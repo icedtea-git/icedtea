@@ -30,25 +30,25 @@ import java.util.Comparator;
 
 class StringArrayComparator implements Comparator {
     public int compare(Object o1, Object o2) {
-	String[] a = (String[])o1;
-	String[] b = (String[])o2;
-	for (int i = 0; i < Math.min(a.length, b.length); i++) {
-	    int c = compare(a[i], b[i]);
-	    if (c != 0)
-		return c;
-	}
+        String[] a = (String[])o1;
+        String[] b = (String[])o2;
+        for (int i = 0; i < Math.min(a.length, b.length); i++) {
+            int c = compare(a[i], b[i]);
+            if (c != 0)
+                return c;
+        }
         return (a.length < b.length ? -1 : a.length == b.length ? 0 : +1);
     }
 
     private static int compare(String a, String b) {
-	if (a == null && b == null)
-	    return 0; 
+        if (a == null && b == null)
+            return 0;
 
-	if (a == null)
+        if (a == null)
             return -1;
 
         if (b == null)
-	    return +1;
+            return +1;
 
         return a.compareTo(b);
     }

@@ -33,33 +33,33 @@ public class BadValue extends Exception
 {
     /**
      * Create a BadValue exception.
-     * @param msg A string giving additional details about the 
-     *		bad value that was found.
+     * @param msg A string giving additional details about the
+     *          bad value that was found.
      */
     public BadValue(String msg) {
-	super(msg);
-	msgs = new String[1];
-	msgs[0] = msg;
+        super(msg);
+        msgs = new String[1];
+        msgs[0] = msg;
     }
 
     /**
      * Create a BadValue exception.
-     * @param msgs An array of strings giving additional details about the 
-     *		bad value that was found.
+     * @param msgs An array of strings giving additional details about the
+     *          bad value that was found.
      */
     public BadValue(String[] msgs) {
-	super(msgs[0]);
-	this.msgs = msgs;
+        super(msgs[0]);
+        this.msgs = msgs;
     }
-    
+
     /**
      * Get the messages giving details about the problem.
-     * @return an array of strings giving additional details about the 
-     *		bad value that was found
+     * @return an array of strings giving additional details about the
+     *          bad value that was found
      */
     public String[] getMessages() {
-	return msgs;
+        return msgs;
     }
-    
+
     private String[] msgs;
 }

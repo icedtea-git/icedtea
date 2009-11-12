@@ -31,33 +31,32 @@ import java.io.InputStream;
 
 class AgentClassLoader2 extends ClassLoader {
     public AgentClassLoader2(Agent.Task parent) {
-	super(parent.getClass().getClassLoader());
-	this.parent = parent;
+        super(parent.getClass().getClassLoader());
+        this.parent = parent;
     }
 
     public Class findClass(String className) throws ClassNotFoundException {
-	byte[] data = parent.getClassData(className);
-	return defineClass(className, data, 0, data.length);
+        byte[] data = parent.getClassData(className);
+        return defineClass(className, data, 0, data.length);
     }
 
     public synchronized InputStream getResourceAsStream(String resourceName) {
-	// check local classpath first
-	// the resource should already be absolute, if we've got here
-	// through getClass().getResourceAsStream()
-	InputStream in = getClass().getResourceAsStream(resourceName);
-	if (in == null) {
-	    try {
-		// if not found here, try remote load from Agent Manager 
-		byte[] data = parent.getResourceData(resourceName);
-		in = new ByteArrayInputStream(data);
-	    }
-	    catch (Exception e) {
-		// ignore
-	    }
-	}
-	return in;
+        // check local classpath first
+        // the resource should already be absolute, if we've got here
+        // through getClass().getResourceAsStream()
+        InputStream in = getClass().getResourceAsStream(resourceName);
+        if (in == null) {
+            try {
+                // if not found here, try remote load from Agent Manager
+                byte[] data = parent.getResourceData(resourceName);
+                in = new ByteArrayInputStream(data);
+            }
+            catch (Exception e) {
+                // ignore
+            }
+        }
+        return in;
     }
-    
+
     private Agent.Task parent;
 }
-    

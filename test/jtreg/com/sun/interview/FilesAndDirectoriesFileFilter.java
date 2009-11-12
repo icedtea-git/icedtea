@@ -31,31 +31,31 @@ import java.io.File;
 /**
  * A filter which accepts all files and directories.
  */
-public class FilesAndDirectoriesFileFilter implements FileFilter 
+public class FilesAndDirectoriesFileFilter implements FileFilter
 {
     /**
      * Create a filter which accepts all files and directories.
      * @param description A short string describing the filter.
      */
     public FilesAndDirectoriesFileFilter(String description) {
-	this.description = description;
+        this.description = description;
     }
-    
+
     public boolean accept(File f) {
-	return true;
+        return true;
     }
-    
+
     public boolean acceptsDirectories() {
-	return true;
+        return true;
     }
-    
+
     /**
      * Get a short description for this filter.
      * @return a short description of this filter
      */
     public String getDescription() {
-	return description;
+        return description;
     }
-    
+
     private String description;
 }

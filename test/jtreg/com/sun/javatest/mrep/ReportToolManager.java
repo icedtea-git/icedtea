@@ -37,23 +37,23 @@ import com.sun.javatest.tool.ToolAction;
 import com.sun.javatest.tool.ToolManager;
 
 public class ReportToolManager extends ToolManager {
-    
+
     public ReportToolManager(Desktop desktop) {
-        super(desktop);        
+        super(desktop);
     }
 
     public Tool startTool() {
         ReportTool t = getTool();
 
         Desktop d = getDesktop();
-        if (!d.containsTool(t)) 
+        if (!d.containsTool(t))
             d.addTool(t);
 
         d.setSelectedTool(t);
 
         return t;
     }
-    
+
     public Action[] getWindowOpenMenuActions() {
         Action a = new ToolAction(i18n, "tmgr.openReport") {
             public void actionPerformed(ActionEvent e) {
@@ -62,7 +62,7 @@ public class ReportToolManager extends ToolManager {
         };
         return new Action[] { a };
     }
-    
+
     public Tool restoreTool(Map m) {
         ReportTool t = getTool();
         t.restore(m);
@@ -75,7 +75,7 @@ public class ReportToolManager extends ToolManager {
                     public void shortTitleChanged(Tool t, String newValue) { }
 
                     public void titleChanged(Tool t, String newValue) { }
-                   
+
                     public void toolDisposed(Tool t) {
                         if (t == tool)
                             tool = null;

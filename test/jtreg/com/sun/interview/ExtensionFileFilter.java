@@ -31,29 +31,29 @@ import java.io.File;
 /**
  * A filter which accepts files based on their extension.
  */
-public class ExtensionFileFilter implements FileFilter 
+public class ExtensionFileFilter implements FileFilter
 {
-    
+
     /**
      * Create a filter which accepts files based on their extension.
      * @param extn The required extension for files that are to be
-     * 		accepted by this filter.
+     *          accepted by this filter.
      * @param description A short string describing the filter.
      */
     public ExtensionFileFilter(String extn, String description) {
-	this.extns = new String[] {extn};
-	this.description = description;
+        this.extns = new String[] {extn};
+        this.description = description;
     }
 
     /**
      * Create a filter which accepts files based on their extension.
-     * @param extns Any array of permissable extensions for 
-     *		files that are to be accepted by this filter.
+     * @param extns Any array of permissable extensions for
+     *          files that are to be accepted by this filter.
      * @param description A short string describing the filter.
      */
     public ExtensionFileFilter(String[] extns, String description) {
-	this.extns = extns;
-	this.description = description;
+        this.extns = extns;
+        this.description = description;
     }
 
     /**
@@ -64,7 +64,7 @@ public class ExtensionFileFilter implements FileFilter
      * @see #isCaseSensitive
      */
     public void setCaseSensitive(boolean b) {
-	caseSensitive = b;
+        caseSensitive = b;
     }
 
     /**
@@ -75,18 +75,18 @@ public class ExtensionFileFilter implements FileFilter
      * @see #setCaseSensitive
      */
     public boolean isCaseSensitive() {
-	return caseSensitive;
+        return caseSensitive;
     }
 
     public boolean accept(File f) {
-	for (int i = 0; i < extns.length; i++) 
-	    if (endsWith(f.getName(), extns[i]))
-		return true;
-	return false;
+        for (int i = 0; i < extns.length; i++)
+            if (endsWith(f.getName(), extns[i]))
+                return true;
+        return false;
     }
 
     public boolean acceptsDirectories() {
-	return false;
+        return false;
     }
 
     /**
@@ -94,7 +94,7 @@ public class ExtensionFileFilter implements FileFilter
      * @return a short description of this filter
      */
     public String getDescription() {
-	return description;
+        return description;
     }
 
     /**
@@ -102,19 +102,19 @@ public class ExtensionFileFilter implements FileFilter
      * by this filter.  If it does not, one is appended
      * @param path The path to be checked.
      * @return the original path if it already ended with a valid extension,
-     *		or if it was null or empty;
-     * 		otherwise, a copy of the path is returned, with a valid 
-     *		extension added on.
+     *          or if it was null or empty;
+     *          otherwise, a copy of the path is returned, with a valid
+     *          extension added on.
      */
     public String ensureExtension(String path) {
-	if (path == null || path.length() == 0)
-	    return path;
+        if (path == null || path.length() == 0)
+            return path;
 
-	for (int i = 0; i < extns.length; i++) 
-	    if (endsWith(path, extns[i]))
-		return path;
+        for (int i = 0; i < extns.length; i++)
+            if (endsWith(path, extns[i]))
+                return path;
 
-	return (path + extns[0]);
+        return (path + extns[0]);
     }
 
 
@@ -123,37 +123,37 @@ public class ExtensionFileFilter implements FileFilter
      * by this filter.  If it does not, one is appended
      * @param file The file to be checked.
      * @return the original file if it already ended with a valid extension,
-     *		or if it was null or empty;
-     * 		otherwise, a new file is returned, whose path is a copy
-     *		of the original, with a valid extension added on.
+     *          or if it was null or empty;
+     *          otherwise, a new file is returned, whose path is a copy
+     *          of the original, with a valid extension added on.
      */
     public File ensureExtension(File file) {
-	if (file == null)
-	    return null;
+        if (file == null)
+            return null;
 
-	String path = file.getPath();
-	String newPath = ensureExtension(path);
-	return (newPath.equals(path) ? file : new File(newPath));
+        String path = file.getPath();
+        String newPath = ensureExtension(path);
+        return (newPath.equals(path) ? file : new File(newPath));
     }
 
     private boolean endsWith(String s, String sfx) {
-	if (caseSensitive)
-	    return s.endsWith(sfx);
+        if (caseSensitive)
+            return s.endsWith(sfx);
 
-	int slen = s.length();
-	int sfxlen = sfx.length();
-	if (slen < sfxlen)
-	    return false;
+        int slen = s.length();
+        int sfxlen = sfx.length();
+        if (slen < sfxlen)
+            return false;
 
-	int offset = slen - sfxlen;
-	for (int i = 0; i < sfxlen; i++) {
-	    char c1 = s.charAt(offset + i);
-	    char c2 = sfx.charAt(i);
-	    if (Character.toLowerCase(c1) != Character.toLowerCase(c2))
-		return false;
-	}
+        int offset = slen - sfxlen;
+        for (int i = 0; i < sfxlen; i++) {
+            char c1 = s.charAt(offset + i);
+            char c2 = sfx.charAt(i);
+            if (Character.toLowerCase(c1) != Character.toLowerCase(c2))
+                return false;
+        }
 
-	return true;
+        return true;
     }
 
     private String[] extns;

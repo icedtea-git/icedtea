@@ -41,7 +41,7 @@ import javax.swing.SwingUtilities;
 import com.sun.javatest.tool.UIFactory;
 
 /**
- * The "Tool Bar Manager" tool, which allows a user to add, remove, 
+ * The "Tool Bar Manager" tool, which allows a user to add, remove,
  * and get custom toolbars.
  */
 public class ToolBarManager {
@@ -50,7 +50,7 @@ public class ToolBarManager {
 
     /**
      * Adds specified toolbar.
-     * @param theBar the tool bar which should be added to the TestManager, 
+     * @param theBar the tool bar which should be added to the TestManager,
      * can't be null
      * @param toolBarID unique string ID of theBar, can't be null or empty
      * @return <tt>true</tt> if the bar was successfully added
@@ -75,17 +75,17 @@ public class ToolBarManager {
         }
         return false;
     }
-    
+
     /**
      * Finds toolbar by ID and returns it.
      * @param toolBarID unique string ID of theBar, can't be null or empty
-     * @return the toolbar object, or <tt>null</tt> if the manager contains 
+     * @return the toolbar object, or <tt>null</tt> if the manager contains
      * no tool bar for this key.
      **/
     public JavaTestToolBar getToolBar(String toolBarID) {
         return (JavaTestToolBar) store.get(toolBarID);
     }
-    
+
     /**
      * Returns an array of currently registered toolbars.
      * @return array of currently registered toolbars
@@ -95,12 +95,12 @@ public class ToolBarManager {
         ret = (JavaTestToolBar[]) store.values().toArray(ret);
         return ret;
     }
- 
+
     /**
      * Removes the toolbar by ID.
      * @param toolBarID unique string ID of theBar, can't be null or empty
      * @return <tt>true</tt> if the bar was successfully removed and <tt>false</tt>
-     * if the specified ID was not be found. 
+     * if the specified ID was not be found.
      **/
     boolean removeToolBar(String toolBarID) {
         if (store.containsKey(toolBarID)) {
@@ -133,7 +133,7 @@ public class ToolBarManager {
         }
         return toolBarMenu;
     }
-    
+
     /**
      * Saves visible state.
      * Invoked from ExecTool's save
@@ -172,7 +172,7 @@ public class ToolBarManager {
             }   // for
         }
     }
-    
+
     void setVisibleFromPrefs(boolean visible) {
         int count = toolBarMenu.getItemCount();
         for (int i = 0; i < count; i++) {
@@ -190,9 +190,9 @@ public class ToolBarManager {
             }
         }
     }
-    
+
     /**
-     * TBMenuManager manages toolbar menu and processes adding/removing toolbars 
+     * TBMenuManager manages toolbar menu and processes adding/removing toolbars
      **/
     class TBMenuManager {
         /**
@@ -229,9 +229,9 @@ public class ToolBarManager {
                 }
             }
         }
-        
+
     }
-    
+
     /**
      *ToolbarMenuAction reflects changing of visible state to the menu
      **/
@@ -248,12 +248,12 @@ public class ToolBarManager {
         }
         private JavaTestToolBar theBar;
     }
-    
+
     private UIFactory uif;
     private JMenu toolBarMenu;
     private TBMenuManager mmanager = new TBMenuManager();
-    private Map<String, JavaTestToolBar> store = 
+    private Map<String, JavaTestToolBar> store =
         Collections.synchronizedMap(new LinkedHashMap<String, JavaTestToolBar>());
     private ToolBarPanel panel;
-    
+
 }

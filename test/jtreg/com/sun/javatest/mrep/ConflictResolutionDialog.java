@@ -71,7 +71,7 @@ public class ConflictResolutionDialog extends JDialog {
     private int     selectedIndex;
     private boolean bPreferredReport;
     private boolean bUseMostRecent;
-    
+
     private UIFactory uif;
 
     private boolean cancel = false;
@@ -80,8 +80,8 @@ public class ConflictResolutionDialog extends JDialog {
     public ConflictResolutionDialog(JFrame parent, String testName, String[] reportsList, boolean bPreferredSet, UIFactory uif) {
         super(parent, true);
         this.uif = uif;
-        
-        setName("conflict");        
+
+        setName("conflict");
         setTitle(uif.getI18NString("conflict.name"));
         setResizable(false);
 
@@ -90,9 +90,9 @@ public class ConflictResolutionDialog extends JDialog {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         ConflictResolutionActionListener conflictResolutionListener = new ConflictResolutionActionListener();
 
-        JLabel text = uif.createLabel("conflict.text"); 
+        JLabel text = uif.createLabel("conflict.text");
         text.setText(text.getText() + " " + testName);
-       
+
 
         text.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         JPanel textPanel = uif.createPanel("conflict.text.panel", new FlowLayout(FlowLayout.CENTER));
@@ -163,7 +163,7 @@ public class ConflictResolutionDialog extends JDialog {
         cancelButton = uif.createButton("conflict.cancel");
         cancelButton.addActionListener(conflictResolutionListener);
         cancelButton.setActionCommand(cancelButtonStr);
-        
+
         p2.add(resolveButton);
         p2.add(cancelButton);
 
@@ -192,22 +192,22 @@ public class ConflictResolutionDialog extends JDialog {
     public boolean wasCanceled() {
         return cancel;
     }
-    
+
     class CancelException extends Exception {
-        
+
     }
-    
-    
+
+
     class ConflictResolutionActionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
 
             String cmd = e.getActionCommand();
             if (cmd.equals(cancelButtonStr)) {
-                
+
                 if (uif.showYesNoDialog("conflict.areyousure") != JOptionPane.YES_OPTION)
                     return;
-                
+
                 ConflictResolutionDialog.this.cancel = true;
                 ConflictResolutionDialog.this.dispose();
             } else if (cmd.equals(resolveButtonStr)) {
@@ -260,4 +260,3 @@ public class ConflictResolutionDialog extends JDialog {
     }
 
 }
-

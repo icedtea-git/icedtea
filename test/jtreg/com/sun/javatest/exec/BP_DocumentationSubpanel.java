@@ -37,7 +37,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class BP_DocumentationSubpanel extends BP_BranchSubpanel {
-    
+
     /** Creates a new instance of BP_DocumentationSubpanel */
     public BP_DocumentationSubpanel(UIFactory uif, BP_Model bpm, TestTreeModel ttm, ExecModel em) {
         super("ds", uif, bpm, ttm, "br.ds");
@@ -45,19 +45,19 @@ public class BP_DocumentationSubpanel extends BP_BranchSubpanel {
         this.bpm = bpm;
         initGUI();
     }
-    
+
     private void initGUI() {
         setLayout(new BorderLayout());
 
         filesPane = new FilesPane(uif);
-        
+
         emptyPane = uif.createPanel("br.ds.ep", new GridBagLayout(), false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = gbc.CENTER;
         JLabel emptyL = uif.createLabel("br.ds.el");
         emptyPane.add(emptyL, gbc);
     }
-    
+
     protected void updateSubpanel(TestResultTable.TreeNode currNode) {
         super.updateSubpanel(currNode);
         TestSuite ts = em.getTestSuite();
@@ -72,36 +72,36 @@ public class BP_DocumentationSubpanel extends BP_BranchSubpanel {
                 setPanel(emptyPane);
             }
         }catch(Exception e){
-            
+
         }
-        
+
         validateEnabledState();
     }
-    
+
     protected void invalidateFilters() {
         super.invalidateFilters();
         validateEnabledState();
     }
-    
+
     private void validateEnabledState() {
         if(filelist != null)
             bpm.setEnabled(this, true);
         else
             bpm.setEnabled(this, false);
     }
-    
+
     private void setPanel(JPanel p) {
         if(p != null) {
             this.removeAll();
             this.add(p, BorderLayout.CENTER);
         }
     }
-    
+
 
     private FilesPane filesPane;
     private JPanel emptyPane;
     private ExecModel em;
     private BP_Model bpm;
     private URL[] filelist;
-    
+
 }

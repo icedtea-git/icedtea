@@ -33,19 +33,19 @@ import com.sun.javatest.util.I18NResourceBundle;
  */
 public class AllTestsFilter extends TestFilter {
     public String getName() {
-	return i18n.getString("allTestsFilter.name");
+        return i18n.getString("allTestsFilter.name");
     }
 
     public String getDescription() {
-	return i18n.getString("allTestsFilter.description");
+        return i18n.getString("allTestsFilter.description");
     }
 
     public String getReason() {
-	return i18n.getString("allTestsFilter.reason");
+        return i18n.getString("allTestsFilter.reason");
     }
 
     public boolean accepts(TestDescription td) throws Fault {
-	return true;
+        return true;
     }
 
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(AllTestsFilter.class);

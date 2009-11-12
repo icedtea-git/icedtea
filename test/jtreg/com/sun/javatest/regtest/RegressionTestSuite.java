@@ -51,7 +51,7 @@ import java.util.Set;
 
 public class RegressionTestSuite extends TestSuite
 {
-    /** 
+    /**
      * @throws Fault Thrown if there are problems reading TEST.ROOT.
      */
     public RegressionTestSuite(File testSuiteRoot) throws Fault {
@@ -70,7 +70,7 @@ public class RegressionTestSuite extends TestSuite
             throw new Error();
         }
     }
-    
+
     @Override
     public boolean getTestRefreshBehavior(int event) {
         switch (event) {
@@ -81,14 +81,14 @@ public class RegressionTestSuite extends TestSuite
                 return super.getTestRefreshBehavior(event);
         }
     }
-    
-    
+
+
     @Override
     public Script createScript(TestDescription td, String[] exclTestCases, TestEnvironment scriptEnv,
             WorkDirectory workDir,
             BackupPolicy backupPolicy) throws Fault {
         Script s = new RegressionScript();
-        
+
         // generic script init
         s.initTestDescription(td);
         s.initExcludedTestCases(exclTestCases);
@@ -96,10 +96,10 @@ public class RegressionTestSuite extends TestSuite
         s.initWorkDir(workDir);
         s.initBackupPolicy(backupPolicy);
         s.initClassLoader(getClassLoader());
-        
+
         return s;
     }
-    
+
     @Override
     public InterviewParameters createInterview() throws TestSuite.Fault {
         try {
@@ -114,22 +114,22 @@ public class RegressionTestSuite extends TestSuite
     public String[] getAdditionalDocNames() {
         return additionalDocNames;
     }
-    
-    private static String[] additionalDocNames = { 
-        "com/sun/javatest/regtest/help/jtreg.hs" 
+
+    private static String[] additionalDocNames = {
+        "com/sun/javatest/regtest/help/jtreg.hs"
     };
-    
+
     @Override
     public URL[] getFilesForTest(TestDescription td) {
         List<URL> urls = new ArrayList<URL>();
-        
+
         // always include the file containing the test description
         try {
             urls.add(td.getFile().toURI().toURL());
         } catch (MalformedURLException e) {
             // ignore any bad URLs
         }
-        
+
         File[] files = new RegressionScript().getSourceFiles(td);
         for (int i = 0; i < files.length; i++) {
             try {

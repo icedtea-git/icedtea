@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * A {@link Question question} to which the response is a filename.
  */
-public abstract class FileQuestion extends Question 
+public abstract class FileQuestion extends Question
 {
     /**
      * Create a question with a nominated tag.
@@ -40,12 +40,12 @@ public abstract class FileQuestion extends Question
      * @param tag A unique tag to identify this specific question.
      */
     protected FileQuestion(Interview interview, String tag) {
-	super(interview, tag);
+        super(interview, tag);
 
-	if (interview.getInterviewSemantics() > Interview.SEMANTIC_PRE_32)
-	    clear();
+        if (interview.getInterviewSemantics() > Interview.SEMANTIC_PRE_32)
+            clear();
 
-	setDefaultValue(value);
+        setDefaultValue(value);
     }
 
     /**
@@ -55,7 +55,7 @@ public abstract class FileQuestion extends Question
      * @see #setSuggestions
      */
     public File[] getSuggestions() {
-	return suggestions;
+        return suggestions;
     }
 
     /**
@@ -66,14 +66,14 @@ public abstract class FileQuestion extends Question
      * @see #getSuggestions
      */
     public void setSuggestions(File[] newSuggestions) {
-	if (newSuggestions != null) {
-	    for (int i = 0; i < newSuggestions.length; i++) {
-		if (newSuggestions[i] == null)
-		    throw new IllegalArgumentException();
-	    }
-	}
+        if (newSuggestions != null) {
+            for (int i = 0; i < newSuggestions.length; i++) {
+                if (newSuggestions[i] == null)
+                    throw new IllegalArgumentException();
+            }
+        }
 
-	suggestions = newSuggestions;
+        suggestions = newSuggestions;
     }
 
     /**
@@ -83,7 +83,7 @@ public abstract class FileQuestion extends Question
      * @see #setDefaultValue
      */
     public File getDefaultValue() {
-	return defaultValue;
+        return defaultValue;
     }
 
     /**
@@ -94,66 +94,66 @@ public abstract class FileQuestion extends Question
      * @see #getDefaultValue
      */
     public void setDefaultValue(File v) {
-	defaultValue = v;
+        defaultValue = v;
     }
 
     /**
      * Get the current (default or latest) response to this question.
-     * @return The current value. 
+     * @return The current value.
      * @see #setValue
      */
     public File getValue() {
-	return value;
+        return value;
     }
 
     /**
      * Verify this question is on the current path, and if it is,
      * return the current value.
      * @return the current value of this question
-     * @throws Interview.NotOnPathFault if this question is not on the 
+     * @throws Interview.NotOnPathFault if this question is not on the
      * current path
      * @see #getValue
      */
-    public File getValueOnPath() 
-	throws Interview.NotOnPathFault
+    public File getValueOnPath()
+        throws Interview.NotOnPathFault
     {
-	interview.verifyPathContains(this);
-	return getValue();
+        interview.verifyPathContains(this);
+        return getValue();
     }
 
     public String getStringValue() {
-	return (value == null ? null : value.getPath());
+        return (value == null ? null : value.getPath());
     }
 
     /**
      * Set the response to this question to the value represented by
-     * a string-valued argument. 
+     * a string-valued argument.
      * @see #getValue
      */
     public void setValue(String path) {
-	setValue(path == null ? (File)null : new File(path));
+        setValue(path == null ? (File)null : new File(path));
     }
 
     /**
-     * Set the current value. 
-     * @param newValue The value to be set. 
+     * Set the current value.
+     * @param newValue The value to be set.
      * @see #getValue
      */
     public void setValue(File newValue) {
-	File oldValue = value;
-	value = newValue;
-	if (!equal(value, oldValue)) {
-	    interview.updatePath(this);
-	    interview.setEdited(true);
-	}
+        File oldValue = value;
+        value = newValue;
+        if (!equal(value, oldValue)) {
+            interview.updatePath(this);
+            interview.setEdited(true);
+        }
     }
 
     public boolean isValueValid() {
-	return true;
+        return true;
     }
 
     public boolean isValueAlwaysValid() {
-	return false;
+        return false;
     }
 
     /**
@@ -164,7 +164,7 @@ public abstract class FileQuestion extends Question
      * @see #setFilters
      */
     public FileFilter[] getFilters() {
-	return filters;
+        return filters;
     }
 
     /**
@@ -176,7 +176,7 @@ public abstract class FileQuestion extends Question
      * @see #setFilters
      */
     public void setFilter(FileFilter filter) {
-	filters = new FileFilter[] { filter };
+        filters = new FileFilter[] { filter };
     }
 
     /**
@@ -188,7 +188,7 @@ public abstract class FileQuestion extends Question
      * @see #setFilter
      */
     public void setFilters(FileFilter[] filters) {
-	this.filters = filters;
+        this.filters = filters;
     }
 
     /**
@@ -198,7 +198,7 @@ public abstract class FileQuestion extends Question
      * @see #isBaseRelativeOnly
      */
     public File getBaseDirectory() {
-	return baseDir;
+        return baseDir;
     }
 
     /**
@@ -207,7 +207,7 @@ public abstract class FileQuestion extends Question
      * @see #getBaseDirectory
      */
     public void setBaseDirectory(File dir) {
-	baseDir = dir;
+        baseDir = dir;
     }
 
     /**
@@ -219,18 +219,18 @@ public abstract class FileQuestion extends Question
      * @see #setBaseRelativeOnly
      */
     public boolean isBaseRelativeOnly() {
-	return baseRelativeOnly;
+        return baseRelativeOnly;
     }
 
     /**
      * Specify whether all valid responses to this question should be
      * relative to the base directory (in or under it).
-     * @param b this parameter should be true if all valid responses 
+     * @param b this parameter should be true if all valid responses
      * to this question should be relative to the base directory
      * @see #setBaseRelativeOnly
      */
     public void setBaseRelativeOnly(boolean b) {
-	baseRelativeOnly = b;
+        baseRelativeOnly = b;
     }
 
     /**
@@ -238,7 +238,7 @@ public abstract class FileQuestion extends Question
      * back to its initial state.
      */
     public void clear() {
-	setValue(defaultValue);
+        setValue(defaultValue);
     }
 
     /**
@@ -247,11 +247,11 @@ public abstract class FileQuestion extends Question
      * @param data The map from which to load the value for this question.
      */
     protected void load(Map data) {
-	Object o = data.get(tag);
-	if (o instanceof File)
-	    setValue((File)o);
-	else if (o instanceof String)
-	    setValue(new File((String)o));
+        Object o = data.get(tag);
+        if (o instanceof File)
+            setValue((File)o);
+        else if (o instanceof String)
+            setValue(new File((String)o));
     }
 
     /**
@@ -260,8 +260,8 @@ public abstract class FileQuestion extends Question
      * @param data The map in which to save the value for this question.
      */
     protected void save(Map data) {
-	if (value != null)
-	    data.put(tag, value.toString());
+        if (value != null)
+            data.put(tag, value.toString());
     }
 
 
@@ -273,7 +273,7 @@ public abstract class FileQuestion extends Question
      * identify the same filename
      */
     protected static boolean equal(File f1, File f2) {
-	return (f1 == null ? f2 == null : f1.equals(f2));
+        return (f1 == null ? f2 == null : f1.equals(f2));
     }
 
     /**

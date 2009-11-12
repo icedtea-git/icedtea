@@ -47,7 +47,7 @@ public class LogFile
      * The messages will be written to System.err.
      */
     public LogFile() {
-	this(new OutputStreamWriter(System.err));
+        this(new OutputStreamWriter(System.err));
     }
 
     /**
@@ -55,10 +55,10 @@ public class LogFile
      * @param out the stream to which to write the messages.
      */
     public LogFile(Writer out) {
-	if (out == null)
-	    throw new NullPointerException();
+        if (out == null)
+            throw new NullPointerException();
 
-	this.out = out;
+        this.out = out;
     }
 
     /**
@@ -66,10 +66,10 @@ public class LogFile
      * @param file the file to which to write the messages.
      */
     public LogFile(File file) {
-	if (file == null)
-	    throw new NullPointerException();
+        if (file == null)
+            throw new NullPointerException();
 
-	this.file = file;
+        this.file = file;
     }
 
     /**
@@ -81,7 +81,7 @@ public class LogFile
      * @param key a key into the resource bundle for the required message
      */
     public void log(I18NResourceBundle i18n, String key) {
-	log(i18n.getString(key), null);
+        log(i18n.getString(key), null);
     }
 
     /**
@@ -92,14 +92,14 @@ public class LogFile
      * @param i18n a resource bundle containing the localized messages
      * @param key a key into the resource bundle for the required message
      * @param arg An argument to be formatted into the specified message.
-     * 		If this is a <code>Throwable</code>, its stack trace
+     *          If this is a <code>Throwable</code>, its stack trace
      *          will be included in the log.
      */
     public void log(I18NResourceBundle i18n, String key, Object arg) {
-	if (arg instanceof Throwable)
-	    log(i18n.getString(key, arg), (Throwable)arg);
-	else
-	    log(i18n.getString(key, arg), null);
+        if (arg instanceof Throwable)
+            log(i18n.getString(key, arg), (Throwable)arg);
+        else
+            log(i18n.getString(key, arg), null);
     }
 
     /**
@@ -110,58 +110,58 @@ public class LogFile
      * @param i18n a resource bundle containing the localized messages
      * @param key a key into the resource bundle for the required message
      * @param args An array of arguments to be formatted into the specified message.
-     * 		If the first arg is a <code>Throwable</code>, its stack
-     *        	trace will be included in the log.
+     *          If the first arg is a <code>Throwable</code>, its stack
+     *          trace will be included in the log.
      */
     public void log(I18NResourceBundle i18n, String key, Object[] args) {
-	if (args != null && args.length > 0 && args[0] instanceof Throwable)
-	    log(i18n.getString(key, args), (Throwable)args[0]);
-	else
-	    log(i18n.getString(key, args), null);
+        if (args != null && args.length > 0 && args[0] instanceof Throwable)
+            log(i18n.getString(key, args), (Throwable)args[0]);
+        else
+            log(i18n.getString(key, args), null);
     }
 
     private synchronized void log(String text, Throwable trace) {
-	Date now = new Date();
-	SimpleDateFormat format = new SimpleDateFormat("[ddMMMyyyy kk:mmz]");
+        Date now = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("[ddMMMyyyy kk:mmz]");
 
-	PrintWriter pw;
-	boolean closeWhenDone;
-	if (out != null) {
-	    pw = new PrintWriter(out);
-	    closeWhenDone = false;
-	}
-	else {
-	    FileWriter fw = null;
-	    try {
-		// open writer in append mode
-		fw = new FileWriter(file, true);
-	    }
-	    catch (IOException e) {
-		// oh well
-		if (!logError) {
-		    // just report first instance
-		    String msg = local_i18n.getString("log.error", new Object[] { file, e.toString() });
-		    System.err.println(msg);
-		    logError = true;
-		}
-		return;
-	    }
-	    
-	    pw = new PrintWriter(fw);
-	    closeWhenDone = true;
-	}
+        PrintWriter pw;
+        boolean closeWhenDone;
+        if (out != null) {
+            pw = new PrintWriter(out);
+            closeWhenDone = false;
+        }
+        else {
+            FileWriter fw = null;
+            try {
+                // open writer in append mode
+                fw = new FileWriter(file, true);
+            }
+            catch (IOException e) {
+                // oh well
+                if (!logError) {
+                    // just report first instance
+                    String msg = local_i18n.getString("log.error", new Object[] { file, e.toString() });
+                    System.err.println(msg);
+                    logError = true;
+                }
+                return;
+            }
 
-	pw.print(format.format(new Date()));
-	pw.print("  ");
-	pw.println(text);
-	
-	if (trace != null)
-	    trace.printStackTrace(pw);
-	
-	if (closeWhenDone)
-	    pw.close();
-	else
-	    pw.flush();
+            pw = new PrintWriter(fw);
+            closeWhenDone = true;
+        }
+
+        pw.print(format.format(new Date()));
+        pw.print("  ");
+        pw.println(text);
+
+        if (trace != null)
+            trace.printStackTrace(pw);
+
+        if (closeWhenDone)
+            pw.close();
+        else
+            pw.flush();
     }
 
     private File file;

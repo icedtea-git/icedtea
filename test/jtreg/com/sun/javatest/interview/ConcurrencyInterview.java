@@ -37,7 +37,7 @@ import com.sun.javatest.Parameters;
  * one of a series of sub-interviews that collect the parameter information for
  * a test run.
  */
-public class ConcurrencyInterview 
+public class ConcurrencyInterview
     extends Interview
     implements Parameters.MutableConcurrencyParameters
 {
@@ -46,13 +46,13 @@ public class ConcurrencyInterview
      * @param parent The parent interview of which this is a child.
      * @throws Interview.Fault if there is a problem while creating the interview.
      */
-    public ConcurrencyInterview(Interview parent) 
-	throws Interview.Fault
+    public ConcurrencyInterview(Interview parent)
+        throws Interview.Fault
     {
-	super(parent, "concurrency");
-	this.parent = parent;
-	setResourceBundle("i18n");
-	setFirstQuestion(qConcurrency);
+        super(parent, "concurrency");
+        this.parent = parent;
+        setResourceBundle("i18n");
+        setFirstQuestion(qConcurrency);
     }
 
     /**
@@ -61,7 +61,7 @@ public class ConcurrencyInterview
      * @see #setConcurrency
      */
     public int getConcurrency() {
-	return qConcurrency.getValue();
+        return qConcurrency.getValue();
     }
 
     /**
@@ -70,7 +70,7 @@ public class ConcurrencyInterview
      * @see #getConcurrency
      */
     public void setConcurrency(int conc) {
-	qConcurrency.setValue(conc);
+        qConcurrency.setValue(conc);
     }
 
     //----------------------------------------------------------------------------
@@ -78,20 +78,20 @@ public class ConcurrencyInterview
     // Concurrency
 
     private IntQuestion qConcurrency = new IntQuestion(this, "concurrency") {
-	{
-	    setBounds(Parameters.ConcurrencyParameters.MIN_CONCURRENCY, 
-		      Parameters.ConcurrencyParameters.MAX_CONCURRENCY);
-	}
+        {
+            setBounds(Parameters.ConcurrencyParameters.MIN_CONCURRENCY,
+                      Parameters.ConcurrencyParameters.MAX_CONCURRENCY);
+        }
 
-	protected Question getNext() {
-	    return qEnd;
-	}
+        protected Question getNext() {
+            return qEnd;
+        }
 
-	public void clear() {
-	    setValue(1);
-	}
+        public void clear() {
+            setValue(1);
+        }
     };
-	    
+
     //----------------------------------------------------------------------------
     //
     // End

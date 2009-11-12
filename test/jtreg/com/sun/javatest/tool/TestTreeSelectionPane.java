@@ -40,86 +40,86 @@ public class TestTreeSelectionPane extends TreeSelectionPane
      * that may be selected
      */
     public TestTreeSelectionPane(TestResultTable trt) {
-	super(new TRTModel(trt));
+        super(new TRTModel(trt));
     }
 
-    private static class TRTModel implements Model 
+    private static class TRTModel implements Model
     {
-	TRTModel(TestResultTable trt) {
-	    this.trt = trt;
-	}
+        TRTModel(TestResultTable trt) {
+            this.trt = trt;
+        }
 
-	public Object getRoot() {
-	    return trt.getRoot();
-	}
+        public Object getRoot() {
+            return trt.getRoot();
+        }
 
-	public int getChildCount(Object node) {
-	    if (node == null) 
-		throw new NullPointerException();
-	    else if (node instanceof TestResultTable.TreeNode)
-		return ((TestResultTable.TreeNode) node).getChildCount();
-	    else if (node instanceof TestResult)
-		return 0;
-	    else
-		throw new IllegalArgumentException();
-	}
+        public int getChildCount(Object node) {
+            if (node == null)
+                throw new NullPointerException();
+            else if (node instanceof TestResultTable.TreeNode)
+                return ((TestResultTable.TreeNode) node).getChildCount();
+            else if (node instanceof TestResult)
+                return 0;
+            else
+                throw new IllegalArgumentException();
+        }
 
-	public Object getChild(Object node, int index) {
-	    if (node == null) 
-		throw new NullPointerException();
-	    else if (node instanceof TestResultTable.TreeNode)
-		return ((TestResultTable.TreeNode) node).getChild(index);
-	    else if (node instanceof TestResult)
-		return null;
-	    else
-		throw new IllegalArgumentException();
-	}
+        public Object getChild(Object node, int index) {
+            if (node == null)
+                throw new NullPointerException();
+            else if (node instanceof TestResultTable.TreeNode)
+                return ((TestResultTable.TreeNode) node).getChild(index);
+            else if (node instanceof TestResult)
+                return null;
+            else
+                throw new IllegalArgumentException();
+        }
 
-	public String getName(Object node) {
-	    if (node == null)
-		throw new NullPointerException();
-	    else if (node instanceof TestResultTable.TreeNode)
-		return ((TestResultTable.TreeNode) node).getName();
-	    else if (node instanceof TestResult) {
-		TestResult tr = (TestResult) node;
-		String fullName = tr.getTestName();
-		int lastSlash = fullName.lastIndexOf("/");
-		return (lastSlash == -1
-			? fullName
-			: fullName.substring(lastSlash+1));
-		
-	    }
-	    else
-		throw new IllegalArgumentException();
-	}
+        public String getName(Object node) {
+            if (node == null)
+                throw new NullPointerException();
+            else if (node instanceof TestResultTable.TreeNode)
+                return ((TestResultTable.TreeNode) node).getName();
+            else if (node instanceof TestResult) {
+                TestResult tr = (TestResult) node;
+                String fullName = tr.getTestName();
+                int lastSlash = fullName.lastIndexOf("/");
+                return (lastSlash == -1
+                        ? fullName
+                        : fullName.substring(lastSlash+1));
 
-	public String getPath(Object node) {
-	    if (node == null)
-		throw new NullPointerException();
-	    else if (node instanceof TestResult)
-		return ((TestResult) node).getTestName();
-	    else if (node instanceof TestResultTable.TreeNode) {
-		TestResultTable.TreeNode tn = (TestResultTable.TreeNode) node;
-		if (tn.isRoot())
-		    return tn.getName();
-		else
-		    return getPath(tn.getParent() + "/" + tn.getName());
-	    }
-	    else
-		throw new IllegalArgumentException();
-	}
+            }
+            else
+                throw new IllegalArgumentException();
+        }
 
-	public boolean isLeaf(Object node) {
-	    if (node == null)
-		throw new NullPointerException();
-	    else if (node instanceof TestResult)
-		return true;
-	    else if (node instanceof TestResultTable.TreeNode)
-		return false;
-	    else
-		throw new IllegalArgumentException();
-	}
+        public String getPath(Object node) {
+            if (node == null)
+                throw new NullPointerException();
+            else if (node instanceof TestResult)
+                return ((TestResult) node).getTestName();
+            else if (node instanceof TestResultTable.TreeNode) {
+                TestResultTable.TreeNode tn = (TestResultTable.TreeNode) node;
+                if (tn.isRoot())
+                    return tn.getName();
+                else
+                    return getPath(tn.getParent() + "/" + tn.getName());
+            }
+            else
+                throw new IllegalArgumentException();
+        }
 
-	private TestResultTable trt;
+        public boolean isLeaf(Object node) {
+            if (node == null)
+                throw new NullPointerException();
+            else if (node instanceof TestResult)
+                return true;
+            else if (node instanceof TestResultTable.TreeNode)
+                return false;
+            else
+                throw new IllegalArgumentException();
+        }
+
+        private TestResultTable trt;
     }
 }

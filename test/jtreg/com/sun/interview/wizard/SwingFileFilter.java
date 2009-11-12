@@ -30,32 +30,32 @@ import java.io.File;
 
 import com.sun.interview.FileFilter;
 
-class SwingFileFilter extends javax.swing.filechooser.FileFilter 
+class SwingFileFilter extends javax.swing.filechooser.FileFilter
 {
     static javax.swing.filechooser.FileFilter wrap(FileFilter f) {
-	return new SwingFileFilter(f);
+        return new SwingFileFilter(f);
     }
-    
+
     static FileFilter unwrap(javax.swing.filechooser.FileFilter f) {
-	if (f != null && f instanceof SwingFileFilter)
-	    return (((SwingFileFilter)f).filter);
-	else
-	    return null;
+        if (f != null && f instanceof SwingFileFilter)
+            return (((SwingFileFilter)f).filter);
+        else
+            return null;
     }
 
     SwingFileFilter(FileFilter ff) {
-	if (ff == null)
-	    throw new NullPointerException();
-	filter = ff;
+        if (ff == null)
+            throw new NullPointerException();
+        filter = ff;
     }
-    
+
     public boolean accept(File f) {
-	return f.isDirectory() || filter.accept(f);
+        return f.isDirectory() || filter.accept(f);
     }
-    
+
     public String getDescription() {
-	return filter.getDescription();
+        return filter.getDescription();
     }
-    
+
     FileFilter filter;
 }

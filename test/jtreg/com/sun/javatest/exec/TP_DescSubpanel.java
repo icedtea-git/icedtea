@@ -37,26 +37,26 @@ import com.sun.javatest.tool.UIFactory;
 
 class TP_DescSubpanel extends TP_PropertySubpanel {
     TP_DescSubpanel(UIFactory uif) {
-	super(uif, "desc");
+        super(uif, "desc");
     }
 
     protected void updateSubpanel(TestResult currTest) {
-	super.updateSubpanel(currTest);
+        super.updateSubpanel(currTest);
 
-	TestDescription td; 
+        TestDescription td;
 
-	try {
-	    td = subpanelTest.getDescription();
-	} 
-	catch (TestResult.Fault f) {
-	    return;
-	}
+        try {
+            td = subpanelTest.getDescription();
+        }
+        catch (TestResult.Fault f) {
+            return;
+        }
 
-	for (Iterator iter = td.getParameterKeys(); iter.hasNext(); ) {
-	    String key = (String)(iter.next());
-	    String val = td.getParameter(key);
-	    updateEntry(key, val);
-	}
+        for (Iterator iter = td.getParameterKeys(); iter.hasNext(); ) {
+            String key = (String)(iter.next());
+            String val = td.getParameter(key);
+            updateEntry(key, val);
+        }
     }
 
 }

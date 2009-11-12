@@ -49,45 +49,45 @@ import javax.swing.JLabel;
 public class IconLabel extends JLabel
 {
     public float getAlignmentY() {
-	return .7f;
+        return .7f;
     }
 
     public Icon getIcon() {
-	if (type == null)
-	    return null;
+        if (type == null)
+            return null;
 
-	if (type.equals("file"))
-	    return IconFactory.getFileIcon();
+        if (type.equals("file"))
+            return IconFactory.getFileIcon();
 
-	if (type.equals("folder"))
-	    return IconFactory.getFolderIcon();
+        if (type.equals("folder"))
+            return IconFactory.getFolderIcon();
 
-	if (type.equals("up"))
-	    return IconFactory.getUpFolderIcon();
+        if (type.equals("up"))
+            return IconFactory.getUpFolderIcon();
 
-	if (state == null)
-	    return null;
+        if (state == null)
+            return null;
 
-	int s;
-	if (state.equalsIgnoreCase("passed"))
-	    s = IconFactory.PASSED;
-	else if (state.equalsIgnoreCase("failed"))
-	    s = IconFactory.FAILED;
-	else if (state.equalsIgnoreCase("error"))
-	    s = IconFactory.ERROR;
-	else if (state.equalsIgnoreCase("notRun"))
-	    s = IconFactory.NOT_RUN;
-	else 
-	    s = 0; // should have unknown icon?
+        int s;
+        if (state.equalsIgnoreCase("passed"))
+            s = IconFactory.PASSED;
+        else if (state.equalsIgnoreCase("failed"))
+            s = IconFactory.FAILED;
+        else if (state.equalsIgnoreCase("error"))
+            s = IconFactory.ERROR;
+        else if (state.equalsIgnoreCase("notRun"))
+            s = IconFactory.NOT_RUN;
+        else
+            s = 0; // should have unknown icon?
 
-	if (type.equalsIgnoreCase("test"))
-	    return IconFactory.getTestIcon(s, false, true);
-	else if (type.equalsIgnoreCase("testFolder"))
-	    return IconFactory.getTestFolderIcon(s, false, true);
-	else if (type.equalsIgnoreCase("testSection"))
-	    return IconFactory.getTestSectionIcon(s);
-	else
-	    return null;
+        if (type.equalsIgnoreCase("test"))
+            return IconFactory.getTestIcon(s, false, true);
+        else if (type.equalsIgnoreCase("testFolder"))
+            return IconFactory.getTestFolderIcon(s, false, true);
+        else if (type.equalsIgnoreCase("testSection"))
+            return IconFactory.getTestSectionIcon(s);
+        else
+            return null;
     }
 
     /**
@@ -96,7 +96,7 @@ public class IconLabel extends JLabel
      * @see #setType
      */
     public String getType() {
-	return type;
+        return type;
     }
 
     /**
@@ -105,7 +105,7 @@ public class IconLabel extends JLabel
      * @see #getType
      */
     public void setType(String type) {
-	this.type = type;
+        this.type = type;
     }
 
     /**
@@ -114,7 +114,7 @@ public class IconLabel extends JLabel
      * @see #setState
      */
     public String getState() {
-	return state;
+        return state;
     }
 
     /**
@@ -123,7 +123,7 @@ public class IconLabel extends JLabel
      * @see #getState
      */
     public void setState(String state) {
-	this.state = state;
+        this.state = state;
     }
 
     private String type;

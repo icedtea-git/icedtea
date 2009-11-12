@@ -153,7 +153,7 @@ public class ExecTool extends Tool implements ExecModel {
             catch (IOException e) {
                 // ignore?
                 /*
-                uif.showError("exec.cantLoadDefaultConfig", 
+                uif.showError("exec.cantLoadDefaultConfig",
                               new Object[] { latestConfigFile, e });
                 */
             }
@@ -186,7 +186,7 @@ public class ExecTool extends Tool implements ExecModel {
             cm.getFeatureManager().isEnabled(FeatureManager.SINGLE_TEST_MANAGER))
                 TestSuite.close(testSuite.getRoot());
         */
-        
+
         configHandler.dispose();
 
         // ensure no tests running
@@ -520,7 +520,7 @@ public class ExecTool extends Tool implements ExecModel {
 
     public void showTemplateEditor() {
         configHandler.showTemplateEditor();
-    }    
+    }
     /*
 public void showTemplateEditor() {
      if (runTestsWhenDone) {
@@ -644,7 +644,7 @@ public void showTemplateEditor() {
             configHandler.setTemplateName(templatePath.substring(sep < 0 ? 0 : sep + 1));
         }
 
-        configHandler.setCustomRenderersMap(getContextManager().getCustomRenderersMap()); 
+        configHandler.setCustomRenderersMap(getContextManager().getCustomRenderersMap());
 
         initGUI(map);
     }
@@ -667,7 +667,7 @@ public void showTemplateEditor() {
         if (newTestSuite == null && newWorkDir == null)
             throw new IllegalArgumentException();
 
-        // if the new test suite is null, default it to the test suite 
+        // if the new test suite is null, default it to the test suite
         // of the new work directory
         if (newTestSuite == null)
             newTestSuite = newWorkDir.getTestSuite();
@@ -678,7 +678,7 @@ public void showTemplateEditor() {
 
         // assert(workDir == null || workDir == newWorkDir);
         if (workDir != null && workDir != newWorkDir) {
-            // throw new IllegalStateException();            
+            // throw new IllegalStateException();
             manager.showWorkDirectory(newWorkDir);
             return;
         }
@@ -764,7 +764,7 @@ public void showTemplateEditor() {
                                         ((defaultConfigLoadPath.getCanonicalPath())) == 0);
                             } catch (IOException ioe) {
                                 // use logging subsystem instead when available
-                                // Internal error in ExecToolManager: exception thrown: 
+                                // Internal error in ExecToolManager: exception thrown:
                                 uif.showError("exec.internalError", ioe);
                                 return;
                             }
@@ -1379,8 +1379,8 @@ public void showTemplateEditor() {
     private ReportHandler reportHandler;
     private ET_FilterHandler filterHandler;
 
-    private ToolBarManager toolBarManager;          // custom toolbars 
-    private JavaTestMenuManager menuManager;        // custom menus 
+    private ToolBarManager toolBarManager;          // custom toolbars
+    private JavaTestMenuManager menuManager;        // custom menus
 
     private JMenuBar menuBar;
     private JToolBar toolBar;
@@ -1468,4 +1468,3 @@ public void showTemplateEditor() {
         private boolean shownErrorDialog = false;
     }
 }
-

@@ -32,17 +32,17 @@ import java.io.OutputStream;
 
 /**
  * A Connection embodies the communication connection between the main JT Harness
- * test harness and the Javatest agent as used to run a test. It is a bidirectional 
- * pair of byte streams used to communicate requests and results between the main 
+ * test harness and the Javatest agent as used to run a test. It is a bidirectional
+ * pair of byte streams used to communicate requests and results between the main
  * harness and the agent.
  * <p>
  * Connections are created by a {@link ConnectionFactory}.
  */
 public interface Connection
 {
-    /** 
+    /**
      * Get a name for this connection.
-     * @return		A short presentation string identifying this connection.
+     * @return          A short presentation string identifying this connection.
      */
     String getName();
 
@@ -74,10 +74,10 @@ public interface Connection
      * Wait until the connection has been closed from the other end,
      * perhaps in response to an in-band close request written to the
      * output stream.
-     * @param timeout 	A maximum time to wauit for the close. The timeout
-     * 			should be specified in milliseconds.
+     * @param timeout   A maximum time to wauit for the close. The timeout
+     *                  should be specified in milliseconds.
      * @throws InterruptedException if the thread is interrupted while waiting
-     * 			for the connection to be closed.
+     *                  for the connection to be closed.
      */
     void waitUntilClosed(int timeout) throws InterruptedException;
 }

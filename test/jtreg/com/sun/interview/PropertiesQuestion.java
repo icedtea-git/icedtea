@@ -58,21 +58,21 @@ import com.sun.interview.Interview.Fault;
  *
  * The presentation info is store here instead of in a renderer class because
  * multiple clients need to render this question.
- * 
+ *
  * @since 4.0
  */
-public abstract class PropertiesQuestion extends CompositeQuestion 
+public abstract class PropertiesQuestion extends CompositeQuestion
 {
     /**
-     * Create a question with a nominated tag. 
+     * Create a question with a nominated tag.
      * If this constructor is used, the choices must be supplied separately.
      * @param interview The interview containing this question.
      * @param tag A unique tag to identify this specific question.
      */
     protected PropertiesQuestion(Interview interview, String tag) {
-	super(interview, tag);
-	clear();
-	setDefaultValue(value);
+        super(interview, tag);
+        clear();
+        setDefaultValue(value);
     }
 
     /**
@@ -84,10 +84,10 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * @throws NullPointerException if choices is null
      */
     protected PropertiesQuestion(Interview interview, String tag, Properties props) {
-	super(interview, tag);
+        super(interview, tag);
 
-	setProperties(props);
-	setDefaultValue(value);
+        setProperties(props);
+        setDefaultValue(value);
     }
 
     /**
@@ -96,15 +96,15 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * will be looked up by this questions tag, plus each of the key values.
      * @param interview The interview containing this question.
      * @param tag A unique tag to identify this specific question.
-     * @param keys Internal name of the keys 
+     * @param keys Internal name of the keys
      * @throws NullPointerException if choices is null
      */
     protected PropertiesQuestion(Interview interview, String tag, String[] keys) {
-	super(interview, tag);
+        super(interview, tag);
 
-	String blank = "";
-	setKeys(keys, true);
-	setDefaultValue(value);
+        String blank = "";
+        setKeys(keys, true);
+        setDefaultValue(value);
     }
 
     /**
@@ -115,8 +115,8 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * @throws NullPointerException if choices is null
      */
     protected void setProperties(Properties props) {
-	value = ((Properties)props.clone());
-	// clobber display values?
+        value = ((Properties)props.clone());
+        // clobber display values?
     }
 
     /**
@@ -133,31 +133,31 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * @throws NullPointerException if choices is null
      */
     protected void setKeys(String[] keys, boolean localize) {
-	value = new Properties();
-	String blank = "";
+        value = new Properties();
+        String blank = "";
 
-	// populate the properties object
-	for (int i = 0; i < keys.length; i++) {
-	    value.put(keys[i], blank);
-	}
+        // populate the properties object
+        for (int i = 0; i < keys.length; i++) {
+            value.put(keys[i], blank);
+        }
 
-	ResourceBundle b = interview.getResourceBundle();
-	if (!localize || b == null)	// will use literal keys
-	    presentationKeys = null;
-	else {
-	    presentationKeys = new HashMap();
-	    for (int i = 0; i < keys.length; i++) {
-		String c = keys[i];
-		String rn = tag + "." + c;
-		try {
-		    presentationKeys.put(keys[i], (c == null ? null : b.getString(rn)));
-		}
-		catch (MissingResourceException e) {
-		    System.err.println("WARNING: missing resource " + rn);
-		    presentationKeys.put(keys[i], c);
-		}
-	    }	// for
-	}   // else
+        ResourceBundle b = interview.getResourceBundle();
+        if (!localize || b == null)     // will use literal keys
+            presentationKeys = null;
+        else {
+            presentationKeys = new HashMap();
+            for (int i = 0; i < keys.length; i++) {
+                String c = keys[i];
+                String rn = tag + "." + c;
+                try {
+                    presentationKeys.put(keys[i], (c == null ? null : b.getString(rn)));
+                }
+                catch (MissingResourceException e) {
+                    System.err.println("WARNING: missing resource " + rn);
+                    presentationKeys.put(keys[i], c);
+                }
+            }   // for
+        }   // else
     }
 
     /**
@@ -167,10 +167,10 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * @see #setChoices
      */
     public Enumeration getKeys() {
-	if (value != null)
-	    return value.keys();
-	else
-	    return null;
+        if (value != null)
+            return value.keys();
+        else
+            return null;
     }
 
     /**
@@ -180,20 +180,20 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * @see #setDefaultValue
      */
     public Properties getDefaultValue() {
-	return defaultValue;
+        return defaultValue;
     }
 
     /**
-     * Set the default response for this question, 
-     * used by the clear method. 
+     * Set the default response for this question,
+     * used by the clear method.
      * @param v the default response for this question.
      *
      * @see #getDefaultValue
      */
     public void setDefaultValue(Properties props) {
-	defaultValue = props;
+        defaultValue = props;
     }
-    
+
     /**
      * Get the current (default or latest) response to this question.
      * @return The current value - a cloned copy.
@@ -205,43 +205,43 @@ public abstract class PropertiesQuestion extends CompositeQuestion
         if (value == null)
             return null;
 
-	return (Properties)(value.clone());
+        return (Properties)(value.clone());
     }
 
     /**
      * Verify this question is on the current path, and if it is,
      * return the current value.
      * @return the current value of this question
-     * @throws Interview.NotOnPathFault if this question is not on the 
+     * @throws Interview.NotOnPathFault if this question is not on the
      * current path
      * @see #getValue
      */
     public Properties getValueOnPath() throws Interview.NotOnPathFault {
-	interview.verifyPathContains(this);
-	return getValue();
+        interview.verifyPathContains(this);
+        return getValue();
     }
 
     public String getStringValue() {
-	if (value == null)
-	    return "";
+        if (value == null)
+            return "";
 
         // if upgraded, the values should probably be sorted
         // and you may consider removing the custom implemntation
         // of equals()
 
-	StringWriter sw = new StringWriter();
-	if (value != null) {
-	    value.list(new PrintWriter(sw));
-	}
+        StringWriter sw = new StringWriter();
+        if (value != null) {
+            value.list(new PrintWriter(sw));
+        }
 
-	return sw.toString();
+        return sw.toString();
     }
 
     public boolean equals(Object other) {
-        
+
 //        boolean basicEquality = super.equals(other);
-	if ( !(other instanceof PropertiesQuestion))
-	    return false;
+        if ( !(other instanceof PropertiesQuestion))
+            return false;
 
         PropertiesQuestion pq = (PropertiesQuestion)other;
 
@@ -249,7 +249,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
         if(!basicEquality) {
             return false;
         }
-        
+
         if ( pq.value == null && value == null)
             return true;
 
@@ -278,18 +278,18 @@ public abstract class PropertiesQuestion extends CompositeQuestion
     }
 
     /**
-     * Set the current value. 
+     * Set the current value.
      * @param newValue Value represented as a single string.  May not be null.  May be
      *    an empty string.
      * @see #getValue
      */
     public void setValue(String newValue) {
-	if (value == null || value.size() == 0)
-	    return;
+        if (value == null || value.size() == 0)
+            return;
 
-	// parse newValue and inject into properties object
-	if (newValue == null)
-	    throw new NullPointerException();
+        // parse newValue and inject into properties object
+        if (newValue == null)
+            throw new NullPointerException();
 
         setValue(load(newValue));
     }
@@ -308,7 +308,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      */
     public void setValue(String key, String v) throws Interview.Fault {
         if (key == null || v == null)
-	    throw new NullPointerException();
+            throw new NullPointerException();
 
         String check = value.getProperty(key);
         if (check == null)
@@ -329,7 +329,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
     }
 
     public boolean isValueAlwaysValid() {
-	return false;
+        return false;
     }
 
     /**
@@ -337,7 +337,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * back to its initial state.
      */
     public void clear() {
-	setValue(defaultValue);
+        setValue(defaultValue);
     }
 
     /**
@@ -346,10 +346,10 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * @param data The map from which to load the value for this question.
      */
     protected void load(Map data) {
-	Object o = data.get(tag);
-	if (o != null && o instanceof String) {
-	    setValue(load((String)o));
-	}
+        Object o = data.get(tag);
+        if (o != null && o instanceof String) {
+            setValue(load((String)o));
+        }
     }
 
     protected static Properties load(String s) {
@@ -381,14 +381,14 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * @param data The map in which to save the value for this question.
      */
     protected void save(Map data) {
-	if (value == null)
-	    return;
+        if (value == null)
+            return;
 
-	Properties2 p2 = new Properties2();
-	p2.load(value);
-	StringWriter sw = new StringWriter();
-	p2.save(sw, null);
-	data.put(tag, sw.toString());
+        Properties2 p2 = new Properties2();
+        p2.load(value);
+        StringWriter sw = new StringWriter();
+        p2.save(sw, null);
+        data.put(tag, sw.toString());
     }
 
     // extra special features
@@ -444,7 +444,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
             return false;
     }
 
-    /** 
+    /**
      * Get the keys which are currently invalid and blocking the question
      * (getNext() returning null).  It is recommended but not required that
      * this method return null if the question is not blocked (getNext() !=
@@ -469,7 +469,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
                 continue;   // no checks, next key
             }
             else {
-                String reason = rules.isValid(value.getProperty(curr));    
+                String reason = rules.isValid(value.getProperty(curr));
                 if (reason != null) {
                     badKeys.add(curr);
                     reasons.add(reason);
@@ -523,7 +523,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
     public void setValue(Properties props) {
         if (props == null) {
             value = null;
-        } 
+        }
         else {
             value = ((Properties)props.clone());
         }
@@ -543,11 +543,11 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      *     exist.
      */
     public void updateProperties(String[][] props) {
-	if (props == null || props.length == 0)
-	    throw new IllegalArgumentException("Argument is null or zero length.");
+        if (props == null || props.length == 0)
+            throw new IllegalArgumentException("Argument is null or zero length.");
 
-	for (int i = 0; i < props.length; i++) {
-	    updateProperty(props[i][0], props[i][1]);
+        for (int i = 0; i < props.length; i++) {
+            updateProperty(props[i][0], props[i][1]);
         }
     }
 
@@ -558,10 +558,10 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * @throws IllegalArgumentException If the property does not exist.
      */
     public void updateProperty(String key, String val) {
-	if (!value.containsKey(key))
-	    throw new IllegalArgumentException("Key " + key + " does not exist");
+        if (!value.containsKey(key))
+            throw new IllegalArgumentException("Key " + key + " does not exist");
 
-	Object old = value.setProperty(key, val);
+        Object old = value.setProperty(key, val);
         if (!old.equals(val)) {
             interview.updatePath(this);
             interview.setEdited(true);
@@ -575,8 +575,8 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * @throws IllegalStateException If the group requested already exists.
      */
     public void createGroup(String name) {
-	if (keyGroups == null)
-	    keyGroups = new HashMap();
+        if (keyGroups == null)
+            keyGroups = new HashMap();
 
         Object o = keyGroups.get(name);
         if (o != null)
@@ -600,42 +600,42 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * @see #createGroup
      */
     public void setGroup(String group, String key) {
-	if (value == null)
-	    throw new IllegalStateException(
+        if (value == null)
+            throw new IllegalStateException(
                     "Question has no values, cannot group non-existant key");
-	if (!value.containsKey(key))
-	    throw new IllegalArgumentException("Key " + key + " does not exist");
-	if (keyGroups == null)
+        if (!value.containsKey(key))
+            throw new IllegalArgumentException("Key " + key + " does not exist");
+        if (keyGroups == null)
             throw new IllegalArgumentException("No such group: " + group);
 
-	// find existing group or create
-	ArrayList l = ((ArrayList)(keyGroups.get(group)));
-	if (l == null)
+        // find existing group or create
+        ArrayList l = ((ArrayList)(keyGroups.get(group)));
+        if (l == null)
             throw new IllegalArgumentException("No such group: " + group);
 
-	// remove key from all groups
-	Iterator vals = keyGroups.values().iterator();
-	while (vals.hasNext()) {
-	    ArrayList al = ((ArrayList)(vals.next()));
-	    for (int i = 0; i < al.size(); i++)
-		if (al.get(i).equals(key))
-		    al.remove(i);
-	}
+        // remove key from all groups
+        Iterator vals = keyGroups.values().iterator();
+        while (vals.hasNext()) {
+            ArrayList al = ((ArrayList)(vals.next()));
+            for (int i = 0; i < al.size(); i++)
+                if (al.get(i).equals(key))
+                    al.remove(i);
+        }
 
-	// add to group
-	for (int i = 0; i < l.size(); i++) {
-	    if (l.get(i).equals(key))
-		return;	    // already there
-	}
-	l.add(key);
+        // add to group
+        for (int i = 0; i < l.size(); i++) {
+            if (l.get(i).equals(key))
+                return;     // already there
+        }
+        l.add(key);
     }
 
     public void setGroup(String group, String[] keys) {
-	if (keys == null || keys.length == 0)
-	    return;
+        if (keys == null || keys.length == 0)
+            return;
 
-	for (int i = 0; i < keys.length; i++)
-	    setGroup(group, keys[i]);
+        for (int i = 0; i < keys.length; i++)
+            setGroup(group, keys[i]);
     }
 
     /**
@@ -646,33 +646,33 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * @see #setKeyGroup
      */
     public String[] getGroups() {
-	if (keyGroups == null)
-	    return null;
+        if (keyGroups == null)
+            return null;
 
-	ArrayList result = new ArrayList();
-	Set keys = keyGroups.keySet();
-	if (keys != null) {
-	    Iterator it = keys.iterator();
-	    while(it.hasNext()) {
-		Object key = it.next();
-		ArrayList al = ((ArrayList)keyGroups.get(key));
-		if (al == null || al.size() == 0)
-		    continue;	    // empty group
+        ArrayList result = new ArrayList();
+        Set keys = keyGroups.keySet();
+        if (keys != null) {
+            Iterator it = keys.iterator();
+            while(it.hasNext()) {
+                Object key = it.next();
+                ArrayList al = ((ArrayList)keyGroups.get(key));
+                if (al == null || al.size() == 0)
+                    continue;       // empty group
 
-		result.add(key);
-	    }	// while
-	}
+                result.add(key);
+            }   // while
+        }
 
-	if (result.size() == 0)
-	    return null;
-	else {
-	    String[] ret = new String[result.size()];
-	    ret = (String[])(result.toArray(ret));
-	    return ret;
-	}
+        if (result.size() == 0)
+            return null;
+        else {
+            String[] ret = new String[result.size()];
+            ret = (String[])(result.toArray(ret));
+            return ret;
+        }
     }
 
-    /** 
+    /**
      * Get the keys which are registered with the given group.
      @ @param group Group name to query.  Null returns the groupless keys.
      * @return Null if the group is empty or does not exist, else the keys and
@@ -681,29 +681,29 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      * @see #setGroup
      */
     public String[][] getGroup(String group) {
-	if (value == null || value.size() == 0)
-	    return null;
+        if (value == null || value.size() == 0)
+            return null;
 
         if (group == null)
             return getUngrouped();
 
-	ArrayList al = ((ArrayList)keyGroups.get(group));
+        ArrayList al = ((ArrayList)keyGroups.get(group));
 
-	if (al == null || al.size() == 0)
-	    return null;
-	else {
-	    Iterator it = al.iterator();
-	    String[][] data = new String[al.size()][2];
-	    for(int i = 0; it.hasNext(); i++) {
-		data[i][0] = (String)(it.next());
-		data[i][1] = (String)(value.get(data[i][0]));
-	    }	// for
+        if (al == null || al.size() == 0)
+            return null;
+        else {
+            Iterator it = al.iterator();
+            String[][] data = new String[al.size()][2];
+            for(int i = 0; it.hasNext(); i++) {
+                data[i][0] = (String)(it.next());
+                data[i][1] = (String)(value.get(data[i][0]));
+            }   // for
 
-	    return data;
-	}
+            return data;
+        }
     }
 
-    /** 
+    /**
      * @return The keys and values which are not allocated to any group.
      *         Null if there are no ungrouped values.
      * @see #getGroup
@@ -757,7 +757,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
             ret[i][1] = value.getProperty(key);
             i++;
         }   // while
-        
+
         return ret;        // no groups in use
     }
 
@@ -773,27 +773,27 @@ public abstract class PropertiesQuestion extends CompositeQuestion
      *       cannot be found.
      */
     public String getGroupDisplayName(String group) {
-	ResourceBundle b = interview.getResourceBundle();
-	presentationKeys = new HashMap();
-	String rn = tag + "." + group + ".group";
+        ResourceBundle b = interview.getResourceBundle();
+        presentationKeys = new HashMap();
+        String rn = tag + "." + group + ".group";
 
-	try {
-	    return b.getString(rn);
-	}
-	catch (MissingResourceException e) {
-	    System.err.println("WARNING: missing resource " + rn);
-	    return rn;
-	}
+        try {
+            return b.getString(rn);
+        }
+        catch (MissingResourceException e) {
+            System.err.println("WARNING: missing resource " + rn);
+            return rn;
+        }
     }
 
     public String getKeyHeaderName() {
-	// XXX upgrade to be customizable
-	return Interview.i18n.getString("props.key.name");
+        // XXX upgrade to be customizable
+        return Interview.i18n.getString("props.key.name");
     }
 
     public String getValueHeaderName() {
-	// XXX upgrade to be customizable
-	return Interview.i18n.getString("props.value.name");
+        // XXX upgrade to be customizable
+        return Interview.i18n.getString("props.value.name");
     }
 
 
@@ -1011,7 +1011,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
                 return "Not an integer.";   // XXX i18n
             }
         }
-        
+
         /**
          * Is the given value valid for this field?
          * @return Null if the valid is valid, a localized reason string
@@ -1059,7 +1059,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
             setBounds(min, max);
             setSuggestions(suggestions);
         }
-        
+
         /**
          * Set the max/min possible value that should be considered
          * valid.  The range in inclusive.  The defaults are the
@@ -1147,7 +1147,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
                 return "Not an floating point number.";   // XXX i18n
             }
         }
-        
+
         /**
          * Is the given value valid for this field?
          * @return Null if the valid is valid, a localized reason string
@@ -1234,7 +1234,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
             return custom;
         }
 
-        /** 
+        /**
          * Get the nominal maximum length for the string.
          * @return the nominal maximum length for the string.
          *
@@ -1244,7 +1244,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
             return nominalMaxLength;
         }
 
-        /** 
+        /**
          * Set the expected maximum length for the string.
          * @param nominalMaxLength  the nominal maximum length for the string.
          *
@@ -1389,7 +1389,7 @@ public abstract class PropertiesQuestion extends CompositeQuestion
         /**
          * Specify whether all valid responses to this question should be
          * relative to the base directory (i.e. in or under it.)
-         * @param b this parameter should be true if all valid responses 
+         * @param b this parameter should be true if all valid responses
          * to this question should be relative to the base directory
          * @see #setBaseRelativeOnly
          */

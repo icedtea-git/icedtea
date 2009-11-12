@@ -59,20 +59,20 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      * construction code and does not create a usable object.
      */
     protected TRT_Iterator() {
-	outQueue = new LinkedList();
-	resultStats = new int[Status.NUM_STATES];
-	nodeIndex = -1;
-	currFrame = null;
+        outQueue = new LinkedList();
+        resultStats = new int[Status.NUM_STATES];
+        nodeIndex = -1;
+        currFrame = null;
     }
 
     TRT_Iterator(TestResultTable.TreeNode node) {
-	this();
-	nodes = new TestResultTable.TreeNode[1];
-	nodes[0] = node;
-	init(nodes);
+        this();
+        nodes = new TestResultTable.TreeNode[1];
+        nodes[0] = node;
+        init(nodes);
 
-	if (debug)
-	    Debug.println("Created TreeIterator without filters, one initial node.");
+        if (debug)
+            Debug.println("Created TreeIterator without filters, one initial node.");
     }
 
     /**
@@ -81,14 +81,14 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      * @param filters Which filters to apply to the tests found.  May be null.
      */
     TRT_Iterator(TestResultTable.TreeNode node, TestFilter[] filters) {
-	this();
-	this.filters = filters;
-	nodes = new TestResultTable.TreeNode[1];
-	nodes[0] = node;
-	init(nodes);
+        this();
+        this.filters = filters;
+        nodes = new TestResultTable.TreeNode[1];
+        nodes[0] = node;
+        init(nodes);
 
-	if (debug)
-	    Debug.println("Created TreeIterator with filters and one initial node.");
+        if (debug)
+            Debug.println("Created TreeIterator with filters and one initial node.");
     }
 
     /**
@@ -100,18 +100,18 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      * @param filters Which filters to apply to the tests found.  May be null.
      */
     TRT_Iterator(TestResultTable.TreeNode[] nodes, TestFilter[] filters) {
-	this();
-	this.filters = filters;
+        this();
+        this.filters = filters;
 
-	if (nodes != null) {
-	    this.nodes = new TestResultTable.TreeNode[nodes.length];
-	    System.arraycopy(nodes, 0, this.nodes, 0, nodes.length);
-	}
+        if (nodes != null) {
+            this.nodes = new TestResultTable.TreeNode[nodes.length];
+            System.arraycopy(nodes, 0, this.nodes, 0, nodes.length);
+        }
 
-	init(this.nodes);
+        init(this.nodes);
 
-	if (debug)
-	    Debug.println("Created TreeIterator with filters and initial nodes.");
+        if (debug)
+            Debug.println("Created TreeIterator with filters and initial nodes.");
     }
 
     /**
@@ -125,79 +125,79 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      * @param filters Which filters to apply to the tests found.  May be null.
      */
     TRT_Iterator(TestResultTable.TreeNode[] nodes, TestResult[] trs, TestFilter[] filters) {
-	this();
-	this.filters = filters;
+        this();
+        this.filters = filters;
 
-	if (trs != null && trs.length != 0) {
-	    Vector names = new Vector();
+        if (trs != null && trs.length != 0) {
+            Vector names = new Vector();
 
-	    // prime the outqueue with the given tests
-	    for (int i = 0; i < trs.length; i++) {
-		try {
-		    if (wouldAccept(trs[i]) == -1) {
-			outQueue.addLast(trs[i]);
-			names.add(trs[i].getDescription().getRootRelativeURL());
-		    }
-		    else { }
-		}   // try
-		catch (TestResult.Fault f) {
-		}
-	    }	// for
+            // prime the outqueue with the given tests
+            for (int i = 0; i < trs.length; i++) {
+                try {
+                    if (wouldAccept(trs[i]) == -1) {
+                        outQueue.addLast(trs[i]);
+                        names.add(trs[i].getDescription().getRootRelativeURL());
+                    }
+                    else { }
+                }   // try
+                catch (TestResult.Fault f) {
+                }
+            }   // for
 
-	    initialTests = new String[names.size()];
-	    names.copyInto(initialTests);
-	}
+            initialTests = new String[names.size()];
+            names.copyInto(initialTests);
+        }
 
-	if (nodes != null) {
-	    this.nodes = new TestResultTable.TreeNode[nodes.length];
-	    System.arraycopy(nodes, 0, this.nodes, 0, nodes.length);
-	}
+        if (nodes != null) {
+            this.nodes = new TestResultTable.TreeNode[nodes.length];
+            System.arraycopy(nodes, 0, this.nodes, 0, nodes.length);
+        }
 
-	init(this.nodes);
+        init(this.nodes);
 
-	if (debug)
-	    Debug.println("Created TreeIterator with filters, nodes and initial TR set.");
+        if (debug)
+            Debug.println("Created TreeIterator with filters, nodes and initial TR set.");
     }
 
     // --- Enumerator interface  ---
     public boolean hasMoreElements() {
-	if (!finished) {
-	    return true;
-	}
-	else
-	    return false;
+        if (!finished) {
+            return true;
+        }
+        else
+            return false;
     }
 
     public Object nextElement() {
-	TestResult val = null;
+        TestResult val = null;
 
-	if (hasMoreElements()) {
-	    synchronized (outQueueLock) {
-		val = (TestResult)(outQueue.removeFirst());
-	    }	// sync
+        if (hasMoreElements()) {
+            synchronized (outQueueLock) {
+                val = (TestResult)(outQueue.removeFirst());
+            }   // sync
 
-	    findNext();
-	    
-	    // XXX refresh val from TRT? 
-	    // the test in the TRT may have changed since it was selected by
-	    // findNext()
+            findNext();
 
-	    resultStats[val.getStatus().getType()]++;
+            // XXX refresh val from TRT?
+            // the test in the TRT may have changed since it was selected by
+            // findNext()
 
-	    return val;
-	}
-	else {
-	    throw new NoSuchElementException(i18n.getString("trt.noElements"));
-	}
+            resultStats[val.getStatus().getType()]++;
+
+            return val;
+        }
+        else {
+            throw new NoSuchElementException(i18n.getString("trt.noElements"));
+        }
     }
 
     // --- Iterator interface ---
     public boolean hasNext() {
-	return hasMoreElements();
+        return hasMoreElements();
     }
 
     public Object next() {
-	return nextElement();
+        return nextElement();
     }
 
     /**
@@ -206,7 +206,7 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      * @throws UnsupportedOperationException Not available for this iterator.
      */
     public void remove() {
-	throw new UnsupportedOperationException("Cannot remove from TestResultTable thhrough interator.  Do not call this method.");
+        throw new UnsupportedOperationException("Cannot remove from TestResultTable thhrough interator.  Do not call this method.");
     }
 
     // --- Statistics info ---
@@ -216,11 +216,11 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      * instantaneous snapshot.
      */
     public int getProcessedCount() {
-	return absoluteCount;
+        return absoluteCount;
     }
 
     public int getRejectCount() {
-	return rejectCount;
+        return rejectCount;
     }
 
     /**
@@ -230,24 +230,24 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      * @param state True if rejected tests should be logged, false otherwise.
      */
     public void setRecordRejects(boolean state) {
-	recordRejects = state;
+        recordRejects = state;
 
-	if (recordRejects == true) {
-	    // only create new objects if they don't exist
-	    // users can turn on and off this feature if they want
-	    if (filteredTRs == null)
-		filteredTRs = new Hashtable(10);	// not likely to have > 10 filters
+        if (recordRejects == true) {
+            // only create new objects if they don't exist
+            // users can turn on and off this feature if they want
+            if (filteredTRs == null)
+                filteredTRs = new Hashtable(10);        // not likely to have > 10 filters
 
-	    if (fo == null)
-		fo = new FilterObserver();
-	}
+            if (fo == null)
+                fo = new FilterObserver();
+        }
     }
 
     public int[] getResultStats() {
-	int[] copy = new int[resultStats.length];
-	System.arraycopy(resultStats, 0, copy, 0, resultStats.length);
+        int[] copy = new int[resultStats.length];
+        System.arraycopy(resultStats, 0, copy, 0, resultStats.length);
 
-	return copy;
+        return copy;
     }
 
     /**
@@ -265,47 +265,47 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      * @return Array as described or null if no tests have been rejected yet.
      */
     public Hashtable getFilterStats() {
-	if (filteredTRs == null)
-	    return null;
-	else {
-	    // create shallow, reformatted version of stored data
-	    // keys are TRs, values are TestFilters.
-	    Hashtable out = new Hashtable();
+        if (filteredTRs == null)
+            return null;
+        else {
+            // create shallow, reformatted version of stored data
+            // keys are TRs, values are TestFilters.
+            Hashtable out = new Hashtable();
 
-	    synchronized (rejLock) {
-		Enumeration keys = filteredTRs.keys();
-		// each key is a TestFilter
-		while (keys.hasMoreElements()) {
-		    // could cast this to TestFilter, but why?
-		    Object thisKey = keys.nextElement();
+            synchronized (rejLock) {
+                Enumeration keys = filteredTRs.keys();
+                // each key is a TestFilter
+                while (keys.hasMoreElements()) {
+                    // could cast this to TestFilter, but why?
+                    Object thisKey = keys.nextElement();
 
-		    // the HT value is a Vector or TRs
-		    Iterator it = ((Vector)(filteredTRs.get(thisKey))).iterator();
+                    // the HT value is a Vector or TRs
+                    Iterator it = ((Vector)(filteredTRs.get(thisKey))).iterator();
 
-		    while (it.hasNext()) {
-			out.put(it.next(), thisKey);
-		    }	// inner while
-		}   // outer while
-	    }	// sync
+                    while (it.hasNext()) {
+                        out.put(it.next(), thisKey);
+                    }   // inner while
+                }   // outer while
+            }   // sync
 
-	    return out;
-	}
+            return out;
+        }
     }
 
-    /** 
+    /**
      * Find out what the effective filters are.
      *
      * @return Null if there are no active filters.
      */
     public TestFilter[] getFilters() {
-	if (filters == null || filters.length == 0)
-	    return null;
-	else {
-	    // shallow copy it
-	    TestFilter[] copy = new TestFilter[filters.length];
-	    System.arraycopy(filters, 0, copy, 0, filters.length);
-	    return copy;
-	}
+        if (filters == null || filters.length == 0)
+            return null;
+        else {
+            // shallow copy it
+            TestFilter[] copy = new TestFilter[filters.length];
+            System.arraycopy(filters, 0, copy, 0, filters.length);
+            return copy;
+        }
 
     }
 
@@ -323,230 +323,230 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      *         URLs otherwise.
      */
     public String[] getInitialURLs() {
-	String[] list = null;
-	Vector urls = new Vector();
+        String[] list = null;
+        Vector urls = new Vector();
 
-	// can we correctly show the effective urls from here?  what about TCs?
-	if (nodes != null) {
-	    for (int i = 0; i < nodes.length; i++)
-		urls.addElement(TestResultTable.getRootRelativePath(nodes[i]));
-	}
+        // can we correctly show the effective urls from here?  what about TCs?
+        if (nodes != null) {
+            for (int i = 0; i < nodes.length; i++)
+                urls.addElement(TestResultTable.getRootRelativePath(nodes[i]));
+        }
 
-	if (initialTests != null) {
-	    for (int i = 0; i < initialTests.length; i++)
-		urls.add(initialTests[i]);
-	}
+        if (initialTests != null) {
+            for (int i = 0; i < initialTests.length; i++)
+                urls.add(initialTests[i]);
+        }
 
-	if (urls.size() > 0) {
-	    list = new String[urls.size()];
-	    urls.copyInto(list);
-	}
+        if (urls.size() > 0) {
+            list = new String[urls.size()];
+            urls.copyInto(list);
+        }
 
-	return list;
+        return list;
     }
 
     public Object peek() {
-	if (hasNext())
-	    synchronized (outQueueLock) {
-		return outQueue.getFirst();
-	    }	// sync
-	else
-	    return null;
+        if (hasNext())
+            synchronized (outQueueLock) {
+                return outQueue.getFirst();
+            }   // sync
+        else
+            return null;
     }
 
     public boolean isPending(TestResult node) {
-	if (!hasMoreElements())
-	    return false;
+        if (!hasMoreElements())
+            return false;
 
-	String testName = node.getTestName();
-	String partial = testName;
+        String testName = node.getTestName();
+        String partial = testName;
 
-	synchronized (outQueueLock) {
-	    // compare to outgoing test result objects
-	    if (outQueue.size() > 0)
-		for (int i = 0; i < outQueue.size(); i++) {
-		    TestResult tr = (TestResult)(outQueue.get(i));
-		    if (tr.getTestName().equals(testName)) {
-			return true;
-		    }
-		}   // for
-	}	// sync
+        synchronized (outQueueLock) {
+            // compare to outgoing test result objects
+            if (outQueue.size() > 0)
+                for (int i = 0; i < outQueue.size(); i++) {
+                    TestResult tr = (TestResult)(outQueue.get(i));
+                    if (tr.getTestName().equals(testName)) {
+                        return true;
+                    }
+                }   // for
+        }       // sync
 
-	boolean result = false;
-	boolean done = false;
-	if (nodes != null) {
-	    for (int i = nodeIndex; i < nodes.length; i++) {
-		String nodePath = TestResultTable.getRootRelativePath(nodes[i]);
+        boolean result = false;
+        boolean done = false;
+        if (nodes != null) {
+            for (int i = nodeIndex; i < nodes.length; i++) {
+                String nodePath = TestResultTable.getRootRelativePath(nodes[i]);
 
-		if (testName.startsWith(nodePath)) {
-		    if (i > nodeIndex) {    // haven't processed that init. node yet
-			result = true;
-			done = true;
-			break;
-		    }
-		    else if (i < nodeIndex) { // passed this location already
-			result = false;
-			done = true;
-			break;
-		    }
-		    else {		    // working at this location
-			// if this is a root iterator, we always end up in this
-			// case
+                if (testName.startsWith(nodePath)) {
+                    if (i > nodeIndex) {    // haven't processed that init. node yet
+                        result = true;
+                        done = true;
+                        break;
+                    }
+                    else if (i < nodeIndex) { // passed this location already
+                        result = false;
+                        done = true;
+                        break;
+                    }
+                    else {                  // working at this location
+                        // if this is a root iterator, we always end up in this
+                        // case
 
-			// remove the "known" part of the location
-			// if we are at node lang/foo, the test name
-			// lang/foo/bar/baz.html becomes bar/baz.html and
-			// we continue...
-			if (nodePath.length() != 0)	// root nodePath is ""
-			    partial = testName.substring(nodePath.length()+1);
+                        // remove the "known" part of the location
+                        // if we are at node lang/foo, the test name
+                        // lang/foo/bar/baz.html becomes bar/baz.html and
+                        // we continue...
+                        if (nodePath.length() != 0)     // root nodePath is ""
+                            partial = testName.substring(nodePath.length()+1);
 
-			// traverse the stack
-			// XXX this could be made more efficienet
-			for (int j = 0; j < stack.size(); j++) {
-			    String dir = TestResultTable.getDirName(partial);
-			    partial = TestResultTable.behead(partial);
+                        // traverse the stack
+                        // XXX this could be made more efficienet
+                        for (int j = 0; j < stack.size(); j++) {
+                            String dir = TestResultTable.getDirName(partial);
+                            partial = TestResultTable.behead(partial);
 
-			    // XXX special cases here...
+                            // XXX special cases here...
 
-			    // it would be nicer if we could just cast to TRT.TreeNode
-			    PseudoFrame frame = (PseudoFrame)(stack.elementAt(j));
-			    TRT_TreeNode tn = (TRT_TreeNode)(frame.getNode());
-			    int pos = tn.getNodeIndex(dir, false);
-			    int currIndex = frame.getCurrentIndex();
+                            // it would be nicer if we could just cast to TRT.TreeNode
+                            PseudoFrame frame = (PseudoFrame)(stack.elementAt(j));
+                            TRT_TreeNode tn = (TRT_TreeNode)(frame.getNode());
+                            int pos = tn.getNodeIndex(dir, false);
+                            int currIndex = frame.getCurrentIndex();
 
-			    // special case where test is at top of testsuite
-			    if (testName.indexOf("/") == -1)
-				pos = currIndex;
+                            // special case where test is at top of testsuite
+                            if (testName.indexOf("/") == -1)
+                                pos = currIndex;
 
-			    // possible outcomes:
-			    // 1 test in question can not be found
-			    // 2 test path indicates that we've passed it's position
-			    // 3 we are working along the test's path
-			    // 4 the test's path is ahead of our position
+                            // possible outcomes:
+                            // 1 test in question can not be found
+                            // 2 test path indicates that we've passed it's position
+                            // 3 we are working along the test's path
+                            // 4 the test's path is ahead of our position
 
-			    // not present or already past
-			    if (pos == -1 || (pos < currIndex)) {   // case 1-2
-				result = false;
-				done = true;
-				break;
-			    }
-			    else if (pos == frame.getCurrentIndex()) { // case 3
-				if (partial.indexOf('/') != -1) {
-				    // more depth needed, go around again
-				    continue;
-				}
-				else if (j+1 == stack.size()) {	    // test should be in currFrame
-				    done = false;   // jump out to special case
-				    break;
-				}
-				else {				    // test should be in this frame
-				    switch (checkTestPosition(frame, testName)) {
-				    case -1:
-				    case 0 :
-					result = false;
-					done = true;
-					break;
-				    case 2 :
-					result = true;
-					done = true;
-					break;
-				    case 1 :
-				    default:
-					throw new IllegalStateException();
-				    }	// switch
+                            // not present or already past
+                            if (pos == -1 || (pos < currIndex)) {   // case 1-2
+                                result = false;
+                                done = true;
+                                break;
+                            }
+                            else if (pos == frame.getCurrentIndex()) { // case 3
+                                if (partial.indexOf('/') != -1) {
+                                    // more depth needed, go around again
+                                    continue;
+                                }
+                                else if (j+1 == stack.size()) {     // test should be in currFrame
+                                    done = false;   // jump out to special case
+                                    break;
+                                }
+                                else {                              // test should be in this frame
+                                    switch (checkTestPosition(frame, testName)) {
+                                    case -1:
+                                    case 0 :
+                                        result = false;
+                                        done = true;
+                                        break;
+                                    case 2 :
+                                        result = true;
+                                        done = true;
+                                        break;
+                                    case 1 :
+                                    default:
+                                        throw new IllegalStateException();
+                                    }   // switch
 
-				    break;
-				}
-			    }
-			    else {				    // case 4
-				result = true;
-				done = true;
-				break;
-			    }
-			}   // inner for 
+                                    break;
+                                }
+                            }
+                            else {                                  // case 4
+                                result = true;
+                                done = true;
+                                break;
+                            }
+                        }   // inner for
 
-			// assertions:
-			// the only ways out of the loop above
-			// - determined answer that this method is answering
-			//   in which case done == true
-			// - loop exhaused the stack and done == false
+                        // assertions:
+                        // the only ways out of the loop above
+                        // - determined answer that this method is answering
+                        //   in which case done == true
+                        // - loop exhaused the stack and done == false
 
-			// need to check exact iterator location
-			    // chop at depth of incoming node
-			    // chop stack size
-			    // search for first path comp. in currFrame
-			    // match node name, compare to location
-		    }
-		}
-	    }	// outer for
+                        // need to check exact iterator location
+                            // chop at depth of incoming node
+                            // chop stack size
+                            // search for first path comp. in currFrame
+                            // match node name, compare to location
+                    }
+                }
+            }   // outer for
 
-	    // special case to check currFrame which is never
-	    // represented on the stack
-	    if (!done) {
-		TRT_TreeNode tn = (TRT_TreeNode)(currFrame.getNode());
-		String dir = TestResultTable.getDirName(partial);
-		partial = TestResultTable.behead(partial);
+            // special case to check currFrame which is never
+            // represented on the stack
+            if (!done) {
+                TRT_TreeNode tn = (TRT_TreeNode)(currFrame.getNode());
+                String dir = TestResultTable.getDirName(partial);
+                partial = TestResultTable.behead(partial);
 
-		if (partial.indexOf("/") == -1) {
-		    switch (checkTestPosition(currFrame, testName)) {
-		    case -1:
-		    case 0 :
-			result = false;
-			break;
-		    case 2 :
-			result = true;
-			break;
-		    case 1 :
-		    default:
-			throw new IllegalStateException();
-		    }	// switch
-		}
-		else if (!dir.equals(currFrame.getNode().getName())) {
-		    result = false;	    // can't find location 
-		    // test is *below* this node
-		    dir = TestResultTable.getDirName(partial);
-		    tn = (TRT_TreeNode)(currFrame.getNode());
-		    int pos = tn.getNodeIndex(dir, false);
-		    int currIndex = currFrame.getCurrentIndex();
+                if (partial.indexOf("/") == -1) {
+                    switch (checkTestPosition(currFrame, testName)) {
+                    case -1:
+                    case 0 :
+                        result = false;
+                        break;
+                    case 2 :
+                        result = true;
+                        break;
+                    case 1 :
+                    default:
+                        throw new IllegalStateException();
+                    }   // switch
+                }
+                else if (!dir.equals(currFrame.getNode().getName())) {
+                    result = false;         // can't find location
+                    // test is *below* this node
+                    dir = TestResultTable.getDirName(partial);
+                    tn = (TRT_TreeNode)(currFrame.getNode());
+                    int pos = tn.getNodeIndex(dir, false);
+                    int currIndex = currFrame.getCurrentIndex();
 
-		    // possible outcomes:
-		    // 1 test in question can not be found
-		    // 2 test path indicates that we've passed it's position
-		    // 3 we are working along the test's path
-		    // 4 the test's path is ahead of our position
+                    // possible outcomes:
+                    // 1 test in question can not be found
+                    // 2 test path indicates that we've passed it's position
+                    // 3 we are working along the test's path
+                    // 4 the test's path is ahead of our position
 
-		    if (pos == -1) {			    // case 1
-			result = false;
-		    }
-		    else if (pos < currIndex) {		    // case 2
-			result = false;
-		    }
-		    else if (pos == currIndex) {	    // case 3
-			// not possible?
-			throw new IllegalStateException("");
-		    }
-		    else {					    // case 4
-			result = true;
-		    }
-		}
-		else {
-		    int pos = tn.getTestIndex(testName);
-		    if (pos == -1) {	    // not found
-			result = false;
-		    }
+                    if (pos == -1) {                        // case 1
+                        result = false;
+                    }
+                    else if (pos < currIndex) {             // case 2
+                        result = false;
+                    }
+                    else if (pos == currIndex) {            // case 3
+                        // not possible?
+                        throw new IllegalStateException("");
+                    }
+                    else {                                          // case 4
+                        result = true;
+                    }
+                }
+                else {
+                    int pos = tn.getTestIndex(testName);
+                    if (pos == -1) {        // not found
+                        result = false;
+                    }
 
-		    if (pos > currFrame.getCurrentIndex()) {
-			result = true;
-		    }
-		    else {
-			result = false;
-		    }
-		}
-	    }   // if !done
+                    if (pos > currFrame.getCurrentIndex()) {
+                        result = true;
+                    }
+                    else {
+                        result = false;
+                    }
+                }
+            }   // if !done
 
-	}   // outer if
+        }   // outer if
 
-	return result;
+        return result;
     }
 
     // ------------------ TreeIterator Private --------------------
@@ -558,18 +558,18 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      * @param nodes May be null or zero length.
      */
     private void init(TestResultTable.TreeNode[] nodes) {
-	if (nodes != null && nodes.length == 0)
-	    this.nodes = null;
-	else
-	    this.nodes = nodes;
+        if (nodes != null && nodes.length == 0)
+            this.nodes = null;
+        else
+            this.nodes = nodes;
 
-	boolean hasNodes = nextNode();
+        boolean hasNodes = nextNode();
 
-	if (hasNodes)
-	    findNext();
-	else if (outQueue.size() == 0)
-	    finished = true;
-	// else outQueue.length != 0, so we continue
+        if (hasNodes)
+            findNext();
+        else if (outQueue.size() == 0)
+            finished = true;
+        // else outQueue.length != 0, so we continue
     }
 
     /**
@@ -579,98 +579,98 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      *         path is requested.
      */
     private synchronized void findNext() {
-	boolean done = false;
+        boolean done = false;
 
-	if (finished == true)
-	    return;
+        if (finished == true)
+            return;
 
-	while (!done) {
-	    // init(),nextFrame() will set currFrame if there are any nodes to
-	    // process.  If this is null, our work is done.
-	    if (currFrame == null) {
-		synchronized (outQueueLock) {
-		    if (outQueue.size() == 0)
-			finished = true;
-		}   // sync
-		return;
-	    }
+        while (!done) {
+            // init(),nextFrame() will set currFrame if there are any nodes to
+            // process.  If this is null, our work is done.
+            if (currFrame == null) {
+                synchronized (outQueueLock) {
+                    if (outQueue.size() == 0)
+                        finished = true;
+                }   // sync
+                return;
+            }
 
-	    // get data from current node
-	    int nextIndex = currFrame.nextIndex();
-	    if (nextIndex == -1) {	    // done with this node
-		nextFrame();
-		continue;
-	    }
-	    else {			    // keep going
-		Object anonNode = currFrame.getNode().getChild(nextIndex);
-		if (anonNode == null) {	    // error condition really
-		    nextFrame();
-		    continue;		    // attempt to recover by skipping
-		}
+            // get data from current node
+            int nextIndex = currFrame.nextIndex();
+            if (nextIndex == -1) {          // done with this node
+                nextFrame();
+                continue;
+            }
+            else {                          // keep going
+                Object anonNode = currFrame.getNode().getChild(nextIndex);
+                if (anonNode == null) {     // error condition really
+                    nextFrame();
+                    continue;               // attempt to recover by skipping
+                }
 
-		if (anonNode instanceof TestResultTable.TreeNode) {
-		    // need to recurse into this node
-		    // setup stack frames and recurse
-		    TestResultTable.TreeNode node = (TestResultTable.TreeNode)anonNode;
-		    push(currFrame);
-		    currFrame = new PseudoFrame(node);
-		    continue;		    // recurse
-		}
-		else {
-		    // we can assume that the node is a test since it is not
-		    // null and not a node
-		    TestResult test = (TestResult)anonNode;
+                if (anonNode instanceof TestResultTable.TreeNode) {
+                    // need to recurse into this node
+                    // setup stack frames and recurse
+                    TestResultTable.TreeNode node = (TestResultTable.TreeNode)anonNode;
+                    push(currFrame);
+                    currFrame = new PseudoFrame(node);
+                    continue;               // recurse
+                }
+                else {
+                    // we can assume that the node is a test since it is not
+                    // null and not a node
+                    TestResult test = (TestResult)anonNode;
 
-		    // check the filters
-		    try {
-			int would = wouldAccept(test);
+                    // check the filters
+                    try {
+                        int would = wouldAccept(test);
 
-			if (would >= 0) {		// rejected
-			    continue;		// recurse
-			}
-		    }
-		    catch (TestResult.Fault f) {
+                        if (would >= 0) {               // rejected
+                            continue;           // recurse
+                        }
+                    }
+                    catch (TestResult.Fault f) {
 
-			TestResultTable trt = null;
-			// need handle onto TRT to reset
-			// could use TR.getParent(), but it's
-			// probably better not to trust it
-			if (nodes != null && nodes[0] != null)
-			    trt = nodes[0].getEnclosingTable();
-			else if (test.getParent() != null) {
-			    trt = test.getParent().getEnclosingTable();
-			}
-			else
-			    continue;
+                        TestResultTable trt = null;
+                        // need handle onto TRT to reset
+                        // could use TR.getParent(), but it's
+                        // probably better not to trust it
+                        if (nodes != null && nodes[0] != null)
+                            trt = nodes[0].getEnclosingTable();
+                        else if (test.getParent() != null) {
+                            trt = test.getParent().getEnclosingTable();
+                        }
+                        else
+                            continue;
 
-			if (trt == null)
-			    continue;
-			else {
-			    test = trt.resetTest(test);
-			    // nowr retry once
-			    try {
-				if (wouldAccept(test) >= 0)
-				    continue;	// rejected
-			    }
-			    catch (TestResult.Fault f2) {
-				if (debug)
-				    f2.printStackTrace(Debug.getWriter());
-				// give up
-				continue;
-			    }
-			}
-		    }
+                        if (trt == null)
+                            continue;
+                        else {
+                            test = trt.resetTest(test);
+                            // nowr retry once
+                            try {
+                                if (wouldAccept(test) >= 0)
+                                    continue;   // rejected
+                            }
+                            catch (TestResult.Fault f2) {
+                                if (debug)
+                                    f2.printStackTrace(Debug.getWriter());
+                                // give up
+                                continue;
+                            }
+                        }
+                    }
 
-		    // not filtered out
-		    // put this test into the output queue
-		    synchronized (outQueueLock) {
-			outQueue.addLast(test);
-		    }	// sync
+                    // not filtered out
+                    // put this test into the output queue
+                    synchronized (outQueueLock) {
+                        outQueue.addLast(test);
+                    }   // sync
 
-		    done = true;
-		}
-	    }
-	}   // while
+                    done = true;
+                }
+            }
+        }   // while
     }
 
     /**
@@ -679,10 +679,10 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      * root node?
      */
     private boolean isTop(TestResultTable.TreeNode where) {
-	if (where.isRoot() || nodes[nodeIndex] == where)
-	    return true;
-	else
-	    return false;
+        if (where.isRoot() || nodes[nodeIndex] == where)
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -694,70 +694,70 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      *         otherwise.
      */
     private boolean nextNode() {
-	// stacks only valid in the context of a single node
-	// we create a new one when we move to a new initial node
-	stack = new Stack();
+        // stacks only valid in the context of a single node
+        // we create a new one when we move to a new initial node
+        stack = new Stack();
 
-	// invalidate the current frame
-	// NOTE: a null currFrame will terminate the iteration in findNext()
-	currFrame = null;
+        // invalidate the current frame
+        // NOTE: a null currFrame will terminate the iteration in findNext()
+        currFrame = null;
 
-	if (nodes != null && ++nodeIndex < nodes.length) {
-	    // more on to the next node
-	    TestResultTable.TreeNode next = nodes[nodeIndex];
-	    currFrame = new PseudoFrame(next);
+        if (nodes != null && ++nodeIndex < nodes.length) {
+            // more on to the next node
+            TestResultTable.TreeNode next = nodes[nodeIndex];
+            currFrame = new PseudoFrame(next);
 
-	    return true;
-	}
-	else {
-	    // no more nodes
-	    return false;
-	}
+            return true;
+        }
+        else {
+            // no more nodes
+            return false;
+        }
     }
 
-    /** 
+    /**
      * Move down one level in the tree.
      * The path basically operates like a program stack and remembers what we
      * were doing at each level so we can continue when we get back there.
     private void push(TestResultTable.TreeNode newLocation) {
-	// increase available recording depth
-	if (pathIdx + 1 == path.length) {
-	    // need more array space
-	    int[] temp = new int[path.length+1];
-	    System.arraycopy(path, 0, temp, 0, path.length);
-	    path = temp;
-	}
+        // increase available recording depth
+        if (pathIdx + 1 == path.length) {
+            // need more array space
+            int[] temp = new int[path.length+1];
+            System.arraycopy(path, 0, temp, 0, path.length);
+            path = temp;
+        }
 
-	pathIdx++;
-	path[pathIdx] = -1;
-	location = (TestResultTable.TreeNode)newLocation;
+        pathIdx++;
+        path[pathIdx] = -1;
+        location = (TestResultTable.TreeNode)newLocation;
     }
      */
 
     private void push(PseudoFrame frame) {
-	stack.push(frame);
+        stack.push(frame);
     }
 
     /**
      * @return The next frame on the stack.  Null if stack is empty.
      */
     private PseudoFrame pop() {
-	if (!stack.empty())
-	    return (PseudoFrame)(stack.pop());
-	else
-	    return null;
+        if (!stack.empty())
+            return (PseudoFrame)(stack.pop());
+        else
+            return null;
     }
 
     /**
      * Get the next frame off the stack or goto the next node in the input queue.
      */
     private void nextFrame() {
-	currFrame = pop();
+        currFrame = pop();
 
-	// if we reach the bottom of the stack, we need a new node
-	// it will set currFrame for us
-	if (currFrame == null)
-	    nextNode();
+        // if we reach the bottom of the stack, we need a new node
+        // it will set currFrame for us
+        if (currFrame == null)
+            nextNode();
     }
 
     /**
@@ -769,77 +769,77 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      *         probably a reload fault.
      */
     private int wouldAccept(TestResult tr) throws TestResult.Fault {
-	if (filters == null || filters.length == 0)
-	    return -1;
+        if (filters == null || filters.length == 0)
+            return -1;
 
-	if (debug)
-	    Debug.println("Iterator checking filter for: " + tr.getWorkRelativePath());
+        if (debug)
+            Debug.println("Iterator checking filter for: " + tr.getWorkRelativePath());
 
-	absoluteCount++;
-	currentResult = tr;
+        absoluteCount++;
+        currentResult = tr;
 
-	for (int i = 0; i < filters.length; i++) {
-	    boolean accepted = true;
-	    try {
-		if (fo == null)
-		    accepted = filters[i].accepts(tr.getDescription());
-		else
-		    accepted = filters[i].accepts(tr.getDescription(), fo);
-	    }
-	    catch (TestFilter.Fault f) {
-		accepted = true;
-		if (debug)
-		    Debug.println("   -> exception while checking filter: " + f.getMessage());
-	    }	// catch
+        for (int i = 0; i < filters.length; i++) {
+            boolean accepted = true;
+            try {
+                if (fo == null)
+                    accepted = filters[i].accepts(tr.getDescription());
+                else
+                    accepted = filters[i].accepts(tr.getDescription(), fo);
+            }
+            catch (TestFilter.Fault f) {
+                accepted = true;
+                if (debug)
+                    Debug.println("   -> exception while checking filter: " + f.getMessage());
+            }   // catch
 
-	    if (!accepted) {
-		if (debug) {
-		    Debug.println("   -> Rejected by: " + filters[i]);
-		    Debug.println("   -> Test Status: " + tr.getStatus().getType());
-		}
+            if (!accepted) {
+                if (debug) {
+                    Debug.println("   -> Rejected by: " + filters[i]);
+                    Debug.println("   -> Test Status: " + tr.getStatus().getType());
+                }
 
-		rejectCount++;
-		// rejected
-		return i;
-	    }
-	}   // for
+                rejectCount++;
+                // rejected
+                return i;
+            }
+        }   // for
 
-	// accepted
-	return -1;
+        // accepted
+        return -1;
     }
 
     /**
      * @return -1==not found, 0==before, 1==current pos., 2==after, 3==error
      */
     private static int checkTestPosition(PseudoFrame frame, String testName) {
-	// need to determine if it is before or after the
-	// current iterator position
-	TRT_TreeNode tn = (TRT_TreeNode)(frame.getNode());
-	int targetIndex = tn.getTestIndex(testName);
-	int currIndex = frame.getCurrentIndex();
-	int result = 3;
+        // need to determine if it is before or after the
+        // current iterator position
+        TRT_TreeNode tn = (TRT_TreeNode)(frame.getNode());
+        int targetIndex = tn.getTestIndex(testName);
+        int currIndex = frame.getCurrentIndex();
+        int result = 3;
 
-	if (targetIndex == -1)
-	    result = -1;
-	else if (targetIndex < currIndex)
-	    result = 0;
-	else if (targetIndex == currIndex)
-	    result = 1;
-	else if (targetIndex > currIndex)
-	    result = 2;
-	else
-	    result = 3;
+        if (targetIndex == -1)
+            result = -1;
+        else if (targetIndex < currIndex)
+            result = 0;
+        else if (targetIndex == currIndex)
+            result = 1;
+        else if (targetIndex > currIndex)
+            result = 2;
+        else
+            result = 3;
 
-	return result;
+        return result;
     }
 
     /**
     private TestResultTable.TreeNode traverseToNode(TestResultTable.TreeNode start, String path) {
-	String curr;
-	TestResultTable.TreeNode pos;
+        String curr;
+        TestResultTable.TreeNode pos;
 
-	while (path != null) {
-	}   // while
+        while (path != null) {
+        }   // while
     }
     */
 
@@ -858,20 +858,20 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
     private LinkedList outQueue;  // queue of tests to be given out
 
     private TestResultTable.TreeNode[] nodes;       // which nodes we are enumerating
-    private int nodeIndex;			    // which node are we working on
+    private int nodeIndex;                          // which node are we working on
 
     private TestFilter[] filters;
-    private int[] resultStats;		// pass/fail/error statistics
-    private int absoluteCount;		// how many tests were processed
+    private int[] resultStats;          // pass/fail/error statistics
+    private int absoluteCount;          // how many tests were processed
 
 
     // filter rejection info
     private int rejectCount;
-    private boolean recordRejects;	// true when we are collecting reject stats
-    private Hashtable filteredTRs;	// key==TestFilter  value=Vector of TestResults
-    private TestResult currentResult;	// necessary communicate with filter observer, yuck
+    private boolean recordRejects;      // true when we are collecting reject stats
+    private Hashtable filteredTRs;      // key==TestFilter  value=Vector of TestResults
+    private TestResult currentResult;   // necessary communicate with filter observer, yuck
     private Object rejLock;
-    private FilterObserver fo;		// null if feature is disabled
+    private FilterObserver fo;          // null if feature is disabled
 
     // ------ state information ------
     private Stack stack;
@@ -887,68 +887,67 @@ class TRT_Iterator implements TestResultTable.TreeIterator {
      * persistent stack frame which will store state as we traverse the tree.
      */
     private static class PseudoFrame {
-	/**
-	 * @param node The tree node which this frame is responsible for.
-	 */
-	PseudoFrame(TestResultTable.TreeNode node) {
-	    this.node = node;
-	    this.currIndex = -1;
-	}
+        /**
+         * @param node The tree node which this frame is responsible for.
+         */
+        PseudoFrame(TestResultTable.TreeNode node) {
+            this.node = node;
+            this.currIndex = -1;
+        }
 
-	/**
-	 * Next index in this node to process.
-	 *
-	 * @return -1 if work in this node is complete
-	 */
-	int nextIndex() {
-	    if (++currIndex < node.getChildCount())
-		return currIndex;
-	    else
-		return -1;
-	}
+        /**
+         * Next index in this node to process.
+         *
+         * @return -1 if work in this node is complete
+         */
+        int nextIndex() {
+            if (++currIndex < node.getChildCount())
+                return currIndex;
+            else
+                return -1;
+        }
 
-	/**
-	 * What node does this frame track?
-	 */
-	TestResultTable.TreeNode getNode() {
-	    return node;
-	}
+        /**
+         * What node does this frame track?
+         */
+        TestResultTable.TreeNode getNode() {
+            return node;
+        }
 
-	/**
-	 * What was the last index returned.
-	 * @return A value greater than zero, unless the node has been
-	 *         exhausted, in which case -1.
-	 */
-	int getCurrentIndex() {
-	    return currIndex;
-	}
+        /**
+         * What was the last index returned.
+         * @return A value greater than zero, unless the node has been
+         *         exhausted, in which case -1.
+         */
+        int getCurrentIndex() {
+            return currIndex;
+        }
 
-	private int currIndex;
-	private TestResultTable.TreeNode node;
+        private int currIndex;
+        private TestResultTable.TreeNode node;
     }
 
     private class FilterObserver implements TestFilter.Observer {
-	public void rejected(TestDescription d, TestFilter rejector) {
-	    synchronized (rejLock) {
-		Vector vec = (Vector)(filteredTRs.get(rejector));
-		if (vec == null) {
-		    vec = new Vector();
-		    filteredTRs.put(rejector, vec);
-		}
+        public void rejected(TestDescription d, TestFilter rejector) {
+            synchronized (rejLock) {
+                Vector vec = (Vector)(filteredTRs.get(rejector));
+                if (vec == null) {
+                    vec = new Vector();
+                    filteredTRs.put(rejector, vec);
+                }
 
-		// remove later...
-		try {
-		    if (currentResult.getDescription() != d)
-			throw new JavaTestError("TRT_Iterator observered TR.TD does not match filtered one.");
-		}
-		catch (TestResult.Fault f) {
-		    throw new JavaTestError("TRT_Iterator cannot determine TR source info.", f);
-		}   // sanity check
+                // remove later...
+                try {
+                    if (currentResult.getDescription() != d)
+                        throw new JavaTestError("TRT_Iterator observered TR.TD does not match filtered one.");
+                }
+                catch (TestResult.Fault f) {
+                    throw new JavaTestError("TRT_Iterator cannot determine TR source info.", f);
+                }   // sanity check
 
-		vec.add(currentResult);
+                vec.add(currentResult);
 
-	    }	// sync
-	}
+            }   // sync
+        }
     }
-}	// TRT_Iterator
-
+}       // TRT_Iterator

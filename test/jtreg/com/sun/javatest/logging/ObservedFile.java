@@ -40,26 +40,26 @@ public class ObservedFile extends File {
         recordInexName = name + ".rec.index";
         loggersInexName = name + ".log.index";
     }
-    
+
     synchronized public void addFileListener(FileListener listener) {
         list.add(FileListener.class, listener );
     }
-    
+
     synchronized private FileListener[] getFileListeners() {
         return list.getListeners(FileListener.class);
     }
-    
+
     synchronized public void removeFileListener(FileListener listener) {
         list.remove(FileListener.class, listener);
     }
-    
+
     synchronized void fireFileEvent(FileEvent fileEvent) {
         FileListener[] fl = getFileListeners();
         for (FileListener aFl : fl) {
             aFl.fileModified(fileEvent);
         }
     }
-    
+
     synchronized public boolean backup() {
         File to = new File(getAbsolutePath()+"~");
         File toRecInd = new File(getRecordInexName()+"~");
@@ -78,23 +78,23 @@ public class ObservedFile extends File {
 
         return retval;
     }
-    
+
     private String getRecordInexName() {
         return recordInexName;
     }
-    
+
     private String getLoggersInexName() {
         return loggersInexName;
     }
-    
+
     File getRecordInexFile() {
         return new File(recordInexName);
     }
-    
+
     File getLoggersInexFile() {
         return new File(loggersInexName);
     }
-    
+
     synchronized void addToIndex(LogRecord record, long startOff, long endOff, String logName) {
         if (debug) System.out.println("OF - added record");
         int logNum = -1;
@@ -117,7 +117,7 @@ public class ObservedFile extends File {
                 logs.writeUTF(logName);
             }
             logs.close();
-            
+
             // recored index
             recs = new RandomAccessFile(getRecordInexFile(), "rw");
             recs.seek(recs.length());
@@ -138,7 +138,7 @@ public class ObservedFile extends File {
             }
         }
     }
-    
+
     synchronized void readLoggers(ArrayList<String> loggers) {
         String line = "";
         try {
@@ -152,7 +152,7 @@ public class ObservedFile extends File {
             // it's ok
         }
     }
-    
+
     synchronized void readRecords(ArrayList<LogModel.LiteLogRecord> records) {
         try {
             RandomAccessFile recs = new RandomAccessFile(getRecordInexFile(), "r");
@@ -163,32 +163,31 @@ public class ObservedFile extends File {
                 r.severety = recs.readInt();
                 r.startOff = recs.readLong();
                 r.endOff = recs.readLong();
-                
+
                 // ajust level
                 if (r.severety != Level.SEVERE.intValue()
                 && r.severety != Level.WARNING.intValue()
                 && r.severety != Level.INFO.intValue()) {
                     r.severety = Level.FINE.intValue();
                 }
-                
+
                 records.add(r);
-                if (debug) System.out.println("OF - read record ");            
+                if (debug) System.out.println("OF - read record ");
             }
-            
+
             recs.close();
         } catch (IOException e) {
             // it's ok
         }
-        
+
     }
-    
+
     private EventListenerList list = new EventListenerList();
     private final static boolean debug = false;
     private String recordInexName;
     private String loggersInexName;
 
     public boolean needToBackup() {
-        return length() != 0 || getLoggersInexFile().length() != 0 || getRecordInexFile().length() != 0; 
+        return length() != 0 || getLoggersInexFile().length() != 0 || getRecordInexFile().length() != 0;
     }
 }
-

@@ -32,9 +32,8 @@ import com.sun.javatest.TestResult;
 /**
  * Interface for reading a series of test-status results.
  */
-public interface DiffReader extends Iterable<TestResult> { 
+public interface DiffReader extends Iterable<TestResult> {
     File getWorkDirectory();
     String getFileType();
     File getFile();
 }
-

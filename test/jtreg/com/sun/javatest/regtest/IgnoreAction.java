@@ -77,11 +77,11 @@ public class IgnoreAction extends Action
      */
     public Status run() throws TestRunException {
         section = startAction("ignore", args, reason);
-        
+
         Status status;
         if (script.isCheck())
             status = Status.passed(CHECK_PASS);
-        else switch (script.getIgnoreKind()) { 
+        else switch (script.getIgnoreKind()) {
             case QUIET:
                 throw new IllegalStateException();
             case ERROR:

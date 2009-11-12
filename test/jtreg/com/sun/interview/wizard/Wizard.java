@@ -89,8 +89,8 @@ import com.sun.interview.WizPrint;
  *
  * <p>The tool can be started as an application itself,
  * by using the {@link #main main}
- * method. This requires that the class name of the interview 
- * be supplied as the first argument; the class itself must be on 
+ * method. This requires that the class name of the interview
+ * be supplied as the first argument; the class itself must be on
  * the tool's class path. This technique allows any interview
  * to be run by this tool.
  * <p>An alternative technique is to provide a small default main method
@@ -102,9 +102,9 @@ import com.sun.interview.WizPrint;
  *
  *    public class Demo extends Interview {
  *        public static void main(String[] args) {
- *	    Demo d = new Demo();
- *	    Wizard w = new Wizard(d);
- *	    w.showInFrame(true);
+ *          Demo d = new Demo();
+ *          Wizard w = new Wizard(d);
+ *          w.showInFrame(true);
  *        }
  *    }
  *</pre>
@@ -116,18 +116,18 @@ public class Wizard extends JComponent {
      * a subtype of {@link Interview}.
      */
     public static void main(String[] args) {
-	try {
-	    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 
-	    Class ic = (Class.forName(args[0]));
-	    Interview i = (Interview)(ic.newInstance());
-	    Wizard w = new Wizard(i);
-	    w.showInFrame(true);
-	}
-	catch (Throwable e) {
-	    e.printStackTrace();
-	    System.exit(1);
-	}
+            Class ic = (Class.forName(args[0]));
+            Interview i = (Interview)(ic.newInstance());
+            Wizard w = new Wizard(i);
+            w.showInFrame(true);
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     /**
@@ -135,7 +135,7 @@ public class Wizard extends JComponent {
      * @param i The interview to be presented.
      */
     public Wizard(Interview i) {
-	this(i, null);
+        this(i, null);
     }
 
     /**
@@ -144,52 +144,52 @@ public class Wizard extends JComponent {
      * @param e An array of exporters to which the interview can be exported.
      */
     public Wizard(Interview i, Exporter[] e) {
-	interview = i;
-	exporters = e;
+        interview = i;
+        exporters = e;
     }
 
     /**
      * Open a file and load it into the interview for this wizard.
      * This does not affect the name of the current file.
-     * @param f The file to be loaded. 
+     * @param f The file to be loaded.
      * @throws IOException if any problems occur while reading the file.
      * @throws Interview.Fault if the checksum is missing or incorrect in the file
      * @see Interview#load
      * @see #setFile
      */
     public void open(File f) throws Interview.Fault, IOException {
-	InputStream in = new BufferedInputStream(new FileInputStream(f));
-	try {
-	    Properties p = new Properties();
-	    p.load(in);
-	    interview.load(p);
-	    interview.setEdited(false);
-	    initialInfoVisible = p.getProperty("INFO", "true").equals("true");
-	}
-	finally {
-	    in.close();
-	}
+        InputStream in = new BufferedInputStream(new FileInputStream(f));
+        try {
+            Properties p = new Properties();
+            p.load(in);
+            interview.load(p);
+            interview.setEdited(false);
+            initialInfoVisible = p.getProperty("INFO", "true").equals("true");
+        }
+        finally {
+            in.close();
+        }
     }
 
     /**
      * Save the current responses to the interview's questions in a file..
-     * @param f The file in which to save the responses. 
+     * @param f The file in which to save the responses.
      * @throws IOException if any problems occur while reading the file.
      * @see Interview#save
      */
     public void save(File f) throws IOException {
-	OutputStream out = new BufferedOutputStream(new FileOutputStream(f));
-	try {
-	    Properties p = new Properties();
-	    if (infoPanel != null) 
-		p.put("INFO", String.valueOf(infoPanel.isShowing()));
-	    interview.save(p);
-	    interview.setEdited(false);
-	    p.save(out, "Wizard data file: " + interview.getTitle());
-	}
-	finally {
-	    out.close();
-	}
+        OutputStream out = new BufferedOutputStream(new FileOutputStream(f));
+        try {
+            Properties p = new Properties();
+            if (infoPanel != null)
+                p.put("INFO", String.valueOf(infoPanel.isShowing()));
+            interview.save(p);
+            interview.setEdited(false);
+            p.save(out, "Wizard data file: " + interview.getTitle());
+        }
+        finally {
+            out.close();
+        }
     }
 
     /**
@@ -198,7 +198,7 @@ public class Wizard extends JComponent {
      * @see #setFile
      */
     public File getFile() {
-	return currFile;
+        return currFile;
     }
 
     /**
@@ -209,23 +209,23 @@ public class Wizard extends JComponent {
      * @see #setDefaultFile
      */
     public void setFile(File f) {
-	currFile = new File(f.getAbsolutePath());
-	if (window != null)
-	    updateTitle(window);
+        currFile = new File(f.getAbsolutePath());
+        if (window != null)
+            updateTitle(window);
     }
-    
+
     /**
      * Set the name of a default file associated with this interview.
      * The default file is used for the name of the current value
      * if the user performs a File>New operation. In addition, if the
-     * default file is set, and the current file matches the default file, 
+     * default file is set, and the current file matches the default file,
      * it will not be shown in the title bar.
      * @param f The default file to be associated with this interview.
      */
     public void setDefaultFile(File f) {
-	defaultFile = f;
-	if (window != null)
-	    updateTitle(window);
+        defaultFile = f;
+        if (window != null)
+            updateTitle(window);
     }
 
     /**
@@ -233,50 +233,50 @@ public class Wizard extends JComponent {
      * @param exitOnClose Set to true if the JVM should be exited when the frame is closed.
      */
     public void showInFrame(final boolean exitOnClose) {
-	if (window != null && !(window instanceof JFrame))
-	    throw new IllegalStateException();
+        if (window != null && !(window instanceof JFrame))
+            throw new IllegalStateException();
 
-	if (!EventQueue.isDispatchThread()) {
-	    EventQueue.invokeLater(new Runnable() {
-		public void run() {
-		    showInFrame(exitOnClose);
-		}
-	    });
-	    return;
-	}
+        if (!EventQueue.isDispatchThread()) {
+            EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    showInFrame(exitOnClose);
+                }
+            });
+            return;
+        }
 
-	initGUI();
-	okBtn.setVisible(false);
-	cancelBtn.setVisible(false);
-	
-	final JFrame f = new JFrame();
-	initMenuBar(f);
-	updateTitle(f);
-	f.setName("interview.wizard");
-	f.setJMenuBar(menuBar);
-	f.setContentPane(main);
-	f.pack();
-	
-	f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-	f.addWindowListener(new WindowAdapter() {
-	    public void windowClosing(WindowEvent e) {
-		if (interview.isEdited() && !okToContinue())
-		    return;
-		e.getWindow().dispose();
-	    }
-	    
-	    public void windowClosed(WindowEvent e) {
-		if (exitOnClose)
-		    System.exit(0);
-	    }
-	});
-	
-	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	Dimension size = f.getSize();
-	f.setLocation(screenSize.width/2 - size.width/2, screenSize.height/2 - size.height/2);
-	f.show();
-	
-	window = f;
+        initGUI();
+        okBtn.setVisible(false);
+        cancelBtn.setVisible(false);
+
+        final JFrame f = new JFrame();
+        initMenuBar(f);
+        updateTitle(f);
+        f.setName("interview.wizard");
+        f.setJMenuBar(menuBar);
+        f.setContentPane(main);
+        f.pack();
+
+        f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        f.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                if (interview.isEdited() && !okToContinue())
+                    return;
+                e.getWindow().dispose();
+            }
+
+            public void windowClosed(WindowEvent e) {
+                if (exitOnClose)
+                    System.exit(0);
+            }
+        });
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension size = f.getSize();
+        f.setLocation(screenSize.width/2 - size.width/2, screenSize.height/2 - size.height/2);
+        f.show();
+
+        window = f;
     }
 
     /**
@@ -290,58 +290,58 @@ public class Wizard extends JComponent {
      * @param okListener A listener to e notified when the dialog is dismissed.
      */
     public void showInDialog(final Frame parent, final ActionListener okListener) {
-	if (window != null && !(window instanceof JDialog))
-	    throw new IllegalStateException();
+        if (window != null && !(window instanceof JDialog))
+            throw new IllegalStateException();
 
-	if (!EventQueue.isDispatchThread()) {
-	    EventQueue.invokeLater(new Runnable() {
-		public void run() {
-		    showInDialog(parent, okListener);
-		}
-	    });
-	    return;
-	}
+        if (!EventQueue.isDispatchThread()) {
+            EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    showInDialog(parent, okListener);
+                }
+            });
+            return;
+        }
 
-	this.okListener = okListener;
+        this.okListener = okListener;
 
-	initGUI();
-	okBtn.setVisible(true);
-	okBtn.setEnabled(interview.isFinishable());
-	cancelBtn.setVisible(true);
-	
-	final JDialog d = new JDialog(parent);
-	initMenuBar(d);
-	updateTitle(d);
-	d.setJMenuBar(menuBar);
-	d.setContentPane(main);
-	d.pack();
-	
-	d.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-	d.addWindowListener(new WindowAdapter() {
-	    public void windowClosing(WindowEvent e) {
-		if (!interview.isEdited() || okToContinue())
-		    e.getWindow().dispose();
-	    }
-	    
-	    public void windowClosed(WindowEvent e) {
-	    }
-	});
-	
-	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	Dimension size = d.getSize();
-	d.setLocation(screenSize.width/2 - size.width/2, screenSize.height/2 - size.height/2);
-	d.show();
-	
-	window = d;
+        initGUI();
+        okBtn.setVisible(true);
+        okBtn.setEnabled(interview.isFinishable());
+        cancelBtn.setVisible(true);
+
+        final JDialog d = new JDialog(parent);
+        initMenuBar(d);
+        updateTitle(d);
+        d.setJMenuBar(menuBar);
+        d.setContentPane(main);
+        d.pack();
+
+        d.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        d.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                if (!interview.isEdited() || okToContinue())
+                    e.getWindow().dispose();
+            }
+
+            public void windowClosed(WindowEvent e) {
+            }
+        });
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension size = d.getSize();
+        d.setLocation(screenSize.width/2 - size.width/2, screenSize.height/2 - size.height/2);
+        d.show();
+
+        window = d;
     }
 
     /**
      * Check if this object is being displayed on the screen.
-     * @return true if the wizard is currently being displayed, 
+     * @return true if the wizard is currently being displayed,
      * and false otherwise.
      */
     public boolean isShowing() {
-	return (window != null && window.isShowing());
+        return (window != null && window.isShowing());
     }
 
     /**
@@ -350,8 +350,8 @@ public class Wizard extends JComponent {
      * has no effect.
      */
     public void toFront() {
-	if (window != null)
-	    window.toFront();
+        if (window != null)
+            window.toFront();
     }
 
     /**
@@ -359,136 +359,136 @@ public class Wizard extends JComponent {
      */
     private void initGUI() {
 
-	title = interview.getTitle();
-	if (title == null || title.equals(""))
-	    title = i18n.getString("wizard.defaultTitle");
+        title = interview.getTitle();
+        if (title == null || title.equals(""))
+            title = i18n.getString("wizard.defaultTitle");
 
-	//main = new JPanel(new BorderLayout());
-	setLayout(new BorderLayout());
-	main = this;
+        //main = new JPanel(new BorderLayout());
+        setLayout(new BorderLayout());
+        main = this;
 
-	questionPanel = new QuestionPanel(interview);
-	questionPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-	pathPanel = new PathPanel(questionPanel, interview);
+        questionPanel = new QuestionPanel(interview);
+        questionPanel.setBorder(BorderFactory.createLoweredBevelBorder());
+        pathPanel = new PathPanel(questionPanel, interview);
 
-	buttonPanel = new JToolBar();
-	buttonPanel.setFloatable(false);
-	//buttonPanel.setBorder(BorderFactory.createRaisedBevelBorder());	
-	
-	buttonPanel.add(Box.createHorizontalGlue());
-	backBtn = createButton("back", "performBack", performer);
-	buttonPanel.add(backBtn);
-	nextBtn = createButton("next", "performNext", performer);
-	buttonPanel.add(nextBtn);
-	buttonPanel.addSeparator();
-	okBtn = createButton("ok", "performOk", performer);
-	buttonPanel.add(okBtn);
-	cancelBtn = createButton("cancel", "performCancel", performer);
-	buttonPanel.add(cancelBtn);
-	if (infoPanel != null) {
-	    buttonPanel.addSeparator();
-	    infoBtn = createToggle("info", "performInfo", performer);
-	    infoBtn.setSelected(initialInfoVisible);
-	    buttonPanel.add(infoBtn);
-	}
-	buttonPanel.addAncestorListener(new Listener());
+        buttonPanel = new JToolBar();
+        buttonPanel.setFloatable(false);
+        //buttonPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 
-	body = new JPanel(new BorderLayout());
-	body.add(pathPanel, BorderLayout.WEST);
-	body.add(questionPanel, BorderLayout.CENTER);
-	body.add(buttonPanel, BorderLayout.SOUTH);
+        buttonPanel.add(Box.createHorizontalGlue());
+        backBtn = createButton("back", "performBack", performer);
+        buttonPanel.add(backBtn);
+        nextBtn = createButton("next", "performNext", performer);
+        buttonPanel.add(nextBtn);
+        buttonPanel.addSeparator();
+        okBtn = createButton("ok", "performOk", performer);
+        buttonPanel.add(okBtn);
+        cancelBtn = createButton("cancel", "performCancel", performer);
+        buttonPanel.add(cancelBtn);
+        if (infoPanel != null) {
+            buttonPanel.addSeparator();
+            infoBtn = createToggle("info", "performInfo", performer);
+            infoBtn.setSelected(initialInfoVisible);
+            buttonPanel.add(infoBtn);
+        }
+        buttonPanel.addAncestorListener(new Listener());
 
-	body.registerKeyboardAction(performer, "performFindNext", KeyStroke.getKeyStroke("F3"), 
-					   JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-	
-	if (infoPanel == null)
-	    main.add(body);
-	else
-	    update(infoBtn.isSelected());
+        body = new JPanel(new BorderLayout());
+        body.add(pathPanel, BorderLayout.WEST);
+        body.add(questionPanel, BorderLayout.CENTER);
+        body.add(buttonPanel, BorderLayout.SOUTH);
+
+        body.registerKeyboardAction(performer, "performFindNext", KeyStroke.getKeyStroke("F3"),
+                                           JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        if (infoPanel == null)
+            main.add(body);
+        else
+            update(infoBtn.isSelected());
     }
 
     private void initMenuBar(Window w) {
-	menuBar = new JMenuBar();
+        menuBar = new JMenuBar();
 
-	fileMenu = createMenu("file", fileMenuData, performer);
-	if (w instanceof JFrame) {
-	    fileMenu.addSeparator();
-	    fileMenu.add(createMenuItem("file", "exit", "performExit", performer));
-	}
-	else {
-	    fileMenu.addSeparator();
-	    fileMenu.add(createMenuItem("file", "close", "performCancel", performer));
-	}
-	    
+        fileMenu = createMenu("file", fileMenuData, performer);
+        if (w instanceof JFrame) {
+            fileMenu.addSeparator();
+            fileMenu.add(createMenuItem("file", "exit", "performExit", performer));
+        }
+        else {
+            fileMenu.addSeparator();
+            fileMenu.add(createMenuItem("file", "close", "performCancel", performer));
+        }
 
-	if (exporters != null) {
-	    // replace the default "export log" item with a full export submenu
-	    for (int i = 0; i < fileMenu.getItemCount(); i++) {
-		JMenuItem mi = (JMenuItem)(fileMenu.getItem(i));
-		if (mi != null && mi.getActionCommand().equals("performExportLog")) {
-		    fileMenu.remove(i);
-		    JMenu exportMenu = new ExportMenu(exporters);
-		    exportMenu.add(createMenuItem("export", "log", "performExportLog", performer));
-		    fileMenu.insert(exportMenu, i);
-		    break;
-		}
-	    }
-	}
-	menuBar.add(fileMenu);
 
-	JMenu searchMenu = createMenu("search", searchMenuData, performer);
-	menuBar.add(searchMenu);
+        if (exporters != null) {
+            // replace the default "export log" item with a full export submenu
+            for (int i = 0; i < fileMenu.getItemCount(); i++) {
+                JMenuItem mi = (JMenuItem)(fileMenu.getItem(i));
+                if (mi != null && mi.getActionCommand().equals("performExportLog")) {
+                    fileMenu.remove(i);
+                    JMenu exportMenu = new ExportMenu(exporters);
+                    exportMenu.add(createMenuItem("export", "log", "performExportLog", performer));
+                    fileMenu.insert(exportMenu, i);
+                    break;
+                }
+            }
+        }
+        menuBar.add(fileMenu);
+
+        JMenu searchMenu = createMenu("search", searchMenuData, performer);
+        menuBar.add(searchMenu);
 
     }
 
     private void update(boolean showInfoPanel) {
-	Dimension bodySize = body.getSize();
-	if (bodySize.width == 0)
-	    bodySize = body.getPreferredSize();
+        Dimension bodySize = body.getSize();
+        if (bodySize.width == 0)
+            bodySize = body.getPreferredSize();
 
-	Dimension infoSize = infoPanel.getSize();
-	if (infoSize.width == 0)
-	    infoSize = infoPanel.getPreferredSize();
-	// need to capture the next value before we remove everything from main
-	boolean infoPanelIsShowing = infoPanel.isShowing();
+        Dimension infoSize = infoPanel.getSize();
+        if (infoSize.width == 0)
+            infoSize = infoPanel.getPreferredSize();
+        // need to capture the next value before we remove everything from main
+        boolean infoPanelIsShowing = infoPanel.isShowing();
 
-	main.removeAll();
+        main.removeAll();
 
-	if (showInfoPanel) {
-	    // body-help
-	    JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, body, infoPanel);
-	    sp.setDividerLocation(bodySize.width + 2);
-	    main.add(sp);
-	}
-	else {
-	    // body
-	    main.add(body);
-	}
+        if (showInfoPanel) {
+            // body-help
+            JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, body, infoPanel);
+            sp.setDividerLocation(bodySize.width + 2);
+            main.add(sp);
+        }
+        else {
+            // body
+            main.add(body);
+        }
 
-	if (window != null) {
-	    int divWidth = new JSplitPane().getDividerSize();
-	    Dimension winSize = window.getSize();
-	    int newWidth = winSize.width;
-	    if (showInfoPanel != infoPanelIsShowing) 
-		newWidth += (showInfoPanel ? +1 : -1) * (infoSize.width + divWidth + 4);
-	    window.setSize(newWidth, winSize.height);
-	}
+        if (window != null) {
+            int divWidth = new JSplitPane().getDividerSize();
+            Dimension winSize = window.getSize();
+            int newWidth = winSize.width;
+            if (showInfoPanel != infoPanelIsShowing)
+                newWidth += (showInfoPanel ? +1 : -1) * (infoSize.width + divWidth + 4);
+            window.setSize(newWidth, winSize.height);
+        }
 
-	if (infoBtn.isSelected() != showInfoPanel)
-	    infoBtn.setSelected(showInfoPanel);
+        if (infoBtn.isSelected() != showInfoPanel)
+            infoBtn.setSelected(showInfoPanel);
     }
 
     private void updateTitle(Window w) {
-	String t;
-	if (currFile == null 
-	    || (defaultFile != null && currFile.equals(defaultFile))) 
-	    t = title;
-	else 
-	    t = i18n.getString("wizard.titleAndFile", new Object[] {title, currFile.getPath()});
-	if (w instanceof JFrame)
-	    ((JFrame) w).setTitle(t);
-	else
-	    ((JDialog) w).setTitle(t);
+        String t;
+        if (currFile == null
+            || (defaultFile != null && currFile.equals(defaultFile)))
+            t = title;
+        else
+            t = i18n.getString("wizard.titleAndFile", new Object[] {title, currFile.getPath()});
+        if (w instanceof JFrame)
+            ((JFrame) w).setTitle(t);
+        else
+            ((JDialog) w).setTitle(t);
     }
 
     /**
@@ -496,399 +496,399 @@ public class Wizard extends JComponent {
      * @param s The name of the method to be invoked.
      */
     private void perform(String s) {
-	try {
-	    Method m = Wizard.class.getDeclaredMethod(s, new Class[] { });
-	    m.invoke(Wizard.this, new Object[] { });
-	}
-	catch (IllegalAccessException ex) {
-	    System.err.println(s);
-	    ex.printStackTrace();
-	}
-	catch (InvocationTargetException ex) {
-	    System.err.println(s);
-	    ex.getTargetException().printStackTrace();
-	}
-	catch (NoSuchMethodException ex) {
-	    System.err.println(s);
-	}
+        try {
+            Method m = Wizard.class.getDeclaredMethod(s, new Class[] { });
+            m.invoke(Wizard.this, new Object[] { });
+        }
+        catch (IllegalAccessException ex) {
+            System.err.println(s);
+            ex.printStackTrace();
+        }
+        catch (InvocationTargetException ex) {
+            System.err.println(s);
+            ex.getTargetException().printStackTrace();
+        }
+        catch (NoSuchMethodException ex) {
+            System.err.println(s);
+        }
     }
 
     /**
      * Handle the "back" action
      */
     private void performBack() {
-	try {
-	    questionPanel.saveCurrentResponse();
-	    interview.prev();
-	}
-	catch (Interview.Fault e) {
-	    // exception normally means no more questions
-	    // e.printStackTrace();
-	}
-	catch (RuntimeException e) {
-	    // typically NumberFormatError
-	    // SEE ALSO QuestionPanel.showInetAddressQuestion
-	    // which wants to throw Interview.Fault from
-	    // the value saver, but can't
-	    questionPanel.getToolkit().beep();
-	}
+        try {
+            questionPanel.saveCurrentResponse();
+            interview.prev();
+        }
+        catch (Interview.Fault e) {
+            // exception normally means no more questions
+            // e.printStackTrace();
+        }
+        catch (RuntimeException e) {
+            // typically NumberFormatError
+            // SEE ALSO QuestionPanel.showInetAddressQuestion
+            // which wants to throw Interview.Fault from
+            // the value saver, but can't
+            questionPanel.getToolkit().beep();
+        }
     }
 
     /**
      * Handle the "cancel" action
      */
     private void performCancel() {
-	questionPanel.saveCurrentResponse();
-	if (interview.isEdited() && !okToContinue())
-	    return;
-	window.dispose();
+        questionPanel.saveCurrentResponse();
+        if (interview.isEdited() && !okToContinue())
+            return;
+        window.dispose();
     }
 
     /**
      * Handle the "exit" action
      */
     private void performExit() {
-	questionPanel.saveCurrentResponse();
-	if (interview.isEdited() && !okToContinue())
-	    return;
-	// setVisible(false);
-	System.exit(0); // uugh
+        questionPanel.saveCurrentResponse();
+        if (interview.isEdited() && !okToContinue())
+            return;
+        // setVisible(false);
+        System.exit(0); // uugh
     }
 
     /**
      * Handle the "exportLog" action
      */
     private void performExportLog() {
-	questionPanel.saveCurrentResponse();
-	JFileChooser chooser = new JFileChooser();
-	if (currFile != null) {
-	    //  setCurrentDirectory required
-	    chooser.setCurrentDirectory(new File(currFile.getParent()));
-	    int dot = currFile.getName().lastIndexOf(".");
-	    if (dot != -1) {
-		File f = new File(currFile.getName().substring(0, dot) + ".html");
-		chooser.setSelectedFile(f);
-	    }
-	}
-	else {
-	    chooser.setCurrentDirectory(getUserDir());
-	}
-	chooser.setFileFilter(htmlFilter);
-	//chooser.addChoosableFileFilter(txtFilter);
-	int action = chooser.showDialog(main, i18n.getString("wizard.exportLog"));
-	if (action != JFileChooser.APPROVE_OPTION)
-	    return;
+        questionPanel.saveCurrentResponse();
+        JFileChooser chooser = new JFileChooser();
+        if (currFile != null) {
+            //  setCurrentDirectory required
+            chooser.setCurrentDirectory(new File(currFile.getParent()));
+            int dot = currFile.getName().lastIndexOf(".");
+            if (dot != -1) {
+                File f = new File(currFile.getName().substring(0, dot) + ".html");
+                chooser.setSelectedFile(f);
+            }
+        }
+        else {
+            chooser.setCurrentDirectory(getUserDir());
+        }
+        chooser.setFileFilter(htmlFilter);
+        //chooser.addChoosableFileFilter(txtFilter);
+        int action = chooser.showDialog(main, i18n.getString("wizard.exportLog"));
+        if (action != JFileChooser.APPROVE_OPTION)
+            return;
 
-	File f = ensureExtn(chooser.getSelectedFile(), ".html");
-	if (f.exists() && !okToOverwrite(f))
-	    return;
-	try {
-	    Writer out = new FileWriter(f);
-	    WizPrint w = new WizPrint(interview, interview.getPath());
-	    w.setShowResponses(true);
-	    w.write(out);
-	}
-	catch (FileNotFoundException e) {
-	    JOptionPane.showMessageDialog(main, 
-					  i18n.getString("wizard.fileNotFound.txt", e.getMessage()),
-					  i18n.getString("wizard.fileNotFound.title"),
-					  JOptionPane.ERROR_MESSAGE);
-	}
-	catch (IOException e) {
-	    JOptionPane.showMessageDialog(main, 
-					  i18n.getString("wizard.badFile.txt", e.getMessage()),
-					  i18n.getString("wizard.badFile.title"),
-					  JOptionPane.ERROR_MESSAGE);
-	}	
+        File f = ensureExtn(chooser.getSelectedFile(), ".html");
+        if (f.exists() && !okToOverwrite(f))
+            return;
+        try {
+            Writer out = new FileWriter(f);
+            WizPrint w = new WizPrint(interview, interview.getPath());
+            w.setShowResponses(true);
+            w.write(out);
+        }
+        catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(main,
+                                          i18n.getString("wizard.fileNotFound.txt", e.getMessage()),
+                                          i18n.getString("wizard.fileNotFound.title"),
+                                          JOptionPane.ERROR_MESSAGE);
+        }
+        catch (IOException e) {
+            JOptionPane.showMessageDialog(main,
+                                          i18n.getString("wizard.badFile.txt", e.getMessage()),
+                                          i18n.getString("wizard.badFile.title"),
+                                          JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
      * Handle the "find" action
      */
     private void performFind() {
-	if (searchDialog == null)
-	    searchDialog = SearchDialog.create(window, interview);
-	searchDialog.setVisible(true);
+        if (searchDialog == null)
+            searchDialog = SearchDialog.create(window, interview);
+        searchDialog.setVisible(true);
     }
 
     /**
      * Handle the "find" action
      */
     private void performFindNext() {
-	if (searchDialog == null)
-	    searchDialog = SearchDialog.create(window, interview);
-	searchDialog.find();
+        if (searchDialog == null)
+            searchDialog = SearchDialog.create(window, interview);
+        searchDialog.find();
     }
 
     /**
      * Handle the "info" action
      */
     private void performInfo() {
-	boolean infoOn = infoBtn.isSelected();
-	if (infoPanel.isShowing() != infoOn) {
-	    update(infoOn);
-	    window.validate();
-	}
+        boolean infoOn = infoBtn.isSelected();
+        if (infoPanel.isShowing() != infoOn) {
+            update(infoOn);
+            window.validate();
+        }
     }
 
     /**
      * Handle the "new" action
      */
     private void performNew() {
-	questionPanel.saveCurrentResponse();
-	if (interview.isEdited() && !okToContinue())
-	    return;
-	interview.clear();
-	interview.setEdited(false);
-	setFile(defaultFile);
+        questionPanel.saveCurrentResponse();
+        if (interview.isEdited() && !okToContinue())
+            return;
+        interview.clear();
+        interview.setEdited(false);
+        setFile(defaultFile);
     }
 
     /**
      * Handle the "next" action
      */
     private void performNext() {
-	try {
-	    questionPanel.saveCurrentResponse();
-	    interview.next();
-	}
-	catch (Interview.Fault e) {
-	    // exception normally means no more questions
-	    // e.printStackTrace();
-	    questionPanel.getToolkit().beep();
-	}
-	catch (RuntimeException e) {
-	    // typically NumberFormatError
-	    questionPanel.getToolkit().beep();
-	}
+        try {
+            questionPanel.saveCurrentResponse();
+            interview.next();
+        }
+        catch (Interview.Fault e) {
+            // exception normally means no more questions
+            // e.printStackTrace();
+            questionPanel.getToolkit().beep();
+        }
+        catch (RuntimeException e) {
+            // typically NumberFormatError
+            questionPanel.getToolkit().beep();
+        }
     }
 
     /**
      * Handle the "ok" action
      */
     private void performOk() {
-	try {
-	    questionPanel.saveCurrentResponse();
-	    window.dispose();
-	    okListener.actionPerformed(new ActionEvent(this, 
-						       ActionEvent.ACTION_PERFORMED,
-						       OK));
-	}
-	catch (RuntimeException e) {
-	    // typically NumberFormatError
-	    questionPanel.getToolkit().beep();
-	}
+        try {
+            questionPanel.saveCurrentResponse();
+            window.dispose();
+            okListener.actionPerformed(new ActionEvent(this,
+                                                       ActionEvent.ACTION_PERFORMED,
+                                                       OK));
+        }
+        catch (RuntimeException e) {
+            // typically NumberFormatError
+            questionPanel.getToolkit().beep();
+        }
     }
 
     /**
      * Handle the "open" action
      */
     private void performOpen() {
-	questionPanel.saveCurrentResponse();
-	if (interview.isEdited() && !okToContinue())
-	    return;
+        questionPanel.saveCurrentResponse();
+        if (interview.isEdited() && !okToContinue())
+            return;
 
-	JFileChooser chooser = new JFileChooser();
-	// set current directory from file or user.dir
-	if (currFile != null) {
-	    // setCurrentDirectory required
-	    chooser.setCurrentDirectory(new File(currFile.getParent()));
-	    chooser.setSelectedFile(new File(currFile.getName()));
-	}
-	else {
-	    chooser.setCurrentDirectory(getUserDir());
-	}
-	chooser.setFileFilter(jtiFilter);
-	int action = chooser.showOpenDialog(main);
-	if (action != JFileChooser.APPROVE_OPTION)
-	    return;
-	File f = ensureExtn(chooser.getSelectedFile(), ".jti");
-	try {
-	    open(f);
-	    setFile(f);
-	}
-	catch (Interview.Fault e) {
-	    JOptionPane.showMessageDialog(main, 
-					  i18n.getString("wizard.badInterview.txt", e.getMessage()),
-					  i18n.getString("wizard.badInterview.title"),
-					  JOptionPane.ERROR_MESSAGE);
-	}
-	catch (FileNotFoundException e) {
-	    JOptionPane.showMessageDialog(main, 
-					  i18n.getString("wizard.fileNotFound.txt", e.getMessage()),
-					  i18n.getString("wizard.fileNotFound.title"),
-					  JOptionPane.ERROR_MESSAGE);
-	}
-	catch (IOException e) {
-	    JOptionPane.showMessageDialog(main, 
-					  i18n.getString("wizard.badFile.txt", e.getMessage()),
-					  i18n.getString("wizard.badFile.title"),
-					  JOptionPane.ERROR_MESSAGE);
-	}
+        JFileChooser chooser = new JFileChooser();
+        // set current directory from file or user.dir
+        if (currFile != null) {
+            // setCurrentDirectory required
+            chooser.setCurrentDirectory(new File(currFile.getParent()));
+            chooser.setSelectedFile(new File(currFile.getName()));
+        }
+        else {
+            chooser.setCurrentDirectory(getUserDir());
+        }
+        chooser.setFileFilter(jtiFilter);
+        int action = chooser.showOpenDialog(main);
+        if (action != JFileChooser.APPROVE_OPTION)
+            return;
+        File f = ensureExtn(chooser.getSelectedFile(), ".jti");
+        try {
+            open(f);
+            setFile(f);
+        }
+        catch (Interview.Fault e) {
+            JOptionPane.showMessageDialog(main,
+                                          i18n.getString("wizard.badInterview.txt", e.getMessage()),
+                                          i18n.getString("wizard.badInterview.title"),
+                                          JOptionPane.ERROR_MESSAGE);
+        }
+        catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(main,
+                                          i18n.getString("wizard.fileNotFound.txt", e.getMessage()),
+                                          i18n.getString("wizard.fileNotFound.title"),
+                                          JOptionPane.ERROR_MESSAGE);
+        }
+        catch (IOException e) {
+            JOptionPane.showMessageDialog(main,
+                                          i18n.getString("wizard.badFile.txt", e.getMessage()),
+                                          i18n.getString("wizard.badFile.title"),
+                                          JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
      * Handle the "save" action
      */
     private void performSave() {
-	questionPanel.saveCurrentResponse();
-	// save with current file
-	if (currFile == null)
-	    performSaveAs();
-	else
-	    performSaveInternal(currFile);
+        questionPanel.saveCurrentResponse();
+        // save with current file
+        if (currFile == null)
+            performSaveAs();
+        else
+            performSaveInternal(currFile);
     }
 
     /**
      * Handle the "save as" action
      */
     private void performSaveAs() {
-	questionPanel.saveCurrentResponse();
-	JFileChooser chooser = new JFileChooser();
-	if (currFile != null) {
-	    // setCurrentDirectory required
-	    chooser.setCurrentDirectory(new File(currFile.getParent()));
-	    chooser.setSelectedFile(new File(currFile.getName()));
-	}
-	else {
-	    chooser.setCurrentDirectory(getUserDir());
-	}
-	chooser.setFileFilter(jtiFilter);
-	int action = chooser.showSaveDialog(main);
-	if (action != JFileChooser.APPROVE_OPTION)
-	    return;
-	File f = ensureExtn(chooser.getSelectedFile(), ".jti");
-	if (f.exists() && !okToOverwrite(f))
-	    return;
-	performSaveInternal(f);
+        questionPanel.saveCurrentResponse();
+        JFileChooser chooser = new JFileChooser();
+        if (currFile != null) {
+            // setCurrentDirectory required
+            chooser.setCurrentDirectory(new File(currFile.getParent()));
+            chooser.setSelectedFile(new File(currFile.getName()));
+        }
+        else {
+            chooser.setCurrentDirectory(getUserDir());
+        }
+        chooser.setFileFilter(jtiFilter);
+        int action = chooser.showSaveDialog(main);
+        if (action != JFileChooser.APPROVE_OPTION)
+            return;
+        File f = ensureExtn(chooser.getSelectedFile(), ".jti");
+        if (f.exists() && !okToOverwrite(f))
+            return;
+        performSaveInternal(f);
     }
 
     /**
      * Internal common routine for the save/saveAs actions
      */
     private void performSaveInternal(File f) {
-	try {
-	    save(f);
-	    setFile(f);
-	}
-	catch (FileNotFoundException e) {
-	    JOptionPane.showMessageDialog(main, 
-					  i18n.getString("wizard.fileNotFound.txt", e.getMessage()),
-					  i18n.getString("wizard.fileNotFound.title"),
-					  JOptionPane.ERROR_MESSAGE);
-	}
-	catch (IOException e) {
-	    JOptionPane.showMessageDialog(main, 
-					  i18n.getString("wizard.badFile.txt", e.getMessage()),
-					  i18n.getString("wizard.badFile.title"),
-					  JOptionPane.ERROR_MESSAGE);
-	}
+        try {
+            save(f);
+            setFile(f);
+        }
+        catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(main,
+                                          i18n.getString("wizard.fileNotFound.txt", e.getMessage()),
+                                          i18n.getString("wizard.fileNotFound.title"),
+                                          JOptionPane.ERROR_MESSAGE);
+        }
+        catch (IOException e) {
+            JOptionPane.showMessageDialog(main,
+                                          i18n.getString("wizard.badFile.txt", e.getMessage()),
+                                          i18n.getString("wizard.badFile.title"),
+                                          JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
      * Get the user's current directory
      */
     private File getUserDir() {
-	return new File(System.getProperty("user.dir"));
+        return new File(System.getProperty("user.dir"));
     }
 
     private JButton createButton(String uiKey, String actionCommand, ActionListener l) {
-	JButton b = new JButton(createIcon(uiKey));
+        JButton b = new JButton(createIcon(uiKey));
         b.setToolTipText(i18n.getString("wizard." + uiKey + ".tip"));
-	b.setActionCommand(actionCommand);
-	b.addActionListener(l);
-	b.registerKeyboardAction(l, actionCommand, enterKey, JComponent.WHEN_FOCUSED);
-	return b;
+        b.setActionCommand(actionCommand);
+        b.addActionListener(l);
+        b.registerKeyboardAction(l, actionCommand, enterKey, JComponent.WHEN_FOCUSED);
+        return b;
     }
 
     private Icon createIcon(String uiKey) {
-	String iconResource = i18n.getString("wizard." + uiKey + ".icon");
-	URL url = getClass().getResource(iconResource);
-	return (url == null ? null : new ImageIcon(url));
+        String iconResource = i18n.getString("wizard." + uiKey + ".icon");
+        URL url = getClass().getResource(iconResource);
+        return (url == null ? null : new ImageIcon(url));
     }
 
     /**
      * Create a menu according to an array of data
      * @title the title for the menu
      * @menuData the data for the menu; one element per menu item; an element can be
-     * one of 
+     * one of
      * <dl>
      * <dt> null
-     * 	 <dd> a separator
+     *   <dd> a separator
      * <dt> an array of two strings
      *   <dd> a menu item, whose name is the first string, and whose action is the second
      * </dl>
      */
     private JMenu createMenu(String uiKey, String[][] menuData, ActionListener l) {
-	JMenu m = new JMenu(i18n.getString("wizard." + uiKey + ".menu"));
-	m.setName("wizard." + uiKey);
-	m.setMnemonic(i18n.getString("wizard." + uiKey + ".mne").charAt(0));
-	for (int i = 0; i < menuData.length; i++) {
-	    String[] data = menuData[i];
-	    if (data == null) 
-		m.addSeparator();
-	    else {
-		JMenuItem mi = createMenuItem(uiKey, data[0], data[1], l);
-		if (data.length > 2) {
-		    KeyStroke accel = KeyStroke.getKeyStroke(data[2]);
-		    mi.setAccelerator(accel);
-		}
-		m.add(mi);
-	    }
-	}
-	return m;
+        JMenu m = new JMenu(i18n.getString("wizard." + uiKey + ".menu"));
+        m.setName("wizard." + uiKey);
+        m.setMnemonic(i18n.getString("wizard." + uiKey + ".mne").charAt(0));
+        for (int i = 0; i < menuData.length; i++) {
+            String[] data = menuData[i];
+            if (data == null)
+                m.addSeparator();
+            else {
+                JMenuItem mi = createMenuItem(uiKey, data[0], data[1], l);
+                if (data.length > 2) {
+                    KeyStroke accel = KeyStroke.getKeyStroke(data[2]);
+                    mi.setAccelerator(accel);
+                }
+                m.add(mi);
+            }
+        }
+        return m;
     }
 
     private JMenuItem createMenuItem(String uiKey, String name, String actionCommand, ActionListener l) {
-	JMenuItem item = new JMenuItem(i18n.getString("wizard." + uiKey + "." + name + ".mit"));
-	item.setName(name);
-	item.setMnemonic(i18n.getString("wizard." + uiKey + "." + name + ".mne").charAt(0));
-	item.setActionCommand(actionCommand);
-	item.addActionListener(l);
-	return item;
+        JMenuItem item = new JMenuItem(i18n.getString("wizard." + uiKey + "." + name + ".mit"));
+        item.setName(name);
+        item.setMnemonic(i18n.getString("wizard." + uiKey + "." + name + ".mne").charAt(0));
+        item.setActionCommand(actionCommand);
+        item.addActionListener(l);
+        return item;
     }
 
     private JToggleButton createToggle(String uiKey, String actionCommand, ActionListener l) {
-	JToggleButton b = new JToggleButton(createIcon(uiKey)) {
-	    public Insets getInsets() {
-		return (nextBtn == null ? super.getInsets() : nextBtn.getInsets()); // !!
-	    } 
-	};
+        JToggleButton b = new JToggleButton(createIcon(uiKey)) {
+            public Insets getInsets() {
+                return (nextBtn == null ? super.getInsets() : nextBtn.getInsets()); // !!
+            }
+        };
         b.setToolTipText(i18n.getString("wizard." + uiKey + ".tip"));
-	b.setActionCommand(actionCommand);
-	b.addActionListener(l);
-	b.registerKeyboardAction(l, actionCommand, enterKey, JComponent.WHEN_FOCUSED);
-	return b;
+        b.setActionCommand(actionCommand);
+        b.addActionListener(l);
+        b.registerKeyboardAction(l, actionCommand, enterKey, JComponent.WHEN_FOCUSED);
+        return b;
     }
 
     private File ensureExtn(File f, String extn) {
-	if (f.getName().endsWith(extn))
-	    return f;
-	else
-	    return new File(f.getPath() + extn);
+        if (f.getName().endsWith(extn))
+            return f;
+        else
+            return new File(f.getPath() + extn);
     }
 
     private boolean okToContinue() {
-	int response = 
-	    JOptionPane.showConfirmDialog(main,
-					 i18n.getString("wizard.unsavedAnswers.txt"),
-					 i18n.getString("wizard.unsavedAnswers.title"),
-					 JOptionPane.YES_NO_OPTION);
-	return (response == JOptionPane.YES_OPTION); 
+        int response =
+            JOptionPane.showConfirmDialog(main,
+                                         i18n.getString("wizard.unsavedAnswers.txt"),
+                                         i18n.getString("wizard.unsavedAnswers.title"),
+                                         JOptionPane.YES_NO_OPTION);
+        return (response == JOptionPane.YES_OPTION);
     }
 
     private boolean okToOverwrite(File f) {
-	int response = 
-	    JOptionPane.showConfirmDialog(main,
-					 i18n.getString("wizard.overwrite.txt", f),
-					 i18n.getString("wizard.overwrite.title"),
-					 JOptionPane.YES_NO_OPTION);
-	return (response == JOptionPane.YES_OPTION); 
+        int response =
+            JOptionPane.showConfirmDialog(main,
+                                         i18n.getString("wizard.overwrite.txt", f),
+                                         i18n.getString("wizard.overwrite.title"),
+                                         JOptionPane.YES_NO_OPTION);
+        return (response == JOptionPane.YES_OPTION);
     }
 
     private ActionListener performer = new ActionListener() {
-	public void actionPerformed(ActionEvent e) {
-	    perform(e.getActionCommand());
-	}
+        public void actionPerformed(ActionEvent e) {
+            perform(e.getActionCommand());
+        }
     };
 
     private Interview interview;
@@ -919,177 +919,177 @@ public class Wizard extends JComponent {
     private boolean exitOnClose;
 
     private final FileFilter jtiFilter = new ExtensionFileFilter(".jti");
-    private final FileFilter htmlFilter = 
-    	new ExtensionFileFilter(new String[] {".htm", ".html"});
+    private final FileFilter htmlFilter =
+        new ExtensionFileFilter(new String[] {".htm", ".html"});
 
     private static final KeyStroke enterKey = KeyStroke.getKeyStroke("ENTER");
 
     private static final I18NResourceBundle i18n = I18NResourceBundle.getDefaultBundle();
 
     private static final String[][] fileMenuData = {
-	{"new", "performNew"},
-	{"open", "performOpen"},
-	{"save", "performSave"},
-	{"saveAs", "performSaveAs"},
-	null,
-	{"exportLog", "performExportLog"}
+        {"new", "performNew"},
+        {"open", "performOpen"},
+        {"save", "performSave"},
+        {"saveAs", "performSaveAs"},
+        null,
+        {"exportLog", "performExportLog"}
     };
 
     private static final String[][] searchMenuData = {
-	{"find", "performFind", "control F"},
-	{"findNext", "performFindNext", "F3"},
+        {"find", "performFind", "control F"},
+        {"findNext", "performFindNext", "F3"},
     };
 
     private class ExtensionFileFilter extends FileFilter {
-	ExtensionFileFilter(String extn) {
-	    this.extns = new String[] {extn};
-	}
+        ExtensionFileFilter(String extn) {
+            this.extns = new String[] {extn};
+        }
 
-	ExtensionFileFilter(String[] extns) {
-	    this.extns = extns;
-	}
+        ExtensionFileFilter(String[] extns) {
+            this.extns = extns;
+        }
 
 
-	ExtensionFileFilter(String[] extns, String description) {
-	    this.extns = extns;
-	    this.description = description;
-	}
+        ExtensionFileFilter(String[] extns, String description) {
+            this.extns = extns;
+            this.description = description;
+        }
 
-	public boolean accept(File f) {
-	    if (f.isDirectory())
-		return true;
-	    for (int i = 0; i < extns.length; i++) 
-		if (f.getName().endsWith(extns[i]))
-		    return true;
-	    return false;
-	}
+        public boolean accept(File f) {
+            if (f.isDirectory())
+                return true;
+            for (int i = 0; i < extns.length; i++)
+                if (f.getName().endsWith(extns[i]))
+                    return true;
+            return false;
+        }
 
-	public String getDescription() {
-	    if (description == null) {
-		StringBuffer sb = new StringBuffer("wizard.extn");
-		if (extns.length == 0)
-		    sb.append(".allFiles");
-		else {
-		    for (int i = 0; i < extns.length; i++) 
-			sb.append(extns[i]);
-		}
-		description = i18n.getString(sb.toString());
-	    }
-	    return description;
-	}
+        public String getDescription() {
+            if (description == null) {
+                StringBuffer sb = new StringBuffer("wizard.extn");
+                if (extns.length == 0)
+                    sb.append(".allFiles");
+                else {
+                    for (int i = 0; i < extns.length; i++)
+                        sb.append(extns[i]);
+                }
+                description = i18n.getString(sb.toString());
+            }
+            return description;
+        }
 
-	private String[] extns;
-	private String description;
+        private String[] extns;
+        private String description;
     }
 
     private class ExportMenu extends JMenu implements ActionListener, PopupMenuListener {
-	ExportMenu(Exporter[] exporters) {
-	    super(i18n.getString("wizard.export.menu"));
-	    setName("export");
-	    setMnemonic(i18n.getString("wizard.export.mne").charAt(0));
-	    for (int i = 0; i < exporters.length; i++) {
-		JMenuItem mi = new JMenuItem(exporters[i].getName());
-		mi.putClientProperty("exporter", exporters[i]);
-		mi.setActionCommand("performGenericExport");
-		mi.addActionListener(this);
-		add(mi);
-	    }
-	    getPopupMenu().addPopupMenuListener(this);
-	}
+        ExportMenu(Exporter[] exporters) {
+            super(i18n.getString("wizard.export.menu"));
+            setName("export");
+            setMnemonic(i18n.getString("wizard.export.mne").charAt(0));
+            for (int i = 0; i < exporters.length; i++) {
+                JMenuItem mi = new JMenuItem(exporters[i].getName());
+                mi.putClientProperty("exporter", exporters[i]);
+                mi.setActionCommand("performGenericExport");
+                mi.addActionListener(this);
+                add(mi);
+            }
+            getPopupMenu().addPopupMenuListener(this);
+        }
 
-	public void actionPerformed(ActionEvent ev) {
-	    questionPanel.saveCurrentResponse();
-	    JMenuItem mi = (JMenuItem)(ev.getSource());
-	    Exporter e = (Exporter)(mi.getClientProperty("exporter"));
-	    export(e);
-	}
+        public void actionPerformed(ActionEvent ev) {
+            questionPanel.saveCurrentResponse();
+            JMenuItem mi = (JMenuItem)(ev.getSource());
+            Exporter e = (Exporter)(mi.getClientProperty("exporter"));
+            export(e);
+        }
 
-	public void popupMenuCanceled(PopupMenuEvent e) {
-	}
+        public void popupMenuCanceled(PopupMenuEvent e) {
+        }
 
-	public void popupMenuWillBecomeInvisible(PopupMenuEvent ev) {
-	}
+        public void popupMenuWillBecomeInvisible(PopupMenuEvent ev) {
+        }
 
-	public void popupMenuWillBecomeVisible(PopupMenuEvent ev) {
-	    JPopupMenu m = (JPopupMenu)(ev.getSource());
-	    for (int i = 0; i < m.getComponentCount(); i++) {
-		JMenuItem mi = (JMenuItem)(m.getComponent(i));
-		if (mi != null) {
-		    Exporter e = (Exporter)(mi.getClientProperty("exporter"));
-		    if (e != null)
-			mi.setEnabled(e.isExportable());
-		}
-	    }
-	}
+        public void popupMenuWillBecomeVisible(PopupMenuEvent ev) {
+            JPopupMenu m = (JPopupMenu)(ev.getSource());
+            for (int i = 0; i < m.getComponentCount(); i++) {
+                JMenuItem mi = (JMenuItem)(m.getComponent(i));
+                if (mi != null) {
+                    Exporter e = (Exporter)(mi.getClientProperty("exporter"));
+                    if (e != null)
+                        mi.setEnabled(e.isExportable());
+                }
+            }
+        }
 
-	private void export(Exporter e) {
-	    JFileChooser exportChooser = new JFileChooser();
-	    if (currFile != null) {
-		// setCurrentDirectory required
-		exportChooser.setCurrentDirectory(new File(currFile.getParent()));
-		String[] extns = e.getFileExtensions();
-		int dot = currFile.getName().lastIndexOf(".");
-		if (dot != -1 && extns != null && extns.length > 0) {
-		    File f = new File(currFile.getName().substring(0, dot) + extns[0]);
-		    exportChooser.setSelectedFile(f);
-		}
-	    }
-	    else {
-		exportChooser.setCurrentDirectory(getUserDir());
-	    }
-	    exportChooser.setApproveButtonText(i18n.getString("wizard.exportChooser.export"));
-	    String[] extns = e.getFileExtensions();
-	    String desc = e.getFileDescription();
-	    exportChooser.setFileFilter(new ExtensionFileFilter(extns, desc));
-	    int action = exportChooser.showSaveDialog(main);
-	    if (action != JFileChooser.APPROVE_OPTION)
-		return;
-	    try {
-		File f = ensureExtn(exportChooser.getSelectedFile(), extns[0]);
-		if (f.exists() && !okToOverwrite(f))
-		    return;
-		e.export(f);
-	    }
-	    catch (IOException ex) {
-		JOptionPane.showMessageDialog(main, 
-					      i18n.getString("wizard.exportError.txt", ex.getMessage()),
-					      i18n.getString("wizard.exportError.title"),
-					      JOptionPane.ERROR_MESSAGE);
-	    }
-	    catch (Interview.Fault ex) {
-		JOptionPane.showMessageDialog(main, 
-					      i18n.getString("wizard.exportError.txt", ex.getMessage()),
-					      i18n.getString("wizard.exportError.title"),
-					      JOptionPane.ERROR_MESSAGE);
-	    }
-	}
+        private void export(Exporter e) {
+            JFileChooser exportChooser = new JFileChooser();
+            if (currFile != null) {
+                // setCurrentDirectory required
+                exportChooser.setCurrentDirectory(new File(currFile.getParent()));
+                String[] extns = e.getFileExtensions();
+                int dot = currFile.getName().lastIndexOf(".");
+                if (dot != -1 && extns != null && extns.length > 0) {
+                    File f = new File(currFile.getName().substring(0, dot) + extns[0]);
+                    exportChooser.setSelectedFile(f);
+                }
+            }
+            else {
+                exportChooser.setCurrentDirectory(getUserDir());
+            }
+            exportChooser.setApproveButtonText(i18n.getString("wizard.exportChooser.export"));
+            String[] extns = e.getFileExtensions();
+            String desc = e.getFileDescription();
+            exportChooser.setFileFilter(new ExtensionFileFilter(extns, desc));
+            int action = exportChooser.showSaveDialog(main);
+            if (action != JFileChooser.APPROVE_OPTION)
+                return;
+            try {
+                File f = ensureExtn(exportChooser.getSelectedFile(), extns[0]);
+                if (f.exists() && !okToOverwrite(f))
+                    return;
+                e.export(f);
+            }
+            catch (IOException ex) {
+                JOptionPane.showMessageDialog(main,
+                                              i18n.getString("wizard.exportError.txt", ex.getMessage()),
+                                              i18n.getString("wizard.exportError.title"),
+                                              JOptionPane.ERROR_MESSAGE);
+            }
+            catch (Interview.Fault ex) {
+                JOptionPane.showMessageDialog(main,
+                                              i18n.getString("wizard.exportError.txt", ex.getMessage()),
+                                              i18n.getString("wizard.exportError.title"),
+                                              JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     private class Listener implements AncestorListener, Interview.Observer
     {
-	// ---------- from AncestorListener -----------
+        // ---------- from AncestorListener -----------
 
-	public void ancestorAdded(AncestorEvent e) {
-	    interview.addObserver(this);
-	    pathUpdated();
-	    currentQuestionChanged(interview.getCurrentQuestion());
-	}
+        public void ancestorAdded(AncestorEvent e) {
+            interview.addObserver(this);
+            pathUpdated();
+            currentQuestionChanged(interview.getCurrentQuestion());
+        }
 
-	public void ancestorMoved(AncestorEvent e) { }
+        public void ancestorMoved(AncestorEvent e) { }
 
-	public void ancestorRemoved(AncestorEvent e) {
-	    interview.removeObserver(this);
-	}
+        public void ancestorRemoved(AncestorEvent e) {
+            interview.removeObserver(this);
+        }
 
-	//----- from Interview.Observer -----------
+        //----- from Interview.Observer -----------
 
-	public void pathUpdated() { 
-	    okBtn.setEnabled(interview.isFinishable());
-	}
+        public void pathUpdated() {
+            okBtn.setEnabled(interview.isFinishable());
+        }
 
-	public void currentQuestionChanged(Question q) { 
-	    backBtn.setEnabled(!interview.isFirst(q));
-	    nextBtn.setEnabled(!interview.isLast(q));
-	}
+        public void currentQuestionChanged(Question q) {
+            backBtn.setEnabled(!interview.isFirst(q));
+            nextBtn.setEnabled(!interview.isLast(q));
+        }
     }
 }

@@ -39,50 +39,50 @@ import java.awt.print.Printable;
 import javax.swing.JEditorPane;
 
 class FilesPane extends JPanel implements Printable {
- 
-    static class Fault extends Exception {
-	Fault(I18NResourceBundle i18n, String s) {
-	    super(i18n.getString(s));
-	}
 
-	Fault(I18NResourceBundle i18n, String s, Object o) {
-	    super(i18n.getString(s, o));
-	}
+    static class Fault extends Exception {
+        Fault(I18NResourceBundle i18n, String s) {
+            super(i18n.getString(s));
+        }
+
+        Fault(I18NResourceBundle i18n, String s, Object o) {
+            super(i18n.getString(s, o));
+        }
     }
 
-    FilesPane(UIFactory uif) { 
-	this.uif = uif;
+    FilesPane(UIFactory uif) {
+        this.uif = uif;
 
         initGUI();
     }
-    
+
     public MultiFormatPane getMediaPane() {
         return mediaPane;
     }
-    
+
     public NavigationPane getNavigationPane() {
         return navPane;
     }
-    
-    void setBaseDirectory(File base) { 
+
+    void setBaseDirectory(File base) {
         mediaPane.setBaseDirectory(base);
-    } 
-    
-    File getBaseDirectory() {
-	return mediaPane.getBaseDirectory();
     }
-    
+
+    File getBaseDirectory() {
+        return mediaPane.getBaseDirectory();
+    }
+
     void setText(String text, String MIME) {
         mediaPane.showText(text, MIME);
     }
-    
+
     String getText() {
         return ((JEditorPane)mediaPane.getMediaPane(mediaPane.TEXT)).getText();
     }
-    
+
     void setFile(URL file) {
-        if (file != null) 
-	    setFiles(new URL[] { file });
+        if (file != null)
+            setFiles(new URL[] { file });
     }
 
     void setFiles(URL[] files) {
@@ -90,45 +90,45 @@ class FilesPane extends JPanel implements Printable {
         navPane.setURLs(files);
         mediaPane.loadPage(files[0]);
     }
-    
+
     URL getPage() {
         return mediaPane.getPage();
     }
 
     //------------------------------------------------------------------------------------
 
-    private void initGUI() { 
-	setName("fp");
-	setFocusable(false);
+    private void initGUI() {
+        setName("fp");
+        setFocusable(false);
 
-	setLayout(new BorderLayout()); 
+        setLayout(new BorderLayout());
         mediaPane = new MultiFormatPane(uif);
         navPane = new NavigationPane(uif, mediaPane);
-	
-	add(navPane, BorderLayout.NORTH);
-	add(mediaPane, BorderLayout.CENTER);
+
+        add(navPane, BorderLayout.NORTH);
+        add(mediaPane, BorderLayout.CENTER);
 
         noteField = uif.createOutputField("fp.note");
         mediaPane.setNoteField(noteField);
-        
-	add(noteField, BorderLayout.SOUTH);
+
+        add(noteField, BorderLayout.SOUTH);
     }
-    
-    void clear() { 
+
+    void clear() {
         mediaPane.clear();
     }
-    
+
     String getMIMEType(URL url) {
         return TextPane.getMIMEType(url);
     }
-    
+
     private JTextField noteField;
     private UIFactory uif;
 
     public int print (Graphics g, PageFormat pf, int pageIndex) {
         return mediaPane.print(g, pf, pageIndex);
     }
-    
+
     private MultiFormatPane mediaPane;
     private NavigationPane navPane;
 }

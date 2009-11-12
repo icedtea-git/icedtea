@@ -82,11 +82,11 @@ public class RenderingUtilities {
             if (vc == null) {
                 return false;
             }
-            
+
             if (vc.isUnsetAllowed()) {
                return true;
             }
-            
+
             if (vc instanceof IntConstraints) {
                 IntConstraints ic = (IntConstraints) vc;
                 if (ic.getSuggestions() == null ||
@@ -161,7 +161,7 @@ public class RenderingUtilities {
         }
 
         public Component getTableCellEditorComponent(JTable table, Object value,
-	        boolean isSelected, int row, int column) {
+                boolean isSelected, int row, int column) {
             String key = (String)(table.getValueAt(row, 0));
             ValueConstraints vc = q.getConstraints(key);
 
@@ -185,7 +185,7 @@ public class RenderingUtilities {
 
             return tf;
         }
-        
+
         private PropertiesQuestion q;
     }
 
@@ -214,8 +214,8 @@ public class RenderingUtilities {
             this.rules = rules;
         }
 
-	public Component getTableCellEditorComponent(JTable table, Object value,
-	         boolean isSelected, int row, int column) {
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                 boolean isSelected, int row, int column) {
             String key = (String)(table.getValueAt(row, 0));
             rules = question.getConstraints(key);
 
@@ -265,7 +265,7 @@ public class RenderingUtilities {
                         dir = new File(System.getProperty("user.dir"));
                     chooser.setCurrentDirectory(dir);
                 }
-                else 
+                else
                     chooser.setSelectedFile(f);
 
                 browseBtn.setName("file.browse.btn");
@@ -278,7 +278,7 @@ public class RenderingUtilities {
                         if (s != null && s.length() > 0) {
                             File f = new File(s);
                             File baseDir = fc.getBaseDirectory();
-                            if (!f.isAbsolute() && baseDir != null) 
+                            if (!f.isAbsolute() && baseDir != null)
                                 f = new File(baseDir, s);
                             chooser.setSelectedFile(f);
                         }
@@ -440,9 +440,9 @@ public class RenderingUtilities {
         }
 
         public Component getTableCellRendererComponent(JTable table, Object value,
-	          boolean isSelected, boolean hasFocus, int row, int column) {
-	    Component c = super.getTableCellRendererComponent(table, value, isSelected,
-				hasFocus, row, column);
+                  boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = super.getTableCellRendererComponent(table, value, isSelected,
+                                hasFocus, row, column);
 
             // XXX needs i18n and 508
             if ( q.isValueValid((String)(table.getValueAt(row, 0))) != null )
@@ -450,7 +450,7 @@ public class RenderingUtilities {
             else
                 c.setBackground(Color.WHITE);
 
-	    return c;
+            return c;
         }
 
         PropertiesQuestion q;

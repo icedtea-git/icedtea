@@ -44,19 +44,19 @@ import com.sun.javatest.util.I18NResourceBundle;
 
 class RenderingUtilities {
     static ListCellRenderer createTestListRenderer() {
-	return new TestCellRenderer(i18n);
+        return new TestCellRenderer(i18n);
     }
 
     static ListCellRenderer createTRTNodeRenderer() {
-	return new TestCellRenderer(i18n);
+        return new TestCellRenderer(i18n);
     }
 
     static ListCellRenderer createFilterListRenderer() {
-	return new FilterCellRenderer(i18n);
+        return new FilterCellRenderer(i18n);
     }
 
     private static I18NResourceBundle i18n =
-	I18NResourceBundle.getBundleForClass(RenderingUtilities.class);
+        I18NResourceBundle.getBundleForClass(RenderingUtilities.class);
     private static TestCellRenderer tlRend;
     private static FilterCellRenderer flRend;
 
@@ -66,67 +66,67 @@ class RenderingUtilities {
      * Render a list of tests (TestResult objects).
      */
     static class TestCellRenderer extends JLabel implements ListCellRenderer {
-	 public TestCellRenderer(I18NResourceBundle i18n) {
-	     setOpaque(false);
-	     this.i18n = i18n;
-	 }
+         public TestCellRenderer(I18NResourceBundle i18n) {
+             setOpaque(false);
+             this.i18n = i18n;
+         }
 
-	public Component getListCellRendererComponent(JList list,
-	    Object value, int index, boolean isSelected, boolean cellHasFocus) {
-	    if (value == null)	// very strange...
-		return this;
+        public Component getListCellRendererComponent(JList list,
+            Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            if (value == null)  // very strange...
+                return this;
 
-	    if (value instanceof TestResult) {
-		TestResult tr = (TestResult)value;
-		setText(tr.getTestName());
-		setToolTipText(I18NUtils.getStatusMessage(tr.getStatus()));
-		setBasicAttribs(isSelected);
-	    }
-	    else if (value instanceof TestResultTable.TreeNode) {
-		TestResultTable.TreeNode tn = (TestResultTable.TreeNode)value;
-		if (tn.getName() != null)
-		    setText(TestResultTable.getRootRelativePath(tn));
-		else
-		    setText(i18n.getString("rendUtil.rootName"));
-		//setToolTipText(I18NUtils.getStatusMessage(tr.getStatus()));
-		setBasicAttribs(isSelected);
-	    }
-	    else {	    // this code really should never run
-		setText(value.toString());
-		if (isSelected) {
-		    setOpaque(true);
-		    setBackground(MetalLookAndFeel.getTextHighlightColor());
-		}
-		else {
-		    setForeground(Color.black);
-		    setOpaque(false);
-		}
-	    }
+            if (value instanceof TestResult) {
+                TestResult tr = (TestResult)value;
+                setText(tr.getTestName());
+                setToolTipText(I18NUtils.getStatusMessage(tr.getStatus()));
+                setBasicAttribs(isSelected);
+            }
+            else if (value instanceof TestResultTable.TreeNode) {
+                TestResultTable.TreeNode tn = (TestResultTable.TreeNode)value;
+                if (tn.getName() != null)
+                    setText(TestResultTable.getRootRelativePath(tn));
+                else
+                    setText(i18n.getString("rendUtil.rootName"));
+                //setToolTipText(I18NUtils.getStatusMessage(tr.getStatus()));
+                setBasicAttribs(isSelected);
+            }
+            else {          // this code really should never run
+                setText(value.toString());
+                if (isSelected) {
+                    setOpaque(true);
+                    setBackground(MetalLookAndFeel.getTextHighlightColor());
+                }
+                else {
+                    setForeground(Color.black);
+                    setOpaque(false);
+                }
+            }
 
-	    setFont(getFont().deriveFont(Font.PLAIN));
+            setFont(getFont().deriveFont(Font.PLAIN));
 
-	    return this;
-	}
+            return this;
+        }
 
-	private void setBasicAttribs(boolean isSelected) {
-	    // Hopefully safe to share...will help with saving space
-	    // This border is to provide space between the text and the
-	    // side of the widget, helping readability.
-	    setBorder(spacerBorder);
+        private void setBasicAttribs(boolean isSelected) {
+            // Hopefully safe to share...will help with saving space
+            // This border is to provide space between the text and the
+            // side of the widget, helping readability.
+            setBorder(spacerBorder);
 
-	    if (isSelected) {
-		setOpaque(true);
-		setBackground(MetalLookAndFeel.getTextHighlightColor());
-	    }
-	    else {
-		setForeground(Color.black);
-		setOpaque(false);
-	    }
-	}
+            if (isSelected) {
+                setOpaque(true);
+                setBackground(MetalLookAndFeel.getTextHighlightColor());
+            }
+            else {
+                setForeground(Color.black);
+                setOpaque(false);
+            }
+        }
 
-	private I18NResourceBundle i18n;
-	// border to pad left and right
-	private Border spacerBorder = BorderFactory.createEmptyBorder(0,3,0,3);
+        private I18NResourceBundle i18n;
+        // border to pad left and right
+        private Border spacerBorder = BorderFactory.createEmptyBorder(0,3,0,3);
     }
 
     /**
@@ -134,52 +134,52 @@ class RenderingUtilities {
      * @see com.sun.javatest.TestFilter#getName()
      */
     static class FilterCellRenderer extends JLabel implements ListCellRenderer {
-	public FilterCellRenderer(I18NResourceBundle i18n) {
-	    setOpaque(false);
-	     this.i18n = i18n;
-	}
+        public FilterCellRenderer(I18NResourceBundle i18n) {
+            setOpaque(false);
+             this.i18n = i18n;
+        }
 
-	public Component getListCellRendererComponent(JList list,
-	    Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList list,
+            Object value, int index, boolean isSelected, boolean cellHasFocus) {
 
-	    String name = null;
+            String name = null;
 
-	    TestFilter filter = (TestFilter)value;
-	    name = filter.getName();
+            TestFilter filter = (TestFilter)value;
+            name = filter.getName();
 
-	    //setToolTipText(filter.getDescription());
-	    if (name != null && name.length() > 0)
-		setText(name);
-	    else
-		setText(i18n.getString("rendUtil.noFilterName"));
+            //setToolTipText(filter.getDescription());
+            if (name != null && name.length() > 0)
+                setText(name);
+            else
+                setText(i18n.getString("rendUtil.noFilterName"));
 
-	    setColors(isSelected);
-	    setFont(false);
+            setColors(isSelected);
+            setFont(false);
 
-	    return this;
-	}
+            return this;
+        }
 
-	private void setColors(boolean isSelected) {
-	    if (isSelected) {
-		setOpaque(true);
-		setForeground(Color.white);
-		setBackground(MetalLookAndFeel.getPrimaryControlDarkShadow());
-	    }
-	    else {
-		//setForeground(MetalLookAndFeel.getPrimaryControlDarkShadow());
-		setForeground(Color.black);
-		setOpaque(false);
-	    }
-	}
+        private void setColors(boolean isSelected) {
+            if (isSelected) {
+                setOpaque(true);
+                setForeground(Color.white);
+                setBackground(MetalLookAndFeel.getPrimaryControlDarkShadow());
+            }
+            else {
+                //setForeground(MetalLookAndFeel.getPrimaryControlDarkShadow());
+                setForeground(Color.black);
+                setOpaque(false);
+            }
+        }
 
-	private void setFont(boolean isActive) {
-	    if (isActive)
-		setFont(getFont().deriveFont(Font.BOLD));
-	    else
-		setFont(getFont().deriveFont(Font.PLAIN));
-	}
+        private void setFont(boolean isActive) {
+            if (isActive)
+                setFont(getFont().deriveFont(Font.BOLD));
+            else
+                setFont(getFont().deriveFont(Font.PLAIN));
+        }
 
-	private I18NResourceBundle i18n;
+        private I18NResourceBundle i18n;
     }
     // end inner classes
 }

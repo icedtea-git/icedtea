@@ -33,7 +33,7 @@ import java.util.Vector;
 /**
  * A {@link Question question} to which the response is one or more filenames.
  */
-public abstract class FileListQuestion extends Question 
+public abstract class FileListQuestion extends Question
 {
     /**
      * Create a question with a nominated tag.
@@ -41,12 +41,12 @@ public abstract class FileListQuestion extends Question
      * @param tag A unique tag to identify this specific question.
      */
     protected FileListQuestion(Interview interview, String tag) {
-	super(interview, tag);
+        super(interview, tag);
 
-	if (interview.getInterviewSemantics() > Interview.SEMANTIC_PRE_32)
-	    clear();
+        if (interview.getInterviewSemantics() > Interview.SEMANTIC_PRE_32)
+            clear();
 
-	setDefaultValue(value);
+        setDefaultValue(value);
     }
 
     /**
@@ -56,18 +56,18 @@ public abstract class FileListQuestion extends Question
      * @see #setDefaultValue
      */
     public File[] getDefaultValue() {
-	return defaultValue;
+        return defaultValue;
     }
 
     /**
      * Set the default response for this question,
-     * used by the clear method. 
+     * used by the clear method.
      * @param v the default response for this question.
      *
      * @see #getDefaultValue
      */
     public void setDefaultValue(File[] v) {
-	defaultValue = v;
+        defaultValue = v;
     }
 
     /**
@@ -77,7 +77,7 @@ public abstract class FileListQuestion extends Question
      * @see #isDuplicatesAllowed
      */
     public void setDuplicatesAllowed(boolean b) {
-	duplicatesAllowed = b;
+        duplicatesAllowed = b;
     }
 
     /**
@@ -86,40 +86,40 @@ public abstract class FileListQuestion extends Question
      * @see #setDuplicatesAllowed
      */
     public boolean isDuplicatesAllowed() {
-	return duplicatesAllowed;
+        return duplicatesAllowed;
     }
 
     /**
      * Get the current (default or latest) response to this question.
-     * @return The current value. 
+     * @return The current value.
      * @see #setValue
      */
     public File[] getValue() {
-	return value;
+        return value;
     }
 
     /**
      * Verify this question is on the current path, and if it is,
      * return the current value.
      * @return the current value of this question
-     * @throws Interview.NotOnPathFault if this question is not on the 
+     * @throws Interview.NotOnPathFault if this question is not on the
      * current path
      * @see #getValue
      */
-    public File[] getValueOnPath() 
-	throws Interview.NotOnPathFault
+    public File[] getValueOnPath()
+        throws Interview.NotOnPathFault
     {
-	interview.verifyPathContains(this);
-	return getValue();
+        interview.verifyPathContains(this);
+        return getValue();
     }
 
     public String getStringValue() {
-	return join(value);
+        return join(value);
     }
 
     /**
      * Set the response to this question to the value represented by
-     * a string-valued argument. 
+     * a string-valued argument.
      * @see #getValue
      */
     public void setValue(String paths) {
@@ -127,25 +127,25 @@ public abstract class FileListQuestion extends Question
     }
 
     /**
-     * Set the current value. 
-     * @param newValue The value to be set. 
+     * Set the current value.
+     * @param newValue The value to be set.
      * @see #getValue
      */
     public void setValue(File[] newValue) {
-	File[] oldValue = value;
-	value = newValue;
-	if (!equal(value, oldValue)) {
-	    interview.updatePath(this);
-	    interview.setEdited(true);
-	}
+        File[] oldValue = value;
+        value = newValue;
+        if (!equal(value, oldValue)) {
+            interview.updatePath(this);
+            interview.setEdited(true);
+        }
     }
 
     public boolean isValueValid() {
-	return true;
+        return true;
     }
 
     public boolean isValueAlwaysValid() {
-	return false;
+        return false;
     }
 
     /**
@@ -156,7 +156,7 @@ public abstract class FileListQuestion extends Question
      * @see #setFilters
      */
     public FileFilter[] getFilters() {
-	return filters;
+        return filters;
     }
 
     /**
@@ -168,7 +168,7 @@ public abstract class FileListQuestion extends Question
      * @see #setFilters
      */
     public void setFilter(FileFilter filter) {
-	filters = new FileFilter[] { filter };
+        filters = new FileFilter[] { filter };
     }
 
     /**
@@ -180,7 +180,7 @@ public abstract class FileListQuestion extends Question
      * @see #setFilters
      */
     public void setFilters(FileFilter[] filters) {
-	this.filters = filters;
+        this.filters = filters;
     }
 
     /**
@@ -190,7 +190,7 @@ public abstract class FileListQuestion extends Question
      * @see #isBaseRelativeOnly
      */
     public File getBaseDirectory() {
-	return baseDir;
+        return baseDir;
     }
 
     /**
@@ -199,7 +199,7 @@ public abstract class FileListQuestion extends Question
      * @see #getBaseDirectory
      */
     public void setBaseDirectory(File dir) {
-	baseDir = dir;
+        baseDir = dir;
     }
 
     /**
@@ -210,18 +210,18 @@ public abstract class FileListQuestion extends Question
      * @see #setBaseRelativeOnly
      */
     public boolean isBaseRelativeOnly() {
-	return baseRelativeOnly;
+        return baseRelativeOnly;
     }
 
     /**
      * Specify whether all valid responses to this question should be
      * relative to the base directory (i.e. in or under it.)
-     * @param b this parameter should be true if all valid responses 
+     * @param b this parameter should be true if all valid responses
      * to this question should be relative to the base directory
      * @see #setBaseRelativeOnly
      */
     public void setBaseRelativeOnly(boolean b) {
-	baseRelativeOnly = b;
+        baseRelativeOnly = b;
     }
 
     /**
@@ -229,7 +229,7 @@ public abstract class FileListQuestion extends Question
      * back to its initial state.
      */
     public void clear() {
-	setValue(defaultValue);
+        setValue(defaultValue);
     }
 
     /**
@@ -238,50 +238,50 @@ public abstract class FileListQuestion extends Question
      * @param data The map from which to load the value for this question.
      */
     protected void load(Map data) {
-	Object o = data.get(tag);
-	if (o instanceof File[])
-	    setValue((File[])o);
-	else if (o instanceof String)
-	    setValue(split((String)o));
+        Object o = data.get(tag);
+        if (o instanceof File[])
+            setValue((File[])o);
+        else if (o instanceof String)
+            setValue(split((String)o));
     }
 
     /**
-     * Break apart a string containing a white-space separate list of file 
-     * names into an array of individual files.  
+     * Break apart a string containing a white-space separate list of file
+     * names into an array of individual files.
      * If the string is null or empty, an empty array is returned.
-     * The preferred separator is a newline character; 
-     * if there are no newline characters in the string, then 
+     * The preferred separator is a newline character;
+     * if there are no newline characters in the string, then
      * (for backward compatibility) space is accepted instead.
      * @param s The string to be broken apart
      * @return An array of files determined from the parameter string.
      * @see #join
      */
     public static File[] split(String s) {
-	if (s == null)
-	    return empty;
+        if (s == null)
+            return empty;
 
-	char sep = (s.indexOf('\n') == -1 ? ' ' : '\n');
+        char sep = (s.indexOf('\n') == -1 ? ' ' : '\n');
 
-	Vector v = new Vector();
-	int start = -1;
-	for (int i = 0; i < s.length(); i++) {
-	    if (s.charAt(i) == sep) {
-	        if (start != -1)
-		    v.addElement(new File(s.substring(start, i)));
-	        start = -1;
-	    } else
-	        if (start == -1)
-		    start = i;
-	}
-	if (start != -1)
-	    v.addElement(new File(s.substring(start)));
-	if (v.size() == 0)
-	    return empty;
-	File[] a = new File[v.size()];
-	v.copyInto(a);
-	return a;
+        Vector v = new Vector();
+        int start = -1;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == sep) {
+                if (start != -1)
+                    v.addElement(new File(s.substring(start, i)));
+                start = -1;
+            } else
+                if (start == -1)
+                    start = i;
+        }
+        if (start != -1)
+            v.addElement(new File(s.substring(start)));
+        if (v.size() == 0)
+            return empty;
+        File[] a = new File[v.size()];
+        v.copyInto(a);
+        return a;
     }
-    
+
     private static final File[] empty = { };
 
     /**
@@ -290,48 +290,48 @@ public abstract class FileListQuestion extends Question
      * @param data The map in which to save the value for this question.
      */
     protected void save(Map data) {
-	if (value != null)
-	    data.put(tag, join(value));
+        if (value != null)
+            data.put(tag, join(value));
     }
 
     /**
      * Convert a list of filenames to a newline separated string.
      * @param ff an array of filenames
-     * @return a string containing the filenames separated by newline 
+     * @return a string containing the filenames separated by newline
      * characters.
-     * If there is just one filename, and if it contains space characters 
+     * If there is just one filename, and if it contains space characters
      * in its path,
      * the list is terminated by a newline as well.
      * If the parameter array is null or empty, an empty string is returned.
      * @see #split
      */
     public static String join(File[] ff) {
-	if (ff == null || ff.length == 0)
-	    return "";
+        if (ff == null || ff.length == 0)
+            return "";
 
-	int l = ff.length - 1; // allow for spaces between words
-	for (int i = 0; i < ff.length; i++)
-	    l += ff[i].getPath().length();
+        int l = ff.length - 1; // allow for spaces between words
+        for (int i = 0; i < ff.length; i++)
+            l += ff[i].getPath().length();
 
-	StringBuffer sb = new StringBuffer(l);
+        StringBuffer sb = new StringBuffer(l);
 
-	String ff0p = ff[0].getPath();
-	sb.append(ff0p);
+        String ff0p = ff[0].getPath();
+        sb.append(ff0p);
 
-	if (ff.length == 1 && ff0p.indexOf(' ') != -1) {
-	    // if there is just one file, and if it contains space characters,
-	    // then force a newline character for subsequent split to recognize
-	    sb.append('\n');
-	}
-	else {
-	    // if there is more than one file, separate them with newlines
-	    for (int i = 1; i < ff.length; i++) {
-		sb.append('\n');
-		sb.append(ff[i].getPath());
-	    }
-	}
+        if (ff.length == 1 && ff0p.indexOf(' ') != -1) {
+            // if there is just one file, and if it contains space characters,
+            // then force a newline character for subsequent split to recognize
+            sb.append('\n');
+        }
+        else {
+            // if there is more than one file, separate them with newlines
+            for (int i = 1; i < ff.length; i++) {
+                sb.append('\n');
+                sb.append(ff[i].getPath());
+            }
+        }
 
-	return sb.toString();
+        return sb.toString();
     }
 
     /**
@@ -342,18 +342,18 @@ public abstract class FileListQuestion extends Question
      * their contents match, element for element, in order
      */
     protected static boolean equal(File[] f1, File[] f2) {
-	if (f1 == null || f2 == null)
-	    return (f1 == f2);
+        if (f1 == null || f2 == null)
+            return (f1 == f2);
 
-	if (f1.length != f2.length)
-	    return false;
+        if (f1.length != f2.length)
+            return false;
 
-	for (int i = 0; i < f1.length; i++) {
-	    if (f1[i] != f2[i])
-		return false;
-	}
+        for (int i = 0; i < f1.length; i++) {
+            if (f1[i] != f2[i])
+                return false;
+        }
 
-	return true;
+        return true;
     }
 
     /**

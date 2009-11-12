@@ -816,6 +816,3 @@ public class InterviewPropagator {
     private String [] ignorableProps ;
     private String [] ignorablePrefs ;
 }
-
-
-

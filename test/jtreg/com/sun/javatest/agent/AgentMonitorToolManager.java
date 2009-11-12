@@ -39,33 +39,33 @@ import com.sun.javatest.tool.ToolManager;
 /**
  * The ToolManager for {@link AgentMonitorTool agent monitor} window.
  */
-public class AgentMonitorToolManager extends ToolManager 
+public class AgentMonitorToolManager extends ToolManager
 {
     /**
      * Create an agent tool manager.
      * @param desktop the desktop for which this manager will manage agent monitor tools
      */
     public AgentMonitorToolManager(Desktop desktop) {
-	super(desktop);
+        super(desktop);
     }
 
     //----------------------------------------------------------------------------
 
     public Action[] getWindowOpenMenuActions() {
-	Action a = new ToolAction(i18n, "tmgr.openMonitor") {
-	    public void actionPerformed(ActionEvent e) {
-		startTool();
-	    }
-	};
-	return new Action[] { a };
+        Action a = new ToolAction(i18n, "tmgr.openMonitor") {
+            public void actionPerformed(ActionEvent e) {
+                startTool();
+            }
+        };
+        return new Action[] { a };
     }
 
     //----------------------------------------------------------------------------
 
     public Tool restoreTool(Map m) {
-	AgentMonitorTool t = getTool();
-	t.restore(m);
-	return t;
+        AgentMonitorTool t = getTool();
+        t.restore(m);
+        return t;
     }
 
     //----------------------------------------------------------------------------
@@ -74,14 +74,14 @@ public class AgentMonitorToolManager extends ToolManager
      * Start the {@link AgentMonitorTool agent monitor} window.
      */
     public Tool startTool() {
-	AgentMonitorTool t = getTool();
+        AgentMonitorTool t = getTool();
 
-	Desktop d = getDesktop();
-	if (!d.containsTool(t))
-	    d.addTool(t);
-	d.setSelectedTool(t);
+        Desktop d = getDesktop();
+        if (!d.containsTool(t))
+            d.addTool(t);
+        d.setSelectedTool(t);
 
-	return t;
+        return t;
     }
 
     /**
@@ -89,23 +89,22 @@ public class AgentMonitorToolManager extends ToolManager
      * @return the one agent monitor tool managed by this tool manager
      */
     public AgentMonitorTool getTool() {
-	if (tool == null) {
-	    tool = new AgentMonitorTool(this);
-	    tool.addObserver(new Tool.Observer() {
-		    public void shortTitleChanged(Tool t, String newValue) { }
+        if (tool == null) {
+            tool = new AgentMonitorTool(this);
+            tool.addObserver(new Tool.Observer() {
+                    public void shortTitleChanged(Tool t, String newValue) { }
 
-		    public void titleChanged(Tool t, String newValue) { }
-		    
-		    public void toolDisposed(Tool t) {
-			if (t == tool)
-			    tool = null;
-		    }
-		});
-	}
+                    public void titleChanged(Tool t, String newValue) { }
 
-	return tool;
+                    public void toolDisposed(Tool t) {
+                        if (t == tool)
+                            tool = null;
+                    }
+                });
+        }
+
+        return tool;
     }
 
     private AgentMonitorTool tool;
 }
-

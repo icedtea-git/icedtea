@@ -35,19 +35,19 @@ import com.sun.javatest.Status;
 // TODO: I18N
 
 public class RegressionObserver implements Harness.Observer {
-    
+
     RegressionObserver(Verbose verbose, PrintWriter out, PrintWriter err) {
         this.verbose = verbose;
         this.out = out;
         this.err = err;
     }
-    
+
     public void startingTestRun(Parameters params) { }
     public void stoppingTestRun() { }
     public void finishedTesting() { }
     public void finishedTestRun(boolean allOK) { }
-    
-    
+
+
     public synchronized void startingTest(TestResult tr) {
         if (verbose == Verbose.DEFAULT) {
             try {
@@ -59,7 +59,7 @@ public class RegressionObserver implements Harness.Observer {
             }
         }
     } // starting()
-    
+
     public synchronized void finishedTest(TestResult tr) {
         Verbose.Mode m;
         switch (tr.getStatus().getType()) {
@@ -75,11 +75,11 @@ public class RegressionObserver implements Harness.Observer {
             default:
                 m = Verbose.Mode.NONE;
         }
-        
+
         switch (m) {
             case NONE:
                 break;
-                
+
             case DEFAULT:
                 try {
                     TestDescription td = tr.getDescription();
@@ -92,21 +92,21 @@ public class RegressionObserver implements Harness.Observer {
                     e.printStackTrace();
                 }
                 break;
-                
+
             case SUMMARY:
                 printSummary(tr, verbose.time);
                 break;
-                
+
             case BRIEF:
                 printBriefOutput(tr, verbose.time);
                 break;
-                
+
             case FULL:
                 printFullOutput(tr);
                 break;
         }
     } // finished()
-    
+
     /**
      * Print out one line per test indicating the status category for the
      * named test.
@@ -118,7 +118,7 @@ public class RegressionObserver implements Harness.Observer {
         try {
             TestDescription td = tr.getDescription();
             String msg;
-            
+
             if (tr.getStatus().isPassed())
                 msg = "Passed: ";
             else if (tr.getStatus().isFailed())
@@ -129,15 +129,15 @@ public class RegressionObserver implements Harness.Observer {
                 msg = "Unexpected status: ";
             msg += td.getRootRelativeURL();
             out.println(msg);
-            
+
             if (times)
                 printElapsedTimes(tr);
-            
+
         } catch (TestResult.Fault e) {
             e.printStackTrace();
         }
     } // printSummary()
-    
+
     /**
      * Print out two lines per test indicating the name of the test and the
      * final status.
@@ -150,22 +150,22 @@ public class RegressionObserver implements Harness.Observer {
             out.println(VERBOSE_TEST_SEP);
             doneSeparator = true;
         }
-        
+
         try {
             TestDescription td = tr.getDescription();
             out.println("TEST: " + td.getRootRelativeURL());
-            
+
             if (times)
                 printElapsedTimes(tr);
-            
+
             out.println("TEST RESULT: " + tr.getStatus());
         } catch (TestResult.Fault e) {
             e.printStackTrace();
         }
-        
+
         out.println(VERBOSE_TEST_SEP);
     } // printBriefOutput()
-    
+
     /**
      * Print out full information for the test.  This includes the reason
      * for running each action, the action's output streams, the final
@@ -180,12 +180,12 @@ public class RegressionObserver implements Harness.Observer {
             out.println(VERBOSE_TEST_SEP);
             doneSeparator = true;
         }
-        
+
         try {
             TestDescription td = tr.getDescription();
             out.println("TEST: " + td.getRootRelativeURL());
             out.println(getTestJDK(tr));
-            
+
             StringBuffer sb = new StringBuffer();
             for (int i = 1; i < tr.getSectionCount(); i++) {
                 TestResult.Section section = tr.getSection(i);
@@ -195,7 +195,7 @@ public class RegressionObserver implements Harness.Observer {
                 sb.append("REASON: ").append(getReason(section)).append(LINESEP);
                 sb.append("TIME:   ").append(getElapsedTime(section));
                 sb.append(" seconds").append(LINESEP);
-                
+
                 String[] outputNames = section.getOutputNames();
                 for (int n = 0; n < outputNames.length; n++) {
                     String name = outputNames[n];
@@ -209,14 +209,14 @@ public class RegressionObserver implements Harness.Observer {
                 }
             }
             out.println(sb.toString());
-            
+
             out.println("TEST RESULT: " + tr.getStatus());
             out.println(VERBOSE_TEST_SEP);
         } catch (TestResult.Fault e) {
             e.printStackTrace();
         }
     } // printFullOutput()
-    
+
     /**
      * Print out one line per test indicating the status category for the
      * named test and the elapsed time per action in the test.
@@ -237,7 +237,7 @@ public class RegressionObserver implements Harness.Observer {
             f.printStackTrace();
         }
     } // printElapsedTimes()
-    
+
     /**
      * Find the reason that the action was run.  This method takes
      * advantage of the fact that the reason string begins with
@@ -254,7 +254,7 @@ public class RegressionObserver implements Harness.Observer {
         int posEnd   = msg.indexOf(LINESEP, posStart);
         return msg.substring(posStart, posEnd);
     } // getReason()
-    
+
     /**
      * Find the elapsed time for the action.  This method takes advantage
      * of the fact that the string containing the elapsed time begins with
@@ -272,8 +272,8 @@ public class RegressionObserver implements Harness.Observer {
         int posEnd = msg.indexOf(LINESEP, posStart);
         return msg.substring(posStart, posEnd);
     } // getElapsedTime()
-    
-    
+
+
     /**
      * Find the JDK under test.  This string is sent to the System message
      * section.  This method takes advantage of the fact that desired
@@ -296,30 +296,30 @@ public class RegressionObserver implements Harness.Observer {
         }
         return "???";
     } // getTestJDK()
-    
+
     //------methods from Log-----------------------------------------------
-    
+
     public synchronized void report(String s) {
     }
-    
+
     public synchronized void report(String[] s) {
     }
-    
+
     public synchronized void error(String s) {
         err.println("Error: " + s);
     }
-    
+
     public synchronized void error(String[] s) {
         err.println("Error:");
         for (int i = 0; i < s.length; i++)
             err.println(s[i]);
     }
-    
+
     //----------member variables-------------------------------------------
-    
+
     private static final String VERBOSE_TEST_SEP = "--------------------------------------------------";
     private static final String LINESEP = System.getProperty("line.separator");
-    
+
     private Verbose verbose;
     private PrintWriter out;
     private PrintWriter err;

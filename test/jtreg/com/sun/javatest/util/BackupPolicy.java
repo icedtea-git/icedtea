@@ -41,15 +41,15 @@ import java.util.Vector;
  * An abstract base class to provide a way of opening files subject
  * to a policy of what to do if a file of the same name already exists.
  */
-public abstract class BackupPolicy 
+public abstract class BackupPolicy
 {
     /**
-     * Backup a file by renaming it to have have a new name of 
+     * Backup a file by renaming it to have have a new name of
      * <i>old-name</i>~<i>n</i> where n is chosen to be higher than
      * any other for which a candidate new filename exists.
      * Thus, successive backups of a file named "x" will create
      * files named "x~1~", "x~2~", "x~3~", etc.
-     * The number of backup files to keep is determined by 
+     * The number of backup files to keep is determined by
      * getNumBackupsToKeep. In addition, backups can be suppressed
      * by isBackupRequired if desired.
      * @param file the file to be backed up
@@ -60,69 +60,69 @@ public abstract class BackupPolicy
      * @see #isBackupRequired
      */
     public void backup(File file) throws IOException, SecurityException {
-	if (!isBackupRequired(file))
-	    return;
+        if (!isBackupRequired(file))
+            return;
 
-	if (!file.exists())
-	    return;
+        if (!file.exists())
+            return;
 
-	if (file.isDirectory())
-	    throw new IOException("Cannot backup a directory");
+        if (file.isDirectory())
+            throw new IOException("Cannot backup a directory");
 
-	if (!file.canWrite())
-	    throw new IOException("File is write-protected");
+        if (!file.canWrite())
+            throw new IOException("File is write-protected");
 
-	File canon = new File(file.getCanonicalPath());
-	String p = canon.getParent();
-	if (p == null)
-	    throw new IOException("Cannot determine parent directory of " + file);
-       
-	File dir = new File(p);
-	String[] dirFiles = dir.list();
+        File canon = new File(file.getCanonicalPath());
+        String p = canon.getParent();
+        if (p == null)
+            throw new IOException("Cannot determine parent directory of " + file);
 
-	String prefix = file.getName() + "~";
-	String suffix = "~";
-	int maxBackupIndex = 0;
-	Vector backups = new Vector(); 
+        File dir = new File(p);
+        String[] dirFiles = dir.list();
+
+        String prefix = file.getName() + "~";
+        String suffix = "~";
+        int maxBackupIndex = 0;
+        Vector backups = new Vector();
     nextFile:
-	if (dirFiles != null) {
-	    for (int i = 0; i < dirFiles.length; i++) {
-		String s = dirFiles[i];
-		if (s.length() > (prefix.length() + suffix.length()) &&
-		    	s.startsWith(prefix) && s.endsWith(suffix)) {
-		    String mid = s.substring(prefix.length(), s.length() - suffix.length());
-		    // verify filename is numeric between prefix and suffix; if not; skip it
-		    for (int m = 0; m < mid.length(); m++)
-			if (!Character.isDigit(mid.charAt(m)))
-			    break nextFile;
-		    // if numeric, get the backup index; ignore NumberFormatException
-		    // since is really should not happen, given preceding check
-		    int index = Integer.parseInt(mid);
-		    if (index > maxBackupIndex)
-			maxBackupIndex = index;
-		    backups.addElement(new Integer(index));
-		}
-	    }
-	}
+        if (dirFiles != null) {
+            for (int i = 0; i < dirFiles.length; i++) {
+                String s = dirFiles[i];
+                if (s.length() > (prefix.length() + suffix.length()) &&
+                        s.startsWith(prefix) && s.endsWith(suffix)) {
+                    String mid = s.substring(prefix.length(), s.length() - suffix.length());
+                    // verify filename is numeric between prefix and suffix; if not; skip it
+                    for (int m = 0; m < mid.length(); m++)
+                        if (!Character.isDigit(mid.charAt(m)))
+                            break nextFile;
+                    // if numeric, get the backup index; ignore NumberFormatException
+                    // since is really should not happen, given preceding check
+                    int index = Integer.parseInt(mid);
+                    if (index > maxBackupIndex)
+                        maxBackupIndex = index;
+                    backups.addElement(new Integer(index));
+                }
+            }
+        }
 
-	// try renaming file to file~(++maxBackupIndex)~
-	File backup = new File(file.getPath() + "~" + (++maxBackupIndex) + "~");
+        // try renaming file to file~(++maxBackupIndex)~
+        File backup = new File(file.getPath() + "~" + (++maxBackupIndex) + "~");
 
-	boolean ok = file.renameTo(backup);
-	if (!ok)
-	    throw new IOException("failed to backup file: " + file);
+        boolean ok = file.renameTo(backup);
+        if (!ok)
+            throw new IOException("failed to backup file: " + file);
 
-	// delete old backups
-	int numBackupsToKeep = getNumBackupsToKeep(file);
-	for (int i = 0; i < backups.size(); i++) {
-	    int index = ((Integer)(backups.elementAt(i))).intValue();
-	    if (index <= (maxBackupIndex-numBackupsToKeep)) {
-	        File backupToGo = new File(file.getPath() + "~" + index + "~");
-		// let SecurityExceptions out, but otherwise ignore failures
-		// to delete old backups
-		boolean ignore = backupToGo.delete();
-	    }
-	}
+        // delete old backups
+        int numBackupsToKeep = getNumBackupsToKeep(file);
+        for (int i = 0; i < backups.size(); i++) {
+            int index = ((Integer)(backups.elementAt(i))).intValue();
+            if (index <= (maxBackupIndex-numBackupsToKeep)) {
+                File backupToGo = new File(file.getPath() + "~" + index + "~");
+                // let SecurityExceptions out, but otherwise ignore failures
+                // to delete old backups
+                boolean ignore = backupToGo.delete();
+            }
+        }
     }
 
     /**
@@ -130,12 +130,12 @@ public abstract class BackupPolicy
      * necessary.  This method will return without action if the source file does not
      * exist.
      *
-     * @param source The file to be backed up. 
-     * 			It must be a file (not a directory) which is deleteable.
-     * @param target The new name for the file. It must be a file (not a directory) 
-     * 			which is will be at a writable location.
+     * @param source The file to be backed up.
+     *                  It must be a file (not a directory) which is deleteable.
+     * @param target The new name for the file. It must be a file (not a directory)
+     *                  which is will be at a writable location.
      * @throws IOException if there is a problem renaming the file.
-     * 		This may happen if the source is a
+     *          This may happen if the source is a
      *         directory, the source file is not writable, or the rename operation
      *         fails.  In all cases, the rename operation was not successful.
      * @throws SecurityException if the backup operation fails because of a security
@@ -144,27 +144,27 @@ public abstract class BackupPolicy
      * @since 3.0.1
      */
     public void backupAndRename(File source, File target) throws IOException, SecurityException {
-	if (!source.exists())
-	    return;
+        if (!source.exists())
+            return;
 
-	if (source.isDirectory())
-	    throw new IOException("Cannot backup a directory.");
+        if (source.isDirectory())
+            throw new IOException("Cannot backup a directory.");
 
-	if (!source.canWrite())
-	    throw new IOException("Cannot rename, source file is write-protected " + source.getPath());
+        if (!source.canWrite())
+            throw new IOException("Cannot rename, source file is write-protected " + source.getPath());
 
-	if (isBackupRequired(target)) {
-	    backup(target);
-	}
-	else if (target.exists()) {
-	    // remove the file we are about to overwrite
-	    // not really needed on Solaris, seems to be needed on Win32
-	    target.delete();
-	}
+        if (isBackupRequired(target)) {
+            backup(target);
+        }
+        else if (target.exists()) {
+            // remove the file we are about to overwrite
+            // not really needed on Solaris, seems to be needed on Win32
+            target.delete();
+        }
 
-	boolean result = source.renameTo(target);
-	if (!result)
-	    throw new IOException("Rename of " + target.getPath() + " failed."); 
+        boolean result = source.renameTo(target);
+        if (!result)
+            throw new IOException("Rename of " + target.getPath() + " failed.");
     }
 
     /**
@@ -172,13 +172,13 @@ public abstract class BackupPolicy
      * @param file the file to be backed up, and for which a new Writer will be opened
      * @return a buffered file writer to the specified file
      * @throws IOException if there is a problem backing up the file or creating
-     * 	the new writer object
+     *  the new writer object
      * @throws SecurityException if the operation could not be completed because
      * of a security constraint
      */
     public Writer backupAndOpenWriter(File file) throws IOException, SecurityException {
-	backup(file);
-	return new BufferedWriter(new FileWriter(file));
+        backup(file);
+        return new BufferedWriter(new FileWriter(file));
     }
 
     /**
@@ -187,28 +187,28 @@ public abstract class BackupPolicy
      * @param charsetName Create an OutputStreamWriter that uses the named charset
      * @return a buffered file writer to the specified file
      * @throws IOException if there is a problem backing up the file or creating
-     * 	the new writer object
+     *  the new writer object
      * @throws SecurityException if the operation could not be completed because
      * of a security constraint
      */
     public Writer backupAndOpenWriter(File file, String charsetName) throws IOException, SecurityException {
-	backup(file);
-	return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), charsetName));
+        backup(file);
+        return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), charsetName));
     }
-    
-    
+
+
     /**
      * Backup a file and open a new output stream to the file.
      * @param file the file to be backed up, and for which a new output stream will be opened
      * @return a buffered output stream to the specified file
      * @throws IOException if there is a problem backing up the file or creating
-     * 	the new output stream
+     *  the new output stream
      * @throws SecurityException if the operation could not be completed because
      * of a security constraint
      */
     public OutputStream backupAndOpenStream(File file) throws IOException, SecurityException {
-	backup(file);
-	return new BufferedOutputStream(new FileOutputStream(file));
+        backup(file);
+        return new BufferedOutputStream(new FileOutputStream(file));
     }
 
     /**
@@ -229,34 +229,34 @@ public abstract class BackupPolicy
      */
     public abstract boolean isBackupRequired(File file);
 
-    /** 
+    /**
      * Get a BackupPolicy object which does no backups for any files.
      * @return a BackupPolicy object which does no backups for any files
      */
     public static BackupPolicy noBackups() {
-	return new BackupPolicy() {
-	    public int getNumBackupsToKeep(File file) {
-		return 0;
-	    }
-	    public boolean isBackupRequired(File file) {
-		return false;
-	    }
-	};	
+        return new BackupPolicy() {
+            public int getNumBackupsToKeep(File file) {
+                return 0;
+            }
+            public boolean isBackupRequired(File file) {
+                return false;
+            }
+        };
     }
 
-    /** 
+    /**
      * Get a BackupPolicy object which does a set number of backups for all files.
      * @param n The number of backups to kept for each file
      * @return a BackupPolicy object which does a set number of backups for all files
      */
     public static BackupPolicy simpleBackups(final int n) {
-	return new BackupPolicy() {
-	    public int getNumBackupsToKeep(File file) {
-		return n;
-	    }
-	    public boolean isBackupRequired(File file) {
-		return true;
-	    }
-	};	
+        return new BackupPolicy() {
+            public int getNumBackupsToKeep(File file) {
+                return n;
+            }
+            public boolean isBackupRequired(File file) {
+                return true;
+            }
+        };
     }
 }

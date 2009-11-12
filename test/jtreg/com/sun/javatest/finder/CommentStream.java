@@ -40,7 +40,7 @@ abstract public class CommentStream
      * @param br The reader from which to read.
      */
     public void init(BufferedReader br) {
-	cs = br;
+        cs = br;
     }
 
     /**
@@ -48,25 +48,25 @@ abstract public class CommentStream
      * @throws IOException if there is a problem closing the stream.
      */
     public void close() throws IOException {
-	cs.close();
+        cs.close();
     }
 
     /**
      * Set this comment stream into "fast scan" mode.
-     * Depending on the context, this should be set if there is a 
+     * Depending on the context, this should be set if there is a
      * constraint that limits the set of comments that might be of
      * interest.
      * @param b Set to true to enable a fast scan for comments.
      */
     public void setFastScan(boolean b) {
-	fastScan = b;
+        fastScan = b;
     }
 
-    /** 
+    /**
      * Read the next comment from the input reader.
      * @return The next comment that is read from the stream.
-     * @throws IOException if there is a problem while reading the 
-     * 		next comment.
+     * @throws IOException if there is a problem while reading the
+     *          next comment.
      */
     abstract public String readComment() throws IOException;
 

@@ -40,19 +40,19 @@ public class SortedProperties extends Properties
 {
     // override Keys() to return a sorted set
     public Enumeration keys() {
-	Set s = new TreeSet(); // ordered
-	for (Enumeration e = super.keys(); e.hasMoreElements(); ) {
-	    s.add(e.nextElement());
-	}
-	
-	final Iterator iter = s.iterator();
-	return new Enumeration() {
-		public boolean hasMoreElements() {
-		    return iter.hasNext();
-		}
-		public Object nextElement() {
-		    return iter.next();
-		}
-	    };
+        Set s = new TreeSet(); // ordered
+        for (Enumeration e = super.keys(); e.hasMoreElements(); ) {
+            s.add(e.nextElement());
+        }
+
+        final Iterator iter = s.iterator();
+        return new Enumeration() {
+                public boolean hasMoreElements() {
+                    return iter.hasNext();
+                }
+                public Object nextElement() {
+                    return iter.next();
+                }
+            };
     }
 }

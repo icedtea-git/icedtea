@@ -46,36 +46,36 @@ public abstract class Keywords
      */
     public static class Fault extends Exception
     {
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 */
-	Fault(I18NResourceBundle i18n, String s) {
-	    super(i18n.getString(s));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         */
+        Fault(I18NResourceBundle i18n, String s) {
+            super(i18n.getString(s));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An argument to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	Fault(I18NResourceBundle i18n, String s, Object o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An argument to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        Fault(I18NResourceBundle i18n, String s, Object o) {
+            super(i18n.getString(s, o));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An array of arguments to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	Fault(I18NResourceBundle i18n, String s, Object[] o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An array of arguments to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        Fault(I18NResourceBundle i18n, String s, Object[] o) {
+            super(i18n.getString(s, o));
+        }
     }
 
     /**
@@ -89,7 +89,7 @@ public abstract class Keywords
      * @throws Keywords.Fault if there are errors in the arguments.
      */
     public static Keywords create(String type, String text) throws Fault {
-	return create(type, text, null);
+        return create(type, text, null);
     }
 
     /**
@@ -100,28 +100,28 @@ public abstract class Keywords
      *    text should be a boolean valued expression formed from
      *    keywords, '&' (and), '|' (or), '!' (not) and '(' ')' (parentheses).
      * @param validKeywords a set of valid keywords for this test suite,
-     * 	  or null.
+     *    or null.
      *    If not null, all the keywords in <i>text</i> must be in this set.
      * @return A Keywords object for the specified type and text.
      * @throws Keywords.Fault if there are errors in the arguments.
      */
     public static Keywords create(String type, String text, Set validKeywords) throws Fault {
-	Set lowerCaseValidKeywords = toLowerCase(validKeywords);
+        Set lowerCaseValidKeywords = toLowerCase(validKeywords);
         if (text == null) {
             text = "";
         }
-	if (type == null || type.equals("ignore"))
-	    return null;
-	else if (type.equals(ALL_OF))
-	    return new AllKeywords(StringArray.split(text), lowerCaseValidKeywords);
-	else if (type.equals(ANY_OF))
-	    return new AnyKeywords(StringArray.split(text), lowerCaseValidKeywords);
-	else if (type.equals(EXPR)) {
-	    ExprParser p = new ExprParser(text, lowerCaseValidKeywords);
-	    return p.parse();
-	} 
-	else
-	    throw new Fault(i18n, "kw.badKeywordType", type);
+        if (type == null || type.equals("ignore"))
+            return null;
+        else if (type.equals(ALL_OF))
+            return new AllKeywords(StringArray.split(text), lowerCaseValidKeywords);
+        else if (type.equals(ANY_OF))
+            return new AnyKeywords(StringArray.split(text), lowerCaseValidKeywords);
+        else if (type.equals(EXPR)) {
+            ExprParser p = new ExprParser(text, lowerCaseValidKeywords);
+            return p.parse();
+        }
+        else
+            throw new Fault(i18n, "kw.badKeywordType", type);
     }
 
     /**
@@ -141,54 +141,54 @@ public abstract class Keywords
 
     /**
      * Allow keywords to begin with a numeric or not.
-     * @param allowNumericKeywords Value to be set.  
+     * @param allowNumericKeywords Value to be set.
      */
     public static void setAllowNumericKeywords(boolean allowNumericKeywords) {
-        ExprParser.allowNumericKeywords = allowNumericKeywords; 
+        ExprParser.allowNumericKeywords = allowNumericKeywords;
     }
 
     /**
      * Check if this keywords object accepts, or matches, the specified
-     * set of words. If the keywords type is "any of" or "all of", 
+     * set of words. If the keywords type is "any of" or "all of",
      * the set must have any or of all of the words specified
      * in the keywords object; if the keywords type is "expr", the
-     * given expression must evaluate to true, when the words in the 
+     * given expression must evaluate to true, when the words in the
      * expression are true if they are present in the given set of words.
      *
      * @param s A set of words to compare against the keywords object.
      * @return true if the the specified set of words are compatible
-     * with this keywords object. 
+     * with this keywords object.
      */
     public abstract boolean accepts(Set s);
 
     private static Set toLowerCase(Set words) {
-	if (words == null)
-	    return null;
+        if (words == null)
+            return null;
 
-	boolean allLowerCase = true;
-	for (Iterator iter = words.iterator(); iter.hasNext() && allLowerCase; ) {
-	    String word = (String) (iter.next());
-	    allLowerCase &= word.equals(word.toLowerCase());
-	}
+        boolean allLowerCase = true;
+        for (Iterator iter = words.iterator(); iter.hasNext() && allLowerCase; ) {
+            String word = (String) (iter.next());
+            allLowerCase &= word.equals(word.toLowerCase());
+        }
 
-	if (allLowerCase)
-	    return words;
+        if (allLowerCase)
+            return words;
 
-	Set s = new HashSet();
-	for (Iterator iter = words.iterator(); iter.hasNext(); ) {
-	    String word = (String) (iter.next());
-	    s.add(word.toLowerCase());
-	}
-	
-	return s;
+        Set s = new HashSet();
+        for (Iterator iter = words.iterator(); iter.hasNext(); ) {
+            String word = (String) (iter.next());
+            s.add(word.toLowerCase());
+        }
+
+        return s;
     }
 
     private static boolean isLowerCase(String s) {
-	for (int i = 0; i < s.length(); i++) {
-	    if (Character.isUpperCase(s.charAt(i)))
-		return false;
-	}
-	return true;
+        for (int i = 0; i < s.length(); i++) {
+            if (Character.isUpperCase(s.charAt(i)))
+                return false;
+        }
+        return true;
     }
 
     static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(Keywords.class);
@@ -200,40 +200,40 @@ public abstract class Keywords
 class AllKeywords extends Keywords
 {
     AllKeywords(String[] keys, Set validKeywords) throws Keywords.Fault {
-	if (keys.length == 0)
-		throw new Keywords.Fault(i18n, "kw.noKeywords");
+        if (keys.length == 0)
+                throw new Keywords.Fault(i18n, "kw.noKeywords");
 
-	this.keys = new String[keys.length];
-	for (int i = 0; i < keys.length; i++) {
-	    this.keys[i] = keys[i].toLowerCase();
-	    if (validKeywords != null && !validKeywords.contains(this.keys[i]))
-		throw new Keywords.Fault(i18n, "kw.invalidKeyword", keys[i]);
-	}
+        this.keys = new String[keys.length];
+        for (int i = 0; i < keys.length; i++) {
+            this.keys[i] = keys[i].toLowerCase();
+            if (validKeywords != null && !validKeywords.contains(this.keys[i]))
+                throw new Keywords.Fault(i18n, "kw.invalidKeyword", keys[i]);
+        }
     }
 
     public boolean accepts(Set s) {
-	for (int i = 0; i < keys.length; i++)
-	    if (!s.contains(keys[i]))
-		return false;
-	return true;
+        for (int i = 0; i < keys.length; i++)
+            if (!s.contains(keys[i]))
+                return false;
+        return true;
     }
 
     public boolean equals(Object o) {
-	if (!(o instanceof AllKeywords))
-	    return false;
+        if (!(o instanceof AllKeywords))
+            return false;
 
-	AllKeywords other = (AllKeywords) o;
-	if (keys.length != other.keys.length)
-	    return false;
-	for (int i = 0; i < other.keys.length; i++) {
-	    if (!keys[i].equals(other.keys[i]))
-		return false;
-	}
-	return true;
+        AllKeywords other = (AllKeywords) o;
+        if (keys.length != other.keys.length)
+            return false;
+        for (int i = 0; i < other.keys.length; i++) {
+            if (!keys[i].equals(other.keys[i]))
+                return false;
+        }
+        return true;
     }
 
     public String toString() {
-	return "all of (" + StringArray.join(keys) + ")";
+        return "all of (" + StringArray.join(keys) + ")";
     }
 
     private String[] keys;
@@ -244,41 +244,41 @@ class AllKeywords extends Keywords
 class AnyKeywords extends Keywords
 {
     AnyKeywords(String[] keys, Set validKeywords) throws Keywords.Fault {
-	if (keys.length == 0)
-		throw new Keywords.Fault(i18n, "kw.noKeywords");
-	    
-	this.keys = new String[keys.length];
-	for (int i = 0; i < keys.length; i++) {
-	    this.keys[i] = keys[i].toLowerCase();
-	    if (validKeywords != null && !validKeywords.contains(this.keys[i]))
-		throw new Keywords.Fault(i18n, "kw.invalidKeyword", keys[i]);
-	}
+        if (keys.length == 0)
+                throw new Keywords.Fault(i18n, "kw.noKeywords");
+
+        this.keys = new String[keys.length];
+        for (int i = 0; i < keys.length; i++) {
+            this.keys[i] = keys[i].toLowerCase();
+            if (validKeywords != null && !validKeywords.contains(this.keys[i]))
+                throw new Keywords.Fault(i18n, "kw.invalidKeyword", keys[i]);
+        }
     }
 
     public boolean accepts(Set s) {
-	for (int i = 0; i < keys.length; i++)
-	    if (s.contains(keys[i]))
-		return true;
-	return false;
+        for (int i = 0; i < keys.length; i++)
+            if (s.contains(keys[i]))
+                return true;
+        return false;
     }
 
     public boolean equals(Object o) {
-	if (!(o instanceof AnyKeywords))
-	    return false;
+        if (!(o instanceof AnyKeywords))
+            return false;
 
-	AnyKeywords other = (AnyKeywords) o;
-	if (keys.length != other.keys.length)
-	    return false;
-	for (int i = 0; i < other.keys.length; i++) {
-	    if (!keys[i].equals(other.keys[i]))
-		return false;
-	}
-	return true;
-	
+        AnyKeywords other = (AnyKeywords) o;
+        if (keys.length != other.keys.length)
+            return false;
+        for (int i = 0; i < other.keys.length; i++) {
+            if (!keys[i].equals(other.keys[i]))
+                return false;
+        }
+        return true;
+
     }
 
     public String toString() {
-	return "any of (" + StringArray.join(keys) + ")";
+        return "any of (" + StringArray.join(keys) + ")";
     }
 
     private String[] keys;
@@ -288,119 +288,119 @@ class AnyKeywords extends Keywords
 
 class ExprParser {
     ExprParser(String text, Set validKeywords) {
-	this.text = text;
-	this.validKeywords = validKeywords;
-	nextToken();
+        this.text = text;
+        this.validKeywords = validKeywords;
+        nextToken();
     }
 
     ExprKeywords parse() throws Keywords.Fault {
-	if (text == null || text.trim().length() == 0)
-	    throw new Keywords.Fault(i18n, "kw.noExpr");
+        if (text == null || text.trim().length() == 0)
+            throw new Keywords.Fault(i18n, "kw.noExpr");
 
-	ExprKeywords e = parseExpr();
-	expect(END);
-	return e;
+        ExprKeywords e = parseExpr();
+        expect(END);
+        return e;
     }
 
     ExprKeywords parseExpr() throws Keywords.Fault {
-	for (ExprKeywords e = parseTerm() ; e != null ; e = e.order()) {
-	    switch (token) {
-	    case AND:
-		nextToken();
-		e = new AndExprKeywords(e, parseTerm());
-		break;
-	    case OR:
-		nextToken();
-		e = new OrExprKeywords(e, parseTerm());
-		break;
-	    default:
-		return e;
-	    }
-	}
-	// bogus return to keep compiler happy
-	return null;
+        for (ExprKeywords e = parseTerm() ; e != null ; e = e.order()) {
+            switch (token) {
+            case AND:
+                nextToken();
+                e = new AndExprKeywords(e, parseTerm());
+                break;
+            case OR:
+                nextToken();
+                e = new OrExprKeywords(e, parseTerm());
+                break;
+            default:
+                return e;
+            }
+        }
+        // bogus return to keep compiler happy
+        return null;
     }
 
     ExprKeywords parseTerm() throws Keywords.Fault {
-	switch (token) {
-	case ID:
-	    String id = idValue;
-	    if (validKeywords != null && !validKeywords.contains(id))
-		throw new Keywords.Fault(i18n, "kw.invalidKeyword", id);
-	    nextToken();
-	    return new TermExprKeywords(id);
-	case NOT:
-	    nextToken();
-	    return new NotExprKeywords(parseTerm());
-	case LPAREN:
-	    nextToken();
-	    ExprKeywords e = parseExpr();
-	    expect(RPAREN);
-	    return new ParenExprKeywords(e);
-	default:
-	    throw new Keywords.Fault(i18n, "kw.badKeywordExpr");
-	}
+        switch (token) {
+        case ID:
+            String id = idValue;
+            if (validKeywords != null && !validKeywords.contains(id))
+                throw new Keywords.Fault(i18n, "kw.invalidKeyword", id);
+            nextToken();
+            return new TermExprKeywords(id);
+        case NOT:
+            nextToken();
+            return new NotExprKeywords(parseTerm());
+        case LPAREN:
+            nextToken();
+            ExprKeywords e = parseExpr();
+            expect(RPAREN);
+            return new ParenExprKeywords(e);
+        default:
+            throw new Keywords.Fault(i18n, "kw.badKeywordExpr");
+        }
     }
 
     private void expect(int t) throws Keywords.Fault {
-	if (t == token) 
-	    nextToken();
-	else
-	    throw new Keywords.Fault(i18n, "kw.badKeywordExpr");
+        if (t == token)
+            nextToken();
+        else
+            throw new Keywords.Fault(i18n, "kw.badKeywordExpr");
     }
 
     private void nextToken() {
-	while (index < text.length()) {
-	    char c = text.charAt(index++);
-	    switch (c) {
-	    case ' ':
-	    case '\t':
-		continue;
-	    case '&':
-		token = AND;
-		return;
-	    case '|':
-		token = OR;
-		return;
-	    case '!':
-		token = NOT;
-		return;
-	    case '(':
-		token = LPAREN;
-		return;
-	    case ')':
-		token = RPAREN;
-		return;
-	    default:
-		if (Character.isUnicodeIdentifierStart(c) ||
-		    	(allowNumericKeywords && Character.isDigit(c))) {  
-		    idValue = String.valueOf(Character.toLowerCase(c));
-		    while (index < text.length() 
-			   && Character.isUnicodeIdentifierPart(text.charAt(index))) {
-			char ch = text.charAt(index++);
-			if (!Character.isIdentifierIgnorable(ch))
-			    idValue += Character.toLowerCase(ch);
-		    }
-		    token = ID;
-		    return;
-		}
-		else {
-		    token = ERROR;
-		    return;
-		}
-	    }
-	}
-	token = END;
+        while (index < text.length()) {
+            char c = text.charAt(index++);
+            switch (c) {
+            case ' ':
+            case '\t':
+                continue;
+            case '&':
+                token = AND;
+                return;
+            case '|':
+                token = OR;
+                return;
+            case '!':
+                token = NOT;
+                return;
+            case '(':
+                token = LPAREN;
+                return;
+            case ')':
+                token = RPAREN;
+                return;
+            default:
+                if (Character.isUnicodeIdentifierStart(c) ||
+                        (allowNumericKeywords && Character.isDigit(c))) {
+                    idValue = String.valueOf(Character.toLowerCase(c));
+                    while (index < text.length()
+                           && Character.isUnicodeIdentifierPart(text.charAt(index))) {
+                        char ch = text.charAt(index++);
+                        if (!Character.isIdentifierIgnorable(ch))
+                            idValue += Character.toLowerCase(ch);
+                    }
+                    token = ID;
+                    return;
+                }
+                else {
+                    token = ERROR;
+                    return;
+                }
+            }
+        }
+        token = END;
     }
 
-    protected static boolean allowNumericKeywords = 
-    	Boolean.getBoolean("javatest.allowNumericKeywords");
+    protected static boolean allowNumericKeywords =
+        Boolean.getBoolean("javatest.allowNumericKeywords");
     private String text;
     private Set validKeywords;
     private int index;
     private int token;
     private String idValue;
-    private static final int 
+    private static final int
         ID = 0, AND = 1, OR = 2, NOT = 3, LPAREN = 4, RPAREN = 5, END = 6, ERROR = 7;
 
     private static I18NResourceBundle i18n = Keywords.i18n;
@@ -414,7 +414,7 @@ abstract class ExprKeywords extends Keywords
     abstract int precedence();
 
     ExprKeywords order() {
-	return this;
+        return this;
     }
 }
 
@@ -423,18 +423,18 @@ abstract class ExprKeywords extends Keywords
 abstract class BinaryExprKeywords extends ExprKeywords
 {
     BinaryExprKeywords(ExprKeywords left, ExprKeywords right) {
-	this.left = left; 
-	this.right = right;
+        this.left = left;
+        this.right = right;
     }
 
     ExprKeywords order() {
-	if (precedence() > left.precedence() && left instanceof BinaryExprKeywords) {
-	    BinaryExprKeywords e = (BinaryExprKeywords)left;
-	    left = e.right;
-	    e.right = order();
-	    return e;
-	} else
-	    return this;
+        if (precedence() > left.precedence() && left instanceof BinaryExprKeywords) {
+            BinaryExprKeywords e = (BinaryExprKeywords)left;
+            left = e.right;
+            e.right = order();
+            return e;
+        } else
+            return this;
     }
 
     protected ExprKeywords left;
@@ -446,27 +446,27 @@ abstract class BinaryExprKeywords extends ExprKeywords
 class AndExprKeywords extends BinaryExprKeywords
 {
     AndExprKeywords(ExprKeywords left, ExprKeywords right) {
-	super(left, right);
+        super(left, right);
     }
 
     public boolean accepts(Set s) {
-	return (left.accepts(s) && right.accepts(s));
+        return (left.accepts(s) && right.accepts(s));
     }
 
     public boolean equals(Object o) {
-	if (!(o instanceof AndExprKeywords))
-	    return false;
+        if (!(o instanceof AndExprKeywords))
+            return false;
 
-	AndExprKeywords other = (AndExprKeywords) o;
-	return (left.equals(other.left) && right.equals(other.right));
+        AndExprKeywords other = (AndExprKeywords) o;
+        return (left.equals(other.left) && right.equals(other.right));
     }
 
     int precedence() {
-	return 1;
+        return 1;
     }
 
     public String toString() {
-	return "`" + left + "&" + right + "'";
+        return "`" + left + "&" + right + "'";
     }
 }
 
@@ -475,27 +475,27 @@ class AndExprKeywords extends BinaryExprKeywords
 class NotExprKeywords extends ExprKeywords
 {
     NotExprKeywords(ExprKeywords expr) {
-	this.expr = expr; 
+        this.expr = expr;
     }
 
     public boolean accepts(Set s) {
-	return !expr.accepts(s);
+        return !expr.accepts(s);
     }
 
     public boolean equals(Object o) {
-	if (!(o instanceof NotExprKeywords))
-	    return false;
-	
-	NotExprKeywords other = (NotExprKeywords) o;
-	return (expr.equals(other.expr));
+        if (!(o instanceof NotExprKeywords))
+            return false;
+
+        NotExprKeywords other = (NotExprKeywords) o;
+        return (expr.equals(other.expr));
     }
 
     int precedence() {
-	return 2;
+        return 2;
     }
 
     public String toString() {
-	return "!" + expr;
+        return "!" + expr;
     }
 
     private ExprKeywords expr;
@@ -506,28 +506,28 @@ class NotExprKeywords extends ExprKeywords
 class OrExprKeywords extends BinaryExprKeywords
 {
     OrExprKeywords(ExprKeywords left, ExprKeywords right) {
-	super(left, right);
+        super(left, right);
     }
 
     public boolean accepts(Set s) {
-	return (left.accepts(s) || right.accepts(s));
+        return (left.accepts(s) || right.accepts(s));
     }
 
     public boolean equals(Object o) {
-	if (!(o instanceof OrExprKeywords))
-	    return false;
+        if (!(o instanceof OrExprKeywords))
+            return false;
 
-	OrExprKeywords other = (OrExprKeywords) o;
-	return (left.equals(other.left) && right.equals(other.right));
-	
+        OrExprKeywords other = (OrExprKeywords) o;
+        return (left.equals(other.left) && right.equals(other.right));
+
     }
 
     int precedence() {
-	return 0;
+        return 0;
     }
 
     public String toString() {
-	return "`" + left + "|" + right + "'";
+        return "`" + left + "|" + right + "'";
     }
 }
 
@@ -536,27 +536,27 @@ class OrExprKeywords extends BinaryExprKeywords
 class ParenExprKeywords extends ExprKeywords
 {
     ParenExprKeywords(ExprKeywords expr) {
-	this.expr = expr; 
+        this.expr = expr;
     }
 
     public boolean accepts(Set s) {
-	return expr.accepts(s);
+        return expr.accepts(s);
     }
 
     public boolean equals(Object o) {
-	if (!(o instanceof ParenExprKeywords))
-	    return false;
-	
-	ParenExprKeywords other = (ParenExprKeywords) o;
-	return (expr.equals(other.expr));
+        if (!(o instanceof ParenExprKeywords))
+            return false;
+
+        ParenExprKeywords other = (ParenExprKeywords) o;
+        return (expr.equals(other.expr));
     }
 
     int precedence() {
-	return 2;
+        return 2;
     }
 
     public String toString() {
-	return "(" + expr + ")";
+        return "(" + expr + ")";
     }
 
     private ExprKeywords expr;
@@ -567,28 +567,28 @@ class ParenExprKeywords extends ExprKeywords
 class TermExprKeywords extends ExprKeywords
 {
     TermExprKeywords(String key) {
-	this.key = key;
+        this.key = key;
     }
 
     public boolean accepts(Set s) {
-	return (s.contains(key));
+        return (s.contains(key));
     }
 
     public boolean equals(Object o) {
-	if (!(o instanceof TermExprKeywords))
-	    return false;
+        if (!(o instanceof TermExprKeywords))
+            return false;
 
-	TermExprKeywords other = (TermExprKeywords) o;
-	return (key.equals(other.key));
-	
+        TermExprKeywords other = (TermExprKeywords) o;
+        return (key.equals(other.key));
+
     }
 
     int precedence() {
-	return 2;
+        return 2;
     }
 
     public String toString() {
-	return key;
+        return key;
     }
 
     private String key;

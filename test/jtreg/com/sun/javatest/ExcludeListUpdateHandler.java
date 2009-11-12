@@ -47,11 +47,11 @@ public class ExcludeListUpdateHandler
      * @param localFile the file to which the exclude list should be written
      */
     public ExcludeListUpdateHandler(URL remoteURL, File localFile) {
-	if (remoteURL == null || localFile == null)
-	    throw new NullPointerException();
+        if (remoteURL == null || localFile == null)
+            throw new NullPointerException();
 
-	this.remoteURL = remoteURL;
-	this.localFile = localFile;
+        this.remoteURL = remoteURL;
+        this.localFile = localFile;
     }
 
     /**
@@ -59,7 +59,7 @@ public class ExcludeListUpdateHandler
      * @return the file to which the exclude list should be written
      */
     public File getLocalFile() {
-	return localFile;
+        return localFile;
     }
 
     /**
@@ -70,9 +70,9 @@ public class ExcludeListUpdateHandler
      * a problem determining the required information
      */
     public long getLocalFileLastModified() {
-	if (localFileLastModified == 0) 
-	    localFileLastModified = localFile.lastModified();
-	return localFileLastModified;
+        if (localFileLastModified == 0)
+            localFileLastModified = localFile.lastModified();
+        return localFileLastModified;
     }
 
     /**
@@ -80,7 +80,7 @@ public class ExcludeListUpdateHandler
      * @return the URL from which the exclude list should be downloaded
      */
     public URL getRemoteURL() {
-	return remoteURL;
+        return remoteURL;
     }
 
     /**
@@ -91,13 +91,13 @@ public class ExcludeListUpdateHandler
      * @throws IOException if there is a problem determining the information.
      */
     public long getRemoteURLLastModified() throws IOException {
-	if (remoteURLLastModified == 0) {
-	    URLConnection c = remoteURL.openConnection();
-	    c.connect();
-	    remoteURLLastModified = c.getLastModified();
-	    c.getInputStream().close();
-	}
-	return remoteURLLastModified;
+        if (remoteURLLastModified == 0) {
+            URLConnection c = remoteURL.openConnection();
+            c.connect();
+            remoteURLLastModified = c.getLastModified();
+            c.getInputStream().close();
+        }
+        return remoteURLLastModified;
     }
 
     /**
@@ -110,9 +110,9 @@ public class ExcludeListUpdateHandler
      * @see #getRemoteURLLastModified
      */
     public boolean isUpdateAvailable() throws IOException {
-	getLocalFileLastModified();
-	getRemoteURLLastModified();
-	return (remoteURLLastModified > localFileLastModified);
+        getLocalFileLastModified();
+        getRemoteURLLastModified();
+        return (remoteURLLastModified > localFileLastModified);
     }
 
     /**
@@ -120,7 +120,7 @@ public class ExcludeListUpdateHandler
      * @throws IOException if there is a problem reading the exclude list
      */
     public void update() throws IOException {
-	update(remoteURL.openConnection());
+        update(remoteURL.openConnection());
     }
 
     /**
@@ -129,35 +129,35 @@ public class ExcludeListUpdateHandler
      * @throws IOException if there is a problem reading the exclude list
      */
     public void updateIfNewer() throws IOException {
-	URLConnection c = remoteURL.openConnection();
-	c.getContentLength();
-	c.connect();
-	remoteURLLastModified = c.getLastModified();
-	if (remoteURLLastModified > getLocalFileLastModified()) 
-	    update(c);
-	else
-	    c.getInputStream().close();
+        URLConnection c = remoteURL.openConnection();
+        c.getContentLength();
+        c.connect();
+        remoteURLLastModified = c.getLastModified();
+        if (remoteURLLastModified > getLocalFileLastModified())
+            update(c);
+        else
+            c.getInputStream().close();
     }
 
     private void update(URLConnection c) throws IOException {
-	c.connect();
+        c.connect();
 
-	int totalBytes = c.getContentLength();
-	InputStream in = new BufferedInputStream(c.getInputStream());
+        int totalBytes = c.getContentLength();
+        InputStream in = new BufferedInputStream(c.getInputStream());
 
-	OutputStream out = new BufferedOutputStream(new FileOutputStream(localFile));
+        OutputStream out = new BufferedOutputStream(new FileOutputStream(localFile));
 
-	int bytesSoFar = 0;
-	byte[] data = new byte[4096];
-	int n;
-	while ((n = in.read(data)) != -1) {
-	    out.write(data, 0, n);
-	    bytesSoFar += n;
-	    int percent = Math.max(bytesSoFar * 100 / totalBytes, 100);
-	    // good point to update progress meter if appropriate
-	}
-	in.close();
-	out.close();
+        int bytesSoFar = 0;
+        byte[] data = new byte[4096];
+        int n;
+        while ((n = in.read(data)) != -1) {
+            out.write(data, 0, n);
+            bytesSoFar += n;
+            int percent = Math.max(bytesSoFar * 100 / totalBytes, 100);
+            // good point to update progress meter if appropriate
+        }
+        in.close();
+        out.close();
     }
 
     private File localFile;

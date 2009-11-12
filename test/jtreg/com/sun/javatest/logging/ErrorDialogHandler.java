@@ -41,7 +41,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import java.util.logging.Level; 
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.StreamHandler;
 
@@ -63,8 +63,8 @@ public class ErrorDialogHandler extends StreamHandler {
             StackTraceElement[] trace = record.getThrown().getStackTrace();
             String[] message = new String[trace.length + 1];
             message[0] = record.getThrown().toString();
-            for (int i = 1; i < message.length; i++) 
-                message[i] = trace[i-1].toString(); 
+            for (int i = 1; i < message.length; i++)
+                message[i] = trace[i-1].toString();
 
             argsToArr[0] = i18n.getString("logger.exception.message") + record.getSourceClassName() +
                 "," + record.getSourceMethodName();
@@ -126,7 +126,7 @@ public class ErrorDialogHandler extends StreamHandler {
         // The text will be layed out, wrapping lines, for the width, and the
         // preferred height will thereby be determined accordingly.
         txt.setSize(new Dimension(7 * DOTS_PER_INCH, Integer.MAX_VALUE));
-        // override JTextArea focus traversal keys, resetting them to 
+        // override JTextArea focus traversal keys, resetting them to
         // the Component default (i.e. the same as for the parent.)
         txt.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
         txt.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, null);
@@ -152,7 +152,7 @@ public class ErrorDialogHandler extends StreamHandler {
             content = sp;
         }
 
-        JOptionPane.showOptionDialog(null, 
+        JOptionPane.showOptionDialog(null,
                                      content,
                                      i18n.getString("logger.message.title"),
                                      JOptionPane.DEFAULT_OPTION,
@@ -173,7 +173,7 @@ public class ErrorDialogHandler extends StreamHandler {
         // The text will be layed out, wrapping lines, for the width, and the
         // preferred height will thereby be determined accordingly.
         txt.setSize(new Dimension(7 * DOTS_PER_INCH, Integer.MAX_VALUE));
-        // override JTextArea focus traversal keys, resetting them to 
+        // override JTextArea focus traversal keys, resetting them to
         // the Component default (i.e. the same as for the parent.)
         txt.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
         txt.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, null);
@@ -199,12 +199,12 @@ public class ErrorDialogHandler extends StreamHandler {
     }
 
     private static int getI18NMnemonic(String key) {
-	String keyString = i18n.getString(key);
-	KeyStroke keyStroke = KeyStroke.getKeyStroke(keyString);
+        String keyString = i18n.getString(key);
+        KeyStroke keyStroke = KeyStroke.getKeyStroke(keyString);
         if (keyStroke != null)
             return keyStroke.getKeyCode();
         else
-	    //System.err.println("WARNING: bad mnemonic keystroke for " + key + ": " + keyString);
+            //System.err.println("WARNING: bad mnemonic keystroke for " + key + ": " + keyString);
             return 0;
     }
 
@@ -214,4 +214,3 @@ public class ErrorDialogHandler extends StreamHandler {
     private static I18NResourceBundle i18n= I18NResourceBundle.getBundleForClass(ErrorDialogHandler.class);
     private static final int DOTS_PER_INCH = Toolkit.getDefaultToolkit().getScreenResolution();
 }
-

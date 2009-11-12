@@ -41,7 +41,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 class Merger {
-    
+
     /**
      * @param in array of files with XML reports
      * @param out file to put results
@@ -57,7 +57,7 @@ class Merger {
             Map map = reader.readIDs(in[i]);
             inputs[i] = map;
         }
-        
+
         // shift word workgroups id renaming
         int allCnt = 0;
         // rename id's and find conficts
@@ -87,12 +87,12 @@ class Merger {
                     td.setID(td.getID() + allCnt);
                     newMap.put(url, td);
                 }
-                
+
             }
             inputs[i] = newMap;
             allCnt += workdirsInFile;
         }
-        
+
         // resolve each conflict
         for (int c = 0; c < confilcts.size(); c++) {
             String url = (String)confilcts.get(c);
@@ -119,7 +119,7 @@ class Merger {
                 }
             }
         }
-        
+
         // make merge with using statistics
         new XMLReportWriter(out).write(in, inputs);
         return true;

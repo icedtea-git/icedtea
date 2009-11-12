@@ -65,25 +65,25 @@ import java.util.Properties;
 
 public class Debug {
     private Debug() {
-	// no instances
+        // no instances
     }
 
-    /** 
+    /**
      * Print a debugging message.
      * @param s the message to be printed.
      */
     public static void print(String s) {
-	out.print(s);
-	out.flush();
+        out.print(s);
+        out.flush();
     }
 
-    /** 
+    /**
      * Print a debugging message and end the line.
      * @param s the message to be printed.
      */
     public static void println(String s) {
-	out.println(s);
-	out.flush();
+        out.println(s);
+        out.flush();
     }
 
     /**
@@ -93,7 +93,7 @@ public class Debug {
      * @return true if debugging is enabled, and false otherwise
      */
     public static boolean isEnabled() {
-	return masterSwitch;
+        return masterSwitch;
     }
 
     /**
@@ -106,22 +106,22 @@ public class Debug {
      *
      * @param key The name of the setting to be returned
      * @return The setting, or null if not found.  Null is returned if debugging is
-     *	disabled entriely.
+     *  disabled entriely.
      */
     public static String getSetting(String key) {
-	// important because there may be uninitialized objects
-	if (masterSwitch == false)
-	    return null;
+        // important because there may be uninitialized objects
+        if (masterSwitch == false)
+            return null;
 
-	String match = dProps.getProperty(key);
+        String match = dProps.getProperty(key);
 
-	if (match != null)
-	    return match;
-	else {
-	    match = wildProps.search(key);
-	    // may be null
-	    return match;
-	}
+        if (match != null)
+            return match;
+        else {
+            match = wildProps.search(key);
+            // may be null
+            return match;
+        }
     }
 
     /**
@@ -133,16 +133,16 @@ public class Debug {
      * @return the debugging setting for the specified class
      */
     public static boolean getBoolean(Class c) {
-	init(false);
+        init(false);
 
-	if (!masterSwitch)
-	    return false;
+        if (!masterSwitch)
+            return false;
 
-	String key = getName(c);
-	String setting = getSetting(key);
-	boolean state = convertToBool(setting);
+        String key = getName(c);
+        String setting = getSetting(key);
+        boolean state = convertToBool(setting);
 
-	return state;
+        return state;
     }
 
     /**
@@ -157,22 +157,22 @@ public class Debug {
      * @return the debugging setting for the specified class
      */
     public static boolean getBoolean(Class c, String suffix) {
-	init(false);
+        init(false);
 
-	if (!masterSwitch)
-	    return false;
+        if (!masterSwitch)
+            return false;
 
-	StringBuffer buf = new StringBuffer(getName(c));
-	if (suffix != null && suffix.length() != 0) {
-	    buf.append(Debug.SEPARATOR);
-	    buf.append(suffix);
-	}
+        StringBuffer buf = new StringBuffer(getName(c));
+        if (suffix != null && suffix.length() != 0) {
+            buf.append(Debug.SEPARATOR);
+            buf.append(suffix);
+        }
 
-	String key = buf.toString();
-	String setting = getSetting(key);
-	boolean state = convertToBool(setting);
+        String key = buf.toString();
+        String setting = getSetting(key);
+        boolean state = convertToBool(setting);
 
-	return state;
+        return state;
     }
 
     /**
@@ -181,15 +181,15 @@ public class Debug {
      * @return the value of the debugging setting
      */
     public static boolean getBoolean(String s) {
-	init(false);
+        init(false);
 
-	if (!masterSwitch || s == null)
-	    return false;
+        if (!masterSwitch || s == null)
+            return false;
 
-	String setting = getSetting(s);
-	boolean state = convertToBool(setting);
+        String setting = getSetting(s);
+        boolean state = convertToBool(setting);
 
-	return state;
+        return state;
     }
 
     /**
@@ -201,16 +201,16 @@ public class Debug {
      *    was specified
      */
     public static int getInt(Class c) {
-	init(false);
+        init(false);
 
-	if (!masterSwitch || c == null)
-	    return 0;
+        if (!masterSwitch || c == null)
+            return 0;
 
-	String key = getName(c);
-	String setting = getSetting(key);
-	int state = convertToInt(setting);
+        String key = getName(c);
+        String setting = getSetting(key);
+        int state = convertToInt(setting);
 
-	return state;
+        return state;
     }
 
     /**
@@ -225,22 +225,22 @@ public class Debug {
      * @return the debugging setting for the class
      */
     public static int getInt(Class c, String suffix) {
-	init(false);
+        init(false);
 
-	if (!masterSwitch || c == null)
-	    return 0;
+        if (!masterSwitch || c == null)
+            return 0;
 
-	StringBuffer buf = new StringBuffer(getName(c));
-	if (suffix != null && suffix.length() != 0) {
-	    buf.append(Debug.SEPARATOR);
-	    buf.append(suffix);
-	}
+        StringBuffer buf = new StringBuffer(getName(c));
+        if (suffix != null && suffix.length() != 0) {
+            buf.append(Debug.SEPARATOR);
+            buf.append(suffix);
+        }
 
-	String key = buf.toString();
-	String setting = getSetting(key);
-	int state = convertToInt(setting);
+        String key = buf.toString();
+        String setting = getSetting(key);
+        int state = convertToInt(setting);
 
-	return state;
+        return state;
     }
 
     /**
@@ -249,30 +249,30 @@ public class Debug {
      * @return the value of the debugging setting
      */
     public static int getInt(String s) {
-	init(false);
+        init(false);
 
-	if (!masterSwitch)
-	    return 0;
+        if (!masterSwitch)
+            return 0;
 
-	String setting = getSetting(s);
-	return convertToInt(setting);
+        String setting = getSetting(s);
+        return convertToInt(setting);
 
-	/*
-	String setting = dProps.getProperty(s);
-	if (setting == null)
-	    return 0;
-	else if (setting.equalsIgnoreCase("true"))
-	    return 1;
-	else {
-	    try {
-		return Integer.parseInt(setting);
-	    }
-	    catch (NumberFormatException e) {
-		e.printStackTrace(out);
-		return 0;
-	    }
-	}
-	*/
+        /*
+        String setting = dProps.getProperty(s);
+        if (setting == null)
+            return 0;
+        else if (setting.equalsIgnoreCase("true"))
+            return 1;
+        else {
+            try {
+                return Integer.parseInt(setting);
+            }
+            catch (NumberFormatException e) {
+                e.printStackTrace(out);
+                return 0;
+            }
+        }
+        */
     }
 
     /**
@@ -280,7 +280,7 @@ public class Debug {
      * @return the debugging stream, used to write debug messages
      */
     public static PrintWriter getWriter() {
-	return out;
+        return out;
     }
 
     /**
@@ -290,7 +290,7 @@ public class Debug {
      * @param props A table of properties conatining debugging settings
      */
     public static void setProperties(Properties props) {
-	givenProps = props;
+        givenProps = props;
     }
 
     /**
@@ -298,47 +298,47 @@ public class Debug {
      * @param force Force reprocessing of System properties.
      */
     public static void init(boolean force) {
-	if (dProps != null && force != true)
-	    return;
+        if (dProps != null && force != true)
+            return;
 
-	Properties props;
+        Properties props;
 
-	try {
-	    props = System.getProperties();
-	}
-	catch (SecurityException e) {
-	    // this is the backup source of settings
-	    props = givenProps;
-	}
+        try {
+            props = System.getProperties();
+        }
+        catch (SecurityException e) {
+            // this is the backup source of settings
+            props = givenProps;
+        }
 
-	if (props == null) {
-	    // we're stuck, must disable debugging
-	    masterSwitch = false;
-	    return;
-	}
+        if (props == null) {
+            // we're stuck, must disable debugging
+            masterSwitch = false;
+            return;
+        }
 
-	Enumeration keys = props.propertyNames();
+        Enumeration keys = props.propertyNames();
 
-	dProps = new Properties();
-	wildProps = new WildcardProperties();
+        dProps = new Properties();
+        wildProps = new WildcardProperties();
 
-	while (keys.hasMoreElements()) {
-	    String key = (String)(keys.nextElement());
-	    if (key.startsWith(DEBUG_PREFIX)) {
-		// this should be a setProperty() in JDK 1.2+
-		if (key.equalsIgnoreCase(MASTER_KEY)) {
-		    String val = props.getProperty(key);
-		    // this will disable all debugging, all methods will return zero or false
-		    if (val.equalsIgnoreCase(TRUE_STRING))
-			masterSwitch = false;
-		}
-		else if (key.endsWith(WILD_SUFFIX)) {
-		    wildProps.put(key.substring(DEBUG_PREFIX.length()), props.getProperty(key));
-		}
-		else
-		    dProps.put(key.substring(DEBUG_PREFIX.length()), props.getProperty(key));
-	    }
-	}   // while
+        while (keys.hasMoreElements()) {
+            String key = (String)(keys.nextElement());
+            if (key.startsWith(DEBUG_PREFIX)) {
+                // this should be a setProperty() in JDK 1.2+
+                if (key.equalsIgnoreCase(MASTER_KEY)) {
+                    String val = props.getProperty(key);
+                    // this will disable all debugging, all methods will return zero or false
+                    if (val.equalsIgnoreCase(TRUE_STRING))
+                        masterSwitch = false;
+                }
+                else if (key.endsWith(WILD_SUFFIX)) {
+                    wildProps.put(key.substring(DEBUG_PREFIX.length()), props.getProperty(key));
+                }
+                else
+                    dProps.put(key.substring(DEBUG_PREFIX.length()), props.getProperty(key));
+            }
+        }   // while
     }
 
     // -------- Private ---------
@@ -349,14 +349,14 @@ public class Debug {
      * @param c Must not be null.
      */
     private static String getName(Class c) {
-	// null checking skipped
+        // null checking skipped
 
-	String name = c.getName();
+        String name = c.getName();
 
-	// compensate for inner classes for which getName() return the internal name
-	name = name.replace('$', '.');
+        // compensate for inner classes for which getName() return the internal name
+        name = name.replace('$', '.');
 
-	return name;
+        return name;
     }
 
     /*
@@ -365,24 +365,24 @@ public class Debug {
      * an integer greater than zero, true is returned.  Otherwise, false is returned.
      */
     private static boolean convertToBool(String setting) {
-	if (setting == null)
-	    return false;
+        if (setting == null)
+            return false;
 
-	if (setting.equalsIgnoreCase(TRUE_STRING))
-	    return true;
-	else {
-	    try {
-		int num = Integer.parseInt(setting);
-		if (num > 0)
-		    return true;
-		else
-		    return false;
-	    }
-	    catch (NumberFormatException e) {
-		// not "true", not an integer
-		return false;
-	    }
-	}
+        if (setting.equalsIgnoreCase(TRUE_STRING))
+            return true;
+        else {
+            try {
+                int num = Integer.parseInt(setting);
+                if (num > 0)
+                    return true;
+                else
+                    return false;
+            }
+            catch (NumberFormatException e) {
+                // not "true", not an integer
+                return false;
+            }
+        }
     }
 
     /**
@@ -391,21 +391,21 @@ public class Debug {
      * anything else, zero is returned.
      */
     private static int convertToInt(String setting) {
-	if (setting == null)
-	    return 0;
+        if (setting == null)
+            return 0;
 
-	if (setting.equalsIgnoreCase(TRUE_STRING))
-	    return 1;
-	else {
-	    try {
-		int num = Integer.parseInt(setting);
-		return num;
-	    }
-	    catch (NumberFormatException e) {
-		// not "true", not an integer
-		return 0;
-	    }
-	}
+        if (setting.equalsIgnoreCase(TRUE_STRING))
+            return 1;
+        else {
+            try {
+                int num = Integer.parseInt(setting);
+                return num;
+            }
+            catch (NumberFormatException e) {
+                // not "true", not an integer
+                return 0;
+            }
+        }
     }
 
     // ---- activate as needed ----
@@ -416,7 +416,7 @@ public class Debug {
     }
 
     private static void setOutput(PrintWriter w) {
-	out = w;
+        out = w;
     }
 
     private static final String SEPARATOR = ".";
@@ -425,8 +425,8 @@ public class Debug {
     private static final String TRUE_STRING = "true";
     private static final String MASTER_KEY = "debug.disable";
 
-    private static Properties givenProps;	    // settings used if System won't give
-    private static Properties dProps;		    // explicit props
+    private static Properties givenProps;           // settings used if System won't give
+    private static Properties dProps;               // explicit props
     private static WildcardProperties wildProps;    // props which contain wildcards
 
     private static PrintWriter out;
@@ -439,7 +439,7 @@ public class Debug {
     private static boolean masterSwitch = true;
 
     static {
-	out = new PrintWriter(System.err);
+        out = new PrintWriter(System.err);
     }
 
     /**
@@ -448,45 +448,44 @@ public class Debug {
      * <tt>"foo.*"</tt> will not be a match.
      */
     private static class WildcardProperties extends Properties {
-	/**
-	 * This is the only method in this class that accounts for wildcards.
-	 */
-	public String search(String key) {
-	    String lowerKey = key.toLowerCase();
-	    String target = trimTarget(lowerKey);
+        /**
+         * This is the only method in this class that accounts for wildcards.
+         */
+        public String search(String key) {
+            String lowerKey = key.toLowerCase();
+            String target = trimTarget(lowerKey);
 
-	    Enumeration keys = propertyNames();
-	    while (keys.hasMoreElements()) {
-		String k = (String)(keys.nextElement());
-		String lowerK = k.toLowerCase();
+            Enumeration keys = propertyNames();
+            while (keys.hasMoreElements()) {
+                String k = (String)(keys.nextElement());
+                String lowerK = k.toLowerCase();
 
-		if (lowerK.startsWith(target)) {
-		    // should strip target string and dot
-		    String tail = lowerK.substring(target.length());
-		    String head = lowerK.substring(0, target.length());
-		    if (tail.equals(wildTail) || head.equals(lowerKey))
-			return getProperty(k);
-		}
-	    }	// while
+                if (lowerK.startsWith(target)) {
+                    // should strip target string and dot
+                    String tail = lowerK.substring(target.length());
+                    String head = lowerK.substring(0, target.length());
+                    if (tail.equals(wildTail) || head.equals(lowerKey))
+                        return getProperty(k);
+                }
+            }   // while
 
-	    return null;
-	}
+            return null;
+        }
 
-	/**
-	 * Remove the last element of the requested key to see if a wildcard fits into
-	 * that position.  Wildcards can only be valid up one level, so
-	 * foo.* cannot match foo.bar.baz, but will match foo.bar.  This method
-	 * turns foo.bar into foo so it the search mathod can use "foo".
-	 */
-	String trimTarget(String t) {
-	    int index = t.lastIndexOf(Debug.SEPARATOR);
-	    if (index != -1)
-		return t.substring(0, index);
-	    else
-		return t;
-	}
+        /**
+         * Remove the last element of the requested key to see if a wildcard fits into
+         * that position.  Wildcards can only be valid up one level, so
+         * foo.* cannot match foo.bar.baz, but will match foo.bar.  This method
+         * turns foo.bar into foo so it the search mathod can use "foo".
+         */
+        String trimTarget(String t) {
+            int index = t.lastIndexOf(Debug.SEPARATOR);
+            if (index != -1)
+                return t.substring(0, index);
+            else
+                return t;
+        }
 
-	static final String wildTail = Debug.SEPARATOR + Debug.WILD_SUFFIX;
+        static final String wildTail = Debug.SEPARATOR + Debug.WILD_SUFFIX;
     }
 }
-

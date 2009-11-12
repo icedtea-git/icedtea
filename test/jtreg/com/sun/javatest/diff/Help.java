@@ -61,29 +61,29 @@ import com.sun.javatest.util.WrapWriter;
  * Handles help options for main program
  */
 public class Help {
-    
+
     /** Creates a new instance of Help */
     public Help(Option[] options) {
         this.options = options;
     }
-    
+
     void setVersionFlag(boolean yes) {
         versionFlag = yes;
     }
-    
+
 //    void setReleaseNotes(boolean yes) {
 //        releaseNotesFlag = yes;
 //    }
-    
+
     void setCommandLineHelpQuery(String query) {
         if (commandLineHelpQuery == null)
             commandLineHelpQuery = new ArrayList<String>();
         if (query != null)
             commandLineHelpQuery.addAll(Arrays.asList(query.trim().split("\\s+")));
     }
-    
+
 //    void setOnlineHelpQuery(String query) {
-//        
+//
 //        if (query == null || query.length() == 0) {
 //            if (onlineHelpQuery == null)
 //                onlineHelpQuery = "";
@@ -94,27 +94,27 @@ public class Help {
 //                onlineHelpQuery += " " + query;
 //        }
 //    }
-    
+
     void show(PrintStream out) {
         PrintWriter w = new PrintWriter(out);
         show(w);
         w.flush();
     }
-    
+
     void show(PrintWriter out) {
 //        if (releaseNotesFlag)
 //            showReleaseNotes(out);
-        
+
         if (versionFlag)
             showVersion(out);
-        
+
         if (commandLineHelpQuery != null)
             showCommandLineHelp(out);
-        
+
 //        if (onlineHelpQuery != null)
 //            showOnlineHelp(out);
     }
-    
+
 //    void showReleaseNotes(PrintWriter out) {
 //        File docDir = getDocDir();
 //        File notes = new File(docDir, "ReleaseNotes-jtreg.html");
@@ -123,7 +123,7 @@ public class Help {
 //        else
 //            out.println(i18n.getString("help.cantFindReleaseNotes"));
 //    }
-    
+
     /**
      * Show version information for JavaTest.
      * @param out the stream to which to write the information
@@ -132,9 +132,9 @@ public class Help {
         Properties manifest = getManifestForClass(getClass());
         if (manifest == null)
             manifest = new Properties();
-        
+
         String unknown = i18n.getString("help.version.unknown");
-        
+
         // build properties, from manifest
         String product = manifest.getProperty("jtdiff-Name", unknown);
         String version = manifest.getProperty("jtdiff-Version", unknown);
@@ -142,15 +142,15 @@ public class Help {
         String build = manifest.getProperty("jtdiff-Build", unknown);
         String buildJavaVersion = manifest.getProperty("jtdiff-BuildJavaVersion", unknown);
         String buildDate = manifest.getProperty("jtdiff-BuildDate", unknown);
-        
+
         String thisJavaHome = System.getProperty("java.home");
         String thisJavaVersion = System.getProperty("java.version");
-        
+
         File classPathFile = getClassPathFileForClass(Main.class);
         String classPath = (classPathFile == null ? unknown : classPathFile.getPath());
-        
+
         DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
-        
+
         Object[] versionArgs = {
             product,
             version,
@@ -162,7 +162,7 @@ public class Help {
             buildJavaVersion,
             buildDate
         };
-        
+
         /*
          * Example format string:
          *
@@ -178,11 +178,11 @@ public class Help {
          * Running on platform version 1.5.0_06 from /opt/java/5.0/jre.
          * Built with 1.5.0_06 on 09/11/2006 07:52 PM.
          */
-        
+
         out.println(i18n.getString("help.version.txt", versionArgs));
         out.println(i18n.getString("help.copyright.txt"));
     }
-    
+
     private File getDocDir() {
         File classPathFile = getClassPathFileForClass(Main.class);
         if (classPathFile == null)
@@ -194,7 +194,7 @@ public class Help {
             return doc;
         return null;
     }
-    
+
     private URL getClassPathEntryForClass(Class<?> c) {
         try {
             URL url = c.getResource("/" + c.getName().replace('.', '/') + ".class");
@@ -207,19 +207,19 @@ public class Help {
         }
         return null;
     }
-    
+
     private File getClassPathFileForClass(Class<?> c) {
         URL url = getClassPathEntryForClass(c);
         if (url.getProtocol().equals("file"))
             return new File(url.getPath());
         return null;
     }
-    
+
     private Properties getManifestForClass(Class<?> c) {
         URL classPathEntry = getClassPathEntryForClass(c);
         if (classPathEntry == null)
             return null;
-        
+
         try {
             Enumeration<URL> e = getClass().getClassLoader().getResources("META-INF/MANIFEST.MF");
             while (e.hasMoreElements()) {
@@ -241,23 +241,23 @@ public class Help {
         }
         return null;
     }
-    
-    
+
+
     /**
      * Print out info about the options accepted by the command line decoder.
      * @param out A stream to which to write the information.
      */
     void showCommandLineHelp(PrintWriter out) {
         HelpTree commandHelpTree = new HelpTree();
-        
+
         Integer nodeIndent = Integer.getInteger("javatest.help.nodeIndent");
         if (nodeIndent != null)
             commandHelpTree.setNodeIndent(nodeIndent.intValue());
-        
+
         Integer descIndent = Integer.getInteger("javatest.help.descIndent");
         if (descIndent != null)
             commandHelpTree.setDescriptionIndent(descIndent.intValue());
-        
+
         // first, group the options by their group, and sort within group
         // by their first name
         Set<String> groups = new LinkedHashSet<String>();
@@ -271,7 +271,7 @@ public class Help {
             if (o.names.length > 0)
                 map.get(o.group).put(o.names[0], o);
         }
-        
+
         // now build the help tree nodes and add then into the primary help node
         for (String g: groups) {
             SortedMap<String,Option> optionsForGroup = map.get(g);
@@ -283,12 +283,12 @@ public class Help {
                     nodesForGroup.toArray(new HelpTree.Node[nodesForGroup.size()]));
             commandHelpTree.addNode(groupNode);
         }
-        
+
         String progName = getProgramName();
-        
+
         try {
             WrapWriter ww = new WrapWriter(out);
-            
+
             if (commandLineHelpQuery == null || commandLineHelpQuery.size() == 0) {
                 // no keywords given
                 ww.write(i18n.getString("help.cmd.proto", progName));
@@ -316,7 +316,7 @@ public class Help {
                     commandHelpTree.writeSummary(ww);
                 }
             }
-            
+
             ww.write('\n');
             ww.write(i18n.getString("help.cmd.tail"));
             ww.write("\n\n");
@@ -324,14 +324,14 @@ public class Help {
             ww.write("\n\n");
             ww.write(i18n.getString("help.copyright.txt"));
             ww.write("\n\n");
-            
+
             ww.flush();
         } catch (IOException e) {
             // should not happen, from PrintWriter
         }
-        
+
     }
-    
+
     private HelpTree.Node createOptionHelpNode(Option o) {
         String prefix = "help." + o.group.toString().toLowerCase() + "." + o.names[0];
         String arg = (o.argType == Option.ArgType.NONE ? null : i18n.getString(prefix + ".arg"));
@@ -348,24 +348,24 @@ public class Help {
                 case FILE:
                     sb.append(":").append(arg);
                     break;
-                    
+
                 case REST:
                     sb.append(" ").append(arg);
                     break;
-                    
+
                 case WILDCARD:
                     sb.append(arg);
                     break;
-                    
+
                 case OPT:
                     sb.append("  |  -").append(n).append(":").append(arg);
                     break;
-                    
+
                 default:
                     throw new AssertionError();
             }
         }
-        
+
         String name = sb.toString();
         String desc = i18n.getString(prefix + ".desc");
         String[] values = o.getChoices();
@@ -378,37 +378,37 @@ public class Help {
             return new HelpTree.Node(name, desc, children);
         }
     }
-    
+
     private static String getProgramName() {
         String p = System.getProperty("program");
         if (p != null)
             return p;
-        
+
 //        String cp = System.getProperty("java.class.path");
 //        if (cp.indexOf(File.pathSeparator) == -1) {
 //            File f = new File(cp);
 //            if (f.getName().equals("jtreg.jar"))
 //                return "java -jar jtreg.jar ";
 //        }
-        
+
         return "java " + Main.class.getName();
     }
-    
-    
+
+
 //    /**
 //     * Show the jtdiff online help, and exit when it is closed.
 //     * @param out the stream to which to write the help
 //     */
 //    void showOnlineHelp(PrintWriter out) {
-//        
+//
 //        out.println(i18n.getString("help.onlineHelp.pleaseWait"));
 //        out.flush();
-//        
+//
 //        // use a customized HelpBroker that will exit the VM when closed
 //        URL u = HelpSet.findHelpSet(null, "com/sun/javatest/diff/help/jtdiff.hs");
 //        if (u == null)
 //            throw new AssertionError("cant find jtdiff helpset");
-//        
+//
 //        try {
 //            HelpSet helpSet = new HelpSet(null, u);
 //            CustomHelpBroker b = new CustomHelpBroker(helpSet);
@@ -421,25 +421,25 @@ public class Help {
 //            // TO DO...
 //        }
 //    }
-    
+
     private static class CaseInsensitiveStringComparator implements Comparator<String> {
         public int compare(String s1, String s2) {
             if (s1 == null && s2 == null)
                 return 0;
-            
+
             if (s1 == null || s2 == null)
                 return (s1 == null ? -1 : +1);
-            
+
             return s1.compareToIgnoreCase(s2);
         }
-        
+
     }
-    
+
     private Option[] options;
 //    private boolean releaseNotesFlag;
     private boolean versionFlag;
     private List<String> commandLineHelpQuery;
 //    private String onlineHelpQuery;
-    
+
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(Main.class);
 }

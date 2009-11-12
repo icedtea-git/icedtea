@@ -79,18 +79,18 @@ import javax.swing.WindowConstants;
 class CE_KeywordsPane extends CE_StdPane {
     CE_KeywordsPane(UIFactory uif, InterviewParameters config) {
         super(uif, config, "keywords");
-        
+
         updateConfig();
         initGUI();
     }
-    
+
     boolean isOKToClose() {
         if (mutableKeywordsParameters == null)
             return true;
-        
+
         if (!selectCheck.isSelected())
             return true;
-        
+
         try {
             TestSuite ts = config.getTestSuite();
             String[] validKeywords = ts.getKeywords();
@@ -99,7 +99,7 @@ class CE_KeywordsPane extends CE_StdPane {
                 validKeywordsSet = null;
             else
                 validKeywordsSet = new HashSet(Arrays.asList(validKeywords));
-            
+
             String kc = (String) (keywordsChoice.getSelectedItem());
             String type;
             if (kc.equals(ANY_OF))
@@ -116,7 +116,7 @@ class CE_KeywordsPane extends CE_StdPane {
             return false;
         }
     }
-    
+
     void updateConfig() {
         // track interview changes
         keywordsParameters = config.getKeywordsParameters();
@@ -126,32 +126,32 @@ class CE_KeywordsPane extends CE_StdPane {
         else
             mutableKeywordsParameters = null;
     }
-    
+
     void load() {
         updateConfig();
-        
+
         // update GUI
         if (mutableKeywordsParameters != null) {
             selectCheck.setEnabled(true);
             setEnabled(true);
             int km = mutableKeywordsParameters.getKeywordsMode();
             selectCheck.setSelected(km == MutableKeywordsParameters.MATCH_KEYWORDS);
-            
+
             int kmm = mutableKeywordsParameters.getMatchKeywordsMode();
             switch (kmm) {
                 case MutableKeywordsParameters.ANY_OF:
                     keywordsChoice.setSelectedItem(ANY_OF);
                     break;
-                    
+
                 case MutableKeywordsParameters.ALL_OF:
                     keywordsChoice.setSelectedItem(ALL_OF);
                     break;
-                    
+
                 case MutableKeywordsParameters.EXPR:
                     keywordsChoice.setSelectedItem(EXPR);
                     break;
             }
-            
+
             String kmv = mutableKeywordsParameters.getMatchKeywordsValue();
             keywordsField.setText(kmv == null ? "" : kmv);
         } else if (keywordsParameters != null) {
@@ -159,29 +159,29 @@ class CE_KeywordsPane extends CE_StdPane {
             String expr = keywordsParameters.getKeywords().toString();
             selectCheck.setSelected(expr.length() == 0);
             selectCheck.setEnabled(false);
-            
+
             keywordsChoice.setSelectedItem(EXPR);
             keywordsField.setText(expr);
             keywordsChoice.setEnabled(false);
         } else {
             setEnabled(false); // may be too late to hide tab
             selectCheck.setEnabled(false);
-            
+
             keywordsChoice.setSelectedItem(EXPR);
             keywordsField.setText("");
             keywordsChoice.setEnabled(false);
         }
-        
+
         enableKeywordFields();
     }
-    
+
     void save() {
         if (mutableKeywordsParameters != null) {
             int km = (selectCheck.isSelected()
             ? MutableKeywordsParameters.MATCH_KEYWORDS
                     : MutableKeywordsParameters.NO_KEYWORDS);
             mutableKeywordsParameters.setKeywordsMode(km);
-            
+
             String kc = (String) (keywordsChoice.getSelectedItem());
             int kmm;
             if (kc.equals(ANY_OF))
@@ -193,25 +193,25 @@ class CE_KeywordsPane extends CE_StdPane {
             mutableKeywordsParameters.setMatchKeywords(kmm, keywordsField.getText());
         }
     }
-    
+
     private void initGUI() {
         JPanel p = uif.createPanel("ce.keywords", new BorderLayout(), false);
-        
+
         // ----- body -----
         JPanel body = uif.createPanel("ce.keywords.body",
                 new GridBagLayout(),
                 false);
         body.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
-        
+
         GridBagConstraints c = new GridBagConstraints();
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1;
-        
+
         selectCheck = uif.createCheckBox("ce.keywords.select");
         selectCheck.addChangeListener(listener);
         body.add(selectCheck, c);
-        
+
         String[] kc = {ANY_OF, ALL_OF, EXPR};
         keywordsChoice = uif.createChoice("ce.keywords.choice", kc);
         keywordsChoice.addItemListener(listener);
@@ -219,7 +219,7 @@ class CE_KeywordsPane extends CE_StdPane {
         c.insets.left = 17;
         c.weightx = 0;
         body.add(keywordsChoice, c);
-        
+
         keywordsField = uif.createInputField("ce.keywords.field", 20);
         uif.setAccessibleName(keywordsField, "ce.keywords.field");
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -227,17 +227,17 @@ class CE_KeywordsPane extends CE_StdPane {
         c.insets.left = 0;
         c.weightx = 1;
         body.add(keywordsField, c);
-        
+
         p.add(body, BorderLayout.CENTER);
-        
+
         // ----- foot -----
         JPanel foot = uif.createPanel("ce.keywords.foot",
                 new GridBagLayout(),
                 false);
         foot.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        
+
         Icon dropDownIcon = new DropDownIcon();
-        
+
         c.anchor = GridBagConstraints.EAST;
         c.fill = GridBagConstraints.NONE;
         c.insets.left = 5;
@@ -246,21 +246,21 @@ class CE_KeywordsPane extends CE_StdPane {
         keywordBtn.setIcon(dropDownIcon);
         keywordBtn.setHorizontalTextPosition(JLabel.LEADING);
         foot.add(keywordBtn, c);
-        
+
         c.weightx = 0;
         opBtn = uif.createButton("ce.keywords.op", listener);
         opBtn.setIcon(dropDownIcon);
         opBtn.setHorizontalTextPosition(JLabel.LEADING);
         foot.add(opBtn, c);
         p.add(foot, BorderLayout.SOUTH);
-        
+
         addBody(p);
-        
+
         String[] opItems = { AND, OR, NOT, PARENS };
         opPopup = uif.createPopupMenu("ce.keywords.op", opItems, listener);
-        
+
         keywords = config.getTestSuite().getKeywords();
-        
+
         if (keywords != null) {
             if (keywords.length == 0) {
                 // this test suite explicitly does not support keywords,
@@ -280,18 +280,18 @@ class CE_KeywordsPane extends CE_StdPane {
             }
         }
     }
-    
+
     private class KeywordChooser extends JDialog {
 
         private JScrollPane sp;
         private JList lst;
         private JButton ok, cancel;
-        
+
         KeywordChooser(Dialog parent, String [] keywords, Listener listener ) {
             super(parent);
             initUI(keywords, listener);
         }
-        
+
         KeywordChooser(Frame parent, String [] keywords, Listener listener ) {
             super(parent);
             initUI(keywords, listener);
@@ -301,13 +301,13 @@ class CE_KeywordsPane extends CE_StdPane {
             super();
             initUI(keywords, listener);
         }
-        
+
         private void initUI(String [] keywords, final Listener listener ) {
             GridBagConstraints gbc;
-            
+
             sp = new JScrollPane();
             lst = new JList(keywords);
-            
+
             ok = uif.createButton("keywordChooser.insert", new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     Object[] sels = lst.getSelectedValues();
@@ -321,8 +321,8 @@ class CE_KeywordsPane extends CE_StdPane {
                     dispose();
                 }
             });
-            
-            
+
+
             cancel = uif.createButton("keywordChooser.cancel", new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     lst.clearSelection();
@@ -330,24 +330,24 @@ class CE_KeywordsPane extends CE_StdPane {
                     dispose();
                 }
             }) ;
-            
+
             JPanel btnP = new JPanel();
             btnP.setLayout(new GridLayout(1,2,5,0));
             btnP.add(cancel);
             btnP.add(ok);
-                    
+
             getContentPane().setLayout(new GridBagLayout());
-            
+
             setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            
+
             setModal(true);
             setUndecorated(true);
             JPopupMenu samplePopup = new JPopupMenu();
             getRootPane().setBorder(samplePopup.getBorder());
-            
+
             sp.setViewportView(lst);
             lst.setBackground(samplePopup.getBackground());
-            
+
             gbc = new GridBagConstraints();
             gbc.gridwidth = 2;
             gbc.fill = GridBagConstraints.BOTH;
@@ -370,7 +370,7 @@ class CE_KeywordsPane extends CE_StdPane {
                     ok.setEnabled(lst.getSelectedIndex() != -1);
                 }
             });
-            
+
             setSize(s);
         }
 
@@ -381,10 +381,10 @@ class CE_KeywordsPane extends CE_StdPane {
             Point yP = getLocation();
             setLocation(new Point(xP.x, yP.y));
         }
-        
+
     }
-    
-    
+
+
     private void enableKeywordFields() {
         boolean b = selectCheck.isEnabled() && selectCheck.isSelected();
         keywordsChoice.setEnabled(b);
@@ -392,7 +392,7 @@ class CE_KeywordsPane extends CE_StdPane {
         opBtn.setEnabled(b && keywordsChoice.getSelectedItem().equals(EXPR));
         keywordBtn.setEnabled(b && (keywordPopup != null || keywordChooser));
     }
-    
+
     private KeywordsParameters keywordsParameters;
     private MutableKeywordsParameters mutableKeywordsParameters;
     private JCheckBox selectCheck;
@@ -403,24 +403,24 @@ class CE_KeywordsPane extends CE_StdPane {
     private JButton opBtn;
     private JPopupMenu opPopup;
     private Listener listener = new Listener();
-    
+
     private static final String ALL_OF = "allOf";
     private static final String ANY_OF = "anyOf";
     private static final String EXPR   = "expr";
     private static final String IGNORE = "ignore";
-    
+
     private static final String AND = "and";
     private static final String OR = "or";
     private static final String NOT = "not";
     private static final String PARENS = "parens";
-    
+
     private boolean keywordChooser;
     private String[] keywords;
-    
+
     private class Listener
             implements ActionListener, ChangeListener, ItemListener {
         // ---------- ActionListener -----------------------------------
-        
+
         public void actionPerformed(ActionEvent e) {
             Component src = (Component) (e.getSource());
             String cmd = e.getActionCommand();
@@ -457,55 +457,55 @@ class CE_KeywordsPane extends CE_StdPane {
             } else if (src.getParent() == keywordPopup)
                 insert(cmd);
         }
-        
+
         // show a popup menu relative to its invoking button
         private void show(Component ref, JPopupMenu menu) {
             menu.show(ref, 0, ref.getHeight());
         }
-        
+
         // insert text into the keywords field
         void insert(String s) {
             if (s.length() == 0)
                 return;
-            
+
             String t = keywordsField.getText();
-            
+
             Caret caret = keywordsField.getCaret();
             int p1 = Math.min(caret.getDot(), caret.getMark());
             int p2 = Math.max(caret.getDot(), caret.getMark());
-            
+
             boolean needSpaceBefore = Character.isLetterOrDigit(s.charAt(0))
             && (p1 > 0) && Character.isLetterOrDigit(t.charAt(p1 - 1));
             if (needSpaceBefore)
                 s = " " + s;
-            
+
             boolean needSpaceAfter = Character.isLetterOrDigit(s.charAt(s.length() - 1))
             && (p2 < t.length()) && Character.isLetterOrDigit(t.charAt(p2));
             if (needSpaceAfter)
                 s = s + " ";
-            
+
             keywordsField.replaceSelection(s);
         }
-        
+
         // ---------- ChangeListener -----------------------------------
-        
+
         public void stateChanged(ChangeEvent e) {
             enableKeywordFields();
         }
-        
+
         // ---------- ItemListener -----------------------------------
-        
+
         public void itemStateChanged(ItemEvent e) {
             enableKeywordFields();
         }
     }
-    
+
     private static class DropDownIcon implements Icon {
-        
+
         public void paintIcon(Component c, Graphics g, int x, int y) {
             JComponent component = (JComponent)c;
             int iconWidth = getIconWidth();
-            
+
             g.translate( x, y );
             g.setColor( component.isEnabled() ?
                 MetalLookAndFeel.getControlInfo() :
@@ -515,13 +515,13 @@ class CE_KeywordsPane extends CE_StdPane {
             g.drawLine( 2, 2, 2 + (iconWidth - 5), 2 );
             g.drawLine( 3, 3, 3 + (iconWidth - 7), 3 );
             g.drawLine( 4, 4, 4 + (iconWidth - 9), 4 );
-            
+
             g.translate( -x, -y );
         }
-        
+
         public int getIconWidth() { return 10; }
-        
+
         public int getIconHeight()  { return 5; }
-        
+
     }
 }

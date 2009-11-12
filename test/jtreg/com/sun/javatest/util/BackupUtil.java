@@ -33,11 +33,11 @@ import java.io.FileFilter;
 import java.io.IOException;
 
 public class BackupUtil {
-    
+
     /** Creates a new instance of BackupUtil */
     public BackupUtil() {
     }
-    
+
     /**
      * Performs backup of file. Searchs for all files with the same name + "~i~"(such names
      * we use for backupped files). For each backup it increase it's number for 1
@@ -51,11 +51,11 @@ public class BackupUtil {
         if(!file.exists()) {
             return -1;
         }
-        
+
         if(file.isDirectory()) {
             return -1;
         }
-        
+
         String filename = file.getPath();
         File dir = file.getParentFile();
         String[] list = dir.list();
@@ -66,7 +66,7 @@ public class BackupUtil {
         String prefix = file.getName() + "~";
         String suffix = "~";
         int maxBackupIndex = 0;
-        Vector backups = new Vector(); 
+        Vector backups = new Vector();
 
         boolean renamed;
         java.util.Arrays.sort(list);
@@ -79,11 +79,11 @@ public class BackupUtil {
                 if(!checkForInteger(mid)) {
                     continue;
                 }
-                
+
                 int index = Integer.parseInt(mid);
                 File backuppedFile = new File(filename + "~" + index + "~");
                 index++;
-                renamed = 
+                renamed =
                         backuppedFile.renameTo(new File(filename + "~" + index + "~"));
                 if(!renamed) {
                     return -1;
@@ -91,7 +91,7 @@ public class BackupUtil {
                 backups.addElement(new Integer(index));
             }
         }
-        
+
         renamed = file.renameTo(new File(filename + "~" + 1 + "~"));
         if(!renamed) {
             return -1;
@@ -109,7 +109,7 @@ public class BackupUtil {
         }
         return maxIndex > maxBackups ? maxBackups : maxIndex;
     }
-    
+
     /**
      * This method created to backup dirs. It just renames directories, not content of
      * this directories. Renaming mechanism is the same, as for backupFile().
@@ -120,11 +120,11 @@ public class BackupUtil {
         if(!file.isDirectory()) {
             return;
         }
-        
+
         if(file.list().length == 0) {
             return;
         }
-        
+
         boolean renamed;
         String filename = file.getPath();
         File dir = file.getParentFile();
@@ -133,7 +133,7 @@ public class BackupUtil {
         String prefix = file.getName() + "~";
         String suffix = "~";
         int maxBackupIndex = 0;
-        Vector backups = new Vector(); 
+        Vector backups = new Vector();
 
         java.util.Arrays.sort(list);
         for (int i = list.length - 1; i >= 0; i--) {
@@ -145,11 +145,11 @@ public class BackupUtil {
                 if(!checkForInteger(mid)) {
                     continue;
                 }
-                
+
                 int index = Integer.parseInt(mid);
                 File backuppedFile = new File(filename + "~" + index + "~");
                 index++;
-                renamed = 
+                renamed =
                         backuppedFile.renameTo(new File(filename + "~" + index + "~"));
                 if(!renamed) {
                     return;
@@ -157,7 +157,7 @@ public class BackupUtil {
                 backups.addElement(new Integer(index));
             }
         }
-        
+
         renamed = file.renameTo(new File(filename + "~" + 1 + "~"));
         if(!renamed) {
             return;
@@ -172,9 +172,9 @@ public class BackupUtil {
                 File oldBackup = new File(filename + "~" + backups.get(j) + "~");
                 deleteDir(oldBackup);
             }
-        }        
+        }
     }
-    
+
     /**
      * Backups all found "layers" of subdirs. Subdirs have the same layer, if
      * suffixes of their names are the same (suffix has format ~ + int number + ~)
@@ -185,13 +185,13 @@ public class BackupUtil {
         if(!dir.exists()) {
             return;
         }
-        
+
         File[] files = dir.listFiles();
-        
+
         if(files.length == 0) {
             return;
         }
-        
+
         HashSet layers = new HashSet();
         String suffix = "~";
         for(int i = 0; i < files.length; i++) {
@@ -201,23 +201,23 @@ public class BackupUtil {
                     layers.add(new Integer(0));
                     continue;
                 }
-                
+
                 String prefix = fileName.substring(0,fileName.lastIndexOf(suffix));
                 String numb = prefix.substring(prefix.lastIndexOf(suffix) + 1, prefix.length());
-                
+
                 if(checkForInteger(numb)) {
                     layers.add(new Integer(Integer.parseInt(numb)));
                 }
             }
         }
-        
+
         Object[] larray = layers.toArray();
         java.util.Arrays.sort(larray);
         for(int i = larray.length - 1; i >= 0; i--) {
             backupLayer(dir, (Integer)larray[i], maxBackups);
         }
     }
-    
+
     /**
      * Backups "layer" of subdirs - all subdirs with the same number in suffix.
      * If layer should be deleted (because of max allowed backups) - deletes it
@@ -253,7 +253,7 @@ public class BackupUtil {
             }
         }
     }
-    
+
     private static class LayerFilter implements FileFilter {
         private String suffix;
         public LayerFilter(String suffix) {
@@ -262,7 +262,7 @@ public class BackupUtil {
         public boolean accept(File file) {
             if(!file.isDirectory())
                 return false;
-            
+
             if(suffix.equals("")) {
                 if(!file.getName().endsWith("~"))
                     return true;
@@ -276,9 +276,9 @@ public class BackupUtil {
                     return false;
             }
         }
-        
+
     }
-    
+
     /**
      * backups all files in the directory. No rename of directory. Not - recursive
      */
@@ -286,7 +286,7 @@ public class BackupUtil {
         if(!dir.isDirectory()) {
             return;
         }
-        
+
         String[] list = dir.list();
         for (int i = 0; i < list.length; i++) {
             File f = new File(dir, list[i]);
@@ -298,9 +298,9 @@ public class BackupUtil {
             }
         }
     }
-    
+
     /**
-     * 
+     *
      * @param s Checks, if this String represents integer number
      * @return true, if if this String represents integer number,
      * false otherwise
@@ -316,16 +316,16 @@ public class BackupUtil {
         }
         return true;
     }
-    
+
     /**
-     * 
-     * @param dir File to delete. If it is not dir, deletes this File. Otherwise deletes dir 
+     *
+     * @param dir File to delete. If it is not dir, deletes this File. Otherwise deletes dir
      * recursively
      * @return true, if dir (or file) removed successfully
      */
     public static boolean deleteDir(File dir) {
         boolean deleted = dir.delete();
-        
+
         if(!deleted) {
             String[] list = dir.list();
             if(list != null) {

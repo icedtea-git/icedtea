@@ -43,7 +43,7 @@ public class HTMLWriter
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public HTMLWriter(Writer out) throws IOException {
-	this(out, "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2//EN\">");
+        this(out, "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 3.2//EN\">");
     }
 
     /**
@@ -53,23 +53,23 @@ public class HTMLWriter
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public HTMLWriter(Writer out, String docType) throws IOException {
-	if (out instanceof BufferedWriter)
-	    this.out = (BufferedWriter) out;
-	else 
-	    this.out = new BufferedWriter(out);
-	this.out.write(docType);
-	this.out.newLine();
+        if (out instanceof BufferedWriter)
+            this.out = (BufferedWriter) out;
+        else
+            this.out = new BufferedWriter(out);
+        this.out.write(docType);
+        this.out.newLine();
     }
 
     /**
      * Create an HTMLWriter object, using a specified bundle for l0calizing messages.
      * @param out a Writer to which to write the generated HTML
-     * @param i18n a resource bundle to use to localize messages 
+     * @param i18n a resource bundle to use to localize messages
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public HTMLWriter(Writer out, I18NResourceBundle i18n) throws IOException {
-	this(out);
-	this.i18n = i18n;
+        this(out);
+        this.i18n = i18n;
     }
 
 
@@ -78,12 +78,12 @@ public class HTMLWriter
      * using a specified bundle for l0calizing messages.
      * @param out a Writer to which to write the generated HTML
      * @param docType a string containing a doctype header for the HTML to be generetaed
-     * @param i18n a resource bundle to use to localize messages 
+     * @param i18n a resource bundle to use to localize messages
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public HTMLWriter(Writer out, String docType, I18NResourceBundle i18n) throws IOException {
-	this(out, docType);
-	this.i18n = i18n;
+        this(out, docType);
+        this.i18n = i18n;
     }
 
     /**
@@ -91,7 +91,7 @@ public class HTMLWriter
      * @param i18n the resource bundle to be used for localizing messages
      */
     public void setI18NResourceBundle(I18NResourceBundle i18n) {
-	this.i18n = i18n;
+        this.i18n = i18n;
     }
 
     /**
@@ -99,7 +99,7 @@ public class HTMLWriter
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public void flush() throws IOException {
-	out.flush();
+        out.flush();
     }
 
     /**
@@ -107,7 +107,7 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void close() throws IOException {
-	out.close();
+        out.close();
     }
 
     /**
@@ -115,14 +115,14 @@ public class HTMLWriter
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public void newLine() throws IOException {
-	out.newLine();
+        out.newLine();
     }
 
     /**
      * Start an HTML tag.  If a prior tag has been started, it will
      * be closed first. Once a tag has been opened, attributes for the
-     * tag may be written out, followed by body content before finally 
-     * ending the tag.  
+     * tag may be written out, followed by body content before finally
+     * ending the tag.
      * @param tag the tag to be started
      * @throws IOException if there is a problem writing to the underlying stream
      * @see #writeAttr
@@ -130,14 +130,14 @@ public class HTMLWriter
      * @see #endTag
      */
     public void startTag(String tag) throws IOException {
-	if (state == IN_TAG) {
-	    out.write(">");
-	    state = IN_BODY;
-	}
+        if (state == IN_TAG) {
+            out.write(">");
+            state = IN_BODY;
+        }
         newLine();
-	out.write("<");
-	out.write(tag);
-	state = IN_TAG;
+        out.write("<");
+        out.write(tag);
+        state = IN_TAG;
     }
 
     /**
@@ -148,19 +148,19 @@ public class HTMLWriter
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public void endTag(String tag) throws IOException {
-	if (state == IN_TAG) {
-	    out.write(">");
-	    state = IN_BODY;
+        if (state == IN_TAG) {
+            out.write(">");
+            state = IN_BODY;
             out.newLine();
-	}
-	out.write("</");
-	out.write(tag);
-	out.write(">");
+        }
+        out.write("</");
+        out.write(tag);
+        out.write(">");
         out.newLine();
-	state = IN_BODY;
+        state = IN_BODY;
     }
 
-    /** 
+    /**
      * Finish an empty element tag, such as a META, BASE or LINK tag.
      * This is expected to correspond with a startTag.
      * @param tag the tag which is being closed.  this is only useful for
@@ -170,12 +170,12 @@ public class HTMLWriter
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public void endEmptyTag(String tag) throws IOException {
-	if (state != IN_TAG)
-	    throw new IllegalStateException();
+        if (state != IN_TAG)
+            throw new IllegalStateException();
 
-	out.write(">");
-	state = IN_BODY;
-	out.newLine();
+        out.write(">");
+        state = IN_BODY;
+        out.newLine();
     }
 
     /**
@@ -191,20 +191,20 @@ public class HTMLWriter
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public void writeAttr(String name, String value) throws IOException {
-	if (state != IN_TAG)
-	    throw new IllegalStateException();
+        if (state != IN_TAG)
+            throw new IllegalStateException();
 
-	out.write(" ");
-	out.write(name);
-	out.write("=");
-	boolean alpha = true;
-	for (int i = 0; i < value.length() && alpha; i++)
-	    alpha = Character.isLetter(value.charAt(i));
-	if (!alpha)
-	    out.write("\"");
-	out.write(value);
-	if (!alpha)
-	    out.write("\"");
+        out.write(" ");
+        out.write(name);
+        out.write("=");
+        boolean alpha = true;
+        for (int i = 0; i < value.length() && alpha; i++)
+            alpha = Character.isLetter(value.charAt(i));
+        if (!alpha)
+            out.write("\"");
+        out.write(value);
+        if (!alpha)
+            out.write("\"");
     }
 
     /**
@@ -220,11 +220,11 @@ public class HTMLWriter
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public void writeAttr(String name, int value) throws IOException {
-	writeAttr(name, Integer.toString(value));
+        writeAttr(name, Integer.toString(value));
     }
-  
-    /** 
-     * Write a line of text, followed by a newline. 
+
+    /**
+     * Write a line of text, followed by a newline.
      * The text will be escaped as necessary.
      * @param text the text to be written.
      * @throws IOException if there is a problem closing the underlying stream
@@ -244,61 +244,61 @@ public class HTMLWriter
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public void write(String text) throws IOException {
-	if (state == IN_TAG) {
-	    out.write(">");
-	    state = IN_BODY;
-	}
+        if (state == IN_TAG) {
+            out.write(">");
+            state = IN_BODY;
+        }
 
         if (text == null)
             return;
 
-	// check to see if there are any special characters
-	boolean specialChars = false;
-	for (int i = 0; i < text.length() && !specialChars; i++) {
-	    switch (text.charAt(i)) {
-	    case '<': case '>': case '&': 
-		specialChars = true;
-	    }
-	}
+        // check to see if there are any special characters
+        boolean specialChars = false;
+        for (int i = 0; i < text.length() && !specialChars; i++) {
+            switch (text.charAt(i)) {
+            case '<': case '>': case '&':
+                specialChars = true;
+            }
+        }
 
-	// if there are special characters write the string character at a time;
-	// otherwise, write it out as is
-	if (specialChars) {
-	    for (int i = 0; i < text.length(); i++) {
-		char c = text.charAt(i);
-		switch (c) {
-		case '<': out.write("&lt;"); break;
-		case '>': out.write("&gt;"); break;
-		case '&': out.write("&amp;"); break;
-		default: out.write(c);
-		}			
-	    }
-	}
-	else
-	    out.write(text);
+        // if there are special characters write the string character at a time;
+        // otherwise, write it out as is
+        if (specialChars) {
+            for (int i = 0; i < text.length(); i++) {
+                char c = text.charAt(i);
+                switch (c) {
+                case '<': out.write("&lt;"); break;
+                case '>': out.write("&gt;"); break;
+                case '&': out.write("&amp;"); break;
+                default: out.write(c);
+                }
+            }
+        }
+        else
+            out.write(text);
     }
-	
+
     /**
      * Write a basic HTML entity, such as &nbsp; or &#123; .
      * @param entity the entity to write
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public void writeEntity(String entity) throws IOException {
-	if (state == IN_TAG) {
-	    out.write(">");
-	    state = IN_BODY;
-	}
-	out.write(entity);
+        if (state == IN_TAG) {
+            out.write(">");
+            state = IN_BODY;
+        }
+        out.write(entity);
     }
-	
+
     /**
      * Write an image tag, using a specified path for the image source attribute.
      * @param imagePath the path for the image source
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeImage(String imagePath) throws IOException {
-	startTag(IMAGE);
-	writeAttr(SRC, imagePath);
+        startTag(IMAGE);
+        writeAttr(SRC, imagePath);
     }
 
     /**
@@ -307,7 +307,7 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeImage(URL imageURL) throws IOException {
-	writeImage(imageURL.toString());
+        writeImage(imageURL.toString());
     }
 
     /**
@@ -317,10 +317,10 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeLink(String anchor, String body) throws IOException {
-	startTag(A);
-	writeAttr(HREF, anchor);
-	write(body);
-	endTag(A);
+        startTag(A);
+        writeAttr(HREF, anchor);
+        write(body);
+        endTag(A);
     }
 
     /**
@@ -330,15 +330,15 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeLink(File file, String body) throws IOException {
-	startTag(A);
-	StringBuffer sb = new StringBuffer();
-	String path = file.getPath().replace(File.separatorChar, '/');
-	if (file.isAbsolute() && !path.startsWith("/"))
-	    sb.append('/');
-	sb.append(path);
-	writeAttr(HREF, sb.toString());
-	write(body);
-	endTag(A);
+        startTag(A);
+        StringBuffer sb = new StringBuffer();
+        String path = file.getPath().replace(File.separatorChar, '/');
+        if (file.isAbsolute() && !path.startsWith("/"))
+            sb.append('/');
+        sb.append(path);
+        writeAttr(HREF, sb.toString());
+        write(body);
+        endTag(A);
     }
 
     /**
@@ -347,7 +347,7 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeLink(File file) throws IOException {
-	writeLink(file, file.getPath());
+        writeLink(file, file.getPath());
     }
 
     /**
@@ -357,10 +357,10 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeLink(URL url, String body) throws IOException {
-	startTag(A);
-	writeAttr(HREF, url.toString());
-	write(body);
-	endTag(A);
+        startTag(A);
+        writeAttr(HREF, url.toString());
+        write(body);
+        endTag(A);
     }
 
     /**
@@ -370,22 +370,22 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeLinkDestination(String anchor, String body) throws IOException {
-	startTag(A);
-	writeAttr(NAME, anchor);
-	write(body);
-	endTag(A);
+        startTag(A);
+        writeAttr(NAME, anchor);
+        write(body);
+        endTag(A);
     }
 
     /**
      * Write a parameter tag.
-     * @param name the name of the parameter 
+     * @param name the name of the parameter
      * @param value the value of the parameter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeParam(String name, String value) throws IOException {
-	startTag(PARAM);
-	writeAttr(NAME, name);
-	writeAttr(VALUE, value);
+        startTag(PARAM);
+        writeAttr(NAME, name);
+        writeAttr(VALUE, value);
     }
 
     /**
@@ -394,7 +394,7 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeStyleAttr(String value) throws IOException {
-	writeAttr(STYLE, value);
+        writeAttr(STYLE, value);
     }
 
     /**
@@ -404,7 +404,7 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void write(I18NResourceBundle i18n, String key) throws IOException {
-	write(i18n.getString(key));
+        write(i18n.getString(key));
     }
 
     /**
@@ -415,7 +415,7 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void write(I18NResourceBundle i18n, String key, Object arg) throws IOException {
-	write(i18n.getString(key, arg));
+        write(i18n.getString(key, arg));
     }
 
     /**
@@ -426,7 +426,7 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void write(I18NResourceBundle i18n, String key, Object[] args) throws IOException {
-	write(i18n.getString(key, args));
+        write(i18n.getString(key, args));
     }
 
     /**
@@ -435,7 +435,7 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeI18N(String key) throws IOException {
-	write(i18n.getString(key));
+        write(i18n.getString(key));
     }
 
     /**
@@ -445,7 +445,7 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeI18N(String key, Object arg) throws IOException {
-	write(i18n.getString(key, arg));
+        write(i18n.getString(key, arg));
     }
 
     /**
@@ -455,7 +455,7 @@ public class HTMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeI18N(String key, Object[] args) throws IOException {
-	write(i18n.getString(key, args));
+        write(i18n.getString(key, args));
     }
 
     /** The HTML "a" tag. */

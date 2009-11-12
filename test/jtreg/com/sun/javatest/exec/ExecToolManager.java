@@ -65,25 +65,25 @@ import com.sun.javatest.tool.WorkDirChooser;
 /**
  * The ToolManager for {@link ExecTool test manager} windows.
  */
-public class ExecToolManager extends ToolManager 
+public class ExecToolManager extends ToolManager
 {
     /**
      * Create an ExecManager to manage the test manager windows on a desktop.
      * @param desktop the desktop for which this manager is responsible
      */
-    public ExecToolManager(Desktop desktop) { 
+    public ExecToolManager(Desktop desktop) {
         super(desktop);
     }
 
     public FileOpener[] getFileOpeners() {
-        return fileOpeners; 
+        return fileOpeners;
     }
 
     public Action[] getFileMenuActions() {
-        // The newWorkDirAction is enabled if we can reasonably deduce a 
+        // The newWorkDirAction is enabled if we can reasonably deduce a
         // test suite for it to operate on, so, without opening anything new,
         // we check through a candidate list of test suites. If we find one,
-        // we enabled the newWorkDirAction, and stash some private data 
+        // we enabled the newWorkDirAction, and stash some private data
         // in it that will enable us to determine the test suite if that
         // action is performed.
         // The openWorkDirAction is always enabled, but we stash private data
@@ -92,7 +92,7 @@ public class ExecToolManager extends ToolManager
         boolean done = false;
         Object tsInfo = null;
         Desktop d = getDesktop();
-        
+
         // check if the current tool is an ExecTool with a test suite loaded
         // if so, set tsInfo to the test suite
         Tool t = d.getSelectedTool();
@@ -105,7 +105,7 @@ public class ExecToolManager extends ToolManager
                 done = true;
             }
         }
-        
+
         // if not got a test suite yet, check if the collected set of current tools
         // define a unique test suite; if they define one, use it; if they define more
         // than one, give up.
@@ -122,8 +122,8 @@ public class ExecToolManager extends ToolManager
                 newWorkDirAction.setEnabled(true);
                 newWorkDirAction.putValue("testSuite", new WeakReference(ts));
                 openWorkDirAction.putValue("testSuite", new WeakReference(ts));
-            } 
-            else 
+            }
+            else
                 newWorkDirAction.setEnabled(false);
             done = (s.size() > 0);
         }
@@ -143,7 +143,7 @@ public class ExecToolManager extends ToolManager
             catch (Exception e) {
             }
         }
-       
+
         // if not got a test suite yet, check if the user's directory is a work directory;
         // if so, remember that filename (don't open the test suite because it might not
         // be needed.)
@@ -159,10 +159,10 @@ public class ExecToolManager extends ToolManager
             catch (Exception e) {
             }
         }
-        
-       
+
+
         // if not got a test suite yet, check if the JT installation directory or its parent
-        // is a test suite; if so, remember that filename (don't open the test suite because 
+        // is a test suite; if so, remember that filename (don't open the test suite because
         // it might not be needed.)
         if (!done) {
             try {
@@ -189,7 +189,7 @@ public class ExecToolManager extends ToolManager
         if (!done)
             newWorkDirAction.setEnabled(false);
 
-        return fileMenuActions; 
+        return fileMenuActions;
     }
 
     public JMenuItem[] getFileMenuPrimaries() {
@@ -282,13 +282,13 @@ public class ExecToolManager extends ToolManager
             prefsPane = new PrefsPane();
         return prefsPane;
     }
-    
-    
-    /** 
+
+
+    /**
      * If ExecTool have SINGLE_TEST_MANAGER enabled then
-     * this method check SINGLE_TEST_MANAGER in all 
-     * loaded tools and return false if such found. 
-     * 
+     * this method check SINGLE_TEST_MANAGER in all
+     * loaded tools and return false if such found.
+     *
      * @param newTool new tool which is added to Dektop
      * @param d Desktop to add
      * @return true if there is no conflict with SINGLE_TEST_MANAGER
@@ -297,7 +297,7 @@ public class ExecToolManager extends ToolManager
     boolean checkOpenNewTool(ExecTool newTool, Desktop d) {
         return checkOpenNewTool(d, newTool.getContextManager());
     }
-        
+
     boolean checkOpenNewTool(Desktop d, ContextManager conManager) {
         if (conManager != null  && conManager.getFeatureManager().isEnabled(
                         FeatureManager.SINGLE_TEST_MANAGER)) {
@@ -328,19 +328,19 @@ public class ExecToolManager extends ToolManager
                 } else {
                     return false;
                 }
-            } 
+            }
             showError("tse.single");
             return false;
         }
         return true;
     }
-    
-    
+
+
     public Tool startTool() {
         Desktop d = getDesktop();
 
-        
-        
+
+
         ExecTool t = new ExecTool(this);
 
         if (!checkOpenNewTool(t, d)) {
@@ -359,7 +359,7 @@ public class ExecToolManager extends ToolManager
      * Start an ExecTool for a particular configuration.
      * @param p the configuration defining the tests and test results to be
      * displayed
-     * @return the tool created to show the tests and test results specified 
+     * @return the tool created to show the tests and test results specified
      * by the configuration
      */
     public Tool startTool(InterviewParameters p) {
@@ -393,7 +393,7 @@ public class ExecToolManager extends ToolManager
 
     //-------------------------------------------------------------------------
 
-    /** 
+    /**
      * Create an ExecTool instance using the given test suite.
      * @param ts the test suite to seed the new tool with
      * @return tool instance now associated with the given test suite
@@ -402,7 +402,7 @@ public class ExecToolManager extends ToolManager
      * @throws TestSuite.Fault if there is a problem while accessing the test
      *         suite object
      */
-    public ExecTool showTestSuite(TestSuite ts) 
+    public ExecTool showTestSuite(TestSuite ts)
         throws InterviewParameters.Fault, TestSuite.Fault
     {
         // check to see if there is an empty tool; if so select it
@@ -415,7 +415,7 @@ public class ExecToolManager extends ToolManager
             for (int i = 0; i < tools.length && usableExecTool == null; i++) {
                 if (tools[i] instanceof ExecTool) {
                     ExecTool t = (ExecTool) tools[i];
-                    if (t.isEmpty() && !(t.isQuickStartWizardShowing())) 
+                    if (t.isEmpty() && !(t.isQuickStartWizardShowing()))
                         usableExecTool = t;
                 }
             }
@@ -440,12 +440,12 @@ public class ExecToolManager extends ToolManager
     }
 
     private TestSuiteChooser getTestSuiteChooser() {
-        if (testSuiteChooser == null) 
+        if (testSuiteChooser == null)
             testSuiteChooser = new TestSuiteChooser();
-        
+
         return testSuiteChooser;
     }
-  
+
     void addToFileHistory(TestSuite ts) {
         // for 4.0, we think adding test suites is not useful
         //getDesktop().addToFileHistory(ts.getRoot(), testSuiteOpener);
@@ -453,7 +453,7 @@ public class ExecToolManager extends ToolManager
 
     //-------------------------------------------------------------------------
 
-    /** 
+    /**
      * Create an ExecTool instance using the given work directory.
      * @param wd the work directory to open
      * @return tool instance now associated with the given work directory
@@ -462,7 +462,7 @@ public class ExecToolManager extends ToolManager
      * @throws TestSuite.Fault if there is a problem while accessing the test
      *         suite object
      */
-    public ExecTool showWorkDirectory(WorkDirectory wd) 
+    public ExecTool showWorkDirectory(WorkDirectory wd)
         throws InterviewParameters.Fault, TestSuite.Fault
     {
         // check to see if there is a matching tool; if so, select it
@@ -477,7 +477,7 @@ public class ExecToolManager extends ToolManager
                     ExecTool t = (ExecTool) tools[i];
                     if (usableExecTool == null && t.isEmpty() && !(t.isQuickStartWizardShowing() )) {
                         // save for later in case no better match
-                        usableExecTool = t; 
+                        usableExecTool = t;
                     }
                     else if (t.getWorkDirectory() == null
                              && t.containsTestSuite(wd.getTestSuite())) {
@@ -488,12 +488,12 @@ public class ExecToolManager extends ToolManager
                 }
             }
         }
-           
+
         // create or update a suitable exec tool
         ExecTool t;
         if (usableExecTool != null) {
             t = usableExecTool;
-            
+
             if (t.isEmpty()) {
                 d.removeTool(t);
                 t = new ExecTool(this, wd);
@@ -511,10 +511,10 @@ public class ExecToolManager extends ToolManager
             TestSuite ts = wd.getTestSuite();
             InterviewParameters params = ts.createInterview();
             params.setWorkDirectory(wd);
-            
+
             FileHistory h = FileHistory.getFileHistory(wd, "configHistory.jtl");
             File latestConfigFile = h.getLatestEntry();
-            
+
             if (latestConfigFile != null) {
                 try {
                     params.load(latestConfigFile);
@@ -526,9 +526,9 @@ public class ExecToolManager extends ToolManager
                     showError("tmgr.cantLoadDefaultConfig", new Object[] { latestConfigFile, e.getMessage() });
                 }
             }
-            
+
             t = new ExecTool(this, params);
-            if (!checkOpenNewTool(t, d)){         
+            if (!checkOpenNewTool(t, d)){
                 return null;
             }
             d.addTool(t);
@@ -543,7 +543,7 @@ public class ExecToolManager extends ToolManager
     void addToFileHistory(WorkDirectory wd) {
         getDesktop().addToFileHistory(wd.getRoot(), workDirOpener);
     }
-    
+
     void showError(String key) {
         showError(key, (String[]) null);
     }
@@ -563,17 +563,17 @@ public class ExecToolManager extends ToolManager
                 uif = new UIFactory(getClass(), getDesktop().getDialogParent());
         return uif.showYesNoDialog("tse.closeCurrent");
     }
-    
-    
+
+
 
     //-------------------------------------------------------------------------
 
     private Action openQuickStartAction = new ToolAction(i18n, "mgr.openQuickStart") {
         public void actionPerformed(ActionEvent e) {
             Desktop d = getDesktop();
-            
-            ExecTool t = new ExecTool(ExecToolManager.this);        
-            if (!checkOpenNewTool(t, d)){         
+
+            ExecTool t = new ExecTool(ExecToolManager.this);
+            if (!checkOpenNewTool(t, d)){
                 return;
             }
             d.addTool(t);
@@ -590,11 +590,11 @@ public class ExecToolManager extends ToolManager
             //System.err.println("EM:openTestSuiteAction " + e);
             try {
                 TestSuiteChooser tsc = getTestSuiteChooser();
-                
+
                 int action = tsc.showDialog(getDesktop().getDialogParent());
                 if (action != JFileChooser.APPROVE_OPTION)
                     return;
-                
+
                 showTestSuite(tsc.getSelectedTestSuite());
                 tsc.setSelectedTestSuite(null);
             }
@@ -616,22 +616,22 @@ public class ExecToolManager extends ToolManager
 
             TestSuite ts = null;
             try {
-                if (tsp != null) 
+                if (tsp != null)
                     ts = TestSuite.open(tsp);
                 else if (wdp != null)
                     ts = WorkDirectory.open(wdp).getTestSuite();
             }
             catch (Exception ignore) {
-                // we're only looking for a default test suite, 
+                // we're only looking for a default test suite,
                 // so ignore any problems trying to find one
             }
 
             Desktop d = getDesktop();
 
-            // ExecTool t = new ExecTool(ExecToolManager.this);        
+            // ExecTool t = new ExecTool(ExecToolManager.this);
             if (uif == null)
                 uif = new UIFactory(getClass(), getDesktop().getDialogParent());
-            
+
             Tool currentTool = d.getSelectedTool();
             ExecTool newET = null;
             if (currentTool != null && (currentTool instanceof ExecTool) && ((ExecTool)currentTool).getWorkDirectory() == null) {
@@ -651,7 +651,7 @@ public class ExecToolManager extends ToolManager
                 } else {
                     newET = new ExecTool(ExecToolManager.this);
                 }
-                
+
                 if (currentTool instanceof ExecTool) {
                     // currentTool can be null if all TestManagers closed and no test suite specified
                     if (!checkOpenNewTool((ExecTool)currentTool, d)) {
@@ -659,7 +659,7 @@ public class ExecToolManager extends ToolManager
                         return;
                     }
                 }
-                
+
                 d.addTool(newET);
                 d.setSelectedTool(newET);
             }
@@ -668,7 +668,7 @@ public class ExecToolManager extends ToolManager
         }
     };
 
-    
+
     //-------------------------------------------------------------------------
 
     private Action newWorkDirAction = new ToolAction(i18n, "mgr.newWorkDir") {
@@ -682,16 +682,16 @@ public class ExecToolManager extends ToolManager
                 TestSuite ts;
                 if (tsv != null)
                     ts = tsv;
-                else if (tsp != null) 
+                else if (tsp != null)
                     ts = TestSuite.open(tsp);
-                else if (wdp != null) 
+                else if (wdp != null)
                     ts = WorkDirectory.open(wdp).getTestSuite();
                 else
                     throw new JavaTestError("ExecManager.newWorkDirAction");
 
                 Desktop d = getDesktop();
                 ExecTool t = null;
-                
+
                 Tool tool = d.getSelectedTool();
                 ExecTool oldTool = (tool != null && (tool instanceof ExecTool)) ? (ExecTool) tool : null;
                 if (oldTool != null && ((ExecTool)tool).getWorkDirectory() == null) {
@@ -711,18 +711,18 @@ public class ExecToolManager extends ToolManager
                     } else {
                         t = new ExecTool(ExecToolManager.this);
                     }
-                    
+
                     if (!checkOpenNewTool(t, d)) {
                         t.dispose();
                         return;
                     }
-                   
+
                     d.addTool(t);
                     d.setSelectedTool(t);
                 }
                 if (uif == null)
                     uif = new UIFactory(getClass(), getDesktop().getDialogParent());
-                
+
                 ExecTool et = (ExecTool)t;
                 WorkDirChooseTool.getTool(et, et.getUIF(), et, WorkDirChooser.NEW, ts, true).doTool();
             }
@@ -737,7 +737,7 @@ public class ExecToolManager extends ToolManager
                 // should not happen because the action should not be enabled
                 // and the paths should not be set if they don't exist
                 JavaTestError.unexpectedException(ex);
-            }                
+            }
         }
     };
 
@@ -781,10 +781,10 @@ public class ExecToolManager extends ToolManager
             catch (WorkDirectory.Fault e) {
                 throw new Fault(i18n, "mgr.errorOpeningWorkDirectory", new Object[] { f, e.getMessage() });
             }
-            
+
             Preferences prefs = Preferences.access();
             try {
-                prefs.setPreference(WorkDirChooseTool.DEFAULT_WD_PREF_NAME, 
+                prefs.setPreference(WorkDirChooseTool.DEFAULT_WD_PREF_NAME,
                                         f.getParentFile().getCanonicalPath());
             }
             catch (IOException e) {}
@@ -801,15 +801,15 @@ public class ExecToolManager extends ToolManager
     private static final String EXEC = "exec";
     private static final File userDir = new File(System.getProperty("user.dir"));
 
-    private FileOpener[] fileOpeners = { 
-        testSuiteOpener, 
-        workDirOpener 
+    private FileOpener[] fileOpeners = {
+        testSuiteOpener,
+        workDirOpener
     };
 
-    private Action[] fileMenuActions = { 
+    private Action[] fileMenuActions = {
         openQuickStartAction,
-        newWorkDirAction, 
-        //openWorkDirAction, 
-        //openTestSuiteAction,  
+        newWorkDirAction,
+        //openWorkDirAction,
+        //openTestSuiteAction,
     };
 }

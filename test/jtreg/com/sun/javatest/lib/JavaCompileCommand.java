@@ -76,25 +76,25 @@ public class JavaCompileCommand extends Command
      * @see #run
      */
     public static void main(String[] args) {
-	PrintWriter out = new PrintWriter(System.out);
-	PrintWriter err = new PrintWriter(System.err);
-	Status s;
-	try {
-	    JavaCompileCommand c = new JavaCompileCommand();
-	    s = c.run(args, out, err);
-	}
-	finally {
-	    out.flush();
-	    err.flush();
-	}
-	s.exit();
+        PrintWriter out = new PrintWriter(System.out);
+        PrintWriter err = new PrintWriter(System.err);
+        Status s;
+        try {
+            JavaCompileCommand c = new JavaCompileCommand();
+            s = c.run(args, out, err);
+        }
+        finally {
+            out.flush();
+            err.flush();
+        }
+        s.exit();
     }
 
 
     /**
      * Invoke a specified compiler, or the default, javac.
      * If the first word in the <code>args</code> array is "-compiler"
-     * the second is interpreted as the class name for the compiler to be 
+     * the second is interpreted as the class name for the compiler to be
      * invoked, optionally preceded by a name for the compiler, separated
      * from the class name by a colon.  If no -compiler is specified,
      * the default is `javac:com.sun.tools.javac.Main'. If -compiler is specified
@@ -110,202 +110,202 @@ public class JavaCompileCommand extends Command
      * result will be `failed'. If any problems arise, the result will be
      * a status of `error'.
      * @param args An optional specification for the compiler to be invoked,
-     *		followed by arguments for the compiler's compile method.
+     *          followed by arguments for the compiler's compile method.
      * @param log  Not used.
      * @param ref  Passed to the compiler that is invoked.
      * @return `passed' if the compilation is successful; `failed' if the
-     * 		compiler is invoked and errors are found in the file(s)
-     *		being compiler; or `error' if some more serios problem arose
-     *		that prevented the compiler performing its task.
+     *          compiler is invoked and errors are found in the file(s)
+     *          being compiler; or `error' if some more serios problem arose
+     *          that prevented the compiler performing its task.
      */
     public Status run(String[] args, PrintWriter log, PrintWriter ref) {
 
-	if (args.length == 0)
-	    return Status.error("No args supplied");
+        if (args.length == 0)
+            return Status.error("No args supplied");
 
-	String compilerClassName = null;
-	String compilerName = null;
-	String classpath = null;
-	String[] options = null;
+        String compilerClassName = null;
+        String compilerName = null;
+        String classpath = null;
+        String[] options = null;
 
-	// If we find a '-' in the args, what comes before it are 
-	// options for this class and what comes after it are args 
-	// for the compiler class. If don't find a '-', there are no
-	// options for this class, and everything is handed off to
-	// the compiler class
+        // If we find a '-' in the args, what comes before it are
+        // options for this class and what comes after it are args
+        // for the compiler class. If don't find a '-', there are no
+        // options for this class, and everything is handed off to
+        // the compiler class
 
-	for (int i = 0; i < args.length; i++) {
-	    if (args[i].equals("-")) {
-		options = new String[i];
-		System.arraycopy(args, 0, options, 0, options.length);
-		args = shift(args, i+1);
-		break;
-	    }
-	}
-	
-	if (options != null) {
-	    for (int i = 0; i < options.length; i++) {
-		if (options[i].equals("-compiler")) {
-		    if (i + 1 == options.length)
-			return Status.error("No compiler specified after -compiler option");
-		    
-		    String s = options[++i];
-		    int colon = s.indexOf(":");
-		    if (colon == -1) {
-			compilerClassName = s;
-			compilerName = "java " + s;
-		    }
-		    else {
-			compilerClassName = s.substring(colon + 1);
-			compilerName = s.substring(0, colon);
-		    }
-		}
-		else if (options[i].equals("-cp") || options[i].equals("-classpath")) {
-		    if (i + 1 == options.length)
-			return Status.error("No path specified after -cp or -classpath option");
-		    classpath = options[++i];
-		}
-		else if (options[i].equals("-verbose"))
-		    verbose = true;
-		else
-		    return Status.error("Unrecognized option: " + options[i]);
-	    }
-	}
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-")) {
+                options = new String[i];
+                System.arraycopy(args, 0, options, 0, options.length);
+                args = shift(args, i+1);
+                break;
+            }
+        }
 
-	this.log = log;
+        if (options != null) {
+            for (int i = 0; i < options.length; i++) {
+                if (options[i].equals("-compiler")) {
+                    if (i + 1 == options.length)
+                        return Status.error("No compiler specified after -compiler option");
 
-	try {
+                    String s = options[++i];
+                    int colon = s.indexOf(":");
+                    if (colon == -1) {
+                        compilerClassName = s;
+                        compilerName = "java " + s;
+                    }
+                    else {
+                        compilerClassName = s.substring(colon + 1);
+                        compilerName = s.substring(0, colon);
+                    }
+                }
+                else if (options[i].equals("-cp") || options[i].equals("-classpath")) {
+                    if (i + 1 == options.length)
+                        return Status.error("No path specified after -cp or -classpath option");
+                    classpath = options[++i];
+                }
+                else if (options[i].equals("-verbose"))
+                    verbose = true;
+                else
+                    return Status.error("Unrecognized option: " + options[i]);
+            }
+        }
 
-	    ClassLoader loader;
-	    if (classpath == null)
-		loader = null;
-	    else
-		loader = new PathClassLoader(classpath);
+        this.log = log;
 
-	    Class compilerClass;
-	    if (compilerClassName != null) {
-		compilerClass = getClass(loader, compilerClassName);
-		if (compilerClass == null)
-		    return Status.error("Cannot find compiler: " + compilerClassName);
-	    }
-	    else {
-		compilerName = "javac";
-		compilerClass = getClass(loader, "com.sun.tools.javac.Main");  // JDK1.3+
-		if (compilerClass == null)
-		    compilerClass = getClass(loader, "sun.tools.javac.Main");  // JDK1.1-2
-		if (compilerClass == null)
-		    return Status.error("Cannot find compiler");
-	    }
+        try {
 
-	    loader = null;
+            ClassLoader loader;
+            if (classpath == null)
+                loader = null;
+            else
+                loader = new PathClassLoader(classpath);
 
-	    Object[] compileMethodArgs;
-	    Method compileMethod = getMethod(compilerClass, "compile", // JDK1.4+
-					     new Class[] { String[].class, PrintWriter.class });
-	    if (compileMethod != null) 
-		compileMethodArgs = new Object[] { args, ref };
-	    else {
-		compileMethod = getMethod(compilerClass, "compile",   // JDK1.1-3
-					  new Class[] { String[].class });
-		if (compileMethod != null)
-		    compileMethodArgs = new Object[] { args };
-		else
-		    return Status.error("Cannot find compile method for " + compilerClass.getName());
-	    }
+            Class compilerClass;
+            if (compilerClassName != null) {
+                compilerClass = getClass(loader, compilerClassName);
+                if (compilerClass == null)
+                    return Status.error("Cannot find compiler: " + compilerClassName);
+            }
+            else {
+                compilerName = "javac";
+                compilerClass = getClass(loader, "com.sun.tools.javac.Main");  // JDK1.3+
+                if (compilerClass == null)
+                    compilerClass = getClass(loader, "sun.tools.javac.Main");  // JDK1.1-2
+                if (compilerClass == null)
+                    return Status.error("Cannot find compiler");
+            }
 
-	    Object compiler;
-	    if (Modifier.isStatic(compileMethod.getModifiers()))
-		compiler =  null;
-	    else {
-		Object[] constrArgs;
-		Constructor constr = getConstructor(compilerClass, // JDK1.1-2
-						    new Class[] { OutputStream.class, String.class });
-		if (constr != null) 
-		    constrArgs = new Object[] { new WriterStream(ref), compilerName };
-		else {
-		    constr = getConstructor(compilerClass, new Class[0]); // JDK1.3
-		    if (constr != null)
-			constrArgs = new Object[0];
-		    else
-			return Status.error("Cannot find suitable constructor for " + compilerClass.getName());
-		}
-		try {
-		    compiler = constr.newInstance(constrArgs);
-		}
-		catch (Throwable t) {
-		    t.printStackTrace(log);
-		    return Status.error("Cannot instantiate compiler");
-		}
-	    }
+            loader = null;
 
-	    Object result;
-	    try {
-		result = compileMethod.invoke(compiler, compileMethodArgs);
-	    }
-	    catch (Throwable t) {
-		t.printStackTrace(log);
-		return Status.error("Error invoking compiler");
-	    }
+            Object[] compileMethodArgs;
+            Method compileMethod = getMethod(compilerClass, "compile", // JDK1.4+
+                                             new Class[] { String[].class, PrintWriter.class });
+            if (compileMethod != null)
+                compileMethodArgs = new Object[] { args, ref };
+            else {
+                compileMethod = getMethod(compilerClass, "compile",   // JDK1.1-3
+                                          new Class[] { String[].class });
+                if (compileMethod != null)
+                    compileMethodArgs = new Object[] { args };
+                else
+                    return Status.error("Cannot find compile method for " + compilerClass.getName());
+            }
 
-	    // result might be a boolean (old javac) or an int (new javac)
-	    if (result instanceof Boolean) {
-		boolean ok = ((Boolean)result).booleanValue();
-		return (ok ? passed : failed);
-	    }
-	    else if (result instanceof Integer) {
-		int rc = ((Integer)result).intValue();
-		return (rc == 0 ? passed : failed);
-	    }
-	    else 
-		return Status.error("Unexpected return value from compiler: " + result);
-	}
-	finally {
-	    log.flush();
-	    ref.flush();
-	}    
+            Object compiler;
+            if (Modifier.isStatic(compileMethod.getModifiers()))
+                compiler =  null;
+            else {
+                Object[] constrArgs;
+                Constructor constr = getConstructor(compilerClass, // JDK1.1-2
+                                                    new Class[] { OutputStream.class, String.class });
+                if (constr != null)
+                    constrArgs = new Object[] { new WriterStream(ref), compilerName };
+                else {
+                    constr = getConstructor(compilerClass, new Class[0]); // JDK1.3
+                    if (constr != null)
+                        constrArgs = new Object[0];
+                    else
+                        return Status.error("Cannot find suitable constructor for " + compilerClass.getName());
+                }
+                try {
+                    compiler = constr.newInstance(constrArgs);
+                }
+                catch (Throwable t) {
+                    t.printStackTrace(log);
+                    return Status.error("Cannot instantiate compiler");
+                }
+            }
+
+            Object result;
+            try {
+                result = compileMethod.invoke(compiler, compileMethodArgs);
+            }
+            catch (Throwable t) {
+                t.printStackTrace(log);
+                return Status.error("Error invoking compiler");
+            }
+
+            // result might be a boolean (old javac) or an int (new javac)
+            if (result instanceof Boolean) {
+                boolean ok = ((Boolean)result).booleanValue();
+                return (ok ? passed : failed);
+            }
+            else if (result instanceof Integer) {
+                int rc = ((Integer)result).intValue();
+                return (rc == 0 ? passed : failed);
+            }
+            else
+                return Status.error("Unexpected return value from compiler: " + result);
+        }
+        finally {
+            log.flush();
+            ref.flush();
+        }
     }
 
     private Class getClass(ClassLoader loader, String name) {
-	try { 
-	    return (loader == null ? Class.forName(name) : loader.loadClass(name));
-	}
-	catch (ClassNotFoundException e) {
-	    return null;
-	}
+        try {
+            return (loader == null ? Class.forName(name) : loader.loadClass(name));
+        }
+        catch (ClassNotFoundException e) {
+            return null;
+        }
     }
 
     private Constructor getConstructor(Class c, Class[] argTypes) {
-	try {
-	    return c.getConstructor(argTypes);
-	}
-	catch (NoSuchMethodException e) {
-	    return null;
-	}
-	catch (Throwable t) {
-	    if (verbose)
-		t.printStackTrace(log);
-	    return null;
-	}
+        try {
+            return c.getConstructor(argTypes);
+        }
+        catch (NoSuchMethodException e) {
+            return null;
+        }
+        catch (Throwable t) {
+            if (verbose)
+                t.printStackTrace(log);
+            return null;
+        }
     }
 
     private Method getMethod(Class c, String name, Class[] argTypes) {
-	try {
-	    return c.getMethod(name, argTypes);
-	}
-	catch (NoSuchMethodException e) {
-	    return null;
-	}
-	catch (Throwable t) {
-	    if (verbose)
-		t.printStackTrace(log);
-	    return null;
-	}
+        try {
+            return c.getMethod(name, argTypes);
+        }
+        catch (NoSuchMethodException e) {
+            return null;
+        }
+        catch (Throwable t) {
+            if (verbose)
+                t.printStackTrace(log);
+            return null;
+        }
     }
 
     private static String[] shift(String[] args, int n) {
-	String[] newArgs = new String[args.length - n];
-	System.arraycopy(args, n, newArgs, 0, newArgs.length);
-	return newArgs;
+        String[] newArgs = new String[args.length - n];
+        System.arraycopy(args, n, newArgs, 0, newArgs.length);
+        return newArgs;
     }
 
     public static boolean defaultVerbose = Boolean.getBoolean("javatest.JavaCompileCommand.verbose");

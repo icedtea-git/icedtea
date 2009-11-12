@@ -49,269 +49,269 @@ import javax.swing.JRadioButton;
  */
 class DesktopPrefsPane extends Preferences.Pane {
     DesktopPrefsPane(Desktop desktop, UIFactory uif) {
-	this.desktop = desktop;
-	this.uif = uif;
-	setLayout(new GridBagLayout());
-	GridBagConstraints c = new GridBagConstraints();
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.weightx = 1;
-	c.insets.bottom= 10; // set off subsequent entries
-	
-	add(createDesktopStylePanel(), c);
-	add(createToolTipsPanel(), c);
-	add(createShutdownPanel(), c);
-	
-	c.fill = GridBagConstraints.BOTH;
-	c.weighty = 1;
-	add(Box.createVerticalGlue(), c);
+        this.desktop = desktop;
+        this.uif = uif;
+        setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.weightx = 1;
+        c.insets.bottom= 10; // set off subsequent entries
+
+        add(createDesktopStylePanel(), c);
+        add(createToolTipsPanel(), c);
+        add(createShutdownPanel(), c);
+
+        c.fill = GridBagConstraints.BOTH;
+        c.weighty = 1;
+        add(Box.createVerticalGlue(), c);
     }
-    
+
     public String getText() {
-	return uif.getI18NString("dt.prefs.name");
+        return uif.getI18NString("dt.prefs.name");
     }
-    
+
     public void load(Map m) {
-	String styleName = (String) (m.get(Desktop.STYLE_PREF));
-	if (styleName == null)
-	    styleName = Desktop.styleNames[desktop.getStyle()];
+        String styleName = (String) (m.get(Desktop.STYLE_PREF));
+        if (styleName == null)
+            styleName = Desktop.styleNames[desktop.getStyle()];
 
-	for (Enumeration e = styleGrp.getElements(); e.hasMoreElements(); ) {
-	    JRadioButton rb = (JRadioButton)e.nextElement();
-	    if (rb.getActionCommand().equals(styleName)) {
-		rb.setSelected(true);
-		break;
-	    }
-	}
-	// tooltips
-	String tipState = (String) (m.get(Desktop.TTIP_PREF));
-	ttipsCheck.setSelected(tipState == null || tipState.equalsIgnoreCase("true"));
+        for (Enumeration e = styleGrp.getElements(); e.hasMoreElements(); ) {
+            JRadioButton rb = (JRadioButton)e.nextElement();
+            if (rb.getActionCommand().equals(styleName)) {
+                rb.setSelected(true);
+                break;
+            }
+        }
+        // tooltips
+        String tipState = (String) (m.get(Desktop.TTIP_PREF));
+        ttipsCheck.setSelected(tipState == null || tipState.equalsIgnoreCase("true"));
 
-	boolean complete = false;	// used for delay and duration code
+        boolean complete = false;       // used for delay and duration code
 
-	String tipDelay = (String) (m.get(Desktop.TTIP_DELAY));
-	try {
-	    int delay = Integer.parseInt(tipDelay);
+        String tipDelay = (String) (m.get(Desktop.TTIP_DELAY));
+        try {
+            int delay = Integer.parseInt(tipDelay);
 
-	    if (delay == Desktop.TTIP_DELAY_NONE) {
-		// no delay
-		ttDelay.setSelectedItem(tooltipDelays[0]);
-		complete = true;
-	    }
-	    else {
-		for (int i = 1; i < ttDelay.getItemCount(); i++) {
-		    if ( ((Integer)(ttDelay.getItemAt(i))).intValue() == delay ) {
-			ttDelay.setSelectedIndex(i);
-			i = ttDelay.getItemCount(); // stop loop
-			complete = true;
-		    }
-		}   // for
+            if (delay == Desktop.TTIP_DELAY_NONE) {
+                // no delay
+                ttDelay.setSelectedItem(tooltipDelays[0]);
+                complete = true;
+            }
+            else {
+                for (int i = 1; i < ttDelay.getItemCount(); i++) {
+                    if ( ((Integer)(ttDelay.getItemAt(i))).intValue() == delay ) {
+                        ttDelay.setSelectedIndex(i);
+                        i = ttDelay.getItemCount(); // stop loop
+                        complete = true;
+                    }
+                }   // for
 
-	    }	// if/else
-	}
-	catch (NumberFormatException e) {
-	    complete = false;
-	}
+            }   // if/else
+        }
+        catch (NumberFormatException e) {
+            complete = false;
+        }
 
-	ttDelay.setEnabled(ttipsCheck.isSelected());
-	ttDuration.setEnabled(ttipsCheck.isSelected());
+        ttDelay.setEnabled(ttipsCheck.isSelected());
+        ttDuration.setEnabled(ttipsCheck.isSelected());
 
-	// default
-	if (!complete)
-		ttDelay.setSelectedIndex(1);
+        // default
+        if (!complete)
+                ttDelay.setSelectedIndex(1);
 
-	complete = false;
-	String tipDuration = (String) (m.get(Desktop.TTIP_DURATION));
-	try {
-	    int duration = Integer.parseInt(tipDuration);
-	    if (duration == Desktop.TTIP_DURATION_FOREVER) {
-		// forever
-		ttDuration.setSelectedItem(tooltipDurations[tooltipDurations.length-1]);
-		complete = true;
-	    }
-	    else {
-		for (int i = 0; i < tooltipDurations.length-1; i++) {
-		    if (duration == tooltipDurations[i].intValue()) {
-			ttDuration.setSelectedItem(tooltipDurations[i]);
-			complete = true;
-			i = tooltipDurations.length;	// stop loop
-		    }
-		}   // for
-	    }	// if/else
-	}   // try
-	catch (NumberFormatException e) {
-	    complete = false;
-	}   // catch
+        complete = false;
+        String tipDuration = (String) (m.get(Desktop.TTIP_DURATION));
+        try {
+            int duration = Integer.parseInt(tipDuration);
+            if (duration == Desktop.TTIP_DURATION_FOREVER) {
+                // forever
+                ttDuration.setSelectedItem(tooltipDurations[tooltipDurations.length-1]);
+                complete = true;
+            }
+            else {
+                for (int i = 0; i < tooltipDurations.length-1; i++) {
+                    if (duration == tooltipDurations[i].intValue()) {
+                        ttDuration.setSelectedItem(tooltipDurations[i]);
+                        complete = true;
+                        i = tooltipDurations.length;    // stop loop
+                    }
+                }   // for
+            }   // if/else
+        }   // try
+        catch (NumberFormatException e) {
+            complete = false;
+        }   // catch
 
-	// default
-	if (!complete){
-		ttDuration.setSelectedItem(tooltipDurations[1]);
-	    }
+        // default
+        if (!complete){
+                ttDuration.setSelectedItem(tooltipDurations[1]);
+            }
 
-	// make it happen
-	syncTooltipPrefs();
-	
-	// save on exit
-	String saveState = (String) (m.get(Desktop.SAVE_ON_EXIT_PREF));
-	saveCheck.setSelected(saveState == null || saveState.equalsIgnoreCase("true"));
+        // make it happen
+        syncTooltipPrefs();
+
+        // save on exit
+        String saveState = (String) (m.get(Desktop.SAVE_ON_EXIT_PREF));
+        saveCheck.setSelected(saveState == null || saveState.equalsIgnoreCase("true"));
     }
-    
-    public void save(Map m) {
-	ButtonModel bm = styleGrp.getSelection();
-	if (bm != null) {
-	    String styleName = bm.getActionCommand();
-	    for (int i = 0; i < Desktop.styleNames.length; i++) {
-		if (styleName.equals(Desktop.styleNames[i])) {
-		    desktop.setStyle(i);
-		    m.put(Desktop.STYLE_PREF, styleName);
-		    break;
-		}
-	    } 
-	}
-	
-	boolean tips = ttipsCheck.isSelected();
-	m.put(Desktop.TTIP_PREF, String.valueOf(tips));
-	desktop.setTooltipsEnabled(tips);
-	
-	int delay = getTooltipDelay();
-	m.put(Desktop.TTIP_DELAY, Integer.toString(delay));
-	desktop.setTooltipDelay(delay);
-	
-	int duration = getTooltipDuration();
-	m.put(Desktop.TTIP_DURATION, Integer.toString(duration));
-	desktop.setTooltipDuration(duration);
-	
-	m.put(Desktop.SAVE_ON_EXIT_PREF, String.valueOf(saveCheck.isSelected()));
-	desktop.setSaveOnExit(saveCheck.isSelected());
 
-	syncTooltipPrefs();
+    public void save(Map m) {
+        ButtonModel bm = styleGrp.getSelection();
+        if (bm != null) {
+            String styleName = bm.getActionCommand();
+            for (int i = 0; i < Desktop.styleNames.length; i++) {
+                if (styleName.equals(Desktop.styleNames[i])) {
+                    desktop.setStyle(i);
+                    m.put(Desktop.STYLE_PREF, styleName);
+                    break;
+                }
+            }
+        }
+
+        boolean tips = ttipsCheck.isSelected();
+        m.put(Desktop.TTIP_PREF, String.valueOf(tips));
+        desktop.setTooltipsEnabled(tips);
+
+        int delay = getTooltipDelay();
+        m.put(Desktop.TTIP_DELAY, Integer.toString(delay));
+        desktop.setTooltipDelay(delay);
+
+        int duration = getTooltipDuration();
+        m.put(Desktop.TTIP_DURATION, Integer.toString(duration));
+        desktop.setTooltipDuration(duration);
+
+        m.put(Desktop.SAVE_ON_EXIT_PREF, String.valueOf(saveCheck.isSelected()));
+        desktop.setSaveOnExit(saveCheck.isSelected());
+
+        syncTooltipPrefs();
     }
 
     /**
      * Force the GUI and the actual settings to be synchronized.
      */
     private void syncTooltipPrefs() {
-	boolean tips = ttipsCheck.isSelected();
-	desktop.setTooltipsEnabled(tips);
-	
-	int delay = getTooltipDelay();
-	desktop.setTooltipDelay(delay);
-	
-	int duration = getTooltipDuration();
-	desktop.setTooltipDuration(duration);
+        boolean tips = ttipsCheck.isSelected();
+        desktop.setTooltipsEnabled(tips);
+
+        int delay = getTooltipDelay();
+        desktop.setTooltipDelay(delay);
+
+        int duration = getTooltipDuration();
+        desktop.setTooltipDuration(duration);
     }
-    
+
     private Component createDesktopStylePanel() {
-	Box p = Box.createHorizontalBox();
-	p.setBorder(uif.createTitledBorder("dt.prefs.style"));
-	styleGrp = new ButtonGroup();
-	for (int i = 0; i < Desktop.styleNames.length; i++) {
-	    String styleName = Desktop.styleNames[i];
-	    String uiKey = "dt.prefs." + styleName;
-	    JRadioButton b = uif.createRadioButton(uiKey, styleGrp);
-	    b.setActionCommand(styleName);
-	    p.add(b);
-	}
-	p.add(Box.createHorizontalGlue());
-	
-	return p;
+        Box p = Box.createHorizontalBox();
+        p.setBorder(uif.createTitledBorder("dt.prefs.style"));
+        styleGrp = new ButtonGroup();
+        for (int i = 0; i < Desktop.styleNames.length; i++) {
+            String styleName = Desktop.styleNames[i];
+            String uiKey = "dt.prefs." + styleName;
+            JRadioButton b = uif.createRadioButton(uiKey, styleGrp);
+            b.setActionCommand(styleName);
+            p.add(b);
+        }
+        p.add(Box.createHorizontalGlue());
+
+        return p;
     }
-    
+
     private Component createShutdownPanel() {
-	Box p = Box.createHorizontalBox();
-	p.setBorder(uif.createTitledBorder("dt.prefs.shutdown"));
-	saveCheck = uif.createCheckBox("dt.prefs.saveOnExit");
-	p.add(saveCheck);
-	p.add(Box.createHorizontalGlue());
-	return p;
+        Box p = Box.createHorizontalBox();
+        p.setBorder(uif.createTitledBorder("dt.prefs.shutdown"));
+        saveCheck = uif.createCheckBox("dt.prefs.saveOnExit");
+        p.add(saveCheck);
+        p.add(Box.createHorizontalGlue());
+        return p;
     }
-    
+
     private Component createToolTipsPanel() {
-	JPanel p = uif.createPanel("dt.prefs.tt", false);
-	
-	p.setLayout(new GridBagLayout());
-	GridBagConstraints c = new GridBagConstraints();
-	c.anchor = GridBagConstraints.WEST;
-	c.ipadx = 3;
-	c.ipady = 5;
-	c.fill = GridBagConstraints.VERTICAL;
-	c.insets.left = 3;
-	c.insets.right = 3;
-	c.insets.top = 2;
-	c.insets.bottom = 2;
-	
-	p.setBorder(uif.createTitledBorder("dt.prefs.ttips"));
-	ttipsCheck = uif.createCheckBox("dt.prefs.ttips");
-	// override default name
-	uif.setAccessibleName(ttipsCheck, "dt.prefs.ttips");
-	
-	ttipsCheck.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    boolean state = ttipsCheck.isSelected();
-		    ttDelay.setEnabled(state);
-		    ttDuration.setEnabled(state);
-		}
-	    });
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.weightx = 1;
-	p.add(ttipsCheck, c);
+        JPanel p = uif.createPanel("dt.prefs.tt", false);
 
-	loadTooltipResources();
+        p.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.WEST;
+        c.ipadx = 3;
+        c.ipady = 5;
+        c.fill = GridBagConstraints.VERTICAL;
+        c.insets.left = 3;
+        c.insets.right = 3;
+        c.insets.top = 2;
+        c.insets.bottom = 2;
 
-	JLabel l = uif.createLabel("dt.prefs.ttDelay", true);
+        p.setBorder(uif.createTitledBorder("dt.prefs.ttips"));
+        ttipsCheck = uif.createCheckBox("dt.prefs.ttips");
+        // override default name
+        uif.setAccessibleName(ttipsCheck, "dt.prefs.ttips");
 
-	ttDelay = uif.createChoice("dt.prefs.ttDelay", l);
-	for (int i = 0; i < tooltipDelays.length; i++)
-	    ttDelay.addItem(tooltipDelays[i]);
-	
-	ttDelay.setSelectedItem(tooltipDelays[0]);
-	ttDelay.setRenderer(new TipDelayRenderer());
-	
-	c.gridwidth = 1;
-	c.weightx = 0;
-	p.add(l, c);
-	
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.weightx = 1;
-	p.add(ttDelay, c);
-	
-	l = uif.createLabel("dt.prefs.ttDuration", true);
+        ttipsCheck.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    boolean state = ttipsCheck.isSelected();
+                    ttDelay.setEnabled(state);
+                    ttDuration.setEnabled(state);
+                }
+            });
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.weightx = 1;
+        p.add(ttipsCheck, c);
 
-	ttDuration = uif.createChoice("dt.prefs.ttDuration", l);
-	for (int i = 0; i < tooltipDurations.length; i++)
-	    ttDuration.addItem(tooltipDurations[i]);
+        loadTooltipResources();
 
-	ttDuration.setRenderer(new TipDurationRenderer());
-	// nominate a reasonable choice
-	ttDuration.setSelectedItem(tooltipDurations[
-		Math.max(tooltipDurations.length-2, 0)]);
-	
-	c.gridwidth = 1;
-	c.weightx = 0;
-	p.add(l, c);
-	
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.weightx = 1;
-	p.add(ttDuration, c);
-	
-	return p;
+        JLabel l = uif.createLabel("dt.prefs.ttDelay", true);
+
+        ttDelay = uif.createChoice("dt.prefs.ttDelay", l);
+        for (int i = 0; i < tooltipDelays.length; i++)
+            ttDelay.addItem(tooltipDelays[i]);
+
+        ttDelay.setSelectedItem(tooltipDelays[0]);
+        ttDelay.setRenderer(new TipDelayRenderer());
+
+        c.gridwidth = 1;
+        c.weightx = 0;
+        p.add(l, c);
+
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.weightx = 1;
+        p.add(ttDelay, c);
+
+        l = uif.createLabel("dt.prefs.ttDuration", true);
+
+        ttDuration = uif.createChoice("dt.prefs.ttDuration", l);
+        for (int i = 0; i < tooltipDurations.length; i++)
+            ttDuration.addItem(tooltipDurations[i]);
+
+        ttDuration.setRenderer(new TipDurationRenderer());
+        // nominate a reasonable choice
+        ttDuration.setSelectedItem(tooltipDurations[
+                Math.max(tooltipDurations.length-2, 0)]);
+
+        c.gridwidth = 1;
+        c.weightx = 0;
+        p.add(l, c);
+
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.weightx = 1;
+        p.add(ttDuration, c);
+
+        return p;
     }
 
     private void loadTooltipResources() {
-	tooltipDurations = new Integer[] { new Integer(1000),
-					   new Integer(2000), 
-					   new Integer(3000),
-					   new Integer(5000), 
-					   new Integer(10000),
-					   new Integer(15000), 
-					   new Integer(-1) };
-	
-	tooltipDelays = new Integer[] { new Integer(0), 
-					new Integer(1000),
-					new Integer(2000), 
-					new Integer(3000),
-					new Integer(5000), 
-					new Integer(10000) };
+        tooltipDurations = new Integer[] { new Integer(1000),
+                                           new Integer(2000),
+                                           new Integer(3000),
+                                           new Integer(5000),
+                                           new Integer(10000),
+                                           new Integer(15000),
+                                           new Integer(-1) };
+
+        tooltipDelays = new Integer[] { new Integer(0),
+                                        new Integer(1000),
+                                        new Integer(2000),
+                                        new Integer(3000),
+                                        new Integer(5000),
+                                        new Integer(10000) };
     }
 
     /**
@@ -319,8 +319,8 @@ class DesktopPrefsPane extends Preferences.Pane {
      * @return Zero for no delay, otherwise a delay in milliseconds.
      */
     private int getTooltipDelay() {
-	Integer value = (Integer)(ttDelay.getSelectedItem());
-	return value.intValue();
+        Integer value = (Integer)(ttDelay.getSelectedItem());
+        return value.intValue();
     }
 
     /**
@@ -329,10 +329,10 @@ class DesktopPrefsPane extends Preferences.Pane {
      *         milliseconds.
      */
     private int getTooltipDuration() {
-	int value = ((Integer) (ttDuration.getSelectedItem())).intValue();
-	return (value < 0 ? Desktop.TTIP_DURATION_FOREVER : value);
+        int value = ((Integer) (ttDuration.getSelectedItem())).intValue();
+        return (value < 0 ? Desktop.TTIP_DURATION_FOREVER : value);
     }
- 
+
     private Desktop desktop;
     private UIFactory uif;
     private ButtonGroup styleGrp;
@@ -348,57 +348,57 @@ class DesktopPrefsPane extends Preferences.Pane {
     private static String TIP_SHOW_FOREVER;
 
     private class TipDelayRenderer extends BasicComboBoxRenderer {
-	public Component getListCellRendererComponent(JList list,
+        public Component getListCellRendererComponent(JList list,
                                               Object value,
                                               int index,
                                               boolean isSelected,
                                               boolean cellHasFocus) {
-	    Object theVal;
-	    if (value instanceof Integer) {
-		int val = ((Integer)value).intValue();
-		// convert to seconds and create localized text
-		theVal = uif.getI18NString("dt.prefs.ttDelay", new Integer(val/1000));
-	    }
-	    else {
-		theVal = value;
-	    }
+            Object theVal;
+            if (value instanceof Integer) {
+                int val = ((Integer)value).intValue();
+                // convert to seconds and create localized text
+                theVal = uif.getI18NString("dt.prefs.ttDelay", new Integer(val/1000));
+            }
+            else {
+                theVal = value;
+            }
 
-	    return super.getListCellRendererComponent(
-		list, theVal, index, isSelected, cellHasFocus);
-	}
+            return super.getListCellRendererComponent(
+                list, theVal, index, isSelected, cellHasFocus);
+        }
     }
 
     private class TipDurationRenderer extends BasicComboBoxRenderer {
-	TipDurationRenderer() {
-	    synchronized (DesktopPrefsPane.this) {
-		if (TIP_SHOW_FOREVER  == null)
-		    TIP_SHOW_FOREVER =
-			uif.getI18NString("dt.prefs.ttDuration.forev");
-	    }
-	}
+        TipDurationRenderer() {
+            synchronized (DesktopPrefsPane.this) {
+                if (TIP_SHOW_FOREVER  == null)
+                    TIP_SHOW_FOREVER =
+                        uif.getI18NString("dt.prefs.ttDuration.forev");
+            }
+        }
 
-	public Component getListCellRendererComponent(JList list,
+        public Component getListCellRendererComponent(JList list,
                                               Object value,
                                               int index,
                                               boolean isSelected,
                                               boolean cellHasFocus) {
-	    Object theVal;
-	    if (value instanceof Integer) {
-		int val = ((Integer)value).intValue();
-		if (val > 0) {
-		    // convert to seconds and create localized text
-		    theVal = uif.getI18NString("dt.prefs.ttDuration.sec",
-				new Integer(val/1000));
-		}
-		else
-		    theVal = TIP_SHOW_FOREVER;
-	    }
-	    else {
-		theVal = value;
-	    }
+            Object theVal;
+            if (value instanceof Integer) {
+                int val = ((Integer)value).intValue();
+                if (val > 0) {
+                    // convert to seconds and create localized text
+                    theVal = uif.getI18NString("dt.prefs.ttDuration.sec",
+                                new Integer(val/1000));
+                }
+                else
+                    theVal = TIP_SHOW_FOREVER;
+            }
+            else {
+                theVal = value;
+            }
 
-	    return super.getListCellRendererComponent(
-		list, theVal, index, isSelected, cellHasFocus);
-	}
+            return super.getListCellRendererComponent(
+                list, theVal, index, isSelected, cellHasFocus);
+        }
     }
 }

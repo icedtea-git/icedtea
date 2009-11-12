@@ -37,39 +37,39 @@ import com.sun.javatest.tool.UIFactory;
 
 abstract class AuditPane extends JPanel {
     AuditPane(String uiKey, UIFactory uif) {
-	this.uif = uif;
+        this.uif = uif;
 
-	setName(uiKey);
-	setLayout(new CardLayout());
-	setFocusable(false);
-	
-	textArea = new JTextArea();
-	textArea.setName(uiKey + ".txt");
-	textArea.setEditable(false);
-	textArea.setLineWrap(true);
-	textArea.setWrapStyleWord(true);
-	textArea.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-	uif.setAccessibleInfo(textArea, uiKey + ".txt");
-	
-	// don't really expect to need a scrollpane, but use one for visual
-	// consistency with body
-	JScrollPane sp = uif.createScrollPane(textArea,
-					 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-					 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	add(sp, "text");
+        setName(uiKey);
+        setLayout(new CardLayout());
+        setFocusable(false);
 
-	// leave subtypes to create other content
+        textArea = new JTextArea();
+        textArea.setName(uiKey + ".txt");
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        uif.setAccessibleInfo(textArea, uiKey + ".txt");
+
+        // don't really expect to need a scrollpane, but use one for visual
+        // consistency with body
+        JScrollPane sp = uif.createScrollPane(textArea,
+                                         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        add(sp, "text");
+
+        // leave subtypes to create other content
     }
 
     void show(String message) {
-	textArea.setText(message);
+        textArea.setText(message);
         ((CardLayout)(getLayout())).show(this, "text");
     }
 
     abstract void show(Audit audit);
 
     protected void setBody(JComponent body) {
-	add(body, "body");
+        add(body, "body");
     }
 
     protected void showBody() {

@@ -48,8 +48,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class RegressionParameters 
-    extends BasicInterviewParameters 
+public class RegressionParameters
+    extends BasicInterviewParameters
     implements Parameters.EnvParameters
 {
     public RegressionParameters(String tag, TestSuite testsuite) throws InterviewParameters.Fault {
@@ -60,19 +60,19 @@ public class RegressionParameters
     }
 
     //---------------------------------------------------------------------
-    
+
     public void setTests(List<String> tests) {
         setTests(tests == null ? null : tests.toArray(new String[tests.size()]));
     }
 
     public void setTests(String[] tests) {
-        MutableTestsParameters mtp = 
+        MutableTestsParameters mtp =
             (MutableTestsParameters) getTestsParameters();
         mtp.setTests(tests);
     }
 
     public void setKeywordsExpr(String expr) {
-        MutableKeywordsParameters mkp = 
+        MutableKeywordsParameters mkp =
             (MutableKeywordsParameters) getKeywordsParameters();
         mkp.setKeywords(MutableKeywordsParameters.EXPR, expr);
     }
@@ -122,14 +122,14 @@ public class RegressionParameters
     }
 
     //---------------------------------------------------------------------
-    
+
     // The following (load and save) are an interim consequence of not using proper
     // interview questions to store configurations values.
     // The critical values to preserve are any that may be set by direct setXYZ methods
     // below.
     // A better solution is to migrate to using interview questions where possible,
     // and potentially allow the values to be modified via the Config Editor
-    
+
     private static final String ENVVARS = ".envVars";
     private static final String CHECK = ".check";
     private static final String JDK = ".jdk";
@@ -140,46 +140,46 @@ public class RegressionParameters
     private static final String IGNORE = ".ignore";
     private static final String RETAIN_ARGS = ".retain";
     private static final String SAME_JVM_SAFE_DIRS = ".samejvmsafedirs";
-    
+
     @Override
     public void load(Map data, boolean checkChecksum) throws Interview.Fault {
         super.load(data, checkChecksum);
         String prefix = getTag();
-        
+
         String v;
-        
+
         v = (String) data.get(prefix + ENVVARS);
         if (v != null)
             setEnvVars(StringArray.splitSeparator("\n", v));
-        
+
         v = (String) data.get(prefix + CHECK);
         if (v != null)
             setCheck(v.equals("true"));
-        
+
         v = (String) data.get(prefix + SAME_JVM);
         if (v != null)
             setSameJVM(v.equals("true"));
-        
+
         v = (String) data.get(prefix + IGNORE);
         if (v != null)
             setIgnoreKind(IgnoreKind.valueOf(v));
-        
+
         v = (String) data.get(prefix + JDK);
         if (v != null)
             setJDK(new JDK(v));
-        
+
         v = (String) data.get(prefix + TEST_VM_OPTIONS);
         if (v != null)
             setTestVMOptions(Arrays.asList(StringArray.splitSeparator("\n", v)));
-        
+
         v = (String) data.get(prefix + TEST_COMPILER_OPTIONS);
         if (v != null)
             setTestCompilerOptions(Arrays.asList(StringArray.splitSeparator("\n", v)));
-        
+
         v = (String) data.get(prefix + TEST_JAVA_OPTIONS);
         if (v != null)
             setTestJavaOptions(Arrays.asList(StringArray.splitSeparator("\n", v)));
-        
+
         v = (String) data.get(prefix + RETAIN_ARGS);
         if (v != null)
             setRetainArgs(Arrays.asList(StringArray.splitSeparator("\n", v)));
@@ -188,41 +188,41 @@ public class RegressionParameters
         if (v != null)
             setSameJVMSafeDirs(Arrays.asList(StringArray.splitSeparator("\n", v)));
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public void save(Map data) {
         save0((Map<String,String>) data);
         super.save(data);
     }
-    
+
     private void save0(Map<String,String> data) {
         String prefix = getTag();
-        
+
         if (envVars != null)
             data.put(prefix + ENVVARS, StringArray.join(envVars, "\n"));
-        
+
         data.put(prefix + CHECK, String.valueOf(check));
         data.put(prefix + SAME_JVM, String.valueOf(sameJVM));
         data.put(prefix + IGNORE, String.valueOf(ignoreKind));
-        
+
         if (jdk != null)
             data.put(prefix + JDK, jdk.getPath());
-        
+
         if (sameJVMSafeDirs != null)
             data.put(prefix + SAME_JVM_SAFE_DIRS, StringUtils.join(sameJVMSafeDirs, "\n"));
-        
+
         if (retainArgs != null)
             data.put(prefix + RETAIN_ARGS, StringUtils.join(retainArgs, "\n"));
-        
+
         if (testVMOpts != null)
             data.put(prefix + TEST_VM_OPTIONS, StringUtils.join(testVMOpts, "\n"));
-        
-        if (testCompilerOpts != null) 
+
+        if (testCompilerOpts != null)
             data.put(prefix + TEST_COMPILER_OPTIONS, StringUtils.join(testCompilerOpts, "\n"));
-        
-        if (testJavaOpts != null) 
-            data.put(prefix + TEST_JAVA_OPTIONS, StringUtils.join(testJavaOpts, "\n")); 
+
+        if (testJavaOpts != null)
+            data.put(prefix + TEST_JAVA_OPTIONS, StringUtils.join(testJavaOpts, "\n"));
     }
 
     //---------------------------------------------------------------------
@@ -270,7 +270,7 @@ public class RegressionParameters
         return !sameJVM;
     }
 
-    boolean sameJVM; 
+    boolean sameJVM;
 
     //---------------------------------------------------------------------
 
@@ -283,7 +283,7 @@ public class RegressionParameters
         return ignoreKind;
     }
 
-    IgnoreKind ignoreKind = IgnoreKind.ERROR; // non-null default 
+    IgnoreKind ignoreKind = IgnoreKind.ERROR; // non-null default
 
     //---------------------------------------------------------------------
 
@@ -296,10 +296,10 @@ public class RegressionParameters
         return jdk;
     }
 
-    JDK jdk; 
+    JDK jdk;
 
     //---------------------------------------------------------------------
-    
+
     //@Deprecated
     private File getJavaHome() {
         if (javaHome == null)
@@ -314,7 +314,7 @@ public class RegressionParameters
         for (int i = 0; i < ev.length; i++) {
             if (ev[i].startsWith("TESTJAVAHOME")) {
                 String jh = (StringArray.splitEqual(ev[i]))[1];
-                if (!jh.equals("samevm")) 
+                if (!jh.equals("samevm"))
                     s = jh;
                 break;
             }
@@ -335,7 +335,7 @@ public class RegressionParameters
                 Status status = null;
                 // since we are trying to determine the Java version, we have to assume
                 // the worst, and use CLASSPATH.
-                String[] cmdArgs = new String[] { 
+                String[] cmdArgs = new String[] {
                     "CLASSPATH=" + getJavaTestClassPath(),
                     jdk.getJavaProg().getPath(),
                     "com.sun.javatest.regtest.GetSystemProperty",
@@ -357,7 +357,7 @@ public class RegressionParameters
                     if (v.length == 2 && v[0].equals(VERSION_PROPERTY))
                         version = v[1];
                 }
-            } else 
+            } else
                 version = System.getProperty(VERSION_PROPERTY);
 
             // java.java.specification.version is not defined in JDK1.1.*
@@ -365,7 +365,7 @@ public class RegressionParameters
                 javaVersion = "1.1";
             else
                 javaVersion = version;
-                
+
         }
         return javaVersion;
     }
@@ -388,7 +388,7 @@ public class RegressionParameters
 
             ProcessCommand cmd = new ProcessCommand();
             // no need to set execDir for "java -version"
-            status = cmd.run(cmdArgs.toArray(new String[cmdArgs.size()]), 
+            status = cmd.run(cmdArgs.toArray(new String[cmdArgs.size()]),
                             new PrintWriter(errSW), new PrintWriter(outSW));
 
             // EVALUATE THE RESULTS
@@ -405,7 +405,7 @@ public class RegressionParameters
             }
         }
         return javaFullVersion;
-    } 
+    }
 
     private String javaFullVersion;
 
@@ -431,7 +431,7 @@ public class RegressionParameters
     //---------------------------------------------------------------------
 
     String getStdJDKClassPath() {
-        if (stdJDKClassPath == null) 
+        if (stdJDKClassPath == null)
             stdJDKClassPath = getJDK().getToolsJar().getPath();
         return stdJDKClassPath;
     }
@@ -444,11 +444,11 @@ public class RegressionParameters
         if (javaTestClassPath == null) {
             File jtClsDir = ProductInfo.getJavaTestClassDir();
             javaTestClassPath = jtClsDir.getPath();
-            
+
             int index = javaTestClassPath.indexOf("javatest.jar");
-            if (index > 0) {        
-                // append jtreg.jar to the path 
-                String jtregClassDir = 
+            if (index > 0) {
+                // append jtreg.jar to the path
+                String jtregClassDir =
                     javaTestClassPath.substring(0, index) + "jtreg.jar";
                 javaTestClassPath += PATHSEP + jtregClassDir;
             }
@@ -471,7 +471,7 @@ public class RegressionParameters
     }
 
     private List<String> testVMOpts;
-    
+
     /**
      * Return the set of VM options each prefixed by -J, as required by JDK tools.
      */
@@ -525,22 +525,22 @@ public class RegressionParameters
     private List<String> testJavaOpts;
 
     //---------------------------------------------------------------------
-    
+
     List<String> getRetainArgs() {
         return retainArgs;
     }
-    
+
     void setRetainArgs(List<String> retainArgs) {
         this.retainArgs = retainArgs;
-        
+
         retainStatusSet.clear();
         if (retainArgs == null) {
             retainFilesPattern = null;
             return;
         }
-        
+
         StringBuilder sb = new StringBuilder();
-        
+
         for (String arg: retainArgs) {
             if (arg.equals("all")) {
                 retainStatusSet.add(Status.PASSED);
@@ -579,32 +579,32 @@ public class RegressionParameters
                     sb.append("\\E");
             }
         }
-        
+
         retainFilesPattern = (sb.length() == 0 ? null : Pattern.compile(sb.toString()));
     }
-    
+
     boolean isRetainEnabled() {
         return (retainArgs != null);
     }
-    
+
     Set<Integer> getRetainStatus() {
         return retainStatusSet;
     }
-    
+
     Pattern getRetainFilesPattern() {
         return retainFilesPattern;
     }
-    
+
     private List<String> retainArgs;
     private Set<Integer> retainStatusSet = new HashSet<Integer>(4);
     private Pattern retainFilesPattern;
 
     //---------------------------------------------------------------------
-    
+
     List<String> getSameJVMSafeDirs() {
         return sameJVMSafeDirs;
     }
-    
+
     void setSameJVMSafeDirs(List<String> sameJVMSafeDirs) {
         this.sameJVMSafeDirs= sameJVMSafeDirs;
     }
@@ -615,5 +615,5 @@ public class RegressionParameters
 
     private static final String PATHSEP  = System.getProperty("path.separator");
     private static final String LINESEP  = System.getProperty("line.separator");
-    
+
 }

@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 
-/** 
+/**
  * Information about the last or current test run.  This is an interface onto
  * this meta-information stored in a work directory.
  */
@@ -41,28 +41,28 @@ public class LastRunInfo {
     }
 
     private LastRunInfo(WorkDirectory wd) throws IOException {
-	this();
+        this();
 
-	FileInputStream in = new FileInputStream(wd.getSystemFile(FILENAME));
-	Properties p = new Properties();
-	p.load(in);
+        FileInputStream in = new FileInputStream(wd.getSystemFile(FILENAME));
+        Properties p = new Properties();
+        p.load(in);
 
-	String val = p.getProperty(START);
+        String val = p.getProperty(START);
 
-	try {
-	    startTime = Long.parseLong(val);
-	}
-	catch (NumberFormatException e) {
-	}
+        try {
+            startTime = Long.parseLong(val);
+        }
+        catch (NumberFormatException e) {
+        }
 
-	val = p.getProperty(FINISH);
-	try {
-	    finishTime = Long.parseLong(val);
-	}
-	catch (NumberFormatException e) {
-	}
+        val = p.getProperty(FINISH);
+        try {
+            finishTime = Long.parseLong(val);
+        }
+        catch (NumberFormatException e) {
+        }
 
-	configName = p.getProperty(CONFIG);
+        configName = p.getProperty(CONFIG);
     }
 
     /**
@@ -75,7 +75,7 @@ public class LastRunInfo {
      * @see java.util.Date
      */
     public long getStartTime() {
-	return startTime;
+        return startTime;
     }
 
     /**
@@ -89,7 +89,7 @@ public class LastRunInfo {
      * @see java.util.Date
      */
     public long getFinishTime() {
-	return finishTime;
+        return finishTime;
     }
 
     /**
@@ -99,7 +99,7 @@ public class LastRunInfo {
      * @see java.util.Date
      */
     public Date getStartDate() {
-	return new Date(startTime);
+        return new Date(startTime);
     }
 
     /**
@@ -109,20 +109,20 @@ public class LastRunInfo {
      * @see java.util.Date
      */
     public Date getFinishDate() {
-	return new Date(finishTime);
+        return new Date(finishTime);
     }
 
-    /** 
+    /**
      * Get the name of the configuration that was used in the last
      * test run.
      * @return Configuration name as it appeared in the configuration.  May be
      *         null or empty string if this information is not available.
      */
     public String getConfigName() {
-	return configName;
+        return configName;
     }
 
-    /** 
+    /**
      * Given a work directory, attempt to create an instance using the information
      * found in it.
      * @param wd The work directory to create the information from.
@@ -132,7 +132,7 @@ public class LastRunInfo {
      *         system has a problem while reading the file.
      */
     public static LastRunInfo readInfo(WorkDirectory wd) throws IOException {
-	return new LastRunInfo(wd);
+        return new LastRunInfo(wd);
     }
 
     /**
@@ -150,16 +150,16 @@ public class LastRunInfo {
      */
     public static void writeInfo(WorkDirectory workdir,
                             long start, long stop, String config)
-		throws IOException {
-	Properties p = new Properties();
-	p.setProperty(CONFIG, config);
-	p.setProperty(START, Long.toString(start));
-	p.setProperty(FINISH, Long.toString(stop));
+                throws IOException {
+        Properties p = new Properties();
+        p.setProperty(CONFIG, config);
+        p.setProperty(START, Long.toString(start));
+        p.setProperty(FINISH, Long.toString(stop));
 
-	FileOutputStream out = new FileOutputStream(workdir.getSystemFile(FILENAME));
+        FileOutputStream out = new FileOutputStream(workdir.getSystemFile(FILENAME));
 
-	// this is a date file, does not need i18n
-	p.store(out, "Last test run info");
+        // this is a date file, does not need i18n
+        p.store(out, "Last test run info");
     }
 
     private String configName;
@@ -168,7 +168,7 @@ public class LastRunInfo {
 
     // file in the work dir
     private static final String FILENAME = "lastRun.txt";
-    
+
     // keys for properties
     private static final String START = "startTime";
     private static final String FINISH = "finishTime";

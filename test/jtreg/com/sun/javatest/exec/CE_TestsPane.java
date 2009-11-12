@@ -55,193 +55,193 @@ import com.sun.javatest.tool.FileChooser;
 import com.sun.javatest.tool.TestTreeSelectionPane;
 import com.sun.javatest.tool.UIFactory;
 
-/** 
+/**
  * Standard values view, initial tests selection panel.
  */
 class CE_TestsPane extends CE_StdPane
 {
     CE_TestsPane(UIFactory uif, InterviewParameters config) {
-	super(uif, config, "tests");
+        super(uif, config, "tests");
 
-	updateConfig();
-	initGUI();
+        updateConfig();
+        initGUI();
     }
 
     boolean isOKToClose() {
-	if (mutableTestsParameters == null) 
-	    return true;
+        if (mutableTestsParameters == null)
+            return true;
 
-	if (selectTestsBtn.isSelected() && testsField.isSelectionEmpty()) {
-	    uif.showError("ce.tests.noTests");
-	    return false;
-	}
+        if (selectTestsBtn.isSelected() && testsField.isSelectionEmpty()) {
+            uif.showError("ce.tests.noTests");
+            return false;
+        }
 
-	return true;
+        return true;
     }
 
     void updateConfig() {
-	testsParameters = config.getTestsParameters();
-	if (testsParameters instanceof MutableTestsParameters) 
-	    mutableTestsParameters = ((MutableTestsParameters) (testsParameters));
-	else
-	    mutableTestsParameters = null;
+        testsParameters = config.getTestsParameters();
+        if (testsParameters instanceof MutableTestsParameters)
+            mutableTestsParameters = ((MutableTestsParameters) (testsParameters));
+        else
+            mutableTestsParameters = null;
     }
 
     void load() {
-	updateConfig();
+        updateConfig();
 
-	if (mutableTestsParameters != null) {
-	    int tm = mutableTestsParameters.getTestsMode();
-	    if (tm == MutableTestsParameters.ALL_TESTS) 
-		allTestsBtn.setSelected(true);
-	    else
-		selectTestsBtn.setSelected(true);
+        if (mutableTestsParameters != null) {
+            int tm = mutableTestsParameters.getTestsMode();
+            if (tm == MutableTestsParameters.ALL_TESTS)
+                allTestsBtn.setSelected(true);
+            else
+                selectTestsBtn.setSelected(true);
 
-	    testsField.setSelection(mutableTestsParameters.getSpecifiedTests());
-	    testsField.setEnabled(selectTestsBtn.isSelected());
-	}
-	else {
-	    mutableTestsParameters = null;
+            testsField.setSelection(mutableTestsParameters.getSpecifiedTests());
+            testsField.setEnabled(selectTestsBtn.isSelected());
+        }
+        else {
+            mutableTestsParameters = null;
 
-	    String[] tests = testsParameters.getTests();
-	    if (tests == null || tests.length == 0) {
-		allTestsBtn.setSelected(true);
-		testsField.clear();
-	    }
-	    else {
-		selectTestsBtn.setSelected(true);
-		testsField.setSelection(tests);
-	    }
-	    allTestsBtn.setEnabled(false);
-	    selectTestsBtn.setEnabled(false);
-	    testsField.setEnabled(false);
-	}
+            String[] tests = testsParameters.getTests();
+            if (tests == null || tests.length == 0) {
+                allTestsBtn.setSelected(true);
+                testsField.clear();
+            }
+            else {
+                selectTestsBtn.setSelected(true);
+                testsField.setSelection(tests);
+            }
+            allTestsBtn.setEnabled(false);
+            selectTestsBtn.setEnabled(false);
+            testsField.setEnabled(false);
+        }
     }
 
     void save() {
-	if (mutableTestsParameters != null) {
-	    if (allTestsBtn.isSelected())
-		mutableTestsParameters.setTestsMode(MutableTestsParameters.ALL_TESTS);
-	    else if (selectTestsBtn.isSelected())
-		mutableTestsParameters.setTestsMode(MutableTestsParameters.SPECIFIED_TESTS);
-	    mutableTestsParameters.setSpecifiedTests(testsField.getSelection());
-	}
+        if (mutableTestsParameters != null) {
+            if (allTestsBtn.isSelected())
+                mutableTestsParameters.setTestsMode(MutableTestsParameters.ALL_TESTS);
+            else if (selectTestsBtn.isSelected())
+                mutableTestsParameters.setTestsMode(MutableTestsParameters.SPECIFIED_TESTS);
+            mutableTestsParameters.setSpecifiedTests(testsField.getSelection());
+        }
     }
-    
+
     private void initGUI() {
-	JPanel p = uif.createPanel("ce.tests", new GridBagLayout(), false);
+        JPanel p = uif.createPanel("ce.tests", new GridBagLayout(), false);
 
-	GridBagConstraints c = new GridBagConstraints();
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.weightx = 1;
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1;
 
-	btnGrp = new ButtonGroup();
-	allTestsBtn = uif.createRadioButton("ce.tests.all", btnGrp);
-	p.add(allTestsBtn, c);
+        btnGrp = new ButtonGroup();
+        allTestsBtn = uif.createRadioButton("ce.tests.all", btnGrp);
+        p.add(allTestsBtn, c);
 
 
-	selectTestsBtn = uif.createRadioButton("ce.tests.select", btnGrp);
-	selectTestsBtn.addChangeListener(new ChangeListener() {
-	    public void stateChanged(ChangeEvent e) {
-		boolean s = selectTestsBtn.isSelected();
-		testsField.setEnabled(s);
-		loadBtn.setEnabled(s);
-	    }
-	});
-	c.gridheight = 2;
-	c.gridwidth = 1;
-	c.weightx = 0;
-	p.add(selectTestsBtn, c);
+        selectTestsBtn = uif.createRadioButton("ce.tests.select", btnGrp);
+        selectTestsBtn.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                boolean s = selectTestsBtn.isSelected();
+                testsField.setEnabled(s);
+                loadBtn.setEnabled(s);
+            }
+        });
+        c.gridheight = 2;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        p.add(selectTestsBtn, c);
 
-	testsField = new TestTreeSelectionPane(config.getWorkDirectory().getTestResultTable());
-	testsField.setEnabled(selectTestsBtn.isSelected());
-	c.fill = GridBagConstraints.BOTH;
-	c.gridheight = 1;
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.weightx = 1;
-	c.weighty = 1;
-	p.add(testsField, c);
+        testsField = new TestTreeSelectionPane(config.getWorkDirectory().getTestResultTable());
+        testsField.setEnabled(selectTestsBtn.isSelected());
+        c.fill = GridBagConstraints.BOTH;
+        c.gridheight = 1;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.weightx = 1;
+        c.weighty = 1;
+        p.add(testsField, c);
 
-	loadBtn = uif.createButton("ce.tests.load", new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    selectFromFile();
-		}
-	    });
-	loadBtn.setEnabled(selectTestsBtn.isSelected());
-	c.anchor = GridBagConstraints.EAST;
-	c.fill = GridBagConstraints.NONE;
-	c.insets.top = 5;
-	c.weighty = 1;
-	c.weighty = 0;
-	p.add(loadBtn, c);
+        loadBtn = uif.createButton("ce.tests.load", new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    selectFromFile();
+                }
+            });
+        loadBtn.setEnabled(selectTestsBtn.isSelected());
+        c.anchor = GridBagConstraints.EAST;
+        c.fill = GridBagConstraints.NONE;
+        c.insets.top = 5;
+        c.weighty = 1;
+        c.weighty = 0;
+        p.add(loadBtn, c);
 
-	addBody(p);
+        addBody(p);
     }
 
     private void selectFromFile() {
-	if (chooser == null) {
-	    chooser = new FileChooser();
-	}
-	
-	int rc = chooser.showDialog(this, chooser.getApproveButtonText());
-	if (rc != JFileChooser.APPROVE_OPTION)
-	    return;
+        if (chooser == null) {
+            chooser = new FileChooser();
+        }
 
-	WorkDirectory wd = config.getWorkDirectory();
-	TestResultTable trt = wd.getTestResultTable();
-	
-	File file = chooser.getSelectedFile();
-	Vector paths = new Vector();
-	Vector badPaths = new Vector();
-	Set seen = new HashSet();
-	try {
-	    BufferedReader in = new BufferedReader(new FileReader(file));
-	    String line;
-	    while ((line = in.readLine()) != null) {
-		line = line.trim();
-		if (line.length() == 0 || line.startsWith("#"))
-		    continue;
-		int sp = line.indexOf(' ');
-		String path = (sp == -1 ? line : line.substring(0, sp));
-		if (!seen.contains(path)) {
-		    if (trt.validatePath(path))
-			paths.add(path);
-		    else 
-			badPaths.add(path);
-		    seen.add(path);
-		}
-	    }
-	    in.close();
-	}
-	catch (FileNotFoundException e) {
-	    uif.showError("ce.tests.cantFindFile", file.toString());
-	    return;
-	}
-	catch (IOException e) {
-	    uif.showError("ce.tests.cantReadFile", new Object[] { file, e.toString() });
-	    return;
-	}
+        int rc = chooser.showDialog(this, chooser.getApproveButtonText());
+        if (rc != JFileChooser.APPROVE_OPTION)
+            return;
 
-	final int MAX_BAD_PATHS = 10;
+        WorkDirectory wd = config.getWorkDirectory();
+        TestResultTable trt = wd.getTestResultTable();
 
-	if (badPaths.size() > 0) {
-	    if (badPaths.size() == 1)
-		uif.showError("ce.tests.badPath", badPaths.get(0));
-	    else {
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < Math.min(badPaths.size(), MAX_BAD_PATHS); i++) {
-		    if (sb.length() > 0)
-			sb.append('\n');
-		    sb.append(badPaths.get(i));
-		}
-		boolean more = badPaths.size() > MAX_BAD_PATHS;
-		uif.showError("ce.tests.badPaths", 
-			      new Object[] { sb.toString(), new Integer(more ? 1 : 0) });
-	    }	
-	}
+        File file = chooser.getSelectedFile();
+        Vector paths = new Vector();
+        Vector badPaths = new Vector();
+        Set seen = new HashSet();
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = in.readLine()) != null) {
+                line = line.trim();
+                if (line.length() == 0 || line.startsWith("#"))
+                    continue;
+                int sp = line.indexOf(' ');
+                String path = (sp == -1 ? line : line.substring(0, sp));
+                if (!seen.contains(path)) {
+                    if (trt.validatePath(path))
+                        paths.add(path);
+                    else
+                        badPaths.add(path);
+                    seen.add(path);
+                }
+            }
+            in.close();
+        }
+        catch (FileNotFoundException e) {
+            uif.showError("ce.tests.cantFindFile", file.toString());
+            return;
+        }
+        catch (IOException e) {
+            uif.showError("ce.tests.cantReadFile", new Object[] { file, e.toString() });
+            return;
+        }
 
-	testsField.setSelection((String[]) (paths.toArray(new String[paths.size()])));
+        final int MAX_BAD_PATHS = 10;
+
+        if (badPaths.size() > 0) {
+            if (badPaths.size() == 1)
+                uif.showError("ce.tests.badPath", badPaths.get(0));
+            else {
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < Math.min(badPaths.size(), MAX_BAD_PATHS); i++) {
+                    if (sb.length() > 0)
+                        sb.append('\n');
+                    sb.append(badPaths.get(i));
+                }
+                boolean more = badPaths.size() > MAX_BAD_PATHS;
+                uif.showError("ce.tests.badPaths",
+                              new Object[] { sb.toString(), new Integer(more ? 1 : 0) });
+            }
+        }
+
+        testsField.setSelection((String[]) (paths.toArray(new String[paths.size()])));
     }
 
     private TestsParameters testsParameters;

@@ -37,15 +37,15 @@ import com.sun.javatest.TestResult;
  * the work directory as the result of a prior run.  This will allow the
  * creation of a TestResult object from a old test run.
  */
-public class ReportScript extends Script 
+public class ReportScript extends Script
 {
     public final void run() {
-	TestResult tr = getTestResult();
-	try {
-	    tr.reloadFromWorkDir(workDir);
-	}
-	catch (TestResult.Fault ignore) {
-	}
+        TestResult tr = getTestResult();
+        try {
+            tr.reloadFromWorkDir(workDir);
+        }
+        catch (TestResult.Fault ignore) {
+        }
     }
 
     /** This method should not be called; for this class, its identity
@@ -54,6 +54,6 @@ public class ReportScript extends Script
      * @throws Error if called
      */
     public Status run(String[] args, TestDescription td, TestEnvironment env) {
-	throw new Error("should not be called");
+        throw new Error("should not be called");
     }
 }

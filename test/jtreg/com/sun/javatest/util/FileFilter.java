@@ -36,7 +36,7 @@ public interface FileFilter
     /**
      * Determines whether a file should be included in a collection.
      *
-     * @param file	the file to check
+     * @param file      the file to check
      * @return true if the file should be included in acollection, and false otherwise.
      */
     boolean accepts(File file);

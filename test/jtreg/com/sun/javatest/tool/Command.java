@@ -38,72 +38,72 @@ import com.sun.javatest.util.I18NResourceBundle;
  * A class to represent a command to be executed.
  * Commands are typically read from the command line or from command files.
  */
-public abstract class Command 
+public abstract class Command
 {
     /**
      * This exception is used to report problems with a specific command.
      */
     public class Fault extends Exception
     {
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 */
-	public Fault(I18NResourceBundle i18n, String s) {
-	    super(i18n.getString(s));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         */
+        public Fault(I18NResourceBundle i18n, String s) {
+            super(i18n.getString(s));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An argument to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	public Fault(I18NResourceBundle i18n, String s, Object o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An argument to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        public Fault(I18NResourceBundle i18n, String s, Object o) {
+            super(i18n.getString(s, o));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An array of arguments to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	public Fault(I18NResourceBundle i18n, String s, Object[] o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An array of arguments to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        public Fault(I18NResourceBundle i18n, String s, Object[] o) {
+            super(i18n.getString(s, o));
+        }
 
-	/**
-	 * Create a Fault, by wrapping a CommandContext Fault.
-	 * The message string will be propogated directly; 
-	 * the argument fault will be set as the cause for this fault.
-	 * @param e A CommandContext.Fault to wrap.
-	 */
-	public Fault(CommandContext.Fault e) {
-	    super(e.getMessage(), e);
-	}
+        /**
+         * Create a Fault, by wrapping a CommandContext Fault.
+         * The message string will be propogated directly;
+         * the argument fault will be set as the cause for this fault.
+         * @param e A CommandContext.Fault to wrap.
+         */
+        public Fault(CommandContext.Fault e) {
+            super(e.getMessage(), e);
+        }
 
-	/** 
-	 * Get the command that created this fault.
-	 * @return the command that created this fault
-	 */
-	public Command getCommand() {
-	    return Command.this;
-	}
+        /**
+         * Get the command that created this fault.
+         * @return the command that created this fault
+         */
+        public Command getCommand() {
+            return Command.this;
+        }
 
     }
 
     /**
      * Create an instance of a command.
-     * @param name The name for this command. 
+     * @param name The name for this command.
      * The name will be saved as the first entry as the argument array.
      */
     protected Command(String name) {
-	args = new Vector();
-	args.add(name);
+        args = new Vector();
+        args.add(name);
     }
 
     /**
@@ -111,7 +111,7 @@ public abstract class Command
      * @param arg the argument to be added
      */
     protected void addArg(String arg) {
-	args.add(arg);
+        args.add(arg);
     }
 
     /**
@@ -120,9 +120,9 @@ public abstract class Command
      * @return the next argument from the iterator
      */
     protected String nextArg(Iterator argIter) {
-	String s = (String) argIter.next();
-	addArg(s);
-	return s;
+        String s = (String) argIter.next();
+        addArg(s);
+        return s;
     }
 
     /**
@@ -131,8 +131,8 @@ public abstract class Command
      * @param argIter the iterator from which teh argument was obtained
      */
     protected void putbackArg(ListIterator argIter) {
-	argIter.previous();
-	args.remove(args.size() - 1);
+        argIter.previous();
+        args.remove(args.size() - 1);
     }
 
     /**
@@ -142,9 +142,9 @@ public abstract class Command
      * @return the array of arguments for this command
      */
     public String[] getArgs() {
-	String[] a = new String[args.size()];
-	args.copyInto(a);
-	return a;
+        String[] a = new String[args.size()];
+        args.copyInto(a);
+        return a;
     }
 
     /**
@@ -153,30 +153,30 @@ public abstract class Command
      * @return a printable representation of this command
      */
     public String toString() {
-	StringBuffer sb = new StringBuffer();
-	for (int i = 0; i < args.size(); i++) {
-	    if (sb.length() > 0)
-		sb.append(' ');
-	    String arg = (String) (args.elementAt(i));
-	    boolean hasSpace = (arg.indexOf(' ') != -1);
-	    boolean hasQuote = (arg.indexOf('"') != -1);
-	    boolean hasEscape = (arg.indexOf('\\') != -1);
-	    if (hasSpace)
-		sb.append('"');
-	    if (hasQuote || hasEscape) {
-		for (int ci = 0; ci < arg.length(); ci++) {
-		    char c = arg.charAt(ci);
-		    if (c == '"' || c == '\\')
-			sb.append('\\');
-		    sb.append(c);
-		}
-	    }
-	    else
-		sb.append(arg);
-	    if (hasSpace)
-		sb.append('"');
-	}
-	return sb.toString();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < args.size(); i++) {
+            if (sb.length() > 0)
+                sb.append(' ');
+            String arg = (String) (args.elementAt(i));
+            boolean hasSpace = (arg.indexOf(' ') != -1);
+            boolean hasQuote = (arg.indexOf('"') != -1);
+            boolean hasEscape = (arg.indexOf('\\') != -1);
+            if (hasSpace)
+                sb.append('"');
+            if (hasQuote || hasEscape) {
+                for (int ci = 0; ci < arg.length(); ci++) {
+                    char c = arg.charAt(ci);
+                    if (c == '"' || c == '\\')
+                        sb.append('\\');
+                    sb.append(c);
+                }
+            }
+            else
+                sb.append(arg);
+            if (hasSpace)
+                sb.append('"');
+        }
+        return sb.toString();
     }
 
     /**
@@ -190,7 +190,7 @@ public abstract class Command
      * @see #DESKTOP_REQUIRED_DTMODE
      */
     public int getDesktopMode() {
-	return (isActionCommand() ? DESKTOP_NOT_REQUIRED_DTMODE : DEFAULT_DTMODE);
+        return (isActionCommand() ? DESKTOP_NOT_REQUIRED_DTMODE : DEFAULT_DTMODE);
     }
 
     /**
@@ -247,7 +247,7 @@ public abstract class Command
      * @return true if this command is an action command, and false otherwise
      */
     public boolean isActionCommand() {
-	return false;
+        return false;
     }
 
     /**
@@ -262,18 +262,18 @@ public abstract class Command
      * and rewrapping any execption that might occur.
      * @param ctx the command context from which to get the configuration
      * @return the current configuration from the command context
-     * @throws Command.Fault if there is a problem obtaining or evaluating 
+     * @throws Command.Fault if there is a problem obtaining or evaluating
      * the configuration.
      */
     protected InterviewParameters getConfig(CommandContext ctx)
-	throws Command.Fault 
+        throws Command.Fault
     {
-	try {
-	    return ctx.getConfig();
-	}
-	catch (CommandContext.Fault e) {
-	    throw new Fault(e);
-	}
+        try {
+            return ctx.getConfig();
+        }
+        catch (CommandContext.Fault e) {
+            throw new Fault(e);
+        }
     }
 
     private Vector args;

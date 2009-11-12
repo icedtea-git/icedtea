@@ -27,7 +27,7 @@
 package com.sun.javatest.mrep;
 
 final class Scheme {
-        
+
         // ELEMENTS
          static final String REPORT = "Report";
          static final String SUMMARY = "Summary";
@@ -61,7 +61,7 @@ final class Scheme {
          static final String PROP_QUEST = "PropertiesQuestion";
          static final String GROUP = "Group";
          static final String ROW = "Row";
-        
+
         // ATTRS
          static final String TR_URL = "url";
          static final String TR_STATUS = "status";
@@ -93,7 +93,7 @@ final class Scheme {
          static final String ROW_VAL = "value";
          static final String ENV_NAME = "name";
          static final String ENV_DESCR = "description";
-        
+
         // VALUES
          static final String XSI_VAL = "http://www.w3.org/2001/XMLSchema-instance";
          static final String SCH_LOC_VAL = "Report.xsd";

@@ -38,51 +38,51 @@ import com.sun.javatest.util.I18NResourceBundle;
  * <li><code>-cleanDesktop</code>: synonym for newDesktop (backward compatibility)
  * </ul>
  */
-public class DesktopManager extends CommandManager 
+public class DesktopManager extends CommandManager
 {
     public HelpTree.Node getHelp() {
-	String[] cmds = { "cleanDesktop", "newDesktop" };
-	return new HelpTree.Node(i18n, "dt.opts", cmds);
+        String[] cmds = { "cleanDesktop", "newDesktop" };
+        return new HelpTree.Node(i18n, "dt.opts", cmds);
     }
 
     Desktop createDesktop() {
-	Desktop d = new Desktop();
-	if (firstTimeFlag)
-	    d.setFirstTime(firstTimeFlag);
-	return d;
+        Desktop d = new Desktop();
+        if (firstTimeFlag)
+            d.setFirstTime(firstTimeFlag);
+        return d;
     }
 
     Desktop createDesktop(CommandContext ctx) {
-	Desktop d = new Desktop(ctx);
-	if (firstTimeFlag)
-	    d.setFirstTime(firstTimeFlag);
-	return d;
+        Desktop d = new Desktop(ctx);
+        if (firstTimeFlag)
+            d.setFirstTime(firstTimeFlag);
+        return d;
     }
-	
+
 
     //----------------------------------------------------------------------------
 
     public boolean parseCommand(String cmd, ListIterator argIter, CommandContext ctx)
-	throws Command.Fault
+        throws Command.Fault
     {
-	if (cmd.equalsIgnoreCase("newDesktop") || cmd.equalsIgnoreCase("cleanDesktop")) {
-	    firstTimeFlag = true;
-	    ctx.addCommand(new NewDesktopCommand());
-	    return true;
-	}
-	return false;
+        if (cmd.equalsIgnoreCase("newDesktop") || cmd.equalsIgnoreCase("cleanDesktop")) {
+            firstTimeFlag = true;
+            ctx.addCommand(new NewDesktopCommand());
+            return true;
+        }
+        return false;
     }
 
     private boolean firstTimeFlag;
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(ConfigManager.class);
 
     private static class NewDesktopCommand extends Command {
-	NewDesktopCommand() {
-	    super("newDesktop");
-	}
+        NewDesktopCommand() {
+            super("newDesktop");
+        }
 
-	public void run(CommandContext ctx) {
-	}
+        public void run(CommandContext ctx) {
+        }
     }
-	    
+
 }

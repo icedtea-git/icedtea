@@ -57,7 +57,7 @@ import com.sun.javatest.tool.UIFactory;
 
 import com.sun.javatest.util.Debug;
 
-/** 
+/**
  * This is the panel which shows information about a particular branch node in the
  * testsuite tree.  It contains a series of tabs, the first of which is a summary
  * of the number of passed, failed, etc... tests under the node.  The rest of the
@@ -65,9 +65,9 @@ import com.sun.javatest.util.Debug;
  * a clickable.
  */
 
-class BranchPanel 
+class BranchPanel
     extends JPanel
-    implements FilterSelectionHandler.Observer 
+    implements FilterSelectionHandler.Observer
 {
     BranchPanel(UIFactory uif, TreePanelModel model, Harness h, ExecModel em, JComponent parent,
                 FilterSelectionHandler filterHandler, TestTreeModel ttm) {
@@ -120,7 +120,7 @@ class BranchPanel
         setName("branch");
         allPanels = new BP_BranchSubpanel[NUM_TABS];
         allPanels[0] = summPanel = new BP_SummarySubpanel(uif, bModel, ttm);
-        
+
         allPanels[1] = docPanel = new BP_DocumentationSubpanel(uif, bModel, ttm, execModel);
 
         // the summary tab is not a list
@@ -130,7 +130,7 @@ class BranchPanel
                 new BP_TestListSubpanel(uif, harness, execModel, bModel, ttm, i);
         }
 
-        allPanels[allPanels.length-1] = foPanel = 
+        allPanels[allPanels.length-1] = foPanel =
                 new BP_FilteredOutSubpanel(uif, bModel, ttm);
 
         listDisplayStatus = new boolean[allPanels.length];
@@ -179,7 +179,7 @@ class BranchPanel
         */
 
         currPanel = summPanel;
-        
+
         setLayout(new BorderLayout());
         add(bPane, BorderLayout.CENTER);
 
@@ -249,7 +249,7 @@ class BranchPanel
     protected void updateGUI() {
         if (currNode == null) {
             // start at 1 since we don't disable the summary tab
-            for (int i = 1; i < bPane.getComponentCount(); i++) 
+            for (int i = 1; i < bPane.getComponentCount(); i++)
                 bPane.setEnabledAt(i, false);
         }
         else {
@@ -308,7 +308,7 @@ class BranchPanel
     public void filterSelected(TestFilter f) {
         for (int i = 0; i < allPanels.length; i++)
             allPanels[i].invalidateFilters();
-    
+
         updateGUI();
     }
 
@@ -366,7 +366,7 @@ class BranchPanel
     class BranchModel implements BP_Model {
         public boolean isRunning() {
             return harness.isRunning();
-        } 
+        }
 
         /**
          * Message are automatically placed onto the event thread.
@@ -463,7 +463,7 @@ class BranchPanel
             this.uif = uif;
         }
 
-        /** 
+        /**
          * Update a single text field.
          */
         TextUpdater(JTextComponent tf, String val, UIFactory uif) {
@@ -576,4 +576,3 @@ class BranchPanel
     }
 
 }
-

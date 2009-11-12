@@ -39,81 +39,81 @@ import com.sun.javatest.util.I18NResourceBundle;
 /**
  * A command manager to provide commands for batch execution of tests.
  */
-public class BatchManager 
+public class BatchManager
     extends CommandManager
 {
     static {
-	RunTestsCommand.initVerboseOptions();
+        RunTestsCommand.initVerboseOptions();
     }
 
     public HelpTree.Node getHelp() {
-	HelpTree.Node[] cmdNodes = {
-	    getCommandHelp(BatchCommand.getName()),
-	    ObserverCommand.getHelp(),
-	    getCommandHelp(RunTestsCommand.getName())
-	};
-	return new HelpTree.Node(i18n, "cmgr.help", cmdNodes);
-	
+        HelpTree.Node[] cmdNodes = {
+            getCommandHelp(BatchCommand.getName()),
+            ObserverCommand.getHelp(),
+            getCommandHelp(RunTestsCommand.getName())
+        };
+        return new HelpTree.Node(i18n, "cmgr.help", cmdNodes);
+
     }
 
     private HelpTree.Node getCommandHelp(String name) {
-	return new HelpTree.Node(i18n, "cmgr.help." + name);
+        return new HelpTree.Node(i18n, "cmgr.help." + name);
     }
 
-    public boolean parseCommand(String cmd, ListIterator argIter, CommandContext ctx) 
-	throws Command.Fault
+    public boolean parseCommand(String cmd, ListIterator argIter, CommandContext ctx)
+        throws Command.Fault
     {
-	if (isMatch(cmd, BatchCommand.getName())) {
-	    ctx.addCommand(new BatchCommand());
-	    return true;
-	}
-	
-	if (isMatch(cmd, ObserverCommand.getName())) {
-	    ctx.addCommand(new ObserverCommand(argIter));
-	    return true;
-	}
-	
-	if (isMatch(cmd, RunTestsCommand.getName())) {
-	    ctx.addCommand(new RunTestsCommand(argIter));
-	    return true;
-	}
-	
-	return false;
+        if (isMatch(cmd, BatchCommand.getName())) {
+            ctx.addCommand(new BatchCommand());
+            return true;
+        }
+
+        if (isMatch(cmd, ObserverCommand.getName())) {
+            ctx.addCommand(new ObserverCommand(argIter));
+            return true;
+        }
+
+        if (isMatch(cmd, RunTestsCommand.getName())) {
+            ctx.addCommand(new RunTestsCommand(argIter));
+            return true;
+        }
+
+        return false;
     }
-    
+
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(BatchManager.class);
-    
+
     //--------------------------------------------------------------------------
 
     static class BatchCommand
-	extends Command
+        extends Command
     {
-	static String getName() {
-	    return "batch";
-	}
+        static String getName() {
+            return "batch";
+        }
 
-	BatchCommand() {
-	    super(getName());
-	}
+        BatchCommand() {
+            super(getName());
+        }
 
-	public int getDesktopMode() {
-	    return DESKTOP_NOT_REQUIRED_DTMODE;
-	}
+        public int getDesktopMode() {
+            return DESKTOP_NOT_REQUIRED_DTMODE;
+        }
 
-	public void run(CommandContext ctx) throws Fault {
-	    ctx.setAutoRunCommand(new AutoRunCommand());
-	    ctx.setCloseDesktopWhenDoneEnabled(true);
-	}
+        public void run(CommandContext ctx) throws Fault {
+            ctx.setAutoRunCommand(new AutoRunCommand());
+            ctx.setCloseDesktopWhenDoneEnabled(true);
+        }
     }
 
     static class AutoRunCommand extends RunTestsCommand
     {
-	public void run(CommandContext ctx) throws Fault {
-	    super.run(ctx);
-	    
-	    File reportDir = ctx.getAutoRunReportDir();
-	    if (reportDir != null) 
-		ReportManager.writeReport(reportDir, ctx);
-	}
+        public void run(CommandContext ctx) throws Fault {
+            super.run(ctx);
+
+            File reportDir = ctx.getAutoRunReportDir();
+            if (reportDir != null)
+                ReportManager.writeReport(reportDir, ctx);
+        }
     }
 }

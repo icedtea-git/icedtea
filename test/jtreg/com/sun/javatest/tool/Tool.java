@@ -45,32 +45,32 @@ import com.sun.javatest.util.DynamicArray;
 /**
  * A base class for tools to appear on the JT Harness desktop.
  */
-public abstract class Tool extends JPanel 
+public abstract class Tool extends JPanel
 {
     /**
-     * An observer interface for use by those that wishing to monitor changes 
+     * An observer interface for use by those that wishing to monitor changes
      * to a tool.
      */
     public interface Observer {
-	/**
-	 * The title of a tool has been changed.
-	 * @param source The tool whose title has been changed.
-	 * @param newValue The new tite for the tool.
-	 */
-	void titleChanged(Tool source, String newValue);
+        /**
+         * The title of a tool has been changed.
+         * @param source The tool whose title has been changed.
+         * @param newValue The new tite for the tool.
+         */
+        void titleChanged(Tool source, String newValue);
 
-	/**
-	 * The short title of a tool has been changed.
-	 * @param source The tool whose title has been changed.
-	 * @param newValue The new tite for the tool.
-	 */
-	void shortTitleChanged(Tool source, String newValue);
+        /**
+         * The short title of a tool has been changed.
+         * @param source The tool whose title has been changed.
+         * @param newValue The new tite for the tool.
+         */
+        void shortTitleChanged(Tool source, String newValue);
 
-	/**
-	 * A tool has been disposed.
-	 * @param source the tool that has been disposed
-	 */
-	void toolDisposed(Tool source);
+        /**
+         * A tool has been disposed.
+         * @param source the tool that has been disposed
+         */
+        void toolDisposed(Tool source);
     }
 
     //--------------------------------------------------------------------------
@@ -81,7 +81,7 @@ public abstract class Tool extends JPanel
      * @see #removeObserver
      */
     synchronized public void addObserver(Observer o) {
-	observers = (Observer[])DynamicArray.append(observers, o);
+        observers = (Observer[])DynamicArray.append(observers, o);
     }
 
     /**
@@ -91,13 +91,13 @@ public abstract class Tool extends JPanel
      * @see #addObserver
      */
     synchronized public void removeObserver(Observer o) {
-	observers = (Observer[])DynamicArray.remove(observers, o);
+        observers = (Observer[])DynamicArray.remove(observers, o);
     }
 
     //--------------------------------------------------------------------------
 
     /**
-     * Get the menu bar for a tool. 
+     * Get the menu bar for a tool.
      * This should just contain the tool-specific menus. The desktop will
      * automatically add and display the standard menus on the menu bar.
      * @return a menu bar containing tool-specific menus
@@ -105,17 +105,17 @@ public abstract class Tool extends JPanel
     public abstract JMenuBar getMenuBar();
 
     /**
-     * Set the title string for the tool. This will normally the displayed 
+     * Set the title string for the tool. This will normally the displayed
      * by the desktop in the title bar of the window containing the tool.
      * @param key key to be used to get title text from resource bundle
      * @see #getTitle
      */
     protected void setI18NTitle(String key) {
-	setLocalizedTitle(uif.getI18NString(key));
+        setLocalizedTitle(uif.getI18NString(key));
     }
 
     /**
-     * Set the title string for the tool. This will normally the displayed 
+     * Set the title string for the tool. This will normally the displayed
      * by the desktop in the title bar of the window containing the tool.
      * @param key key to be used to get title text from resource bundle
      * @param arg item for substitution into string from resource bundle
@@ -123,11 +123,11 @@ public abstract class Tool extends JPanel
      * @see #getTitle
      */
     protected void setI18NTitle(String key, Object arg) {
-	setLocalizedTitle(uif.getI18NString(key, arg));
+        setLocalizedTitle(uif.getI18NString(key, arg));
     }
 
     /**
-     * Set the title string for the tool. This will normally the displayed 
+     * Set the title string for the tool. This will normally the displayed
      * by the desktop in the title bar of the window containing the tool.
      * @param key key to be used to get title text from resource bundle
      * @param args items for substitution into string from resource bundle
@@ -135,34 +135,34 @@ public abstract class Tool extends JPanel
      * @see #getTitle
      */
     protected void setI18NTitle(String key, Object[] args) {
-	setLocalizedTitle(uif.getI18NString(key, args));
+        setLocalizedTitle(uif.getI18NString(key, args));
     }
 
     /**
-     * Set the title string for the tool. This will normally the displayed 
+     * Set the title string for the tool. This will normally the displayed
      * by the desktop in the title bar of the window containing the tool.
      * @param newTitle the title string for the tool
      * @see #getTitle
      */
     private synchronized void setLocalizedTitle(String newTitle) {
-	if (title == null ? newTitle == null : title.equals(newTitle))
-	    return;
+        if (title == null ? newTitle == null : title.equals(newTitle))
+            return;
 
-	title = newTitle;
-	for (int i = 0; i < observers.length; i++) {
-	    observers[i].titleChanged(this, title);
-	}	    
+        title = newTitle;
+        for (int i = 0; i < observers.length; i++) {
+            observers[i].titleChanged(this, title);
+        }
     }
 
     /**
-     * Get the title string for the tool. 
+     * Get the title string for the tool.
      * @return the title string for the tool
      * @see #setI18NTitle(String)
      * @see #setI18NTitle(String,Object)
      * @see #setI18NTitle(String,Object[])
      */
     public String getTitle() {
-	return title;
+        return title;
     }
 
     /**
@@ -173,27 +173,27 @@ public abstract class Tool extends JPanel
      * @see #getShortTitle
      */
     public void setShortTitle(String newShortTitle) {
-	if (shortTitle == null ? newShortTitle == null : shortTitle.equals(newShortTitle))
-	    return;
+        if (shortTitle == null ? newShortTitle == null : shortTitle.equals(newShortTitle))
+            return;
 
-	shortTitle = newShortTitle;
-	for (int i = 0; i < observers.length; i++) {
-	    observers[i].shortTitleChanged(this, shortTitle);
-	}	    
+        shortTitle = newShortTitle;
+        for (int i = 0; i < observers.length; i++) {
+            observers[i].shortTitleChanged(this, shortTitle);
+        }
     }
 
     /**
-     * Get a short title for the tool. 
+     * Get a short title for the tool.
      * @return the short title string for the tool
      * @see #setShortTitle
      */
     public String getShortTitle() {
-	if (shortTitle != null)
-	    return shortTitle;
-	else if (title != null)
-	    return title;
-	else
-	    return getName();
+        if (shortTitle != null)
+            return shortTitle;
+        else if (title != null)
+            return title;
+        else
+            return getName();
     }
 
     /**
@@ -201,7 +201,7 @@ public abstract class Tool extends JPanel
      * @return a list of test suites being used by the tool, or null if none
      */
     public TestSuite[] getLoadedTestSuites() {
-	return null;
+        return null;
     }
 
     /**
@@ -209,21 +209,21 @@ public abstract class Tool extends JPanel
      * @return a list of work directories being used by the tool, or null if none
      */
     public WorkDirectory[] getLoadedWorkDirectories() {
-	return null;
+        return null;
     }
 
     /**
      * Get the creation time for this tool. This is used by the desktop
      * to help preserve a consistent order when changing between desktop
      * styles.
-     * @return a standard long cvalue, as returned by 
+     * @return a standard long cvalue, as returned by
      * System.currentTimeMillis, indicating the time the tool was created
      */
     public long getCreationTime() {
-	return creationTime;
+        return creationTime;
     }
 
-    
+
 
     //--------------------------------------------------------------------------
 
@@ -232,13 +232,13 @@ public abstract class Tool extends JPanel
      * This is for "destroying" this tool instance.
      */
     public void dispose() {
-	removeAll();
-	uif.dispose();
+        removeAll();
+        uif.dispose();
 
-	for (int i = observers.length - 1; i >= 0; i--) 
-	    observers[i].toolDisposed(this);
+        for (int i = observers.length - 1; i >= 0; i--)
+            observers[i].toolDisposed(this);
 
-	observers = new Observer[0];
+        observers = new Observer[0];
     }
 
     //--------------------------------------------------------------------------
@@ -253,14 +253,14 @@ public abstract class Tool extends JPanel
      * @param uiKey the component name for this tool
      */
     protected Tool(ToolManager m, String uiKey) {
-	super(new BorderLayout());
-	setName(uiKey + ":" + (toolIndex++));
-	setFocusable(false);
-	manager = m;
-	uif = new UIFactory(this);
-	uif.setAccessibleName(this, uiKey);
-	uif.setToolTip(this, uiKey);
-	creationTime = System.currentTimeMillis();
+        super(new BorderLayout());
+        setName(uiKey + ":" + (toolIndex++));
+        setFocusable(false);
+        manager = m;
+        uif = new UIFactory(this);
+        uif.setAccessibleName(this, uiKey);
+        uif.setToolTip(this, uiKey);
+        creationTime = System.currentTimeMillis();
     }
 
     /**
@@ -268,7 +268,7 @@ public abstract class Tool extends JPanel
      * @return the manager for this tool
      */
     public ToolManager getManager() {
-	return manager;
+        return manager;
     }
 
     /**
@@ -276,7 +276,7 @@ public abstract class Tool extends JPanel
      * @return the desktop for this tool
      */
     public Desktop getDesktop() {
-	return manager.getDesktop();
+        return manager.getDesktop();
     }
 
     /**
@@ -289,7 +289,7 @@ public abstract class Tool extends JPanel
      * of the tool
      */
     protected abstract void save(Map m);
-    
+
     /**
      * Get a list (if any) of the reasons why it might be inadvisable
      * to close the tool at this point. This will normally include
@@ -299,7 +299,7 @@ public abstract class Tool extends JPanel
      * to indicate that there are no such reasons
      */
     protected String[] getCloseAlerts() {
-	return null;
+        return null;
     }
 
 
@@ -308,20 +308,20 @@ public abstract class Tool extends JPanel
      * @return an array containing the set of ToolDialogs owned by this tool
      */
     public ToolDialog[] getToolDialogs() {
-	if (toolDialogs == null)
-	    return new ToolDialog[0];
+        if (toolDialogs == null)
+            return new ToolDialog[0];
 
-	ArrayList l = new ArrayList();
-	for (Iterator iter = toolDialogs.iterator(); iter.hasNext(); ) {
-	    WeakReference r = (WeakReference) (iter.next());
-	    ToolDialog td = (ToolDialog) (r.get());
-	    if (td == null)
-		iter.remove();
-	    else 
-		l.add(td);
-	}
+        ArrayList l = new ArrayList();
+        for (Iterator iter = toolDialogs.iterator(); iter.hasNext(); ) {
+            WeakReference r = (WeakReference) (iter.next());
+            ToolDialog td = (ToolDialog) (r.get());
+            if (td == null)
+                iter.remove();
+            else
+                l.add(td);
+        }
 
-	return (ToolDialog[]) (l.toArray(new ToolDialog[l.size()]));
+        return (ToolDialog[]) (l.toArray(new ToolDialog[l.size()]));
     }
 
     /**
@@ -329,21 +329,21 @@ public abstract class Tool extends JPanel
      * @param td the tool dialog to be registered as belonging to this tool.
      */
     void addToolDialog(ToolDialog td) {
-	if (td == null)
-	    throw new NullPointerException();
+        if (td == null)
+            throw new NullPointerException();
 
-	if (toolDialogs == null)
-	    toolDialogs = new ArrayList();
+        if (toolDialogs == null)
+            toolDialogs = new ArrayList();
 
-	toolDialogs.add(new WeakReference(td));
+        toolDialogs.add(new WeakReference(td));
     }
 
     void setDeskView(DeskView view) {
-	deskView = view;
+        deskView = view;
     }
 
     DeskView getDeskView() {
-	return deskView;
+        return deskView;
     }
 
     /**

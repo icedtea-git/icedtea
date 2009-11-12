@@ -60,7 +60,7 @@ import javax.swing.event.InternalFrameEvent;
  * Lightweight wrapper class to provide standard support for tool dialogs.
  * Dialogs have a title, optional menu bar, a body, and an optional set of
  * buttons, including a default button.
- * The actual dialog displayed may be a JDialog, or a JInternalFrame, 
+ * The actual dialog displayed may be a JDialog, or a JInternalFrame,
  * depending on the current desktop.
  */
 abstract public class ToolDialog
@@ -80,10 +80,10 @@ abstract public class ToolDialog
         this.uif = uif;
         this.uiKey = uiKey;
 
-        tool = (Tool) (parent instanceof Tool ? parent 
+        tool = (Tool) (parent instanceof Tool ? parent
                        : (SwingUtilities.getAncestorOfClass(Tool.class, parent)));
 
-        if (tool == null) 
+        if (tool == null)
             throw new IllegalStateException();
 
         tool.addToolDialog(this);
@@ -96,7 +96,7 @@ abstract public class ToolDialog
                 closing();
             }
         };
-        
+
         tool.addObserver(defaultDisposeHandler);
     }
 
@@ -129,19 +129,19 @@ abstract public class ToolDialog
 
     /**
      * packs the dialog. The method is useful when it's necessary to call pack
-     * separately from <code>setVisible(boolean)</code> 
+     * separately from <code>setVisible(boolean)</code>
      * @see #setVisible
      */
     public void pack() {
         if (dialog == null)
             ensureDialogInitialized();
-        
+
         if (dialog instanceof JDialog)
             ((JDialog) dialog).pack();
         else
-        	((JInternalFrame) dialog).pack();        	
+                ((JInternalFrame) dialog).pack();
     }
-    
+
     /**
      * Specify whether the dialog should be made visible on the screen or not.
      * @param b True if the dialog should be made visible, false if is should
@@ -152,7 +152,7 @@ abstract public class ToolDialog
         if (b) {
             // setting dialog visible
             ensureDialogInitialized();
-            
+
             if (dialog instanceof JDialog) {
                 ((JDialog) dialog).toFront();
                 ((JDialog) dialog).pack();
@@ -178,9 +178,9 @@ abstract public class ToolDialog
      */
     public void dispose() {
         if (dialog != null) {
-            if (dialog instanceof JDialog) 
+            if (dialog instanceof JDialog)
                 ((JDialog) dialog).dispose();
-            else 
+            else
                 ((JInternalFrame) dialog).dispose();
 
             RootPaneContainer rpc = (RootPaneContainer) dialog;
@@ -208,7 +208,7 @@ abstract public class ToolDialog
         }
         return (Frame) (SwingUtilities.getAncestorOfClass(Frame.class, dialog));
     }
-    
+
     /**
      * Initialize the GUI, by calling the various setXXX methods.
      */
@@ -254,9 +254,9 @@ abstract public class ToolDialog
 
     private void setLocalizedTitle(String title) {
         if (dialog != null)  {
-            if (dialog instanceof JDialog) 
+            if (dialog instanceof JDialog)
                 ((JDialog) dialog).setTitle(title);
-            else 
+            else
                 ((JInternalFrame) dialog).setTitle(title);
         }
 
@@ -279,9 +279,9 @@ abstract public class ToolDialog
      */
     protected void setJMenuBar(JMenuBar menuBar) {
         if (dialog != null)  {
-            if (dialog instanceof JDialog) 
+            if (dialog instanceof JDialog)
                 ((JDialog) dialog).setJMenuBar(menuBar);
-            else 
+            else
                 ((JInternalFrame) dialog).setJMenuBar(menuBar);
         }
 
@@ -297,7 +297,7 @@ abstract public class ToolDialog
         return body;
     }
 
-    /** 
+    /**
      * Set the component for the main body of the dialog.
      * This should not include the button bar, which should be set separately.
      * This method must be called befor ethe dialog is made visible.
@@ -309,9 +309,9 @@ abstract public class ToolDialog
 
         if (dialog != null) {
             initMain();
-            if (dialog instanceof JDialog) 
+            if (dialog instanceof JDialog)
                 ((JDialog) dialog).setContentPane(main);
-            else 
+            else
                 ((JInternalFrame) dialog).setContentPane(main);
         }
     }
@@ -360,23 +360,23 @@ abstract public class ToolDialog
 
         if (dialog != null) {
             initMain();
-            if (dialog instanceof JDialog) 
+            if (dialog instanceof JDialog)
                 ((JDialog) dialog).setContentPane(main);
-            else 
+            else
                 ((JInternalFrame) dialog).setContentPane(main);
         }
     }
 
     /**
      * Set a ComponentListener to be registered on the dialog.
-     * This is useful for listening for events when the dialog is made visible and 
+     * This is useful for listening for events when the dialog is made visible and
      * invisible.
      * @param l listener to attach to this component
      */
     protected void setComponentListener(ComponentListener l) {
         componentListener = l;
     }
-        
+
     /**
      * Get the size of the dialog. An exception will be thrown if the dialog has not
      * yet been shown, or if it is has been disposed since it was shown on the screen.
@@ -394,7 +394,7 @@ abstract public class ToolDialog
      * yet been shown, or if it is has been disposed since it was shown on the screen.
      * @param d the new size of this dialog
      * @see #getSize
-     */ 
+     */
     protected void setSize(Dimension d) {
         if (dialog == null)
             throw new IllegalStateException();
@@ -408,10 +408,10 @@ abstract public class ToolDialog
      * @param width the new width of this dialog
      * @param height the new height of this dialog
      * @see #getSize
-     */ 
+     */
     protected void setSize(int width, int height) {
         if (dialog == null)
-            ensureDialogInitialized();                    
+            ensureDialogInitialized();
 
         dialog.setSize(width, height);
     }
@@ -434,10 +434,10 @@ abstract public class ToolDialog
      * yet been shown, or if it is has been disposed since it was shown on the screen.
      * @param p the new location of this dialog
      * @see #getLocation
-     */ 
+     */
     protected void setLocation(Point p) {
         if (dialog == null)
-            ensureDialogInitialized();                    
+            ensureDialogInitialized();
 
         dialog.setLocation(p);
     }
@@ -448,7 +448,7 @@ abstract public class ToolDialog
      * @param x - the x-coordinate of the new location's top-left corner in the parent's coordinate space
      * @param y - the y-coordinate of the new location's top-left corner in the parent's coordinate space
      * @see #getLocation
-     */ 
+     */
     protected void setLocation(int x, int y) {
         if (dialog == null)
             throw new IllegalStateException();
@@ -461,7 +461,7 @@ abstract public class ToolDialog
      * since the dialog was last made visible, the dialog will be reinitialized.
      */
     private void ensureDialogInitialized() {
-        Desktop desktop = tool.getDesktop(); 
+        Desktop desktop = tool.getDesktop();
 
         if (dialog == null || !desktop.isToolOwnerForDialog(tool, dialog)) {
             if (main == null)
@@ -476,12 +476,12 @@ abstract public class ToolDialog
 
     void initDialog(DeskView view, boolean visible) {
         if (view == null) {
-            Desktop desktop = tool.getDesktop();            
-            dialog = desktop.createDialog(tool, uiKey, title, menuBar, main, 
+            Desktop desktop = tool.getDesktop();
+            dialog = desktop.createDialog(tool, uiKey, title, menuBar, main,
                                       (dialog == null ? null : dialog.getBounds()));
         }
         else {
-            dialog = view.createDialog(tool, uiKey, title, menuBar, main, 
+            dialog = view.createDialog(tool, uiKey, title, menuBar, main,
                                       (dialog == null ? null : dialog.getBounds()));
         }
 
@@ -491,7 +491,7 @@ abstract public class ToolDialog
             if (defaultButton != null) {
                 d.getRootPane().setDefaultButton(defaultButton);
             }
-            
+
             d.addWindowListener(new WindowAdapter() {
                     public void windowActivated(WindowEvent e) {
                         if(defaultButton != null)
@@ -501,7 +501,7 @@ abstract public class ToolDialog
                         windowClosingAction(e);
                     }
             });
-            
+
             d.setDefaultCloseOperation(defaultCloseOperation);
             d.pack();
         }
@@ -516,21 +516,21 @@ abstract public class ToolDialog
                    f.removeInternalFrameListener(this);
                    }
                    });
-                */      
+                */
             }
             f.addInternalFrameListener(new InternalFrameAdapter() {
                 public void internalFrameClosing(InternalFrameEvent e) {
                     windowClosingAction(e);
                 }
             });
-            
+
             f.setDefaultCloseOperation(defaultCloseOperation);
             f.pack();
         }
-        
+
         if (componentListener != null)
             dialog.addComponentListener(componentListener);
-        
+
         if (cancelButton != null) {
             // if there are buttons, main will be a JPanel that we created
             JPanel p = (JPanel) main;
@@ -555,19 +555,19 @@ abstract public class ToolDialog
                         showInfo();
                     }
                 });
-        }           
+        }
 
         dialog.setVisible(visible);
     }
-    
+
     /**
      * This method add to allow subclasses of ToolDialog to change default close operation.
-     * @param operation one of WindowConstants used by JDialog/JInternalFrame 
+     * @param operation one of WindowConstants used by JDialog/JInternalFrame
      * setDefaultCloseOperation method
      */
     protected void setDefaultCloseOperation(int operation) {
         defaultCloseOperation = operation;
-        
+
         if(dialog != null) {
             if(dialog instanceof JDialog) {
                 ((JDialog)dialog).setDefaultCloseOperation(operation);
@@ -577,9 +577,9 @@ abstract public class ToolDialog
             }
         }
     }
-    
+
     /**
-     * this method invokes in Window/JInternalFrame listener (depends on dialog variable 
+     * this method invokes in Window/JInternalFrame listener (depends on dialog variable
      * instance). Should be overwritten in subclass if you want to handle window closing
      * event. You may need to change default close operation first for this event to be fired
      */
@@ -598,7 +598,7 @@ abstract public class ToolDialog
             tool.removeObserver(defaultDisposeHandler);
         }
     }
-            
+
     /**
      * Attempt to close
      */
@@ -614,7 +614,7 @@ abstract public class ToolDialog
     /**
      * Initialize the content pane of the dialog.
      * If there are no buttons, the content pane is simply the client-supplied body;
-     * otherwise, it will be a panel conatining the client-supplied body, with 
+     * otherwise, it will be a panel conatining the client-supplied body, with
      * the buttons below it.
      */
     private void initMain() {
@@ -626,7 +626,7 @@ abstract public class ToolDialog
 
         if (buttons == null || buttons.length == 0)
             main = body;
-        else { 
+        else {
             Container m = uif.createPanel(uiKey + ".main", false);
             m.setLayout(new BorderLayout());
             m.add(body, BorderLayout.CENTER);
@@ -639,9 +639,9 @@ abstract public class ToolDialog
                 maxBtnDims.height = Math.max(maxBtnDims.height, d.height);
             }
 
-            for (int i = 0; i < buttons.length; i++) 
+            for (int i = 0; i < buttons.length; i++)
                 buttons[i].setPreferredSize(maxBtnDims);
-           
+
             Container p = uif.createPanel(uiKey + ".btns", false);
             p.setLayout(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
@@ -650,7 +650,7 @@ abstract public class ToolDialog
             c.insets.bottom = 11;  // value from JL&F Guidelines
             c.insets.right = 11;   // value from JL&F Guidelines
             c.weightx = 1;         // first button absorbs space to the left
-            
+
             for (int i = 0; i < buttons.length; i++) {
                 p.add(buttons[i], c);
                 c.weightx = 0;
@@ -681,14 +681,14 @@ abstract public class ToolDialog
         if (c instanceof Container) {
             Container p = (Container) c;
             System.err.println(" " + p.getComponentCount() + " children");
-            for (int i = 0; i < p.getComponentCount(); i++) 
+            for (int i = 0; i < p.getComponentCount(); i++)
                 showComponent(p.getComponent(i), depth + 1);
         }
         else
             System.err.println();
     }
 
-    /** 
+    /**
      * Parent component of this dialog.
      */
     protected final Component parent;
@@ -698,14 +698,14 @@ abstract public class ToolDialog
      */
     protected final UIFactory uif;
 
-    /** 
+    /**
      * Parent tool of this dialog.
      */
     protected final Tool tool;
 
     private String uiKey;
     private Tool.Observer defaultDisposeHandler;
-    
+
     private Container dialog; // JDialog or JInternalFrame, as provided by desktop
     private String title;
     private JMenuBar menuBar;

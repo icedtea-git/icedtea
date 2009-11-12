@@ -31,29 +31,29 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * This class implements an output stream that has additional methods for 
- * printing. It is similar to java.io.PrintStream except that it does not swallow 
+ * This class implements an output stream that has additional methods for
+ * printing. It is similar to java.io.PrintStream except that it does not swallow
  * exceptions.
  */
 public class TextStream extends FilterOutputStream
 {
     /**
      * Creates a new TextStream.
-     * @param out	the output stream
+     * @param out       the output stream
      */
     public TextStream(OutputStream out) {
-	super(out);
+        super(out);
     }
 
     /**
      * Creates a new TextStream.
-     * @param out	the output stream
+     * @param out       the output stream
      * @param autoflush set to true to flush the stream after each newline character
      * is written
      */
     public TextStream(OutputStream out, boolean autoflush) {
-	super(out);
-	this.autoflush = autoflush;
+        super(out);
+        this.autoflush = autoflush;
     }
 
     /**
@@ -62,25 +62,25 @@ public class TextStream extends FilterOutputStream
      * @throws IOException if there is a problem writing to the stream
      */
     synchronized public void print(String s) throws IOException {
-	if (s == null) {
-	    s = "null";
-	}
+        if (s == null) {
+            s = "null";
+        }
 
-	int len = s.length();
-	for (int i = 0 ; i < len ; i++) {
-	    char c = s.charAt(i);
-	    write(c);
-	    if (autoflush && c == '\n')
-		out.flush();
-	}
+        int len = s.length();
+        for (int i = 0 ; i < len ; i++) {
+            char c = s.charAt(i);
+            write(c);
+            if (autoflush && c == '\n')
+                out.flush();
+        }
     }
-    
+
     /**
      * Prints a newline.
      * @throws IOException if there is a problem writing to the stream
      */
     public void println() throws IOException {
-	write('\n');
+        write('\n');
     }
 
     /**
@@ -89,8 +89,8 @@ public class TextStream extends FilterOutputStream
      * @throws IOException if there is a problem writing to the stream
      */
     synchronized public void println(String s) throws IOException {
-	print(s);
-	write('\n');
+        print(s);
+        write('\n');
     }
 
     private boolean autoflush;

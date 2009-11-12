@@ -70,11 +70,11 @@ import org.xml.sax.SAXException;
  * XML report (dump).
  */
 class XMLReport  {
-    
+
     public void write(CustomReport.ReportEnviroment sett, File dir) throws IOException {
-        
+
         BackupPolicy backupPolicy;
-        
+
         File repFile = new File(dir, REPORT_NAME);
         Writer w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(repFile), XMLReportMaker.XML_CHARSET));
         try {
@@ -83,12 +83,12 @@ class XMLReport  {
             throw new JavaTestError(i18n.getString("report.writing.err"), ex);
         }
         w.close();
-        sett.xmlReportFile = repFile; 
-        
+        sett.xmlReportFile = repFile;
+
     }
-    
+
     public void write(Writer w, CustomReport.ReportEnviroment sett) throws IOException, SAXException {
-        
+
         XMLReportMaker maker = new XMLReportMaker(w);
         maker.sDocument();
         maker.sReport();
@@ -98,27 +98,27 @@ class XMLReport  {
             jti = sett.getIp().getFile();
         }
         maker.sWorkdirectory( jti == null ? null : jti.getPath());
-        
+
         writeTemplateInfo(maker, sett);
         writeInterview(maker, sett);
         writeStandardValues(maker, sett);
         writeEnvironment(maker, sett);
-        
+
         maker.eWorkdirectory();
         maker.eWorkdirectories();
         writeResults(maker, sett);
         maker.eReport();
         maker.eDocument();
-        
+
     }
-    
+
     private void writeResults(final XMLReportMaker maker, final CustomReport.ReportEnviroment sett) throws SAXException, JavaTestError, IOException {
         maker.sTestResults();
-        
+
         File[] initFiles = sett.getInitFiles();
         Iterator iter = null;
         TestResultTable resultTable = sett.getIp().getWorkDirectory().getTestResultTable();
-        
+
         try {
             if (initFiles == null) {
                 iter = resultTable.getIterator(new TestFilter[] {sett.getFilter()});
@@ -134,9 +134,9 @@ class XMLReport  {
             throw new JavaTestError(i18n.getString("report.testResult.err"), f);
         }
     }
-    
+
     private void writeResult(final XMLReportMaker maker, final TestResult testResult) throws SAXException, IOException {
-        
+
         maker.sTestResult(testResult.getTestName(), testResult.getStatus(), 1);
         try {
             writeDescriptionData(maker, testResult);
@@ -150,9 +150,9 @@ class XMLReport  {
             maker.eTestResult();
         }
     }
-    
+
     private void writeSections(final XMLReportMaker maker, final TestResult testResult) throws SAXException, IOException, TestResult.Fault {
-        
+
         maker.sSections();
         for (int i = 0; i < testResult.getSectionCount() ; i++) {
             String st = testResult.getSectionTitles()[i];
@@ -168,11 +168,11 @@ class XMLReport  {
         }
         maker.eSections();
     }
-    
+
     private void writeResultProps(final XMLReportMaker maker, final TestResult testResult) throws SAXException, TestResult.Fault {
-        
+
         String time = testResult.getProperty(TestResult.END);
-        
+
         maker.sResultProps(time);
         Enumeration en = testResult.getPropertyNames();
         while (en.hasMoreElements()) {
@@ -184,9 +184,9 @@ class XMLReport  {
         }
         maker.eResultProps();
     }
-    
+
     private void writeEnvironment(final XMLReportMaker maker, final TestResult testResult) throws SAXException {
-        
+
         Iterator keysIt;
         try {
             Map m = testResult.getEnvironment();
@@ -199,19 +199,19 @@ class XMLReport  {
             }
             maker.eTestEnvironment();
         } catch (TestResult.Fault e) {
-            
+
         }
     }
-    
+
     private void writeDescriptionData(final XMLReportMaker maker, final TestResult testResult) throws SAXException, TestResult.Fault {
         maker.sDescriptionData();
-        
+
         TestDescription td = testResult.getDescription();
         Iterator keysIt = td.getParameterKeys();
-        
+
         maker.makeProperty("$root", td.getRootDir());
         maker.makeProperty("$file", td.getFile().getPath());
-        
+
         while (keysIt.hasNext()) {
             String key = (String) keysIt.next();
             // dump keywords separately
@@ -220,7 +220,7 @@ class XMLReport  {
                 maker.makeProperty(key, val);
             }
         }
-        
+
         String [] kws = td.getKeywords();
         if (kws != null && kws.length > 0 ) {
             maker.sKeyWords();
@@ -229,16 +229,16 @@ class XMLReport  {
         }
         maker.eDescriptionData();
     }
-    
+
     private void writeEnvironment(final XMLReportMaker maker, final CustomReport.ReportEnviroment sett) throws SAXException {
-        
+
         String name = null, descr = null;
-        
+
         if (sett.getIp().getEnv() != null) {
             name = sett.getIp().getEnv().getName();
             descr= sett.getIp().getEnv().getDescription();
         }
-        
+
         maker.sEnvironment(name, descr);
         TestEnvironment env = sett.getIp().getEnv();
         if (env != null) {
@@ -249,7 +249,7 @@ class XMLReport  {
         }
         maker.eEnvironment();
     }
-    
+
     private void writeStandardValues(final XMLReportMaker maker, CustomReport.ReportEnviroment sett) throws SAXException {
         maker.sStdValues();
         writeTestsToRun(maker, sett);
@@ -260,7 +260,7 @@ class XMLReport  {
         writeKeyWords(maker, sett);
         maker.eStdValues();
     }
-    
+
     private void writeKeyWords(final XMLReportMaker maker, final CustomReport.ReportEnviroment sett) throws SAXException {
         // kwywords
         Keywords keywords = sett.getIp().getKeywords();
@@ -269,7 +269,7 @@ class XMLReport  {
             maker.eKeyWords();
         }
     }
-    
+
     private void writeExcludeLists(final XMLReportMaker maker, final CustomReport.ReportEnviroment sett) throws SAXException {
         // Exclude
         ExcludeList excludeList = sett.getIp().getExcludeList();
@@ -279,7 +279,7 @@ class XMLReport  {
             if (exclParams instanceof Parameters.MutableExcludeListParameters)
                 excludeFiles =
                         ((Parameters.MutableExcludeListParameters) (exclParams)).getExcludeFiles();
-            
+
             if (excludeFiles != null && excludeFiles.length > 0) {
                 maker.sExclList();
                 maker.makeItems(excludeFiles);
@@ -287,7 +287,7 @@ class XMLReport  {
             }
         }
     }
-    
+
     private void writePriorStatusList(final XMLReportMaker maker, final CustomReport.ReportEnviroment sett) throws SAXException {
         boolean[] b = sett.getIp().getPriorStatusValues();
         if (b != null) {
@@ -301,7 +301,7 @@ class XMLReport  {
             maker.ePriorStatusList();
         }
     }
-    
+
     private void writeTestsToRun(final XMLReportMaker maker, final CustomReport.ReportEnviroment sett) throws SAXException {
         maker.sTests();
         String [] tests = sett.getIp().getTests();
@@ -326,10 +326,10 @@ class XMLReport  {
             }
         }
     }
-    
-    
+
+
     private void writeInterview(final XMLReportMaker maker, final CustomReport.ReportEnviroment sett) throws SAXException {
-        
+
         maker.sInterview();
         Question [] questions = sett.getIp().getPath();
         for (int i = 0; i < questions.length; i++) {
@@ -346,7 +346,7 @@ class XMLReport  {
         }
         maker.eInterview();
     }
-    
+
     private void writeListQuestion(XMLReportMaker maker, Question q) throws SAXException {
         maker.sListQuestion();
         if (q instanceof TreeQuestion) {
@@ -361,7 +361,7 @@ class XMLReport  {
         }
         maker.eListQuestion();
     }
-    
+
     private void writePropertiesQuestion(XMLReportMaker maker, Question q) throws SAXException {
         maker.sPropertiesQuestion();
         PropertiesQuestion pq = (PropertiesQuestion) q;
@@ -381,7 +381,7 @@ class XMLReport  {
         }
         maker.ePropertiesQuestion();
     }
-    
+
     private void writeChoiceQuestion(XMLReportMaker maker, Question q) throws SAXException {
         maker.sChoiceQuestion();
         if (q instanceof ChoiceQuestion ) {
@@ -396,20 +396,20 @@ class XMLReport  {
         }
         maker.eChoiceQuestion();
     }
-    
+
     private void writeTable(XMLReportMaker maker, String[][] table) throws SAXException {
         if (table != null ) {
-            for (int i=0 ; i < table.length ;i++) { 
+            for (int i=0 ; i < table.length ;i++) {
                 maker.makeRow(table[i][0], table[i][1]);
             }
         }
     }
-    
+
     /**
      * Utility class
      */
     static class Utils {
-        
+
         /**
          * Convert date to string in ISO-8601 or xs:dateTime format
          * @param date Date
@@ -422,7 +422,7 @@ class XMLReport  {
             // remap the timezone from 0000 to 00:00 (starts at char 22)
             return dateStr.substring(0, 22) + ":" + dateStr.substring(22);
         }
-        
+
         /**
          * Convert string from JTR format to java.util.Date
          * @throws java.text.ParseException
@@ -434,7 +434,7 @@ class XMLReport  {
                     Locale.US);
             return df.parse(dateStr);
         }
-        
+
         /**
          * Convert Status object to String
          */
@@ -445,7 +445,7 @@ class XMLReport  {
             if (st.isPassed()) return "PASSED";
             return "UNKNOWN";
         }
-        
+
         /**
          * Convert Status integer value to String
          */
@@ -456,16 +456,16 @@ class XMLReport  {
             if (st == Status.PASSED) return "PASSED";
             return "UNKNOWN";
         }
-        
+
     }
-    
+
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(XMLReport.class);
-    
+
     // The name of the root file for a set of report files.
     static final String REPORT_NAME = "report.xml";
-    
+
     public static String[] getFilenamesUsed() {
         return new String[] {REPORT_NAME};
     }
-    
+
 }

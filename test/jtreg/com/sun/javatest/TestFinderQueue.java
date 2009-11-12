@@ -44,62 +44,62 @@ public class TestFinderQueue {
      */
     public static interface Observer
     {
-	/**
-	 * Another file which needs to be read has been found.
-	 * @param file the file which was found
-	 */
-	void found(File file);
+        /**
+         * Another file which needs to be read has been found.
+         * @param file the file which was found
+         */
+        void found(File file);
 
-	/**
-	 * A file is being read.
-	 * @param file the file being read
-	 */
-	void reading(File file);
+        /**
+         * A file is being read.
+         * @param file the file being read
+         */
+        void reading(File file);
 
-	/** 
-	 * A file has been read.
-	 * @param file the file which was read
-	 */
-	void done(File file);
+        /**
+         * A file has been read.
+         * @param file the file which was read
+         */
+        void done(File file);
 
-	/**
-	 * A test description has been found.
-	 * @param td the test description which was found
-	 */
-	void found(TestDescription td);
+        /**
+         * A test description has been found.
+         * @param td the test description which was found
+         */
+        void found(TestDescription td);
 
-	/**
-	 * A test description which was previously found, has been rejected by
-	 * a test filter, and so has not been put in the queue of tests to be executed.
-	 * @param td the test description which was rejected by the filter
-	 * @param f the filter which rejected the test
-	 */
-	void ignored(TestDescription td, TestFilter f);
+        /**
+         * A test description which was previously found, has been rejected by
+         * a test filter, and so has not been put in the queue of tests to be executed.
+         * @param td the test description which was rejected by the filter
+         * @param f the filter which rejected the test
+         */
+        void ignored(TestDescription td, TestFilter f);
 
-	/**
-	 * A test description that was previously put in the test finder queue
-	 * has been taken from the queue and passed back to the client caller.
-	 * @param td the test description which was taken from the queue
-	 */
-	void done(TestDescription td);
+        /**
+         * A test description that was previously put in the test finder queue
+         * has been taken from the queue and passed back to the client caller.
+         * @param td the test description which was taken from the queue
+         */
+        void done(TestDescription td);
 
-	/**
-	 * The queue of tests has been flushed.
-	 */
-	void flushed();
+        /**
+         * The queue of tests has been flushed.
+         */
+        void flushed();
 
-	/**
-	 * An error was reported by the test finder while reading a file.
-	 * @param msg a detail message describing the error
-	 */
-	void error(String msg);
+        /**
+         * An error was reported by the test finder while reading a file.
+         * @param msg a detail message describing the error
+         */
+        void error(String msg);
 
-	/**
-	 * An error was reported by the test finder while reading a file.
-	 * @param td the test description to which the error applies
-	 * @param msg a detail message describing the error
-	 */
-	void error(TestDescription td, String msg);
+        /**
+         * An error was reported by the test finder while reading a file.
+         * @param td the test description to which the error applies
+         * @param msg a detail message describing the error
+         */
+        void error(TestDescription td, String msg);
     }
 
     /**
@@ -113,7 +113,7 @@ public class TestFinderQueue {
      * @param finder the test finder to be used to read the tests
      */
     public TestFinderQueue(TestFinder finder) {
-	setTestFinder(finder);
+        setTestFinder(finder);
     }
 
     /**
@@ -122,7 +122,7 @@ public class TestFinderQueue {
      * @see #setTestFinder
      */
     public TestFinder getTestFinder() {
-	return testFinder;
+        return testFinder;
     }
 
     /**
@@ -134,19 +134,19 @@ public class TestFinderQueue {
      * @see #getTestFinder
      */
     public void setTestFinder(TestFinder finder) {
-	if (finder == null)
-	    throw new NullPointerException();
+        if (finder == null)
+            throw new NullPointerException();
 
-	if (testFinder != null && testFinder != finder)
-	    throw new IllegalStateException();
+        if (testFinder != null && testFinder != finder)
+            throw new IllegalStateException();
 
-	this.testFinder = finder;
-	testFinder.setErrorHandler(new TestFinder.ErrorHandler() {
-	    public void error(String msg) {
-		errorCount++;
-		notifier.error(msg);
-	    }
-	});
+        this.testFinder = finder;
+        testFinder.setErrorHandler(new TestFinder.ErrorHandler() {
+            public void error(String msg) {
+                errorCount++;
+                notifier.error(msg);
+            }
+        });
     }
 
     /**
@@ -156,7 +156,7 @@ public class TestFinderQueue {
      * @param filters the filters to be used.
      */
     public void setFilters(TestFilter[] filters) {
-	this.filters = filters;
+        this.filters = filters;
     }
 
     /**
@@ -165,51 +165,51 @@ public class TestFinderQueue {
      * @param initTests the initial set of files to be read by the test finder
      */
     public synchronized void setTests(String[] initTests) {
-	File testSuiteRoot = testFinder.getRoot();
+        File testSuiteRoot = testFinder.getRoot();
 
-	// make canonical copy of tests
-	// really ought not to be using File, since the tests may contain a trailing #xxx
-	File[] files;
-	if (initTests == null)
-	    // ensure not null
-	    files = new File[] {testSuiteRoot};
-	else {
-	    files = new File[initTests.length];
-	    for (int i = 0; i < initTests.length; i++) {
-		files[i] = new File(initTests[i]);
-	    }
-	}
-	
-	rootDir = (testSuiteRoot.isDirectory() ?
-		   testSuiteRoot : new File(testSuiteRoot.getParent()));
+        // make canonical copy of tests
+        // really ought not to be using File, since the tests may contain a trailing #xxx
+        File[] files;
+        if (initTests == null)
+            // ensure not null
+            files = new File[] {testSuiteRoot};
+        else {
+            files = new File[initTests.length];
+            for (int i = 0; i < initTests.length; i++) {
+                files[i] = new File(initTests[i]);
+            }
+        }
 
-	// build up the fifo of tests to be used by readNextFile
+        rootDir = (testSuiteRoot.isDirectory() ?
+                   testSuiteRoot : new File(testSuiteRoot.getParent()));
 
-	tests = new Fifo();
-	currInitialFile = null;
+        // build up the fifo of tests to be used by readNextFile
 
-	for (int pass = 0; pass < 2; pass++) {
-	    for (int i = 0; i < files.length; i++) {
-		File f = files[i];
-		String n = f.getName();
-		// in pass 0, only select initial files without #
-		// in pass 1, only select initial files with #
-		if ((n.indexOf("#") != -1) == (pass == 0)) 
-		    continue;
-		    
-		// ensure all absolute, or if relative, make them relative
-		// to rootDir
-		if (!f.isAbsolute())
-		    f = new File(rootDir, f.getPath());
-		// ensure no trailing file separator
-		String p = f.getPath();
-		if (p.endsWith(File.separator))
-		    f = new File(p.substring(0, p.length() - 1));
-		tests.insert(f);
-	    }
-	}
+        tests = new Fifo();
+        currInitialFile = null;
 
-	filesRemainingCount = filesToRead.size() + tests.size();
+        for (int pass = 0; pass < 2; pass++) {
+            for (int i = 0; i < files.length; i++) {
+                File f = files[i];
+                String n = f.getName();
+                // in pass 0, only select initial files without #
+                // in pass 1, only select initial files with #
+                if ((n.indexOf("#") != -1) == (pass == 0))
+                    continue;
+
+                // ensure all absolute, or if relative, make them relative
+                // to rootDir
+                if (!f.isAbsolute())
+                    f = new File(rootDir, f.getPath());
+                // ensure no trailing file separator
+                String p = f.getPath();
+                if (p.endsWith(File.separator))
+                    f = new File(p.substring(0, p.length() - 1));
+                tests.insert(f);
+            }
+        }
+
+        filesRemainingCount = filesToRead.size() + tests.size();
     }
 
     /**
@@ -221,7 +221,7 @@ public class TestFinderQueue {
      * if no tests are found by the time that all files have been read
      */
     public void setZeroTestsOK(boolean zeroTestsOK) {
-	this.zeroTestsOK = zeroTestsOK;
+        this.zeroTestsOK = zeroTestsOK;
     }
 
     /**
@@ -231,14 +231,14 @@ public class TestFinderQueue {
      * @deprecated retained for historical purposes
      */
     public void repeat(TestDescription[] tds) {
-	if (tests == null)
-	    tests = new Fifo(); // for now
-	for (int i = 0; i < tds.length; i++) {
-	    TestDescription td = tds[i];
-	    testDescsFound.insert(td);
-	    testsFoundCount++;
-	    notifier.found(td);
-	}
+        if (tests == null)
+            tests = new Fifo(); // for now
+        for (int i = 0; i < tds.length; i++) {
+            TestDescription td = tds[i];
+            testDescsFound.insert(td);
+            testsFoundCount++;
+            notifier.found(td);
+        }
     }
 
 
@@ -250,25 +250,25 @@ public class TestFinderQueue {
      * @return     A test description or null.
      */
     public TestDescription next() {
-	TestDescription td;
+        TestDescription td;
 
-	synchronized (this) {
-	    while (needReadAhead() && readNextFile()) /*NO-OP*/;
-	    
-	    // read files until there is a test description available or there
-	    // are no more files.
-	    while ((td = (TestDescription)(testDescsFound.remove())) == null) {
-		boolean ok = readNextFile();
-		if (!ok)
-		    return null;
-	    }
-	    
-	    // note testsDone, for readAhead
-	    testsDoneCount++;
-	}
+        synchronized (this) {
+            while (needReadAhead() && readNextFile()) /*NO-OP*/;
 
-	notifier.done(td);
-	return td;
+            // read files until there is a test description available or there
+            // are no more files.
+            while ((td = (TestDescription)(testDescsFound.remove())) == null) {
+                boolean ok = readNextFile();
+                if (!ok)
+                    return null;
+            }
+
+            // note testsDone, for readAhead
+            testsDoneCount++;
+        }
+
+        notifier.done(td);
+        return td;
     }
 
 
@@ -279,11 +279,11 @@ public class TestFinderQueue {
      * @return the root directory, as set in the test finder
      */
     public File getRoot() {
-	return rootDir;
+        return rootDir;
     }
 
     //--------------------------------------------------------------------------
-    // 
+    //
     // these are all carefully arranges to not need to be synchronized
 
     /**
@@ -291,7 +291,7 @@ public class TestFinderQueue {
      * @return the number of files that have been found so far
      */
     public int getFilesFoundCount() {
-	return filesFound.size();
+        return filesFound.size();
     }
 
     /**
@@ -299,7 +299,7 @@ public class TestFinderQueue {
      * @return the number of files that have been found and read so far
      */
     public int getFilesDoneCount() {
-	return filesDoneCount;
+        return filesDoneCount;
     }
 
     /**
@@ -307,7 +307,7 @@ public class TestFinderQueue {
      * @return the number of files that have been found but not yet read so far
      */
     public int getFilesRemainingCount() {
-	return filesRemainingCount;
+        return filesRemainingCount;
     }
 
     /**
@@ -315,7 +315,7 @@ public class TestFinderQueue {
      * @return the number of tests that have been found so far
      */
     public int getTestsFoundCount() {
-	return testsFoundCount;
+        return testsFoundCount;
     }
 
     /**
@@ -323,7 +323,7 @@ public class TestFinderQueue {
      * @return the number of tests that have been read from this object so far
      */
     public int getTestsDoneCount() {
-	return testsDoneCount;
+        return testsDoneCount;
     }
 
     /**
@@ -333,7 +333,7 @@ public class TestFinderQueue {
      * from this object so far
      */
     public int getTestsRemainingCount() {
-	return testDescsFound.size();
+        return testDescsFound.size();
     }
 
     /**
@@ -343,7 +343,7 @@ public class TestFinderQueue {
      * while reading the tests.
      */
     public int getErrorCount() {
-	return errorCount;
+        return errorCount;
     }
 
     //--------------------------------------------------------------------------
@@ -353,7 +353,7 @@ public class TestFinderQueue {
      * @param o the observer
      */
     public void addObserver(Observer o) {
-	notifier.addObserver(o);
+        notifier.addObserver(o);
     }
 
     /**
@@ -362,7 +362,7 @@ public class TestFinderQueue {
      * @param o the observer
      */
     public void removeObserver(Observer o) {
-	notifier.removeObserver(o);
+        notifier.removeObserver(o);
     }
 
     //--------------------------------------------------------------------------
@@ -370,7 +370,7 @@ public class TestFinderQueue {
 
     /**
      * Set the amount of read-ahead done by the finder.
-     * @param mode 	acceptable values are as follows:
+     * @param mode      acceptable values are as follows:
      * <dl> <dt> 0: no read ahead
      * <dd> Files are not read ahead more than necessary
      * <dt> 1: low read ahead
@@ -386,61 +386,61 @@ public class TestFinderQueue {
      * </dl>
      */
     public synchronized void setReadAheadMode(byte mode) {
-	switch (mode) {
-	case NO_READ_AHEAD:
-	case FULL_READ_AHEAD:
-	    readAheadMode = mode;
-	    readAheadWorker = null; // worker will note this and go away
-	    break;
+        switch (mode) {
+        case NO_READ_AHEAD:
+        case FULL_READ_AHEAD:
+            readAheadMode = mode;
+            readAheadWorker = null; // worker will note this and go away
+            break;
 
-	case LOW_READ_AHEAD:
-	case MEDIUM_READ_AHEAD:
-	    readAheadMode = mode;
-	    if (readAheadWorker == null) {
-		readAheadWorker = new Thread() {
-		    public void run() {
-			// This is intended to be interruptible and
-			// relies on safe atomic access to worker
-			while ((readAheadWorker == this) && readNextFile()) /*NO-OP*/;
-			// when thread exits; flatten pointer if still current
-			synchronized (TestFinderQueue.this) {
-			    if (readAheadWorker == this)
-				readAheadWorker = null;
-			}
-		    }
-		};
-		readAheadWorker.setName("TestFinderQueue:Worker:" + workerIndex++);
-		readAheadWorker.setPriority(Thread.MIN_PRIORITY);
-		readAheadWorker.start();
-	    }
-	    break;
+        case LOW_READ_AHEAD:
+        case MEDIUM_READ_AHEAD:
+            readAheadMode = mode;
+            if (readAheadWorker == null) {
+                readAheadWorker = new Thread() {
+                    public void run() {
+                        // This is intended to be interruptible and
+                        // relies on safe atomic access to worker
+                        while ((readAheadWorker == this) && readNextFile()) /*NO-OP*/;
+                        // when thread exits; flatten pointer if still current
+                        synchronized (TestFinderQueue.this) {
+                            if (readAheadWorker == this)
+                                readAheadWorker = null;
+                        }
+                    }
+                };
+                readAheadWorker.setName("TestFinderQueue:Worker:" + workerIndex++);
+                readAheadWorker.setPriority(Thread.MIN_PRIORITY);
+                readAheadWorker.start();
+            }
+            break;
 
-	default:
-	    throw new IllegalArgumentException("invalid value for mode");
-	}
+        default:
+            throw new IllegalArgumentException("invalid value for mode");
+        }
     }
 
     /**
-     * A constant specifying that the test finder queue should not perform 
+     * A constant specifying that the test finder queue should not perform
      * any read ahead.
      */
     public static final byte NO_READ_AHEAD = 0;
 
-    /** 
+    /**
      * A constant specifying the test finder queue should perform minimal
      * read ahead.
      */
     public static final byte LOW_READ_AHEAD = 1;
 
-    /** 
+    /**
      * A constant specifying the test finder queue should perform medium
      * (typical) read ahead.
      */
     public static final byte MEDIUM_READ_AHEAD = 2;
 
-    /** 
+    /**
      * A constant specifying the test finder queue should perform complete
-     * read ahead, reading all tests from the test finder before returning any 
+     * read ahead, reading all tests from the test finder before returning any
      * from this object.
      */
     public static final byte FULL_READ_AHEAD = 3;
@@ -449,13 +449,13 @@ public class TestFinderQueue {
      * Flush all readahead.
      */
     public void flush() {
-	synchronized (this) {
-	    filesToRead.setSize(0);
-	    tests.flush();
-	    testDescsFound.flush();
-	    filesRemainingCount = 0;
-	}
-	notifier.flushed();
+        synchronized (this) {
+            filesToRead.setSize(0);
+            tests.flush();
+            testDescsFound.flush();
+            filesRemainingCount = 0;
+        }
+        notifier.flushed();
     }
 
 
@@ -465,116 +465,116 @@ public class TestFinderQueue {
      * for the client.
      */
     private boolean needReadAhead() {
-	switch (readAheadMode) {
-	case FULL_READ_AHEAD:
-	    return true;
-	case MEDIUM_READ_AHEAD:
-	    // return true if not many tests read yet, or if testsDoneCount
-	    // is greater than a certain percentage of testsFoundCount.
-	    // This percentage increases inverse exponentially on the
-	    // number of tests found. The intent is to try and keep
-	    // progress meters based on testsDoneCount and testsFoundCount helpful,
-	    // while permitting readAhead to be done.
-	    // The formula has the following datapoints:
-	    // testsFoundCount: 1000   percent: 18%
-	    // testsFoundCount: 10000  percent: 86%
-	    if (testsFoundCount < 100)
-		// don't let tests start until at least 100 have been read
-		return true;
-	    else {
-		double percent = 1 - Math.exp(-0.0002 * testsFoundCount);
-		return (testsDoneCount > (testsFoundCount * percent));
-	    }
-	default:
-	    return false;
-	}
+        switch (readAheadMode) {
+        case FULL_READ_AHEAD:
+            return true;
+        case MEDIUM_READ_AHEAD:
+            // return true if not many tests read yet, or if testsDoneCount
+            // is greater than a certain percentage of testsFoundCount.
+            // This percentage increases inverse exponentially on the
+            // number of tests found. The intent is to try and keep
+            // progress meters based on testsDoneCount and testsFoundCount helpful,
+            // while permitting readAhead to be done.
+            // The formula has the following datapoints:
+            // testsFoundCount: 1000   percent: 18%
+            // testsFoundCount: 10000  percent: 86%
+            if (testsFoundCount < 100)
+                // don't let tests start until at least 100 have been read
+                return true;
+            else {
+                double percent = 1 - Math.exp(-0.0002 * testsFoundCount);
+                return (testsDoneCount > (testsFoundCount * percent));
+            }
+        default:
+            return false;
+        }
     }
 
     //---------------------------------------------------------------
 
     private synchronized boolean readNextFile() {
-	if (filesToRead.isEmpty()) {
-	    // have we finished reading an initial file and found no test descriptions in it?
-	    // if so, inform the caller
-	    if (currInitialFile != null 
-		&& testsFoundCountBeforeCurrInitialFile == testsFoundCount
-		&& !zeroTestsOK) {
-		errorCount++;
-		notifier.error(i18n.getString("finder.noTests", currInitialFile));
-	    }
+        if (filesToRead.isEmpty()) {
+            // have we finished reading an initial file and found no test descriptions in it?
+            // if so, inform the caller
+            if (currInitialFile != null
+                && testsFoundCountBeforeCurrInitialFile == testsFoundCount
+                && !zeroTestsOK) {
+                errorCount++;
+                notifier.error(i18n.getString("finder.noTests", currInitialFile));
+            }
 
-	    // are there any more tests that have not been read?
-	    // check until we find one (just one).
-	    while (filesToRead.isEmpty() && !tests.isEmpty()) {
-		currInitialFile = (File)tests.remove();
-		foundFile(currInitialFile);
-	    }
+            // are there any more tests that have not been read?
+            // check until we find one (just one).
+            while (filesToRead.isEmpty() && !tests.isEmpty()) {
+                currInitialFile = (File)tests.remove();
+                foundFile(currInitialFile);
+            }
 
-	    // if we didn't find any more initial files, there is nothing more to do
-	    if (filesToRead.isEmpty()) {
-		currInitialFile = null;
-		return false;
-	    }
-	    else 
-		testsFoundCountBeforeCurrInitialFile = testsFoundCount;
-	}
+            // if we didn't find any more initial files, there is nothing more to do
+            if (filesToRead.isEmpty()) {
+                currInitialFile = null;
+                return false;
+            }
+            else
+                testsFoundCountBeforeCurrInitialFile = testsFoundCount;
+        }
 
 
-	File f = (File)(filesToRead.lastElement());
-	filesToRead.setSize(filesToRead.size() - 1);
-	filesRemainingCount = filesToRead.size() + tests.size();
+        File f = (File)(filesToRead.lastElement());
+        filesToRead.setSize(filesToRead.size() - 1);
+        filesRemainingCount = filesToRead.size() + tests.size();
 
-	String path = f.getPath();
-	int index = path.indexOf('#');
-	if (index != -1) {
-	    selectedId = path.substring(index + 1);
-	    f = new File(path.substring(0, index));
-	}
+        String path = f.getPath();
+        int index = path.indexOf('#');
+        if (index != -1) {
+            selectedId = path.substring(index + 1);
+            f = new File(path.substring(0, index));
+        }
 
-	// The filesToRead are maintained in a vector that approximates a stack:
-	// new entries are added at or near the end, and entries are taken from
-	// the end. The subtlety is to add the new files found in file in reverse
-	// order, so that when removed from the end, they are used in the
-	// correct order. This is done by inserting each new file found at a fixed
-	// place, corresponding to the end of the vector as it is when scan() starts.
-	// The net effect is to push up files added earlier in this scan, so they
-	// they will be used first.   The overall net effect is that of a depth-first
-	// search for test descriptions.
-	fileInsertPosn = filesToRead.size();
+        // The filesToRead are maintained in a vector that approximates a stack:
+        // new entries are added at or near the end, and entries are taken from
+        // the end. The subtlety is to add the new files found in file in reverse
+        // order, so that when removed from the end, they are used in the
+        // correct order. This is done by inserting each new file found at a fixed
+        // place, corresponding to the end of the vector as it is when scan() starts.
+        // The net effect is to push up files added earlier in this scan, so they
+        // they will be used first.   The overall net effect is that of a depth-first
+        // search for test descriptions.
+        fileInsertPosn = filesToRead.size();
 
-	notifier.reading(f);
-	try {
-	    testFinder.read(f);
-	}
-	finally {
-	    TestDescription[] tds = testFinder.getTests();
-	    for (int i = 0; i < tds.length; i++) {
-		foundTestDescription(tds[i]);
-	    }
+        notifier.reading(f);
+        try {
+            testFinder.read(f);
+        }
+        finally {
+            TestDescription[] tds = testFinder.getTests();
+            for (int i = 0; i < tds.length; i++) {
+                foundTestDescription(tds[i]);
+            }
 
-	    File[] files = testFinder.getFiles();
-	    for (int i = 0; i < files.length; i++) {
-		foundFile(files[i]);
-	    }
+            File[] files = testFinder.getFiles();
+            for (int i = 0; i < files.length; i++) {
+                foundFile(files[i]);
+            }
 
-	    // done limiting tests to this id
-	    selectedId = null;
-	    filesDoneCount++;
-	    notifier.done(f);
-	    
-	    /*
-	    if (filesToRead.isEmpty()) {
-		// we have read all the files we can
-		// flush various tables to free up any space used
-		filesFound.clear();
-		testsInFile.clear();
-	    }
-	    */
-	    
-	}
+            // done limiting tests to this id
+            selectedId = null;
+            filesDoneCount++;
+            notifier.done(f);
 
-	// read a file OK
-	return true;
+            /*
+            if (filesToRead.isEmpty()) {
+                // we have read all the files we can
+                // flush various tables to free up any space used
+                filesFound.clear();
+                testsInFile.clear();
+            }
+            */
+
+        }
+
+        // read a file OK
+        return true;
     }
 
     /**
@@ -585,101 +585,101 @@ public class TestFinderQueue {
      * @param newFile The file to be queued
      */
     private void foundFile(File newFile) {
-	// only accept new files if not looking for a specific test in the
-	// current file
-	if (selectedId == null) {
-	    Object prev = filesFound.put(newFile.getPath(), newFile);
-	    if (prev == null) {
-		filesToRead.insertElementAt(newFile, fileInsertPosn);
-		notifier.found(newFile);
-	    }
-	}
+        // only accept new files if not looking for a specific test in the
+        // current file
+        if (selectedId == null) {
+            Object prev = filesFound.put(newFile.getPath(), newFile);
+            if (prev == null) {
+                filesToRead.insertElementAt(newFile, fileInsertPosn);
+                notifier.found(newFile);
+            }
+        }
     }
 
     private void foundTestDescription(TestDescription td) {
-	// if we are not searching for a specific test, or if we are and we have
-	// found it, then add the test to the list of tests we have found
-	if (selectedId == null || selectedId.equals(td.getId())) {
-	    if (filters != null) {
-		for (int i = 0; i < filters.length; i++) {
-		    TestFilter filter = filters[i];
-		    try {
-			if (!filter.accepts(td)) {
-			    notifier.ignored(td, filter);
-			    return;
-			}
-		    }
-		    catch (TestFilter.Fault e) {
-			errorCount++;
-			notifier.error(td, e.getMessage());
-			return;
-		    }
-		}
-	    }
+        // if we are not searching for a specific test, or if we are and we have
+        // found it, then add the test to the list of tests we have found
+        if (selectedId == null || selectedId.equals(td.getId())) {
+            if (filters != null) {
+                for (int i = 0; i < filters.length; i++) {
+                    TestFilter filter = filters[i];
+                    try {
+                        if (!filter.accepts(td)) {
+                            notifier.ignored(td, filter);
+                            return;
+                        }
+                    }
+                    catch (TestFilter.Fault e) {
+                        errorCount++;
+                        notifier.error(td, e.getMessage());
+                        return;
+                    }
+                }
+            }
 
-	    testDescsFound.insert(td);
-	    testsFoundCount++;
-	    notifier.found(td);
-	}
+            testDescsFound.insert(td);
+            testsFoundCount++;
+            notifier.found(td);
+        }
     }
 
     //---------------------------------------------------------------
 
     private static class Notifier implements Observer {
-	public synchronized void addObserver(Observer o) {
-	    observers = (Observer[])DynamicArray.append(observers, o);
-	}
+        public synchronized void addObserver(Observer o) {
+            observers = (Observer[])DynamicArray.append(observers, o);
+        }
 
-	public synchronized void removeObserver(Observer o) {
-	    observers = (Observer[])DynamicArray.remove(observers, o);
-	}
-	
-	public synchronized void found(File file) {
-	    for (int i = 0; i < observers.length; i++)
-		observers[i].found(file);
-	}
-	
-	public synchronized void reading(File file) {
-	    for (int i = 0; i < observers.length; i++)
-		observers[i].reading(file);
-	}
-	
-	public synchronized void done(File file) {
-	    for (int i = 0; i < observers.length; i++)
-		observers[i].done(file);
-	}
-	
-	public synchronized void found(TestDescription td) {
-	    for (int i = 0; i < observers.length; i++)
-		observers[i].found(td);
-	}
-	
-	public synchronized void ignored(TestDescription td, TestFilter f) {
-	    for (int i = 0; i < observers.length; i++)
-		observers[i].ignored(td, f);
-	}
-	
-	public synchronized void done(TestDescription td) {
-	    for (int i = 0; i < observers.length; i++)
-		observers[i].done(td);
-	}
-	
-	public synchronized void flushed() {
-	    for (int i = 0; i < observers.length; i++)
-		observers[i].flushed();
-	}
-	
-	public synchronized void error(String msg) {
-	    for (int i = 0; i < observers.length; i++)
-		observers[i].error(msg);
-	}
-	
-	public synchronized void error(TestDescription td, String msg) {
-	    for (int i = 0; i < observers.length; i++)
-		observers[i].error(td, msg);
-	}
+        public synchronized void removeObserver(Observer o) {
+            observers = (Observer[])DynamicArray.remove(observers, o);
+        }
 
-	private Observer[] observers = new Observer[0];
+        public synchronized void found(File file) {
+            for (int i = 0; i < observers.length; i++)
+                observers[i].found(file);
+        }
+
+        public synchronized void reading(File file) {
+            for (int i = 0; i < observers.length; i++)
+                observers[i].reading(file);
+        }
+
+        public synchronized void done(File file) {
+            for (int i = 0; i < observers.length; i++)
+                observers[i].done(file);
+        }
+
+        public synchronized void found(TestDescription td) {
+            for (int i = 0; i < observers.length; i++)
+                observers[i].found(td);
+        }
+
+        public synchronized void ignored(TestDescription td, TestFilter f) {
+            for (int i = 0; i < observers.length; i++)
+                observers[i].ignored(td, f);
+        }
+
+        public synchronized void done(TestDescription td) {
+            for (int i = 0; i < observers.length; i++)
+                observers[i].done(td);
+        }
+
+        public synchronized void flushed() {
+            for (int i = 0; i < observers.length; i++)
+                observers[i].flushed();
+        }
+
+        public synchronized void error(String msg) {
+            for (int i = 0; i < observers.length; i++)
+                observers[i].error(msg);
+        }
+
+        public synchronized void error(TestDescription td, String msg) {
+            for (int i = 0; i < observers.length; i++)
+                observers[i].error(td, msg);
+        }
+
+        private Observer[] observers = new Observer[0];
     }
 
     //----------member variables------------------------------------------------

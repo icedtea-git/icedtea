@@ -36,37 +36,37 @@ import java.util.Map;
 /**
  * A class to provide access to OS environment variables, by means of
  * an external command which is executed.
- * 
+ *
  * The command will be executed when the first acces is made to the
  * environment variables. The command name is determined as follows:
  * <ul>
  * <li> The value passed to setCommand, if that has been set
- * <li> The value of the system property "javatest.sysEnv.command", 
+ * <li> The value of the system property "javatest.sysEnv.command",
  *      if that has been set
- * <li> An OS-specific default, if one is known. The current set of 
- * 	defaults is as follows:
+ * <li> An OS-specific default, if one is known. The current set of
+ *      defaults is as follows:
  *      <table>
- *	<tr><th>OS		<th>Default
- *      <tr><td>Mac OS X 	<td>/usr/bin/env
- *      <tr><td>Solaris 	<td>/usr/bin/env
- *      <tr><td>Windows XP	<td>cmd /c set
- *	</table>
- * <li> Finally, a simple default of "env" is used. While this may not 
+ *      <tr><th>OS              <th>Default
+ *      <tr><td>Mac OS X        <td>/usr/bin/env
+ *      <tr><td>Solaris         <td>/usr/bin/env
+ *      <tr><td>Windows XP      <td>cmd /c set
+ *      </table>
+ * <li> Finally, a simple default of "env" is used. While this may not
  *      always work by default, a user could provide a suitable script
  *      or batch file on the current execution path that will yield the
  *      required results.
  * </ul>
  *
- * <p> Note that the specified command will be invoked by Runtime.exec and 
+ * <p> Note that the specified command will be invoked by Runtime.exec and
  * must be capable or working as such. This may preclude direct use of
- * builtin commands on some systems. For example, you cannot directly 
+ * builtin commands on some systems. For example, you cannot directly
  * exec the Windows "set" command built in to the standard Windows
  * command shell.
  *
  * <p> The command must print out a series of lines of the form <i>name</i>=<i>value</i>,
  * one for each environment variable.
  */
-public class SysEnv 
+public class SysEnv
 {
     /**
      * Set the command to be executed to access the OS environment variables.
@@ -74,7 +74,7 @@ public class SysEnv
      * @param cmd the command to be executed
      */
     public static void setCommand(String cmd) {
-	command = cmd;
+        command = cmd;
     }
 
     /**
@@ -83,10 +83,10 @@ public class SysEnv
      * @return the value of the environment variable if set, or null if not
      */
     public static String get(String name) {
-	if (values == null)
-	    initValues();
+        if (values == null)
+            initValues();
 
-	return (String) (values.get(name));
+        return (String) (values.get(name));
     }
 
     /**
@@ -95,7 +95,7 @@ public class SysEnv
      * @return a map containing all the known environment variables.
      */
     public static Map getAll() {
-	return getAll(new HashMap());
+        return getAll(new HashMap());
     }
 
     /**
@@ -106,68 +106,68 @@ public class SysEnv
      * @return the argument map.
      */
     public static Map getAll(Map m) {
-	if (values == null)
-	    initValues();
+        if (values == null)
+            initValues();
 
-	m.putAll(values);
-	return m;
+        m.putAll(values);
+        return m;
     }
 
     private static void initValues() {
-	values = new HashMap();
+        values = new HashMap();
 
-	if (command == null)
-	    command = getDefaultCommand();
+        if (command == null)
+            command = getDefaultCommand();
 
-	if (command == null)
-	    return;
+        if (command == null)
+            return;
 
-	try {
-	    Process p = Runtime.getRuntime().exec(command);
-	    
-	    InputStream pin = p.getInputStream(); // sysout from the process
-	    DataInputStream in = new DataInputStream(new BufferedInputStream(pin));
-	    
-	    String line;
-	    while ((line = in.readLine()) != null) {
-		int eq = line.indexOf('=');
-		if (eq == -1)
-		    continue;
-		String name = line.substring(0, eq);
-		String value = line.substring(eq + 1);
-		values.put(name, value);
-	    }
-	    
-	    in.close();
-	    
-	    p.getErrorStream().close();
-	    p.getOutputStream().close();
-	}
-	catch (IOException e) {
-	    System.err.println(i18n.getString("sysEnv.err", e));
-	}
+        try {
+            Process p = Runtime.getRuntime().exec(command);
+
+            InputStream pin = p.getInputStream(); // sysout from the process
+            DataInputStream in = new DataInputStream(new BufferedInputStream(pin));
+
+            String line;
+            while ((line = in.readLine()) != null) {
+                int eq = line.indexOf('=');
+                if (eq == -1)
+                    continue;
+                String name = line.substring(0, eq);
+                String value = line.substring(eq + 1);
+                values.put(name, value);
+            }
+
+            in.close();
+
+            p.getErrorStream().close();
+            p.getOutputStream().close();
+        }
+        catch (IOException e) {
+            System.err.println(i18n.getString("sysEnv.err", e));
+        }
     }
 
     private static String getDefaultCommand() {
-	String prop = System.getProperty("javatest.sysEnv.command");
-	if (prop != null)
-	    return prop;
+        String prop = System.getProperty("javatest.sysEnv.command");
+        if (prop != null)
+            return prop;
 
-	String osName = System.getProperty("os.name");
+        String osName = System.getProperty("os.name");
 
-	if (osName.equalsIgnoreCase("SunOS")
-	    || osName.equalsIgnoreCase("Linux")
-	    || osName.equalsIgnoreCase("Mac OS X"))
-	    return "/usr/bin/env";
-	
-	if (osName.equalsIgnoreCase("Windows XP")
-	    || osName.equalsIgnoreCase("Windows 2000"))  // tested
-	    return "cmd /c set";
+        if (osName.equalsIgnoreCase("SunOS")
+            || osName.equalsIgnoreCase("Linux")
+            || osName.equalsIgnoreCase("Mac OS X"))
+            return "/usr/bin/env";
 
-	if (osName.toLowerCase().startsWith("windows")) // not yet tested
-	    return "cmd /c set";
+        if (osName.equalsIgnoreCase("Windows XP")
+            || osName.equalsIgnoreCase("Windows 2000"))  // tested
+            return "cmd /c set";
 
-	return "env"; // best guess
+        if (osName.toLowerCase().startsWith("windows")) // not yet tested
+            return "cmd /c set";
+
+        return "env"; // best guess
     }
 
     private static String command;

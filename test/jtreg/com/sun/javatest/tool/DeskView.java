@@ -56,7 +56,7 @@ import com.sun.javatest.util.I18NResourceBundle;
 import com.sun.javatest.util.PrefixMap;
 import com.sun.javatest.util.StringArray;
 
-/** 
+/**
  * A deskview defines the abstract behavior of a style of desktop,
  * such as MDI, SDI, or tabbed.
  * @see Desktop
@@ -67,45 +67,45 @@ abstract class DeskView {
      */
     static class Fault extends Exception
     {
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 */
-	Fault(I18NResourceBundle i18n, String s) {
-	    super(i18n.getString(s));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         */
+        Fault(I18NResourceBundle i18n, String s) {
+            super(i18n.getString(s));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An argument to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	Fault(I18NResourceBundle i18n, String s, Object o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An argument to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        Fault(I18NResourceBundle i18n, String s, Object o) {
+            super(i18n.getString(s, o));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An array of arguments to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	Fault(I18NResourceBundle i18n, String s, Object[] o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An array of arguments to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        Fault(I18NResourceBundle i18n, String s, Object[] o) {
+            super(i18n.getString(s, o));
+        }
     }
 
     protected DeskView(Desktop desktop) {
-	this.desktop = desktop;
-	uif = new UIFactory(getClass());
+        this.desktop = desktop;
+        uif = new UIFactory(getClass());
     }
 
     public Desktop getDesktop() {
-	return desktop;
+        return desktop;
     }
 
     /**
@@ -115,18 +115,18 @@ abstract class DeskView {
      * @see #access
      */
     public void dispose() {
-	Tool[] tools = getTools();
-	for (int i = 0; i < tools.length; i++)
-	    tools[i].dispose();
+        Tool[] tools = getTools();
+        for (int i = 0; i < tools.length; i++)
+            tools[i].dispose();
 
-	/*
-	if (this == theOne) {
-	    theOne = null;
-	    if (helpBroker != null && helpBroker.isDisplayed()) {
-		helpBroker.setDisplayed(false);
-	    }
-	}
-	*/
+        /*
+        if (this == theOne) {
+            theOne = null;
+            if (helpBroker != null && helpBroker.isDisplayed()) {
+                helpBroker.setDisplayed(false);
+            }
+        }
+        */
     }
 
     /**
@@ -143,13 +143,13 @@ abstract class DeskView {
      */
     public abstract void setVisible(boolean v);
 
-    /** 
+    /**
      * Check whether the desktop is empty of any tools.
      * @return true if there are no tools on the desktop, and false otherwise
      */
     public abstract boolean isEmpty();
 
-    /** 
+    /**
      * Get the set of tools currently on the desktop.
      * @return the set of tools currently on the desktop
      */
@@ -209,10 +209,10 @@ abstract class DeskView {
      *         is available.
      */
     public Component getDialogParent() {
-	JFrame[] frames = getFrames();
-	if (frames == null || frames.length == 0)
-	    return null;
-	return frames[0].getContentPane();
+        JFrame[] frames = getFrames();
+        if (frames == null || frames.length == 0)
+            return null;
+        return frames[0].getContentPane();
     }
 
     /**
@@ -228,15 +228,15 @@ abstract class DeskView {
      * of the default desktop.
      */
     public static Rectangle getDefaultBounds() {
-	GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	Rectangle mwb = ge.getMaximumWindowBounds();
-	int w = Math.min(mwb.width, Math.max(640, mwb.width * 3 / 4));
-	int h = Math.min(mwb.height, Math.max(480, mwb.height * 3 / 4));
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        Rectangle mwb = ge.getMaximumWindowBounds();
+        int w = Math.min(mwb.width, Math.max(640, mwb.width * 3 / 4));
+        int h = Math.min(mwb.height, Math.max(480, mwb.height * 3 / 4));
 
-	int x = ge.getCenterPoint().x - w/2;
-	int y = ge.getCenterPoint().y - h/2;
+        int x = ge.getCenterPoint().x - w/2;
+        int y = ge.getCenterPoint().y - h/2;
 
-	return new Rectangle(x, y, w, h);
+        return new Rectangle(x, y, w, h);
     }
 
     /**
@@ -248,7 +248,7 @@ abstract class DeskView {
      * @return a new top level frame for the desktop
      */
     protected JFrame createFrame(MenuListener winMenuListener, String uiKey) {
-	return createFrame(winMenuListener, null, uiKey);
+        return createFrame(winMenuListener, null, uiKey);
     }
 
     /**
@@ -262,85 +262,85 @@ abstract class DeskView {
      * @return a new top level frame for the desktop
      */
     protected JFrame createFrame(MenuListener winMenuListener, Action fileCloseAction,
-				 String uiKey) {
-	JFrame frame = new JFrame();
-	frame.setName(uiKey + ":" + (frameIndex++));
-	frame.setTitle(uif.getI18NString("dt.title.txt"));
-	frame.setIconImage(uif.createImage("images/jticon.gif"));
-	uif.setAccessibleInfo(frame, uiKey);
+                                 String uiKey) {
+        JFrame frame = new JFrame();
+        frame.setName(uiKey + ":" + (frameIndex++));
+        frame.setTitle(uif.getI18NString("dt.title.txt"));
+        frame.setIconImage(uif.createImage("images/jticon.gif"));
+        uif.setAccessibleInfo(frame, uiKey);
 
-	JRootPane root = frame.getRootPane();
-	root.setName("root");
-	uif.setAccessibleInfo(root, uiKey); // same as for frame, deliberate
+        JRootPane root = frame.getRootPane();
+        root.setName("root");
+        uif.setAccessibleInfo(root, uiKey); // same as for frame, deliberate
 
-	//System.err.println("DT: createFrame");
+        //System.err.println("DT: createFrame");
 
-	JMenuBar mb = uif.createMenuBar("dt.menuBar");
-	JMenu fileMenu = uif.createMenu("dt.file");
-	// fileMenu is populated dynamically by FileMenuListener
-	fileMenu.addMenuListener(new FileMenuListener(fileCloseAction));
-	mb.add(fileMenu);
+        JMenuBar mb = uif.createMenuBar("dt.menuBar");
+        JMenu fileMenu = uif.createMenu("dt.file");
+        // fileMenu is populated dynamically by FileMenuListener
+        fileMenu.addMenuListener(new FileMenuListener(fileCloseAction));
+        mb.add(fileMenu);
 
-	JMenu toolMenu = uif.createMenu("dt.tasks");
-	// could dynamically create this list when menu invoked
-	ToolManager[] mgrs = desktop.getToolManagers();
-	for (int i = 0; i < mgrs.length; i++) {
-	    //Action[] actions = mgrs[i].getTaskMenuActions();
-	    Action[] actions = mgrs[i].getWindowOpenMenuActions();  // method name is out of date
-	    if (actions != null) {
-		for (int j = 0; j < actions.length; j++) 
-		    toolMenu.add(actions[j]);
-	    }
-	}
+        JMenu toolMenu = uif.createMenu("dt.tasks");
+        // could dynamically create this list when menu invoked
+        ToolManager[] mgrs = desktop.getToolManagers();
+        for (int i = 0; i < mgrs.length; i++) {
+            //Action[] actions = mgrs[i].getTaskMenuActions();
+            Action[] actions = mgrs[i].getWindowOpenMenuActions();  // method name is out of date
+            if (actions != null) {
+                for (int j = 0; j < actions.length; j++)
+                    toolMenu.add(actions[j]);
+            }
+        }
         mb.add(toolMenu);
 
-        JMenu winMenu = uif.createMenu("dt.windows");  
-	// winMenu is populated dynamically by WinMenuListener
-	winMenu.addMenuListener(winMenuListener);
-	mb.add(winMenu);
+        JMenu winMenu = uif.createMenu("dt.windows");
+        // winMenu is populated dynamically by WinMenuListener
+        winMenu.addMenuListener(winMenuListener);
+        mb.add(winMenu);
 
-	mb.add(uif.createHorizontalGlue("dt.pad"));
+        mb.add(uif.createHorizontalGlue("dt.pad"));
 
-	JMenu helpMenu = new HelpMenu(frame, desktop, uif);
-	mb.add(helpMenu);
+        JMenu helpMenu = new HelpMenu(frame, desktop, uif);
+        mb.add(helpMenu);
 
-	frame.setJMenuBar(mb);
+        frame.setJMenuBar(mb);
 
-	Desktop.addPreferredSizeDebugListener(frame);
+        Desktop.addPreferredSizeDebugListener(frame);
 
-	if (focusMonitor != null)
-	    focusMonitor.monitor(frame);
-	
-	frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-	frame.addWindowListener(new WindowAdapter() {
-	    public void windowClosed(WindowEvent e) { 
-		// WARNING: this event may be called more than once
-		// so only do post-processing the first time it is called
-		// for this window
-		final JFrame frame = (JFrame) (e.getSource());
-		//System.err.println("DT: closed " + frame.getTitle());
-		synchronized (allFrames) {
-		    if (allFrames.remove(frame) && allFrames.isEmpty()) {
-			// defer until outstanding events are processed
-			EventQueue.invokeLater(new Runnable() {
-			    public void run() {
-				ExitCount.dec();
-			    }
-			});
-		    }
-		}
-	    }
-	});
+        if (focusMonitor != null)
+            focusMonitor.monitor(frame);
 
-	synchronized (allFrames) {
-	    allFrames.add(frame);
-	    if (allFrames.size() == 1)
-		ExitCount.inc();
-	}
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosed(WindowEvent e) {
+                // WARNING: this event may be called more than once
+                // so only do post-processing the first time it is called
+                // for this window
+                final JFrame frame = (JFrame) (e.getSource());
+                //System.err.println("DT: closed " + frame.getTitle());
+                synchronized (allFrames) {
+                    if (allFrames.remove(frame) && allFrames.isEmpty()) {
+                        // defer until outstanding events are processed
+                        EventQueue.invokeLater(new Runnable() {
+                            public void run() {
+                                ExitCount.dec();
+                            }
+                        });
+                    }
+                }
+            }
+        });
 
-	//System.err.println("DT: createFrame done");
+        synchronized (allFrames) {
+            allFrames.add(frame);
+            if (allFrames.size() == 1)
+                ExitCount.inc();
+        }
 
-	return frame;
+        //System.err.println("DT: createFrame done");
+
+        return frame;
     }
 
     /**
@@ -350,56 +350,56 @@ abstract class DeskView {
      * @param tool the tool to get the menu items from
      */
     protected void addToolMenuItemsToFrameMenuBar(JFrame frame, Tool tool) {
-	JMenuBar frameMenuBar = frame.getJMenuBar();
-	Tool curr = (Tool)(frameMenuBar.getClientProperty(getClass()));
-	if (tool == curr)
-	    return;
-	else if (curr != null)
-	    removeToolMenuItemsFromFrameMenuBar(frame, curr);
+        JMenuBar frameMenuBar = frame.getJMenuBar();
+        Tool curr = (Tool)(frameMenuBar.getClientProperty(getClass()));
+        if (tool == curr)
+            return;
+        else if (curr != null)
+            removeToolMenuItemsFromFrameMenuBar(frame, curr);
 
-	JMenuBar toolMenuBar = tool.getMenuBar();
-	if (toolMenuBar == null)
-	    return;
+        JMenuBar toolMenuBar = tool.getMenuBar();
+        if (toolMenuBar == null)
+            return;
 
-	for (int i = 0; i < toolMenuBar.getMenuCount(); i++) {
-	    JMenu toolMenu = toolMenuBar.getMenu(i);
-	    if (toolMenu == null)
-		// null if i'th item not a menu, e.g. glue
-		continue;
+        for (int i = 0; i < toolMenuBar.getMenuCount(); i++) {
+            JMenu toolMenu = toolMenuBar.getMenu(i);
+            if (toolMenu == null)
+                // null if i'th item not a menu, e.g. glue
+                continue;
 
-	    int toolMenuSize = toolMenu.getMenuComponentCount();
-	    JMenu frameMenu = findMenu(frameMenuBar, toolMenu.getText());
-	    if (frameMenu == null) {
-		frameMenu = new JMenu(toolMenu.getText());
-		frameMenu.setName(toolMenu.getName());
-		frameMenu.setMnemonic(toolMenu.getMnemonic());
-		AccessibleContext bc = frameMenu.getAccessibleContext();
-		AccessibleContext tc = toolMenu.getAccessibleContext();
-		bc.setAccessibleName(tc.getAccessibleName());
-		bc.setAccessibleDescription(tc.getAccessibleDescription());
-		copyMenuListeners(toolMenu, frameMenu);
-		for (int j = 0; j < toolMenuSize; j++) {
-		    frameMenu.add(toolMenu.getMenuComponent(0));
-		}
-		frameMenuBar.add(frameMenu, frameMenuBar.getMenuCount() - MENU_INSERT_POINT);
-	    }
-	    else {
-		for (int j = 0; j < toolMenuSize; j++) {
-		    frameMenu.add(toolMenu.getMenuComponent(0), j);
-		}
-		frameMenu.insertSeparator(toolMenuSize);
-	    }
-	    frameMenu.putClientProperty(getClass(), new Integer(toolMenuSize));
-	}   // for
-	frameMenuBar.putClientProperty(getClass(), tool);
+            int toolMenuSize = toolMenu.getMenuComponentCount();
+            JMenu frameMenu = findMenu(frameMenuBar, toolMenu.getText());
+            if (frameMenu == null) {
+                frameMenu = new JMenu(toolMenu.getText());
+                frameMenu.setName(toolMenu.getName());
+                frameMenu.setMnemonic(toolMenu.getMnemonic());
+                AccessibleContext bc = frameMenu.getAccessibleContext();
+                AccessibleContext tc = toolMenu.getAccessibleContext();
+                bc.setAccessibleName(tc.getAccessibleName());
+                bc.setAccessibleDescription(tc.getAccessibleDescription());
+                copyMenuListeners(toolMenu, frameMenu);
+                for (int j = 0; j < toolMenuSize; j++) {
+                    frameMenu.add(toolMenu.getMenuComponent(0));
+                }
+                frameMenuBar.add(frameMenu, frameMenuBar.getMenuCount() - MENU_INSERT_POINT);
+            }
+            else {
+                for (int j = 0; j < toolMenuSize; j++) {
+                    frameMenu.add(toolMenu.getMenuComponent(0), j);
+                }
+                frameMenu.insertSeparator(toolMenuSize);
+            }
+            frameMenu.putClientProperty(getClass(), new Integer(toolMenuSize));
+        }   // for
+        frameMenuBar.putClientProperty(getClass(), tool);
     }
 
     private void removeToolMenuItemsFromFrameMenuBar(JFrame frame) {
-	JMenuBar frameMenuBar = frame.getJMenuBar();
-	Tool tool = (Tool)(frameMenuBar.getClientProperty(getClass()));
-	if (tool == null)
-	    return;
-	removeToolMenuItemsFromFrameMenuBar(frame, tool);
+        JMenuBar frameMenuBar = frame.getJMenuBar();
+        Tool tool = (Tool)(frameMenuBar.getClientProperty(getClass()));
+        if (tool == null)
+            return;
+        removeToolMenuItemsFromFrameMenuBar(frame, tool);
     }
 
     /**
@@ -407,60 +407,60 @@ abstract class DeskView {
      * tool menu.
      * @param frame the frame with the menu bar to which the tool's menus have
      * been added
-     * @param tool the tool to which to return the menu items 
+     * @param tool the tool to which to return the menu items
      */
     protected void removeToolMenuItemsFromFrameMenuBar(JFrame frame, Tool tool) {
-	JMenuBar frameMenuBar = frame.getJMenuBar();
-	JMenuBar toolMenuBar = tool.getMenuBar();
-	for (int i = 0; i < toolMenuBar.getMenuCount(); i++) {
-	    JMenu toolMenu = toolMenuBar.getMenu(i);
-	    if (toolMenu == null)
-		// null if i'th item not a menu, e.g. glue
-		continue;
+        JMenuBar frameMenuBar = frame.getJMenuBar();
+        JMenuBar toolMenuBar = tool.getMenuBar();
+        for (int i = 0; i < toolMenuBar.getMenuCount(); i++) {
+            JMenu toolMenu = toolMenuBar.getMenu(i);
+            if (toolMenu == null)
+                // null if i'th item not a menu, e.g. glue
+                continue;
 
-	    JMenu frameMenu = findMenu(frameMenuBar, toolMenu.getText());
-	    int toolMenuSize = ((Integer)(frameMenu.getClientProperty(getClass()))).intValue();
-	    for (int j = 0; j < toolMenuSize; j++) {
-		toolMenu.add(frameMenu.getMenuComponent(0));
-	    }
-	    if (frameMenu.getItemCount() == 0)
-		frameMenuBar.remove(frameMenu);
-	    else {
-		frameMenu.remove(0); // separator
-		frameMenu.putClientProperty(getClass(), null);
-	    }
-	}
+            JMenu frameMenu = findMenu(frameMenuBar, toolMenu.getText());
+            int toolMenuSize = ((Integer)(frameMenu.getClientProperty(getClass()))).intValue();
+            for (int j = 0; j < toolMenuSize; j++) {
+                toolMenu.add(frameMenu.getMenuComponent(0));
+            }
+            if (frameMenu.getItemCount() == 0)
+                frameMenuBar.remove(frameMenu);
+            else {
+                frameMenu.remove(0); // separator
+                frameMenu.putClientProperty(getClass(), null);
+            }
+        }
 
-	frameMenuBar.putClientProperty(getClass(), null);
+        frameMenuBar.putClientProperty(getClass(), null);
     }
 
     protected JMenu getWindowOpenMenu() {
-	JMenu menu = uif.createMenu("dt.windows.open");
-	// could dynamically create this list when menu invoked
-	ToolManager[] mgrs = desktop.getToolManagers();
-	for (int i = 0; i < mgrs.length; i++) {
-	    Action[] actions = mgrs[i].getWindowOpenMenuActions();
-	    if (actions != null) {
-		for (int j = 0; j < actions.length; j++) 
-		    menu.add(actions[j]);
-	    }
-	}
-	return menu;
+        JMenu menu = uif.createMenu("dt.windows.open");
+        // could dynamically create this list when menu invoked
+        ToolManager[] mgrs = desktop.getToolManagers();
+        for (int i = 0; i < mgrs.length; i++) {
+            Action[] actions = mgrs[i].getWindowOpenMenuActions();
+            if (actions != null) {
+                for (int j = 0; j < actions.length; j++)
+                    menu.add(actions[j]);
+            }
+        }
+        return menu;
     }
 
     private void copyMenuListeners(JMenu src, JMenu dst) {
-	MenuListener[] ll = (MenuListener[]) (src.getListeners(MenuListener.class));
-	for (int i = 0; i < ll.length; i++) 
-	    dst.addMenuListener(ll[i]);
+        MenuListener[] ll = (MenuListener[]) (src.getListeners(MenuListener.class));
+        for (int i = 0; i < ll.length; i++)
+            dst.addMenuListener(ll[i]);
     }
 
     private JMenu findMenu(JMenuBar mb, String text) {
-	for (int i = 0; i < mb.getMenuCount(); i++) {
-	    JMenu m = mb.getMenu(i);
-	    if (m != null && m.getText().equals(text)) 
-		return m;
-	}
-	return null;
+        for (int i = 0; i < mb.getMenuCount(); i++) {
+            JMenu m = mb.getMenu(i);
+            if (m != null && m.getText().equals(text))
+                return m;
+        }
+        return null;
     }
 
     private static final int MENU_INSERT_POINT = 4; // before Windows, glue and Help
@@ -476,9 +476,9 @@ abstract class DeskView {
      * @param bounds the size and position for the dialog
      * @return a JDialog or JInternalDialog built from the supplied values.
      */
-    public abstract Container createDialog(Tool tool, String uiKey, String title, 
-					   JMenuBar menuBar, Container body,
-					   Rectangle bounds);
+    public abstract Container createDialog(Tool tool, String uiKey, String title,
+                                           JMenuBar menuBar, Container body,
+                                           Rectangle bounds);
 
     /**
      * Check if the tool's parent Window is the owner of a dialog.
@@ -495,7 +495,7 @@ abstract class DeskView {
      * Handle the File>Preferences menu: show a Preferences window.
      */
     private void doPrefs(JFrame parent) {
-	desktop.showPreferences(parent);
+        desktop.showPreferences(parent);
     }
 
     /**
@@ -511,10 +511,10 @@ abstract class DeskView {
      * @see #restoreDesktop
      */
     protected void saveTools(Map m) {
-	Tool[] tools = getTools();
-	m.put("tool.count", String.valueOf(tools.length));
-	for (int i = 0; i < tools.length; i++)
-	    saveTool(new PrefixMap(m, "tool." + String.valueOf(i)), tools[i]);
+        Tool[] tools = getTools();
+        m.put("tool.count", String.valueOf(tools.length));
+        for (int i = 0; i < tools.length; i++)
+            saveTool(new PrefixMap(m, "tool." + String.valueOf(i)), tools[i]);
     }
 
     /**
@@ -524,10 +524,10 @@ abstract class DeskView {
      * @see #restoreTool
      */
     protected void saveTool(Map m, Tool t) {
-	m.put("mgr", t.getManager().getClass().getName());
-	m.put("class", t.getClass().getName());
-	m.put("selected", String.valueOf(t == getSelectedTool()));
-	t.save(m);
+        m.put("mgr", t.getManager().getClass().getName());
+        m.put("class", t.getClass().getName());
+        m.put("selected", String.valueOf(t == getSelectedTool()));
+        t.save(m);
     }
 
     /**
@@ -543,38 +543,38 @@ abstract class DeskView {
      * @see #saveTools
      */
     protected void restoreTools(Map m) {
-	try {
-	    String c = (String) (m.get("tool.count"));
-	    if (c != null) {
-		int count = Integer.parseInt(c);
-		for (int i = 0; i < count; i++) {
-		    try {
-			String prefix = "tool." + i;
-			Map toolMap = new PrefixMap(m, prefix);
-			restoreTool(toolMap, prefix);
-		    }
-		    catch (ToolManager.Fault e) {
-			uif.showError("dv.restore.cantRestoreTool",
-				      new Object[] { new Integer(i), e.getMessage() });
-		    }
-		    catch (Fault e) { 
-			uif.showError("dv.restore.cantRestoreTool",
-				      new Object[] { new Integer(i), e.getMessage() });
-		    }
-		    catch (Throwable e) {
-			uif.showError("dv.restore.cantRestoreTool", 
-				      new Object[] { new Integer(i), e.toString() });
-			I18NResourceBundle i18n = uif.getI18NResourceBundle();
-			desktop.log(i18n, "dv.restore.cantRestoreTool", 
-				    new Object[] { e, new Integer(i) });
-		    }
-		}
-	    }
-	}
-	catch (NumberFormatException ignore) {
-	    // ignore, for now
-	}
-	
+        try {
+            String c = (String) (m.get("tool.count"));
+            if (c != null) {
+                int count = Integer.parseInt(c);
+                for (int i = 0; i < count; i++) {
+                    try {
+                        String prefix = "tool." + i;
+                        Map toolMap = new PrefixMap(m, prefix);
+                        restoreTool(toolMap, prefix);
+                    }
+                    catch (ToolManager.Fault e) {
+                        uif.showError("dv.restore.cantRestoreTool",
+                                      new Object[] { new Integer(i), e.getMessage() });
+                    }
+                    catch (Fault e) {
+                        uif.showError("dv.restore.cantRestoreTool",
+                                      new Object[] { new Integer(i), e.getMessage() });
+                    }
+                    catch (Throwable e) {
+                        uif.showError("dv.restore.cantRestoreTool",
+                                      new Object[] { new Integer(i), e.toString() });
+                        I18NResourceBundle i18n = uif.getI18NResourceBundle();
+                        desktop.log(i18n, "dv.restore.cantRestoreTool",
+                                    new Object[] { e, new Integer(i) });
+                    }
+                }
+            }
+        }
+        catch (NumberFormatException ignore) {
+            // ignore, for now
+        }
+
     }
 
     /**
@@ -589,38 +589,38 @@ abstract class DeskView {
      */
     protected Tool restoreTool(Map m, String name) throws Fault, ToolManager.Fault
     {
-	String mgrClassName = (String) (m.get("mgr"));
-	if (mgrClassName == null) {
-	    // backwards compatibility with 3.1
-	    String toolClassName = (String) (m.get("class"));
-	    if (toolClassName != null || toolClassName.endsWith("Tool")) {
-		String n = toolClassName.substring(0, toolClassName.length()) + "Manager";
-		try {
-		    if (Class.forName(n) != null)
-			mgrClassName = n;
-		}
-		catch (Throwable e) {
-		    // ignore
-		}
-	    }
+        String mgrClassName = (String) (m.get("mgr"));
+        if (mgrClassName == null) {
+            // backwards compatibility with 3.1
+            String toolClassName = (String) (m.get("class"));
+            if (toolClassName != null || toolClassName.endsWith("Tool")) {
+                String n = toolClassName.substring(0, toolClassName.length()) + "Manager";
+                try {
+                    if (Class.forName(n) != null)
+                        mgrClassName = n;
+                }
+                catch (Throwable e) {
+                    // ignore
+                }
+            }
 
-	    if (mgrClassName == null)
-		throw new Fault(i18n, "dv.restore.noMgrClass", name);
-	}
+            if (mgrClassName == null)
+                throw new Fault(i18n, "dv.restore.noMgrClass", name);
+        }
 
-	ToolManager mgr = desktop.getToolManager(mgrClassName);
-	if (mgr == null)
-	    throw new Fault(i18n, "dv.restore.noMgr",
-			    new Object[] { name, mgrClassName } );
+        ToolManager mgr = desktop.getToolManager(mgrClassName);
+        if (mgr == null)
+            throw new Fault(i18n, "dv.restore.noMgr",
+                            new Object[] { name, mgrClassName } );
 
-	Tool t = mgr.restoreTool(m);
-	
-	addTool(t);
-	boolean selected = "true".equals(m.get("selected"));
-	if (selected)
-	    setSelectedTool(t);
+        Tool t = mgr.restoreTool(m);
 
-	return t;
+        addTool(t);
+        boolean selected = "true".equals(m.get("selected"));
+        if (selected)
+            setSelectedTool(t);
+
+        return t;
     }
 
     /**
@@ -630,11 +630,11 @@ abstract class DeskView {
      * @see #restoreBounds
      */
     protected static void saveBounds(Component c, Map m) {
-	Rectangle r = c.getBounds();
-	m.put("x", String.valueOf(r.x));
-	m.put("y", String.valueOf(r.y));
-	m.put("w", String.valueOf(r.width));
-	m.put("h", String.valueOf(r.height));
+        Rectangle r = c.getBounds();
+        m.put("x", String.valueOf(r.x));
+        m.put("y", String.valueOf(r.y));
+        m.put("w", String.valueOf(r.width));
+        m.put("h", String.valueOf(r.height));
     }
 
 
@@ -646,18 +646,18 @@ abstract class DeskView {
      * @see #saveBounds
      */
     protected static void restoreBounds(Component c, Map m) {
-	try {
-	    String xs = (String) (m.get("x"));
-	    String ys = (String) (m.get("y"));
-	    String ws = (String) (m.get("w"));
-	    String hs = (String) (m.get("h"));
-	    if (xs != null && ys != null && ws != null && hs != null) 
-		c.setBounds(Integer.parseInt(xs), Integer.parseInt(ys),
-			    Integer.parseInt(ws), Integer.parseInt(hs));
-	}
-	catch (NumberFormatException e) {
-	    // ignore
-	}
+        try {
+            String xs = (String) (m.get("x"));
+            String ys = (String) (m.get("y"));
+            String ws = (String) (m.get("w"));
+            String hs = (String) (m.get("h"));
+            if (xs != null && ys != null && ws != null && hs != null)
+                c.setBounds(Integer.parseInt(xs), Integer.parseInt(ys),
+                            Integer.parseInt(ws), Integer.parseInt(hs));
+        }
+        catch (NumberFormatException e) {
+            // ignore
+        }
     }
 
     // keep a private list of all the outstanding frames, so that
@@ -677,156 +677,156 @@ abstract class DeskView {
     private static FocusMonitor focusMonitor;
 
     static {
-	String opts = System.getProperty("javatest.focus.monitor");
-	if (opts != null) {
-	    focusMonitor = FocusMonitor.access();
-	    if (!opts.equals("true")) // support old value for back compat
-		focusMonitor.setOptions(StringArray.split(opts));
-	    focusMonitor.setActivateKey("alt 2");
-	    focusMonitor.setReportKey("shift alt 2");
-	    focusMonitor.setReportFile(System.getProperty("javatest.focus.monitor.log"));
-	}
+        String opts = System.getProperty("javatest.focus.monitor");
+        if (opts != null) {
+            focusMonitor = FocusMonitor.access();
+            if (!opts.equals("true")) // support old value for back compat
+                focusMonitor.setOptions(StringArray.split(opts));
+            focusMonitor.setActivateKey("alt 2");
+            focusMonitor.setReportKey("shift alt 2");
+            focusMonitor.setReportFile(System.getProperty("javatest.focus.monitor.log"));
+        }
     };
-    
+
             static final String CLOSE = "close"; // visible for file close listeners
     private static final String EXIT = "exit";
     private static final String PREFS = "prefs";
     private static final String HISTORY = "history";
     private static final String SEPARATOR = null;
 
-    private static final I18NResourceBundle i18n = 
-	I18NResourceBundle.getBundleForClass(DeskView.class);
+    private static final I18NResourceBundle i18n =
+        I18NResourceBundle.getBundleForClass(DeskView.class);
 
 
     //-------------------------------------------------------------------------
 
     private class FileMenuListener implements MenuListener, ActionListener {
-	FileMenuListener(Action closeAction) {
+        FileMenuListener(Action closeAction) {
 
-	    prefs = uif.createMenuItem("dt.file", PREFS, this);
-	    if (closeAction != null)
-		close = uif.createMenuItem(closeAction);
-	    exit = uif.createMenuItem("dt.file", EXIT, this);
-	    // additional entries are created dynamically
-	}
+            prefs = uif.createMenuItem("dt.file", PREFS, this);
+            if (closeAction != null)
+                close = uif.createMenuItem(closeAction);
+            exit = uif.createMenuItem("dt.file", EXIT, this);
+            // additional entries are created dynamically
+        }
 
-	public void menuSelected(MenuEvent e) {
-	    //System.err.println("DT:FileMenu: selected " + e);
-	    JMenu m = (JMenu) (e.getSource());
-	    m.removeAll();
+        public void menuSelected(MenuEvent e) {
+            //System.err.println("DT:FileMenu: selected " + e);
+            JMenu m = (JMenu) (e.getSource());
+            m.removeAll();
 
-	    // this code is not ideal, and essentially works (for now) because
-	    // only one tool manager provides file menu actions: ie. ExecManager.
-	    // If that gets changed, we'll want to consider sorting/grouping
-	    // the actions somehow.
-	    ToolManager[] mgrs = desktop.getToolManagers();
-	    for (int i = 0; i < mgrs.length; i++) {
-		Action[] fma = mgrs[i].getFileMenuActions();
-		if (fma != null) {
-		    for (int j = 0; j < fma.length; j++) 
-			m.add(new JMenuItem(fma[j]));
-		}
+            // this code is not ideal, and essentially works (for now) because
+            // only one tool manager provides file menu actions: ie. ExecManager.
+            // If that gets changed, we'll want to consider sorting/grouping
+            // the actions somehow.
+            ToolManager[] mgrs = desktop.getToolManagers();
+            for (int i = 0; i < mgrs.length; i++) {
+                Action[] fma = mgrs[i].getFileMenuActions();
+                if (fma != null) {
+                    for (int j = 0; j < fma.length; j++)
+                        m.add(new JMenuItem(fma[j]));
+                }
 
                 JMenuItem[] jmi = mgrs[i].getFileMenuPrimaries();
-		if (jmi != null) {
-		    for (int j = 0; j < jmi.length; j++) 
-			m.add(jmi[j]);
-		}
+                if (jmi != null) {
+                    for (int j = 0; j < jmi.length; j++)
+                        m.add(jmi[j]);
+                }
 
-	    }   // for
+            }   // for
 
             // add secondary items before prefs, close, exit
-	    for (int i = 0; i < mgrs.length; i++) {
+            for (int i = 0; i < mgrs.length; i++) {
                 JMenuItem[] jmi = mgrs[i].getFileMenuSecondaries();
-		if (jmi != null) {
-		    for (int j = 0; j < jmi.length; j++) 
-			m.add(jmi[j]);
+                if (jmi != null) {
+                    for (int j = 0; j < jmi.length; j++)
+                        m.add(jmi[j]);
                     m.addSeparator();
-		}
+                }
 
-	    }   // for
+            }   // for
 
-	    List fileHistory = desktop.getFileHistory();
-//	    if (!fileHistory.isEmpty()) {
+            List fileHistory = desktop.getFileHistory();
+//          if (!fileHistory.isEmpty()) {
         JMenu hm = uif.createMenu("dt.file.recentwd");
         if (!fileHistory.isEmpty()) {
-		int n = 0;
-		
-		for (Iterator i = fileHistory.iterator(); i.hasNext(); ) {
-		    Desktop.FileHistoryEntry h = (Desktop.FileHistoryEntry) (i.next());
-		    if (!h.file.exists())
-			continue;
-		    String s = uif.getI18NString("dt.file.historyX.mit", 
-					     new Object[] {new Integer(n), h.file.getPath()});
-		    JMenuItem mi = new JMenuItem(s);
-		    mi.setActionCommand(HISTORY);
-		    mi.addActionListener(this);
-		    mi.putClientProperty(this, h);
-		    if (n < 10) 
-			mi.setMnemonic(Character.forDigit(n, 10));
-		    n++;
-		    hm.add(mi);
-		}
+                int n = 0;
+
+                for (Iterator i = fileHistory.iterator(); i.hasNext(); ) {
+                    Desktop.FileHistoryEntry h = (Desktop.FileHistoryEntry) (i.next());
+                    if (!h.file.exists())
+                        continue;
+                    String s = uif.getI18NString("dt.file.historyX.mit",
+                                             new Object[] {new Integer(n), h.file.getPath()});
+                    JMenuItem mi = new JMenuItem(s);
+                    mi.setActionCommand(HISTORY);
+                    mi.addActionListener(this);
+                    mi.putClientProperty(this, h);
+                    if (n < 10)
+                        mi.setMnemonic(Character.forDigit(n, 10));
+                    n++;
+                    hm.add(mi);
+                }
         } else {
-        	JMenuItem noEntries = new JMenuItem(i18n.getString("fh.empty"));
-        	noEntries.setEnabled(false);
-        	hm.add(noEntries);
-        	
+                JMenuItem noEntries = new JMenuItem(i18n.getString("fh.empty"));
+                noEntries.setEnabled(false);
+                hm.add(noEntries);
+
         }
         m.add(hm);
-		m.addSeparator();
-	    
-	    m.add(prefs);
+                m.addSeparator();
+
+            m.add(prefs);
             m.addSeparator();
-	    if (close != null)
-		m.add(close);
-	    m.add(exit);
-	}
+            if (close != null)
+                m.add(close);
+            m.add(exit);
+        }
 
-	public void menuDeselected(MenuEvent e) {
-	    JMenu m = (JMenu) (e.getSource());
-	    m.removeAll();
-	}
+        public void menuDeselected(MenuEvent e) {
+            JMenu m = (JMenu) (e.getSource());
+            m.removeAll();
+        }
 
-	public void menuCanceled(MenuEvent e) {
-	    JMenu m = (JMenu) (e.getSource());
-	    m.removeAll();
-	}
+        public void menuCanceled(MenuEvent e) {
+            JMenu m = (JMenu) (e.getSource());
+            m.removeAll();
+        }
 
-	public void actionPerformed(ActionEvent e) {
-	    //System.err.println("DT:FileMenu: action " + e);
-	    Component src = (Component) (e.getSource());
-	    JFrame parent = (JFrame) (SwingUtilities.getAncestorOfClass(JFrame.class, src));
-	    if (parent == null) // only happens during testing when invoking menuitem directly,
-		parent = getFrames()[0];
+        public void actionPerformed(ActionEvent e) {
+            //System.err.println("DT:FileMenu: action " + e);
+            Component src = (Component) (e.getSource());
+            JFrame parent = (JFrame) (SwingUtilities.getAncestorOfClass(JFrame.class, src));
+            if (parent == null) // only happens during testing when invoking menuitem directly,
+                parent = getFrames()[0];
 
-	    String cmd = e.getActionCommand();
-	    if (cmd.equals(PREFS)) {
-		doPrefs(parent);
-	    }
-	    else if (cmd.equals(HISTORY)) {
-		JMenuItem mi = (JMenuItem) (e.getSource());
-		Desktop.FileHistoryEntry h = (Desktop.FileHistoryEntry) (mi.getClientProperty(this));
-		try {
-		    h.fileOpener.open(h.file);
-		}
-		catch (FileNotFoundException ex) {
-		    uif.showError("dt.file.cannotFind", h.file);
-		}
-		catch (FileOpener.Fault ex) {
-		    uif.showError("dt.file.cannotOpen", 
-				  new Object[] { h.file, ex.getMessage() });
-		}
-	    }
-	    else if (cmd.equals(EXIT)) {
-		desktop.checkToolsAndExitIfOK(parent);
-	    }
-	}
+            String cmd = e.getActionCommand();
+            if (cmd.equals(PREFS)) {
+                doPrefs(parent);
+            }
+            else if (cmd.equals(HISTORY)) {
+                JMenuItem mi = (JMenuItem) (e.getSource());
+                Desktop.FileHistoryEntry h = (Desktop.FileHistoryEntry) (mi.getClientProperty(this));
+                try {
+                    h.fileOpener.open(h.file);
+                }
+                catch (FileNotFoundException ex) {
+                    uif.showError("dt.file.cannotFind", h.file);
+                }
+                catch (FileOpener.Fault ex) {
+                    uif.showError("dt.file.cannotOpen",
+                                  new Object[] { h.file, ex.getMessage() });
+                }
+            }
+            else if (cmd.equals(EXIT)) {
+                desktop.checkToolsAndExitIfOK(parent);
+            }
+        }
 
-	private JMenu fileOpenMenu;
-	private JMenuItem prefs;
-	private JMenuItem close;
-	private JMenuItem exit;
+        private JMenu fileOpenMenu;
+        private JMenuItem prefs;
+        private JMenuItem close;
+        private JMenuItem exit;
     }
 
 

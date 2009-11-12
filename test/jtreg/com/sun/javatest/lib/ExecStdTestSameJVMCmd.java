@@ -58,98 +58,97 @@ public class ExecStdTestSameJVMCmd extends Command
 {
     /**
      * The method that that does the work of the command.
-     * @param args	[-loadDir <em>dir</em>] [-saveProps] <em>executeClass</em> <em>executeArgs</em>
-     * @param log	A stream to which to report messages and errors
-     * @param ref	A stream to which to write reference output
-     * @return		The result of the command
+     * @param args      [-loadDir <em>dir</em>] [-saveProps] <em>executeClass</em> <em>executeArgs</em>
+     * @param log       A stream to which to report messages and errors
+     * @param ref       A stream to which to write reference output
+     * @return          The result of the command
      */
     public Status run(String[] args, PrintWriter log, PrintWriter ref) {
-	int repeat = 1;
-	String className = null;
-	String[] executeArgs = { };
-	ClassLoader loader = getClassLoader();
+        int repeat = 1;
+        String className = null;
+        String[] executeArgs = { };
+        ClassLoader loader = getClassLoader();
 
-	int i = 0;
+        int i = 0;
 
-	for (; i < args.length && args[i].startsWith("-"); i++) {
-	    if ("-loadDir".equals(args[i]) && i+1 < args.length) {
-		// -loadDir is optional; if given, a new class loader will be created
-		// to load the class to execute;  if not given, the system class loader
-		// will be used.
-		loader = new DirectoryClassLoader(new File(args[++i]));
-	    } else if ("-repeat".equals(args[i]) && i+1 < args.length) {
-		// -repeat is optional; if given, the test will be run that
-		// number of times (in the same JVM)
-		try {
-		    if ((repeat = Integer.parseInt(args[++i])) < 1)
-			return Status.error("Unexpected number of repetitions: " + repeat);
-		}
-		catch (NumberFormatException e) {
-		    return Status.error("Unrecognized number of repetitions: " + repeat);
-		}
-	    }
-	}
+        for (; i < args.length && args[i].startsWith("-"); i++) {
+            if ("-loadDir".equals(args[i]) && i+1 < args.length) {
+                // -loadDir is optional; if given, a new class loader will be created
+                // to load the class to execute;  if not given, the system class loader
+                // will be used.
+                loader = new DirectoryClassLoader(new File(args[++i]));
+            } else if ("-repeat".equals(args[i]) && i+1 < args.length) {
+                // -repeat is optional; if given, the test will be run that
+                // number of times (in the same JVM)
+                try {
+                    if ((repeat = Integer.parseInt(args[++i])) < 1)
+                        return Status.error("Unexpected number of repetitions: " + repeat);
+                }
+                catch (NumberFormatException e) {
+                    return Status.error("Unrecognized number of repetitions: " + repeat);
+                }
+            }
+        }
 
-	// Next must come the executeClass
-	if (i < args.length) {
-	    className = args[i];
-	    i++;
-	} else
-	    return Status.failed("No executeClass specified");
+        // Next must come the executeClass
+        if (i < args.length) {
+            className = args[i];
+            i++;
+        } else
+            return Status.failed("No executeClass specified");
 
-	// Finally, any optional args
-	if (i < args.length) {
-	    executeArgs = new String[args.length - i];
-	    System.arraycopy(args, i, executeArgs, 0, executeArgs.length);
-	}
+        // Finally, any optional args
+        if (i < args.length) {
+            executeArgs = new String[args.length - i];
+            System.arraycopy(args, i, executeArgs, 0, executeArgs.length);
+        }
 
-	Status status = null;
-	try {
-	    Class c;
-	    if (loader == null)
-		c = Class.forName(className);
-	    else
-		c = loader.loadClass(className);
+        Status status = null;
+        try {
+            Class c;
+            if (loader == null)
+                c = Class.forName(className);
+            else
+                c = loader.loadClass(className);
 
-	    Status prevStatus = null;
-	    for (int j = 0; j < repeat; j++) {
-		if (repeat > 1)
-		    log.println("iteration: " + (j+1));
+            Status prevStatus = null;
+            for (int j = 0; j < repeat; j++) {
+                if (repeat > 1)
+                    log.println("iteration: " + (j+1));
 
-		Test t = (Test) (c.newInstance());
-		status = t.run(executeArgs, log, ref);
+                Test t = (Test) (c.newInstance());
+                status = t.run(executeArgs, log, ref);
 
-		if (repeat > 1)
-		    log.println("   " + status);
+                if (repeat > 1)
+                    log.println("   " + status);
 
-		if ((prevStatus != null) && status.getType() != prevStatus.getType())
-		    status = Status.error("Return status type changed at repetition: " + (j+1));
+                if ((prevStatus != null) && status.getType() != prevStatus.getType())
+                    status = Status.error("Return status type changed at repetition: " + (j+1));
 
-		if (status.isError())
-		    return status;
-		else
-		    prevStatus = status;
-	    }
-	}
+                if (status.isError())
+                    return status;
+                else
+                    prevStatus = status;
+            }
+        }
         catch (ClassCastException e) {
-	    status = Status.failed("Can't load test: required interface not found");
-	}
-	catch (ClassNotFoundException e) {
-	    status = Status.failed("Can't load test: " + e);
-	}
-	catch (InstantiationException e) {
-	    status = Status.failed("Can't instantiate test: " + e);
-	}
-	catch (IllegalAccessException e) {
-	    status = Status.failed("Illegal access to test: " + e);
-	}
-	catch (VerifyError e) {
-	    return Status.failed("Class verification error while trying to load test class `" + className + "': " + e);
-	}
-	catch (LinkageError e) {
-	    return Status.failed("Class linking error while trying to load test class `" + className + "': " + e);
-	}
-	return status;
+            status = Status.failed("Can't load test: required interface not found");
+        }
+        catch (ClassNotFoundException e) {
+            status = Status.failed("Can't load test: " + e);
+        }
+        catch (InstantiationException e) {
+            status = Status.failed("Can't instantiate test: " + e);
+        }
+        catch (IllegalAccessException e) {
+            status = Status.failed("Illegal access to test: " + e);
+        }
+        catch (VerifyError e) {
+            return Status.failed("Class verification error while trying to load test class `" + className + "': " + e);
+        }
+        catch (LinkageError e) {
+            return Status.failed("Class linking error while trying to load test class `" + className + "': " + e);
+        }
+        return status;
     }
 }
-

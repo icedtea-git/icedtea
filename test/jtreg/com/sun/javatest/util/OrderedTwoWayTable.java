@@ -38,8 +38,8 @@ import java.util.Vector;
  */
 public class OrderedTwoWayTable {
     public OrderedTwoWayTable() {
-	keys = new Vector();
-	values = new Vector();
+        keys = new Vector();
+        values = new Vector();
     }
 
     /**
@@ -48,8 +48,8 @@ public class OrderedTwoWayTable {
      * @param value the object to be stored in the table
      */
     public synchronized void put(Object key, Object value) {
-	keys.add(key);
-	values.add(value);
+        keys.add(key);
+        values.add(value);
     }
 
     /**
@@ -58,7 +58,7 @@ public class OrderedTwoWayTable {
      * @return the position of the key within the table, or -1 if not found
      */
     public synchronized int getKeyIndex(Object key) {
-	return findIndex(keys, key);
+        return findIndex(keys, key);
     }
 
     /**
@@ -67,7 +67,7 @@ public class OrderedTwoWayTable {
      * @return the position of the value within the table, or -1 if not found
      */
     public synchronized int getValueIndex(Object value) {
-	return findIndex(values, value);
+        return findIndex(values, value);
     }
 
     /**
@@ -76,10 +76,10 @@ public class OrderedTwoWayTable {
      * @return the value at the given index, or null if not found or index out of bounds.
      */
     public synchronized Object getValueAt(int index) {
-	if (index < values.size())
-	    return values.elementAt(index);
-	else
-	    return null;
+        if (index < values.size())
+            return values.elementAt(index);
+        else
+            return null;
     }
 
     /**
@@ -88,10 +88,10 @@ public class OrderedTwoWayTable {
      * @return the value at the given index, null if not found or index out of bounds.
      */
     public synchronized Object getKeyAt(int index) {
-	if (index < keys.size())
-	    return keys.elementAt(index);
-	else
-	    return null;
+        if (index < keys.size())
+            return keys.elementAt(index);
+        else
+            return null;
     }
 
     /**
@@ -99,7 +99,7 @@ public class OrderedTwoWayTable {
      * @return the numbver of pairs on the table
      */
     public synchronized int getSize() {
-	return keys.size();
+        return keys.size();
     }
 
     /**
@@ -107,29 +107,27 @@ public class OrderedTwoWayTable {
      * @param index the index of the entry to be removed.
      */
     public synchronized void remove(int index) {
-	if (index >= keys.size())
-	    return;
+        if (index >= keys.size())
+            return;
 
-	keys.removeElementAt(index);
-	values.removeElementAt(index);
+        keys.removeElementAt(index);
+        values.removeElementAt(index);
     }
 
     /**
-     * Get the index of the target in the table.  
+     * Get the index of the target in the table.
      * This is a reference equality search.
      * @param data the vector in which to search
      * @param target the object to search for
      * @return the index of the target in the vector, or -1 if not found
      */
     protected int findIndex(Vector data, Object target) {
-	for (int i = 0; i < data.size(); i++)
-	    if (data.elementAt(i) == target)
-		return i;
+        for (int i = 0; i < data.size(); i++)
+            if (data.elementAt(i) == target)
+                return i;
 
-	return -1;
+        return -1;
     }
 
     private Vector keys, values;
 }
-
-

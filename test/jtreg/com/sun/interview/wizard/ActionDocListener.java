@@ -35,22 +35,22 @@ import javax.swing.event.DocumentListener;
 class ActionDocListener implements DocumentListener
 {
     ActionDocListener(Component src, ActionListener listener, String cmd) {
-	this.src = src;
-	this.listener = listener;
-	this.cmd = cmd;
+        this.src = src;
+        this.listener = listener;
+        this.cmd = cmd;
     }
 
     public void insertUpdate(DocumentEvent e) {
-	changedUpdate(e);
+        changedUpdate(e);
     }
 
     public void removeUpdate(DocumentEvent e) {
-	changedUpdate(e);
+        changedUpdate(e);
     }
 
     public void changedUpdate(DocumentEvent e) {
-	ActionEvent ae = new ActionEvent(src, ActionEvent.ACTION_PERFORMED, cmd);
-	listener.actionPerformed(ae);
+        ActionEvent ae = new ActionEvent(src, ActionEvent.ACTION_PERFORMED, cmd);
+        listener.actionPerformed(ae);
     }
 
     private Component src;

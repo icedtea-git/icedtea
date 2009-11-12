@@ -44,144 +44,144 @@ class FloatQuestionRenderer
     implements QuestionRenderer
 {
     public JComponent getQuestionRendererComponent(Question qq, ActionListener listener) {
-	FloatQuestion q = (FloatQuestion) qq;
+        FloatQuestion q = (FloatQuestion) qq;
 
-	lwb = q.getLowerBound();
-	upb = q.getUpperBound();
-	resolution = q.getResolution();
-	value = q.getValue();
-	range = upb - lwb;
-	suggs = q.getSuggestions();
+        lwb = q.getLowerBound();
+        upb = q.getUpperBound();
+        resolution = q.getResolution();
+        value = q.getValue();
+        range = upb - lwb;
+        suggs = q.getSuggestions();
 
-	//if (range > 100) 
-	    return createTextField(q, listener);
-	//else
-	    //return createSlider(q, listener);
+        //if (range > 100)
+            return createTextField(q, listener);
+        //else
+            //return createSlider(q, listener);
     }
 
     public String getInvalidValueMessage(Question q) {
-	return null;
+        return null;
     }
 
     private JPanel createTextField(final FloatQuestion q, ActionListener listener) {
-	int w = 1;
-	while (range >= 10) {
-	    range /= 10;
-	    w++;
-	}
-	if (lwb < 0)
-	    w++;
-	// add in room for fractions
-	w += 5;
+        int w = 1;
+        while (range >= 10) {
+            range /= 10;
+            w++;
+        }
+        if (lwb < 0)
+            w++;
+        // add in room for fractions
+        w += 5;
 
-	w = Math.min(w, 20);
+        w = Math.min(w, 20);
 
-	String[] strSuggs;
-	if (suggs == null)
-	    strSuggs = null;
-	else {
-	    strSuggs = new String[suggs.length];
-	    for (int i = 0; i < suggs.length; i++)
-		strSuggs[i] = String.valueOf(suggs[i]);
-	}
+        String[] strSuggs;
+        if (suggs == null)
+            strSuggs = null;
+        else {
+            strSuggs = new String[suggs.length];
+            for (int i = 0; i < suggs.length; i++)
+                strSuggs[i] = String.valueOf(suggs[i]);
+        }
 
-	final JButton resetBtn;
+        final JButton resetBtn;
 
-	final float defVal = q.getDefaultValue();
-	if (Float.isNaN(defVal))
-	    resetBtn = null;
-	else {
-	    resetBtn = new JButton(i18n.getString("flt.reset.btn"));
-	    resetBtn.setName("flt.reset.btn");
-	    resetBtn.setMnemonic(i18n.getString("flt.reset.mne").charAt(0));
-	    resetBtn.setToolTipText(i18n.getString("flt.reset.tip"));
-	}
-	
-	final TypeInPanel p =  new TypeInPanel("flt.field", 
-					       q, 
-					       w,
-					       strSuggs, 
-					       resetBtn,
-					       listener);
+        final float defVal = q.getDefaultValue();
+        if (Float.isNaN(defVal))
+            resetBtn = null;
+        else {
+            resetBtn = new JButton(i18n.getString("flt.reset.btn"));
+            resetBtn.setName("flt.reset.btn");
+            resetBtn.setMnemonic(i18n.getString("flt.reset.mne").charAt(0));
+            resetBtn.setToolTipText(i18n.getString("flt.reset.tip"));
+        }
 
-	if (resetBtn != null) {
-	    resetBtn.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-			NumberFormat fmt = NumberFormat.getNumberInstance();  // will be locale-specific
-			p.setValue(fmt.format(new Double(defVal)));
-		    }
-		});
-	}
+        final TypeInPanel p =  new TypeInPanel("flt.field",
+                                               q,
+                                               w,
+                                               strSuggs,
+                                               resetBtn,
+                                               listener);
 
-	return p;
+        if (resetBtn != null) {
+            resetBtn.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        NumberFormat fmt = NumberFormat.getNumberInstance();  // will be locale-specific
+                        p.setValue(fmt.format(new Double(defVal)));
+                    }
+                });
+        }
+
+        return p;
     }
 
     private JPanel createSlider(final FloatQuestion q, ActionListener listener) {
-	JPanel panel = new JPanel(new GridBagLayout());
-	panel.setName("flt");
-	panel.setFocusable(false);
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setName("flt");
+        panel.setFocusable(false);
 
-	GridBagConstraints c = new GridBagConstraints();
+        GridBagConstraints c = new GridBagConstraints();
 
-	JLabel label = new JLabel(i18n.getString("flt.sldr.lbl")); 
-	label.setName("flt.sldr.lbl");
-	label.setDisplayedMnemonic(i18n.getString("flt.sldr.mne").charAt(0));
-	label.setToolTipText(i18n.getString("flt.sldr.tip"));
-	panel.add(label, c);
+        JLabel label = new JLabel(i18n.getString("flt.sldr.lbl"));
+        label.setName("flt.sldr.lbl");
+        label.setDisplayedMnemonic(i18n.getString("flt.sldr.mne").charAt(0));
+        label.setToolTipText(i18n.getString("flt.sldr.tip"));
+        panel.add(label, c);
 
-	/*
-	  final JSlider slider = new JSlider(lwb, upb, value);
-	  slider.setMajorTickSpacing((upb - lwb)/2);
-	  slider.setMinorTickSpacing(1);
-	  slider.setSnapToTicks(true);
-	  slider.setPaintTicks(true);
-	  float startHint = q.getLabelStartHint();
-	  float incHint = q.getLabelIncrementHint();
-	  if (incHint != 0) 
-	  slider.setLabelTable(slider.createStandardLabels(incHint, startHint));
-	*/
-	int iMax = (int)((upb - lwb) / resolution);
-	int iVal = (int)((value - lwb) / resolution);
-	final JSlider slider = new JSlider(0, iMax, iVal);
-	slider.setName("flt");
-	slider.getAccessibleContext().setAccessibleName(slider.getName());
-	slider.getAccessibleContext().setAccessibleDescription(slider.getToolTipText());
-	slider.setMajorTickSpacing(iMax / 2);
-	slider.setMinorTickSpacing(Math.max((int)(1/resolution), 1));
-	slider.setSnapToTicks(true);
-	slider.setPaintTicks(true);
-	float startHint = q.getLabelStartHint();
-	float incHint = q.getLabelIncrementHint();
-	int iStartHint = (int)((startHint - lwb)/ resolution);
-	int iIncHint = (int)(incHint / resolution);
-	Hashtable labels = new Hashtable();
-	for (int i = iStartHint; i < iMax; i += iIncHint) {
-	    float f = lwb + i*resolution;
-	    String s;
-	    if (f == ((int)f))
-		s = String.valueOf((int)f);
-	    else
-		s = String.valueOf(f);
-	    labels.put(new Integer(i), new JLabel(s));
-	}
-	slider.setLabelTable(labels);
-	slider.setPaintLabels(true);
-	//slider.registerKeyboardAction(enterListener, enterKey, JComponent.WHEN_FOCUSED);
+        /*
+          final JSlider slider = new JSlider(lwb, upb, value);
+          slider.setMajorTickSpacing((upb - lwb)/2);
+          slider.setMinorTickSpacing(1);
+          slider.setSnapToTicks(true);
+          slider.setPaintTicks(true);
+          float startHint = q.getLabelStartHint();
+          float incHint = q.getLabelIncrementHint();
+          if (incHint != 0)
+          slider.setLabelTable(slider.createStandardLabels(incHint, startHint));
+        */
+        int iMax = (int)((upb - lwb) / resolution);
+        int iVal = (int)((value - lwb) / resolution);
+        final JSlider slider = new JSlider(0, iMax, iVal);
+        slider.setName("flt");
+        slider.getAccessibleContext().setAccessibleName(slider.getName());
+        slider.getAccessibleContext().setAccessibleDescription(slider.getToolTipText());
+        slider.setMajorTickSpacing(iMax / 2);
+        slider.setMinorTickSpacing(Math.max((int)(1/resolution), 1));
+        slider.setSnapToTicks(true);
+        slider.setPaintTicks(true);
+        float startHint = q.getLabelStartHint();
+        float incHint = q.getLabelIncrementHint();
+        int iStartHint = (int)((startHint - lwb)/ resolution);
+        int iIncHint = (int)(incHint / resolution);
+        Hashtable labels = new Hashtable();
+        for (int i = iStartHint; i < iMax; i += iIncHint) {
+            float f = lwb + i*resolution;
+            String s;
+            if (f == ((int)f))
+                s = String.valueOf((int)f);
+            else
+                s = String.valueOf(f);
+            labels.put(new Integer(i), new JLabel(s));
+        }
+        slider.setLabelTable(labels);
+        slider.setPaintLabels(true);
+        //slider.registerKeyboardAction(enterListener, enterKey, JComponent.WHEN_FOCUSED);
 
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.weightx = 1;
-	panel.add(slider, c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1;
+        panel.add(slider, c);
 
-	Runnable valueSaver = new Runnable() {
-		public void run() {
-		    int i = slider.getValue();
-		    q.setValue(lwb + i * resolution);
-		}
-	    };
+        Runnable valueSaver = new Runnable() {
+                public void run() {
+                    int i = slider.getValue();
+                    q.setValue(lwb + i * resolution);
+                }
+            };
 
-	
-	panel.putClientProperty(VALUE_SAVER, valueSaver);
-	return panel;
+
+        panel.putClientProperty(VALUE_SAVER, valueSaver);
+        return panel;
     }
 
     private float lwb;

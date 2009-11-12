@@ -33,10 +33,10 @@ import java.util.ResourceBundle;
 import java.util.MissingResourceException;
 
 /**
- * A class that lazily opens a package-specific resource bundle 
+ * A class that lazily opens a package-specific resource bundle
  * containing localization data for a class.
  */
-public class I18NResourceBundle extends ResourceBundle 
+public class I18NResourceBundle extends ResourceBundle
 {
     /**
      * Get a package-specific resource bundle for a class containing localization data.
@@ -60,7 +60,7 @@ public class I18NResourceBundle extends ResourceBundle
      * @param key the name of the entry to be returned
      * @param arg an argument to be formatted into the result using
      * {@link java.text.MessageFormat#format}
-     * @return the formatted string 
+     * @return the formatted string
      */
     public String getString(String key, Object arg) {
         return getString(key, new Object[] {arg});
@@ -154,7 +154,7 @@ public class I18NResourceBundle extends ResourceBundle
     }
 
     /**
-     * Returns the name of this bundle (useful for methods using 
+     * Returns the name of this bundle (useful for methods using
      * bundle name instead of instance, such as <code>Logger</code> creation,
      * @return the name of this resource bundle
      */

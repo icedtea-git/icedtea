@@ -43,11 +43,11 @@ import com.sun.javatest.util.DynamicArray;
 
 class MonitorState {
     MonitorState(Harness h) {
-	h.addObserver(dispatcher);
-	harness = h;
-	startTime = -1l;
-	finishTime = -1l;
-	stats = new int[Status.NUM_STATES];
+        h.addObserver(dispatcher);
+        harness = h;
+        startTime = -1l;
+        finishTime = -1l;
+        stats = new int[Status.NUM_STATES];
     }
 
     /**
@@ -56,72 +56,72 @@ class MonitorState {
      * Be short and timely in processing these events.
      */
     interface Observer {
-	/**
-	 * A new test run is starting.
-	 */
-	public void starting();
+        /**
+         * A new test run is starting.
+         */
+        public void starting();
 
-	/**
-	 * The tests have stopped running, and the harness is now doing
-	 * cleanup.
-	 */
-	public void postProcessing();
+        /**
+         * The tests have stopped running, and the harness is now doing
+         * cleanup.
+         */
+        public void postProcessing();
 
-	/**
-	  * A test run is being stopped by something.  This is not the same
-	  * as finishing.
-	  */
-	public void stopping();
+        /**
+          * A test run is being stopped by something.  This is not the same
+          * as finishing.
+          */
+        public void stopping();
 
-	/**
-	 * A test run is finishing.
-	 *
-	 * @param allOk Did all the tests pass?
-	 */
-	public void finished(boolean allOk);
+        /**
+         * A test run is finishing.
+         *
+         * @param allOk Did all the tests pass?
+         */
+        public void finished(boolean allOk);
     }
 
     void addObserver(Observer o) {
-	obs = (Observer[])DynamicArray.append(obs, o);
+        obs = (Observer[])DynamicArray.append(obs, o);
     }
 
     void removeObserver(Observer o) {
-	obs = (Observer[])DynamicArray.remove(obs, o);
+        obs = (Observer[])DynamicArray.remove(obs, o);
     }
 
     /**
      * Is the harness currently doing a test run.
      */
     boolean isRunning() {
-	return running;
+        return running;
     }
 
     /**
      * Time since the start of the run.
-     * 
+     *
      * @return Zero at the instant we start a run or when no run has been
      *         performed yet.
      */
     long getElapsedTime() {
-	/*
-	// we don't have a valid time available
-	if (startTime == -1)
-	    return 0l;
+        /*
+        // we don't have a valid time available
+        if (startTime == -1)
+            return 0l;
 
-	// provide the current or last time
-	long now = System.currentTimeMillis();
+        // provide the current or last time
+        long now = System.currentTimeMillis();
 
-	// answer depends whether we are running now or not
-	if (finishTime < 0) {
-	    // we are still running
-	    return now - startTime;
-	}
-	else {
-	    return finishTime - startTime;
-	}
-	*/
+        // answer depends whether we are running now or not
+        if (finishTime < 0) {
+            // we are still running
+            return now - startTime;
+        }
+        else {
+            return finishTime - startTime;
+        }
+        */
 
-	return harness.getElapsedTime();
+        return harness.getElapsedTime();
     }
 
     /**
@@ -131,7 +131,7 @@ class MonitorState {
      *         no estimate is available.
      */
     synchronized long getEstimatedTime() {
-	return harness.getEstimatedTime();
+        return harness.getEstimatedTime();
     }
 
     /**
@@ -140,17 +140,17 @@ class MonitorState {
      * @return estimated number of tests in the entire testsuite, -1 if unknown
      */
     synchronized int getEstimatedTotalTests() {
-	WorkDirectory wd = harness.getResultTable().getWorkDir();
-	if (wd == null)
-	    return -1;
+        WorkDirectory wd = harness.getResultTable().getWorkDir();
+        if (wd == null)
+            return -1;
 
-	int count = wd.getTestSuiteTestCount();
+        int count = wd.getTestSuiteTestCount();
 
-	if (count == -1)
-	    count = wd.getTestSuite().getEstimatedTestCount();
+        if (count == -1)
+            count = wd.getTestSuite().getEstimatedTestCount();
 
-	// make sure we return -1
-	return (count < 0 ? -1 : count);
+        // make sure we return -1
+        return (count < 0 ? -1 : count);
     }
 
     /**
@@ -161,7 +161,7 @@ class MonitorState {
      *         parameters.
      */
     synchronized int getTestsFoundCount() {
-	return harness.getTestsFoundCount();
+        return harness.getTestsFoundCount();
     }
 
     /**
@@ -169,11 +169,11 @@ class MonitorState {
      * current or last run.
      */
     synchronized int getTestsDoneCount() {
-	int done = 0;
-	for (int i = 0; i < stats.length; i++)
-	    done += stats[i];
-	
-	return done;
+        int done = 0;
+        for (int i = 0; i < stats.length; i++)
+            done += stats[i];
+
+        return done;
     }
 
     /**
@@ -181,7 +181,7 @@ class MonitorState {
      * to be run for the current or last run.
      */
     synchronized int getTestsRemainingCount() {
-	return getTestsFoundCount() - getTestsDoneCount();
+        return getTestsFoundCount() - getTestsDoneCount();
     }
 
     /**
@@ -190,129 +190,129 @@ class MonitorState {
      * @return array of counts, based on the indexes of Status types.
      */
     synchronized int[] getStats() {
-	// we could consider trusting the client and not doing the copy
-	int[] copy = new int[stats.length];
-	System.arraycopy(stats, 0, copy, 0, stats.length);
-	return copy;
+        // we could consider trusting the client and not doing the copy
+        int[] copy = new int[stats.length];
+        System.arraycopy(stats, 0, copy, 0, stats.length);
+        return copy;
     }
 
     TestResult[] getRunningTests() {
-	TestResult[] trs = null;
+        TestResult[] trs = null;
 
-	synchronized (vLock) {
-	    trs = new TestResult[runningTests.size()];
-	    runningTests.copyInto(trs);
-	}
+        synchronized (vLock) {
+            trs = new TestResult[runningTests.size()];
+            runningTests.copyInto(trs);
+        }
 
-	return trs;
+        return trs;
     }
 
     /**
      * Provide synchronized access to the statistics array.
      */
     private synchronized void incrementStat(int state) {
-	// this mainly called by the harness observer implementation
-	stats[state]++;
+        // this mainly called by the harness observer implementation
+        stats[state]++;
     }
 
     private synchronized void resetStats() {
-	stats = new int[Status.NUM_STATES];
+        stats = new int[Status.NUM_STATES];
     }
 
     class Dispatcher implements Harness.Observer {
 
-	public void startingTestRun(Parameters p) {
-	    running = true;
+        public void startingTestRun(Parameters p) {
+            running = true;
 
-	    startTime = System.currentTimeMillis();
-	    finishTime = -1l;
-	    resetStats();
+            startTime = System.currentTimeMillis();
+            finishTime = -1l;
+            resetStats();
 
-	    synchronized (vLock) {
-		runningTests.clear();
-	    }
+            synchronized (vLock) {
+                runningTests.clear();
+            }
 
-	    notifySimple(0);
-	}
+            notifySimple(0);
+        }
 
-	public void startingTest(TestResult tr) {
-	    synchronized (vLock) {
-		runningTests.add(tr);
-	    }
-	}
+        public void startingTest(TestResult tr) {
+            synchronized (vLock) {
+                runningTests.add(tr);
+            }
+        }
 
-	public void finishedTest(TestResult tr) {
-	    synchronized (vLock) {
-		runningTests.remove(tr);
-	    }
+        public void finishedTest(TestResult tr) {
+            synchronized (vLock) {
+                runningTests.remove(tr);
+            }
 
-	    incrementStat(tr.getStatus().getType());
-	}
+            incrementStat(tr.getStatus().getType());
+        }
 
-	public void stoppingTestRun() {
-	    notifySimple(1);
-	}
+        public void stoppingTestRun() {
+            notifySimple(1);
+        }
 
-	public void finishedTesting() {
-	    finishTime = System.currentTimeMillis();
+        public void finishedTesting() {
+            finishTime = System.currentTimeMillis();
 
-	    synchronized (vLock) {
-		runningTests.clear();
-	    }
+            synchronized (vLock) {
+                runningTests.clear();
+            }
 
-	    notifySimple(2);
-	}
+            notifySimple(2);
+        }
 
-	public void finishedTestRun(boolean allOk) {
-	    running = false;
-	    notifyComplete(allOk);
-	}
+        public void finishedTestRun(boolean allOk) {
+            running = false;
+            notifyComplete(allOk);
+        }
 
-	public void error(String msg) {
-	}
+        public void error(String msg) {
+        }
 
-	// --------- private ----------
-	private void notifySimple(final int which) {
-	    if (!EventQueue.isDispatchThread()) {
-		Runnable cmd = new Runnable() {
-		    public void run() {
-			MonitorState.Dispatcher.this.notifySimple(which);
-		    }   // run()
-		};	// end anon. class
+        // --------- private ----------
+        private void notifySimple(final int which) {
+            if (!EventQueue.isDispatchThread()) {
+                Runnable cmd = new Runnable() {
+                    public void run() {
+                        MonitorState.Dispatcher.this.notifySimple(which);
+                    }   // run()
+                };      // end anon. class
 
-		EventQueue.invokeLater(cmd);
-	    }
-	    else {	// now on event thread
-		for (int i = 0; i < obs.length; i++)
-		    switch (which) {
-			case 0: 
-			    obs[i].starting(); break;
-			case 1:
-			    obs[i].stopping(); break;
-			case 2:
-			    obs[i].postProcessing(); break;
-			default:
-			    throw new IllegalStateException();
-		    }	// switch
-		// end for
-	    }	// else
-	}
+                EventQueue.invokeLater(cmd);
+            }
+            else {      // now on event thread
+                for (int i = 0; i < obs.length; i++)
+                    switch (which) {
+                        case 0:
+                            obs[i].starting(); break;
+                        case 1:
+                            obs[i].stopping(); break;
+                        case 2:
+                            obs[i].postProcessing(); break;
+                        default:
+                            throw new IllegalStateException();
+                    }   // switch
+                // end for
+            }   // else
+        }
 
-	private void notifyComplete(final boolean allOk) {
-	    if (!EventQueue.isDispatchThread()) {
-		Runnable cmd = new Runnable() {
-		    public void run() {
-			MonitorState.Dispatcher.this.notifyComplete(allOk);
-		    }   // run()
-		};	// end anon. class
+        private void notifyComplete(final boolean allOk) {
+            if (!EventQueue.isDispatchThread()) {
+                Runnable cmd = new Runnable() {
+                    public void run() {
+                        MonitorState.Dispatcher.this.notifyComplete(allOk);
+                    }   // run()
+                };      // end anon. class
 
-		EventQueue.invokeLater(cmd);
-	    }
-	    else {	// now on event thread
-		for (int i = 0; i < obs.length; i++)
-		    obs[i].finished(allOk);
-	    }
-	}
+                EventQueue.invokeLater(cmd);
+            }
+            else {      // now on event thread
+                for (int i = 0; i < obs.length; i++)
+                    obs[i].finished(allOk);
+            }
+        }
     }
 
     // instance vars for MonitorState
@@ -328,7 +328,6 @@ class MonitorState {
      * Basis for the elapsed time.
      */
     private long startTime;
-    private long finishTime;	// only used if startTime != -1 and finishTime >= 0
+    private long finishTime;    // only used if startTime != -1 and finishTime >= 0
     private Dispatcher dispatcher = new Dispatcher();
 }
-

@@ -52,7 +52,7 @@ public abstract class CommandManager {
      * @param argIter an iterator from which to get any arguments that
      * might be required by the option
      * @param ctx a context object to use while parsing the command
-     * @return true if the command is recognized and successfully parsed, 
+     * @return true if the command is recognized and successfully parsed,
      * or false if the command is not recognized by this command manager
      * @throws Command.Fault if the command is recognized by this command manager
      * but could not be successfully parsed or otheriwse handled.
@@ -68,7 +68,7 @@ public abstract class CommandManager {
      * @return true if the strings match, and false otherwise
      */
     protected static boolean isMatch(String s1, String s2) {
-	return (s1.equalsIgnoreCase(s2));
+        return (s1.equalsIgnoreCase(s2));
     }
 
     /**
@@ -80,11 +80,11 @@ public abstract class CommandManager {
      * @return true if a match is found, and false otherwise
      */
     protected static boolean isMatch(String s1, String[] s2) {
-	for (int i = 0; i < s2.length; i++) {
-	    if (s1.equalsIgnoreCase(s2[i]))
-		return true;
-	}
-	return false;
+        for (int i = 0; i < s2.length; i++) {
+            if (s1.equalsIgnoreCase(s2[i]))
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -97,11 +97,11 @@ public abstract class CommandManager {
      * @return true if a match is found, and false otherwise
      */
     protected static boolean isPrefixMatch(String arg, String prefix) {
-	String s1 = prefix.toUpperCase();
-	String s2 = arg.toUpperCase();
-	if (s2.startsWith(s1))
-	    return true;
-	else
-	    return false;
+        String s1 = prefix.toUpperCase();
+        String s2 = arg.toUpperCase();
+        if (s2.startsWith(s1))
+            return true;
+        else
+            return false;
     }
 }

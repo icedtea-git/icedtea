@@ -39,60 +39,60 @@ import com.sun.javatest.tool.UIFactory;
 
 abstract class ListPane extends AuditPane {
     ListPane(String uiKey, UIFactory uif) {
-	super(uiKey, uif);
+        super(uiKey, uif);
 
-	model = new ListModel();
-	list = uif.createList(uiKey + ".lst", model);
-	list.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-	list.setCellRenderer(new Renderer());
-	
-	JScrollPane sp = uif.createScrollPane(list,
-					 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-					 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	setBody(sp);
+        model = new ListModel();
+        list = uif.createList(uiKey + ".lst", model);
+        list.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        list.setCellRenderer(new Renderer());
+
+        JScrollPane sp = uif.createScrollPane(list,
+                                         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        setBody(sp);
     }
 
     void setData(Object[] data) {
-	if (data == null || data.length == 0)
-	    show(uif.getI18NString("list.noEntries"));
-	else {
-	    model.setData(data);
-	    showBody();
-	}
+        if (data == null || data.length == 0)
+            show(uif.getI18NString("list.noEntries"));
+        else {
+            model.setData(data);
+            showBody();
+        }
     }
 
     private class ListModel extends AbstractListModel {
-	public Object getElementAt(int index) {
-	    return data[index];
-	}
+        public Object getElementAt(int index) {
+            return data[index];
+        }
 
-	public int getSize() {
-	    return (data == null ? 0 : data.length);
-	}
+        public int getSize() {
+            return (data == null ? 0 : data.length);
+        }
 
-	void setData(Object[] data) {
-	    this.data = data;
-	    fireContentsChanged(this, 0, data.length - 1);
-	}
+        void setData(Object[] data) {
+            this.data = data;
+            fireContentsChanged(this, 0, data.length - 1);
+        }
 
-	private Object[] data;
+        private Object[] data;
     }
 
-    private class Renderer extends DefaultListCellRenderer {	
-	public Component getListCellRendererComponent(JList list, Object o, int index, boolean isSelected, boolean cellHasFocus) {
-	    String name;
-	    if (o instanceof TestResult) {
-		TestResult tr = (TestResult) o;
-		name = tr.getTestName();
-	    }
-	    else if (o instanceof TestDescription) {
-		TestDescription td = (TestDescription) o;
-		name = td.getRootRelativeURL();
-	    }
-	    else 
-		name = String.valueOf(o);
-	    return super.getListCellRendererComponent(list, name, index, isSelected, cellHasFocus);
-	}
+    private class Renderer extends DefaultListCellRenderer {
+        public Component getListCellRendererComponent(JList list, Object o, int index, boolean isSelected, boolean cellHasFocus) {
+            String name;
+            if (o instanceof TestResult) {
+                TestResult tr = (TestResult) o;
+                name = tr.getTestName();
+            }
+            else if (o instanceof TestDescription) {
+                TestDescription td = (TestDescription) o;
+                name = td.getRootRelativeURL();
+            }
+            else
+                name = String.valueOf(o);
+            return super.getListCellRendererComponent(list, name, index, isSelected, cellHasFocus);
+        }
     }
 
     protected JList list;

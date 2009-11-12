@@ -55,7 +55,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 class LogViewerTools extends Thread {
-    
+
     LogViewerTools(LogModel model, File out, Logger log, Component parent, UIFactory uif) {
         this.model = model;
         this.out = out;
@@ -63,11 +63,11 @@ class LogViewerTools extends Thread {
         this.parent = parent;
         this.uif = uif;
     }
-    
+
     void go() {
-        
+
         waitDialog = uif.createWaitDialog("lvt.wait",parent);
-        
+
         ActionListener al = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 // show dialog if still processing
@@ -76,16 +76,16 @@ class LogViewerTools extends Thread {
                 }
             }
         };
-        
+
         // show wait dialog if operation is still running after
         // WAIT_DIALOG_DELAY
         Timer timer = new Timer(WAIT_DIALOG_DELAY, al);
         timer.setRepeats(false);
         timer.start();
-        
+
         start();
     }
-    
+
     public void run() {
         Properties outputProps = new Properties();
         outputProps.put("indent", "yes");
@@ -98,14 +98,14 @@ class LogViewerTools extends Thread {
             ex.printStackTrace();
             return;
         }
-        
+
         ser.getTransformer().setOutputProperties(outputProps);
         AttributesImpl emptyAttr = new AttributesImpl();
         try {
-            
+
             Report.Settings settings = Report.getSettingsPrefs();
             BackupPolicy backupPolicy;
-            
+
             if (settings.isBackupsEnabled()) {
                 backupPolicy = BackupPolicy.simpleBackups(settings.getBackupLevel());
             }  else {
@@ -113,7 +113,7 @@ class LogViewerTools extends Thread {
             }
             Writer w = backupPolicy.backupAndOpenWriter(out, XML_CHARSET);
             ser.setResult(new StreamResult(w));
-            
+
             ser.startDocument();
             ser.startElement("","","report", emptyAttr);
             for (int i = 0; i < model.getRecords().size(); i++) {
@@ -124,14 +124,14 @@ class LogViewerTools extends Thread {
             ser.endDocument();
             w.close();
             waitDialog.hide();
-            
+
         } catch (IOException ex) {
             log.log(Level.SEVERE, "LogViewer report", ex);
         } catch (SAXException ex) {
             log.log(Level.SEVERE, "LogViewer report", ex);
         }
     }
-    
+
     private void outRecord(LogModel.LiteLogRecord llr) throws SAXException, IOException {
         String msg = model.getRecordMessage(llr);
         AttributesImpl atts = new AttributesImpl();
@@ -144,13 +144,13 @@ class LogViewerTools extends Thread {
         XMLReportMaker.writeCDATA(ser, ser, msg);
         ser.endElement("","","logrecord");
     }
-    
+
     private String dateToISO8601(long time) {
         DateFormat dfISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         String dateStr = dfISO8601.format(new Date(time));
         return dateStr.substring(0, 22) + ":" + dateStr.substring(22);
     }
-    
+
     private JDialog waitDialog;
     private TransformerHandler ser;
     private LogModel model;
@@ -159,7 +159,7 @@ class LogViewerTools extends Thread {
     private Component parent;
     private  UIFactory uif;
     private String XML_CHARSET = "UTF-8";
-    private static final int WAIT_DIALOG_DELAY = 3000;	    // 3 second delay
+    private static final int WAIT_DIALOG_DELAY = 3000;      // 3 second delay
 }
 
 
@@ -186,6 +186,3 @@ class StopWatcher extends Thread {
         lv = null;
     }
 }
-
-
-

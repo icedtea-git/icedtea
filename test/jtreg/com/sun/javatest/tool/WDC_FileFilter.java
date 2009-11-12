@@ -45,4 +45,3 @@ public class WDC_FileFilter extends FileFilter {
 
     private String description;
 }
-

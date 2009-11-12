@@ -30,17 +30,17 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
- * A "null" question with no response. In effect, this 
+ * A "null" question with no response. In effect, this
  * posts the text, which must simply be acknowledged.
  */
-public abstract class NullQuestion extends Question 
+public abstract class NullQuestion extends Question
 {
     /**
      * Create a null question.
      * @param interview The interview containing this question.
      */
     protected NullQuestion(Interview interview) {
-	super(interview);
+        super(interview);
     }
 
     /**
@@ -49,7 +49,7 @@ public abstract class NullQuestion extends Question
      * @param tag A unique tag to identify this specific question.
      */
     protected NullQuestion(Interview interview, String tag) {
-	super(interview, tag);
+        super(interview, tag);
     }
 
     /**
@@ -59,11 +59,11 @@ public abstract class NullQuestion extends Question
      * @param level The "level" of this question.
      */
     protected NullQuestion(Interview interview, String tag, int level) {
-	super(interview, tag);
+        super(interview, tag);
         this.level = level;
     }
 
-    /** 
+    /**
      * Set the heading level of this question.
      * This is roughtly equivalent to heading levels in HTML, where heading 1
      * is the largest, for a document title or chapter.  As the number grows,
@@ -108,47 +108,47 @@ public abstract class NullQuestion extends Question
     public void clear() {
     }
 
-    /** 
+    /**
      * A NullQuestion does not have a value, and so this method always
      * returns null.
      * @return null
      */
     public String getStringValue() {
-	return null;
+        return null;
     }
 
     /**
      * Set the response to this question to the value represented by
-     * a string-valued argument. For this question, no value is 
+     * a string-valued argument. For this question, no value is
      * appropriate and an exception is always thrown.
      * @throws UnsupportedOperationException always
      */
     public void setValue(String ignore) {
-	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
-    /** 
+    /**
      * A NullQuestion does not have a value, and so this method always
      * returns true.
      * @return true
      */
     public boolean isValueValid() {
-	return true;
+        return true;
     }
 
 
-    /** 
+    /**
      * A NullQuestion does not have a value, and so this method always
      * returns true.
      * @return true
      */
     public boolean isValueAlwaysValid() {
-	return true;
+        return true;
     }
 
     /**
      * Load the value for this question from a dictionary, using
-     * the tag as the key. 
+     * the tag as the key.
      * @param data ignored
      */
     protected void load(Map data) {

@@ -45,97 +45,97 @@ import com.sun.interview.Question;
 class TypeInPanel extends JPanel
 {
     TypeInPanel(String uiKey, final Question q, int fieldWidth, String[] suggestions, JButton btn, ActionListener listener) {
-	setLayout(new GridBagLayout());
-	setName(uiKey);
-	setFocusable(false);
-	
-	GridBagConstraints c = new GridBagConstraints();
-	if (fieldWidth <= 0) {
-	    c.anchor = GridBagConstraints.WEST;
-	    c.gridwidth = GridBagConstraints.REMAINDER;
-	    c.weightx = 1;
-	}
+        setLayout(new GridBagLayout());
+        setName(uiKey);
+        setFocusable(false);
 
-	JLabel label = new JLabel(i18n.getString(uiKey + ".lbl")); 
-	label.setName(uiKey + ".lbl");
-	label.setDisplayedMnemonic(i18n.getString(uiKey + ".mne").charAt(0));
-	label.setToolTipText(i18n.getString(uiKey + ".tip"));
-	add(label, c);
+        GridBagConstraints c = new GridBagConstraints();
+        if (fieldWidth <= 0) {
+            c.anchor = GridBagConstraints.WEST;
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            c.weightx = 1;
+        }
 
-	c.gridwidth = 1;
+        JLabel label = new JLabel(i18n.getString(uiKey + ".lbl"));
+        label.setName(uiKey + ".lbl");
+        label.setDisplayedMnemonic(i18n.getString(uiKey + ".mne").charAt(0));
+        label.setToolTipText(i18n.getString(uiKey + ".tip"));
+        add(label, c);
 
-	if (suggestions == null) {
-	    field = new JTextField(q.getStringValue());
-	    field.setName(uiKey + ".txt");
-	    field.addActionListener(listener);
-	    field.getDocument().addDocumentListener(new ActionDocListener(field, listener, QuestionRenderer.EDITED));  // uugh dependency on QuestionRenderer
-	    field.setToolTipText(label.getToolTipText());
-	    label.setLabelFor(field);
-	
-	    if (fieldWidth <= 0) 
-		c.fill = GridBagConstraints.HORIZONTAL;
-	    else 
-		field.setColumns(fieldWidth);
-	    
-	    add(field, c);
-	}
-	else {
-	    choice = new JComboBox();
-	    choice.setName(uiKey + ".chc");
-	    choice.setEditable(true);
-	    choice.setSelectedItem(q.getStringValue());
-	    //choice.addActionListener(listener);
-	    label.setLabelFor(choice);
-	    
-	    Component editComp =  choice.getEditor().getEditorComponent();
-	    editComp.setFont(editComp.getFont().deriveFont(Font.PLAIN));
-	    if (editComp instanceof Accessible) {
-		if (editComp.getName() == null)
-		    editComp.setName(uiKey + ".chc.ed");
-		AccessibleContext ed_ac = editComp.getAccessibleContext();
-		ed_ac.setAccessibleName(i18n.getString(uiKey + ".chc.ed.name"));
-		ed_ac.setAccessibleDescription(i18n.getString(uiKey + ".chc.ed.desc"));
-	    }
-	    
-	    for (int i = 0; i < suggestions.length; i++)
-		choice.addItem(suggestions[i]);
-	    
-	    if (fieldWidth <= 0) {
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1;
-	    }
-	    else {
-		c.anchor = GridBagConstraints.WEST;
-		c.weightx = 0;
-	    }
-	    
-	    add(choice, c);
-	}
+        c.gridwidth = 1;
 
-	if (btn != null) {
-	    c.insets.left = 10;
-	    c.weightx = 0;
-	    add(btn, c);
-	}
+        if (suggestions == null) {
+            field = new JTextField(q.getStringValue());
+            field.setName(uiKey + ".txt");
+            field.addActionListener(listener);
+            field.getDocument().addDocumentListener(new ActionDocListener(field, listener, QuestionRenderer.EDITED));  // uugh dependency on QuestionRenderer
+            field.setToolTipText(label.getToolTipText());
+            label.setLabelFor(field);
 
-	Runnable valueSaver = new Runnable() {
-		public void run() {
-		    try {
+            if (fieldWidth <= 0)
+                c.fill = GridBagConstraints.HORIZONTAL;
+            else
+                field.setColumns(fieldWidth);
+
+            add(field, c);
+        }
+        else {
+            choice = new JComboBox();
+            choice.setName(uiKey + ".chc");
+            choice.setEditable(true);
+            choice.setSelectedItem(q.getStringValue());
+            //choice.addActionListener(listener);
+            label.setLabelFor(choice);
+
+            Component editComp =  choice.getEditor().getEditorComponent();
+            editComp.setFont(editComp.getFont().deriveFont(Font.PLAIN));
+            if (editComp instanceof Accessible) {
+                if (editComp.getName() == null)
+                    editComp.setName(uiKey + ".chc.ed");
+                AccessibleContext ed_ac = editComp.getAccessibleContext();
+                ed_ac.setAccessibleName(i18n.getString(uiKey + ".chc.ed.name"));
+                ed_ac.setAccessibleDescription(i18n.getString(uiKey + ".chc.ed.desc"));
+            }
+
+            for (int i = 0; i < suggestions.length; i++)
+                choice.addItem(suggestions[i]);
+
+            if (fieldWidth <= 0) {
+                c.fill = GridBagConstraints.HORIZONTAL;
+                c.weightx = 1;
+            }
+            else {
+                c.anchor = GridBagConstraints.WEST;
+                c.weightx = 0;
+            }
+
+            add(choice, c);
+        }
+
+        if (btn != null) {
+            c.insets.left = 10;
+            c.weightx = 0;
+            add(btn, c);
+        }
+
+        Runnable valueSaver = new Runnable() {
+                public void run() {
+                    try {
                         q.setValue(getValue());
-		    }
-		    catch (Interview.Fault e) {
-			throw new Error(e);
-		    }
-		}
-	    };
+                    }
+                    catch (Interview.Fault e) {
+                        throw new Error(e);
+                    }
+                }
+            };
 
-	putClientProperty(QuestionRenderer.VALUE_SAVER, valueSaver);
+        putClientProperty(QuestionRenderer.VALUE_SAVER, valueSaver);
     }
 
     String getValue() {
-	if (field != null)
-	    return field.getText();
-	else  {
+        if (field != null)
+            return field.getText();
+        else  {
             if (choice.isEditable()) {
                 return choice.getEditor().getItem().toString();
             } else {
@@ -145,10 +145,10 @@ class TypeInPanel extends JPanel
     }
 
     void setValue(String value) {
-	if (field != null)
-	    field.setText(value);
-	else
-	    choice.setSelectedItem(value);
+        if (field != null)
+            field.setText(value);
+        else
+            choice.setSelectedItem(value);
     }
 
     private JTextField field;
@@ -156,4 +156,3 @@ class TypeInPanel extends JPanel
 
     private static final I18NResourceBundle i18n = I18NResourceBundle.getDefaultBundle();
 }
-

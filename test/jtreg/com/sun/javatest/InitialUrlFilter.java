@@ -51,24 +51,24 @@ public class InitialUrlFilter extends TestFilter {
      * true.
      */
     public InitialUrlFilter(File[] initFiles) {
-	// preprocess
-	if (initFiles == null || initFiles.length == 0)
-	    initUrls = null;
-	else {
-	    initUrls = new String[initFiles.length];
+        // preprocess
+        if (initFiles == null || initFiles.length == 0)
+            initUrls = null;
+        else {
+            initUrls = new String[initFiles.length];
 
-	    // validate, make path lower case, change path sep.
-	    for (int i = 0; i < initFiles.length; i++) {
-		if (initFiles[i].isAbsolute())	// illegal, based on javadoc spec.
-		    throw new IllegalArgumentException(initFiles[i].getPath());
+            // validate, make path lower case, change path sep.
+            for (int i = 0; i < initFiles.length; i++) {
+                if (initFiles[i].isAbsolute())  // illegal, based on javadoc spec.
+                    throw new IllegalArgumentException(initFiles[i].getPath());
 
-		initUrls[i] = initFiles[i].getPath().toLowerCase();
-		
-		// fix path sep. IF needed
-		if (File.separatorChar != '/')
-		    initUrls[i] = initUrls[i].replace(File.separatorChar, '/');
-	    }	// for
-	}
+                initUrls[i] = initFiles[i].getPath().toLowerCase();
+
+                // fix path sep. IF needed
+                if (File.separatorChar != '/')
+                    initUrls[i] = initUrls[i].replace(File.separatorChar, '/');
+            }   // for
+        }
     }
 
     /**
@@ -83,39 +83,39 @@ public class InitialUrlFilter extends TestFilter {
      * returning true.
      */
     public InitialUrlFilter(String[] initialUrls) {
-	// preprocess, make a copy
-	if (initialUrls == null || initialUrls.length == 0)
-	    initUrls = null;
-	else {
-	    initUrls = new String[initialUrls.length];
-	    //System.arraycopy(initialUrls, 0, initUrls, 0, initialUrls.length);
-	    for (int i = 0; i < initialUrls.length; i++) {
-		initUrls[i] = initialUrls[i].toLowerCase();
-	    }	// for
-	}
+        // preprocess, make a copy
+        if (initialUrls == null || initialUrls.length == 0)
+            initUrls = null;
+        else {
+            initUrls = new String[initialUrls.length];
+            //System.arraycopy(initialUrls, 0, initUrls, 0, initialUrls.length);
+            for (int i = 0; i < initialUrls.length; i++) {
+                initUrls[i] = initialUrls[i].toLowerCase();
+            }   // for
+        }
     }
 
     public boolean accepts(TestDescription td) {
-	if (initUrls == null) // all urls being accepted
-	    return true;
+        if (initUrls == null) // all urls being accepted
+            return true;
 
-	String testUrl = td.getRootRelativeURL().toLowerCase();
+        String testUrl = td.getRootRelativeURL().toLowerCase();
 
-	// other parts of the code should ensure this is not null
-	for (int i = 0; i < initUrls.length; i++) {
-	    String urlI = initUrls[i];
-	    if (isInitialUrlMatch(testUrl, initUrls[i]))
-		return true;
-	}   // for
+        // other parts of the code should ensure this is not null
+        for (int i = 0; i < initUrls.length; i++) {
+            String urlI = initUrls[i];
+            if (isInitialUrlMatch(testUrl, initUrls[i]))
+                return true;
+        }   // for
 
-	// no init. urls specified (initUrls.length == 0) OR
-	// all init. urls processed
-	return false;
+        // no init. urls specified (initUrls.length == 0) OR
+        // all init. urls processed
+        return false;
     }
 
     /**
      * Find out if a given URL falls under a particular initial URL.
-     * This effectively compares one incoming URL to one in a set of known 
+     * This effectively compares one incoming URL to one in a set of known
      * initial URLs.
      * @param toCheck The incoming name to check.  This might originate from a
      *        TestDescription being filtered.
@@ -125,46 +125,45 @@ public class InitialUrlFilter extends TestFilter {
      *         URL.
      */
     public static boolean isInitialUrlMatch(String toCheck, String compareTo) {
-	if (toCheck.equals(compareTo))	// direct match of test
-	    return true;
-	// a startsWith match must end on one of the delimiter characters to
-	// be a valid match.  the delim. can either be on the initial URL or
-	// test URL
-	// during a beginsWith:
-	//    - is the last char of the initUrl a delimiter?
-	//    - is the next char in the test URL a delimiter?
-	else if (toCheck.startsWith(compareTo) &&
-		 (isDelimiter(compareTo.charAt(compareTo.length()-1)) ||
-		  isDelimiter(toCheck.charAt(compareTo.length())))) {
-	    return true;
-	}
-	else
-	    return false;
+        if (toCheck.equals(compareTo))  // direct match of test
+            return true;
+        // a startsWith match must end on one of the delimiter characters to
+        // be a valid match.  the delim. can either be on the initial URL or
+        // test URL
+        // during a beginsWith:
+        //    - is the last char of the initUrl a delimiter?
+        //    - is the next char in the test URL a delimiter?
+        else if (toCheck.startsWith(compareTo) &&
+                 (isDelimiter(compareTo.charAt(compareTo.length()-1)) ||
+                  isDelimiter(toCheck.charAt(compareTo.length())))) {
+            return true;
+        }
+        else
+            return false;
     }
 
     public String getName() {
-	return i18n.getString("iurlFilter.name");
+        return i18n.getString("iurlFilter.name");
     }
 
     public String getDescription() {
-	return i18n.getString("iurlFilter.description");
+        return i18n.getString("iurlFilter.description");
     }
 
     public String getReason() {
-	return i18n.getString("iurlFilter.reason");
+        return i18n.getString("iurlFilter.reason");
     }
 
     /**
      * Is this a delimiter that ends/begins a valid startsWith segment.
      */
     private static boolean isDelimiter(char c) {
-	if (c == '/' || c == '#')
-	    return true;
-	else
-	    return false;
+        if (c == '/' || c == '#')
+            return true;
+        else
+            return false;
     }
 
     private String[] initUrls;
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(ExcludeListFilter.class);
 }
-

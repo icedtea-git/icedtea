@@ -51,7 +51,7 @@ public class ProductInfo
      * @return a string identifying the name of this product.
      */
     public static String getName() {
-	return "JT Harness";
+        return "JT Harness";
     }
 
     /**
@@ -59,7 +59,7 @@ public class ProductInfo
      * @return a string identifying the version of this product.
      */
     public static String getVersion() {
-	return getProperty("version");
+        return getProperty("version");
     }
 
     /**
@@ -67,7 +67,7 @@ public class ProductInfo
      * @return a string identifying the milestone of this product.
      */
     public static String getMilestone() {
-	return getProperty("milestone");
+        return getProperty("milestone");
     }
 
     /**
@@ -75,7 +75,7 @@ public class ProductInfo
      * @return a string identifying the build number of this product.
      */
     public static String getBuildNumber() {
-	return getProperty("build");
+        return getProperty("build");
     }
 
     /**
@@ -83,7 +83,7 @@ public class ProductInfo
      * @return a string aidentifying a version of Java used to build this product.
      */
     public static String getBuildJavaVersion() {
-	return getProperty("java");
+        return getProperty("java");
     }
 
     /**
@@ -92,20 +92,20 @@ public class ProductInfo
      *         Null will be returned if no build data is available.
      */
     public static Date getBuildDate() {
-	// read en_US date, and prepare to emit it using the
-	// current locale
-	DateFormat endf =
-	    DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
-	Date date = null;
-	try {
-	    date = endf.parse(getProperty("date"));
-	}
-	catch (ParseException pe) {
-	    // can't get the date
-	    date = null;
-	}
+        // read en_US date, and prepare to emit it using the
+        // current locale
+        DateFormat endf =
+            DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
+        Date date = null;
+        try {
+            date = endf.parse(getProperty("date"));
+        }
+        catch (ParseException pe) {
+            // can't get the date
+            date = null;
+        }
 
-	return date;
+        return date;
     }
 
     /**
@@ -114,29 +114,29 @@ public class ProductInfo
      * @return the entry on the class path which contains the JT Harness harness.
      */
     public static File getJavaTestClassDir() {
-	if (javatestClassDir == null)
-	    javatestClassDir = findJavaTestClassDir(System.err);
+        if (javatestClassDir == null)
+            javatestClassDir = findJavaTestClassDir(System.err);
 
-	return javatestClassDir;
+        return javatestClassDir;
     }
 
     private static File findJavaTestClassDir(PrintStream log) {
-	String VERBOSE_CLASSDIR_PROPNAME = "verbose_javatestClassDir";
-	String CLASSDIR_PROPNAME = "javatestClassDir";
+        String VERBOSE_CLASSDIR_PROPNAME = "verbose_javatestClassDir";
+        String CLASSDIR_PROPNAME = "javatestClassDir";
 
-	boolean verbose = (log == null ? false : Boolean.getBoolean(VERBOSE_CLASSDIR_PROPNAME));
-	I18NResourceBundle i18n = (verbose ? I18NResourceBundle.getBundleForClass(ProductInfo.class) : null);
+        boolean verbose = (log == null ? false : Boolean.getBoolean(VERBOSE_CLASSDIR_PROPNAME));
+        I18NResourceBundle i18n = (verbose ? I18NResourceBundle.getBundleForClass(ProductInfo.class) : null);
 
-	// javatestClassDir is made available by the harness in the environment
-	// so that tests running in other JVM's can access Test, Status etc
-	String jc = System.getProperty(CLASSDIR_PROPNAME);
-	if (jc != null) {
-	    File javatestClassDir = new File(new File(jc).getAbsolutePath());
-	    if (verbose)
-		log.println("  " + CLASSDIR_PROPNAME + " = " + javatestClassDir);
+        // javatestClassDir is made available by the harness in the environment
+        // so that tests running in other JVM's can access Test, Status etc
+        String jc = System.getProperty(CLASSDIR_PROPNAME);
+        if (jc != null) {
+            File javatestClassDir = new File(new File(jc).getAbsolutePath());
+            if (verbose)
+                log.println("  " + CLASSDIR_PROPNAME + " = " + javatestClassDir);
 
             return javatestClassDir;
-	}
+        }
 
         try {
 
@@ -163,35 +163,35 @@ public class ProductInfo
         } catch (MalformedURLException ignore) {
         }
 
-	if (verbose) {
-	    log.println(i18n.getString("pi.jcd.cant"));
+        if (verbose) {
+            log.println(i18n.getString("pi.jcd.cant"));
         }
 
-        if(i18n == null) { 
+        if(i18n == null) {
             // we need initialized i18n for the following exception
             i18n = I18NResourceBundle.getBundleForClass(ProductInfo.class);
         }
 
-	throw new IllegalStateException(i18n.getString("pi.jcd.noInstallDir",
-			  new Object[] { VERBOSE_CLASSDIR_PROPNAME, CLASSDIR_PROPNAME }));
+        throw new IllegalStateException(i18n.getString("pi.jcd.noInstallDir",
+                          new Object[] { VERBOSE_CLASSDIR_PROPNAME, CLASSDIR_PROPNAME }));
     }
 
     private static String getProperty(String name) {
-	if (info == null) {
-	    info = new Properties();
-	    try {
-		InputStream in = ProductInfo.class.getResourceAsStream("/buildInfo.txt");
-		if (in != null) {
-		    info.load(in);
-		    in.close();
-		}
-	    }
-	    catch (IOException ignore) {
-		//e.printStackTrace();
-	    }
-	}
+        if (info == null) {
+            info = new Properties();
+            try {
+                InputStream in = ProductInfo.class.getResourceAsStream("/buildInfo.txt");
+                if (in != null) {
+                    info.load(in);
+                    in.close();
+                }
+            }
+            catch (IOException ignore) {
+                //e.printStackTrace();
+            }
+        }
 
-	return info.getProperty(name, "unset");
+        return info.getProperty(name, "unset");
     }
 
     private static Properties info;

@@ -37,27 +37,27 @@ public class PassiveConnectionFactory implements ConnectionFactory
     /**
      * Create a factory for creating connections to be used by agents running
      * in "passive" mode.
-     * @param port The port on which connections will listen. 
-     * 		Specify 0 for a dynamically allocated port.
+     * @param port The port on which connections will listen.
+     *          Specify 0 for a dynamically allocated port.
      * @param backlog The number of buffered incoming connection requests
-     *		to be accepted.
+     *          to be accepted.
      * @throws IOException if problems occur while setting up the factory
      */
     public PassiveConnectionFactory(int port, int backlog) throws IOException {
-	if (port < 0 || backlog < 0)
-	    throw new IllegalArgumentException();
+        if (port < 0 || backlog < 0)
+            throw new IllegalArgumentException();
 
-	serverSocket = new ServerSocket(port, backlog);
+        serverSocket = new ServerSocket(port, backlog);
     }
 
     /**
      * Create a factory for creating connections to be used by agents running
      * in "passive" mode.
-     * @param serverSocket The server socket used to accept incoming 
-     *		connection requests.
+     * @param serverSocket The server socket used to accept incoming
+     *          connection requests.
      */
     public PassiveConnectionFactory(ServerSocket serverSocket) {
-	this.serverSocket = serverSocket;
+        this.serverSocket = serverSocket;
     }
 
     /**
@@ -65,26 +65,26 @@ public class PassiveConnectionFactory implements ConnectionFactory
      * @return The port on which incoming connection requests will be accepted.
      */
     public int getPort() {
-	return serverSocket.getLocalPort();
+        return serverSocket.getLocalPort();
     }
 
     public Connection nextConnection() throws ConnectionFactory.Fault {
-	try {
-//	    return new SocketConnection(serverSocket.accept());
+        try {
+//          return new SocketConnection(serverSocket.accept());
             return new InterruptableSocketConnection(serverSocket.accept());
-	}
-	catch (IOException e) {
-	    throw new ConnectionFactory.Fault(e, false);
-	}
+        }
+        catch (IOException e) {
+            throw new ConnectionFactory.Fault(e, false);
+        }
     }
 
     public void close() throws ConnectionFactory.Fault {
-	try {
-	    serverSocket.close();
-	}
-	catch (IOException e) {
-	    throw new ConnectionFactory.Fault(e, true);
-	}
+        try {
+            serverSocket.close();
+        }
+        catch (IOException e) {
+            throw new ConnectionFactory.Fault(e, true);
+        }
     }
 
     private ServerSocket serverSocket;

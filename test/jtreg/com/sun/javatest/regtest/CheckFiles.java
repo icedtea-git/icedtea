@@ -111,7 +111,7 @@ public class CheckFiles
         if (comment.matches(".*@(run|main|compile|summary|bug).*")) {
             System.out.println(f + ": " + comment.substring(0, Math.min(lineLength, comment.length())));
             count++;
-        }          
+        }
     }
 
     private int count;

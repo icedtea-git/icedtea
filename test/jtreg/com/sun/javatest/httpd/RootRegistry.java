@@ -33,43 +33,43 @@ import com.sun.javatest.util.I18NResourceBundle;
 
 /**
  * Root level public registry for JT Harness classes which wish to publish pages
- * for the http server.  
+ * for the http server.
  */
 
 public class RootRegistry extends ProviderRegistry {
     private RootRegistry() {
-	// to prevent instantiation
-	httpHandle = new SpecialURLHandler();
-	addHandler("/version", "Version information handler", httpHandle);
+        // to prevent instantiation
+        httpHandle = new SpecialURLHandler();
+        addHandler("/version", "Version information handler", httpHandle);
     }
 
     /**
      * The root registry is a Singleton.
      */
     public static RootRegistry getInstance() {
-	if (myInstance == null)
-	    myInstance = new RootRegistry();
+        if (myInstance == null)
+            myInstance = new RootRegistry();
 
-	return myInstance;
+        return myInstance;
     }
 
     public void addHandler(String url, String descrip, JThttpProvider obj) {
-	if (!url.equals("/"))
-	    super.addHandler(url, descrip, obj);
-	else {
-	    // special case for a normally invalid url
-	    if (debug) {
-		System.out.println("RPR-Adding Handler: " + descrip);
-		System.out.println("   RPR-Adding URL: " + url);
-		System.out.println("   RPR-Adding OBJ: " + obj);
-	    }
+        if (!url.equals("/"))
+            super.addHandler(url, descrip, obj);
+        else {
+            // special case for a normally invalid url
+            if (debug) {
+                System.out.println("RPR-Adding Handler: " + descrip);
+                System.out.println("   RPR-Adding URL: " + url);
+                System.out.println("   RPR-Adding OBJ: " + obj);
+            }
 
-	    String[] path = {url};
-	    insertHandler(path, descrip, obj, false);
-	}
+            String[] path = {url};
+            insertHandler(path, descrip, obj, false);
+        }
     }
 
-    /** 
+    /**
      * Given a specific object, find an associated handler.
      * This only works if an associateObject() has been done for the specified
      * object.
@@ -78,23 +78,23 @@ public class RootRegistry extends ProviderRegistry {
      * @return The object's handler, or null if none if registered.
      */
     public static JThttpProvider getObjectHandler(Object what) {
-	return (JThttpProvider)(obj2prov.get(what));
+        return (JThttpProvider)(obj2prov.get(what));
     }
 
     public static void associateObject(Object what, JThttpProvider prov) {
-	if (what != null && prov != null)
-	    obj2prov.put(what, prov);
+        if (what != null && prov != null)
+            obj2prov.put(what, prov);
     }
 
     public static void unassociateObject(Object what, JThttpProvider prov) {
-	if (what != null && prov != null) {
-	    Object found = obj2prov.get(what);
-	    if (found == prov)
-		obj2prov.remove(what);
-	    else
-		throw new IllegalArgumentException(
-		    "RR-Unable to unassociateObject, providers do not match.");
-	}
+        if (what != null && prov != null) {
+            Object found = obj2prov.get(what);
+            if (found == prov)
+                obj2prov.remove(what);
+            else
+                throw new IllegalArgumentException(
+                    "RR-Unable to unassociateObject, providers do not match.");
+        }
     }
 
     private static RootRegistry myInstance = new RootRegistry();
@@ -109,28 +109,27 @@ public class RootRegistry extends ProviderRegistry {
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(RootRegistry.class);
 
     static {
-	String title = i18n.getString("root.name");
-	myInstance.addHandler("/", title, new IndexHandler(myInstance.url2prov));
-	myInstance.addHandler("/index.html", title, new IndexHandler(myInstance.url2prov));
+        String title = i18n.getString("root.name");
+        myInstance.addHandler("/", title, new IndexHandler(myInstance.url2prov));
+        myInstance.addHandler("/index.html", title, new IndexHandler(myInstance.url2prov));
     }
 
     private class SpecialURLHandler extends JThttpProvider {
-	public void serviceRequest(httpURL url, PrintWriter out) {
-	    url.resetIterator();
-	    String target = url.getNextFile();
+        public void serviceRequest(httpURL url, PrintWriter out) {
+            url.resetIterator();
+            String target = url.getNextFile();
 
-	    if (target.equals("version")) {
-		printVersionInfo(out);
-	    }
+            if (target.equals("version")) {
+                printVersionInfo(out);
+            }
 
-	    out.close();
-	}
+            out.close();
+        }
 
-	private void printVersionInfo(PrintWriter out) {
-	    println(out, PageGenerator.getSWName() + " " + PageGenerator.getSWVersion());
-	    print(out, i18n.getString("root.built.txt"));
-	    println(out, PageGenerator.getSWBuildDate());
-	}
+        private void printVersionInfo(PrintWriter out) {
+            println(out, PageGenerator.getSWName() + " " + PageGenerator.getSWVersion());
+            print(out, i18n.getString("root.built.txt"));
+            println(out, PageGenerator.getSWBuildDate());
+        }
     }
 }
-

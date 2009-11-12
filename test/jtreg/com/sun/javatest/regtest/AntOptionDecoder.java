@@ -31,27 +31,27 @@ public class AntOptionDecoder extends OptionDecoder {
     public AntOptionDecoder(Option[] options) {
         super(options);
     }
-    
+
     public void process(String name, boolean value) throws BadArgs {
         if (value)
             process(name, name);
     }
-    
+
     public void process(String name, File value) throws BadArgs {
         if (value != null)
             process(name, value.getPath());
     }
-    
+
     public void process(String name, String value) throws BadArgs {
         if (value == null)
             return;
-        
+
         Option o = getOption(name);
         if (o == null)
             throw new AssertionError("can't find " + name);
-        
+
         checkConflicts(o, name);
-        
+
         // synthesize a command line option in case jtreg gets redispatched
         // in child
         String opt;
@@ -83,11 +83,11 @@ public class AntOptionDecoder extends OptionDecoder {
 
                 throw new Error();
         }
-        
+
         if (debugOptions)
             System.err.println("AntOptionDecoder.process: " + name + " " + value);
-        
+
         o.process(opt, value);
     }
-    
+
 }

@@ -40,87 +40,87 @@ import javax.swing.JRadioButton;
 
 
 public class YesNoQuestionRenderer implements QuestionRenderer{
-        
+
     public JComponent getQuestionRendererComponent(Question qq, ActionListener listener) {
         final YesNoQuestion q = (YesNoQuestion)qq;
         final ActionListener editedListener = listener;
-        
+
         String[] displayChoices = q.getDisplayChoices();
         String[] choices = q.getChoices();
-        
+
 
         boolean allowUnset = (choices[0] == null);
-	String v = q.getValue();        
-        
-	ActionListener l = new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    q.setValue(e.getActionCommand());
-		    fireEditedEvent(e.getSource(), editedListener);
-		}
-	    };
-        
-	final JPanel btnPanel = new JPanel(new GridBagLayout());
-	GridBagConstraints gbc = new GridBagConstraints();
-	gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-	gbc.fill = GridBagConstraints.HORIZONTAL;
-	btnPanel.setName("chc.btns");
-	btnPanel.setFocusable(false);
+        String v = q.getValue();
 
-	ButtonGroup bg = new ButtonGroup();
-            
+        ActionListener l = new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    q.setValue(e.getActionCommand());
+                    fireEditedEvent(e.getSource(), editedListener);
+                }
+            };
+
+        final JPanel btnPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        btnPanel.setName("chc.btns");
+        btnPanel.setFocusable(false);
+
+        ButtonGroup bg = new ButtonGroup();
+
         int realNumber = 0;
-	for (int i = (allowUnset ? 1 : 0); i < choices.length; i++) {
-	    String choice = choices[i];
-	    String displayChoice = displayChoices[i];
-	    JRadioButton rb = new JRadioButton(displayChoice, (v == choice));
-	    rb.setName("chc.btn." + choices[i]);
+        for (int i = (allowUnset ? 1 : 0); i < choices.length; i++) {
+            String choice = choices[i];
+            String displayChoice = displayChoices[i];
+            JRadioButton rb = new JRadioButton(displayChoice, (v == choice));
+            rb.setName("chc.btn." + choices[i]);
 
             if (realNumber < 10)
-		rb.setMnemonic('0' + realNumber);
-            
-	    rb.setToolTipText(i18n.getString("chc.btn.tip"));
-	    rb.getAccessibleContext().setAccessibleName(rb.getName());
-	    rb.getAccessibleContext().setAccessibleDescription(rb.getToolTipText());
-	    rb.setActionCommand(choice);
-	    rb.addActionListener(l);
-            bg.add(rb);
-            //gbc.gridx = realNumber % 2; 
-            gbc.gridy = realNumber;
-	    btnPanel.add(rb, gbc);
-            realNumber++;
-	}
-	       
-	JPanel result = new JPanel(new GridBagLayout());
-	result.setName("chc");
-	result.setFocusable(false);
+                rb.setMnemonic('0' + realNumber);
 
-	JLabel label = new JLabel(i18n.getString("chc.btns.lbl"));
-	
-	GridBagConstraints c = new GridBagConstraints();
-	c.anchor = GridBagConstraints.NORTHWEST;
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.weightx = 1;
-	result.add(label, c);
+            rb.setToolTipText(i18n.getString("chc.btn.tip"));
+            rb.getAccessibleContext().setAccessibleName(rb.getName());
+            rb.getAccessibleContext().setAccessibleDescription(rb.getToolTipText());
+            rb.setActionCommand(choice);
+            rb.addActionListener(l);
+            bg.add(rb);
+            //gbc.gridx = realNumber % 2;
+            gbc.gridy = realNumber;
+            btnPanel.add(rb, gbc);
+            realNumber++;
+        }
+
+        JPanel result = new JPanel(new GridBagLayout());
+        result.setName("chc");
+        result.setFocusable(false);
+
+        JLabel label = new JLabel(i18n.getString("chc.btns.lbl"));
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.weightx = 1;
+        result.add(label, c);
 
         c.insets.top = 10;
-	c.anchor = GridBagConstraints.NORTH;
-        
-	result.add(btnPanel, c);
-                
+        c.anchor = GridBagConstraints.NORTH;
+
+        result.add(btnPanel, c);
+
         return result;
     }
-        
+
     public String getInvalidValueMessage(Question q) {
-	return null;
+        return null;
     }
-    
+
     private void fireEditedEvent(Object src, ActionListener l) {
-	ActionEvent e = new ActionEvent(src, 
-					ActionEvent.ACTION_PERFORMED, 
-					EDITED);
-	l.actionPerformed(e);
+        ActionEvent e = new ActionEvent(src,
+                                        ActionEvent.ACTION_PERFORMED,
+                                        EDITED);
+        l.actionPerformed(e);
     }
-    
+
     private static final I18NResourceBundle i18n = I18NResourceBundle.getDefaultBundle();
-    
+
 }

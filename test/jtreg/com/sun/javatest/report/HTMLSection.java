@@ -36,50 +36,50 @@ import com.sun.javatest.util.I18NResourceBundle;
 /**
  * A segment of the main top level HTML report.
  */
-abstract class HTMLSection { 
+abstract class HTMLSection {
     HTMLSection(String n, Report.Settings s, File dir, HTMLReport parent) {
-	name = n;
-	settings = s;
-	reportDir = dir;
-	this.parent = parent;
+        name = n;
+        settings = s;
+        reportDir = dir;
+        this.parent = parent;
     }
-    
+
     /*
     HTMLSection(String n, Parameters p) {
-	name = n;
-    } 
-    
+        name = n;
+    }
+
     HTMLSection(String n, Parameters p, ReportModel m) {
-	name = n;
-	params = p;
-	model = m;
-    } 
+        name = n;
+        params = p;
+        model = m;
+    }
     */
 
     Writer openWriter(int code) throws IOException {
-	return parent.openWriter(reportDir, code);
+        return parent.openWriter(reportDir, code);
     }
 
     String getName() {
-	return name;
+        return name;
     }
-    
+
     void writeContents(ReportWriter out) throws IOException {
         out.writeLink('#' + name,  name);
-    } 
-    
+    }
+
     void writeSummary(ReportWriter out) throws IOException {
-	out.startTag(HTMLWriter.H2);
+        out.startTag(HTMLWriter.H2);
         out.writeLinkDestination(name, name);
         out.endTag(HTMLWriter.H2);
-    } 
-    
+    }
+
     void writeExtraFiles() throws IOException {
-    } 
-    
+    }
+
     protected ReportWriter openAuxFile(int code, String title,
-				I18NResourceBundle i18n) throws IOException {
-	return new ReportWriter(openWriter(code), title, i18n);
+                                I18NResourceBundle i18n) throws IOException {
+        return new ReportWriter(openWriter(code), title, i18n);
     }
 
 

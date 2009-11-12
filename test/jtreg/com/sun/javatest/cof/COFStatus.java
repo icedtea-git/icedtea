@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;*/
 
 
 /**
- * 
+ *
  *         Actual elements contain text that refers to an actual value.
  *         This can be anything. A header, value, body, ..... If the tag
  *         log appears, it may be understood that a URL of a log file will
@@ -45,12 +45,12 @@ import javax.xml.bind.annotation.XmlType;*/
  *         will be fully qualified. If file protocol, the full path
  *         beginning with /net will be expected. Microsoft file mapping or
  *         Unix automounts should not be used.
- *       
- * 
+ *
+ *
  * <p>Java class for Status complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="Status">
  *   &lt;complexContent>
@@ -75,8 +75,8 @@ import javax.xml.bind.annotation.XmlType;*/
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 /*@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Status", propOrder = {
@@ -90,65 +90,65 @@ static LinkedHashMap xmlElements;
 static String xmlTagName;
 
     static {
-		xmlElements = new LinkedHashMap();
-		xmlAttributes = new LinkedHashMap();
-		xmlElements.put("expected","expected");
-		xmlElements.put("actual","actual");
-		xmlAttributes.put("value","value");
-		xmlTagName = "status";
-	}
+                xmlElements = new LinkedHashMap();
+                xmlAttributes = new LinkedHashMap();
+                xmlElements.put("expected","expected");
+                xmlElements.put("actual","actual");
+                xmlAttributes.put("value","value");
+                xmlTagName = "status";
+        }
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
     protected String actual;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
     protected String expected;
 
-	//    @XmlAttribute(required = true)
+        //    @XmlAttribute(required = true)
     protected String value;
 
-	/**
+        /**
      * Gets the value of the actual property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getActual() {
         return actual;
     }
 
-	/**
+        /**
      * Gets the value of the expected property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getExpected() {
         return expected;
     }
     LinkedHashMap getItemAttributes() {
-		return xmlAttributes;
-	}
+                return xmlAttributes;
+        }
 
-	LinkedHashMap getItemElements() {
-		return xmlElements;
-	}
+        LinkedHashMap getItemElements() {
+                return xmlElements;
+        }
 
     String getItemTagName() {
-		return xmlTagName;
-	}
+                return xmlTagName;
+        }
 
     /**
      * Gets the value of the value property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getValue() {
         return value;
@@ -156,11 +156,11 @@ static String xmlTagName;
 
     /**
      * Sets the value of the actual property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setActual(String value) {
         this.actual = value;
@@ -168,11 +168,11 @@ static String xmlTagName;
 
     /**
      * Sets the value of the expected property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setExpected(String value) {
         this.expected = value;
@@ -180,11 +180,11 @@ static String xmlTagName;
 
     /**
      * Sets the value of the value property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setValue(String value) {
         this.value = value;

@@ -51,14 +51,14 @@ public class ChameleonTestFinder extends TestFinder {
      * Create an uninitialized ChameleonTestFinder.
      */
     public ChameleonTestFinder() {
-	String ic = System.getProperty("javatest.chameleon.ignoreCase");
-	if (ic != null)
-	    ignoreCase = ic.equals("true");
-	else {
-	    String os = System.getProperty("os.name");
-	    ignoreCase = os.startsWith("Windows");
-	}
- 	exclude(excludeNames);
+        String ic = System.getProperty("javatest.chameleon.ignoreCase");
+        if (ic != null)
+            ignoreCase = ic.equals("true");
+        else {
+            String os = System.getProperty("os.name");
+            ignoreCase = os.startsWith("Windows");
+        }
+        exclude(excludeNames);
     }
 
     /**
@@ -67,7 +67,7 @@ public class ChameleonTestFinder extends TestFinder {
      * @param name The name of files to be excluded
      */
     public void exclude(String name) {
-	excludeList.put(name, name);
+        excludeList.put(name, name);
     }
 
     /**
@@ -76,10 +76,10 @@ public class ChameleonTestFinder extends TestFinder {
      * @param names The names of files to be excluded
      */
     public void exclude(String[] names) {
-	for (int i = 0; i < names.length; i++) {
-	    String name = names[i];
-	    excludeList.put(name, name);
-	}
+        for (int i = 0; i < names.length; i++) {
+            String name = names[i];
+            excludeList.put(name, name);
+        }
     }
 
     /**
@@ -99,7 +99,7 @@ public class ChameleonTestFinder extends TestFinder {
      * @see #setIgnoreCase
      */
     public boolean getIgnoreCase() {
-	return ignoreCase;
+        return ignoreCase;
     }
 
     /**
@@ -109,35 +109,35 @@ public class ChameleonTestFinder extends TestFinder {
      * @see #getIgnoreCase
      */
     public void setIgnoreCase(boolean b) {
-	ignoreCase = b;
+        ignoreCase = b;
     }
     /**
      * Generic initialization routine. You can also initialize the test finder
      * directly, with {@link #exclude}, {@link #readEntries}, etc.
      * @param args An array of strings giving initialization data.
-     * 	The primary option is "-f <em>file</em>" to specify the name
+     *  The primary option is "-f <em>file</em>" to specify the name
      *  of the file describing which test finder to use in which section
      *  of the test suite.
-     * @param testSuiteRoot	The root file of the test suite.
-     * @param env		This argument is not required by this test finder.
+     * @param testSuiteRoot     The root file of the test suite.
+     * @param env               This argument is not required by this test finder.
      * @throws TestFinder.Fault if an error is found during initialization.
      */
     public void init(String[] args, File testSuiteRoot, TestEnvironment env) throws Fault {
-	super.init(args, testSuiteRoot, env);
+        super.init(args, testSuiteRoot, env);
 
-	if (entryFile == null)
-	    throw new Fault(i18n, "cham.noConfigFile");
-	
-	if (!entryFile.isAbsolute())
-	    entryFile = new File(getRootDir(), entryFile.getPath());
-	
-	readEntries(entryFile);
+        if (entryFile == null)
+            throw new Fault(i18n, "cham.noConfigFile");
+
+        if (!entryFile.isAbsolute())
+            entryFile = new File(getRootDir(), entryFile.getPath());
+
+        readEntries(entryFile);
     }
 
     /**
      * Read the entries in a file which describe which test finder to use
      * in which part of the test suite.
-     * The file is read line by line. If a line is empty or begins with 
+     * The file is read line by line. If a line is empty or begins with
      * a '#' character, the line is ignored. Otherwise the line is broken
      * up as follows:<br>
      * <em>directory-or-file</em>  <em>finder-class-name</em>  <em>finder-args</em> <em>...</em><br>
@@ -146,73 +146,73 @@ public class ChameleonTestFinder extends TestFinder {
      * the beginning of the nameo of the file to be read. If and when a match
      * is found, the test finder delegates the request to the test finder specified
      * in the rest of the entry that provided the match.
-     * @param file 		The file containing the entries to be read.
+     * @param file              The file containing the entries to be read.
      * @throws TestFinder.Fault if a problem occurs while reading the file.
      */
     public void readEntries(File file) throws Fault {
-	//System.err.println("reading " + file);
-	SortedSet s = new TreeSet(new Comparator() {
-	    public int compare(Object o1, Object o2) {
-		int n = ((Entry)o1).compareTo((Entry)o2);
-		// this gives us the reverse of the order we want, so ...
-		return -n;
-	    }
-	});
+        //System.err.println("reading " + file);
+        SortedSet s = new TreeSet(new Comparator() {
+            public int compare(Object o1, Object o2) {
+                int n = ((Entry)o1).compareTo((Entry)o2);
+                // this gives us the reverse of the order we want, so ...
+                return -n;
+            }
+        });
 
-	try {
-	    BufferedReader in = new BufferedReader(new FileReader(file));
-	    String line;
-	    int lineNum = 0;
-	    while ((line = in.readLine()) != null) {
-		line = line.trim();
-		lineNum++;
-		if (line.startsWith("#")  ||  line.length() == 0)
-		    continue;
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(file));
+            String line;
+            int lineNum = 0;
+            while ((line = in.readLine()) != null) {
+                line = line.trim();
+                lineNum++;
+                if (line.startsWith("#")  ||  line.length() == 0)
+                    continue;
 
-		String[] words = StringArray.split(line);
-		if (words.length < 2) {
-		    throw new Fault(i18n, "cham.missingData",
-				    new Object[] {new Integer(lineNum), line});
-		}
+                String[] words = StringArray.split(line);
+                if (words.length < 2) {
+                    throw new Fault(i18n, "cham.missingData",
+                                    new Object[] {new Integer(lineNum), line});
+                }
 
-		String pattern = words[0];
-		String finderClassName = words[1];
-		String[] finderArgs = new String[words.length - 2];
-		System.arraycopy(words, 2, finderArgs, 0, finderArgs.length);
-		Entry e = new Entry(pattern, finderClassName, finderArgs);
-		s.add(e);
-	    }
-	}
-	catch (FileNotFoundException e) {
-	    throw new Fault(i18n, "cham.cantFindFile", file);
-	}
-	catch (IOException e) {
-	    throw new Fault(i18n, "cham.ioError", 
-			    new Object[] {file, e});
-	}
+                String pattern = words[0];
+                String finderClassName = words[1];
+                String[] finderArgs = new String[words.length - 2];
+                System.arraycopy(words, 2, finderArgs, 0, finderArgs.length);
+                Entry e = new Entry(pattern, finderClassName, finderArgs);
+                s.add(e);
+            }
+        }
+        catch (FileNotFoundException e) {
+            throw new Fault(i18n, "cham.cantFindFile", file);
+        }
+        catch (IOException e) {
+            throw new Fault(i18n, "cham.ioError",
+                            new Object[] {file, e});
+        }
 
-	entryFile = file;
-	entries = (Entry[]) (s.toArray(new Entry[s.size()]));
+        entryFile = file;
+        entries = (Entry[]) (s.toArray(new Entry[s.size()]));
 
-	//for (int i = 0; i < entries.length; i++)
-	//    System.err.println(entries[i].prefix + "   " + entries[i].suffix);
+        //for (int i = 0; i < entries.length; i++)
+        //    System.err.println(entries[i].prefix + "   " + entries[i].suffix);
     }
 
     protected int decodeArg(String[] args, int i) throws Fault {
-	if (args[i].equals("-f") && i + 1 < args.length) {
-	    entryFile = new File(args[i + 1]);
-	    return 2;
-	}
-	else if (args[i].equalsIgnoreCase("-ignoreCase")) {
-	    ignoreCase = true;
-	    return 1;
-	}
-	else if (args[i].equalsIgnoreCase("-dontIgnoreCase")) {
-	    ignoreCase = false;
-	    return 1;
-	}
-	else
-	    return super.decodeArg(args, i);
+        if (args[i].equals("-f") && i + 1 < args.length) {
+            entryFile = new File(args[i + 1]);
+            return 2;
+        }
+        else if (args[i].equalsIgnoreCase("-ignoreCase")) {
+            ignoreCase = true;
+            return 1;
+        }
+        else if (args[i].equalsIgnoreCase("-dontIgnoreCase")) {
+            ignoreCase = false;
+            return 1;
+        }
+        else
+            return super.decodeArg(args, i);
     }
 
 
@@ -223,29 +223,29 @@ public class ChameleonTestFinder extends TestFinder {
      * @param file The file to scan
      */
     protected void scan(File file) {
-	//System.err.println("SCAN: " + file);
-	if (file.isDirectory())
-	    scanDirectory(file);
-	else
-	    scanFile(file);
+        //System.err.println("SCAN: " + file);
+        if (file.isDirectory())
+            scanDirectory(file);
+        else
+            scanFile(file);
     }
 
     public File[] getFiles() {
-	if (currEntry == null)
-	    return super.getFiles();
-	else if (currEntry.finder == null)
-	    return new File[0];
-	else  
-	    return currEntry.finder.getFiles();
+        if (currEntry == null)
+            return super.getFiles();
+        else if (currEntry.finder == null)
+            return new File[0];
+        else
+            return currEntry.finder.getFiles();
     }
 
     public TestDescription[] getTests() {
-	if (currEntry == null)
-	    return super.getTests();
-	else if (currEntry.finder == null)
-	    return new TestDescription[0];
-	else  
-	    return currEntry.finder.getTests();
+        if (currEntry == null)
+            return super.getTests();
+        else if (currEntry.finder == null)
+            return new TestDescription[0];
+        else
+            return currEntry.finder.getTests();
     }
 
 
@@ -256,68 +256,68 @@ public class ChameleonTestFinder extends TestFinder {
      * @param dir The directory to scan
      */
     private void scanDirectory(File dir) {
-	// scan the contents of the directory, checking for
-	// subdirectories and other files that should be scanned
-	currEntry = null;
-	String[] names = dir.list();
-	for (int i = 0; i < names.length; i++) {
-	    String name = names[i];
-	    // if the file should be ignored, skip it
-	    // This is typically for directories like SCCS etc
-	    if (excludeList.containsKey(name))
-		continue;
+        // scan the contents of the directory, checking for
+        // subdirectories and other files that should be scanned
+        currEntry = null;
+        String[] names = dir.list();
+        for (int i = 0; i < names.length; i++) {
+            String name = names[i];
+            // if the file should be ignored, skip it
+            // This is typically for directories like SCCS etc
+            if (excludeList.containsKey(name))
+                continue;
 
-	    foundFile(new File(dir, name));
-	}
+            foundFile(new File(dir, name));
+        }
     }
 
     private void scanFile(File file) {
-	// see if the file matches a registered test finder, and if so
-	// delegate to that
-	for (int i = 0; i < entries.length; i++) {
-	    if (entries[i].matches(file)) {
-		currEntry = entries[i];
-		currEntry.scanFile(file);
-		return;
-	    }
-	}
-	// no match found
-	currEntry = null;
+        // see if the file matches a registered test finder, and if so
+        // delegate to that
+        for (int i = 0; i < entries.length; i++) {
+            if (entries[i].matches(file)) {
+                currEntry = entries[i];
+                currEntry.scanFile(file);
+                return;
+            }
+        }
+        // no match found
+        currEntry = null;
     }
 
     private Object newInstance(Class c) throws Fault {
-	try {
-	    return c.newInstance();
-	}
-	catch (InstantiationException e) {
-	    throw new Fault(i18n, "cham.cantCreateClass",
-			    new Object[] {c.getName(), e});
-	}
-	catch (IllegalAccessException e) {
-	    throw new Fault(i18n, "cham.cantAccessClass",
-			    new Object[] {c.getName(), e});
-	}
+        try {
+            return c.newInstance();
+        }
+        catch (InstantiationException e) {
+            throw new Fault(i18n, "cham.cantCreateClass",
+                            new Object[] {c.getName(), e});
+        }
+        catch (IllegalAccessException e) {
+            throw new Fault(i18n, "cham.cantAccessClass",
+                            new Object[] {c.getName(), e});
+        }
     }
 
     private Class loadClass(String className) throws Fault {
-	try {
-	    if (loader == null)
-		return Class.forName(className);
-	    else
-		return loader.loadClass(className);
-	}
-	catch (ClassNotFoundException e) {
-	    throw new Fault(i18n, "cham.cantFindClass",
-			    new Object[] {className, e});
-	}
-	catch (IllegalArgumentException e) {
-	    throw new Fault(i18n, "cham.badClassName", className);
-	}
-	
+        try {
+            if (loader == null)
+                return Class.forName(className);
+            else
+                return loader.loadClass(className);
+        }
+        catch (ClassNotFoundException e) {
+            throw new Fault(i18n, "cham.cantFindClass",
+                            new Object[] {className, e});
+        }
+        catch (IllegalArgumentException e) {
+            throw new Fault(i18n, "cham.badClassName", className);
+        }
+
     }
 
     private TestEnvironment getEnv() {
-	return env;
+        return env;
     }
 
     private File entryFile;
@@ -328,123 +328,123 @@ public class ChameleonTestFinder extends TestFinder {
     private Hashtable excludeList = new Hashtable();
 
     private static final String[] excludeNames = {
- 	"SCCS", "deleted_files"
+        "SCCS", "deleted_files"
     };
 
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(ChameleonTestFinder.class);
 
     private class Entry {
-	Entry(String pattern, String finderClassName, String[] finderArgs) {
-	    int star = pattern.indexOf('*');
-	    if (star == -1) {
-		prefix = pattern;
-		suffix = null;
-	    }
-	    else {
-		prefix = pattern.substring(0, star);
-		suffix = pattern.substring(star+1);
-	    }
-	    prefix = new File(getRootDir(), prefix.replace('/', File.separatorChar)).getPath();
-	    if (suffix != null)
-		suffix = suffix.replace('/', File.separatorChar);
+        Entry(String pattern, String finderClassName, String[] finderArgs) {
+            int star = pattern.indexOf('*');
+            if (star == -1) {
+                prefix = pattern;
+                suffix = null;
+            }
+            else {
+                prefix = pattern.substring(0, star);
+                suffix = pattern.substring(star+1);
+            }
+            prefix = new File(getRootDir(), prefix.replace('/', File.separatorChar)).getPath();
+            if (suffix != null)
+                suffix = suffix.replace('/', File.separatorChar);
 
-	    this.finderClassName = finderClassName;
-	    this.finderArgs = finderArgs;
+            this.finderClassName = finderClassName;
+            this.finderArgs = finderArgs;
 
-	    //System.err.println("created entry: prefix: " + prefix);
-	    //System.err.println("created entry: suffix: " + suffix);
-	    //System.err.println("created entry:  class: " + finderClassName);
-	    //System.err.println("created entry:   args: " + StringArray.join(finderArgs));
-	}
+            //System.err.println("created entry: prefix: " + prefix);
+            //System.err.println("created entry: suffix: " + suffix);
+            //System.err.println("created entry:  class: " + finderClassName);
+            //System.err.println("created entry:   args: " + StringArray.join(finderArgs));
+        }
 
-	boolean matches(File file) {
-	    //System.err.println("checking " + file);
-	    //System.err.println(" prefix: " + prefix);
-	    //System.err.println(" suffix: " + suffix);
+        boolean matches(File file) {
+            //System.err.println("checking " + file);
+            //System.err.println(" prefix: " + prefix);
+            //System.err.println(" suffix: " + suffix);
 
-	    String p = file.getPath();
-	    int pLen = p.length();
-	    int preLen = prefix.length();
+            String p = file.getPath();
+            int pLen = p.length();
+            int preLen = prefix.length();
 
-	    // if file does not match the prefix, return false
-	    if (!p.regionMatches(ignoreCase, 0, prefix, 0, preLen))
-		return false;
-	    
-	    // if there is a suffix, and the suffix is too short or the
-	    // file does not match the prefix, return false
-	    if (suffix != null) {
-		int sufLen = suffix.length();
+            // if file does not match the prefix, return false
+            if (!p.regionMatches(ignoreCase, 0, prefix, 0, preLen))
+                return false;
 
-		if (sufLen > pLen)
-		    return false;
-		
-		if (!p.regionMatches(ignoreCase, pLen - sufLen, suffix, 0, sufLen))
-		    return false;
-	    }
-	    
-	    // if we matched the prefix and possible suffix, we're done
-	    return true;
-	}
+            // if there is a suffix, and the suffix is too short or the
+            // file does not match the prefix, return false
+            if (suffix != null) {
+                int sufLen = suffix.length();
 
-	void scanFile(File file) {
-	    if (!initialized) 
-		init();
+                if (sufLen > pLen)
+                    return false;
 
-	    if (finder != null)
-		finder.read(file);
-	}
-	
-	private void init() {
-	    try {
-		if (!finderClassName.equals("-")) {
-		    finder = (TestFinder)(newInstance(loadClass(finderClassName)));
-		    finder.init(finderArgs, getRoot(), getEnv());
-		}
-	    }
-	    catch (Fault e) {
-		error(i18n, "cham.cantInitClass", e.getMessage());
-	    }
-	    finally {
-		initialized = true;
-	    }
-	}
+                if (!p.regionMatches(ignoreCase, pLen - sufLen, suffix, 0, sufLen))
+                    return false;
+            }
 
-	int compareTo(Entry other) {
-	    Entry a = this;
-	    Entry b = other;
-	    int apl = a.prefix.length();
-	    int bpl = b.prefix.length();
-	    if (apl < bpl) 
-		return -1; 
-	    else if (apl == bpl) {
-		int pc = a.prefix.compareTo(b.prefix);
-		if (pc != 0) 
-		    return pc;
-		else {
-		    // prefixes are the same, check the suffixes
-		    String as = a.suffix;
-		    String bs = b.suffix;
-		    if (as == null && bs == null)
-			return 0;
-		    
-		    if (as == null)
-			return -1; 
-		    
-		    if (bs == null)
-			return +1;
-		    
-		    return as.compareTo(bs);
-		}
-	    }
-	    else 
-		return +1;
-	}
+            // if we matched the prefix and possible suffix, we're done
+            return true;
+        }
 
-	private String prefix;
-	private String suffix;
-	private String finderClassName;
-	private String[] finderArgs;
-	private TestFinder finder;
-	private boolean initialized;
+        void scanFile(File file) {
+            if (!initialized)
+                init();
+
+            if (finder != null)
+                finder.read(file);
+        }
+
+        private void init() {
+            try {
+                if (!finderClassName.equals("-")) {
+                    finder = (TestFinder)(newInstance(loadClass(finderClassName)));
+                    finder.init(finderArgs, getRoot(), getEnv());
+                }
+            }
+            catch (Fault e) {
+                error(i18n, "cham.cantInitClass", e.getMessage());
+            }
+            finally {
+                initialized = true;
+            }
+        }
+
+        int compareTo(Entry other) {
+            Entry a = this;
+            Entry b = other;
+            int apl = a.prefix.length();
+            int bpl = b.prefix.length();
+            if (apl < bpl)
+                return -1;
+            else if (apl == bpl) {
+                int pc = a.prefix.compareTo(b.prefix);
+                if (pc != 0)
+                    return pc;
+                else {
+                    // prefixes are the same, check the suffixes
+                    String as = a.suffix;
+                    String bs = b.suffix;
+                    if (as == null && bs == null)
+                        return 0;
+
+                    if (as == null)
+                        return -1;
+
+                    if (bs == null)
+                        return +1;
+
+                    return as.compareTo(bs);
+                }
+            }
+            else
+                return +1;
+        }
+
+        private String prefix;
+        private String suffix;
+        private String finderClassName;
+        private String[] finderArgs;
+        private TestFinder finder;
+        private boolean initialized;
     }
 }

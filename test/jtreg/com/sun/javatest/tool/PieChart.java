@@ -64,8 +64,8 @@ public class PieChart extends JComponent /* implements Accessible*/ {
      * @see #setValue
      */
     public PieChart(int[] dist, Color[] colors) {
-	this();
-	setValue(dist, colors);
+        this();
+        setValue(dist, colors);
     }
 
     // could provide methods which take percentage, floats, floats, long, etc...
@@ -82,144 +82,144 @@ public class PieChart extends JComponent /* implements Accessible*/ {
      * @throws NullPointerException if either argument is null
      */
     public void setValue(int[] dist, Color[] c) {
-	if (dist.length != c.length)
-	    throw new IllegalArgumentException();
+        if (dist.length != c.length)
+            throw new IllegalArgumentException();
 
-	colors = c;
-	slices = dist;
-	repaint();
+        colors = c;
+        slices = dist;
+        repaint();
     }
 
     protected void paintComponent(Graphics g) {
-	Image image = new BufferedImage(getWidth(), getHeight(),
-				  BufferedImage.TYPE_INT_ARGB);
-	Graphics2D imageG = (Graphics2D)image.getGraphics();
-	paintPie(imageG);
-	imageG.dispose();
-	
-	g.drawImage(image, 0, 0, null);
-	g.dispose();
+        Image image = new BufferedImage(getWidth(), getHeight(),
+                                  BufferedImage.TYPE_INT_ARGB);
+        Graphics2D imageG = (Graphics2D)image.getGraphics();
+        paintPie(imageG);
+        imageG.dispose();
+
+        g.drawImage(image, 0, 0, null);
+        g.dispose();
     }
 
     private void paintPie(Graphics2D g2d) {
-	if (isOpaque()) {
-	    g2d.setColor(getBackground());
-	    g2d.fillRect(0,0, getWidth(), getHeight());
-	}
+        if (isOpaque()) {
+            g2d.setColor(getBackground());
+            g2d.fillRect(0,0, getWidth(), getHeight());
+        }
 
-	if (slices == null || slices.length == 0)
-	    return;
+        if (slices == null || slices.length == 0)
+            return;
 
-	// now paint pie slices
-	float sum = 0.0f;
-	int minIndex = 0, maxIndex = 0;
-	for (int i = 0; i < slices.length; i++) {
-	    sum += slices[i];
-	    if (slices[i] > slices[maxIndex])
-		maxIndex = i;
-	    if (slices[i] > slices[minIndex])
-		minIndex = i;
-	}
+        // now paint pie slices
+        float sum = 0.0f;
+        int minIndex = 0, maxIndex = 0;
+        for (int i = 0; i < slices.length; i++) {
+            sum += slices[i];
+            if (slices[i] > slices[maxIndex])
+                maxIndex = i;
+            if (slices[i] > slices[minIndex])
+                minIndex = i;
+        }
 
-	// do not paint shadow if there is no pie
-	if (sum < 0.1f)	    // floating point inaccuracy...
-	    return;
+        // do not paint shadow if there is no pie
+        if (sum < 0.1f)     // floating point inaccuracy...
+            return;
 
-	// perhaps use create with a clip that excludes the border area??
-	Insets inset = getInsets();
+        // perhaps use create with a clip that excludes the border area??
+        Insets inset = getInsets();
 
-	// this is critical - pie can look ugly without
-	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-			     RenderingHints.VALUE_ANTIALIAS_ON);
+        // this is critical - pie can look ugly without
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                             RenderingHints.VALUE_ANTIALIAS_ON);
 
-	int maxDia = Math.min((getWidth() - inset.left - inset.right),
-			      (getHeight() - inset.top - inset.bottom));
-	float targetDia = (float)maxDia * 0.8f;
+        int maxDia = Math.min((getWidth() - inset.left - inset.right),
+                              (getHeight() - inset.top - inset.bottom));
+        float targetDia = (float)maxDia * 0.8f;
 
 
-	// coords of point defining the box which defines the arcs
-	float boxX = inset.left + (0.1f  * (maxDia - targetDia));
+        // coords of point defining the box which defines the arcs
+        float boxX = inset.left + (0.1f  * (maxDia - targetDia));
 
-	float boxY = inset.top + (0.1f  * (maxDia - targetDia));
-	if (getWidth() > getHeight()) {
-	}
-	else {
-	    // vertical centering
-	    boxY = ((float)(getHeight() / 2)) - (0.5f * targetDia);
-	}
+        float boxY = inset.top + (0.1f  * (maxDia - targetDia));
+        if (getWidth() > getHeight()) {
+        }
+        else {
+            // vertical centering
+            boxY = ((float)(getHeight() / 2)) - (0.5f * targetDia);
+        }
 
-	// center of gradient circle
-	float gradx = boxX + OFFSETX;
-	float grady = boxY + OFFSETY;
+        // center of gradient circle
+        float gradx = boxX + OFFSETX;
+        float grady = boxY + OFFSETY;
 
-	// the effectiveness of the gradient will be determined by the fg and
-	// bg colors, combined with whether or not this component is opaque
-	/*
-	GradientPaint grad = new GradientPaint(
-					(float)(gradx-xshift),
-					(float)(grady-yshift),
-					Color.black,
-					(float)(gradx+xshift),
-					(float)(grady+yshift),
-					getBackground());
-	*/
-	GradientPaint grad = new GradientPaint(
-					0.0f, 0.0f,
-					Color.decode("#dddddd"),
-					(float)getWidth(), (float)getHeight(),
-					getBackground());
-	g2d.setPaint(grad);
-	g2d.fill(new Ellipse2D.Float(gradx, grady,
-				     targetDia*0.98f, targetDia*0.98f));
+        // the effectiveness of the gradient will be determined by the fg and
+        // bg colors, combined with whether or not this component is opaque
+        /*
+        GradientPaint grad = new GradientPaint(
+                                        (float)(gradx-xshift),
+                                        (float)(grady-yshift),
+                                        Color.black,
+                                        (float)(gradx+xshift),
+                                        (float)(grady+yshift),
+                                        getBackground());
+        */
+        GradientPaint grad = new GradientPaint(
+                                        0.0f, 0.0f,
+                                        Color.decode("#dddddd"),
+                                        (float)getWidth(), (float)getHeight(),
+                                        getBackground());
+        g2d.setPaint(grad);
+        g2d.fill(new Ellipse2D.Float(gradx, grady,
+                                     targetDia*0.98f, targetDia*0.98f));
 
-	float[] dist = new float[slices.length];
-	for (int i = 0; i < slices.length; i++) {
-	    if (slices[i] == 0)
-		dist[i] = 0.0f;
-	    else if (slices[i] == sum)
-		dist[i] = 360.0f;
-	    else
-		dist[i] = 360.0f * (((float)slices[i]) / sum);
-	}
+        float[] dist = new float[slices.length];
+        for (int i = 0; i < slices.length; i++) {
+            if (slices[i] == 0)
+                dist[i] = 0.0f;
+            else if (slices[i] == sum)
+                dist[i] = 360.0f;
+            else
+                dist[i] = 360.0f * (((float)slices[i]) / sum);
+        }
 
-	// post process to provide slices of minimal viewable size
-	for (int i = 0; i < dist.length; i++) {
-	    if (dist[i] > 0.0f && dist[i] < MIN_SLICE) {
-		dist[maxIndex] = dist[maxIndex] - (MIN_SLICE - dist[i]);
-		// XXX should recalculate maxIndex
-		dist[i] = MIN_SLICE;
-	    }
-	}
+        // post process to provide slices of minimal viewable size
+        for (int i = 0; i < dist.length; i++) {
+            if (dist[i] > 0.0f && dist[i] < MIN_SLICE) {
+                dist[maxIndex] = dist[maxIndex] - (MIN_SLICE - dist[i]);
+                // XXX should recalculate maxIndex
+                dist[i] = MIN_SLICE;
+            }
+        }
 
-	float pos = 90.0f;	// position on circle
-	for (int i = 0; i < slices.length; i++) {
-	    if (dist[i] > 0.0) {
-		g2d.setPaint(colors[i]);
-		g2d.fill(new Arc2D.Float(boxX, boxY, targetDia, targetDia,
-					 pos, -1.0f*dist[i], Arc2D.PIE));
+        float pos = 90.0f;      // position on circle
+        for (int i = 0; i < slices.length; i++) {
+            if (dist[i] > 0.0) {
+                g2d.setPaint(colors[i]);
+                g2d.fill(new Arc2D.Float(boxX, boxY, targetDia, targetDia,
+                                         pos, -1.0f*dist[i], Arc2D.PIE));
 
-		// special outline for white slices
-		if (colors[i].equals(Color.WHITE)) {
-		    g2d.setPaint(Color.BLACK);
+                // special outline for white slices
+                if (colors[i].equals(Color.WHITE)) {
+                    g2d.setPaint(Color.BLACK);
 
-		    if (dist[i] == 360.0f)
-			g2d.draw(new Ellipse2D.Float(boxX, boxY, targetDia, targetDia));
-		    else
-			g2d.draw(new Arc2D.Float(boxX, boxY, targetDia, targetDia,
-						 pos, -1.0f*dist[i], Arc2D.PIE));
-		}
-		else { }
+                    if (dist[i] == 360.0f)
+                        g2d.draw(new Ellipse2D.Float(boxX, boxY, targetDia, targetDia));
+                    else
+                        g2d.draw(new Arc2D.Float(boxX, boxY, targetDia, targetDia,
+                                                 pos, -1.0f*dist[i], Arc2D.PIE));
+                }
+                else { }
 
-		pos -= dist[i];
-	    }
-	}   // for
+                pos -= dist[i];
+            }
+        }   // for
 
-	/*
-	// creates a border for the whole pie
-	g2d.setStroke(new BasicStroke(1.5f));
-	g2d.draw(new Ellipse2D.Float(boxX, boxY,
-				     targetDia, targetDia));
-	*/
+        /*
+        // creates a border for the whole pie
+        g2d.setStroke(new BasicStroke(1.5f));
+        g2d.draw(new Ellipse2D.Float(boxX, boxY,
+                                     targetDia, targetDia));
+        */
     }
 
     private int[] slices;
@@ -227,5 +227,5 @@ public class PieChart extends JComponent /* implements Accessible*/ {
     private static final int OFFSETX = 7;
     private static final int OFFSETY = 7;
     private static final float GRAD_ANGLE = 45.0f;
-    private static final float MIN_SLICE = 2.0f;	    // min. of 3 degrees
+    private static final float MIN_SLICE = 2.0f;            // min. of 3 degrees
 }

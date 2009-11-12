@@ -33,41 +33,41 @@ import com.sun.javatest.TestResult;
 
 class TestResultsByFileComparator implements Comparator {
     public int compare(Object o1, Object o2) {
-	TestResult a = (TestResult)o1;
-	TestResult b = (TestResult)o2; 
-	
-	// The simplest way to compare two URLs would be to compare their
-	// external forms, but generating them generates garbage at a
-	// prodigous rate.  So, since we know URLs are represented
-	// as  protocol  host  post  file  ref  we compare the constituent
-	// parts in order.  
-	
-	try {
-	    TestDescription da = a.getDescription();
-	    TestDescription db = b.getDescription(); 
-	    
-	    int rf = compare(da.getFile().getPath(), db.getFile().getPath());
-	    if (rf != 0)
-		return rf; 
-	    int rr = compare(da.getId(), db.getId());
-	    return rr;
-	}
-	catch (TestResult.Fault e) {
-	    // bad files go at the end ?
-	    return 1;
-	}
+        TestResult a = (TestResult)o1;
+        TestResult b = (TestResult)o2;
+
+        // The simplest way to compare two URLs would be to compare their
+        // external forms, but generating them generates garbage at a
+        // prodigous rate.  So, since we know URLs are represented
+        // as  protocol  host  post  file  ref  we compare the constituent
+        // parts in order.
+
+        try {
+            TestDescription da = a.getDescription();
+            TestDescription db = b.getDescription();
+
+            int rf = compare(da.getFile().getPath(), db.getFile().getPath());
+            if (rf != 0)
+                return rf;
+            int rr = compare(da.getId(), db.getId());
+            return rr;
+        }
+        catch (TestResult.Fault e) {
+            // bad files go at the end ?
+            return 1;
+        }
     }
 
     private static int compare(String a, String b) {
-	if (a == null && b == null)
-	    return 0; 
-	    
-	if (a == null)
-	    return -1;
+        if (a == null && b == null)
+            return 0;
 
-	if (b == null)
-	    return +1; 
-	    
-	return a.compareTo(b);
+        if (a == null)
+            return -1;
+
+        if (b == null)
+            return +1;
+
+        return a.compareTo(b);
     }
 }

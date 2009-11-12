@@ -31,14 +31,14 @@ import com.sun.javatest.util.I18NResourceBundle;
 /**
  * A test filter that filters out tests that appear in an {@link ExcludeList}.
  */
-public class ExcludeListFilter extends TestFilter 
+public class ExcludeListFilter extends TestFilter
 {
     /**
      * Create a test filter that filters out tests that appear in an exclude list.
      * @param t The exclude list to be used to filter out tests.
      */
     public ExcludeListFilter(ExcludeList t) {
-	table = t;
+        table = t;
     }
 
     /**
@@ -46,34 +46,34 @@ public class ExcludeListFilter extends TestFilter
      * @return The exclude list used to filter out tests for this filter.
      */
     public ExcludeList getExcludeList() {
-	return table;
+        return table;
     }
 
     public String getName() {
-	return i18n.getString("excludeFilter.name");
+        return i18n.getString("excludeFilter.name");
     }
 
     public String getDescription() {
-	return i18n.getString("excludeFilter.description");
+        return i18n.getString("excludeFilter.description");
     }
 
     public String getReason() {
-	return i18n.getString("excludeFilter.reason");
+        return i18n.getString("excludeFilter.reason");
     }
 
     public boolean accepts(TestDescription td) {
-	return !table.excludesAllOf(td);
+        return !table.excludesAllOf(td);
     }
-    
+
     public boolean equals(Object o) {
-	if (o == this)
-	    return true;
+        if (o == this)
+            return true;
 
-	if (!(o instanceof ExcludeListFilter))
-	    return false;
+        if (!(o instanceof ExcludeListFilter))
+            return false;
 
-	ExcludeListFilter other = (ExcludeListFilter) o;
-	return table.equals(other.table);
+        ExcludeListFilter other = (ExcludeListFilter) o;
+        return table.equals(other.table);
     }
 
     private ExcludeList table;

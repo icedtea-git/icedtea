@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
 /**
  * A {@link Question question} to which the response is yes or no.
  */
-public abstract class YesNoQuestion extends ChoiceQuestion 
+public abstract class YesNoQuestion extends ChoiceQuestion
 {
     /**
      * A value for an affirmative response.
@@ -44,40 +44,40 @@ public abstract class YesNoQuestion extends ChoiceQuestion
     public static final String NO = "No";
 
     /**
-     * Create a question with a nominated tag. 
+     * Create a question with a nominated tag.
      * If this constructor is used, the choices must be supplied separately.
      * @param interview The interview containing this question.
      * @param tag A unique tag to identify this specific question.
      */
     protected YesNoQuestion(Interview interview, String tag) {
-	this(interview, tag, null);
+        this(interview, tag, null);
     }
 
     /**
-     * Create a question with a nominated tag. 
+     * Create a question with a nominated tag.
      * If this constructor is used, the choices must be supplied separately.
      * @param interview The interview containing this question.
      * @param tag A unique tag to identify this specific question.
-     * @param defaultValue A default value for the question; this must be one of 
+     * @param defaultValue A default value for the question; this must be one of
      * <em>null</em>, YES, or NO.
      */
     protected YesNoQuestion(Interview interview, String tag, String defaultValue) {
-	super(interview, tag);
+        super(interview, tag);
 
-	if (defaultValue != null && !defaultValue.equals(YES) && !defaultValue.equals(NO))
-	    throw new IllegalArgumentException();
+        if (defaultValue != null && !defaultValue.equals(YES) && !defaultValue.equals(NO))
+            throw new IllegalArgumentException();
 
-	String[] choices = new String[] { null, YES, NO };
-	String[] displayChoices = new String[] { null, 
-						 i18n.getString("yn.yes"), 
-						 i18n.getString("yn.no") };
+        String[] choices = new String[] { null, YES, NO };
+        String[] displayChoices = new String[] { null,
+                                                 i18n.getString("yn.yes"),
+                                                 i18n.getString("yn.no") };
 
-	setChoices(choices, displayChoices);
+        setChoices(choices, displayChoices);
 
-	if (defaultValue != getDefaultValue()) {
-	    setDefaultValue(defaultValue);
-	    setValue(defaultValue);
-	}
+        if (defaultValue != getDefaultValue()) {
+            setDefaultValue(defaultValue);
+            setValue(defaultValue);
+        }
     }
 
     /**
@@ -87,7 +87,7 @@ public abstract class YesNoQuestion extends ChoiceQuestion
      * @throws IllegalArgumentException always.
      */
     protected final void setChoices(String[] choices) {
-	throw new IllegalArgumentException("Cannot set choices for YesNoQuestion");
+        throw new IllegalArgumentException("Cannot set choices for YesNoQuestion");
     }
 
     private static final ResourceBundle i18n = Interview.i18n;

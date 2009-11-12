@@ -33,11 +33,11 @@ import com.sun.javatest.Status;
  * A comparator for the status contained in a test result.
  */
 public class StatusComparator implements Comparator<TestResult> {
-    
+
     /** Creates a new instance of StatusComparator */
     public StatusComparator() {
     }
-    
+
     /** Creates a new instance of StatusComparator */
     public StatusComparator(boolean includeReason) {
         this.includeReason = includeReason;
@@ -46,34 +46,34 @@ public class StatusComparator implements Comparator<TestResult> {
     public int compare(TestResult o1, TestResult o2) {
         int t1 = getType(o1);
         int t2 = getType(o2);
-        
+
         if (t1 < t2)
             return -1;
-        
+
         if (t1 > t2)
             return +1;
-        
+
         if (!includeReason)
             return 0;
-        
+
         String r1 = getReason(o1);
         String r2 = getReason(o2);
         return r1.compareTo(r2);
     }
-    
+
     private static int getType(TestResult tr) {
         if (tr == null)
             return Status.NOT_RUN;
         Status s = tr.getStatus();
         return (s == null ? Status.NOT_RUN : s.getType());
     }
-    
+
     private static String getReason(TestResult tr) {
         if (tr == null)
             return "";
         Status s = tr.getStatus();
         return (s == null ? "" : s.getReason());
     }
-    
+
     private boolean includeReason;
 }

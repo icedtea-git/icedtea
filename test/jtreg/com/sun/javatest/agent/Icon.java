@@ -42,51 +42,51 @@ import java.net.URL;
 class Icon extends Component {
 
     public Icon(Image i) {
-	image = i;
-	waitForSize();
-	imageSize = new Dimension(-1, -1);
-	imageSize.width = i.getWidth(this);
-	imageSize.height = i.getHeight(this);
+        image = i;
+        waitForSize();
+        imageSize = new Dimension(-1, -1);
+        imageSize.width = i.getWidth(this);
+        imageSize.height = i.getHeight(this);
     }
 
     public Icon(String name) {
-	Toolkit kit = getToolkit();
-	imageSize = new Dimension(-1, -1);
-	image = kit.getImage(name);
-	waitForSize();
-	imageSize.width = image.getWidth(this);
-	imageSize.height = image.getHeight(this);
-	setName(name);
+        Toolkit kit = getToolkit();
+        imageSize = new Dimension(-1, -1);
+        image = kit.getImage(name);
+        waitForSize();
+        imageSize.width = image.getWidth(this);
+        imageSize.height = image.getHeight(this);
+        setName(name);
     }
 
     public Icon(URL url) {
-	Toolkit kit = getToolkit();
-	imageSize = new Dimension(-1, -1);
-	image = kit.getImage(url);
-	waitForSize();
-	imageSize.width = image.getWidth(this);
-	imageSize.height = image.getHeight(this);
+        Toolkit kit = getToolkit();
+        imageSize = new Dimension(-1, -1);
+        image = kit.getImage(url);
+        waitForSize();
+        imageSize.width = image.getWidth(this);
+        imageSize.height = image.getHeight(this);
     }
 
     // --- Component methods ----------------------------------------------------
 
     public Dimension getMinimumSize() {
-	return getPreferredSize();
+        return getPreferredSize();
     }
-    
+
     public Dimension getPreferredSize() {
-	return imageSize;
+        return imageSize;
     }
 
     public Dimension getMaximumSize() {
-	return getPreferredSize();
+        return getPreferredSize();
     }
 
     public void paint(Graphics g) {
-	if (image != null) {
-	    Dimension size = getSize();
-	    g.drawImage(image, 0, 0, size.width, size.height, this);
-	}
+        if (image != null) {
+            Dimension size = getSize();
+            g.drawImage(image, 0, 0, size.width, size.height, this);
+        }
     }
 
     // --- local methods ---------------------------------------------
@@ -95,16 +95,16 @@ class Icon extends Component {
      * provides sychronization with the determination of the image size.
      */
     protected void waitForSize() {
-	MediaTracker tracker = new MediaTracker(this);
-	tracker.addImage(image, 0);
-	try {
-	    tracker.waitForID(0);
-	} catch (InterruptedException e) {
-	}
+        MediaTracker tracker = new MediaTracker(this);
+        tracker.addImage(image, 0);
+        try {
+            tracker.waitForID(0);
+        } catch (InterruptedException e) {
+        }
     }
 
     protected Dimension getImageSize() {
-	return imageSize;
+        return imageSize;
     }
 
     // --- member variables ------------------------------------------

@@ -43,96 +43,96 @@ import com.sun.interview.Question;
 
 class DetailsBrowser extends JDialog {
     DetailsBrowser(Component parent, Interview interview) {
-	super(getFrameParent(parent), "Configuration Editor Details Browser", false);
-	//setUndecorated(false);
-	setDefaultCloseOperation(HIDE_ON_CLOSE);
+        super(getFrameParent(parent), "Configuration Editor Details Browser", false);
+        //setUndecorated(false);
+        setDefaultCloseOperation(HIDE_ON_CLOSE);
 
-	JPanel p = new JPanel(new GridBagLayout());
-	GridBagConstraints c = new GridBagConstraints();
-	c.insets.left = 5;
-	c.insets.right = 5;
-	c.insets.bottom = 5;
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.weightx = 1;
+        JPanel p = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets.left = 5;
+        c.insets.right = 5;
+        c.insets.bottom = 5;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.weightx = 1;
 
-	Listener listener = new Listener();
+        Listener listener = new Listener();
 
-	GridBagConstraints lc = new GridBagConstraints();
-	lc.anchor = GridBagConstraints.EAST;
-	lc.insets.left = 10;
+        GridBagConstraints lc = new GridBagConstraints();
+        lc.anchor = GridBagConstraints.EAST;
+        lc.insets.left = 10;
 
-	GridBagConstraints fc = new GridBagConstraints();
-	fc.fill = GridBagConstraints.HORIZONTAL;
-	fc.gridwidth = GridBagConstraints.REMAINDER;
-	fc.weightx = 1;
-	fc.insets.left = 10;
-	fc.insets.right = 10;
+        GridBagConstraints fc = new GridBagConstraints();
+        fc.fill = GridBagConstraints.HORIZONTAL;
+        fc.gridwidth = GridBagConstraints.REMAINDER;
+        fc.weightx = 1;
+        fc.insets.left = 10;
+        fc.insets.right = 10;
 
-	JPanel qp = new JPanel(new GridBagLayout());
-	qp.setBorder(BorderFactory.createTitledBorder("Current Question"));
+        JPanel qp = new JPanel(new GridBagLayout());
+        qp.setBorder(BorderFactory.createTitledBorder("Current Question"));
 
-	JLabel tagLbl = new JLabel("tag:");
-	qp.add(tagLbl, lc);
-	tagField = new JTextField(64);
-	tagField.setBorder(null);
-	tagField.setEditable(false);
-	qp.add(tagField, fc);
-	
-	JLabel keyLbl = new JLabel("key:");
-	qp.add(keyLbl, lc);
-	keyField = new JTextField(64);
-	keyField.setBorder(null);
-	keyField.setEditable(false);
-	qp.add(keyField, fc);
+        JLabel tagLbl = new JLabel("tag:");
+        qp.add(tagLbl, lc);
+        tagField = new JTextField(64);
+        tagField.setBorder(null);
+        tagField.setEditable(false);
+        qp.add(tagField, fc);
 
-	update(interview.getCurrentQuestion());
-	interview.addObserver(listener);
+        JLabel keyLbl = new JLabel("key:");
+        qp.add(keyLbl, lc);
+        keyField = new JTextField(64);
+        keyField.setBorder(null);
+        keyField.setEditable(false);
+        qp.add(keyField, fc);
 
-	p.add(qp, c);
+        update(interview.getCurrentQuestion());
+        interview.addObserver(listener);
 
-	setContentPane(p);
-	pack();
+        p.add(qp, c);
+
+        setContentPane(p);
+        pack();
 
     }
 
     void setQuestionInfoEnabled(boolean on) {
-	keyField.setEnabled(on);
-	tagField.setEnabled(on);
+        keyField.setEnabled(on);
+        tagField.setEnabled(on);
     }
-    
+
     /*
     private void update(Question q) {
-	tagField.setText(q.getTag());
-	keyField.setText(q.getKey());
-	try {
-	    if (helpSet != null) {
-		try {
-		    Map.ID mid = Map.ID.create(q.getKey(), helpSet);
-		    URL u = helpSet.getLocalMap().getURLFromID(mid);
-		    urlField.setText(u.toString());
-		}
-		catch (MalformedURLException e) {
-		    urlField.setText(e.toString());
-		}
-	    }
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
+        tagField.setText(q.getTag());
+        keyField.setText(q.getKey());
+        try {
+            if (helpSet != null) {
+                try {
+                    Map.ID mid = Map.ID.create(q.getKey(), helpSet);
+                    URL u = helpSet.getLocalMap().getURLFromID(mid);
+                    urlField.setText(u.toString());
+                }
+                catch (MalformedURLException e) {
+                    urlField.setText(e.toString());
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     */
 
     private void update(Question q) {
-	tagField.setText(q.getTag());
-	keyField.setText(q.getKey());
+        tagField.setText(q.getTag());
+        keyField.setText(q.getKey());
     }
 
     private static Frame getFrameParent(Component c) {
-	return (Frame)(SwingUtilities.getAncestorOfClass(Frame.class, c));
+        return (Frame)(SwingUtilities.getAncestorOfClass(Frame.class, c));
     }
 
-    
+
     private JTextField tagField;
     private JTextField keyField;
     private JTextField hsField;
@@ -140,15 +140,15 @@ class DetailsBrowser extends JDialog {
     private JTextField urlField;
 
     private class Listener
-	implements Interview.Observer
+        implements Interview.Observer
     {
-	// Interview.Observer
-	public void pathUpdated() { }
-	
-	public void currentQuestionChanged(Question q) { 
-	    update(q);
-	}
-	
-	public void finished() { }
+        // Interview.Observer
+        public void pathUpdated() { }
+
+        public void currentQuestionChanged(Question q) {
+            update(q);
+        }
+
+        public void finished() { }
     }
 }

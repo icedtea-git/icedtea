@@ -35,22 +35,22 @@ import javax.swing.event.ListDataListener;
 class ActionListDataListener implements ListDataListener
 {
     ActionListDataListener(Component src, ActionListener listener, String cmd) {
-	this.src = src;
-	this.listener = listener;
-	this.cmd = cmd;
+        this.src = src;
+        this.listener = listener;
+        this.cmd = cmd;
     }
 
     public void intervalAdded(ListDataEvent e) {
-	contentsChanged(e);
+        contentsChanged(e);
     }
 
     public void intervalRemoved(ListDataEvent e) {
-	contentsChanged(e);
+        contentsChanged(e);
     }
 
     public void contentsChanged(ListDataEvent e) {
-	ActionEvent ae = new ActionEvent(src, ActionEvent.ACTION_PERFORMED, cmd);
-	listener.actionPerformed(ae);
+        ActionEvent ae = new ActionEvent(src, ActionEvent.ACTION_PERFORMED, cmd);
+        listener.actionPerformed(ae);
     }
 
     private Component src;

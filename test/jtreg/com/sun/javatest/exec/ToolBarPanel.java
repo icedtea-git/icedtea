@@ -42,7 +42,7 @@ import javax.swing.border.BevelBorder;
  * The Panel which holds standard and custom toolbars
  */
 class ToolBarPanel extends JPanel {
-    
+
     /**
      * Creates a new panel.
      */
@@ -50,10 +50,10 @@ class ToolBarPanel extends JPanel {
         setLayout(theLayout);
         setName("toolbarPanel");
     }
-    
+
     /**
      * Paints the panel.
-     * Invoked by Swing to draw components. 
+     * Invoked by Swing to draw components.
      * @param g - the Graphics context in which to paint
      **/
     public void paint(java.awt.Graphics g) {
@@ -68,21 +68,21 @@ class ToolBarPanel extends JPanel {
             g.setColor(b.getHighlightInnerColor(this));
             g.drawLine(indent, separators[i]+1, getWidth()-indent, separators[i]+1);
         }
-        
+
         g.setColor(oldColor);
     }
-    
+
     /**
-     *ToolBarLayout lays out the panel and calculates positions for 
+     *ToolBarLayout lays out the panel and calculates positions for
      *horisontal separators
      **/
     class ToolBarLayout extends FlowLayout {
-        
+
         public ToolBarLayout() {
             super(FlowLayout.LEFT, 0, 0);
             setHgap(10);
         }
-        
+
         public Dimension preferredLayoutSize(Container target) {
             synchronized (target.getTreeLock()) {
                 int realW = target.getSize().width;
@@ -121,8 +121,8 @@ class ToolBarPanel extends JPanel {
                             hs.add(new Integer(dim.height));
                             dim.height += maxHeight + getVgap();
                             maxHeight = 0;
-                            // this is bug 
-                            // it calculates height of a new row by height of first component 
+                            // this is bug
+                            // it calculates height of a new row by height of first component
                             maxWidth = Math.max(maxWidth, dim.width);
                             maxHeight = Math.max(maxHeight, d.height);
                             dim.width = d.width;
@@ -145,18 +145,15 @@ class ToolBarPanel extends JPanel {
                 return dim;
             }
         }
-        
+
         synchronized int[] getRowPositions() {
             return separators;
         }
         private int[] separators = new int[0];
     }
-    
+
     private ToolBarLayout theLayout = new ToolBarLayout();
     private BevelBorder b = new BevelBorder(BevelBorder.RAISED);
     public static final String PB_PROP_NAME = "PAINT_BORDER";
-    
+
 }
-
-
-

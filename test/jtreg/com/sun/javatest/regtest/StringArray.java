@@ -87,13 +87,13 @@ public class StringArray extends com.sun.javatest.util.StringArray
      * indicated by the separator or the end of the string.  If there is a
      * separator immeidately before the end of the string, the final element
      * will be empty.  None of the strings will contain the separator. Useful
-     * when separating strings such as "foo/bar/bas" using separator '/'.  
+     * when separating strings such as "foo/bar/bas" using separator '/'.
      *
      * @param sep  The separator.
      * @param s    The string to split.
      * @return     An array of strings. Each string in the array is determined
      *             by the location of the provided sep in the original string,
-     *             s.  Whitespace not stripped.  
+     *             s.  Whitespace not stripped.
      * @see #splitTerminator
      */
     public static String [] splitSeparator(String sep, String s) {
@@ -113,7 +113,7 @@ public class StringArray extends com.sun.javatest.util.StringArray
     } // splitSeparator()
 
     /**
-     * Splits a string based on the presence of a specified terminator.  Returns 
+     * Splits a string based on the presence of a specified terminator.  Returns
      * an array of arbitrary length.  The end of each element in the array is
      * indicated by the terminator.  None of the strings will contain the
      * terminator.  Useful when separating string such as "int foo; int bar;"
@@ -140,7 +140,7 @@ public class StringArray extends com.sun.javatest.util.StringArray
         v.copyInto(retVal);
         return retVal;
     } // splitTerminator()
-    
+
     /**
      * Splits a string according to whitespace in the string.  Returns an array
      * of arbitrary length. Elements are delimited (start or end) by an

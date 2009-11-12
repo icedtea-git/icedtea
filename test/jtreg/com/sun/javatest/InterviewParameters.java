@@ -178,14 +178,14 @@ public abstract class InterviewParameters
     }
 
     /**
-     *  The template manager is used to change behaviour of 
-     *  template saving, the default implementation is 
-     *  the context manager of correspomding test suite. 
+     *  The template manager is used to change behaviour of
+     *  template saving, the default implementation is
+     *  the context manager of correspomding test suite.
      */
     public interface TemplateManager {
         /**
          * This method is invoked each time before saving template.
-         * The template will be saved only if this method returns true. 
+         * The template will be saved only if this method returns true.
          * @param file template file
          * @return true if this operation is allowed, false otherwise
          */
@@ -229,7 +229,7 @@ public abstract class InterviewParameters
      * This method is called when the object is created
      * from an entry in a .jtt file.
      * By default, the method throws an exception if any arguments
-     * are given. It should be redefined by any test suites that wish 
+     * are given. It should be redefined by any test suites that wish
      * to support this type of initialization.
      * @param args test suite specific args with which to initialize
      * this InterviewParameters object
@@ -249,7 +249,7 @@ public abstract class InterviewParameters
      * may need to be evaluated to get the required value. Subtypes may
      * choose to override this method to provide a more efficient
      * implementation.
-     * 
+     *
      * <p> Since the default implementation gets the name from the test
      * environment, clients should not use this method to determine
      * the name for the test environment, unless this method is redefined.
@@ -284,8 +284,8 @@ public abstract class InterviewParameters
     /**
      * Get a description for this configuration.
      * By default and for backwards compatibility, this defaults to the
-     * description entry in the test environment, which means that the 
-     * whole environment may need to be evaluated to get the required value. 
+     * description entry in the test environment, which means that the
+     * whole environment may need to be evaluated to get the required value.
      * Subtypes may choose to override this method to provide a more efficient
      * implementation.
      * @return a description for this configuration, or null if not known
@@ -305,7 +305,7 @@ public abstract class InterviewParameters
 
     /**
      * Get the next question to the asked after the initial prolog
-     * of questions. 
+     * of questions.
      * The default value is the result of getEnvFirstQuestion.
      * @return the next question to be asked after the initial prolog
      * of questions.
@@ -328,7 +328,7 @@ public abstract class InterviewParameters
 
     /**
      * Get the first question to be asked concerning the environment to be
-     * set up and used for each test to be run. If these questions are 
+     * set up and used for each test to be run. If these questions are
      * contained in an interview, this method can be simply implemented as:<br>
      *  <code>return callInterview(</code><i>envInterview</i><code>, getEnvSuccessorQuestion);</code><br>
      * @return the first question to be asked concerning the environment to be
@@ -338,11 +338,11 @@ public abstract class InterviewParameters
     protected abstract Question getEnvFirstQuestion();
 
     /**
-     * Get the next question to be asked after those concerning 
-     * the environment to be set up and used for each test to be run. 
+     * Get the next question to be asked after those concerning
+     * the environment to be set up and used for each test to be run.
      * The default value is the result of getTestsFirstQuestion.
-     * @return the next question to be asked after those concerning 
-     * the environment to be set up and used for each test to be run. 
+     * @return the next question to be asked after those concerning
+     * the environment to be set up and used for each test to be run.
      * @see #getEnvFirstQuestion
      */
     protected Question getEnvSuccessorQuestion() {
@@ -402,10 +402,10 @@ public abstract class InterviewParameters
     }
 
     /**
-     * Get the next question to be asked after those concerning 
+     * Get the next question to be asked after those concerning
      * the exclude list to be used to exclude tests from the test run.
      * The default value is the result of getKeywordsFirstQuestion,
-     * @return the next question to be asked after those concerning 
+     * @return the next question to be asked after those concerning
      * the exclude list to be used to exclude tests from the test run.
      * @see #getExcludeListFirstQuestion
      */
@@ -414,9 +414,9 @@ public abstract class InterviewParameters
     }
 
     /**
-     * Get the next question to be asked after those concerning 
+     * Get the next question to be asked after those concerning
      * the exclude list to be used to exclude tests from the test run.
-     * @return the next question to be asked after those concerning 
+     * @return the next question to be asked after those concerning
      * the exclude list to be used to exclude tests from the test run
      * @deprecated
      * @see #getExcludeListSuccessorQuestion
@@ -440,10 +440,10 @@ public abstract class InterviewParameters
     protected abstract Question getKeywordsFirstQuestion();
 
     /**
-     * Get the next question to be asked after those concerning 
+     * Get the next question to be asked after those concerning
      * the keywords that may be used to select tests for the test run.
      * The default value is the result of getPriorStatusQuestion.
-     * @return the next question to be asked after those concerning 
+     * @return the next question to be asked after those concerning
      * the keywords that may be used to select tests for the test run.
      * @see #getKeywordsFirstQuestion
      */
@@ -466,13 +466,13 @@ public abstract class InterviewParameters
     protected abstract Question getPriorStatusFirstQuestion();
 
     /**
-     * Get the next question to be asked after those concerning 
-     * whether tests should be selected for execution according to their 
+     * Get the next question to be asked after those concerning
+     * whether tests should be selected for execution according to their
      * prior execution status.
      * The default value is the result of getConcurrencyFirstQuestion
-     * @return the next question to be asked after those concerning 
-     * whether tests should be selected for execution according to their 
-     * prior execution status. 
+     * @return the next question to be asked after those concerning
+     * whether tests should be selected for execution according to their
+     * prior execution status.
      * @see #getPriorStatusFirstQuestion
      */
     protected Question getPriorStatusSuccessorQuestion() {
@@ -494,10 +494,10 @@ public abstract class InterviewParameters
     protected abstract Question getConcurrencyFirstQuestion();
 
     /**
-     * Get the next question after those concerning the number 
+     * Get the next question after those concerning the number
      * of tests that may be run in parallel.
      * The default is the result of getTimeoutFactorFirstQuestion
-     * @return the next question after those concerning the number 
+     * @return the next question after those concerning the number
      * of tests that may be run in parallel.
      * @see #getConcurrencyFirstQuestion
      */
@@ -545,7 +545,7 @@ public abstract class InterviewParameters
     /**
      * Determine whether all the configuration values are valid, by
      * checking if the interview has been completed.
-     * If so, the result will be true; if not, the result will be false, 
+     * If so, the result will be true; if not, the result will be false,
      * and getErrorMessage will provide details about at least one of the
      * invalid values.
      * @return true if and only if all the configuration values are valid
@@ -726,7 +726,7 @@ public abstract class InterviewParameters
 
     /**
      * Determine if the current instance is a template or not.
-     * @return true if the current instance is a template, 
+     * @return true if the current instance is a template,
      * and false otherwise
      */
     public boolean isTemplate() {
@@ -736,7 +736,7 @@ public abstract class InterviewParameters
     /**
      * Set if the current instance is a template or not.
      * <b>For internal use only, architects should not use this.</b>
-     * @return true if the current instance is a template, 
+     * @return true if the current instance is a template,
      * and false otherwise
      */
     public void setTemplate(boolean tm) {
@@ -759,7 +759,7 @@ public abstract class InterviewParameters
 
     /**
      * Return String path to the template file for the current instance.
-     * @return String path to the template file, or null if the instance is not template-based 
+     * @return String path to the template file, or null if the instance is not template-based
      */
     public String getTemplatePath() {
         return templatePath;
@@ -776,7 +776,7 @@ public abstract class InterviewParameters
 
 
     /**
-     * Get the file associated with this interview. 
+     * Get the file associated with this interview.
      * @return the file associated with this interview.
      * @see #setFile
      * @see #load
@@ -804,7 +804,7 @@ public abstract class InterviewParameters
      * Determine if the specified file is an interview file,
      * as determined by whether its extension is .jti or not.
      * @param f the file to be checked
-     * @return true if the specified file is an interview file, 
+     * @return true if the specified file is an interview file,
      * and false otherwise
      */
     public static boolean isInterviewFile(File f) {
@@ -818,7 +818,7 @@ public abstract class InterviewParameters
      * @return an InterviewParameters as determined by the contents of an
      * interview file.
      * @throws IOException is there is a problem reading the file
-     * @throws Interview.Fault if there is a problem instantiating the 
+     * @throws Interview.Fault if there is a problem instantiating the
      * interview
      */
     public static InterviewParameters open(File file)
@@ -835,7 +835,7 @@ public abstract class InterviewParameters
      * @return an InterviewParameters as determined by the test suite
      * and the contents of an interview file
      * @throws IOException is there is a problem reading the file
-     * @throws Interview.Fault if there is a problem instantiating the 
+     * @throws Interview.Fault if there is a problem instantiating the
      * interview
      */
     public static InterviewParameters open(File file, TestSuite testSuite)
@@ -851,12 +851,12 @@ public abstract class InterviewParameters
      * Create an InterviewParameters by populating the interview for a specified
      * work directory with responses from a given file.
      * @param file the file to be read
-     * @param workDir the work directory (implying the test suite) for which 
+     * @param workDir the work directory (implying the test suite) for which
      * to create the interview
      * @return an InterviewParameters as determined by the work directory
      * and the contents of an interview file
      * @throws IOException is there is a problem reading the file
-     * @throws Interview.Fault if there is a problem instantiating the 
+     * @throws Interview.Fault if there is a problem instantiating the
      * interview
      */
     public static InterviewParameters open(File file, WorkDirectory workDir)
@@ -987,7 +987,7 @@ public abstract class InterviewParameters
      * test suite and work directory. Any, but not all, of these paths may be null.
      * Any non-null path must specify an appropriate existing file, otherwise
      * an exception will be thrown.
-     * @param testSuitePath the path for the test suite; if not specified, 
+     * @param testSuitePath the path for the test suite; if not specified,
      * the test suite will default from the work directory (if specified) or
      * the configuration file.
      * @param workDirPath the path for the work directory; if not specified,
@@ -1016,7 +1016,7 @@ public abstract class InterviewParameters
      * test suite and work directory. Any, but not all, of these paths may be null.
      * Any non-null path must specify an appropriate existing file, otherwise
      * an exception will be thrown.
-     * @param testSuitePath the path for the test suite; if not specified, 
+     * @param testSuitePath the path for the test suite; if not specified,
      * the test suite will default from the work directory (if specified) or
      * the configuration file.
      * @param workDirPath the path for the work directory; if not specified,
@@ -1141,11 +1141,11 @@ public abstract class InterviewParameters
 
 
     /**
-     * Load the interview with the contents of the file associated with 
-     * the interview. If the file does not exist, the interview will be 
+     * Load the interview with the contents of the file associated with
+     * the interview. If the file does not exist, the interview will be
      * cleared.
      * @throws IOException is there is a problem reading the file
-     * @throws Interview.Fault if there is a problem loading the 
+     * @throws Interview.Fault if there is a problem loading the
      * interview
      */
     public void load() throws IOException, Fault {
@@ -1164,7 +1164,7 @@ public abstract class InterviewParameters
      * @param file the file to be loaded
      * @throws FileNotFoundException if the specified file does not exist.
      * @throws IOException is there is a problem reading the file
-     * @throws Interview.Fault if there is a problem loading the 
+     * @throws Interview.Fault if there is a problem loading the
      * interview
      */
     public void load(File file) throws FileNotFoundException, IOException, Fault {
@@ -1229,7 +1229,7 @@ public abstract class InterviewParameters
 
     /**
      * Load the interview as best as possible with the data in another
-     * Parameters object. If any of the various sub-objects as returned by 
+     * Parameters object. If any of the various sub-objects as returned by
      * get<i>XXX</i>Parameters are not recognized, they will be ignored.
      * @param other The Parameters object to be copied.
      */
@@ -1379,7 +1379,7 @@ public abstract class InterviewParameters
      * Save the current set of answers for the interview in the standard
      * file associated with the interview.
      * @throws IOException is there is a problem writing the file
-     * @throws Interview.Fault if there is a problem preparing the 
+     * @throws Interview.Fault if there is a problem preparing the
      * interview to be written
      * @see #getFile
      */
@@ -1396,7 +1396,7 @@ public abstract class InterviewParameters
      * and make that file the new file associated with the interview.
      * @param file the file in which to save the state of the interview
      * @throws IOException is there is a problem writing the file
-     * @throws Interview.Fault if there is a problem preparing the 
+     * @throws Interview.Fault if there is a problem preparing the
      * interview to be written
      * @see #getFile
      */
@@ -1412,7 +1412,7 @@ public abstract class InterviewParameters
      * @param file the file in which to save the state of the interview
      * @param isTemplate
      * @throws IOException is there is a problem writing the file
-     * @throws Interview.Fault if there is a problem preparing the 
+     * @throws Interview.Fault if there is a problem preparing the
      * interview to be written
      * @see #getFile
      */
@@ -1431,7 +1431,7 @@ public abstract class InterviewParameters
      * including the paths for the test suite and work directory.
      * @param file the file in which to save the state of the interview
      * @throws IOException is there is a problem writing the file
-     * @throws Interview.Fault if there is a problem preparing the 
+     * @throws Interview.Fault if there is a problem preparing the
      * interview to be written
      */
     public void saveAs(File file)
@@ -1452,7 +1452,7 @@ public abstract class InterviewParameters
      * in the file.
      * @param is template if true, the intreview will be saved as template.
      * @throws IOException is there is a problem writing the file
-     * @throws Interview.Fault if there is a problem preparing the 
+     * @throws Interview.Fault if there is a problem preparing the
      * interview to be written
      */
     public void saveAs(File file, boolean saveTestSuite, boolean saveWorkDir, boolean isTemplate)
@@ -1508,7 +1508,7 @@ public abstract class InterviewParameters
      * @param saveWorkDir if true, the work directory path will be saved
      * in the file.
      * @throws IOException is there is a problem writing the file
-     * @throws Interview.Fault if there is a problem preparing the 
+     * @throws Interview.Fault if there is a problem preparing the
      * interview to be written
      */
     public void saveAs(File file, boolean saveTestSuite, boolean saveWorkDir)
@@ -1574,7 +1574,7 @@ public abstract class InterviewParameters
      * Check if the current file has been loaded into this interview,
      * or if the interview has been saved in it.
      * @return true if the file assocaited with the interview was set as a
-     * side effect of load or save, or false if the file was just set by 
+     * side effect of load or save, or false if the file was just set by
      * setFile.
      */
     public boolean isFileLoaded() {
@@ -1584,7 +1584,7 @@ public abstract class InterviewParameters
     /**
      * Determine if the file assocaited with this interview has been modified
      * on disk after the last call of load or save.
-     * @return true if the file on disk has been modified after it was last 
+     * @return true if the file on disk has been modified after it was last
      * used by load or save.
      * @see #load()
      * @see #save()

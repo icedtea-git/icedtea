@@ -104,9 +104,9 @@ public class Main {
             }
         }
     };
-    
+
     //---------- Command line invocation support -------------------------------
-    
+
     /**
      * Standard entry point. Only returns if GUI mode is initiated; otherwise, it calls System.exit
      * with an appropriate exit code.

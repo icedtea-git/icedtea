@@ -46,89 +46,89 @@ import com.sun.javatest.tool.UIFactory;
 
 class RunProgressMonitor extends Monitor implements MonitorState.Observer {
     RunProgressMonitor(MonitorState ms, UIFactory uif) {
-	super(ms, uif);
-	ms.addObserver(this);
+        super(ms, uif);
+        ms.addObserver(this);
     }
 
     public String getSmallMonitorName() {
-	return uif.getI18NString("runprog.smName");
+        return uif.getI18NString("runprog.smName");
     }
 
     public Icon getSmallMonitorIcon() {
-	return null;
+        return null;
     }
 
     public JComponent getSmallMonitor() {
-	/* removed for JT 3.2
-	if (smMeter == null) {
-	    Color[] colors = new Color[Status.NUM_STATES];
-	    colors[Status.PASSED] =  I18NUtils.getStatusBarColor(Status.PASSED);
-	    colors[Status.FAILED] =  I18NUtils.getStatusBarColor(Status.FAILED);
-	    colors[Status.ERROR] =   I18NUtils.getStatusBarColor(Status.ERROR);
-	    colors[Status.NOT_RUN] = I18NUtils.getStatusBarColor(Status.NOT_RUN);
-	    smMeter = new ProgressMeter(colors, state);
-	    smMeter.setToolTipText(uif.getI18NString("runprog.smName.tip"));
-	}
+        /* removed for JT 3.2
+        if (smMeter == null) {
+            Color[] colors = new Color[Status.NUM_STATES];
+            colors[Status.PASSED] =  I18NUtils.getStatusBarColor(Status.PASSED);
+            colors[Status.FAILED] =  I18NUtils.getStatusBarColor(Status.FAILED);
+            colors[Status.ERROR] =   I18NUtils.getStatusBarColor(Status.ERROR);
+            colors[Status.NOT_RUN] = I18NUtils.getStatusBarColor(Status.NOT_RUN);
+            smMeter = new ProgressMeter(colors, state);
+            smMeter.setToolTipText(uif.getI18NString("runprog.smName.tip"));
+        }
 
-	if (state.isRunning())
-	    smMeter.start();
-	else
-	    smMeter.update();
-	*/
-	smMeter = uif.createProgressBar("runprog.sm", JProgressBar.HORIZONTAL);
-	smMeter.setMinimum(0);
-	smMeter.setStringPainted(true);
-	//smMeter.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-	smMeter.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createEmptyBorder(3,5,3,5),
-				BorderFactory.createLineBorder(Color.black)));
+        if (state.isRunning())
+            smMeter.start();
+        else
+            smMeter.update();
+        */
+        smMeter = uif.createProgressBar("runprog.sm", JProgressBar.HORIZONTAL);
+        smMeter.setMinimum(0);
+        smMeter.setStringPainted(true);
+        //smMeter.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        smMeter.setBorder(BorderFactory.createCompoundBorder(
+                                BorderFactory.createEmptyBorder(3,5,3,5),
+                                BorderFactory.createLineBorder(Color.black)));
 
-	return smMeter;
+        return smMeter;
     }
 
     public String getLargeMonitorName() {
-	return uif.getI18NString("runprog.lgName");
+        return uif.getI18NString("runprog.lgName");
     }
 
     public Icon getLargeMonitorIcon() {
-	return null;
+        return null;
     }
 
     public JComponent getLargeMonitor() {
-	return null;
+        return null;
     }
 
     // MonitorState.Observer
     public void starting() {
-	if (pmUpdate == null) {
-	    pmUpdate = new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    if (lastDone != state.getTestsDoneCount()) {
-			smMeter.setMaximum(state.getTestsFoundCount());
-			lastDone = state.getTestsDoneCount();
-			smMeter.setValue(lastDone);
-		    }
-		}
+        if (pmUpdate == null) {
+            pmUpdate = new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (lastDone != state.getTestsDoneCount()) {
+                        smMeter.setMaximum(state.getTestsFoundCount());
+                        lastDone = state.getTestsDoneCount();
+                        smMeter.setValue(lastDone);
+                    }
+                }
 
-		private int lastDone = 0;
-	    };
-	}
+                private int lastDone = 0;
+            };
+        }
 
-	if (pmTimer == null) {
-	    pmTimer = new Timer(TIMER_FREQ, pmUpdate);
-	    pmTimer.setInitialDelay(TIMER_INITIAL);
-	    pmTimer.setCoalesce(false);	    // ok to lose extra events
-	    pmTimer.setRepeats(true);
-	}
+        if (pmTimer == null) {
+            pmTimer = new Timer(TIMER_FREQ, pmUpdate);
+            pmTimer.setInitialDelay(TIMER_INITIAL);
+            pmTimer.setCoalesce(false);     // ok to lose extra events
+            pmTimer.setRepeats(true);
+        }
 
-	if (pmTimer.isRunning())
-	    pmTimer.restart();	    // this should not happen
-	else
-	    pmTimer.start();
+        if (pmTimer.isRunning())
+            pmTimer.restart();      // this should not happen
+        else
+            pmTimer.start();
     }
 
     public void postProcessing() {
-	stopAll();
+        stopAll();
     }
 
     public void stopping() {
@@ -141,15 +141,15 @@ class RunProgressMonitor extends Monitor implements MonitorState.Observer {
      * Stop all active subthreads associated with a running harness.
      */
     private void stopAll() {
-	if (pmTimer != null && pmTimer.isRunning())
-	    pmTimer.stop();
-	
-	// if all tests were completed, make sure that the bar shows
-	// 100%.  this is necessary because depending on the timer,
-	// it may not have been updated since the last test finished;
-	// actually this is likely.
-	if (state.getTestsDoneCount() == state.getTestsFoundCount())
-	    smMeter.setValue(smMeter.getMaximum());
+        if (pmTimer != null && pmTimer.isRunning())
+            pmTimer.stop();
+
+        // if all tests were completed, make sure that the bar shows
+        // 100%.  this is necessary because depending on the timer,
+        // it may not have been updated since the last test finished;
+        // actually this is likely.
+        if (state.getTestsDoneCount() == state.getTestsFoundCount())
+            smMeter.setValue(smMeter.getMaximum());
     }
 
     private JProgressBar smMeter;

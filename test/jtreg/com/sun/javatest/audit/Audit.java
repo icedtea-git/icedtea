@@ -70,31 +70,31 @@ public class Audit
      * used in the analysis.
      * @throws TestSuite.Fault if there is a problem opening the test suite given in the parameters
      */
-    public Audit(Parameters params) 
+    public Audit(Parameters params)
     {
-	this(getTestFinderQueue(params), 
-	     params.getExcludeList(), 
-	     params.getWorkDirectory());
+        this(getTestFinderQueue(params),
+             params.getExcludeList(),
+             params.getWorkDirectory());
     }
 
     /**
      * Create a test finder queue based on the info in the parameters
      */
-    private static TestFinderQueue getTestFinderQueue(Parameters params) 
+    private static TestFinderQueue getTestFinderQueue(Parameters params)
     {
-	TestSuite ts = params.getTestSuite();
-	TestFinder tf = ts.getTestFinder();
+        TestSuite ts = params.getTestSuite();
+        TestFinder tf = ts.getTestFinder();
 
-	TestFinderQueue tfq = new TestFinderQueue();
-	tfq.setTestFinder(tf);
+        TestFinderQueue tfq = new TestFinderQueue();
+        tfq.setTestFinder(tf);
 
-	String[] tests = params.getTests();
-	tfq.setTests(tests);
+        String[] tests = params.getTests();
+        tfq.setTests(tests);
 
-	TestFilter[] filters = params.getFilters();
-	tfq.setFilters(filters);
+        TestFilter[] filters = params.getFilters();
+        tfq.setFilters(filters);
 
-	return tfq;
+        return tfq;
     }
 
 
@@ -104,94 +104,94 @@ public class Audit
      * @param excludeList The excludeList against which to check excluded test cases
      * @param workDir The set of results
      */
-    public Audit(TestFinderQueue tfq, ExcludeList excludeList, WorkDirectory workDir)  
+    public Audit(TestFinderQueue tfq, ExcludeList excludeList, WorkDirectory workDir)
     {
-	Vector badChecksumTestsV = new Vector();
-	Vector badTestDescriptionsV = new Vector();
-	Vector badTestCaseTestsV = new Vector();
-	Vector badTestsV = new Vector();
+        Vector badChecksumTestsV = new Vector();
+        Vector badTestDescriptionsV = new Vector();
+        Vector badTestCaseTestsV = new Vector();
+        Vector badTestsV = new Vector();
 
         workDir.getTestResultTable().waitUntilReady();
 
-	TestDescription td;
-	while ((td = tfq.next()) != null) {
-	    try {
-		TestResult tr = new TestResult(workDir, TestResult.getWorkRelativePath(td));
+        TestDescription td;
+        while ((td = tfq.next()) != null) {
+            try {
+                TestResult tr = new TestResult(workDir, TestResult.getWorkRelativePath(td));
 
-		testCount++;
-		statusCounts[tr.getStatus().getType()]++;
-		checksumCounts[tr.getChecksumState()]++;
+                testCount++;
+                statusCounts[tr.getStatus().getType()]++;
+                checksumCounts[tr.getChecksumState()]++;
 
-		if (tr.getChecksumState() == TestResult.BAD_CHECKSUM) 
-		    badChecksumTestsV.addElement(tr);
+                if (tr.getChecksumState() == TestResult.BAD_CHECKSUM)
+                    badChecksumTestsV.addElement(tr);
 
-		if (!equal(td, tr.getDescription()))
-		    badTestDescriptionsV.addElement(tr);
-		
-		if (!checkTestCases(tr, excludeList))
-		    badTestCaseTestsV.addElement(tr);
-		
-		Map trEnv = tr.getEnvironment();
-		for (Iterator i = trEnv.entrySet().iterator(); i.hasNext(); ) {
-		    Map.Entry e = (Map.Entry) (i.next());
-		    String key = (String) (e.getKey());
-		    String value = (String) (e.getValue());
-		    Vector allValuesForKey = (Vector)(envTable.get(key));
-		    if (allValuesForKey == null) {
-			allValuesForKey = new Vector();
-			envTable.put(key, allValuesForKey);
-		    }
-		    if (!allValuesForKey.contains(value))
-			allValuesForKey.addElement(value);
-		}
-		
-		String start = tr.getProperty(TestResult.START);
-		if (start == null) {
-		    badDates = true;
-		}
-		else {
-		    Date d = parseDate(start);
-		    if (d == null)
-			badDates = true;
-		    else {
-			if (earliestStart == null || d.before(earliestStart))
-			    earliestStart = d;
-			if (latestStart == null || d.after(latestStart))
-			    latestStart = d;
-		    }
-		}
-	    }
-	    catch (TestResult.Fault e) {
-		//System.err.println(td.getRootRelativeURL() + " " + TestResult.getWorkRelativePath(td) + " " + e);
-		badTestsV.addElement(td);
-	    }
-	}
-	    
-	for (Enumeration e = envTable.keys(); e.hasMoreElements(); ) {
-	    String key = (String)(e.nextElement());
-	    Vector allValuesForKey = (Vector)(envTable.get(key));
-	    envCounts[allValuesForKey.size() == 1 ? 0 : 1]++;	
-	}
+                if (!equal(td, tr.getDescription()))
+                    badTestDescriptionsV.addElement(tr);
 
-	if (badChecksumTestsV.size() > 0) {
-	    badChecksumTests = new TestResult[badChecksumTestsV.size()];
-	    badChecksumTestsV.copyInto(badChecksumTests);
-	}
+                if (!checkTestCases(tr, excludeList))
+                    badTestCaseTestsV.addElement(tr);
 
-	if (badTestDescriptionsV.size() > 0) {
-	    badTestDescriptions = new TestResult[badTestDescriptionsV.size()];
-	    badTestDescriptionsV.copyInto(badTestDescriptions);
-	}
+                Map trEnv = tr.getEnvironment();
+                for (Iterator i = trEnv.entrySet().iterator(); i.hasNext(); ) {
+                    Map.Entry e = (Map.Entry) (i.next());
+                    String key = (String) (e.getKey());
+                    String value = (String) (e.getValue());
+                    Vector allValuesForKey = (Vector)(envTable.get(key));
+                    if (allValuesForKey == null) {
+                        allValuesForKey = new Vector();
+                        envTable.put(key, allValuesForKey);
+                    }
+                    if (!allValuesForKey.contains(value))
+                        allValuesForKey.addElement(value);
+                }
 
-	if (badTestCaseTestsV.size() > 0) {
-	    badTestCaseTests = new TestResult[badTestCaseTestsV.size()];
-	    badTestCaseTestsV.copyInto(badTestCaseTests);
-	}
+                String start = tr.getProperty(TestResult.START);
+                if (start == null) {
+                    badDates = true;
+                }
+                else {
+                    Date d = parseDate(start);
+                    if (d == null)
+                        badDates = true;
+                    else {
+                        if (earliestStart == null || d.before(earliestStart))
+                            earliestStart = d;
+                        if (latestStart == null || d.after(latestStart))
+                            latestStart = d;
+                    }
+                }
+            }
+            catch (TestResult.Fault e) {
+                //System.err.println(td.getRootRelativeURL() + " " + TestResult.getWorkRelativePath(td) + " " + e);
+                badTestsV.addElement(td);
+            }
+        }
 
-	if (badTestsV.size() > 0) {
-	    badTests = new TestDescription[badTestsV.size()];
-	    badTestsV.copyInto(badTests);
-	}
+        for (Enumeration e = envTable.keys(); e.hasMoreElements(); ) {
+            String key = (String)(e.nextElement());
+            Vector allValuesForKey = (Vector)(envTable.get(key));
+            envCounts[allValuesForKey.size() == 1 ? 0 : 1]++;
+        }
+
+        if (badChecksumTestsV.size() > 0) {
+            badChecksumTests = new TestResult[badChecksumTestsV.size()];
+            badChecksumTestsV.copyInto(badChecksumTests);
+        }
+
+        if (badTestDescriptionsV.size() > 0) {
+            badTestDescriptions = new TestResult[badTestDescriptionsV.size()];
+            badTestDescriptionsV.copyInto(badTestDescriptions);
+        }
+
+        if (badTestCaseTestsV.size() > 0) {
+            badTestCaseTests = new TestResult[badTestCaseTestsV.size()];
+            badTestCaseTestsV.copyInto(badTestCaseTests);
+        }
+
+        if (badTestsV.size() > 0) {
+            badTests = new TestDescription[badTestsV.size()];
+            badTestsV.copyInto(badTests);
+        }
     }
 
     /**
@@ -199,7 +199,7 @@ public class Audit
      * @return A set of tests, or null if none.
      */
     public TestResult[] getBadChecksumTests() {
-	return badChecksumTests;
+        return badChecksumTests;
     }
 
     /**
@@ -207,7 +207,7 @@ public class Audit
      * @return A set of tests, or null if none.
      */
     public TestResult[] getBadTestDescriptions() {
-	return badTestDescriptions;
+        return badTestDescriptions;
     }
 
     /**
@@ -215,7 +215,7 @@ public class Audit
      * @return A set of tests, or null if none.
      */
     public TestDescription[] getBadTests() {
-	return badTests;
+        return badTests;
     }
 
     /**
@@ -224,16 +224,16 @@ public class Audit
      * @return A set of tests, or null if none.
      */
     public TestResult[] getBadTestCaseTests() {
-	return badTestCaseTests;
+        return badTestCaseTests;
     }
 
     /**
      * Get the statistics about the test result checksums.
-     * @return An array of counts, indexed by 
+     * @return An array of counts, indexed by
      * TestResult.GOOD_CHECKSUM, TestResult.BAD_CHECKSUM, etc
      */
     public int[] getChecksumCounts() {
-	return checksumCounts;
+        return checksumCounts;
     }
 
     /**
@@ -243,7 +243,7 @@ public class Audit
      * the number that were multiply defined across the results.
      */
     public int[] getEnvCounts() {
-	return envCounts;
+        return envCounts;
     }
 
     /**
@@ -253,15 +253,15 @@ public class Audit
      * containing the various values for that key.
      */
     public Hashtable getEnvTable() {
-	return envTable;
+        return envTable;
     }
 
     /**
      * Get the statistics about the test results.
-     * @return An array of counts, indexed by Status.PASSED, Status.FAILED, etc 
+     * @return An array of counts, indexed by Status.PASSED, Status.FAILED, etc
      */
     public int[] getStatusCounts() {
-	return statusCounts;
+        return statusCounts;
     }
 
     /**
@@ -270,7 +270,7 @@ public class Audit
      * or null, if none was found.
      */
     public Date getEarliestStartTime() {
-	return earliestStart;
+        return earliestStart;
     }
 
     /**
@@ -279,11 +279,11 @@ public class Audit
      * or null, if none was found.
      */
     public Date getLatestStartTime() {
-	return latestStart;
+        return latestStart;
     }
 
     public boolean hasBadStartTimes() {
-	return badDates;
+        return badDates;
     }
 
     /**
@@ -292,12 +292,12 @@ public class Audit
      * @return true if all checks are OK
      */
     public boolean isOK() {
-	return (isStatusCountsOK() 
-		&& isChecksumCountsOK()
-		&& isDateStampsOK()
-		&& isAllTestsOK()
-		&& isAllTestCasesOK())
-	        && isAllTestDescriptionsOK();
+        return (isStatusCountsOK()
+                && isChecksumCountsOK()
+                && isDateStampsOK()
+                && isAllTestsOK()
+                && isAllTestCasesOK())
+                && isAllTestDescriptionsOK();
     }
 
     /**
@@ -305,7 +305,7 @@ public class Audit
      * @return true if all tests were analysed successfully.
      */
     public boolean isAllTestsOK() {
-	return (badTests == null);
+        return (badTests == null);
     }
 
     /**
@@ -315,7 +315,7 @@ public class Audit
      * tests that support test cases.
      */
     public boolean isAllTestCasesOK() {
-	return (badTestCaseTests == null);
+        return (badTestCaseTests == null);
     }
 
     /**
@@ -323,17 +323,17 @@ public class Audit
      * @return true is all test descriptions were OK.
      */
     public boolean isAllTestDescriptionsOK() {
-	return (badTestDescriptions == null);
+        return (badTestDescriptions == null);
     }
 
     /**
      * Determine if the checksum counts are acceptable.
-     * This is currently defined as "no bad checksums"; 
+     * This is currently defined as "no bad checksums";
      * in time, it should become "all good checksums".
      * @return true is there were no test results with bad checksums.
      */
     public boolean isChecksumCountsOK() {
-	return (checksumCounts[TestResult.BAD_CHECKSUM] == 0);
+        return (checksumCounts[TestResult.BAD_CHECKSUM] == 0);
     }
 
     /**
@@ -343,7 +343,7 @@ public class Audit
      * @return true if no dates have invalid datestamps.
      */
     public boolean isDateStampsOK() {
-	return (earliestStart != null && latestStart != null && !badDates);
+        return (earliestStart != null && latestStart != null && !badDates);
     }
 
     /**
@@ -352,67 +352,67 @@ public class Audit
      * @return true if all necessary tests passed.
      */
     public boolean isStatusCountsOK() {
-	if (testCount == 0)
-	    return false;
+        if (testCount == 0)
+            return false;
 
-	for (int i = 0; i < statusCounts.length; i++) {
-	    if (i != Status.PASSED && statusCounts[i] != 0)
-		return false;
-	}
-	return (statusCounts[Status.PASSED] == testCount);
+        for (int i = 0; i < statusCounts.length; i++) {
+            if (i != Status.PASSED && statusCounts[i] != 0)
+                return false;
+        }
+        return (statusCounts[Status.PASSED] == testCount);
     }
-    
+
     /**
      * Print out a report of the analysis.
      * @param out  A stream to which to write the output.
      * @param showAllEnvValues Include a listing of all environment values used
-     * 		by the collected set of tests.
-     * @param showMultipleEnvValues Include a listing of those environment values 
-     * 		which were multiply defined by the collected set of tests.
+     *          by the collected set of tests.
+     * @param showMultipleEnvValues Include a listing of those environment values
+     *          which were multiply defined by the collected set of tests.
      */
-    public synchronized void report(PrintStream out, 
-				    boolean showAllEnvValues, 
-				    boolean showMultipleEnvValues) {
-	this.out = out;
+    public synchronized void report(PrintStream out,
+                                    boolean showAllEnvValues,
+                                    boolean showMultipleEnvValues) {
+        this.out = out;
 
-	showResultCounts();
-	showChecksumCounts();
-	showDateStampInfo();
-	showEnvCounts();
+        showResultCounts();
+        showChecksumCounts();
+        showDateStampInfo();
+        showEnvCounts();
 
-	showBadChecksums();
-	showBadTestDescriptions();
-	showBadTestCaseTests();
-	showBadTests();
+        showBadChecksums();
+        showBadTestDescriptions();
+        showBadTestCaseTests();
+        showBadTests();
 
-	if (showAllEnvValues || showMultipleEnvValues)
-	    showEnvValues(showAllEnvValues);
+        if (showAllEnvValues || showMultipleEnvValues)
+            showEnvValues(showAllEnvValues);
     }
 
     /**
      * Print out a short summary about any tests with bad checksums
      */
     private void showBadChecksums() {
-	if (badChecksumTests != null) {
-	    out.println("The following " + badChecksumTests.length + " tests had bad checksums.");
-	    for (int i = 0; i < badChecksumTests.length; i++) {
-		TestResult tr = badChecksumTests[i];
-		out.println(tr.getWorkRelativePath());
-	    }
-	}
+        if (badChecksumTests != null) {
+            out.println("The following " + badChecksumTests.length + " tests had bad checksums.");
+            for (int i = 0; i < badChecksumTests.length; i++) {
+                TestResult tr = badChecksumTests[i];
+                out.println(tr.getWorkRelativePath());
+            }
+        }
     }
 
     /**
      * Print out a short summary about any tests with bad test descriptions
      */
     private void showBadTestDescriptions() {
-	if (badTestDescriptions != null) {
-	    out.println("The following " + badTestDescriptions.length + " tests had bad test descriptions.");
-	    for (int i = 0; i < badTestDescriptions.length; i++) {
-		TestResult tr = badTestDescriptions[i];
-		out.println(tr.getWorkRelativePath());
-	    }
-	}
+        if (badTestDescriptions != null) {
+            out.println("The following " + badTestDescriptions.length + " tests had bad test descriptions.");
+            for (int i = 0; i < badTestDescriptions.length; i++) {
+                TestResult tr = badTestDescriptions[i];
+                out.println(tr.getWorkRelativePath());
+            }
+        }
     }
 
     /**
@@ -420,13 +420,13 @@ public class Audit
      * excluded.
      */
     private void showBadTestCaseTests() {
-	if (badTestCaseTests != null) {
-	    out.println(i18n.getString("adt.tooManyTestCases", new Integer(badTestCaseTests.length)));
-	    for (int i = 0; i < badTestCaseTests.length; i++) {
-		TestResult tr = badTestCaseTests[i];
-		out.println(tr.getWorkRelativePath());
-	    }
-	}
+        if (badTestCaseTests != null) {
+            out.println(i18n.getString("adt.tooManyTestCases", new Integer(badTestCaseTests.length)));
+            for (int i = 0; i < badTestCaseTests.length; i++) {
+                TestResult tr = badTestCaseTests[i];
+                out.println(tr.getWorkRelativePath());
+            }
+        }
     }
 
     /**
@@ -434,13 +434,13 @@ public class Audit
      * during the analysis.
      */
     private void showBadTests() {
-	if (badTests != null) {
-	    out.println(i18n.getString("adt.badTests", new Integer(badTests.length)));
-	    for (int i = 0; i < badTests.length; i++) {
-		TestDescription td = badTests[i];
-		out.println(TestResult.getWorkRelativePath(td));
-	    }
-	}
+        if (badTests != null) {
+            out.println(i18n.getString("adt.badTests", new Integer(badTests.length)));
+            for (int i = 0; i < badTests.length; i++) {
+                TestDescription td = badTests[i];
+                out.println(TestResult.getWorkRelativePath(td));
+            }
+        }
     }
 
     /**
@@ -448,18 +448,18 @@ public class Audit
      * start times for the test results.
      */
     private void showDateStampInfo() {
-	if (earliestStart == null || latestStart == null) {
-	    out.println(i18n.getString("adt.noDateStamps"));
-	}
-	else {
-	    Integer b = new Integer(badDates ? 1 : 0);
-	    out.println(i18n.getString("adt.earliestResult", 
-				    new Object[] {earliestStart, b}));
-	    out.println(i18n.getString("adt.latestResult", 
-				    new Object[] {latestStart, b}));
-	    if (badDates)
-		out.println(i18n.getString("adt.badDateStamps"));
-	}
+        if (earliestStart == null || latestStart == null) {
+            out.println(i18n.getString("adt.noDateStamps"));
+        }
+        else {
+            Integer b = new Integer(badDates ? 1 : 0);
+            out.println(i18n.getString("adt.earliestResult",
+                                    new Object[] {earliestStart, b}));
+            out.println(i18n.getString("adt.latestResult",
+                                    new Object[] {latestStart, b}));
+            if (badDates)
+                out.println(i18n.getString("adt.badDateStamps"));
+        }
     }
 
     /**
@@ -467,20 +467,20 @@ public class Audit
      * @param out  A stream to which to write the output.
      */
     private void showEnvCounts() {
-	int u = envCounts[0];
-	int m = envCounts[1];
-	if (u + m > 0) {
-	    if (m == 0)
-		out.println(i18n.getString("adt.env.allOK"));
-	    else {
-		out.println(i18n.getString("adt.env.count",
-					   new Object[] {
-					       new Integer(u),
-					       new Integer((u > 0 && m > 0) ? 1 : 0),
-					       new Integer(m)
-						   } ));
-	    }
-	}
+        int u = envCounts[0];
+        int m = envCounts[1];
+        if (u + m > 0) {
+            if (m == 0)
+                out.println(i18n.getString("adt.env.allOK"));
+            else {
+                out.println(i18n.getString("adt.env.count",
+                                           new Object[] {
+                                               new Integer(u),
+                                               new Integer((u > 0 && m > 0) ? 1 : 0),
+                                               new Integer(m)
+                                                   } ));
+            }
+        }
     }
 
     /**
@@ -489,81 +489,81 @@ public class Audit
      * The default is to just show the multiple defined values.
      */
     private void showEnvValues(boolean showAll) {
-	out.println();
-	out.print(i18n.getString("adt.envList.title"));
+        out.println();
+        out.print(i18n.getString("adt.envList.title"));
 
-	SortedSet ss = new TreeSet();
-	for (Enumeration e = envTable.keys(); e.hasMoreElements(); ) {
-	    String key = (String)(e.nextElement());
-	    ss.add(key);
-	}
+        SortedSet ss = new TreeSet();
+        for (Enumeration e = envTable.keys(); e.hasMoreElements(); ) {
+            String key = (String)(e.nextElement());
+            ss.add(key);
+        }
 
-	for (Iterator iter = ss.iterator(); iter.hasNext(); ) {
-	    String key = (String) (iter.next());
-	    Vector allValuesForKey = (Vector)(envTable.get(key));
-	    if (allValuesForKey.size() == 1) {
-		if (showAll) 
-		    out.println(i18n.getString("adt.envKeyValue", 
-					    new Object[] {key, allValuesForKey.elementAt(0)}));
-	    }
-	    else {
-		out.println(i18n.getString("adt.envKey", key));
-		for (int j = 0; j < allValuesForKey.size(); j++) {
-		    out.println(i18n.getString("adt.envValue", 
-					    allValuesForKey.elementAt(j)));
-		}
-	    }
-	}
+        for (Iterator iter = ss.iterator(); iter.hasNext(); ) {
+            String key = (String) (iter.next());
+            Vector allValuesForKey = (Vector)(envTable.get(key));
+            if (allValuesForKey.size() == 1) {
+                if (showAll)
+                    out.println(i18n.getString("adt.envKeyValue",
+                                            new Object[] {key, allValuesForKey.elementAt(0)}));
+            }
+            else {
+                out.println(i18n.getString("adt.envKey", key));
+                for (int j = 0; j < allValuesForKey.size(); j++) {
+                    out.println(i18n.getString("adt.envValue",
+                                            allValuesForKey.elementAt(j)));
+                }
+            }
+        }
     }
 
     /**
      * Print out a short summary report of the checksum statistics.
      */
     private void showChecksumCounts() {
-	if (testCount > 0) {
-	    int g = checksumCounts[TestResult.GOOD_CHECKSUM];
-	    int b = checksumCounts[TestResult.BAD_CHECKSUM];
-	    int n = checksumCounts[TestResult.NO_CHECKSUM];
-	    if (b == 0 && n == 0)
-		out.println(i18n.getString("adt.cs.allOK"));
-	    else
-		out.println(i18n.getString("adt.cs.count",
-					   new Object[] {
-					       new Integer(g),
-					       new Integer((g > 0) && (b + n > 0) ? 1 : 0),
-					       new Integer(b),
-					       new Integer((b > 0) && (n > 0) ? 1 : 0),
-					       new Integer(n)
-						   }));
-	}
+        if (testCount > 0) {
+            int g = checksumCounts[TestResult.GOOD_CHECKSUM];
+            int b = checksumCounts[TestResult.BAD_CHECKSUM];
+            int n = checksumCounts[TestResult.NO_CHECKSUM];
+            if (b == 0 && n == 0)
+                out.println(i18n.getString("adt.cs.allOK"));
+            else
+                out.println(i18n.getString("adt.cs.count",
+                                           new Object[] {
+                                               new Integer(g),
+                                               new Integer((g > 0) && (b + n > 0) ? 1 : 0),
+                                               new Integer(b),
+                                               new Integer((b > 0) && (n > 0) ? 1 : 0),
+                                               new Integer(n)
+                                                   }));
+        }
     }
 
     /**
      * Print out a short summary report of the test result status statistics.
      */
     private void showResultCounts() {
-	if (testCount == 0)
-	    out.println(i18n.getString("adt.status.noTests"));
-	else {
-	    int p = statusCounts[Status.PASSED];
-	    int f = statusCounts[Status.FAILED];
-	    int e = statusCounts[Status.ERROR];
-	    int nr = statusCounts[Status.NOT_RUN];
+        if (testCount == 0)
+            out.println(i18n.getString("adt.status.noTests"));
+        else {
+            int p = statusCounts[Status.PASSED];
+            int f = statusCounts[Status.FAILED];
+            int e = statusCounts[Status.ERROR];
+            int nr = statusCounts[Status.NOT_RUN];
 
-	    if (p == testCount)
-		out.println(i18n.getString("adt.status.allOK"));
-	    else
-		out.println(i18n.getString("adt.status.count",
-					   new Object[] {
-					       new Integer(p),
-					       new Integer((p > 0) && (f + e + nr > 0) ? 1 : 0),
-					       new Integer(f),
-					       new Integer((f > 0) && (e + nr > 0) ? 1 : 0),
-					       new Integer(e),
-					       new Integer((e > 0) && (nr > 0) ? 1 : 0),
-					       new Integer(nr)
-						   }));
-	}
+            if (p == testCount)
+                out.println(i18n.getString("adt.status.allOK"));
+            else
+                out.println(i18n.getString("adt.status.count",
+                                           new Object[] {
+                                               new Integer(p),
+                                               new Integer((p > 0) && (f + e + nr > 0) ? 1 : 0),
+                                               new Integer(f),
+                                               new Integer((f > 0) && (e + nr > 0) ? 1 : 0),
+                                               new Integer(e),
+                                               new Integer((e > 0) && (nr > 0) ? 1 : 0),
+                                               new Integer(nr)
+                                                   }));
+        }
     }
 
     /**
@@ -574,150 +574,150 @@ public class Audit
      * @return true if a separator will be needed for the next value to be shown
      */
     private boolean showCount(String msg, boolean needSep, int count) {
-	if (count == 0) 
-	    return needSep;
-	else {
-	    out.print(i18n.getString(msg, 
-				  new Object[] {new Integer(needSep ? 1 : 0), new Integer(count)}));
-	    return true;
-	}
+        if (count == 0)
+            return needSep;
+        else {
+            out.print(i18n.getString(msg,
+                                  new Object[] {new Integer(needSep ? 1 : 0), new Integer(count)}));
+            return true;
+        }
     }
 
-    private boolean checkTestCases(TestResult tr, ExcludeList excludeList) 
-	throws TestResult.Fault {
-	// If no test cases excluded when test was run, then OK.
-	// (This is the typical case.)
-	String[] etcTest;
-	String etcTestProp = tr.getProperty("excludedTestCases");
-	if (etcTestProp == null)
-	    return true;
-	else
-	    etcTest = StringArray.split(etcTestProp);
+    private boolean checkTestCases(TestResult tr, ExcludeList excludeList)
+        throws TestResult.Fault {
+        // If no test cases excluded when test was run, then OK.
+        // (This is the typical case.)
+        String[] etcTest;
+        String etcTestProp = tr.getProperty("excludedTestCases");
+        if (etcTestProp == null)
+            return true;
+        else
+            etcTest = StringArray.split(etcTestProp);
 
-	// This next test is probably redundant, assuming the excludeList is
-	// the same as that used to locate the tests, but check anyway:
-	// if test is now completely excluded, then OK.
-	if (excludeList.excludesAllOf(tr.getDescription()))
-	    return true;
+        // This next test is probably redundant, assuming the excludeList is
+        // the same as that used to locate the tests, but check anyway:
+        // if test is now completely excluded, then OK.
+        if (excludeList.excludesAllOf(tr.getDescription()))
+            return true;
 
-	String[] etcTable = excludeList.getTestCases(tr.getDescription());
-	// null indicates test not found in table, or the entire test is excluded
-	// (without specifying test cases.)  Because of the previous check, the
-	// latter cannot be the case, so null means the test is not present
-	// in the exclude list. Since we also have checked that the test has
-	// excluded test cases that means we have a problem...
-	if (etcTable == null)
-	    return false;
+        String[] etcTable = excludeList.getTestCases(tr.getDescription());
+        // null indicates test not found in table, or the entire test is excluded
+        // (without specifying test cases.)  Because of the previous check, the
+        // latter cannot be the case, so null means the test is not present
+        // in the exclude list. Since we also have checked that the test has
+        // excluded test cases that means we have a problem...
+        if (etcTable == null)
+            return false;
 
-	// now check that etcTest is a subset of etcTable
+        // now check that etcTest is a subset of etcTable
     nextTestCase:
-	for (int i = 0; i < etcTest.length; i++) {
-	    for (int j = 0; j < etcTable.length; j++) {
-		if (etcTest[i].equals(etcTable[j]))
-		    continue nextTestCase;
-	    }
-	    // etcTest[i] was not found in etcTable;
-	    // that means we have a problem
-	    return false;
-	}
-	
-	// if we're here, we found all the test cases that were actually
-	// excluded were all validly excluded, according to excludedTestCases.
-	return true;
+        for (int i = 0; i < etcTest.length; i++) {
+            for (int j = 0; j < etcTable.length; j++) {
+                if (etcTest[i].equals(etcTable[j]))
+                    continue nextTestCase;
+            }
+            // etcTest[i] was not found in etcTable;
+            // that means we have a problem
+            return false;
+        }
+
+        // if we're here, we found all the test cases that were actually
+        // excluded were all validly excluded, according to excludedTestCases.
+        return true;
     }
 
     private static boolean equal(TestDescription a, TestDescription b) {
-	if (a == null || b == null)
-	    return (a == b);
+        if (a == null || b == null)
+            return (a == b);
 
-	//if (!a.rootRelativeFile.equals(b.rootRelativeFile))
-	//    return false;
+        //if (!a.rootRelativeFile.equals(b.rootRelativeFile))
+        //    return false;
 
-	Iterator eA = a.getParameterKeys();
-	Iterator eB = b.getParameterKeys();
-	while (eA.hasNext() && eB.hasNext()) {
-	    String keyA = (String)eA.next();
-	    String keyB = (String)eB.next();
-	    if (!keyA.equals(keyB)) {
-		//System.err.println("mismatch " + a.getRootRelativePath() + " a:" + keyA + " b:" + keyB);
-		return false;
-	    }
+        Iterator eA = a.getParameterKeys();
+        Iterator eB = b.getParameterKeys();
+        while (eA.hasNext() && eB.hasNext()) {
+            String keyA = (String)eA.next();
+            String keyB = (String)eB.next();
+            if (!keyA.equals(keyB)) {
+                //System.err.println("mismatch " + a.getRootRelativePath() + " a:" + keyA + " b:" + keyB);
+                return false;
+            }
 
-	    String valA = a.getParameter(keyA);
-	    String valB = a.getParameter(keyB);
-	    if (!(valA.equals(valB) || (keyA.equals("keywords") && keywordMatch(valA, valB)))) {
-		//System.err.println("mismatch " + a.getRootRelativePath() + " key:" + keyA + " a:" + valA + " b:" + valB);
-		return false;
-	    }
-	}
+            String valA = a.getParameter(keyA);
+            String valB = a.getParameter(keyB);
+            if (!(valA.equals(valB) || (keyA.equals("keywords") && keywordMatch(valA, valB)))) {
+                //System.err.println("mismatch " + a.getRootRelativePath() + " key:" + keyA + " a:" + valA + " b:" + valB);
+                return false;
+            }
+        }
 
-	return true;
+        return true;
     }
 
     private final static boolean keywordMatch(String a, String b) {
-	// eek, not very efficient!
-	String[] aa = StringArray.split(a);
-	Arrays.sort(aa);
-	String[] bb = StringArray.split(b);
-	Arrays.sort(bb);
-	return aa.equals(bb);
+        // eek, not very efficient!
+        String[] aa = StringArray.split(a);
+        Arrays.sort(aa);
+        String[] bb = StringArray.split(b);
+        Arrays.sort(bb);
+        return aa.equals(bb);
     }
 
     private Date parseDate(String s) {
-	if (dateFormats == null) 
-	    initDateFormats();
+        if (dateFormats == null)
+            initDateFormats();
 
-	for (int i = 0; i < dateFormats.length; i++) {
-	    try {
-		Date d = dateFormats[i].parse(s);
-		// successfully parsed the date; shuffle the format to the front
-		// to speed up future parses, assuming dates will likely be similar
-		if (i > 0) {
-		    DateFormat tmp = dateFormats[i];
-		    System.arraycopy(dateFormats, 0, dateFormats, 1, i);
-		    dateFormats[0] = tmp;
-		}
-		return d;
-	    }
-	    catch (ParseException e) {
-		//System.err.println("pattern: " + ((SimpleDateFormat)dateFormats[i]).toPattern());
-		//System.err.println("  value: " + s);
-		//System.err.println("example: " + dateFormats[i].format(new Date()));
-	    }
-	}
-	return null;
+        for (int i = 0; i < dateFormats.length; i++) {
+            try {
+                Date d = dateFormats[i].parse(s);
+                // successfully parsed the date; shuffle the format to the front
+                // to speed up future parses, assuming dates will likely be similar
+                if (i > 0) {
+                    DateFormat tmp = dateFormats[i];
+                    System.arraycopy(dateFormats, 0, dateFormats, 1, i);
+                    dateFormats[0] = tmp;
+                }
+                return d;
+            }
+            catch (ParseException e) {
+                //System.err.println("pattern: " + ((SimpleDateFormat)dateFormats[i]).toPattern());
+                //System.err.println("  value: " + s);
+                //System.err.println("example: " + dateFormats[i].format(new Date()));
+            }
+        }
+        return null;
     }
 
     private void initDateFormats() {
-	// Create an array of possible date formats to parse dates in .jtr files.
-	// Most likely is Unix C time in English; the array will be reordered in use
-	// by moving the recently used entries to the front of the array.
-	Vector v = new Vector();
-	
-	// generic Java default
-	// 10-Sep-99 3:25:11 PM
-	v.addElement(DateFormat.getDateTimeInstance()); 
-	v.addElement(DateFormat.getDateTimeInstance(DateFormat.DEFAULT, 
-						    DateFormat.DEFAULT, 
-						    Locale.ENGLISH)); 
+        // Create an array of possible date formats to parse dates in .jtr files.
+        // Most likely is Unix C time in English; the array will be reordered in use
+        // by moving the recently used entries to the front of the array.
+        Vector v = new Vector();
 
-	// standard IETF date syntax
-	// Fri, 10 September 1999 03:25:12 PDT
-	v.addElement(new SimpleDateFormat("EEE, dd MMMM yyyy HH:mm:ss zzz"));
-	v.addElement(new SimpleDateFormat("EEE, dd MMMM yyyy HH:mm:ss zzz", Locale.ENGLISH));
+        // generic Java default
+        // 10-Sep-99 3:25:11 PM
+        v.addElement(DateFormat.getDateTimeInstance());
+        v.addElement(DateFormat.getDateTimeInstance(DateFormat.DEFAULT,
+                                                    DateFormat.DEFAULT,
+                                                    Locale.ENGLISH));
 
-	// Unix C time
-	// Fri Sep 10 14:41:37 PDT 1999
-	v.addElement(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy"));
-	v.addElement(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH));
+        // standard IETF date syntax
+        // Fri, 10 September 1999 03:25:12 PDT
+        v.addElement(new SimpleDateFormat("EEE, dd MMMM yyyy HH:mm:ss zzz"));
+        v.addElement(new SimpleDateFormat("EEE, dd MMMM yyyy HH:mm:ss zzz", Locale.ENGLISH));
 
-	// allow user-specified format
-	String s = System.getProperty("javatest.date.format");
-	if (s != null)
-	    v.addElement(new SimpleDateFormat(s));
+        // Unix C time
+        // Fri Sep 10 14:41:37 PDT 1999
+        v.addElement(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy"));
+        v.addElement(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH));
 
-	dateFormats = new DateFormat[v.size()];
-	v.copyInto(dateFormats);
+        // allow user-specified format
+        String s = System.getProperty("javatest.date.format");
+        if (s != null)
+            v.addElement(new SimpleDateFormat(s));
+
+        dateFormats = new DateFormat[v.size()];
+        v.copyInto(dateFormats);
     }
 
     private int testCount;

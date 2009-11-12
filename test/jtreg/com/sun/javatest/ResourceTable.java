@@ -38,15 +38,15 @@ public class ResourceTable
      * Create a resource table.
      */
     public ResourceTable() {
-	table = new HashMap();
+        table = new HashMap();
     }
-    
+
     /**
      * Create a resource table of a specified size.
      * @param initialSize a hint as to the initial capacity to make the table
      */
     public ResourceTable(int initialSize) {
-	table = new HashMap(initialSize);
+        table = new HashMap(initialSize);
     }
 
     /**
@@ -59,46 +59,46 @@ public class ResourceTable
      * waiting for the locks to become available.
      */
     public synchronized boolean acquire(String[] resourceNames, int timeout) throws InterruptedException {
-	if (timeout <= 0)
-	    throw new IllegalArgumentException("timeout required");
+        if (timeout <= 0)
+            throw new IllegalArgumentException("timeout required");
 
-	if (resourceNames.length > 1) {
-	    // canonicalize acquisition order to prevent deadlocks
-	    String[] s = new String[resourceNames.length];
-	    System.arraycopy(resourceNames, 0, s, 0, s.length);
-	    Arrays.sort(s);
-	    resourceNames = s;
-	}
+        if (resourceNames.length > 1) {
+            // canonicalize acquisition order to prevent deadlocks
+            String[] s = new String[resourceNames.length];
+            System.arraycopy(resourceNames, 0, s, 0, s.length);
+            Arrays.sort(s);
+            resourceNames = s;
+        }
 
-	long start = System.currentTimeMillis();
-	long now = start;
+        long start = System.currentTimeMillis();
+        long now = start;
 
-	try {
-	    for (int i = 0; i < resourceNames.length; i++) {
-		String resourceName = resourceNames[i];
-		Object owner = null;
-		while ((owner = table.get(resourceName)) != null) {
-		    long remain = start + timeout - now;
-		    if (remain < 0) {
-			release(resourceNames);
-			return false;
-		    }
-		    
-		    //System.out.println("waiting for resource: " + resourceName);
-		    wait(remain);
-		    now = System.currentTimeMillis();
-		}
-		
-		table.put(resourceName, Thread.currentThread());
-	    }
-	    return true;
-	}
-	catch (InterruptedException e) {
-	    release(resourceNames);
-	    throw e;
-	}
+        try {
+            for (int i = 0; i < resourceNames.length; i++) {
+                String resourceName = resourceNames[i];
+                Object owner = null;
+                while ((owner = table.get(resourceName)) != null) {
+                    long remain = start + timeout - now;
+                    if (remain < 0) {
+                        release(resourceNames);
+                        return false;
+                    }
+
+                    //System.out.println("waiting for resource: " + resourceName);
+                    wait(remain);
+                    now = System.currentTimeMillis();
+                }
+
+                table.put(resourceName, Thread.currentThread());
+            }
+            return true;
+        }
+        catch (InterruptedException e) {
+            release(resourceNames);
+            throw e;
+        }
     }
-    
+
     /**
      * Release a set of previously acquired locks.
      * The named locks are only released if currently owned by the
@@ -106,12 +106,12 @@ public class ResourceTable
      * @param resourceNames the names of the locks to be released
      */
     public synchronized void release(String[] resourceNames) {
-	for (int i = 0; i < resourceNames.length; i++) {
-	    Object owner = table.get(resourceNames[i]);
-	    if (owner == Thread.currentThread())
-		table.remove(resourceNames[i]);
-	}
-	notifyAll();
+        for (int i = 0; i < resourceNames.length; i++) {
+            Object owner = table.get(resourceNames[i]);
+            if (owner == Thread.currentThread())
+                table.remove(resourceNames[i]);
+        }
+        notifyAll();
     }
 
     private HashMap table;

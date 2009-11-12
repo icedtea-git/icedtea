@@ -51,93 +51,93 @@ class RequestHandler implements Runnable {
      * them.
      */
     public RequestHandler(Socket soc) {
-	this.soc = soc;
+        this.soc = soc;
     }
 
     public void run() {
-	// read the request
-	String request = null;
+        // read the request
+        String request = null;
 
-	try {
-	    if (debug) {
-		StringBuffer buf = new StringBuffer();
-		buf.append("Handling request from ");
-		buf.append(soc.getInetAddress().getHostName());
-		buf.append(" (");
-		buf.append(soc.getInetAddress().getHostAddress());
-		buf.append(")");
-		System.out.println(buf.toString());
-		buf.setLength(0);
-	    }
+        try {
+            if (debug) {
+                StringBuffer buf = new StringBuffer();
+                buf.append("Handling request from ");
+                buf.append(soc.getInetAddress().getHostName());
+                buf.append(" (");
+                buf.append(soc.getInetAddress().getHostAddress());
+                buf.append(")");
+                System.out.println(buf.toString());
+                buf.setLength(0);
+            }
 
-	    out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(soc.getOutputStream())));
-	    in = new LineNumberReader(new InputStreamReader(soc.getInputStream()));
+            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(soc.getOutputStream())));
+            in = new LineNumberReader(new InputStreamReader(soc.getInputStream()));
 
-	    
-	    request = in.readLine();
 
-	    if (debug) {
-		System.out.println("-------------");
-		System.out.println("RH-Full request:");
-		System.out.println(request);
-	    }
+            request = in.readLine();
 
-	    // if we are debugging, print the rest of the message
-	    while (debug && in.ready()) {
-		String line = in.readLine();
-		System.out.println(line);
-	    }
+            if (debug) {
+                System.out.println("-------------");
+                System.out.println("RH-Full request:");
+                System.out.println(request);
+            }
 
-	    if (debug) System.out.println("-------------");
-	}
-	catch (IOException e) {
-	    e.printStackTrace();
-	}
+            // if we are debugging, print the rest of the message
+            while (debug && in.ready()) {
+                String line = in.readLine();
+                System.out.println(line);
+            }
 
-	// decode
-	String[] args = StringArray.split(request);
-	if (debug) {
-	    System.out.print("Decode: " + request);
-	    System.out.println(" -> " + args.length + " params.");
-	}
+            if (debug) System.out.println("-------------");
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
 
-	if (args == null || args.length < 3) {
-	    if (debug) System.err.println("RH-HTTP request too short.");
-	    // ignore the request
-	    return;
-	}
+        // decode
+        String[] args = StringArray.split(request);
+        if (debug) {
+            System.out.print("Decode: " + request);
+            System.out.println(" -> " + args.length + " params.");
+        }
 
-	if (args[0].equalsIgnoreCase(GET)) {
-	    if (debug) System.out.println("RH-Processing HTTP GET request.");
-	    doGet(args);
-	}
-	else if (args[0].equalsIgnoreCase(POST)) {
-	    if (debug) System.out.println("RH-Processing HTTP POST request.");
-	    doPost(args);
-	}
-	else {
-	    if (debug) System.err.println("RH-Unsupported request method: " + args[0]);
-	    error(out, BAD_METHOD, args[0] + " is an unsupported request method. " + BAD_METHOD);
-	    out.close();
-	    return;
-	}
+        if (args == null || args.length < 3) {
+            if (debug) System.err.println("RH-HTTP request too short.");
+            // ignore the request
+            return;
+        }
+
+        if (args[0].equalsIgnoreCase(GET)) {
+            if (debug) System.out.println("RH-Processing HTTP GET request.");
+            doGet(args);
+        }
+        else if (args[0].equalsIgnoreCase(POST)) {
+            if (debug) System.out.println("RH-Processing HTTP POST request.");
+            doPost(args);
+        }
+        else {
+            if (debug) System.err.println("RH-Unsupported request method: " + args[0]);
+            error(out, BAD_METHOD, args[0] + " is an unsupported request method. " + BAD_METHOD);
+            out.close();
+            return;
+        }
     }
 
     protected void doGet(String[] args) {
-	if (debug) System.out.println("RH-Get processing URL: \"" + args[1] + "\"");
+        if (debug) System.out.println("RH-Get processing URL: \"" + args[1] + "\"");
 
-	httpURL url = new httpURL(args[1]);
+        httpURL url = new httpURL(args[1]);
 
-	/*
-	JThttpProvider handler = ProviderRegistry.getHandler(args[1]);
-	*/
-	JThttpProvider handler = RootRegistry.getInstance().getHandler(url);
-	if (handler != null)
-	    handler.serviceRequest(url, out);
-	else {
-	    // need to produce an error page!
-	    if (debug) System.out.println("No handler found for: " + args[1]);
-	}
+        /*
+        JThttpProvider handler = ProviderRegistry.getHandler(args[1]);
+        */
+        JThttpProvider handler = RootRegistry.getInstance().getHandler(url);
+        if (handler != null)
+            handler.serviceRequest(url, out);
+        else {
+            // need to produce an error page!
+            if (debug) System.out.println("No handler found for: " + args[1]);
+        }
     }
 
     protected void doPost(String[] args) {
@@ -150,16 +150,16 @@ class RequestHandler implements Runnable {
     }
 
     private void error(PrintWriter out, String code, String msg) {
-	out.print("HTTP/1.1 ");
-	out.println(code);
-	out.println(HTTP_CONTENT_HTML);
-	out.print("<html><head><title>");
-	out.print(code);
-	out.println("</title></head><body>");
-	out.print(i18n.getString("handler.err.txt"));
-	out.println("<br>");
-	out.println(code);
-	out.println("</body></html>");
+        out.print("HTTP/1.1 ");
+        out.println(code);
+        out.println(HTTP_CONTENT_HTML);
+        out.print("<html><head><title>");
+        out.print(code);
+        out.println("</title></head><body>");
+        out.print(i18n.getString("handler.err.txt"));
+        out.println("<br>");
+        out.println(code);
+        out.println("</body></html>");
     }
 
     private static Hashtable urlMap;

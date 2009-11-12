@@ -32,7 +32,7 @@ import java.util.Vector;
 /**
  * A {@link Question question} to which the response is an array of strings.
  */
-public abstract class StringListQuestion extends Question 
+public abstract class StringListQuestion extends Question
 {
     /**
      * Create a question with a nominated tag.
@@ -40,9 +40,9 @@ public abstract class StringListQuestion extends Question
      * @param tag A unique tag to identify this specific question.
      */
     protected StringListQuestion(Interview interview, String tag) {
-	super(interview, tag);
-	clear();
-	setDefaultValue(value);
+        super(interview, tag);
+        clear();
+        setDefaultValue(value);
     }
 
     /**
@@ -53,19 +53,19 @@ public abstract class StringListQuestion extends Question
      * @see #clear
      */
     public String[] getDefaultValue() {
-	return defaultValue;
+        return defaultValue;
     }
 
     /**
-     * Set the default response for this question, 
-     * used by the clear method. 
+     * Set the default response for this question,
+     * used by the clear method.
      * @param v the default response for this question.
      *
      * @see #getDefaultValue
      * @see #clear
      */
     public void setDefaultValue(String[] v) {
-	defaultValue = v;
+        defaultValue = v;
     }
 
     /**
@@ -75,7 +75,7 @@ public abstract class StringListQuestion extends Question
      * @see #isDuplicatesAllowed
      */
     public void setDuplicatesAllowed(boolean b) {
-	duplicatesAllowed = b;
+        duplicatesAllowed = b;
     }
 
     /**
@@ -84,7 +84,7 @@ public abstract class StringListQuestion extends Question
      * @see #setDuplicatesAllowed
      */
     public boolean isDuplicatesAllowed() {
-	return duplicatesAllowed;
+        return duplicatesAllowed;
     }
 
     /**
@@ -94,22 +94,22 @@ public abstract class StringListQuestion extends Question
      * @see #setValue
      */
     public String[] getValue() {
-	return value;
+        return value;
     }
 
     /**
      * Verify this question is on the current path, and if it is,
      * return the current value.
      * @return the current value of this question
-     * @throws Interview.NotOnPathFault if this question is not on the 
+     * @throws Interview.NotOnPathFault if this question is not on the
      * current path
      * @see #getValue
      */
-    public String[] getValueOnPath() 
-	throws Interview.NotOnPathFault
+    public String[] getValueOnPath()
+        throws Interview.NotOnPathFault
     {
-	interview.verifyPathContains(this);
-	return getValue();
+        interview.verifyPathContains(this);
+        return getValue();
     }
 
     /**
@@ -118,56 +118,56 @@ public abstract class StringListQuestion extends Question
      * @see #setValue(String)
      */
     public String getStringValue() {
-	if (value == null)
-	    return null;
+        if (value == null)
+            return null;
 
-	StringBuffer sb = new StringBuffer();
-	for (int i = 0; i < value.length; i++) {
-	    if (sb.length() > 0)
-		sb.append('\n');
-	    if (value[i] != null)
-		sb.append(value[i]);
-	}
-	
-	return sb.toString();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < value.length; i++) {
+            if (sb.length() > 0)
+                sb.append('\n');
+            if (value[i] != null)
+                sb.append(value[i]);
+        }
+
+        return sb.toString();
     }
 
     public boolean isValueValid() {
-	return true;
+        return true;
     }
 
     public boolean isValueAlwaysValid() {
-	return false;
+        return false;
     }
 
     public void setValue(String s) {
-	setValue(s == null ? ((String[]) null) : split(s));
+        setValue(s == null ? ((String[]) null) : split(s));
     }
 
     /**
-     * Set the current value. 
-     * @param newValue The value to be set. 
+     * Set the current value.
+     * @param newValue The value to be set.
      *
      * @see #getValue
      */
     public void setValue(String[] newValue) {
-	if (newValue != null) {
-	    for (int i = 0; i < newValue.length; i++) {
-		if (newValue[i] == null || (newValue[i].indexOf("\n") != -1))
-		    throw new IllegalArgumentException();
-	    }
-	}
+        if (newValue != null) {
+            for (int i = 0; i < newValue.length; i++) {
+                if (newValue[i] == null || (newValue[i].indexOf("\n") != -1))
+                    throw new IllegalArgumentException();
+            }
+        }
 
-	if (!equal(newValue, value)) {
-	    if (newValue == null)
-		value = null;
-	    else {
-		value = new String[newValue.length];
-		System.arraycopy(newValue, 0, value, 0, newValue.length);
-	    }
-	    interview.updatePath(this);
-	    interview.setEdited(true);
-	}
+        if (!equal(newValue, value)) {
+            if (newValue == null)
+                value = null;
+            else {
+                value = new String[newValue.length];
+                System.arraycopy(newValue, 0, value, 0, newValue.length);
+            }
+            interview.updatePath(this);
+            interview.setEdited(true);
+        }
     }
 
     /**
@@ -175,7 +175,7 @@ public abstract class StringListQuestion extends Question
      * back to its initial state.
      */
     public void clear() {
-	setValue(defaultValue);
+        setValue(defaultValue);
     }
 
     /**
@@ -184,11 +184,11 @@ public abstract class StringListQuestion extends Question
      * @param data The map from which to load the value for this question.
      */
     protected void load(Map data) {
-	Object o = data.get(tag);
-	if (o instanceof String[]) 
-	    setValue((String[]) o);
-	else if (o instanceof String)
-	    setValue((String) o);
+        Object o = data.get(tag);
+        if (o instanceof String[])
+            setValue((String[]) o);
+        else if (o instanceof String)
+            setValue((String) o);
     }
 
     /**
@@ -197,8 +197,8 @@ public abstract class StringListQuestion extends Question
      * @param data The map in which to save the value for this question.
      */
     protected void save(Map data) {
-	if (value != null)
-	    data.put(tag, getStringValue());
+        if (value != null)
+            data.put(tag, getStringValue());
     }
 
     /**
@@ -210,20 +210,20 @@ public abstract class StringListQuestion extends Question
      * @see #equal(String, String)
      */
     protected static boolean equal(String[] s1, String[] s2) {
-	if (s1 == null || s2 == null)
-	    return (s1 == s2);
+        if (s1 == null || s2 == null)
+            return (s1 == s2);
 
-	if (s1.length != s2.length)
-	    return false;
-	
-	for (int i = 0; i < s1.length; i++) {
-	    if (!equal(s1[i], s2[i]))
-		return false;
-	}
+        if (s1.length != s2.length)
+            return false;
 
-	return true;
+        for (int i = 0; i < s1.length; i++) {
+            if (!equal(s1[i], s2[i]))
+                return false;
+        }
+
+        return true;
     }
-    
+
 
     /**
      * Compare two strings for equality.
@@ -233,41 +233,41 @@ public abstract class StringListQuestion extends Question
      * and equal.
      */
     protected static boolean equal(String s1, String s2) {
-	return (s1 == null ? s2 == null : s1.equals(s2));
+        return (s1 == null ? s2 == null : s1.equals(s2));
     }
 
     /**
      * Split a string into a set of newline-separated strings.
      * @param s The string to be split, or null
-     * @return an array of strings containing the newline-separated substrings of 
+     * @return an array of strings containing the newline-separated substrings of
      * the argument.
      */
     protected static String[] split(String s) {
-	if (s == null)
-	    return empty;
+        if (s == null)
+            return empty;
 
-	final char sep = '\n';
+        final char sep = '\n';
 
-	Vector v = new Vector();
-	int start = -1;
-	for (int i = 0; i < s.length(); i++) {
-	    if (s.charAt(i) == sep) {
-	        if (start != -1)
-		    v.addElement(s.substring(start, i));
-	        start = -1;
-	    } else
-	        if (start == -1)
-		    start = i;
-	}
-	if (start != -1)
-	    v.addElement(s.substring(start));
-	if (v.size() == 0)
-	    return empty;
-	String[] a = new String[v.size()];
-	v.copyInto(a);
-	return a;
+        Vector v = new Vector();
+        int start = -1;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == sep) {
+                if (start != -1)
+                    v.addElement(s.substring(start, i));
+                start = -1;
+            } else
+                if (start == -1)
+                    start = i;
+        }
+        if (start != -1)
+            v.addElement(s.substring(start));
+        if (v.size() == 0)
+            return empty;
+        String[] a = new String[v.size()];
+        v.copyInto(a);
+        return a;
     }
-    
+
     private static final String[] empty = { };
 
     /**

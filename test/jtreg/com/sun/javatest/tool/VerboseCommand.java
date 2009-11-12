@@ -49,8 +49,8 @@ public class VerboseCommand extends Command
      * @param node the help node for this option
      */
     public static void addOption(String name, HelpTree.Node node) {
-	ensureAllOptionsInitialized();
-	allOptions.put(name, node);
+        ensureAllOptionsInitialized();
+        allOptions.put(name, node);
     }
 
     /**
@@ -64,11 +64,11 @@ public class VerboseCommand extends Command
     private static String NO_PREFIX = "no-";
 
     private static void ensureAllOptionsInitialized() {
-	if (allOptions == null) {
-	    allOptions = new TreeMap();
-	    allOptions.put(MAX,  new HelpTree.Node(i18n, "verb.max"));
-	    allOptions.put(QUIET, new HelpTree.Node(i18n, "verb.quiet"));
-	}
+        if (allOptions == null) {
+            allOptions = new TreeMap();
+            allOptions.put(MAX,  new HelpTree.Node(i18n, "verb.max"));
+            allOptions.put(QUIET, new HelpTree.Node(i18n, "verb.quiet"));
+        }
     }
     private static Map allOptions;
 
@@ -76,84 +76,84 @@ public class VerboseCommand extends Command
 
 
     VerboseCommand(String cmd) throws Fault {
-	super(cmd);
+        super(cmd);
 
-	int chop = cmd.indexOf(CMD);
-	
-	if (chop == -1)
-	    throw new IllegalArgumentException();
-	
-	String workstr = cmd.substring(chop + CMD.length());
-	
-	if (workstr.length() == 0) {
-	    optionValues.put(DEFAULT, Boolean.TRUE);
-	}
-	else if (workstr.charAt(0) == ':') {
-	    // rm colon
-	    workstr = workstr.substring(1);
-	    processOptions(workstr);
-	}
-	else
-	    throw new Fault(i18n, "verb.badOpts");
+        int chop = cmd.indexOf(CMD);
+
+        if (chop == -1)
+            throw new IllegalArgumentException();
+
+        String workstr = cmd.substring(chop + CMD.length());
+
+        if (workstr.length() == 0) {
+            optionValues.put(DEFAULT, Boolean.TRUE);
+        }
+        else if (workstr.charAt(0) == ':') {
+            // rm colon
+            workstr = workstr.substring(1);
+            processOptions(workstr);
+        }
+        else
+            throw new Fault(i18n, "verb.badOpts");
     }
-    
+
     private void processOptions(String ops) throws Fault {
-	ensureAllOptionsInitialized();
-	String[] items = StringArray.splitList(ops, ",");
-	
-	if (items == null)
-	    throw new Fault(i18n, "verb.noOpts");
-	
-	for (int i = 0; i < items.length; i++) {
-	    String item = items[i];
-	    boolean on;
-	    if (item.startsWith(NO_PREFIX)) {
-		on = false;
-		item = item.substring(NO_PREFIX.length());
-	    }
-	    else
-		on = true;
-	    
-	    if (!allOptions.containsKey(item.toLowerCase()))
-		throw new Fault(i18n, "verb.badOpt", item);
-	    
-	    optionValues.put(item, new Boolean(on));
-	}
+        ensureAllOptionsInitialized();
+        String[] items = StringArray.splitList(ops, ",");
+
+        if (items == null)
+            throw new Fault(i18n, "verb.noOpts");
+
+        for (int i = 0; i < items.length; i++) {
+            String item = items[i];
+            boolean on;
+            if (item.startsWith(NO_PREFIX)) {
+                on = false;
+                item = item.substring(NO_PREFIX.length());
+            }
+            else
+                on = true;
+
+            if (!allOptions.containsKey(item.toLowerCase()))
+                throw new Fault(i18n, "verb.badOpt", item);
+
+            optionValues.put(item, new Boolean(on));
+        }
     }
-    
+
     public void run(CommandContext ctx) throws Fault {
-	for (Iterator iter = optionValues.entrySet().iterator(); iter.hasNext(); ) {
-	    Map.Entry e = (Map.Entry) (iter.next());
-	    String name = (String) (e.getKey());
-	    boolean value = ((Boolean) (e.getValue())).booleanValue();
-	    if (name.equalsIgnoreCase(MAX))
-		ctx.setVerboseMax(value);
-	    else if (name.equalsIgnoreCase(QUIET))
-		ctx.setVerboseQuiet(value);
-	    else if (name.equalsIgnoreCase(DATE))
-		ctx.setVerboseTimestampEnabled(value);
-	    else
-		ctx.setVerboseOptionValue(name, value);
-	}
+        for (Iterator iter = optionValues.entrySet().iterator(); iter.hasNext(); ) {
+            Map.Entry e = (Map.Entry) (iter.next());
+            String name = (String) (e.getKey());
+            boolean value = ((Boolean) (e.getValue())).booleanValue();
+            if (name.equalsIgnoreCase(MAX))
+                ctx.setVerboseMax(value);
+            else if (name.equalsIgnoreCase(QUIET))
+                ctx.setVerboseQuiet(value);
+            else if (name.equalsIgnoreCase(DATE))
+                ctx.setVerboseTimestampEnabled(value);
+            else
+                ctx.setVerboseOptionValue(name, value);
+        }
     }
 
     static HelpTree.Node getHelp() {
-	ensureAllOptionsInitialized();
+        ensureAllOptionsInitialized();
 
-	HelpTree.Node[] nodes = new HelpTree.Node[allOptions.size()];
-	int i = 0;
-	for (Iterator iter = allOptions.values().iterator(); iter.hasNext(); ) 
-	    nodes[i++] = (HelpTree.Node) (iter.next());
+        HelpTree.Node[] nodes = new HelpTree.Node[allOptions.size()];
+        int i = 0;
+        for (Iterator iter = allOptions.values().iterator(); iter.hasNext(); )
+            nodes[i++] = (HelpTree.Node) (iter.next());
 
-	return new HelpTree.Node(i18n, "verb", nodes);
+        return new HelpTree.Node(i18n, "verb", nodes);
     }
-    
+
     static String getName() {
-	return CMD;
+        return CMD;
     }
-    
+
     private HashMap optionValues = new HashMap();  // HashMap<name,boolean>
 
     private static final String CMD = "verbose";
-    private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(VerboseCommand.class); 
+    private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(VerboseCommand.class);
 }

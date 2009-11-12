@@ -42,51 +42,51 @@ class COFData
     }
 
     COFData(Vector data) throws IOException {
-	for (int i = 0; i < data.size(); i++) {
-	    Object o = data.elementAt(i);
-	    if (o == null)
-		throw new NullPointerException();
-	    else if (o instanceof String) {
-		String s = (String) o;
-		int eq = s.indexOf("=");
-		if (eq < 1)
-		    throw new IllegalArgumentException(s);
-		String name = s.substring(0, eq);
-		String value = s.substring(eq + 1);
-		put(name, value);
-	    }
-	    else if (o instanceof File) {
-		File f = (File) o;
-		InputStream in = new BufferedInputStream(new FileInputStream(f));
-		Properties p = new Properties();
-		try {
-		    p.load(in);
-		}
-		finally {
-		    in.close();
-		}
-		putAll(p);
-	    }
-	    else
-		throw new IllegalArgumentException(o.toString());
-	}
+        for (int i = 0; i < data.size(); i++) {
+            Object o = data.elementAt(i);
+            if (o == null)
+                throw new NullPointerException();
+            else if (o instanceof String) {
+                String s = (String) o;
+                int eq = s.indexOf("=");
+                if (eq < 1)
+                    throw new IllegalArgumentException(s);
+                String name = s.substring(0, eq);
+                String value = s.substring(eq + 1);
+                put(name, value);
+            }
+            else if (o instanceof File) {
+                File f = (File) o;
+                InputStream in = new BufferedInputStream(new FileInputStream(f));
+                Properties p = new Properties();
+                try {
+                    p.load(in);
+                }
+                finally {
+                    in.close();
+                }
+                putAll(p);
+            }
+            else
+                throw new IllegalArgumentException(o.toString());
+        }
     }
 
     String get(String name) {
-	return (String) (data.get(name));
+        return (String) (data.get(name));
     }
 
     String get(String name, String defaultValue) {
-	String value = (String) (data.get(name));
-	return (value == null ? defaultValue : value);
+        String value = (String) (data.get(name));
+        return (value == null ? defaultValue : value);
     }
 
     void put(String name, String value) {
-	data.put(name, value);
+        data.put(name, value);
     }
 
     void putAll(Map map) {
-	data.putAll(map);
+        data.putAll(map);
     }
 
     private Map data = new HashMap();

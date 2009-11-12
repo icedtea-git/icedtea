@@ -32,14 +32,14 @@ import java.util.Map;
 
 /**
  * Questions are the primary constituent elements of {@link Interview interviews}.
- * They provide text and an optional graphic to be presented to the user, 
+ * They provide text and an optional graphic to be presented to the user,
  * and they provide a place to store the user's response.
- * Various subtypes are provided, according to the type of response they 
+ * Various subtypes are provided, according to the type of response they
  * request and store.
  * Questions are identified internally by a unique tag, which is used to identify
  * the question in contexts such as resource bundles, dictionaries, and so on.
  */
-public abstract class Question 
+public abstract class Question
 {
 
     /**
@@ -48,22 +48,22 @@ public abstract class Question
      * @param baseTag A name to uniquely identify this question within its interview.
      */
     protected Question(Interview interview, String baseTag) {
-	if (baseTag == null || baseTag.length() == 0)
-	    throw new IllegalArgumentException("No tag specified");
+        if (baseTag == null || baseTag.length() == 0)
+            throw new IllegalArgumentException("No tag specified");
 
-	this.interview = interview;
-	this.baseTag = baseTag;
+        this.interview = interview;
+        this.baseTag = baseTag;
 
-	updateTag();
+        updateTag();
 
-	interview.add(this);
+        interview.add(this);
 
-	String c = interview.getClass().getName();
-	int dot = c.lastIndexOf(".");
-	if (dot != -1)
-	    c = c.substring(dot+1);
-	c = c.replace('$', '.');
-	key = c + "." + baseTag;
+        String c = interview.getClass().getName();
+        int dot = c.lastIndexOf(".");
+        if (dot != -1)
+            c = c.substring(dot+1);
+        c = c.replace('$', '.');
+        key = c + "." + baseTag;
     }
 
     /**
@@ -71,10 +71,10 @@ public abstract class Question
      * @param interview The interview containing this question.
      */
     protected Question(Interview interview) {
-	this.interview = interview;
-	baseTag = null;
-	tag = null;
-	key = null;
+        this.interview = interview;
+        baseTag = null;
+        tag = null;
+        key = null;
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class Question
      * @return the interview of which this question is a part
      */
     public Interview getInterview() {
-	return interview;
+        return interview;
     }
 
     /**
@@ -96,7 +96,7 @@ public abstract class Question
      * @see #getTag
      */
     public String getKey() {
-	return key;
+        return key;
     }
 
     /**
@@ -109,29 +109,29 @@ public abstract class Question
      * @see #getKey
      */
     public String getTag() {
-	return tag;
+        return tag;
     }
 
     String getBaseTag() {
-	return baseTag;
+        return baseTag;
     }
 
     void updateTag() {
-	if (interview.getTag() == null)
-	    tag = baseTag;
-	else
-	    tag = (interview.getTag() + "." + baseTag);
+        if (interview.getTag() == null)
+            tag = baseTag;
+        else
+            tag = (interview.getTag() + "." + baseTag);
     }
 
     /**
      * Set the text for this question. The text can also be provided
-     * in the containing interview's resource bundle, using the resource name 
+     * in the containing interview's resource bundle, using the resource name
      * <i>key</i>.<code>text</code>.
      * @param text the text for this question
      * @see #getText
      */
     protected void setText(String text) {
-	this.text = text.trim();
+        this.text = text.trim();
     }
 
     /**
@@ -142,17 +142,17 @@ public abstract class Question
      * @see #setText
      */
     public String getText() {
-	if (text == null) {
-	    text = getResourceString(interview, key + ".text", true);
-	    if (text == null) 
-		text = key + ".text";
-	}
-	return MessageFormat.format(text, getTextArgs());
+        if (text == null) {
+            text = getResourceString(interview, key + ".text", true);
+            if (text == null)
+                text = key + ".text";
+        }
+        return MessageFormat.format(text, getTextArgs());
     }
 
     /**
      * Get any arguments necessary to go with the question text.
-     * The text is formatted using the rules specified for 
+     * The text is formatted using the rules specified for
      * {@link java.text.MessageFormat#format}. By default, this
      * method returns null. If the text for the question contains
      * variable entries (using the '{' '}' notation), you should
@@ -161,18 +161,18 @@ public abstract class Question
      * of the question.
      */
     protected Object[] getTextArgs() {
-	return null;
+        return null;
     }
 
     /**
      * Set the summary text for this question. The text can also be provided
-     * in the containing interview's resource bundle, using the resource name 
+     * in the containing interview's resource bundle, using the resource name
      * <i>key</i>.<code>smry</code>.
      * @param summary a short summary of the text for this question
      * @see #getSummary
      */
     protected void setSummary(String summary) {
-	this.summary = summary.trim();
+        this.summary = summary.trim();
     }
 
     /**
@@ -181,33 +181,33 @@ public abstract class Question
      * @see #setSummary
      */
     public String getSummary() {
-	if (summary == null) {
-	    summary = getResourceString(interview, key + ".smry", true);
-	    if (summary == null)
-		summary = key + ".smry";
-	    /* OLD, undocumented and mildly suspect (e.g. i18n)
-	    if (summary == null) {
-		// search text for either a newline, or for whitespace
-		// following a .
-		String t = getText();
-		if (t != null) {
-		    for (int i = 0; i < t.length(); i++) {
-			char c = t.charAt(i);
-			if (c == '\n' 
-			    || (Character.isWhitespace(c) 
-				&& i > 0 
-				&& t.charAt(i-1) == '.' )) {
-			    summary = t.substring(0, i).trim();
-			    break;
-			}
-		    }
-		    if (summary == null)
-			summary = t;
-		}
-	    }
-	    */
-	}
-	return summary;
+        if (summary == null) {
+            summary = getResourceString(interview, key + ".smry", true);
+            if (summary == null)
+                summary = key + ".smry";
+            /* OLD, undocumented and mildly suspect (e.g. i18n)
+            if (summary == null) {
+                // search text for either a newline, or for whitespace
+                // following a .
+                String t = getText();
+                if (t != null) {
+                    for (int i = 0; i < t.length(); i++) {
+                        char c = t.charAt(i);
+                        if (c == '\n'
+                            || (Character.isWhitespace(c)
+                                && i > 0
+                                && t.charAt(i-1) == '.' )) {
+                            summary = t.substring(0, i).trim();
+                            break;
+                        }
+                    }
+                    if (summary == null)
+                        summary = t;
+                }
+            }
+            */
+        }
+        return summary;
     }
 
     /**
@@ -217,7 +217,7 @@ public abstract class Question
      * @see #getImage
      */
     public void setImage(String resource) {
-	image = getClass().getResource(resource);
+        image = getClass().getResource(resource);
     }
 
     /**
@@ -227,25 +227,25 @@ public abstract class Question
      * @see #getImage
      */
     protected void setImage(URL u) {
-	image = u;
+        image = u;
     }
 
     /**
      * Get the graphic for this question. If {@link #setImage}
      * has been called to supply a specific image for this question,
      * that will be the result here; otherwise, the value defaults
-     * first to a question-specific resource (<i>tag</i><code>.gif</code>) 
+     * first to a question-specific resource (<i>tag</i><code>.gif</code>)
      * and then to a {@link Interview#getDefaultImage default image}
      * for the interview.
      * @return a URL for the question.
      * @see #setImage
      */
     public URL getImage() {
-	if (image == null)
-	    image = getClass().getResource(tag + ".gif");
-	if (image == null)
-	    image = interview.getDefaultImage();
-	return image;
+        if (image == null)
+            image = getClass().getResource(tag + ".gif");
+        if (image == null)
+            image = interview.getDefaultImage();
+        return image;
     }
 
     /**
@@ -261,56 +261,56 @@ public abstract class Question
 
     /**
      * Add a named marker to this question, if it has not already been added.
-     * @param name the name of the marker to be added. 
+     * @param name the name of the marker to be added.
      * @throws NullPointerException if name is null
      */
     public void addMarker(String name) {
-	interview.addMarker(this, name);
+        interview.addMarker(this, name);
     }
 
     /**
      * Remove a named marker to this question.
-     * @param name the name of the marker to be removed. 
+     * @param name the name of the marker to be removed.
      */
     public void removeMarker(String name) {
-	interview.removeMarker(this, name);
+        interview.removeMarker(this, name);
     }
 
     /**
      * Check if a marker has been added to this question.
-     * @param name the name of the marker to be checked. 
+     * @param name the name of the marker to be checked.
      * @return true if the marker has been added to this question, and false otherwise.
      */
     public boolean hasMarker(String name) {
-	return interview.hasMarker(this, name);
+        return interview.hasMarker(this, name);
     }
 
 
     /**
      * Determine if this question is currently "hidden".
      * Hidden questions do not appear on the current path
-     * and so are skipped over by {@link Interview#prev} and 
-     * {@link Interview#next}, etc. 
+     * and so are skipped over by {@link Interview#prev} and
+     * {@link Interview#next}, etc.
      * By default, questions are not hidden, and this method returns false.
-     * Override this method if you want to hide a question. 
-     * It can be convenient to determine whether or not a question is 
+     * Override this method if you want to hide a question.
+     * It can be convenient to determine whether or not a question is
      * hidden using the values of earlier questions.
-     * @return true if this question has been hidden. 
+     * @return true if this question has been hidden.
      * @deprecated
      * @see #isEnabled
      */
     public boolean isHidden() {
-	return false;
+        return false;
     }
 
 
     /**
-     * Determine if this question is currently enabled. 
+     * Determine if this question is currently enabled.
      * Disabled questions do not appear on the current path
-     * and so are skipped over by {@link Interview#prev} and 
+     * and so are skipped over by {@link Interview#prev} and
      * {@link Interview#next}, etc.
      * By default, all questions are enabled, and this method returns true.
-     * Override this method if you want to hide a question. 
+     * Override this method if you want to hide a question.
      * It can be convenient to determine whether or not a question should be
      * disabled by using the values of earlier questions.
      * <em>Note:</em> for backwards compatibility, the default implementation
@@ -319,11 +319,11 @@ public abstract class Question
      * and false otherwise.
      */
     public boolean isEnabled() {
-	return (!isHidden());
+        return (!isHidden());
     }
 
     /**
-     * Get the next question to be asked. 
+     * Get the next question to be asked.
      * @return the next question to be asked
      */
     protected abstract Question getNext();
@@ -369,14 +369,14 @@ public abstract class Question
     public abstract boolean isValueAlwaysValid();
 
     /**
-     * Load any state for this question from a dictionary, 
+     * Load any state for this question from a dictionary,
      * using the tag as the key.
      * @param data The map from which to load the value for this question.
      */
     protected abstract void load(Map data);
 
     /**
-     * Save any state for this question in a dictionary, 
+     * Save any state for this question in a dictionary,
      * using the tag as the key.
      * @param data The map in which to save the value for this question.
      */
@@ -398,25 +398,25 @@ public abstract class Question
 
     /**
      * Check if this question equals another.
-     * By default, two questions are equal if they have equal tags, 
+     * By default, two questions are equal if they have equal tags,
      * and the string values are either both null
      * or are equal.
      */
     public boolean equals(Object other) {
-	if ( !(other instanceof Question))
-	    return false;
+        if ( !(other instanceof Question))
+            return false;
 
-	Question oq = (Question) other;
+        Question oq = (Question) other;
 
-	return (equal(tag, oq.tag) && equal(getStringValue(), oq.getStringValue()));
+        return (equal(tag, oq.tag) && equal(getStringValue(), oq.getStringValue()));
     }
 
     private static boolean equal(String s1, String s2) {
-	return (s1 == null || s2 == null ? s1 == s2 : s1.equals(s2));
+        return (s1 == null || s2 == null ? s1 == s2 : s1.equals(s2));
     }
 
     /**
-     * Get an entry from the interview's resource bundle. 
+     * Get an entry from the interview's resource bundle.
      * The parent and other ancestors bundles will be checked first before
      * this interview's bundle, allowing the root interview a chance to override
      * the default value provided by this interview.
@@ -425,7 +425,7 @@ public abstract class Question
      * @see Interview#getResourceString(String)
      */
     protected String getResourceString(String key) {
-	return interview.getResourceString(key);
+        return interview.getResourceString(key);
     }
 
     /**
@@ -442,41 +442,41 @@ public abstract class Question
      * @see Interview#getResourceString(String, boolean)
      */
     protected String getResourceString(String key, boolean checkAncestorsFirst) {
-	return interview.getResourceString(key, checkAncestorsFirst);
+        return interview.getResourceString(key, checkAncestorsFirst);
     }
 
     private String getResourceString(Interview interview, String key, boolean checkAncestorsFirst) {
-	return interview.getResourceString(key, checkAncestorsFirst);
-	/*
-	 * the following code is now in Interview.getResourceString
-	try {
-	    //System.err.println("QU: " + interview.getTag() + " " + key);
-	    String s = null;
-	    Interview p = interview.getParent();
-	    if (checkAncestorsFirst) {
-		if (p != null)
-		    s = getResourceString(p, key, checkAncestorsFirst);
-		if (s == null) {
-		    ResourceBundle b = interview.getResourceBundle();
-		    if (b != null)
-			s = b.getString(key);
-		}
-	    }
-	    else {
-		ResourceBundle b = interview.getResourceBundle();
-		if (b != null)
-		    s = b.getString(key);
-		if (s == null && p != null)
-		    s = getResourceString(p, key, checkAncestorsFirst);
-	    }
-	    //System.err.println("QU: " + interview.getTag() + " " + key + " " + s);
-	    return s;
-	}
-	catch (MissingResourceException e) {
-	    //System.err.println("QU: " + interview.getTag() + " " + key + " -null-");
-	    return null;
-	}
-	*/
+        return interview.getResourceString(key, checkAncestorsFirst);
+        /*
+         * the following code is now in Interview.getResourceString
+        try {
+            //System.err.println("QU: " + interview.getTag() + " " + key);
+            String s = null;
+            Interview p = interview.getParent();
+            if (checkAncestorsFirst) {
+                if (p != null)
+                    s = getResourceString(p, key, checkAncestorsFirst);
+                if (s == null) {
+                    ResourceBundle b = interview.getResourceBundle();
+                    if (b != null)
+                        s = b.getString(key);
+                }
+            }
+            else {
+                ResourceBundle b = interview.getResourceBundle();
+                if (b != null)
+                    s = b.getString(key);
+                if (s == null && p != null)
+                    s = getResourceString(p, key, checkAncestorsFirst);
+            }
+            //System.err.println("QU: " + interview.getTag() + " " + key + " " + s);
+            return s;
+        }
+        catch (MissingResourceException e) {
+            //System.err.println("QU: " + interview.getTag() + " " + key + " -null-");
+            return null;
+        }
+        */
     }
 
     /**
@@ -485,14 +485,14 @@ public abstract class Question
     protected Interview interview;
 
     /**
-     * A unique tag to identify this question. 
+     * A unique tag to identify this question.
      */
     protected String tag; // parent tag + baseTag
 
     private String baseTag; // tag relative to parent
 
     /**
-     * A unique key to identify the resources for this question. 
+     * A unique key to identify the resources for this question.
      */
     protected final String key;
 

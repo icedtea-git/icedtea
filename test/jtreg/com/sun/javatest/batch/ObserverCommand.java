@@ -45,133 +45,133 @@ import com.sun.javatest.util.I18NResourceBundle;
 class ObserverCommand extends Command
 {
     static String getName() {
-	return "observer";
+        return "observer";
     }
 
     static HelpTree.Node getHelp() {
-	String[] opts = { "cp" };
-	return new HelpTree.Node(i18n, "cmgr.help.observer", opts);
+        String[] opts = { "cp" };
+        return new HelpTree.Node(i18n, "cmgr.help.observer", opts);
     }
 
     ObserverCommand(ListIterator argIter) throws Fault {
-	super(getName());
+        super(getName());
 
-	Vector v = null;
+        Vector v = null;
 
-	while (argIter.hasNext()) {
-	    String arg = nextArg(argIter);
+        while (argIter.hasNext()) {
+            String arg = nextArg(argIter);
 
-	    if (arg.equals("-cp") && argIter.hasNext()) 
-		setClassPath(nextArg(argIter));
-	    else if (arg.startsWith("-"))
-		throw new Fault(i18n, "observer.badArg", arg);
-	    else {
-		className = arg;
-		while (argIter.hasNext()) {
-		    arg = nextArg(argIter);
-		    if (arg.equals("-end")) 
-			break;
-		    else {
-			if (v == null)
-			    v = new Vector();
-			v.add(arg);
-		    }
-		}
-		break;
-	    }				  
-	}
-	
-	if (className == null)
-	    throw new Fault(i18n, "observer.noClassName");
-	
-	if (v != null) {
-	    classArgs = new String[v.size()];
-	    v.copyInto(classArgs);
-	}
+            if (arg.equals("-cp") && argIter.hasNext())
+                setClassPath(nextArg(argIter));
+            else if (arg.startsWith("-"))
+                throw new Fault(i18n, "observer.badArg", arg);
+            else {
+                className = arg;
+                while (argIter.hasNext()) {
+                    arg = nextArg(argIter);
+                    if (arg.equals("-end"))
+                        break;
+                    else {
+                        if (v == null)
+                            v = new Vector();
+                        v.add(arg);
+                    }
+                }
+                break;
+            }
+        }
+
+        if (className == null)
+            throw new Fault(i18n, "observer.noClassName");
+
+        if (v != null) {
+            classArgs = new String[v.size()];
+            v.copyInto(classArgs);
+        }
     }
 
     public void run(CommandContext ctx) throws Fault {
-	try {
-	    Class oc = loadClass(className);
+        try {
+            Class oc = loadClass(className);
 
-	    Harness.Observer o = null;
-	    if (classArgs == null || classArgs.length == 0) {
-		o = tryConstructor(oc,
-				   new Class[] { }, 
-				   new Object[] { });
-	    }
-	    else if (classArgs.length == 1) {
-		o = tryConstructor(oc,
-				   new Class[] { String.class },
-				   new Object[] { classArgs[0] });
-	    }
+            Harness.Observer o = null;
+            if (classArgs == null || classArgs.length == 0) {
+                o = tryConstructor(oc,
+                                   new Class[] { },
+                                   new Object[] { });
+            }
+            else if (classArgs.length == 1) {
+                o = tryConstructor(oc,
+                                   new Class[] { String.class },
+                                   new Object[] { classArgs[0] });
+            }
 
-	    if (o == null)
-		o = tryConstructor(oc,
-				   new Class[] { String[].class },
-				   new Object[] { classArgs });
+            if (o == null)
+                o = tryConstructor(oc,
+                                   new Class[] { String[].class },
+                                   new Object[] { classArgs });
 
-	    if (o == null)
-		throw new Fault(i18n, "observer.cantFindConstructor", className);
+            if (o == null)
+                throw new Fault(i18n, "observer.cantFindConstructor", className);
 
-	    ctx.addHarnessObserver(o);
-	}
-	catch (ClassNotFoundException e) {
-	    throw new Fault(i18n, "observer.cantFindClass", className);
-	}
-	catch (IllegalAccessException e) {
-	    throw new Fault(i18n, "observer.cantAccessClass", className);
-	}
-	catch (InstantiationException e) {
-	    throw new Fault(i18n, "observer.cantCreateClass", className);
-	}
-	catch (InvocationTargetException e) {
-	    throw new Fault(i18n, "observer.cantCreateClass", className);
-	}
+            ctx.addHarnessObserver(o);
+        }
+        catch (ClassNotFoundException e) {
+            throw new Fault(i18n, "observer.cantFindClass", className);
+        }
+        catch (IllegalAccessException e) {
+            throw new Fault(i18n, "observer.cantAccessClass", className);
+        }
+        catch (InstantiationException e) {
+            throw new Fault(i18n, "observer.cantCreateClass", className);
+        }
+        catch (InvocationTargetException e) {
+            throw new Fault(i18n, "observer.cantCreateClass", className);
+        }
     }
 
-    private Harness.Observer tryConstructor(Class obsClass, Class[] argTypes, Object[] args) 
-	throws IllegalAccessException, InstantiationException, InvocationTargetException
+    private Harness.Observer tryConstructor(Class obsClass, Class[] argTypes, Object[] args)
+        throws IllegalAccessException, InstantiationException, InvocationTargetException
     {
-	try {
-	    Constructor c = obsClass.getConstructor(argTypes);
-	    return (Harness.Observer) (c.newInstance(args));
-	}
-	catch (NoSuchMethodException e) {
-	    return null;
-	}
+        try {
+            Constructor c = obsClass.getConstructor(argTypes);
+            return (Harness.Observer) (c.newInstance(args));
+        }
+        catch (NoSuchMethodException e) {
+            return null;
+        }
     }
 
     private void setClassPath(String s) throws Fault {
-	char pathCh = File.pathSeparatorChar;
-	Vector v = new Vector();
-	int start = 0;
-	for (int i = s.indexOf(pathCh); i != -1; i = s.indexOf(pathCh, start)) {
-	    addClassPathEntry(s.substring(start, i), v);
-	    start = i + 1;
-	}
-	addClassPathEntry(s.substring(start), v);
-	URL[] path = new URL[v.size()];
-	v.copyInto(path);
-	setClassPath(path);
+        char pathCh = File.pathSeparatorChar;
+        Vector v = new Vector();
+        int start = 0;
+        for (int i = s.indexOf(pathCh); i != -1; i = s.indexOf(pathCh, start)) {
+            addClassPathEntry(s.substring(start, i), v);
+            start = i + 1;
+        }
+        addClassPathEntry(s.substring(start), v);
+        URL[] path = new URL[v.size()];
+        v.copyInto(path);
+        setClassPath(path);
     }
 
     private void setClassPath(URL[] path) {
-	classLoader = new URLClassLoader(path);
+        classLoader = new URLClassLoader(path);
     }
 
     private Class loadClass(String name) throws ClassNotFoundException {
-	return (classLoader == null ? Class.forName(name) : classLoader.loadClass(name));
+        return (classLoader == null ? Class.forName(name) : classLoader.loadClass(name));
     }
 
     private void addClassPathEntry(String s, Vector v) throws Fault {
-	try {
-	    if (s.length() > 0) 
-		v.add(new File(s).toURL());
-	}
-	catch (MalformedURLException e) {
-	    throw new Fault(i18n, "observer.badClassPath", new Object[] { s, e });
-	}
+        try {
+            if (s.length() > 0)
+                v.add(new File(s).toURL());
+        }
+        catch (MalformedURLException e) {
+            throw new Fault(i18n, "observer.badClassPath", new Object[] { s, e });
+        }
     }
 
     private ClassLoader classLoader;

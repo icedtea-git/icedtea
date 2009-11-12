@@ -40,44 +40,44 @@ import java.io.IOException;
 public class ShScriptCommentStream extends CommentStream
 {
     public String readComment() throws IOException {
-	String comment, line;
+        String comment, line;
 
-	while (true) {
-	    if ((line = cs.readLine()) == null)
-		return null;
-	    if ((line = getCommentLine(line)) != null)
-		break;
-	}
-	comment = line;
+        while (true) {
+            if ((line = cs.readLine()) == null)
+                return null;
+            if ((line = getCommentLine(line)) != null)
+                break;
+        }
+        comment = line;
 
-	while (true) {
-	    if ((line = cs.readLine()) == null)
-		return comment;
-	    if ((line = getCommentLine(line)) == null)
-		return comment;
-	    comment += line;
-	}
+        while (true) {
+            if ((line = cs.readLine()) == null)
+                return comment;
+            if ((line = getCommentLine(line)) == null)
+                return comment;
+            comment += line;
+        }
     }
 
     //----- internal routines---------------------------------------------------
 
     private String getCommentLine(String line) {
-	boolean isLineComment = false;
-	char lineArray[] = line.toCharArray();
-	int pos;
-	for (pos = 0; pos < lineArray.length; pos++) {
-	    char c = lineArray[pos];
-	    if (c == '#')
-		isLineComment = true;
-	    else if ((c != ' ' ) && (c != '\t') && (c != '\f'))
-		break;
-	}
-	if (!isLineComment)
-	    return null;
-	return line.substring(pos) + LINESEP;
+        boolean isLineComment = false;
+        char lineArray[] = line.toCharArray();
+        int pos;
+        for (pos = 0; pos < lineArray.length; pos++) {
+            char c = lineArray[pos];
+            if (c == '#')
+                isLineComment = true;
+            else if ((c != ' ' ) && (c != '\t') && (c != '\f'))
+                break;
+        }
+        if (!isLineComment)
+            return null;
+        return line.substring(pos) + LINESEP;
     }
 
-    //----------member variables------------------------------------------------    
+    //----------member variables------------------------------------------------
 
     private static final String LINESEP = System.getProperty("line.separator");
 }

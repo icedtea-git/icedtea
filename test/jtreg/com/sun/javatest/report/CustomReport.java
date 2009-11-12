@@ -104,7 +104,7 @@ public abstract class CustomReport {
      * @return The filename of a file that should be displayed if possible.
      *         Currently, only HTML (with simple CSS), plain text and RTF
      *         can be rendered.
-     * @throws com.sun.javatest.report.CustomReport.ReportException - if the report creation was unsuccessful. 
+     * @throws com.sun.javatest.report.CustomReport.ReportException - if the report creation was unsuccessful.
      *         Harness can show Exception's text
      */
     public abstract File createReport(File rootDir) throws ReportException;
@@ -133,7 +133,7 @@ public abstract class CustomReport {
      *         Currently, only HTML (with simple CSS), plain text and RTF
      *         can be rendered.
      * @see com.sun.javatest.tool.Preferences
-     * @throws com.sun.javatest.report.CustomReport.ReportException - if the report creation was unsuccessful. 
+     * @throws com.sun.javatest.report.CustomReport.ReportException - if the report creation was unsuccessful.
      *         Harness can show Exception's text
      */
     public abstract File createReport(String args, File rootDir,
@@ -169,7 +169,7 @@ public abstract class CustomReport {
      *         or zero-length string.
      */
     public abstract String getName();
-    
+
     /**
      * Get a longer description about the purpose of this report type.
      * <i>The implementation should internationalize this value.</i>
@@ -233,15 +233,15 @@ public abstract class CustomReport {
      * The harness can print or show Exception's text
      */
     public class ReportException extends IOException {
-        
+
         /**
-         * Constructs a new exception with the specified detail message. 
+         * Constructs a new exception with the specified detail message.
          */
         public ReportException(String message) {
             super(message);
         }
     }
-    
+
     /**
      * Configuration panel for a report.  It is recommended that you set
      * the name of this component to something unique so that it can be
@@ -252,7 +252,7 @@ public abstract class CustomReport {
      */
     public static abstract class ReportConfigPanel extends JPanel {
         public ReportConfigPanel() {
-	    setFocusable(false);
+            setFocusable(false);
         }
 
         /**
@@ -263,7 +263,7 @@ public abstract class CustomReport {
          */
         public abstract String getPanelName();
     }
-    
+
     /**
      * Specifid enviroment and settings for report generation.
      */
@@ -313,7 +313,7 @@ public abstract class CustomReport {
         /**
          * Give Map for data exchane between custom reports during the same report session.
          * Can be used for sharing intermediate results between reports for optimization.
-         * @return Map for data exchane 
+         * @return Map for data exchane
          */
         public Map getExchangeData() {
             if (exchangeData == null) {
@@ -321,7 +321,7 @@ public abstract class CustomReport {
             }
             return exchangeData;
         }
-        
+
         // TODO
         ReportEnviroment(InterviewParameters ipa, TestFilter f) {
             ip = ipa;
@@ -330,7 +330,7 @@ public abstract class CustomReport {
             backUpEnabled = false;
             backups = 0;
         }
-        
+
         /**
          * Creates a new ReportEnviroment instance refers to the given file.
          */
@@ -338,7 +338,7 @@ public abstract class CustomReport {
             this.xmlReportFile = xmlReportFile;
             this.mif = in;
         }
-        
+
         ReportEnviroment(Report.Settings sett) {
             ip = sett.ip;
             filter = sett.filter;
@@ -346,39 +346,39 @@ public abstract class CustomReport {
             backUpEnabled = sett.isBackupsEnabled();
             backups = sett.backups;
         }
-        
+
         void cleanup() {
             if (tmpXmlReportFile != null) {
                 tmpXmlReportFile.delete();
             }
-	    if (exchangeData != null) {
-        	exchangeData.clear();
-	    }
+            if (exchangeData != null) {
+                exchangeData.clear();
+            }
         }
 
         /**
-         * Returns array of File objects that were sources for Report Converter tool 
+         * Returns array of File objects that were sources for Report Converter tool
          * or empty array if Report Converter was not used.
          * @return array of source files
          */
         public File[] getMergingFiles() {
             return mif;
         }
-        
+
         File xmlReportFile = null;
         File tmpXmlReportFile = null;
         private File[] mif = new File[0];
-        
+
         private InterviewParameters ip;
-	private TestFilter filter;
+        private TestFilter filter;
         private File[] initFiles;
         private HashMap exchangeData;
-        
+
         private boolean backUpEnabled;
         private int backups;
 
     }
-    
+
 
     public void setEnviroment(CustomReport.ReportEnviroment envir) {
         env = envir;

@@ -62,12 +62,12 @@ public class ReadAheadIterator implements Iterator
      * @see #FULL
      */
     public ReadAheadIterator(Iterator source, int mode) {
-	this(source, mode, DEFAULT_LIMITED_READAHEAD);
+        this(source, mode, DEFAULT_LIMITED_READAHEAD);
     }
 
     /**
      * Create a ReadAheadIterator.
-     * @param source The iterator from which to read ahead. 
+     * @param source The iterator from which to read ahead.
      * @param mode A value indicating the type of read ahead required.
      * @param amount A value indicating the amount of read ahead required,
      * if the mode is set to LIMITED. If the mode is NON or FULL, this
@@ -77,18 +77,18 @@ public class ReadAheadIterator implements Iterator
      * @see #FULL
      */
     public ReadAheadIterator(Iterator source, int mode, int amount) {
-	this.source = source;
-	setMode(mode, amount);
+        this.source = source;
+        setMode(mode, amount);
     }
 
     /**
      * Check if all available items from the underlying source iterator
      * have been read.
-     * @return true if all available items from the underlying source iterator 
+     * @return true if all available items from the underlying source iterator
      * have been read.
      */
     public synchronized boolean isReadAheadComplete() {
-	return (worker == null ? !source.hasNext() : !sourceHasNext);
+        return (worker == null ? !source.hasNext() : !sourceHasNext);
     }
 
     /**
@@ -101,7 +101,7 @@ public class ReadAheadIterator implements Iterator
      * @see #isReadAheadComplete
      */
     public synchronized int getItemsFoundCount() {
-	return (usedCount + queue.size());
+        return (usedCount + queue.size());
     }
 
     /**
@@ -110,7 +110,7 @@ public class ReadAheadIterator implements Iterator
      * @deprecated
      */
     public synchronized boolean isSourceExhausted() {
-	return (worker == null ? !source.hasNext() : !sourceHasNext);
+        return (worker == null ? !source.hasNext() : !sourceHasNext);
     }
 
     /**
@@ -119,7 +119,7 @@ public class ReadAheadIterator implements Iterator
      * @deprecated
      */
     public synchronized int getUsedElementCount() {
-	return usedCount;
+        return usedCount;
     }
 
     /**
@@ -129,7 +129,7 @@ public class ReadAheadIterator implements Iterator
      * @deprecated
      */
     public synchronized int getOutputQueueSize() {
-	return queue.size();
+        return queue.size();
     }
 
     /**
@@ -140,152 +140,152 @@ public class ReadAheadIterator implements Iterator
      * parameter will be ignored.
      */
     synchronized void setMode(int mode, int amount) {
-	switch (mode) {
-	case NONE:
-	    minQueueSize = 0;
-	    maxQueueSize = 0;
-	    if (worker != null) {
-		worker = null;
-		notifyAll();  // wake up worker if necessary
-	    }
-	    break;
+        switch (mode) {
+        case NONE:
+            minQueueSize = 0;
+            maxQueueSize = 0;
+            if (worker != null) {
+                worker = null;
+                notifyAll();  // wake up worker if necessary
+            }
+            break;
 
-	case LIMITED:
-	    if (amount <= 0)
-		throw new IllegalArgumentException();
-	    minQueueSize = Math.min(10, amount);
-	    maxQueueSize = amount;
-	    break;
+        case LIMITED:
+            if (amount <= 0)
+                throw new IllegalArgumentException();
+            minQueueSize = Math.min(10, amount);
+            maxQueueSize = amount;
+            break;
 
-	case FULL:
-	    minQueueSize = 10;
-	    maxQueueSize = Integer.MAX_VALUE;
-	    break;
+        case FULL:
+            minQueueSize = 10;
+            maxQueueSize = Integer.MAX_VALUE;
+            break;
 
-	default:
-	    throw new IllegalArgumentException();
-	}
+        default:
+            throw new IllegalArgumentException();
+        }
     }
 
     public synchronized boolean hasNext() {
-	return (queue.size() > 0 
-		|| (worker == null ? source.hasNext() : sourceHasNext));
+        return (queue.size() > 0
+                || (worker == null ? source.hasNext() : sourceHasNext));
     }
 
     public synchronized Object next() {
-	// see if there are items in the read ahead queue
-	Object result = queue.remove();
+        // see if there are items in the read ahead queue
+        Object result = queue.remove();
 
-	if (result == null) {
-	    // queue is empty: check whether to read source directly, or rely on the worker thread
-	    if (maxQueueSize == 0) 
-		// no read ahead, so don't start worker; use source directly
-		result = source.next();
-	    else {
-		if (worker == null) {
-		    // only start a worker if there are items for it to read
-		    sourceHasNext = source.hasNext();
-		    if (sourceHasNext) {
-			// there is more to be read, so start a worker to read it
-			worker = new Thread("ReadAheadIterator" + (workerNum++)) {
-				public void run() {
-				    readAhead();
-				}
-			    };
-			worker.start();
-		    }
-		}
-		else {
-		    // ensure worker is awake
-		    notifyAll();
-		}
+        if (result == null) {
+            // queue is empty: check whether to read source directly, or rely on the worker thread
+            if (maxQueueSize == 0)
+                // no read ahead, so don't start worker; use source directly
+                result = source.next();
+            else {
+                if (worker == null) {
+                    // only start a worker if there are items for it to read
+                    sourceHasNext = source.hasNext();
+                    if (sourceHasNext) {
+                        // there is more to be read, so start a worker to read it
+                        worker = new Thread("ReadAheadIterator" + (workerNum++)) {
+                                public void run() {
+                                    readAhead();
+                                }
+                            };
+                        worker.start();
+                    }
+                }
+                else {
+                    // ensure worker is awake
+                    notifyAll();
+                }
 
-		// wait for the worker to deliver some results
-		while (sourceHasNext && queue.isEmpty()) {
-		    try {
-			wait();
-		    }
-		    catch (InterruptedException e) {
-			// should not happen, but if it does, propogate the interrupt 
-			Thread.currentThread().interrupt();
-		    }
-		}
+                // wait for the worker to deliver some results
+                while (sourceHasNext && queue.isEmpty()) {
+                    try {
+                        wait();
+                    }
+                    catch (InterruptedException e) {
+                        // should not happen, but if it does, propogate the interrupt
+                        Thread.currentThread().interrupt();
+                    }
+                }
 
-		result = queue.remove();
-	    }
-	}
-	else if (sourceHasNext && (queue.size() < minQueueSize)) {
-	    // we've got something from the queue, but the queue is getting empty,
-	    // so ensure worker is awake
-	    notifyAll();
-	}   
+                result = queue.remove();
+            }
+        }
+        else if (sourceHasNext && (queue.size() < minQueueSize)) {
+            // we've got something from the queue, but the queue is getting empty,
+            // so ensure worker is awake
+            notifyAll();
+        }
 
-	if (result != null)
-	    usedCount++;
+        if (result != null)
+            usedCount++;
 
-	return result;
+        return result;
     }
 
     /**
      * @throws UnsupportedOperationException
      */
     public void remove() {
-	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * The body of the worker thread which is used to perform the read ahead.
      * While the worker is running, it notionally "owns" the source iterator.
      * As such, read ahead from the source is not synchronized; instead,
-     * just the updates to the queue and other monitored data with the results 
+     * just the updates to the queue and other monitored data with the results
      * of the read ahead are synchronized. This ensure minimum latency on the
      * main monitor lock.
      */
     private void readAhead() {
-	final Thread thisThread = Thread.currentThread();
-	boolean keepReading;
-	
-	// check whether the thread is really required
-	synchronized (this) {
-	    keepReading = (sourceHasNext && (thisThread == worker));
-	}
+        final Thread thisThread = Thread.currentThread();
+        boolean keepReading;
 
-	try {
-	    while (keepReading) {
-		// sourceHasNext is true, which means there is another item
-		// to be read, so read it, and also check whether there is 
-		// another item after that
-		Object srcNext  = source.next();
-		boolean srcHasNext = source.hasNext();
-		
-		// get the lock to update the queue and sourceHasNext;
-		// check that the worker is still required; and 
-		// wait (if necessary) for the queue to empty a bit
-		synchronized (this) {
-		    queue.insert(srcNext);
-		    sourceHasNext = srcHasNext;
-		    notifyAll();
-		    
-		    keepReading = (sourceHasNext && (thisThread == worker));
-		    
-		    while (queue.size() >= maxQueueSize && keepReading) {
-			wait();
-			keepReading = (sourceHasNext && (thisThread == worker));
-		    }
-		}
-	    }
-	}
-	catch (InterruptedException e) {
-	    // ignore
-	}
-	finally {
-	    // if this is still the main worker thread, zap the 
-	    // reference to the thread, to help GC.
-	    synchronized (this) {
-		if (thisThread == worker)
-		    worker = null;
-	    }
-	}
+        // check whether the thread is really required
+        synchronized (this) {
+            keepReading = (sourceHasNext && (thisThread == worker));
+        }
+
+        try {
+            while (keepReading) {
+                // sourceHasNext is true, which means there is another item
+                // to be read, so read it, and also check whether there is
+                // another item after that
+                Object srcNext  = source.next();
+                boolean srcHasNext = source.hasNext();
+
+                // get the lock to update the queue and sourceHasNext;
+                // check that the worker is still required; and
+                // wait (if necessary) for the queue to empty a bit
+                synchronized (this) {
+                    queue.insert(srcNext);
+                    sourceHasNext = srcHasNext;
+                    notifyAll();
+
+                    keepReading = (sourceHasNext && (thisThread == worker));
+
+                    while (queue.size() >= maxQueueSize && keepReading) {
+                        wait();
+                        keepReading = (sourceHasNext && (thisThread == worker));
+                    }
+                }
+            }
+        }
+        catch (InterruptedException e) {
+            // ignore
+        }
+        finally {
+            // if this is still the main worker thread, zap the
+            // reference to the thread, to help GC.
+            synchronized (this) {
+                if (thisThread == worker)
+                    worker = null;
+            }
+        }
     }
 
     //------------------------------------------------------------------------------------------

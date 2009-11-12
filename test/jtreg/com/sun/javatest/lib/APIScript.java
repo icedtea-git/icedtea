@@ -40,7 +40,7 @@ import com.sun.javatest.TestDescription;
 public class APIScript extends Script
 {
     /// XXX this code really needs to be re-visited!
-    
+
     /**
      * The method that interprets the tags provided in the test description and
      * performs actions accordingly.
@@ -57,48 +57,48 @@ public class APIScript extends Script
 
         PrintWriter trOut = getTestResult().getTestCommentWriter();
 
-	Status status = decodeArgs(args);
-	if (status != null)
-	    return status;
-	
-	// XXX This isn't everything.  We need to make sure that this is a
-	// XXX reasonable subset of JCKScript.  Do we want to handle all options 
-	// XXX available there?  How about the keywords?
+        Status status = decodeArgs(args);
+        if (status != null)
+            return status;
 
-	// compile
-	File [] srcs = td.getSourceFiles();
-	Status compileStatus;
-	if (precompileClassDir == null) {
-	    trOut.println("Unconditionally compiling all sources");
-	    compileStatus = compileTogether(TEST_COMPILE, srcs);
-	} else {
-	    trOut.println("Compiling sources only if necessary");
-	    compileStatus = compileIfNecessary(TEST_COMPILE, srcs, precompileClassDir);
-	}
+        // XXX This isn't everything.  We need to make sure that this is a
+        // XXX reasonable subset of JCKScript.  Do we want to handle all options
+        // XXX available there?  How about the keywords?
 
-	if (!compileStatus.isPassed())
-	    return compileStatus;
+        // compile
+        File [] srcs = td.getSourceFiles();
+        Status compileStatus;
+        if (precompileClassDir == null) {
+            trOut.println("Unconditionally compiling all sources");
+            compileStatus = compileTogether(TEST_COMPILE, srcs);
+        } else {
+            trOut.println("Compiling sources only if necessary");
+            compileStatus = compileIfNecessary(TEST_COMPILE, srcs, precompileClassDir);
+        }
 
-	// execute
-	String executeClass  = td.getParameter("executeClass");
-	String executeArgs   = td.getParameter("executeArgs");
-	Status executeStatus = execute(TEST_EXECUTE, executeClass, executeArgs);
+        if (!compileStatus.isPassed())
+            return compileStatus;
 
-	return executeStatus;
+        // execute
+        String executeClass  = td.getParameter("executeClass");
+        String executeArgs   = td.getParameter("executeArgs");
+        Status executeStatus = execute(TEST_EXECUTE, executeClass, executeArgs);
+
+        return executeStatus;
     } // run()
 
     //----------private methods-------------------------------------------------
 
     private Status decodeArgs(String [] args) {
-	// decode args
-	for (int i = 0; i < args.length; i++) {
-	    if (args[i].equals("-precompileClassDir") && (i+1 < args.length))
-		precompileClassDir = args[++i];
-	    else
-		return Status.failed(UNRECOGNIZED_ARG + args[i]);
-	}
+        // decode args
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-precompileClassDir") && (i+1 < args.length))
+                precompileClassDir = args[++i];
+            else
+                return Status.failed(UNRECOGNIZED_ARG + args[i]);
+        }
 
-	return null;
+        return null;
     } // init()
 
     //----------member variables------------------------------------------------
@@ -110,5 +110,5 @@ public class APIScript extends Script
     private String precompileClassDir;
 
     private static final String
-	UNRECOGNIZED_ARG      = "Unrecognized argument for script: ";
+        UNRECOGNIZED_ARG      = "Unrecognized argument for script: ";
 }

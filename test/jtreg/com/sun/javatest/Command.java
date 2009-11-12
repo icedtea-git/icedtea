@@ -31,20 +31,20 @@ import java.io.PrintWriter;
 /**
  * Command provides the ability to invoke arbitrary Java
  * code from within a Script. Standard implementations may exist to compile
- * or execute tests, in the same JVM as the harness or its agent, 
- * in separate processes, or even on a separate machine. 
+ * or execute tests, in the same JVM as the harness or its agent,
+ * in separate processes, or even on a separate machine.
  * Custom implementations can also be used.
  */
-public abstract class Command 
+public abstract class Command
 {
     /**
      * The method that that does the work of the command.
-     * @param args	Command-specific options and arguments
-     * @param out1	A stream to which to report messages and errors. 
-     *			This stream was previously called "log".
-     * @param out2	An additional stream to which to write output.
-     *			This stream was previously called "ref".
-     * @return		The result of the command
+     * @param args      Command-specific options and arguments
+     * @param out1      A stream to which to report messages and errors.
+     *                  This stream was previously called "log".
+     * @param out2      An additional stream to which to write output.
+     *                  This stream was previously called "ref".
+     * @return          The result of the command
      */
     public abstract Status run(String[] args, PrintWriter out1, PrintWriter out2);
 
@@ -55,7 +55,7 @@ public abstract class Command
      * @see #getClassLoader
      */
     public void setClassLoader(ClassLoader cl) {
-	loader = cl;
+        loader = cl;
     }
 
     /**
@@ -65,7 +65,7 @@ public abstract class Command
      * @see #setClassLoader
      */
     public ClassLoader getClassLoader() {
-	return loader;
+        return loader;
     }
 
     private ClassLoader loader;

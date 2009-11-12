@@ -39,7 +39,7 @@ import java.util.zip.ZipFile;
  * A class loader for loading classes from a path of directories,
  * zip files and jar files.
  */
-public class PathClassLoader extends ClassLoader 
+public class PathClassLoader extends ClassLoader
 {
     /**
      * Create a PathClassLoader, specifying a path.
@@ -50,11 +50,11 @@ public class PathClassLoader extends ClassLoader
      * @see File#pathSeparator
      */
     public PathClassLoader(String pathString) {
-	this.path = split(pathString);
+        this.path = split(pathString);
     }
 
     /**
-     * Create a PathClassLoader, specifying a path and a 
+     * Create a PathClassLoader, specifying a path and a
      * base directory for any relative files on the path.
      * @param baseDir the base directory for any relative
      * files on the path
@@ -65,12 +65,12 @@ public class PathClassLoader extends ClassLoader
      * @see File#pathSeparator
      */
     public PathClassLoader(File baseDir, String pathString) {
-	path = split(pathString);
-	for (int i = 0; i < path.length; i++) {
-	    File f = path[i];
-	    if (!f.isAbsolute())
-		path[i] = new File(baseDir, f.getPath());
-	}
+        path = split(pathString);
+        for (int i = 0; i < path.length; i++) {
+            File f = path[i];
+            if (!f.isAbsolute())
+                path[i] = new File(baseDir, f.getPath());
+        }
     }
 
     /**
@@ -79,11 +79,11 @@ public class PathClassLoader extends ClassLoader
      *   to look for classes to be loaded
      */
     public PathClassLoader(File[] path) {
-	this.path = path;
+        this.path = path;
     }
-	
+
     /**
-     * Attempt to load a class if it is not already loaded, and optionally 
+     * Attempt to load a class if it is not already loaded, and optionally
      * resolve any imports it might have.
      *
      * @param name The fully-qualified name of the class to load.
@@ -91,115 +91,115 @@ public class PathClassLoader extends ClassLoader
      * @return the class that was loaded
      * @throws ClassNotFoundException if the class was not found.
      */
-    protected Class loadClass(String name, boolean resolve) 
-	throws ClassNotFoundException {
-		
-	    Class cl = (Class)classes.get(name);
-		
-	    if (cl == null) {
-		try {
-		    cl = findSystemClass(name);
-		} 
-		catch (ClassNotFoundException e) {
-		    cl = locateClass(name);
-		}
-	    }
-	    
-	    if (resolve)
-		resolveClass(cl);
-	    
-	    return cl;
+    protected Class loadClass(String name, boolean resolve)
+        throws ClassNotFoundException {
+
+            Class cl = (Class)classes.get(name);
+
+            if (cl == null) {
+                try {
+                    cl = findSystemClass(name);
+                }
+                catch (ClassNotFoundException e) {
+                    cl = locateClass(name);
+                }
+            }
+
+            if (resolve)
+                resolveClass(cl);
+
+            return cl;
     }
 
-	
-    private synchronized Class locateClass(String name) 
-	throws ClassNotFoundException {
-	//System.err.println("locateClass: " + name);
-	Class c = (Class)classes.get(name);
-	if (c != null)
-	    return c;
-	
-	for (int i = 0; i < path.length; i++) {
-	    if (path[i].isDirectory())
-		c = locateClassInDir(name, path[i]);
-	    else
-		c = locateClassInJar(name, path[i]);
 
-	    if (c != null) {
-		classes.put(name, c);
-		return c;
-	    }
-	}
-	
-	throw new ClassNotFoundException(name);
+    private synchronized Class locateClass(String name)
+        throws ClassNotFoundException {
+        //System.err.println("locateClass: " + name);
+        Class c = (Class)classes.get(name);
+        if (c != null)
+            return c;
+
+        for (int i = 0; i < path.length; i++) {
+            if (path[i].isDirectory())
+                c = locateClassInDir(name, path[i]);
+            else
+                c = locateClassInJar(name, path[i]);
+
+            if (c != null) {
+                classes.put(name, c);
+                return c;
+            }
+        }
+
+        throw new ClassNotFoundException(name);
     }
 
-    private Class locateClassInDir(String name, File dir) 
-	throws ClassNotFoundException {	
-	//System.err.println("locateClassInDir: " + name + " " + dir);	    
-	String cname = name.replace('.', '/') + ".class";
-	try {    
-	    File file = new File(dir, cname);
-	    return readClass(name, new FileInputStream(file), (int)(file.length()));
-	}
-	catch (IOException e) {
-	    //System.err.println("locateClassInDir: " + e);
-	    return null;
-	}
+    private Class locateClassInDir(String name, File dir)
+        throws ClassNotFoundException {
+        //System.err.println("locateClassInDir: " + name + " " + dir);
+        String cname = name.replace('.', '/') + ".class";
+        try {
+            File file = new File(dir, cname);
+            return readClass(name, new FileInputStream(file), (int)(file.length()));
+        }
+        catch (IOException e) {
+            //System.err.println("locateClassInDir: " + e);
+            return null;
+        }
     }
 
-    private Class locateClassInJar(String name, File jarFile) 
-	throws ClassNotFoundException {
-	//System.err.println("locateClassInJar: " + name + " " + jarFile);	    
-	String cname = name.replace('.', '/') + ".class";
-	try {    
-	    ZipFile z = (ZipFile)zips.get(jarFile);
-	    if (z == null) {
-		z = new ZipFile(jarFile);
-		zips.put(jarFile, z);
-	    }
-	    ZipEntry ze = z.getEntry(cname);
-	    if (ze == null)
-		return null;
-	    return readClass(name, z.getInputStream(ze), (int)(ze.getSize()));
-	}
-	catch (IOException e) {
-	    //System.err.println("locateClassInJar: " + e);
-	    return null;
-	}
+    private Class locateClassInJar(String name, File jarFile)
+        throws ClassNotFoundException {
+        //System.err.println("locateClassInJar: " + name + " " + jarFile);
+        String cname = name.replace('.', '/') + ".class";
+        try {
+            ZipFile z = (ZipFile)zips.get(jarFile);
+            if (z == null) {
+                z = new ZipFile(jarFile);
+                zips.put(jarFile, z);
+            }
+            ZipEntry ze = z.getEntry(cname);
+            if (ze == null)
+                return null;
+            return readClass(name, z.getInputStream(ze), (int)(ze.getSize()));
+        }
+        catch (IOException e) {
+            //System.err.println("locateClassInJar: " + e);
+            return null;
+        }
     }
 
     private Class readClass(String name, InputStream in, int size) throws IOException {
-	byte[] data = new byte[size];
-	try {
-	    for (int total = 0; total < size; ) {
-		total += in.read(data, total, size - total);
-	    }
-	} 
-	finally {
-	    in.close();
-	}
-	return defineClass(name, data, 0, data.length);
+        byte[] data = new byte[size];
+        try {
+            for (int total = 0; total < size; ) {
+                total += in.read(data, total, size - total);
+            }
+        }
+        finally {
+            in.close();
+        }
+        return defineClass(name, data, 0, data.length);
     }
 
     private File[] split(String s) {
-	char pathCh = File.pathSeparatorChar;
-	Vector v = new Vector();
-	int start = 0;
-	for (int i = s.indexOf(pathCh); i != -1; i = s.indexOf(pathCh, start)) {
-	    add(s.substring(start, i), v);
-	    start = i + 1;
-	}
-	if (start != s.length())
-	    add(s.substring(start), v);
-	File[] path = new File[v.size()];
-	v.copyInto(path);
-	return path;
+        char pathCh = File.pathSeparatorChar;
+        Vector v = new Vector();
+        int start = 0;
+        for (int i = s.indexOf(pathCh); i != -1; i = s.indexOf(pathCh, start)) {
+            add(s.substring(start, i), v);
+            start = i + 1;
+        }
+        if (start != s.length())
+            add(s.substring(start), v);
+        File[] path = new File[v.size()];
+        v.copyInto(path);
+        return path;
     }
 
     private void add(String s, Vector v) {
-	if (s.length() != 0)
-	    v.addElement(new File(s));
+        if (s.length() != 0)
+            v.addElement(new File(s));
     }
 
     private File[] path;

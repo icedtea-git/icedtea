@@ -45,11 +45,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ext.LexicalHandler;
 
 public class XMLReportMaker {
-    
+
     private TransformerHandler ser;
-    
+
     XMLReportMaker(Writer w) throws IOException {
-        
+
         Properties outputProps = new Properties();
         outputProps.put("indent", "yes");
         outputProps.put("encoding", XML_CHARSET);
@@ -63,15 +63,15 @@ public class XMLReportMaker {
         ser.getTransformer().setOutputProperties(outputProps);
         ser.setResult(new StreamResult(w));
     }
-    
+
     void sDocument() throws SAXException {
         ser.startDocument();
     }
-    
+
     void eDocument() throws SAXException, IOException {
         ser.endDocument();
     }
-    
+
     void sReport() throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         atts.addAttribute("", "", Scheme.XSI, "String", Scheme.XSI_VAL);
@@ -80,28 +80,28 @@ public class XMLReportMaker {
         atts.addAttribute("", "", Scheme.REPORT_GENTIME, "String", XMLReport.Utils.dateToISO8601(new Date()));
         sE(Scheme.REPORT, atts);
     }
-    
+
     void eReport() throws SAXException {
         eE(Scheme.REPORT);
     }
-    
+
     void sSummary() throws SAXException {
         sE(Scheme.SUMMARY);
     }
-    
+
     void eSummary() throws SAXException {
         eE(Scheme.SUMMARY);
     }
-    
-    
+
+
     void sWorkdirectories() throws SAXException {
         sE(Scheme.WDS);
     }
-    
+
     void eWorkdirectories() throws SAXException {
         eE(Scheme.WDS);
     }
-    
+
     void sEnvironment(String name, String descr) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         if (name != null && ! "".equals(name.trim())) {
@@ -112,25 +112,25 @@ public class XMLReportMaker {
         }
         sE(Scheme.ENV, atts);
     }
-    
+
     void eEnvironment() throws SAXException {
         eE(Scheme.ENV);
     }
-    
+
     void conCur(int val) throws SAXException  {
         sE(Scheme.CONC);
         String sVal = Integer.toString(val);
         ser.characters(sVal.toCharArray(), 0, sVal.length());
         eE(Scheme.CONC);
     }
-    
+
     void timeOut(float val) throws SAXException  {
         sE(Scheme.TIMO);
         String sVal = Float.toString(val);
         ser.characters(sVal.toCharArray(), 0, sVal.length());
         eE(Scheme.TIMO);
     }
-    
+
     void sWorkdirectory(String jti) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         atts.addAttribute("", "", Scheme.WD_ID, "String", "1");
@@ -139,19 +139,19 @@ public class XMLReportMaker {
         }
         sE(Scheme.WD, atts);
     }
-    
+
     void eWorkdirectory() throws SAXException {
         eE(Scheme.WD);
     }
-    
+
     void sTestResults() throws SAXException {
         sE(Scheme.TRS);
     }
-    
+
     void eTestResults() throws SAXException {
         eE(Scheme.TRS);
     }
-    
+
     void sTestResult(String url, Status st, int id) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         atts.addAttribute("", "", Scheme.TR_URL, "String", url);
@@ -159,43 +159,43 @@ public class XMLReportMaker {
         atts.addAttribute("", "", Scheme.TR_WDID, "Integer", Integer.toString(id));
         sE(Scheme.TR, atts);
     }
-    
+
     void eTestResult() throws SAXException {
         eE(Scheme.TR);
     }
-    
+
     void sDescriptionData() throws SAXException {
         sE(Scheme.DESCR_DATA);
     }
-    
+
     void eDescriptionData() throws SAXException {
         eE(Scheme.DESCR_DATA);
     }
-    
-    
+
+
     void sKeyWords() throws SAXException {
         sE(Scheme.KEY_WORDS);
     }
-    
+
     void sKeyWords(String expr) throws SAXException {
-        
+
         AttributesImpl atts = new AttributesImpl();
         atts.addAttribute("", "", Scheme.KEYWORDS_EXPR, "String", expr);
         sE(Scheme.KEY_WORDS, atts);
     }
-    
+
     void eKeyWords() throws SAXException {
         eE(Scheme.KEY_WORDS);
     }
-    
+
     void sTestEnvironment() throws SAXException {
         sE(Scheme.TEST_ENV);
     }
-    
+
     void eTestEnvironment() throws SAXException {
         eE(Scheme.TEST_ENV);
     }
-    
+
     void sResultProps(String time) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         if (time != null) {
@@ -208,61 +208,61 @@ public class XMLReportMaker {
         }
         sE(Scheme.RES_PROP, atts);
     }
-    
+
     void eResultProps() throws SAXException {
         eE(Scheme.RES_PROP);
     }
-    
+
     void sSections() throws SAXException {
         sE(Scheme.SES);
     }
-    
+
     void eSections() throws SAXException {
         eE(Scheme.SES);
     }
-    
+
     void sStdValues() throws SAXException {
         sE(Scheme.STD_VALS);
     }
-    
+
     void eStdValues() throws SAXException {
         eE(Scheme.STD_VALS);
     }
-    
+
     void sPriorStatusList() throws SAXException {
         sE(Scheme.PRIOS);
     }
-    
+
     void ePriorStatusList() throws SAXException {
         eE(Scheme.PRIOS);
     }
-    
+
     void sExclList() throws SAXException {
         sE(Scheme.EXCL_LIST);
     }
-    
+
     void eExclList() throws SAXException {
         eE(Scheme.EXCL_LIST);
     }
-    
+
     void sTests() throws SAXException {
         sE(Scheme.TESTS);
     }
-    
+
     void eTests() throws SAXException {
         eE(Scheme.TESTS);
     }
-    
+
     void sInterview() throws SAXException {
         sE(Scheme.INT);
     }
-    
+
     void eInterview() throws SAXException {
         eE(Scheme.INT);
     }
-    
+
     void sQuestion(String value, String text, String summary) throws SAXException {
-        
+
         AttributesImpl atts = new AttributesImpl();
         if (summary != null) {
             atts.addAttribute("", "", Scheme.QUEST_SUMM, "String", summary);
@@ -273,39 +273,39 @@ public class XMLReportMaker {
         if (value != null) {
             atts.addAttribute("", "", Scheme.QUEST_TEXT, "String", text);
         }
-        
+
         sE(Scheme.QUEST, atts);
     }
-    
+
     void eQuestion() throws SAXException {
         eE(Scheme.QUEST);
     }
-    
-    
+
+
     void sListQuestion() throws SAXException {
         sE(Scheme.LIST_QUEST);
     }
-    
+
     void eListQuestion() throws SAXException {
         eE(Scheme.LIST_QUEST);
     }
-    
+
     void sChoiceQuestion() throws SAXException {
         sE(Scheme.CHOICE_QUEST);
     }
-    
+
     void eChoiceQuestion() throws SAXException {
         eE(Scheme.CHOICE_QUEST);
     }
-    
+
     void sPropertiesQuestion()  throws SAXException {
         sE(Scheme.PROP_QUEST);
     }
-    
+
     void ePropertiesQuestion()  throws SAXException {
         eE(Scheme.PROP_QUEST);
     }
-    
+
     void sGroup(String name, String hd1, String hd2) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         if (name != null) {
@@ -319,11 +319,11 @@ public class XMLReportMaker {
         }
         sE(Scheme.GROUP, atts);
     }
-    
+
     void eGroup(String name, String h1, String h2) throws SAXException {
         eE(Scheme.GROUP);
     }
-    
+
     void makeRow(String key, String val) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         if (key != null) {
@@ -335,7 +335,7 @@ public class XMLReportMaker {
         sE(Scheme.ROW, atts);
         eE(Scheme.ROW);
     }
-    
+
     void makeChoices(String[] ch, String[] dispCh) throws SAXException {
         if (ch != null) {
             for (int i = 0; i < ch.length; i++) {
@@ -343,7 +343,7 @@ public class XMLReportMaker {
             }
         }
     }
-    
+
     void makeChoices(String[] ch, String[] dispCh, boolean[] values) throws SAXException {
         if (ch != null) {
             for (int i = 0; i < ch.length; i++) {
@@ -351,8 +351,8 @@ public class XMLReportMaker {
             }
         }
     }
-    
-    
+
+
     private void makeChoice(String ch, String di) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         if (ch != null) {
@@ -364,7 +364,7 @@ public class XMLReportMaker {
         sE(Scheme.CHOICE, atts);
         eE(Scheme.CHOICE);
     }
-    
+
     private void makeChoice(String ch, String di, boolean val) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         atts.addAttribute("", "", Scheme.CHOICE_CH, "String", ch);
@@ -375,13 +375,13 @@ public class XMLReportMaker {
         sE(Scheme.CHOICE, atts);
         eE(Scheme.CHOICE);
     }
-    
-    
+
+
     void makeEntireTestTree() throws SAXException {
         sE(Scheme.ENTTREE);
         eE(Scheme.ENTTREE);
     }
-    
+
     void sSection(String title, Status st) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         atts.addAttribute("", "", Scheme.SE_TIT, "String", title);
@@ -390,11 +390,11 @@ public class XMLReportMaker {
         }
         sE(Scheme.SE, atts);
     }
-    
+
     void eSection() throws SAXException {
         eE(Scheme.SE);
     }
-    
+
     void sOutput(String title, String content) throws SAXException, IOException {
         AttributesImpl atts = new AttributesImpl();
         atts.addAttribute("", "", Scheme.OU_TIT, "String", title);
@@ -403,11 +403,11 @@ public class XMLReportMaker {
             writeCDATA(ser, ser, content);
         }
     }
-    
+
     void eOutput() throws SAXException {
         eE(Scheme.OU);
     }
-    
+
     void makeTemplateInfo(String tPath, String name, String descr) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         if (tPath != null) {
@@ -422,8 +422,8 @@ public class XMLReportMaker {
         sE(Scheme.TEMPLATE, atts);
         eE(Scheme.TEMPLATE);
     }
-    
-    
+
+
     void makeProperty(String key, String val) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         atts.addAttribute("", "", Scheme.PR_NAME, "String", key);
@@ -431,14 +431,14 @@ public class XMLReportMaker {
         sE(Scheme.PR, atts);
         eE(Scheme.PR);
     }
-    
+
     void makeItem(String val) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         atts.addAttribute("", "", Scheme.IT_VAL, "CDATA", val);
         sE(Scheme.IT, atts);
         eE(Scheme.IT);
     }
-    
+
     void makeItems(String[] vals) throws SAXException {
         if (vals != null) {
             for (int i = 0 ; i < vals.length; i++) {
@@ -448,7 +448,7 @@ public class XMLReportMaker {
             }
         }
     }
-    
+
     void makeItems(File[] files) throws SAXException {
         if (files != null) {
             for (int i = 0 ; i < files.length; i++) {
@@ -456,24 +456,24 @@ public class XMLReportMaker {
             }
         }
     }
-    
-    
+
+
     private void sE(String name) throws SAXException {
         ser.startElement("","",name, emptyAttr);
     }
-    
+
     private void sE(String name, Attributes atts) throws SAXException {
         ser.startElement("","",name, atts);
     }
-    
+
     private void eE(String name) throws SAXException {
         ser.endElement("","",name);
     }
-    
+
     public static void writeCDATA(LexicalHandler lh, ContentHandler ser, String cdata) throws IOException, SAXException {
-        
+
         cdata = convertProhibitedChars(cdata);
-        
+
         if (lh != null) {
             int start = 0;
             int end;
@@ -490,7 +490,7 @@ public class XMLReportMaker {
             }
         }
     }
-    
+
     public static String convertProhibitedChars(String cdata) {
         StringBuffer sb = new StringBuffer();
         char [] data = cdata.toCharArray();
@@ -508,7 +508,7 @@ public class XMLReportMaker {
         }
         return sb.toString();
     }
-    
+
     // XML 1.0 specification ( http://www.w3.org/TR/2004/REC-xml-20040204/ ) defines legal chars:
     // Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
     public static boolean prohibited(int c) {
@@ -518,15 +518,15 @@ public class XMLReportMaker {
         if (c >= 0x10000 && c <= 0x10FFFF) return false; // can't be java char, but any way...
         return true;
     }
-    
-    
+
+
     private final AttributesImpl emptyAttr = new AttributesImpl();
-    
+
     /**
      * Elements and attributes names are defined here
      */
     private static class Scheme {
-        
+
         // ELEMENTS
         private static final String REPORT = "Report";
         private static final String SUMMARY = "Summary";
@@ -561,7 +561,7 @@ public class XMLReportMaker {
         private static final String GROUP = "Group";
         private static final String ROW = "Row";
         private static final String TEMPLATE = "Template";
-        
+
         // ATTRS
         private static final String TR_URL = "url";
         private static final String TR_STATUS = "status";
@@ -593,17 +593,17 @@ public class XMLReportMaker {
         private static final String ROW_VAL = "value";
         private static final String ENV_NAME = "name";
         private static final String ENV_DESCR = "description";
-        
+
         private static final String TEM_NAME = "name";
         private static final String TEM_DESCRIPTION = "description";
         private static final String TEM_FILE = "fileName";
-        
+
         // VALUES
         private static final String XSI_VAL = "http://www.w3.org/2001/XMLSchema-instance";
         private static final String SCH_LOC_VAL = "Report.xsd";
-        
+
     }
-    
+
     public static String XML_CHARSET = "UTF-8";
-    
+
 }

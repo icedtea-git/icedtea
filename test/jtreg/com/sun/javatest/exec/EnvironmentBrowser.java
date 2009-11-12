@@ -63,86 +63,86 @@ class EnvironmentBrowser extends ToolDialog
 {
 
     EnvironmentBrowser(JComponent parent, UIFactory uif) {
-	super(parent, uif, "env");
+        super(parent, uif, "env");
 
-	listener = new Listener();
-	
-	envTableModel = new ElementsTableModel();
+        listener = new Listener();
+
+        envTableModel = new ElementsTableModel();
     }
 
     public void show(InterviewParameters params) {
-	this.params = params;
-	setVisible(true);
+        this.params = params;
+        setVisible(true);
     }
 
     private void setEnv(TestEnvironment env) {
-	this.env = env;
+        this.env = env;
 
-	if (env == null || env.getName().trim().length() == 0)
-	    setI18NTitle("env.title.unset");
-	else
-	    setI18NTitle("env.title.name", env.getName());
-	 
-	envTableModel.setEnvironment(env);
+        if (env == null || env.getName().trim().length() == 0)
+            setI18NTitle("env.title.unset");
+        else
+            setI18NTitle("env.title.name", env.getName());
+
+        envTableModel.setEnvironment(env);
     }
 
     protected void initGUI() {
 
-	JPanel body = uif.createPanel("env.body", false);
-	body.setLayout(new GridBagLayout());
-	body.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-	
+        JPanel body = uif.createPanel("env.body", false);
+        body.setLayout(new GridBagLayout());
+        body.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-	table = uif.createTable("env.data", envTableModel);
-	// make default size small to reduce change of ToolSubPanel scrollbars
-	table.setPreferredScrollableViewportSize(new Dimension(100, 100));
-	table.setCellSelectionEnabled(true);
-	table.getTableHeader().addMouseListener(new MouseAdapter() {
-	    public void mouseClicked(MouseEvent e) { 
-		Object src = e.getSource();
-		if (src instanceof JTableHeader) {
-		    JTableHeader th = (JTableHeader)src;
-		    int col = th.columnAtPoint(e.getPoint());
-		    envTableModel.sort(col);
-		}
-	    }
-	});
-	table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	table.getSelectionModel().addListSelectionListener(listener);
-	table.getColumnModel().getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	table.getColumnModel().getSelectionModel().addListSelectionListener(listener);
-	
-	JScrollPane table_sp = uif.createScrollPane(table);
-	int dpi = uif.getDotsPerInch();
-	table_sp.setPreferredSize(new Dimension(6 * dpi, 3 * dpi));
 
-	GridBagConstraints c = new GridBagConstraints();
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.fill = GridBagConstraints.BOTH;
-	c.insets.bottom = 10;
-	c.weightx = 1;
-	c.weighty = 1;
-	body.add(table_sp, c);
+        table = uif.createTable("env.data", envTableModel);
+        // make default size small to reduce change of ToolSubPanel scrollbars
+        table.setPreferredScrollableViewportSize(new Dimension(100, 100));
+        table.setCellSelectionEnabled(true);
+        table.getTableHeader().addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                Object src = e.getSource();
+                if (src instanceof JTableHeader) {
+                    JTableHeader th = (JTableHeader)src;
+                    int col = th.columnAtPoint(e.getPoint());
+                    envTableModel.sort(col);
+                }
+            }
+        });
+        table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getSelectionModel().addListSelectionListener(listener);
+        table.getColumnModel().getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getColumnModel().getSelectionModel().addListSelectionListener(listener);
 
-	JLabel lbl = uif.createLabel("env.value", true);
-	c.insets.bottom = 0;
-	c.weighty = 0;
-	body.add(lbl, c);
+        JScrollPane table_sp = uif.createScrollPane(table);
+        int dpi = uif.getDotsPerInch();
+        table_sp.setPreferredSize(new Dimension(6 * dpi, 3 * dpi));
 
-	text = uif.createTextArea("env.value", lbl);
-	text.setRows(5);
-	text.setLineWrap(true);
-	text.setEditable(false);
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.fill = GridBagConstraints.BOTH;
+        c.insets.bottom = 10;
+        c.weightx = 1;
+        c.weighty = 1;
+        body.add(table_sp, c);
 
-	c.weighty = 0.5;
-	body.add(new JScrollPane(text), c);
+        JLabel lbl = uif.createLabel("env.value", true);
+        c.insets.bottom = 0;
+        c.weighty = 0;
+        body.add(lbl, c);
 
-	setBody(body);
+        text = uif.createTextArea("env.value", lbl);
+        text.setRows(5);
+        text.setLineWrap(true);
+        text.setEditable(false);
 
-	JButton closeBtn = uif.createCloseButton("env.close");
-	setButtons(new JButton[] { closeBtn }, closeBtn);
+        c.weighty = 0.5;
+        body.add(new JScrollPane(text), c);
 
-	setComponentListener(listener);
+        setBody(body);
+
+        JButton closeBtn = uif.createCloseButton("env.close");
+        setButtons(new JButton[] { closeBtn }, closeBtn);
+
+        setComponentListener(listener);
     }
 
     private InterviewParameters params;
@@ -158,194 +158,194 @@ class EnvironmentBrowser extends ToolDialog
     private static final int DEFINED_IN_FILE = 2;
     private static final int DEFINED_IN_ENV = 3;
 
-    private class Listener 
-	extends ComponentAdapter 
-	implements ListSelectionListener, Interview.Observer 
+    private class Listener
+        extends ComponentAdapter
+        implements ListSelectionListener, Interview.Observer
     {
-	// ComponentListener
-	public void componentShown(ComponentEvent e) {
-	    params.addObserver(listener);
-	    updateContent();
-	}
+        // ComponentListener
+        public void componentShown(ComponentEvent e) {
+            params.addObserver(listener);
+            updateContent();
+        }
 
-	public void componentHidden(ComponentEvent e) {
-	    params.removeObserver(listener);
-	}
+        public void componentHidden(ComponentEvent e) {
+            params.removeObserver(listener);
+        }
 
-	// ListSelectionListener
-	public void valueChanged(ListSelectionEvent e) {
-	    //System.err.println(e);
-	    int r = table.getSelectedRow();
-	    int c = table.getSelectedColumn();
-	    if (r == -1 || c == -1)
-		text.setText("");
-	    else {
-		Object o = table.getModel().getValueAt(r, c);
-		if (o == null) {
-		    text.setFont(text.getFont().deriveFont(Font.ITALIC));
-		    text.setForeground(Color.gray);
-		    text.setText(uif.getI18NString("env.unset"));
-		}
-		else {
-		    text.setFont(text.getFont().deriveFont(Font.PLAIN));
-		    text.setForeground(Color.black);
-		    text.setText(String.valueOf(o));
-		}
-	    }
-	}
+        // ListSelectionListener
+        public void valueChanged(ListSelectionEvent e) {
+            //System.err.println(e);
+            int r = table.getSelectedRow();
+            int c = table.getSelectedColumn();
+            if (r == -1 || c == -1)
+                text.setText("");
+            else {
+                Object o = table.getModel().getValueAt(r, c);
+                if (o == null) {
+                    text.setFont(text.getFont().deriveFont(Font.ITALIC));
+                    text.setForeground(Color.gray);
+                    text.setText(uif.getI18NString("env.unset"));
+                }
+                else {
+                    text.setFont(text.getFont().deriveFont(Font.PLAIN));
+                    text.setForeground(Color.black);
+                    text.setText(String.valueOf(o));
+                }
+            }
+        }
 
-	// Interview.Observer
-	public void currentQuestionChanged(Question q) {
-	}
+        // Interview.Observer
+        public void currentQuestionChanged(Question q) {
+        }
 
-	public void pathUpdated() {
-	    updateContent();
-	}
+        public void pathUpdated() {
+            updateContent();
+        }
 
-	private void updateContent() {
-	    setEnv(params.getEnv());
-	}
+        private void updateContent() {
+            setEnv(params.getEnv());
+        }
     };
 
     private class EnvEntryComparator implements Comparator {
-	EnvEntryComparator(int sortMode, String[] inherits) {
-	    this.sortMode = sortMode;
-	    this.inherits = inherits;
-	}
+        EnvEntryComparator(int sortMode, String[] inherits) {
+            this.sortMode = sortMode;
+            this.inherits = inherits;
+        }
 
-	public int compare(Object o1, Object o2) {
-	    TestEnvironment.Element e1 = (TestEnvironment.Element)o1;
-	    TestEnvironment.Element e2 = (TestEnvironment.Element)o2;
+        public int compare(Object o1, Object o2) {
+            TestEnvironment.Element e1 = (TestEnvironment.Element)o1;
+            TestEnvironment.Element e2 = (TestEnvironment.Element)o2;
             // the following should be a switch statement, but JDK
             // 1.1.7 can't compile it: doesn't recognize KEY etc as
             // constants.
-	    if (sortMode == KEY)
-		// key should always be unique, so should be enough to sort on that
-		return (e1.getKey().compareTo(e2.getKey()));
-	    else if (sortMode == VALUE) {
-		// value probably unique, but if not, sort on key as well
-		int c = (e1.getValue().compareTo(e2.getValue()));
-		return (c != 0 ? c : e1.getKey().compareTo(e2.getKey()));
-	    }
-	    else if (sortMode == DEFINED_IN_ENV) {
-		// defined_in probably not unique, so sort on key as well
-		int i1 = getInheritsIndex(e1.getDefinedInEnv());
-		int i2 = getInheritsIndex(e2.getDefinedInEnv());
-		return (i1 < i2 ? -1 :
-			i1 > i2 ? +1 : e1.getKey().compareTo(e2.getKey()));
-	    }
-	    else if (sortMode == DEFINED_IN_FILE) {
-		// defined_in probably not unique, so sort on key as well
-		int c = (e1.getDefinedInFile().compareTo(e2.getDefinedInFile()));
-		return (c != 0 ? c : e1.getKey().compareTo(e2.getKey()));
-	    }
-	    else {
-		return 0;
-	    } 
-	}
+            if (sortMode == KEY)
+                // key should always be unique, so should be enough to sort on that
+                return (e1.getKey().compareTo(e2.getKey()));
+            else if (sortMode == VALUE) {
+                // value probably unique, but if not, sort on key as well
+                int c = (e1.getValue().compareTo(e2.getValue()));
+                return (c != 0 ? c : e1.getKey().compareTo(e2.getKey()));
+            }
+            else if (sortMode == DEFINED_IN_ENV) {
+                // defined_in probably not unique, so sort on key as well
+                int i1 = getInheritsIndex(e1.getDefinedInEnv());
+                int i2 = getInheritsIndex(e2.getDefinedInEnv());
+                return (i1 < i2 ? -1 :
+                        i1 > i2 ? +1 : e1.getKey().compareTo(e2.getKey()));
+            }
+            else if (sortMode == DEFINED_IN_FILE) {
+                // defined_in probably not unique, so sort on key as well
+                int c = (e1.getDefinedInFile().compareTo(e2.getDefinedInFile()));
+                return (c != 0 ? c : e1.getKey().compareTo(e2.getKey()));
+            }
+            else {
+                return 0;
+            }
+        }
 
-	private int getInheritsIndex(String s) {
-	    for (int i = 0; i < inherits.length; i++) {
-		if (inherits[i].equals(s))
-		    return i;
-	    }
-	    return inherits.length;
-	}
+        private int getInheritsIndex(String s) {
+            for (int i = 0; i < inherits.length; i++) {
+                if (inherits[i].equals(s))
+                    return i;
+            }
+            return inherits.length;
+        }
 
-	private int sortMode;
-	private String[] inherits;
+        private int sortMode;
+        private String[] inherits;
     }
 
     private class ElementsTableModel extends AbstractTableModel {
-	ElementsTableModel() {
-	    if (headings == null) {
-		headings = new String[4];
-		headings[KEY] = uif.getI18NString("env.head.key");
-		headings[VALUE] = uif.getI18NString("env.head.value");
-		headings[DEFINED_IN_FILE] = uif.getI18NString("env.head.defInFile");
-		headings[DEFINED_IN_ENV] = uif.getI18NString("env.head.defInEnv");
-	    }
-	}
+        ElementsTableModel() {
+            if (headings == null) {
+                headings = new String[4];
+                headings[KEY] = uif.getI18NString("env.head.key");
+                headings[VALUE] = uif.getI18NString("env.head.value");
+                headings[DEFINED_IN_FILE] = uif.getI18NString("env.head.defInFile");
+                headings[DEFINED_IN_ENV] = uif.getI18NString("env.head.defInEnv");
+            }
+        }
 
-	public synchronized void setEnvironment(TestEnvironment env) {
-	    int oldRowCount = getRowCount();
-	    currEnv = env;
+        public synchronized void setEnvironment(TestEnvironment env) {
+            int oldRowCount = getRowCount();
+            currEnv = env;
 
-	    if (currEnv == null) 
-		elems = null;
-	    else {
-		Collection e = currEnv.elements();
-		elems = (TestEnvironment.Element[]) (e.toArray(new TestEnvironment.Element[e.size()]));
-		Arrays.sort(elems, new EnvEntryComparator(KEY, currEnv.getInherits()));
-	    }
-	    int newRowCount = getRowCount();
+            if (currEnv == null)
+                elems = null;
+            else {
+                Collection e = currEnv.elements();
+                elems = (TestEnvironment.Element[]) (e.toArray(new TestEnvironment.Element[e.size()]));
+                Arrays.sort(elems, new EnvEntryComparator(KEY, currEnv.getInherits()));
+            }
+            int newRowCount = getRowCount();
 
-	    int commonRowCount = Math.min(oldRowCount, newRowCount);
+            int commonRowCount = Math.min(oldRowCount, newRowCount);
 
-	    if (commonRowCount > 0) {
-		// the rows in common have changed
-		fireTableRowsUpdated(0, commonRowCount - 1);
-	    }
+            if (commonRowCount > 0) {
+                // the rows in common have changed
+                fireTableRowsUpdated(0, commonRowCount - 1);
+            }
 
-	    if (newRowCount > oldRowCount) {
-		// the new table is bigger: so rows have been added
-		fireTableRowsInserted(commonRowCount, newRowCount - 1);
-	    }
-	    else if (newRowCount < oldRowCount) {
-		// the new table is smaller, so rows have been removed
-		fireTableRowsDeleted(commonRowCount, oldRowCount - 1);
-	    }
-	}
+            if (newRowCount > oldRowCount) {
+                // the new table is bigger: so rows have been added
+                fireTableRowsInserted(commonRowCount, newRowCount - 1);
+            }
+            else if (newRowCount < oldRowCount) {
+                // the new table is smaller, so rows have been removed
+                fireTableRowsDeleted(commonRowCount, oldRowCount - 1);
+            }
+        }
 
-	public void sort(int columnIndex) {
-	    if (elems != null) {
-		Arrays.sort(elems, new EnvEntryComparator(columnIndex, currEnv.getInherits()));
-		fireTableRowsUpdated(0, elems.length - 1);
-	    }
-	}
+        public void sort(int columnIndex) {
+            if (elems != null) {
+                Arrays.sort(elems, new EnvEntryComparator(columnIndex, currEnv.getInherits()));
+                fireTableRowsUpdated(0, elems.length - 1);
+            }
+        }
 
-	private void update() {
-	}
-	
-	public synchronized int getRowCount() {
-	    return (elems == null ? 0 : elems.length);
-	}
-	
-	public int getColumnCount() {
-	    // might be nice to make this more dynamic ... 
-	    // have "defined in env" and "defined in file" be dynamic, specified on View menu
-	    return 4; // key, value, defined_in_env, defined_in_file
-	}
-	
-	public String getColumnName(int columnIndex) {
-	    return headings[columnIndex];
-	}
-	
-	public Class getColumnClass(int columnIndex) {
-	    return String.class;
-	}
-	
-	public synchronized Object getValueAt(int rowIndex, int columnIndex) {
-	    if (rowIndex < 0 || rowIndex >= getRowCount()
-		|| columnIndex < 0 || columnIndex >= getColumnCount())
-		throw new IllegalArgumentException();
+        private void update() {
+        }
 
-	    TestEnvironment.Element e = elems[rowIndex];
-	    switch (columnIndex) {
-	    case KEY:
-		return e.getKey();
-	    case DEFINED_IN_ENV:
-		return e.getDefinedInEnv();
-	    case DEFINED_IN_FILE:
-		return e.getDefinedInFile();
-	    case VALUE:
-		return e.getValue();
-	    default:
-		throw new Error();
-	    }
-	}
+        public synchronized int getRowCount() {
+            return (elems == null ? 0 : elems.length);
+        }
 
-	private TestEnvironment.Element[] elems;
-	private TestEnvironment currEnv;
+        public int getColumnCount() {
+            // might be nice to make this more dynamic ...
+            // have "defined in env" and "defined in file" be dynamic, specified on View menu
+            return 4; // key, value, defined_in_env, defined_in_file
+        }
+
+        public String getColumnName(int columnIndex) {
+            return headings[columnIndex];
+        }
+
+        public Class getColumnClass(int columnIndex) {
+            return String.class;
+        }
+
+        public synchronized Object getValueAt(int rowIndex, int columnIndex) {
+            if (rowIndex < 0 || rowIndex >= getRowCount()
+                || columnIndex < 0 || columnIndex >= getColumnCount())
+                throw new IllegalArgumentException();
+
+            TestEnvironment.Element e = elems[rowIndex];
+            switch (columnIndex) {
+            case KEY:
+                return e.getKey();
+            case DEFINED_IN_ENV:
+                return e.getDefinedInEnv();
+            case DEFINED_IN_FILE:
+                return e.getDefinedInFile();
+            case VALUE:
+                return e.getValue();
+            default:
+                throw new Error();
+            }
+        }
+
+        private TestEnvironment.Element[] elems;
+        private TestEnvironment currEnv;
     }
 }

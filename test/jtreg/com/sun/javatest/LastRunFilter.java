@@ -54,66 +54,66 @@ public class LastRunFilter extends ObservableTestFilter {
     }
 
     public LastRunFilter(WorkDirectory wd) {
-	this();
-	
-	setWorkDirectory(wd);
+        this();
+
+        setWorkDirectory(wd);
     }
 
-    /** 
+    /**
      * Can be called at any time to change the context of this filter.
      */
     public void setWorkDirectory(WorkDirectory wd) {
-	if (wd == null)
-	    return;
+        if (wd == null)
+            return;
 
-	try {
-	    LastRunInfo info = LastRunInfo.readInfo(wd);
-	    lastStart = info.getStartTime() - (info.getStartTime() % 1000l);
-	    // warning: time accuracy in a JTR is 1 second
-	    //   comparing below one second (system clock) may cause unexpected
-	    //   results
-	    //lastStart = info.getStartTime();
-	}
-	catch (IOException e) {
-	}
+        try {
+            LastRunInfo info = LastRunInfo.readInfo(wd);
+            lastStart = info.getStartTime() - (info.getStartTime() % 1000l);
+            // warning: time accuracy in a JTR is 1 second
+            //   comparing below one second (system clock) may cause unexpected
+            //   results
+            //lastStart = info.getStartTime();
+        }
+        catch (IOException e) {
+        }
 
         workdir = wd;
 
-	notifyUpdated(this);
+        notifyUpdated(this);
     }
 
     public void setLastStartTime(long time) {
-	// warning: time accuracy in a JTR is 1 second
-	//   comparing below one second (system clock) may cause unexpected
-	//   results
-	//lastStart = time;
-	lastStart = time - (time % 1000l);
-	notifyUpdated(this);
+        // warning: time accuracy in a JTR is 1 second
+        //   comparing below one second (system clock) may cause unexpected
+        //   results
+        //lastStart = time;
+        lastStart = time - (time % 1000l);
+        notifyUpdated(this);
     }
 
     public boolean isWorkDirectorySet() {
-	return (workdir != null);
+        return (workdir != null);
     }
 
     // ------- TestFilter ---------
     public String getName() {
-	return i18n.getString("ltr.name");
+        return i18n.getString("ltr.name");
     }
 
     public String getDescription() {
-	return i18n.getString("ltr.desc");
+        return i18n.getString("ltr.desc");
     }
 
     public String getReason() {
-	return i18n.getString("ltr.reason");
+        return i18n.getString("ltr.reason");
     }
 
     public boolean accepts(TestDescription td) throws Fault {
-	return accepts(td, null);
+        return accepts(td, null);
     }
 
     public boolean accepts(TestDescription td, TestFilter.Observer o)
-		    throws Fault {
+                    throws Fault {
 
         if (workdir == null)
             return true;
@@ -121,21 +121,21 @@ public class LastRunFilter extends ObservableTestFilter {
         TestResultTable trt = workdir.getTestResultTable();
 
         if (trt == null)
-	    return true;
+            return true;
 
         TestResult tr = trt.lookup(td);
-	if (tr != null) {
-	    long et = tr.getEndTime();
-	    if (et >= lastStart)
-		return true;
-	    else {
-		if (o != null)
-		    o.rejected(td, this);
-		return false;
-	    }
-	}
-	else
-	    return true;
+        if (tr != null) {
+            long et = tr.getEndTime();
+            if (et >= lastStart)
+                return true;
+            else {
+                if (o != null)
+                    o.rejected(td, this);
+                return false;
+            }
+        }
+        else
+            return true;
 
     }
 

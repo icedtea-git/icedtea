@@ -34,16 +34,16 @@ import java.util.ResourceBundle;
 import java.util.MissingResourceException;
 
 /**
- * A class that lazily opens a package-specific resource bundle 
+ * A class that lazily opens a package-specific resource bundle
  * conatining localization data for a class.
  */
-class I18NResourceBundle extends ResourceBundle 
+class I18NResourceBundle extends ResourceBundle
 {
     static I18NResourceBundle getDefaultBundle() {
-	if (defaultBundle == null) 
-	    defaultBundle = getBundleForClass(I18NResourceBundle.class);
+        if (defaultBundle == null)
+            defaultBundle = getBundleForClass(I18NResourceBundle.class);
 
-	return defaultBundle;
+        return defaultBundle;
     }
 
     private static I18NResourceBundle defaultBundle;
@@ -56,11 +56,11 @@ class I18NResourceBundle extends ResourceBundle
      * @return the appropriate resource bundle for the class
      */
     public static I18NResourceBundle getBundleForClass(Class c) {
-	String cn = c.getName();
-	int dot = cn.lastIndexOf('.');
-	String rn = (dot == -1 ? "i18n" : cn.substring(0, dot) + ".i18n");
-	boolean logging = (logClassPrefix == null ? false : cn.startsWith(logClassPrefix));
-	return new I18NResourceBundle(rn, logging, c.getClassLoader());
+        String cn = c.getName();
+        int dot = cn.lastIndexOf('.');
+        String rn = (dot == -1 ? "i18n" : cn.substring(0, dot) + ".i18n");
+        boolean logging = (logClassPrefix == null ? false : cn.startsWith(logClassPrefix));
+        return new I18NResourceBundle(rn, logging, c.getClassLoader());
     }
 
     /**
@@ -70,10 +70,10 @@ class I18NResourceBundle extends ResourceBundle
      * @param key the name of the entry to be returned
      * @param arg an argument to be formatted into the result using
      * {@link java.text.MessageFormat#format}
-     * @return the formatted string 
+     * @return the formatted string
      */
     public String getString(String key, Object arg) {
-	return getString(key, new Object[] {arg});
+        return getString(key, new Object[] {arg});
     }
 
     /**
@@ -86,20 +86,20 @@ class I18NResourceBundle extends ResourceBundle
      * @return the formatted string
      */
     public String getString(String key, Object[] args) {
-	try {
-	    return MessageFormat.format(getString(key), args);
-	}
-	catch (MissingResourceException e) {
-	    showError(key, name);
-	    return key;
-	}
+        try {
+            return MessageFormat.format(getString(key), args);
+        }
+        catch (MissingResourceException e) {
+            showError(key, name);
+            return key;
+        }
     }
 
     /**
      * Get a color defined in the resource bundle.
      * If the resource cannot be found, a message is printed to the console
      * and the result will be a specified default.
-     * @param key The base key for the resource. The actual key is this 
+     * @param key The base key for the resource. The actual key is this
      * value with ".clr" appended.
      * @param dflt an integer value used to construct the default result
      * if the specified resource cannot be found. The value is normally
@@ -108,15 +108,15 @@ class I18NResourceBundle extends ResourceBundle
      * if the resource cannot be found
      */
     public Color getColor(String key, int dflt) {
-	String value = getString(key + ".clr");
-	try {
-	    if (value != null)
-		return Color.decode(value);
-	}
-	catch (Exception e) {
-	    // ignore
-	}
-	return new Color(dflt);
+        String value = getString(key + ".clr");
+        try {
+            if (value != null)
+                return Color.decode(value);
+        }
+        catch (Exception e) {
+            // ignore
+        }
+        return new Color(dflt);
     }
 
     /**
@@ -125,7 +125,7 @@ class I18NResourceBundle extends ResourceBundle
      * @return a color suitable for displaying short error messages
      */
     public Color getErrorColor() {
-	return getColor("i18n.error", 0xff0000);
+        return getColor("i18n.error", 0xff0000);
     }
 
 
@@ -135,9 +135,9 @@ class I18NResourceBundle extends ResourceBundle
      * @arg name The name of the actual resource bundle to use.
      */
     private I18NResourceBundle(String name, boolean logging, ClassLoader cl) {
-	this.name = name;
-	this.logging = logging;
-	this.classLoader = cl;
+        this.name = name;
+        this.logging = logging;
+        this.classLoader = cl;
     }
 
     /**
@@ -148,17 +148,17 @@ class I18NResourceBundle extends ResourceBundle
      * and the result will be the original key.
      */
     protected Object handleGetObject(String key) throws MissingResourceException {
-	if (logging)
-	    System.out.println("i18n: " + key);
-	try {
-	    if (delegate == null)
-		delegate = ResourceBundle.getBundle(name, Locale.getDefault(), classLoader);
-	    return delegate.getObject(key);
-	}
-	catch (MissingResourceException e) {
-	    showError(key, name);
-	    return key;
-	}
+        if (logging)
+            System.out.println("i18n: " + key);
+        try {
+            if (delegate == null)
+                delegate = ResourceBundle.getBundle(name, Locale.getDefault(), classLoader);
+            return delegate.getObject(key);
+        }
+        catch (MissingResourceException e) {
+            showError(key, name);
+            return key;
+        }
     }
 
     /**
@@ -167,13 +167,13 @@ class I18NResourceBundle extends ResourceBundle
      * then hand the request off to that bundle.
      */
     public Enumeration getKeys() {
-	if (delegate == null)
-	    delegate = ResourceBundle.getBundle(name);
-	return delegate.getKeys();
+        if (delegate == null)
+            delegate = ResourceBundle.getBundle(name);
+        return delegate.getKeys();
     }
 
     private void showError(String key, String name) {
-	System.err.println("WARNING: missing resource: " + key + " for " + name);
+        System.err.println("WARNING: missing resource: " + key + " for " + name);
     }
 
     private String name;

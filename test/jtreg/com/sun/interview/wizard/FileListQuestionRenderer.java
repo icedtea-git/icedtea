@@ -40,73 +40,73 @@ class FileListQuestionRenderer
     implements QuestionRenderer
 {
     public JComponent getQuestionRendererComponent(Question qq, ActionListener listener) {
-	final FileListQuestion q = (FileListQuestion) qq;
+        final FileListQuestion q = (FileListQuestion) qq;
 
-	JPanel panel = new JPanel(new BorderLayout());
-	panel.setName("flst");
-	panel.setFocusable(false);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setName("flst");
+        panel.setFocusable(false);
 
-	JLabel label = new JLabel(i18n.getString("flst.lbl")); 
-	label.setName("flst.lbl");
-	label.setDisplayedMnemonic(i18n.getString("flst.mne").charAt(0));
-	label.setToolTipText(i18n.getString("flst.tip"));
-	panel.add(label, BorderLayout.NORTH);
+        JLabel label = new JLabel(i18n.getString("flst.lbl"));
+        label.setName("flst.lbl");
+        label.setDisplayedMnemonic(i18n.getString("flst.mne").charAt(0));
+        label.setToolTipText(i18n.getString("flst.tip"));
+        panel.add(label, BorderLayout.NORTH);
 
-	final FileList list = new FileList("flst", q.getValue());
-	list.setDuplicatesAllowed(q.isDuplicatesAllowed());
-	list.addListDataListener(new ActionListDataListener(panel, 
-							    listener,
-							    QuestionRenderer.EDITED));
-	list.setBaseDirectory(q.getBaseDirectory());
-	label.setLabelFor(list);
+        final FileList list = new FileList("flst", q.getValue());
+        list.setDuplicatesAllowed(q.isDuplicatesAllowed());
+        list.addListDataListener(new ActionListDataListener(panel,
+                                                            listener,
+                                                            QuestionRenderer.EDITED));
+        list.setBaseDirectory(q.getBaseDirectory());
+        label.setLabelFor(list);
 
-	FileFilter[] filters = q.getFilters();
-	if (filters == null || filters.length == 0) {
-	    list.setFileSelectionMode(JFileChooser.FILES_ONLY);
-	}
-	else {
-	    int mode = -1;
-	    for (int i = 0; i < filters.length; i++) {
-		FileFilter filter = filters[i];
-		list.addFilter(SwingFileFilter.wrap(filter));
-		if (filter.acceptsDirectories()) {
-		    if (mode == -1){
-			// 
-			// setting mode to DIRECTORIES_ONLY ignores the possibility
-			// that the filter might accept (some) files, so set it to
-			// FILES_AND_DIRECTORIES and leave to filter to hide any
-			// unacceptable files. 
-			// Same issue in FileQuestionRenderer
-			mode = JFileChooser.FILES_AND_DIRECTORIES;
-		    }
-		    else if (mode == JFileChooser.FILES_ONLY)
-			mode = JFileChooser.FILES_AND_DIRECTORIES;
-		}
-		else {
-		    if (mode == -1)
-			mode = JFileChooser.FILES_ONLY;
-		    else if (mode == JFileChooser.DIRECTORIES_ONLY)
-			mode = JFileChooser.FILES_AND_DIRECTORIES;
-		}
-	    }
-	    list.setFileSelectionMode(mode);
-	}
+        FileFilter[] filters = q.getFilters();
+        if (filters == null || filters.length == 0) {
+            list.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        }
+        else {
+            int mode = -1;
+            for (int i = 0; i < filters.length; i++) {
+                FileFilter filter = filters[i];
+                list.addFilter(SwingFileFilter.wrap(filter));
+                if (filter.acceptsDirectories()) {
+                    if (mode == -1){
+                        //
+                        // setting mode to DIRECTORIES_ONLY ignores the possibility
+                        // that the filter might accept (some) files, so set it to
+                        // FILES_AND_DIRECTORIES and leave to filter to hide any
+                        // unacceptable files.
+                        // Same issue in FileQuestionRenderer
+                        mode = JFileChooser.FILES_AND_DIRECTORIES;
+                    }
+                    else if (mode == JFileChooser.FILES_ONLY)
+                        mode = JFileChooser.FILES_AND_DIRECTORIES;
+                }
+                else {
+                    if (mode == -1)
+                        mode = JFileChooser.FILES_ONLY;
+                    else if (mode == JFileChooser.DIRECTORIES_ONLY)
+                        mode = JFileChooser.FILES_AND_DIRECTORIES;
+                }
+            }
+            list.setFileSelectionMode(mode);
+        }
 
-	panel.add(list, BorderLayout.CENTER);
+        panel.add(list, BorderLayout.CENTER);
 
-	Runnable valueSaver = new Runnable() {
-	    public void run() {
-		q.setValue(list.getFiles());
-	    }
-	};
-	
-	panel.putClientProperty(VALUE_SAVER, valueSaver);
+        Runnable valueSaver = new Runnable() {
+            public void run() {
+                q.setValue(list.getFiles());
+            }
+        };
 
-	return panel;
+        panel.putClientProperty(VALUE_SAVER, valueSaver);
+
+        return panel;
     }
 
     public String getInvalidValueMessage(Question q) {
-	return null;
+        return null;
     }
 
     private static final I18NResourceBundle i18n = I18NResourceBundle.getDefaultBundle();

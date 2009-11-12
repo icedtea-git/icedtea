@@ -41,17 +41,17 @@ import com.sun.interview.Question;
 class InfoPanel extends JComponent
 {
     public InfoPanel(Interview interview) {
-	this.interview = interview;
-	setName("info");
-	setLayout(new BorderLayout());
-	addAncestorListener(new Listener());
+        this.interview = interview;
+        setName("info");
+        setLayout(new BorderLayout());
+        addAncestorListener(new Listener());
     }
 
     public Dimension getPreferredSize() {
-	Toolkit tk = Toolkit.getDefaultToolkit();
-	Dimension d = new Dimension(PREFERRED_WIDTH*tk.getScreenResolution(),
-				    PREFERRED_HEIGHT*tk.getScreenResolution());
-	return d;
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        Dimension d = new Dimension(PREFERRED_WIDTH*tk.getScreenResolution(),
+                                    PREFERRED_HEIGHT*tk.getScreenResolution());
+        return d;
     }
 
     private Interview interview;
@@ -64,26 +64,26 @@ class InfoPanel extends JComponent
 
     private class Listener implements AncestorListener, Interview.Observer
     {
-	// ---------- from AncestorListener -----------
+        // ---------- from AncestorListener -----------
 
-	public void ancestorAdded(AncestorEvent e) {
-	    interview.addObserver(this);
-	    currentQuestionChanged(interview.getCurrentQuestion());
-	}
+        public void ancestorAdded(AncestorEvent e) {
+            interview.addObserver(this);
+            currentQuestionChanged(interview.getCurrentQuestion());
+        }
 
-	public void ancestorMoved(AncestorEvent e) { }
+        public void ancestorMoved(AncestorEvent e) { }
 
-	public void ancestorRemoved(AncestorEvent e) {
-	    interview.removeObserver(this);
-	}
+        public void ancestorRemoved(AncestorEvent e) {
+            interview.removeObserver(this);
+        }
 
-	//----- from Interview.Observer -----------
+        //----- from Interview.Observer -----------
 
-	public void pathUpdated() { }
+        public void pathUpdated() { }
 
-	public void currentQuestionChanged(Question q) { 
-	    if (!(q instanceof ErrorQuestion))
-		;
-	}
+        public void currentQuestionChanged(Question q) {
+            if (!(q instanceof ErrorQuestion))
+                ;
+        }
     }
 }

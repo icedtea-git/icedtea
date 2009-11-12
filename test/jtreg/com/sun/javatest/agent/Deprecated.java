@@ -31,7 +31,7 @@ import java.io.PrintStream;
 
 /**
  * This class should take the hit for all deprecated methods used in this
- * package.  
+ * package.
  */
 class Deprecated
 {
@@ -47,6 +47,6 @@ class Deprecated
      * @return     A PrintStream.
      */
     static PrintStream createPrintStream(OutputStream out) {
-	return new PrintStream(out);
+        return new PrintStream(out);
     }
 }

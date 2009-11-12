@@ -387,6 +387,3 @@ public class FilteredLogModel extends LogModel {
 
 
 }
-
-
-

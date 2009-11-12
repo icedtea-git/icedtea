@@ -47,7 +47,7 @@ import com.sun.javatest.util.StringArray;
  * one of a series of sub-interviews that collect the parameter information for
  * a test run.
  */
-public class KeywordsInterview 
+public class KeywordsInterview
     extends Interview
     implements Parameters.MutableKeywordsParameters
 {
@@ -56,13 +56,13 @@ public class KeywordsInterview
      * @param parent The parent interview of which this is a child.
      * @throws Interview.Fault if there is a problem while creating the interview.
      */
-    public KeywordsInterview(InterviewParameters parent) 
-	throws Interview.Fault
+    public KeywordsInterview(InterviewParameters parent)
+        throws Interview.Fault
     {
-	super(parent, "keywords");
-	this.parent = parent;
-	setResourceBundle("i18n");
-	setFirstQuestion(qNeedKeywords);
+        super(parent, "keywords");
+        this.parent = parent;
+        setResourceBundle("i18n");
+        setFirstQuestion(qNeedKeywords);
     }
 
 
@@ -72,42 +72,42 @@ public class KeywordsInterview
      * @see #setKeywords
      */
     public Keywords getKeywords() {
-	if (qNeedKeywords.getValue() == YesNoQuestion.YES) {
-	    updateCachedKeywordsData();
-	    return cachedKeywords;
-	}
-	else
-	    return null;
+        if (qNeedKeywords.getValue() == YesNoQuestion.YES) {
+            updateCachedKeywordsData();
+            return cachedKeywords;
+        }
+        else
+            return null;
     }
 
     public void setKeywords(int mode, String value) {
-	if (value == null)
-	    setKeywordsMode(NO_KEYWORDS);
-	else {
-	    setKeywordsMode(MATCH_KEYWORDS);
-	    setMatchKeywords(mode, value);
-	}
+        if (value == null)
+            setKeywordsMode(NO_KEYWORDS);
+        else {
+            setKeywordsMode(MATCH_KEYWORDS);
+            setMatchKeywords(mode, value);
+        }
     }
 
     public int getKeywordsMode() {
-	return (qNeedKeywords.getValue() == YesNoQuestion.YES 
-		? MATCH_KEYWORDS : NO_KEYWORDS);
+        return (qNeedKeywords.getValue() == YesNoQuestion.YES
+                ? MATCH_KEYWORDS : NO_KEYWORDS);
     }
 
     public void setKeywordsMode(int mode) {
-	qNeedKeywords.setValue(mode == MATCH_KEYWORDS ? YesNoQuestion.YES : YesNoQuestion.NO);
+        qNeedKeywords.setValue(mode == MATCH_KEYWORDS ? YesNoQuestion.YES : YesNoQuestion.NO);
     }
-	    
+
     public int getMatchKeywordsMode() {
-	return qKeywords.getMode();
+        return qKeywords.getMode();
     }
 
     public String getMatchKeywordsValue() {
-	return qKeywords.getModeValue();
+        return qKeywords.getModeValue();
     }
 
     public void setMatchKeywords(int mode, String value) {
-	qKeywords.setValue(mode, value);
+        qKeywords.setValue(mode, value);
     }
 
 
@@ -116,12 +116,12 @@ public class KeywordsInterview
      * @return a test filter based on the keyword expression in the interview.
      */
     public TestFilter getKeywordFilter() {
-	if (qNeedKeywords.getValue() == YesNoQuestion.YES) {
-	    updateCachedKeywordsData();
-	    return cachedKeywordsFilter;
-	}
-	else
-	    return null;
+        if (qNeedKeywords.getValue() == YesNoQuestion.YES) {
+            updateCachedKeywordsData();
+            return cachedKeywordsFilter;
+        }
+        else
+            return null;
     }
 
     //----------------------------------------------------------------------------
@@ -129,14 +129,14 @@ public class KeywordsInterview
     // Need keywords
 
     private YesNoQuestion qNeedKeywords = new YesNoQuestion(this, "needKeywords", YesNoQuestion.NO) {
-	protected Question getNext() {
-	    if (value == null)
-		return null;
-	    else if (value == YES)
-		return qKeywords;
-	    else
-		return qEnd;
-	}
+        protected Question getNext() {
+            if (value == null)
+                return null;
+            else if (value == YES)
+                return qKeywords;
+            else
+                return qEnd;
+        }
     };
 
     //----------------------------------------------------------------------------
@@ -145,105 +145,105 @@ public class KeywordsInterview
 
     private static abstract class KeywordsQuestion extends StringQuestion
     {
-	KeywordsQuestion(Interview i, String t) {
-	    super(i, t);
-	}
+        KeywordsQuestion(Interview i, String t) {
+            super(i, t);
+        }
 
-	public int getMode() {
-	    return mode;
-	}
+        public int getMode() {
+            return mode;
+        }
 
-	public String getModeValue() {
-	    return modeValue;
-	}
+        public String getModeValue() {
+            return modeValue;
+        }
 
-	public void setValue(int m, String v) {
-	    //System.err.println("KI: m=" + m + " v=" + v);
-	    switch (m) {
-	    case ANY_OF:
-		mode = ANY_OF;
-		modeValue = v;
-		super.setValue(termsToExpr(v, " | "));
-		break;
+        public void setValue(int m, String v) {
+            //System.err.println("KI: m=" + m + " v=" + v);
+            switch (m) {
+            case ANY_OF:
+                mode = ANY_OF;
+                modeValue = v;
+                super.setValue(termsToExpr(v, " | "));
+                break;
 
-	    case ALL_OF:
-		mode = ALL_OF;
-		modeValue = v;
-		super.setValue(termsToExpr(v, " & "));
-		break;
+            case ALL_OF:
+                mode = ALL_OF;
+                modeValue = v;
+                super.setValue(termsToExpr(v, " & "));
+                break;
 
-	    default:
-		mode = EXPR;
-		modeValue = v;
-		super.setValue(v == null || v.length() == 0 ? null : v);
-	    }
-	}
+            default:
+                mode = EXPR;
+                modeValue = v;
+                super.setValue(v == null || v.length() == 0 ? null : v);
+            }
+        }
 
-	public void setValue(String v) {
-	    //System.err.println("KI: v=" + v);
-	    if (v != null && v.equals(getValue()))
-		return;
+        public void setValue(String v) {
+            //System.err.println("KI: v=" + v);
+            if (v != null && v.equals(getValue()))
+                return;
 
-	    mode = EXPR;
-	    modeValue = v;
-	    super.setValue(modeValue);
-	}
+            mode = EXPR;
+            modeValue = v;
+            super.setValue(modeValue);
+        }
 
-	public void load(Map data) {
-	    Object m = data.get(tag + ".mode");
-	    Object v = data.get(tag + ".value");
-	    //System.err.println("KI.load: m=" + m + " v=" + v);
-	    if (m == null) 
-		super.load(data); // support existing interview files
-	    else if (m instanceof String && (v == null || v instanceof String)) {
-		String ms = (String) m;
-		String vs = (String) v;
-		if (ms.equals("allOf")) 
-		    setValue(ALL_OF, vs);
-		else if (ms.equals("anyOf"))
-		    setValue(ANY_OF, vs);
-		else
-		    setValue(EXPR, vs);
-	    }
-	}
+        public void load(Map data) {
+            Object m = data.get(tag + ".mode");
+            Object v = data.get(tag + ".value");
+            //System.err.println("KI.load: m=" + m + " v=" + v);
+            if (m == null)
+                super.load(data); // support existing interview files
+            else if (m instanceof String && (v == null || v instanceof String)) {
+                String ms = (String) m;
+                String vs = (String) v;
+                if (ms.equals("allOf"))
+                    setValue(ALL_OF, vs);
+                else if (ms.equals("anyOf"))
+                    setValue(ANY_OF, vs);
+                else
+                    setValue(EXPR, vs);
+            }
+        }
 
-	public void save(Map data) {
-	    super.save(data);  // for backwards compatibility
-	    String modeText = (mode == ANY_OF ? "anyOf" : mode == ALL_OF ? "allOf" : "expr");
-	    data.put(tag + ".mode", modeText);
-	    if (modeValue != null)
-		data.put(tag + ".value", modeValue);
-	    //System.err.println("KI.save: m=" + mode + " v=" + modeValue);
-	}
+        public void save(Map data) {
+            super.save(data);  // for backwards compatibility
+            String modeText = (mode == ANY_OF ? "anyOf" : mode == ALL_OF ? "allOf" : "expr");
+            data.put(tag + ".mode", modeText);
+            if (modeValue != null)
+                data.put(tag + ".value", modeValue);
+            //System.err.println("KI.save: m=" + mode + " v=" + modeValue);
+        }
 
-	private String termsToExpr(String list, String op) {
-	    if (list == null || list.length() == 0)
-		return null;
+        private String termsToExpr(String list, String op) {
+            if (list == null || list.length() == 0)
+                return null;
 
-	    String[] keys = StringArray.split(list);
-	    StringBuffer sb = new StringBuffer(list.length());
-	    for (int i = 0; i < keys.length; i++) {
-		if (i > 0)
-		    sb.append(op);
-		sb.append(keys[i]);
-	    }
-	    //System.err.println("KI.t2E: list=" + list + " result=" + sb);
-	    return sb.toString();
-	}
+            String[] keys = StringArray.split(list);
+            StringBuffer sb = new StringBuffer(list.length());
+            for (int i = 0; i < keys.length; i++) {
+                if (i > 0)
+                    sb.append(op);
+                sb.append(keys[i]);
+            }
+            //System.err.println("KI.t2E: list=" + list + " result=" + sb);
+            return sb.toString();
+        }
 
-	private int mode;
-	private String modeValue;	
+        private int mode;
+        private String modeValue;
     }
 
     private KeywordsQuestion qKeywords = new KeywordsQuestion(this, "keywords") {
-	protected Question getNext() {
-	    if (value == null || value.length() == 0)
-		return null;
-	    else {
-		return qEnd;
-	    }
-	}
-        
+        protected Question getNext() {
+            if (value == null || value.length() == 0)
+                return null;
+            else {
+                return qEnd;
+            }
+        }
+
         public boolean isValueValid() {
             updateCachedKeywordsData();
             return cachedKeywordsError == null;
@@ -251,38 +251,38 @@ public class KeywordsInterview
     };
 
     private void updateCachedKeywordsData() {
-	String expr = qKeywords.getValue();
-	if (!equal(cachedKeywords_expr, expr)) {
-	    try {
-		TestSuite ts = parent.getTestSuite();
+        String expr = qKeywords.getValue();
+        if (!equal(cachedKeywords_expr, expr)) {
+            try {
+                TestSuite ts = parent.getTestSuite();
 
-		if (ts == null) {
-		    throw new IllegalStateException("Null TestSuite, cannot get keyword info");
-		}
+                if (ts == null) {
+                    throw new IllegalStateException("Null TestSuite, cannot get keyword info");
+                }
 
-		String[] validKeywords = ts.getKeywords();
-		HashSet validKeywordsSet;
-		if (validKeywords == null)
-		    validKeywordsSet = null;
-		else
-		    validKeywordsSet = new HashSet(Arrays.asList(validKeywords));
+                String[] validKeywords = ts.getKeywords();
+                HashSet validKeywordsSet;
+                if (validKeywords == null)
+                    validKeywordsSet = null;
+                else
+                    validKeywordsSet = new HashSet(Arrays.asList(validKeywords));
 
-		int mode = qKeywords.getMode();
-		String modeName = (mode == ANY_OF ? Keywords.ANY_OF 
-				   : mode == ALL_OF ? Keywords.ALL_OF 
-				   : Keywords.EXPR);
-		Keywords k = Keywords.create(modeName, qKeywords.getModeValue(), validKeywordsSet);
-		cachedKeywords = k;
-		cachedKeywordsFilter = new KeywordsFilter(k);
-		cachedKeywordsError = null;
-	    }
-	    catch (Keywords.Fault e) {
-		cachedKeywords = null;
-		cachedKeywordsFilter = null;
-		cachedKeywordsError = e.getMessage();
-	    }
-	    cachedKeywords_expr = expr;
-	}
+                int mode = qKeywords.getMode();
+                String modeName = (mode == ANY_OF ? Keywords.ANY_OF
+                                   : mode == ALL_OF ? Keywords.ALL_OF
+                                   : Keywords.EXPR);
+                Keywords k = Keywords.create(modeName, qKeywords.getModeValue(), validKeywordsSet);
+                cachedKeywords = k;
+                cachedKeywordsFilter = new KeywordsFilter(k);
+                cachedKeywordsError = null;
+            }
+            catch (Keywords.Fault e) {
+                cachedKeywords = null;
+                cachedKeywordsFilter = null;
+                cachedKeywordsError = e.getMessage();
+            }
+            cachedKeywords_expr = expr;
+        }
     }
 
     private Keywords cachedKeywords;
@@ -295,7 +295,7 @@ public class KeywordsInterview
     //----------------------------------------------------------------------------
 
     private static boolean equal(String s1, String s2) {
-	return (s1 == null ? s2 == null : s1.equals(s2));
+        return (s1 == null ? s2 == null : s1.equals(s2));
     }
 
     //--------------------------------------------------------

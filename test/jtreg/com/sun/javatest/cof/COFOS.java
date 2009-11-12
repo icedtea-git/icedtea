@@ -30,16 +30,16 @@ import java.util.LinkedHashMap;
 
 
 /**
- * 
+ *
  *         OS name elements use the property os.name. OS version elements
  *         use the property os.version. OS arch elements use the property
  *         os.arch.
- *       
- * 
+ *
+ *
  * <p>Java class for OS complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="OS">
  *   &lt;complexContent>
@@ -53,8 +53,8 @@ import java.util.LinkedHashMap;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 public class COFOS extends COFItem{
 
@@ -71,7 +71,7 @@ static final String [] tags = {
 static LinkedHashMap xmlAttributes;
 
     static LinkedHashMap xmlElements;
-    
+
     static String xmlTagName;
 
     static {
@@ -80,47 +80,47 @@ static LinkedHashMap xmlAttributes;
             xmlElements.put(propOrder[i], tags[i]);
         }
         xmlTagName = "os";
-	}
+        }
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
     protected String arch;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
     protected String name;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
     protected String version;
 
-	/**
+        /**
      * Gets the value of the arch property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getArch() {
         return arch;
     }
 
-	LinkedHashMap getItemAttributes() {
-		return xmlAttributes;
-	}
+        LinkedHashMap getItemAttributes() {
+                return xmlAttributes;
+        }
     LinkedHashMap getItemElements() {
-		return xmlElements;
-	}
+                return xmlElements;
+        }
 
-	String getItemTagName() {
-		return xmlTagName;
-	}
+        String getItemTagName() {
+                return xmlTagName;
+        }
 
     /**
      * Gets the value of the name property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getName() {
         return name;
@@ -128,11 +128,11 @@ static LinkedHashMap xmlAttributes;
 
     /**
      * Gets the value of the version property.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getVersion() {
         return version;
@@ -140,11 +140,11 @@ static LinkedHashMap xmlAttributes;
 
     /**
      * Sets the value of the arch property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setArch(String value) {
         this.arch = value;
@@ -152,11 +152,11 @@ static LinkedHashMap xmlAttributes;
 
     /**
      * Sets the value of the name property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setName(String value) {
         this.name = value;
@@ -164,11 +164,11 @@ static LinkedHashMap xmlAttributes;
 
     /**
      * Sets the value of the version property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setVersion(String value) {
         this.version = value;

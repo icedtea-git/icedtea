@@ -45,27 +45,27 @@ public class StringArray
      *         empty array (length==0) is returned.
      */
     public static String[] split(String s) {
-	if (s == null)
-	    return empty;
+        if (s == null)
+            return empty;
 
-	Vector v = new Vector();
-	int start = -1;
-	for (int i = 0; i < s.length(); i++) {
-	    if (white(s.charAt(i))) {
-	        if (start != -1)
-		    v.addElement(s.substring(start, i));
-	        start = -1;
-	    } else
-	        if (start == -1)
-		    start = i;
-	}
-	if (start != -1)
-	    v.addElement(s.substring(start));
-	if (v.size() == 0)
-	    return empty;
-	String[] a = new String[v.size()];
-	v.copyInto(a);
-	return a;
+        Vector v = new Vector();
+        int start = -1;
+        for (int i = 0; i < s.length(); i++) {
+            if (white(s.charAt(i))) {
+                if (start != -1)
+                    v.addElement(s.substring(start, i));
+                start = -1;
+            } else
+                if (start == -1)
+                    start = i;
+        }
+        if (start != -1)
+            v.addElement(s.substring(start));
+        if (v.size() == 0)
+            return empty;
+        String[] a = new String[v.size()];
+        v.copyInto(a);
+        return a;
     }
 
     /**
@@ -80,7 +80,7 @@ public class StringArray
      *         was null or zero length.
      */
     public static String join(String[] ss) {
-	return join(ss, " ");
+        return join(ss, " ");
     }
 
     /**
@@ -91,28 +91,28 @@ public class StringArray
      * delimit the values in the resulting string.
      * @param ss The strings which should be concatenated together.  A zero
      *           length or null value will not cause an error.
-     * @param sep The separator to place bwteen the elements of the string 
-     * 		array in the concatenated result
+     * @param sep The separator to place bwteen the elements of the string
+     *          array in the concatenated result
      * @return The string which is made up of all the strings provided.
      *         The return value is a zero length string if the input value
      *         was null or zero length.
      */
     public static String join(String[] ss, String sep) {
-	if (ss == null || ss.length == 0)
-	    return "";
+        if (ss == null || ss.length == 0)
+            return "";
 
-	int l = (ss.length - 1) * sep.length(); 
-	for (int i = 0; i < ss.length; i++)
-	    l += (ss[i] == null ? 0 : ss[i].length());
+        int l = (ss.length - 1) * sep.length();
+        for (int i = 0; i < ss.length; i++)
+            l += (ss[i] == null ? 0 : ss[i].length());
 
-	StringBuffer sb = new StringBuffer(l);
-	sb.append(ss[0]);
-	for (int i = 1; i < ss.length; i++) {
-	    sb.append(sep);
-	    sb.append(ss[i]);
-	}
+        StringBuffer sb = new StringBuffer(l);
+        sb.append(ss[0]);
+        for (int i = 1; i < ss.length; i++) {
+            sb.append(sep);
+            sb.append(ss[i]);
+        }
 
-	return sb.toString();
+        return sb.toString();
     }
 
     /**
@@ -127,32 +127,32 @@ public class StringArray
      *         null if the input string is null or zero length.
      */
     public static String[] splitList(String list, String delim) {
-	if (list == null || list.length() == 0)
-	    return null;
+        if (list == null || list.length() == 0)
+            return null;
 
-	Vector v = new Vector();
-	int pos = 0;
-	while (true) {
-	    int nextD = list.indexOf(delim, pos);
+        Vector v = new Vector();
+        int pos = 0;
+        while (true) {
+            int nextD = list.indexOf(delim, pos);
 
-	    if (nextD != -1) {
-		v.addElement(list.substring(pos, nextD));
-		pos = nextD + delim.length();
-		pos = skipWhite(list, pos);
-	    }
-	    else
-		break;
-	}
+            if (nextD != -1) {
+                v.addElement(list.substring(pos, nextD));
+                pos = nextD + delim.length();
+                pos = skipWhite(list, pos);
+            }
+            else
+                break;
+        }
 
-	if (pos < list.length())
-	    v.addElement(list.substring(pos));
+        if (pos < list.length())
+            v.addElement(list.substring(pos));
 
-	if (v.size() == 0)
-	    return new String[0];
+        if (v.size() == 0)
+            return new String[0];
 
-	String[] a = new String[v.size()];
-	v.copyInto(a);
-	return a;
+        String[] a = new String[v.size()];
+        v.copyInto(a);
+        return a;
     }
 
     /**
@@ -183,16 +183,16 @@ public class StringArray
         return contains(split(list), target);
     }
 
-    /** 
+    /**
      * Find the index of the next non-whitespace character
      * in the string.
      */
     private static int skipWhite(String s, int start) {
-	for (int i = start; i < s.length(); i++)
-	    if (!white(s.charAt(i)))
-		return i;
-	
-	return s.length();
+        for (int i = start; i < s.length(); i++)
+            if (!white(s.charAt(i)))
+                return i;
+
+        return s.length();
     }
 
     private static boolean white(char c) {

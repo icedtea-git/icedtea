@@ -31,16 +31,16 @@ import com.sun.javatest.tool.UIFactory;
 
 class BadChecksumPane extends ListPane {
     BadChecksumPane(UIFactory uif) {
-	super("badChecksum", uif);
+        super("badChecksum", uif);
     }
 
     void show(Audit audit) {
         if (audit == currAudit)
-	    showBody();
-	else {
-	    currAudit = audit;
-	    setData(currAudit.getBadChecksumTests());
-	}
+            showBody();
+        else {
+            currAudit = audit;
+            setData(currAudit.getBadChecksumTests());
+        }
     }
 
     private Audit currAudit;

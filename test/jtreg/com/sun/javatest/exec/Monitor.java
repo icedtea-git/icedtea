@@ -42,8 +42,8 @@ import com.sun.javatest.tool.UIFactory;
 abstract class Monitor {
 
     protected Monitor(MonitorState ms, UIFactory uif) {
-	this.state = ms;
-	this.uif = uif;
+        this.state = ms;
+        this.uif = uif;
     }
 
     public abstract String getSmallMonitorName();
@@ -57,4 +57,3 @@ abstract class Monitor {
     protected MonitorState state;
     protected UIFactory uif;
 }
-

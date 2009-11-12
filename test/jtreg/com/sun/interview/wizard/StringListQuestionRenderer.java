@@ -38,40 +38,40 @@ class StringListQuestionRenderer
     implements QuestionRenderer
 {
     public JComponent getQuestionRendererComponent(Question qq, ActionListener listener) {
-	final StringListQuestion q = (StringListQuestion) qq;
+        final StringListQuestion q = (StringListQuestion) qq;
 
-	JPanel panel = new JPanel(new BorderLayout());
-	panel.setName("slst");
-	panel.setFocusable(false);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setName("slst");
+        panel.setFocusable(false);
 
-	JLabel label = new JLabel(i18n.getString("slst.lbl")); 
-	label.setName("slst.lbl");
-	label.setDisplayedMnemonic(i18n.getString("slst.mne").charAt(0));
-	label.setToolTipText(i18n.getString("slst.tip"));
-	panel.add(label, BorderLayout.NORTH);
+        JLabel label = new JLabel(i18n.getString("slst.lbl"));
+        label.setName("slst.lbl");
+        label.setDisplayedMnemonic(i18n.getString("slst.mne").charAt(0));
+        label.setToolTipText(i18n.getString("slst.tip"));
+        panel.add(label, BorderLayout.NORTH);
 
-	final EditableList list = new EditableList("slst", q.getValue());
-	list.setDuplicatesAllowed(q.isDuplicatesAllowed());
-	list.addListDataListener(new ActionListDataListener(panel, 
-							    listener,
-							    QuestionRenderer.EDITED));
-	label.setLabelFor(list);
+        final EditableList list = new EditableList("slst", q.getValue());
+        list.setDuplicatesAllowed(q.isDuplicatesAllowed());
+        list.addListDataListener(new ActionListDataListener(panel,
+                                                            listener,
+                                                            QuestionRenderer.EDITED));
+        label.setLabelFor(list);
 
-	panel.add(list, BorderLayout.CENTER);
+        panel.add(list, BorderLayout.CENTER);
 
-	Runnable valueSaver = new Runnable() {
-	    public void run() {
-		q.setValue((String[]) list.getItems(String.class));
-	    }
-	};
-	
-	panel.putClientProperty(VALUE_SAVER, valueSaver);
+        Runnable valueSaver = new Runnable() {
+            public void run() {
+                q.setValue((String[]) list.getItems(String.class));
+            }
+        };
 
-	return panel;
+        panel.putClientProperty(VALUE_SAVER, valueSaver);
+
+        return panel;
     }
 
     public String getInvalidValueMessage(Question q) {
-	return null;
+        return null;
     }
 
     private static final I18NResourceBundle i18n = I18NResourceBundle.getDefaultBundle();

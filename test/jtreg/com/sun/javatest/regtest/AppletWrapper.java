@@ -165,17 +165,17 @@ public class AppletWrapper
                 }
                 // just in case the system is slow, ensure paint is called
                 app.getApplet().paint(app.getApplet().getGraphics());
-               
+
             } else {
                 // wait for user to click on "Pass", "Fail", or "Done"
                 waiter.waitForDone();
             }
-            
+
             app.getApplet().stop();
             app.getApplet().destroy();
-            
+
             app.dispose();
-            
+
             //Toolkit.getDefaultToolkit().beep();
             status.exit();
         } // run()
@@ -193,7 +193,7 @@ public class AppletWrapper
                         }});
                     return;
                 }
-            } 
+            }
             catch (NoSuchMethodException e) {
                 // must be JDK 1.1 -- fallthrough
             }
@@ -201,7 +201,7 @@ public class AppletWrapper
                 t.printStackTrace();
             }
             c.validate();
-            
+
         }
     } // class AppletRunnable
 
@@ -240,7 +240,7 @@ public class AppletWrapper
         /**
          * Create the AppletFrame frame which contains the running applet and
          * any instructions, buttons, etc.
-         * 
+         *
          * @param className The name of the applet class which must extend
          *         java.awt.Applet.
          * @param text   A string containing the test instructions from the body

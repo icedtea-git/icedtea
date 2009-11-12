@@ -603,9 +603,9 @@ public class Main {
             }
         }
     };
-    
+
     //---------- Command line invocation support -------------------------------
-    
+
     /** Execution OK. */
     public static final int EXIT_OK = 0;
     /** One of more tests failed. */
@@ -1389,24 +1389,24 @@ public class Main {
     // non-null if anything was actually specified as same jvm safe and
     // the whole test suite is being tested.
     private List<String> getSameJVMSafeDirs(File testRoot) {
-	// Only use the same jvm safe dirs when running from the root.
-	if (testFileArgs.size() != 1
-	    || !canon(testFileArgs.iterator().next()).equals(canon(testRoot)))
-	    return null;
+        // Only use the same jvm safe dirs when running from the root.
+        if (testFileArgs.size() != 1
+            || !canon(testFileArgs.iterator().next()).equals(canon(testRoot)))
+            return null;
 
-	try {
-	    File file = new File(testRoot, "TEST.ROOT");
+        try {
+            File file = new File(testRoot, "TEST.ROOT");
             if (file.exists()) {
-		Properties testRootProps = new Properties();
-		testRootProps.load(new FileInputStream(file));
-		String safedirs = testRootProps.getProperty("samejvmsafe");
-		if ((safedirs != null) && (safedirs.trim().length() > 0))
-		    return Arrays.asList(StringArray.splitWS(safedirs));
-	    }
-	} catch (IOException ioe) {
-	    // Bah, then just assume everything is safe.
-	}
-	return null;
+                Properties testRootProps = new Properties();
+                testRootProps.load(new FileInputStream(file));
+                String safedirs = testRootProps.getProperty("samejvmsafe");
+                if ((safedirs != null) && (safedirs.trim().length() > 0))
+                    return Arrays.asList(StringArray.splitWS(safedirs));
+            }
+        } catch (IOException ioe) {
+            // Bah, then just assume everything is safe.
+        }
+        return null;
     }
 
     private String getRelativePath(File base, File f) {

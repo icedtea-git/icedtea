@@ -82,7 +82,7 @@ public abstract class Action
      *             the test.
      */
     public abstract Status run() throws TestRunException;
-    
+
     /**
      * Get any source files directly referenced by this action.
      **/
@@ -160,10 +160,10 @@ public abstract class Action
                     fw.write("};" + LINESEP);
                 }
                 fw.write(LINESEP);
-                
+
                 fw.write("// original policy file:" + LINESEP);
                 fw.write("// " + fileName + LINESEP);
-                
+
                 BufferedReader in = new BufferedReader(new FileReader(fileName));
                 try {
                     String line;
@@ -182,7 +182,7 @@ public abstract class Action
         } catch (SecurityException e) {
             throw new TestRunException(POLICY_SM_PROB + newPolicy.toString());
         }
-        
+
         return newPolicy.toString();
     } // addGrantEntry()
 
@@ -327,7 +327,7 @@ public abstract class Action
     /**
      * Given a string, change "\\" into "\\\\" for windows platforms.  This method
      * must be called exactly once before the string is used to start a new
-     * process.  
+     * process.
      *
      * @param s    The string to translate.
      * @return     For Windows systems, a modified string.  For all other
@@ -523,8 +523,6 @@ public abstract class Action
 
     protected String reason;
     protected RegressionScript script;
-            
+
     protected static final boolean showCmd = Boolean.getBoolean("javatest.regtest.showCmd");
 }
-
-

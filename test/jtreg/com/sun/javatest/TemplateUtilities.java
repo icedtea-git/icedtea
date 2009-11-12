@@ -67,7 +67,7 @@ public class TemplateUtilities {
         if (wd == null) {
             return null;
         }
-        
+
         File dataFile = wd.getSystemFile(TEMPLATE_FILE);
         Properties p = new Properties();
 
@@ -158,10 +158,10 @@ public class TemplateUtilities {
         p.load(in);
         in.close();
         return  p.getProperty(TEMPL_FILE_PROP);
-        
+
     }
-    
-    
+
+
     public static boolean isTemplate(File f) throws IOException {
         Properties p = new Properties();
         InputStream in = new FileInputStream(f);

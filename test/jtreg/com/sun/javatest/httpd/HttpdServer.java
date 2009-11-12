@@ -45,34 +45,34 @@ import com.sun.javatest.util.I18NResourceBundle;
 // this code is based upon that found in the sun.net package
 public class HttpdServer implements Runnable {
     public HttpdServer() {
-	try {
-	    init();
-	    active = true;
-	}
-	catch (IOException e) {
-	    //e.printStackTrace();
-	    throw new IllegalStateException(i18n.getString("server.cantInit"));
-	}
+        try {
+            init();
+            active = true;
+        }
+        catch (IOException e) {
+            //e.printStackTrace();
+            throw new IllegalStateException(i18n.getString("server.cantInit"));
+        }
     }
 
     public void run() {
-	while (true) {
-	    try {
-		Socket ns = socket.accept();
-	        if (debug) System.out.println("httpd-New connection " + ns);
+        while (true) {
+            try {
+                Socket ns = socket.accept();
+                if (debug) System.out.println("httpd-New connection " + ns);
 
-		RequestHandler handler = new RequestHandler(ns);
-		Thread thr = new Thread(handler);
+                RequestHandler handler = new RequestHandler(ns);
+                Thread thr = new Thread(handler);
 
-	        if (debug) System.out.println("httpd-Starting thread for connection ");
-		thr.start();
-	    }
-	    catch (IOException e) {
-		System.out.println(i18n.getString("server.errorInAccept"));
-		e.printStackTrace(System.out);
-		// abort server?
-	    }
-	}
+                if (debug) System.out.println("httpd-Starting thread for connection ");
+                thr.start();
+            }
+            catch (IOException e) {
+                System.out.println(i18n.getString("server.errorInAccept"));
+                e.printStackTrace(System.out);
+                // abort server?
+            }
+        }
 
     }
 
@@ -80,103 +80,103 @@ public class HttpdServer implements Runnable {
      * Get the local port on which the server is listening
      */
     public static int getLocalPort() {
-	if (socket == null)
-	    throw new IllegalStateException();
+        if (socket == null)
+            throw new IllegalStateException();
 
-	return socket.getLocalPort();
+        return socket.getLocalPort();
     }
 
     /**
      * Is the webserver active?
      */
     public static boolean isActive() {
-	return active;
+        return active;
     }
 
-    /** 
+    /**
      * Find out the fully qualified base address of the webserver.
      * Typical output would be http://hostname.domain:port/
      */
     private static String getBaseUrl() {
-	return baseURL;
+        return baseURL;
     }
 
     /**
      * @exception IOException May be thrown if an error occurs when attempting
-     *				  to create the Socket.
+     *                            to create the Socket.
      */
     private void init() throws IOException {
-	if (debug) System.out.println("Initializing JT Harness HTTP Server");
+        if (debug) System.out.println("Initializing JT Harness HTTP Server");
 
-	int soc_num = (Integer.getInteger("jt.httpd.port", 1903)).intValue();
+        int soc_num = (Integer.getInteger("jt.httpd.port", 1903)).intValue();
 
-	// this loop searches for an available port
-	for (int i = soc_num; i < soc_num + MAX_PORT_SEARCH; i++) {
+        // this loop searches for an available port
+        for (int i = soc_num; i < soc_num + MAX_PORT_SEARCH; i++) {
 
-	    try {
-		socket = new ServerSocket (i, 25);
+            try {
+                socket = new ServerSocket (i, 25);
 
-		// success!
-		System.out.println(i18n.getString("server.port", 
-						  String.valueOf(socket.getLocalPort())));
+                // success!
+                System.out.println(i18n.getString("server.port",
+                                                  String.valueOf(socket.getLocalPort())));
 
-		StringBuffer buf = new StringBuffer("http://");
-		buf.append(InetAddress.getLocalHost().getHostAddress());
-		buf.append(":");
-		buf.append(socket.getLocalPort());
-		buf.append("/");
-		baseURL = buf.toString();
-		buf = null;
+                StringBuffer buf = new StringBuffer("http://");
+                buf.append(InetAddress.getLocalHost().getHostAddress());
+                buf.append(":");
+                buf.append(socket.getLocalPort());
+                buf.append("/");
+                baseURL = buf.toString();
+                buf = null;
 
-		System.out.println(i18n.getString("server.url", baseURL));
-		break;
-	    }   // try
-	    catch (BindException e) {
-		if (i + 1 >= soc_num + MAX_PORT_SEARCH)
-		    throw e;
-		else {
-		    System.out.println(i18n.getString("server.portBusy", new Integer(i)));
-		}
-	    }
-	    catch (IOException e) {
-		System.out.println(i18n.getString("server.errorInInit"));
-		throw e;
-	    }   // catch
+                System.out.println(i18n.getString("server.url", baseURL));
+                break;
+            }   // try
+            catch (BindException e) {
+                if (i + 1 >= soc_num + MAX_PORT_SEARCH)
+                    throw e;
+                else {
+                    System.out.println(i18n.getString("server.portBusy", new Integer(i)));
+                }
+            }
+            catch (IOException e) {
+                System.out.println(i18n.getString("server.errorInInit"));
+                throw e;
+            }   // catch
 
-	}   // for
+        }   // for
     }   // init()
 
     // ---- FOR DEBUGGING ----
     public static void main(String[] args) {
-	System.out.println("Starting JT Harness httpd in debug mode.");
+        System.out.println("Starting JT Harness httpd in debug mode.");
 
-	JThttpProvider prov = new JThttpProvider() {
-	    public void serviceRequest(httpURL url, PrintWriter out) {
-		PageGenerator.generateDocType(out, PageGenerator.HTML32);
-		out.println("<html>");
-		out.println("<Body>");
-		out.println("<h2>Hello, this is the JT Harness web server.</h2>");
-		out.println("Running in test mode, no harness.");
-		out.println("</Body>");
-		out.println("</html>");
+        JThttpProvider prov = new JThttpProvider() {
+            public void serviceRequest(httpURL url, PrintWriter out) {
+                PageGenerator.generateDocType(out, PageGenerator.HTML32);
+                out.println("<html>");
+                out.println("<Body>");
+                out.println("<h2>Hello, this is the JT Harness web server.</h2>");
+                out.println("Running in test mode, no harness.");
+                out.println("</Body>");
+                out.println("</html>");
 
-		out.close();
-	    }
-	};
+                out.close();
+            }
+        };
 
-	RootRegistry.getInstance().addHandler("/", "Root JT Harness URL", prov);
+        RootRegistry.getInstance().addHandler("/", "Root JT Harness URL", prov);
 
-	HttpdServer server = new HttpdServer();
-	server.debug = true;
+        HttpdServer server = new HttpdServer();
+        server.debug = true;
 
-	Thread thr = new Thread(server);
-	thr.start();
+        Thread thr = new Thread(server);
+        thr.start();
     }
 
     private static ServerSocket socket;
     private static String baseURL;
 
-    /** 
+    /**
      * Maximum number of ports above the given port number to try to attach to.
      */
     private static final int MAX_PORT_SEARCH = 10;
@@ -188,7 +188,6 @@ public class HttpdServer implements Runnable {
 
     static protected boolean debug = Boolean.getBoolean("debug." + HttpdServer.class.getName());
 
-    
+
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(HttpdServer.class);
 }
-

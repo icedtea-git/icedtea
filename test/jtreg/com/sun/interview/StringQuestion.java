@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * A {@link Question question} to which the response is a string.
  */
-public abstract class StringQuestion extends Question 
+public abstract class StringQuestion extends Question
 {
     /**
      * Create a question with a nominated tag.
@@ -39,9 +39,9 @@ public abstract class StringQuestion extends Question
      * @param tag A unique tag to identify this specific question.
      */
     protected StringQuestion(Interview interview, String tag) {
-	super(interview, tag);
-	clear();
-	setDefaultValue(value);
+        super(interview, tag);
+        clear();
+        setDefaultValue(value);
     }
 
     /**
@@ -51,18 +51,18 @@ public abstract class StringQuestion extends Question
      * @see #setDefaultValue
      */
     public String getDefaultValue() {
-	return defaultValue;
+        return defaultValue;
     }
 
     /**
-     * Set the default response for this question, 
-     * used by the clear method. 
+     * Set the default response for this question,
+     * used by the clear method.
      * @param v the default response for this question.
      *
      * @see #getDefaultValue
      */
     public void setDefaultValue(String v) {
-	defaultValue = v;
+        defaultValue = v;
     }
 
 
@@ -73,54 +73,54 @@ public abstract class StringQuestion extends Question
      * @see #setValue
      */
     public String getValue() {
-	return value;
+        return value;
     }
 
     /**
      * Verify this question is on the current path, and if it is,
      * return the current value.
      * @return the current value of this question
-     * @throws Interview.NotOnPathFault if this question is not on the 
+     * @throws Interview.NotOnPathFault if this question is not on the
      * current path
      * @see #getValue
      */
-    public String getValueOnPath() 
-	throws Interview.NotOnPathFault
+    public String getValueOnPath()
+        throws Interview.NotOnPathFault
     {
-	interview.verifyPathContains(this);
-	return getValue();
+        interview.verifyPathContains(this);
+        return getValue();
     }
 
     public String getStringValue() {
-	return value;
+        return value;
     }
 
     public boolean isValueValid() {
-	return true;
+        return true;
     }
 
     public boolean isValueAlwaysValid() {
-	return false;
+        return false;
     }
 
-    /** 
+    /**
      * Get the nominal maximum length for the string.
      * @return the nominal maximum length for the string.
      *
      * @see #setNominalMaxLength
      */
     public int getNominalMaxLength() {
-	return nominalMaxLength;
+        return nominalMaxLength;
     }
 
-    /** 
+    /**
      * Set the expected maximum length for the string.
      * @param nominalMaxLength  the nominal maximum length for the string.
      *
      * @see #getNominalMaxLength
      */
     public void setNominalMaxLength(int nominalMaxLength) {
-	this.nominalMaxLength = nominalMaxLength;
+        this.nominalMaxLength = nominalMaxLength;
     }
 
 
@@ -131,7 +131,7 @@ public abstract class StringQuestion extends Question
      * @see #setSuggestions
      */
     public String[] getSuggestions() {
-	return suggestions;
+        return suggestions;
     }
 
     /**
@@ -143,29 +143,29 @@ public abstract class StringQuestion extends Question
      * @see #getSuggestions
      */
     public void setSuggestions(String[] newSuggestions) {
-	if (newSuggestions != null) {
-	    for (int i = 0; i < newSuggestions.length; i++) {
-		if (newSuggestions[i] == null)
-		    throw new IllegalArgumentException();
-	    }
-	}
+        if (newSuggestions != null) {
+            for (int i = 0; i < newSuggestions.length; i++) {
+                if (newSuggestions[i] == null)
+                    throw new IllegalArgumentException();
+            }
+        }
 
-	suggestions = newSuggestions;
+        suggestions = newSuggestions;
     }
 
     /**
-     * Set the current value. 
-     * @param newValue The value to be set. 
+     * Set the current value.
+     * @param newValue The value to be set.
      *
      * @see #getValue
      */
     public void setValue(String newValue) {
-	String oldValue = value;
-	value = (newValue == null ? null : newValue.trim());
-	if (!equal(value, oldValue)) {
-	    interview.updatePath(this);
-	    interview.setEdited(true);
-	}
+        String oldValue = value;
+        value = (newValue == null ? null : newValue.trim());
+        if (!equal(value, oldValue)) {
+            interview.updatePath(this);
+            interview.setEdited(true);
+        }
     }
 
     /**
@@ -173,7 +173,7 @@ public abstract class StringQuestion extends Question
      * back to its initial state.
      */
     public void clear() {
-	setValue(defaultValue);
+        setValue(defaultValue);
     }
 
     /**
@@ -182,9 +182,9 @@ public abstract class StringQuestion extends Question
      * @param data The map from which to load the value for this question.
      */
     protected void load(Map data) {
-	Object o = data.get(tag);
-	if (o instanceof String) 
-	    setValue((String)o);
+        Object o = data.get(tag);
+        if (o instanceof String)
+            setValue((String)o);
     }
 
     /**
@@ -193,8 +193,8 @@ public abstract class StringQuestion extends Question
      * @param data The map in which to save the value for this question.
      */
     protected void save(Map data) {
-	if (value != null)
-	    data.put(tag, value);
+        if (value != null)
+            data.put(tag, value);
     }
 
     /**
@@ -205,7 +205,7 @@ public abstract class StringQuestion extends Question
      * and equal.
      */
     protected static boolean equal(String s1, String s2) {
-	return (s1 == null ? s2 == null : s1.equals(s2));
+        return (s1 == null ? s2 == null : s1.equals(s2));
     }
 
     /**

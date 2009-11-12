@@ -35,19 +35,19 @@ import java.util.Map;
  * @param successor The next question to be invoked when the subinterview is completed
  * @throws NullPointerException if either argument is null
  */
-class InterviewQuestion extends Question 
+class InterviewQuestion extends Question
 {
     InterviewQuestion(Interview interview, Interview targetInterview, Question next) {
-	super(interview);
+        super(interview);
 
-	if (targetInterview == null)
-	    throw new NullPointerException();
+        if (targetInterview == null)
+            throw new NullPointerException();
 
-	if (next == null)
-	    throw new NullPointerException();
+        if (next == null)
+            throw new NullPointerException();
 
-	this.targetInterview = targetInterview;
-	this.next = next;
+        this.targetInterview = targetInterview;
+        this.next = next;
     }
 
     /**
@@ -55,7 +55,7 @@ class InterviewQuestion extends Question
      * @return the nested interview
      */
     Interview getTargetInterview() {
-	return targetInterview;
+        return targetInterview;
     }
 
     /**
@@ -64,61 +64,61 @@ class InterviewQuestion extends Question
      * @result The question that follows the interview
      */
     protected Question getNext() {
-	return next;
+        return next;
     }
 
     public boolean isValueValid() {
-	return true;
+        return true;
     }
 
     public boolean isValueAlwaysValid() {
-	return true;
+        return true;
     }
 
     public boolean isEnabled() {
-	return true;
+        return true;
     }
 
     /**
      * Clear any response to this question, resetting the value
      * back to its initial state. Since this question
-     * is just used to mark a call to a sub-interview, 
+     * is just used to mark a call to a sub-interview,
      * there is no value, and so no action is performed.
      */
     public void clear() {
     }
 
     public String getStringValue() {
-	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Set the response to this question to the value represented by
-     * a string-valued argument. For this question, no value is 
+     * a string-valued argument. For this question, no value is
      * appropriate and an exception is always throwm.
      */
     public void setValue(String ignore) {
-	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
-     * Load the state, if any, for this question from a dictionary. 
-     * Since this question is just used to wrap an interview, 
+     * Load the state, if any, for this question from a dictionary.
+     * Since this question is just used to wrap an interview,
      * there is no value, and so no action is performed.
      * @param data The map from which to load the state for this question.
      */
     protected void load(Map data) {
-	// no need to super.load(data)
+        // no need to super.load(data)
     }
 
     /**
-     * Save the state, if any, for this question to a dictionary.  
-     * Since this question is just used to wrap an interview, 
+     * Save the state, if any, for this question to a dictionary.
+     * Since this question is just used to wrap an interview,
      * there is no value, and so no action is performed.
      * @param data The map from which to load the state for this question.
      */
     protected void save(Map data) {
-	// no need to super.save(data)
+        // no need to super.save(data)
     }
 
     private Interview targetInterview;

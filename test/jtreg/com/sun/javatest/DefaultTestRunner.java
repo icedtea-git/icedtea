@@ -42,209 +42,209 @@ import com.sun.javatest.util.I18NResourceBundle;
  */
 public class DefaultTestRunner extends TestRunner
 {
-    public synchronized boolean runTests(Iterator testIter) 
-	throws InterruptedException 
+    public synchronized boolean runTests(Iterator testIter)
+        throws InterruptedException
     {
-	this.testIter = testIter;
+        this.testIter = testIter;
 
-	Thread[] threads = new Thread[getConcurrency()];
-	activeThreads = new HashSet();
-	allPassed = true;
-	
-	try {
-	    int n = 0;
-	    while (!stopping) {
-		for (int i = 0; i < threads.length; i++) {
-		    Thread t = threads[i];
-		    if (t == null || !activeThreads.contains(t)) {
-			int prio = Math.max(Thread.MIN_PRIORITY, Thread.currentThread().getPriority() - 1);
-			t = new Thread() {
-				public void run() {
-				    try {
-					TestDescription td;
-					while ((td = nextTest()) != null) {
-					    if (!runTest(td))
-						allPassed = false;
-					}
-				    }
-				    finally {
-					// Inform runner this thread is dying, so it can start another thread
-					// to replace it, if necessary.
-					threadExiting(this);
-				    }
-				}
-			    };
-			t.setName("DefaultTestRunner:Worker-" + i + ":" + n++);
-			t.start();
-			t.setPriority(prio);
-			activeThreads.add(t);
-			threads[i] = t;
-		    }
-		}
-		wait();
-	    }
-	    // Wait for all the threads to finish so they don't get nuked by the
-	    // finally code. Order is not important so just wait for them one at a time.
-	    // Note we can't simply join with the thread because that gives a deadlock
-	    // on our lock.
-	    for (int i = 0; i < threads.length; i++) {
-		if (threads[i] != null) {
-		    while (activeThreads.contains(threads[i]))
-			wait();
-		    threads[i] = null;
-		}
-	    }
-	}
-	catch (InterruptedException ex) {
-	    // The thread has been interrupted
-	    
-	    stopping = true;	// stop workers from starting any new tests
-	    
-	    // interrupt the worker threads
-	    for (Iterator iter = activeThreads.iterator() ; iter.hasNext(); ) {
-		Thread t = (Thread) (iter.next());
-		t.interrupt();
-	    }
-	    
-	    // while a short while (a couple of seconds) for tests to clean up
-	    // before we nuke them
-	    long now = System.currentTimeMillis();
-	    try {
-		while (activeThreads.size() > 0 && (System.currentTimeMillis() - now < 2000)) {
-		    wait(100);
-		}
-	    }
-	    catch (InterruptedException e) {
-	    }
-	    
-	    // rethrow the original exception so the caller knows what's happened
-	    throw ex;
-	}
-	finally {
-	    // ensure all child threads killed
-	    for (int i = 0; i < threads.length; i++) {
-		if (threads[i] != null)
-		    Deprecated.invokeThreadStop(threads[i]);
-	    }
-	}
-	
-	return allPassed;
+        Thread[] threads = new Thread[getConcurrency()];
+        activeThreads = new HashSet();
+        allPassed = true;
+
+        try {
+            int n = 0;
+            while (!stopping) {
+                for (int i = 0; i < threads.length; i++) {
+                    Thread t = threads[i];
+                    if (t == null || !activeThreads.contains(t)) {
+                        int prio = Math.max(Thread.MIN_PRIORITY, Thread.currentThread().getPriority() - 1);
+                        t = new Thread() {
+                                public void run() {
+                                    try {
+                                        TestDescription td;
+                                        while ((td = nextTest()) != null) {
+                                            if (!runTest(td))
+                                                allPassed = false;
+                                        }
+                                    }
+                                    finally {
+                                        // Inform runner this thread is dying, so it can start another thread
+                                        // to replace it, if necessary.
+                                        threadExiting(this);
+                                    }
+                                }
+                            };
+                        t.setName("DefaultTestRunner:Worker-" + i + ":" + n++);
+                        t.start();
+                        t.setPriority(prio);
+                        activeThreads.add(t);
+                        threads[i] = t;
+                    }
+                }
+                wait();
+            }
+            // Wait for all the threads to finish so they don't get nuked by the
+            // finally code. Order is not important so just wait for them one at a time.
+            // Note we can't simply join with the thread because that gives a deadlock
+            // on our lock.
+            for (int i = 0; i < threads.length; i++) {
+                if (threads[i] != null) {
+                    while (activeThreads.contains(threads[i]))
+                        wait();
+                    threads[i] = null;
+                }
+            }
+        }
+        catch (InterruptedException ex) {
+            // The thread has been interrupted
+
+            stopping = true;    // stop workers from starting any new tests
+
+            // interrupt the worker threads
+            for (Iterator iter = activeThreads.iterator() ; iter.hasNext(); ) {
+                Thread t = (Thread) (iter.next());
+                t.interrupt();
+            }
+
+            // while a short while (a couple of seconds) for tests to clean up
+            // before we nuke them
+            long now = System.currentTimeMillis();
+            try {
+                while (activeThreads.size() > 0 && (System.currentTimeMillis() - now < 2000)) {
+                    wait(100);
+                }
+            }
+            catch (InterruptedException e) {
+            }
+
+            // rethrow the original exception so the caller knows what's happened
+            throw ex;
+        }
+        finally {
+            // ensure all child threads killed
+            for (int i = 0; i < threads.length; i++) {
+                if (threads[i] != null)
+                    Deprecated.invokeThreadStop(threads[i]);
+            }
+        }
+
+        return allPassed;
     }
 
     private synchronized void threadExiting(Thread t) {
-	activeThreads.remove(t);
-	notifyAll();
+        activeThreads.remove(t);
+        notifyAll();
     }
-    
+
     private synchronized TestDescription nextTest() {
-	if (stopping)
-	    return null;
-	
-	if (testIter.hasNext()) 
-	    return (TestDescription) (testIter.next());
-	else {
-	    stopping = true;
-	    return null;
-	}
+        if (stopping)
+            return null;
+
+        if (testIter.hasNext())
+            return (TestDescription) (testIter.next());
+        else {
+            stopping = true;
+            return null;
+        }
     }
 
     private boolean runTest(TestDescription td) {
-	WorkDirectory workDir = getWorkDirectory();
-	TestResult result = null; 
+        WorkDirectory workDir = getWorkDirectory();
+        TestResult result = null;
 
-	try {
-	    TestSuite testSuite = getTestSuite();
-	    TestEnvironment env = getEnvironment();
-	    BackupPolicy backupPolicy = getBackupPolicy();
+        try {
+            TestSuite testSuite = getTestSuite();
+            TestEnvironment env = getEnvironment();
+            BackupPolicy backupPolicy = getBackupPolicy();
 
-	    String[] exclTestCases = getExcludedTestCases(td);
-	    Script s = testSuite.createScript(td, exclTestCases, env.copy(), workDir, backupPolicy);
-	    
-	    notifyStartingTest(s.getTestResult());
-	    
-	    result = s.getTestResult();
-	    
-	    s.run();
-	} 
-	catch (ThreadDeath e) {
-	    String url = td.getRootRelativeURL();
-	    workDir.log(i18n, "dtr.threadKilled", url);
-	    result = createErrorResult(td, i18n.getString("dtr.threadKilled", url), e);
-	    throw e;
-	} 
-	catch (Throwable e) {
-	    String url = td.getRootRelativeURL();
-	    workDir.log(i18n, "dtr.unexpectedThrowable", 
-			new Object[] { url, e, classifyThrowable(e) });
-	    result = createErrorResult(td,
-				       i18n.getString("dtr.unexpectedThrowable", 
-						      new Object[] { url, e, classifyThrowable(e) }),
-				       e);
-	}
-	finally {
-	    if (result == null) {
-		String url = td.getRootRelativeURL();
-		result = createErrorResult(td, i18n.getString("dtr.noResult", url), null);
-	    }
+            String[] exclTestCases = getExcludedTestCases(td);
+            Script s = testSuite.createScript(td, exclTestCases, env.copy(), workDir, backupPolicy);
 
-	    try {
-		notifyFinishedTest(result);
-	    }
-	    catch (ThreadDeath e) {
-		String url = td.getRootRelativeURL();
-		workDir.log(i18n, "dtr.threadKilled", url);
-		throw e;
-	    } 
-	    catch (Throwable e) {
-		String url = td.getRootRelativeURL();
-		workDir.log(i18n, "dtr.unexpectedThrowable", new Object[] { url, e, classifyThrowable(e) });
-	    }
-	}
-	    
-	return (result.getStatus().getType() == Status.PASSED);
+            notifyStartingTest(s.getTestResult());
+
+            result = s.getTestResult();
+
+            s.run();
+        }
+        catch (ThreadDeath e) {
+            String url = td.getRootRelativeURL();
+            workDir.log(i18n, "dtr.threadKilled", url);
+            result = createErrorResult(td, i18n.getString("dtr.threadKilled", url), e);
+            throw e;
+        }
+        catch (Throwable e) {
+            String url = td.getRootRelativeURL();
+            workDir.log(i18n, "dtr.unexpectedThrowable",
+                        new Object[] { url, e, classifyThrowable(e) });
+            result = createErrorResult(td,
+                                       i18n.getString("dtr.unexpectedThrowable",
+                                                      new Object[] { url, e, classifyThrowable(e) }),
+                                       e);
+        }
+        finally {
+            if (result == null) {
+                String url = td.getRootRelativeURL();
+                result = createErrorResult(td, i18n.getString("dtr.noResult", url), null);
+            }
+
+            try {
+                notifyFinishedTest(result);
+            }
+            catch (ThreadDeath e) {
+                String url = td.getRootRelativeURL();
+                workDir.log(i18n, "dtr.threadKilled", url);
+                throw e;
+            }
+            catch (Throwable e) {
+                String url = td.getRootRelativeURL();
+                workDir.log(i18n, "dtr.unexpectedThrowable", new Object[] { url, e, classifyThrowable(e) });
+            }
+        }
+
+        return (result.getStatus().getType() == Status.PASSED);
     }
 
     private TestResult createErrorResult(TestDescription td, String reason, Throwable t) { // make more i18n
-	Status s = Status.error(reason);
-	TestResult tr;
-	if (t == null)
-	    tr = new TestResult(td, s);
-	else {
-	    tr = new TestResult(td);
-	    TestResult.Section trs = tr.createSection(i18n.getString("dtr.details"));
-	    PrintWriter pw = trs.createOutput(i18n.getString("dtr.stackTrace"));
-	    t.printStackTrace(pw);
-	    pw.close();
-	    tr.setStatus(s);
-	}
+        Status s = Status.error(reason);
+        TestResult tr;
+        if (t == null)
+            tr = new TestResult(td, s);
+        else {
+            tr = new TestResult(td);
+            TestResult.Section trs = tr.createSection(i18n.getString("dtr.details"));
+            PrintWriter pw = trs.createOutput(i18n.getString("dtr.stackTrace"));
+            t.printStackTrace(pw);
+            pw.close();
+            tr.setStatus(s);
+        }
 
-	WorkDirectory workDir = getWorkDirectory();
-	BackupPolicy backupPolicy = getBackupPolicy();
-	try {
-	    tr.writeResults(workDir, backupPolicy);
-	}
-	catch (Exception e) {
-	    workDir.log(i18n, "dtr.unexpectedThrowable",
-		new Object[] {td.getRootRelativeURL(), e, EXCEPTION });
-	}
-	return tr;
+        WorkDirectory workDir = getWorkDirectory();
+        BackupPolicy backupPolicy = getBackupPolicy();
+        try {
+            tr.writeResults(workDir, backupPolicy);
+        }
+        catch (Exception e) {
+            workDir.log(i18n, "dtr.unexpectedThrowable",
+                new Object[] {td.getRootRelativeURL(), e, EXCEPTION });
+        }
+        return tr;
     }
 
     private Integer classifyThrowable(Throwable t) {
-	if (t instanceof Exception)
-	    return EXCEPTION;
-	else if (t instanceof Error)
-	    return ERROR;
-	else 
-	    return THROWABLE;
+        if (t instanceof Exception)
+            return EXCEPTION;
+        else if (t instanceof Error)
+            return ERROR;
+        else
+            return THROWABLE;
     }
 
     // constants used by classifyThrowable and i18n key unexpectedThrowable
     private static final Integer EXCEPTION = new Integer(0);
     private static final Integer ERROR = new Integer(1);
     private static final Integer THROWABLE = new Integer(2);
-    
-    
+
+
     private Iterator testIter;
     private Set activeThreads;
     private boolean allPassed;

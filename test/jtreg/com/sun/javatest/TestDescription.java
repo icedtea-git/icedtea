@@ -39,7 +39,7 @@ import com.sun.javatest.util.StringArray;
 /**
  * TestDescription objects embody the parameters of a test and provide the
  * ability to run a test. The parameters are normally found by parsing
- * HTML files and looking for distinguished constructions whose parameters 
+ * HTML files and looking for distinguished constructions whose parameters
  * provide the necessary description of a test.
  */
 
@@ -48,98 +48,98 @@ public class TestDescription implements Serializable
     /**
      * Construct a test description from the parameters of a recognized descriptions.
      *
-     * @param root	The root file of the test suite
-     * @param file	The file containing the test description
-     * @param params	The collected parameters of the test description
+     * @param root      The root file of the test suite
+     * @param file      The file containing the test description
+     * @param params    The collected parameters of the test description
      * @throws IllegalArgumentException if the file argument is an absolute
      * filename and does not begin with the root filename.
      *
      */
-    public TestDescription(File root, File file, Map params) 
-		throws IllegalArgumentException {
+    public TestDescription(File root, File file, Map params)
+                throws IllegalArgumentException {
 
-	if (root.equals(cachedRoot))
-	    rootDir = cachedRootDir;
-	else {
-	    if (root.exists() ? root.isFile() : root.getName().endsWith(".html"))
-		rootDir = root.getParent();
-	    else
-		rootDir = root.getPath();
+        if (root.equals(cachedRoot))
+            rootDir = cachedRootDir;
+        else {
+            if (root.exists() ? root.isFile() : root.getName().endsWith(".html"))
+                rootDir = root.getParent();
+            else
+                rootDir = root.getPath();
 
-	    // cache root->rootDir map to avoid making extra files
-	    cachedRoot = root;
-	    cachedRootDir = rootDir;
-	}
+            // cache root->rootDir map to avoid making extra files
+            cachedRoot = root;
+            cachedRootDir = rootDir;
+        }
 
-	String fp = file.getPath();
-	String rootRelativeFile;
-	if (file.isAbsolute()) {
-	    String rp = rootDir;
-	    if (! (fp.startsWith(rp) && fp.charAt(rp.length()) == File.separatorChar))
-		throw new IllegalArgumentException("file must be relative to root: " + file);
-	    rootRelativeFile = fp.substring(rp.length() + 1);
-	}
-	else
-	    rootRelativeFile = fp;
-	rootRelativePath = rootRelativeFile.replace(File.separatorChar, '/');
+        String fp = file.getPath();
+        String rootRelativeFile;
+        if (file.isAbsolute()) {
+            String rp = rootDir;
+            if (! (fp.startsWith(rp) && fp.charAt(rp.length()) == File.separatorChar))
+                throw new IllegalArgumentException("file must be relative to root: " + file);
+            rootRelativeFile = fp.substring(rp.length() + 1);
+        }
+        else
+            rootRelativeFile = fp;
+        rootRelativePath = rootRelativeFile.replace(File.separatorChar, '/');
 
-	Vector v = new Vector(0, params.size() * 2);
-	for (Iterator i = params.keySet().iterator(); i.hasNext(); ) {
-	    String key = (String) (i.next());
-	    String value = (String)(params.get(key));
-	    insert(v, key, value);
-	}
-	fields = new String[v.size()];
-	v.copyInto(fields);
+        Vector v = new Vector(0, params.size() * 2);
+        for (Iterator i = params.keySet().iterator(); i.hasNext(); ) {
+            String key = (String) (i.next());
+            String value = (String)(params.get(key));
+            insert(v, key, value);
+        }
+        fields = new String[v.size()];
+        v.copyInto(fields);
     }
 
     /**
      * Internal constructor used by load()
      */
     private TestDescription(String root, String file, String[] params) {
-	rootDir = root;
-	// skip over the root part of the filename.
-	char sep = file.charAt(root.length());
-	rootRelativePath = file.substring(root.length() + 1).replace(sep, '/');
+        rootDir = root;
+        // skip over the root part of the filename.
+        char sep = file.charAt(root.length());
+        rootRelativePath = file.substring(root.length() + 1).replace(sep, '/');
 
-	Vector v = new Vector(0, params.length);
-	for (int i = 0; i < params.length; i += 2) {
-	    String key = params[i];
-	    if (!(key.startsWith("$") || key.equals("testsuite") ||  key.equals("file"))) {
-		// don't keep synthetic values from save;
-		String value = params[i+1];
-		insert(v, key, value);
-	    }
-	}
-	fields = new String[v.size()];
-	v.copyInto(fields);	
+        Vector v = new Vector(0, params.length);
+        for (int i = 0; i < params.length; i += 2) {
+            String key = params[i];
+            if (!(key.startsWith("$") || key.equals("testsuite") ||  key.equals("file"))) {
+                // don't keep synthetic values from save;
+                String value = params[i+1];
+                insert(v, key, value);
+            }
+        }
+        fields = new String[v.size()];
+        v.copyInto(fields);
     }
 
     public boolean equals(Object td) {
-	if (!(td instanceof TestDescription))
-	    return false;
-	
-	TestDescription otherTd = (TestDescription)td;
-	
-	// a quick and simple check
-	if (otherTd.getParameterCount() != getParameterCount()) {
-	    return false;
-	}
-	
-	// raw compare
-	int pos = 0;
-	while (pos < fields.length) {
-	    String otherVal = otherTd.getParameter(fields[pos]);
+        if (!(td instanceof TestDescription))
+            return false;
 
-	    if (otherVal == null ||
-		!otherVal.equals(fields[pos+1])) {
-		return false;
-	    }
+        TestDescription otherTd = (TestDescription)td;
 
-	    pos += 2;
-	}
+        // a quick and simple check
+        if (otherTd.getParameterCount() != getParameterCount()) {
+            return false;
+        }
 
-	return true;
+        // raw compare
+        int pos = 0;
+        while (pos < fields.length) {
+            String otherVal = otherTd.getParameter(fields[pos]);
+
+            if (otherVal == null ||
+                !otherVal.equals(fields[pos+1])) {
+                return false;
+            }
+
+            pos += 2;
+        }
+
+        return true;
     }
 
     /**
@@ -147,7 +147,7 @@ public class TestDescription implements Serializable
      * @return the directory containing this test description
      */
     public File getDir() {
-	return new File(getFile().getParent());
+        return new File(getFile().getParent());
     }
 
     /**
@@ -165,7 +165,7 @@ public class TestDescription implements Serializable
      * @return the id within the file of this test description
      */
     public String getId() {
-	return getParameter("id");
+        return getParameter("id");
     }
 
     /**
@@ -175,63 +175,63 @@ public class TestDescription implements Serializable
      * @return the title of this test description
      */
     public String getTitle() {
-	// default title to name
-	String title = getParameter("title");
-	if (title == null)
-	    title = getName();
+        // default title to name
+        String title = getParameter("title");
+        if (title == null)
+            title = getName();
 
         return title;
     }
 
     /**
-     * Get the name of this test description; if not given explicitly, 
+     * Get the name of this test description; if not given explicitly,
      * it defaults to the filename root of the first source file.
      * @return the name of this test description
      */
     public String getName() {
 
-	// the name used to be a parameter you could set explicitly
-	// now, it is based on the file and id
-	int lastSep = rootRelativePath.lastIndexOf('/');
-	String name = (lastSep == -1 ? 
-		       rootRelativePath : 
-		       rootRelativePath.substring(lastSep + 1));
+        // the name used to be a parameter you could set explicitly
+        // now, it is based on the file and id
+        int lastSep = rootRelativePath.lastIndexOf('/');
+        String name = (lastSep == -1 ?
+                       rootRelativePath :
+                       rootRelativePath.substring(lastSep + 1));
 
-	// strip off extension
-	int dot = name.indexOf('.');
-	if (dot != -1)
-	    name = name.substring(0, dot);
+        // strip off extension
+        int dot = name.indexOf('.');
+        if (dot != -1)
+            name = name.substring(0, dot);
 
-	String id = getParameter("id");
-	if (id != null)
-	    name = name + "_" + id;
+        String id = getParameter("id");
+        if (id != null)
+            name = name + "_" + id;
 
         return name;
     }
 
     /**
-     * Get the set of keywords for this test description, 
+     * Get the set of keywords for this test description,
      * as specified by the "keywords" parameter.
      * @return the set of keywords
      */
     public String[] getKeywords() {
-	return StringArray.split(getParameter("keywords"));
+        return StringArray.split(getParameter("keywords"));
     }
 
     /**
-     * Get the set of keywords for this test description, 
-     * as specified by the "keywords" parameter. 
+     * Get the set of keywords for this test description,
+     * as specified by the "keywords" parameter.
      * They are returned in canonical form (lower-case).
      * @return the set of keywords
      */
     public Set getKeywordTable() {
-	String[] keys = StringArray.split(getParameter("keywords"));
-	Set s = new TreeSet();
-	for (int i = 0; i < keys.length; i++) {
-	    String k = keys[i].toLowerCase();
-	    s.add(k);
-	}
-	return s;
+        String[] keys = StringArray.split(getParameter("keywords"));
+        Set s = new TreeSet();
+        for (int i = 0; i < keys.length; i++) {
+            String k = keys[i].toLowerCase();
+            s.add(k);
+        }
+        return s;
     }
 
     /**
@@ -241,7 +241,7 @@ public class TestDescription implements Serializable
      * @see #getSourceFiles
      */
     public String[] getSources() {
-	return StringArray.split(getParameter("source"));
+        return StringArray.split(getParameter("source"));
     }
 
     /**
@@ -251,26 +251,26 @@ public class TestDescription implements Serializable
      * case, they will be evaluated relative to the directory
      * containing this test description. Then, if any of the
      * files are under the user's current directory, they will
-     * be returned relative to that directory; otherwise, they 
+     * be returned relative to that directory; otherwise, they
      * will be returned as absolute filenames.
      * @return filenames specified by the source parameter.
      * @see #getSources
      */
     public File[] getSourceFiles() {
-	String dir  = getFile().getParent();
-	String[] srcs = getSources();
-	File[] sourceFiles = new File[srcs.length];
-    	String userCurrDir = System.getProperty("user.dir") + File.separator;
-	for (int i = 0; i < srcs.length; i++) {
-	    File f = new File(dir, srcs[i].replace('/', File.separatorChar));
-	    String s = f.getPath();
-	    if (s.startsWith(userCurrDir)) {	
-	        s = s.substring(userCurrDir.length());	
-		sourceFiles[i] = new File(s);
-	    } else
-		sourceFiles[i] = f;
-	}
-	return sourceFiles;
+        String dir  = getFile().getParent();
+        String[] srcs = getSources();
+        File[] sourceFiles = new File[srcs.length];
+        String userCurrDir = System.getProperty("user.dir") + File.separator;
+        for (int i = 0; i < srcs.length; i++) {
+            File f = new File(dir, srcs[i].replace('/', File.separatorChar));
+            String s = f.getPath();
+            if (s.startsWith(userCurrDir)) {
+                s = s.substring(userCurrDir.length());
+                sourceFiles[i] = new File(s);
+            } else
+                sourceFiles[i] = f;
+        }
+        return sourceFiles;
     }
 
     /**
@@ -280,7 +280,7 @@ public class TestDescription implements Serializable
      * @deprecated use <code>getParameter("classDir")</code> instead
      */
     public String getClassDir() {
-	return getParameter("classDir");
+        return getParameter("classDir");
     }
 
     /**
@@ -290,7 +290,7 @@ public class TestDescription implements Serializable
      * @deprecated use <code>getParameter("executeClass")</code> instead
      */
     public String getExecuteClass() {
-	return getParameter("executeClass");
+        return getParameter("executeClass");
     }
 
     /**
@@ -300,7 +300,7 @@ public class TestDescription implements Serializable
      * @deprecated use <code>getParameter("executeArgs")</code> instead
      */
     public String getExecuteArgs() {
-	return getParameter("executeArgs");
+        return getParameter("executeArgs");
     }
 
     /**
@@ -310,11 +310,11 @@ public class TestDescription implements Serializable
      * @deprecated  use <code>getParameter("timeout")</code> instead
      */
     public int getTimeout() {
-	String t = getParameter("timeout");
-	if (t == null) 
-	    return 0;
-	else
-	    return Integer.parseInt(t);
+        String t = getParameter("timeout");
+        if (t == null)
+            return 0;
+        else
+            return Integer.parseInt(t);
     }
 
     /**
@@ -326,7 +326,7 @@ public class TestDescription implements Serializable
      * may be inappropriate for this system.
      * @return the root file for this test suite
      * @see #getRootDir
-     * @deprecated 
+     * @deprecated
      */
     public File getRoot() {
         return new File(rootDir, "testsuite.html");
@@ -349,7 +349,7 @@ public class TestDescription implements Serializable
      * @return the path for this test description within the test suite
      */
     public String getRootRelativePath() {
-	return rootRelativePath;
+        return rootRelativePath;
     }
 
     /**
@@ -357,7 +357,7 @@ public class TestDescription implements Serializable
      * @return A platform specific path to the source file.
      */
     public File getRootRelativeFile() {
-	return new File(rootRelativePath.replace('/', File.separatorChar));
+        return new File(rootRelativePath.replace('/', File.separatorChar));
     }
 
     /**
@@ -367,8 +367,8 @@ public class TestDescription implements Serializable
      * @return a relative URL for this test within the test suite
      */
     public String getRootRelativeURL() {
-	String id = getParameter("id");
-	return (id == null ?  rootRelativePath : rootRelativePath + "#" + id);
+        String id = getParameter("id");
+        return (id == null ?  rootRelativePath : rootRelativePath + "#" + id);
     }
 
     /**
@@ -378,8 +378,8 @@ public class TestDescription implements Serializable
      * @deprecated Use getRootRelativeFile().getParent()
      */
     public File getRootRelativeDir() {
-	String p = getRootRelativeFile().getParent();
-	return (p == null ? new File(".") : new File(p));
+        String p = getRootRelativeFile().getParent();
+        return (p == null ? new File(".") : new File(p));
     }
 
     /**
@@ -387,7 +387,7 @@ public class TestDescription implements Serializable
      * @return the number of parameters
      */
     public int getParameterCount() {
-	return fields.length / 2;
+        return fields.length / 2;
     }
 
     /**
@@ -419,9 +419,9 @@ public class TestDescription implements Serializable
                 }
             }
 
-	    public void remove() {
-		throw new UnsupportedOperationException();
-	    }
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
         };
     }
 
@@ -431,42 +431,42 @@ public class TestDescription implements Serializable
      * @return the value of the specified parameter, or null if not found
      */
     public String getParameter(String key) {
-	int lower = 0;
-	int upper = fields.length - 2;
-	int mid;
+        int lower = 0;
+        int upper = fields.length - 2;
+        int mid;
 
-	if (upper < 0)
-	    return null;
+        if (upper < 0)
+            return null;
 
-	String last = fields[upper];
-	int cmp = key.compareTo(last);
-	if (cmp > 0)
-	    return null;
+        String last = fields[upper];
+        int cmp = key.compareTo(last);
+        if (cmp > 0)
+            return null;
 
-	while (lower <= upper) {
-	    // in next line, take care to ensure that mid is always even
-	    mid = lower + ((upper - lower) / 4) * 2;
-	    String e = fields[mid];
-	    cmp = key.compareTo(e);
-	    if (cmp < 0) {
-		upper = mid - 2;
-	    }
-	    else if (cmp > 0) {
-		lower = mid + 2;
-	    }
-	    else 
-		return fields[mid+1];
-	}
+        while (lower <= upper) {
+            // in next line, take care to ensure that mid is always even
+            mid = lower + ((upper - lower) / 4) * 2;
+            String e = fields[mid];
+            cmp = key.compareTo(e);
+            if (cmp < 0) {
+                upper = mid - 2;
+            }
+            else if (cmp > 0) {
+                lower = mid + 2;
+            }
+            else
+                return fields[mid+1];
+        }
 
-	// did not find an exact match 
-	return null;
+        // did not find an exact match
+        return null;
     }
 
     /**
      * Simple standard debugging output.
      */
     public String toString() {
-	return ("TestDescription[" + getTitle() + "]");
+        return ("TestDescription[" + getTitle() + "]");
     }
 
     /**
@@ -475,76 +475,76 @@ public class TestDescription implements Serializable
      * may be inappropriate for this system.
      */
     void save(Map p) {
-	saveField(p, "$root", rootDir);
-	saveField(p, "$file", getFile().getPath());
-	for (int i = 0; i < fields.length; i+=2) {
-	    saveField(p, fields[i], fields[i+1]);
-	}
+        saveField(p, "$root", rootDir);
+        saveField(p, "$file", getFile().getPath());
+        for (int i = 0; i < fields.length; i+=2) {
+            saveField(p, fields[i], fields[i+1]);
+        }
     }
 
     private void saveField(Map p, String key, String value) {
-	if (value != null)
-	    p.put(key, value);
+        if (value != null)
+            p.put(key, value);
     }
 
     /**
      * Recover TestDescription from saved dictionary
      */
     static TestDescription load(String[] params) {
-	//File r = new File((String)d.get("testsuite"));
-	//if (!r.isDirectory())
-	//    r = new File(r.getParent());
-	//File f = new File((String)d.get("file"));
-	String r = PropertyArray.get(params, "$root");
-	if (r == null)
-	    r = PropertyArray.get(params, "testsuite");
-	String f = PropertyArray.get(params, "$file");
-	if (f == null)
-	    f = PropertyArray.get(params, "file");
-	return new TestDescription(r, f, params);
+        //File r = new File((String)d.get("testsuite"));
+        //if (!r.isDirectory())
+        //    r = new File(r.getParent());
+        //File f = new File((String)d.get("file"));
+        String r = PropertyArray.get(params, "$root");
+        if (r == null)
+            r = PropertyArray.get(params, "testsuite");
+        String f = PropertyArray.get(params, "$file");
+        if (f == null)
+            f = PropertyArray.get(params, "file");
+        return new TestDescription(r, f, params);
     }
 
     private static void insert(Vector v, String key, String value) {
-	int lower = 0;
-	int upper = v.size() - 2;
-	int mid = 0;
+        int lower = 0;
+        int upper = v.size() - 2;
+        int mid = 0;
 
-	if (upper < 0) {
-	    v.addElement(key);
-	    v.addElement(value);
-	    return;
-	}
+        if (upper < 0) {
+            v.addElement(key);
+            v.addElement(value);
+            return;
+        }
 
-	String last = (String)v.elementAt(upper);
-	int cmp = key.compareTo(last);
-	if (cmp > 0) {
-	    v.addElement(key);
-	    v.addElement(value);
-	    return;
-	}
+        String last = (String)v.elementAt(upper);
+        int cmp = key.compareTo(last);
+        if (cmp > 0) {
+            v.addElement(key);
+            v.addElement(value);
+            return;
+        }
 
-	while (lower <= upper) {
-	    // in next line, take care to ensure that mid is always even
-	    mid = lower + ((upper - lower) / 4) * 2;
-	    String e = (String)(v.elementAt(mid));
-	    cmp = key.compareTo(e);
-	    if (cmp < 0) {
-		upper = mid - 2;
-	    }
-	    else if (cmp > 0) {
-		lower = mid + 2;
-	    }
-	    else 
-		throw new Error("should not happen");
-	}
+        while (lower <= upper) {
+            // in next line, take care to ensure that mid is always even
+            mid = lower + ((upper - lower) / 4) * 2;
+            String e = (String)(v.elementAt(mid));
+            cmp = key.compareTo(e);
+            if (cmp < 0) {
+                upper = mid - 2;
+            }
+            else if (cmp > 0) {
+                lower = mid + 2;
+            }
+            else
+                throw new Error("should not happen");
+        }
 
-	// did not find an exact match (we did not expect to) 
-	// adjust the insert point
-	if (cmp > 0)
-	    mid += 2;
+        // did not find an exact match (we did not expect to)
+        // adjust the insert point
+        if (cmp > 0)
+            mid += 2;
 
-	v.insertElementAt(key, mid);
-	v.insertElementAt(value, mid+1);
+        v.insertElementAt(key, mid);
+        v.insertElementAt(value, mid+1);
     }
 
     //-----member variables-------------------------------------------------------
@@ -573,4 +573,3 @@ public class TestDescription implements Serializable
     private static File cachedRoot;
     private static String cachedRootDir;
 }
-

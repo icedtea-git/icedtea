@@ -42,16 +42,16 @@ public class FileInfoCache
      * Create a FileInfoCache object.
      */
     public FileInfoCache() {
-	map = new HashMap();
-	// This next line is a workaround for a bug in URLClassLoader
-	// that is provoked when FileInfoCache is used in conjunction
-	// with JFileChooser (and more accurately, BasicDirectoryModel.)
-	// The bug occurs when BasicDirectoryModel interrupts its loader
-	// thread; the bug manifests itself as IndexOutOfBoundsException
-	// inside URLClassLoader when trying to do "new Entry" inside
-	// put. The workaround is to proactively load the class here.
-	// The bug is in JDK 1.3.0_O (at least).
-	Class c = Entry.class;
+        map = new HashMap();
+        // This next line is a workaround for a bug in URLClassLoader
+        // that is provoked when FileInfoCache is used in conjunction
+        // with JFileChooser (and more accurately, BasicDirectoryModel.)
+        // The bug occurs when BasicDirectoryModel interrupts its loader
+        // thread; the bug manifests itself as IndexOutOfBoundsException
+        // inside URLClassLoader when trying to do "new Entry" inside
+        // put. The workaround is to proactively load the class here.
+        // The bug is in JDK 1.3.0_O (at least).
+        Class c = Entry.class;
     }
 
     /**
@@ -61,8 +61,8 @@ public class FileInfoCache
      * will expire
      */
     public FileInfoCache(int timeout) {
-	this();
-	this.timeout = timeout;
+        this();
+        this.timeout = timeout;
     }
 
     /**
@@ -71,17 +71,17 @@ public class FileInfoCache
      * @param o the object to be saved in the cache for the given file
      */
     public synchronized void put(File f, Object o) {
-	map.put(f, new Entry(f, o));
+        map.put(f, new Entry(f, o));
 
-	if (timeout > 0) {
-	    long now = System.currentTimeMillis();
-	    long old = now - timeout; 
-	    for (Iterator i = map.values().iterator(); i.hasNext(); ) {
-		Entry e = (Entry) (i.next());
-		if (e.lastUsed < old)
-		    i.remove();
-	    }
-	}
+        if (timeout > 0) {
+            long now = System.currentTimeMillis();
+            long old = now - timeout;
+            for (Iterator i = map.values().iterator(); i.hasNext(); ) {
+                Entry e = (Entry) (i.next());
+                if (e.lastUsed < old)
+                    i.remove();
+            }
+        }
     }
 
     /**
@@ -93,42 +93,42 @@ public class FileInfoCache
      * if there is no current entry
      */
     public synchronized Object get(File f) {
-	Entry e = (Entry) (map.get(f));
-	if (e == null) {
-	    // not in cache
-	    return null;
-	}
-	else if (e.fileLastModified != f.lastModified()) {
-	    // cache out of date; file has been modified
-	    map.remove(f);
-	    return null;
-	}
-	else {
-	    // got valid entry
-	    e.lastUsed = System.currentTimeMillis();
-	    return e.value;
-	}
+        Entry e = (Entry) (map.get(f));
+        if (e == null) {
+            // not in cache
+            return null;
+        }
+        else if (e.fileLastModified != f.lastModified()) {
+            // cache out of date; file has been modified
+            map.remove(f);
+            return null;
+        }
+        else {
+            // got valid entry
+            e.lastUsed = System.currentTimeMillis();
+            return e.value;
+        }
     }
 
     /**
      * Clear all entries from the cache.
      */
     public synchronized void clear() {
-	map.clear();
+        map.clear();
     }
 
     private Map map;
     private int timeout;
 
     private static class Entry {
-	Entry(File f, Object value) {
-	    fileLastModified = f.lastModified();
-	    lastUsed = System.currentTimeMillis();
-	    this.value = value;
-	}
+        Entry(File f, Object value) {
+            fileLastModified = f.lastModified();
+            lastUsed = System.currentTimeMillis();
+            this.value = value;
+        }
 
-	long fileLastModified;
-	long lastUsed;
-	Object value;
+        long fileLastModified;
+        long lastUsed;
+        Object value;
     }
 }

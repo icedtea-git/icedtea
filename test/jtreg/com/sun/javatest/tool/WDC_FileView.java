@@ -39,7 +39,7 @@ public class WDC_FileView extends FileView {
         this.swda = swda;
         icon = IconFactory.getSelectableFolderIcon();
     }
-    
+
     public String getDescription(File f) {
         return "";
     }
@@ -62,5 +62,5 @@ public class WDC_FileView extends FileView {
         return (f.isDirectory() && !swda.isWorkDirectory(f) ? Boolean.TRUE : Boolean.FALSE);
     }
     private SelectedWorkDirApprover swda;
-    private Icon icon;    
+    private Icon icon;
 }

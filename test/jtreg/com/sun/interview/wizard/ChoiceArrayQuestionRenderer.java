@@ -53,8 +53,8 @@ class ChoiceArrayQuestionRenderer
         implements QuestionRenderer
 {
     /**
-     * Returns component for this question. Selects if it should be a pane with buttons, or 
-     * table, using information about available space. This information sets in 
+     * Returns component for this question. Selects if it should be a pane with buttons, or
+     * table, using information about available space. This information sets in
      * setPreferredPaneSize() method.
      * For each question we save its last layout and try to use it, if we cant do better.
      * We don't allow for renderer to switch from table to buttons panel and back for
@@ -66,56 +66,56 @@ class ChoiceArrayQuestionRenderer
     }
 
     public String getInvalidValueMessage(Question q) {
-	return null;
+        return null;
     }
-    
+
     private JComponent createChoiceTable(final ChoiceArrayQuestion q,
-					final ActionListener editedListener) {
-	final String[] displayChoices = q.getDisplayChoices();
-	final boolean[] values = q.getValue();
-	
+                                        final ActionListener editedListener) {
+        final String[] displayChoices = q.getDisplayChoices();
+        final boolean[] values = q.getValue();
+
         class TestTableModel extends AbstractTableModel {
-		public Class getColumnClass(int c) {
-		    return (c == 0 ? Boolean.class : String.class);
-		}
-		
-		public int getColumnCount() {
-		    return 2;
-		}
-		
-		public int getRowCount() {
-		    return displayChoices.length;
-		}
-		
-		public Object getValueAt(int r, int c) {
-		    return (c == 0 ? (Object) (new Boolean(values[r])) : displayChoices[r]);
-		}
-		
-		public void setValueAt(Object o, int r, int c) {
-		    if (c == 0) {
-			values[r] = ((Boolean) o).booleanValue();
-			q.setValue(values);
-			fireEditedEvent(this, editedListener);
-		    }
-		}
-		
-		public boolean isCellEditable(int r, int c) {
-		    return (c == 0 ? true : false);
-		}
-	    };
-            
+                public Class getColumnClass(int c) {
+                    return (c == 0 ? Boolean.class : String.class);
+                }
+
+                public int getColumnCount() {
+                    return 2;
+                }
+
+                public int getRowCount() {
+                    return displayChoices.length;
+                }
+
+                public Object getValueAt(int r, int c) {
+                    return (c == 0 ? (Object) (new Boolean(values[r])) : displayChoices[r]);
+                }
+
+                public void setValueAt(Object o, int r, int c) {
+                    if (c == 0) {
+                        values[r] = ((Boolean) o).booleanValue();
+                        q.setValue(values);
+                        fireEditedEvent(this, editedListener);
+                    }
+                }
+
+                public boolean isCellEditable(int r, int c) {
+                    return (c == 0 ? true : false);
+                }
+            };
+
         final TestTableModel tm = new TestTableModel();
 
-	final JTable tbl = new JTable(tm);
-	tbl.setPreferredScrollableViewportSize(new Dimension(DOTS_PER_INCH, DOTS_PER_INCH));
-	tbl.setShowHorizontalLines(false);
-	tbl.setShowVerticalLines(false);
-	tbl.setTableHeader(null);
+        final JTable tbl = new JTable(tm);
+        tbl.setPreferredScrollableViewportSize(new Dimension(DOTS_PER_INCH, DOTS_PER_INCH));
+        tbl.setShowHorizontalLines(false);
+        tbl.setShowVerticalLines(false);
+        tbl.setTableHeader(null);
         tbl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	tbl.setRowSelectionAllowed(false);
-	tbl.setColumnSelectionAllowed(false);
-	tbl.setToolTipText(i18n.getString("chcArr.tbl.tip"));
-        
+        tbl.setRowSelectionAllowed(false);
+        tbl.setColumnSelectionAllowed(false);
+        tbl.setToolTipText(i18n.getString("chcArr.tbl.tip"));
+
         tbl.addKeyListener(new KeyAdapter() {
            public void keyPressed(KeyEvent e) {
                if((e.getModifiersEx() & e.CTRL_DOWN_MASK) != 0 && e.getKeyCode() == e.VK_A) {
@@ -125,40 +125,40 @@ class ChoiceArrayQuestionRenderer
                            allSelected = false;
                            break;
                        }
-                           
+
                    }
                    for(int i = 0; i < tm.getRowCount(); i++) {
                        tm.setValueAt(new Boolean(!allSelected), i, 0);
-                       TableModelEvent ev = new TableModelEvent(tm, i, i, 
+                       TableModelEvent ev = new TableModelEvent(tm, i, i,
                                             TableModelEvent.ALL_COLUMNS,
                                             TableModelEvent.UPDATE);
                        tm.fireTableChanged(ev);
                    }
                }
-               
+
            }
         });
 
-	TableColumn col0 = tbl.getColumnModel().getColumn(0);
-	col0.setPreferredWidth(24);
-	col0.setMaxWidth(24);
-	col0.setResizable(false);
-        
+        TableColumn col0 = tbl.getColumnModel().getColumn(0);
+        col0.setPreferredWidth(24);
+        col0.setMaxWidth(24);
+        col0.setResizable(false);
+
         TableColumn col1 = tbl.getColumnModel().getColumn(1);
         col1.setPreferredWidth(getColumnWidth(tbl, 1) + 20);
 
-	final JScrollPane sp = new JScrollPane(tbl);
-	sp.setName("chcArr.sp");
+        final JScrollPane sp = new JScrollPane(tbl);
+        sp.setName("chcArr.sp");
         sp.getViewport().setBackground(tbl.getBackground());
 
 
-	JLabel lbl = new JLabel(i18n.getString("chcArr.tbl.lbl"));
-	lbl.setName("chcArr.tbl.lbl");
-	lbl.setDisplayedMnemonic(i18n.getString("chcArr.tbl.mne").charAt(0));
-	lbl.setToolTipText(i18n.getString("chcArr.tbl.tip"));
-	lbl.setLabelFor(sp);
-        	
-	JPanel result = new JPanel(new BorderLayout());
+        JLabel lbl = new JLabel(i18n.getString("chcArr.tbl.lbl"));
+        lbl.setName("chcArr.tbl.lbl");
+        lbl.setDisplayedMnemonic(i18n.getString("chcArr.tbl.mne").charAt(0));
+        lbl.setToolTipText(i18n.getString("chcArr.tbl.tip"));
+        lbl.setLabelFor(sp);
+
+        JPanel result = new JPanel(new BorderLayout());
 
         tbl.setRowHeight(22);
 //        tbl.setRowMargin(6);
@@ -172,19 +172,19 @@ class ChoiceArrayQuestionRenderer
 //
 //            }
 
-	result.add(lbl, BorderLayout.NORTH);
-	result.add(sp, BorderLayout.CENTER);
-	
-	return result;	
+        result.add(lbl, BorderLayout.NORTH);
+        result.add(sp, BorderLayout.CENTER);
+
+        return result;
     }
-    
+
     private int getColumnWidth(JTable table, int colIndex) {
         int width = -1;
-        
+
         TableModel model = table.getModel();
         int rowCount = model.getRowCount();
         TableColumn col = table.getColumnModel().getColumn(colIndex);
-        
+
         for(int i = 0; i < rowCount; i++) {
             TableCellRenderer r = table.getCellRenderer(i, colIndex);
             Component c = r.getTableCellRendererComponent(table,
@@ -192,23 +192,23 @@ class ChoiceArrayQuestionRenderer
                 false, false, i, colIndex);
             width = Math.max(width, c.getPreferredSize().width);
         }
-        
+
         return width;
     }
-    
-    
+
+
 
 
     private void fireEditedEvent(Object src, ActionListener l) {
-	ActionEvent e = new ActionEvent(src, 
-					ActionEvent.ACTION_PERFORMED, 
-					EDITED);
-	l.actionPerformed(e);
+        ActionEvent e = new ActionEvent(src,
+                                        ActionEvent.ACTION_PERFORMED,
+                                        EDITED);
+        l.actionPerformed(e);
     }
-    
+
     private HashMap layoutHistory = new HashMap();
-    
+
     private static final I18NResourceBundle i18n = I18NResourceBundle.getDefaultBundle();
     private static final int DOTS_PER_INCH = Toolkit.getDefaultToolkit().getScreenResolution();
-        
+
 }

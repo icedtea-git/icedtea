@@ -47,7 +47,7 @@ public class EditableFileList extends EditableList
      * @see #setChooser
      */
     public EditableFileList(JFileChooser c) {
-	setChooser(c);
+        setChooser(c);
     }
 
     /**
@@ -56,12 +56,12 @@ public class EditableFileList extends EditableList
      * @param dir the directory to be displayed by the file chooser
      */
     public void setBaseDirectory(File dir) {
-	baseDir = dir;
-	if (chooser != null) {
-	    if (dir == null)
-		dir = new File(System.getProperty("user.dir"));
-	    chooser.setCurrentDirectory(dir);
-	}
+        baseDir = dir;
+        if (chooser != null) {
+            if (dir == null)
+                dir = new File(System.getProperty("user.dir"));
+            chooser.setCurrentDirectory(dir);
+        }
     }
 
     /**
@@ -70,32 +70,32 @@ public class EditableFileList extends EditableList
      * @param c the chooser to be used
      */
     public void setChooser(JFileChooser c) {
-	if (c == null)
-	    throw new NullPointerException();
-	chooser = c;
+        if (c == null)
+            throw new NullPointerException();
+        chooser = c;
     }
 
     /**
      * Set the items in the list. Any previous items are removed first.
      * The items should be files, or strings (which will be turned into
      * files.)
-     * @param items the array of strings or files to be put in the list. 
+     * @param items the array of strings or files to be put in the list.
      * @see #getItems
      */
     public void setItems(Object[] items) {
-	listModel.clear();
-	if (items == null)
-	    return;
+        listModel.clear();
+        if (items == null)
+            return;
 
-	for (int i = 0; i < items.length; i++) {
-	    Object o = items[i];
-	    if (o instanceof File)
-		listModel.addElement(o);
-	    else if (o instanceof String)
-		listModel.addElement(new File((String) o));
-	    else
-		throw new IllegalArgumentException(o.toString());
-	}
+        for (int i = 0; i < items.length; i++) {
+            Object o = items[i];
+            if (o instanceof File)
+                listModel.addElement(o);
+            else if (o instanceof String)
+                listModel.addElement(new File((String) o));
+            else
+                throw new IllegalArgumentException(o.toString());
+        }
     }
 
     /**
@@ -104,9 +104,9 @@ public class EditableFileList extends EditableList
      * @see #setFiles
      */
     public File[] getFiles() {
-	File[] files = new File[listModel.size()];
-	listModel.copyInto(files);
-	return files;
+        File[] files = new File[listModel.size()];
+        listModel.copyInto(files);
+        return files;
     }
 
     /**
@@ -115,7 +115,7 @@ public class EditableFileList extends EditableList
      * @see #getFiles
      */
     public void setFiles(File[] files) {
-	setItems(files);
+        setItems(files);
     }
 
     /**
@@ -126,19 +126,19 @@ public class EditableFileList extends EditableList
      * @return a file to be added to the list, or null if none
      */
     protected Object getNewItem() {
-	if (chooser == null)
-	    chooser = new JFileChooser();
-	int opt = chooser.showDialog(this, uif.getI18NString("list.add.select.txt"));
-	if (opt != JFileChooser.APPROVE_OPTION) 
-	    return null;
-	
-	File f = chooser.getSelectedFile();
-	if (baseDir != null) {
-	    String bp = baseDir.getPath();
-	    if (f.getPath().startsWith(bp + File.separatorChar))
-		f = new File(f.getPath().substring(bp.length() + 1));
-	}
-	return f;
+        if (chooser == null)
+            chooser = new JFileChooser();
+        int opt = chooser.showDialog(this, uif.getI18NString("list.add.select.txt"));
+        if (opt != JFileChooser.APPROVE_OPTION)
+            return null;
+
+        File f = chooser.getSelectedFile();
+        if (baseDir != null) {
+            String bp = baseDir.getPath();
+            if (f.getPath().startsWith(bp + File.separatorChar))
+                f = new File(f.getPath().substring(bp.length() + 1));
+        }
+        return f;
     }
 
     private JFileChooser chooser;

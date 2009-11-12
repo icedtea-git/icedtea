@@ -28,7 +28,7 @@ package com.sun.javatest;
 
 /**
  * This class should take the hit for all deprecated methods used in this
- * package.  
+ * package.
  */
 class Deprecated
 {
@@ -40,6 +40,6 @@ class Deprecated
      * @param thread The thread to stop.
      */
     static void invokeThreadStop(Thread thread) {
-	thread.stop();
+        thread.stop();
     }
 }

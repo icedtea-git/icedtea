@@ -35,43 +35,43 @@ import com.sun.javatest.util.I18NResourceBundle;
  * An interface for a handler, provided by a tool manager,
  * that can open files of a particular type.
  */
-public interface FileOpener 
+public interface FileOpener
 {
     /**
      * This exception is to report problems that occur while opening a file.
      */
     public static class Fault extends Exception
     {
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 */
-	public Fault(I18NResourceBundle i18n, String s) {
-	    super(i18n.getString(s));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         */
+        public Fault(I18NResourceBundle i18n, String s) {
+            super(i18n.getString(s));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An argument to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	public Fault(I18NResourceBundle i18n, String s, Object o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An argument to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        public Fault(I18NResourceBundle i18n, String s, Object o) {
+            super(i18n.getString(s, o));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An array of arguments to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	public Fault(I18NResourceBundle i18n, String s, Object[] o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An array of arguments to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        public Fault(I18NResourceBundle i18n, String s, Object[] o) {
+            super(i18n.getString(s, o));
+        }
     }
 
     /**

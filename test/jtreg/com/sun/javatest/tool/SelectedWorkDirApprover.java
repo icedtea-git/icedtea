@@ -37,7 +37,7 @@ import com.sun.javatest.util.FileInfoCache;
 import com.sun.javatest.util.I18NResourceBundle;
 
 /**
- * 
+ *
  */
 public class SelectedWorkDirApprover {
     /**
@@ -53,20 +53,20 @@ public class SelectedWorkDirApprover {
         this.mode = mode;
     }
 
-    //-------------------------------------------------------------------------    
+    //-------------------------------------------------------------------------
     public boolean approveNewSelection(File dir, TestSuite testSuite) {
         if (testSuite == null)
             throw new IllegalStateException();
-        
+
         if (dir.exists()) {
-            if (isWorkDirectory(dir)) 
+            if (isWorkDirectory(dir))
                 return approveNewSelection_workDirExists(dir, testSuite);
-            else if (dir.isDirectory()) 
+            else if (dir.isDirectory())
                 return approveNewSelection_dirExists(dir, testSuite);
             else
                 uif.showLiteralError(null, i18n.getString("wdc.notADir.err", dir));
         }
-        else 
+        else
             return approveNewSelection_dirNotFound(dir, testSuite);
         return false;
     }
@@ -77,7 +77,7 @@ public class SelectedWorkDirApprover {
 
         if (option != JOptionPane.YES_OPTION)
             return false;
-        
+
         try {
             workDir = WorkDirectory.open(dir, testSuite);
 
@@ -87,7 +87,7 @@ public class SelectedWorkDirApprover {
                 uif.showLiteralError(null, i18n.getString("wdc.wrongTS.err"));
                 return false;
             }
-            
+
             return true;
         }
         catch (FileNotFoundException e) {
@@ -112,7 +112,7 @@ public class SelectedWorkDirApprover {
         int option = uif.showYesNoDialog("wdc.existsNotWorkDir_convert");
         if (option != JOptionPane.YES_OPTION)
             return false;
-        
+
         try {
             workDir = WorkDirectory.convert(dir, testSuite);
             return true;
@@ -139,7 +139,7 @@ public class SelectedWorkDirApprover {
     }
 
     //-------------------------------------------------------------------------
-    
+
     public boolean approveOpenSelection(File dir, TestSuite testSuite) {
         if (dir.exists()) {
             if (isWorkDirectory(dir))
@@ -151,7 +151,7 @@ public class SelectedWorkDirApprover {
                 uif.showLiteralError(null, i18n.getString("wdc.notADir.err", dir));
             }   // inner if
         }
-        else 
+        else
             return approveOpenSelection_dirNotFound(dir, testSuite);
         return false;
     }
@@ -196,7 +196,7 @@ public class SelectedWorkDirApprover {
 
                     // get the alternate test suite
                     TestSuite newTestSuite = testSuiteChooser.getSelectedTestSuite();
-                    
+
                     // user cancelled dialog, so exit out of approve*
                     if (newTestSuite == null)
                         return false;
@@ -233,7 +233,7 @@ public class SelectedWorkDirApprover {
             if (option != JOptionPane.YES_OPTION)
                 return false;
         }
-        
+
         try {
             workDir = WorkDirectory.create(dir, testSuite);
         }
@@ -249,7 +249,7 @@ public class SelectedWorkDirApprover {
     public boolean isWorkDirectory(File f) {
         if (isIgnoreable(f))
             return false;
-        
+
         Boolean b = (Boolean) (cache.get(f));
         if (b == null) {
             boolean v = WorkDirectory.isWorkDirectory(f);
@@ -263,17 +263,17 @@ public class SelectedWorkDirApprover {
     public static boolean isIgnoreable(File f) {
         // Take care not touch the floppy disk drive on Windows
         // because if there is no disk in it, the user will get a dialog.
-        // Root directories (such as A:) have an empty name, 
+        // Root directories (such as A:) have an empty name,
         // so use that to avoid touching the file itself.
         // This means we can't put a work directory in the root of
         // the file system, but that is a lesser inconvenience
         // than those floppy dialogs!
         return (f.getName().equals(""));
     }
-    
+
     public boolean isApprovedOpenSelection_dirExists() {
         return approveOpenSelection_dirExists;
-    }   
+    }
 
     public WorkDirectory getWorkDirectory() {
         return workDir;
@@ -282,7 +282,7 @@ public class SelectedWorkDirApprover {
     void setAllowNoTemplate(boolean allowNoTemplate) {
         this.allowNoTemplate = allowNoTemplate;
     }
-    
+
     private FileInfoCache cache = new FileInfoCache(60*1000);
 
     private int mode;
@@ -290,7 +290,7 @@ public class SelectedWorkDirApprover {
     private WorkDirectory workDir;
     private Component parent;
     private boolean approveOpenSelection_dirExists = false;
-    
+
     private UIFactory uif;
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(SelectedWorkDirApprover.class);
 

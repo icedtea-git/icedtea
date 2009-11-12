@@ -46,7 +46,7 @@ import com.sun.javatest.util.StringArray;
 
 class ParameterFilter extends ObservableTestFilter {
     ParameterFilter() {
-	super();
+        super();
     }
 
     // ------- this class' methods -------
@@ -59,7 +59,7 @@ class ParameterFilter extends ObservableTestFilter {
      * @see #isTestsFiltered()
      */
     public void setFilterTests(boolean state) {
-	rmInitFiles = state;
+        rmInitFiles = state;
     }
 
     /**
@@ -68,57 +68,57 @@ class ParameterFilter extends ObservableTestFilter {
      * @see #setFilterTests(boolean)
      */
     public boolean isTestsFiltered() {
-	return rmInitFiles;
+        return rmInitFiles;
     }
 
     // ------- TestFilter ---------
     public String getName() {
-	return i18n.getString("pFilter.name");
+        return i18n.getString("pFilter.name");
     }
 
     public String getDescription() {
-	return i18n.getString("pFilter.desc");
+        return i18n.getString("pFilter.desc");
     }
 
     public String getReason() {
-	return i18n.getString("pFilter.reason");
+        return i18n.getString("pFilter.reason");
     }
 
     public boolean accepts(TestDescription td) throws Fault {
-	return accepts(td, null);
+        return accepts(td, null);
     }
 
     public boolean accepts(TestDescription td, TestFilter.Observer o) throws Fault {
-	// need to handle the initial url filter as a special case
-	if (filters == null || filters.length == 0)
-	    if (iurlFilter == null)
-		return true;
-	    else {
-		boolean result = iurlFilter.accepts(td);
-		if (!result && o != null)
-		    o.rejected(td, iurlFilter);
-	    }
+        // need to handle the initial url filter as a special case
+        if (filters == null || filters.length == 0)
+            if (iurlFilter == null)
+                return true;
+            else {
+                boolean result = iurlFilter.accepts(td);
+                if (!result && o != null)
+                    o.rejected(td, iurlFilter);
+            }
 
-	for (int i = 0; i < filters.length; i++) {
-	    boolean result = filters[i].accepts(td);
-	    if (!result) {
-		if (o != null)
-		    o.rejected(td, filters[i]);
+        for (int i = 0; i < filters.length; i++) {
+            boolean result = filters[i].accepts(td);
+            if (!result) {
+                if (o != null)
+                    o.rejected(td, filters[i]);
 
-		return false;
-	    }
-	}   // for
+                return false;
+            }
+        }   // for
 
-	// check initial URL filter
-	if (rmInitFiles && iurlFilter != null && !iurlFilter.accepts(td)) {
-	    if (o != null)
-		o.rejected(td, iurlFilter);
+        // check initial URL filter
+        if (rmInitFiles && iurlFilter != null && !iurlFilter.accepts(td)) {
+            if (o != null)
+                o.rejected(td, iurlFilter);
 
-	    return false;
-	}
+            return false;
+        }
 
-	// test accepted
-	return true;
+        // test accepted
+        return true;
     }
 
     // ------- Composite overrides ---------
@@ -132,24 +132,24 @@ class ParameterFilter extends ObservableTestFilter {
      * @see com.sun.javatest.InitialUrlFilter
      */
     public TestFilter[] getTestFilters() {
-	TestFilter[] copy = null;
-	
-	// allocate shallow copy array
-	// change size depending on whether url filter is to be included
-	if (rmInitFiles && iurlFilter != null)
-	    copy = new TestFilter[filters.length + 1];
-	else
-	    copy = new TestFilter[filters.length];
+        TestFilter[] copy = null;
 
-	System.arraycopy(filters, 0, copy, 0, filters.length);
+        // allocate shallow copy array
+        // change size depending on whether url filter is to be included
+        if (rmInitFiles && iurlFilter != null)
+            copy = new TestFilter[filters.length + 1];
+        else
+            copy = new TestFilter[filters.length];
 
-	// add the final filter
-	if (rmInitFiles) {
-	    // init. file filter being used, append it
-	    copy[copy.length-1] = iurlFilter;
-	}
+        System.arraycopy(filters, 0, copy, 0, filters.length);
 
-	return copy;
+        // add the final filter
+        if (rmInitFiles) {
+            // init. file filter being used, append it
+            copy[copy.length-1] = iurlFilter;
+        }
+
+        return copy;
     }
 
     // ---------- methods for this class -----------
@@ -159,72 +159,72 @@ class ParameterFilter extends ObservableTestFilter {
      * may have changed.
      */
     void update(Parameters p) {
-	if (p == null)
-	    return;
+        if (p == null)
+            return;
 
-	boolean wasUpdated = false;
+        boolean wasUpdated = false;
 
-	if (params == null) {	    // first time
-	    // record and send observer msg
-	    params = p;
-	    filters = p.getFilters();
-	    wasUpdated = true;
-	}
-	else if (p != params) {	    // ref. change
-	    // record and send observer msg
-	    params = p;
-	    filters = p.getFilters();
-	    wasUpdated = true;
-	}
-	else {			    // internal update only
-	    // if same as present, compare filters
-	    TestFilter[] newFilters = p.getFilters();
+        if (params == null) {       // first time
+            // record and send observer msg
+            params = p;
+            filters = p.getFilters();
+            wasUpdated = true;
+        }
+        else if (p != params) {     // ref. change
+            // record and send observer msg
+            params = p;
+            filters = p.getFilters();
+            wasUpdated = true;
+        }
+        else {                      // internal update only
+            // if same as present, compare filters
+            TestFilter[] newFilters = p.getFilters();
 
-	    if (newFilters == null && filters == null) {
-		// do nothing, no change
-	    }
-	    else if ((newFilters == null && filters != null) ||
-		     (filters == null && newFilters != null)) {
-		filters = newFilters;
-		wasUpdated = true;
-	    }
-	    else if (newFilters.length == filters.length) {
-		// do set comparison on the old and new filters
-		if (!CompositeFilter.equals(newFilters, filters)) {
-		    filters = newFilters;
-		    wasUpdated = true;
-		}
-	    }
-	    else {   // there are more or fewer filters than before
-		filters = newFilters;
-		wasUpdated = true;
-	    }
-	}
+            if (newFilters == null && filters == null) {
+                // do nothing, no change
+            }
+            else if ((newFilters == null && filters != null) ||
+                     (filters == null && newFilters != null)) {
+                filters = newFilters;
+                wasUpdated = true;
+            }
+            else if (newFilters.length == filters.length) {
+                // do set comparison on the old and new filters
+                if (!CompositeFilter.equals(newFilters, filters)) {
+                    filters = newFilters;
+                    wasUpdated = true;
+                }
+            }
+            else {   // there are more or fewer filters than before
+                filters = newFilters;
+                wasUpdated = true;
+            }
+        }
 
-	// null or empty check is done by the filter class
-	// should be smart about setting wasUpdated flag
-        
+        // null or empty check is done by the filter class
+        // should be smart about setting wasUpdated flag
+
         String[] initStrings = p.getTests();
-	File[] initFiles = stringsToFiles(initStrings);
+        File[] initFiles = stringsToFiles(initStrings);
 
         // could optimize out this code if rmInitFiles is false
-	iurlFilter = new InitialUrlFilter(initFiles);
+        iurlFilter = new InitialUrlFilter(initFiles);
         wasUpdated = (wasUpdated || !StringArray.join(initStrings).equals(lastInitStrings));
         lastInitStrings = StringArray.join(initStrings);
 
-	if (wasUpdated)
-	    notifyUpdated(this);
+        if (wasUpdated)
+            notifyUpdated(this);
     }
 
     private static File[] stringsToFiles(String[] tests) {
-	if (tests == null)
-	    return null;
+        if (tests == null)
+            return null;
 
-	File[] files = new File[tests.length];
-	for (int i = 0; i < tests.length; i++)
-	    files[i] = new File(tests[i]);
+        File[] files = new File[tests.length];
+        for (int i = 0; i < tests.length; i++)
+            files[i] = new File(tests[i]);
 
-	return files;
+        return files;
     }
 
     private InitialUrlFilter iurlFilter;    // not appended into filters
@@ -235,4 +235,3 @@ class ParameterFilter extends ObservableTestFilter {
     private Parameters params;
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(ParameterFilter.class);
 }
-

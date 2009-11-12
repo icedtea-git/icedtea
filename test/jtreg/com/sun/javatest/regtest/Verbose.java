@@ -34,7 +34,7 @@ import java.util.Set;
  */
 public class Verbose {
     public static enum Mode { NONE, DEFAULT, SUMMARY, BRIEF, FULL };
-    
+
     public static final Verbose DEFAULT  = new Verbose(Mode.DEFAULT);
     public static final Verbose SUMMARY  = new Verbose(Mode.SUMMARY);
     public static final Verbose ALL      = new Verbose(Mode.FULL);
@@ -42,7 +42,7 @@ public class Verbose {
     public static final Verbose FAIL     = new Verbose(Mode.BRIEF, Mode.FULL, Mode.BRIEF);
     public static final Verbose ERROR    = new Verbose(Mode.BRIEF, Mode.BRIEF, Mode.FULL);
     public static final Verbose TIME     = new Verbose(Mode.SUMMARY, true);
-    
+
     static String[] values() {
         return new String[] {
             "default",
@@ -55,7 +55,7 @@ public class Verbose {
             "time"
         };
     }
-    
+
     static Verbose decode(String s) {
         // FIXME, use regexp to splt the string?
         // FIXME, check all words are valid?
@@ -68,7 +68,7 @@ public class Verbose {
         boolean errorOpt = opts.contains("error");
         boolean nopassOpt = opts.contains("nopass");
         boolean timeOpt = opts.contains("time");
-        
+
         if (defaultOpt) {
             if (summaryOpt || allOpt
                     || passOpt || failOpt || errorOpt
@@ -76,7 +76,7 @@ public class Verbose {
                 throw new IllegalArgumentException(s);
             return new Verbose(Mode.DEFAULT, timeOpt);
         }
-        
+
         if (summaryOpt || allOpt || passOpt || failOpt || errorOpt || nopassOpt) {
             if (passOpt && nopassOpt)
                 throw new IllegalArgumentException(s);
@@ -87,42 +87,42 @@ public class Verbose {
                     (allOpt || errorOpt) ? Mode.FULL : shortMode,
                     timeOpt);
         }
-        
+
         return timeOpt ? Verbose.TIME : Verbose.DEFAULT;
     }
-    
+
     private static Mode check(Mode currentMode, Mode newMode) {
         if (newMode == null)
             throw new NullPointerException();
         if (currentMode == null || currentMode == newMode)
             return newMode;
-        
+
         return newMode;
     }
-    
+
     Verbose(Mode m) {
         this(m, false);
     }
-    
+
     Verbose(Mode m, boolean time) {
         this(m, m, m, time);
     }
-    
+
     Verbose(Mode p, Mode f, Mode e) {
         this(p, f, e, false);
     }
-    
+
     Verbose(Mode p, Mode f, Mode e, boolean t) {
         passMode = p;
         failMode = f;
         errorMode = e;
         time = t;
     }
-    
+
     public String toString() {
         return "Verbose[p=" + passMode + ",f=" + failMode + ",e=" + errorMode + ",t=" + time + "]";
     }
-    
+
     final Mode passMode;
     final Mode failMode;
     final Mode errorMode;

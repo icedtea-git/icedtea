@@ -41,103 +41,103 @@ import com.sun.javatest.util.XMLWriter;
 
 class COFTestSuite extends COFItem {
 
-	private static final String[] cofStatus = new String[Status.NUM_STATES];
+        private static final String[] cofStatus = new String[Status.NUM_STATES];
 
-	private static I18NResourceBundle i18n = I18NResourceBundle
-			.getBundleForClass(COFTestSuite.class);
+        private static I18NResourceBundle i18n = I18NResourceBundle
+                        .getBundleForClass(COFTestSuite.class);
 
-	static {
-		cofStatus[Status.PASSED] = "pass";
-		cofStatus[Status.FAILED] = "fail";
-		cofStatus[Status.ERROR] = "error";
-		cofStatus[Status.NOT_RUN] = "did_not_run";
-	}
+        static {
+                cofStatus[Status.PASSED] = "pass";
+                cofStatus[Status.FAILED] = "fail";
+                cofStatus[Status.ERROR] = "error";
+                cofStatus[Status.NOT_RUN] = "did_not_run";
+        }
 
-	private COFData cofData;
+        private COFData cofData;
 
-	private boolean legacyMode = false; // modern workdir or not
+        private boolean legacyMode = false; // modern workdir or not
 
-	private String name;
+        private String name;
 
-	protected Pattern testCasePattern = Pattern
-			.compile("^(\\S+): (Passed\\.|Failed\\.|Error\\.|Not\\ run\\.)(.*)");
+        protected Pattern testCasePattern = Pattern
+                        .compile("^(\\S+): (Passed\\.|Failed\\.|Error\\.|Not\\ run\\.)(.*)");
 
 
-	private TestResultTable trt;
+        private TestResultTable trt;
 
-	COFTestSuite(File dir) {
-		trt = new TestResultTable();
-		scan(dir);
-		legacyMode = true;
-	}
+        COFTestSuite(File dir) {
+                trt = new TestResultTable();
+                scan(dir);
+                legacyMode = true;
+        }
 
-	COFTestSuite(File dir, COFData cd) {
-		cofData = cd;
-		trt = new TestResultTable();
-		name = cofData.get("testsuites.testsuite.name");
-		scan(dir);
-		legacyMode = true;
-	}
+        COFTestSuite(File dir, COFData cd) {
+                cofData = cd;
+                trt = new TestResultTable();
+                name = cofData.get("testsuites.testsuite.name");
+                scan(dir);
+                legacyMode = true;
+        }
 
-	COFTestSuite(TestResultTable trt) {
-		this.trt = trt;
-	}
+        COFTestSuite(TestResultTable trt) {
+                this.trt = trt;
+        }
 
-	COFTestSuite(WorkDirectory wd) {
-		this(wd, null);
-	}
+        COFTestSuite(WorkDirectory wd) {
+                this(wd, null);
+        }
 
-	COFTestSuite(WorkDirectory wd, COFData cd) {
-		cofData = cd;
-		TestSuite ts = wd.getTestSuite();
-		name = ts.getID();
-		trt = wd.getTestResultTable();
-	}
+        COFTestSuite(WorkDirectory wd, COFData cd) {
+                cofData = cd;
+                TestSuite ts = wd.getTestSuite();
+                name = ts.getID();
+                trt = wd.getTestResultTable();
+        }
 
-	void scan(File dir) {
-		String[] entries = dir.list();
-		if (entries != null) {
-			for (int i = 0; i < entries.length; i++) {
-				File f = new File(dir, entries[i]);
-				if (f.isDirectory())
-					scan(f);
-				else if (TestResult.isResultFile(f)) {
-					try {
-						TestResult tr = new TestResult(f);
-						trt.update(tr);
-					} catch (TestResult.Fault e) {
-						// ignore errors for now
-						// an error handler might report errors to stderr
-						System.err.println(i18n.getString("ts.badTest",
-								new Object[] { f, e.getMessage() }));
-					}
-				}
-			}
-		}
-	}
+        void scan(File dir) {
+                String[] entries = dir.list();
+                if (entries != null) {
+                        for (int i = 0; i < entries.length; i++) {
+                                File f = new File(dir, entries[i]);
+                                if (f.isDirectory())
+                                        scan(f);
+                                else if (TestResult.isResultFile(f)) {
+                                        try {
+                                                TestResult tr = new TestResult(f);
+                                                trt.update(tr);
+                                        } catch (TestResult.Fault e) {
+                                                // ignore errors for now
+                                                // an error handler might report errors to stderr
+                                                System.err.println(i18n.getString("ts.badTest",
+                                                                new Object[] { f, e.getMessage() }));
+                                        }
+                                }
+                        }
+                }
+        }
 
-	void write(XMLWriter out) throws IOException {
+        void write(XMLWriter out) throws IOException {
 
-		out.startTag("testsuite");
-		out.writeAttr("id", "unknownTestSuite:0");
+                out.startTag("testsuite");
+                out.writeAttr("id", "unknownTestSuite:0");
 
-		// name
-		out.startTag("name");
-		out.write(name == null ? "unknown" : name);
-		out.endTag("name");
-		// version (optional)
-		// tests
-		out.startTag("tests");
+                // name
+                out.startTag("name");
+                out.write(name == null ? "unknown" : name);
+                out.endTag("name");
+                // version (optional)
+                // tests
+                out.startTag("tests");
 
-		// might need to wait for workdir to fully load
-		if (!legacyMode)
-			trt.waitUntilReady();
-		for (Iterator iter = trt.getIterator(); iter.hasNext();) {
-			TestResult tr = (TestResult) (iter.next());
-			out.newLine();
-			new COFTest(tr, cofData).write(out);
-		}
-		out.endTag("tests");
-		out.endTag("testsuite");
-	}
+                // might need to wait for workdir to fully load
+                if (!legacyMode)
+                        trt.waitUntilReady();
+                for (Iterator iter = trt.getIterator(); iter.hasNext();) {
+                        TestResult tr = (TestResult) (iter.next());
+                        out.newLine();
+                        new COFTest(tr, cofData).write(out);
+                }
+                out.endTag("tests");
+                out.endTag("testsuite");
+        }
 }

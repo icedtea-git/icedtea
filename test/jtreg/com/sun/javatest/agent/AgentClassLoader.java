@@ -31,58 +31,58 @@ import java.io.InputStream;
 
 class AgentClassLoader extends ClassLoader {
     AgentClassLoader(Agent.Task parent) {
-	this.parent = parent;
+        this.parent = parent;
     }
 
     public synchronized Class loadClass(String className, boolean resolve) throws ClassNotFoundException {
-	
-	// check the cache first
-	Class c = findLoadedClass(className); 
-	
-	// not found in the cache? 
-	if (c == null) {
-	    try {
-		ClassLoader cl = getClass().getClassLoader();
-		if (cl != null) {
-		    // if this class has a class loader, defer to that,
-		    // (and assume it will call findSystemClass if necessary)
-		    c = cl.loadClass(className);
-		}
-		else {
-		    // this class must be loaded via system class loader,
-		    // so go use that one
-		    c = findSystemClass(className);
-		}
-	    } 
-	    catch (ClassNotFoundException e) {
-		byte[] data = parent.getClassData(className);
-		c = defineClass(className, data, 0, data.length);
-	    }
-	}
-	
-	if (resolve)
-	    resolveClass(c);
-	
-	return c;
+
+        // check the cache first
+        Class c = findLoadedClass(className);
+
+        // not found in the cache?
+        if (c == null) {
+            try {
+                ClassLoader cl = getClass().getClassLoader();
+                if (cl != null) {
+                    // if this class has a class loader, defer to that,
+                    // (and assume it will call findSystemClass if necessary)
+                    c = cl.loadClass(className);
+                }
+                else {
+                    // this class must be loaded via system class loader,
+                    // so go use that one
+                    c = findSystemClass(className);
+                }
+            }
+            catch (ClassNotFoundException e) {
+                byte[] data = parent.getClassData(className);
+                c = defineClass(className, data, 0, data.length);
+            }
+        }
+
+        if (resolve)
+            resolveClass(c);
+
+        return c;
     }
 
     public synchronized InputStream getResourceAsStream(String resourceName) {
-	// check local classpath first
-	// the resource should already be absolute, if we've got here
-	// through getClass().getResourceAsStream()
-	InputStream in = getClass().getResourceAsStream(resourceName);
-	if (in == null) {
-	    try {
-		// if not found here, try remote load from Agent Manager 
-		byte[] data = parent.getResourceData(resourceName);
-		in = new ByteArrayInputStream(data);
-	    }
-	    catch (Exception e) {
-		// ignore
-	    }
-	}
-	return in;
+        // check local classpath first
+        // the resource should already be absolute, if we've got here
+        // through getClass().getResourceAsStream()
+        InputStream in = getClass().getResourceAsStream(resourceName);
+        if (in == null) {
+            try {
+                // if not found here, try remote load from Agent Manager
+                byte[] data = parent.getResourceData(resourceName);
+                in = new ByteArrayInputStream(data);
+            }
+            catch (Exception e) {
+                // ignore
+            }
+        }
+        return in;
     }
-    
+
     private Agent.Task parent;
 }

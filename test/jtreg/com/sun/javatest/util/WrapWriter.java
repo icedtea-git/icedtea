@@ -42,7 +42,7 @@ public class WrapWriter extends Writer
      * @param out the stream to which the WrapWriter will write
      */
     public WrapWriter(OutputStream out) {
-	this.out = new OutputStreamWriter(out);
+        this.out = new OutputStreamWriter(out);
     }
 
     /**
@@ -50,51 +50,51 @@ public class WrapWriter extends Writer
      * @param out the stream to which the WrapWriter will write
      */
     public WrapWriter(Writer out) {
-	this.out = out;
+        this.out = out;
     }
 
     /**
-     * Set the position for the left margin for the text stream. 
+     * Set the position for the left margin for the text stream.
      * @param m the position for the left margin
      * @throws IllegalArgumentException if the value is negative or
      * greater than the current value of the right margin
      * @see #getLeftMargin
      */
     public void setLeftMargin(int m) {
-	if (m < 0 || m >= rightMargin)
-	    throw new IllegalArgumentException();
-	leftMargin = m;
+        if (m < 0 || m >= rightMargin)
+            throw new IllegalArgumentException();
+        leftMargin = m;
     }
 
     /**
-     * Get the position for the left margin for the text stream. 
+     * Get the position for the left margin for the text stream.
      * @return the position for the left margin
      * @see #setLeftMargin
      */
     public int getLeftMargin() {
-	return leftMargin;
+        return leftMargin;
     }
 
     /**
-     * Set the position for the right margin for the text stream. 
+     * Set the position for the right margin for the text stream.
      * @param m the position for the right margin
-     * @throws IllegalArgumentException if the value is 
+     * @throws IllegalArgumentException if the value is
      * less than the current value of the left margin
      * @see #getRightMargin
      */
     public void setRightMargin(int m) {
-	if (m <= leftMargin)
-	    throw new IllegalArgumentException();
-	rightMargin = m;
+        if (m <= leftMargin)
+            throw new IllegalArgumentException();
+        rightMargin = m;
     }
 
     /**
-     * Get the position for the right margin for the text stream. 
+     * Get the position for the right margin for the text stream.
      * @return the position for the right margin
      * @see #setRightMargin
      */
     public int getRightMargin() {
-	return rightMargin;
+        return rightMargin;
     }
 
     /**
@@ -107,79 +107,79 @@ public class WrapWriter extends Writer
      * so far on the line
      */
     public int getCharsOnLineSoFar() {
-	return charsOnLineSoFar;
+        return charsOnLineSoFar;
     }
 
     public void close() throws IOException {
-	flush();
-	out.close();
+        flush();
+        out.close();
     }
 
     public void flush() throws IOException {
-	write(' ');
-	out.flush();
+        write(' ');
+        out.flush();
     }
 
     public void write(char cbuf[], int off, int len) throws IOException {
-	for (int i = off; i < off + len; i++)
-	    write(cbuf[i]);
+        for (int i = off; i < off + len; i++)
+            write(cbuf[i]);
     }
 
     /**
      * Write a character to the stream. Non-white-space characters will be buffered
      * until a white space character is written. When a white space character is
      * written, the buffered characters will be written on the current line, if
-     * they will fit before the right margin, otherwise a newline and spaces will be 
+     * they will fit before the right margin, otherwise a newline and spaces will be
      * inserted so that the buffered characters appear on the next line starting at
      * the left margin.
      * @param c the character to be written
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public void write(char c) throws IOException {
-	if (Character.isWhitespace(c)) {
-	    if (pending.length() > 0) {
-		// if writing the pending text would overrun the margin,
-		// wrap to a new line
-		if (Math.max(leftMargin, charsOnLineSoFar + 1) + pending.length() > rightMargin) 
-		    newLine();
+        if (Character.isWhitespace(c)) {
+            if (pending.length() > 0) {
+                // if writing the pending text would overrun the margin,
+                // wrap to a new line
+                if (Math.max(leftMargin, charsOnLineSoFar + 1) + pending.length() > rightMargin)
+                    newLine();
 
-		// if the pending text is the first on the line, space to
-		// the left margin, otherwise just write a space to separate
-		// from the new text from previously written text
-		if (charsOnLineSoFar < leftMargin) {
-		    for (int i = charsOnLineSoFar; i < leftMargin; i++) 
-			out.write(' ');
-		    charsOnLineSoFar = leftMargin;
-		}
-		else if (charsOnLineSoFar > leftMargin) {
-		    out.write(' ');
-		    charsOnLineSoFar++;
-		}
-		
-		out.write(pending.toString());
-		charsOnLineSoFar += pending.length();
-		pending.setLength(0);
-	    }
+                // if the pending text is the first on the line, space to
+                // the left margin, otherwise just write a space to separate
+                // from the new text from previously written text
+                if (charsOnLineSoFar < leftMargin) {
+                    for (int i = charsOnLineSoFar; i < leftMargin; i++)
+                        out.write(' ');
+                    charsOnLineSoFar = leftMargin;
+                }
+                else if (charsOnLineSoFar > leftMargin) {
+                    out.write(' ');
+                    charsOnLineSoFar++;
+                }
 
-	    if (c == '\n') {
-		newLine();
-	    }
-	    else if (c == '\t') {
-		out.write(' ');
-		charsOnLineSoFar++;
-		while (charsOnLineSoFar % 8 != 0) {
-		    out.write(' ');
-		    charsOnLineSoFar++;
-		}		
-	    }
-	}
-	else
-	    pending.append(c);
+                out.write(pending.toString());
+                charsOnLineSoFar += pending.length();
+                pending.setLength(0);
+            }
+
+            if (c == '\n') {
+                newLine();
+            }
+            else if (c == '\t') {
+                out.write(' ');
+                charsOnLineSoFar++;
+                while (charsOnLineSoFar % 8 != 0) {
+                    out.write(' ');
+                    charsOnLineSoFar++;
+                }
+            }
+        }
+        else
+            pending.append(c);
     }
 
     private void newLine() throws IOException {
-	out.write(lineSeparator);
-	charsOnLineSoFar = 0;
+        out.write(lineSeparator);
+        charsOnLineSoFar = 0;
     }
 
     private Writer out;

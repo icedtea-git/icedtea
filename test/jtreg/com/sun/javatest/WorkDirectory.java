@@ -99,7 +99,7 @@ public class WorkDirectory
 
     /**
      * Signals that a work directory already exists when an attempt is made
-     * to create one. 
+     * to create one.
      */
     public static class WorkDirectoryExistsFault extends Fault
     {
@@ -119,7 +119,7 @@ public class WorkDirectory
     }
 
     /**
-     * Signals that there is a problem trying to determine the test suite 
+     * Signals that there is a problem trying to determine the test suite
      * appropriate for the work directory.
      */
     public static class TestSuiteFault extends Fault
@@ -160,7 +160,7 @@ public class WorkDirectory
      */
     public static boolean isWorkDirectory(File dir) {
         //System.err.println("WorkDirectory.isWorkDirectory: " + dir);
-        File jtData = new File(dir, JTDATA);  
+        File jtData = new File(dir, JTDATA);
 
         if (jtData.exists() && jtData.isDirectory())
             // should consider checking for existence of test suite data
@@ -193,7 +193,7 @@ public class WorkDirectory
 
         try {
             File canonDir = canonicalize(dir);
-            File jtData = new File(canonDir, JTDATA);  
+            File jtData = new File(canonDir, JTDATA);
 
             // could call isWorkDirectory(File)
             if (!isUsable(jtData))
@@ -230,22 +230,22 @@ public class WorkDirectory
 
     /**
      * Create a new work directory with a given name, and for a given test suite.
-     * @param dir the directory to be created as a work directory.  
+     * @param dir the directory to be created as a work directory.
      * This directory may (but need not) exist; if it does exist, it must be empty.
      * @param ts the test suite for which this will be a work directory
      * @return the WorkDirectory that was created
-     * @throws WorkDirectory.WorkDirectoryExistsFault if the work directory 
-     *          could not be created because it already exists.   
-     *          If this exception is thrown, you may want to call {@link #open} 
-     *          instead.                
-     * @throws WorkDirectory.BadDirectoryFault is there was a problem creating 
+     * @throws WorkDirectory.WorkDirectoryExistsFault if the work directory
+     *          could not be created because it already exists.
+     *          If this exception is thrown, you may want to call {@link #open}
+     *          instead.
+     * @throws WorkDirectory.BadDirectoryFault is there was a problem creating
      *          the work directory.
      * @throws WorkDirectory.InitializationFault if there are unrecoverable problems encountered
      *         while reading the data present in the work directory
      * @see #convert
      * @see #open
      */
-    public static WorkDirectory create(File dir, TestSuite ts)  
+    public static WorkDirectory create(File dir, TestSuite ts)
         throws BadDirectoryFault, WorkDirectoryExistsFault, InitializationFault
     {
         //System.err.println("WD.create: " + dir);
@@ -257,21 +257,21 @@ public class WorkDirectory
      * @param dir the directory to be converted to a work directory
      * @param ts  the test suite for which this will be a work directory
      * @return the WorkDirectory that was created
-     * @throws FileNotFoundException if the directory to be converted does 
+     * @throws FileNotFoundException if the directory to be converted does
      *          not exist
-     * @throws WorkDirectory.WorkDirectoryExistsFault if the work directory 
-     *          could not be created because it already exists.   
-     *          If this exception is thrown, you may want to call {@link #open} 
-     *          instead.                
-     * @throws WorkDirectory.BadDirectoryFault is there was a problem creating 
+     * @throws WorkDirectory.WorkDirectoryExistsFault if the work directory
+     *          could not be created because it already exists.
+     *          If this exception is thrown, you may want to call {@link #open}
+     *          instead.
+     * @throws WorkDirectory.BadDirectoryFault is there was a problem creating
      *          the work directory.
      * @throws WorkDirectory.InitializationFault if there are unrecoverable problems encountered
      *         while reading the data present in the work directory
      * @see #create
      * @see #open
      */
-    public static WorkDirectory convert(File dir, TestSuite ts)  
-        throws BadDirectoryFault, WorkDirectoryExistsFault, 
+    public static WorkDirectory convert(File dir, TestSuite ts)
+        throws BadDirectoryFault, WorkDirectoryExistsFault,
                FileNotFoundException, InitializationFault
     {
         if (!dir.exists())
@@ -279,8 +279,8 @@ public class WorkDirectory
         return createOrConvert(dir, ts, false);
     }
 
-    private static WorkDirectory createOrConvert(File dir, TestSuite ts, boolean checkEmpty)  
-        throws BadDirectoryFault, WorkDirectoryExistsFault, InitializationFault 
+    private static WorkDirectory createOrConvert(File dir, TestSuite ts, boolean checkEmpty)
+        throws BadDirectoryFault, WorkDirectoryExistsFault, InitializationFault
     {
         File canonDir;
         File jtData;
@@ -289,7 +289,7 @@ public class WorkDirectory
         try {
             if (dir.exists()) {
                 canonDir = canonicalize(dir);
-                jtData = new File(canonDir, JTDATA);  
+                jtData = new File(canonDir, JTDATA);
 
 
                 if (!canonDir.isDirectory())
@@ -313,10 +313,10 @@ public class WorkDirectory
                 if (!mkdirs(dir, undoList))
                     throw new BadDirectoryFault(i18n, "wd.cantCreate", dir);
                 canonDir = canonicalize(dir);
-                jtData = new File(canonDir, JTDATA);  
+                jtData = new File(canonDir, JTDATA);
             }
 
-            if (!mkdirs(jtData, undoList)) 
+            if (!mkdirs(jtData, undoList))
                 throw new BadDirectoryFault(i18n, "wd.cantCreate", canonDir);
 
             try {
@@ -388,35 +388,35 @@ public class WorkDirectory
      * @param dir the directory to be opened as a WorkDirectory
      * @return the WorkDirectory that is opened
      * @throws FileNotFoundException if the directory identified by <code>dir</code> does
-     *          not exist. If this exception is thrown, you may want to call {@link #create} 
+     *          not exist. If this exception is thrown, you may want to call {@link #create}
      *          instead.
-     * @throws WorkDirectory.BadDirectoryFault if there was a problem opening the 
+     * @throws WorkDirectory.BadDirectoryFault if there was a problem opening the
      *          work directory.
-     * @throws WorkDirectory.NotWorkDirectoryFault if the directory identified 
-     *          by <code>dir</code> is a valid directory, but has not yet been 
-     *          initialized as a work directory. If this exception is thrown, 
+     * @throws WorkDirectory.NotWorkDirectoryFault if the directory identified
+     *          by <code>dir</code> is a valid directory, but has not yet been
+     *          initialized as a work directory. If this exception is thrown,
      *          you may want to call {@link #create} instead.
      * @throws WorkDirectory.MismatchFault if the test suite recorded in
      *          the work directory does not match the test suite's ID recorded
      *          in the work directory.
-     * @throws WorkDirectory.TestSuiteFault if there was a problem determining 
-     *          the test suite for which this is a work directory. 
-     *          If this exception is thrown, you can override the test suite 
+     * @throws WorkDirectory.TestSuiteFault if there was a problem determining
+     *          the test suite for which this is a work directory.
+     *          If this exception is thrown, you can override the test suite
      *          using the other version of {@link #open(File,TestSuite)}.
      * @throws WorkDirectory.InitializationFault if there are unrecoverable
      *         problems encountered while reading the data present in the
      *         work directory
      */
-    public static WorkDirectory open(File dir) 
-        throws FileNotFoundException, 
-               BadDirectoryFault, 
-               NotWorkDirectoryFault, 
-               MismatchFault, 
+    public static WorkDirectory open(File dir)
+        throws FileNotFoundException,
+               BadDirectoryFault,
+               NotWorkDirectoryFault,
+               MismatchFault,
                TestSuiteFault,
                InitializationFault
     {
         //System.err.println("WD.open: " + dir);
-        if (!dir.exists()) 
+        if (!dir.exists())
             throw new FileNotFoundException(dir.getPath());
 
         File canonDir = canonicalize(dir);
@@ -426,7 +426,7 @@ public class WorkDirectory
 
         if (!canonDir.canRead())
             throw new BadDirectoryFault(i18n, "wd.notReadable", canonDir);
-        
+
         File jtData = new File(canonDir, JTDATA);
         if (!jtData.exists())
             throw new NotWorkDirectoryFault(i18n, "wd.notWorkDir", canonDir);
@@ -454,13 +454,13 @@ public class WorkDirectory
                 if (!tsr.exists())
                     throw new TestSuiteFault(i18n, "wd.cantFindTestSuite", canonDir, tsr.getPath());
 
-                ts = TestSuite.open(tsr);                
+                ts = TestSuite.open(tsr);
 
                 String wdID = (tsInfo == null ? null : (String) (tsInfo.get(TESTSUITE_ID)));
                 String tsID = ts.getID();
                 if (!(wdID == null ? "" : wdID).equals(tsID == null ? "" : tsID))
                     throw new MismatchFault(i18n, "wd.mismatchID", canonDir);
-                
+
             }   // try
             catch (FileNotFoundException e) {
                 throw new BadDirectoryFault(i18n, "wd.noTestSuiteFile", canonDir);
@@ -471,8 +471,8 @@ public class WorkDirectory
             catch (TestSuite.Fault e) {
                 throw new TestSuiteFault(i18n, "wd.cantOpenTestSuite", canonDir, e.toString());
             }   // catch
-             
-            wd = new WorkDirectory(canonDir, ts, tsInfo); 
+
+            wd = new WorkDirectory(canonDir, ts, tsInfo);
 
             dirMap.put(canonDir, new WeakReference(wd));
         }   // sync block
@@ -485,18 +485,18 @@ public class WorkDirectory
      * about the test suite previously associated with this work directory is overwritten
      * and lost. Therefore this method should be used with care: normally, a work directory
      * should be opened with {@link #open(File)}.
-     * 
+     *
      * @param dir The directory to be opened as a WorkDirectory.
      * @param testSuite The test suite to be associated with this work directory.
      * @return The WorkDirectory that is opened.
      * @throws FileNotFoundException if the directory identified by <code>dir</code> does
-     *          not exist. If this exception is thrown, you may want to call {@link #create} 
+     *          not exist. If this exception is thrown, you may want to call {@link #create}
      *          instead.
-     * @throws WorkDirectory.BadDirectoryFault if there was a problem opening 
+     * @throws WorkDirectory.BadDirectoryFault if there was a problem opening
      *          the work directory.
-     * @throws WorkDirectory.NotWorkDirectoryFault if the directory identified by 
-     *          <code>dir</code> is a valid directory, but has not yet been 
-     *          initialized as a work directory. f this exception is thrown, 
+     * @throws WorkDirectory.NotWorkDirectoryFault if the directory identified by
+     *          <code>dir</code> is a valid directory, but has not yet been
+     *          initialized as a work directory. f this exception is thrown,
      *          you may want to call {@link #create} instead.
      * @throws WorkDirectory.MismatchFault if the specified test suite does not
      *          match the ID recorded in the work directory.
@@ -504,25 +504,25 @@ public class WorkDirectory
      *         problems encountered while reading the data present in the
      *         work directory
      */
-    public static WorkDirectory open(File dir, TestSuite testSuite) 
-        throws FileNotFoundException, 
-               BadDirectoryFault, 
+    public static WorkDirectory open(File dir, TestSuite testSuite)
+        throws FileNotFoundException,
+               BadDirectoryFault,
                NotWorkDirectoryFault,
                MismatchFault,
                InitializationFault
     {
         //System.err.println("WD.open: " + dir + " ts=" + testSuite.getPath());
-        if (!dir.exists()) 
+        if (!dir.exists())
             throw new FileNotFoundException(dir.getPath());
 
         File canonDir = canonicalize(dir);
-            
+
         if (!canonDir.isDirectory())
             throw new BadDirectoryFault(i18n, "wd.notDirectory", canonDir);
 
         if (!canonDir.canRead())
             throw new BadDirectoryFault(i18n, "wd.notReadable", canonDir);
-        
+
         File jtData = new File(canonDir, JTDATA);
         if (!jtData.exists())
             throw new NotWorkDirectoryFault(i18n, "wd.notWorkDir", canonDir);
@@ -575,7 +575,7 @@ public class WorkDirectory
         jtData = new File(root, JTDATA);
 
         if (jtData != null) {
-            logFileName = jtData.getParent() + File.separator + 
+            logFileName = jtData.getParent() + File.separator +
                 LoggerFactory.LOGFILE_NAME + "." + LoggerFactory.LOGFILE_EXTENSION;
             testSuite.setLogFilePath(this);
             File loggerFile = new File(logFileName);
@@ -605,7 +605,7 @@ public class WorkDirectory
             }
             testCount = tc;
         }
-        else 
+        else
             testCount = testSuite.getEstimatedTestCount();
 
         testSuiteID = testSuite.getID();
@@ -613,7 +613,7 @@ public class WorkDirectory
             testSuiteID = "";
 
     }
-        
+
     /**
      * Get the root directory for this work directory.
      * @return the root directory for this work directory
@@ -621,7 +621,7 @@ public class WorkDirectory
     public File getRoot() {
         return root;
     }
-        
+
     /**
      * Get the root directory for this work directory.
      * @return the path of the root directory for this work directory
@@ -629,7 +629,7 @@ public class WorkDirectory
     public String getPath() {
         return root.getPath();
     }
-        
+
     /**
      * Get the data directory for this work directory.
      * @return the system (jtData) directory for this work directory
@@ -646,7 +646,7 @@ public class WorkDirectory
     public File getFile(String name) {
         return new File(root, name);
     }
-        
+
     /**
      * Get a file in the system directory for this work directory.
      * @param name the name of a file within the wsystem (jtData) directory
@@ -677,8 +677,8 @@ public class WorkDirectory
     }
 
     /**
-     * Specify the total number of tests found in this testsuite.  
-     * When available, this class prefers to use this number rather 
+     * Specify the total number of tests found in this testsuite.
+     * When available, this class prefers to use this number rather
      * than that provided by a TestSuite object.
      * @param num the number of tests in the test suite
      * @see #getTestSuiteTestCount
@@ -687,7 +687,7 @@ public class WorkDirectory
     public void setTestSuiteTestCount(int num) {
         if (num != testCount) {
             testCount = num;
-            
+
             try {
                 saveTestSuiteInfo();
             }
@@ -697,7 +697,7 @@ public class WorkDirectory
         }
     }
 
-    
+
     /**
      * Get a test result table containing the test results in this work directory.
      * @return a test result table containing the test results in this work directory
@@ -864,7 +864,7 @@ public class WorkDirectory
 
             if (f.isFile()) {
                 result &= f.delete();
-                if (f.getName().endsWith(TestResult.EXTN)) 
+                if (f.getName().endsWith(TestResult.EXTN))
                     testResultTable.resetTest(p);
             }
             else if (!p.equals(JTDATA)) {

@@ -59,183 +59,183 @@ import java.util.HashMap;
  * of displays. controlled by its own toolbar (button-bar.)
  */
 
-class TestPanel extends JPanel 
+class TestPanel extends JPanel
 {
     TestPanel(UIFactory uif, Harness harness, ContextManager contextManager) {
-	this.uif = uif;
-	this.harness = harness;
+        this.uif = uif;
+        this.harness = harness;
         this.contextManager = contextManager;
-	initGUI();
+        initGUI();
 
     }
 
-    // most of the tabs have arbitrary, accomodating sizes, 
+    // most of the tabs have arbitrary, accomodating sizes,
     // so set a default preferred size here for the panel
     public Dimension getPreferredSize() {
-	int dpi = uif.getDotsPerInch();
-	return new Dimension(5 * dpi, 4 * dpi);
+        int dpi = uif.getDotsPerInch();
+        return new Dimension(5 * dpi, 4 * dpi);
     }
 
     void setTestSuite(TestSuite ts) {
-	for (int i = 0; i < panels.length; i++)
-	    panels[i].setTestSuite(ts);
+        for (int i = 0; i < panels.length; i++)
+            panels[i].setTestSuite(ts);
     }
 
     TestResult getTest() {
-	return currTest;
+        return currTest;
     }
 
     void setTest(TestResult tr) {
-        for (int i=stdPanels.length ; i < panels.length; i++) { 
-              TP_CustomSubpanel sp = (TP_CustomSubpanel) panels[i]; 
-              sp.onCangedTestResult(tr, (sp == currPanel)); 
-        }         
-	updatePanel(tr, currPanel);
+        for (int i=stdPanels.length ; i < panels.length; i++) {
+              TP_CustomSubpanel sp = (TP_CustomSubpanel) panels[i];
+              sp.onCangedTestResult(tr, (sp == currPanel));
+        }
+        updatePanel(tr, currPanel);
     }
 
     //------private methods----------------------------------------------
 
     private synchronized void updatePanel(TestResult newTest, TP_Subpanel newPanel) {
-	// this method is specifically designed to be fast to execute when
-	// the panel is hidden; it also tries to avoid unnecessarily getting
-	// rid of useful information which is still valid
+        // this method is specifically designed to be fast to execute when
+        // the panel is hidden; it also tries to avoid unnecessarily getting
+        // rid of useful information which is still valid
 
-	if (newTest != currTest) {
-	    currTest = newTest;
-	    currDesc = null;  // don't evaluate till later
-	}
+        if (newTest != currTest) {
+            currTest = newTest;
+            currDesc = null;  // don't evaluate till later
+        }
 
-	if (newPanel != currPanel) {
-	    // update help for tabbed pane to reflect help for selected panel
-	    currPanel = newPanel;
-	}
+        if (newPanel != currPanel) {
+            // update help for tabbed pane to reflect help for selected panel
+            currPanel = newPanel;
+        }
 
-	if (EventQueue.isDispatchThread())
-	    updateGUIWhenVisible();
-	else {
-	    if (!updatePending && !needToUpdateGUIWhenShown) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-			    synchronized (TestPanel.this) {
-				updateGUIWhenVisible();
-				updatePending = false;
-			    }
-			}
-		    });
-		updatePending = true;
-	    }
-	}
+        if (EventQueue.isDispatchThread())
+            updateGUIWhenVisible();
+        else {
+            if (!updatePending && !needToUpdateGUIWhenShown) {
+                EventQueue.invokeLater(new Runnable() {
+                        public void run() {
+                            synchronized (TestPanel.this) {
+                                updateGUIWhenVisible();
+                                updatePending = false;
+                            }
+                        }
+                    });
+                updatePending = true;
+            }
+        }
     }
 
-    
+
     // must be called on the AWT event thread
     private void updateGUIWhenVisible() {
-	if (isVisible())
-	    updateGUI();
-	else
-	    needToUpdateGUIWhenShown = true;
+        if (isVisible())
+            updateGUI();
+        else
+            needToUpdateGUIWhenShown = true;
     }
 
     // updateGUI is the second half of updatePanel(...)
-    // It is called directly from updatePanel via updateGUIWhenVisible, 
-    // if the update is made when the panel is visible; otherwise the 
+    // It is called directly from updatePanel via updateGUIWhenVisible,
+    // if the update is made when the panel is visible; otherwise the
     // call is delayed until the panel gets ComponentEvent.shown.
     private synchronized void updateGUI() {
-	//System.err.println("TP.updateGUI");
-	if (currTest == null) {
-	    for (int i = 0; i < tabs.getComponentCount(); i++) 
-		tabs.setEnabledAt(i, false);
+        //System.err.println("TP.updateGUI");
+        if (currTest == null) {
+            for (int i = 0; i < tabs.getComponentCount(); i++)
+                tabs.setEnabledAt(i, false);
 
-	    statusField.setEnabled(false);
-	}
-	else {
-	    try {
-		if (currDesc == null)
-		    currDesc = currTest.getDescription();
-	    }
-	    catch (TestResult.Fault e) {
-		JavaTestError.unexpectedException(e);
-		// ignore exception if can't find description ??
-	    }
+            statusField.setEnabled(false);
+        }
+        else {
+            try {
+                if (currDesc == null)
+                    currDesc = currTest.getDescription();
+            }
+            catch (TestResult.Fault e) {
+                JavaTestError.unexpectedException(e);
+                // ignore exception if can't find description ??
+            }
 
-	    // always got a test description
-	    tabs.setEnabledAt(tabs.indexOfComponent(descPanel), true);
-            
+            // always got a test description
+            tabs.setEnabledAt(tabs.indexOfComponent(descPanel), true);
+
             // always got documentation
             tabs.setEnabledAt(tabs.indexOfComponent(docPanel), true);
 
-	    // always got source files
-	    tabs.setEnabledAt(tabs.indexOfComponent(filesPanel), true);
+            // always got source files
+            tabs.setEnabledAt(tabs.indexOfComponent(filesPanel), true);
 
-	    // check if there are any environment entries recorded
-	    boolean hasEnv;
-	    try {
-		Map map = currTest.getEnvironment();
-		hasEnv = (map != null && map.size() > 0);
-	    } 
-	    catch (TestResult.Fault f) {
-		hasEnv = false;
-	    }
-	    tabs.setEnabledAt(tabs.indexOfComponent(envPanel), hasEnv);
+            // check if there are any environment entries recorded
+            boolean hasEnv;
+            try {
+                Map map = currTest.getEnvironment();
+                hasEnv = (map != null && map.size() > 0);
+            }
+            catch (TestResult.Fault f) {
+                hasEnv = false;
+            }
+            tabs.setEnabledAt(tabs.indexOfComponent(envPanel), hasEnv);
 
-	    // check if there are any result properties recorded
-	    boolean hasResults = currTest.getPropertyNames().hasMoreElements();
-	    tabs.setEnabledAt(tabs.indexOfComponent(resultPanel), hasResults);
+            // check if there are any result properties recorded
+            boolean hasResults = currTest.getPropertyNames().hasMoreElements();
+            tabs.setEnabledAt(tabs.indexOfComponent(resultPanel), hasResults);
 
-	    // check if there is any output recorded
-	    boolean hasOutput = (currTest.getSectionCount() > 0);
-	    tabs.setEnabledAt(tabs.indexOfComponent(outputPanel), hasOutput);
+            // check if there is any output recorded
+            boolean hasOutput = (currTest.getSectionCount() > 0);
+            tabs.setEnabledAt(tabs.indexOfComponent(outputPanel), hasOutput);
 
             for (int i = stdPanels.length; i < tabs.getTabCount(); i++) {
                 tabs.setEnabledAt(i, true);
             }
-            
-	    updateStatus();
 
-	    // should consider tracking test, if test is mutable
-	    // and enable tabs/status as required
+            updateStatus();
 
-	    if (currPanel.isUpdateRequired(currTest)) 
-		currPanel.updateSubpanel(currTest);
+            // should consider tracking test, if test is mutable
+            // and enable tabs/status as required
 
-	}
+            if (currPanel.isUpdateRequired(currTest))
+                currPanel.updateSubpanel(currTest);
+
+        }
     }
 
     private void updateStatus() {
-	if (isShowing()) {
-	    Status s = currTest.getStatus();
-	    statusField.setText(I18NUtils.getStatusMessage(s));
-	    Color c = I18NUtils.getStatusBarColor(s.getType());
-	    statusField.setBackground(c);
-	    statusField.setEnabled(true);
-	}
+        if (isShowing()) {
+            Status s = currTest.getStatus();
+            statusField.setText(I18NUtils.getStatusMessage(s));
+            Color c = I18NUtils.getStatusBarColor(s.getType());
+            statusField.setBackground(c);
+            statusField.setEnabled(true);
+        }
     }
- 
+
     private void initGUI() {
-	setName("test");
-	descPanel = new TP_DescSubpanel(uif);
+        setName("test");
+        descPanel = new TP_DescSubpanel(uif);
         docPanel = new TP_DocumentationSubpanel(uif);
-	filesPanel = new TP_FilesSubpanel(uif);
-	resultPanel = new TP_ResultsSubpanel(uif);
-	envPanel = new TP_EnvSubpanel(uif);
-	outputPanel = new TP_OutputSubpanel(uif);
+        filesPanel = new TP_FilesSubpanel(uif);
+        resultPanel = new TP_ResultsSubpanel(uif);
+        envPanel = new TP_EnvSubpanel(uif);
+        outputPanel = new TP_OutputSubpanel(uif);
 
-	stdPanels = new TP_Subpanel[] {
-	    descPanel,
+        stdPanels = new TP_Subpanel[] {
+            descPanel,
             docPanel,
-	    filesPanel,
-	    envPanel,
-	    resultPanel,
-	    outputPanel
-	};
+            filesPanel,
+            envPanel,
+            resultPanel,
+            outputPanel
+        };
 
-	tabs = uif.createTabbedPane("test", stdPanels);
-        
-	panels = stdPanels;
+        tabs = uif.createTabbedPane("test", stdPanels);
+
+        panels = stdPanels;
         if (contextManager != null ) {
             CustomTestResultViewer[] cv = contextManager.getCustomResultViewers();
             if (cv != null) {
-		customViewTable = new HashMap();
+                customViewTable = new HashMap();
                 panels = new TP_Subpanel[stdPanels.length + cv.length];
                 System.arraycopy(stdPanels, 0, panels, 0, stdPanels.length);
                 for (int i=0; i < cv.length; i++) {
@@ -246,56 +246,56 @@ class TestPanel extends JPanel
                     }
                 }
                 for (int i=0; i < cv.length; i++) {
-                    cv[i].addPropertyChangeListener(CustomTestResultViewer.visibleProperetyName, 
-                            new ViewerStateListener(cv, i, stdPanels.length));		    
+                    cv[i].addPropertyChangeListener(CustomTestResultViewer.visibleProperetyName,
+                            new ViewerStateListener(cv, i, stdPanels.length));
                 }
             }
-        } 
-        
-	tabs.setTabPlacement(SwingConstants.TOP);
-	tabs.setName("testTabs");
-	tabs.setSelectedComponent(outputPanel);
-	tabs.addChangeListener(new ChangeListener() {
-	    public void stateChanged(ChangeEvent e) {
-		Component c = tabs.getSelectedComponent();
-		if (c instanceof TP_Subpanel) {
-		    updatePanel(currTest, (TP_Subpanel) c);
-		}  if (c instanceof CustomTestResultViewer) {
+        }
+
+        tabs.setTabPlacement(SwingConstants.TOP);
+        tabs.setName("testTabs");
+        tabs.setSelectedComponent(outputPanel);
+        tabs.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                Component c = tabs.getSelectedComponent();
+                if (c instanceof TP_Subpanel) {
+                    updatePanel(currTest, (TP_Subpanel) c);
+                }  if (c instanceof CustomTestResultViewer) {
                     updatePanel(currTest, (TP_CustomSubpanel) customViewTable.get(c));
                 }
-	    }
-	});
+            }
+        });
 
-	currPanel = outputPanel;
+        currPanel = outputPanel;
 
-	statusField = uif.createOutputField("test.status");
-	statusField.setEnabled(false);
-	
-	setLayout(new BorderLayout());
-	add(tabs, BorderLayout.CENTER);
-	add(statusField, BorderLayout.SOUTH);
+        statusField = uif.createOutputField("test.status");
+        statusField.setEnabled(false);
+
+        setLayout(new BorderLayout());
+        add(tabs, BorderLayout.CENTER);
+        add(statusField, BorderLayout.SOUTH);
 
         // --- anonymous class ---
-	ComponentListener cl = new ComponentListener() {
-	    public void componentResized(ComponentEvent e) {
-	    }
+        ComponentListener cl = new ComponentListener() {
+            public void componentResized(ComponentEvent e) {
+            }
 
-	    public void componentMoved(ComponentEvent e) {
-	    }
-	    public void componentShown(ComponentEvent e) {
-		if (needToUpdateGUIWhenShown) {
-		    updateGUI();
-		    needToUpdateGUIWhenShown = false;
-		}
-		//System.err.println("TP: showing");
-		harness.addObserver(observer);
-	    }
-	    public void componentHidden(ComponentEvent e) {
-		//System.err.println("TP: hidden");
-		harness.removeObserver(observer);
-	    }
-	};
-	addComponentListener(cl);
+            public void componentMoved(ComponentEvent e) {
+            }
+            public void componentShown(ComponentEvent e) {
+                if (needToUpdateGUIWhenShown) {
+                    updateGUI();
+                    needToUpdateGUIWhenShown = false;
+                }
+                //System.err.println("TP: showing");
+                harness.addObserver(observer);
+            }
+            public void componentHidden(ComponentEvent e) {
+                //System.err.println("TP: hidden");
+                harness.removeObserver(observer);
+            }
+        };
+        addComponentListener(cl);
     }
 
     class ViewerStateListener implements  PropertyChangeListener{
@@ -306,7 +306,7 @@ class TestPanel extends JPanel
         }
         private CustomTestResultViewer[] cv;
         private int pos, offset;
-        
+
         public void propertyChange(PropertyChangeEvent evt) {
             Boolean state = (Boolean) evt.getNewValue();
             if (state.booleanValue()) {
@@ -322,11 +322,11 @@ class TestPanel extends JPanel
             }
         }
     }
-    
+
     static final String lineSeparator = System.getProperty("line.separator");
 
     // basic GUI objects
-    private UIFactory uif; 
+    private UIFactory uif;
     private TP_Subpanel[] panels;
     private TP_Subpanel[] stdPanels;
     private JTabbedPane tabs;
@@ -339,14 +339,14 @@ class TestPanel extends JPanel
     private JTextField statusField;
     private HashMap customViewTable;
 
-    // 
+    //
     private Harness harness;
 
-    // 
+    //
     private ContextManager contextManager;
-    
+
     // set these values via update
-    private TestResult currTest; 
+    private TestResult currTest;
     private TP_Subpanel currPanel;
 
     // these values are derived from values given to update
@@ -359,65 +359,65 @@ class TestPanel extends JPanel
     // will be needed for dynamic update
     private final Observer observer = new Observer();
 
-    private class Observer 
-	implements Harness.Observer, TestResult.Observer 
+    private class Observer
+        implements Harness.Observer, TestResult.Observer
     {
-	// ---------- Harness.Observer ----------
-	public void startingTestRun(Parameters params) {
-	}
+        // ---------- Harness.Observer ----------
+        public void startingTestRun(Parameters params) {
+        }
 
         public void startingTest(TestResult tr) {
-	    //System.err.println("TP$Observer.starting: " + tr);
-	    try {
-		if (tr.getDescription() == currDesc) {
-		    //System.out.println("RunnerObserver.UPDATING CURRENT TEST");
-		    // this will update currTest to tr if needed
-		    updatePanel(tr, currPanel);
-		}
-	    }
-	    catch (TestResult.Fault e) {
-	    }
+            //System.err.println("TP$Observer.starting: " + tr);
+            try {
+                if (tr.getDescription() == currDesc) {
+                    //System.out.println("RunnerObserver.UPDATING CURRENT TEST");
+                    // this will update currTest to tr if needed
+                    updatePanel(tr, currPanel);
+                }
+            }
+            catch (TestResult.Fault e) {
+            }
         }
 
         public void finishedTest(TestResult tr) {
-	    //System.err.println("TP$Observer.finished: " + tr);
-	    if (tr == currTest)
-		updatePanel(tr, currPanel);
+            //System.err.println("TP$Observer.finished: " + tr);
+            if (tr == currTest)
+                updatePanel(tr, currPanel);
         }
 
-	public void stoppingTestRun() {
-	}
+        public void stoppingTestRun() {
+        }
 
-	public void finishedTesting() {
-	}
+        public void finishedTesting() {
+        }
 
-	public void finishedTestRun(boolean allOK) {
-	}
+        public void finishedTestRun(boolean allOK) {
+        }
 
-	public void error(String msg) {
-	}
+        public void error(String msg) {
+        }
 
-	// ----- TestResult.Observer interface -----
-	public void completed(TestResult tr) {
-	    tr.removeObserver(this);
-	    updateStatus();
-	}
-	
-	public void createdSection(TestResult tr, TestResult.Section section) { }
-	
-	public void completedSection(TestResult tr, TestResult.Section section) { }
-	
-	public void createdOutput(TestResult tr, TestResult.Section section,
-				  String outputName) { }
-	
-	public void completedOutput(TestResult tr, TestResult.Section section,
-				    String outputName) { }
-	
-	public void updatedOutput(TestResult tr, TestResult.Section section, 
-				  String outputName, 
-				  int start, int end, String text) { }
-	
-	public void updatedProperty(TestResult tr, String name, String value) { }
+        // ----- TestResult.Observer interface -----
+        public void completed(TestResult tr) {
+            tr.removeObserver(this);
+            updateStatus();
+        }
+
+        public void createdSection(TestResult tr, TestResult.Section section) { }
+
+        public void completedSection(TestResult tr, TestResult.Section section) { }
+
+        public void createdOutput(TestResult tr, TestResult.Section section,
+                                  String outputName) { }
+
+        public void completedOutput(TestResult tr, TestResult.Section section,
+                                    String outputName) { }
+
+        public void updatedOutput(TestResult tr, TestResult.Section section,
+                                  String outputName,
+                                  int start, int end, String text) { }
+
+        public void updatedProperty(TestResult tr, String name, String value) { }
     }
 
-} 
+}

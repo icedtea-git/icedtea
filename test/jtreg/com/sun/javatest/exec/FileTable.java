@@ -34,9 +34,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class FileTable extends JTable {
-    
-    
-    
+
+
+
     public FileTable(FileSystemTableModel model, UIFactory uif) {
         super(model);
         this.uif = uif;
@@ -46,21 +46,21 @@ public class FileTable extends JTable {
         setShowGrid(false);
         getColumnModel().getColumn(0).setCellRenderer(new IconRenderer());
     }
-    
+
     private class IconRenderer extends DefaultTableCellRenderer {
 
         {
             up = uif.createIcon("upper");
             dir = uif.createIcon("folder");
         }
-        
+
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
-            
+
             setFont(table.getFont());
             setIcon(null);
             setText("");
-            
+
             if (isSelected) {
                 super.setForeground(table.getSelectionForeground());
                 super.setBackground(table.getSelectionBackground());
@@ -68,7 +68,7 @@ public class FileTable extends JTable {
                 super.setForeground(table.getForeground());
                 super.setBackground(table.getBackground());
             }
-            
+
             if (value instanceof FileTableNode) {
                 FileTableNode fn = (FileTableNode) value;
                 if (fn.getMode() != 'f') {
@@ -88,12 +88,12 @@ public class FileTable extends JTable {
 
         private Icon up;
         private Icon dir;
-        
+
     }
-    
-    
-    
+
+
+
     private UIFactory uif;
-    
-    
+
+
 }

@@ -61,54 +61,54 @@ import com.sun.javatest.tool.UIFactory;
 class QuestionLogBrowser extends ToolDialog
 {
     QuestionLogBrowser(JComponent parent, ExecModel model, UIFactory uif) {
-	super(parent, uif, "qlb");
- 
-	if (model == null)
-	    throw new NullPointerException();
+        super(parent, uif, "qlb");
 
-	this.model = model;
+        if (model == null)
+            throw new NullPointerException();
 
-	params = model.getInterviewParameters();
-	if (params == null)
-	    throw new NullPointerException();
+        this.model = model;
 
-	listener = new Listener();
+        params = model.getInterviewParameters();
+        if (params == null)
+            throw new NullPointerException();
+
+        listener = new Listener();
     }
 
     protected void initGUI() {
-	JMenuBar mb = uif.createMenuBar("qlb");
-	String[] fileActions = { SAVE_AS, PRINT_SETUP, PRINT };
-	JMenu fileMenu = uif.createMenu("qlb.file", fileActions, listener);
-	mb.add(fileMenu);
-	setJMenuBar(mb);
+        JMenuBar mb = uif.createMenuBar("qlb");
+        String[] fileActions = { SAVE_AS, PRINT_SETUP, PRINT };
+        JMenu fileMenu = uif.createMenu("qlb.file", fileActions, listener);
+        mb.add(fileMenu);
+        setJMenuBar(mb);
 
         body = new MultiFormatPane(uif);
-	body.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-	body.setName("qlb.body");
-	uif.setAccessibleName(body, "qlb.body");
-	uif.setToolTip(body, "qlb");
+        body.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        body.setName("qlb.body");
+        uif.setAccessibleName(body, "qlb.body");
+        uif.setToolTip(body, "qlb");
 
-	int dpi = uif.getDotsPerInch();
+        int dpi = uif.getDotsPerInch();
         body.setPreferredSize(new Dimension(6 * dpi, 9 * dpi));
         setBody(body);
 
-	JButton closeBtn = uif.createCloseButton("qlb.close");
-	setButtons(new JButton[] { closeBtn }, closeBtn);
+        JButton closeBtn = uif.createCloseButton("qlb.close");
+        setButtons(new JButton[] { closeBtn }, closeBtn);
 
-	setComponentListener(listener);
+        setComponentListener(listener);
     }
 
     private void updateContent() {
-	if (body == null)
-	    initGUI();
+        if (body == null)
+            initGUI();
 
         final JDialog d = uif.createWaitDialog("qlb.wait", parent);
 
-	File f = params.getFile();
-	if (f == null)
-	    setI18NTitle("qlb.title");
-	else 
-	    setI18NTitle("qlb.titleWithFile", f);
+        File f = params.getFile();
+        if (f == null)
+            setI18NTitle("qlb.title");
+        else
+            setI18NTitle("qlb.titleWithFile", f);
 
         final Thread t = new Thread() {
             public void run() {
@@ -163,118 +163,118 @@ class QuestionLogBrowser extends ToolDialog
     }
 
     private void doSaveAs() {
-	if (fileChooser == null) {
-	    fileChooser = new FileChooser(true);
-	    fileChooser.addChoosableExtension(".html",
-					      uif.getI18NString("qlb.htmlFiles"));
-	}
+        if (fileChooser == null) {
+            fileChooser = new FileChooser(true);
+            fileChooser.addChoosableExtension(".html",
+                                              uif.getI18NString("qlb.htmlFiles"));
+        }
 
-	fileChooser.setDialogTitle(uif.getI18NString("qlb.save.title"));
-	
-	File file = null;
+        fileChooser.setDialogTitle(uif.getI18NString("qlb.save.title"));
 
-	while (file == null) {
-	    int rc = fileChooser.showDialog(parent, uif.getI18NString("qlb.save.btn"));
-	    if (rc != JFileChooser.APPROVE_OPTION)
-		// user has canceled or closed the chooser
-		return;
-	    
-	    file = fileChooser.getSelectedFile();
-	    
-	    // if file exists, leave well enough alone;
-	    // otherwise, make sure it ends with .html
-	    if (!file.exists()) {
-		String path = file.getPath();
-		if (!path.endsWith(".html"))
-		    file = new File(path + ".html");
-	    }
-	    
-	    // if file exists, make sure user wants to overwrite it
-	    if (file.exists()) {
-		rc = uif.showYesNoCancelDialog("qlb.save.warn", file);
-		switch (rc) {
-		case JOptionPane.YES_OPTION:
-		    break;  // use this file
-		    
-		case JOptionPane.NO_OPTION:
-		    fileChooser.setSelectedFile(null);
-		    file = null;
-		    continue;  // choose another file
-		    
-		default:
-		    return;  // exit without saving
-		}
-	    }
-	}	    
+        File file = null;
 
-	try {
-	    Writer out = new BufferedWriter(new FileWriter(file));
+        while (file == null) {
+            int rc = fileChooser.showDialog(parent, uif.getI18NString("qlb.save.btn"));
+            if (rc != JFileChooser.APPROVE_OPTION)
+                // user has canceled or closed the chooser
+                return;
+
+            file = fileChooser.getSelectedFile();
+
+            // if file exists, leave well enough alone;
+            // otherwise, make sure it ends with .html
+            if (!file.exists()) {
+                String path = file.getPath();
+                if (!path.endsWith(".html"))
+                    file = new File(path + ".html");
+            }
+
+            // if file exists, make sure user wants to overwrite it
+            if (file.exists()) {
+                rc = uif.showYesNoCancelDialog("qlb.save.warn", file);
+                switch (rc) {
+                case JOptionPane.YES_OPTION:
+                    break;  // use this file
+
+                case JOptionPane.NO_OPTION:
+                    fileChooser.setSelectedFile(null);
+                    file = null;
+                    continue;  // choose another file
+
+                default:
+                    return;  // exit without saving
+                }
+            }
+        }
+
+        try {
+            Writer out = new BufferedWriter(new FileWriter(file));
             out.write(((JEditorPane)body.getMediaPane(body.TEXT)).getText());
-	    out.close();
-	}
-	catch (IOException e) {
-	    if (!file.canWrite())
-		uif.showError("qlb.save.cantWriteFile", file);
-	    else if (e instanceof FileNotFoundException) 
-		uif.showError("qlb.save.cantFindFile", file);
-	    else
-		uif.showError("qlb.save.error", new Object[] { file, e } );
-	}
+            out.close();
+        }
+        catch (IOException e) {
+            if (!file.canWrite())
+                uif.showError("qlb.save.cantWriteFile", file);
+            else if (e instanceof FileNotFoundException)
+                uif.showError("qlb.save.cantFindFile", file);
+            else
+                uif.showError("qlb.save.error", new Object[] { file, e } );
+        }
     }
 
     private void doPrintSetup() {
-	model.printSetup();
+        model.printSetup();
     }
 
     private void doPrint() {
-	    model.print(body);
+            model.print(body);
     }
 
-    private class Listener 
-	extends ComponentAdapter
-	implements ActionListener, Interview.Observer 
+    private class Listener
+        extends ComponentAdapter
+        implements ActionListener, Interview.Observer
     {
-	// ActionListener
-	public void actionPerformed(ActionEvent e) {
-	    String cmd = e.getActionCommand();
-	    if (cmd.equals(SAVE_AS))
-		doSaveAs();
-	    else if (cmd.equals(PRINT_SETUP))
-		doPrintSetup();
-	    else if (cmd.equals(PRINT))
-		doPrint();
-	}
+        // ActionListener
+        public void actionPerformed(ActionEvent e) {
+            String cmd = e.getActionCommand();
+            if (cmd.equals(SAVE_AS))
+                doSaveAs();
+            else if (cmd.equals(PRINT_SETUP))
+                doPrintSetup();
+            else if (cmd.equals(PRINT))
+                doPrint();
+        }
 
-	// ComponentListener
-	public void componentShown(ComponentEvent e) {
-	    params.addObserver(this);
-	    updateContent();
-	}
+        // ComponentListener
+        public void componentShown(ComponentEvent e) {
+            params.addObserver(this);
+            updateContent();
+        }
 
-	public void componentHidden(ComponentEvent e) {
-	    params.removeObserver(this);
-	}
+        public void componentHidden(ComponentEvent e) {
+            params.removeObserver(this);
+        }
 
-	// Interview.Observer
-	public void currentQuestionChanged(Question q) {
-	}
+        // Interview.Observer
+        public void currentQuestionChanged(Question q) {
+        }
 
-	public void pathUpdated() {
-	    updateContent();
-	}
-	
+        public void pathUpdated() {
+            updateContent();
+        }
+
     };
 
     private ExecModel model;
     private InterviewParameters params;
 
     private MultiFormatPane body;
-    
+
     private FileChooser fileChooser;
     private Listener listener;
 
     private static final String SAVE_AS = "SaveAs";
     private static final String PRINT_SETUP = "PrintSetup";
     private static final String PRINT = "Print";
-    private static final int WAIT_DIALOG_DELAY = 3000;	    // 3 second delay
+    private static final int WAIT_DIALOG_DELAY = 3000;      // 3 second delay
 }

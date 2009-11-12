@@ -45,171 +45,171 @@ import com.sun.javatest.util.StringArray;
 
 class StatisticsSection extends HTMLSection {
     StatisticsSection(HTMLReport parent, Report.Settings set, File dir) {
-	super(i18n.getString("stats.title"), set, dir, parent);
+        super(i18n.getString("stats.title"), set, dir, parent);
         initFiles = settings.getInitialFiles();
 
         resultTable = settings.ip.getWorkDirectory().getTestResultTable();
-	Iterator iter =  null;
-	try {
-	    iter = (initFiles == null) ? 
+        Iterator iter =  null;
+        try {
+            iter = (initFiles == null) ?
                         resultTable.getIterator(new TestFilter[] {settings.filter}) :
                         resultTable.getIterator(initFiles, new TestFilter[]
-						{settings.filter});
-	}
-	catch (TestResultTable.Fault f) {
-	    throw new JavaTestError(i18n.getString("stats.testResult.err"));
-	}	// catch
+                                                {settings.filter});
+        }
+        catch (TestResultTable.Fault f) {
+            throw new JavaTestError(i18n.getString("stats.testResult.err"));
+        }       // catch
 
-	for (; iter.hasNext(); ) {
-	    TestResult tr = (TestResult) (iter.next());
-	    
-	    try {
-		Status s = tr.getStatus();
-		TestDescription td = tr.getDescription();
+        for (; iter.hasNext(); ) {
+            TestResult tr = (TestResult) (iter.next());
 
-		String[] keys = td.getKeywords();
-		Arrays.sort(keys);
-		String sortedKeys = StringArray.join(keys);
+            try {
+                Status s = tr.getStatus();
+                TestDescription td = tr.getDescription();
 
-		int[] v = (int[])(keywordTable.get(sortedKeys));
-		if (v == null) {
-		    v = new int[Status.NUM_STATES];
-		    keywordTable.put(sortedKeys, v);
-		}
-		v[s.getType()]++;
-		
-		statusTotals[s.getType()]++;
-	    }
-	    catch (TestResult.Fault ex) {
-		// hmmm. Could count problem files here and report on them later
+                String[] keys = td.getKeywords();
+                Arrays.sort(keys);
+                String sortedKeys = StringArray.join(keys);
+
+                int[] v = (int[])(keywordTable.get(sortedKeys));
+                if (v == null) {
+                    v = new int[Status.NUM_STATES];
+                    keywordTable.put(sortedKeys, v);
+                }
+                v[s.getType()]++;
+
+                statusTotals[s.getType()]++;
             }
-	}
+            catch (TestResult.Fault ex) {
+                // hmmm. Could count problem files here and report on them later
+            }
+        }
     }
 
     void writeContents(ReportWriter out) throws IOException {
-	// arguably, this should be conditional on whether
-	// the test suite has tests that use keywords!
+        // arguably, this should be conditional on whether
+        // the test suite has tests that use keywords!
 
-	super.writeContents(out); 
-	
-	out.startTag(HTMLWriter.UL);
-	out.startTag(HTMLWriter.LI);
+        super.writeContents(out);
+
+        out.startTag(HTMLWriter.UL);
+        out.startTag(HTMLWriter.LI);
         out.writeLink("#" + HTMLReport.anchors[HTMLReport.KEYWORD_ANCHOR],
                       i18n.getString("stats.keywordValue"));
-	out.endTag(HTMLWriter.UL);
+        out.endTag(HTMLWriter.UL);
         out.newLine();
     }
 
     void writeSummary(ReportWriter out) throws IOException {
-	// arguably, this should be conditional on whether
-	// the test suite has tests that use keywords!
+        // arguably, this should be conditional on whether
+        // the test suite has tests that use keywords!
 
-	super.writeSummary(out); 
-	writeKeywordSummary(out);
+        super.writeSummary(out);
+        writeKeywordSummary(out);
     }
 
     private void writeKeywordSummary(ReportWriter out) throws IOException {
-	// arguably, the following logic to create the keyword table
-	// should be done in the constructor, so that we can optimize
-	// out the contents and summary if the do not provide any
-	// significant data
-	// -- or else, we could just report "test suite does not use keywords"
-	// instead of a mostly empty table
+        // arguably, the following logic to create the keyword table
+        // should be done in the constructor, so that we can optimize
+        // out the contents and summary if the do not provide any
+        // significant data
+        // -- or else, we could just report "test suite does not use keywords"
+        // instead of a mostly empty table
 
-	// compute the keyword statistics
+        // compute the keyword statistics
 
-	int ncols = 2; // keywords, total
-	for (int i = 0; i < statusTotals.length; i++)
-	    if (statusTotals[i] > 0) 
-		ncols++;
-	
+        int ncols = 2; // keywords, total
+        for (int i = 0; i < statusTotals.length; i++)
+            if (statusTotals[i] > 0)
+                ncols++;
+
         String[] head = new String[ncols];
         {
-	    int c = 0;
-	    head[c++] = i18n.getString("stats.keyword");
-	    for (int i = 0; i < statusTotals.length; i++)
-		if (statusTotals[i] > 0) 
-		    head[c++] = headings[i];
-	    head[c] = i18n.getString("stats.total");
+            int c = 0;
+            head[c++] = i18n.getString("stats.keyword");
+            for (int i = 0; i < statusTotals.length; i++)
+                if (statusTotals[i] > 0)
+                    head[c++] = headings[i];
+            head[c] = i18n.getString("stats.total");
         }
 
-	Vector v = new Vector();
-	for (Iterator iter = keywordTable.entrySet().iterator(); iter.hasNext(); ) {
-	    Map.Entry e = (Map.Entry) (iter.next());
-	    String k = (String) (e.getKey());
-	    int[] kv = (int[]) (e.getValue());
-	    String[] newEntry = new String[ncols];
-	    int c = 0, total = 0;
-	    newEntry[c++] = k;
-	    for (int i = 0; i < kv.length; i++) {
-		if (statusTotals[i] != 0)
-		    newEntry[c++] = (kv[i] == 0 ? "" : Integer.toString(kv[i]));
-		total += kv[i];
-	    }
-	    newEntry[c] = Integer.toString(total);
+        Vector v = new Vector();
+        for (Iterator iter = keywordTable.entrySet().iterator(); iter.hasNext(); ) {
+            Map.Entry e = (Map.Entry) (iter.next());
+            String k = (String) (e.getKey());
+            int[] kv = (int[]) (e.getValue());
+            String[] newEntry = new String[ncols];
+            int c = 0, total = 0;
+            newEntry[c++] = k;
+            for (int i = 0; i < kv.length; i++) {
+                if (statusTotals[i] != 0)
+                    newEntry[c++] = (kv[i] == 0 ? "" : Integer.toString(kv[i]));
+                total += kv[i];
+            }
+            newEntry[c] = Integer.toString(total);
 
-	sortedInsert:
-	    { 
-		for (int i = 0; i < v.size(); i++) {
-		    String[] entry = (String[])v.elementAt(i);
-		    if (k.compareTo(entry[0]) < 0) {
-			v.insertElementAt(newEntry, i);
-			break sortedInsert;
-		    }
-		}
-		v.addElement(newEntry);
-	    }
-	}
-	  
-	{  
-	    String[] totalsEntry = new String[ncols];
-	    int c = 0, total = 0;
-	    totalsEntry[c++] = i18n.getString("stats.total");
-	    for (int i = 0; i < statusTotals.length; i++) {
-		if (statusTotals[i] != 0)
-		    totalsEntry[c++] = Integer.toString(statusTotals[i]);
-		total += statusTotals[i];
-	    }
-	    totalsEntry[c] = Integer.toString(total);
-	    v.addElement(totalsEntry);
-	}
+        sortedInsert:
+            {
+                for (int i = 0; i < v.size(); i++) {
+                    String[] entry = (String[])v.elementAt(i);
+                    if (k.compareTo(entry[0]) < 0) {
+                        v.insertElementAt(newEntry, i);
+                        break sortedInsert;
+                    }
+                }
+                v.addElement(newEntry);
+            }
+        }
 
-	String[][] table = new String[v.size()][];
-	v.copyInto(table);
-	    
-	// write out the keyword statistics
+        {
+            String[] totalsEntry = new String[ncols];
+            int c = 0, total = 0;
+            totalsEntry[c++] = i18n.getString("stats.total");
+            for (int i = 0; i < statusTotals.length; i++) {
+                if (statusTotals[i] != 0)
+                    totalsEntry[c++] = Integer.toString(statusTotals[i]);
+                total += statusTotals[i];
+            }
+            totalsEntry[c] = Integer.toString(total);
+            v.addElement(totalsEntry);
+        }
 
-	out.startTag(HTMLWriter.H3);
+        String[][] table = new String[v.size()][];
+        v.copyInto(table);
+
+        // write out the keyword statistics
+
+        out.startTag(HTMLWriter.H3);
         out.writeLinkDestination(HTMLReport.anchors[HTMLReport.KEYWORD_ANCHOR],
                       i18n.getString("stats.keywordValue"));
-	out.endTag(HTMLWriter.H3);
+        out.endTag(HTMLWriter.H3);
         out.newLine();
 
-	// write out the table of keyword statistics
+        // write out the table of keyword statistics
 
-	out.startTag(HTMLWriter.TABLE);
-	out.writeAttr(HTMLWriter.BORDER, 1);
+        out.startTag(HTMLWriter.TABLE);
+        out.writeAttr(HTMLWriter.BORDER, 1);
 
-	out.startTag(HTMLWriter.TR);
-	for (int c = 0; c < head.length; c++) {
-	    out.startTag(HTMLWriter.TH);
-	    out.writeAttr(HTMLWriter.ALIGN, (c == 0 ? HTMLWriter.LEFT : HTMLWriter.RIGHT));
-	    out.write(head[c]);
-	    out.endTag(HTMLWriter.TH);
-	}
-	out.endTag(HTMLWriter.TR);
+        out.startTag(HTMLWriter.TR);
+        for (int c = 0; c < head.length; c++) {
+            out.startTag(HTMLWriter.TH);
+            out.writeAttr(HTMLWriter.ALIGN, (c == 0 ? HTMLWriter.LEFT : HTMLWriter.RIGHT));
+            out.write(head[c]);
+            out.endTag(HTMLWriter.TH);
+        }
+        out.endTag(HTMLWriter.TR);
 
-	for (int r = 0; r < table.length; r++) {
-	    out.startTag(HTMLWriter.TR);
-	    for (int c = 0; c < table[r].length; c++) {
-		out.startTag(HTMLWriter.TD);
-		out.writeAttr(HTMLWriter.ALIGN, (c == 0 ? HTMLWriter.LEFT : HTMLWriter.RIGHT));
-		out.write(table[r][c]);
-		out.endTag(HTMLWriter.TD);
-	    }
-	    out.endTag(HTMLWriter.TR);
-	}
-	out.endTag(HTMLWriter.TABLE);
+        for (int r = 0; r < table.length; r++) {
+            out.startTag(HTMLWriter.TR);
+            for (int c = 0; c < table[r].length; c++) {
+                out.startTag(HTMLWriter.TD);
+                out.writeAttr(HTMLWriter.ALIGN, (c == 0 ? HTMLWriter.LEFT : HTMLWriter.RIGHT));
+                out.write(table[r][c]);
+                out.endTag(HTMLWriter.TD);
+            }
+            out.endTag(HTMLWriter.TR);
+        }
+        out.endTag(HTMLWriter.TABLE);
     }
 
     //-----------------------------------------------------------------------
@@ -220,9 +220,9 @@ class StatisticsSection extends HTMLSection {
     private int[] statusTotals = new int[Status.NUM_STATES];
 
     private final String[] headings = {
-	i18n.getString("stats.heading.passed"),
-	i18n.getString("stats.heading.failed"),
-	i18n.getString("stats.heading.error"),
-	i18n.getString("stats.heading.notRun")
+        i18n.getString("stats.heading.passed"),
+        i18n.getString("stats.heading.failed"),
+        i18n.getString("stats.heading.error"),
+        i18n.getString("stats.heading.notRun")
     };
 }

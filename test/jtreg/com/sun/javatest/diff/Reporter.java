@@ -53,21 +53,21 @@ public abstract class Reporter {
     public void setComparator(Comparator<TestResult> c) {
         this.comparator = c;
     }
-    
+
     public void setReaders(List<DiffReader> readers) {
         this.readers = readers;
     }
-    
+
     public void setTestCounts(List<int[]> testCounts) {
         this.testCounts = testCounts;
     }
-    
+
     public int getDiffCount() {
         return diffs;
     }
-    
+
     abstract void write(MultiMap<String,TestResult> table) throws IOException;
-    
+
     protected List<DiffReader> readers;
     protected List<int[]> testCounts = new ArrayList<int[]>();
     protected Comparator<TestResult> comparator;

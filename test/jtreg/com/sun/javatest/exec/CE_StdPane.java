@@ -34,42 +34,42 @@ import com.sun.javatest.InterviewParameters;
 import com.sun.javatest.tool.ToolDialog;
 import com.sun.javatest.tool.UIFactory;
 
-abstract class CE_StdPane extends JPanel 
+abstract class CE_StdPane extends JPanel
 {
     protected CE_StdPane(UIFactory uif, InterviewParameters config, String name) {
-	this.uif = uif;
-	this.config = config;
+        this.uif = uif;
+        this.config = config;
 
-	setName(name);
-	setLayout(new BorderLayout());
+        setName(name);
+        setLayout(new BorderLayout());
 
-	// We should be able to use a composite border here, but they don't
-	// seem to work with titled borders. So use nested panels with separate
-	// borders.
+        // We should be able to use a composite border here, but they don't
+        // seem to work with titled borders. So use nested panels with separate
+        // borders.
 
-	setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5));
-	
-	main = uif.createPanel("ce.std", new BorderLayout(), false);
-	String captionText = uif.getI18NString("ce." + name + ".caption");
-	main.setBorder(BorderFactory.createTitledBorder(captionText));
-	add(main);
+        setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5));
 
-	uif.setToolTip(this, "ce." + name);
+        main = uif.createPanel("ce.std", new BorderLayout(), false);
+        String captionText = uif.getI18NString("ce." + name + ".caption");
+        main.setBorder(BorderFactory.createTitledBorder(captionText));
+        add(main);
+
+        uif.setToolTip(this, "ce." + name);
     }
 
     protected void addBody(JPanel p) {
-	p.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5));
-	main.add(p);
+        p.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5));
+        main.add(p);
     }
-    
+
     public void setParentToolDialog(ToolDialog d) {
         toolDialog = d;
     }
-    
+
     public ToolDialog getParentToolDialog() {
         return toolDialog;
     }
-    
+
 
     abstract boolean isOKToClose();
     abstract void load();

@@ -71,9 +71,9 @@ public class RegressionTestFinder extends TagTestFinder
         addExtension(".sh", ShScriptCommentStream.class);
         addExtension(".html", HTMLCommentStream.class);
     }
-    
+
     @Override
-    protected void setRoot(File testSuiteRoot) throws Fault { 
+    protected void setRoot(File testSuiteRoot) throws Fault {
         super.setRoot(testSuiteRoot = canon(testSuiteRoot));
         validKeysTable = new ValidKeysTable(testSuiteRoot, rootValidKeys);
     }
@@ -98,7 +98,7 @@ public class RegressionTestFinder extends TagTestFinder
     protected Map<String, String> normalize(Map tv) {
         return normalize0((Map<String,String>) tv);
     }
-    
+
     private Map<String,String> normalize0(Map<String,String> tagValues) {
         File currFile = getCurrentFile();
         HashMap<String,String> newTagValues = new HashMap<String,String>();
@@ -204,7 +204,7 @@ public class RegressionTestFinder extends TagTestFinder
 
         return newTagValues;
     }
-    
+
     private static boolean match(CharSequence cs, Pattern p) {
         return p.matcher(cs).matches();
     }
@@ -222,7 +222,7 @@ public class RegressionTestFinder extends TagTestFinder
     protected void processEntry(Map tv, String name, String value)
     {
         Map<String,String> tagValues = (Map<String,String>) tv;
-        
+
         // check for valid tag name, don't produce error message for the
         // the SCCS sequence '%' 'W' '%'
         if (name.startsWith("(#)"))
@@ -253,7 +253,7 @@ public class RegressionTestFinder extends TagTestFinder
             name  = "error";
             value = e.getMessage();
         }
-           
+
         super.processEntry(tagValues, name, value);
     }
 
@@ -339,7 +339,7 @@ public class RegressionTestFinder extends TagTestFinder
         throws ParseException
   {
         Set<String> validKeys = validKeysTable.getValidKeys(getCurrentFile());
-        
+
         // make sure that the provided keys are all valid
         if (value.trim().length() != 0) {
             String[] keys = StringArray.splitWS(value);
@@ -447,7 +447,7 @@ public class RegressionTestFinder extends TagTestFinder
 
         private Set<String> validTags;
     }
-    
+
     /**
      * A table giving the set of valid keys for any file in the test suite.
      * The keys are determined from TEST.ROOT and any TEST.properties
@@ -457,7 +457,7 @@ public class RegressionTestFinder extends TagTestFinder
         ValidKeysTable(File rootDir, Set<String> rootKeys) {
             rootCacheEntry = new CacheEntry(rootDir, rootKeys);
         }
-        
+
         /**
          * Get the set of valid keys for a particular file in the test suite.
          * A cache is kept of the value for the directory of the last file
@@ -474,12 +474,12 @@ public class RegressionTestFinder extends TagTestFinder
         }
         // where
         private CacheEntry lastCacheEntry;
-        
-        
+
+
         private CacheEntry getCacheEntry(File dir) {
             if (dir.equals(rootCacheEntry.dir))
                 return rootCacheEntry;
-            
+
             CacheEntry parent = getCacheEntry(dir.getParentFile());
             CacheEntry child = parent.children == null ? null : parent.children.get(dir.getName());
             if (child == null) {
@@ -490,10 +490,10 @@ public class RegressionTestFinder extends TagTestFinder
                 //    parent.children.put(dir.getName(), child);
                 // for a small cache, just cache the current path by keeping the latest child
                 parent.children = Collections.singletonMap(dir.getName(), child);
-            } 
+            }
             return child;
         }
-        
+
         private static Set<String> getLocalKeys(File dir, Set<String> parentKeys) {
             File f = new File(dir, "TEST.properties");
             if (f.canRead()) {
@@ -513,23 +513,23 @@ public class RegressionTestFinder extends TagTestFinder
             }
             return parentKeys;
         }
-        
+
         private static class CacheEntry {
             CacheEntry(File dir, Set<String> keys) {
                 dir.getClass();
                 this.dir = dir;
                 this.keys = keys;
             }
-            
+
             File dir;
             Set<String> keys;
             Map<String, CacheEntry> children;
         }
-        
+
         private CacheEntry rootCacheEntry;
-        
+
     }
-   
+
     //----------misc statics----------------------------------------------------
 
     private static final String LINESEP = System.getProperty("line.separator");
@@ -550,11 +550,11 @@ public class RegressionTestFinder extends TagTestFinder
         PARSE_KEY_BAD         = "Invalid key: ",
         PARSE_LIB_EMPTY       = "No value provided for `@library'",
         PARSE_LIB_AFTER_RUN   = "`@library' must appear before first `@run'";
-    
-    private static final boolean allowLocalKeys = 
+
+    private static final boolean allowLocalKeys =
             Boolean.parseBoolean(System.getProperty("javatest.regtest.allowLocalKeys", "true"));
-    
-    private static final Pattern 
+
+    private static final Pattern
         OTHERVM_OPTION = Pattern.compile(".*/othervm[/ \t].*",    Pattern.DOTALL),
         MANUAL_OPTION  = Pattern.compile(".*/manual[/= \t].*",    Pattern.DOTALL),
         SHELL_ACTION   = Pattern.compile(".*[ \t]shell[/ \t].*",  Pattern.DOTALL),

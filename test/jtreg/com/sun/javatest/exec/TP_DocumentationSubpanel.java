@@ -37,25 +37,25 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class TP_DocumentationSubpanel extends TP_Subpanel{
-    
+
     /** Creates a new instance of TP_DocumentationSubpanel */
     public TP_DocumentationSubpanel(UIFactory uif) {
         super(uif, "docs");
         initGUI();
     }
-    
+
     private void initGUI() {
         setLayout(new BorderLayout());
 
         filesPane = new FilesPane(uif);
-        
+
         emptyPane = uif.createPanel("test.docs.ep", new GridBagLayout(), false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = gbc.CENTER;
         JLabel emptyL = uif.createLabel("test.docs.el");
         emptyPane.add(emptyL, gbc);
     }
-    
+
     protected void updateSubpanel(TestResult currTest) {
         super.updateSubpanel(currTest);
         try {
@@ -79,7 +79,7 @@ public class TP_DocumentationSubpanel extends TP_Subpanel{
             this.add(p, BorderLayout.CENTER);
         }
     }
-    
+
     private FilesPane filesPane;
     private JPanel emptyPane;
     private URL[] filelist;

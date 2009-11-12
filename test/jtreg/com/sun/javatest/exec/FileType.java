@@ -36,41 +36,41 @@ class FileType extends FileFilter
     }
 
     public FileType(String extn) {
-	this(new String[] { extn });
+        this(new String[] { extn });
     }
 
     public FileType(String[] extns) {
-	this.extns = extns;
+        this.extns = extns;
     }
 
     public String getDescription() {
-	if (desc == null) {
-	    StringBuffer sb = new StringBuffer("filetype");
-	    if (extns == null)
-		sb.append(".allFiles");
-	    else {
-		for (int i = 0; i < extns.length; i++)
-		    sb.append("." + extns[i]);
-	    }
-	    desc = i18n.getString(sb.toString());
-	}
-	return desc;
+        if (desc == null) {
+            StringBuffer sb = new StringBuffer("filetype");
+            if (extns == null)
+                sb.append(".allFiles");
+            else {
+                for (int i = 0; i < extns.length; i++)
+                    sb.append("." + extns[i]);
+            }
+            desc = i18n.getString(sb.toString());
+        }
+        return desc;
     }
 
     public String[] getExtensions() {
-	return extns;
+        return extns;
     }
 
     public boolean accept(File f) {
-	if (f.isDirectory() || extns == null || extns.length == 0)
-	    return true;
+        if (f.isDirectory() || extns == null || extns.length == 0)
+            return true;
 
-	String fName = f.getName();
-	for (int i = 0; i < extns.length; i++) {
-	    if (fName.endsWith(extns[i]))
-		return true;		
-	}
-	return false;
+        String fName = f.getName();
+        for (int i = 0; i < extns.length; i++) {
+            if (fName.endsWith(extns[i]))
+                return true;
+        }
+        return false;
     }
 
     private String desc;

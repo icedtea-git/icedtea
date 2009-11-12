@@ -43,24 +43,24 @@ import org.xml.sax.helpers.DefaultHandler;
 
 class XMLReportReader {
     private SAXParser parser;
-    
+
     private IDHandler handler;
-    
+
     XMLReportReader() throws SAXException, ParserConfigurationException {
         parser = SAXParserFactory.newInstance().newSAXParser();
         handler = new IDHandler();
     }
-    
+
     Map readIDs(File file) throws SAXException, IOException {
         parser.parse(file, handler);
         return handler.getMap();
     }
-    
+
     private static class IDHandler extends DefaultHandler {
         private Map map = new HashMap();
-        
+
         private long time = 0;
-        
+
         public void startElement(String namespaceUri, String localName,
                 String qualifiedName, Attributes attributes)
                 throws SAXException {
@@ -85,11 +85,10 @@ class XMLReportReader {
                 }
             }
         }
-        
+
         public Map getMap() {
             return map;
         }
     }
-    
-}
 
+}

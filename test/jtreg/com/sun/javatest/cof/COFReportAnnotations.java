@@ -33,9 +33,9 @@ import java.util.List;
 
 /**
  * <p>Java class for ReportAnnotations complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="ReportAnnotations">
  *   &lt;complexContent>
@@ -47,8 +47,8 @@ import java.util.List;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 /*@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ReportAnnotations", propOrder = {
@@ -59,38 +59,38 @@ public class COFReportAnnotations extends COFItem{
 static LinkedHashMap xmlAttributes;
     static LinkedHashMap xmlElements;
 
-	static String xmlTagName;
+        static String xmlTagName;
 
-	static {
-		xmlElements = new LinkedHashMap();
-		xmlElements.put("annotation","annotation");
-		xmlTagName = "annotations";
-	}
+        static {
+                xmlElements = new LinkedHashMap();
+                xmlElements.put("annotation","annotation");
+                xmlTagName = "annotations";
+        }
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
     protected List/*<COFReportAnnotation>*/ annotation;
 
-	/**
+        /**
      * Gets the value of the annotation property.
-     * 
+     *
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the annotation property.
-     * 
+     *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getAnnotation().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link COFReportAnnotation }
-     * 
-     * 
+     *
+     *
      */
     public List/*<COFReportAnnotation>*/ getAnnotation() {
         if (annotation == null) {
@@ -99,16 +99,16 @@ static LinkedHashMap xmlAttributes;
         return this.annotation;
     }
 
-	LinkedHashMap getItemAttributes() {
-		return xmlAttributes;
-	}
+        LinkedHashMap getItemAttributes() {
+                return xmlAttributes;
+        }
 
     LinkedHashMap getItemElements() {
-		return xmlElements;
-	}
+                return xmlElements;
+        }
 
-	String getItemTagName() {
-		return xmlTagName;
-	}
+        String getItemTagName() {
+                return xmlTagName;
+        }
 
 }

@@ -57,16 +57,16 @@ public class Startup
      * in the resource bundle com.sun.javatest.tool.i18n.properties.
      */
     public Startup() {
-	showDefault();
+        showDefault();
     }
 
     /**
      * Create an object to display a startup screen.
      * @param i18n A resource bundle that defines the content of the startup screen.
      * @param prefix A prefix for resources in the resource file to display in
-     * the startup screen. The object checks to see if the resource 
-     * "<i>prefix</i>.icon" is defined: if so, it is used as the URL of a 
-     * resource containing an image to be display. If "<i>prefix</i>.icon" is 
+     * the startup screen. The object checks to see if the resource
+     * "<i>prefix</i>.icon" is defined: if so, it is used as the URL of a
+     * resource containing an image to be display. If "<i>prefix</i>.icon" is
      * not defined, the Startup object checks for three strings
      * "<i>prefix</i>.line1", "<i>prefix</i>.line2" and "<i>prefix</i>.line3",
      * which will be displayed in a simple Frame containing three lines of text.
@@ -83,9 +83,9 @@ public class Startup
      * will be used.
      * @param i18n A resource bundle that defines the content of the startup screen.
      * @param prefix A prefix for resources in the resource file to display in
-     * the startup screen. The object checks to see if the resource 
-     * "<i>prefix</i>.icon" is defined: if so, it is used as the URL of a 
-     * resource containing an image to be display. If "<i>prefix</i>.icon" is 
+     * the startup screen. The object checks to see if the resource
+     * "<i>prefix</i>.icon" is defined: if so, it is used as the URL of a
+     * resource containing an image to be display. If "<i>prefix</i>.icon" is
      * not defined, the Startup object checks for three strings
      * "<i>prefix</i>.line1", "<i>prefix</i>.line2" and "<i>prefix</i>.line3",
      * which will be displayed in a simple Frame containing three lines of text.
@@ -101,14 +101,14 @@ public class Startup
     }
 
     private void showDefault() {
-	show(I18NResourceBundle.getBundleForClass(Startup.class), "startup");
+        show(I18NResourceBundle.getBundleForClass(Startup.class), "startup");
     }
 
     private void show(I18NResourceBundle i18n, String prefix) {
-	String iconName = i18n.getOptionalString(prefix + ".icon");
+        String iconName = i18n.getOptionalString(prefix + ".icon");
         URL url = null;
 
-	if (iconName != null) {
+        if (iconName != null) {
             url = getClass().getClassLoader().getResource(iconName);
         }
 
@@ -125,11 +125,11 @@ public class Startup
             public Dimension getPreferredSize() {
                 return imageSize;
             }
-            
+
             public void update(Graphics g) {
                 paint(g);
             }
-            
+
             public void paint(Graphics g) {
                 g.drawImage(image, 0, 0, null);
             }
@@ -150,38 +150,38 @@ public class Startup
         catch (InterruptedException e) {
         }
 
-	if (imageSize == null) {
-	    frame = new Frame(ProductInfo.getName() + " " + ProductInfo.getVersion());
-	    setAccessibleInfo(frame, i18n, prefix + ".splash");
-	    frame.setBackground(Color.white);
-	    frame.add(new Label(i18n.getString(prefix + ".line1"), Label.CENTER), "North");
-	    frame.add(new Label(i18n.getString(prefix + ".line2"), Label.CENTER), "Center");
-	    frame.add(new Label(i18n.getString(prefix + ".line3"), Label.CENTER), "South");
-	    frame.add(new Label("          "), "East");
-	    frame.add(new Label("           "), "West");
-	    frame.setResizable(false);
-	}
+        if (imageSize == null) {
+            frame = new Frame(ProductInfo.getName() + " " + ProductInfo.getVersion());
+            setAccessibleInfo(frame, i18n, prefix + ".splash");
+            frame.setBackground(Color.white);
+            frame.add(new Label(i18n.getString(prefix + ".line1"), Label.CENTER), "North");
+            frame.add(new Label(i18n.getString(prefix + ".line2"), Label.CENTER), "Center");
+            frame.add(new Label(i18n.getString(prefix + ".line3"), Label.CENTER), "South");
+            frame.add(new Label("          "), "East");
+            frame.add(new Label("           "), "West");
+            frame.setResizable(false);
+        }
 
-	frame.pack();
+        frame.pack();
 
-	//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	Dimension size = frame.getSize();
-	GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	//frame.setLocation(screenSize.width/2 - size.width/2, screenSize.height/2 - size.height/2);
-	frame.setLocation(ge.getCenterPoint().x - size.width/2,
-			  ge.getCenterPoint().y - size.height/2);
-	frame.setVisible(true);
+        //Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension size = frame.getSize();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        //frame.setLocation(screenSize.width/2 - size.width/2, screenSize.height/2 - size.height/2);
+        frame.setLocation(ge.getCenterPoint().x - size.width/2,
+                          ge.getCenterPoint().y - size.height/2);
+        frame.setVisible(true);
     }
 
     Window getWindow() {
-	return frame;
+        return frame;
     }
 
     /**
      * Dispose of the window resources used by this object.
      */
     public void dispose() {
-	frame.dispose();
+        frame.dispose();
     }
 
     /**
@@ -189,16 +189,16 @@ public class Startup
      * by scheduling an event to be run on the AWT Event Queue.
      */
     public void disposeLater() {
-	EventQueue.invokeLater(new Runnable() {
-	    public void run() {
-		dispose();
-	    }
-	});
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                dispose();
+            }
+        });
     }
 
     private void setAccessibleInfo(Frame f, ResourceBundle i18n, String uiKey) {
-	f.getAccessibleContext().setAccessibleName(i18n.getString(uiKey + ".name"));
-	f.getAccessibleContext().setAccessibleDescription(i18n.getString(uiKey + ".desc"));
+        f.getAccessibleContext().setAccessibleName(i18n.getString(uiKey + ".name"));
+        f.getAccessibleContext().setAccessibleDescription(i18n.getString(uiKey + ".desc"));
     }
 
     private Frame frame;

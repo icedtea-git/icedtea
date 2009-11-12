@@ -38,23 +38,23 @@ import com.sun.javatest.util.I18NResourceBundle;
  */
 abstract class BP_BranchSubpanel extends JPanel {
     BP_BranchSubpanel(String name, UIFactory uif, BP_Model model, TestTreeModel ttm,
-		      String uiKey) {
-	setName(name);
-	setBackground(Color.white);
-	uif.setAccessibleInfo(this, uiKey);
+                      String uiKey) {
+        setName(name);
+        setBackground(Color.white);
+        uif.setAccessibleInfo(this, uiKey);
 
-	this.uif = uif;
-	this.model = model;
-	this.ttm = ttm;
+        this.uif = uif;
+        this.model = model;
+        this.ttm = ttm;
     }
 
     boolean isUpdateRequired(TestResultTable.TreeNode currNode) {
-	return (subpanelNode != currNode);
+        return (subpanelNode != currNode);
     }
 
 
     protected void updateSubpanel(TestResultTable.TreeNode currNode) {
-	subpanelNode = currNode;
+        subpanelNode = currNode;
     }
 
     /**
@@ -63,27 +63,27 @@ abstract class BP_BranchSubpanel extends JPanel {
      * anything which depends on the filters.
      */
     protected void invalidateFilters() {
-	filtersInvalidated = true;
+        filtersInvalidated = true;
     }
 
     protected void showMessage(String msg) {
-	// this not on the event thread yet, it gets switched in
-	// BranchModel
-	lastMsg = msg;
+        // this not on the event thread yet, it gets switched in
+        // BranchModel
+        lastMsg = msg;
 
-	if (isVisible()) {
-	    model.showMessage(lastMsg);
-	}
+        if (isVisible()) {
+            model.showMessage(lastMsg);
+        }
     }
 
     protected void showMesasge(I18NResourceBundle i18n, String key) {
-	showMessage(i18n.getString(key));
+        showMessage(i18n.getString(key));
     }
 
     // this method is to allow the GUI to restore the message if the
     // active panel is changed
     protected String getLastMessage() {
-	return lastMsg;
+        return lastMsg;
     }
 
     protected TestResultTable.TreeNode subpanelNode;
@@ -93,4 +93,3 @@ abstract class BP_BranchSubpanel extends JPanel {
     protected TestTreeModel ttm;
     protected boolean filtersInvalidated;
 }
-

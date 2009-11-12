@@ -93,113 +93,113 @@ import javax.swing.JInternalFrame;
 class QuickStartWizard extends ToolDialog
 {
     QuickStartWizard(ExecTool tool, UIFactory uif) {
-	super(tool, uif, "qsw");
-	this.tool = tool;
+        super(tool, uif, "qsw");
+        this.tool = tool;
     }
 
-    
-    
+
+
     protected void initGUI() {
         disableDefaultDisposeHandler();
-	initDirs();
-	initPanes();
+        initDirs();
+        initPanes();
 
-	setI18NTitle("qsw.title");
+        setI18NTitle("qsw.title");
 
-	body = uif.createPanel("qsw.body", new BorderLayout(), false);
-	body.setBorder(BorderFactory.createLoweredBevelBorder());
+        body = uif.createPanel("qsw.body", new BorderLayout(), false);
+        body.setBorder(BorderFactory.createLoweredBevelBorder());
 
-	/*
-	 *	*-----------------------+
-	 *	|	| head		|
-	 *	|	+---------------|
-	 *	|	|		|
-	 *	| logo	| question pane	|
-	 *	|	|		|
-	 *	|	+---------------|
-	 *	|	| error		|
-	 *	|-------+---------------+
-	 *	|	  buttons	|
-	 *	|-----------------------+
-	 */
+        /*
+         *      *-----------------------+
+         *      |       | head          |
+         *      |       +---------------|
+         *      |       |               |
+         *      | logo  | question pane |
+         *      |       |               |
+         *      |       +---------------|
+         *      |       | error         |
+         *      |-------+---------------+
+         *      |         buttons       |
+         *      |-----------------------+
+         */
 
-	TestSuite ts;
-	try {
-	    //System.err.println("QSG: installDirIsTestSuite=" + installDirIsTestSuite);
-	    //System.err.println("QSG: installParentDirIsTestSuite=" + installParentDirIsTestSuite);
-	    //System.err.println("QSG: userDirIsTestSuite=" + userDirIsTestSuite);
-	    if (installDirIsTestSuite)
-		ts = TestSuite.open(installDir);
-	    else if (installParentDirIsTestSuite)
-		ts = TestSuite.open(installParentDir);
-	    else if (userDirIsTestSuite)
-		ts = TestSuite.open(userDir);
-	    else 
-		ts = null;
-	}
-	catch (Throwable e) {
-	    ts = null;
-	}
+        TestSuite ts;
+        try {
+            //System.err.println("QSG: installDirIsTestSuite=" + installDirIsTestSuite);
+            //System.err.println("QSG: installParentDirIsTestSuite=" + installParentDirIsTestSuite);
+            //System.err.println("QSG: userDirIsTestSuite=" + userDirIsTestSuite);
+            if (installDirIsTestSuite)
+                ts = TestSuite.open(installDir);
+            else if (installParentDirIsTestSuite)
+                ts = TestSuite.open(installParentDir);
+            else if (userDirIsTestSuite)
+                ts = TestSuite.open(userDir);
+            else
+                ts = null;
+        }
+        catch (Throwable e) {
+            ts = null;
+        }
 
-	// logo...
-	JLabel logo;
-	
-	URL tsLogoURL = (ts == null ? null : ts.getLogo());
-	//System.err.println("QSG: tsLogoURL=" + tsLogoURL);	
-	if (tsLogoURL == null) {
-	    logo = new JLabel(tool.getManager().getDesktop().getLogo()); 
-	    logo.setName("qsw.jtlogo");
-	    logo.setBackground(uif.getI18NColor("qsw.jtlogo.bg"));
-	    uif.setAccessibleInfo(logo, "qsw.jtlogo");
-	}
-	else {
-	    logo = new JLabel(new ImageIcon(tsLogoURL));
-	    logo.setName("qsw.tslogo");
-	    logo.setBackground(Color.white);
-	    // the following comments are to keep the i18n checker happy
-	    // getI18NString("qsw.tslogo.desc")
-	    // getI18NString("qsw.tslogo.name")
-	    uif.setAccessibleInfo(logo, "qsw.tslogo");
-	}
-	logo.setOpaque(true);
-	logo.setFocusable(false); // mildly questionable, but it can't take/show focus
-	body.add(logo, BorderLayout.WEST);
-	
-	main = uif.createPanel("qsw.main", new BorderLayout(), false);
-	main.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 11));
-	head = uif.createOutputField("qsw.head");
-	head.setBorder(null);
-	head.setFont(head.getFont().deriveFont(Font.BOLD));
-	main.add(head, BorderLayout.NORTH);
+        // logo...
+        JLabel logo;
 
-	foot = uif.createOutputField("qsw.foot");
-	foot.setBorder(null);
-	foot.setFont(foot.getFont().deriveFont(Font.BOLD));
-	foot.setForeground(uif.getI18NColor("qsw.foot"));
-	main.add(foot, BorderLayout.SOUTH);
+        URL tsLogoURL = (ts == null ? null : ts.getLogo());
+        //System.err.println("QSG: tsLogoURL=" + tsLogoURL);
+        if (tsLogoURL == null) {
+            logo = new JLabel(tool.getManager().getDesktop().getLogo());
+            logo.setName("qsw.jtlogo");
+            logo.setBackground(uif.getI18NColor("qsw.jtlogo.bg"));
+            uif.setAccessibleInfo(logo, "qsw.jtlogo");
+        }
+        else {
+            logo = new JLabel(new ImageIcon(tsLogoURL));
+            logo.setName("qsw.tslogo");
+            logo.setBackground(Color.white);
+            // the following comments are to keep the i18n checker happy
+            // getI18NString("qsw.tslogo.desc")
+            // getI18NString("qsw.tslogo.name")
+            uif.setAccessibleInfo(logo, "qsw.tslogo");
+        }
+        logo.setOpaque(true);
+        logo.setFocusable(false); // mildly questionable, but it can't take/show focus
+        body.add(logo, BorderLayout.WEST);
 
-	body.add(main, BorderLayout.CENTER);
+        main = uif.createPanel("qsw.main", new BorderLayout(), false);
+        main.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 11));
+        head = uif.createOutputField("qsw.head");
+        head.setBorder(null);
+        head.setFont(head.getFont().deriveFont(Font.BOLD));
+        main.add(head, BorderLayout.NORTH);
 
-	setBody(body);
+        foot = uif.createOutputField("qsw.foot");
+        foot.setBorder(null);
+        foot.setFont(foot.getFont().deriveFont(Font.BOLD));
+        foot.setForeground(uif.getI18NColor("qsw.foot"));
+        main.add(foot, BorderLayout.SOUTH);
 
-	backBtn = uif.createButton("qsw.back", listener);
-	nextBtn = uif.createButton("qsw.next", listener);
-	doneBtn = uif.createButton("qsw.done", listener);
-	JButton cancelBtn = uif.createCancelButton("qsw.cancel");
+        body.add(main, BorderLayout.CENTER);
+
+        setBody(body);
+
+        backBtn = uif.createButton("qsw.back", listener);
+        nextBtn = uif.createButton("qsw.next", listener);
+        doneBtn = uif.createButton("qsw.done", listener);
+        JButton cancelBtn = uif.createCancelButton("qsw.cancel");
         cancelBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 closeExecTool(e);
             }
 
         });
-	setPane(taskPane);    
-	setButtons(new JButton[] { backBtn, nextBtn, doneBtn, cancelBtn }, null);
+        setPane(taskPane);
+        setButtons(new JButton[] { backBtn, nextBtn, doneBtn, cancelBtn }, null);
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        
+
     }
 
     private void closeExecTool(AWTEvent ev) {
-        
+
         Component src = (Component) ev.getSource();
         for (Container p = src.getParent(); p != null; p = p.getParent()) {
             if (p instanceof JInternalFrame || p instanceof Window &&  p.getParent() != null) {
@@ -207,77 +207,77 @@ class QuickStartWizard extends ToolDialog
                 break;
             }
         }
-        
+
         tool.getDesktop().removeTool(tool);
         tool.dispose();
     }
-    
-    private void initDirs() {
-	File classDir = Harness.getClassDir();
-	installDir = (classDir == null ? null : classDir.getParentFile());
-	installDirIsTestSuite = (installDir == null ? false : TestSuite.isTestSuite(installDir));
-	installParentDir = (installDir == null ? null : installDir.getParentFile());
-	installParentDirIsTestSuite = (installParentDir == null ? false : TestSuite.isTestSuite(installParentDir));
 
-	userDir = new File(System.getProperty("user.dir"));
-	userDirIsTestSuite = (userDir == null ? false : TestSuite.isTestSuite(userDir));
-	userDirIsWorkDirectory = (userDir == null ? false : WorkDirectory.isWorkDirectory(userDir));
+    private void initDirs() {
+        File classDir = Harness.getClassDir();
+        installDir = (classDir == null ? null : classDir.getParentFile());
+        installDirIsTestSuite = (installDir == null ? false : TestSuite.isTestSuite(installDir));
+        installParentDir = (installDir == null ? null : installDir.getParentFile());
+        installParentDirIsTestSuite = (installParentDir == null ? false : TestSuite.isTestSuite(installParentDir));
+
+        userDir = new File(System.getProperty("user.dir"));
+        userDirIsTestSuite = (userDir == null ? false : TestSuite.isTestSuite(userDir));
+        userDirIsWorkDirectory = (userDir == null ? false : WorkDirectory.isWorkDirectory(userDir));
     }
 
     private void initPanes() {
-	taskPane = new TaskPane();
-	configPane = new ConfigPane();
-	testSuitePane = new TestSuitePane();
-	newWorkDirPane = new CreateWorkDirPane();
-	openWorkDirPane = new OpenWorkDirPane();
-	endPane = new EndPane();
+        taskPane = new TaskPane();
+        configPane = new ConfigPane();
+        testSuitePane = new TestSuitePane();
+        newWorkDirPane = new CreateWorkDirPane();
+        openWorkDirPane = new OpenWorkDirPane();
+        endPane = new EndPane();
     }
 
     private void setPane(Pane p) {
-	if (currPane != null) 
-	    main.remove(currPane);
+        if (currPane != null)
+            main.remove(currPane);
 
-	p.update();
-	head.setText(p.getHead());
-	main.add(p, BorderLayout.CENTER);
-	showError(null);
-	backBtn.setEnabled(history.size() > 0);
-	p.updateNextButton();
-	doneBtn.setEnabled(p == endPane); 
-	currPane = p;
+        p.update();
+        head.setText(p.getHead());
+        main.add(p, BorderLayout.CENTER);
+        showError(null);
+        backBtn.setEnabled(history.size() > 0);
+        p.updateNextButton();
+        doneBtn.setEnabled(p == endPane);
+        currPane = p;
 
-	main.validate();
-	main.repaint();
+        main.validate();
+        main.repaint();
     }
 
     private void showError(String key) {
-	if (key == null) {
-	    foot.setText("");
-	    foot.setEnabled(false);
-	}
-	else {
-	    foot.setText(uif.getI18NString(key));
-	    foot.setEnabled(true);
-	    nextBtn.setEnabled(false);
-	}
+        if (key == null) {
+            foot.setText("");
+            foot.setEnabled(false);
+        }
+        else {
+            foot.setText(uif.getI18NString(key));
+            foot.setEnabled(true);
+            nextBtn.setEnabled(false);
+        }
     }
 
     private void doBack() {
-	int n = history.size();
-	if (n > 0) {
-	    Pane p = (Pane) (history.remove(n - 1));
-	    setPane(p);
-	}
+        int n = history.size();
+        if (n > 0) {
+            Pane p = (Pane) (history.remove(n - 1));
+            setPane(p);
+        }
     }
 
     private void doNext() {
-	Pane p = currPane.getNext();
-	if (p != null) {
-	    history.add(currPane);
-	    setPane(p);
-	}
+        Pane p = currPane.getNext();
+        if (p != null) {
+            history.add(currPane);
+            setPane(p);
+        }
     }
-    
+
     boolean checkSingleTestManager() {
         if (contextManager != null) {
             ExecToolManager em = tool.getExecToolManager();
@@ -289,22 +289,22 @@ class QuickStartWizard extends ToolDialog
         return true;
 
     }
-    
-    private void doDone() {
-	if (config == null)
-	    throw new IllegalStateException();
 
-	if (workDir != null)
-	    config.setWorkDirectory(workDir);
+    private void doDone() {
+        if (config == null)
+            throw new IllegalStateException();
+
+        if (workDir != null)
+            config.setWorkDirectory(workDir);
 
         tool.setInterviewParameters(config);
 
-	if (showConfigEditorFlag) 
-	    tool.showConfigEditor(runTestsFlag);
-	else if (runTestsFlag) 
-	    tool.runTests();
+        if (showConfigEditorFlag)
+            tool.showConfigEditor(runTestsFlag);
+        else if (runTestsFlag)
+            tool.runTests();
 
-	setVisible(false);
+        setVisible(false);
     }
 
     private ExecTool tool;
@@ -326,7 +326,7 @@ class QuickStartWizard extends ToolDialog
     private File configFile;
     private Properties jtmData;
     private File jtmFile;
-    
+
     private InterviewParameters config;
     private ContextManager contextManager;
     private TestSuite testSuite;
@@ -359,41 +359,41 @@ class QuickStartWizard extends ToolDialog
 
     private class Listener implements ActionListener
     {
-	public void actionPerformed(ActionEvent e) {
-	    Object src = e.getSource();
-	    if (src == nextBtn) 
-		doNext();
-	    else if (src == backBtn) 
-		doBack();
-	    else if (src == doneBtn) 
-		doDone();
-	    else
-		System.err.println("QSG.Listener " + e);
-	}
+        public void actionPerformed(ActionEvent e) {
+            Object src = e.getSource();
+            if (src == nextBtn)
+                doNext();
+            else if (src == backBtn)
+                doBack();
+            else if (src == doneBtn)
+                doDone();
+            else
+                System.err.println("QSG.Listener " + e);
+        }
     }
 
     private class FilePanel extends JPanel {
 
-	FilePanel(String key, final JFileChooser chooser) {
-	    uif.initPanel(this, key, new BorderLayout(), false);
+        FilePanel(String key, final JFileChooser chooser) {
+            uif.initPanel(this, key, new BorderLayout(), false);
 
-	    label = uif.createLabel(key, true);
+            label = uif.createLabel(key, true);
 
-	    field = uif.createInputField(key, label);
-	    currPathComp = field;
+            field = uif.createInputField(key, label);
+            currPathComp = field;
 
-	    button = uif.createButton(key + ".browse");
-	    button.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
+            button = uif.createButton(key + ".browse");
+            button.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
                         // seed the path if the user has started to enter
                         // something
                         String path = getPath();
-                        if (chooser instanceof FileChooser  && 
-                                ((FileChooser)chooser).getChosenExtension() != null && 
+                        if (chooser instanceof FileChooser  &&
+                                ((FileChooser)chooser).getChosenExtension() != null &&
                                 ((FileChooser)chooser).getChosenExtension().equals(".jti")) {
-                            
+
                             File f = ConfigEditor.loadConfigFile(
-                                contextManager, parent, uif, 
+                                contextManager, parent, uif,
                                 (FileChooser)chooser);
                             path = (f == null ? null : f.getPath());
                         }
@@ -412,293 +412,293 @@ class QuickStartWizard extends ToolDialog
                         field.setText(path);
                         if (combo != null)
                                 combo.setSelectedItem(path);
-		    }
-		});
+                    }
+                });
 
-	    add(label, BorderLayout.WEST);
-	    add(field, BorderLayout.CENTER); // default, may be changed to combo
-	    add(button, BorderLayout.EAST);
-	}
+            add(label, BorderLayout.WEST);
+            add(field, BorderLayout.CENTER); // default, may be changed to combo
+            add(button, BorderLayout.EAST);
+        }
 
-	public void setEnabled(boolean b) {
-	    super.setEnabled(b);
-	    label.setEnabled(b);
-	    currPathComp.setEnabled(b);
-	    button.setEnabled(b);
-	}
+        public void setEnabled(boolean b) {
+            super.setEnabled(b);
+            label.setEnabled(b);
+            currPathComp.setEnabled(b);
+            button.setEnabled(b);
+        }
 
-	void setSuggestions(String[] suggestions) {
-	    if (suggestions == null || suggestions.length == 0) 
-		setPathComponent(field);
-	    else {
-		if (combo == null) {
-		    combo = uif.createChoice(getName()/*key*/, true, label);
-		    //combo.setEditable(true);
-		    combo.setFont(combo.getFont().deriveFont(Font.PLAIN));
-		    if (listener != null) {
-			// would be better to use editor addActionListener
-			Component c = combo.getEditor().getEditorComponent();
-			if (c instanceof JTextField)
-			    ((JTextField) c).getDocument().addDocumentListener(listener);
-		    }
-		}
-		setPathComponent(combo);
-		combo.removeAllItems();
-		for (int i = 0; i < suggestions.length; i++) 
-		    combo.addItem(suggestions[i]);
-	    }
-	}
+        void setSuggestions(String[] suggestions) {
+            if (suggestions == null || suggestions.length == 0)
+                setPathComponent(field);
+            else {
+                if (combo == null) {
+                    combo = uif.createChoice(getName()/*key*/, true, label);
+                    //combo.setEditable(true);
+                    combo.setFont(combo.getFont().deriveFont(Font.PLAIN));
+                    if (listener != null) {
+                        // would be better to use editor addActionListener
+                        Component c = combo.getEditor().getEditorComponent();
+                        if (c instanceof JTextField)
+                            ((JTextField) c).getDocument().addDocumentListener(listener);
+                    }
+                }
+                setPathComponent(combo);
+                combo.removeAllItems();
+                for (int i = 0; i < suggestions.length; i++)
+                    combo.addItem(suggestions[i]);
+            }
+        }
 
-	File getFile() {
-	    String path = getPath();
-	    return (path == null || path.length() == 0 ? null : new File(path));
-	}
+        File getFile() {
+            String path = getPath();
+            return (path == null || path.length() == 0 ? null : new File(path));
+        }
 
-	String getPath() {
-	    //System.err.println("QSG.FP.getPath currComp=" + currPathComp);
-	    //System.err.println("QSG.FP.getPath combo.selectedItem=" + (combo == null ? "null" : String.valueOf(combo.getSelectedItem())));
-	    if (currPathComp == field)
-		return field.getText();
-	    else if (currPathComp == combo) {
-		Component c = combo.getEditor().getEditorComponent();
-		if (c.isShowing() && c instanceof JTextField) 
-		    return ((JTextField) c).getText();
-		else
-		    return ((String) (combo.getSelectedItem()));
-	    }
-	    else 
-		throw new IllegalStateException();
-	}
+        String getPath() {
+            //System.err.println("QSG.FP.getPath currComp=" + currPathComp);
+            //System.err.println("QSG.FP.getPath combo.selectedItem=" + (combo == null ? "null" : String.valueOf(combo.getSelectedItem())));
+            if (currPathComp == field)
+                return field.getText();
+            else if (currPathComp == combo) {
+                Component c = combo.getEditor().getEditorComponent();
+                if (c.isShowing() && c instanceof JTextField)
+                    return ((JTextField) c).getText();
+                else
+                    return ((String) (combo.getSelectedItem()));
+            }
+            else
+                throw new IllegalStateException();
+        }
 
-	void setDocumentListener(DocumentListener l) {
-	    field.getDocument().addDocumentListener(l);
-	    listener = l;
-	}
-	
-	private void setPathComponent(JComponent newPathComp) {
-	    //System.err.println("QSG.FP.setPathComponent " + newPathComp);
-	    if (newPathComp != currPathComp) {
-		if (currPathComp != null)
-		    remove(currPathComp);
-		add(newPathComp, BorderLayout.CENTER);
-		newPathComp.setEnabled(isEnabled());
-		label.setLabelFor(newPathComp);
-		currPathComp = newPathComp;
-	    }
-	}
+        void setDocumentListener(DocumentListener l) {
+            field.getDocument().addDocumentListener(l);
+            listener = l;
+        }
 
-	private JLabel label;
-	private JTextField field;
-	private JComboBox combo;
-	private JComponent currPathComp;
-	private JButton button;
-	private DocumentListener listener;
+        private void setPathComponent(JComponent newPathComp) {
+            //System.err.println("QSG.FP.setPathComponent " + newPathComp);
+            if (newPathComp != currPathComp) {
+                if (currPathComp != null)
+                    remove(currPathComp);
+                add(newPathComp, BorderLayout.CENTER);
+                newPathComp.setEnabled(isEnabled());
+                label.setLabelFor(newPathComp);
+                currPathComp = newPathComp;
+            }
+        }
+
+        private JLabel label;
+        private JTextField field;
+        private JComboBox combo;
+        private JComponent currPathComp;
+        private JButton button;
+        private DocumentListener listener;
     }
 
     private abstract class Pane extends JPanel {
-	Pane(String key) {
-	    paneKey = key;
-	    setLayout(new GridBagLayout());
-	    int dpi = uif.getDotsPerInch();
-	    setPreferredSize(new Dimension(5 * dpi, (int) (2.5 * dpi)));
-	    head = uif.getI18NString(paneKey + ".hd");
-	}
+        Pane(String key) {
+            paneKey = key;
+            setLayout(new GridBagLayout());
+            int dpi = uif.getDotsPerInch();
+            setPreferredSize(new Dimension(5 * dpi, (int) (2.5 * dpi)));
+            head = uif.getI18NString(paneKey + ".hd");
+        }
 
-	void stateChanged() { }
+        void stateChanged() { }
 
-	String getHead() {
-	    return head;
-	}
+        String getHead() {
+            return head;
+        }
 
-	void update() {
-	    updateNextButton();
-	}
+        void update() {
+            updateNextButton();
+        }
 
-	abstract void updateNextButton();
+        abstract void updateNextButton();
 
-	Pane getNext() {
-	    return null;
-	}
+        Pane getNext() {
+            return null;
+        }
 
-	JCheckBox addCheck(String key) {
-	    JCheckBox cb = uif.createCheckBox(paneKey + "." + key);
-	    cb.addChangeListener(changeListener);
+        JCheckBox addCheck(String key) {
+            JCheckBox cb = uif.createCheckBox(paneKey + "." + key);
+            cb.addChangeListener(changeListener);
 
-	    GridBagConstraints c = new GridBagConstraints();
-	    c.fill = GridBagConstraints.HORIZONTAL;
-	    c.gridwidth = GridBagConstraints.REMAINDER;
-	    c.insets.left = 10;
-	    c.insets.bottom = 5;
-	    c.weightx = 1;
-	    add(cb, c);
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            c.insets.left = 10;
+            c.insets.bottom = 5;
+            c.weightx = 1;
+            add(cb, c);
 
-	    return cb;
-	}
+            return cb;
+        }
 
-	JRadioButton addChoice(String key, ButtonGroup bg) {
-	    JRadioButton rb = uif.createRadioButton(paneKey + "." + key, bg);
-	    rb.addChangeListener(changeListener);
+        JRadioButton addChoice(String key, ButtonGroup bg) {
+            JRadioButton rb = uif.createRadioButton(paneKey + "." + key, bg);
+            rb.addChangeListener(changeListener);
 
-	    GridBagConstraints c = new GridBagConstraints();
-	    c.fill = GridBagConstraints.HORIZONTAL;
-	    c.gridwidth = GridBagConstraints.REMAINDER;
-	    c.insets.left = 10;
-	    c.insets.bottom = 5;
-	    c.weightx = 1;
-	    add(rb, c);
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            c.insets.left = 10;
+            c.insets.bottom = 5;
+            c.weightx = 1;
+            add(rb, c);
 
-	    return rb;
-	}
+            return rb;
+        }
 
-	FilePanel addFile(String key, JFileChooser chooser) {
-	    return addFile(key, chooser, null);
-	}
+        FilePanel addFile(String key, JFileChooser chooser) {
+            return addFile(key, chooser, null);
+        }
 
-	FilePanel addFile(String key, final JFileChooser chooser, final JRadioButton rb) {
-	    final FilePanel fp = new FilePanel(paneKey + "." + key, chooser);
+        FilePanel addFile(String key, final JFileChooser chooser, final JRadioButton rb) {
+            final FilePanel fp = new FilePanel(paneKey + "." + key, chooser);
 
-	    GridBagConstraints c = new GridBagConstraints();
-	    c.fill = GridBagConstraints.HORIZONTAL;
-	    c.gridwidth = GridBagConstraints.REMAINDER;
-	    c.insets.bottom = 10;
-	    c.insets.left = (rb == null ? 0 : 30);
-	    c.weightx = 1;
-	    add(fp, c);
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            c.insets.bottom = 10;
+            c.insets.left = (rb == null ? 0 : 30);
+            c.weightx = 1;
+            add(fp, c);
 
-	    if (rb != null) {
-		fp.addAncestorListener(new AncestorListener() {
-			public void ancestorAdded(AncestorEvent e) {
-			    fp.setEnabled(rb.isSelected());
-			}
-			public void ancestorMoved(AncestorEvent e) { }
-			public void ancestorRemoved(AncestorEvent e) { }
-		    });
-		rb.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-			    fp.setEnabled(rb.isSelected());
-			}
-		    });
-	    }
+            if (rb != null) {
+                fp.addAncestorListener(new AncestorListener() {
+                        public void ancestorAdded(AncestorEvent e) {
+                            fp.setEnabled(rb.isSelected());
+                        }
+                        public void ancestorMoved(AncestorEvent e) { }
+                        public void ancestorRemoved(AncestorEvent e) { }
+                    });
+                rb.addChangeListener(new ChangeListener() {
+                        public void stateChanged(ChangeEvent e) {
+                            fp.setEnabled(rb.isSelected());
+                        }
+                    });
+            }
 
-	    fp.setDocumentListener(new DocumentListener() {
-		    public void changedUpdate(DocumentEvent e) {
-			changeListener.stateChanged(new ChangeEvent(fp));
-		    }
-		    public void insertUpdate(DocumentEvent e) {
-			changedUpdate(e);
-		    }
-		    public void removeUpdate(DocumentEvent e) {
-			changedUpdate(e);
-		    }
-		});
+            fp.setDocumentListener(new DocumentListener() {
+                    public void changedUpdate(DocumentEvent e) {
+                        changeListener.stateChanged(new ChangeEvent(fp));
+                    }
+                    public void insertUpdate(DocumentEvent e) {
+                        changedUpdate(e);
+                    }
+                    public void removeUpdate(DocumentEvent e) {
+                        changedUpdate(e);
+                    }
+                });
 
-	    return fp;
-	}
+            return fp;
+        }
 
-	JTextArea addText() {
-	    return addText(true);
-	}
+        JTextArea addText() {
+            return addText(true);
+        }
 
-	JTextArea addText(boolean initContent) {
-	    // text area...
-	    JTextArea textArea = uif.createTextArea("qsw.text");
-	    textArea.setEditable(false);
-	    textArea.setLineWrap(true);
-	    textArea.setOpaque(false);
-	    textArea.setWrapStyleWord(true);
-	    // override JTextArea focus traversal keys, resetting them to 
-	    // the Component default (i.e. the same as for the parent.)
-	    textArea.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
-	    textArea.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, null);
-	    if (initContent)
-		textArea.setText(uif.getI18NString(paneKey + ".txt"));
-	    /*
-	      // set enter to be same as Next
-	      {
-	      InputMap im = textArea.getInputMap();
-	      im.put(enterKey, "next");
-	      ActionMap am = textArea.getActionMap();
-	      am.put("next", valueAction);
-	      }
-	    */
-	    GridBagConstraints c = new GridBagConstraints();
-	    c.gridwidth = GridBagConstraints.REMAINDER;
-	    c.insets.top = 20;
-	    c.insets.right = 10;
-	    c.insets.bottom = 10;
-	    c.fill = GridBagConstraints.BOTH;
-	    add(textArea, c);
-	    return textArea;
-	}
+        JTextArea addText(boolean initContent) {
+            // text area...
+            JTextArea textArea = uif.createTextArea("qsw.text");
+            textArea.setEditable(false);
+            textArea.setLineWrap(true);
+            textArea.setOpaque(false);
+            textArea.setWrapStyleWord(true);
+            // override JTextArea focus traversal keys, resetting them to
+            // the Component default (i.e. the same as for the parent.)
+            textArea.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
+            textArea.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, null);
+            if (initContent)
+                textArea.setText(uif.getI18NString(paneKey + ".txt"));
+            /*
+              // set enter to be same as Next
+              {
+              InputMap im = textArea.getInputMap();
+              im.put(enterKey, "next");
+              ActionMap am = textArea.getActionMap();
+              am.put("next", valueAction);
+              }
+            */
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            c.insets.top = 20;
+            c.insets.right = 10;
+            c.insets.bottom = 10;
+            c.fill = GridBagConstraints.BOTH;
+            add(textArea, c);
+            return textArea;
+        }
 
-	private ChangeListener changeListener = new ChangeListener() {
-		public void stateChanged(ChangeEvent e) {
-		    Pane.this.stateChanged();
-		}
-	    };
+        private ChangeListener changeListener = new ChangeListener() {
+                public void stateChanged(ChangeEvent e) {
+                    Pane.this.stateChanged();
+                }
+            };
 
-	private String paneKey;
-	private String head;
+        private String paneKey;
+        private String head;
     };
 
     //------------------------------------------------------------------------------
 
     private class TaskPane extends Pane {
-	TaskPane() {
-	    super("qsw.tsk");
-	    addText();
-	    newRun = addChoice("new", bg);
-	    resumeRun = addChoice("resume", bg);
-	    browse = addChoice("browse", bg);
-	}
-	
-	void stateChanged() {
-	    task = (newRun.isSelected() ? NEW 
-		    : resumeRun.isSelected() ? RESUME 
-		    : browse.isSelected() ? BROWSE 
-		    : UNSET);
-	    updateNextButton();
-	}
+        TaskPane() {
+            super("qsw.tsk");
+            addText();
+            newRun = addChoice("new", bg);
+            resumeRun = addChoice("resume", bg);
+            browse = addChoice("browse", bg);
+        }
 
-	void updateNextButton() {
-	    nextBtn.setEnabled(task != UNSET);
-	}
+        void stateChanged() {
+            task = (newRun.isSelected() ? NEW
+                    : resumeRun.isSelected() ? RESUME
+                    : browse.isSelected() ? BROWSE
+                    : UNSET);
+            updateNextButton();
+        }
 
-        
-	Pane getNext() {
-            
-	    return (task == NEW || task == BROWSE ? (Pane) testSuitePane
-		    : task == RESUME ? (Pane) openWorkDirPane
-		    : null);
-	}
+        void updateNextButton() {
+            nextBtn.setEnabled(task != UNSET);
+        }
 
 
-	private ButtonGroup bg = new ButtonGroup();
-	private JRadioButton newRun;
-	private JRadioButton resumeRun;
-	private JRadioButton browse;
+        Pane getNext() {
+
+            return (task == NEW || task == BROWSE ? (Pane) testSuitePane
+                    : task == RESUME ? (Pane) openWorkDirPane
+                    : null);
+        }
+
+
+        private ButtonGroup bg = new ButtonGroup();
+        private JRadioButton newRun;
+        private JRadioButton resumeRun;
+        private JRadioButton browse;
     };
 
     //------------------------------------------------------------------------------
 
     private class ConfigPane extends Pane  {
-	ConfigPane() {
-	    super("qsw.cfg");
-	    addText();
-	    jtiChooser = new FileChooser(true);
-	    jtiChooser.addChoosableExtension(".jti", 
-					  uif.getI18NString("qsw.cfg.jtiFiles"));
-            
-	    jtmChooser = new FileChooser(true);
-            jtmChooser.setDialogTitle(uif.getI18NString("qsw.cfg.jtmChooser.title"));
-	    jtmChooser.addChoosableExtension(".jtm", 
-					  uif.getI18NString("qsw.cfg.jtmFiles"));
+        ConfigPane() {
+            super("qsw.cfg");
+            addText();
+            jtiChooser = new FileChooser(true);
+            jtiChooser.addChoosableExtension(".jti",
+                                          uif.getI18NString("qsw.cfg.jtiFiles"));
 
-	    newConfig = addChoice("new", bg);
+            jtmChooser = new FileChooser(true);
+            jtmChooser.setDialogTitle(uif.getI18NString("qsw.cfg.jtmChooser.title"));
+            jtmChooser.addChoosableExtension(".jtm",
+                                          uif.getI18NString("qsw.cfg.jtmFiles"));
+
+            newConfig = addChoice("new", bg);
             jtmConfig = addChoice("template", bg);
             jtmPanel = addFile("jtm.field", jtmChooser, jtmConfig);
-            
-	}
+
+        }
 
 
         void tuneTemplateFilter() {
@@ -712,11 +712,11 @@ class QuickStartWizard extends ToolDialog
 
 
         private void tunePane() {
-            
+
             if (contextManager != null) {
-                
+
                 jtmChooser.setCurrentDirectory(contextManager.getDefaultTemplateLoadPath());
-                        
+
                 if (contextManager.getFeatureManager() != null) {
                     FeatureManager fm = contextManager.getFeatureManager();
                     jtmConfig.setEnabled(fm.isEnabled(FeatureManager.TEMPLATE_USAGE));
@@ -724,48 +724,48 @@ class QuickStartWizard extends ToolDialog
                 }
             }
         }
-	
 
-	void stateChanged() {
-	    showError(null);
-	    updateNextButton();
-	}
 
-        
-	void updateNextButton() {
-            
+        void stateChanged() {
+            showError(null);
+            updateNextButton();
+        }
+
+
+        void updateNextButton() {
+
             tunePane();
-            
-	    if (newConfig.isSelected()) {
-		nextBtn.setEnabled(true);
-	    } else if (jtmConfig.isSelected()) {
-		File f = jtmPanel.getFile();
-		nextBtn.setEnabled(f != null && f.exists() && f.isFile());
+
+            if (newConfig.isSelected()) {
+                nextBtn.setEnabled(true);
+            } else if (jtmConfig.isSelected()) {
+                File f = jtmPanel.getFile();
+                nextBtn.setEnabled(f != null && f.exists() && f.isFile());
             }
-	    else
-		nextBtn.setEnabled(false);
-	}
-	
-	Pane getNext() {
-	    if (bg.getSelection() == null) 
-		return null;
-	    
-	    if (newConfig.isSelected()) {
-		configData = null;
-		configFile = null;
+            else
+                nextBtn.setEnabled(false);
+        }
+
+        Pane getNext() {
+            if (bg.getSelection() == null)
+                return null;
+
+            if (newConfig.isSelected()) {
+                configData = null;
+                configFile = null;
                 jtmData = null;
                 jtmFile = null;
-	    } else if (jtmConfig.isSelected()) {
+            } else if (jtmConfig.isSelected()) {
                 jtmData = new Properties();
                 jtmFile = chkConfigFile(jtmPanel, jtmData);
                 if (jtmFile == null) {
                     return null;
                 }
-                
+
                 if (jtmData != null) {
                     String jtmDataInterview = (String) (jtmData.get("INTERVIEW"));
 
-                    if (jtmDataInterview != null 
+                    if (jtmDataInterview != null
                         && !config.getClass().getName().equals(jtmDataInterview)) {
                         uif.showError("qsw.ts.templateMismatch");
                         return null;
@@ -793,16 +793,16 @@ class QuickStartWizard extends ToolDialog
                         }
                     }
                 }
-                
+
                 return (task == NEW ? (Pane) newWorkDirPane : (Pane) endPane);
-	    }
-            
-            
-            
+            }
+
+
+
             if (configData != null) {
                 String configDataInterview = (String) (configData.get("INTERVIEW"));
 
-                if (configDataInterview != null 
+                if (configDataInterview != null
                     && !config.getClass().getName().equals(configDataInterview)) {
                     uif.showError("qsw.ts.configMismatch");
                     return null;
@@ -816,12 +816,12 @@ class QuickStartWizard extends ToolDialog
                     return null;
                 }
             }
-            
-            return (config == null ? null : task == NEW ? (Pane) newWorkDirPane : (Pane) endPane);
-	    
-	}
 
-        
+            return (config == null ? null : task == NEW ? (Pane) newWorkDirPane : (Pane) endPane);
+
+        }
+
+
         private File chkConfigFile(FilePanel panel, Properties data ) {
             String path = panel.getPath();
             File file = null;
@@ -844,7 +844,7 @@ class QuickStartWizard extends ToolDialog
             try {
                 InputStream in = new BufferedInputStream(new FileInputStream(f));
 
-                try { 
+                try {
                     data.clear();
                     data.load(in);
                     file = f;
@@ -866,118 +866,118 @@ class QuickStartWizard extends ToolDialog
             if (!InterviewParameters.isChecksumValid(data, true)) {
                 uif.showError("qsw.cfg.badChecksum");
                 return null;
-            }			
+            }
 
             return file;
-        }        
-        
-	private ButtonGroup bg = new ButtonGroup();
-	private JRadioButton newConfig;
-	private JRadioButton fileConfig;
-	private JRadioButton jtmConfig;
-	private FilePanel filePanel;
-	private FilePanel jtmPanel;
-	private FileChooser jtiChooser;
-	private FileChooser jtmChooser;
+        }
 
-	private long configLastModified;	
+        private ButtonGroup bg = new ButtonGroup();
+        private JRadioButton newConfig;
+        private JRadioButton fileConfig;
+        private JRadioButton jtmConfig;
+        private FilePanel filePanel;
+        private FilePanel jtmPanel;
+        private FileChooser jtiChooser;
+        private FileChooser jtmChooser;
+
+        private long configLastModified;
 
     };
 
     //------------------------------------------------------------------------------
 
     private class TestSuitePane extends Pane {
-	TestSuitePane() {
-	    super("qsw.ts");
-	    addText();
-	    chooser = new TestSuiteChooser();
-	    testSuitePanel = addFile("file", chooser);
-	}
+        TestSuitePane() {
+            super("qsw.ts");
+            addText();
+            chooser = new TestSuiteChooser();
+            testSuitePanel = addFile("file", chooser);
+        }
 
-	void stateChanged() {
-	    showError(null);
-	    updateNextButton();
-	}
-	
-	void update() {
-	    super.update();
-	    
-	    // update file with suggestions based on -
-	    // - config template
-	    // - installation directory and its parent
-	    // - current directory
+        void stateChanged() {
+            showError(null);
+            updateNextButton();
+        }
 
-	    Set s = new TreeSet();
-	    if (configData != null) {
-		String configTestSuite = (String) (configData.get("TESTSUITE"));
-		if (configTestSuite != null)
-		    s.add(configTestSuite);
-	    }
+        void update() {
+            super.update();
 
-	    if (userDirIsTestSuite)
-		s.add(userDir.getPath());
+            // update file with suggestions based on -
+            // - config template
+            // - installation directory and its parent
+            // - current directory
 
-	    if (installDirIsTestSuite)
-		s.add(installDir.getPath());
+            Set s = new TreeSet();
+            if (configData != null) {
+                String configTestSuite = (String) (configData.get("TESTSUITE"));
+                if (configTestSuite != null)
+                    s.add(configTestSuite);
+            }
 
-	    if (installParentDirIsTestSuite)
-		s.add(installParentDir.getPath());
+            if (userDirIsTestSuite)
+                s.add(userDir.getPath());
 
-	    if (s.size() > 0)
-		testSuitePanel.setSuggestions((String[]) (s.toArray(new String[s.size()])));
-	}
+            if (installDirIsTestSuite)
+                s.add(installDir.getPath());
 
-	void updateNextButton() {
-	    File file = testSuitePanel.getFile();
-	    TestSuite chooserTestSuite = chooser.getSelectedTestSuite();
+            if (installParentDirIsTestSuite)
+                s.add(installParentDir.getPath());
 
-	    if (file == null)
-		nextBtn.setEnabled(false);
-	    else if (chooserTestSuite != null && chooserTestSuite.getRoot().equals(file))
-		nextBtn.setEnabled(true);
-	    else
-		nextBtn.setEnabled(TestSuite.isTestSuite(file));
-	}
-	
-	Pane getNext() {
-	    // update test suite and check validity?
-	    // if ts == chooser.getSelectedFile, use chooser.getSelectedTestSuite
-	    File file = testSuitePanel.getFile();
-	    if (file == null) {
-		showError("qsw.ts.noFile");
-		return null;
-	    }
-	    else if (testSuite == null || !testSuite.getRoot().equals(file) || config == null) {
-		try {
-		    TestSuite chooserTestSuite = chooser.getSelectedTestSuite();
-		    if (chooserTestSuite != null 
-			&& chooserTestSuite.getRoot().equals(file)) 
-			testSuite = chooserTestSuite;
-		    else
-			testSuite = TestSuite.open(file);
-		}
-		catch (FileNotFoundException e) {
-		    showError("qsw.ts.cantFindFile");
-		    return null;
-		}
-		catch (TestSuite.Fault e) {
-		    uif.showError("qsw.ts.cantOpen", 
-				  new Object[] { file, e.getMessage() });
-		    return null;
-		}
+            if (s.size() > 0)
+                testSuitePanel.setSuggestions((String[]) (s.toArray(new String[s.size()])));
+        }
 
-		// now that test suite is set, try to update config too
-		try {
-		    config = testSuite.createInterview();
-		}
-		catch (TestSuite.Fault e) {
-		    uif.showError("qsw.ts.cantCreateInterview", e.getMessage());
-		    return null;
-		}
-		catch (Throwable t) {
-		    uif.showError("qsw.ts.cantCreateInterview", t.toString());
-		    return null;
-		}
+        void updateNextButton() {
+            File file = testSuitePanel.getFile();
+            TestSuite chooserTestSuite = chooser.getSelectedTestSuite();
+
+            if (file == null)
+                nextBtn.setEnabled(false);
+            else if (chooserTestSuite != null && chooserTestSuite.getRoot().equals(file))
+                nextBtn.setEnabled(true);
+            else
+                nextBtn.setEnabled(TestSuite.isTestSuite(file));
+        }
+
+        Pane getNext() {
+            // update test suite and check validity?
+            // if ts == chooser.getSelectedFile, use chooser.getSelectedTestSuite
+            File file = testSuitePanel.getFile();
+            if (file == null) {
+                showError("qsw.ts.noFile");
+                return null;
+            }
+            else if (testSuite == null || !testSuite.getRoot().equals(file) || config == null) {
+                try {
+                    TestSuite chooserTestSuite = chooser.getSelectedTestSuite();
+                    if (chooserTestSuite != null
+                        && chooserTestSuite.getRoot().equals(file))
+                        testSuite = chooserTestSuite;
+                    else
+                        testSuite = TestSuite.open(file);
+                }
+                catch (FileNotFoundException e) {
+                    showError("qsw.ts.cantFindFile");
+                    return null;
+                }
+                catch (TestSuite.Fault e) {
+                    uif.showError("qsw.ts.cantOpen",
+                                  new Object[] { file, e.getMessage() });
+                    return null;
+                }
+
+                // now that test suite is set, try to update config too
+                try {
+                    config = testSuite.createInterview();
+                }
+                catch (TestSuite.Fault e) {
+                    uif.showError("qsw.ts.cantCreateInterview", e.getMessage());
+                    return null;
+                }
+                catch (Throwable t) {
+                    uif.showError("qsw.ts.cantCreateInterview", t.toString());
+                    return null;
+                }
 
             }
 
@@ -989,179 +989,179 @@ class QuickStartWizard extends ToolDialog
             if (!checkSingleTestManager()) {
                 return null;
             }
-            
-            
+
+
             return (task == NEW || task == BROWSE ? (Pane) configPane
                     : task == RESUME ? (Pane) openWorkDirPane
                     : null);
-            
-	   // return (config == null ? null : task == NEW ? (Pane) newWorkDirPane : (Pane) endPane);
-	}
 
-	private FilePanel testSuitePanel;
-	private TestSuiteChooser chooser;
+           // return (config == null ? null : task == NEW ? (Pane) newWorkDirPane : (Pane) endPane);
+        }
+
+        private FilePanel testSuitePanel;
+        private TestSuiteChooser chooser;
     };
 
     //------------------------------------------------------------------------------
 
     private abstract class WorkDirPane extends Pane {
-	WorkDirPane(String key) {
-	    super(key);
-	    textArea = addText();
+        WorkDirPane(String key) {
+            super(key);
+            textArea = addText();
             chooser = new WorkDirChooser(true);
-	    workDirPanel = addFile("file", chooser);
-	}
+            workDirPanel = addFile("file", chooser);
+        }
 
-	protected final JTextArea textArea;
-	protected final FilePanel workDirPanel;
-	protected WorkDirChooser chooser;	
+        protected final JTextArea textArea;
+        protected final FilePanel workDirPanel;
+        protected WorkDirChooser chooser;
     };
 
     private class CreateWorkDirPane extends WorkDirPane {
-	CreateWorkDirPane() {
-	    super("qsw.nwd");
-	    chooser.setMode(WorkDirChooser.NEW);
-	}
+        CreateWorkDirPane() {
+            super("qsw.nwd");
+            chooser.setMode(WorkDirChooser.NEW);
+        }
 
-	void stateChanged() {
-	    updateNextButton();
-	}
+        void stateChanged() {
+            updateNextButton();
+        }
 
-	public void update() {
-	    chooser.setTestSuite(testSuite);
-	}
+        public void update() {
+            chooser.setTestSuite(testSuite);
+        }
 
-	void updateNextButton() {
-	    String path = workDirPanel.getPath();
-	    nextBtn.setEnabled(path != null && path.length() > 0);
-	}
-	
-	Pane getNext() {
-	    File file = workDirPanel.getFile();
+        void updateNextButton() {
+            String path = workDirPanel.getPath();
+            nextBtn.setEnabled(path != null && path.length() > 0);
+        }
 
-	    if (file == null) {
-		showError("qsw.nwd.noFile");
-		return null;
-	    }
-	    else if (workDir == null || !workDir.getRoot().equals(file)) {
-		try {
-		    WorkDirectory chooserWorkDir = chooser.getSelectedWorkDirectory();
-		    if (chooserWorkDir != null && canonicalEquals(chooserWorkDir.getRoot(), file)) {
-			// workdir was created inside the chooser
-			workDir = chooserWorkDir;
-		    }
-		    else
-			workDir = WorkDirectory.create(file, testSuite);
-                    
+        Pane getNext() {
+            File file = workDirPanel.getFile();
+
+            if (file == null) {
+                showError("qsw.nwd.noFile");
+                return null;
+            }
+            else if (workDir == null || !workDir.getRoot().equals(file)) {
+                try {
+                    WorkDirectory chooserWorkDir = chooser.getSelectedWorkDirectory();
+                    if (chooserWorkDir != null && canonicalEquals(chooserWorkDir.getRoot(), file)) {
+                        // workdir was created inside the chooser
+                        workDir = chooserWorkDir;
+                    }
+                    else
+                        workDir = WorkDirectory.create(file, testSuite);
+
                     if (jtmFile != null && workDir != null && jtmTemplate) {
                         TemplateUtilities.setTemplateFile(workDir, jtmFile, true);
                         //tool.setWorkDir(workDir, true);
                         //tool.getConfigHandler().loadConfigNoUI(jtmFile);
                     }
-                    
-		}
-		catch (WorkDirectory.Fault e) {
-		    uif.showError("qsw.nwd.cantCreate", 
-				  new Object[] { file, e.getMessage() });
-		    return null;
-		} catch (IOException ex) {
+
+                }
+                catch (WorkDirectory.Fault e) {
+                    uif.showError("qsw.nwd.cantCreate",
+                                  new Object[] { file, e.getMessage() });
+                    return null;
+                } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-	    }
+            }
 
-	    return endPane;
-	}
+            return endPane;
+        }
     };
 
     private static boolean canonicalEquals(File f1, File f2) {
-	try {
-	    File c1 = f1.getCanonicalFile();
-	    File c2 = f2.getCanonicalFile();
-	    return (c1.equals(c2));
-	}
-	catch (IOException e) {
-	    return false;
-	}
+        try {
+            File c1 = f1.getCanonicalFile();
+            File c2 = f2.getCanonicalFile();
+            return (c1.equals(c2));
+        }
+        catch (IOException e) {
+            return false;
+        }
     }
-    
+
     private class OpenWorkDirPane extends WorkDirPane {
-	OpenWorkDirPane() {
-	    super("qsw.owd");
-	    chooser.setMode(WorkDirChooser.OPEN_FOR_ANY_TESTSUITE);
+        OpenWorkDirPane() {
+            super("qsw.owd");
+            chooser.setMode(WorkDirChooser.OPEN_FOR_ANY_TESTSUITE);
 
-	    if (userDirIsWorkDirectory) 
-		workDirPanel.setSuggestions(new String[] { userDir.getPath() });
-	}
+            if (userDirIsWorkDirectory)
+                workDirPanel.setSuggestions(new String[] { userDir.getPath() });
+        }
 
-	void stateChanged() {
-	    updateNextButton();
-	}
+        void stateChanged() {
+            updateNextButton();
+        }
 
-	void updateNextButton() {
-	    File file = workDirPanel.getFile();
-	    WorkDirectory chooserWorkDir = chooser.getSelectedWorkDirectory();
+        void updateNextButton() {
+            File file = workDirPanel.getFile();
+            WorkDirectory chooserWorkDir = chooser.getSelectedWorkDirectory();
 
-	    if (file == null)
-		nextBtn.setEnabled(false);
-	    else if (chooserWorkDir != null && chooserWorkDir.getRoot().equals(file))
-		nextBtn.setEnabled(true);
-	    else
-		nextBtn.setEnabled(WorkDirectory.isWorkDirectory(file));
-	}
-	
-	Pane getNext() {
-	    File file = workDirPanel.getFile();
+            if (file == null)
+                nextBtn.setEnabled(false);
+            else if (chooserWorkDir != null && chooserWorkDir.getRoot().equals(file))
+                nextBtn.setEnabled(true);
+            else
+                nextBtn.setEnabled(WorkDirectory.isWorkDirectory(file));
+        }
 
-	    if (file == null) {
-		showError("qsw.owd.noFile");
-		return null;
-	    }
-	    else if (workDir == null || !workDir.getRoot().equals(file)) {
-		try {
-		    WorkDirectory chooserWorkDir = chooser.getSelectedWorkDirectory();
-		    if (chooserWorkDir != null 
-			&& chooserWorkDir.getRoot().equals(file)) 
-			workDir = chooserWorkDir;
-		    else
-			workDir = WorkDirectory.open(file);
-		    testSuite = workDir.getTestSuite();
-		}
-		catch (FileNotFoundException e) {
-		    showError("qsw.owd.cantFindFile");
-		    return null;
-		}
-		catch (WorkDirectory.Fault e) {
-		    uif.showError("qsw.owd.cantOpen", 
-				  new Object[] { file, e.getMessage() });
-		    return null;
-		}
-		
-		try {
-		    config = testSuite.createInterview();
-		    // should get latest config for workDir
-		}
-		catch (TestSuite.Fault e) {
-		    uif.showError("qsw.owd.createCreateInterview", e.getMessage());
-		    return null;
-		}
-	    
-		FileHistory h = FileHistory.getFileHistory(workDir, "configHistory.jtl");
-		File latestConfigFile = h.getLatestEntry();
-		if (latestConfigFile != null) {
-		    try {
-			config.load(latestConfigFile);
-		    }
-		    catch (IOException e) {
-			uif.showError("qsw.owd.cantLoadDefaultConfig", 
-				      new Object[] { latestConfigFile, e });
-			return null;
-		    }
-		    catch (InterviewParameters.Fault e) {
-			uif.showError("qsw.owd.cantLoadDefaultConfig", 
-				      new Object[] { latestConfigFile, e.getMessage() });
-			return null;
-		    }
-		}
+        Pane getNext() {
+            File file = workDirPanel.getFile();
+
+            if (file == null) {
+                showError("qsw.owd.noFile");
+                return null;
+            }
+            else if (workDir == null || !workDir.getRoot().equals(file)) {
+                try {
+                    WorkDirectory chooserWorkDir = chooser.getSelectedWorkDirectory();
+                    if (chooserWorkDir != null
+                        && chooserWorkDir.getRoot().equals(file))
+                        workDir = chooserWorkDir;
+                    else
+                        workDir = WorkDirectory.open(file);
+                    testSuite = workDir.getTestSuite();
+                }
+                catch (FileNotFoundException e) {
+                    showError("qsw.owd.cantFindFile");
+                    return null;
+                }
+                catch (WorkDirectory.Fault e) {
+                    uif.showError("qsw.owd.cantOpen",
+                                  new Object[] { file, e.getMessage() });
+                    return null;
+                }
+
+                try {
+                    config = testSuite.createInterview();
+                    // should get latest config for workDir
+                }
+                catch (TestSuite.Fault e) {
+                    uif.showError("qsw.owd.createCreateInterview", e.getMessage());
+                    return null;
+                }
+
+                FileHistory h = FileHistory.getFileHistory(workDir, "configHistory.jtl");
+                File latestConfigFile = h.getLatestEntry();
+                if (latestConfigFile != null) {
+                    try {
+                        config.load(latestConfigFile);
+                    }
+                    catch (IOException e) {
+                        uif.showError("qsw.owd.cantLoadDefaultConfig",
+                                      new Object[] { latestConfigFile, e });
+                        return null;
+                    }
+                    catch (InterviewParameters.Fault e) {
+                        uif.showError("qsw.owd.cantLoadDefaultConfig",
+                                      new Object[] { latestConfigFile, e.getMessage() });
+                        return null;
+                    }
+                }
                 if (testSuite != null) {
                     contextManager = ExecTool.createContextManager(testSuite);
 
@@ -1169,95 +1169,94 @@ class QuickStartWizard extends ToolDialog
                         return null;
                     }
                 }
-                
-	    }
-            
-	    return endPane;
-	}
+
+            }
+
+            return endPane;
+        }
     };
 
     //------------------------------------------------------------------------------
 
-    private class EndPane extends Pane {	    
-	EndPane() {
-	    super("qsw.end");
-	    configTextArea = addText(false);
-	    configCheck = addCheck("cfg");
-	    runTestsTextArea = addText(false);
-	    runTestsCheck = addCheck("run");
-	}
-	
-	void update() {
-	    super.update();
+    private class EndPane extends Pane {
+        EndPane() {
+            super("qsw.end");
+            configTextArea = addText(false);
+            configCheck = addCheck("cfg");
+            runTestsTextArea = addText(false);
+            runTestsCheck = addCheck("run");
+        }
 
-	    // update text according to whether config is complete or not
-	    // (and so whether config editor required)
-	    // set configCheck if config incomplete
-	    Integer haveConfig = new Integer(configData == null ? 0 : 1);
+        void update() {
+            super.update();
 
-	    StringBuffer sb = new StringBuffer();
-	    if (config.isFinishable()) {
-		// "Your configuration is complete, but you can change it by using
-		// the Configuration Editor."
-		sb.append(uif.getI18NString("qsw.end.cfgComplete"));
-		configCheck.setSelected(task == BROWSE ? false : true);
-	    }
-	    else {
-		if (configData != null) {
-		    // "Your configuration is incomplete."
-		    sb.append(uif.getI18NString("qsw.end.cfgIncomplete"));
-		    sb.append(" ");
-		}
-		// "Before you can run tests, you must complete (a|your) configuration
-		// by using the Configuration Editor."
-		sb.append(uif.getI18NString("qsw.end.needEditor", haveConfig));
-		configCheck.setSelected(task == BROWSE ? false : true);
-	    }
-	    sb.append(" ");
-	    // "You can open the Configuration Editor automatically by
-	    // checking the box below. You can also open the Configuration Editor
-	    // at any time from the Configure menu."
-	    sb.append(uif.getI18NString("qsw.end.editor"));
-	    configTextArea.setText(sb.toString());
-	    
-	    if (task == BROWSE) {
-		runTestsTextArea.setVisible(false);
-		runTestsCheck.setVisible(false);
-	    }
-	    else {
-		runTestsTextArea.setVisible(true);
-		runTestsCheck.setVisible(true);
-		// "Once (the|your) configuration is complete, you can run tests automatically
-		// by checking the box below. You can also run tests at any time from the
-		// Run Tests menu."
-		runTestsTextArea.setText(uif.getI18NString("qsw.end.runTests", haveConfig));	
-	    }
+            // update text according to whether config is complete or not
+            // (and so whether config editor required)
+            // set configCheck if config incomplete
+            Integer haveConfig = new Integer(configData == null ? 0 : 1);
 
-	    stateChanged();
-	}
+            StringBuffer sb = new StringBuffer();
+            if (config.isFinishable()) {
+                // "Your configuration is complete, but you can change it by using
+                // the Configuration Editor."
+                sb.append(uif.getI18NString("qsw.end.cfgComplete"));
+                configCheck.setSelected(task == BROWSE ? false : true);
+            }
+            else {
+                if (configData != null) {
+                    // "Your configuration is incomplete."
+                    sb.append(uif.getI18NString("qsw.end.cfgIncomplete"));
+                    sb.append(" ");
+                }
+                // "Before you can run tests, you must complete (a|your) configuration
+                // by using the Configuration Editor."
+                sb.append(uif.getI18NString("qsw.end.needEditor", haveConfig));
+                configCheck.setSelected(task == BROWSE ? false : true);
+            }
+            sb.append(" ");
+            // "You can open the Configuration Editor automatically by
+            // checking the box below. You can also open the Configuration Editor
+            // at any time from the Configure menu."
+            sb.append(uif.getI18NString("qsw.end.editor"));
+            configTextArea.setText(sb.toString());
 
-	void updateNextButton() {
-	    nextBtn.setEnabled(false);
-	}
-	
-	void stateChanged() {
-	    if (runTestsCheck.isSelected() 
-		&& (config == null || !config.isFinishable()))
-		configCheck.setSelected(true);
-	    showConfigEditorFlag = configCheck.isSelected();
-	    runTestsFlag = runTestsCheck.isSelected();
-	}
+            if (task == BROWSE) {
+                runTestsTextArea.setVisible(false);
+                runTestsCheck.setVisible(false);
+            }
+            else {
+                runTestsTextArea.setVisible(true);
+                runTestsCheck.setVisible(true);
+                // "Once (the|your) configuration is complete, you can run tests automatically
+                // by checking the box below. You can also run tests at any time from the
+                // Run Tests menu."
+                runTestsTextArea.setText(uif.getI18NString("qsw.end.runTests", haveConfig));
+            }
 
-	private JTextArea configTextArea;
-	private JCheckBox configCheck;
-	private JTextArea runTestsTextArea;
-	private JCheckBox runTestsCheck;
+            stateChanged();
+        }
+
+        void updateNextButton() {
+            nextBtn.setEnabled(false);
+        }
+
+        void stateChanged() {
+            if (runTestsCheck.isSelected()
+                && (config == null || !config.isFinishable()))
+                configCheck.setSelected(true);
+            showConfigEditorFlag = configCheck.isSelected();
+            runTestsFlag = runTestsCheck.isSelected();
+        }
+
+        private JTextArea configTextArea;
+        private JCheckBox configCheck;
+        private JTextArea runTestsTextArea;
+        private JCheckBox runTestsCheck;
     };
-    
+
     protected void windowClosingAction(AWTEvent e) {
         setVisible(false);
         closeExecTool(e);
     }
-    
-}
 
+}

@@ -44,7 +44,7 @@ public class XMLWriter
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public XMLWriter(Writer out) throws IOException {
-	this(out, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+        this(out, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
     }
 
     /**
@@ -54,23 +54,23 @@ public class XMLWriter
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public XMLWriter(Writer out, String docType) throws IOException {
-	if (out instanceof BufferedWriter)
-	    this.out = (BufferedWriter) out;
-	else 
-	    this.out = new BufferedWriter(out);
-	this.out.write(docType);
-	this.out.newLine();
+        if (out instanceof BufferedWriter)
+            this.out = (BufferedWriter) out;
+        else
+            this.out = new BufferedWriter(out);
+        this.out.write(docType);
+        this.out.newLine();
     }
 
     /**
      * Create an XMLWriter object, using a specified bundle for l0calizing messages.
      * @param out a Writer to which to write the generated XML
-     * @param i18n a resource bundle to use to localize messages 
+     * @param i18n a resource bundle to use to localize messages
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public XMLWriter(Writer out, I18NResourceBundle i18n) throws IOException {
-	this(out);
-	this.i18n = i18n;
+        this(out);
+        this.i18n = i18n;
     }
 
 
@@ -79,12 +79,12 @@ public class XMLWriter
      * using a specified bundle for l0calizing messages.
      * @param out a Writer to which to write the generated XML
      * @param docType a string containing a doctype header for the XML to be generetaed
-     * @param i18n a resource bundle to use to localize messages 
+     * @param i18n a resource bundle to use to localize messages
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public XMLWriter(Writer out, String docType, I18NResourceBundle i18n) throws IOException {
-	this(out, docType);
-	this.i18n = i18n;
+        this(out, docType);
+        this.i18n = i18n;
     }
 
     /**
@@ -92,7 +92,7 @@ public class XMLWriter
      * @param i18n the resource bundle to be used for localizing messages
      */
     public void setI18NResourceBundle(I18NResourceBundle i18n) {
-	this.i18n = i18n;
+        this.i18n = i18n;
     }
 
     /**
@@ -100,7 +100,7 @@ public class XMLWriter
      * @throws IOException if there is a problem writing to the underlying stream
      */
     public void flush() throws IOException {
-	out.flush();
+        out.flush();
     }
 
     /**
@@ -108,7 +108,7 @@ public class XMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void close() throws IOException {
-	out.close();
+        out.close();
     }
 
     /**
@@ -116,18 +116,18 @@ public class XMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void newLine() throws IOException {
-	if (state == IN_TAG) {
-	    out.write(">");
-	    state = IN_BODY;
-	}
-	out.newLine();
+        if (state == IN_TAG) {
+            out.write(">");
+            state = IN_BODY;
+        }
+        out.newLine();
     }
 
     /**
      * Start an XML tag.  If a prior tag has been started, it will
      * be closed first. Once a tag has been opened, attributes for the
-     * tag may be written out, followed by body content before finally 
-     * ending the tag.  
+     * tag may be written out, followed by body content before finally
+     * ending the tag.
      * @param tag the tag to be started
      * @throws IOException if there is a problem closing the underlying stream
      * @see #writeAttr
@@ -135,14 +135,14 @@ public class XMLWriter
      * @see #endTag
      */
     public void startTag(String tag) throws IOException {
-	if (state == IN_TAG) {
-	    out.write(">");
-	    state = IN_BODY;
-	}
+        if (state == IN_TAG) {
+            out.write(">");
+            state = IN_BODY;
+        }
         //newLine();
-	out.write("<");
-	out.write(tag);
-	state = IN_TAG;
+        out.write("<");
+        out.write(tag);
+        state = IN_TAG;
     }
 
     /**
@@ -153,15 +153,15 @@ public class XMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void endTag(String tag) throws IOException {
-	if (state == IN_TAG) {
-	    out.write("/>");
-	    state = IN_BODY;
-	}
-	else {
-	    out.write("</");
-	    out.write(tag);
-	    out.write(">");
-	}
+        if (state == IN_TAG) {
+            out.write("/>");
+            state = IN_BODY;
+        }
+        else {
+            out.write("</");
+            out.write(tag);
+            out.write(">");
+        }
         //out.newLine();
     }
 
@@ -178,19 +178,19 @@ public class XMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeAttr(String name, String value) throws IOException {
-	if (state != IN_TAG)
-	    throw new IllegalStateException();
+        if (state != IN_TAG)
+            throw new IllegalStateException();
 
-	out.write(" ");
-	out.write(name);
-	out.write("=");
-	out.write("\"");
-	out.write(value);  // should check for " ?
-	out.write("\"");
+        out.write(" ");
+        out.write(name);
+        out.write("=");
+        out.write("\"");
+        out.write(value);  // should check for " ?
+        out.write("\"");
     }
-  
-    /** 
-     * Write a line of text, followed by a newline. 
+
+    /**
+     * Write a line of text, followed by a newline.
      * The text will be escaped as necessary.
      * @param text the text to be written.
      * @throws IOException if there is a problem closing the underlying stream
@@ -207,7 +207,7 @@ public class XMLWriter
      * @see java.util.Date
      */
     public void writeDate(long millis) throws IOException {
-	writeDate(new Date(millis));
+        writeDate(new Date(millis));
     }
 
     /**
@@ -218,7 +218,7 @@ public class XMLWriter
      * @see java.util.Date
      */
     public void writeDate(String tag, long millis) throws IOException {
-	writeDate(tag, new Date(millis));
+        writeDate(tag, new Date(millis));
     }
 
     /**
@@ -227,9 +227,9 @@ public class XMLWriter
      * @throws IOException if a exception occurs during writing
      */
     public void writeDate(Date date) throws IOException {
-	if (dateFormatter == null)
-	    dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-	write(dateFormatter.format(date));
+        if (dateFormatter == null)
+            dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        write(dateFormatter.format(date));
     }
 
     /**
@@ -240,9 +240,9 @@ public class XMLWriter
      * @see java.util.Date
      */
     public void writeDate(String tag, Date date) throws IOException {
-	startTag(tag);
-	writeDate(date);
-	endTag(tag);
+        startTag(tag);
+        writeDate(date);
+        endTag(tag);
     }
 
     /**
@@ -254,38 +254,38 @@ public class XMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void write(String text) throws IOException {
-	if (text.length() == 0)
-	    return;
+        if (text.length() == 0)
+            return;
 
-	if (state == IN_TAG) {
-	    out.write(">");
-	    state = IN_BODY;
-	}
+        if (state == IN_TAG) {
+            out.write(">");
+            state = IN_BODY;
+        }
 
-	// check to see if there are any special characters
-	boolean specialChars = false;
-	for (int i = 0; i < text.length() && !specialChars; i++) {
-	    switch (text.charAt(i)) {
-	    case '<': case '>': case '&': 
-		specialChars = true;
-	    }
-	}
+        // check to see if there are any special characters
+        boolean specialChars = false;
+        for (int i = 0; i < text.length() && !specialChars; i++) {
+            switch (text.charAt(i)) {
+            case '<': case '>': case '&':
+                specialChars = true;
+            }
+        }
 
-	// if there are special characters write the string character at a time;
-	// otherwise, write it out as is
-	if (specialChars) {
-	    for (int i = 0; i < text.length(); i++) {
-		char c = text.charAt(i);
-		switch (c) {
-		case '<': out.write("&lt;"); break;
-		case '>': out.write("&gt;"); break;
-		case '&': out.write("&amp;"); break;
-		default: out.write(c);
-		}			
-	    }
-	}
-	else
-	    out.write(text);
+        // if there are special characters write the string character at a time;
+        // otherwise, write it out as is
+        if (specialChars) {
+            for (int i = 0; i < text.length(); i++) {
+                char c = text.charAt(i);
+                switch (c) {
+                case '<': out.write("&lt;"); break;
+                case '>': out.write("&gt;"); break;
+                case '&': out.write("&amp;"); break;
+                default: out.write(c);
+                }
+            }
+        }
+        else
+            out.write(text);
     }
 
     /**
@@ -295,7 +295,7 @@ public class XMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void write(I18NResourceBundle i18n, String key) throws IOException {
-	write(i18n.getString(key));
+        write(i18n.getString(key));
     }
 
     /**
@@ -306,7 +306,7 @@ public class XMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void write(I18NResourceBundle i18n, String key, Object arg) throws IOException {
-	write(i18n.getString(key, arg));
+        write(i18n.getString(key, arg));
     }
 
     /**
@@ -317,7 +317,7 @@ public class XMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void write(I18NResourceBundle i18n, String key, Object[] args) throws IOException {
-	write(i18n.getString(key, args));
+        write(i18n.getString(key, args));
     }
 
     /**
@@ -326,7 +326,7 @@ public class XMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeI18N(String key) throws IOException {
-	write(i18n.getString(key));
+        write(i18n.getString(key));
     }
 
     /**
@@ -336,7 +336,7 @@ public class XMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeI18N(String key, Object arg) throws IOException {
-	write(i18n.getString(key, arg));
+        write(i18n.getString(key, arg));
     }
 
     /**
@@ -346,7 +346,7 @@ public class XMLWriter
      * @throws IOException if there is a problem closing the underlying stream
      */
     public void writeI18N(String key, Object[] args) throws IOException {
-	write(i18n.getString(key, args));
+        write(i18n.getString(key, args));
     }
 
     private BufferedWriter out;

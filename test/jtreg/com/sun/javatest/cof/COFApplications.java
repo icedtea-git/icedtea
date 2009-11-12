@@ -37,27 +37,27 @@ static LinkedHashMap xmlAttributes;
 
     static LinkedHashMap xmlElements;
 
-	static String xmlTagName;
+        static String xmlTagName;
 
-	static  {
-    	xmlElements = new LinkedHashMap();
+        static  {
+        xmlElements = new LinkedHashMap();
         xmlElements.put("application", "application");
         xmlTagName = "applications";
     }
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
     protected List  application;
 
-	LinkedHashMap getItemAttributes() {
-		return xmlAttributes;
-	}
+        LinkedHashMap getItemAttributes() {
+                return xmlAttributes;
+        }
 
-	LinkedHashMap getItemElements() {
-		return xmlElements;
-	}
+        LinkedHashMap getItemElements() {
+                return xmlElements;
+        }
     String getItemTagName() {
-		return xmlTagName;
-	}
+                return xmlTagName;
+        }
 
     public List getApplication() {
         if (application == null) {

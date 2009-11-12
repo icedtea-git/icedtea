@@ -38,7 +38,7 @@ import javax.swing.KeyStroke;
 import com.sun.javatest.util.DynamicArray;
 import com.sun.javatest.util.I18NResourceBundle;
 
-/** 
+/**
  * Standard template for creation of an Action to be used in a Tool.
  */
 public abstract class ToolAction implements Action
@@ -53,10 +53,10 @@ public abstract class ToolAction implements Action
      * @see javax.swing.Action
      */
     public ToolAction(String name, String desc, int mnemonic) {
-	this.name = name;
-	this.desc = desc;
-	this.mnemonic = new Integer(mnemonic);
-	enabled = true;
+        this.name = name;
+        this.desc = desc;
+        this.mnemonic = new Integer(mnemonic);
+        enabled = true;
     }
 
     /**
@@ -67,7 +67,7 @@ public abstract class ToolAction implements Action
      * @see #ToolAction(I18NResourceBundle,String)
      */
     public ToolAction(UIFactory uif, String key) {
-	this(uif.getI18NResourceBundle(), key);
+        this(uif.getI18NResourceBundle(), key);
     }
 
     /**
@@ -82,9 +82,9 @@ public abstract class ToolAction implements Action
      * @see javax.swing.Action#SMALL_ICON
      */
     public ToolAction(UIFactory uif, String key, boolean needIcon) {
-	this(uif, key);
-	if (needIcon)
-	    putValue(Action.SMALL_ICON, uif.createIcon(key));
+        this(uif, key);
+        if (needIcon)
+            putValue(Action.SMALL_ICON, uif.createIcon(key));
     }
 
     /**
@@ -100,11 +100,11 @@ public abstract class ToolAction implements Action
      *        bundle.
      */
     public ToolAction(I18NResourceBundle i18n, String key) {
-	this( i18n.getString(key + ".act"),
-	      i18n.getString(key + ".tip"),
-	      getMnemonic(i18n, key + ".mne") );
+        this( i18n.getString(key + ".act"),
+              i18n.getString(key + ".tip"),
+              getMnemonic(i18n, key + ".mne") );
     }
-    
+
     /**
      * Gets one of this object's properties using the associated key.
      * @param key the key of the property to be returned
@@ -112,126 +112,126 @@ public abstract class ToolAction implements Action
      * @see #putValue
      */
     public Object getValue(String key) {
-	if (key == null)
-	    throw new NullPointerException();
+        if (key == null)
+            throw new NullPointerException();
 
-	if (key.equals(NAME))
-	    return name;
-	else if (key.equals(SHORT_DESCRIPTION))
-	    return desc;
-	else if (key.equals(MNEMONIC_KEY))
-	    return mnemonic;
-	else if (key.equals(SMALL_ICON))
-	    return icon;
-	else 
-	    return (misc == null ? null : misc.get(key));
+        if (key.equals(NAME))
+            return name;
+        else if (key.equals(SHORT_DESCRIPTION))
+            return desc;
+        else if (key.equals(MNEMONIC_KEY))
+            return mnemonic;
+        else if (key.equals(SMALL_ICON))
+            return icon;
+        else
+            return (misc == null ? null : misc.get(key));
     }
 
     /**
-     * Sets one of this object's properties using the associated key. 
+     * Sets one of this object's properties using the associated key.
      * If the value has changed, a <code>PropertyChangeEvent</code> is sent
      * to listeners.
      * @param key    the key of the property to be stored
      * @param newVal  the new value for the property
      */
     public void putValue(String key, Object newVal) {
-	Object oldVal;
+        Object oldVal;
 
-	if (key.equals(NAME)) {
-	    if (equal(newVal, name))
-		return;
-	    oldVal = name;
-	    name = (String) newVal;
-	}
-	else if (key.equals(SHORT_DESCRIPTION)) {
-	    if (equal(newVal, desc))
-		return;
-	    oldVal = desc;
-	    desc = (String) newVal;
-	}
-	else if (key.equals(MNEMONIC_KEY)) {
-	    if (equal(newVal, mnemonic))
-		return;
-	    oldVal = mnemonic;
-	    mnemonic = (Integer) newVal;
-	}
-	else if (key.equals(SMALL_ICON)) {
-	    if (equal(newVal, icon))
-		return;
-	    oldVal = icon;
-	    icon = (Icon) newVal;
-	}
-	else {
-	    if (misc == null)
-		misc = new HashMap();
-	    oldVal = misc.get(key);
-	    if (equal(newVal, oldVal))
-		return;
-	    misc.put(key, newVal);
-	}
-	firePropertyChangeEvent(key, oldVal, newVal);
+        if (key.equals(NAME)) {
+            if (equal(newVal, name))
+                return;
+            oldVal = name;
+            name = (String) newVal;
+        }
+        else if (key.equals(SHORT_DESCRIPTION)) {
+            if (equal(newVal, desc))
+                return;
+            oldVal = desc;
+            desc = (String) newVal;
+        }
+        else if (key.equals(MNEMONIC_KEY)) {
+            if (equal(newVal, mnemonic))
+                return;
+            oldVal = mnemonic;
+            mnemonic = (Integer) newVal;
+        }
+        else if (key.equals(SMALL_ICON)) {
+            if (equal(newVal, icon))
+                return;
+            oldVal = icon;
+            icon = (Icon) newVal;
+        }
+        else {
+            if (misc == null)
+                misc = new HashMap();
+            oldVal = misc.get(key);
+            if (equal(newVal, oldVal))
+                return;
+            misc.put(key, newVal);
+        }
+        firePropertyChangeEvent(key, oldVal, newVal);
     }
 
     public boolean isEnabled() {
-	// no need to synchronize just to read a single simple boolean
-	return enabled;
+        // no need to synchronize just to read a single simple boolean
+        return enabled;
     }
 
     public void setEnabled(boolean newVal) {
-	if (enabled == newVal)
-	    return;
-	
-	boolean oldVal = enabled;
-	enabled = newVal;
+        if (enabled == newVal)
+            return;
 
-	if (listeners.length > 0) 
-	    firePropertyChangeEvent("enabled", new Boolean(oldVal), new Boolean(newVal));
+        boolean oldVal = enabled;
+        enabled = newVal;
+
+        if (listeners.length > 0)
+            firePropertyChangeEvent("enabled", new Boolean(oldVal), new Boolean(newVal));
     }
 
     public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
-	listeners = (WeakReference[]) DynamicArray.append(listeners, new WeakReference(listener));
+        listeners = (WeakReference[]) DynamicArray.append(listeners, new WeakReference(listener));
     }
 
     public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
-	WeakReference[] l = listeners;
-	int size = l.length;
-	for (int i = size - 1; i >= 0; i--) {
-	    if (l[i].get() == listener) 
-		System.arraycopy(l, i+1, l, i, (--size) - i);
-	}
+        WeakReference[] l = listeners;
+        int size = l.length;
+        for (int i = size - 1; i >= 0; i--) {
+            if (l[i].get() == listener)
+                System.arraycopy(l, i+1, l, i, (--size) - i);
+        }
 
-	if (size < l.length) {
-	    listeners = new WeakReference[size];
-	    System.arraycopy(l, 0, listeners, 0, size);
-	}
+        if (size < l.length) {
+            listeners = new WeakReference[size];
+            System.arraycopy(l, 0, listeners, 0, size);
+        }
     }
 
     private void firePropertyChangeEvent(String name, Object oldVal, Object newVal) {
-	PropertyChangeEvent ev = null; // lazy create event if needed
-	WeakReference[] l = listeners;
-	if (l.length > 0) {
-	    for (int i = l.length - 1; i >= 0; i--) {
-		PropertyChangeListener pcl = (PropertyChangeListener) (l[i].get());
-		if (pcl != null) {
-		    if (ev == null)
-			ev = new PropertyChangeEvent(this, name, oldVal, newVal);
-		    pcl.propertyChange(ev);
-		}
-	    }
-	}
+        PropertyChangeEvent ev = null; // lazy create event if needed
+        WeakReference[] l = listeners;
+        if (l.length > 0) {
+            for (int i = l.length - 1; i >= 0; i--) {
+                PropertyChangeListener pcl = (PropertyChangeListener) (l[i].get());
+                if (pcl != null) {
+                    if (ev == null)
+                        ev = new PropertyChangeEvent(this, name, oldVal, newVal);
+                    pcl.propertyChange(ev);
+                }
+            }
+        }
     }
 
 
     private static int getMnemonic(I18NResourceBundle i18n, String key) {
-	String keyString = i18n.getString(key);
-	KeyStroke keyStroke = KeyStroke.getKeyStroke(keyString);
-	return (keyStroke == null ? 0 : keyStroke.getKeyCode());
+        String keyString = i18n.getString(key);
+        KeyStroke keyStroke = KeyStroke.getKeyStroke(keyString);
+        return (keyStroke == null ? 0 : keyStroke.getKeyCode());
     }
 
     private static boolean equal(Object a, Object b) {
-	return (a == null ? b == null : a.equals(b));
+        return (a == null ? b == null : a.equals(b));
     }
-    
+
     private String name;
     private String desc;
     private Integer mnemonic;

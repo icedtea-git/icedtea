@@ -63,26 +63,26 @@ class PropertiesQuestionRenderer implements QuestionRenderer {
     public JComponent getQuestionRendererComponent(Question qq, ActionListener listener) {
         question = (PropertiesQuestion)qq;
 
-	tables = new HashMap();
+        tables = new HashMap();
 
-	JPanel panel = new JPanel(new GridBagLayout());
-	panel.setName("properties");
-	panel.setFocusable(false);
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setName("properties");
+        panel.setFocusable(false);
 
         if (question.getValue() == null) {
             showEmptyQuestion(panel);
             return panel;
         }
 
-	String[] headers = {question.getKeyHeaderName(),
+        String[] headers = {question.getKeyHeaderName(),
                             question.getValueHeaderName()};
 
 
-	// add table(s)
-	addGroup(null, panel, question, headers, listener);
+        // add table(s)
+        addGroup(null, panel, question, headers, listener);
 
-	// note that empty groups are not returned by the next call
-	String[] groups = question.getGroups();
+        // note that empty groups are not returned by the next call
+        String[] groups = question.getGroups();
         if (groups != null)
             for (int i = 0; i < groups.length; i++) {
                 addGroup(groups[i], panel, question, headers, listener);
@@ -91,9 +91,9 @@ class PropertiesQuestionRenderer implements QuestionRenderer {
         if (panel.getComponentCount() == 0) {
             showEmptyQuestion(panel);
         }
-        
-	valueSaver = new Runnable() {
-		public void run() {
+
+        valueSaver = new Runnable() {
+                public void run() {
                     Set keys = tables.keySet();
                     Iterator iter = keys.iterator();
                     while(iter.hasNext()) {
@@ -103,10 +103,10 @@ class PropertiesQuestionRenderer implements QuestionRenderer {
                             editor.stopCellEditing();
                         }
                     }
-		}
-	    };
-	
-	panel.putClientProperty(VALUE_SAVER, valueSaver);
+                }
+            };
+
+        panel.putClientProperty(VALUE_SAVER, valueSaver);
 
 
         // This inserted to handle programmaticaly fired events
@@ -124,13 +124,13 @@ class PropertiesQuestionRenderer implements QuestionRenderer {
                 }
             }
         });
-        
-        
-	return panel;
+
+
+        return panel;
     }
 
     public String getInvalidValueMessage(Question q) {
-	return null;
+        return null;
     }
 
     private void showEmptyQuestion(JPanel panel) {
@@ -155,22 +155,22 @@ class PropertiesQuestionRenderer implements QuestionRenderer {
     }
 
     // TABLE BUILDING
-    /** 
+    /**
      * @param headers Just an optimzation right now.
      */
     private void addGroup(String group, JPanel panel, PropertiesQuestion q,
-			  String[] headers, ActionListener listener) {
+                          String[] headers, ActionListener listener) {
         TableModel model = new PropTableModel(headers, group, q, listener);
         // don't show empty tables
         if (model.getRowCount() == 0)
             return;
 
-	GridBagConstraints c = new GridBagConstraints();
-	c.gridx = 0;
-	c.gridy = tables.size() * 4;
-	c.anchor = GridBagConstraints.PAGE_START;
-	c.weightx = 1.0;
-	c.fill = GridBagConstraints.BOTH;
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = tables.size() * 4;
+        c.anchor = GridBagConstraints.PAGE_START;
+        c.weightx = 1.0;
+        c.fill = GridBagConstraints.BOTH;
 
         if (c.gridy > 0) {
             Component box = Box.createVerticalStrut(40);
@@ -180,14 +180,14 @@ class PropertiesQuestionRenderer implements QuestionRenderer {
             c.weighty = 0.0;
         }
 
-	// null group is for ungrouped properties
-	if (group != null) {
-	    JLabel label = new JLabel(q.getGroupDisplayName(group));
-	    label.setName(q.getGroupDisplayName(group));
-	    //label.setDisplayedMnemonic(i18n.getString("int.sldr.mne").charAt(0));
-	    //label.setToolTipText(i18n.getString("int.sldr.tip"));
-	    panel.add(label, c);
-	}
+        // null group is for ungrouped properties
+        if (group != null) {
+            JLabel label = new JLabel(q.getGroupDisplayName(group));
+            label.setName(q.getGroupDisplayName(group));
+            //label.setDisplayedMnemonic(i18n.getString("int.sldr.mne").charAt(0));
+            //label.setToolTipText(i18n.getString("int.sldr.tip"));
+            panel.add(label, c);
+        }
         /*
         else {
             Component box = Box.createVerticalStrut(1);
@@ -196,44 +196,44 @@ class PropertiesQuestionRenderer implements QuestionRenderer {
         }
         */
 
-	if (renderer == null)
-	    renderer = new RenderingUtilities.PropCellRenderer(q);
+        if (renderer == null)
+            renderer = new RenderingUtilities.PropCellRenderer(q);
 
-	JTable table = new PropJTable(model);
-	table.setBorder(BorderFactory.createEtchedBorder());
-	table.setRowSelectionAllowed(false);
-	table.setColumnSelectionAllowed(false);
+        JTable table = new PropJTable(model);
+        table.setBorder(BorderFactory.createEtchedBorder());
+        table.setRowSelectionAllowed(false);
+        table.setColumnSelectionAllowed(false);
         table.getTableHeader().setReorderingAllowed(false);
 
         // setup key column
-	TableColumn tc = table.getColumnModel().getColumn(0);
-	tc.setCellRenderer(renderer);
-	tc.setResizable(true);
+        TableColumn tc = table.getColumnModel().getColumn(0);
+        tc.setCellRenderer(renderer);
+        tc.setResizable(true);
 
         // setup value column
-	tc = table.getColumnModel().getColumn(1);
-	tc.setCellEditor(
+        tc = table.getColumnModel().getColumn(1);
+        tc.setCellEditor(
             new RenderingUtilities.PCE(question));
-	tc.setCellRenderer(renderer);
-	tc.setResizable(true);
+        tc.setCellRenderer(renderer);
+        tc.setResizable(true);
 
-	c.gridy++;
-	//panel.add(new JScrollPane(table), c);
-	panel.add(table.getTableHeader(), c);
+        c.gridy++;
+        //panel.add(new JScrollPane(table), c);
+        panel.add(table.getTableHeader(), c);
 
-	c.gridy++;
-	panel.add(table, c);
+        c.gridy++;
+        panel.add(table, c);
 
-	tables.put(group, table);
+        tables.put(group, table);
     }
 
     // UTILITY
-   
+
     private void fireEditedEvent(Object src, ActionListener l) {
-	ActionEvent e = new ActionEvent(src, 
-					ActionEvent.ACTION_PERFORMED, 
-					EDITED);
-	l.actionPerformed(e);
+        ActionEvent e = new ActionEvent(src,
+                                        ActionEvent.ACTION_PERFORMED,
+                                        EDITED);
+        l.actionPerformed(e);
     }
 
     private class PropJTable extends JTable {
@@ -255,16 +255,16 @@ class PropertiesQuestionRenderer implements QuestionRenderer {
     }
 
     private class PropTableModel extends DefaultTableModel {
-	PropTableModel(String[] headers, String group, PropertiesQuestion q,
-		       ActionListener listener) {
-	    super();
-	    this.q = q;
-	    editedListener = listener;
+        PropTableModel(String[] headers, String group, PropertiesQuestion q,
+                       ActionListener listener) {
+            super();
+            this.q = q;
+            editedListener = listener;
 
-	    setColumnCount(2);
+            setColumnCount(2);
 
             String[][] d = q.getGroup(group);
-            
+
             if (d != null) {
                 ArrayList rm = null;
                 for (int i = 0; i < d.length; i++) {
@@ -293,7 +293,7 @@ class PropertiesQuestionRenderer implements QuestionRenderer {
                         }
                     // assert: pos == d2.length
                     }   // loop should fill d2.length!
-                    
+
                     d = d2;
                 }
                 setDataVector(d, headers);
@@ -303,36 +303,36 @@ class PropertiesQuestionRenderer implements QuestionRenderer {
             if (d != null)
                 setDataVector(d, headers);
             */
-	}
+        }
 
-	    /*
-	 String getColumnName(int column) {
-	     if (column > headers.length - 1)
-		 return super.getColumnName();
-	     else
-		 return headers[column];
-	 }
+            /*
+         String getColumnName(int column) {
+             if (column > headers.length - 1)
+                 return super.getColumnName();
+             else
+                 return headers[column];
+         }
 
-	String[] headers;
-	 */
+        String[] headers;
+         */
 
-	public void setValueAt(Object o, int row, int col) {
-	    super.setValueAt(o, row, col);
+        public void setValueAt(Object o, int row, int col) {
+            super.setValueAt(o, row, col);
 
-	    if (col == 1) {
-		String key = (String)(getValueAt(row, 0));
-		q.updateProperty(key, (String)o);
-		fireEditedEvent(this, editedListener);
+            if (col == 1) {
+                String key = (String)(getValueAt(row, 0));
+                q.updateProperty(key, (String)o);
+                fireEditedEvent(this, editedListener);
                 fireTableCellUpdated(row, 0);
                 fireTableCellUpdated(row, 1);
-	    }
-	}
+            }
+        }
 
-	private PropertiesQuestion q;
-	private ActionListener editedListener;
+        private PropertiesQuestion q;
+        private ActionListener editedListener;
     }
 
-    private Runnable valueSaver;    
+    private Runnable valueSaver;
     private HashMap tables;
     private TableCellRenderer renderer;
     private PropertiesQuestion question;

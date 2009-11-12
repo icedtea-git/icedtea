@@ -55,34 +55,34 @@ import com.sun.javatest.util.PrefixMap;
  */
 class ReportHandler {
     ReportHandler(JComponent parent, ExecModel model, Harness harness, UIFactory uif) {
-	this.parent = parent;
+        this.parent = parent;
         this.model = model;
-	this.uif = uif;
+        this.uif = uif;
         this.harness = harness;
-	initActions();
+        initActions();
     }
-    
-    JMenu getMenu() {
-	Action[] reportActions = {
-	    newReportAction,
-	    openReportAction,
-            null
-	};
 
-	JMenu menu = uif.createMenu("rpth", reportActions);
+    JMenu getMenu() {
+        Action[] reportActions = {
+            newReportAction,
+            openReportAction,
+            null
+        };
+
+        JMenu menu = uif.createMenu("rpth", reportActions);
 
         reportHistoryListener = new FileHistory.Listener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		JMenuItem mi = (JMenuItem) (e.getSource());
-		File f = (File) (mi.getClientProperty(FileHistory.FILE));
-		if (f != null)
-		    showReportBrowser(f);
-	    }
-	});
+            public void actionPerformed(ActionEvent e) {
+                JMenuItem mi = (JMenuItem) (e.getSource());
+                File f = (File) (mi.getClientProperty(FileHistory.FILE));
+                if (f != null)
+                    showReportBrowser(f);
+            }
+        });
 
-	menu.addMenuListener(reportHistoryListener);
+        menu.addMenuListener(reportHistoryListener);
 
-	return menu;
+        return menu;
     }
 
     void showReportDialog(int mode) {
@@ -114,19 +114,19 @@ class ReportHandler {
     }
 
     void showNewReportDialog() {
-	if (newReportD == null) {
-	    newReportD = new NewReportDialog(parent, uif, model.getFilterConfig(),
-			    getReportBrowser(), model);
+        if (newReportD == null) {
+            newReportD = new NewReportDialog(parent, uif, model.getFilterConfig(),
+                            getReportBrowser(), model);
 
         newReportD.addObserver(new NewReportDialog.Observer() {
-		public void update(Map l) {
-		    lastState = l;
-		    String lastReportDir =
-			(String) (lastState.get(NewReportDialog.REPORT_DIR));
-		   
-		   if (lastReportDir != null)
-		       history.add(new File(lastReportDir));
-		}
+                public void update(Map l) {
+                    lastState = l;
+                    String lastReportDir =
+                        (String) (lastState.get(NewReportDialog.REPORT_DIR));
+
+                   if (lastReportDir != null)
+                       history.add(new File(lastReportDir));
+                }
 
                 public void writingReport() {
                     newReportAction.setEnabled(false);
@@ -139,20 +139,20 @@ class ReportHandler {
                 public void errorWriting(String problem) {
                     newReportAction.setEnabled(true);
                 }
-	    });
+            });
         }
 
         newReportD.setInterviewParameters(model.getInterviewParameters());
         if (lastState != null)
-	    newReportD.setLastState(lastState);
+            newReportD.setLastState(lastState);
 
-	newReportD.setVisible(true);
+        newReportD.setVisible(true);
     }
 
     void showReportBrowser(File reportDir) {
-	// if if is a dir, try to find a particular file to show
-	// since there may be multiple choices, use the one with the
-	// most recent date
+        // if if is a dir, try to find a particular file to show
+        // since there may be multiple choices, use the one with the
+        // most recent date
         File target = reportDir;
         if (reportDir.isDirectory()) {
             String[] names = Report.getHtmlReportFilenames();
@@ -173,11 +173,11 @@ class ReportHandler {
         getReportBrowser().show(target);
     }
 
-    ReportBrowser getReportBrowser() { 
+    ReportBrowser getReportBrowser() {
         if (reportBrowser == null) {
             reportBrowser = new ReportBrowser(parent, model, uif, this);
         }
-	return reportBrowser;
+        return reportBrowser;
     }
 
     ReportDirChooser getReportDirChooser() {
@@ -196,7 +196,7 @@ class ReportHandler {
 
     // should really be observing ExecModel
     void updateGUI() {
-        
+
         workDir = model.getWorkDirectory();
 
         boolean workDirSet = (workDir != null);
@@ -205,10 +205,10 @@ class ReportHandler {
 
         if (!workDirSet) return;
 
-	if (history == null) {
-	    history = FileHistory.getFileHistory(workDir, "reportDirHistory.jtl");
-	    reportHistoryListener.setFileHistory(history);
-	}
+        if (history == null) {
+            history = FileHistory.getFileHistory(workDir, "reportDirHistory.jtl");
+            reportHistoryListener.setFileHistory(history);
+        }
     }
 
     void save(Map parentMap) {
@@ -221,17 +221,17 @@ class ReportHandler {
     void restore(Map parentMap) {
         PrefixMap pm = new PrefixMap(parentMap, REPORT_PREFIX);
         if (pm == null) return;
- 
+
         Object[] keys = pm.keySet().toArray();
         if (lastState == null)
-	    lastState = new HashMap();
-    
+            lastState = new HashMap();
+
         for (int i = 0; i < keys.length; i++) {
-	    String key = (String) keys[i];
-	    String value = (String) pm.get(keys[i]);
-	    
-	    if (value != null)
-		lastState.put(key, value);
+            String key = (String) keys[i];
+            String value = (String) pm.get(keys[i]);
+
+            if (value != null)
+                lastState.put(key, value);
         }
     }
 
@@ -239,15 +239,15 @@ class ReportHandler {
         if (newReportD != null) {
             newReportD.dispose();
         }
- 
+
         if (reportBrowser != null) {
             reportBrowser.dispose();
         }
- 
+
         if (uif != null) {
             uif.dispose();
         }
- 
+
         workDir = null;
         model = null;
         lastState = null;
@@ -260,13 +260,13 @@ class ReportHandler {
     // on uif being initialized in the constructor
     private void initActions() {
         newReportAction = new ToolAction(uif, "rpth.new") {
-	    public void actionPerformed(ActionEvent e) {
-		showNewReportDialog();
-	    }
-	};
-        
+            public void actionPerformed(ActionEvent e) {
+                showNewReportDialog();
+            }
+        };
+
         harness.addObserver(new Harness.Observer() {
-            
+
             public void startingTestRun(Parameters params) {
                 newReportAction.setEnabled(false);
             }
@@ -277,17 +277,17 @@ class ReportHandler {
             public void finishedTesting() {}
 
             public void finishedTestRun(boolean allOK) {
-                newReportAction.setEnabled(true);                                
+                newReportAction.setEnabled(true);
             }
 
             public void error(String msg) {}
         });
 
-	openReportAction = new ToolAction(uif, "rpth.open") {
-	    public void actionPerformed(ActionEvent e) {
-		showReportDialog(ReportDirChooser.OPEN);
-	    }
-	};
+        openReportAction = new ToolAction(uif, "rpth.open") {
+            public void actionPerformed(ActionEvent e) {
+                showReportDialog(ReportDirChooser.OPEN);
+            }
+        };
     }
 
     private Action newReportAction;

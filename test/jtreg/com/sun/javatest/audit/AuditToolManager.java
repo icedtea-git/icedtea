@@ -39,21 +39,21 @@ import com.sun.javatest.tool.ToolManager;
 /**
  * The ToolManager for {@link AuditTool audit tool} window.
  */
-public class AuditToolManager extends ToolManager 
+public class AuditToolManager extends ToolManager
 {
     public AuditToolManager(Desktop desktop) {
-	super(desktop);
+        super(desktop);
     }
 
     //----------------------------------------------------------------------------
 
     public Action[] getWindowOpenMenuActions() {
-	Action a = new ToolAction(i18n, "tmgr.openAudit") {
-	    public void actionPerformed(ActionEvent e) {
-		startTool();
-	    }
-	};
-	return new Action[] { a };
+        Action a = new ToolAction(i18n, "tmgr.openAudit") {
+            public void actionPerformed(ActionEvent e) {
+                startTool();
+            }
+        };
+        return new Action[] { a };
     }
 
     //----------------------------------------------------------------------------
@@ -62,44 +62,43 @@ public class AuditToolManager extends ToolManager
      * Start the {@link AuditTool audit tool} window.
      */
     public Tool startTool() {
-	AuditTool t = getTool();
+        AuditTool t = getTool();
 
-	Desktop d = getDesktop();
-	if (!d.containsTool(t)) 
-	    d.addTool(t);
+        Desktop d = getDesktop();
+        if (!d.containsTool(t))
+            d.addTool(t);
 
-	d.setSelectedTool(t);
+        d.setSelectedTool(t);
 
-	return t;
+        return t;
     }
 
     public Tool restoreTool(Map m) {
-	AuditTool t = getTool();
-	t.restore(m);
-	return t;
+        AuditTool t = getTool();
+        t.restore(m);
+        return t;
     }
 
     //----------------------------------------------------------------------------
 
 
     AuditTool getTool() {
-	if (tool == null) {
-	    tool = new AuditTool(this);
-	    tool.addObserver(new Tool.Observer() {
-		    public void shortTitleChanged(Tool t, String newValue) { }
+        if (tool == null) {
+            tool = new AuditTool(this);
+            tool.addObserver(new Tool.Observer() {
+                    public void shortTitleChanged(Tool t, String newValue) { }
 
-		    public void titleChanged(Tool t, String newValue) { }
-		    
-		    public void toolDisposed(Tool t) {
-			if (t == tool)
-			    tool = null;
-		    }
-		});
-	}
+                    public void titleChanged(Tool t, String newValue) { }
 
-	return tool;
+                    public void toolDisposed(Tool t) {
+                        if (t == tool)
+                            tool = null;
+                    }
+                });
+        }
+
+        return tool;
     }
 
     private AuditTool tool;
 }
-

@@ -87,11 +87,11 @@ class OptionsPane extends JPanel {
         this.okListener = okListener;
         initGUI();
     }
-    
+
     boolean resolveByRecent() {
         return resolveAsRecentBox.isSelected();
     }
-    
+
     boolean isXmlReport() {
         return cbXml.isSelected();
     }
@@ -114,7 +114,7 @@ class OptionsPane extends JPanel {
         lc.fill = GridBagConstraints.HORIZONTAL;
         lc.weightx = 1.0;
         this.add(title, lc);
-        
+
         lc = new GridBagConstraints();
         lc.anchor = GridBagConstraints.NORTHEAST;
         lc.gridheight = 2;
@@ -136,14 +136,14 @@ class OptionsPane extends JPanel {
         lc.fill = GridBagConstraints.HORIZONTAL;
         this.add(resolveAsRecentBox, lc);
 
-// --------------------------------------------------------------------------------        
+// --------------------------------------------------------------------------------
         JPanel bottom = uif.createPanel("opts.bottom", false);
         bottom.setLayout(new BorderLayout());
         bottom.setBorder(BorderFactory.createCompoundBorder(
                         uif.createTitledBorder("opts.bottom"),
                         BorderFactory.createEmptyBorder(12,12,12,12)));
-        
-        
+
+
         listModel = new DefaultListModel();
 
         // populate list and card panel
@@ -165,18 +165,18 @@ class OptionsPane extends JPanel {
         list.addKeyListener(sl);
         list.addListSelectionListener(sl);
         list.setCellRenderer(new CheckBoxListCellRenderer());
-	list.setBorder(BorderFactory.createCompoundBorder(
-	    BorderFactory.createEtchedBorder(),
-	    BorderFactory.createEmptyBorder(0,3,0,3)));
-        
-        
+        list.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createEtchedBorder(),
+            BorderFactory.createEmptyBorder(0,3,0,3)));
+
+
 
         descriptionArea = uif.createMessageArea("opts.type.desc");
         descriptionArea.setRows(3);
         Font f = descriptionArea.getFont();
         f = f.deriveFont(Font.PLAIN, f.getSize2D()-1);
         descriptionArea.setFont(f);
-        
+
 
         if (customBoxes != null && list != null) {
             CustomReport val = (CustomReport)(customBoxes.get(list.getSelectedValue()));
@@ -190,9 +190,9 @@ class OptionsPane extends JPanel {
         rightCenter.add(descriptionArea, BorderLayout.PAGE_START);
         rightCenter.add(p, BorderLayout.CENTER);
         bottom.add(rightCenter, BorderLayout.CENTER);
-        
+
         bottom.add(list, BorderLayout.WEST);
-        
+
         lc.insets.left = 0;
         lc.gridwidth = 1;
         lc.gridy = 3;
@@ -202,8 +202,8 @@ class OptionsPane extends JPanel {
         lc.weighty = 1.0;
 
         add(bottom, lc);
-        
-//---------------------------------------------------------------------------------        
+
+//---------------------------------------------------------------------------------
 
         okBtn = uif.createButton("opts.ok", okListener);
         cancelBtn = uif.createCancelButton("opts.cancel");
@@ -216,7 +216,7 @@ class OptionsPane extends JPanel {
         co.weightx = 1;
         co.gridwidth = 3;
         co.insets = new Insets(10,0,0,0);
-        
+
         GridBagConstraints bb = new GridBagConstraints();
         bb.anchor = GridBagConstraints.WEST;
         bb.insets = new Insets(10,0,0,0);
@@ -289,7 +289,7 @@ class OptionsPane extends JPanel {
 
         return result;
     }
-    
+
     private ArrayList getActiveCustomReports() {
 
         ArrayList customReps = new ArrayList();
@@ -300,7 +300,7 @@ class OptionsPane extends JPanel {
                 if (box.isSelected()) {
                     customReps.add(customBoxes.get(box));
                 }
-            }   
+            }
         }
         return customReps;
     }
@@ -367,7 +367,7 @@ class OptionsPane extends JPanel {
                             rep.getOptionPanes()[i].setEnabled(box.isSelected());
                         }   // for
                     }
- 
+
                     descriptionArea.setText(rep.getDescription());
                 }
             }
@@ -403,14 +403,14 @@ class OptionsPane extends JPanel {
      */
     private class PanelEnableListener implements PropertyChangeListener {
         /**
-         * @param container Container for controlling 
+         * @param container Container for controlling
          */
         PanelEnableListener(Container container) {
             theContainer = container;
         }
 
         /**
-         * Catches changes of "enabled" property 
+         * Catches changes of "enabled" property
          * and changes enabled status for all child components
          */
         public void propertyChange(PropertyChangeEvent evt) {
@@ -479,7 +479,7 @@ class OptionsPane extends JPanel {
             return comp;
         }
     }
-    
+
     JButton[] getButtons() {
         return new JButton[] { backBtn, okBtn, cancelBtn };
     }
@@ -497,8 +497,8 @@ class OptionsPane extends JPanel {
     private JCheckBox resolveAsRecentBox;
     private ActionListener chTabListener;
     private ActionListener okListener;
-    
+
     private Desktop desktop;
     private UIFactory uif;
-    private static final int DOTS_PER_INCH = Toolkit.getDefaultToolkit().getScreenResolution(); 
+    private static final int DOTS_PER_INCH = Toolkit.getDefaultToolkit().getScreenResolution();
 }

@@ -34,7 +34,7 @@ import java.util.Vector;
  * A Checklist is a sorted collection of messages,
  * for the purpose of providing a list of actions that must
  * be performed in association with a completed interview.
- * Messages are grouped into sections, which are sorted 
+ * Messages are grouped into sections, which are sorted
  * alphabetically; within a section, messages are stored
  * in the order they are added.
  */
@@ -44,42 +44,42 @@ public class Checklist
      * An Item contains a message to appear in a checklist.
      */
     public static class Item {
-	/**
-	 * Create an item to appear in a checklist.
-	 * @param sectionName the name of the section 
-	 * in which the message should appear
-	 * @param text the text of the message to appear
-	 * in the checklist
-	 */
-	public Item(String sectionName, String text) {
-	    this.sectionName = sectionName;
-	    this.text = text;
-	}
-	
-	private String sectionName;
-	private String text;
-	
+        /**
+         * Create an item to appear in a checklist.
+         * @param sectionName the name of the section
+         * in which the message should appear
+         * @param text the text of the message to appear
+         * in the checklist
+         */
+        public Item(String sectionName, String text) {
+            this.sectionName = sectionName;
+            this.text = text;
+        }
+
+        private String sectionName;
+        private String text;
+
     };
 
     /**
      * Create an empty checklist.
      */
     public Checklist() {
-	sections = new TreeMap();
+        sections = new TreeMap();
     }
 
     /**
-     * Get the names of the sections for which entries have been 
+     * Get the names of the sections for which entries have been
      * added to the checklist.
      * @return an array containing the names of the sections for
      * which entries have been added to the checklist
      */
     public String[] getSectionNames() {
-	if (sections == null)
-	    return null;
-	String[] names = new String[sections.keySet().size()];
-	sections.keySet().toArray(names);
-	return names;
+        if (sections == null)
+            return null;
+        String[] names = new String[sections.keySet().size()];
+        sections.keySet().toArray(names);
+        return names;
     }
 
     /**
@@ -87,16 +87,16 @@ public class Checklist
      * @param sectionName the name of the section for which
      * the iterator should return messages
      * @return an array containing the messages in a specific section
-     * of this checklist, or null if no messages have been 
+     * of this checklist, or null if no messages have been
      * added for the given section
      */
     public String[] getSectionMessages(String sectionName) {
-	Vector v = (Vector) (sections.get(sectionName));
-	if (v == null)
-	    return null;
-	String[] msgs = new String[v.size()];
-	v.copyInto(msgs);
-	return msgs;
+        Vector v = (Vector) (sections.get(sectionName));
+        if (v == null)
+            return null;
+        String[] msgs = new String[v.size()];
+        v.copyInto(msgs);
+        return msgs;
     }
 
     /**
@@ -104,12 +104,12 @@ public class Checklist
      * @param item The Item to be added
      */
     public void add(Item item) {
-	Vector msgs = (Vector) (sections.get(item.sectionName));
-	if (msgs == null) {
-	    msgs = new Vector();
-	    sections.put(item.sectionName, msgs);
-	}
-	msgs.add(item.text);
+        Vector msgs = (Vector) (sections.get(item.sectionName));
+        if (msgs == null) {
+            msgs = new Vector();
+            sections.put(item.sectionName, msgs);
+        }
+        msgs.add(item.text);
     }
 
     /**
@@ -117,7 +117,7 @@ public class Checklist
      * @return true if the checklist has no entries, and false otherwise.
      */
     public boolean isEmpty() {
-	return sections.isEmpty();
+        return sections.isEmpty();
     }
 
     private Map sections; // section name to vector of messages

@@ -115,14 +115,14 @@ class NewReportDialog extends ToolDialog
         // parameters are passed
 
        /**
-	 * The dialog is done. Notify the observer to keep a snapshot of
-	 * current state.
+         * The dialog is done. Notify the observer to keep a snapshot of
+         * current state.
          */
         public void update(Map l);
 
         // starting
         public void writingReport();
-        
+
         // done
         public void wroteReport();
 
@@ -133,16 +133,16 @@ class NewReportDialog extends ToolDialog
     }
 
     NewReportDialog(Component parent, UIFactory uif, FilterConfig f,
-		    ReportBrowser reportBrowser, ExecModel model) {
-	super(parent, uif, "nrd");
+                    ReportBrowser reportBrowser, ExecModel model) {
+        super(parent, uif, "nrd");
 
         this.model = model;
         filterHandler = f.createFilterSelectionHandler();
-	this.reportBrowser = reportBrowser;
+        this.reportBrowser = reportBrowser;
     }
 
     public void setInterviewParameters(InterviewParameters p) {
-	 interviewParams = p;
+         interviewParams = p;
     }
 
     // ---------------------------------------------------------------------------
@@ -151,16 +151,16 @@ class NewReportDialog extends ToolDialog
         String rd = (String) (h.get(REPORT_DIR));
         String filter = (String) (h.get(FILTER));
 
-	if (dirBox == null)
-	    initGUI();
+        if (dirBox == null)
+            initGUI();
 
         dirBox.removeAllItems();
-        if (rd != null && rd.length() > 0) 
+        if (rd != null && rd.length() > 0)
            dirBox.addItem(rd);
         else
            dirBox.addItem("");
 
-        if (filter != null && filter.length() > 0) 
+        if (filter != null && filter.length() > 0)
            filterHandler.setFilter(filter);
     }
 
@@ -169,10 +169,10 @@ class NewReportDialog extends ToolDialog
         String filter = filterHandler.getActiveFilter().getName();
         Map lastState = new HashMap();
 
-        if (rd != null && rd.length() > 0) 
+        if (rd != null && rd.length() > 0)
            lastState.put(REPORT_DIR, rd);
 
-        if (filter != null && filter.length() > 0) 
+        if (filter != null && filter.length() > 0)
            lastState.put(FILTER, filter);
 
         return lastState;
@@ -210,7 +210,7 @@ class NewReportDialog extends ToolDialog
             o.wroteReport();
         }
     }
-    
+
     private void notifyErrorWriting(String problem) {
         for (Observer o : obs) {
             o.errorWriting(problem);
@@ -220,91 +220,91 @@ class NewReportDialog extends ToolDialog
     // ---------------------------------------------------------------------------
 
     protected void initGUI() {
-	setI18NTitle("nrd.title");
+        setI18NTitle("nrd.title");
 
-	JPanel body = new JPanel() {
-		public Dimension getPreferredSize() {
-		    Dimension d = super.getPreferredSize();
-		    int dpi = uif.getDotsPerInch();
-		    return new Dimension(Math.max(d.width, 5 * dpi), d.height);
-		}
-	    };
-	body.setName("nrd.body");
-	body.setFocusable(false);
-	body.setLayout(new GridBagLayout());
-	body.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel body = new JPanel() {
+                public Dimension getPreferredSize() {
+                    Dimension d = super.getPreferredSize();
+                    int dpi = uif.getDotsPerInch();
+                    return new Dimension(Math.max(d.width, 5 * dpi), d.height);
+                }
+            };
+        body.setName("nrd.body");
+        body.setFocusable(false);
+        body.setLayout(new GridBagLayout());
+        body.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-	int dpi = uif.getDotsPerInch();
+        int dpi = uif.getDotsPerInch();
 
-	GridBagConstraints lc = new GridBagConstraints();
-	lc.anchor = GridBagConstraints.EAST;
-	lc.insets.right = 10;
-	lc.insets.bottom = 11;
-	lc.weighty = 0.0;
-	lc.weightx = 0.0;
-	lc.fill = GridBagConstraints.HORIZONTAL;
-	lc.gridwidth = 1;
+        GridBagConstraints lc = new GridBagConstraints();
+        lc.anchor = GridBagConstraints.EAST;
+        lc.insets.right = 10;
+        lc.insets.bottom = 11;
+        lc.weighty = 0.0;
+        lc.weightx = 0.0;
+        lc.fill = GridBagConstraints.HORIZONTAL;
+        lc.gridwidth = 1;
 
-	// first row, directory name
-	JLabel dirLabel = uif.createLabel("nrd.dir", true);
-	body.add(dirLabel, lc);
+        // first row, directory name
+        JLabel dirLabel = uif.createLabel("nrd.dir", true);
+        body.add(dirLabel, lc);
 
-	dirBox = uif.createChoice("nrd.dir.choice", true, dirLabel);
+        dirBox = uif.createChoice("nrd.dir.choice", true, dirLabel);
         dirBox.setMaximumRowCount(1);
-	lc.weightx = 3.0;
-	body.add(dirBox, lc);
+        lc.weightx = 3.0;
+        body.add(dirBox, lc);
 
-	browseBtn = uif.createButton("nrd.browse", listener);
-	browseBtn.setBorder(BorderFactory.createCompoundBorder(
-	    BorderFactory.createEtchedBorder(),
-	    BorderFactory.createEmptyBorder(0,3,0,3)));
-	lc.gridwidth = GridBagConstraints.REMAINDER;
-	lc.insets.left = 11;
-	lc.weightx = 0.0;
-	body.add(browseBtn, lc);
+        browseBtn = uif.createButton("nrd.browse", listener);
+        browseBtn.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createEtchedBorder(),
+            BorderFactory.createEmptyBorder(0,3,0,3)));
+        lc.gridwidth = GridBagConstraints.REMAINDER;
+        lc.insets.left = 11;
+        lc.weightx = 0.0;
+        body.add(browseBtn, lc);
 
-	// second row, filter
-	lc.insets.left = 0;
-	lc.gridwidth = 1;
+        // second row, filter
+        lc.insets.left = 0;
+        lc.gridwidth = 1;
 
-	// add filter selector
+        // add filter selector
         if (filterHandler != null) {
-	    JLabel filterLabel = uif.createLabel("nrd.filter", true);
-	    body.add(filterLabel, lc);
-	    
-	    JComponent selector = filterHandler.getFilterSelector();
-	    filterLabel.setLabelFor(selector);
-	    lc.gridwidth = GridBagConstraints.REMAINDER;
-	    lc.weightx = 4.0;
-	    lc.anchor = GridBagConstraints.WEST;
-	    lc.fill = GridBagConstraints.NONE;
-	    body.add(selector, lc);
-	}
+            JLabel filterLabel = uif.createLabel("nrd.filter", true);
+            body.add(filterLabel, lc);
 
-	// third row, the tabs
-	lc.anchor = GridBagConstraints.NORTHWEST;
-	lc.gridwidth = GridBagConstraints.REMAINDER;
-	lc.fill = GridBagConstraints.BOTH;
-	lc.insets.bottom = 12;
-	lc.weighty = 4.0;
-	lc.weighty = 1.0;
+            JComponent selector = filterHandler.getFilterSelector();
+            filterLabel.setLabelFor(selector);
+            lc.gridwidth = GridBagConstraints.REMAINDER;
+            lc.weightx = 4.0;
+            lc.anchor = GridBagConstraints.WEST;
+            lc.fill = GridBagConstraints.NONE;
+            body.add(selector, lc);
+        }
 
-//------------------------------------------------------------------------  
-        
+        // third row, the tabs
+        lc.anchor = GridBagConstraints.NORTHWEST;
+        lc.gridwidth = GridBagConstraints.REMAINDER;
+        lc.fill = GridBagConstraints.BOTH;
+        lc.insets.bottom = 12;
+        lc.weighty = 4.0;
+        lc.weighty = 1.0;
+
+//------------------------------------------------------------------------
+
         JPanel middle = uif.createPanel("nrd.middle", false);
         middle.setLayout(new BorderLayout());
         middle.setBorder(BorderFactory.createCompoundBorder(
                         uif.createTitledBorder("nrd.middle"),
                         BorderFactory.createEmptyBorder(12,12,12,12)));
 
-	panes = new JComponent[] {
-	    createHtmlBlock(),
-	    createFilesBlock()
-	};
-        
-	tabs = uif.createTabbedPane("nrd.tabs", panes);
-	tabs.setTabPlacement(SwingConstants.TOP);
-	tabs.setBorder(BorderFactory.createEmptyBorder());
+        panes = new JComponent[] {
+            createHtmlBlock(),
+            createFilesBlock()
+        };
+
+        tabs = uif.createTabbedPane("nrd.tabs", panes);
+        tabs.setTabPlacement(SwingConstants.TOP);
+        tabs.setBorder(BorderFactory.createEmptyBorder());
 
         listModel = new DefaultListModel();
 
@@ -312,18 +312,18 @@ class NewReportDialog extends ToolDialog
         final CardLayout cards = new CardLayout();
         final JPanel p = uif.createPanel("nrd.typecards", cards, false);
 
-	cbHtml = uif.createCheckBox("nrd.type.html", true);
-	//cbHtml.addActionListener(cbListener);
+        cbHtml = uif.createCheckBox("nrd.type.html", true);
+        //cbHtml.addActionListener(cbListener);
         listModel.addElement(cbHtml);
-	p.add("nrd.type.html", tabs);
+        p.add("nrd.type.html", tabs);
 
-	cbPlain = uif.createCheckBox("nrd.type.pt", true);
+        cbPlain = uif.createCheckBox("nrd.type.pt", true);
         listModel.addElement(cbPlain);
-	p.add("nrd.type.pt", uif.createPanel("nrd.blank", false));
+        p.add("nrd.type.pt", uif.createPanel("nrd.blank", false));
 
-	cbXml = uif.createCheckBox("nrd.type.xml", false);
+        cbXml = uif.createCheckBox("nrd.type.xml", false);
         listModel.addElement(cbXml);
-	p.add("nrd.type.xml", uif.createPanel("nrd.blank", false));
+        p.add("nrd.type.xml", uif.createPanel("nrd.blank", false));
 
         getCustomReports(p);
 
@@ -334,16 +334,16 @@ class NewReportDialog extends ToolDialog
         list.addKeyListener(sl);
         list.addListSelectionListener(sl);
         list.setCellRenderer(new CheckBoxListCellRenderer());
-	list.setBorder(BorderFactory.createCompoundBorder(
-	    BorderFactory.createEtchedBorder(),
-	    BorderFactory.createEmptyBorder(0,3,0,3)));
+        list.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createEtchedBorder(),
+            BorderFactory.createEmptyBorder(0,3,0,3)));
 
         infoArea = uif.createMessageArea("nrd.info");
         infoArea.setRows(3);
         Font f = infoArea.getFont();
         f = f.deriveFont(Font.PLAIN, f.getSize2D()-1);
         infoArea.setFont(f);
-        
+
         // create container for right side (next to list)
         JPanel right = uif.createPanel("nrd.rptright", false);
         right.setLayout(new BorderLayout());
@@ -354,300 +354,300 @@ class NewReportDialog extends ToolDialog
         middle.add(list, BorderLayout.WEST);
         body.add(middle, lc);
 //-----------------------------------------------------------------
-        
+
         Action listMnemonics = new AbstractAction() {
 
-			public void actionPerformed(ActionEvent e) {
-				int ord = Integer.parseInt(e.getActionCommand()) - 1;
-				if (ord == -1) ord = 9;
-				if (ord <= list.getModel().getSize()) {
-					list.requestFocusInWindow();
-					list.setSelectedIndex(ord);
-				}
-			}
-        	
+                        public void actionPerformed(ActionEvent e) {
+                                int ord = Integer.parseInt(e.getActionCommand()) - 1;
+                                if (ord == -1) ord = 9;
+                                if (ord <= list.getModel().getSize()) {
+                                        list.requestFocusInWindow();
+                                        list.setSelectedIndex(ord);
+                                }
+                        }
+
         };
-        
+
         ActionMap listActions = new ActionMap();
         InputMap listInput = new ComponentInputMap(list);
-        
+
         list.setActionMap(listActions);
         list.setInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW, listInput);
-        
+
         listActions.put(ACTION_MAP_KEY, listMnemonics);
-        
+
         int itemCount = listModel.size();
         if (itemCount > 9) itemCount = 9;
         for (int i = 1; i <= itemCount; ++i) {
-        	listInput.put(KeyStroke.getKeyStroke(i + '0', InputEvent.ALT_DOWN_MASK), ACTION_MAP_KEY);
-        	JCheckBox box = ((JCheckBox)listModel.getElementAt(i - 1));
-        	box.setMnemonic(i + '0');
-        	box.setText(Character.toString((char)('0' + i)) + " " + box.getText());
+                listInput.put(KeyStroke.getKeyStroke(i + '0', InputEvent.ALT_DOWN_MASK), ACTION_MAP_KEY);
+                JCheckBox box = ((JCheckBox)listModel.getElementAt(i - 1));
+                box.setMnemonic(i + '0');
+                box.setText(Character.toString((char)('0' + i)) + " " + box.getText());
         }
-        
+
         if (listModel.size() == 10){
-        	listInput.put(KeyStroke.getKeyStroke('0', InputEvent.ALT_DOWN_MASK), ACTION_MAP_KEY);
-        	JCheckBox box = ((JCheckBox)listModel.getElementAt(9));
-        	box.setMnemonic('0');
-        	box.setText("0 " + box.getText());
+                listInput.put(KeyStroke.getKeyStroke('0', InputEvent.ALT_DOWN_MASK), ACTION_MAP_KEY);
+                JCheckBox box = ((JCheckBox)listModel.getElementAt(9));
+                box.setMnemonic('0');
+                box.setText("0 " + box.getText());
         }
-        
+
 //-----------------------------------------------------------------
         JPanel bottom = createBackupOpsPane();
         bottom.setBorder(BorderFactory.createCompoundBorder(
                         uif.createTitledBorder("nrd.backup"),
                         BorderFactory.createEmptyBorder(12,12,12,12)));
-        
-        body.add(bottom, lc);        
-	setBody(body);
+
+        body.add(bottom, lc);
+        setBody(body);
 //--------------------------------------------------------------------------------------
-        
+
         okBtn = uif.createButton("nrd.ok", listener);
         cancelBtn = uif.createCancelButton("nrd.cancel", listener);
-	setButtons(new JButton[] { okBtn, cancelBtn, }, cancelBtn);
+        setButtons(new JButton[] { okBtn, cancelBtn, }, cancelBtn);
 
         list.setSelectedIndex(0);
-	setState(Report.getSettingsPrefs());
+        setState(Report.getSettingsPrefs());
     }
 
-    /** 
+    /**
      * Options for the HTML report.
      */
     private JComponent createHtmlBlock() {
-	JPanel p = uif.createPanel("nrd.htmlops", new GridBagLayout(),
-				    false);
-	p.setName("htmlops");
-	GridBagConstraints gbc = new GridBagConstraints();
-	gbc.fill = GridBagConstraints.NONE;
-	gbc.anchor = GridBagConstraints.WEST;
-	gbc.gridwidth = 2;
-	gbc.gridy = 0;
+        JPanel p = uif.createPanel("nrd.htmlops", new GridBagLayout(),
+                                    false);
+        p.setName("htmlops");
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridwidth = 2;
+        gbc.gridy = 0;
 
-	// info about this block of buttons
-	JTextArea info = uif.createMessageArea("nrd.htmlops");
-	//info.setBorder(BorderFactory.createLineBorder(Color.black));
-	p.add(info, gbc);
+        // info about this block of buttons
+        JTextArea info = uif.createMessageArea("nrd.htmlops");
+        //info.setBorder(BorderFactory.createLineBorder(Color.black));
+        p.add(info, gbc);
 
-	// checkboxes
-	// these are given settings here, but setting will be reloaded
-	// elsewhere before the user sees them
-	JCheckBox cb = uif.createCheckBox("nrd.htmlops.config", true);
-	cbConfig = cb;
-	cbConfig.addActionListener(cbListener);
-	htmlGroup.addElement(cb);
-	gbc.gridy = 1;
-	p.add(cb, gbc);
+        // checkboxes
+        // these are given settings here, but setting will be reloaded
+        // elsewhere before the user sees them
+        JCheckBox cb = uif.createCheckBox("nrd.htmlops.config", true);
+        cbConfig = cb;
+        cbConfig.addActionListener(cbListener);
+        htmlGroup.addElement(cb);
+        gbc.gridy = 1;
+        p.add(cb, gbc);
 
-	// question log
-	gbc.gridwidth = 1;
-	gbc.gridy = 2;
-	cb = cbQl = uif.createCheckBox("nrd.htmlops.ql", true);
-	configGroup.addElement(cb);
-	htmlGroup.addElement(cb);
-	p.add(uif.createHorizontalStrut(25), gbc);
-	p.add(cb, gbc);
+        // question log
+        gbc.gridwidth = 1;
+        gbc.gridy = 2;
+        cb = cbQl = uif.createCheckBox("nrd.htmlops.ql", true);
+        configGroup.addElement(cb);
+        htmlGroup.addElement(cb);
+        p.add(uif.createHorizontalStrut(25), gbc);
+        p.add(cb, gbc);
 
-	// environment
-	gbc.gridy = 3;
-	cb = cbEnv = uif.createCheckBox("nrd.htmlops.env", false);
-	configGroup.addElement(cb);
-	htmlGroup.addElement(cb);
-	p.add(uif.createHorizontalStrut(25), gbc);
-	p.add(cb, gbc);
+        // environment
+        gbc.gridy = 3;
+        cb = cbEnv = uif.createCheckBox("nrd.htmlops.env", false);
+        configGroup.addElement(cb);
+        htmlGroup.addElement(cb);
+        p.add(uif.createHorizontalStrut(25), gbc);
+        p.add(cb, gbc);
 
-	// standard values
-	gbc.gridy = 4;
-	cb = cbStd = uif.createCheckBox("nrd.htmlops.std", false);
-	configGroup.addElement(cb);
-	htmlGroup.addElement(cb);
-	p.add(uif.createHorizontalStrut(25), gbc);
-	p.add(cb, gbc);
+        // standard values
+        gbc.gridy = 4;
+        cb = cbStd = uif.createCheckBox("nrd.htmlops.std", false);
+        configGroup.addElement(cb);
+        htmlGroup.addElement(cb);
+        p.add(uif.createHorizontalStrut(25), gbc);
+        p.add(cb, gbc);
 
-	// result summary
-	gbc.gridy = 5;
-	gbc.gridwidth = 2;
-	cb = cbResults = uif.createCheckBox("nrd.htmlops.res", true);
-	htmlGroup.addElement(cb);
-	p.add(cb, gbc);
+        // result summary
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+        cb = cbResults = uif.createCheckBox("nrd.htmlops.res", true);
+        htmlGroup.addElement(cb);
+        p.add(cb, gbc);
 
-	// keyword summary
-	cb = cbKws = uif.createCheckBox("nrd.htmlops.kw", true);
-	htmlGroup.addElement(cb);
-	gbc.gridy = 6;
-	p.add(cb, gbc);
+        // keyword summary
+        cb = cbKws = uif.createCheckBox("nrd.htmlops.kw", true);
+        htmlGroup.addElement(cb);
+        gbc.gridy = 6;
+        p.add(cb, gbc);
 
-	JScrollPane sp = uif.createScrollPane(p,
-		ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-		ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane sp = uif.createScrollPane(p,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-	sp.setViewportBorder(BorderFactory.createCompoundBorder(
-	    BorderFactory.createEmptyBorder(10, 5, 5, 5),
-	    uif.createTitledBorder("nrd.htmlops")
-	));
+        sp.setViewportBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createEmptyBorder(10, 5, 5, 5),
+            uif.createTitledBorder("nrd.htmlops")
+        ));
         sp.addPropertyChangeListener("enabled", new PanelEnableListener(sp));
-	return sp;
+        return sp;
     }
 
-    /** 
+    /**
      * Options for the HTML report files.
      */
     private JComponent createFilesBlock() {
-	JPanel p = uif.createPanel("nrd.htmlf", new GridBagLayout(),
-				    false);
-	p.setName("htmlf");
-	GridBagConstraints gbc = new GridBagConstraints();
-	gbc.fill = GridBagConstraints.BOTH;
-	gbc.anchor = GridBagConstraints.WEST;
-	//gbc.gridx = 0;
-	gbc.gridwidth = 3;
-	gbc.gridy = 0;
+        JPanel p = uif.createPanel("nrd.htmlf", new GridBagLayout(),
+                                    false);
+        p.setName("htmlf");
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.WEST;
+        //gbc.gridx = 0;
+        gbc.gridwidth = 3;
+        gbc.gridy = 0;
 
-	// info about this block of buttons
-	JTextArea info = uif.createMessageArea("nrd.htmlf");
-	//info.setBorder(BorderFactory.createLineBorder(Color.black));
-	p.add(info, gbc);
+        // info about this block of buttons
+        JTextArea info = uif.createMessageArea("nrd.htmlf");
+        //info.setBorder(BorderFactory.createLineBorder(Color.black));
+        p.add(info, gbc);
 
-	// settings are given here, but settings will be reloaded
-	// elsewhere before the user sees them
+        // settings are given here, but settings will be reloaded
+        // elsewhere before the user sees them
 
-	// index.html and/or report.html
-	JLabel lab = uif.createLabel("nrd.htmlf.main", false);
-	gbc.gridy = 1;
-	p.add(lab, gbc);
+        // index.html and/or report.html
+        JLabel lab = uif.createLabel("nrd.htmlf.main", false);
+        gbc.gridy = 1;
+        p.add(lab, gbc);
 
-	gbc.gridwidth = 1;
-	gbc.gridy = 2;
-	JCheckBox cb = cbHtmlRpt = uif.createCheckBox("nrd.htmlf.rpt", true);
-	cbHtmlRpt.addActionListener(cbListener);
-	htmlGroup.addElement(cb);
-	p.add(uif.createHorizontalStrut(25), gbc);
-	gbc.gridwidth = 2;
-	p.add(cb, gbc);
+        gbc.gridwidth = 1;
+        gbc.gridy = 2;
+        JCheckBox cb = cbHtmlRpt = uif.createCheckBox("nrd.htmlf.rpt", true);
+        cbHtmlRpt.addActionListener(cbListener);
+        htmlGroup.addElement(cb);
+        p.add(uif.createHorizontalStrut(25), gbc);
+        gbc.gridwidth = 2;
+        p.add(cb, gbc);
 
-	gbc.gridy = 3;
-	gbc.gridwidth = 1;
-	cb = cbHtmlInd = uif.createCheckBox("nrd.htmlf.idx", false);
-	cbHtmlInd.addActionListener(cbListener);
-	htmlGroup.addElement(cb);
-	p.add(uif.createHorizontalStrut(25), gbc);
-	gbc.gridwidth = 2;
-	p.add(cb, gbc);
+        gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        cb = cbHtmlInd = uif.createCheckBox("nrd.htmlf.idx", false);
+        cbHtmlInd.addActionListener(cbListener);
+        htmlGroup.addElement(cb);
+        p.add(uif.createHorizontalStrut(25), gbc);
+        gbc.gridwidth = 2;
+        p.add(cb, gbc);
 
-	// pass, fail, error, notrun files
-	gbc.gridy = 4;
-	gbc.gridwidth = 3;
-	lab = uif.createLabel("nrd.htmlf.xtra", false);
-	p.add(lab, gbc);
+        // pass, fail, error, notrun files
+        gbc.gridy = 4;
+        gbc.gridwidth = 3;
+        lab = uif.createLabel("nrd.htmlf.xtra", false);
+        p.add(lab, gbc);
 
-	gbc.gridy = 5;
-	cb = uif.createCheckBox("nrd.htmlf.pass", true);
-	htmlGroup.addElement(cb);
-	cbPass = cb;
-	gbc.gridwidth = 1;
-	p.add(uif.createHorizontalStrut(25), gbc);
-	p.add(cb, gbc);
+        gbc.gridy = 5;
+        cb = uif.createCheckBox("nrd.htmlf.pass", true);
+        htmlGroup.addElement(cb);
+        cbPass = cb;
+        gbc.gridwidth = 1;
+        p.add(uif.createHorizontalStrut(25), gbc);
+        p.add(cb, gbc);
 
-	cb = cbErr = uif.createCheckBox("nrd.htmlf.err", true);
-	htmlGroup.addElement(cb);
-	p.add(cb, gbc);
+        cb = cbErr = uif.createCheckBox("nrd.htmlf.err", true);
+        htmlGroup.addElement(cb);
+        p.add(cb, gbc);
 
-	gbc.gridy = 6;
-	cb = cbFail = uif.createCheckBox("nrd.htmlf.fail", true);
-	htmlGroup.addElement(cb);
-	p.add(uif.createHorizontalStrut(25), gbc);
-	p.add(cb, gbc);
+        gbc.gridy = 6;
+        cb = cbFail = uif.createCheckBox("nrd.htmlf.fail", true);
+        htmlGroup.addElement(cb);
+        p.add(uif.createHorizontalStrut(25), gbc);
+        p.add(cb, gbc);
 
-	cb = cbNr = uif.createCheckBox("nrd.htmlf.nr", true);
-	htmlGroup.addElement(cb);
-	p.add(cb, gbc);
+        cb = cbNr = uif.createCheckBox("nrd.htmlf.nr", true);
+        htmlGroup.addElement(cb);
+        p.add(cb, gbc);
 
-	JScrollPane sp = uif.createScrollPane(p,
-		ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-		ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane sp = uif.createScrollPane(p,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-	sp.setViewportBorder(BorderFactory.createCompoundBorder(
-	    BorderFactory.createEmptyBorder(10, 5, 5, 5),
-	    uif.createTitledBorder("nrd.htmlf")
-	));
-        
+        sp.setViewportBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createEmptyBorder(10, 5, 5, 5),
+            uif.createTitledBorder("nrd.htmlf")
+        ));
+
         sp.addPropertyChangeListener("enabled", new PanelEnableListener(sp));
-	return sp;
+        return sp;
     }
-    
+
     private JPanel createBackupOpsPane() {
         JPanel p = uif.createPanel("nrd.backup", new GridBagLayout(),
-				    false);        
-	p.setName("backup");
-	GridBagConstraints gbc = new GridBagConstraints();
-	gbc.fill = GridBagConstraints.BOTH;
-	gbc.anchor = GridBagConstraints.WEST;
-	gbc.gridx = 0;
-	gbc.gridwidth = 3;
+                                    false);
+        p.setName("backup");
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridx = 0;
+        gbc.gridwidth = 3;
 
-	// info about this block of buttons
-	JTextArea info = uif.createMessageArea("nrd.backup");
-	//info.setBorder(BorderFactory.createLineBorder(Color.black));
-	p.add(info, gbc);
+        // info about this block of buttons
+        JTextArea info = uif.createMessageArea("nrd.backup");
+        //info.setBorder(BorderFactory.createLineBorder(Color.black));
+        p.add(info, gbc);
 
-	// checkboxes
-	// these are given settings here, but setting will be reloaded
-	// elsewhere before the user sees them
-	JCheckBox cb = cbBak = uif.createCheckBox("nrd.backup.bak", true);
-	cbBak.addChangeListener(new ChangeListener() {
-		public void stateChanged(ChangeEvent e) {
-		    if (numBak != null) {
-			numBak.setEnabled(cbBak.isSelected());
-		    }
-		}
-	    });
-	p.add(cb, gbc);
+        // checkboxes
+        // these are given settings here, but setting will be reloaded
+        // elsewhere before the user sees them
+        JCheckBox cb = cbBak = uif.createCheckBox("nrd.backup.bak", true);
+        cbBak.addChangeListener(new ChangeListener() {
+                public void stateChanged(ChangeEvent e) {
+                    if (numBak != null) {
+                        numBak.setEnabled(cbBak.isSelected());
+                    }
+                }
+            });
+        p.add(cb, gbc);
 
-	gbc.gridwidth = 1;
-	gbc.gridy = 2;
-	gbc.gridx = GridBagConstraints.RELATIVE;
-	p.add(uif.createHorizontalStrut(25), gbc);
+        gbc.gridwidth = 1;
+        gbc.gridy = 2;
+        gbc.gridx = GridBagConstraints.RELATIVE;
+        p.add(uif.createHorizontalStrut(25), gbc);
 
-	JLabel lab = uif.createLabel("nrd.backup.bak.level", true);
-	p.add(lab, gbc);
+        JLabel lab = uif.createLabel("nrd.backup.bak.level", true);
+        p.add(lab, gbc);
 
-	// backup levels
-	numBak = uif.createInputField("nrd.backup.bak.level", 2, lab);
-	gbc.insets.left = 12;
-	numBak.setText("1");
+        // backup levels
+        numBak = uif.createInputField("nrd.backup.bak.level", 2, lab);
+        gbc.insets.left = 12;
+        numBak.setText("1");
 
-	Action action = new AbstractAction() {
-	    public void actionPerformed(ActionEvent e) {
-		    JTextField src = (JTextField) (e.getSource());
-		    String cmd = e.getActionCommand();
-		    char ch = cmd.charAt(0);
-		    int savedDot = src.getCaret().getDot();
-		    int savedMark = src.getCaret().getMark();
-		    String savedText = src.getText();
+        Action action = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                    JTextField src = (JTextField) (e.getSource());
+                    String cmd = e.getActionCommand();
+                    char ch = cmd.charAt(0);
+                    int savedDot = src.getCaret().getDot();
+                    int savedMark = src.getCaret().getMark();
+                    String savedText = src.getText();
 
-		    // reject all non-numeric chars
-		    if (Character.isDigit(ch) && ch != '0') {
-			Action delegate = new javax.swing.text.DefaultEditorKit.InsertContentAction();
-			delegate.actionPerformed(e);
+                    // reject all non-numeric chars
+                    if (Character.isDigit(ch) && ch != '0') {
+                        Action delegate = new javax.swing.text.DefaultEditorKit.InsertContentAction();
+                        delegate.actionPerformed(e);
 
-			String newText = src.getText();
-			// reject new input if it leaves an invalid value,
-			// i.e. more than one digit (>9)
-			if (newText.length() > 1) {
-			    src.setText(savedText);
-			}
-		    }
-		}
-	    };
-	Keymap keymap = numBak.addKeymap("intField", numBak.getKeymap());
-	keymap.setDefaultAction(action);
-	numBak.setKeymap(keymap);
+                        String newText = src.getText();
+                        // reject new input if it leaves an invalid value,
+                        // i.e. more than one digit (>9)
+                        if (newText.length() > 1) {
+                            src.setText(savedText);
+                        }
+                    }
+                }
+            };
+        Keymap keymap = numBak.addKeymap("intField", numBak.getKeymap());
+        keymap.setDefaultAction(action);
+        numBak.setKeymap(keymap);
 
-	p.add(numBak, gbc);
+        p.add(numBak, gbc);
 
-	p.setMaximumSize(p.getPreferredSize());
+        p.setMaximumSize(p.getPreferredSize());
         return p;
     }
-    
+
 
     /**
      * @return number of custom reports added
@@ -667,7 +667,7 @@ class NewReportDialog extends ToolDialog
 
         customBoxes = new HashMap();
 
-        for (int i = 0; i < customReports.length; i++) { 
+        for (int i = 0; i < customReports.length; i++) {
             JCheckBox cb = new JCheckBox(customReports[i].getName());
             cb.setName(customReports[i].getReportId());
             listModel.addElement(cb);
@@ -737,7 +737,7 @@ class NewReportDialog extends ToolDialog
                         newestF = file;
                         newestTime = file.lastModified();
                     }
-                }	// for
+                }       // for
                 reportBrowser.show(newestF);
             }
             else
@@ -745,24 +745,24 @@ class NewReportDialog extends ToolDialog
         }
     }
 
-    /** 
+    /**
      * Normally called by the background thread.
      */
     private void runReport(Report.Settings settings) throws IOException {
-	if (interviewParams != null) {
+        if (interviewParams != null) {
             Report r = new Report();
 
             // if no work directory selected, throw exception.
             if (interviewParams.getWorkDirectory() == null) {
-	        throw new IOException(uif.getI18NString("nrd.noWorkDir.err"));
+                throw new IOException(uif.getI18NString("nrd.noWorkDir.err"));
             }
             r.addStartGenListener(new ReportGenListener());
-	    r.writeReports(settings, reportDir, getActiveCustomReports());
+            r.writeReports(settings, reportDir, getActiveCustomReports());
 
-	}
-	else {
-	    throw new IOException(uif.getI18NString("nrd.nullParams.err"));
-	}
+        }
+        else {
+            throw new IOException(uif.getI18NString("nrd.nullParams.err"));
+        }
     }
 
     private ArrayList getActiveCustomReports() {
@@ -775,7 +775,7 @@ class NewReportDialog extends ToolDialog
                 if (box.isSelected()) {
                     customReps.add(customBoxes.get(box));
                 }
-            }   
+            }
         }
         return customReps;
     }
@@ -785,49 +785,49 @@ class NewReportDialog extends ToolDialog
     }
 
     private void updateCheckboxStates() {
-	// config buttons done before html buttons to ensure that
-	// config gets disabled if HTML reporting is off
+        // config buttons done before html buttons to ensure that
+        // config gets disabled if HTML reporting is off
 
-	if (!cbHtml.isSelected()) {
-	    for (int i = 0; i < htmlGroup.size(); i++)
-		((JCheckBox)(htmlGroup.elementAt(i))).setEnabled(cbHtml.isSelected());
-	}
-	else {
-	    for (int i = 0; i < htmlGroup.size(); i++)
-		((JCheckBox)(htmlGroup.elementAt(i))).setEnabled(cbHtml.isSelected());
-	    for (int i = 0; i < configGroup.size(); i++)
-		((JCheckBox)(configGroup.elementAt(i))).setEnabled(cbConfig.isSelected());
-	}
+        if (!cbHtml.isSelected()) {
+            for (int i = 0; i < htmlGroup.size(); i++)
+                ((JCheckBox)(htmlGroup.elementAt(i))).setEnabled(cbHtml.isSelected());
+        }
+        else {
+            for (int i = 0; i < htmlGroup.size(); i++)
+                ((JCheckBox)(htmlGroup.elementAt(i))).setEnabled(cbHtml.isSelected());
+            for (int i = 0; i < configGroup.size(); i++)
+                ((JCheckBox)(configGroup.elementAt(i))).setEnabled(cbConfig.isSelected());
+        }
     }
 
     private Report.Settings captureState() {
-	Report.Settings snap = new Report.Settings(interviewParams);
+        Report.Settings snap = new Report.Settings(interviewParams);
 
-	snap.setEnableHtmlReport(cbHtml.isSelected());
-	snap.setEnableXmlReport(cbXml.isSelected());
-	snap.setEnablePlainReport(cbPlain.isSelected());
+        snap.setEnableHtmlReport(cbHtml.isSelected());
+        snap.setEnableXmlReport(cbXml.isSelected());
+        snap.setEnablePlainReport(cbPlain.isSelected());
 
-	snap.setShowConfigSection(cbConfig.isSelected());
-	snap.setShowEnvLog(cbEnv.isSelected());
-	snap.setShowQuestionLog(cbQl.isSelected());
-	snap.setShowStdValues(cbStd.isSelected());
-	snap.setShowResults(cbResults.isSelected());
-	snap.setShowKeywordSummary(cbKws.isSelected());
+        snap.setShowConfigSection(cbConfig.isSelected());
+        snap.setShowEnvLog(cbEnv.isSelected());
+        snap.setShowQuestionLog(cbQl.isSelected());
+        snap.setShowStdValues(cbStd.isSelected());
+        snap.setShowResults(cbResults.isSelected());
+        snap.setShowKeywordSummary(cbKws.isSelected());
 
-	snap.setHtmlMainReport(cbHtmlRpt.isSelected(), cbHtmlInd.isSelected());
-	snap.setEnableHtmlStateFile(Status.PASSED, cbPass.isSelected());
-	snap.setEnableHtmlStateFile(Status.FAILED, cbFail.isSelected());
-	snap.setEnableHtmlStateFile(Status.ERROR, cbErr.isSelected());
-	snap.setEnableHtmlStateFile(Status.NOT_RUN, cbNr.isSelected());
+        snap.setHtmlMainReport(cbHtmlRpt.isSelected(), cbHtmlInd.isSelected());
+        snap.setEnableHtmlStateFile(Status.PASSED, cbPass.isSelected());
+        snap.setEnableHtmlStateFile(Status.FAILED, cbFail.isSelected());
+        snap.setEnableHtmlStateFile(Status.ERROR, cbErr.isSelected());
+        snap.setEnableHtmlStateFile(Status.NOT_RUN, cbNr.isSelected());
 
-	snap.setEnableBackups(cbBak.isSelected());
+        snap.setEnableBackups(cbBak.isSelected());
 
-	try {
-	    int i = Integer.parseInt(numBak.getText());
-	    snap.setBackupLevels(i);
-	}
-	catch (NumberFormatException e) {
-	}
+        try {
+            int i = Integer.parseInt(numBak.getText());
+            snap.setBackupLevels(i);
+        }
+        catch (NumberFormatException e) {
+        }
 
         TestFilter filter = filterHandler.getActiveFilter();
 
@@ -837,94 +837,94 @@ class NewReportDialog extends ToolDialog
         else
             snap.setAllowInitFilesOptimize(false);
 
-	snap.setFilter(filter);
+        snap.setFilter(filter);
 
-	return snap;
+        return snap;
     }
 
     private void setState(Report.Settings snap) {
-	if (snap == null)
-	    return;
+        if (snap == null)
+            return;
 
-	lastSettings = snap;
+        lastSettings = snap;
 
 
-	cbHtml.setSelected(snap.isHtmlEnabled());
-	cbXml.setSelected(snap.isXmlEnabled());
-	cbPlain.setSelected(snap.isPlainEnabled());
+        cbHtml.setSelected(snap.isHtmlEnabled());
+        cbXml.setSelected(snap.isXmlEnabled());
+        cbPlain.setSelected(snap.isPlainEnabled());
 
-	// ---
-	boolean section = snap.isConfigSectionEnabled();
-	cbConfig.setSelected(section);
+        // ---
+        boolean section = snap.isConfigSectionEnabled();
+        cbConfig.setSelected(section);
 
-	cbEnv.setSelected(snap.isEnvEnabled());
-	cbQl.setSelected(snap.isQuestionLogEnabled());
-	cbStd.setSelected(snap.isStdEnabled());
+        cbEnv.setSelected(snap.isEnvEnabled());
+        cbQl.setSelected(snap.isQuestionLogEnabled());
+        cbStd.setSelected(snap.isStdEnabled());
 
-	cbEnv.setEnabled(section);
-	cbQl.setEnabled(section);
-	cbStd.setEnabled(section);
+        cbEnv.setEnabled(section);
+        cbQl.setEnabled(section);
+        cbStd.setEnabled(section);
 
-	// ---
-	cbResults.setSelected(snap.isResultsEnabled());
-	cbKws.setSelected(snap.isKeywordSummaryEnabled());
+        // ---
+        cbResults.setSelected(snap.isResultsEnabled());
+        cbKws.setSelected(snap.isKeywordSummaryEnabled());
 
-	cbHtmlRpt.setSelected(snap.isReportHtmlEnabled());
-	cbHtmlInd.setSelected(snap.isIndexHtmlEnabled());
-	cbPass.setSelected(snap.isStateFileEnabled(Status.PASSED));
-	cbFail.setSelected(snap.isStateFileEnabled(Status.FAILED));
-	cbErr.setSelected(snap.isStateFileEnabled(Status.ERROR));
-	cbNr.setSelected(snap.isStateFileEnabled(Status.NOT_RUN));
+        cbHtmlRpt.setSelected(snap.isReportHtmlEnabled());
+        cbHtmlInd.setSelected(snap.isIndexHtmlEnabled());
+        cbPass.setSelected(snap.isStateFileEnabled(Status.PASSED));
+        cbFail.setSelected(snap.isStateFileEnabled(Status.FAILED));
+        cbErr.setSelected(snap.isStateFileEnabled(Status.ERROR));
+        cbNr.setSelected(snap.isStateFileEnabled(Status.NOT_RUN));
 
-	cbBak.setSelected(snap.isBackupsEnabled());
-	numBak.setText(Integer.toString(snap.getBackupLevel()));
+        cbBak.setSelected(snap.isBackupsEnabled());
+        numBak.setText(Integer.toString(snap.getBackupLevel()));
 
-	// a null value will be ignored
-	filterHandler.setFilter(snap.getTestFilter());
+        // a null value will be ignored
+        filterHandler.setFilter(snap.getTestFilter());
     }
 
     private ActionListener cbListener = new ActionListener() {
-	public void actionPerformed(ActionEvent e) {
-	    Object src = e.getSource();
+        public void actionPerformed(ActionEvent e) {
+            Object src = e.getSource();
 
-	    if (src == cbHtml || src == cbConfig)
-		updateCheckboxStates();
-	    else if (src == cbBak) {
-		numBak.setEnabled(cbBak.isSelected());
-	    }
-	}
+            if (src == cbHtml || src == cbConfig)
+                updateCheckboxStates();
+            else if (src == cbBak) {
+                numBak.setEnabled(cbBak.isSelected());
+            }
+        }
     };
-    
+
     private ActionListener listener = new ActionListener() {
-	public void actionPerformed(ActionEvent e) {
-	    Object src = e.getSource();
+        public void actionPerformed(ActionEvent e) {
+            Object src = e.getSource();
 
-	    if (src == browseBtn) {
-		showReportChooserDialog();
-	    } 
-	    else if (src == cancelBtn) {
-		// revert settings
-		// hide dialog
-		setState(lastSettings);
-		setVisible(false);
-	    } 
-	    else if (src == okBtn) {
-		String s = (String) dirBox.getSelectedItem(); 
+            if (src == browseBtn) {
+                showReportChooserDialog();
+            }
+            else if (src == cancelBtn) {
+                // revert settings
+                // hide dialog
+                setState(lastSettings);
+                setVisible(false);
+            }
+            else if (src == okBtn) {
+                String s = (String) dirBox.getSelectedItem();
 
-		// check null input
-		if (s == null || s.length() == 0) {
-		    uif.showError("nrd.emptyInput");
-		    return;
-		}
+                // check null input
+                if (s == null || s.length() == 0) {
+                    uif.showError("nrd.emptyInput");
+                    return;
+                }
 
-		// check for empty input
-		if (cbBak.isSelected() && numBak.getText().equals("")) {
-		    uif.showError("nrd.emptyBak");
-		    // select the last tab (assumes this has the backup settings)
-		    tabs.setSelectedIndex(tabs.getTabCount()-1);
-		    return;
-		}
-                
+                // check for empty input
+                if (cbBak.isSelected() && numBak.getText().equals("")) {
+                    uif.showError("nrd.emptyBak");
+                    // select the last tab (assumes this has the backup settings)
+                    tabs.setSelectedIndex(tabs.getTabCount()-1);
+                    return;
+                }
+
                 // validate custom reports
                 Iterator it = getActiveCustomReports().iterator();
                 while (it.hasNext()) {
@@ -942,67 +942,67 @@ class NewReportDialog extends ToolDialog
                     }
                 }
 
-		reportDir = new File(s);
+                reportDir = new File(s);
 
-		try {
-		    // check if dir needs to be created.
-		    if (!reportDir.isDirectory()) {
-			reportDir.mkdirs();
-		    }
-		    else {
-			    // check if dir is a report dir
-			if (!Report.isReportDirectory(reportDir) &&
-			    !isEmptyDirectory(reportDir)) {
-			    uif.showError("nrd.cantUse", reportDir);
-			    return;
-			}
-		    }
+                try {
+                    // check if dir needs to be created.
+                    if (!reportDir.isDirectory()) {
+                        reportDir.mkdirs();
+                    }
+                    else {
+                            // check if dir is a report dir
+                        if (!Report.isReportDirectory(reportDir) &&
+                            !isEmptyDirectory(reportDir)) {
+                            uif.showError("nrd.cantUse", reportDir);
+                            return;
+                        }
+                    }
 
-		    // XXX save settings in prefs
+                    // XXX save settings in prefs
 
-		    setVisible(false);
-		    lastSettings = captureState();
+                    setVisible(false);
+                    lastSettings = captureState();
                     notifyStarting();
-		    doBgReport(lastSettings);
-		}
-		catch (SecurityException se) {
-		    uif.showError("nrd.cantCreate", se.getMessage());
-		}
-	    }
-	}
+                    doBgReport(lastSettings);
+                }
+                catch (SecurityException se) {
+                    uif.showError("nrd.cantCreate", se.getMessage());
+                }
+            }
+        }
 
-	// does work on background thread
-	private void doBgReport(final Report.Settings snap) {
-	    /*final JDialog*/ waitDialog = uif.createWaitDialog("nrd.wait", parent);
- 
+        // does work on background thread
+        private void doBgReport(final Report.Settings snap) {
+            /*final JDialog*/ waitDialog = uif.createWaitDialog("nrd.wait", parent);
+
             final Stopper stopper = new Stopper();
-	    final Thread worker = new Thread() {
-		public void run() {
-		    try {
-			runReport(snap);
-			// go away to switch back to GUI thread
-			finishReport(waitDialog, snap, stopper);
-		    }
-                    catch (CustomReport.ReportException ie) { 
-                        showError("nrd.custom", ie.getMessage(), waitDialog); 
+            final Thread worker = new Thread() {
+                public void run() {
+                    try {
+                        runReport(snap);
+                        // go away to switch back to GUI thread
+                        finishReport(waitDialog, snap, stopper);
+                    }
+                    catch (CustomReport.ReportException ie) {
+                        showError("nrd.custom", ie.getMessage(), waitDialog);
                         notifyError(ie.getMessage());
                     }
-		    catch (IOException ie) {
-			showError("nrd.cantWrite", ie.getMessage(), waitDialog);
+                    catch (IOException ie) {
+                        showError("nrd.cantWrite", ie.getMessage(), waitDialog);
                         notifyError(ie.getMessage());
-			// should reshow dialog
-		    }
-		    catch (SecurityException se) {
-			showError("nrd.cantCreate", se.getMessage(), waitDialog);
+                        // should reshow dialog
+                    }
+                    catch (SecurityException se) {
+                        showError("nrd.cantCreate", se.getMessage(), waitDialog);
                         notifyError(se.getMessage());
-			// should reshow dialog
-		    }
+                        // should reshow dialog
+                    }
                     catch (RuntimeException re) {
                         showError("nrd.errorWriting", re.getMessage(), waitDialog);
                         notifyErrorWriting(re.getMessage());
                     }
-		}   // run()
-	    };	// thread
+                }   // run()
+            };  // thread
 
             // this code is copied from ReportTool....
             GridBagConstraints gbc = new GridBagConstraints();
@@ -1036,35 +1036,35 @@ class NewReportDialog extends ToolDialog
 
                 }
             });
-            
-            
-            
-            
-	    ActionListener al = new ActionListener() {
-		public void actionPerformed(ActionEvent evt) {
-		    // show dialog if still processing
-		    if (worker.isAlive()) {
-			waitDialog.show();
-		    }
-		}
-	    };
 
-	    // show wait dialog if operation is still running after
-	    // WAIT_DIALOG_DELAY
-	    Timer timer = new Timer(WAIT_DIALOG_DELAY, al);
-	    timer.setRepeats(false);
-	    timer.start();
 
-	    // do it!
-	    worker.start();
-	}
 
-	private void finishReport(final JDialog waitDialog,
-				  final Report.Settings snap, final Stopper stopper) {
-	    // done generating report, switch back to GUI thread
-	    EventQueue.invokeLater(new Runnable() {
-		    public void run() {
-			waitDialog.hide();
+
+            ActionListener al = new ActionListener() {
+                public void actionPerformed(ActionEvent evt) {
+                    // show dialog if still processing
+                    if (worker.isAlive()) {
+                        waitDialog.show();
+                    }
+                }
+            };
+
+            // show wait dialog if operation is still running after
+            // WAIT_DIALOG_DELAY
+            Timer timer = new Timer(WAIT_DIALOG_DELAY, al);
+            timer.setRepeats(false);
+            timer.start();
+
+            // do it!
+            worker.start();
+        }
+
+        private void finishReport(final JDialog waitDialog,
+                                  final Report.Settings snap, final Stopper stopper) {
+            // done generating report, switch back to GUI thread
+            EventQueue.invokeLater(new Runnable() {
+                    public void run() {
+                        waitDialog.hide();
                         if(!stopper.waitWasHidden) {
                             int r = uif.showYesNoDialog("nrd.showReport");
 
@@ -1086,36 +1086,36 @@ class NewReportDialog extends ToolDialog
                         }
 
                         notifyDone();
-			notifyUpdate(getLastState());
-		    }
-		}
-	    );
-	}
-        
+                        notifyUpdate(getLastState());
+                    }
+                }
+            );
+        }
 
-	/**
-	 * @param uiKey Key to use to call <tt>UIFactory.showError()</tt>
-	 * @param msg The localized error message to show.
-	 */
-	private void showError(final String uiKey, final String msg,
-				final JDialog waitDialog) {
-	    // switch back to GUI thread
-	    EventQueue.invokeLater(new Runnable() {
-		    public void run() {
-			waitDialog.hide();
-			uif.showError(uiKey, msg);
-		    }
-		}
-	    );
-	}
 
-	/**
-	 * Decide which file in the report dir to show to the user when
-	 * they ask to view a generated 'report'.
-	 */
-	private File selectFileToShow(Report.Settings snap) {
-	    File result = new File(reportDir, Report.INDEX_FILE_NAME);
-            
+        /**
+         * @param uiKey Key to use to call <tt>UIFactory.showError()</tt>
+         * @param msg The localized error message to show.
+         */
+        private void showError(final String uiKey, final String msg,
+                                final JDialog waitDialog) {
+            // switch back to GUI thread
+            EventQueue.invokeLater(new Runnable() {
+                    public void run() {
+                        waitDialog.hide();
+                        uif.showError(uiKey, msg);
+                    }
+                }
+            );
+        }
+
+        /**
+         * Decide which file in the report dir to show to the user when
+         * they ask to view a generated 'report'.
+         */
+        private File selectFileToShow(Report.Settings snap) {
+            File result = new File(reportDir, Report.INDEX_FILE_NAME);
+
             if(!result.exists()) {
                 if (snap.isHtmlEnabled()) {
                     // show main report file or file listing
@@ -1138,33 +1138,33 @@ class NewReportDialog extends ToolDialog
                     result = reportDir;
                 }
             }
-            
-	    return result;
-	}
 
-	private File searchForFile(File dir, String[] names) {
-	    for (int i = 0; i < names.length; i++) {
-		File f = new File(reportDir, names[i]);
-		if (f.exists()) {
-		    return f;
-		}
-	    }   // for
+            return result;
+        }
 
-	    return null;
-	}
+        private File searchForFile(File dir, String[] names) {
+            for (int i = 0; i < names.length; i++) {
+                File f = new File(reportDir, names[i]);
+                if (f.exists()) {
+                    return f;
+                }
+            }   // for
+
+            return null;
+        }
     };
-    
-    
+
+
     //------------------------------end of listener--------------------------
-       
+
     private static class Stopper {
         boolean waitWasHidden = false;
     }
-    
+
     private class ReportGenListener implements StartGenListener {
         public void startReportGeneration(Report.Settings s, String reportID) {
             String reportName;
-            if(reportID.equals("xml") || reportID.equals("pt") || 
+            if(reportID.equals("xml") || reportID.equals("pt") ||
                                                 reportID.equals("html")) {
                 reportName = uif.getI18NString("nrd.type." + reportID + ".ckb");
             }
@@ -1172,7 +1172,7 @@ class NewReportDialog extends ToolDialog
                 reportName = reportID;
             }
 
-            String status = uif.getI18NString("nrd.wait.report_gen", 
+            String status = uif.getI18NString("nrd.wait.report_gen",
                                                 new String[] {reportName});
 
             Component[] cmp = waitDialog.getContentPane().getComponents();
@@ -1186,7 +1186,7 @@ class NewReportDialog extends ToolDialog
             }
         }
     }
-    
+
     /**
      * This listener changes options state against checkboxes
      */
@@ -1204,7 +1204,7 @@ class NewReportDialog extends ToolDialog
             panel = p;
             cards = cardLayout;
         }
-        
+
         public void keyTyped(KeyEvent e) {
             if (e.getKeyChar() == ' ') {
                 process(list.getSelectedIndex());
@@ -1259,7 +1259,7 @@ class NewReportDialog extends ToolDialog
             }
 
         }
-        
+
         private void process(final int index) {
             JCheckBox box = (JCheckBox)(listModel.getElementAt(index));
 
@@ -1278,7 +1278,7 @@ class NewReportDialog extends ToolDialog
         }
 
         Object lastSelected;
-        JList list; 
+        JList list;
         ListModel listModel;
         JPanel panel;
         CardLayout cards;
@@ -1290,13 +1290,13 @@ class NewReportDialog extends ToolDialog
      */
     private class PanelEnableListener implements PropertyChangeListener {
         /**
-         * @param container Container for controlling 
+         * @param container Container for controlling
          */
         PanelEnableListener(Container container) {
             theContainer = container;
         }
         /**
-         * Catches changes of "enabled" property 
+         * Catches changes of "enabled" property
          * and changes enabled status for all child components
          */
         public void propertyChange(PropertyChangeEvent evt) {
@@ -1314,8 +1314,8 @@ class NewReportDialog extends ToolDialog
                             c.setEnabled(false);
                         }
                     }
-                    
-                } else if (!oldV && newV && enabledComp != null) { 
+
+                } else if (!oldV && newV && enabledComp != null) {
                     // enable
                     Iterator chIt = collectChildren(theContainer, new ArrayList()).iterator();
                     while (chIt.hasNext()) {
@@ -1327,7 +1327,7 @@ class NewReportDialog extends ToolDialog
                 }
             }
         }
-        
+
         /**
          * Recursively gathers all children components
          */
@@ -1341,11 +1341,11 @@ class NewReportDialog extends ToolDialog
             }
             return c;
         }
-        
+
         private Container theContainer;
         private HashSet enabledComp;
     }
-    
+
     private class CheckBoxListCellRenderer implements ListCellRenderer {
         public Component getListCellRendererComponent(
                     JList list,
@@ -1421,8 +1421,8 @@ class NewReportDialog extends ToolDialog
     // keys for option values used for save & restore
     static final String REPORT_DIR = "reportDir";
     private static final String FILTER = "filter";
-    private static final int WAIT_DIALOG_DELAY = 3000;	    // 3 second delay
-    
+    private static final int WAIT_DIALOG_DELAY = 3000;      // 3 second delay
+
     private JDialog waitDialog;
-    
+
 }

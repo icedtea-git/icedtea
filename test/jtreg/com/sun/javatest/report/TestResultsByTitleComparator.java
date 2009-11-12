@@ -32,22 +32,22 @@ import com.sun.javatest.TestResult;
 
 class TestResultsByTitleComparator implements Comparator {
     public int compare(Object o1, Object o2) {
-	TestResult tr1 = (TestResult)o1;
-	TestResult tr2 = (TestResult)o2;
+        TestResult tr1 = (TestResult)o1;
+        TestResult tr2 = (TestResult)o2;
 
-	return compare(tr1.getTestName(), tr2.getTestName());
+        return compare(tr1.getTestName(), tr2.getTestName());
     }
 
     private static int compare(String a, String b) {
-	if (a == null && b == null)
-	    return 0;
+        if (a == null && b == null)
+            return 0;
 
-	if (a == null)
-	    return -1;
+        if (a == null)
+            return -1;
 
-	if (b == null)
-	    return +1;
+        if (b == null)
+            return +1;
 
-	return a.compareTo(b);
+        return a.compareTo(b);
      }
 }

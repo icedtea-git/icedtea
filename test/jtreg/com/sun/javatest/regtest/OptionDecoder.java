@@ -36,7 +36,7 @@ import java.util.Map;
 import com.sun.javatest.util.I18NResourceBundle;
 
 public class OptionDecoder {
-    
+
     public OptionDecoder(Option[] options) {
         for (Option o: options) {
             switch (o.argType) {
@@ -52,11 +52,11 @@ public class OptionDecoder {
             }
         }
     }
-    
+
     public void decodeArgs(String[] args) throws BadArgs {
         decodeArgs(Arrays.asList(args));
     }
-    
+
     public void decodeArgs(List<String> args) throws BadArgs {
         Iterator<String> iter = args.iterator();
         while (iter.hasNext()) {
@@ -73,7 +73,7 @@ public class OptionDecoder {
                 decodeArg(arg, iter);
         }
     }
-    
+
     private void decodeArg(String arg, Iterator<String> iter) throws BadArgs {
         int sep = arg.indexOf(":");
         String name;
@@ -85,11 +85,11 @@ public class OptionDecoder {
             name = arg.substring(0, sep);
             value = arg.substring(sep + 1);
         }
-        
+
         Option o = getOption(name);
         if (o == null)
             throw new BadArgs(i18n, "opt.unknown", name);
-        
+
         switch (o.argType) {
             case NONE:       // -opt
                 if (value != null)
@@ -115,39 +115,39 @@ public class OptionDecoder {
             case REST:      // -opt rest
                 value = join(iter, " ");
         }
-        
+
         checkConflicts(o, name);
-        
+
         if (debugOptions)
             System.err.println("OptionDecoder.decodeArg: " + name + " " + value);
-        
+
         o.process(arg, value);
     }
-    
+
     public void addFile(File file) throws BadArgs {
         fileOption.process(null, file.getPath());
     }
-    
+
     public void addFile(String path) throws BadArgs {
         fileOption.process(null, path);
     }
-    
+
     protected Option getOption(String name) {
         if (name.startsWith("-"))
             name = name.substring(1);
-        
+
         Option s = simpleOptions.get(name.toLowerCase());
         if (s != null)
             return s;
-        
+
         for (Option m: matchOptions) {
             if (m.matches(name))
                 return m;
         }
-        
+
         return null;
     }
-    
+
     protected void checkConflicts(Option o, String name) throws BadArgs {
         if (o.lockName != null) {
             String prev = locks.get(o.lockName);
@@ -160,7 +160,7 @@ public class OptionDecoder {
             locks.put(o.lockName, name);
         }
     }
-    
+
     private static String join(Iterator<?> iter, String sep) {
         StringBuilder sb = new StringBuilder();
         while (iter.hasNext()) {
@@ -170,15 +170,15 @@ public class OptionDecoder {
         }
         return sb.toString();
     }
-    
-    
+
+
     private Map<String,Option> simpleOptions = new HashMap<String,Option>();
     private List<Option> matchOptions = new ArrayList<Option>();
     private Option fileOption;
-    
+
     private Map<String,String> locks = new HashMap<String,String>();
     private boolean inFiles;
-    
+
     protected static boolean debugOptions = Boolean.getBoolean("javatest.regtest.debugOptions");
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(Main.class);
 }

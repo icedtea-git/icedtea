@@ -42,25 +42,25 @@ import com.sun.javatest.tool.UIFactory;
 
 import com.sun.javatest.util.Debug;
 
-/** 
+/**
  * This panel shows information when multiple nodes are selected in the tree.
  */
 class MultiSelectPanel
     extends JPanel
-    //implements FilterSelectionHandler.Observer 
+    //implements FilterSelectionHandler.Observer
 {
     MultiSelectPanel(UIFactory uif, TreePanelModel model, TestTreeModel ttm) {
-	this.uif = uif;
-	this.tpm = model;
-	this.ttm = ttm;
+        this.uif = uif;
+        this.tpm = model;
+        this.ttm = ttm;
 
-	initGUI();
+        initGUI();
     }
 
     // XXX use TreePath[] as parameter?
     void setNodes(Object[] nodes) {
-	this.nodes =nodes;
-	updatePanel(nodes);
+        this.nodes =nodes;
+        updatePanel(nodes);
     }
 
     /**
@@ -71,78 +71,78 @@ class MultiSelectPanel
      * @param p A validated set of parameters.
      * @see com.sun.javatest.exec.FilterConfig
     void setParameters(Parameters p) {
-	this.params = p;
+        this.params = p;
 
-	TestResultTable newTrt = null;
-	if (p.getWorkDirectory() != null) {
-	    newTrt = p.getWorkDirectory().getTestResultTable();
-	}
+        TestResultTable newTrt = null;
+        if (p.getWorkDirectory() != null) {
+            newTrt = p.getWorkDirectory().getTestResultTable();
+        }
     }
 
     void dispose() {
-	// stop counter thread
-	summPanel.dispose();
+        // stop counter thread
+        summPanel.dispose();
     }
      */
 
     protected void initGUI() {
-	setName("multiselect");
-	setLayout(new GridBagLayout());
-	setMinimumSize(new Dimension(150, 100));
+        setName("multiselect");
+        setLayout(new GridBagLayout());
+        setMinimumSize(new Dimension(150, 100));
 
-	listModel = new DefaultListModel();
-	nodeList = uif.createList("ms.nlist", listModel);
-	GridBagConstraints gbc = new GridBagConstraints();
-	gbc.weightx= 1.0;
-	gbc.gridy = 0;
-	gbc.gridx = 0;
-	gbc.anchor = GridBagConstraints.CENTER;
+        listModel = new DefaultListModel();
+        nodeList = uif.createList("ms.nlist", listModel);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.weightx= 1.0;
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
 
-	// add inline help
-	gbc.fill = GridBagConstraints.HORIZONTAL;
-	add(uif.createMessageArea("ms.help"), gbc);
+        // add inline help
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        add(uif.createMessageArea("ms.help"), gbc);
 
-	gbc.weighty = 9.0;
-	gbc.gridy = 1;
-	gbc.fill = GridBagConstraints.BOTH;
-	nodeList.setBorder(BorderFactory.createCompoundBorder(
+        gbc.weighty = 9.0;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        nodeList.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createEmptyBorder(10, 5, 5, 5),
             uif.createTitledBorder("ms.nlist"))
-	);
+        );
 
-	nodeList.setCellRenderer(RenderingUtilities.createTRTNodeRenderer());
+        nodeList.setCellRenderer(RenderingUtilities.createTRTNodeRenderer());
 
-	add(new JScrollPane(nodeList), gbc);
+        add(new JScrollPane(nodeList), gbc);
 
         // --- anonymous class ---
-	ComponentListener cl = new ComponentListener() {
-	    public void componentResized(ComponentEvent e) {
-	    }
+        ComponentListener cl = new ComponentListener() {
+            public void componentResized(ComponentEvent e) {
+            }
 
-	    public void componentMoved(ComponentEvent e) {
-	    }
+            public void componentMoved(ComponentEvent e) {
+            }
 
-	    public void componentShown(ComponentEvent e) {
-		if (needToUpdateGUIWhenShown) {
-		    updateGUI();
-		    needToUpdateGUIWhenShown = false;
-		}
-	    }
-	    public void componentHidden(ComponentEvent e) {
-	    }
-	};
-	addComponentListener(cl);
+            public void componentShown(ComponentEvent e) {
+                if (needToUpdateGUIWhenShown) {
+                    updateGUI();
+                    needToUpdateGUIWhenShown = false;
+                }
+            }
+            public void componentHidden(ComponentEvent e) {
+            }
+        };
+        addComponentListener(cl);
     }
 
     protected void updatePanel(Object[] nodes) {
-	if (isVisible())
-	    updateGUI();
-	else
-	    needToUpdateGUIWhenShown = true;
+        if (isVisible())
+            updateGUI();
+        else
+            needToUpdateGUIWhenShown = true;
     }
 
     Object[] getNodes() {
-	return nodes;
+        return nodes;
     }
 
     /**
@@ -150,17 +150,17 @@ class MultiSelectPanel
      * internally to force updates when filters have changed.
      */
     protected void updateGUI() {
-	listModel.removeAllElements();
+        listModel.removeAllElements();
 
-	if (nodes == null)
-	    return;
+        if (nodes == null)
+            return;
 
-	for (int i = 0; i < nodes.length; i++)
-	    listModel.addElement(nodes[i]);
+        for (int i = 0; i < nodes.length; i++)
+            listModel.addElement(nodes[i]);
     }
 
     protected void finalize() throws Throwable {
-	super.finalize();
+        super.finalize();
     }
 
     private TestTreeModel ttm;

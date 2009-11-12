@@ -50,51 +50,51 @@ import com.sun.javatest.interview.DefaultInterviewParameters;
  * JVM, using "standard" JDK arguments.
  */
 public class SimpleInterviewParameters
-    extends DefaultInterviewParameters 
+    extends DefaultInterviewParameters
     implements EnvParameters
 {
     public SimpleInterviewParameters() throws Fault {
-	super("simple");
-	setResourceBundle("i18n");
-	
-	mode = CERTIFY; // default, if not overridden by system property
+        super("simple");
+        setResourceBundle("i18n");
 
-	String m = System.getProperty("SimpleInterviewParameters.mode");
-	if (m != null) {
-	    if (m.equals("developer"))
-		mode = DEVELOPER;
-	    else if (m.equals("precompile"))
-		mode = PRECOMPILE;
-	}
+        mode = CERTIFY; // default, if not overridden by system property
+
+        String m = System.getProperty("SimpleInterviewParameters.mode");
+        if (m != null) {
+            if (m.equals("developer"))
+                mode = DEVELOPER;
+            else if (m.equals("precompile"))
+                mode = PRECOMPILE;
+        }
     }
 
     public TestEnvironment getEnv() {
-	HashMap envProps = new HashMap();
-	export(envProps);
-	try {
-	    String name = qName.getValue();
-	    if (name == null || name.length() == 0)
-		name = "unknown";
-	    return new TestEnvironment(name, envProps, "configuration interview");
-	}
-	catch (TestEnvironment.Fault e) {
-	    throw new Error("should not happen");
-	}
+        HashMap envProps = new HashMap();
+        export(envProps);
+        try {
+            String name = qName.getValue();
+            if (name == null || name.length() == 0)
+                name = "unknown";
+            return new TestEnvironment(name, envProps, "configuration interview");
+        }
+        catch (TestEnvironment.Fault e) {
+            throw new Error("should not happen");
+        }
     }
 
     public EnvParameters getEnvParameters() {
-	return this;
+        return this;
     }
 
     public Question getEnvFirstQuestion() {
-	switch (mode) {
-	case PRECOMPILE:
-	    return qPrecompile;
-	case DEVELOPER:
-	    return qDeveloper;
-	default:
-	    return qName;
-	}
+        switch (mode) {
+        case PRECOMPILE:
+            return qPrecompile;
+        case DEVELOPER:
+            return qDeveloper;
+        default:
+            return qName;
+        }
     }
 
     //----------------------------------------------------------------------
@@ -102,60 +102,60 @@ public class SimpleInterviewParameters
     // Precompile mode
 
     private Question qPrecompile = new NullQuestion(this, "precompile") {
-	    public Question getNext() {
-		return qEnvEnd;
-	    }
+            public Question getNext() {
+                return qEnvEnd;
+            }
 
-	    public void export(Map data) {
-		data.put("script.mode", "precompile");
-		data.put("command.compile.java", System.getProperty("command.compile.java"));
-	    }
-	};
+            public void export(Map data) {
+                data.put("script.mode", "precompile");
+                data.put("command.compile.java", System.getProperty("command.compile.java"));
+            }
+        };
 
     //----------------------------------------------------------------------
     //
     // Developer mode
 
     private Question qDeveloper = new NullQuestion(this, "developer") {
-	    public Question getNext() {
-		return qName;
-	    }
+            public Question getNext() {
+                return qName;
+            }
 
-	    public void export(Map data) {
-		data.put("script.mode", "developer");
-		data.put("command.compile.java", System.getProperty("command.compile.java"));
-	    }
-	};
+            public void export(Map data) {
+                data.put("script.mode", "developer");
+                data.put("command.compile.java", System.getProperty("command.compile.java"));
+            }
+        };
 
     //----------------------------------------------------------------------
     //
     // Give a name for this configuration
 
     private StringQuestion qName = new StringQuestion(this, "name") {
-	    public Question getNext() {
-		if (value == null || value.length() == 0)
-		    return null;
-		else
-		    return qDesc;
-	    }
-	};
+            public Question getNext() {
+                if (value == null || value.length() == 0)
+                    return null;
+                else
+                    return qDesc;
+            }
+        };
 
     //----------------------------------------------------------------------
     //
     // Give a description for this configuration
 
     private Question qDesc = new StringQuestion(this, "desc") {
-	    public Question getNext() {
-		if (value == null || value.length() == 0)
-		    return null;
-		else
-		    return qCmdType;
-	    }
+            public Question getNext() {
+                if (value == null || value.length() == 0)
+                    return null;
+                else
+                    return qCmdType;
+            }
 
-	    public void export(Map data) {
-		data.put("description", String.valueOf(value));
-	    }
-	};
+            public void export(Map data) {
+                data.put("description", String.valueOf(value));
+            }
+        };
 
     //----------------------------------------------------------------------
     //
@@ -167,99 +167,99 @@ public class SimpleInterviewParameters
     private static final String OTHER_VM = "otherVM";
 
     private Question qCmdType = new ChoiceQuestion(this, "cmdType") {
-	    {
-		setChoices(new String[] { null, OTHER_VM, AGENT }, true);
-	    }
+            {
+                setChoices(new String[] { null, OTHER_VM, AGENT }, true);
+            }
 
-	    public Question getNext() {
-		if (value == null || value.length() == 0)
-		    return null;
-		else if (value.equals(OTHER_VM))
-		    return qJVM;
-		else
-		    return qEnvEnd;
-	    }
+            public Question getNext() {
+                if (value == null || value.length() == 0)
+                    return null;
+                else if (value.equals(OTHER_VM))
+                    return qJVM;
+                else
+                    return qEnvEnd;
+            }
 
-	    public void export(Map data) {
-		String cmd;
-		if (value != null && value.equals(OTHER_VM))
-		    cmd = getOtherVMExecuteCommand();
-		else
-		    cmd = "com.sun.javatest.agent.AgentCommand " +
-			"com.sun.javatest.lib.ExecStdTestSameJVMCmd " +
-			"$testExecuteClass $testExecuteArgs";
-		data.put("command.execute", cmd);
-	    }
-	};
+            public void export(Map data) {
+                String cmd;
+                if (value != null && value.equals(OTHER_VM))
+                    cmd = getOtherVMExecuteCommand();
+                else
+                    cmd = "com.sun.javatest.agent.AgentCommand " +
+                        "com.sun.javatest.lib.ExecStdTestSameJVMCmd " +
+                        "$testExecuteClass $testExecuteArgs";
+                data.put("command.execute", cmd);
+            }
+        };
 
     //----------------------------------------------------------------------
     //
     // What is the path for the JVM you wish to use to execute the tests?
 
     private FileQuestion qJVM = new FileQuestion(this, "jvm") {
-	    public Question getNext() {
-		if (value == null || value.getPath().length() == 0) 
-		    return null;
-		else if (! (value.exists() && value.isFile() && value.canRead())) 
-		    return qBadJVM;
-		else 
-		    return qClassPath;
-	    }
-	};
+            public Question getNext() {
+                if (value == null || value.getPath().length() == 0)
+                    return null;
+                else if (! (value.exists() && value.isFile() && value.canRead()))
+                    return qBadJVM;
+                else
+                    return qClassPath;
+            }
+        };
 
     private Question qBadJVM = new ErrorQuestion(this, "badJVM") {
-	    public Object[] getTextArgs() {
-		return new Object[] { qJVM.getValue().getPath() };
-	    }
-	};
+            public Object[] getTextArgs() {
+                return new Object[] { qJVM.getValue().getPath() };
+            }
+        };
 
     private String getOtherVMExecuteCommand() {
-	char fs = File.separatorChar;
-	char ps = File.pathSeparatorChar;
+        char fs = File.separatorChar;
+        char ps = File.pathSeparatorChar;
 
-	StringBuffer sb = new StringBuffer();
-	sb.append("com.sun.javatest.lib.ExecStdTestOtherJVMCmd ");
-	File jvm = qJVM.getValue();
-	sb.append(jvm == null ? "unknown_jvm" : jvm.getPath());
-	File[] cpFiles = qClassPath.getValue();
-	if (cpFiles != null && cpFiles.length > 0) {
-	    sb.append(" -classpath ");
-	    for (int i = 0; i < cpFiles.length; i++) {
-		if (i > 0)
-		    sb.append(File.pathSeparator);
-		sb.append(cpFiles[i]);
-	    }
-	}
-	sb.append(" $testExecuteClass $testExecuteArgs");
-	return sb.toString();
+        StringBuffer sb = new StringBuffer();
+        sb.append("com.sun.javatest.lib.ExecStdTestOtherJVMCmd ");
+        File jvm = qJVM.getValue();
+        sb.append(jvm == null ? "unknown_jvm" : jvm.getPath());
+        File[] cpFiles = qClassPath.getValue();
+        if (cpFiles != null && cpFiles.length > 0) {
+            sb.append(" -classpath ");
+            for (int i = 0; i < cpFiles.length; i++) {
+                if (i > 0)
+                    sb.append(File.pathSeparator);
+                sb.append(cpFiles[i]);
+            }
+        }
+        sb.append(" $testExecuteClass $testExecuteArgs");
+        return sb.toString();
     }
 
     //----------------------------------------------------------------------
 
     private FileListQuestion qClassPath = new FileListQuestion(this, "classPath") {
-	    {
-		FileFilter[] filters = {
-		    new DirectoryFileFilter("Directories"),
-		    new ExtensionFileFilter(".zip", "ZIP Files"),
-		    new ExtensionFileFilter(".jar", "JAR Files"),
-		};
-		setFilters(filters);
-	    }
+            {
+                FileFilter[] filters = {
+                    new DirectoryFileFilter("Directories"),
+                    new ExtensionFileFilter(".zip", "ZIP Files"),
+                    new ExtensionFileFilter(".jar", "JAR Files"),
+                };
+                setFilters(filters);
+            }
 
-	    public Question getNext() {
-		// check all files valid?
-		return qEnvEnd;
-	    }
-	    
-	};
+            public Question getNext() {
+                // check all files valid?
+                return qEnvEnd;
+            }
+
+        };
 
     //----------------------------------------------------------------------
 
     private Question qEnvEnd = new NullQuestion(this, "envEnd") {
-	    public Question getNext() {
-		return getEnvSuccessorQuestion();
-	    }
-	};
+            public Question getNext() {
+                return getEnvSuccessorQuestion();
+            }
+        };
 
     //----------------------------------------------------------------------
 

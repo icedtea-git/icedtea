@@ -55,7 +55,7 @@ public class MainFrame
      * @deprecated replaced by @link(#setFrame)
      */
     public static synchronized void setContext(Container c) {
-	setFrame((Frame)c);
+        setFrame((Frame)c);
     }
 
     /**
@@ -64,29 +64,29 @@ public class MainFrame
      * @param f The container to be registered
      */
     public static synchronized void setFrame(Frame f) {
-	frame = f;
+        frame = f;
     }
 
-    
+
 
     /**
      * Try to acquire exclusive access to a shared context previously registered
      * with @link(#setFrame). If the frame is currently in use by someone
      * else, the call will wait until the other owner is releases it.
      * @return The container previously registered with setFrame. It will
-     * be returned in as clean a state as possible, with no children, and 
+     * be returned in as clean a state as possible, with no children, and
      * a new instance of @link(FlowLayout). null is returned if the call is
      * interrupted.
      * @see #setContext
      * @deprecated replaced by acquireFrame.
      */
     public static Container getContext() {
-	try {
-	    return acquireFrame();
-	}
-	catch (InterruptedException e) {
-	    return null;
-	}
+        try {
+            return acquireFrame();
+        }
+        catch (InterruptedException e) {
+            return null;
+        }
     }
 
     /**
@@ -94,7 +94,7 @@ public class MainFrame
      * with @link(#setContext). If the context is currently in use by someone
      * else, the call will wait until the other owner is releases it.
      * @return The container previously registered with setContext. It will
-     * be returned in as clean a state as possible, with no children, and 
+     * be returned in as clean a state as possible, with no children, and
      * a new instance of @link(FlowLayout).
      * If no frame has been registered, one has been created.
      * @throws InterruptedException if the thread is interrupted while waiting
@@ -102,61 +102,61 @@ public class MainFrame
      * @see #releaseFrame
      */
     public static synchronized Frame acquireFrame() throws InterruptedException {
-	if (frame == null) {
-	    frame = new Frame("JT Harness Default Frame");
-	    initialTitle = frame.getTitle();
-	    initialState = frame.getState();
-	    initialIconImage = frame.getIconImage();
-	    initialCursor = frame.getCursor();
-	    initialFont = frame.getFont();
-	    initialLocale = frame.getLocale();
-	    initialResizable = frame.isResizable();
-	    initialEnabled = frame.isEnabled();
-	}
+        if (frame == null) {
+            frame = new Frame("JT Harness Default Frame");
+            initialTitle = frame.getTitle();
+            initialState = frame.getState();
+            initialIconImage = frame.getIconImage();
+            initialCursor = frame.getCursor();
+            initialFont = frame.getFont();
+            initialLocale = frame.getLocale();
+            initialResizable = frame.isResizable();
+            initialEnabled = frame.isEnabled();
+        }
 
-	while (inUse)
-	    // note: MainFrame.class provides the monitor for a static synchronized
-	    // method in this class.
-	    MainFrame.class.wait();
+        while (inUse)
+            // note: MainFrame.class provides the monitor for a static synchronized
+            // method in this class.
+            MainFrame.class.wait();
 
-	inUse = true;
+        inUse = true;
 
-	// save state ... should all be free of side effects
-	// the properties are all available in PBP 1.0, which is
-	// currently the lowest common denominator for all MainFrame users.
-	savedLayout = frame.getLayout();
-	savedComponents = frame.getComponents();
-	savedName = frame.getName();
-	savedBounds = frame.getBounds();
-	Color bg = frame.getBackground();
-	savedBackground = (bg == null ? SystemColor.window : bg);
-	Color fg = frame.getForeground();
-	savedForeground = (fg == null ? SystemColor.windowText : fg);
-	savedTitle = frame.getTitle();
-	savedState = frame.getState();
-	savedIconImage = frame.getIconImage();
-	savedCursor = frame.getCursor();
-	savedFont = frame.getFont();
-	savedLocale = frame.getLocale();
-	savedResizable = frame.isResizable();
-	savedEnabled = frame.isEnabled();
+        // save state ... should all be free of side effects
+        // the properties are all available in PBP 1.0, which is
+        // currently the lowest common denominator for all MainFrame users.
+        savedLayout = frame.getLayout();
+        savedComponents = frame.getComponents();
+        savedName = frame.getName();
+        savedBounds = frame.getBounds();
+        Color bg = frame.getBackground();
+        savedBackground = (bg == null ? SystemColor.window : bg);
+        Color fg = frame.getForeground();
+        savedForeground = (fg == null ? SystemColor.windowText : fg);
+        savedTitle = frame.getTitle();
+        savedState = frame.getState();
+        savedIconImage = frame.getIconImage();
+        savedCursor = frame.getCursor();
+        savedFont = frame.getFont();
+        savedLocale = frame.getLocale();
+        savedResizable = frame.isResizable();
+        savedEnabled = frame.isEnabled();
 
-	// now we want to clear the context ... do it carefully
-	// set the layout to null while we remove the components
-	// so as not to affect the savedlayoutManager
-	frame.setLayout(null);  
-	frame.removeAll();
-	frame.setLayout(new FlowLayout());
-	frame.setTitle(initialTitle);
-	frame.setState(initialState);
-	frame.setIconImage(initialIconImage);
-	frame.setCursor(initialCursor);
-	frame.setFont(initialFont);
-	frame.setLocale(initialLocale);
-	frame.setResizable(initialResizable);
-	frame.setEnabled(initialEnabled);
+        // now we want to clear the context ... do it carefully
+        // set the layout to null while we remove the components
+        // so as not to affect the savedlayoutManager
+        frame.setLayout(null);
+        frame.removeAll();
+        frame.setLayout(new FlowLayout());
+        frame.setTitle(initialTitle);
+        frame.setState(initialState);
+        frame.setIconImage(initialIconImage);
+        frame.setCursor(initialCursor);
+        frame.setFont(initialFont);
+        frame.setLocale(initialLocale);
+        frame.setResizable(initialResizable);
+        frame.setEnabled(initialEnabled);
 
-	return frame;
+        return frame;
     }
 
 
@@ -171,9 +171,9 @@ public class MainFrame
      * @deprecated replaced by releaseFrame.
      */
     public static void restoreContext(Container c) {
-	releaseFrame((Frame)c);
+        releaseFrame((Frame)c);
     }
-    
+
 
 
     /**
@@ -186,39 +186,39 @@ public class MainFrame
      * @see #acquireFrame
      */
     public static synchronized void releaseFrame(Frame f) {
-	if (f == null)
-	    return;
+        if (f == null)
+            return;
 
-	if (f != frame) 
-	    throw new IllegalStateException("wrong frame");
+        if (f != frame)
+            throw new IllegalStateException("wrong frame");
 
-	if (!inUse)
-	    throw new IllegalStateException("frame not acquired");
+        if (!inUse)
+            throw new IllegalStateException("frame not acquired");
 
-	// remove what might have been put in the frame
-	frame.setLayout(null);
-	frame.removeAll();
+        // remove what might have been put in the frame
+        frame.setLayout(null);
+        frame.removeAll();
 
-	// Restore previously saved stuff, do as much as possible 
-	// with layout manager set to null, to minimise side effects.
-	frame.setForeground(savedForeground);
-	frame.setBackground(savedBackground);
-	frame.setBounds(savedBounds);
-	frame.setName(savedName);
-	for (int i = 0; i < savedComponents.length; i++)
-	    frame.add(savedComponents[i]);
-	frame.setLayout(savedLayout);
-	frame.setTitle(savedTitle);
-	frame.setState(savedState);
-	frame.setIconImage(savedIconImage);
-	frame.setCursor(savedCursor);
-	frame.setFont(savedFont);
-	frame.setLocale(savedLocale);
-	frame.setResizable(savedResizable);
-	frame.setEnabled(savedEnabled);
+        // Restore previously saved stuff, do as much as possible
+        // with layout manager set to null, to minimise side effects.
+        frame.setForeground(savedForeground);
+        frame.setBackground(savedBackground);
+        frame.setBounds(savedBounds);
+        frame.setName(savedName);
+        for (int i = 0; i < savedComponents.length; i++)
+            frame.add(savedComponents[i]);
+        frame.setLayout(savedLayout);
+        frame.setTitle(savedTitle);
+        frame.setState(savedState);
+        frame.setIconImage(savedIconImage);
+        frame.setCursor(savedCursor);
+        frame.setFont(savedFont);
+        frame.setLocale(savedLocale);
+        frame.setResizable(savedResizable);
+        frame.setEnabled(savedEnabled);
 
-	inUse = false;
-	MainFrame.class.notify();
+        inUse = false;
+        MainFrame.class.notify();
     }
 
     private static Frame frame;

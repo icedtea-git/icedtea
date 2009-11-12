@@ -54,7 +54,7 @@ public abstract class Script
      * @param args custom args for the script
      */
     public void initArgs(String[] args) {
-	scriptArgs = args;
+        scriptArgs = args;
     }
 
     /**
@@ -64,8 +64,8 @@ public abstract class Script
      * @param td the test description for the test to be run
      */
     public void initTestDescription(TestDescription td) {
-	this.td = td;
-	testResult = new TestResult(td);
+        this.td = td;
+        testResult = new TestResult(td);
         trOut = testResult.getTestCommentWriter();
     }
 
@@ -74,11 +74,11 @@ public abstract class Script
      * The script is responsible for determininng how to instruct the test
      * not to run these test cases. A recommended convention is to pass the
      * list of test cases to the test using a -exclude option.
-     * @param excludedTestCases a list of test cases within the test that 
+     * @param excludedTestCases a list of test cases within the test that
      * should not be run
      */
     public void initExcludedTestCases(String[] excludedTestCases) {
-	this.excludedTestCases = excludedTestCases;
+        this.excludedTestCases = excludedTestCases;
     }
 
     /**
@@ -86,7 +86,7 @@ public abstract class Script
      * @param env the environment to be used when running the test
      */
     public void initTestEnvironment(TestEnvironment env) {
-	this.env = env;
+        this.env = env;
     }
 
     /**
@@ -96,7 +96,7 @@ public abstract class Script
      * @param workDir the work directory to be used to store the test's results.
      */
     public void initWorkDir(WorkDirectory workDir) {
-	this.workDir = workDir;
+        this.workDir = workDir;
     }
 
     /**
@@ -106,7 +106,7 @@ public abstract class Script
      * creating test result files.
      */
     public void initBackupPolicy(BackupPolicy backupPolicy) {
-	this.backupPolicy = backupPolicy;
+        this.backupPolicy = backupPolicy;
     }
 
     /**
@@ -115,42 +115,42 @@ public abstract class Script
      * user-specified classes that may be required.
      */
     public void initClassLoader(ClassLoader loader) {
-	this.loader = loader;
+        this.loader = loader;
     }
 
     /**
-     * Initialize a delegate script object. This should only be used in 
+     * Initialize a delegate script object. This should only be used in
      * exceptional circumstances, and is mostly provided for historical purposes.
      * @param s The delegate to be initialized
      * @param scriptArgs the arguments to be passed to the delegate object
      */
     protected void initDelegate(Script s, String[] scriptArgs) {
-	s.scriptArgs = scriptArgs;
-	// copy rest of values across from self
-	s.td = td;
-	s.env = env;
-	s.workDir = workDir;
-	s.backupPolicy = backupPolicy;
-	s.loader = loader;
-	s.testResult = testResult;
+        s.scriptArgs = scriptArgs;
+        // copy rest of values across from self
+        s.td = td;
+        s.env = env;
+        s.workDir = workDir;
+        s.backupPolicy = backupPolicy;
+        s.loader = loader;
+        s.testResult = testResult;
         s.trOut = trOut;
-	s.jtrIfPassed = jtrIfPassed;
+        s.jtrIfPassed = jtrIfPassed;
     }
 
     /**
      * Initialize the test result for the result of the script execution.
      * Normally, a test result is initialized as a side effect of calling
-     * initTestDescription. This method should only be called is special 
+     * initTestDescription. This method should only be called is special
      * circumstances, and is mostly provided for historical purposes.
      * @param tr The test result to set as the result of the script's execution.
      * @throws IllegalStateException if the test result has already been set.
      * @see #initTestDescription
      */
     protected void initTestResult(TestResult tr) {
-	if (testResult != null)
-	    throw new IllegalStateException();
+        if (testResult != null)
+            throw new IllegalStateException();
 
-	testResult = tr;
+        testResult = tr;
     }
 
     /**
@@ -160,14 +160,14 @@ public abstract class Script
      * method @link(run(String[],TestDescription, TestEnvironment))
      */
     public void run() {
-	if (workDir == null)
-	    throw new NullPointerException(i18n.getString("script.noWorkDir"));
-	if (td == null)
-	    throw new NullPointerException(i18n.getString("script.noTestDesc"));
-	if (testResult == null)
-	    throw new NullPointerException(i18n.getString("script.noTestRslt"));
-	if (env == null)
-	    throw new NullPointerException(i18n.getString("script.noTestEnv"));
+        if (workDir == null)
+            throw new NullPointerException(i18n.getString("script.noWorkDir"));
+        if (td == null)
+            throw new NullPointerException(i18n.getString("script.noTestDesc"));
+        if (testResult == null)
+            throw new NullPointerException(i18n.getString("script.noTestRslt"));
+        if (env == null)
+            throw new NullPointerException(i18n.getString("script.noTestEnv"));
 
         Status execStatus = null;
 
@@ -175,12 +175,12 @@ public abstract class Script
         // "testWork" has the work dir for this test
         File testWork = workDir.getFile(td.getRootRelativeDir().getPath());
 
-	// synchronize against interference by other scripts
-	synchronized (Script.class) {
-	    if (!testWork.exists()) {
-		testWork.mkdirs();
-	    }
-	}
+        // synchronize against interference by other scripts
+        synchronized (Script.class) {
+            if (!testWork.exists()) {
+                testWork.mkdirs();
+            }
+        }
 
         String descUrl = td.getFile().toURI().toASCIIString();
         String id = td.getId();
@@ -191,15 +191,15 @@ public abstract class Script
         testResult.putProperty(TestResult.VERSION, ProductInfo.getVersion());
         testResult.putProperty(TestResult.WORK, testWork.getAbsolutePath());
         testResult.putProperty(TestResult.ENVIRONMENT, env.getName());
-	if (osInfo == null) {
-	    String osArch = System.getProperty("os.arch");
-	    String osName = System.getProperty("os.name");
-	    String osVersion = System.getProperty("os.version");
-	    osInfo = osName + " " + osVersion + " (" + osArch + ")";
-	}
+        if (osInfo == null) {
+            String osArch = System.getProperty("os.arch");
+            String osName = System.getProperty("os.name");
+            String osVersion = System.getProperty("os.version");
+            osInfo = osName + " " + osVersion + " (" + osArch + ")";
+        }
         testResult.putProperty(TestResult.JAVATEST_OS, osInfo);
-	if (excludedTestCases != null)
-	    testResult.putProperty("excludedTestCases", StringArray.join(excludedTestCases));	    
+        if (excludedTestCases != null)
+            testResult.putProperty("excludedTestCases", StringArray.join(excludedTestCases));
 
         String classDir = td.getParameter("classDir");
         File f = (classDir == null ? workDir.getFile(defaultClassDir) :
@@ -210,43 +210,43 @@ public abstract class Script
         env.put("testDir", td.getFile().getParent());
         env.put("testURL", descUrl);
         env.put("testPath", td.getRootRelativeURL());
-	
-	int timeout = getTestTimeout();
-	PrintStream out = System.out;
-	PrintStream err = System.err;
+
+        int timeout = getTestTimeout();
+        PrintStream out = System.out;
+        PrintStream err = System.err;
 
         try {
             testResult.putProperty(TestResult.TEST, td.getRootRelativeURL());
             testResult.putProperty(TestResult.SCRIPT, this.getClass().getName() + " " +
                        StringArray.join(scriptArgs));
 
-	    if (timeout > 0) {
-		testResult.putProperty("timeoutSeconds", Integer.toString(timeout));
-		setAlarm(timeout*1000);
-	    }
-	    
+            if (timeout > 0) {
+                testResult.putProperty("timeoutSeconds", Integer.toString(timeout));
+                setAlarm(timeout*1000);
+            }
+
             execStatus = run(scriptArgs, td, env);
         }
-	finally {
-	    if (timeout > 0)
-		setAlarm(0);
+        finally {
+            if (timeout > 0)
+                setAlarm(0);
 
-	    try {
-		System.setOut(System.out);
-		System.setErr(System.err);
-	    }
-	    catch (SecurityException ignore) {
-	    }
+            try {
+                System.setOut(System.out);
+                System.setErr(System.err);
+            }
+            catch (SecurityException ignore) {
+            }
 
-	    if (Thread.interrupted()) // will clear interrupted status of thread, as desired
-		execStatus = Status.error(i18n.getString("script.interrupted"));
+            if (Thread.interrupted()) // will clear interrupted status of thread, as desired
+                execStatus = Status.error(i18n.getString("script.interrupted"));
 
             testResult.putProperty(TestResult.END, (new Date()).toString());
 
             if (execStatus == null) {
                 execStatus = Status.error(i18n.getString("script.noStatus"));
             }
-	    else {
+            else {
                 switch (execStatus.getType()) {
                 case Status.PASSED:
                 case Status.FAILED:
@@ -259,16 +259,16 @@ public abstract class Script
 
         }
 
-	testResult.setEnvironment(env);
+        testResult.setEnvironment(env);
         testResult.setStatus(execStatus);
 
         try {
-	    if (execStatus.getType() != Status.PASSED || jtrIfPassed)
-		testResult.writeResults(workDir, backupPolicy);
+            if (execStatus.getType() != Status.PASSED || jtrIfPassed)
+                testResult.writeResults(workDir, backupPolicy);
         }
-	catch (IOException e) {
-	    // ignore it; the test will have an error status already
-	    //throw new JavaTestError("Unable to write result file! " + e);
+        catch (IOException e) {
+            // ignore it; the test will have an error status already
+            //throw new JavaTestError("Unable to write result file! " + e);
         }
     }
 
@@ -281,10 +281,10 @@ public abstract class Script
      * simplify the task of running the compiler, an interpreter or any other commands,
      * which can be specified in a flexible manner by properties in the TestEnvironment.
      *
-     * @param args	Any script-specific options specified in the script property
-     * @param td	The test description for the test to be performed
-     * @param env	The test environment giving the details of how to run the test
-     * @return		The result of running the script
+     * @param args      Any script-specific options specified in the script property
+     * @param td        The test description for the test to be performed
+     * @param env       The test environment giving the details of how to run the test
+     * @return          The result of running the script
      * @see #compileIndividually
      * @see #compileTogether
      * @see #execute
@@ -309,25 +309,25 @@ public abstract class Script
     }
 
     /**
-     * Get the flag that indicates whether a result (.jtr) file should be written 
+     * Get the flag that indicates whether a result (.jtr) file should be written
      * even if the test has passed. By default, this is true.
      * @return the flag that indicates whether a result (.jtr) file should be written
      * even if the test has passed.
      * @see #setJTRIfPassed
      */
     public boolean getJTRIfPassed() {
-	return jtrIfPassed;
+        return jtrIfPassed;
     }
 
     /**
-     * Set the flag that indicates whether a result (.jtr) file should be written 
+     * Set the flag that indicates whether a result (.jtr) file should be written
      * even if the test has passed. By default, this is true.
      * @param b the flag that indicates whether a result (.jtr) file should be written
      * even if the test has passed.
      * @see #getJTRIfPassed
      */
     public void setJTRIfPassed(boolean b) {
-	jtrIfPassed = b;
+        jtrIfPassed = b;
     }
 
     /**
@@ -348,7 +348,7 @@ public abstract class Script
      * thread will be interrupted, if not cancelled in the meantime.
      */
     protected void setAlarm(int timeout) {
-	setAlarm(timeout, Thread.currentThread());
+        setAlarm(timeout, Thread.currentThread());
     }
 
 
@@ -367,54 +367,54 @@ public abstract class Script
      * }
      * </pre>
      * @param timeout the interval (in milliseconds) after which the calling
-     *	    thread will be interrupted, if not cancelled in the meantime.
+     *      thread will be interrupted, if not cancelled in the meantime.
      * @param threadToInterrupt which thread to interrupt
      */
     protected void setAlarm(int timeout, Thread threadToInterrupt) {
-	if (alarm != null) {
-	    alarm.cancel();
-	    alarm = null;
-	}
+        if (alarm != null) {
+            alarm.cancel();
+            alarm = null;
+        }
 
-	if (timeout > 0)
-	    alarm = new Alarm(timeout, threadToInterrupt);
+        if (timeout > 0)
+            alarm = new Alarm(timeout, threadToInterrupt);
     }
 
     /**
      * Get the timeout to be used for a test.
      * The default implementation is 10 minutes scaled by
      * a value found in the environment ("javatestTimeoutFactor").
-     * Override this method to provide different behaviors.  
+     * Override this method to provide different behaviors.
      * A value of zero means no timeout.
      * @return the number of seconds in which the test is expected to
      * complete its execution.
      */
     protected int getTestTimeout() {
-	float factor = 1;
-	try {
-	    String[] jtf = env.lookup("javatestTimeoutFactor");
-	    if (jtf != null) {
-		if (jtf.length == 1)
-		    factor = Float.parseFloat(jtf[0]);
-		else if (jtf.length == 2)
-		    factor = Float.parseFloat(jtf[1]);
-	    }
-	}
-	catch (TestEnvironment.Fault e) {
-	}
-	return (int) (10 * 60 * factor);
+        float factor = 1;
+        try {
+            String[] jtf = env.lookup("javatestTimeoutFactor");
+            if (jtf != null) {
+                if (jtf.length == 1)
+                    factor = Float.parseFloat(jtf[0]);
+                else if (jtf.length == 2)
+                    factor = Float.parseFloat(jtf[1]);
+            }
+        }
+        catch (TestEnvironment.Fault e) {
+        }
+        return (int) (10 * 60 * factor);
     }
 
     /**
      * Compile the given source files individually. One at a time, each source file
      * is passed to <em>compileTogether</em>, until they have all been
      * successfully compiled, or until one fails to compile.
-     * @param srcs	The names of the file to be compiled.
-     * @return		The status of the compilation: passed or failed.
+     * @param srcs      The names of the file to be compiled.
+     * @return          The status of the compilation: passed or failed.
      * @see #compileTogether
      */
     protected Status compileIndividually(String[] srcs) {
-	return compileIndividually(DEFAULT_COMPILE_COMMAND, srcs);
+        return compileIndividually(DEFAULT_COMPILE_COMMAND, srcs);
     }
 
     /**
@@ -424,32 +424,32 @@ public abstract class Script
      * @param command the base name of the command entry in the environment to be used
      * to compile any necessary sources. The complete entry name will be
      * <code>command.</code><i>command</i><code>.</code><i>extn</i>
-     * @param srcs	The names of the file to be compiled.
-     * @return		The status of the compilation: passed or failed.
+     * @param srcs      The names of the file to be compiled.
+     * @return          The status of the compilation: passed or failed.
      * @see #compileTogether
      */
     protected Status compileIndividually(String command, String[] srcs) {
-	if (srcs.length == 0) 
-	    return error_noSource;
+        if (srcs.length == 0)
+            return error_noSource;
 
-	for (int i = 0; i < srcs.length; i++) {
-	    Status s = compileOne(command, srcs[i]);
-	    if (!s.isPassed())
-		return s;
-	}
-	return pass_compSuccExp;   
+        for (int i = 0; i < srcs.length; i++) {
+            Status s = compileOne(command, srcs[i]);
+            if (!s.isPassed())
+                return s;
+        }
+        return pass_compSuccExp;
     }
 
     /**
      * Compile the given source files individually. One at a time, each source file
      * is passed to <em>compileTogether</em>, until they have all been
      * successfully compiled, or until one fails to compile.
-     * @param srcs	The names of the file to be compiled.
-     * @return		The status of the compilation: passed or failed.
+     * @param srcs      The names of the file to be compiled.
+     * @return          The status of the compilation: passed or failed.
      * @see #compileTogether
      */
     protected Status compileIndividually(File[] srcs) {
-	return compileIndividually(DEFAULT_COMPILE_COMMAND, filesToStrings(srcs));
+        return compileIndividually(DEFAULT_COMPILE_COMMAND, filesToStrings(srcs));
     }
 
     /**
@@ -459,22 +459,22 @@ public abstract class Script
      * @param command the base name of the command entry in the environment to be used
      * to compile any necessary sources. The complete entry name will be
      * <code>command.</code><i>command</i><code>.</code><i>extn</i>
-     * @param srcs	The names of the file to be compiled.
-     * @return		The status of the compilation: passed or failed.
+     * @param srcs      The names of the file to be compiled.
+     * @return          The status of the compilation: passed or failed.
      * @see #compileTogether
      */
     protected Status compileIndividually(String command, File[] srcs) {
-	return compileIndividually(command, filesToStrings(srcs));
+        return compileIndividually(command, filesToStrings(srcs));
     }
 
     /**
-     * Compile the given source file. 
-     * @param src	The name of the file to be compiled.
-     * @return		The status of the compilation: passed or failed.
+     * Compile the given source file.
+     * @param src       The name of the file to be compiled.
+     * @return          The status of the compilation: passed or failed.
      * @see #compileTogether
      */
     protected Status compileOne(String src) {
-	return compileOne(DEFAULT_COMPILE_COMMAND, src);
+        return compileOne(DEFAULT_COMPILE_COMMAND, src);
     }
 
     /**
@@ -483,57 +483,57 @@ public abstract class Script
      * @param command the base name of the command entry in the environment to be used
      * to compile any necessary sources. The complete entry name will be
      * <code>command.</code><i>command</i><code>.</code><i>extn</i>
-     * @param src	The name of the file to be compiled.
-     * @return		The status of the compilation: passed or failed.
+     * @param src       The name of the file to be compiled.
+     * @return          The status of the compilation: passed or failed.
      * @see #compileTogether
      */
     protected Status compileOne(String command, String src) {
-	return compileTogether(command, new String[] {src});
+        return compileTogether(command, new String[] {src});
     }
 
     /**
-     * Compiles the given source file. 
+     * Compiles the given source file.
      *
-     * @param src	The name of the file to be compiled.
-     * @return		The status of the compilation: passed or failed.
+     * @param src       The name of the file to be compiled.
+     * @return          The status of the compilation: passed or failed.
      * @see #compileTogether
      */
     protected Status compileOne(File src) {
-	return compileOne(DEFAULT_COMPILE_COMMAND, src.getPath());
+        return compileOne(DEFAULT_COMPILE_COMMAND, src.getPath());
     }
 
     /**
-     * Compiles the given source file. 
+     * Compiles the given source file.
      *
      * @param command the base name of the command entry in the environment to be used
      * to compile any necessary sources. The complete entry name will be
      * <code>command.</code><i>command</i><code>.</code><i>extn</i>
-     * @param src	The name of the file to be compiled.
-     * @return		The status of the compilation: passed or failed.
+     * @param src       The name of the file to be compiled.
+     * @return          The status of the compilation: passed or failed.
      * @see #compileTogether
      */
     protected Status compileOne(String command, File src) {
-	return compileOne(command, src.getPath());
+        return compileOne(command, src.getPath());
     }
 
     /**
-     * Compile the given source files together.  The compiler and arguments to be used 
-     * are identified by the `<code>env.<em>env</em>.compile.<em>extn</em>.*</code>' 
+     * Compile the given source files together.  The compiler and arguments to be used
+     * are identified by the `<code>env.<em>env</em>.compile.<em>extn</em>.*</code>'
      * properties in the script's environment, where <em>env</em>
      * is the name of the environment specified to the GUI, and <em>extn</em> is
      * the extension of the first source file.  The names of the files to be compiled
      * are added to the end of the arguments retrieved from the environment.
-     * @param srcs	The names of the file to be compiled.
-     * @return		The status of the compilation: passed or failed.
+     * @param srcs      The names of the file to be compiled.
+     * @return          The status of the compilation: passed or failed.
      * @see #invokeCommand
      */
     protected Status compileTogether(String[] srcs) {
-	return compileTogether(DEFAULT_COMPILE_COMMAND, srcs);
+        return compileTogether(DEFAULT_COMPILE_COMMAND, srcs);
     }
 
     /**
-     * Compile the given source files together.  The compiler and arguments to be used 
-     * are identified by the `<code>env.<em>env</em>.command.<em>command</em>.<em>extn</em>.*</code>' 
+     * Compile the given source files together.  The compiler and arguments to be used
+     * are identified by the `<code>env.<em>env</em>.command.<em>command</em>.<em>extn</em>.*</code>'
      * properties in the script's environment, where <em>env</em>
      * is the name of the environment specified to the GUI, and <em>extn</em> is
      * the extension of the first source file.  The names of the files to be compiled
@@ -541,69 +541,69 @@ public abstract class Script
      * @param command the base name of the command entry in the environment to be used
      * to compile any necessary sources. The complete entry name will be
      * <code>command.</code><i>command</i><code>.</code><i>extn</i>
-     * @param srcs	The names of the file to be compiled.
-     * @return		The status of the compilation: passed or failed.
+     * @param srcs      The names of the file to be compiled.
+     * @return          The status of the compilation: passed or failed.
      * @see #invokeCommand
      */
     protected Status compileTogether(String command, String[] srcs) {
-	if (srcs.length == 0) 
-	    return error_noSource;
+        if (srcs.length == 0)
+            return error_noSource;
 
-	try {
-	    String[] classDir = env.lookup("testClassDir");
-	    if (classDir == null || classDir.length != 1)
-		return error_badTestClassDir;
-	    File f = new File(classDir[0]);
-	    if (!f.exists())
-		f.mkdirs();
-	}
-	catch (TestEnvironment.Fault e) {
-	    return error_badTestClassDir;
-	}
+        try {
+            String[] classDir = env.lookup("testClassDir");
+            if (classDir == null || classDir.length != 1)
+                return error_badTestClassDir;
+            File f = new File(classDir[0]);
+            if (!f.exists())
+                f.mkdirs();
+        }
+        catch (TestEnvironment.Fault e) {
+            return error_badTestClassDir;
+        }
 
-	String primarySrcFile = srcs[0];
-	int dot = primarySrcFile.lastIndexOf('.');
-	if (dot == -1)
-	    return error_noExtnInSource;
-	   
-	String extn = primarySrcFile.substring(dot);
+        String primarySrcFile = srcs[0];
+        int dot = primarySrcFile.lastIndexOf('.');
+        if (dot == -1)
+            return error_noExtnInSource;
 
-	env.put("testSource", srcs);
+        String extn = primarySrcFile.substring(dot);
 
-	try {
-	    boolean ok = sourceTable.acquire(srcs, 10*60*1000);
-	    if (!ok)
-		return Status.error(i18n.getString("script.srcLockTimeout"));
-	    return invokeCommand(command + extn);
-	}
-	catch (InterruptedException e) {
-	    return Status.error(i18n.getString("script.srcLockInterrupted"));
-	}
-	finally {
-	    sourceTable.release(srcs);
-	}
+        env.put("testSource", srcs);
+
+        try {
+            boolean ok = sourceTable.acquire(srcs, 10*60*1000);
+            if (!ok)
+                return Status.error(i18n.getString("script.srcLockTimeout"));
+            return invokeCommand(command + extn);
+        }
+        catch (InterruptedException e) {
+            return Status.error(i18n.getString("script.srcLockInterrupted"));
+        }
+        finally {
+            sourceTable.release(srcs);
+        }
     }
 
     private static ResourceTable sourceTable = new ResourceTable();
 
     /**
-     * Compile the given source files together.  The compiler and arguments to be used 
-     * are identified by the `<code>env.<em>env</em>.command.compile.<em>extn</em>.*</code>' 
+     * Compile the given source files together.  The compiler and arguments to be used
+     * are identified by the `<code>env.<em>env</em>.command.compile.<em>extn</em>.*</code>'
      * properties in the script's environment, where <em>env</em>
      * is the name of the environment specified to the GUI, and <em>extn</em> is
      * the extension of the first source file.  The names of the files to be compiled
      * are added to the end of the arguments retrieved from the environment.
-     * @param srcs	The names of the file to be compiled.
-     * @return		The status of the compilation: passed or failed.
+     * @param srcs      The names of the file to be compiled.
+     * @return          The status of the compilation: passed or failed.
      * @see #invokeCommand
      */
     protected Status compileTogether(File[] srcs) {
-	return compileTogether(DEFAULT_COMPILE_COMMAND, filesToStrings(srcs));
+        return compileTogether(DEFAULT_COMPILE_COMMAND, filesToStrings(srcs));
     }
 
     /**
-     * Compile the given source files together.  The compiler and arguments to be used 
-     * are identified by the `<code>env.<em>env</em>.command.<em>command</em>.<em>extn</em>.*</code>' 
+     * Compile the given source files together.  The compiler and arguments to be used
+     * are identified by the `<code>env.<em>env</em>.command.<em>command</em>.<em>extn</em>.*</code>'
      * properties in the script's environment, where <em>env</em>
      * is the name of the environment specified to the GUI, and <em>extn</em> is
      * the extension of the first source file.  The names of the files to be compiled
@@ -611,12 +611,12 @@ public abstract class Script
      * @param command the base name of the command entry in the environment to be used
      * to compile any necessary sources. The complete entry name will be
      * <code>command.</code><i>command</i><code>.</code><i>extn</i>
-     * @param srcs	The names of the file to be compiled.
-     * @return		The status of the compilation: passed or failed.
+     * @param srcs      The names of the file to be compiled.
+     * @return          The status of the compilation: passed or failed.
      * @see #invokeCommand
      */
     protected Status compileTogether(String command, File[] srcs) {
-	return compileTogether(command, filesToStrings(srcs));
+        return compileTogether(command, filesToStrings(srcs));
     }
 
     /**
@@ -630,11 +630,11 @@ public abstract class Script
      * @param srcs The names of the source files to be compiled if necessary
      * @param classDir The class directory in which the corresponding class files
      * (if any) will be found.
-     * @return		The status of the compilation: passed or failed.
+     * @return          The status of the compilation: passed or failed.
      * @see #compileTogether
      */
     protected Status compileIfNecessary(String[] srcs, String classDir) {
-	return compileIfNecessary(DEFAULT_COMPILE_COMMAND, srcs, classDir);
+        return compileIfNecessary(DEFAULT_COMPILE_COMMAND, srcs, classDir);
     }
 
     /**
@@ -651,107 +651,107 @@ public abstract class Script
      * @param srcs The names of the source files to be compiled if necessary
      * @param classDir The class directory in which the corresponding class files
      * (if any) will be found.
-     * @return		The status of the compilation: passed or failed.
+     * @return          The status of the compilation: passed or failed.
      * @see #compileTogether
      */
     protected Status compileIfNecessary(String command, String[] srcs, String classDir) {
-	if (srcs.length == 0) 
-	    return error_noSource;
-	
-	if (classDir == null) 
-	    classDir = "$testClassDir";
+        if (srcs.length == 0)
+            return error_noSource;
 
-	if (classDir.startsWith("$")) {
-	    try {
-		String[] cd = env.resolve(classDir);
-		if (cd == null || cd.length != 1)
-		    return error_badTestClassDir;
-		classDir = cd[0];
-	    }
-	    catch (TestEnvironment.Fault e) {
-		return error_badTestClassDir;
-	    }
-	}
+        if (classDir == null)
+            classDir = "$testClassDir";
 
-	File cdf = new File(classDir);
-	if (!cdf.exists())
-	    cdf.mkdirs();
+        if (classDir.startsWith("$")) {
+            try {
+                String[] cd = env.resolve(classDir);
+                if (cd == null || cd.length != 1)
+                    return error_badTestClassDir;
+                classDir = cd[0];
+            }
+            catch (TestEnvironment.Fault e) {
+                return error_badTestClassDir;
+            }
+        }
 
-	Vector v = new Vector(0, srcs.length);
-	
-	for (int i = 0; i < srcs.length; i++) {
-	    String src = srcs[i];
-	    int x = src.lastIndexOf(File.separatorChar);
-	    int y = src.indexOf('.', x+1);
-	    String className = src.substring(x+1, (y == -1 ? src.length() : y));
-	    String pkgPrefix;  // deliberately unset to have compiler check init in all required cases
+        File cdf = new File(classDir);
+        if (!cdf.exists())
+            cdf.mkdirs();
 
-	    // read the source file to see if a package statement exists
-	    // if it does, set pkgPrefix to package directory
-	    // if none found, set setPrefix to empty string
-	    // if error, report the error, ignore pkgPrefix, and set file to
-	    // be unconditionally compiled.
-	    BufferedReader r = null;
-	    try {
-		r = new BufferedReader(new FileReader(src));
-		StreamTokenizer tr = new StreamTokenizer(r);
-		tr.ordinaryChar('/');
-		tr.slashStarComments(true);
-		tr.slashSlashComments(true);
-		tr.wordChars('.', '.'); // package separator
-		int c = tr.nextToken();
-		if (c == StreamTokenizer.TT_WORD && tr.sval.equals("package")) {
-		    // found what looks like a package statement
-		    c = tr.nextToken();
-		    if (c == StreamTokenizer.TT_WORD)
-			// yes, it was a valid package statement
-			pkgPrefix = tr.sval.replace('.', File.separatorChar) + File.separatorChar;
-		    else {
-			// well, sort of; malformed package statement
-			trOut.println(i18n.getString("script.badPackage"));
-			v.addElement(src);
-			continue;
-		    }
-		}
-		else 
-		    // no package statement
-		    pkgPrefix = "";
-	    }
-	    catch (IOException e) {
-		trOut.println(i18n.getString("script.badDateStamp", new Object[] { src, e }));
-		v.addElement(src);
-		continue;
-	    }
-	    finally {
-		if (r != null) {
-		    try {
-			r.close();
-		    }
-		    catch (IOException ignore) {
-		    }
-		}
-	    }
+        Vector v = new Vector(0, srcs.length);
+
+        for (int i = 0; i < srcs.length; i++) {
+            String src = srcs[i];
+            int x = src.lastIndexOf(File.separatorChar);
+            int y = src.indexOf('.', x+1);
+            String className = src.substring(x+1, (y == -1 ? src.length() : y));
+            String pkgPrefix;  // deliberately unset to have compiler check init in all required cases
+
+            // read the source file to see if a package statement exists
+            // if it does, set pkgPrefix to package directory
+            // if none found, set setPrefix to empty string
+            // if error, report the error, ignore pkgPrefix, and set file to
+            // be unconditionally compiled.
+            BufferedReader r = null;
+            try {
+                r = new BufferedReader(new FileReader(src));
+                StreamTokenizer tr = new StreamTokenizer(r);
+                tr.ordinaryChar('/');
+                tr.slashStarComments(true);
+                tr.slashSlashComments(true);
+                tr.wordChars('.', '.'); // package separator
+                int c = tr.nextToken();
+                if (c == StreamTokenizer.TT_WORD && tr.sval.equals("package")) {
+                    // found what looks like a package statement
+                    c = tr.nextToken();
+                    if (c == StreamTokenizer.TT_WORD)
+                        // yes, it was a valid package statement
+                        pkgPrefix = tr.sval.replace('.', File.separatorChar) + File.separatorChar;
+                    else {
+                        // well, sort of; malformed package statement
+                        trOut.println(i18n.getString("script.badPackage"));
+                        v.addElement(src);
+                        continue;
+                    }
+                }
+                else
+                    // no package statement
+                    pkgPrefix = "";
+            }
+            catch (IOException e) {
+                trOut.println(i18n.getString("script.badDateStamp", new Object[] { src, e }));
+                v.addElement(src);
+                continue;
+            }
+            finally {
+                if (r != null) {
+                    try {
+                        r.close();
+                    }
+                    catch (IOException ignore) {
+                    }
+                }
+            }
 
 
-	    File srcFile = new File(src);
-	    File classFile = new File(classDir, pkgPrefix + className + ".class");
-	    //System.out.println("checking " + classFile);
-	    //System.out.println("classfile " + classFile.lastModified());
-	    //System.out.println("srcfile " + srcFile.lastModified());
-	    if (classFile.exists() && classFile.lastModified() > srcFile.lastModified())
-		trOut.println(i18n.getString("script.upToDate", src));
-	    else
-		v.addElement(src);
-	}
-	  
-	if (v.size() > 0) {
-	    String[] necessarySrcs = new String[v.size()];
-	    v.copyInto(necessarySrcs);
-	    
-	    return compileTogether(command, necessarySrcs);
-	}
-	else
-	    return Status.passed(i18n.getString("script.allUpToDate"));
+            File srcFile = new File(src);
+            File classFile = new File(classDir, pkgPrefix + className + ".class");
+            //System.out.println("checking " + classFile);
+            //System.out.println("classfile " + classFile.lastModified());
+            //System.out.println("srcfile " + srcFile.lastModified());
+            if (classFile.exists() && classFile.lastModified() > srcFile.lastModified())
+                trOut.println(i18n.getString("script.upToDate", src));
+            else
+                v.addElement(src);
+        }
+
+        if (v.size() > 0) {
+            String[] necessarySrcs = new String[v.size()];
+            v.copyInto(necessarySrcs);
+
+            return compileTogether(command, necessarySrcs);
+        }
+        else
+            return Status.passed(i18n.getString("script.allUpToDate"));
     }
 
     /**
@@ -765,11 +765,11 @@ public abstract class Script
      * @param srcs The names of the source files to be compiled if necessary
      * @param classDir The class directory in which the corresponding class files
      * (if any) will be found.
-     * @return		The status of the compilation: passed or failed.
+     * @return          The status of the compilation: passed or failed.
      * @see #compileTogether
      */
     protected Status compileIfNecessary(File[] srcs, String classDir) {
-	return compileIfNecessary(DEFAULT_COMPILE_COMMAND, filesToStrings(srcs), classDir);
+        return compileIfNecessary(DEFAULT_COMPILE_COMMAND, filesToStrings(srcs), classDir);
     }
 
     /**
@@ -786,83 +786,83 @@ public abstract class Script
      * @param srcs The names of the source files to be compiled if necessary
      * @param classDir The class directory in which the corresponding class files
      * (if any) will be found.
-     * @return		The status of the compilation: passed or failed.
+     * @return          The status of the compilation: passed or failed.
      * @see #compileTogether
      */
     protected Status compileIfNecessary(String command, File[] srcs, String classDir) {
-	return compileIfNecessary(command, filesToStrings(srcs), classDir);
+        return compileIfNecessary(command, filesToStrings(srcs), classDir);
     }
 
     /**
      * Execute the given class with the given arguments, which need to be passed
      * to the environment for $ substitution and for splitting into separate strings.
-     * @param executeClass 	The name of the class to be executed
-     * @param executeArgs	The arguments to be evaluated before passing to
-     *				the class to be executed
-     * @return			The status of the execution
+     * @param executeClass      The name of the class to be executed
+     * @param executeArgs       The arguments to be evaluated before passing to
+     *                          the class to be executed
+     * @return                  The status of the execution
      * @see #execute(java.lang.String, java.lang.String, java.lang.String)
      */
     protected Status execute(String executeClass, String executeArgs) {
-	return execute(DEFAULT_EXECUTE_COMMAND, executeClass, executeArgs);
+        return execute(DEFAULT_EXECUTE_COMMAND, executeClass, executeArgs);
     }
 
     /**
      * Execute the given class with the given arguments, which need to be passed
      * to the environment for $ substitution and for splitting into separate strings.
-     * @param command	The name of the command containing the template to be executed
-     * @param executeClass 	The name of the class to be executed
-     * @param executeArgs	The arguments to be evaluated before passing to
-     *				the class to be executed
-     * @return			The status of the execution
+     * @param command   The name of the command containing the template to be executed
+     * @param executeClass      The name of the class to be executed
+     * @param executeArgs       The arguments to be evaluated before passing to
+     *                          the class to be executed
+     * @return                  The status of the execution
      */
     protected Status execute(String command, String executeClass,
                              String executeArgs) {
-	try {
-	    String[] args = (executeArgs == null ? nullArgs : env.resolve(executeArgs));
-	    if (excludedTestCases != null)
-		args = exclude(args, excludedTestCases);
-	    return execute(command, executeClass, args);
-	}
-	catch (TestEnvironment.Fault e) {
-	    trOut.println(i18n.getString("script.testEnvFault", 
-					 new Object[] { executeArgs, e.toString() }));
-	    return error_badExecuteArgs;
-	}
+        try {
+            String[] args = (executeArgs == null ? nullArgs : env.resolve(executeArgs));
+            if (excludedTestCases != null)
+                args = exclude(args, excludedTestCases);
+            return execute(command, executeClass, args);
+        }
+        catch (TestEnvironment.Fault e) {
+            trOut.println(i18n.getString("script.testEnvFault",
+                                         new Object[] { executeArgs, e.toString() }));
+            return error_badExecuteArgs;
+        }
     }
 
     /**
      * Execute the given class with the given arguments.  The interpreter to be used
-     * and its arguments are identified by the `<code>env.<em>env</em>.execute.*</code>' 
+     * and its arguments are identified by the `<code>env.<em>env</em>.execute.*</code>'
      * properties in the script's environment, where <em>env</em>
      * is the name of the environment specified to the GUI. The class to be executed and
      * its arguments are added to the end of the arguments retrieved from the environment.
-     * @param executeClass	The name of the class to be executed.
-     * @param executeArgs	Any arguments to be passed to the class to be executed.
-     * @return			The status of the execution
+     * @param executeClass      The name of the class to be executed.
+     * @param executeArgs       Any arguments to be passed to the class to be executed.
+     * @return                  The status of the execution
      * @see #execute(java.lang.String, java.lang.String, java.lang.String[])
      */
     protected Status execute(String executeClass, String[] executeArgs) {
-	return execute(DEFAULT_EXECUTE_COMMAND, executeClass, executeArgs);
+        return execute(DEFAULT_EXECUTE_COMMAND, executeClass, executeArgs);
     }
 
     /**
      * Execute the given class with the given arguments.  The interpreter to be used
-     * and its arguments are identified by the `<code>env.<em>env</em>.<em>command</em>.*</code>' 
+     * and its arguments are identified by the `<code>env.<em>env</em>.<em>command</em>.*</code>'
      * properties in the script's environment, where <em>env</em>
      * is the name of the environment specified to the GUI. The class to be executed and
      * its arguments are added to the end of the arguments retrieved from the environment.
-     * @param command	The name of the command containing the template to be executed
-     * @param executeClass	The name of the class to be executed.
-     * @param executeArgs	Any arguments to be passed to the class to be executed.
-     * @return			The status of the execution
+     * @param command   The name of the command containing the template to be executed
+     * @param executeClass      The name of the class to be executed.
+     * @param executeArgs       Any arguments to be passed to the class to be executed.
+     * @return                  The status of the execution
      * @see #invokeCommand
      */
     protected Status execute(String command, String executeClass, String[] executeArgs) {
-	if (executeClass == null || executeClass.length() == 0)
-	    return error_noExecuteClass;
-	env.put("testExecuteClass", executeClass);
-	env.put("testExecuteArgs", executeArgs);
-	return invokeCommand(command);
+        if (executeClass == null || executeClass.length() == 0)
+            return error_noExecuteClass;
+        env.put("testExecuteClass", executeClass);
+        env.put("testExecuteArgs", executeArgs);
+        return invokeCommand(command);
     }
 
     /**
@@ -875,9 +875,9 @@ public abstract class Script
      * @param classes   The names of the classes to be compiled by rmic.
      * @return          The status of the compilation: passed or failed.
      * @see #invokeCommand
-     */  
+     */
     protected Status rmiCompile(String[] classes) {
-	return rmiCompile(DEFAULT_RMIC_COMMAND, classes);
+        return rmiCompile(DEFAULT_RMIC_COMMAND, classes);
     }
 
     /**
@@ -887,11 +887,11 @@ public abstract class Script
      * is the name of the environment specified to the GUI.
      * The name of the classes to be compiled by rmic is obtained from the
      * test description.
-     * @param command	The name of the command containing the template to be compiled
+     * @param command   The name of the command containing the template to be compiled
      * @param classes   The names of the classes to be compiled by rmic.
      * @return          The status of the compilation: passed or failed.
      * @see #invokeCommand
-     */  
+     */
     protected Status rmiCompile(String command, String[] classes) {
         try {
             String[] classDir = env.lookup("testClassDir");
@@ -905,14 +905,14 @@ public abstract class Script
             return error_badTestClassDir;
         }
 
-	if (classes == null || classes.length == 0)
-	    return error_noRMIClasses;
+        if (classes == null || classes.length == 0)
+            return error_noRMIClasses;
 
-	env.put("testRmicClasses", classes);
-	// backwards compatability
-	env.put("testRmicClass", classes);
+        env.put("testRmicClasses", classes);
+        // backwards compatability
+        env.put("testRmicClass", classes);
         return invokeCommand(command);
-    } 
+    }
 
 
     /**
@@ -925,7 +925,7 @@ public abstract class Script
      * Standard library implementations of <code>Command</code> are available,
      * such as:
      * <DL>
-     * <DT>com.sun.javatest.lib.ProcessCommand 
+     * <DT>com.sun.javatest.lib.ProcessCommand
      * <DD>Execute a command in a separate process
      * <DT>com.sun.javatest.lib.ExecStdTestSameJVMCmd
      * <DD>Execute a standard test in the same JVM as JT Harness
@@ -935,59 +935,59 @@ public abstract class Script
      * For full details, the documentation for the various appropriate classes.
      *
      * <p> The use of `<code>command.<em>key</em></code>' supercedes an earlier
-     * mechanism involving multiple properties. For backwards compatability, 
+     * mechanism involving multiple properties. For backwards compatability,
      * if the `<code>command.<em>key</em></code>' property is not found, the
      * properties for the earlier mechanism are checked as well.
      *
-     * @param key	The tag for the command to be executed
-     * @return		A status giving the outcome of the command
+     * @param key       The tag for the command to be executed
+     * @return          A status giving the outcome of the command
      *
      * @see Command
      *
      */
     protected Status invokeCommand(String key) {
         TestResult.Section section;
-	Status s = null;
+        Status s = null;
 
-	try {
-	    String[] command = env.lookup("command." + key);
+        try {
+            String[] command = env.lookup("command." + key);
 
-	    if (command.length == 0)
-		return Status.error(i18n.getString("script.noCommand", 
-						   new Object[] { env.getName(), key }));
+            if (command.length == 0)
+                return Status.error(i18n.getString("script.noCommand",
+                                                   new Object[] { env.getName(), key }));
 
-	    String className = command[0];
-	    String[] args = new String[command.length - 1];
-	    System.arraycopy(command, 1, args, 0, args.length);
+            String className = command[0];
+            String[] args = new String[command.length - 1];
+            System.arraycopy(command, 1, args, 0, args.length);
 
             section = testResult.createSection(key);
 
-	    section.getMessageWriter().println(i18n.getString("script.command", 
-							      new Object[] {className, StringArray.join(args) }));
+            section.getMessageWriter().println(i18n.getString("script.command",
+                                                              new Object[] {className, StringArray.join(args) }));
 
-	    PrintWriter out1 = null;
-	    PrintWriter out2 = null;
-	    try {
+            PrintWriter out1 = null;
+            PrintWriter out2 = null;
+            try {
                 out1 = section.createOutput(cmdOut1Name);
                 out2 = section.createOutput(cmdOut2Name);
 
-		s = invokeClass(className, args, out1, out2);
+                s = invokeClass(className, args, out1, out2);
 
                 out1.close();
                 out2.close();
-	    }
-	    finally {
-		if (out2 != null)  out2.close();
-		if (out1 != null)  out1.close();
-	    }
+            }
+            finally {
+                if (out2 != null)  out2.close();
+                if (out1 != null)  out1.close();
+            }
 
             section.setStatus(s);
-	    return s;
-	}
-	catch (TestEnvironment.Fault e) {
-	    return Status.error(i18n.getString("script.badCommand", 
-					       new Object[] { env.getName(), key }));
-	}
+            return s;
+        }
+        catch (TestEnvironment.Fault e) {
+            return Status.error(i18n.getString("script.badCommand",
+                                               new Object[] { env.getName(), key }));
+        }
     }
 
     /**
@@ -1000,88 +1000,88 @@ public abstract class Script
      * @param out2Name Name of the second stream.
      */
     protected void setDefaultCommandStreamNames(String out1Name, String out2Name) {
-	cmdOut1Name = out1Name;
-	cmdOut2Name = out2Name;
+        cmdOut1Name = out1Name;
+        cmdOut2Name = out2Name;
     }
 
     /**
-     * Create and run a Command object.  
-     * @param className	The name of the class to load and instantiate.
-     * @param args	The args to pass to the `run' method of the loaded object.
-     * @return		The result identifies any problems that may occur in trying
-     *			to create and run the specified object, or if it succeeds,
-     *			it returns the result from calling the object's `run' method.
+     * Create and run a Command object.
+     * @param className The name of the class to load and instantiate.
+     * @param args      The args to pass to the `run' method of the loaded object.
+     * @return          The result identifies any problems that may occur in trying
+     *                  to create and run the specified object, or if it succeeds,
+     *                  it returns the result from calling the object's `run' method.
      * @see Command
      */
-    private Status invokeClass(String className, String[] args, 
-			       PrintWriter out1, PrintWriter out2) {
-	// this is the central place where we get to run what the user
-	// says in the environment file: 
-	Command testCommand;
-	try {
-	    Class c = (loader == null ? Class.forName(className) : loader.loadClass(className));
-	    testCommand = (Command)(c.newInstance());	    
-	}
+    private Status invokeClass(String className, String[] args,
+                               PrintWriter out1, PrintWriter out2) {
+        // this is the central place where we get to run what the user
+        // says in the environment file:
+        Command testCommand;
+        try {
+            Class c = (loader == null ? Class.forName(className) : loader.loadClass(className));
+            testCommand = (Command)(c.newInstance());
+        }
         catch (ClassCastException e) {
-	    return Status.error(i18n.getString("script.cantRunClass",
-					       new Object[] { className, Command.class.getName() }));
-	}
-	catch (ClassNotFoundException ex) {
-	    return Status.error(i18n.getString("script.cantFindClass",
-					       new Object[] { className, env.getName() }));
-	}
-	catch (IllegalAccessException ex) {
-	    return Status.error(i18n.getString("script.cantAccessClass",
-					       new Object[] { className, env.getName() }));
-	}
-	catch (IllegalArgumentException ex) {
-	    return Status.error(i18n.getString("script.badClassName", 
-					       new Object[] { className, env.getName() }));
-	}
-	catch (InstantiationException ex) {
-	    return Status.error(i18n.getString("script.cantCreateClass",
-					       new Object[] { className, env.getName() }));
-	}
-	catch (ThreadDeath e) {
-	    throw (ThreadDeath)(e.fillInStackTrace());
-	}
-	catch (Exception e) {
-	    e.printStackTrace(out1);
-	    return Status.error(i18n.getString("script.unexpLoadExc", new Object[] { className, e }));
-	}
-	catch (Error e) {
-	    e.printStackTrace(out1);
-	    return Status.error(i18n.getString("script.unexpLoadErr", new Object[] { className, e }));
-	}
-	catch (Throwable e) {
-	    e.printStackTrace(out1);
-	    return Status.error(i18n.getString("script.unexpLoadThr", new Object[] { className, e }));
-	}
-	
-	try {
-	    testCommand.setClassLoader(loader);
-	    return testCommand.run(args, out1, out2);
-	}
-	catch (ThreadDeath e) {
-	    throw (ThreadDeath)(e.fillInStackTrace());
-	}
-	catch (Exception e) {
-	    e.printStackTrace(out1);
-	    // error reduced to failed in following line for benefit of negative tests
-	    return Status.failed(i18n.getString("script.unexpExecExc", new Object[] { className, e }));
-	}
-	catch (Error e) {
-	    e.printStackTrace(out1);
-	    // error reduced to failed in following line for benefit of negative tests
-	    return Status.failed(i18n.getString("script.unexpExecErr", new Object[] { className, e }));
-	}
-	catch (Throwable e) {
-	    e.printStackTrace(out1);
-	    // error *NOT* reduced to failed in following line for benefit of
-	    // negative tests: test should never throw something which is not
-	    // an Exception or Error
-	    return Status.error(i18n.getString("script.unexpExecThr", new Object[] { className, e }));
-	}
+            return Status.error(i18n.getString("script.cantRunClass",
+                                               new Object[] { className, Command.class.getName() }));
+        }
+        catch (ClassNotFoundException ex) {
+            return Status.error(i18n.getString("script.cantFindClass",
+                                               new Object[] { className, env.getName() }));
+        }
+        catch (IllegalAccessException ex) {
+            return Status.error(i18n.getString("script.cantAccessClass",
+                                               new Object[] { className, env.getName() }));
+        }
+        catch (IllegalArgumentException ex) {
+            return Status.error(i18n.getString("script.badClassName",
+                                               new Object[] { className, env.getName() }));
+        }
+        catch (InstantiationException ex) {
+            return Status.error(i18n.getString("script.cantCreateClass",
+                                               new Object[] { className, env.getName() }));
+        }
+        catch (ThreadDeath e) {
+            throw (ThreadDeath)(e.fillInStackTrace());
+        }
+        catch (Exception e) {
+            e.printStackTrace(out1);
+            return Status.error(i18n.getString("script.unexpLoadExc", new Object[] { className, e }));
+        }
+        catch (Error e) {
+            e.printStackTrace(out1);
+            return Status.error(i18n.getString("script.unexpLoadErr", new Object[] { className, e }));
+        }
+        catch (Throwable e) {
+            e.printStackTrace(out1);
+            return Status.error(i18n.getString("script.unexpLoadThr", new Object[] { className, e }));
+        }
+
+        try {
+            testCommand.setClassLoader(loader);
+            return testCommand.run(args, out1, out2);
+        }
+        catch (ThreadDeath e) {
+            throw (ThreadDeath)(e.fillInStackTrace());
+        }
+        catch (Exception e) {
+            e.printStackTrace(out1);
+            // error reduced to failed in following line for benefit of negative tests
+            return Status.failed(i18n.getString("script.unexpExecExc", new Object[] { className, e }));
+        }
+        catch (Error e) {
+            e.printStackTrace(out1);
+            // error reduced to failed in following line for benefit of negative tests
+            return Status.failed(i18n.getString("script.unexpExecErr", new Object[] { className, e }));
+        }
+        catch (Throwable e) {
+            e.printStackTrace(out1);
+            // error *NOT* reduced to failed in following line for benefit of
+            // negative tests: test should never throw something which is not
+            // an Exception or Error
+            return Status.error(i18n.getString("script.unexpExecThr", new Object[] { className, e }));
+        }
 
     }
 
@@ -1098,59 +1098,59 @@ public abstract class Script
      * the test
      */
     protected String[] exclude(String[] args, String[] testCases) {
-	if (testCases == null)
-	    return args;
-	StringBuffer sb = new StringBuffer();
-	for (int i = 0; i < testCases.length; i++) {
-	    if (i > 0)
-		sb.append(",");
-	    sb.append(testCases[i]);
-	}
-	String[] newArgs = new String[args.length + 2];
-	newArgs[0] = "-exclude";
-	newArgs[1] = sb.toString();
-	System.arraycopy(args, 0, newArgs, 2, args.length);
-	testResult.putProperty("exclude", newArgs[1]);
-	return newArgs;
+        if (testCases == null)
+            return args;
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < testCases.length; i++) {
+            if (i > 0)
+                sb.append(",");
+            sb.append(testCases[i]);
+        }
+        String[] newArgs = new String[args.length + 2];
+        newArgs[0] = "-exclude";
+        newArgs[1] = sb.toString();
+        System.arraycopy(args, 0, newArgs, 2, args.length);
+        testResult.putProperty("exclude", newArgs[1]);
+        return newArgs;
     }
 
     /**
-     * Utility routine to convert an array of filenames to a corresponding 
+     * Utility routine to convert an array of filenames to a corresponding
      * array of strings.
-     * @param files	The filenames to be converted
-     * @return		The corresponding strings
+     * @param files     The filenames to be converted
+     * @return          The corresponding strings
      */
     protected static String[] filesToStrings(File[] files) {
-	String[] strings = new String[files.length];
-	for (int i = 0; i < files.length; i++)
-	    strings[i] = files[i].getPath();
-	return strings;
+        String[] strings = new String[files.length];
+        for (int i = 0; i < files.length; i++)
+            strings[i] = files[i].getPath();
+        return strings;
     }
 
     /**
      * The test description for the test being performed.
      */
-    protected TestDescription td;  		// required
+    protected TestDescription td;               // required
 
     /**
      * The set of test cases to be excluded for this test.
      */
-    protected String[] excludedTestCases; 	// optional, may be null
+    protected String[] excludedTestCases;       // optional, may be null
 
     /**
      * The test environment for the test being performed.
      */
-    protected TestEnvironment env;  		// required
+    protected TestEnvironment env;              // required
 
     /**
      * The initialization args for the script.
      */
-    protected String[] scriptArgs;  		// optional
+    protected String[] scriptArgs;              // optional
 
     /**
      * The work directory for the test run.
      */
-    protected WorkDirectory workDir;			// required
+    protected WorkDirectory workDir;                    // required
 
     /**
      * The default name for the TestResult section used to save the data written to the out1 stream
@@ -1177,7 +1177,7 @@ public abstract class Script
      * The class loader to be used to load additional user-specified classes
      * as required in the execution of the script.
      */
-    protected ClassLoader loader;		// optional, may be null
+    protected ClassLoader loader;               // optional, may be null
 
     /**
      * The reporting channel for the test being performed.
@@ -1193,86 +1193,86 @@ public abstract class Script
      * A status that may be used to indicate problems in the executeArgs field
      * of a test description.
      */
-    protected static final Status 
-	error_badExecuteArgs = Status.error(i18n.getString("script.badExecuteArgs"));
+    protected static final Status
+        error_badExecuteArgs = Status.error(i18n.getString("script.badExecuteArgs"));
 
     /**
      * A status that may be used to indicate a problem with a test's class directory.
      */
-    protected static final Status 
+    protected static final Status
         error_badTestClassDir = Status.error(i18n.getString("script.badTestClassDir"));
 
     /**
      * A status that may be used to indicate that a compilation failed unexpectedly.
      */
-    protected static final Status 
-	error_compFailUnexp = Status.error(i18n.getString("script.compFailUnexp"));
+    protected static final Status
+        error_compFailUnexp = Status.error(i18n.getString("script.compFailUnexp"));
 
     /**
      * A status that may be used to indicate that no action was specified.
      */
-    protected static final Status 
-	error_noActionSpecified = Status.error(i18n.getString("script.noAction"));
+    protected static final Status
+        error_noActionSpecified = Status.error(i18n.getString("script.noAction"));
 
     /**
      * A status that may be used to indicate that no execute class was specified in a test description.
      */
-    protected static final Status 
-	error_noExecuteClass = Status.error(i18n.getString("script.noExecuteClass"));
+    protected static final Status
+        error_noExecuteClass = Status.error(i18n.getString("script.noExecuteClass"));
 
-    /** 
+    /**
      * A status that may be used to indicate that no extension was found in a source file.
      */
-    protected static final Status 
-	error_noExtnInSource = Status.error(i18n.getString("script.noExtnInSrc"));
+    protected static final Status
+        error_noExtnInSource = Status.error(i18n.getString("script.noExtnInSrc"));
 
     /**
      * A status that may be used to indicate that no rmi classes were specified in a test description.
      */
-    protected static final Status 
+    protected static final Status
         error_noRMIClasses = Status.error(i18n.getString("script.noRMIClasses"));
 
     /**
      * A status that may be used to indicate that no sources were specified in a test description.
      */
-    protected static final Status 
-	error_noSource = Status.error(i18n.getString("script.noSource"));
+    protected static final Status
+        error_noSource = Status.error(i18n.getString("script.noSource"));
 
     /**
      * A status that may be used to indicate the a compilation failed unexpectedly.
      */
-    protected static final Status 
-	fail_compFailUnexp = Status.failed(i18n.getString("script.compFailUnexp"));
+    protected static final Status
+        fail_compFailUnexp = Status.failed(i18n.getString("script.compFailUnexp"));
 
-    /** 
+    /**
      * A status that may be used to indicate that a compilation did not fail as was expected.
      */
-    protected static final Status 
-	fail_compSuccUnexp = Status.failed(i18n.getString("script.compSuccUnexp"));
+    protected static final Status
+        fail_compSuccUnexp = Status.failed(i18n.getString("script.compSuccUnexp"));
 
     /**
      * A status that may be used to indicate that a test execution step  did not fail as wqas expected.
      */
-    protected static final Status 
-	fail_execSuccUnexp = Status.failed(i18n.getString("script.execSuccUnexp"));
+    protected static final Status
+        fail_execSuccUnexp = Status.failed(i18n.getString("script.execSuccUnexp"));
 
     /**
      * A status that may be used to indicate that a compilation failed as expected.
      */
-    protected static final Status 
-	pass_compFailExp = Status.passed(i18n.getString("script.compFailExp"));
+    protected static final Status
+        pass_compFailExp = Status.passed(i18n.getString("script.compFailExp"));
 
     /**
      * A status that may be used to indicate that a compilation succeeded as expected.
      */
-    protected static final Status 
-	pass_compSuccExp = Status.passed(i18n.getString("script.compSuccExp"));
+    protected static final Status
+        pass_compSuccExp = Status.passed(i18n.getString("script.compSuccExp"));
 
     /**
      * A status that may be used to indicate that an execution step failed, as was expected.
      */
-    protected static final Status 
-	pass_execFailExp = Status.passed(i18n.getString("script.execFailExp"));
+    protected static final Status
+        pass_execFailExp = Status.passed(i18n.getString("script.execFailExp"));
 
     // backwards compatibility
     /**
@@ -1299,51 +1299,51 @@ public abstract class Script
 
     private TestResult testResult;
     private Alarm alarm;
-    private boolean jtrIfPassed = 
-	System.getProperty("javatest.script.jtrIfPassed", "true").equals("true");
+    private boolean jtrIfPassed =
+        System.getProperty("javatest.script.jtrIfPassed", "true").equals("true");
 
     private class Alarm implements Timer.Timeable {
-	Alarm(int delay) {
-	    this(delay, Thread.currentThread());
-	}
+        Alarm(int delay) {
+            this(delay, Thread.currentThread());
+        }
 
-	Alarm(int delay, Thread threadToInterrupt) {
-	    if (threadToInterrupt == null)
-		throw new NullPointerException();
+        Alarm(int delay, Thread threadToInterrupt) {
+            if (threadToInterrupt == null)
+                throw new NullPointerException();
 
-	    this.delay = delay;
-	    this.threadToInterrupt = threadToInterrupt;
-	    entry = alarmTimer.requestDelayedCallback(this, delay);
-	    if (debugAlarm) 
-		System.err.println(i18n.getString("script.alarm.started", this));
-	}
+            this.delay = delay;
+            this.threadToInterrupt = threadToInterrupt;
+            entry = alarmTimer.requestDelayedCallback(this, delay);
+            if (debugAlarm)
+                System.err.println(i18n.getString("script.alarm.started", this));
+        }
 
-	synchronized void cancel() {
-	    if (debugAlarm) 
-		System.err.println(i18n.getString("script.alarm.cancelled", this));
-	    alarmTimer.cancel(entry);
-	}
+        synchronized void cancel() {
+            if (debugAlarm)
+                System.err.println(i18n.getString("script.alarm.cancelled", this));
+            alarmTimer.cancel(entry);
+        }
 
-	public synchronized void timeout() {
-	    if (count == 0)
-		trOut.println(i18n.getString("script.timeout", new Float(delay/1000.f)));
-	    else if (count%100 == 0) {
-		trOut.println(i18n.getString("script.notResponding", new Integer(count)));
-		if (count%1000 == 0) 
-		    System.err.println(i18n.getString("script.timedOut", 
-						      new Object[] { td.getRootRelativeURL(), new Integer(count) }));
-	    }
-	    if (debugAlarm) 
-		System.err.println(i18n.getString("script.alarm.interrupt", new Object[] { this, threadToInterrupt }));
-	    threadToInterrupt.interrupt();
-	    count++;
-	    entry = alarmTimer.requestDelayedCallback(this, 100); // keep requesting interrupts until cancelled
-	}
+        public synchronized void timeout() {
+            if (count == 0)
+                trOut.println(i18n.getString("script.timeout", new Float(delay/1000.f)));
+            else if (count%100 == 0) {
+                trOut.println(i18n.getString("script.notResponding", new Integer(count)));
+                if (count%1000 == 0)
+                    System.err.println(i18n.getString("script.timedOut",
+                                                      new Object[] { td.getRootRelativeURL(), new Integer(count) }));
+            }
+            if (debugAlarm)
+                System.err.println(i18n.getString("script.alarm.interrupt", new Object[] { this, threadToInterrupt }));
+            threadToInterrupt.interrupt();
+            count++;
+            entry = alarmTimer.requestDelayedCallback(this, 100); // keep requesting interrupts until cancelled
+        }
 
-	private int delay;
-	private Thread threadToInterrupt;
-	private int count;
-	private Timer.Entry entry;
+        private int delay;
+        private Thread threadToInterrupt;
+        private int count;
+        private Timer.Entry entry;
     }
 
     private static boolean debugAlarm = Boolean.getBoolean("debug.com.sun.javatest.Script.Alarm");

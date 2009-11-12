@@ -56,7 +56,7 @@ import com.sun.javatest.util.PropertyArray;
 import com.sun.javatest.util.StringArray;
 import com.sun.javatest.util.DynamicArray;
 
-/** 
+/**
  * The TestResult object encapsulates the results from a test.
  * Test results are formatted in sections of command output,
  * comments and sometimes "streams" of output (<tt>stdout</tt> for example).
@@ -65,13 +65,13 @@ import com.sun.javatest.util.DynamicArray;
  * set or until the result of the test itself is set.
  *
  * Test results are stored in a structured text files.
- * The TestResult class serves as the API for accessing the various 
- * components that make up the result of running a test.  
+ * The TestResult class serves as the API for accessing the various
+ * components that make up the result of running a test.
  * The status is cached as its size is small and it is accessed often.
  *
  * This class and inner classes will throw IllegalStateExceptions if an
  * attempt is made to modify the any part of the object that has been
- * marked immutable. 
+ * marked immutable.
  */
 
 public class TestResult {
@@ -80,37 +80,37 @@ public class TestResult {
      */
     public static class Fault extends Exception
     {
-	Fault(I18NResourceBundle i18n, String key) {
-	    super(i18n.getString(key));
-	}
+        Fault(I18NResourceBundle i18n, String key) {
+            super(i18n.getString(key));
+        }
 
-	Fault(I18NResourceBundle i18n, String key, Object arg) {
-	    super(i18n.getString(key, arg));
-	}
+        Fault(I18NResourceBundle i18n, String key, Object arg) {
+            super(i18n.getString(key, arg));
+        }
 
-	Fault(I18NResourceBundle i18n, String key, Object[] args) {
-	    super(i18n.getString(key, args));
-	}
+        Fault(I18NResourceBundle i18n, String key, Object[] args) {
+            super(i18n.getString(key, args));
+        }
     }
 
     /**
      * This exception is thrown if the JTR file cannot be found.
      */
     public static class ResultFileNotFoundFault extends Fault {
-	ResultFileNotFoundFault(I18NResourceBundle i18n, String key) {
-	    super(i18n, key);
-	}
+        ResultFileNotFoundFault(I18NResourceBundle i18n, String key) {
+            super(i18n, key);
+        }
 
-	ResultFileNotFoundFault(I18NResourceBundle i18n, String key, Object arg) {
-	    super(i18n, key, arg);
-	}
+        ResultFileNotFoundFault(I18NResourceBundle i18n, String key, Object arg) {
+            super(i18n, key, arg);
+        }
 
-	ResultFileNotFoundFault(I18NResourceBundle i18n, String key, Object[] args) {
-	    super(i18n, key, args);
-	}
+        ResultFileNotFoundFault(I18NResourceBundle i18n, String key, Object[] args) {
+            super(i18n, key, args);
+        }
     }
 
-    /** 
+    /**
      * This exception ay occur anytime the JTR file is being read from the filesystem.
      * To optimize memory usage, the contents of a TestResult object are sometimes
      * discarded and then loaded on demand from the JTR file.  If a fault occurs
@@ -119,17 +119,17 @@ public class TestResult {
      * @see TestResult.ResultFileNotFoundFault
      */
     public static class ReloadFault extends Fault {
-	ReloadFault(I18NResourceBundle i18n, String key) {
-	    super(i18n, key);
-	}
+        ReloadFault(I18NResourceBundle i18n, String key) {
+            super(i18n, key);
+        }
 
-	ReloadFault(I18NResourceBundle i18n, String key, Object arg) {
-	    super(i18n, key, arg);
-	}
+        ReloadFault(I18NResourceBundle i18n, String key, Object arg) {
+            super(i18n, key, arg);
+        }
 
-	ReloadFault(I18NResourceBundle i18n, String key, Object[] args) {
-	    super(i18n, key, args);
-	}
+        ReloadFault(I18NResourceBundle i18n, String key, Object[] args) {
+            super(i18n, key, args);
+        }
     }
 
     /**
@@ -176,28 +176,28 @@ public class TestResult {
          * @param tr The test result object being modified.
          * @param section The section in which the output is being produced.
          * @param outputName The name of the output.
-	 * @param start the start offset of the text that was changed
-	 * @param end the end offset of the text that was changed
+         * @param start the start offset of the text that was changed
+         * @param end the end offset of the text that was changed
          * @param text the text that replaced the specified range.
          */
         public void updatedOutput(TestResult tr, Section section, String outputName, int start, int end, String text);
 
-	/**
-	 * A property of the test result has been updated.
-	 *
-	 * @param tr The test result containing the property that was modified.
-	 * @param name The key for the property that was modified.
-	 * @param value The new value for the property.
-	 *
-	 */
-	public void updatedProperty(TestResult tr, String name, String value);
+        /**
+         * A property of the test result has been updated.
+         *
+         * @param tr The test result containing the property that was modified.
+         * @param name The key for the property that was modified.
+         * @param value The new value for the property.
+         *
+         */
+        public void updatedProperty(TestResult tr, String name, String value);
 
-	/**
-	 * The test has completed, and the results are now immutable.
-	 * There will be no further observer calls.
-	 * @param tr The test result that has been completed.
-	 */
-	public void completed(TestResult tr);
+        /**
+         * The test has completed, and the results are now immutable.
+         * There will be no further observer calls.
+         * @param tr The test result that has been completed.
+         */
+        public void completed(TestResult tr);
 
     }
 
@@ -209,23 +209,23 @@ public class TestResult {
      * This output is identified by the MSG_SECTION_NAME identifier.
      */
     public class Section {
-	/**
-	 * Query if the section is still writable or not.
-	 * @return true if the section is still writable, and false otherwise
-	 */
+        /**
+         * Query if the section is still writable or not.
+         * @return true if the section is still writable, and false otherwise
+         */
         public boolean isMutable() {
-	    synchronized (TestResult.this) {
-		synchronized (this) {
-		    return (TestResult.this.isMutable() && 
-			    this.result == inProgress);
-		}
-	    }
-	}
+            synchronized (TestResult.this) {
+                synchronized (this) {
+                    return (TestResult.this.isMutable() &&
+                            this.result == inProgress);
+                }
+            }
+        }
 
         /**
          * Find out what the result of the execution of this section was.
-	 * @return the result of the execution of this section
-	 * @see #setStatus
+         * @return the result of the execution of this section
+         * @see #setStatus
          */
         public Status getStatus() {
             return result;
@@ -236,51 +236,51 @@ public class TestResult {
          * immutable.
          *
          * @param result The status to set as the result of this section of the test
-	 * @see #getStatus
+         * @see #getStatus
          */
         public void setStatus(Status result) {
-	    synchronized (TestResult.this) {
-		synchronized (this) {
-		    checkMutable();
-		    for (int i = 0; i < buffers.length; i++) {
-			OutputBuffer b = buffers[i];
-			if (b instanceof WritableOutputBuffer) {
-			    WritableOutputBuffer wb = (WritableOutputBuffer)b;
-			    wb.getPrintWriter().close();
-			}
-		    }
-		    if (env == null)
-			env = emptyStringArray;
-		    this.result = result;
-		    if (env == null)
-			env = emptyStringArray;
-		    notifyCompletedSection(this);
-		}
-	    }
+            synchronized (TestResult.this) {
+                synchronized (this) {
+                    checkMutable();
+                    for (int i = 0; i < buffers.length; i++) {
+                        OutputBuffer b = buffers[i];
+                        if (b instanceof WritableOutputBuffer) {
+                            WritableOutputBuffer wb = (WritableOutputBuffer)b;
+                            wb.getPrintWriter().close();
+                        }
+                    }
+                    if (env == null)
+                        env = emptyStringArray;
+                    this.result = result;
+                    if (env == null)
+                        env = emptyStringArray;
+                    notifyCompletedSection(this);
+                }
+            }
         }
 
-	/**
-	 * Get the title of this section, specified when the section
-	 * was created.
-	 * @return the title of this section
-	 */
+        /**
+         * Get the title of this section, specified when the section
+         * was created.
+         * @return the title of this section
+         */
         public String getTitle() {
             return title;
         }
 
         /**
          * Get the appropriate to writer to access the default message field.
-	 * @return a Writer to access the default message field
+         * @return a Writer to access the default message field
          */
         public PrintWriter getMessageWriter() {
-	    synchronized (TestResult.this) {
-		synchronized (this) {
-		    checkMutable();
-		    // if it is mutable, it must have a message stream,
-		    // which will be the first entry
-		    return buffers[0].getPrintWriter();
-		}
-	    }
+            synchronized (TestResult.this) {
+                synchronized (this) {
+                    checkMutable();
+                    // if it is mutable, it must have a message stream,
+                    // which will be the first entry
+                    return buffers[0].getPrintWriter();
+                }
+            }
         }
 
         /**
@@ -289,7 +289,7 @@ public class TestResult {
          * @return The number of output buffers in use (>=0).
          */
         public synchronized int getOutputCount() {
-	    return buffers.length;
+            return buffers.length;
         }
 
         /**
@@ -299,42 +299,42 @@ public class TestResult {
          * @return A PrintWriter that gives access to the new stream.
          */
         public PrintWriter createOutput(String name) {
-	    if (name == null)
-		throw new NullPointerException();
+            if (name == null)
+                throw new NullPointerException();
 
-	    synchronized (TestResult.this) {
-		synchronized (this) {
-		    checkMutable();
-		    
-		    OutputBuffer b = new WritableOutputBuffer(name);
-		    buffers = (OutputBuffer[])(DynamicArray.append(buffers, b));
-		    
-		    notifyCreatedOutput(this, name);
-		    
-		    return b.getPrintWriter();
-		}
-	    }
+            synchronized (TestResult.this) {
+                synchronized (this) {
+                    checkMutable();
+
+                    OutputBuffer b = new WritableOutputBuffer(name);
+                    buffers = (OutputBuffer[])(DynamicArray.append(buffers, b));
+
+                    notifyCreatedOutput(this, name);
+
+                    return b.getPrintWriter();
+                }
+            }
         }
 
         /**
-	 * Get the content that was written to a specified output stream.
-	 * @param name the name of the stream in question
+         * Get the content that was written to a specified output stream.
+         * @param name the name of the stream in question
          * @return All the data that was written to the specified output,
          *         or null if nothing has been written.
          */
         public String getOutput(String name) {
-	    if (name == null)
-		throw new NullPointerException();
+            if (name == null)
+                throw new NullPointerException();
 
-	    synchronized (TestResult.this) {
-		synchronized (this) {
-		    OutputBuffer b = findOutputBuffer(name);
-		    return (b == null ? null : b.getOutput());
-		}
-	    }
+            synchronized (TestResult.this) {
+                synchronized (this) {
+                    OutputBuffer b = findOutputBuffer(name);
+                    return (b == null ? null : b.getOutput());
+                }
+            }
         }
 
-        /** 
+        /**
          * Find out the symbolic names of all the streams in this section.  You
          * can use getOutputCount to discover the number of items in
          * this enumeration (not a thread safe activity in the strictest
@@ -348,9 +348,9 @@ public class TestResult {
 
             for (int i = 0; i < buffers.length; i++) {
                 names[i] = buffers[i].getName();
-		if (names[i] == null)
-		    throw new IllegalStateException("BUFFER IS BROKEN");
-	    }
+                if (names[i] == null)
+                    throw new IllegalStateException("BUFFER IS BROKEN");
+            }
 
             return names;
         }
@@ -358,12 +358,12 @@ public class TestResult {
         // ---------- PACKAGE PRIVATE ----------
 
         Section(String title) {
-	    if (title == null)
-		throw new NullPointerException();
-	    if (title.indexOf(' ') != -1)
-		throw new IllegalArgumentException("space invalid in section title");
-	
-	    this.title = title;
+            if (title == null)
+                throw new NullPointerException();
+            if (title.indexOf(' ') != -1)
+                throw new IllegalArgumentException("space invalid in section title");
+
+            this.title = title;
             result = inProgress;
         }
 
@@ -383,7 +383,7 @@ public class TestResult {
                     title = extractSlice(line, 0, ":", null);
                     break;
                 }
-		else 
+                else
                     // don't know what this line is, may be empty
                     line = in.readLine();
             }
@@ -392,27 +392,27 @@ public class TestResult {
                 throw new ReloadFault(i18n, "rslt.noSectionTitle");
 
             if (title.equals(MSG_SECTION_NAME)) {
-		// use standard internal copy of string
+                // use standard internal copy of string
                 title = MSG_SECTION_NAME;
             }
 
-	    while ((line = in.readLine()).startsWith(JTR_V2_SECTSTREAM)) {
-		OutputBuffer b = new FixedOutputBuffer(line, in);
-		buffers = (OutputBuffer[])(DynamicArray.append(buffers, b));
-	    }
+            while ((line = in.readLine()).startsWith(JTR_V2_SECTSTREAM)) {
+                OutputBuffer b = new FixedOutputBuffer(line, in);
+                buffers = (OutputBuffer[])(DynamicArray.append(buffers, b));
+            }
 
             // if not in the message section, line should have the section result
             if (title != MSG_SECTION_NAME) {
-		if (line != null) {
-		    if (line.startsWith(JTR_V2_SECTRESULT))
-			result = Status.parse(line.substring(JTR_V2_SECTRESULT.length()));
-		    else 
-			throw new ReloadFault(i18n, "rslt.badLine", line);
-		}
-		if (result == null)
-		    // no test result
-		    throw new ReloadFault(i18n, "rslt.noSectionResult");
-	    }
+                if (line != null) {
+                    if (line.startsWith(JTR_V2_SECTRESULT))
+                        result = Status.parse(line.substring(JTR_V2_SECTRESULT.length()));
+                    else
+                        throw new ReloadFault(i18n, "rslt.badLine", line);
+                }
+                if (result == null)
+                    // no test result
+                    throw new ReloadFault(i18n, "rslt.noSectionResult");
+            }
         }
 
         void save(Writer out) throws IOException {
@@ -420,90 +420,90 @@ public class TestResult {
             out.write(lineSeparator);
 
             for (int index = 0; index < buffers.length; index++) {
-		String text = buffers[index].getOutput();
-		int numLines = 0;
-		int numBackslashes = 0;
-		int numNonASCII = 0;
-		boolean needsFinalNewline = false;
-		boolean needsEscape;
+                String text = buffers[index].getOutput();
+                int numLines = 0;
+                int numBackslashes = 0;
+                int numNonASCII = 0;
+                boolean needsFinalNewline = false;
+                boolean needsEscape;
 
-		// scan for newlines and characters requiring escapes
-		for (int i = 0; i < text.length(); i++) {
-		    char c = text.charAt(i);
-		    if (c < 32) {
-			if (c == '\n')
-			    numLines++;
-			else if (c != '\t' && c != '\r')
-			    numNonASCII++;		
-		    }
-		    else if (c < 127) {
-			if (c == '\\')
-			    numBackslashes++;
-		    }
-		    else
-			numNonASCII++;
-		}
+                // scan for newlines and characters requiring escapes
+                for (int i = 0; i < text.length(); i++) {
+                    char c = text.charAt(i);
+                    if (c < 32) {
+                        if (c == '\n')
+                            numLines++;
+                        else if (c != '\t' && c != '\r')
+                            numNonASCII++;
+                    }
+                    else if (c < 127) {
+                        if (c == '\\')
+                            numBackslashes++;
+                    }
+                    else
+                        numNonASCII++;
+                }
 
-		needsEscape = (numBackslashes > 0 || numNonASCII > 0);
+                needsEscape = (numBackslashes > 0 || numNonASCII > 0);
 
-		// Check the text ends with a final newline ('\n', not line.separator)
-		// Note this must match the check when reading the text back in,
-		// when we also check for just '\n' and not line.separator, because
-		// line.separator now, and line.separator then, might be different.
-		if (text.length() != 0 && !text.endsWith("\n")) {
-		    needsFinalNewline = true;
-		    numLines++;
-		}
+                // Check the text ends with a final newline ('\n', not line.separator)
+                // Note this must match the check when reading the text back in,
+                // when we also check for just '\n' and not line.separator, because
+                // line.separator now, and line.separator then, might be different.
+                if (text.length() != 0 && !text.endsWith("\n")) {
+                    needsFinalNewline = true;
+                    numLines++;
+                }
 
-		out.write(JTR_V2_SECTSTREAM);
-		out.write(buffers[index].getName());
-		out.write(":");
-	        out.write('(');
-		out.write(String.valueOf(numLines));
-		out.write('/');
-		if (needsEscape) {
-		    // count one per character, plus an additional one per \ (written as "\ \") and an
-		    // additional 5 per nonASCII (written as "\ u x x x x") 
-		    out.write(String.valueOf(text.length() + numBackslashes + 5*numNonASCII));
-		}
-		else
-		    out.write(String.valueOf(text.length()));
-		out.write(')');
-		if (needsEscape)
-		    out.write('*');
-		out.write(JTR_V2_SECTSTREAM);
-	        out.write(lineSeparator);
-                
-		if (needsEscape) {
-		    for (int i = 0; i < text.length(); i++) {
-			char c = text.charAt(i);
-			if (32 <= c && c < 127 && c != '\\') 
-			    out.write(c);
-			else {
-			    switch (c) {
-			    case '\n': case '\r': case '\t':
-				out.write(c);
-				break;
-			    case '\\':
-				out.write("\\\\");
-				break;
-			    default:
-				out.write("\\u");
-				out.write(Character.forDigit((c >> 12) & 0xF, 16));
-				out.write(Character.forDigit((c >>  8) & 0xF, 16));
-				out.write(Character.forDigit((c >>  4) & 0xF, 16));
-				out.write(Character.forDigit((c >>  0) & 0xF, 16));
-				break;
-			    }
-			}
-		    }
-		}
-		else
-		    out.write(text);
+                out.write(JTR_V2_SECTSTREAM);
+                out.write(buffers[index].getName());
+                out.write(":");
+                out.write('(');
+                out.write(String.valueOf(numLines));
+                out.write('/');
+                if (needsEscape) {
+                    // count one per character, plus an additional one per \ (written as "\ \") and an
+                    // additional 5 per nonASCII (written as "\ u x x x x")
+                    out.write(String.valueOf(text.length() + numBackslashes + 5*numNonASCII));
+                }
+                else
+                    out.write(String.valueOf(text.length()));
+                out.write(')');
+                if (needsEscape)
+                    out.write('*');
+                out.write(JTR_V2_SECTSTREAM);
+                out.write(lineSeparator);
+
+                if (needsEscape) {
+                    for (int i = 0; i < text.length(); i++) {
+                        char c = text.charAt(i);
+                        if (32 <= c && c < 127 && c != '\\')
+                            out.write(c);
+                        else {
+                            switch (c) {
+                            case '\n': case '\r': case '\t':
+                                out.write(c);
+                                break;
+                            case '\\':
+                                out.write("\\\\");
+                                break;
+                            default:
+                                out.write("\\u");
+                                out.write(Character.forDigit((c >> 12) & 0xF, 16));
+                                out.write(Character.forDigit((c >>  8) & 0xF, 16));
+                                out.write(Character.forDigit((c >>  4) & 0xF, 16));
+                                out.write(Character.forDigit((c >>  0) & 0xF, 16));
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                    out.write(text);
 
                 if (needsFinalNewline)
                     out.write(lineSeparator);
-            }  
+            }
 
             // the default message section does not need a result line
             if (getTitle() != MSG_SECTION_NAME) {
@@ -516,38 +516,38 @@ public class TestResult {
 
         /**
          * Reload an output block. This method is called while reloading
-	 * a test result and so bypasses the normal immutability checks.
+         * a test result and so bypasses the normal immutability checks.
          */
         synchronized void reloadOutput(String name, String data) {
             if (name.equals(MESSAGE_OUTPUT_NAME))
                 name = MESSAGE_OUTPUT_NAME;
-	    OutputBuffer b = new FixedOutputBuffer(name, data);
+            OutputBuffer b = new FixedOutputBuffer(name, data);
             buffers = (OutputBuffer[])(DynamicArray.append(buffers, b));
         }
 
-	/**
-	 * Reload the status. This method is called while reloading
-	 * a test result and so bypasses the normal immutability checks.
-	 */
-	synchronized void reloadStatus(Status s) {
-	    result = s;
-	}
+        /**
+         * Reload the status. This method is called while reloading
+         * a test result and so bypasses the normal immutability checks.
+         */
+        synchronized void reloadStatus(Status s) {
+            result = s;
+        }
 
         // ---------- PRIVATE ----------
 
-	private void checkMutable() {
-	    if (!isMutable())
-		throw new IllegalStateException("This section of the test result is now immutable.");
-	}
+        private void checkMutable() {
+            if (!isMutable())
+                throw new IllegalStateException("This section of the test result is now immutable.");
+        }
 
-	private synchronized void makeOutputImmutable(OutputBuffer b, String name, String output) {
-	    for (int i = 0; i < buffers.length; i++) {
-		if (buffers[i] == b) {
-		    buffers[i] = new FixedOutputBuffer(name, output);
-		    return;
-		}
-	    }
-	}
+        private synchronized void makeOutputImmutable(OutputBuffer b, String name, String output) {
+            for (int i = 0; i < buffers.length; i++) {
+                if (buffers[i] == b) {
+                    buffers[i] = new FixedOutputBuffer(name, output);
+                    return;
+                }
+            }
+        }
 
         private synchronized OutputBuffer findOutputBuffer(String name) {
             // search backwards
@@ -555,9 +555,9 @@ public class TestResult {
             // recent stream with that name will be found
             // performance of the search will still be constant
             for (int i = buffers.length-1; i >= 0 ; i--) {
-                if (name.equals(buffers[i].getName())) 
+                if (name.equals(buffers[i].getName()))
                     return buffers[i];
-            }  
+            }
 
             return null;
         }
@@ -565,218 +565,218 @@ public class TestResult {
         private OutputBuffer[] buffers = new OutputBuffer[0];
         private String title;
         private Status result;
-	
-	private class FixedOutputBuffer implements OutputBuffer {
-	    FixedOutputBuffer(String name, String output) {
-		if (name == null || output == null)
-		    throw new NullPointerException();
 
-		this.name = name;
-		this.output = output;
-	    }
-	    
-	    public String getName() {
-		return name;
-	    }
-	    
-	    public String getOutput() {
-		return output;
-	    }
-	    
-	    public PrintWriter getPrintWriter() {
-		throw new IllegalStateException("This section is immutable");
-	    }
+        private class FixedOutputBuffer implements OutputBuffer {
+            FixedOutputBuffer(String name, String output) {
+                if (name == null || output == null)
+                    throw new NullPointerException();
 
-	    FixedOutputBuffer(String header, BufferedReader in) throws ReloadFault {
-		String nm = extractSlice(header, JTR_V2_SECTSTREAM.length(), null, ":");
+                this.name = name;
+                this.output = output;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public String getOutput() {
+                return output;
+            }
+
+            public PrintWriter getPrintWriter() {
+                throw new IllegalStateException("This section is immutable");
+            }
+
+            FixedOutputBuffer(String header, BufferedReader in) throws ReloadFault {
+                String nm = extractSlice(header, JTR_V2_SECTSTREAM.length(), null, ":");
                 if (nm == null)
                     throw new ReloadFault(i18n, "rslt.noOutputTitle");
-		
+
                 if (nm.equals(MESSAGE_OUTPUT_NAME ))
                     nm = MESSAGE_OUTPUT_NAME;
-		
-		try {
-		    int lines;
-		    int chars;
-		    boolean needsEscape;
 
-		    try {
-			int start = JTR_V2_SECTSTREAM.length();
-			lines = Integer.parseInt(extractSlice(header, start, "(", "/"));
-			chars = Integer.parseInt(extractSlice(header, start, "/", ")"));
-			int rp = header.indexOf(")", start);
-			if (rp >= 0 && rp < header.length() - 2)
-			    needsEscape = (header.charAt(rp + 1) == '*');
-			else
-			    needsEscape = false;
-		    } 
-		    catch (NumberFormatException e) {
+                try {
+                    int lines;
+                    int chars;
+                    boolean needsEscape;
+
+                    try {
+                        int start = JTR_V2_SECTSTREAM.length();
+                        lines = Integer.parseInt(extractSlice(header, start, "(", "/"));
+                        chars = Integer.parseInt(extractSlice(header, start, "/", ")"));
+                        int rp = header.indexOf(")", start);
+                        if (rp >= 0 && rp < header.length() - 2)
+                            needsEscape = (header.charAt(rp + 1) == '*');
+                        else
+                            needsEscape = false;
+                    }
+                    catch (NumberFormatException e) {
                         // fatal parsing error
                         throw new ReloadFault(i18n, "rslt.badHeaderVersion", e);
-		    }
-		    
-		    StringBuffer buff = new StringBuffer(chars);
-		    
-		    if (needsEscape) {
-			for (int i = 0; i < chars; i++) {
-			    int c = in.read();
-			    if (c == -1)
-				throw new ReloadFault(i18n, "rslt.badEOF");
-			    else if (c == '\\') {
-				c = in.read();
-				i++;
-				if (c == 'u') {
-				    c =  Character.digit((char)in.read(), 16) << 12;
-				    c += Character.digit((char)in.read(), 16) <<  8;
-				    c += Character.digit((char)in.read(), 16) <<  4;
-				    c += Character.digit((char)in.read(), 16);
-				    i += 4;
-				}
-				// else drop through (for \\)
-			    }
-			    buff.append((char)c);
-			}
-		    }
-		    else {
-			char[] data = new char[Math.min(4096, chars)];
-			int charsRead = 0;
-			while (charsRead < chars) {
-			    int n = in.read(data, 0, Math.min(data.length, chars-charsRead));
-			    buff.append(data, 0, n);
-			    charsRead += n;
-			}
-		    }
-		    
-		    /*NEW
-		    while (true) {
-			int c = in.read();
-			switch (c) {
-			case -1:
-			    throw new ReloadFault(i18n, "rslt.badEOF");
+                    }
 
-			case '\\':
-			    if (needEscape) {
-				c = in.read();
-				if (c == 'u') {
-				    c =  Character.digit((char)in.read(), 16) << 12;
-				    c += Character.digit((char)in.read(), 16) <<  8;
-				    c += Character.digit((char)in.read(), 16) <<  4;
-				    c += Character.digit((char)in.read(), 16);
-				}
-				// else drop through (for \\)
-			    }
-			    buff.append((char)c);
-			}
-		    }
-		    */
+                    StringBuffer buff = new StringBuffer(chars);
 
-		    name = nm;
-		    output = buff.toString();
+                    if (needsEscape) {
+                        for (int i = 0; i < chars; i++) {
+                            int c = in.read();
+                            if (c == -1)
+                                throw new ReloadFault(i18n, "rslt.badEOF");
+                            else if (c == '\\') {
+                                c = in.read();
+                                i++;
+                                if (c == 'u') {
+                                    c =  Character.digit((char)in.read(), 16) << 12;
+                                    c += Character.digit((char)in.read(), 16) <<  8;
+                                    c += Character.digit((char)in.read(), 16) <<  4;
+                                    c += Character.digit((char)in.read(), 16);
+                                    i += 4;
+                                }
+                                // else drop through (for \\)
+                            }
+                            buff.append((char)c);
+                        }
+                    }
+                    else {
+                        char[] data = new char[Math.min(4096, chars)];
+                        int charsRead = 0;
+                        while (charsRead < chars) {
+                            int n = in.read(data, 0, Math.min(data.length, chars-charsRead));
+                            buff.append(data, 0, n);
+                            charsRead += n;
+                        }
+                    }
 
-		    if (buff.length() > 0 && buff.charAt(buff.length() - 1) != '\n') {
-			int c = in.read();
-			if (c == '\r')
-			    c = in.read();
-			if (c != '\n') {
-			    System.err.println("TR.badChars: output=" + (output.length() < 32 ? output : output.substring(0, 9) + " ... " + output.substring(output.length() - 10) ));
-			    System.err.println("TR.badChars: '" + ((char)c) + "' (" + c + ")");
-			    throw new ReloadFault(i18n, "rslt.badChars", name);
-			}
-		    }
-		} 
-		catch (IOException e) {
-		    // not enough data probably fatal parsing error
-		    throw new ReloadFault(i18n, "rslt.badFile", e);
-		}
-	    }
-	    
-	    private final String name;
-	    private final String output;
-	}
+                    /*NEW
+                    while (true) {
+                        int c = in.read();
+                        switch (c) {
+                        case -1:
+                            throw new ReloadFault(i18n, "rslt.badEOF");
 
-	private class WritableOutputBuffer extends Writer implements OutputBuffer {
-	    WritableOutputBuffer(String name) {
+                        case '\\':
+                            if (needEscape) {
+                                c = in.read();
+                                if (c == 'u') {
+                                    c =  Character.digit((char)in.read(), 16) << 12;
+                                    c += Character.digit((char)in.read(), 16) <<  8;
+                                    c += Character.digit((char)in.read(), 16) <<  4;
+                                    c += Character.digit((char)in.read(), 16);
+                                }
+                                // else drop through (for \\)
+                            }
+                            buff.append((char)c);
+                        }
+                    }
+                    */
+
+                    name = nm;
+                    output = buff.toString();
+
+                    if (buff.length() > 0 && buff.charAt(buff.length() - 1) != '\n') {
+                        int c = in.read();
+                        if (c == '\r')
+                            c = in.read();
+                        if (c != '\n') {
+                            System.err.println("TR.badChars: output=" + (output.length() < 32 ? output : output.substring(0, 9) + " ... " + output.substring(output.length() - 10) ));
+                            System.err.println("TR.badChars: '" + ((char)c) + "' (" + c + ")");
+                            throw new ReloadFault(i18n, "rslt.badChars", name);
+                        }
+                    }
+                }
+                catch (IOException e) {
+                    // not enough data probably fatal parsing error
+                    throw new ReloadFault(i18n, "rslt.badFile", e);
+                }
+            }
+
+            private final String name;
+            private final String output;
+        }
+
+        private class WritableOutputBuffer extends Writer implements OutputBuffer {
+            WritableOutputBuffer(String name) {
                 super(TestResult.this);
-		if (name == null)
-		    throw new NullPointerException();
+                if (name == null)
+                    throw new NullPointerException();
 
-		this.name = name;
-		output = new StringBuffer();
+                this.name = name;
+                output = new StringBuffer();
                 pw = new LockedWriter(this, TestResult.this);
-	    }
-	    
-	    public String getName() {
-		return name;
-	    }
-	    
-	    public String getOutput() {
-		return new String(output);
-	    }
-	    
-	    public PrintWriter getPrintWriter() {
-		return pw;
-	    }
+            }
 
-	    public void write(char[] buf, int offset, int len) throws IOException {
-		if (output == null) 
-		    throw new IOException("stream has been closed");
+            public String getName() {
+                return name;
+            }
 
-		int end = output.length();
-		output.append(buf, offset, len);
-		// want to avoid creating the string buf(offset..len) 
-		// since likely case is no observers
-		notifyUpdatedOutput(Section.this, name, end, end, buf, offset, len);
+            public String getOutput() {
+                return new String(output);
+            }
 
-		if (output.length() > maxOutputSize) {
-		    int overflowEnd = maxOutputSize*2/3;
-		    if (overflowed) {
-			// output.delete(overflowStart, overflowEnd); 
-			// JDK 1.1--start
-			String s = output.toString();
-			output = new StringBuffer(s.substring(0, overflowStart) + s.substring(overflowEnd));
-			// JDK 1.1--end
-			notifyUpdatedOutput(Section.this, name, overflowStart, overflowEnd, "");
-		    }
-		    else {
-			String OVERFLOW_MESSAGE = 
-			    "\n\n...\n"
-			    + "Output overflow:\n" 
-			    + "JT Harness has limited the test output to the text to that\n" 
-			    + "at the beginning and the end, so that you can see how the\n"
-			    + "test began, and how it completed.\n"
-			    + "\n"
-			    + "If you need to see more of the output from the test,\n"
-			    + "set the system property javatest.maxOutputSize to a higher\n"
-			    + "value. The current value is " + maxOutputSize 
-			    + "\n...\n\n";
-			overflowStart = maxOutputSize/3;
-			//output.replace(overflowStart, maxOutputSize*2/3, OVERFLOW_MESSAGE);
-			// JDK 1.1--start
-			String s = output.toString();
-			output = new StringBuffer(s.substring(0, overflowStart) + OVERFLOW_MESSAGE + s.substring(overflowEnd));
-			// JDK 1.1--end
-			notifyUpdatedOutput(Section.this, name, overflowStart, overflowEnd, OVERFLOW_MESSAGE);
-			overflowStart += OVERFLOW_MESSAGE.length();
-			overflowed = true;
-		    }
-		}
-	    }
+            public PrintWriter getPrintWriter() {
+                return pw;
+            }
 
-	    public void flush() {
-		//no-op
-	    }
+            public void write(char[] buf, int offset, int len) throws IOException {
+                if (output == null)
+                    throw new IOException("stream has been closed");
 
-	    public void close() {
-		makeOutputImmutable(this, name, new String(output));
-		notifyCompletedOutput(Section.this, name);
-	    }
-	    
-	    private boolean overflowed;
-	    private int overflowStart;
-	    private final String name;
-	    private /*final*/ StringBuffer output; // can't easily be final in JDK 1.1 because need to reassign to it
-	    private final PrintWriter pw;
-	}
+                int end = output.length();
+                output.append(buf, offset, len);
+                // want to avoid creating the string buf(offset..len)
+                // since likely case is no observers
+                notifyUpdatedOutput(Section.this, name, end, end, buf, offset, len);
+
+                if (output.length() > maxOutputSize) {
+                    int overflowEnd = maxOutputSize*2/3;
+                    if (overflowed) {
+                        // output.delete(overflowStart, overflowEnd);
+                        // JDK 1.1--start
+                        String s = output.toString();
+                        output = new StringBuffer(s.substring(0, overflowStart) + s.substring(overflowEnd));
+                        // JDK 1.1--end
+                        notifyUpdatedOutput(Section.this, name, overflowStart, overflowEnd, "");
+                    }
+                    else {
+                        String OVERFLOW_MESSAGE =
+                            "\n\n...\n"
+                            + "Output overflow:\n"
+                            + "JT Harness has limited the test output to the text to that\n"
+                            + "at the beginning and the end, so that you can see how the\n"
+                            + "test began, and how it completed.\n"
+                            + "\n"
+                            + "If you need to see more of the output from the test,\n"
+                            + "set the system property javatest.maxOutputSize to a higher\n"
+                            + "value. The current value is " + maxOutputSize
+                            + "\n...\n\n";
+                        overflowStart = maxOutputSize/3;
+                        //output.replace(overflowStart, maxOutputSize*2/3, OVERFLOW_MESSAGE);
+                        // JDK 1.1--start
+                        String s = output.toString();
+                        output = new StringBuffer(s.substring(0, overflowStart) + OVERFLOW_MESSAGE + s.substring(overflowEnd));
+                        // JDK 1.1--end
+                        notifyUpdatedOutput(Section.this, name, overflowStart, overflowEnd, OVERFLOW_MESSAGE);
+                        overflowStart += OVERFLOW_MESSAGE.length();
+                        overflowed = true;
+                    }
+                }
+            }
+
+            public void flush() {
+                //no-op
+            }
+
+            public void close() {
+                makeOutputImmutable(this, name, new String(output));
+                notifyCompletedOutput(Section.this, name);
+            }
+
+            private boolean overflowed;
+            private int overflowStart;
+            private final String name;
+            private /*final*/ StringBuffer output; // can't easily be final in JDK 1.1 because need to reassign to it
+            private final PrintWriter pw;
+        }
     }
 
     private class LockedWriter extends PrintWriter {
@@ -789,9 +789,9 @@ public class TestResult {
     // Conceptually, this belongs in Section, but that is not legal Java.
     // (It is accepted in  1.1.x; rejected by 1.2)
     private interface OutputBuffer {
-	String getName();
-	String getOutput();
-	PrintWriter getPrintWriter();
+        String getName();
+        String getOutput();
+        PrintWriter getPrintWriter();
     }
 
 
@@ -808,7 +808,7 @@ public class TestResult {
     public TestResult(TestDescription td) {
         desc = td;
         execStatus = inProgress;
-	testURL = desc.getRootRelativeURL();
+        testURL = desc.getRootRelativeURL();
 
         createSection(MSG_SECTION_NAME);
 
@@ -820,17 +820,17 @@ public class TestResult {
      * Reconstruct the results of a previously run test.
      *
      * @param workDir Work directory in which the tests were run
-     * @param td      Description of the test that was run 
+     * @param td      Description of the test that was run
      * @throws TestResult.Fault if there is a problem recreating the results
-     *			from the appropriate file in the work directory
+     *                  from the appropriate file in the work directory
      */
-    public TestResult(TestDescription td, WorkDirectory workDir) 
+    public TestResult(TestDescription td, WorkDirectory workDir)
                       throws Fault {
-	desc = td;
-	testURL = desc.getRootRelativeURL();
-	execStatus = inProgress;
+        desc = td;
+        testURL = desc.getRootRelativeURL();
+        execStatus = inProgress;
 
-	reloadFromWorkDir(workDir);
+        reloadFromWorkDir(workDir);
     }
 
     /**
@@ -838,19 +838,19 @@ public class TestResult {
      *
      * @param file File that the results have been stored into.
      * @throws     TestResult.ReloadFault if there is a problem recreating the results
-     *			from the given file
+     *                  from the given file
      * @throws     TestResult.ResultFileNotFoundFault if there is a problem locating
-     *			the given file
+     *                  the given file
      */
-    public TestResult(File file) 
-	throws ResultFileNotFoundFault, ReloadFault 
+    public TestResult(File file)
+        throws ResultFileNotFoundFault, ReloadFault
     {
-	resultsFile = file;
-	reload();
+        resultsFile = file;
+        reload();
 
-	testURL = desc.getRootRelativeURL();
+        testURL = desc.getRootRelativeURL();
 
-	execStatus = Status.parse(PropertyArray.get(props, EXEC_STATUS));
+        execStatus = Status.parse(PropertyArray.get(props, EXEC_STATUS));
     }
 
     /**
@@ -859,17 +859,17 @@ public class TestResult {
      * @param workDir The work directory where previous results for the guven
      *        test can be found.
      * @param workRelativePath The path to the JTR to reload, relative to the
-     *        workdir.  
+     *        workdir.
      * @throws TestResult.Fault if there is a problem recreating the results
-     *		  from the given file
+     *            from the given file
      */
     public TestResult(WorkDirectory workDir, String workRelativePath) throws Fault {
-	//resultsFile = workDir.getFile(workRelativePath.replace('/', File.separatorChar));
-	resultsFile = workDir.getFile(workRelativePath);
-	reload();
+        //resultsFile = workDir.getFile(workRelativePath.replace('/', File.separatorChar));
+        resultsFile = workDir.getFile(workRelativePath);
+        reload();
 
-	testURL = desc.getRootRelativeURL();
-	execStatus = Status.parse(PropertyArray.get(props, EXEC_STATUS));
+        testURL = desc.getRootRelativeURL();
+        execStatus = Status.parse(PropertyArray.get(props, EXEC_STATUS));
     }
 
     /**
@@ -881,10 +881,10 @@ public class TestResult {
      *               to be of the Status.FAILED type.
      */
     public TestResult(TestDescription td, Status s) {
-	desc = td;
-	testURL = desc.getRootRelativeURL();
-	resultsFile = null;
-	execStatus = s;
+        desc = td;
+        testURL = desc.getRootRelativeURL();
+        resultsFile = null;
+        execStatus = s;
         props = emptyStringArray;
     }
 
@@ -892,15 +892,15 @@ public class TestResult {
      * Create a placeholder TestResult for a test that has not yet been run.
      *
      * @param td     The test description for the test
-     * @return	     A test result that indicates that the test has not yet been run
+     * @return       A test result that indicates that the test has not yet been run
      */
     public static TestResult notRun(TestDescription td) {
-	return new TestResult(td, notRunStatus);
+        return new TestResult(td, notRunStatus);
     }
 
     //------------------------ MODIFIER METHODS ------------------------------
 
-    /** 
+    /**
      * Create a new section inside this test result.
      *
      * @param name The symbolic name for this new section.
@@ -915,13 +915,13 @@ public class TestResult {
         Section section = new Section(name);
         sections = (Section[])(DynamicArray.append(sections, section));
         notifyCreatedSection(section);
-	// avoid creating output (which will cause observer messages)
-	// before the createdSection has been notified
-	section.createOutput(TestResult.MESSAGE_OUTPUT_NAME);
+        // avoid creating output (which will cause observer messages)
+        // before the createdSection has been notified
+        section.createOutput(TestResult.MESSAGE_OUTPUT_NAME);
 
         return section;
     }
-     
+
 
     /**
      * Set the environment used by this test. When the test is run,
@@ -935,11 +935,11 @@ public class TestResult {
             throw new IllegalStateException(
                         "This TestResult is no longer mutable!");
         }
-	for (Iterator i = environment.elementsUsed().iterator(); i.hasNext(); ) {
-	    TestEnvironment.Element elem = (TestEnvironment.Element) (i.next());
-	    // this is stunningly inefficient and should be fixed
-	    env = PropertyArray.put(env, elem.getKey(), elem.getValue());
-	}
+        for (Iterator i = environment.elementsUsed().iterator(); i.hasNext(); ) {
+            TestEnvironment.Element elem = (TestEnvironment.Element) (i.next());
+            // this is stunningly inefficient and should be fixed
+            env = PropertyArray.put(env, elem.getKey(), elem.getValue());
+        }
     }
 
     /**
@@ -959,35 +959,35 @@ public class TestResult {
                         "TestResult status cannot be set to null!");
         }
 
-	// close out message section
-	sections[0].setStatus(null);
+        // close out message section
+        sections[0].setStatus(null);
 
         execStatus = stat;
 
-	if (execStatus == inProgress)
-	    execStatus = interrupted;
-	
-	// verify integrity of status in all sections
-	for (int i = 0; i < sections.length; i++) {
-	    if (sections[i].isMutable()) {
-		sections[i].setStatus(incomplete);
-	    }
-	}
-	
-	props = PropertyArray.put(props, SECTIONS,
-				  StringArray.join(getSectionTitles()));
-	props = PropertyArray.put(props, EXEC_STATUS,
-				  execStatus.toString());
+        if (execStatus == inProgress)
+            execStatus = interrupted;
 
-	// end time now required
-	// mainly for writing in the TRC for the Last Run Filter
-	if (PropertyArray.get(props, END) == null) {
-	    props = PropertyArray.put(props, END,
-				(new Date()).toString());
-	}
+        // verify integrity of status in all sections
+        for (int i = 0; i < sections.length; i++) {
+            if (sections[i].isMutable()) {
+                sections[i].setStatus(incomplete);
+            }
+        }
 
-	// this object is now immutable
-	notifyCompleted();
+        props = PropertyArray.put(props, SECTIONS,
+                                  StringArray.join(getSectionTitles()));
+        props = PropertyArray.put(props, EXEC_STATUS,
+                                  execStatus.toString());
+
+        // end time now required
+        // mainly for writing in the TRC for the Last Run Filter
+        if (PropertyArray.get(props, END) == null) {
+            props = PropertyArray.put(props, END,
+                                (new Date()).toString());
+        }
+
+        // this object is now immutable
+        notifyCompleted();
     }
 
     /**
@@ -1004,7 +1004,7 @@ public class TestResult {
         }
 
         props = PropertyArray.put(props, name, value);
-	notifyUpdatedProperty(name, value);
+        notifyUpdatedProperty(name, value);
     }
 
     /**
@@ -1021,39 +1021,39 @@ public class TestResult {
         }
 
 
-	try {
-	    resultsFile = workDir.getFile(getWorkRelativePath());
-	    props = null;
-	    sections = null;
-	    execStatus = null;
+        try {
+            resultsFile = workDir.getFile(getWorkRelativePath());
+            props = null;
+            sections = null;
+            execStatus = null;
 
-	    reload(new FileReader(resultsFile));
+            reload(new FileReader(resultsFile));
 
-	    // this next line is dubious since the execStatus should have
-	    // been set during the reload
-	    execStatus = Status.parse(PropertyArray.get(props, EXEC_STATUS));
-	}
-	catch (FileNotFoundException e) {
-	    props = emptyStringArray;
-	    env = emptyStringArray;
-	    sections = emptySectionArray;
-	    execStatus = Status.notRun("no test result file found");
-	}
-	catch (IOException e) {
-	    props = emptyStringArray;
-	    env = emptyStringArray;
-	    sections = emptySectionArray;
-	    execStatus = Status.error("error opening result file: " + e);
-	    throw new Fault(i18n, "rslt.badFile", e.toString());
-	}
-	catch (Fault f) {
-	    props = emptyStringArray;
-	    env = emptyStringArray;
-	    sections = emptySectionArray;
-	    execStatus = Status.error(f.getMessage());
-	    throw f;
-	}
-	    
+            // this next line is dubious since the execStatus should have
+            // been set during the reload
+            execStatus = Status.parse(PropertyArray.get(props, EXEC_STATUS));
+        }
+        catch (FileNotFoundException e) {
+            props = emptyStringArray;
+            env = emptyStringArray;
+            sections = emptySectionArray;
+            execStatus = Status.notRun("no test result file found");
+        }
+        catch (IOException e) {
+            props = emptyStringArray;
+            env = emptyStringArray;
+            sections = emptySectionArray;
+            execStatus = Status.error("error opening result file: " + e);
+            throw new Fault(i18n, "rslt.badFile", e.toString());
+        }
+        catch (Fault f) {
+            props = emptyStringArray;
+            env = emptyStringArray;
+            sections = emptySectionArray;
+            execStatus = Status.error(f.getMessage());
+            throw f;
+        }
+
     }
 
     //----------ACCESS FUNCTIONS (MISC)-----------------------------------------
@@ -1092,7 +1092,7 @@ public class TestResult {
      * @see #GOOD_CHECKSUM
      */
     public byte getChecksumState() {
-	return checksumState;
+        return checksumState;
     }
 
     /**
@@ -1105,7 +1105,7 @@ public class TestResult {
         return sections[0].getMessageWriter();
     }
 
-    /** 
+    /**
      * Get the test name, as given by the test URL defined by
      * TestDescription.getRootRelativeURL().  This method <em>always</em>
      * returns a useful string, representing the test name.
@@ -1114,21 +1114,21 @@ public class TestResult {
      * @see TestDescription#getRootRelativeURL
      */
     public String getTestName() {
-	return testURL;
+        return testURL;
     }
 
-    /** 
+    /**
      * Check whether this test result can be reloaded from a file.
      * This method does not validate the contents of the file.
      * @return true if the result file for this object can be read
      */
     public boolean isReloadable() {
-	return (resultsFile != null && resultsFile.canRead());
+        return (resultsFile != null && resultsFile.canRead());
     }
 
     /**
      * Check whether this object has been "shrunk" to reduce its
-     * memory footprint. If it has, some or all of the data will have 
+     * memory footprint. If it has, some or all of the data will have
      * to be reloaded.  This method is somewhat
      * orthogonal to <code>isReloadable()</code> and should not be used as a
      * substitute.
@@ -1137,14 +1137,14 @@ public class TestResult {
      * @see #isReloadable
      */
     public boolean isShrunk() {
-	if (!isMutable() &&
-	    (desc == null ||
-	     props == null ||
-	     env == null ||
+        if (!isMutable() &&
+            (desc == null ||
+             props == null ||
+             env == null ||
              (sections == null && execStatus != inProgress)))
-	    return true;
-	else
-	    return false;
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -1157,13 +1157,13 @@ public class TestResult {
      * @throws TestResult.Fault if there is a problem recreating the description
      * from the results file.
      */
-    public synchronized TestDescription getDescription() 
-    		throws Fault {
-	if (desc == null) {
-	    // reconstitute description (probably from file)
+    public synchronized TestDescription getDescription()
+                throws Fault {
+        if (desc == null) {
+            // reconstitute description (probably from file)
             reload();
-	}
-	return desc;
+        }
+        return desc;
     }
 
     /*
@@ -1172,21 +1172,21 @@ public class TestResult {
      *
      * @deprecated Please query the test description for info.
     public String getTitle() {
-	// hmm slight copout; would like to make sure never null in the first place
-	String title = desc.getParameter("title");
-	if (title == null)
-	    title = td.getRootRelativeURL();
+        // hmm slight copout; would like to make sure never null in the first place
+        String title = desc.getParameter("title");
+        if (title == null)
+            title = td.getRootRelativeURL();
     }
      */
 
     /**
-     * Get the path name for the results file for this test, relative to the 
+     * Get the path name for the results file for this test, relative to the
      * work directory.  The internal separator is '/'.
-     * @return the path name for the results file for this test, 
+     * @return the path name for the results file for this test,
      * relative to the work directory
      */
     public String getWorkRelativePath() {
-	return getWorkRelativePath(testURL);
+        return getWorkRelativePath(testURL);
     }
 
     /**
@@ -1195,7 +1195,7 @@ public class TestResult {
      * @return the name, if any, for the result file for this object
      */
     public File getFile() {
-	return resultsFile;
+        return resultsFile;
     }
 
     public void resetFile() {
@@ -1203,22 +1203,22 @@ public class TestResult {
     }
 
     /**
-     * Get the path name for the results file for a test, relative to the 
+     * Get the path name for the results file for a test, relative to the
      * work directory.  The internal separator is '/'.
      * @param td the test description for the test in question
-     * @return the path name for the results file for a test, relative to the 
+     * @return the path name for the results file for a test, relative to the
      * work directory
      */
     public static String getWorkRelativePath(TestDescription td) {
-	String baseURL = td.getRootRelativePath();
-	
-	// add in uniquifying id if 
-	String id = td.getParameter("id");
-	return getWorkRelativePath(baseURL, id);
+        String baseURL = td.getRootRelativePath();
+
+        // add in uniquifying id if
+        String id = td.getParameter("id");
+        return getWorkRelativePath(baseURL, id);
     }
 
     /**
-     * Get the path name for the results file for a test, relative to the 
+     * Get the path name for the results file for a test, relative to the
      * work directory.  The internal separator is '/'.
      *
      * @param testURL May not be null;
@@ -1226,16 +1226,16 @@ public class TestResult {
      *         given URL is null.
      */
     public static String getWorkRelativePath(String testURL) {
-	int pound = testURL.lastIndexOf("#");
-	if (pound == -1)	// no test id
-	    return getWorkRelativePath(testURL, null);
-	else
-	    return getWorkRelativePath(testURL.substring(0, pound),
-				       testURL.substring(pound + 1));
+        int pound = testURL.lastIndexOf("#");
+        if (pound == -1)        // no test id
+            return getWorkRelativePath(testURL, null);
+        else
+            return getWorkRelativePath(testURL.substring(0, pound),
+                                       testURL.substring(pound + 1));
     }
 
     /**
-     * Get the path name for the results file for a test, relative to the 
+     * Get the path name for the results file for a test, relative to the
      * work directory.  The internal separator is '/'.
      *
      * @param baseURL May not be null;
@@ -1244,29 +1244,29 @@ public class TestResult {
      *         given URL is null.
      */
     public static String getWorkRelativePath(String baseURL, String testId) {
-	StringBuffer sb = new StringBuffer(baseURL);
+        StringBuffer sb = new StringBuffer(baseURL);
 
-	// strip off extension
+        // strip off extension
     stripExtn:
-	for (int i = sb.length() - 1; i >= 0; i--) {
-	    switch (sb.charAt(i)) {
-	    case '.':
-		sb.setLength(i);
-		break stripExtn;
-	    case '/':
-		break stripExtn;
-	    }
-	}
+        for (int i = sb.length() - 1; i >= 0; i--) {
+            switch (sb.charAt(i)) {
+            case '.':
+                sb.setLength(i);
+                break stripExtn;
+            case '/':
+                break stripExtn;
+            }
+        }
 
-	// add in uniquifying id if 
-	if (testId != null) {
-	    sb.append('_');
-	    sb.append(testId);
-	}
+        // add in uniquifying id if
+        if (testId != null) {
+            sb.append('_');
+            sb.append(testId);
+        }
 
-	sb.append(EXTN);
+        sb.append(EXTN);
 
-	return sb.toString();
+        return sb.toString();
     }
 
     /**
@@ -1274,7 +1274,7 @@ public class TestResult {
      * @return the keys of the properties that this object has stored
      */
     public synchronized Enumeration getPropertyNames() {
-	return PropertyArray.enumerate(props);
+        return PropertyArray.enumerate(props);
     }
 
     /**
@@ -1283,15 +1283,15 @@ public class TestResult {
      * @param name The name of the property to be retrieved.
      * @return The value corresponding to the property name, null if not
      *          found.
-     * @throws TestResult.Fault if there is a problem 
-     * 		recreating data from the results file.
+     * @throws TestResult.Fault if there is a problem
+     *          recreating data from the results file.
      */
     public synchronized String getProperty(String name)
             throws Fault {
         if (props == null) {
-	    // reconstitute properties 
+            // reconstitute properties
             // this may result in a Fault, which is okay
-	    reload();
+            reload();
         }
 
         return PropertyArray.get(props, name);
@@ -1300,17 +1300,17 @@ public class TestResult {
     /**
      * Get a copy of the environment that this object has stored.
      * @return a copy of the environment that this object has stored
-     * @throws TestResult.Fault if there is a problem 
-     * 		recreating data from the results file.
+     * @throws TestResult.Fault if there is a problem
+     *          recreating data from the results file.
      * @see #setEnvironment
      */
     public synchronized Map getEnvironment() throws Fault {
         if (env == null) {
-	    // reconstitute environment 
+            // reconstitute environment
             // this may result in a Fault, which is okay
-	    reload();
+            reload();
         }
-	return PropertyArray.getProperties(env);
+        return PropertyArray.getProperties(env);
     }
 
     /**
@@ -1346,7 +1346,7 @@ public class TestResult {
      */
     public synchronized boolean isMutable() {
         // must be mutable during reload (internal operation)
-	// mutable as long as possible, to allow max time for writing log messages
+        // mutable as long as possible, to allow max time for writing log messages
         return (execStatus == inProgress);
     }
 
@@ -1357,7 +1357,7 @@ public class TestResult {
      * @see #setStatus
      */
     public synchronized Status getStatus() {
-	return execStatus;
+        return execStatus;
     }
 
     //----------ACCESS METHODS (TEST OUTPUT)----------------------------------
@@ -1371,10 +1371,10 @@ public class TestResult {
         if (sections != null) {
             return sections.length;
         }
-	else if (PropertyArray.get(props, SECTIONS) != null) {
+        else if (PropertyArray.get(props, SECTIONS) != null) {
             return StringArray.split(PropertyArray.get(props, SECTIONS)).length;
         }
-	else {
+        else {
             // hum, test props are never discarded, so we have no sections
             return 0;
         }
@@ -1397,19 +1397,19 @@ public class TestResult {
             // try to reload from file
             try {
                 reload();
-            } 
-	    catch (ReloadFault f) {
-		throw f;
             }
-	    catch (Fault f) {
-		throw new ReloadFault(i18n, "rslt.badFile",  f.getMessage());
+            catch (ReloadFault f) {
+                throw f;
+            }
+            catch (Fault f) {
+                throw new ReloadFault(i18n, "rslt.badFile",  f.getMessage());
             }
         }
 
         if (index >= sections.length) {
             target = null;
         }
-	else {
+        else {
             target = sections[index];
         }
 
@@ -1420,20 +1420,20 @@ public class TestResult {
      * Get the titles of all sections in this test result.
      * A null result probably indicates that there are no sections.  This is
      * improbable since most test result object automatically have one section.
-     * 
+     *
      * @return The titles, one at a time in the array.  Null if the titles
      *          do not exist or could not be determined.
      */
     public synchronized String[] getSectionTitles() {
-	if (props == null) {
-	    try {
-		reload();
-	    }
-	    catch (Fault f) {
-		// should this maybe be a JavaTestError?
-		return null;
-	    }
-	}
+        if (props == null) {
+            try {
+                reload();
+            }
+            catch (Fault f) {
+                // should this maybe be a JavaTestError?
+                return null;
+            }
+        }
 
         // look for what we need from easiest to hardest source
         String names = PropertyArray.get(props, SECTIONS);
@@ -1442,7 +1442,7 @@ public class TestResult {
             // it is cached
             return StringArray.split(names);
         }
-	else if (sections != null) {
+        else if (sections != null) {
             // TR is not immutable yet, probably
             int numSections = getSectionCount();
             String[] data = new String[numSections];
@@ -1453,13 +1453,13 @@ public class TestResult {
 
             return data;
         }
-	else {
+        else {
             // hum, bad.  No sections exist and this data isn't cached
             // the test probably has not run
             return null;
         }
     }
- 
+
     /**
      * Check if this file is or appears to be a result (.jtr) file,
      * according to its filename extension.
@@ -1467,8 +1467,8 @@ public class TestResult {
      * @return true if this file is or appears to be a result (.jtr) file.
      */
     public static boolean isResultFile(File f) {
- 	String p = f.getPath();
- 	return (p.endsWith(EXTN));
+        String p = f.getPath();
+        return (p.endsWith(EXTN));
     }
 
     /**
@@ -1483,29 +1483,29 @@ public class TestResult {
      *         Under this condition, this object will change it status to an error.
      */
     public synchronized void writeResults(WorkDirectory workDir, BackupPolicy backupPolicy)
-		throws IOException 
+                throws IOException
     {
-        if (isMutable()) 
+        if (isMutable())
             throw new IllegalStateException("This TestResult is still mutable - set the status!");
-       
+
         // could attempt a reload() I suppose
         if (props == null)
-	    props = emptyStringArray;
+            props = emptyStringArray;
 
-	String wrp = getWorkRelativePath(desc).replace('/', File.separatorChar);
-	resultsFile = workDir.getFile(wrp);
+        String wrp = getWorkRelativePath(desc).replace('/', File.separatorChar);
+        resultsFile = workDir.getFile(wrp);
 
-	File resultsDir = resultsFile.getParentFile();
-	resultsDir.mkdirs(); // ensure directory created for .jtr file
+        File resultsDir = resultsFile.getParentFile();
+        resultsDir.mkdirs(); // ensure directory created for .jtr file
 
-	File tempFile = createTempFile(workDir, backupPolicy);
-	try {
-	    writeResults(tempFile, backupPolicy);
-	}
-	finally {
-	    if (tempFile.exists())
-		tempFile.delete();
-	} 
+        File tempFile = createTempFile(workDir, backupPolicy);
+        try {
+            writeResults(tempFile, backupPolicy);
+        }
+        finally {
+            if (tempFile.exists())
+                tempFile.delete();
+        }
     }
 
     /**
@@ -1514,125 +1514,125 @@ public class TestResult {
      */
     // don't use File.createTempFile because of issues with the internal locking there
     private File createTempFile(WorkDirectory workDir, BackupPolicy backupPolicy)
-	throws IOException 
+        throws IOException
     {
-	final int MAX_TRIES = 100; // absurdly big limit, but a limit nonetheless
-	for (int i = 0; i < MAX_TRIES; i++) {
-	    File tempFile = new File(resultsFile.getPath() + "." + i + ".tmp");
-	    if (tempFile.createNewFile())
-		return tempFile;
-	}
-	throw new IOException("could not create temp file for " + resultsFile + ": too many tries");
+        final int MAX_TRIES = 100; // absurdly big limit, but a limit nonetheless
+        for (int i = 0; i < MAX_TRIES; i++) {
+            File tempFile = new File(resultsFile.getPath() + "." + i + ".tmp");
+            if (tempFile.createNewFile())
+                return tempFile;
+        }
+        throw new IOException("could not create temp file for " + resultsFile + ": too many tries");
     }
 
     /**
      * Write the results to a temporary file, and when done, rename it to resultsFile
      */
-    private void writeResults(File tempFile, BackupPolicy backupPolicy) 
-	throws IOException 
+    private void writeResults(File tempFile, BackupPolicy backupPolicy)
+        throws IOException
     {
-	FileWriter out;
-	try {
-	    out = new FileWriter(tempFile);
-	}
-	catch (IOException e) {
-	    execStatus = Status.error("Problem writing result file for test: " + getTestName());
-	    resultsFile = null; // file not successfully written after all
-	    throw e;
-	}
+        FileWriter out;
+        try {
+            out = new FileWriter(tempFile);
+        }
+        catch (IOException e) {
+            execStatus = Status.error("Problem writing result file for test: " + getTestName());
+            resultsFile = null; // file not successfully written after all
+            throw e;
+        }
 
-	try {
+        try {
             // redundant, is done in setResult
             // needed though if setResult isn't being called
-	    props = PropertyArray.put(props, EXEC_STATUS, execStatus.toString());
+            props = PropertyArray.put(props, EXEC_STATUS, execStatus.toString());
 
             // file header
             out.write(JTR_V2_HEADER);
-	    out.write(lineSeparator);
+            out.write(lineSeparator);
 
             // date and time
             out.write("#" + (new Date()).toString());
-	    out.write(lineSeparator);
+            out.write(lineSeparator);
 
             // checksum header and data
             out.write(JTR_V2_CHECKSUM);
-	    out.write(Long.toHexString(computeChecksum()));
-	    out.write(lineSeparator);
+            out.write(Long.toHexString(computeChecksum()));
+            out.write(lineSeparator);
 
-	    if (debug) {  // debugging code
-		out.write("# debug: test desc checksum: ");
-		out.write(Long.toHexString(computeChecksum(desc)));
-		out.write(lineSeparator);
+            if (debug) {  // debugging code
+                out.write("# debug: test desc checksum: ");
+                out.write(Long.toHexString(computeChecksum(desc)));
+                out.write(lineSeparator);
 
-		for (Iterator iter = desc.getParameterKeys(); iter.hasNext(); ) {
-		    // don't rely on enumeration in a particular order
-		    // so simply add the checksum products together
-		    String KEY = (String) (iter.next());
-		    out.write("# debug: test desc checksum key " + KEY + ": ");
-		    out.write(Long.toHexString(computeChecksum(KEY) * computeChecksum(desc.getParameter(KEY))));
-		    out.write(lineSeparator);
-		}
+                for (Iterator iter = desc.getParameterKeys(); iter.hasNext(); ) {
+                    // don't rely on enumeration in a particular order
+                    // so simply add the checksum products together
+                    String KEY = (String) (iter.next());
+                    out.write("# debug: test desc checksum key " + KEY + ": ");
+                    out.write(Long.toHexString(computeChecksum(KEY) * computeChecksum(desc.getParameter(KEY))));
+                    out.write(lineSeparator);
+                }
 
-		out.write("# debug: test env checksum: ");
-		if (env == null)
-		    out.write("null");
-		else
-		    out.write(Long.toHexString(computeChecksum(env)));
-		out.write(lineSeparator);
+                out.write("# debug: test env checksum: ");
+                if (env == null)
+                    out.write("null");
+                else
+                    out.write(Long.toHexString(computeChecksum(env)));
+                out.write(lineSeparator);
 
-		out.write("# debug: test props checksum: ");
-		out.write(Long.toHexString(computeChecksum(props)));
-		out.write(lineSeparator);
+                out.write("# debug: test props checksum: ");
+                out.write(Long.toHexString(computeChecksum(props)));
+                out.write(lineSeparator);
 
-		out.write("# debug: test sections checksum: ");
-		out.write(Long.toHexString(computeChecksum(sections)));
-		out.write(lineSeparator);
+                out.write("# debug: test sections checksum: ");
+                out.write(Long.toHexString(computeChecksum(sections)));
+                out.write(lineSeparator);
 
-		for (int I = 0; I < sections.length; I++) {
-		    out.write("# debug: test section[" + I + "] checksum: ");
-		    out.write(Long.toHexString(computeChecksum(sections[I])));
-		    out.write(lineSeparator);
+                for (int I = 0; I < sections.length; I++) {
+                    out.write("# debug: test section[" + I + "] checksum: ");
+                    out.write(Long.toHexString(computeChecksum(sections[I])));
+                    out.write(lineSeparator);
 
-		    String[] NAMES = sections[I].getOutputNames();
-		    for (int J = 0; J < NAMES.length; J++) {
-			out.write("# debug: test section[" + I + "] name=" + NAMES[J] + " checksum: ");
-			out.write(Long.toHexString(computeChecksum(NAMES[J])));
-			out.write(lineSeparator);
+                    String[] NAMES = sections[I].getOutputNames();
+                    for (int J = 0; J < NAMES.length; J++) {
+                        out.write("# debug: test section[" + I + "] name=" + NAMES[J] + " checksum: ");
+                        out.write(Long.toHexString(computeChecksum(NAMES[J])));
+                        out.write(lineSeparator);
 
-			out.write("# debug: test section[" + I + "] name=" + NAMES[J] + " output checksum: ");
-			out.write(Long.toHexString(computeChecksum(sections[I].getOutput(NAMES[J]))));
-			out.write(lineSeparator);
-		    }
-		}
-	    }
+                        out.write("# debug: test section[" + I + "] name=" + NAMES[J] + " output checksum: ");
+                        out.write(Long.toHexString(computeChecksum(sections[I].getOutput(NAMES[J]))));
+                        out.write(lineSeparator);
+                    }
+                }
+            }
 
             // description header and data
             out.write(JTR_V2_TESTDESC);
-	    out.write(lineSeparator);
+            out.write(lineSeparator);
 
             Properties tdProps = new Properties();
             desc.save(tdProps);
             PropertyArray.save(PropertyArray.getArray(tdProps), out);
-	    out.write(lineSeparator);
+            out.write(lineSeparator);
 
             // test environment header and data
-	    if (env != null) {
-		out.write(JTR_V2_ENVIRONMENT);
-		out.write(lineSeparator);
-		PropertyArray.save(env, out);
-		out.write(lineSeparator);
-	    }
+            if (env != null) {
+                out.write(JTR_V2_ENVIRONMENT);
+                out.write(lineSeparator);
+                PropertyArray.save(env, out);
+                out.write(lineSeparator);
+            }
 
             // test result props header and data
             out.write(JTR_V2_RESPROPS);
-	    out.write(lineSeparator);
-	    PropertyArray.save(props, out);
-	    out.write(lineSeparator);
+            out.write(lineSeparator);
+            PropertyArray.save(props, out);
+            out.write(lineSeparator);
 
             // get sections into memory
             // I hope the out stream is not the same as the resultFile!
             if (sections == null) {
-		throw new JavaTestError("Cannot write test result - it contains no sections.");
+                throw new JavaTestError("Cannot write test result - it contains no sections.");
             }
 
             StringBuffer buffer = new StringBuffer();
@@ -1641,36 +1641,36 @@ public class TestResult {
                 sections[i].save(out);
             }
 
-	    out.write(lineSeparator);
+            out.write(lineSeparator);
             out.write(JTR_V2_TSTRESULT);
             out.write(execStatus.toString());
-	    out.write(lineSeparator);
-	    out.close();
-	}   // try
-	catch (IOException e) {
-	    // This exception could be raised when trying to create the directory
-	    // for the test results; opening the results file, or closing it.
-	    execStatus = Status.error("Write to temp. JTR file failed (old JTR intact): " +
-					tempFile.getPath());
-	    resultsFile = null; // file not successfully written after all
-	    throw e;
-	}   // catch
+            out.write(lineSeparator);
+            out.close();
+        }   // try
+        catch (IOException e) {
+            // This exception could be raised when trying to create the directory
+            // for the test results; opening the results file, or closing it.
+            execStatus = Status.error("Write to temp. JTR file failed (old JTR intact): " +
+                                        tempFile.getPath());
+            resultsFile = null; // file not successfully written after all
+            throw e;
+        }   // catch
 
-	try {
-	    backupPolicy.backupAndRename(tempFile, resultsFile);
+        try {
+            backupPolicy.backupAndRename(tempFile, resultsFile);
 
-	    // now that it has been successfully written out, make the object
-	    // a candidate for shrinking
-	    addToShrinkList();
-	}   // try
-	catch (IOException e) {
-	    // This exception could be raised when trying to create the directory
-	    // for the test results; opening the results file, or closing it.
-	    execStatus = Status.error("Problem writing result file: " +
-					resultsFile.getPath());
-	    resultsFile = null; // file not successfully written after all
-	    throw e;
-	}   // catch
+            // now that it has been successfully written out, make the object
+            // a candidate for shrinking
+            addToShrinkList();
+        }   // try
+        catch (IOException e) {
+            // This exception could be raised when trying to create the directory
+            // for the test results; opening the results file, or closing it.
+            execStatus = Status.error("Problem writing result file: " +
+                                        resultsFile.getPath());
+            resultsFile = null; // file not successfully written after all
+            throw e;
+        }   // catch
     }
 
     // -----observer methods ---------------------------------------------------
@@ -1679,14 +1679,14 @@ public class TestResult {
      * @param obs the observer to be added
      */
     public synchronized void addObserver(Observer obs) {
-	if (isMutable()) {
-	    Observer[] observers = (Observer[])observersTable.get(this);
+        if (isMutable()) {
+            Observer[] observers = (Observer[])observersTable.get(this);
 
             if (observers == null) observers = new Observer[0];
 
-	    observers = (Observer[])(DynamicArray.append(observers, obs));
-	    observersTable.put(this, observers);
-	}
+            observers = (Observer[])(DynamicArray.append(observers, obs));
+            observersTable.put(this, observers);
+        }
     }
 
     /**
@@ -1694,18 +1694,18 @@ public class TestResult {
      * @param obs the observer to be removed
      */
     public synchronized void removeObserver(Observer obs) {
-	Observer[] observers = (Observer[])observersTable.get(this);
-	if (observers == null)
-	    return;
+        Observer[] observers = (Observer[])observersTable.get(this);
+        if (observers == null)
+            return;
 
         observers = (Observer[])(DynamicArray.remove(observers, obs));
-	if (observers == null)
-	    observersTable.remove(this);
-	else
-	    observersTable.put(this, observers);
+        if (observers == null)
+            observersTable.remove(this);
+        else
+            observersTable.put(this, observers);
     }
 
-    /** 
+    /**
      * Gets the time when the test was completed, or at least the time
      * when it's final status was set.  Be aware that if the information is
      * not available in memory, it will be loaded from disk.
@@ -1715,36 +1715,36 @@ public class TestResult {
      * @see java.util.Date
      */
     public long getEndTime() {
-	if (endTime < 0) {
-	    try {
-		String datestr = PropertyArray.get(props, END);
+        if (endTime < 0) {
+            try {
+                String datestr = PropertyArray.get(props, END);
 
-		if (datestr == null) {
-		    // this may be more expensive because it can cause a
-		    // reload from disk
-		    try {
-			datestr = getProperty(END);
-		    }
-		    catch (Fault f) {
-		    }
-		}
+                if (datestr == null) {
+                    // this may be more expensive because it can cause a
+                    // reload from disk
+                    try {
+                        datestr = getProperty(END);
+                    }
+                    catch (Fault f) {
+                    }
+                }
 
-		if (datestr != null) {
-		    // this is to parse Date.toString() output
-		    DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
-						     Locale.US);
-		    Date date = df.parse(datestr);
-		    endTime = date.getTime();
-		}
-		else {
-		    // info not available
-		}
-	    }
-	    catch (ParseException e) {
-	    }
-	}
+                if (datestr != null) {
+                    // this is to parse Date.toString() output
+                    DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",
+                                                     Locale.US);
+                    Date date = df.parse(datestr);
+                    endTime = date.getTime();
+                }
+                else {
+                    // info not available
+                }
+            }
+            catch (ParseException e) {
+            }
+        }
 
-	return endTime;
+        return endTime;
     }
 
     // ----- PACKAGE METHODS ---------------------------------------------------
@@ -1754,7 +1754,7 @@ public class TestResult {
      * The stream is not closed.
      * @deprecated JTS files are no longer supported
     TestResult(WorkDirectory workDir, DataInputStream in) throws IOException {
-	workRelativePath = in.readUTF();
+        workRelativePath = in.readUTF();
 
         // ** temp. fix ** XXX
         // make sure the path is in URL form with forward slashes
@@ -1762,18 +1762,18 @@ public class TestResult {
         int index = workRelativePath.indexOf('/');
         if (index == -1) workRelativePath = workRelativePath.replace('\\', '/');
 
-	resultsFile = workDir.getFile(workRelativePath.replace('/', File.separatorChar));
-	title = in.readUTF();
-	int esc = in.readByte();
-	String esr = in.readUTF();
-	execStatus = new Status(esc, esr);
-	boolean defIsExec = in.readBoolean();
-	if (!defIsExec) {
-	    // have to read these, per protocol
-	    int dsc = in.readByte();
-	    String dsr = in.readUTF();
-	    //ignore dsc, dsr; they used to go in defStatus
-	}
+        resultsFile = workDir.getFile(workRelativePath.replace('/', File.separatorChar));
+        title = in.readUTF();
+        int esc = in.readByte();
+        String esr = in.readUTF();
+        execStatus = new Status(esc, esr);
+        boolean defIsExec = in.readBoolean();
+        if (!defIsExec) {
+            // have to read these, per protocol
+            int dsc = in.readByte();
+            String dsr = in.readUTF();
+            //ignore dsc, dsr; they used to go in defStatus
+        }
     }
      */
 
@@ -1787,18 +1787,18 @@ public class TestResult {
      * @throws JavaTestError Will be thrown if any params are null.
      */
     TestResult(String url, WorkDirectory workDir, Status status) {
-	if (url == null)
-	    throw new JavaTestError(i18n, "rslt.badTestUrl");
+        if (url == null)
+            throw new JavaTestError(i18n, "rslt.badTestUrl");
 
-	if (workDir == null)
-	    throw new JavaTestError(i18n, "rslt.badWorkdir");
+        if (workDir == null)
+            throw new JavaTestError(i18n, "rslt.badWorkdir");
 
-	if (status == null)
-	    throw new JavaTestError(i18n, "rslt.badStatus"); 
+        if (status == null)
+            throw new JavaTestError(i18n, "rslt.badStatus");
 
-	testURL = url;
-	resultsFile = workDir.getFile(getWorkRelativePath());
-	execStatus = status;
+        testURL = url;
+        resultsFile = workDir.getFile(getWorkRelativePath());
+        execStatus = status;
     }
 
     /**
@@ -1813,33 +1813,33 @@ public class TestResult {
      * @see #getEndTime()
      */
     TestResult(String url, WorkDirectory workDir, Status status, long endTime) {
-	if (url == null)
-	    throw new JavaTestError(i18n, "rslt.badTestUrl");
+        if (url == null)
+            throw new JavaTestError(i18n, "rslt.badTestUrl");
 
-	if (workDir == null)
-	    throw new JavaTestError(i18n, "rslt.badWorkdir");
+        if (workDir == null)
+            throw new JavaTestError(i18n, "rslt.badWorkdir");
 
-	if (status == null)
-	    throw new JavaTestError(i18n, "rslt.badStatus"); 
+        if (status == null)
+            throw new JavaTestError(i18n, "rslt.badStatus");
 
-	testURL = url;
-	resultsFile = workDir.getFile(getWorkRelativePath());
-	execStatus = status;
-	this.endTime = endTime;
+        testURL = url;
+        resultsFile = workDir.getFile(getWorkRelativePath());
+        execStatus = status;
+        this.endTime = endTime;
     }
 
     void shareStatus(Hashtable[] tables) {
-	execStatus = shareStatus(tables, execStatus);
+        execStatus = shareStatus(tables, execStatus);
     }
 
     /*
      * @deprecated JTS files no longer supported
     void writeSummary(DataOutputStream out) throws IOException {
-	out.writeUTF(workRelativePath);
-	out.writeUTF(title);
-	out.writeByte(execStatus.getType());
-	out.writeUTF(execStatus.getReason());
-	out.writeBoolean(true); // defStatus == execStatus
+        out.writeUTF(workRelativePath);
+        out.writeUTF(title);
+        out.writeByte(execStatus.getType());
+        out.writeUTF(execStatus.getReason());
+        out.writeBoolean(true); // defStatus == execStatus
     }
     */
 
@@ -1874,35 +1874,35 @@ public class TestResult {
      * @throws IllegalStateException If the state of this object fobiu
      */
     void setTestDescription(TestDescription td) {
-	if (td == null)
-	    return;
+        if (td == null)
+            return;
 
-	String name = td.getRootRelativeURL();
-	if (!testURL.equals(name))
-	    throw new IllegalStateException();
+        String name = td.getRootRelativeURL();
+        if (!testURL.equals(name))
+            throw new IllegalStateException();
 
-	if (desc != null) {		// compare if possible
-	    if (!desc.equals(td)) {	// test descriptions are not the same
-		// accept new TD, reset this TR
-		// reset status to a special one
-		execStatus = tdMismatch;
-		desc = td;
+        if (desc != null) {             // compare if possible
+            if (!desc.equals(td)) {     // test descriptions are not the same
+                // accept new TD, reset this TR
+                // reset status to a special one
+                execStatus = tdMismatch;
+                desc = td;
 
-		props = emptyStringArray;
-		resultsFile = null;
-		env = emptyStringArray;
-		sections = emptySectionArray;
+                props = emptyStringArray;
+                resultsFile = null;
+                env = emptyStringArray;
+                sections = emptySectionArray;
 
-		if (isMutable())
-		    createSection(MSG_SECTION_NAME);
-	    }
-	    else {
-		// TDs are equal, no action, drop thru and return
-	    }
-	}
-	else {
-	    desc = td;
-	}
+                if (isMutable())
+                    createSection(MSG_SECTION_NAME);
+            }
+            else {
+                // TDs are equal, no action, drop thru and return
+            }
+        }
+        else {
+            desc = td;
+        }
     }
 
     // ----- PRIVATE METHODS ---------------------------------------------------
@@ -1911,10 +1911,10 @@ public class TestResult {
      * @deprecated Use the Section API to accomplish your task.
      */
     private static Reader getLastRefOutput(TestResult tr) {
-	try {
-	    Section lastBlk = tr.getSection(tr.getSectionCount() - 1);
-	    return new StringReader(lastBlk.getOutput("ref"));
-	}
+        try {
+            Section lastBlk = tr.getSection(tr.getSectionCount() - 1);
+            return new StringReader(lastBlk.getOutput("ref"));
+        }
         catch (ReloadFault f) {
             // not the best, but this method is deprecated and hopefully never
             // called
@@ -1923,94 +1923,94 @@ public class TestResult {
     }
 
     private long computeChecksum() {
-	long cs = 0;
-	cs = cs * 37 + computeChecksum(desc);
-	// in JT2.1.1a, environment was not included in checksum,
-	// so allow that for backward compatibility
-	String jtv = PropertyArray.get(props, VERSION);
-	if (env != null) {
-	    if (jtv == null || !jtv.equals("JT_2.1.1a"))
-		cs = cs * 37 + computeChecksum(env);
-	}
-	cs = cs * 37 + computeChecksum(props);
-	if (sections != null)
-	    cs = cs * 37 + computeChecksum(sections);
-	cs = cs * 37 + execStatus.getType() + computeChecksum(execStatus.getReason());
-	return Math.abs(cs);  // ensure +ve, to avoid sign issues!
+        long cs = 0;
+        cs = cs * 37 + computeChecksum(desc);
+        // in JT2.1.1a, environment was not included in checksum,
+        // so allow that for backward compatibility
+        String jtv = PropertyArray.get(props, VERSION);
+        if (env != null) {
+            if (jtv == null || !jtv.equals("JT_2.1.1a"))
+                cs = cs * 37 + computeChecksum(env);
+        }
+        cs = cs * 37 + computeChecksum(props);
+        if (sections != null)
+            cs = cs * 37 + computeChecksum(sections);
+        cs = cs * 37 + execStatus.getType() + computeChecksum(execStatus.getReason());
+        return Math.abs(cs);  // ensure +ve, to avoid sign issues!
     }
 
     private static long computeChecksum(TestDescription td) {
-	long cs = 0;
-	for (Iterator i = td.getParameterKeys(); i.hasNext(); ) {
-	    // don't rely on enumeration in a particular order
-	    // so simply add the checksum products together
-	    String key = (String) (i.next());
-	    cs += computeChecksum(key) * computeChecksum(td.getParameter(key));
-	}
-	return cs;
+        long cs = 0;
+        for (Iterator i = td.getParameterKeys(); i.hasNext(); ) {
+            // don't rely on enumeration in a particular order
+            // so simply add the checksum products together
+            String key = (String) (i.next());
+            cs += computeChecksum(key) * computeChecksum(td.getParameter(key));
+        }
+        return cs;
     }
 
     private static long computeChecksum(Section[] sections) {
-	long cs = sections.length;
-	for (int i = 0; i < sections.length; i++) {
-	    cs = cs * 37 + computeChecksum(sections[i]);
-	}
-	return cs;
+        long cs = sections.length;
+        for (int i = 0; i < sections.length; i++) {
+            cs = cs * 37 + computeChecksum(sections[i]);
+        }
+        return cs;
     }
 
     private static long computeChecksum(Section s) {
-	long cs = computeChecksum(s.getTitle());
-	String[] names = s.getOutputNames();
-	for (int i = 0; i <names.length; i++) {
-	    cs = cs * 37 + computeChecksum(names[i]);
-	    cs = cs * 37 + computeChecksum(s.getOutput(names[i]));
-	}
-	return cs;
+        long cs = computeChecksum(s.getTitle());
+        String[] names = s.getOutputNames();
+        for (int i = 0; i <names.length; i++) {
+            cs = cs * 37 + computeChecksum(names[i]);
+            cs = cs * 37 + computeChecksum(s.getOutput(names[i]));
+        }
+        return cs;
     }
 
     private static long computeChecksum(String[] strings) {
-	long cs = strings.length;
-	for (int i = 0; i < strings.length; i++) {
-	    cs = cs * 37 + computeChecksum(strings[i]);
-	}
-	return cs;
+        long cs = strings.length;
+        for (int i = 0; i < strings.length; i++) {
+            cs = cs * 37 + computeChecksum(strings[i]);
+        }
+        return cs;
     }
 
     private static long computeChecksum(String s) {
-	long cs = 0;
-	for (int i = 0; i < s.length(); i++) {
-	    char c = s.charAt(i);
-	    //if (!Character.isISOControl(c) || c == '\n')
-	    cs = cs * 37 + c;
-	}
-	return cs;
+        long cs = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            //if (!Character.isISOControl(c) || c == '\n')
+            cs = cs * 37 + c;
+        }
+        return cs;
     }
 
-    /** 
+    /**
      * @throws ResultFileNotFoundFault May be thrown if the JTR file cannot be found.
      * @throws ReloadFault Generally describes any error which is encountered while
      *            reading or processing the input file.
      */
-    private synchronized void reload() 
-	throws ResultFileNotFoundFault, ReloadFault
+    private synchronized void reload()
+        throws ResultFileNotFoundFault, ReloadFault
     {
         if (resultsFile == null)
             throw new ReloadFault(i18n, "rslt.noResultFile");
-        
-	if (isMutable())
+
+        if (isMutable())
             throw new IllegalStateException("Cannot do a reload of this object.");
 
         try {
             reload(new FileReader(resultsFile));
 
-	    // Well, we have successfully reloaded it, so the object is now taking
-	    // up a big footprint again ... put it back on the list to be shrunk again
-	    addToShrinkList();
-        } 
-	catch (FileNotFoundException e) {
+            // Well, we have successfully reloaded it, so the object is now taking
+            // up a big footprint again ... put it back on the list to be shrunk again
+            addToShrinkList();
+        }
+        catch (FileNotFoundException e) {
             throw new ResultFileNotFoundFault(i18n, "rslt.fileNotFound", resultsFile);
         }
-	catch (IOException e) {
+        catch (IOException e) {
             throw new ReloadFault(i18n, "rslt.badFile", e);
         }
     }
@@ -2018,35 +2018,35 @@ public class TestResult {
     /**
      * @throws ReloadFault Generally describes any error which is encountered while
      *            reading or processing the input file.  This may indicate
-     *		  an empty file or incorrectly formatted file.
+     *            an empty file or incorrectly formatted file.
      */
-    private void reload(Reader r) 
-	throws ReloadFault, IOException 
+    private void reload(Reader r)
+        throws ReloadFault, IOException
     {
-	try {
-	    BufferedReader br = new BufferedReader(r);
-	    String line = br.readLine();
-	    
-	    // determine JTR version
-	    if (line == null) {
-		throw new ReloadFault(i18n, "rslt.empty", resultsFile);
-	    }
-	    if (line.equals(JTR_V2_HEADER)) {
-		reloadVersion2(br);
-	    }
-	    else if (line.equals(JTR_V1_HEADER)) {
-		reloadVersion1(br);
-	    }
-	    else 
-		throw new ReloadFault(i18n, "rslt.badHeader", resultsFile);
-	}
-	finally {
-	    r.close();
-	}
+        try {
+            BufferedReader br = new BufferedReader(r);
+            String line = br.readLine();
+
+            // determine JTR version
+            if (line == null) {
+                throw new ReloadFault(i18n, "rslt.empty", resultsFile);
+            }
+            if (line.equals(JTR_V2_HEADER)) {
+                reloadVersion2(br);
+            }
+            else if (line.equals(JTR_V1_HEADER)) {
+                reloadVersion1(br);
+            }
+            else
+                throw new ReloadFault(i18n, "rslt.badHeader", resultsFile);
+        }
+        finally {
+            r.close();
+        }
     }
 
-    private void reloadVersion1(BufferedReader in) 
-	throws ReloadFault, IOException 
+    private void reloadVersion1(BufferedReader in)
+        throws ReloadFault, IOException
     {
         // grab property info
         StringBuffer buff = new StringBuffer();
@@ -2098,19 +2098,19 @@ public class TestResult {
                     sections = (Section[])(DynamicArray.append(sections, blk));
                 }
             }
-	    else if (line.startsWith(JTR_V1_TSTRESULT)) {
+            else if (line.startsWith(JTR_V1_TSTRESULT)) {
                 // test result
                 if (line == null) {
                     // couldn't get the status text for some reason
                 }
-		else {
+                else {
                     line = extractSlice(line, JTR_V1_TSTRESULT.length(), " ", null);
                     execStatus = Status.parse(line);
                 }   // inner else
 
                 break;
             }
-	    else {
+            else {
                 // message text
                 buff.append(line);
                 buff.append(lineSeparator);
@@ -2129,7 +2129,7 @@ public class TestResult {
     }
 
     private Section processOldSection(String line1, BufferedReader in)
-	throws ReloadFault, IOException
+        throws ReloadFault, IOException
     {
         StringBuffer sb = new StringBuffer();         // message stream
         Section section = null;
@@ -2147,21 +2147,21 @@ public class TestResult {
                     lines = Integer.parseInt(extractSlice(line, 10, "(", "/"));
                     chars = Integer.parseInt(extractSlice(line, 10, "/", ")"));
 
-		    for (int count = 0; count < lines; count++) {
-			buff.append(in.readLine());
-		    }
-                } 
-		catch (NumberFormatException e) {
+                    for (int count = 0; count < lines; count++) {
+                        buff.append(in.readLine());
+                    }
+                }
+                catch (NumberFormatException e) {
                     // confused!
                     throw new ReloadFault(i18n, "rslt.badFile", e);
-                }  
+                }
 
                 if (section == null)
                     section = new Section(sectionName);
 
                 section.reloadOutput(streamName, buff.toString());
             }
-	    else if (line.startsWith(JTR_V1_SECTRESULT)) {
+            else if (line.startsWith(JTR_V1_SECTRESULT)) {
                 // set result
                 if (section == null)
                     section = new Section("");
@@ -2172,12 +2172,12 @@ public class TestResult {
                 if (line == null)
                     // couldn't get the status text for some reason
                     throw new ReloadFault(i18n, "rslt.noSectionResult");
-		else
+                else
                     section.reloadStatus(Status.parse(line));
 
                 break;
             }
-	    else {
+            else {
                 // just a plain message
                 sb.append(line);
                 sb.append(lineSeparator);
@@ -2190,23 +2190,23 @@ public class TestResult {
         return section;
     }
 
-    private void reloadVersion2(BufferedReader in) 
-	throws ReloadFault, IOException 
+    private void reloadVersion2(BufferedReader in)
+        throws ReloadFault, IOException
     {
-	String checksumText = null;
-	String line;
+        String checksumText = null;
+        String line;
 
-	// look for optional checksum and then test description,
-	// skipping comments
-	while ((line = in.readLine()) != null) {
-	    if (line.equals(JTR_V2_TESTDESC))
-		break;
-	    else if (line.startsWith(JTR_V2_CHECKSUM)) {
-		checksumText = line.substring(JTR_V2_CHECKSUM.length());
-	    }
-	    else if (!line.startsWith("#"))
-		throw new ReloadFault(i18n, "rslt.badLine", line);
-	}
+        // look for optional checksum and then test description,
+        // skipping comments
+        while ((line = in.readLine()) != null) {
+            if (line.equals(JTR_V2_TESTDESC))
+                break;
+            else if (line.startsWith(JTR_V2_CHECKSUM)) {
+                checksumText = line.substring(JTR_V2_CHECKSUM.length());
+            }
+            else if (!line.startsWith("#"))
+                throw new ReloadFault(i18n, "rslt.badLine", line);
+        }
 
         // this probably won't work with a normal Properties object
         String[] tdProps = PropertyArray.load(in);
@@ -2217,22 +2217,22 @@ public class TestResult {
         }
         tdProps = null;                // dump it
 
-	// XXX compare to TD
+        // XXX compare to TD
 
         // remove comment lines and look for test env props
         while ((line = in.readLine()) != null) {
-	    if (line.startsWith(JTR_V2_RESPROPS))
-		break;
-	    else if (line.startsWith(JTR_V2_ENVIRONMENT)) {
-		env = PropertyArray.load(in);
-		uniquifyStrings(env);
-	    }
-	    else if (!line.startsWith("#"))
-		throw new ReloadFault(i18n, "rslt.badLine", line);
+            if (line.startsWith(JTR_V2_RESPROPS))
+                break;
+            else if (line.startsWith(JTR_V2_ENVIRONMENT)) {
+                env = PropertyArray.load(in);
+                uniquifyStrings(env);
+            }
+            else if (!line.startsWith("#"))
+                throw new ReloadFault(i18n, "rslt.badLine", line);
         }
 
-	if (env == null)
-	    env = new String[] {};
+        if (env == null)
+            env = new String[] {};
 
         if (line == null) {
             throw new ReloadFault(i18n, "rslt.badFormat");
@@ -2263,29 +2263,29 @@ public class TestResult {
             }
         }
 
-	if (execStatus == null)
-	    execStatus = Status.error("NO STATUS RECORDED IN FILE");
+        if (execStatus == null)
+            execStatus = Status.error("NO STATUS RECORDED IN FILE");
 
-	// check whether checksum was valid or not
-	if (checksumText == null)
-	    checksumState = NO_CHECKSUM;
-	else {
-	    try {
-		long cs = Long.parseLong(checksumText, 16);
-		if (cs == computeChecksum())
-		    checksumState = GOOD_CHECKSUM;
-		else 
-		    checksumState = BAD_CHECKSUM;
-	    }
-	    catch (RuntimeException e) {
-		checksumState = BAD_CHECKSUM;
-	    }
-	}
+        // check whether checksum was valid or not
+        if (checksumText == null)
+            checksumState = NO_CHECKSUM;
+        else {
+            try {
+                long cs = Long.parseLong(checksumText, 16);
+                if (cs == computeChecksum())
+                    checksumState = GOOD_CHECKSUM;
+                else
+                    checksumState = BAD_CHECKSUM;
+            }
+            catch (RuntimeException e) {
+                checksumState = BAD_CHECKSUM;
+            }
+        }
     }
 
     void uniquifyStrings(String[] data) {
-        for (int i = 0; i < data.length; i++) 
-	    data[i] = data[i].intern();
+        for (int i = 0; i < data.length; i++)
+            data[i] = data[i].intern();
     }
 
     /**
@@ -2301,66 +2301,66 @@ public class TestResult {
     String extractSlice(String s, int where, String start, String end) {
         int startInd;
         int endInd;
-        
+
         if (start == null)
-	    startInd = where;
-	else {
-	    int i = s.indexOf(start, where);
-	    if (i < 0)
-		return null;
-	    startInd = i + start.length();
-	}
-	
-        if (end == null) 
+            startInd = where;
+        else {
+            int i = s.indexOf(start, where);
+            if (i < 0)
+                return null;
+            startInd = i + start.length();
+        }
+
+        if (end == null)
             endInd = s.length();
-	else {
+        else {
             endInd = s.indexOf(end, startInd);
-	    if (endInd == -1) 
-		return null;
-	}
+            if (endInd == -1)
+                return null;
+        }
 
         try {
             return s.substring(startInd, endInd);
-        } 
-	catch (StringIndexOutOfBoundsException e) {
+        }
+        catch (StringIndexOutOfBoundsException e) {
             return null;
         }
     }
 
 
-    private static boolean compare(Reader left, Reader right) 
-		throws Fault {
-	try {
-	    try {
-		for (;;) {
-		    int l = left.read(), r = right.read();
-		    if (l != r) {
-		        return false; // different content found
-		    }
-		    if (l == -1)
-			return true;
-		}   
-	    }
-	    finally {
-		left.close();
-		right.close();
-	    }
-	}
-	catch (IOException e) {
-	    throw new Fault(i18n, "rslt.badCompare", e);
-	}
+    private static boolean compare(Reader left, Reader right)
+                throws Fault {
+        try {
+            try {
+                for (;;) {
+                    int l = left.read(), r = right.read();
+                    if (l != r) {
+                        return false; // different content found
+                    }
+                    if (l == -1)
+                        return true;
+                }
+            }
+            finally {
+                left.close();
+                right.close();
+            }
+        }
+        catch (IOException e) {
+            throw new Fault(i18n, "rslt.badCompare", e);
+        }
     }
 
     private static Status shareStatus(Hashtable[] tables, Status s) {
-	int type = s.getType();
-	String reason = s.getReason();
-	Status result = (Status)tables[type].get(reason);
-	if (result == null) {
-	    tables[type].put(reason, s);
-	    result = s;
-	} 
+        int type = s.getType();
+        String reason = s.getReason();
+        Status result = (Status)tables[type].get(reason);
+        if (result == null) {
+            tables[type].put(reason, s);
+            result = s;
+        }
 
-	return result;
+        return result;
     }
 
     // ------------------------ OBSERVER MAINTENANCE -------------------------
@@ -2371,7 +2371,7 @@ public class TestResult {
      * @param section The section that was created.
      */
     private synchronized void notifyCreatedSection(Section section) {
-	Observer[] observers = (Observer[])(observersTable.get(this));
+        Observer[] observers = (Observer[])(observersTable.get(this));
         if (observers != null)
             for (int i = 0; i < observers.length; i++)
                 observers[i].createdSection(this, section);
@@ -2383,7 +2383,7 @@ public class TestResult {
      * @param section The section that was completed.
      */
     private synchronized void notifyCompletedSection(Section section) {
-	Observer[] observers = (Observer[])(observersTable.get(this));
+        Observer[] observers = (Observer[])(observersTable.get(this));
         if (observers != null)
             for (int i = 0; i < observers.length; i++)
                 observers[i].completedSection(this, section);
@@ -2396,7 +2396,7 @@ public class TestResult {
      * @param outputName The name of the output.
      */
     private synchronized void notifyCreatedOutput(Section section, String outputName) {
-	Observer[] observers = (Observer[])(observersTable.get(this));
+        Observer[] observers = (Observer[])(observersTable.get(this));
         if (observers != null)
             for (int i = 0; i < observers.length; i++)
                 observers[i].createdOutput(this, section, outputName);
@@ -2409,7 +2409,7 @@ public class TestResult {
      * @param outputName The name of the output.
      */
     private synchronized void notifyCompletedOutput(Section section, String outputName) {
-	Observer[] observers = (Observer[])(observersTable.get(this));
+        Observer[] observers = (Observer[])(observersTable.get(this));
         if (observers != null)
             for (int i = 0; i < observers.length; i++)
                 observers[i].completedOutput(this, section, outputName);
@@ -2423,9 +2423,9 @@ public class TestResult {
      * @param text The text that was added (appended).
      */
     private synchronized void notifyUpdatedOutput(Section section, String outputName, int start, int end, String text) {
-	Observer[] observers = (Observer[])(observersTable.get(this));
-        if (observers != null) 
-            for (int i = 0; i < observers.length; i++) 
+        Observer[] observers = (Observer[])(observersTable.get(this));
+        if (observers != null)
+            for (int i = 0; i < observers.length; i++)
                 observers[i].updatedOutput(this, section, outputName, start, end, text);
     }
 
@@ -2436,15 +2436,15 @@ public class TestResult {
      * @param outputName The stream of the section that is being modified.
      * @param text The text that was added (appended).
      */
-    private synchronized void notifyUpdatedOutput(Section section, String outputName, int start, int end, 
-						  char[] buf, int offset, int len) {
-	Observer[] observers = (Observer[])(observersTable.get(this));
+    private synchronized void notifyUpdatedOutput(Section section, String outputName, int start, int end,
+                                                  char[] buf, int offset, int len) {
+        Observer[] observers = (Observer[])(observersTable.get(this));
         if (observers != null) {
-	    // only create string if there are really observers who want to see it
-	    String text = new String(buf, offset, len);
-            for (int i = 0; i < observers.length; i++) 
+            // only create string if there are really observers who want to see it
+            String text = new String(buf, offset, len);
+            for (int i = 0; i < observers.length; i++)
                 observers[i].updatedOutput(this, section, outputName, start, end, text);
-	}
+        }
     }
 
     /**
@@ -2454,9 +2454,9 @@ public class TestResult {
      * @param value The new value for the property.
      */
     private synchronized void notifyUpdatedProperty(String key, String value) {
-	Observer[] observers = (Observer[])(observersTable.get(this));
-        if (observers != null) 
-            for (int i = 0; i < observers.length; i++) 
+        Observer[] observers = (Observer[])(observersTable.get(this));
+        if (observers != null)
+            for (int i = 0; i < observers.length; i++)
                 observers[i].updatedProperty(this, key, value);
     }
 
@@ -2464,16 +2464,16 @@ public class TestResult {
      * Notify observers the test has completed.
      */
     private synchronized void notifyCompleted() {
-	// since there will be no more observer messages after this, there
-	// is no need to keep any observers registered after we finish here
-	// so get the observers one last time, and at the same time
-	// remove them from the table
-	Observer[] observers = (Observer[])(observersTable.remove(this));
+        // since there will be no more observer messages after this, there
+        // is no need to keep any observers registered after we finish here
+        // so get the observers one last time, and at the same time
+        // remove them from the table
+        Observer[] observers = (Observer[])(observersTable.remove(this));
         if (observers != null) {
             for (int i = 0; i < observers.length; i++)
                 observers[i].completed(this);
-	    observersTable.remove(this);
-	}
+            observersTable.remove(this);
+        }
 
     }
 
@@ -2482,7 +2482,7 @@ public class TestResult {
      */
     private synchronized int findSection(String name) {
         int location;
-        
+
         if (sections == null || sections.length == 0) {
             return -1;
         }
@@ -2503,23 +2503,23 @@ public class TestResult {
     }
 
     private void addToShrinkList() {
-	synchronized (shrinkList) {
-	    // if this object is in the list; remove it;
-	    // if there are dead weak refs, remove them
-	    for (Iterator iter = shrinkList.iterator(); iter.hasNext(); ) {
-		WeakReference wref = (WeakReference) (iter.next());
-		Object o = wref.get();
-		if (o == null || o == this)
-		    iter.remove();
-	    }
-	    while (shrinkList.size() >= maxShrinkListSize) {
-		WeakReference wref = (WeakReference) (shrinkList.removeFirst());
-		TestResult tr = (TestResult) (wref.get());
-		if (tr != null)
-		    tr.shrink();
-	    }
-	    shrinkList.addLast(new WeakReference(this));
-	}
+        synchronized (shrinkList) {
+            // if this object is in the list; remove it;
+            // if there are dead weak refs, remove them
+            for (Iterator iter = shrinkList.iterator(); iter.hasNext(); ) {
+                WeakReference wref = (WeakReference) (iter.next());
+                Object o = wref.get();
+                if (o == null || o == this)
+                    iter.remove();
+            }
+            while (shrinkList.size() >= maxShrinkListSize) {
+                WeakReference wref = (WeakReference) (shrinkList.removeFirst());
+                TestResult tr = (TestResult) (wref.get());
+                if (tr != null)
+                    tr.shrink();
+            }
+            shrinkList.addLast(new WeakReference(this));
+        }
     }
 
     /**
@@ -2532,28 +2532,28 @@ public class TestResult {
             throw new IllegalStateException("Can't shrink a mutable test result!");
         }
 
-	// Should ensure we have a resultsFile.
+        // Should ensure we have a resultsFile.
         sections = null;
 
         // NOTE: if either of these are discarded, it may be a good idea to
         //       optimize reload() to not read the section/stream data since
         //       a small property lookup could incur a huge overhead
-	//props = null;         // works, may or may-not improve memory usage
+        //props = null;         // works, may or may-not improve memory usage
         //desc = null;          // doesn't work in current implementation
     }
 
     // the following fields should be valid for all test results
-    private File resultsFile;		// if set, location where test results are stored
-    private Status execStatus; 		// pre-compare result
-    private String testURL;		// URL for this test, equal to the one in TD.getRootRelativeURL
-    private long endTime = -1;		// when test finished
-    private byte checksumState;		// checksum state
+    private File resultsFile;           // if set, location where test results are stored
+    private Status execStatus;          // pre-compare result
+    private String testURL;             // URL for this test, equal to the one in TD.getRootRelativeURL
+    private long endTime = -1;          // when test finished
+    private byte checksumState;         // checksum state
     // the following fields are candidates for shrinking although not currently done
-    private TestDescription desc;	// test description for which this is the result
-    private String[] props;		// table of values written during test execution
+    private TestDescription desc;       // test description for which this is the result
+    private String[] props;             // table of values written during test execution
     private String[] env;
     // this field is cleared when the test result is shrunk
-    private Section[] sections;		// sections of output written during test execution
+    private Section[] sections;         // sections of output written during test execution
 
     // only valid when this TR is in a TRT, should remain when shrunk
     private TestResultTable.TreeNode parent;
@@ -2580,7 +2580,7 @@ public class TestResult {
 
     /**
      * The name of the property that defines the time at which the test
-     * execution finished. 
+     * execution finished.
     */
     public static final String END = "end";
 
@@ -2588,8 +2588,8 @@ public class TestResult {
      * The name of the property that defines the environment name.
      */
     public static final String ENVIRONMENT = "environment";
-    
-    /** 
+
+    /**
      * The name of the property that defines the test execution status.
      */
     public static final String EXEC_STATUS = "execStatus";
@@ -2600,7 +2600,7 @@ public class TestResult {
      */
     public static final String JAVATEST_OS = "javatestOS";
 
-    /** 
+    /**
      * The name of the property that defines the script that ran the test.
      */
     public static final String SCRIPT = "script";
@@ -2613,12 +2613,12 @@ public class TestResult {
 
     /**
      * The name of the property that defines the time at which the test
-     * execution started. 
+     * execution started.
     */
     public static final String START = "start";
 
     /**
-     * The name of the property that defines the test for which this is 
+     * The name of the property that defines the test for which this is
      * the result object.
     */
     public static final String TEST = "test";
@@ -2636,14 +2636,14 @@ public class TestResult {
 
     static final String EXTN = ".jtr";
 
-    private static final Status 
+    private static final Status
         filesSame       = Status.passed("Output file and reference file matched"),
         filesDifferent  = Status.failed("Output file and reference file were different"),
         fileError       = Status.failed("Error occurred during comparison"),
         interrupted     = Status.failed("interrupted"),
         inProgress      = Status.notRun("Test running..."),
         incomplete      = Status.notRun("Section not closed, may be incomplete"),
-        tdMismatch	= Status.notRun("Old test flushed, new test description located"),
+        tdMismatch      = Status.notRun("Old test flushed, new test description located"),
         notRunStatus    = Status.notRun("");
 
     private static final String[] emptyStringArray = new String[0];
@@ -2666,17 +2666,17 @@ public class TestResult {
     private static final String JTR_V2_SECTRESULT = "result: ";
     private static final String JTR_V2_TSTRESULT = "test result: ";
     private static final String JTR_V2_SECTSTREAM = "----------";
-  
+
     private static final String lineSeparator = System.getProperty("line.separator");
 
     private static final int DEFAULT_MAX_SHRINK_LIST_SIZE = 128;
-    private static final int maxShrinkListSize = 
-    	Integer.getInteger("javatest.numCachedResults", DEFAULT_MAX_SHRINK_LIST_SIZE).intValue();
+    private static final int maxShrinkListSize =
+        Integer.getInteger("javatest.numCachedResults", DEFAULT_MAX_SHRINK_LIST_SIZE).intValue();
     private static LinkedList shrinkList = new LinkedList();
 
     private static final int DEFAULT_MAX_OUTPUT_SIZE = 100000;
-    private static final int maxOutputSize = 
-	Integer.getInteger("javatest.maxOutputSize", DEFAULT_MAX_OUTPUT_SIZE).intValue();
+    private static final int maxOutputSize =
+        Integer.getInteger("javatest.maxOutputSize", DEFAULT_MAX_OUTPUT_SIZE).intValue();
 
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(TestResult.class);
 

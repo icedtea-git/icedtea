@@ -43,14 +43,14 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 /**
- * The <code>Properties</code> class represents a persistent set of 
- * properties. The <code>Properties</code> can be saved to a stream 
- * or loaded from a stream. Each key and its corresponding value in 
- * the property list is a string. 
+ * The <code>Properties</code> class represents a persistent set of
+ * properties. The <code>Properties</code> can be saved to a stream
+ * or loaded from a stream. Each key and its corresponding value in
+ * the property list is a string.
  * <p>
- * A property list can contain another property list as its 
- * "defaults"; this second property list is searched if 
- * the property key is not found in the original property list. 
+ * A property list can contain another property list as its
+ * "defaults"; this second property list is searched if
+ * the property key is not found in the original property list.
  *
  * <p>
  * Modified from JDK java.util.Properties to use Reader/Writer as well as
@@ -59,34 +59,34 @@ import java.util.Hashtable;
 public
 class Properties extends Hashtable {
     /**
-     * A property list that contains default values for any keys not 
-     * found in this property list. 
+     * A property list that contains default values for any keys not
+     * found in this property list.
      *
      * @since   JDK1.0
      */
     protected Properties defaults;
 
     /**
-     * Creates an empty property list with no default values. 
+     * Creates an empty property list with no default values.
      *
      * @since   JDK1.0
      */
     public Properties() {
-	this(null);
+        this(null);
     }
 
     /**
-     * Creates an empty property list with the specified defaults. 
+     * Creates an empty property list with the specified defaults.
      *
      * @param   defaults   the defaults.
      * @since   JDK1.0
      */
     public Properties(Properties defaults) {
-	this.defaults = defaults;
+        this.defaults = defaults;
     }
 
 //    /**
-//     * Reads a property list from an input stream. 
+//     * Reads a property list from an input stream.
 //     *
 //     * @param      in   the input stream.
 //     * @exception  IOException  if an error occurred when reading from the
@@ -94,115 +94,115 @@ class Properties extends Hashtable {
 //     * @since   JDK1.0
 //     */
 //    public synchronized void load(InputStream in) throws IOException {
-//	in = Runtime.getRuntime().getLocalizedInputStream(in);
-//	load(new InputStreamReader(in));
+//      in = Runtime.getRuntime().getLocalizedInputStream(in);
+//      load(new InputStreamReader(in));
 //    }
 
 
     /**
-     * Reads a property list from an input stream. 
+     * Reads a property list from an input stream.
      *
      * @param      in   the input stream.
      * @exception  IOException  if an error occurred when reading from the
      *               input stream.
      */
     public synchronized void load(Reader in) throws IOException {
-	int ch = in.read();
-	while (true) {
-	    switch (ch) {
-	      case -1:
-		return;
+        int ch = in.read();
+        while (true) {
+            switch (ch) {
+              case -1:
+                return;
 
-	      case '#':
-	      case '!':
-		do {
-		    ch = in.read();
-		} while ((ch >= 0) && (ch != '\n') && (ch != '\r'));
-		continue;
+              case '#':
+              case '!':
+                do {
+                    ch = in.read();
+                } while ((ch >= 0) && (ch != '\n') && (ch != '\r'));
+                continue;
 
-	      case '\n':
-	      case '\r':
-	      case ' ':
-	      case '\t':
-		ch = in.read();
-		continue;
-	    }
+              case '\n':
+              case '\r':
+              case ' ':
+              case '\t':
+                ch = in.read();
+                continue;
+            }
 
-	    // Read the key
-	    StringBuffer key = new StringBuffer();
-	    while ((ch >= 0) && (ch != '=') && (ch != ':') && 
-		   (ch != ' ') && (ch != '\t') && (ch != '\n') && (ch != '\r')) {
-		key.append((char)ch);
-		ch = in.read();
-	    }
-	    while ((ch == ' ') || (ch == '\t')) {
-		ch = in.read();
-	    }
-	    if ((ch == '=') || (ch == ':')) {
-		ch = in.read();
-	    }
-	    while ((ch == ' ') || (ch == '\t')) {
-		ch = in.read();
-	    }
+            // Read the key
+            StringBuffer key = new StringBuffer();
+            while ((ch >= 0) && (ch != '=') && (ch != ':') &&
+                   (ch != ' ') && (ch != '\t') && (ch != '\n') && (ch != '\r')) {
+                key.append((char)ch);
+                ch = in.read();
+            }
+            while ((ch == ' ') || (ch == '\t')) {
+                ch = in.read();
+            }
+            if ((ch == '=') || (ch == ':')) {
+                ch = in.read();
+            }
+            while ((ch == ' ') || (ch == '\t')) {
+                ch = in.read();
+            }
 
-	    // Read the value
-	    StringBuffer val = new StringBuffer();
-	    while ((ch >= 0) && (ch != '\n') && (ch != '\r')) {
-		int next = 0;
-		if (ch == '\\') {
-		    switch (ch = in.read()) {
-		      case '\r':
-			if (((ch = in.read()) == '\n') ||
-			    (ch == ' ') || (ch == '\t')) {
-			  // fall thru to '\n' case
-			} else continue;
-		      case '\n': 
-			while (((ch = in.read()) == ' ') || (ch == '\t'));
-			continue;
-		      case 't': ch = '\t'; next = in.read(); break;
-		      case 'n': ch = '\n'; next = in.read(); break;
-		      case 'r': ch = '\r'; next = in.read(); break;
-		      case 'u': {
-			while ((ch = in.read()) == 'u');
-			int d = 0;
-		      loop:
-			for (int i = 0 ; i < 4 ; i++) {
-			    next = in.read();
-			    switch (ch) {
-			      case '0': case '1': case '2': case '3': case '4':
-			      case '5': case '6': case '7': case '8': case '9':
-				d = (d << 4) + ch - '0';
-				break;
-			      case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
-				d = (d << 4) + 10 + ch - 'a';
-				break;
-			      case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
-				d = (d << 4) + 10 + ch - 'A';
-				break;
-			      default:
-				break loop;
-			    }	
-			    ch = next;
-			}
-			ch = d;
-			break;
-		      }
-		      default: next = in.read(); break;
-		    }
-		} else {
-		    next = in.read();
-		}
-		val.append((char)ch);
-		ch = next;
-	    }
+            // Read the value
+            StringBuffer val = new StringBuffer();
+            while ((ch >= 0) && (ch != '\n') && (ch != '\r')) {
+                int next = 0;
+                if (ch == '\\') {
+                    switch (ch = in.read()) {
+                      case '\r':
+                        if (((ch = in.read()) == '\n') ||
+                            (ch == ' ') || (ch == '\t')) {
+                          // fall thru to '\n' case
+                        } else continue;
+                      case '\n':
+                        while (((ch = in.read()) == ' ') || (ch == '\t'));
+                        continue;
+                      case 't': ch = '\t'; next = in.read(); break;
+                      case 'n': ch = '\n'; next = in.read(); break;
+                      case 'r': ch = '\r'; next = in.read(); break;
+                      case 'u': {
+                        while ((ch = in.read()) == 'u');
+                        int d = 0;
+                      loop:
+                        for (int i = 0 ; i < 4 ; i++) {
+                            next = in.read();
+                            switch (ch) {
+                              case '0': case '1': case '2': case '3': case '4':
+                              case '5': case '6': case '7': case '8': case '9':
+                                d = (d << 4) + ch - '0';
+                                break;
+                              case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
+                                d = (d << 4) + 10 + ch - 'a';
+                                break;
+                              case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
+                                d = (d << 4) + 10 + ch - 'A';
+                                break;
+                              default:
+                                break loop;
+                            }
+                            ch = next;
+                        }
+                        ch = d;
+                        break;
+                      }
+                      default: next = in.read(); break;
+                    }
+                } else {
+                    next = in.read();
+                }
+                val.append((char)ch);
+                ch = next;
+            }
 
-	    //System.out.println(key + " = '" + val + "'");
-	    put(key.toString(), val.toString());
-	}
+            //System.out.println(key + " = '" + val + "'");
+            put(key.toString(), val.toString());
+        }
     }
 
 //    /**
-//     * Stores this property list to the specified output stream. The 
+//     * Stores this property list to the specified output stream. The
 //     * string header is printed as a comment at the beginning of the stream.
 //     *
 //     * @param   out      an output stream.
@@ -210,13 +210,13 @@ class Properties extends Hashtable {
 //     * @since   JDK1.0
 //     */
 //    public synchronized void save(OutputStream out, String header) {
-//	OutputStream localOut = Runtime.getRuntime().getLocalizedOutputStream(out);
-//	boolean localize = localOut != out;
-//	save(new OutputStreamWriter(localOut), header, localize);
+//      OutputStream localOut = Runtime.getRuntime().getLocalizedOutputStream(out);
+//      boolean localize = localOut != out;
+//      save(new OutputStreamWriter(localOut), header, localize);
 //    }
 
     /**
-     * Stores this property list to the specified output stream. The 
+     * Stores this property list to the specified output stream. The
      * string header is printed as a comment at the beginning of the stream.
      *
      * @param   out      an output stream.
@@ -224,58 +224,58 @@ class Properties extends Hashtable {
      * @since   JDK1.0
      */
     public synchronized void save(Writer out, String header) {
-	save(out, header, false);
+        save(out, header, false);
     }
 
     private void save(Writer out, String header, boolean localize) {
-	PrintWriter prnt = (out instanceof PrintWriter ? (PrintWriter)out :
-			    new PrintWriter(out, false));
+        PrintWriter prnt = (out instanceof PrintWriter ? (PrintWriter)out :
+                            new PrintWriter(out, false));
 
-	if (header != null) {
-	    prnt.write('#');
-	    prnt.println(header);
-	}
-	prnt.write('#');
-	prnt.println(new Date());
+        if (header != null) {
+            prnt.write('#');
+            prnt.println(header);
+        }
+        prnt.write('#');
+        prnt.println(new Date());
 
-	for (Enumeration e = keys() ; e.hasMoreElements() ;) {
-	    String key = (String)e.nextElement();
-	    prnt.print(key);
-	    prnt.write('=');
+        for (Enumeration e = keys() ; e.hasMoreElements() ;) {
+            String key = (String)e.nextElement();
+            prnt.print(key);
+            prnt.write('=');
 
-	    String val = (String)get(key);
-	    int len = val.length();
-	    boolean empty = false;
+            String val = (String)get(key);
+            int len = val.length();
+            boolean empty = false;
 
-	    for (int i = 0 ; i < len ; i++) {
-		int ch = val.charAt(i);
+            for (int i = 0 ; i < len ; i++) {
+                int ch = val.charAt(i);
 
-		switch (ch) {
-		  case '\\': prnt.write('\\'); prnt.write('\\'); break;
-		  case '\t': prnt.write('\\'); prnt.write('t'); break;
-		  case '\n': prnt.write('\\'); prnt.write('n'); break;
-		  case '\r': prnt.write('\\'); prnt.write('r'); break;
+                switch (ch) {
+                  case '\\': prnt.write('\\'); prnt.write('\\'); break;
+                  case '\t': prnt.write('\\'); prnt.write('t'); break;
+                  case '\n': prnt.write('\\'); prnt.write('n'); break;
+                  case '\r': prnt.write('\\'); prnt.write('r'); break;
 
-		  default:
-		    if ((ch < ' ') || (ch >= 127) || (empty && (ch == ' '))) {
-			if ((ch > 255) && localize) {
-			    prnt.write(ch);
-			} else {
-			    prnt.write('\\');
-			    prnt.write('u');
-			    prnt.write(toHex((ch >> 12) & 0xF));
-			    prnt.write(toHex((ch >>  8) & 0xF));
-			    prnt.write(toHex((ch >>  4) & 0xF));
-			    prnt.write(toHex((ch >>  0) & 0xF));
-			}
-		    } else {
-			prnt.write(ch);
-		    }
-		}
-		empty = false;
-	    }
-	    prnt.write('\n');
-	}
+                  default:
+                    if ((ch < ' ') || (ch >= 127) || (empty && (ch == ' '))) {
+                        if ((ch > 255) && localize) {
+                            prnt.write(ch);
+                        } else {
+                            prnt.write('\\');
+                            prnt.write('u');
+                            prnt.write(toHex((ch >> 12) & 0xF));
+                            prnt.write(toHex((ch >>  8) & 0xF));
+                            prnt.write(toHex((ch >>  4) & 0xF));
+                            prnt.write(toHex((ch >>  0) & 0xF));
+                        }
+                    } else {
+                        prnt.write(ch);
+                    }
+                }
+                empty = false;
+            }
+            prnt.write('\n');
+        }
     }
 
     /**
@@ -290,9 +290,9 @@ class Properties extends Hashtable {
      * @since   JDK1.0
      */
     public String getProperty(String key) {
-	Object oval = super.get(key);
-	String sval = (oval instanceof String) ? (String)oval : null;
-	return ((sval == null) && (defaults != null)) ? defaults.getProperty(key) : sval;
+        Object oval = super.get(key);
+        String sval = (oval instanceof String) ? (String)oval : null;
+        return ((sval == null) && (defaults != null)) ? defaults.getProperty(key) : sval;
     }
 
     /**
@@ -309,8 +309,8 @@ class Properties extends Hashtable {
      * @since   JDK1.0
      */
     public String getProperty(String key, String defaultValue) {
-	String val = getProperty(key);
-	return (val == null) ? defaultValue : val;
+        String val = getProperty(key);
+        return (val == null) ? defaultValue : val;
     }
 
     /**
@@ -324,25 +324,25 @@ class Properties extends Hashtable {
      * @since   JDK1.0
      */
     public Enumeration propertyNames() {
-	Hashtable h = new Hashtable();
-	enumerate(h);
-	return h.keys();
+        Hashtable h = new Hashtable();
+        enumerate(h);
+        return h.keys();
     }
 
 //    /**
-//     * Prints this property list out to the specified output stream. 
-//     * This method is useful for debugging. 
+//     * Prints this property list out to the specified output stream.
+//     * This method is useful for debugging.
 //     *
 //     * @param   out   an output stream.
 //     * @since   JDK1.0
 //     */
 //    public void list(PrintStream out) {
-//	list(new PrintWriter(out));
+//      list(new PrintWriter(out));
 //    }
 
     /**
-     * Prints this property list out to the specified output stream. 
-     * This method is useful for debugging. 
+     * Prints this property list out to the specified output stream.
+     * This method is useful for debugging.
      *
      * @param   out   an output stream.
      * @since   JDK1.1
@@ -353,17 +353,17 @@ class Properties extends Hashtable {
      * compile this file.
      */
     public void list(PrintWriter out) {
-	out.println("-- listing properties --");
-	Hashtable h = new Hashtable();
-	enumerate(h);
-	for (Enumeration e = h.keys() ; e.hasMoreElements() ;) {
-	    String key = (String)e.nextElement();
-	    String val = (String)h.get(key);
-	    if (val.length() > 40) {
-		val = val.substring(0, 37) + "...";
-	    }
-	    out.println(key + "=" + val);
-	}
+        out.println("-- listing properties --");
+        Hashtable h = new Hashtable();
+        enumerate(h);
+        for (Enumeration e = h.keys() ; e.hasMoreElements() ;) {
+            String key = (String)e.nextElement();
+            String val = (String)h.get(key);
+            if (val.length() > 40) {
+                val = val.substring(0, 37) + "...";
+            }
+            out.println(key + "=" + val);
+        }
     }
 
     /**
@@ -371,25 +371,25 @@ class Properties extends Hashtable {
      * @param h the hashtable
      */
     private synchronized void enumerate(Hashtable h) {
-	if (defaults != null) {
-	    defaults.enumerate(h);
-	}
-	for (Enumeration e = keys() ; e.hasMoreElements() ;) {
-	    String key = (String)e.nextElement();
-	    h.put(key, get(key));
-	}
+        if (defaults != null) {
+            defaults.enumerate(h);
+        }
+        for (Enumeration e = keys() ; e.hasMoreElements() ;) {
+            String key = (String)e.nextElement();
+            h.put(key, get(key));
+        }
     }
 
     /**
      * Convert a nibble to a hex character
-     * @param	nibble	the nibble to convert.
+     * @param   nibble  the nibble to convert.
      */
     private static char toHex(int nibble) {
-	return hexDigit[(nibble & 0xF)];
+        return hexDigit[(nibble & 0xF)];
     }
 
     /** A table of hex digits */
     private static char[] hexDigit = {
-	'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'
+        '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'
     };
 }

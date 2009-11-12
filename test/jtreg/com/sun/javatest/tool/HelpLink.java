@@ -68,11 +68,11 @@ public class HelpLink extends JComponent implements Accessible
      * Create a HelpLink object.
      */
     public HelpLink() {
-	addMouseListener(new MouseAdapter() {
-	    public void mousePressed(MouseEvent e) {
-	    }
-	});
-	setCursor(new Cursor(Cursor.HAND_CURSOR));
+        addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+            }
+        });
+        setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     /**
@@ -80,29 +80,29 @@ public class HelpLink extends JComponent implements Accessible
      * @return the accessible context for this pane
      */
     public AccessibleContext getAccessibleContext() {
-	if (accessibleContext == null)
-	    accessibleContext = new AccessibleJComponent() { };
-	return accessibleContext;
+        if (accessibleContext == null)
+            accessibleContext = new AccessibleJComponent() { };
+        return accessibleContext;
     }
 
     public Dimension getPreferredSize() {
-	Graphics g = getGraphics();
-	if (g == null)
-	    return new Dimension(100, 10);
+        Graphics g = getGraphics();
+        if (g == null)
+            return new Dimension(100, 10);
 
-	FontMetrics fm = (font == null ? g.getFontMetrics() : g.getFontMetrics(font));
-	int w = fm.stringWidth(text);
-	int h = fm.getHeight();
-	return new Dimension(w, h);
+        FontMetrics fm = (font == null ? g.getFontMetrics() : g.getFontMetrics(font));
+        int w = fm.stringWidth(text);
+        int h = fm.getHeight();
+        return new Dimension(w, h);
     }
 
     public void paintComponent(Graphics g) {
-	g.setColor(color);
-	g.setFont(font);
-	FontMetrics fm = g.getFontMetrics();
-	int baseLine = fm.getLeading() + fm.getMaxAscent();
-	g.drawString(text, 0, baseLine);
-	g.drawLine(0, baseLine + 1, fm.stringWidth(text) - 1, baseLine + 1);
+        g.setColor(color);
+        g.setFont(font);
+        FontMetrics fm = g.getFontMetrics();
+        int baseLine = fm.getLeading() + fm.getMaxAscent();
+        g.drawString(text, 0, baseLine);
+        g.drawLine(0, baseLine + 1, fm.stringWidth(text) - 1, baseLine + 1);
     }
 
     /**
@@ -111,7 +111,7 @@ public class HelpLink extends JComponent implements Accessible
      * @see #setTarget
      */
     public String getTarget() {
-	return target;
+        return target;
     }
 
     /**
@@ -121,7 +121,7 @@ public class HelpLink extends JComponent implements Accessible
      * @see #getTarget
      */
     public void setTarget(String target) {
-	this.target = target;
+        this.target = target;
     }
 
     /**
@@ -130,7 +130,7 @@ public class HelpLink extends JComponent implements Accessible
      * @see #setText
      */
     public String getText() {
-	return text;
+        return text;
     }
 
     /**
@@ -140,7 +140,7 @@ public class HelpLink extends JComponent implements Accessible
      * @see #getText
      */
     public void setText(String text) {
-	this.text = text;
+        this.text = text;
     }
 
     /**
@@ -150,7 +150,7 @@ public class HelpLink extends JComponent implements Accessible
      * @see #setTextFont
      */
     public String getTextFont() {
-	return (font == null ? null : font.toString());
+        return (font == null ? null : font.toString());
     }
 
     /**
@@ -159,7 +159,7 @@ public class HelpLink extends JComponent implements Accessible
      * @see #getTextFont
      */
     public void setTextFont(String font) {
-	this.font = Font.decode(font);
+        this.font = Font.decode(font);
     }
 
     /**
@@ -169,7 +169,7 @@ public class HelpLink extends JComponent implements Accessible
      * @see #setTextColor
      */
     public String getTextColor() {
-	return color.toString();
+        return color.toString();
     }
 
     /**
@@ -178,7 +178,7 @@ public class HelpLink extends JComponent implements Accessible
      * @see #getTextColor
      */
     public void setTextColor(String color) {
-	this.color = Color.decode(color);
+        this.color = Color.decode(color);
     }
 
 

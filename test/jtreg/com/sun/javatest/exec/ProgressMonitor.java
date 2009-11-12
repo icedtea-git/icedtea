@@ -60,134 +60,134 @@ import com.sun.javatest.tool.UIFactory;
 class ProgressMonitor extends ToolDialog {
 
     ProgressMonitor(Component parent, UIFactory uif, MonitorState state) {
-	super(parent, uif, "pm");
+        super(parent, uif, "pm");
 
-	/*ToolDialog
-	super(parent, uif.getI18NString("pm.title"), false);
-	*/
+        /*ToolDialog
+        super(parent, uif.getI18NString("pm.title"), false);
+        */
 
-	// ToolDialog this.uif = uif;
-	this.state = state;
+        // ToolDialog this.uif = uif;
+        this.state = state;
     }
 
     protected void initGUI() {
-	setI18NTitle("pm.title");
+        setI18NTitle("pm.title");
 
-	subpanels = new StatusSubpanel[4];
+        subpanels = new StatusSubpanel[4];
 
-	/*ToolDialog
-	Container content = getContentPane();
-	content.setName("progressD");
-	content.setLayout(new BorderLayout());
-	*/
+        /*ToolDialog
+        Container content = getContentPane();
+        content.setName("progressD");
+        content.setLayout(new BorderLayout());
+        */
 
-	JPanel body = new JPanel(new GridBagLayout());
-	GridBagConstraints c = new GridBagConstraints();
-	c.fill = GridBagConstraints.BOTH;
+        JPanel body = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
 
-	// TOP 
-	c.gridwidth = 2;
-	c.gridx = 0;
-	c.gridy = 0;
-	c.insets.left = 8;
-	c.insets.right = 8;
-	c.insets.top = 5;
-	c.weightx = 1;
-	c.weighty = 0;
-	progressSubpanel = new ProgressSubpanel();
-	subpanels[0] = progressSubpanel;
-	body.add(progressSubpanel, c);
+        // TOP
+        c.gridwidth = 2;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.insets.left = 8;
+        c.insets.right = 8;
+        c.insets.top = 5;
+        c.weightx = 1;
+        c.weighty = 0;
+        progressSubpanel = new ProgressSubpanel();
+        subpanels[0] = progressSubpanel;
+        body.add(progressSubpanel, c);
 
-	// LEFT SIDE
-	c.gridheight = 1;
-	c.gridwidth = 1;
-	c.gridx = 0;
-	c.gridy = 1;
-	c.insets.right = 0;
-	c.weightx = 1;
-	c.weighty = 2;
+        // LEFT SIDE
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.insets.right = 0;
+        c.weightx = 1;
+        c.weighty = 2;
 
-	timeSubpanel = new TimeSubpanel();
-	subpanels[1] = timeSubpanel;
-	body.add(timeSubpanel, c);
+        timeSubpanel = new TimeSubpanel();
+        subpanels[1] = timeSubpanel;
+        body.add(timeSubpanel, c);
 
-	c.gridy = 2;
-	memorySubpanel = new MemorySubpanel();
-	subpanels[2] = memorySubpanel;
-	body.add(memorySubpanel, c);
+        c.gridy = 2;
+        memorySubpanel = new MemorySubpanel();
+        subpanels[2] = memorySubpanel;
+        body.add(memorySubpanel, c);
 
-	// RIGHT SIDE
-	// list of tests running
-	c.fill = GridBagConstraints.BOTH;
-	c.gridheight = 2;
-	c.gridwidth = 1;
-	c.gridx = 1;
-	c.gridy = 1;
-	c.insets.right = 8;
-	c.weightx = 3;
-	c.weighty = 1;
-	activitySubpanel = new ActivitySubpanel();
-	subpanels[3] = activitySubpanel;
-	body.add(activitySubpanel, c);
-	
-	setBody(body);
-	/*ToolDialog
-	content.add(body, BorderLayout.CENTER);
-	*/
-	
-	/*ToolDialog
-	JPanel btnPanel = new JPanel(new GridBagLayout());
-	GridBagConstraints bc = new GridBagConstraints();
-	bc.anchor = GridBagConstraints.EAST;
-	bc.insets.top = 5;
-	bc.insets.bottom = 11;  // value from JL&F Guidelines
-	bc.insets.right = 5;   // value from JL&F Guidelines
-	bc.weightx = 1;
+        // RIGHT SIDE
+        // list of tests running
+        c.fill = GridBagConstraints.BOTH;
+        c.gridheight = 2;
+        c.gridwidth = 1;
+        c.gridx = 1;
+        c.gridy = 1;
+        c.insets.right = 8;
+        c.weightx = 3;
+        c.weighty = 1;
+        activitySubpanel = new ActivitySubpanel();
+        subpanels[3] = activitySubpanel;
+        body.add(activitySubpanel, c);
 
-	JButton helpBtn = uif.createHelpButton("pm.help", "browse.testMonitor.csh");
-	btnPanel.add(helpBtn, bc);
+        setBody(body);
+        /*ToolDialog
+        content.add(body, BorderLayout.CENTER);
+        */
 
-	JButton closeBtn = uif.createCloseButton("pm.close");
-	bc.insets.right = 11;   // value from JL&F Guidelines
-	bc.weightx = 0;
-	btnPanel.add(closeBtn, bc);
+        /*ToolDialog
+        JPanel btnPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints bc = new GridBagConstraints();
+        bc.anchor = GridBagConstraints.EAST;
+        bc.insets.top = 5;
+        bc.insets.bottom = 11;  // value from JL&F Guidelines
+        bc.insets.right = 5;   // value from JL&F Guidelines
+        bc.weightx = 1;
 
-	content.add(btnPanel, BorderLayout.SOUTH);
-	*/
-	JButton closeBtn = uif.createCloseButton("pm.close");
-	setButtons(new JButton[] { closeBtn }, closeBtn);
+        JButton helpBtn = uif.createHelpButton("pm.help", "browse.testMonitor.csh");
+        btnPanel.add(helpBtn, bc);
 
-	// other stuff
-	state.addObserver(listener);
+        JButton closeBtn = uif.createCloseButton("pm.close");
+        bc.insets.right = 11;   // value from JL&F Guidelines
+        bc.weightx = 0;
+        btnPanel.add(closeBtn, bc);
 
-	if (state.isRunning())
-	    listener.starting();
+        content.add(btnPanel, BorderLayout.SOUTH);
+        */
+        JButton closeBtn = uif.createCloseButton("pm.close");
+        setButtons(new JButton[] { closeBtn }, closeBtn);
 
-	/*ToolDialog
-	HelpBroker b = uif.getHelpBroker();
-	//Desktop.addHelpDebugListener(progDialog);
-	b.enableHelpKey(getRootPane(), "browse.testMonitor.csh", null);
-	*/
+        // other stuff
+        state.addObserver(listener);
 
-	//ToolDialog pack();
+        if (state.isRunning())
+            listener.starting();
 
-	for (int i = 0; i < subpanels.length; i++) {
-	    // make sure the panels are in any initial state
-	    // important for getting the "last" run info, less important if
-	    // there's a run in progress or a future runs
-	    subpanels[i].update();
-	}
+        /*ToolDialog
+        HelpBroker b = uif.getHelpBroker();
+        //Desktop.addHelpDebugListener(progDialog);
+        b.enableHelpKey(getRootPane(), "browse.testMonitor.csh", null);
+        */
 
-	/*ToolDialog
-	getAccessibleContext().setAccessibleDescription(
-			    uif.getI18NString("pm.desc"));
-	*/
+        //ToolDialog pack();
+
+        for (int i = 0; i < subpanels.length; i++) {
+            // make sure the panels are in any initial state
+            // important for getting the "last" run info, less important if
+            // there's a run in progress or a future runs
+            subpanels[i].update();
+        }
+
+        /*ToolDialog
+        getAccessibleContext().setAccessibleDescription(
+                            uif.getI18NString("pm.desc"));
+        */
     }
 
     void setTreePanelModel(TreePanelModel tpm) {
-	this.tpm = tpm;
+        this.tpm = tpm;
     }
-    
+
     //----------member variables-----------------------------------------------------
 
     private MonitorState state;
@@ -210,423 +210,423 @@ class ProgressMonitor extends ToolDialog {
     //----------nested classes-------------------------------------------------------
 
     class Listener implements MonitorState.Observer, ActionListener {
-	Listener() {
-	    timer = new Timer(UPDATE_FREQUENCY, this);
-	}
+        Listener() {
+            timer = new Timer(UPDATE_FREQUENCY, this);
+        }
 
-	public void actionPerformed(ActionEvent e) {
-	    if (e.getSource() == timer) {
-		for (int i = 0; i < subpanels.length; i++)
-		    subpanels[i].update();
-	    }
-	}
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == timer) {
+                for (int i = 0; i < subpanels.length; i++)
+                    subpanels[i].update();
+            }
+        }
 
-	// these are probably on whichever thread the harness is running on
-	// be sure to switch them onto the event thread
-	public void starting() {
-	    running = true;
+        // these are probably on whichever thread the harness is running on
+        // be sure to switch them onto the event thread
+        public void starting() {
+            running = true;
 
-	    for (int i = 0; i < subpanels.length; i++)
-		subpanels[i].starting();
+            for (int i = 0; i < subpanels.length; i++)
+                subpanels[i].starting();
 
-	    timer.start();
-	}
+            timer.start();
+        }
 
-	public void postProcessing() {
-	    for (int i = 0; i < subpanels.length; i++) {
-		    // make sure the panels update one last time
-		subpanels[i].update();
-		subpanels[i].postProcessing();
-	    }	// for
-	}
+        public void postProcessing() {
+            for (int i = 0; i < subpanels.length; i++) {
+                    // make sure the panels update one last time
+                subpanels[i].update();
+                subpanels[i].postProcessing();
+            }   // for
+        }
 
-	public void stopping() {
-	    // it is assumed that finished() will be called right away
-	}
+        public void stopping() {
+            // it is assumed that finished() will be called right away
+        }
 
-	public void finished(final boolean allOk) {
-	    running = false;
-	    for (int i = 0; i < subpanels.length; i++) {
-		// make sure the panels update one last time
-		subpanels[i].update();
-		subpanels[i].stopping();
-	    }	// for
+        public void finished(final boolean allOk) {
+            running = false;
+            for (int i = 0; i < subpanels.length; i++) {
+                // make sure the panels update one last time
+                subpanels[i].update();
+                subpanels[i].stopping();
+            }   // for
 
-	    timer.stop();
-	}
+            timer.stop();
+        }
 
-	private Timer timer;
+        private Timer timer;
     }
 
     private abstract class StatusSubpanel extends JPanel {
-	/**
-	 * Refresh any data in this subpanel.
-	 * This method is always called on the event dispatch thread.
-	 */
-	abstract void update();
+        /**
+         * Refresh any data in this subpanel.
+         * This method is always called on the event dispatch thread.
+         */
+        abstract void update();
 
-	/**
-	 * Test run is starting.  This method can be ignored if it does not apply.
-	 */
-	void starting() {
-	}
+        /**
+         * Test run is starting.  This method can be ignored if it does not apply.
+         */
+        void starting() {
+        }
 
-	void postProcessing() {
-	}
+        void postProcessing() {
+        }
 
-	/**
-	 * Test run is finishing.  This method can be ignored if it does not apply.
-	 */
-	void stopping() {
-	}
+        /**
+         * Test run is finishing.  This method can be ignored if it does not apply.
+         */
+        void stopping() {
+        }
     }
 
     private class ProgressSubpanel extends StatusSubpanel
     {
-	ProgressSubpanel() {
-	    setBorder(uif.createTitledBorder("pm.prog"));
-	    setLayout(new GridBagLayout());
+        ProgressSubpanel() {
+            setBorder(uif.createTitledBorder("pm.prog"));
+            setLayout(new GridBagLayout());
 
-	    // Line label
-	    GridBagConstraints lnc = new GridBagConstraints();
-	    lnc.gridx = 0;
-	    lnc.anchor = GridBagConstraints.EAST;
-	    lnc.insets.right = 10;
+            // Line label
+            GridBagConstraints lnc = new GridBagConstraints();
+            lnc.gridx = 0;
+            lnc.anchor = GridBagConstraints.EAST;
+            lnc.insets.right = 10;
 
-	    // Field label
-	    GridBagConstraints lc = new GridBagConstraints();
-	    lc.insets.right = 5;  
+            // Field label
+            GridBagConstraints lc = new GridBagConstraints();
+            lc.insets.right = 5;
 
-	    // Field
-	    GridBagConstraints fc = new GridBagConstraints(); 
-	    fc.weightx = 1;
-	    fc.fill = GridBagConstraints.HORIZONTAL; 
-	    fc.insets.right = 15;
-	    
-	    // Remaining field
-	    GridBagConstraints rc = new GridBagConstraints();
-	    rc.weightx = 1;
-	    rc.fill = GridBagConstraints.BOTH;
-	    rc.gridwidth = GridBagConstraints.REMAINDER;
+            // Field
+            GridBagConstraints fc = new GridBagConstraints();
+            fc.weightx = 1;
+            fc.fill = GridBagConstraints.HORIZONTAL;
+            fc.insets.right = 15;
 
-	    JTextField tf = uif.createHeading("pm.tests");
-	    uif.setAccessibleInfo(tf, "pm.tests");
-	    add(tf, lnc);
-	    JLabel lab = uif.createLabel("pm.tests.pass");
-	    add(lab, lc);
-	    passTf = uif.createOutputField("pm.tests.pass", 6);
-	    passTf.setHorizontalAlignment(JTextField.RIGHT);
-	    lab.setLabelFor(passTf);
-	    lab.setDisplayedMnemonic(uif.getI18NString("pm.tests.pass.mne").charAt(0));
-	    add(passTf, fc);
+            // Remaining field
+            GridBagConstraints rc = new GridBagConstraints();
+            rc.weightx = 1;
+            rc.fill = GridBagConstraints.BOTH;
+            rc.gridwidth = GridBagConstraints.REMAINDER;
 
-	    lab = uif.createLabel("pm.tests.fail");
-	    lab.setDisplayedMnemonic(uif.getI18NString("pm.tests.fail.mne").charAt(0));
-	    add(lab, lc);
-	    failTf = uif.createOutputField("pm.tests.fail", 6);
-	    failTf.setHorizontalAlignment(JTextField.RIGHT);
-	    lab.setLabelFor(failTf);
-	    add(failTf, fc);
+            JTextField tf = uif.createHeading("pm.tests");
+            uif.setAccessibleInfo(tf, "pm.tests");
+            add(tf, lnc);
+            JLabel lab = uif.createLabel("pm.tests.pass");
+            add(lab, lc);
+            passTf = uif.createOutputField("pm.tests.pass", 6);
+            passTf.setHorizontalAlignment(JTextField.RIGHT);
+            lab.setLabelFor(passTf);
+            lab.setDisplayedMnemonic(uif.getI18NString("pm.tests.pass.mne").charAt(0));
+            add(passTf, fc);
 
-	    lab = uif.createLabel("pm.tests.err");
-	    add(lab, lc);
-	    errorTf = uif.createOutputField("pm.tests.err", 6);
-	    lab.setDisplayedMnemonic(uif.getI18NString("pm.tests.err.mne").charAt(0));
-	    errorTf.setHorizontalAlignment(JTextField.RIGHT);
-	    lab.setLabelFor(errorTf);
-	    add(errorTf, fc);
+            lab = uif.createLabel("pm.tests.fail");
+            lab.setDisplayedMnemonic(uif.getI18NString("pm.tests.fail.mne").charAt(0));
+            add(lab, lc);
+            failTf = uif.createOutputField("pm.tests.fail", 6);
+            failTf.setHorizontalAlignment(JTextField.RIGHT);
+            lab.setLabelFor(failTf);
+            add(failTf, fc);
 
-	    lab = uif.createLabel("pm.tests.nr");
-	    lab.setDisplayedMnemonic(uif.getI18NString("pm.tests.nr.mne").charAt(0));
-	    add(lab, lc);
-	    notRunTf = uif.createOutputField("pm.tests.nr", 6);
-	    notRunTf.setHorizontalAlignment(JTextField.RIGHT);
-	    lab.setLabelFor(notRunTf);
-	    add(notRunTf, rc);
-	    add(Box.createVerticalStrut(10), rc);
+            lab = uif.createLabel("pm.tests.err");
+            add(lab, lc);
+            errorTf = uif.createOutputField("pm.tests.err", 6);
+            lab.setDisplayedMnemonic(uif.getI18NString("pm.tests.err.mne").charAt(0));
+            errorTf.setHorizontalAlignment(JTextField.RIGHT);
+            lab.setLabelFor(errorTf);
+            add(errorTf, fc);
 
-	    Color[] colors = new Color[Status.NUM_STATES];
-	    colors[Status.PASSED] = I18NUtils.getStatusBarColor(Status.PASSED);
-	    colors[Status.FAILED] = I18NUtils.getStatusBarColor(Status.FAILED);
-	    colors[Status.ERROR] = I18NUtils.getStatusBarColor(Status.ERROR);
-	    colors[Status.NOT_RUN] = I18NUtils.getStatusBarColor(Status.NOT_RUN);
+            lab = uif.createLabel("pm.tests.nr");
+            lab.setDisplayedMnemonic(uif.getI18NString("pm.tests.nr.mne").charAt(0));
+            add(lab, lc);
+            notRunTf = uif.createOutputField("pm.tests.nr", 6);
+            notRunTf.setHorizontalAlignment(JTextField.RIGHT);
+            lab.setLabelFor(notRunTf);
+            add(notRunTf, rc);
+            add(Box.createVerticalStrut(10), rc);
 
-	    /*
-	    String[] actions = new String[5 + 1];
-	    actions[Status.PASSED] = Integer.toString(Status.PASSED);
-	    actions[Status.FAILED] = Integer.toString(Status.FAILED);
-	    actions[Status.ERROR] = Integer.toString(Status.ERROR);
-	    actions[Status.NOT_RUN] = Integer.toString(Status.NOT_RUN);
-	    actions[actions.length - 1] = "-1";
-	    */
+            Color[] colors = new Color[Status.NUM_STATES];
+            colors[Status.PASSED] = I18NUtils.getStatusBarColor(Status.PASSED);
+            colors[Status.FAILED] = I18NUtils.getStatusBarColor(Status.FAILED);
+            colors[Status.ERROR] = I18NUtils.getStatusBarColor(Status.ERROR);
+            colors[Status.NOT_RUN] = I18NUtils.getStatusBarColor(Status.NOT_RUN);
 
-	    tf = uif.createHeading("pm.tests.mtr");
-	    uif.setAccessibleInfo(tf, "pm.tests.mtr");
-	    add(tf, lnc);
-	    add(meter = new ProgressMeter(colors, state), rc);
-	    uif.setAccessibleInfo(meter, "pm.tests.bar");
-	    /*
-	    meter.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            /*
+            String[] actions = new String[5 + 1];
+            actions[Status.PASSED] = Integer.toString(Status.PASSED);
+            actions[Status.FAILED] = Integer.toString(Status.FAILED);
+            actions[Status.ERROR] = Integer.toString(Status.ERROR);
+            actions[Status.NOT_RUN] = Integer.toString(Status.NOT_RUN);
+            actions[actions.length - 1] = "-1";
+            */
 
-	    ActionListener al = new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    model.showSummary(Integer.parseInt(e.getActionCommand()));
-		}
-	    };
+            tf = uif.createHeading("pm.tests.mtr");
+            uif.setAccessibleInfo(tf, "pm.tests.mtr");
+            add(tf, lnc);
+            add(meter = new ProgressMeter(colors, state), rc);
+            uif.setAccessibleInfo(meter, "pm.tests.bar");
+            /*
+            meter.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-	    meter.addActionListener(al);
-	    */
-	    uif.setToolTip(this, "pm.tests");
-	}
+            ActionListener al = new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    model.showSummary(Integer.parseInt(e.getActionCommand()));
+                }
+            };
 
-	public void update() {
-	    updateAll();
-	}
+            meter.addActionListener(al);
+            */
+            uif.setToolTip(this, "pm.tests");
+        }
 
-	//--------------------------------------------------------------------------------
+        public void update() {
+            updateAll();
+        }
 
-	private void updateAll() {
-	    meter.update();
+        //--------------------------------------------------------------------------------
 
-	    int[] stats = state.getStats();
+        private void updateAll() {
+            meter.update();
 
-	    setCount(passTf, stats[Status.PASSED]);
-	    setCount(failTf, stats[Status.FAILED]);
-	    setCount(errorTf, stats[Status.ERROR]);
-	    setCount(notRunTf,state.getTestsRemainingCount());
-	}
+            int[] stats = state.getStats();
 
-	private final void setCount(JTextField tf, int value) {
-	    if (EventQueue.isDispatchThread())
-		tf.setText(Integer.toString(value));
-	    else
-		try {
-		    EventQueue.invokeAndWait(new BranchPanel.TextUpdater(tf,
-					     Integer.toString(value), uif));
-		}
-		catch (InterruptedException e) {
-		}
-		catch (InvocationTargetException e) {
-		}
-	}
-	
-	private JTextField passTf;
-	private JTextField failTf;
-	private JTextField errorTf;
-	private JTextField notRunTf;
+            setCount(passTf, stats[Status.PASSED]);
+            setCount(failTf, stats[Status.FAILED]);
+            setCount(errorTf, stats[Status.ERROR]);
+            setCount(notRunTf,state.getTestsRemainingCount());
+        }
 
-	private ProgressMeter meter;
-	private int[] meterStats;
+        private final void setCount(JTextField tf, int value) {
+            if (EventQueue.isDispatchThread())
+                tf.setText(Integer.toString(value));
+            else
+                try {
+                    EventQueue.invokeAndWait(new BranchPanel.TextUpdater(tf,
+                                             Integer.toString(value), uif));
+                }
+                catch (InterruptedException e) {
+                }
+                catch (InvocationTargetException e) {
+                }
+        }
+
+        private JTextField passTf;
+        private JTextField failTf;
+        private JTextField errorTf;
+        private JTextField notRunTf;
+
+        private ProgressMeter meter;
+        private int[] meterStats;
     }
 
     private class ActivitySubpanel extends StatusSubpanel {
-	ActivitySubpanel() {
-	    setBorder(uif.createTitledBorder("pm.activity"));
-	    setLayout(new CardLayout());
-	    
-	    idleCard = createSimpleCard("pm.idle");
-	    addCard(idleCard);
-	    initRunningCard();
-	    showCard(idleCard);
-	}
+        ActivitySubpanel() {
+            setBorder(uif.createTitledBorder("pm.activity"));
+            setLayout(new CardLayout());
 
-	void starting() {
-	    showCard(runningCard);
-	    //StatusDialog.this.validate();
-	}
+            idleCard = createSimpleCard("pm.idle");
+            addCard(idleCard);
+            initRunningCard();
+            showCard(idleCard);
+        }
 
-	void postProcessing() {
-	    showCard(idleCard);
-	}
+        void starting() {
+            showCard(runningCard);
+            //StatusDialog.this.validate();
+        }
 
-	void stopping() {
-	}
+        void postProcessing() {
+            showCard(idleCard);
+        }
 
-	void update() {
-	    testListData.removeAllElements();
-	    TestResult[] rt = state.getRunningTests();
-	    for (int i = 0; i < rt.length; i++)
-		testListData.addElement(rt[i]);
-	}
+        void stopping() {
+        }
 
-	//------------------------------------------------------------------
+        void update() {
+            testListData.removeAllElements();
+            TestResult[] rt = state.getRunningTests();
+            for (int i = 0; i < rt.length; i++)
+                testListData.addElement(rt[i]);
+        }
 
-	private JComponent createSimpleCard(String uiKey) {
-	    JPanel card = new JPanel();
-	    card.setLayout(new GridBagLayout());
-	    GridBagConstraints c = new GridBagConstraints();
-	    c.anchor = GridBagConstraints.CENTER;
-	    c.gridwidth = GridBagConstraints.REMAINDER;
-	    c.weightx = 1;
-	    c.weighty = 1;
-	    JTextField tf = uif.createHeading(uiKey);
-	    uif.setAccessibleInfo(tf, uiKey);
-	    card.add(tf, c);
+        //------------------------------------------------------------------
 
-	    JLabel icon = uif.createIconLabel(uiKey);
-	    c.anchor = GridBagConstraints.WEST;
-	    c.weighty = 0;
-	    card.add(icon, c);
+        private JComponent createSimpleCard(String uiKey) {
+            JPanel card = new JPanel();
+            card.setLayout(new GridBagLayout());
+            GridBagConstraints c = new GridBagConstraints();
+            c.anchor = GridBagConstraints.CENTER;
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            c.weightx = 1;
+            c.weighty = 1;
+            JTextField tf = uif.createHeading(uiKey);
+            uif.setAccessibleInfo(tf, uiKey);
+            card.add(tf, c);
 
-	    return card;
-	}
+            JLabel icon = uif.createIconLabel(uiKey);
+            c.anchor = GridBagConstraints.WEST;
+            c.weighty = 0;
+            card.add(icon, c);
 
-	private void initRunningCard() {
-	    testListData = new DefaultListModel();
-	    final JList list = uif.createList("pm.runlist", testListData);
-	    list.setBorder(BorderFactory.createEtchedBorder());
-	    list.setCellRenderer(RenderingUtilities.createTestListRenderer());
-	    list.addMouseListener(new MouseAdapter() {
-		    public void mouseClicked(MouseEvent e) {
-			int index = list.locationToIndex(e.getPoint());
-			Object target = list.getModel().getElementAt(index);
-			if (target instanceof TestResult && tpm != null) {
-			    tpm.showTest(((TestResult)target).getTestName());
-			}
-		    }
-		}
-	    );
-	    runningCard = 
-		uif.createScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-	    addCard(runningCard);
-	}
+            return card;
+        }
 
-	private void addCard(JComponent comp) {
-	    String s = comp.getName();
-	    if (s == null) 
-		comp.setName("StatusDialog.component" + componentCount++);
-	    add(comp, comp.getName());
-	}
+        private void initRunningCard() {
+            testListData = new DefaultListModel();
+            final JList list = uif.createList("pm.runlist", testListData);
+            list.setBorder(BorderFactory.createEtchedBorder());
+            list.setCellRenderer(RenderingUtilities.createTestListRenderer());
+            list.addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent e) {
+                        int index = list.locationToIndex(e.getPoint());
+                        Object target = list.getModel().getElementAt(index);
+                        if (target instanceof TestResult && tpm != null) {
+                            tpm.showTest(((TestResult)target).getTestName());
+                        }
+                    }
+                }
+            );
+            runningCard =
+                uif.createScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            addCard(runningCard);
+        }
 
-	private void showCard(JComponent comp) {
-	    //setVisible(false);
-	    ((CardLayout)(getLayout())).show(this, comp.getName());
-	    //setVisible(true);
-	}
-		
-	private JComponent idleCard;
-	private JComponent runningCard;
+        private void addCard(JComponent comp) {
+            String s = comp.getName();
+            if (s == null)
+                comp.setName("StatusDialog.component" + componentCount++);
+            add(comp, comp.getName());
+        }
 
-	private JTextField fileField;
-	private DefaultListModel testListData;
-	private JList testList;
-	private String rootDir;
+        private void showCard(JComponent comp) {
+            //setVisible(false);
+            ((CardLayout)(getLayout())).show(this, comp.getName());
+            //setVisible(true);
+        }
+
+        private JComponent idleCard;
+        private JComponent runningCard;
+
+        private JTextField fileField;
+        private DefaultListModel testListData;
+        private JList testList;
+        private String rootDir;
     }
 
     private class TimeSubpanel extends StatusSubpanel {
-	TimeSubpanel() {
-	    setLayout(new GridBagLayout());
-	    Border b1 = uif.createTitledBorder("pm.time");
-	    Border b2 = BorderFactory.createEmptyBorder(10, 5, 10, 5);
-	    setBorder(BorderFactory.createCompoundBorder(b1, b2));
+        TimeSubpanel() {
+            setLayout(new GridBagLayout());
+            Border b1 = uif.createTitledBorder("pm.time");
+            Border b2 = BorderFactory.createEmptyBorder(10, 5, 10, 5);
+            setBorder(BorderFactory.createCompoundBorder(b1, b2));
 
-	    // Line label
-	    GridBagConstraints lnc = new GridBagConstraints();
-	    lnc.gridx = 0;
-	    lnc.anchor = GridBagConstraints.EAST;
-	    lnc.insets.right = 10;
-	    
-	    // Remaining field
-	    GridBagConstraints rc = new GridBagConstraints();
-	    rc.fill = GridBagConstraints.BOTH;
-	    rc.gridwidth = GridBagConstraints.REMAINDER;
-	    rc.weightx = 1;
+            // Line label
+            GridBagConstraints lnc = new GridBagConstraints();
+            lnc.gridx = 0;
+            lnc.anchor = GridBagConstraints.EAST;
+            lnc.insets.right = 10;
 
-	    JLabel lab = uif.createLabel("pm.time.sofar");
-	    lab.setDisplayedMnemonic(uif.getI18NString("pm.time.sofar.mne").charAt(0));
-	    add(lab, lnc);
-	    add(elapsedField = uif.createOutputField("pm.time.sofar", 8), rc);
-	    elapsedField.setText("00:00:00");
-	    lab.setLabelFor(elapsedField);
+            // Remaining field
+            GridBagConstraints rc = new GridBagConstraints();
+            rc.fill = GridBagConstraints.BOTH;
+            rc.gridwidth = GridBagConstraints.REMAINDER;
+            rc.weightx = 1;
 
-	    lab = uif.createLabel("pm.time.remain");
-	    lab.setDisplayedMnemonic(uif.getI18NString("pm.time.remain.mne").charAt(0));
-	    add(lab, lnc);
-	    add(estimatedRemainingField = uif.createOutputField("pm.time.remain", 8), rc);
-	    estimatedRemainingField.setText("00:00:00");
-	    lab.setLabelFor(estimatedRemainingField);
+            JLabel lab = uif.createLabel("pm.time.sofar");
+            lab.setDisplayedMnemonic(uif.getI18NString("pm.time.sofar.mne").charAt(0));
+            add(lab, lnc);
+            add(elapsedField = uif.createOutputField("pm.time.sofar", 8), rc);
+            elapsedField.setText("00:00:00");
+            lab.setLabelFor(elapsedField);
 
-	    // workaround unknown GridBagLayout problem
-	    add(Box.createVerticalStrut(10), rc);
+            lab = uif.createLabel("pm.time.remain");
+            lab.setDisplayedMnemonic(uif.getI18NString("pm.time.remain.mne").charAt(0));
+            add(lab, lnc);
+            add(estimatedRemainingField = uif.createOutputField("pm.time.remain", 8), rc);
+            estimatedRemainingField.setText("00:00:00");
+            lab.setLabelFor(estimatedRemainingField);
 
-	    uif.setToolTip(this, "pm.time");
-	}
+            // workaround unknown GridBagLayout problem
+            add(Box.createVerticalStrut(10), rc);
 
-	void update() {
-	    long elapsed = state.getElapsedTime();
-	    elapsedField.setText(ElapsedTimeMonitor.millisToString(elapsed));
+            uif.setToolTip(this, "pm.time");
+        }
 
-	    long remain = state.getEstimatedTime();
-	    estimatedRemainingField.setText(ElapsedTimeMonitor.millisToString(remain));
-	}
+        void update() {
+            long elapsed = state.getElapsedTime();
+            elapsedField.setText(ElapsedTimeMonitor.millisToString(elapsed));
 
-	private JTextField elapsedField;
-	private JTextField estimatedRemainingField;
-	//private ProgressMeter meter;
-	private int[] meterStats = new int[2];
+            long remain = state.getEstimatedTime();
+            estimatedRemainingField.setText(ElapsedTimeMonitor.millisToString(remain));
+        }
+
+        private JTextField elapsedField;
+        private JTextField estimatedRemainingField;
+        //private ProgressMeter meter;
+        private int[] meterStats = new int[2];
     }
 
     private class MemorySubpanel extends StatusSubpanel {
-	MemorySubpanel() {
-	    setLayout(new GridBagLayout());
-	    Border b1 = uif.createTitledBorder("pm.memory");
-	    Border b2 = BorderFactory.createEmptyBorder(10, 5, 10, 5);
-	    setBorder(BorderFactory.createCompoundBorder(b1, b2));
+        MemorySubpanel() {
+            setLayout(new GridBagLayout());
+            Border b1 = uif.createTitledBorder("pm.memory");
+            Border b2 = BorderFactory.createEmptyBorder(10, 5, 10, 5);
+            setBorder(BorderFactory.createCompoundBorder(b1, b2));
 
-	    // Line label
-	    GridBagConstraints lnc = new GridBagConstraints();
-	    lnc.gridx = 0;
-	    lnc.anchor = GridBagConstraints.EAST;
-	    lnc.insets.right = 10;
-	    lnc.weightx = 0;
-	    lnc.fill = GridBagConstraints.NONE;
-	    
-	    // Remaining field
-	    GridBagConstraints rc = new GridBagConstraints();
-	    rc.fill = GridBagConstraints.BOTH;
-	    rc.gridwidth = GridBagConstraints.REMAINDER;
-	    rc.weightx = 1;
+            // Line label
+            GridBagConstraints lnc = new GridBagConstraints();
+            lnc.gridx = 0;
+            lnc.anchor = GridBagConstraints.EAST;
+            lnc.insets.right = 10;
+            lnc.weightx = 0;
+            lnc.fill = GridBagConstraints.NONE;
 
-	    JLabel lab = uif.createLabel("pm.memory.used");
-	    lab.setDisplayedMnemonic(uif.getI18NString("pm.memory.used.mne").charAt(0));
-	    add(lab, lnc);
-	    add(usedField = uif.createOutputField("pm.memory.used", 10), rc);
-	    lab.setLabelFor(usedField);
+            // Remaining field
+            GridBagConstraints rc = new GridBagConstraints();
+            rc.fill = GridBagConstraints.BOTH;
+            rc.gridwidth = GridBagConstraints.REMAINDER;
+            rc.weightx = 1;
 
-	    lab = uif.createLabel("pm.memory.ttl");
-	    lab.setDisplayedMnemonic(uif.getI18NString("pm.memory.ttl.mne").charAt(0));
-	    add(lab, lnc);
-	    add(totalField = uif.createOutputField("pm.memory.ttl", 10), rc);
-	    lab.setLabelFor(totalField);
+            JLabel lab = uif.createLabel("pm.memory.used");
+            lab.setDisplayedMnemonic(uif.getI18NString("pm.memory.used.mne").charAt(0));
+            add(lab, lnc);
+            add(usedField = uif.createOutputField("pm.memory.used", 10), rc);
+            lab.setLabelFor(usedField);
 
-	    // workaround unknown GridBagLayout problem
-	    add(Box.createVerticalStrut(10), rc);
+            lab = uif.createLabel("pm.memory.ttl");
+            lab.setDisplayedMnemonic(uif.getI18NString("pm.memory.ttl.mne").charAt(0));
+            add(lab, lnc);
+            add(totalField = uif.createOutputField("pm.memory.ttl", 10), rc);
+            lab.setLabelFor(totalField);
 
-	    /*
-	    rc.fill = GridBagConstraints.VERTICAL;
-	    Color[] mc = {
-		new Color(128, 0, 0), 
-		new Color(0, 128, 0)
-	    };
-	    add(meter = new ProgressMeter(mc, state), rc);
-	    */
-	    uif.setToolTip(this, "pm.memory");
-	}
+            // workaround unknown GridBagLayout problem
+            add(Box.createVerticalStrut(10), rc);
 
-	void update() {
-	    int freeMem = (int)(runtime.freeMemory() / 1024);
-	    int totalMem = (int)(runtime.totalMemory() / 1024);
-	    int usedMem = totalMem - freeMem;
-	    usedField.setText(usedMem + "K");
-	    totalField.setText(totalMem + "K");
+            /*
+            rc.fill = GridBagConstraints.VERTICAL;
+            Color[] mc = {
+                new Color(128, 0, 0),
+                new Color(0, 128, 0)
+            };
+            add(meter = new ProgressMeter(mc, state), rc);
+            */
+            uif.setToolTip(this, "pm.memory");
+        }
 
-	}
-	
-	private JTextField usedField;
-	private JTextField totalField;
-	private ProgressMeter meter;
-	private int[] meterStats = new int[2];
-	private Runtime runtime = Runtime.getRuntime();
+        void update() {
+            int freeMem = (int)(runtime.freeMemory() / 1024);
+            int totalMem = (int)(runtime.totalMemory() / 1024);
+            int usedMem = totalMem - freeMem;
+            usedField.setText(usedMem + "K");
+            totalField.setText(totalMem + "K");
+
+        }
+
+        private JTextField usedField;
+        private JTextField totalField;
+        private ProgressMeter meter;
+        private int[] meterStats = new int[2];
+        private Runtime runtime = Runtime.getRuntime();
     }
 }

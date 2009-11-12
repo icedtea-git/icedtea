@@ -97,119 +97,119 @@ public class MultiFormatPane extends JPanel implements Printable {
 
         listener = new Listener();
         initGUI();
-        
+
         modesToPanes = new HashMap();
-        
+
         addMediaPane(TEXT, textPane);
         addMediaPane(AUDIO, musicPane);
         addMediaPane(IMAGE, imagePane);
         addMediaPane(ERROR, errorPane);
 
     }
-    
+
     public void setNoteField(JTextField noteField) {
         this.noteField = noteField;
     }
-    
+
     public void setNavigationPane(NavigationPane navPane) {
         this.navPane = navPane;
     }
-    
+
     public void addMediaPane(int mode, MediaPane pane) {
         modesToPanes.put(mode, pane);
     }
-    
+
     public MediaPane getMediaPane(int mode) {
         return (MediaPane)modesToPanes.get(mode);
     }
-    
+
     public void clear() {
-	currURL = null;
+        currURL = null;
         if(navPane != null) {
             navPane.clear();
         }
         musicPane.stopAudio();
     }
-    
+
     public URL getPage() {
         return currURL;
     }
-    
+
     public int getCurrentMode() {
         return getCurrentPane().getMode();
     }
-    
+
     public MediaPane getCurrentPane() {
         return (MediaPane)scrllBody.getViewport().getComponent(0);
     }
-    
+
     // Base directory is root directory for displayable content
     // if it set, all filenames will be relative to this directory
     void setBaseDirectory(File base) {
-	baseDir = base;
+        baseDir = base;
     }
-    
+
     File getBaseDirectory() {
-	return baseDir;
+        return baseDir;
     }
-    
+
     void setDefaultView() {
         textPane.setDocument(new HTMLDocument());
         textPane.showTextArea();
     }
-    
+
     private void initGUI() {
         uif.initPanel(this, "mfp", false);
-        
+
         textPane = new TextPane(uif, "mfp.textPane", null);
         textPane.addHyperlinkListener(listener);
-        
+
         scrllBody = uif.createScrollPane(textPane,
                                  JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                                  JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        
+
         textPane.setParent(scrllBody);
-        
+
         musicPane = new MusicPane(uif, "mfp.audioPane", scrllBody);
         imagePane = new ImagePane(uif, "mfp.imagePanelbl", scrllBody);
         errorPane = new ErrorFormatPane(uif, "mfp.errorPane", scrllBody);
-        
+
         scrllBody.setViewportView(textPane);
-	
-	setLayout(new BorderLayout());
-                
+
+        setLayout(new BorderLayout());
+
         add(scrllBody, BorderLayout.CENTER);
-        
-    }    
-    
-    
+
+    }
+
+
     //Loads everything by URL
     public void loadPage(URL url) {
-	// avoid recursive callbacks from updating combo
-	if (url.equals(currURL))
-	    return;
+        // avoid recursive callbacks from updating combo
+        if (url.equals(currURL))
+            return;
 
-	currURL = url;
+        currURL = url;
 
-	String protocol = url.getProtocol();
-	File file = new File(url.getFile());
-	if (protocol.equals("file") && file.isDirectory()) {
-	    String list = listLocalDirectory(file);
+        String protocol = url.getProtocol();
+        File file = new File(url.getFile());
+        if (protocol.equals("file") && file.isDirectory()) {
+            String list = listLocalDirectory(file);
             textPane.showText(list, "text/html");
             ((HTMLDocument)textPane.getDocument()).setBase(url);
-	}
+        }
         else if (ImagePane.isImageResource(url)) {
             imagePane.showImage(url);
-	}
+        }
         else if(MusicPane.isAudioResource(url)) {
             musicPane.showAudio(url);
         }
         else if(isMediaResourceCorrupted(url)) {
             errorPane.showError(uif.getI18NString("mfp.errorPaneLbl.corrupted"));
         }
-	else if(TextPane.isTextResource(url)){
+        else if(TextPane.isTextResource(url)){
             textPane.showText(url);
-	}
+        }
         else {
             int response = uif.showYesNoDialog("mfp.unknownTypeDlg");
             if(response == JOptionPane.YES_OPTION) {
@@ -219,155 +219,155 @@ public class MultiFormatPane extends JPanel implements Printable {
                 errorPane.showError(uif.getI18NString("mfp.errorPaneLbl.unsupported"));
             }
         }
-        
+
         if(navPane != null) {
             navPane.processURL(url);
         }
     }
-    
-    
+
+
     public void showText(String text, String MIME) {
         textPane.showText(text, MIME);
         currURL = null;
     }
-        
+
     public void showText(URL url) {
         textPane.showText(url);
     }
-    
+
     public void showAudio(URL url) {
         musicPane.showAudio(url);
     }
-    
+
     public void stopAudio() {
         musicPane.stopAudio();
     }
-    
+
     public void showImage(URL url) {
         imagePane.showImage(url);
     }
-    
+
     public void showError(String errorMessage) {
         errorPane.showError(errorMessage);
     }
-    
-    
+
+
     private boolean isMediaResourceSupported(URL url) {
         return ImagePane.isImageResource(url) || MusicPane.isAudioResource(url);
     }
-    
+
     private boolean isMediaResourceCorrupted(URL url) {
         String filename = url.getFile();
         String ext = filename.substring(filename.lastIndexOf('.') + 1);
         ext = ext.toLowerCase();
-        
-        return (SUPPORTED_MEDIA_RESOURCE_EXTENSIONS.indexOf(ext) != -1) && 
+
+        return (SUPPORTED_MEDIA_RESOURCE_EXTENSIONS.indexOf(ext) != -1) &&
                 !isMediaResourceSupported(url);
     }
-    
+
 
     private String listLocalDirectory(File dir) {
-	if (!dir.isAbsolute())
-	    dir = dir.getAbsoluteFile();
+        if (!dir.isAbsolute())
+            dir = dir.getAbsoluteFile();
 
-	String displayPath = dir.getPath();
-	// if contains base dir, only show path relative to baseDir
-	if (baseDir != null) {
-	    String p = baseDir.getParent();
-	    if (p != null 
-		&& displayPath.startsWith(p) &&
-		(displayPath.length() > p.length())) {
-		displayPath = displayPath.substring(p.length()); 
-		// in case of Unix
-		if (displayPath.startsWith(File.separator)) {
-		    displayPath = displayPath.substring(1);
-		}
-	    }
-	}
+        String displayPath = dir.getPath();
+        // if contains base dir, only show path relative to baseDir
+        if (baseDir != null) {
+            String p = baseDir.getParent();
+            if (p != null
+                && displayPath.startsWith(p) &&
+                (displayPath.length() > p.length())) {
+                displayPath = displayPath.substring(p.length());
+                // in case of Unix
+                if (displayPath.startsWith(File.separator)) {
+                    displayPath = displayPath.substring(1);
+                }
+            }
+        }
 
-	String[] filelist = dir.list();
-        
-	StringWriter sw = new StringWriter();
-	try {
-	    HTMLWriter out = new HTMLWriter(sw, uif.getI18NResourceBundle());
-	
-	    out.startTag(HTMLWriter.HTML);
-	    out.startTag(HTMLWriter.HEAD);
-	    out.startTag(HTMLWriter.TITLE);
-	    out.write(displayPath);
-	    out.endTag(HTMLWriter.TITLE);
-	    out.endTag(HTMLWriter.HEAD);
-	    out.startTag(HTMLWriter.BODY);
-	    out.writeStyleAttr("font-family: SansSerif; font-size: 12pt");
-	    out.startTag(HTMLWriter.H3);
-	    out.writeI18N("mfp.head", displayPath);
-	    out.endTag(HTMLWriter.H3);
-	    out.startTag(HTMLWriter.UL);
-	    out.writeStyleAttr("margin-left:0");
+        String[] filelist = dir.list();
 
-	    File parent = dir.getParentFile();
-	    if (parent != null) {
-		out.startTag(HTMLWriter.LI);
-		out.startTag(HTMLWriter.OBJECT);
-		out.writeAttr(HTMLWriter.CLASSID, "com.sun.javatest.tool.IconLabel");
-		out.writeParam("type", "up");
-		out.endTag(HTMLWriter.OBJECT);
-		out.writeEntity("&nbsp;");
-		try {
-		    out.startTag(HTMLWriter.A);
-		    out.writeAttr(HTMLWriter.HREF, parent.toURL().toString());
-		    out.writeI18N("mfp.parent");
-		    out.endTag(HTMLWriter.A);
-		}
-		catch (MalformedURLException e) {
-		    out.writeI18N("mfp.parent");
-		}
-	    }
-	
-	    for (int i = 0; i < filelist.length; i++) {
-		File file = new File(dir, filelist[i]);
-		out.startTag(HTMLWriter.LI);
-		out.startTag(HTMLWriter.OBJECT);
-		out.writeAttr(HTMLWriter.CLASSID, "com.sun.javatest.tool.IconLabel");
-		out.writeParam("type", (file.isDirectory() ? "folder" : "file"));
-		out.endTag(HTMLWriter.OBJECT);
-		out.writeEntity("&nbsp;");
-		try {
-		    out.writeLink(file.toURL(), file.getName());
-		}
-		catch (MalformedURLException e) {
-		    out.write(file.getName());
-		}
-	    }
-	
-	    out.endTag(HTMLWriter.UL);
-	    out.endTag(HTMLWriter.BODY);
-	    out.endTag(HTMLWriter.HTML);
-	    out.close();
-	}
-	catch (IOException e) {
-	    // should not happen, writing to StringWriter
-	}
+        StringWriter sw = new StringWriter();
+        try {
+            HTMLWriter out = new HTMLWriter(sw, uif.getI18NResourceBundle());
 
-	return sw.toString();
+            out.startTag(HTMLWriter.HTML);
+            out.startTag(HTMLWriter.HEAD);
+            out.startTag(HTMLWriter.TITLE);
+            out.write(displayPath);
+            out.endTag(HTMLWriter.TITLE);
+            out.endTag(HTMLWriter.HEAD);
+            out.startTag(HTMLWriter.BODY);
+            out.writeStyleAttr("font-family: SansSerif; font-size: 12pt");
+            out.startTag(HTMLWriter.H3);
+            out.writeI18N("mfp.head", displayPath);
+            out.endTag(HTMLWriter.H3);
+            out.startTag(HTMLWriter.UL);
+            out.writeStyleAttr("margin-left:0");
+
+            File parent = dir.getParentFile();
+            if (parent != null) {
+                out.startTag(HTMLWriter.LI);
+                out.startTag(HTMLWriter.OBJECT);
+                out.writeAttr(HTMLWriter.CLASSID, "com.sun.javatest.tool.IconLabel");
+                out.writeParam("type", "up");
+                out.endTag(HTMLWriter.OBJECT);
+                out.writeEntity("&nbsp;");
+                try {
+                    out.startTag(HTMLWriter.A);
+                    out.writeAttr(HTMLWriter.HREF, parent.toURL().toString());
+                    out.writeI18N("mfp.parent");
+                    out.endTag(HTMLWriter.A);
+                }
+                catch (MalformedURLException e) {
+                    out.writeI18N("mfp.parent");
+                }
+            }
+
+            for (int i = 0; i < filelist.length; i++) {
+                File file = new File(dir, filelist[i]);
+                out.startTag(HTMLWriter.LI);
+                out.startTag(HTMLWriter.OBJECT);
+                out.writeAttr(HTMLWriter.CLASSID, "com.sun.javatest.tool.IconLabel");
+                out.writeParam("type", (file.isDirectory() ? "folder" : "file"));
+                out.endTag(HTMLWriter.OBJECT);
+                out.writeEntity("&nbsp;");
+                try {
+                    out.writeLink(file.toURL(), file.getName());
+                }
+                catch (MalformedURLException e) {
+                    out.write(file.getName());
+                }
+            }
+
+            out.endTag(HTMLWriter.UL);
+            out.endTag(HTMLWriter.BODY);
+            out.endTag(HTMLWriter.HTML);
+            out.close();
+        }
+        catch (IOException e) {
+            // should not happen, writing to StringWriter
+        }
+
+        return sw.toString();
     }
-    
+
     public interface MediaPane {
-        
+
         public int getMode();
-        
+
         public void changeURL(URL url);
-        
+
         public void setParent(JScrollPane pane);
     }
-    
-// Print this panel    
+
+// Print this panel
     public int print (Graphics g, PageFormat pf, int pageIndex) {
-        
+
         int response = NO_SUCH_PAGE;
 
         Graphics2D g2 = (Graphics2D) g;
-        
+
         Component componentToBePrinted = scrllBody.getComponent(0);
         int mode = getCurrentMode();
         switch(mode) {
@@ -412,9 +412,9 @@ public class MultiFormatPane extends JPanel implements Printable {
           enableDoubleBuffering(componentToBePrinted);
           response = Printable.PAGE_EXISTS;
         }
-        return response;    
+        return response;
     }
-    
+
     private void disableDoubleBuffering(Component c) {
         RepaintManager currentManager = RepaintManager.currentManager(c);
         currentManager.setDoubleBufferingEnabled(false);
@@ -425,18 +425,18 @@ public class MultiFormatPane extends JPanel implements Printable {
         currentManager.setDoubleBufferingEnabled(true);
     }
 // END of printing
-    
-    private class Listener implements HyperlinkListener { 
-	public void hyperlinkUpdate(HyperlinkEvent e) { 
-	    HyperlinkEvent.EventType et = e.getEventType();	    
-	    if (et == HyperlinkEvent.EventType.ACTIVATED) { 
-		if (e instanceof HTMLFrameHyperlinkEvent) { 
-//		    HTMLDocument doc = (HTMLDocument) 
-//			((JEditorPane) e.getSource()).getDocument();                    
-//		    doc.processHTMLFrameHyperlinkEvent((HTMLFrameHyperlinkEvent) e);
+
+    private class Listener implements HyperlinkListener {
+        public void hyperlinkUpdate(HyperlinkEvent e) {
+            HyperlinkEvent.EventType et = e.getEventType();
+            if (et == HyperlinkEvent.EventType.ACTIVATED) {
+                if (e instanceof HTMLFrameHyperlinkEvent) {
+//                  HTMLDocument doc = (HTMLDocument)
+//                      ((JEditorPane) e.getSource()).getDocument();
+//                  doc.processHTMLFrameHyperlinkEvent((HTMLFrameHyperlinkEvent) e);
                     processFrameLink(e);
-		}  
-		else {
+                }
+                else {
                     musicPane.stopAudio();
 //                    String s = e.getDescription();
 //                    URL correctURL = e.getURL();
@@ -445,7 +445,7 @@ public class MultiFormatPane extends JPanel implements Printable {
 //                        currURL = doc.getBase();
 //                    // JEditorPane doesn't allows javascript, so we delete this parameter and load
 //                    // root page of help package
-//                    if(correctURL.getProtocol().equals("file")) {                    
+//                    if(correctURL.getProtocol().equals("file")) {
 
 //                        int pos = correctURL.toString().indexOf("?");
 //                        if (pos >= 0) {
@@ -465,37 +465,37 @@ public class MultiFormatPane extends JPanel implements Printable {
                         processGeneralLink(e);
                     }
                 }
-	    }
-	    else if (et == HyperlinkEvent.EventType.ENTERED) {
-		URL u = e.getURL();
-		if (u != null) {
-		    textPane.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+            else if (et == HyperlinkEvent.EventType.ENTERED) {
+                URL u = e.getURL();
+                if (u != null) {
+                    textPane.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     if(noteField != null) {
                         noteField.setText(u.toString());
                     }
-		}
-	    } 
-	    else if (et == HyperlinkEvent.EventType.EXITED) {  
-		textPane.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                }
+            }
+            else if (et == HyperlinkEvent.EventType.EXITED) {
+                textPane.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 if(noteField != null) {
                     noteField.setText("");
                 }
-	    }
-	}
-        
+            }
+        }
+
         private void processFrameLink(HyperlinkEvent e) {
-            HTMLDocument doc = (HTMLDocument) 
-                ((JEditorPane) e.getSource()).getDocument();                    
+            HTMLDocument doc = (HTMLDocument)
+                ((JEditorPane) e.getSource()).getDocument();
             doc.processHTMLFrameHyperlinkEvent((HTMLFrameHyperlinkEvent) e);
         }
-        
+
         private void processSharpLink(HyperlinkEvent e) {
             String desc = e.getDescription();
             if (!(desc.startsWith("#")))
                 return;
             textPane.scrollToReference(desc.substring(1));
         }
-        
+
         private void processGeneralLink(HyperlinkEvent e) {
             URL correctURL = e.getURL();
             HTMLDocument doc = (HTMLDocument)((JEditorPane)e.getSource()).getDocument();
@@ -519,12 +519,12 @@ public class MultiFormatPane extends JPanel implements Printable {
             // end of fix
             loadPage(correctURL);
         }
-    } 
-    
-    
-    
-    
-    private static final String SUPPORTED_MEDIA_RESOURCE_EXTENSIONS = 
+    }
+
+
+
+
+    private static final String SUPPORTED_MEDIA_RESOURCE_EXTENSIONS =
             ".wav .au .aif .mid .midi .rmf .jpeg .jpg .gif .png";
     private JScrollPane scrllBody;
     public static final int TEXT = 0;
@@ -534,85 +534,85 @@ public class MultiFormatPane extends JPanel implements Printable {
 
     private File baseDir;
     private URL currURL;
-    
+
     private TextPane textPane;
     private MusicPane musicPane;
     private ImagePane imagePane;
     private ErrorFormatPane errorPane;
-    
+
     private UIFactory uif;
     private String uiKey;
-    
+
     private Listener listener;
-    
+
     private JTextField noteField;
     private NavigationPane navPane;
-    
+
     private HashMap modesToPanes;
 }
 
 
 class TextPane extends JEditorPane implements MultiFormatPane.MediaPane {
-    
+
     public TextPane(UIFactory uif, String uiKey, JScrollPane owner) {
         super();
-        
+
         this.uif = uif;
         this.owner = owner;
-        
-	setName("text");
-	setEditable(false);
-	setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        
-	uif.setAccessibleInfo(this, uiKey);
+
+        setName("text");
+        setEditable(false);
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        uif.setAccessibleInfo(this, uiKey);
 
         htmlKit = new HTMLEditorKit();
         defaultKit = new DefaultEditorKit();
         rtfKit = new RTFEditorKit();
-        
+
     }
-    
+
     public void changeURL(URL url) {}
-    
+
     public void setParent(JScrollPane owner) {
         this.owner = owner;
     }
-    
+
     public int getMode() {
         return MultiFormatPane.TEXT;
     }
 
     public void showText(String text, String MIME) {
         setContentType(MIME);
-        
+
         EditorKit kit = getKitByMIME(MIME);
         Document doc = kit.createDefaultDocument();
-        
+
         setDocument(doc);
-        
+
         setText(text);
-        
+
         showTextArea();
     }
 
     public void showText(URL url) {
         try {
             URL loaded = getPage();
-            
+
             String mimeType = getMIMEType(url);
             if (mimeType == null) {
                 mimeType = "text/plain";
             }
-            
+
             boolean loadManually = false;
             if (mimeType.indexOf("plain") != -1) {
                 loadManually = true;
             }
-            
+
             EditorKit kit = getKitByMIME(mimeType);
-            
+
             setContentType(mimeType);
-            
+
             if (loaded == null || !loaded.sameFile(url)) {
                 Document doc = kit.createDefaultDocument();
                 setDocument(doc);
@@ -623,21 +623,21 @@ class TextPane extends JEditorPane implements MultiFormatPane.MediaPane {
                     Reader r = new BufferedReader(new FileReader(file));
                     read(r, url);
                     r.close();
-                } 
+                }
                 catch (IOException e) {
                     uif.showError("mfp.load.error", new Object[] { url, e });
-                } 
+                }
             } else {
                 setPage(url);
             }
-            
+
             showTextArea();
-        } 
+        }
         catch (IOException e) {
             uif.showError("mfp.load.error", new Object[] { url, e });
-        } 
+        }
     }
-    
+
     public static boolean isTextResource(URL url) {
         String mimeType = getMIMEType(url);
         if (mimeType == null)
@@ -645,19 +645,19 @@ class TextPane extends JEditorPane implements MultiFormatPane.MediaPane {
         return (mimeType.equals("text/plain") || mimeType.equals("text/html") ||
                 mimeType.equals("text/rtf"));
     }
-    
+
     public static String getMIMEType(URL url) {
         String filename = url.getFile();
         String ext = filename.substring(filename.lastIndexOf('.') + 1);
         ext = ext.toLowerCase();
-        
+
         return (String)extensionsToMIME.get(ext);
     }
-    
+
     public void showTextArea() {
         owner.setViewportView(this);
         owner.revalidate();
-        owner.repaint();        
+        owner.repaint();
     }
 
     private EditorKit getKitByMIME(String mime) {
@@ -672,11 +672,11 @@ class TextPane extends JEditorPane implements MultiFormatPane.MediaPane {
 
     private JScrollPane owner;
     private UIFactory uif;
-    
+
     private HTMLEditorKit htmlKit;
     private DefaultEditorKit defaultKit;
     private RTFEditorKit rtfKit;
-    
+
 
     private static HashMap extensionsToMIME;
     static {
@@ -687,7 +687,7 @@ class TextPane extends JEditorPane implements MultiFormatPane.MediaPane {
         extensionsToMIME.put("htx", "text/html");
         extensionsToMIME.put("shtml", "text/html");
         extensionsToMIME.put("stm", "text/html");
-        
+
         extensionsToMIME.put("text", "text/plain");
         extensionsToMIME.put("txt", "text/plain");
         extensionsToMIME.put("log", "text/plain");
@@ -699,29 +699,29 @@ class TextPane extends JEditorPane implements MultiFormatPane.MediaPane {
         extensionsToMIME.put("jti", "text/plain");
         extensionsToMIME.put("jtm", "text/plain");
         extensionsToMIME.put("css", "text/plain");
-        
+
         extensionsToMIME.put("rtf", "text/rtf");
         extensionsToMIME.put("rtx", "text/rtf");
-        
+
     }
-        
-    
+
+
 }
 
 class MusicPane extends JPanel implements MultiFormatPane.MediaPane {
     public MusicPane(UIFactory uif, String uiKey, JScrollPane owner) {
         super();
-        
+
         this.uif = uif;
         this.owner = owner;
-        
+
         initGUI(uiKey);
     }
-    
+
     private void initGUI(String uiKey) {
         setName(uiKey);
         uif.setAccessibleInfo(this, uiKey);
-        
+
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -756,41 +756,41 @@ class MusicPane extends JPanel implements MultiFormatPane.MediaPane {
             public void actionPerformed(ActionEvent e) {
                 if(isSampledAudioResource(currURL)) {
                     loadSample(currURL);
-                    clip.loop(Clip.LOOP_CONTINUOUSLY);            
+                    clip.loop(Clip.LOOP_CONTINUOUSLY);
                 }
             }
         });
-        
+
     }
-    
+
     public void showAudio(URL url) {
         changeURL(url);
-        
+
         owner.setViewportView(this);
         owner.revalidate();
         owner.repaint();
     }
-    
+
     public void changeURL(URL url) {
         currURL = url;
-        
+
         if(isMidiAudioResource(url)) {
             btnLoop.setEnabled(false);
         }
         else if(isSampledAudioResource(url)) {
             btnLoop.setEnabled(true);
         }
-        
+
     }
-    
+
     public void setParent(JScrollPane owner) {
         this.owner = owner;
     }
-    
+
     public int getMode() {
         return MultiFormatPane.AUDIO;
     }
-    
+
     public static boolean isAudioResource(URL url) {
         return isSampledAudioResource(url) || isMidiAudioResource(url);
     }
@@ -804,7 +804,7 @@ class MusicPane extends JPanel implements MultiFormatPane.MediaPane {
         if(sequencer != null && sequencer.isRunning())
             sequencer.stop();
     }
-        
+
     private void loadSample(URL url) {
         try {
             AudioInputStream stream = AudioSystem.getAudioInputStream(url);
@@ -826,7 +826,7 @@ class MusicPane extends JPanel implements MultiFormatPane.MediaPane {
             clip.close();
         }
     }
-    
+
     private void loadSequence(URL url) {
         try {
             Sequence sequence = MidiSystem.getSequence(url);
@@ -837,20 +837,20 @@ class MusicPane extends JPanel implements MultiFormatPane.MediaPane {
             sequencer.setSequence(sequence);
 
         } catch (Exception e) {}
-        
+
     }
-    
+
     private static boolean isSampledAudioResource(URL url) {
         try{
-            AudioFileFormat fformat = AudioSystem.getAudioFileFormat(url);    
+            AudioFileFormat fformat = AudioSystem.getAudioFileFormat(url);
             return AudioSystem.isFileTypeSupported(fformat.getType());
         } catch (UnsupportedAudioFileException unsuppExc) {
             return false;
         } catch (IOException ioExc) {
             return false;
-        }        
+        }
     }
-    
+
     private static boolean isMidiAudioResource(URL url) {
         try {
             MidiFileFormat fformat = MidiSystem.getMidiFileFormat(url);
@@ -865,40 +865,40 @@ class MusicPane extends JPanel implements MultiFormatPane.MediaPane {
             return false;
         }
     }
-    
-    
+
+
     private UIFactory uif;
     private JScrollPane owner;
-    
+
     private JButton btnStart;
     private JButton btnStop;
     private JButton btnLoop;
-    
+
     private URL currURL;
     private Clip clip;
     private Sequencer sequencer;
-    
+
 }
 
 class ImagePane extends JLabel implements MultiFormatPane.MediaPane {
-    
+
     public ImagePane(UIFactory uif, String uiKey, JScrollPane owner) {
         super(uif.getI18NString(uiKey + ".lbl"));
 //        setName(uiKey);
-        
+
         this.owner = owner;
     }
-    
+
     public void changeURL(URL url) {}
-    
+
     public void setParent(JScrollPane owner) {
         this.owner = owner;
     }
-    
+
     public int getMode() {
         return MultiFormatPane.IMAGE;
     }
-    
+
     public void showImage(URL url) {
         if(isImageFormatSupported(url)) {
             ImageIcon img = new ImageIcon(url);
@@ -909,14 +909,14 @@ class ImagePane extends JLabel implements MultiFormatPane.MediaPane {
             owner.repaint();
         }
     }
-            
+
     public static boolean isImageResource(URL url) {
         String file = url.getFile();
         String ext = file.substring(file.lastIndexOf('.')+1);
         Iterator iter = ImageIO.getImageReadersBySuffix(ext);
         return iter.hasNext();
     }
-    
+
     public static boolean isImageFormatSupported(URL url) {
         try {
             ImageInputStream iis = ImageIO.createImageInputStream(new File(url.getFile()));
@@ -929,7 +929,7 @@ class ImagePane extends JLabel implements MultiFormatPane.MediaPane {
         }
         return true;
     }
-    
+
     private JScrollPane owner;
 }
 
@@ -937,35 +937,35 @@ class ErrorFormatPane extends JPanel implements MultiFormatPane.MediaPane {
     public ErrorFormatPane(UIFactory uif, String uiKey, JScrollPane owner) {
         super();
         uif.initPanel(this, uiKey, true);
-        
+
         this.owner = owner;
-        
+
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = gbc.CENTER;
         errorLabel = uif.createLabel("mfp.errorPaneLbl", true);
         add(errorLabel, gbc);
-        
+
     }
-    
+
     public void changeURL(URL url) {}
-    
+
     public void setParent(JScrollPane owner) {
         this.owner = owner;
     }
-    
+
     public int getMode() {
         return MultiFormatPane.ERROR;
     }
-    
+
     public void showError(String errorMessage) {
         errorLabel.setText(errorMessage);
-        
+
         owner.setViewportView(this);
         owner.revalidate();
         owner.repaint();
     }
-    
+
     private JLabel errorLabel;
     private JScrollPane owner;
 }

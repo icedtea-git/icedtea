@@ -32,7 +32,7 @@ import java.io.IOException;
 import com.sun.interview.Interview;
 
 /**
- * This interface defines the ability to export the answers 
+ * This interface defines the ability to export the answers
  * contained in a configuration to a custom file format.
  */
 public interface Exporter
@@ -68,7 +68,7 @@ public interface Exporter
      * @param f The file to which to write the data
      * @throws IOException if there is a problem while writing the file
      * @throws Interview.Fault if there is a problem exporting the data
-     *	  	 from the interview.
+     *           from the interview.
      */
     void export(File f) throws IOException, Interview.Fault;
 }

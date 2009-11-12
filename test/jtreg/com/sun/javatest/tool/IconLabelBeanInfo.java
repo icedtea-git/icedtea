@@ -42,16 +42,16 @@ public class IconLabelBeanInfo extends SimpleBeanInfo
      * @see IconLabel
      */
     public PropertyDescriptor[] getPropertyDescriptors() {
-	try {
-	    PropertyDescriptor[] pds = {
-		new PropertyDescriptor("type",     IconLabel.class),
-		new PropertyDescriptor("state",    IconLabel.class)
-	    };
-	    return pds;
-	}
-	catch (Exception e) {
-	    JavaTestError.unexpectedException(e);
-	    return null;
-	}
+        try {
+            PropertyDescriptor[] pds = {
+                new PropertyDescriptor("type",     IconLabel.class),
+                new PropertyDescriptor("state",    IconLabel.class)
+            };
+            return pds;
+        }
+        catch (Exception e) {
+            JavaTestError.unexpectedException(e);
+            return null;
+        }
     }
 }

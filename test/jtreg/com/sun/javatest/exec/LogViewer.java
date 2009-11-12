@@ -94,7 +94,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 class LogViewer extends ToolDialog {
-    
+
     public LogViewer(WorkDirectory workDir, UIFactory uif, Component parent) {
         super(parent, uif, "logviewer");
         String fileName = workDir.getLogFileName();
@@ -106,9 +106,9 @@ class LogViewer extends ToolDialog {
         }
         model = new FilteredLogModel(workDir.getTestSuite().getObservedFile(fileName), fileName);
         model.setLogger(log);
-        
+
         initGUI();
-        
+
         model.addNewLoggerListener(new LogModel.LoggerListener() {
             public void onNewLogger(String logName) {
                 if (debug > 1) {
@@ -116,7 +116,7 @@ class LogViewer extends ToolDialog {
                     loggerCounter.setText(text);
                 }
             }
-            
+
 
             public void onRemoveAllLoggers() {
                 if (debug > 1) {
@@ -124,9 +124,9 @@ class LogViewer extends ToolDialog {
                     loggerCounter.setText(text);
                 }
             }
-            
+
         });
-        
+
         model.addNewPageListener(new LogModel.NewPageListener() {
             public void onNewPage(final int from, final int to, final int page) {
                 synchronized (thePane) {
@@ -149,7 +149,7 @@ class LogViewer extends ToolDialog {
                 }
             }
         });
-        
+
         model.addFilterChangedListener(new FilteredLogModel.FilterChangedListener() {
             public void onFilterChanged() {
                 synchronized (thePane) {
@@ -158,21 +158,21 @@ class LogViewer extends ToolDialog {
                 }
             }
         });
-        
+
         model.init();
         updateNavBtns();
         setVisible(true);
-        
+
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        
+
         LV_Scroller autoScroller = new LV_Scroller();
         autoScroller.start();
     }
-    
+
     protected void windowClosingAction(AWTEvent e) {
         onClose(null);
     }
-    
+
     private void makeLogger(final WorkDirectory workDir) {
         log = Logger.getLogger("LogViewer");
         try {
@@ -185,7 +185,7 @@ class LogViewer extends ToolDialog {
             }
         }
     }
-    
+
     protected void initGUI() {
 
         working1 = uif.getI18NString("logviewer.working1");
@@ -196,10 +196,10 @@ class LogViewer extends ToolDialog {
         setI18NTitle("logviewer.title", windowCounter);
 
         GridBagConstraints gridBagConstraints;
-        
+
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new GridBagLayout());
-        
+
         Object[] items = {
             uif.getI18NString("logviewer.combobox.actions"),
             new JSeparator(),
@@ -211,14 +211,14 @@ class LogViewer extends ToolDialog {
             new FilterComboboxItem(uif.getI18NString("logviewer.combobox.select") + levelNames[2], levels[2]),
             new FilterComboboxItem(uif.getI18NString("logviewer.combobox.select") + levelNames[3], levels[3])
         };
-        
+
         filterCombo = uif.createLiteralChoice("logviewer.combobox", items);   //new JComboBox(items);
         uif.setAccessibleName(filterCombo, filterCombo.getName());
         filterCombo.setRenderer(new CustomRenderer());
         filterTreeScroll = new JScrollPane();
 
         createFilterTree(filterTreeScroll);
-        
+
         JLabel filterSubstringLbl = uif.createLabel("logviewer.label.find");
         final JTextField filterSubstring = uif.createInputField("logviewer.fitertext");
         uif.setAccessibleInfo(filterSubstring, filterSubstring.getName());
@@ -227,7 +227,7 @@ class LogViewer extends ToolDialog {
                 model.getFilter().setSubstring(filterSubstring.getText());
             }
         });
-        
+
         autoScrollCheckBox = uif.createCheckBox("logviewer.autoscroll");
         autoScroll = Boolean.parseBoolean(prefs.getPreference(AUTOSCROLL_PREF, Boolean.toString(true)));
         autoScrollCheckBox.setSelected(autoScroll);
@@ -245,12 +245,12 @@ class LogViewer extends ToolDialog {
             public void itemStateChanged(ItemEvent e) {
                 wordWrap = (e.getStateChange() == ItemEvent.SELECTED);
                 synchronized (thePane) {
-                    
+
                     // try to restore position (not exactly)  -
                     Point vp = scrollPane.getViewport().getViewPosition();
                     Dimension vs = scrollPane.getViewport().getViewSize();
                     final double magic = vp.getY()/vs.getHeight();
-                    
+
                     int p = thePane.page;
                     clearPane(0);
                     setPage(p);
@@ -267,8 +267,8 @@ class LogViewer extends ToolDialog {
 
         scrollPane = new JScrollPane();
         thePane = new LogPane();
-        
-        
+
+
         thePane.setEditorKit(new LogEditorKit());
         JButton btnClose = uif.createButton("logviewer.button.close");
         JButton btnNew = uif.createButton("logviewer.button.open");
@@ -291,37 +291,37 @@ class LogViewer extends ToolDialog {
         btnNext = uif.createButton("logviewer.nextpage");
         btnPrev = uif.createButton("logviewer.previouspage");
         btnLast = uif.createButton("logviewer.lastspage");
-        
+
         body.setLayout(new GridBagLayout());
-        
+
         thePane.setEditable(false);
         thePane.setPreferredSize(new Dimension(600, 400));
         scrollPane.setViewportView(thePane);
-        
+
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.insets = new Insets(0, 0, 5, 0);
         filterPanel.add(filterCombo, gridBagConstraints);
-        
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         filterPanel.add(filterTreeScroll, gridBagConstraints);
-        
+
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new Insets(5, 0, 0, 0);
         filterPanel.add(filterSubstringLbl, gridBagConstraints);
-        
+
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         filterPanel.add(filterSubstring, gridBagConstraints);
-        
+
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -329,11 +329,11 @@ class LogViewer extends ToolDialog {
         gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new Insets(11, 11, 5, 5);
-        
+
         body.add(filterPanel, gridBagConstraints);
-        
+
         initPane();
-        
+
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -342,48 +342,48 @@ class LogViewer extends ToolDialog {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new Insets(11, 5, 5, 11);
         body.add(scrollPane, gridBagConstraints);
-        
+
         btnClose.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 onClose(evt);
             }
         });
-        
+
         btnNew.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 onNew(evt);
             }
         });
-        
+
         btnSave.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 onSave(evt);
             }
         });
-        
+
         btnClear.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 onClear(evt);
             }
         });
-        
-        
+
+
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new Insets(0, 11, 0, 0);
         body.add(autoScrollCheckBox, gridBagConstraints);
-        
+
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new Insets(0, 11, 0, 0);
         body.add(wordWrapCheckBox, gridBagConstraints);
-        
+
         if (debug != 0) {
-            
+
             counter.setText("Records : ");
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 0;
@@ -391,7 +391,7 @@ class LogViewer extends ToolDialog {
             gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
             gridBagConstraints.insets = new Insets(0, 5, 0, 5);
             body.add(counter, gridBagConstraints);
-            
+
             pageCounter.setText("Pages : ");
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 0;
@@ -399,7 +399,7 @@ class LogViewer extends ToolDialog {
             gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
             gridBagConstraints.insets = new Insets(0, 5, 0, 5);
             body.add(pageCounter, gridBagConstraints);
-            
+
             loggerCounter.setText("Loggers : ");
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 0;
@@ -407,7 +407,7 @@ class LogViewer extends ToolDialog {
             gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
             gridBagConstraints.insets = new Insets(0, 5, 0, 5);
             body.add(loggerCounter, gridBagConstraints);
-            
+
             currPage.setText("Current page ");
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 0;
@@ -415,7 +415,7 @@ class LogViewer extends ToolDialog {
             gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
             gridBagConstraints.insets = new Insets(0, 5, 5, 5);
             body.add(currPage, gridBagConstraints);
-            
+
             JButton btnGen = new JButton(new AbstractAction("Generate !") {
                 public void actionPerformed(ActionEvent e) {
                     log.config("Config");
@@ -437,7 +437,7 @@ class LogViewer extends ToolDialog {
                     }
                 }
             });
-            
+
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
             gridBagConstraints.gridy = 3;
@@ -445,7 +445,7 @@ class LogViewer extends ToolDialog {
             gridBagConstraints.gridy = 4;
             body.add(btnGen2, gridBagConstraints);
         }
-        
+
         naviBtnPanel.setLayout(new GridLayout(1, 4, 10, 10));
         btnFirst.setEnabled(false);
         btnFirst.addActionListener(new ActionListener() {
@@ -453,36 +453,36 @@ class LogViewer extends ToolDialog {
                 goFirst(evt);
             }
         });
-        
+
         naviBtnPanel.add(btnFirst);
-        
+
         btnPrev.setEnabled(false);
         btnPrev.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 goPrev(evt);
             }
         });
-        
+
         naviBtnPanel.add(btnPrev);
-        
+
         btnNext.setEnabled(false);
         btnNext.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 goNext(evt);
             }
         });
-        
+
         naviBtnPanel.add(btnNext);
-        
+
         btnLast.setEnabled(false);
         btnLast.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 goLast(evt);
             }
         });
-        
+
         naviBtnPanel.add(btnLast);
-        
+
         naviPanel.setLayout(new BorderLayout());
         naviPanel.add(lblPageCounter, BorderLayout.WEST);
         naviPanel.add(naviBtnPanel, BorderLayout.EAST);
@@ -508,9 +508,9 @@ class LogViewer extends ToolDialog {
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.insets = new Insets(0, 5, 5, 11);
         body.add(naviPanel, gridBagConstraints);
-        
+
         setButtons(new JButton[] {btnClear, btnSave, btnNew, btnClose}, btnClose);
-        
+
         setBody(body);
     }
 
@@ -537,7 +537,7 @@ class LogViewer extends ToolDialog {
         Random r = new Random();
         String lName = "log_" + r.nextInt(10);
         Logger ret = null;
-        
+
         try {
             ret = workDir.getTestSuite().createLog(workDir, null, lName);
         } catch (TestSuite.DuplicateLogNameFault ex) {
@@ -549,7 +549,7 @@ class LogViewer extends ToolDialog {
         }
         return ret;
     }
-    
+
     private class EditorFiller extends Thread {
         EditorFiller(int from, int to, int pagenum) {
             super("editorFiller");
@@ -557,7 +557,7 @@ class LogViewer extends ToolDialog {
             this.to=to;
             this.pagenum=pagenum;
         }
-        
+
         public void run() {
             if (noWindow) return;
             if (Thread.currentThread().isInterrupted()) {
@@ -595,7 +595,7 @@ class LogViewer extends ToolDialog {
                             int oldPos = thePane.getCaretPosition();
                             doc.insertString(pos, header, getStyle(level));
                             doc.insertString(doc.getEndPosition().getOffset()-1, "\n", getStyle(level));
-                            
+
                             if (!"".equals(substr)) {
                                 String up = header.toUpperCase();
                                 int s = 0; int ss;
@@ -607,7 +607,7 @@ class LogViewer extends ToolDialog {
                             pos = doc.getEndPosition().getOffset()-1;
                             doc.insertString(pos, msg, styleMsg);
                             doc.insertString(doc.getEndPosition().getOffset()-1, "\n", getStyle(level));
-                            
+
                             if (!"".equals(substr)) {
                                 String up = msg.toUpperCase();
                                 int s = 0; int ss;
@@ -625,14 +625,14 @@ class LogViewer extends ToolDialog {
                 } );
             }
         }
-        
-        
+
+
         private int pagenum;
         private int to;
         private int from;
     }
-    
-    
+
+
     private void setRecords(final int from, final int to, final int pagenum) {
         if (editorThread != null && editorThread.isAlive()) {
             editorThread.interrupt();
@@ -646,8 +646,8 @@ class LogViewer extends ToolDialog {
         editorThread.setPriority(Thread.MIN_PRIORITY);
         editorThread.start();
     }
-    
-    
+
+
     private void clearPane(final int from) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -664,8 +664,8 @@ class LogViewer extends ToolDialog {
             }
         } );
     }
-    
-    
+
+
     private Style getStyle(int level) {
         if (level == Level.INFO.intValue()) {
             return styleInfo;
@@ -677,8 +677,8 @@ class LogViewer extends ToolDialog {
             return styleOther;
         }
     }
-    
-    
+
+
     private void goLast(ActionEvent evt) {
         // it's important to put it to the end of the queue !
         SwingUtilities.invokeLater(new Runnable() {
@@ -689,7 +689,7 @@ class LogViewer extends ToolDialog {
             }
         });
     }
-    
+
     private void goPrev(ActionEvent evt) {
         // it's important to put it to the end of the queue !
         SwingUtilities.invokeLater(new Runnable() {
@@ -702,7 +702,7 @@ class LogViewer extends ToolDialog {
             }
         });
     }
-    
+
     private void goNext(ActionEvent evt) {
         // it's important to put it to the end of the queue !
         SwingUtilities.invokeLater(new Runnable() {
@@ -713,7 +713,7 @@ class LogViewer extends ToolDialog {
             }
         });
     }
-    
+
     private void goFirst(ActionEvent evt) {
         // it's important to put it to the end of the queue !
         SwingUtilities.invokeLater(new Runnable() {
@@ -726,18 +726,18 @@ class LogViewer extends ToolDialog {
             }
         });
     }
-    
+
     private void onClose(ActionEvent evt) {
         dispose();
     }
-    
+
     private void onNew(ActionEvent evt) {
         LogViewer lv = new LogViewer(workDir, uif, parent);
         Point newL = getLocation();
         newL.translate(20, 20);
         lv.setLocation(newL);
     }
-    
+
     private void onSave(ActionEvent evt) {
         FileChooser fileChooser = new FileChooser(true);
         fileChooser.addChoosableExtension(".xml",
@@ -749,16 +749,16 @@ class LogViewer extends ToolDialog {
         }
         File f = fileChooser.getSelectedFile();
         if (f != null) {
-            
+
             if (!f.getName().toLowerCase().endsWith(".xml")) {
                 f = new File(f.getPath() + ".xml");
             }
-            
+
             LogViewerTools rm = new LogViewerTools(model, f, log, parent, uif);
             rm.go();
         }
     }
-    
+
     private void onClear(ActionEvent evt) {
         if (uif.showYesNoDialog("logviewer.clearconfirm") == JOptionPane.YES_OPTION) {
             try {
@@ -768,26 +768,26 @@ class LogViewer extends ToolDialog {
             }
         }
     }
-    
+
     private void updatePage(int from, int to) {
         setRecords(from, to, thePane.page);
         updateNavBtns();
     }
-    
+
     private void setPage(int pageNum) {
         int from, to;
         from = (pageNum - 1) * model.getPageSize() ;
         to = pageNum * model.getPageSize() - 1;
-        
+
         synchronized (thePane) {
             thePane.page = pageNum;
         }
-        
+
         clearPane(from);
         setRecords(from, to, pageNum);
-        
+
         updateNavBtns();
-        
+
         if (debugPages > 1) {
             System.out.println("setPage " + pageNum + " thePane.page=" + thePane.page );
             SwingUtilities.invokeLater(new Runnable() {
@@ -799,7 +799,7 @@ class LogViewer extends ToolDialog {
             });
         }
     }
-    
+
     private void updateNavBtns() {
         // can be called not from swing thread
         SwingUtilities.invokeLater(new Runnable(){
@@ -827,12 +827,12 @@ class LogViewer extends ToolDialog {
             }
         });
     }
-    
+
     private void initPane() {
         doc = thePane.getStyledDocument();
         Style def = StyleContext.getDefaultStyleContext().
                 getStyle(StyleContext.DEFAULT_STYLE);
-        
+
         styleMsg = doc.addStyle("msg_text", def);
         StyleConstants.setFontFamily(styleMsg, "Monospaced");
 
@@ -842,25 +842,25 @@ class LogViewer extends ToolDialog {
         styleInfo = doc.addStyle("info_text", styleMsg);
         Color darkGreen = new Color(0, 180, 0);
         StyleConstants.setForeground(styleInfo, darkGreen);
-        
+
         styleWarning = doc.addStyle("warning_text", styleMsg);
         StyleConstants.setForeground(styleWarning, new Color(200, 150, 0));
-        
+
         styleSevere = doc.addStyle("severe_text", styleMsg);
         StyleConstants.setForeground(styleSevere, Color.RED);
-        
+
         styleOther = doc.addStyle("other_text", styleMsg);
         StyleConstants.setForeground(styleOther, Color.BLUE);
-        
+
         selected = doc.addStyle("selected", null);
         StyleConstants.setBackground(selected, Color.YELLOW);
 
     }
-    
-    
+
+
     private class LogEditorKit extends StyledEditorKit {
-        
-        
+
+
         public ViewFactory getViewFactory() {
             if (fact == null) {
                 fact = new LogViewFactory();
@@ -868,17 +868,17 @@ class LogViewer extends ToolDialog {
             return fact;
         }
         ViewFactory fact;
-        
+
         class NoWrapLabelView extends LabelView {
             public NoWrapLabelView(Element elem) {
                 super(elem);
             }
-            
+
             public int getBreakWeight(int axis, float pos, float len) {
                 return BadBreakWeight;
             }
         }
-        
+
         private class LogViewFactory implements ViewFactory {
             public View create(Element elem) {
                 String kind = elem.getName();
@@ -899,14 +899,14 @@ class LogViewer extends ToolDialog {
                         return new IconView(elem);
                     }
                 }
-                
+
                 // default to text display
                 return new LabelView(elem);
             }
         }
-        
+
     }
-    
+
     private class LogPane extends JTextPane {
         int page;
         int fromRec;
@@ -917,12 +917,12 @@ class LogViewer extends ToolDialog {
 
         }
     }
-    
+
     private class CheckBoxEditor extends DefaultTreeCellEditor {
         CheckBoxEditor(JTree tree) {
             super(tree, new DefaultTreeCellRenderer());
         }
-        
+
         public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
             if (value instanceof DefaultMutableTreeNode) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
@@ -933,30 +933,30 @@ class LogViewer extends ToolDialog {
                     return cb;
                 }
             }
-            
+
             return super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
         }
-        
+
         // no expand/collaps !!
         // edit this to change
         public boolean isCellEditable(EventObject event) {
             return true;
         }
-        
+
     }
-    
+
     private class CheckBoxRenderer extends JCheckBox
             implements TreeCellRenderer {
-        
+
         public CheckBoxRenderer() {
             super();
             setBackground(filterTree.getBackground());
         }
-        
+
         public Component getTreeCellRendererComponent(JTree tree,
                 Object value, boolean isSelected, boolean expanded,
                 boolean leaf, int row, boolean hasFocus) {
-            
+
             if (value instanceof DefaultMutableTreeNode) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
                 Object o = node.getUserObject();
@@ -967,14 +967,14 @@ class LogViewer extends ToolDialog {
                     return this;
                 }
             }
-            
+
             return defRend.getTreeCellRendererComponent(tree,
                     value, isSelected, expanded, leaf, row, hasFocus);
         }
         DefaultTreeCellRenderer defRend = new DefaultTreeCellRenderer();
     }
-    
-    
+
+
     private class CustomRenderer extends JComponent
             implements ListCellRenderer {
         public Component getListCellRendererComponent(
@@ -994,13 +994,13 @@ class LogViewer extends ToolDialog {
                     ((JCheckBox)value).setBackground(list.getBackground());
                     ((JCheckBox)value).setForeground(list.getForeground());
                 }
-                
+
                 return (JCheckBox)value;
             }
             return this;
         }
     }
-    
+
     private class LoggersTreeModel extends DefaultTreeModel {
         LoggersTreeModel() {
             super(treeRoot);
@@ -1011,11 +1011,11 @@ class LogViewer extends ToolDialog {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
                             // check for the same
-                            
+
                             final PropagatedCheckBox ch = new PropagatedCheckBox(name);
                             ch.setSelected(true);
                             DefaultMutableTreeNode newLogger = new DefaultMutableTreeNode(ch, true);
-                            
+
                             for (int i = 0 ; i < levels.length; i++) {
                                 final JCheckBox chh = new FilterTreeItem(name, levels[i].intValue(), levelNames[i]);
                                 chh.setSelected(true);
@@ -1037,23 +1037,23 @@ class LogViewer extends ToolDialog {
                                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(chh);
                                 newLogger.add(node);
                             }
-                            
+
                             treeRoot.add(newLogger);
                             nodesWereInserted(treeRoot, new int [] {treeRoot.getIndex(newLogger)});
                             filterTree.expandPath(new TreePath(newLogger.getPath()));
-                            
+
                         }
                     });
-                    
+
                 }
-                
+
                 public void onRemoveAllLoggers() {
                     createFilterTree(filterTreeScroll);
                 }
             });
         }
     }
-    
+
     private class PropagatedCheckBox extends JCheckBox {
         PropagatedCheckBox(final String name) {
             super(name);
@@ -1072,7 +1072,7 @@ class LogViewer extends ToolDialog {
                 }
             });
         }
-        
+
         public void fireEvent() {
             fireItemStateChanged(
                     new ItemEvent(this,
@@ -1080,15 +1080,15 @@ class LogViewer extends ToolDialog {
                     this,
                     this.isSelected() ?  ItemEvent.SELECTED : ItemEvent.DESELECTED));
         }
-        
+
         public void addChild(JCheckBox ch) {
             children.add(ch);
         }
-        
+
         private ArrayList<JCheckBox> children = new ArrayList<JCheckBox>();
     }
-    
-    
+
+
     private class FilterTreeItem extends JCheckBox {
         public FilterTreeItem(String logName, int level, String levelName) {
             super(levelName);
@@ -1098,42 +1098,42 @@ class LogViewer extends ToolDialog {
         String logName;
         int level;
     }
-    
+
     private class FilterComboboxItem {
-        
+
         public FilterComboboxItem(String txt, Level l) {
             label = txt;
             level = l.intValue();
             kind = false;
         }
-        
+
         public FilterComboboxItem(String txt, boolean s) {
             label = txt;
             select = s;
             kind = true;
         }
-        
-        
+
+
         public String toString() {
             return label;
         }
-        
+
         // true - select all / unselect all
         // false - select particular level
         boolean kind;
-        
+
         private String label;
         int level;
         boolean select;
-        
+
     }
-    
-    
+
+
     private class FilterComboBoxListener implements ActionListener {
         public FilterComboBoxListener(LoggersTreeModel m) {
             model = m;
         }
-        
+
         public void actionPerformed(ActionEvent e) {
             JComboBox cb = (JComboBox) e.getSource();
             Object o = cb.getSelectedItem();
@@ -1173,18 +1173,18 @@ class LogViewer extends ToolDialog {
                 cb.setSelectedIndex(0);
             }
         }
-        
+
         private LoggersTreeModel model;
-        
+
     }
-    
+
     public void setVisible(boolean b) {
         super.setVisible(b);
         if (!b) {
             dispose();
         }
     }
-    
+
     public void dispose() {
         removeWindowFromList();
         if (noWindow) {
@@ -1289,7 +1289,7 @@ class LogViewer extends ToolDialog {
             }
         }
     }
-    
+
     private UIFactory uif;
 
     private final Level  [] levels = { Level.SEVERE, Level.WARNING, Level.INFO, Level.FINE } ;
@@ -1298,11 +1298,11 @@ class LogViewer extends ToolDialog {
      LoggerFactory.getLocalizedLevelName(Level.WARNING),
      LoggerFactory.getLocalizedLevelName(Level.INFO),
      LoggerFactory.getLocalizedLevelName(Level.FINE) } ;
-    
+
     private DefaultMutableTreeNode treeRoot;
     private JComboBox filterCombo;
     private JTree filterTree ;
-    
+
     private boolean noWindow = false;
     private JLabel lblPageCounter;
     private JButton btnFirst;
@@ -1322,12 +1322,12 @@ class LogViewer extends ToolDialog {
     private JLabel processLabel;
     private WorkDirectory workDir;
     private Thread editorThread;
-    
+
     private StyledDocument doc;
     private Style styleMsg, styleInfo, styleWarning, styleSevere, styleOther, styleWait, selected;
     private FilteredLogModel model;
     private Logger log;
-    
+
     private final int debug = 0;
     private final int debugPages = 0;
     private boolean autoScroll = true;

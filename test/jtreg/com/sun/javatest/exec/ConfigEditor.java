@@ -104,11 +104,11 @@ class ConfigEditor extends ToolDialog
 
     public void clear() {
         clear(false);
-    }    
-    
+    }
+
     void clear(boolean isTemplate) {
         templateMode = isTemplate;
-        
+
         if (stdView == null)
             initGUI();
 
@@ -116,7 +116,7 @@ class ConfigEditor extends ToolDialog
             currView.save();
 
         // viewConfig.isEdited() will be true unless viewConfig is already clear,
-        // in which case there is no need to do anything except make sure the view 
+        // in which case there is no need to do anything except make sure the view
         // is visible.
         if (viewConfig.isEdited()) {
             // if viewConfig differs from mainConfig, we show a warning, giving the user
@@ -125,23 +125,23 @@ class ConfigEditor extends ToolDialog
             if (!equal(mainConfig, viewConfig)) {
                 // show a warning
                 int rc = uif.showYesNoCancelDialog("ce.clear.warn");
-                
+
                 switch (rc) {
                 case JOptionPane.YES_OPTION:
                     if (save0())
                         break;
                     else
                         return;
-                    
+
                 case JOptionPane.NO_OPTION:
                     break;
-                    
+
                 default:
                     return;
                 }
             }
 
-            // clear viewConfig, but leave mainConfig alone for now(until we exit/save) 
+            // clear viewConfig, but leave mainConfig alone for now(until we exit/save)
             // so that the user can revert the clear if so desired
             viewConfig.clear();
             viewConfig.setEdited(false);
@@ -162,9 +162,9 @@ class ConfigEditor extends ToolDialog
                 fault.printStackTrace();        // need better error
             }
         }
-        
+
         updateTitle();
-        // always set the full view, because that is the only way you can 
+        // always set the full view, because that is the only way you can
         // enter a full configuration; standard values "won't cut it" :-)
         setView(fullView);
         setVisible(true);
@@ -174,12 +174,12 @@ class ConfigEditor extends ToolDialog
         JComponent jparent = (JComponent) SwingUtilities.getAncestorOfClass(JComponent.class, parent);
         WorkDirChooseTool tool;
         if (isTemplate) {
-            tool = WorkDirChooseTool.getTool(jparent, uif, model, 
+            tool = WorkDirChooseTool.getTool(jparent, uif, model,
                     WorkDirChooseTool.LOAD_TEMPLATE, model.getTestSuite(), true);
         } else {
-            tool = WorkDirChooseTool.getTool(jparent, uif, model, 
+            tool = WorkDirChooseTool.getTool(jparent, uif, model,
                     WorkDirChooseTool.LOAD_CONFIG, model.getTestSuite(), true);
-        }        
+        }
         tool.setConfigEditor(this);
         tool.doTool();
 
@@ -197,22 +197,22 @@ class ConfigEditor extends ToolDialog
         load0(file, false);
     }
 
-    
+
     private void load0(File file, boolean showUI) {
         if (isEdited()) {
             // show a warning
             int rc = uif.showYesNoCancelDialog("ce.load.warn");
-    
+
             switch (rc) {
             case JOptionPane.YES_OPTION:
             if (save0())
                 break;
             else
                 return;
-            
+
             case JOptionPane.NO_OPTION:
             break;
-            
+
             default:
             return;
             }
@@ -250,16 +250,16 @@ class ConfigEditor extends ToolDialog
         }
 
         File mainConfigFile = mainConfig.getFile();
-        
+
         FileChooser fileChooser = getFileChooser();
-        
+
         if (mainConfigFile != null)
             fileChooser.setCurrentDirectory(mainConfigFile.getParentFile());
-        
+
         if (showUI) {
             file = loadConfigFile(model.getContextManager(), parent, uif, fileChooser);
         }
-    
+
         if (file == null)
             return;
 
@@ -308,7 +308,7 @@ class ConfigEditor extends ToolDialog
         catch (IOException e) {
             if (!file.canWrite())
                 uif.showError("ce.save.cantWriteFile", file);
-            else if (e instanceof FileNotFoundException) 
+            else if (e instanceof FileNotFoundException)
                 uif.showError("ce.save.cantFindFile", file);
             else
                 uif.showError("ce.save.error", new Object[] { file, e } );
@@ -339,21 +339,21 @@ class ConfigEditor extends ToolDialog
             file = getSaveFile(mainConfigDir);
             if (file == null)
                 return false; // exit without saving
-        }           
+        }
 
         try {
             if (currView != null) {
                 currView.save();
-                copy(viewConfig, mainConfig, false); 
-                // don't bother to copy filename since we're about to save 
-                // mainConfig in "file" 
+                copy(viewConfig, mainConfig, false);
+                // don't bother to copy filename since we're about to save
+                // mainConfig in "file"
             }
             mainConfig.save(file, templateMode);
             viewConfig.setFile(file);   // for subsequent use
             if (templateMode) {
-                // set up this template for WD                
+                // set up this template for WD
                 TemplateUtilities.setTemplateFile(viewConfig.getWorkDirectory(),
-                                                    file, true);  
+                                                    file, true);
                 historyTemplate.add(file);
             }
             else
@@ -368,7 +368,7 @@ class ConfigEditor extends ToolDialog
         catch (IOException e) {
             if (!file.canWrite())
                 uif.showError("ce.save.cantWriteFile", file);
-            else if (e instanceof FileNotFoundException) 
+            else if (e instanceof FileNotFoundException)
                 uif.showError("ce.save.cantFindFile", file);
             else
                 uif.showError("ce.save.error", new Object[] { file, e } );
@@ -391,7 +391,7 @@ class ConfigEditor extends ToolDialog
     }
 
     private FileChooser getFileChooser() {
-        
+
         FileChooser fileChooser = new FileChooser(true);
         if (templateMode) {
             fileChooser.addChoosableExtension(JTM,
@@ -416,11 +416,11 @@ class ConfigEditor extends ToolDialog
     public void revert() {
         if (!isEdited())
             return;
-        
+
         int rc = uif.showOKCancelDialog("ce.revert.warn");
         if (rc != JOptionPane.OK_OPTION)
             return;
-        
+
         try {
             copy(mainConfig, viewConfig);
             if (currView != null && currView.isShowing())
@@ -540,7 +540,7 @@ class ConfigEditor extends ToolDialog
                 uif.showError("ce.show.error", e.getMessage());
             }
         }
-        
+
         setView(newView);
 
         setVisible(true);
@@ -559,7 +559,7 @@ class ConfigEditor extends ToolDialog
             KeyboardFocusManager kfm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             Component fo = kfm.getPermanentFocusOwner();
             boolean focusInView = (fo != null && currView != null && currView.isAncestorOf(fo));
-            
+
             currView = newView;
 
             // update currView from viewConfig
@@ -587,7 +587,7 @@ class ConfigEditor extends ToolDialog
 
             if (detailsBrowser != null)
                 detailsBrowser.setQuestionInfoEnabled(currIsFull);
-            
+
             updateTitle();
         }
     }
@@ -603,19 +603,19 @@ class ConfigEditor extends ToolDialog
 
         close(true);
     }
-    
+
     protected void windowClosingAction(AWTEvent e) {
         if (!canInterruptTemplateCreation()) {
             uif.showError("ce.force_close");
             return;
         }
-        
+
         if(fullView.isVisible()) {
             fullView.prepareClosing();
         }
         close();
     }
-    
+
     private void close(boolean checkIfEdited) {
         if (currView == null)
             return;
@@ -653,21 +653,21 @@ class ConfigEditor extends ToolDialog
         }
 
         setVisible(false);
-        
+
         // closeListener may have been set by show(ActionListener)
         if (closeListener != null) {
-            ActionEvent e = new ActionEvent(this, 
+            ActionEvent e = new ActionEvent(this,
                                             ActionEvent.ACTION_PERFORMED,
                                             CLOSE);
             closeListener.actionPerformed(e);
             closeListener = null;
         }
-        
+
         if (afterCloseCommand != null) {
             afterCloseCommand.run();
             afterCloseCommand = null;
         }
-        
+
     }
 
     void setCheckExcludeListListener(ActionListener l) {
@@ -685,7 +685,7 @@ class ConfigEditor extends ToolDialog
         Question vq = viewConfig.getCurrentQuestion();
         return !equal(mq.getTag(), vq.getTag());
     }
-        
+
 
     boolean isEdited() {
         if (currView != null && currView.isShowing())
@@ -754,15 +754,15 @@ class ConfigEditor extends ToolDialog
             boolean prefMoreInfo = p.getPreference(MORE_INFO_PREF, "true").equals("true");
             views.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
             body = views;
-        
+
         // Don't register "shift alt D" on body, because body might change
-        // if the more info is opened/closed. 
+        // if the more info is opened/closed.
         // Instead, register it on views and infoPanel
-        views.registerKeyboardAction(listener, DETAILS, detailsKey, 
+        views.registerKeyboardAction(listener, DETAILS, detailsKey,
                                            JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        
+
         setBody(body);
-        
+
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
@@ -777,13 +777,13 @@ class ConfigEditor extends ToolDialog
         } else {
             fileMenuItems = new String[] { SAVE, SAVE_AS, REVERT, null, NEW, LOAD, null, NEWT, LOADT, null, CLOSE };
         }
-    	int historyIndex = fileMenuItems.length - 5;
-    	JMenu fileMenu = uif.createMenu("ce.file", fileMenuItems, listener);
-    	FileHistory h = FileHistory.getFileHistory(viewConfig.getWorkDirectory(), "configHistory.jtl");
-    	FileHistory.Listener l = new FileHistory.Listener(h, 0, (ActionListener)listener);
+        int historyIndex = fileMenuItems.length - 5;
+        JMenu fileMenu = uif.createMenu("ce.file", fileMenuItems, listener);
+        FileHistory h = FileHistory.getFileHistory(viewConfig.getWorkDirectory(), "configHistory.jtl");
+        FileHistory.Listener l = new FileHistory.Listener(h, 0, (ActionListener)listener);
             JMenu mm = uif.createMenu("ce.history");
-    	mm.addMenuListener(l);
-    	fileMenu.insert(mm, historyIndex);
+        mm.addMenuListener(l);
+        fileMenu.insert(mm, historyIndex);
         if (cm == null || cm != null && cm.getFeatureManager().isEnabled(
                 FeatureManager.TEMPLATE_CREATION)) {
             int historyTemplateIndex = fileMenuItems.length - 1;
@@ -835,7 +835,7 @@ class ConfigEditor extends ToolDialog
         viewRefreshItem = uif.createMenuItem("ce.view", "refresh", listener);
         viewRefreshItem.setAccelerator(KeyStroke.getKeyStroke("F5"));
         viewMenu.add(viewRefreshItem);
-        
+
         menuBar.add(viewMenu);
 
         menuBar.add(uif.createHorizontalGlue("ce.pad"));
@@ -851,13 +851,13 @@ class ConfigEditor extends ToolDialog
     private void updateTitle() {
         File f = viewConfig.getFile();
         if (templateMode) {
-            setI18NTitle("ce.titlet", 
+            setI18NTitle("ce.titlet",
                     new Object[] { new Integer(currView == fullView ? 0 : 1),
                     new Integer(f == null ? 0 : 1), f });
         } else {
-            setI18NTitle("ce.title", 
+            setI18NTitle("ce.title",
                     new Object[] { new Integer(currView == fullView ? 0 : 1),
-                    new Integer(f == null ? 0 : 1), f });        
+                    new Integer(f == null ? 0 : 1), f });
         }
     }
 
@@ -875,10 +875,10 @@ class ConfigEditor extends ToolDialog
             clear();
         else if (cmd.equals(LOAD))
             load(false);
-    	else if (cmd.equals(LOADT))
-    	    load(true);
-    	else if (cmd.equals(NEWT))
-    	    clear(true);
+        else if (cmd.equals(LOADT))
+            load(true);
+        else if (cmd.equals(NEWT))
+            clear(true);
         else if (cmd.equals(SAVE))
             save();
         else if (cmd.equals(SAVE_AS))
@@ -907,7 +907,7 @@ class ConfigEditor extends ToolDialog
                 uif.showError("ce.force_close");
                 return;
             }
-            
+
             currView.save();
             if (!viewConfig.isFinishable()) {
                 Integer rp = new Integer(runPending ? 1 : 0);
@@ -916,7 +916,7 @@ class ConfigEditor extends ToolDialog
                     return;
             }
 
-            if (isEdited() || isCurrentQuestionChanged()) 
+            if (isEdited() || isCurrentQuestionChanged())
                 saveRequired = true;
 
             if (saveRequired) {
@@ -949,7 +949,7 @@ class ConfigEditor extends ToolDialog
 
     private boolean canInterruptTemplateCreation () {
         ContextManager cm = model.getContextManager();
-        String wdTmpl = TemplateUtilities.getTemplatePath(model.getWorkDirectory());            
+        String wdTmpl = TemplateUtilities.getTemplatePath(model.getWorkDirectory());
         if (mainConfig.isTemplate() &&
                 !cm.getFeatureManager().isEnabled(FeatureManager.WD_WITHOUT_TEMPLATE) &&
                 wdTmpl == null) {
@@ -957,16 +957,16 @@ class ConfigEditor extends ToolDialog
         }
         return true;
     }
-    
-    private void copy(InterviewParameters from, InterviewParameters to) 
-        throws Interview.Fault 
+
+    private void copy(InterviewParameters from, InterviewParameters to)
+        throws Interview.Fault
     {
         copy(from, to, true); // copy filename as well, by default
     }
 
     private void copy(InterviewParameters from, InterviewParameters to,
-                      boolean copyFile) 
-        throws Interview.Fault 
+                      boolean copyFile)
+        throws Interview.Fault
     {
         //System.err.println("CE.copy from " + (from==mainConfig?"main":from==viewConfig?"view":from.toString()) + " to " + (to==mainConfig?"main":to==viewConfig?"view":to.toString()));
         HashMap data = new HashMap();
@@ -987,7 +987,7 @@ class ConfigEditor extends ToolDialog
     * <li><code>getAllowConfigLoadOutsideDefault()</code>
     * </ul>
     * @throws <code>IllegalArgumentException</code> if the following configuration errors found:
-    * <ul> 
+    * <ul>
     * <li> <code>getDefaultConfigLoadPath()</code> returns <code>null</code> when <code>getAllowConfigLoadOutsideDefault()</code> returns <code>false</code>
     * <li> <code>getDefaultConfigLoadPath()</code> returns not absolute path
     * <li> <code>getDefaultConfigLoadPath()</code> returns a file (not a directory)
@@ -1006,20 +1006,20 @@ class ConfigEditor extends ToolDialog
         boolean allowConfigLoadOutsideDefault = cm.getAllowConfigLoadOutsideDefault();
 
         if (defaultConfigLoadPath == null && !allowConfigLoadOutsideDefault)
-            throw new IllegalArgumentException("Default directory not specified for " + 
+            throw new IllegalArgumentException("Default directory not specified for " +
                 "load operation when allowConfigLoadOutsideDefault is false");
 
         if (defaultConfigLoadPath != null) {
             if (!defaultConfigLoadPath.isAbsolute())
                 throw new IllegalArgumentException("Relative paths not " +
                     "currently supported. The following setting is incorrect: " +
-                    "\"" + defaultConfigLoadPath.getPath() + "\" selected for " + 
+                    "\"" + defaultConfigLoadPath.getPath() + "\" selected for " +
                     "load operation");
 
             if (defaultConfigLoadPath.isFile())
                 throw new IllegalArgumentException("Filename selected unexpectedly " +
                     "as a default directory: " +
-                    "\"" + defaultConfigLoadPath.getPath() + "\" for " + 
+                    "\"" + defaultConfigLoadPath.getPath() + "\" for " +
                     "load operation");
         }
 
@@ -1030,7 +1030,7 @@ class ConfigEditor extends ToolDialog
     * Provides capabiltiies for configuration file loading. Method takes into
     * account context settings relating to default locations for configuration
     * files loading and behaves according to them.
-    * @param cm <code>ContextManager</code> object defining current harness' context. The following methods 
+    * @param cm <code>ContextManager</code> object defining current harness' context. The following methods
     *           affect this method functionality:
     * <li><code>getDefaultConfigLoadPath()</code>
     * <li><code>getAllowConfigLoadOutsideDefault()</code>
@@ -1065,7 +1065,7 @@ class ConfigEditor extends ToolDialog
                     return null;
                 }
                 fileChooser.enableDirectories(false);
-            } else 
+            } else
                 fileChooser.enableDirectories(true);
             fileChooser.setCurrentDirectory(defaultConfigLoadPath);
         }
@@ -1082,9 +1082,9 @@ class ConfigEditor extends ToolDialog
             if (!allowConfigLoadOutsideDefault) {
                 if (defaultConfigLoadPath == null)
                     return null;
-        
+
                 File f = new File(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(File.separator)));
-        
+
                 try {
                     isMatch = (f.getCanonicalPath().indexOf((defaultConfigLoadPath.getCanonicalPath())) == 0);
                 } catch ( IOException ioe) {
@@ -1105,12 +1105,12 @@ class ConfigEditor extends ToolDialog
 
         if (file != null) {
             String path = file.getPath();
-            String ext = fileChooser.getChosenExtension(); 
-            if (ext == null) { 
-                ext = JTI; 
+            String ext = fileChooser.getChosenExtension();
+            if (ext == null) {
+                ext = JTI;
             }
             if (!path.endsWith(ext))
-                file = new File(path + ext);        
+                file = new File(path + ext);
         }
 
         return file;
@@ -1120,7 +1120,7 @@ class ConfigEditor extends ToolDialog
     * Provides as the user with a dialog to chooser where to save a config. Method takes into account
     * context settings relating to default locations for configuration files saving and behaves
     * according to them.
-    * @param cm <code>ContextManager</code> object defining current harness' context. The following methods 
+    * @param cm <code>ContextManager</code> object defining current harness' context. The following methods
     *           affect this method functionality:
     * <ul>
     * <li><code>getDefaultConfigSavePath()</code>
@@ -1132,7 +1132,7 @@ class ConfigEditor extends ToolDialog
     * @return The configuration file selected by user if this file saving is allowed by
     *         harness' contest settings
     * @throws <code>IllegalArgumentException</code> if the following configuration errors found:
-    * <ul> 
+    * <ul>
     * <li> <code>getDefaultConfigSavePath()</code> returns <code>null</code> when <code>getAllowConfigSaveOutsideDefault()</code> returns <code>false</code>
     * <li> <code>getDefaultConfigSavePath()</code> returns not absolute path
     * <li> <code>getDefaultConfigSavePath()</code> returns a file (not a directory)
@@ -1148,7 +1148,7 @@ class ConfigEditor extends ToolDialog
         if (cm == null)
             return null;
 
-        File defaultSavePath; 
+        File defaultSavePath;
         if (isTemplate) {
             defaultSavePath = cm.getDefaultTemplateSavePath();
         } else {
@@ -1160,23 +1160,23 @@ class ConfigEditor extends ToolDialog
         } else {
             allowSaveOutsideDefault = cm.getAllowConfigSaveOutsideDefault();
         }
-            
+
 
         if (defaultSavePath == null && !allowSaveOutsideDefault)
-            throw new IllegalArgumentException("Default directory not specified for " + 
+            throw new IllegalArgumentException("Default directory not specified for " +
                 "save operation when allowConfigSaveOutsideDefault is false");
 
         if (defaultSavePath != null) {
             if (!defaultSavePath.isAbsolute())
                 throw new IllegalArgumentException("Relative paths not " +
                     "currently supported. The following setting is incorrect: " +
-                    "\"" + defaultSavePath.getPath() + "\" selected for " + 
+                    "\"" + defaultSavePath.getPath() + "\" selected for " +
                     "save operation");
 
             if (defaultSavePath.isFile())
                 throw new IllegalArgumentException("Filename selected unexpectedly " +
                     "as a default directory: " +
-                    "\"" + defaultSavePath.getPath() + "\" for " + 
+                    "\"" + defaultSavePath.getPath() + "\" for " +
                     "save operation");
 
             if (!allowSaveOutsideDefault) {
@@ -1201,11 +1201,11 @@ class ConfigEditor extends ToolDialog
             if (rc != JFileChooser.APPROVE_OPTION)
                 // user has canceled or closed the chooser
                 return null;
-            
+
             file = fileChooser.getSelectedFile();
             if (file == null) // just making sure
                 continue;
-        
+
             File f = new File(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(File.separator)));
 
             if (!allowSaveOutsideDefault) {
@@ -1260,7 +1260,7 @@ class ConfigEditor extends ToolDialog
             // otherwise, make sure it ends with .jti or .jtm
             if (!file.exists()) {
                 String path = file.getPath();
-                String ext = fileChooser.getChosenExtension(); 
+                String ext = fileChooser.getChosenExtension();
                 if (ext != null && !path.endsWith(ext))
                     file = new File(path + ext);
             }
@@ -1285,10 +1285,10 @@ class ConfigEditor extends ToolDialog
     void setAfterCloseCommand(Runnable runnable) {
         afterCloseCommand = runnable;
     }
-    
+
     private Runnable afterCloseCommand;
     private boolean templateMode = false;
-    
+
     private boolean runPending;
 
     private InterviewParameters mainConfig;
@@ -1326,7 +1326,7 @@ class ConfigEditor extends ToolDialog
     static final String JTI = ".jti";
     static final String TEMPLATE_EXTENSION = ".jtm";
     static final String JTM = TEMPLATE_EXTENSION;
-    
+
     private static final String NEW = "new";
     private static final String LOAD = "load";
     private static final String NEWT = "newt";

@@ -27,11 +27,11 @@
 package com.sun.interview;
 
 /**
- * A "null" question with no response. In effect, this 
+ * A "null" question with no response. In effect, this
  * posts the text, which must simply be acknowledged.
  * ErrorQuestions have no successor.
  */
-public class ErrorQuestion extends NullQuestion 
+public class ErrorQuestion extends NullQuestion
 {
     /**
      * Create a question with a nominated tag.
@@ -39,18 +39,18 @@ public class ErrorQuestion extends NullQuestion
      * @param tag A unique tag to identify this specific question.
      */
     public ErrorQuestion(Interview interview, String tag) {
-	super(interview, tag);
+        super(interview, tag);
     }
 
     public final Question getNext() {
-	return null;
+        return null;
     }
 
     public boolean isValueValid() {
-	return false;
+        return false;
     }
 
     public boolean isValueAlwaysValid() {
-	return false;
+        return false;
     }
 }

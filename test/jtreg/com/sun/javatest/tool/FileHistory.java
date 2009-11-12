@@ -49,9 +49,9 @@ import com.sun.javatest.util.I18NResourceBundle;
 
 /**
  * A class to maintain a history of recently used files. The history is
- * maintained in a specified file in a WorkDirectory, and can be 
+ * maintained in a specified file in a WorkDirectory, and can be
  * dynamically added to a menu by means of a Listener class.
- * The format of the file is one file per line, with most recently 
+ * The format of the file is one file per line, with most recently
  * added entries appearing first.  Lines beginning with <code>#</code> are ignored.
  */
 public class FileHistory
@@ -60,7 +60,7 @@ public class FileHistory
      * Get a shared FileHistory object for a specified file and work directory.
      * @param wd The work directory in which the history file is maintained.
      * @param name The name of the file within the work direectory's jtData/
-     * subdirectory. 
+     * subdirectory.
      * @return the specified FileHistory object
      */
     public static FileHistory getFileHistory(WorkDirectory wd, String name) {
@@ -72,7 +72,7 @@ public class FileHistory
         if (map == null) {
             map = new HashMap(8);
             cache.put(wd, map);
-        }       
+        }
 
         // then, get the FileHistory for the specified file
         FileHistory h = (FileHistory) (map.get(name));
@@ -89,14 +89,14 @@ public class FileHistory
      * Get a shared FileHistory object for a specified file and path to work directory.
      * @param wdFile The path th work directory in which the history file is maintained.
      * @param name The name of the file within the work direectory's jtData/
-     * subdirectory. 
+     * subdirectory.
      * @return the specified FileHistory object
      */
     public static FileHistory getFileHistory(File wdFile, String name) {
         if (cache == null)
             cache = new WeakHashMap(8);
 
-        if (!WorkDirectory.isWorkDirectory(wdFile)) 
+        if (!WorkDirectory.isWorkDirectory(wdFile))
             return null;
 
         // let's find in the cache work dir corresponding to the path
@@ -108,13 +108,13 @@ public class FileHistory
                 wd = tempWD;
                 break;
             }
-        }        
+        }
         if (wd != null)
             return FileHistory.getFileHistory(wd, name);
         else
             return null;
     }
-    
+
     /**
      * Add a new file to the history.
      * The file in the work directory for this history will be updated.
@@ -122,11 +122,11 @@ public class FileHistory
      */
     public void add(File file) {
         ensureEntriesUpToDate();
-        
+
         file = file.getAbsoluteFile();
         entries.remove(file);
         entries.add(0, file);
-        
+
         writeEntries();
     }
 
@@ -162,7 +162,7 @@ public class FileHistory
      * Get the latest valid entry from a file history object. An entry
      * is valid if it identifies a file that exists on the current system.
      * @return the latest valid entry from afile history object, or null
-     * if none found. 
+     * if none found.
      */
     public File getLatestEntry() {
         ensureEntriesUpToDate();
@@ -173,7 +173,7 @@ public class FileHistory
         // platforms.
         for (int i = 0; i < entries.size(); i++) {
             File f = (File) (entries.elementAt(i));
-            if (f.exists()) 
+            if (f.exists())
                 return f;
         }
 
@@ -213,7 +213,7 @@ public class FileHistory
                 WorkDirectory workDir = (WorkDirectory) (workDirRef.get());
                 workDir.log(i18n, "fh.cantRead", new Object[] { name, e } );
             }
-            
+
             historyFileLastModified = historyFile.lastModified();
         }
     }
@@ -240,17 +240,17 @@ public class FileHistory
     }
 
     /**
-     * A class that will dynamically add the latest entries for a 
-     * FileHistory onto a menu. To do this, an instance of this class 
-     * should be added to the menu with 
+     * A class that will dynamically add the latest entries for a
+     * FileHistory onto a menu. To do this, an instance of this class
+     * should be added to the menu with
      * {@link javax.swing.JMenu#addMenuListener addMenuListener}.
      */
     public static class Listener implements MenuListener {
         /**
          * Create a Listener that can be used to dynamically add the
          * latest entries from a FileHistory onto a menu.  The dynamic
-         * entries will be added to the end of the menu when it is 
-         * selected. Any previous values added by this listener 
+         * entries will be added to the end of the menu when it is
+         * selected. Any previous values added by this listener
          * will automatically be removed.
          * @param l An ActionListener that will be notified when
          * any of the dynamic menu entries are invoked. When this
@@ -265,11 +265,11 @@ public class FileHistory
 
         /**
          * Create a Listener that can be used to dynamically add the
-         * latest entries from a FileHistory onto a menu. 
-         * Any previous values added by this listener will automatically 
+         * latest entries from a FileHistory onto a menu.
+         * Any previous values added by this listener will automatically
          * be removed.
          * @param o The position in the menu at which to insert the
-         * dynamic entries. 
+         * dynamic entries.
          * @param l An ActionListener that will be notified when
          * any of the dynamic menu entries are invoked. When this
          * action listener is notified, the action command will be
@@ -283,13 +283,13 @@ public class FileHistory
 
         /**
          * Create a Listener that can be used to dynamically add the
-         * latest entries from a FileHistory onto a menu. 
-         * Any previous values added by this listener will automatically 
+         * latest entries from a FileHistory onto a menu.
+         * Any previous values added by this listener will automatically
          * be removed.
-         * @param h The FileHistory from which to determine the 
+         * @param h The FileHistory from which to determine the
          * entries to be added.
          * @param o The position in the menu at which to insert the
-         * dynamic entries. 
+         * dynamic entries.
          * @param l An ActionListener that will be notified when
          * any of the dynamic menu entries are invoked. When this
          * action listener is notified, the action command will be
@@ -304,9 +304,9 @@ public class FileHistory
         }
 
         /**
-         * Get the FileHistory object from which to obtain the dynamic menu 
+         * Get the FileHistory object from which to obtain the dynamic menu
          * entries.
-         * @return the FileHistory object from which to obtain the dynamic menu 
+         * @return the FileHistory object from which to obtain the dynamic menu
          * entries
          * @see #setFileHistory
          */
@@ -315,9 +315,9 @@ public class FileHistory
         }
 
         /**
-         * Specify the FileHistory object from which to obtain the dynamic menu 
+         * Specify the FileHistory object from which to obtain the dynamic menu
          * entries.
-         * @param h the FileHistory object from which to obtain the dynamic menu 
+         * @param h the FileHistory object from which to obtain the dynamic menu
          * entries
          * @see #getFileHistory
          */
@@ -353,22 +353,22 @@ public class FileHistory
                 }
             }
         }
-        
+
         public void menuDeselected(MenuEvent e) {
             removeDynamicEntries((JMenu) (e.getSource()));
         }
-        
+
         public void menuCanceled(MenuEvent e) {
             removeDynamicEntries((JMenu) (e.getSource()));
         }
 
         private void removeDynamicEntries(JMenu menu) {
-            // Clear out any old menu items previously added by this 
-            // menu listener; remove them from bottom up because 
+            // Clear out any old menu items previously added by this
+            // menu listener; remove them from bottom up because
             // removing an item affects index of subsequent items
             for (int i = menu.getItemCount() -1; i >= 0; i--) {
                 JMenuItem mi = menu.getItem(i);
-                if (mi != null && mi.getClientProperty(FILE_HISTORY) == this) 
+                if (mi != null && mi.getClientProperty(FILE_HISTORY) == this)
                     menu.remove(mi);
             }
         }

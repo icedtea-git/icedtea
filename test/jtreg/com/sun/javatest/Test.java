@@ -30,33 +30,33 @@ import java.io.PrintWriter;
 
 /**
  * This interface is implemented by tests to be run by standard scripts.
- * Information about the test is normally contained in a 
+ * Information about the test is normally contained in a
  * {@link TestDescription test description}.
  *
  * A test should also define `main' as follows:
  * <pre>
  * <code>
- * 	public static void main(String[] args) {
- * 	    Test t = new <em>test-class-name</em>();
- * 	    Status s = t.run(args, new PrintWriter(System.err), new PrintWriter(System.out));
- * 	    s.exit();
- * 	}
+ *      public static void main(String[] args) {
+ *          Test t = new <em>test-class-name</em>();
+ *          Status s = t.run(args, new PrintWriter(System.err), new PrintWriter(System.out));
+ *          s.exit();
+ *      }
  * </code>
  * </pre>
- * Defining `main' like this means that the test can also be run standalone, 
+ * Defining `main' like this means that the test can also be run standalone,
  * independent of the harness.
  */
 public interface Test
 {
     /**
      * Runs the test embodied by the implementation.
-     * @param args 	These are supplied by the {@link Script script} running the test, 
-     * 			typically derived from values in the 
-     *			{@link TestDescription test description}.
-     *             	and allow a script to provide configuration information to a test,
-     *			or to reuse a test with different test values.
-     * @param out1  	A stream to which to report errors. This stream was previously called "err".
-     * @param out2  	An additional stream to which to report messages. This stream was previously called "out".
+     * @param args      These are supplied by the {@link Script script} running the test,
+     *                  typically derived from values in the
+     *                  {@link TestDescription test description}.
+     *                  and allow a script to provide configuration information to a test,
+     *                  or to reuse a test with different test values.
+     * @param out1      A stream to which to report errors. This stream was previously called "err".
+     * @param out2      An additional stream to which to report messages. This stream was previously called "out".
      * @return          A {@link Status} object representing the outcome of the test.
      */
     public Status run(String[] args, PrintWriter out1, PrintWriter out2);

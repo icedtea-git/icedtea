@@ -47,205 +47,205 @@ import com.sun.javatest.tool.UIFactory;
 class CE_ExecutionPane extends CE_StdPane
 {
     CE_ExecutionPane(UIFactory uif, InterviewParameters config) {
-	super(uif, config, "exec");
+        super(uif, config, "exec");
 
-	updateConfig();
-	initGUI();
+        updateConfig();
+        initGUI();
     }
 
     boolean isOKToClose() {
-	if (mutableConcurrencyParameters == null && mutableTimeoutFactorParameters == null)
-	    return true;
+        if (mutableConcurrencyParameters == null && mutableTimeoutFactorParameters == null)
+            return true;
 
-	// check concurrency is OK...
+        // check concurrency is OK...
 
-	String cs = concurrencyField.getText();
-	if (cs == null || cs.length() == 0) {
-	    uif.showError("ce.exec.noConcurrency");
-	    return false;
-	}
+        String cs = concurrencyField.getText();
+        if (cs == null || cs.length() == 0) {
+            uif.showError("ce.exec.noConcurrency");
+            return false;
+        }
 
-	/*
-	try {
-	    int c = Integer.parseInt(cs);
-	    if (c < ConcurrencyParameters.MIN_CONCURRENCY || c > ConcurrencyParameters.MAX_CONCURRENCY) {
-		uif.showError("ce.exec.badRangeConcurrency",
-			      new Object[] { new Integer(ConcurrencyParameters.MIN_CONCURRENCY), 
-					     new Integer(ConcurrencyParameters.MAX_CONCURRENCY) });
-		return false;
-	    }
-	}
-	catch (NumberFormatException e) {
-	    uif.showError("ce.exec.badConcurrency");
-	    return false;
-	}
-	*/
+        /*
+        try {
+            int c = Integer.parseInt(cs);
+            if (c < ConcurrencyParameters.MIN_CONCURRENCY || c > ConcurrencyParameters.MAX_CONCURRENCY) {
+                uif.showError("ce.exec.badRangeConcurrency",
+                              new Object[] { new Integer(ConcurrencyParameters.MIN_CONCURRENCY),
+                                             new Integer(ConcurrencyParameters.MAX_CONCURRENCY) });
+                return false;
+            }
+        }
+        catch (NumberFormatException e) {
+            uif.showError("ce.exec.badConcurrency");
+            return false;
+        }
+        */
 
-	{
-	    NumberFormat fmt = NumberFormat.getIntegerInstance(); // will be locale-specific
-	    ParsePosition pos = new ParsePosition(0);
-	    Number num = fmt.parse(cs, pos);
-	    
-	    if (num != null && (pos.getIndex() == cs.length())) {
-		int c = num.intValue();
-		if (c < ConcurrencyParameters.MIN_CONCURRENCY || c > ConcurrencyParameters.MAX_CONCURRENCY) {
-		    uif.showError("ce.exec.badRangeConcurrency",
-				  new Object[] { new Integer(ConcurrencyParameters.MIN_CONCURRENCY), 
-						 new Integer(ConcurrencyParameters.MAX_CONCURRENCY) });
-		    return false;
-		}
-	    }
-	    else {
-		uif.showError("ce.exec.badConcurrency");
-		return false;
-	    }
-	}
+        {
+            NumberFormat fmt = NumberFormat.getIntegerInstance(); // will be locale-specific
+            ParsePosition pos = new ParsePosition(0);
+            Number num = fmt.parse(cs, pos);
 
-	// check timeout factor is OK...
+            if (num != null && (pos.getIndex() == cs.length())) {
+                int c = num.intValue();
+                if (c < ConcurrencyParameters.MIN_CONCURRENCY || c > ConcurrencyParameters.MAX_CONCURRENCY) {
+                    uif.showError("ce.exec.badRangeConcurrency",
+                                  new Object[] { new Integer(ConcurrencyParameters.MIN_CONCURRENCY),
+                                                 new Integer(ConcurrencyParameters.MAX_CONCURRENCY) });
+                    return false;
+                }
+            }
+            else {
+                uif.showError("ce.exec.badConcurrency");
+                return false;
+            }
+        }
 
-	String ts = timeoutFactorField.getText();
-	if (ts == null || ts.length() == 0) {
-	    uif.showError("ce.exec.noTimeoutFactor");
-	    return false;
-	}
+        // check timeout factor is OK...
 
-	{
-	    NumberFormat fmt = NumberFormat.getNumberInstance(); // will be locale-specific
-	    ParsePosition pos = new ParsePosition(0);
-	    Number num = fmt.parse(ts, pos);
-	    
-	    if (num != null && (pos.getIndex() == ts.length())) {
-		float t = num.floatValue();
-		if (t < TimeoutFactorParameters.MIN_TIMEOUT_FACTOR || t > TimeoutFactorParameters.MAX_TIMEOUT_FACTOR) {
-		    uif.showError("ce.exec.badRangeTimeoutFactor",
-				  new Object[] { new Float(TimeoutFactorParameters.MIN_TIMEOUT_FACTOR), 
-						 new Float(TimeoutFactorParameters.MAX_TIMEOUT_FACTOR) });
-		    return false;
-		}
-	    }
-	    else {
-		uif.showError("ce.exec.badTimeoutFactor");
-		return false;
-	    }
-	}
+        String ts = timeoutFactorField.getText();
+        if (ts == null || ts.length() == 0) {
+            uif.showError("ce.exec.noTimeoutFactor");
+            return false;
+        }
 
-	// all checked; must be OK ...
+        {
+            NumberFormat fmt = NumberFormat.getNumberInstance(); // will be locale-specific
+            ParsePosition pos = new ParsePosition(0);
+            Number num = fmt.parse(ts, pos);
 
-	return true;
+            if (num != null && (pos.getIndex() == ts.length())) {
+                float t = num.floatValue();
+                if (t < TimeoutFactorParameters.MIN_TIMEOUT_FACTOR || t > TimeoutFactorParameters.MAX_TIMEOUT_FACTOR) {
+                    uif.showError("ce.exec.badRangeTimeoutFactor",
+                                  new Object[] { new Float(TimeoutFactorParameters.MIN_TIMEOUT_FACTOR),
+                                                 new Float(TimeoutFactorParameters.MAX_TIMEOUT_FACTOR) });
+                    return false;
+                }
+            }
+            else {
+                uif.showError("ce.exec.badTimeoutFactor");
+                return false;
+            }
+        }
+
+        // all checked; must be OK ...
+
+        return true;
     }
 
 
     void load() {
-	updateConfig();
+        updateConfig();
 
-	// updat teh values displayed and update mutability
-	concurrencyField.setText(String.valueOf(config.getConcurrency()));
-	concurrencyField.setEnabled(mutableConcurrencyParameters != null);
+        // updat teh values displayed and update mutability
+        concurrencyField.setText(String.valueOf(config.getConcurrency()));
+        concurrencyField.setEnabled(mutableConcurrencyParameters != null);
 
-	NumberFormat fmt = NumberFormat.getNumberInstance();  // is locale-specific
-	timeoutFactorField.setText(fmt.format(new Double(config.getTimeoutFactor())));
-	timeoutFactorField.setEnabled(mutableTimeoutFactorParameters != null);
+        NumberFormat fmt = NumberFormat.getNumberInstance();  // is locale-specific
+        timeoutFactorField.setText(fmt.format(new Double(config.getTimeoutFactor())));
+        timeoutFactorField.setEnabled(mutableTimeoutFactorParameters != null);
     }
 
     /**
      * Update internal values from the configuration.
      */
     void updateConfig() {
-	concurrencyParameters = config.getConcurrencyParameters();
-	if (concurrencyParameters instanceof MutableConcurrencyParameters) 
-	    mutableConcurrencyParameters =
-		(MutableConcurrencyParameters) concurrencyParameters;
-	else 
-	    mutableConcurrencyParameters = null;
-	
-	timeoutFactorParameters = config.getTimeoutFactorParameters();
-	if (timeoutFactorParameters instanceof MutableTimeoutFactorParameters) 
-	    mutableTimeoutFactorParameters =
-		(MutableTimeoutFactorParameters) timeoutFactorParameters;
-	else 
-	    mutableTimeoutFactorParameters = null;
+        concurrencyParameters = config.getConcurrencyParameters();
+        if (concurrencyParameters instanceof MutableConcurrencyParameters)
+            mutableConcurrencyParameters =
+                (MutableConcurrencyParameters) concurrencyParameters;
+        else
+            mutableConcurrencyParameters = null;
+
+        timeoutFactorParameters = config.getTimeoutFactorParameters();
+        if (timeoutFactorParameters instanceof MutableTimeoutFactorParameters)
+            mutableTimeoutFactorParameters =
+                (MutableTimeoutFactorParameters) timeoutFactorParameters;
+        else
+            mutableTimeoutFactorParameters = null;
 
     }
-    
+
     void save() {
-	if (mutableConcurrencyParameters != null) {
-	    int c = getInt(concurrencyField.getText(), 1);
-	    mutableConcurrencyParameters.setConcurrency(c);
-	}
-	
-	if (mutableTimeoutFactorParameters != null) {
-	    float t = getFloat(timeoutFactorField.getText(), 1);
-	    mutableTimeoutFactorParameters.setTimeoutFactor(t);
-	}
+        if (mutableConcurrencyParameters != null) {
+            int c = getInt(concurrencyField.getText(), 1);
+            mutableConcurrencyParameters.setConcurrency(c);
+        }
+
+        if (mutableTimeoutFactorParameters != null) {
+            float t = getFloat(timeoutFactorField.getText(), 1);
+            mutableTimeoutFactorParameters.setTimeoutFactor(t);
+        }
     }
 
     private void initGUI() {
-	JPanel p = uif.createPanel("ce.exec", new GridBagLayout(), false);
+        JPanel p = uif.createPanel("ce.exec", new GridBagLayout(), false);
 
-	GridBagConstraints lc = new GridBagConstraints();
-	lc.anchor = GridBagConstraints.EAST;
-	lc.gridwidth = 1;
-	lc.insets.right = 5;
-	lc.weightx = 0;
+        GridBagConstraints lc = new GridBagConstraints();
+        lc.anchor = GridBagConstraints.EAST;
+        lc.gridwidth = 1;
+        lc.insets.right = 5;
+        lc.weightx = 0;
 
-	GridBagConstraints fc = new GridBagConstraints();
-	fc.anchor = GridBagConstraints.WEST;
-	fc.gridwidth = GridBagConstraints.REMAINDER;
+        GridBagConstraints fc = new GridBagConstraints();
+        fc.anchor = GridBagConstraints.WEST;
+        fc.gridwidth = GridBagConstraints.REMAINDER;
 
-	concurrencyLabel = uif.createLabel("ce.exec.concurrency", true);
-	p.add(concurrencyLabel, lc);
-	concurrencyField = uif.createInputField("ce.exec.concurrency", 5);
-	concurrencyField.setEnabled(mutableConcurrencyParameters != null);
-	concurrencyLabel.setLabelFor(concurrencyField);
-	p.add(concurrencyField, fc);
+        concurrencyLabel = uif.createLabel("ce.exec.concurrency", true);
+        p.add(concurrencyLabel, lc);
+        concurrencyField = uif.createInputField("ce.exec.concurrency", 5);
+        concurrencyField.setEnabled(mutableConcurrencyParameters != null);
+        concurrencyLabel.setLabelFor(concurrencyField);
+        p.add(concurrencyField, fc);
 
-	timeoutFactorLabel = uif.createLabel("ce.exec.timeoutFactor", true);
-	p.add(timeoutFactorLabel, lc);
-	timeoutFactorField = uif.createInputField("ce.exec.timeoutFactor", 5);
-	timeoutFactorField.setEnabled(mutableTimeoutFactorParameters != null);
-	timeoutFactorLabel.setLabelFor(timeoutFactorField);
-	p.add(timeoutFactorField, fc);
+        timeoutFactorLabel = uif.createLabel("ce.exec.timeoutFactor", true);
+        p.add(timeoutFactorLabel, lc);
+        timeoutFactorField = uif.createInputField("ce.exec.timeoutFactor", 5);
+        timeoutFactorField.setEnabled(mutableTimeoutFactorParameters != null);
+        timeoutFactorLabel.setLabelFor(timeoutFactorField);
+        p.add(timeoutFactorField, fc);
 
-	addBody(p);
+        addBody(p);
     }
 
     private int getInt(String s, int dflt) {
-	/* OLD
-	try {
-	    return (s == null || s.trim().length() == 0 ? dflt : Integer.parseInt(s));
-	}
-	catch (NumberFormatException e) {
-	    return dflt;
-	}
-	*/
+        /* OLD
+        try {
+            return (s == null || s.trim().length() == 0 ? dflt : Integer.parseInt(s));
+        }
+        catch (NumberFormatException e) {
+            return dflt;
+        }
+        */
 
-	NumberFormat fmt = NumberFormat.getIntegerInstance(); // will be locale-specific
-	ParsePosition pos = new ParsePosition(0);
-	Number num = fmt.parse(s, pos);
-	return (num != null && (pos.getIndex() == s.length()) ? num.intValue() : dflt);
+        NumberFormat fmt = NumberFormat.getIntegerInstance(); // will be locale-specific
+        ParsePosition pos = new ParsePosition(0);
+        Number num = fmt.parse(s, pos);
+        return (num != null && (pos.getIndex() == s.length()) ? num.intValue() : dflt);
     }
 
     private float getFloat(String s, float dflt) {
-	/* OLD
-	try {
-	    return (s == null || s.trim().length() == 0 ? dflt : Float.parseFloat(s));
-	}
-	catch (NumberFormatException e) {
-	    return dflt;
-	}
-	*/
+        /* OLD
+        try {
+            return (s == null || s.trim().length() == 0 ? dflt : Float.parseFloat(s));
+        }
+        catch (NumberFormatException e) {
+            return dflt;
+        }
+        */
 
-	NumberFormat fmt = NumberFormat.getNumberInstance(); // will be locale-specific
-	ParsePosition pos = new ParsePosition(0);
-	Number num = fmt.parse(s, pos);
-	return (num != null && (pos.getIndex() == s.length()) ? num.floatValue() : dflt);
+        NumberFormat fmt = NumberFormat.getNumberInstance(); // will be locale-specific
+        ParsePosition pos = new ParsePosition(0);
+        Number num = fmt.parse(s, pos);
+        return (num != null && (pos.getIndex() == s.length()) ? num.floatValue() : dflt);
     }
 
     private ConcurrencyParameters concurrencyParameters;
     private MutableConcurrencyParameters mutableConcurrencyParameters;
     private JLabel concurrencyLabel;
     private JTextField concurrencyField;
-    
+
     private TimeoutFactorParameters timeoutFactorParameters;
     private MutableTimeoutFactorParameters mutableTimeoutFactorParameters;
     private JLabel timeoutFactorLabel;

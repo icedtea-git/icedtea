@@ -42,14 +42,14 @@ public class ActiveConnectionFactory implements ConnectionFactory
      * @param port The port on the host to which the connections should connect.
      */
     public ActiveConnectionFactory(String host, int port) {
-	if (host == null)
-	    throw new NullPointerException();
+        if (host == null)
+            throw new NullPointerException();
 
-	if (host.length() == 0 || port <= 0)
-	    throw new IllegalArgumentException();
+        if (host.length() == 0 || port <= 0)
+            throw new IllegalArgumentException();
 
-	this.host = host;
-	this.port = port;
+        this.host = host;
+        this.port = port;
     }
 
     /**
@@ -57,7 +57,7 @@ public class ActiveConnectionFactory implements ConnectionFactory
      * @return the host to which connections will be made
      */
     public String getHost() {
-	return host;
+        return host;
     }
 
     /**
@@ -65,19 +65,19 @@ public class ActiveConnectionFactory implements ConnectionFactory
      * @return the port to which connections will be made
      */
     public int getPort() {
-	return port;
+        return port;
     }
 
     public Connection nextConnection() throws ConnectionFactory.Fault {
-	try {
-	    return new SocketConnection(new Socket(host, port));
-	}
-	catch (UnknownHostException e) {
-	    throw new ConnectionFactory.Fault(e, true);
-	}
-	catch (IOException e) {
-	    throw new ConnectionFactory.Fault(e, false);
-	}
+        try {
+            return new SocketConnection(new Socket(host, port));
+        }
+        catch (UnknownHostException e) {
+            throw new ConnectionFactory.Fault(e, true);
+        }
+        catch (IOException e) {
+            throw new ConnectionFactory.Fault(e, false);
+        }
     }
 
     public void close() {

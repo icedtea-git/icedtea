@@ -35,14 +35,14 @@ import com.sun.javatest.util.I18NResourceBundle;
  * Special error class to be used for errors which may pop out of JT Harness and
  * be seen by the user.
  */
-public class JavaTestError extends Error 
+public class JavaTestError extends Error
 {
     /**
      * Constructs a JavaTestError object with a literal string as the message
      * text.  You should ensure that the string you supply here is subject to
      * I18N.
      *
-     * @param s Literal string to use as the message text. 
+     * @param s Literal string to use as the message text.
      */
     public JavaTestError(String s) {
         super(s);
@@ -53,24 +53,24 @@ public class JavaTestError extends Error
      * text.  You should ensure that the string you supply here is subject to
      * I18N.
      *
-     * @param s Literal string to use as the message text. 
+     * @param s Literal string to use as the message text.
      * @param original The exception which originally caused the problem.
      */
     public JavaTestError(String s, Throwable original) {
         super(s);
-	this.original = original;
+        this.original = original;
     }
 
     /**
      * Constructs a JavaTestError object to be thrown when an unexpected
      * exception has been caught.
-     * 
+     *
      * @param original The exception which originally caused the problem.
      * @see #unexpectedException
      */
     public JavaTestError(Throwable original) {
-	super(i18n.getString("fault.default", original));
-	this.original = original;
+        super(i18n.getString("fault.default", original));
+        this.original = original;
     }
 
     /**
@@ -150,31 +150,31 @@ public class JavaTestError extends Error
     }
 
     public void printStackTrace() {
-	printStackTrace(System.err);
+        printStackTrace(System.err);
     }
 
     public void printStackTrace(PrintStream s) {
-	s.println(GENERIC_START);
-	super.printStackTrace(s);
+        s.println(GENERIC_START);
+        super.printStackTrace(s);
 
-	if (original != null) {
-	    s.println(ROOT_CAUSE);
-	    original.printStackTrace(s);
-	}
+        if (original != null) {
+            s.println(ROOT_CAUSE);
+            original.printStackTrace(s);
+        }
 
-	s.println(GENERIC_END);
+        s.println(GENERIC_END);
     }
 
     public void printStackTrace(PrintWriter s) {
-	s.println(GENERIC_START);
-	super.printStackTrace(s);
+        s.println(GENERIC_START);
+        super.printStackTrace(s);
 
-	if (original != null) {
-	    s.println(ROOT_CAUSE);
-	    original.printStackTrace(s);
-	}
+        if (original != null) {
+            s.println(ROOT_CAUSE);
+            original.printStackTrace(s);
+        }
 
-	s.println(GENERIC_END);
+        s.println(GENERIC_END);
     }
 
     /**
@@ -192,10 +192,10 @@ public class JavaTestError extends Error
      * Add an object to an arrray.
      */
     private static Object[] join(Object[] args, Object a) {
-	Object[] newArgs = new Object[args.length + 1];
-	System.arraycopy(args, 0, newArgs, 0, args.length);
-	newArgs[args.length] = a;
-	return newArgs;
+        Object[] newArgs = new Object[args.length + 1];
+        System.arraycopy(args, 0, newArgs, 0, args.length);
+        newArgs[args.length] = a;
+        return newArgs;
     }
 
     /**
@@ -204,10 +204,10 @@ public class JavaTestError extends Error
      * @see #JavaTestError(Throwable)
      */
     public static void unexpectedException(Throwable t) {
-	System.err.println(GENERIC_START);
-	System.err.println(UNEXPECTED_EXCEPTION);
-	t.printStackTrace(System.err);
-	System.err.println(GENERIC_END);
+        System.err.println(GENERIC_START);
+        System.err.println(UNEXPECTED_EXCEPTION);
+        t.printStackTrace(System.err);
+        System.err.println(GENERIC_END);
     }
 
     /**
@@ -221,4 +221,3 @@ public class JavaTestError extends Error
     private static final String ROOT_CAUSE = i18n.getString("fault.origin");
     private static final String UNEXPECTED_EXCEPTION = i18n.getString("fault.unexpected");
 }
-

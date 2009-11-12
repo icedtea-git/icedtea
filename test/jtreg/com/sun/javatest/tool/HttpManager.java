@@ -45,55 +45,55 @@ import com.sun.javatest.util.I18NResourceBundle;
  * <li><code>-startHttp</code>: start an HTTP server
  * </ul>
  */
-public class HttpManager extends CommandManager 
+public class HttpManager extends CommandManager
 {
     public HelpTree.Node getHelp() {
-	String[] cmds = {
-	    HttpCommand.getName()
-	};
-	return new HelpTree.Node(i18n, "http", cmds);
+        String[] cmds = {
+            HttpCommand.getName()
+        };
+        return new HelpTree.Node(i18n, "http", cmds);
     }
 
     //----------------------------------------------------------------------------
 
     public boolean parseCommand(String cmd, ListIterator argIter, CommandContext ctx)
-	throws Command.Fault
+        throws Command.Fault
     {
-	if (isMatch(cmd, HttpCommand.getName())) {
-	    if (!httpFlag) {
-		ctx.addCommand(new HttpCommand());
-		httpFlag = true;
-	    }
-	    return true;
-	}
-	return false;
+        if (isMatch(cmd, HttpCommand.getName())) {
+            if (!httpFlag) {
+                ctx.addCommand(new HttpCommand());
+                httpFlag = true;
+            }
+            return true;
+        }
+        return false;
     }
 
     private boolean httpFlag;
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(ConfigManager.class);
 
     private static class HttpCommand extends Command {
-	static String getName() {
-	    return "startHttp";
-	}
+        static String getName() {
+            return "startHttp";
+        }
 
-	HttpCommand() {
-	    super(getName());
-	}
+        HttpCommand() {
+            super(getName());
+        }
 
-	public void run(CommandContext ctx) {
-	    HttpdServer server = new HttpdServer();
-	    Thread thr = new Thread(server);
+        public void run(CommandContext ctx) {
+            HttpdServer server = new HttpdServer();
+            Thread thr = new Thread(server);
 
-	    Date date = ProductInfo.getBuildDate();
-	    DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+            Date date = ProductInfo.getBuildDate();
+            DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
 
-	    PageGenerator.setSWName(ProductInfo.getName());
-	    PageGenerator.setSWBuildDate(df.format(date));
-	    PageGenerator.setSWVersion(ProductInfo.getVersion());
+            PageGenerator.setSWName(ProductInfo.getName());
+            PageGenerator.setSWBuildDate(df.format(date));
+            PageGenerator.setSWVersion(ProductInfo.getVersion());
 
-	    thr.start();
-	}
+            thr.start();
+        }
     }
-	    
+
 }

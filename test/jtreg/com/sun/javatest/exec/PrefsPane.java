@@ -42,77 +42,77 @@ import com.sun.javatest.tool.UIFactory;
 class PrefsPane extends Preferences.Pane
 {
     PrefsPane() {
-	uif = new UIFactory(this);
-	initGUI();
+        uif = new UIFactory(this);
+        initGUI();
     }
 
     public Preferences.Pane[] getChildPanes() {
-	if (configEditorPane == null)
-	    configEditorPane = new ConfigEditorPane();
-	if (childPanes == null)
-	    childPanes = new Preferences.Pane[] { configEditorPane };
-	return childPanes;
+        if (configEditorPane == null)
+            configEditorPane = new ConfigEditorPane();
+        if (childPanes == null)
+            childPanes = new Preferences.Pane[] { configEditorPane };
+        return childPanes;
     }
 
     public String getText() {
-	return uif.getI18NString("ep.title");
+        return uif.getI18NString("ep.title");
     }
 
     public void load(Map m) {
-	super.load(m);
-	String p = (String) (m.get(ExecTool.TOOLBAR_PREF));
-	toolBarChk.setSelected(p == null || p.equals("true"));
-	p = (String) (m.get(ExecTool.FILTER_WARN_PREF));
-	filterWarnChk.setSelected(p == null || p.equals("true"));
+        super.load(m);
+        String p = (String) (m.get(ExecTool.TOOLBAR_PREF));
+        toolBarChk.setSelected(p == null || p.equals("true"));
+        p = (String) (m.get(ExecTool.FILTER_WARN_PREF));
+        filterWarnChk.setSelected(p == null || p.equals("true"));
     }
 
     public void save(Map m) {
-	super.save(m);
-	m.put(ExecTool.TOOLBAR_PREF, String.valueOf(toolBarChk.isSelected()));
-	m.put(ExecTool.FILTER_WARN_PREF, String.valueOf(filterWarnChk.isSelected()));
+        super.save(m);
+        m.put(ExecTool.TOOLBAR_PREF, String.valueOf(toolBarChk.isSelected()));
+        m.put(ExecTool.FILTER_WARN_PREF, String.valueOf(filterWarnChk.isSelected()));
     }
 
     private void initGUI() {
-	setLayout(new GridBagLayout());
+        setLayout(new GridBagLayout());
 
-	GridBagConstraints c = new GridBagConstraints();
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.weightx = 1;
-	
-	add(createToolBarPanel(), c);
-	add(createFilterPanel(), c);
-	
-	c.weighty = 1;
-	add(Box.createVerticalGlue(), c);
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.weightx = 1;
+
+        add(createToolBarPanel(), c);
+        add(createFilterPanel(), c);
+
+        c.weighty = 1;
+        add(Box.createVerticalGlue(), c);
 
     }
 
     private JPanel createToolBarPanel() {
-	JPanel p = uif.createPanel("exec.prefs", new GridBagLayout(), false);
-	GridBagConstraints c = new GridBagConstraints();
-	c.anchor = GridBagConstraints.WEST;
-	c.weightx = 1;
-	p.setBorder(uif.createTitledBorder("ep.toolbar"));
-	toolBarChk = uif.createCheckBox("ep.toolbar", true);
-	// override default a11y name
-	uif.setAccessibleName(toolBarChk, "ep.toolbar");
-	p.add(toolBarChk, c);
-	return p;
+        JPanel p = uif.createPanel("exec.prefs", new GridBagLayout(), false);
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.WEST;
+        c.weightx = 1;
+        p.setBorder(uif.createTitledBorder("ep.toolbar"));
+        toolBarChk = uif.createCheckBox("ep.toolbar", true);
+        // override default a11y name
+        uif.setAccessibleName(toolBarChk, "ep.toolbar");
+        p.add(toolBarChk, c);
+        return p;
     }
 
     private JPanel createFilterPanel() {
-	// could have setting to ask user what the default filter to use is
-	JPanel p = uif.createPanel("exec.prefs.filter", new GridBagLayout(), false);
-	GridBagConstraints c = new GridBagConstraints();
-	c.anchor = GridBagConstraints.WEST;
-	c.weightx = 1;
-	p.setBorder(uif.createTitledBorder("ep.filt"));
-	filterWarnChk= uif.createCheckBox("ep.filt", true);
-	// override default a11y name
-	uif.setAccessibleName(filterWarnChk, "ep.filt");
-	p.add(filterWarnChk, c);
-	return p;
+        // could have setting to ask user what the default filter to use is
+        JPanel p = uif.createPanel("exec.prefs.filter", new GridBagLayout(), false);
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.WEST;
+        c.weightx = 1;
+        p.setBorder(uif.createTitledBorder("ep.filt"));
+        filterWarnChk= uif.createCheckBox("ep.filt", true);
+        // override default a11y name
+        uif.setAccessibleName(filterWarnChk, "ep.filt");
+        p.add(filterWarnChk, c);
+        return p;
     }
 
     private UIFactory uif;
@@ -122,74 +122,74 @@ class PrefsPane extends Preferences.Pane
     private Preferences.Pane[] childPanes;
 
     private class ConfigEditorPane extends Preferences.Pane {
-	ConfigEditorPane() {
-	    initGUI();
-	}
+        ConfigEditorPane() {
+            initGUI();
+        }
 
-	public String getText() {
-	    return uif.getI18NString("ep.ce.title");
-	}
+        public String getText() {
+            return uif.getI18NString("ep.ce.title");
+        }
 
-	public void load(Map m) {
-	    String vp = (String) (m.get(ConfigEditor.VIEW_PREF));
-	    if (vp != null && vp.equals(CE_View.STD))
-		stdBtn.setSelected(true);
-	    else
-		fullBtn.setSelected(true);
-	    String mp = (String) (m.get(ConfigEditor.MORE_INFO_PREF));
-	    moreInfoChk.setSelected(mp == null || mp.equals("true"));
-	}
+        public void load(Map m) {
+            String vp = (String) (m.get(ConfigEditor.VIEW_PREF));
+            if (vp != null && vp.equals(CE_View.STD))
+                stdBtn.setSelected(true);
+            else
+                fullBtn.setSelected(true);
+            String mp = (String) (m.get(ConfigEditor.MORE_INFO_PREF));
+            moreInfoChk.setSelected(mp == null || mp.equals("true"));
+        }
 
-	public void save(Map m) {
-	    m.put(ConfigEditor.VIEW_PREF, (stdBtn.isSelected() ? CE_View.STD : CE_View.FULL));
-	    m.put(ConfigEditor.MORE_INFO_PREF, String.valueOf(moreInfoChk.isSelected()));
-	}
+        public void save(Map m) {
+            m.put(ConfigEditor.VIEW_PREF, (stdBtn.isSelected() ? CE_View.STD : CE_View.FULL));
+            m.put(ConfigEditor.MORE_INFO_PREF, String.valueOf(moreInfoChk.isSelected()));
+        }
 
-	private void initGUI() {
-	    setLayout(new GridBagLayout());
-	    
-	    GridBagConstraints c = new GridBagConstraints();
-	    c.fill = GridBagConstraints.HORIZONTAL;
-	    c.gridwidth = GridBagConstraints.REMAINDER;
-	    c.weightx = 1;
-	    
-	    add(createDefaultViewPanel(), c);
-	    
-	    c.weighty = 1;
-	    add(Box.createVerticalGlue(), c);
-	}
+        private void initGUI() {
+            setLayout(new GridBagLayout());
 
-	private JPanel createDefaultViewPanel() {
-	    GridBagConstraints c = new GridBagConstraints();
-	    c.anchor = GridBagConstraints.WEST;
-	    c.gridwidth = GridBagConstraints.REMAINDER;
-	    c.insets.left = 10;
-	    c.weightx = 1;
-	    c.weighty = 0;
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            c.weightx = 1;
 
-	    JPanel p = new JPanel(new GridBagLayout());
+            add(createDefaultViewPanel(), c);
 
-	    JTextArea infoTa = uif.createMessageArea("ep.ce.info");
-	    infoTa.setOpaque(false);
-	    add(infoTa, c);
+            c.weighty = 1;
+            add(Box.createVerticalGlue(), c);
+        }
 
-	    p.setBorder(uif.createTitledBorder("ep.ce.defView"));
-	    ButtonGroup grp = new ButtonGroup();
-	    fullBtn = uif.createRadioButton("ep.ce.defView.full", grp);
-	    p.add(fullBtn, c);
-	    stdBtn = uif.createRadioButton("ep.ce.defView.std", grp);
-	    p.add(stdBtn, c);
-	    moreInfoChk = uif.createCheckBox("ep.ce.moreInfo", true);
-	    // override default a11y name
-	    uif.setAccessibleName(moreInfoChk, "ep.ce.moreInfo");
+        private JPanel createDefaultViewPanel() {
+            GridBagConstraints c = new GridBagConstraints();
+            c.anchor = GridBagConstraints.WEST;
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            c.insets.left = 10;
+            c.weightx = 1;
+            c.weighty = 0;
 
-	    c.insets.top = 10;
-	    p.add(moreInfoChk, c);
-	    return p;
-	}
-	
-	private JRadioButton fullBtn;
-	private JRadioButton stdBtn;
-	private JCheckBox moreInfoChk;
+            JPanel p = new JPanel(new GridBagLayout());
+
+            JTextArea infoTa = uif.createMessageArea("ep.ce.info");
+            infoTa.setOpaque(false);
+            add(infoTa, c);
+
+            p.setBorder(uif.createTitledBorder("ep.ce.defView"));
+            ButtonGroup grp = new ButtonGroup();
+            fullBtn = uif.createRadioButton("ep.ce.defView.full", grp);
+            p.add(fullBtn, c);
+            stdBtn = uif.createRadioButton("ep.ce.defView.std", grp);
+            p.add(stdBtn, c);
+            moreInfoChk = uif.createCheckBox("ep.ce.moreInfo", true);
+            // override default a11y name
+            uif.setAccessibleName(moreInfoChk, "ep.ce.moreInfo");
+
+            c.insets.top = 10;
+            p.add(moreInfoChk, c);
+            return p;
+        }
+
+        private JRadioButton fullBtn;
+        private JRadioButton stdBtn;
+        private JCheckBox moreInfoChk;
     }
 }

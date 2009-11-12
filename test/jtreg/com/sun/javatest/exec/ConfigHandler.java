@@ -102,9 +102,9 @@ class ConfigHandler
         amap.put(SHOW_FULL_CONFIG_EDITOR, showFullConfigAction);
     }
 
-    private static KeyStroke configEditorAccelerator = 
+    private static KeyStroke configEditorAccelerator =
         KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_MASK);
-    private static KeyStroke tEditorAccelerator = 
+    private static KeyStroke tEditorAccelerator =
         KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK);
 
     void dispose() {
@@ -146,7 +146,7 @@ class ConfigHandler
         }
 
         // add Edit Quick Set
-        menu.add(changeMenu); 
+        menu.add(changeMenu);
 
         menu.addSeparator();
         menu.add(uif.createMenuItem(newConfigAction));
@@ -156,7 +156,7 @@ class ConfigHandler
         menu.add(uif.createMenuItem(showChecklistAction));
         menu.add(uif.createMenuItem(showExcludeListAction));
         menu.add(uif.createMenuItem(showEnvironmentAction));
-        menu.add(uif.createMenuItem(showQuestionLogAction)); 
+        menu.add(uif.createMenuItem(showQuestionLogAction));
         menu.addSeparator();
         */
         // custom menu items
@@ -171,7 +171,7 @@ class ConfigHandler
                         menu.add(items[i]);
             }
         }
-        
+
         configHistoryListener = new FileHistory.Listener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     JMenuItem mi = (JMenuItem) (e.getSource());
@@ -249,7 +249,7 @@ class ConfigHandler
             return true;
         }
     }
-    
+
     private boolean isTemplateEditingEnabled() {
         if (interviewParams == null || !isTemplateCreationEnabled()) {
             return false;
@@ -264,10 +264,10 @@ class ConfigHandler
         JLabel lab = uif.createLabel("ch.cfname");
         lab.setDisplayedMnemonic(uif.getI18NString("ch.cfname.mne").charAt(0));
 
-	    lab.setBackground(MetalLookAndFeel.getMenuBackground());
-	    lab.setForeground(new Color(102,102,102));   // #666666
-	    Font f = MetalLookAndFeel.getSystemTextFont();
-	    lab.setFont(new Font("Ariel", Font.BOLD, f.getSize()));
+            lab.setBackground(MetalLookAndFeel.getMenuBackground());
+            lab.setForeground(new Color(102,102,102));   // #666666
+            Font f = MetalLookAndFeel.getSystemTextFont();
+            lab.setFont(new Font("Ariel", Font.BOLD, f.getSize()));
         lab.setHorizontalAlignment(JLabel.RIGHT);
 
         configNameField = uif.createOutputField("ch.cfname", lab);
@@ -275,7 +275,7 @@ class ConfigHandler
         configNameField.setBackground(MetalLookAndFeel.getMenuBackground());
 
         configNameField.setForeground(new Color(102,102,102));   // #666666
-	    configNameField.setFont(new Font("Ariel", Font.BOLD, f.getSize()));
+            configNameField.setFont(new Font("Ariel", Font.BOLD, f.getSize()));
         configNameField.setBorder(BorderFactory.createEmptyBorder());
         configNameField.setText(uif.getI18NString("ch.none"));
         configNameField.setHorizontalAlignment(JTextField.RIGHT);
@@ -285,18 +285,18 @@ class ConfigHandler
         JLabel lab1 = uif.createLabel("ch.tmplname");
         lab1.setDisplayedMnemonic(uif.getI18NString("ch.tmplname.mne").charAt(0));
 
-	    lab1.setBackground(MetalLookAndFeel.getMenuBackground());
-	    lab1.setForeground(new Color(102,102,102));   // #666666
-	    f = MetalLookAndFeel.getSystemTextFont();
-	    lab1.setFont(new Font("Ariel", Font.BOLD, f.getSize()));
+            lab1.setBackground(MetalLookAndFeel.getMenuBackground());
+            lab1.setForeground(new Color(102,102,102));   // #666666
+            f = MetalLookAndFeel.getSystemTextFont();
+            lab1.setFont(new Font("Ariel", Font.BOLD, f.getSize()));
         lab1.setHorizontalAlignment(JLabel.LEADING);
 
 
         tmplNameField = uif.createOutputField("ch.tmplname", lab1);
         tmplNameField.setColumns(0);
         tmplNameField.setBackground(MetalLookAndFeel.getMenuBackground());
-	    tmplNameField.setForeground(new Color(102,102,102));   // #666666
-	    tmplNameField.setFont(new Font("Ariel", Font.BOLD, f.getSize()));
+            tmplNameField.setForeground(new Color(102,102,102));   // #666666
+            tmplNameField.setFont(new Font("Ariel", Font.BOLD, f.getSize()));
         tmplNameField.setBorder(BorderFactory.createEmptyBorder());
         tmplNameField.setText(uif.getI18NString("ch.none"));
         tmplNameField.setHorizontalAlignment(JTextField.LEADING);
@@ -385,14 +385,14 @@ class ConfigHandler
             if ( !(elp instanceof InterviewParameters.MutableExcludeListParameters))
                 return;
             InterviewParameters.MutableExcludeListParameters melp = (InterviewParameters.MutableExcludeListParameters) elp;
-            
+
             URL remote = testSuite.getLatestExcludeList();
             File local = workDir.getSystemFile("latest.jtx");
             ExcludeListUpdateHandler eluh = new ExcludeListUpdateHandler(remote, local);
-            
+
             if (quietIfNoUpdate && !eluh.isUpdateAvailable())
                 return;
-            
+
             JPanel info = new JPanel(new GridBagLayout());
             info.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
             GridBagConstraints lc = new GridBagConstraints();
@@ -401,35 +401,35 @@ class ConfigHandler
             fc.gridwidth = GridBagConstraints.REMAINDER;
             fc.fill = GridBagConstraints.HORIZONTAL;
             fc.weightx = 1;
-            
+
             JLabel remoteLbl = uif.createLabel("ch.elu.remote");
             info.add(remoteLbl, lc);
 
             JTextField remoteText = uif.createOutputField("ch.elu.remote", remoteLbl);
             remoteText.setBorder(null);
             // should consider better date formatting; is this i18n-ok?
-            long remoteDate =  eluh.getRemoteURLLastModified(); 
-            String remoteDateText = (remoteDate <= 0 ? 
-                                     uif.getI18NString("ch.elu.notAvailable") 
+            long remoteDate =  eluh.getRemoteURLLastModified();
+            String remoteDateText = (remoteDate <= 0 ?
+                                     uif.getI18NString("ch.elu.notAvailable")
                                      : new Date(remoteDate).toString());
             remoteText.setText(remoteDateText);
             remoteText.setColumns(remoteDateText.length());
             info.add(remoteText, fc);
-            
+
             JLabel localLbl = uif.createLabel("ch.elu.local");
             info.add(localLbl, lc);
 
             JTextField localText = uif.createOutputField("ch.elu.local", localLbl);
             localText.setBorder(null);
             // should consider better date formatting; is this i18n-ok?
-            long localDate =  eluh.getLocalFileLastModified(); 
-            String localDateText = (localDate <= 0 ? 
-                                    uif.getI18NString("ch.elu.notAvailable") 
+            long localDate =  eluh.getLocalFileLastModified();
+            String localDateText = (localDate <= 0 ?
+                                    uif.getI18NString("ch.elu.notAvailable")
                                     : new Date(localDate).toString());
             localText.setText(localDateText);
             localText.setColumns(localDateText.length());
             info.add(localText, fc);
-            
+
             if (eluh.isUpdateAvailable()) {
                 String title = uif.getI18NString("ch.elu.update.title");
                 String head = uif.getI18NString("ch.elu.update.head");
@@ -465,7 +465,7 @@ class ConfigHandler
 
     }
 
-    boolean ensureInterviewUpToDate() { 
+    boolean ensureInterviewUpToDate() {
         try {
             if (interviewParams.isFileNewer())  {
                 interviewParams.load();
@@ -509,7 +509,7 @@ class ConfigHandler
                         showTemplateName(p);
                     }
             });
- 
+
         }
     }
 
@@ -519,7 +519,7 @@ class ConfigHandler
             if (workDir == null)
                 return;
         }
-        
+
         ensureConfigEditorInitialized();
         configEditor.show(ConfigEditor.FULL_MODE, false);
     }
@@ -530,34 +530,34 @@ class ConfigHandler
             if (workDir == null)
                 return;
         }
-        
+
         ensureConfigEditorInitialized();
         configEditor.show(ConfigEditor.FULL_MODE, true);
     }
 
-    
+
     void showConfigEditor(ActionListener l) {
         if (workDir == null) {
             model.showWorkDirDialog(true);
             if (workDir == null)
                 return;
         }
-        
+
         ensureConfigEditorInitialized();
         configEditor.show(ConfigEditor.FULL_MODE, l, false);
     }
-    
+
     void showTemplateEditor(ActionListener l) {
         if (workDir == null) {
             model.showWorkDirDialog(true);
             if (workDir == null)
                 return;
         }
-        
+
         ensureConfigEditorInitialized();
         configEditor.show(ConfigEditor.FULL_MODE, l, true);
     }
-            
+
     // should really be observing ExecModel
     void updateGUI() {
         testSuite = model.getTestSuite();
@@ -570,15 +570,15 @@ class ConfigHandler
         boolean testSuiteSet = (testSuite != null);
 
         /*
-        boolean configurationSet = (testSuiteSet && 
-                interviewParams != null && 
-                !interviewParams.isTemplate() && 
+        boolean configurationSet = (testSuiteSet &&
+                interviewParams != null &&
+                !interviewParams.isTemplate() &&
                 interviewParams.getFile() != null);
 
 
         menuEdit.setEnabled(configurationSet);
         changeMenu.setEnabled(configurationSet);
-        // toolbar actions 
+        // toolbar actions
         showFullConfigAction.setEnabled(configurationSet);
         showStdConfigAction.setEnabled(configurationSet);
         */
@@ -594,8 +594,8 @@ class ConfigHandler
         menuTemplateHistory.setVisible(templateMenuVisible);
         menuEditT.setVisible(templateMenuVisible);
 
-        showFullConfigAction.setEnabled(testSuiteSet); 
-        showStdConfigAction.setEnabled(testSuiteSet); 
+        showFullConfigAction.setEnabled(testSuiteSet);
+        showStdConfigAction.setEnabled(testSuiteSet);
 
         // you can only configure tests if the test suite is set
         newConfigAction.setEnabled(testSuiteSet);
@@ -603,27 +603,27 @@ class ConfigHandler
         showExcludeListAction.setEnabled(testSuiteSet);
         showEnvironmentAction.setEnabled(testSuiteSet);
         showQuestionLogAction.setEnabled(testSuiteSet);
-        showChecklistAction.setEnabled(testSuiteSet 
+        showChecklistAction.setEnabled(testSuiteSet
                                        && interviewParams != null
                                        && !interviewParams.isChecklistEmpty());
         newConfigTAction.setEnabled(testSuiteSet);
         showConfigTAction.setEnabled(testSuiteSet);
-        checkUpdatesAction.setEnabled(testSuiteSet 
+        checkUpdatesAction.setEnabled(testSuiteSet
                                        && interviewParams != null
-                                       && !interviewParams.isTemplate() 
+                                       && !interviewParams.isTemplate()
                                        && interviewParams.getTemplatePath() != null);
-        
+
         menuHistory.setEnabled(testSuiteSet);
-        if (model.getContextManager() == null 
+        if (model.getContextManager() == null
                 || model.getContextManager().getFeatureManager().
                 isEnabled(FeatureManager.TEMPLATE_CREATION) )
         menuTemplateHistory.setEnabled(testSuiteSet);
 
         if (interviewParams != null && !interviewParams.isTemplate() && interviewParams.getFile() != null) {
-            
+
             // there is a template and empty interview
             boolean noEdit = interviewParams.getTemplatePath() == null &&
-                    (interviewParams.getWorkDirectory() != null && 
+                    (interviewParams.getWorkDirectory() != null &&
                     TemplateUtilities.getTemplatePath(interviewParams.getWorkDirectory()) != null );
 
             showFullConfigAction.setEnabled(testSuiteSet && !noEdit);
@@ -631,22 +631,22 @@ class ConfigHandler
 
             boolean enabled = interviewParams.getTemplatePath() != null ||
                     !interviewParams.isTemplate() ||
-                    (interviewParams.getWorkDirectory() != null && 
+                    (interviewParams.getWorkDirectory() != null &&
                     TemplateUtilities.getTemplatePath(interviewParams.getWorkDirectory()) != null );
             showFullConfigTAction.setEnabled(enabled && testSuiteSet && isTemplateEditingEnabled());
         }
         else {
             showFullConfigAction.setEnabled(false);
             showStdConfigAction.setEnabled(false);
-            
+
             showFullConfigTAction.setEnabled(testSuiteSet && isTemplateEditingEnabled());
         }
-        
+
         if (workDir != null && configHistoryListener.getFileHistory() == null) {
             FileHistory h = FileHistory.getFileHistory(workDir, "configHistory.jtl");
             configHistoryListener.setFileHistory(h);
         }
-        
+
         if (workDir != null && configTemplateHistoryListener.getFileHistory() == null) {
             FileHistory h = FileHistory.getFileHistory(workDir, "templateHistory.jtl");
             configTemplateHistoryListener.setFileHistory(h);
@@ -677,7 +677,7 @@ class ConfigHandler
     //----------------------------------------------------------------------------
     //
     // what follows are the methods invoved by the various menu and toolbar actions
-    
+
     void loadConfig() {
         if (workDir == null) {
             model.showWorkDirDialog(true);
@@ -690,20 +690,20 @@ class ConfigHandler
                                     WorkDirChooseTool.LOAD_CONFIG, testSuite, true);
         tool.setConfigEditor(configEditor);
         tool.doTool();
-        
+
         //if (templatesUI == null)
         //templatesUI = new TemplatesUI(parent, uif);
-        
+
         //templatesUI.setMode(TemplatesUI.LOAD_CONFIG);
         //templatesUI.setConfigEditor(configEditor);
-        //templatesUI.initGUI();        
-        
+        //templatesUI.initGUI();
+
         //updateGUI();
         showTemplateName(null);
         showConfigName(null);
 
         showFullConfigAction.setEnabled(true);
-        
+
         showFullConfigTAction.setEnabled(isTemplateEditingEnabled());
     }
 
@@ -723,7 +723,7 @@ class ConfigHandler
         showConfigName(null);
 
         showFullConfigAction.setEnabled(true);
-        
+
         showFullConfigTAction.setEnabled(isTemplateEditingEnabled());
     }
 
@@ -733,7 +733,7 @@ class ConfigHandler
             if (workDir == null)
                 return;
         }
-        
+
         ensureConfigEditorInitialized();
         configEditor.show(false);
     }
@@ -744,7 +744,7 @@ class ConfigHandler
             if (workDir == null)
                 return;
         }
-        
+
         ensureConfigEditorInitialized();
         configEditor.show(mode, true);
     }
@@ -755,7 +755,7 @@ class ConfigHandler
             if (workDir == null)
                 return;
         }
-        
+
         ensureConfigEditorInitialized();
         configEditor.show(mode, false);
     }
@@ -791,7 +791,7 @@ class ConfigHandler
 //        templatesUI = new TemplatesUI(parent, uif);
 //        templatesUI.setMode(TemplatesUI.OPEN_TEMPLATE);
 //        templatesUI.setConfigEditor(configEditor);
-//        templatesUI.initGUI();        
+//        templatesUI.initGUI();
 
         WorkDirChooseTool tool = WorkDirChooseTool.getTool(parent, uif, model, WorkDirChooseTool.LOAD_TEMPLATE, testSuite, true);
         tool.setConfigEditor(configEditor);
@@ -809,11 +809,11 @@ class ConfigHandler
 
         if (isConfigEdited() && !isOKToContinue())
             return;
-        
-        if (environmentBrowser == null) 
+
+        if (environmentBrowser == null)
             environmentBrowser = new EnvironmentBrowser(parent, uif);
-        
-        environmentBrowser.show(interviewParams);           
+
+        environmentBrowser.show(interviewParams);
     }
 
     void showExcludeList() {
@@ -821,10 +821,10 @@ class ConfigHandler
 
         if (isConfigEdited() && !isOKToContinue())
             return;
-        
-        if (excludeListBrowser == null) 
+
+        if (excludeListBrowser == null)
             excludeListBrowser = new ExcludeListBrowser(parent, uif);
-        
+
         excludeListBrowser.show(interviewParams);
     }
 
@@ -833,10 +833,10 @@ class ConfigHandler
 
         if (isConfigEdited() && !isOKToContinue())
             return;
-        
-        if (checkListBrowser == null) 
+
+        if (checkListBrowser == null)
             checkListBrowser = new ChecklistBrowser(parent, model, uif);
-        
+
         checkListBrowser.setVisible(true);
     }
 
@@ -845,15 +845,15 @@ class ConfigHandler
 
         if (isConfigEdited() && !isOKToContinue())
             return;
-        
-        if (questionLogBrowser == null) 
+
+        if (questionLogBrowser == null)
             questionLogBrowser = new QuestionLogBrowser(parent, model, uif);
-        
+
         questionLogBrowser.setVisible(true);
     }
 
     void checkUpdate() {
-        
+
         try {
             if (interviewParams.isFileNewer())  {
                 interviewParams.load();
@@ -867,10 +867,10 @@ class ConfigHandler
         catch (InterviewParameters.Fault ex) {
             uif.showError("exec.loadInterview", ex.getMessage());
         }
-        
+
     }
-    
-    
+
+
     //----------------------------------------------------------------------------
     //
     // internal methods
@@ -907,13 +907,13 @@ class ConfigHandler
                 loadTemplate();
             }
         };
-        
+
 
         showFullConfigAction = new ConfigAction(uif, "ch.full",
                                                 ConfigEditor.FULL_MODE, true);
-        
-        
-        showStdConfigAction = new ConfigAction(uif, "ch.std", 
+
+
+        showStdConfigAction = new ConfigAction(uif, "ch.std",
                                                 ConfigEditor.STD_MODE, true) {
             public void setEnabled(boolean newValue) {
                 super.setEnabled(newValue);
@@ -936,8 +936,8 @@ class ConfigHandler
                 }
             }
         };
-        
-        showFullConfigTAction = new ConfigAction(uif, "ch.fullT", 
+
+        showFullConfigTAction = new ConfigAction(uif, "ch.fullT",
                                         ConfigEditor.TEMPLATE_FULL_MODE, false);
 
         showEnvironmentAction = new ToolAction(uif, "ch.env") {
@@ -1090,7 +1090,7 @@ class ConfigHandler
         }
 
     }
-    
+
     private class ChangeConfigMenu extends JMenu
         implements MenuListener
     {
@@ -1111,11 +1111,11 @@ class ConfigHandler
             other.setAccelerator(configEditorAccelerator);
 */
             addMenuListener(this);
-            
+
         }
 
         public void checkEnabled() {
-            if (!(tests.isEnabled() || excludeList.isEnabled() || 
+            if (!(tests.isEnabled() || excludeList.isEnabled() ||
                     keywords.isEnabled() || priorStatus.isEnabled() ||
                     environment.isEnabled() || concurrency.isEnabled() ||
                     timeoutFactor.isEnabled())) {
@@ -1125,7 +1125,7 @@ class ConfigHandler
                 setEnabled(true);
             }
         }
-        
+
         private JMenuItem addMenuItem(String action, int configEditorMode) {
             JMenuItem mi = uif.createMenuItem(showStdConfigAction);
             mi.setIcon(null);
@@ -1142,7 +1142,7 @@ class ConfigHandler
             InterviewParameters c = interviewParams; // alias, to save typing
             if (c == null) // if null, should not even be enabled
                 return;
-            
+
             // Update the various menu items depending whether the corresponding parameters
             // can be handled by the Standard Values view -- ie whether the corresponding
             // parameters are mutable
@@ -1172,8 +1172,8 @@ class ConfigHandler
         {
             configEditor.load(file);
         }
-        
-        
+
+
         // ----------
 
         private JMenuItem tests;

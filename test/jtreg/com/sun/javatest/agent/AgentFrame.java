@@ -53,221 +53,221 @@ import com.sun.javatest.util.MainFrame;
  *
  **/
 
-public class AgentFrame extends Frame 
+public class AgentFrame extends Frame
 {
     /**
      * Create and start a AgentFrame, based on the supplied command line arguments.
      *
-     * @param args	The command line arguments 
+     * @param args      The command line arguments
      * <table>
-     * <tr><td> -help        			<td> print a short summary of the command usage
-     * <tr><td> -usage       			<td> print a short summary of the command usage
-     * <tr><td> -active      			<td> set mode to be active
-     * <tr><td> -activeHost  <em>hostname</em>	<td> set the host for active connections (implies -active)
-     * <tr><td> -activePort  <em>port</em>	<td> set the port for active connections (implies -active)
-     * <tr><td> -passive     			<td> set mode to be passive
-     * <tr><td> -passivePort <em>port</em>	<td> set the port for passive connections (implies -passive)
-     * <tr><td> -map         <em>file</em>	<td> map file for translating arguments of incoming requests
-     * <tr><td> -concurrency <em>number</em>	<td> set the maximum number of simultaneous connections
-     * <tr><td> -history     <em>number</em>	<td> set the size of the execution history
-     * <tr><td> -trace       			<td> trace the execution of the agent
+     * <tr><td> -help                           <td> print a short summary of the command usage
+     * <tr><td> -usage                          <td> print a short summary of the command usage
+     * <tr><td> -active                         <td> set mode to be active
+     * <tr><td> -activeHost  <em>hostname</em>  <td> set the host for active connections (implies -active)
+     * <tr><td> -activePort  <em>port</em>      <td> set the port for active connections (implies -active)
+     * <tr><td> -passive                        <td> set mode to be passive
+     * <tr><td> -passivePort <em>port</em>      <td> set the port for passive connections (implies -passive)
+     * <tr><td> -map         <em>file</em>      <td> map file for translating arguments of incoming requests
+     * <tr><td> -concurrency <em>number</em>    <td> set the maximum number of simultaneous connections
+     * <tr><td> -history     <em>number</em>    <td> set the size of the execution history
+     * <tr><td> -trace                          <td> trace the execution of the agent
      * <tr><td> -observer    <em>classname</em> <td> add an observer to the agent that is used
      * </table>
      */
     public static void main(String[] args) {
-	ModeOptions mode = null;
-	String activeHost = null;
-	int activePort = -1;
-	int passivePort = -1;
-	int concurrency = -1;
-	String mapFile = null;
-	int history = -1;
-	boolean start = false;
-	boolean useSharedFrame = true;
-	String observerClassName = null;
+        ModeOptions mode = null;
+        String activeHost = null;
+        int activePort = -1;
+        int passivePort = -1;
+        int concurrency = -1;
+        String mapFile = null;
+        int history = -1;
+        boolean start = false;
+        boolean useSharedFrame = true;
+        String observerClassName = null;
 
-	ActiveModeOptions amo = new ActiveModeOptions();
-	PassiveModeOptions pmo = new PassiveModeOptions();
+        ActiveModeOptions amo = new ActiveModeOptions();
+        PassiveModeOptions pmo = new PassiveModeOptions();
 
-	for (int i = 0; i < args.length; i++) {
-	    try {
-		if (args[i].equalsIgnoreCase("-active")) {
-		    mode = amo;
-		} 
-		else if (args[i].equalsIgnoreCase("-passive")) {
-		    mode = pmo;
-		} 
-		else if (args[i].equalsIgnoreCase("-activeHost")) {
-		    mode = amo;
-		    activeHost = args[++i];
-		} 
-		else if (args[i].equalsIgnoreCase("-activePort")) {
-		    mode = amo;
-		    activePort = Integer.parseInt(args[++i]);
-		} 
-		else if (args[i].equalsIgnoreCase("-passivePort")) {
-		    mode = pmo;
-		    passivePort = Integer.parseInt(args[++i]);
-		}  
-		else if (args[i].equalsIgnoreCase("-concurrency")) {
-		    concurrency = Integer.parseInt(args[++i]);
-		} 
-		else if (args[i].equalsIgnoreCase("-map")) {
-		    mapFile = args[++i];
-		} 
-		else if (args[i].equalsIgnoreCase("-history")) {
-		    history = Integer.parseInt(args[++i]);
-		} 
-		else if (args[i].equalsIgnoreCase("-start")) {
-		    start = true;
-		} 
-		else if (args[i].equalsIgnoreCase("-trace")) {
-		    Agent.tracing = true;
-		} 
-		else if ("-observer".equalsIgnoreCase(args[i]) && i < args.length - 1) {
-		    if (observerClassName != null) {
-			System.err.println("duplicate use of -observer");
-			usage(System.err, 1);
-		    }
-		    observerClassName = args[++i];
-		}
-		else if (args[i].equalsIgnoreCase("-useSharedFrame")) {
-		    System.err.println("Note: -useSharedFrame is now the default");
-		    System.err.println("Use -noSharedFrame to disable this feature.");
-		    useSharedFrame = true;
-		}  
-		else if (args[i].equalsIgnoreCase("-noSharedFrame")) {
-		    useSharedFrame = false;
-		} 
-		else if (args[i].equalsIgnoreCase("-help") || args[i].equalsIgnoreCase("-usage") ) {
-		    usage(System.err, 0);
-		} 
-		else {
-		    System.err.println("Unrecognised option: " + args[i]);
-		    usage(System.err, 1);
-		}
-	    }
-	    catch (ArrayIndexOutOfBoundsException e) {
-		System.err.println("Missing argument for " + args[args.length - 1]);
-		usage(System.err, 1);
-	    }
-	    catch (NumberFormatException e) {
-		System.err.println("Number expected: " + args[i]);
-		usage(System.err, 1);
-	    }
-	}
+        for (int i = 0; i < args.length; i++) {
+            try {
+                if (args[i].equalsIgnoreCase("-active")) {
+                    mode = amo;
+                }
+                else if (args[i].equalsIgnoreCase("-passive")) {
+                    mode = pmo;
+                }
+                else if (args[i].equalsIgnoreCase("-activeHost")) {
+                    mode = amo;
+                    activeHost = args[++i];
+                }
+                else if (args[i].equalsIgnoreCase("-activePort")) {
+                    mode = amo;
+                    activePort = Integer.parseInt(args[++i]);
+                }
+                else if (args[i].equalsIgnoreCase("-passivePort")) {
+                    mode = pmo;
+                    passivePort = Integer.parseInt(args[++i]);
+                }
+                else if (args[i].equalsIgnoreCase("-concurrency")) {
+                    concurrency = Integer.parseInt(args[++i]);
+                }
+                else if (args[i].equalsIgnoreCase("-map")) {
+                    mapFile = args[++i];
+                }
+                else if (args[i].equalsIgnoreCase("-history")) {
+                    history = Integer.parseInt(args[++i]);
+                }
+                else if (args[i].equalsIgnoreCase("-start")) {
+                    start = true;
+                }
+                else if (args[i].equalsIgnoreCase("-trace")) {
+                    Agent.tracing = true;
+                }
+                else if ("-observer".equalsIgnoreCase(args[i]) && i < args.length - 1) {
+                    if (observerClassName != null) {
+                        System.err.println("duplicate use of -observer");
+                        usage(System.err, 1);
+                    }
+                    observerClassName = args[++i];
+                }
+                else if (args[i].equalsIgnoreCase("-useSharedFrame")) {
+                    System.err.println("Note: -useSharedFrame is now the default");
+                    System.err.println("Use -noSharedFrame to disable this feature.");
+                    useSharedFrame = true;
+                }
+                else if (args[i].equalsIgnoreCase("-noSharedFrame")) {
+                    useSharedFrame = false;
+                }
+                else if (args[i].equalsIgnoreCase("-help") || args[i].equalsIgnoreCase("-usage") ) {
+                    usage(System.err, 0);
+                }
+                else {
+                    System.err.println("Unrecognised option: " + args[i]);
+                    usage(System.err, 1);
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException e) {
+                System.err.println("Missing argument for " + args[args.length - 1]);
+                usage(System.err, 1);
+            }
+            catch (NumberFormatException e) {
+                System.err.println("Number expected: " + args[i]);
+                usage(System.err, 1);
+            }
+        }
 
-	
-	if (activeHost != null)
-	    amo.setHost(activeHost);
 
-	if (activePort != -1)
-	    amo.setPort(activePort);
+        if (activeHost != null)
+            amo.setHost(activeHost);
 
-	if (passivePort != -1)
-	    pmo.setPort(passivePort);
+        if (activePort != -1)
+            amo.setPort(activePort);
 
-	ModeOptions[] modeOptions = new ModeOptions[] {amo, pmo};
+        if (passivePort != -1)
+            pmo.setPort(passivePort);
 
-	final AgentFrame sf = new AgentFrame(modeOptions);
+        ModeOptions[] modeOptions = new ModeOptions[] {amo, pmo};
 
-	if (observerClassName != null) {
-	    try {
-		Class observerClass = Class.forName(observerClassName);
-		Agent.Observer observer = (Agent.Observer)(observerClass.newInstance());
-		sf.panel.addObserver(observer);
-	    }
-	    catch (ClassCastException e) {
-		System.err.println("observer is not of type " +
-			Agent.Observer.class.getName() + ": " + observerClassName);
-		System.exit(1);
-	    }
-	    catch (ClassNotFoundException e) {
-		System.err.println("cannot find observer class: " + observerClassName);
-		System.exit(1);
-	    }
-	    catch (IllegalAccessException e) {
-		System.err.println("problem instantiating observer: " + e);
-		System.exit(1);
-	    }
-	    catch (InstantiationException e) {
-		System.err.println("problem instantiating observer: " + e);
-		System.exit(1);
-	    }
-	}
+        final AgentFrame sf = new AgentFrame(modeOptions);
 
-	if (useSharedFrame)
-	    MainFrame.setFrame(sf);
+        if (observerClassName != null) {
+            try {
+                Class observerClass = Class.forName(observerClassName);
+                Agent.Observer observer = (Agent.Observer)(observerClass.newInstance());
+                sf.panel.addObserver(observer);
+            }
+            catch (ClassCastException e) {
+                System.err.println("observer is not of type " +
+                        Agent.Observer.class.getName() + ": " + observerClassName);
+                System.exit(1);
+            }
+            catch (ClassNotFoundException e) {
+                System.err.println("cannot find observer class: " + observerClassName);
+                System.exit(1);
+            }
+            catch (IllegalAccessException e) {
+                System.err.println("problem instantiating observer: " + e);
+                System.exit(1);
+            }
+            catch (InstantiationException e) {
+                System.err.println("problem instantiating observer: " + e);
+                System.exit(1);
+            }
+        }
 
-	AgentPanel sp = sf.panel;
+        if (useSharedFrame)
+            MainFrame.setFrame(sf);
 
-	if (mode != null)
-	    sp.setMode(mode.getModeName());
+        AgentPanel sp = sf.panel;
 
-	if (concurrency != -1)
-	    sp.setConcurrency(concurrency);
+        if (mode != null)
+            sp.setMode(mode.getModeName());
 
-	if (mapFile != null)
-	    sp.setMapFile(mapFile);
+        if (concurrency != -1)
+            sp.setConcurrency(concurrency);
 
-	if (history != -1)
-	    sp.setHistoryLimit(history);
+        if (mapFile != null)
+            sp.setMapFile(mapFile);
 
-	Integer delay = Integer.getInteger("agent.retry.delay");
-	if (delay != null)
-	    sp.setRetryDelay(delay.intValue());
+        if (history != -1)
+            sp.setHistoryLimit(history);
 
-	// install our own permissive security manager, to prevent anyone else
-	// installing a less permissive one; moan if it can't be installed.
-	JavaTestSecurityManager.install();
+        Integer delay = Integer.getInteger("agent.retry.delay");
+        if (delay != null)
+            sp.setRetryDelay(delay.intValue());
 
-	if (start)
-	    sp.start();
+        // install our own permissive security manager, to prevent anyone else
+        // installing a less permissive one; moan if it can't be installed.
+        JavaTestSecurityManager.install();
 
-	try {
-	    Method invokeLater = EventQueue.class.getMethod("invokeLater", new Class[] { Runnable.class });
-	    invokeLater.invoke(null, new Object[] { new Runnable() {
-		    public void run() {
-			sf.showCentered();
-		    }
-		} });
-	} 
-	catch (NoSuchMethodException e) {
-	    // must be JDK 1.1
-	    sf.showCentered();
-	}
-	catch (Throwable t) {
-	    t.printStackTrace();
-	}
+        if (start)
+            sp.start();
+
+        try {
+            Method invokeLater = EventQueue.class.getMethod("invokeLater", new Class[] { Runnable.class });
+            invokeLater.invoke(null, new Object[] { new Runnable() {
+                    public void run() {
+                        sf.showCentered();
+                    }
+                } });
+        }
+        catch (NoSuchMethodException e) {
+            // must be JDK 1.1
+            sf.showCentered();
+        }
+        catch (Throwable t) {
+            t.printStackTrace();
+        }
 
     }
 
     /**
      * Display the set of options recognized by main(), and exit.
      *
-     * @param out	The output stream to whichg to write the 
-     *		    	command line help.
-     * @param exitCode	The exit code to be passed to System.exit. 
+     * @param out       The output stream to whichg to write the
+     *                  command line help.
+     * @param exitCode  The exit code to be passed to System.exit.
      */
     public static void usage(PrintStream out, int exitCode) {
-	String className = AgentFrame.class.getName();
-	out.println("Usage:");
-	out.println("    java " + className + " [options]");
-	out.println("        -help             print this message");
-	out.println("        -usage            print this message");
-	out.println("        -active           set mode to be active");
-	out.println("        -activeHost host  set the host for active connections (implies -active)");
-	out.println("        -activePort port  set the port for active connections (implies -active)");
-	out.println("        -passive          set mode to be passive");
-	out.println("        -passivePort port set the port for passive connections (implies -passive)");
-	out.println("        -concurrency num  set the maximum number of simultaneous connections");
-	out.println("        -map file         map file for translating arguments of incoming requests");
-	out.println("        -history num      set the maximum number of requests remembered in the history list");
-	out.println("        -start            automatically start a agent");
-	out.println("        -trace            trace the execution of the agent");
-	out.println("        -observer class   add an observer to the agent");
-	out.println("        -useSharedFrame   share the application frame with any tests that require it");
-	System.exit(exitCode);
+        String className = AgentFrame.class.getName();
+        out.println("Usage:");
+        out.println("    java " + className + " [options]");
+        out.println("        -help             print this message");
+        out.println("        -usage            print this message");
+        out.println("        -active           set mode to be active");
+        out.println("        -activeHost host  set the host for active connections (implies -active)");
+        out.println("        -activePort port  set the port for active connections (implies -active)");
+        out.println("        -passive          set mode to be passive");
+        out.println("        -passivePort port set the port for passive connections (implies -passive)");
+        out.println("        -concurrency num  set the maximum number of simultaneous connections");
+        out.println("        -map file         map file for translating arguments of incoming requests");
+        out.println("        -history num      set the maximum number of requests remembered in the history list");
+        out.println("        -start            automatically start a agent");
+        out.println("        -trace            trace the execution of the agent");
+        out.println("        -observer class   add an observer to the agent");
+        out.println("        -useSharedFrame   share the application frame with any tests that require it");
+        System.exit(exitCode);
     }
 
     /**
@@ -275,58 +275,58 @@ public class AgentFrame extends Frame
      * @param modeOptions An array of option panels for different connection modes.
      */
     public AgentFrame(ModeOptions[] modeOptions) {
-	super(Agent.productName);
+        super(Agent.productName);
 
         ExitCount.inc();
-	addWindowListener(new WindowAdapter() {
-	    public void windowClosing(WindowEvent e) { 
-		setVisible(false);
-		AgentFrame.this.dispose();
-	    }
-	    
-	    public void windowClosed(WindowEvent e) { 
-		ExitCount.dec();
-	    }
-	});
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                setVisible(false);
+                AgentFrame.this.dispose();
+            }
 
-	setLayout(new GridBagLayout());
+            public void windowClosed(WindowEvent e) {
+                ExitCount.dec();
+            }
+        });
 
-	GridBagConstraints c = new GridBagConstraints();
+        setLayout(new GridBagLayout());
 
-	panel = new AgentPanel(modeOptions, new AgentPanel.MapReader() {
-	    public Map read(String name) throws IOException {
-		// Experiments indicate that the following code works OK 
-		// on versions of PersonalJava that do not support local file systems.
-		// Just specify the map file as an http: URL.
-		if (name == null || name.length() == 0)
-		    return null;
-		else 
-		    return Map.readFileOrURL(name);
-	    }
-	});
+        GridBagConstraints c = new GridBagConstraints();
 
-	c.fill = GridBagConstraints.BOTH;
-	c.weightx = 1;
-	c.weighty = 1;
-	add(panel, c);
+        panel = new AgentPanel(modeOptions, new AgentPanel.MapReader() {
+            public Map read(String name) throws IOException {
+                // Experiments indicate that the following code works OK
+                // on versions of PersonalJava that do not support local file systems.
+                // Just specify the map file as an http: URL.
+                if (name == null || name.length() == 0)
+                    return null;
+                else
+                    return Map.readFileOrURL(name);
+            }
+        });
+
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1;
+        c.weighty = 1;
+        add(panel, c);
     }
 
     private void showCentered() {
-	pack();
+        pack();
 
-	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	Dimension size = getSize();
-	setLocation(screenSize.width/2 - size.width/2, screenSize.height/2 - size.height/2);
-	show();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension size = getSize();
+        setLocation(screenSize.width/2 - size.width/2, screenSize.height/2 - size.height/2);
+        show();
     }
 
     private class Listener implements ActionListener {
-	public void actionPerformed(ActionEvent e) {
-	    String cmd = e.getActionCommand();
-	    if (cmd.equals(EXIT)) {
-		AgentFrame.this.dispose();
-	    }
-	}
+        public void actionPerformed(ActionEvent e) {
+            String cmd = e.getActionCommand();
+            if (cmd.equals(EXIT)) {
+                AgentFrame.this.dispose();
+            }
+        }
     }
 
     private Listener listener = new Listener();

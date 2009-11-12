@@ -574,7 +574,7 @@ class ReportTool extends Tool{
     private BrowserPane browserPane;
     private JDialog waitDialog;
     private WaitDialogController waitDialogController;
-    private static final int WAIT_DIALOG_DELAY = 3000;	    // 3 second delay
+    private static final int WAIT_DIALOG_DELAY = 3000;      // 3 second delay
 
     // The merge options
     private File[] in;

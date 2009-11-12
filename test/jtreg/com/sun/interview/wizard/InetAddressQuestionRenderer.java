@@ -64,185 +64,185 @@ class InetAddressQuestionRenderer
     implements QuestionRenderer
 {
     public JComponent getQuestionRendererComponent(Question qq, ActionListener listener) {
-	final InetAddressQuestion q = (InetAddressQuestion) qq;
-	int type = q.getType();
-	int style = q.getStyle();
-	InetAddress[] suggestions = q.getSuggestions();
+        final InetAddressQuestion q = (InetAddressQuestion) qq;
+        int type = q.getType();
+        int style = q.getStyle();
+        InetAddress[] suggestions = q.getSuggestions();
 
-	if (type == InetAddressQuestion.IPv4
-	    && style == InetAddressQuestion.IPv4
-	    && suggestions == null)
-	    return createIPv4Panel(q, listener);
-	else
-	    return createIPv6Panel(q, listener);
+        if (type == InetAddressQuestion.IPv4
+            && style == InetAddressQuestion.IPv4
+            && suggestions == null)
+            return createIPv4Panel(q, listener);
+        else
+            return createIPv6Panel(q, listener);
     }
 
     private JPanel createIPv4Panel(final InetAddressQuestion q, ActionListener listener) {
-	InetAddress v = q.getValue();
-	byte[] addr = (v == null ? new byte[4] : v.getAddress());
-	final JTextField[] fields = new JTextField[4];
+        InetAddress v = q.getValue();
+        byte[] addr = (v == null ? new byte[4] : v.getAddress());
+        final JTextField[] fields = new JTextField[4];
 
-	Action action = new AbstractAction() {
-	    public void actionPerformed(ActionEvent e) {
-		JTextField src = (JTextField) (e.getSource());
-		JTextField next = (JTextField) (src.getClientProperty("next"));
-		String cmd = e.getActionCommand();
-		if (cmd.equals(".")) {
-		    if (next != null) {
-			// got a dot and a successor field; step forward
-			next.requestFocus();
-			next.getCaret().setDot(0);
-			next.getCaret().moveDot(next.getText().length());
-			return;
-		    }
-		}
-		else if (Character.isDigit(cmd.charAt(0))) {
-		    // got a digit
-		    int savedDot = src.getCaret().getDot();
-		    int savedMark = src.getCaret().getMark();
-		    String savedText = src.getText();
+        Action action = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                JTextField src = (JTextField) (e.getSource());
+                JTextField next = (JTextField) (src.getClientProperty("next"));
+                String cmd = e.getActionCommand();
+                if (cmd.equals(".")) {
+                    if (next != null) {
+                        // got a dot and a successor field; step forward
+                        next.requestFocus();
+                        next.getCaret().setDot(0);
+                        next.getCaret().moveDot(next.getText().length());
+                        return;
+                    }
+                }
+                else if (Character.isDigit(cmd.charAt(0))) {
+                    // got a digit
+                    int savedDot = src.getCaret().getDot();
+                    int savedMark = src.getCaret().getMark();
+                    String savedText = src.getText();
 
-		    Action delegate = new javax.swing.text.DefaultEditorKit.InsertContentAction();
-		    delegate.actionPerformed(e);
+                    Action delegate = new javax.swing.text.DefaultEditorKit.InsertContentAction();
+                    delegate.actionPerformed(e);
 
-		    String newText = src.getText();
-		    int newValue = Integer.parseInt(newText);
+                    String newText = src.getText();
+                    int newValue = Integer.parseInt(newText);
 
-		    if (newText.length() <= 3 && newValue <= 255) {
-			// new text is good; move on to next field if appropriate
-			// (otherwise leave focus here, for next character)
-			if (src.getCaretPosition() == 3 && next != null) {
-			    next.requestFocus();
-			    next.getCaret().setDot(0);
-			    next.getCaret().moveDot(next.getText().length());
-			}
-			return;
-		    }
-		    else {
-			// reset text
-			src.setText(savedText);
-			src.getCaret().setDot(savedMark);
-			src.getCaret().moveDot(savedDot);
-		    }
-		}
-		else if (cmd.charAt(0) == '\n')
-		    // ignore spurious newlines; don't know why we are getting them
-		    // (they occur when doing enter in previous question)
-		    return;
-		fields[0].getToolkit().beep();
-	    }
-	};
+                    if (newText.length() <= 3 && newValue <= 255) {
+                        // new text is good; move on to next field if appropriate
+                        // (otherwise leave focus here, for next character)
+                        if (src.getCaretPosition() == 3 && next != null) {
+                            next.requestFocus();
+                            next.getCaret().setDot(0);
+                            next.getCaret().moveDot(next.getText().length());
+                        }
+                        return;
+                    }
+                    else {
+                        // reset text
+                        src.setText(savedText);
+                        src.getCaret().setDot(savedMark);
+                        src.getCaret().moveDot(savedDot);
+                    }
+                }
+                else if (cmd.charAt(0) == '\n')
+                    // ignore spurious newlines; don't know why we are getting them
+                    // (they occur when doing enter in previous question)
+                    return;
+                fields[0].getToolkit().beep();
+            }
+        };
 
-	JPanel panel = new JPanel(new GridBagLayout());
-	panel.setName("inet");
-	panel.setFocusable(false);
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setName("inet");
+        panel.setFocusable(false);
 
-	GridBagConstraints c = new GridBagConstraints();
+        GridBagConstraints c = new GridBagConstraints();
 
-	for (int i = 0; i < 4; i++) {
-	    String lblKey = (i == 0 ? "inet.ip" : "inet.dot");
-	    JLabel label = new JLabel(i18n.getString(lblKey + ".lbl"));
-	    label.setDisplayedMnemonic(i == 0 ? i18n.getString(lblKey + ".mne").charAt(0) 
-				       : '0' + i);
-	    label.setToolTipText(i18n.getString(lblKey + ".tip"));
-	    panel.add(label, c);
+        for (int i = 0; i < 4; i++) {
+            String lblKey = (i == 0 ? "inet.ip" : "inet.dot");
+            JLabel label = new JLabel(i18n.getString(lblKey + ".lbl"));
+            label.setDisplayedMnemonic(i == 0 ? i18n.getString(lblKey + ".mne").charAt(0)
+                                       : '0' + i);
+            label.setToolTipText(i18n.getString(lblKey + ".tip"));
+            panel.add(label, c);
 
-	    byte b = addr[i];
-	    JTextField field = new JTextField(String.valueOf(b < 0 ? b + 256 : b), 3);
-	    field.setName("inet." + i);
- 	    field.setToolTipText(i18n.getString("inet.field.tip", new Integer(i)));
-	    field.getDocument().addDocumentListener(new ActionDocListener(field, listener, EDITED));
-	    Keymap keymap = field.addKeymap("IP field", field.getKeymap());
-	    //keymap.addActionForKeyStroke(enterKey, enterListener);
-	    keymap.setDefaultAction(action);
-	    field.setKeymap(keymap);
-	    label.setLabelFor(field);
+            byte b = addr[i];
+            JTextField field = new JTextField(String.valueOf(b < 0 ? b + 256 : b), 3);
+            field.setName("inet." + i);
+            field.setToolTipText(i18n.getString("inet.field.tip", new Integer(i)));
+            field.getDocument().addDocumentListener(new ActionDocListener(field, listener, EDITED));
+            Keymap keymap = field.addKeymap("IP field", field.getKeymap());
+            //keymap.addActionForKeyStroke(enterKey, enterListener);
+            keymap.setDefaultAction(action);
+            field.setKeymap(keymap);
+            label.setLabelFor(field);
 
-	    if (i == 3) {
-		c.weightx = 1;
-		c.anchor = GridBagConstraints.WEST;
-	    }
+            if (i == 3) {
+                c.weightx = 1;
+                c.anchor = GridBagConstraints.WEST;
+            }
 
-	    panel.add(field, c);
+            panel.add(field, c);
 
-	    if (i > 0)
-		fields[i-1].putClientProperty("next", field);
+            if (i > 0)
+                fields[i-1].putClientProperty("next", field);
 
-	    fields[i] = field;
-	}
+            fields[i] = field;
+        }
 
-	Runnable valueSaver = new Runnable() {
-	    public void run() {
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < 4; i++) {
-		    String s = fields[i].getText();
-		    if (s == null || s.length() == 0)
-			sb.append("0");
-		    else 
-			sb.append(s);
-		    if (i < 3)
-			sb.append(".");
-		}
-		try {
-		    InetAddress a = InetAddress.getByName(sb.toString());
-		    q.setValue(a);
-		}
-		catch (UnknownHostException e) {
-		    // ignore ... should not happen
-		}
-	    }
-	};
-	
-	panel.putClientProperty(VALUE_SAVER, valueSaver);
+        Runnable valueSaver = new Runnable() {
+            public void run() {
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < 4; i++) {
+                    String s = fields[i].getText();
+                    if (s == null || s.length() == 0)
+                        sb.append("0");
+                    else
+                        sb.append(s);
+                    if (i < 3)
+                        sb.append(".");
+                }
+                try {
+                    InetAddress a = InetAddress.getByName(sb.toString());
+                    q.setValue(a);
+                }
+                catch (UnknownHostException e) {
+                    // ignore ... should not happen
+                }
+            }
+        };
 
-	return panel;
+        panel.putClientProperty(VALUE_SAVER, valueSaver);
+
+        return panel;
 
     }
 
     private JPanel createIPv6Panel(InetAddressQuestion q, ActionListener listener) {
-	InetAddress[] suggestions = q.getSuggestions();
+        InetAddress[] suggestions = q.getSuggestions();
 
-	String[] ss;
-	if (suggestions == null)
-	    ss = null;
-	else {
-	    ss = new String[suggestions.length];
-	    for (int i = 0; i < suggestions.length; i++) { 
-		InetAddress sugg = suggestions[i];
-		ss[i] = (sugg == null ? "" : sugg.getHostAddress());
-	    }
-	}
+        String[] ss;
+        if (suggestions == null)
+            ss = null;
+        else {
+            ss = new String[suggestions.length];
+            for (int i = 0; i < suggestions.length; i++) {
+                InetAddress sugg = suggestions[i];
+                ss[i] = (sugg == null ? "" : sugg.getHostAddress());
+            }
+        }
 
-	final JButton lookupBtn = new JButton(i18n.getString("inet.lookup.btn"));
-	lookupBtn.setName("inet.lookup.btn");
-	lookupBtn.setMnemonic(i18n.getString("inet.lookup.mne").charAt(0));
-	lookupBtn.setToolTipText(i18n.getString("inet.lookup.tip"));
-	
-	int type = q.getType();
-	int width = (type == InetAddressQuestion.IPv4 ? 16 : 0);
+        final JButton lookupBtn = new JButton(i18n.getString("inet.lookup.btn"));
+        lookupBtn.setName("inet.lookup.btn");
+        lookupBtn.setMnemonic(i18n.getString("inet.lookup.mne").charAt(0));
+        lookupBtn.setToolTipText(i18n.getString("inet.lookup.tip"));
 
-	final TypeInPanel p = new TypeInPanel("inet", 
-					      q, 
-					      width,
-					      ss, 
-					      lookupBtn, 
-					      listener);
+        int type = q.getType();
+        int width = (type == InetAddressQuestion.IPv4 ? 16 : 0);
 
-	lookupPane = new LookupPane(type);
+        final TypeInPanel p = new TypeInPanel("inet",
+                                              q,
+                                              width,
+                                              ss,
+                                              lookupBtn,
+                                              listener);
 
-	lookupBtn.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		JDialog d = lookupPane.createDialog(p, i18n.getString("inet.lookup.title"));
-		d.setVisible(true);
-		p.setValue((String) (lookupPane.getValue()));
-	    }
-	    });
+        lookupPane = new LookupPane(type);
 
-	return p;
+        lookupBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JDialog d = lookupPane.createDialog(p, i18n.getString("inet.lookup.title"));
+                d.setVisible(true);
+                p.setValue((String) (lookupPane.getValue()));
+            }
+            });
+
+        return p;
     }
 
     public String getInvalidValueMessage(Question q) {
-	return null;
+        return null;
     }
 
     private JOptionPane lookupPane;
@@ -252,141 +252,141 @@ class InetAddressQuestionRenderer
     private static Color INVALID_VALUE_COLOR = i18n.getErrorColor();
 
     private class LookupPane extends JOptionPane
-	implements ActionListener, DocumentListener, ListSelectionListener
+        implements ActionListener, DocumentListener, ListSelectionListener
     {
-	LookupPane(int type) {
-	    super(new JPanel(new GridBagLayout()));
-	    setMessageType(JOptionPane.QUESTION_MESSAGE);
-	    this.type = type;
+        LookupPane(int type) {
+            super(new JPanel(new GridBagLayout()));
+            setMessageType(JOptionPane.QUESTION_MESSAGE);
+            this.type = type;
 
-	    JPanel msgPanel = (JPanel) (getMessage());
-	    
-	    GridBagConstraints c = new GridBagConstraints();
-	    
-	    JLabel lbl = new JLabel(i18n.getString("inet.lookup.name.lbl"));
-	    lbl.setDisplayedMnemonic(i18n.getString("inet.lookup.name.mne").charAt(0));
-	    c.insets.right = 5;
-	    msgPanel.add(lbl, c);
-	    
-	    nameField = new JTextField(16);
-	    nameField.setActionCommand(LOOKUP);
-	    nameField.addActionListener(this);
-	    lbl.setLabelFor(nameField);
-	    c.insets.right = 0;
-	    c.weightx = 1;
-	    msgPanel.add(nameField, c);
-	    
-	    String r = i18n.getString("inet.lookup.icon");
-	    URL url = getClass().getResource(r);
-	    JButton lookupBtn = (url == null ? new JButton(r)
-		: new JButton(new ImageIcon(url)));
-	    lookupBtn.setActionCommand(LOOKUP);
-	    lookupBtn.addActionListener(this);
-	    c.weightx = 0;
-	    c.insets.left = 5;
-	    c.gridwidth = GridBagConstraints.REMAINDER;
-	    msgPanel.add(lookupBtn, c);
+            JPanel msgPanel = (JPanel) (getMessage());
 
-	    errorField = new JTextField(16);
-	    errorField.setName("inet.lookup.error");
-	    errorField.setEditable(false);
-	    errorField.setBorder(null);
-	    errorField.setFont(errorField.getFont().deriveFont(Font.BOLD));
-	    errorField.setForeground(INVALID_VALUE_COLOR);
-	    c.fill = GridBagConstraints.HORIZONTAL;
-	    c.insets.left = 0;
-	    c.weightx = 1;
-	    msgPanel.add(errorField, c);
-	    
-	    listModel = new DefaultListModel();
-	    list = new JList(listModel);
-	    list.setVisibleRowCount(3);
-	    list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	    list.addListSelectionListener(this);
-	    c.fill = GridBagConstraints.BOTH;
-	    c.weightx = 1;
-	    msgPanel.add(new JScrollPane(list), c);
-	    
-	    okBtn = new JButton(i18n.getString("inet.lookup.ok.btn"));
-	    okBtn.setActionCommand(OK);
-	    okBtn.setEnabled(false); // enabled with a valid list selection
-	    okBtn.addActionListener(this);
+            GridBagConstraints c = new GridBagConstraints();
 
-	    JButton cancelBtn = new JButton(i18n.getString("inet.lookup.cancel.btn"));
-	    cancelBtn.setActionCommand(OK);
-	    cancelBtn.addActionListener(this);
+            JLabel lbl = new JLabel(i18n.getString("inet.lookup.name.lbl"));
+            lbl.setDisplayedMnemonic(i18n.getString("inet.lookup.name.mne").charAt(0));
+            c.insets.right = 5;
+            msgPanel.add(lbl, c);
 
-	    setOptions(new Object[] { okBtn, cancelBtn });
-	}
+            nameField = new JTextField(16);
+            nameField.setActionCommand(LOOKUP);
+            nameField.addActionListener(this);
+            lbl.setLabelFor(nameField);
+            c.insets.right = 0;
+            c.weightx = 1;
+            msgPanel.add(nameField, c);
 
-	//----- for ActionListener -------------------
+            String r = i18n.getString("inet.lookup.icon");
+            URL url = getClass().getResource(r);
+            JButton lookupBtn = (url == null ? new JButton(r)
+                : new JButton(new ImageIcon(url)));
+            lookupBtn.setActionCommand(LOOKUP);
+            lookupBtn.addActionListener(this);
+            c.weightx = 0;
+            c.insets.left = 5;
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            msgPanel.add(lookupBtn, c);
 
-	public void actionPerformed(ActionEvent e) {
-	    String cmd = e.getActionCommand();
-	    if (cmd.equals(LOOKUP)) {
-		String name = nameField.getText();
-		if (name == null || name.length() == 0)
-		    errorField.setText(i18n.getString("inet.lookup.noName.err"));
-		else {
-		    InetAddress[] addrs;
-		    try {
-			addrs = InetAddress.getAllByName(name);
-		    }
-		    catch (UnknownHostException ex) {
-			addrs = null;
-		    }
+            errorField = new JTextField(16);
+            errorField.setName("inet.lookup.error");
+            errorField.setEditable(false);
+            errorField.setBorder(null);
+            errorField.setFont(errorField.getFont().deriveFont(Font.BOLD));
+            errorField.setForeground(INVALID_VALUE_COLOR);
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.insets.left = 0;
+            c.weightx = 1;
+            msgPanel.add(errorField, c);
 
-		    listModel.clear();
+            listModel = new DefaultListModel();
+            list = new JList(listModel);
+            list.setVisibleRowCount(3);
+            list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            list.addListSelectionListener(this);
+            c.fill = GridBagConstraints.BOTH;
+            c.weightx = 1;
+            msgPanel.add(new JScrollPane(list), c);
 
-		    if (addrs == null || addrs.length == 0) 
-			errorField.setText(i18n.getString("inet.lookup.notFound.err"));
-		    else {
-			errorField.setText("");
-			for (int i = 0; i < addrs.length; i++) 
-			    listModel.addElement(addrs[i].getHostAddress());
-			list.setSelectedIndex(0);
-		    }
-		}
-	    }
-	    else if (cmd.equals(OK)) {
-		setValue(list.getSelectedValue());
-		SwingUtilities.getRoot(this).setVisible(false);
-	    }
-	    else if (cmd.equals(CANCEL)) {
-		setValue(null);
-		SwingUtilities.getRoot(this).setVisible(false);
-	    }	
-	}
+            okBtn = new JButton(i18n.getString("inet.lookup.ok.btn"));
+            okBtn.setActionCommand(OK);
+            okBtn.setEnabled(false); // enabled with a valid list selection
+            okBtn.addActionListener(this);
 
-	//----- for DocumentListener -------------------
+            JButton cancelBtn = new JButton(i18n.getString("inet.lookup.cancel.btn"));
+            cancelBtn.setActionCommand(OK);
+            cancelBtn.addActionListener(this);
 
-	public void insertUpdate(DocumentEvent e) {
-	    changedUpdate(e);
-	}
-	
-	public void removeUpdate(DocumentEvent e) {
-	    changedUpdate(e);
-	}
-	
-	public void changedUpdate(DocumentEvent e) {
-	    errorField.setText("");
-	}
+            setOptions(new Object[] { okBtn, cancelBtn });
+        }
 
-	//----- for ListSelectionListener -----------
-	
-	public void valueChanged(ListSelectionEvent e) {
-	    okBtn.setEnabled(list.getSelectedValue() != null);
-	}
+        //----- for ActionListener -------------------
 
-	private int type;
-	private JTextField nameField;
-	private JTextField errorField;
-	private DefaultListModel listModel;
-	private JList list;
-	private JButton okBtn;
+        public void actionPerformed(ActionEvent e) {
+            String cmd = e.getActionCommand();
+            if (cmd.equals(LOOKUP)) {
+                String name = nameField.getText();
+                if (name == null || name.length() == 0)
+                    errorField.setText(i18n.getString("inet.lookup.noName.err"));
+                else {
+                    InetAddress[] addrs;
+                    try {
+                        addrs = InetAddress.getAllByName(name);
+                    }
+                    catch (UnknownHostException ex) {
+                        addrs = null;
+                    }
 
-	private static final String LOOKUP = "lookup";
-	private static final String OK = "ok";
-	private static final String CANCEL = "cancel";
+                    listModel.clear();
+
+                    if (addrs == null || addrs.length == 0)
+                        errorField.setText(i18n.getString("inet.lookup.notFound.err"));
+                    else {
+                        errorField.setText("");
+                        for (int i = 0; i < addrs.length; i++)
+                            listModel.addElement(addrs[i].getHostAddress());
+                        list.setSelectedIndex(0);
+                    }
+                }
+            }
+            else if (cmd.equals(OK)) {
+                setValue(list.getSelectedValue());
+                SwingUtilities.getRoot(this).setVisible(false);
+            }
+            else if (cmd.equals(CANCEL)) {
+                setValue(null);
+                SwingUtilities.getRoot(this).setVisible(false);
+            }
+        }
+
+        //----- for DocumentListener -------------------
+
+        public void insertUpdate(DocumentEvent e) {
+            changedUpdate(e);
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+            changedUpdate(e);
+        }
+
+        public void changedUpdate(DocumentEvent e) {
+            errorField.setText("");
+        }
+
+        //----- for ListSelectionListener -----------
+
+        public void valueChanged(ListSelectionEvent e) {
+            okBtn.setEnabled(list.getSelectedValue() != null);
+        }
+
+        private int type;
+        private JTextField nameField;
+        private JTextField errorField;
+        private DefaultListModel listModel;
+        private JList list;
+        private JButton okBtn;
+
+        private static final String LOOKUP = "lookup";
+        private static final String OK = "ok";
+        private static final String CANCEL = "cancel";
     }
 }

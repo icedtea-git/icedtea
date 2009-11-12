@@ -36,17 +36,17 @@ import javax.xml.bind.annotation.XmlType;
 */
 
 /**
- * 
+ *
  *         Some attributes are used by the QARE test database system. One
  *         of these is the name of your testing group. The name of the
  *         annotation for this is "test_group". An example of such a group
  *         is "J2SE QA".
- *       
- * 
+ *
+ *
  * <p>Java class for ReportAnnotation complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="ReportAnnotation">
  *   &lt;complexContent>
@@ -59,8 +59,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 /*@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ReportAnnotation", propOrder = {
@@ -75,51 +75,51 @@ static LinkedHashMap xmlElements;
     static String xmlTagName;
 
     static  {
-		xmlElements = new LinkedHashMap();
-		xmlElements.put("name", "name");
-		xmlElements.put("value","value");
-		xmlTagName = "annotation";
-	}
+                xmlElements = new LinkedHashMap();
+                xmlElements.put("name", "name");
+                xmlElements.put("value","value");
+                xmlTagName = "annotation";
+        }
     //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
 //    protected List/*<String>*/ name;
     protected List/*<String>*/ name;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
     protected List/*<String>*/ value;
 
-	LinkedHashMap getItemAttributes() {
-		return xmlAttributes;
-	}
+        LinkedHashMap getItemAttributes() {
+                return xmlAttributes;
+        }
 
-	LinkedHashMap getItemElements() {
-		return xmlElements;
-	}
+        LinkedHashMap getItemElements() {
+                return xmlElements;
+        }
 
-	String getItemTagName() {
-		return xmlTagName;
-	}
+        String getItemTagName() {
+                return xmlTagName;
+        }
 
-	/**
+        /**
      * Gets the value of the name property.
-     * 
+     *
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the name property.
-     * 
+     *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getName().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link String }
-     * 
-     * 
+     *
+     *
      */
     public List/*<String>*/ getName() {
         if (name == null) {
@@ -128,27 +128,27 @@ static LinkedHashMap xmlElements;
         return this.name;
     }
 
-	/**
+        /**
      * Gets the value of the value property.
-     * 
+     *
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the value property.
-     * 
+     *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getValue().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link String }
-     * 
-     * 
+     *
+     *
      */
     public List/*<String>*/ getValue() {
         if (value == null) {

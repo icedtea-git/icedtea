@@ -58,191 +58,191 @@ import com.sun.javatest.tool.UIFactory;
 class CE_TemplateDialog extends ToolDialog
 {
     CE_TemplateDialog(JComponent parent, InterviewParameters config, ExecModel model, UIFactory uif) {
-	super(parent, uif, "ct");
+        super(parent, uif, "ct");
 
-	this.config = config;
-	this.model = model;
+        this.config = config;
+        this.model = model;
 
-	fileChooser = new FileChooser(true);
-	fileChooser.addChoosableExtension(".jti",
-					  uif.getI18NString("ct.jtiFiles"));
+        fileChooser = new FileChooser(true);
+        fileChooser.addChoosableExtension(".jti",
+                                          uif.getI18NString("ct.jtiFiles"));
     }
 
     public void setVisible(boolean on) {
-	if (on) {
-	    if (markersCheckBox == null)
-		initGUI();
+        if (on) {
+            if (markersCheckBox == null)
+                initGUI();
 
-	    markersCheckBox.setSelected(config.getMarkersEnabled());
-	    filterCheckBox.setEnabled(markersCheckBox.isSelected());
-	    filterCheckBox.setSelected(config.getMarkersFilterEnabled());
-	}
+            markersCheckBox.setSelected(config.getMarkersEnabled());
+            filterCheckBox.setEnabled(markersCheckBox.isSelected());
+            filterCheckBox.setSelected(config.getMarkersFilterEnabled());
+        }
 
-	super.setVisible(on);
+        super.setVisible(on);
     }
 
     protected void initGUI() {
-	setI18NTitle("ct.title");
+        setI18NTitle("ct.title");
 
-	listener = new Listener();
+        listener = new Listener();
 
-	JPanel body = uif.createPanel("ct.body", false);
-	body.setLayout(new GridBagLayout());
-	body.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 10));
+        JPanel body = uif.createPanel("ct.body", false);
+        body.setLayout(new GridBagLayout());
+        body.setBorder(BorderFactory.createEmptyBorder(10, 10, 30, 10));
 
-	GridBagConstraints c = new GridBagConstraints();
+        GridBagConstraints c = new GridBagConstraints();
 
-	JLabel fileLbl = uif.createLabel("ct.file");
-	c.insets.right = 10;
-	body.add(fileLbl, c);
+        JLabel fileLbl = uif.createLabel("ct.file");
+        c.insets.right = 10;
+        body.add(fileLbl, c);
 
-	JPanel p = uif.createPanel("ct.file", false);
-	p.setLayout(new BorderLayout());
-	
-	fileField = uif.createInputField("ct.file", 32);
-	fileField.getDocument().addDocumentListener(listener);
-	fileLbl.setLabelFor(fileField);
-	p.add(fileField, BorderLayout.CENTER);
+        JPanel p = uif.createPanel("ct.file", false);
+        p.setLayout(new BorderLayout());
 
-	browseBtn = uif.createButton("ct.browse", listener);
-	p.add(browseBtn, BorderLayout.EAST);
-	
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.insets.top = 10;
-	c.insets.right = 0;
-	c.weightx = 1;
-	body.add(p, c);
+        fileField = uif.createInputField("ct.file", 32);
+        fileField.getDocument().addDocumentListener(listener);
+        fileLbl.setLabelFor(fileField);
+        p.add(fileField, BorderLayout.CENTER);
 
-	GridBagConstraints c2 = new GridBagConstraints();
-	body.add(Box.createHorizontalGlue(), c2);
+        browseBtn = uif.createButton("ct.browse", listener);
+        p.add(browseBtn, BorderLayout.EAST);
 
-	testSuiteCheckBox = uif.createCheckBox("ct.testSuite");
-	testSuiteCheckBox.addChangeListener(listener);
-	c.anchor = GridBagConstraints.WEST;
-	c.fill = GridBagConstraints.NONE;
-	c.insets.top = 0;
-	body.add(testSuiteCheckBox, c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets.top = 10;
+        c.insets.right = 0;
+        c.weightx = 1;
+        body.add(p, c);
 
-	body.add(Box.createHorizontalGlue(), c2);
+        GridBagConstraints c2 = new GridBagConstraints();
+        body.add(Box.createHorizontalGlue(), c2);
 
-	workDirCheckBox = uif.createCheckBox("ct.workDir");
-	workDirCheckBox.setEnabled(testSuiteCheckBox.isSelected());
-	body.add(workDirCheckBox, c);
+        testSuiteCheckBox = uif.createCheckBox("ct.testSuite");
+        testSuiteCheckBox.addChangeListener(listener);
+        c.anchor = GridBagConstraints.WEST;
+        c.fill = GridBagConstraints.NONE;
+        c.insets.top = 0;
+        body.add(testSuiteCheckBox, c);
 
-	body.add(Box.createHorizontalGlue(), c2);
+        body.add(Box.createHorizontalGlue(), c2);
 
-	markersCheckBox = uif.createCheckBox("ct.markers");
-	markersCheckBox.addChangeListener(listener);
-	body.add(markersCheckBox, c);
+        workDirCheckBox = uif.createCheckBox("ct.workDir");
+        workDirCheckBox.setEnabled(testSuiteCheckBox.isSelected());
+        body.add(workDirCheckBox, c);
 
-	body.add(Box.createHorizontalGlue(), c2);
+        body.add(Box.createHorizontalGlue(), c2);
 
-	filterCheckBox = uif.createCheckBox("ct.filter");
-	filterCheckBox.setEnabled(markersCheckBox.isSelected());
-	body.add(filterCheckBox, c);
+        markersCheckBox = uif.createCheckBox("ct.markers");
+        markersCheckBox.addChangeListener(listener);
+        body.add(markersCheckBox, c);
 
-	body.add(Box.createHorizontalGlue(), c2);
+        body.add(Box.createHorizontalGlue(), c2);
 
-	clearCheckBox = uif.createCheckBox("ct.clear");
-	body.add(clearCheckBox, c);
+        filterCheckBox = uif.createCheckBox("ct.filter");
+        filterCheckBox.setEnabled(markersCheckBox.isSelected());
+        body.add(filterCheckBox, c);
 
-	setBody(body);
+        body.add(Box.createHorizontalGlue(), c2);
+
+        clearCheckBox = uif.createCheckBox("ct.clear");
+        body.add(clearCheckBox, c);
+
+        setBody(body);
 
         okBtn = uif.createButton("ct.ok", listener);
-	okBtn.setEnabled(false); // enable when file field looks OK
-	JButton cancelBtn = uif.createCancelButton("ct.cancel");
-	setButtons(new JButton[] { okBtn, cancelBtn }, null);
+        okBtn.setEnabled(false); // enable when file field looks OK
+        JButton cancelBtn = uif.createCancelButton("ct.cancel");
+        setButtons(new JButton[] { okBtn, cancelBtn }, null);
     }
 
     private void doBrowse() {
-	String fileFieldText = fileField.getText();
-	File f = null;
+        String fileFieldText = fileField.getText();
+        File f = null;
 
-	if (fileFieldText.length() > 0) {
-	    f = new File(fileFieldText);
-	    if (f.isDirectory()) 
-		fileChooser.setCurrentDirectory(f);
-	    else
-		fileChooser.setSelectedFile(f);
-	}
+        if (fileFieldText.length() > 0) {
+            f = new File(fileFieldText);
+            if (f.isDirectory())
+                fileChooser.setCurrentDirectory(f);
+            else
+                fileChooser.setSelectedFile(f);
+        }
 
         File file = ConfigEditor.saveConfigFile(model.getContextManager(), parent, uif, fileChooser, f, false);
 
-	if (file != null) 
-	    fileField.setText(file.getPath());
+        if (file != null)
+            fileField.setText(file.getPath());
     }
 
     private boolean doSave() {
-	String fileFieldText = fileField.getText();
-	if (fileFieldText.length() == 0)
-	    return false;
+        String fileFieldText = fileField.getText();
+        if (fileFieldText.length() == 0)
+            return false;
 
-	File file = new File(fileFieldText);
-		
-	// if file exists, leave well enough alone;
-	// otherwise, make sure it ends with .jti
-	if (!file.exists()) {
-	    String path = file.getPath();
-	    if (!path.endsWith(".jti"))
-		file = new File(path + ".jti");
-	}
-	
-	// if file exists, make sure user wants to overwrite it
-	if (file.exists()) {
-	    int rc = uif.showYesNoCancelDialog("ce.save.warn");
-	    switch (rc) {
-	    case JOptionPane.YES_OPTION:
-		break;  // use this file
-		
-	    default:
-		return false; // save unsuccessful
-	    }
-	}
+        File file = new File(fileFieldText);
 
-	InterviewParameters c;
-	if (clearCheckBox.isSelected()
-	    || markersCheckBox.isSelected() != config.getMarkersEnabled()
-	    || filterCheckBox.isSelected() != config.getMarkersFilterEnabled()) {
-	    try {
-		c = config.getTestSuite().createInterview();
-		HashMap data = new HashMap();
-		config.save(data);
-		c.load(data, false);
-	    }
-	    catch (Interview.Fault e) {
-		// ignore, for now; should not happen
-		return false;
-	    }
-	    catch (TestSuite.Fault e) {
-		// ignore, for now; should not happen
-		return false;
-	    }
+        // if file exists, leave well enough alone;
+        // otherwise, make sure it ends with .jti
+        if (!file.exists()) {
+            String path = file.getPath();
+            if (!path.endsWith(".jti"))
+                file = new File(path + ".jti");
+        }
 
-	    c.setMarkersEnabled(markersCheckBox.isSelected());
-	    c.setMarkersFilterEnabled(filterCheckBox.isSelected());
+        // if file exists, make sure user wants to overwrite it
+        if (file.exists()) {
+            int rc = uif.showYesNoCancelDialog("ce.save.warn");
+            switch (rc) {
+            case JOptionPane.YES_OPTION:
+                break;  // use this file
 
-	    if (clearCheckBox.isSelected())
-		c.clearMarkedResponses(null); // null == default marker name
-	}
-	else
-	    c = config;
-	   
-	boolean tsb = testSuiteCheckBox.isSelected();
-	boolean wdb = workDirCheckBox.isSelected();
+            default:
+                return false; // save unsuccessful
+            }
+        }
 
-	try {
-	    c.saveAs(file, tsb, (tsb == false ? false : wdb), true);
-	    return true;
-	}
-	catch (IOException e) {
-	    uif.showError("ct.save", e.toString());
-	    return false;
-	}
-	catch (Interview.Fault e) {
-	    uif.showError("ct.save", e.getMessage());
-	    return false;
-	}
+        InterviewParameters c;
+        if (clearCheckBox.isSelected()
+            || markersCheckBox.isSelected() != config.getMarkersEnabled()
+            || filterCheckBox.isSelected() != config.getMarkersFilterEnabled()) {
+            try {
+                c = config.getTestSuite().createInterview();
+                HashMap data = new HashMap();
+                config.save(data);
+                c.load(data, false);
+            }
+            catch (Interview.Fault e) {
+                // ignore, for now; should not happen
+                return false;
+            }
+            catch (TestSuite.Fault e) {
+                // ignore, for now; should not happen
+                return false;
+            }
+
+            c.setMarkersEnabled(markersCheckBox.isSelected());
+            c.setMarkersFilterEnabled(filterCheckBox.isSelected());
+
+            if (clearCheckBox.isSelected())
+                c.clearMarkedResponses(null); // null == default marker name
+        }
+        else
+            c = config;
+
+        boolean tsb = testSuiteCheckBox.isSelected();
+        boolean wdb = workDirCheckBox.isSelected();
+
+        try {
+            c.saveAs(file, tsb, (tsb == false ? false : wdb), true);
+            return true;
+        }
+        catch (IOException e) {
+            uif.showError("ct.save", e.toString());
+            return false;
+        }
+        catch (Interview.Fault e) {
+            uif.showError("ct.save", e.getMessage());
+            return false;
+        }
     }
 
     private InterviewParameters config;
@@ -255,66 +255,66 @@ class CE_TemplateDialog extends ToolDialog
     private JCheckBox filterCheckBox;
     private JCheckBox clearCheckBox;
     private JButton okBtn;
-    
+
     private ExecModel model;
 
     private Listener listener;
 
-    private class Listener 
-	implements ActionListener, ChangeListener, DocumentListener
+    private class Listener
+        implements ActionListener, ChangeListener, DocumentListener
     {
-	//----- for ActionListener ----------------------
+        //----- for ActionListener ----------------------
 
-	public void actionPerformed(ActionEvent e) {
-	    Object src = e.getSource();
-	    if (src == browseBtn)
-		doBrowse();
-	    else if (src == okBtn) {
-		boolean ok = doSave();
-		if (ok)
-		    setVisible(false);
-	    }
-	}
+        public void actionPerformed(ActionEvent e) {
+            Object src = e.getSource();
+            if (src == browseBtn)
+                doBrowse();
+            else if (src == okBtn) {
+                boolean ok = doSave();
+                if (ok)
+                    setVisible(false);
+            }
+        }
 
-	//----- for ChangeListener ----------------------
+        //----- for ChangeListener ----------------------
 
-	public void stateChanged(ChangeEvent e) {
-	    Object src = e.getSource();
-	    if (src == testSuiteCheckBox) {
-		workDirCheckBox.setEnabled(testSuiteCheckBox.isSelected());
-	    }
-	    else if (src == markersCheckBox) {
-		filterCheckBox.setEnabled(markersCheckBox.isSelected());
-	    }
-	}
+        public void stateChanged(ChangeEvent e) {
+            Object src = e.getSource();
+            if (src == testSuiteCheckBox) {
+                workDirCheckBox.setEnabled(testSuiteCheckBox.isSelected());
+            }
+            else if (src == markersCheckBox) {
+                filterCheckBox.setEnabled(markersCheckBox.isSelected());
+            }
+        }
 
-	//----- for DocumentListener ----------------------
-	
-	public void insertUpdate(DocumentEvent e) {
-	    changedUpdate(e);
-	}
-	
-	public void removeUpdate(DocumentEvent e) {
-	    changedUpdate(e);
-	}
-	
-	public void changedUpdate(DocumentEvent e) {
-	    String path = fileField.getText();
-	    boolean ok;
+        //----- for DocumentListener ----------------------
 
-	    if (path.length() == 0) 
-		ok = false;
-	    else {
-		File f = new File(path);
-		if (f.exists() && f.isDirectory())
-		    ok = false;
-		else {
-		    File parent = f.getParentFile();
-		    ok = (parent != null && parent.exists() && parent.isDirectory());
-		}
-	    }
+        public void insertUpdate(DocumentEvent e) {
+            changedUpdate(e);
+        }
 
-	    okBtn.setEnabled(ok);
-	}
+        public void removeUpdate(DocumentEvent e) {
+            changedUpdate(e);
+        }
+
+        public void changedUpdate(DocumentEvent e) {
+            String path = fileField.getText();
+            boolean ok;
+
+            if (path.length() == 0)
+                ok = false;
+            else {
+                File f = new File(path);
+                if (f.exists() && f.isDirectory())
+                    ok = false;
+                else {
+                    File parent = f.getParentFile();
+                    ok = (parent != null && parent.exists() && parent.isDirectory());
+                }
+            }
+
+            okBtn.setEnabled(ok);
+        }
     }
 }

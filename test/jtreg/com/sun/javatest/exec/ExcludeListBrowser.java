@@ -60,171 +60,171 @@ import com.sun.javatest.tool.UIFactory;
 class ExcludeListBrowser extends ToolDialog
 {
     ExcludeListBrowser(Container parent, UIFactory uif) {
-	super(parent, uif, "elb");
-	this.params = params;
+        super(parent, uif, "elb");
+        this.params = params;
 
-	listener = new Listener();
+        listener = new Listener();
     }
 
     public void show(InterviewParameters params) {
-	this.params = params;
-	setVisible(true);
+        this.params = params;
+        setVisible(true);
     }
 
     private void updateContent() {
-	ExcludeList exclList = params.getExcludeList();
-	File[] exclFiles;
-	Parameters.ExcludeListParameters eParams =
-	    params.getExcludeListParameters();
-	if (eParams instanceof Parameters.MutableExcludeListParameters) 
-	    exclFiles = ((Parameters.MutableExcludeListParameters) eParams).getExcludeFiles();
-	else
-	    exclFiles = null;
+        ExcludeList exclList = params.getExcludeList();
+        File[] exclFiles;
+        Parameters.ExcludeListParameters eParams =
+            params.getExcludeListParameters();
+        if (eParams instanceof Parameters.MutableExcludeListParameters)
+            exclFiles = ((Parameters.MutableExcludeListParameters) eParams).getExcludeFiles();
+        else
+            exclFiles = null;
 
-	// rely on interview caching to allow reference equality here
-	if (list != exclList || files != exclFiles)
-	    setTable(exclFiles, exclList);
+        // rely on interview caching to allow reference equality here
+        if (list != exclList || files != exclFiles)
+            setTable(exclFiles, exclList);
     }
 
     private void setTable(File[] files, ExcludeList list) {
 
-	this.list = list;
-	this.files = files;
+        this.list = list;
+        this.files = files;
 
-	model = new ExcludeListTableModel(list);
-	table.setModel(model);
+        model = new ExcludeListTableModel(list);
+        table.setModel(model);
 
-	if (files == null || files.length == 0)
-	    setI18NTitle("elb.title0");
-	else if (files.length == 1)
-	    setI18NTitle("elb.title1", files[0].getPath());
-	else 
-	    setI18NTitle("elb.titlen", new Integer(files.length));
+        if (files == null || files.length == 0)
+            setI18NTitle("elb.title0");
+        else if (files.length == 1)
+            setI18NTitle("elb.title1", files[0].getPath());
+        else
+            setI18NTitle("elb.titlen", new Integer(files.length));
     }
 
     protected void initGUI() {
-	// fix
-	// TO DO...
-	//fileField = uif.createOutputField("elb.file", 30);
-	//fileField.setBorder(null);
-	//fileField.setHorizontalAlignment(JTextField.RIGHT);
-	//setHeadExtras(fileField);
-	JPanel body = uif.createPanel("elb.body", new GridBagLayout(), false);
-	body.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-	int dpi = uif.getDotsPerInch();
-	body.setPreferredSize(new Dimension(5 * dpi, 2 * dpi));
+        // fix
+        // TO DO...
+        //fileField = uif.createOutputField("elb.file", 30);
+        //fileField.setBorder(null);
+        //fileField.setHorizontalAlignment(JTextField.RIGHT);
+        //setHeadExtras(fileField);
+        JPanel body = uif.createPanel("elb.body", new GridBagLayout(), false);
+        body.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        int dpi = uif.getDotsPerInch();
+        body.setPreferredSize(new Dimension(5 * dpi, 2 * dpi));
 
-	GridBagConstraints c = new GridBagConstraints();
-	c.fill = GridBagConstraints.BOTH;
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.weighty = 1;
-	c.insets.bottom = 5;
-	/*
-	list = uif.createList("elb.list");
-	list.addListSelectionListener(new ListSelectionListener() {
-	    public void valueChanged(ListSelectionEvent e) {
-		selectEntry((ExcludeList.Entry)(list.getSelectedValue()));
-	    }
-	});
-	
-	list.setCellRenderer(new DefaultListCellRenderer() {	
-	    public Component getListCellRendererComponent(JList list, Object o, int index, boolean isSelected, boolean cellHasFocus) {
-		String name = entryToString((ExcludeList.Entry)o);
-		return super.getListCellRendererComponent(list, name, index, isSelected, cellHasFocus);
-	    }
-	});
-	list.setVisibleRowCount(3);
-	body.add(uif.createScrollPane(list), c);
-	*/
-	table = new JTable();
-	table.setRowSelectionAllowed(true);
-	table.setColumnSelectionAllowed(false);
-	table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-	    public void valueChanged(ListSelectionEvent e) {
-		showSelectedEntry();
-	    }
-	});
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.weighty = 1;
+        c.insets.bottom = 5;
+        /*
+        list = uif.createList("elb.list");
+        list.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                selectEntry((ExcludeList.Entry)(list.getSelectedValue()));
+            }
+        });
+
+        list.setCellRenderer(new DefaultListCellRenderer() {
+            public Component getListCellRendererComponent(JList list, Object o, int index, boolean isSelected, boolean cellHasFocus) {
+                String name = entryToString((ExcludeList.Entry)o);
+                return super.getListCellRendererComponent(list, name, index, isSelected, cellHasFocus);
+            }
+        });
+        list.setVisibleRowCount(3);
+        body.add(uif.createScrollPane(list), c);
+        */
+        table = new JTable();
+        table.setRowSelectionAllowed(true);
+        table.setColumnSelectionAllowed(false);
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                showSelectedEntry();
+            }
+        });
 
         uif.setAccessibleInfo(table, "elb.tbl");
         uif.setToolTip(table, "elb.tbl");
-        
-	body.add(new JScrollPane(table), c);
 
-	GridBagConstraints lc = new GridBagConstraints();
-	lc.insets.top = 2;
-	lc.insets.right = 5;
-	lc.anchor = GridBagConstraints.EAST;
+        body.add(new JScrollPane(table), c);
 
-	GridBagConstraints fc = new GridBagConstraints();
-	fc.gridwidth = GridBagConstraints.REMAINDER;
-	fc.insets.top = 2;
-	fc.weightx = 1;
-	fc.fill = GridBagConstraints.HORIZONTAL;
+        GridBagConstraints lc = new GridBagConstraints();
+        lc.insets.top = 2;
+        lc.insets.right = 5;
+        lc.anchor = GridBagConstraints.EAST;
 
-	JLabel synopsisLabel = uif.createLabel("elb.synopsis", true);
-	body.add(synopsisLabel, lc);
-	synopsisField = uif.createOutputField("elb.synopsis", synopsisLabel);
-	body.add(synopsisField, fc);
+        GridBagConstraints fc = new GridBagConstraints();
+        fc.gridwidth = GridBagConstraints.REMAINDER;
+        fc.insets.top = 2;
+        fc.weightx = 1;
+        fc.fill = GridBagConstraints.HORIZONTAL;
 
-	JLabel kwLabel = uif.createLabel("elb.kws", true);
-	body.add(kwLabel, lc);
-	kwField = uif.createOutputField("elb.kws", kwLabel);
-	body.add(kwField, fc);
+        JLabel synopsisLabel = uif.createLabel("elb.synopsis", true);
+        body.add(synopsisLabel, lc);
+        synopsisField = uif.createOutputField("elb.synopsis", synopsisLabel);
+        body.add(synopsisField, fc);
 
-	JLabel bugIdsLabel = uif.createLabel("elb.bugids", true);
-	body.add(bugIdsLabel, lc);
-	bugIdsField = uif.createOutputField("elb.bugids", bugIdsLabel);
-	body.add(bugIdsField, fc);
-	
-	setBody(body);
+        JLabel kwLabel = uif.createLabel("elb.kws", true);
+        body.add(kwLabel, lc);
+        kwField = uif.createOutputField("elb.kws", kwLabel);
+        body.add(kwField, fc);
 
-	JButton closeBtn = uif.createCloseButton("elb.close");
-	setButtons(new JButton[] { closeBtn }, closeBtn);
+        JLabel bugIdsLabel = uif.createLabel("elb.bugids", true);
+        body.add(bugIdsLabel, lc);
+        bugIdsField = uif.createOutputField("elb.bugids", bugIdsLabel);
+        body.add(bugIdsField, fc);
 
-	setComponentListener(listener);
+        setBody(body);
+
+        JButton closeBtn = uif.createCloseButton("elb.close");
+        setButtons(new JButton[] { closeBtn }, closeBtn);
+
+        setComponentListener(listener);
     }
 
     private void showSelectedEntry() {
-	ExcludeList.Entry e = model.getEntry(table.getSelectedRow());
+        ExcludeList.Entry e = model.getEntry(table.getSelectedRow());
 
-	if (e == null) {
-	    synopsisField.setText("");
-	    kwField.setText("");
-	    bugIdsField.setText("");
-	} 
-	else {
-	    synopsisField.setText(e.getSynopsis());
-	    kwField.setText(getKeywords(e));
-	    bugIdsField.setText(getBugIds(e));
-	}
+        if (e == null) {
+            synopsisField.setText("");
+            kwField.setText("");
+            bugIdsField.setText("");
+        }
+        else {
+            synopsisField.setText(e.getSynopsis());
+            kwField.setText(getKeywords(e));
+            bugIdsField.setText(getBugIds(e));
+        }
     }
 
     private String entryToString(ExcludeList.Entry e) {
-	String u = e.getRelativeURL();
-	String tc = e.getTestCases();
-	return (tc == null ? u : u + "[" + tc + "]");
+        String u = e.getRelativeURL();
+        String tc = e.getTestCases();
+        return (tc == null ? u : u + "[" + tc + "]");
     }
 
     private String getBugIds(ExcludeList.Entry e) {
-	String[] bugIds = e.getBugIdStrings();
-	StringBuffer sb = new StringBuffer();
-	for (int i = 0; i < bugIds.length; i++) {
-	    if (i > 0)
-		sb.append(", ");
-	    sb.append(bugIds[i]);
-	}
-	return sb.toString();
+        String[] bugIds = e.getBugIdStrings();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < bugIds.length; i++) {
+            if (i > 0)
+                sb.append(", ");
+            sb.append(bugIds[i]);
+        }
+        return sb.toString();
     }
 
     private String getKeywords(ExcludeList.Entry e) {
-	String[] keywords = e.getPlatforms();
-	StringBuffer sb = new StringBuffer();
-	for (int i = 0; i < keywords.length; i++) {
-	    if (i > 0)
-		sb.append(", ");
-	    sb.append(keywords[i]);
-	}
-	return sb.toString();
+        String[] keywords = e.getPlatforms();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < keywords.length; i++) {
+            if (i > 0)
+                sb.append(", ");
+            sb.append(keywords[i]);
+        }
+        return sb.toString();
     }
 
 
@@ -240,27 +240,27 @@ class ExcludeListBrowser extends ToolDialog
 
     private Listener listener;
 
-    private class Listener 
-	extends ComponentAdapter
-	implements Interview.Observer
+    private class Listener
+        extends ComponentAdapter
+        implements Interview.Observer
     {
-	// ComponentListener
-	public void componentShown(ComponentEvent e) {
-	    params.addObserver(this);
-	    updateContent();
-	}
-	
-	public void componentHidden(ComponentEvent e) {
-	    params.removeObserver(this);
-	}
+        // ComponentListener
+        public void componentShown(ComponentEvent e) {
+            params.addObserver(this);
+            updateContent();
+        }
 
-	// Interview.Observer
-	public void currentQuestionChanged(Question q) {
-	}
+        public void componentHidden(ComponentEvent e) {
+            params.removeObserver(this);
+        }
 
-	public void pathUpdated() {
-	    updateContent();
-	}
+        // Interview.Observer
+        public void currentQuestionChanged(Question q) {
+        }
+
+        public void pathUpdated() {
+            updateContent();
+        }
     }
 
     private static final int TEST_NAME_COL = 0;
@@ -274,98 +274,98 @@ class ExcludeListBrowser extends ToolDialog
 
     private class ExcludeListTableModel implements TableModel
     {
-	ExcludeListTableModel(ExcludeList list) {
-	    if (columnNames == null) {
-		columnNames = new String[COLUMN_COUNT];
-		columnNames[TEST_NAME_COL] = uif.getI18NString("elb.col.testName");
-		columnNames[TEST_CASE_COL] = uif.getI18NString("elb.col.testCase");
-		columnNames[BUG_COL] = uif.getI18NString("elb.col.bugId");
-		columnNames[KEYWORDS_COL] = uif.getI18NString("elb.col.keywords");
-		columnNames[SYNOPSIS_COL] = uif.getI18NString("elb.col.synopsis");
-	    }
+        ExcludeListTableModel(ExcludeList list) {
+            if (columnNames == null) {
+                columnNames = new String[COLUMN_COUNT];
+                columnNames[TEST_NAME_COL] = uif.getI18NString("elb.col.testName");
+                columnNames[TEST_CASE_COL] = uif.getI18NString("elb.col.testCase");
+                columnNames[BUG_COL] = uif.getI18NString("elb.col.bugId");
+                columnNames[KEYWORDS_COL] = uif.getI18NString("elb.col.keywords");
+                columnNames[SYNOPSIS_COL] = uif.getI18NString("elb.col.synopsis");
+            }
 
-	    // The following operation is slow and should arguably be 
-	    // done by a worker thread, perhaps using the nested List class as
-	    // a Runnable.
-	    SortedSet sortedEntries = new TreeSet(new Comparator() {
-		    public int compare(Object o1, Object o2) {
-			String s1 = entryToString((ExcludeList.Entry)o1);
-			String s2 = entryToString((ExcludeList.Entry)o2);
-			return s1.compareTo(s2);
-		    }
-		});
+            // The following operation is slow and should arguably be
+            // done by a worker thread, perhaps using the nested List class as
+            // a Runnable.
+            SortedSet sortedEntries = new TreeSet(new Comparator() {
+                    public int compare(Object o1, Object o2) {
+                        String s1 = entryToString((ExcludeList.Entry)o1);
+                        String s2 = entryToString((ExcludeList.Entry)o2);
+                        return s1.compareTo(s2);
+                    }
+                });
 
-	    if (list != null) {
-		for (Iterator iter = list.getIterator(false); iter.hasNext(); ) {
-		    ExcludeList.Entry ee = (ExcludeList.Entry) (iter.next());
-		    sortedEntries.add(ee);
-		}
-	    }
+            if (list != null) {
+                for (Iterator iter = list.getIterator(false); iter.hasNext(); ) {
+                    ExcludeList.Entry ee = (ExcludeList.Entry) (iter.next());
+                    sortedEntries.add(ee);
+                }
+            }
 
-	    entries = new ExcludeList.Entry[sortedEntries.size()];
-	    sortedEntries.toArray(entries);
-	}
+            entries = new ExcludeList.Entry[sortedEntries.size()];
+            sortedEntries.toArray(entries);
+        }
 
-	ExcludeList.Entry getEntry(int index) {
-	    return (index < 0 || index >= entries.length ? null : entries[index]);
-	}
+        ExcludeList.Entry getEntry(int index) {
+            return (index < 0 || index >= entries.length ? null : entries[index]);
+        }
 
-	public void addTableModelListener(TableModelListener l) {
-	    // model never changes, so ignore listener
-	}
+        public void addTableModelListener(TableModelListener l) {
+            // model never changes, so ignore listener
+        }
 
-	public Class getColumnClass(int columnIndex) {
-	    // for now, all are strings
-	    return String.class;
-	}
+        public Class getColumnClass(int columnIndex) {
+            // for now, all are strings
+            return String.class;
+        }
 
-	public int getColumnCount() {
-	    return COLUMN_COUNT;
-	}
+        public int getColumnCount() {
+            return COLUMN_COUNT;
+        }
 
-	public String getColumnName(int index) {
-	    return columnNames[index];
-	}
+        public String getColumnName(int index) {
+            return columnNames[index];
+        }
 
-	public int getRowCount() {
-	    return entries.length;
-	}
+        public int getRowCount() {
+            return entries.length;
+        }
 
-	public Object getValueAt(int rowIndex, int colIndex) {
-	    ExcludeList.Entry e = entries[rowIndex];
-	    switch (colIndex) {
-	    case TEST_NAME_COL:
-		return e.getRelativeURL();
+        public Object getValueAt(int rowIndex, int colIndex) {
+            ExcludeList.Entry e = entries[rowIndex];
+            switch (colIndex) {
+            case TEST_NAME_COL:
+                return e.getRelativeURL();
 
-	    case TEST_CASE_COL:
-		return e.getTestCases();
+            case TEST_CASE_COL:
+                return e.getTestCases();
 
-	    case BUG_COL:
-		return getBugIds(e);
+            case BUG_COL:
+                return getBugIds(e);
 
-	    case KEYWORDS_COL:
-		return getKeywords(e);
+            case KEYWORDS_COL:
+                return getKeywords(e);
 
-	    case SYNOPSIS_COL:
-		return e.getSynopsis();
-	    }
+            case SYNOPSIS_COL:
+                return e.getSynopsis();
+            }
 
-	    throw new IllegalArgumentException();
-	}
+            throw new IllegalArgumentException();
+        }
 
-	public boolean isCellEditable(int rowIndex, int colIndex) {
-	    return false;
-	}
+        public boolean isCellEditable(int rowIndex, int colIndex) {
+            return false;
+        }
 
-	public void removeTableModelListener(TableModelListener l) {
-	    // model never changes, so ignore listener
-	}
+        public void removeTableModelListener(TableModelListener l) {
+            // model never changes, so ignore listener
+        }
 
-	public void setValueAt(Object aValue, int rowIndex, int colIndex) {
-	    throw new UnsupportedOperationException();
-	}
+        public void setValueAt(Object aValue, int rowIndex, int colIndex) {
+            throw new UnsupportedOperationException();
+        }
 
-	private ExcludeList.Entry[] entries;
-	
+        private ExcludeList.Entry[] entries;
+
     }
 }

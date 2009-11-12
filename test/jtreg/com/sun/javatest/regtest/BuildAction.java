@@ -103,7 +103,7 @@ public class BuildAction extends Action
         this.args = args;
         this.opts = opts;
     } // init()
-    
+
     @Override
     public File[] getSourceFiles() {
         List<File> l = new ArrayList<File>();
@@ -167,10 +167,10 @@ public class BuildAction extends Action
 //              break;
 //          }
 //      }
-        
+
         // step 1: see which files need compiling, and group them according
         // to the value of the -d flag that will be required
-        Map<File,List<File>> filesToCompile = new LinkedHashMap<File,List<File>>(); 
+        Map<File,List<File>> filesToCompile = new LinkedHashMap<File,List<File>>();
         for (int i = 0; i < args.length; i++) {
             // the argument to build is a classname
             String currFN = args[i].replace('.', File.separatorChar) + ".java";
@@ -187,7 +187,7 @@ public class BuildAction extends Action
                 filesForDest.add(sf);
             }
         }
-        
+
         // step 2: perform the compilations, if any
         if (filesToCompile.isEmpty()) {
             status = Status.passed(BUILD_UP_TO_DATE);
@@ -209,7 +209,7 @@ public class BuildAction extends Action
         endAction(status, section);
         return status;
     } // run()
-    
+
     private String[] asStrings(File[] files) {
         String[] strings = new String[files.length];
         for (int i = 0; i < files.length; i++)

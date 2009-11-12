@@ -53,35 +53,35 @@ class TT_Renderer extends DefaultTreeCellRenderer {
      *        current filter for rendering purposes.
      */
     TT_Renderer(UIFactory uif, FilterSelectionHandler fh, TreePanelModel model) {
-	this.uif = uif;
-	this.filterHandler = fh;
-	this.tpm = model;
-	//loadIcons();
+        this.uif = uif;
+        this.filterHandler = fh;
+        this.tpm = model;
+        //loadIcons();
 
-	// this is supposed to be caught during development
-	if (stateOrdering.length != Status.NUM_STATES)
-	    throw new JavaTestError(uif.getI18NString("tree.unmatched"));
+        // this is supposed to be caught during development
+        if (stateOrdering.length != Status.NUM_STATES)
+            throw new JavaTestError(uif.getI18NString("tree.unmatched"));
     }
 
     public Component getTreeCellRendererComponent(JTree tree,
-						  Object value,
-						  boolean selected,
-						  boolean expanded,
-						  boolean leaf,
-						  int row,
-						  boolean hasFocus) {
-	super.getTreeCellRendererComponent(tree, value, selected, expanded,
-					   leaf, row, hasFocus);
+                                                  Object value,
+                                                  boolean selected,
+                                                  boolean expanded,
+                                                  boolean leaf,
+                                                  int row,
+                                                  boolean hasFocus) {
+        super.getTreeCellRendererComponent(tree, value, selected, expanded,
+                                           leaf, row, hasFocus);
 
-	setIcon(getIcon(value, (TestTreeModel)(tree.getModel())));
-	setText(getLabelText(value));
-	setToolTipText(getTipText(value));
-	
-	return this;
+        setIcon(getIcon(value, (TestTreeModel)(tree.getModel())));
+        setText(getLabelText(value));
+        setToolTipText(getTipText(value));
+
+        return this;
     }
 
     void setParameters(Parameters p) {
-	params = p;
+        params = p;
     }
 
     /**
@@ -90,189 +90,189 @@ class TT_Renderer extends DefaultTreeCellRenderer {
      */
     /*
     private void loadIcons() {
-	// if the runIcon is there, we assume that icons have already be loaded
-	if (unknownIcon == null) {
-	    unknownIcon = uif.createIcon("exec.tree.unknown");
-	    leafIcons = new Icon[numLeafIcons];
-	    leafIcons[Status.PASSED] = uif.createIcon("exec.tree.pass");
-	    leafIcons[Status.FAILED] = uif.createIcon("exec.tree.fail");
-	    leafIcons[Status.ERROR] = uif.createIcon("exec.tree.error");
-	    leafIcons[Status.NOT_RUN] = uif.createIcon("exec.tree.notRun");
-	    leafIcons[numLeafIcons-1] = uif.createIcon("exec.tree.disable");
-	    
+        // if the runIcon is there, we assume that icons have already be loaded
+        if (unknownIcon == null) {
+            unknownIcon = uif.createIcon("exec.tree.unknown");
+            leafIcons = new Icon[numLeafIcons];
+            leafIcons[Status.PASSED] = uif.createIcon("exec.tree.pass");
+            leafIcons[Status.FAILED] = uif.createIcon("exec.tree.fail");
+            leafIcons[Status.ERROR] = uif.createIcon("exec.tree.error");
+            leafIcons[Status.NOT_RUN] = uif.createIcon("exec.tree.notRun");
+            leafIcons[numLeafIcons-1] = uif.createIcon("exec.tree.disable");
 
-	    leafRunIcons = new Icon[numLeafIcons];
-	    leafRunIcons[Status.PASSED] = uif.createIcon("exec.tree.runPass");
-	    leafRunIcons[Status.FAILED] = uif.createIcon("exec.tree.runFail");
-	    leafRunIcons[Status.ERROR] = uif.createIcon("exec.tree.runError");
-	    leafRunIcons[Status.NOT_RUN] = uif.createIcon("exec.tree.runNotRun");
-	    leafRunIcons[numLeafIcons-1] = uif.createIcon("exec.tree.runDisable");
 
-	    brIcons = new Icon[numBrIcons];
-	    brIcons[Status.PASSED] = uif.createIcon("exec.tree.passf");
-	    brIcons[Status.FAILED] = uif.createIcon("exec.tree.failf");
-	    brIcons[Status.ERROR] = uif.createIcon("exec.tree.errorf");
-	    brIcons[Status.NOT_RUN] = uif.createIcon("exec.tree.notRunf");
-	    brIcons[numBrIcons-1] = uif.createIcon("exec.tree.disabledf");
+            leafRunIcons = new Icon[numLeafIcons];
+            leafRunIcons[Status.PASSED] = uif.createIcon("exec.tree.runPass");
+            leafRunIcons[Status.FAILED] = uif.createIcon("exec.tree.runFail");
+            leafRunIcons[Status.ERROR] = uif.createIcon("exec.tree.runError");
+            leafRunIcons[Status.NOT_RUN] = uif.createIcon("exec.tree.runNotRun");
+            leafRunIcons[numLeafIcons-1] = uif.createIcon("exec.tree.runDisable");
 
-	    brComputeIcons = new Icon[numBrIcons];
-	    brComputeIcons[Status.PASSED] = uif.createIcon("exec.tree.computePassf");
-	    brComputeIcons[Status.FAILED] = uif.createIcon("exec.tree.computeFailf");
-	    brComputeIcons[Status.ERROR] = uif.createIcon("exec.tree.computeErrorf");
-	    brComputeIcons[Status.NOT_RUN] = uif.createIcon("exec.tree.computeNotRunf");
-	    brComputeIcons[numBrIcons-1] = uif.createIcon("exec.tree.computeDisabledf");
-	}
+            brIcons = new Icon[numBrIcons];
+            brIcons[Status.PASSED] = uif.createIcon("exec.tree.passf");
+            brIcons[Status.FAILED] = uif.createIcon("exec.tree.failf");
+            brIcons[Status.ERROR] = uif.createIcon("exec.tree.errorf");
+            brIcons[Status.NOT_RUN] = uif.createIcon("exec.tree.notRunf");
+            brIcons[numBrIcons-1] = uif.createIcon("exec.tree.disabledf");
+
+            brComputeIcons = new Icon[numBrIcons];
+            brComputeIcons[Status.PASSED] = uif.createIcon("exec.tree.computePassf");
+            brComputeIcons[Status.FAILED] = uif.createIcon("exec.tree.computeFailf");
+            brComputeIcons[Status.ERROR] = uif.createIcon("exec.tree.computeErrorf");
+            brComputeIcons[Status.NOT_RUN] = uif.createIcon("exec.tree.computeNotRunf");
+            brComputeIcons[numBrIcons-1] = uif.createIcon("exec.tree.computeDisabledf");
+        }
     }
     */
 
     private Icon getIcon(Object value, TestTreeModel model) {
-	// XXX may want to cache the filters - performance
-	TestFilter filter = filterHandler.getActiveFilter();
+        // XXX may want to cache the filters - performance
+        TestFilter filter = filterHandler.getActiveFilter();
 
-	if (params == null || params.getTestSuite() == null)
-	    return IconFactory.getTestFolderIcon(Status.NOT_RUN, false, true);
+        if (params == null || params.getTestSuite() == null)
+            return IconFactory.getTestFolderIcon(Status.NOT_RUN, false, true);
 
-	if (value instanceof TestResult) {
-	    TestResult tr = (TestResult)value;
+        if (value instanceof TestResult) {
+            TestResult tr = (TestResult)value;
 
-	    if (debug > 0) {
-		Debug.println("TT Rend - rendering TR " + tr);
-		Debug.println("   -> " + tr.getTestName());
-		Debug.println("   -> " + tr.getStatus().toString());
-		Debug.println("   -> " + tr.isMutable());
-	    }
-	    
-	    /*
-  	    if (isFilteredOut(tr, filter))	    // not selected for execution
- 		return leafIcons[numLeafIcons-1];
- 	    else if (tr.isMutable())	    // test is running, may want to change criteria
- 		return leafRunIcons[tr.getStatus().getType()];
- 	    else				    // one of the normal status
- 		return leafIcons[tr.getStatus().getType()];
-	    */
+            if (debug > 0) {
+                Debug.println("TT Rend - rendering TR " + tr);
+                Debug.println("   -> " + tr.getTestName());
+                Debug.println("   -> " + tr.getStatus().toString());
+                Debug.println("   -> " + tr.isMutable());
+            }
 
-	    if (isFilteredOut(tr, filter))	    // not selected for execution
-		return IconFactory.getTestIcon(IconFactory.FILTERED_OUT, false, true);
-	    else if (isRunning(tr))
-		return IconFactory.getTestIcon(tr.getStatus().getType(), true, true);
-	    else 
-		return IconFactory.getTestIcon(tr.getStatus().getType(), false, true);
-	}
-	else {
-	    TestResultTable.TreeNode tn = (TestResultTable.TreeNode)value;
-	    TT_NodeCache info = model.getNodeInfo(tn, false);
-	    int[] stats = info.getStats();
+            /*
+            if (isFilteredOut(tr, filter))          // not selected for execution
+                return leafIcons[numLeafIcons-1];
+            else if (tr.isMutable())        // test is running, may want to change criteria
+                return leafRunIcons[tr.getStatus().getType()];
+            else                                    // one of the normal status
+                return leafIcons[tr.getStatus().getType()];
+            */
 
-	    // XXX should probably investigate why this can happen
-	    if (stats == null)
-		return unknownIcon;
+            if (isFilteredOut(tr, filter))          // not selected for execution
+                return IconFactory.getTestIcon(IconFactory.FILTERED_OUT, false, true);
+            else if (isRunning(tr))
+                return IconFactory.getTestIcon(tr.getStatus().getType(), true, true);
+            else
+                return IconFactory.getTestIcon(tr.getStatus().getType(), false, true);
+        }
+        else {
+            TestResultTable.TreeNode tn = (TestResultTable.TreeNode)value;
+            TT_NodeCache info = model.getNodeInfo(tn, false);
+            int[] stats = info.getStats();
 
-	    /*
-  	    if (!info.isValid() || info.isActive() ||	// being processed
- 		(info.isValid() && !info.isComplete())) {   // to be processed
- 		return brComputeIcons[selectBranchIconIndex(stats, true)];
- 	    }
- 	    else {
- 		return brIcons[selectBranchIconIndex(stats, false)];
- 	    }
-	    */
+            // XXX should probably investigate why this can happen
+            if (stats == null)
+                return unknownIcon;
 
-	    boolean active = ( !info.isValid() 
-			       || info.isActive()	// being processed
-			       || (info.isValid() && !info.isComplete()) );   // to be processed
-	    return IconFactory.getTestFolderIcon(
-		    selectBranchIconIndex(stats, active),
-		    (tpm.isActive(tn) || active), true);
-	}
+            /*
+            if (!info.isValid() || info.isActive() ||   // being processed
+                (info.isValid() && !info.isComplete())) {   // to be processed
+                return brComputeIcons[selectBranchIconIndex(stats, true)];
+            }
+            else {
+                return brIcons[selectBranchIconIndex(stats, false)];
+            }
+            */
+
+            boolean active = ( !info.isValid()
+                               || info.isActive()       // being processed
+                               || (info.isValid() && !info.isComplete()) );   // to be processed
+            return IconFactory.getTestFolderIcon(
+                    selectBranchIconIndex(stats, active),
+                    (tpm.isActive(tn) || active), true);
+        }
     }
 
     private String getLabelText(Object value) {
-	if (value instanceof TestResult) {
-	    TestResult tr = (TestResult)value;
-	    String fullname = tr.getTestName();
-	    int lastSlash = fullname.lastIndexOf("/");
-	    return (lastSlash != -1 ?
-		    fullname.substring(lastSlash+1) :
-		    fullname);
+        if (value instanceof TestResult) {
+            TestResult tr = (TestResult)value;
+            String fullname = tr.getTestName();
+            int lastSlash = fullname.lastIndexOf("/");
+            return (lastSlash != -1 ?
+                    fullname.substring(lastSlash+1) :
+                    fullname);
 
-	} else {
-	    TestResultTable.TreeNode tn = (TestResultTable.TreeNode)value;
-	    if (tn.isRoot())
-		if (params == null || params.getTestSuite() == null)
-		    return uif.getI18NString("tree.noTs");
-		else
-		    return uif.getI18NString("tree.rootName");
-	    else
-		return tn.getName();
-	}
+        } else {
+            TestResultTable.TreeNode tn = (TestResultTable.TreeNode)value;
+            if (tn.isRoot())
+                if (params == null || params.getTestSuite() == null)
+                    return uif.getI18NString("tree.noTs");
+                else
+                    return uif.getI18NString("tree.rootName");
+            else
+                return tn.getName();
+        }
     }
-    
-    private String getTipText(Object val) {
-	if (val instanceof TestResult) {
-	    //return ((TestResult)val).getWorkRelativePath();
-	    return ((TestResult)val).getTestName();
-	}
-	else if (val instanceof TestResultTable.TreeNode) {
-	    if (params == null || params.getTestSuite() == null)
-		return uif.getI18NString("tree.noRootName.tip");
 
-	    TestResultTable.TreeNode node = (TestResultTable.TreeNode)val;
-	    if (node.isRoot())
-		return uif.getI18NString("tree.rootName.tip", params.getTestSuite().getName());
-	    else
-		return TestResultTable.getRootRelativePath(node);
-	}
-	else
-	    return null;
+    private String getTipText(Object val) {
+        if (val instanceof TestResult) {
+            //return ((TestResult)val).getWorkRelativePath();
+            return ((TestResult)val).getTestName();
+        }
+        else if (val instanceof TestResultTable.TreeNode) {
+            if (params == null || params.getTestSuite() == null)
+                return uif.getI18NString("tree.noRootName.tip");
+
+            TestResultTable.TreeNode node = (TestResultTable.TreeNode)val;
+            if (node.isRoot())
+                return uif.getI18NString("tree.rootName.tip", params.getTestSuite().getName());
+            else
+                return TestResultTable.getRootRelativePath(node);
+        }
+        else
+            return null;
     }
 
     private boolean isFilteredOut(TestResult tr, TestFilter filter) {
-	if (filter == null)
-	    return false;
+        if (filter == null)
+            return false;
 
-	if (debug > 1)
-	    Debug.println("TT - Checking filter for: " + tr.getTestName() + " (TR status=" +
-				tr.getStatus().getType() + ")");
+        if (debug > 1)
+            Debug.println("TT - Checking filter for: " + tr.getTestName() + " (TR status=" +
+                                tr.getStatus().getType() + ")");
 
-	TestDescription td;
+        TestDescription td;
 
-	try {
-	    td = tr.getDescription();
-	}
-	catch (TestResult.Fault f) {
-	    if (debug > 0)
-		f.printStackTrace(Debug.getWriter());
+        try {
+            td = tr.getDescription();
+        }
+        catch (TestResult.Fault f) {
+            if (debug > 0)
+                f.printStackTrace(Debug.getWriter());
 
-	    return false;
-	}
+            return false;
+        }
 
-	try {
-	    if (!filter.accepts(td)) {
-		if (debug > 1) {
-		    Debug.println("TT - Filter " + filter + " rejected: " +
-				  tr.getWorkRelativePath());
-		}
+        try {
+            if (!filter.accepts(td)) {
+                if (debug > 1) {
+                    Debug.println("TT - Filter " + filter + " rejected: " +
+                                  tr.getWorkRelativePath());
+                }
 
-		// rejected
-		return true;
-	    }
-	}
-	catch (TestFilter.Fault f) {
-	    if (debug > 0)
-		f.printStackTrace(Debug.getWriter());
+                // rejected
+                return true;
+            }
+        }
+        catch (TestFilter.Fault f) {
+            if (debug > 0)
+                f.printStackTrace(Debug.getWriter());
 
-	    // just fall through to accept
-	}	// catch
+            // just fall through to accept
+        }       // catch
 
-	// accepted
-	return false;
+        // accepted
+        return false;
     }
 
     private boolean isRunning(TestResult tr) {
-	if (tpm.isActive(tr))
-	    return true;
-	else
-	    return false;
+        if (tpm.isActive(tr))
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -286,24 +286,24 @@ System.out.println(tn.getName() + " done " +
 info.getStats()[0] + "  " + info.getStats()[1] + "  " + info.getStats()[2] + "  " +
 info.getStats()[3]);
 */
-	// in effect this selects in this order:
-	// 1) error (blue)
-	// 2) fail (red)
-	// 3) not run (white)
-	// 4) pass (green)
-	// 5) not runnable (grey)
-	for (int i = 0; i != stateOrdering.length; i++) {
-	    if (stats[stateOrdering[i]] > 0) {
-		return stateOrdering[i];
-	    }
-	}   // for
+        // in effect this selects in this order:
+        // 1) error (blue)
+        // 2) fail (red)
+        // 3) not run (white)
+        // 4) pass (green)
+        // 5) not runnable (grey)
+        for (int i = 0; i != stateOrdering.length; i++) {
+            if (stats[stateOrdering[i]] > 0) {
+                return stateOrdering[i];
+            }
+        }   // for
 
-	// must be a filtered-out node
-	if (!loading)
-	    //return numBrIcons-1;
-	    return IconFactory.FILTERED_OUT;
-	else
-	    return Status.NOT_RUN;
+        // must be a filtered-out node
+        if (!loading)
+            //return numBrIcons-1;
+            return IconFactory.FILTERED_OUT;
+        else
+            return Status.NOT_RUN;
     }
 
     private Parameters params;
@@ -326,4 +326,3 @@ info.getStats()[3]);
 
     private static final int debug = Debug.getInt(TT_Renderer.class);
 }
-

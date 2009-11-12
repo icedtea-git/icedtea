@@ -58,86 +58,86 @@ import javax.swing.BorderFactory;
 class ChecklistBrowser extends ToolDialog
 {
     ChecklistBrowser(JComponent parent, ExecModel model, UIFactory uif) {
-	super(parent, uif, "cb");
- 
-	if (model == null)
-	    throw new NullPointerException();
+        super(parent, uif, "cb");
 
-	this.model = model;
+        if (model == null)
+            throw new NullPointerException();
 
-	params = model.getInterviewParameters();
-	if (params == null)
-	    throw new NullPointerException();
+        this.model = model;
 
-	listener = new Listener();
+        params = model.getInterviewParameters();
+        if (params == null)
+            throw new NullPointerException();
+
+        listener = new Listener();
     }
 
     protected void initGUI() {
-	JMenuBar mb = uif.createMenuBar("cb");
-	String[] fileActions = { SAVE_AS, PRINT_SETUP, PRINT };
-	JMenu fileMenu = uif.createMenu("cb.file", fileActions, listener);
-	mb.add(fileMenu);
-	setJMenuBar(mb);
+        JMenuBar mb = uif.createMenuBar("cb");
+        String[] fileActions = { SAVE_AS, PRINT_SETUP, PRINT };
+        JMenu fileMenu = uif.createMenu("cb.file", fileActions, listener);
+        mb.add(fileMenu);
+        setJMenuBar(mb);
 
         body = new MultiFormatPane(uif);
         body.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         uif.setAccessibleName(body, "cb");
-	uif.setToolTip(body, "cb");
+        uif.setToolTip(body, "cb");
         int dpi = uif.getDotsPerInch();
         body.setPreferredSize(new Dimension(6 * dpi, 8 * dpi));
         setBody(body);
-        	
-	JButton closeBtn = uif.createCloseButton("cb.close");
-	setButtons(new JButton[] { closeBtn }, closeBtn);
 
-	setComponentListener(listener);
+        JButton closeBtn = uif.createCloseButton("cb.close");
+        setButtons(new JButton[] { closeBtn }, closeBtn);
+
+        setComponentListener(listener);
     }
 
     private void updateContent() {
-	if (body == null)
-	    initGUI();
+        if (body == null)
+            initGUI();
 
-	File f = params.getFile();
-	if (f == null)
-	    setI18NTitle("cb.title");
-	else 
-	    setI18NTitle("cb.titleWithFile", f);
+        File f = params.getFile();
+        if (f == null)
+            setI18NTitle("cb.title");
+        else
+            setI18NTitle("cb.titleWithFile", f);
 
-	try {
-	    Checklist c = params.createChecklist();
-	    StringWriter out = new StringWriter();
-	    writeChecklist(c, out);
-	}
-	catch (IOException e) {
-	    // should not happen while writing to StringWriter
-	}
-	
+        try {
+            Checklist c = params.createChecklist();
+            StringWriter out = new StringWriter();
+            writeChecklist(c, out);
+        }
+        catch (IOException e) {
+            // should not happen while writing to StringWriter
+        }
+
     }
-    
+
     private void writeChecklist(Checklist c, Writer out) throws IOException {
-	out.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n");
-	out.write("<html><body>\n");
+        out.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n");
+        out.write("<html><body>\n");
 
-	TestEnvironment env = params.getEnv();
-	if (env != null) {
-	    // very improbable to have a checklist with no env!
-	    out.write("<h1>");
-	    out.write(escape(uif.getI18NString("cb.html.title", env.getName())));
-	    out.write("</h1>\n");
-	}
+        TestEnvironment env = params.getEnv();
+        if (env != null) {
+            // very improbable to have a checklist with no env!
+            out.write("<h1>");
+            out.write(escape(uif.getI18NString("cb.html.title", env.getName())));
+            out.write("</h1>\n");
+        }
 
-	if (c.isEmpty()) 
-	    out.write(escape(uif.getI18NString("cb.html.noEntries")));
-	else {
-	    out.write(escape(uif.getI18NString("cb.html.intro")));
-	    String[] names = c.getSectionNames();
-	    for (int i = 0; i < names.length; i++) {
-		writeSection(c, names[i], out);
-	    }
-	}
+        if (c.isEmpty())
+            out.write(escape(uif.getI18NString("cb.html.noEntries")));
+        else {
+            out.write(escape(uif.getI18NString("cb.html.intro")));
+            String[] names = c.getSectionNames();
+            for (int i = 0; i < names.length; i++) {
+                writeSection(c, names[i], out);
+            }
+        }
 
-	out.write("</body></html>");
-	out.close();
+        out.write("</body></html>");
+        out.close();
 
         TextPane pane = (TextPane)body.getMediaPane(body.TEXT);
         pane.showText(out.toString(), "text/html");
@@ -145,103 +145,103 @@ class ChecklistBrowser extends ToolDialog
     }
 
     private void writeSection(Checklist c, String name, Writer out) throws IOException {
-	out.write("<h2>");
-	out.write(escape(name));
-	out.write("</h2>\n");
+        out.write("<h2>");
+        out.write(escape(name));
+        out.write("</h2>\n");
 
-	out.write("<ul>");
-	String[] msgs = c.getSectionMessages(name);
-	for (int i = 0; i < msgs.length; i++) {
-	    out.write("<li>");
-	    out.write(escape(msgs[i]));
-	    out.write("\n");
-	}
-	out.write("</ul>\n");
+        out.write("<ul>");
+        String[] msgs = c.getSectionMessages(name);
+        for (int i = 0; i < msgs.length; i++) {
+            out.write("<li>");
+            out.write(escape(msgs[i]));
+            out.write("\n");
+        }
+        out.write("</ul>\n");
     }
 
     private String escape(String s) {
-	for (int i = 0; i < s.length(); i++) {
-	    switch (s.charAt(i)) {
-	    case '<': case '>': case '&': 
-		StringBuffer sb = new StringBuffer(s.length()*2);
-		for (int j = 0; j < s.length(); j++) {
-		    char c = s.charAt(j);
-		    switch (c) {
-		    case '<': sb.append("&lt;"); break;
-		    case '>': sb.append("&gt;"); break;
-		    case '&': sb.append("&amp;"); break;
-		    default: sb.append(c);
-		    }			
-		}
-		return sb.toString();
-	    }
-	}
-	return s;
+        for (int i = 0; i < s.length(); i++) {
+            switch (s.charAt(i)) {
+            case '<': case '>': case '&':
+                StringBuffer sb = new StringBuffer(s.length()*2);
+                for (int j = 0; j < s.length(); j++) {
+                    char c = s.charAt(j);
+                    switch (c) {
+                    case '<': sb.append("&lt;"); break;
+                    case '>': sb.append("&gt;"); break;
+                    case '&': sb.append("&amp;"); break;
+                    default: sb.append(c);
+                    }
+                }
+                return sb.toString();
+            }
+        }
+        return s;
     }
 
     private void doSaveAs() {
-	if (fileChooser == null) {
-	    fileChooser = new FileChooser(true);
-	    fileChooser.addChoosableExtension(".html",
-					      uif.getI18NString("cb.htmlFiles"));
-	}
+        if (fileChooser == null) {
+            fileChooser = new FileChooser(true);
+            fileChooser.addChoosableExtension(".html",
+                                              uif.getI18NString("cb.htmlFiles"));
+        }
 
-	fileChooser.setDialogTitle(uif.getI18NString("cb.save.title"));
-	
-	File file = null;
+        fileChooser.setDialogTitle(uif.getI18NString("cb.save.title"));
 
-	while (file == null) {
-	    int rc = fileChooser.showDialog(parent, uif.getI18NString("cb.save.btn"));
-	    if (rc != JFileChooser.APPROVE_OPTION)
-		// user has canceled or closed the chooser
-		return;
-	    
-	    file = fileChooser.getSelectedFile();
-	    
-	    // if file exists, leave well enough alone;
-	    // otherwise, make sure it ends with .html
-	    if (!file.exists()) {
-		String path = file.getPath();
-		if (!path.endsWith(".html"))
-		    file = new File(path + ".html");
-	    }
-	    
-	    // if file exists, make sure user wants to overwrite it
-	    if (file.exists()) {
-		rc = uif.showYesNoCancelDialog("cb.save.warn");
-		switch (rc) {
-		case JOptionPane.YES_OPTION:
-		    break;  // use this file
-		    
-		case JOptionPane.NO_OPTION:
-		    fileChooser.setSelectedFile(null);
-		    file = null;
-		    continue;  // choose another file
-		    
-		default:
-		    return;  // exit without saving
-		}
-	    }
-	}	    
+        File file = null;
 
-	try {
-	    Writer out = new BufferedWriter(new FileWriter(file));
+        while (file == null) {
+            int rc = fileChooser.showDialog(parent, uif.getI18NString("cb.save.btn"));
+            if (rc != JFileChooser.APPROVE_OPTION)
+                // user has canceled or closed the chooser
+                return;
+
+            file = fileChooser.getSelectedFile();
+
+            // if file exists, leave well enough alone;
+            // otherwise, make sure it ends with .html
+            if (!file.exists()) {
+                String path = file.getPath();
+                if (!path.endsWith(".html"))
+                    file = new File(path + ".html");
+            }
+
+            // if file exists, make sure user wants to overwrite it
+            if (file.exists()) {
+                rc = uif.showYesNoCancelDialog("cb.save.warn");
+                switch (rc) {
+                case JOptionPane.YES_OPTION:
+                    break;  // use this file
+
+                case JOptionPane.NO_OPTION:
+                    fileChooser.setSelectedFile(null);
+                    file = null;
+                    continue;  // choose another file
+
+                default:
+                    return;  // exit without saving
+                }
+            }
+        }
+
+        try {
+            Writer out = new BufferedWriter(new FileWriter(file));
             TextPane pane = (TextPane)body.getMediaPane(body.TEXT);
             out.write(pane.getText());
-	    out.close();
-	}
-	catch (IOException e) {
-	    if (!file.canWrite())
-		uif.showError("cb.save.cantWriteFile", file);
-	    else if (e instanceof FileNotFoundException) 
-		uif.showError("cb.save.cantFindFile", file);
-	    else
-		uif.showError("cb.save.error", new Object[] { file, e } );
-	}
+            out.close();
+        }
+        catch (IOException e) {
+            if (!file.canWrite())
+                uif.showError("cb.save.cantWriteFile", file);
+            else if (e instanceof FileNotFoundException)
+                uif.showError("cb.save.cantFindFile", file);
+            else
+                uif.showError("cb.save.error", new Object[] { file, e } );
+        }
     }
 
     private void doPrintSetup() {
-	model.printSetup();
+        model.printSetup();
     }
 
     private void doPrint() {
@@ -252,39 +252,39 @@ class ChecklistBrowser extends ToolDialog
     private static final String PRINT_SETUP = "PrintSetup";
     private static final String PRINT = "Print";
 
-    private class Listener 
-	extends ComponentAdapter
-	implements ActionListener, Interview.Observer 
+    private class Listener
+        extends ComponentAdapter
+        implements ActionListener, Interview.Observer
     {
-	// ActionListener
-	public void actionPerformed(ActionEvent e) {
-	    String cmd = e.getActionCommand();
-	    if (cmd.equals(SAVE_AS))
-		doSaveAs();
-	    else if (cmd.equals(PRINT_SETUP))
-		doPrintSetup();
-	    else if (cmd.equals(PRINT))
-		doPrint();
-	}
+        // ActionListener
+        public void actionPerformed(ActionEvent e) {
+            String cmd = e.getActionCommand();
+            if (cmd.equals(SAVE_AS))
+                doSaveAs();
+            else if (cmd.equals(PRINT_SETUP))
+                doPrintSetup();
+            else if (cmd.equals(PRINT))
+                doPrint();
+        }
 
-	// ComponentListener
-	public void componentShown(ComponentEvent e) {
-	    params.addObserver(this);
-	    updateContent();
-	}
+        // ComponentListener
+        public void componentShown(ComponentEvent e) {
+            params.addObserver(this);
+            updateContent();
+        }
 
-	public void componentHidden(ComponentEvent e) {
-	    params.removeObserver(this);
-	}
+        public void componentHidden(ComponentEvent e) {
+            params.removeObserver(this);
+        }
 
-	// Interview.Observer
-	public void currentQuestionChanged(Question q) {
-	}
+        // Interview.Observer
+        public void currentQuestionChanged(Question q) {
+        }
 
-	public void pathUpdated() {
-	    updateContent();
-	}
-	
+        public void pathUpdated() {
+            updateContent();
+        }
+
     };
 
     private ExecModel model;

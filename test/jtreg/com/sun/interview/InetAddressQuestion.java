@@ -36,32 +36,32 @@ import java.util.ResourceBundle;
  * A {@link Question question} to which the response is an IP address.
  * Both IPv4 and IPv6 addresses are supported.
  */
-public abstract class InetAddressQuestion extends Question 
+public abstract class InetAddressQuestion extends Question
 {
 
     /**
-     * Create a question with a nominated tag. 
+     * Create a question with a nominated tag.
      * @param interview The interview containing this question.
      * @param tag A unique tag to identify this specific question.
      */
     protected InetAddressQuestion(Interview interview, String tag) {
-	super(interview, tag);
-	clear();
-	setDefaultValue(value);
+        super(interview, tag);
+        clear();
+        setDefaultValue(value);
     }
 
     /**
-     * Create a question with a nominated tag. 
+     * Create a question with a nominated tag.
      * @param interview The interview containing this question.
      * @param tag A unique tag to identify this specific question.
      * @param type A value to (IPv4 or IPv6) to indicate the type of
      * address used by the question.
      */
     protected InetAddressQuestion(Interview interview, String tag, int type) {
-	super(interview, tag);
-	setType(type);
-	clear();
-	setDefaultValue(value);
+        super(interview, tag);
+        setType(type);
+        clear();
+        setDefaultValue(value);
     }
 
     /**
@@ -81,7 +81,7 @@ public abstract class InetAddressQuestion extends Question
      * @see #setType
      */
     public int getType() {
-	return type;
+        return type;
     }
 
     /**
@@ -90,10 +90,10 @@ public abstract class InetAddressQuestion extends Question
      * @see #getType
      */
     protected void setType(int type) {
-	if (type != IPv4 && type != IPv6)
-	    throw new IllegalArgumentException();
+        if (type != IPv4 && type != IPv6)
+            throw new IllegalArgumentException();
 
-	this.type = type;
+        this.type = type;
     }
 
     /**
@@ -101,28 +101,28 @@ public abstract class InetAddressQuestion extends Question
      * This is only a hint. Setting the type to IPv6 or setting suggestions
      * may cause the actual presentation style to be IPv6.
      * In IPv4 style, the data entry is four dotted decimal fields.
-     * In IPv6 style, the data entry is a single type in field, with 
+     * In IPv6 style, the data entry is a single type in field, with
      * an associated lookup button.
      * @return the presentation style for this question
      * @see #setStyle
      */
     public int getStyle() {
-	return style;
+        return style;
     }
 
     /**
      * Set the presentation style (IPv4 or IPv6) for this question.
      * In IPv4 style, the data entry is four dotted decimal fields.
-     * In IPv6 style, the data entry is a single type in field, with 
+     * In IPv6 style, the data entry is a single type in field, with
      * an associated lookup button.
      * @param style the presentation style for this question
      * @see #getStyle
      */
     protected void setStyle(int style) {
-	if (style != IPv4 && style != IPv6)
-	    throw new IllegalArgumentException();
+        if (style != IPv4 && style != IPv6)
+            throw new IllegalArgumentException();
 
-	this.style = style;
+        this.style = style;
     }
 
     /**
@@ -132,27 +132,27 @@ public abstract class InetAddressQuestion extends Question
      * @see #setSuggestions
      */
     public InetAddress[] getSuggestions() {
-	return suggestions;
+        return suggestions;
     }
 
     /**
      * Set the set of suggested responses.
      * @param newSuggestions The values to be set, or null if none
-     * @throws IllegalArgumentException if any except the first of the values 
+     * @throws IllegalArgumentException if any except the first of the values
      * in the array are null
      *
      * @see #getSuggestions
      */
     public void setSuggestions(InetAddress[] newSuggestions) {
-	if (newSuggestions != null) {
-	    // allow the first entry to be null
-	    for (int i = 1; i < newSuggestions.length; i++) {
-		if (newSuggestions[i] == null)
-		    throw new IllegalArgumentException();
-	    }
-	}
+        if (newSuggestions != null) {
+            // allow the first entry to be null
+            for (int i = 1; i < newSuggestions.length; i++) {
+                if (newSuggestions[i] == null)
+                    throw new IllegalArgumentException();
+            }
+        }
 
-	suggestions = newSuggestions;
+        suggestions = newSuggestions;
     }
 
     /**
@@ -162,174 +162,174 @@ public abstract class InetAddressQuestion extends Question
      * @see #setDefaultValue
      */
     public InetAddress getDefaultValue() {
-	return defaultValue;
+        return defaultValue;
     }
 
     /**
-     * Set the default response for this question, 
-     * used by the clear method. 
+     * Set the default response for this question,
+     * used by the clear method.
      * @param v the default response for this question.
      *
      * @see #getDefaultValue
      */
     public void setDefaultValue(InetAddress v) {
-	defaultValue = v;
+        defaultValue = v;
     }
-    
+
 
     /**
      * Get the current (default or latest) response to this question.
      * If the question type is set to IPv4, a valid response will be
      * an Inet4Address; otherwise, if the question type is set to IPv6,
      * a valid response will be an Inet4Address or an Inet6Address
-     * @return The current value. 
+     * @return The current value.
      * @see #setValue
      */
     public InetAddress getValue() {
-	return value;
+        return value;
     }
 
     /**
      * Verify this question is on the current path, and if it is,
      * return the current value.
      * @return the current value of this question
-     * @throws Interview.NotOnPathFault if this question is not on the 
+     * @throws Interview.NotOnPathFault if this question is not on the
      * current path
      * @see #getValue
      */
-    public InetAddress getValueOnPath() 
-	throws Interview.NotOnPathFault
+    public InetAddress getValueOnPath()
+        throws Interview.NotOnPathFault
     {
-	interview.verifyPathContains(this);
-	return getValue();
+        interview.verifyPathContains(this);
+        return getValue();
     }
 
     public String getStringValue() {
-	if (stringValue == null && value != null)
-	    stringValue = value.getHostAddress();
+        if (stringValue == null && value != null)
+            stringValue = value.getHostAddress();
 
-	return stringValue;
+        return stringValue;
     }
 
 
     /**
-     * Set the current value. 
+     * Set the current value.
      * Although any value can be set, if the value is to be considered valid
-     * it must be an Inet4Address if the question type is set to IPv4, 
-     * or either an Inet4Address or an Inet6Address if the question type 
+     * it must be an Inet4Address if the question type is set to IPv4,
+     * or either an Inet4Address or an Inet6Address if the question type
      * is set to IPv6.
-     * @param newValue The value to be set. 
+     * @param newValue The value to be set.
      * @see #getValue
      */
     public void setValue(InetAddress newValue) {
-	InetAddress oldValue = value;
-	value = newValue;
-	stringValue = newStringValue;  // only non-null if called from setValue(String s)
-	newStringValue = null;
+        InetAddress oldValue = value;
+        value = newValue;
+        stringValue = newStringValue;  // only non-null if called from setValue(String s)
+        newStringValue = null;
 
-	valid = (value == null ? false
-		 : type == IPv4 ? (value instanceof Inet4Address)
-		 : true);
+        valid = (value == null ? false
+                 : type == IPv4 ? (value instanceof Inet4Address)
+                 : true);
 
-	if (!equal(value, oldValue)) {
-	    interview.updatePath(this);
-	    interview.setEdited(true);
-	}
+        if (!equal(value, oldValue)) {
+            interview.updatePath(this);
+            interview.setEdited(true);
+        }
     }
 
     public boolean isValueValid() {
-	return valid; // set by setValue
+        return valid; // set by setValue
     }
 
     public boolean isValueAlwaysValid() {
-	return false;
+        return false;
     }
 
     /**
-     * Set the current value. 
-     * @param newValue The value to be set. 
+     * Set the current value.
+     * @param newValue The value to be set.
      * @throws Interview.Fault (retained for compatibility; should not be thrown)
      * @see #getValue
      */
     public void setValue(String newValue) throws Interview.Fault {
-	InetAddress v = parse(newValue);
+        InetAddress v = parse(newValue);
 
-	newStringValue = newValue;
-	setValue(v);
+        newStringValue = newValue;
+        setValue(v);
     }
 
     private InetAddress parse(String s) {
-	if (s == null || s.length() == 0)
-	    return null;
+        if (s == null || s.length() == 0)
+            return null;
 
-	// scan the string to see if it looks reasonable:
-	// - an IPv4 string contains only digits and dots
-	// - an IPv6 string contains hex digits, dots and colons
-	//   with at least one colon
-	// this is intended to prevent calling erroneously calling
-	// InetAddress.getByName with a hostname and getting a
-	// false positive result
+        // scan the string to see if it looks reasonable:
+        // - an IPv4 string contains only digits and dots
+        // - an IPv6 string contains hex digits, dots and colons
+        //   with at least one colon
+        // this is intended to prevent calling erroneously calling
+        // InetAddress.getByName with a hostname and getting a
+        // false positive result
 
-	boolean seenAlpha = false;
-	boolean seenDigit = false;
-	boolean seenDot = false;
-	boolean seenColon = false;
-	int slen = s.length();
-	for (int i = 0; i < slen; i++) {
-	    char c = s.charAt(i);
-	    switch (c) {
-	    case '0': case '1': case '2': case '3': case '4':
-	    case '5': case '6': case '7': case '8': case '9':
-		// always valid
-		seenDigit = true;
-		break;
+        boolean seenAlpha = false;
+        boolean seenDigit = false;
+        boolean seenDot = false;
+        boolean seenColon = false;
+        int slen = s.length();
+        for (int i = 0; i < slen; i++) {
+            char c = s.charAt(i);
+            switch (c) {
+            case '0': case '1': case '2': case '3': case '4':
+            case '5': case '6': case '7': case '8': case '9':
+                // always valid
+                seenDigit = true;
+                break;
 
-	    case '.':
-		// always valid
-		seenDot = true;
-		break;
+            case '.':
+                // always valid
+                seenDot = true;
+                break;
 
-	    case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
-	    case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
-		// invalid for IPv4, valid for IPv6
-		if (type == IPv4)
-		    return null;
+            case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
+            case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
+                // invalid for IPv4, valid for IPv6
+                if (type == IPv4)
+                    return null;
 
-		seenAlpha = true;
-		break;
+                seenAlpha = true;
+                break;
 
-	    case ':':
-		// invalid for IPv4; at least 1 required for IPv6
-		if (type == IPv4)
-		    return null;
+            case ':':
+                // invalid for IPv4; at least 1 required for IPv6
+                if (type == IPv4)
+                    return null;
 
-		seenColon = true;
-		break;
+                seenColon = true;
+                break;
 
-	    default:
-		return null;
-	    }
-	}
+            default:
+                return null;
+            }
+        }
 
-	if (type == IPv6 && !(seenColon || seenDot && seenDigit && !seenAlpha))
-	    return null;
+        if (type == IPv6 && !(seenColon || seenDot && seenDigit && !seenAlpha))
+            return null;
 
-	try {
-	    return InetAddress.getByName(s);
-	}
-	catch (UnknownHostException e) {
-	    return null;
-	}
+        try {
+            return InetAddress.getByName(s);
+        }
+        catch (UnknownHostException e) {
+            return null;
+        }
     }
-		    
-		    
+
+
 
     /**
      * Clear any response to this question, resetting the value
      * back to its initial state.
      */
     public void clear() {
-	setValue(defaultValue);
+        setValue(defaultValue);
     }
 
     /**
@@ -338,19 +338,19 @@ public abstract class InetAddressQuestion extends Question
      * @param data The map from which to load the value for this question.
      */
     protected void load(Map data) {
-	Object o = data.get(tag);
-	if (o instanceof InetAddress) {
-	    setValue((InetAddress) o);
-	}
-	else if (o instanceof String) {
-	    try {
-		setValue((String) o);
-	    }
-	    catch (Interview.Fault e) {
-		// never thrown. but just in case...
-		throw new Error(e);
-	    }
-	}
+        Object o = data.get(tag);
+        if (o instanceof InetAddress) {
+            setValue((InetAddress) o);
+        }
+        else if (o instanceof String) {
+            try {
+                setValue((String) o);
+            }
+            catch (Interview.Fault e) {
+                // never thrown. but just in case...
+                throw new Error(e);
+            }
+        }
     }
 
     /**
@@ -359,9 +359,9 @@ public abstract class InetAddressQuestion extends Question
      * @param data The map in which to save the value for this question.
      */
     protected void save(Map data) {
-	String s = getStringValue();
-	if (s != null)
-	    data.put(tag, s);
+        String s = getStringValue();
+        if (s != null)
+            data.put(tag, s);
     }
 
     /**
@@ -373,7 +373,7 @@ public abstract class InetAddressQuestion extends Question
      *
      */
     protected static boolean equal(InetAddress i1, InetAddress i2) {
-	return (i1 == null ? i2 == null : i1.equals(i2));
+        return (i1 == null ? i2 == null : i1.equals(i2));
     }
 
     /**

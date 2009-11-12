@@ -38,9 +38,9 @@ import java.io.IOException;
 
 class TemplateParameterFilter extends ParameterFilter {
     TemplateParameterFilter() {
-	super();
+        super();
     }
-    
+
     void update(InterviewParameters ip) {
 
         File jtm = null;
@@ -52,7 +52,7 @@ class TemplateParameterFilter extends ParameterFilter {
                 jtm = new File(jtmF);
             }
         }
-        
+
         if (jtm != null) {
             TestSuite ts = ip.getTestSuite();
             try {
@@ -62,11 +62,11 @@ class TemplateParameterFilter extends ParameterFilter {
                 templateEnabled = true;
                 return;
             } catch (TestSuite.Fault ex) {
-                // 
+                //
             } catch (Interview.Fault ex) {
-                // 
+                //
             } catch (IOException ex) {
-                // 
+                //
             }
         } else if (ip.isTemplate()) {
             super.update(ip);
@@ -75,7 +75,7 @@ class TemplateParameterFilter extends ParameterFilter {
         }
         templateEnabled = false;
     }
-    
+
 
     public boolean accepts(TestDescription td) throws Fault {
         if (templateEnabled) {
@@ -84,7 +84,7 @@ class TemplateParameterFilter extends ParameterFilter {
             return false;
         }
     }
-    
+
     public boolean accepts(TestDescription td, TestFilter.Observer o) throws TestFilter.Fault {
         if (templateEnabled) {
             return super.accepts(td, o);
@@ -95,11 +95,11 @@ class TemplateParameterFilter extends ParameterFilter {
             return false;
         }
     }
-    
+
     public String getName() {
         return i18n.getString("tFilter.name");
     }
-    
+
     public String getDescription() {
         return i18n.getString("tFilter.desc");
     }
@@ -110,10 +110,9 @@ class TemplateParameterFilter extends ParameterFilter {
         }
         return i18n.getString("tFilter.reason");
     }
-    
+
 
     private boolean templateEnabled = false;
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(TemplateParameterFilter.class);
-    
-}
 
+}

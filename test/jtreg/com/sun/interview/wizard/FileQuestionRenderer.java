@@ -42,121 +42,121 @@ class FileQuestionRenderer
     implements QuestionRenderer
 {
     public JComponent getQuestionRendererComponent(Question qq, ActionListener listener) {
-	final FileQuestion q = (FileQuestion) qq;
+        final FileQuestion q = (FileQuestion) qq;
         final JFileChooser chooser = createChooser(q.getSummary(), q.getFilters());
-	File f = q.getValue();
-	if (f == null) {
-	    File dir = q.getBaseDirectory();
-	    if (dir == null)
-		dir = new File(System.getProperty("user.dir"));
-	    chooser.setCurrentDirectory(dir);
-	}
-	else 
-	    chooser.setSelectedFile(f);
+        File f = q.getValue();
+        if (f == null) {
+            File dir = q.getBaseDirectory();
+            if (dir == null)
+                dir = new File(System.getProperty("user.dir"));
+            chooser.setCurrentDirectory(dir);
+        }
+        else
+            chooser.setSelectedFile(f);
 
-	final JButton browseBtn = new JButton(i18n.getString("file.browse.btn"));
-	browseBtn.setName("file.browse.btn");
-	browseBtn.setMnemonic(i18n.getString("file.browse.mne").charAt(0));
-	browseBtn.setToolTipText(i18n.getString("file.browse.tip"));
+        final JButton browseBtn = new JButton(i18n.getString("file.browse.btn"));
+        browseBtn.setName("file.browse.btn");
+        browseBtn.setMnemonic(i18n.getString("file.browse.mne").charAt(0));
+        browseBtn.setToolTipText(i18n.getString("file.browse.tip"));
 
-	File[] suggs = q.getSuggestions();
-	String[] strSuggs;
-	if (suggs == null)
-	    strSuggs = null;
-	else {
-	    strSuggs = new String[suggs.length];
-	    for (int i = 0; i < suggs.length; i++)
-		strSuggs[i] = suggs[i].getPath();
-	}
+        File[] suggs = q.getSuggestions();
+        String[] strSuggs;
+        if (suggs == null)
+            strSuggs = null;
+        else {
+            strSuggs = new String[suggs.length];
+            for (int i = 0; i < suggs.length; i++)
+                strSuggs[i] = suggs[i].getPath();
+        }
 
-	final TypeInPanel p = new TypeInPanel("file", 
-					      q, 
-					      0,
-					      strSuggs, 
-					      browseBtn, 
-					      listener);
+        final TypeInPanel p = new TypeInPanel("file",
+                                              q,
+                                              0,
+                                              strSuggs,
+                                              browseBtn,
+                                              listener);
 
-	browseBtn.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		// default chooser to point at specified entry
-		String s = p.getValue();
-		if (s != null && s.length() > 0) {
-		    File f = new File(s);
-		    File baseDir = q.getBaseDirectory();
-		    if (!f.isAbsolute() && baseDir != null) 
-			f = new File(baseDir, s);
-		    chooser.setSelectedFile(f);
-		}
+        browseBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // default chooser to point at specified entry
+                String s = p.getValue();
+                if (s != null && s.length() > 0) {
+                    File f = new File(s);
+                    File baseDir = q.getBaseDirectory();
+                    if (!f.isAbsolute() && baseDir != null)
+                        f = new File(baseDir, s);
+                    chooser.setSelectedFile(f);
+                }
 
-		int opt = chooser.showDialog(browseBtn, "Select");
-		if (opt == JFileChooser.APPROVE_OPTION) {
-		    String path = chooser.getSelectedFile().getPath();
-		    FileFilter ff = SwingFileFilter.unwrap(chooser.getFileFilter());
-		    if (ff != null && ff instanceof ExtensionFileFilter) {
-			ExtensionFileFilter eff = (ExtensionFileFilter) ff;
-			path = eff.ensureExtension(path);
-		    }
-		    File baseDir = q.getBaseDirectory();
-		    if (baseDir != null) {
-			String bp = baseDir.getPath();
-			if (path.startsWith(bp + File.separatorChar))
-			    path = path.substring(bp.length() + 1);
-		    }
-		    p.setValue(path);
-		}
-	    }
-	});
+                int opt = chooser.showDialog(browseBtn, "Select");
+                if (opt == JFileChooser.APPROVE_OPTION) {
+                    String path = chooser.getSelectedFile().getPath();
+                    FileFilter ff = SwingFileFilter.unwrap(chooser.getFileFilter());
+                    if (ff != null && ff instanceof ExtensionFileFilter) {
+                        ExtensionFileFilter eff = (ExtensionFileFilter) ff;
+                        path = eff.ensureExtension(path);
+                    }
+                    File baseDir = q.getBaseDirectory();
+                    if (baseDir != null) {
+                        String bp = baseDir.getPath();
+                        if (path.startsWith(bp + File.separatorChar))
+                            path = path.substring(bp.length() + 1);
+                    }
+                    p.setValue(path);
+                }
+            }
+        });
 
-	return p;
+        return p;
     }
 
     /**
      * Create a chooser with the associated filters.
      */
     static JFileChooser createChooser(String title, FileFilter[] filters) {
-	JFileChooser chooser = new JFileChooser();
-	chooser.setDialogTitle(title);
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle(title);
 
-	if (filters == null || filters.length == 0) {
-	    chooser.setAcceptAllFileFilterUsed(true);
-	    chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-	}
-	else {
-	    int mode = -1;
-	    // removed to implement
-	    // add API to disable the all files filter perhaps?
-	    // chooser.setAcceptAllFileFilterUsed(false);
+        if (filters == null || filters.length == 0) {
+            chooser.setAcceptAllFileFilterUsed(true);
+            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        }
+        else {
+            int mode = -1;
+            // removed to implement
+            // add API to disable the all files filter perhaps?
+            // chooser.setAcceptAllFileFilterUsed(false);
 
-	    for (int i = 0; i < filters.length; i++) {
-		FileFilter filter = filters[i];
-		chooser.addChoosableFileFilter(SwingFileFilter.wrap(filter));
-		if (filter.acceptsDirectories()) {
-		    if (mode == -1) {
-			// setting mode to DIRECTORIES_ONLY ignores the possibility
-			// that the filter might accept (some) files, so set it to
-			// FILES_AND_DIRECTORIES and leave to filter to hide any
-			// unacceptable files
-			// Same issue in FileListQuestionRenderer
-			mode = JFileChooser.FILES_AND_DIRECTORIES;
-		    }
-		    else if (mode == JFileChooser.FILES_ONLY)
-			mode = JFileChooser.FILES_AND_DIRECTORIES;
-		}
-		else {
-		    if (mode == -1)
-			mode = JFileChooser.FILES_ONLY;
-		    else if (mode == JFileChooser.DIRECTORIES_ONLY)
-			mode = JFileChooser.FILES_AND_DIRECTORIES;
-		}
-	    }
-	    chooser.setFileSelectionMode(mode);
-	}
+            for (int i = 0; i < filters.length; i++) {
+                FileFilter filter = filters[i];
+                chooser.addChoosableFileFilter(SwingFileFilter.wrap(filter));
+                if (filter.acceptsDirectories()) {
+                    if (mode == -1) {
+                        // setting mode to DIRECTORIES_ONLY ignores the possibility
+                        // that the filter might accept (some) files, so set it to
+                        // FILES_AND_DIRECTORIES and leave to filter to hide any
+                        // unacceptable files
+                        // Same issue in FileListQuestionRenderer
+                        mode = JFileChooser.FILES_AND_DIRECTORIES;
+                    }
+                    else if (mode == JFileChooser.FILES_ONLY)
+                        mode = JFileChooser.FILES_AND_DIRECTORIES;
+                }
+                else {
+                    if (mode == -1)
+                        mode = JFileChooser.FILES_ONLY;
+                    else if (mode == JFileChooser.DIRECTORIES_ONLY)
+                        mode = JFileChooser.FILES_AND_DIRECTORIES;
+                }
+            }
+            chooser.setFileSelectionMode(mode);
+        }
 
         return chooser;
     }
 
     public String getInvalidValueMessage(Question q) {
-	return null;
+        return null;
     }
 
     private static final I18NResourceBundle i18n = I18NResourceBundle.getDefaultBundle();

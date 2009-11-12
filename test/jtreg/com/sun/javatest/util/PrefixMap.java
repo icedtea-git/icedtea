@@ -35,29 +35,29 @@ import java.util.Set;
 import java.util.Vector;
 
 /**
- * A map whose entries are stored in a parent map by prefixing 
+ * A map whose entries are stored in a parent map by prefixing
  * the key names with a specific string.
  */
 public class PrefixMap implements Map
 {
     /**
-     * Create a map whose entries are stored in a parent map 
+     * Create a map whose entries are stored in a parent map
      * by prefixing the key names with a specific string.
      * @param map the parent map
      * @param prefix the prefix with which to prefix the entries in the
      * parent map
      */
     public PrefixMap(Map map, String prefix) {
-	this.map = map;
-	this.prefix = prefix + ".";
+        this.map = map;
+        this.prefix = prefix + ".";
     }
 
     public void clear() {
-	for (Iterator i = map.keySet().iterator(); i.hasNext(); ) {
-	    String key = (String) (i.next());
-	    if (key.startsWith(prefix))
-		i.remove();
-	}
+        for (Iterator i = map.keySet().iterator(); i.hasNext(); ) {
+            String key = (String) (i.next());
+            if (key.startsWith(prefix))
+                i.remove();
+        }
     }
 
     /**
@@ -68,102 +68,102 @@ public class PrefixMap implements Map
      * @return The prefix string, which may be a zero length string.
      */
     public String getPrefix() {
-	// protect against zero length prefix
-	if (prefix.length() > 1)
-	    return prefix.substring(0, prefix.length() - 1);
-	else
-	    return "";
+        // protect against zero length prefix
+        if (prefix.length() > 1)
+            return prefix.substring(0, prefix.length() - 1);
+        else
+            return "";
     }
 
     public boolean containsKey(Object key) {
-	return map.containsKey(prefix + key);
+        return map.containsKey(prefix + key);
     }
 
     public boolean containsValue(Object value) {
-	for (Iterator i = map.entrySet().iterator(); i.hasNext(); ) {
-	    Map.Entry e = (Map.Entry) (i.next());
-	    String key = (String) (e.getKey());
-	    if (key.startsWith(prefix) && e.getValue().equals(value))
-		return true;
-	}
-	return false;
+        for (Iterator i = map.entrySet().iterator(); i.hasNext(); ) {
+            Map.Entry e = (Map.Entry) (i.next());
+            String key = (String) (e.getKey());
+            if (key.startsWith(prefix) && e.getValue().equals(value))
+                return true;
+        }
+        return false;
     }
 
     public Set entrySet() {
-	Map m = new HashMap();
-	for (Iterator i = map.entrySet().iterator(); i.hasNext(); ) {
-	    Map.Entry e = (Map.Entry) (i.next());
-	    String key = (String) (e.getKey());
-	    if (key.startsWith(prefix))
-		m.put(key.substring(prefix.length()), e.getValue());
-	}
-	return m.entrySet();
+        Map m = new HashMap();
+        for (Iterator i = map.entrySet().iterator(); i.hasNext(); ) {
+            Map.Entry e = (Map.Entry) (i.next());
+            String key = (String) (e.getKey());
+            if (key.startsWith(prefix))
+                m.put(key.substring(prefix.length()), e.getValue());
+        }
+        return m.entrySet();
     }
 
     public Object get(Object key) {
-	return map.get(prefix + key);
+        return map.get(prefix + key);
     }
 
     public int hashCode() {
-	return (map.hashCode() + prefix.hashCode());
+        return (map.hashCode() + prefix.hashCode());
     }
 
     public boolean isEmpty() {
-	for (Iterator i = map.keySet().iterator(); i.hasNext(); ) {
-	    String key = (String) (i.next());
-	    if (key.startsWith(prefix))
-		return false;
-	}
-	return true;
+        for (Iterator i = map.keySet().iterator(); i.hasNext(); ) {
+            String key = (String) (i.next());
+            if (key.startsWith(prefix))
+                return false;
+        }
+        return true;
     }
 
     public Set keySet() {
-	Set s = new HashSet();
-	for (Iterator i = map.keySet().iterator(); i.hasNext(); ) {
-	    String key = (String) (i.next());
-	    if (key.startsWith(prefix))
-		s.add(key.substring(prefix.length()));
-	}
-	return s;
+        Set s = new HashSet();
+        for (Iterator i = map.keySet().iterator(); i.hasNext(); ) {
+            String key = (String) (i.next());
+            if (key.startsWith(prefix))
+                s.add(key.substring(prefix.length()));
+        }
+        return s;
     }
 
     public Object put(Object key, Object value) {
-	return map.put(prefix + key, value);
+        return map.put(prefix + key, value);
     }
 
     public void putAll(Map t) {
-	for (Iterator i = t.entrySet().iterator(); i.hasNext(); ) {
-	    Map.Entry e = (Map.Entry) (i.next());
-	    String key = (String) (e.getKey());
-	    put(key, e.getValue());
-	}
+        for (Iterator i = t.entrySet().iterator(); i.hasNext(); ) {
+            Map.Entry e = (Map.Entry) (i.next());
+            String key = (String) (e.getKey());
+            put(key, e.getValue());
+        }
     }
 
     public Object remove(Object key) {
-	return map.remove(prefix + key);
+        return map.remove(prefix + key);
     }
 
     public int size() {
-	int n = 0;
-	for (Iterator i = map.keySet().iterator(); i.hasNext(); ) {
-	    String key = (String) (i.next());
-	    if (key.startsWith(prefix))
-		n++;
-	}
-	return n;
+        int n = 0;
+        for (Iterator i = map.keySet().iterator(); i.hasNext(); ) {
+            String key = (String) (i.next());
+            if (key.startsWith(prefix))
+                n++;
+        }
+        return n;
     }
 
     public Collection values() {
-	Collection c = new Vector();
-	for (Iterator i = map.entrySet().iterator(); i.hasNext(); ) {
-	    Map.Entry e = (Map.Entry) (i.next());
-	    String key = (String) (e.getKey());
-	    if (key.startsWith(prefix))
-		c.add(e.getValue());
-	}
-	return c;
+        Collection c = new Vector();
+        for (Iterator i = map.entrySet().iterator(); i.hasNext(); ) {
+            Map.Entry e = (Map.Entry) (i.next());
+            String key = (String) (e.getKey());
+            if (key.startsWith(prefix))
+                c.add(e.getValue());
+        }
+        return c;
     }
-    
+
     private Map map;
     private String prefix;
 }

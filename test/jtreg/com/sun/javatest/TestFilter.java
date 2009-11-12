@@ -40,48 +40,48 @@ public abstract class TestFilter
      */
     public static class Fault extends Exception
     {
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 */
-	public Fault(I18NResourceBundle i18n, String s) {
-	    super(i18n.getString(s));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         */
+        public Fault(I18NResourceBundle i18n, String s) {
+            super(i18n.getString(s));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An argument to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	public Fault(I18NResourceBundle i18n, String s, Object o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An argument to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        public Fault(I18NResourceBundle i18n, String s, Object o) {
+            super(i18n.getString(s, o));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An array of arguments to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	public Fault(I18NResourceBundle i18n, String s, Object[] o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An array of arguments to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        public Fault(I18NResourceBundle i18n, String s, Object[] o) {
+            super(i18n.getString(s, o));
+        }
     }
 
     /**
      * An interface for notification about why a test has been filtered out.
      */
     public interface Observer {
-	/**
-	 * Notification methodcalled when a test has been rejected.
-	 * @param d The test that has been rejected.
-	 * @param rejector The filter rejecting the test.
-	 */
-	void rejected(TestDescription d, TestFilter rejector);
+        /**
+         * Notification methodcalled when a test has been rejected.
+         * @param d The test that has been rejected.
+         * @param rejector The filter rejecting the test.
+         */
+        void rejected(TestDescription d, TestFilter rejector);
     }
 
     /**
@@ -110,7 +110,7 @@ public abstract class TestFilter
      * Determines whether a TestDescription should be accepted or rejected
      * by this filter.
      *
-     * @param td	the TestDescription to check
+     * @param td        the TestDescription to check
      * @return true if td should be included in collection; false otherwise.
      * @throws TestFilter.Fault if an error occurs while trying to determine if this test
      * should be accepted or not.
@@ -121,19 +121,19 @@ public abstract class TestFilter
      * Determines whether a TestDescription should be accepted or rejected
      * by this filter; if rejected, it is reported to the provided observer.
      *
-     * @param td	The TestDescription to check.
-     * @param o		An observer, which will be notified if the test is 
-     *			rejected by this filter.
+     * @param td        The TestDescription to check.
+     * @param o         An observer, which will be notified if the test is
+     *                  rejected by this filter.
      * @return true if td should be included in collection; false otherwise.
      * @throws TestFilter.Fault if an error occurs while trying to determine if this test
      * should be accepted or not.
      */
     public boolean accepts(TestDescription td, Observer o) throws Fault {
-	if (accepts(td))
-	    return true;
-	else {
-	    o.rejected(td, this);
-	    return false;
-	}
+        if (accepts(td))
+            return true;
+        else {
+            o.rejected(td, this);
+            return false;
+        }
     }
 }

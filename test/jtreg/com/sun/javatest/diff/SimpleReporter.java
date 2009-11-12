@@ -39,13 +39,13 @@ import java.util.Map;
  * Write simple reports to a text file.
  */
 public class SimpleReporter extends Reporter {
-    
+
     /**
      * Creates a new instance of SimpleReporter
      */
     public SimpleReporter(PrintWriter out) {
         this.out = out;
-        
+
         statusStrings = new String[4];
         statusStrings[Status.PASSED] = i18n.getString("simple.pass");
         statusStrings[Status.FAILED] = i18n.getString("simple.fail");
@@ -54,21 +54,21 @@ public class SimpleReporter extends Reporter {
         for (String ss: statusStrings)
             maxStatusStringLength = Math.max(maxStatusStringLength, ss.length());
     }
-    
+
     public void write(MultiMap<String, TestResult> table) throws IOException {
         this.table = table;
         size = table.getColumns();
-        
+
         if (title != null) {
             println(title);
             println();
         }
-        
+
         writeHead();
         writeBody();
         writeSummary();
     }
-    
+
     private void writeHead() throws IOException {
         for (int i = 0; i < size; i++) {
             int[] c = testCounts.get(i);
@@ -91,7 +91,7 @@ public class SimpleReporter extends Reporter {
             println();
         }
     }
-    
+
     private void writeBody() throws IOException {
         diffs = 0;
         for (Map.Entry<String, MultiMap.Entry<TestResult>> e: table.entrySet()) {
@@ -116,7 +116,7 @@ public class SimpleReporter extends Reporter {
             diffs++;
         }
     }
-    
+
     private void writeSummary() throws IOException {
         println();
         if (diffs == 0)
@@ -125,39 +125,39 @@ public class SimpleReporter extends Reporter {
             writeI18N("simple.diffs.count", diffs);
         println();
     }
-    
+
     private void writeI18N(String key, Object... args) throws IOException {
         print(i18n.getString(key, args));
     }
-    
+
     private void print(Object o) throws IOException {
         out.print(o.toString());
     }
-    
+
     private void print(String s, int width) throws IOException {
         out.print(s);
         for (int i = s.length(); i < width; i++)
             out.print(' ');
     }
-    
+
     private void println() throws IOException {
         out.println();
     }
-    
+
     private void println(Object o) throws IOException {
         out.println(o.toString());
     }
-    
+
     private String getStatusString(Status s) {
         return statusStrings[s == null ? Status.NOT_RUN : s.getType()];
     }
-    
+
     private MultiMap<String, TestResult> table;
     private int size;
     private PrintWriter out;
-    
+
     private String[] statusStrings;
     private int maxStatusStringLength;
-    
+
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(SimpleReporter.class);
 }

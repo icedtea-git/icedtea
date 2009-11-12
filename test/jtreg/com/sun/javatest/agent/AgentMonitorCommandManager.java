@@ -40,45 +40,45 @@ import com.sun.javatest.util.I18NResourceBundle;
 /**
  * The ToolManager for {@link AgentMonitorTool agent monitor} window.
  */
-public class AgentMonitorCommandManager extends CommandManager 
+public class AgentMonitorCommandManager extends CommandManager
 {
 
     public HelpTree.Node getHelp() {
-	String[] cmds = { 
-	    AgentPoolPortCommand.getName(),
-	    AgentPoolTimeoutCommand.getName(),
-	    StartAgentPoolCommand.getName(),
-	    ShowMonitorCommand.getName()
-	};
-	return new HelpTree.Node(i18n, "cmgr.help", cmds);
+        String[] cmds = {
+            AgentPoolPortCommand.getName(),
+            AgentPoolTimeoutCommand.getName(),
+            StartAgentPoolCommand.getName(),
+            ShowMonitorCommand.getName()
+        };
+        return new HelpTree.Node(i18n, "cmgr.help", cmds);
     }
 
     //----------------------------------------------------------------------------
 
-    public boolean parseCommand(String cmd, ListIterator argIter, CommandContext ctx) 
-	throws Command.Fault
+    public boolean parseCommand(String cmd, ListIterator argIter, CommandContext ctx)
+        throws Command.Fault
     {
-	if (cmd.equalsIgnoreCase(AgentPoolPortCommand.getName())) {
-	    ctx.addCommand(new AgentPoolPortCommand(argIter));
-	    return true;
-	}
-	
-	if (cmd.equalsIgnoreCase(AgentPoolTimeoutCommand.getName())) {
-	    ctx.addCommand(new AgentPoolTimeoutCommand(argIter));
-	    return true;
-	}
-	
-	if (cmd.equalsIgnoreCase(ShowMonitorCommand.getName())) {
-	    ctx.addCommand(new ShowMonitorCommand());
-	    return true;
-	}
-	
-	if (cmd.equalsIgnoreCase(StartAgentPoolCommand.getName())) {
-	    ctx.addCommand(new StartAgentPoolCommand(argIter));
-	    return true;
-	}
-	
-	return false;
+        if (cmd.equalsIgnoreCase(AgentPoolPortCommand.getName())) {
+            ctx.addCommand(new AgentPoolPortCommand(argIter));
+            return true;
+        }
+
+        if (cmd.equalsIgnoreCase(AgentPoolTimeoutCommand.getName())) {
+            ctx.addCommand(new AgentPoolTimeoutCommand(argIter));
+            return true;
+        }
+
+        if (cmd.equalsIgnoreCase(ShowMonitorCommand.getName())) {
+            ctx.addCommand(new ShowMonitorCommand());
+            return true;
+        }
+
+        if (cmd.equalsIgnoreCase(StartAgentPoolCommand.getName())) {
+            ctx.addCommand(new StartAgentPoolCommand(argIter));
+            return true;
+        }
+
+        return false;
     }
 
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(AgentMonitorCommandManager.class);
@@ -86,105 +86,105 @@ public class AgentMonitorCommandManager extends CommandManager
     //----------------------------------------------------------------------------
 
     private static class AgentPoolPortCommand extends Command {
-	static String getName() {
-	    return "agentPoolPort";
-	}
-    
-	AgentPoolPortCommand(ListIterator argIter) throws Fault {
-	    super(getName());
+        static String getName() {
+            return "agentPoolPort";
+        }
 
-	    if (!argIter.hasNext())
-		throw new Fault(i18n, "cmgr.missingArg.err");
-	    
-	    try {
-		port = Integer.parseInt(nextArg(argIter));
-	    }
-	    catch (NumberFormatException e) {
-		throw new Command.Fault(i18n, "cmgr.badNumber.err");
-	    }
-	}
+        AgentPoolPortCommand(ListIterator argIter) throws Fault {
+            super(getName());
 
-	public void run(CommandContext ctx) {
-	    AgentManager mgr = AgentManager.access();
-	    ActiveAgentPool pool = mgr.getActiveAgentPool();
-	    pool.setPort(port);
-	}
+            if (!argIter.hasNext())
+                throw new Fault(i18n, "cmgr.missingArg.err");
 
-	private int port;
+            try {
+                port = Integer.parseInt(nextArg(argIter));
+            }
+            catch (NumberFormatException e) {
+                throw new Command.Fault(i18n, "cmgr.badNumber.err");
+            }
+        }
+
+        public void run(CommandContext ctx) {
+            AgentManager mgr = AgentManager.access();
+            ActiveAgentPool pool = mgr.getActiveAgentPool();
+            pool.setPort(port);
+        }
+
+        private int port;
     }
 
     //----------------------------------------------------------------------------
 
     private static class AgentPoolTimeoutCommand extends Command {
-	static String getName() {
-	    return "agentPoolTimeout";
-	}
-    
-	AgentPoolTimeoutCommand(ListIterator argIter) throws Fault {
-	    super(getName());
+        static String getName() {
+            return "agentPoolTimeout";
+        }
 
-	    if (!argIter.hasNext())
-		throw new Fault(i18n, "cmgr.missingArg.err");
-	    
-	    try {
-		timeout = Integer.parseInt(nextArg(argIter));
-	    }
-	    catch (NumberFormatException e) {
-		throw new Command.Fault(i18n, "cmgr.badNumber.err");
-	    }
-	}
+        AgentPoolTimeoutCommand(ListIterator argIter) throws Fault {
+            super(getName());
 
-	public void run(CommandContext ctx) {
-	    AgentManager mgr = AgentManager.access();
-	    ActiveAgentPool pool = mgr.getActiveAgentPool();
-	    pool.setTimeout(timeout * 1000);
-	}
+            if (!argIter.hasNext())
+                throw new Fault(i18n, "cmgr.missingArg.err");
 
-	private int timeout;
+            try {
+                timeout = Integer.parseInt(nextArg(argIter));
+            }
+            catch (NumberFormatException e) {
+                throw new Command.Fault(i18n, "cmgr.badNumber.err");
+            }
+        }
+
+        public void run(CommandContext ctx) {
+            AgentManager mgr = AgentManager.access();
+            ActiveAgentPool pool = mgr.getActiveAgentPool();
+            pool.setTimeout(timeout * 1000);
+        }
+
+        private int timeout;
     }
 
     //----------------------------------------------------------------------------
 
     private static class StartAgentPoolCommand extends Command {
-	static String getName() {
-	    return "startAgentPool";
-	}
-    
-	StartAgentPoolCommand(ListIterator argIter) throws Fault {
-	    super(getName());
+        static String getName() {
+            return "startAgentPool";
+        }
 
-	    while (argIter.hasNext()) {
-		String arg = nextArg(argIter);
-		if (arg.equalsIgnoreCase("-" + AgentPoolPortCommand.getName())) {
-		    portSubcommand = new AgentPoolPortCommand(argIter);
-		    addArgs(portSubcommand);
-		}
-		else if (arg.equalsIgnoreCase("-" + AgentPoolTimeoutCommand.getName())) {
-		    timeoutSubcommand = new AgentPoolTimeoutCommand(argIter);
-		    addArgs(timeoutSubcommand);
-		}
-		else {
-		    putbackArg(argIter);
-		    break;
-		}
-	    }
-	}
+        StartAgentPoolCommand(ListIterator argIter) throws Fault {
+            super(getName());
 
-	public void run(CommandContext ctx) throws Fault {
-	    if (portSubcommand != null)
-		portSubcommand.run(ctx);
+            while (argIter.hasNext()) {
+                String arg = nextArg(argIter);
+                if (arg.equalsIgnoreCase("-" + AgentPoolPortCommand.getName())) {
+                    portSubcommand = new AgentPoolPortCommand(argIter);
+                    addArgs(portSubcommand);
+                }
+                else if (arg.equalsIgnoreCase("-" + AgentPoolTimeoutCommand.getName())) {
+                    timeoutSubcommand = new AgentPoolTimeoutCommand(argIter);
+                    addArgs(timeoutSubcommand);
+                }
+                else {
+                    putbackArg(argIter);
+                    break;
+                }
+            }
+        }
 
-	    if (timeoutSubcommand != null)
-		timeoutSubcommand.run(ctx);
+        public void run(CommandContext ctx) throws Fault {
+            if (portSubcommand != null)
+                portSubcommand.run(ctx);
 
-	    try {
-		AgentManager mgr = AgentManager.access();
-		ActiveAgentPool pool = mgr.getActiveAgentPool();
-		pool.setListening(true);
-	    }
-	    catch (IOException e) {
-		AgentManager mgr = AgentManager.access();
-		ActiveAgentPool pool = mgr.getActiveAgentPool();
+            if (timeoutSubcommand != null)
+                timeoutSubcommand.run(ctx);
+
+            try {
+                AgentManager mgr = AgentManager.access();
+                ActiveAgentPool pool = mgr.getActiveAgentPool();
+                pool.setListening(true);
+            }
+            catch (IOException e) {
+                AgentManager mgr = AgentManager.access();
+                ActiveAgentPool pool = mgr.getActiveAgentPool();
 
                 // this line does not function correctly on locales
                 // other than English, it prduces garbage as the
@@ -192,40 +192,39 @@ public class AgentMonitorCommandManager extends CommandManager
                 //Integer p = new Integer(pool.getPort());
                 // warning: line below is not really i18n compliant
                 String p = Integer.toString(pool.getPort());
-		throw new Fault(i18n, "cmgr.listenOn.err", new Object[] {p,e});
-	    }
-	}
+                throw new Fault(i18n, "cmgr.listenOn.err", new Object[] {p,e});
+            }
+        }
 
-	private void addArgs(Command c) {
-	    String[] args = c.getArgs();
-	    for (int i = 1; i < args.length; i++)
-		addArg(args[i]);
-	}
+        private void addArgs(Command c) {
+            String[] args = c.getArgs();
+            for (int i = 1; i < args.length; i++)
+                addArg(args[i]);
+        }
 
-	private AgentPoolPortCommand portSubcommand;
-	private AgentPoolTimeoutCommand timeoutSubcommand;
+        private AgentPoolPortCommand portSubcommand;
+        private AgentPoolTimeoutCommand timeoutSubcommand;
     }
 
     //----------------------------------------------------------------------------
 
     private static class ShowMonitorCommand extends Command {
-	static String getName() {
-	    return "monitorAgent";
-	}
-    
-	ShowMonitorCommand() {
-	    super(getName());
-	}
+        static String getName() {
+            return "monitorAgent";
+        }
 
-	public int getDesktopMode() {
-	    return DESKTOP_REQUIRED_DTMODE;
-	}
+        ShowMonitorCommand() {
+            super(getName());
+        }
 
-	public void run(CommandContext ctx) {
-	    Desktop d = ctx.getDesktop();
-	    AgentMonitorToolManager tm = (AgentMonitorToolManager) (d.getToolManager(AgentMonitorToolManager.class));
-	    tm.startTool();
-	}
+        public int getDesktopMode() {
+            return DESKTOP_REQUIRED_DTMODE;
+        }
+
+        public void run(CommandContext ctx) {
+            Desktop d = ctx.getDesktop();
+            AgentMonitorToolManager tm = (AgentMonitorToolManager) (d.getToolManager(AgentMonitorToolManager.class));
+            tm.startTool();
+        }
     }
 }
-

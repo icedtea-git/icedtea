@@ -31,8 +31,8 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * This class implements an output stream that has additional methods for 
- * printing. It is based on PrintStream except that it does not swallow 
+ * This class implements an output stream that has additional methods for
+ * printing. It is based on PrintStream except that it does not swallow
  * exceptions.
  */
 
@@ -44,7 +44,7 @@ public class TextWriter extends FilterWriter {
      * @param  out        A character-output stream
      */
     public TextWriter(Writer out) {
-	this(out, false);
+        this(out, false);
     }
 
     /**
@@ -55,220 +55,220 @@ public class TextWriter extends FilterWriter {
      *                    the output buffer
      */
     public TextWriter(Writer out, boolean autoFlush) {
-	// this next call establishes "out" as the value of the
-	// protected variable "lock"
-	super(out); 
-	this.autoFlush = autoFlush;
-	lineSeparator = System.getProperty("line.separator");
+        // this next call establishes "out" as the value of the
+        // protected variable "lock"
+        super(out);
+        this.autoFlush = autoFlush;
+        lineSeparator = System.getProperty("line.separator");
     }
 
     /* Methods that do not terminate lines */
 
-    /** 
-     * Print a boolean. 
+    /**
+     * Print a boolean.
      * @param b the boolean to be printed
      * @throws IOException if there is a problem writing to the stream
      */
     public void print(boolean b) throws IOException {
-	write(b ? "true" : "false");
+        write(b ? "true" : "false");
     }
 
-    /** 
-     * Print a character. 
+    /**
+     * Print a character.
      * @param c the character to be printed
      * @throws IOException if there is a problem writing to the stream
      */
     public void print(char c) throws IOException {
-	write(String.valueOf(c));
+        write(String.valueOf(c));
     }
 
-    /** 
-     * Print an integer. 
+    /**
+     * Print an integer.
      * @param i the integer to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void print(int i) throws IOException {
-	write(String.valueOf(i));
+        write(String.valueOf(i));
     }
 
-    /** 
-     * Print a long. 
+    /**
+     * Print a long.
      * @param l the long to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void print(long l) throws IOException {
-	write(String.valueOf(l));
+        write(String.valueOf(l));
     }
 
-    /** 
-     * Print a float. 
+    /**
+     * Print a float.
      * @param f the float to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void print(float f) throws IOException {
-	write(String.valueOf(f));
+        write(String.valueOf(f));
     }
 
-    /** 
-     * Print a double. 
+    /**
+     * Print a double.
      * @param d the double to be printed
      * @throws IOException if an error occurred while writing to the stream
      **/
     public void print(double d) throws IOException {
-	write(String.valueOf(d));
+        write(String.valueOf(d));
     }
 
-    /** 
+    /**
      * Print an array of characters.
      * @param s the array of characters to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void print(char s[]) throws IOException {
-	write(s);
+        write(s);
     }
 
-    /** 
+    /**
      * Print a string.
-     * @param s the string to be printed 
+     * @param s the string to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void print(String s) throws IOException {
-	if (s == null) {
-	    s = "null";
-	}
-	write(s);
+        if (s == null) {
+            s = "null";
+        }
+        write(s);
     }
 
-    /** 
-     * Print an object. 
+    /**
+     * Print an object.
      * @param obj the object to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void print(Object obj) throws IOException {
-	write(String.valueOf(obj));
+        write(String.valueOf(obj));
     }
 
 
     /* Methods that do terminate lines */
 
-    /** 
-     * Finish the line. 
+    /**
+     * Finish the line.
      * @throws IOException if an error occurred while writing to the stream
      */
     public void println() throws IOException {
-	synchronized (lock) {
-	    out.write(lineSeparator);
-	    if (autoFlush)
-		out.flush();
-	}
+        synchronized (lock) {
+            out.write(lineSeparator);
+            if (autoFlush)
+                out.flush();
+        }
     }
 
-    /** 
-     * Print a boolean, and then finish the line. 
+    /**
+     * Print a boolean, and then finish the line.
      * @param b the boolean to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void println(boolean b) throws IOException {
-	synchronized (lock) {
-	    print(b);
-	    println();
-	}
+        synchronized (lock) {
+            print(b);
+            println();
+        }
     }
 
-    /** 
+    /**
      * Print a character, and then finish the line.
      * @param c the character to beprinted
-     * @throws IOException if an error occurred while writing to the stream 
+     * @throws IOException if an error occurred while writing to the stream
      */
     public void println(char c) throws IOException {
-	synchronized (lock) {
-	    print(c);
-	    println();
-	}
+        synchronized (lock) {
+            print(c);
+            println();
+        }
     }
 
-    /** 
-     * Print an integer, and then finish the line. 
+    /**
+     * Print an integer, and then finish the line.
      * @param i the int to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void println(int i) throws IOException {
-	synchronized (lock) {
-	    print(i);
-	    println();
-	}
+        synchronized (lock) {
+            print(i);
+            println();
+        }
     }
 
-    /** 
-     * Print a long, and then finish the line. 
+    /**
+     * Print a long, and then finish the line.
      * @param l the long to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void println(long l) throws IOException {
-	synchronized (lock) {
-	    print(l);
-	    println();
-	}
+        synchronized (lock) {
+            print(l);
+            println();
+        }
     }
 
-    /** 
-     * Print a float, and then finish the line. 
+    /**
+     * Print a float, and then finish the line.
      * @param f the float to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void println(float f) throws IOException {
-	synchronized (lock) {
-	    print(f);
-	    println();
-	}
+        synchronized (lock) {
+            print(f);
+            println();
+        }
     }
 
-    /** 
-     * Print a double, and then finish the line. 
+    /**
+     * Print a double, and then finish the line.
      * @param d the double to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void println(double d) throws IOException {
-	synchronized (lock) {
-	    print(d);
-	    println();
-	}
+        synchronized (lock) {
+            print(d);
+            println();
+        }
     }
 
-    /** 
-     * Print an array of characters, and then finish the line. 
+    /**
+     * Print an array of characters, and then finish the line.
      * @param c the array of characters to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void println(char[] c) throws IOException {
-	synchronized (lock) {
-	    print(c);
-	    println();
-	}
+        synchronized (lock) {
+            print(c);
+            println();
+        }
     }
 
-    /** 
-     * Print a String, and then finish the line. 
+    /**
+     * Print a String, and then finish the line.
      * @param s the string to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void println(String s) throws IOException {
-	synchronized (lock) {
-	    print(s);
-	    println();
-	}
+        synchronized (lock) {
+            print(s);
+            println();
+        }
     }
 
-    /** 
-     * Print an Object, and then finish the line. 
+    /**
+     * Print an Object, and then finish the line.
      * @param obj the object to be printed
      * @throws IOException if an error occurred while writing to the stream
      */
     public void println(Object obj) throws IOException {
-	synchronized (lock) {
-	    print(obj);
-	    println();
-	}
+        synchronized (lock) {
+            print(obj);
+            println();
+        }
     }
 
     private boolean autoFlush = false;

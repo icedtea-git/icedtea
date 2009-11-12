@@ -39,107 +39,107 @@ import com.sun.javatest.util.StringArray;
 public class StdTestScript extends Script
 {
     public Status run(String[] args, TestDescription td, TestEnvironment env) {
-	try {
-	    String[] m = env.lookup("script.mode");
-	    if (m != null && m.length == 1)
-		setMode(m[0]);
-	}
-	catch (TestEnvironment.Fault e) {
-	    return Status.failed("error determining script mode: " + e.getMessage());
-	}
+        try {
+            String[] m = env.lookup("script.mode");
+            if (m != null && m.length == 1)
+                setMode(m[0]);
+        }
+        catch (TestEnvironment.Fault e) {
+            return Status.failed("error determining script mode: " + e.getMessage());
+        }
 
-	boolean compile = false;
-	boolean execute = false;
-	boolean expectFail = false;
+        boolean compile = false;
+        boolean execute = false;
+        boolean expectFail = false;
 
-	for (int i = 0; i < args.length; i++) {
-	    String arg = args[i];
-	    
-	    if (arg.equals("-certify")) {
-		compile = false;
-		execute = true;
-	    }
-	    else if (arg.equals("-precompile")) {
-		compile = true;
-		execute = false;
-	    }
-	    else if (arg.equals("-developer")) {
-		compile = true;
-		execute = true;
-	    }
-	    else if (arg.equals("-compile")) {
-		compile = true;
-	    }
-	    else if (arg.equals("-execute")) {
-		execute = true;
-	    }
-	    else if (arg.equals("-expectFail")) {
-		expectFail = true;
-	    }
-	    else
-		return Status.failed("bad arg for script: `" + arg + "'");
-	}
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
 
-	if (compile == false && execute == false) {
-	    // not set in args, so set from mode
-	    compile = (mode == DEVELOPER || mode == PRECOMPILE);
-	    execute = (mode == DEVELOPER || mode == CERTIFY);
-	}
+            if (arg.equals("-certify")) {
+                compile = false;
+                execute = true;
+            }
+            else if (arg.equals("-precompile")) {
+                compile = true;
+                execute = false;
+            }
+            else if (arg.equals("-developer")) {
+                compile = true;
+                execute = true;
+            }
+            else if (arg.equals("-compile")) {
+                compile = true;
+            }
+            else if (arg.equals("-execute")) {
+                execute = true;
+            }
+            else if (arg.equals("-expectFail")) {
+                expectFail = true;
+            }
+            else
+                return Status.failed("bad arg for script: `" + arg + "'");
+        }
 
-	if (compile) {
-	    String srcsParameter = td.getParameter("sources");
-	    if (srcsParameter == null)
-		// check "source" for backwards compatibility
-		srcsParameter = td.getParameter("source");
-	    String[] srcs = StringArray.split(srcsParameter);
-	    File[] files = new File[srcs.length];
-	    File tdDir  = td.getDir();
-	    for (int i = 0; i < files.length; i++) 
-		files[i] = new File(tdDir, srcs[i].replace('/', File.separatorChar));
+        if (compile == false && execute == false) {
+            // not set in args, so set from mode
+            compile = (mode == DEVELOPER || mode == PRECOMPILE);
+            execute = (mode == DEVELOPER || mode == CERTIFY);
+        }
 
-	    Status compileStatus = compileTogether(files);
+        if (compile) {
+            String srcsParameter = td.getParameter("sources");
+            if (srcsParameter == null)
+                // check "source" for backwards compatibility
+                srcsParameter = td.getParameter("source");
+            String[] srcs = StringArray.split(srcsParameter);
+            File[] files = new File[srcs.length];
+            File tdDir  = td.getDir();
+            for (int i = 0; i < files.length; i++)
+                files[i] = new File(tdDir, srcs[i].replace('/', File.separatorChar));
 
-	    // if we're not going to execute the test, this is the end of the task
-	    if (!execute)  {
-		if (expectFail) {
-		    // backwards compatibility for negative compiler tests,
-		    // for which we expect the compilation to fail,
-		    // so verify that it did, and return accordingly
-		    if (compileStatus.getType() == Status.FAILED) 
-			return pass_compFailExp.augment(compileStatus);
-		    else
-			return fail_compSuccUnexp.augment(compileStatus);
-		} else
-		    // normal exit for compile-only tests
-		    return compileStatus;
-	    } 
+            Status compileStatus = compileTogether(files);
 
-	    // if we want to execute the test, but the compilation failed, we can't go on
-	    if (compileStatus.isFailed())
-		return fail_compFailUnexp.augment(compileStatus);
-	}
+            // if we're not going to execute the test, this is the end of the task
+            if (!execute)  {
+                if (expectFail) {
+                    // backwards compatibility for negative compiler tests,
+                    // for which we expect the compilation to fail,
+                    // so verify that it did, and return accordingly
+                    if (compileStatus.getType() == Status.FAILED)
+                        return pass_compFailExp.augment(compileStatus);
+                    else
+                        return fail_compSuccUnexp.augment(compileStatus);
+                } else
+                    // normal exit for compile-only tests
+                    return compileStatus;
+            }
 
-	if (execute) {
-	    String executeClass = td.getParameter("executeClass");
-	    if (executeClass == null)
-		return error_noExecuteClass;
+            // if we want to execute the test, but the compilation failed, we can't go on
+            if (compileStatus.isFailed())
+                return fail_compFailUnexp.augment(compileStatus);
+        }
 
-	    Status executeStatus = execute(executeClass, td.getParameter("executeArgs"));
+        if (execute) {
+            String executeClass = td.getParameter("executeClass");
+            if (executeClass == null)
+                return error_noExecuteClass;
 
-	    if (expectFail) {
-		// backwards compatibility for negative execution tests,
-		// for which we expect the execution to fail,
-		// so verify that it did, and return accordingly
-		if (executeStatus.getType() == Status.FAILED) 
-		    return pass_execFailExp.augment(executeStatus);
-		else
-		    return fail_execSuccUnexp.augment(executeStatus);
-	    } else
-		// normal exit for (compile and) execute tests
-		return executeStatus;
-	}
+            Status executeStatus = execute(executeClass, td.getParameter("executeArgs"));
 
-	return error_noActionSpecified;
+            if (expectFail) {
+                // backwards compatibility for negative execution tests,
+                // for which we expect the execution to fail,
+                // so verify that it did, and return accordingly
+                if (executeStatus.getType() == Status.FAILED)
+                    return pass_execFailExp.augment(executeStatus);
+                else
+                    return fail_execSuccUnexp.augment(executeStatus);
+            } else
+                // normal exit for (compile and) execute tests
+                return executeStatus;
+        }
+
+        return error_noActionSpecified;
     }
 
     /**
@@ -152,11 +152,11 @@ public class StdTestScript extends Script
      * @see #DEVELOPER
      */
     public int getMode() {
-	return mode;
+        return mode;
     }
 
     /**
-     * Set the execution mode for this script. 
+     * Set the execution mode for this script.
      * @param mode an integer signifying the execution mode for this script
      * @see #getMode
      * @see #UNKNOWN
@@ -165,35 +165,35 @@ public class StdTestScript extends Script
      * @see #DEVELOPER
      */
     public void setMode(int mode) {
-	switch (mode) {
-	case CERTIFY:
-	case PRECOMPILE:
-	case DEVELOPER:
-	    this.mode = mode;
-	    break;
+        switch (mode) {
+        case CERTIFY:
+        case PRECOMPILE:
+        case DEVELOPER:
+            this.mode = mode;
+            break;
 
-	default:
-	    throw new IllegalArgumentException();
-	}
+        default:
+            throw new IllegalArgumentException();
+        }
     }
 
     private void setMode(String mode) {
-	setMode(parseMode(mode));
+        setMode(parseMode(mode));
     }
-    
+
     private static int parseMode(String m) {
-	if (m == null || m.equals("certify"))
-	    return CERTIFY;
-	else if (m.equals("precompile"))
-	    return PRECOMPILE;
-	else if (m.equals("developer"))
-	    return DEVELOPER;
-	else 
-	    return UNKNOWN;
+        if (m == null || m.equals("certify"))
+            return CERTIFY;
+        else if (m.equals("precompile"))
+            return PRECOMPILE;
+        else if (m.equals("developer"))
+            return DEVELOPER;
+        else
+            return UNKNOWN;
     }
 
     private static int getDefaultMode() {
-	return parseMode(System.getProperty("javatest.stdTestScript.defaultMode"));
+        return parseMode(System.getProperty("javatest.stdTestScript.defaultMode"));
     }
 
     /**

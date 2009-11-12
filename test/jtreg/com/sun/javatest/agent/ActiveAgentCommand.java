@@ -37,81 +37,80 @@ import com.sun.javatest.Status;
 public class ActiveAgentCommand extends Command
 {
     /**
-     * Delegate a subcommand to an agent running in active mode. 
-     * The active agent to be used is obtained from the active agent pool, 
+     * Delegate a subcommand to an agent running in active mode.
+     * The active agent to be used is obtained from the active agent pool,
      * maintained by the {@link AgentManager}.
      * @param args An array of strings, identifying the subcommand and where
-     * 		to run it. The array should be of the form:<br>
-     *		<em>options</em>... <em>subcommand-class</em> <em>subcommand-args</em>...
+     *          to run it. The array should be of the form:<br>
+     *          <em>options</em>... <em>subcommand-class</em> <em>subcommand-args</em>...
      * <table><tr><th colspan=2>Options</th></tr>
      * <tr><td>-cp <em>path</em><br>-classpath <em>path</em>
-     *		<td>Specify a path from which the subcommand should be loaded, 
-     *		via the connection to the JT Harness harness.
-     *		If not specified, any necessary classes will be loaded 
-     * 		from the agent's classpath.
+     *          <td>Specify a path from which the subcommand should be loaded,
+     *          via the connection to the JT Harness harness.
+     *          If not specified, any necessary classes will be loaded
+     *          from the agent's classpath.
      * <tr><td>-m<br>-mapArgs
-     *		<td>Use the map facility on the JT Harness Agent to localize
-     *		any configuration values.
+     *          <td>Use the map facility on the JT Harness Agent to localize
+     *          any configuration values.
      * <tr><td>-t <em>tag</em><br>-tag <em>tag</em>
-     *		<td>Spectify a tag with with to identify this command in
-     * 		any tracing output or GUI display.
+     *          <td>Spectify a tag with with to identify this command in
+     *          any tracing output or GUI display.
      * </table>
      * @param err A stream to which to write any diagnostic error messages.
      * @param out An additional stream to which to write any additional output.
      * @return a Status object indicating the outcome of the command that was executed
      */
     public Status run(String[] args, PrintWriter err, PrintWriter out) {
-	String classPath = null;
-	String tag = null;
-	boolean localizeArgs = false;
+        String classPath = null;
+        String tag = null;
+        boolean localizeArgs = false;
 
-	// analyse options	
-	int i = 0;
-	for (; i < args.length && args[i].startsWith("-"); i++) {
-	    if ((args[i].equals("-cp") || args[i].equals("-classpath")) && i+1 < args.length) {
-	    	classPath = args[++i];
-	    }
-	    else if (args[i].equals("-m") || args[i].equals("-mapArgs")) {
-		localizeArgs = true;
-	    }
-	    else if ((args[i].equals("-t") || args[i].equals("-tag")) && i+1 < args.length) {
-	    	tag = args[++i];
-	    }
-	    else 
-		return Status.error("Unrecognized option: " + args[i]);
-	}
-	
-	if (i == args.length)
-	    return Status.error("No command specified");
+        // analyse options
+        int i = 0;
+        for (; i < args.length && args[i].startsWith("-"); i++) {
+            if ((args[i].equals("-cp") || args[i].equals("-classpath")) && i+1 < args.length) {
+                classPath = args[++i];
+            }
+            else if (args[i].equals("-m") || args[i].equals("-mapArgs")) {
+                localizeArgs = true;
+            }
+            else if ((args[i].equals("-t") || args[i].equals("-tag")) && i+1 < args.length) {
+                tag = args[++i];
+            }
+            else
+                return Status.error("Unrecognized option: " + args[i]);
+        }
 
-	String cmdClass = args[i++];
+        if (i == args.length)
+            return Status.error("No command specified");
 
-	String[] cmdArgs = new String[args.length - i];
-	System.arraycopy(args, i, cmdArgs, 0, cmdArgs.length);
+        String cmdClass = args[i++];
 
-	if (tag == null)
-	    tag = cmdClass;
+        String[] cmdArgs = new String[args.length - i];
+        System.arraycopy(args, i, cmdArgs, 0, cmdArgs.length);
 
-	try {
-	    AgentManager mgr = AgentManager.access();
-	    AgentManager.Task t = mgr.connectToActiveAgent();
+        if (tag == null)
+            tag = cmdClass;
 
-	    if (classPath != null)
-		t.setClassPath(classPath);
+        try {
+            AgentManager mgr = AgentManager.access();
+            AgentManager.Task t = mgr.connectToActiveAgent();
 
-	    out.println("Executing command via " + t.getConnection().getName());
-	    
-	    return t.executeCommand(tag, cmdClass, cmdArgs, localizeArgs, err, out);  
-	}
-	catch (InterruptedException e) {
-	    return Status.error("Interrupted while waiting for agent");
-	}
-	catch (IOException e) {
-	    return Status.error("Error accessing agent: " + e);
-	}
-	catch (ActiveAgentPool.NoAgentException e) {
-	    return Status.error("No agents available for use: " + e.getMessage());
-	}
+            if (classPath != null)
+                t.setClassPath(classPath);
+
+            out.println("Executing command via " + t.getConnection().getName());
+
+            return t.executeCommand(tag, cmdClass, cmdArgs, localizeArgs, err, out);
+        }
+        catch (InterruptedException e) {
+            return Status.error("Interrupted while waiting for agent");
+        }
+        catch (IOException e) {
+            return Status.error("Error accessing agent: " + e);
+        }
+        catch (ActiveAgentPool.NoAgentException e) {
+            return Status.error("No agents available for use: " + e.getMessage());
+        }
     }
 }
-	    

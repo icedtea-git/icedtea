@@ -56,7 +56,7 @@ public class FeatureManager {
     /**
      * Can templates be created?
      */
-    public static final int TEMPLATE_CREATION = 2;	
+    public static final int TEMPLATE_CREATION = 2;
 
     /**
      * Show "check for template update" menu.
@@ -67,7 +67,7 @@ public class FeatureManager {
      * Can this test suite be opened more than once within a harness?
      * False allows any number of instances of the test suite to be opened.
      */
-    public static final int SINGLE_TEST_MANAGER = 4;        
+    public static final int SINGLE_TEST_MANAGER = 4;
 
     /**
      * Ability to support only work directories with templates attaached.
@@ -75,7 +75,7 @@ public class FeatureManager {
     public static final int WD_WITHOUT_TEMPLATE = 5;
 
     private static int FEATURE_COUNT = 6;
-    
+
     /**
      * @param feature one of TEMPLATE_USAGE, TEMPLATE_CREATION,
      *              AUTOPROPAGATE, SINGLE_TEST_MANAGER

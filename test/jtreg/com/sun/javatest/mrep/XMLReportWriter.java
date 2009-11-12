@@ -60,15 +60,15 @@ class XMLReportWriter {
     public static String XML_CHARSET = "UTF-8";
     private final AttributesImpl emptyAttr = new AttributesImpl();
     private TransformerHandler ser;
-    
+
     private Writer fw;
-    
+
     public XMLReportWriter(File file) throws IOException{
         Properties outputProps = new Properties();
         outputProps.put("indent", "yes");
-        
+
         outputProps.put("encoding", XML_CHARSET);
-        
+
         SAXTransformerFactory stf = (SAXTransformerFactory )TransformerFactory.newInstance();
         stf.setAttribute("indent-number", 4);
         try {
@@ -76,13 +76,13 @@ class XMLReportWriter {
         } catch (TransformerConfigurationException ex) {
             ex.printStackTrace();
         }
-        
+
         ser.getTransformer().setOutputProperties(outputProps);
-        
+
         fw = new BufferedWriter( new OutputStreamWriter( new FileOutputStream(file), XMLReportMaker.XML_CHARSET));
         ser.setResult(new StreamResult(fw));
     }
-    
+
     /**
      * Convert date to string in ISO-8601 or xs:dateTime format
      *
@@ -97,7 +97,7 @@ class XMLReportWriter {
         // remap the timezone from 0000 to 00:00 (starts at char 22)
         return dateStr.substring(0, 22) + ":" + dateStr.substring(22);
     }
-    
+
     /**
      * Convert string in ISO-8601 or xs:dateTime format to date
      *
@@ -113,7 +113,7 @@ class XMLReportWriter {
         // remap the timezone from 0000 to 00:00 (starts at char 22)
         return date;
     }
-    
+
     private void sReport() throws SAXException {
         AttributesImpl atts = new AttributesImpl();
         atts.addAttribute("", "", Scheme.XSI, "String", Scheme.XSI_VAL);
@@ -123,7 +123,7 @@ class XMLReportWriter {
                 dateToISO8601(new Date()));
         ser.startElement("", "", Scheme.REPORT, atts);
     }
-    
+
     public void write(File[] file, Map[] map) throws SAXException,
             ParserConfigurationException, IOException {
         try {
@@ -148,7 +148,7 @@ class XMLReportWriter {
         } finally {
             fw.close();
         }
-        
+
     }
 }
 
@@ -156,23 +156,23 @@ class XMLReportWriter {
 // modifiyng elements according mapping
 
 class CopyHandler extends DefaultHandler {
-    
+
     private ContentHandler ser;
     private LexicalHandler lh;
-    
+
     // are we collect workdirs or not
     private final boolean isWorkDir;
-    
+
     // is it need to write
     private boolean needWrite;
-    
+
     // skipping by confilc resolving
     private boolean skipByConflict;
-    
+
     // id -> new_id mapping
     // url -> new_TestDescr mapping
     private Map map;
-    
+
     public CopyHandler(ContentHandler ser, boolean isWorkDir, Map map) {
         this.ser = ser;
         if (ser instanceof LexicalHandler) {
@@ -183,11 +183,11 @@ class CopyHandler extends DefaultHandler {
         this.map = map;
         this.skipByConflict = false;
     }
-    
+
     public void startElement(String namespaceUri, String localName,
             String qName, Attributes attrs) throws SAXException {
         if (needWrite == true && skipByConflict == false) {
-            
+
             if (qName.equals(Scheme.WD)) {
                 // for WD WD_ID may be updated
                 AttributesImpl newAttrs = new AttributesImpl();
@@ -232,9 +232,9 @@ class CopyHandler extends DefaultHandler {
                 // by default source atrributes are used
                 ser.startElement("", "", qName, attrs);
             }
-            
+
         }
-        
+
         // don't write TRS, WDS
         // they are written by XMLReportWriter
         // also mode needWrite may be changed
@@ -245,7 +245,7 @@ class CopyHandler extends DefaultHandler {
             needWrite = true;
         }
     }
-    
+
     public void characters(char[] arg0, int arg1, int arg2) throws SAXException {
         if (this.needWrite == false || this.skipByConflict == true)
             return;
@@ -256,7 +256,7 @@ class CopyHandler extends DefaultHandler {
         ser.characters(arg0, arg1, arg2);
         lh.endCDATA();
     }
-    
+
     public void endElement(String arg0, String arg1, String arg2)
             throws SAXException {
         // don't write TRS, WDS

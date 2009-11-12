@@ -40,9 +40,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for TestCases complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="TestCases">
  *   &lt;complexContent>
@@ -54,64 +54,64 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 /*@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TestCases", propOrder = {
     "testcase"
 })*/
 public class COFTestCases extends COFItem{
-	
-	static LinkedHashMap xmlAttributes;
 
-	static LinkedHashMap xmlElements;
+        static LinkedHashMap xmlAttributes;
 
-	static String xmlTagName;
+        static LinkedHashMap xmlElements;
 
-	static {
-		xmlTagName = "testcases";
-		xmlElements = new LinkedHashMap();
-		xmlElements.put("testcase", "testcase");
-	}
+        static String xmlTagName;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
+        static {
+                xmlTagName = "testcases";
+                xmlElements = new LinkedHashMap();
+                xmlElements.put("testcase", "testcase");
+        }
+
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
     protected List/*<COFTestCase>*/ testcase;
 
-	LinkedHashMap getItemAttributes() {
-		return xmlAttributes;
-	}
+        LinkedHashMap getItemAttributes() {
+                return xmlAttributes;
+        }
 
-	LinkedHashMap getItemElements() {
-		return xmlElements;
-	}
+        LinkedHashMap getItemElements() {
+                return xmlElements;
+        }
 
 
-	String getItemTagName() {
-		return xmlTagName;
-	}
+        String getItemTagName() {
+                return xmlTagName;
+        }
 
     /**
      * Gets the value of the testcase property.
-     * 
+     *
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the testcase property.
-     * 
+     *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getTestcase().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link COFTestCase }
-     * 
-     * 
+     *
+     *
      */
     public List/*<COFTestCase>*/ getTestcase() {
         if (testcase == null) {
@@ -120,14 +120,14 @@ public class COFTestCases extends COFItem{
         return this.testcase;
     }
 
-	/* (non-Javadoc)
-	 * @see com.sun.javatest.cof.COFItem#write(com.sun.javatest.util.XMLWriter)
-	 */
-	void write(XMLWriter out) throws IOException {
-		if (getTestcase().size() != 0) {
-			out.newLine();
-			super.write(out);
-		}
-	}
+        /* (non-Javadoc)
+         * @see com.sun.javatest.cof.COFItem#write(com.sun.javatest.util.XMLWriter)
+         */
+        void write(XMLWriter out) throws IOException {
+                if (getTestcase().size() != 0) {
+                        out.newLine();
+                        super.write(out);
+                }
+        }
 
 }

@@ -48,27 +48,27 @@ import com.sun.javatest.tool.UIFactory;
 
 class CE_FullView extends CE_View
 {
-    CE_FullView(InterviewParameters config, 
-		UIFactory uif, ActionListener l) {
-	super(config, uif, l);
-	initGUI();
+    CE_FullView(InterviewParameters config,
+                UIFactory uif, ActionListener l) {
+        super(config, uif, l);
+        initGUI();
     }
 
     JMenu getMarkerMenu() {
-	return wizPane.getMarkerMenu();
+        return wizPane.getMarkerMenu();
     }
 
     JMenu getSearchMenu() {
-	return searchMenu;
+        return searchMenu;
     }
 
     boolean isOKToClose() {
-	return true;
+        return true;
     }
 
     void load() {
-	wizPane.setMarkersEnabled(config.getMarkersEnabled());
-	wizPane.setMarkersFilterEnabled(config.getMarkersFilterEnabled());
+        wizPane.setMarkersEnabled(config.getMarkersEnabled());
+        wizPane.setMarkersFilterEnabled(config.getMarkersFilterEnabled());
     }
 
     void save() {
@@ -77,38 +77,38 @@ class CE_FullView extends CE_View
         // that does not write synchronously to the Question, e.g. a cell being
         // edited in a table
         wizPane.prepareClosing();
-	wizPane.save();
+        wizPane.save();
 
-	config.setMarkersEnabled(wizPane.getMarkersEnabled());
-	config.setMarkersFilterEnabled(wizPane.getMarkersFilterEnabled());
+        config.setMarkersEnabled(wizPane.getMarkersEnabled());
+        config.setMarkersFilterEnabled(wizPane.getMarkersFilterEnabled());
     }
 
     void refresh() {
-	config.updatePath();
+        config.updatePath();
     }
 
     boolean isTagVisible() {
-	return wizPane.isTagVisible();
+        return wizPane.isTagVisible();
     }
 
     void setTagVisible(boolean v) {
-	wizPane.setTagVisible(v);
+        wizPane.setTagVisible(v);
     }
 
     private void initGUI() {
-	setName(FULL);
+        setName(FULL);
 
-	String[] searchMenuItems = { FIND, FIND_NEXT };
-	searchMenu = uif.createMenu("ce.search", searchMenuItems, localListener);
+        String[] searchMenuItems = { FIND, FIND_NEXT };
+        searchMenu = uif.createMenu("ce.search", searchMenuItems, localListener);
 
-	setLayout(new BorderLayout());
-	initBody();
-	initButtons();
+        setLayout(new BorderLayout());
+        initBody();
+        initButtons();
     }
 
     private void initBody() {
-	wizPane = new WizPane(config, false);
-	wizPane.addAncestorListener(localListener);
+        wizPane = new WizPane(config, false);
+        wizPane.addAncestorListener(localListener);
         add(wizPane, BorderLayout.CENTER);
     }
 
@@ -118,127 +118,127 @@ class CE_FullView extends CE_View
 
 
     private void initButtons() {
-	JPanel btnPanel = uif.createPanel("ce.full.btns", new GridBagLayout(), false);
-	GridBagConstraints c = new GridBagConstraints();
-	c.insets.top = 5;
-	c.insets.bottom = 11;  // value from JL&F Guidelines
-	c.insets.right = 5;    // value from JL&F Guidelines
-	c.insets.left = 11;
+        JPanel btnPanel = uif.createPanel("ce.full.btns", new GridBagLayout(), false);
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets.top = 5;
+        c.insets.bottom = 11;  // value from JL&F Guidelines
+        c.insets.right = 5;    // value from JL&F Guidelines
+        c.insets.left = 11;
 
-	// Message Area, grow to fit
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.weightx = 1;
-	msgField = uif.createOutputField("ce.msgs");
-	msgField.setBorder(null);
-	msgField.setEnabled(false); 
-	completeMsg = uif.getI18NString("ce.msgs.complete");
-	incompleteMsg = uif.getI18NString("ce.msgs.incomplete");
-	btnPanel.add(msgField, c);
-	
-	// Back
-	c.weightx = 0;
-	c.insets.left = 0;
-	backBtn = uif.createButton("ce.full.back", localListener, BACK);
-	backBtn.setIcon(uif.createIcon("ce.full.back"));
-	backBtn.setHorizontalTextPosition(JLabel.TRAILING);
-	btnPanel.add(backBtn, c);
-	// Next
-	nextBtn = uif.createButton("ce.full.next", localListener, NEXT);
-	nextBtn.setIcon(uif.createIcon("ce.full.next"));
-	nextBtn.setHorizontalTextPosition(JLabel.LEADING);
-	btnPanel.add(nextBtn, c);
-	// Last
-	lastBtn = uif.createButton("ce.full.last", localListener, LAST);
-	lastBtn.setIcon(uif.createIcon("ce.full.last"));
-	lastBtn.setHorizontalTextPosition(JLabel.LEADING);
-	btnPanel.add(lastBtn, c);
-	// short gap, then Done
-	c.insets.left = 20;	
-	c.insets.right = 11;    // value from JL&F Guidelines
-	JButton doneBtn = uif.createButton("ce.done", listener, DONE);
-	btnPanel.add(doneBtn, c);
+        // Message Area, grow to fit
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1;
+        msgField = uif.createOutputField("ce.msgs");
+        msgField.setBorder(null);
+        msgField.setEnabled(false);
+        completeMsg = uif.getI18NString("ce.msgs.complete");
+        incompleteMsg = uif.getI18NString("ce.msgs.incomplete");
+        btnPanel.add(msgField, c);
 
-	add(btnPanel, BorderLayout.SOUTH);
+        // Back
+        c.weightx = 0;
+        c.insets.left = 0;
+        backBtn = uif.createButton("ce.full.back", localListener, BACK);
+        backBtn.setIcon(uif.createIcon("ce.full.back"));
+        backBtn.setHorizontalTextPosition(JLabel.TRAILING);
+        btnPanel.add(backBtn, c);
+        // Next
+        nextBtn = uif.createButton("ce.full.next", localListener, NEXT);
+        nextBtn.setIcon(uif.createIcon("ce.full.next"));
+        nextBtn.setHorizontalTextPosition(JLabel.LEADING);
+        btnPanel.add(nextBtn, c);
+        // Last
+        lastBtn = uif.createButton("ce.full.last", localListener, LAST);
+        lastBtn.setIcon(uif.createIcon("ce.full.last"));
+        lastBtn.setHorizontalTextPosition(JLabel.LEADING);
+        btnPanel.add(lastBtn, c);
+        // short gap, then Done
+        c.insets.left = 20;
+        c.insets.right = 11;    // value from JL&F Guidelines
+        JButton doneBtn = uif.createButton("ce.done", listener, DONE);
+        btnPanel.add(doneBtn, c);
+
+        add(btnPanel, BorderLayout.SOUTH);
     }
 
-    private class Listener 
-	implements ActionListener, AncestorListener, Interview.Observer 
+    private class Listener
+        implements ActionListener, AncestorListener, Interview.Observer
     {
-	// ---------- from ActionListener -----------
+        // ---------- from ActionListener -----------
 
-	public void actionPerformed(ActionEvent e) {
-	    String cmd = e.getActionCommand();
-	    if (cmd.equals(NEXT)) {
-		// hmm, arguably, if the filter is *not* enabled,  
-		// then nextVisible() should be the same as next() anyway
-		if (wizPane.getMarkersFilterEnabled())
-		    wizPane.nextVisible();
-		else
-		    wizPane.next();
-	    }
-	    else if (cmd.equals(BACK)) {
-		// hmm, arguably, if the filter is *not* enabled,  
-		// then nextVisible() should be the same as next() anyway
-		if (wizPane.getMarkersFilterEnabled())
-		    wizPane.prevVisible();
-		else
-		    wizPane.prev();
-	    }
-	    else if (cmd.equals(LAST)) {
-		// hmm, arguably, if the filter is *not* enabled,  
-		// then nextVisible() should be the same as next() anyway
-		if (wizPane.getMarkersFilterEnabled())
-		    wizPane.lastVisible();
-		else
-		    wizPane.last();
-	    }
-	    else if (cmd.equals(FIND)) {
-		wizPane.find();
-	    }
-	    else if (cmd.equals(FIND_NEXT)) {
-		wizPane.findNext();
-	    }
-	}
+        public void actionPerformed(ActionEvent e) {
+            String cmd = e.getActionCommand();
+            if (cmd.equals(NEXT)) {
+                // hmm, arguably, if the filter is *not* enabled,
+                // then nextVisible() should be the same as next() anyway
+                if (wizPane.getMarkersFilterEnabled())
+                    wizPane.nextVisible();
+                else
+                    wizPane.next();
+            }
+            else if (cmd.equals(BACK)) {
+                // hmm, arguably, if the filter is *not* enabled,
+                // then nextVisible() should be the same as next() anyway
+                if (wizPane.getMarkersFilterEnabled())
+                    wizPane.prevVisible();
+                else
+                    wizPane.prev();
+            }
+            else if (cmd.equals(LAST)) {
+                // hmm, arguably, if the filter is *not* enabled,
+                // then nextVisible() should be the same as next() anyway
+                if (wizPane.getMarkersFilterEnabled())
+                    wizPane.lastVisible();
+                else
+                    wizPane.last();
+            }
+            else if (cmd.equals(FIND)) {
+                wizPane.find();
+            }
+            else if (cmd.equals(FIND_NEXT)) {
+                wizPane.findNext();
+            }
+        }
 
-	// ---------- from AncestorListener -----------
+        // ---------- from AncestorListener -----------
 
-	public void ancestorAdded(AncestorEvent e) {
-	    config.addObserver(this);
-	    pathUpdated();
-	    currentQuestionChanged(config.getCurrentQuestion());
-	}
+        public void ancestorAdded(AncestorEvent e) {
+            config.addObserver(this);
+            pathUpdated();
+            currentQuestionChanged(config.getCurrentQuestion());
+        }
 
-	public void ancestorMoved(AncestorEvent e) { }
+        public void ancestorMoved(AncestorEvent e) { }
 
-	public void ancestorRemoved(AncestorEvent e) {
-	    config.removeObserver(this);
-	}
+        public void ancestorRemoved(AncestorEvent e) {
+            config.removeObserver(this);
+        }
 
-	// ---------- from Interview.Observer -------
+        // ---------- from Interview.Observer -------
 
-	public void pathUpdated() { 
-	    String msg = (config.isFinishable() ? completeMsg : incompleteMsg);
-	    if (msg == null || msg.length() == 0) {
-		msgField.setEnabled(false);
-		msgField.setText("");
-	    }
-	    else {
-		msgField.setEnabled(true);
-		msgField.setText(msg);
-	    }
-	    
-	}
+        public void pathUpdated() {
+            String msg = (config.isFinishable() ? completeMsg : incompleteMsg);
+            if (msg == null || msg.length() == 0) {
+                msgField.setEnabled(false);
+                msgField.setText("");
+            }
+            else {
+                msgField.setEnabled(true);
+                msgField.setText(msg);
+            }
 
-	public void currentQuestionChanged(Question q) { 
-	    boolean first = config.isFirst(q);
-	    boolean last = config.isLast(q);
-	    backBtn.setEnabled(!first);
-	    nextBtn.setEnabled(!last);
-	    lastBtn.setEnabled(!last);
-	}
+        }
+
+        public void currentQuestionChanged(Question q) {
+            boolean first = config.isFirst(q);
+            boolean last = config.isLast(q);
+            backBtn.setEnabled(!first);
+            nextBtn.setEnabled(!last);
+            lastBtn.setEnabled(!last);
+        }
     };
-    
-    
+
+
     /**
      * This method invokes when config editor is going to be closed.
      * This made to allow components handle feature closing
@@ -256,7 +256,7 @@ class CE_FullView extends CE_View
     private JButton nextBtn;
     private JButton lastBtn;
     private Listener localListener = new Listener();
-    
+
     private static final String BACK = "back";
     private static final String NEXT = "next";
     private static final String LAST = "last";

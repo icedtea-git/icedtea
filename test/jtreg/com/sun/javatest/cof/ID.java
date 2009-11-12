@@ -32,23 +32,23 @@ import java.util.Map;
 class ID
 {
     static class Factory {
-	ID create(String base) {
-	    Integer last = (Integer) (map.get(base));
-	    int index = (last == null ? 0 : last.intValue() + 1);
-	    map.put(base, new Integer(index));
-	    return new ID(base, index);
-	}
+        ID create(String base) {
+            Integer last = (Integer) (map.get(base));
+            int index = (last == null ? 0 : last.intValue() + 1);
+            map.put(base, new Integer(index));
+            return new ID(base, index);
+        }
 
-	Map map = new HashMap();
+        Map map = new HashMap();
     };
 
     private ID(String base, int index) {
-	this.base = base;
-	this.index = index;
+        this.base = base;
+        this.index = index;
     }
 
     public String toString() {
-	return (base + ":" + index);
+        return (base + ":" + index);
     }
 
     private String base;

@@ -31,16 +31,16 @@ import com.sun.javatest.tool.UIFactory;
 
 class BadTestsPane extends ListPane {
     BadTestsPane(UIFactory uif) {
-	super("badTests", uif);
+        super("badTests", uif);
     }
 
     void show(Audit audit) {
-	if (audit == currAudit)
-	    showBody();
-	else {
-	    currAudit = audit;
-	    setData(currAudit.getBadTests());
-	}
+        if (audit == currAudit)
+            showBody();
+        else {
+            currAudit = audit;
+            setData(currAudit.getBadTests());
+        }
     }
 
     private Audit currAudit;

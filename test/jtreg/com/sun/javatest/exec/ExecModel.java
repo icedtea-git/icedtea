@@ -38,11 +38,11 @@ import java.awt.print.Printable;
 interface ExecModel
 {
     TestSuite getTestSuite();
-    
+
     WorkDirectory getWorkDirectory();
 
     InterviewParameters getInterviewParameters();
-    
+
     FilterConfig getFilterConfig();
 
     ContextManager getContextManager();
@@ -55,24 +55,24 @@ interface ExecModel
      * @return the test result table currently in use for display.
      */
     TestResultTable getActiveTestResultTable();
-    
+
     void showWorkDirDialog(boolean allowTemplates);
 
     /**
      * Show the configuration editor for this tool, and optionally run
      * the tests defined by the configuration when the editor is closed.
      * @param runTestsWhenDone true if the tests should automatically
-     * be run when the user closes the configuration editor, 
+     * be run when the user closes the configuration editor,
      * and false otherwise.
      */
     void showConfigEditor(boolean runTestsWhenDone);
-    
+
     /**
       * Show the configuration editor for this tool with current template
       */
-    void showTemplateEditor();    
+    void showTemplateEditor();
 
-    /** 
+    /**
      * Run specified tests.
      * @param urls These names may either be paths to folders or test names.
      * Empty string value in the array indicates that the whole test suite
@@ -85,9 +85,9 @@ interface ExecModel
     void printSetup();
 
     void print(Printable p);
-        
-    void setWorkDir(WorkDirectory wd, boolean addToFileHistory) 
-        throws Interview.Fault, TestSuite.Fault; 
-    
+
+    void setWorkDir(WorkDirectory wd, boolean addToFileHistory)
+        throws Interview.Fault, TestSuite.Fault;
+
     ExecToolManager getExecToolManager();
 }

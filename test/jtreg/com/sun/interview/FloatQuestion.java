@@ -34,7 +34,7 @@ import java.util.ResourceBundle;
 /**
  * A {@link Question question} to which the response is an floating point number.
  */
-public abstract class FloatQuestion extends Question 
+public abstract class FloatQuestion extends Question
 {
     /**
      * Create a question with a nominated tag.
@@ -42,9 +42,9 @@ public abstract class FloatQuestion extends Question
      * @param tag A unique tag to identify this specific question.
      */
     protected FloatQuestion(Interview interview, String tag) {
-	super(interview, tag);
-	clear();
-	setDefaultValue(value);
+        super(interview, tag);
+        clear();
+        setDefaultValue(value);
     }
 
     /**
@@ -58,14 +58,14 @@ public abstract class FloatQuestion extends Question
      * or equal to <code>max</code>.
      */
     protected FloatQuestion(Interview interview, String tag, float min, float max, float resolution) {
-	super(interview, tag);
-	setBounds(min, max);
-	setResolution(resolution);
-	clear();
-	setDefaultValue(value);
+        super(interview, tag);
+        setBounds(min, max);
+        setResolution(resolution);
+        clear();
+        setDefaultValue(value);
     }
 
-    /** 
+    /**
      * Set the bounds for the response to this question.
      * @param min The inclusive lower bound for responses to this question
      * @param max The inclusive upper bound for responses to this question
@@ -73,11 +73,11 @@ public abstract class FloatQuestion extends Question
      * or equal to <code>max</code>.
      */
     protected void setBounds(float min, float max) {
-	if (min >= max)
-	    throw new IllegalArgumentException("invalid bounds");
-	this.min = min;
-	this.max = max;
-	// warning, may change result of isValid()
+        if (min >= max)
+            throw new IllegalArgumentException("invalid bounds");
+        this.min = min;
+        this.max = max;
+        // warning, may change result of isValid()
     }
 
     /**
@@ -85,7 +85,7 @@ public abstract class FloatQuestion extends Question
      * @return the lower bound
      */
     public float getLowerBound() {
-	return min;
+        return min;
     }
 
     /**
@@ -93,7 +93,7 @@ public abstract class FloatQuestion extends Question
      * @return the upper bound
      */
     public float getUpperBound() {
-	return max;
+        return max;
     }
 
     /**
@@ -104,13 +104,13 @@ public abstract class FloatQuestion extends Question
      * @deprecated see #isValueValid
      */
     public boolean isValid() {
-	// conceptually, we want to do the following:
-	//	return (!Float.isNaN(value) && min <= value && value <= max);
-	// but if min = Float.MIN_VALUE, that behaves like -0 (negative zero)
-	// and can lead to false results, so take care with that case	
-	return (!Float.isNaN(value)
-		&& (min == Float.MIN_VALUE || min <= value)
-		&& (value <= max));
+        // conceptually, we want to do the following:
+        //      return (!Float.isNaN(value) && min <= value && value <= max);
+        // but if min = Float.MIN_VALUE, that behaves like -0 (negative zero)
+        // and can lead to false results, so take care with that case
+        return (!Float.isNaN(value)
+                && (min == Float.MIN_VALUE || min <= value)
+                && (value <= max));
     }
 
     /**
@@ -121,7 +121,7 @@ public abstract class FloatQuestion extends Question
      * @see #setValue
      */
     public void setResolution(float resolution) {
-	this.resolution = resolution;
+        this.resolution = resolution;
     }
 
 
@@ -133,7 +133,7 @@ public abstract class FloatQuestion extends Question
      * @see #setValue
      */
     public float getResolution() {
-	return resolution;
+        return resolution;
     }
 
     /**
@@ -143,7 +143,7 @@ public abstract class FloatQuestion extends Question
      * @see #setSuggestions
      */
     public float[] getSuggestions() {
-	return suggestions;
+        return suggestions;
     }
 
     /**
@@ -152,7 +152,7 @@ public abstract class FloatQuestion extends Question
      * @see #getSuggestions
      */
     public void setSuggestions(float[] newSuggestions) {
-	suggestions = newSuggestions;
+        suggestions = newSuggestions;
     }
 
     /**
@@ -162,117 +162,117 @@ public abstract class FloatQuestion extends Question
      * @see #setDefaultValue
      */
     public float getDefaultValue() {
-	return defaultValue;
+        return defaultValue;
     }
 
     /**
-     * Set the default response for this question, 
-     * used by the clear method. 
+     * Set the default response for this question,
+     * used by the clear method.
      * @param v the default response for this question.
      *
      * @see #getDefaultValue
      */
     public void setDefaultValue(float v) {
-	defaultValue = v;
+        defaultValue = v;
     }
 
     /**
      * Get the current (default or latest) response to this question.
-     * @return The current value. 
+     * @return The current value.
      * @see #setValue
      */
     public float getValue() {
-	return value;
+        return value;
     }
 
     /**
      * Verify this question is on the current path, and if it is,
      * return the current value.
      * @return the current value of this question
-     * @throws Interview.NotOnPathFault if this question is not on the 
+     * @throws Interview.NotOnPathFault if this question is not on the
      * current path
      * @see #getValue
      */
-    public float getValueOnPath() 
-	throws Interview.NotOnPathFault
+    public float getValueOnPath()
+        throws Interview.NotOnPathFault
     {
-	interview.verifyPathContains(this);
-	return getValue();
+        interview.verifyPathContains(this);
+        return getValue();
     }
 
     public String getStringValue() {
-	if (stringValue == null) {
-	    if (Float.isNaN(value)) {
-		stringValue = "";
-	    }
-	    else {
-		NumberFormat fmt = NumberFormat.getNumberInstance();  // will be locale-specific
-		stringValue = fmt.format(new Double(value));
-	    }
-	}
+        if (stringValue == null) {
+            if (Float.isNaN(value)) {
+                stringValue = "";
+            }
+            else {
+                NumberFormat fmt = NumberFormat.getNumberInstance();  // will be locale-specific
+                stringValue = fmt.format(new Double(value));
+            }
+        }
 
-	return stringValue;
+        return stringValue;
     }
 
     /**
      * Set the response to this question to the value represented by
-     * a string-valued argument. 
+     * a string-valued argument.
      * @param s A string containing the numeric value to be set.
-     * The number should be in the range of valid values defined for 
-     * this question; if it is not, the value will be retained, 
-     * but isValueValid() will return false. 
+     * The number should be in the range of valid values defined for
+     * this question; if it is not, the value will be retained,
+     * but isValueValid() will return false.
      * @see #getValue
      * @throws Interview.Fault This exception is just retained for backwards
      * compatibility; it should never actually be thrown.
      */
     public void setValue(String s) throws Interview.Fault {
-	float f;
+        float f;
 
-	if (s != null)
-	    s = s.trim();
+        if (s != null)
+            s = s.trim();
 
-	if (s == null || s.length() == 0 || s.equals("NaN"))
-	    f = Float.NaN;
-	else {
-	    NumberFormat fmt = NumberFormat.getNumberInstance(); // will be locale-specific
-	    ParsePosition pos = new ParsePosition(0);
-	    Number num = fmt.parse(s, pos);
-	    if (num != null && (pos.getIndex() == s.length()))
-		f = num.floatValue();
-	    else 
-		f = Float.NaN;
-	}
+        if (s == null || s.length() == 0 || s.equals("NaN"))
+            f = Float.NaN;
+        else {
+            NumberFormat fmt = NumberFormat.getNumberInstance(); // will be locale-specific
+            ParsePosition pos = new ParsePosition(0);
+            Number num = fmt.parse(s, pos);
+            if (num != null && (pos.getIndex() == s.length()))
+                f = num.floatValue();
+            else
+                f = Float.NaN;
+        }
 
-	// It would be nice to introduce a new protected setValue(f, s) that allows
-	// the original text to be preserved as well. Instead, for now we pass a covert 
-	// parameter into setValue
-	newStringValue = s;
-	setValue(f);
+        // It would be nice to introduce a new protected setValue(f, s) that allows
+        // the original text to be preserved as well. Instead, for now we pass a covert
+        // parameter into setValue
+        newStringValue = s;
+        setValue(f);
     }
 
     /**
-     * Set the current value. 
+     * Set the current value.
      * @param newValue The value to be set. It should be in the range
      * of valid values defined for this question.
      * @see #getValue
      */
     public void setValue(float newValue) {
-	float oldValue = value;
-	value = newValue;
-	stringValue = newStringValue;  // only non-null if called from setValue(String s)
-	newStringValue = null;
-	if (Float.isNaN(value) ? !Float.isNaN(oldValue) : (value != oldValue)) {
-	    interview.updatePath(this);
-	    interview.setEdited(true);
-	}
+        float oldValue = value;
+        value = newValue;
+        stringValue = newStringValue;  // only non-null if called from setValue(String s)
+        newStringValue = null;
+        if (Float.isNaN(value) ? !Float.isNaN(oldValue) : (value != oldValue)) {
+            interview.updatePath(this);
+            interview.setEdited(true);
+        }
     }
 
     public boolean isValueValid() {
-	return isValid();
+        return isValid();
     }
 
     public boolean isValueAlwaysValid() {
-	return false;
+        return false;
     }
 
     /**
@@ -282,8 +282,8 @@ public abstract class FloatQuestion extends Question
      * @param increment The increment for successive labels
      */
     protected void setLabelHints(float start, float increment) {
-	labelStart = start;
-	labelIncrement = increment;
+        labelStart = start;
+        labelIncrement = increment;
     }
 
     /**
@@ -292,7 +292,7 @@ public abstract class FloatQuestion extends Question
      * @return The lowest value that might be labelled.
      */
     public float getLabelStartHint() {
-	return labelStart;
+        return labelStart;
     }
 
     /**
@@ -301,7 +301,7 @@ public abstract class FloatQuestion extends Question
      * @return The increment between values that might be labelled.
      */
     public float getLabelIncrementHint() {
-	return labelIncrement;
+        return labelIncrement;
     }
 
     /**
@@ -309,7 +309,7 @@ public abstract class FloatQuestion extends Question
      * back to its initial state.
      */
     public void clear() {
-	setValue(defaultValue);
+        setValue(defaultValue);
     }
 
     /**
@@ -318,19 +318,19 @@ public abstract class FloatQuestion extends Question
      * @param data The map from which to load the value for this question.
      */
     protected void load(Map data) {
-	Object o = data.get(tag);
-	if (o == null)
-	    clear();
-	else if (o instanceof Float)
-	    setValue(((Float)o).floatValue());
-	else if (o instanceof String) {
-	    try {
-		setValue((String) o);
-	    }
-	    catch (Interview.Fault e) {
-		throw new Error(e);
-	    }
-	}
+        Object o = data.get(tag);
+        if (o == null)
+            clear();
+        else if (o instanceof Float)
+            setValue(((Float)o).floatValue());
+        else if (o instanceof String) {
+            try {
+                setValue((String) o);
+            }
+            catch (Interview.Fault e) {
+                throw new Error(e);
+            }
+        }
     }
 
     /**
@@ -339,12 +339,12 @@ public abstract class FloatQuestion extends Question
      * @param data The map in which to save the value for this question.
      */
     protected void save(Map data) {
-	data.put(tag, getStringValue());
+        data.put(tag, getStringValue());
     }
 
     /**
      * The current response for this question.
-     * This field should be treated as read-only. 
+     * This field should be treated as read-only.
      * Use setValue to change the value.
      */
     protected float value = Float.NaN;

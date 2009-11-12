@@ -39,546 +39,546 @@ import java.util.TimeZone;
 import com.sun.javatest.util.I18NResourceBundle;
 
 /* temp */public/* temp */class COFEnvironment extends COFItem {
-	static String[] propOrder = { "machine", "os", "jdk", "systemLocale",
-			"userLocale", "encoding", "timezone", "bits", "displaydepth",
-			"description", "sw" };
+        static String[] propOrder = { "machine", "os", "jdk", "systemLocale",
+                        "userLocale", "encoding", "timezone", "bits", "displaydepth",
+                        "description", "sw" };
 
-	static String[] propTags = { "machine", "os", "jdk", "system-locale",
-			"user-locale", "encoding", "timezone", "bits", "displaydepth",
-			"description", "sw" };
+        static String[] propTags = { "machine", "os", "jdk", "system-locale",
+                        "user-locale", "encoding", "timezone", "bits", "displaydepth",
+                        "description", "sw" };
 
-	static LinkedHashMap xmlAttributes;
+        static LinkedHashMap xmlAttributes;
 
-	static LinkedHashMap xmlElements;
+        static LinkedHashMap xmlElements;
 
-	static String xmlTagName;
-	private static I18NResourceBundle i18n = I18NResourceBundle
-	.getBundleForClass(Main.class);
-	
-	static {
-		xmlElements = new LinkedHashMap();
-		for (int i = 0; i < propOrder.length; i++) {
-			xmlElements.put(propOrder[i], propTags[i]);
-		}
-		xmlAttributes = new LinkedHashMap();
-		xmlAttributes.put("id", "id");
-		xmlTagName = "environment";
-	}
+        static String xmlTagName;
+        private static I18NResourceBundle i18n = I18NResourceBundle
+        .getBundleForClass(Main.class);
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
-	protected Integer bits;
+        static {
+                xmlElements = new LinkedHashMap();
+                for (int i = 0; i < propOrder.length; i++) {
+                        xmlElements.put(propOrder[i], propTags[i]);
+                }
+                xmlAttributes = new LinkedHashMap();
+                xmlAttributes.put("id", "id");
+                xmlTagName = "environment";
+        }
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
-	protected String description;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        protected Integer bits;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
-	protected Integer displaydepth;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        protected String description;
 
-	private String domainName;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        protected Integer displaydepth;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
-	protected String encoding;
+        private String domainName;
 
-	private String hostName;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        protected String encoding;
 
-	//    @XmlAttribute(required = true)
-	protected String id = "env:0";
+        private String hostName;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
-	protected String jdk;
+        //    @XmlAttribute(required = true)
+        protected String id = "env:0";
 
-	//  @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
-	protected String machine;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        protected String jdk;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
-	protected COFOS os;
+        //  @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
+        protected String machine;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
-	protected List/*<SWEntity>*/sw;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
+        protected COFOS os;
 
-	//    @XmlElement(name = "system-locale", namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
-	protected String systemLocale;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
+        protected List/*<SWEntity>*/sw;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
-	protected String timezone;
+        //    @XmlElement(name = "system-locale", namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        protected String systemLocale;
 
-	//    @XmlElement(name = "system-locale", namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
-	protected String userLocale;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        protected String timezone;
 
-	COFEnvironment(COFData data) {
-		initDefaultHostInfo();
-		initDefaultOSInfo();
+        //    @XmlElement(name = "system-locale", namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        protected String userLocale;
 
-		hostName = data.get("environment.host", hostName);
-		domainName = data.get("environment.domain", domainName);
-		setMachine(data.get("environment.machine", hostName + "." + domainName));
-		os.setName(data.get("environment.os.name", os.getName()));
-		os.setVersion(data.get("environment.os.version", os.getVersion()));
-		os.setArch(data.get("environment.os.arch", os.getArch()));
-		setJdk(data.get("environment.jdk", jdk));
-		setUserLocale(data.get("environment.user-locale", java.util.Locale.getDefault().toString()));
-		setSystemLocale(data.get("environment.system-locale", data
-				.get("LOCALE")));
-		setEncoding(data.get("environment.encoding", (new InputStreamReader(
-				System.in)).getEncoding()));
-		setTimezone(data.get("environment.timezone", TimeZone.getDefault()
-				.getID()));
-		setBits(data.get("environment.bits", null) == null ? null
-				: new Integer(data.get("environment.bits")));
-		setDisplaydepth(data.get("environment.displaydepth", null) == null ? null
-				: new Integer(data.get("environment.displaydepth")));
-		setDescription(data.get("environment.description"));
-	}
+        COFEnvironment(COFData data) {
+                initDefaultHostInfo();
+                initDefaultOSInfo();
 
-	/**
-	 * Gets the value of the bits property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link Integer }
-	 *     
-	 */
-	public Integer getBits() {
-		return bits;
-	}
+                hostName = data.get("environment.host", hostName);
+                domainName = data.get("environment.domain", domainName);
+                setMachine(data.get("environment.machine", hostName + "." + domainName));
+                os.setName(data.get("environment.os.name", os.getName()));
+                os.setVersion(data.get("environment.os.version", os.getVersion()));
+                os.setArch(data.get("environment.os.arch", os.getArch()));
+                setJdk(data.get("environment.jdk", jdk));
+                setUserLocale(data.get("environment.user-locale", java.util.Locale.getDefault().toString()));
+                setSystemLocale(data.get("environment.system-locale", data
+                                .get("LOCALE")));
+                setEncoding(data.get("environment.encoding", (new InputStreamReader(
+                                System.in)).getEncoding()));
+                setTimezone(data.get("environment.timezone", TimeZone.getDefault()
+                                .getID()));
+                setBits(data.get("environment.bits", null) == null ? null
+                                : new Integer(data.get("environment.bits")));
+                setDisplaydepth(data.get("environment.displaydepth", null) == null ? null
+                                : new Integer(data.get("environment.displaydepth")));
+                setDescription(data.get("environment.description"));
+        }
 
-	private String getCalderaLinuxVersionInfo() {
-		String res = "N/A";
+        /**
+         * Gets the value of the bits property.
+         *
+         * @return
+         *     possible object is
+         *     {@link Integer }
+         *
+         */
+        public Integer getBits() {
+                return bits;
+        }
 
-		RandomAccessFile raf = null;
-		try {
-			raf = new RandomAccessFile("/etc/issue", "r");
-			String line;
-			while ((line = raf.readLine()) != null) {
-				StringTokenizer st = new StringTokenizer(line, " ");
-				if (st.countTokens() >= 2) {
-					if (st.nextToken().toUpperCase().equals("VERSION")) {
-						res = st.nextToken();
-						break;
-					}
-				}
-			}
-		} catch (Exception e) {
-			// System.err.println("Something might be wrong with Caldera");
-			// cat.warn("The version number of Caldera cannot be retrieved");
-		} finally {
-			if (raf != null) {
-				try {
-					raf.close();
-				} catch (Exception e) {
-				}
-			}
-		}
+        private String getCalderaLinuxVersionInfo() {
+                String res = "N/A";
 
-		return res;
-	}
+                RandomAccessFile raf = null;
+                try {
+                        raf = new RandomAccessFile("/etc/issue", "r");
+                        String line;
+                        while ((line = raf.readLine()) != null) {
+                                StringTokenizer st = new StringTokenizer(line, " ");
+                                if (st.countTokens() >= 2) {
+                                        if (st.nextToken().toUpperCase().equals("VERSION")) {
+                                                res = st.nextToken();
+                                                break;
+                                        }
+                                }
+                        }
+                } catch (Exception e) {
+                        // System.err.println("Something might be wrong with Caldera");
+                        // cat.warn("The version number of Caldera cannot be retrieved");
+                } finally {
+                        if (raf != null) {
+                                try {
+                                        raf.close();
+                                } catch (Exception e) {
+                                }
+                        }
+                }
 
-	/**
-	 * Gets the value of the description property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public String getDescription() {
-		return description;
-	}
+                return res;
+        }
 
-	/**
-	 * Gets the value of the displaydepth property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link Integer }
-	 *     
-	 */
-	public Integer getDisplaydepth() {
-		return displaydepth;
-	}
+        /**
+         * Gets the value of the description property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getDescription() {
+                return description;
+        }
 
-	/**
-	 * Gets the value of the encoding property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public String getEncoding() {
-		return encoding;
-	}
+        /**
+         * Gets the value of the displaydepth property.
+         *
+         * @return
+         *     possible object is
+         *     {@link Integer }
+         *
+         */
+        public Integer getDisplaydepth() {
+                return displaydepth;
+        }
 
-	private String getGenericLinuxVersionInfo(String fileName) {
-		String res = "N/A";
+        /**
+         * Gets the value of the encoding property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getEncoding() {
+                return encoding;
+        }
 
-		RandomAccessFile raf = null;
-		try {
-			raf = new RandomAccessFile(fileName, "r");
-			StringTokenizer st = new StringTokenizer(raf.readLine(), " ");
-			while (st.hasMoreElements()) {
-				String ele = st.nextToken();
-				if (Character.isDigit(ele.charAt(0))) {
-					res = ele;
-					break;
-				}
-			}
-		} catch (Exception e) {
-			// System.err.println("Something might be wrong with Linux");
-		} finally {
-			if (raf != null) {
-				try {
-					raf.close();
-				} catch (Exception e) {
-				}
-			}
-		}
+        private String getGenericLinuxVersionInfo(String fileName) {
+                String res = "N/A";
 
-		return res;
-	}
+                RandomAccessFile raf = null;
+                try {
+                        raf = new RandomAccessFile(fileName, "r");
+                        StringTokenizer st = new StringTokenizer(raf.readLine(), " ");
+                        while (st.hasMoreElements()) {
+                                String ele = st.nextToken();
+                                if (Character.isDigit(ele.charAt(0))) {
+                                        res = ele;
+                                        break;
+                                }
+                        }
+                } catch (Exception e) {
+                        // System.err.println("Something might be wrong with Linux");
+                } finally {
+                        if (raf != null) {
+                                try {
+                                        raf.close();
+                                } catch (Exception e) {
+                                }
+                        }
+                }
 
-	/**
-	 * Gets the value of the id property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public String getId() {
-		return id;
-	}
+                return res;
+        }
 
-	LinkedHashMap getItemAttributes() {
-		return xmlAttributes;
-	}
+        /**
+         * Gets the value of the id property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getId() {
+                return id;
+        }
 
-	LinkedHashMap getItemElements() {
-		return xmlElements;
-	}
+        LinkedHashMap getItemAttributes() {
+                return xmlAttributes;
+        }
 
-	String getItemTagName() {
-		return xmlTagName;
-	}
+        LinkedHashMap getItemElements() {
+                return xmlElements;
+        }
 
-	/**
-	 * Gets the value of the jdk property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public String getJdk() {
-		return jdk;
-	}
+        String getItemTagName() {
+                return xmlTagName;
+        }
 
-	/**
-	 * Gets the value of the machine property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public String getMachine() {
-		return machine;
-	}
+        /**
+         * Gets the value of the jdk property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getJdk() {
+                return jdk;
+        }
 
-	/**
-	 * Gets the value of the os property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link OS }
-	 *     
-	 */
-	public COFOS getOs() {
-		return os;
-	}
+        /**
+         * Gets the value of the machine property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getMachine() {
+                return machine;
+        }
 
-	String[] getPropOrder() {
-		return propOrder;
-	}
+        /**
+         * Gets the value of the os property.
+         *
+         * @return
+         *     possible object is
+         *     {@link OS }
+         *
+         */
+        public COFOS getOs() {
+                return os;
+        }
 
-	/**
-	 * Gets the value of the sw property.
-	 * 
-	 * <p>
-	 * This accessor method returns a reference to the live list,
-	 * not a snapshot. Therefore any modification you make to the
-	 * returned list will be present inside the JAXB object.
-	 * This is why there is not a <CODE>set</CODE> method for the sw property.
-	 * 
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * <pre>
-	 *    getSw().add(newItem);
-	 * </pre>
-	 * 
-	 * 
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list
-	 * {@link SWEntity }
-	 * 
-	 * 
-	 */
-	public List/*<SWEntity>*/getSw() {
-		if (sw == null) {
-			sw = new ArrayList/*<SWEntity>*/();
-		}
-		return this.sw;
-	}
+        String[] getPropOrder() {
+                return propOrder;
+        }
 
-	/**
-	 * Gets the value of the systemLocale property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public String getSystemLocale() {
-		return systemLocale;
-	}
+        /**
+         * Gets the value of the sw property.
+         *
+         * <p>
+         * This accessor method returns a reference to the live list,
+         * not a snapshot. Therefore any modification you make to the
+         * returned list will be present inside the JAXB object.
+         * This is why there is not a <CODE>set</CODE> method for the sw property.
+         *
+         * <p>
+         * For example, to add a new item, do as follows:
+         * <pre>
+         *    getSw().add(newItem);
+         * </pre>
+         *
+         *
+         * <p>
+         * Objects of the following type(s) are allowed in the list
+         * {@link SWEntity }
+         *
+         *
+         */
+        public List/*<SWEntity>*/getSw() {
+                if (sw == null) {
+                        sw = new ArrayList/*<SWEntity>*/();
+                }
+                return this.sw;
+        }
 
-	String getTagName() {
-		return itemTagName;
-	}
+        /**
+         * Gets the value of the systemLocale property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getSystemLocale() {
+                return systemLocale;
+        }
 
-	String[] getTags() {
-		return propTags;
-	}
+        String getTagName() {
+                return itemTagName;
+        }
 
-	/**
-	 * Gets the value of the timezone property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public String getTimezone() {
-		return timezone;
-	}
+        String[] getTags() {
+                return propTags;
+        }
 
-	/**
-	 * Gets the value of the userLocale property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public String getUserLocale() {
-		return userLocale;
-	}
+        /**
+         * Gets the value of the timezone property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getTimezone() {
+                return timezone;
+        }
 
-	private void initDefaultHostInfo() {
-		domainName = "unknown";
+        /**
+         * Gets the value of the userLocale property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getUserLocale() {
+                return userLocale;
+        }
 
-		try {
-			hostName = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			hostName = "unknown";
-		}
-	}
+        private void initDefaultHostInfo() {
+                domainName = "unknown";
 
-	private void initDefaultOSInfo() {
-		os = new COFOS();
-		os.setName(System.getProperty("os.name"));
-		os.setVersion(System.getProperty("os.version"));
-		os.setArch(System.getProperty("os.arch"));
+                try {
+                        hostName = InetAddress.getLocalHost().getHostName();
+                } catch (UnknownHostException e) {
+                        hostName = "unknown";
+                }
+        }
 
-		// standardize results
-		/*        if (osName.equals("sunos") || osName.equals("solaris")) {
-		 osName = "solaris";
-		 if (osVersion.equals("5.6"))
-		 osVersion = "2.6";
-		 else if (osVersion.equals("5.7"))
-		 osVersion = "2.7";
-		 else if (osVersion.equals("5.8"))
-		 osVersion = "8";
-		 else if (osVersion.equals("5.9"))
-		 osVersion = "9";
-		 } else if (osName.startsWith("windows")) {
-		 osName = "windows";
-		 if (osName.indexOf("95") != -1)
-		 osVersion = "95";
-		 else if (osName.indexOf("98") != -1)
-		 osVersion = "98";
-		 else if (osName.indexOf("2000") != -1)
-		 osVersion = "2000";
-		 else if (osName.indexOf("me") != -1)
-		 osVersion = "me";
-		 else if (osName.indexOf("nt") != -1)
-		 osVersion = "nt_4.0";
-		 else if (osName.indexOf("xp") != -1)
-		 osVersion = "xp";
-		 } else if (osName.equals("linux")) {
-		 if ((new File("/etc/turbolinux-release")).exists()) {
-		 osName = "turbo_linux";
-		 osVersion = getGenericLinuxVersionInfo("/etc/turbolinux-release");
-		 } else if ((new File("/etc/SuSE-release")).exists()) {
-		 osName = "suse_linux";
-		 osVersion = getGenericLinuxVersionInfo("/etc/SuSE-release");
-		 } else if ((new File("/etc/mandrake-release")).exists()) {
-		 osName = "mandrake_linux";
-		 osVersion = getGenericLinuxVersionInfo("/etc/mandrake-release");
-		 } else if ((new File("/etc/redhat-release")).exists()) {
-		 osName = "redhat_linux";
-		 osVersion = getGenericLinuxVersionInfo("/etc/redhat-release");
-		 } else if ((new File("/etc/lst.cnf")).exists()) {
-		 osName = "caldera_linux";
-		 osVersion = getCalderaLinuxVersionInfo();
-		 } else {
-		 osName = "unknown_linux";
-		 osVersion = "N/A";
-		 }
-		 }
-		 */}
+        private void initDefaultOSInfo() {
+                os = new COFOS();
+                os.setName(System.getProperty("os.name"));
+                os.setVersion(System.getProperty("os.version"));
+                os.setArch(System.getProperty("os.arch"));
 
-	/**
-	 * Sets the value of the bits property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link Integer }
-	 *     
-	 */
-	public void setBits(Integer value) {
-		this.bits = value;
-	}
+                // standardize results
+                /*        if (osName.equals("sunos") || osName.equals("solaris")) {
+                 osName = "solaris";
+                 if (osVersion.equals("5.6"))
+                 osVersion = "2.6";
+                 else if (osVersion.equals("5.7"))
+                 osVersion = "2.7";
+                 else if (osVersion.equals("5.8"))
+                 osVersion = "8";
+                 else if (osVersion.equals("5.9"))
+                 osVersion = "9";
+                 } else if (osName.startsWith("windows")) {
+                 osName = "windows";
+                 if (osName.indexOf("95") != -1)
+                 osVersion = "95";
+                 else if (osName.indexOf("98") != -1)
+                 osVersion = "98";
+                 else if (osName.indexOf("2000") != -1)
+                 osVersion = "2000";
+                 else if (osName.indexOf("me") != -1)
+                 osVersion = "me";
+                 else if (osName.indexOf("nt") != -1)
+                 osVersion = "nt_4.0";
+                 else if (osName.indexOf("xp") != -1)
+                 osVersion = "xp";
+                 } else if (osName.equals("linux")) {
+                 if ((new File("/etc/turbolinux-release")).exists()) {
+                 osName = "turbo_linux";
+                 osVersion = getGenericLinuxVersionInfo("/etc/turbolinux-release");
+                 } else if ((new File("/etc/SuSE-release")).exists()) {
+                 osName = "suse_linux";
+                 osVersion = getGenericLinuxVersionInfo("/etc/SuSE-release");
+                 } else if ((new File("/etc/mandrake-release")).exists()) {
+                 osName = "mandrake_linux";
+                 osVersion = getGenericLinuxVersionInfo("/etc/mandrake-release");
+                 } else if ((new File("/etc/redhat-release")).exists()) {
+                 osName = "redhat_linux";
+                 osVersion = getGenericLinuxVersionInfo("/etc/redhat-release");
+                 } else if ((new File("/etc/lst.cnf")).exists()) {
+                 osName = "caldera_linux";
+                 osVersion = getCalderaLinuxVersionInfo();
+                 } else {
+                 osName = "unknown_linux";
+                 osVersion = "N/A";
+                 }
+                 }
+                 */}
 
-	/**
-	 * Sets the value of the description property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	public void setDescription(String value) {
-		this.description = value;
-	}
+        /**
+         * Sets the value of the bits property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link Integer }
+         *
+         */
+        public void setBits(Integer value) {
+                this.bits = value;
+        }
 
-	/**
-	 * Sets the value of the displaydepth property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link Integer }
-	 *     
-	 */
-	public void setDisplaydepth(Integer value) {
-		this.displaydepth = value;
-	}
+        /**
+         * Sets the value of the description property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setDescription(String value) {
+                this.description = value;
+        }
 
-	/**
-	 * Sets the value of the encoding property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	public void setEncoding(String value) {
-		this.encoding = value;
-	}
+        /**
+         * Sets the value of the displaydepth property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link Integer }
+         *
+         */
+        public void setDisplaydepth(Integer value) {
+                this.displaydepth = value;
+        }
 
-	/**
-	 * Sets the value of the id property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	public void setId(String value) {
-		this.id = value;
-	}
+        /**
+         * Sets the value of the encoding property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setEncoding(String value) {
+                this.encoding = value;
+        }
 
-	/**
-	 * Sets the value of the jdk property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	public void setJdk(String value) {
-		this.jdk = value;
-	}
+        /**
+         * Sets the value of the id property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setId(String value) {
+                this.id = value;
+        }
 
-	/**
-	 * Sets the value of the machine property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	public void setMachine(String value) {
-		if (value.endsWith(".unknown")) 
-		try {
-				machine = InetAddress.getLocalHost().getCanonicalHostName();
-				if (machine.indexOf(".") == -1) 
-					System.err.println(i18n.getString("environment.badMachineName", machine));
-				return;
-		} catch (UnknownHostException e) {
-			System.err.println(i18n.getString("environment.cantGetLocalhostName", e.getMessage()));
-			value = value.substring(0,  value.indexOf(".unknown")-1);
-			System.err.println(i18n.getString("environment.badMachineName", value));
-		}
-		this.machine = value;
-	}
+        /**
+         * Sets the value of the jdk property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setJdk(String value) {
+                this.jdk = value;
+        }
 
-	/**
-	 * Sets the value of the os property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link OS }
-	 *     
-	 */
-	public void setOs(COFOS value) {
-		this.os = value;
-	}
+        /**
+         * Sets the value of the machine property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setMachine(String value) {
+                if (value.endsWith(".unknown"))
+                try {
+                                machine = InetAddress.getLocalHost().getCanonicalHostName();
+                                if (machine.indexOf(".") == -1)
+                                        System.err.println(i18n.getString("environment.badMachineName", machine));
+                                return;
+                } catch (UnknownHostException e) {
+                        System.err.println(i18n.getString("environment.cantGetLocalhostName", e.getMessage()));
+                        value = value.substring(0,  value.indexOf(".unknown")-1);
+                        System.err.println(i18n.getString("environment.badMachineName", value));
+                }
+                this.machine = value;
+        }
 
-	/**
-	 * Sets the value of the systemLocale property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	public void setSystemLocale(String value) {
-		this.systemLocale = value;
-	}
+        /**
+         * Sets the value of the os property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link OS }
+         *
+         */
+        public void setOs(COFOS value) {
+                this.os = value;
+        }
 
-	/**
-	 * Sets the value of the timezone property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	public void setTimezone(String value) {
-		this.timezone = value;
-	}
+        /**
+         * Sets the value of the systemLocale property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setSystemLocale(String value) {
+                this.systemLocale = value;
+        }
 
-	/**
-	 * Sets the value of the userLocale property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	public void setUserLocale(String value) {
-		this.userLocale = value;
-	}
+        /**
+         * Sets the value of the timezone property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setTimezone(String value) {
+                this.timezone = value;
+        }
+
+        /**
+         * Sets the value of the userLocale property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setUserLocale(String value) {
+                this.userLocale = value;
+        }
 
 }

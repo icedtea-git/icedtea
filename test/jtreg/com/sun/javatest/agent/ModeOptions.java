@@ -32,24 +32,24 @@ import java.awt.TextField;
 
 abstract class ModeOptions extends Panel {
     ModeOptions(String modeName) {
-	setLayout(new GridBagLayout());
-	this.modeName = modeName;
+        setLayout(new GridBagLayout());
+        this.modeName = modeName;
     }
 
     String getModeName() {
-	return modeName;
+        return modeName;
     }
-    
-    abstract ConnectionFactory createConnectionFactory(int concurrency) 
-	throws BadValue, ConnectionFactory.Fault;
+
+    abstract ConnectionFactory createConnectionFactory(int concurrency)
+        throws BadValue, ConnectionFactory.Fault;
 
     protected static int getInt(String label, TextField field) throws BadValue {
-	try {
-	    return Integer.parseInt(field.getText(), 10);
-	}
-	catch (NumberFormatException e) {
-	    throw new BadValue("bad value in `" + label + "' field");
-	}
+        try {
+            return Integer.parseInt(field.getText(), 10);
+        }
+        catch (NumberFormatException e) {
+            throw new BadValue("bad value in `" + label + "' field");
+        }
     }
 
     private String modeName;

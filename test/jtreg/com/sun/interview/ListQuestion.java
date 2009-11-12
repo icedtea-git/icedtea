@@ -32,7 +32,7 @@ import java.util.ResourceBundle;
 import java.util.Vector;
 
 /**
- * A {@link Question question} to support the construction of an 
+ * A {@link Question question} to support the construction of an
  * open-ended set of complex values determined by a specified subinterview.
  *
  * <p>A "loop" is created by creating an instance of a subtype of ListQuestion.
@@ -41,14 +41,14 @@ import java.util.Vector;
  * loop has been completed.
  *
  * <p>Computationally, this question behaves more like a "fork" than a "loop".
- * Semantically, it is as though all the bodies are evaluated together, 
- * in parallel, rather than serially one after the other. 
- * In the  GUI presentation, it is expected that only one body is displayed 
+ * Semantically, it is as though all the bodies are evaluated together,
+ * in parallel, rather than serially one after the other.
+ * In the  GUI presentation, it is expected that only one body is displayed
  * at a time, and that the user can choose which body is viewed.
  * This avoids having all the loops unrolled all the time in the display of
  * the current path.
  * Internally, each ListQuestion has a sibling that is created automatically,
- * and together, these two questions bracket the set of loop bodies. 
+ * and together, these two questions bracket the set of loop bodies.
  */
 public abstract class ListQuestion extends Question
 {
@@ -59,144 +59,144 @@ public abstract class ListQuestion extends Question
      * this instance of the loop body.
      */
     public static abstract class Body extends Interview {
-	/**
-	 * Create an instance of a loop body.
-	 * @param question The loop question for which this is a body instance.
-	 * @param index The position of this body within the set of all the bodies.
-	 * The value is normally just a hint (albeit a possibly string one).
-	 * The index will be updated if necessary when the body is actually 
-	 * set as one of the bodies of the loop.
-	 */ 
-	protected Body(ListQuestion question, int index) {
-	    super(question.getInterview(), 
-		  question.getBaseTag() + "." + index);
-	    this.question = question;
-	    this.index = index;
-	}
+        /**
+         * Create an instance of a loop body.
+         * @param question The loop question for which this is a body instance.
+         * @param index The position of this body within the set of all the bodies.
+         * The value is normally just a hint (albeit a possibly string one).
+         * The index will be updated if necessary when the body is actually
+         * set as one of the bodies of the loop.
+         */
+        protected Body(ListQuestion question, int index) {
+            super(question.getInterview(),
+                  question.getBaseTag() + "." + index);
+            this.question = question;
+            this.index = index;
+        }
 
-	/**
-	 * Get a string to uniquely identify this instance of the loop body, 
-	 * or null if there is insufficient information so far to make a 
-	 * determination. The string will be used to identify the loop body
-	 * to the user.
-	 * @return a string to uniquely identify this instance of the loop body, 
-	 * or null if there is insufficient information so far to make a 
-	 * determination.
-	 */
-	public abstract String getSummary();
+        /**
+         * Get a string to uniquely identify this instance of the loop body,
+         * or null if there is insufficient information so far to make a
+         * determination. The string will be used to identify the loop body
+         * to the user.
+         * @return a string to uniquely identify this instance of the loop body,
+         * or null if there is insufficient information so far to make a
+         * determination.
+         */
+        public abstract String getSummary();
 
-	/**
-	 * Get the position of this loop body within the set of all the loop
-	 * bodies for the question.
-	 * @return the position of this loop body within the set of all the loop
-	 * bodies for the question
-	 */
-	public int getIndex() {
-	    return index;
-	}
+        /**
+         * Get the position of this loop body within the set of all the loop
+         * bodies for the question.
+         * @return the position of this loop body within the set of all the loop
+         * bodies for the question
+         */
+        public int getIndex() {
+            return index;
+        }
 
-	/**
-	 * Set the recorded position of this loop body within the set 
-	 * of all the loop bodies for the question. By itself, this method
-	 * does not actually affect the loop bodies. 
-	 * See {@link ListQuestion#setBodies} for details on updating the
-	 * bodies of the loop.
-	 * @param newIndex the new position of this loop body within the 
-	 * set of all the loop bodies for the question
-	 */
-	void setIndex(int newIndex) {
-	    if (newIndex != index) {
-		index = newIndex;
-		setBaseTag(question.getBaseTag() + "." + index);
-	    }
-	}
+        /**
+         * Set the recorded position of this loop body within the set
+         * of all the loop bodies for the question. By itself, this method
+         * does not actually affect the loop bodies.
+         * See {@link ListQuestion#setBodies} for details on updating the
+         * bodies of the loop.
+         * @param newIndex the new position of this loop body within the
+         * set of all the loop bodies for the question
+         */
+        void setIndex(int newIndex) {
+            if (newIndex != index) {
+                index = newIndex;
+                setBaseTag(question.getBaseTag() + "." + index);
+            }
+        }
 
-	/**
-	 * Get a default summary to be used to identify this instance of the
-	 * the loop body, to be used when getSummary() returns null.
-	 * The summary will be a standard prefix string possibly followed
-	 * by a number to distinguish between multiple bodies using the
-	 * default summary. The default summary will be unique and persist
-	 * for the life of this body or until getSummary() returns a non-null
-	 * value. 
-	 * @return a default summary to be used to identify this instance of the
-	 * the loop body, to be used when getSummary() returns null.
-	 */
-	public String getDefaultSummary() {
-	    if (defaultSummary == null) {
-		// recycle any default summaries that are no longer required
-		Vector bodies = question.bodies;
-		for (int i = 0; i < bodies.size(); i++) {
-		    Body b = (Body) (bodies.elementAt(i));
-		    if (b.defaultSummary != null 
-			&& b.getSummary() != null
-			&& !b.defaultSummary.equals(b.getSummary())) {
-			b.defaultSummary = null;
-		    }
-		}
+        /**
+         * Get a default summary to be used to identify this instance of the
+         * the loop body, to be used when getSummary() returns null.
+         * The summary will be a standard prefix string possibly followed
+         * by a number to distinguish between multiple bodies using the
+         * default summary. The default summary will be unique and persist
+         * for the life of this body or until getSummary() returns a non-null
+         * value.
+         * @return a default summary to be used to identify this instance of the
+         * the loop body, to be used when getSummary() returns null.
+         */
+        public String getDefaultSummary() {
+            if (defaultSummary == null) {
+                // recycle any default summaries that are no longer required
+                Vector bodies = question.bodies;
+                for (int i = 0; i < bodies.size(); i++) {
+                    Body b = (Body) (bodies.elementAt(i));
+                    if (b.defaultSummary != null
+                        && b.getSummary() != null
+                        && !b.defaultSummary.equals(b.getSummary())) {
+                        b.defaultSummary = null;
+                    }
+                }
 
-		// try and find an unused unique value v not used by any other default summary
-		for (int v = 0; v < bodies.size(); v++) {
-		    String s = MessageFormat.format(i18n.getString("lp.newValue"),
-						    new Object[] { new Integer(v) });
-		    // check s is not the same as any current default summary;
-		    // if it is, reset it to null
-		    for (int i = 0; i < bodies.size(); i++) {
-			Body b = (Body) (bodies.elementAt(i));		
-			if (s.equals(b.defaultSummary)) {
-			    s = null;
-			    break;
-			}
-		    }
-		    // if s is not null, it is unique, different from other default
-		    // summaries, so use it...
-		    if (s != null) {
-			defaultSummary = s;
-			break;
-		    }
-		}
-	    }
-	    
-	    return defaultSummary;
-	}
+                // try and find an unused unique value v not used by any other default summary
+                for (int v = 0; v < bodies.size(); v++) {
+                    String s = MessageFormat.format(i18n.getString("lp.newValue"),
+                                                    new Object[] { new Integer(v) });
+                    // check s is not the same as any current default summary;
+                    // if it is, reset it to null
+                    for (int i = 0; i < bodies.size(); i++) {
+                        Body b = (Body) (bodies.elementAt(i));
+                        if (s.equals(b.defaultSummary)) {
+                            s = null;
+                            break;
+                        }
+                    }
+                    // if s is not null, it is unique, different from other default
+                    // summaries, so use it...
+                    if (s != null) {
+                        defaultSummary = s;
+                        break;
+                    }
+                }
+            }
 
-	/**
-	 * Check if this body has been completed. It is considered to have 
-	 * been completed if none of the questions in this body
-	 * on the current path return null as the result of getNext().
-	 * @return true is this body has been completed.
-	 */
-	public boolean isBodyFinishable() {
-	    return isInterviewFinishable();
-	}
+            return defaultSummary;
+        }
 
-	private ListQuestion question;
-	private int index;
-	private String defaultSummary;
+        /**
+         * Check if this body has been completed. It is considered to have
+         * been completed if none of the questions in this body
+         * on the current path return null as the result of getNext().
+         * @return true is this body has been completed.
+         */
+        public boolean isBodyFinishable() {
+            return isInterviewFinishable();
+        }
+
+        private ListQuestion question;
+        private int index;
+        private String defaultSummary;
     };
-    
+
     /**
      * Create a question with a nominated tag.
      * @param interview The interview containing this question.
      * @param tag A unique tag to identify this specific question.
      */
     protected ListQuestion(Interview interview, String tag) {
-	super(interview, tag);
+        super(interview, tag);
 
-	if (this instanceof EndQuestion) {
-	    end = (EndQuestion) this;
-	    bodies = null;
-	} 
-	else {
-	    end = new EndQuestion(interview, tag, this);
-	    bodies = new Vector();
-	}
+        if (this instanceof EndQuestion) {
+            end = (EndQuestion) this;
+            bodies = null;
+        }
+        else {
+            end = new EndQuestion(interview, tag, this);
+            bodies = new Vector();
+        }
     }
 
     /**
-     * Create a new instance of a body for this loop question. 
+     * Create a new instance of a body for this loop question.
      * The body is a subinterview that contains the questions
-     * for the body of the loop. 
+     * for the body of the loop.
      * The body does not become one of the set of bodies for the loop
      * until the set is updated with {@link #setBodies}.
      * @param index the position that this body will have within
@@ -210,23 +210,23 @@ public abstract class ListQuestion extends Question
      * Check if this is the question that appears at the beginning or
      * at the end of the loop. When a ListQuestion is created, a sibling
      * is automatically created that will appear at the end of the loop.
-     * @return false if this is the main question, that appears at the 
-     * head of the loop, or true if this is the question that is 
+     * @return false if this is the main question, that appears at the
+     * head of the loop, or true if this is the question that is
      * automatically created to appear at the end of the lop.
      */
     public final boolean isEnd() {
-	return (this instanceof EndQuestion);
+        return (this instanceof EndQuestion);
     }
 
     /**
      * Get the sibling question that appears at the other end of the loop.
-     * When a ListQuestion is created, a sibling is automatically created 
+     * When a ListQuestion is created, a sibling is automatically created
      * that will appear at the end of the loop. From either of these questions,
      * you can use this method to get at the other one.
      * @return the sibling question that appears at the other end of the loop
      */
     public ListQuestion getOther() {
-	return end;
+        return end;
     }
 
     /**
@@ -234,10 +234,10 @@ public abstract class ListQuestion extends Question
      * @return the currently selected loop body, or null, if none.
      */
     public Body getSelectedBody() {
-	if (value >= 0 && value < bodies.size()) 
-	    return (Body) (bodies.elementAt(value));
-	else
-	    return null;
+        if (value >= 0 && value < bodies.size())
+            return (Body) (bodies.elementAt(value));
+        else
+            return null;
     }
 
     /**
@@ -248,31 +248,31 @@ public abstract class ListQuestion extends Question
      * @see #setValue
      */
     public int getValue() {
-	return value;
+        return value;
     }
 
     /**
      * Verify this question is on the current path, and if it is,
      * return the current value.
      * @return the current value of this question
-     * @throws Interview.NotOnPathFault if this question is not on the 
+     * @throws Interview.NotOnPathFault if this question is not on the
      * current path
      * @see #getValue
      */
-    public int getValueOnPath() 
-	throws Interview.NotOnPathFault
+    public int getValueOnPath()
+        throws Interview.NotOnPathFault
     {
-	interview.verifyPathContains(this);
-	return getValue();
+        interview.verifyPathContains(this);
+        return getValue();
     }
 
     /**
-     * Get a string representation of the index of the currently 
-     * selected loop body, or an out of range value 
+     * Get a string representation of the index of the currently
+     * selected loop body, or an out of range value
      * (typically less than zero) if none is selected.
      */
     public String getStringValue() {
-	return String.valueOf(value);
+        return String.valueOf(value);
     }
 
     /**
@@ -282,37 +282,37 @@ public abstract class ListQuestion extends Question
      * @see #getValue
      */
     public void setValue(int newValue) {
-	int oldValue = value;
-	value = newValue;
-	if (normalizeValue(value) != normalizeValue(oldValue)) {
-	    interview.updatePath(this);
-	    interview.setEdited(true);
-	}
+        int oldValue = value;
+        value = newValue;
+        if (normalizeValue(value) != normalizeValue(oldValue)) {
+            interview.updatePath(this);
+            interview.setEdited(true);
+        }
     }
 
     private int normalizeValue(int value) {
-	return (value >= 0 && value < bodies.size() ? value : -1);
+        return (value >= 0 && value < bodies.size() ? value : -1);
     }
 
     /**
      * Set the index of the loop body to be selected.
      * If the value is out of range, no loop body will be selected.
-     * @param s a string containing the index of the loop body 
+     * @param s a string containing the index of the loop body
      * to be selected. If the string does not contain a valid
      * integer, the value will be set to -1.
      * @see #getValue
      */
     public void setValue(String s) {
-	try {
-	    if (s != null) {
-		setValue(Integer.parseInt(s));
-		return;
-	    }
-	}
-	catch (NumberFormatException e) {
-	    // ignore
-	}
-	setValue(-1);
+        try {
+            if (s != null) {
+                setValue(Integer.parseInt(s));
+                return;
+            }
+        }
+        catch (NumberFormatException e) {
+            // ignore
+        }
+        setValue(-1);
     }
 
     /**
@@ -322,7 +322,7 @@ public abstract class ListQuestion extends Question
      * and false otheriwse.
      **/
     public boolean isValueValid() {
-	return true;  // should probably reflect whether bodies are valid 
+        return true;  // should probably reflect whether bodies are valid
     }
 
     /**
@@ -332,7 +332,7 @@ public abstract class ListQuestion extends Question
      * and false otheriwse.
      **/
     public boolean isValueAlwaysValid() {
-	return false;
+        return false;
     }
 
     /**
@@ -341,13 +341,13 @@ public abstract class ListQuestion extends Question
      * body selected.
      */
     public void clear() {
-	setValue(Integer.MIN_VALUE);
-	bodies.setSize(0);
+        setValue(Integer.MIN_VALUE);
+        bodies.setSize(0);
     }
 
     /**
-     * Get the summary text for the end question. 
-     * When a ListQuestion is created, a sibling is automatically created 
+     * Get the summary text for the end question.
+     * When a ListQuestion is created, a sibling is automatically created
      * that will appear at the end of the loop.
      * Override this method to override the default behavior to
      * get the summary text from the standard resource bundle.
@@ -358,12 +358,12 @@ public abstract class ListQuestion extends Question
      * @see #getOther
      */
     public String getEndSummary() {
-	return end.getDefaultSummary();
+        return end.getDefaultSummary();
     }
-    
+
     /**
-     * Get the question text for the end question. 
-     * When a ListQuestion is created, a sibling is automatically created 
+     * Get the question text for the end question.
+     * When a ListQuestion is created, a sibling is automatically created
      * that will appear at the end of the loop.
      * Override this method to override the default behavior to
      * get the question text from the standard resource bundle.
@@ -375,13 +375,13 @@ public abstract class ListQuestion extends Question
      * @see #getOther
      */
     public String getEndText() {
-	return end.getDefaultText();
+        return end.getDefaultText();
     }
-    
-    
+
+
     /**
-     * Get the formatting arguments for the question text for the end question. 
-     * When a ListQuestion is created, a sibling is automatically created 
+     * Get the formatting arguments for the question text for the end question.
+     * When a ListQuestion is created, a sibling is automatically created
      * that will appear at the end of the loop.
      * Override this method to override the default behavior to
      * return null.
@@ -391,51 +391,51 @@ public abstract class ListQuestion extends Question
      * @see #getOther
      */
     public Object[] getEndTextArgs() {
-	return end.getDefaultTextArgs();
+        return end.getDefaultTextArgs();
     }
 
     protected void load(Map data) {
-	bodies.setSize(0);
-	String c = (String) (data.get(tag + ".count"));
-	if (c != null && c.length() > 0) {
-	    try {
-		int n = Integer.parseInt(c);
-		for (int i = 0; i < n; i++) 
-		    bodies.add(createBody(i));
-		// once the bodies are created as children of this question's
-		// interview, they'll be reloaded by the interviews load method
-	    }
-	    catch (NumberFormatException ignore) {
-	    }
-	}
-	
-	String v = (String) (data.get(tag + ".curr"));
-	if (v == null || v.length() == 0)
-	    value = 0;
-	else {
-	    try {
-		value = Integer.parseInt(v);
-	    }
-	    catch (NumberFormatException ignore) {
-		value = 0;
-	    }
-	}
+        bodies.setSize(0);
+        String c = (String) (data.get(tag + ".count"));
+        if (c != null && c.length() > 0) {
+            try {
+                int n = Integer.parseInt(c);
+                for (int i = 0; i < n; i++)
+                    bodies.add(createBody(i));
+                // once the bodies are created as children of this question's
+                // interview, they'll be reloaded by the interviews load method
+            }
+            catch (NumberFormatException ignore) {
+            }
+        }
+
+        String v = (String) (data.get(tag + ".curr"));
+        if (v == null || v.length() == 0)
+            value = 0;
+        else {
+            try {
+                value = Integer.parseInt(v);
+            }
+            catch (NumberFormatException ignore) {
+                value = 0;
+            }
+        }
     }
-    
+
     protected void save(Map data) {
-	data.put(tag + ".count", String.valueOf(bodies.size()));
-	data.put(tag + ".curr", String.valueOf(value));
+        data.put(tag + ".count", String.valueOf(bodies.size()));
+        data.put(tag + ".curr", String.valueOf(value));
     }
-    
+
     /**
      * Get the set of bodies currently allocated within the loop.
      * @return the set of bodies currently allocated within the loop
      * @see #setBodies
      */
     public Body[] getBodies() {
-	Body[] b = new Body[bodies.size()];
-	bodies.copyInto(b);
-	return b;
+        Body[] b = new Body[bodies.size()];
+        bodies.copyInto(b);
+        return b;
     }
 
     /**
@@ -443,7 +443,7 @@ public abstract class ListQuestion extends Question
      * @return the number of bodies currently allocated within the loop
      */
     public int getBodyCount() {
-	return (bodies == null ? 0 : bodies.size());
+        return (bodies == null ? 0 : bodies.size());
     }
 
     /**
@@ -451,11 +451,11 @@ public abstract class ListQuestion extends Question
      * @param index the position of the desired body within the set of bodies
      * currently allocated within the loop.
      * @return the specified body
-     * @throws ArrayIndexOutOfBoundsException if index does not identify a 
+     * @throws ArrayIndexOutOfBoundsException if index does not identify a
      * valid body
      */
     public Body getBody(int index) {
-	return (Body) (bodies.elementAt(index));
+        return (Body) (bodies.elementAt(index));
     }
 
     /**
@@ -471,35 +471,35 @@ public abstract class ListQuestion extends Question
      * @see #getBodies
      */
     public void setBodies(Body[] newBodies, int newValue) {
-	Body oldSelectedBody = getSelectedBody();
-	int oldIncompleteCount = getIncompleteBodyCount();
+        Body oldSelectedBody = getSelectedBody();
+        int oldIncompleteCount = getIncompleteBodyCount();
 
-	boolean edited = false;
+        boolean edited = false;
 
-	if (newBodies.length != bodies.size()) {
-	    bodies.setSize(newBodies.length);
-	    edited = true;
-	}
+        if (newBodies.length != bodies.size()) {
+            bodies.setSize(newBodies.length);
+            edited = true;
+        }
 
-	for (int i = 0; i < newBodies.length; i++) {
-	    Body b = newBodies[i];
-	    if (b != bodies.elementAt(i)) {
-		b.setIndex(i);
-		bodies.setElementAt(b, i);
-		edited = true;
-	    }
-	}
+        for (int i = 0; i < newBodies.length; i++) {
+            Body b = newBodies[i];
+            if (b != bodies.elementAt(i)) {
+                b.setIndex(i);
+                bodies.setElementAt(b, i);
+                edited = true;
+            }
+        }
 
-	value = newValue;
-	Body newSelectedBody = getSelectedBody();
-	int newIncompleteCount = getIncompleteBodyCount();
-	
-	if (newSelectedBody != oldSelectedBody
-	    || ((oldIncompleteCount == 0) != (newIncompleteCount == 0))) {
-	    interview.updatePath(this);
-	}
+        value = newValue;
+        Body newSelectedBody = getSelectedBody();
+        int newIncompleteCount = getIncompleteBodyCount();
 
-	interview.setEdited(edited);
+        if (newSelectedBody != oldSelectedBody
+            || ((oldIncompleteCount == 0) != (newIncompleteCount == 0))) {
+            interview.updatePath(this);
+        }
+
+        interview.setEdited(edited);
     }
 
     /**
@@ -508,130 +508,130 @@ public abstract class ListQuestion extends Question
      * @return the number of bodies for this loop that are currently incomplete.
      */
     public int getIncompleteBodyCount() {
-	int count = 0;
-	for (int i = 0; i < bodies.size(); i++) {
-	    Body b = (Body) (bodies.elementAt(i));
-	    if (!b.isInterviewFinishable()) 
-		count++;
-	}
-	return count;
+        int count = 0;
+        for (int i = 0; i < bodies.size(); i++) {
+            Body b = (Body) (bodies.elementAt(i));
+            if (!b.isInterviewFinishable())
+                count++;
+        }
+        return count;
     }
-    
-    
-    private final EndQuestion end; 
+
+
+    private final EndQuestion end;
     private final Vector bodies;
     private int value;
 
     private static final ResourceBundle i18n = Interview.i18n;
 
     private static class EndQuestion extends ListQuestion {
-	EndQuestion(Interview interview, String tag, ListQuestion head) {
-	    super(interview, tag + ".end");
-	    this.head = head;
-	}
+        EndQuestion(Interview interview, String tag, ListQuestion head) {
+            super(interview, tag + ".end");
+            this.head = head;
+        }
 
-	public Question getNext() {
-	    boolean allBodiesFinishable = true;
-	    for (int i = 0; i < head.getBodyCount(); i++) {
-		Body b = (Body) (head.getBody(i));
-		if (!b.isInterviewFinishable()) {
-		    allBodiesFinishable = false;
-		    break;
-		}
-	    }
+        public Question getNext() {
+            boolean allBodiesFinishable = true;
+            for (int i = 0; i < head.getBodyCount(); i++) {
+                Body b = (Body) (head.getBody(i));
+                if (!b.isInterviewFinishable()) {
+                    allBodiesFinishable = false;
+                    break;
+                }
+            }
 
-	    return (allBodiesFinishable ? head.getNext() : null);
-	}
+            return (allBodiesFinishable ? head.getNext() : null);
+        }
 
-	public String getSummary() {
-	    // ListQuestion.getEndSummary can be overridden, but defaults to
-	    // getDefaultSummary() here, which calls super.getSummary()
-	    return head.getEndSummary();
-	}
+        public String getSummary() {
+            // ListQuestion.getEndSummary can be overridden, but defaults to
+            // getDefaultSummary() here, which calls super.getSummary()
+            return head.getEndSummary();
+        }
 
-	String getDefaultSummary() {
-	    return super.getSummary();
-	}
-	
-	public String getText() {
-	    // ListQuestion.getEndText can be overridden, but defaults to
-	    // getDefaultText() here, which calls super.getText()
-	    return head.getEndText();
-	}
-	
-	String getDefaultText() {
-	    return super.getText();
-	}
-	
-	public Object[] getTextArgs() {
-	    // ListQuestion.getEndTextArgs can be overridden, but defaults to
-	    // getDefaultTextArgs() here, which calls super.getText()
-	    return head.getEndTextArgs();
-	}
+        String getDefaultSummary() {
+            return super.getSummary();
+        }
+
+        public String getText() {
+            // ListQuestion.getEndText can be overridden, but defaults to
+            // getDefaultText() here, which calls super.getText()
+            return head.getEndText();
+        }
+
+        String getDefaultText() {
+            return super.getText();
+        }
+
+        public Object[] getTextArgs() {
+            // ListQuestion.getEndTextArgs can be overridden, but defaults to
+            // getDefaultTextArgs() here, which calls super.getText()
+            return head.getEndTextArgs();
+        }
 
         Object[] getDefaultTextArgs() {
-	    return super.getTextArgs();
-	}
-	
-	public int getValue() {
-	    return head.getValue();
-	}
-	
-	public String getStringValue() {
-	    return head.getStringValue();
-	}
-	
-	public void setValue(int value) {
-	    head.setValue(value);
-	}
-	
-	public void setValue(String s) {
-	    head.setValue(s);
-	}
-	
-	public Body getSelectedBody() {
-	    return head.getSelectedBody();
-	}
-	
-	public Body createBody(int index) {
-	    return head.createBody(index);
-	}
+            return super.getTextArgs();
+        }
 
-	public ListQuestion getOther() {
-	    return head;
-	}
-	
-	public void clear() {
-	    head.clear();
-	}
-	
-	protected void load(Map data) {
-	}
-	
-	protected void save(Map data) {
-	}
-	
-	public Body[] getBodies() {
-	    return head.getBodies();
-	}
-	
-	public int getBodyCount() {
-	    return head.getBodyCount();
-	}
-	
-	public Body getBody(int index) {
-	    return head.getBody(index);
-	}
-	
-	public void setBodies(Body[] newBodies, int newValue) {
-	    head.setBodies(newBodies, newValue);
-	}
-	
-	public int getIncompleteBodyCount() {
-	    return head.getIncompleteBodyCount();
-	}
+        public int getValue() {
+            return head.getValue();
+        }
 
-	private ListQuestion head;
-	
+        public String getStringValue() {
+            return head.getStringValue();
+        }
+
+        public void setValue(int value) {
+            head.setValue(value);
+        }
+
+        public void setValue(String s) {
+            head.setValue(s);
+        }
+
+        public Body getSelectedBody() {
+            return head.getSelectedBody();
+        }
+
+        public Body createBody(int index) {
+            return head.createBody(index);
+        }
+
+        public ListQuestion getOther() {
+            return head;
+        }
+
+        public void clear() {
+            head.clear();
+        }
+
+        protected void load(Map data) {
+        }
+
+        protected void save(Map data) {
+        }
+
+        public Body[] getBodies() {
+            return head.getBodies();
+        }
+
+        public int getBodyCount() {
+            return head.getBodyCount();
+        }
+
+        public Body getBody(int index) {
+            return head.getBody(index);
+        }
+
+        public void setBodies(Body[] newBodies, int newValue) {
+            head.setBodies(newBodies, newValue);
+        }
+
+        public int getIncompleteBodyCount() {
+            return head.getIncompleteBodyCount();
+        }
+
+        private ListQuestion head;
+
     }
 }

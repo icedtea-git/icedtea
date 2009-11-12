@@ -28,7 +28,7 @@ package com.sun.javatest.interview;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Iterator; 
+import java.util.Iterator;
 import com.sun.interview.ErrorQuestion;
 import com.sun.interview.ExtensionFileFilter;
 import com.sun.interview.FileListQuestion;
@@ -45,13 +45,13 @@ import com.sun.javatest.TestSuite;
 
 /**
  * This interview collects the environment parameter, by means of environment (jte) files
- * and an environment name. It is normally used as one of a series of sub-interviews 
+ * and an environment name. It is normally used as one of a series of sub-interviews
  * that collect the parameter information for a test run. It is suitable for use with
  * legacy test suites that still rely on environments being provided with .jte files;
  * more sophisticated interviews should create a custom interview that collects the
  * environment data directly.
  */
-public class EnvironmentInterview 
+public class EnvironmentInterview
     extends Interview
     implements Parameters.LegacyEnvParameters
 {
@@ -60,13 +60,13 @@ public class EnvironmentInterview
      * @param parent The parent interview of which this is a child.
      * @throws Interview.Fault if there is a problem while creating the interview.
      */
-    public EnvironmentInterview(InterviewParameters parent) 
-	throws Interview.Fault
+    public EnvironmentInterview(InterviewParameters parent)
+        throws Interview.Fault
     {
-	super(parent, "environment");
-	this.parent = parent;
-	setResourceBundle("i18n");
-	setFirstQuestion(qEnvFiles);
+        super(parent, "environment");
+        this.parent = parent;
+        setResourceBundle("i18n");
+        setFirstQuestion(qEnvFiles);
     }
 
     /**
@@ -75,13 +75,13 @@ public class EnvironmentInterview
      * @see #setEnvFiles
      */
     public File[] getEnvFiles() {
-	return qEnvFiles.getValue();
+        return qEnvFiles.getValue();
     }
 
     public File[] getAbsoluteEnvFiles() {
-	TestSuite ts = parent.getTestSuite();
-	File tsRootDir = (ts == null ? null : ts.getRootDir());
-	return getAbsoluteFiles(tsRootDir, getEnvFiles());
+        TestSuite ts = parent.getTestSuite();
+        File tsRootDir = (ts == null ? null : ts.getRootDir());
+        return getAbsoluteFiles(tsRootDir, getEnvFiles());
     }
 
     /**
@@ -90,7 +90,7 @@ public class EnvironmentInterview
      * @see #getEnvFiles
      */
     public void setEnvFiles(File[] files) {
-	qEnvFiles.setValue(files);
+        qEnvFiles.setValue(files);
     }
 
     /**
@@ -99,7 +99,7 @@ public class EnvironmentInterview
      * @see #setEnvName
      */
     public String getEnvName() {
-	return qEnv.getValue();	
+        return qEnv.getValue();
     }
 
     /**
@@ -108,7 +108,7 @@ public class EnvironmentInterview
      * @see #getEnvName
      */
     public void setEnvName(String name) {
-	qEnv.setValue(name);
+        qEnv.setValue(name);
     }
 
     /**
@@ -119,8 +119,8 @@ public class EnvironmentInterview
      * @see #getEnvName
      */
     public TestEnvironment getEnv() {
-	updateCachedEnv();
-	return cachedEnv;
+        updateCachedEnv();
+        return cachedEnv;
     }
 
 
@@ -129,51 +129,51 @@ public class EnvironmentInterview
     // Env files
 
     private FileListQuestion qEnvFiles = new FileListQuestion(this, "envFiles") {
-	{
-	    // I18N...
-	    setFilter(new ExtensionFileFilter(".jte", "Environment File"));
-	    setDuplicatesAllowed(false);
-	}
+        {
+            // I18N...
+            setFilter(new ExtensionFileFilter(".jte", "Environment File"));
+            setDuplicatesAllowed(false);
+        }
 
-	public File getBaseDirectory() {
-	    TestSuite ts = parent.getTestSuite();
-	    if (ts == null)
-		return null;
-	    else {
-		File r = ts.getRoot();
-		return r.isDirectory() ? r : r.getParentFile();
-	    }
-	}
-	
-	protected Question getNext() {
-	    updateCachedEnvTable();
-	    if (cachedEnvTableError != null)
-		return qEnvTableError;
-	    else if (cachedEnvTable == null || cachedEnvTable.getEnvNames().length == 0)
-		return qNoEnvs;
-	    else
-		return qEnv;
-	}
+        public File getBaseDirectory() {
+            TestSuite ts = parent.getTestSuite();
+            if (ts == null)
+                return null;
+            else {
+                File r = ts.getRoot();
+                return r.isDirectory() ? r : r.getParentFile();
+            }
+        }
+
+        protected Question getNext() {
+            updateCachedEnvTable();
+            if (cachedEnvTableError != null)
+                return qEnvTableError;
+            else if (cachedEnvTable == null || cachedEnvTable.getEnvNames().length == 0)
+                return qNoEnvs;
+            else
+                return qEnv;
+        }
     };
 
     private TestEnvContext getEnvTable() {
-	updateCachedEnvTable();
-	return cachedEnvTable;
+        updateCachedEnvTable();
+        return cachedEnvTable;
     }
 
     private void updateCachedEnvTable() {
-	File[] absFiles = getAbsoluteEnvFiles();
-	if (!equal(cachedEnvTable_absFiles, absFiles)) {
-	    try {
-		cachedEnvTable = new TestEnvContext(absFiles);
-		cachedEnvTableError = null;
-	    }
-	    catch (TestEnvContext.Fault e) {
-		cachedEnvTable = null;
-		cachedEnvTableError = e.getMessage();
-	    }
-	    cachedEnvTable_absFiles = absFiles;
-	}
+        File[] absFiles = getAbsoluteEnvFiles();
+        if (!equal(cachedEnvTable_absFiles, absFiles)) {
+            try {
+                cachedEnvTable = new TestEnvContext(absFiles);
+                cachedEnvTableError = null;
+            }
+            catch (TestEnvContext.Fault e) {
+                cachedEnvTable = null;
+                cachedEnvTableError = e.getMessage();
+            }
+            cachedEnvTable_absFiles = absFiles;
+        }
     }
 
     private TestEnvContext cachedEnvTable;
@@ -193,9 +193,9 @@ public class EnvironmentInterview
     // Env Table Error
 
     private ErrorQuestion qEnvTableError = new ErrorQuestion(this, "envTableError") {
-	protected Object[] getTextArgs() {
-	    return new Object[] { cachedEnvTableError };
-	}
+        protected Object[] getTextArgs() {
+            return new Object[] { cachedEnvTableError };
+        }
     };
 
 
@@ -204,84 +204,84 @@ public class EnvironmentInterview
     // Env
 
     private StringQuestion qEnv = new StringQuestion(this, "env") {
-	public String[] getSuggestions() {
-	    // ensure the choices are up to date with envTable;
-	    // note that setting choices may smash the current value
-	    // if it's not a valid choice in the new set
-	    TestEnvContext envTable = getEnvTable();
-	    if (envTable != cachedEnvTable) {
-		String[] envNames;
-		if (envTable == null)
-		    envNames = new String[0];
-		else {
-		    String[] names = envTable.getEnvMenuNames();
-		    Arrays.sort(names);
-		    envNames = names;
-		}
-		setSuggestions(envNames);
-		cachedEnvTable = envTable;
-	    }
-	    return super.getSuggestions();
-	}
+        public String[] getSuggestions() {
+            // ensure the choices are up to date with envTable;
+            // note that setting choices may smash the current value
+            // if it's not a valid choice in the new set
+            TestEnvContext envTable = getEnvTable();
+            if (envTable != cachedEnvTable) {
+                String[] envNames;
+                if (envTable == null)
+                    envNames = new String[0];
+                else {
+                    String[] names = envTable.getEnvMenuNames();
+                    Arrays.sort(names);
+                    envNames = names;
+                }
+                setSuggestions(envNames);
+                cachedEnvTable = envTable;
+            }
+            return super.getSuggestions();
+        }
 
-	protected Question getNext() {
-	    if (value == null)
-		return null;
-	    else {
-		updateCachedEnv();
-		if (cachedEnv == null)
-		    return cachedEnvError;
-		else
-		    return qEnd;
-	    }
-	}
+        protected Question getNext() {
+            if (value == null)
+                return null;
+            else {
+                updateCachedEnv();
+                if (cachedEnv == null)
+                    return cachedEnvError;
+                else
+                    return qEnd;
+            }
+        }
 
-	private TestEnvContext cachedEnvTable;
+        private TestEnvContext cachedEnvTable;
     };
 
     private void updateCachedEnv() {
-	TestEnvContext envTable = getEnvTable();
-	String envName = getEnvName();
-	if (cachedEnv_envTable != envTable || !equal(cachedEnv_envName, envName)) {
-	    try {
-		if (envTable == null || envName == null || envName.length() == 0) {
-		    cachedEnv = null;
-		    cachedEnvError = null;
-		}
-		else {
-		    cachedEnv = envTable.getEnv(envName);
-		    if (cachedEnv == null) {
-			cachedEnvError = qEnvNotFound;
-			cachedEnvErrorArgs = new Object[] { envName };
-		    }
-		    else {
-			// verify all entries defined
-			cachedEnvError = null;
-			cachedEnvErrorArgs = null;
-			for (Iterator i = cachedEnv.elements().iterator(); 
-			     i.hasNext() && cachedEnvError == null; ) {
-			    TestEnvironment.Element entry = (TestEnvironment.Element) (i.next());
-			    if (entry.getValue().indexOf("VALUE_NOT_DEFINED") >= 0) {
-				cachedEnv = null;
-				String eText =
-				    ( (entry.getDefinedInEnv() == null ? "" : "env." +  entry.getDefinedInEnv() + ".") +
-				      entry.getKey() + "=" + entry.getValue());
-				cachedEnvError = qEnvUndefinedEntry;
-				cachedEnvErrorArgs = new Object[] {eText, entry.getDefinedInFile()};
-			    }
-			}
-		    }
-		}
+        TestEnvContext envTable = getEnvTable();
+        String envName = getEnvName();
+        if (cachedEnv_envTable != envTable || !equal(cachedEnv_envName, envName)) {
+            try {
+                if (envTable == null || envName == null || envName.length() == 0) {
+                    cachedEnv = null;
+                    cachedEnvError = null;
+                }
+                else {
+                    cachedEnv = envTable.getEnv(envName);
+                    if (cachedEnv == null) {
+                        cachedEnvError = qEnvNotFound;
+                        cachedEnvErrorArgs = new Object[] { envName };
+                    }
+                    else {
+                        // verify all entries defined
+                        cachedEnvError = null;
+                        cachedEnvErrorArgs = null;
+                        for (Iterator i = cachedEnv.elements().iterator();
+                             i.hasNext() && cachedEnvError == null; ) {
+                            TestEnvironment.Element entry = (TestEnvironment.Element) (i.next());
+                            if (entry.getValue().indexOf("VALUE_NOT_DEFINED") >= 0) {
+                                cachedEnv = null;
+                                String eText =
+                                    ( (entry.getDefinedInEnv() == null ? "" : "env." +  entry.getDefinedInEnv() + ".") +
+                                      entry.getKey() + "=" + entry.getValue());
+                                cachedEnvError = qEnvUndefinedEntry;
+                                cachedEnvErrorArgs = new Object[] {eText, entry.getDefinedInFile()};
+                            }
+                        }
+                    }
+                }
 
-	    }
-	    catch (TestEnvironment.Fault e) {
-		cachedEnv = null;
-		cachedEnvError = qEnvError;
-		cachedEnvErrorArgs = new Object[] { e.getMessage() };
-	    }
-	    cachedEnv_envTable = envTable;
-	    cachedEnv_envName = envName;
-	}	    
+            }
+            catch (TestEnvironment.Fault e) {
+                cachedEnv = null;
+                cachedEnvError = qEnvError;
+                cachedEnvErrorArgs = new Object[] { e.getMessage() };
+            }
+            cachedEnv_envTable = envTable;
+            cachedEnv_envName = envName;
+        }
     }
 
     private TestEnvironment cachedEnv;
@@ -297,9 +297,9 @@ public class EnvironmentInterview
     // Env Error
 
     private ErrorQuestion qEnvError = new ErrorQuestion(this, "envError") {
-	protected Object[] getTextArgs() {
-	    return cachedEnvErrorArgs;
-	}
+        protected Object[] getTextArgs() {
+            return cachedEnvErrorArgs;
+        }
     };
 
     //----------------------------------------------------------------------------
@@ -307,9 +307,9 @@ public class EnvironmentInterview
     // Env Not Found
 
     private ErrorQuestion qEnvNotFound = new ErrorQuestion(this, "envNotFound") {
-	protected Object[] getTextArgs() {
-	    return cachedEnvErrorArgs;
-	}
+        protected Object[] getTextArgs() {
+            return cachedEnvErrorArgs;
+        }
     };
 
     //----------------------------------------------------------------------------
@@ -317,11 +317,11 @@ public class EnvironmentInterview
     // Env Undefined Entry
 
     private ErrorQuestion qEnvUndefinedEntry = new ErrorQuestion(this, "envUndefinedEntry") {
-	protected Object[] getTextArgs() {
-	    return cachedEnvErrorArgs;
-	}
+        protected Object[] getTextArgs() {
+            return cachedEnvErrorArgs;
+        }
     };
-	    
+
     //----------------------------------------------------------------------------
     //
     // End
@@ -331,51 +331,51 @@ public class EnvironmentInterview
     //---------------------------------------------------------------------
 
     private static File[] getAbsoluteFiles(File baseDir, File[] files) {
-	if (files == null)
-	    return null;
+        if (files == null)
+            return null;
 
-	if (baseDir == null)
-	    return files;
+        if (baseDir == null)
+            return files;
 
-	boolean allAbsolute = true;
-	for (int i = 0; i < files.length && allAbsolute; i++) 
-	    allAbsolute = files[i].isAbsolute();
+        boolean allAbsolute = true;
+        for (int i = 0; i < files.length && allAbsolute; i++)
+            allAbsolute = files[i].isAbsolute();
 
-	if (allAbsolute)
-	    return files;
+        if (allAbsolute)
+            return files;
 
-	File[] absoluteFiles = new File[files.length];
-	for (int i = 0; i < files.length; i++) {
-	    File f = files[i];
-	    absoluteFiles[i] = (f.isAbsolute() ? f : new File(baseDir, f.getPath()));
-	}
+        File[] absoluteFiles = new File[files.length];
+        for (int i = 0; i < files.length; i++) {
+            File f = files[i];
+            absoluteFiles[i] = (f.isAbsolute() ? f : new File(baseDir, f.getPath()));
+        }
 
-	return absoluteFiles;
+        return absoluteFiles;
     }
 
     //----------------------------------------------------------------------------
 
     private static boolean equal(File f1, File f2) {
-	return (f1 == null ? f2 == null : f1.equals(f2));
+        return (f1 == null ? f2 == null : f1.equals(f2));
     }
 
     private static boolean equal(File[] f1, File[] f2) {
-	if (f1 == null || f2 == null)
-	    return (f1 == f2);
+        if (f1 == null || f2 == null)
+            return (f1 == f2);
 
-	if (f1.length != f2.length)
-	    return false;
+        if (f1.length != f2.length)
+            return false;
 
-	for (int i = 0; i < f1.length; i++) {
-	    if (!equal(f1[i], f2[i]))
-		return false;
-	}
+        for (int i = 0; i < f1.length; i++) {
+            if (!equal(f1[i], f2[i]))
+                return false;
+        }
 
-	return true;
+        return true;
     }
 
     private static boolean equal(String s1, String s2) {
-	return (s1 == null ? s2 == null : s1.equals(s2));
+        return (s1 == null ? s2 == null : s1.equals(s2));
     }
 
 

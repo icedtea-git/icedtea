@@ -60,15 +60,15 @@ class OptionsDialog extends ToolDialog
     String[] getXmlFiles() {
         return ((FilesPane)panes[0]).getXmlFiles();
     }
-        
+
     boolean handleAsConflict() {
         return true;
     }
-    
+
     boolean resolveByRecent() {
         return ((OptionsPane)panes[1]).resolveByRecent();
     }
-    
+
     boolean isXmlReport() {
         return ((OptionsPane)panes[1]).isXmlReport();
     }
@@ -76,12 +76,12 @@ class OptionsDialog extends ToolDialog
     CustomReport[] getCustomReports() {
         return ((OptionsPane)panes[1]).getCustomSelected();
     }
-    
+
     void updateCustomReports() {
-        
+
     }
-    
-    // remove this function by something better XXX     
+
+    // remove this function by something better XXX
     private void setButtonsSize() {
         JButton[] bb = ((OptionsPane)panes[1]).getButtons();
         JButton[] fb = ((FilesPane)panes[0]).getButtons();
@@ -93,8 +93,8 @@ class OptionsDialog extends ToolDialog
             } else {
                 all[i] = fb[i - bb.length];
             }
-            max = max > all[i].getMinimumSize().width ? max 
-                    : all[i].getMinimumSize().width; 
+            max = max > all[i].getMinimumSize().width ? max
+                    : all[i].getMinimumSize().width;
         }
         for (int i = 0; i < all.length; i++) {
             all[i].setPreferredSize(new Dimension(max, all[i].getPreferredSize().height));
@@ -106,7 +106,7 @@ class OptionsDialog extends ToolDialog
     protected void windowClosingAction(AWTEvent e) {
         cleanUp();
     }
-    
+
     protected void initGUI() {
         setI18NTitle("opts.title");
         JPanel tabs = new JPanel();
@@ -129,8 +129,8 @@ class OptionsDialog extends ToolDialog
         for (int i = 0; i < panes.length; i++) {
             //uif.addTab(tabs, "tool.tabs." + panes[i].getName(), panes[i]);
             tabs.add(panes[i], "" + i);
-        }        
-        
+        }
+
         body.add(tabs);
         setBody(body);
 
@@ -168,9 +168,9 @@ class OptionsDialog extends ToolDialog
             this.cl = cl;
             this.parent = parent;
         }
-        public void actionPerformed(ActionEvent e) {            
+        public void actionPerformed(ActionEvent e) {
             cl.show(parent, key);
-        }                
+        }
     }
 
     private void cleanUp() {
@@ -187,13 +187,13 @@ class OptionsDialog extends ToolDialog
         public void actionPerformed(ActionEvent e) {
             if (chain != null)
                chain.actionPerformed(e);
-            
+
             cleanUp();
         }
     }
-    
-        
- 
+
+
+
     private Tool tool;
     private ActionListener okListener;
     private JPanel body;
@@ -201,4 +201,3 @@ class OptionsDialog extends ToolDialog
 
     private JPanel[] panes;
 }
-

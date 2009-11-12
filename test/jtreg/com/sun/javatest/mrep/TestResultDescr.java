@@ -28,51 +28,51 @@ package com.sun.javatest.mrep;
 
 import java.io.File;
 /**
- * 
- *  
+ *
+ *
  * This a short description of test which can be used
  * to resolve conflicts and prepare summary.
- * 
- * The constructors are made package local to avoid 
+ *
+ * The constructors are made package local to avoid
  * creating instance of this class outside mrep.
  *
  */
-class TestResultDescr {	
-	
-	private File file;	
-	private String status;	
-	private long time;
-	private int id;
-	
-	TestResultDescr(File file, String status, int id, int time) {		
-		this.file = file;
-		this.status = status;
-		this.time = time;
+class TestResultDescr {
+
+        private File file;
+        private String status;
+        private long time;
+        private int id;
+
+        TestResultDescr(File file, String status, int id, int time) {
+                this.file = file;
+                this.status = status;
+                this.time = time;
                 this.id = id;
-	}
-	TestResultDescr(String status, int id, long time) {		
-		this.file = null;
-		this.status = status;
-		this.time = time;
+        }
+        TestResultDescr(String status, int id, long time) {
+                this.file = null;
+                this.status = status;
+                this.time = time;
                 this.id = id;
-	}
-	public File getFile() {
-		return file;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public long getTime() {
-		return time;
-	}
-	int getID() {
-		return id;
-	}
-	public void setID(int id) {
-		this.id = id;
-	}
-	public void setFile(File file) {
-		this.file = file;
-	}
-	
+        }
+        public File getFile() {
+                return file;
+        }
+        public String getStatus() {
+                return status;
+        }
+        public long getTime() {
+                return time;
+        }
+        int getID() {
+                return id;
+        }
+        public void setID(int id) {
+                this.id = id;
+        }
+        public void setFile(File file) {
+                this.file = file;
+        }
+
 }

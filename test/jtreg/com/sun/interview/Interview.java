@@ -49,10 +49,10 @@ import java.util.Vector;
 
 /**
  * The base class for an interview: a series of {@link Question questions}, to be
- * presented to the user via some tool such as an assistant or wizard. 
+ * presented to the user via some tool such as an assistant or wizard.
  * Interviews may be stand-alone, or designed to be part of other interviews.
  */
-public class Interview 
+public class Interview
 {
     //----- inner classes ----------------------------------------
 
@@ -61,36 +61,36 @@ public class Interview
      */
     public static class Fault extends Exception
     {
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 */
-	public Fault(ResourceBundle i18n, String s) {
-	    super(i18n.getString(s));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         */
+        public Fault(ResourceBundle i18n, String s) {
+            super(i18n.getString(s));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An argument to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	public Fault(ResourceBundle i18n, String s, Object o) {
-	    super(MessageFormat.format(i18n.getString(s), new Object[] {o}));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An argument to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        public Fault(ResourceBundle i18n, String s, Object o) {
+            super(MessageFormat.format(i18n.getString(s), new Object[] {o}));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An array of arguments to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	public Fault(ResourceBundle i18n, String s, Object[] o) {
-	    super(MessageFormat.format(i18n.getString(s), o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An array of arguments to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        public Fault(ResourceBundle i18n, String s, Object[] o) {
+            super(MessageFormat.format(i18n.getString(s), o));
+        }
     }
 
     /**
@@ -99,9 +99,9 @@ public class Interview
      */
     public static class NotOnPathFault extends Fault
     {
-	NotOnPathFault(Question q) {
-	    super(i18n, "interview.questionNotOnPath", q.getTag());
-	}
+        NotOnPathFault(Question q) {
+            super(i18n, "interview.questionNotOnPath", q.getTag());
+        }
     }
 
     /**
@@ -109,19 +109,19 @@ public class Interview
      * the interview is updated.
      */
     public static interface Observer {
-	/**
-	 * Invoked when the current question in the interview has been changed.
-	 * @param q the new current question
-	 */
-	void currentQuestionChanged(Question q);
-	
-	/**
-	 * Invoked when the set of questions in the current path has been
-	 * changed. This is normally because the response to one of the
-	 * questions on the path has been changed, thereby causing a change
-	 * to its successor questions.
-	 */
-	void pathUpdated();
+        /**
+         * Invoked when the current question in the interview has been changed.
+         * @param q the new current question
+         */
+        void currentQuestionChanged(Question q);
+
+        /**
+         * Invoked when the set of questions in the current path has been
+         * changed. This is normally because the response to one of the
+         * questions on the path has been changed, thereby causing a change
+         * to its successor questions.
+         */
+        void pathUpdated();
     }
 
     //----- constructors ----------------------------------------
@@ -133,7 +133,7 @@ public class Interview
      * tags.
      */
     protected Interview(String tag) {
-	this(null, tag);
+        this(null, tag);
     }
 
     /**
@@ -145,16 +145,16 @@ public class Interview
      * specified.
      */
     protected Interview(Interview parent, String baseTag) {
-	this.parent = parent;
-	setBaseTag(baseTag);
+        this.parent = parent;
+        setBaseTag(baseTag);
 
-	if (parent == null)
-	    root = this;
-	else {
-	    parent.add(this);
-	    root = parent.root;
-	    semantics = parent.getInterviewSemantics();
-	}
+        if (parent == null)
+            root = this;
+        else {
+            parent.add(this);
+            root = parent.root;
+            semantics = parent.getInterviewSemantics();
+        }
     }
 
     //----- basic facilities ----------------------------------------
@@ -164,7 +164,7 @@ public class Interview
      * @return the parent interview, or null if no parent has been specified.
      */
     public Interview getParent() {
-	return parent;
+        return parent;
     }
 
     /**
@@ -172,7 +172,7 @@ public class Interview
      * @return the title
      */
     public String getTag() {
-	return tag;
+        return tag;
     }
 
     /**
@@ -181,29 +181,29 @@ public class Interview
      * @see #getTitle
      */
     protected void setTitle(String title) {
-	this.title = title;
+        this.title = title;
     }
 
     /**
      * Get a descriptive title associated with this interview.
-     * If not specified, the system will try and locate the title in the 
+     * If not specified, the system will try and locate the title in the
      * interview's resource bundle, using the resource name <code>title</code>.
      * of the interview.
      * @return the title
      * @see #setTitle
      */
     public String getTitle() {
-	if (title == null) {
-	    // Need to dance a bit here to avoid "title" being picked up 
-	    // by the i18n validation scripts as a necessary key in i18n 
-	    // instead of bundle.  Another solution would be to make 
-	    // getI18NString static and pass the resource bundle in as the
-	    // first arg.
-	    String titleKey = "title";
-	    title = getI18NString(titleKey).trim();
-	}
+        if (title == null) {
+            // Need to dance a bit here to avoid "title" being picked up
+            // by the i18n validation scripts as a necessary key in i18n
+            // instead of bundle.  Another solution would be to make
+            // getI18NString static and pass the resource bundle in as the
+            // first arg.
+            String titleKey = "title";
+            title = getI18NString(titleKey).trim();
+        }
 
-	return title;
+        return title;
     }
 
     /**
@@ -214,89 +214,89 @@ public class Interview
      * @see #getDefaultImage
      */
     protected void setDefaultImage(URL u) {
-	defaultImage = u;
+        defaultImage = u;
     }
-    
-    /** 
+
+    /**
      * Get a default image to be used for the questions of an interview.
-     * If no default has been set for this interview, the parent's 
+     * If no default has been set for this interview, the parent's
      * default image (if any) is used instead.
      * @return a URL for the default image to be used
      * @see #setDefaultImage
      */
     public URL getDefaultImage() {
-	if (defaultImage == null && parent != null)
-	    return parent.getDefaultImage();
-	
-	return defaultImage;
+        if (defaultImage == null && parent != null)
+            return parent.getDefaultImage();
+
+        return defaultImage;
     }
 
     /**
-     * Set the base name of the resource bundle used to look up 
+     * Set the base name of the resource bundle used to look up
      * internationized strings, such as the title and text of each
-     * question.  If the name starts with '/', it will be treated 
-     * as an absolute resource name, and used "as is"; 
+     * question.  If the name starts with '/', it will be treated
+     * as an absolute resource name, and used "as is";
      * otherwise it will be treated as relative to the
      * package in which the actual interview class is defined.
-     * The default is the interview tag name if this is a root 
+     * The default is the interview tag name if this is a root
      * interview. If this is a child interview, there is no default
      * resource bundle.
      * @param name The name of the resource bundle used to look
      * up internationalized strings.
-     * @throws MissingResourceException if the resource bundle 
+     * @throws MissingResourceException if the resource bundle
      * cannot be found.
      * @see #getResourceBundle
      */
-    protected void setResourceBundle(String name) 
-	throws MissingResourceException 
+    protected void setResourceBundle(String name)
+        throws MissingResourceException
     {
-	if (name != bundleName) {
-	    if (name != null) {
-		Class c = getClass();
-		ClassLoader cl = c.getClassLoader();
-		String rn;
-		if (name.startsWith("/"))
-		    rn = name.substring(1);
-		else {
-		    String cn = c.getName();
-		    String pn = cn.substring(0, cn.lastIndexOf('.'));
-		    rn = pn + "." + name;
-		}
-		//System.err.println("INT: looking for bundle: " + rn);
-		bundle = ResourceBundle.getBundle(rn, Locale.getDefault(), cl);
-	    }
-	    bundleName = name;
-	}
+        if (name != bundleName) {
+            if (name != null) {
+                Class c = getClass();
+                ClassLoader cl = c.getClassLoader();
+                String rn;
+                if (name.startsWith("/"))
+                    rn = name.substring(1);
+                else {
+                    String cn = c.getName();
+                    String pn = cn.substring(0, cn.lastIndexOf('.'));
+                    rn = pn + "." + name;
+                }
+                //System.err.println("INT: looking for bundle: " + rn);
+                bundle = ResourceBundle.getBundle(rn, Locale.getDefault(), cl);
+            }
+            bundleName = name;
+        }
     }
     /**
-     * Set the base name of the resource bundle used to look up 
+     * Set the base name of the resource bundle used to look up
      * internationized strings, such as the title and text of each
      * question. If the name is treated as filename of file
      * which is located in directory file.
-     * The default is the interview tag name if this is a root 
+     * The default is the interview tag name if this is a root
      * interview. If this is a child interview, there is no default
      * resource bundle.
      * @param name The name of the resource bundle used to look
      * up internationalized strings.
      * @param file The directory to find name.
-     * @throws MissingResourceException if the resource bundle 
+     * @throws MissingResourceException if the resource bundle
      * cannot be found.
      * @see #getResourceBundle
      */
-    protected void setResourceBundle(String name, File file) 
+    protected void setResourceBundle(String name, File file)
     throws MissingResourceException {
-    	if (name == bundleName) {
-    		return;
-    	}
-    	try {
-    		URL[] url = {new URL("file:" + file.getAbsolutePath() + "/")};
-    		URLClassLoader cl = new URLClassLoader(url);    		
-    		bundle = ResourceBundle.getBundle(name, Locale.getDefault(),cl);
-    	} catch (MalformedURLException e) {
-					
-		}
-		
-	}
+        if (name == bundleName) {
+                return;
+        }
+        try {
+                URL[] url = {new URL("file:" + file.getAbsolutePath() + "/")};
+                URLClassLoader cl = new URLClassLoader(url);
+                bundle = ResourceBundle.getBundle(name, Locale.getDefault(),cl);
+        } catch (MalformedURLException e) {
+
+                }
+
+        }
 
     /**
      * Get the resource bundle for this interview, used to look up
@@ -308,21 +308,21 @@ public class Interview
      * @see #setResourceBundle
      */
     public ResourceBundle getResourceBundle() {
-	if (bundle == null && parent != null)
-	    return parent.getResourceBundle();
-	else  
-	    return bundle;
-    } 
+        if (bundle == null && parent != null)
+            return parent.getResourceBundle();
+        else
+            return bundle;
+    }
 
     /**
      * Mark this interview as having been edited or not.
      * @param edited whether or not this interview is marked as edited
      */
     public void setEdited(boolean edited) {
-	Interview i = this;
-	while (i.parent != null)
-	    i = i.parent;
-	i.edited = edited;
+        Interview i = this;
+        while (i.parent != null)
+            i = i.parent;
+        i.edited = edited;
     }
 
 
@@ -331,10 +331,10 @@ public class Interview
      * @return true if this interview is marked as having been edited
      */
     public boolean isEdited() {
-	Interview i = this;
-	while (i.parent != null)
-	    i = i.parent;
-	return i.edited;
+        Interview i = this;
+        while (i.parent != null)
+            i = i.parent;
+        return i.edited;
     }
 
     /**
@@ -343,9 +343,9 @@ public class Interview
      * @see #setFirstQuestion
      */
     public Question getFirstQuestion() {
-	return firstQuestion;
+        return firstQuestion;
     }
-	
+
     /**
      * Set the first question for an interview. This may be called more
      * than once, but only while the interview is being constructed.
@@ -357,81 +357,81 @@ public class Interview
      * @see #getFirstQuestion
      */
     protected void setFirstQuestion(Question q) {
-	if (path != null)
-	    throw new IllegalStateException();
+        if (path != null)
+            throw new IllegalStateException();
 
-	firstQuestion = q;
+        firstQuestion = q;
 
-	// OLD: the problem with this is that reset() calls updatePath()
-	// which might call methods which refer to uninitialize data,
-	// so can't safely call reset() here
-	//
-	// if (parent == null)
-	//    reset();
+        // OLD: the problem with this is that reset() calls updatePath()
+        // which might call methods which refer to uninitialize data,
+        // so can't safely call reset() here
+        //
+        // if (parent == null)
+        //    reset();
 
         // if we wanted to permit the first question to be changed,
-	// consider the following:
-	// if (parent == null)
-	//    path = null;
+        // consider the following:
+        // if (parent == null)
+        //    path = null;
     }
 
     //---------------------------------------------------------
 
     /**
-     * Get a sub-interview with a given tag name. All descendents are 
+     * Get a sub-interview with a given tag name. All descendents are
      * searched (i.e. all children, all their children, etc.)
      * @param tag The tag of the interview to be found.
      * @return the sub-interview with the specified name.
      * @throws Interview.Fault if no interview is found with the given name.
      */
     public Interview getInterview(String tag) throws Fault {
-	if (tag == null)
-	    throw new NullPointerException();
+        if (tag == null)
+            throw new NullPointerException();
 
-	Interview i = getInterview0(tag);
-	if (i != null)
-	    return i;
-	else
-	    throw new Fault(i18n, "interview.cantFindInterview", tag);
+        Interview i = getInterview0(tag);
+        if (i != null)
+            return i;
+        else
+            throw new Fault(i18n, "interview.cantFindInterview", tag);
     }
 
     private Interview getInterview0(String t) {
-	if (t.equals(tag))
-	    return this;
-		
-	for (int i = 0; i < children.size(); i++) {
-	    Interview c = (Interview) (children.elementAt(i));
-	    Interview iv = c.getInterview0(t);
-	    if (iv != null)
-		return iv;
-	}
+        if (t.equals(tag))
+            return this;
 
-	return null;
+        for (int i = 0; i < children.size(); i++) {
+            Interview c = (Interview) (children.elementAt(i));
+            Interview iv = c.getInterview0(t);
+            if (iv != null)
+                return iv;
+        }
+
+        return null;
     }
 
     private Set getInterviews() {
-	Set s = new HashSet();
-	getInterviews0(s);
-	return s;
+        Set s = new HashSet();
+        getInterviews0(s);
+        return s;
     }
 
     private void getInterviews0(Set s) {
-	s.add(this);
-	for (int i = 0; i < children.size(); i++) {
-	    Interview child = (Interview) (children.elementAt(i));
-	    child.getInterviews0(s);
-	}
+        s.add(this);
+        for (int i = 0; i < children.size(); i++) {
+            Interview child = (Interview) (children.elementAt(i));
+            child.getInterviews0(s);
+        }
     }
 
     //----- navigation ----------------------------------------
-    
+
     /**
      * Determine if a question is the first question of the interview.
      * @param q the question to check
      * @return true if this is the first question.
      */
     public boolean isFirst(Question q) {
-	return (q == firstQuestion);
+        return (q == firstQuestion);
     }
 
     /**
@@ -440,7 +440,7 @@ public class Interview
      * @return true if this is the last question.
      */
     public boolean isLast(Question q) {
-	return (q instanceof FinalQuestion && q.interview.caller == null);
+        return (q instanceof FinalQuestion && q.interview.caller == null);
     }
 
     /**
@@ -449,20 +449,20 @@ public class Interview
      * @return true if this question has a non-null successor.
      */
     public boolean hasNext(Question q) {
-	return (q.getNext() != null);
+        return (q.getNext() != null);
     }
 
 
     /**
-     * Determine if a question has a successor which is neither null 
+     * Determine if a question has a successor which is neither null
      * nor an ErrorQuestion.
      * @param q the question to check
-     * @return true if this question has a successor which is neither null 
+     * @return true if this question has a successor which is neither null
      * nor an ErrorQuestion
      */
     public boolean hasValidNext(Question q) {
-	Question qn = q.getNext();
-	return (qn != null && !(qn instanceof ErrorQuestion));
+        Question qn = q.getNext();
+        return (qn != null && !(qn instanceof ErrorQuestion));
     }
 
     /**
@@ -470,17 +470,17 @@ public class Interview
      * question, and the current path is evaluated from there.
      */
     public void reset() {
-	ensurePathInitialized();
+        ensurePathInitialized();
 
-	// first, reset back to the beginning
-	updateEnabled = true;
-	caller = null;
-	currIndex = 0;
-	path.clear();
-	path.addQuestion(firstQuestion);
-	updatePath(firstQuestion);
-	// notify observers
-	notifyCurrentQuestionChanged(firstQuestion);
+        // first, reset back to the beginning
+        updateEnabled = true;
+        caller = null;
+        currIndex = 0;
+        path.clear();
+        path.addQuestion(firstQuestion);
+        updatePath(firstQuestion);
+        // notify observers
+        notifyCurrentQuestionChanged(firstQuestion);
     }
 
     /**
@@ -488,29 +488,29 @@ public class Interview
      * question, and the current path is evaluated from there.
      */
     private void reset(Question q) {
-	ensurePathInitialized();
+        ensurePathInitialized();
 
-	// first, reset back to the beginning
-	updateEnabled = true;
-	caller = null;
-	currIndex = 0;
-	path.clear();
-	path.addQuestion(firstQuestion);
-	updatePath(firstQuestion);
+        // first, reset back to the beginning
+        updateEnabled = true;
+        caller = null;
+        currIndex = 0;
+        path.clear();
+        path.addQuestion(firstQuestion);
+        updatePath(firstQuestion);
 
-	// now update to the selected question
-	if (q == firstQuestion || q == null)
-	    // already there; just need to notify observers
-	    notifyCurrentQuestionChanged(firstQuestion);
-	else {
-	    // try and select the specified question
-	    try {
-		setCurrentQuestion(q);
-	    }
-	    catch (Fault e) {
-		notifyCurrentQuestionChanged(firstQuestion);
-	    }
-	}
+        // now update to the selected question
+        if (q == firstQuestion || q == null)
+            // already there; just need to notify observers
+            notifyCurrentQuestionChanged(firstQuestion);
+        else {
+            // try and select the specified question
+            try {
+                setCurrentQuestion(q);
+            }
+            catch (Fault e) {
+                notifyCurrentQuestionChanged(firstQuestion);
+            }
+        }
     }
 
     /**
@@ -520,90 +520,90 @@ public class Interview
      * @throws Interview.Fault if there are no more questions
      */
     public void next() throws Fault {
-	ensurePathInitialized();
+        ensurePathInitialized();
 
-	Interview i = this;
+        Interview i = this;
 
-	// first, step in until we get to the current question
-	while (i.path.questionAt(i.currIndex) instanceof InterviewQuestion) {
-	    InterviewQuestion iq = (InterviewQuestion) (i.path.questionAt(i.currIndex));
-	    i = iq.getTargetInterview();
-	}
+        // first, step in until we get to the current question
+        while (i.path.questionAt(i.currIndex) instanceof InterviewQuestion) {
+            InterviewQuestion iq = (InterviewQuestion) (i.path.questionAt(i.currIndex));
+            i = iq.getTargetInterview();
+        }
 
-	// next, step forward to the next question
-	i.currIndex++;
+        // next, step forward to the next question
+        i.currIndex++;
 
-	// finally, normalize the result
-	while (true) {
-	    if (i.currIndex == i.path.size()) {
-		i.currIndex--;
-		throw new Fault(i18n, "interview.noMoreQuestions");
-	    }
+        // finally, normalize the result
+        while (true) {
+            if (i.currIndex == i.path.size()) {
+                i.currIndex--;
+                throw new Fault(i18n, "interview.noMoreQuestions");
+            }
 
-	    Question q = i.path.questionAt(i.currIndex);
-	    if (q instanceof InterviewQuestion) {
-		InterviewQuestion iq = (InterviewQuestion) q;
-		i = iq.getTargetInterview();
-		i.currIndex = 0;
-	    }
-	    else if (q instanceof FinalQuestion && i.caller != null) {
-		i = i.caller.getInterview();
-		i.currIndex++;
-	    }
-	    else 
-		break;		
-	}
+            Question q = i.path.questionAt(i.currIndex);
+            if (q instanceof InterviewQuestion) {
+                InterviewQuestion iq = (InterviewQuestion) q;
+                i = iq.getTargetInterview();
+                i.currIndex = 0;
+            }
+            else if (q instanceof FinalQuestion && i.caller != null) {
+                i = i.caller.getInterview();
+                i.currIndex++;
+            }
+            else
+                break;
+        }
 
-	Question q = i.path.questionAt(i.currIndex);
-	notifyCurrentQuestionChanged(q);
+        Question q = i.path.questionAt(i.currIndex);
+        notifyCurrentQuestionChanged(q);
     }
 
-    /** 
+    /**
      * Back up to the previous question in the interview.
      * Questions that have been {@link Question#isEnabled disabled} will
      * be skipped over.
      * @throws Interview.Fault if there is no previous question.
      */
     public void prev() throws Fault {
-	ensurePathInitialized();
+        ensurePathInitialized();
 
-	Interview i = this;
+        Interview i = this;
 
-	// first, step in until we get to the current question
-	while (i.path.questionAt(i.currIndex) instanceof InterviewQuestion) {
-	    InterviewQuestion iq = (InterviewQuestion) (i.path.questionAt(i.currIndex));
-	    i = iq.getTargetInterview();
-	}
+        // first, step in until we get to the current question
+        while (i.path.questionAt(i.currIndex) instanceof InterviewQuestion) {
+            InterviewQuestion iq = (InterviewQuestion) (i.path.questionAt(i.currIndex));
+            i = iq.getTargetInterview();
+        }
 
-	// next, step back to the next question
-	i.currIndex--;
+        // next, step back to the next question
+        i.currIndex--;
 
-	// finally, normalize the result
-	while (true) {
-	    if (i.currIndex < 0) {
-		if (i.caller == null) {
-		    i.currIndex = 0;
-		    throw new Fault(i18n, "interview.noMoreQuestions");
-		}
-		else {
-		    i = i.caller.getInterview();
-		    i.currIndex--;
-		}
-	    }
-	    else if (i.path.questionAt(i.currIndex) instanceof InterviewQuestion) {
-		InterviewQuestion iq = (InterviewQuestion) (i.path.questionAt(i.currIndex));
-		i = iq.getTargetInterview();
-		i.currIndex = i.path.size() - 1;
-	    }
-	    else if (i.path.questionAt(i.currIndex) instanceof FinalQuestion) {
-		i.currIndex--;
-	    }
-	    else
-		break;		
-	}
+        // finally, normalize the result
+        while (true) {
+            if (i.currIndex < 0) {
+                if (i.caller == null) {
+                    i.currIndex = 0;
+                    throw new Fault(i18n, "interview.noMoreQuestions");
+                }
+                else {
+                    i = i.caller.getInterview();
+                    i.currIndex--;
+                }
+            }
+            else if (i.path.questionAt(i.currIndex) instanceof InterviewQuestion) {
+                InterviewQuestion iq = (InterviewQuestion) (i.path.questionAt(i.currIndex));
+                i = iq.getTargetInterview();
+                i.currIndex = i.path.size() - 1;
+            }
+            else if (i.path.questionAt(i.currIndex) instanceof FinalQuestion) {
+                i.currIndex--;
+            }
+            else
+                break;
+        }
 
-	Question q = i.path.questionAt(i.currIndex);
-	notifyCurrentQuestionChanged(q);
+        Question q = i.path.questionAt(i.currIndex);
+        notifyCurrentQuestionChanged(q);
     }
 
     /**
@@ -613,75 +613,75 @@ public class Interview
      * @throws Interview.Fault if there are no more questions
      */
     public void last() throws Fault {
-	ensurePathInitialized();
+        ensurePathInitialized();
 
-	Interview i = this;
+        Interview i = this;
 
-	// first, step in until we get to the current question
-	while (i.path.questionAt(i.currIndex) instanceof InterviewQuestion) {
-	    InterviewQuestion iq = (InterviewQuestion) (i.path.questionAt(i.currIndex));
-	    i = iq.getTargetInterview();
-	}
+        // first, step in until we get to the current question
+        while (i.path.questionAt(i.currIndex) instanceof InterviewQuestion) {
+            InterviewQuestion iq = (InterviewQuestion) (i.path.questionAt(i.currIndex));
+            i = iq.getTargetInterview();
+        }
 
-	// navigate around the interview without upsetting any interview's currIndex
-	int index = i.currIndex;
+        // navigate around the interview without upsetting any interview's currIndex
+        int index = i.currIndex;
 
-	// Scan forward looking for candidates for the last question.
-	// The alternative is to advance i.currIndex to the end of this
-	// interview and normalize the result, but that gets complicated
-	// with the interaction between nested interviews and hidden 
-	// questions.
-	Question cq = i.path.questionAt(index);
-	Question lq = cq;
-	index++;
+        // Scan forward looking for candidates for the last question.
+        // The alternative is to advance i.currIndex to the end of this
+        // interview and normalize the result, but that gets complicated
+        // with the interaction between nested interviews and hidden
+        // questions.
+        Question cq = i.path.questionAt(index);
+        Question lq = cq;
+        index++;
 
-	while (index < i.path.size()) {
-	    Question q = i.path.questionAt(index);
-	    
-	    if (q instanceof InterviewQuestion) {
-		i = ((InterviewQuestion) q).getTargetInterview();
-		index = 0;
-	    }
-	    else if (q instanceof FinalQuestion && i.caller != null) {
-		Interview callInterview = i.caller.getInterview();
-		int callIndex = callInterview.path.indexOf(i);
-		if (callIndex == -1)
-		    throw new IllegalStateException();
-		i = callInterview;
-		index = callIndex + 1;
-	    }
-	    else {
-		// update candidate and move on
-		lq = q;
-		index++;
-	    }
-	}
-	
-	if (lq == cq) {
-	    if ( !(lq instanceof FinalQuestion)) 	
-		throw new Fault(i18n, "interview.noMoreQuestions");
-	}
-	else 
-	    setCurrentQuestion(lq);
+        while (index < i.path.size()) {
+            Question q = i.path.questionAt(index);
+
+            if (q instanceof InterviewQuestion) {
+                i = ((InterviewQuestion) q).getTargetInterview();
+                index = 0;
+            }
+            else if (q instanceof FinalQuestion && i.caller != null) {
+                Interview callInterview = i.caller.getInterview();
+                int callIndex = callInterview.path.indexOf(i);
+                if (callIndex == -1)
+                    throw new IllegalStateException();
+                i = callInterview;
+                index = callIndex + 1;
+            }
+            else {
+                // update candidate and move on
+                lq = q;
+                index++;
+            }
+        }
+
+        if (lq == cq) {
+            if ( !(lq instanceof FinalQuestion))
+                throw new Fault(i18n, "interview.noMoreQuestions");
+        }
+        else
+            setCurrentQuestion(lq);
     }
 
     /**
-     * Check if the interview has been started. An interview is 
+     * Check if the interview has been started. An interview is
      * considered to be at the beginning if there is only one
      * question on the current path of a type that requires a response.
      * This indirectly implies it must be the last question on
-     * the current path, and must only be preceded by 
+     * the current path, and must only be preceded by
      * {@link NullQuestion information-only} questions.
      * @return true if the first answerable question is unanswered.
      */
     public boolean isStarted() {
-	Question[] path = root.getPath();
-	for (int i = 0; i < path.length - 1; i++) {
-	    Question q = path[i];
-	    if (!(q instanceof NullQuestion))
-		return true;
-	}
-	return false;
+        Question[] path = root.getPath();
+        for (int i = 0; i < path.length - 1; i++) {
+            Question q = path[i];
+            if (!(q instanceof NullQuestion))
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -691,24 +691,24 @@ public class Interview
      * @return true if the interview has been completed.
      */
     public boolean isFinishable() {
-	ensurePathInitialized();
+        ensurePathInitialized();
 
-	Interview i = root;
-	return (i.path.lastQuestion() instanceof FinalQuestion);
+        Interview i = root;
+        return (i.path.lastQuestion() instanceof FinalQuestion);
     }
 
     /**
-     * Check if this subinterview has been completed. A subinterview is 
-     * considered to have been completed if none of the questions from 
-     * this subinterview on the current path return null as the result 
+     * Check if this subinterview has been completed. A subinterview is
+     * considered to have been completed if none of the questions from
+     * this subinterview on the current path return null as the result
      * of getNext().
-     *<em>Note:</em>compare this to isFinishable() which checks that the 
+     *<em>Note:</em>compare this to isFinishable() which checks that the
      * entire interview (of which this subinterview may be a part) is
      * complete.
      * @return true is this subinterview has been completed.
      */
     protected boolean isInterviewFinishable() {
-	return (path != null && path.lastQuestion() instanceof FinalQuestion);
+        return (path != null && path.lastQuestion() instanceof FinalQuestion);
     }
 
 
@@ -722,36 +722,36 @@ public class Interview
      * @see #getCurrentQuestion
      */
     public void setCurrentQuestion(Question q) throws Fault {
-	if (q == null)
-	    throw new NullPointerException();
+        if (q == null)
+            throw new NullPointerException();
 
-	if (q == getCurrentQuestion()) 
-	    return;
+        if (q == getCurrentQuestion())
+            return;
 
-	boolean ok = root.setCurrentQuestion0(q);
-	if (!ok)
-	    throw new NotOnPathFault(q);
+        boolean ok = root.setCurrentQuestion0(q);
+        if (!ok)
+            throw new NotOnPathFault(q);
 
-	notifyCurrentQuestionChanged(q);
+        notifyCurrentQuestionChanged(q);
     }
 
     private boolean setCurrentQuestion0(Question q) {
-	ensurePathInitialized();
+        ensurePathInitialized();
 
-	for (int i = 0; i < path.size(); i++) {
-	    Question qq = path.questionAt(i);
-	    if (qq.equals(q)) {
-		currIndex = i;
-		return true;
-	    }
-	    else if (qq instanceof InterviewQuestion) {
-		if (((InterviewQuestion) qq).getTargetInterview().setCurrentQuestion0(q)) {
-		    currIndex = i;
-		    return true;
-		}
-	    }
-	}
-	return false;
+        for (int i = 0; i < path.size(); i++) {
+            Question qq = path.questionAt(i);
+            if (qq.equals(q)) {
+                currIndex = i;
+                return true;
+            }
+            else if (qq instanceof InterviewQuestion) {
+                if (((InterviewQuestion) qq).getTargetInterview().setCurrentQuestion0(q)) {
+                    currIndex = i;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -760,28 +760,28 @@ public class Interview
      * @see #setCurrentQuestion
      */
     public Question getCurrentQuestion() {
-	ensurePathInitialized();
+        ensurePathInitialized();
 
-	Interview i = root;
-	Question q = i.path.questionAt(i.currIndex);
-	while (q instanceof InterviewQuestion) {
-	    i = ((InterviewQuestion) q).getTargetInterview();
-	    q = i.path.questionAt(i.currIndex);
-	}
-	return q;
+        Interview i = root;
+        Question q = i.path.questionAt(i.currIndex);
+        while (q instanceof InterviewQuestion) {
+            i = ((InterviewQuestion) q).getTargetInterview();
+            q = i.path.questionAt(i.currIndex);
+        }
+        return q;
     }
 
     private void setCurrentQuestionFromPath(Question[] path) {
-	root.setCurrentQuestionFromPath0(path);
+        root.setCurrentQuestionFromPath0(path);
     }
 
     private void setCurrentQuestionFromPath0(Question[] path) {
-	for (int i = path.length - 1; i >= 0; i--) {
-	    if (setCurrentQuestion0(path[i])) {
-		notifyCurrentQuestionChanged(path[i]);
-		return;
-	    }
-	}
+        for (int i = path.length - 1; i >= 0; i--) {
+            if (setCurrentQuestion0(path[i])) {
+                notifyCurrentQuestionChanged(path[i]);
+                return;
+            }
+        }
     }
 
     //----- path stuff ----------------------------------------
@@ -796,8 +796,8 @@ public class Interview
      * never returns a successor.
      * Within a particular interview, a question may refer to a
      * nested interview, before continuing within the original interview.
-     * Any such references to nested interviews are automatically 
-     * expanded by this method, leaving just the complete set of basic 
+     * Any such references to nested interviews are automatically
+     * expanded by this method, leaving just the complete set of basic
      * questions on the path.
      * @return an array containing the list of questions on the current path.
      * @see #setFirstQuestion
@@ -805,26 +805,26 @@ public class Interview
      * @see #getPathToCurrent
      */
     public Question[] getPath() {
-	Vector v = new Vector();
-	iteratePath0(v, true, true, true);
-	Question[] p = new Question[v.size()];
-	v.copyInto(p);
-	return p;
+        Vector v = new Vector();
+        iteratePath0(v, true, true, true);
+        Question[] p = new Question[v.size()];
+        v.copyInto(p);
+        return p;
     }
 
     /**
      * Get the set of questions on the current path up to and
      * including the current question.
-     * @return an array containing the list of questions on the 
+     * @return an array containing the list of questions on the
      * current path up to and including the current question
      * @see #getPath
      */
     public Question[] getPathToCurrent() {
-	Vector v = new Vector();
-	iteratePath0(v, true, false, true);
-	Question[] p = new Question[v.size()];
-	v.copyInto(p);
-	return p;
+        Vector v = new Vector();
+        iteratePath0(v, true, false, true);
+        Question[] p = new Question[v.size()];
+        v.copyInto(p);
+        return p;
     }
 
     /**
@@ -844,11 +844,11 @@ public class Interview
      * the nested interview will be returned instead.
      * @return an Iterator for the questions on the current path
      * @see #iteratePathToCurrent
-     */ 
+     */
     public Iterator iteratePath(boolean flattenNestedInterviews) {
-	Vector v = new Vector();
-	iteratePath0(v, flattenNestedInterviews, true, true);
-	return v.iterator();
+        Vector v = new Vector();
+        iteratePath0(v, flattenNestedInterviews, true, true);
+        return v.iterator();
     }
 
 
@@ -863,42 +863,42 @@ public class Interview
      * @see #iteratePath
      */
     public Iterator iteratePathToCurrent(boolean flattenNestedInterviews) {
-	Vector v = new Vector();
-	iteratePath0(v, flattenNestedInterviews, false, true);
-	return v.iterator();
+        Vector v = new Vector();
+        iteratePath0(v, flattenNestedInterviews, false, true);
+        return v.iterator();
     }
 
     private void iteratePath0(List l, boolean flattenNestedInterviews, boolean all, boolean addFinal) {
-	ensurePathInitialized();
+        ensurePathInitialized();
 
-	int n = (all ? path.size() : currIndex + 1);
-	for (int i = 0; i < n; i++) {
-	    Question q = path.questionAt(i);
-	    if (q instanceof InterviewQuestion) {
-		if (flattenNestedInterviews) 
-		    ((InterviewQuestion) q).getTargetInterview().iteratePath0(l, true, all, false);
-		else
-		    l.add(q);
-	    }
-	    else if (!addFinal && q instanceof FinalQuestion)
-		return;
-	    else 
-		l.add(q);
-	}
+        int n = (all ? path.size() : currIndex + 1);
+        for (int i = 0; i < n; i++) {
+            Question q = path.questionAt(i);
+            if (q instanceof InterviewQuestion) {
+                if (flattenNestedInterviews)
+                    ((InterviewQuestion) q).getTargetInterview().iteratePath0(l, true, all, false);
+                else
+                    l.add(q);
+            }
+            else if (!addFinal && q instanceof FinalQuestion)
+                return;
+            else
+                l.add(q);
+        }
     }
 
     /**
-     * Verify that the current path contains a specified question, 
+     * Verify that the current path contains a specified question,
      * and throw an exception if it does not.
      * @param q the question to be checked
      * @throws Interview.NotOnPathFault if the current path does not contain
      * the specified question.
      */
-    public void verifyPathContains(Question q) 
-	throws NotOnPathFault
+    public void verifyPathContains(Question q)
+        throws NotOnPathFault
     {
-	if (!pathContains(q))
-	    throw new NotOnPathFault(q);
+        if (!pathContains(q))
+            throw new NotOnPathFault(q);
     }
 
     /**
@@ -907,7 +907,7 @@ public class Interview
      * @return true if the question is found on the current path.
      */
     public boolean pathContains(Question q) {
-	return root.pathContains0(q);
+        return root.pathContains0(q);
     }
 
     /**
@@ -916,69 +916,69 @@ public class Interview
      * @return true if the interview is found on the current path.
      */
     public boolean pathContains(Interview i) {
-	return	root.pathContains0(i);
+        return  root.pathContains0(i);
     }
 
     private boolean pathContains0(Object o) {
-	ensurePathInitialized();
+        ensurePathInitialized();
 
-	for (int index = 0; index < path.size(); index++) {
-	    Question q = path.questionAt(index);
-	    if (o == q)
-		return true;
-	    
-	    if (q instanceof InterviewQuestion) {
-		InterviewQuestion iq = (InterviewQuestion) q;
-		Interview i = iq.getTargetInterview();
-		if (o == i)
-		    return true;
+        for (int index = 0; index < path.size(); index++) {
+            Question q = path.questionAt(index);
+            if (o == q)
+                return true;
 
-		if (i.pathContains0(o))
-		    return true;
-	    }
-	}
+            if (q instanceof InterviewQuestion) {
+                InterviewQuestion iq = (InterviewQuestion) q;
+                Interview i = iq.getTargetInterview();
+                if (o == i)
+                    return true;
 
-	return false;
+                if (i.pathContains0(o))
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     /**
-     * Get the complete set of questions in this interview and 
+     * Get the complete set of questions in this interview and
      * recursively, in all child interviews.
      * @return a set of all questions in this and every child interview.
      */
     public Set getQuestions() {
-	Set s = new HashSet();
-	getQuestions0(s);
-	return s;
+        Set s = new HashSet();
+        getQuestions0(s);
+        return s;
     }
 
     private void getQuestions0(Set s) {
-	s.addAll(allQuestions.values());
+        s.addAll(allQuestions.values());
 
-	for (int i = 0; i < children.size(); i++) {
-	    Interview child = (Interview) (children.elementAt(i));
-	    child.getQuestions0(s);
-	}
+        for (int i = 0; i < children.size(); i++) {
+            Interview child = (Interview) (children.elementAt(i));
+            child.getQuestions0(s);
+        }
     }
 
     /**
-     * Get all questions in this interview and 
+     * Get all questions in this interview and
      * recursively, in all child interviews.
      * @return a map containing all questions in this and every child interview.
      */
     public Map getAllQuestions() {
-	Map m = new HashMap();
-	getAllQuestions0(m);
-	return m;
+        Map m = new HashMap();
+        getAllQuestions0(m);
+        return m;
     }
 
     private void getAllQuestions0(Map m) {
-	m.putAll(allQuestions);
+        m.putAll(allQuestions);
 
-	for (int i = 0; i < children.size(); i++) {
-	    Interview child = (Interview) (children.elementAt(i));
-	    child.getAllQuestions0(m);
-	}
+        for (int i = 0; i < children.size(); i++) {
+            Interview child = (Interview) (children.elementAt(i));
+            child.getAllQuestions0(m);
+        }
     }
 
     /**
@@ -988,13 +988,13 @@ public class Interview
      * items, and false otherwise.
      */
     public boolean isChecklistEmpty() {
-	for (Iterator iter = iteratePath(true); iter.hasNext(); ) {
-	    Question q = (Question) (iter.next());
-	    Checklist.Item[] items = q.getChecklistItems();
-	    if (items != null && items.length > 0)
-		return false;
-	}
-	return true;
+        for (Iterator iter = iteratePath(true); iter.hasNext(); ) {
+            Question q = (Question) (iter.next());
+            Checklist.Item[] items = q.getChecklistItems();
+            if (items != null && items.length > 0)
+                return false;
+        }
+        return true;
     }
 
     /**
@@ -1006,32 +1006,32 @@ public class Interview
      * @see Question#getChecklistItems
      */
     public Checklist createChecklist() {
-	Checklist c = new Checklist();
-	for (Iterator iter = iteratePath(true); iter.hasNext(); ) {
-	    Question q = (Question) (iter.next());
-	    Checklist.Item[] items = q.getChecklistItems();
-	    if (items != null) {
-		for (int i = 0; i < items.length; i++) 
-		    c.add(items[i]);
-	    }
-	}
-	return c;
+        Checklist c = new Checklist();
+        for (Iterator iter = iteratePath(true); iter.hasNext(); ) {
+            Question q = (Question) (iter.next());
+            Checklist.Item[] items = q.getChecklistItems();
+            if (items != null) {
+                for (int i = 0; i < items.length; i++)
+                    c.add(items[i]);
+            }
+        }
+        return c;
     }
 
-    /** 
+    /**
      * Create a checklist item based on entries in the interview's resource bundle.
      * @param sectionKey A key to identify the section name within the interview's resource bundle
      * @param textKey A key to identify the checklist item text within the interview's resource bundle
      * @return a Checklist.Item object composed from the appropriate entries in the interview's resource bundle
      */
     public Checklist.Item createChecklistItem(String sectionKey, String textKey) {
-	String section = getI18NString(sectionKey);
-	String text = getI18NString(textKey);
-	return new Checklist.Item(section, text);
+        String section = getI18NString(sectionKey);
+        String text = getI18NString(textKey);
+        return new Checklist.Item(section, text);
     }
 
 
-    /** 
+    /**
      * Create a checklist item based on entries in the interview's resource bundle.
      * @param sectionKey A key to identify the section name within the interview's resource bundle
      * @param textKey A key to identify the checklist item text within the interview's resource bundle
@@ -1039,13 +1039,13 @@ public class Interview
      * @return a Checklist.Item object composed from the appropriate entries in the interview's resource bundle and the specified argument value
      */
     public Checklist.Item createChecklistItem(String sectionKey, String textKey, Object textArg) {
-	String section = getI18NString(sectionKey);
-	String text = getI18NString(textKey, textArg);
-	return new Checklist.Item(section, text);
+        String section = getI18NString(sectionKey);
+        String text = getI18NString(textKey, textArg);
+        return new Checklist.Item(section, text);
     }
 
 
-    /** 
+    /**
      * Create a checklist item based on entries in the interview's resource bundle.
      * @param sectionKey A key to identify the section name within the interview's resource bundle
      * @param textKey A key to identify the checklist item text within the interview's resource bundle
@@ -1053,9 +1053,9 @@ public class Interview
      * @return a Checklist.Item object composed from the appropriate entries in the interview's resource bundle and the specified argument values
      */
     public Checklist.Item createChecklistItem(String sectionKey, String textKey, Object[] textArgs) {
-	String section = getI18NString(sectionKey);
-	String text = getI18NString(textKey, textArgs);
-	return new Checklist.Item(section, text);
+        String section = getI18NString(sectionKey);
+        String text = getI18NString(textKey, textArgs);
+        return new Checklist.Item(section, text);
     }
 
     //----- markers ---------------------------------
@@ -1067,24 +1067,24 @@ public class Interview
      * @throws NullPointerException if the question is null.
      */
     void addMarker(Question q, String name) {
-	if (root != this) {
-	    root.addMarker(q, name);
-	    return;
-	}
+        if (root != this) {
+            root.addMarker(q, name);
+            return;
+        }
 
-	if (q == null)
-	    throw new NullPointerException();
+        if (q == null)
+            throw new NullPointerException();
 
-	if (allMarkers == null)
-	    allMarkers = new HashMap();
+        if (allMarkers == null)
+            allMarkers = new HashMap();
 
-	Set markersForName = (Set) (allMarkers.get(name));
-	if (markersForName == null) {
-	    markersForName = new HashSet();
-	    allMarkers.put(name, markersForName);
-	}
+        Set markersForName = (Set) (allMarkers.get(name));
+        if (markersForName == null) {
+            markersForName = new HashSet();
+            allMarkers.put(name, markersForName);
+        }
 
-	markersForName.add(q);
+        markersForName.add(q);
     }
 
     /**
@@ -1094,25 +1094,25 @@ public class Interview
      * @throws NullPointerException if the question is null.
      */
     void removeMarker(Question q, String name) {
-	if (root != this) {
-	    root.removeMarker(q, name);
-	    return;
-	}
+        if (root != this) {
+            root.removeMarker(q, name);
+            return;
+        }
 
-	if (q == null)
-	    throw new NullPointerException();
+        if (q == null)
+            throw new NullPointerException();
 
-	if (allMarkers == null)
-	    return;
+        if (allMarkers == null)
+            return;
 
-	Set markersForName = (Set) (allMarkers.get(name));
-	if (markersForName == null) 
-	    return;
+        Set markersForName = (Set) (allMarkers.get(name));
+        if (markersForName == null)
+            return;
 
-	markersForName.remove(q);
+        markersForName.remove(q);
 
-	if (markersForName.size() == 0)
-	    allMarkers.remove(name);
+        if (markersForName.size() == 0)
+            allMarkers.remove(name);
     }
 
     /**
@@ -1122,20 +1122,20 @@ public class Interview
      * @throws NullPointerException if the question is null.
      */
     boolean hasMarker(Question q, String name) {
-	if (root != this)
-	    return root.hasMarker(q, name);
+        if (root != this)
+            return root.hasMarker(q, name);
 
-	if (q == null)
-	    throw new NullPointerException();
+        if (q == null)
+            throw new NullPointerException();
 
-	if (allMarkers == null)
-	    return false;
+        if (allMarkers == null)
+            return false;
 
-	Set markersForName = (Set) (allMarkers.get(name));
-	if (markersForName == null) 
-	    return false;
+        Set markersForName = (Set) (allMarkers.get(name));
+        if (markersForName == null)
+            return false;
 
-	return markersForName.contains(q);
+        return markersForName.contains(q);
     }
 
     /**
@@ -1143,26 +1143,26 @@ public class Interview
      * @param name The name of the markers to be removed
      */
     public void removeMarkers(String name) {
-	if (root != this) {
-	    root.removeMarkers(name);
-	    return;
-	}
+        if (root != this) {
+            root.removeMarkers(name);
+            return;
+        }
 
-	// just have to remove the appropriate set of markers
-	if (allMarkers != null)
-	    allMarkers.remove(name);
+        // just have to remove the appropriate set of markers
+        if (allMarkers != null)
+            allMarkers.remove(name);
     }
 
     /**
      * Remove all the markers, whatever their name.
      */
     public void removeAllMarkers() {
-	if (root != this) {
-	    root.removeAllMarkers();
-	    return;
-	}
+        if (root != this) {
+            root.removeAllMarkers();
+            return;
+        }
 
-	allMarkers = null;
+        allMarkers = null;
     }
 
     /**
@@ -1170,108 +1170,108 @@ public class Interview
      * @param name The name of the markers for the questions to be cleared.
      */
     public void clearMarkedResponses(String name) {
-	if (root != this) {
-	    root.clearMarkedResponses(name);
-	    return;
-	}
+        if (root != this) {
+            root.clearMarkedResponses(name);
+            return;
+        }
 
-	if (allMarkers == null) // no markers at all
-	    return;
-	
-	Set markersForName = (Set) (allMarkers.get(name));
-	if (markersForName == null) // no markers for this name
-	    return;
+        if (allMarkers == null) // no markers at all
+            return;
 
-	updateEnabled = false;
-	Question oldCurrentQuestion = getCurrentQuestion();
+        Set markersForName = (Set) (allMarkers.get(name));
+        if (markersForName == null) // no markers for this name
+            return;
 
-	for (Iterator iter = markersForName.iterator(); iter.hasNext(); ) {
-	    Question q = (Question) (iter.next());
-	    q.clear();
-	}
-	
-	updateEnabled = true;
-	updatePath(firstQuestion);
+        updateEnabled = false;
+        Question oldCurrentQuestion = getCurrentQuestion();
 
-	Question newCurrentQuestion = getCurrentQuestion();
-	if (newCurrentQuestion != oldCurrentQuestion)
-	    notifyCurrentQuestionChanged(newCurrentQuestion);
+        for (Iterator iter = markersForName.iterator(); iter.hasNext(); ) {
+            Question q = (Question) (iter.next());
+            q.clear();
+        }
+
+        updateEnabled = true;
+        updatePath(firstQuestion);
+
+        Question newCurrentQuestion = getCurrentQuestion();
+        if (newCurrentQuestion != oldCurrentQuestion)
+            notifyCurrentQuestionChanged(newCurrentQuestion);
     }
 
     private void loadMarkers(Map data) {
-	String s = (String) (data.get(MARKERS));
-	int count = 0;
-	if (s != null) {
-	    try {
-		count = Integer.parseInt(s);
-	    }
-	    catch (NumberFormatException e) {
-		// ignore
-	    }
-	}
+        String s = (String) (data.get(MARKERS));
+        int count = 0;
+        if (s != null) {
+            try {
+                count = Integer.parseInt(s);
+            }
+            catch (NumberFormatException e) {
+                // ignore
+            }
+        }
 
-	allMarkers = null;
+        allMarkers = null;
 
-	for (int i = 0; i < count; i++) {
-	    String name = (String) (data.get(MARKERS_PREF + i + ".name"));
-	    String tags = (String) (data.get(MARKERS_PREF + i));
-	    if (tags != null) 
-		loadMarkers(name, tags);
-	}
+        for (int i = 0; i < count; i++) {
+            String name = (String) (data.get(MARKERS_PREF + i + ".name"));
+            String tags = (String) (data.get(MARKERS_PREF + i));
+            if (tags != null)
+                loadMarkers(name, tags);
+        }
     }
 
     private void loadMarkers(String name, String tags) {
-	int start = -1;
-	for (int i = 0; i < tags.length(); i++) {
-	    if (tags.charAt(i) == '\n') {
-		if (start != -1) {
-		    String tag = tags.substring(start, i).trim();
-		    loadMarker(name, tag);
-		    start = -1;
-		} 
-	    }
-	    else
-		if (start == -1)
-		    start = i;
-	}
-	if (start != -1) {
-	    String tag = tags.substring(start).trim();
-	    loadMarker(name, tag);
-	}
+        int start = -1;
+        for (int i = 0; i < tags.length(); i++) {
+            if (tags.charAt(i) == '\n') {
+                if (start != -1) {
+                    String tag = tags.substring(start, i).trim();
+                    loadMarker(name, tag);
+                    start = -1;
+                }
+            }
+            else
+                if (start == -1)
+                    start = i;
+        }
+        if (start != -1) {
+            String tag = tags.substring(start).trim();
+            loadMarker(name, tag);
+        }
     }
 
     private void loadMarker(String name, String tag) {
-	if (tag.length() > 0) {
-	    Question q = lookup(tag);
-	    if (q != null)
-		addMarker(q, name);
-	}
+        if (tag.length() > 0) {
+            Question q = lookup(tag);
+            if (q != null)
+                addMarker(q, name);
+        }
     }
-    
-    private void saveMarkers(Map data) {
-	if (allMarkers == null)
-	    return;
 
-	int i = 0;
-	for (Iterator iter = allMarkers.entrySet().iterator(); iter.hasNext(); ) {
-	    Map.Entry e = (Map.Entry) (iter.next());
-	    String name = (String) (e.getKey());
-	    Set markersForName = (Set) (e.getValue());
-	    if (name != null)
-		data.put(MARKERS_PREF + i + ".name", name);
-	    StringBuffer sb = new StringBuffer();
-	    for (Iterator qIter = markersForName.iterator(); qIter.hasNext(); ) {
-		Question q = (Question) (qIter.next());
-		if (sb.length() > 0)
-		    sb.append('\n');
-		sb.append(q.getTag());
-	    }
-	    data.put(MARKERS_PREF + i, sb.toString());
-	    i++;
-	}
-	
-	if (i > 0)
-	    data.put(MARKERS, String.valueOf(i));
+    private void saveMarkers(Map data) {
+        if (allMarkers == null)
+            return;
+
+        int i = 0;
+        for (Iterator iter = allMarkers.entrySet().iterator(); iter.hasNext(); ) {
+            Map.Entry e = (Map.Entry) (iter.next());
+            String name = (String) (e.getKey());
+            Set markersForName = (Set) (e.getValue());
+            if (name != null)
+                data.put(MARKERS_PREF + i + ".name", name);
+            StringBuffer sb = new StringBuffer();
+            for (Iterator qIter = markersForName.iterator(); qIter.hasNext(); ) {
+                Question q = (Question) (qIter.next());
+                if (sb.length() > 0)
+                    sb.append('\n');
+                sb.append(q.getTag());
+            }
+            data.put(MARKERS_PREF + i, sb.toString());
+            i++;
+        }
+
+        if (i > 0)
+            data.put(MARKERS, String.valueOf(i));
     }
 
 
@@ -1288,7 +1288,7 @@ public class Interview
      * continuing with the specified follow-on question.
      */
     protected Question callInterview(Interview i, Question q) {
-	return new InterviewQuestion(this, i, q);
+        return new InterviewQuestion(this, i, q);
     }
 
     //----- load/save stuff ----------------------------------------
@@ -1298,20 +1298,20 @@ public class Interview
      * recursively, in its child interviews.
      */
     public void clear() {
-	updateEnabled = false;
-	for (Iterator iter = allQuestions.values().iterator(); iter.hasNext(); ) {
-	    Question q = (Question) (iter.next());
-	    q.clear();
-	}
+        updateEnabled = false;
+        for (Iterator iter = allQuestions.values().iterator(); iter.hasNext(); ) {
+            Question q = (Question) (iter.next());
+            q.clear();
+        }
 
-	for (int i = 0; i < children.size(); i++) {
-	    Interview child = (Interview)children.elementAt(i);
-	    child.clear();
-	}
-	if (parent == null) {
+        for (int i = 0; i < children.size(); i++) {
+            Interview child = (Interview)children.elementAt(i);
+            child.clear();
+        }
+        if (parent == null) {
             extraValues = null;
             templateValues = null;
-	    reset();
+            reset();
         }
     }
 
@@ -1325,7 +1325,7 @@ public class Interview
      * @throws Interview.Fault if the checksum is found to be incorrect.
      */
     public void load(Map data) throws Fault {
-	load(data, true);
+        load(data, true);
     }
 
     /**
@@ -1339,44 +1339,44 @@ public class Interview
      * @throws Interview.Fault if the checksum is found to be incorrect.
      */
     public void load(Map data, boolean checkChecksum) throws Fault {
-	if (checkChecksum && !isChecksumValid(data, true)) 
-	    throw new Fault(i18n, "interview.checksumError");
+        if (checkChecksum && !isChecksumValid(data, true))
+            throw new Fault(i18n, "interview.checksumError");
 
-	if (parent == null) {
-	    String iTag = (String)(data.get(INTERVIEW));
-	    if (iTag != null && !iTag.equals(getClass().getName()))
-		throw new Fault(i18n, "interview.classMismatch");
+        if (parent == null) {
+            String iTag = (String)(data.get(INTERVIEW));
+            if (iTag != null && !iTag.equals(getClass().getName()))
+                throw new Fault(i18n, "interview.classMismatch");
 
             loadExternalValues(data);
             loadTemplateValues(data);
-	}
+        }
 
-	updateEnabled = false;
+        updateEnabled = false;
 
-	// clear all the answers in this interview before loading an
-	// responses from the archive
-	for (Iterator iter = allQuestions.values().iterator(); iter.hasNext(); ) {
-	    Question q = (Question) (iter.next());
-	    q.clear();
-	}
+        // clear all the answers in this interview before loading an
+        // responses from the archive
+        for (Iterator iter = allQuestions.values().iterator(); iter.hasNext(); ) {
+            Question q = (Question) (iter.next());
+            q.clear();
+        }
 
-	for (Iterator iter = allQuestions.values().iterator(); iter.hasNext(); ) {
-	    Question q = (Question) (iter.next());
-	    q.load(data);
-	}
+        for (Iterator iter = allQuestions.values().iterator(); iter.hasNext(); ) {
+            Question q = (Question) (iter.next());
+            q.load(data);
+        }
 
-	for (int i = 0; i < children.size(); i++) {
-	    Interview child = (Interview)children.elementAt(i);
-	    child.load(data, false);
-	}
+        for (int i = 0; i < children.size(); i++) {
+            Interview child = (Interview)children.elementAt(i);
+            child.load(data, false);
+        }
 
-	if (parent == null) {
-	    String qTag = (String)(data.get(QUESTION));
-	    Question q = (qTag == null ? null : lookup(qTag));
-	    reset(q == null ? firstQuestion : q);
-	}
+        if (parent == null) {
+            String qTag = (String)(data.get(QUESTION));
+            Question q = (qTag == null ? null : lookup(qTag));
+            reset(q == null ? firstQuestion : q);
+        }
 
-	loadMarkers(data);
+        loadMarkers(data);
     }
 
     /**
@@ -1392,16 +1392,16 @@ public class Interview
      * or whether it is OK to monit the checksum, if not.
      */
     public static boolean isChecksumValid(Map data, boolean okIfOmitted) {
-	try {
-	    String s = (String)(data.get(CHECKSUM));
-	    if (s == null)
-		return okIfOmitted;
-	    else
-		return (Long.parseLong(s, 16) == computeChecksum(data));
-	}
-	catch (NumberFormatException e) {
-	    return false;
-	}
+        try {
+            String s = (String)(data.get(CHECKSUM));
+            if (s == null)
+                return okIfOmitted;
+            else
+                return (Long.parseLong(s, 16) == computeChecksum(data));
+        }
+        catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     /**
@@ -1413,10 +1413,10 @@ public class Interview
      */
     public void save(Map data) {
         // only in the root interview
-	if (parent == null) {
-	    data.put(INTERVIEW, getClass().getName());
-	    data.put(QUESTION, getCurrentQuestion().getTag());
-	    data.put(LOCALE, Locale.getDefault().toString());
+        if (parent == null) {
+            data.put(INTERVIEW, getClass().getName());
+            data.put(QUESTION, getCurrentQuestion().getTag());
+            data.put(LOCALE, Locale.getDefault().toString());
 
             if (extraValues != null && extraValues.size() > 0) {
                 Set keys = getPropertyKeys();
@@ -1426,7 +1426,7 @@ public class Interview
                     data.put(EXTERNAL_PREF + key, extraValues.get(key));
                 }   // while
             }
-            
+
             if (templateValues != null && templateValues.size() > 0) {
                 Set keys = templateValues.keySet();
                 Iterator it = keys.iterator();
@@ -1435,101 +1435,101 @@ public class Interview
                     data.put(TEMPLATE_PREF + key, retrieveTemplateProperty(key));
                 }   // while
             }
-            
-	}
 
-	for (Iterator iter = allQuestions.values().iterator(); iter.hasNext(); ) {
-	    Question q = (Question) (iter.next());
-	    try {
-		q.save(data);
-	    }
-	    catch (RuntimeException ex) {
-		System.err.println("warning: " + ex.toString());
-		System.err.println("while saving value for question " + q.getTag() + " in interview " + getTag());
-	    }
-	}
+        }
 
-	for (int i = 0; i < children.size(); i++) {
-	    Interview child = (Interview)children.elementAt(i);
-	    child.save(data);
-	}
-	
-	saveMarkers(data);
+        for (Iterator iter = allQuestions.values().iterator(); iter.hasNext(); ) {
+            Question q = (Question) (iter.next());
+            try {
+                q.save(data);
+            }
+            catch (RuntimeException ex) {
+                System.err.println("warning: " + ex.toString());
+                System.err.println("while saving value for question " + q.getTag() + " in interview " + getTag());
+            }
+        }
 
-	data.put(CHECKSUM, Long.toString(computeChecksum(data), 16));
+        for (int i = 0; i < children.size(); i++) {
+            Interview child = (Interview)children.elementAt(i);
+            child.save(data);
+        }
+
+        saveMarkers(data);
+
+        data.put(CHECKSUM, Long.toString(computeChecksum(data), 16));
     }
 
     private static long computeChecksum(Map data) {
-	long cs = 0;
-	for (Iterator iter = data.entrySet().iterator(); iter.hasNext(); ) {
-	    Map.Entry e = (Map.Entry) (iter.next());
-	    String key = (String) (e.getKey());
-	    String value = (String)(e.getValue());
-	    if (!key.equals(CHECKSUM)) {
-		cs += computeChecksum(key) * computeChecksum(value);
-	    }
-	}
-	// ensure result is >= 0 to avoid problems with signed hex numbers
-	return (cs == Long.MIN_VALUE ? 0 : cs < 0 ? -cs : cs);
+        long cs = 0;
+        for (Iterator iter = data.entrySet().iterator(); iter.hasNext(); ) {
+            Map.Entry e = (Map.Entry) (iter.next());
+            String key = (String) (e.getKey());
+            String value = (String)(e.getValue());
+            if (!key.equals(CHECKSUM)) {
+                cs += computeChecksum(key) * computeChecksum(value);
+            }
+        }
+        // ensure result is >= 0 to avoid problems with signed hex numbers
+        return (cs == Long.MIN_VALUE ? 0 : cs < 0 ? -cs : cs);
     }
 
     private static long computeChecksum(String s) {
-	if (s == null)
-	    return 1;
-	else {
-	    long cs = 0;
-	    for (int i = 0; i < s.length(); i++) {
-		cs = cs * 37 + s.charAt(i);
-	    }
-	    return cs;
-	}
+        if (s == null)
+            return 1;
+        else {
+            long cs = 0;
+            for (int i = 0; i < s.length(); i++) {
+                cs = cs * 37 + s.charAt(i);
+            }
+            return cs;
+        }
     }
 
     /**
      * Export values for questions on the current path, by calling {@link Question#export}
-     * for each question returned by {@link #getPath}. 
+     * for each question returned by {@link #getPath}.
      * It should  be called on the root interview to export the values for all
      * questions on the current path, or it can be called on a sub-interview
      * to export just the values from the question in that sub-interview (and in turn,
      * in any further sub-interviews for which there are questions on the path.)
      * Unchecked exceptions that arise from each question's export method are treated
      * according to the policy set by setExportIgnoreExceptionPolicy for the interview
-     * for which export was called.  
+     * for which export was called.
      * It may be convenient to ignore runtime exceptions during export, if exceptions
      * may be thrown when the interview is incomplete.  It may be preferred not
-     * to ignore any exceptions, if no exceptions are expected.  
+     * to ignore any exceptions, if no exceptions are expected.
      * @param data The map in which the values will be placed.
      * @see #getPath
      * @see #setExportIgnoreExceptionPolicy
      * @see #EXPORT_IGNORE_ALL_EXCEPTIONS
-     * @see #EXPORT_IGNORE_RUNTIME_EXCEPTIONS 
+     * @see #EXPORT_IGNORE_RUNTIME_EXCEPTIONS
      * @see #EXPORT_IGNORE_NO_EXCEPTIONS
      */
     public void export(Map data) {
-	Question[] path = getPath();
-	for (int i = 0; i < path.length; i++) {
-	    try {
-		path[i].export(data);
-	    }
-	    catch (RuntimeException e) {
-		switch (exportIgnoreExceptionPolicy) {
-		case EXPORT_IGNORE_ALL_EXCEPTIONS:
-		case EXPORT_IGNORE_RUNTIME_EXCEPTIONS:
-		    break;
-		case EXPORT_IGNORE_NO_EXCEPTIONS:
-		    throw e;
-		}
-	    }
-	    catch (Error e) {
-		switch (exportIgnoreExceptionPolicy) {
-		case EXPORT_IGNORE_ALL_EXCEPTIONS:
-		    break;
-		case EXPORT_IGNORE_RUNTIME_EXCEPTIONS:
-		case EXPORT_IGNORE_NO_EXCEPTIONS:
-		    throw e;
-		}
-	    }
-	}
+        Question[] path = getPath();
+        for (int i = 0; i < path.length; i++) {
+            try {
+                path[i].export(data);
+            }
+            catch (RuntimeException e) {
+                switch (exportIgnoreExceptionPolicy) {
+                case EXPORT_IGNORE_ALL_EXCEPTIONS:
+                case EXPORT_IGNORE_RUNTIME_EXCEPTIONS:
+                    break;
+                case EXPORT_IGNORE_NO_EXCEPTIONS:
+                    throw e;
+                }
+            }
+            catch (Error e) {
+                switch (exportIgnoreExceptionPolicy) {
+                case EXPORT_IGNORE_ALL_EXCEPTIONS:
+                    break;
+                case EXPORT_IGNORE_RUNTIME_EXCEPTIONS:
+                case EXPORT_IGNORE_NO_EXCEPTIONS:
+                    throw e;
+                }
+            }
+        }
     }
 
     /**
@@ -1540,11 +1540,11 @@ public class Interview
      * exceptions that may arise during export.
      * @see #export
      * @see #EXPORT_IGNORE_ALL_EXCEPTIONS
-     * @see #EXPORT_IGNORE_RUNTIME_EXCEPTIONS 
+     * @see #EXPORT_IGNORE_RUNTIME_EXCEPTIONS
      * @see #EXPORT_IGNORE_NO_EXCEPTIONS
      */
     public int getExportIgnoreExceptionPolicy() {
-	return exportIgnoreExceptionPolicy;
+        return exportIgnoreExceptionPolicy;
     }
 
 
@@ -1555,13 +1555,13 @@ public class Interview
      * @see #getExportIgnoreExceptionPolicy
      * @see #export
      * @see #EXPORT_IGNORE_ALL_EXCEPTIONS
-     * @see #EXPORT_IGNORE_RUNTIME_EXCEPTIONS 
+     * @see #EXPORT_IGNORE_RUNTIME_EXCEPTIONS
      * @see #EXPORT_IGNORE_NO_EXCEPTIONS
      */
     public void setExportIgnoreExceptionPolicy(int policy) {
-	if (policy < 0 || policy >= EXPORT_NUM_IGNORE_POLICIES)
-	    throw new IllegalArgumentException();
-	exportIgnoreExceptionPolicy = policy;
+        if (policy < 0 || policy >= EXPORT_NUM_IGNORE_POLICIES)
+            throw new IllegalArgumentException();
+        exportIgnoreExceptionPolicy = policy;
     }
 
     /**
@@ -1598,15 +1598,15 @@ public class Interview
      * @param o an observer to be notified as changes occur
      */
     synchronized public void addObserver(Observer o) {
-	if (o == null)
-	    throw new NullPointerException();
+        if (o == null)
+            throw new NullPointerException();
 
-	// we take the hit here of shuffling arrays to make the
-	// notification faster and more convenient (no casting)
-	Observer[] newObs = new Observer[observers.length + 1];
-	System.arraycopy(observers, 0, newObs, 0, observers.length);
-	newObs[observers.length] = o;
-	observers = newObs;
+        // we take the hit here of shuffling arrays to make the
+        // notification faster and more convenient (no casting)
+        Observer[] newObs = new Observer[observers.length + 1];
+        System.arraycopy(observers, 0, newObs, 0, observers.length);
+        newObs[observers.length] = o;
+        observers = newObs;
     }
 
     /**
@@ -1614,92 +1614,92 @@ public class Interview
      * @param o the observer to be removed from the list taht are notified
      */
     synchronized public void removeObserver(Observer o) {
-	if (o == null)
-	    throw new NullPointerException();
+        if (o == null)
+            throw new NullPointerException();
 
-	// we take the hit here of shuffling arrays to make the
-	// notification faster and more convenient (no casting)
-	for (int i = 0; i < observers.length; i++) {
-	    if (observers[i] == o) {
-		Observer[] newObs =
-		    new Observer[observers.length - 1];
-		System.arraycopy(observers, 0, newObs, 0, i);
-		System.arraycopy(observers, i + 1, newObs, i, observers.length - i - 1);
-		observers = newObs;
-		return;
-	    }
-	}
+        // we take the hit here of shuffling arrays to make the
+        // notification faster and more convenient (no casting)
+        for (int i = 0; i < observers.length; i++) {
+            if (observers[i] == o) {
+                Observer[] newObs =
+                    new Observer[observers.length - 1];
+                System.arraycopy(observers, 0, newObs, 0, i);
+                System.arraycopy(observers, i + 1, newObs, i, observers.length - i - 1);
+                observers = newObs;
+                return;
+            }
+        }
     }
 
     private void notifyCurrentQuestionChanged(Question q) {
-	for (int i = 0; i < observers.length && q == getCurrentQuestion(); i++)
-	    observers[i].currentQuestionChanged(q);
+        for (int i = 0; i < observers.length && q == getCurrentQuestion(); i++)
+            observers[i].currentQuestionChanged(q);
     }
 
     private void notifyPathUpdated() {
-	for (int i = 0; i < observers.length; i++)
-	    observers[i].pathUpdated();
+        for (int i = 0; i < observers.length; i++)
+            observers[i].pathUpdated();
     }
 
-    private Observer[] observers = new Observer[0];	
+    private Observer[] observers = new Observer[0];
 
     //----- tag stuff ----------------------------------------
 
     /**
-     * Change the base tag for this interview. 
+     * Change the base tag for this interview.
      * This should not be done for most interviews, since the base tag
      * is the basis for storing loading and storing values, and changing
-     * the base tag may lead to unexpected results. 
+     * the base tag may lead to unexpected results.
      * Changing the base tag will caused the tags in all statically
      * nested interviews and questions to be updated as well.
-     * This method is primarily intended to be used when renaming 
+     * This method is primarily intended to be used when renaming
      * dynamically allocated loop bodies in ListQuestion.
      * @param newBaseTag the new value for the base tag.
      */
     protected void setBaseTag(String newBaseTag) {
-	baseTag = newBaseTag;
-	updateTags();
+        baseTag = newBaseTag;
+        updateTags();
     }
 
     private void updateTags() {
-	// update our own tag
-	if (parent == null || parent.tag == null)
-	    tag = baseTag;
-	else if (baseTag == null) // should we allow this?
-	    tag = parent.getTag();
-	else
-	    tag = parent.getTag() + "." + baseTag;
+        // update our own tag
+        if (parent == null || parent.tag == null)
+            tag = baseTag;
+        else if (baseTag == null) // should we allow this?
+            tag = parent.getTag();
+        else
+            tag = parent.getTag() + "." + baseTag;
 
-	// update the tags for the questions in the interview
-	// and rebuild the tag map
-	Map newAllQuestions = new HashMap();
-	for (Iterator iter = allQuestions.values().iterator(); iter.hasNext(); ) {
-	    Question q = (Question) (iter.next());
-	    q.updateTag();
-	    newAllQuestions.put(q.getTag(), q);
-	}
-	allQuestions = newAllQuestions;
+        // update the tags for the questions in the interview
+        // and rebuild the tag map
+        Map newAllQuestions = new HashMap();
+        for (Iterator iter = allQuestions.values().iterator(); iter.hasNext(); ) {
+            Question q = (Question) (iter.next());
+            q.updateTag();
+            newAllQuestions.put(q.getTag(), q);
+        }
+        allQuestions = newAllQuestions;
 
-	// recursively update children
-	for (Iterator iter = children.iterator(); iter.hasNext(); ) {
-	    Interview i = (Interview) (iter.next());
-	    i.updateTags();
-	}
+        // recursively update children
+        for (Iterator iter = children.iterator(); iter.hasNext(); ) {
+            Interview i = (Interview) (iter.next());
+            i.updateTags();
+        }
     }
-    
+
     //----- adding subinterviews and questions ------------------------
 
     void add(Interview child) {
-	children.add(child);
+        children.add(child);
     }
 
     void add(Question question) {
-	String qTag = question.getTag();
-	Question prev = (Question) allQuestions.put(qTag, question);
-	if (prev != null)
-	    throw new IllegalArgumentException("duplicate questions for tag: " + qTag);
+        String qTag = question.getTag();
+        Question prev = (Question) allQuestions.put(qTag, question);
+        if (prev != null)
+            throw new IllegalArgumentException("duplicate questions for tag: " + qTag);
     }
-    
+
     //----- versioning ----------------------------------------
 
     /**
@@ -1720,8 +1720,8 @@ public class Interview
      * @see #getInterviewSemantics
      */
     protected void setInterviewSemantics(int value) {
-	if (value <= SEMANTIC_MAX_VERSION)
-	    semantics = value;
+        if (value <= SEMANTIC_MAX_VERSION)
+            semantics = value;
     }
 
     /**
@@ -1734,7 +1734,7 @@ public class Interview
      * @since 3.2
      */
     public int getInterviewSemantics() {
-	return semantics;
+        return semantics;
     }
 
     //----- external value management ----------------------------------------
@@ -1760,7 +1760,7 @@ public class Interview
     }
 
     /**
-     * Store a template value into the configuration.  
+     * Store a template value into the configuration.
      * @param key The name of the key to store.
      * @param value The value associated with the given key.
      * @return The old value of this property, null if not previously set.
@@ -1773,9 +1773,9 @@ public class Interview
             return (String)(templateValues.put(key, value));
         }
     }
-    
+
     /**
-     * Clear a previous template properties and store the new into the configuration.  
+     * Clear a previous template properties and store the new into the configuration.
      * @param props The properties to store.
      */
     public void storeTemplateProperties(Properties props) {
@@ -1787,8 +1787,8 @@ public class Interview
             templateValues.putAll(props);
         }
     }
-    
-    
+
+
     /**
      * Retrieve a property from the collection of "external" values being
      * stored in the configuration.
@@ -1822,7 +1822,7 @@ public class Interview
             return (String)(templateValues.get(key));
         }
     }
-    
+
     public Set retrieveTemplateKeys() {
         if (getParent() != null)
             return getParent().retrieveTemplateKeys();
@@ -1832,8 +1832,8 @@ public class Interview
         }
     }
 
-    
-    
+
+
     /**
      * Retrieve set of keys for the "external" values being stored in the
      * configuration.
@@ -1889,55 +1889,55 @@ public class Interview
                 // store it, minus the special prefix
                 templateValues.put(key.substring(TEMPLATE_PREF.length()), val);
             }
-        }   
+        }
     }
-    
+
     public void propagateTemplateForAll() {
         ensureTemValuesInitialized();
-	for (Iterator iter = getAllQuestions().values().iterator(); iter.hasNext(); ) {
-	    Question q = (Question) (iter.next());
-		q.load(templateValues);
-	}
+        for (Iterator iter = getAllQuestions().values().iterator(); iter.hasNext(); ) {
+            Question q = (Question) (iter.next());
+                q.load(templateValues);
+        }
     }
-    
+
     //----- internal utilities ----------------------------------------
 
     private void ensureTemValuesInitialized() {
-	if (templateValues  == null) {
-	    templateValues  = new HashMap();
+        if (templateValues  == null) {
+            templateValues  = new HashMap();
         }
     }
 
     private void ensurePathInitialized() {
-	if (path == null) {
-	    path = new Path();
-	    reset();
-	}
+        if (path == null) {
+            path = new Path();
+            reset();
+        }
     }
-    
-    
-    private Question lookup(String tag) {
-	Question q = (Question)(allQuestions.get(tag));
-	// if q is null, search children till we find it
-	for (int i = 0; i < children.size() && q == null; i++) {
-	    Interview child = (Interview)children.elementAt(i);
-	    q = child.lookup(tag);
-	}
 
-	return q;	    
+
+    private Question lookup(String tag) {
+        Question q = (Question)(allQuestions.get(tag));
+        // if q is null, search children till we find it
+        for (int i = 0; i < children.size() && q == null; i++) {
+            Interview child = (Interview)children.elementAt(i);
+            q = child.lookup(tag);
+        }
+
+        return q;
     }
 
     // Some of the interview state is anchored off the root interview:
     // the current execution path, markers etc. This provides access to the
     // root. Arguably we could give each interview a root field as well...
     private Interview getRoot() {
-	/*
-	Interview i = this;
-	while (i.root != this)
-	    i = i.parent;
-	return i;
-	*/
-	return root;
+        /*
+        Interview i = this;
+        while (i.root != this)
+            i = i.parent;
+        return i;
+        */
+        return root;
     }
 
     /**
@@ -1945,181 +1945,181 @@ public class Interview
      * a question has changed.
      */
     public void updatePath() {
-	root.updatePath0(root.firstQuestion);
+        root.updatePath0(root.firstQuestion);
     }
 
     /**
      * Update the current path, typically because a response to
      * a question has changed.
-     * @param q The question that was changed. 
+     * @param q The question that was changed.
      */
     public void updatePath(Question q) {
        root.updatePath0(q);
     }
 
     private void updatePath0(Question q) {
-	ASSERT(root == this);
+        ASSERT(root == this);
 
-	if (!updateEnabled) { 
-	    // avoid frequent updates during load
-	    return;
-	}
+        if (!updateEnabled) {
+            // avoid frequent updates during load
+            return;
+        }
 
-	if (path == null) {
-	    // path has not been initialized yet, so no need to update it
-	    return;
-	}
+        if (path == null) {
+            // path has not been initialized yet, so no need to update it
+            return;
+        }
 
-	if (!pathContains(q)) {
-	    // question is not on the path, so nothing to do
-	    return;
-	}
+        if (!pathContains(q)) {
+            // question is not on the path, so nothing to do
+            return;
+        }
 
-	// keep a copy of the current path so that if the current
-	// question is no longer on the path at the end of the update
-	// we can adjust it as best we can.
-	Question[] currPath = getPathToCurrent();
+        // keep a copy of the current path so that if the current
+        // question is no longer on the path at the end of the update
+        // we can adjust it as best we can.
+        Question[] currPath = getPathToCurrent();
 
-	trimPath(q);
-	predictPath(q);
-	//showPath(this, q, 0);
+        trimPath(q);
+        predictPath(q);
+        //showPath(this, q, 0);
 
-	if (!pathContains(currPath[currPath.length - 1]))
-	    setCurrentQuestionFromPath(currPath);
+        if (!pathContains(currPath[currPath.length - 1]))
+            setCurrentQuestionFromPath(currPath);
 
-	notifyPathUpdated();
+        notifyPathUpdated();
     }
 
     /* useful debug routine
     private void showPath(Interview i, Question q, int depth) {
-	for (int d = 0; d < depth; d++) 
-	    System.err.print("  ");
-	System.err.println(i.getClass().getName() + " " + i.getTag());
-	for (int p = 0; p < i.path.size(); p++) {
-	    for (int d = 0; d < depth; d++) 
-		System.err.print("  ");
-	    Question pq = i.path.questionAt(p);
-	    System.err.print(p + ": " + pq.getClass().getName() + " " + pq.getTag());
-	    if (pq == q)
-		System.err.print(" *");
-	    System.err.println();
-	    if (pq instanceof InterviewQuestion)
-		showPath(((InterviewQuestion)pq).getTargetInterview(), q, depth+1);
-	} 
+        for (int d = 0; d < depth; d++)
+            System.err.print("  ");
+        System.err.println(i.getClass().getName() + " " + i.getTag());
+        for (int p = 0; p < i.path.size(); p++) {
+            for (int d = 0; d < depth; d++)
+                System.err.print("  ");
+            Question pq = i.path.questionAt(p);
+            System.err.print(p + ": " + pq.getClass().getName() + " " + pq.getTag());
+            if (pq == q)
+                System.err.print(" *");
+            System.err.println();
+            if (pq instanceof InterviewQuestion)
+                showPath(((InterviewQuestion)pq).getTargetInterview(), q, depth+1);
+        }
     }
     */
 
     private void trimPath(Question q) {
-	Object o = q;
-	Interview i = q.getInterview();
-	while (i != null) {
-	    // try to find o within i's path
-	    Path iPath = i.path;
-	    int oIndex = -1;
-	    for (int pi = 0; pi < iPath.size(); pi++) {
-		Question qq = iPath.questionAt(pi);
-		if (qq == o 
-		    || (qq instanceof InterviewQuestion
-			&& ((InterviewQuestion) qq).getTargetInterview() == o)) {
-		    oIndex = pi;
-		    break;
-		}
-	    }	
-	    // if not found, this question is not on path
-	    // otherwise, trim i's path to end with o
-	    if (oIndex == -1)
-		return;
-	    else
-		iPath.setSize(oIndex + 1);
+        Object o = q;
+        Interview i = q.getInterview();
+        while (i != null) {
+            // try to find o within i's path
+            Path iPath = i.path;
+            int oIndex = -1;
+            for (int pi = 0; pi < iPath.size(); pi++) {
+                Question qq = iPath.questionAt(pi);
+                if (qq == o
+                    || (qq instanceof InterviewQuestion
+                        && ((InterviewQuestion) qq).getTargetInterview() == o)) {
+                    oIndex = pi;
+                    break;
+                }
+            }
+            // if not found, this question is not on path
+            // otherwise, trim i's path to end with o
+            if (oIndex == -1)
+                return;
+            else
+                iPath.setSize(oIndex + 1);
 
-	    // repeat with caller, all the way up the call stack
-	    o = i;
-	    i = (i.caller == null ? null : i.caller.getInterview());
-	}
+            // repeat with caller, all the way up the call stack
+            o = i;
+            i = (i.caller == null ? null : i.caller.getInterview());
+        }
     }
 
     private void predictPath(Question q) {
-	// start filling out path
-	Interview i = q.getInterview();
-	q = predictNext(q);
-	while (true) {
-	    // note: multiple exit conditions within loop body
-	    if (q == null || pathContains(q))
-		break;
-	    else if (q instanceof FinalQuestion) {
-		// end of an interview; continue in caller if available
-		i.path.addQuestion(q);
-		if (i.caller == null) {
-		    break;
-		}
-		else {
-		    q = i.caller.getNext();
-		    i = i.caller.getInterview();
-		}
-	    }
-	    else if (q instanceof InterviewQuestion) {
-		InterviewQuestion iq = (InterviewQuestion)q;
-		Interview i2 = iq.getTargetInterview();
-		if (pathContains(i2))
-		    break;
-		else if (i2 instanceof ListQuestion.Body) {
-		    // no need to predict the body, right?
-		    // because it was done in predictNext()
-		    i2.caller = iq;
-		    i.path.addQuestion(iq);
-		    q = (i2.path.lastQuestion() instanceof FinalQuestion ? iq.getNext() : null);
-		}
-		else {
-		    i2.caller = iq;
-		    if (i2.path == null)
-			i2.path = new Path();
-		    else
-			i2.path.clear();
-		    i.path.addQuestion(iq);
-		    i = i2;
-		    q = i2.firstQuestion;
-		}
-	    }
-	    else {
-		if (q.isEnabled())
-		    i.path.addQuestion(q);
-		q = predictNext(q);
-	    }
-	}
+        // start filling out path
+        Interview i = q.getInterview();
+        q = predictNext(q);
+        while (true) {
+            // note: multiple exit conditions within loop body
+            if (q == null || pathContains(q))
+                break;
+            else if (q instanceof FinalQuestion) {
+                // end of an interview; continue in caller if available
+                i.path.addQuestion(q);
+                if (i.caller == null) {
+                    break;
+                }
+                else {
+                    q = i.caller.getNext();
+                    i = i.caller.getInterview();
+                }
+            }
+            else if (q instanceof InterviewQuestion) {
+                InterviewQuestion iq = (InterviewQuestion)q;
+                Interview i2 = iq.getTargetInterview();
+                if (pathContains(i2))
+                    break;
+                else if (i2 instanceof ListQuestion.Body) {
+                    // no need to predict the body, right?
+                    // because it was done in predictNext()
+                    i2.caller = iq;
+                    i.path.addQuestion(iq);
+                    q = (i2.path.lastQuestion() instanceof FinalQuestion ? iq.getNext() : null);
+                }
+                else {
+                    i2.caller = iq;
+                    if (i2.path == null)
+                        i2.path = new Path();
+                    else
+                        i2.path.clear();
+                    i.path.addQuestion(iq);
+                    i = i2;
+                    q = i2.firstQuestion;
+                }
+            }
+            else {
+                if (q.isEnabled())
+                    i.path.addQuestion(q);
+                q = predictNext(q);
+            }
+        }
     }
 
     private Question predictNext(Question q) {
-	if (!q.isValueValid())
-	    return null;
+        if (!q.isValueValid())
+            return null;
 
-	if (q instanceof ListQuestion && q.isEnabled()) {
-	    final ListQuestion lq = (ListQuestion) q;
-	    if (lq.isEnd()) 
-		return q.getNext();
+        if (q instanceof ListQuestion && q.isEnabled()) {
+            final ListQuestion lq = (ListQuestion) q;
+            if (lq.isEnd())
+                return q.getNext();
 
-	    for (int index = 0; index < lq.getBodyCount(); index++) {
-		Interview b = lq.getBody(index);
-		if (b.path == null)
-		    b.path = new Path();
-		else
-		    b.path.clear();
-		b.path.addQuestion(b.firstQuestion);
-		b.caller = null;
-		b.predictPath(b.firstQuestion);
-	    }
-	    
+            for (int index = 0; index < lq.getBodyCount(); index++) {
+                Interview b = lq.getBody(index);
+                if (b.path == null)
+                    b.path = new Path();
+                else
+                    b.path.clear();
+                b.path.addQuestion(b.firstQuestion);
+                b.caller = null;
+                b.predictPath(b.firstQuestion);
+            }
 
-	    Interview lqBody = lq.getSelectedBody();
-	    Question lqOther = lq.getOther();
-	    if (lqBody == null) 
-		return lqOther.getNext();
-	    else {
-		Interview lqInt = lq.getInterview();
-		return new InterviewQuestion(lqInt, lqBody, lqOther);
-	    }
-	}
 
-	return q.getNext();
+            Interview lqBody = lq.getSelectedBody();
+            Question lqOther = lq.getOther();
+            if (lqBody == null)
+                return lqOther.getNext();
+            else {
+                Interview lqInt = lq.getInterview();
+                return new InterviewQuestion(lqInt, lqBody, lqOther);
+            }
+        }
+
+        return q.getNext();
     }
 
     /**
@@ -2129,10 +2129,10 @@ public class Interview
      * @param key the name of the entry to be returned
      * @param arg an argument to be formatted into the result using
      * {@link java.text.MessageFormat#format}
-     * @return the formatted string 
+     * @return the formatted string
      */
     private String getI18NString(String key) {
-	return getI18NString(key, empty);
+        return getI18NString(key, empty);
     }
 
     private static final Object[] empty = { };
@@ -2144,10 +2144,10 @@ public class Interview
      * @param key the name of the entry to be returned
      * @param arg an argument to be formatted into the result using
      * {@link java.text.MessageFormat#format}
-     * @return the formatted string 
+     * @return the formatted string
      */
     private String getI18NString(String key, Object arg) {
-	return getI18NString(key, new Object[] { arg });
+        return getI18NString(key, new Object[] { arg });
     }
 
     /**
@@ -2160,26 +2160,26 @@ public class Interview
      * @return the formatted string
      */
     private String getI18NString(String key, Object[] args) {
-	try {
-	    ResourceBundle b = getResourceBundle();
-	    if (b != null)
-		return MessageFormat.format(b.getString(key), args);
-	}
-	catch (MissingResourceException e) {
-	    // should msgs like this be i18n and optional?
-	    System.err.println("WARNING: missing resource: " + key);
-	}
+        try {
+            ResourceBundle b = getResourceBundle();
+            if (b != null)
+                return MessageFormat.format(b.getString(key), args);
+        }
+        catch (MissingResourceException e) {
+            // should msgs like this be i18n and optional?
+            System.err.println("WARNING: missing resource: " + key);
+        }
 
-	StringBuffer sb = new StringBuffer(key);
-	for (int i = 0; i < args.length; i++) {
-	    sb.append('\n');
-	    sb.append(args.toString());
-	}
-	return sb.toString();
+        StringBuffer sb = new StringBuffer(key);
+        for (int i = 0; i < args.length; i++) {
+            sb.append('\n');
+            sb.append(args.toString());
+        }
+        return sb.toString();
     }
 
     /**
-     * Get an entry from the resource bundle. 
+     * Get an entry from the resource bundle.
      * The parent and other ancestors bundles will be checked first before
      * this interview's bundle, allowing the root interview a chance to override
      * the default value provided by this interview.
@@ -2187,7 +2187,7 @@ public class Interview
      * @return the value of the resource, or null if not found
      */
     protected String getResourceString(String key) {
-	return getResourceString(key, true);
+        return getResourceString(key, true);
     }
 
     /**
@@ -2203,35 +2203,35 @@ public class Interview
      * @return the value of the resource, or null if not found
      */
     protected String getResourceString(String key, boolean checkAncestorsFirst) {
-	try {
-	    String s = null;
-	    if (checkAncestorsFirst) {
-		if (parent != null)
-		    s = parent.getResourceString(key, checkAncestorsFirst);
-		if (s == null) {
-		    ResourceBundle b = getResourceBundle();
-		    if (b != null)
-			s = b.getString(key);
-		}
-	    }
-	    else {
-		ResourceBundle b = getResourceBundle();
-		if (b != null)
-		    s = b.getString(key);
-		if (s == null && parent != null)
-		    s = parent.getResourceString(key, checkAncestorsFirst);
-	    }
-	    return s;
-	}
-	catch (MissingResourceException e) {
-	    return null;
-	}
+        try {
+            String s = null;
+            if (checkAncestorsFirst) {
+                if (parent != null)
+                    s = parent.getResourceString(key, checkAncestorsFirst);
+                if (s == null) {
+                    ResourceBundle b = getResourceBundle();
+                    if (b != null)
+                        s = b.getString(key);
+                }
+            }
+            else {
+                ResourceBundle b = getResourceBundle();
+                if (b != null)
+                    s = b.getString(key);
+                if (s == null && parent != null)
+                    s = parent.getResourceString(key, checkAncestorsFirst);
+            }
+            return s;
+        }
+        catch (MissingResourceException e) {
+            return null;
+        }
     }
 
     // can change this to "assert(b)" in JDK 1.5
     private static final void ASSERT(boolean b) {
-	if (!b)
-	    throw new IllegalStateException();
+        if (!b)
+            throw new IllegalStateException();
     }
 
     /**
@@ -2252,7 +2252,7 @@ public class Interview
      * A descriptive title for the interview.
      */
     private String title;
-    
+
     /**
      * The first question of the interview.
      */
@@ -2285,7 +2285,7 @@ public class Interview
 
     private Map allMarkers;
     private HashMap extraValues;        // used in top-level interview only
-    private HashMap templateValues;     
+    private HashMap templateValues;
 
     private int semantics = SEMANTIC_PRE_32;
 
@@ -2320,71 +2320,71 @@ public class Interview
     public static final int SEMANTIC_MAX_VERSION = 1;
 
     static class Path {
-	void addQuestion(Question q) {
-	    if (questions == null) 
-		questions = new Question[10];
-	    else if (numQuestions == questions.length) {
-		Question[] newQuestions = new Question[2 * questions.length];
-		System.arraycopy(questions, 0, newQuestions, 0, questions.length);
-		questions = newQuestions;
-	    }
+        void addQuestion(Question q) {
+            if (questions == null)
+                questions = new Question[10];
+            else if (numQuestions == questions.length) {
+                Question[] newQuestions = new Question[2 * questions.length];
+                System.arraycopy(questions, 0, newQuestions, 0, questions.length);
+                questions = newQuestions;
+            }
 
-	    questions[numQuestions++] = q;
-	}
+            questions[numQuestions++] = q;
+        }
 
-	Question questionAt(int index) throws ArrayIndexOutOfBoundsException {
-	    if (index < 0 || index >= numQuestions)
-		throw new ArrayIndexOutOfBoundsException();
-	    return questions[index];
-	}
-	
-	Question lastQuestion() {
-	    return questionAt(numQuestions - 1);
-	}
+        Question questionAt(int index) throws ArrayIndexOutOfBoundsException {
+            if (index < 0 || index >= numQuestions)
+                throw new ArrayIndexOutOfBoundsException();
+            return questions[index];
+        }
 
-	int indexOf(Interview interview) {
-	    for (int index = 0; index < numQuestions; index++) {
-		Question q = questions[index];
-		if (q instanceof InterviewQuestion
-		    && ((InterviewQuestion) q).getTargetInterview() == interview)
-		    return index;
-	    }
-	    return -1;
-	}
+        Question lastQuestion() {
+            return questionAt(numQuestions - 1);
+        }
 
-	int size() {
-	    return numQuestions;
-	}
+        int indexOf(Interview interview) {
+            for (int index = 0; index < numQuestions; index++) {
+                Question q = questions[index];
+                if (q instanceof InterviewQuestion
+                    && ((InterviewQuestion) q).getTargetInterview() == interview)
+                    return index;
+            }
+            return -1;
+        }
 
-	void setSize(int newSize) {
-	    // expected case is only to shrink size, so questions != null && newSize < questions.length
-	    if (questions != null) {
-		if (newSize > questions.length) {
-		    Question[] newQuestions = new Question[newSize];
-		    System.arraycopy(questions, 0, newQuestions, 0, questions.length);
-		    questions = newQuestions;
-		    
-		}
-		for (int i = newSize; i < numQuestions; i++)
-		    questions[i] = null;
-	    }
-	    else if (newSize > 0)
-		questions = new Question[newSize];
+        int size() {
+            return numQuestions;
+        }
 
-	    numQuestions = newSize;
-	}
-		
+        void setSize(int newSize) {
+            // expected case is only to shrink size, so questions != null && newSize < questions.length
+            if (questions != null) {
+                if (newSize > questions.length) {
+                    Question[] newQuestions = new Question[newSize];
+                    System.arraycopy(questions, 0, newQuestions, 0, questions.length);
+                    questions = newQuestions;
 
-	void clear() {
-	    for (int i = 0; i < numQuestions; i++)
-		questions[i] = null;
-	    numQuestions = 0;
-	}
+                }
+                for (int i = newSize; i < numQuestions; i++)
+                    questions[i] = null;
+            }
+            else if (newSize > 0)
+                questions = new Question[newSize];
 
-	private Question[] questions;
-	private int numQuestions;
+            numQuestions = newSize;
+        }
+
+
+        void clear() {
+            for (int i = 0; i < numQuestions; i++)
+                questions[i] = null;
+            numQuestions = 0;
+        }
+
+        private Question[] questions;
+        private int numQuestions;
     }
-    
+
     protected final static String QUESTION = "QUESTION";
     protected final static String INTERVIEW = "INTERVIEW";
     protected final static String LOCALE = "LOCALE";
@@ -2393,5 +2393,5 @@ public class Interview
     protected final static String MARKERS_PREF = "MARKERS.";
     protected static final String EXTERNAL_PREF = "EXTERNAL.";
     protected static final String TEMPLATE_PREF = "TEMPLATE.";
-    
+
 }

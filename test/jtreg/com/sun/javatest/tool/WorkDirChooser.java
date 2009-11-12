@@ -42,7 +42,7 @@ import java.io.IOException;
 /**
  * A custom JFileChooser, for a user to choose a work directory.
  */
-public class WorkDirChooser extends JFileChooser 
+public class WorkDirChooser extends JFileChooser
 {
     static {
         // the following is a workaround to force the WorkDIrectory class to
@@ -87,42 +87,42 @@ public class WorkDirChooser extends JFileChooser
         // we want a filter that only selects directories
         setAcceptAllFileFilterUsed(false);
 
-        // we need FILES in the mode so that non-traversable 
-        // items appear in the list 
+        // we need FILES in the mode so that non-traversable
+        // items appear in the list
         // -- see BasicDirectoryModel.LoadFilesThread
-        // we need DIRECTORIES in the mode so that directories 
-        // (eg work directories) can be selected (ie chosen) 
+        // we need DIRECTORIES in the mode so that directories
+        // (eg work directories) can be selected (ie chosen)
         // -- see BasicFileChooserUI.ApproveSelectionAction
         setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
-        // these parameters are still not ideal ... 
-        // approveSelection(File) below gets called for all directories: 
-        // we still have to redispatch according to whether it is a work 
+        // these parameters are still not ideal ...
+        // approveSelection(File) below gets called for all directories:
+        // we still have to redispatch according to whether it is a work
         // directory or not.
 
         swda = new SelectedWorkDirApprover(uif, mode, this);
-        
-        // we want a file view that displays special icons for 
-        // work directories and sets work directories non-traversable, 
-        // so that double clicking in the list view will select 
+
+        // we want a file view that displays special icons for
+        // work directories and sets work directories non-traversable,
+        // so that double clicking in the list view will select
         // (ie choose) them
         setFileView(new WDC_FileView(swda));
         setAcceptAllFileFilterUsed(true);
         setFileFilter(new WDC_FileFilter(uif.getI18NString("wdc.ft")));
     }
-    
+
     /**
      * A constant to indicate that a new work directory is to be created.
      * @see #setMode
      */
     public static final int NEW = 0;
-    
+
     /**
      * A constant to indicate that an existing work directory is to be opened.
      * @see #setMode
      */
     public static final int OPEN_FOR_ANY_TESTSUITE = 1;
-    
+
     /**
      * A constant to indicate that an existing work directory that is to be opened
      * in conjunction with a specific test suite.
@@ -166,7 +166,7 @@ public class WorkDirChooser extends JFileChooser
     public void setTestSuite(TestSuite ts) {
         testSuite = ts;
     }
-      
+
     /**
      * Set a test suite chooser to be used during error handling,
      * if the test suite referenced by an existing work directory
@@ -176,7 +176,7 @@ public class WorkDirChooser extends JFileChooser
     public void setTestSuiteChooser(TestSuiteChooser tsc) {
         testSuiteChooser = tsc;
     }
-   
+
     /**
      * Get the work directory that was most recently selected by the user.
      * @return the work directorythat was most recently selected by the user
@@ -187,13 +187,13 @@ public class WorkDirChooser extends JFileChooser
         return workDir;
     }
 
-    /** 
+    /**
      * Set the work directory selected by the user.
      * @param wd the work directory
      * @see #getSelectedWorkDirectory
      */
     public void setSelectedWorkDirectory(WorkDirectory wd) {
-        if (wd != null) 
+        if (wd != null)
             setSelectedFile(wd.getRoot());
         workDir = wd;
     }
@@ -202,7 +202,7 @@ public class WorkDirChooser extends JFileChooser
      * Show a dialog to allow the user to select a work directory.
      * If a work directory is selected, it can be accessed via getSelectedWorkDirectory.
      * @param parent the component to be used at the parent of this dialog
-     * @return an integer signifying how the dialog was dismissed 
+     * @return an integer signifying how the dialog was dismissed
      * (APPROVE_OPTION or CANCEL_OPTION).
      * @see #APPROVE_OPTION
      * @see #CANCEL_OPTION
@@ -211,7 +211,7 @@ public class WorkDirChooser extends JFileChooser
     public int showDialog(Component parent) {
         return showDialog(parent, getApproveButtonText());
     }
-    
+
     public void approveSelection() {
         // the validity of the selection depends on whether the
         // selected directory is to be created or opened.
@@ -228,18 +228,18 @@ public class WorkDirChooser extends JFileChooser
             if (swda.isApprovedOpenSelection_dirExists())
                 approveOpenSelection_dirExists(wd);
             workDir = swda.getWorkDirectory();
-            
+
             try {
                 Preferences prefs = Preferences.access();
                 String defaultDir = workDir.getRoot().getParentFile().getCanonicalPath();
                 prefs.setPreference(WorkDirChooseTool.DEFAULT_WD_PREF_NAME, defaultDir);
             }
             catch (IOException e) {}
-            
+
             super.approveSelection();
         }
     }
-    
+
     private static File normalize(File dir) {
         // check this and all parent directories, in case any one is a work directory
         for (File d = dir; d != null && !d.getName().equals(""); d = d.getParentFile()) {
@@ -261,47 +261,47 @@ public class WorkDirChooser extends JFileChooser
         setSelectedFile(null);
         setSelectedFiles(null);
     }
-    
+
     private int mode;
     private TestSuite testSuite;
     private TestSuiteChooser testSuiteChooser;
     private WorkDirectory workDir;
     private boolean allowNoTemplate = false;
-    
+
     private UIFactory uif;
     private SelectedWorkDirApprover swda;
-    
+
     private Dimension size;
     private LinkedHashMap fileData;
     private LinkedHashMap wdData;
-    
+
     public String getName(File f) {
         String retValue;
         String baseName = super.getName(f);
         if (!isWorkDir(f)) {
             return baseName;
         }
-        
+
         String[] info = getInfo(f);
         if (info != null && info[1] != null && !"".equals(info[1])) {
             return baseName + " (" + info[1] + ")";
         }
         return super.getName(f);
     }
-    
-    
+
+
     private boolean isWorkDir(File dir) {
         if (wdData == null) wdData = new LinkedHashMap() {
                 protected boolean removeEldestEntry(Map.Entry eldest) {
                     return size() > 500;
                 }
         };
-        
+
         // MS Windows top-level folders ("My Computer's children")
         if (dir.getParent() == null || dir.getParent().startsWith("::") ) {
             return false;
         }
-        
+
         String key = dir.getAbsolutePath();
         Boolean value = (Boolean) wdData.get(key);
         if (value != null) {
@@ -311,9 +311,9 @@ public class WorkDirChooser extends JFileChooser
         wdData.put(key, value);
         return value.booleanValue();
     }
-    
+
     private String[] getInfo(File file) {
-        
+
         if (fileData == null) fileData = new LinkedHashMap() {
                 protected boolean removeEldestEntry(Map.Entry eldest) {
                     return size() > 500;
@@ -324,7 +324,7 @@ public class WorkDirChooser extends JFileChooser
         if (value != null) {
             return value;
         }
-        // refresh    
+        // refresh
         try {
             String[] data = new String[] {"", ""};
             String path = TemplateUtilities.getTemplateFromWd(file);
@@ -333,12 +333,12 @@ public class WorkDirChooser extends JFileChooser
                 if (ci != null) {
                     data = new String[] {ci.getName(), ci.getDescription()};
                 }
-                
+
             }
             fileData.put(key, data);
             return data;
         }
-        catch  (Exception e) { 
+        catch  (Exception e) {
             return new String[] {"", ""};
         }
     }
@@ -346,7 +346,7 @@ public class WorkDirChooser extends JFileChooser
     public void setAllowNoTemplate(boolean allowNoTemplate) {
         this.allowNoTemplate = allowNoTemplate;
     }
-    
-    
+
+
 
 }

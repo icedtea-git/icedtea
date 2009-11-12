@@ -37,21 +37,21 @@ import java.awt.Panel;
 class Deck extends Panel
 {
     public Deck() {
-	super(new CardLayout());
+        super(new CardLayout());
     }
 
     public void setLayout(LayoutManager lm) {
-	if (lm instanceof CardLayout)
-	    super.setLayout(lm);
-	else
-	    throw new AWTError("Can't set layout for " + getClass().getName());
+        if (lm instanceof CardLayout)
+            super.setLayout(lm);
+        else
+            throw new AWTError("Can't set layout for " + getClass().getName());
     }
 
     public Component add(Component comp) {
-	if (comp.getName() == null)
-	    comp.setName("card" + cardNum++);
-	super.add(comp, comp.getName());
-	return comp;
+        if (comp.getName() == null)
+            comp.setName("card" + cardNum++);
+        super.add(comp, comp.getName());
+        return comp;
     }
 
     /**
@@ -65,30 +65,30 @@ class Deck extends Panel
     }
 
     public void add(Component comp, Object x) {
-	throw new AWTError("Can't add with constraints for " + getClass().getName());
+        throw new AWTError("Can't add with constraints for " + getClass().getName());
     }
 
     public Component getCurrentCard() {
-	for (int i = 0; i < getComponentCount(); i++) {
-	    Component c = getComponent(i);
-	    if (c.isVisible())
-		return c;
-	}
-	return null;
+        for (int i = 0; i < getComponentCount(); i++) {
+            Component c = getComponent(i);
+            if (c.isVisible())
+                return c;
+        }
+        return null;
     }
 
     public void show(Component comp) {
-	// Set the wait cursor on the parent because we're going to make
-	// this panel invisible while we bring the new card to the fore.
-	Component parent = getParent();
-	Cursor savedCursor = parent.getCursor();
-	parent.setCursor(waitCursor);
-	//boolean savedVisible = isVisible();
-	//setVisible(false);
-	comp.validate();
-	((CardLayout)(getLayout())).show(this, comp.getName());
-	//setVisible(savedVisible);
-	parent.setCursor(savedCursor);
+        // Set the wait cursor on the parent because we're going to make
+        // this panel invisible while we bring the new card to the fore.
+        Component parent = getParent();
+        Cursor savedCursor = parent.getCursor();
+        parent.setCursor(waitCursor);
+        //boolean savedVisible = isVisible();
+        //setVisible(false);
+        comp.validate();
+        ((CardLayout)(getLayout())).show(this, comp.getName());
+        //setVisible(savedVisible);
+        parent.setCursor(savedCursor);
     }
 
     private Cursor waitCursor = new Cursor(Cursor.WAIT_CURSOR);

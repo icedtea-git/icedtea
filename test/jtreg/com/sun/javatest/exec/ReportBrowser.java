@@ -47,100 +47,100 @@ import com.sun.javatest.tool.ToolDialog;
 import com.sun.javatest.tool.UIFactory;
 
 class ReportBrowser extends ToolDialog
-{ 
-    public ReportBrowser(JComponent parent, ExecModel model, UIFactory uif, ReportHandler rh) { 
-	super(parent, uif, "rb");
-	this.model = model;
-	reportHandler = rh;
+{
+    public ReportBrowser(JComponent parent, ExecModel model, UIFactory uif, ReportHandler rh) {
+        super(parent, uif, "rb");
+        this.model = model;
+        reportHandler = rh;
     }
 
     void show(File f) {
-	try {
-	    setSelectedFile(f);
-	    setVisible(true);
+        try {
+            setSelectedFile(f);
+            setVisible(true);
         }
-	catch (IOException e) {
-	    uif.showError("rb.load.error", new Object[] { f, e });
+        catch (IOException e) {
+            uif.showError("rb.load.error", new Object[] { f, e });
         }
     }
 
-    void setSelectedFile(File f) throws IOException 
+    void setSelectedFile(File f) throws IOException
     {
-	if (f == null)
-	    throw new NullPointerException();
+        if (f == null)
+            throw new NullPointerException();
 
-	reportFile = f;
-	
-	setI18NTitle("rb.title", f);
-	
-	if (fp == null)
-	    initGUI();
-	
-	fp.setBaseDirectory(f);
-	fp.setFile(f.toURL());
+        reportFile = f;
+
+        setI18NTitle("rb.title", f);
+
+        if (fp == null)
+            initGUI();
+
+        fp.setBaseDirectory(f);
+        fp.setFile(f.toURL());
     }
 
     File getSelectedFile() {
-	return reportFile;
+        return reportFile;
     }
- 
+
     //------------------------------------------------------------------------------
 
 
     protected void initGUI() {
         fp = new FilesPane(uif);
 
-	int dpi = uif.getDotsPerInch();
-	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	int prefWidth = Math.min(7 * dpi, screenSize.width * 9 / 10);
-	int prefHeight = Math.min(9 * dpi, screenSize.height * 9 / 10);
-	fp.setPreferredSize(new Dimension(prefWidth, prefHeight));
-	setBody(fp);
+        int dpi = uif.getDotsPerInch();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int prefWidth = Math.min(7 * dpi, screenSize.width * 9 / 10);
+        int prefHeight = Math.min(9 * dpi, screenSize.height * 9 / 10);
+        fp.setPreferredSize(new Dimension(prefWidth, prefHeight));
+        setBody(fp);
 
         JMenuBar menuBar = uif.createMenuBar("rb.menubar");
         menuBar.add(createFileMenu(reportHandler));
-	menuBar.add(uif.createHorizontalGlue("rb.pad"));
-	setJMenuBar(menuBar);
+        menuBar.add(uif.createHorizontalGlue("rb.pad"));
+        setJMenuBar(menuBar);
 
-	if (reportFile == null) 
-	    setI18NTitle("rb.title");
-	else {
-	    setI18NTitle("rb.title_file", reportFile);
-	    fp.setBaseDirectory(reportFile);
-	    try {
-		fp.setFile(reportFile.toURL());
-	    }
-	    catch (MalformedURLException e) {
-		// ignore
-		//e.printStackTrace();
-	    }
-	}
+        if (reportFile == null)
+            setI18NTitle("rb.title");
+        else {
+            setI18NTitle("rb.title_file", reportFile);
+            fp.setBaseDirectory(reportFile);
+            try {
+                fp.setFile(reportFile.toURL());
+            }
+            catch (MalformedURLException e) {
+                // ignore
+                //e.printStackTrace();
+            }
+        }
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     }
 
-    
+
     private JMenu createFileMenu(ReportHandler reportHandler) {
-	Action newReport = reportHandler.getNewReportAction();
-	Action openReport = reportHandler.getOpenReportAction();
+        Action newReport = reportHandler.getNewReportAction();
+        Action openReport = reportHandler.getOpenReportAction();
 
-	Action printSetup = new ToolAction(uif, "rb.file.printSetup") {
-		public void actionPerformed(ActionEvent e) {
-		    model.printSetup();
-		}
-	    };
+        Action printSetup = new ToolAction(uif, "rb.file.printSetup") {
+                public void actionPerformed(ActionEvent e) {
+                    model.printSetup();
+                }
+            };
 
-	Action print = new ToolAction(uif, "rb.file.print") {
-		public void actionPerformed(ActionEvent e) {
+        Action print = new ToolAction(uif, "rb.file.print") {
+                public void actionPerformed(ActionEvent e) {
                     model.print(fp);
-		}
-	    };
+                }
+            };
 
-	Action close = new ToolAction(uif, "rb.file.close") { 
-		public void actionPerformed(ActionEvent e) {
-		    setVisible(false);
+        Action close = new ToolAction(uif, "rb.file.close") {
+                public void actionPerformed(ActionEvent e) {
+                    setVisible(false);
                     cleanup();
-		}
-	    };
+                }
+            };
 
         Action[] actions = { newReport, openReport, null, printSetup, print, null, close };
         JMenu fileMenu = uif.createMenu("rb.file", actions );
@@ -155,7 +155,7 @@ class ReportBrowser extends ToolDialog
     private void cleanup() {
         fp.clear();
     }
-    
+
     private ExecModel model;
     private ReportHandler reportHandler;
     private FilesPane fp;

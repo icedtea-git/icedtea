@@ -95,195 +95,195 @@ import java.util.HashSet;
 class BasicCustomTestFilter extends ConfigurableTestFilter {
     // UIFactory parameter assume this class stays in the exec package
     BasicCustomTestFilter(String name, ExecModel e, UIFactory uif) {
-	super(name, e);
-	this.uif = uif;
-	init(null);
+        super(name, e);
+        this.uif = uif;
+        init(null);
     }
 
     BasicCustomTestFilter(Map map, ExecModel e, UIFactory uif) {
-	super(map, e);
-	this.uif = uif;
-	init(map);
+        super(map, e);
+        this.uif = uif;
+        init(map);
     }
 
     BasicCustomTestFilter(ExecModel e, UIFactory uif) {
-	super(uif.getI18NString("basicTf.namePrefix"), e);
-	this.uif = uif;
+        super(uif.getI18NString("basicTf.namePrefix"), e);
+        this.uif = uif;
 
-	init(null);
+        init(null);
     }
 
     ConfigurableTestFilter cloneInstance() {
-	return new BasicCustomTestFilter(uif.getI18NString("basicTf.namePrefix") +
-					 instanceCount, execModel, uif);
+        return new BasicCustomTestFilter(uif.getI18NString("basicTf.namePrefix") +
+                                         instanceCount, execModel, uif);
     }
 
     // override superclass methods
     // observers must be static data since all exec tool instances
     // must be notified of changes
     public void addObserver(Observer o) {
-	obs = (Observer[])DynamicArray.append(obs, o);
+        obs = (Observer[])DynamicArray.append(obs, o);
     }
 
     public void removeObserver(Observer o) {
-	obs = (Observer[])DynamicArray.remove(obs, o);
+        obs = (Observer[])DynamicArray.remove(obs, o);
     }
 
     protected void notifyUpdated(ObservableTestFilter filter) {
-	// obs will be null if called indirectly via load(map) from the
-	// superclass constructor, because super(...) is defined to be
-	// called before instance variables are initialized.
-	// (Hence the danger of overriding methods called from a superclass
-	// constructor.)  11/12/02
-	if (obs == null)
-	    return;
+        // obs will be null if called indirectly via load(map) from the
+        // superclass constructor, because super(...) is defined to be
+        // called before instance variables are initialized.
+        // (Hence the danger of overriding methods called from a superclass
+        // constructor.)  11/12/02
+        if (obs == null)
+            return;
 
-	for (int i = 0; i < obs.length; i++)
-	    obs[i].filterUpdated(filter);
+        for (int i = 0; i < obs.length; i++)
+            obs[i].filterUpdated(filter);
     }
 
     boolean load(Map map) {
-	boolean result = super.load(map);
-	activeSettings = new SettingsSnapshot(map);
-	putSettings(activeSettings);
-	activateSettings(activeSettings);
+        boolean result = super.load(map);
+        activeSettings = new SettingsSnapshot(map);
+        putSettings(activeSettings);
+        activateSettings(activeSettings);
 
-	notifyUpdated(this);
+        notifyUpdated(this);
 
-	return result;
+        return result;
     }
 
     boolean save(Map map) {
-	boolean result = super.save(map);
-	activeSettings.save(map);
+        boolean result = super.save(map);
+        activeSettings.save(map);
 
-	return result;
+        return result;
     }
 
     synchronized JComponent getEditorPane() {
-	if (editorPane == null) {
-	    editorPane = uif.createTabbedPane("basicTf.tabs", createTabPanels());
-	    editorPane.setTabPlacement(SwingConstants.TOP);
+        if (editorPane == null) {
+            editorPane = uif.createTabbedPane("basicTf.tabs", createTabPanels());
+            editorPane.setTabPlacement(SwingConstants.TOP);
 
-	    try {
-		if (activeSettings == null)
-		    activeSettings = grabSettings();
-		else
-		    putSettings(activeSettings);
-	    }
-	    catch (IllegalStateException e) {
-		throw new IllegalStateException("Illegal state of BCTF GUI on startup.");
-	    }	// catch
+            try {
+                if (activeSettings == null)
+                    activeSettings = grabSettings();
+                else
+                    putSettings(activeSettings);
+            }
+            catch (IllegalStateException e) {
+                throw new IllegalStateException("Illegal state of BCTF GUI on startup.");
+            }   // catch
 
-	    editorPane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-	}
+            editorPane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        }
 
-	return editorPane;
+        return editorPane;
     }
 
     String commitEditorSettings() {
-	SettingsSnapshot nowSettings = null;
+        SettingsSnapshot nowSettings = null;
 
-	try {
-	    nowSettings = grabSettings();
-	}
-	catch (IllegalStateException e) {
-	    // indicates that the GUI settings are not valid
-	    return e.getMessage();
-	}   // catch
+        try {
+            nowSettings = grabSettings();
+        }
+        catch (IllegalStateException e) {
+            // indicates that the GUI settings are not valid
+            return e.getMessage();
+        }   // catch
 
-	if (!activeSettings.equals(nowSettings)) {
-	    return activateSettings(nowSettings);
-	}
-	else {
-	    return null;
-	}
+        if (!activeSettings.equals(nowSettings)) {
+            return activateSettings(nowSettings);
+        }
+        else {
+            return null;
+        }
     }
 
     void resetEditorSettings() {
-	// set GUI to match live settings
-	putSettings(activeSettings);
+        // set GUI to match live settings
+        putSettings(activeSettings);
     }
 
     boolean isEditorChanged() {
-	SettingsSnapshot nowSettings = null;
+        SettingsSnapshot nowSettings = null;
 
-	try {
-	    nowSettings = grabSettings();
-	}
-	catch (IllegalStateException e) {
-	    // indicates that the GUI settings are not valid
-	    return true;
-	}   // catch
-	if (activeSettings.equals(nowSettings))
-	    return false;
-	else
-	    return true;
+        try {
+            nowSettings = grabSettings();
+        }
+        catch (IllegalStateException e) {
+            // indicates that the GUI settings are not valid
+            return true;
+        }   // catch
+        if (activeSettings.equals(nowSettings))
+            return false;
+        else
+            return true;
     }
 
     // TestFilter interface
     public boolean accepts(TestDescription td)
-		throws TestFilter.Fault {
-	return accepts(td, null);
+                throws TestFilter.Fault {
+        return accepts(td, null);
     }
 
     public boolean accepts(TestDescription td, TestFilter.Observer o)
                 throws TestFilter.Fault {
-	for (int i = 0; i < activeFilters.length; i++) {
-	    if (activeFilters[i] != null &&
-		!activeFilters[i].accepts(td)) {
-		if (o != null)
-		    o.rejected(td, activeFilters[i]);
-		else { }
+        for (int i = 0; i < activeFilters.length; i++) {
+            if (activeFilters[i] != null &&
+                !activeFilters[i].accepts(td)) {
+                if (o != null)
+                    o.rejected(td, activeFilters[i]);
+                else { }
 
-		return false;
-	    }	// outer if
-	}   // for
+                return false;
+            }   // outer if
+        }   // for
 
-	return true;
+        return true;
     }
 
     public String getBaseName() {
-	return NAME;
+        return NAME;
     }
 
     public String getName() {
-	return instanceName;
+        return instanceName;
     }
 
     public String getReason() {
-	return REASON;
+        return REASON;
     }
 
     public String getDescription() {
-	return DESCRIPTION;
+        return DESCRIPTION;
     }
 
     // ----- PRIVATE -----
 
     private void init(Map map) {
-	if (NAME == null)
-	    NAME = uif.getI18NString("basicTf.name");
+        if (NAME == null)
+            NAME = uif.getI18NString("basicTf.name");
 
-	if (REASON == null)
-	    REASON = uif.getI18NString("basicTf.reason");
+        if (REASON == null)
+            REASON = uif.getI18NString("basicTf.reason");
 
-	if (DESCRIPTION == null)
-	    DESCRIPTION = uif.getI18NString("basicTf.description");
+        if (DESCRIPTION == null)
+            DESCRIPTION = uif.getI18NString("basicTf.description");
 
-	// assignment done in load() -- 11/12/02
-	// activeFilters = new TestFilter[NUM_FILTERS];
+        // assignment done in load() -- 11/12/02
+        // activeFilters = new TestFilter[NUM_FILTERS];
 
-	if (map != null)
-	    activeSettings = new SettingsSnapshot(map);
-	else
-	    activeSettings = new SettingsSnapshot();
+        if (map != null)
+            activeSettings = new SettingsSnapshot(map);
+        else
+            activeSettings = new SettingsSnapshot();
 
-	instanceCount++;
+        instanceCount++;
 
-	// not using this from superclass
-	observers = null;
-	activateSettings(activeSettings);
+        // not using this from superclass
+        observers = null;
+        activateSettings(activeSettings);
     }
 
     /**
@@ -292,100 +292,100 @@ class BasicCustomTestFilter extends ConfigurableTestFilter {
      * an update message is sent.
      */
     private String activateSettings(SettingsSnapshot nowSettings) {
-	KeywordsFilter newKeyFilter = null;
-	InitialUrlFilter newUrlFilter = null;
-	TestFilter newJtxFilter = null;
-	StatusFilter newStatusFilter = null;
-	TestFilter newTsfFilter = null;
+        KeywordsFilter newKeyFilter = null;
+        InitialUrlFilter newUrlFilter = null;
+        TestFilter newJtxFilter = null;
+        StatusFilter newStatusFilter = null;
+        TestFilter newTsfFilter = null;
 
-	InterviewParameters ip = execModel.getInterviewParameters();
+        InterviewParameters ip = execModel.getInterviewParameters();
         TestSuite ts = execModel.getTestSuite();
-	updateInterviewObserver(ip);
+        updateInterviewObserver(ip);
 
-	// recreate filters
-	if (nowSettings.urlsEnabled) {
-	    // converting to strings to avoid any confusion
-	    // files vs urls
-	    if (nowSettings.initialUrls != null) {
-	       newUrlFilter = new InitialUrlFilter(nowSettings.initialUrls); 
-	    }
+        // recreate filters
+        if (nowSettings.urlsEnabled) {
+            // converting to strings to avoid any confusion
+            // files vs urls
+            if (nowSettings.initialUrls != null) {
+               newUrlFilter = new InitialUrlFilter(nowSettings.initialUrls);
+            }
 
-	}
+        }
 
-	if (nowSettings.keywordsEnabled) {
-	    try {
-		String[] validKeywords = ts.getKeywords();
-		HashSet validKeywordsSet;
-		if (validKeywords == null)
-		    validKeywordsSet = null;
-		else
-		    validKeywordsSet = new HashSet(Arrays.asList(validKeywords));
+        if (nowSettings.keywordsEnabled) {
+            try {
+                String[] validKeywords = ts.getKeywords();
+                HashSet validKeywordsSet;
+                if (validKeywords == null)
+                    validKeywordsSet = null;
+                else
+                    validKeywordsSet = new HashSet(Arrays.asList(validKeywords));
 
                 Keywords kw = Keywords.create(kwModeToType(nowSettings.keyChoice),
-				    nowSettings.keyString, validKeywordsSet);
-		newKeyFilter = new KeywordsFilter(kw);
-	    }
-	    catch (Keywords.Fault f) {
-		return f.getMessage();
-	    }
+                                    nowSettings.keyString, validKeywordsSet);
+                newKeyFilter = new KeywordsFilter(kw);
+            }
+            catch (Keywords.Fault f) {
+                return f.getMessage();
+            }
 
-	}
+        }
 
-	if (nowSettings.statusEnabled) {
-	    // this filter won't work without a TRT
-	    TestResultTable trt = execModel.getActiveTestResultTable();
-	    if (trt != null) {
-		newStatusFilter = new StatusFilter(
-				nowSettings.statusFields,
-				trt);
-	    }
-	    else { }
-	}
-	else { }
+        if (nowSettings.statusEnabled) {
+            // this filter won't work without a TRT
+            TestResultTable trt = execModel.getActiveTestResultTable();
+            if (trt != null) {
+                newStatusFilter = new StatusFilter(
+                                nowSettings.statusFields,
+                                trt);
+            }
+            else { }
+        }
+        else { }
 
-	if (nowSettings.jtxEnabled) {
-	    // we only support copying exclude list from interview
-	    // right now
-	    if (ip != null) {
-		// may set var. to null, but that's okay
-		newJtxFilter = ip.getExcludeListFilter();
-	    }
-	}
+        if (nowSettings.jtxEnabled) {
+            // we only support copying exclude list from interview
+            // right now
+            if (ip != null) {
+                // may set var. to null, but that's okay
+                newJtxFilter = ip.getExcludeListFilter();
+            }
+        }
 
-	if (nowSettings.tsfEnabled) {
-	    // we only support copying exclude list from interview
-	    // right now
-	    if (ip != null && ts != null) {
-		// may set filter to null, but that's okay
-		newTsfFilter = ts.createTestFilter(ip.getEnv());
-	    }
-	}
+        if (nowSettings.tsfEnabled) {
+            // we only support copying exclude list from interview
+            // right now
+            if (ip != null && ts != null) {
+                // may set filter to null, but that's okay
+                newTsfFilter = ts.createTestFilter(ip.getEnv());
+            }
+        }
 
-	// can abort anytime before this
-	// commit now
-	keyFilter = newKeyFilter;
-	urlFilter = newUrlFilter;
-	jtxFilter = newJtxFilter;
-	statusFilter = newStatusFilter;
-	tsfFilter = newTsfFilter;
+        // can abort anytime before this
+        // commit now
+        keyFilter = newKeyFilter;
+        urlFilter = newUrlFilter;
+        jtxFilter = newJtxFilter;
+        statusFilter = newStatusFilter;
+        tsfFilter = newTsfFilter;
 
-	// initialize the array if not yet done so
-	if (activeFilters == null)
-	    activeFilters = new TestFilter[NUM_FILTERS];
+        // initialize the array if not yet done so
+        if (activeFilters == null)
+            activeFilters = new TestFilter[NUM_FILTERS];
 
-	activeFilters[0] = keyFilter;
-	activeFilters[1] = urlFilter;
-	activeFilters[2] = jtxFilter;
-	activeFilters[3] = statusFilter;
-	activeFilters[4] = tsfFilter;
+        activeFilters[0] = keyFilter;
+        activeFilters[1] = urlFilter;
+        activeFilters[2] = jtxFilter;
+        activeFilters[3] = statusFilter;
+        activeFilters[4] = tsfFilter;
 
-	activeSettings = nowSettings;
-	updateExcludeInfo();
+        activeSettings = nowSettings;
+        updateExcludeInfo();
 
-	// notify observers
-	notifyUpdated(this);
+        // notify observers
+        notifyUpdated(this);
 
-	return null;
+        return null;
     }
 
     /**
@@ -395,68 +395,68 @@ class BasicCustomTestFilter extends ConfigurableTestFilter {
      *        is null, any current observers will be detached.
      */
     private void updateInterviewObserver(InterviewParameters ip) {
-	if (ip == null && intObs != null)
-	    intObs.getInterview().removeObserver(intObs);
-	else if (intObs == null || intObs.getInterview() != ip) {
-	    if (intObs != null)
-		intObs.getInterview().removeObserver(intObs);
+        if (ip == null && intObs != null)
+            intObs.getInterview().removeObserver(intObs);
+        else if (intObs == null || intObs.getInterview() != ip) {
+            if (intObs != null)
+                intObs.getInterview().removeObserver(intObs);
 
-	    if (ip != null) {
-		intObs = new InterviewObserver(ip);
-		ip.addObserver(intObs);
-	    }
-	}
+            if (ip != null) {
+                intObs = new InterviewObserver(ip);
+                ip.addObserver(intObs);
+            }
+        }
     }
 
     private void updateExcludeInfo() {
-	// check to see if GUI is init-ed
-	if (jtxMode == null)
-	    return;
+        // check to see if GUI is init-ed
+        if (jtxMode == null)
+            return;
 
-	InterviewParameters ip = execModel.getInterviewParameters();
+        InterviewParameters ip = execModel.getInterviewParameters();
 
-	if (ip == null)	    // nothing to do
-	    return;
+        if (ip == null)     // nothing to do
+            return;
 
-	boolean isUnknown = true;
-	ExcludeListParameters elp = ip.getExcludeListParameters();
+        boolean isUnknown = true;
+        ExcludeListParameters elp = ip.getExcludeListParameters();
 
-	if (ip != null) {
-	    elp = ip.getExcludeListParameters();
-	    if (elp instanceof MutableExcludeListParameters) {
-		MutableExcludeListParameters melp = (MutableExcludeListParameters)elp;
-		int mode = melp.getExcludeMode();
-		switch (mode) {
-		case MutableExcludeListParameters.NO_EXCLUDE_LIST:
-		    jtxMode.setText(uif.getI18NString("basicTf.exclude.mode.none"));
-		    setExcludeFiles(null);
-		    isUnknown = false;
-		    break;
-		case MutableExcludeListParameters.INITIAL_EXCLUDE_LIST:
-		    jtxMode.setText(uif.getI18NString("basicTf.exclude.mode.initial"));
-		    setExcludeFiles(melp.getExcludeFiles());
-		    isUnknown = false;
-		    break;
-		case MutableExcludeListParameters.LATEST_EXCLUDE_LIST:
-		    jtxMode.setText(uif.getI18NString("basicTf.exclude.mode.latest"));
-		    setExcludeFiles(null);
-		    isUnknown = false;
-		    break;
-		case MutableExcludeListParameters.CUSTOM_EXCLUDE_LIST:
-		    jtxMode.setText(uif.getI18NString("basicTf.exclude.mode.custom"));
-		    setExcludeFiles(melp.getCustomExcludeFiles());
-		    isUnknown = false;
-		    break;
-		}   // switch
+        if (ip != null) {
+            elp = ip.getExcludeListParameters();
+            if (elp instanceof MutableExcludeListParameters) {
+                MutableExcludeListParameters melp = (MutableExcludeListParameters)elp;
+                int mode = melp.getExcludeMode();
+                switch (mode) {
+                case MutableExcludeListParameters.NO_EXCLUDE_LIST:
+                    jtxMode.setText(uif.getI18NString("basicTf.exclude.mode.none"));
+                    setExcludeFiles(null);
+                    isUnknown = false;
+                    break;
+                case MutableExcludeListParameters.INITIAL_EXCLUDE_LIST:
+                    jtxMode.setText(uif.getI18NString("basicTf.exclude.mode.initial"));
+                    setExcludeFiles(melp.getExcludeFiles());
+                    isUnknown = false;
+                    break;
+                case MutableExcludeListParameters.LATEST_EXCLUDE_LIST:
+                    jtxMode.setText(uif.getI18NString("basicTf.exclude.mode.latest"));
+                    setExcludeFiles(null);
+                    isUnknown = false;
+                    break;
+                case MutableExcludeListParameters.CUSTOM_EXCLUDE_LIST:
+                    jtxMode.setText(uif.getI18NString("basicTf.exclude.mode.custom"));
+                    setExcludeFiles(melp.getCustomExcludeFiles());
+                    isUnknown = false;
+                    break;
+                }   // switch
 
-	    }
-	}
+            }
+        }
 
-	// done here to avoid duplicating code above
-	if (isUnknown) {
-	    jtxMode.setText(uif.getI18NString("basicTf.exclude.mode.unknown"));
-	    jtxFiles.removeAllElements();
-	}
+        // done here to avoid duplicating code above
+        if (isUnknown) {
+            jtxMode.setText(uif.getI18NString("basicTf.exclude.mode.unknown"));
+            jtxFiles.removeAllElements();
+        }
     }
 
     /**
@@ -465,263 +465,263 @@ class BasicCustomTestFilter extends ConfigurableTestFilter {
      * @param files The files to add.  Null ok.
      */
     private void setExcludeFiles(File[] files) {
-	jtxFiles.removeAllElements();
+        jtxFiles.removeAllElements();
 
-	if (files == null || files.length == 0)
-	    return;
-	else
-	    for (int i = 0; i < files.length; i++)
-		jtxFiles.addElement(files[i].getPath());
+        if (files == null || files.length == 0)
+            return;
+        else
+            for (int i = 0; i < files.length; i++)
+                jtxFiles.addElement(files[i].getPath());
     }
 
     private JComponent[] createTabPanels() {
-	JComponent[] items = {createTestsPanel(), createKeywordPanel(),
-			      createStatusPanel(), createExcludePanel(),
-			      createSpecialPanel()};
+        JComponent[] items = {createTestsPanel(), createKeywordPanel(),
+                              createStatusPanel(), createExcludePanel(),
+                              createSpecialPanel()};
 
-	return items;
+        return items;
     }
 
     // KEYWORD PANEL
     private JComponent createKeywordPanel() {
-	JPanel p = uif.createPanel(
-		    "basicTf.keywords.mainPanel", new GridBagLayout(), false);
-	p.setName("keywords");
+        JPanel p = uif.createPanel(
+                    "basicTf.keywords.mainPanel", new GridBagLayout(), false);
+        p.setName("keywords");
 
-	GridBagConstraints c = new GridBagConstraints();
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.weightx = 1;
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1;
 
-	keyBtnGrp = new ButtonGroup();
-	keyAllBtn = uif.createRadioButton("basicTf.keywords.all", keyBtnGrp);
-	keyAllBtn.setMnemonic(uif.getI18NString("basicTf.keywords.all.mne").charAt(0));
-	p.add(keyAllBtn, c);
+        keyBtnGrp = new ButtonGroup();
+        keyAllBtn = uif.createRadioButton("basicTf.keywords.all", keyBtnGrp);
+        keyAllBtn.setMnemonic(uif.getI18NString("basicTf.keywords.all.mne").charAt(0));
+        p.add(keyAllBtn, c);
 
-	keyMatchBtn = uif.createRadioButton("basicTf.keywords.match", keyBtnGrp);
-	keyMatchBtn.setMnemonic(uif.getI18NString("basicTf.keywords.match.mne").charAt(0));
-	keyMatchBtn.addChangeListener(new ChangeListener() {
-	    public void stateChanged(ChangeEvent e) {
-		enableKeywordFields();
-	    }
-	});
-	c.weightx = 0;
-	c.gridwidth = 1;
-	p.add(keyMatchBtn, c);
-	
-	String[] kc = {ANY_OF, ALL_OF, EXPR};
-	keywordsChoice = uif.createChoice("basicTf.keywords.choice", kc);
-	p.add(keywordsChoice, c);
+        keyMatchBtn = uif.createRadioButton("basicTf.keywords.match", keyBtnGrp);
+        keyMatchBtn.setMnemonic(uif.getI18NString("basicTf.keywords.match.mne").charAt(0));
+        keyMatchBtn.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                enableKeywordFields();
+            }
+        });
+        c.weightx = 0;
+        c.gridwidth = 1;
+        p.add(keyMatchBtn, c);
 
-	keywordsField = uif.createInputField("basicTf.keywords.field", 20);
-	keywordsField.setEditable(true);
-	uif.setAccessibleInfo(keywordsField, "basicTf.keywords.field");
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.gridwidth = GridBagConstraints.REMAINDER;
-	c.weightx = 1;
-	p.add(keywordsField, c);
+        String[] kc = {ANY_OF, ALL_OF, EXPR};
+        keywordsChoice = uif.createChoice("basicTf.keywords.choice", kc);
+        p.add(keywordsChoice, c);
 
-	keyAllBtn.setSelected(true);
-	enableKeywordFields();
-	return p;
+        keywordsField = uif.createInputField("basicTf.keywords.field", 20);
+        keywordsField.setEditable(true);
+        uif.setAccessibleInfo(keywordsField, "basicTf.keywords.field");
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.weightx = 1;
+        p.add(keywordsField, c);
+
+        keyAllBtn.setSelected(true);
+        enableKeywordFields();
+        return p;
     }
 
     private void enableKeywordFields() {
-	boolean b = keyMatchBtn.isSelected();
-	keywordsChoice.setEnabled(b);
-	keywordsField.setEnabled(b);
+        boolean b = keyMatchBtn.isSelected();
+        keywordsChoice.setEnabled(b);
+        keywordsField.setEnabled(b);
     }
 
     // STATUS PANEL
     private JComponent createStatusPanel() {
-	JPanel p = uif.createPanel(
-		"basicTf.status.mainPanel", new GridBagLayout(), false);
-	p.setName("status");
+        JPanel p = uif.createPanel(
+                "basicTf.status.mainPanel", new GridBagLayout(), false);
+        p.setName("status");
 
-	GridBagConstraints c = new GridBagConstraints();
-	c.anchor = GridBagConstraints.WEST;
-	c.gridwidth = GridBagConstraints.REMAINDER;
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.WEST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
 
-	statusBtnGrp = new ButtonGroup();
-	statusAllBtn = uif.createRadioButton("basicTf.status.all", statusBtnGrp);
-	statusAllBtn.setMnemonic(uif.getI18NString("basicTf.status.all.mne").charAt(0));
-	p.add(statusAllBtn, c);
+        statusBtnGrp = new ButtonGroup();
+        statusAllBtn = uif.createRadioButton("basicTf.status.all", statusBtnGrp);
+        statusAllBtn.setMnemonic(uif.getI18NString("basicTf.status.all.mne").charAt(0));
+        p.add(statusAllBtn, c);
 
-	statusAnyOfBtn = uif.createRadioButton("basicTf.status.anyOf", statusBtnGrp);
-	statusAnyOfBtn.setMnemonic(uif.getI18NString("basicTf.status.anyOf.mne").charAt(0));
-	statusAnyOfBtn.addChangeListener(new ChangeListener() {
-	    public void stateChanged(ChangeEvent e) {
-		enableStatusFields();
-	    }
-	});
-	c.gridwidth = 1;
-	c.weightx = 0;
-	p.add(statusAnyOfBtn, c);
+        statusAnyOfBtn = uif.createRadioButton("basicTf.status.anyOf", statusBtnGrp);
+        statusAnyOfBtn.setMnemonic(uif.getI18NString("basicTf.status.anyOf.mne").charAt(0));
+        statusAnyOfBtn.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                enableStatusFields();
+            }
+        });
+        c.gridwidth = 1;
+        c.weightx = 0;
+        p.add(statusAnyOfBtn, c);
 
-	JPanel row = new JPanel(new GridBagLayout()); 
-	row.setBorder(BorderFactory.createEtchedBorder());
-	GridBagConstraints rc = new GridBagConstraints();
-	rc.insets.left = 10;
-	    
-	statusChecks[Status.PASSED] = 
-	    uif.createCheckBox("basicTf.status.prev.passed", false);
-	row.add(statusChecks[Status.PASSED], rc);
-	
-	statusChecks[Status.FAILED] = 
-	    uif.createCheckBox("basicTf.status.prev.failed", true);
-	row.add(statusChecks[Status.FAILED], rc);
-	
-	statusChecks[Status.ERROR] = 
-	    uif.createCheckBox("basicTf.status.prev.error", true);
-	row.add(statusChecks[Status.ERROR], rc);
-	
-	rc.insets.right = 10;
-	statusChecks[Status.NOT_RUN] = 
-	    uif.createCheckBox("basicTf.status.prev.notRun", true);
-	row.add(statusChecks[Status.NOT_RUN], rc);
-	uif.setToolTip(row, "basicTf.status.prev");
-	
-	statusAllBtn.setSelected(true);
-	enableStatusFields();
-	p.add(row, c);
+        JPanel row = new JPanel(new GridBagLayout());
+        row.setBorder(BorderFactory.createEtchedBorder());
+        GridBagConstraints rc = new GridBagConstraints();
+        rc.insets.left = 10;
 
-	return p;
+        statusChecks[Status.PASSED] =
+            uif.createCheckBox("basicTf.status.prev.passed", false);
+        row.add(statusChecks[Status.PASSED], rc);
+
+        statusChecks[Status.FAILED] =
+            uif.createCheckBox("basicTf.status.prev.failed", true);
+        row.add(statusChecks[Status.FAILED], rc);
+
+        statusChecks[Status.ERROR] =
+            uif.createCheckBox("basicTf.status.prev.error", true);
+        row.add(statusChecks[Status.ERROR], rc);
+
+        rc.insets.right = 10;
+        statusChecks[Status.NOT_RUN] =
+            uif.createCheckBox("basicTf.status.prev.notRun", true);
+        row.add(statusChecks[Status.NOT_RUN], rc);
+        uif.setToolTip(row, "basicTf.status.prev");
+
+        statusAllBtn.setSelected(true);
+        enableStatusFields();
+        p.add(row, c);
+
+        return p;
     }
 
     private void enableStatusFields() {
-	boolean enable = statusAnyOfBtn.isEnabled() && statusAnyOfBtn.isSelected();
-	for (int i = 0; i < statusChecks.length; i++) {
-	    statusChecks[i].setEnabled(enable);
-	}
+        boolean enable = statusAnyOfBtn.isEnabled() && statusAnyOfBtn.isSelected();
+        for (int i = 0; i < statusChecks.length; i++) {
+            statusChecks[i].setEnabled(enable);
+        }
     }
 
     // INIT URLS
     private JComponent createTestsPanel() {
-	final JPanel p = uif.createPanel(
-		"basicTf.tests.mainPanel", new BorderLayout(), false);
-	p.setName("tests");
+        final JPanel p = uif.createPanel(
+                "basicTf.tests.mainPanel", new BorderLayout(), false);
+        p.setName("tests");
 
-	// more configure ... 
-	lastTrt = execModel.getActiveTestResultTable();
-	testsField = new TestTreeSelectionPane(lastTrt);
+        // more configure ...
+        lastTrt = execModel.getActiveTestResultTable();
+        testsField = new TestTreeSelectionPane(lastTrt);
 
-	p.add(testsField, BorderLayout.CENTER);
+        p.add(testsField, BorderLayout.CENTER);
 
-	p.addComponentListener(new ComponentAdapter() {
-	    public void componentShown(ComponentEvent e) {
-		TestResultTable nowTrt = execModel.getActiveTestResultTable();
-		// replaces widget with an updated one
-		// only really important if the test suite contents (structure)
-		// changes
-		// this code basically keeps it in sync with the main tree,
-		// otherwise it might be left behind watching a temporary TRT
-		if (nowTrt != lastTrt) {
-		    TestTreeSelectionPane newTree = new TestTreeSelectionPane(nowTrt);
-		    String[] paths = testsField.getSelection();	    // save
-		    p.remove(testsField);
-		    testsField = newTree;
-		    testsField.setSelection(paths);		    // restore
-		    p.add(testsField, BorderLayout.CENTER);
-		    lastTrt = nowTrt;
-		}
-	    }
-	});
+        p.addComponentListener(new ComponentAdapter() {
+            public void componentShown(ComponentEvent e) {
+                TestResultTable nowTrt = execModel.getActiveTestResultTable();
+                // replaces widget with an updated one
+                // only really important if the test suite contents (structure)
+                // changes
+                // this code basically keeps it in sync with the main tree,
+                // otherwise it might be left behind watching a temporary TRT
+                if (nowTrt != lastTrt) {
+                    TestTreeSelectionPane newTree = new TestTreeSelectionPane(nowTrt);
+                    String[] paths = testsField.getSelection();     // save
+                    p.remove(testsField);
+                    testsField = newTree;
+                    testsField.setSelection(paths);                 // restore
+                    p.add(testsField, BorderLayout.CENTER);
+                    lastTrt = nowTrt;
+                }
+            }
+        });
 
-	return p;
+        return p;
     }
 
     // JTX lists
     private JComponent createExcludePanel() {
-	JPanel p = new JPanel(new GridBagLayout());
-	p.setName("exclude");
+        JPanel p = new JPanel(new GridBagLayout());
+        p.setName("exclude");
 
-	GridBagConstraints c = new GridBagConstraints();
-	c.anchor = GridBagConstraints.NORTHWEST;
-	c.ipadx = 10;
-	c.gridwidth = 1;
-	c.gridx = 0;
-	c.gridy= 0;
-	c.fill = GridBagConstraints.NONE;
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.ipadx = 10;
+        c.gridwidth = 1;
+        c.gridx = 0;
+        c.gridy= 0;
+        c.fill = GridBagConstraints.NONE;
 
-	// column 1
-	c.gridwidth = 3;
-	jtxCheckBox = uif.createCheckBox("basicTf.exclude", false);
-	jtxCheckBox.setMnemonic(uif.getI18NString("basicTf.exclude.mne").charAt(0));
-	p.add(jtxCheckBox, c);
+        // column 1
+        c.gridwidth = 3;
+        jtxCheckBox = uif.createCheckBox("basicTf.exclude", false);
+        jtxCheckBox.setMnemonic(uif.getI18NString("basicTf.exclude.mne").charAt(0));
+        p.add(jtxCheckBox, c);
 
-	// create some margins
-	c.gridy = 1;
-	p.add(Box.createVerticalStrut(5), c);
+        // create some margins
+        c.gridy = 1;
+        p.add(Box.createVerticalStrut(5), c);
 
-	c.gridy = 2;
-	c.gridwidth = 1;
+        c.gridy = 2;
+        c.gridwidth = 1;
 
-	c.gridheight = 2;
-	p.add(Box.createHorizontalStrut(8), c);
+        c.gridheight = 2;
+        p.add(Box.createHorizontalStrut(8), c);
 
-	c.gridheight = 1;
-	c.gridx = 2;
+        c.gridheight = 1;
+        c.gridx = 2;
 
-	// labels
-	final JLabel modeLab = uif.createLabel("basicTf.exclude.mode");
-	modeLab.setDisplayedMnemonic(uif.getI18NString("basicTf.exclude.mode.mne").charAt(0));
-	modeLab.setEnabled(jtxCheckBox.isSelected());
-	p.add(modeLab, c);
+        // labels
+        final JLabel modeLab = uif.createLabel("basicTf.exclude.mode");
+        modeLab.setDisplayedMnemonic(uif.getI18NString("basicTf.exclude.mode.mne").charAt(0));
+        modeLab.setEnabled(jtxCheckBox.isSelected());
+        p.add(modeLab, c);
 
-	c.gridy = 3;
-	final JLabel fileLab = uif.createLabel("basicTf.exclude.file");
-	fileLab.setDisplayedMnemonic(uif.getI18NString("basicTf.exclude.file.mne").charAt(0));
-	fileLab.setEnabled(jtxCheckBox.isSelected());
-	p.add(fileLab, c);
+        c.gridy = 3;
+        final JLabel fileLab = uif.createLabel("basicTf.exclude.file");
+        fileLab.setDisplayedMnemonic(uif.getI18NString("basicTf.exclude.file.mne").charAt(0));
+        fileLab.setEnabled(jtxCheckBox.isSelected());
+        p.add(fileLab, c);
 
-	// column 2
-	c.gridy = 2;
-	c.gridx = 3;
-	c.fill = GridBagConstraints.HORIZONTAL;
-	jtxMode = uif.createOutputField("basicTf.exclude.mode", modeLab);
-	jtxMode.setBorder(BorderFactory.createEmptyBorder());
-	jtxMode.setEditable(false);
-	jtxMode.setEnabled(jtxCheckBox.isSelected());
-	uif.setAccessibleInfo(jtxMode, "basicTf.exclude.mode");
-	p.add(jtxMode, c);
+        // column 2
+        c.gridy = 2;
+        c.gridx = 3;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        jtxMode = uif.createOutputField("basicTf.exclude.mode", modeLab);
+        jtxMode.setBorder(BorderFactory.createEmptyBorder());
+        jtxMode.setEditable(false);
+        jtxMode.setEnabled(jtxCheckBox.isSelected());
+        uif.setAccessibleInfo(jtxMode, "basicTf.exclude.mode");
+        p.add(jtxMode, c);
 
-	c.gridy = 3;
-	c.weightx = 2;
-	c.weighty = 2;
-	c.fill = GridBagConstraints.BOTH;
-	jtxFiles = new DefaultListModel();
-	jtxFileList = uif.createList("basicTf.exclude.file", jtxFiles);
-	jtxFileList.setEnabled(jtxCheckBox.isSelected());
-	uif.setAccessibleInfo(jtxFileList, "basicTf.exclude.file");
-	fileLab.setLabelFor(jtxFileList);
+        c.gridy = 3;
+        c.weightx = 2;
+        c.weighty = 2;
+        c.fill = GridBagConstraints.BOTH;
+        jtxFiles = new DefaultListModel();
+        jtxFileList = uif.createList("basicTf.exclude.file", jtxFiles);
+        jtxFileList.setEnabled(jtxCheckBox.isSelected());
+        uif.setAccessibleInfo(jtxFileList, "basicTf.exclude.file");
+        fileLab.setLabelFor(jtxFileList);
 
-	// might need to add a scroll panel here
-	p.add(uif.createScrollPane(jtxFileList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-	      JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), c);
+        // might need to add a scroll panel here
+        p.add(uif.createScrollPane(jtxFileList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+              JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), c);
 
-	jtxCheckBox.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
-		jtxFileList.setEnabled(jtxCheckBox.isSelected());
-		jtxMode.setEnabled(jtxCheckBox.isSelected());
-		modeLab.setEnabled(jtxCheckBox.isSelected());
-		fileLab.setEnabled(jtxCheckBox.isSelected());
-	    }
-	});
+        jtxCheckBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                jtxFileList.setEnabled(jtxCheckBox.isSelected());
+                jtxMode.setEnabled(jtxCheckBox.isSelected());
+                modeLab.setEnabled(jtxCheckBox.isSelected());
+                fileLab.setEnabled(jtxCheckBox.isSelected());
+            }
+        });
 
-	return p;
+        return p;
     }
 
     // test suite specific filter
     private JComponent createSpecialPanel() {
-	String k = "basicTf.tsf";
-	JPanel p = uif.createPanel("basicTf.tsf", new BorderLayout(), false);
-	p.setName("special");
+        String k = "basicTf.tsf";
+        JPanel p = uif.createPanel("basicTf.tsf", new BorderLayout(), false);
+        p.setName("special");
 
-	tsfCheckBox = uif.createCheckBox("basicTf.tsf", false);
-	tsfCheckBox.setMnemonic(uif.getI18NString("basicTf.tsf.mne").charAt(0));
-	p.add(tsfCheckBox, BorderLayout.CENTER);
+        tsfCheckBox = uif.createCheckBox("basicTf.tsf", false);
+        tsfCheckBox.setMnemonic(uif.getI18NString("basicTf.tsf.mne").charAt(0));
+        p.add(tsfCheckBox, BorderLayout.CENTER);
 
-	return p;
+        return p;
     }
 
     /**
@@ -733,81 +733,81 @@ class BasicCustomTestFilter extends ConfigurableTestFilter {
      *         user resolve the problem.
      */
     private SettingsSnapshot grabSettings() {
-	SettingsSnapshot shot = new SettingsSnapshot();
+        SettingsSnapshot shot = new SettingsSnapshot();
 
-	// grad top level togggle state of each type
-	shot.keywordsEnabled = !keyAllBtn.isSelected();
-	//shot.urlsEnabled = !allTestsBtn.isSelected();
-	shot.urlsEnabled = true;	// always enabled in current impl.
-	shot.statusEnabled = statusAnyOfBtn.isSelected();
-	shot.jtxEnabled = jtxCheckBox.isSelected();
-	shot.tsfEnabled = tsfCheckBox.isSelected();
+        // grad top level togggle state of each type
+        shot.keywordsEnabled = !keyAllBtn.isSelected();
+        //shot.urlsEnabled = !allTestsBtn.isSelected();
+        shot.urlsEnabled = true;        // always enabled in current impl.
+        shot.statusEnabled = statusAnyOfBtn.isSelected();
+        shot.jtxEnabled = jtxCheckBox.isSelected();
+        shot.tsfEnabled = tsfCheckBox.isSelected();
 
-	// grab status checkbox state
-	boolean oneSelected = false;
-	shot.statusFields = new boolean[statusChecks.length];
-	for (int i = 0; i < statusChecks.length; i++) {
-	    shot.statusFields[i] = statusChecks[i].isSelected();
-	    oneSelected = oneSelected || shot.statusFields[i];
-	}
+        // grab status checkbox state
+        boolean oneSelected = false;
+        shot.statusFields = new boolean[statusChecks.length];
+        for (int i = 0; i < statusChecks.length; i++) {
+            shot.statusFields[i] = statusChecks[i].isSelected();
+            oneSelected = oneSelected || shot.statusFields[i];
+        }
 
-	if (shot.statusEnabled && !oneSelected)
-	    throw new IllegalStateException(uif.getI18NString("basicTf.badStatus"));
+        if (shot.statusEnabled && !oneSelected)
+            throw new IllegalStateException(uif.getI18NString("basicTf.badStatus"));
 
-	// init. urls
-	shot.initialUrls = testsField.getSelection();
+        // init. urls
+        shot.initialUrls = testsField.getSelection();
 
-	// special case post processing for root selection
-	// if length is one and that string is zero length, that indicates
-	// a root selection
-	if (shot.initialUrls != null &&
-	    shot.initialUrls.length == 1 &&
-	    shot.initialUrls[0].length() == 0)
-	    shot.initialUrls = null;
+        // special case post processing for root selection
+        // if length is one and that string is zero length, that indicates
+        // a root selection
+        if (shot.initialUrls != null &&
+            shot.initialUrls.length == 1 &&
+            shot.initialUrls[0].length() == 0)
+            shot.initialUrls = null;
 
-	// keywords
-	shot.keyChoice = (String)(keywordsChoice.getSelectedItem());
-	shot.keyString = keywordsField.getText();
+        // keywords
+        shot.keyChoice = (String)(keywordsChoice.getSelectedItem());
+        shot.keyString = keywordsField.getText();
 
-	return shot;
+        return shot;
     }
 
     /**
      * Put a set of settings into the GUI.
      */
     private void putSettings(SettingsSnapshot s) {
-	// no GUI, don't do anything
-	if (editorPane == null)
-	    return;
+        // no GUI, don't do anything
+        if (editorPane == null)
+            return;
 
-	keyAllBtn.setSelected(!s.keywordsEnabled);
-	keyMatchBtn.setSelected(s.keywordsEnabled);
+        keyAllBtn.setSelected(!s.keywordsEnabled);
+        keyMatchBtn.setSelected(s.keywordsEnabled);
 
-	statusAllBtn.setSelected(!s.statusEnabled);
-	statusAnyOfBtn.setSelected(s.statusEnabled);
+        statusAllBtn.setSelected(!s.statusEnabled);
+        statusAnyOfBtn.setSelected(s.statusEnabled);
 
-	jtxCheckBox.setSelected(s.jtxEnabled);
-	tsfCheckBox.setSelected(s.tsfEnabled);
+        jtxCheckBox.setSelected(s.jtxEnabled);
+        tsfCheckBox.setSelected(s.tsfEnabled);
 
-	for (int i = 0; i < statusChecks.length; i++)
-	    statusChecks[i].setSelected(s.statusFields[i]);
-	
-	testsField.setSelection(s.initialUrls);
+        for (int i = 0; i < statusChecks.length; i++)
+            statusChecks[i].setSelected(s.statusFields[i]);
 
-	keywordsChoice.setSelectedItem(s.keyChoice);
-	keywordsField.setText(s.keyString);
+        testsField.setSelection(s.initialUrls);
 
-	updateExcludeInfo();
+        keywordsChoice.setSelectedItem(s.keyChoice);
+        keywordsField.setText(s.keyString);
+
+        updateExcludeInfo();
     }
-    
+
     // Utility methods
     private static String kwModeToType(String mode) {
-	if (mode == ALL_OF)
-	    return "all of";
-	else if (mode == ANY_OF)
-	    return "any of";
-	else
-	    return EXPR;
+        if (mode == ALL_OF)
+            return "all of";
+        else if (mode == ANY_OF)
+            return "any of";
+        else
+            return EXPR;
     }
 
     private Observer[] obs = new Observer[0];
@@ -817,12 +817,12 @@ class BasicCustomTestFilter extends ConfigurableTestFilter {
 
     private static int NUM_FILTERS = 5;
     private SettingsSnapshot activeSettings;
-    private TestFilter[] activeFilters;	    // for convienience
+    private TestFilter[] activeFilters;     // for convienience
     private KeywordsFilter keyFilter;
     private InitialUrlFilter urlFilter;
     private TestFilter jtxFilter;
     private StatusFilter statusFilter;
-    private TestFilter tsfFilter;	    // test suite filter
+    private TestFilter tsfFilter;           // test suite filter
 
     private final UIFactory uif;
     private JTabbedPane editorPane;
@@ -843,7 +843,7 @@ class BasicCustomTestFilter extends ConfigurableTestFilter {
     private JRadioButton statusAllBtn;
     private JRadioButton statusAnyOfBtn;
     private JCheckBox[] statusChecks = new JCheckBox[Status.NUM_STATES];
-    
+
     // tests info
     private ButtonGroup testsBtnGrp;
     //private JRadioButton allTestsBtn;
@@ -865,212 +865,212 @@ class BasicCustomTestFilter extends ConfigurableTestFilter {
      * Necessary to track changes which occur in the active interview.
      */
     private class InterviewObserver implements Interview.Observer {
-	InterviewObserver(InterviewParameters i) {
-	    interview = i;
-	}
+        InterviewObserver(InterviewParameters i) {
+            interview = i;
+        }
 
-	InterviewParameters getInterview() {
-	    return interview;
-	}
+        InterviewParameters getInterview() {
+            return interview;
+        }
 
-	public void currentQuestionChanged(Question q) {
-	    // ignore
-	}
+        public void currentQuestionChanged(Question q) {
+            // ignore
+        }
 
-	public void pathUpdated() {
-	    TestFilter underTest;
-	    boolean needsUpdate = false;
-	    updateExcludeInfo();
+        public void pathUpdated() {
+            TestFilter underTest;
+            boolean needsUpdate = false;
+            updateExcludeInfo();
 
-	    // determine if jtx and tsf filters were updated
-	    if (activeSettings.jtxEnabled) {
-		// we only support copying exclude list from interview
-		// right now
-		InterviewParameters ip = execModel.getInterviewParameters();
+            // determine if jtx and tsf filters were updated
+            if (activeSettings.jtxEnabled) {
+                // we only support copying exclude list from interview
+                // right now
+                InterviewParameters ip = execModel.getInterviewParameters();
 
-		if (ip != null) {
-		    // may set var. to null, but that's okay
-		    underTest = ip.getExcludeListFilter();
-		    if (underTest != null &&
-			(jtxFilter == null || !underTest.equals(jtxFilter)))
-			needsUpdate = true;
-		    else if (jtxFilter != null)	    // jtx filter now null
-			needsUpdate = true;
-		}
-	    }
+                if (ip != null) {
+                    // may set var. to null, but that's okay
+                    underTest = ip.getExcludeListFilter();
+                    if (underTest != null &&
+                        (jtxFilter == null || !underTest.equals(jtxFilter)))
+                        needsUpdate = true;
+                    else if (jtxFilter != null)     // jtx filter now null
+                        needsUpdate = true;
+                }
+            }
 
-	    if (needsUpdate) {
-		activateSettings(activeSettings);
-		return;	    // rest of checking no longer needed
-	    }
+            if (needsUpdate) {
+                activateSettings(activeSettings);
+                return;     // rest of checking no longer needed
+            }
 
-	    if (activeSettings.tsfEnabled) {
-		// we only support copying exclude list from interview
-		// right now
-		InterviewParameters ip = execModel.getInterviewParameters();
-		TestSuite ts = execModel.getTestSuite();
+            if (activeSettings.tsfEnabled) {
+                // we only support copying exclude list from interview
+                // right now
+                InterviewParameters ip = execModel.getInterviewParameters();
+                TestSuite ts = execModel.getTestSuite();
 
-		if (ip != null && ts != null) {
-		    underTest = ts.createTestFilter(ip.getEnv());
-		    if (underTest != null)
-			if (tsfFilter == null || !underTest.equals(tsfFilter))
-			    needsUpdate = true;
-			else { }
-		    else if (tsfFilter != null)	    // tsf filter now null
-			needsUpdate = true;
-		    else { }
-		}
-		else { }
-	    }
+                if (ip != null && ts != null) {
+                    underTest = ts.createTestFilter(ip.getEnv());
+                    if (underTest != null)
+                        if (tsfFilter == null || !underTest.equals(tsfFilter))
+                            needsUpdate = true;
+                        else { }
+                    else if (tsfFilter != null)     // tsf filter now null
+                        needsUpdate = true;
+                    else { }
+                }
+                else { }
+            }
 
-	    if (needsUpdate) {
-		activateSettings(activeSettings);
-		return;	    // rest of checking no longer needed
-	    }
-	}
+            if (needsUpdate) {
+                activateSettings(activeSettings);
+                return;     // rest of checking no longer needed
+            }
+        }
 
-	private InterviewParameters interview;
+        private InterviewParameters interview;
     }
 
     private class SettingsSnapshot {
-	SettingsSnapshot() {
-	    statusFields = new boolean[Status.NUM_STATES];
-	    urlsEnabled = true;
-	    keyChoice = EXPR;
-	    keyString = "";
-	}
+        SettingsSnapshot() {
+            statusFields = new boolean[Status.NUM_STATES];
+            urlsEnabled = true;
+            keyChoice = EXPR;
+            keyString = "";
+        }
 
-	SettingsSnapshot(Map m) {
-	    this();
-	    load(m);
-	}
+        SettingsSnapshot(Map m) {
+            this();
+            load(m);
+        }
 
-	public boolean equals(Object settings) {
-	    SettingsSnapshot incoming = (SettingsSnapshot)settings;
-	
-	    if (!Arrays.equals(initialUrls, incoming.initialUrls))
-		return false;
+        public boolean equals(Object settings) {
+            SettingsSnapshot incoming = (SettingsSnapshot)settings;
 
-	    if (keywordsEnabled != incoming.keywordsEnabled)
-		return false;
-	    else {
-		if (keyChoice != incoming.keyChoice)
-		    return false;
+            if (!Arrays.equals(initialUrls, incoming.initialUrls))
+                return false;
 
-		// destination of structure is to handle null values
-		if (keyString == null) {
-		    if (keyString != incoming.keyString)
-			return false;
-		    else { }
-		}
-		else {
-		    if (!keyString.equals(incoming.keyString))
-			return false;
-		    else { }
-		}
-	    }	// outer else
+            if (keywordsEnabled != incoming.keywordsEnabled)
+                return false;
+            else {
+                if (keyChoice != incoming.keyChoice)
+                    return false;
 
-	    if (statusEnabled != incoming.statusEnabled)
-		return false;
-	    else
-		if (!Arrays.equals(statusFields, incoming.statusFields))
-		    return false;
+                // destination of structure is to handle null values
+                if (keyString == null) {
+                    if (keyString != incoming.keyString)
+                        return false;
+                    else { }
+                }
+                else {
+                    if (!keyString.equals(incoming.keyString))
+                        return false;
+                    else { }
+                }
+            }   // outer else
 
-	    if (jtxEnabled != incoming.jtxEnabled)
-		return false;
+            if (statusEnabled != incoming.statusEnabled)
+                return false;
+            else
+                if (!Arrays.equals(statusFields, incoming.statusFields))
+                    return false;
 
-	    if (tsfEnabled != incoming.tsfEnabled)
-		return false;
+            if (jtxEnabled != incoming.jtxEnabled)
+                return false;
 
-	    return true;
-	}   // equals()
+            if (tsfEnabled != incoming.tsfEnabled)
+                return false;
 
-	void save(Map map) {
-	    map.put(MAP_URL_ENABLE, booleanToInt(urlsEnabled));
-	    map.put(MAP_KEY_ENABLE, booleanToInt(keywordsEnabled));
-	    map.put(MAP_STATUS_ENABLE, booleanToInt(statusEnabled));
-	    map.put(MAP_JTX_ENABLE, booleanToInt(jtxEnabled));
-	    map.put(MAP_TSF_ENABLE, booleanToInt(tsfEnabled));
+            return true;
+        }   // equals()
 
-	    for (int i = 0; i < statusFields.length; i++)
-		map.put(MAP_STATUS_PREFIX + i, booleanToInt(statusFields[i]));
+        void save(Map map) {
+            map.put(MAP_URL_ENABLE, booleanToInt(urlsEnabled));
+            map.put(MAP_KEY_ENABLE, booleanToInt(keywordsEnabled));
+            map.put(MAP_STATUS_ENABLE, booleanToInt(statusEnabled));
+            map.put(MAP_JTX_ENABLE, booleanToInt(jtxEnabled));
+            map.put(MAP_TSF_ENABLE, booleanToInt(tsfEnabled));
 
-	    map.put(MAP_URLS, StringArray.join(initialUrls));
+            for (int i = 0; i < statusFields.length; i++)
+                map.put(MAP_STATUS_PREFIX + i, booleanToInt(statusFields[i]));
 
-	    map.put(MAP_KEY_CHOICE, keyChoice);
-	    map.put(MAP_KEY_STRING, keyString);
-	}
+            map.put(MAP_URLS, StringArray.join(initialUrls));
 
-	void load(Map map) {
-	    urlsEnabled = intToBoolean((String)(map.get(MAP_URL_ENABLE)));
-	    keywordsEnabled = intToBoolean((String)(map.get(MAP_KEY_ENABLE)));
-	    statusEnabled = intToBoolean((String)(map.get(MAP_STATUS_ENABLE)));
-	    jtxEnabled = intToBoolean((String)(map.get(MAP_JTX_ENABLE)));
-	    tsfEnabled = intToBoolean((String)(map.get(MAP_TSF_ENABLE)));
+            map.put(MAP_KEY_CHOICE, keyChoice);
+            map.put(MAP_KEY_STRING, keyString);
+        }
 
-	    for (int i = 0; i < Status.NUM_STATES; i++) {
-		statusFields[i] = intToBoolean((String)(map.get(MAP_STATUS_PREFIX + i)));
-	    }	// for
+        void load(Map map) {
+            urlsEnabled = intToBoolean((String)(map.get(MAP_URL_ENABLE)));
+            keywordsEnabled = intToBoolean((String)(map.get(MAP_KEY_ENABLE)));
+            statusEnabled = intToBoolean((String)(map.get(MAP_STATUS_ENABLE)));
+            jtxEnabled = intToBoolean((String)(map.get(MAP_JTX_ENABLE)));
+            tsfEnabled = intToBoolean((String)(map.get(MAP_TSF_ENABLE)));
 
-	    initialUrls = StringArray.split((String)(map.get(MAP_URLS)));
+            for (int i = 0; i < Status.NUM_STATES; i++) {
+                statusFields[i] = intToBoolean((String)(map.get(MAP_STATUS_PREFIX + i)));
+            }   // for
 
-	    keyChoice = (String)(map.get(MAP_KEY_CHOICE));
-	    keyString = (String)(map.get(MAP_KEY_STRING));
+            initialUrls = StringArray.split((String)(map.get(MAP_URLS)));
 
-	    validate();
-	}
+            keyChoice = (String)(map.get(MAP_KEY_CHOICE));
+            keyString = (String)(map.get(MAP_KEY_STRING));
 
-	private void validate() {
-	    // conserve strings, but also sync with the actual
-	    // objects in the choice list for easy use
-	    if (keyChoice.equals(ALL_OF))
-		keyChoice = ALL_OF;
-	    else if (keyChoice.equals(ANY_OF))
-		keyChoice = ANY_OF;
-	    else if (keyChoice.equals(EXPR))
-		keyChoice = EXPR;
-	    else
-		keyChoice = ALL_OF;	// unknown, use default
-	}
+            validate();
+        }
 
-	String booleanToInt(boolean val) {
-	    if (val)
-		return "1";
-	    else
-		return "0";
-	}
+        private void validate() {
+            // conserve strings, but also sync with the actual
+            // objects in the choice list for easy use
+            if (keyChoice.equals(ALL_OF))
+                keyChoice = ALL_OF;
+            else if (keyChoice.equals(ANY_OF))
+                keyChoice = ANY_OF;
+            else if (keyChoice.equals(EXPR))
+                keyChoice = EXPR;
+            else
+                keyChoice = ALL_OF;     // unknown, use default
+        }
 
-	boolean intToBoolean(String num) {
-	    if (num == null)
-		return false;
+        String booleanToInt(boolean val) {
+            if (val)
+                return "1";
+            else
+                return "0";
+        }
 
-	    if (num.equals("1"))
-		return true;
-	    else
-		return false;
-	}
+        boolean intToBoolean(String num) {
+            if (num == null)
+                return false;
 
-	boolean urlsEnabled;
-	boolean keywordsEnabled;
-	boolean statusEnabled;
-	boolean jtxEnabled;
-	boolean tsfEnabled;
+            if (num.equals("1"))
+                return true;
+            else
+                return false;
+        }
 
-	boolean[] statusFields;
+        boolean urlsEnabled;
+        boolean keywordsEnabled;
+        boolean statusEnabled;
+        boolean jtxEnabled;
+        boolean tsfEnabled;
 
-	String[] initialUrls;
-	String keyChoice;
-	String keyString;
+        boolean[] statusFields;
 
-	private static final String MAP_URL_ENABLE = "urlsEnabled";
-	private static final String MAP_KEY_ENABLE = "keyEnabled";
-	private static final String MAP_STATUS_ENABLE = "statusEnable";
-	private static final String MAP_JTX_ENABLE = "jtxEnable";
-	private static final String MAP_TSF_ENABLE = "tsfEnable";
-	private static final String MAP_URLS = "urls";
-	private static final String MAP_KEY_CHOICE = "keyChoice";
-	private static final String MAP_KEY_STRING = "keyString";
-	private static final String MAP_STATUS_PREFIX = "status";
+        String[] initialUrls;
+        String keyChoice;
+        String keyString;
+
+        private static final String MAP_URL_ENABLE = "urlsEnabled";
+        private static final String MAP_KEY_ENABLE = "keyEnabled";
+        private static final String MAP_STATUS_ENABLE = "statusEnable";
+        private static final String MAP_JTX_ENABLE = "jtxEnable";
+        private static final String MAP_TSF_ENABLE = "tsfEnable";
+        private static final String MAP_URLS = "urls";
+        private static final String MAP_KEY_CHOICE = "keyChoice";
+        private static final String MAP_KEY_STRING = "keyString";
+        private static final String MAP_STATUS_PREFIX = "status";
 
     }
 

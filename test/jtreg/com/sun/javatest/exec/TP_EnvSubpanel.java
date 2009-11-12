@@ -34,91 +34,91 @@ import com.sun.javatest.tool.UIFactory;
  * A subpanel of TestPanel that displays the test enviornment for a test result.
  */
 
-class TP_EnvSubpanel 
-    extends TP_PropertySubpanel 
+class TP_EnvSubpanel
+    extends TP_PropertySubpanel
 {
     TP_EnvSubpanel(UIFactory uif) {
-	super(uif, "env");
+        super(uif, "env");
     }
 
     protected void updateSubpanel(TestResult currTest) {
-	if (subpanelTest != null)
-	    subpanelTest.removeObserver(observer);
+        if (subpanelTest != null)
+            subpanelTest.removeObserver(observer);
 
-	super.updateSubpanel(currTest);
-	updateEntries();
+        super.updateSubpanel(currTest);
+        updateEntries();
 
-	// if it is mutable, track updates
-	if (subpanelTest.isMutable())  {
-	    subpanelTest.addObserver(observer);
-	}
+        // if it is mutable, track updates
+        if (subpanelTest.isMutable())  {
+            subpanelTest.addObserver(observer);
+        }
     }
 
     private void updateEntries() {
-	try {
-	    updateEntries(subpanelTest.getEnvironment());
-	} 
-	catch (TestResult.Fault f) {
-	    // quietly ignore
-	}
+        try {
+            updateEntries(subpanelTest.getEnvironment());
+        }
+        catch (TestResult.Fault f) {
+            // quietly ignore
+        }
     }
 
     private void updateEntriesLater(final TestResult tr) {
-	if (tr == subpanelTest) {
-	    if (EventQueue.isDispatchThread()) 
-		updateEntries();
-	    else {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-			    if (tr == subpanelTest) {
-				updateEntries();
-			    }
-			}
-		    });
-	    }
-	}
+        if (tr == subpanelTest) {
+            if (EventQueue.isDispatchThread())
+                updateEntries();
+            else {
+                EventQueue.invokeLater(new Runnable() {
+                        public void run() {
+                            if (tr == subpanelTest) {
+                                updateEntries();
+                            }
+                        }
+                    });
+            }
+        }
     }
 
     private TRObserver observer = new TRObserver();
 
     //------------------------------------------------------------------------------------
 
-    private class TRObserver 
-	implements TestResult.Observer 
+    private class TRObserver
+        implements TestResult.Observer
     {
-	public void completed(TestResult tr) {
-	    //System.err.println("TPES_TRO: completed: " + tr.getWorkRelativePath());
-	    updateEntriesLater(tr);
-	    tr.removeObserver(this);
-	}
-	
-	public void createdSection(TestResult tr, TestResult.Section section) {
-	    // ignore
-	}
-	
-	public void completedSection(TestResult tr, TestResult.Section section) {
-	    // ignore
-	}
-	
-	public void createdOutput(TestResult tr, TestResult.Section section,
-				  String outputName) {
-	    // ignore
-	}
-	
-	public void completedOutput(TestResult tr, TestResult.Section section,
-				    String outputName) {
-	    // ignore
-	}
-	
-	public void updatedOutput(TestResult tr, TestResult.Section section, 
-				  String outputName, 
-				  int start, int end, String text) {
-	    // ignore
-	}
-	
-	public void updatedProperty(TestResult tr, String name, String value) {
-	    // ignore
-	}
+        public void completed(TestResult tr) {
+            //System.err.println("TPES_TRO: completed: " + tr.getWorkRelativePath());
+            updateEntriesLater(tr);
+            tr.removeObserver(this);
+        }
+
+        public void createdSection(TestResult tr, TestResult.Section section) {
+            // ignore
+        }
+
+        public void completedSection(TestResult tr, TestResult.Section section) {
+            // ignore
+        }
+
+        public void createdOutput(TestResult tr, TestResult.Section section,
+                                  String outputName) {
+            // ignore
+        }
+
+        public void completedOutput(TestResult tr, TestResult.Section section,
+                                    String outputName) {
+            // ignore
+        }
+
+        public void updatedOutput(TestResult tr, TestResult.Section section,
+                                  String outputName,
+                                  int start, int end, String text) {
+            // ignore
+        }
+
+        public void updatedProperty(TestResult tr, String name, String value) {
+            // ignore
+        }
     }
 
 }

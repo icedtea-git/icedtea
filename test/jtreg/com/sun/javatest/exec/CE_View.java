@@ -37,11 +37,11 @@ import com.sun.javatest.tool.UIFactory;
 abstract class CE_View extends JPanel
 {
     protected CE_View(InterviewParameters config,
-		      UIFactory uif, ActionListener l) {
-	this.config = config;
-	this.uif = uif;
-	listener = l;
-	setFocusable(false);
+                      UIFactory uif, ActionListener l) {
+        this.config = config;
+        this.uif = uif;
+        listener = l;
+        setFocusable(false);
     }
 
     abstract boolean isOKToClose();
@@ -51,17 +51,17 @@ abstract class CE_View extends JPanel
     abstract void save();
 
     void refresh() { }
-    
+
     public void setParentToolDialog(ToolDialog d) {
         toolDialog = d;
     }
-    
+
     public ToolDialog getParentToolDialog() {
         return toolDialog;
     }
 
     protected ToolDialog toolDialog;
-			
+
     protected InterviewParameters config;
     protected UIFactory uif;
     protected ActionListener listener;

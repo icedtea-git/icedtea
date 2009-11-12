@@ -42,18 +42,18 @@ public class HelpLinkBeanInfo extends SimpleBeanInfo
      * @see HelpLink
      */
     public PropertyDescriptor[] getPropertyDescriptors() {
-	try {
-	    PropertyDescriptor[] pds = {
-		new PropertyDescriptor("target",     HelpLink.class),
-		new PropertyDescriptor("text",       HelpLink.class),
-		new PropertyDescriptor("textFont",   HelpLink.class),
-		new PropertyDescriptor("textColor",  HelpLink.class)
-	    };
-	    return pds;
-	}
-	catch (Exception e) {
-	    JavaTestError.unexpectedException(e);
-	    return null;
-	}
+        try {
+            PropertyDescriptor[] pds = {
+                new PropertyDescriptor("target",     HelpLink.class),
+                new PropertyDescriptor("text",       HelpLink.class),
+                new PropertyDescriptor("textFont",   HelpLink.class),
+                new PropertyDescriptor("textColor",  HelpLink.class)
+            };
+            return pds;
+        }
+        catch (Exception e) {
+            JavaTestError.unexpectedException(e);
+            return null;
+        }
     }
 }

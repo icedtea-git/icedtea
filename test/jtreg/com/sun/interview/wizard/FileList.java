@@ -43,23 +43,23 @@ public class FileList extends EditableList
      * @param files An array of files to display as initial values in the list.
      */
     public FileList(String uiKey, File[] files) {
-	super(uiKey, files);
+        super(uiKey, files);
 
-	chooser = new JFileChooser();
-	chooser.setName(uiKey + "chsr");
+        chooser = new JFileChooser();
+        chooser.setName(uiKey + "chsr");
     }
 
     /**
-     * Set the base directory for the file list. 
+     * Set the base directory for the file list.
      * Files will be returned relative to this directory if possible.
      * @param dir The directory to set as the base directory. If null,
-     *		the user's current directory will be used.
+     *          the user's current directory will be used.
      */
     public void setBaseDirectory(File dir) {
-	baseDir = dir;
-	if (dir == null)
-	    dir = new File(System.getProperty("user.dir"));
-	chooser.setCurrentDirectory(dir);
+        baseDir = dir;
+        if (dir == null)
+            dir = new File(System.getProperty("user.dir"));
+        chooser.setCurrentDirectory(dir);
     }
 
     /**
@@ -67,11 +67,11 @@ public class FileList extends EditableList
      * @param filter A file filter to add to the list of choosable file filters.
      */
     public void addFilter(FileFilter filter) {
-	/*
-	if (chooser.isAcceptAllFileFilterUsed())
-	    chooser.setAcceptAllFileFilterUsed(false);
-	*/
-	chooser.addChoosableFileFilter(filter);
+        /*
+        if (chooser.isAcceptAllFileFilterUsed())
+            chooser.setAcceptAllFileFilterUsed(false);
+        */
+        chooser.addChoosableFileFilter(filter);
     }
 
     /**
@@ -82,7 +82,7 @@ public class FileList extends EditableList
      * @see JFileChooser#FILES_AND_DIRECTORIES
      */
     public void setFileSelectionMode(int mode) {
-	chooser.setFileSelectionMode(mode);
+        chooser.setFileSelectionMode(mode);
     }
 
     /**
@@ -90,40 +90,40 @@ public class FileList extends EditableList
      * @return the set of files currently in the list
      */
     public File[] getFiles() {
-	return (File[]) (getItems(File.class));
+        return (File[]) (getItems(File.class));
     }
 
     protected Object getNewItem() {
-	chooser.setDialogTitle(i18n.getString("flst.addFile.title"));
-	int opt = chooser.showDialog(FileList.this, i18n.getString("flst.addFile.ok"));
-	if (opt == JFileChooser.APPROVE_OPTION)
-	    return getBaseRelativeFile(chooser.getSelectedFile());
-	else
-	    return null;	    
+        chooser.setDialogTitle(i18n.getString("flst.addFile.title"));
+        int opt = chooser.showDialog(FileList.this, i18n.getString("flst.addFile.ok"));
+        if (opt == JFileChooser.APPROVE_OPTION)
+            return getBaseRelativeFile(chooser.getSelectedFile());
+        else
+            return null;
     }
 
     protected Object getNewItem(Object oldItem) {
-	File f = (File) oldItem;
-	if (!f.isAbsolute() && baseDir != null)
-	    f = new File(baseDir, f.getPath());
-	chooser.setSelectedFile(f);
-	chooser.setDialogTitle(i18n.getString("flst.changeFile.title"));
-	int opt = chooser.showDialog(FileList.this, i18n.getString("flst.changeFile.ok"));
-	if (opt == JFileChooser.APPROVE_OPTION) 
-	    return getBaseRelativeFile(chooser.getSelectedFile());
-	else
-	    return null;
+        File f = (File) oldItem;
+        if (!f.isAbsolute() && baseDir != null)
+            f = new File(baseDir, f.getPath());
+        chooser.setSelectedFile(f);
+        chooser.setDialogTitle(i18n.getString("flst.changeFile.title"));
+        int opt = chooser.showDialog(FileList.this, i18n.getString("flst.changeFile.ok"));
+        if (opt == JFileChooser.APPROVE_OPTION)
+            return getBaseRelativeFile(chooser.getSelectedFile());
+        else
+            return null;
     }
 
     private File getBaseRelativeFile(File f) {
-	if (baseDir == null) 
-	    return f;
+        if (baseDir == null)
+            return f;
 
-	String bp = baseDir.getPath();
-	if (f.getPath().startsWith(bp + File.separatorChar))
-	    return new File(f.getPath().substring(bp.length() + 1));
-	
-	return f;
+        String bp = baseDir.getPath();
+        if (f.getPath().startsWith(bp + File.separatorChar))
+            return new File(f.getPath().substring(bp.length() + 1));
+
+        return f;
     }
 
 

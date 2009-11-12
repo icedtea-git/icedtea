@@ -123,7 +123,7 @@ public class AppletAction extends Action
 
         htmlFN   = args[0];
     } // init()
-    
+
     @Override
     public File[] getSourceFiles() {
         return new File[] { new File(script.absTestSrcDir() + FILESEP + htmlFN) };

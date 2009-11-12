@@ -140,7 +140,7 @@ public class UIFactory {
     /**
      * Set the parent component to be used for dialogs created by this factory.
      * This setting cannot be changed after it is set.
-     * 
+     *
      * @param p The parent component, should not be null.
      */
     public void setDialogParent(Component p) {
@@ -174,12 +174,12 @@ public class UIFactory {
      * @return the first character of the string that was found
      */
     public int getI18NMnemonic(String key) {
-	String keyString = getI18NString(key);
-	KeyStroke keyStroke = KeyStroke.getKeyStroke(keyString);
+        String keyString = getI18NString(key);
+        KeyStroke keyStroke = KeyStroke.getKeyStroke(keyString);
         if (keyStroke != null)
             return keyStroke.getKeyCode();
         else
-	    //System.err.println("WARNING: bad mnemonic keystroke for " + key + ": " + keyString);
+            //System.err.println("WARNING: bad mnemonic keystroke for " + key + ": " + keyString);
             return 0;
     }
 
@@ -214,7 +214,7 @@ public class UIFactory {
      * @param key the name of the resource to be returned
      * @param arg an argument to be formatted into the result using
      * {@link java.text.MessageFormat#format}
-     * @return the formatted string 
+     * @return the formatted string
      */
     public String getI18NString(String key, Object arg) {
         return i18n.getString(key, arg);
@@ -262,7 +262,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.desc  <td>accessible description
      * </table>
      * @param c the component to modify
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @see #setAccessibleDescription(AccessibleContext,String)
      */
     public void setAccessibleDescription(Component c, String uiKey) {
@@ -276,7 +276,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.desc  <td>accessible description
      * </table>
      * @param c the context object to modify
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      */
     public void setAccessibleDescription(AccessibleContext c, String uiKey) {
         String text = getI18NString(uiKey + ".desc");
@@ -287,7 +287,7 @@ public class UIFactory {
      * Sets only the accessible name for the given context, using the
      * given key.
      * @param c the component object to modify
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @see #setAccessibleName(AccessibleContext,String)
      */
     public void setAccessibleName(Component c, String uiKey) {
@@ -301,7 +301,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.name  <td>accessible name
      * </table>
      * @param c the context object to modify
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      */
     public void setAccessibleName(AccessibleContext c, String uiKey) {
         String text = getI18NString(uiKey + ".name");
@@ -312,7 +312,7 @@ public class UIFactory {
      * Sets the accessible name and description for the given
      * component.
      * @param c the component object to modify
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @see #setAccessibleInfo(AccessibleContext,String)
      */
     public void setAccessibleInfo(Component c, String uiKey) {
@@ -328,7 +328,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.desc  <td>accessible description text
      * </table>
      * @param c the context object to modify
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      */
     public void setAccessibleInfo(AccessibleContext c, String uiKey) {
         setAccessibleDescription(c, uiKey);
@@ -361,7 +361,7 @@ public class UIFactory {
      * Create a horizontal filler that expands to fill the available space.
      * The name of the glue component will be set to <i>uikey</i>.  No resource
      * strings are required at this time.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return a filler component that expands to fill the available space
      */
     public Component createHorizontalGlue(String uiKey) {
@@ -373,7 +373,7 @@ public class UIFactory {
 
     /**
      * Create a filler that expands to fill the available space.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return a filler component that expands to fill the available space
      */
     public Component createGlue(String uiKey) {
@@ -407,9 +407,9 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.btn  <td>the name for the button
      * <tr><td><i>uiKey</i>.tip  <td>the tool tip for the button
      * </table>
-     * In addition, the name of the button and the action command 
+     * In addition, the name of the button and the action command
      * for the button is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resources to be used 
+     * @param uiKey the base name of the resources to be used
      * @return the button that was created
      * @see #createHelpButton
      * @see #createIconButton
@@ -436,7 +436,7 @@ public class UIFactory {
 
     /**
      * Create a button containing an Icon.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param icon the icon to appear in the button
      * @return the button that was created
      */
@@ -456,9 +456,9 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.btn  <td>the name for the button
      * <tr><td><i>uiKey</i>.tip  <td>the tool tip for the button
      * </table>
-     * In addition, the name of the button and the action command 
+     * In addition, the name of the button and the action command
      * for the button is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resources to be used 
+     * @param uiKey the base name of the resources to be used
      * @param l the ActionListener to be add to the button
      * @return the button that was created
      */
@@ -477,7 +477,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.tip  <td>the tool tip for the button
      * </table>
      * In addition, the name of the button is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resources to be used 
+     * @param uiKey the base name of the resources to be used
      * @param l the ActionListener to be add to the button
      * @param cmd the action command to be set for the button
      * @return the button that was created
@@ -489,12 +489,12 @@ public class UIFactory {
         return b;
     }
 
-    /** 
+    /**
      * Constant to identify the cancellation option.
      */
     public static final String CANCEL = "cancel";
 
-    /** 
+    /**
      * Special method to create a cancel button.  Differs from a
      * standard button because it does not require a mnemonic, per
      * the Java Look and Feel standard.
@@ -505,7 +505,7 @@ public class UIFactory {
         return createCancelButton(uiKey, closeListener);
     }
 
-    /** 
+    /**
      * Special method to create a cancel button.  Differs from a
      * standard button because it does not require a mnemonic, per
      * the Java Look and Feel standard.
@@ -525,7 +525,7 @@ public class UIFactory {
         finally {
             i18n = save_i18n;
         }
-        
+
         b.setActionCommand(CANCEL);
         b.addActionListener(l);
         b.setName(uiKey);
@@ -543,7 +543,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.tip  <td>the tool tip for the button
      * </table>
      * In addition, the name of the button is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resources to be used 
+     * @param uiKey the base name of the resources to be used
      * @return the button that was created
      * @see #createButton
      */
@@ -561,8 +561,8 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.tip  <td>the tool tip for the button
      * </table>
      * In addition, the name of the button is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resources to be used 
-     * @param needMnemonic a boolean indicating whether or not a mnemonic should be 
+     * @param uiKey the base name of the resources to be used
+     * @param needMnemonic a boolean indicating whether or not a mnemonic should be
      * set on the button. If the button is going to be the default button for a
      * dialog, it does not need a mnemonic.
      * @return the button that was created
@@ -586,7 +586,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.icon <td>the name of the resource for the icon image
      * <tr><td><i>uiKey</i>.tip  <td>the tool tip for the button
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return the button that was created
      */
     public JButton createIconButton(String uiKey) {
@@ -603,7 +603,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.icon <td>the name of the resource for the icon image
      * <tr><td><i>uiKey</i>.tip  <td>the tool tip for the button
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param l the action listener to attach to the new button
      * @return the button that was created
      */
@@ -643,7 +643,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.mne  <td>the mnemonic for the button
      * </table>
      * In addition, the name of the button is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resources to be used 
+     * @param uiKey the base name of the resources to be used
      * @param group the group to which the check box will be added
      * @return the radio button that was created
      * @see #createButton
@@ -667,13 +667,13 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.mne <td>The keystroke to use
      * </table>
      * @param b the button to modify
-     * @param uiKey the base name of the resources to be used 
+     * @param uiKey the base name of the resources to be used
      * @see javax.swing.KeyStoke
      */
     public void setMnemonic(AbstractButton b, String uiKey) {
         // NOTE: Swing is misleading; it uses an integer value for the mnemonic
         // but according to SwingUtilities.findDisplayedMnemonicIndex it is always
-        // the literal character for the mnemonic, and not anything fancy like 
+        // the literal character for the mnemonic, and not anything fancy like
         // an integer keycode
         int mne = getI18NMnemonic(uiKey + ".mne");
         if (mne != 0)
@@ -693,7 +693,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.mne  <td>the mnemonic for the button
      * </table>
      * In addition, the name of the check box is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resources to be used 
+     * @param uiKey the base name of the resources to be used
      * @return the check box that was created
      * @see #createCheckBoxMenuItem
      */
@@ -710,7 +710,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.mne  <td>the mnemonic for the button
      * </table>
      * In addition, the name of the check box is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resources to be used 
+     * @param uiKey the base name of the resources to be used
      * @param state the initial state of the check box
      * @return the check box that was created
      * @see #createCheckBoxMenuItem
@@ -729,7 +729,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.mne  <td>the mnemonic for the button
      * </table>
      * In addition, the name of the check box is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resources to be used 
+     * @param uiKey the base name of the resources to be used
      * @param state the initial state of the check box
      * @param group the group to which the check box will be added
      * @return the check box that was created
@@ -775,7 +775,7 @@ public class UIFactory {
         return createChoice(uiKey, choiceKeys, false);
     }
 
-    /** 
+    /**
      * Same as the two parameter <code>createChoice</code>, except you can
      * make this an mutable choice component (freeform editing of the
      * response).  If the component is to be editable, an additional
@@ -794,7 +794,7 @@ public class UIFactory {
         // rendering, but otherwise, let the JComboBox work in terms of the
         // choiceKeys
         final String[] choices = new String[choiceKeys.length];
-        for (int i = 0; i < choices.length; i++) 
+        for (int i = 0; i < choices.length; i++)
             choices[i] = getI18NString(uiKey + "." + choiceKeys[i] + ".chc");
 
         JComboBox choice = new JComboBox(choiceKeys);
@@ -912,8 +912,8 @@ public class UIFactory {
     }
 
     /**
-     * Create an choice item containing literal choices, 
-     * and using a resource to specify the tool tip. 
+     * Create an choice item containing literal choices,
+     * and using a resource to specify the tool tip.
      * The choices appear as given: for example, this method might be used to
      * create a choice item containing a set of filenames from which to choose. <br>
      * Note that if the choices are strings, they should probably be localized, and
@@ -925,7 +925,7 @@ public class UIFactory {
      * </table>
      * In addition, the name of the choice is set to <i>uiKey</i>.
      * @param uiKey the base name of the resources to be used for the menu
-     * @param choices the choices to appear in the choice item 
+     * @param choices the choices to appear in the choice item
      * @return the choice item that was created
      * @see #createChoice
      */
@@ -946,7 +946,7 @@ public class UIFactory {
      * <table>
      * <tr><td><i>uiKey</i>.icon  <td>the name of a resource containing the image
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return the icon that was created
      * @throws  MissingResourceException if the image resource cannot be found
      * @see #createIconButton
@@ -961,26 +961,26 @@ public class UIFactory {
      * <table>
      * <tr><td><i>uiKey</i>.icon  <td>the name of a resource containing the image
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return the URL for the resource obtained from the resource bundle
      * @throws  MissingResourceException if the image resource cannot be found
      */
     public URL getIconURL(String uiKey) {
         String r = getI18NString(uiKey + ".icon");
         URL url = clientClass.getResource(r);
-        if (url == null) 
+        if (url == null)
             throw new MissingResourceException(r, clientClass.getName(), r);
         return url;
     }
 
     /**
-     * Create a label containing an icon, using a resource to specify the 
+     * Create a label containing an icon, using a resource to specify the
      * icon image. <br>
      * The resource used is:
      * <table>
      * <tr><td><i>uiKey</i>.icon <td>the name of the resource for the icon image
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return the image that was created
      * @throws  MissingResourceException if the image resource cannot be found
      * @see #createLabel
@@ -997,7 +997,7 @@ public class UIFactory {
      */
     public Image createImage(String r) {
         URL url = getClass().getResource(r);
-        if (url == null) 
+        if (url == null)
             throw new MissingResourceException(r, clientClass.getName(), r);
         return Toolkit.getDefaultToolkit().getImage(url);
     }
@@ -1012,7 +1012,7 @@ public class UIFactory {
      * <table>
      * <tr><td><i>uiKey</i>.lbl  <td>the text for the label
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return the label that was created
      * @see #createIconLabel
      */
@@ -1028,7 +1028,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.tip  <td>the tooltip text for the label
      * <tr><td><i>uiKey</i>.mne  <td>the mnemonic for the label
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param need508 whether or not a mnemonic and tooltip should be set for this label
      * @return the label that was created
      * @see #createIconLabel
@@ -1099,14 +1099,14 @@ public class UIFactory {
     //
     // menus
 
-    /** 
+    /**
      * Create an empty menu bar, using resources to specify the accessible info.<br>
      * The resources used are:
      * <table>
      * <tr><td><i>uiKey</i>.name <td>the accessible name text
      * <tr><td><i>uiKey</i>.desc <td>accessible description text
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return the menu bar that was created
      */
     public JMenuBar createMenuBar(String uiKey) {
@@ -1116,7 +1116,7 @@ public class UIFactory {
         return mb;
     }
 
-    /** 
+    /**
      * Create an empty menu, using resources to specify the name and mnemonic. <br>
      * The resources used are:
      * <table>
@@ -1124,7 +1124,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.mne  <td>the single character mnemonic for the menu
      * <tr><td><i>uiKey</i>.desc <td>accessible description text
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return the menu that was created
      * @see #createPopupMenu
      */
@@ -1134,7 +1134,7 @@ public class UIFactory {
         return m;
     }
 
-    /** 
+    /**
      * Initialize an empty menu, using resources to specify the name and mnemonic. <br>
      * The resources used are:
      * <table>
@@ -1143,7 +1143,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.desc <td>accessible description text
      * </table>
      * @param m the menu the be initialized
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @see #createPopupMenu
      */
     public void initMenu(JMenu m, String uiKey) {
@@ -1153,16 +1153,16 @@ public class UIFactory {
         setAccessibleDescription(m, uiKey);
     }
 
-    /** 
-     * Create a menu, using actions to specify the menu items, 
+    /**
+     * Create a menu, using actions to specify the menu items,
      * and using resources to specify the name and mnemonic. <br>
      * The resources used are:
      * <table>
      * <tr><td><i>uiKey</i>.menu  <td>the display name of the menu
      * <tr><td><i>uiKey</i>.mne  <td>the single character mnemonic for the menu
      * </table>
-     * @param uiKey the base name of the resources to be used 
-     * @param actions the actions from which to create the menu items; 
+     * @param uiKey the base name of the resources to be used
+     * @param actions the actions from which to create the menu items;
      *  use null in the array to indicate if and where a separator is required
      * @return the menu that was created
      * @see #createMenuItem(Action)
@@ -1171,16 +1171,16 @@ public class UIFactory {
         JMenu m = createMenu(uiKey);
         for (int i = 0; i < actions.length; i++) {
             Action action = actions[i];
-            if (action == null) 
+            if (action == null)
                 m.addSeparator();
-            else 
+            else
                 m.add(createMenuItem(action));
         }
         return m;
     }
 
-    /** 
-     * Create a menu using resources and an action listener to specify 
+    /**
+     * Create a menu using resources and an action listener to specify
      * the menu items, and using resources to specify the name and mnemonic. <br>
      * The resources used are:
      * <table>
@@ -1189,9 +1189,9 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.<i>actions<sub>i</sub></i>.mit  <td>the text for the menu item, for 0 &lt;= i &lt; choiceKeys.length
      * <tr><td><i>uiKey</i>.<i>actions<sub>i</sub></i>.mne  <td>the single character mnemonic for the menu item, for 0 &lt;= i &lt; choiceKeys.length
      * </table>
-     * @param uiKey the base name of the resources to be used 
-     * @param actions the qualifying names for the resources for the 
-     *  individual menu items; use null in the array to indicate if 
+     * @param uiKey the base name of the resources to be used
+     * @param actions the qualifying names for the resources for the
+     *  individual menu items; use null in the array to indicate if
      *  and where a separator is required
      * @param l the action listener to be used for each menu item
      * @return the menu that was created
@@ -1203,8 +1203,8 @@ public class UIFactory {
         return m;
     }
 
-    /** 
-     * Initialize a menu using resources and an action listener to specify 
+    /**
+     * Initialize a menu using resources and an action listener to specify
      * the menu items, and using resources to specify the name and mnemonic. <br>
      * The resources used are:
      * <table>
@@ -1214,9 +1214,9 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.<i>actions<sub>i</sub></i>.mne  <td>the single character mnemonic for the menu item, for 0 &lt;= i &lt; choiceKeys.length
      * </table>
      * @param m the menu the be initialized
-     * @param uiKey the base name of the resources to be used 
-     * @param actions the qualifying names for the resources for the 
-     *  individual menu items; use null in the array to indicate if 
+     * @param uiKey the base name of the resources to be used
+     * @param actions the qualifying names for the resources for the
+     *  individual menu items; use null in the array to indicate if
      *  and where a separator is required
      * @param l the action listener to be used for each menu item
      * @see #createMenuItem(String, String, ActionListener)
@@ -1225,9 +1225,9 @@ public class UIFactory {
         initMenu(m, uiKey);
         for (int i = 0; i < actions.length; i++) {
             String action = actions[i];
-            if (action == null) 
+            if (action == null)
                 m.addSeparator();
-            else 
+            else
                 m.add(createMenuItem(uiKey, action, l));
         }
     }
@@ -1244,9 +1244,9 @@ public class UIFactory {
 
     /**
      * Create an popup menu.
-     * @param uiKey the base name of the resource to be used 
-     * @param actions the qualifying names for the resources for the 
-     *  individual menu items; use null in the array to indicate if 
+     * @param uiKey the base name of the resource to be used
+     * @param actions the qualifying names for the resources for the
+     *  individual menu items; use null in the array to indicate if
      *  and where a separator is required
      * @param l the action listener to be used for each menu item
      * @return the popup menu that was created
@@ -1256,9 +1256,9 @@ public class UIFactory {
         JPopupMenu m = createPopupMenu(uiKey);
         for (int i = 0; i < actions.length; i++) {
             String action = actions[i];
-            if (action == null) 
+            if (action == null)
                 m.addSeparator();
-            else 
+            else
                 m.add(createMenuItem(uiKey, action, l));
         }
         return m;
@@ -1289,7 +1289,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.<i>action</i>.mit  <td>the text for the menu item
      * <tr><td><i>uiKey</i>.<i>action</i>.mne  <td>the single character mnemonic for the menu item
      * </table>
-     * @param uiKey the base name of the resources to be used 
+     * @param uiKey the base name of the resources to be used
      * @param action the qualifying name for the resources for the menu item
      * @param l the action listener for the menu item
      * @return the menu item that was created
@@ -1305,7 +1305,7 @@ public class UIFactory {
     }
 
     /**
-     * Create a check box menu item, using resources to specify the 
+     * Create a check box menu item, using resources to specify the
      * name and the tool tip. <br>
      * The resources used are:
      * <table>
@@ -1342,7 +1342,7 @@ public class UIFactory {
     }
 
     /**
-     * Create a check box menu item, using resources to specify the 
+     * Create a check box menu item, using resources to specify the
      * name and the tool tip. <br>
      * The resources used are:
      * <table>
@@ -1425,7 +1425,7 @@ public class UIFactory {
     //
     // split pane
 
-    /** 
+    /**
      * Create an empty split pane with the given orientation.
      * @param orient The split's orientation.
      * @return The empty split pane component.
@@ -1439,7 +1439,7 @@ public class UIFactory {
         return sp;
     }
 
-    /** 
+    /**
      * Create an empty split pane with the given components inside.
      * @param orient The split's orientation.
      * @param c1 first component (left)
@@ -1473,7 +1473,7 @@ public class UIFactory {
     //
     // spinners - not accessible as of JDK 1.5, so it's commented out here!
 
-    /** 
+    /**
      * Create a spinner.
      * @param uiKey the base name of the resources to be used
      * @return a spinner component
@@ -1501,7 +1501,7 @@ public class UIFactory {
     //
     // tabbed paned
 
-    /** 
+    /**
      * Create an empty tabbed pane.
      * @param uiKey the base name of the resources to be used
      * @return an empty (no tabs) tabbed pane
@@ -1576,7 +1576,7 @@ public class UIFactory {
         String name = getI18NString(uiKey + ".tab");
         String tip = getI18NString(uiKey + ".tip");
         tPane.addTab(name, null, comp, tip);
-        
+
     }
 
     //----------------------------------------------------------------------------
@@ -1614,14 +1614,14 @@ public class UIFactory {
     // text fields, text areas etc
 
     /**
-     * Create a text field for use as a heading, using a resource to specify 
+     * Create a text field for use as a heading, using a resource to specify
      * the heading. <br>
      * The resource used is:
      * <table>
      * <tr><td><i>uiKey</i>.txt  <td>the text for the heading
      * </table>
      * In addition, the name of the output field is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return the text field that was created
      */
     public JTextField createHeading(String uiKey) {
@@ -1644,7 +1644,7 @@ public class UIFactory {
      * </table>
      * In addition, the name of the input field is set to <i>uiKey</i>.
      * By default, the input field is 10 characters wide.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return the input field that was created
      */
     public JTextField createInputField(String uiKey) {
@@ -1659,7 +1659,7 @@ public class UIFactory {
      * </table>
      * In addition, the name of the input field is set to <i>uiKey</i>.
      * By default, the input field is 10 characters wide.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param label the label to associate with this component
      * @return the input field that was created
      */
@@ -1668,14 +1668,14 @@ public class UIFactory {
     }
 
     /**
-     * Create an input text field with a specified number of columns, 
+     * Create an input text field with a specified number of columns,
      * using a resource to specify the tool tip.  <br>
      * The resource used is:
      * <table>
      * <tr><td><i>uiKey</i>.tip  <td>the tool tip for the field
      * </table>
      * In addition, the name of the input field is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param cols the default width of the field, in characters
      * @return the input field that was created
      * @see #createOutputField
@@ -1685,14 +1685,14 @@ public class UIFactory {
     }
 
     /**
-     * Create an input text field with a specified number of columns, 
+     * Create an input text field with a specified number of columns,
      * using a resource to specify the tool tip.  <br>
      * The resource used is:
      * <table>
      * <tr><td><i>uiKey</i>.tip  <td>the tool tip for the field
      * </table>
      * In addition, the name of the input field is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param cols the default width of the field, in characters
      * @param label the label to associate with this component
      * @return the input field that was created
@@ -1712,19 +1712,19 @@ public class UIFactory {
             tf.setName(uiKey);
             //setAccessibleName(tf, uiKey);
         }
-        
+
         setToolTip(tf, uiKey);
         return tf;
     }
 
     /**
-     * Create a message area, using a resource to specify the content. 
+     * Create a message area, using a resource to specify the content.
      * The message area will be transparent, uneditable, and word-wrapped. <br>
      * The resource used is:
      * <table>
      * <tr><td><i>uiKey</i>.txt  <td>the text for the message area
      * </table>
-     * @param uiKey the name of the resource to be used 
+     * @param uiKey the name of the resource to be used
      * @return the message area that was created
      */
     public JTextArea createMessageArea(String uiKey) {
@@ -1732,7 +1732,7 @@ public class UIFactory {
     }
 
     /**
-     * Create a message area, using a resource to specify the content. 
+     * Create a message area, using a resource to specify the content.
      * The message area will be transparent, uneditable, and word-wrapped. <br>
      * The resource used is:
      * <table>
@@ -1740,7 +1740,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.name  <td>accessible name
      * <tr><td><i>uiKey</i>.desc  <td>accessible description text
      * </table>
-     * @param uiKey the name of the resource to be used 
+     * @param uiKey the name of the resource to be used
      * @param arg an argument to be formatted into the content using
      * {@link java.text.MessageFormat#format}
      * @return the message area that was created
@@ -1751,7 +1751,7 @@ public class UIFactory {
 
 
     /**
-     * Create a message area, using a resource to specify the content. 
+     * Create a message area, using a resource to specify the content.
      * The message area will be transparent, uneditable, and word-wrapped. <br>
      * The resource used is:
      * <table>
@@ -1759,7 +1759,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.name  <td>accessible name
      * <tr><td><i>uiKey</i>.desc  <td>accessible description text
      * </table>
-     * @param uiKey the name of the resource to be used 
+     * @param uiKey the name of the resource to be used
      * @param args an array of arguments to be formatted into the content using
      * {@link java.text.MessageFormat#format}
      * @return the message area that was created
@@ -1783,7 +1783,7 @@ public class UIFactory {
         // The text will be layed out, wrapping lines, for the width, and the
         // preferred height will thereby be determined accordingly.
         txt.setSize(new Dimension(7 * DOTS_PER_INCH, Integer.MAX_VALUE));
-        // override JTextArea focus traversal keys, resetting them to 
+        // override JTextArea focus traversal keys, resetting them to
         // the Component default (i.e. the same as for the parent.)
         txt.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
         txt.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, null);
@@ -1808,7 +1808,7 @@ public class UIFactory {
         // The text will be layed out, wrapping lines, for the width, and the
         // preferred height will thereby be determined accordingly.
         txt.setSize(new Dimension(7 * DOTS_PER_INCH, Integer.MAX_VALUE));
-        // override JTextArea focus traversal keys, resetting them to 
+        // override JTextArea focus traversal keys, resetting them to
         // the Component default (i.e. the same as for the parent.)
         txt.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
         txt.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, null);
@@ -1831,7 +1831,7 @@ public class UIFactory {
      * </table>
      * In addition, the name of the output field is set to <i>uiKey</i>.
      * By default, the output field is empty and is 10 characters wide.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return the empty output field that was created
      * @see #createInputField
      */
@@ -1843,7 +1843,7 @@ public class UIFactory {
      * Same as the single parameter version, except a label, which labels
      * this new component, will be set.
      * The label's <code>setLabelFor()</code> will be set.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param label the label which is labeling this field
      * @return the output field that was created
      * @see #createInputField(String)
@@ -1853,7 +1853,7 @@ public class UIFactory {
     }
 
     /**
-     * Create an output text field with a specified number of columns, 
+     * Create an output text field with a specified number of columns,
      * and using a resource to specify the tool tip.  <br>
      * The resource used is:
      * <table>
@@ -1862,7 +1862,7 @@ public class UIFactory {
      * </table>
      * In addition, the name of the output field is set to <i>uiKey</i>.
      * The output field is initially empty.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param cols the default width of the field, in characters
      * @return the empty output field that was created
      */
@@ -1871,7 +1871,7 @@ public class UIFactory {
     }
 
     /**
-     * Create an output text field with a specified number of columns, 
+     * Create an output text field with a specified number of columns,
      * using a resource to specify the tool tip, with an attached label.  <br>
      * The resource used is:
      * <table>
@@ -1880,7 +1880,7 @@ public class UIFactory {
      * </table>
      * In addition, the name of the output field is set to <i>uiKey</i>.
      * The output field is initially empty.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param cols the default width of the field, in characters
      * @param label the label which is labeling this field
      * @return the empty output field that was created
@@ -1890,7 +1890,7 @@ public class UIFactory {
     }
 
     /**
-     * Create an output text field containing a specified value, 
+     * Create an output text field containing a specified value,
      * and using a resource to specify the tool tip.  <br>
      * The resource used is:
      * <table>
@@ -1899,7 +1899,7 @@ public class UIFactory {
      * </table>
      * In addition, the name of the output field is set to <i>uiKey</i>.
      * By default, the output field is 10 characters wide.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param value the initial text to appear in the output field
      * @return the output field that was created
      */
@@ -1908,7 +1908,7 @@ public class UIFactory {
     }
 
     /**
-     * Create an output text field containing a specified value, 
+     * Create an output text field containing a specified value,
      * using a resource to specify the tool tip,
      * with an attached label. <br>
      * The resource used is:
@@ -1918,7 +1918,7 @@ public class UIFactory {
      * </table>
      * In addition, the name of the output field is set to <i>uiKey</i>.
      * By default, the output field is 10 characters wide.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param value the text to appear in the output field
      * @param label the label which is labeling this field
      * @return the output field that was created
@@ -1928,7 +1928,7 @@ public class UIFactory {
     }
 
     /**
-     * Create an output text field containing a specified value, 
+     * Create an output text field containing a specified value,
      * with a specified number of columns,
      * and using a resource to specify the tool tip.  <br>
      * The resource used is:
@@ -1937,7 +1937,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.name <td>accessible name
      * </table>
      * In addition, the name of the output field is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param value the text to appear in the output field
      * @param cols the default width of the field, in characters
      * @return the output field that was created
@@ -1947,7 +1947,7 @@ public class UIFactory {
     }
 
     /**
-     * Create an output text field containing a specified value, 
+     * Create an output text field containing a specified value,
      * with a specified number of columns,
      * using a resource to specify the tool tip,
      * with a label referencing this new field.<br>
@@ -1957,7 +1957,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.name <td>accessible name
      * </table>
      * In addition, the name of the output field is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param value the text to appear in the output field
      * @param cols the default width of the field, in characters
      * @param label the label which is labeling this field
@@ -1967,14 +1967,14 @@ public class UIFactory {
         JTextField tf = new JTextField(value, cols);
         tf.setName(uiKey);
         tf.setEditable(false);
-        
+
         if (label != null)
             label.setLabelFor(tf);
         else
             setAccessibleName(tf, uiKey);
 
         setToolTip(tf, uiKey);
-        // override JTextField focus traversal keys, resetting them to 
+        // override JTextField focus traversal keys, resetting them to
         // the Component default (i.e. the same as for the parent.)
         tf.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
         tf.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, null);
@@ -1982,13 +1982,13 @@ public class UIFactory {
     }
 
     /**
-     * Create a text area, using a resource to specify the tool tip.  <br> 
+     * Create a text area, using a resource to specify the tool tip.  <br>
      * The resource used is:
      * <table>
      * <tr><td><i>uiKey</i>.tip  <td>the tool tip for the text area
      * </table>
      * In addition, the name of the text area is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return the text area that was created
      */
     public JTextArea createTextArea(String uiKey) {
@@ -1996,13 +1996,13 @@ public class UIFactory {
     }
 
     /**
-     * Create a text area, using a resource to specify the tool tip.  <br> 
+     * Create a text area, using a resource to specify the tool tip.  <br>
      * The resource used is:
      * <table>
      * <tr><td><i>uiKey</i>.tip  <td>the tool tip for the text area
      * </table>
      * In addition, the name of the text area is set to <i>uiKey</i>.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param label the label that labels this text area.  May be null.
      * @return the text area that was created
      */
@@ -2027,7 +2027,7 @@ public class UIFactory {
     //
     // progress bars
 
-    /** 
+    /**
      * Create a basic progress bar.
      * The resource used is:
      * <table>
@@ -2035,7 +2035,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.tip  <td>the tool tip for the text area
      * </table>
      *
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param orient Value from <code>JProgressBar</code>
      * @return Returns a progress bar component with the specified attributes.
      * @see javax.swing.JProgressBar#VERTICAL
@@ -2049,7 +2049,7 @@ public class UIFactory {
         return pb;
     }
 
-    /** 
+    /**
      * Create a basic progress bar.
      * The resources used are:
      * <table>
@@ -2057,7 +2057,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.tip  <td>the tool tip for the text area
      * </table>
      *
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param orient Value from <code>JProgressBar</code>
      * @param model Model to use for the progress bar.
      * @return Returns a progress bar component with the specified attributes.
@@ -2076,7 +2076,7 @@ public class UIFactory {
     //
     // toolbar
 
-    /** 
+    /**
      * Create an empty toolbar.
      * The resources used are:
      * <table>
@@ -2094,8 +2094,8 @@ public class UIFactory {
         return tb;
     }
 
-    /** 
-     * Create a toolbar, using actions to specify the buttons, 
+    /**
+     * Create a toolbar, using actions to specify the buttons,
      * and using resources to specify the name and mnemonic. <br>
      * The components on the toolbar which are derived from the actions will
      * have their accessible description set to the short description of the
@@ -2106,7 +2106,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.desc  <td>accessible description text
      * </table>
      * @param uiKey used to obtain accessibility info and name the component
-     * @param actions the actions from which to create the buttons; 
+     * @param actions the actions from which to create the buttons;
      *  use null in the array to indicate if and where a separator is required
      * @return the tool bar that was created
      * @see javax.swing.Action#SHORT_DESCRIPTION
@@ -2117,7 +2117,7 @@ public class UIFactory {
         setAccessibleInfo(tb, uiKey);
         for (int i = 0; i < actions.length; i++) {
             Action action = actions[i];
-            if (action == null) 
+            if (action == null)
                 tb.addSeparator();
             else {
                 JButton b = tb.add(action);
@@ -2128,8 +2128,8 @@ public class UIFactory {
         return tb;
     }
 
-    /** 
-     * Create a toolbar, using buttons. 
+    /**
+     * Create a toolbar, using buttons.
      * The resources used are:
      * <table>
      * <tr><td><i>uiKey</i>.name  <td>accessible name
@@ -2146,7 +2146,7 @@ public class UIFactory {
         setAccessibleInfo(tb, uiKey);
         for (int i = 0; i < buttons.length; i++) {
             JButton button = buttons[i];
-            if (button == null) 
+            if (button == null)
                 tb.addSeparator();
             else {
                 tb.add(button);
@@ -2159,14 +2159,14 @@ public class UIFactory {
      * Add a set of actions to an existing toolbar.
      *
      * @param tb The toolbar to modify, must not be null.
-     * @param actions the actions from which to create the buttons; 
+     * @param actions the actions from which to create the buttons;
      *        use null in the array to indicate if and where a separator is required
      * @see javax.swing.Action#SHORT_DESCRIPTION
      */
     public void addToolBarActions(JToolBar tb, Action[] actions) {
         for (int i = 0; i < actions.length; i++) {
             Action action = actions[i];
-            if (action == null) 
+            if (action == null)
                 tb.addSeparator();
             else {
                 JButton b = tb.add(action);
@@ -2181,25 +2181,25 @@ public class UIFactory {
     // blocking confirmation and error dialogs
 
     /**
-     * Show an error dialog, using a resource to specify the error message. <br> 
+     * Show an error dialog, using a resource to specify the error message. <br>
      * The resource used is:
      * <table>
      * <tr><td><i>uiKey</i>.err  <td>the error message to be displayed
      * </table>
      * The method will block until the dialog is dismissed by the user.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      */
     public void showError(String uiKey) {
         showLocalizedError(uiKey, getI18NString(uiKey + ".err"));
     }
 
     /**
-     * Show an error dialog, using a resource to specify the error message. <br> 
+     * Show an error dialog, using a resource to specify the error message. <br>
      * The resource used is:
      * <table>
      * <tr><td><i>uiKey</i>.err  <td>the error message to be displayed
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param arg an argument to be formatted into the content using
      * {@link java.text.MessageFormat#format}
      * The method will block until the dialog is dismissed by the user.
@@ -2209,12 +2209,12 @@ public class UIFactory {
     }
 
     /**
-     * Show an error dialog, using a resource to specify the error message. <br> 
+     * Show an error dialog, using a resource to specify the error message. <br>
      * The resource used is:
      * <table>
      * <tr><td><i>uiKey</i>.err  <td>the error message to be displayed
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param args an array of arguments to be formatted into the content using
      * {@link java.text.MessageFormat#format}
      * The method will block until the dialog is dismissed by the user.
@@ -2233,7 +2233,7 @@ public class UIFactory {
                                     Math.round(2.f * DOTS_PER_INCH)));
             content = sp;
         }
-            
+
         JOptionPane.showOptionDialog(parent,
                                      content,
                                      title,
@@ -2245,15 +2245,15 @@ public class UIFactory {
     }
 
     /**
-     * Show an error dialog containing stack trace information, using a 
-     * resource to specify the error message. <br> 
+     * Show an error dialog containing stack trace information, using a
+     * resource to specify the error message. <br>
      * The resource used is:
      * <table>
      * <tr><td><i>uiKey</i>.err  <td>the error message to be displayed
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param args an array of arguments to be formatted into the content using
-     * @param trace an array of arguments containing stack trace information 
+     * @param trace an array of arguments containing stack trace information
      * to be added to scrollable pane
      * The method will block until the dialog is dismissed by the user.
      */
@@ -2298,7 +2298,7 @@ public class UIFactory {
         if (title == null)
             title = local_i18n.getString("uif.error", ProductInfo.getName());
 
-        JOptionPane.showOptionDialog(parent, 
+        JOptionPane.showOptionDialog(parent,
                                      createLiteralMessageArea(msg),
                                      title,
                                      JOptionPane.DEFAULT_OPTION,
@@ -2311,7 +2311,7 @@ public class UIFactory {
     private void showLocalizedError(String uiKey, String text) {
         String title = local_i18n.getString("uif.error", ProductInfo.getName());
         JButton okBtn = createOptionButton("uif.ok");
-        JOptionPane.showOptionDialog(parent, 
+        JOptionPane.showOptionDialog(parent,
                                      createLocalizedMessageArea(uiKey, text, true),
                                      title,
                                      JOptionPane.DEFAULT_OPTION,
@@ -2322,7 +2322,7 @@ public class UIFactory {
     }
 
     /**
-     * Show a confirmation dialog with OK and Cancel buttons, 
+     * Show a confirmation dialog with OK and Cancel buttons,
      * using a resource to specify the message and title. <br>
      * The resources used are:
      * <table>
@@ -2330,7 +2330,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.title  <td>the title for the dialog
      * </table>
      * The method will block until the dialog is dismissed by the user.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return an integer signifying how the dialog was dismissed
      * @see JOptionPane#OK_OPTION
      * @see JOptionPane#CANCEL_OPTION
@@ -2340,7 +2340,7 @@ public class UIFactory {
     }
 
     /**
-     * Show a confirmation dialog with OK and Cancel buttons, 
+     * Show a confirmation dialog with OK and Cancel buttons,
      * using a resource to specify the message and title. <br>
      * The resources used are:
      * <table>
@@ -2348,7 +2348,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.title  <td>the title for the dialog
      * </table>
      * The method will block until the dialog is dismissed by the user.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param arg an argument to be formatted into the content using
      * {@link java.text.MessageFormat#format}
      * @return an integer signifying how the dialog was dismissed
@@ -2360,7 +2360,7 @@ public class UIFactory {
     }
 
     /**
-     * Show a confirmation dialog with OK and Cancel buttons, 
+     * Show a confirmation dialog with OK and Cancel buttons,
      * using a resource to specify the message and title. <br>
      * The resources used are:
      * <table>
@@ -2368,7 +2368,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.title  <td>the title for the dialog
      * </table>
      * The method will block until the dialog is dismissed by the user.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return an integer signifying how the dialog was dismissed
      * @param args an array of arguments to be formatted into the content using
      * {@link java.text.MessageFormat#format}
@@ -2398,7 +2398,7 @@ public class UIFactory {
     }
 
     /**
-     * Show a confirmation dialog with Yes and No buttons, 
+     * Show a confirmation dialog with Yes and No buttons,
      * using a resource to specify the message and title. <br>
      * The resources used are:
      * <table>
@@ -2406,7 +2406,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.title  <td>the title for the dialog
      * </table>
      * The method will block until the dialog is dismissed by the user.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return an integer signifying how the dialog was dismissed
      * @see JOptionPane#YES_OPTION
      * @see JOptionPane#NO_OPTION
@@ -2416,7 +2416,7 @@ public class UIFactory {
     }
 
     /**
-     * Show a confirmation dialog with Yes and No buttons, 
+     * Show a confirmation dialog with Yes and No buttons,
      * using a resource to specify the message and title. <br>
      * The resources used are:
      * <table>
@@ -2424,7 +2424,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.title  <td>the title for the dialog
      * </table>
      * The method will block until the dialog is dismissed by the user.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param arg an argument to be formatted into the content using
      * {@link java.text.MessageFormat#format}
      * @return an integer signifying how the dialog was dismissed
@@ -2436,14 +2436,14 @@ public class UIFactory {
     }
 
     /**
-     * Show a confirmation dialog with Yes and No buttons, 
+     * Show a confirmation dialog with Yes and No buttons,
      * using a resource to specify the title and component for the message.<br>
      * The resources used are:
      * <table>
      * <tr><td><i>uiKey</i>.title  <td>the title for the dialog
      * </table>
      * The method will block until the dialog is dismissed by the user.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param msg the GUI component to be used as the dialogs message payload
      * @return an integer signifying how the dialog was dismissed
      * @see JOptionPane#YES_OPTION
@@ -2454,7 +2454,7 @@ public class UIFactory {
     }
 
     /**
-     * Show a confirmation dialog with Yes and No buttons, 
+     * Show a confirmation dialog with Yes and No buttons,
      * using a resource to specify the message and title. <br>
      * The resources used are:
      * <table>
@@ -2462,7 +2462,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.title  <td>the title for the dialog
      * </table>
      * The method will block until the dialog is dismissed by the user.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return an integer signifying how the dialog was dismissed
      * @param args an array of arguments to be formatted into the content using
      * {@link java.text.MessageFormat#format}
@@ -2516,7 +2516,7 @@ public class UIFactory {
     }
 
     /**
-     * Show a confirmation dialog with Yes, No and Cancel buttons, 
+     * Show a confirmation dialog with Yes, No and Cancel buttons,
      * using a resource to specify the message and title. <br>
      * The resources used are:
      * <table>
@@ -2524,7 +2524,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.title  <td>the title for the dialog
      * </table>
      * The method will block until the dialog is dismissed by the user.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return an integer signifying how the dialog was dismissed
      * @see JOptionPane#YES_OPTION
      * @see JOptionPane#NO_OPTION
@@ -2535,7 +2535,7 @@ public class UIFactory {
     }
 
     /**
-     * Show a confirmation dialog with Yes and No buttons, 
+     * Show a confirmation dialog with Yes and No buttons,
      * using a resource to specify the message and title. <br>
      * The resources used are:
      * <table>
@@ -2543,7 +2543,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.title  <td>the title for the dialog
      * </table>
      * The method will block until the dialog is dismissed by the user.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param arg an argument to be formatted into the content using
      * {@link java.text.MessageFormat#format}
      * @return an integer signifying how the dialog was dismissed
@@ -2556,7 +2556,7 @@ public class UIFactory {
     }
 
     /**
-     * Show a confirmation dialog with Yes and No buttons, 
+     * Show a confirmation dialog with Yes and No buttons,
      * using a resource to specify the message and title. <br>
      * The resources used are:
      * <table>
@@ -2564,7 +2564,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.title  <td>the title for the dialog
      * </table>
      * The method will block until the dialog is dismissed by the user.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return an integer signifying how the dialog was dismissed
      * @param args an array of arguments to be formatted into the content using
      * {@link java.text.MessageFormat#format}
@@ -2599,7 +2599,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.txt  <td>the message to be displayed
      * <tr><td><i>uiKey</i>.title  <td>the title for the dialog
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param args any arguments to be used to create the message
      */
     public void showInformationDialog(String uiKey, Object[] args) {
@@ -2641,12 +2641,12 @@ public class UIFactory {
 
     /**
      * Show a dialog which provides the user with an informational message.
-     * 
+     *
      * The resources used are:
      * <table>
      * <tr><td><i>uiKey</i>.title  <td>the title for the dialog
      * </table>
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param msg the body of the dialog, which should have already been localized
      */
     public void showCustomInfoDialog(String uiKey, Object msg) {
@@ -2660,11 +2660,11 @@ public class UIFactory {
     //----------------------------------------------------------------------------
     //
     // panels
-        
-    /** 
+
+    /**
      * Create a horizontal placeholder "box". <br>
      * The name of this new box component will be set to <i>uiKey</i>.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return A Box component
      * @see javax.swing.Box
      */
@@ -2675,7 +2675,7 @@ public class UIFactory {
         return box;
     }
 
-    /** 
+    /**
      * Create an empty panel.  <br>
      * In the J2SE 1.4 and greater world, panels are focusable by default,
      * so this panel will be focusable.  Because of this, accessibility
@@ -2686,14 +2686,14 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.desc <td>accessible description text
      * </table>
      * The name of this new component will be set to <i>uiKey</i>.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @return An empty panel component
      */
     public JPanel createPanel(String uiKey) {
         return createPanel(uiKey, true);
     }
 
-    /** 
+    /**
      * Create an empty panel.  <br>
      * In the J2SE 1.4 and greater world, panels are focusable by default,
      * so this panel will be focusable.  Use this method to control
@@ -2704,7 +2704,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.desc <td>accessible description text
      * </table>
      * The name of this new component will be set to <i>uiKey</i>.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param focusable If true, the panel will accept focus in the GUI.
      *        If false it will not.  Note that if it is focusable, you need to
      *        provide accessibility text.
@@ -2716,7 +2716,7 @@ public class UIFactory {
         return p;
     }
 
-    /** 
+    /**
      * Create an empty panel with a specific layout mananger.  <br>
      * In the J2SE 1.4 and greater world, panels are focusable by default,
      * so this panel will be focusable.  Because of this, accessibility
@@ -2727,7 +2727,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.desc <td>accessible description text
      * </table>
      * The name of this new component will be set to <i>uiKey</i>.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param layout the layout manager instance to use in this panel
      * @return An empty panel component
      */
@@ -2735,7 +2735,7 @@ public class UIFactory {
         return createPanel(uiKey, layout, true);
     }
 
-    /** 
+    /**
      * Create an empty panel with a specific layout manager.  <br>
      * In the J2SE 1.4 and greater world, panels are focusable by default,
      * so this panel will be focusable.  Use this method to control
@@ -2746,7 +2746,7 @@ public class UIFactory {
      * <tr><td><i>uiKey</i>.desc <td>accessible description text
      * </table>
      * The name of this new component will be set to <i>uiKey</i>.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param layout the layout manager instance to use in this panel
      * @param focusable If true, the panel will accept focus in the GUI.
      *        If false it will not.  Note that if it is focusable, you need to
@@ -2762,7 +2762,7 @@ public class UIFactory {
     /**
      * Set properties on an existing panel.
      * @param p the panel to modify
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param focusable If true, the panel will accept focus in the GUI.
      *        If false it will not.  Note that if it is focusable, you need to
      *        provide accessbility text.
@@ -2778,7 +2778,7 @@ public class UIFactory {
     /**
      * Set properties on an existing panel, including the layout manager.
      * @param p the panel to modify
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param layout the layout manager instance that this panel should use
      * @param focusable If true, the panel will accept focus in the GUI.
      *        If false it will not.  Note that if it is focusable, you need to
@@ -2797,7 +2797,7 @@ public class UIFactory {
     /**
      * Create an empty dialog. <br>
      * See <code>initDialog(JDialog,String)</code> for required resources.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param parent the parent component of this dialog
      * @return an empty dialog component
      * @see #initDialog
@@ -2810,7 +2810,7 @@ public class UIFactory {
     /**
      * Create an empty dialog. <br>
      * See <code>initDialog(JDialog,String)</code> for required resources.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param owner the parent frame of this dialog
      * @return an empty dialog component
      * @see #initDialog
@@ -2824,7 +2824,7 @@ public class UIFactory {
     /**
      * Create an empty dialog. <br>
      * See <code>initDialog(JDialog,String)</code> for required resources.
-     * @param uiKey the base name of the resource to be used 
+     * @param uiKey the base name of the resource to be used
      * @param owner the parent frame of this dialog
      * @param title the localized title of this new dialog
      * @param content the content to go into the dialog

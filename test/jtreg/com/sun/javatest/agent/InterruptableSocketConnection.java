@@ -32,20 +32,20 @@ import java.io.InterruptedIOException;
 import java.net.Socket;
 
 public class InterruptableSocketConnection extends SocketConnection {
-    
+
     public InterruptableSocketConnection(Socket socket) throws IOException {
         super(socket);
     }
     public InterruptableSocketConnection(String host, int port) throws IOException {
         super(host, port);
     }
-    
+
     public InputStream getInputStream() {
         return new InterruptableInputStream();
     }
 
     class InterruptableInputStream extends InputStream {
-        
+
         public int read() throws IOException {
             byte[] b = new byte[1];
             int n = read(b);
@@ -65,7 +65,7 @@ public class InterruptableSocketConnection extends SocketConnection {
                 return new InterruptableReader().read(buffer, offset, count);
             }
             catch (InterruptedException ie) {
-                InterruptedIOException iio = 
+                InterruptedIOException iio =
                         new InterruptedIOException
                         ("Interrupted while waiting for agent response");
                 iio.fillInStackTrace();
@@ -130,5 +130,5 @@ public class InterruptableSocketConnection extends SocketConnection {
             }
         };
     };
-    
+
 }

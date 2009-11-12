@@ -74,12 +74,12 @@ interface TreePanelModel {
     /*
     public String getSelectedTest();
     */
-    //public String getSelectedNode();		// uncomment to use
+    //public String getSelectedNode();          // uncomment to use
 
     /**
      * Return the folder or test that the user is currently viewing.
      */
-    //public Object getSelectedObject();	// uncomment to use
+    //public Object getSelectedObject();        // uncomment to use
 
     public boolean isActive(TestResultTable.TreeNode node);
     public boolean isActive(TestResult tr);
@@ -94,4 +94,3 @@ interface TreePanelModel {
      */
     void unpauseWork();
 }
-

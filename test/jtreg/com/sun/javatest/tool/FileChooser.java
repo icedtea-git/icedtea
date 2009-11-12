@@ -38,10 +38,10 @@ import javax.swing.filechooser.FileFilter;
 public class FileChooser extends JFileChooser
 {
     /**
-     * Create a default file chooser.  
+     * Create a default file chooser.
      */
     public FileChooser() {
-	this(true);
+        this(true);
     }
 
     /**
@@ -51,13 +51,13 @@ public class FileChooser extends JFileChooser
      *        be available, and alse if not.
      */
     public FileChooser(boolean showAllFilesFilter) {
-	this.showAllFilesFilter = showAllFilesFilter;
-	setCurrentDirectory(userDir);
+        this.showAllFilesFilter = showAllFilesFilter;
+        setCurrentDirectory(userDir);
 
-	if (showAllFilesFilter)
-	    setAcceptAllFileFilterUsed(true);
-	else
-	    setAcceptAllFileFilterUsed(false);
+        if (showAllFilesFilter)
+            setAcceptAllFileFilterUsed(true);
+        else
+            setAcceptAllFileFilterUsed(false);
     }
 
     /**
@@ -67,13 +67,13 @@ public class FileChooser extends JFileChooser
      * @param desc the description for files selected by the filter
      */
     public void addChoosableExtension(String extn, String desc) {
-	FileFilter f = new ExtensionFileFilter(extn, desc);
-	addChoosableFileFilter(f);
-	setFileFilter(f);
+        FileFilter f = new ExtensionFileFilter(extn, desc);
+        addChoosableFileFilter(f);
+        setFileFilter(f);
 
-	// now that we have a filter, disable the "all files" filter
-	if (!showAllFilesFilter && isAcceptAllFileFilterUsed())
-	    setAcceptAllFileFilterUsed(false);
+        // now that we have a filter, disable the "all files" filter
+        if (!showAllFilesFilter && isAcceptAllFileFilterUsed())
+            setAcceptAllFileFilterUsed(false);
     }
 
     /**
@@ -81,14 +81,14 @@ public class FileChooser extends JFileChooser
      * @return an extension or null if not specified
      */
     public String getChosenExtension() {
-	FileFilter f = getFileFilter();
+        FileFilter f = getFileFilter();
         if (f instanceof ExtensionFileFilter) {
             return ((ExtensionFileFilter) f).getExtension();
         }
         return null;
     }
-    
-    
+
+
     /**
      * Allows to disable directories browsing
      * @param enableDirs <code>true</code> if directories browsing is allowed,
@@ -104,26 +104,25 @@ public class FileChooser extends JFileChooser
 
     private class ExtensionFileFilter extends FileFilter
     {
-	ExtensionFileFilter(String extn, String desc) {
-	    this.extn = extn;
-	    this.desc = desc;
-	}
+        ExtensionFileFilter(String extn, String desc) {
+            this.extn = extn;
+            this.desc = desc;
+        }
 
-	public boolean accept(File f) {
-	    return ((enableDirs && f.isDirectory()) 
+        public boolean accept(File f) {
+            return ((enableDirs && f.isDirectory())
                     || f.getName().endsWith(extn));
-	}
+        }
 
-	public String getDescription() {
-	    return desc;
-	}
+        public String getDescription() {
+            return desc;
+        }
 
         public String getExtension() {
-	    return extn;
-	}
+            return extn;
+        }
 
         private String extn;
-	private String desc;
+        private String desc;
     }
 }
-

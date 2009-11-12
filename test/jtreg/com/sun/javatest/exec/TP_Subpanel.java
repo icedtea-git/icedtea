@@ -41,33 +41,33 @@ import com.sun.javatest.util.I18NResourceBundle;
  * Base class for the individual displays of the TestPanel.
  */
 
-abstract class TP_Subpanel extends JPanel 
+abstract class TP_Subpanel extends JPanel
 {
     TP_Subpanel(UIFactory uif, String name) {
-	this.uif = uif;
-	setName(name);
-	setBackground(Color.white);
+        this.uif = uif;
+        setName(name);
+        setBackground(Color.white);
     }
 
     void setTestSuite(TestSuite ts) {
-	testSuite = ts;
+        testSuite = ts;
     }
 
     boolean isUpdateRequired(TestResult currTest) {
-	return (subpanelTest != currTest);
+        return (subpanelTest != currTest);
     }
 
     protected void updateSubpanel(TestResult currTest) {
-	//System.out.println(getClass().getName() + ".updateSubpanel()");
-	subpanelTest = currTest;
+        //System.out.println(getClass().getName() + ".updateSubpanel()");
+        subpanelTest = currTest;
 
-	try {
-	    subpanelDesc = currTest.getDescription();
-	}
-	catch (TestResult.Fault e) {
-	    I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(getClass());
-	    throw new JavaTestError(i18n, "test.noDesc", e);
-	}
+        try {
+            subpanelDesc = currTest.getDescription();
+        }
+        catch (TestResult.Fault e) {
+            I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(getClass());
+            throw new JavaTestError(i18n, "test.noDesc", e);
+        }
     }
 
     protected TestSuite testSuite;
@@ -75,4 +75,3 @@ abstract class TP_Subpanel extends JPanel
     protected TestDescription subpanelDesc;
     protected UIFactory uif;
 }
-

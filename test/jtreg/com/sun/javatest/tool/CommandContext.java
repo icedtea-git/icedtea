@@ -49,7 +49,7 @@ import com.sun.javatest.util.HelpTree;
 import com.sun.javatest.util.I18NResourceBundle;
 
 /**
- * An object to carry the shared state required and derived from 
+ * An object to carry the shared state required and derived from
  * executing a series of commands.
  *
  * <p>While the object does provide some behavior, as detailed below,
@@ -66,66 +66,66 @@ public class CommandContext
      */
     public class Fault extends Exception
     {
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 */
-	Fault(I18NResourceBundle i18n, String s) {
-	    super(i18n.getString(s));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         */
+        Fault(I18NResourceBundle i18n, String s) {
+            super(i18n.getString(s));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An argument to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	Fault(I18NResourceBundle i18n, String s, Object o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An argument to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        Fault(I18NResourceBundle i18n, String s, Object o) {
+            super(i18n.getString(s, o));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An array of arguments to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	Fault(I18NResourceBundle i18n, String s, Object[] o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An array of arguments to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        Fault(I18NResourceBundle i18n, String s, Object[] o) {
+            super(i18n.getString(s, o));
+        }
 
-	Fault(Command.Fault e) {
-	    super(e.getMessage(), e);
-	}
+        Fault(Command.Fault e) {
+            super(e.getMessage(), e);
+        }
 
-	/**
-	 * Get the command context object that created this fault object.
-	 * @return the command context object that created this fault object
-	 */
-	public CommandContext getContext() {
-	    return CommandContext.this;
-	}
+        /**
+         * Get the command context object that created this fault object.
+         * @return the command context object that created this fault object
+         */
+        public CommandContext getContext() {
+            return CommandContext.this;
+        }
     }
 
-    /** 
-     * Create a new context object. 
-     * The output stream, used by the printXXX methods, is set 
+    /**
+     * Create a new context object.
+     * The output stream, used by the printXXX methods, is set
      * to System.err.
      */
     public CommandContext() {
-	this(new PrintWriter(System.err));
+        this(new PrintWriter(System.err));
     }
 
-    /** 
+    /**
      * Create a new context object, using a specified PrintWriter
      * for the output stream, used by the printXXX methods.
      * @param out the output stream to be used by the printXXX methods.
      */
     public CommandContext(PrintWriter out) {
-	this.out = out;
+        this.out = out;
     }
 
     /**
@@ -135,7 +135,7 @@ public class CommandContext
      * @see #runCommands
      */
     public void addCommand(Command cmd) {
-	commands.add(cmd);
+        commands.add(cmd);
     }
 
     /**
@@ -145,9 +145,9 @@ public class CommandContext
      * @see #runCommands
      */
     public Command[] getCommands() {
-	Command[] a = new Command[commands.size()];
-	commands.copyInto(a);
-	return a;
+        Command[] a = new Command[commands.size()];
+        commands.copyInto(a);
+        return a;
     }
 
     /**
@@ -157,36 +157,36 @@ public class CommandContext
      * other commands have been executed.
      * @throws CommandContext.Fault if any of the commands executed throw Command.Fault
      */
-    public void runCommands() 
-	throws CommandContext.Fault 
+    public void runCommands()
+        throws CommandContext.Fault
     {
-	boolean foundAction = false;
+        boolean foundAction = false;
 
-	for (int i = 0; i < commands.size(); i++) {
-	    Command cmd = (Command) (commands.elementAt(i));
-	    foundAction |= cmd.isActionCommand();
+        for (int i = 0; i < commands.size(); i++) {
+            Command cmd = (Command) (commands.elementAt(i));
+            foundAction |= cmd.isActionCommand();
 
-	    // can't cache this ... may change while we execute commands
-	    boolean verbose = getVerboseOptionValue(VERBOSE_COMMANDS, false);
-	    if (verbose)
-	    	out.println(TRACE_PREFIX + cmd.toString());
+            // can't cache this ... may change while we execute commands
+            boolean verbose = getVerboseOptionValue(VERBOSE_COMMANDS, false);
+            if (verbose)
+                out.println(TRACE_PREFIX + cmd.toString());
 
-	    try {
-		cmd.run(this);
-	    }
-	    catch (Command.Fault e) {
-		throw new Fault(e);
-	    }
-	}
+            try {
+                cmd.run(this);
+            }
+            catch (Command.Fault e) {
+                throw new Fault(e);
+            }
+        }
 
-	if (!foundAction && autoRunCommand != null) {
-	    try {
-		autoRunCommand.run(this);
-	    }
-	    catch (Command.Fault e) {
-		throw new Fault(i18n, "cc.errorInDefault", e.getMessage());
-	    }
-	}
+        if (!foundAction && autoRunCommand != null) {
+            try {
+                autoRunCommand.run(this);
+            }
+            catch (Command.Fault e) {
+                throw new Fault(i18n, "cc.errorInDefault", e.getMessage());
+            }
+        }
     }
 
     /**
@@ -195,7 +195,7 @@ public class CommandContext
      * @see #getHarnessObservers
      */
     public void addHarnessObserver(Harness.Observer o) {
-	harnessObservers = (Harness.Observer[]) (DynamicArray.append(harnessObservers, o));
+        harnessObservers = (Harness.Observer[]) (DynamicArray.append(harnessObservers, o));
     }
 
     /**
@@ -204,9 +204,9 @@ public class CommandContext
      * @see #addHarnessObserver
      */
     public Harness.Observer[] getHarnessObservers() {
-	return harnessObservers;
+        return harnessObservers;
     }
-    
+
     /**
      * Get the "auto run" command registered with this object. If not null,
      * this command will be executed after the other commands executed by this
@@ -216,7 +216,7 @@ public class CommandContext
      * @see #runCommands
      */
     public Command getAutoRunCommand() {
-	return autoRunCommand;
+        return autoRunCommand;
     }
 
     /**
@@ -228,29 +228,29 @@ public class CommandContext
      * @see #runCommands
      */
     public void setAutoRunCommand(Command c) {
-	autoRunCommand = c;
+        autoRunCommand = c;
     }
 
     /**
      * Get the "auto run report directory" registered with this object.
-     * This is primarily to support backwards compatibility with JT Harness 
+     * This is primarily to support backwards compatibility with JT Harness
      * 2.x behavior.
      * @return  the "auto run report directory" registered with this object
      * @see #setAutoRunReportDir
      */
     public File getAutoRunReportDir() {
-	return autoRunReportDir;
+        return autoRunReportDir;
     }
 
     /**
      * Set the "auto run report directory" registered with this object.
-     * This is primarily to support backwards compatibility with JT Harness 
+     * This is primarily to support backwards compatibility with JT Harness
      * 2.x behavior.
      * @param dir  the "auto run report directory" to be registered with this object
      * @see #getAutoRunReportDir
      */
     public void setAutoRunReportDir(File dir) {
-	autoRunReportDir = dir;
+        autoRunReportDir = dir;
     }
 
     /**
@@ -258,11 +258,11 @@ public class CommandContext
      * @param stats an array of test counts, indexed by the standard Status.XXX values.
      */
     public void addTestStats(int[] stats) {
-	if (stats.length != Status.NUM_STATES)
-	    throw new IllegalArgumentException();
+        if (stats.length != Status.NUM_STATES)
+            throw new IllegalArgumentException();
 
-	for (int i = 0; i < stats.length; i++)
-	    cumulativeTestStats[i] += stats[i];
+        for (int i = 0; i < stats.length; i++)
+            cumulativeTestStats[i] += stats[i];
     }
 
     /**
@@ -270,11 +270,11 @@ public class CommandContext
      * @return an array of test counts, indexed by the standard Status.XXX values.
      */
     public int[] getTestStats() {
-	int[] s = new int[Status.NUM_STATES];
-	System.arraycopy(cumulativeTestStats, 0, s, 0, s.length);
-	return s;
+        int[] s = new int[Status.NUM_STATES];
+        System.arraycopy(cumulativeTestStats, 0, s, 0, s.length);
+        return s;
     }
-	
+
 
     /**
      * Check whether this object indicates that the desktop should be closed
@@ -284,7 +284,7 @@ public class CommandContext
      * @see #setCloseDesktopWhenDoneEnabled
      */
     public boolean isCloseDesktopWhenDoneEnabled() {
-	return closeDesktopWhenDoneEnabled;
+        return closeDesktopWhenDoneEnabled;
     }
 
     /**
@@ -295,7 +295,7 @@ public class CommandContext
      * @see #isCloseDesktopWhenDoneEnabled
      */
     public void setCloseDesktopWhenDoneEnabled(boolean b) {
-	closeDesktopWhenDoneEnabled = b;
+        closeDesktopWhenDoneEnabled = b;
     }
 
     /**
@@ -303,7 +303,7 @@ public class CommandContext
      * @return true if the test suite has been set, and false otherwise
      */
     public boolean isTestSuiteSet() {
-	return hasConfig();
+        return hasConfig();
     }
 
     /**
@@ -313,12 +313,12 @@ public class CommandContext
      * the available parameters
      * @see #setTestSuite
      */
-    public TestSuite getTestSuite() 
-	throws Fault 
+    public TestSuite getTestSuite()
+        throws Fault
     {
-	initConfig();
-	return config.getTestSuite();
-    }	
+        initConfig();
+        return config.getTestSuite();
+    }
 
     /**
      * Set the path for the test suite to be associated with this object.
@@ -330,34 +330,34 @@ public class CommandContext
      * @throws CommandContext.Fault if the test suite has already ben set
      */
     public void setTestSuite(File path)
-	throws Fault
+        throws Fault
     {
-	if (testSuitePath != null && !testSuitePath.equals(path))
-	    throw new Fault(i18n, "cc.tsAlreadySet", testSuitePath);
+        if (testSuitePath != null && !testSuitePath.equals(path))
+            throw new Fault(i18n, "cc.tsAlreadySet", testSuitePath);
 
-	testSuitePath = path;
+        testSuitePath = path;
     }
 
     /**
      * Set the test suite to be associated with this object.
      * @param ts the test suite to be associated with this object
      * @see #getTestSuite
-     * @throws CommandContext.Fault if the test suite has already been set to 
-     * something else, or if there is a problem evaluating related parameters, 
+     * @throws CommandContext.Fault if the test suite has already been set to
+     * something else, or if there is a problem evaluating related parameters,
      * such as a configuration file or template, or a work directory.
      * @throws TestSuite.Fault if there is a problem evaluating related
      * parameters.
      */
-    public void setTestSuite(TestSuite ts) 
-	throws Fault, TestSuite.Fault 
+    public void setTestSuite(TestSuite ts)
+        throws Fault, TestSuite.Fault
     {
-	if (isInitConfigRequired())
-	    initConfig();
+        if (isInitConfigRequired())
+            initConfig();
 
-	if (config == null) 
-	    config = ts.createInterview();
-	else if (config.getTestSuite() != ts)
-	    throw new Fault(i18n, "cc.tsAlreadySet", testSuitePath);
+        if (config == null)
+            config = ts.createInterview();
+        else if (config.getTestSuite() != ts)
+            throw new Fault(i18n, "cc.tsAlreadySet", testSuitePath);
     }
 
     /**
@@ -365,7 +365,7 @@ public class CommandContext
      * @return true if the work directory has been set, and false otherwise
      */
     public boolean isWorkDirectorySet() {
-	return (hasConfig() && (config.getWorkDirectory() != null));
+        return (hasConfig() && (config.getWorkDirectory() != null));
     }
 
     /**
@@ -375,12 +375,12 @@ public class CommandContext
      * the available parameters
      * @see #setWorkDirectory
      */
-    public WorkDirectory getWorkDirectory() 
-	throws Fault 
+    public WorkDirectory getWorkDirectory()
+        throws Fault
     {
-	initConfig();
+        initConfig();
 
-	return config.getWorkDirectory();
+        return config.getWorkDirectory();
     }
 
     /**
@@ -393,10 +393,10 @@ public class CommandContext
      * @see #getWorkDirectory
      * @throws CommandContext.Fault if the work directory has already been set
      */
-    public void setWorkDirectory(File path) 
-	throws Fault
+    public void setWorkDirectory(File path)
+        throws Fault
     {
-	setWorkDirectory(path, false);
+        setWorkDirectory(path, false);
     }
 
     /**
@@ -410,14 +410,14 @@ public class CommandContext
      * @see #getWorkDirectory
      * @throws CommandContext.Fault if the work directory has already been set
      */
-    public void setWorkDirectory(File path, boolean create) 
-	throws Fault
+    public void setWorkDirectory(File path, boolean create)
+        throws Fault
     {
-	if (workDirectoryPath != null && !workDirectoryPath.equals(path))
-	    throw new Fault(i18n, "cc.wdAlreadySet", workDirectoryPath);
+        if (workDirectoryPath != null && !workDirectoryPath.equals(path))
+            throw new Fault(i18n, "cc.wdAlreadySet", workDirectoryPath);
 
-	autoCreateWorkDirectory = create;
-	workDirectoryPath = path;
+        autoCreateWorkDirectory = create;
+        workDirectoryPath = path;
     }
 
     /**
@@ -429,28 +429,28 @@ public class CommandContext
      * test suite.
      * @throws TestSuite.Fault if there is a problem evaluating related
      * parameters.
-     * @throws CommandContext.Fault if the work directory has already 
+     * @throws CommandContext.Fault if the work directory has already
      * been set to something else
      */
-    public void setWorkDirectory(WorkDirectory wd) 
-	throws Fault, TestSuite.Fault 
+    public void setWorkDirectory(WorkDirectory wd)
+        throws Fault, TestSuite.Fault
     {
-	if (isInitConfigRequired())
-	    initConfig();
+        if (isInitConfigRequired())
+            initConfig();
 
-	if (config == null)
-	    config = wd.getTestSuite().createInterview();
-	else {
-	    if (wd.getTestSuite() != config.getTestSuite())
-		throw new Fault(i18n, "cc.wdTestSuiteMismatch", 
-					new Object[] { wd.getRoot(), config.getTestSuite().getRoot() });
-	    
-	    WorkDirectory cwd = config.getWorkDirectory();
-	    if (cwd != null && cwd != wd)
-		throw new Fault(i18n, "cc.wdAlreadySet", workDirectoryPath);
-	}
+        if (config == null)
+            config = wd.getTestSuite().createInterview();
+        else {
+            if (wd.getTestSuite() != config.getTestSuite())
+                throw new Fault(i18n, "cc.wdTestSuiteMismatch",
+                                        new Object[] { wd.getRoot(), config.getTestSuite().getRoot() });
 
-	config.setWorkDirectory(wd);
+            WorkDirectory cwd = config.getWorkDirectory();
+            if (cwd != null && cwd != wd)
+                throw new Fault(i18n, "cc.wdAlreadySet", workDirectoryPath);
+        }
+
+        config.setWorkDirectory(wd);
     }
 
     /**
@@ -462,10 +462,10 @@ public class CommandContext
      * @throws CommandContext.Fault if there is a problem evaluating the parameters
      * that define the configuration
      */
-    public InterviewParameters getInterviewParameters() 
-	throws Fault 
+    public InterviewParameters getInterviewParameters()
+        throws Fault
     {
-	return getConfig();
+        return getConfig();
     }
 
     /**
@@ -475,48 +475,48 @@ public class CommandContext
      * @throws CommandContext.Fault if there is a problem evaluating the parameters
      * that define the configuration
      */
-    public InterviewParameters getConfig() 
-	throws Fault 
+    public InterviewParameters getConfig()
+        throws Fault
     {
-	initConfig();
+        initConfig();
 
-	return config;
+        return config;
     }
-	
+
 
     /**
      * Check whether a configuration has been set yet.
      * @return true if a configuration has been set, and false otherwise
      */
     public boolean hasConfig() {
-	return (config != null
-		|| testSuitePath != null
-		|| workDirectoryPath != null
-		|| configFilePath != null);
+        return (config != null
+                || testSuitePath != null
+                || workDirectoryPath != null
+                || configFilePath != null);
     }
 
     /**
-     * Set the path for the configuration information to be associated 
+     * Set the path for the configuration information to be associated
      * with this object.
      * The path will not be verified until required, so that it can be
      * evaluated in conjunction with other parameters such as the test suite
      * and work directory.
-     * @param path the path for the configuration information to be associated 
+     * @param path the path for the configuration information to be associated
      * with this object.
      * @see #getConfig
      * @throws CommandContext.Fault if the configuration has already been evaluated
      */
-    public void setConfig(File path) 
-	throws Fault
+    public void setConfig(File path)
+        throws Fault
     {
-	if (config != null) {
-	    if (configFilePath == null)
-		throw new Fault(i18n, "cc.confAlreadySetDefault", path);
-	    else
-		throw new Fault(i18n, "cc.confAlreadySet", new Object[] { path, configFilePath });
-	}
+        if (config != null) {
+            if (configFilePath == null)
+                throw new Fault(i18n, "cc.confAlreadySetDefault", path);
+            else
+                throw new Fault(i18n, "cc.confAlreadySet", new Object[] { path, configFilePath });
+        }
 
-	configFilePath = path;
+        configFilePath = path;
     }
 
     /**
@@ -537,50 +537,50 @@ public class CommandContext
      * @see #getInterviewParameters
      * @deprecated
      */
-    public void setInterviewParameters(InterviewParameters p) 
-	throws Fault 
+    public void setInterviewParameters(InterviewParameters p)
+        throws Fault
     {
-	if (isInitConfigRequired())
-	    initConfig();
-	
-	WorkDirectory cwd;
-	if (config != null) {
-	    if (config.getTestSuite() != p.getTestSuite())
-		throw new Fault(i18n, "cc.confTestSuiteMismatch",
-					new Object[] { config.getTestSuite().getRoot() });
+        if (isInitConfigRequired())
+            initConfig();
 
-	    cwd = config.getWorkDirectory();
+        WorkDirectory cwd;
+        if (config != null) {
+            if (config.getTestSuite() != p.getTestSuite())
+                throw new Fault(i18n, "cc.confTestSuiteMismatch",
+                                        new Object[] { config.getTestSuite().getRoot() });
 
-	    WorkDirectory pwd = p.getWorkDirectory();
-	    if (cwd != null && pwd != null && pwd != cwd)
-		throw new Fault(i18n, "cc.confWorkDirMismatch",
-					new Object[] { cwd.getRoot() });
-	}
-	else
-	    cwd = null;
+            cwd = config.getWorkDirectory();
 
-	config = p;
+            WorkDirectory pwd = p.getWorkDirectory();
+            if (cwd != null && pwd != null && pwd != cwd)
+                throw new Fault(i18n, "cc.confWorkDirMismatch",
+                                        new Object[] { cwd.getRoot() });
+        }
+        else
+            cwd = null;
 
-	if (config.getWorkDirectory() == null && cwd != null)
-	    config.setWorkDirectory(cwd);
+        config = p;
+
+        if (config.getWorkDirectory() == null && cwd != null)
+            config.setWorkDirectory(cwd);
     }
 
     private boolean isInitConfigRequired() {
-	return (config == null && (testSuitePath != null
-				   || workDirectoryPath != null
-				   || configFilePath != null));
+        return (config == null && (testSuitePath != null
+                                   || workDirectoryPath != null
+                                   || configFilePath != null));
     }
 
-    private void initConfig() 
-	throws Fault 
+    private void initConfig()
+        throws Fault
     {
-	if (config != null)
-	    return;
+        if (config != null)
+            return;
 
-	/* 
-	if (testSuitePath == null && workDirectoryPath == null && configFilePath == null)
-	    throw new Fault(i18n, "cc.noConfig");
-	*/
+        /*
+        if (testSuitePath == null && workDirectoryPath == null && configFilePath == null)
+            throw new Fault(i18n, "cc.noConfig");
+        */
 
         // special case, should correspond to -ts -preferred <path>
         if (testSuitePath != null && workDirectoryPath == null &&
@@ -588,117 +588,117 @@ public class CommandContext
             workDirectoryPath = new File(defaultWorkDirPath);
         }
 
-	if (workDirectoryPath != null
-	    && (autoCreateWorkDirectory
-		|| WorkDirectory.isEmptyDirectory(workDirectoryPath))) {
+        if (workDirectoryPath != null
+            && (autoCreateWorkDirectory
+                || WorkDirectory.isEmptyDirectory(workDirectoryPath))) {
 
-	    // first, determine where the test suite is
-	    Properties configData;
-	    File tsPath;
+            // first, determine where the test suite is
+            Properties configData;
+            File tsPath;
 
             // get test suite path if we don't have it
-	    if (testSuitePath == null) {
-		if (configFilePath == null)
-		    throw new Fault(i18n, "cc.noTestSuite");
+            if (testSuitePath == null) {
+                if (configFilePath == null)
+                    throw new Fault(i18n, "cc.noTestSuite");
 
-		configData = new Properties();
+                configData = new Properties();
 
-		try {
-		    InputStream in = new BufferedInputStream(new FileInputStream(configFilePath));
-		    try {
-			configData.load(in);
-		    }
-		    catch (RuntimeException e) {
-			// can get IllegalArgumentException if the file is corrupt
-			throw new Fault(i18n, "cc.cantReadConfig", new Object[] { configFilePath, e });
-		    }
-		    finally {
-			in.close();
-		    }
-		}
-		catch (FileNotFoundException e) {
-		    throw new Fault(i18n, "cc.cantFindConfig", configFilePath);
-		}
-		catch (IOException e) {
-		    throw new Fault(i18n, "cc.cantReadConfig",
-					    new Object[] { configFilePath, e });
-		}
+                try {
+                    InputStream in = new BufferedInputStream(new FileInputStream(configFilePath));
+                    try {
+                        configData.load(in);
+                    }
+                    catch (RuntimeException e) {
+                        // can get IllegalArgumentException if the file is corrupt
+                        throw new Fault(i18n, "cc.cantReadConfig", new Object[] { configFilePath, e });
+                    }
+                    finally {
+                        in.close();
+                    }
+                }
+                catch (FileNotFoundException e) {
+                    throw new Fault(i18n, "cc.cantFindConfig", configFilePath);
+                }
+                catch (IOException e) {
+                    throw new Fault(i18n, "cc.cantReadConfig",
+                                            new Object[] { configFilePath, e });
+                }
 
-		String tsp = (String) (configData.get("TESTSUITE"));
-		if (tsp == null)
-		    throw new Fault(i18n, "cc.noTestSuiteInConfigFile", configFilePath);
-		
-		tsPath = new File(tsp);
-	    }
-	    else {
-		configData = null;
-		tsPath = testSuitePath;
-	    }
-		
-	    // open the test suite
-	    TestSuite ts;
-	    try {
-		ts = TestSuite.open(tsPath);
-	    }
-	    catch (FileNotFoundException e) {
-		throw new Fault(i18n, "cc.cantFindTS", 
-					new Object[] { tsPath, 
-						       new Integer(testSuitePath != null ? 0 : 1),
-						       configFilePath });
-	    }
-	    catch (TestSuite.Fault e) {
-		throw new Fault(i18n, "cc.cantOpenTS",
-					new Object[] { tsPath, 
-						       new Integer(testSuitePath != null ? 0 : 1),
-						       configFilePath,
-						       e.getMessage() });
-	    }
+                String tsp = (String) (configData.get("TESTSUITE"));
+                if (tsp == null)
+                    throw new Fault(i18n, "cc.noTestSuiteInConfigFile", configFilePath);
 
-	    // create the work directory
-	    WorkDirectory wd;
-	    try {
-		wd = WorkDirectory.create(workDirectoryPath, ts);
-	    }
-	    catch (WorkDirectory.Fault e) {
-		throw new Fault(i18n, "cc.cantCreateWD", workDirectoryPath);
-	    }
- 
-	    // finally, set up the config
-	    if (configFilePath == null || configData != null) {
+                tsPath = new File(tsp);
+            }
+            else {
+                configData = null;
+                tsPath = testSuitePath;
+            }
+
+            // open the test suite
+            TestSuite ts;
+            try {
+                ts = TestSuite.open(tsPath);
+            }
+            catch (FileNotFoundException e) {
+                throw new Fault(i18n, "cc.cantFindTS",
+                                        new Object[] { tsPath,
+                                                       new Integer(testSuitePath != null ? 0 : 1),
+                                                       configFilePath });
+            }
+            catch (TestSuite.Fault e) {
+                throw new Fault(i18n, "cc.cantOpenTS",
+                                        new Object[] { tsPath,
+                                                       new Integer(testSuitePath != null ? 0 : 1),
+                                                       configFilePath,
+                                                       e.getMessage() });
+            }
+
+            // create the work directory
+            WorkDirectory wd;
+            try {
+                wd = WorkDirectory.create(workDirectoryPath, ts);
+            }
+            catch (WorkDirectory.Fault e) {
+                throw new Fault(i18n, "cc.cantCreateWD", workDirectoryPath);
+            }
+
+            // finally, set up the config
+            if (configFilePath == null || configData != null) {
                 // create empty interview
-		try {
-		    config = ts.createInterview();
-		}
-		catch (TestSuite.Fault e) {
-		    throw new Fault(i18n, "cc.cantCreateConfig",
-					    new Object[] { testSuitePath, e.getMessage() });
-		}
-		
-                // load config data if we have it
-		try {
-		    if (configData != null)
-			config.load(configData, configFilePath);
-		}
-		catch (InterviewParameters.Fault e) {
-		    throw new Fault(i18n, "cc.cantOpenConfig",
-					    new Object[] { configFilePath, e.getMessage() });
-		}
+                try {
+                    config = ts.createInterview();
+                }
+                catch (TestSuite.Fault e) {
+                    throw new Fault(i18n, "cc.cantCreateConfig",
+                                            new Object[] { testSuitePath, e.getMessage() });
+                }
 
-		config.setWorkDirectory(wd);
-	    }
-	    else {
-		try {
-		    config = InterviewParameters.open(configFilePath, wd);
-		}
-		catch (IOException e) {
-		    throw new Fault(i18n, "cc.cantReadConfig",
-					    new Object[] { configFilePath, e });
-		}
-		catch (InterviewParameters.Fault e) {
-		    throw new Fault(i18n, "cc.cantOpenConfig",
-					    new Object[] { configFilePath, e.getMessage() });
-		}
-	    }
+                // load config data if we have it
+                try {
+                    if (configData != null)
+                        config.load(configData, configFilePath);
+                }
+                catch (InterviewParameters.Fault e) {
+                    throw new Fault(i18n, "cc.cantOpenConfig",
+                                            new Object[] { configFilePath, e.getMessage() });
+                }
+
+                config.setWorkDirectory(wd);
+            }
+            else {
+                try {
+                    config = InterviewParameters.open(configFilePath, wd);
+                }
+                catch (IOException e) {
+                    throw new Fault(i18n, "cc.cantReadConfig",
+                                            new Object[] { configFilePath, e });
+                }
+                catch (InterviewParameters.Fault e) {
+                    throw new Fault(i18n, "cc.cantOpenConfig",
+                                            new Object[] { configFilePath, e.getMessage() });
+                }
+            }
 
             // configuration was created without template,
             // it means that there will be no template reference
@@ -715,10 +715,10 @@ public class CommandContext
                 }
             }
 
-	}
-	else {
+        }
+        else {
             // reject an unusable workdir setting
-	    try {
+            try {
                 config = InterviewParameters.open(testSuitePath,
                                                     workDirectoryPath,
                                                     configFilePath);
@@ -748,21 +748,21 @@ public class CommandContext
                             // ignore
                         }
                     }   // if
-                } 
-	    }   // try
-	    catch (InterviewParameters.Fault e) {
-		throw new Fault(i18n, "cc.cantInitConfig", e.getMessage());
-	    }
-	}
+                }
+            }   // try
+            catch (InterviewParameters.Fault e) {
+                throw new Fault(i18n, "cc.cantInitConfig", e.getMessage());
+            }
+        }
 
-	if (testSuitePath == null)
-	    testSuitePath = config.getTestSuite().getRoot();
+        if (testSuitePath == null)
+            testSuitePath = config.getTestSuite().getRoot();
 
-	if (workDirectoryPath == null && config.getWorkDirectory() != null)
-	    workDirectoryPath = config.getWorkDirectory().getRoot();
+        if (workDirectoryPath == null && config.getWorkDirectory() != null)
+            workDirectoryPath = config.getWorkDirectory().getRoot();
 
-	if (configFilePath == null)
-	    configFilePath = config.getFile();
+        if (configFilePath == null)
+            configFilePath = config.getFile();
     }
 
     /**
@@ -774,13 +774,13 @@ public class CommandContext
      * @return whether or not a desktop is required by the commands registered with this object
      */
     public boolean isDesktopRequired() {
-	int mode = Command.DEFAULT_DTMODE;
-	for (int i = 0; i < commands.size(); i++) {
-	    Command cmd = (Command) (commands.elementAt(i));
-	    mode = Math.max(mode, cmd.getDesktopMode());
-	}
-	return (mode == Command.DESKTOP_NOT_REQUIRED_DTMODE ? false : true);
-	
+        int mode = Command.DEFAULT_DTMODE;
+        for (int i = 0; i < commands.size(); i++) {
+            Command cmd = (Command) (commands.elementAt(i));
+            mode = Math.max(mode, cmd.getDesktopMode());
+        }
+        return (mode == Command.DESKTOP_NOT_REQUIRED_DTMODE ? false : true);
+
     }
 
     /**
@@ -790,9 +790,9 @@ public class CommandContext
      * @see #getDesktop
      */
     public void setDesktop(Desktop d) {
-	if (d == null)
-	    throw new NullPointerException();
-	desktop = d;
+        if (d == null)
+            throw new NullPointerException();
+        desktop = d;
     }
 
     /**
@@ -801,7 +801,7 @@ public class CommandContext
      * @see #setDesktop
      */
     public Desktop getDesktop() {
-	return desktop;
+        return desktop;
     }
 
 
@@ -814,7 +814,7 @@ public class CommandContext
      * be given as true.
      */
     public void setVerboseMax(boolean on) {
-	verboseMax = on;
+        verboseMax = on;
     }
 
     /**
@@ -824,7 +824,7 @@ public class CommandContext
      * be given as false.
      */
     public void setVerboseQuiet(boolean on) {
-	verboseQuiet = on;
+        verboseQuiet = on;
     }
 
     /**
@@ -832,7 +832,7 @@ public class CommandContext
      * @param on False for no timestamps.
      */
     public void setVerboseTimestampEnabled(boolean on) {
-	verboseDate = on;
+        verboseDate = on;
     }
 
     /**
@@ -842,7 +842,7 @@ public class CommandContext
      * @see #getVerboseOptionValue
      */
     public void setVerboseOptionValue(String name, boolean on) {
-	verboseOptionValues.put(name.toLowerCase(), new Boolean(on));
+        verboseOptionValues.put(name.toLowerCase(), new Boolean(on));
     }
 
     /**
@@ -857,7 +857,7 @@ public class CommandContext
      * @see #setVerboseOptionValue
      */
     public boolean getVerboseOptionValue(String name) {
-	return getVerboseOptionValue(name, false);
+        return getVerboseOptionValue(name, false);
     }
 
     /**
@@ -873,14 +873,14 @@ public class CommandContext
      * @see #setVerboseOptionValue
      */
     public boolean getVerboseOptionValue(String name, boolean defaultValue) {
-	if (verboseMax)
-	    return true;
-	
-	if (verboseQuiet)
-	    return false;
+        if (verboseMax)
+            return true;
 
-	Boolean b = (Boolean) (verboseOptionValues.get(name.toLowerCase()));
-	return (b == null ? defaultValue : b.booleanValue());
+        if (verboseQuiet)
+            return false;
+
+        Boolean b = (Boolean) (verboseOptionValues.get(name.toLowerCase()));
+        return (b == null ? defaultValue : b.booleanValue());
     }
 
     /**
@@ -891,7 +891,7 @@ public class CommandContext
      * and false otherwise
      */
     public boolean isVerboseOptionSet(String name) {
-	return (verboseOptionValues.get(name.toLowerCase()) != null);
+        return (verboseOptionValues.get(name.toLowerCase()) != null);
     }
 
     /**
@@ -900,7 +900,7 @@ public class CommandContext
      * @see #setVerboseTimestampEnabled
      */
     public boolean isVerboseTimestampEnabled() {
-	return verboseDate;
+        return verboseDate;
     }
 
     /**
@@ -909,7 +909,7 @@ public class CommandContext
      * @see #getLogWriter
      */
     public void setLogWriter(PrintWriter out) {
-	this.out = out;
+        this.out = out;
     }
 
     /**
@@ -918,7 +918,7 @@ public class CommandContext
      * @see #setLogWriter
      */
     public PrintWriter getLogWriter() {
-	return out;
+        return out;
     }
 
     /**
@@ -928,7 +928,7 @@ public class CommandContext
      * @see #setLogWriter
      */
     public void printMessage(I18NResourceBundle i18n, String key) {
-	out.println(i18n.getString(key));
+        out.println(i18n.getString(key));
     }
 
     /**
@@ -939,7 +939,7 @@ public class CommandContext
      * @see #setLogWriter
      */
     public void printMessage(I18NResourceBundle i18n, String key, Object arg) {
-	out.println(i18n.getString(key, arg));
+        out.println(i18n.getString(key, arg));
     }
 
     /**
@@ -950,7 +950,7 @@ public class CommandContext
      * @see #setLogWriter
      */
     public void printMessage(I18NResourceBundle i18n, String key, Object[] args) {
-	out.println(i18n.getString(key, args));
+        out.println(i18n.getString(key, args));
     }
 
     /**
@@ -960,8 +960,8 @@ public class CommandContext
      * @see #setLogWriter
      */
     public void printErrorMessage(I18NResourceBundle i18n, String key) {
-	out.println(i18n.getString(key));
-	errors = true;
+        out.println(i18n.getString(key));
+        errors = true;
     }
 
     /**
@@ -972,8 +972,8 @@ public class CommandContext
      * @see #setLogWriter
      */
     public void printErrorMessage(I18NResourceBundle i18n, String key, Object arg) {
-	out.println(i18n.getString(key, arg));
-	errors = true;
+        out.println(i18n.getString(key, arg));
+        errors = true;
     }
 
     /**
@@ -984,15 +984,15 @@ public class CommandContext
      * @see #setLogWriter
      */
     public void printErrorMessage(I18NResourceBundle i18n, String key, Object[] args) {
-	out.println(i18n.getString(key, args));
-	errors = true;
+        out.println(i18n.getString(key, args));
+        errors = true;
     }
 
     //-------------------------------------------------------------------------
 
 
     private Vector commands = new Vector();
-    
+
     //private TestSuite testSuite;
     //private WorkDirectory workDir;
     private File testSuitePath;
@@ -1021,7 +1021,7 @@ public class CommandContext
     static final String VERBOSE_COMMANDS = "commands";
 
     static {
-	VerboseCommand.addOption(VERBOSE_COMMANDS, new HelpTree.Node(i18n, "cc.verbose"));
+        VerboseCommand.addOption(VERBOSE_COMMANDS, new HelpTree.Node(i18n, "cc.verbose"));
     }
 
     static final String TRACE_PREFIX = "+ ";

@@ -30,52 +30,52 @@ import java.io.IOException;
 
 /**
   * This class extracts all ASCII characters within HTML comments
-  * bound by "<!--" and "-->".  The comment may span multiple lines. 
+  * bound by "<!--" and "-->".  The comment may span multiple lines.
   *
   * @see CommentStream
   */
 public class HTMLCommentStream extends CommentStream
 {
     public String readComment() throws IOException {
-	String comment, line;
-	int startComment;
-	int endComment;
-	boolean endFound = false;
+        String comment, line;
+        int startComment;
+        int endComment;
+        boolean endFound = false;
 
-	// beginning of comment
-	while (true) {
-	    startComment = 0;
-	    endComment   = 0;
-	    if ((line = cs.readLine()) == null)
-		return null;
-	    startComment = line.indexOf("<!--");
-	    if (startComment >= 0) {
-		// handle a comment that starts and ends on the same line
-		// +4 needed to offset the starting pos characters
-		String tail = line.substring(startComment+4);
-		if ((endComment = tail.indexOf("-->")) >= 0) {
- 		    comment = tail.substring(0, endComment);
-		    endFound = true;
-		    break;
-		} else {
-		    comment = tail + LINESEP;
-		    break;
-		}
-	    }
-	}
+        // beginning of comment
+        while (true) {
+            startComment = 0;
+            endComment   = 0;
+            if ((line = cs.readLine()) == null)
+                return null;
+            startComment = line.indexOf("<!--");
+            if (startComment >= 0) {
+                // handle a comment that starts and ends on the same line
+                // +4 needed to offset the starting pos characters
+                String tail = line.substring(startComment+4);
+                if ((endComment = tail.indexOf("-->")) >= 0) {
+                    comment = tail.substring(0, endComment);
+                    endFound = true;
+                    break;
+                } else {
+                    comment = tail + LINESEP;
+                    break;
+                }
+            }
+        }
 
-	// end of comment
-	while (!endFound) {
-	    if ((line = cs.readLine()) == null)
-		throw new IOException("Comment not properly terminated");
-	    if ((endComment = line.indexOf("-->")) >= 0) {
-		comment += line.substring(0, endComment) + LINESEP;
-		endFound = true;
-	    } else
-		comment += line + LINESEP;
-	}
+        // end of comment
+        while (!endFound) {
+            if ((line = cs.readLine()) == null)
+                throw new IOException("Comment not properly terminated");
+            if ((endComment = line.indexOf("-->")) >= 0) {
+                comment += line.substring(0, endComment) + LINESEP;
+                endFound = true;
+            } else
+                comment += line + LINESEP;
+        }
 
-	return comment.replace('\n', ' ').replace('\r', ' ').trim();
+        return comment.replace('\n', ' ').replace('\r', ' ').trim();
     }
 
     //----------member variables------------------------------------------------

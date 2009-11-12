@@ -42,7 +42,7 @@ import javax.swing.border.BevelBorder;
  * The custom toolbar.
  */
 public class JavaTestToolBar extends JToolBar {
-    
+
     /**
      * Creates using specified ResourceBundle a new tool bar with
      * the specified menu controlled state.
@@ -52,16 +52,16 @@ public class JavaTestToolBar extends JToolBar {
      * alphanumeric (Latin) string. It is automatically used to retrieve the toolbar
      * name and description from the resource bundle.
      * Can't be null and empty string.
-     * @param menuControlled - true to make View/Toolbars/menu for the toolbar. 
+     * @param menuControlled - true to make View/Toolbars/menu for the toolbar.
      **/
     public JavaTestToolBar(ResourceBundle bundle, String resourceID, boolean menuControlled) {
         super();
         theBundle = bundle;
         id = resourceID;
         inMenu = menuControlled;
-        setUpStyle();        
+        setUpStyle();
     }
-    
+
     /**
      * Creates using specified ResourceBundle a new menu controlled tool bar.
      * @param bundle a resource bundle used to obtain the resources for the toolbar.
@@ -74,7 +74,7 @@ public class JavaTestToolBar extends JToolBar {
     public JavaTestToolBar(ResourceBundle bundle, String resourceID) {
         this(bundle, resourceID, true);
     }
-    
+
     /**
      * Get the identification string for this toolbar.
      * @return the string ID for the tool bar.
@@ -82,8 +82,8 @@ public class JavaTestToolBar extends JToolBar {
     public String getId() {
         return id;
     }
-    
-    
+
+
     /**
      * Get the long description of this toolbar's purpose.
      * May be multiple sentences if desired. This is automatically retrieved from
@@ -94,7 +94,7 @@ public class JavaTestToolBar extends JToolBar {
     public String getDescription()  {
         return theBundle.getString(getId() + ".tb.desc" );
     }
-    
+
     /**
      * Get the short name of this toolbar. Would be used in places such as a toolbar
      * selector drop-down for the user, so it should be kept to one or two words.
@@ -106,7 +106,7 @@ public class JavaTestToolBar extends JToolBar {
     public String getName() {
         return theBundle.getString(getId() + ".tb.name" );
     }
-    
+
     /**
      * Determines whether this tool bar should be controlled from view menu.
      * @return true if this tool bar is menu controlled.
@@ -114,7 +114,7 @@ public class JavaTestToolBar extends JToolBar {
     public boolean isMenuControlled() {
         return inMenu;
     }
-    
+
     /**
      * Shows or hides this component depending on the value of parameter visible.
      * visible - true to make the component visible; false to make it invisible
@@ -123,7 +123,7 @@ public class JavaTestToolBar extends JToolBar {
         super.setVisible(visible);
         saveVisibleState(visible);
     }
-    
+
     void setVisibleNoStateAffect(boolean visible) {
         super.setVisible(visible);
     }
@@ -145,11 +145,11 @@ public class JavaTestToolBar extends JToolBar {
     void saveVisibleState(boolean visible) {
         state.put(USER_TOOLBAR_PREF + getId(), Boolean.toString(visible));
     }
-    
+
     void save(Map map) {
         map.putAll(state);
     }
-    
+
     /**
      * Accepts Map with parameters from ExecTool
      **/
@@ -161,13 +161,13 @@ public class JavaTestToolBar extends JToolBar {
                 state.put(okey, map.get(okey));
             }
         }
-        
+
         Preferences prefs = Preferences.access();
         String visPref = prefs.getPreference(ExecTool.TOOLBAR_PREF);
         boolean generalVisibleState = "true".equals(visPref);
         setVisibleNoStateAffect(generalVisibleState && readVisibleState());
     }
-    
+
     /**
      * Sets common style for a toolbar
      **/
@@ -176,31 +176,31 @@ public class JavaTestToolBar extends JToolBar {
         setRollover(true);
         setBorder(new ToolBarBorder());
     }
-    
+
     /**
-     * Sets common style for a toolbar with left border 
+     * Sets common style for a toolbar with left border
      **/
     class ToolBarBorder extends BevelBorder {
-        
+
         public ToolBarBorder() {
             super(BevelBorder.RAISED);
         }
-        
+
         public Insets getBorderInsets(Component c)       {
             return new Insets(2, 2, 2, lIn );
         }
-        
+
         public Insets getBorderInsets(Component c, Insets insets) {
             insets.right = lIn;
             insets.top = insets.left = insets.bottom = 2;
             return insets;
         }
-        
+
         protected void paintRaisedBevel(Component c, Graphics g, int x, int y,
                 int width, int height)  {
             int gap = 4;
             int hlen=12;
-            
+
             if (c instanceof JComponent) {
                 JComponent jc = (JComponent) c;
                 Boolean paint = (Boolean)jc.getClientProperty(ToolBarPanel.PB_PROP_NAME);
@@ -208,26 +208,26 @@ public class JavaTestToolBar extends JToolBar {
                     Color oldColor = g.getColor();
                     int h = height;
                     int w = width;
-                    
+
                     if (h > hlen*2) {
                         int mid = y + (h/2);
                         y = mid - hlen;
                         h = hlen*2;
                     }
-                        
+
                     g.setColor(getShadowInnerColor(c));
                     g.drawLine(x, y+gap, x, y+h-gap-1);
-                    
+
                     g.setColor(getHighlightInnerColor(c));
                     g.drawLine(x+1, y+gap, x+1, y+h-gap-1);
                 }
             }
         }
-        
+
         private int lIn = 5;
-        
+
     }
-    
+
     final static String USER_TOOLBAR_PREF = "JavaTestToolBar.toolbar_";
     private boolean inMenu = false;
     private ResourceBundle theBundle;

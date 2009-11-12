@@ -38,7 +38,7 @@ import com.sun.javatest.Parameters;
  * one of a series of sub-interviews that collect the parameter information for
  * a test run.
  */
-public class TimeoutFactorInterview 
+public class TimeoutFactorInterview
     extends Interview
     implements Parameters.MutableTimeoutFactorParameters
 {
@@ -47,13 +47,13 @@ public class TimeoutFactorInterview
      * @param parent The parent interview of which this is a child.
      * @throws Interview.Fault if there is a problem while creating the interview.
      */
-    public TimeoutFactorInterview(InterviewParameters parent) 
-	throws Interview.Fault
+    public TimeoutFactorInterview(InterviewParameters parent)
+        throws Interview.Fault
     {
-	super(parent, "timeout");
-	this.parent = parent;
-	setResourceBundle("i18n");
-	setFirstQuestion(qTimeout);
+        super(parent, "timeout");
+        this.parent = parent;
+        setResourceBundle("i18n");
+        setFirstQuestion(qTimeout);
     }
 
     /**
@@ -62,7 +62,7 @@ public class TimeoutFactorInterview
      * @see #setTimeoutFactor
      */
     public float getTimeoutFactor() {
-	return qTimeout.getValue();
+        return qTimeout.getValue();
     }
 
     /**
@@ -71,7 +71,7 @@ public class TimeoutFactorInterview
      * @see #getTimeoutFactor
      */
     public void setTimeoutFactor(float t) {
-	qTimeout.setValue(t);
+        qTimeout.setValue(t);
     }
 
     //----------------------------------------------------------------------------
@@ -79,21 +79,21 @@ public class TimeoutFactorInterview
     // Timeout
 
     private FloatQuestion qTimeout = new FloatQuestion(this, "timeout") {
-	{
-	    setBounds(Parameters.TimeoutFactorParameters.MIN_TIMEOUT_FACTOR, 
-		      Parameters.TimeoutFactorParameters.MAX_TIMEOUT_FACTOR);
-	    setResolution(0.1f);
-	}
+        {
+            setBounds(Parameters.TimeoutFactorParameters.MIN_TIMEOUT_FACTOR,
+                      Parameters.TimeoutFactorParameters.MAX_TIMEOUT_FACTOR);
+            setResolution(0.1f);
+        }
 
-	protected Question getNext() {
-	    return qEnd;
-	}
+        protected Question getNext() {
+            return qEnd;
+        }
 
-	public void clear() {
-	    setValue(1);
-	}
+        public void clear() {
+            setValue(1);
+        }
     };
-	    
+
     //----------------------------------------------------------------------------
     //
     // End

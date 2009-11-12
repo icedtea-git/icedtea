@@ -56,7 +56,7 @@ public class CompositeFilter extends TestFilter {
      * <p>
      * An empty set of filters is accepted for convienience, but will result
      * allowing all tests passing through for filtering to be accepted.
-     * 
+     *
      * @param filters The filters that constitute this composite filter.
      *        Must never be null.
      * @param bundle The bundle to get the description, name and reason from.
@@ -66,21 +66,21 @@ public class CompositeFilter extends TestFilter {
      * @see com.sun.javatest.TestFilter
      */
     public CompositeFilter(TestFilter[] filters, I18NResourceBundle bundle,
-			   String prefix) {
-	// XXX could start checking for null parameter
-	this.filters = filters;
+                           String prefix) {
+        // XXX could start checking for null parameter
+        this.filters = filters;
 
-	description = bundle.getString(prefix + ".description");
-	name = bundle.getString(prefix + ".name");
-	reason = bundle.getString(prefix + ".reason");
+        description = bundle.getString(prefix + ".description");
+        name = bundle.getString(prefix + ".name");
+        reason = bundle.getString(prefix + ".reason");
 
-	// paranoid checks
-	if (description == null)
-	    description = i18n.getString("compFilter.unset.description");
-	if (name == null)
-	    name = i18n.getString("compFilter.unset.name");
-	if (reason == null)
-	    reason = i18n.getString("compFilter.unset.reason");
+        // paranoid checks
+        if (description == null)
+            description = i18n.getString("compFilter.unset.description");
+        if (name == null)
+            name = i18n.getString("compFilter.unset.name");
+        if (reason == null)
+            reason = i18n.getString("compFilter.unset.reason");
     }
 
     /**
@@ -98,62 +98,62 @@ public class CompositeFilter extends TestFilter {
      * @see #CompositeFilter(TestFilter[],I18NResourceBundle,String)
      */
     public CompositeFilter(TestFilter[] filters) {
-	if (filters == null)
-	    throw new NullPointerException();
-	this.filters = filters;
+        if (filters == null)
+            throw new NullPointerException();
+        this.filters = filters;
     }
 
     // ------- TestFilter ---------
     public String getName() {
-	if (name == null)
-	    return i18n.getString("compFilter.name");
-	else
-	    return name;
+        if (name == null)
+            return i18n.getString("compFilter.name");
+        else
+            return name;
     }
 
     public String getDescription() {
-	if (description == null)
-	    return i18n.getString("compFilter.description");
-	else
-	    return description;
+        if (description == null)
+            return i18n.getString("compFilter.description");
+        else
+            return description;
     }
 
     public String getReason() {
-	if (reason == null)
-	    return i18n.getString("compFilter.reason");
-	else
-	    return reason;
+        if (reason == null)
+            return i18n.getString("compFilter.reason");
+        else
+            return reason;
     }
 
     public boolean accepts(TestDescription td) throws Fault {
-	if (filters == null || filters.length == 0)
-	    return true;
+        if (filters == null || filters.length == 0)
+            return true;
 
-	try {
-	    for (int i = 0; i < filters.length; i++)
-		if (!filters[i].accepts(td))
-		    return false;
-	    
-	    // made it; accepted
-	    return true;
-	}
-	catch (RuntimeException e) {
-	    throw new Fault(i18n, "compFilter.exception", e);
-	}
+        try {
+            for (int i = 0; i < filters.length; i++)
+                if (!filters[i].accepts(td))
+                    return false;
+
+            // made it; accepted
+            return true;
+        }
+        catch (RuntimeException e) {
+            throw new Fault(i18n, "compFilter.exception", e);
+        }
     }
 
     public boolean accepts(TestDescription td, TestFilter.Observer o)
                 throws TestFilter.Fault {
-	if (filters == null || filters.length == 0)
-	    return true;
+        if (filters == null || filters.length == 0)
+            return true;
 
-	for (int i = 0; i < filters.length; i++)
-	    // this works well since the observer only has a rejected method
-	    if (!filters[i].accepts(td, o)) {
-		return false;
-	    }
-	
-	return true;
+        for (int i = 0; i < filters.length; i++)
+            // this works well since the observer only has a rejected method
+            if (!filters[i].accepts(td, o)) {
+                return false;
+            }
+
+        return true;
     }
 
     /**
@@ -168,27 +168,27 @@ public class CompositeFilter extends TestFilter {
      * @see java.lang.Object#equals(Object)
      */
     public boolean equals(Object tf) {
-	if (tf == null)
-	    return false;
+        if (tf == null)
+            return false;
 
-	// if this composite contains one filter, should we
-	// compare it to the given filter?
-	// how transitive should this comparison be?...recursive composites
-	if (!(tf instanceof CompositeFilter))
-	    return false;
-	
-	TestFilter[] thoseFilters = ((CompositeFilter)tf).getFilters();
+        // if this composite contains one filter, should we
+        // compare it to the given filter?
+        // how transitive should this comparison be?...recursive composites
+        if (!(tf instanceof CompositeFilter))
+            return false;
 
-	// no filters in both is equal
-	if ((filters == null || filters.length == 0) && thoseFilters.length == 0)
-	    return true;
+        TestFilter[] thoseFilters = ((CompositeFilter)tf).getFilters();
 
-	// both sets have at least 1 element
-	// if they don't have the same size, then they are not equal
-	if (filters.length != thoseFilters.length)
-	    return false;
+        // no filters in both is equal
+        if ((filters == null || filters.length == 0) && thoseFilters.length == 0)
+            return true;
 
-	return equals(filters, thoseFilters);
+        // both sets have at least 1 element
+        // if they don't have the same size, then they are not equal
+        if (filters.length != thoseFilters.length)
+            return false;
+
+        return equals(filters, thoseFilters);
     }
 
     // ---------- new methods ----------
@@ -199,13 +199,13 @@ public class CompositeFilter extends TestFilter {
      *         Shallow copy.
      */
     public TestFilter[] getFilters() {
-	if (filters == null)
-	    return new TestFilter[0];
+        if (filters == null)
+            return new TestFilter[0];
 
-	TestFilter[] copy = new TestFilter[filters.length];
-	System.arraycopy(filters, 0, copy, 0, filters.length);
+        TestFilter[] copy = new TestFilter[filters.length];
+        System.arraycopy(filters, 0, copy, 0, filters.length);
 
-	return copy;
+        return copy;
     }
 
     /**
@@ -216,13 +216,13 @@ public class CompositeFilter extends TestFilter {
      * @return true of the two arrays of filters are equivalent.
      */
     public static boolean equals(TestFilter[] array1, TestFilter[] array2) {
-	List list1 = Arrays.asList(array1);
-	List list2 = Arrays.asList(array2);
+        List list1 = Arrays.asList(array1);
+        List list2 = Arrays.asList(array2);
 
-	HashSet set1 = new HashSet(list1);
-	HashSet set2 = new HashSet(list2);
+        HashSet set1 = new HashSet(list1);
+        HashSet set2 = new HashSet(list2);
 
-	return set1.equals(set2);
+        return set1.equals(set2);
     }
 
     private TestFilter[] filters;
@@ -231,4 +231,3 @@ public class CompositeFilter extends TestFilter {
     private String reason;
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(CompositeFilter.class);
 }
-

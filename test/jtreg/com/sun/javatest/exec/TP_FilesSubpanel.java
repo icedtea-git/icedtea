@@ -37,48 +37,46 @@ import com.sun.javatest.TestDescription;
 import com.sun.javatest.TestResult;
 
 /**
- * Show the source and other files for the test.  
+ * Show the source and other files for the test.
  */
 
 class TP_FilesSubpanel extends TP_Subpanel {
     TP_FilesSubpanel(UIFactory uif) {
-	super(uif, "files");
-	setLayout(new BorderLayout());
+        super(uif, "files");
+        setLayout(new BorderLayout());
 
-	filesPane = new FilesPane(uif);
+        filesPane = new FilesPane(uif);
 
-	add(filesPane, BorderLayout.CENTER);
+        add(filesPane, BorderLayout.CENTER);
     }
 
     protected void updateSubpanel(TestResult currTest) {
-	if (testSuite == null)
-	    throw new IllegalStateException();
+        if (testSuite == null)
+            throw new IllegalStateException();
 
-	TestDescription oldDesc = subpanelDesc;
+        TestDescription oldDesc = subpanelDesc;
 
-	super.updateSubpanel(currTest);
+        super.updateSubpanel(currTest);
 
-	if (subpanelDesc != oldDesc) {
-	    // The test has changed; need to update the files panel
-	    if (EventQueue.isDispatchThread()) 
-		updateFiles();
-	    else 
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-			    updateFiles();
-			}
-		    });
-	}
+        if (subpanelDesc != oldDesc) {
+            // The test has changed; need to update the files panel
+            if (EventQueue.isDispatchThread())
+                updateFiles();
+            else
+                SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            updateFiles();
+                        }
+                    });
+        }
     }
 
     private void updateFiles() {
-	URL[] urls = testSuite.getFilesForTest(subpanelDesc);
-	
-	filesPane.setBaseDirectory(subpanelDesc.getDir());
-	filesPane.setFiles(urls);
+        URL[] urls = testSuite.getFilesForTest(subpanelDesc);
+
+        filesPane.setBaseDirectory(subpanelDesc.getDir());
+        filesPane.setFiles(urls);
     }
 
     private FilesPane filesPane;
 }
-
-

@@ -44,119 +44,119 @@ public class HelpTree
      * and zero or more child nodes.
      */
     public static class Node {
-        
-	/**
-	 * Create a node, with no children.
-	 * @param name the name for the node
-	 * @param description the descrption for the node
-	 */
+
+        /**
+         * Create a node, with no children.
+         * @param name the name for the node
+         * @param description the descrption for the node
+         */
         public Node(String name, String description) {
             this.name = name;
             this.description = description;
         }
-        
-	/**
-	 * Create a node, with given children.
-	 * @param name the name for the node
-	 * @param description the description for the node
-	 * @param children the child nodes for the node
-	 */
+
+        /**
+         * Create a node, with given children.
+         * @param name the name for the node
+         * @param description the description for the node
+         * @param children the child nodes for the node
+         */
         public Node(String name, String description, Node[] children) {
             this.name = name;
             this.description = description;
             this.children = children;
         }
-        
-	/**
-	 * Create a node, with no children. The name and description are 
-	 * obtained from a resource bundle, using keys based on a common
-	 * prefix. The key for the name will be <i>prefix</i>.name and 
-	 * the key for the description will be <i>prefix</i>.desc.
-	 * @param i18n the resource bundle from which to obtain the 
-	 * name and description for the node.
-	 * @param prefix the prefix for the names of the name and description
-	 * entries in the resource bundle.
-	 */
-	public Node(I18NResourceBundle i18n, String prefix) {
-	    name = i18n.getString(prefix + ".name");
-	    description = i18n.getString(prefix + ".desc");
-	}
 
-	/**
-	 * Create a node, with given children. The name and description are 
-	 * obtained from a resource bundle, using keys based on a common
-	 * prefix. The key for the name will be <i>prefix</i>.name and 
-	 * the key for the description will be <i>prefix</i>.desc.
-	 * @param i18n the resource bundle from which to obtain the 
-	 * name and description for the node.
-	 * @param prefix the prefix for the names of the name and description
-	 * entries in the resource bundle.
-	 * @param children the child nodes for this node
-	 */
-	public Node(I18NResourceBundle i18n, String prefix, Node[] children) {
+        /**
+         * Create a node, with no children. The name and description are
+         * obtained from a resource bundle, using keys based on a common
+         * prefix. The key for the name will be <i>prefix</i>.name and
+         * the key for the description will be <i>prefix</i>.desc.
+         * @param i18n the resource bundle from which to obtain the
+         * name and description for the node.
+         * @param prefix the prefix for the names of the name and description
+         * entries in the resource bundle.
+         */
+        public Node(I18NResourceBundle i18n, String prefix) {
+            name = i18n.getString(prefix + ".name");
+            description = i18n.getString(prefix + ".desc");
+        }
+
+        /**
+         * Create a node, with given children. The name and description are
+         * obtained from a resource bundle, using keys based on a common
+         * prefix. The key for the name will be <i>prefix</i>.name and
+         * the key for the description will be <i>prefix</i>.desc.
+         * @param i18n the resource bundle from which to obtain the
+         * name and description for the node.
+         * @param prefix the prefix for the names of the name and description
+         * entries in the resource bundle.
+         * @param children the child nodes for this node
+         */
+        public Node(I18NResourceBundle i18n, String prefix, Node[] children) {
             this(i18n, prefix);
-	    this.children = children;
-	}
+            this.children = children;
+        }
 
-	/**
-	 * Create a node and its children. The name and description are 
-	 * obtained from a resource bundle, using keys based on a common
-	 * prefix. The key for the name will be <i>prefix</i>.name and 
-	 * the key for the description will be <i>prefix</i>.desc.
-	 * The children will each be created with no children of their
-	 * own, using a prefix of <i>prefix</i>.<i>entry</i>.
-	 * @param i18n the resource bundle from which to obtain the 
-	 * name and description for the node.
-	 * @param prefix the prefix for the names of the name and description
-	 * entries in the resource bundle.
-	 * @param entries the array of <i>entry</i> names used to create
-	 * the child nodes.
-	 */
-	public Node(I18NResourceBundle i18n, String prefix, String[] entries) {
+        /**
+         * Create a node and its children. The name and description are
+         * obtained from a resource bundle, using keys based on a common
+         * prefix. The key for the name will be <i>prefix</i>.name and
+         * the key for the description will be <i>prefix</i>.desc.
+         * The children will each be created with no children of their
+         * own, using a prefix of <i>prefix</i>.<i>entry</i>.
+         * @param i18n the resource bundle from which to obtain the
+         * name and description for the node.
+         * @param prefix the prefix for the names of the name and description
+         * entries in the resource bundle.
+         * @param entries the array of <i>entry</i> names used to create
+         * the child nodes.
+         */
+        public Node(I18NResourceBundle i18n, String prefix, String[] entries) {
             this(i18n, prefix);
-	    children = new Node[entries.length];
-	    for (int i = 0; i < children.length; i++)
-		children[i] = new Node(i18n, prefix + '.' + entries[i]);
-	}
+            children = new Node[entries.length];
+            for (int i = 0; i < children.length; i++)
+                children[i] = new Node(i18n, prefix + '.' + entries[i]);
+        }
 
-	/**
-	 * Get the name of this node.
-	 * @return the name of this node
-	 */
-	public final String getName() {
-	    return name;
-	}
+        /**
+         * Get the name of this node.
+         * @return the name of this node
+         */
+        public final String getName() {
+            return name;
+        }
 
-	/**
-	 * Get the description of this node.
-	 * @return the description of this node
-	 */
-	public final String getDescription() {
-	    return description;
-	}
+        /**
+         * Get the description of this node.
+         * @return the description of this node
+         */
+        public final String getDescription() {
+            return description;
+        }
 
-	/**
-	 * Get the number of children of this node.
-	 * @return the number of children of this node
-	 */
-	public int getChildCount() {
-	    return (children == null ? 0 : children.length);
-	}
+        /**
+         * Get the number of children of this node.
+         * @return the number of children of this node
+         */
+        public int getChildCount() {
+            return (children == null ? 0 : children.length);
+        }
 
-	/**
-	 * Get a specified child of this node.
-	 * @param i the index of the desired child 
-	 * @return the specified child of this node
-	 */
-	public Node getChild(int i) {
-	    if (i >= getChildCount())
-		throw new IllegalArgumentException();
-	    return children[i];
-	}
+        /**
+         * Get a specified child of this node.
+         * @param i the index of the desired child
+         * @return the specified child of this node
+         */
+        public Node getChild(int i) {
+            if (i >= getChildCount())
+                throw new IllegalArgumentException();
+            return children[i];
+        }
 
-	private String name;
-	private String description;
-	private Node[] children;
+        private String name;
+        private String description;
+        private Node[] children;
     }
 
     /**
@@ -164,36 +164,36 @@ public class HelpTree
      * @see HelpTree#find
      */
     public class Selection {
-	private Selection(Node node) {
-	    this(node, null);
-	}
+        private Selection(Node node) {
+            this(node, null);
+        }
 
-	private Selection(Map map) {
-	    this(null, map);
-	}
+        private Selection(Map map) {
+            this(null, map);
+        }
 
-	private Selection(Node node, Map map) {
-	    this.node = node;
-	    this.map = map;
-	}
+        private Selection(Node node, Map map) {
+            this.node = node;
+            this.map = map;
+        }
 
-	private Node node;
-	private Map map;
+        private Node node;
+        private Map map;
     }
 
-    /** 
+    /**
      * Create an empty HelpTree object.
      */
     public HelpTree() {
-	nodes = new Node[0];
+        nodes = new Node[0];
     }
 
-    /** 
+    /**
      * Create a HelpTree object containing a given set of nodes.
      * @param nodes the contents of the HelpTree
      */
     public HelpTree(Node[] nodes) {
-	this.nodes = nodes;
+        this.nodes = nodes;
     }
 
     /**
@@ -201,7 +201,7 @@ public class HelpTree
      * @param node the node to be added to the tree
      */
     public void addNode(Node node) {
-	nodes = (Node[]) DynamicArray.append(nodes, node);
+        nodes = (Node[]) DynamicArray.append(nodes, node);
     }
 
     /**
@@ -212,7 +212,7 @@ public class HelpTree
      * @see #setNodeIndent
      */
     public int getNodeIndent() {
-	return nodeIndent;
+        return nodeIndent;
     }
 
     /**
@@ -223,7 +223,7 @@ public class HelpTree
      * @see #getNodeIndent
      */
     public void setNodeIndent(int n) {
-	nodeIndent = n;
+        nodeIndent = n;
     }
 
     /**
@@ -234,7 +234,7 @@ public class HelpTree
      * @see #setDescriptionIndent
      */
     public int getDescriptionIndent() {
-	return descriptionIndent;
+        return descriptionIndent;
     }
 
     /**
@@ -245,25 +245,25 @@ public class HelpTree
      * @see #getDescriptionIndent
      */
     public void setDescriptionIndent(int n) {
-	descriptionIndent = n;
+        descriptionIndent = n;
     }
 
     /**
      * Get a selection representing the nodes that match the given words.
-     * If there are nodes whose name or description contain all of the 
-     * given words, then those nodes will be returned. 
+     * If there are nodes whose name or description contain all of the
+     * given words, then those nodes will be returned.
      * Otherwise, all nodes whose name or description contain at least one
      * of the given words will be returned.
      * @param words the words to be searched for
      * @return a Selection containing the matching nodes
      */
     public Selection find(String[] words) {
-	Selection s = find(words, ALL);
+        Selection s = find(words, ALL);
 
-	if (s == null && words.length > 1)
-	    s = find(words, ANY);
+        if (s == null && words.length > 1)
+            s = find(words, ANY);
 
-	return s;
+        return s;
     }
 
     /**
@@ -272,92 +272,92 @@ public class HelpTree
      * @return a Selection containing the matching nodes
      */
     public Selection findAll(String[] words) {
-	return find(words, ALL);
+        return find(words, ALL);
     }
 
     /**
-     * Get a selection representing the nodes that each match 
+     * Get a selection representing the nodes that each match
      * at least one of the given words.
      * @param words the words to be searched for
      * @return a Selection containing the matching nodes
      */
     public Selection findAny(String[] words) {
-	return find(words, ANY);
+        return find(words, ANY);
     }
 
     private Selection find(String[] words, int mode) {
-	Map map = null;
-	
-	for (int i = 0; i < nodes.length; i++) {
-	    Node node = nodes[i];
-	    Selection s = find(node, words, mode);
-	    if (s != null) {
-		if (map == null)
-		    map = new TreeMap(nodeComparator);
-		map.put(node, s);
-	    }
-	}
+        Map map = null;
 
-	return (map == null ? null : new Selection(map));
+        for (int i = 0; i < nodes.length; i++) {
+            Node node = nodes[i];
+            Selection s = find(node, words, mode);
+            if (s != null) {
+                if (map == null)
+                    map = new TreeMap(nodeComparator);
+                map.put(node, s);
+            }
+        }
+
+        return (map == null ? null : new Selection(map));
     }
 
     private Selection find(Node node, String[] words, int mode) {
-	if (mode == ALL) {
-	    if (containsAllOf(node.name, words) || containsAllOf(node.description, words)) 
-		return new Selection(node);
-	}
-	else if (mode == ANY) {
-	    if (containsAnyOf(node.name, words) || containsAnyOf(node.description, words)) 
-		return new Selection(node);
-	}
-	else
-	    throw new IllegalArgumentException();
-	
-	if (node.children == null)
-	    return null;
+        if (mode == ALL) {
+            if (containsAllOf(node.name, words) || containsAllOf(node.description, words))
+                return new Selection(node);
+        }
+        else if (mode == ANY) {
+            if (containsAnyOf(node.name, words) || containsAnyOf(node.description, words))
+                return new Selection(node);
+        }
+        else
+            throw new IllegalArgumentException();
 
-	Map map = null;
-	
-	for (int i = 0; i < node.children.length; i++) {
-	    Node child = node.children[i];
-	    Selection s = find(child, words, mode);
-	    if (s != null) {
-		if (map == null)
-		    map = new TreeMap(nodeComparator);
-		map.put(child, s);
-	    }
-	}
+        if (node.children == null)
+            return null;
 
-	return (map == null ? null : new Selection(node, map));
+        Map map = null;
+
+        for (int i = 0; i < node.children.length; i++) {
+            Node child = node.children[i];
+            Selection s = find(child, words, mode);
+            if (s != null) {
+                if (map == null)
+                    map = new TreeMap(nodeComparator);
+                map.put(child, s);
+            }
+        }
+
+        return (map == null ? null : new Selection(node, map));
     }
 
     /**
      * Write out all the nodes in this HelpTree.
      * @param out the writer to which to write the nodes.
      * If out is a com.sun.javatest.util.WrapWriter, it will be
-     * used directly, otherwise a WrapWriter will be created 
+     * used directly, otherwise a WrapWriter will be created
      * that will write to the given writer.
      * @throws IOException if the is a problem writing the
      * nodes.
      * @see WrapWriter
      */
     public void write(Writer out) throws IOException {
-	WrapWriter ww = getWrapWriter(out);
+        WrapWriter ww = getWrapWriter(out);
 
-	for (int i = 0; i < nodes.length; i++) {
-	    write(ww, nodes[i]);
-	    ww.write('\n');
-	}
+        for (int i = 0; i < nodes.length; i++) {
+            write(ww, nodes[i]);
+            ww.write('\n');
+        }
 
-	if (ww != out)
-	    ww.flush();
+        if (ww != out)
+            ww.flush();
     }
 
     /**
      * Write out selected nodes in this HelpTree.
      * @param out the writer to which to write the nodes.
      * If out is a com.sun.javatest.util.WrapWriter, it will be
-     * used directly, otherwise a WrapWriter will be created 
+     * used directly, otherwise a WrapWriter will be created
      * that will write to the given writer.
      * @param s a Selection object containing the nodes to be written
      * @throws IOException if the is a problem writing the
@@ -365,12 +365,12 @@ public class HelpTree
      * @see WrapWriter
      */
     public void write(Writer out, Selection s) throws IOException {
-	WrapWriter ww = getWrapWriter(out);
+        WrapWriter ww = getWrapWriter(out);
 
-	write(ww, s.map);
+        write(ww, s.map);
 
-	if (ww != out)
-	    ww.flush();
+        if (ww != out)
+            ww.flush();
     }
 
     /**
@@ -379,105 +379,105 @@ public class HelpTree
      * top level nodes, but not any of their children.
      * @param out the writer to which to write the nodes.
      * If out is a com.sun.javatest.util.WrapWriter, it will be
-     * used directly, otherwise a WrapWriter will be created 
+     * used directly, otherwise a WrapWriter will be created
      * that will write to the given writer.
      * @throws IOException if the is a problem writing the
      * nodes.
      * @see WrapWriter
      */
     public void writeSummary(Writer out) throws IOException {
-	WrapWriter ww = getWrapWriter(out);
+        WrapWriter ww = getWrapWriter(out);
 
-	for (int i = 0; i < nodes.length; i++) 
-	    writeHead(ww, nodes[i]);
+        for (int i = 0; i < nodes.length; i++)
+            writeHead(ww, nodes[i]);
 
-	if (ww != out)
-	    ww.flush();
+        if (ww != out)
+            ww.flush();
     }
 
     private void write(WrapWriter out, Map m) throws IOException {
-	int margin = out.getLeftMargin();
-	for (Iterator iter = m.entrySet().iterator(); iter.hasNext(); ) {
-	    Map.Entry e = (Map.Entry) (iter.next());
-	    Node node = (Node) (e.getKey());
-	    Selection s = (Selection) (e.getValue());
-	    if (s.map == null)
-		write(out, node);
-	    else {
-		writeHead(out, node);
-		out.setLeftMargin(margin + nodeIndent);
-		write(out, s.map);
-		out.setLeftMargin(margin);
-	    }
-	    if (margin == 0)
-		out.write('\n');
-	}
+        int margin = out.getLeftMargin();
+        for (Iterator iter = m.entrySet().iterator(); iter.hasNext(); ) {
+            Map.Entry e = (Map.Entry) (iter.next());
+            Node node = (Node) (e.getKey());
+            Selection s = (Selection) (e.getValue());
+            if (s.map == null)
+                write(out, node);
+            else {
+                writeHead(out, node);
+                out.setLeftMargin(margin + nodeIndent);
+                write(out, s.map);
+                out.setLeftMargin(margin);
+            }
+            if (margin == 0)
+                out.write('\n');
+        }
     }
 
     private void write(WrapWriter out, Node node) throws IOException {
-	int baseMargin = out.getLeftMargin();
+        int baseMargin = out.getLeftMargin();
 
-	writeHead(out, node);
+        writeHead(out, node);
 
-	Node[] children = node.children;
-	if (children != null && children.length > 0) {
-	    out.setLeftMargin(baseMargin + nodeIndent);
-	    for (int i = 0; i < children.length; i++) 
-		write(out, children[i]);
-	}
-	
-	out.setLeftMargin(baseMargin);
+        Node[] children = node.children;
+        if (children != null && children.length > 0) {
+            out.setLeftMargin(baseMargin + nodeIndent);
+            for (int i = 0; i < children.length; i++)
+                write(out, children[i]);
+        }
+
+        out.setLeftMargin(baseMargin);
     }
 
     private void writeHead(WrapWriter out, Node node) throws IOException {
-	int baseMargin = out.getLeftMargin();
+        int baseMargin = out.getLeftMargin();
 
-	String name = node.name;
-	String desc = node.description;
-	if (name != null) {
-	    out.write(name);
-	    out.write(' ');
-	    if (desc != null) {
-		out.setLeftMargin(baseMargin + descriptionIndent);
-		if (out.getCharsOnLineSoFar() + 2 > out.getLeftMargin())
-		    out.write('\n');
-		out.write(desc);
-	    }
-	    out.write('\n');
-	}
+        String name = node.name;
+        String desc = node.description;
+        if (name != null) {
+            out.write(name);
+            out.write(' ');
+            if (desc != null) {
+                out.setLeftMargin(baseMargin + descriptionIndent);
+                if (out.getCharsOnLineSoFar() + 2 > out.getLeftMargin())
+                    out.write('\n');
+                out.write(desc);
+            }
+            out.write('\n');
+        }
 
-	out.setLeftMargin(baseMargin);
+        out.setLeftMargin(baseMargin);
     }
 
     private boolean containsAllOf(String text, String[] words) {
-	for (int i = 0; i < words.length; i++) {
-	    if (!contains(text, words[i]))
-		return false;
-	}
-	return true;
+        for (int i = 0; i < words.length; i++) {
+            if (!contains(text, words[i]))
+                return false;
+        }
+        return true;
     }
 
     private boolean containsAnyOf(String text, String[] words) {
-	for (int i = 0; i < words.length; i++) {
-	    if (contains(text, words[i]))
-		return true;
-	}
-	return false;
+        for (int i = 0; i < words.length; i++) {
+            if (contains(text, words[i]))
+                return true;
+        }
+        return false;
     }
 
     private boolean contains(String text, String word) {
-	int startIndex = text.toLowerCase().indexOf(word.toLowerCase());
-	if (startIndex == -1)
-	    return false;
+        int startIndex = text.toLowerCase().indexOf(word.toLowerCase());
+        if (startIndex == -1)
+            return false;
 
-	int endIndex = startIndex + word.length();
+        int endIndex = startIndex + word.length();
 
-	return ((startIndex == 0 || !Character.isLetter(text.charAt(startIndex - 1)))
-		&& (endIndex == text.length() || !Character.isLetter(text.charAt(endIndex))));
+        return ((startIndex == 0 || !Character.isLetter(text.charAt(startIndex - 1)))
+                && (endIndex == text.length() || !Character.isLetter(text.charAt(endIndex))));
     }
 
     private WrapWriter getWrapWriter(Writer out) {
-	return (out instanceof WrapWriter ? (WrapWriter) out : new WrapWriter(out));
+        return (out instanceof WrapWriter ? (WrapWriter) out : new WrapWriter(out));
     }
 
     private Node[] nodes;
@@ -489,22 +489,22 @@ public class HelpTree
     private static final int ANY = 2;
 
     private static Comparator nodeComparator = new Comparator() {
-	    public int compare(Object o1, Object o2) {
-		Node n1 = (Node) o1;
-		Node n2 = (Node) o2;
-		
-		int v = compareStrings(n1.name, n2.name);
-		return (v != 0 ? v : compareStrings(n1.description, n2.description));
-	    }
-	    
-	    private int compareStrings(String s1, String s2) {
-		if (s1 == null && s2 == null)
-		    return 0;
-		
-		if (s1 == null || s2 == null)
-		    return (s1 == null ? -1 : +1);
-		
-		return s1.toLowerCase().compareTo(s2.toLowerCase());
-	    }
-	};
+            public int compare(Object o1, Object o2) {
+                Node n1 = (Node) o1;
+                Node n2 = (Node) o2;
+
+                int v = compareStrings(n1.name, n2.name);
+                return (v != 0 ? v : compareStrings(n1.description, n2.description));
+            }
+
+            private int compareStrings(String s1, String s2) {
+                if (s1 == null && s2 == null)
+                    return 0;
+
+                if (s1 == null || s2 == null)
+                    return (s1 == null ? -1 : +1);
+
+                return s1.toLowerCase().compareTo(s2.toLowerCase());
+            }
+        };
 }

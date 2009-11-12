@@ -40,33 +40,33 @@ import com.sun.javatest.util.I18NResourceBundle;
 /**
  * The CommandManager for audit support.
  */
-public class AuditCommandManager extends CommandManager 
+public class AuditCommandManager extends CommandManager
 {
 
     public HelpTree.Node getHelp() {
-	String[] cmds = { 
-	    "audit", 
-	    "showAudit"
-	};
-	return new HelpTree.Node(i18n, "cmgr.help", cmds);
+        String[] cmds = {
+            "audit",
+            "showAudit"
+        };
+        return new HelpTree.Node(i18n, "cmgr.help", cmds);
     }
 
     //----------------------------------------------------------------------------
 
-    public boolean parseCommand(String cmd, ListIterator argIter, CommandContext ctx) 
-	throws Command.Fault
+    public boolean parseCommand(String cmd, ListIterator argIter, CommandContext ctx)
+        throws Command.Fault
     {
-	if (cmd.equalsIgnoreCase(AuditCommand.getName())) {
-	    ctx.addCommand(new AuditCommand(argIter));
-	    return true;
-	}
+        if (cmd.equalsIgnoreCase(AuditCommand.getName())) {
+            ctx.addCommand(new AuditCommand(argIter));
+            return true;
+        }
 
-	if (cmd.equalsIgnoreCase(ShowAuditCommand.getName())) {
-	    ctx.addCommand(new ShowAuditCommand(argIter));
-	    return true;
-	}
-	
-	return false;
+        if (cmd.equalsIgnoreCase(ShowAuditCommand.getName())) {
+            ctx.addCommand(new ShowAuditCommand(argIter));
+            return true;
+        }
+
+        return false;
     }
 
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(AuditCommandManager.class);
@@ -75,66 +75,65 @@ public class AuditCommandManager extends CommandManager
 
     private static class AuditCommand extends Command
     {
-	static String getName() {
-	    return "audit";
-	}
-	
-	AuditCommand(ListIterator argIter) throws Fault {
-	    super(getName());
+        static String getName() {
+            return "audit";
+        }
 
-	    while (argIter.hasNext()) {
-		String arg = nextArg(argIter);
-		if (arg.equalsIgnoreCase("-showEnvValues")) 
-		    showAllEnvValues = true;
-		else if (arg.equalsIgnoreCase("-showMultipleEnvValues")) 
-		    showMultipleEnvValues = true;
-		else {
-		    putbackArg(argIter);
-		    break;
-		}
-	    }
-	}
+        AuditCommand(ListIterator argIter) throws Fault {
+            super(getName());
 
-	public boolean isActionCommand() {
-	    return true;
-	}
-	
-	public void run(CommandContext ctx) throws Fault {	    
-	    Parameters p = getConfig(ctx);
-	    
-	    Audit a = new Audit(p);
-	    a.report(System.out, showAllEnvValues, showMultipleEnvValues);
-	    
-	    if (a.isOK()) 
-		ctx.printMessage(i18n, "audit.ok");
-	    else
-		ctx.printErrorMessage(i18n, "audit.failed");
-	}
-	
-	private boolean showAllEnvValues;
-	private boolean showMultipleEnvValues;
+            while (argIter.hasNext()) {
+                String arg = nextArg(argIter);
+                if (arg.equalsIgnoreCase("-showEnvValues"))
+                    showAllEnvValues = true;
+                else if (arg.equalsIgnoreCase("-showMultipleEnvValues"))
+                    showMultipleEnvValues = true;
+                else {
+                    putbackArg(argIter);
+                    break;
+                }
+            }
+        }
+
+        public boolean isActionCommand() {
+            return true;
+        }
+
+        public void run(CommandContext ctx) throws Fault {
+            Parameters p = getConfig(ctx);
+
+            Audit a = new Audit(p);
+            a.report(System.out, showAllEnvValues, showMultipleEnvValues);
+
+            if (a.isOK())
+                ctx.printMessage(i18n, "audit.ok");
+            else
+                ctx.printErrorMessage(i18n, "audit.failed");
+        }
+
+        private boolean showAllEnvValues;
+        private boolean showMultipleEnvValues;
     }
 
     //----------------------------------------------------------------------------
 
     private static class ShowAuditCommand extends Command {
-	static String getName() {
-	    return "showAudit";
-	}
+        static String getName() {
+            return "showAudit";
+        }
 
-	ShowAuditCommand(ListIterator argIter) {
-	    super(getName());
-	}
+        ShowAuditCommand(ListIterator argIter) {
+            super(getName());
+        }
 
-	public int getDesktopMode() {
-	    return DESKTOP_REQUIRED_DTMODE;
-	}
+        public int getDesktopMode() {
+            return DESKTOP_REQUIRED_DTMODE;
+        }
 
-	public void run(CommandContext ctx) {
-	    Desktop d = ctx.getDesktop();
-	    AuditToolManager tm = (AuditToolManager) (d.getToolManager(AuditToolManager.class));
-	    tm.startTool();
-	}
+        public void run(CommandContext ctx) {
+            Desktop d = ctx.getDesktop();
+            AuditToolManager tm = (AuditToolManager) (d.getToolManager(AuditToolManager.class));
+            tm.startTool();
+        }
     }
 }
-

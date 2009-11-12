@@ -30,7 +30,7 @@ import java.util.logging.Level;
 import com.sun.javatest.util.I18NResourceBundle;
 
 public class LoggerFactory {
-    
+
     public static String getLocalizedLevelName(Level level) {
         if (level.intValue() == Level.SEVERE.intValue())
             return i18n.getString("logger.level.critical");
@@ -41,7 +41,7 @@ public class LoggerFactory {
         if (level.intValue() == Level.INFO.intValue())
             return i18n.getString("logger.level.monitoring");
 
-        return i18n.getString("logger.level.debug"); 
+        return i18n.getString("logger.level.debug");
     }
 
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(LoggerFactory.class);
@@ -55,4 +55,3 @@ public class LoggerFactory {
     public static final Level WARNING = Level.WARNING;
     public static final Level CRITICAL = Level.SEVERE;
 }
-

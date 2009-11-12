@@ -26,51 +26,51 @@
  */
 package com.sun.javatest.agent;
 
-/** 
- * A ConnectionFactory provides a source of {@link Connection connections} 
+/**
+ * A ConnectionFactory provides a source of {@link Connection connections}
  * between the main JT Harness test harness and the JT Harness Agent. A fresh
- * new connection is created for each test that is executed by the agent. 
+ * new connection is created for each test that is executed by the agent.
  */
-public interface ConnectionFactory 
+public interface ConnectionFactory
 {
     /**
      * This exception is used to forward exception that might occur when
      * using the connection factory.
      */
     public static class Fault extends Exception {
-	/**
-	 * Create a Fault.
-	 * @param e  	An exception to be forwarded by this fault.
-	 * @param fatal Indicates whether the exception is fatal or not.
-	 * 		For example, an exception caused by a temporary lack of resources
-	 *		would not be fatal, whereas an exception caused by a naming error
-	 * 		would be fatal.
-	 */
-	public Fault(Exception e, boolean fatal) {
-	    super(e.toString());
-	    this.exception = e;
-	    this.fatal = fatal;
-	}
+        /**
+         * Create a Fault.
+         * @param e     An exception to be forwarded by this fault.
+         * @param fatal Indicates whether the exception is fatal or not.
+         *              For example, an exception caused by a temporary lack of resources
+         *              would not be fatal, whereas an exception caused by a naming error
+         *              would be fatal.
+         */
+        public Fault(Exception e, boolean fatal) {
+            super(e.toString());
+            this.exception = e;
+            this.fatal = fatal;
+        }
 
-	/**
-	 * Get the exception being forward by this Fault.
-	 * @return The exception being forwarded.
-	 */
-	public Exception getException() {
-	    return exception;
-	}
+        /**
+         * Get the exception being forward by this Fault.
+         * @return The exception being forwarded.
+         */
+        public Exception getException() {
+            return exception;
+        }
 
-	/**
-	 * Check whether this Fault is fatal or not.  If it is, there is little
-	 * point retrying the operation that threw the Fault.
-	 * @return true if this Fault is fatal.
-	 */
-	public boolean isFatal() {
-	    return fatal;
-	}
+        /**
+         * Check whether this Fault is fatal or not.  If it is, there is little
+         * point retrying the operation that threw the Fault.
+         * @return true if this Fault is fatal.
+         */
+        public boolean isFatal() {
+            return fatal;
+        }
 
-	private Exception exception;
-	private boolean fatal;
+        private Exception exception;
+        private boolean fatal;
     }
 
     /**

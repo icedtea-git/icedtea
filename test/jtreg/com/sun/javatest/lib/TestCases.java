@@ -37,9 +37,9 @@ import com.sun.javatest.Test;
 
 /**
  * A handler for the set of test cases in a test.
- * Test cases are those methods with no args that return a 
+ * Test cases are those methods with no args that return a
  * {@link com.sun.javatest.Status status}.
- * Test cases can be explicitly selected into or excluded from the 
+ * Test cases can be explicitly selected into or excluded from the
  * set.
  */
 public class TestCases {
@@ -47,15 +47,15 @@ public class TestCases {
      * Exception used to report internal errors.
      */
     public static class Fault extends Exception {
-	/**
-	 * Construct a new Fault object that signals failure
-	 * with a corresponding message.
-	 * 
-	 * @param s the string containing a comment
-	 */
-	public Fault(String s) {
-	    super(s);
-	}
+        /**
+         * Construct a new Fault object that signals failure
+         * with a corresponding message.
+         *
+         * @param s the string containing a comment
+         */
+        public Fault(String s) {
+            super(s);
+        }
     }
 
     /**
@@ -65,9 +65,9 @@ public class TestCases {
      *   Use null if messages are not desired.
      */
     public TestCases(Test t, PrintWriter log) {
-	test = t;
-	this.log = log;
-	testClass = t.getClass();
+        test = t;
+        this.log = log;
+        testClass = t.getClass();
     }
 
     /**
@@ -81,7 +81,7 @@ public class TestCases {
      * @throws TestCases.Fault if any of the test case names are invalid.
      */
     public void select(String testCaseNames) throws Fault {
-	select(split(testCaseNames));
+        select(split(testCaseNames));
     }
 
 
@@ -96,10 +96,10 @@ public class TestCases {
      * @throws TestCases.Fault if any of the test case names are invalid.
      */
     public void select(String[] testCaseNames) throws Fault  {
-	for (int i = 0; i < testCaseNames.length; i++) {
-	    String t = testCaseNames[i];
-	    selectedCases.put(t, getTestCase(t));
-	}
+        for (int i = 0; i < testCaseNames.length; i++) {
+            String t = testCaseNames[i];
+            selectedCases.put(t, getTestCase(t));
+        }
     }
 
 
@@ -112,7 +112,7 @@ public class TestCases {
      * @throws TestCases.Fault if any of the test case names are invalid.
      */
     public void exclude(String testCaseNames) throws Fault  {
-	exclude(split(testCaseNames));
+        exclude(split(testCaseNames));
     }
 
 
@@ -125,10 +125,10 @@ public class TestCases {
      * @throws TestCases.Fault if any of the test case names are invalid.
      */
     public void exclude(String[] testCaseNames) throws Fault  {
-	for (int i = 0; i < testCaseNames.length; i++) {
-	    String t = testCaseNames[i];
-	    excludedCases.put(t, getTestCase(t));
-	}
+        for (int i = 0; i < testCaseNames.length; i++) {
+            String t = testCaseNames[i];
+            excludedCases.put(t, getTestCase(t));
+        }
     }
 
 
@@ -138,34 +138,34 @@ public class TestCases {
      * @return An enumeration of the test cases.
      */
     public Enumeration enumerate() {
-	Vector v = new Vector();
-	if (selectedCases.isEmpty()) {
-	    Method[] methods = testClass.getMethods();
-	    for (int i = 0; i < methods.length; i++) {
-		Method m = methods[i];
-		if (excludedCases.get(m.getName()) == null) {
-		    Class[] paramTypes = m.getParameterTypes();
-		    Class returnType = m.getReturnType();
-		    if ((paramTypes.length == 0) && Status.class.isAssignableFrom(returnType))
-			v.addElement(m);
-		}
-	    }
-	}
-	else {
-	    for (Enumeration e = selectedCases.elements(); e.hasMoreElements(); ) {
-		Method m = (Method)(e.nextElement());
-		if (excludedCases.get(m.getName()) == null)
-		    v.addElement(m);
-	    }
-	}
-	return v.elements();	
+        Vector v = new Vector();
+        if (selectedCases.isEmpty()) {
+            Method[] methods = testClass.getMethods();
+            for (int i = 0; i < methods.length; i++) {
+                Method m = methods[i];
+                if (excludedCases.get(m.getName()) == null) {
+                    Class[] paramTypes = m.getParameterTypes();
+                    Class returnType = m.getReturnType();
+                    if ((paramTypes.length == 0) && Status.class.isAssignableFrom(returnType))
+                        v.addElement(m);
+                }
+            }
+        }
+        else {
+            for (Enumeration e = selectedCases.elements(); e.hasMoreElements(); ) {
+                Method m = (Method)(e.nextElement());
+                if (excludedCases.get(m.getName()) == null)
+                    v.addElement(m);
+            }
+        }
+        return v.elements();
     }
 
-    
+
     /**
      * Invoke each of the selected test cases, based upon the select and exclude
      * calls that have been made, if any.
-     * If the test object provides a public method 
+     * If the test object provides a public method
      * {@link com.sun.javatest.Status}invokeTestCase({@link java.lang.reflect.Method})
      * that method will be called to invoke the test cases; otherwise, the test
      * cases will be invoked directly.
@@ -173,50 +173,50 @@ public class TestCases {
      * @return the combined result of executing all the test cases.
      */
     public Status invokeTestCases() {
-	// see if test object provides  Status invokeTestCase(Method m)
-	Method invoker;
-	try {
-	    invoker = testClass.getMethod("invokeTestCase", new Class[] {Method.class});
-	    if (!Status.class.isAssignableFrom(invoker.getReturnType()))
-		invoker = null;
-	}
-	catch (NoSuchMethodException e) {
-	    invoker = null;
-	}
+        // see if test object provides  Status invokeTestCase(Method m)
+        Method invoker;
+        try {
+            invoker = testClass.getMethod("invokeTestCase", new Class[] {Method.class});
+            if (!Status.class.isAssignableFrom(invoker.getReturnType()))
+                invoker = null;
+        }
+        catch (NoSuchMethodException e) {
+            invoker = null;
+        }
 
-	MultiStatus ms = new MultiStatus(log);
-	for (Enumeration e = enumerate(); e.hasMoreElements(); ) {
-	    Method m = (Method)(e.nextElement());
-	    Status s;
-	    try {
-		if (invoker != null)
-		    s = (Status)invoker.invoke(test, new Object[] {m});
-		else
-		    s = (Status)m.invoke(test, noArgs);
-	    }
-	    catch (IllegalAccessException ex) {
-		s = Status.failed("Could not access test case: " + m.getName());
-	    }
-	    catch (InvocationTargetException ex) {
-		printStackTrace(ex.getTargetException());
-		s = Status.failed("Exception from test case: " +
-				       ex.getTargetException().toString());
-	    }
-	    catch (ThreadDeath t) {
-		printStackTrace(t);
-		throw t;
-	    }
-	    catch (Throwable t) {
-		printStackTrace(t);
-		s = Status.failed("Unexpected Throwable: " + t);
-	    }
+        MultiStatus ms = new MultiStatus(log);
+        for (Enumeration e = enumerate(); e.hasMoreElements(); ) {
+            Method m = (Method)(e.nextElement());
+            Status s;
+            try {
+                if (invoker != null)
+                    s = (Status)invoker.invoke(test, new Object[] {m});
+                else
+                    s = (Status)m.invoke(test, noArgs);
+            }
+            catch (IllegalAccessException ex) {
+                s = Status.failed("Could not access test case: " + m.getName());
+            }
+            catch (InvocationTargetException ex) {
+                printStackTrace(ex.getTargetException());
+                s = Status.failed("Exception from test case: " +
+                                       ex.getTargetException().toString());
+            }
+            catch (ThreadDeath t) {
+                printStackTrace(t);
+                throw t;
+            }
+            catch (Throwable t) {
+                printStackTrace(t);
+                s = Status.failed("Unexpected Throwable: " + t);
+            }
 
-	    ms.add(m.getName(), s);
-	}
-	if (ms.getTestCount() == 0)
-	    return Status.passed("Test passed by default: no test cases executed.");
-	else
-	    return ms.getStatus();
+            ms.add(m.getName(), s);
+        }
+        if (ms.getTestCount() == 0)
+            return Status.passed("Test passed by default: no test cases executed.");
+        else
+            return ms.getStatus();
     }
 
     /**
@@ -224,44 +224,44 @@ public class TestCases {
      * @param t The Throwable for which to print the trace
      */
     protected void printStackTrace(Throwable t) {
-	if (log != null) 
-	    t.printStackTrace(log);
+        if (log != null)
+            t.printStackTrace(log);
     }
 
     /**
      * Look up a test case in the test object.
      * @param name the name of the test case; it must identify a method
-     *		Status name()
+     *          Status name()
      * @returns the selected method
      * @throws Fault if the name does not identify an appropriate method.
      */
     private Method getTestCase(String name) throws Fault {
-	try {
-	    Method m = testClass.getMethod(name, noArgTypes);
-	    if (!Status.class.isAssignableFrom(m.getReturnType()))
-		throw new Fault("Method for test case '" + name + "' has wrong return type" ); 
-	    return m;
-	} 
-	catch (NoSuchMethodException e) {
-	    throw new Fault("Could not find test case: " + name);
-	} 
-	catch (SecurityException e) {
-	    throw new Fault(e.toString());
-	}
+        try {
+            Method m = testClass.getMethod(name, noArgTypes);
+            if (!Status.class.isAssignableFrom(m.getReturnType()))
+                throw new Fault("Method for test case '" + name + "' has wrong return type" );
+            return m;
+        }
+        catch (NoSuchMethodException e) {
+            throw new Fault("Could not find test case: " + name);
+        }
+        catch (SecurityException e) {
+            throw new Fault(e.toString());
+        }
     }
 
     private String[] split(String s) {
-	Vector v = new Vector();
-	int start = 0;
-	for (int i = s.indexOf(','); i != -1; i = s.indexOf(',', start)) {
-	    v.addElement(s.substring(start, i));
-	    start = i + 1;
-	}
-	if (start != s.length())
-	    v.addElement(s.substring(start));
-	String[] ss = new String[v.size()];
-	v.copyInto(ss);
-	return ss;
+        Vector v = new Vector();
+        int start = 0;
+        for (int i = s.indexOf(','); i != -1; i = s.indexOf(',', start)) {
+            v.addElement(s.substring(start, i));
+            start = i + 1;
+        }
+        if (start != s.length())
+            v.addElement(s.substring(start));
+        String[] ss = new String[v.size()];
+        v.copyInto(ss);
+        return ss;
     }
 
     private Object test;

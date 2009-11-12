@@ -128,7 +128,7 @@ public class ShellAction extends Action
             }
             return (n % 2 == 0);
         }
-    
+
     @Override
     public File[] getSourceFiles() {
         return new File[] { new File(script.absTestSrcDir(), shellFN) };
@@ -255,8 +255,8 @@ public class ShellAction extends Action
             return (sep == null ? s : s.replace(File.separator, sep));
         }
         private static final String sep = getSeparator();
-        private static String getSeparator() { 
-            return (File.separatorChar == '\\' 
+        private static String getSeparator() {
+            return (File.separatorChar == '\\'
                 ? System.getProperty("javatest.shell.separator", "/")
                 : null);
         }

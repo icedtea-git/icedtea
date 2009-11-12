@@ -42,7 +42,7 @@ import com.sun.javatest.TestDescription;
 import com.sun.javatest.TestEnvironment;
 import com.sun.javatest.TestResult;
 
-import com.sun.javatest.util.Fifo; 
+import com.sun.javatest.util.Fifo;
 import java.util.regex.Pattern;
 
 /**
@@ -70,31 +70,31 @@ public class RegressionScript extends Script
         if (!(env instanceof RegressionEnvironment))
             throw new AssertionError();
 
-	String testFilePath = td.getRootRelativePath();
-	int lastSlash = testFilePath.lastIndexOf('/');
-	testDirPath = testFilePath.substring(0, lastSlash);
-        
+        String testFilePath = td.getRootRelativePath();
+        int lastSlash = testFilePath.lastIndexOf('/');
+        testDirPath = testFilePath.substring(0, lastSlash);
+
         regEnv = (RegressionEnvironment) env;
         params = regEnv.params;
-        
+
         Status status = Status.passed("OK");
         String actions = td.getParameter("run");
-        
+
 //      System.out.println("--- ACTIONS: " + actions);
         // actions != null -- should never happen since we have reasonable
         // defaults
-                
+
         try {
             setLibList(td.getParameter("library"));
-            
+
             Fifo actionList = parseActions(actions, true);
-            
+
             initScratchDirectory();
-            
+
             testResult = getTestResult();
             PrintWriter msgPW = testResult.getTestCommentWriter();
             msgPW.println("JDK under test: " + getJavaFullVersion());
-            
+
             // if we got an error while parsing the TestDescription, return
             // error immediately
             if (td.getParameter("error") != null)
@@ -117,12 +117,12 @@ public class RegressionScript extends Script
         }
         return status;
     } // run()
-    
+
     /**
      * Get the set of source files used by the actions in a test description.
      **/
     public File[] getSourceFiles(TestDescription td) {
-        this.td = td;        
+        this.td = td;
         try {
             setLibList(td.getParameter("library"));
             String actions = td.getParameter("run");
@@ -141,52 +141,52 @@ public class RegressionScript extends Script
             throw new Error(shouldNotHappen);
         }
     }
-    
+
     public boolean hasEnv() {
         return (regEnv != null);
     }
-    
+
     static class ParseActionsException extends Exception {
         static final long serialVersionUID = -3369214582449830917L;
         ParseActionsException(String msg) {
             super(msg);
         }
     }
-    
+
     /**
      * Parse a sequence of actions.
-     * 
+     *
      * @param actions a series of actions, separated by LINESEP
      * @param stopOnError whether or not to ignore any parse errors; if true and an error
      * is found, a ParseActionsException will be thrown, giving a detail message.
      * @return a Fifo of Action objects
      */
-    Fifo parseActions(String actions, boolean stopOnError) throws ParseActionsException, ParseException {   
+    Fifo parseActions(String actions, boolean stopOnError) throws ParseActionsException, ParseException {
         Fifo actionList = new Fifo(2);
         String[] runCmds = StringArray.splitTerminator(LINESEP, actions);
         populateActionTable();
-        
+
         for (int j = 0; j < runCmds.length; j++) {
             // e.g. reason compile/fail/ref=Foo.ref -debug Foo.java
             // where "reason" indicates why the action should run
             String[] tokens = StringArray.splitWS(runCmds[j]);
             // [reason, compile/fail/ref=Foo.ref, -debug, Foo.java]
-            
+
             String[] verbopts = StringArray.splitSeparator("/", tokens[1]);
             // [compile, fail, ref=Foo.ref]
             String verb = verbopts[0];
-            
+
             String[][] opts = new String[verbopts.length -1][];
             for (int i = 1; i < verbopts.length; i++) {
                 opts[i-1] = StringArray.splitEqual(verbopts[i]);
                 // [[fail,], [ref, Foo.ref]]
             }
-            
+
             String[] args = new String[tokens.length-2];
             for (int i = 2; i < tokens.length; i++)
                 args[i-2] = tokens[i];
             // [-debug, Foo.java] (everything after the big options token)
-            
+
             Class<?> c = null;
             try {
                 c = (Class<?>)(actionTable.get(verb));
@@ -206,9 +206,9 @@ public class RegressionScript extends Script
                     throw new ParseActionsException(ILLEGAL_ACCESS_INIT + c);
             }
         }
-        
+
         return actionList;
-        
+
     }
 
     //---------- methods for timing --------------------------------------------
@@ -272,7 +272,7 @@ public class RegressionScript extends Script
     }
 
     //----------internal methods------------------------------------------------
-    
+
     private void initScratchDirectory() throws TestRunException {
         File dir = absTestScratchDir();
         if (dir.exists()) {
@@ -280,30 +280,30 @@ public class RegressionScript extends Script
                 cleanDirectoryContents(dir);
                 return;
             } else {
-                if (!dir.delete()) 
+                if (!dir.delete())
                     throw new TestRunException(CLEAN_RM_PROB + dir);
             }
         }
-        if (!dir.mkdirs()) 
+        if (!dir.mkdirs())
             throw new TestRunException(PATH_SCRATCH_CREATE + dir);
     }
-    
-    private void retainScratchFiles(Status status) {  
+
+    private void retainScratchFiles(Status status) {
         File scratchDir = absTestScratchDir();
         File resultDir = absTestResultDir();
-        
+
         if (params.getRetainStatus().contains(status.getType())) {
-            if (!scratchDir.equals(resultDir)) 
+            if (!scratchDir.equals(resultDir))
                 saveFiles(scratchDir, resultDir, null, false);
         } else {
             Pattern rp = params.getRetainFilesPattern();
-            if (scratchDir.equals(resultDir) || rp == null) 
+            if (scratchDir.equals(resultDir) || rp == null)
                 deleteFiles(resultDir, rp, false);
             else if (rp != null)
                 saveFiles(scratchDir, resultDir, rp, true);
         }
     }
-    
+
     /**
      * Copy all files in a directory that optionally match or don't match a pattern.
      **/
@@ -338,18 +338,18 @@ public class RegressionScript extends Script
             }
         }
     }
-    
+
     /**
      * Delete all files in a directory that optionally match or don't
      * match a pattern.  If all files in the directory are deleted,
      * the directory is deleted as well.
-     * @returns true if the directory and all its contents are 
+     * @returns true if the directory and all its contents are
      * successfully deleted.
      */
     private boolean deleteFiles(File dir, Pattern p, boolean match) {
         if (!dir.exists())
             return true;
-        
+
         boolean all = true;
         for (File file: dir.listFiles()) {
             if (file.isDirectory()) {
@@ -363,8 +363,8 @@ public class RegressionScript extends Script
                     all &= ok;
                 } else {
                     all = false;
-                } 
-            } 
+                }
+            }
         }
         if (all) {
             all = dir.delete();
@@ -490,7 +490,7 @@ public class RegressionScript extends Script
     List<String> getTestJavaOptions() {
         return params.getTestJavaOptions();
     }
-    
+
     /**
      * What to do with @ignore tags
      */
@@ -555,7 +555,7 @@ public class RegressionScript extends Script
         }
         return cacheAbsTestScratchDir;
     } // absTestScratchDir()
-    
+
     private File cacheAbsTestResultDir;
     File absTestResultDir() {
         if (cacheAbsTestResultDir == null) {
@@ -578,7 +578,7 @@ public class RegressionScript extends Script
         String clsTopDir = absTestClsDir.substring(0, pos + clsStr.length() + 1);
 
         cacheAbsTestClsTopDir = new File(clsTopDir);
- 
+
         return cacheAbsTestClsTopDir;
     } // absTestClsTopDir()
 
@@ -590,7 +590,7 @@ public class RegressionScript extends Script
     File absTestClsDestDir(String fileName) throws TestClassException {
         return absTestClsDestDir(new File(fileName));
     }
-    
+
     File absTestClsDestDir(File file) throws TestClassException {
         File retVal = null;
         String name = null;
@@ -695,7 +695,7 @@ public class RegressionScript extends Script
      *             contain the directory of the defining file of the test
      *             followed by the library list.
      */
-    private Map<File,Set<String>> cacheDirContents = new HashMap<File,Set<String>>(); 
+    private Map<File,Set<String>> cacheDirContents = new HashMap<File,Set<String>>();
     private File locateFile(String fileName, File[] dirList)
         throws TestRunException
     {
@@ -773,12 +773,12 @@ public class RegressionScript extends Script
     private void setLibList(String libPath) throws TestClassException {
         if ((cacheAbsSrcLibList == null) || (cacheAbsClsLibList == null)) {
             cacheRelSrcLibList = StringArray.splitWS(libPath);
-            
+
             cacheAbsSrcLibList = new File[cacheRelSrcLibList.length];
             for (int i = 0; i < cacheRelSrcLibList.length; i++) {
                 cacheAbsSrcLibList[i] = new File(absTestSrcDir(), cacheRelSrcLibList[i]);
             }
-            
+
             if (hasEnv()) {
                 cacheAbsClsLibList = new File[cacheRelSrcLibList.length];
                 for (int i = 0; i < cacheRelSrcLibList.length; i++) {
@@ -837,11 +837,11 @@ public class RegressionScript extends Script
     }
 
     boolean isOtherJVM() {
-	boolean samevm = !params.isOtherJVM();
-	if (samevm)
-	    return !isSameJVMSafe();
-	else
-	    return true;
+        boolean samevm = !params.isOtherJVM();
+        if (samevm)
+            return !isSameJVMSafe();
+        else
+            return true;
     }
 
     // Whether the actions of this script can safely run in the same jvm.
@@ -849,14 +849,14 @@ public class RegressionScript extends Script
     // If our actions come from a file in a subdir of a safe dir that is ok.
     boolean isSameJVMSafe() {
         List<String> dirs = params.getSameJVMSafeDirs();
-	if (dirs == null)
-	    return true;
+        if (dirs == null)
+            return true;
 
-	for (String dir : dirs)
-	    if (testDirPath.startsWith(dir))
-		return true;
+        for (String dir : dirs)
+            if (testDirPath.startsWith(dir))
+                return true;
 
-	return false;
+        return false;
     }
 
     String getJavaProg() {
@@ -946,4 +946,3 @@ public class RegressionScript extends Script
     private RegressionParameters params;
     private String testDirPath;
 }
-

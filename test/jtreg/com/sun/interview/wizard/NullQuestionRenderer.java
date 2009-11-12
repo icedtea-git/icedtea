@@ -34,10 +34,10 @@ class NullQuestionRenderer
     implements QuestionRenderer
 {
     public JComponent getQuestionRendererComponent(Question q, ActionListener listener) {
-	return null;
+        return null;
     }
 
     public String getInvalidValueMessage(Question q) {
-	return null;
+        return null;
     }
 }

@@ -43,7 +43,7 @@ import com.sun.javatest.util.I18NResourceBundle;
  * It is highly recommended that the GUI panel used to configure
  * this filter be a single panel, and not a complex tabbed or otherwise
  * "switchable" panel.
- * 
+ *
  * <p>
  * Subclasses of this class should implement the abstract methods here and
  * those in ObservableTestFilter.
@@ -64,13 +64,13 @@ abstract class ConfigurableTestFilter extends ObservableTestFilter {
      * @throws IllegalArgumentException If the either parameter is null.
      */
     protected ConfigurableTestFilter(String name, ExecModel e) {
-	if (name == null)
-	    throw new IllegalArgumentException(i18n.getString("ctf.nullName"));
-	if (e == null)
-	    throw new IllegalArgumentException(i18n.getString("ctf.nullExec"));
-	
-	instanceName = name;
-	execModel = e;
+        if (name == null)
+            throw new IllegalArgumentException(i18n.getString("ctf.nullName"));
+        if (e == null)
+            throw new IllegalArgumentException(i18n.getString("ctf.nullExec"));
+
+        instanceName = name;
+        execModel = e;
     }
 
     /**
@@ -81,11 +81,11 @@ abstract class ConfigurableTestFilter extends ObservableTestFilter {
      *         the exec model argument is null.
      */
     protected ConfigurableTestFilter(Map map, ExecModel e) {
-	if (e == null)
-	    throw new IllegalArgumentException(i18n.getString("ctf.nullExec"));
-	
-	execModel = e;
-	load(map);
+        if (e == null)
+            throw new IllegalArgumentException(i18n.getString("ctf.nullExec"));
+
+        execModel = e;
+        load(map);
 
     }
 
@@ -100,7 +100,7 @@ abstract class ConfigurableTestFilter extends ObservableTestFilter {
      * Settings from the original instance may not necessarily be copied.
      */
     public Object clone() {
-	return cloneInstance();
+        return cloneInstance();
     }
 
     /**
@@ -120,10 +120,10 @@ abstract class ConfigurableTestFilter extends ObservableTestFilter {
      * @see #getName()
      */
     void setInstanceName(String text) {
-	if (text != null)
-	    instanceName = text;
-	else
-	    throw new IllegalArgumentException(i18n.getString("ctf.nullName"));
+        if (text != null)
+            instanceName = text;
+        else
+            throw new IllegalArgumentException(i18n.getString("ctf.nullName"));
     }
 
     /**
@@ -135,12 +135,12 @@ abstract class ConfigurableTestFilter extends ObservableTestFilter {
      * @throws IllegalStateException If the instance name is not present in the map.
      */
     boolean load(Map map) {
-	instanceName = (String)(map.get(INSTANCE_KEY));
+        instanceName = (String)(map.get(INSTANCE_KEY));
 
-	if (instanceName == null)
-	    throw new IllegalStateException(i18n.getString("ctf.mapNoName"));
-	
-	return true;
+        if (instanceName == null)
+            throw new IllegalStateException(i18n.getString("ctf.mapNoName"));
+
+        return true;
     }
 
     /**
@@ -151,9 +151,9 @@ abstract class ConfigurableTestFilter extends ObservableTestFilter {
      * @return True if saving was sucessful, false if the operation failed.
      */
     boolean save(Map map) {
-	map.put(INSTANCE_KEY, instanceName);
+        map.put(INSTANCE_KEY, instanceName);
 
-	return true;
+        return true;
     }
 
     /**
@@ -206,4 +206,3 @@ abstract class ConfigurableTestFilter extends ObservableTestFilter {
     protected static final String INSTANCE_KEY = "instanceName";
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(ConfigurableTestFilter.class);
 }
-

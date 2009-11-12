@@ -32,12 +32,12 @@ import com.sun.javatest.util.I18NResourceBundle;
  * A test filter that filters tests according to the keywords on a test description.
  */
 public class KeywordsFilter extends TestFilter {
-    /** 
+    /**
      * Create a filter that filters tests according to a Keywords object.
      * @param keywords an object that provides the basic filter
      */
     public KeywordsFilter(Keywords keywords) {
-	this.keywords = keywords;
+        this.keywords = keywords;
     }
 
     /**
@@ -45,34 +45,34 @@ public class KeywordsFilter extends TestFilter {
      * @return the keywords object that provides the basic filter
      */
     public Keywords getKeywords() {
-	return keywords;
+        return keywords;
     }
 
     public String getName() {
-	return i18n.getString("keywordsFilter.name");
+        return i18n.getString("keywordsFilter.name");
     }
 
     public String getDescription() {
-	return i18n.getString("keywordsFilter.description");
+        return i18n.getString("keywordsFilter.description");
     }
 
     public String getReason() {
-	return i18n.getString("keywordsFilter.reason");
+        return i18n.getString("keywordsFilter.reason");
     }
 
     public boolean accepts(TestDescription td) {
-	return keywords.accepts(td.getKeywordTable());
+        return keywords.accepts(td.getKeywordTable());
     }
-    
+
     public boolean equals(Object o) {
-	if (o == this)
-	    return true;
+        if (o == this)
+            return true;
 
-	if (!(o instanceof KeywordsFilter))
-	    return false;
+        if (!(o instanceof KeywordsFilter))
+            return false;
 
-	KeywordsFilter other = (KeywordsFilter) o;
-	return keywords.equals(other.keywords);
+        KeywordsFilter other = (KeywordsFilter) o;
+        return keywords.equals(other.keywords);
     }
 
     private Keywords keywords;

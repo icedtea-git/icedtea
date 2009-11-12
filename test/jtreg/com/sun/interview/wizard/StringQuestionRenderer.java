@@ -41,63 +41,63 @@ class StringQuestionRenderer
     implements QuestionRenderer
 {
     public JComponent getQuestionRendererComponent(final Question q, ActionListener listener) {
-	StringQuestion sq = (StringQuestion) q;
-	String[] suggestions = sq.getSuggestions();
-	int nomMaxLen = sq.getNominalMaxLength();
+        StringQuestion sq = (StringQuestion) q;
+        String[] suggestions = sq.getSuggestions();
+        int nomMaxLen = sq.getNominalMaxLength();
 
-	if (nomMaxLen > 80)
-	    return createTextArea(sq, listener);
-	else	    
-	    return createTypeInPanel(sq, listener);
+        if (nomMaxLen > 80)
+            return createTextArea(sq, listener);
+        else
+            return createTypeInPanel(sq, listener);
     }
 
     public String getInvalidValueMessage(Question q) {
-	return null;
+        return null;
     }
 
     private JPanel createTextArea(final StringQuestion q, ActionListener listener) {
-	JPanel panel = new JPanel(new BorderLayout());
-	panel.setName("str");
-	panel.setFocusable(false);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setName("str");
+        panel.setFocusable(false);
 
-	JLabel label = new JLabel(i18n.getString("str.area.lbl")); 
-	label.setName("str.area.lbl");
-	label.setDisplayedMnemonic(i18n.getString("str.area.mne").charAt(0));
-	label.setToolTipText(i18n.getString("str.area.tip"));
-	panel.add(label, BorderLayout.NORTH);
+        JLabel label = new JLabel(i18n.getString("str.area.lbl"));
+        label.setName("str.area.lbl");
+        label.setDisplayedMnemonic(i18n.getString("str.area.mne").charAt(0));
+        label.setToolTipText(i18n.getString("str.area.tip"));
+        panel.add(label, BorderLayout.NORTH);
 
-	final JTextArea textArea = new JTextArea(q.getValue());
-	textArea.setName("str");
-	textArea.setLineWrap(true);
-	//textArea.addActionListener(listener);
-	textArea.getDocument().addDocumentListener(new ActionDocListener(textArea, listener, EDITED));
-	textArea.setToolTipText(label.getToolTipText());
-	label.setLabelFor(textArea);
+        final JTextArea textArea = new JTextArea(q.getValue());
+        textArea.setName("str");
+        textArea.setLineWrap(true);
+        //textArea.addActionListener(listener);
+        textArea.getDocument().addDocumentListener(new ActionDocListener(textArea, listener, EDITED));
+        textArea.setToolTipText(label.getToolTipText());
+        label.setLabelFor(textArea);
 
-	JScrollPane sp = new JScrollPane(textArea);
-	sp.setName("str.sp");
-	sp.setFocusable(false);
-	panel.add(sp, BorderLayout.CENTER);
+        JScrollPane sp = new JScrollPane(textArea);
+        sp.setName("str.sp");
+        sp.setFocusable(false);
+        panel.add(sp, BorderLayout.CENTER);
 
-	Runnable valueSaver = new Runnable() {
-		public void run() {
-		    q.setValue(textArea.getText());
-		}
-	    };
-	
-	panel.putClientProperty(VALUE_SAVER, valueSaver);
+        Runnable valueSaver = new Runnable() {
+                public void run() {
+                    q.setValue(textArea.getText());
+                }
+            };
 
-	return panel;
+        panel.putClientProperty(VALUE_SAVER, valueSaver);
+
+        return panel;
     }
 
     private JPanel createTypeInPanel(final StringQuestion q, ActionListener listener) {
 
-	return new TypeInPanel("str", 
-			       q, 
-			       q.getNominalMaxLength(),
-			       q.getSuggestions(), 
-			       null, 
-			       listener);
+        return new TypeInPanel("str",
+                               q,
+                               q.getNominalMaxLength(),
+                               q.getSuggestions(),
+                               null,
+                               listener);
     }
 
     private static final I18NResourceBundle i18n = I18NResourceBundle.getDefaultBundle();

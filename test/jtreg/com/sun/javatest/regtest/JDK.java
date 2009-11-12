@@ -32,24 +32,24 @@ import java.io.IOException;
  * Info about a JDK
  */
 public class JDK {
-    
+
     /** Creates a new instance of JDK */
     public JDK(String jdk) {
         this(new File(jdk));
     }
-    
+
     public JDK(File jdk) {
         this.jdk = jdk;
     }
-    
+
     public File getFile() {
         return jdk;
     }
-    
+
     public File getAbsoluteFile() {
         return jdk.getAbsoluteFile();
     }
-    
+
     public File getCanonicalFile() {
         try {
             return jdk.getCanonicalFile();
@@ -57,32 +57,32 @@ public class JDK {
             return jdk.getAbsoluteFile();
         }
     }
-    
+
     public File getJavaProg() {
         return new File(new File(getAbsoluteFile(), "bin"), "java");
     }
-    
+
     public File getJavacProg() {
         return new File(new File(getAbsoluteFile(), "bin"), "javac");
     }
-    
+
     public File getToolsJar() {
         return new File(new File(getAbsoluteFile(), "lib"), "tools.jar");
     }
-    
+
     public boolean exists() {
         return jdk.exists();
     }
-    
+
     public String getPath() {
         return jdk.getPath();
     }
-    
+
     @Override
     public String toString() {
         return getPath();
     }
-    
+
     private File jdk;
-    
+
 }

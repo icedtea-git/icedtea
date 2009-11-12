@@ -40,119 +40,119 @@ import java.io.IOException;
 public class JavaCommentStream extends CommentStream
 {
     public String readComment() throws IOException {
-	int c;
-	StringBuffer comment = new StringBuffer(0);
+        int c;
+        StringBuffer comment = new StringBuffer(0);
 
     commentStart:
-	// start of comment is "/*".
-	while (true) {
-	    switch (c = cs.read()) {
-	    case -1:
-		return null;
-	    case '/':
-		switch (cs.read()) {
-		case -1:
-		    return null;
-		case '*':
-		    break commentStart;
-		case '/':
- 		    skipLine();
-		    break;
-		default:
-		    break;
-		}
-		break;
-	    case '\'':
-	    case '"':
-		skipString(c);
-		break;
-	    default:
-		if ((!Character.isWhitespace((char) c)) && fastScan)
-		    return null;
-		break;
-	    }
-	}
+        // start of comment is "/*".
+        while (true) {
+            switch (c = cs.read()) {
+            case -1:
+                return null;
+            case '/':
+                switch (cs.read()) {
+                case -1:
+                    return null;
+                case '*':
+                    break commentStart;
+                case '/':
+                    skipLine();
+                    break;
+                default:
+                    break;
+                }
+                break;
+            case '\'':
+            case '"':
+                skipString(c);
+                break;
+            default:
+                if ((!Character.isWhitespace((char) c)) && fastScan)
+                    return null;
+                break;
+            }
+        }
 
-	startLine = true;
+        startLine = true;
 
-	// end of comment is "*/".
-	// take care to handle repeated stars before end of comment
-	boolean starPending = false;
+        // end of comment is "*/".
+        // take care to handle repeated stars before end of comment
+        boolean starPending = false;
     commentEnd:
-	while (true) {
-	    switch (c = cs.read()) {
-	    case -1:
-		return null;
-	    case '*':
-		if (starPending) 
-		    putc(comment, c); // flush pending *, leave * pending
-		else
-		    starPending = true;
-		break;
-	    case '/':
-		if (starPending)
-		    break commentEnd;  // finally got "*/"
-		putc(comment, c);
-		break;
-	    default:
-		if (starPending) {
-		    putc(comment, '*');
-		    starPending = false;
-		}
-		putc(comment, c);
-		break;
-	    }
-	}
-	return comment.toString();
+        while (true) {
+            switch (c = cs.read()) {
+            case -1:
+                return null;
+            case '*':
+                if (starPending)
+                    putc(comment, c); // flush pending *, leave * pending
+                else
+                    starPending = true;
+                break;
+            case '/':
+                if (starPending)
+                    break commentEnd;  // finally got "*/"
+                putc(comment, c);
+                break;
+            default:
+                if (starPending) {
+                    putc(comment, '*');
+                    starPending = false;
+                }
+                putc(comment, c);
+                break;
+            }
+        }
+        return comment.toString();
     } // readComment()
 
     //-----internal routines----------------------------------------------------
 
     private void putc(StringBuffer s, int c) {
-	switch (c) {
-	    //case '\b':
-	    //case '\f':
-	    //break;
-	case '\n':
-	case '\r':
-	    //XXX dump the newline info?
-	    s.append((char) c);
-	    startLine = true;
-	    break;
-	case ' ':
-	case '\t':
-	case '*':
-	    if (!startLine)
-		s.append((char) c);
-	    break;
-	default:
-	    startLine = false;
-	    s.append((char) c);
-	    break;
-	}
+        switch (c) {
+            //case '\b':
+            //case '\f':
+            //break;
+        case '\n':
+        case '\r':
+            //XXX dump the newline info?
+            s.append((char) c);
+            startLine = true;
+            break;
+        case ' ':
+        case '\t':
+        case '*':
+            if (!startLine)
+                s.append((char) c);
+            break;
+        default:
+            startLine = false;
+            s.append((char) c);
+            break;
+        }
     } // putc()
 
     private void skipLine() throws IOException {
-	while (true) {
-	    int c = cs.read();
-	    if (c == -1 || c == '\r' || c == '\n')
-		return;
-	}
+        while (true) {
+            int c = cs.read();
+            if (c == -1 || c == '\r' || c == '\n')
+                return;
+        }
     }
 
     private void skipString(int term) throws IOException {
-	while (true) {
-	    int c = cs.read();
-	    if (c == -1 || c == term)
-		return;
-	    else if (c == '\\') {
-		// since we are only interested in finding the end of the
-		// string, we don't need to parse the escape: it is sufficient
-		// to just skip the next character, in case the escape is
-		// \\ or \' or \"
-		c = cs.read();
-	    }
-	}
+        while (true) {
+            int c = cs.read();
+            if (c == -1 || c == term)
+                return;
+            else if (c == '\\') {
+                // since we are only interested in finding the end of the
+                // string, we don't need to parse the escape: it is sufficient
+                // to just skip the next character, in case the escape is
+                // \\ or \' or \"
+                c = cs.read();
+            }
+        }
     }
 
     //----------member variables------------------------------------------------

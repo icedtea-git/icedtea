@@ -42,81 +42,81 @@ class TestSuiteErrorsDialog extends ToolDialog
 {
 
     TestSuiteErrorsDialog(Component parent, UIFactory uif) {
-	super(parent, uif, "tse");
+        super(parent, uif, "tse");
     }
 
     public void show(TestSuite ts) {
-	testSuite = ts;
-	
-	StringBuffer sb = new StringBuffer();
-	sb.append("<html><body style=\"font-family: SansSerif; font-size: 12pt\">");
+        testSuite = ts;
 
-	if (testSuite == null) 
-	    sb.append(uif.getI18NString("tse.head.noTestSuite"));
-	else {
-	    TestFinder tf = testSuite.getTestFinder();
-	    if (tf.getErrorCount() == 0)
-		sb.append(uif.getI18NString("tse.head.noErrs"));
-	    else {
-		sb.append(uif.getI18NString("tse.head.errs"));
-		sb.append("<ul>");
-		
-		String[] errors = tf.getErrors();
-		for (int i = 0; i < errors.length; i++) {
-		    sb.append("<li>");
-		    sb.append(escape(errors[i]));
-		}
-		sb.append("</ul>");
-	    }
-	}
-	sb.append("</body>");
-	sb.append("</html>");
+        StringBuffer sb = new StringBuffer();
+        sb.append("<html><body style=\"font-family: SansSerif; font-size: 12pt\">");
 
-	// would be nice to have more incremental update here;
-	// might have to rethink use of HTML
-	if (body == null)
-	    initGUI();
+        if (testSuite == null)
+            sb.append(uif.getI18NString("tse.head.noTestSuite"));
+        else {
+            TestFinder tf = testSuite.getTestFinder();
+            if (tf.getErrorCount() == 0)
+                sb.append(uif.getI18NString("tse.head.noErrs"));
+            else {
+                sb.append(uif.getI18NString("tse.head.errs"));
+                sb.append("<ul>");
 
-	body.setText(sb.toString());
-	setVisible(true);
+                String[] errors = tf.getErrors();
+                for (int i = 0; i < errors.length; i++) {
+                    sb.append("<li>");
+                    sb.append(escape(errors[i]));
+                }
+                sb.append("</ul>");
+            }
+        }
+        sb.append("</body>");
+        sb.append("</html>");
+
+        // would be nice to have more incremental update here;
+        // might have to rethink use of HTML
+        if (body == null)
+            initGUI();
+
+        body.setText(sb.toString());
+        setVisible(true);
     }
 
     protected void initGUI() {
-	setI18NTitle("tse.title");
+        setI18NTitle("tse.title");
 
-	body = new JEditorPane();
-	body.setName("tse");
-	body.setContentType("text/html");
-	body.setEditable(false);
-	body.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        body = new JEditorPane();
+        body.setName("tse");
+        body.setContentType("text/html");
+        body.setEditable(false);
+        body.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-	JScrollPane sp = uif.createScrollPane(body);
-	int dpi = uif.getDotsPerInch();
-	sp.setPreferredSize(new Dimension(6 * dpi, 3 * dpi));
-	setBody(sp);
-	
-	JButton closeBtn = uif.createCloseButton("tse.close");
-	setButtons(new JButton[] { closeBtn }, closeBtn);	
+        JScrollPane sp = uif.createScrollPane(body);
+        int dpi = uif.getDotsPerInch();
+        sp.setPreferredSize(new Dimension(6 * dpi, 3 * dpi));
+        setBody(sp);
+
+        JButton closeBtn = uif.createCloseButton("tse.close");
+        setButtons(new JButton[] { closeBtn }, closeBtn);
     }
 
     private String escape(String s) {
-	for (int i = 0; i < s.length(); i++) {
-	    switch (s.charAt(i)) {
-	    case '<': case '>': case '&': 
-		StringBuffer sb = new StringBuffer(s.length()*2);
-		for (int j = 0; j < s.length(); j++) {
-		    char c = s.charAt(j);
-		    switch (c) {
-		    case '<': sb.append("&lt;"); break;
-		    case '>': sb.append("&gt;"); break;
-		    case '&': sb.append("&amp;"); break;
-		    default: sb.append(c);
-		    }			
-		}
-		return sb.toString();
-	    }
-	}
-	return s;
+        for (int i = 0; i < s.length(); i++) {
+            switch (s.charAt(i)) {
+            case '<': case '>': case '&':
+                StringBuffer sb = new StringBuffer(s.length()*2);
+                for (int j = 0; j < s.length(); j++) {
+                    char c = s.charAt(j);
+                    switch (c) {
+                    case '<': sb.append("&lt;"); break;
+                    case '>': sb.append("&gt;"); break;
+                    case '&': sb.append("&amp;"); break;
+                    default: sb.append(c);
+                    }
+                }
+                return sb.toString();
+            }
+        }
+        return s;
     }
 
     private TestSuite testSuite;

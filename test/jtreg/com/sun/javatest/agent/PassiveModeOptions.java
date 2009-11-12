@@ -33,41 +33,41 @@ import java.io.IOException;
 
 class PassiveModeOptions extends ModeOptions {
     PassiveModeOptions() {
-	super("passive");
+        super("passive");
 
-	GridBagConstraints c = new GridBagConstraints();
-	
-	portLabel = new Label("port:");
-	c.weightx = 0;
-	add(portLabel, c);
-	
-	String defPassPort = Integer.toString(Agent.defaultPassivePort);
-	portField = new TextField(defPassPort, 5);
-	c.weightx = 1.0;
-	c.anchor = GridBagConstraints.WEST;
-	add(portField, c);
+        GridBagConstraints c = new GridBagConstraints();
+
+        portLabel = new Label("port:");
+        c.weightx = 0;
+        add(portLabel, c);
+
+        String defPassPort = Integer.toString(Agent.defaultPassivePort);
+        portField = new TextField(defPassPort, 5);
+        c.weightx = 1.0;
+        c.anchor = GridBagConstraints.WEST;
+        add(portField, c);
     }
-    
+
     ConnectionFactory createConnectionFactory(int concurrency) throws BadValue, ConnectionFactory.Fault {
-	try {
-	    int port = getInt("port", portField);
-	    if (port < 0)
-		throw new BadValue("port may not be negative");
+        try {
+            int port = getInt("port", portField);
+            if (port < 0)
+                throw new BadValue("port may not be negative");
 
-	    if (concurrency < 0)
-		throw new BadValue("concurrency may not be negative");
+            if (concurrency < 0)
+                throw new BadValue("concurrency may not be negative");
 
-	    return new PassiveConnectionFactory(port, concurrency);
-	}
-	catch (IOException e) {
-	    throw new ConnectionFactory.Fault(e, true);
-	}
+            return new PassiveConnectionFactory(port, concurrency);
+        }
+        catch (IOException e) {
+            throw new ConnectionFactory.Fault(e, true);
+        }
     }
-    
+
     void setPort(int port) {
-	portField.setText(Integer.toString(port));
+        portField.setText(Integer.toString(port));
     }
-    
+
     private Label portLabel;
     private TextField portField;
 }

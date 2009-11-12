@@ -65,13 +65,13 @@ class FilesPane extends JPanel {
 
     FilesPane(UIFactory uif, final ActionListener nextListener) {
         this.uif = uif;
-        this.listener = new Listener();        
+        this.listener = new Listener();
 
         setName("files");
         setLayout(new GridBagLayout());
         setFocusable(false);
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-        
+
         JLabel title = uif.createLabel("files.title");
         GridBagConstraints lc = new GridBagConstraints();
         lc.gridwidth = GridBagConstraints.REMAINDER;
@@ -80,8 +80,8 @@ class FilesPane extends JPanel {
         lc.anchor = GridBagConstraints.WEST;
         lc.insets = new Insets(5,5,15,5);
         this.add(title, lc);
-        
-        
+
+
         JLabel wdLabel = uif.createLabel("files.resultLabel", true);
         lc = new GridBagConstraints();
         lc.anchor = GridBagConstraints.EAST;
@@ -92,13 +92,13 @@ class FilesPane extends JPanel {
         resultField.addItem("");
         resultField.addActionListener(listener);
         Component com = resultField.getEditor().getEditorComponent();
-        
+
         resultField.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent e) {
                 enableNext();
             }
         });
-        
+
         GridBagConstraints fc = new GridBagConstraints();
         fc.insets = new Insets(5,0,0,5);
         fc.weightx = 1.0;
@@ -110,7 +110,7 @@ class FilesPane extends JPanel {
         bc.insets = new Insets(5,0,0,5);
         bc.gridwidth = GridBagConstraints.REMAINDER;
         this.add(resultBtn, bc);
- 
+
         // Report directory UI ends
         // Panel with xml files begin
 
@@ -124,7 +124,7 @@ class FilesPane extends JPanel {
         JScrollPane js = new JScrollPane();
         js.setBorder(uif.createTitledBorder("files.merged"));
         js.setName("files.in");
-        js.setViewportView(new MergedSubPanel(uif));        
+        js.setViewportView(new MergedSubPanel(uif));
         js.createVerticalScrollBar();
         js.getViewport().setName("files.inview");
         this.add(js, pan);
@@ -134,10 +134,10 @@ class FilesPane extends JPanel {
         int dpi = uif.getDotsPerInch();
         this.setPreferredSize(new Dimension(Math.max(d.width, 5 * dpi),
                 d.height));
-        
+
         // Panel with xml files begin
         // Buttons begin
-        
+
         nextBtn = uif.createButton("files.next", new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (checkInput())
@@ -149,21 +149,21 @@ class FilesPane extends JPanel {
         buttons = new JButton[] { nextBtn, cancelBtn };
         JPanel buttonsPanel = uif.createPanel("files.but");
         GridBagConstraints co = new GridBagConstraints();
-        co.anchor = GridBagConstraints.EAST;        
+        co.anchor = GridBagConstraints.EAST;
         co.weightx = 1;
         co.gridwidth = 3;
         co.insets = new Insets(5,0,0,0);
         this.add(buttonsPanel, co);
         buttonsPanel.setLayout(new GridLayout(1, 3, 5, 5));
         for (int i = 0; i < buttons.length; i++) {
-            buttonsPanel.add(buttons[i]);            
+            buttonsPanel.add(buttons[i]);
         }
-        
+
     }
-    
+
     boolean checkInput() {
         String[] merged = getXmlFiles();
-        
+
         // check the files
         for (int i=0; i < merged.length; i++) {
             if (!FilesPane.isXMLReport(new File(merged[i]))) {
@@ -171,7 +171,7 @@ class FilesPane extends JPanel {
                 return false;
             }
         }
-        
+
         if ("".equals(getResultDir())) {
             uif.showError("files.nooutfile");
             return false;
@@ -196,9 +196,9 @@ class FilesPane extends JPanel {
 
         return true;
     }
-    
-    
-    
+
+
+
     private void enableNext() {
         nextBtn.setEnabled(isNextEnabled());
     }
@@ -219,10 +219,10 @@ class FilesPane extends JPanel {
             }
         }
         return found;
-        
+
     }
-    
-    
+
+
     class MergedSubPanel extends JPanel {
 
         MergedSubPanel(UIFactory uif) {
@@ -297,7 +297,7 @@ class FilesPane extends JPanel {
             bc.weighty = 1.0;
             this.add(addMore, bc);
             this.updateUI();
-        }      
+        }
 
         private java.util.List mergedBtns;
         private JButton addMore;
@@ -319,7 +319,7 @@ class FilesPane extends JPanel {
                 }
             });
         }
-        
+
         if (!field.getText().trim().equals("")) {
             File entered = new File(field.getText());
             if (entered.exists()) {
@@ -342,13 +342,13 @@ class FilesPane extends JPanel {
         }
         field.setText(cfp);
     }
-    
+
     JButton[] getButtons() {
         return buttons;
     }
 
-    private void showReportChooserDialog() {    
-        
+    private void showReportChooserDialog() {
+
         if (reportDirChooser == null)
             reportDirChooser = new ReportDirChooser();
         reportDirChooser.setMode(ReportDirChooser.NEW);
@@ -359,24 +359,24 @@ class FilesPane extends JPanel {
         int option = reportDirChooser.showDialog(resultField);
         if (option != JFileChooser.APPROVE_OPTION)
             return;
-        
+
         resultField.setSelectedItem(reportDirChooser.getSelectedFile().getAbsolutePath());
         for (int i = 0; i < resultField.getItemCount(); i++) {
             if (new File(resultField.getItemAt(i).toString())
                     .equals(reportDirChooser.getSelectedFile())) {
                 return;
-            }                    
+            }
         }
         resultField.addItem(resultField.getSelectedItem());
-        
-        
+
+
     }
 
     static boolean isXMLReport(File f) {
-        
+
         String schemaLocation = "xsi:noNamespaceSchemaLocation=\"Report.xsd\"";
         String formatVersion = "formatVersion=\"v1\"";
-        
+
         if (!f.getName().endsWith(".xml")) return false;
         BufferedReader r = null;
         try {
@@ -393,40 +393,40 @@ class FilesPane extends JPanel {
             try {
                 if (r != null) r.close();
             } catch (IOException ex) {
-                // nothing... 
+                // nothing...
             }
         }
     }
-    
+
     private class XMLReportView extends FileView {
-        
+
         public XMLReportView() {
             super();
-            icon = IconFactory.getReportIcon();            
+            icon = IconFactory.getReportIcon();
         }
-        
+
         public Icon getIcon(File f) {
             return isXMLReport(f) ? icon : null;
         }
-        
+
         private Icon icon;
     }
-    
+
     private UIFactory uif;
 
     private Listener listener;
 
-    String getResultDir() {        
+    String getResultDir() {
         return resultField.getSelectedItem().toString();
     }
-    
+
     String[] getXmlFiles() {
         int l=0;
         for (int i = 0; i < merged.size(); i++) {
             String s = ((JTextField)merged.get(i)).getText().trim();
             if (!"".equals(s)) l++;
         }
-        
+
         String[] result = new String[l];
         l = 0;
         for (int i = 0; i < merged.size(); i++) {
@@ -437,7 +437,7 @@ class FilesPane extends JPanel {
         }
         return result;
     }
-    
+
     private List merged;
     static final String OK = "OK";
 
@@ -454,7 +454,7 @@ class FilesPane extends JPanel {
                 showReportChooserDialog();
                 enableNext();
             }
-                
+
         }
     };
 
@@ -462,7 +462,7 @@ class FilesPane extends JPanel {
     private JButton[] buttons;
     private JButton nextBtn;
 
-    private JComboBox resultField;    
+    private JComboBox resultField;
 
     private JFileChooser xmlFileChooser;
     private ReportDirChooser reportDirChooser;

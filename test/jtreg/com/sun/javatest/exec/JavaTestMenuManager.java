@@ -125,7 +125,7 @@ public abstract class JavaTestMenuManager {
     public static final int HELP_PRIMARY = 14;
     public static final int HELP_TESTSUITE = 15;
     public static final int HELP_ABOUT = 16;
-    
+
     public static final int TOOLS_OTHER = 17;
 
     private static final int NUM_POSITIONS = 18;

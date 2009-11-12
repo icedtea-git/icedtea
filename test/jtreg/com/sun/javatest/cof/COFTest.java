@@ -55,18 +55,18 @@ import com.sun.javatest.TestResult.ResultFileNotFoundFault;
  */
 
 /**
- * 
+ *
  *         The analysis setting is meant to allow remote groups to waive or
  *         accept the pass/fail status of the test using E-mail. For
  *         testcases, the analysis setting provides a default value to
  *         apply to the analysis the setting for all testcase results for
  *         this test.
- *       
- * 
+ *
+ *
  * <p>Java class for Test complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="Test">
  *   &lt;complexContent>
@@ -94,8 +94,8 @@ import com.sun.javatest.TestResult.ResultFileNotFoundFault;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 /*@XmlAccessorType(XmlAccessType.FIELD)
  @XmlType(name = "Test", propOrder = {
@@ -110,485 +110,485 @@ import com.sun.javatest.TestResult.ResultFileNotFoundFault;
  })*/
 public class COFTest extends COFItem {
 
-	private static final Date badDate = new Date(0);
+        private static final Date badDate = new Date(0);
 
-	private static final String[] cofStatus = new String[Status.NUM_STATES];
+        private static final String[] cofStatus = new String[Status.NUM_STATES];
 
-	static long count = 0;
+        static long count = 0;
 
-	private static DateFormat[] dateFormats;
+        private static DateFormat[] dateFormats;
 
-	protected static Pattern idPattern = Pattern
-			.compile(".*[^\\w\\.\\[\\]\\(\\)\\{\\},_\\-]([\\w\\.\\[\\]\\(\\)\\{\\},_\\-]+)");
+        protected static Pattern idPattern = Pattern
+                        .compile(".*[^\\w\\.\\[\\]\\(\\)\\{\\},_\\-]([\\w\\.\\[\\]\\(\\)\\{\\},_\\-]+)");
 
-	static boolean noTestCases = false;
+        static boolean noTestCases = false;
 
-	protected static Pattern testCasePattern = Pattern
-			.compile("^(\\S+): (Passed\\.|Failed\\.|Error\\.|Not\\ run\\.)(.*)");
+        protected static Pattern testCasePattern = Pattern
+                        .compile("^(\\S+): (Passed\\.|Failed\\.|Error\\.|Not\\ run\\.)(.*)");
 
-	static LinkedHashMap xmlAttributes;
+        static LinkedHashMap xmlAttributes;
 
-	static LinkedHashMap xmlElements;
+        static LinkedHashMap xmlElements;
 
-	static String xmlTagName;
+        static String xmlTagName;
 
-	static {
-		xmlElements = new LinkedHashMap();
-		xmlAttributes = new LinkedHashMap();
-		xmlElements.put("name", "name");
-		xmlElements.put("appuse", "appuse");
-		xmlElements.put("status", "status");
-		xmlElements.put("testcases", "testcases");
-		xmlElements.put("starttime", "starttime");
-		xmlElements.put("endtime", "endtime");
-		xmlElements.put("attributes", "attributes");
-		xmlElements.put("description", "description");
-		//		xmlAttributes.put("analysis", "analysis");
-		xmlAttributes.put("id", "id");
-		xmlTagName = "test";
+        static {
+                xmlElements = new LinkedHashMap();
+                xmlAttributes = new LinkedHashMap();
+                xmlElements.put("name", "name");
+                xmlElements.put("appuse", "appuse");
+                xmlElements.put("status", "status");
+                xmlElements.put("testcases", "testcases");
+                xmlElements.put("starttime", "starttime");
+                xmlElements.put("endtime", "endtime");
+                xmlElements.put("attributes", "attributes");
+                xmlElements.put("description", "description");
+                //              xmlAttributes.put("analysis", "analysis");
+                xmlAttributes.put("id", "id");
+                xmlTagName = "test";
 
-	}
-	static {
-		cofStatus[Status.PASSED] = "pass";
-		cofStatus[Status.FAILED] = "fail";
-		cofStatus[Status.ERROR] = "error";
-		cofStatus[Status.NOT_RUN] = "did_not_run";
-	}
+        }
+        static {
+                cofStatus[Status.PASSED] = "pass";
+                cofStatus[Status.FAILED] = "fail";
+                cofStatus[Status.ERROR] = "error";
+                cofStatus[Status.NOT_RUN] = "did_not_run";
+        }
 
-	//    @XmlAttribute
-	protected String analysis;
+        //    @XmlAttribute
+        protected String analysis;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
-	protected List/*<String>*/appuse;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
+        protected List/*<String>*/appuse;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
-	protected COFTestAttributes attributes;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        protected COFTestAttributes attributes;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
-	protected String description;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        protected String description;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", type = String.class)
-	//    @XmlJavaTypeAdapter(Adapter1 .class)
-	protected Date endtime;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", type = String.class)
+        //    @XmlJavaTypeAdapter(Adapter1 .class)
+        protected Date endtime;
 
-	//    @XmlAttribute(required = true)
-	protected String id;
+        //    @XmlAttribute(required = true)
+        protected String id;
 
-	final long idNum = count++;
+        final long idNum = count++;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
-	protected String name;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
+        protected String name;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", type = String.class)
-	//    @XmlJavaTypeAdapter(Adapter1 .class)
-	protected Date starttime;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", type = String.class)
+        //    @XmlJavaTypeAdapter(Adapter1 .class)
+        protected Date starttime;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
-	protected COFStatus status;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        protected COFStatus status;
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
-	protected COFTestCases testcases;
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema")
+        protected COFTestCases testcases;
 
-	private COFData cofData;
+        private COFData cofData;
 
-	COFTest(TestResult tr, COFData data) {
-		cofData = data;
-		initDateFormats();
-		status = new COFStatus();
-		status.setValue(cofStatus[tr.getStatus().getType()]);
-		status.setActual(tr.getStatus().getReason());
-		fillTestCases(tr);
-		setName(tr.getTestName());
-		setStarttime(parseDate(tr, TestResult.START));
-		setEndtime(parseDate(tr, TestResult.END));
-		attributes = new COFTestAttributes();
-		attributes.getAttribute().add(
-				new COFTestAttribute("logfile", tr.getWorkRelativePath()));
-		String jo = cofData.get("jvmopt", null);
-		if (jo != null) {
-			attributes.getAttribute().add(new COFTestAttribute("javaopt", jo));
-		}
+        COFTest(TestResult tr, COFData data) {
+                cofData = data;
+                initDateFormats();
+                status = new COFStatus();
+                status.setValue(cofStatus[tr.getStatus().getType()]);
+                status.setActual(tr.getStatus().getReason());
+                fillTestCases(tr);
+                setName(tr.getTestName());
+                setStarttime(parseDate(tr, TestResult.START));
+                setEndtime(parseDate(tr, TestResult.END));
+                attributes = new COFTestAttributes();
+                attributes.getAttribute().add(
+                                new COFTestAttribute("logfile", tr.getWorkRelativePath()));
+                String jo = cofData.get("jvmopt", null);
+                if (jo != null) {
+                        attributes.getAttribute().add(new COFTestAttribute("javaopt", jo));
+                }
 
-	}
+        }
 
-	protected void fillTestCases(TestResult tr) {
-		if (noTestCases)
-			return;
-		testcases = new COFTestCases();
-		int sCount = tr.getSectionCount();
-		if (sCount == 0 && tr.getStatus().getType() != Status.NOT_RUN ) {
-			try {
-				tr = new TestResult(new File(cofData.get("workdir") + File.separator + tr.getWorkRelativePath()));
-				sCount = tr.getSectionCount();
-			} catch (ResultFileNotFoundFault e) {
-				// warning is out from somewhere else, but again
-				System.err.println(e.getMessage());
-			} catch (ReloadFault e) {
-				System.err.println(tr.getFile());
-			}
-		}
-		for (int i = 0; i < sCount; i++) {
-			try {
-				String sectionOut = tr.getSection(i).getOutput("out1");
-				if (sectionOut == null)
-					continue;
-				BufferedReader reader = new BufferedReader(new StringReader(
-						sectionOut));
-				String s = reader.readLine();
-				while (s != null) {
-					Matcher m = testCasePattern.matcher(s);
-					if (m.matches()) {
-						COFTestCase tc = new COFTestCase();
-						COFStatus status = new COFStatus();
-						tc.setName(m.group(1));
-						status.setValue(cofStatus[Status.parse(m.group(2))
-								.getType()]);
-						status.setActual(m.group(3));
-						tc.setStatus(status);
-						testcases.getTestcase().add(tc);
-					}
-					s = reader.readLine();
-				}
-			} catch (ReloadFault e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
+        protected void fillTestCases(TestResult tr) {
+                if (noTestCases)
+                        return;
+                testcases = new COFTestCases();
+                int sCount = tr.getSectionCount();
+                if (sCount == 0 && tr.getStatus().getType() != Status.NOT_RUN ) {
+                        try {
+                                tr = new TestResult(new File(cofData.get("workdir") + File.separator + tr.getWorkRelativePath()));
+                                sCount = tr.getSectionCount();
+                        } catch (ResultFileNotFoundFault e) {
+                                // warning is out from somewhere else, but again
+                                System.err.println(e.getMessage());
+                        } catch (ReloadFault e) {
+                                System.err.println(tr.getFile());
+                        }
+                }
+                for (int i = 0; i < sCount; i++) {
+                        try {
+                                String sectionOut = tr.getSection(i).getOutput("out1");
+                                if (sectionOut == null)
+                                        continue;
+                                BufferedReader reader = new BufferedReader(new StringReader(
+                                                sectionOut));
+                                String s = reader.readLine();
+                                while (s != null) {
+                                        Matcher m = testCasePattern.matcher(s);
+                                        if (m.matches()) {
+                                                COFTestCase tc = new COFTestCase();
+                                                COFStatus status = new COFStatus();
+                                                tc.setName(m.group(1));
+                                                status.setValue(cofStatus[Status.parse(m.group(2))
+                                                                .getType()]);
+                                                status.setActual(m.group(3));
+                                                tc.setStatus(status);
+                                                testcases.getTestcase().add(tc);
+                                        }
+                                        s = reader.readLine();
+                                }
+                        } catch (ReloadFault e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                        } catch (IOException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                        }
+                }
+        }
 
-	/**
-	 * Gets the value of the analysis property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public String getAnalysis() {
-		if (analysis == null) {
-			return "accept";
-		} else {
-			return analysis;
-		}
-	}
+        /**
+         * Gets the value of the analysis property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getAnalysis() {
+                if (analysis == null) {
+                        return "accept";
+                } else {
+                        return analysis;
+                }
+        }
 
-	/**
-	 * Gets the value of the appuse property.
-	 * 
-	 * <p>
-	 * This accessor method returns a reference to the live list,
-	 * not a snapshot. Therefore any modification you make to the
-	 * returned list will be present inside the JAXB object.
-	 * This is why there is not a <CODE>set</CODE> method for the appuse property.
-	 * 
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * <pre>
-	 *    getAppuse().add(newItem);
-	 * </pre>
-	 * 
-	 * 
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list
-	 * {@link String }
-	 * 
-	 * 
-	 */
-	public List/*<String>*/getAppuse() {
-		if (appuse == null) {
-			appuse = new ArrayList/*<String>*/();
-		}
-		return this.appuse;
-	}
+        /**
+         * Gets the value of the appuse property.
+         *
+         * <p>
+         * This accessor method returns a reference to the live list,
+         * not a snapshot. Therefore any modification you make to the
+         * returned list will be present inside the JAXB object.
+         * This is why there is not a <CODE>set</CODE> method for the appuse property.
+         *
+         * <p>
+         * For example, to add a new item, do as follows:
+         * <pre>
+         *    getAppuse().add(newItem);
+         * </pre>
+         *
+         *
+         * <p>
+         * Objects of the following type(s) are allowed in the list
+         * {@link String }
+         *
+         *
+         */
+        public List/*<String>*/getAppuse() {
+                if (appuse == null) {
+                        appuse = new ArrayList/*<String>*/();
+                }
+                return this.appuse;
+        }
 
-	/**
-	 * Gets the value of the attributes property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link COFTestAttributes }
-	 *     
-	 */
-	public COFTestAttributes getAttributes() {
-		return attributes;
-	}
+        /**
+         * Gets the value of the attributes property.
+         *
+         * @return
+         *     possible object is
+         *     {@link COFTestAttributes }
+         *
+         */
+        public COFTestAttributes getAttributes() {
+                return attributes;
+        }
 
-	/**
-	 * Gets the value of the description property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public String getDescription() {
-		return description;
-	}
+        /**
+         * Gets the value of the description property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getDescription() {
+                return description;
+        }
 
-	/**
-	 * Gets the value of the endtime property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public Date getEndtime() {
-		return endtime;
-	}
+        /**
+         * Gets the value of the endtime property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public Date getEndtime() {
+                return endtime;
+        }
 
-	/**
-	 * Gets the value of the id property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public String getId() {
-		if (id != null)
-			return id;
-		if (name == null)
-			throw new IllegalStateException("Name was not set.");
-		Matcher m = idPattern.matcher(name);
-		if (m.matches())
-			id = m.group(1) + ":" + idNum;
-		else
-			id = "test:" + idNum;
-		return id;
-	}
+        /**
+         * Gets the value of the id property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getId() {
+                if (id != null)
+                        return id;
+                if (name == null)
+                        throw new IllegalStateException("Name was not set.");
+                Matcher m = idPattern.matcher(name);
+                if (m.matches())
+                        id = m.group(1) + ":" + idNum;
+                else
+                        id = "test:" + idNum;
+                return id;
+        }
 
-	LinkedHashMap getItemAttributes() {
-		return xmlAttributes;
-	}
+        LinkedHashMap getItemAttributes() {
+                return xmlAttributes;
+        }
 
-	LinkedHashMap getItemElements() {
-		return xmlElements;
-	}
+        LinkedHashMap getItemElements() {
+                return xmlElements;
+        }
 
-	String getItemTagName() {
-		return xmlTagName;
-	}
+        String getItemTagName() {
+                return xmlTagName;
+        }
 
-	/**
-	 * Gets the value of the name property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public String getName() {
-		return name;
-	}
+        /**
+         * Gets the value of the name property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public String getName() {
+                return name;
+        }
 
-	/**
-	 * Gets the value of the starttime property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link String }
-	 *     
-	 */
-	public Date getStarttime() {
-		return starttime;
-	}
+        /**
+         * Gets the value of the starttime property.
+         *
+         * @return
+         *     possible object is
+         *     {@link String }
+         *
+         */
+        public Date getStarttime() {
+                return starttime;
+        }
 
-	/**
-	 * Gets the value of the status property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link COFStatus }
-	 *     
-	 */
-	public COFStatus getStatus() {
-		return status;
-	}
+        /**
+         * Gets the value of the status property.
+         *
+         * @return
+         *     possible object is
+         *     {@link COFStatus }
+         *
+         */
+        public COFStatus getStatus() {
+                return status;
+        }
 
-	/**
-	 * Gets the value of the testcases property.
-	 * 
-	 * @return
-	 *     possible object is
-	 *     {@link COFTestCases }
-	 *     
-	 */
-	public COFTestCases getTestcases() {
-		return testcases;
-	}
+        /**
+         * Gets the value of the testcases property.
+         *
+         * @return
+         *     possible object is
+         *     {@link COFTestCases }
+         *
+         */
+        public COFTestCases getTestcases() {
+                return testcases;
+        }
 
-	/**
-	 * Sets the value of the id property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	//	public void setId(String value) {
-	//		this.id = value;
-	//	}
-	private void initDateFormats() {
-		Vector v = new Vector();
+        /**
+         * Sets the value of the id property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        //      public void setId(String value) {
+        //              this.id = value;
+        //      }
+        private void initDateFormats() {
+                Vector v = new Vector();
 
-		// generic Java default
-		// 10-Sep-99 3:25:11 PM
-		v.addElement(DateFormat.getDateTimeInstance());
+                // generic Java default
+                // 10-Sep-99 3:25:11 PM
+                v.addElement(DateFormat.getDateTimeInstance());
 
-		// standard IETF date syntax
-		// Fri, 10 September 1999 03:25:12 PDT
-		v.addElement(new SimpleDateFormat("EEE, dd MMMM yyyy HH:mm:ss zzz"));
+                // standard IETF date syntax
+                // Fri, 10 September 1999 03:25:12 PDT
+                v.addElement(new SimpleDateFormat("EEE, dd MMMM yyyy HH:mm:ss zzz"));
 
-		// Unix C time
-		// Fri Sep 10 14:41:37 PDT 1999
-		v.addElement(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy"));
+                // Unix C time
+                // Fri Sep 10 14:41:37 PDT 1999
+                v.addElement(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy"));
 
-		// XML time
-		// 1999-09-10T03:25:12.123 (ISO 8601, sect 5.4)
-		v.addElement(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS"));
+                // XML time
+                // 1999-09-10T03:25:12.123 (ISO 8601, sect 5.4)
+                v.addElement(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS"));
 
-		// allow user-specified format
-		String s = System.getProperty("javatest.date.format");
-		if (s != null)
-			v.addElement(new SimpleDateFormat(s));
+                // allow user-specified format
+                String s = System.getProperty("javatest.date.format");
+                if (s != null)
+                        v.addElement(new SimpleDateFormat(s));
 
-		dateFormats = new DateFormat[v.size()];
-		v.copyInto(dateFormats);
-	}
+                dateFormats = new DateFormat[v.size()];
+                v.copyInto(dateFormats);
+        }
 
-	private Date parseDate(String s) {
-		for (int i = 0; i < dateFormats.length; i++) {
-			try {
-				Date d = dateFormats[i].parse(s);
-				// successfully parsed the date; shuffle the format to the front
-				// to speed up future parses, assuming dates will likely be similar
-				if (i > 0) {
-					DateFormat tmp = dateFormats[i];
-					System.arraycopy(dateFormats, 0, dateFormats, 1, i);
-					dateFormats[0] = tmp;
-				}
-				return d;
-			} catch (ParseException e) {
-				//System.err.println("pattern: " + ((SimpleDateFormat)dateFormats[i]).toPattern());
-				//System.err.println("  value: " + s);
-				//System.err.println("example: " + dateFormats[i].format(new Date()));
-			}
-		}
+        private Date parseDate(String s) {
+                for (int i = 0; i < dateFormats.length; i++) {
+                        try {
+                                Date d = dateFormats[i].parse(s);
+                                // successfully parsed the date; shuffle the format to the front
+                                // to speed up future parses, assuming dates will likely be similar
+                                if (i > 0) {
+                                        DateFormat tmp = dateFormats[i];
+                                        System.arraycopy(dateFormats, 0, dateFormats, 1, i);
+                                        dateFormats[0] = tmp;
+                                }
+                                return d;
+                        } catch (ParseException e) {
+                                //System.err.println("pattern: " + ((SimpleDateFormat)dateFormats[i]).toPattern());
+                                //System.err.println("  value: " + s);
+                                //System.err.println("example: " + dateFormats[i].format(new Date()));
+                        }
+                }
 
-		return badDate;
-	}
+                return badDate;
+        }
 
-	private Date parseDate(TestResult tr, String key) {
-		try {
-			String s = tr.getProperty(key);
-			if (s != null && s.length() > 0) {
-				return parseDate(s);
-			}
-		} catch (TestResult.Fault e) {
-			System.err.println(e);
-		}
-		// default, if no entry in test result, or if error reloading test result
-		return badDate;
-	}
+        private Date parseDate(TestResult tr, String key) {
+                try {
+                        String s = tr.getProperty(key);
+                        if (s != null && s.length() > 0) {
+                                return parseDate(s);
+                        }
+                } catch (TestResult.Fault e) {
+                        System.err.println(e);
+                }
+                // default, if no entry in test result, or if error reloading test result
+                return badDate;
+        }
 
-	/**
-	 * Sets the value of the analysis property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	public void setAnalysis(String value) {
-		this.analysis = value;
-	}
+        /**
+         * Sets the value of the analysis property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setAnalysis(String value) {
+                this.analysis = value;
+        }
 
-	/**
-	 * Sets the value of the attributes property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link COFTestAttributes }
-	 *     
-	 */
-	public void setAttributes(COFTestAttributes value) {
-		this.attributes = value;
-	}
+        /**
+         * Sets the value of the attributes property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link COFTestAttributes }
+         *
+         */
+        public void setAttributes(COFTestAttributes value) {
+                this.attributes = value;
+        }
 
-	/**
-	 * Sets the value of the description property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	public void setDescription(String value) {
-		this.description = value;
-	}
+        /**
+         * Sets the value of the description property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setDescription(String value) {
+                this.description = value;
+        }
 
-	/**
-	 * Sets the value of the endtime property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	public void setEndtime(Date value) {
-		this.endtime = value;
-	}
+        /**
+         * Sets the value of the endtime property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setEndtime(Date value) {
+                this.endtime = value;
+        }
 
-	/**
-	 * Sets the value of the name property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	public void setName(String value) {
-		this.name = value;
-	}
+        /**
+         * Sets the value of the name property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setName(String value) {
+                this.name = value;
+        }
 
-	/**
-	 * Sets the value of the starttime property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link String }
-	 *     
-	 */
-	public void setStarttime(Date value) {
-		this.starttime = value;
-	}
+        /**
+         * Sets the value of the starttime property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link String }
+         *
+         */
+        public void setStarttime(Date value) {
+                this.starttime = value;
+        }
 
-	/**
-	 * Sets the value of the status property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link COFStatus }
-	 *     
-	 */
-	public void setStatus(COFStatus value) {
-		this.status = value;
-	}
+        /**
+         * Sets the value of the status property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link COFStatus }
+         *
+         */
+        public void setStatus(COFStatus value) {
+                this.status = value;
+        }
 
-	/**
-	 * Sets the value of the testcases property.
-	 * 
-	 * @param value
-	 *     allowed object is
-	 *     {@link COFTestCases }
-	 *     
-	 */
-	public void setTestcases(COFTestCases value) {
-		this.testcases = value;
-	}
+        /**
+         * Sets the value of the testcases property.
+         *
+         * @param value
+         *     allowed object is
+         *     {@link COFTestCases }
+         *
+         */
+        public void setTestcases(COFTestCases value) {
+                this.testcases = value;
+        }
 
 }

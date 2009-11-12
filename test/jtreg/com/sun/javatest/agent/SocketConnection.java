@@ -38,7 +38,7 @@ import com.sun.javatest.util.Timer;
 /**
  * A connection via a TCP/IP socket.
  */
-public class SocketConnection implements Connection 
+public class SocketConnection implements Connection
 {
     /**
      * Create a connection via a TCP/IP socket.
@@ -47,11 +47,11 @@ public class SocketConnection implements Connection
      * @throws NullPointerException if socket is null
      */
     public SocketConnection(Socket socket) throws IOException {
-	if (socket == null)
-	    throw new NullPointerException();
-	this.socket = socket;
-	socketInput = socket.getInputStream();
-	socketOutput = socket.getOutputStream();
+        if (socket == null)
+            throw new NullPointerException();
+        this.socket = socket;
+        socketInput = socket.getInputStream();
+        socketOutput = socket.getOutputStream();
     }
 
     /**
@@ -61,101 +61,101 @@ public class SocketConnection implements Connection
      * @throws IOException if an error occurs opening the socket.
      */
     public SocketConnection(String host, int port) throws IOException {
-	if (host == null)
-	    throw new NullPointerException();
+        if (host == null)
+            throw new NullPointerException();
         socket = new Socket(host, port);
-	socketInput = socket.getInputStream();
-	socketOutput = socket.getOutputStream();
+        socketInput = socket.getInputStream();
+        socketOutput = socket.getOutputStream();
     }
-    
+
     public String getName() {
-	if (name == null) {
-	    StringBuffer sb = new StringBuffer(32);
-	    sb.append(getHostName(socket.getInetAddress()));
-	    sb.append(",port=");
-	    sb.append(socket.getPort());
-	    sb.append(",localport=");
-	    sb.append(socket.getLocalPort());
-	    name = sb.toString();
-	}
-	return name;
+        if (name == null) {
+            StringBuffer sb = new StringBuffer(32);
+            sb.append(getHostName(socket.getInetAddress()));
+            sb.append(",port=");
+            sb.append(socket.getPort());
+            sb.append(",localport=");
+            sb.append(socket.getLocalPort());
+            name = sb.toString();
+        }
+        return name;
     }
 
     public InputStream getInputStream() {
-	return socketInput;
+        return socketInput;
     }
 
     public OutputStream getOutputStream() {
-	return socketOutput;
+        return socketOutput;
     }
-    
-    public synchronized void close() throws IOException {
-	socket.close();
-	socketInput.close();
-	socketOutput.close();
-	closed = true;
 
-	if (waitThread != null)
-	    waitThread.interrupt();
+    public synchronized void close() throws IOException {
+        socket.close();
+        socketInput.close();
+        socketOutput.close();
+        closed = true;
+
+        if (waitThread != null)
+            waitThread.interrupt();
     }
 
     public synchronized boolean isClosed() {
-	return closed;
+        return closed;
     }
 
     public void waitUntilClosed(int timeout) throws InterruptedException {
-	synchronized (this) {
-	    waitThread = Thread.currentThread();
-	}
+        synchronized (this) {
+            waitThread = Thread.currentThread();
+        }
 
-	Timer.Timeable cb = new Timer.Timeable() {
-	    public void timeout() {
-		synchronized (SocketConnection.this) {
-		    if (waitThread != null)
-			waitThread.interrupt();
-		    try {
-			socketInput.close();
-		    }
-		    catch (IOException ignore) {
-		    }
-		    try {
-			socketOutput.close();
-		    }
-		    catch (IOException ignore) {
-		    }
-		}
-	    }
-	};
+        Timer.Timeable cb = new Timer.Timeable() {
+            public void timeout() {
+                synchronized (SocketConnection.this) {
+                    if (waitThread != null)
+                        waitThread.interrupt();
+                    try {
+                        socketInput.close();
+                    }
+                    catch (IOException ignore) {
+                    }
+                    try {
+                        socketOutput.close();
+                    }
+                    catch (IOException ignore) {
+                    }
+                }
+            }
+        };
 
-	Timer.Entry e = timer.requestDelayedCallback(cb, timeout);
-	try {
-	    while (true) {
-		try {
-		    int i = socketInput.read();
-		    if (i == -1)
-			break;		    
-		}
-		catch (IOException ignore) {
-		    break;
-		}
-	    }
-	}
-	finally {
-	    timer.cancel(e);
+        Timer.Entry e = timer.requestDelayedCallback(cb, timeout);
+        try {
+            while (true) {
+                try {
+                    int i = socketInput.read();
+                    if (i == -1)
+                        break;
+                }
+                catch (IOException ignore) {
+                    break;
+                }
+            }
+        }
+        finally {
+            timer.cancel(e);
 
-	    synchronized (this) {
-		waitThread = null;
-	    }
-	}
+            synchronized (this) {
+                waitThread = null;
+            }
+        }
     }
 
     private static String getHostName(InetAddress addr) {
-	String s = (String)(addressCache.get(addr));
-	if (s == null) {
-	    s = addr.getHostName();
-	    addressCache.put(addr, s);
-	}
-	return s;
+        String s = (String)(addressCache.get(addr));
+        if (s == null) {
+            s = addr.getHostName();
+            addressCache.put(addr, s);
+        }
+        return s;
     }
 
     private final Socket socket;

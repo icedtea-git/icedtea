@@ -32,47 +32,47 @@ import java.awt.TextField;
 
 class ActiveModeOptions extends ModeOptions {
     ActiveModeOptions() {
-	super("active");
+        super("active");
 
-	GridBagConstraints c = new GridBagConstraints();
-	
-	Label hostLabel = new Label("host:");
-	add(hostLabel, c);
-	
-	hostField = new TextField(20);
-	c.weightx = 1.0;
-	c.fill = GridBagConstraints.HORIZONTAL;
-	add(hostField, c);
-	
-	portLabel = new Label("port:");
-	c.weightx = 0;
-	add(portLabel, c);
-	
-	String defActPort = Integer.toString(Agent.defaultActivePort);
-	portField = new TextField(defActPort, 5);
-	add(portField, c);
+        GridBagConstraints c = new GridBagConstraints();
+
+        Label hostLabel = new Label("host:");
+        add(hostLabel, c);
+
+        hostField = new TextField(20);
+        c.weightx = 1.0;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        add(hostField, c);
+
+        portLabel = new Label("port:");
+        c.weightx = 0;
+        add(portLabel, c);
+
+        String defActPort = Integer.toString(Agent.defaultActivePort);
+        portField = new TextField(defActPort, 5);
+        add(portField, c);
     }
-    
+
     ConnectionFactory createConnectionFactory(int concurrency) throws BadValue {
-	String host = hostField.getText();
-	if (host == null || host.length() == 0)
-	    throw new BadValue("no host name set");
+        String host = hostField.getText();
+        if (host == null || host.length() == 0)
+            throw new BadValue("no host name set");
 
-	int port = getInt("port", portField);
-	if (port < 0)
-	    throw new BadValue("port may not be negative");
+        int port = getInt("port", portField);
+        if (port < 0)
+            throw new BadValue("port may not be negative");
 
-	return new ActiveConnectionFactory(host, port);
+        return new ActiveConnectionFactory(host, port);
     }
-    
+
     void setHost(String host) {
-	hostField.setText(host);
+        hostField.setText(host);
     }
-    
+
     void setPort(int port) {
-	portField.setText(Integer.toString(port));
+        portField.setText(Integer.toString(port));
     }
-    
+
     private TextField hostField;
     private Label portLabel;
     private TextField portField;

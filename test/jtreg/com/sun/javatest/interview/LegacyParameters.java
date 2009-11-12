@@ -41,12 +41,12 @@ public class LegacyParameters extends BasicInterviewParameters
      * @throws Interview.Fault if there is a problem instantiating the
      * interview.
      */
-    public LegacyParameters() 
-	throws Fault
+    public LegacyParameters()
+        throws Fault
     {
-	super("jtwiz");
-	setResourceBundle("i18n");
-	iEnvironment = new EnvironmentInterview(this);
+        super("jtwiz");
+        setResourceBundle("i18n");
+        iEnvironment = new EnvironmentInterview(this);
     }
 
     /**
@@ -55,18 +55,18 @@ public class LegacyParameters extends BasicInterviewParameters
      * @throws Interview.Fault if there is a problem instantiating the
      * interview.
      */
-    public LegacyParameters(TestSuite testSuite) 
-	throws Fault
+    public LegacyParameters(TestSuite testSuite)
+        throws Fault
     {
-	super("jtwiz", testSuite);
-	setResourceBundle("i18n");
-	iEnvironment = new EnvironmentInterview(this);
+        super("jtwiz", testSuite);
+        setResourceBundle("i18n");
+        iEnvironment = new EnvironmentInterview(this);
     }
 
     //--------------------------------------------------------------------------
 
     public Parameters.EnvParameters getEnvParameters() {
-	return iEnvironment;
+        return iEnvironment;
     }
 
     /**
@@ -79,7 +79,7 @@ public class LegacyParameters extends BasicInterviewParameters
      * @see #getEnvSuccessorQuestion
      */
     protected Question getEnvFirstQuestion() {
-	return callInterview(iEnvironment, getEnvSuccessorQuestion());
+        return callInterview(iEnvironment, getEnvSuccessorQuestion());
     }
 
     //--------------------------------------------------------------------------

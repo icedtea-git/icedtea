@@ -38,17 +38,17 @@ public interface QuestionRenderer
 {
     /**
      * Return a component that can be used to display a suitable response field
-     * for a question. 
+     * for a question.
      * @param q the question whose response field should appear in the component
      * @param listener a listener that should be invoked if the component supports
-     * an action like "Enter" to commit the response; should also be invoked with 
+     * an action like "Enter" to commit the response; should also be invoked with
      * an "edited" action when the value is changed.
      * @return a component that can be used to display a suitable response field
      */
     JComponent getQuestionRendererComponent(Question q, ActionListener listener);
 
     /**
-     * Get a string to display when the response to a question is invalid. 
+     * Get a string to display when the response to a question is invalid.
      * (i.e. isValid() is false or getNext() is null).
      * @param q the question which has an invalid response
      * @return a string to display when the response to a question is invalid.

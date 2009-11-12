@@ -36,7 +36,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 
 public class FileSystemTableModel extends AbstractTableModel  {
-    
+
     // Names of the columns.
     // TODO - i18!
     static protected String[]  cNames = {"File Name", "Name", "Description"};
@@ -52,8 +52,8 @@ public class FileSystemTableModel extends AbstractTableModel  {
     private LinkedHashMap fileData;
     private boolean allowTraversDirs;
     private File defTemplateDir;
-    
-    public FileSystemTableModel(String file, FileTableFilter flt, File defTemplateDir, boolean allowTraversDirs) { 
+
+    public FileSystemTableModel(String file, FileTableFilter flt, File defTemplateDir, boolean allowTraversDirs) {
         setFilter(flt);
         this.allowTraversDirs = allowTraversDirs;
         this.defTemplateDir = defTemplateDir;
@@ -62,7 +62,7 @@ public class FileSystemTableModel extends AbstractTableModel  {
 
     public void fireTableDataChanged() {
     }
-    
+
     public void resetTable(String file, FileTableFilter flt) {
         setFilter(flt);
         init(file);
@@ -73,7 +73,7 @@ public class FileSystemTableModel extends AbstractTableModel  {
         init(file);
         fireTableChanged(new TableModelEvent(this));
     }
-    
+
     public int getColumnCount() {
         return cNames.length;
     }
@@ -92,9 +92,9 @@ public class FileSystemTableModel extends AbstractTableModel  {
 
     private void init(String f) {
         File file = new File(f);
-        init(file);        
+        init(file);
     }
-    
+
     public File getCurrentDir() {
         return root.getFile();
     }
@@ -102,7 +102,7 @@ public class FileSystemTableModel extends AbstractTableModel  {
     private void init(final File file) {
         root = new FileTableNode(file, 'r');
         data = new ArrayList();
-        
+
 //        if(allowTraversDirs) {
 //            data.add(new FileTableNode(root.getFile(), 'u'));
 //        }
@@ -128,7 +128,7 @@ public class FileSystemTableModel extends AbstractTableModel  {
                 if (!lst[i].isDirectory()) {
                     if (filter == null || filter.isApplicableFile(lst[i])) {
                         data.add(new FileTableNode(lst[i], 'f'));
-                    } 
+                    }
                 }
             }   // for
         }
@@ -150,8 +150,8 @@ public class FileSystemTableModel extends AbstractTableModel  {
         if (rowIndex < 0 || rowIndex >= data.size() ) return null;
         return ((FileTableNode) data.get(rowIndex)).getFile();
     }
-    
-    
+
+
     public int getRowCount() {
         return data.size();
     }
@@ -165,7 +165,7 @@ public class FileSystemTableModel extends AbstractTableModel  {
     }
 
     private String[] getInfo(File file) {
-        
+
         if (fileData == null) fileData = new LinkedHashMap() {
                 protected boolean removeEldestEntry(Map.Entry eldest) {
                     return size() > 500;
@@ -177,7 +177,7 @@ public class FileSystemTableModel extends AbstractTableModel  {
             return value;
         }
 
-        // refresh    
+        // refresh
         try {
             String[] data = new String[] {"", ""};
             /*
@@ -187,7 +187,7 @@ public class FileSystemTableModel extends AbstractTableModel  {
                 if (ci != null) {
                     data = new String[] {ci.getName(), ci.getDescription()};
                 }
-                
+
             }
             */
             TemplateUtilities.ConfigInfo ci = TemplateUtilities.getConfigInfo(file);
@@ -197,7 +197,7 @@ public class FileSystemTableModel extends AbstractTableModel  {
             fileData.put(key, data);
             return data;
         }
-        catch  (Exception e) { 
+        catch  (Exception e) {
             return new String[] {"", ""};
         }
     }
@@ -206,40 +206,40 @@ public class FileSystemTableModel extends AbstractTableModel  {
         FileTableFilter(String ext) {
             extension = ext;
         }
-        
+
         protected boolean isApplicableFile(File f) {
             if (extension == null) return true;
             if (f.isDirectory()) return true;
             return f.getName().endsWith(extension);
         }
-    
+
         private String extension;
     }
 
 }
 
 
-class FileTableNode { 
-    
-    File file; 
+class FileTableNode {
+
+    File file;
 
     private char mode;
- 
-    public FileTableNode(File file, char mode) { 
-        this.file = file; 
+
+    public FileTableNode(File file, char mode) {
+        this.file = file;
         this.mode = mode;
     }
 
-    public String toString() { 
+    public String toString() {
         return file.getName();
     }
 
     public File getFile() {
-        return file; 
+        return file;
     }
 
     public char getMode() {
-        return mode; 
+        return mode;
     }
-    
+
 }

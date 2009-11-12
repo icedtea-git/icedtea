@@ -49,5 +49,5 @@ class TP_CustomSubpanel extends TP_Subpanel {
     protected void onCangedTestResult(TestResult currTest, boolean isActive) {
         ctrv.onCangedTestResult(currTest, isActive);
     }
-    
+
 }

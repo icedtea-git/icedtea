@@ -40,21 +40,21 @@ import java.util.logging.StreamHandler;
 import com.sun.javatest.util.I18NResourceBundle;
 
 public class WorkDirLogHandler extends StreamHandler {
-    
+
     private void open(File fname) throws IOException {
         bout =  new BufferedOutputStream(new FileOutputStream(fname.toString()));
         setOutputStream(bout);
         first = true;
     }
-    
+
     public WorkDirLogHandler(ObservedFile of) {
         setLevel(Level.ALL);
         setFormatter(new JTFormatter());
         pattern = of.getAbsolutePath();
         this.of = of;
     }
-    
-    
+
+
     public void publish(LogRecord record) {
         publish(record, null);
     }
@@ -89,11 +89,11 @@ public class WorkDirLogHandler extends StreamHandler {
             of.addToIndex(record, startOff, endOff, logName);
         }
     }
-    
+
     public String getPattern() {
         return pattern;
     }
-    
+
     public void close() {
         synchronized (WorkDirLogHandler.class) {
             if (bout != null) {
@@ -109,7 +109,7 @@ public class WorkDirLogHandler extends StreamHandler {
             }
         }
     }
-    
+
     public void eraseLogFile() throws IOException {
         synchronized (WorkDirLogHandler.class) {
             if (bout == null) {
@@ -136,13 +136,12 @@ public class WorkDirLogHandler extends StreamHandler {
             of.fireFileEvent(new FileEvent(of, FileEvent.ERASED));
         }
     }
-    
+
     private String pattern;
     private BufferedOutputStream bout;
     private ObservedFile of = null;
 
     private static I18NResourceBundle i18n = I18NResourceBundle.getBundleForClass(WorkDirLogHandler.class);
-    
+
     private boolean first;
 }
-

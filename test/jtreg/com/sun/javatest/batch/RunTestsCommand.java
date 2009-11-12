@@ -45,7 +45,7 @@ import com.sun.javatest.util.I18NResourceBundle;
 class RunTestsCommand extends Command
 {
     static String getName() {
-	return "runTests";
+        return "runTests";
     }
 
     private static final String DATE_OPTION = "date";
@@ -57,105 +57,105 @@ class RunTestsCommand extends Command
     private Harness harness;
 
     static void initVerboseOptions() {
-	VerboseCommand.addOption(DATE_OPTION, new HelpTree.Node(i18n, "runTests.verbose.date"));
-	VerboseCommand.addOption(NON_PASS_OPTION, new HelpTree.Node(i18n, "runTests.verbose.nonPass"));
-	VerboseCommand.addOption(START_OPTION, new HelpTree.Node(i18n, "runTests.verbose.start"));
-	VerboseCommand.addOption(FINISH_OPTION, new HelpTree.Node(i18n, "runTests.verbose.stop"));
-	VerboseCommand.addOption(PROGRESS_OPTION, new HelpTree.Node(i18n, "runTests.verbose.progress"));
+        VerboseCommand.addOption(DATE_OPTION, new HelpTree.Node(i18n, "runTests.verbose.date"));
+        VerboseCommand.addOption(NON_PASS_OPTION, new HelpTree.Node(i18n, "runTests.verbose.nonPass"));
+        VerboseCommand.addOption(START_OPTION, new HelpTree.Node(i18n, "runTests.verbose.start"));
+        VerboseCommand.addOption(FINISH_OPTION, new HelpTree.Node(i18n, "runTests.verbose.stop"));
+        VerboseCommand.addOption(PROGRESS_OPTION, new HelpTree.Node(i18n, "runTests.verbose.progress"));
     }
 
     RunTestsCommand() {
-	super(getName());
+        super(getName());
     }
 
     RunTestsCommand(Iterator argIter) {
-	super(getName());
+        super(getName());
     }
 
     public boolean isActionCommand() {
-	return true;
+        return true;
     }
 
     public void run(CommandContext ctx) throws Fault {
-	this.ctx = ctx;
+        this.ctx = ctx;
 
-	try {
-	    Parameters p = getConfig(ctx); // throws fault if not set
+        try {
+            Parameters p = getConfig(ctx); // throws fault if not set
 
-	    // might want to move harness down into CommandContext
-	    // to share with GUI
-	    Harness h = new Harness();
-	    harness = h;
+            // might want to move harness down into CommandContext
+            // to share with GUI
+            Harness h = new Harness();
+            harness = h;
 
-	    Harness.Observer[] observers = ctx.getHarnessObservers();
-	    for (int i = 0; i < observers.length; i++)
-		h.addObserver(observers[i]);
+            Harness.Observer[] observers = ctx.getHarnessObservers();
+            for (int i = 0; i < observers.length; i++)
+                h.addObserver(observers[i]);
 
-	    // should really merge VerboseObserver and BatchObserver
-	    VerboseObserver vo = new VerboseObserver(ctx);
-	    h.addObserver(vo);
+            // should really merge VerboseObserver and BatchObserver
+            VerboseObserver vo = new VerboseObserver(ctx);
+            h.addObserver(vo);
 
-	    BatchObserver bo = new BatchObserver();
-	    h.addObserver(bo);
-	    p.getTestSuite().getTestFinder().setErrorHandler(bo);
+            BatchObserver bo = new BatchObserver();
+            h.addObserver(bo);
+            p.getTestSuite().getTestFinder().setErrorHandler(bo);
 
-	    boolean ok = h.batch(p);
+            boolean ok = h.batch(p);
 
-	    if (bo.getFinderErrorCount() > 0) {
-		// other problems during run
-		ctx.printErrorMessage(i18n, "runTests.warnError");
-	    }
-	    
-	    showResultStats(bo.getStats());
+            if (bo.getFinderErrorCount() > 0) {
+                // other problems during run
+                ctx.printErrorMessage(i18n, "runTests.warnError");
+            }
 
-	    int testsFound = h.getTestsFoundCount();
+            showResultStats(bo.getStats());
 
-	    if (testsFound > 0)
-		ctx.printMessage(i18n, "runTests.resultsDone", p.getWorkDirectory().getPath());
+            int testsFound = h.getTestsFoundCount();
 
-	    int[] stats = bo.getStats();
+            if (testsFound > 0)
+                ctx.printMessage(i18n, "runTests.resultsDone", p.getWorkDirectory().getPath());
 
-	    if (!ok) {
-		if (testsFound > 0 &&
-		    testsFound != stats[Status.PASSED]) {
-		    // some tests are actually not passed, print
-		    // appropriate message
-		    ctx.printErrorMessage(i18n, "runTests.testsFailed");
-		}
-	    }
+            int[] stats = bo.getStats();
 
-	    ctx.addTestStats(stats);
-	}
-	catch (Harness.Fault e) {
-	    throw new Fault(i18n, "runTests.harnessError", e.getMessage());
-	}
-	catch (InterruptedException e) {
-	    throw new Fault(i18n, "runTests.interrupted");
-	}
+            if (!ok) {
+                if (testsFound > 0 &&
+                    testsFound != stats[Status.PASSED]) {
+                    // some tests are actually not passed, print
+                    // appropriate message
+                    ctx.printErrorMessage(i18n, "runTests.testsFailed");
+                }
+            }
+
+            ctx.addTestStats(stats);
+        }
+        catch (Harness.Fault e) {
+            throw new Fault(i18n, "runTests.harnessError", e.getMessage());
+        }
+        catch (InterruptedException e) {
+            throw new Fault(i18n, "runTests.interrupted");
+        }
     }
 
     private void showResultStats(int[] stats) {
-	int p = stats[Status.PASSED];
-	int f = stats[Status.FAILED];
-	int e = stats[Status.ERROR];
-	int nr = stats[Status.NOT_RUN] =
-	    harness.getTestsFoundCount() - p - f - e;
+        int p = stats[Status.PASSED];
+        int f = stats[Status.FAILED];
+        int e = stats[Status.ERROR];
+        int nr = stats[Status.NOT_RUN] =
+            harness.getTestsFoundCount() - p - f - e;
 
 
-	if (p + f + e + nr == 0)
-	    ctx.printMessage(i18n, "runTests.noTests");
-	else {
-	    ctx.printMessage(i18n, "runTests.tests",
-		      new Object[] {
-			  new Integer(p),
-			  new Integer((p > 0) && (f + e + nr > 0) ? 1 : 0),
-			  new Integer(f),
-			  new Integer((f > 0) && (e + nr > 0) ? 1 : 0),
-			  new Integer(e),
-			  new Integer((e > 0) && (nr > 0) ? 1 : 0),
-			  new Integer(nr)
-			      });
-	}
+        if (p + f + e + nr == 0)
+            ctx.printMessage(i18n, "runTests.noTests");
+        else {
+            ctx.printMessage(i18n, "runTests.tests",
+                      new Object[] {
+                          new Integer(p),
+                          new Integer((p > 0) && (f + e + nr > 0) ? 1 : 0),
+                          new Integer(f),
+                          new Integer((f > 0) && (e + nr > 0) ? 1 : 0),
+                          new Integer(e),
+                          new Integer((e > 0) && (nr > 0) ? 1 : 0),
+                          new Integer(nr)
+                              });
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -166,251 +166,251 @@ class RunTestsCommand extends Command
 
     //-------------------------------------------------------------------------
 
-    private class BatchObserver 
-	implements Harness.Observer, TestFinder.ErrorHandler {
+    private class BatchObserver
+        implements Harness.Observer, TestFinder.ErrorHandler {
 
-	int[] getStats() {
-	    return stats;
-	}
+        int[] getStats() {
+            return stats;
+        }
 
-	int getFinderErrorCount() {
-	    return finderErrors;
-	}
-	
-	public void startingTestRun(Parameters params) {
-	    stats = new int[Status.NUM_STATES];
-	}
+        int getFinderErrorCount() {
+            return finderErrors;
+        }
 
-	public void startingTest(TestResult tr) { }
+        public void startingTestRun(Parameters params) {
+            stats = new int[Status.NUM_STATES];
+        }
 
-	public void finishedTest(TestResult tr) { 
-	    stats[tr.getStatus().getType()]++; 
-	}
+        public void startingTest(TestResult tr) { }
 
-	public void stoppingTestRun() { }
+        public void finishedTest(TestResult tr) {
+            stats[tr.getStatus().getType()]++;
+        }
 
-	public void finishedTesting() { }
-	public void finishedTestRun(boolean allOK) { }
+        public void stoppingTestRun() { }
 
-	public void error(String msg) {
-	    ctx.printMessage(i18n, "runTests.error", msg);
-	    finderErrors++;
-	}
+        public void finishedTesting() { }
+        public void finishedTestRun(boolean allOK) { }
 
-	private int[] stats;
-	private int finderErrors;
+        public void error(String msg) {
+            ctx.printMessage(i18n, "runTests.error", msg);
+            finderErrors++;
+        }
+
+        private int[] stats;
+        private int finderErrors;
     }
 
     private class VerboseObserver implements Harness.Observer
     {
-	VerboseObserver(CommandContext ctx) {
-	    this.ctx = ctx;
-	    this.out = ctx.getLogWriter();
-	    
-	    df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
-						DateFormat.MEDIUM);
-	    ctx.addHarnessObserver(this);
-	    
-	    boolean defaultFlag = ctx.getVerboseOptionValue("default", false);
-	    options = new boolean[OPTION_COUNT];
-	    options[NO_DATE] = !ctx.isVerboseTimestampEnabled();
-	    options[NON_PASS] = ctx.getVerboseOptionValue(NON_PASS_OPTION, false);
-	    options[START] = ctx.getVerboseOptionValue(START_OPTION, false);
-	    options[FINISH] = ctx.getVerboseOptionValue(FINISH_OPTION, false);
-	    options[PROGRESS] = ctx.getVerboseOptionValue(PROGRESS_OPTION, defaultFlag);
-	}
+        VerboseObserver(CommandContext ctx) {
+            this.ctx = ctx;
+            this.out = ctx.getLogWriter();
 
-	public boolean isVerbose(int kind) {
-	    if (quiet_flag)
-		return false;
+            df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
+                                                DateFormat.MEDIUM);
+            ctx.addHarnessObserver(this);
 
-	    if (max_flag)
-		return true;
+            boolean defaultFlag = ctx.getVerboseOptionValue("default", false);
+            options = new boolean[OPTION_COUNT];
+            options[NO_DATE] = !ctx.isVerboseTimestampEnabled();
+            options[NON_PASS] = ctx.getVerboseOptionValue(NON_PASS_OPTION, false);
+            options[START] = ctx.getVerboseOptionValue(START_OPTION, false);
+            options[FINISH] = ctx.getVerboseOptionValue(FINISH_OPTION, false);
+            options[PROGRESS] = ctx.getVerboseOptionValue(PROGRESS_OPTION, defaultFlag);
+        }
 
-	    if (kind < OPTION_COUNT)
-		return options[kind];
-	    else
-		return false;
-	}
+        public boolean isVerbose(int kind) {
+            if (quiet_flag)
+                return false;
 
-	private void printTimestamp() {
-	    if (quiet_flag || options[NO_DATE])
-		return;
+            if (max_flag)
+                return true;
 
-	    out.print(df.format(new Date()));
-	    out.print(" ");
-	}
+            if (kind < OPTION_COUNT)
+                return options[kind];
+            else
+                return false;
+        }
 
-	// ---- Harness.Observer ----
-	public void startingTestRun(Parameters params) {
-	    stats = new int[Status.NUM_STATES];
+        private void printTimestamp() {
+            if (quiet_flag || options[NO_DATE])
+                return;
 
-	    if (!quiet_flag) {
-		if (progressOnline)
-		    out.println();
-		printTimestamp();
-		ctx.printMessage(i18n, "cmgr.verb.strt", 
-		    params.getEnv().getName());
-		out.flush();
-		progressOnline = false;
-	    }
-	}
+            out.print(df.format(new Date()));
+            out.print(" ");
+        }
 
-	public void startingTest(TestResult tr) {
-	    if (!isVerbose(START))
-		return;
+        // ---- Harness.Observer ----
+        public void startingTestRun(Parameters params) {
+            stats = new int[Status.NUM_STATES];
 
-	    if (progressOnline)
-		out.println();
+            if (!quiet_flag) {
+                if (progressOnline)
+                    out.println();
+                printTimestamp();
+                ctx.printMessage(i18n, "cmgr.verb.strt",
+                    params.getEnv().getName());
+                out.flush();
+                progressOnline = false;
+            }
+        }
 
-	    printTimestamp();
-	    ctx.printMessage(i18n, "cmgr.verb.tsts", tr.getTestName());
-	    out.flush();
+        public void startingTest(TestResult tr) {
+            if (!isVerbose(START))
+                return;
 
-	    progressOnline = false;
-	}
+            if (progressOnline)
+                out.println();
 
-	public void finishedTest(TestResult tr) {
-	    Status s = tr.getStatus();
-	    stats[s.getType()]++;
+            printTimestamp();
+            ctx.printMessage(i18n, "cmgr.verb.tsts", tr.getTestName());
+            out.flush();
 
-	    switch(s.getType()) {
-		case Status.FAILED:
-		case Status.ERROR:
-		    if (isVerbose(NON_PASS) || isVerbose(FINISH)) {
-			printFinish(s, tr);
-			progressOnline = false;
-		    }
-		    break;
-		default:
-		    if (isVerbose(FINISH)) {
-			printFinish(s, tr);
-			progressOnline = false;
-		    }
-	    }	// swtich
+            progressOnline = false;
+        }
 
-	    printStats();
-	    out.flush();
-	}
+        public void finishedTest(TestResult tr) {
+            Status s = tr.getStatus();
+            stats[s.getType()]++;
 
-	public void stoppingTestRun() {
-	    if (progressOnline)
-		out.println();
+            switch(s.getType()) {
+                case Status.FAILED:
+                case Status.ERROR:
+                    if (isVerbose(NON_PASS) || isVerbose(FINISH)) {
+                        printFinish(s, tr);
+                        progressOnline = false;
+                    }
+                    break;
+                default:
+                    if (isVerbose(FINISH)) {
+                        printFinish(s, tr);
+                        progressOnline = false;
+                    }
+            }   // swtich
 
-	    printTimestamp();
-	    ctx.printMessage(i18n, "cmgr.verb.stpng");
-	    out.flush();
+            printStats();
+            out.flush();
+        }
 
-	    progressOnline = false;
-	}
+        public void stoppingTestRun() {
+            if (progressOnline)
+                out.println();
 
-	public void finishedTesting() {
-	    if (!quiet_flag) {
-		if (progressOnline)
-		    out.println();
+            printTimestamp();
+            ctx.printMessage(i18n, "cmgr.verb.stpng");
+            out.flush();
 
-		printTimestamp();
-		ctx.printMessage(i18n, "cmgr.verb.donerun");
-		out.flush();
+            progressOnline = false;
+        }
 
-		progressOnline = false;
-	    }
-	}
+        public void finishedTesting() {
+            if (!quiet_flag) {
+                if (progressOnline)
+                    out.println();
 
-	public void finishedTestRun(boolean allOK) {
-	    if (!quiet_flag) {
-		if (progressOnline)
-		    out.println();
+                printTimestamp();
+                ctx.printMessage(i18n, "cmgr.verb.donerun");
+                out.flush();
 
-		printTimestamp();
-		ctx.printMessage(i18n, "cmgr.verb.finish");
-		out.flush();
+                progressOnline = false;
+            }
+        }
 
-		progressOnline = false;
-	    }
-	}
+        public void finishedTestRun(boolean allOK) {
+            if (!quiet_flag) {
+                if (progressOnline)
+                    out.println();
 
-	public void error(String msg) {
-	    if (progressOnline)
-		out.println();
+                printTimestamp();
+                ctx.printMessage(i18n, "cmgr.verb.finish");
+                out.flush();
 
-	    printTimestamp();
-	    ctx.printErrorMessage(i18n, "cmgr.verb.err", msg);
-	    out.flush();
+                progressOnline = false;
+            }
+        }
 
-	    progressOnline = false;
-	}
+        public void error(String msg) {
+            if (progressOnline)
+                out.println();
 
-	// utility methods
-	private void printStats() {
-	    if (!isVerbose(PROGRESS))
-		return;
+            printTimestamp();
+            ctx.printErrorMessage(i18n, "cmgr.verb.err", msg);
+            out.flush();
 
-	    if (progressOnline)
-		out.print("\r");
+            progressOnline = false;
+        }
 
-	    int p = stats[Status.PASSED];
-	    int f = stats[Status.FAILED];
-	    int e = stats[Status.ERROR];
-	    int nr = stats[Status.NOT_RUN] =
-		harness.getTestsFoundCount() - p - f - e;
+        // utility methods
+        private void printStats() {
+            if (!isVerbose(PROGRESS))
+                return;
 
-	    out.print(i18n.getString("cmgr.verb.prog",
-		      new Object[] {
-			  new Integer(p),
-			  new Integer(f),
-			  new Integer(e),
-			  new Integer(nr)
-		      }));
-	    out.print("    ");
+            if (progressOnline)
+                out.print("\r");
 
-	    progressOnline = true;
-	}
+            int p = stats[Status.PASSED];
+            int f = stats[Status.FAILED];
+            int e = stats[Status.ERROR];
+            int nr = stats[Status.NOT_RUN] =
+                harness.getTestsFoundCount() - p - f - e;
 
-	private void printFinish(Status s, TestResult tr) {
-	    if (!quiet_flag) {
-		// need to create newline if we are doing single-line
-		// updates
-		if (progressOnline)
-		    out.println();
+            out.print(i18n.getString("cmgr.verb.prog",
+                      new Object[] {
+                          new Integer(p),
+                          new Integer(f),
+                          new Integer(e),
+                          new Integer(nr)
+                      }));
+            out.print("    ");
 
-		printTimestamp();
-		String[] args = {tr.getTestName(),
-				 s.toString()};
-		ctx.printMessage(i18n, "cmgr.verb.tstd", args);
-		out.flush();
-		progressOnline = false;
-	    }
-	}
+            progressOnline = true;
+        }
 
-	/**
-	 * Is the text being displayed using println during the run?
-	 * This affects our ability to update a progress counter.
-	 */
-	private boolean isScolling() {
-	    if (!isVerbose(START) && !isVerbose(FINISH))
-		return false;
-	    else
-		return true;
-	}
+        private void printFinish(Status s, TestResult tr) {
+            if (!quiet_flag) {
+                // need to create newline if we are doing single-line
+                // updates
+                if (progressOnline)
+                    out.println();
 
-	private boolean[] options;
-	private boolean quiet_flag = false;
-	private boolean max_flag = false;
-	private DateFormat df;
-	private CommandContext ctx;
-	private PrintWriter out;
-	private int[] stats;
-	private boolean progressOnline = false;
+                printTimestamp();
+                String[] args = {tr.getTestName(),
+                                 s.toString()};
+                ctx.printMessage(i18n, "cmgr.verb.tstd", args);
+                out.flush();
+                progressOnline = false;
+            }
+        }
 
-	public static final int NO_DATE = 0;
-	public static final int NON_PASS = 1;
-	public static final int START = 2;
-	public static final int FINISH = 3;
-	public static final int PROGRESS = 4;
+        /**
+         * Is the text being displayed using println during the run?
+         * This affects our ability to update a progress counter.
+         */
+        private boolean isScolling() {
+            if (!isVerbose(START) && !isVerbose(FINISH))
+                return false;
+            else
+                return true;
+        }
 
-	public static final int DEFAULT = PROGRESS;
+        private boolean[] options;
+        private boolean quiet_flag = false;
+        private boolean max_flag = false;
+        private DateFormat df;
+        private CommandContext ctx;
+        private PrintWriter out;
+        private int[] stats;
+        private boolean progressOnline = false;
 
-	private static final int OPTION_COUNT = 5;
+        public static final int NO_DATE = 0;
+        public static final int NON_PASS = 1;
+        public static final int START = 2;
+        public static final int FINISH = 3;
+        public static final int PROGRESS = 4;
+
+        public static final int DEFAULT = PROGRESS;
+
+        private static final int OPTION_COUNT = 5;
     }
 }

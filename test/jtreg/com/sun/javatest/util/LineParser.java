@@ -40,43 +40,43 @@ import java.util.Vector;
  * by '#' and extend to the next newline character. Lines may be terminated
  * by newline, semicolon or a comment.
  */
-public class LineParser 
+public class LineParser
 {
     /**
      * This exception is used to report problems while using a line parser.
      */
     public static class Fault extends Exception
     {
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 */
-	Fault(I18NResourceBundle i18n, String s) {
-	    super(i18n.getString(s));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         */
+        Fault(I18NResourceBundle i18n, String s) {
+            super(i18n.getString(s));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An argument to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	Fault(I18NResourceBundle i18n, String s, Object o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An argument to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        Fault(I18NResourceBundle i18n, String s, Object o) {
+            super(i18n.getString(s, o));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An array of arguments to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	Fault(I18NResourceBundle i18n, String s, Object[] o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An array of arguments to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        Fault(I18NResourceBundle i18n, String s, Object[] o) {
+            super(i18n.getString(s, o));
+        }
     }
 
     /**
@@ -86,19 +86,19 @@ public class LineParser
      * @throws IOException if there is some problem opening the file
      * or reading the initial characters of the file
      */
-    public LineParser(File file) 
-	throws FileNotFoundException, IOException 
+    public LineParser(File file)
+        throws FileNotFoundException, IOException
     {
-	this(file, new BufferedReader(new FileReader(file)));
+        this(file, new BufferedReader(new FileReader(file)));
     }
 
     /**
      * Create a line parser, reading data from an anonymous stream.
      * @param in the stream from which to read the data
      */
-    public LineParser(Reader in) 
+    public LineParser(Reader in)
     {
-	this(null, in);
+        this(null, in);
     }
 
     /**
@@ -109,11 +109,11 @@ public class LineParser
      * @param in the stream from which to read the data
      */
     private LineParser(File file, Reader in) {
-	this.file = file;
-	this.in = in;
-	currLine = new Vector();
-	lineNumber = 1;
-	ch = ' ';
+        this.file = file;
+        this.in = in;
+        currLine = new Vector();
+        lineNumber = 1;
+        ch = ' ';
     }
 
     /**
@@ -121,7 +121,7 @@ public class LineParser
      * @return the file being read, or null if not available
      */
     public File getFile() {
-	return file;
+        return file;
     }
 
     /**
@@ -129,7 +129,7 @@ public class LineParser
      * @return the current line number within nthe stream being read
      */
     public int getLineNumber() {
-	return lineNumber;
+        return lineNumber;
     }
 
     /**
@@ -139,150 +139,150 @@ public class LineParser
      * such as an unterminated string
      */
     public String[] readLine() throws Fault {
-	try {
-	    while (ch != -1) {
-		switch (ch) {
-		case ' ':
-		case '\t':
-		    // end current word
-		    endWord_nextCh();
-		    break;
-		    
-		case '\r':
-		case '\n':
-		    // end current word, return if curr line not empty
-		    endWord_nextCh();
-		    if (currLine.size() > 0)
-			return endLine();
-		    break;
+        try {
+            while (ch != -1) {
+                switch (ch) {
+                case ' ':
+                case '\t':
+                    // end current word
+                    endWord_nextCh();
+                    break;
 
-		case ';':
-		    // end current word, return if curr line not empty
-		    endWord_nextCh();
-		    if (currLine.size() > 0)
-			return endLine();
-		    break;
+                case '\r':
+                case '\n':
+                    // end current word, return if curr line not empty
+                    endWord_nextCh();
+                    if (currLine.size() > 0)
+                        return endLine();
+                    break;
 
-		case '#':
-		    // skip to end of line
-		    // return if curr line not empty
-		    endWord_nextCh();
-		    while (ch != -1 && ch != '\r' && ch != '\n')
-			nextCh();
-		    if (currLine.size() > 0)
-			return endLine();
-		    break;
+                case ';':
+                    // end current word, return if curr line not empty
+                    endWord_nextCh();
+                    if (currLine.size() > 0)
+                        return endLine();
+                    break;
 
-		case '\\':
-		    // read next character; if newline, skip whitespace
-		    // else add next character uninterpreted
-		    nextCh();
-		    if (ch == '\r')
-			nextCh();
-		    if (ch == '\n') {
-			nextCh();
-			while (ch == ' ' || ch == '\t')
-			    nextCh();
-		    }
-		    else 
-			append_nextCh();
-		    break;
+                case '#':
+                    // skip to end of line
+                    // return if curr line not empty
+                    endWord_nextCh();
+                    while (ch != -1 && ch != '\r' && ch != '\n')
+                        nextCh();
+                    if (currLine.size() > 0)
+                        return endLine();
+                    break;
 
-		case '"':
-		case '\'':
-		    readString((char) ch);
-		    break;
+                case '\\':
+                    // read next character; if newline, skip whitespace
+                    // else add next character uninterpreted
+                    nextCh();
+                    if (ch == '\r')
+                        nextCh();
+                    if (ch == '\n') {
+                        nextCh();
+                        while (ch == ' ' || ch == '\t')
+                            nextCh();
+                    }
+                    else
+                        append_nextCh();
+                    break;
 
-		default:
-		    append_nextCh();
-		    break;
-		    
-		}
-	    }
+                case '"':
+                case '\'':
+                    readString((char) ch);
+                    break;
 
-	    // at end of file ...
-	    // flush last word found, if any
-	    if (currWord != null) {
-		currLine.add(currWord.toString());
-		currWord = null;
-	    }
+                default:
+                    append_nextCh();
+                    break;
 
-	    return (currLine.size() > 0 ? endLine() : null);
-	}
-	catch (IOException e) {
-	    throw new Fault(i18n, "lineParser.ioError", 
-			    new Object[] {new Integer(file == null ? 0 : 1),
-					  file,
-					  new Integer(lineNumber), 
-					  e } );
-	}
+                }
+            }
+
+            // at end of file ...
+            // flush last word found, if any
+            if (currWord != null) {
+                currLine.add(currWord.toString());
+                currWord = null;
+            }
+
+            return (currLine.size() > 0 ? endLine() : null);
+        }
+        catch (IOException e) {
+            throw new Fault(i18n, "lineParser.ioError",
+                            new Object[] {new Integer(file == null ? 0 : 1),
+                                          file,
+                                          new Integer(lineNumber),
+                                          e } );
+        }
     }
 
     private void readString(char termCh) throws IOException, Fault {
-	if (currWord == null)
-	    currWord = new StringBuffer();
-	nextCh();
-	while (ch != -1) {
-	    switch (ch) {
-	    case '\r':
-	    case '\n':
-		throw new Fault(i18n, "lineParser.unterminatedString",
-				new Object[] {new Integer(file == null ? 0 : 1),
-					      file,
-					      new Integer(lineNumber) } );
-		    
-	    case '\\':
-		nextCh();
-		append_nextCh();
-		break;
+        if (currWord == null)
+            currWord = new StringBuffer();
+        nextCh();
+        while (ch != -1) {
+            switch (ch) {
+            case '\r':
+            case '\n':
+                throw new Fault(i18n, "lineParser.unterminatedString",
+                                new Object[] {new Integer(file == null ? 0 : 1),
+                                              file,
+                                              new Integer(lineNumber) } );
 
-	    default:
-		if (ch == termCh) {
-		    nextCh();
-		    return;
-		}
-		else
-		    append_nextCh();
-	    }
-	}
+            case '\\':
+                nextCh();
+                append_nextCh();
+                break;
+
+            default:
+                if (ch == termCh) {
+                    nextCh();
+                    return;
+                }
+                else
+                    append_nextCh();
+            }
+        }
     }
 
     private void append_nextCh() throws IOException {
-	if (currWord == null)
-	    currWord = new StringBuffer();
-	currWord.append((char) ch);
-	nextCh();
+        if (currWord == null)
+            currWord = new StringBuffer();
+        currWord.append((char) ch);
+        nextCh();
     }
 
     private void endWord_nextCh() throws IOException {
-	if (currWord != null) {
-	    //System.err.println("endWord_nextCh: `" + currWord + "'");
-	    currLine.add(currWord.toString());
-	    currWord = null;
-	}
-	nextCh();
+        if (currWord != null) {
+            //System.err.println("endWord_nextCh: `" + currWord + "'");
+            currLine.add(currWord.toString());
+            currWord = null;
+        }
+        nextCh();
     }
 
     private String[] endLine() {
-	String[] line = new String[currLine.size()];
-	currLine.copyInto(line);
-	currLine.setSize(0);
-	return line;
+        String[] line = new String[currLine.size()];
+        currLine.copyInto(line);
+        currLine.setSize(0);
+        return line;
     }
 
     private void nextCh() throws IOException {
-	ch = in.read();
-	if (ch == '\n')
-	    lineNumber++;
+        ch = in.read();
+        if (ch == '\n')
+            lineNumber++;
     }
 
     private File file;
     private Reader in;
-    private int ch;   
+    private int ch;
     private int lineNumber;
     private StringBuffer currWord;
     private Vector currLine;
 
-    private static final I18NResourceBundle i18n = 
-	I18NResourceBundle.getBundleForClass(LineParser.class);
+    private static final I18NResourceBundle i18n =
+        I18NResourceBundle.getBundleForClass(LineParser.class);
 }

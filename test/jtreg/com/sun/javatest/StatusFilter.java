@@ -46,14 +46,14 @@ public class StatusFilter extends TestFilter {
      * @see com.sun.javatest.Status#NOT_RUN
      */
     public StatusFilter(boolean[] statusValues, TestResultTable trt) {
-	if (statusValues == null || trt == null)
-	    throw new NullPointerException();
+        if (statusValues == null || trt == null)
+            throw new NullPointerException();
 
-	if (statusValues.length != Status.NUM_STATES)
-	    throw new IllegalArgumentException();
+        if (statusValues.length != Status.NUM_STATES)
+            throw new IllegalArgumentException();
 
-	this.statusValues = statusValues;
-	this.trt = trt;
+        this.statusValues = statusValues;
+        this.trt = trt;
     }
 
     /**
@@ -68,7 +68,7 @@ public class StatusFilter extends TestFilter {
      * @see com.sun.javatest.Status#NOT_RUN
      */
     public boolean[] getStatusValues() {
-	return statusValues;
+        return statusValues;
     }
 
     /**
@@ -77,45 +77,45 @@ public class StatusFilter extends TestFilter {
      * @return a test result table
      */
     public TestResultTable getTestResultTable() {
-	return trt;
+        return trt;
     }
 
     public String getName() {
-	return i18n.getString("statusFilter.name");
+        return i18n.getString("statusFilter.name");
     }
 
     public String getDescription() {
-	return i18n.getString("statusFilter.description");
+        return i18n.getString("statusFilter.description");
     }
 
     public String getReason() {
-	return i18n.getString("statusFilter.reason");
+        return i18n.getString("statusFilter.reason");
     }
 
     public boolean accepts(TestDescription td) throws Fault {
-	TestResult tr = trt.lookup(td);
-	if (tr == null)
-	    throw new Fault(i18n, "statusFilter.cantFindTest", td.getRootRelativeURL());
-	Status s = tr.getStatus();
-	if (s == null)
-	    throw new Fault(i18n, "statusFilter.noStatus", td.getRootRelativeURL());
-	return statusValues[s.getType()];
+        TestResult tr = trt.lookup(td);
+        if (tr == null)
+            throw new Fault(i18n, "statusFilter.cantFindTest", td.getRootRelativeURL());
+        Status s = tr.getStatus();
+        if (s == null)
+            throw new Fault(i18n, "statusFilter.noStatus", td.getRootRelativeURL());
+        return statusValues[s.getType()];
     }
-    
+
     public boolean equals(Object o) {
-	if (o == this)
-	    return true;
+        if (o == this)
+            return true;
 
-	if ( !(o instanceof TestFilter)) 
-	    return false;
+        if ( !(o instanceof TestFilter))
+            return false;
 
-	StatusFilter other = (StatusFilter) o;
-	for (int i = 0; i < Status.NUM_STATES; i++) {
-	    if (statusValues[i] != other.statusValues[i])
-		return false;
-	}
+        StatusFilter other = (StatusFilter) o;
+        for (int i = 0; i < Status.NUM_STATES; i++) {
+            if (statusValues[i] != other.statusValues[i])
+                return false;
+        }
 
-	return (trt == other.trt);
+        return (trt == other.trt);
     }
 
     private boolean[] statusValues;

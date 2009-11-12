@@ -48,7 +48,7 @@ public class DirectoryClassLoader extends ClassLoader
      * @param dir  The File specifying the directory to search.
      */
     public DirectoryClassLoader(File dir) {
- 	loadDir = dir;
+        loadDir = dir;
     }
 
     /**
@@ -58,13 +58,13 @@ public class DirectoryClassLoader extends ClassLoader
      * @param dirName  A file pathname specifying the directory to search.
      */
     public DirectoryClassLoader(String dirName) {
-	loadDir = new File(dirName);
+        loadDir = new File(dirName);
     }
-    
+
     //----------ClassLoader methods---------------------------------------------
-	
+
     /**
-     * Attempt to load a class if it is not already loaded, and optionally 
+     * Attempt to load a class if it is not already loaded, and optionally
      * resolve any imports it might have.
      *
      * @param name The fully-qualified name of the class to load.
@@ -72,37 +72,37 @@ public class DirectoryClassLoader extends ClassLoader
      * @return the class that was loaded
      * @throws ClassNotFoundException if the class was not found.
      */
-    protected Class loadClass(String name, boolean resolve) 
-	throws ClassNotFoundException {
+    protected Class loadClass(String name, boolean resolve)
+        throws ClassNotFoundException {
 
-	// check the cache first
-	Class cl = (Class)classes.get(name); 
-	
-	// not found in the cache? 
-	if (cl == null) {
-	    // see if it is a system class
-	    try {
-		cl = findSystemClass(name);
-	    } 
-	    catch (ClassNotFoundException e) {
-		// It's not a system class, look in the directory for this
-		// class loader.  If there is an IO problem, we'll throw
-		// ClassNotFoundException; if the class file is read correctly
-		// but is an invalid class, we'll get a LinkageError
-		cl = locateClass(name);
-	    }
-	}
-	
-	if (resolve)
-	    resolveClass(cl);
-	
-	return cl;
+        // check the cache first
+        Class cl = (Class)classes.get(name);
+
+        // not found in the cache?
+        if (cl == null) {
+            // see if it is a system class
+            try {
+                cl = findSystemClass(name);
+            }
+            catch (ClassNotFoundException e) {
+                // It's not a system class, look in the directory for this
+                // class loader.  If there is an IO problem, we'll throw
+                // ClassNotFoundException; if the class file is read correctly
+                // but is an invalid class, we'll get a LinkageError
+                cl = locateClass(name);
+            }
+        }
+
+        if (resolve)
+            resolveClass(cl);
+
+        return cl;
 
     }
-	
+
     /**
      * Returns an input stream for reading the specified resource.
-     * 
+     *
      * @param  name the resource name
      * @return an input stream for reading the resource, or <code>null</code>
      *         if the resource could not be found
@@ -110,12 +110,12 @@ public class DirectoryClassLoader extends ClassLoader
      *  redundant in 1.2
      */
     public InputStream getResourceAsStream(String name) {
-	URL url = getResource(name);
-	try {
-	    return url != null ? url.openStream() : null;
-	} catch (IOException e) {
-	    return null;
-	}
+        URL url = getResource(name);
+        try {
+            return url != null ? url.openStream() : null;
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     /**
@@ -138,15 +138,15 @@ public class DirectoryClassLoader extends ClassLoader
      *  redundant in 1.2
      */
     public URL getResource(String name) {
-	// the ordering of this code looks very strange, but it
-	// corresponds to the implementation in JDK 1.2.
-	URL url = getSystemResource(name);
-	if (url == null) {
-	    url = findResource(name);
-	}
-	return url;
+        // the ordering of this code looks very strange, but it
+        // corresponds to the implementation in JDK 1.2.
+        URL url = getSystemResource(name);
+        if (url == null) {
+            url = findResource(name);
+        }
+        return url;
     }
-	
+
     /**
      * Finds the resource with the given name. Class loader
      * implementations should override this method to specify where to
@@ -159,68 +159,68 @@ public class DirectoryClassLoader extends ClassLoader
      */
     public URL findResource(String name) {
        try {
-	   File f = new File(loadDir, name);
-	   if (f.exists())
-	       return new URL("file:" + f.getAbsolutePath());
-	   else
-	       return null;
-       } 
+           File f = new File(loadDir, name);
+           if (f.exists())
+               return new URL("file:" + f.getAbsolutePath());
+           else
+               return null;
+       }
        catch (java.net.MalformedURLException e) {
-	   return null;
+           return null;
        }
     }
-	
+
     //----------internal methods------------------------------------------------
 
-    private synchronized Class locateClass(String name) 
-	throws ClassNotFoundException {
-	//This check is currently necessary; we just
-	// check the cache at the one call site, but that was not
-	// synchronized, so there is a very small remote chance another
-	// caller has just loaded this class.
-	Class cl = (Class)classes.get(name);
-	if (cl != null)
-	    return cl;
-	
-	String cname = name.replace('.', '/') + ".class";
-	    
-	File file = new File(loadDir, cname);
-	    
-	try {
-	    InputStream in = new FileInputStream(file);
-	    byte[] data;
-	    try {
-		int len = in.available();
-		data = new byte[len];
-		for (int total = 0; total < data.length; ) {
-		    total += in.read(data, total, data.length - total);
-		}
-	    } 
-	    finally {
-		if (in != null)
-		    in.close();
-	    }
-	    // the next line may throw LinkageError, which we let
-	    // escape to the caller
-	    cl = defineClass(name, data, 0, data.length);
-	    classes.put(name, cl);
-	    return cl;
-	}
-	catch (FileNotFoundException e) {
-	    // ClassNotFoundException is obviously the correct
-	    // exception to throw in this case
-	    throw new ClassNotFoundException(name);
-	}
-	catch (IOException e) {
-	    // This one is more iffy; we found a file, but had trouble
-	    // reading it; still use ClassNotFoundException for now.
-	    throw new ClassNotFoundException(name);
-	}
-	
+    private synchronized Class locateClass(String name)
+        throws ClassNotFoundException {
+        //This check is currently necessary; we just
+        // check the cache at the one call site, but that was not
+        // synchronized, so there is a very small remote chance another
+        // caller has just loaded this class.
+        Class cl = (Class)classes.get(name);
+        if (cl != null)
+            return cl;
+
+        String cname = name.replace('.', '/') + ".class";
+
+        File file = new File(loadDir, cname);
+
+        try {
+            InputStream in = new FileInputStream(file);
+            byte[] data;
+            try {
+                int len = in.available();
+                data = new byte[len];
+                for (int total = 0; total < data.length; ) {
+                    total += in.read(data, total, data.length - total);
+                }
+            }
+            finally {
+                if (in != null)
+                    in.close();
+            }
+            // the next line may throw LinkageError, which we let
+            // escape to the caller
+            cl = defineClass(name, data, 0, data.length);
+            classes.put(name, cl);
+            return cl;
+        }
+        catch (FileNotFoundException e) {
+            // ClassNotFoundException is obviously the correct
+            // exception to throw in this case
+            throw new ClassNotFoundException(name);
+        }
+        catch (IOException e) {
+            // This one is more iffy; we found a file, but had trouble
+            // reading it; still use ClassNotFoundException for now.
+            throw new ClassNotFoundException(name);
+        }
+
     }
-	
+
     //----------Data members----------------------------------------------------
-	
+
     private File loadDir;
     private Hashtable classes = new Hashtable();
 }

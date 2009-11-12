@@ -33,26 +33,26 @@ import com.sun.javatest.TestResult;
 
 class TestResultsByStatusAndTitleComparator implements Comparator {
     public int compare(Object o1, Object o2) {
-	TestResult tr1 = (TestResult)o1;
-	TestResult tr2 = (TestResult)o2;
-	Status s1 = tr1.getStatus();
-	Status s2 = tr2.getStatus();
-	if (s1.getType() != s2.getType())
-	    return (s1.getType() < s2.getType() ? -1 : +1);
+        TestResult tr1 = (TestResult)o1;
+        TestResult tr2 = (TestResult)o2;
+        Status s1 = tr1.getStatus();
+        Status s2 = tr2.getStatus();
+        if (s1.getType() != s2.getType())
+            return (s1.getType() < s2.getType() ? -1 : +1);
         int x = compare(s1.getReason(), s2.getReason());
-	return (x != 0 ? x : compare(tr1.getTestName(), tr2.getTestName()));
+        return (x != 0 ? x : compare(tr1.getTestName(), tr2.getTestName()));
     }
 
     private static int compare(String a, String b) {
-	if (a == null && b == null)
-	    return 0;
+        if (a == null && b == null)
+            return 0;
 
-	if (a == null)
-	    return -1;
+        if (a == null)
+            return -1;
 
-	if (b == null)
-	    return +1;
+        if (b == null)
+            return +1;
 
-	return a.compareTo(b);
+        return a.compareTo(b);
     }
 }

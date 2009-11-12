@@ -39,7 +39,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LogModel {
-    
+
     public LogModel(ObservedFile logFile, String fileName) {
         file = fileName;
         records = new ArrayList<LiteLogRecord>();
@@ -47,28 +47,28 @@ public class LogModel {
         messageCache = new MessageCache();
         setObservedFile(logFile);
     }
-    
+
     public ArrayList<String> getLoggers() {
         return loggers;
     }
-    
+
     public ArrayList<LiteLogRecord> getRecords() {
         return records;
     }
-    
+
     public void init() {
         worker = new Worker("LogViewerWorker");
         //worker.setPriority(Thread.MIN_PRIORITY);
         worker.start();
     }
-    
+
     boolean jobDone() {
         if (worker == null ) {
             return false;
         }
         return !worker.isAlive();
     }
-    
+
     int recordsRead() {
         if (records != null) {
             return records.size();
@@ -76,7 +76,7 @@ public class LogModel {
             return 0;
         }
     }
-    
+
     public int pagesRead() {
         int records = recordsRead();
         if (records == 0) {
@@ -85,15 +85,15 @@ public class LogModel {
             return (records-1) / PAGE_SIZE + 1;
         }
     }
-    
+
     private class Worker extends Thread {
-        
+
         public Worker(String name) {
             super(name);
         }
-        
+
         boolean stop = false;
-        
+
         public void run() {
             RandomAccessFile r = null;
             int firstRecordOnPage = 0;
@@ -145,21 +145,21 @@ public class LogModel {
                     LogModel.LiteLogRecord llr = records.get(recordCount-1);
                     r.seek(llr.endOff);
                 }
-                
-                
+
+
                 String readStr = "";
                 while (true) {
                     while (readStr != null) {
                         if (stop) {
                             return;
                         }
-                        
+
                         String logName = r.readLine();
                         if (logName == null) {
                             break;
                         }
 
-                        
+
                         int logID = loggers.indexOf(logName);
                         if (logID < 0) {
                             logID = loggers.size();
@@ -188,21 +188,21 @@ public class LogModel {
                         long read = 0;
                         long start = r.getFilePointer();
                         StringBuffer msg = new StringBuffer();
-                        
+
                         // Do not optimize this loop, do not use readLine() !
                         while (read <= length) {
                             byte ch = r.readByte();
                             read++;
                             msg.append(ch);
                         }
-                        
+
                         LiteLogRecord record = new LiteLogRecord();
                         record.loggerID = logID;
                         record.startOff = start;
                         record.endOff = r.getFilePointer();
                         record.time = mills;
                         record.severety = level;
-                        
+
                         if (level != Level.SEVERE.intValue()
                         && level != Level.WARNING.intValue()
                         && level != Level.INFO.intValue()) {
@@ -252,7 +252,7 @@ public class LogModel {
             }
         }
     }
-    
+
     public void addNewLoggerListener(LoggerListener lst) {
         loggerListeners.add(lst);
     }
@@ -260,55 +260,55 @@ public class LogModel {
     public void removeNewLoggerListeners() {
         loggerListeners.clear();
     }
-    
+
     void addNewPageListener(NewPageListener lst) {
         pageListeners.add(lst);
     }
-    
+
     boolean isStableState() {
         return stable;
     }
-    
+
     void setObservedFile(ObservedFile of) {
         if (this.of != null && fileListener != null) {
             this.of.removeFileListener(fileListener);
         }
-        
+
         this.of = of;
         if (of != null) {
             fileListener = new LogFileListener();
             of.addFileListener(fileListener);
         }
     }
-    
+
     private void fireNewLoggerFound(String loggerName) {
         for(LoggerListener lst : loggerListeners) {
             lst.onNewLogger(loggerName);
         }
     }
-    
-    
+
+
     private void fireRemoveAllLoggers() {
         for(LoggerListener lst : loggerListeners) {
             lst.onRemoveAllLoggers();
         }
     }
-    
+
     private void fireNewPage(int from, int to) {
         int pageNum = (to-1) / PAGE_SIZE + 1;
         for(NewPageListener lst : pageListeners) {
             lst.onNewPage(from, to, pageNum);
         }
     }
-    
-    
+
+
     public synchronized String getRecordMessage(LiteLogRecord rec) {
         if (rec == null)
             return "";
         if (messageCache.containsKey(rec)) {
             return messageCache.get(rec);
         }
-        
+
         StringBuffer msg = new StringBuffer();
         try {
             ensureMirrorFileOpened();
@@ -333,20 +333,20 @@ public class LogModel {
         messageCache.put(rec, msg.toString());
         return msg.toString();
     }
-    
+
     synchronized void dispose() {
         resetModel();
         loggerListeners.clear();
         pageListeners.clear();
-        
+
         if (of != null && fileListener != null) {
             of.removeFileListener(fileListener);
         }
-        
+
         //theThread = null;
         worker = null;
     }
-    
+
     private synchronized void resetModel() {
         if (worker != null && worker.isAlive()) {
             worker.stop = true;
@@ -369,7 +369,7 @@ public class LogModel {
                 logEx(ex);
             }
         }
-        
+
         synchronized (of) {
             records.clear();
             loggers.clear();
@@ -385,28 +385,28 @@ public class LogModel {
             mirrorFile = null;
         }
     }
-    
+
     private void ensureMirrorFileOpened() throws FileNotFoundException {
         if (mirrorFile == null) {
             mirrorFile = new RandomAccessFile(file, "r");
         }
     }
-    
+
     public int getPageSize() {
         return PAGE_SIZE;
     }
-    
+
     public String getLogname(int loggerID) {
         if (loggerID < loggers.size())
             return loggers.get(loggerID);
         else
             return "";
     }
-    
+
     public void setLogger(Logger log) {
         logger = log;
     }
-    
+
     private void logEx(Throwable th) {
         if (logger != null) {
             logger.logp(Level.SEVERE, getClass().getName(), null, th.getMessage(), th);
@@ -414,7 +414,7 @@ public class LogModel {
             th.printStackTrace();
         }
     }
-    
+
     class LogFileListener implements FileListener {
         public void fileModified(FileEvent e) {
             synchronized (LogModel.this) {
@@ -425,18 +425,18 @@ public class LogModel {
                     if (debug) System.out.println("FileEvent.ERASED");
                     init();
                 }
-                
+
             }
         }
     }
-    
-    
+
+
     private class MessageCache extends LinkedHashMap<LiteLogRecord, String> {
         protected boolean removeEldestEntry(Map.Entry eldest) {
             return size() > PAGE_SIZE*2;
         }
     }
-    
+
     private boolean stable = false;
     private ArrayList<String> loggers;
     private ArrayList<LiteLogRecord> records;
@@ -448,24 +448,24 @@ public class LogModel {
     private RandomAccessFile mirrorFile;
     private Worker worker;
     private Logger logger;
-    
+
     private ObservedFile of;
     private LogFileListener fileListener;
-    
+
     static final boolean debug = false;
-    
+
     public interface LoggerListener {
         void onNewLogger(String name);
         void onRemoveAllLoggers();
     }
-    
+
     public interface NewPageListener {
         void onNewPage(int startRecord, int endRecord, int pageNum);
     }
-    
+
     private static final int PAGE_SIZE = 1000;
-    
-    
+
+
     static public class LiteLogRecord {
 
         private String getTimeString() {
@@ -495,8 +495,6 @@ public class LogModel {
         public int severety;
         public long startOff, endOff;
     }
-    
-    
+
+
 }
-
-

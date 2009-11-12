@@ -40,69 +40,69 @@ import com.sun.javatest.util.I18NResourceBundle;
 
 class ElapsedTimeMonitor extends Monitor implements MonitorState.Observer {
     ElapsedTimeMonitor(MonitorState ms, UIFactory uif) {
-	super(ms, uif);
-	ms.addObserver(this);
+        super(ms, uif);
+        ms.addObserver(this);
     }
 
     public String getSmallMonitorName() {
-	return uif.getI18NString("et.sm.Name");
+        return uif.getI18NString("et.sm.Name");
     }
 
     public Icon getSmallMonitorIcon() {
-	return null;
+        return null;
     }
 
     public JComponent getSmallMonitor() {
-	if (smTimer == null)
-	    smTimer = new SmallTimer(uif, state);
+        if (smTimer == null)
+            smTimer = new SmallTimer(uif, state);
 
-	if (isRunning)
-	    smTimer.start();
-	else
-	    smTimer.update();
+        if (isRunning)
+            smTimer.start();
+        else
+            smTimer.update();
 
-	return smTimer;
+        return smTimer;
     }
 
     public String getLargeMonitorName() {
-	return uif.getI18NString("et.lg.Name");
+        return uif.getI18NString("et.lg.Name");
     }
 
     public Icon getLargeMonitorIcon() {
-	return null;
+        return null;
     }
 
     public JComponent getLargeMonitor() {
-	return null;
+        return null;
     }
 
     // MonitorState.Observer
     public void starting() {
-	isRunning = true;
+        isRunning = true;
 
-	if (smTimer != null)
-	    smTimer.start();
+        if (smTimer != null)
+            smTimer.start();
     }
 
     public void postProcessing() {
-	if (smTimer != null)
-	    smTimer.stop();
+        if (smTimer != null)
+            smTimer.stop();
     }
 
     public void stopping() {
     }
 
     public void finished(boolean allOk) {
-	isRunning = false;
-	stopAll();
+        isRunning = false;
+        stopAll();
     }
 
     /**
      * Stop all active subthreads associated with a running harness.
      */
     private void stopAll() {
-	if (smTimer != null)
-	    smTimer.stop();
+        if (smTimer != null)
+            smTimer.stop();
     }
 
     /**
@@ -117,69 +117,69 @@ class ElapsedTimeMonitor extends Monitor implements MonitorState.Observer {
      * Message strip sized timer.  Should be reusable using start and stop.
      */
     static class SmallTimer extends JTextField {
-	SmallTimer(UIFactory uif, MonitorState ms) {
-	    super("et.sm");
-	    this.state = ms;
-	    this.uif = uif;
+        SmallTimer(UIFactory uif, MonitorState ms) {
+            super("et.sm");
+            this.state = ms;
+            this.uif = uif;
 
-	    setHorizontalAlignment(JTextField.LEFT);
-	    setOpaque(false);
-	    setEnabled(true);
-	    setVisible(true);
-	    setEditable(false);
-	    setBorder(BorderFactory.createEmptyBorder());
-	    /*
-	    prefix = uif.getI18NString("et.sm.prefix");
-	    setText(prefix + "00:00:00");
-	    */
-	    setText("00:00:00");
-	    uif.setToolTip(this, "et.sm");
-	    AccessibleContext ac = getAccessibleContext();
-	    ac.setAccessibleName(uif.getI18NString("et.sm.name"));
+            setHorizontalAlignment(JTextField.LEFT);
+            setOpaque(false);
+            setEnabled(true);
+            setVisible(true);
+            setEditable(false);
+            setBorder(BorderFactory.createEmptyBorder());
+            /*
+            prefix = uif.getI18NString("et.sm.prefix");
+            setText(prefix + "00:00:00");
+            */
+            setText("00:00:00");
+            uif.setToolTip(this, "et.sm");
+            AccessibleContext ac = getAccessibleContext();
+            ac.setAccessibleName(uif.getI18NString("et.sm.name"));
 
-	    update();
-	}
+            update();
+        }
 
-	public void start() {
-	    myThread = new Thread() {
-		public void run() {
-		    while(myThread == currentThread()) {
-			try {
-			    synchronized (myThread) {
-				myThread.wait(1000);
-				update();
-			    }
-			}
-			catch(InterruptedException e) {
-			}
-		    }	// while
+        public void start() {
+            myThread = new Thread() {
+                public void run() {
+                    while(myThread == currentThread()) {
+                        try {
+                            synchronized (myThread) {
+                                myThread.wait(1000);
+                                update();
+                            }
+                        }
+                        catch(InterruptedException e) {
+                        }
+                    }   // while
 
-		    // one last update of the time
-		    update();
-		}
-	    };	// Thread()
+                    // one last update of the time
+                    update();
+                }
+            };  // Thread()
 
-	    // user will notice this, so set a higher priority
-	    myThread.setPriority(Thread.MIN_PRIORITY + 3);
-	    myThread.start();
-	}
+            // user will notice this, so set a higher priority
+            myThread.setPriority(Thread.MIN_PRIORITY + 3);
+            myThread.start();
+        }
 
-	public void stop() {
-	    myThread = null;
-	}
+        public void stop() {
+            myThread = null;
+        }
 
-	private void update() {
-	    if (!EventQueue.isDispatchThread())
-		EventQueue.invokeLater(new BranchPanel.TextUpdater(this,
-				       millisToString(state.getElapsedTime()), uif));
-	    else
-		setText(millisToString(state.getElapsedTime()));
-	}
+        private void update() {
+            if (!EventQueue.isDispatchThread())
+                EventQueue.invokeLater(new BranchPanel.TextUpdater(this,
+                                       millisToString(state.getElapsedTime()), uif));
+            else
+                setText(millisToString(state.getElapsedTime()));
+        }
 
-	private String prefix;
-	private MonitorState state;
-	private UIFactory uif;
-	private volatile Thread myThread;
+        private String prefix;
+        private MonitorState state;
+        private UIFactory uif;
+        private volatile Thread myThread;
     }
 
     /**
@@ -187,35 +187,33 @@ class ElapsedTimeMonitor extends Monitor implements MonitorState.Observer {
      * string.
      */
     static final String millisToString(long millis) {
-	// lazy init.
-	if (i18n == null)
-	    i18n = I18NResourceBundle.getBundleForClass(ElapsedTimeMonitor.class);
+        // lazy init.
+        if (i18n == null)
+            i18n = I18NResourceBundle.getBundleForClass(ElapsedTimeMonitor.class);
 
-	int seconds = (int)((millis / 1000) % 60);
-	int minutes = (int)((millis / 60000) % 60);
-	int hours = (int)(millis / 3600000);
+        int seconds = (int)((millis / 1000) % 60);
+        int minutes = (int)((millis / 60000) % 60);
+        int hours = (int)(millis / 3600000);
 
-	String h, m, s;
+        String h, m, s;
 
-	if (hours < 10)
-	    h = "0" + Integer.toString(hours);
-	else
-	    h = Integer.toString(hours);
+        if (hours < 10)
+            h = "0" + Integer.toString(hours);
+        else
+            h = Integer.toString(hours);
 
-	if (minutes < 10)
-	    m = "0" + Integer.toString(minutes);
-	else
-	    m = Integer.toString(minutes);
+        if (minutes < 10)
+            m = "0" + Integer.toString(minutes);
+        else
+            m = Integer.toString(minutes);
 
-	if (seconds < 10)
-	    s = "0" + Integer.toString(seconds);
-	else
-	    s = Integer.toString(seconds);
+        if (seconds < 10)
+            s = "0" + Integer.toString(seconds);
+        else
+            s = Integer.toString(seconds);
 
-	String[] args = {h, m, s};
+        String[] args = {h, m, s};
 
-	return i18n.getString("etm.hms", args);
+        return i18n.getString("etm.hms", args);
     }
 }
-
-

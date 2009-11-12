@@ -38,15 +38,15 @@ public abstract class DefaultInterviewParameters extends BasicInterviewParameter
 {
     /**
      * Create a BasicInterviewParameters object.
-     * The test suite for which this interview applies should be set 
+     * The test suite for which this interview applies should be set
      * with setTestSuite.
      * @param tag the tag used to qualify questions in this interview
      * @throws Interview.Fault if there is a problem creating this object
      */
-    protected DefaultInterviewParameters(String tag) 
-	throws Fault
+    protected DefaultInterviewParameters(String tag)
+        throws Fault
     {
-	super(tag);
+        super(tag);
     }
 
     /**
@@ -55,9 +55,9 @@ public abstract class DefaultInterviewParameters extends BasicInterviewParameter
      * @param ts The test suite to which this interview applies.
      * @throws Interview.Fault if there is a problem creating this object
      */
-    protected DefaultInterviewParameters(String tag, TestSuite ts) 
-	throws Fault
+    protected DefaultInterviewParameters(String tag, TestSuite ts)
+        throws Fault
     {
-	super(tag, ts);
+        super(tag, ts);
     }
 }

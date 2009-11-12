@@ -39,12 +39,12 @@ public abstract class ObservableTestFilter extends TestFilter {
      * An observer that is notified when the filter has been changed.
      */
     public interface Observer {
-	/**
-	 * A notification message that is called when the filter has
-	 * been changed.
-	 * @param filter The filter that has been changed
-	 */
-	public void filterUpdated(ObservableTestFilter filter);
+        /**
+         * A notification message that is called when the filter has
+         * been changed.
+         * @param filter The filter that has been changed
+         */
+        public void filterUpdated(ObservableTestFilter filter);
     }
 
     /**
@@ -52,7 +52,7 @@ public abstract class ObservableTestFilter extends TestFilter {
      * @param o The observer to be registered.  Should never be null.
      */
     public void addObserver(Observer o) {
-	observers = (Observer[])DynamicArray.append(observers, o);
+        observers = (Observer[])DynamicArray.append(observers, o);
     }
 
     /**
@@ -61,17 +61,17 @@ public abstract class ObservableTestFilter extends TestFilter {
      * @param o The filter to be un-registered.
      */
     public void removeObserver(Observer o) {
-	observers = (Observer[])DynamicArray.remove(observers, o);
+        observers = (Observer[])DynamicArray.remove(observers, o);
     }
 
-    /** 
+    /**
      * Notify observers that this filter has changed it's internal state
      * (behavior).
      * @param filter the filter that has changed
      */
     protected void notifyUpdated(ObservableTestFilter filter) {
-	for (int i = 0; i < observers.length; i++)
-	    observers[i].filterUpdated(this);
+        for (int i = 0; i < observers.length; i++)
+            observers[i].filterUpdated(this);
     }
 
     /**
@@ -79,4 +79,3 @@ public abstract class ObservableTestFilter extends TestFilter {
      */
     protected Observer[] observers = new Observer[0];
 }
-

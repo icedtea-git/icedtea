@@ -61,50 +61,50 @@ class EditableList extends JPanel
      * @param items An array of strings to display as initial values in the list.
      */
     public EditableList(String uiKey, Object[] items) {
-	setLayout(new BorderLayout());
-	setName(uiKey);
-	setFocusable(false);
+        setLayout(new BorderLayout());
+        setName(uiKey);
+        setFocusable(false);
 
-	listModel = new DefaultListModel(); // need to force the type of model
-	if (items != null) {
-	    for (int i = 0; i < items.length; i++) 
-		listModel.addElement(items[i]);
-	}
-	list = new JList(listModel);
-	list.setName(uiKey);
-	list.setToolTipText(i18n.getString(uiKey + ".tip"));
-	list.getAccessibleContext().setAccessibleName(list.getName());
-	list.getAccessibleContext().setAccessibleDescription(list.getToolTipText());
-	list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	list.setCellRenderer(renderer);
-	list.addListSelectionListener(listener);
-	list.addMouseListener(listener);
-	list.setVisibleRowCount(5);
+        listModel = new DefaultListModel(); // need to force the type of model
+        if (items != null) {
+            for (int i = 0; i < items.length; i++)
+                listModel.addElement(items[i]);
+        }
+        list = new JList(listModel);
+        list.setName(uiKey);
+        list.setToolTipText(i18n.getString(uiKey + ".tip"));
+        list.getAccessibleContext().setAccessibleName(list.getName());
+        list.getAccessibleContext().setAccessibleDescription(list.getToolTipText());
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setCellRenderer(renderer);
+        list.addListSelectionListener(listener);
+        list.addMouseListener(listener);
+        list.setVisibleRowCount(5);
 
-	JScrollPane sp = new JScrollPane(list);
-	sp.setName(uiKey + ".sp");
-	sp.setFocusable(false);
-	add(sp, BorderLayout.CENTER);
+        JScrollPane sp = new JScrollPane(list);
+        sp.setName(uiKey + ".sp");
+        sp.setFocusable(false);
+        add(sp, BorderLayout.CENTER);
 
-	JToolBar bar = new JToolBar(JToolBar.VERTICAL);
-	bar.setName(uiKey + "bar");
-	bar.setFocusable(false);
-	bar.setFloatable(false);
-	bar.add(addBtn  = createButton("elst.add"));
-	bar.add(removeBtn = createButton("elst.remove"));
-	bar.add(upBtn = createButton("elst.up"));
-	bar.add(downBtn = createButton("elst.down"));
-	add(bar, BorderLayout.EAST);
-	updateButtons();
-	setBorder(BorderFactory.createEtchedBorder());
+        JToolBar bar = new JToolBar(JToolBar.VERTICAL);
+        bar.setName(uiKey + "bar");
+        bar.setFocusable(false);
+        bar.setFloatable(false);
+        bar.add(addBtn  = createButton("elst.add"));
+        bar.add(removeBtn = createButton("elst.remove"));
+        bar.add(upBtn = createButton("elst.up"));
+        bar.add(downBtn = createButton("elst.down"));
+        add(bar, BorderLayout.EAST);
+        updateButtons();
+        setBorder(BorderFactory.createEtchedBorder());
     }
-    
+
     public int getItemCount() {
-	return listModel.getSize();
+        return listModel.getSize();
     }
-    
+
     public Object getItem(int index) {
-	return listModel.elementAt(index);
+        return listModel.elementAt(index);
     }
 
     /**
@@ -112,7 +112,7 @@ class EditableList extends JPanel
      * @return the set of items currently in the list
      */
     public Object[] getItems() {
-	return listModel.toArray();
+        return listModel.toArray();
     }
 
     /**
@@ -121,29 +121,29 @@ class EditableList extends JPanel
      * @return an array containing the items currently in the list
      */
     public Object[] getItems(Class c) {
-	Object[] items = (Object[]) (Array.newInstance(c, listModel.size()));
-	listModel.copyInto(items);
-	return items;
+        Object[] items = (Object[]) (Array.newInstance(c, listModel.size()));
+        listModel.copyInto(items);
+        return items;
     }
 
     public int getSelectedIndex() {
-	return list.getSelectedIndex();
+        return list.getSelectedIndex();
     }
 
     public Object getSelectedItem() {
-	return list.getSelectedValue();
+        return list.getSelectedValue();
     }
 
     public void setSelectedItem(Object item) {
-	list.setSelectedValue(item, true);
+        list.setSelectedValue(item, true);
     }
 
     public void addListDataListener(ListDataListener l) {
-	listModel.addListDataListener(l);
+        listModel.addListDataListener(l);
     }
 
     public void removeListDataListener(ListDataListener l) {
-	listModel.removeListDataListener(l);
+        listModel.removeListDataListener(l);
     }
 
     /**
@@ -152,7 +152,7 @@ class EditableList extends JPanel
      * @see #isDuplicatesAllowed
      */
     public void setDuplicatesAllowed(boolean b) {
-	duplicatesAllowed = b;
+        duplicatesAllowed = b;
     }
 
     /**
@@ -161,11 +161,11 @@ class EditableList extends JPanel
      * @see #setDuplicatesAllowed
      */
     public boolean isDuplicatesAllowed() {
-	return duplicatesAllowed;
+        return duplicatesAllowed;
     }
 
     protected Object getDisplayValue(Object item) {
-	return item;
+        return item;
     }
 
     /**
@@ -178,7 +178,7 @@ class EditableList extends JPanel
      * to be added.
      */
     protected Object getNewItem() {
-	return JOptionPane.showInputDialog(this, i18n.getString("elst.add.title"));
+        return JOptionPane.showInputDialog(this, i18n.getString("elst.add.title"));
     }
 
     /**
@@ -192,7 +192,7 @@ class EditableList extends JPanel
      * replacement should occur.
      */
     protected Object getNewItem(Object oldItem) {
-	return JOptionPane.showInputDialog(this, i18n.getString("elst.change.title"), oldItem);
+        return JOptionPane.showInputDialog(this, i18n.getString("elst.change.title"), oldItem);
     }
 
     protected void itemsChanged() {
@@ -202,156 +202,156 @@ class EditableList extends JPanel
     }
 
     protected void insertItem() {
-	Object newItem = getNewItem();
+        Object newItem = getNewItem();
 
-	if (!duplicatesAllowed && listModel.contains(newItem)) {
-	    showDuplicateError(newItem);
-	    return;
-	}
-	    
-	if (newItem != null) {
-	    if (list.isSelectionEmpty()) 
-		listModel.addElement(newItem);
-	    else 
-		listModel.add(1 + list.getSelectedIndex(), newItem);
-	    list.setSelectedValue(newItem, true);
-	}
+        if (!duplicatesAllowed && listModel.contains(newItem)) {
+            showDuplicateError(newItem);
+            return;
+        }
+
+        if (newItem != null) {
+            if (list.isSelectionEmpty())
+                listModel.addElement(newItem);
+            else
+                listModel.add(1 + list.getSelectedIndex(), newItem);
+            list.setSelectedValue(newItem, true);
+        }
     }
 
     protected void removeSelectedItem() {
-	if (!list.isSelectionEmpty()) 
-	    listModel.remove(list.getSelectedIndex());
+        if (!list.isSelectionEmpty())
+            listModel.remove(list.getSelectedIndex());
     }
 
     protected void moveSelectedItemUp() {
-	if (!list.isSelectionEmpty()) {
-	    int i = list.getSelectedIndex();
-	    if (i > 0) {
-		swap(i, i - 1);
-		list.setSelectedIndex(i - 1);
-	    }
-	}
+        if (!list.isSelectionEmpty()) {
+            int i = list.getSelectedIndex();
+            if (i > 0) {
+                swap(i, i - 1);
+                list.setSelectedIndex(i - 1);
+            }
+        }
     }
 
     private void moveSelectedItemDown() {
-	if (!list.isSelectionEmpty()) {
-	    int i = list.getSelectedIndex();
-	    if (i + 1 < listModel.size()) {
-		swap(i, i + 1);
-		list.setSelectedIndex(i + 1);
-	    }
-	}
+        if (!list.isSelectionEmpty()) {
+            int i = list.getSelectedIndex();
+            if (i + 1 < listModel.size()) {
+                swap(i, i + 1);
+                list.setSelectedIndex(i + 1);
+            }
+        }
     }
 
     private void editItem(int index) {
-	Object newItem = getNewItem(listModel.getElementAt(index));
+        Object newItem = getNewItem(listModel.getElementAt(index));
 
-	if (!duplicatesAllowed && listModel.contains(newItem)) {
-	    showDuplicateError(newItem);
-	    return;
-	}
+        if (!duplicatesAllowed && listModel.contains(newItem)) {
+            showDuplicateError(newItem);
+            return;
+        }
 
-	if (newItem != null)
-	    listModel.set(index, newItem);
+        if (newItem != null)
+            listModel.set(index, newItem);
     }
 
 
     protected JButton createButton(String uiKey) {
-	JButton b = new JButton(i18n.getString(uiKey + ".btn"));
-	b.setName(uiKey);
-	b.setToolTipText(i18n.getString(uiKey + ".tip"));
-	b.setMnemonic(i18n.getString(uiKey + ".mne").charAt(0));
-	// set max size so button can grow within toolbar
-	b.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-	b.addActionListener(listener);
-	return b;
+        JButton b = new JButton(i18n.getString(uiKey + ".btn"));
+        b.setName(uiKey);
+        b.setToolTipText(i18n.getString(uiKey + ".tip"));
+        b.setMnemonic(i18n.getString(uiKey + ".mne").charAt(0));
+        // set max size so button can grow within toolbar
+        b.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        b.addActionListener(listener);
+        return b;
     }
 
     private void showDuplicateError(Object item) {
-	String text = MessageFormat.format(i18n.getString("elst.duplicate.text"),
-					   new Object[] { getDisplayValue(item) });
+        String text = MessageFormat.format(i18n.getString("elst.duplicate.text"),
+                                           new Object[] { getDisplayValue(item) });
 
-	String title = i18n.getString("elst.duplicate.title");
+        String title = i18n.getString("elst.duplicate.title");
 
-	JOptionPane.showMessageDialog(this, 
-				      text, 
-				      title,
-				      JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this,
+                                      text,
+                                      title,
+                                      JOptionPane.INFORMATION_MESSAGE);
     }
 
     private class Renderer
-	extends DefaultListCellRenderer {
-	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-	    return super.getListCellRendererComponent(list, 
-						      getDisplayValue(value), 
-						      index, 
-						      isSelected, 
-						      cellHasFocus);
-	}
+        extends DefaultListCellRenderer {
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            return super.getListCellRendererComponent(list,
+                                                      getDisplayValue(value),
+                                                      index,
+                                                      isSelected,
+                                                      cellHasFocus);
+        }
     }
 
-    private class Listener 
-	implements ActionListener, ListSelectionListener, MouseListener {
-	// ActionListener, for add, remove, up, down buttons
-	public void actionPerformed(ActionEvent e) {
-	    Object src = e.getSource();
-	    if (src == addBtn) {
-		insertItem();
-	    }
-	    else if (src == removeBtn) {
-		removeSelectedItem();
-	    }
-	    else if (src == upBtn) {
-		moveSelectedItemUp();
-	    }
-	    else if (src == downBtn) {
-		moveSelectedItemDown();
-	    }
-	    itemsChanged();
-	    updateButtons();
-	}
+    private class Listener
+        implements ActionListener, ListSelectionListener, MouseListener {
+        // ActionListener, for add, remove, up, down buttons
+        public void actionPerformed(ActionEvent e) {
+            Object src = e.getSource();
+            if (src == addBtn) {
+                insertItem();
+            }
+            else if (src == removeBtn) {
+                removeSelectedItem();
+            }
+            else if (src == upBtn) {
+                moveSelectedItemUp();
+            }
+            else if (src == downBtn) {
+                moveSelectedItemDown();
+            }
+            itemsChanged();
+            updateButtons();
+        }
 
-	// ListSelectionListener, to track list selection chnages
-	public void valueChanged(ListSelectionEvent e) {
-	    selectedItemChanged();
-	    updateButtons();
-	}    
+        // ListSelectionListener, to track list selection chnages
+        public void valueChanged(ListSelectionEvent e) {
+            selectedItemChanged();
+            updateButtons();
+        }
 
-	// MouseListener, to react to double click in list
-	public void mouseClicked(MouseEvent e) {
-	    if (e.getClickCount() == 2) {
-		int index = list.locationToIndex(e.getPoint());
+        // MouseListener, to react to double click in list
+        public void mouseClicked(MouseEvent e) {
+            if (e.getClickCount() == 2) {
+                int index = list.locationToIndex(e.getPoint());
                 if(index != -1)
                     editItem(index);
-	    }
-	}
-	 
-	public void mouseEntered(MouseEvent e) { }
-	public void mouseExited(MouseEvent e) { }
-	public void mousePressed(MouseEvent e) { }
-	public void mouseReleased(MouseEvent e) { }
+            }
+        }
+
+        public void mouseEntered(MouseEvent e) { }
+        public void mouseExited(MouseEvent e) { }
+        public void mousePressed(MouseEvent e) { }
+        public void mouseReleased(MouseEvent e) { }
     }
 
     private void updateButtons() {
-	if (list.isSelectionEmpty()) {
-	    removeBtn.setEnabled(false);
-	    upBtn.setEnabled(false);
-	    downBtn.setEnabled(false);
-	}
-	else {
-	    removeBtn.setEnabled(true);
-	    int i = list.getSelectedIndex();
-	    upBtn.setEnabled(i > 0);
-	    downBtn.setEnabled((i + 1 < listModel.size()));
-	}		
+        if (list.isSelectionEmpty()) {
+            removeBtn.setEnabled(false);
+            upBtn.setEnabled(false);
+            downBtn.setEnabled(false);
+        }
+        else {
+            removeBtn.setEnabled(true);
+            int i = list.getSelectedIndex();
+            upBtn.setEnabled(i > 0);
+            downBtn.setEnabled((i + 1 < listModel.size()));
+        }
     }
 
-	
+
     private void swap(int i1, int i2) {
-	Object o1 = listModel.elementAt(i1); 
-	Object o2 = listModel.elementAt(i2); 
-	listModel.set(i1, o2);
-	listModel.set(i2, o1);
+        Object o1 = listModel.elementAt(i1);
+        Object o2 = listModel.elementAt(i2);
+        listModel.set(i1, o2);
+        listModel.set(i2, o1);
     }
 
     private boolean duplicatesAllowed;

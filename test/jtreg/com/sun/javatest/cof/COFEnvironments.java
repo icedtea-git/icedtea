@@ -36,9 +36,9 @@ import com.sun.javatest.util.XMLWriter;
 
 /**
  * <p>Java class for Environments complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="Environments">
  *   &lt;complexContent>
@@ -50,47 +50,47 @@ import com.sun.javatest.util.XMLWriter;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 public class COFEnvironments extends COFItem {
 
 static LinkedHashMap xmlAttributes;
 
-	static LinkedHashMap xmlElements;
+        static LinkedHashMap xmlElements;
 
-	static String xmlTagName;
+        static String xmlTagName;
 
-	static {
+        static {
         xmlElements = new LinkedHashMap();
         xmlElements.put("environment", "environment");
         xmlTagName = "environments";
     }
 
-	//    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
+        //    @XmlElement(namespace = "http://qare.sfbay.sun.com/projects/COF/2003/2_0_2/Schema", required = true)
     protected List/*<Environment>*/ environment;
 
-	/**
+        /**
      * Gets the value of the environment property.
-     * 
+     *
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the environment property.
-     * 
+     *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getEnvironment().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link Environment }
-     * 
-     * 
+     *
+     *
      */
     public List/*<Environment>*/ getEnvironment() {
         if (environment == null) {
@@ -99,26 +99,26 @@ static LinkedHashMap xmlAttributes;
         return this.environment;
     }
 
-	LinkedHashMap getItemAttributes() {
-		return xmlAttributes;
-	}
+        LinkedHashMap getItemAttributes() {
+                return xmlAttributes;
+        }
 
-	LinkedHashMap getItemElements() {
-		return xmlElements;
-	}
+        LinkedHashMap getItemElements() {
+                return xmlElements;
+        }
 
-    
+
     String getItemTagName() {
-		return xmlTagName;
-	}
+                return xmlTagName;
+        }
 
 
-	/* (non-Javadoc)
-	 * @see com.sun.javatest.cof.COFItem#write(com.sun.javatest.util.XMLWriter)
-	 */
-	void write(XMLWriter out) throws IOException {
-		out.newLine();
-		super.write(out);
-	}
+        /* (non-Javadoc)
+         * @see com.sun.javatest.cof.COFItem#write(com.sun.javatest.util.XMLWriter)
+         */
+        void write(XMLWriter out) throws IOException {
+                out.newLine();
+                super.write(out);
+        }
 
 }

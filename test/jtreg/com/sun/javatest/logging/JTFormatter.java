@@ -42,7 +42,7 @@ class JTFormatter extends Formatter {
     public String format(LogRecord record) {
         StringBuffer sb = new StringBuffer();
         StringBuffer msgBuf = new StringBuffer(record.getMessage());
-        
+
         if (record.getThrown() != null) {
             // Report on the state of the throwable.
             Throwable th = record.getThrown();
@@ -58,10 +58,10 @@ class JTFormatter extends Formatter {
                 if (i != trace.length-1) {
                     msgBuf.append('\n');
                 }
-            } 
+            }
         }
         String msg = msgBuf.toString();
-        
+
         if (logName != null) {
             sb.append(logName);
         } else {
@@ -87,7 +87,7 @@ class JTFormatter extends Formatter {
     void setErasing() {
         // TODO
     }
-    
+
     public static final String LOG_SIGNATURE = "=JTLOG=";
 
     public int getLastOffset() {
@@ -100,5 +100,5 @@ class JTFormatter extends Formatter {
 
     private String logName;
 
-    
+
 }

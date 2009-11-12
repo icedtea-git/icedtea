@@ -48,59 +48,59 @@ import java.io.FileWriter;
  */
 class PlainTextReport implements ReportFormat {
     PlainTextReport(I18NResourceBundle bundle) {
-	i18n = bundle;
+        i18n = bundle;
     }
 
     public static String[] getReportFilenames() {
-	return files;
+        return files;
     }
 
     public static String[] getFilenamesUsed() {
-	return files;
+        return files;
     }
 
     public void write(Report.Settings s, File dir) throws IOException {
-	TestResultTable resultTable = s.ip.getWorkDirectory().getTestResultTable();
+        TestResultTable resultTable = s.ip.getWorkDirectory().getTestResultTable();
 
-	File[] initFiles = s.getInitialFiles();
+        File[] initFiles = s.getInitialFiles();
 
-	SortedSet tests = new TreeSet(new TestResultsByFileComparator());
-	int width = 0;
+        SortedSet tests = new TreeSet(new TestResultsByFileComparator());
+        int width = 0;
 
-	Iterator iter = null;
-	try {
-            if (initFiles == null)  
-	        iter = resultTable.getIterator(new TestFilter[] {s.filter});
-            else  
-	        iter = resultTable.getIterator(initFiles,
-					new TestFilter[] {s.filter});
-	}
-	catch (TestResultTable.Fault f) {
-	    throw new JavaTestError(i18n.getString("report.testResult.err"));
-	}   // catch
+        Iterator iter = null;
+        try {
+            if (initFiles == null)
+                iter = resultTable.getIterator(new TestFilter[] {s.filter});
+            else
+                iter = resultTable.getIterator(initFiles,
+                                        new TestFilter[] {s.filter});
+        }
+        catch (TestResultTable.Fault f) {
+            throw new JavaTestError(i18n.getString("report.testResult.err"));
+        }   // catch
 
-	for (; iter.hasNext(); ) {
-	    TestResult tr = (TestResult) (iter.next());
-	    // build a list of TestResults, sorted by test name
-	    width = Math.max(width, tr.getTestName().length());
-	    tests.add(tr);
-	}
+        for (; iter.hasNext(); ) {
+            TestResult tr = (TestResult) (iter.next());
+            // build a list of TestResults, sorted by test name
+            width = Math.max(width, tr.getTestName().length());
+            tests.add(tr);
+        }
 
-	TextWriter out = new TextWriter(openWriter(dir, files[SMRY_TXT]));
-	for (iter = tests.iterator(); iter.hasNext(); ) {
-	    TestResult tr = (TestResult) (iter.next());
-	    String u = tr.getTestName();
-	    out.print(u);
-	    for (int sp = u.length(); sp < width; sp++)
-		out.print(" ");
-	    out.print("  ");
-	    out.println(tr.getStatus().toString());
-	}
-	out.close();
+        TextWriter out = new TextWriter(openWriter(dir, files[SMRY_TXT]));
+        for (iter = tests.iterator(); iter.hasNext(); ) {
+            TestResult tr = (TestResult) (iter.next());
+            String u = tr.getTestName();
+            out.print(u);
+            for (int sp = u.length(); sp < width; sp++)
+                out.print(" ");
+            out.print("  ");
+            out.println(tr.getStatus().toString());
+        }
+        out.close();
     }
 
     private Writer openWriter(File reportDir, String filename) throws IOException {
-	return new BufferedWriter(new FileWriter(new File(reportDir, filename)));
+        return new BufferedWriter(new FileWriter(new File(reportDir, filename)));
     }
 
     // these fields must have synchronized indexes

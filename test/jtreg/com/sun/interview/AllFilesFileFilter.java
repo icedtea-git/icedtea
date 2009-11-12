@@ -37,24 +37,24 @@ public class AllFilesFileFilter implements FileFilter {
      * @param description A short string describing the filter.
      */
     public AllFilesFileFilter(String description) {
-	this.description = description;
+        this.description = description;
     }
-    
+
     public boolean accept(File f) {
-	return (!f.isDirectory());
+        return (!f.isDirectory());
     }
-    
+
     public boolean acceptsDirectories() {
-	return false;
+        return false;
     }
-    
+
     /**
      * Get a short description for this filter.
      * @return a short description of this filter
      */
     public String getDescription() {
-	return description;
+        return description;
     }
-    
+
     private String description;
 }

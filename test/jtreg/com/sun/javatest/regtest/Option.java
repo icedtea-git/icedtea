@@ -28,7 +28,7 @@ package com.sun.javatest.regtest;
 import java.util.Arrays;
 
 public abstract class Option {
-    
+
     public enum ArgType {
         NONE,       // -opt
         STD,        // -opt:arg
@@ -38,18 +38,18 @@ public abstract class Option {
         REST,       // -opt rest of args
         FILE        // file
     }
-    
+
     public Option(ArgType a, String g, String ln, String... names) {
         argType = a;
         group = g;
         lockName = (ln != null && ln.length() == 0 && names.length > 0 ? names[0] : ln);
         this.names = names;
     }
-    
+
     public String[] getChoices() {
         return null;
     }
-    
+
     public boolean matches(String name) {
         switch (argType) {
             case FILE:
@@ -69,7 +69,7 @@ public abstract class Option {
         }
         return false;
     }
-    
+
     public String getValue(String arg) {
         switch (argType) {
             case WILDCARD:
@@ -81,17 +81,16 @@ public abstract class Option {
         }
         return null;
     }
-    
+
     @Override
     public String toString() {
         return ("Option[" + argType + "," + group +"," + lockName + "," + Arrays.asList(names) + "]");
     }
-    
+
     public abstract void process(String opt, String arg) throws BadArgs;
-    
+
     public final ArgType argType;
     public final String group;
     public final String lockName;
     public final String[] names;
 }
-

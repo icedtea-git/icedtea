@@ -33,16 +33,16 @@ import java.util.ResourceBundle;
 /**
  * A {@link Question question} to which the response is one of a number of choices.
  */
-public abstract class ChoiceArrayQuestion extends Question 
+public abstract class ChoiceArrayQuestion extends Question
 {
     /**
-     * Create a question with a nominated tag. 
+     * Create a question with a nominated tag.
      * If this constructor is used, the choices must be supplied separately.
      * @param interview The interview containing this question.
      * @param tag A unique tag to identify this specific question.
      */
     protected ChoiceArrayQuestion(Interview interview, String tag) {
-	super(interview, tag);
+        super(interview, tag);
     }
 
     /**
@@ -54,10 +54,10 @@ public abstract class ChoiceArrayQuestion extends Question
      * @throws NullPointerException if choices is null
      */
     protected ChoiceArrayQuestion(Interview interview, String tag, String[] choices) {
-	super(interview, tag);
-	setChoices(choices, choices);
+        super(interview, tag);
+        setChoices(choices, choices);
     }
-    
+
     /**
      * Set the names of the choices for this question.
      * The choices will also be used as the display choices.
@@ -68,7 +68,7 @@ public abstract class ChoiceArrayQuestion extends Question
      * @throws NullPointerException if choices is null
      */
     protected void setChoices(String[] choices) {
-	setChoices(choices, choices);
+        setChoices(choices, choices);
     }
 
     /**
@@ -84,7 +84,7 @@ public abstract class ChoiceArrayQuestion extends Question
      * @throws NullPointerException if choices is null
      */
     protected void setChoices(String[] choices, boolean localize) {
-	setChoices(choices, (localize ? null : choices));
+        setChoices(choices, (localize ? null : choices));
     }
 
     /**
@@ -102,39 +102,39 @@ public abstract class ChoiceArrayQuestion extends Question
      * @see #getDisplayChoices
      */
     protected void setChoices(String[] choices, String[] displayChoices) {
-	if (choices == null)
-	    throw new NullPointerException();
+        if (choices == null)
+            throw new NullPointerException();
 
-	for (int i = 0; i < choices.length; i++) {
-	    if (choices[i] == null)
-		throw new NullPointerException();
-	}
+        for (int i = 0; i < choices.length; i++) {
+            if (choices[i] == null)
+                throw new NullPointerException();
+        }
 
-	if (displayChoices != null) {
-	    if (choices.length != displayChoices.length)
-		throw new IllegalArgumentException();
-	    
-	    for (int i = 0; i < displayChoices.length; i++) {
-		if (displayChoices[i] == null)
-		    throw new NullPointerException();
-	    }
-	}
+        if (displayChoices != null) {
+            if (choices.length != displayChoices.length)
+                throw new IllegalArgumentException();
 
-	this.choices = choices;
-	this.displayChoices = displayChoices;
-	value = new boolean[choices.length];
+            for (int i = 0; i < displayChoices.length; i++) {
+                if (displayChoices[i] == null)
+                    throw new NullPointerException();
+            }
+        }
 
-	if (defaultValue != null && defaultValue.length != choices.length)
-	    defaultValue = null;
+        this.choices = choices;
+        this.displayChoices = displayChoices;
+        value = new boolean[choices.length];
+
+        if (defaultValue != null && defaultValue.length != choices.length)
+            defaultValue = null;
     }
-    
+
     /**
      * Get the set of legal responses for this question.
      * @return The set of possible responses for this question.
      * @see #setChoices
      */
     public String[] getChoices() {
-	return choices;
+        return choices;
     }
 
     /**
@@ -146,27 +146,27 @@ public abstract class ChoiceArrayQuestion extends Question
      * @see #getDisplayChoices
      */
     public String[] getDisplayChoices() {
-	if (displayChoices == null) {
-	    ResourceBundle b = interview.getResourceBundle();
-	    if (b == null)
-	        return choices;
-	    else {
-		displayChoices = new String[choices.length];
-		for (int i = 0; i < choices.length; i++) {
-		    String c = choices[i];
-		    String rn = key + "." + c;
-		    try {
-			displayChoices[i] = (c == null ? null : b.getString(rn));
-		    }
-		    catch (MissingResourceException e) {
-			System.err.println("WARNING: missing resource " + rn);
-			displayChoices[i] = c;
-		    }
-		}
-	    }
-	}
+        if (displayChoices == null) {
+            ResourceBundle b = interview.getResourceBundle();
+            if (b == null)
+                return choices;
+            else {
+                displayChoices = new String[choices.length];
+                for (int i = 0; i < choices.length; i++) {
+                    String c = choices[i];
+                    String rn = key + "." + c;
+                    try {
+                        displayChoices[i] = (c == null ? null : b.getString(rn));
+                    }
+                    catch (MissingResourceException e) {
+                        System.err.println("WARNING: missing resource " + rn);
+                        displayChoices[i] = c;
+                    }
+                }
+            }
+        }
 
-	return displayChoices;
+        return displayChoices;
     }
 
     /**
@@ -176,82 +176,82 @@ public abstract class ChoiceArrayQuestion extends Question
      * @see #setDefaultValue
      */
     public boolean[] getDefaultValue() {
-	return defaultValue;
+        return defaultValue;
     }
 
     /**
-     * Set the default response for this question, 
-     * used by the clear method. 
+     * Set the default response for this question,
+     * used by the clear method.
      * @param v the default response for this question.
      *
      * @see #getDefaultValue
      */
     public void setDefaultValue(boolean[] v) {
-	defaultValue = v;
+        defaultValue = v;
     }
-    
+
     /**
      * Get the current (default or latest) response to this question.
-     * @return The current value. 
+     * @return The current value.
      * @see #setValue
      * @throws IllegalStateException if no choices have been set, defining
      *   the set of responses to this question
      * @see #setChoices
      */
     public boolean[] getValue() {
-	if (value == null)
-	    throw new IllegalStateException();
+        if (value == null)
+            throw new IllegalStateException();
 
-	// returns a copy of the data
-	boolean[] cp = null;
-	if (value != null) {
-	    cp = new boolean[value.length];
-	    for (int i = 0; i < value.length; i++)
-		cp[i] = value[i];
-	}
+        // returns a copy of the data
+        boolean[] cp = null;
+        if (value != null) {
+            cp = new boolean[value.length];
+            for (int i = 0; i < value.length; i++)
+                cp[i] = value[i];
+        }
 
-	return cp;
+        return cp;
     }
 
     /**
      * Verify this question is on the current path, and if it is,
      * return the current value.
      * @return the current value of this question
-     * @throws Interview.NotOnPathFault if this question is not on the 
+     * @throws Interview.NotOnPathFault if this question is not on the
      * current path
      * @see #getValue
      */
-    public boolean[] getValueOnPath() 
-	throws Interview.NotOnPathFault
+    public boolean[] getValueOnPath()
+        throws Interview.NotOnPathFault
     {
-	interview.verifyPathContains(this);
-	return getValue();
+        interview.verifyPathContains(this);
+        return getValue();
     }
 
     public String getStringValue() {
-	if (value == null)
-	    return "";
+        if (value == null)
+            return "";
 
-	if (value.length != choices.length)
-	    throw new IllegalStateException();
+        if (value.length != choices.length)
+            throw new IllegalStateException();
 
-	StringBuffer sb = new StringBuffer();
-	if (value != null) {
-	    for (int i = 0; i < value.length; i++) {
-		if (value[i]) {
-		    if (sb.length() > 0)
-			sb.append(' ');
-		    sb.append(choices[i].replace(' ', '_'));
-		}
-	    }
-	}
+        StringBuffer sb = new StringBuffer();
+        if (value != null) {
+            for (int i = 0; i < value.length; i++) {
+                if (value[i]) {
+                    if (sb.length() > 0)
+                        sb.append(' ');
+                    sb.append(choices[i].replace(' ', '_'));
+                }
+            }
+        }
 
-	return sb.toString();
+        return sb.toString();
     }
-	    
+
 
     /**
-     * Set the current value. 
+     * Set the current value.
      * @param newValue The value to be set. The value is broken into words,
      * and each word must identify one of the set of choices for this question.
      * The set of choices so identified will be set to true.
@@ -259,42 +259,42 @@ public abstract class ChoiceArrayQuestion extends Question
      * @see #getValue
      */
     public void setValue(String newValue) {
-	if (choices == null)
-	    return;
+        if (choices == null)
+            return;
 
-	boolean[] bb = new boolean[choices.length];
+        boolean[] bb = new boolean[choices.length];
 
-	int start = -1;
-	for (int i = 0; i < newValue.length(); i++) {
-	    if (white(newValue.charAt(i))) {
-	        if (start != -1)
-		    set(bb, newValue.substring(start, i));
-	        start = -1;
-	    } else
-	        if (start == -1)
-		    start = i;
-	}
-	if (start != -1)
-	    set(bb, newValue.substring(start));
+        int start = -1;
+        for (int i = 0; i < newValue.length(); i++) {
+            if (white(newValue.charAt(i))) {
+                if (start != -1)
+                    set(bb, newValue.substring(start, i));
+                start = -1;
+            } else
+                if (start == -1)
+                    start = i;
+        }
+        if (start != -1)
+            set(bb, newValue.substring(start));
 
-	setValue(bb);
+        setValue(bb);
     }
 
     public boolean isValueValid() {
-	return true;
+        return true;
     }
 
     public boolean isValueAlwaysValid() {
-	return false;
+        return false;
     }
 
     private void set(boolean[] bb, String s) {
-	for (int i = 0; i < choices.length; i++) {
-	    if (s.equals(choices[i].replace(' ', '_'))) {
-		bb[i] = true;
-		return;
-	    }
-	}
+        for (int i = 0; i < choices.length; i++) {
+            if (s.equals(choices[i].replace(' ', '_'))) {
+                bb[i] = true;
+                return;
+            }
+        }
     }
 
     private static boolean white(char c) {
@@ -302,36 +302,36 @@ public abstract class ChoiceArrayQuestion extends Question
     }
 
     /**
-     * Set the current value. 
+     * Set the current value.
      * @param newValue The new value: one boolean per choice, indicating whether
      * the corresponding choice is selected or not.
      * @see #getValue
      */
     public void setValue(boolean[] newValue) {
-	if (choices == null)
-	    return;
+        if (choices == null)
+            return;
 
-	boolean changed = false;
+        boolean changed = false;
 
-	if (newValue == null) {
-	    for (int i = 0; i < value.length; i++) {
-		if (!changed)
-		    changed = (value[i] != false);
-		value[i] = false;
-	    }
-	}
-	else {
-	    for (int i = 0; i < Math.min(newValue.length, value.length); i++) {
-		if (!changed)
-		    changed = (value[i] != newValue[i]);
-		value[i] = newValue[i];
-	    }
-	}
+        if (newValue == null) {
+            for (int i = 0; i < value.length; i++) {
+                if (!changed)
+                    changed = (value[i] != false);
+                value[i] = false;
+            }
+        }
+        else {
+            for (int i = 0; i < Math.min(newValue.length, value.length); i++) {
+                if (!changed)
+                    changed = (value[i] != newValue[i]);
+                value[i] = newValue[i];
+            }
+        }
 
-	if (changed) {
-	    interview.updatePath(this);
-	    interview.setEdited(true);
-	}
+        if (changed) {
+            interview.updatePath(this);
+            interview.setEdited(true);
+        }
     }
 
     /**
@@ -339,7 +339,7 @@ public abstract class ChoiceArrayQuestion extends Question
      * back to its initial state.
      */
     public void clear() {
-	setValue(defaultValue);
+        setValue(defaultValue);
     }
 
     /**
@@ -348,9 +348,9 @@ public abstract class ChoiceArrayQuestion extends Question
      * @param data The map from which to load the value for this question.
      */
     protected void load(Map data) {
-	Object o = data.get(tag);
-	if (o != null && o instanceof String) 
-	    setValue((String)o);
+        Object o = data.get(tag);
+        if (o != null && o instanceof String)
+            setValue((String)o);
     }
 
     /**
@@ -359,7 +359,7 @@ public abstract class ChoiceArrayQuestion extends Question
      * @param data The map in which to save the value for this question.
      */
     protected void save(Map data) {
-	data.put(tag, getStringValue());
+        data.put(tag, getStringValue());
     }
 
     /**

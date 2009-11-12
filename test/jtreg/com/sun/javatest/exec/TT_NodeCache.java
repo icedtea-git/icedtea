@@ -47,7 +47,7 @@ import com.sun.javatest.util.DynamicArray;
  * Objects of this type run to completion and are then immutable.
  */
 class TT_NodeCache implements Runnable {
-    /** 
+    /**
      * Construct a cache object which will collect info about the given node
      * with respsect to the supplied filter.
      *
@@ -55,37 +55,37 @@ class TT_NodeCache implements Runnable {
      * @param f Filter to use when producing information.  Can be null.
      */
     TT_NodeCache(TestResultTable.TreeNode n, TestFilter f) {
-	filter = f;
-	node = n;
+        filter = f;
+        node = n;
 
-	// all the states plus filtered out
-	testLists = new Vector[Status.NUM_STATES+1];
-	for (int i = 0; i < Status.NUM_STATES+1; i++)
-	    testLists[i] = new Vector();
+        // all the states plus filtered out
+        testLists = new Vector[Status.NUM_STATES+1];
+        for (int i = 0; i < Status.NUM_STATES+1; i++)
+            testLists[i] = new Vector();
     }
 
     /**
      * Start or resume processing.
      */
     public void run() {
-	if (debug) {
-	    Debug.println("TT_NodeCache starting");
-	    Debug.println("   -> " + this);
-	    Debug.println("   -> node " + node + "(" + node.getName() + ")");
-	    Debug.println("   -> filter=" + filter);
-	    Debug.println("   -> old state=" + state);
-	}
+        if (debug) {
+            Debug.println("TT_NodeCache starting");
+            Debug.println("   -> " + this);
+            Debug.println("   -> node " + node + "(" + node.getName() + ")");
+            Debug.println("   -> filter=" + filter);
+            Debug.println("   -> old state=" + state);
+        }
 
-	// needed for a new run, a paused object will already have one
-	if (it == null)
-	    it = init();
-	
-	if (debug)
-	    Debug.println("   -> iterator= " + it);
+        // needed for a new run, a paused object will already have one
+        if (it == null)
+            it = init();
 
-	state = COMPUTING;
+        if (debug)
+            Debug.println("   -> iterator= " + it);
 
-	process();
+        state = COMPUTING;
+
+        process();
     }
 
     /**
@@ -96,13 +96,13 @@ class TT_NodeCache implements Runnable {
      * @see #resume()
      */
     void pause() {
-	if (state < COMPLETED) {
-	    state = PAUSED;
-	    if (debug) {
-		Debug.println("TT_NodeCache for " + node.getName() + " pausing...");
-	    }
-	}
-	// else do nothing
+        if (state < COMPLETED) {
+            state = PAUSED;
+            if (debug) {
+                Debug.println("TT_NodeCache for " + node.getName() + " pausing...");
+            }
+        }
+        // else do nothing
     }
 
     /**
@@ -111,11 +111,11 @@ class TT_NodeCache implements Runnable {
      * @throws IllegalStateException if <tt>pause()</tt> was not previously called.
      */
     void resume() {
-	if (state != PAUSED)
-	    throw new IllegalStateException("Cache node not previously paused.");
+        if (state != PAUSED)
+            throw new IllegalStateException("Cache node not previously paused.");
 
-	state = COMPUTING;
-	process();
+        state = COMPUTING;
+        process();
     }
 
     /**
@@ -123,112 +123,112 @@ class TT_NodeCache implements Runnable {
      *         if it does not.
      */
     synchronized boolean add(TestResultTable.TreeNode[] path, TestResult what, int index) {
-	boolean result = false;
-	boolean wouldAccept = false;	 // special case because of filtering
-	boolean needsProcessing = false;
+        boolean result = false;
+        boolean wouldAccept = false;     // special case because of filtering
+        boolean needsProcessing = false;
 
-	// not even running yet
-	if (it == null)
-	    return false;
+        // not even running yet
+        if (it == null)
+            return false;
 
-	try {
-	    TestDescription td = what.getDescription();
-	    TestFilter rejector = null;
+        try {
+            TestDescription td = what.getDescription();
+            TestFilter rejector = null;
 
-	    synchronized(fObs) {
-		wouldAccept = filter.accepts(td, fObs);
-		if (!wouldAccept && fObs.lastTd == td) {
-		    rejector = fObs.lastRejector;
-		    fObs.clear();
-		}
-	    }	// sync
+            synchronized(fObs) {
+                wouldAccept = filter.accepts(td, fObs);
+                if (!wouldAccept && fObs.lastTd == td) {
+                    rejector = fObs.lastRejector;
+                    fObs.clear();
+                }
+            }   // sync
 
-	    needsProcessing = (!it.isPending(what));
+            needsProcessing = (!it.isPending(what));
 
-	    if (!needsProcessing) {
-		// It's still going to come out of the iterator.
-		// Make sure it's not the one which is committed to be next.
-		// Would be nice to work around this in a different way, either
-		// here or in the iterator.
-		Object peek = it.peek();
-		if (peek instanceof TestResult &&
-		    ((TestResult)peek).getTestName().equals(what.getTestName())) {
-		    TestResult junk = (TestResult)(it.next());	    // consume
-		    needsProcessing= true;
-		}
-		else { }
-	    }
-	    else { }
+            if (!needsProcessing) {
+                // It's still going to come out of the iterator.
+                // Make sure it's not the one which is committed to be next.
+                // Would be nice to work around this in a different way, either
+                // here or in the iterator.
+                Object peek = it.peek();
+                if (peek instanceof TestResult &&
+                    ((TestResult)peek).getTestName().equals(what.getTestName())) {
+                    TestResult junk = (TestResult)(it.next());      // consume
+                    needsProcessing= true;
+                }
+                else { }
+            }
+            else { }
 
-	    if (needsProcessing) {
-		if (!wouldAccept) {
-		    // add to filtered out list
-		    localRejectCount++;
-		    testLists[testLists.length-1].add(what);
- 		    rejectReasons.put(what, rejector);
-		}
-		else {
-		    int type = what.getStatus().getType();
+            if (needsProcessing) {
+                if (!wouldAccept) {
+                    // add to filtered out list
+                    localRejectCount++;
+                    testLists[testLists.length-1].add(what);
+                    rejectReasons.put(what, rejector);
+                }
+                else {
+                    int type = what.getStatus().getType();
 
-		    // unfortuantely the add/remove messages don't seem to
-		    // be 100% symmetric, or else there is some other race
-		    // condition.  I tried to find the problem, but 0-5 tests out
-		    // of 10000 will end up added twice when loading a workdir at
-		    // startup. 12/9/2002
-		    if (!testLists[type].contains(what)) {
-			stats[type]++;
-			testLists[type].add(what);
-		    }
-		    else {
-		    }
-		}
+                    // unfortuantely the add/remove messages don't seem to
+                    // be 100% symmetric, or else there is some other race
+                    // condition.  I tried to find the problem, but 0-5 tests out
+                    // of 10000 will end up added twice when loading a workdir at
+                    // startup. 12/9/2002
+                    if (!testLists[type].contains(what)) {
+                        stats[type]++;
+                        testLists[type].add(what);
+                    }
+                    else {
+                    }
+                }
 
-		result = true;
-	    }
-	    else {	// will be counted later...
-		result = false;
-	    }
+                result = true;
+            }
+            else {      // will be counted later...
+                result = false;
+            }
 
-	    // send out notifications if needed
-	    notify((wouldAccept ?
-		    what.getStatus().getType()+TT_NodeCacheObserver.OFFSET_FROM_STATUS
-		    : TT_NodeCacheObserver.MSGS_FILTERED),
-		    true, path, what, index);
+            // send out notifications if needed
+            notify((wouldAccept ?
+                    what.getStatus().getType()+TT_NodeCacheObserver.OFFSET_FROM_STATUS
+                    : TT_NodeCacheObserver.MSGS_FILTERED),
+                    true, path, what, index);
 
-	    if (result)
-		notifyStats();
-	}
-	catch (TestResult.Fault f) {
-	    if (debug) {
-		f.printStackTrace(Debug.getWriter());
-		Debug.println("TT_NC - TR fault, purging old info. " + what.getTestName());
-	    }
+            if (result)
+                notifyStats();
+        }
+        catch (TestResult.Fault f) {
+            if (debug) {
+                f.printStackTrace(Debug.getWriter());
+                Debug.println("TT_NC - TR fault, purging old info. " + what.getTestName());
+            }
 
-	    // TR is somehow corrupt, remove it
-	    what = node.getEnclosingTable().resetTest(what.getTestName());
-	    result = false;
-	}
-	catch (TestFilter.Fault f) {
-	    if (debug)
-		f.printStackTrace(Debug.getWriter());
+            // TR is somehow corrupt, remove it
+            what = node.getEnclosingTable().resetTest(what.getTestName());
+            result = false;
+        }
+        catch (TestFilter.Fault f) {
+            if (debug)
+                f.printStackTrace(Debug.getWriter());
 
-	    // filter is broken, shove everything into filtered out.
-	    // this behavior is similar to what would happen in the same
-	    // case when the harness is iterating to select tests to run.
-	    // trying to only do this if counting of this test would have 
-	    // been necessary.
-	    if (needsProcessing) {
-		localRejectCount++;
-		testLists[testLists.length-1].add(what);
-		// this reject will not have a reason entry in
-		// rejectReasons
-	    }
+            // filter is broken, shove everything into filtered out.
+            // this behavior is similar to what would happen in the same
+            // case when the harness is iterating to select tests to run.
+            // trying to only do this if counting of this test would have
+            // been necessary.
+            if (needsProcessing) {
+                localRejectCount++;
+                testLists[testLists.length-1].add(what);
+                // this reject will not have a reason entry in
+                // rejectReasons
+            }
 
-	    // ignore error and don't do anything
-	    result = false;
-	}
+            // ignore error and don't do anything
+            result = false;
+        }
 
-	return result;
+        return result;
     }
 
     /**
@@ -236,51 +236,51 @@ class TT_NodeCache implements Runnable {
      *         if it does not.
      */
     synchronized boolean remove(TestResultTable.TreeNode[] path, TestResult what, int index) {
-	boolean result = false;
-	// special case because of filtering
+        boolean result = false;
+        // special case because of filtering
 
-	// not even running yet
-	if (it == null)
-	    return false;
+        // not even running yet
+        if (it == null)
+            return false;
 
-	boolean wouldAccept = false;
-	int type = what.getStatus().getType();
+        boolean wouldAccept = false;
+        int type = what.getStatus().getType();
 
-	if (!it.isPending(what)) {	    // check interator position
-	    int[] rmList = locateTestInLists(what, type, -1);
+        if (!it.isPending(what)) {          // check interator position
+            int[] rmList = locateTestInLists(what, type, -1);
 
-	    if (rmList[0] != -1) {
-		Object junk = testLists[rmList[0]].remove(rmList[1]);
+            if (rmList[0] != -1) {
+                Object junk = testLists[rmList[0]].remove(rmList[1]);
 
-		// decrement counter
-		if (rmList[0] < stats.length) {
-		    stats[rmList[0]]--;
-		}
-		else
-		    localRejectCount--;
+                // decrement counter
+                if (rmList[0] < stats.length) {
+                    stats[rmList[0]]--;
+                }
+                else
+                    localRejectCount--;
 
-		// send out notifications if needed
-		notify(rmList[0]+TT_NodeCacheObserver.OFFSET_FROM_STATUS, false, path, what, index);
-		result = true;
-	    }
-	    else { }
-	}
-	else {	// pending in iterator
-	    Object peek = it.peek();
-	    if (peek instanceof TestResult &&
-		((TestResult)peek).getTestName().equals(what.getTestName())) {
-		TestResult junk = (TestResult)(it.next());	    // consume
+                // send out notifications if needed
+                notify(rmList[0]+TT_NodeCacheObserver.OFFSET_FROM_STATUS, false, path, what, index);
+                result = true;
+            }
+            else { }
+        }
+        else {  // pending in iterator
+            Object peek = it.peek();
+            if (peek instanceof TestResult &&
+                ((TestResult)peek).getTestName().equals(what.getTestName())) {
+                TestResult junk = (TestResult)(it.next());          // consume
 
-		// do it again to make it happen
-		result = remove(path, what, index);
-	    }
-	    
-	}
+                // do it again to make it happen
+                result = remove(path, what, index);
+            }
 
-	if (result)
-	    notifyStats();
+        }
 
-	return result;
+        if (result)
+            notifyStats();
+
+        return result;
     }
 
     /**
@@ -288,115 +288,115 @@ class TT_NodeCache implements Runnable {
      *         if it does not.
      */
     synchronized boolean replace(TestResultTable.TreeNode[] path, TestResult what,
-				 int index, TestResult old) {
-	boolean result = false;
-	// not even running yet
-	if (it == null)
-	    return false;
+                                 int index, TestResult old) {
+        boolean result = false;
+        // not even running yet
+        if (it == null)
+            return false;
 
-	if (!it.isPending(what)) {	    // check interator position
-	    int typeNew = what.getStatus().getType();
-	    int typeOld = old.getStatus().getType();
+        if (!it.isPending(what)) {          // check interator position
+            int typeNew = what.getStatus().getType();
+            int typeOld = old.getStatus().getType();
 
-	    // filtering of old does not work because of the status filter
-	    boolean wouldAcceptNew = false;
-	    TestFilter rejector = null;
+            // filtering of old does not work because of the status filter
+            boolean wouldAcceptNew = false;
+            TestFilter rejector = null;
 
-	    try {
-		TestDescription td = what.getDescription();
+            try {
+                TestDescription td = what.getDescription();
 
-		synchronized(fObs) {
-		    wouldAcceptNew = filter.accepts(td, fObs);
-		    if (!wouldAcceptNew && fObs.lastTd == td) {
-			rejector = fObs.lastRejector;
-			fObs.clear();
-		    }
-		}	// sync
-	    }   // try
-	    catch (TestResult.Fault f) {
-		if (debug)
-		    f.printStackTrace(Debug.getWriter());
+                synchronized(fObs) {
+                    wouldAcceptNew = filter.accepts(td, fObs);
+                    if (!wouldAcceptNew && fObs.lastTd == td) {
+                        rejector = fObs.lastRejector;
+                        fObs.clear();
+                    }
+                }       // sync
+            }   // try
+            catch (TestResult.Fault f) {
+                if (debug)
+                    f.printStackTrace(Debug.getWriter());
 
-		// ignore error and don't do anything
-		return false;
-	    }	// catch
-	    catch (TestFilter.Fault f) {
-		if (debug)
-		    f.printStackTrace(Debug.getWriter());
+                // ignore error and don't do anything
+                return false;
+            }   // catch
+            catch (TestFilter.Fault f) {
+                if (debug)
+                    f.printStackTrace(Debug.getWriter());
 
-		// ignore error and don't do anything
-		return false;
-	    }	// catch
+                // ignore error and don't do anything
+                return false;
+            }   // catch
 
-	    // inserting into one of the status lists or the filtered out list
-	    int targetList = (wouldAcceptNew ? typeNew : testLists.length-1);
-	    int[] rmList = null;
+            // inserting into one of the status lists or the filtered out list
+            int targetList = (wouldAcceptNew ? typeNew : testLists.length-1);
+            int[] rmList = null;
 
-	    // optimization to search based on expected location of old test
-	    // and optimize out null changes
-	    if (what == old) {
-		if (typeOld != typeNew) {	// special case optimization
-		    // no change to lists
-		    rmList = new int[] {-1, -1};
-		}
-		else {
-		    rmList = locateTestInLists(old, Status.NOT_RUN, targetList);
+            // optimization to search based on expected location of old test
+            // and optimize out null changes
+            if (what == old) {
+                if (typeOld != typeNew) {       // special case optimization
+                    // no change to lists
+                    rmList = new int[] {-1, -1};
+                }
+                else {
+                    rmList = locateTestInLists(old, Status.NOT_RUN, targetList);
 
-		    if (rmList[0] == targetList) {
-			// same TR object, same status
-			// use -1 to specify no remove action
-			rmList[0] = -1;
-			rmList[1] = -1;
-		    }
-		}
-	    }
-	    else
-		rmList = locateTestInLists(old, typeOld, targetList);
+                    if (rmList[0] == targetList) {
+                        // same TR object, same status
+                        // use -1 to specify no remove action
+                        rmList[0] = -1;
+                        rmList[1] = -1;
+                    }
+                }
+            }
+            else
+                rmList = locateTestInLists(old, typeOld, targetList);
 
-	    if (rmList[0] != -1) {
-		Object junk = testLists[rmList[0]].remove(rmList[1]);
-		testLists[targetList].add(what);
+            if (rmList[0] != -1) {
+                Object junk = testLists[rmList[0]].remove(rmList[1]);
+                testLists[targetList].add(what);
 
-		// decrement counter
-		if (rmList[0] < stats.length)
-		    stats[rmList[0]]--;
-		else {
-		    localRejectCount--;
-		    rejectReasons.remove(what);
-		}
+                // decrement counter
+                if (rmList[0] < stats.length)
+                    stats[rmList[0]]--;
+                else {
+                    localRejectCount--;
+                    rejectReasons.remove(what);
+                }
 
-		// increment counter
-		if (targetList < stats.length)
-		    stats[targetList]++;
-		else {
-		    localRejectCount++;
-		    rejectReasons.put(what, rejector);
-		}
+                // increment counter
+                if (targetList < stats.length)
+                    stats[targetList]++;
+                else {
+                    localRejectCount++;
+                    rejectReasons.put(what, rejector);
+                }
 
-		// remove the old
-		// add the new
-		notify(rmList[0]+TT_NodeCacheObserver.OFFSET_FROM_STATUS,
-			false, path, old, index);
-		notify(targetList+TT_NodeCacheObserver.OFFSET_FROM_STATUS,
-			true, path, what, index);
+                // remove the old
+                // add the new
+                notify(rmList[0]+TT_NodeCacheObserver.OFFSET_FROM_STATUS,
+                        false, path, old, index);
+                notify(targetList+TT_NodeCacheObserver.OFFSET_FROM_STATUS,
+                        true, path, what, index);
 
-		result = true;
-	    }
-	    else {
-		// must be a null change
-	    }
-	}
-	else	// this TR has yet to be processed
-	    result = false;
+                result = true;
+            }
+            else {
+                // must be a null change
+            }
+        }
+        else    // this TR has yet to be processed
+            result = false;
 
-	if (result)
-	    notifyStats();
+        if (result)
+            notifyStats();
 
-	return result;
+        return result;
     }
 
     boolean isPaused() {
-	return (state == PAUSED);
+        return (state == PAUSED);
     }
 
     /**
@@ -404,18 +404,18 @@ class TT_NodeCache implements Runnable {
      * This translates to being either unprocessed or paused.
      */
     boolean canRun() {
-	return ((state == PAUSED || state == NOT_COMPUTED) &&
-	        valid == true);
+        return ((state == PAUSED || state == NOT_COMPUTED) &&
+                valid == true);
     }
 
     void halt() {
-	if (debug) {
-	    Debug.println("TT_NodeCache thread stopping");
-	    Debug.println("   -> " + this);
-	}
+        if (debug) {
+            Debug.println("TT_NodeCache thread stopping");
+            Debug.println("   -> " + this);
+        }
 
-	state = ABORTED;
-	valid = false;
+        state = ABORTED;
+        valid = false;
     }
 
     /**
@@ -426,7 +426,7 @@ class TT_NodeCache implements Runnable {
      * @see #isPaused()
      */
     boolean isActive() {
-	return (state == COMPUTING);
+        return (state == COMPUTING);
     }
 
     /**
@@ -435,7 +435,7 @@ class TT_NodeCache implements Runnable {
      *         unless this node is invalidated.
      */
     boolean isComplete() {
-	return (state == COMPLETED);
+        return (state == COMPLETED);
     }
 
     /**
@@ -443,9 +443,9 @@ class TT_NodeCache implements Runnable {
      * @see #isValid()
      */
     void invalidate() {
-	valid = false;
-	//node.removeObserver(watcher);
-	//watcher = null;
+        valid = false;
+        //node.removeObserver(watcher);
+        //watcher = null;
     }
 
     /**
@@ -456,15 +456,15 @@ class TT_NodeCache implements Runnable {
      * @see #invalidate()
      */
     boolean isValid() {
-	return valid;
+        return valid;
     }
 
     TestResultTable.TreeNode getNode() {
-	return node;
+        return node;
     }
 
     TestFilter getFilter() {
-	return filter;
+        return filter;
     }
 
     /**
@@ -477,20 +477,20 @@ class TT_NodeCache implements Runnable {
      * @see com.sun.javatest.Status#NUM_STATES
      */
     int[] getStats() {
-	/* in case we want to do copies
-	int[] copy = null;
+        /* in case we want to do copies
+        int[] copy = null;
 
-	if (it != null) {
-	    int[] stats = it.getResultStats();
-	    copy = new int[stats.length];
-	    System.arraycopy(stats, 0, copy, 0, stats.length);
-	}
-	else {
-	    copy = new int[Status.NUM_STATES];
-	}
-	*/
+        if (it != null) {
+            int[] stats = it.getResultStats();
+            copy = new int[stats.length];
+            System.arraycopy(stats, 0, copy, 0, stats.length);
+        }
+        else {
+            copy = new int[Status.NUM_STATES];
+        }
+        */
 
-	return stats;
+        return stats;
     }
 
     /**
@@ -498,14 +498,14 @@ class TT_NodeCache implements Runnable {
      * @return Number of rejected tests found in and below this node.
      */
     int getRejectCount() {
-	if (it != null)
-	    return it.getRejectCount() + localRejectCount;
-	else
-	    return localRejectCount;
+        if (it != null)
+            return it.getRejectCount() + localRejectCount;
+        else
+            return localRejectCount;
     }
 
     TestFilter getRejectReason(TestResult tr) {
-	return (TestFilter)(rejectReasons.get(tr));
+        return (TestFilter)(rejectReasons.get(tr));
     }
 
     /**
@@ -520,21 +520,21 @@ class TT_NodeCache implements Runnable {
      *         <tt>needSnapshot</tt> is false.
      */
     synchronized Vector[] addObserver(TT_NodeCacheObserver obs, boolean needSnapshot) {
-	// snapshot the current data
-	// must be done before adding the observer to ensure correct data
-	// delivery to client
+        // snapshot the current data
+        // must be done before adding the observer to ensure correct data
+        // delivery to client
 
-	Vector[] cp = null;
-	if (needSnapshot) {
-	    cp = new Vector[testLists.length];
-	    for (int i = 0; i < testLists.length; i++)
-		cp[i] = (Vector)(testLists[i].clone());
-	}
+        Vector[] cp = null;
+        if (needSnapshot) {
+            cp = new Vector[testLists.length];
+            for (int i = 0; i < testLists.length; i++)
+                cp[i] = (Vector)(testLists[i].clone());
+        }
 
-	if (obs != null)
-	    observers = (TT_NodeCacheObserver[])DynamicArray.append(observers, obs);
+        if (obs != null)
+            observers = (TT_NodeCacheObserver[])DynamicArray.append(observers, obs);
 
-	return cp;
+        return cp;
     }
 
     // advisory - many thread access this.  you should lock this object before
@@ -542,17 +542,17 @@ class TT_NodeCache implements Runnable {
     // THEN itself (the GUI component) for proper locking sequence, since the
     // highest contention is for this cache object.
     synchronized void removeObserver(TT_NodeCacheObserver obs) {
-	observers = (TT_NodeCacheObserver[])DynamicArray.remove(observers, obs);
+        observers = (TT_NodeCacheObserver[])DynamicArray.remove(observers, obs);
     }
 
     // ------------- PRIVATE -----------------
 
     private void process() {
-	while (state != ABORTED && state != PAUSED && it.hasNext()) {
-	    try {
+        while (state != ABORTED && state != PAUSED && it.hasNext()) {
+            try {
                 synchronized (node) {       // to maintain locking order
-                    synchronized (this) {	// sync to lockout during add/remove/replace
-                        if (!it.hasNext())	// need to recheck after locking
+                    synchronized (this) {       // sync to lockout during add/remove/replace
+                        if (!it.hasNext())      // need to recheck after locking
                             continue;
 
                         TestResult tr = (TestResult)it.next();
@@ -571,13 +571,13 @@ class TT_NodeCache implements Runnable {
                                 // asssume it is accepted, this is what would
                                 // happen for test exection as well
                                 wouldAccept = true;
-                            }	// catch
+                            }   // catch
 
                             if (!wouldAccept && fObs.lastTd == td) {
                                 rejector = fObs.lastRejector;
                                 fObs.clear();
                             }
-                        }	// sync
+                        }       // sync
 
                         if (wouldAccept) {
                             int type = tr.getStatus().getType();
@@ -611,22 +611,22 @@ class TT_NodeCache implements Runnable {
                             notify(TT_NodeCacheObserver.MSGS_FILTERED,
                                true, null, tr, -1);
                         }
-                    }	// sync this
-                }	// sync node
-	    }   // try
-	    catch (TestResult.Fault f) {
-		if (debug)
-		    f.printStackTrace(Debug.getWriter());
+                    }   // sync this
+                }       // sync node
+            }   // try
+            catch (TestResult.Fault f) {
+                if (debug)
+                    f.printStackTrace(Debug.getWriter());
 
-		// try to recover it?
-		// ignore error and don't do anything
-	    }   // catch
+                // try to recover it?
+                // ignore error and don't do anything
+            }   // catch
 
-	    notifyStats();
-	}   // while
+            notifyStats();
+        }   // while
 
-	if (state != PAUSED)
-	    cleanup();
+        if (state != PAUSED)
+            cleanup();
     }
 
     /**
@@ -637,75 +637,75 @@ class TT_NodeCache implements Runnable {
      * @param tr The test to locate.
      * @param firstListToCheck Hint of where to start looking.  -1 to specify none.
      * @param lastListToCheck Hint of where the last place to look should be.
-     *		-1 to specify none.
+     *          -1 to specify none.
      * @return Array describing [0] which list the item was found in, [1] at
      *         what index.  If [0] is greater than -1, then so will [1].  [0]
      *         of -1 indicates that then item was not found.
      */
     private int[] locateTestInLists(TestResult tr, int firstListToCheck,
-				    int lastListToCheck) {
-	int[] result = new int[2];
-	result[0] = -1;
-	result[1] = -1;
-	
-	if (firstListToCheck >= 0) {
-	    int possible = testLists[firstListToCheck].indexOf(tr);
-	    if (possible != -1) {
-		// done with search
-		result[0] = firstListToCheck;
-		result[1] = possible;
-	    }
-	}
-	else { }
+                                    int lastListToCheck) {
+        int[] result = new int[2];
+        result[0] = -1;
+        result[1] = -1;
 
-	// do a more exhaustive search if not found yet
-	if (result[0] == -1) {
-	    for (int i = 0; i < testLists.length; i++) {
-		// skip the lists which have been checked or that should be
-		// checked last
-		// this is just a performance optimization
-		if (i == firstListToCheck || i == lastListToCheck)
-		    continue;
+        if (firstListToCheck >= 0) {
+            int possible = testLists[firstListToCheck].indexOf(tr);
+            if (possible != -1) {
+                // done with search
+                result[0] = firstListToCheck;
+                result[1] = possible;
+            }
+        }
+        else { }
 
-		int possible = testLists[i].indexOf(tr);
-		if (possible != -1) {
-		    // found in list i, position possible
-		    // done with search
-		    result[0] = i;
-		    result[1] = possible;
-		    break;
-		}
-	    }	// for
-	}
+        // do a more exhaustive search if not found yet
+        if (result[0] == -1) {
+            for (int i = 0; i < testLists.length; i++) {
+                // skip the lists which have been checked or that should be
+                // checked last
+                // this is just a performance optimization
+                if (i == firstListToCheck || i == lastListToCheck)
+                    continue;
 
-	// if still not found, check the list which was specified to be checked
-	// last, this is just a performance optimization
-	if (result[0] == -1 && lastListToCheck >= 0) {
-	    int possible = testLists[lastListToCheck].indexOf(tr);
-	    if (possible != -1) {
-		result[0] = lastListToCheck;
-		result[1] = possible;
-	    }
-	}
+                int possible = testLists[i].indexOf(tr);
+                if (possible != -1) {
+                    // found in list i, position possible
+                    // done with search
+                    result[0] = i;
+                    result[1] = possible;
+                    break;
+                }
+            }   // for
+        }
 
-	return result;
+        // if still not found, check the list which was specified to be checked
+        // last, this is just a performance optimization
+        if (result[0] == -1 && lastListToCheck >= 0) {
+            int possible = testLists[lastListToCheck].indexOf(tr);
+            if (possible != -1) {
+                result[0] = lastListToCheck;
+                result[1] = possible;
+            }
+        }
+
+        return result;
     }
 
     /**
      * Determine the index of a particular test in a vector.
      */
     private int searchList(TestResult target, Vector list) {
-	int possible = list.indexOf(target);
-	return possible;
+        int possible = list.indexOf(target);
+        return possible;
     }
 
     private void cleanup() {
-	if (state == ABORTED) {
-	    // no valid info
-	    return;
-	}
+        if (state == ABORTED) {
+            // no valid info
+            return;
+        }
 
-	state = COMPLETED;
+        state = COMPLETED;
      }
 
     /**
@@ -714,62 +714,62 @@ class TT_NodeCache implements Runnable {
      * @return Iterator for this node, or null if not possible.
      */
     private TestResultTable.TreeIterator init() {
-	if (node == null) {
-	    valid = false;
-	    state = ABORTED;
-	    return null;
-	}
+        if (node == null) {
+            valid = false;
+            state = ABORTED;
+            return null;
+        }
 
-	// wait for TRT to settle down
-	//node.getEnclosingTable().waitUntilReady();
+        // wait for TRT to settle down
+        //node.getEnclosingTable().waitUntilReady();
 
-	//if (filter != null)
-	//    return TestResultTable.getIterator(node, filter);
-	//else
-	    return TestResultTable.getIterator(node);
+        //if (filter != null)
+        //    return TestResultTable.getIterator(node, filter);
+        //else
+            return TestResultTable.getIterator(node);
     }
 
     private synchronized void notify(int type, boolean isAdd,
-				     TestResultTable.TreeNode[] path,
-				     TestResult what, int index) {
-	if (observers.length == 0) {
-	    return;
-	}
+                                     TestResultTable.TreeNode[] path,
+                                     TestResult what, int index) {
+        if (observers.length == 0) {
+            return;
+        }
 
-	for (int i = 0; i < observers.length; i++) {
-	    boolean[] mask = observers[i].getEventMasks();
-	    if (mask[0] || mask[type]) {
-		if (isAdd) {
-		    observers[i].testAdded(type, path, what, index);
-		}
-		else {
-		    observers[i].testRemoved(type, path, what, index);
-		}
-	    }
-	}   // for
+        for (int i = 0; i < observers.length; i++) {
+            boolean[] mask = observers[i].getEventMasks();
+            if (mask[0] || mask[type]) {
+                if (isAdd) {
+                    observers[i].testAdded(type, path, what, index);
+                }
+                else {
+                    observers[i].testRemoved(type, path, what, index);
+                }
+            }
+        }   // for
     }
 
     private synchronized void notifyStats() {
-	if (observers.length == 0)
-	    return;
-	
-	for (int i = 0; i < observers.length; i++) {
-	    boolean[] mask = observers[i].getEventMasks();
-	    if (mask[0] || mask[TT_NodeCacheObserver.MSGS_STATS]) {
-		observers[i].statsUpdated(stats);
-	    }
-	}   // for
+        if (observers.length == 0)
+            return;
+
+        for (int i = 0; i < observers.length; i++) {
+            boolean[] mask = observers[i].getEventMasks();
+            if (mask[0] || mask[TT_NodeCacheObserver.MSGS_STATS]) {
+                observers[i].statsUpdated(stats);
+            }
+        }   // for
     }
 
      /* deprecated since this info is no longer readily available
     Hashtable getFilterStats() {
-	return filterInfo;
+        return filterInfo;
     }
 
     protected void finalize() {
-	// cleanup in worst case
-	if (watcher != null && node != null)
-	    node.removeObserver(watcher);
+        // cleanup in worst case
+        if (watcher != null && node != null)
+            node.removeObserver(watcher);
     }
     */
 
@@ -784,7 +784,7 @@ class TT_NodeCache implements Runnable {
     private FilterObserver fObs = new FilterObserver();
 
     private TT_NodeCacheObserver[] observers = new TT_NodeCacheObserver[0];
-    private Vector[] testLists;	    // could use unsynchronzied data structure
+    private Vector[] testLists;     // could use unsynchronzied data structure
 
     private volatile int state;
     private volatile boolean valid = true;
@@ -798,74 +798,74 @@ class TT_NodeCache implements Runnable {
     private static final boolean debug = Debug.getBoolean(TT_NodeCache.class);
 
     static abstract class TT_NodeCacheObserver {
-	public TT_NodeCacheObserver() {
-	    interestList = new boolean[EVENT_LIST_SIZE];
-	}
+        public TT_NodeCacheObserver() {
+            interestList = new boolean[EVENT_LIST_SIZE];
+        }
 
-	/**
-	 * Find out what messages this observer is interested in.
-	 */
-	public boolean[] getEventMasks() {
-	    return interestList;
-	}
+        /**
+         * Find out what messages this observer is interested in.
+         */
+        public boolean[] getEventMasks() {
+            return interestList;
+        }
 
-	public abstract void testAdded(int messageType,
-		TestResultTable.TreeNode[] path, TestResult what, int index);
-	public abstract void testRemoved(int messageType,
-		TestResultTable.TreeNode[] path, TestResult what, int index);
-	public abstract void statsUpdated(int[] stats);
+        public abstract void testAdded(int messageType,
+                TestResultTable.TreeNode[] path, TestResult what, int index);
+        public abstract void testRemoved(int messageType,
+                TestResultTable.TreeNode[] path, TestResult what, int index);
+        public abstract void statsUpdated(int[] stats);
 
-	protected boolean[] interestList;
+        protected boolean[] interestList;
 
-	public static final int EVENT_LIST_SIZE = 7;
-	public static final int MSGS_ALL = 0;
-	public static final int MSGS_STATS = 1;
-	public static final int MSGS_PASSED = 2;
-	public static final int MSGS_FAILED = 3;
-	public static final int MSGS_ERRORS = 4;
-	public static final int MSGS_NOT_RUNS = 5;
-	public static final int MSGS_FILTERED = 6;
-	public static final int OFFSET_FROM_STATUS = 2;
+        public static final int EVENT_LIST_SIZE = 7;
+        public static final int MSGS_ALL = 0;
+        public static final int MSGS_STATS = 1;
+        public static final int MSGS_PASSED = 2;
+        public static final int MSGS_FAILED = 3;
+        public static final int MSGS_ERRORS = 4;
+        public static final int MSGS_NOT_RUNS = 5;
+        public static final int MSGS_FILTERED = 6;
+        public static final int OFFSET_FROM_STATUS = 2;
     }
 
     static class FilterObserver implements TestFilter.Observer {
-	public void rejected(TestDescription d, TestFilter rejector) {
-	    lastTd = d;
-	    lastRejector = rejector;
-	}
+        public void rejected(TestDescription d, TestFilter rejector) {
+            lastTd = d;
+            lastRejector = rejector;
+        }
 
-	public void clear() {
-	    lastTd = null;
-	    lastRejector = null;
-	}
+        public void clear() {
+            lastTd = null;
+            lastRejector = null;
+        }
 
-	TestDescription lastTd;
-	TestFilter lastRejector;
+        TestDescription lastTd;
+        TestFilter lastRejector;
     }
 
     /* not useful right now
     class Watcher implements TestResultTable.TreeNodeObserver {
-	public void countersInvalidated(TestResultTable.TreeNode where) {
-	    Debug.println("Counters( " + node.getName() + ") - " + where.getName());
-	}
+        public void countersInvalidated(TestResultTable.TreeNode where) {
+            Debug.println("Counters( " + node.getName() + ") - " + where.getName());
+        }
 
-	public void insertedBranch(TestResultTable.TreeNode parent, TestResultTable.TreeNode newNode, int index) {
-	}
+        public void insertedBranch(TestResultTable.TreeNode parent, TestResultTable.TreeNode newNode, int index) {
+        }
 
-	public void insertedResult(TestResultTable.TreeNode parent, TestResult test, int index) {
-	}
+        public void insertedResult(TestResultTable.TreeNode parent, TestResult test, int index) {
+        }
 
-	public void removedBranch(TestResultTable.TreeNode parent, int index) {
-	}
+        public void removedBranch(TestResultTable.TreeNode parent, int index) {
+        }
 
-	public void removedResult(TestResultTable.TreeNode parent, TestResult test, int index) {
-	    Debug.println("Remove - " + parent.getName());
-	}
+        public void removedResult(TestResultTable.TreeNode parent, TestResult test, int index) {
+            Debug.println("Remove - " + parent.getName());
+        }
 
-	public void replacedResult(TestResultTable.TreeNode parent, TestResult oldTest, TestResult newTest,
-		   int index)  {
-	    Debug.println("Replace - " + parent.getName() + " " + oldTest.getStatus().getType() + "  " + newTest.getStatus().getType());
-	}
-    }	// Watcher
+        public void replacedResult(TestResultTable.TreeNode parent, TestResult oldTest, TestResult newTest,
+                   int index)  {
+            Debug.println("Replace - " + parent.getName() + " " + oldTest.getStatus().getType() + "  " + newTest.getStatus().getType());
+        }
+    }   // Watcher
     */
 }

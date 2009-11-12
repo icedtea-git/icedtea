@@ -41,43 +41,43 @@ import com.sun.javatest.util.I18NResourceBundle;
  *
  * @see Tool
  */
-public abstract class ToolManager 
+public abstract class ToolManager
 {
     /**
      * This exception is used to report problems while using a tool manager.
      */
     public static class Fault extends Exception
     {
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 */
-	public Fault(I18NResourceBundle i18n, String s) {
-	    super(i18n.getString(s));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         */
+        public Fault(I18NResourceBundle i18n, String s) {
+            super(i18n.getString(s));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An argument to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	public Fault(I18NResourceBundle i18n, String s, Object o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An argument to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        public Fault(I18NResourceBundle i18n, String s, Object o) {
+            super(i18n.getString(s, o));
+        }
 
-	/**
-	 * Create a Fault.
-	 * @param i18n A resource bundle in which to find the detail message.
-	 * @param s The key for the detail message.
-	 * @param o An array of arguments to be formatted with the detail message by
-	 * {@link java.text.MessageFormat#format}
-	 */
-	public Fault(I18NResourceBundle i18n, String s, Object[] o) {
-	    super(i18n.getString(s, o));
-	}
+        /**
+         * Create a Fault.
+         * @param i18n A resource bundle in which to find the detail message.
+         * @param s The key for the detail message.
+         * @param o An array of arguments to be formatted with the detail message by
+         * {@link java.text.MessageFormat#format}
+         */
+        public Fault(I18NResourceBundle i18n, String s, Object[] o) {
+            super(i18n.getString(s, o));
+        }
     }
 
     //----------------------------------------------------------------------------
@@ -87,8 +87,8 @@ public abstract class ToolManager
      * @param desktop the desktop for which this manager should manage tools
      */
     protected ToolManager(Desktop desktop) {
-	this.desktop = desktop;
-	i18n = I18NResourceBundle.getBundleForClass(getClass());
+        this.desktop = desktop;
+        i18n = I18NResourceBundle.getBundleForClass(getClass());
     }
 
     /**
@@ -96,7 +96,7 @@ public abstract class ToolManager
      * @return the desktop for which this manager should manage tools
      */
     public Desktop getDesktop() {
-	return desktop;
+        return desktop;
     }
 
     /**
@@ -105,7 +105,7 @@ public abstract class ToolManager
      * or null if no preferences are supported.
      */
     public Preferences.Pane getPrefsPane() {
-	return null;
+        return null;
     }
 
     /**
@@ -114,17 +114,17 @@ public abstract class ToolManager
      * or null if none available.
      */
     public FileOpener[] getFileOpeners() {
-	return null;
+        return null;
     }
 
     /**
      * Get actions for any items to appear in the main section of the desktop
-     * File menu. 
+     * File menu.
      * @return an array of Actions to appear on the File menu, or null if none
      * are required.
      */
     public Action[] getFileMenuActions() {
-	return null;
+        return null;
     }
 
     /**
@@ -165,22 +165,22 @@ public abstract class ToolManager
 
     /**
      * Get actions for any items to appear in the desktop Tasks menu.
-     * @return an array of Actions to appear on the Tasks menu, or null 
+     * @return an array of Actions to appear on the Tasks menu, or null
      * if none are required.
      * @deprecated There is no tasks menu anymore.
      */
     public Action[] getTaskMenuActions() {
-	return null;
+        return null;
     }
 
     /**
      * Get actions to open any windows for this tool.
-     * @return an array of Actions that open windows for this tool, or null 
+     * @return an array of Actions that open windows for this tool, or null
      * if none are required.
      * @deprecated
      */
     public Action[] getWindowOpenMenuActions() {
-	return null;
+        return null;
     }
 
     //----------------------------------------------------------------------------
@@ -204,17 +204,17 @@ public abstract class ToolManager
     /**
      * Create an icon from a resource specified in the standard resource bundle
      * for this tool manager.
-     * @param key the base name for the resource specifying the image file for the 
+     * @param key the base name for the resource specifying the image file for the
      *   icon. The actual name of the resource is formed as follows:
      *   <i>key</i> "<code>.icon</code>"
      * @return an icon containing the specified image
      */
     protected Icon createIcon(String key) {
-	String r = i18n.getString(key + ".icon");
-	URL url = getClass().getResource(r);
-	if (url == null) 
-	    throw new MissingResourceException(r, getClass().getName(), r);
-	return new ImageIcon(url);
+        String r = i18n.getString(key + ".icon");
+        URL url = getClass().getResource(r);
+        if (url == null)
+            throw new MissingResourceException(r, getClass().getName(), r);
+        return new ImageIcon(url);
     }
 
     /**
@@ -227,6 +227,6 @@ public abstract class ToolManager
 
     private final Desktop desktop;
 
-    private static final I18NResourceBundle localI18N = 
-	I18NResourceBundle.getBundleForClass(ToolManager.class);
+    private static final I18NResourceBundle localI18N =
+        I18NResourceBundle.getBundleForClass(ToolManager.class);
 }
