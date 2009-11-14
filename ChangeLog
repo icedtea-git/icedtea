@@ -1,3 +1,9 @@
+2009-11-13  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Set ARCH_DATA_MODEL rather than
+	ZERO_BITSPERWORD.
+	
 2009-11-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	* test/jtreg/com/sun/javatest/agent/Agent.java,
