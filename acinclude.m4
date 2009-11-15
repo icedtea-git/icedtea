@@ -728,55 +728,48 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
   fi
   AM_CONDITIONAL(CORE_BUILD, test "x${use_core}" = xyes)
 
-  ZERO_LIBARCH=
-  ZERO_BITSPERWORD=
-  ZERO_ENDIANNESS=
-  ZERO_ARCHDEF=
-  ZERO_ARCHFLAG=
-  if test "x${use_zero}" = xyes; then
-    ZERO_LIBARCH="${INSTALL_ARCH_DIR}"
-    dnl can't use AC_CHECK_SIZEOF on multilib
-    case "${ZERO_LIBARCH}" in
-      i386|ppc|s390|sparc)
-        ZERO_BITSPERWORD=32
-        ;;
-      amd64|ppc64|s390x|sparc64)
-        ZERO_BITSPERWORD=64
-        ;;
-      *)
-        AC_CHECK_SIZEOF(void *)
-        ZERO_BITSPERWORD=`expr "${ac_cv_sizeof_void_p}" "*" 8`
-    esac
-    AC_C_BIGENDIAN([ZERO_ENDIANNESS="big"], [ZERO_ENDIANNESS="little"])
-    case "${ZERO_LIBARCH}" in
-      i386)
-        ZERO_ARCHDEF="IA32"
-        ;;
-      ppc*)
-        ZERO_ARCHDEF="PPC"
-        ;;
-      s390*)
-        ZERO_ARCHDEF="S390"
-        ;;
-      sparc*)
-        ZERO_ARCHDEF="SPARC"
-        ;;
-      *)
-        ZERO_ARCHDEF=`echo ${ZERO_LIBARCH} | tr a-z A-Z`
-    esac
-    dnl multilib machines need telling which mode to build for
-    case "${ZERO_LIBARCH}" in
-      i386|ppc|sparc)
-        ZERO_ARCHFLAG="-m32"
-        ;;
-      s390)
-        ZERO_ARCHFLAG="-m31"
-        ;;
-      amd64|ppc64|s390x|sparc64)
-        ZERO_ARCHFLAG="-m64"
-        ;;
-    esac
-  fi
+  ZERO_LIBARCH="${INSTALL_ARCH_DIR}"
+  dnl can't use AC_CHECK_SIZEOF on multilib
+  case "${ZERO_LIBARCH}" in
+    i386|ppc|s390|sparc)
+      ZERO_BITSPERWORD=32
+      ;;
+    amd64|ppc64|s390x|sparc64)
+      ZERO_BITSPERWORD=64
+      ;;
+    *)
+      AC_CHECK_SIZEOF(void *)
+      ZERO_BITSPERWORD=`expr "${ac_cv_sizeof_void_p}" "*" 8`
+  esac
+  AC_C_BIGENDIAN([ZERO_ENDIANNESS="big"], [ZERO_ENDIANNESS="little"])
+  case "${ZERO_LIBARCH}" in
+    i386)
+      ZERO_ARCHDEF="IA32"
+      ;;
+    ppc*)
+      ZERO_ARCHDEF="PPC"
+      ;;
+    s390*)
+      ZERO_ARCHDEF="S390"
+      ;;
+    sparc*)
+      ZERO_ARCHDEF="SPARC"
+      ;;
+    *)
+      ZERO_ARCHDEF=`echo ${ZERO_LIBARCH} | tr a-z A-Z`
+  esac
+  dnl multilib machines need telling which mode to build for
+  case "${ZERO_LIBARCH}" in
+    i386|ppc|sparc)
+      ZERO_ARCHFLAG="-m32"
+      ;;
+    s390)
+      ZERO_ARCHFLAG="-m31"
+      ;;
+    amd64|ppc64|s390x|sparc64)
+      ZERO_ARCHFLAG="-m64"
+      ;;
+  esac
   AC_SUBST(ZERO_LIBARCH)
   AC_SUBST(ZERO_BITSPERWORD)
   AC_SUBST(ZERO_ENDIANNESS)
@@ -1425,41 +1418,8 @@ AM_CONDITIONAL([CP40616], test x"${it_cv_cp40616}" = "xyes")
 AC_PROVIDE([$0])dnl
 ])
 
-AC_DEFUN([IT_SCANNER_CHECK],[
-AC_CACHE_CHECK([if java.util.Scanner is missing], it_cv_cp30436, [
-CLASS=Test.java
-BYTECODE=$(echo $CLASS|sed 's#\.java##')
-mkdir tmp.$$
-cd tmp.$$
-cat << \EOF > $CLASS
-[/* [#]line __oline__ "configure" */
-public class Test 
-{
-  public static void main(String[] args)
-  throws Exception
-  {
-    new java.util.Scanner("Hello");
-  }
-}]
-EOF
-if $JAVAC -cp . $JAVACFLAGS $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
-  if $JAVA -classpath . $BYTECODE; >&AS_MESSAGE_LOG_FD 2>&1; then
-      it_cv_cp30436=no;
-  else
-      it_cv_cp30436=yes;
-  fi
-else
-  it_cv_cp30436=yes;
-fi
-])
-rm -f $CLASS *.class
-cd ..
-rmdir tmp.$$
-AM_CONDITIONAL([LACKS_JAVA_UTIL_SCANNER], test x"${it_cv_cp30436}" = "xyes")
-AC_PROVIDE([$0])dnl
-])
 AC_DEFUN([IT_PR40630_CHECK],[
-if test "x${it_cv_cp30436}" = "xno"; then
+if test "x${it_cv_JAVA_UTIL_SCANNER}" = "xno"; then
   AC_CACHE_CHECK([if java.util.Scanner exhibits Classpath bug 40630], it_cv_cp40630, [
   CLASS=Test.java
   BYTECODE=$(echo $CLASS|sed 's#\.java##')
@@ -1490,10 +1450,10 @@ EOF
   else
     it_cv_cp40630=yes;
   fi
-  ])
   rm -f $CLASS *.class
   cd ..
   rmdir tmp.$$
+  ])
 fi
 AM_CONDITIONAL([CP40630], test x"${it_cv_cp40630}" = "xyes")
 AC_PROVIDE([$0])dnl
@@ -1558,4 +1518,44 @@ AC_DEFUN([AC_CHECK_WITH_TZDATA_DIR],
   AC_SUBST([TZDATA_DIR])
   AM_CONDITIONAL(WITH_TZDATA_DIR, test "x${TZDATA_DIR}" != "x")
   AC_CONFIG_FILES([tz.properties])
+])
+
+dnl Generic macro to check for a Java class
+dnl Takes two arguments: the name of the macro
+dnl and the name of the class.  The macro name
+dnl is usually the name of the class with '.'
+dnl replaced by '_' and all letters capitalised.
+dnl e.g. IT_CHECK_FOR_CLASS([JAVA_UTIL_SCANNER],[java.util.Scanner])
+AC_DEFUN([IT_CHECK_FOR_CLASS],[
+AC_CACHE_CHECK([if $2 is missing], it_cv_$1, [
+CLASS=Test.java
+BYTECODE=$(echo $CLASS|sed 's#\.java##')
+mkdir tmp.$$
+cd tmp.$$
+cat << \EOF > $CLASS
+[/* [#]line __oline__ "configure" */
+public class Test
+{
+  public static void main(String[] args)
+  {
+    Class<?> cls = $2.class;
+  }
+}
+]
+EOF
+if $JAVAC -cp . $JAVACFLAGS -nowarn -source 5 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+  if $JAVA -classpath . $BYTECODE; >&AS_MESSAGE_LOG_FD 2>&1; then
+      it_cv_$1=no;
+  else
+      it_cv_$1=yes;
+  fi
+else
+  it_cv_$1=yes;
+fi
+])
+rm -f $CLASS *.class
+cd ..
+rmdir tmp.$$
+AM_CONDITIONAL([LACKS_$1], test x"${it_cv_$1}" = "xyes")
+AC_PROVIDE([$0])dnl
 ])

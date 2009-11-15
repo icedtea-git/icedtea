@@ -1,5 +1,43 @@
 2009-11-13  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/icedtea-xjc.patch:
+	Move to upstream jaxws repository.
+	* patches/icedtea-xml-encodinginfo.patch:
+	Dropped, in upstream jaxp M5 bundle.
+	* Makefile.am:
+	Bump to b76, switch to SHA256 checksums,
+	only include jaxws in sourcepaths if
+	javax.annotation.Resource is missing from
+	the boot JDK.  Drop $(JAVAWS)/javax/xml/bind
+	from the list of OpenJDK bootstrap directories.
+	Move build definitions up to occur before sourcepath
+	definitions.
+	(stamps/download-jaxp-drop.stamp): Use SHA256 checksum.
+	(stamps/download-openjdk.stamp): Likewise for all OpenJDK
+	bundles.
+	(stamps/extract.stamp): Also depend on extract-jaxws.stamp.
+	(clean-extract): Depend on clean-extract-jaxws as well.
+	(stamps/extract-jaxws.stamp): Call the JAXWS ant build to
+	extract the JAXWS sources ahead-of-time if javax.annotation.Resource
+	is not in the bootstrap JDK.
+	(clean-extract-jaxws): Revert above target.
+	(stamps/liveconnect.stamp): Include the system JDK on the classpath.
+	(stamps/netx.stamp): Likewise.
+	(stamps/rt-class-files.stamp): Likewise.
+	* acinclude.m4:
+	(ENABLE_ZERO_BUILD): Always set ZERO flags so that ARCH_DATA_MODEL
+	is not set empty.
+	(IT_SCANNER_CHECK): Removed, generalised.
+	(IT_CHECK_FOR_CLASS): Generic macro to check for
+	any class.  Takes as arguments the define and
+	the name of the class.
+	* configure.ac:
+	Find sha256sum tool.  Check for java.util.Scanner
+	and javax.annotation.Resource classes using the
+	new IT_CHECK_FOR_CLASS macro.
+	
+2009-11-13  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	Set ARCH_DATA_MODEL rather than
 	ZERO_BITSPERWORD.

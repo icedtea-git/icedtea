@@ -1,22 +1,22 @@
 # Dependencies
 
-OPENJDK_VERSION = b75
+OPENJDK_VERSION = b76
 
-CORBA_CHANGESET = a12dac8f71dc
-HOTSPOT_CHANGESET = e004313753cc
-JAXP_CHANGESET  = 45da06168568
-JAXWS_CHANGESET = 14446af481e9
-JDK_CHANGESET = d03acee39d3b
+CORBA_CHANGESET = d728db3889da
+HOTSPOT_CHANGESET = b4ab978ce52c
+JAXP_CHANGESET  = fb68fd18eb9f
+JAXWS_CHANGESET = 0dc08d528c99
+JDK_CHANGESET = fb2ee5e96b17
 LANGTOOLS_CHANGESET = 83367f01297b
-OPENJDK_CHANGESET = a8bc38cb80ef
+OPENJDK_CHANGESET = f0bfd9bd1a0e
 
-CORBA_MD5SUM = 455cfaad689717ab542685dd9ed2d876
-HOTSPOT_MD5SUM = 6c711e43b7f6db9d2299f71b8987d446
-JAXP_MD5SUM = bd6ae928afdecf5356c8ecd56a1c39ed
-JAXWS_MD5SUM = 3e2d558e91adcc8630953b1b3a37e269
-JDK_MD5SUM = b811728173a6e554f43a39e84c7f555a
-LANGTOOLS_MD5SUM = 1102b019cd3a734f77bb804228d1727d
-OPENJDK_MD5SUM = 6121a71424fd81df8a34a8b9666fabfd
+CORBA_SHA256SUM = 67824d9e0e21a1b5b55ee6ebc079260672d7d2ed7b9cfabf0cfe67ffd3160f34
+HOTSPOT_SHA256SUM = 1b035a9bf71072b9f60c144c143d501b107a83a009ed31c90c8d0b6d3482a940
+JAXP_SHA256SUM = 7f2f16538bb51081e8483b252f59a2e6e70ba3c33341ed85eaa1532e9fc93dcd
+JAXWS_SHA256SUM = 2005bf1e10bfd49002368088e34f26e86652f175ad827824ccfd9cbc0b840512
+JDK_SHA256SUM = dc409e64ef6e7b310d9e7292b15200529b8e6960404a8751c0ec38bb781a0319
+LANGTOOLS_SHA256SUM = 01c43af5d3da14ff9a96e769d212b2297c2c6756b28cc6a6d6f00148c2eded26
+OPENJDK_SHA256SUM = 6a28cd0ba1bcc4290175497e6cfe11295a8e4f82f4c030b3e5686f7c48297936
 
 CACAO_VERSION = 0.99.4
 CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
@@ -31,13 +31,14 @@ VISUALVM_URL = https://visualvm.dev.java.net/files/documents/7163/127170/
 VISUALVM_SRC_ZIP = visualvm-111-src.tar.gz
 VISUALVM_MD5SUM = a289739f4a5bcdb9a2c642cfcc1e83fe
 
-DROP_URL = http://kenai.com/projects/jdk7-drops/downloads/download
+JAXWS_DROP_URL = http://kenai.com/projects/jdk7-drops/downloads/download
 JAXWS_DROP_ZIP = jdk7-jaxws-2009_09_28.zip
 JAXWS_DROP_MD5SUM = f5010ebf636db9f465a61a7a74944543
 JAF_DROP_ZIP = jdk7-jaf-2009_08_28.zip
 JAF_DROP_MD5SUM = eb8cb7a4a7f14e211fbe2354878a2472
-JAXP_DROP_ZIP = jdk7-jaxp-2009_09_28.zip
-JAXP_DROP_MD5SUM = 8800970d03bab1fff188dcfafc346f5d
+JAXP_DROP_URL = https://jaxp.dev.java.net/files/documents/913/144160
+JAXP_DROP_ZIP = jdk7-jaxp-m5.zip
+JAXP_DROP_SHA256SUM = ebab4c6c4e641a4c95a7b6669e78f9bb1149a11054fc5b423cf292b633d6be53
 
 OPENJDK_HOTSPOT_URL = http://hg.openjdk.java.net/jdk7/hotspot/hotspot
 
@@ -57,20 +58,44 @@ JDK_URL = $(ICEDTEA_HG_URL)/jdk
 LANGTOOLS_URL = $(ICEDTEA_HG_URL)/langtools
 HOTSPOT_URL = $(ICEDTEA_HG_URL)/hotspot
 
+# Build directories
+
+OS_DIR = $(BUILD_OS_DIR)-$(BUILD_ARCH_DIR)
+BUILD_OUTPUT_DIR = $(abs_top_builddir)/openjdk/build/$(OS_DIR)
+BOOT_BUILD_OUTPUT_DIR = openjdk-boot/build/$(OS_DIR)
+ICEDTEA_BUILD_DIR = \
+	$(abs_top_builddir)/$(BUILD_OUTPUT_DIR)
+ICEDTEA_RT = \
+	$(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
+ICEDTEA_BOOT_DIR= \
+	$(abs_top_builddir)/bootstrap/jdk1.6.0
+ICEDTEA_ENDORSED_DIR = \
+	$(ICEDTEA_BOOT_DIR)/lib/endorsed
+ICEDTEA_BUILD_DIR_BOOT = \
+	$(abs_top_builddir)/$(BOOT_BUILD_OUTPUT_DIR)/
+ICEDTEA_CLS_DIR_BOOT = \
+	$(abs_top_builddir)/$(BOOT_BUILD_OUTPUT_DIR)/classes
+SERVER_DIR = hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server
+BUILD_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+BUILD_DEBUG_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+
+# Source directories
+
 JDK_SHARE = openjdk/jdk/src/share/classes
 JDK_SOLARIS = openjdk/jdk/src/solaris/classes
 LANGTOOLS = openjdk/langtools/src/share/classes
-JAXP = openjdk/jaxp/src/share/classes
 CORBA = openjdk/corba/src/share/classes
-JAXWS = openjdk/jaxws/src/share/classes
+if LACKS_JAVAX_ANNOTATION_RESOURCE
+JAXWS = $(BUILD_OUTPUT_DIR)/jaxws/drop/jaxws_src/src
+endif
 
 NETX_SRCDIR = $(abs_top_srcdir)/netx
 NETX_RESOURCE_DIR=$(NETX_SRCDIR)/net/sourceforge/jnlp/resources
 
 OPENJDK_SOURCEPATH_DIRS = \
-        $(JDK_SHARE):$(JDK_SOLARIS):$(LANGTOOLS):$(JAXP):$(CORBA):$(JAXWS):$(NETX_SRCDIR)
+        $(JDK_SHARE):$(JDK_SOLARIS):$(LANGTOOLS):$(CORBA):$(JAXWS)
 
-SOURCEPATH_DIRS = $(abs_top_builddir)/generated:$(OPENJDK_SOURCEPATH_DIRS)
+SOURCEPATH_DIRS = $(abs_top_builddir)/generated:$(OPENJDK_SOURCEPATH_DIRS):$(NETX_SRCDIR)
 
 # Sources used from OpenJDK.
 ICEDTEA_BOOTSTRAP_DIRS = \
@@ -90,33 +115,15 @@ ICEDTEA_BOOTSTRAP_DIRS = \
 	$(JDK_SHARE)/sun/awt/ \
 	$(JDK_SHARE)/sun/rmi/rmic \
 	$(JDK_SHARE)/sun/tools/java \
-	$(JAXWS)/javax/xml/bind \
 	$(LANGTOOLS)/com/sun/mirror \
 	$(LANGTOOLS)/com/sun/tools/apt
+
+# Settings for javac
 
 IT_LANGUAGE_SOURCE_VERSION=5
 IT_CLASS_TARGET_VERSION=5
 IT_JAVAC_SETTINGS=-g -encoding utf-8 $(JAVACFLAGS)
 IT_JAVACFLAGS=$(IT_JAVAC_SETTINGS) -source $(IT_LANGUAGE_SOURCE_VERSION) -target $(IT_CLASS_TARGET_VERSION)
-
-OS_DIR = $(BUILD_OS_DIR)-$(BUILD_ARCH_DIR)
-BUILD_OUTPUT_DIR = openjdk/build/$(OS_DIR)
-BOOT_BUILD_OUTPUT_DIR = openjdk-boot/build/$(OS_DIR)
-ICEDTEA_BUILD_DIR = \
-	$(abs_top_builddir)/$(BUILD_OUTPUT_DIR)
-ICEDTEA_RT = \
-	$(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
-ICEDTEA_BOOT_DIR= \
-	$(abs_top_builddir)/bootstrap/jdk1.6.0
-ICEDTEA_ENDORSED_DIR = \
-	$(ICEDTEA_BOOT_DIR)/lib/endorsed
-ICEDTEA_BUILD_DIR_BOOT = \
-	$(abs_top_builddir)/$(BOOT_BUILD_OUTPUT_DIR)/
-ICEDTEA_CLS_DIR_BOOT = \
-	$(abs_top_builddir)/$(BOOT_BUILD_OUTPUT_DIR)/classes
-SERVER_DIR = hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server
-BUILD_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-BUILD_DEBUG_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 
 # Conditional defintions
 
@@ -300,7 +307,6 @@ ICEDTEA_PATCHES = \
 	patches/cacao/arch.patch \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-lc_ctype.patch \
-	patches/icedtea-xjc.patch \
 	patches/icedtea-renderer-crossing.patch \
 	patches/icedtea-tests-jdk.patch \
 	patches/icedtea-stroker-finish.patch \
@@ -320,7 +326,6 @@ ICEDTEA_PATCHES = \
 	patches/hotspot/$(HSBUILD)/icedtea-includedb.patch \
 	patches/icedtea-demo-swingapplet.patch \
 	patches/icedtea-jvmtiEnv.patch \
-	patches/icedtea-xml-encodinginfo.patch \
 	patches/icedtea-cc-interp-backedge.patch \
 	patches/icedtea-netx.patch \
 	patches/icedtea-disable-intree-ec.patch \
@@ -795,16 +800,16 @@ stamps/download-jaxp-drop.stamp:
 if USE_ALT_JAXP_DROP_ZIP
 	ln -sf $(ALT_JAXP_DROP_ZIP) drops/$(JAXP_DROP_ZIP)
 endif
-	if ! echo "$(JAXP_DROP_MD5SUM)  drops/$(JAXP_DROP_ZIP)" \
-	  | $(MD5SUM) --check ; \
+	if ! echo "$(JAXP_DROP_SHA256SUM)  drops/$(JAXP_DROP_ZIP)" \
+	  | $(SHA256SUM) --check ; \
 	then \
 	  if [ -f drops/$(JAXP_DROP_ZIP) ] ; \
 	  then \
 	    mv drops/$(JAXP_DROP_ZIP) drops/$(JAXP_DROP_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(DROP_URL)/$(JAXP_DROP_ZIP) -O drops/$(JAXP_DROP_ZIP); \
-	  if ! echo "$(JAXP_DROP_MD5SUM)  drops/$(JAXP_DROP_ZIP)" \
-	    | $(MD5SUM) --check ; \
+	  $(WGET) $(JAXP_DROP_URL)/$(JAXP_DROP_ZIP) -O drops/$(JAXP_DROP_ZIP); \
+	  if ! echo "$(JAXP_DROP_SHA256SUM)  drops/$(JAXP_DROP_ZIP)" \
+	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of jaxp drop zip"; false; \
 	  fi; \
 	fi ;
@@ -827,7 +832,7 @@ endif
 	  then \
 	    mv drops/$(JAF_DROP_ZIP) drops/$(JAF_DROP_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(DROP_URL)/$(JAF_DROP_ZIP) -O drops/$(JAF_DROP_ZIP); \
+	  $(WGET) $(JAXWS_DROP_URL)/$(JAF_DROP_ZIP) -O drops/$(JAF_DROP_ZIP); \
 	  if ! echo "$(JAF_DROP_MD5SUM)  drops/$(JAF_DROP_ZIP)" \
 	    | $(MD5SUM) --check ; \
 	  then echo "ERROR: Bad download of jaf drop zip"; false; \
@@ -852,7 +857,7 @@ endif
 	  then \
 	    mv drops/$(JAXWS_DROP_ZIP) drops/$(JAXWS_DROP_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(DROP_URL)/$(JAXWS_DROP_ZIP) -O drops/$(JAXWS_DROP_ZIP); \
+	  $(WGET) $(JAXWS_DROP_URL)/$(JAXWS_DROP_ZIP) -O drops/$(JAXWS_DROP_ZIP); \
 	  if ! echo "$(JAXWS_DROP_MD5SUM)  drops/$(JAXWS_DROP_ZIP)" \
 	    | $(MD5SUM) --check ; \
 	  then echo "ERROR: Bad download of jaxws drop zip"; false; \
@@ -906,94 +911,94 @@ else
 	$(HG) fclone $(ICEDTEA_HG_URL) openjdk;
 endif
 else
-	if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
-	  | $(MD5SUM) --check ; \
+	if ! echo "$(OPENJDK_SHA256SUM)  $(OPENJDK_SRC_ZIP)" \
+	  | $(SHA256SUM) --check ; \
 	then \
 	  if [ $(OPENJDK_SRC_ZIP) ] ; \
 	  then \
 	    mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(OPENJDK_URL)/archive/$(OPENJDK_CHANGESET).tar.gz -O $(OPENJDK_SRC_ZIP); \
-	  if ! echo "$(OPENJDK_MD5SUM)  $(OPENJDK_SRC_ZIP)" \
-	    | $(MD5SUM) --check ; \
+	  if ! echo "$(OPENJDK_SHA256SUM)  $(OPENJDK_SRC_ZIP)" \
+	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of OpenJDK root zip"; false; \
 	  fi; \
 	fi ; \
-	if ! echo "$(CORBA_MD5SUM)  $(CORBA_SRC_ZIP)" \
-	  | $(MD5SUM) --check ; \
+	if ! echo "$(CORBA_SHA256SUM)  $(CORBA_SRC_ZIP)" \
+	  | $(SHA256SUM) --check ; \
 	then \
 	  if [ $(CORBA_SRC_ZIP) ] ; \
 	  then \
 	    mv $(CORBA_SRC_ZIP) $(CORBA_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(CORBA_URL)/archive/$(CORBA_CHANGESET).tar.gz -O $(CORBA_SRC_ZIP); \
-	  if ! echo "$(CORBA_MD5SUM)  $(CORBA_SRC_ZIP)" \
-	    | $(MD5SUM) --check ; \
+	  if ! echo "$(CORBA_SHA256SUM)  $(CORBA_SRC_ZIP)" \
+	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of CORBA zip"; false; \
 	  fi; \
 	fi ; \
-	if ! echo "$(JAXP_MD5SUM)  $(JAXP_SRC_ZIP)" \
-	  | $(MD5SUM) --check ; \
+	if ! echo "$(JAXP_SHA256SUM)  $(JAXP_SRC_ZIP)" \
+	  | $(SHA256SUM) --check ; \
 	then \
 	  if [ $(JAXP_SRC_ZIP) ] ; \
 	  then \
 	    mv $(JAXP_SRC_ZIP) $(JAXP_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(JAXP_URL)/archive/$(JAXP_CHANGESET).tar.gz -O $(JAXP_SRC_ZIP); \
-	  if ! echo "$(JAXP_MD5SUM)  $(JAXP_SRC_ZIP)" \
-	    | $(MD5SUM) --check ; \
+	  if ! echo "$(JAXP_SHA256SUM)  $(JAXP_SRC_ZIP)" \
+	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of JAXP zip"; false; \
 	  fi; \
 	fi ; \
-	if ! echo "$(JAXWS_MD5SUM)  $(JAXWS_SRC_ZIP)" \
-	  | $(MD5SUM) --check ; \
+	if ! echo "$(JAXWS_SHA256SUM)  $(JAXWS_SRC_ZIP)" \
+	  | $(SHA256SUM) --check ; \
 	then \
 	  if [ $(JAXWS_SRC_ZIP) ] ; \
 	  then \
 	    mv $(JAXWS_SRC_ZIP) $(JAXWS_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(JAXWS_URL)/archive/$(JAXWS_CHANGESET).tar.gz -O $(JAXWS_SRC_ZIP); \
-	  if ! echo "$(JAXWS_MD5SUM)  $(JAXWS_SRC_ZIP)" \
-	    | $(MD5SUM) --check ; \
+	  if ! echo "$(JAXWS_SHA256SUM)  $(JAXWS_SRC_ZIP)" \
+	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of JAXWS zip"; false; \
 	  fi; \
 	fi ; \
-	if ! echo "$(JDK_MD5SUM)  $(JDK_SRC_ZIP)" \
-	  | $(MD5SUM) --check ; \
+	if ! echo "$(JDK_SHA256SUM)  $(JDK_SRC_ZIP)" \
+	  | $(SHA256SUM) --check ; \
 	then \
 	  if [ $(JDK_SRC_ZIP) ] ; \
 	  then \
 	    mv $(JDK_SRC_ZIP) $(JDK_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(JDK_URL)/archive/$(JDK_CHANGESET).tar.gz -O $(JDK_SRC_ZIP); \
-	  if ! echo "$(JDK_MD5SUM)  $(JDK_SRC_ZIP)" \
-	    | $(MD5SUM) --check ; \
+	  if ! echo "$(JDK_SHA256SUM)  $(JDK_SRC_ZIP)" \
+	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of JDK zip"; false; \
 	  fi; \
 	fi ; \
-	if ! echo "$(LANGTOOLS_MD5SUM)  $(LANGTOOLS_SRC_ZIP)" \
-	  | $(MD5SUM) --check ; \
+	if ! echo "$(LANGTOOLS_SHA256SUM)  $(LANGTOOLS_SRC_ZIP)" \
+	  | $(SHA256SUM) --check ; \
 	then \
 	  if [ $(LANGTOOLS_SRC_ZIP) ] ; \
 	  then \
 	    mv $(LANGTOOLS_SRC_ZIP) $(LANGTOOLS_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(LANGTOOLS_URL)/archive/$(LANGTOOLS_CHANGESET).tar.gz -O $(LANGTOOLS_SRC_ZIP); \
-	  if ! echo "$(LANGTOOLS_MD5SUM)  $(LANGTOOLS_SRC_ZIP)" \
-	    | $(MD5SUM) --check ; \
+	  if ! echo "$(LANGTOOLS_SHA256SUM)  $(LANGTOOLS_SRC_ZIP)" \
+	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of langtools zip"; false; \
 	  fi; \
 	fi ;
-	if ! echo "$(HS_MD5SUM)  $(HOTSPOT_SRC_ZIP)" \
-	  | $(MD5SUM) --check ; \
+	if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
+	  | $(SHA256SUM) --check ; \
 	then \
 	  if [ $(HOTSPOT_SRC_ZIP) ] ; \
 	  then \
 	    mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
-	  if ! echo "$(HOTSPOT_MD5SUM)  $(HOTSPOT_SRC_ZIP)" \
-	    | $(MD5SUM) --check ; \
+	  if ! echo "$(HOTSPOT_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
+	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of HotSpot zip"; false; \
 	  fi; \
 	fi
@@ -1122,12 +1127,13 @@ endif
 	rm -f stamps/download-visualvm.stamp
 
 stamps/extract.stamp: stamps/extract-openjdk.stamp \
- stamps/extract-visualvm.stamp stamps/extract-cacao.stamp
+ stamps/extract-visualvm.stamp stamps/extract-cacao.stamp \
+ stamps/extract-jaxws.stamp
 	mkdir -p stamps
 	touch $@
 
 clean-extract: clean-extract-openjdk clean-extract-visualvm \
- clean-extract-cacao
+ clean-extract-cacao clean-extract-jaxws
 	rm -f stamps/extract.stamp
 
 stamps/extract-openjdk.stamp: stamps/download-openjdk.stamp
@@ -1281,6 +1287,25 @@ endif
 
 clean-extract-cacao: clean-cacao
 	rm -f stamps/extract-cacao.stamp
+
+stamps/extract-jaxws.stamp: stamps/extract-openjdk.stamp
+if LACKS_JAVAX_ANNOTATION_RESOURCE
+	(cd openjdk/jaxws ; \
+	 $(ANT) -Ddrops.dir=$(abs_top_builddir)/drops \
+	  -Doutput.dir=$(BUILD_OUTPUT_DIR)/jaxws \
+	  source ; \
+	 cd ../..)
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-extract-jaxws:
+	if [ -d $(BUILD_OUTPUT_DIR)/jaxws ] ; then
+	  (cd openjdk/jaxws ; \
+	   $(ANT) -Doutput.dir=$(BUILD_OUTPUT_DIR)/jaxws clobber ; \
+	   cd ../../); \
+        fi
+	rm -f stamps/extract-jaxws.stamp
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
@@ -1990,7 +2015,7 @@ stamps/liveconnect.stamp: liveconnect-source-files.txt stamps/netx.stamp
 	  mkdir -p $(abs_top_builddir)/liveconnect ; \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) \
 	      -d $(abs_top_builddir)/liveconnect \
-	      -classpath $(abs_top_builddir)/lib/rt:$(abs_top_builddir)/netx.build \
+	      -classpath $(abs_top_builddir)/lib/rt:$(abs_top_builddir)/netx.build:$(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
 	      -sourcepath $(SOURCEPATH_DIRS) \
 	      -bootclasspath \'\' \
 	      @liveconnect-source-files.txt ; \
@@ -2030,7 +2055,7 @@ stamps/netx.stamp: netx-source-files.txt stamps/rt-class-files.stamp
 	mkdir -p $(abs_top_builddir)/netx.build
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) \
 	    -d $(abs_top_builddir)/netx.build \
-	    -classpath $(abs_top_builddir)/lib/rt \
+	    -classpath $(abs_top_builddir)/lib/rt:$(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
 	    -sourcepath $(SOURCEPATH_DIRS) \
 	    -bootclasspath \'\' \
 	    @netx-source-files.txt ;
@@ -2473,6 +2498,7 @@ rt-source-files.txt: stamps/overlay.stamp
 stamps/rt-class-files.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP) rt-source-files.txt
 	mkdir -p lib/rt
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) -d lib/rt \
+	  -classpath $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
           -sourcepath '$(SOURCEPATH_DIRS)' \
           -bootclasspath \'\' @rt-source-files.txt ;
 	mkdir -p stamps
