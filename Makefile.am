@@ -1300,7 +1300,7 @@ endif
 	touch $@
 
 clean-extract-jaxws:
-	if [ -d $(BUILD_OUTPUT_DIR)/jaxws ] ; then
+	if [ -d $(BUILD_OUTPUT_DIR)/jaxws ] ; then \
 	  (cd openjdk/jaxws ; \
 	   $(ANT) -Doutput.dir=$(BUILD_OUTPUT_DIR)/jaxws clobber ; \
 	   cd ../../); \
