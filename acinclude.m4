@@ -1538,12 +1538,12 @@ public class Test
 {
   public static void main(String[] args)
   {
-    Class<?> cls = $2.class;
+    $2.class.toString();
   }
 }
 ]
 EOF
-if $JAVAC -cp . $JAVACFLAGS -nowarn -source 5 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+if $JAVAC -cp . $JAVACFLAGS -nowarn $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
   if $JAVA -classpath . $BYTECODE; >&AS_MESSAGE_LOG_FD 2>&1; then
       it_cv_$1=no;
   else
