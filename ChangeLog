@@ -1,6 +1,11 @@
 2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
+	(IT_CHECK_FOR_CLASS): Remove errant semi-colon.
+	
+2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
 	(IT_CHECK_FOR_CLASS): Call toString() on the
 	class constant so Sun's javac doesn't optimise
 	out the line.  Drop the -source 5 option as this

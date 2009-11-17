@@ -1544,7 +1544,7 @@ public class Test
 ]
 EOF
 if $JAVAC -cp . $JAVACFLAGS -nowarn $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
-  if $JAVA -classpath . $BYTECODE; >&AS_MESSAGE_LOG_FD 2>&1; then
+  if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1; then
       it_cv_$1=no;
   else
       it_cv_$1=yes;
