@@ -1,5 +1,11 @@
 2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/icedtea-jaxws-getdtdtype.patch:
+	Replace getDTDType method, don't add another.
+	* HACKING: Document the patch.
+	
+2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	(clean-download-openjdk): Remove conditionals
 	so that symlinks are removed.
