@@ -24,13 +24,13 @@ CACAO_BASE_URL = http://www.complang.tuwien.ac.at
 CACAO_URL = $(CACAO_BASE_URL)/cacaojvm/download/cacao-$(CACAO_VERSION)/
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
-NETBEANS_PROFILER_URL = http://icedtea.classpath.org/visualvm/
-NETBEANS_PROFILER_SRC_ZIP = netbeans-profiler-visualvm_release65_mod.tar.gz
-NETBEANS_PROFILER_SHA256SUM = b57b8d90e5749b80885c03abe5547f0d671abebe7f4991d679fa8a0034ebf2c3
+NETBEANS_PROFILER_URL = https://visualvm.dev.java.net/files/documents/7163/145168/
+NETBEANS_PROFILER_SRC_ZIP = netbeans-profiler-visualvm_release67.tar.gz
+NETBEANS_PROFILER_SHA256SUM = 611736b4e6dac2f7ddb669a23a474fb052f4141c04dc2ba5888b9e9db61fe59b
 
-VISUALVM_URL = https://visualvm.dev.java.net/files/documents/7163/127170/
-VISUALVM_SRC_ZIP = visualvm-111-src.tar.gz
-VISUALVM_SHA256SUM = 947b0af99a1263e14d496a7231445eeff3e04cb38877fd2b56e1b6f68a7ff710
+VISUALVM_URL = https://visualvm.dev.java.net/files/documents/7163/145167/
+VISUALVM_SRC_ZIP = visualvm_121-src.tar.gz
+VISUALVM_SHA256SUM = b561207d85da4916e809cc4c104098e1ca979b30192c207b9d6087a31c91b8b0
 
 JAXWS_DROP_URL = http://kenai.com/projects/jdk7-drops/downloads/download
 JAXWS_DROP_ZIP = jdk7-jaxws-2009_09_28.zip
@@ -2224,9 +2224,9 @@ if WITH_VISUALVM
 	cd ../../.. ; \
         JAVA_HOME=$(ICEDTEA_HOME) $(ANT) -Dpermit.jdk6.builds=true \
             -f nbbuild/build.xml bootstrap ; \
-	for dir in lib.profiler lib.profiler.ui lib.profiler.common profiler ; do \
-	  JAVA_HOME=$(ICEDTEA_HOME) $(ANT) -Dpermit.jdk6.builds=true -Dbuildnumber=081204 \
-            -Dnetbeans.dest.dir=../nbbuild/netbeans_visualvm \
+	for dir in lib.profiler lib.profiler.charts lib.profiler.ui lib.profiler.common profiler ; do \
+	  JAVA_HOME=$(ICEDTEA_HOME) $(ANT) -Dpermit.jdk6.builds=true -Dbuildnumber=091020 \
+            -Dnetbeans.dest.dir=$(abs_top_builddir)/netbeans/nbbuild/netbeans_visualvm \
 	    -f $$dir/build.xml ; \
 	done 
 endif

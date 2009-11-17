@@ -1,3 +1,7 @@
+2009-11-11  Tomas Hurka  <tomas.hurka@sun.com>
+
+	* Makefile.am: Update to VisualVM 1.2.1.
+	
 2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-jaxws-getdtdtype.patch:
