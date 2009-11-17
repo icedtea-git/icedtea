@@ -1,3 +1,17 @@
+2009-11-17  Gary Benson  <gbenson@redhat.com>
+
+	* acinclude.m4:
+	(ENABLE_ZERO_BUILD): Do not set CORE_BUILD.
+
+	* Makefile.am:
+	(ICEDTEA_CORE_BUILD): Do not set.
+	(ICEDTEA_ENV): Do not set CORE_BUILD.
+	(stamps/ports.stamp): Do not create jvm.cfg or
+	ergo_$arch.c for Zero or Shark builds.
+
+	* patches/hotspot/default/icedtea-core-zero-build.patch:
+	Removed unused file.
+
 2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:

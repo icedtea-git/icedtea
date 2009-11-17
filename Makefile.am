@@ -427,11 +427,6 @@ endif
 endif
 
 # OpenJDK build environment.
-if CORE_BUILD
-  ICEDTEA_CORE_BUILD = true
-else
-  ICEDTEA_CORE_BUILD =
-endif
 if ZERO_BUILD
   ICEDTEA_ZERO_BUILD = true
 else
@@ -462,7 +457,6 @@ ICEDTEA_ENV = \
 	ENDORSED="-Djava.endorsed.dirs=$(ICEDTEA_ENDORSED_DIR)" \
 	CLASSPATH="" \
 	LD_LIBRARY_PATH="" \
-	CORE_BUILD="$(ICEDTEA_CORE_BUILD)" \
 	ZERO_BUILD="$(ICEDTEA_ZERO_BUILD)" \
 	ICEDTEA_SHARK_BUILD="$(ICEDTEA_SHARK_BUILD)" \
 	ZERO_LIBARCH="$(ZERO_LIBARCH)" \
@@ -1315,13 +1309,12 @@ stamps/ports.stamp: stamps/extract.stamp
 	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'|sed "s#hotspot/build#hotspot/make#"); \
 	  ln -sfv $$target $$link; \
 	done
-	if ! test "x$(ICEDTEA_CORE_BUILD)$(ICEDTEA_SHARK_BUILD)$(WITH_CACAO)" \
-	  = "xno" ; then \
+	if ! test "x$(WITH_CACAO)" = "xno" ; then \
 	  mkdir -p openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR) ; \
 	  ln -sf $(abs_top_builddir)/jvm.cfg \
 	    openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg ; \
 	fi
-	if ! test "x$(ICEDTEA_ZERO_BUILD)$(WITH_CACAO)" = "xno"; then \
+	if ! test "x$(WITH_CACAO)" = "xno"; then \
 	  ln -sf $(abs_top_builddir)/ergo.c \
 	    openjdk/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
 	fi

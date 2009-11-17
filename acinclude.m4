@@ -718,16 +718,6 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
   AC_MSG_RESULT($use_zero)
   AM_CONDITIONAL(ZERO_BUILD, test "x${use_zero}" = xyes)
 
-  use_core=no
-  if test "x${WITH_CACAO}" != "xno"; then
-    use_core=yes;
-  elif test "x${use_zero}" = "xyes"; then
-    if test "x${use_shark}" = "xno"; then
-      use_core=yes;
-    fi
-  fi
-  AM_CONDITIONAL(CORE_BUILD, test "x${use_core}" = xyes)
-
   ZERO_LIBARCH="${INSTALL_ARCH_DIR}"
   dnl can't use AC_CHECK_SIZEOF on multilib
   case "${ZERO_LIBARCH}" in
