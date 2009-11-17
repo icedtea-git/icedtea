@@ -568,6 +568,7 @@ GENERATED_FILES = $(top_srcdir)/generated/com/sun/java/swing/plaf/gtk/resources/
 	$(top_srcdir)/generated/org/omg/DynamicAny/DynAnyPackage/*.java \
 	$(top_srcdir)/generated/org/omg/DynamicAny/DynAnyFactoryPackage/*.java \
 	$(top_srcdir)/generated/org/omg/PortableServer/*.java \
+	$(top_srcdir)/generated/org/omg/PortableServer/CurrentPackage/*.java \
 	$(top_srcdir)/generated/org/omg/PortableServer/POAManagerPackage/*.java \
 	$(top_srcdir)/generated/org/omg/PortableServer/POAPackage/*.java \
 	$(top_srcdir)/generated/sun/awt/X11/*.java \
@@ -703,12 +704,13 @@ all-local: icedtea-stage2
 check-local: jtregcheck
 
 clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
- clean-clone clean-clone-boot clean-plugs clean-extra clean-netx \
- clean-visualvm clean-nbplatform clean-bootstrap-directory-stage1 \
- clean-bootstrap-directory-stage2 clean-bootstrap-directory-symlink-stage1 \
- clean-bootstrap-directory-symlink-stage2 clean-extract clean-generated \
- clean-plugin clean-liveconnect clean-native-ecj clean-hgforest \
- clean-icedtea-stage2 clean-icedtea-debug-stage2
+ clean-icedtea clean-icedtea-boot clean-clone clean-clone-boot \
+ clean-plugs clean-extra clean-netx clean-visualvm clean-nbplatform \
+ clean-bootstrap-directory-stage1 clean-bootstrap-directory-stage2 \
+ clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
+ clean-extract clean-generated clean-plugin clean-liveconnect clean-native-ecj \
+ clean-hgforest clean-icedtea-stage2 clean-icedtea-debug-stage2 clean-icedtea-stage1 \
+ clean-add-zero clean-add-zero-debug clean-add-cacao clean-add-cacao-debug
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -716,9 +718,6 @@ clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
 	  rmdir lib ; \
 	fi
 	rm -f jni-common.o
-if ADD_ZERO_BUILD
-	rm -rf zerovm
-endif
 
 distclean-local: clean-local clean-download
 	if [ -e stamps ] ; then \
@@ -792,7 +791,8 @@ stamps/download.stamp: stamps/download-drops.stamp stamps/download-openjdk.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-download: clean-drops clean-download-openjdk
+clean-download: clean-drops clean-download-openjdk clean-download-cacao \
+ clean-download-visualvm
 	rm -f stamps/download.stamp
 
 stamps/download-jaxp-drop.stamp:
@@ -1540,9 +1540,9 @@ stamps/clone-boot.stamp: stamps/overlay.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-clone-boot:
-	rm -f stamps/clone-boot.stamp
+clean-clone-boot: clean-patch-boot
 	rm -rf openjdk-boot
+	rm -f stamps/clone-boot.stamp
 
 stamps/patch-boot.stamp: stamps/clone-boot.stamp
 	mkdir -p stamps; \
@@ -1854,7 +1854,7 @@ endif
 clean-icedtea: stamps/download.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
-	  -C openjdk/make clobber
+	  -C openjdk clobber
 	rm -f stamps/icedtea.stamp stamps/icedtea-debug.stamp
 
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
@@ -1908,14 +1908,17 @@ hotspot-helper: stamps/bootstrap-directory-symlink-stage1.stamp \
 	  -C openjdk-boot hotspot
 
 clean-icedtea-boot: stamps/clone-boot.stamp
-	rm -f stamps/icedtea-boot.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot clobber
+	rm -f stamps/icedtea-boot.stamp
 
 stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp
 	mkdir -p stamps
 	touch $@
+
+clean-icedtea-stage1:
+	rm -f stamps/icedtea-stage1.stamp
 
 # Plugin
 
@@ -2003,6 +2006,7 @@ stamps/plugin.stamp: $(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET)
 	touch $@
 
 clean-plugin: $(ICEDTEAPLUGIN_CLEAN) $(ICEDTEANPPLUGIN_CLEAN)
+	rm -f stamps/plugin.stamp
 
 liveconnect-source-files.txt:
 	if test "x${LIVECONNECT_DIR}" != x; then \
@@ -2174,6 +2178,9 @@ if ENABLE_PULSE_JAVA
 	[ -z "$(PULSE_JAVA_CLASS_DIR)" ] || rm -rf $(PULSE_JAVA_CLASS_DIR)
 	rm -f pulse-java.jar
 	rm -f libpulse-java.so
+	if [ $(abs_top_srcdir) != $(abs_top_builddir) ]; then \
+	  rmdir $(abs_top_builddir)/pulseaudio ; \
+	fi
 endif
 	rm -f stamps/pulse-java*.stamp
 
@@ -2290,6 +2297,11 @@ else
 endif
 	touch $@
 
+clean-add-cacao:
+	rm -rf $(BUILD_JRE_ARCH_DIR)/cacao
+	sed -i 's#-cacao KNOWN#-cacao ERROR#' jvm.cfg
+	rm -f stamps/add-cacao.stamp
+
 stamps/add-cacao-debug.stamp: stamps/icedtea-debug.stamp stamps/cacao.stamp
 if ADD_CACAO_BUILD
 	mkdir -p $(BUILD_DEBUG_JRE_ARCH_DIR)/cacao
@@ -2304,6 +2316,11 @@ else
 	printf -- '-cacao ERROR\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
 	touch $@
+
+clean-add-cacao-debug:
+	rm -rf $(BUILD_DEBUG_JRE_ARCH_DIR)/cacao
+	sed -i 's#-cacao KNOWN#-cacao ERROR#' jvm.cfg
+	rm -f stamps/add-cacao-debug.stamp
 
 # configure script arguments, quoted in single quotes
 CONFIGURE_ARGS = @CONFIGURE_ARGS@
@@ -2349,17 +2366,28 @@ if ZERO_BUILD
 	cp -a zerovm/openjdk/build/$(OS_DIR)/hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server/* \
 		$(BUILD_JRE_ARCH_DIR)/shark/
 	printf -- '-shark KNOWN\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
+	printf -- '-zero ERROR\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 else
 	mkdir -p $(BUILD_JRE_ARCH_DIR)/zero
 	cp -a zerovm/openjdk/build/$(OS_DIR)/hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server/* \
 		$(BUILD_JRE_ARCH_DIR)/zero/
 	printf -- '-zero KNOWN\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
+	printf -- '-shark ERROR\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
 else
 	printf -- '-zero ERROR\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 	printf -- '-shark ERROR\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
 	touch $@
+
+clean-add-zero:
+	rm -rf $(BUILD_JRE_ARCH_DIR)/zero
+	sed -i 's#-zero KNOWN#-zero ERROR#' jvm.cfg
+	sed -i 's#-shark KNOWN#-shark ERROR#' jvm.cfg
+if ADD_ZERO_BUILD
+	rm -rf zerovm
+endif
+	rm -f stamps/add-zero.stamp
 
 stamps/add-zero-debug.stamp: stamps/icedtea-debug.stamp
 	mkdir -p stamps
@@ -2389,6 +2417,12 @@ else
 	printf -- '-shark ERROR\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
 	touch $@
+
+clean-add-zero-debug:
+	rm -rf $(BUILD_JRE_ARCH_DIR)/zero
+	sed -i 's#-zero KNOWN#-zero ERROR#' jvm.cfg
+	sed -i 's#-shark KNOWN#-shark ERROR#' jvm.cfg
+	rm -f stamps/add-zero-debug.stamp
 
 # end additional VMs
 

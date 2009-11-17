@@ -1,5 +1,31 @@
 2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	Add missing CORBA CurrentPackage directory to
+	list of distributed sources.
+	(clean-local): Ensure all targets are included.
+	(clean-download): Also depend on clean-cacao
+	and clean-visualvm.
+	(clean-clone-boot): Depend on clean-patch-boot.
+	(clean-icedtea): Makefile is in openjdk, not
+	openjdk/make.
+	(clean-icedtea-boot): Remove stamp last.
+	(clean-icedtea-stage1): New target to revert
+	icedtea-stage1.stamp.
+	(clean-plugin): Remove the stamp.
+	(clean-pulse-java): Remove the empty pulseaudio
+	directory if building out-of-tree.
+	(clean-add-cacao): Revert add-cacao.stamp.
+	(clean-add-cacao-debug): Revert add-cacao-debug.stamp.
+	(add-zero.stamp): Make -zero print ERROR when Shark
+	is built and vice-versa for when Zero is built.
+	(clean-add-zero): Revert add-zero.stamp.
+	(clean-add-zero-debug): Revert add-zero-debug.stamp.
+	* configure.ac:
+	Bump to 1.12.
+
+2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+
 	* acinclude.m4:
 	(IT_FIND_NUMBER_OF_PROCESSORS): Add
 	new macro which finds out the number of
