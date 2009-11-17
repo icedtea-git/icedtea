@@ -1,5 +1,10 @@
 2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/icedtea-jaxws-getdtdtype.patch:
+	Add additional fix for AttributeBase.java
+	
+2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	Use SHA256 checksums for all.
 	(download-visualvm.stamp): Use SHA256 checksums.
