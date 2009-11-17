@@ -1,3 +1,21 @@
+2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Make use of JAXWS dependent on absence of
+	javax.annotation.Resource and/or getDTDType()
+	bug.  Add new JAXWS patch.
+	(extract-jaxws.stamp): Apply getDTDType() patch
+	if bug found.
+	* acinclude.m4:
+	(IT_GETDTDTYPE_CHECK): Check for old versions of
+	gcj/Classpath which have
+	javax.xml.stream.events.Attribute.getDTDType()
+	with a return type of QName not String.
+	* configure.ac:
+	Invoke new IT_GETDTDTYPE_CHECK macro.
+	* patches/icedtea-jaxws-getdtdtype.patch:
+	New patch to work around the getDTDType() bug.
+	
 2009-11-17  Gary Benson  <gbenson@redhat.com>
 
 	* acinclude.m4:

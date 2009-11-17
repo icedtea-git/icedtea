@@ -1561,3 +1561,77 @@ AC_DEFUN([IT_FIND_NUMBER_OF_PROCESSORS],[
   ])
   AC_PROVIDE([$0])dnl
 ])
+
+AC_DEFUN([IT_GETDTDTYPE_CHECK],[
+  AC_CACHE_CHECK([if javax.xml.stream.events.Attribute.getDTDType() wrongly returns a QName], it_cv_dtdtype, [
+  CLASS=Test.java
+  BYTECODE=$(echo $CLASS|sed 's#\.java##')
+  mkdir tmp.$$
+  cd tmp.$$
+  cat << \EOF > $CLASS
+[/* [#]line __oline__ "configure" */
+import javax.xml.namespace.QName;
+import javax.xml.stream.Location;
+import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.Characters;
+import javax.xml.stream.events.EndElement;
+import javax.xml.stream.events.StartElement;
+
+import java.lang.reflect.Method;
+
+public class Test
+    implements Attribute
+{
+    // This method will not qualify if using an
+    // old version of Classpath where it returns
+    // a QName.
+    public String getDTDType() { return "Boom"; }
+
+    // Other Attribute methods
+    public QName getName() { return null; }
+    public String getValue() { return "Bang"; }
+    public boolean isSpecified() { return false; }
+
+    // XMLEvent methods
+    public Characters asCharacters() { return null; }
+    public EndElement asEndElement() { return null; }
+    public StartElement asStartElement() { return null; }
+    public int getEventType() { return 42; }
+    public Location getLocation() { return null; }
+    public QName getSchemaType() { return null; }
+    public boolean isAttribute() { return true; }
+    public boolean isCharacters() { return false; }
+    public boolean isEndDocument() { return false; }
+    public boolean isEndElement() { return false; }
+    public boolean isEntityReference() { return false; }
+    public boolean isNamespace() { return false; }
+    public boolean isProcessingInstruction() { return false; }
+    public boolean isStartDocument() { return false; }
+    public boolean isStartElement() { return false; }
+    public void writeAsEncodedUnicode(java.io.Writer w) {}
+
+    public static void main(String[] args)
+    {
+        for (Method m : Attribute.class.getMethods())
+            if (m.getName().equals("getDTDType"))
+                if (m.getReturnType().equals(QName.class))
+                    System.exit(1);
+    }
+}]
+EOF
+  if $JAVAC -cp . $JAVACFLAGS -source 5 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+    if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1; then
+      it_cv_dtdtype=no;
+    else
+      it_cv_dtdtype=yes;
+    fi
+  else
+    it_cv_dtdtype=yes;
+  fi
+  rm -f $CLASS *.class
+  cd ..
+  rmdir tmp.$$
+  ])
+AM_CONDITIONAL([DTDTYPE_QNAME], test x"${it_cv_dtdtype}" = "xyes")
+AC_PROVIDE([$0])dnl
+])

@@ -85,15 +85,23 @@ JDK_SHARE = openjdk/jdk/src/share/classes
 JDK_SOLARIS = openjdk/jdk/src/solaris/classes
 LANGTOOLS = openjdk/langtools/src/share/classes
 CORBA = openjdk/corba/src/share/classes
-if LACKS_JAVAX_ANNOTATION_RESOURCE
 JAXWS = $(BUILD_OUTPUT_DIR)/jaxws/drop/jaxws_src/src
-endif
 
 NETX_SRCDIR = $(abs_top_srcdir)/netx
 NETX_RESOURCE_DIR=$(NETX_SRCDIR)/net/sourceforge/jnlp/resources
 
+if DTDTYPE_QNAME
+NEED_JAXWS_SRC = true
+JAXWS_COND = $(JAXWS)
+endif
+
+if LACKS_JAVAX_ANNOTATION_RESOURCE
+NEED_JAXWS_SRC = true
+JAXWS_COND = $(JAXWS)
+endif
+
 OPENJDK_SOURCEPATH_DIRS = \
-        $(JDK_SHARE):$(JDK_SOLARIS):$(LANGTOOLS):$(CORBA):$(JAXWS)
+        $(JDK_SHARE):$(JDK_SOLARIS):$(LANGTOOLS):$(CORBA):$(JAXWS_COND)
 
 SOURCEPATH_DIRS = $(abs_top_builddir)/generated:$(OPENJDK_SOURCEPATH_DIRS):$(NETX_SRCDIR)
 
@@ -425,6 +433,10 @@ if CP40630
 ICEDTEA_BOOT_PATCHES += $(SCANNER_PATCHES)
 endif
 endif
+
+# Patches for JAXWS
+
+JAXWS_PATCHES = patches/icedtea-jaxws-getdtdtype.patch
 
 # OpenJDK build environment.
 if ZERO_BUILD
@@ -1283,12 +1295,41 @@ clean-extract-cacao: clean-cacao
 	rm -f stamps/extract-cacao.stamp
 
 stamps/extract-jaxws.stamp: stamps/extract-openjdk.stamp
-if LACKS_JAVAX_ANNOTATION_RESOURCE
-	(cd openjdk/jaxws ; \
-	 $(ANT) -Ddrops.dir=$(abs_top_builddir)/drops \
-	  -Doutput.dir=$(BUILD_OUTPUT_DIR)/jaxws \
-	  source ; \
-	 cd ../..)
+	if test "x$(NEED_JAXWS_SRC)" = "xtrue"; then \
+	  (cd openjdk/jaxws ; \
+	   $(ANT) -Ddrops.dir=$(abs_top_builddir)/drops \
+	   -Doutput.dir=$(BUILD_OUTPUT_DIR)/jaxws \
+	   source ; \
+	   cd $(abs_top_builddir)) ; \
+	fi
+if DTDTYPE_QNAME
+	(cd $(BUILD_OUTPUT_DIR)/jaxws; \
+	 all_patches_ok=yes; \
+	 for p in $(JAXWS_PATCHES) ; \
+	 do \
+	   if test x$${all_patches_ok} = "xyes" \
+	     && echo Checking $$p \
+	     && $(PATCH) -l -p0 --dry-run -s -t -f \
+	       -F 0 < $(abs_top_srcdir)/$$p ; \
+	   then \
+	    echo Applying $$p ; \
+	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
+	    if ! grep "^\* $$(basename $$p)" $(abs_top_srcdir)/HACKING \
+	      >> stamps/extract-jaxws.stamp.tmp ; \
+	    then \
+	      echo "* $$(basename $$p): UNDOCUMENTED" \
+	        >> stamps/extract-jaxws.stamp.tmp ; \
+	    fi ; \
+	   else \
+	     test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
+	   fi ; \
+	 done ; \
+	 if ! test x$${all_patches_ok} = "xyes"; then \
+	   echo ERROR patch $${all_patches_ok} FAILED! ; \
+	   echo WARNING make clean-extract-jaxws before retrying a fix ; \
+	   exit 2; \
+	 fi ; \
+	 cd $(abs_top_builddir)) ;
 endif
 	mkdir -p stamps
 	touch $@
@@ -1299,6 +1340,7 @@ clean-extract-jaxws:
 	   $(ANT) -Doutput.dir=$(BUILD_OUTPUT_DIR)/jaxws clobber ; \
 	   cd ../../); \
         fi
+	mkdir -p stamps
 	rm -f stamps/extract-jaxws.stamp
 
 # Link ports sources into tree
