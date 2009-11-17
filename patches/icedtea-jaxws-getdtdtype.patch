@@ -1,5 +1,5 @@
---- openjdk.orig/build/linux-amd64/jaxws/drop/jaxws_src/src/com/sun/xml/internal/bind/v2/runtime/unmarshaller/StAXEventConnector.java	2009-11-17 16:37:06.000000000 +0000
-+++ openjdk/build/linux-amd64/jaxws/drop/jaxws_src/src/com/sun/xml/internal/bind/v2/runtime/unmarshaller/StAXEventConnector.java	2009-11-17 16:38:00.000000000 +0000
+--- drop/jaxws_src/src/com/sun/xml/internal/bind/v2/runtime/unmarshaller/StAXEventConnector.java	2009-11-17 16:37:06.000000000 +0000
++++ drop/jaxws_src/src/com/sun/xml/internal/bind/v2/runtime/unmarshaller/StAXEventConnector.java	2009-11-17 16:38:00.000000000 +0000
 @@ -276,7 +276,7 @@
                  qName = localName;
              else

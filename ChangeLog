@@ -1,5 +1,10 @@
 2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/icedtea-jaxws-getdtdtype.patch:
+	Fix path.
+
+2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	Make use of JAXWS dependent on absence of
 	javax.annotation.Resource and/or getDTDType()
