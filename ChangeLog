@@ -1,5 +1,20 @@
 2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	Always compute the checksums of zip files
+	even when specified by --with-alt-src-zip.
+	Switch the alternate HotSpot build to SHA256
+	checksums.
+	(hgforest.stamp): Simplified to just if USE_HG.
+	(download-openjdk.stamp): Symlink alternate
+	zip files and then check, instead of jumping
+	the download step altogether.
+	(download-cacao.stamp): Likewise.
+	* hotspot.map: Remove dead redundant line for
+	old original build.
+
+2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+
 	* patches/icedtea-jaxws-getdtdtype.patch:
 	Fix path.
 

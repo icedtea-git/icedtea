@@ -22,6 +22,7 @@ CACAO_VERSION = 0.99.4
 CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
 CACAO_BASE_URL = http://www.complang.tuwien.ac.at
 CACAO_URL = $(CACAO_BASE_URL)/cacaojvm/download/cacao-$(CACAO_VERSION)/
+CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
 NETBEANS_PROFILER_URL = http://icedtea.classpath.org/visualvm/
 NETBEANS_PROFILER_SRC_ZIP = netbeans-profiler-visualvm_release65_mod.tar.gz
@@ -144,55 +145,21 @@ if USE_HG
   LANGTOOLS_SRC_ZIP =
   HOTSPOT_SRC_ZIP =
 else
-if USE_ALT_OPENJDK_SRC_ZIP
-  OPENJDK_SRC_ZIP = $(ALT_OPENJDK_SRC_ZIP)
-else
   OPENJDK_SRC_ZIP = openjdk.tar.gz
-endif
-if USE_ALT_CORBA_SRC_ZIP
-  CORBA_SRC_ZIP = $(ALT_CORBA_SRC_ZIP)
-else
   CORBA_SRC_ZIP = corba.tar.gz
-endif
-if USE_ALT_JAXP_SRC_ZIP
-  JAXP_SRC_ZIP = $(ALT_JAXP_SRC_ZIP)
-else
   JAXP_SRC_ZIP = jaxp.tar.gz
-endif
-if USE_ALT_JAXWS_SRC_ZIP
-  JAXWS_SRC_ZIP = $(ALT_JAXWS_SRC_ZIP)
-else
   JAXWS_SRC_ZIP = jaxws.tar.gz
-endif
-if USE_ALT_JDK_SRC_ZIP
-  JDK_SRC_ZIP = $(ALT_JDK_SRC_ZIP)
-else
   JDK_SRC_ZIP = jdk.tar.gz
-endif
-if USE_ALT_LANGTOOLS_SRC_ZIP
-  LANGTOOLS_SRC_ZIP = $(ALT_LANGTOOLS_SRC_ZIP)
-else
   LANGTOOLS_SRC_ZIP = langtools.tar.gz
-endif
-if USE_ALT_HOTSPOT_SRC_ZIP
-  HOTSPOT_SRC_ZIP = $(ALT_HOTSPOT_SRC_ZIP)
-else
   HOTSPOT_SRC_ZIP = hotspot.tar.gz
-endif
-endif
-
-if USE_ALT_CACAO_SRC_ZIP
-  CACAO_SRC_ZIP = $(ALT_CACAO_SRC_ZIP)
-else
-  CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 endif
 
 if WITH_ALT_HSBUILD
-  HS_MD5SUM = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+  HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
   HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
   HS_URL = $(OPENJDK_HOTSPOT_URL)
 else
-  HS_MD5SUM = $(HOTSPOT_MD5SUM)
+  HS_SHA256SUM = $(HOTSPOT_SHA256SUM)
   HS_CHANGESET = $(HOTSPOT_CHANGESET)
   HS_URL = $(HOTSPOT_URL)
 endif
@@ -769,20 +736,13 @@ dist-openjdk-fsg: stamps/patch-fsg.stamp
 # Check for forest support
 
 stamps/hgforest.stamp:
-if OPENJDK_SRC_DIR_FOUND
-else
-if USE_ALT_OPENJDK_SRC_ZIP
-else
-if !USE_HG
-else
+if USE_HG
 	if ! $(HG) fclone -h; \
           then \
           echo "No forest extension found. Please refer to" \
             "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
           exit 1; \
-          fi;
-endif
-endif
+        fi;
 endif
 	mkdir -p stamps 
 	touch $@
@@ -890,8 +850,6 @@ clean-drops: clean-download-jaxp-drop clean-download-jaf-drop \
 
 stamps/download-openjdk.stamp: stamps/hgforest.stamp
 if !OPENJDK_SRC_DIR_FOUND
-if USE_ALT_OPENJDK_SRC_ZIP
-else
 if USE_CLOSURES
 	$(HG) fclone $(CLOSURES_HG_URL) openjdk; 
 else
@@ -917,6 +875,9 @@ else
 	$(HG) fclone $(ICEDTEA_HG_URL) openjdk;
 endif
 else
+if USE_ALT_OPENJDK_SRC_ZIP
+	ln -sf $(ALT_OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP)
+endif
 	if ! echo "$(OPENJDK_SHA256SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
@@ -929,7 +890,10 @@ else
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of OpenJDK root zip"; false; \
 	  fi; \
-	fi ; \
+	fi ;
+if USE_ALT_CORBA_SRC_ZIP
+	ln -sf $(ALT_CORBA_SRC_ZIP) $(CORBA_SRC_ZIP)
+endif
 	if ! echo "$(CORBA_SHA256SUM)  $(CORBA_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
@@ -942,7 +906,10 @@ else
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of CORBA zip"; false; \
 	  fi; \
-	fi ; \
+	fi ;
+if USE_ALT_JAXP_SRC_ZIP
+	ln -sf $(ALT_JAXP_SRC_ZIP) $(JAXP_SRC_ZIP)
+endif
 	if ! echo "$(JAXP_SHA256SUM)  $(JAXP_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
@@ -955,7 +922,10 @@ else
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of JAXP zip"; false; \
 	  fi; \
-	fi ; \
+	fi ;
+if USE_ALT_JAXWS_SRC_ZIP
+	ln -sf $(ALT_JAXWS_SRC_ZIP) $(JAXWS_SRC_ZIP)
+endif
 	if ! echo "$(JAXWS_SHA256SUM)  $(JAXWS_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
@@ -968,7 +938,10 @@ else
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of JAXWS zip"; false; \
 	  fi; \
-	fi ; \
+	fi ;
+if USE_ALT_JDK_SRC_ZIP
+	ln -sf $(ALT_JDK_SRC_ZIP) $(JDK_SRC_ZIP)
+endif
 	if ! echo "$(JDK_SHA256SUM)  $(JDK_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
@@ -981,7 +954,10 @@ else
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of JDK zip"; false; \
 	  fi; \
-	fi ; \
+	fi ;
+if USE_ALT_LANGTOOLS_SRC_ZIP
+	ln -sf $(ALT_LANGTOOLS_SRC_ZIP) $(LANGTOOLS_SRC_ZIP)
+endif
 	if ! echo "$(LANGTOOLS_SHA256SUM)  $(LANGTOOLS_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
@@ -995,6 +971,9 @@ else
 	  then echo "ERROR: Bad download of langtools zip"; false; \
 	  fi; \
 	fi ;
+if USE_ALT_HOTSPOT_SRC_ZIP
+	ln -sf $(ALT_HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP)
+endif
 	if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
@@ -1008,7 +987,6 @@ else
 	  then echo "ERROR: Bad download of HotSpot zip"; false; \
 	  fi; \
 	fi
-endif
 endif
 endif
 endif
@@ -1062,7 +1040,8 @@ stamps/download-cacao.stamp:
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
 if USE_ALT_CACAO_SRC_ZIP
-else
+	ln -sf $(ALT_CACAO_SRC_ZIP) $(CACAO_SRC_ZIP)
+endif
 	if ! echo "$(CACAO_MD5SUM)  $(CACAO_SRC_ZIP)" \
 	 | $(MD5SUM) --check ; \
 	then \
@@ -1076,7 +1055,6 @@ else
 	 then echo "ERROR: Bad download of CACAO zip"; false; \
 	 fi; \
 	fi
-endif
 endif
 endif
 	mkdir -p stamps
