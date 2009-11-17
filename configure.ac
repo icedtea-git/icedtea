@@ -47,6 +47,7 @@ AC_CHECK_WITH_GCJ
 AC_CHECK_WITH_HOTSPOT_BUILD
 AC_PATH_TOOL([LINUX32],[linux32])
 AC_CHECK_GCC_VERSION
+IT_FIND_NUMBER_OF_PROCESSORS
 
 AC_MSG_CHECKING([for a NetBeans installation])
 AC_ARG_WITH([netbeans-home],
@@ -151,19 +152,20 @@ AM_CONDITIONAL([ENABLE_NSS], [test x$ENABLE_NSS = xyes])
 AC_MSG_RESULT(${ENABLE_NSS})
 
 AC_MSG_CHECKING([how many parallel build jobs to execute])
+proc_default=$(($it_cv_proc + 1))
 AC_ARG_WITH([parallel-jobs],
 	[AS_HELP_STRING([--with-parallel-jobs],
 			[build IcedTea using the specified number of parallel jobs])],
 	[
           if test "x${withval}" = x
           then
-            PARALLEL_JOBS=2
+            PARALLEL_JOBS=${proc_default}
           else
             PARALLEL_JOBS=${withval}
           fi
         ],
         [
-          PARALLEL_JOBS=2
+          PARALLEL_JOBS=${proc_default}
         ])
 AC_MSG_RESULT(${PARALLEL_JOBS})
 AC_SUBST(PARALLEL_JOBS)

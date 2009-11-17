@@ -1,3 +1,13 @@
+2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	(IT_FIND_NUMBER_OF_PROCESSORS): Add
+	new macro which finds out the number of
+	available processors.
+	* configure.ac:
+	Call IT_FIND_NUMBER_OF_PROCESSORS and use
+	result to set default for --with-parallel-jobs.
+
 2009-11-16  Gary Benson  <gbenson@redhat.com>
 
 	* Makefile.am:

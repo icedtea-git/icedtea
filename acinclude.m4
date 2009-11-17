@@ -1559,3 +1559,15 @@ rmdir tmp.$$
 AM_CONDITIONAL([LACKS_$1], test x"${it_cv_$1}" = "xyes")
 AC_PROVIDE([$0])dnl
 ])
+
+AC_DEFUN([IT_FIND_NUMBER_OF_PROCESSORS],[
+  FIND_TOOL([GETCONF], [getconf])
+  AC_CACHE_CHECK([the number of online processors], it_cv_proc, [
+    if number=$($GETCONF _NPROCESSORS_ONLN); then
+      it_cv_proc=$number;
+    else
+      it_cv_proc=2;
+    fi
+  ])
+  AC_PROVIDE([$0])dnl
+])
