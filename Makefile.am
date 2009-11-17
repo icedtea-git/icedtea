@@ -999,41 +999,27 @@ endif
 	touch $@
 
 clean-download-openjdk:
-if !USE_ALT_OPENJDK_SRC_ZIP
 	if [ ! -z $(OPENJDK_SRC_ZIP) ] ; then \
 	  rm -f $(OPENJDK_SRC_ZIP) ; \
 	fi
-endif
-if !USE_ALT_CORBA_SRC_ZIP
 	if [ ! -z $(CORBA_SRC_ZIP) ] ; then \
 	  rm -f $(CORBA_SRC_ZIP) ; \
 	fi
-endif
-if !USE_ALT_JAXP_SRC_ZIP
 	if [ ! -z $(JAXP_SRC_ZIP) ] ; then \
 	  rm -f $(JAXP_SRC_ZIP) ; \
 	fi
-endif
-if !USE_ALT_JAXWS_SRC_ZIP
 	if [ ! -z $(JAXWS_SRC_ZIP) ] ; then \
 	  rm -f $(JAXWS_SRC_ZIP) ; \
 	fi
-endif
-if !USE_ALT_JDK_SRC_ZIP
 	if [ ! -z $(JDK_SRC_ZIP) ] ; then \
 	  rm -f $(JDK_SRC_ZIP) ; \
 	fi
-endif
-if !USE_ALT_LANGTOOLS_SRC_ZIP
 	if [ ! -z $(LANGTOOLS_SRC_ZIP) ] ; then \
 	  rm -f $(LANGTOOLS_SRC_ZIP) ; \
 	fi
-endif
-if !USE_ALT_HOTSPOT_SRC_ZIP
 	if [ ! -z $(HOTSPOT_SRC_ZIP) ] ; then \
 	  rm -f $(HOTSPOT_SRC_ZIP) ; \
 	fi
-endif
 	rm -f stamps/download-openjdk.stamp
 
 stamps/download-cacao.stamp:
@@ -1061,15 +1047,14 @@ endif
 	touch $@
 
 clean-download-cacao:
-if BUILD_CACAO
-if !USE_ALT_CACAO_SRC_ZIP
 	rm -f $(CACAO_SRC_ZIP)
-endif
-endif
 	rm -f stamps/download-cacao.stamp
 
 stamps/download-visualvm.stamp:
 if WITH_VISUALVM
+if USE_ALT_NETBEANS_PROFILER_ZIP
+	ln -sf $(ALT_NETBEANS_PROFILER_ZIP) $(NETBEANS_PROFILER_SRC_ZIP)
+endif
 	if ! echo "$(NETBEANS_PROFILER_SHA256SUM)  $(NETBEANS_PROFILER_SRC_ZIP)" \
 	 | $(SHA256SUM) --check ; \
 	then \
@@ -1085,6 +1070,9 @@ if WITH_VISUALVM
 	 fi; \
 	fi
 
+if USE_ALT_VISUALVM_ZIP
+	ln -sf $(ALT_VISUALVM_ZIP) $(VISUALVM_SRC_ZIP)
+endif
 	if ! echo "$(VISUALVM_SHA256SUM)  $(VISUALVM_SRC_ZIP)" \
          | $(SHA256SUM) --check ; \
         then \
@@ -1104,10 +1092,8 @@ endif
 	touch $@
 
 clean-download-visualvm:
-if WITH_VISUALVM
 	rm -f $(VISUALVM_SRC_ZIP)
 	rm -f $(NETBEANS_PROFILER_SRC_ZIP)
-endif
 	rm -f stamps/download-visualvm.stamp
 
 stamps/extract.stamp: stamps/extract-openjdk.stamp \
