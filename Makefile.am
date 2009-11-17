@@ -19,24 +19,24 @@ LANGTOOLS_SHA256SUM = 01c43af5d3da14ff9a96e769d212b2297c2c6756b28cc6a6d6f00148c2
 OPENJDK_SHA256SUM = 6a28cd0ba1bcc4290175497e6cfe11295a8e4f82f4c030b3e5686f7c48297936
 
 CACAO_VERSION = 0.99.4
-CACAO_MD5SUM = 63220327925ace13756ae334c55a3baa
+CACAO_SHA256SUM = c6090c1d2ed3c60acda0076b62563598267be8dab270ce49ee1035002a2510cf
 CACAO_BASE_URL = http://www.complang.tuwien.ac.at
 CACAO_URL = $(CACAO_BASE_URL)/cacaojvm/download/cacao-$(CACAO_VERSION)/
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
 NETBEANS_PROFILER_URL = http://icedtea.classpath.org/visualvm/
 NETBEANS_PROFILER_SRC_ZIP = netbeans-profiler-visualvm_release65_mod.tar.gz
-NETBEANS_PROFILER_MD5SUM = a6756a62291ebea5c0e2431389b31380
+NETBEANS_PROFILER_SHA256SUM = b57b8d90e5749b80885c03abe5547f0d671abebe7f4991d679fa8a0034ebf2c3
 
 VISUALVM_URL = https://visualvm.dev.java.net/files/documents/7163/127170/
 VISUALVM_SRC_ZIP = visualvm-111-src.tar.gz
-VISUALVM_MD5SUM = a289739f4a5bcdb9a2c642cfcc1e83fe
+VISUALVM_SHA256SUM = 947b0af99a1263e14d496a7231445eeff3e04cb38877fd2b56e1b6f68a7ff710
 
 JAXWS_DROP_URL = http://kenai.com/projects/jdk7-drops/downloads/download
 JAXWS_DROP_ZIP = jdk7-jaxws-2009_09_28.zip
-JAXWS_DROP_MD5SUM = f5010ebf636db9f465a61a7a74944543
+JAXWS_DROP_SHA256SUM = 272756b999e9ae2435da8d58e259562e61126e1c5b1f9421fe65423217cef8fd
 JAF_DROP_ZIP = jdk7-jaf-2009_08_28.zip
-JAF_DROP_MD5SUM = eb8cb7a4a7f14e211fbe2354878a2472
+JAF_DROP_SHA256SUM = 8c81940b3017c0058367d7e7453123442f2cdd77c2bfe74acd9035f97e4db8e8
 JAXP_DROP_URL = https://jaxp.dev.java.net/files/documents/913/144160
 JAXP_DROP_ZIP = jdk7-jaxp-m5.zip
 JAXP_DROP_SHA256SUM = ebab4c6c4e641a4c95a7b6669e78f9bb1149a11054fc5b423cf292b633d6be53
@@ -791,16 +791,16 @@ stamps/download-jaf-drop.stamp:
 if USE_ALT_JAF_DROP_ZIP
 	ln -sf $(ALT_JAF_DROP_ZIP) drops/$(JAF_DROP_ZIP)
 endif
-	if ! echo "$(JAF_DROP_MD5SUM)  drops/$(JAF_DROP_ZIP)" \
-	  | $(MD5SUM) --check ; \
+	if ! echo "$(JAF_DROP_SHA256SUM)  drops/$(JAF_DROP_ZIP)" \
+	  | $(SHA256SUM) --check ; \
 	then \
 	  if [ -f drops/$(JAF_DROP_ZIP) ] ; \
 	  then \
 	    mv drops/$(JAF_DROP_ZIP) drops/$(JAF_DROP_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(JAXWS_DROP_URL)/$(JAF_DROP_ZIP) -O drops/$(JAF_DROP_ZIP); \
-	  if ! echo "$(JAF_DROP_MD5SUM)  drops/$(JAF_DROP_ZIP)" \
-	    | $(MD5SUM) --check ; \
+	  if ! echo "$(JAF_DROP_SHA256SUM)  drops/$(JAF_DROP_ZIP)" \
+	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of jaf drop zip"; false; \
 	  fi; \
 	fi ;
@@ -816,16 +816,16 @@ stamps/download-jaxws-drop.stamp:
 if USE_ALT_JAXWS_DROP_ZIP
 	ln -sf $(ALT_JAXWS_DROP_ZIP) drops/$(JAXWS_DROP_ZIP)
 endif
-	if ! echo "$(JAXWS_DROP_MD5SUM)  drops/$(JAXWS_DROP_ZIP)" \
-	  | $(MD5SUM) --check ; \
+	if ! echo "$(JAXWS_DROP_SHA256SUM)  drops/$(JAXWS_DROP_ZIP)" \
+	  | $(SHA256SUM) --check ; \
 	then \
 	  if [ -f drops/$(JAXWS_DROP_ZIP) ] ; \
 	  then \
 	    mv drops/$(JAXWS_DROP_ZIP) drops/$(JAXWS_DROP_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(JAXWS_DROP_URL)/$(JAXWS_DROP_ZIP) -O drops/$(JAXWS_DROP_ZIP); \
-	  if ! echo "$(JAXWS_DROP_MD5SUM)  drops/$(JAXWS_DROP_ZIP)" \
-	    | $(MD5SUM) --check ; \
+	  if ! echo "$(JAXWS_DROP_SHA256SUM)  drops/$(JAXWS_DROP_ZIP)" \
+	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of jaxws drop zip"; false; \
 	  fi; \
 	fi ;
@@ -1042,16 +1042,16 @@ if !USE_SYSTEM_CACAO
 if USE_ALT_CACAO_SRC_ZIP
 	ln -sf $(ALT_CACAO_SRC_ZIP) $(CACAO_SRC_ZIP)
 endif
-	if ! echo "$(CACAO_MD5SUM)  $(CACAO_SRC_ZIP)" \
-	 | $(MD5SUM) --check ; \
+	if ! echo "$(CACAO_SHA256SUM)  $(CACAO_SRC_ZIP)" \
+	 | $(SHA256SUM) --check ; \
 	then \
 	 if [ $(CACAO_SRC_ZIP) ] ; \
 	 then \
 	   mv $(CACAO_SRC_ZIP) $(CACAO_SRC_ZIP).old ; \
 	 fi ; \
 	 $(WGET) $(CACAO_URL)$(CACAO_SRC_ZIP) -O $(CACAO_SRC_ZIP); \
-	 if ! echo "$(CACAO_MD5SUM)  $(CACAO_SRC_ZIP)" \
-	   | $(MD5SUM) --check ; \
+	 if ! echo "$(CACAO_SHA256SUM)  $(CACAO_SRC_ZIP)" \
+	   | $(SHA256SUM) --check ; \
 	 then echo "ERROR: Bad download of CACAO zip"; false; \
 	 fi; \
 	fi
@@ -1070,8 +1070,8 @@ endif
 
 stamps/download-visualvm.stamp:
 if WITH_VISUALVM
-	if ! echo "$(NETBEANS_PROFILER_MD5SUM)  $(NETBEANS_PROFILER_SRC_ZIP)" \
-	 | $(MD5SUM) --check ; \
+	if ! echo "$(NETBEANS_PROFILER_SHA256SUM)  $(NETBEANS_PROFILER_SRC_ZIP)" \
+	 | $(SHA256SUM) --check ; \
 	then \
 	 if [ $(NETBEANS_PROFILER_SRC_ZIP) ] ; \
 	 then \
@@ -1079,14 +1079,14 @@ if WITH_VISUALVM
 	 fi ; \
 	 $(WGET) $(NETBEANS_PROFILER_URL)$(NETBEANS_PROFILER_SRC_ZIP) \
 	  -O $(NETBEANS_PROFILER_SRC_ZIP) ; \
-	 if ! echo "$(NETBEANS_PROFILER_MD5SUM)  $(NETBEANS_PROFILER_SRC_ZIP)" \
-	   | $(MD5SUM) --check ; \
+	 if ! echo "$(NETBEANS_PROFILER_SHA256SUM)  $(NETBEANS_PROFILER_SRC_ZIP)" \
+	   | $(SHA256SUM) --check ; \
 	 then echo "ERROR: Bad download of NetBeans profiler zip"; false; \
 	 fi; \
 	fi
 
-	if ! echo "$(VISUALVM_MD5SUM)  $(VISUALVM_SRC_ZIP)" \
-         | $(MD5SUM) --check ; \
+	if ! echo "$(VISUALVM_SHA256SUM)  $(VISUALVM_SRC_ZIP)" \
+         | $(SHA256SUM) --check ; \
         then \
          if [ $(VISUALVM_SRC_ZIP) ] ; \
          then \
@@ -1094,8 +1094,8 @@ if WITH_VISUALVM
          fi ; \
          $(WGET) $(VISUALVM_URL)$(VISUALVM_SRC_ZIP) \
           -O $(VISUALVM_SRC_ZIP) ; \
-	 if ! echo "$(VISUALVM_MD5SUM)  $(VISUALVM_SRC_ZIP)" \
-	   | $(MD5SUM) --check ; \
+	 if ! echo "$(VISUALVM_SHA256SUM)  $(VISUALVM_SRC_ZIP)" \
+	   | $(SHA256SUM) --check ; \
 	 then echo "ERROR: Bad download of VisualVM zip"; false; \
 	 fi; \
         fi
