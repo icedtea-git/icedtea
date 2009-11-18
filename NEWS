@@ -1,4 +1,4 @@
-New in release 1.12 (2009-XX-XX)
+New in release 1.12 (2009-11-17)
 
 - Updated to OpenJDK7 milestone 5; includes:
   - From Project Coin:
@@ -38,6 +38,10 @@ New in release 1.12 (2009-XX-XX)
     patches/boot.
   * The icedtea-against-icedtea target is now icedtea-stage2.
     The icedtea-against-ecj target is now icedtea-stage1.
+  * The Java code for the plugin is now built by the
+    liveconnect.stamp and liveconnect-dist.stamp targets
+    rather than hijacking the OpenJDK build.
+- Upgraded to VisualVM 1.2.1
 
 New in release 1.11 (2009-08-06)
 

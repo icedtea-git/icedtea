@@ -1,5 +1,11 @@
 2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
 
+	* NEWS:
+	Mention VisualVM and changes in building
+	the Java plugin code.
+	
+2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+
 	* patches/icedtea-jaxws-getdtdtype.patch:
 	Replace getDTDType method, don't add another.
 	* HACKING: Document the patch.
