@@ -154,12 +154,8 @@ Index: openjdk/hotspot/src/share/vm/utilities/macros.hpp
 ===================================================================
 --- openjdk.orig/ports/hotspot/src/share/vm/utilities/macros.hpp	2009-11-12 15:17:14.458064088 +0100
 +++ openjdk/hotspot/src/share/vm/utilities/macros.hpp	2009-11-12 15:19:18.097063844 +0100
-@@ -146,12 +146,14 @@
- #define NOT_WINDOWS(code) code
- #endif
- 
--#if defined(IA32) || defined(AMD64)
-+#if defined(IA32) || defined(IA64) || defined(AMD64)
+@@ -146,9 +146,11 @@
+ #if defined(IA32) || defined(AMD64)
  #define X86
  #define X86_ONLY(code) code
 +#define NOT_X86(code)
