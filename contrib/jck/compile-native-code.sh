@@ -22,7 +22,7 @@ case "$arch" in
   i?86|ppc)
     MFLAG=-m32
     ;;
-  x86_64|ppc64)
+  x86_64|ppc64|s390x)
     MFLAG=-m64
     ;;
   *)

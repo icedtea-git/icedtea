@@ -1,3 +1,7 @@
+2009-11-23  Gary Benson  <gbenson@redhat.com>
+
+	* contrib/jck/compile-native-code.sh: Support s390x.
+
 2009-11-18  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-shark.patch
