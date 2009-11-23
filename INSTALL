@@ -35,7 +35,7 @@ For building the PulseAudio based mixer, you will need
 pulseaudio-libs-devel >= 0.9.11
 
 For building VisualVM, you will need
-netbeans = 6.5
+netbeans = 6.7.1
 
 For building the zero-assembler port (see below), you will need libffi.
 

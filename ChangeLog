@@ -1,3 +1,8 @@
+2009-11-23  Andrew John Hughes  <ahughes@redhat.com>
+
+	* INSTALL: Update NetBeans requirement
+	to 6.7.1.
+	
 2009-11-11  Tomas Hurka  <tomas.hurka@sun.com>
 
 	* Makefile.am: Update to VisualVM 1.2.1.
