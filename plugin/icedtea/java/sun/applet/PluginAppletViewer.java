@@ -898,8 +898,8 @@ import com.sun.jndi.toolkit.url.UrlUtil;
     	 try {
     		 PluginDebug.debug ("wait request 1");
     		 synchronized(request) {
-    			 PluginDebug.debug ("wait request 2");
-    			 while ((Long) request.getObject() == 0)
+    			 PluginDebug.debug ("wait request 2 " + status.get(identifier) );
+    			 while ((Long) request.getObject() == 0 && (status.get(identifier).equals(PAV_INIT_STATUS.ACTIVE) || status.get(identifier).equals(PAV_INIT_STATUS.PRE_INIT)))
     				 request.wait();
     			 PluginDebug.debug ("wait request 3");
     		 }
@@ -1677,6 +1677,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
     	 boolean isAppletTag = false;
     	 boolean isObjectTag = false;
     	 boolean isEmbedTag = false;
+    	 boolean objectTagAlreadyParsed = false;
 
     	 // warning messages
     	 String requiresNameWarning = amh.getMessage("parse.warning.requiresname");
@@ -1751,6 +1752,10 @@ import com.sun.jndi.toolkit.url.UrlUtil;
     				 if (nm.equalsIgnoreCase("param")) {
     					 Hashtable t = scanTag(in);
     					 String att = (String)t.get("name");
+    					 
+    					 if (atts.containsKey(att))
+    					     continue;
+
     					 if (att == null) {
     						 statusMsgStream.println(requiresNameWarning);
     					 } else {
@@ -1783,7 +1788,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
     					 atts = scanTag(in);
 
                          // If there is a classid and no code tag present, transform it to code tag
-                         if (atts.get("code") == null && atts.get("classid") != null) {
+                         if (atts.get("code") == null && atts.get("classid") != null && ((String) atts.get("classid")).endsWith(".class")) {
                              atts.put("code", atts.get("classid"));
                          }
                          
@@ -1817,13 +1822,18 @@ import com.sun.jndi.toolkit.url.UrlUtil;
     				 }
     				 else if (nm.equalsIgnoreCase("object")) {
     					 isObjectTag = true;
-    					 atts = scanTag(in);
 
-    					 // If there is a classid and no code tag present, transform it to code tag
-                         if (atts.get("code") == null && atts.get("classid") != null) {
-                             atts.put("code", atts.get("classid"));
-                         }
-                         
+    				     // Once code is set, additional nested objects are ignored
+    				     if (!objectTagAlreadyParsed) {
+    				         objectTagAlreadyParsed = true;
+    				         atts = scanTag(in);
+    				     }
+
+    				     // If there is a classid and no code tag present, transform it to code tag
+    				     if (atts.get("code") == null && atts.get("classid") != null && ((String) atts.get("classid")).endsWith(".class")) {
+    				         atts.put("code", atts.get("classid"));
+    				     }
+                        
                          // remove java: from code tag
                          if (atts.get("code") != null && ((String) atts.get("code")).startsWith("java:")) {
                              atts.put("code", ((String) atts.get("code")).substring(5));
@@ -1833,6 +1843,10 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                          // http://java.sun.com/j2se/1.4.2/docs/guide/plugin/developer_guide/using_tags.html#in-ie
                          if (atts.get("java_code") != null) {
                              atts.put("code", ((String) atts.get("java_code")));
+                         }
+
+                         if (atts.containsKey("code")) {
+                             objectTagAlreadyParsed = true;
                          }
 
                          if (atts.get("java_codebase") != null) {
@@ -1874,7 +1888,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
     					 atts = scanTag(in);
 
                          // If there is a classid and no code tag present, transform it to code tag
-                         if (atts.get("code") == null && atts.get("classid") != null) {
+                         if (atts.get("code") == null && atts.get("classid") != null && ((String) atts.get("classid")).endsWith(".class")) {
                              atts.put("code", atts.get("classid"));
                          }
                          

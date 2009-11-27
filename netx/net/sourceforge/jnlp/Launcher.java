@@ -595,6 +595,8 @@ public class Launcher {
             group.setApplication(appletInstance);
             loader.setApplication(appletInstance);
 
+            setContextClassLoaderForAllThreads(appletInstance.getClassLoader());
+
             return appletInstance;
         }
         catch (Exception ex) {

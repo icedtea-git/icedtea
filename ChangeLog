@@ -1,3 +1,13 @@
+2009-11-27  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedtea/java/sun/applet/PluginAppletViewer.java
+	(getWindow): Fortify condition for	wait for panel initialization.
+	(parse): Handle nested objected tags, don't allow parameter value
+	overwrite.
+	* netx/net/sourceforge/jnlp/Launcher.java
+	(createApplet): Set context classloader for the thread to the applet's
+	classloader, so that getContextClassLoader calls succeed.
+
 2009-11-23  Gary Benson  <gbenson@redhat.com>
 
 	* contrib/jck/compile-native-code.sh: Support s390x.
