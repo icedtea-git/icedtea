@@ -1,3 +1,8 @@
+2009-12-02  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Include latest IcedTea6 LCMS fixes.
+	
 2009-11-23  Andrew John Hughes  <ahughes@redhat.com>
 
 	* INSTALL: Update NetBeans requirement
