@@ -48,8 +48,8 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/
 --- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2009-07-24 00:15:26.000000000 +0100
 +++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2009-07-24 00:19:32.000000000 +0100
 @@ -71,6 +71,52 @@
-     REQUIRED_CC_VER = 3.2
-     REQUIRED_GCC_VER = 3.2.*
+   else
+     CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
    endif
 +  ifeq ($(ARCH), alpha)
 +    # alpha

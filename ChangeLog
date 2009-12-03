@@ -1,5 +1,9 @@
 2009-12-03  Gary Benson  <gbenson@redhat.com>
 
+	* patches/cacao/arch.patch: Fix up.
+
+2009-12-03  Gary Benson  <gbenson@redhat.com>
+
 	* patches/icedtea-core-build.patch: Removed.
 	* patches/icedtea-zero-build.patch: Likewise.
 	* Makefile.am (ICEDTEA_PATCHES): Don't apply the above.
