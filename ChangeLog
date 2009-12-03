@@ -1,3 +1,8 @@
+2009-12-03  Gary Benson  <gbenson@redhat.com>
+
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/:
+	Removed.
+
 2009-12-02  Pavel Tisnovsky  <ptisnovs@redhat.com>
 
 	Synchronise Gervill sources stored in IcedTea overlay with OpenJDK sources
