@@ -97,7 +97,6 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
 * icedtea-timerqueue.patch: Fix setting of running variable (PR87/S6623943).
 * icedtea-version.patch: Fix (langtools) ant build to honor fcs MILESTONE setting (S6778493).
 * icedtea-io_util-overflow.patch: Replace some code to correctly handle overflows. (S6788196)
-* icedtea-bytecodeInterpreter.patch: Replace fast opcodes with opc_default.
 * icedtea-hotspot7-build-fixes.patch: Remove KERNEL #ifdef.
 * icedtea-ia64-bugfix.patch: Remove workaround for IA64 GCC bug.
 * icedtea-signature-iterator.patch: Add zero-specific signature handling.
@@ -198,3 +197,4 @@ XSL file (S6707485): Included upstream in OpenJDK7 b29/hs13.
        diff -ruNb openjdk{6,}/hotspot/src/os/linux >> icedtea-hotspot-6bXX-7bYY.patch
 * icedtea-bytecodeInterpreterWithChecks.patch: Same as icedtea-xslfix.patch (OpenJDK6 only, S6707485).
 * icedtea-eclipse-hotspot-6614100-7b24.patch: Fix Eclipse crash (S6614100). Fixed in OpenJDK7 b29/hs13.
+* icedtea-bytecodeInterpreter.patch: Replace fast opcodes with opc_default.

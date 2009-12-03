@@ -291,7 +291,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-samejvm-safe.patch \
 	patches/icedtea-pr261.patch \
 	patches/icedtea-doc-headers.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-bytecodeInterpreter.patch \
 	patches/icedtea-test-atomic-operations.patch \
 	patches/icedtea-ia64-bugfix.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-parisc-opt.patch \
