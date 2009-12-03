@@ -278,6 +278,11 @@ public final class Boot implements PrivilegedAction {
 
         JNLPFile file = new JNLPFile(url, strict);
 
+        // Launches the jnlp file where this file originated. 
+        if (file.getSourceLocation() != null) {
+            file = new JNLPFile(file.getSourceLocation(), strict);
+        }
+
         // add in extra params from command line
         addProperties(file);
 

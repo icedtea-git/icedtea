@@ -1,3 +1,20 @@
+2009-12-03  Man Lung Wong <mwong@redhat.com>
+
+	* rt/net/sourceforge/jnlp/JNLPFile.java
+	(JNLPFile): Download the jnlp file from the webspace it originated, if
+	it exists.
+	* rt/net/sourceforge/jnlp/runtime/ApplicationInstance.java
+	(initialize): Enable desktop element and revise the list of fixme.
+	(addMenuAndDesktopEntries): No longer errors out when shortcut tag not
+	specified.
+	* rt/net/sourceforge/jnlp/runtime/Boot.java
+	(getFile): Launches the original jnlp file (i.e. if the file was
+	downloaded from http://icedtea.classpath.org, then it will launch the
+	one from http://icedtea.classpath.org).
+	* rt/net/sourceforge/jnlp/util/XDesktopEntry.java
+	(getContentsAsReader): Shortcut uses jnlp file in cache and launches
+	with system preferred javaws.
+
 2009-12-03  Gary Benson  <gbenson@redhat.com>
 
 	* patches/cacao/arch.patch: Fix up.

@@ -173,6 +173,14 @@ public class JNLPFile {
     public JNLPFile(URL location, Version version, boolean strict, UpdatePolicy policy) throws IOException, ParseException {
         Node root = Parser.getRootNode(openURL(location, version, policy));
         parse(root, strict, location);
+        	
+        //Downloads the original jnlp file into the cache if possible
+        //(i.e. If the jnlp file being launched exist locally, but it 
+        //originated from a website, then download the one from the website
+        //into the cache).  		
+        if (sourceLocation != null && location.getProtocol() == "file") {
+            openURL(sourceLocation, version, policy);
+        }
 
         this.fileLocation = location;
         

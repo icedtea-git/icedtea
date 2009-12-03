@@ -73,6 +73,7 @@ public class XDesktopEntry {
 
         String pathToJavaws = System.getProperty("java.home") + File.separator + "bin"
                 + File.separator + "javaws";
+        File cacheFile = CacheUtil.urlToPath(file.getSourceLocation(), "cache");
 
         String fileContents = "[Desktop Entry]\n";
         fileContents += "Version=1.0\n";
@@ -89,7 +90,9 @@ public class XDesktopEntry {
         if (file.getInformation().getVendor() != null) {
             fileContents += "Vendor=" + file.getInformation().getVendor() + "\n";
         }
-        fileContents += "Exec=" + pathToJavaws + " \"" + file.getSourceLocation() + "\"\n";
+        
+        //Shortcut executes the jnlp from cache and system preferred java..
+        fileContents += "Exec=" + "javaws" + " \"" + cacheFile.getAbsolutePath() + "\"\n";
 
         return new StringReader(fileContents);
 

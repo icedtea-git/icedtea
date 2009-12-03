@@ -109,24 +109,12 @@ public class ApplicationInstance {
      */
     public void initialize() {
         installEnvironment();
-        
-        /*
-         * FIXME: Disable creating desktop entries for now
-         * 
-         * there are some major issues we need to work out before we can enable them
-         * 1. Playing nice with the altnatives system
-         *   - use the system preferred jdk (/usr/bin/javaws)
-         *   - dont assume what jdk javaws corresponds to
-         *   - make sure our shortcuts work with the sun jdk and vice versa 
-         *     (may not be possible since sun's javaws creates a launcher that
-         *     links to /usr/java/${ver}/bin/javaws)
-         *   - we should use the same options and arguments as sun's javaws
-         * 2. Make shortcuts work offline 
-         *   - make the cache updates and replacements work properly
-         *   - shortcuts should use the cache
-         *   
-         *  addMenuAndDesktopEntries();
-         */
+
+        //Fixme: -Should check whether a desktop entry already exists for
+        //        for this jnlp file, and do nothing if it exists.
+        //       -If no href is specified in the jnlp tag, it should 
+        //        default to using the one passed in as an argument.
+        addMenuAndDesktopEntries();
     }
 
     /**
@@ -135,14 +123,15 @@ public class ApplicationInstance {
 
     private void addMenuAndDesktopEntries() {
         XDesktopEntry entry = new XDesktopEntry(file);
+        ShortcutDesc sd = file.getInformation().getShortcut();
 
-        if (file.getInformation().getShortcut().onDesktop()) {
+        if (sd != null && sd.onDesktop()) {
             if (ServiceUtil.checkAccess(this, AccessType.CREATE_DESTKOP_SHORTCUT)) {
                 entry.createDesktopShortcut();
             }
         }
 
-        if (file.getInformation().getShortcut().getMenu() != null) {
+        if (sd != null && sd.getMenu() != null) {
             /*
              * Sun's WebStart implementation doesnt seem to do anything under GNOME
              */
