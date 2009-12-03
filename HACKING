@@ -15,7 +15,6 @@ The following patches are currently applied before the building of OpenJDK7 or O
   Partially fixed by addition of discardMark() in OpenJDK7.
 * icedtea-copy-plugs.patch: Add IcedTea's 'plugs' for Java WebStart support, add
   cast to getAnnotation and trapAuthenticationFailure variable to com.sun.jmx.snmp.SnmpPduTrap.
-* icedtea-core-build.patch: Add support for building IcedTea core VM.
 * icedtea-debuginfo.patch: Add -g option to build to generate debugging information.
 * icedtea-demos.patch: Fix building of JVMTI demo.
 * icedtea-float-double-trailing-zeros.patch: Remove trailing zeros from Double/Float (PR29/30)
@@ -49,7 +48,6 @@ The following patches are currently applied before the building of OpenJDK7 or O
 * icedtea-use-system-tzdata.patch: Use timezone data from the system (PR70/S6593486).
 * icedtea-version.patch: Replace name and bug URL with IcedTea versions.
 * icedtea-webservices.patch: Add applet support.
-* icedtea-zero-build.patch: Add support for the zero assembler build.
 * icedtea-shark-build.patch: Add support for building the Shark JIT.
 * icedtea-alpha-fixes.patch: Fix build issues on alpha-linux.
 * icedtea-arch.patch: Add support for additional architectures.
@@ -198,3 +196,5 @@ XSL file (S6707485): Included upstream in OpenJDK7 b29/hs13.
 * icedtea-bytecodeInterpreterWithChecks.patch: Same as icedtea-xslfix.patch (OpenJDK6 only, S6707485).
 * icedtea-eclipse-hotspot-6614100-7b24.patch: Fix Eclipse crash (S6614100). Fixed in OpenJDK7 b29/hs13.
 * icedtea-bytecodeInterpreter.patch: Replace fast opcodes with opc_default.
+* icedtea-core-build.patch: Add support for building IcedTea core VM.
+* icedtea-zero-build.patch: Add support for the zero assembler build.

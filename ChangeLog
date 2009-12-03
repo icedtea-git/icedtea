@@ -1,5 +1,12 @@
 2009-12-03  Gary Benson  <gbenson@redhat.com>
 
+	* patches/icedtea-core-build.patch: Removed.
+	* patches/icedtea-zero-build.patch: Likewise.
+	* Makefile.am (ICEDTEA_PATCHES): Don't apply the above.
+	* HACKING: Document the above.
+
+2009-12-03  Gary Benson  <gbenson@redhat.com>
+
 	* patches/hotspot/icedtea-bytecodeInterpreter.patch: Removed.
 	* Makefile.am (ICEDTEA_PATCHES): Don't apply the above.
 	* HACKING: Document the above.

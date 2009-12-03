@@ -254,8 +254,6 @@ ICEDTEA_PATCHES = \
 	patches/hotspot/$(HSBUILD)/icedtea-memory-limits.patch \
 	patches/icedtea-sunsrc.patch \
 	patches/icedtea-libraries.patch \
-	patches/icedtea-core-build.patch \
-	patches/icedtea-zero-build.patch \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
 	patches/icedtea-uname.patch \
