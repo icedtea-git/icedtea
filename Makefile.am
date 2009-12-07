@@ -1847,10 +1847,12 @@ endif
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea: stamps/download.stamp
-	$(ARCH_PREFIX) $(MAKE) \
-	  $(ICEDTEA_ENV) \
-	  -C openjdk clobber
+clean-icedtea: 
+	if [ -e $(abs_top_builddir)/openjdk ]; then \
+	  $(ARCH_PREFIX) $(MAKE) \
+	    $(ICEDTEA_ENV) \
+	    -C openjdk clobber ; \
+	fi
 	rm -f stamps/icedtea.stamp stamps/icedtea-debug.stamp
 
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
@@ -1903,10 +1905,12 @@ hotspot-helper: stamps/bootstrap-directory-symlink-stage1.stamp \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot hotspot
 
-clean-icedtea-boot: stamps/clone-boot.stamp
-	$(ARCH_PREFIX) $(MAKE) \
-	  $(ICEDTEA_ENV_BOOT) \
-	  -C openjdk-boot clobber
+clean-icedtea-boot: 
+	if [ -e $(abs_top_builddir)/openjdk-boot ]; then \
+	  $(ARCH_PREFIX) $(MAKE) \
+	    $(ICEDTEA_ENV_BOOT) \
+	    -C openjdk-boot clobber ; \
+	fi 
 	rm -f stamps/icedtea-boot.stamp
 
 stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp

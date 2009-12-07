@@ -1,3 +1,10 @@
+2009-12-07  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(clean-icedtea): Only run make if openjdk
+	directory exists and remove dependency.
+	(clean-icedtea-boot): Likewise for openjdk-boot.
+	
 2009-12-03  Man Lung Wong <mwong@redhat.com>
 
 	* rt/net/sourceforge/jnlp/JNLPFile.java
