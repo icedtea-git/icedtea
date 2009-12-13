@@ -1,3 +1,10 @@
+2009-12-13  Mark Wielaard  <mjw@redhat.com>
+
+	* Makefile.am (stamps/icedtea.stamp): Install jstack.stp.
+	(stamps/icedtea-debug.stamp): Likewise.
+	* configure.ac (AC_CONFIG_FILES): Add tapset/jstack.stp.
+	* tapset/jstack.stp.in: New tapset.
+
 2009-12-08  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/make/linux/platform_zero.in: New file.

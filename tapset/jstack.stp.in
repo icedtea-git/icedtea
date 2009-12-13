@@ -1,0 +1,503 @@
+/* jstack systemtap tapset, for extracting hotspot java backtraces.
+   Copyright (C) 2009, Red Hat Inc.
+
+This file is part of IcedTea.
+
+IcedTea is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.
+
+IcedTea is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with IcedTea; see the file COPYING.  If not, write to the
+Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301 USA.
+*/
+
+/*
+ Provides helper functions to log and print hotspot java based backtraces.
+ jstack() provides up to 32 pure java frames from the current probe point
+ (space separated). jstack_print() does the same, but logs each frame
+ immediately. jstack_full() provides up to 32 "mixed" frames, including
+ full method signatures plus native code frames. print_jstack_full() does
+ the same, but prints eachs frame to the log immediately. To request
+ more or less frames use the jstack_n(), jstack_full_n(), print_jstack_n()
+ and print_jstack_full_n() variants. And to have full controll over the
+ amount of information included in each frame use the jstack_call()
+ function.
+
+ Currently only works with full path in process probes below.
+ When things don't seem to work look if the correct
+ jre/lib/[arch]/[client|server]/libjvm.so is used
+ and exists under @ABS_JAVA_HOME_DIR@/.
+ This version of jstack.stp has been configured to instrument the
+ libjvm.so for arch @INSTALL_ARCH_DIR@ installed at:
+ @ABS_CLIENT_LIBJVM_SO@
+ @ABS_SERVER_LIBJVM_SO@
+
+ Note that you need a systemtap version > 1.0.
+ Otherwise you will not be able to fetch global vars, which would show as:
+ semantic error: failed to retrieve location attribute for local
+*/
+
+global Universe_methodKlassObj;
+global Universe_collectedHeap;
+global HeapWordSize;
+global CodeCache_heap;
+
+global sp_register;
+global fp_register;
+global pc_register;
+global ptr_size;
+global ptr_mask;
+
+global constantPoolOopDesc_size;
+global HeapBlock_Header_size;
+global oopDesc_size;
+
+global vm_inited;
+
+/* We need to collect some global symbol addresses that cannot be resolved
+   in a bare function and vm_init_end seems a good place to use. */
+probe hotspot.vm_init_end
+{
+  // The parent/type oop for a methodOop.
+  Universe_methodKlassObj = $_methodKlassObj;
+
+  // For compressed oops.
+  // Universe_heap_base = $_heap_base;
+
+  /**
+   * The Universe class holds some of the interesting statics for
+   * introspection into HotSpot. The CollectedHeap
+   * (Universe::_collectedHeap) is an abstraction of a java heap for Hotspot
+   * it contains a _reserved MemRegion which represents a contigous
+   * region of the address space consisting of HeapWords (which just
+   * have one field member char *i).
+   *
+   * Note that we access it through its "short name" _collectedHeap.
+   */
+  Universe_collectedHeap = $_collectedHeap;
+  HeapWordSize = $HeapWordSize;
+
+  /**
+   * The CodeCache class contains the static CodeHeap _heap that
+   * is malloced at the start of the vm run and holds all generated
+   * code. If the program counter is between the low and high memory
+   * marks of the CodeHeap then it is generated code. Note that the
+   * interpreter CodeBlob itself is also generated at runtime.
+   *
+   * The code heap is made up of segments which are described in the
+   * CodeHeap _segmap. Each segment is of size _segment_size, which
+   * must be an exact power of 2 (_log2_segment_size). For each segment
+   * the _segmap has an unsigned char which is 0xFF if the segment
+   * isn't used, 0 if the segment is the start of a block and N
+   * (Where in is 1 till 0xFE) to indicate the segment belongs to
+   * the segment at index - N (which can be recursive if a block
+   * contains more than 0xFE segments).
+   */
+  CodeCache_heap = $_heap;
+
+  // Should really check arch of user space (for 32bit jvm on 64bit kernel).
+  %( arch == "i386" %?
+     sp_register = "esp";
+     fp_register = "ebp";
+     pc_register = "eip";
+     ptr_size = 4;
+     ptr_mask = 0xFFFFFFFF;
+     constantPoolOopDesc_size = 32; // Should use dwarf @size
+  %: %(arch == "x86_64" %?
+     sp_register = "rsp";
+     fp_register = "rbp";
+     pc_register = "rip";
+     ptr_size = 8; // XXX - might be probing 32-on-64 jvm.
+     ptr_mask = 0xFFFFFFFFFFFFFFFF;
+     constantPoolOopDesc_size = 56; // Should use dwarf @size
+  %: **ERROR** unknown architecture
+  %) %)
+
+  // Really should get from dwarf: @size("HeapBlock::Header"), @size("oopDesc")
+  HeapBlock_Header_size = 2 * ptr_size;
+  oopDesc_size = 2 * ptr_size;
+
+  vm_inited = 1;
+}
+
+function jstack:string()
+{
+  // java backtraces can be a lot bigger, but we risk going over MAXACTION.
+  // 32 frames only gives us ~32 actions per frame (with MAXACTION == 1024).
+  max_depth = 32;
+
+  return jstack_n(max_depth);
+}
+
+function jstack_n:string(max_depth:long)
+{
+  // Whether to log the method signatures.
+  log_sig = 0;
+
+  // Set to zero to only print pure java frames
+  log_native = 0;
+
+  // whether to print or just return the frames as space separated string
+  print_frames = 0;
+
+  return jstack_call(max_depth, log_sig, log_native, print_frames);
+}
+
+function print_jstack()
+{
+  // java backtraces can be a lot bigger, but we risk going over MAXACTION.
+  // 32 frames only gives us ~32 actions per frame (with MAXACTION == 1024).
+  max_depth = 32;
+
+  return print_jstack_n(max_depth);
+}
+
+function print_jstack_n:string(max_depth:long)
+{
+  // Whether to log the method signatures.
+  log_sig = 0;
+
+  // Set to zero to only print pure java frames
+  log_native = 0;
+
+  // whether to print or just return the frames as space separated string
+  print_frames = 1;
+
+  jstack_call(max_depth, log_sig, log_native, print_frames);
+}
+
+function jstack_full:string()
+{
+  // java backtraces can be a lot bigger, but we risk going over MAXACTION.
+  // 32 frames only gives us ~32 actions per frame (with MAXACTION == 1024).
+  max_depth = 32;
+
+  return jstack_full_n(max_depth);
+}
+
+function jstack_full_n:string(max_depth:long)
+{
+  // Whether to log the method signatures.
+  log_sig = 1;
+
+  // Set to zero to only print pure java frames
+  log_native = 1;
+
+  // whether to print or just return the frames as space separated string
+  print_frames = 0;
+
+  return jstack_call(max_depth, log_sig, log_native, print_frames);
+}
+
+function print_jstack_full()
+{
+  // java backtraces can be a lot bigger, but we risk going over MAXACTION.
+  // 32 frames only gives us ~32 actions per frame (with MAXACTION == 1024).
+  max_depth = 32;
+
+  return print_jstack_full_n(max_depth);
+}
+
+function print_jstack_full_n:string(max_depth:long)
+{
+  // Whether to log the method signatures.
+  log_sig = 1;
+
+  // Set to zero to only print pure java frames
+  log_native = 1;
+
+  // whether to print or just return the frames as space separated string
+  print_frames = 1;
+
+  jstack_call(max_depth, log_sig, log_native, print_frames);
+}
+
+function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
+                            print_frames:long)
+{
+  if (! vm_inited)
+    {
+      frame = "<vm-not-inited>";
+      if (print_frames)
+        {
+          log(frame);
+          return "";
+        }
+      else
+        return frame;
+    }
+
+  // Extract heap and code bounds.
+  heap_start = @cast(Universe_collectedHeap,
+                     "CollectedHeap",
+                     "@ABS_SERVER_LIBJVM_SO@")->_reserved->_start;
+  heap_size = HeapWordSize * @cast(Universe_collectedHeap,
+                                   "CollectedHeap",
+                                   "@ABS_SERVER_LIBJVM_SO@")->_reserved->_word_size;
+  heap_end = heap_start + heap_size;
+
+  CodeCache_low = @cast(CodeCache_heap, "CodeHeap",
+                        "@ABS_SERVER_LIBJVM_SO@")->_memory->_low;
+  CodeCache_high =  @cast(CodeCache_heap, "CodeHeap",
+                          "@ABS_SERVER_LIBJVM_SO@")->_memory->_high;
+
+  CodeHeap_log2_segment_size = @cast(CodeCache_heap,
+                                     "CodeHeap",
+                                     "@ABS_SERVER_LIBJVM_SO@")->_log2_segment_size;
+  CodeCache_segmap_low = @cast(CodeCache_heap,
+                               "CodeHeap",
+                               "@ABS_SERVER_LIBJVM_SO@")->_segmap->_low;
+
+  // Might want to sanity check above values.
+
+  // Loop through all the frames. The program counter is the starting
+  // point to find the CodeBlob corresponding to the current frame. In
+  // most cases the frame pointer will help us detect the class/method
+  // and next pc value. But we need the stack pointer to help us out
+  // to "recover" the previous fp in case we hit a code blob that didn't
+  // preserve it.
+  frames = "";
+  sp = register(sp_register);
+  fp = register(fp_register);
+  pc = register(pc_register);
+  depth = 0;
+  while (pc != 0 && depth < max_depth)
+    {
+      frame = "";
+
+      // Assume things are fine unless indicated otherwise.
+      trust_fp = 1;
+
+      // Generated code? (Interpreter and stub methods are also generated)
+      if (CodeCache_low <= pc && pc < CodeCache_high)
+        {
+          // Find the start of the code segment and code block that
+          // this pc is in.
+          segments = 0;
+          segment = (pc - CodeCache_low) >> CodeHeap_log2_segment_size;
+          tag = user_char(CodeCache_segmap_low + segment) & 0xFF;
+	  while (tag > 0 && segments < 16)
+            {
+              segment = segment - tag;
+              tag = user_char(CodeCache_segmap_low + segment) & 0xFF;
+              segments++;
+            }
+          block = CodeCache_low + (segment << CodeHeap_log2_segment_size);
+
+          // Do some sanity checking.
+          used = @cast(block, "HeapBlock",
+                       "@ABS_SERVER_LIBJVM_SO@")->_header->_used;
+          if (used != 1)
+            {
+              // Something very odd has happened.
+              frame = sprintf("0x%x <?unused-code-block?>", pc);
+              blob_name = "unused";
+              trust_fp = 0;
+              frame_size = 0;
+            }
+          else
+            {
+	      // We don't like spaces in frames (makes it hard to return
+              // a space separated frame list). So make sure they are
+              // replaced by underscores when used in frames.
+              blob = block + HeapBlock_Header_size;
+              blob_name_ptr = @cast(blob, "CodeBlob",
+                                    "@ABS_SERVER_LIBJVM_SO@")->_name;
+              blob_name = ((blob_name_ptr == 0) ? "<unknown-code-blob>"
+                           : user_string(blob_name_ptr));
+            }
+
+	  // For compiled code the methodOop is part of the code blob.
+          // For the interpreter (and other code blobs) it is on the
+          // stack relative to the frame pointer.
+          if (blob_name == "nmethod")
+            methodOopPtr = @cast(blob, "nmethod",
+                                 "@ABS_SERVER_LIBJVM_SO@")->_method
+          else 
+            methodOopPtr = user_long(fp + (-3 * ptr_size)) & ptr_mask
+
+          // Start optimistic. A methodOop is only valid if it was
+          // heap allocated. And if the "type class" oop equals the
+          // Universe::methodKlassObj.
+          if (heap_start > methodOopPtr || methodOopPtr >= heap_end)
+            isMethodOop = 0
+          else
+            {
+              methodOopKlass = @cast(methodOopPtr, "methodOopDesc",
+                                     "@ABS_SERVER_LIBJVM_SO@")->_metadata->_klass;
+              isMethodOop = (methodOopKlass == Universe_methodKlassObj);
+            }
+
+          if (isMethodOop)
+            {
+              // The java class is the holder of the constants (strings)
+              // that describe the method and signature. This constant pool
+              // contains symbolic information that describe the properties
+              // of the class. The indexes for methods and signaturates in
+              // the constant pool are symbolOopDescs that contain utf8
+              // strings (plus lenghts). (We could also sanity check that
+              // the tag value is correct [CONSTANT_String = 8]).
+              // Note that the class name uses '/' instead of '.' as
+              // package name separator and that the method signature is
+              // encoded as a method descriptor string. Both of which we
+              // don't demangle here.
+              constantPoolOopDesc = @cast(methodOopPtr, "methodOopDesc",
+                                          "@ABS_SERVER_LIBJVM_SO@")->_constants;
+              constantPoolOop_base = constantPoolOopDesc + constantPoolOopDesc_size;
+
+              klassPtr = @cast(constantPoolOopDesc, "constantPoolOopDesc",
+                               "@ABS_SERVER_LIBJVM_SO@")->_pool_holder;
+              klassSymbol = @cast(klassPtr + oopDesc_size, "Klass",
+                                  "@ABS_SERVER_LIBJVM_SO@")->_name;
+              klassName = &@cast(klassSymbol, "symbolOopDesc",
+                                 "@ABS_SERVER_LIBJVM_SO@")->_body[0];
+              klassLength = @cast(klassSymbol, "symbolOopDesc",
+                                  "@ABS_SERVER_LIBJVM_SO@")->_length;
+
+              methodIndex = @cast(methodOopPtr, "methodOopDesc",
+                                  "@ABS_SERVER_LIBJVM_SO@")->_constMethod->_name_index;
+              methodOopDesc = user_long(constantPoolOop_base + (methodIndex * ptr_size));
+              methodName = &@cast(methodOopDesc, "symbolOopDesc",
+                                  "@ABS_SERVER_LIBJVM_SO@")->_body[0];
+              methodLength = @cast(methodOopDesc, "symbolOopDesc",
+                                   "@ABS_SERVER_LIBJVM_SO@")->_length;
+
+              if (log_sig)
+                {
+                  sigIndex = @cast(methodOopPtr, "methodOopDesc",
+                                   "@ABS_SERVER_LIBJVM_SO@")->_constMethod->_signature_index;
+                  sigOopDesc = user_long(constantPoolOop_base
+                                         + (sigIndex * ptr_size));
+                  sigName = &@cast(sigOopDesc, "symbolOopDesc",
+                                   "@ABS_SERVER_LIBJVM_SO@")->_body[0];
+                  sigLength = @cast(sigOopDesc, "symbolOopDesc",
+                                    "@ABS_SERVER_LIBJVM_SO@")->_length;
+                  sig = user_string_n(sigName, sigLength);
+                }
+              else
+                sig = "";
+
+              code_name = (log_native
+                           ? sprintf("<%s@0x%x>",
+                                     str_replace(blob_name, " ", "_"), pc)
+                           : "");
+
+              frame = sprintf("%s.%s%s%s",
+                              user_string_n(klassName, klassLength),
+                              user_string_n(methodName, methodLength),
+                              sig, code_name);
+            }
+          else
+            {
+              // This is probably just an internal function, not a java
+              // method, just print the blob_name and continue.
+              // fp is probably still trusted.
+              if (log_native)
+                frame = sprintf("<%s@0x%x>",
+                                str_replace(blob_name, " ", "_"), pc);
+            }
+
+          // We cannot trust the frame pointer of compiled methods.
+          // The server (c2) jit compiler uses the fp register.
+          // We do know the method frame size on the stack. But
+          // this seems to be useful only as a hint of the minimum
+          // stack being used.
+          if (blob_name == "nmethod")
+            {
+              trust_fp = 0;
+              frame_size = @cast(blob, "CodeBlob",
+                                 "@ABS_SERVER_LIBJVM_SO@")->_frame_size;
+            }
+        }
+      else
+        {
+          // "Normal" hotspot code. Just print what usymname() gets us.
+          // All such code is compiled with -fno-omit-frame-pointer so
+          // we can use that to get at the next frame.
+          // Theoretically there could be libraries or jni code not
+          // compiled with -fno-omit-frame-pointer, then we should really
+          // use the dwarf unwinder or some stack crawling heuristics.
+          if (log_native)
+            frame = usymname(pc);
+        }
+
+        // Get next frame by assuming frame pointers are being used.
+        // (which is not always true for c2 (server) compiled nmethods).
+        old_fp = fp;
+        old_sp = sp
+
+        sp = fp;
+        fp = user_long(sp);
+        pc = user_long(fp + ptr_size);
+
+        // Do we need to double check? We do not want to do this
+        // unless necessary. We have to assume most code is "sane"
+        // and has fp setup correctly because we do not have good
+        // heuristics that cover all cases (native code, interpreted
+        // code, client code, codeblob stubs). So we only check and try
+        // to adapt for nmethods. Scanning the stack for plausible
+        // looking fp and pc values might make us skip a frame.
+        if (!trust_fp)
+          {
+            max_stack_scan = 96; // Arbitrary limit
+
+            // Note that first while iteration actually checks that
+            // the fp and pc from trusting the old fp might be correct
+            // (it often is if the nmethod come from the client compiler).
+            // The only validly looking pc values that we know of are in
+            // the CodeCache (so, we might be skipping native frames).
+            // The nmethod has a frame_size which gives a hint as to
+            // how much stack we have to skip at least.
+            i = 1;
+            while (i < max_stack_scan
+                   && (CodeCache_low > pc
+                       || pc >= CodeCache_high
+                       || fp <= old_fp))
+              {
+                sp = old_sp + ((frame_size + i) * ptr_size);
+                fp = user_long(sp);
+                pc = user_long(fp + ptr_size);
+                i++;
+              }
+            if (i == max_stack_scan)
+              {
+                if (! print_frames)
+                  frames = frames . " <stack_lost>"
+                else
+                  log("<stack_lost>")
+                pc = 0;
+              }
+          }
+
+      if (frame != "")
+        {
+          if (! print_frames)
+            {
+              space = (depth != 0) ? " " : "";
+              frames = frames . space . frame;
+            }
+          else
+            log (frame);
+          depth++;
+        }
+    }
+
+  if (depth == max_depth)
+    {
+      frame = "<stack_truncated>";
+      if (! print_frames)
+        frames = frames . " " . frame
+      else
+        log (frame);
+    }
+
+  return frames;
+}
