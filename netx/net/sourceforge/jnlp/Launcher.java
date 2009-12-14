@@ -19,14 +19,11 @@ package net.sourceforge.jnlp;
 
 import java.applet.Applet;
 import java.awt.Container;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Method;
-import java.net.URL;
+import java.net.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.JarFile;
@@ -187,6 +184,22 @@ public class Launcher {
      */
     public ApplicationInstance launch(JNLPFile file, Container cont) throws LaunchException {
         TgThread tg;
+        
+        //First checks whether offline-allowed tag is specified inside the jnlp
+        //file.
+        if (!file.getInformation().isOfflineAllowed()) {
+            try {
+                //Checks the offline/online status of the system.
+                //If system is offline do not launch.
+                InetAddress.getByName(file.getSourceLocation().getHost());
+
+            } catch (UnknownHostException ue) {
+			    System.err.println("File cannot be launched because offline-allowed tag not specified and system currently offline.");
+                return null;
+            } catch (Exception e) {
+                System.err.println(e);
+            }
+        }
 
         if (file instanceof PluginBridge && cont != null)
         	tg = new TgThread(file, cont, true);

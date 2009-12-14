@@ -1,3 +1,9 @@
+2009-12-14  Man Lung Wong  <mwong@redhat.com>
+
+	* netx/net/sourceforge/jnlp/Launcher.java
+	(launch): File is not launched if offline-allowed tag not present and 
+	system offline.
+
 2009-12-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/boot/icedtea.patch:
@@ -56,18 +62,18 @@
 	
 2009-12-03  Man Lung Wong <mwong@redhat.com>
 
-	* rt/net/sourceforge/jnlp/JNLPFile.java
+	* netx/net/sourceforge/jnlp/JNLPFile.java
 	(JNLPFile): Download the jnlp file from the webspace it originated, if
 	it exists.
-	* rt/net/sourceforge/jnlp/runtime/ApplicationInstance.java
+	* netx/net/sourceforge/jnlp/runtime/ApplicationInstance.java
 	(initialize): Enable desktop element and revise the list of fixme.
 	(addMenuAndDesktopEntries): No longer errors out when shortcut tag not
 	specified.
-	* rt/net/sourceforge/jnlp/runtime/Boot.java
+	* netx/net/sourceforge/jnlp/runtime/Boot.java
 	(getFile): Launches the original jnlp file (i.e. if the file was
 	downloaded from http://icedtea.classpath.org, then it will launch the
 	one from http://icedtea.classpath.org).
-	* rt/net/sourceforge/jnlp/util/XDesktopEntry.java
+	* netx/net/sourceforge/jnlp/util/XDesktopEntry.java
 	(getContentsAsReader): Shortcut uses jnlp file in cache and launches
 	with system preferred javaws.
 
