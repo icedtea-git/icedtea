@@ -1,0 +1,60 @@
+diff -Nru ../openjdk.orig/openjdk-boot/jdk/src/share/classes/java/lang/Double.java openjdk-boot/jdk/src/share/classes/java/lang/Double.java
+--- ../openjdk.orig/openjdk-boot/jdk/src/share/classes/java/lang/Double.java	2009-10-30 16:49:00.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/Double.java	2009-10-30 16:59:16.000000000 +0000
+@@ -76,7 +76,7 @@
+      * {@code 0x1.fffffffffffffP+1023} and also equal to
+      * {@code Double.longBitsToDouble(0x7fefffffffffffffL)}.
+      */
+-    public static final double MAX_VALUE = 0x1.fffffffffffffP+1023; // 1.7976931348623157e+308
++    public static final double MAX_VALUE = 1.7976931348623157e+308;
+ 
+     /**
+      * A constant holding the smallest positive normal value of type
+@@ -86,7 +86,7 @@
+      *
+      * @since 1.6
+      */
+-    public static final double MIN_NORMAL = 0x1.0p-1022; // 2.2250738585072014E-308
++    public static final double MIN_NORMAL = 2.2250738585072014E-308;
+ 
+     /**
+      * A constant holding the smallest positive nonzero value of type
+@@ -95,7 +95,7 @@
+      * {@code 0x0.0000000000001P-1022} and also equal to
+      * {@code Double.longBitsToDouble(0x1L)}.
+      */
+-    public static final double MIN_VALUE = 0x0.0000000000001P-1022; // 4.9e-324
++    public static final double MIN_VALUE = 4.9e-324;
+ 
+     /**
+      * Maximum exponent a finite {@code double} variable may have.
+diff -Nru ../openjdk.orig/openjdk-boot/jdk/src/share/classes/java/lang/Float.java openjdk-boot/jdk/src/share/classes/java/lang/Float.java
+--- ../openjdk.orig/openjdk-boot/jdk/src/share/classes/java/lang/Float.java	2009-10-30 16:49:00.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/Float.java	2009-10-30 16:59:16.000000000 +0000
+@@ -76,7 +76,7 @@
+      * {@code 0x1.fffffeP+127f} and also equal to
+      * {@code Float.intBitsToFloat(0x7f7fffff)}.
+      */
+-    public static final float MAX_VALUE = 0x1.fffffeP+127f; // 3.4028235e+38f
++    public static final float MAX_VALUE = 3.4028235e+38f;
+ 
+     /**
+      * A constant holding the smallest positive normal value of type
+@@ -86,7 +86,7 @@
+      *
+      * @since 1.6
+      */
+-    public static final float MIN_NORMAL = 0x1.0p-126f; // 1.17549435E-38f
++    public static final float MIN_NORMAL = 1.17549435E-38f;
+ 
+     /**
+      * A constant holding the smallest positive nonzero value of type
+@@ -94,7 +94,7 @@
+      * hexadecimal floating-point literal {@code 0x0.000002P-126f}
+      * and also equal to {@code Float.intBitsToFloat(0x1)}.
+      */
+-    public static final float MIN_VALUE = 0x0.000002P-126f; // 1.4e-45f
++    public static final float MIN_VALUE = 1.4e-45f;
+ 
+     /**
+      * Maximum exponent a finite {@code float} variable may have.  It

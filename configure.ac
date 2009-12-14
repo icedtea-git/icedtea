@@ -66,24 +66,6 @@ AC_ARG_WITH([netbeans-home],
 AC_MSG_RESULT([${SYSTEM_NETBEANS_DIR}])
 AC_SUBST(SYSTEM_NETBEANS_DIR)
 
-AC_MSG_CHECKING(for Ant home directory)
-AC_ARG_WITH([ant-home],
-            [AS_HELP_STRING([--with-ant-home],
-                            [Ant home directory (default is /usr/share/ant)])],
-            [
-              if test "x${withval}" = x
-              then
-                SYSTEM_ANT_DIR=/usr/share/ant
-              else
-                SYSTEM_ANT_DIR=${withval}
-              fi
-            ],
-            [
-              SYSTEM_ANT_DIR=/usr/share/ant
-            ])
-AC_MSG_RESULT(${SYSTEM_ANT_DIR})
-AC_SUBST(SYSTEM_ANT_DIR)
-
 AC_MSG_CHECKING(whether to build VisualVM)
 AC_ARG_ENABLE([visualvm],
               [AS_HELP_STRING([--enable-visualvm],

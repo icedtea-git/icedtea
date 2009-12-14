@@ -1,7 +1,7 @@
 diff -Nru openjdk-boot.orig/jaxws/build.properties openjdk-boot/jaxws/build.properties
---- openjdk-boot.orig/jaxws/build.properties	2009-10-12 15:42:14.000000000 +0100
-+++ openjdk-boot/jaxws/build.properties	2009-10-12 15:45:40.000000000 +0100
-@@ -58,6 +58,9 @@
+--- openjdk-boot.orig/jaxws/build.properties	2009-12-04 15:34:46.000000000 +0000
++++ openjdk-boot/jaxws/build.properties	2009-12-13 21:46:57.000000000 +0000
+@@ -62,6 +62,9 @@
  build.dir=${output.dir}/build
  build.classes.dir=${build.dir}/classes
  
@@ -12,15 +12,14 @@ diff -Nru openjdk-boot.orig/jaxws/build.properties openjdk-boot/jaxws/build.prop
  dist.dir=${output.dir}/dist
  dist.lib.dir=${dist.dir}/lib
 diff -Nru openjdk-boot.orig/jaxws/build.xml openjdk-boot/jaxws/build.xml
---- openjdk-boot.orig/jaxws/build.xml	2009-10-12 15:20:51.000000000 +0100
-+++ openjdk-boot/jaxws/build.xml	2009-10-12 15:19:42.000000000 +0100
-@@ -113,7 +113,8 @@
-              source="${javac.source}"
- 	     debug="${javac.debug}"
-              target="${javac.target}"
--             executable="${javac.executable}">
-+             executable="${javac.executable}"
-+	     classpath="${jaxp.classes.dir}:${build.classes.dir}">
-             <compilerarg value="-J-Xbootclasspath/p:${javac.jar}"/>
-             <compilerarg line="${javac.version.opt} ${javac.lint.opts} ${javac.no.jdk.warnings}"/>
-             <src refid="src.dir.id"/>
+--- openjdk-boot.orig/jaxws/build.xml	2009-12-04 15:34:46.000000000 +0000
++++ openjdk-boot/jaxws/build.xml	2009-12-13 21:48:18.000000000 +0000
+@@ -115,7 +115,7 @@
+ 	    depends="init, -init-src-dirs, -build-prep">
+         <javac 
+ 	     includeAntRuntime="false" 
+-	     classpath="${build.classes.dir}:${tools.jar}"
++	     classpath="${jaxp.classes.dir}:${build.classes.dir}:${tools.jar}"
+ 	     fork="true"
+              destdir="${build.classes.dir}"
+              memoryInitialSize="${javac.memoryInitialSize}"

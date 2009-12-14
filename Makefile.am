@@ -1,22 +1,22 @@
 # Dependencies
 
-OPENJDK_VERSION = b76
+OPENJDK_VERSION = b77
 
-CORBA_CHANGESET = d728db3889da
-HOTSPOT_CHANGESET = b4ab978ce52c
-JAXP_CHANGESET  = fb68fd18eb9f
-JAXWS_CHANGESET = 0dc08d528c99
-JDK_CHANGESET = eb54fb210b82
-LANGTOOLS_CHANGESET = 83367f01297b
-OPENJDK_CHANGESET = f0bfd9bd1a0e
+CORBA_CHANGESET = e12a2cc2d9b5
+HOTSPOT_CHANGESET = 6b9522825101
+JAXP_CHANGESET  = 3aeb520849db
+JAXWS_CHANGESET = 85d8e6e69be0
+JDK_CHANGESET = d3b07a3dd0da
+LANGTOOLS_CHANGESET = a2ad734c54f9
+OPENJDK_CHANGESET = 3430bb12a9a5
 
-CORBA_SHA256SUM = 67824d9e0e21a1b5b55ee6ebc079260672d7d2ed7b9cfabf0cfe67ffd3160f34
-HOTSPOT_SHA256SUM = 1b035a9bf71072b9f60c144c143d501b107a83a009ed31c90c8d0b6d3482a940
-JAXP_SHA256SUM = 7f2f16538bb51081e8483b252f59a2e6e70ba3c33341ed85eaa1532e9fc93dcd
-JAXWS_SHA256SUM = 2005bf1e10bfd49002368088e34f26e86652f175ad827824ccfd9cbc0b840512
-JDK_SHA256SUM = 69e4dfa1a8a3371b9178e9a15b15a450076ded9954079a3a0255babce479b255
-LANGTOOLS_SHA256SUM = 01c43af5d3da14ff9a96e769d212b2297c2c6756b28cc6a6d6f00148c2eded26
-OPENJDK_SHA256SUM = 6a28cd0ba1bcc4290175497e6cfe11295a8e4f82f4c030b3e5686f7c48297936
+CORBA_SHA256SUM = 40069a50a17c9e39a59cc9da5ad0e3db23747192ed900309bc6cf0d5a2969446
+HOTSPOT_SHA256SUM = 951efc3e173660a6ec47aba0609a476931fdc46fb6180235f92a85cd98365b83
+JAXP_SHA256SUM = e0405c0fe2f28a2ab8f77c6c5d2430357c0b62999a62e4da4315439a042bc0f3
+JAXWS_SHA256SUM = f59a4dc9c5c0f06cff7d14dbfb87c251b581f8700c01535cbd5f461c26d1d54d
+JDK_SHA256SUM = bac95b945892d15889f96a089a00baf96971950c4c2dbd74ef3b12fae1c32ada
+LANGTOOLS_SHA256SUM = d4f7763087532975cf106a23700e19cb668142e960f337ffcc4f83f8053a567d
+OPENJDK_SHA256SUM = b42e70c5fbeed6db9cac51897ab825c69d90ff26e5b38726d59ed27ed3a4db68
 
 CACAO_VERSION = 0.99.4
 CACAO_SHA256SUM = c6090c1d2ed3c60acda0076b62563598267be8dab270ce49ee1035002a2510cf
@@ -247,7 +247,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-demos.patch \
 	patches/icedtea-headers.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-headers.patch \
-	patches/icedtea-ant.patch \
 	patches/icedtea-gcc-suffix.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-gcc-suffix.patch \
 	patches/icedtea-bytebuffer-compact.patch \
@@ -256,8 +255,7 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-libraries.patch \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
-	patches/icedtea-uname.patch \
-	patches/icedtea-ia64-fdlibm.patch \
+	patches/debian/icedtea-uname.patch \
 	patches/icedtea-freetypeversion.patch \
 	patches/icedtea-fonts.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-sparc-ptracefix.patch \
@@ -267,7 +265,6 @@ ICEDTEA_PATCHES = \
 	patches/hotspot/$(HSBUILD)/icedtea-shark-build.patch \
 	patches/icedtea-security-updates.patch \
 	patches/icedtea-jdk-docs-target.patch \
-	patches/icedtea-mbeanintrospector.patch \
 	patches/icedtea-hotspot-gcc-pr36917.patch \
 	patches/icedtea-alpha-fixes.patch \
 	patches/icedtea-alt-jar.patch \
@@ -280,7 +277,6 @@ ICEDTEA_PATCHES = \
 	patches/cacao/arch.patch \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-lc_ctype.patch \
-	patches/icedtea-renderer-crossing.patch \
 	patches/icedtea-tests-jdk.patch \
 	patches/icedtea-stroker-finish.patch \
 	patches/icedtea-alsa-default-device.patch \
@@ -302,6 +298,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-netx.patch \
 	patches/icedtea-disable-intree-ec.patch \
 	patches/icedtea-sources.patch
+
+# Conditional patches
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
@@ -364,7 +362,22 @@ ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
 
 # Bootstrapping patches
 
-ICEDTEA_BOOT_PATCHES = patches/boot/icedtea.patch \
+ICEDTEA_BOOT_PATCHES = patches/boot/corba-defs.patch \
+	patches/boot/corba-idlj.patch \
+	patches/boot/corba-libgcj.patch \
+	patches/boot/corba-no-gen.patch \
+	patches/boot/corba-orb.patch \
+	patches/boot/demos.patch \
+	patches/boot/ecj-fphexconstants.patch \
+	patches/boot/ecj-opts.patch \
+	patches/boot/fontconfig.patch \
+	patches/boot/generated-comments.patch \
+	patches/boot/xbootclasspath.patch \
+	patches/boot/icedteart.patch \
+	patches/boot/jar.patch \
+	patches/boot/javah.patch \
+	patches/boot/symbols.patch \
+	patches/boot/tobin.patch \
 	patches/boot/icedtea-hotspot-$(HSBUILD).patch \
 	patches/boot/icedtea-jopt.patch \
 	patches/boot/icedtea-dyn.patch \
@@ -419,7 +432,7 @@ COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)
 
 ICEDTEA_ENV = \
 	ALT_JDK_IMPORT_PATH="$(ICEDTEA_BOOT_DIR)" \
-	ANT_HOME="$(SYSTEM_ANT_DIR)" \
+	ANT="$(ANT)" \
         BUILD_NUMBER="$(OPENJDK_VERSION)" \
 	JDK_UPDATE_VERSION="$(JDK_UPDATE_VERSION)" \
         JRE_RELEASE_VERSION="1.7.0_$(COMBINED_VERSION)" \

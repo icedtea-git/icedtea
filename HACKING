@@ -9,8 +9,6 @@ in binary format.
 
 The following patches are currently applied before the building of OpenJDK7 or OpenJDK6 by IcedTea:
 
-* icedtea-ant.patch: Remove use of $(ANT_HOME).
-* icedtea-uname.patch: Handle output of uname on arm and mips{,el}.
 * icedtea-bytebuffer-compact.patch: Add clearMark() method to java.nio.Buffer (PR60/S6593946). 
   Partially fixed by addition of discardMark() in OpenJDK7.
 * icedtea-copy-plugs.patch: Add IcedTea's 'plugs' for Java WebStart support, add
@@ -22,7 +20,6 @@ The following patches are currently applied before the building of OpenJDK7 or O
 * icedtea-fonts.patch: Add Fedora fontconfig.
 * icedtea-gcc-suffix.patch: Append $(GCC_SUFFIX) to end of 'gcc' binary name.
 * icedtea-graphics.patch: Fix word wrap in JTextArea (PR57/S6593649)
-* icedtea-ia64-fdlibm.patch: Fix name of ia64 architecture from _M_IA64 to ia64.
 * icedtea-javac-debuginfo.patch: Ensure debugging information is generated for all class files.
 * icedtea-javafiles.patch: Add missing Java files to list.
 * icedtea-jdk-docs-target.patch: Always set DOCS_TARGET.
@@ -72,6 +69,7 @@ The following patches are currently applied before the building of OpenJDK7 or O
 
 The following patches are only applied to OpenJDK6 in IcedTea6:
 
+* icedtea-ant.patch: Remove use of $(ANT_HOME).
 * icedtea-awt-window-size.patch: Fix X11 window size calculation (S6721088, applied in OpenJDK7 b48).
 * icedtea-corba.patch: Adds additional files to org.omg.CORBA Makefile.
 * icedtea-display-mode-changer.patch: Add extra test class. (applied in OpenJDK7 b43)
@@ -80,10 +78,13 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
 * icedtea-format-warnings.patch: Fix build failures with -Wformat=1. (S6781583, applied in b47).
 * icedtea-gcc-4.3.patch: Fix code to compile with GCC 4.3 and turn off -Werror.
 * icedtea-generated.patch: Force use of /bin/bash.
+* icedtea-ia64-fdlibm.patch: Fix name of ia64 architecture from _M_IA64 to ia64.
 * icedtea-lib64.patch: Add support for building on platforms with /usr/lib64. (S6778662, applied in b47).
 * icedtea-no-bcopy.patch: Don't define local copies of bcopy, bzero and bcmp from BSD (S6781583, applied in b47).
 * icedtea-nomotif.patch: Remove sanity and GrabShell.h dependency on Motif/Lesstif library.
 * icedtea-nomotif-6706121.patch: Remove Motif AWT peers (S6706121).
+* icedtea-nss-config.patch: Add the NSS PKCS11 security provider. (PR356)
+* icedtea-nss-6763530.patch: Fix PKCS11 provider when used with newer version of NSS (>=3.12.3) (PR356, S6763530).
 * icedtea-sparc.patch: Add support for GNU/Linux on SPARC (version in IcedTea includes only minimal build changes).
 * icedtea-jdk-docs-target.patch: Always set DOCS_TARGET.
 * icedtea-lucene-crash.patch: Fix lucene bad code generation bug #6707044.
@@ -102,21 +103,49 @@ The following patches are only applied to OpenJDK6 in IcedTea6:
 * icedtea-test-atomic-operations.patch: Add check to see if GCC's sync_lock_test works.
 * icedtea-zero.patch: Generalise architecture support, add ARM and #ifdef out non-zero applicable parts.
 * icedtea-shark.patch: Add support for the Shark JIT.
+* icedtea-uname.patch: Handle output of uname on arm and mips{,el}.
 
-The following patches are only applied to OpenJDK in IcedTea:
+The following patches are only applied to OpenJDK in IcedTea7:
 
 * icedtea-constructor-properties.patch: Explicitly cast to ConstructorProperties
   as getAnnotation is broken in libgcj 4.3.
-* icedtea-mbeanintrospector.patch: Explicitly cast to Description as getAnnotation
+* legacy/mbeanintrospector.patch: Explicitly cast to Description as getAnnotation
   is broken in libgcj 4.3.
 * icedtea-override.patch: Remove @Override annotation in
   javax.management.AttributeValueExp (unsupported by ecj < 3.4).
-* icedtea-nss-config.patch: Add the NSS PKCS11 security provider. (PR356)
-* icedtea-nss-6763530.patch: Fix PKCS11 provider when used with newer version of NSS (>=3.12.3) (PR356, S6763530).
 * icedtea-sources.patch: Include netx and plugin sources in src.zip
 * icedtea-jaxws-getdtdtype.patch: Workaround for incorrect return type in gcj < 4.4 / GNU Classpath < 0.98
 
-The following patches are only applied to the icedtea-ecj bootstrap tree:
+The following patches are only applied to the icedtea-ecj/boot bootstrap tree:
+
+* ecj/icedtea-jopt.patch: Disable -J options to jar when unsupported.
+* ecj/icedtea-pr261.patch: Adds a couple of classes that are omitted from rt.jar. (PR261)
+* ecj/icedtea-spp.patch: Fixes Spp.java to not use java.util.Scanner.
+
+The following patches are only applied to the icedtea-boot bootstrap tree in IcedTea7:
+
+* corba-defs.patch: Add LANGTOOLS_DIST, remove GENSRCDIR, remove PLATFORMSRC from VPATH0.java.
+* corba-idlj.patch: Turn off calls to idlj.
+* corba-libgcj.patch: Link against libgcj instead of libjava.
+* corba-no-gen.patch: Disable source generation.
+* corba-orb.patch: Add makefile for org.omg.CORBA.ORB.
+* demos.patch: Disable building demos.
+* ecj-fphexconstants.patch: Replace use of floating point hex constants unsupported by ecj+Classpath.
+* ecj-opts.patch: Avoid use of JAVAC_PREFER_SOURCE and -Xmaxwarns.
+* fontconfig.patch: Don't generate fontconfigs, copy them from generated.
+* generated-comments.patch: Remove date comments in generated files.
+* xbootclasspath.patch: Avoid use of -Xbootclasspath/p (unsupported by gij).
+* icedteart.patch: Add ICEDTEA_RT to classpath (links to local rt.jar extended with Sun classes).
+* jar.patch: Support JAR_KNOWS_ATFILE.
+* javah.patch: Handle differences between gjavah and javah output, specifically in OpenGL headers.
+* symbols.patch: Turn off generation of javac.sym.
+* tobin.patch: Don't run sun.awt.X11.ToBin, use hardcoded 0,0.
+* ecj/icedtea-dyn.patch: Don't build java.dyn (needs javac 1.7)
+* ecj/icedtea-pr39408.patch: Add missing constants from superclass not generated by gjavah
+* ecj/icedtea-pr40188.patch: Fix names to refer to constants generated by gjavah.
+* ecj/icedtea-sbcs.patch: Fixes GenerateSBCS.java to not use java.util.Scanner.
+
+The following patches are only applied to the icedtea-ecj bootstrap tree in IcedTea6:
 
 * ecj/icedtea.patch: Don't generate CORBA sources using MC/idlj, link against -lgcj
   instead of -ljava, force use of boot tools, don't run HotSpot's test_gamma, use
@@ -124,16 +153,6 @@ The following patches are only applied to the icedtea-ecj bootstrap tree:
   don't run sun.awt.X11.ToBin, explicitly pull in timezone data and rt.jar in javac
   calls, replace hexadecimal floating point literals with decimal variants in
   java.lang.Double and java.lang.Float.
-* ecj/icedtea-jopt.patch: Disable -J options to jar when unsupported.
-* ecj/icedtea-pr261.patch: Adds a couple of classes that are omitted from rt.jar. (PR261)
-* ecj/icedtea-spp.patch: Fixes Spp.java to not use java.util.Scanner.
-
-The following patches are only applied to the icedtea-ecj bootstrap tree in IcedTea:
-
-* ecj/icedtea-dyn.patch: Don't build java.dyn (needs javac 1.7)
-* ecj/icedtea-pr39408.patch: Add missing constants from superclass not generated by gjavah
-* ecj/icedtea-pr40188.patch: Fix names to refer to constants generated by gjavah.
-* ecj/icedtea-sbcs.patch: Fixes GenerateSBCS.java to not use java.util.Scanner.
 
 The following patches are only applied when building with the CACAO virtual machine:
 

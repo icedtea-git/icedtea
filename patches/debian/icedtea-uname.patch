@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/corba/make/common/shared/Platform.gmk openjdk/corba/make/common/shared/Platform.gmk
---- openjdk.orig/corba/make/common/shared/Platform.gmk	2009-04-14 20:38:17.000000000 +0100
-+++ openjdk/corba/make/common/shared/Platform.gmk	2009-04-15 15:29:14.000000000 +0100
-@@ -181,6 +181,9 @@
+--- openjdk.orig/corba/make/common/shared/Platform.gmk	2009-12-04 15:28:04.000000000 +0000
++++ openjdk/corba/make/common/shared/Platform.gmk	2009-12-13 14:26:03.000000000 +0000
+@@ -174,6 +174,9 @@
    OS_VERSION := $(shell uname -r)
    # Arch and OS name/version
    mach := $(shell uname -m)
@@ -11,19 +11,9 @@ diff -Nru openjdk.orig/corba/make/common/shared/Platform.gmk openjdk/corba/make/
    archExpr = case "$(mach)" in \
                  i[3-9]86) \
                      echo i586 \
-@@ -194,6 +197,9 @@
-                 sparc*) \
-                     echo sparc \
-                     ;; \
-+                arm*) \
-+                    echo arm \
-+                    ;; \
-                 *) \
-                     echo $(mach) \
-                     ;; \
 diff -Nru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/common/shared/Platform.gmk
---- openjdk.orig/jdk/make/common/shared/Platform.gmk	2009-04-14 20:38:17.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Platform.gmk	2009-04-15 15:29:14.000000000 +0100
+--- openjdk.orig/jdk/make/common/shared/Platform.gmk	2009-12-04 23:26:18.000000000 +0000
++++ openjdk/jdk/make/common/shared/Platform.gmk	2009-12-13 14:26:12.000000000 +0000
 @@ -152,6 +152,9 @@
    PLATFORM = linux
    # Arch and OS name/version
@@ -34,13 +24,3 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/comm
    archExpr = case "$(mach)" in \
                  i[3-9]86) \
                      echo i586 \
-@@ -165,6 +168,9 @@
-                 sparc*) \
-                     echo sparc \
-                     ;; \
-+                arm*) \
-+                    echo arm \
-+                    ;; \
-                 *) \
-                     echo $(mach) \
-                     ;; \

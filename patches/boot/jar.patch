@@ -1,0 +1,26 @@
+diff -Nru ../openjdk.orig/openjdk-boot/jdk/make/common/Release.gmk openjdk-boot/jdk/make/common/Release.gmk
+--- ../openjdk.orig/openjdk-boot/jdk/make/common/Release.gmk	2009-10-30 16:49:37.000000000 +0000
++++ openjdk-boot/jdk/make/common/Release.gmk	2009-10-30 16:59:16.000000000 +0000
+@@ -650,10 +650,21 @@
+ RESOURCES_JAR=$(ABS_TEMPDIR)/resources-orig.jar
+ $(RESOURCES_JAR): $(RES_JAR_FILELIST) $(JAR_MANIFEST_FILE)
+ 	$(prep-target)
++ifneq (,$(JAR_KNOWS_ATFILE))
+ 	$(CD) $(CLASSBINDIR) && \
+ 	    $(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
+ 	        @$(RES_JAR_FILELIST) $(BOOT_JAR_JFLAGS)
+-	@$(CD) $(CLASSBINDIR) && $(java-vm-cleanup)
++	@$(CD) $(CLASSBINDIR)
++else ifneq (,$(JAR_ACCEPTS_STDIN_LIST))
++	(cd $(CLASSBINDIR) && $(CAT) $(RES_JAR_FILELIST) | \
++	$(BOOT_JAR_CMD) c0mf@ $(JAR_MANIFEST_FILE) $@ \
++	    $(BOOT_JAR_JFLAGS))
++else
++	(cd $(CLASSBINDIR) && \
++	$(BOOT_JAR_CMD) c0mf $(JAR_MANIFEST_FILE) $@ \
++	    $(BOOT_JAR_JFLAGS) `cat $(RES_JAR_FILELIST)`)
++endif
++	$(java-vm-cleanup)
+ 
+ # Create jsse.jar containing SunJSSE implementation classes
+ JSSE_JAR=$(ABS_TEMPDIR)/jsse-orig.jar

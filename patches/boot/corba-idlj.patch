@@ -1,0 +1,98 @@
+diff -Nru ../openjdk.orig/openjdk-boot/corba/make/org/omg/sources/Makefile openjdk-boot/corba/make/org/omg/sources/Makefile
+--- ../openjdk.orig/openjdk-boot/corba/make/org/omg/sources/Makefile	2009-03-30 17:13:01.000000000 +0100
++++ openjdk-boot/corba/make/org/omg/sources/Makefile	2009-10-30 16:59:16.000000000 +0000
+@@ -93,8 +93,6 @@
+ POAHELHOLFILES =    $(POA_GENERATED_HELP_HOL_java:%=$(GENSRCDIR)/%)
+ 
+ $(POAGENERATEDFILES):: $(POA.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableServer" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -corba 3.0 -fall -pkgPrefix PortableServer org.omg $(POA.IDL)
+-	$(RM) -r $(POAHELHOLFILES)
+ 
+ poa.compile: $(POAGENERATEDFILES)
+ 
+@@ -110,10 +108,6 @@
+ 
+ # Generating and deleting unused files to reduce images size
+ $(DYNANYFILES): $(DYNAMIC_ANY.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" $(DYNANY_IDLJ_FLAGS) $(DYNAMIC_ANY.IDL)
+-	$(RM) $(DYNANY_DIR)/*POA*
+-	$(RM) $(DYNANY_DIR)/*Holder*
+-	$(RM) $(DYNANYDELETEFILES)
+ 
+ dynany.compile: $(DYNANYFILES)
+ 
+@@ -125,12 +119,6 @@
+ TR_IDLJ_FLAGS =-i "$(SRC_DIR)/org/omg/PortableInterceptor" -i "$(SRC_DIR)/org/omg/PortableServer" -i "$(SRC_DIR)/org/omg/CosTransactions"
+ 
+ $(TRGENERATEDFILES):: $(COSTRANSACTIONS.IDL) $(COSTSINTEROP.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fall -pkgPrefix CORBA org.omg -pkgPrefix CosTransactions org.omg $(COSTRANSACTIONS.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fall -pkgPrefix CORBA org.omg -pkgPrefix CosTSInteroperation org.omg $(COSTSINTEROP.IDL)
+-#	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fall -pkgPrefix CORBA org.omg $(TRANSACTIONS.IDL)
+-#	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fallTIE -pkgPrefix CORBA org.omg $(TRANSACTIONS.IDL)
+-#	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fall -pkgPrefix CORBA org.omg $(TRANSACTIONS.IDL)
+-#	$(IDLJ) -td "$(GENSRCDIR)" $(TR_IDLJ_FLAGS) -D CORBA3 -corba 3.0 -fallTIE -pkgPrefix CORBA org.omg $(TRANSACTIONS.IDL)
+ 
+ tr.compile: $(TRGENERATEDFILES)
+ 
+@@ -144,7 +132,6 @@
+ # _NamingContextImplBase.java and _BindingIteratorImplBase.java files
+ # to GENSRC directory. Note that these two classes are deprecated.
+ $(NSGENERATEDFILES): $(NAMESERVICE.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" -i $(NAMESERVICEDIR) -fall -pkgPrefix CosNaming org.omg $(NAMESERVICE.IDL)
+ 
+ ns.compile: $(NSGENERATEDFILES)
+ 
+@@ -156,8 +143,6 @@
+ IOPDELETEFILES =    $(IOP_TO_DELETE_FILES:%=$(GENSRCDIR)/%)
+ 
+ $(IOPGENERATEDFILES):: $(IOP.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -i $(CORBA_IDL_DIR) -fall -corba 3.0 -D CORBA3 -pkgPrefix IOP org.omg $(IOP.IDL)
+-	$(RM) -r $(IOPDELETEFILES)
+ 
+ iop.compile: $(IOPGENERATEDFILES)
+ 
+@@ -169,8 +154,6 @@
+ CORBAXDUPLICATEFILES = $(CORBA_DUPLICATE_java:%=$(GENSRCDIR)/%)
+ 
+ $(CORBAXGENERATEDFILES):: $(CORBAX.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -i $(CORBA_IDL_DIR) -fall -corba 3.0 $(CORBAX.IDL)
+-	$(RM) $(CORBAXDUPLICATEFILES)
+ 
+ corbax.compile: $(CORBAXGENERATEDFILES)
+ 
+@@ -181,7 +164,6 @@
+ MESSAGINGGENERATEDFILES = $(Messaging_java:%=$(GENSRCDIR)/%)
+ 
+ $(MESSAGINGGENERATEDFILES):: $(MESSAGING.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -i $(CORBA_IDL_DIR) -fall -corba 3.0 -pkgPrefix Messaging org.omg $(MESSAGING.IDL)
+ 
+ messaging.compile: $(MESSAGINGGENERATEDFILES)
+ 
+@@ -195,8 +177,6 @@
+ PIHELHOLFILES = $(PI_GENERATED_HELP_HOL_java:%=$(GENSRCDIR)/%)
+ 
+ $(PIGENERATEDFILES):: $(INTERCEPTORS.IDL)
+-	$(IDLJ) -td "$(GENSRCDIR)" -i "$(SRC_DIR)/org/omg/PortableInterceptor" -i $(CORBA_IDL_DIR) -fall -pkgPrefix PortableInterceptor org.omg -pkgPrefix Dynamic org.omg -pkgPrefix IOP org.omg -corba 3.0 -D CORBA3 $(INTERCEPTORS.IDL)
+-	$(RM) $(PIHELHOLFILES)
+ 
+ pi.compile: $(PIGENERATEDFILES)
+ 
+diff -Nru ../openjdk.orig/openjdk-boot/corba/make/sun/rmi/corbalogsources/Makefile openjdk-boot/corba/make/sun/rmi/corbalogsources/Makefile
+--- ../openjdk.orig/openjdk-boot/corba/make/sun/rmi/corbalogsources/Makefile	2009-03-30 23:07:09.000000000 +0100
++++ openjdk-boot/corba/make/sun/rmi/corbalogsources/Makefile	2009-10-30 16:59:16.000000000 +0000
+@@ -172,7 +172,6 @@
+ ACTIVATIONFILES = $(com_sun_corba_se_spi_activation_java:%=$(GENSRCDIR)/%)
+ 
+ $(ACTIVATIONFILES): $(ACTIVATION.IDL)
+-	$(IDLJ) -td $(GENSRCDIR) -i $(ACTIVATIONFILEDIR) -fall -oldImplBase -pkgPrefix activation com.sun.corba.se.spi $(ACTIVATION.IDL)
+ 
+ activation.idl.compile: $(ACTIVATIONFILES)
+ 
+@@ -195,7 +194,6 @@
+ 
+ # REVISIT: remove -oldImplBase
+ $(PORTABLEACTIVATIONFILES): $(PORTABLEACTIVATION.IDL)
+-	$(IDLJ) -td $(GENSRCDIR) $(PORTABLEACTIVATION_INCLUDES) $(PORTABLEACTIVATION_PKG_PREFIXES) -fall -oldImplBase -corba 3.0 -D CORBA3 $(PORTABLEACTIVATION.IDL)
+ 
+ portableactivation.idl.compile: $(PORTABLEACTIVATIONFILES)
+ 

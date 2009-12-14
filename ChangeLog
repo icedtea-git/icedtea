@@ -1,3 +1,52 @@
+2009-12-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/boot/icedtea.patch:
+	Split into individual patches for easier maintenance.
+	* patches/icedtea-ant.patch:
+	Removed; set ANT instead of ANT_HOME instead.
+	* patches/icedtea-ia64-fdlibm.patch:
+	Dropped, upstream zero (jdk/ad1c88142958) patch.
+	* patches/icedtea-mbeanintrospector.patch:
+	Dropped, troublesome line no longer present.
+	* patches/icedtea-renderer-crossing.patch:
+	Dropped, upstream (ccc36189f2a7)
+	* patches/icedtea-uname.patch:
+	Mostly dropped (upstream zero, jdk/ad1c88142958
+	& corba/28b983e5bb5f), remainder
+	moved to debian/icedtea-uname.patch.
+	* .hgignore: Severly trim to avoid
+	issues with new files not appearing
+	in hg status.  It should only mask
+	autoconf and temp files, not everything
+	the build produces.
+	* Makefile.am: Bump to b77, remove
+	patches, list new boot patches, set
+	ANT rather than ANT_HOME.
+	* configure.ac:
+	Remove SYSTEM_ANT_DIR setting.
+	* patches/boot/corba-defs.patch,
+	* patches/boot/corba-idlj.patch,
+	* patches/boot/corba-libgcj.patch,
+	* patches/boot/corba-no-gen.patch,
+	* patches/boot/corba-orb.patch,
+	* patches/boot/demos.patch,
+	* patches/boot/ecj-fphexconstants.patch,
+	* patches/boot/ecj-opts.patch,
+	* patches/boot/fontconfig.patch,
+	* patches/boot/generated-comments.patch,
+	* patches/boot/icedtea-jaxp-dependency.patch,
+	* patches/boot/icedteart.patch,
+	* patches/boot/jar.patch,
+	* patches/boot/javah.patch,
+	* patches/boot/symbols.patch,
+	* patches/boot/tobin.patch,
+	* patches/boot/xbootclasspath.patch:
+	New patches split out from patches/boot/icedtea.patch.
+	* patches/debian/icedtea-uname.patch:
+	Remants of patches/icedtea-uname.patch.
+	Debian-specific as use dpkg-architecture.
+	* HACKING: Updated
+	
 2009-12-07  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
