@@ -1,3 +1,13 @@
+2009-12-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Add Ant patch to explicitly set the
+	javac executable.
+	* patches/boot/ant-javac.patch:
+	New patch (revised from old boot/icedtea.patch
+	version).
+	* HACKING: Updated.
+	
 2009-12-14  Man Lung Wong  <mwong@redhat.com>
 
 	* netx/net/sourceforge/jnlp/Launcher.java

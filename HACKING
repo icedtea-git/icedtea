@@ -124,6 +124,7 @@ The following patches are only applied to the icedtea-ecj/boot bootstrap tree:
 
 The following patches are only applied to the icedtea-boot bootstrap tree in IcedTea7:
 
+* ant-javac.patch: Explicitly set the patch to the javac executable.
 * corba-defs.patch: Add LANGTOOLS_DIST, remove GENSRCDIR, remove PLATFORMSRC from VPATH0.java.
 * corba-idlj.patch: Turn off calls to idlj.
 * corba-libgcj.patch: Link against libgcj instead of libjava.

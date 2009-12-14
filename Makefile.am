@@ -362,7 +362,8 @@ ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
 
 # Bootstrapping patches
 
-ICEDTEA_BOOT_PATCHES = patches/boot/corba-defs.patch \
+ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
+	patches/boot/corba-defs.patch \
 	patches/boot/corba-idlj.patch \
 	patches/boot/corba-libgcj.patch \
 	patches/boot/corba-no-gen.patch \
