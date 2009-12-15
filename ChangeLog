@@ -1,3 +1,9 @@
+2009-12-15  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Always turn off doc generation for bootstrap
+	build.
+	
 2009-12-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
