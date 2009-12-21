@@ -107,6 +107,7 @@ OPENJDK_SOURCEPATH_DIRS = \
 SOURCEPATH_DIRS = $(abs_top_builddir)/generated:$(OPENJDK_SOURCEPATH_DIRS):$(NETX_SRCDIR)
 
 # Sources used from OpenJDK.
+if LACKS_SUN_AWT_TOOLKIT
 ICEDTEA_BOOTSTRAP_DIRS = \
 	$(JDK_SHARE)/com/sun/jdi \
 	$(JDK_SHARE)/com/sun/tools/jdi \
@@ -126,12 +127,13 @@ ICEDTEA_BOOTSTRAP_DIRS = \
 	$(JDK_SHARE)/sun/tools/java \
 	$(LANGTOOLS)/com/sun/mirror \
 	$(LANGTOOLS)/com/sun/tools/apt
+endif
 
 # Settings for javac
 
 IT_LANGUAGE_SOURCE_VERSION=5
 IT_CLASS_TARGET_VERSION=5
-IT_JAVAC_SETTINGS=-g -encoding utf-8 $(JAVACFLAGS)
+IT_JAVAC_SETTINGS=-g -encoding utf-8 $(JAVACFLAGS) $(MEMORY_LIMIT) $(PREFER_SOURCE)
 IT_JAVACFLAGS=$(IT_JAVAC_SETTINGS) -source $(IT_LANGUAGE_SOURCE_VERSION) -target $(IT_CLASS_TARGET_VERSION)
 
 # Conditional defintions
@@ -209,8 +211,10 @@ endif
 # as an argument to javac
 if BOOTSTRAPPING
   MEMORY_LIMIT =
+  PREFER_SOURCE = 
 else
   MEMORY_LIMIT = -J-Xmx1024m
+  PREFER_SOURCE = -Xprefer:source
 endif
 
 if WITH_CACAO
@@ -2032,7 +2036,7 @@ liveconnect-source-files.txt:
 stamps/liveconnect.stamp: liveconnect-source-files.txt stamps/netx.stamp
 	if test "x${LIVECONNECT_DIR}" != x; then \
 	  mkdir -p $(abs_top_builddir)/liveconnect ; \
-	  $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) \
+	  $(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	      -d $(abs_top_builddir)/liveconnect \
 	      -classpath $(abs_top_builddir)/lib/rt:$(abs_top_builddir)/netx.build:$(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
 	      -sourcepath $(SOURCEPATH_DIRS) \
@@ -2072,7 +2076,7 @@ netx-source-files.txt:
 
 stamps/netx.stamp: netx-source-files.txt stamps/rt-class-files.stamp
 	mkdir -p $(abs_top_builddir)/netx.build
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) \
+	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	    -d $(abs_top_builddir)/netx.build \
 	    -classpath $(abs_top_builddir)/lib/rt:$(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
 	    -sourcepath $(SOURCEPATH_DIRS) \
@@ -2105,8 +2109,8 @@ extra-source-files.txt:
 
 stamps/extra-class-files.stamp: extra-source-files.txt stamps/netx.stamp
 	mkdir -p extra-lib
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) -d extra-lib \
-	  -classpath $(abs_top_builddir)/lib/rt \
+	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d extra-lib \
+	  -classpath $(abs_top_builddir)/lib/rt:$(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
 	  -sourcepath $(abs_top_srcdir)/extra:$(SOURCEPATH_DIRS) \
 	  -bootclasspath \'\' \
 	  @extra-source-files.txt ; \
@@ -2546,10 +2550,12 @@ rt-source-files.txt: stamps/overlay.stamp
 
 stamps/rt-class-files.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP) rt-source-files.txt
 	mkdir -p lib/rt
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) $(IT_JAVACFLAGS) -d lib/rt \
+if LACKS_SUN_AWT_TOOLKIT
+	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d lib/rt \
 	  -classpath $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
           -sourcepath '$(SOURCEPATH_DIRS)' \
           -bootclasspath \'\' @rt-source-files.txt ;
+endif
 	mkdir -p stamps
 	touch $@
 

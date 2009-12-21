@@ -1,3 +1,20 @@
+2009-12-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Only set ICEDTEA_BOOTSTRAP_DIRS and build
+	rt-class-files when sun.awt.SunToolkit is
+	missing.  Support -Xprefer:source.  Move
+	MEMORY_LIMIT to IT_JAVACFLAGS.
+	(liveconnect.stamp): Remove MEMORY_LIMIT.
+	(netx.stamp): Remove MEMORY_LIMIT.
+	(extra-class-files.stamp): Remove MEMORY_LIMIT,
+	add system rt.jar to classpath.
+	(rt-class-files.stamp): Remove MEMORY_LIMIT.
+	Make conditional on LACKS_SUN_AWT_TOOLKIT.
+	* configure.ac:
+	Check for sun.awt.SunToolkit and set
+	LACKS_SUN_AWT_TOOLKIT if missing.
+
 2009-12-15  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
