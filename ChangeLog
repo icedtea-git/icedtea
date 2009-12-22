@@ -1,3 +1,8 @@
+2009-12-22  Gary Benson  <gbenson@redhat.com>
+
+	* contrib/checkopts/checkopts.py: New file.
+	* contrib/checkopts/Test.java: Likewise.
+
 2009-12-19  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-parisc.patch: Fix sanity check for parisc.
