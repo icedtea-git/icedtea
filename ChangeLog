@@ -1,3 +1,7 @@
+2009-12-22 Deepak Bhole <dbhole@redhat.com>
+
+	* Makefile.am: Set JDK_UPDATE_VERSION based on upstream drop version 
+
 2009-12-23  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
