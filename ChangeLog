@@ -1,3 +1,9 @@
+2009-12-23  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(rt.stamp): Also make zip updating dependent
+	on LACKS_SUN_AWT_TOOLKIT.
+	
 2009-12-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

@@ -2560,9 +2560,11 @@ endif
 	touch $@
 
 stamps/rt.stamp: stamps/rt-class-files.stamp
+if LACKS_SUN_AWT_TOOLKIT
 	(cd lib/rt ; \
 	 $(ZIP) -qur $(abs_top_builddir)/bootstrap/boot/jre/lib/rt.jar \
 	 com java javax sun );
+endif
 	mkdir -p stamps
 	touch $@
 
