@@ -3,7 +3,12 @@
 	* Makefile.am:
 	(rt.stamp): Also make zip updating dependent
 	on LACKS_SUN_AWT_TOOLKIT.
-	
+
+2009-12-21  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (ADD_ZERO_CONFIGURE_ARGS): Fix path for
+	--with-jdk-home= option.
+
 2009-12-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

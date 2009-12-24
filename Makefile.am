@@ -2344,7 +2344,7 @@ clean-add-cacao-debug:
 # configure script arguments, quoted in single quotes
 CONFIGURE_ARGS = @CONFIGURE_ARGS@
 ADD_ZERO_CONFIGURE_ARGS = \
-	--with-jdk-home=$(abs_top_builddir)/$(BUILD_OUTPUT_DIR)/j2sdk-image \
+	--with-jdk-home=$(BUILD_OUTPUT_DIR)/j2sdk-image \
 	--disable-bootstrap --enable-zero
 if ADD_SHARK_BUILD
 ADD_ZERO_CONFIGURE_ARGS += \
