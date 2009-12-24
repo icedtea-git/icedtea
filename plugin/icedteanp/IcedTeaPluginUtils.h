@@ -57,7 +57,7 @@ exception statement from your version. */
 
 #include <npapi.h>
 
-#if MOZILLA_VERSION_COLLAPSED < 1090200
+#if MOZILLA_VERSION_COLLAPSED < 1090100
 #include <npupp.h>
 #else
 #include <npapi.h>
@@ -116,6 +116,16 @@ exception statement from your version. */
     }                                                \
   } while (0)
 
+#define PLUGIN_DEBUG_5ARG(str, arg1, arg2, arg3, arg4, arg5) \
+  do                                                 \
+  {                                                  \
+    if (plugin_debug)                                \
+    {                                                \
+      fprintf(stderr, "GCJ PLUGIN: thread %p: ", pthread_self()); \
+      fprintf(stderr, str, arg1, arg2, arg3, arg4, arg5); \
+    }                                                \
+  } while (0)
+
 #define CHECK_JAVA_RESULT(result_data)                               \
 {                                                                    \
     if (((JavaResultData*) result_data)->error_occurred)             \
@@ -125,6 +135,39 @@ exception statement from your version. */
         return;                                                      \
     }                                                                \
 }
+
+#define HEX_TO_INT(c) \
+    ((*c >= 'A') ? *c - 'A' + 10 : \
+     (*c >= 'a') ? *c - 'a' + 10 : \
+     *c - '0')
+
+#define IS_VALID_HEX(c) \
+    ((*c >= '0' && *c <= '9') || \
+     (*c >= 'a' && *c <= 'f') || \
+     (*c >= 'A' && *c <= 'F'))
+
+/*
+ * This struct holds data specific to a Java operation requested by the plugin
+ */
+typedef struct java_result_data
+{
+
+    // Return identifier (if applicable)
+    int return_identifier;
+
+    // Return string (if applicable)
+    std::string* return_string;
+
+    // Return wide/mb string (if applicable)
+    std::wstring* return_wstring;
+
+    // Error message (if an error occurred)
+    std::string* error_msg;
+
+    // Boolean indicating if an error occurred
+    bool error_occurred;
+
+} JavaResultData;
 
 /*
  * Misc. utility functions
@@ -143,6 +186,9 @@ class IcedTeaPluginUtilities
 
         /* Map holding window pointer<->instance relationships */
         static std::map<void*, NPP>* instance_map;
+
+        /* Map holding java-side-obj-key->NPObject relationship  */
+        static std::map<std::string, NPObject*>* object_map;
 
     public:
 
@@ -205,13 +251,31 @@ class IcedTeaPluginUtilities
 
     	static void printNPVariant(NPVariant variant);
 
-    	static std::string* NPVariantToString(NPVariant variant);
+    	static void NPVariantToString(NPVariant variant, std::string* result);
+
+        static bool javaResultToNPVariant(NPP instance,
+                                          std::string* java_result,
+                                          NPVariant* variant);
 
     	static const gchar* getSourceFromInstance(NPP instance);
 
     	static void storeInstanceID(void* member_ptr, NPP instance);
 
-    	static NPP getInstanceFromMemberPtr(void* member_ptr);
+    	static void	removeInstanceID(void* member_ptr);
+
+        static NPP getInstanceFromMemberPtr(void* member_ptr);
+
+    	static NPObject* getNPObjectFromJavaKey(std::string key);
+
+    	static void storeObjectMapping(std::string key, NPObject* object);
+
+    	static void removeObjectMapping(std::string key);
+
+    	static void invalidateInstance(NPP instance);
+
+    	static bool isObjectJSArray(NPP instance, NPObject* object);
+
+    	static void decodeURL(const char* url, char** decoded_url);
 };
 
 /*

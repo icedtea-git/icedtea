@@ -1,3 +1,9 @@
+2009-12-24  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedeanp/*: Blanket merge with icedtea6 branch.
+	* netx/net/sourceforge/jnlp/Launcher.java: Switch to only import necessary
+	classes rather than *.
+
 2009-12-22 Deepak Bhole <dbhole@redhat.com>
 
 	* Makefile.am: Set JDK_UPDATE_VERSION based on upstream drop version 

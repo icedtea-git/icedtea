@@ -59,6 +59,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
 import net.sourceforge.jnlp.runtime.JNLPRuntime;
 import netscape.javascript.JSObjectCreatePermission;
 
@@ -460,7 +462,39 @@ public class PluginAppletSecurityContext {
                     store.reference(ret);
                     write(reference, "GetStaticField " + store.getIdentifier(ret));
                 }
-			} else if (message.startsWith("SetStaticField") ||
+			} else if (message.startsWith("GetValue")) {
+                String[] args = message.split(" ");
+                Integer index = parseCall(args[1], null, Integer.class);
+                
+                Object ret = store.getObject(index);
+
+                if (ret == null) {
+                    write(reference, "GetValue literalreturn null");
+                } else if (ret.getClass() == Boolean.TYPE
+                        || ret.getClass() == Boolean.class
+                        || ret.getClass() == Byte.TYPE
+                        || ret.getClass() == Byte.class
+                        || ret.getClass() == Short.TYPE
+                        || ret.getClass() == Short.class
+                        || ret.getClass() == Integer.TYPE
+                        || ret.getClass() == Integer.class
+                        || ret.getClass() == Long.TYPE
+                        || ret.getClass() == Long.class) {
+                    write(reference, "GetValue literalreturn " + ret);
+                } else if (ret.getClass() == Float.TYPE
+                        || ret.getClass() == Float.class
+                        || ret.getClass() == Double.TYPE
+                        || ret.getClass() == Double.class) {
+                    write(reference, "GetValue literalreturn " + String.format("%308.308e", ret));
+                } else if (ret.getClass() == Character.TYPE
+                        || ret.getClass() == Character.class) {
+                    write(reference, "GetValue literalreturn " + (int) (Character) ret);
+                } else {
+                    // Track returned object.
+                    store.reference(ret);
+                    write(reference, "GetValue " + store.getIdentifier(ret));
+                }
+            } else if (message.startsWith("SetStaticField") ||
 			           message.startsWith("SetField")) {
 				String[] args = message.split(" ");
 				Integer classOrObjectID = parseCall(args[1], null, Integer.class);
@@ -526,17 +560,17 @@ public class PluginAppletSecurityContext {
 				Integer index = parseCall(args[2], null, Integer.class);
 				Integer objectID = parseCall(args[3], null, Integer.class);
 
-				// Reflecting doesn't handle Integer -> char dynamic casting 
-				// very well in this case. Give it a little push...
-				if (store.getObject(arrayID).getClass().getComponentType().equals(java.lang.Character.class) ||
-				    store.getObject(arrayID).getClass().getComponentType().equals(java.lang.Character.TYPE))
-				{
-				    char c = (char) ((Integer) store.getObject(objectID)).intValue();
-				    System.err.println("Char array set to " + c + "(" + store.getObject(objectID) + ")");
-				    Array.set(store.getObject(arrayID), index, c);				    
-				} else {
-				    Array.set(store.getObject(arrayID), index, store.getObject(objectID));				    
-				}
+				Object value = store.getObject(objectID);
+				
+				// Cast the object to appropriate type before insertion
+				value = MethodOverloadResolver.getCostAndCastedObject(value, store.getObject(arrayID).getClass().getComponentType())[1];
+				
+				//if (value == null &&
+				//    store.getObject(arrayID).getClass().getComponentType().isPrimitive()) {
+				//    value = 0;
+				//}
+
+				Array.set(store.getObject(arrayID), index, value);				    
 
 				write(reference, "SetObjectArrayElement");
 			} else if (message.startsWith("GetArrayLength")) {
@@ -633,7 +667,7 @@ public class PluginAppletSecurityContext {
                 Object[] matchingMethodAndArgs = MethodOverloadResolver.getMatchingMethod(arguments);
                 
                 if (matchingMethodAndArgs == null) {
-                    write(reference, "Error: No suitable method with matching args found");
+                    write(reference, "Error: No suitable method named " + methodName + " with matching args found");
                     return;
                 }
 
@@ -645,7 +679,7 @@ public class PluginAppletSecurityContext {
 
 				String collapsedArgs = "";
 				for (Object arg : castedArgs) {
-					collapsedArgs += " " + arg.toString();
+					collapsedArgs += " " + arg;
 				}
 
 				PluginDebug.debug("Calling method " + m + " on object " + o
@@ -833,8 +867,26 @@ public class PluginAppletSecurityContext {
 				// + Signature.primitiveNameToType(type));
 
 				Object newArray = null;
-				newArray = Array.newInstance(Signature
-						.primitiveNameToType(type), length);
+
+				Class c;
+				if (type.equals("bool")) {
+				    c = Boolean.class;
+				} else if (type.equals("double")) {
+				    c = Double.class;
+				} else if (type.equals("int")) {
+				    c = Integer.class;
+                } else if (type.equals("string")) {
+                    c = String.class;
+                } else if (isInt(type)) {
+                    c = (Class) store.getObject(Integer.parseInt(type));
+                } else {
+                    c = JSObject.class;
+                }
+
+				if (args.length > 3)
+				    newArray = Array.newInstance(c, new int[] { length, parseCall(args[3], null, Integer.class)});
+				else
+				    newArray = Array.newInstance(c, length);
 
 				store.reference(newArray);
 				write(reference, "NewArray " + store.getIdentifier(newArray));
@@ -1415,6 +1467,10 @@ public class PluginAppletSecurityContext {
 			} catch (MalformedURLException mfue) {
 				// do nothing
 			}
+			
+			if (src.equals("[System]"))
+			    grantedPermissions.add(new JSObjectCreatePermission());
+			
 		} else {
 		    JSObjectCreatePermission perm = new JSObjectCreatePermission();
 		    grantedPermissions.add(perm);
@@ -1426,9 +1482,24 @@ public class PluginAppletSecurityContext {
 		return new AccessControlContext(new ProtectionDomain[] {pd});
 	}
 
+    // private static final == inline
+    private static final boolean isInt(Object o) {
+        boolean isInt = false;
+
+        try {
+            Integer.parseInt((String) o);
+            isInt = true;
+        } catch (Exception e) {
+            // don't care
+        }
+
+        return isInt;
+    }
+	
 	class BrowserReadPermission extends BasicPermission {
 		public BrowserReadPermission() {
 			super("browserRead");
 		}
 	}
+	
 }

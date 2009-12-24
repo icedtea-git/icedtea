@@ -37,6 +37,7 @@ obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
 #include "IcedTeaNPPlugin.h"
+#include "IcedTeaScriptablePluginObject.h"
 #include "IcedTeaPluginUtils.h"
 
 /**
@@ -51,6 +52,7 @@ exception statement from your version. */
 int IcedTeaPluginUtilities::reference = 0;
 pthread_mutex_t IcedTeaPluginUtilities::reference_mutex = PTHREAD_MUTEX_INITIALIZER;
 std::map<void*, NPP>* IcedTeaPluginUtilities::instance_map = new std::map<void*, NPP>();
+std::map<std::string, NPObject*>* IcedTeaPluginUtilities::object_map = new std::map<std::string, NPObject*>();
 
 /**
  * Given a context number, constructs a message prefix to send to Java
@@ -267,6 +269,7 @@ std::vector<std::string>*
 IcedTeaPluginUtilities::strSplit(const char* str, const char* delim)
 {
 	std::vector<std::string>* v = new std::vector<std::string>();
+	v->reserve(strlen(str)/2);
 	char* copy;
 
 	// Tokening is done on a copy
@@ -308,6 +311,7 @@ void
 IcedTeaPluginUtilities::getUTF8String(int length, int begin, std::vector<std::string>* unicode_byte_array, std::string* result_unicode_str)
 {
 	result_unicode_str->clear();
+	result_unicode_str->reserve(unicode_byte_array->size()/2);
 	for (int i = begin; i < begin+length; i++)
 	    result_unicode_str->push_back((char) strtol(unicode_byte_array->at(i).c_str(), NULL, 16));
 
@@ -401,6 +405,11 @@ IcedTeaPluginUtilities::getUTF16LEString(int length, int begin, std::vector<std:
 void
 IcedTeaPluginUtilities::printStringVector(const char* prefix, std::vector<std::string>* str_vector)
 {
+
+        // This is a CPU intensive function. Run only if debugging
+        if (!plugin_debug)
+            return;
+
 	std::string* str = new std::string();
 	*str += "{ ";
 	for (int i=0; i < str_vector->size(); i++)
@@ -449,6 +458,37 @@ IcedTeaPluginUtilities::storeInstanceID(void* member_ptr, NPP instance)
     instance_map->insert(std::make_pair(member_ptr, instance));
 }
 
+/**
+ * Removes a window pointer <-> instance mapping
+ *
+ * @param member_ptr The key to remove
+ */
+
+void
+IcedTeaPluginUtilities::removeInstanceID(void* member_ptr)
+{
+    PLUGIN_DEBUG_1ARG("Removing key %p from instance map\n", member_ptr);
+    instance_map->erase(member_ptr);
+}
+
+/**
+ * Removes all mappings to a given instance, and all associated objects
+ */
+void
+IcedTeaPluginUtilities::invalidateInstance(NPP instance)
+{
+    PLUGIN_DEBUG_1ARG("Invalidating instance %p\n", instance);
+
+    std::map<void*,NPP>::iterator iterator;
+
+    for (iterator = instance_map->begin(); iterator != instance_map->end(); iterator++)
+    {
+        if ((*iterator).second == instance)
+        {
+            instance_map->erase((*iterator).first);
+        }
+    }
+}
 
 /**
  * Given the window pointer, returns the instance associated with it
@@ -475,6 +515,63 @@ IcedTeaPluginUtilities::getInstanceFromMemberPtr(void* member_ptr)
     return instance;
 }
 
+/**
+ * Given a java id key ('classid:instanceid'), returns the associated valid NPObject, if any
+ *
+ * @param key the key
+ * @return The associated active NPObject, NULL otherwise
+ */
+
+NPObject*
+IcedTeaPluginUtilities::getNPObjectFromJavaKey(std::string key)
+{
+
+    NPObject* object = NULL;
+    PLUGIN_DEBUG_1ARG("getNPObjectFromJavaKey looking for %s\n", key.c_str());
+
+    std::map<std::string, NPObject*>::iterator iterator = object_map->find(key);
+
+    if (iterator != object_map->end())
+    {
+        NPObject* mapped_object = object_map->find(key)->second;
+
+        if (getInstanceFromMemberPtr(mapped_object) != NULL)
+        {
+            object = mapped_object;
+            PLUGIN_DEBUG_2ARG("getNPObjectFromJavaKey found %s. NPObject = %p\n", key.c_str(), object);
+        }
+    }
+
+    return object;
+}
+
+/**
+ * Stores a java id key <-> NPObject mapping
+ *
+ * @param key The Java ID Key
+ * @param object The object to map to
+ */
+
+void
+IcedTeaPluginUtilities::storeObjectMapping(std::string key, NPObject* object)
+{
+    PLUGIN_DEBUG_2ARG("Storing object %p with key %s\n", object, key.c_str());
+    object_map->insert(std::make_pair(key, object));
+}
+
+/**
+ * Removes a java id key <-> NPObject mapping
+ *
+ * @param key The key to remove
+ */
+
+void
+IcedTeaPluginUtilities::removeObjectMapping(std::string key)
+{
+    PLUGIN_DEBUG_1ARG("Removing key %s from object map\n", key.c_str());
+    object_map->erase(key);
+}
+
 /*
  * Similar to printStringVector, but takes a vector of string pointers instead
  *
@@ -485,6 +582,10 @@ IcedTeaPluginUtilities::getInstanceFromMemberPtr(void* member_ptr)
 void
 IcedTeaPluginUtilities::printStringPtrVector(const char* prefix, std::vector<std::string*>* str_ptr_vector)
 {
+        // This is a CPU intensive function. Run only if debugging
+        if (!plugin_debug)
+            return;
+
 	std::string* str = new std::string();
 	*str += "{ ";
 	for (int i=0; i < str_ptr_vector->size(); i++)
@@ -505,6 +606,10 @@ IcedTeaPluginUtilities::printStringPtrVector(const char* prefix, std::vector<std
 void
 IcedTeaPluginUtilities::printNPVariant(NPVariant variant)
 {
+    // This is a CPU intensive function. Run only if debugging
+    if (!plugin_debug)
+        return;
+
     if (NPVARIANT_IS_VOID(variant))
     {
     	PLUGIN_DEBUG_1ARG("VOID %d\n", variant);
@@ -539,8 +644,8 @@ IcedTeaPluginUtilities::printNPVariant(NPVariant variant)
     }
 }
 
-std::string*
-IcedTeaPluginUtilities::NPVariantToString(NPVariant variant)
+void
+IcedTeaPluginUtilities::NPVariantToString(NPVariant variant, std::string* result)
 {
 	char* str = (char*) malloc(sizeof(char)*32); // enough for everything except string
 
@@ -583,10 +688,189 @@ IcedTeaPluginUtilities::NPVariantToString(NPVariant variant)
         sprintf(str, "[Object %p]", variant);
     }
 
-    std::string* ret = new std::string(str);
+    result->append(str);
     free(str);
+}
 
-    return ret;
+bool
+IcedTeaPluginUtilities::javaResultToNPVariant(NPP instance,
+                                              std::string* java_value,
+                                              NPVariant* variant)
+{
+    JavaRequestProcessor java_request = JavaRequestProcessor();
+    JavaResultData* java_result;
+
+    if (java_value->find("literalreturn") == 0)
+    {
+        // 'literalreturn ' == 14 to skip
+        std::string value = java_value->substr(14);
+
+        // VOID/BOOLEAN/NUMBER
+
+        if (value == "void")
+        {
+            PLUGIN_DEBUG_0ARG("Method call returned void\n");
+            VOID_TO_NPVARIANT(*variant);
+        } else if (value == "null")
+        {
+            PLUGIN_DEBUG_0ARG("Method call returned null\n");
+            NULL_TO_NPVARIANT(*variant);
+        }else if (value == "true")
+        {
+            PLUGIN_DEBUG_0ARG("Method call returned a boolean (true)\n");
+            BOOLEAN_TO_NPVARIANT(true, *variant);
+        } else if (value == "false")
+        {
+            PLUGIN_DEBUG_0ARG("Method call returned a boolean (false)\n");
+            BOOLEAN_TO_NPVARIANT(false, *variant);
+        } else
+        {
+            double d = strtod(value.c_str(), NULL);
+
+            // See if it is convertible to int
+            if (value.find(".") != std::string::npos ||
+                d < -(0x7fffffffL - 1L) ||
+                d > 0x7fffffffL)
+            {
+                PLUGIN_DEBUG_1ARG("Method call returned a double %f\n", d);
+                DOUBLE_TO_NPVARIANT(d, *variant);
+            } else
+            {
+                int32_t i = (int32_t) d;
+                PLUGIN_DEBUG_1ARG("Method call returned an int %d\n", i);
+                INT32_TO_NPVARIANT(i, *variant);
+            }
+        }
+    } else {
+        // Else this is a complex java object
+
+        // To keep code a little bit cleaner, we create variables with proper descriptive names
+        std::string return_obj_instance_id = std::string();
+        std::string return_obj_class_id = std::string();
+        std::string return_obj_class_name = std::string();
+        return_obj_instance_id.append(*java_value);
+
+        // Find out the class name first, because string is a special case
+        java_result = java_request.getClassName(return_obj_instance_id);
+
+        if (java_result->error_occurred)
+        {
+            return false;
+        }
+
+        return_obj_class_name.append(*(java_result->return_string));
+
+        if (return_obj_class_name == "java.lang.String")
+        {
+            // String is a special case as NPVariant can handle it directly
+            java_result = java_request.getString(return_obj_instance_id);
+
+            if (java_result->error_occurred)
+            {
+                return false;
+            }
+
+            // needs to be on the heap
+            NPUTF8* return_str = (NPUTF8*) malloc(sizeof(NPUTF8)*java_result->return_string->size() + 1);
+            strcpy(return_str, java_result->return_string->c_str());
+
+            PLUGIN_DEBUG_1ARG("Method call returned a string: \"%s\"\n", return_str);
+            STRINGZ_TO_NPVARIANT(return_str, *variant);
+
+        } else {
+
+            // Else this is a regular class. Reference the class object so
+            // we can construct an NPObject with it and the instance
+            java_result = java_request.getClassID(return_obj_instance_id);
+
+            if (java_result->error_occurred)
+            {
+                return false;
+            }
+
+            return_obj_class_id.append(*(java_result->return_string));
+
+            NPObject* obj;
+
+            if (return_obj_class_name.find('[') == 0) // array
+                obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(
+                                instance,
+                                return_obj_class_id, return_obj_instance_id, true);
+            else
+                obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(
+                                                instance,
+                                                return_obj_class_id, return_obj_instance_id, false);
+
+            OBJECT_TO_NPVARIANT(obj, *variant);
+        }
+    }
+
+    return true;
+}
+
+bool
+IcedTeaPluginUtilities::isObjectJSArray(NPP instance, NPObject* object)
+{
+
+    NPVariant constructor_v = NPVariant();
+    NPIdentifier constructor_id = browser_functions.getstringidentifier("constructor");
+    browser_functions.getproperty(instance, object, constructor_id, &constructor_v);
+
+    IcedTeaPluginUtilities::printNPVariant(constructor_v);
+
+    NPObject* constructor = NPVARIANT_TO_OBJECT(constructor_v);
+
+    NPVariant constructor_str;
+    NPIdentifier toString = browser_functions.getstringidentifier("toString");
+    browser_functions.invoke(instance, constructor, toString, NULL, 0, &constructor_str);
+
+    std::string constructor_name = std::string();
+
+#if MOZILLA_VERSION_COLLAPSED < 1090200
+    constructor_name.append(NPVARIANT_TO_STRING(constructor_str).utf8characters);
+#else
+    constructor_name.append(NPVARIANT_TO_STRING(constructor_str).UTF8Characters);
+#endif
+
+    PLUGIN_DEBUG_1ARG("Constructor for NPObject is %s\n", constructor_name.c_str());
+
+    return constructor_name.find("function Array") == 0;
+}
+
+void
+IcedTeaPluginUtilities::decodeURL(const gchar* url, gchar** decoded_url)
+{
+
+    PLUGIN_DEBUG_2ARG("GOT URL: %s -- %s\n", url, *decoded_url);
+    int length = strlen(url);
+    for (int i=0; i < length; i++)
+    {
+        if (url[i] == '%' && i < length - 2)
+        {
+            unsigned char code1 = (unsigned char) url[i+1];
+            unsigned char code2 = (unsigned char) url[i+2];
+
+            if (!IS_VALID_HEX(&code1) || !IS_VALID_HEX(&code2))
+                continue;
+
+            // Convert hex value to integer
+            int converted1 = HEX_TO_INT(&code1);
+            int converted2 = HEX_TO_INT(&code2);
+
+            // bitshift 4 to simulate *16
+            int value = (converted1 << 4) + converted2;
+            char decoded = value;
+
+            strncat(*decoded_url, &decoded, 1);
+
+            i += 2;
+        } else
+        {
+            strncat(*decoded_url, &url[i], 1);
+        }
+    }
+
+    PLUGIN_DEBUG_1ARG("SENDING URL: %s\n", *decoded_url);
 }
 
 /******************************************
@@ -675,9 +959,9 @@ MessageBus::subscribe(BusSubscriber* b)
     // Applets may initialize in parallel. So lock before pushing.
 
 	PLUGIN_DEBUG_2ARG("Subscribing %p to bus %p\n", b, this);
-    pthread_mutex_lock(&subscriber_mutex);
+//    pthread_mutex_lock(&subscriber_mutex);
     subscribers.push_back(b);
-    pthread_mutex_unlock(&subscriber_mutex);
+//    pthread_mutex_unlock(&subscriber_mutex);
 }
 
 /**
@@ -691,9 +975,9 @@ MessageBus::unSubscribe(BusSubscriber* b)
     // Applets may initialize in parallel. So lock before pushing.
 
 	PLUGIN_DEBUG_2ARG("Un-subscribing %p from bus %p\n", b, this);
-    pthread_mutex_lock(&subscriber_mutex);
+//    pthread_mutex_lock(&subscriber_mutex);
     subscribers.remove(b);
-    pthread_mutex_unlock(&subscriber_mutex);
+//    pthread_mutex_unlock(&subscriber_mutex);
 }
 
 /**
@@ -711,7 +995,7 @@ MessageBus::post(const char* message)
 	strcpy(msg, message);
 
 	PLUGIN_DEBUG_1ARG("Trying to lock %p...\n", &msg_queue_mutex);
-    pthread_mutex_lock(&msg_queue_mutex);
+//    pthread_mutex_lock(&msg_queue_mutex);
 
     PLUGIN_DEBUG_1ARG("Message %s received on bus. Notifying subscribers.\n", msg);
 
@@ -721,7 +1005,7 @@ MessageBus::post(const char* message)
     	message_consumed = ((BusSubscriber*) *i)->newMessageOnBus(msg);
     }
 
-    pthread_mutex_unlock(&msg_queue_mutex);
+//    pthread_mutex_unlock(&msg_queue_mutex);
 
     if (!message_consumed)
     	PLUGIN_DEBUG_1ARG("Warning: No consumer found for message %s\n", msg);

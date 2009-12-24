@@ -47,14 +47,13 @@ exception statement from your version. */
 
 #include <npapi.h>
 
-#if MOZILLA_VERSION_COLLAPSED < 1090200
+#if MOZILLA_VERSION_COLLAPSED < 1090100
 #include <npupp.h>
 #else
 #include <npapi.h>
 #include <npruntime.h>
 #endif
 
-#include "IcedTeaRunnable.h"
 #include "IcedTeaPluginUtils.h"
 #include "IcedTeaJavaRequestProcessor.h"
 
@@ -62,12 +61,13 @@ exception statement from your version. */
  * Data structure passed to functions called in a new thread.
  */
 
-typedef struct aync_call_thread_data
+typedef struct async_call_thread_data
 {
     std::vector<void*> parameters;
 	std::string result;
 	bool result_ready;
-} AyncCallThreadData;
+	bool call_successful;
+} AsyncCallThreadData;
 
 /* Internal request reference counter */
 static long internal_req_ref_counter;
@@ -90,6 +90,7 @@ void _getMember(void* data);
 void _setMember(void* data);
 void _call(void* data);
 void _eval(void* data);
+void _getString(void* data);
 
 static pthread_mutex_t tc_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int thread_count = 0;

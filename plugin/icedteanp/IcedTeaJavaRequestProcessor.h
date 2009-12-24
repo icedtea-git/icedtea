@@ -67,28 +67,11 @@ typedef struct java_request
 
 } JavaRequest;
 
-/*
- * This struct holds data specific to a Java operation requested by the plugin
- */
-typedef struct java_result_data
-{
+/* Creates a argument on java-side with appropriate type */
+void createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id);
 
-	// Return identifier (if applicable)
-    int return_identifier;
-
-    // Return string (if applicable)
-    std::string* return_string;
-
-    // Return wide/mb string (if applicable)
-    std::wstring* return_wstring;
-
-    // Error message (if an error occurred)
-    std::string* error_msg;
-
-    // Boolean indicating if an error occurred
-    bool error_occurred;
-
-} JavaResultData;
+/* Returns the type of array based on the given element */
+void getArrayTypeForJava(NPP instance, NPVariant element, std::string* type);
 
 class JavaRequestProcessor : BusSubscriber
 {
@@ -103,13 +86,10 @@ class JavaRequestProcessor : BusSubscriber
     	/* Post message on bus and wait */
     	void postAndWaitForResponse(std::string message);
 
-    	/* Creates a argument on java-side with appropriate type */
-    	void createJavaObjectFromVariant(NPVariant variant, std::string* id);
-
     	// Call a method, static or otherwise, depending on supplied arg
         JavaResultData* call(std::string source, bool isStatic,
                              std::string objectID, std::string methodName,
-                             const NPVariant* args, int numArgs);
+                             std::vector<std::string> args);
 
         // Set a static/non-static field to given value
         JavaResultData* set(std::string source,
@@ -117,7 +97,7 @@ class JavaRequestProcessor : BusSubscriber
                             std::string classID,
                             std::string objectID,
                             std::string fieldName,
-                            NPVariant value);
+                            std::string value_id);
 
         /* Resets the results */
         void resetResult();
@@ -135,6 +115,9 @@ class JavaRequestProcessor : BusSubscriber
 
     	/* Returns the toString() value, given an object identifier */
     	JavaResultData* getToStringValue(std::string object_id);
+
+        /* Returns the value, given an object identifier */
+        JavaResultData* getValue(std::string object_id);
 
     	/* Returns the string, given the identifier */
     	JavaResultData* getString(std::string string_id);
@@ -155,13 +138,13 @@ class JavaRequestProcessor : BusSubscriber
                                  std::string classID,
                                  std::string objectID,
                                  std::string fieldName,
-                                 NPVariant value);
+                                 std::string value_id);
 
         /* Sets the static field object */
         JavaResultData* setStaticField(std::string source,
                                        std::string classID,
                                        std::string fieldName,
-                                       NPVariant value);
+                                       std::string value_id);
 
         /* Returns the field id */
         JavaResultData* getFieldID(std::string classID, std::string fieldName);
@@ -181,13 +164,13 @@ class JavaRequestProcessor : BusSubscriber
         JavaResultData* callStaticMethod(std::string source,
                                          std::string classID,
                                          std::string methodName,
-                                         const NPVariant* args, int numArgs);
+                                         std::vector<std::string> args);
 
         /* Calls a method on an instance */
         JavaResultData* callMethod(std::string source,
                                    std::string objectID,
                                    std::string methodName,
-								   const NPVariant* args, int numArgs);
+                                   std::vector<std::string> args);
 
         /* Returns the class of the given object */
         JavaResultData* getObjectClass(std::string objectID);
@@ -195,7 +178,7 @@ class JavaRequestProcessor : BusSubscriber
     	/* Creates a new object with choosable constructor */
     	JavaResultData* newObject(std::string source,
                                   std::string classID,
-                                  const NPVariant* args, int numArgs);
+                                  std::vector<std::string> args);
 
     	/* Creates a new object when constructor is undetermined */
     	JavaResultData* newObjectWithConstructor(std::string source, std::string classID,
@@ -221,7 +204,11 @@ class JavaRequestProcessor : BusSubscriber
         /* Sets the item at the given index to the given value */
         JavaResultData* setSlot(std::string objectID,
                                 std::string index,
-                                NPVariant value);
+                                std::string value_id);
+
+        /* Creates a new array of given length */
+        JavaResultData* newArray(std::string component_class,
+                                 std::string length);
 
     	/* Creates a new string in the Java store */
     	JavaResultData* newString(std::string str);

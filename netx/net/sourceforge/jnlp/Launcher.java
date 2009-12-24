@@ -19,11 +19,13 @@ package net.sourceforge.jnlp;
 
 import java.applet.Applet;
 import java.awt.Container;
-import java.io.*;
+import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Method;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.JarFile;
