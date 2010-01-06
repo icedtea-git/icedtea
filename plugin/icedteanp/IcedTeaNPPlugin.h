@@ -39,8 +39,6 @@ exception statement from your version. */
 #ifndef __ICEDTEANPPLUGIN_H__
 #define	__ICEDTEANPPLUGIN_H__
 
-#define MOZILLA_VERSION_COLLAPSED 1090105
-
 #if MOZILLA_VERSION_COLLAPSED < 1090100
 #include <nsThreadUtils.h>
 #else
