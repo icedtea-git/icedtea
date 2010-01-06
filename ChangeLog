@@ -1,3 +1,12 @@
+2010-01-06  Deepak Bhole <dbhole@redhat.com>
+
+	* configure.ac: Use libxul instead of libxul-unstable for the new NP
+	plugin.
+	* plugin/icedteanp/IcedTeaNPPlugin.h: Remove debug specific line from 
+	code.
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java
+	(handleMessage): Decode URL before setting documentbase.
+
 2009-12-24  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedeanp/*: Blanket merge with icedtea6 branch.

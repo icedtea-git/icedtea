@@ -424,7 +424,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
         			 }
         			 int index = message.indexOf(' ', "tag".length() + 1);
         			 request.documentbase =
-        				 message.substring("tag".length() + 1, index);
+        				 UrlUtil.decode(message.substring("tag".length() + 1, index));
         			 request.tag = message.substring(index + 1);
         			 PluginDebug.debug ("REQUEST TAG: " + request.tag + " " +
         					 Thread.currentThread());
