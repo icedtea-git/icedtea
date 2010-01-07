@@ -1,3 +1,17 @@
+2010-01-07  Andrew John Hughes  <ahughes@redhat.com>
+
+	Bump to b78.
+	* patches/icedtea-alsa-default-device.patch:
+	Dropped, applied upstream.
+	* patches/icedtea-jdk-docs-target.patch:
+	Revised and recreated upstream.
+	* Makefile.am: Bump to b78.
+	* javac.in: Ignore -implicit:none option when
+	using ecj.
+	* patches/boot/icedteart.patch: Drop langtools patch.
+	* patches/icedtea-override-redirect-metacity.patch:
+	Reduced to just the Metacity workaround.
+
 2010-01-06  Deepak Bhole <dbhole@redhat.com>
 
 	* configure.ac: Use libxul instead of libxul-unstable for the new NP

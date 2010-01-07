@@ -1,22 +1,22 @@
 # Dependencies
 
-OPENJDK_VERSION = b77
+OPENJDK_VERSION = b78
 
-CORBA_CHANGESET = e12a2cc2d9b5
-HOTSPOT_CHANGESET = 6b9522825101
-JAXP_CHANGESET  = 3aeb520849db
-JAXWS_CHANGESET = 85d8e6e69be0
-JDK_CHANGESET = d3b07a3dd0da
-LANGTOOLS_CHANGESET = a2ad734c54f9
-OPENJDK_CHANGESET = 3430bb12a9a5
+CORBA_CHANGESET = 89141a0869e3
+HOTSPOT_CHANGESET = 54dde9f9887d
+JAXP_CHANGESET  = f0f127b93c9e
+JAXWS_CHANGESET = 4ca731fe3154
+JDK_CHANGESET = 35224dd04ddb
+LANGTOOLS_CHANGESET = 21591a03bfbe
+OPENJDK_CHANGESET = f1cf9e78bbad
 
-CORBA_SHA256SUM = 40069a50a17c9e39a59cc9da5ad0e3db23747192ed900309bc6cf0d5a2969446
-HOTSPOT_SHA256SUM = 951efc3e173660a6ec47aba0609a476931fdc46fb6180235f92a85cd98365b83
-JAXP_SHA256SUM = e0405c0fe2f28a2ab8f77c6c5d2430357c0b62999a62e4da4315439a042bc0f3
-JAXWS_SHA256SUM = f59a4dc9c5c0f06cff7d14dbfb87c251b581f8700c01535cbd5f461c26d1d54d
-JDK_SHA256SUM = bac95b945892d15889f96a089a00baf96971950c4c2dbd74ef3b12fae1c32ada
-LANGTOOLS_SHA256SUM = d4f7763087532975cf106a23700e19cb668142e960f337ffcc4f83f8053a567d
-OPENJDK_SHA256SUM = b42e70c5fbeed6db9cac51897ab825c69d90ff26e5b38726d59ed27ed3a4db68
+CORBA_SHA256SUM = 0d41c7f3c3571cc95eae4fb4c0faf8dbbcc61846a4591f70b6870d7b4c2c0857
+HOTSPOT_SHA256SUM = 1127102aa1230d26da6b73118576aef872fb2e86d0d946797da737e64c91d6fc
+JAXP_SHA256SUM = 89f002ed4e6e4b6449e453284b31c4cbe466dedddeeb20249415c6edb10b52cb
+JAXWS_SHA256SUM = 62059bb48e5dad09060bcb79539562f596c77df48345bb35f0e26e815d1cfa6b
+JDK_SHA256SUM = b817bc7703acae21abc57d75eb16ac47d724da25253156aebc90f75c92a267a4
+LANGTOOLS_SHA256SUM = 4bff3af10a14048419bd144a39af2daa82756ca8ec226950d05b91ff99b1d0cc
+OPENJDK_SHA256SUM = df47020bf65614156e363a2170ee96f2959e08e62f9eaedacd3591147f858c00
 
 CACAO_VERSION = 0.99.4
 CACAO_SHA256SUM = c6090c1d2ed3c60acda0076b62563598267be8dab270ce49ee1035002a2510cf
@@ -268,7 +268,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-shark-build.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-shark-build.patch \
 	patches/icedtea-security-updates.patch \
-	patches/icedtea-jdk-docs-target.patch \
 	patches/icedtea-hotspot-gcc-pr36917.patch \
 	patches/icedtea-alpha-fixes.patch \
 	patches/icedtea-alt-jar.patch \
@@ -283,7 +282,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-lc_ctype.patch \
 	patches/icedtea-tests-jdk.patch \
 	patches/icedtea-stroker-finish.patch \
-	patches/icedtea-alsa-default-device.patch \
 	patches/icedtea-linker-libs-order.patch \
 	patches/icedtea-testenv.patch \
 	patches/icedtea-samejvm-safe.patch \

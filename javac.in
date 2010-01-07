@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use constant NO_DUP_ARGS => qw(-source -target -d -encoding);
-use constant STRIP_ARGS => qw(-Werror);
+use constant STRIP_ARGS => qw(-Werror -implicit:none);
 
 my ($ECJ_WARNINGS, $JAVAC_WARNINGS);
 
@@ -22,7 +22,7 @@ push @bcoption, '-bootclasspath', glob '@abs_top_builddir@/bootstrap/jdk1.6.0/jr
 my @ecj_parms = ($ECJ_WARNINGS, @bcoption);
 
 # Work around ecj's inability to handle duplicate command-line
-# options.
+# options and unknown javac options.
 sub gen_ecj_opts
 {
     my @new_args = @{$_[0]};

@@ -39,22 +39,3 @@ diff -Nru openjdk-boot.orig/jdk/make/sun/javazic/Makefile openjdk-boot/jdk/make/
  	@$(java-vm-cleanup)
  
  $(INSTALLDIR)/$(MAPFILE): $(WORKDIR)/$(MAPFILE)
-diff -Nru openjdk-boot.orig/langtools/make/build.xml openjdk-boot/langtools/make/build.xml
---- openjdk-boot.orig/langtools/make/build.xml	2009-10-21 16:40:37.000000000 +0100
-+++ openjdk-boot/langtools/make/build.xml	2009-12-13 20:16:48.000000000 +0000
-@@ -524,6 +524,7 @@
-                        includeAntRuntime="no"
-                        source="@{javac.source}"
-                        target="@{javac.target}">
-+		    <compilerarg line="-bootclasspath @{classes.dir}:../../generated:${boot.java.home}/jre/lib/rt.jar"/>
-                     <compilerarg value="-J-Xbootclasspath/p:@{javac.bootclasspath}"/>
-                     <compilerarg line="${javac.version.opt}"/>
-                     <compilerarg line="-Xlint"/>
-@@ -540,6 +541,7 @@
-                        target="@{javac.target}"
-                        debug="${javac.debug}"
-                        debuglevel="${javac.debuglevel}">
-+		    <compilerarg line="-bootclasspath @{classes.dir}:../../generated:${boot.java.home}/jre/lib/rt.jar"/>
-                     <compilerarg value="-J-Xbootclasspath/p:@{javac.bootclasspath}"/>
-                     <compilerarg value="-Xbootclasspath/p:@{classes.dir}"/>
-                     <compilerarg line="${javac.no.jdk.warnings}"/>
