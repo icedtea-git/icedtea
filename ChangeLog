@@ -1,3 +1,19 @@
+2010-01-08  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Bump JDK revision and sha256sum to pick
+	up updated version patch applied upstream.
+	Calculate JDK and HotSpot Mercurial revisions
+	if available and pass to build.  Also pass
+	DIST_NAME to build.
+	* acinclude.m4:
+	(IT_GET_LSB_DATA): Moved from configure.ac
+	and extended to also obtain the name of
+	the distribution from either lsb_release -is
+	or $build_os.
+	* configure.ac:
+	Invoke IT_GET_LSB_DATA macro.
+
 2010-01-07  Andrew John Hughes  <ahughes@redhat.com>
 
 	Bump to b78.
