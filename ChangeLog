@@ -1,6 +1,10 @@
+2010-01-11  Gary Benson  <gbenson@redhat.com>
+
+	* contrib/checkopts/checkopts: Updated for the above.
+
 2010-01-06  Deepak Bhole <dbhole@redhat.com>
 
-	* plugin/icedteanp/IcedTeaNPPlugin.h: Remove debug specific line from 
+	* plugin/icedteanp/IcedTeaNPPlugin.h: Remove debug specific line from
 	code.
 
 2010-01-05  Deepak Bhole <dbhole@redhat.com>

@@ -23,6 +23,7 @@ class Flag:
     def test_values(self):
         if self.type == "bool":
             if self.name in (
+                "PrintFlagsInitial",    # already done :)
                 "ExtendedDTraceProbes", # Solaris only
                 "RequireSharedSpaces",  # Not set up
                 "PauseAtStartup"):      # Just don't...
@@ -62,7 +63,9 @@ class Main:
 
     def read_flags(self):
         out, err = subprocess.Popen(
-            [self.java, "-XX:+UnlockDiagnosticVMOptions", "-Xprintflags"],
+            [self.java,
+             "-XX:+UnlockDiagnosticVMOptions",
+             "-XX:+PrintFlagsInitial"],
             stdout = subprocess.PIPE,
             stderr = subprocess.PIPE).communicate()
         if err:
