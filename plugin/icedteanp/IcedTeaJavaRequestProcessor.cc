@@ -899,7 +899,7 @@ createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id)
             alreadyCreated = true;
         } else
         {
-            PLUGIN_DEBUG_0ARG("NPObject is not a Java object");
+            PLUGIN_DEBUG_0ARG("NPObject is not a Java object\n");
             NPIdentifier length_id = browser_functions.getstringidentifier("length");
 
             // FIXME: We currently only handle <= 2 dim arrays. Do we really need more though?

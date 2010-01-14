@@ -815,14 +815,18 @@ IcedTeaPluginUtilities::isObjectJSArray(NPP instance, NPObject* object)
     NPVariant constructor_v = NPVariant();
     NPIdentifier constructor_id = browser_functions.getstringidentifier("constructor");
     browser_functions.getproperty(instance, object, constructor_id, &constructor_v);
-
     IcedTeaPluginUtilities::printNPVariant(constructor_v);
+
+    // void constructor => not an array
+    if (NPVARIANT_IS_VOID(constructor_v))
+        return false;
 
     NPObject* constructor = NPVARIANT_TO_OBJECT(constructor_v);
 
     NPVariant constructor_str;
     NPIdentifier toString = browser_functions.getstringidentifier("toString");
     browser_functions.invoke(instance, constructor, toString, NULL, 0, &constructor_str);
+    IcedTeaPluginUtilities::printNPVariant(constructor_str);
 
     std::string constructor_name = std::string();
 

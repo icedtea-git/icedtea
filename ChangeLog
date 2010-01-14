@@ -1,3 +1,49 @@
+2010-01-13  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc
+	(newMessageOnBus): Service GetSlot and SetSlot requests.
+	(call): Create Java object from result only if it is non-null.
+	(setMember): Pass a preset identifier to _setMember. Handle array slot
+	setting.
+	(sendMember): Handle array slot read.
+	(queue_processor): Service GetSlot and SetSlot requests.
+	(_setMember): Work with property NPIdentifier instead of name string.
+	(_getMember): Same.
+	* plugin/icedteanp/IcedTeaPluginUtils.cc
+	(isObjectJSArray): Handle void constructor objects like 'window'.
+	* plugin/tests/LiveConnect/DummyObject.java: New file. Helper for plugin 
+	tests.
+	* plugin/tests/LiveConnect/OverloadTestHelper1.java: Same.
+	* plugin/tests/LiveConnect/OverloadTestHelper2.java: Same.
+	* plugin/tests/LiveConnect/OverloadTestHelper3.java: Same.
+	* plugin/tests/LiveConnect/PluginTest.java: New file. Plugin test applet to 
+	drive LiveConnect tests.
+	* plugin/tests/LiveConnect/build: New build. Build file for plugin tests.
+	* plugin/tests/LiveConnect/common.js: New file. Contains common
+	LiveConnect test functions.
+	* plugin/tests/LiveConnect/index.html: New file. Index from which
+	LiveConnect tests can be launched.
+	* plugin/tests/LiveConnect/jjs_func_parameters_tests.js: New file.
+	Contains Java -> JS parameter passing tests.
+	* plugin/tests/LiveConnect/jjs_func_rettype_tests.js: New file. Contains
+	Java -> JS invocation return type read tests.
+	* plugin/tests/LiveConnect/jjs_get_tests.js: New file. Contains Java ->
+	JS variable read tests.
+	* plugin/tests/LiveConnect/jjs_set_tests.js: New file. Contains Java -> JS
+	variable write tests.
+	* plugin/tests/LiveConnect/jsj_func_overload_tests.js: New file. Contains
+	overload resolution tests for JS -> Java invocation.
+	* plugin/tests/LiveConnect/jsj_func_parameters_tests.js: New file.
+	Contains JS -> Java parameter passing tests.
+	* plugin/tests/LiveConnect/jsj_func_rettype_tests.js: New file. Contains
+	JS -> Java invocation return type read tests.
+	* plugin/tests/LiveConnect/jsj_get_tests.js: New file. Contains JS -> Java
+	variable read tests.
+	* plugin/tests/LiveConnect/jsj_set_tests.js: New file. Contains JS -> Java
+	variable write tests.
+	* plugin/tests/LiveConnect/jsj_type_casting_tests.js: New file. Contains
+	JS -> Java type conversion tests.
+
 2010-01-08  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
