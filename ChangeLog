@@ -1,3 +1,8 @@
+2010-01-15  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/icedtea-npplugin): New target, add file
+	dependencies for building the IcedTeaNPPlugin.so.
+
 2010-01-15  Xerxes Rånby  <xerxes@zafena.se>
 
 	PR icedtea/428:
