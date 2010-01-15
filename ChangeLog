@@ -1,3 +1,8 @@
+2010-01-15  Xerxes Rånby  <xerxes@zafena.se>
+
+	PR icedtea/428:
+	* configure.ac (LLVM_CFLAGS): Remove -pedantic from LLVM_CFLAGS.
+
 2010-01-13  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc
