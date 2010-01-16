@@ -1,21 +1,12 @@
-diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp openjdk/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp
---- openjdk.orig/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp	2008-08-04 08:40:18.000000000 +0100
-+++ openjdk/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp	2008-08-09 01:29:51.000000000 +0100
-@@ -25,7 +25,16 @@
+--- openjdk/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp.orig	2010-01-16 23:19:45.703450297 +0000
++++ openjdk/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp	2010-01-16 23:21:23.942337146 +0000
+@@ -25,7 +25,8 @@
  #include "incls/_precompiled.incl"
  #include "incls/_assembler_linux_sparc.cpp.incl"
  
 -#include <asm-sparc/traps.h>
-+/* Headers for 32bit sparc with a 32bit userland end up in asm/
-+ * Headers for 32bit sparc with a 64bit userland end up in asm-sparc/
-+ * There is no traps.h in asm-sparc64/
-+ */
-+
-+#if defined(__sparc__) && defined(__arch64__)
-+# include <asm-sparc/traps.h>
-+#else 
-+# include <asm/traps.h>
-+#endif
++// always found in asm/ with merged sparc/sparc64 headers
++#include <asm/traps.h>
  
  void MacroAssembler::read_ccr_trap(Register ccr_save) {
    // No implementation
