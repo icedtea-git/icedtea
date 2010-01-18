@@ -1,3 +1,9 @@
+2010-01-18 Andrew John Hughes  <ahughes@redhat.com>
+
+	* configure.ac:
+	Use AC_LANG_PUSH and AC_LANG_POP instead
+	of deprecated SAVE and RESTORE macros.
+	
 2010-01-16 Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
