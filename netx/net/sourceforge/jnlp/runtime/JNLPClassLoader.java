@@ -167,39 +167,50 @@ public class JNLPClassLoader extends URLClassLoader {
     }
 
     private void setSecurity() {
-		/**
-		 * When we're trying to load an applet, file.getSecurity() will return
-		 * null since there is no jnlp file to specify permissions. We
-		 * determine security settings here, after trying to verify jars.
-		 */
-		if (file instanceof PluginBridge) {
-			if (signing == true) {
-				this.security = new SecurityDesc(file, 
-					SecurityDesc.ALL_PERMISSIONS,
-					file.getCodeBase().getHost());
-			} else {
-				this.security = new SecurityDesc(file, 
-					SecurityDesc.SANDBOX_PERMISSIONS, 
-					file.getCodeBase().getHost());
-			}
-		} else { //regular jnlp file
+		
+        URL codebase = null;
+
+        if (file.getCodeBase() != null) {
+            codebase = file.getCodeBase();
+        } else {
+            //Fixme: codebase should be the codebase of the Main Jar not 
+            //the location. Although, it still works in the current state.
+            codebase = file.getResources().getMainJAR().getLocation();
+        }
+
+        /**
+         * When we're trying to load an applet, file.getSecurity() will return
+         * null since there is no jnlp file to specify permissions. We
+         * determine security settings here, after trying to verify jars.
+         */
+        if (file instanceof PluginBridge) {
+            if (signing == true) {
+                this.security = new SecurityDesc(file, 
+                    SecurityDesc.ALL_PERMISSIONS,
+                    codebase.getHost());
+            } else {
+                this.security = new SecurityDesc(file, 
+                    SecurityDesc.SANDBOX_PERMISSIONS, 
+                    codebase.getHost());
+            }
+        } else { //regular jnlp file
 			
-			/**
-			 * If the application is signed, then we set the SecurityDesc to the
-			 * <security> tag in the jnlp file. Note that if an application is
-			 * signed, but there is no <security> tag in the jnlp file, the
-			 * application will get sandbox permissions.
-			 * If the application is unsigned, we ignore the <security> tag and 
-			 * use a sandbox instead. 
-			 */
-			if (signing == true) {
-				this.security = file.getSecurity();
-			} else {
-				this.security = new SecurityDesc(file, 
-						SecurityDesc.SANDBOX_PERMISSIONS, 
-						file.getCodeBase().getHost());
-			}
-		}
+            /**
+             * If the application is signed, then we set the SecurityDesc to the
+             * <security> tag in the jnlp file. Note that if an application is
+             * signed, but there is no <security> tag in the jnlp file, the
+             * application will get sandbox permissions.
+             * If the application is unsigned, we ignore the <security> tag and 
+             * use a sandbox instead. 
+             */
+            if (signing == true) {
+                this.security = file.getSecurity();
+            } else {
+                this.security = new SecurityDesc(file, 
+                        SecurityDesc.SANDBOX_PERMISSIONS, 
+                        codebase.getHost());
+            }
+        }
     }
     
     /**

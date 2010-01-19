@@ -1,3 +1,19 @@
+2010-01-19 Man Lung Wong  <mwong@redhat.com>
+
+	* rt/net/sourceforge/jnlp/JNLPFile.java
+	(parser): Added a default value for sourceLocation to make sure it
+	is not null (location is never null).
+	* rt/net/sourceforge/jnlp/Parser.java:
+	Removed variable base, and replaced it with codebase. The fix ended
+	with base the same as codebase, hence no longer needed. Otherwise,
+	netxwill launch a jnlp file with codebase null and href not
+	null (not the way sun's webstart behaves).
+	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java
+	(setSecurity): Added a variable codebase, which gets the value of
+	codebase attribute in the jnlp file if it exists. Otherwise, it gets
+	the value of the location of main jar resource (which needs to be
+	changed to the codebase portion instead of the entire location).
+
 2010-01-17  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-sparc-trapsfix.patch: Merged sparc headers
