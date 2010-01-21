@@ -1,3 +1,8 @@
+2010-01-21  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am: Don't hide errors in statement sequences building
+	the NPPlugin. Use ICEDTEA_REV to defined PLUGIN_VERSION.
+
 2010-01-19 Man Lung Wong  <mwong@redhat.com>
 
 	* rt/net/sourceforge/jnlp/JNLPFile.java

@@ -1964,31 +1964,24 @@ NPPLUGIN_OBJECTS=IcedTeaNPPlugin.o IcedTeaScriptablePluginObject.o \
 	IcedTeaPluginUtils.o
 
 $(addprefix $(NPPLUGIN_DIR)/,$(NPPLUGIN_OBJECTS)): $(addprefix $(NPPLUGIN_DIR)/,$(NPPLUGIN_SRC))
-	cd $(PLUGIN_DIR); \
-	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
-	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
-	fi ; \
-	if [ -n "$(PKGVERSION)" ]; then plugin_version=" ($(PKGVERSION))"; fi; \
-	plugin_version=" $(PACKAGE_VERSION)$$revision$$plugin_version"; \
+	cd $(PLUGIN_DIR) && \
 	$(CXX) $(CXXFLAGS) \
 	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	  -DPLUGIN_VERSION="\"$$plugin_version\"" \
+	  -DPLUGIN_VERSION="\"$(PACKAGE_VERSION)$(ICEDTEA_REV)\"" \
 	  -DMOZILLA_VERSION_COLLAPSED="$(MOZILLA_VERSION_COLLAPSED)" \
 	  $(GLIB_CFLAGS) \
 	  $(GTK_CFLAGS) \
 	  $(MOZILLA_CFLAGS) \
-	  -fPIC -c $(NPPLUGIN_SRC); \
-	cd ../
+	  -fPIC -c $(NPPLUGIN_SRC)
 
 $(NPPLUGIN_DIR)/IcedTeaNPPlugin.so: $(addprefix $(NPPLUGIN_DIR)/,$(NPPLUGIN_OBJECTS))
-	cd $(PLUGIN_DIR); \
+	cd $(PLUGIN_DIR) && \
 	$(CXX) $(CXXFLAGS) \
 	  $(NPPLUGIN_OBJECTS) \
 	  $(GLIB_LIBS) \
 	  $(GTK_LIBS) \
 	  $(MOZILLA_LIBS)\
-	  -shared -o $@ \
-	cd ../
+	  -shared -o $@
 
 stamps/icedtea-npplugin: $(NPPLUGIN_DIR)/IcedTeaNPPlugin.so
 	touch stamps/icedtea-npplugin
