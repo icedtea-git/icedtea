@@ -1,3 +1,10 @@
+2010-01-25 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Remove trailing space after IcedTea version
+	in plugin version information when package
+	version is not set.
+	
 2010-05-18 Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/boot/scanner-charsets.patch:
