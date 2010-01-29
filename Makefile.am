@@ -168,7 +168,7 @@ endif
 
 if ENABLE_NPPLUGIN
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaNPPlugin
-ICEDTEAPLUGIN_TARGET = stamps/icedtea-npplugin
+ICEDTEANPPLUGIN_TARGET = IcedTeaNPPlugin.so
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
 LIVECONNECT_DIR = sun/applet netscape
 PLUGIN_DIR=$(abs_top_srcdir)/plugin/icedteanp
@@ -182,11 +182,7 @@ LIVECONNECT_DIR = sun/applet netscape
 PLUGIN_DIR=$(abs_top_srcdir)/plugin/icedtea
 JNLP_ABOUT_TARGET = extra-lib/about.jar
 else
-ICEDTEAPLUGIN_CLEAN =
-ICEDTEAPLUGIN_TARGET =
 PLUGIN_PATCH = patches/icedtea-plugin.patch
-LIVECONNECT_DIR =
-JNLP_ABOUT_TARGET = 
 endif
 endif
 
@@ -680,7 +676,8 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	$(JTREG_SRCS) \
 	IcedTeaPlugin.cc \
 	HACKING $(PULSEAUDIO_SRCS) fsg.sh \
-	plugin $(top_srcdir)/netx hotspot.map autogen.sh
+	$(abs_top_srcdir)/plugin $(top_srcdir)/netx \
+	hotspot.map autogen.sh
 
 # Top-Level Targets
 # =================
@@ -1983,9 +1980,6 @@ $(NPPLUGIN_DIR)/IcedTeaNPPlugin.so: $(addprefix $(NPPLUGIN_DIR)/,$(NPPLUGIN_OBJE
 	  $(MOZILLA_LIBS)\
 	  -shared -o $@
 
-stamps/icedtea-npplugin: $(NPPLUGIN_DIR)/IcedTeaNPPlugin.so
-	touch stamps/icedtea-npplugin
-
 clean-IcedTeaNPPlugin:
 	cd $(PLUGIN_DIR); \
 	rm -f *.o; \
@@ -2683,6 +2677,8 @@ patch: stamps/patch.stamp
 patch-boot: stamps/patch-boot.stamp
 
 patch-fsg: stamps/patch-fsg.stamp
+
+plugin: stamps/plugin.stamp
 
 plugs: stamps/plugs.stamp
 
