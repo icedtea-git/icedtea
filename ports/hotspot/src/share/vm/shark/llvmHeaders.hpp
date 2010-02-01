@@ -34,7 +34,9 @@
 #include <llvm/Instructions.h>
 #include <llvm/LLVMContext.h>
 #include <llvm/Module.h>
+#if SHARK_LLVM_VERSION < 27
 #include <llvm/ModuleProvider.h>
+#endif
 #include <llvm/Support/IRBuilder.h>
 #include <llvm/System/Threading.h>
 #include <llvm/Target/TargetSelect.h>

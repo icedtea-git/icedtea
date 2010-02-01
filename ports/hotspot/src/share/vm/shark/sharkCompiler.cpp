@@ -52,11 +52,19 @@ SharkCompiler::SharkCompiler()
   _memory_manager = new SharkMemoryManager();
 
   // Create the JIT
+#if SHARK_LLVM_VERSION >= 27
+  _execution_engine = ExecutionEngine::createJIT(
+    _normal_context->module(),
+    NULL, memory_manager(), CodeGenOpt::Default);
+  execution_engine()->addModule(
+    _native_context->module());
+#else
   _execution_engine = ExecutionEngine::createJIT(
     _normal_context->module_provider(),
     NULL, memory_manager(), CodeGenOpt::Default);
   execution_engine()->addModuleProvider(
     _native_context->module_provider());
+#endif
 
   // All done
   mark_initialized();

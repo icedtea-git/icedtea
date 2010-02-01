@@ -36,7 +36,11 @@ class SharkContext : public llvm::LLVMContext {
  private:
   llvm::Module* _module;
 
+#if SHARK_LLVM_VERSION >= 27
+ public:
+#else
  private:
+#endif
   llvm::Module* module() const
   {
     return _module;
@@ -51,10 +55,12 @@ class SharkContext : public llvm::LLVMContext {
 
   // Module accessors
  public:
+#if SHARK_LLVM_VERSION < 27
   llvm::ModuleProvider* module_provider() const
   {
     return new llvm::ExistingModuleProvider(module());
   }
+#endif
   void add_function(llvm::Function* function) const
   {
     module()->getFunctionList().push_back(function);

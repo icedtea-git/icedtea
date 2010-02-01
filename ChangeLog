@@ -1,3 +1,15 @@
+2010-02-01  Xerxes Rånby  <xerxes@zafena.se>
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::SharkCompiler): Use sharkContext::module
+	instead of sharkContext::module_provider when using LLVM 2.7
+	to handle LLVM r94686 API change.
+	* ports/hotspot/src/share/vm/shark/sharkContext.hpp
+	(sharkContext::module): Made public when using LLVM 2.7.
+	(sharkContext::module_provider): Undefine when using LLVM 2.7.
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp
+	(llvm/ModuleProvider.h): Undefine when using LLVM 2.7.
+
 2010-05-19 Andrew John Hughes  <ahughes@redhat.com>
 
 	Patch splashscreen to build against libpng 1.4.
