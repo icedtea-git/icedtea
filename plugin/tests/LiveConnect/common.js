@@ -97,6 +97,9 @@
                     
                 if (document.getElementById("testForm").jjcrt.checked == 1)
                     jjsCallReturnTypeTests();
+
+                if (document.getElementById("testForm").jjeval.checked == 1)
+                    jjsEvalTests();
             } catch (e) {
                 document.getElementById("results").innerHTML += "<font color=\"red\">ERROR:<BR>" + e;
             }

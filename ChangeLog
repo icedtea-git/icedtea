@@ -1,5 +1,14 @@
 2010-02-02  Deepak Bhole <dbhole@redhat.com>
 
+	* plugin/tests/LiveConnect/PluginTest.java
+	(jjsEvalTest): New function. Calls JSObject.eval() with given string.
+	* plugin/tests/LiveConnect/common.js: Added eval test suite as one of the
+	run options.
+	* plugin/tests/LiveConnect/index.html: Same.
+	* plugin/tests/LiveConnect/jjs_eval_test.js: Eval tests.
+
+2010-02-02  Deepak Bhole <dbhole@redhat.com>
+
 	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java: Re-designed frame
 	embedding code so that the applet is dynamically packed into given handle.
 

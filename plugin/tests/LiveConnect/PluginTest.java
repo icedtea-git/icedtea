@@ -690,6 +690,17 @@ public class PluginTest extends JApplet {
         return ret.toString();        
     }
 
+
+    /*
+    ***********************************
+    * Java -> JS invocation eval test *
+    ***********************************
+    */
+
+    public String jjsEvalTest(String str) {
+        return window.eval(str).toString();
+    }
+
     public void init() {
         window = JSObject.getWindow(this);
         //JSObject.getWindow(this).call("appletLoaded", new Object[]{});
