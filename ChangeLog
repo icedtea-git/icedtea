@@ -1,3 +1,10 @@
+2010-02-03  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaNPPlugin.cc 
+	(plugin_create_applet_tag): Encode new lines, carriage returns, and other
+	special characters before sending them to Java side (de-coding code is
+	already in effect on Java side).
+
 2010-02-02  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/tests/LiveConnect/PluginTest.java

@@ -1575,13 +1575,40 @@ plugin_create_applet_tag (int16_t argc, char* argn[], char* argv[])
           // characters will pass through the pipe.
           if (argv[i] != '\0')
             {
-              gchar* escaped = NULL;
+              // worst case scenario -> all characters are newlines or
+              // returns, each of which translates to 5 substitutions
+              char* escaped = (char*) calloc(((strlen(argv[i])*5)+1), sizeof(char));
 
-              escaped = g_strescape (argv[i], NULL);
+              strcpy(escaped, "");
+              for (int j=0; j < strlen(argv[i]); j++)
+              {
+                  if (argv[i][j] == '\r')
+                      strcat(escaped, "&#13;");
+                  else if (argv[i][j] == '\n')
+                      strcat(escaped, "&#10;");
+                  else if (argv[i][j] == '>')
+                      strcat(escaped, "&gt;");
+                  else if (argv[i][j] == '<')
+                      strcat(escaped, "&lt;");
+                  else if (argv[i][j] == '&')
+                      strcat(escaped, "&amp;");
+                  else
+                  {
+                      char* orig_char = (char*) calloc(2, sizeof(char));
+                      orig_char[0] = argv[i][j];
+                      orig_char[1] = '\0';
+
+                      strcat(escaped, orig_char);
+
+                      free(orig_char);
+                      orig_char = NULL;
+                  }
+              }
+
               parameters = g_strconcat (parameters, "<PARAM NAME=\"", argn[i],
                                         "\" VALUE=\"", escaped, "\">", NULL);
 
-              g_free (escaped);
+              free (escaped);
               escaped = NULL;
             }
         }
