@@ -22,6 +22,9 @@ case "$arch" in
   arm*)
     MFLAG=
     ;;
+  s390)
+    MFLAG=-m31
+    ;;
   i?86|ppc)
     MFLAG=-m32
     ;;
