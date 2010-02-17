@@ -1,3 +1,13 @@
+2010-02-17  Xerxes Rånby  <xerxes@zafena.se>
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::SharkCompiler): Implement host CPU feature
+	autotuner using LLVM 2.7 APIs.
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp:
+	Define llvm/ADT/StringMap.h and llvm/System/Host.h
+	depending on LLVM version.
+	Allways define llvm/Support/CommandLine.h.
+
 2010-02-16  Gary Benson  <gbenson@redhat.com>
 	
 	* contrib/jck/compile-native-code.sh: Add s390.

@@ -51,8 +51,32 @@ SharkCompiler::SharkCompiler()
   // Create the memory manager
   _memory_manager = new SharkMemoryManager();
 
-  // Create the JIT
 #if SHARK_LLVM_VERSION >= 27
+  // Finetune LLVM for the current host CPU.
+  StringMap<bool> Features;
+  bool gotCpuFeatures = llvm::sys::getHostCPUFeatures(Features);
+  std::string cpu("-mcpu=" + llvm::sys::getHostCPUName());
+
+  std::vector<const char*> args;
+  args.push_back(""); // program name
+  args.push_back(cpu.c_str());
+
+  if(gotCpuFeatures){
+    std::string mattr("-mattr=");
+    for(StringMap<bool>::iterator I = Features.begin(),
+      E = Features.end(); I != E; ++I){
+      if(I->second){
+        std::string attr(I->first());
+        mattr+="+"+attr+",";
+      }
+    }
+    args.push_back(mattr.c_str());
+  }
+
+  args.push_back(0);  // terminator
+  cl::ParseCommandLineOptions(args.size() - 1, (char **) &args[0]);
+
+  // Create the JIT
   _execution_engine = ExecutionEngine::createJIT(
     _normal_context->module(),
     NULL, memory_manager(), CodeGenOpt::Default);

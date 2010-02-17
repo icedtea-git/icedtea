@@ -42,10 +42,11 @@
 #include <llvm/Target/TargetSelect.h>
 #include <llvm/Type.h>
 #include <llvm/ExecutionEngine/JITMemoryManager.h>
-#if SHARK_LLVM_VERSION < 27
 #include <llvm/Support/CommandLine.h>
-#else
+#if SHARK_LLVM_VERSION >= 27
+#include <llvm/ADT/StringMap.h>
 #include <llvm/Support/Debug.h>
+#include <llvm/System/Host.h>
 #endif
 
 #include <map>
