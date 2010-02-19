@@ -1336,7 +1336,7 @@ get_proxy_info(const char* siteAddr, char** proxy, uint32_t* len)
 
   // if proxy info is available, extract it
   nsCString phost;
-  PRint32_t pport;
+  PRInt32 pport;
   nsCString ptype;
 
   info->GetHost(phost);

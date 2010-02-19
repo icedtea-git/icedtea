@@ -232,6 +232,9 @@ AC_CHECK_WITH_HG_REVISION
 AC_PATH_TOOL([GCJ],[gcj])
 AC_SUBST([GCJ])
 
+dnl Plugin
+IT_CHECK_XULRUNNER_VERSION
+
 if test "x${enable_visualvm}" = "xyes"
 then
   FIND_NETBEANS
@@ -397,30 +400,6 @@ then
   fi
   AC_SUBST(LIBPULSE_CFLAGS)
   AC_SUBST(LIBPULSE_LIBS)
-fi
-
-dnl Check for plugin support headers and libraries.
-dnl FIXME: use unstable
-if test "x${enable_plugin}" = "xyes"
-then
-  PKG_CHECK_MODULES(XULRUNNER, \
-    nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9)
-  PKG_CHECK_MODULES(GTK, gtk+-2.0)
-  IT_XULRUNNER_VERSION
-fi
-if test "x${enable_npplugin}" = "xyes"
-then
-  PKG_CHECK_MODULES(MOZILLA, \
-    mozilla-plugin libxul)
-  PKG_CHECK_MODULES(GTK, gtk+-2.0)
-  PKG_CHECK_MODULES(GLIB, glib-2.0)
-
-  AC_SUBST(MOZILLA_CFLAGS)
-  AC_SUBST(MOZILLA_LIBS)
-  AC_SUBST(GLIB_CFLAGS)
-  AC_SUBST(GLIB_LIBS)
-  AC_SUBST(GTK_CFLAGS)
-  AC_SUBST(GTK_LIBS)
 fi
 
 if test "x${ENABLE_NSS}" = "xyes"

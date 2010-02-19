@@ -1660,3 +1660,125 @@ fi
 AC_SUBST(DIST_ID)
 AC_SUBST(DIST_NAME)
 ])
+
+AC_DEFUN_ONCE([IT_CHECK_OLD_PLUGIN],
+[
+AC_MSG_CHECKING([whether to build the browser plugin])
+AC_ARG_ENABLE([plugin],
+              [AS_HELP_STRING([--disable-plugin],
+                              [Disable compilation of browser plugin])],
+              [enable_plugin="${enableval}"], [enable_plugin="yes"])
+AC_MSG_RESULT(${enable_plugin})
+])
+
+AC_DEFUN_ONCE([IT_CHECK_NEW_PLUGIN],
+[
+AC_MSG_CHECKING([whether to build the new experimental browser plugin based on npruntime])
+AC_ARG_ENABLE([npplugin],
+              [AS_HELP_STRING([--enable-npplugin],
+                              [Enable compilation of browser plugin (automatically disables default plugin)])],
+              [enable_npplugin="${enableval}"], [enable_npplugin="no"])
+AC_MSG_RESULT(${enable_npplugin})
+])
+
+AC_DEFUN_ONCE([IT_CHECK_PLUGIN_DEPENDENCIES],
+[
+dnl Check for plugin support headers and libraries.
+dnl FIXME: use unstable
+AC_REQUIRE([IT_CHECK_OLD_PLUGIN])
+AC_REQUIRE([IT_CHECK_NEW_PLUGIN])
+if test "x${enable_plugin}" = "xyes" -o "x${enable_npplugin}" = "xyes" ; then
+  PKG_CHECK_MODULES(GTK, gtk+-2.0)
+  PKG_CHECK_MODULES(GLIB, glib-2.0)
+  AC_SUBST(GLIB_CFLAGS)
+  AC_SUBST(GLIB_LIBS)
+  AC_SUBST(GTK_CFLAGS)
+  AC_SUBST(GTK_LIBS)
+
+
+  if $PKG_CONFIG --atleast-version 1.9.2 libxul 2>&AS_MESSAGE_LOG_FD ; then
+    if test "x${enable_npplugin}" != "xyes" ; then
+      AC_MSG_WARN([The old plugin does not work with xulrunner >= 1.9.2.  Enabling new plugin.])
+      enable_npplugin=yes;
+    fi
+    xullibs=libxul
+  else
+    xullibs="libxul libxul-unstable"
+  fi
+
+  if test "x${enable_npplugin}" = "xyes" ;
+  then
+    PKG_CHECK_MODULES(MOZILLA, \
+      mozilla-plugin ${xullibs})
+    
+    AC_SUBST(MOZILLA_CFLAGS)
+    AC_SUBST(MOZILLA_LIBS)
+  else
+    if test "x${enable_plugin}" = "xyes"
+    then
+      PKG_CHECK_MODULES(MOZILLA, \
+        nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9)
+
+      AC_SUBST(MOZILLA_CFLAGS)
+      AC_SUBST(MOZILLA_LIBS)
+    fi
+  fi
+fi
+AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")
+AM_CONDITIONAL(ENABLE_NPPLUGIN, test "x${enable_npplugin}" = "xyes")
+])
+
+AC_DEFUN_ONCE([IT_CHECK_XULRUNNER_VERSION],
+[
+AC_REQUIRE([IT_CHECK_PLUGIN_DEPENDENCIES])
+if test "x${enable_plugin}" = "xyes" -o "x${enable_npplugin}" = "xyes"
+then
+  AC_LANG_PUSH([C++])
+  OLDCPPFLAGS="$CPPFLAGS"
+  CPPFLAGS="$CPPFLAGS $MOZILLA_CFLAGS"
+
+  AC_CACHE_CHECK([for xulrunner version], [xulrunner_cv_collapsed_version],
+      [AC_RUN_IFELSE(
+        [AC_LANG_PROGRAM([[
+#include <mozilla-config.h>
+#include <math.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+]],[[
+int version = 0;
+const char* token = NULL;
+int power=6;
+FILE *datafile;
+
+datafile = fopen ("conftest.vdata", "w");
+if (!datafile) return 1;
+
+// 32 chars is more than enough to hold version
+char* mozilla_version = (char*) malloc(32*sizeof(char));
+snprintf(mozilla_version, 32, "%s", MOZILLA_VERSION);
+
+token = strtok(mozilla_version, ".");
+while (token)
+{
+    version += atoi(token)*(pow(10, power));
+    power -=2;
+    token = strtok(NULL, ".");
+}
+
+fprintf (datafile, "%d\n", version);
+free(mozilla_version);
+if (fclose(datafile)) return 1;
+
+return EXIT_SUCCESS;
+]])],
+    [xulrunner_cv_collapsed_version="$(cat conftest.vdata)"],
+    [AC_MSG_FAILURE([cannot determine xulrunner version])])],
+  [xulrunner_cv_collapsed_version="190000"])
+
+  CPPFLAGS="$OLDCPPFLAGS"
+  AC_LANG_POP([C++])
+
+  AC_SUBST(MOZILLA_VERSION_COLLAPSED, $xulrunner_cv_collapsed_version)
+fi
+])

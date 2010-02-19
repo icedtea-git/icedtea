@@ -1,3 +1,32 @@
+2010-01-25 Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	(IT_CHECK_OLD_PLUGIN): New macro for
+	--enable/disable-plugin.
+	(IT_CHECK_NEW_PLUGIN): Likewise for
+	--enable/disable-npplugin.
+	(IT_CHECK_PLUGIN_DEPENDENCIES): New macro
+	to run pkg-config checks.  Enables the new
+	plugin if xulrunner 1.9.2 or above is
+	detected.
+	(IT_CHECK_XULRUNNER_VERSION): Obtain the
+	XULrunner vgersion for MOZILLA_VERSION_COLLAPSED.
+	* configure.ac:
+	Replace old plugin stuff with a single call
+	to IT_CHECK_XULRUNNER_VERSION (which depends
+	on the other macros).
+
+2010-01-22  Deepak Bhole <dbhole@redhat.com>
+
+	* Makefile.am:
+	Use MOZILLA_CFLAGS/LIBS rather than
+	XULRUNNER.
+	* configure.ac:
+	Check for Mozilla not XULrunner.
+	Bring in libxul-unstable as well.
+	* plugin/icedteanp/IcedTeaNPPlugin.cc:
+	Use PRInt32 rather than PRInt32_t for port.
+
 2010-01-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
@@ -5,7 +34,7 @@
 	a stamps/plugin.stamp target for IcedTea7.
 	Add plugin alias and absolute path to plugin tree
 	in EXTRA_DIST.
-	
+
 2010-01-21  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am: Don't hide errors in statement sequences building
