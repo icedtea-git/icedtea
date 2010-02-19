@@ -645,6 +645,10 @@ AC_DEFUN([FIND_RHINO_JAR],
   fi
   AC_MSG_RESULT(${RHINO_JAR})
   AM_CONDITIONAL(WITH_RHINO, test x"${RHINO_JAR}" != "xno")
+dnl Clear RHINO_JAR if it doesn't contain a valid filename
+  if test x"${RHINO_JAR}" = "xno"; then
+    RHINO_JAR=
+  fi
   AC_SUBST(RHINO_JAR)
 ])
 

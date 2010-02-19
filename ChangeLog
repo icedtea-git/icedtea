@@ -1,3 +1,10 @@
+2010-02-19 Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	(FIND_RHINO_JAR): Clear RHINO_JAR variable
+	if it still contains "no" at the end of the
+	macro.
+
 2010-05-26 Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
