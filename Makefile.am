@@ -1844,31 +1844,31 @@ if WITH_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
 if ENABLE_SYSTEMTAP
-	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
+	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
 	if test $$? -eq 0; then \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot.stp \
-	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	    > $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/hotspot.stp; \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	    > $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/hotspot_jni.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
-	    $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	    $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/hotspot.stp; \
 	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	    $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/hotspot_jni.stp; \
 	fi; \
 	cp $(abs_top_builddir)/tapset/jstack.stp \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/jstack.stp
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/jstack.stp
 endif
 if ENABLE_NSS
 	cp $(abs_top_builddir)/nss.cfg \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/security;
 endif
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib;
 endif
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 	mkdir -p stamps

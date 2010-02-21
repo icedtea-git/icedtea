@@ -1,3 +1,9 @@
+2010-02-21 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(icedtea-debug.stamp): Add missing -debug on
+	end of $(BUILD_OUTPUT_DIR).
+
 2010-02-21  Xerxes Rånby  <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
