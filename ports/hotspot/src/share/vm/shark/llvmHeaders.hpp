@@ -44,6 +44,7 @@
 #include <llvm/ExecutionEngine/JITMemoryManager.h>
 #include <llvm/Support/CommandLine.h>
 #if SHARK_LLVM_VERSION >= 27
+#include <llvm/ExecutionEngine/JIT.h>
 #include <llvm/ADT/StringMap.h>
 #include <llvm/Support/Debug.h>
 #include <llvm/System/Host.h>

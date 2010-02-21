@@ -30,6 +30,17 @@
 
 using namespace llvm;
 
+#if SHARK_LLVM_VERSION >= 27
+namespace {
+  cl::opt<std::string>
+  MCPU("mcpu");
+
+  cl::list<std::string>
+  MAttrs("mattr",
+         cl::CommaSeparated);
+}
+#endif
+
 SharkCompiler::SharkCompiler()
   : AbstractCompiler()
 {
@@ -77,9 +88,24 @@ SharkCompiler::SharkCompiler()
   cl::ParseCommandLineOptions(args.size() - 1, (char **) &args[0]);
 
   // Create the JIT
-  _execution_engine = ExecutionEngine::createJIT(
-    _normal_context->module(),
-    NULL, memory_manager(), CodeGenOpt::Default);
+  std::string ErrorMsg;
+
+  EngineBuilder builder(_normal_context->module());
+  builder.setMCPU(MCPU);
+  builder.setMAttrs(MAttrs);
+  builder.setJITMemoryManager(memory_manager());
+  builder.setEngineKind(EngineKind::JIT);
+  builder.setErrorStr(&ErrorMsg);
+  _execution_engine = builder.create();
+
+  if (!execution_engine()) {
+    if (!ErrorMsg.empty())
+      printf("Error while creating Shark JIT: %s\n",ErrorMsg.c_str());
+    else
+      printf("Unknown error while creating Shark JIT\n");
+    exit(1);
+  }
+
   execution_engine()->addModule(
     _native_context->module());
 #else

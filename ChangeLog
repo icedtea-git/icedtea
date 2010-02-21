@@ -1,3 +1,14 @@
+2010-02-21  Xerxes Rånby  <xerxes@zafena.se>
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(MCPU): Explicitly defined for use by LLVM command line parser.
+	(MAttrs): Likewise.
+	(SharkCompiler::SharkCompiler): Create the JIT using LLVM EngineBuilder
+	in order to explicitly set MCPU and MAttrs when using LLVM 2.7.
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp:
+	Include llvm/ExecutionEngine/JIT.h for LLVM 2.7 to make sure the
+	JIT are linked in.
+
 2010-02-22  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java: Centralized
