@@ -107,7 +107,7 @@ exception statement from your version. */
   "application/x-java-applet;version=1.4.2:class,jar:IcedTea;"         \
   "application/x-java-applet;version=1.5:class,jar:IcedTea;"           \
   "application/x-java-applet;version=1.6:class,jar:IcedTea;"           \
-  "application/x-java-applet;jpi-version=1.6.0_00:class,jar:IcedTea;"  \
+  "application/x-java-applet;jpi-version=1.6.0_" JDK_UPDATE_VERSION ":class,jar:IcedTea;"  \
   "application/x-java-bean:class,jar:IcedTea;"                         \
   "application/x-java-bean;version=1.1:class,jar:IcedTea;"             \
   "application/x-java-bean;version=1.1.1:class,jar:IcedTea;"           \
@@ -123,7 +123,7 @@ exception statement from your version. */
   "application/x-java-bean;version=1.4.2:class,jar:IcedTea;"           \
   "application/x-java-bean;version=1.5:class,jar:IcedTea;"             \
   "application/x-java-bean;version=1.6:class,jar:IcedTea;"             \
-  "application/x-java-bean;jpi-version=1.6.0_00:class,jar:IcedTea;"    \
+  "application/x-java-bean;jpi-version=1.6.0_" JDK_UPDATE_VERSION ":class,jar:IcedTea;"    \
   "application/x-java-vm-npruntime::IcedTea;"
 
 #define PLUGIN_URL NS_INLINE_PLUGIN_CONTRACTID_PREFIX NS_JVM_MIME_TYPE

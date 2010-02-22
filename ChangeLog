@@ -1,3 +1,9 @@
+2010-02-22  Deepak Bhole <dbhole@redhat.com>
+
+	* Makefile.am: Provide JDK_UPDATE_VERSION when compiling the plugin
+	* plugin/icedteanp/IcedTeaNPPlugin.cc: Use JDK_UPDATE_VERSION to set the
+	jpi version.
+
 2010-05-28 Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
