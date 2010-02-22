@@ -1,3 +1,8 @@
+2010-02-22  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java: Centralized
+	and increased timeouts to give slow-loading applets enough time to load.
+
 2010-02-19 Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:

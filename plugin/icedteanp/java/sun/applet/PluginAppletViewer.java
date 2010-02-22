@@ -177,7 +177,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
          Applet a;
 
          // Wait for panel to come alive
-         int maxWait = 5000; // wait 5 seconds max for panel to come alive
+         int maxWait = PluginAppletViewer.APPLET_TIMEOUT; // wait for panel to come alive
          int wait = 0;
          while ((panel == null) || (!((NetxPanel) panel).isAlive() && wait < maxWait)) {
               try {
@@ -368,6 +368,8 @@ import com.sun.jndi.toolkit.url.UrlUtil;
      private long handle = 0;
      private WindowListener windowEventListener = null;
      private AppletEventListener appletEventListener = null;
+     
+     public static final int APPLET_TIMEOUT = 60000;
 
      /**
       * Null constructor to allow instantiation via newInstance()
@@ -613,7 +615,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                  if (message.startsWith("handle")) {
 
                      PluginDebug.debug("handle command waiting for applet to complete loading.");
-                     int maxWait = 10000; // wait 10 seconds max for applet to fully load
+                     int maxWait = APPLET_TIMEOUT; // wait for applet to fully load
                      int wait = 0;
                      while (!status.get(identifier).equals(PAV_INIT_STATUS.INIT_COMPLETE) &&
                              (wait < maxWait)) {
@@ -660,7 +662,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
          if (message.startsWith("width")) {
 
              // Wait for panel to come alive
-             int maxWait = 5000; // wait 5 seconds max for panel to come alive
+             int maxWait = APPLET_TIMEOUT; // wait for panel to come alive
              int wait = 0;
              while (!status.get(identifier).equals(PAV_INIT_STATUS.INIT_COMPLETE) && wait < maxWait) {
                   try {
@@ -721,7 +723,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
              Object o;
 
              // Wait for panel to come alive
-             int maxWait = 5000; // wait 5 seconds max for panel to come alive
+             int maxWait = APPLET_TIMEOUT; // wait for panel to come alive
              int wait = 0;
              while ((panel == null) || (!((NetxPanel) panel).isAlive() && wait < maxWait)) {
                   try {
