@@ -97,10 +97,10 @@ void SharkFunction::initialize(const char *name) {
       SharkTopLevelBlock *locker =
         new SharkTopLevelBlock(this, start_block->ciblock());
       locker->add_incoming(entry_state);
-    
+
       set_block_insertion_point(start_block->entry_block());
       locker->acquire_method_lock();
-    
+
       entry_state = locker->current_state();
     }
   }
@@ -144,7 +144,7 @@ class DeferredZeroCheck : public SharkTargetInvariants {
   SharkState*         _state;
   BasicBlock*         _check_block;
   BasicBlock*         _continue_block;
-  
+
  public:
   SharkTopLevelBlock* block() const {
     return _block;
@@ -154,10 +154,10 @@ class DeferredZeroCheck : public SharkTargetInvariants {
   }
   int bci() const {
     return _bci;
-  } 
+  }
   SharkState* state() const {
     return _state;
-  } 
+  }
   BasicBlock* check_block() const {
     return _check_block;
   }

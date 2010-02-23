@@ -25,7 +25,7 @@
 
 // Items on the stack and in local variables are tracked using
 // SharkValue objects.
-// 
+//
 // All SharkValues are one of two core types, SharkNormalValue
 // and SharkAddressValue, but no code outside this file should
 // ever refer to those directly.  The split is because of the
@@ -34,7 +34,7 @@
 // popped by ret only exist at compile time.  Having separate
 // classes for these allows us to check that our jsr handling
 // is correct, via assertions.
-// 
+//
 // There is one more type, SharkPHIValue, which is a subclass
 // of SharkNormalValue with a couple of extra methods.  Use of
 // SharkPHIValue outside of this file is acceptable, so long
@@ -163,7 +163,7 @@ class SharkValue : public ResourceObj {
 
 class SharkNormalValue : public SharkValue {
   friend class SharkValue;
-  
+
  protected:
   SharkNormalValue(ciType* type, llvm::Value* value, bool zero_checked)
     : _type(type), _llvm_value(value), _zero_checked(zero_checked) {}
@@ -290,7 +290,7 @@ class SharkAddressValue : public SharkValue {
   bool equal_to(SharkValue* other) const;
 
   // Type access
- public:  
+ public:
   BasicType basic_type() const;
   int       size()       const;
   bool      is_address() const;

@@ -168,7 +168,7 @@ class SharkContext : public llvm::LLVMContext {
     assert(type != NULL, "unhandled type");
     return result;
   }
-  
+
  public:
   const llvm::Type* to_stackType(BasicType type) const {
     return map_type(_to_stackType, type);

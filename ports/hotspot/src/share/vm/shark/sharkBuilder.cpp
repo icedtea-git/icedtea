@@ -127,7 +127,7 @@ const Type* SharkBuilder::make_type(char type, bool void_ok) {
   case 'F':
   case 'D':
     return PointerType::getUnqual(make_type(tolower(type), false));
-    
+
     // VM objects
   case 'T':
     return SharkType::thread_type();
@@ -535,4 +535,4 @@ BasicBlock* SharkBuilder::GetBlockInsertionPoint() const {
 BasicBlock* SharkBuilder::CreateBlock(BasicBlock* ip, const char* name) const {
   return BasicBlock::Create(
     SharkContext::current(), name, GetInsertBlock()->getParent(), ip);
-}  
+}

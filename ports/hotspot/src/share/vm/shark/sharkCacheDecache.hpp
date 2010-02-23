@@ -58,7 +58,7 @@ class SharkDecacher : public SharkCacherDecacher {
 
  private:
   int _bci;
-  
+
  protected:
   int bci() const {
     return _bci;
@@ -101,7 +101,7 @@ class SharkDecacher : public SharkCacherDecacher {
   void process_oop_tmp_slot(llvm::Value** value, int offset);
   void process_method_slot(llvm::Value** value, int offset);
   void process_pc_slot(int offset);
-  
+
   void start_locals();
   void process_local_slot(int index, SharkValue** value, int offset);
 
@@ -131,7 +131,7 @@ class SharkDecacher : public SharkCacherDecacher {
     //   stack[3]    local[0]    jint       normal    normal
     //
     // high addresses this end
-    
+
     SharkValue *value = *addr;
     if (value) {
       if (value->is_jobject())

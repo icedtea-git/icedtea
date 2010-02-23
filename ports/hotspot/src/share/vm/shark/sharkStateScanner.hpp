@@ -61,7 +61,7 @@ class SharkStateScanner : public SharkTargetInvariants {
   virtual void process_method_slot(llvm::Value** value, int offset)          {}
   virtual void process_pc_slot(int offset)                                   {}
   virtual void end_frame_header()                                            {}
-  
+
   virtual void start_locals()                                                {}
   virtual void process_local_slot(int index, SharkValue** value, int offset) {}
   virtual void end_locals()                                                  {}

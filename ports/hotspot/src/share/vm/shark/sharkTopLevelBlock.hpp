@@ -52,7 +52,7 @@ class SharkTopLevelBlock : public SharkBlock {
   SharkStack* stack() const {
     return function()->stack();
   }
-  
+
   // Typeflow properties
  public:
   int index() const {
@@ -69,7 +69,7 @@ class SharkTopLevelBlock : public SharkBlock {
   }
   ciType* stack_type_at_entry(int slot) const {
     return ciblock()->stack_type_at(slot);
-  }  
+  }
   int start() const {
     return ciblock()->start();
   }

@@ -25,7 +25,7 @@
 
 class SharkNativeWrapper : public SharkCompileInvariants {
   friend class SharkStackWithNativeFrame;
-  
+
  public:
   static SharkNativeWrapper* build(SharkBuilder* builder,
                                    methodHandle  target,

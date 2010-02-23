@@ -80,7 +80,7 @@ class SharkCompileInvariants : public ResourceObj {
     assert(_thread == NULL, "thread already set");
     _thread = thread;
   }
-  
+
   // Objects that handle various aspects of the compilation.
  protected:
   DebugInformationRecorder* debug_info() const {

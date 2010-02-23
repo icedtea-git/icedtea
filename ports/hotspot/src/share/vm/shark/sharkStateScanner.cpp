@@ -87,13 +87,13 @@ void SharkStateScanner::stack_integrity_checks(SharkState* state) {
     }
   }
 }
-  
+
 void SharkStateScanner::locals_integrity_checks(SharkState* state) {
   for (int i = 0; i < max_locals(); i++) {
     if (state->local(i)) {
       if (state->local(i)->is_two_word())
         assert(state->local(i + 1) == NULL, "should be");
     }
-  } 
+  }
 }
 #endif // !PRODUCT

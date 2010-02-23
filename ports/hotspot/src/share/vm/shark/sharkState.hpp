@@ -184,5 +184,5 @@ class SharkPHIState : public SharkState {
   }
 
  public:
-  void add_incoming(SharkState* incoming_state); 
+  void add_incoming(SharkState* incoming_state);
 };

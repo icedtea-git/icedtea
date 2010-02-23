@@ -44,7 +44,7 @@ void SharkBlock::parse_bytecode(int start, int limit) {
 
     if (SharkTraceBytecodes)
       tty->print_cr("%4d: %s", bci(), Bytecodes::name(bc()));
-    
+
     if (has_trap() && trap_bci() == bci()) {
       do_trap(trap_request());
       return;
@@ -95,7 +95,7 @@ void SharkBlock::parse_bytecode(int start, int limit) {
           }
         }
         break;
-      }  
+      }
     }
 
     switch (bc()) {
@@ -294,25 +294,25 @@ void SharkBlock::parse_bytecode(int start, int limit) {
       xpop();
       xpop();
       break;
-    case Bytecodes::_swap: 
+    case Bytecodes::_swap:
       a = xpop();
       b = xpop();
       xpush(a);
       xpush(b);
-      break;  
+      break;
     case Bytecodes::_dup:
       a = xpop();
       xpush(a);
       xpush(a);
       break;
-    case Bytecodes::_dup_x1: 
+    case Bytecodes::_dup_x1:
       a = xpop();
       b = xpop();
       xpush(a);
       xpush(b);
       xpush(a);
       break;
-    case Bytecodes::_dup_x2: 
+    case Bytecodes::_dup_x2:
       a = xpop();
       b = xpop();
       c = xpop();
@@ -321,7 +321,7 @@ void SharkBlock::parse_bytecode(int start, int limit) {
       xpush(b);
       xpush(a);
       break;
-    case Bytecodes::_dup2: 
+    case Bytecodes::_dup2:
       a = xpop();
       b = xpop();
       xpush(b);
@@ -394,7 +394,7 @@ void SharkBlock::parse_bytecode(int start, int limit) {
       do_irem();
       break;
     case Bytecodes::_ineg:
-      a = pop();      
+      a = pop();
       push(SharkValue::create_jint(
         builder()->CreateNeg(a->jint_value()), a->zero_checked()));
       break;
@@ -470,7 +470,7 @@ void SharkBlock::parse_bytecode(int start, int limit) {
       do_lrem();
       break;
     case Bytecodes::_lneg:
-      a = pop();      
+      a = pop();
       push(SharkValue::create_jlong(
         builder()->CreateNeg(a->jlong_value()), a->zero_checked()));
       break;
@@ -547,18 +547,18 @@ void SharkBlock::parse_bytecode(int start, int limit) {
       break;
     case Bytecodes::_fdiv:
       b = pop();
-      a = pop();      
+      a = pop();
       push(SharkValue::create_jfloat(
         builder()->CreateFDiv(a->jfloat_value(), b->jfloat_value())));
       break;
     case Bytecodes::_frem:
       b = pop();
-      a = pop();      
+      a = pop();
       push(SharkValue::create_jfloat(
         builder()->CreateFRem(a->jfloat_value(), b->jfloat_value())));
       break;
     case Bytecodes::_fneg:
-      a = pop();      
+      a = pop();
       push(SharkValue::create_jfloat(
         builder()->CreateFNeg(a->jfloat_value())));
       break;
@@ -583,18 +583,18 @@ void SharkBlock::parse_bytecode(int start, int limit) {
       break;
     case Bytecodes::_ddiv:
       b = pop();
-      a = pop();      
+      a = pop();
       push(SharkValue::create_jdouble(
         builder()->CreateFDiv(a->jdouble_value(), b->jdouble_value())));
       break;
     case Bytecodes::_drem:
       b = pop();
-      a = pop();      
+      a = pop();
       push(SharkValue::create_jdouble(
         builder()->CreateFRem(a->jdouble_value(), b->jdouble_value())));
       break;
     case Bytecodes::_dneg:
-      a = pop();      
+      a = pop();
       push(SharkValue::create_jdouble(
         builder()->CreateFNeg(a->jdouble_value())));
       break;
@@ -627,7 +627,7 @@ void SharkBlock::parse_bytecode(int start, int limit) {
       break;
 
     case Bytecodes::_i2l:
-      a = pop();      
+      a = pop();
       push(SharkValue::create_jlong(
         builder()->CreateIntCast(
           a->jint_value(), SharkType::jlong_type(), true), a->zero_checked()));
@@ -907,7 +907,7 @@ int SharkBlock::switch_table_length() {
 
   default:
     ShouldNotReachHere();
-  } 
+  }
 }
 
 int SharkBlock::switch_key(int i) {
@@ -920,7 +920,7 @@ int SharkBlock::switch_key(int i) {
 
   default:
     ShouldNotReachHere();
-  } 
+  }
 }
 
 int SharkBlock::switch_dest(int i) {
@@ -933,7 +933,7 @@ int SharkBlock::switch_dest(int i) {
 
   default:
     ShouldNotReachHere();
-  } 
+  }
 }
 
 void SharkBlock::do_div_or_rem(bool is_long, bool is_rem) {
@@ -966,7 +966,7 @@ void SharkBlock::do_div_or_rem(bool is_long, bool is_rem) {
       builder()->CreateICmpEQ(a, p),
       builder()->CreateICmpEQ(b, q)),
     special_case, general_case);
-  
+
   builder()->SetInsertPoint(special_case);
   Value *special_result;
   if (is_rem) {
@@ -1033,12 +1033,12 @@ void SharkBlock::do_field_access(bool is_get, bool is_field) {
     BasicType   basic_type = field->type()->basic_type();
     const Type *stack_type = SharkType::to_stackType(basic_type);
     const Type *field_type = SharkType::to_arrayType(basic_type);
-    
+
     Value *addr = builder()->CreateAddressOfStructEntry(
       object, in_ByteSize(field->offset_in_bytes()),
       PointerType::getUnqual(field_type),
       "addr");
-  
+
     // Do the access
     if (is_get) {
       Value *field_value = builder()->CreateLoad(addr);
@@ -1057,7 +1057,7 @@ void SharkBlock::do_field_access(bool is_get, bool is_field) {
           field_value, field_type, basic_type != T_CHAR);
 
       builder()->CreateStore(field_value, addr);
-      
+
       if (!field->type()->is_primitive_type())
         builder()->CreateUpdateBarrierSet(oopDesc::bs(), addr);
 

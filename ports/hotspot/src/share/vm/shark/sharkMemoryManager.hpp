@@ -84,5 +84,5 @@ class SharkMemoryManager : public llvm::JITMemoryManager {
   void deallocateMemForFunction(const llvm::Function* F);
 #endif
   unsigned char *allocateSpace(intptr_t Size,
-			       unsigned int Alignment);
+                               unsigned int Alignment);
 };

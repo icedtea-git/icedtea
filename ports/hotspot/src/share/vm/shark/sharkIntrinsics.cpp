@@ -133,7 +133,7 @@ void SharkIntrinsics::do_intrinsic() {
   case vmIntrinsics::_currentThread:
     do_Thread_currentThread();
     break;
-    
+
     // sun.misc.Unsafe
   case vmIntrinsics::_compareAndSwapInt:
     do_Unsafe_compareAndSwapInt();
@@ -149,7 +149,7 @@ void SharkIntrinsics::do_Math_minmax(ICmpInst::Predicate p) {
   SharkValue *sb = state()->pop();
   SharkValue *sa = state()->pop();
   Value *a = sa->jint_value();
-  Value *b = sb->jint_value();  
+  Value *b = sb->jint_value();
 
   // Perform the test
   BasicBlock *ip       = builder()->GetBlockInsertionPoint();

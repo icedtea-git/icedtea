@@ -92,7 +92,7 @@ SharkContext::SharkContext(const char* name)
       _to_stackType[i] = jint_type();
       _to_arrayType[i] = jbyte_type();
       break;
-      
+
     case T_BYTE:
       _to_stackType[i] = jint_type();
       _to_arrayType[i] = jbyte_type();

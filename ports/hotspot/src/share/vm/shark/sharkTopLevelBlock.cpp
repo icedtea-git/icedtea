@@ -54,7 +54,7 @@ void SharkTopLevelBlock::scan_for_traps() {
         return;
       }
       break;
-      
+
     case Bytecodes::_getfield:
     case Bytecodes::_getstatic:
     case Bytecodes::_putfield:
@@ -115,7 +115,7 @@ void SharkTopLevelBlock::scan_for_traps() {
       break;
     }
   }
-  
+
   // Trap if typeflow trapped (and we didn't before)
   if (ciblock()->has_trap()) {
     set_trap(
@@ -177,7 +177,7 @@ void SharkTopLevelBlock::enter(SharkTopLevelBlock* predecessor,
     }
   }
 }
-  
+
 void SharkTopLevelBlock::initialize() {
   char name[28];
   snprintf(name, sizeof(name),
@@ -271,7 +271,7 @@ void SharkTopLevelBlock::do_deferred_zero_check(SharkValue* value,
   }
   else {
     iter()->force_bci(start());
-    set_current_state(saved_state);  
+    set_current_state(saved_state);
     zero_check_value(value, continue_block);
   }
 }
@@ -318,7 +318,7 @@ void SharkTopLevelBlock::zero_check_value(SharkValue* value,
   }
   else {
     builder()->CreateUnimplemented(__FILE__, __LINE__);
-  } 
+  }
 
   Value *pending_exception = get_pending_exception();
   clear_pending_exception();
@@ -351,7 +351,7 @@ void SharkTopLevelBlock::check_bounds(SharkValue* array, SharkValue* index) {
   clear_pending_exception();
   handle_exception(pending_exception, EX_CHECK_FULL);
 
-  set_current_state(saved_state);  
+  set_current_state(saved_state);
 
   builder()->SetInsertPoint(in_bounds);
 }
@@ -377,7 +377,7 @@ void SharkTopLevelBlock::check_pending_exception(int action) {
     action ^= EAM_MONITOR_FUDGE;
   }
   clear_pending_exception();
-  handle_exception(pending_exception, action); 
+  handle_exception(pending_exception, action);
   set_current_state(saved_state);
 
   builder()->SetInsertPoint(no_exception);
@@ -486,7 +486,7 @@ void SharkTopLevelBlock::maybe_add_safepoint() {
 
   builder()->SetInsertPoint(do_safepoint);
   call_vm(builder()->safepoint(), EX_CHECK_FULL);
-  BasicBlock *safepointed_block = builder()->GetInsertBlock();  
+  BasicBlock *safepointed_block = builder()->GetInsertBlock();
   builder()->CreateBr(safepointed);
 
   builder()->SetInsertPoint(safepointed);
@@ -521,7 +521,7 @@ bool SharkTopLevelBlock::can_reach_helper(SharkTopLevelBlock* other) {
   if (_can_reach_visited)
     return false;
   _can_reach_visited = true;
-  
+
   if (!has_trap()) {
     for (int i = 0; i < num_successors(); i++) {
       if (successor(i)->can_reach_helper(other))
@@ -558,7 +558,7 @@ void SharkTopLevelBlock::call_register_finalizer(Value *receiver) {
     in_ByteSize(oopDesc::klass_offset_in_bytes()),
     SharkType::oop_type(),
     "klass");
-  
+
   Value *klass_part = builder()->CreateAddressOfStructEntry(
     klass,
     in_ByteSize(klassOopDesc::klass_part_offset_in_bytes()),
@@ -581,7 +581,7 @@ void SharkTopLevelBlock::call_register_finalizer(Value *receiver) {
 
   builder()->SetInsertPoint(do_call);
   call_vm(builder()->register_finalizer(), receiver, EX_CHECK_FULL);
-  BasicBlock *branch_block = builder()->GetInsertBlock();  
+  BasicBlock *branch_block = builder()->GetInsertBlock();
   builder()->CreateBr(done);
 
   builder()->SetInsertPoint(done);
@@ -672,7 +672,7 @@ void SharkTopLevelBlock::do_aload(BasicType basic_type) {
   case T_DOUBLE:
     push(SharkValue::create_jdouble(value));
     break;
-    
+
   case T_OBJECT:
     push(SharkValue::create_generic(element_type, value, false));
     break;
@@ -828,7 +828,7 @@ void SharkTopLevelBlock::do_switch() {
       switchinst->addCase(
         LLVMValue::jint_constant(switch_key(i)),
         dest_block->entry_block());
-      dest_block->add_incoming(current_state());      
+      dest_block->add_incoming(current_state());
     }
   }
 }
@@ -861,7 +861,7 @@ ciMethod* SharkTopLevelBlock::improve_virtual_call(ciMethod*   caller,
   }
 
   // Attempt to find a monomorphic target for this call using
-  // class heirachy analysis.  
+  // class heirachy analysis.
   ciInstanceKlass *calling_klass = caller->holder();
   ciMethod* monomorphic_target =
     dest_method->find_monomorphic_target(calling_klass, klass, actual_receiver);
@@ -1000,7 +1000,7 @@ Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver,
   builder()->SetInsertPoint(got_null);
   builder()->CreateUnimplemented(__FILE__, __LINE__);
   builder()->CreateUnreachable();
-                          
+
   builder()->SetInsertPoint(not_null);
   builder()->CreateCondBr(
     builder()->CreateICmpEQ(itable_iklass, iklass),
@@ -1037,7 +1037,7 @@ Value* SharkTopLevelBlock::get_interface_callee(SharkValue *receiver,
           itableMethodEntry::method_offset_in_bytes())),
       PointerType::getUnqual(SharkType::methodOop_type())),
     "callee");
-} 
+}
 
 void SharkTopLevelBlock::do_call() {
   // Set frequently used booleans
@@ -1165,7 +1165,7 @@ bool SharkTopLevelBlock::static_subtype_check(ciKlass* check_klass,
 
   return false;
 }
-  
+
 void SharkTopLevelBlock::do_instance_check() {
   // Get the class we're checking against
   bool will_link;
@@ -1189,7 +1189,7 @@ void SharkTopLevelBlock::do_instance_check() {
   else
     do_trapping_instance_check(check_klass);
 }
-                
+
 bool SharkTopLevelBlock::maybe_do_instanceof_if() {
   // Get the class we're checking against
   bool will_link;
@@ -1202,7 +1202,7 @@ bool SharkTopLevelBlock::maybe_do_instanceof_if() {
 
   // Keep a copy of the object we're checking
   SharkValue *old_object = xstack(0);
-  
+
   // Get the class of the object we're checking
   ciKlass *object_klass = old_object->type()->as_klass();
 
@@ -1268,7 +1268,7 @@ void SharkTopLevelBlock::do_full_instance_check(ciKlass* klass) {
 
   // Pop the object off the stack
   Value *object = pop()->jobject_value();
-  
+
   // Null objects aren't instances of anything
   builder()->CreateCondBr(
     builder()->CreateICmpEQ(object, LLVMValue::null()),
@@ -1314,7 +1314,7 @@ void SharkTopLevelBlock::do_full_instance_check(ciKlass* klass) {
     LLVMValue::jint_constant(IC_NOT_INSTANCE), not_instance);
   BasicBlock *nonnull_block = builder()->GetInsertBlock();
   builder()->CreateBr(merge2);
-  
+
   // Second merge
   builder()->SetInsertPoint(merge2);
   PHINode *result = builder()->CreatePHI(
@@ -1371,7 +1371,7 @@ void SharkTopLevelBlock::do_trapping_instance_check(ciKlass* klass) {
   builder()->SetInsertPoint(is_null);
   set_current_state(saved_state);
   if (bc() == Bytecodes::_checkcast) {
-    push(SharkValue::create_generic(klass, pop()->jobject_value(), false));    
+    push(SharkValue::create_generic(klass, pop()->jobject_value(), false));
   }
   else {
     pop();
@@ -1395,7 +1395,7 @@ void SharkTopLevelBlock::do_new() {
   BasicBlock *push_object         = NULL;
 
   SharkState *fast_state = NULL;
-  
+
   Value *tlab_object = NULL;
   Value *heap_object = NULL;
   Value *fast_object = NULL;
@@ -1448,7 +1448,7 @@ void SharkTopLevelBlock::do_new() {
 
     // Heap allocation
     Value *top_addr = builder()->CreateIntToPtr(
-	LLVMValue::intptr_constant((intptr_t) Universe::heap()->top_addr()),
+        LLVMValue::intptr_constant((intptr_t) Universe::heap()->top_addr()),
       PointerType::getUnqual(SharkType::intptr_type()),
       "top_addr");
 
@@ -1721,7 +1721,7 @@ void SharkTopLevelBlock::acquire_lock(Value *lockee, int exception_action) {
     builder()->monitorenter(), monitor_addr,
     exception_action | EAM_MONITOR_FUDGE);
   BasicBlock *acquired_slow = builder()->GetInsertBlock();
-  builder()->CreateBr(lock_acquired);  
+  builder()->CreateBr(lock_acquired);
 
   // All done
   builder()->SetInsertPoint(lock_acquired);
@@ -1766,13 +1766,13 @@ void SharkTopLevelBlock::release_lock(int exception_action) {
   // Create an edge for the state merge
   builder()->SetInsertPoint(released_fast);
   SharkState *fast_state = current_state()->copy();
-  builder()->CreateBr(lock_released);  
+  builder()->CreateBr(lock_released);
 
   // Need to drop into the runtime to release this one
   builder()->SetInsertPoint(slow_path);
   call_vm(builder()->monitorexit(), monitor_addr, exception_action);
   BasicBlock *released_slow = builder()->GetInsertBlock();
-  builder()->CreateBr(lock_released);  
+  builder()->CreateBr(lock_released);
 
   // All done
   builder()->SetInsertPoint(lock_released);

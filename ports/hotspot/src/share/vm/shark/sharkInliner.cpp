@@ -81,7 +81,7 @@ class SharkInlinerHelper : public StackObj {
   ciBytecodeStream _iter;
   SharkState*      _entry_state;
   ciMethod*        _target;
-  
+
  public:
   ciBytecodeStream* iter() {
     return &_iter;
@@ -103,7 +103,7 @@ class SharkInlinerHelper : public StackObj {
   int max_stack() const {
     return target()->max_stack();
   }
-  
+
   // Inlinability check
  public:
   bool is_inlinable();
@@ -259,7 +259,7 @@ bool SharkInlinerHelper::is_inlinable() {
     case Bytecodes::_lconst_0:
       push(false);
       push(false);
-      break;      
+      break;
     case Bytecodes::_lconst_1:
       push(true);
       push(false);
@@ -402,25 +402,25 @@ bool SharkInlinerHelper::is_inlinable() {
       pop();
       pop();
       break;
-    case Bytecodes::_swap: 
+    case Bytecodes::_swap:
       a = pop();
       b = pop();
       push(a);
       push(b);
-      break;  
+      break;
     case Bytecodes::_dup:
       a = pop();
       push(a);
       push(a);
       break;
-    case Bytecodes::_dup_x1: 
+    case Bytecodes::_dup_x1:
       a = pop();
       b = pop();
       push(a);
       push(b);
       push(a);
       break;
-    case Bytecodes::_dup_x2: 
+    case Bytecodes::_dup_x2:
       a = pop();
       b = pop();
       c = pop();
@@ -429,7 +429,7 @@ bool SharkInlinerHelper::is_inlinable() {
       push(b);
       push(a);
       break;
-    case Bytecodes::_dup2: 
+    case Bytecodes::_dup2:
       a = pop();
       b = pop();
       push(b);
@@ -499,7 +499,7 @@ bool SharkInlinerHelper::is_inlinable() {
       break;
     case Bytecodes::_ineg:
       break;
-      
+
     case Bytecodes::_ladd:
     case Bytecodes::_lsub:
     case Bytecodes::_lmul:
@@ -584,7 +584,7 @@ bool SharkInlinerHelper::is_inlinable() {
       pop();
       push(false);
       break;
-      
+
     case Bytecodes::_dcmpl:
     case Bytecodes::_dcmpg:
       pop();

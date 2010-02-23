@@ -56,7 +56,7 @@ class SharkStack : public SharkCompileInvariants {
   // BasicBlock creation
  protected:
   virtual llvm::BasicBlock* CreateBlock(const char* name = "") const = 0;
-  
+
   // Interface with the Zero stack
  private:
   llvm::Value* zero_stack() const {
@@ -101,7 +101,7 @@ class SharkStack : public SharkCompileInvariants {
   llvm::StoreInst* CreateStoreFramePointer(llvm::Value* value) {
     return builder()->CreateStore(value, frame_pointer_addr());
   }
-  llvm::Value* CreatePopFrame(int result_slots); 
+  llvm::Value* CreatePopFrame(int result_slots);
 
   // Interface with the frame anchor
  private:
@@ -181,7 +181,7 @@ class SharkStack : public SharkCompileInvariants {
   llvm::Value* slot_addr(int               offset,
                          const llvm::Type* type = NULL,
                          const char*       name = "") const;
-  
+
   llvm::Value* monitor_addr(int index) const {
     return slot_addr(
       monitor_offset(index),
@@ -199,7 +199,7 @@ class SharkStack : public SharkCompileInvariants {
       monitor_header_offset(index),
       SharkType::intptr_type(),
       "displaced_header_addr");
-  }  
+  }
 
   // oopmap helpers
  public:

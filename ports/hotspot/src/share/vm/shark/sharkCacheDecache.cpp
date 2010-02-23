@@ -105,7 +105,7 @@ void SharkDecacher::process_method_slot(Value** value, int offset) {
     *value,
     offset);
 
-  oopmap()->set_oop(slot2reg(offset));  
+  oopmap()->set_oop(slot2reg(offset));
 }
 
 void SharkDecacher::process_pc_slot(int offset) {
@@ -114,7 +114,7 @@ void SharkDecacher::process_pc_slot(int offset) {
     builder()->code_buffer_address(pc_offset()),
     stack()->slot_addr(offset));
 }
-  
+
 void SharkDecacher::start_locals() {
   // Create the array we'll record our local variables in
   _locarray = new GrowableArray<ScopeValue*>(max_locals());}

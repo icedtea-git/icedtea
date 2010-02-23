@@ -28,7 +28,7 @@ class DeferredZeroCheck;
 
 class SharkFunction : public SharkTargetInvariants {
  friend class SharkStackWithNormalFrame;
-  
+
  public:
   static llvm::Function* build(ciEnv*        env,
                                SharkBuilder* builder,
@@ -79,7 +79,7 @@ class SharkFunction : public SharkTargetInvariants {
   }
   const llvm::FunctionType* entry_point_type() const {
     if (is_osr())
-      return SharkType::osr_entry_point_type();      
+      return SharkType::osr_entry_point_type();
     else
       return SharkType::entry_point_type();
   }

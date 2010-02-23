@@ -53,7 +53,7 @@ JRT_ENTRY(void, SharkRuntime::monitorenter(JavaThread*      thread,
   if (PrintBiasedLockingStatistics)
     Atomic::inc(BiasedLocking::slow_path_entry_count_addr());
 
-  Handle object(thread, lock->obj());  
+  Handle object(thread, lock->obj());
   assert(Universe::heap()->is_in_reserved_or_null(object()), "should be");
   if (UseBiasedLocking) {
     // Retry fast entry if bias is revoked to avoid unnecessary inflation
@@ -66,23 +66,23 @@ JRT_END
 
 JRT_ENTRY(void, SharkRuntime::monitorexit(JavaThread*      thread,
                                           BasicObjectLock* lock))
-  Handle object(thread, lock->obj());  
+  Handle object(thread, lock->obj());
   assert(Universe::heap()->is_in_reserved_or_null(object()), "should be");
   if (lock == NULL || object()->is_unlocked()) {
     THROW(vmSymbols::java_lang_IllegalMonitorStateException());
   }
   ObjectSynchronizer::slow_exit(object(), lock->lock(), thread);
 JRT_END
-  
+
 JRT_ENTRY(void, SharkRuntime::new_instance(JavaThread* thread, int index))
   klassOop k_oop = method(thread)->constants()->klass_at(index, CHECK);
   instanceKlassHandle klass(THREAD, k_oop);
-  
+
   // Make sure we are not instantiating an abstract klass
   klass->check_valid_for_instantiation(true, CHECK);
 
   // Make sure klass is initialized
-  klass->initialize(CHECK);    
+  klass->initialize(CHECK);
 
   // At this point the class may not be fully initialized
   // because of recursive initialization. If it is fully
@@ -99,7 +99,7 @@ JRT_ENTRY(void, SharkRuntime::new_instance(JavaThread* thread, int index))
   //       If we have a breakpoint, then we don't rewrite
   //       because the _breakpoint bytecode would be lost.
   oop obj = klass->allocate_instance(CHECK);
-  thread->set_vm_result(obj);  
+  thread->set_vm_result(obj);
 JRT_END
 
 JRT_ENTRY(void, SharkRuntime::newarray(JavaThread* thread,
@@ -141,7 +141,7 @@ JRT_ENTRY(void, SharkRuntime::throw_ArrayIndexOutOfBoundsException(
   char msg[jintAsStringSize];
   snprintf(msg, sizeof(msg), "%d", index);
   Exceptions::_throw_msg(
-    thread, file, line, 
+    thread, file, line,
     vmSymbols::java_lang_ArrayIndexOutOfBoundsException(),
     msg);
 JRT_END
@@ -150,7 +150,7 @@ JRT_ENTRY(void, SharkRuntime::throw_NullPointerException(JavaThread* thread,
                                                          const char* file,
                                                          int         line))
   Exceptions::_throw_msg(
-    thread, file, line, 
+    thread, file, line,
     vmSymbols::java_lang_NullPointerException(),
     "");
 JRT_END
@@ -201,7 +201,7 @@ void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request) {
 
   // Push another dummy frame
   thread->push_zero_frame(FakeStubFrame::build(stack));
-  
+
   // Fill in the skeleton frames
   thread->set_last_Java_frame();
   Deoptimization::unpack_frames(thread, Deoptimization::Unpack_uncommon_trap);
@@ -210,7 +210,7 @@ void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request) {
   // Pop our dummy frame
   thread->pop_zero_frame();
 
-  // Jump into the interpreter  
+  // Jump into the interpreter
 #ifdef CC_INTERP
   CppInterpreter::main_loop(number_of_frames - 1, thread);
 #else

@@ -61,7 +61,7 @@ void SharkStack::initialize(Value* method) {
   offset += stack_words;
 
   // Monitors
-  _monitors_slots_offset = offset; 
+  _monitors_slots_offset = offset;
   offset += monitor_words;
 
   // Temporary oop slot
@@ -86,7 +86,7 @@ void SharkStack::initialize(Value* method) {
   Value *fp = slot_addr(offset++);
 
   // Local variables
-  _locals_slots_offset = offset;  
+  _locals_slots_offset = offset;
   offset += locals_words;
 
   // Push the frame
@@ -106,7 +106,7 @@ void SharkStack::initialize(Value* method) {
 void SharkStack::CreateHardStackOverflowCheck(Value* sp) {
   BasicBlock *overflow = CreateBlock("stack_overflow");
   BasicBlock *no_overflow = CreateBlock("no_overflow");
-  
+
   builder()->CreateCondBr(
     builder()->CreateICmpULT(sp, stack_base()),
     overflow, no_overflow);
@@ -115,7 +115,7 @@ void SharkStack::CreateHardStackOverflowCheck(Value* sp) {
   builder()->CreateUnimplemented(__FILE__, __LINE__);
   builder()->CreateUnreachable();
 
-  builder()->SetInsertPoint(no_overflow);  
+  builder()->SetInsertPoint(no_overflow);
 }
 
 // Check that a stack overflow is not imminent, throwing a

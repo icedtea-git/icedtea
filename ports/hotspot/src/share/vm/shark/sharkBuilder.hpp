@@ -149,7 +149,7 @@ class SharkBuilder : public llvm::IRBuilder<> {
   llvm::Value* memset();
   llvm::Value* unimplemented();
   llvm::Value* should_not_reach_here();
-  llvm::Value* dump();  
+  llvm::Value* dump();
 
   // Public interface to low-level non-VM calls.
  public:
@@ -164,10 +164,10 @@ class SharkBuilder : public llvm::IRBuilder<> {
                                llvm::Value* value,
                                llvm::Value* len,
                                llvm::Value* align);
-  llvm::CallInst* CreateUnimplemented(const char* file, int line);  
-  llvm::CallInst* CreateShouldNotReachHere(const char* file, int line);  
+  llvm::CallInst* CreateUnimplemented(const char* file, int line);
+  llvm::CallInst* CreateShouldNotReachHere(const char* file, int line);
   NOT_PRODUCT(llvm::CallInst* CreateDump(llvm::Value* value));
-  
+
   // Flags for CreateMemoryBarrier.
  public:
   enum BarrierFlags {

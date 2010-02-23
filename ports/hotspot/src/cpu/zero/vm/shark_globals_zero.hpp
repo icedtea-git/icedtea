@@ -20,7 +20,7 @@
  * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
- *  
+ *
  */
 
 // Set the default values for platform dependent flags used by the
@@ -50,7 +50,7 @@ define_pd_global(intx,  FreqInlineSize,               325  );
 define_pd_global(intx,  NewRatio,                     12   );
 define_pd_global(intx,  NewSizeThreadIncrease,        4*K  );
 define_pd_global(intx,  InitialCodeCacheSize,         160*K);
-define_pd_global(intx,  ReservedCodeCacheSize,        32*M ); 
+define_pd_global(intx,  ReservedCodeCacheSize,        32*M );
 define_pd_global(bool,  ProfileInterpreter,           false);
 define_pd_global(intx,  CodeCacheExpansionSize,       32*K );
 define_pd_global(uintx, CodeCacheMinBlockLength,      1    );

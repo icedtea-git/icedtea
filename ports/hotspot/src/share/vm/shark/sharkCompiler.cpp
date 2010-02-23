@@ -48,7 +48,7 @@ SharkCompiler::SharkCompiler()
   MutexLocker locker(execution_engine_lock());
 
   // Make LLVM safe for multithreading
-  if (!llvm_start_multithreaded()) 
+  if (!llvm_start_multithreaded())
     fatal("llvm_start_multithreaded() failed");
 
   // Initialize the native target
@@ -161,7 +161,7 @@ void SharkCompiler::compile_method(ciEnv*    env,
 
   // Emit the entry point
   SharkEntry *entry = (SharkEntry *) cb.malloc(sizeof(SharkEntry));
-  
+
   // Build the LLVM IR for the method
   Function *function = SharkFunction::build(env, &builder, flow, name);
 
@@ -182,7 +182,7 @@ void SharkCompiler::compile_method(ciEnv*    env,
 
   ExceptionHandlerTable handler_table;
   ImplicitExceptionTable inc_table;
-  
+
   env->register_method(target,
                        entry_bci,
                        &offsets,
@@ -255,7 +255,7 @@ void SharkCompiler::generate_native_code(SharkEntry* entry,
         llvm::DebugFlag = true;
       }
       else {
-        llvm::SetCurrentDebugType(""); 
+        llvm::SetCurrentDebugType("");
         llvm::DebugFlag = false;
       }
 #else
@@ -314,7 +314,7 @@ void SharkCompiler::free_queued_methods() {
       break;
 
     execution_engine()->freeMachineCodeForFunction(function);
-    function->eraseFromParent();  
+    function->eraseFromParent();
   }
 }
 

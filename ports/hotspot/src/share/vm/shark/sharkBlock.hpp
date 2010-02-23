@@ -55,11 +55,11 @@ class SharkBlock : public SharkTargetInvariants {
   // Entry state
  protected:
   virtual SharkState* entry_state();
-  
+
   // Current state
  private:
   SharkState* initial_current_state();
-  
+
  public:
   SharkState* current_state() {
     if (_current_state == NULL)
@@ -72,7 +72,7 @@ class SharkBlock : public SharkTargetInvariants {
     _current_state = current_state;
   }
 
-  // Local variables  
+  // Local variables
  protected:
   SharkValue* local(int index) {
     SharkValue *value = current_state()->local(index);
@@ -208,7 +208,7 @@ class SharkBlock : public SharkTargetInvariants {
   void do_lrem() {
     do_div_or_rem(true, true);
   }
-  void do_div_or_rem(bool is_long, bool is_rem);  
+  void do_div_or_rem(bool is_long, bool is_rem);
 
   // get* and put*
  private:
@@ -257,7 +257,7 @@ class SharkBlock : public SharkTargetInvariants {
   int switch_dest(int i);
 
   virtual void do_switch();
-  
+
   // invoke*
  protected:
   virtual void do_call();

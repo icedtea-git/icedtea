@@ -67,11 +67,11 @@ class SharkRuntime : public AllStatic {
   }
   static intptr_t tos_at(JavaThread *thread, int offset) {
     return *(thread->zero_stack()->sp() + offset);
-  }  
+  }
 
   // Non-VM calls
  public:
   static void dump(const char *name, intptr_t value);
-  static bool is_subtype_of(klassOop check_klass, klassOop object_klass); 
+  static bool is_subtype_of(klassOop check_klass, klassOop object_klass);
   static void uncommon_trap(JavaThread* thread, int trap_request);
 };

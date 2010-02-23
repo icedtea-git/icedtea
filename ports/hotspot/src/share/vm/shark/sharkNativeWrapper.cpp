@@ -143,8 +143,8 @@ void SharkNativeWrapper::initialize(const char *name) {
       builder()->CreateBr(merge);
 
       builder()->SetInsertPoint(not_null);
-      builder()->CreateBr(merge);      
-      
+      builder()->CreateBr(merge);
+
       builder()->SetInsertPoint(merge);
       phi = builder()->CreatePHI(box_type, "boxed_object");
       phi->addIncoming(ConstantPointerNull::get(box_type), null);
@@ -172,7 +172,7 @@ void SharkNativeWrapper::initialize(const char *name) {
       param_types.push_back(param_type);
       param_values.push_back(
         builder()->CreateLoad(stack()->slot_addr(adjusted_offset, param_type)));
-    }                     
+    }
   }
 
   // The oopmap is now complete, and everything is written
@@ -254,7 +254,7 @@ void SharkNativeWrapper::initialize(const char *name) {
       thread_state,
       LLVMValue::jint_constant(0)),
     do_safepoint, safepointed);
- 
+
   builder()->SetInsertPoint(do_safepoint);
   builder()->CreateCall(
     builder()->check_special_condition_for_native_trans(), thread);
@@ -311,7 +311,7 @@ void SharkNativeWrapper::initialize(const char *name) {
   // Reset handle block
   CreateResetHandleBlock();
 
-  // Unlock if necessary.  
+  // Unlock if necessary.
   if (is_synchronized())
     Unimplemented();
 
@@ -329,7 +329,7 @@ void SharkNativeWrapper::initialize(const char *name) {
     case T_BYTE:
       needs_cast = true;
       break;
-      
+
     case T_CHAR:
     case T_SHORT:
       needs_cast = true;
@@ -342,7 +342,7 @@ void SharkNativeWrapper::initialize(const char *name) {
     }
 
     builder()->CreateStore(
-      result,              
+      result,
       builder()->CreateIntToPtr(
         result_addr,
         PointerType::getUnqual(SharkType::to_stackType(result_type))));
