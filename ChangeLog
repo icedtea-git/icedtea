@@ -1,3 +1,7 @@
+2010-02-23  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/make/linux/makefiles/shark.make: Comment fix.
+
 2010-02-21 Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
