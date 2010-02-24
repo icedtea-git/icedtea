@@ -1,3 +1,10 @@
+2010-02-24  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/java/sun/applet/PluginMain.java: Add some javaplugin.*
+	properties that some applets expect.
+	* rt/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java: Implement
+	allowed property get/set based on specifications.
+
 2010-05-28 Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

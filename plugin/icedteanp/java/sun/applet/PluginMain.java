@@ -189,6 +189,10 @@ public class PluginMain
 		avProps.put("file.separator.applet", "true");
 		avProps.put("path.separator.applet", "true");
 		avProps.put("line.separator.applet", "true");
+		
+		avProps.put("javaplugin.nodotversion", "160_17");
+		avProps.put("javaplugin.version", "1.6.0_17");
+		avProps.put("javaplugin.vm.options", "");
 
 		// Read in the System properties.  If something is going to be
 		// over-written, warn about it.
