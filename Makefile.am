@@ -736,7 +736,8 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	scripts/jni_create_stap.c \
 	scripts/jni_desc \
 	rewriter/agpl-3.0.txt \
-	$(REWRITER_SRCS)
+	$(REWRITER_SRCS) \
+	THANKYOU
 
 # Top-Level Targets
 # =================

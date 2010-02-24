@@ -1,3 +1,10 @@
+2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am: Add THANKYOU to
+	EXTRA_DIST.
+	* pulseaudio/AUTHORS: Removed; duplicates
+	top-level file.
+
 2010-02-24  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/java/sun/applet/PluginMain.java: Add some javaplugin.*
