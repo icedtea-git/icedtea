@@ -250,6 +250,7 @@ void SharkCompiler::generate_native_code(SharkEntry* entry,
 
     if (SharkPrintAsmOf != NULL) {
 #if SHARK_LLVM_VERSION >= 27
+#ifndef NDEBUG
       if (!fnmatch(SharkPrintAsmOf, name, 0)) {
         llvm::SetCurrentDebugType(X86_ONLY("x86-emitter") NOT_X86("jit"));
         llvm::DebugFlag = true;
@@ -258,6 +259,7 @@ void SharkCompiler::generate_native_code(SharkEntry* entry,
         llvm::SetCurrentDebugType("");
         llvm::DebugFlag = false;
       }
+#endif
 #else
       // NB you need to patch LLVM with http://tinyurl.com/yf3baln for this
       std::vector<const char*> args;

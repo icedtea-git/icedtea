@@ -1,3 +1,9 @@
+2010-02-26  Xerxes Rånby  <xerxes@zafena.se>
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::generate_native_code): Undefine debug code for
+	NDEBUG builds
+
 2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am: Add THANKYOU to
