@@ -1782,3 +1782,35 @@ return EXIT_SUCCESS;
   AC_SUBST(MOZILLA_VERSION_COLLAPSED, $xulrunner_cv_collapsed_version)
 fi
 ])
+
+AC_DEFUN([IT_DIAMOND_CHECK],[
+  AC_CACHE_CHECK([if javac lacks support for the diamond operator], it_cv_diamond, [
+  CLASS=Test.java
+  BYTECODE=$(echo $CLASS|sed 's#\.java##')
+  mkdir tmp.$$
+  cd tmp.$$
+  cat << \EOF > $CLASS
+[/* [#]line __oline__ "configure" */
+import java.util.HashMap;
+import java.util.Map;
+
+public class Test
+{
+    public static void main(String[] args)
+    {
+      Map<String,String> m = new HashMap<>();
+    }
+}]
+EOF
+  if $JAVAC -cp . $JAVACFLAGS -source 7 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+    it_cv_diamond=no;
+  else
+    it_cv_diamond=yes;
+  fi
+  rm -f $CLASS *.class
+  cd ..
+  rmdir tmp.$$
+  ])
+AM_CONDITIONAL([JAVAC_LACKS_DIAMOND], test x"${it_cv_diamond}" = "xyes")
+AC_PROVIDE([$0])dnl
+])

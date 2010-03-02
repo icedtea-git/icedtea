@@ -1,23 +1,23 @@
 diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.cpp openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.cpp
---- openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.cpp	2009-10-21 12:46:24.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.cpp	2009-10-29 13:19:18.000000000 +0000
-@@ -548,3 +548,4 @@
+--- openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.cpp	2010-01-25 14:41:05.000000000 +0000
++++ openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.cpp	2010-02-22 15:15:54.000000000 +0000
+@@ -602,3 +602,4 @@
    }
    return impl;
  }
 +
 diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.hpp openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.hpp
---- openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.hpp	2009-10-21 12:46:24.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.hpp	2009-10-29 13:19:18.000000000 +0000
-@@ -198,4 +198,5 @@
+--- openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.hpp	2010-01-25 14:41:05.000000000 +0000
++++ openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.hpp	2010-02-22 15:15:54.000000000 +0000
+@@ -208,4 +208,5 @@
    // What kind of ciObject is this?
    bool is_instance_klass() { return true; }
    bool is_java_klass()     { return true; }
 +
  };
 diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciMethod.cpp openjdk/hotspot/src/share/vm/ci/ciMethod.cpp
---- openjdk.orig/hotspot/src/share/vm/ci/ciMethod.cpp	2009-10-21 12:46:24.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/ci/ciMethod.cpp	2009-10-29 13:19:18.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/ci/ciMethod.cpp	2010-02-19 17:14:36.000000000 +0000
++++ openjdk/hotspot/src/share/vm/ci/ciMethod.cpp	2010-02-22 15:15:54.000000000 +0000
 @@ -56,9 +56,9 @@
    _liveness           = NULL;
    _bcea = NULL;
@@ -103,9 +103,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciMethod.cpp openjdk/hotspot/src/
  
  // ------------------------------------------------------------------
 diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciMethod.hpp openjdk/hotspot/src/share/vm/ci/ciMethod.hpp
---- openjdk.orig/hotspot/src/share/vm/ci/ciMethod.hpp	2009-10-21 12:46:24.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/ci/ciMethod.hpp	2009-10-29 13:19:18.000000000 +0000
-@@ -69,7 +69,7 @@
+--- openjdk.orig/hotspot/src/share/vm/ci/ciMethod.hpp	2010-01-25 14:41:05.000000000 +0000
++++ openjdk/hotspot/src/share/vm/ci/ciMethod.hpp	2010-02-22 15:15:54.000000000 +0000
+@@ -71,7 +71,7 @@
  
    // Optional liveness analyzer.
    MethodLiveness* _liveness;
@@ -114,7 +114,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciMethod.hpp openjdk/hotspot/src/
    ciTypeFlow*     _flow;
  #endif
  
-@@ -139,6 +139,9 @@
+@@ -141,6 +141,9 @@
  
    // Runtime information.
    int           vtable_index();
@@ -125,10 +125,10 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciMethod.hpp openjdk/hotspot/src/
    address       interpreter_entry();
  
 diff -Nru openjdk.orig/hotspot/src/share/vm/code/nmethod.cpp openjdk/hotspot/src/share/vm/code/nmethod.cpp
---- openjdk.orig/hotspot/src/share/vm/code/nmethod.cpp	2009-10-21 12:46:24.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/code/nmethod.cpp	2009-10-29 13:19:18.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/code/nmethod.cpp	2010-02-19 17:14:36.000000000 +0000
++++ openjdk/hotspot/src/share/vm/code/nmethod.cpp	2010-02-22 15:15:54.000000000 +0000
 @@ -65,6 +65,11 @@
-   assert(compiler() != NULL, "must be");
+   if (is_native_method()) return false;
    return compiler()->is_c2();
  }
 +bool nmethod::is_compiled_by_shark() const {
@@ -139,8 +139,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/code/nmethod.cpp openjdk/hotspot/src
  
  
  
-@@ -1321,6 +1326,10 @@
-     CodeCache::drop_scavenge_root_nmethod(this);
+@@ -1345,6 +1350,10 @@
+     CodeCache::remove_saved_code(this);
    }
  
 +#ifdef SHARK
@@ -150,7 +150,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/code/nmethod.cpp openjdk/hotspot/src
    ((CodeBlob*)(this))->flush();
  
    CodeCache::free(this);
-@@ -1712,6 +1721,7 @@
+@@ -1736,6 +1745,7 @@
  // Method that knows how to preserve outgoing arguments at call. This method must be
  // called with a frame corresponding to a Java invoke
  void nmethod::preserve_callee_argument_oops(frame fr, const RegisterMap *reg_map, OopClosure* f) {
@@ -158,15 +158,15 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/code/nmethod.cpp openjdk/hotspot/src
    if (!method()->is_native()) {
      SimpleScopeDesc ssd(this, fr.pc());
      Bytecode_invoke* call = Bytecode_invoke_at(ssd.method(), ssd.bci());
-@@ -1719,6 +1729,7 @@
+@@ -1743,6 +1753,7 @@
      symbolOop signature = call->signature();
-     fr.oops_compiled_arguments_do(signature, is_static, reg_map, f);
+     fr.oops_compiled_arguments_do(signature, has_receiver, reg_map, f);
    }
 +#endif // !SHARK
  }
  
  
-@@ -2186,6 +2197,8 @@
+@@ -2242,6 +2253,8 @@
      tty->print("(c1) ");
    } else if (is_compiled_by_c2()) {
      tty->print("(c2) ");
@@ -176,19 +176,19 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/code/nmethod.cpp openjdk/hotspot/src
      tty->print("(nm) ");
    }
 diff -Nru openjdk.orig/hotspot/src/share/vm/code/nmethod.hpp openjdk/hotspot/src/share/vm/code/nmethod.hpp
---- openjdk.orig/hotspot/src/share/vm/code/nmethod.hpp	2009-10-21 12:46:24.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/code/nmethod.hpp	2009-10-29 13:19:18.000000000 +0000
-@@ -324,6 +324,7 @@
+--- openjdk.orig/hotspot/src/share/vm/code/nmethod.hpp	2010-02-19 17:14:37.000000000 +0000
++++ openjdk/hotspot/src/share/vm/code/nmethod.hpp	2010-02-22 15:15:54.000000000 +0000
+@@ -334,6 +334,7 @@
  
    bool is_compiled_by_c1() const;
    bool is_compiled_by_c2() const;
 +  bool is_compiled_by_shark() const;
  
    // boundaries for different parts
-   address code_begin         () const             { return _entry_point; }
+   address code_begin            () const          { return _entry_point; }
 diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/abstractCompiler.hpp openjdk/hotspot/src/share/vm/compiler/abstractCompiler.hpp
---- openjdk.orig/hotspot/src/share/vm/compiler/abstractCompiler.hpp	2009-10-21 12:46:24.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/compiler/abstractCompiler.hpp	2009-10-29 13:19:18.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/compiler/abstractCompiler.hpp	2009-03-30 17:15:27.000000000 +0100
++++ openjdk/hotspot/src/share/vm/compiler/abstractCompiler.hpp	2010-02-22 15:15:54.000000000 +0000
 @@ -45,18 +45,26 @@
    // Missing feature tests
    virtual bool supports_native()                 { return true; }
@@ -218,9 +218,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/abstractCompiler.hpp openjd
  
    // Customization
 diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/compileBroker.cpp openjdk/hotspot/src/share/vm/compiler/compileBroker.cpp
---- openjdk.orig/hotspot/src/share/vm/compiler/compileBroker.cpp	2009-10-21 12:46:24.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/compiler/compileBroker.cpp	2009-10-29 13:19:18.000000000 +0000
-@@ -554,6 +554,14 @@
+--- openjdk.orig/hotspot/src/share/vm/compiler/compileBroker.cpp	2010-02-19 17:14:37.000000000 +0000
++++ openjdk/hotspot/src/share/vm/compiler/compileBroker.cpp	2010-02-22 15:15:54.000000000 +0000
+@@ -555,6 +555,14 @@
  #endif
  #endif // COMPILER2
  
@@ -236,8 +236,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/compileBroker.cpp openjdk/h
    _task_free_list = NULL;
  
 diff -Nru openjdk.orig/hotspot/src/share/vm/memory/cardTableModRefBS.hpp openjdk/hotspot/src/share/vm/memory/cardTableModRefBS.hpp
---- openjdk.orig/hotspot/src/share/vm/memory/cardTableModRefBS.hpp	2009-10-21 12:46:24.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/memory/cardTableModRefBS.hpp	2009-10-29 13:19:18.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/memory/cardTableModRefBS.hpp	2009-09-21 17:12:26.000000000 +0100
++++ openjdk/hotspot/src/share/vm/memory/cardTableModRefBS.hpp	2010-02-22 15:15:54.000000000 +0000
 @@ -44,6 +44,7 @@
    friend class VMStructs;
    friend class CardTableRS;
@@ -247,9 +247,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/memory/cardTableModRefBS.hpp openjdk
    // For debugging.
    friend class GuaranteeNotModClosure;
 diff -Nru openjdk.orig/hotspot/src/share/vm/oops/methodOop.cpp openjdk/hotspot/src/share/vm/oops/methodOop.cpp
---- openjdk.orig/hotspot/src/share/vm/oops/methodOop.cpp	2009-10-21 12:46:24.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/oops/methodOop.cpp	2009-10-29 13:19:18.000000000 +0000
-@@ -738,10 +738,14 @@
+--- openjdk.orig/hotspot/src/share/vm/oops/methodOop.cpp	2010-02-19 17:14:37.000000000 +0000
++++ openjdk/hotspot/src/share/vm/oops/methodOop.cpp	2010-02-22 15:15:54.000000000 +0000
+@@ -751,10 +751,14 @@
    }
  
    OrderAccess::storestore();
@@ -265,8 +265,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/oops/methodOop.cpp openjdk/hotspot/s
  }
  
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp openjdk/hotspot/src/share/vm/runtime/deoptimization.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp	2009-10-21 12:46:24.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/deoptimization.cpp	2009-10-29 13:19:18.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp	2010-02-19 17:14:39.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/deoptimization.cpp	2010-02-22 15:15:54.000000000 +0000
 @@ -229,6 +229,7 @@
  
    }
@@ -275,7 +275,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp openjdk/h
    // Compute the caller frame based on the sender sp of stub_frame and stored frame sizes info.
    CodeBlob* cb = stub_frame.cb();
    // Verify we have the right vframeArray
-@@ -239,6 +240,10 @@
+@@ -245,6 +246,10 @@
    assert(cb->is_deoptimization_stub() || cb->is_uncommon_trap_stub(), "just checking");
    Events::log("fetch unroll sp " INTPTR_FORMAT, unpack_sp);
  #endif
@@ -286,7 +286,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp openjdk/h
    // This is a guarantee instead of an assert because if vframe doesn't match
    // we will unpack the wrong deoptimized frame and wind up in strange places
    // where it will be very difficult to figure out what went wrong. Better
-@@ -349,7 +354,9 @@
+@@ -355,7 +360,9 @@
  
    frame_pcs[0] = deopt_sender.raw_pc();
  
@@ -296,7 +296,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp openjdk/h
  
    UnrollBlock* info = new UnrollBlock(array->frame_size() * BytesPerWord,
                                        caller_adjustment * BytesPerWord,
-@@ -890,7 +897,20 @@
+@@ -896,7 +903,20 @@
    // stuff a C2I adapter we can properly fill in the callee-save
    // register locations.
    frame caller = fr.sender(reg_map);
@@ -317,7 +317,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp openjdk/h
  
    frame sender = caller;
  
-@@ -1057,7 +1077,7 @@
+@@ -1063,7 +1083,7 @@
  JRT_END
  
  
@@ -326,7 +326,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp openjdk/h
  void Deoptimization::load_class_by_index(constantPoolHandle constant_pool, int index, TRAPS) {
    // in case of an unresolved klass entry, load the class.
    if (constant_pool->tag_at(index).is_unresolved_klass()) {
-@@ -1808,7 +1828,7 @@
+@@ -1825,7 +1845,7 @@
      if (xtty != NULL)  xtty->tail("statistics");
    }
  }
@@ -335,16 +335,16 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp openjdk/h
  
  
  // Stubs for C1 only system.
-@@ -1844,4 +1864,4 @@
+@@ -1861,4 +1881,4 @@
    return buf;
  }
  
 -#endif // COMPILER2
 +#endif // COMPILER2 || SHARK
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/globals.cpp openjdk/hotspot/src/share/vm/runtime/globals.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/globals.cpp	2009-10-21 12:46:24.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/globals.cpp	2009-10-29 13:19:18.000000000 +0000
-@@ -176,6 +176,18 @@
+--- openjdk.orig/hotspot/src/share/vm/runtime/globals.cpp	2010-01-25 14:41:13.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/globals.cpp	2010-02-22 15:15:54.000000000 +0000
+@@ -181,6 +181,18 @@
    #define C2_NOTPRODUCT_FLAG_STRUCT(type, name, value, doc) { #type, XSTR(name), &name, "{C2 notproduct}", DEFAULT },
  #endif
  
@@ -363,9 +363,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/globals.cpp openjdk/hotspot/
  
  static Flag flagTable[] = {
   RUNTIME_FLAGS(RUNTIME_DEVELOP_FLAG_STRUCT, RUNTIME_PD_DEVELOP_FLAG_STRUCT, RUNTIME_PRODUCT_FLAG_STRUCT, RUNTIME_PD_PRODUCT_FLAG_STRUCT, RUNTIME_DIAGNOSTIC_FLAG_STRUCT, RUNTIME_EXPERIMENTAL_FLAG_STRUCT, RUNTIME_NOTPRODUCT_FLAG_STRUCT, RUNTIME_MANAGEABLE_FLAG_STRUCT, RUNTIME_PRODUCT_RW_FLAG_STRUCT, RUNTIME_LP64_PRODUCT_FLAG_STRUCT)
-@@ -189,6 +201,9 @@
+@@ -194,6 +206,9 @@
  #ifdef COMPILER2
-  C2_FLAGS(C2_DEVELOP_FLAG_STRUCT, C2_PD_DEVELOP_FLAG_STRUCT, C2_PRODUCT_FLAG_STRUCT, C2_PD_PRODUCT_FLAG_STRUCT, C2_DIAGNOSTIC_FLAG_STRUCT, C2_NOTPRODUCT_FLAG_STRUCT)
+  C2_FLAGS(C2_DEVELOP_FLAG_STRUCT, C2_PD_DEVELOP_FLAG_STRUCT, C2_PRODUCT_FLAG_STRUCT, C2_PD_PRODUCT_FLAG_STRUCT, C2_DIAGNOSTIC_FLAG_STRUCT, C2_EXPERIMENTAL_FLAG_STRUCT, C2_NOTPRODUCT_FLAG_STRUCT)
  #endif
 +#ifdef SHARK
 + SHARK_FLAGS(SHARK_DEVELOP_FLAG_STRUCT, SHARK_PD_DEVELOP_FLAG_STRUCT, SHARK_PRODUCT_FLAG_STRUCT, SHARK_PD_PRODUCT_FLAG_STRUCT, SHARK_DIAGNOSTIC_FLAG_STRUCT, SHARK_NOTPRODUCT_FLAG_STRUCT)
@@ -374,8 +374,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/globals.cpp openjdk/hotspot/
  };
  
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp openjdk/hotspot/src/share/vm/runtime/globals.hpp
---- openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp	2009-10-29 13:15:51.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	2009-10-29 13:19:18.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp	2010-02-22 13:12:35.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	2010-02-22 15:15:54.000000000 +0000
 @@ -22,7 +22,7 @@
   *
   */
@@ -386,8 +386,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp openjdk/hotspot/
  define_pd_global(bool, UseTLAB,                      false);
  define_pd_global(bool, CICompileOSR,                 false);
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2009-10-21 12:46:24.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2009-10-29 13:20:39.000000000 +0000
+--- openjdk.orig/hotspot/src/share/vm/runtime/vm_version.cpp	2009-10-30 15:58:39.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp	2010-02-22 15:15:54.000000000 +0000
 @@ -94,12 +94,16 @@
  #ifdef TIERED
    #define VMTYPE "Server"

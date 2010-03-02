@@ -1,22 +1,22 @@
 # Dependencies
 
-OPENJDK_VERSION = b78
+OPENJDK_VERSION = b84
 
-CORBA_CHANGESET = 89141a0869e3
-HOTSPOT_CHANGESET = 54dde9f9887d
-JAXP_CHANGESET  = f0f127b93c9e
-JAXWS_CHANGESET = 4ca731fe3154
-JDK_CHANGESET = cd86da3affff
-LANGTOOLS_CHANGESET = 21591a03bfbe
-OPENJDK_CHANGESET = f1cf9e78bbad
+CORBA_CHANGESET = 007f7db4cbea
+HOTSPOT_CHANGESET = 9ee70b22738a
+JAXP_CHANGESET  = 495072db688b
+JAXWS_CHANGESET = 702e7f7e94c3
+JDK_CHANGESET = 917976e88f76
+LANGTOOLS_CHANGESET = 6a6c3d5c6956
+OPENJDK_CHANGESET = 8bab12c58534
 
-CORBA_SHA256SUM = 0d41c7f3c3571cc95eae4fb4c0faf8dbbcc61846a4591f70b6870d7b4c2c0857
-HOTSPOT_SHA256SUM = 1127102aa1230d26da6b73118576aef872fb2e86d0d946797da737e64c91d6fc
-JAXP_SHA256SUM = 89f002ed4e6e4b6449e453284b31c4cbe466dedddeeb20249415c6edb10b52cb
-JAXWS_SHA256SUM = 62059bb48e5dad09060bcb79539562f596c77df48345bb35f0e26e815d1cfa6b
-JDK_SHA256SUM = 31efd51fc265334046e72b202bf507c1c282d181ce9037e7fcce6215d2fef156
-LANGTOOLS_SHA256SUM = 4bff3af10a14048419bd144a39af2daa82756ca8ec226950d05b91ff99b1d0cc
-OPENJDK_SHA256SUM = df47020bf65614156e363a2170ee96f2959e08e62f9eaedacd3591147f858c00
+CORBA_SHA256SUM = 50955e1352e4da5f31c9a27e22bbbc1bee6c3b1c1533650349def2502e5588e0
+HOTSPOT_SHA256SUM = 5349b2baa758ca0750adc73e913e894acd2d54b626da24e55f8592a87542fe24
+JAXP_SHA256SUM = bee3d39feaf266ec1f0293abcde9cddb2553a09b1e400816187efbf86c6a2563
+JAXWS_SHA256SUM = 242f03256d5065b6b5a26f904591051382fe2b5989c31907859ba0c2ea3389fd
+JDK_SHA256SUM = 1faa4d03d315dcfdf8554299cbc266566100965ffc2529ba8927a4c43d25fd69
+LANGTOOLS_SHA256SUM = ff0451422ba9ff27a295bb11021c1b19d59d2f02ed893553f7919ddeede6aa2f
+OPENJDK_SHA256SUM = 6b0a46f1ca49906ccbe229f4dd5a6cb71914bcff5ce91ace261e88f62336ca97
 
 CACAO_VERSION = 0.99.4
 CACAO_SHA256SUM = c6090c1d2ed3c60acda0076b62563598267be8dab270ce49ee1035002a2510cf
@@ -37,9 +37,9 @@ JAXWS_DROP_ZIP = jdk7-jaxws-2009_09_28.zip
 JAXWS_DROP_SHA256SUM = 272756b999e9ae2435da8d58e259562e61126e1c5b1f9421fe65423217cef8fd
 JAF_DROP_ZIP = jdk7-jaf-2009_08_28.zip
 JAF_DROP_SHA256SUM = 8c81940b3017c0058367d7e7453123442f2cdd77c2bfe74acd9035f97e4db8e8
-JAXP_DROP_URL = https://jaxp.dev.java.net/files/documents/913/144160
-JAXP_DROP_ZIP = jdk7-jaxp-m5.zip
-JAXP_DROP_SHA256SUM = ebab4c6c4e641a4c95a7b6669e78f9bb1149a11054fc5b423cf292b633d6be53
+JAXP_DROP_URL = https://jaxp.dev.java.net/files/documents/913/147490
+JAXP_DROP_ZIP = jdk7-jaxp-m6.zip
+JAXP_DROP_SHA256SUM = 3d9eb7ae71f5365e2a786ba270413c6cb7dc8d1137f56995c087908b3df8446c
 
 OPENJDK_HOTSPOT_URL = http://hg.openjdk.java.net/jdk7/hotspot/hotspot
 
@@ -66,10 +66,10 @@ BUILD_OUTPUT_DIR = $(abs_top_builddir)/openjdk/build/$(OS_DIR)
 BOOT_BUILD_OUTPUT_DIR = openjdk-boot/build/$(OS_DIR)
 ICEDTEA_BUILD_DIR = \
 	$(abs_top_builddir)/$(BUILD_OUTPUT_DIR)
-ICEDTEA_RT = \
-	$(abs_top_builddir)/bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 ICEDTEA_BOOT_DIR= \
 	$(abs_top_builddir)/bootstrap/jdk1.6.0
+ICEDTEA_RT = \
+	$(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar
 ICEDTEA_ENDORSED_DIR = \
 	$(ICEDTEA_BOOT_DIR)/lib/endorsed
 ICEDTEA_BUILD_DIR_BOOT = \
@@ -82,10 +82,10 @@ BUILD_DEBUG_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTA
 
 # Source directories
 
-JDK_SHARE = openjdk/jdk/src/share/classes
-JDK_SOLARIS = openjdk/jdk/src/solaris/classes
-LANGTOOLS = openjdk/langtools/src/share/classes
-CORBA = openjdk/corba/src/share/classes
+JDK_SHARE = openjdk-boot/jdk/src/share/classes
+JDK_SOLARIS = openjdk-boot/jdk/src/solaris/classes
+LANGTOOLS = openjdk-boot/langtools/src/share/classes
+CORBA = openjdk-boot/corba/src/share/classes
 JAXWS = $(BUILD_OUTPUT_DIR)/jaxws/drop/jaxws_src/src
 
 NETX_SRCDIR = $(abs_top_srcdir)/netx
@@ -127,6 +127,10 @@ ICEDTEA_BOOTSTRAP_DIRS = \
 	$(JDK_SHARE)/sun/tools/java \
 	$(LANGTOOLS)/com/sun/mirror \
 	$(LANGTOOLS)/com/sun/tools/apt
+
+ICEDTEA_BOOTSTRAP_RESOURCES = \
+	$(LANGTOOLS)/com/sun/tools/javac/resources
+
 endif
 
 # Settings for javac
@@ -167,19 +171,21 @@ else
 endif
 
 if ENABLE_NPPLUGIN
+PLUGIN_SRCDIR=$(abs_top_srcdir)/plugin/icedteanp
+PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin/icedteanp
+ICEDTEANPPLUGIN_TARGET = $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaNPPlugin
-ICEDTEANPPLUGIN_TARGET = IcedTeaNPPlugin.so
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
 LIVECONNECT_DIR = sun/applet netscape
-PLUGIN_DIR=$(abs_top_srcdir)/plugin/icedteanp
 JNLP_ABOUT_TARGET = extra-lib/about.jar 
 else
 if ENABLE_PLUGIN
+PLUGIN_SRCDIR=$(abs_top_srcdir)/plugin/icedtea
+PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin/icedtea
+ICEDTEAPLUGIN_TARGET = $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
-ICEDTEAPLUGIN_TARGET = IcedTeaPlugin.so
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
 LIVECONNECT_DIR = sun/applet netscape
-PLUGIN_DIR=$(abs_top_srcdir)/plugin/icedtea
 JNLP_ABOUT_TARGET = extra-lib/about.jar
 else
 PLUGIN_PATCH = patches/icedtea-plugin.patch
@@ -230,6 +236,15 @@ else
   ICEDTEA_HOME = $(SYSTEM_JDK_DIR)
   INITIAL_BOOTSTRAP_LINK_STAMP = stamps/bootstrap-directory-symlink-stage2.stamp
 endif
+
+# Target to ensure a patched OpenJDK tree containing Zero & Shark
+# and any overlays is available in $(abs_top_builddir)/openjdk
+OPENJDK_TREE = stamps/overlay.stamp
+
+# Target to ensure a patched OpenJDK bootstrap tree containing
+# Zero & Shark, any other overlays and the bootstrapping patches
+# is available in $(abs_top_builddir)/openjdk-boot
+OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
 
 # Patch list
 
@@ -282,8 +297,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-samejvm-safe.patch \
 	patches/icedtea-pr261.patch \
 	patches/icedtea-doc-headers.patch \
-	patches/icedtea-test-atomic-operations.patch \
-	patches/icedtea-ia64-bugfix.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-parisc-opt.patch \
         patches/security/icedtea-6592792.patch \
         patches/security/icedtea-6733959.patch \
@@ -291,7 +304,6 @@ ICEDTEA_PATCHES = \
 	patches/hotspot/$(HSBUILD)/icedtea-includedb.patch \
 	patches/icedtea-demo-swingapplet.patch \
 	patches/icedtea-jvmtiEnv.patch \
-	patches/icedtea-cc-interp-backedge.patch \
 	patches/icedtea-netx.patch \
 	patches/icedtea-disable-intree-ec.patch \
 	patches/icedtea-sources.patch
@@ -351,8 +363,7 @@ endif
 endif
 
 if ENABLE_NSS
-ICEDTEA_PATCHES += patches/icedtea-nss-config.patch \
-		   patches/icedtea-nss-6763530.patch
+ICEDTEA_PATCHES += patches/icedtea-nss-config.patch
 endif
 
 ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
@@ -379,7 +390,8 @@ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/icedtea-hotspot-$(HSBUILD).patch \
 	patches/boot/icedtea-jopt.patch \
 	patches/boot/icedtea-dyn.patch \
-	patches/boot/icedtea-jaxp-dependency.patch
+	patches/boot/icedtea-jaxp-dependency.patch \
+	patches/boot/genstubs-nofork.patch
 
 if CP39408_JAVAH
 ICEDTEA_BOOT_PATCHES += patches/boot/icedtea-pr39408.patch
@@ -407,6 +419,10 @@ else
 if CP40630
 ICEDTEA_BOOT_PATCHES += $(SCANNER_PATCHES)
 endif
+endif
+
+if JAVAC_LACKS_DIAMOND
+ICEDTEA_BOOT_PATCHES += patches/boot/ecj-diamond.patch
 endif
 
 # Patches for JAXWS
@@ -1268,7 +1284,8 @@ endif
 clean-extract-cacao: clean-cacao
 	rm -f stamps/extract-cacao.stamp
 
-stamps/extract-jaxws.stamp: stamps/extract-openjdk.stamp
+stamps/extract-jaxws.stamp: stamps/extract-openjdk.stamp \
+  stamps/download-jaxws-drop.stamp stamps/download-jaf-drop.stamp
 	if test "x$(NEED_JAXWS_SRC)" = "xtrue"; then \
 	  (cd openjdk/jaxws ; \
 	   $(ANT) -Ddrops.dir=$(abs_top_builddir)/drops \
@@ -1552,7 +1569,7 @@ clean-overlay:
 # ======================================
 
 # Copy over OpenJDK sources for bootstrap.
-stamps/clone-boot.stamp: stamps/overlay.stamp
+stamps/clone-boot.stamp: $(OPENJDK_TREE)
 	if ! test -d openjdk-boot ; then \
 	    cp -pPRl openjdk openjdk-boot ; \
 	fi
@@ -1720,7 +1737,7 @@ clean-bootstrap-directory-symlink-stage2:
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
- stamps/download.stamp stamps/extract.stamp stamps/overlay.stamp \
+ stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/plugin.stamp $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
  stamps/netx-dist.stamp stamps/liveconnect-dist.stamp stamps/pulse-java.stamp
 	$(ARCH_PREFIX) $(MAKE) \
@@ -1732,16 +1749,17 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2re-image/lib/ext 
 if ENABLE_NPPLUGIN
-	cp -pPRf $(PLUGIN_DIR)/IcedTeaNPPlugin.so \
+	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf $(PLUGIN_DIR)/IcedTeaNPPlugin.so \
+	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+else
+if ENABLE_PLUGIN
+	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
-if ENABLE_PLUGIN
-	cp -pPRf IcedTeaPlugin.so \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf IcedTeaPlugin.so \
-	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
 if ENABLE_PULSE_JAVA
 	cp -pPRf libpulse-java.so \
@@ -1795,7 +1813,7 @@ endif
 	touch $@
 
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
- stamps/download.stamp stamps/extract.stamp stamps/overlay.stamp \
+ stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/plugin.stamp $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
  stamps/netx-dist.stamp stamps/liveconnect-dist.stamp stamps/pulse-java.stamp
 	$(ARCH_PREFIX) $(MAKE) \
@@ -1807,16 +1825,17 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
 	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/ext
 	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/ext 
 if ENABLE_NPPLUGIN
-	cp -pPRf IcedTeaNPPlugin.so \
+	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf IcedTeaNPPlugin.so \
+	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+else
+if ENABLE_PLUGIN
+	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so \
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so \
 	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
-if ENABLE_PLUGIN
-	cp -pPRf IcedTeaPlugin.so \
-	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf IcedTeaPlugin.so \
-	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
 if ENABLE_PULSE_JAVA
 	cp -pPRf libpulse-java.so \
@@ -1846,24 +1865,24 @@ if WITH_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
 if ENABLE_SYSTEMTAP
-	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
+	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
 	if test $$? -eq 0; then \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot.stp \
-	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	    > $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/hotspot.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
-	    $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	    $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/hotspot.stp; \
 	fi
 endif
 if ENABLE_NSS
 	cp $(abs_top_builddir)/nss.cfg \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/security;
 endif
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib;
 endif
 	@echo "IcedTea (debug build) is served:" \
 	  $(BUILD_OUTPUT_DIR)-debug
@@ -1899,9 +1918,8 @@ clean-icedtea-debug-stage2:
 # ===================
 
 stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
- stamps/download.stamp stamps/extract.stamp stamps/overlay.stamp \
- stamps/plugs.stamp stamps/netx-dist.stamp stamps/liveconnect-dist.stamp \
- stamps/patch-boot.stamp stamps/cacao.stamp
+ stamps/download.stamp $(OPENJDK_BOOT_TREE) stamps/plugs.stamp \
+ stamps/netx-dist.stamp stamps/liveconnect-dist.stamp stamps/cacao.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot \
@@ -1950,8 +1968,6 @@ if ENABLE_NPPLUGIN
 # Separate compile and link invocations to ensure intermediate object
 # is listed before -l options.  See:
 # http://developer.mozilla.org/en/docs/XPCOM_Glue
-IcedTeaNPPlugin.o: IcedTeaNPPlugin.cc
-
 NPPLUGIN_SRC=IcedTeaNPPlugin.cc IcedTeaScriptablePluginObject.cc \
 	IcedTeaJavaRequestProcessor.cc IcedTeaPluginRequestProcessor.cc \
 	IcedTeaPluginUtils.cc
@@ -1960,8 +1976,9 @@ NPPLUGIN_OBJECTS=IcedTeaNPPlugin.o IcedTeaScriptablePluginObject.o \
 	IcedTeaJavaRequestProcessor.o IcedTeaPluginRequestProcessor.o \
 	IcedTeaPluginUtils.o
 
-$(addprefix $(NPPLUGIN_DIR)/,$(NPPLUGIN_OBJECTS)): $(addprefix $(NPPLUGIN_DIR)/,$(NPPLUGIN_SRC))
-	cd $(PLUGIN_DIR) && \
+$(PLUGIN_BUILD_DIR)/%.o: $(PLUGIN_SRCDIR)/%.cc
+	mkdir -p $(PLUGIN_BUILD_DIR) && \
+	cd $(PLUGIN_BUILD_DIR) && \
 	$(CXX) $(CXXFLAGS) \
 	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
 	  -DPLUGIN_VERSION="\"$(PACKAGE_VERSION)$(ICEDTEA_REV)\"" \
@@ -1969,19 +1986,18 @@ $(addprefix $(NPPLUGIN_DIR)/,$(NPPLUGIN_OBJECTS)): $(addprefix $(NPPLUGIN_DIR)/,
 	  $(GLIB_CFLAGS) \
 	  $(GTK_CFLAGS) \
 	  $(MOZILLA_CFLAGS) \
-	  -fPIC -c $(NPPLUGIN_SRC)
+	  -fPIC -o $@ -c $<
 
-$(NPPLUGIN_DIR)/IcedTeaNPPlugin.so: $(addprefix $(NPPLUGIN_DIR)/,$(NPPLUGIN_OBJECTS))
-	cd $(PLUGIN_DIR) && \
+$(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so: $(addprefix $(PLUGIN_BUILD_DIR)/,$(NPPLUGIN_OBJECTS))
 	$(CXX) $(CXXFLAGS) \
-	  $(NPPLUGIN_OBJECTS) \
+	  $(addprefix $(PLUGIN_BUILD_DIR)/,$(NPPLUGIN_OBJECTS)) \
 	  $(GLIB_LIBS) \
 	  $(GTK_LIBS) \
 	  $(MOZILLA_LIBS)\
 	  -shared -o $@
 
 clean-IcedTeaNPPlugin:
-	cd $(PLUGIN_DIR); \
+	cd $(PLUGIN_BUILD_DIR); \
 	rm -f *.o; \
 	rm -f IcedTeaNPPlugin.so; \
 	cd ../
@@ -1992,7 +2008,7 @@ if ENABLE_PLUGIN
 # Separate compile and link invocations to ensure intermediate object
 # is listed before -l options.  See:
 # http://developer.mozilla.org/en/docs/XPCOM_Glue
-IcedTeaPlugin.o: IcedTeaPlugin.cc
+$(PLUGIN_BUILD_DIR)/IcedTeaPlugin.o: IcedTeaPlugin.cc
 	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
 	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
 	fi ; \
@@ -2005,7 +2021,8 @@ IcedTeaPlugin.o: IcedTeaPlugin.cc
 	  $(GTK_CFLAGS) \
 	  $(MOZILLA_CFLAGS) \
 	  -fPIC -c -o $@ $<
-IcedTeaPlugin.so: IcedTeaPlugin.o
+
+$(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so: $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.o
 	$(CXX) $(CXXFLAGS) \
 	  $< \
 	  $(GTK_LIBS) \
@@ -2013,8 +2030,7 @@ IcedTeaPlugin.so: IcedTeaPlugin.o
 	  -shared -o $@
 
 clean-IcedTeaPlugin:
-	rm -f IcedTeaPlugin.o
-	rm -f IcedTeaPlugin.so
+	rm -rf $(PLUGIN_BUILD_DIR)
 endif
 
 stamps/plugin.stamp: $(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET)
@@ -2026,7 +2042,7 @@ clean-plugin: $(ICEDTEAPLUGIN_CLEAN) $(ICEDTEANPPLUGIN_CLEAN)
 
 liveconnect-source-files.txt:
 	if test "x${LIVECONNECT_DIR}" != x; then \
-	  find $(PLUGIN_DIR)/java -name '*.java' | sort > $@ ; \
+	  find $(PLUGIN_SRCDIR)/java -name '*.java' | sort > $@ ; \
 	fi
 	touch $@
 
@@ -2048,7 +2064,7 @@ stamps/liveconnect-dist.stamp: stamps/liveconnect.stamp
 	  (cd $(abs_top_builddir)/liveconnect ; \
 	   mkdir -p lib ; \
 	   $(ICEDTEA_BOOT_DIR)/bin/jar cf lib/classes.jar ${LIVECONNECT_DIR} ; \
-	   cp -a $(PLUGIN_DIR)/java src; \
+	   cp -a $(PLUGIN_SRCDIR)/java src; \
 	   find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
 	   cd src ; \
 	   $(ZIP) -qr $(abs_top_builddir)/liveconnect/lib/src.zip ${LIVECONNECT_DIR} ) ; \
@@ -2537,7 +2553,7 @@ jtregcheck: jtreg check-hotspot check-langtools check-jdk
 
 # Support classes for non-OpenJDK bootstraps
 
-rt-source-files.txt: stamps/overlay.stamp
+rt-source-files.txt: $(OPENJDK_BOOT_TREE)
 	$(FIND) $(abs_top_builddir)/rt -name '*.java' \
 	  | sort -u > $@
 	for dir in $(ICEDTEA_BOOTSTRAP_DIRS) ; \
@@ -2558,7 +2574,14 @@ endif
 
 stamps/rt.stamp: stamps/rt-class-files.stamp
 if LACKS_SUN_AWT_TOOLKIT
-	(cd lib/rt ; \
+	(set -e ; \
+	 cd lib/rt ; \
+	 for dirs in $(ICEDTEA_BOOTSTRAP_RESOURCES) ; \
+	   do \
+	   destpath=`echo $$dirs|sed -e 's#$(LANGTOOLS)/##' -e 's#$(JDK_SHARE)/##'` ; \
+	   mkdir -p `dirname $$destpath` ; \
+	   cp -a ../../$$dirs $$destpath ; \
+	 done ; \
 	 $(ZIP) -qur $(abs_top_builddir)/bootstrap/boot/jre/lib/rt.jar \
 	 com java javax sun );
 endif

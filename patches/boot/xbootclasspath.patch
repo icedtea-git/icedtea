@@ -1,12 +1,17 @@
-diff -Nru ../openjdk.orig/openjdk-boot/corba/make/common/shared/Defs-java.gmk openjdk-boot/corba/make/common/shared/Defs-java.gmk
---- ../openjdk.orig/openjdk-boot/corba/make/common/shared/Defs-java.gmk	2009-09-04 02:41:12.000000000 +0100
-+++ openjdk-boot/corba/make/common/shared/Defs-java.gmk	2009-10-30 16:59:16.000000000 +0000
-@@ -135,31 +135,14 @@
+diff -Nru openjdk.orig/corba/make/common/shared/Defs-java.gmk openjdk/corba/make/common/shared/Defs-java.gmk
+--- openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk	2009-09-04 02:41:12.000000000 +0100
++++ openjdk-boot/corba/make/common/shared/Defs-java.gmk	2010-02-23 16:12:36.000000000 +0000
+@@ -131,35 +131,18 @@
+ CLASS_VERSION = -target $(TARGET_CLASS_VERSION)
+ JAVACFLAGS  += $(CLASS_VERSION)
+ JAVACFLAGS  += -encoding ascii
+-JAVACFLAGS  += -classpath $(BOOTDIR)/lib/tools.jar
++JAVACFLAGS  += -classpath $(BOOTDIR)/lib/rt.jar
  JAVACFLAGS  += $(OTHER_JAVACFLAGS)
  
  # Needed for javah
 -JAVAHFLAGS += -classpath $(CLASSBINDIR)
-+JAVAHFLAGS += -classpath $(CLASSBINDIR):$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)
++JAVAHFLAGS += -classpath $(CLASSBINDIR):$(ICEDTEA_RT):$(CLASSDESTDIR)
  
  # Langtools
 -ifdef LANGTOOLS_DIST
@@ -39,18 +44,19 @@ diff -Nru ../openjdk.orig/openjdk-boot/corba/make/common/shared/Defs-java.gmk op
  
  # Override of what javac to use (see deploy workspace)
  ifdef JAVAC
-diff -Nru ../openjdk.orig/openjdk-boot/jdk/make/common/shared/Defs-java.gmk openjdk-boot/jdk/make/common/shared/Defs-java.gmk
---- ../openjdk.orig/openjdk-boot/jdk/make/common/shared/Defs-java.gmk	2009-10-30 16:49:36.000000000 +0000
-+++ openjdk-boot/jdk/make/common/shared/Defs-java.gmk	2009-10-30 16:59:16.000000000 +0000
-@@ -136,33 +136,22 @@
+diff -Nru openjdk.orig/jdk/make/common/shared/Defs-java.gmk openjdk/jdk/make/common/shared/Defs-java.gmk
+--- openjdk-boot.orig/jdk/make/common/shared/Defs-java.gmk	2010-02-22 17:34:00.000000000 +0000
++++ openjdk-boot/jdk/make/common/shared/Defs-java.gmk	2010-02-22 18:47:49.000000000 +0000
+@@ -136,7 +136,7 @@
  JAVACFLAGS  += $(OTHER_JAVACFLAGS)
  
  # Needed for javah
 -JAVAHFLAGS += -bootclasspath $(CLASSBINDIR)
-+JAVAHFLAGS += -bootclasspath $(CLASSBINDIR):$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)
++JAVAHFLAGS += -bootclasspath $(CLASSBINDIR):$(ICEDTEA_RT):$(CLASSDESTDIR)
  
- # Needed for JAVADOC and BOOT_JAVACFLAGS
- NO_PROPRIETARY_API_WARNINGS = -XDignore.symbol.file=true
+ # Needed for javadoc to ensure it builds documentation
+ # against the newly built classes
+@@ -147,27 +147,15 @@
  
  # Langtools
  ifdef LANGTOOLS_DIST
@@ -66,20 +72,21 @@ diff -Nru ../openjdk.orig/openjdk-boot/jdk/make/common/shared/Defs-java.gmk open
 -		-jar $(JAVAH_JAR) $(JAVAHFLAGS)
    JAVADOC_CMD = $(BOOT_JAVA_CMD) \
  		"-Xbootclasspath/p:$(JAVADOC_JAR)$(CLASSPATH_SEPARATOR)$(JAVAC_JAR)$(CLASSPATH_SEPARATOR)$(DOCLETS_JAR)" \
- 		-jar $(JAVADOC_JAR)
+ 		-jar $(JAVADOC_JAR) $(JAVADOCFLAGS)
 -else
 -  # If no explicit tools, use boot tools (add VM flags in this case)
    JAVAC_CMD     = $(JAVA_TOOLS_DIR)/javac $(JAVAC_JVM_FLAGS) \
  		  $(JAVACFLAGS)
    JAVAH_CMD     = $(JAVA_TOOLS_DIR)/javah \
  		  $(JAVAHFLAGS)
--  JAVADOC_CMD   = $(JAVA_TOOLS_DIR)/javadoc $(JAVA_TOOLS_FLAGS:%=-J%)
+-  JAVADOC_CMD   = $(JAVA_TOOLS_DIR)/javadoc $(JAVA_TOOLS_FLAGS:%=-J%) \
+-  		  $(JAVADOCFLAGS)
  endif
  
  # Override of what javac to use (see deploy workspace)
-diff -Nru ../openjdk.orig/openjdk-boot/jdk/make/java/text/Makefile openjdk-boot/jdk/make/java/text/Makefile
---- ../openjdk.orig/openjdk-boot/jdk/make/java/text/Makefile	2009-05-08 16:10:43.000000000 +0100
-+++ openjdk-boot/jdk/make/java/text/Makefile	2009-10-30 16:59:16.000000000 +0000
+diff -Nru openjdk.orig/jdk/make/java/text/Makefile openjdk/jdk/make/java/text/Makefile
+--- openjdk-boot.orig/jdk/make/java/text/Makefile	2010-02-22 15:15:18.000000000 +0000
++++ openjdk-boot/jdk/make/java/text/Makefile	2010-02-22 18:45:39.000000000 +0000
 @@ -81,8 +81,8 @@
  		-sourcepath $(TEXT_SRCDIR) \
  		$(TEXT_SOURCES)
@@ -91,10 +98,10 @@ diff -Nru ../openjdk.orig/openjdk-boot/jdk/make/java/text/Makefile openjdk-boot/
  		-o $(TEXT_CLASSDIR) \
  		-spec $(UNICODEDATA)/UnicodeData.txt
  	@$(java-vm-cleanup)
-diff -Nru ../openjdk.orig/openjdk-boot/jdk/make/sun/text/Makefile openjdk-boot/jdk/make/sun/text/Makefile
---- ../openjdk.orig/openjdk-boot/jdk/make/sun/text/Makefile	2009-03-30 17:23:03.000000000 +0100
-+++ openjdk-boot/jdk/make/sun/text/Makefile	2009-10-30 16:59:16.000000000 +0000
-@@ -85,8 +85,9 @@
+diff -Nru openjdk.orig/jdk/make/sun/text/Makefile openjdk/jdk/make/sun/text/Makefile
+--- openjdk-boot.orig/jdk/make/sun/text/Makefile	2010-02-22 15:15:20.000000000 +0000
++++ openjdk-boot/jdk/make/sun/text/Makefile	2010-02-22 18:45:39.000000000 +0000
+@@ -86,8 +86,9 @@
  	$(BOOT_JAVAC_CMD) -d $(TEXT_CLASSES) \
  		-sourcepath $(TEXT_SRCDIR) \
  		$(BIRULES) $(BIINFO)

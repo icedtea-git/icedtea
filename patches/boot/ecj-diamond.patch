@@ -1,0 +1,51 @@
+diff -r 917976e88f76 src/share/classes/sun/nio/cs/AbstractCharsetProvider.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/nio/cs/AbstractCharsetProvider.java	Mon Feb 22 15:16:55 2010 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/nio/cs/AbstractCharsetProvider.java	Mon Feb 22 16:55:24 2010 +0000
+@@ -49,22 +49,22 @@
+     /* Maps canonical names to class names
+      */
+     private Map<String,String> classMap
+-        = new TreeMap<>(ASCIICaseInsensitiveComparator.CASE_INSENSITIVE_ORDER);
++        = new TreeMap<String,String>(ASCIICaseInsensitiveComparator.CASE_INSENSITIVE_ORDER);
+ 
+     /* Maps alias names to canonical names
+      */
+     private Map<String,String> aliasMap
+-        = new TreeMap<>(ASCIICaseInsensitiveComparator.CASE_INSENSITIVE_ORDER);
++        = new TreeMap<String,String>(ASCIICaseInsensitiveComparator.CASE_INSENSITIVE_ORDER);
+ 
+     /* Maps canonical names to alias-name arrays
+      */
+     private Map<String,String[]> aliasNameMap
+-        = new TreeMap<>(ASCIICaseInsensitiveComparator.CASE_INSENSITIVE_ORDER);
++        = new TreeMap<String,String[]>(ASCIICaseInsensitiveComparator.CASE_INSENSITIVE_ORDER);
+ 
+     /* Maps canonical names to soft references that hold cached instances
+      */
+     private Map<String,SoftReference<Charset>> cache
+-        = new TreeMap<>(ASCIICaseInsensitiveComparator.CASE_INSENSITIVE_ORDER);
++        = new TreeMap<String,SoftReference<Charset>>(ASCIICaseInsensitiveComparator.CASE_INSENSITIVE_ORDER);
+ 
+     private String packagePrefix;
+ 
+@@ -167,7 +167,7 @@
+         final ArrayList<String> ks;
+         synchronized (this) {
+             init();
+-            ks = new ArrayList<>(classMap.keySet());
++            ks = new ArrayList<String>(classMap.keySet());
+         }
+ 
+         return new Iterator<Charset>() {
+diff -r a9b4fde406d4 src/share/classes/sun/io/CharacterEncoding.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/io/CharacterEncoding.java	Thu Feb 18 13:31:46 2010 -0800
++++ openjdk-boot/jdk/src/share/classes/sun/io/CharacterEncoding.java	Wed Feb 24 11:10:05 2010 +0000
+@@ -54,7 +54,7 @@
+     private static volatile boolean installedAll;
+ 
+     static {
+-        aliasTable = new HashMap<>(460, 1.0f);                    /* MDA */
++        aliasTable = new HashMap<String,String>(460, 1.0f);                    /* MDA */
+ 
+         aliasTable.put("us-ascii",              "ASCII");
+         aliasTable.put("ascii",                 "ASCII");

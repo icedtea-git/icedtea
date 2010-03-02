@@ -1,3 +1,70 @@
+2010-03-02 Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-cc-interp-backedge.patch,
+	* patches/icedtea-ia64-bugfix.patch,
+	* patches/icedtea-nss-6763530.patch,
+	* patches/icedtea-test-atomic-operations.patch:
+	Dropped, applied upstream.
+	* Makefile.am:
+	Bump to b84 with updated changesets and JAXP
+	URL (m5->m6).
+	(ICEDTEA_RT): Set to main rt.jar not rt-closed.jar.
+	(JDK_SHARE): Use openjdk-boot for building bootstrap classes.
+	(JDK_SOLARIS): Likewise.
+	(LANGTOOLS): Likewise.
+	(CORBA): Likewise.
+	(ICEDTEA_BOOTSTRAP_RESOURCES): Include javac resources in
+	bootstrap.
+	(PLUGIN_DIR): Removed.
+	(PLUGIN_SRCDIR): Common source directory variable for both plugins.
+	(PLUGIN_BUILD_DIR): Likewise for build directory.
+	(ICEDTEAPLUGIN_TARGET): Updated to include full path.
+	(OPENJDK_TREE): Target for obtaining a patched OpenJDK tree.
+	(OPENJDK_BOOT_TREE): Likewise for openjdk-boot.
+	(ICEDTEA_PATCHES): Remove dead patches.
+	(ICEDTEA_BOOT_PATCHES): Add diamond patch if needed.
+	(stamps/extract-jaxws.stamp): Depend on drops being downloaded
+	as well.
+	(stamps/icedtea.stamp): Use OPENJDK_TREE rather than overlay.
+	The download and extract targets are still needed for other
+	options (visualvm, cacao, etc.).  Fix plugin variables and
+	prefix old plugin with build directory.
+	(stamps/icedtea-debug.stamp): Same as above.  Also add missing
+	-debug suffix to recent additions.
+	(stamps/icedtea-boot.stamp): Use OPENJDK_BOOT_TREE rather than
+	overlay.stamp and patch-boot.stamp.
+	(IcedTeaNPPlugin.o): Remove redundant target.
+	($(PLUGIN_BUILD_DIR)/%.o): Use generic rule for building plugin
+	objects.
+	($(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so): Prefix objects rather
+	than using cd.
+	(clean-IcedTeaNPPlugin): Update variable usage.
+	($(PLUGIN_BUILD_DIR)/IcedTeaPlugin.o): Add build directory prefix.
+	($(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so): Likewise.
+	(clean-IcedTeaPlugin): Just delete build tree.
+	(liveconnect-source-files.txt): Update plugin variable usage.
+	(rt-source-files.txt): Depend on $(OPENJDK_BOOT_TREE) ensuring
+	ecj patched versions are used.
+	(stamps/rt.stamp): Include resources specified by ICEDTEA_BOOTSTRAP_RESOURCES
+	in rt.jar.
+	* acinclude.m4:
+	(IT_DIAMOND_CHECK): Check if javac supports the use of Map<>.
+	* configure.ac: Add above check.
+	* patches/boot/ecj-diamond.patch:
+	Patch out use of diamond operator if not supported.
+	* patches/boot/fontconfig.patch: Update target dependencies
+	so they fit the new behaviour of copying bfc files rather than
+	generating them.  Use install-file rather than install-module-file
+	to also copy the file into libdir.
+	* patches/boot/xbootclasspath.patch:
+	Recreated.  Drop dead ICEDTEA_JCE variable.  Have rt.jar on the
+	classpath rather than the symlinked tools.jar.
+	* patches/hotspot/default/icedtea-memory-limits.patch,
+	* patches/hotspot/default/icedtea-params-cast-size_t.patch,
+	* patches/hotspot/default/icedtea-shark.patch,
+	* patches/icedtea-headers.patch:
+	Recreated.
+
 2010-01-25 Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
@@ -9194,7 +9261,7 @@
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java,
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamBufferAttributes.java,
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamSampleSpecification.java: Merged.
-	
+
 2008-12-04  Gary Benson  <gbenson@redhat.com>
 
 	* .hgignore: Ignore rt/javax/script/*.
