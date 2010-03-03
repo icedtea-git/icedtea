@@ -1978,7 +1978,6 @@ NPPLUGIN_OBJECTS=IcedTeaNPPlugin.o IcedTeaScriptablePluginObject.o \
 
 $(PLUGIN_BUILD_DIR)/%.o: $(PLUGIN_SRCDIR)/%.cc
 	mkdir -p $(PLUGIN_BUILD_DIR) && \
-	cd $(PLUGIN_BUILD_DIR) && \
 	$(CXX) $(CXXFLAGS) \
 	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
 	  -DPLUGIN_VERSION="\"$(PACKAGE_VERSION)$(ICEDTEA_REV)\"" \
@@ -2012,6 +2011,7 @@ $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.o: IcedTeaPlugin.cc
 	fi ; \
 	if [ -n "$(PKGVERSION)" ]; then plugin_version=" ($(PKGVERSION))"; fi; \
 	plugin_version=" $(PACKAGE_VERSION)$$revision$$plugin_version"; \
+	mkdir -p $(PLUGIN_BUILD_DIR) && \
 	$(CXX) $(CXXFLAGS) \
 	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
 	  -DPLUGIN_VERSION="\"$$plugin_version\"" \

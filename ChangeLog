@@ -1,6 +1,13 @@
 2010-03-03 Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	($(PLUGIN_BUILD_DIR)/%.o): Remove unnecessary cd.
+	($(PLUGIN_BUILD_DIR)/IcedTeaPlugin.o): Create
+	build directory.
+
+2010-03-03 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(PLUGIN_BUILD_DIR): Name the build directory
 	differently so it doesn't conflict when
 	srcdir==builddir.
