@@ -172,7 +172,7 @@ endif
 
 if ENABLE_NPPLUGIN
 PLUGIN_SRCDIR=$(abs_top_srcdir)/plugin/icedteanp
-PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin/icedteanp
+PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin.build/icedteanp
 ICEDTEANPPLUGIN_TARGET = $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaNPPlugin
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
@@ -181,7 +181,7 @@ JNLP_ABOUT_TARGET = extra-lib/about.jar
 else
 if ENABLE_PLUGIN
 PLUGIN_SRCDIR=$(abs_top_srcdir)/plugin/icedtea
-PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin/icedtea
+PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin.build/icedtea
 ICEDTEAPLUGIN_TARGET = $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
@@ -1997,10 +1997,8 @@ $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so: $(addprefix $(PLUGIN_BUILD_DIR)/,$(NPPLU
 	  -shared -o $@
 
 clean-IcedTeaNPPlugin:
-	cd $(PLUGIN_BUILD_DIR); \
-	rm -f *.o; \
-	rm -f IcedTeaNPPlugin.so; \
-	cd ../
+	rm -f $(addprefix $(PLUGIN_BUILD_DIR)/,$(NPPLUGIN_OBJECTS))
+	rm -f $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so
 endif
 
 if ENABLE_PLUGIN
@@ -2030,7 +2028,8 @@ $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so: $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.o
 	  -shared -o $@
 
 clean-IcedTeaPlugin:
-	rm -rf $(PLUGIN_BUILD_DIR)
+	rm -f $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.o
+	rm -f $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so
 endif
 
 stamps/plugin.stamp: $(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET)
@@ -2038,6 +2037,9 @@ stamps/plugin.stamp: $(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET)
 	touch $@
 
 clean-plugin: $(ICEDTEAPLUGIN_CLEAN) $(ICEDTEANPPLUGIN_CLEAN)
+	if [ -e $(PLUGIN_BUILD_DIR) ] ; then \
+	  rmdir $(PLUGIN_BUILD_DIR) ; \
+	fi
 	rm -f stamps/plugin.stamp
 
 liveconnect-source-files.txt:

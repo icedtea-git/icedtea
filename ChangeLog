@@ -1,3 +1,17 @@
+2010-03-03 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(PLUGIN_BUILD_DIR): Name the build directory
+	differently so it doesn't conflict when
+	srcdir==builddir.
+	(clean-IcedTeaNPPlugin): Avoid needless use
+	of cd by using absolute paths.
+	(clean-IcedTeaPlugin): Explicitly name files
+	as in clean-IcedTeaNPPlugin.
+	(clean-plugin): Remove the plugin build directory
+	using rmdir.  This will fail if anything unexpected
+	is left in the build directory.
+
 2010-03-02 Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/boot/genstubs-nofork.patch:
