@@ -1,0 +1,12 @@
+diff -r bab75805f846 make/build.xml
+--- openjdk-boot.orig/langtools/make/build.xml	Fri Feb 19 17:14:22 2010 +0000
++++ openjdk-boot/langtools/make/build.xml	Tue Feb 23 19:26:20 2010 +0000
+@@ -433,7 +433,7 @@
+         <genstubs
+             srcdir="${import.jdk.src.dir}" destdir="${build.genstubs.dir}"
+             includes="${import.jdk.stub.files}"
+-            fork="true" classpath="${build.toolclasses.dir}:${build.bootstrap.dir}/classes:${ant.home}/lib/ant.jar"
++            fork="false" classpath="${build.toolclasses.dir}:${build.bootstrap.dir}/classes:${ant.home}/lib/ant.jar"
+         />
+     </target>
+ 

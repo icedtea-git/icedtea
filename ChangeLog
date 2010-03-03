@@ -1,5 +1,12 @@
 2010-03-02 Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/boot/genstubs-nofork.patch:
+	Add missing patch.  This causes the
+	genstubs Ant task to not fork a new process.
+	Doing so with gcj causes the build to hang.
+
+2010-03-02 Andrew John Hughes  <ahughes@redhat.com>
+
 	* patches/icedtea-cc-interp-backedge.patch,
 	* patches/icedtea-ia64-bugfix.patch,
 	* patches/icedtea-nss-6763530.patch,
