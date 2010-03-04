@@ -1,3 +1,9 @@
+2010-03-04  Xerxes Rånby  <xerxes@zafena.se>
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(sharkCompiler::sharkCompiler): Move mattr define to make its memory
+	valid in the scope where it are used by the args vector.
+
 2010-03-01  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

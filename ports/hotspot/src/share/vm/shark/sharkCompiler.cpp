@@ -71,8 +71,8 @@ SharkCompiler::SharkCompiler()
   args.push_back(""); // program name
   args.push_back(cpu.c_str());
 
+  std::string mattr("-mattr=");
   if(gotCpuFeatures){
-    std::string mattr("-mattr=");
     for(StringMap<bool>::iterator I = Features.begin(),
       E = Features.end(); I != E; ++I){
       if(I->second){
