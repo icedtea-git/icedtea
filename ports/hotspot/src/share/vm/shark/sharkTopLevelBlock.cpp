@@ -88,6 +88,18 @@ void SharkTopLevelBlock::scan_for_traps() {
             Deoptimization::Action_reinterpret), bci());
           return;
       }
+
+      if (bc() == Bytecodes::_invokevirtual) {
+        klass = ciEnv::get_instance_klass_for_declared_method_holder(
+          iter()->get_declared_method_holder());
+        if (!klass->is_linked()) {
+          set_trap(
+            Deoptimization::make_trap_request(
+              Deoptimization::Reason_uninitialized,
+              Deoptimization::Action_reinterpret), bci());
+            return;
+        }
+      }
       break;
 
     case Bytecodes::_new:
@@ -1099,6 +1111,7 @@ void SharkTopLevelBlock::do_call() {
   Value *callee;
   if (call_is_virtual) {
     if (is_virtual) {
+      assert(klass->is_linked(), "scan_for_traps responsibility");
       int vtable_index = call_method->resolve_vtable_index(
         target()->holder(), klass);
       assert(vtable_index >= 0, "should be");
@@ -1153,14 +1166,12 @@ bool SharkTopLevelBlock::static_subtype_check(ciKlass* check_klass,
   // (GraphKit::static_subtype_check) it says that static
   // interface types cannot be trusted, and if opto can't
   // trust them then I assume we can't either.
-  if (!object_klass->is_interface()) {
+  if (object_klass->is_loaded() && !object_klass->is_interface()) {
     if (object_klass == check_klass)
       return true;
 
-    if (object_klass->is_loaded() && check_klass->is_loaded()) {
-      if (object_klass->is_subtype_of(check_klass))
-        return true;
-    }
+    if (check_klass->is_loaded() && object_klass->is_subtype_of(check_klass))
+      return true;
   }
 
   return false;

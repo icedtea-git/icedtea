@@ -1,5 +1,16 @@
 2010-03-11  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::compile_method): Catch typeflow failures more
+	generally.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::scan_for_traps): New trap.
+	(SharkTopLevelBlock::do_call): Add assertion to check the above.
+	(SharkTopLevelBlock::static_subtype_check): Deal with unloaded
+	object_klass.
+
+2010-03-11  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/src/cpu/zero/vm/shark_globals_zero.hpp:
 	Whitespace changes.
 
