@@ -1,3 +1,9 @@
+2010-03-11 Jon VanAlten  <jon.vanalten@redhat.com>
+
+	* patches/icedtea-systemtap.patch:
+	fix line numbers and context for the
+	openjdk/hotspot/src/share/vm/runtime/arguments.cpp hunk
+
 2010-03-03 Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
