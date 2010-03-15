@@ -1278,6 +1278,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
              return null;
          }
 
+         PluginMessageConsumer.registerPriorityWait(reference);
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
@@ -1323,6 +1324,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
              "plugin PluginProxyInfo reference " + reference + " " +
              requestURI, reference);
 
+         PluginMessageConsumer.registerPriorityWait(reference);
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {

@@ -42,15 +42,25 @@ package sun.applet;
 class PluginMessageHandlerWorker extends Thread {
 
 	private boolean free = true;
+	private boolean isPriorityWorker = false;
 	private int id;
 	private String message = null;
 	private SecurityManager sm;
 	PluginStreamHandler streamHandler = null;
+	PluginMessageConsumer consumer = null;
 
-	public PluginMessageHandlerWorker(PluginStreamHandler streamHandler, int id, SecurityManager sm) {
+	public PluginMessageHandlerWorker(
+	            PluginMessageConsumer consumer, 
+	            PluginStreamHandler streamHandler, int id, 
+	            SecurityManager sm, boolean isPriorityWorker) {
+
 		this.id = id;
 		this.streamHandler = streamHandler;
 		this.sm = sm;
+		this.isPriorityWorker = isPriorityWorker;
+		this.consumer = consumer;
+		
+		PluginDebug.debug("Worker " + this.id + " (priority=" + isPriorityWorker + ") created."); 
 	}
 
 	public void setmessage(String message) {
@@ -107,15 +117,27 @@ class PluginMessageHandlerWorker extends Thread {
 	}
 
 	public void busy() {
-		this.free = false;
+	    synchronized (this) {
+	        this.free = false;            
+        }
 	}
-
 	
 	public void free() {
-		this.free = true;
+	    synchronized (this) {
+	        this.free = true;
+
+	        // Signal the consumer that we are done in case it was waiting
+	        consumer.notifyWorkerIsFree(this); 
+	    }
 	}
-	
-	public boolean isFree() {
-		return free;
+
+	public boolean isPriority() {
+	    return isPriorityWorker;
+	}
+
+	public boolean isFree(boolean prioritized) {
+	    synchronized (this) {
+	        return free && (prioritized == isPriorityWorker);
+	    }
 	}
 }

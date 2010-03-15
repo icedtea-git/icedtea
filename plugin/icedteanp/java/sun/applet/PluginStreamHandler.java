@@ -141,7 +141,7 @@ public class PluginStreamHandler {
     				//System.err.println("Total wait time: " + totalWait);
 
     				if (s != null) {
-    					consumer.consume(s);
+    					consumer.queue(s);
     				} else {
     					try {
     						// Close input/output channels to plugin.
@@ -189,31 +189,6 @@ public class PluginStreamHandler {
     	};
     	
     	listenerThread.start();
-    }
-    
-    public void postMessage(String s) {
-
-    	if (s == null || s.equals("shutdown")) {
-    	    try {
-    		// Close input/output channels to plugin.
-    		pluginInputReader.close();
-    		pluginOutputWriter.close();
-    	    } catch (IOException exception) {
-    		// Deliberately ignore IOException caused by broken
-    		// pipe since plugin may have already detached.
-    	    }
-    	    AppletSecurityContextManager.dumpStore(0);
-    	    PluginDebug.debug("APPLETVIEWER: exiting appletviewer");
-    	    System.exit(0);
-    	}
-
-   		//PluginAppletSecurityContext.contexts.get(0).store.dump();
-   		PluginDebug.debug("Plugin posted: " + s);
-
-		PluginDebug.debug("Consuming " + s);
-		consumer.consume(s);
-
-   		PluginDebug.debug("Added to queue");
     }
     
     public void handleMessage(String message) throws PluginException {

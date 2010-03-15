@@ -1,3 +1,46 @@
+2010-03-13  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java
+	(requestPluginCookieInfo): Register cookie info as a priority message.
+	(requestPluginProxyInfo): Register proxy info as a priority message.
+	* plugin/icedteanp/java/sun/applet/PluginMessageConsumer.java: Re-designed
+	message consumption to implement priority queuing and parallel
+	initialization limits so that an arbitrary number of applets can load
+	without blocking one another, all in a thread-safe manner.
+	(registerPriorityWait): New method. Registers a string that is
+	considered a "priority" string, which gets delegated to dedicated worker
+	threads.
+	(unRegisterPriorityWait): Unregisters a string so that it is no longer
+	a priority.
+	(PluginMessageConsumer): Do not create any workers when starting.
+	(consume): Remove method. Consumption is now done in a separate dedicated
+	thread to prevent blocking.
+	(getPriorityStrIfPriority):	New method. If the given message is priority,
+	return why (i.e the 'priority string'it matched).
+	(isInInit): New method. Returns if the plugin is currently initializing an
+	applet.
+	(addToInitWorkers): New method. Adds given worker to list of workers
+	currently initializting applets.
+	(okayToProcess): New method. Returns whether or not it is okay to process
+	the given applet.
+	(notifyWorkerIsFree): New method. Notifies this class that a worker has
+	just become free.
+	(queue): Queues the given message for consumption.
+	(ConsumerThread): New protected inner (thread) class. Responsible for
+	consuming messages in the queue, and regueuing them if consumption if not
+	possible.
+	(getFreeWorker): Changed to be non-blocking, and return either a priority
+	worker or a normal worker depending on what is requested.
+	* plugin/icedteanp/java/sun/applet/PluginMessageHandlerWorker.java
+	(PluginMessageHandlerWorker): Set new priority and consumer variables.
+	(busy): Make thread-safe by waiting on same property that free() waits on.
+	(free): Make thread-safe by waiting on same property that busy() waits on.
+	(isPriority): New method. Returns of worker is a priority worker.
+	(isFree): Made thread-safe, and accounts for priority.
+	* plugin/icedteanp/java/sun/applet/PluginStreamHandler.java
+	(startProcessing): Call consumer.queue() instead of consumer.consume().
+	(postMessage): Remove unused method.
+
 2010-03-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
