@@ -1,3 +1,12 @@
+2010-03-16  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc
+	(newMessageOnBus): Added support for finalize.
+	(finalize): New function. Decrements object reference count by one.
+	(queue_processor): Added support for finalize.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.h: Removed unused
+	function declerations. Added decleration for finalize.
+
 2010-03-15  Andrew John Hughes  <ahughes@redhat.com>
 
 	NetX/plugin build sync (2/3):

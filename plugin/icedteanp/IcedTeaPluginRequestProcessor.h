@@ -72,14 +72,6 @@ typedef struct async_call_thread_data
 /* Internal request reference counter */
 static long internal_req_ref_counter;
 
-// JS request processor methods
-static void* requestFromMainThread();
-static void* getSlot(void* tdata);
-static void* setSlot(void* tdata);
-static void* removeMember(void* tdata);
-static void* call(void* tdata);
-static void* finalize(void* tdata);
-
 /* Given a value and type, performs the appropriate Java->JS type
  * mapping and puts it in the given variant */
 
@@ -147,6 +139,8 @@ class PluginRequestProcessor : public BusSubscriber
         /* Evaluate the given script */
         void call(std::vector<std::string>* message_parts);
 
+        /* Decrements reference count for given object */
+        void finalize(std::vector<std::string>* message_parts);
 };
 
 #endif // __ICEDTEAPLUGINREQUESTPROCESSOR_H__

@@ -119,7 +119,8 @@ PluginRequestProcessor::newMessageOnBus(const char* message)
                    command == "Call"      ||
                    command == "GetSlot"   ||
                    command == "SetSlot"   ||
-                   command == "Eval")
+                   command == "Eval"      ||
+                   command == "Finalize")
         {
 
             // Update queue synchronously
@@ -658,6 +659,53 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
     pthread_mutex_unlock(&tc_mutex);
 }
 
+/**
+ * Decrements reference count to given object
+ *
+ * @param message_parts The request message.
+ */
+
+void
+PluginRequestProcessor::finalize(std::vector<std::string>* message_parts)
+{
+    std::string type;
+    std::string command;
+    int reference;
+    std::string response = std::string();
+    std::string variant_ptr_str = std::string();
+    NPVariant* variant_ptr;
+    NPObject* window_ptr;
+    int id;
+
+    type = message_parts->at(0);
+    id = atoi(message_parts->at(1).c_str());
+    reference = atoi(message_parts->at(3).c_str());
+    variant_ptr_str = message_parts->at(5);
+
+    NPP instance;
+    get_instance_from_id(id, instance);
+
+    variant_ptr = (NPVariant*) IcedTeaPluginUtilities::stringToJSID(variant_ptr_str);
+    window_ptr = NPVARIANT_TO_OBJECT(*variant_ptr);
+    browser_functions.releaseobject(window_ptr);
+
+    // remove reference
+    IcedTeaPluginUtilities::removeInstanceID(variant_ptr);
+
+    // clear memory
+    free(variant_ptr);
+
+    // We need the context 0 for backwards compatibility with the Java side
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &response);
+    response += " JavaScriptFinalize";
+
+    plugin_to_java_bus->post(response.c_str());
+
+    delete message_parts;
+
+}
+
+
 void*
 queue_processor(void* data)
 {
@@ -718,6 +766,12 @@ queue_processor(void* data)
                 // write methods are synchronized
                 pthread_mutex_lock(&syn_write_mutex);
                 processor->setMember(message_parts);
+                pthread_mutex_unlock(&syn_write_mutex);
+            } else if (command == "Finalize")
+            {
+                // write methods are synchronized
+                pthread_mutex_lock(&syn_write_mutex);
+                processor->finalize(message_parts);
                 pthread_mutex_unlock(&syn_write_mutex);
             } else
             {
