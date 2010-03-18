@@ -1,3 +1,9 @@
+2010-03-18  Pavel Tisnovsky <ptisnovs@redhat.com>
+
+	* patches/jtreg-httpTest.patch: new regression test
+	to check if the cacerts keytool database is configured and
+	created properly and if SSL is really working.
+
 2010-03-17  Matthias Klose  <doko@ubuntu.com>
 
         * NEWS: More news.

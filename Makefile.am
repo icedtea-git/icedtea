@@ -312,7 +312,8 @@ ICEDTEA_PATCHES = \
 	patches/sh4-support.patch \
 	patches/extensions/netx.patch \
 	patches/extensions/netx-dist.patch \
-	patches/extensions/netx-umask.patch
+	patches/extensions/netx-umask.patch \
+	patches/jtreg-httpTest.patch
 
 # Conditional patches
 
