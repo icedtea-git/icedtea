@@ -434,8 +434,8 @@ void start_jvm_if_needed()
   // pipe.
 
   // in_pipe_name
-  in_pipe_name = g_strdup_printf ("%s/icedteanp-appletviewer-to-plugin",
-                                         data_directory);
+  in_pipe_name = g_strdup_printf ("%s/%s-icedteanp-appletviewer-to-plugin",
+                                         data_directory, getenv ("USER"));
   if (!in_pipe_name)
     {
       PLUGIN_ERROR ("Failed to create input pipe name.");
@@ -449,7 +449,7 @@ void start_jvm_if_needed()
   unlink (in_pipe_name);
 
   PLUGIN_DEBUG_1ARG ("GCJ_New: creating input fifo: %s\n", in_pipe_name);
-  if (mkfifo (in_pipe_name, 0700) == -1 && errno != EEXIST)
+  if (mkfifo (in_pipe_name, 0600) == -1 && errno != EEXIST)
     {
       PLUGIN_ERROR_TWO ("Failed to create input pipe", strerror (errno));
       np_error = NPERR_GENERIC_ERROR;
@@ -461,8 +461,8 @@ void start_jvm_if_needed()
   // output pipe.
 
   // out_pipe_name
-  out_pipe_name = g_strdup_printf ("%s/icedteanp-plugin-to-appletviewer",
-                                         data_directory);
+  out_pipe_name = g_strdup_printf ("%s/%s-icedteanp-plugin-to-appletviewer",
+                                         data_directory, getenv ("USER"));
 
   if (!out_pipe_name)
     {
@@ -475,7 +475,7 @@ void start_jvm_if_needed()
   unlink (out_pipe_name);
 
   PLUGIN_DEBUG_1ARG ("GCJ_New: creating output fifo: %s\n", out_pipe_name);
-  if (mkfifo (out_pipe_name, 0700) == -1 && errno != EEXIST)
+  if (mkfifo (out_pipe_name, 0600) == -1 && errno != EEXIST)
     {
       PLUGIN_ERROR_TWO ("Failed to create output pipe", strerror (errno));
       np_error = NPERR_GENERIC_ERROR;
@@ -1461,19 +1461,23 @@ plugin_start_appletviewer (GCJPluginData* data)
 
   if (plugin_debug)
   {
-      command_line = (gchar**) malloc(sizeof(gchar*)*6);
+      command_line = (gchar**) malloc(sizeof(gchar*)*8);
       command_line[0] = g_strdup(appletviewer_executable);
       command_line[1] = g_strdup("-Xdebug");
       command_line[2] = g_strdup("-Xnoagent");
       command_line[3] = g_strdup("-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n");
       command_line[4] = g_strdup("sun.applet.PluginMain");
-      command_line[5] = NULL;
+      command_line[5] = g_strdup(out_pipe_name);
+      command_line[6] = g_strdup(in_pipe_name);
+      command_line[7] = NULL;
    } else
    {
-       command_line = (gchar**) malloc(sizeof(gchar)*3);
+       command_line = (gchar**) malloc(sizeof(gchar)*5);
        command_line[0] = g_strdup(appletviewer_executable);
        command_line[1] = g_strdup("sun.applet.PluginMain");
-       command_line[2] = NULL;
+       command_line[2] = g_strdup(out_pipe_name);
+       command_line[3] = g_strdup(in_pipe_name);
+       command_line[4] = NULL;
    }
 
   if (!g_spawn_async (NULL, command_line, NULL, (GSpawnFlags) G_SPAWN_DO_NOT_REAP_CHILD,
@@ -1963,7 +1967,7 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
 
   // Make sure the plugin data directory exists, creating it if
   // necessary.
-  data_directory = g_strconcat (getenv ("HOME"), "/.icedteaplugin", NULL);
+  data_directory = g_strconcat (P_tmpdir, NULL);
   if (!data_directory)
     {
       PLUGIN_ERROR ("Failed to create data directory name.");
@@ -1971,20 +1975,34 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
     }
   NPError np_error = NPERR_NO_ERROR;
   gchar* filename = NULL;
+
+  // If P_tmpdir does not exist, try /tmp directly
+
   if (!g_file_test (data_directory,
                     (GFileTest) (G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)))
     {
       int file_error = 0;
 
-      file_error = g_mkdir (data_directory, 0700);
-      if (file_error != 0)
-        {
-          PLUGIN_ERROR_THREE ("Failed to create data directory",
-                              data_directory,
-                              strerror (errno));
-          np_error = NPERR_GENERIC_ERROR;
-          goto cleanup_data_directory;
-        }
+      data_directory = g_strconcat ("/tmp", NULL);
+        if (!data_directory)
+          {
+            PLUGIN_ERROR ("Failed to create data directory name.");
+            return NPERR_OUT_OF_MEMORY_ERROR;
+          }
+
+    }
+
+  // If that doesn't exit, bail
+  if (!g_file_test (data_directory,
+                    (GFileTest) (G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)))
+    {
+      PLUGIN_ERROR_THREE ("Temp directory does not exist: ",
+                          data_directory,
+                          strerror (errno));
+
+      np_error = NPERR_GENERIC_ERROR;
+            goto cleanup_data_directory;
+
     }
 
   // Set appletviewer_executable.

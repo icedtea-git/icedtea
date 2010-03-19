@@ -1,3 +1,12 @@
+2010-03-19  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaNPPlugin.cc
+	(start_jvm_if_needed): Create pipes in a temporary dir instead of users
+	home directory. 
+	(plugin_start_appletviewer): Pass pipe names to PluginMain when initializing Java.
+	* plugin/icedteanp/java/sun/applet/PluginMain.java: Receive pipe names
+	during initialization.
+
 2010-03-18  Pavel Tisnovsky <ptisnovs@redhat.com>
 
 	* patches/jtreg-httpTest.patch: new regression test

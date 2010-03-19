@@ -107,9 +107,13 @@ public class PluginMain
     public static void main(String args[])
 	throws IOException
     {
+        if (args.length != 2 || !(new File(args[0]).exists()) || !(new File(args[1]).exists())) {
+            System.err.println("Invalid pipe names provided. Refusing to proceed.");
+            System.exit(1);
+        }
 
     	try {
-    		PluginMain pm = new PluginMain(System.getProperty("user.home") + "/.icedteaplugin/icedteanp-plugin-to-appletviewer", System.getProperty("user.home") + "/.icedteaplugin/icedteanp-appletviewer-to-plugin");
+    		PluginMain pm = new PluginMain(args[0], args[1]);
     	} catch (Exception e) {
     		e.printStackTrace();
     		System.err.println("Something very bad happened. I don't know what to do, so I am going to exit :(");
