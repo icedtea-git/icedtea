@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008, 2009 Red Hat, Inc.
+ * Copyright 2008, 2009, 2010 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -40,11 +40,16 @@ class SharkStack : public SharkCompileInvariants {
     : SharkCompileInvariants(parent) {}
 
  protected:
-  void initialize(llvm::Value* method);
+  void initialize(llvm::Value* method, bool setup_sp_and_method);
 
  protected:
-  void CreateHardStackOverflowCheck(llvm::Value* sp);
-  void CreateSoftStackOverflowCheck(llvm::Value* sp);
+  void CreateStackOverflowCheck(llvm::Value* sp, llvm::Value* method);
+
+ private:
+  void CreateCheckStack(llvm::Value*      base,
+                        llvm::Value*      sp,
+                        llvm::BasicBlock* overflow,
+                        llvm::BasicBlock* no_overflow);
 
   // Properties of the method being compiled
  protected:
@@ -56,6 +61,10 @@ class SharkStack : public SharkCompileInvariants {
   // BasicBlock creation
  protected:
   virtual llvm::BasicBlock* CreateBlock(const char* name = "") const = 0;
+
+  // Interpreter entry point for bailouts
+ protected:
+  virtual address interpreter_entry_point() const = 0;
 
   // Interface with the Zero stack
  private:
@@ -235,6 +244,10 @@ class SharkStackWithNormalFrame : public SharkStack {
   // BasicBlock creation
  private:
   llvm::BasicBlock* CreateBlock(const char* name = "") const;
+
+  // Interpreter entry point for bailouts
+ private:
+  address interpreter_entry_point() const;
 };
 
 class SharkStackWithNativeFrame : public SharkStack {
@@ -261,4 +274,8 @@ class SharkStackWithNativeFrame : public SharkStack {
   // BasicBlock creation
  private:
   llvm::BasicBlock* CreateBlock(const char* name = "") const;
+
+  // Interpreter entry point for bailouts
+ private:
+  address interpreter_entry_point() const;
 };

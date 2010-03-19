@@ -43,10 +43,16 @@ class SharkRuntime : public AllStatic {
 
   static void register_finalizer(JavaThread* thread, oop object);
 
+  static void throw_ArithmeticException(JavaThread* thread,
+                                        const char* file,
+                                        int         line);
   static void throw_ArrayIndexOutOfBoundsException(JavaThread* thread,
                                                    const char* file,
                                                    int         line,
                                                    int         index);
+  static void throw_ClassCastException(JavaThread* thread,
+                                       const char* file,
+                                       int         line);
   static void throw_NullPointerException(JavaThread* thread,
                                          const char* file,
                                          int         line);

@@ -1,3 +1,59 @@
+2010-03-19  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::do_field_access): Indentation fixes.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::throw_ArithmeticException): New method.
+	(SharkBuilder::throw_ClassCastException): Likewise.
+	(SharkBuilder::frame_address): Likewise.
+	(SharkBuilder::CreateGetFrameAddress): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::throw_ArithmeticException): New method.
+	(SharkBuilder::throw_ClassCastException): Likewise.
+	(SharkBuilder::frame_address): Likewise.
+	(SharkBuilder::CreateGetFrameAddress): Likewise.
+	(SharkBuilder::CreateMemoryBarrier): Actually do something on x86.
+	* ports/hotspot/src/share/vm/shark/sharkNativeWrapper.cpp
+	(SharkNativeWrapper::initialize): Implemented UseMembar code.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp
+	(SharkRuntime::throw_ArithmeticException): New method.
+	(SharkRuntime::throw_ClassCastException): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp
+	(SharkRuntime::throw_ArithmeticException): New method.
+	(SharkRuntime::throw_ClassCastException): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStack.hpp
+	(SharkStack::initialize): Added setup_sp_and_method parameter.
+	(SharkStack::CreateStackOverflowCheck): New method.
+	(SharkStack::CreateCheckStack): Likewise.
+	(SharkStack::interpreter_entry_point): Likewise.
+	(SharkStackWithNormalFrame::interpreter_entry_point): Likewise.
+	(SharkStackWithNativeFrame::interpreter_entry_point): Likewise.
+	(SharkStack::CreateHardStackOverflowCheck): Removed.
+	(SharkStack::CreateSoftStackOverflowCheck): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStack.cpp
+	(SharkStack::initialize): Added setup_sp_and_method parameter,
+	and changed to use new stack overflow detection code.
+	(SharkStack::CreateStackOverflowCheck): New method.
+	(SharkStack::CreateCheckStack): Likewise.
+	(SharkStack::CreateHardStackOverflowCheck): Removed.
+	(SharkStack::CreateSoftStackOverflowCheck): Likewise.
+	(SharkStackWithNormalFrame::interpreter_entry_point): Likewise.
+	(SharkStackWithNativeFrame::interpreter_entry_point): Likewise.
+	(SharkStackWithNormalFrame::SharkStackWithNormalFrame): Updated.
+	(SharkStackWithNativeFrame::SharkStackWithNativeFrame): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::static_field_ok_in_clinit): New method.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::scan_for_traps): New trap.
+	(SharkTopLevelBlock::static_field_ok_in_clinit): New method.
+	(SharkTopLevelBlock::zero_check_value): Throw arithmetic exception
+	for divide by zero.
+	(SharkTopLevelBlock::do_full_instance_check): Throw class cast
+	exception.
+	(SharkTopLevelBlock::do_monitorexit): Do not handle exceptions.
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp:
+	Make debugging options available in product builds.
+
 2010-03-19  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaNPPlugin.cc

@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008, 2009 Red Hat, Inc.
+ * Copyright 2008, 2009, 2010 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -72,6 +72,18 @@ void SharkTopLevelBlock::scan_for_traps() {
             Deoptimization::Action_none), bci());
         return;
       }
+
+      // Bail out if we are trying to access a static variable
+      // before the class initializer has completed.
+      if (!is_field && !field->holder()->is_initialized()) {
+        if (!static_field_ok_in_clinit(field)) {
+          set_trap(
+            Deoptimization::make_trap_request(
+              Deoptimization::Reason_uninitialized,
+              Deoptimization::Action_reinterpret), bci());
+          return;
+        }
+      }
       break;
 
     case Bytecodes::_invokestatic:
@@ -137,6 +149,31 @@ void SharkTopLevelBlock::scan_for_traps() {
         ciblock()->trap_index()), ciblock()->trap_bci());
     return;
   }
+}
+
+bool SharkTopLevelBlock::static_field_ok_in_clinit(ciField* field) {
+  assert(field->is_static(), "should be");
+
+  // This code is lifted pretty much verbatim from C2's
+  // Parse::static_field_ok_in_clinit() in parse3.cpp.
+  bool access_OK = false;
+  if (target()->holder()->is_subclass_of(field->holder())) {
+    if (target()->is_static()) {
+      if (target()->name() == ciSymbol::class_initializer_name()) {
+        // It's OK to access static fields from the class initializer
+        access_OK = true;
+      }
+    }
+    else {
+      if (target()->name() == ciSymbol::object_initializer_name()) {
+        // It's also OK to access static fields inside a constructor,
+        // because any thread calling the constructor must first have
+        // synchronized on the class by executing a "new" bytecode.
+        access_OK = true;
+      }
+    }
+  }
+  return access_OK;
 }
 
 SharkState* SharkTopLevelBlock::entry_state() {
@@ -329,7 +366,13 @@ void SharkTopLevelBlock::zero_check_value(SharkValue* value,
       EX_CHECK_NONE);
   }
   else {
-    builder()->CreateUnimplemented(__FILE__, __LINE__);
+    call_vm(
+      builder()->throw_ArithmeticException(),
+      builder()->CreateIntToPtr(
+        LLVMValue::intptr_constant((intptr_t) __FILE__),
+        PointerType::getUnqual(SharkType::jbyte_type())),
+      LLVMValue::jint_constant(__LINE__),
+      EX_CHECK_NONE);
   }
 
   Value *pending_exception = get_pending_exception();
@@ -1344,9 +1387,21 @@ void SharkTopLevelBlock::do_full_instance_check(ciKlass* klass) {
       success, failure);
 
     builder()->SetInsertPoint(failure);
-    builder()->CreateUnimplemented(__FILE__, __LINE__);
-    builder()->CreateUnreachable();
+    SharkState *saved_state = current_state()->copy();
 
+    call_vm(
+      builder()->throw_ClassCastException(),
+      builder()->CreateIntToPtr(
+        LLVMValue::intptr_constant((intptr_t) __FILE__),
+        PointerType::getUnqual(SharkType::jbyte_type())),
+      LLVMValue::jint_constant(__LINE__),
+      EX_CHECK_NONE);
+
+    Value *pending_exception = get_pending_exception();
+    clear_pending_exception();
+    handle_exception(pending_exception, EX_CHECK_FULL);
+
+    set_current_state(saved_state);
     builder()->SetInsertPoint(success);
     push(SharkValue::create_generic(klass, object, false));
   }
@@ -1652,7 +1707,7 @@ void SharkTopLevelBlock::do_monitorenter() {
 
 void SharkTopLevelBlock::do_monitorexit() {
   pop(); // don't need this (monitors are block structured)
-  release_lock(EX_CHECK_FULL);
+  release_lock(EX_CHECK_NO_CATCH);
 }
 
 void SharkTopLevelBlock::acquire_lock(Value *lockee, int exception_action) {

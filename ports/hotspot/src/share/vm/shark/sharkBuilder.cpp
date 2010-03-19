@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008, 2009 Red Hat, Inc.
+ * Copyright 2008, 2009, 2010 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -224,9 +224,19 @@ Value* SharkBuilder::safepoint() {
   return make_function((address) SafepointSynchronize::block, "T", "v");
 }
 
+Value* SharkBuilder::throw_ArithmeticException() {
+  return make_function(
+    (address) SharkRuntime::throw_ArithmeticException, "TCi", "v");
+}
+
 Value* SharkBuilder::throw_ArrayIndexOutOfBoundsException() {
   return make_function(
     (address) SharkRuntime::throw_ArrayIndexOutOfBoundsException, "TCii", "v");
+}
+
+Value* SharkBuilder::throw_ClassCastException() {
+  return make_function(
+    (address) SharkRuntime::throw_ClassCastException, "TCi", "v");
 }
 
 Value* SharkBuilder::throw_NullPointerException() {
@@ -374,6 +384,10 @@ Value* SharkBuilder::cmpxchg_ptr() {
     "Xxx", "x");
 }
 
+Value* SharkBuilder::frame_address() {
+  return make_function("llvm.frameaddress", "i", "C");
+}
+
 Value* SharkBuilder::memory_barrier() {
   return make_function(
 #ifdef ARM
@@ -414,13 +428,17 @@ CallInst* SharkBuilder::CreateCmpxchgPtr(Value* exchange_value,
   return CreateCall3(cmpxchg_ptr(), dst, compare_value, exchange_value);
 }
 
+CallInst* SharkBuilder::CreateGetFrameAddress() {
+  return CreateCall(frame_address(), LLVMValue::jint_constant(0));
+}
+
 CallInst *SharkBuilder::CreateMemoryBarrier(int flags) {
   Value *args[] = {
     LLVMValue::bit_constant((flags & BARRIER_LOADLOAD) ? 1 : 0),
     LLVMValue::bit_constant((flags & BARRIER_LOADSTORE) ? 1 : 0),
     LLVMValue::bit_constant((flags & BARRIER_STORELOAD) ? 1 : 0),
     LLVMValue::bit_constant((flags & BARRIER_STORESTORE) ? 1 : 0),
-    LLVMValue::bit_constant(0)};
+    LLVMValue::bit_constant(1)};
 
   return CreateCall(memory_barrier(), args, args + 5);
 }

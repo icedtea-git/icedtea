@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008, 2009 Red Hat, Inc.
+ * Copyright 2008, 2009, 2010 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -1043,18 +1043,20 @@ void SharkBlock::do_field_access(bool is_get, bool is_field) {
     if (is_get) {
       Value *field_value = builder()->CreateLoad(addr);
 
-      if (field_type != stack_type)
-      field_value = builder()->CreateIntCast(
-        field_value, stack_type, basic_type != T_CHAR);
+      if (field_type != stack_type) {
+        field_value = builder()->CreateIntCast(
+          field_value, stack_type, basic_type != T_CHAR);
+      }
 
       value = SharkValue::create_generic(field->type(), field_value, false);
     }
     else {
       Value *field_value = value->generic_value();
 
-      if (field_type != stack_type)
+      if (field_type != stack_type) {
         field_value = builder()->CreateIntCast(
           field_value, field_type, basic_type != T_CHAR);
+      }
 
       builder()->CreateStore(field_value, addr);
 

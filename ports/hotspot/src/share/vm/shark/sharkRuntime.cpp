@@ -133,6 +133,15 @@ JRT_ENTRY(void, SharkRuntime::register_finalizer(JavaThread* thread,
   instanceKlass::register_finalizer(instanceOop(object), CHECK);
 JRT_END
 
+JRT_ENTRY(void, SharkRuntime::throw_ArithmeticException(JavaThread* thread,
+                                                        const char* file,
+                                                        int         line))
+  Exceptions::_throw_msg(
+    thread, file, line,
+    vmSymbols::java_lang_ArithmeticException(),
+    "");
+JRT_END
+
 JRT_ENTRY(void, SharkRuntime::throw_ArrayIndexOutOfBoundsException(
                                                      JavaThread* thread,
                                                      const char* file,
@@ -144,6 +153,15 @@ JRT_ENTRY(void, SharkRuntime::throw_ArrayIndexOutOfBoundsException(
     thread, file, line,
     vmSymbols::java_lang_ArrayIndexOutOfBoundsException(),
     msg);
+JRT_END
+
+JRT_ENTRY(void, SharkRuntime::throw_ClassCastException(JavaThread* thread,
+                                                       const char* file,
+                                                       int         line))
+  Exceptions::_throw_msg(
+    thread, file, line,
+    vmSymbols::java_lang_ClassCastException(),
+    "");
 JRT_END
 
 JRT_ENTRY(void, SharkRuntime::throw_NullPointerException(JavaThread* thread,

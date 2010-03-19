@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008, 2009 Red Hat, Inc.
+ * Copyright 2008, 2009, 2010 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -96,7 +96,9 @@ class SharkBuilder : public llvm::IRBuilder<> {
   llvm::Value* multianewarray();
   llvm::Value* register_finalizer();
   llvm::Value* safepoint();
+  llvm::Value* throw_ArithmeticException();
   llvm::Value* throw_ArrayIndexOutOfBoundsException();
+  llvm::Value* throw_ClassCastException();
   llvm::Value* throw_NullPointerException();
 
   // Intrinsics and external functions, part 2: High-level non-VM calls.
@@ -145,6 +147,7 @@ class SharkBuilder : public llvm::IRBuilder<> {
  private:
   llvm::Value* cmpxchg_int();
   llvm::Value* cmpxchg_ptr();
+  llvm::Value* frame_address();
   llvm::Value* memory_barrier();
   llvm::Value* memset();
   llvm::Value* unimplemented();
@@ -159,6 +162,7 @@ class SharkBuilder : public llvm::IRBuilder<> {
   llvm::CallInst* CreateCmpxchgPtr(llvm::Value* exchange_value,
                                    llvm::Value* dst,
                                    llvm::Value* compare_value);
+  llvm::CallInst* CreateGetFrameAddress();
   llvm::CallInst* CreateMemoryBarrier(int flags);
   llvm::CallInst* CreateMemset(llvm::Value* dst,
                                llvm::Value* value,

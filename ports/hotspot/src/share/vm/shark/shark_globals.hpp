@@ -1,6 +1,6 @@
 /*
  * Copyright 2000-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008, 2009 Red Hat, Inc.
+ * Copyright 2008, 2009, 2010 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,10 +23,6 @@
  *
  */
 
-//
-// Defines all global flags used by the shark compiler.
-//
-
 #define SHARK_FLAGS(develop, develop_pd, product, product_pd, diagnostic, notproduct) \
                                                                               \
   product(intx, MaxNodeLimit, 65000,                                          \
@@ -40,19 +36,19 @@
   develop(ccstr, SharkPrintTypeflowOf, NULL,                                  \
           "Print the typeflow of the specified method")                       \
                                                                               \
-  develop(ccstr, SharkPrintBitcodeOf, NULL,                                   \
+  diagnostic(ccstr, SharkPrintBitcodeOf, NULL,                                \
           "Print the LLVM bitcode of the specified method")                   \
                                                                               \
-  develop(ccstr, SharkPrintAsmOf, NULL,                                       \
+  diagnostic(ccstr, SharkPrintAsmOf, NULL,                                    \
           "Print the asm of the specified method")                            \
                                                                               \
   develop(bool, SharkTraceBytecodes, false,                                   \
           "Trace bytecode compilation")                                       \
                                                                               \
-  develop(bool, SharkTraceInstalls, false,                                    \
+  diagnostic(bool, SharkTraceInstalls, false,                                 \
           "Trace method installation")                                        \
                                                                               \
-  develop(bool, SharkPerformanceWarnings, false,                              \
+  diagnostic(bool, SharkPerformanceWarnings, false,                           \
           "Warn about things that could be made faster")                      \
 
 SHARK_FLAGS(DECLARE_DEVELOPER_FLAG, DECLARE_PD_DEVELOPER_FLAG, DECLARE_PRODUCT_FLAG, DECLARE_PD_PRODUCT_FLAG, DECLARE_DIAGNOSTIC_FLAG, DECLARE_NOTPRODUCT_FLAG)
