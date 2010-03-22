@@ -434,8 +434,8 @@ void start_jvm_if_needed()
   // pipe.
 
   // in_pipe_name
-  in_pipe_name = g_strdup_printf ("%s/%s-icedteanp-appletviewer-to-plugin",
-                                         data_directory, getenv ("USER"));
+  in_pipe_name = g_strdup_printf ("%s/%d-icedteanp-appletviewer-to-plugin",
+                                         data_directory, getpid());
   if (!in_pipe_name)
     {
       PLUGIN_ERROR ("Failed to create input pipe name.");
@@ -461,8 +461,8 @@ void start_jvm_if_needed()
   // output pipe.
 
   // out_pipe_name
-  out_pipe_name = g_strdup_printf ("%s/%s-icedteanp-plugin-to-appletviewer",
-                                         data_directory, getenv ("USER"));
+  out_pipe_name = g_strdup_printf ("%s/%d-icedteanp-plugin-to-appletviewer",
+                                         data_directory, getpid());
 
   if (!out_pipe_name)
     {
@@ -1992,7 +1992,33 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
 
     }
 
-  // If that doesn't exit, bail
+  data_directory = g_strconcat (data_directory, "/icedteaplugin-", getenv("USER"), NULL);
+
+  if (!data_directory)
+  {
+      PLUGIN_ERROR ("Failed to create data directory name.");
+      return NPERR_OUT_OF_MEMORY_ERROR;
+  }
+
+  // Now create a icedteaplugin subdir
+  if (!g_file_test (data_directory,
+                    (GFileTest) (G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)))
+    {
+      int file_error = 0;
+
+      file_error = g_mkdir (data_directory, 0700);
+      if (file_error != 0)
+        {
+          PLUGIN_ERROR_THREE ("Failed to create data directory",
+                          data_directory,
+                          strerror (errno));
+          np_error = NPERR_GENERIC_ERROR;
+          goto cleanup_data_directory;
+        }
+    }
+
+
+  // If data directory doesn't exit by this point, bail
   if (!g_file_test (data_directory,
                     (GFileTest) (G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)))
     {

@@ -1,3 +1,9 @@
+2010-03-22  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaNPPlugin.cc
+	(start_jvm_if_needed): Change pipe file name format.
+	(NP_Initialize): Put FIFO pipe in a separate per-user directory.
+
 2010-03-19  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
