@@ -1,3 +1,20 @@
+2010-03-31 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(HOTSPOT_CHANGESET): Updated for new security patches.
+	(JDK_CHANGESET): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(SHARE): Changed from JDK_SHARE to match IcedTea6.
+	(SOLARIS): Likewise (from JDK_SOLARIS).
+	(OPENJDK_SOURCEPATH_DIRS): Use $(SHARE) and $(SOLARIS).
+	(SOURCEPATH_DIRS): Remove NETX_SRCDIR.
+	(ICEDTEA_BOOTSTRAP_DIRS): Use $(SHARE).
+	(netx.stamp): Add NETX_SRCDIR to sourcepath.
+	* THANKYOU:
+	Add C. K. Jester-Young who contributed
+	the initial Perl version of javac.in.
+
 2010-03-11 Jon VanAlten  <jon.vanalten@redhat.com>
 
 	* patches/icedtea-systemtap.patch:

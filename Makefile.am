@@ -3,18 +3,18 @@
 OPENJDK_VERSION = b84
 
 CORBA_CHANGESET = 007f7db4cbea
-HOTSPOT_CHANGESET = 9ee70b22738a
+HOTSPOT_CHANGESET = f42ed4c1b561
 JAXP_CHANGESET  = 495072db688b
 JAXWS_CHANGESET = 702e7f7e94c3
-JDK_CHANGESET = 917976e88f76
+JDK_CHANGESET = a6da33732b35
 LANGTOOLS_CHANGESET = 6a6c3d5c6956
 OPENJDK_CHANGESET = 8bab12c58534
 
 CORBA_SHA256SUM = 50955e1352e4da5f31c9a27e22bbbc1bee6c3b1c1533650349def2502e5588e0
-HOTSPOT_SHA256SUM = 5349b2baa758ca0750adc73e913e894acd2d54b626da24e55f8592a87542fe24
+HOTSPOT_SHA256SUM = a8d439fcd1dffc919bc2fd275edf3c5b6740c77a1d1daaa6085db78954483303
 JAXP_SHA256SUM = bee3d39feaf266ec1f0293abcde9cddb2553a09b1e400816187efbf86c6a2563
 JAXWS_SHA256SUM = 242f03256d5065b6b5a26f904591051382fe2b5989c31907859ba0c2ea3389fd
-JDK_SHA256SUM = 1faa4d03d315dcfdf8554299cbc266566100965ffc2529ba8927a4c43d25fd69
+JDK_SHA256SUM = b131df485752d8a635af0d24081cb20042f7ded1df96ff756df23792f6a717d2
 LANGTOOLS_SHA256SUM = ff0451422ba9ff27a295bb11021c1b19d59d2f02ed893553f7919ddeede6aa2f
 OPENJDK_SHA256SUM = 6b0a46f1ca49906ccbe229f4dd5a6cb71914bcff5ce91ace261e88f62336ca97
 
@@ -82,8 +82,8 @@ BUILD_DEBUG_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTA
 
 # Source directories
 
-JDK_SHARE = openjdk-boot/jdk/src/share/classes
-JDK_SOLARIS = openjdk-boot/jdk/src/solaris/classes
+SHARE = openjdk-boot/jdk/src/share/classes
+SOLARIS = openjdk-boot/jdk/src/solaris/classes
 LANGTOOLS = openjdk-boot/langtools/src/share/classes
 CORBA = openjdk-boot/corba/src/share/classes
 JAXWS = $(BUILD_OUTPUT_DIR)/jaxws/drop/jaxws_src/src
@@ -102,29 +102,29 @@ JAXWS_COND = $(JAXWS)
 endif
 
 OPENJDK_SOURCEPATH_DIRS = \
-        $(JDK_SHARE):$(JDK_SOLARIS):$(LANGTOOLS):$(CORBA):$(JAXWS_COND)
+        $(SHARE):$(SOLARIS):$(LANGTOOLS):$(CORBA):$(JAXWS_COND)
 
-SOURCEPATH_DIRS = $(abs_top_builddir)/generated:$(OPENJDK_SOURCEPATH_DIRS):$(NETX_SRCDIR)
+SOURCEPATH_DIRS = $(abs_top_builddir)/generated:$(OPENJDK_SOURCEPATH_DIRS)
 
 # Sources used from OpenJDK.
 if LACKS_SUN_AWT_TOOLKIT
 ICEDTEA_BOOTSTRAP_DIRS = \
-	$(JDK_SHARE)/com/sun/jdi \
-	$(JDK_SHARE)/com/sun/tools/jdi \
-	$(JDK_SHARE)/com/sun/net/httpserver \
-	$(JDK_SHARE)/java/io \
-	$(JDK_SHARE)/java/security/cert \
-	$(JDK_SHARE)/java/util \
-	$(JDK_SHARE)/java/rmi \
-	$(JDK_SHARE)/javax/net/ssl \
-	$(JDK_SHARE)/javax/rmi/ssl \
-	$(JDK_SHARE)/javax/script \
-	$(JDK_SHARE)/javax/security/auth/kerberos \
-	$(JDK_SHARE)/javax/security/sasl \
-	$(JDK_SHARE)/javax/swing/plaf/basic \
-	$(JDK_SHARE)/sun/awt/ \
-	$(JDK_SHARE)/sun/rmi/rmic \
-	$(JDK_SHARE)/sun/tools/java \
+	$(SHARE)/com/sun/jdi \
+	$(SHARE)/com/sun/tools/jdi \
+	$(SHARE)/com/sun/net/httpserver \
+	$(SHARE)/java/io \
+	$(SHARE)/java/security/cert \
+	$(SHARE)/java/util \
+	$(SHARE)/java/rmi \
+	$(SHARE)/javax/net/ssl \
+	$(SHARE)/javax/rmi/ssl \
+	$(SHARE)/javax/script \
+	$(SHARE)/javax/security/auth/kerberos \
+	$(SHARE)/javax/security/sasl \
+	$(SHARE)/javax/swing/plaf/basic \
+	$(SHARE)/sun/awt/ \
+	$(SHARE)/sun/rmi/rmic \
+	$(SHARE)/sun/tools/java \
 	$(LANGTOOLS)/com/sun/mirror \
 	$(LANGTOOLS)/com/sun/tools/apt
 
@@ -2081,8 +2081,6 @@ clean-liveconnect:
 	rm -f stamps/liveconnect.stamp
 
 # NetX
-
-# netx
 # requires availability of OpenJDK source code including
 # a patch applied to sun.plugin.AppletViewerPanel and generated sources
 
@@ -2094,7 +2092,7 @@ stamps/netx.stamp: netx-source-files.txt stamps/rt-class-files.stamp
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	    -d $(abs_top_builddir)/netx.build \
 	    -classpath $(abs_top_builddir)/lib/rt:$(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
-	    -sourcepath $(SOURCEPATH_DIRS) \
+	    -sourcepath $(NETX_SRCDIR):$(SOURCEPATH_DIRS) \
 	    -bootclasspath \'\' \
 	    @netx-source-files.txt ;
 	mkdir -p stamps
