@@ -712,6 +712,7 @@ AC_DEFUN([FIND_TOOL],
 
 AC_DEFUN([ENABLE_ZERO_BUILD],
 [
+  AC_REQUIRE([IT_SET_ARCH_SETTINGS])
   AC_MSG_CHECKING([whether to use the zero-assembler port])
   use_zero=no
   AC_ARG_ENABLE([zero],
