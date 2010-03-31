@@ -1,5 +1,10 @@
 2010-03-31  Matthias Klose  <doko@ubuntu.com>
 
+	* plugin/icedteanp/IcedTeaNPPlugin.cc (plugin_start_appletviewer):
+	Fix typo.
+
+2010-03-31  Matthias Klose  <doko@ubuntu.com>
+
 	* acinclude.m4 (ENABLE_ZERO_BUILD): Depend on IT_SET_ARCH_SETTINGS.
 
 2010-03-29  Andrew John Hughes  <ahughes@redhat.com>

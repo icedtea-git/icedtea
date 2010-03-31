@@ -1472,7 +1472,7 @@ plugin_start_appletviewer (GCJPluginData* data)
       command_line[7] = NULL;
    } else
    {
-       command_line = (gchar**) malloc(sizeof(gchar)*5);
+       command_line = (gchar**) malloc(sizeof(gchar*)*5);
        command_line[0] = g_strdup(appletviewer_executable);
        command_line[1] = g_strdup("sun.applet.PluginMain");
        command_line[2] = g_strdup(out_pipe_name);
