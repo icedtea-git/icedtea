@@ -96,7 +96,7 @@ extern pthread_mutex_t message_queue_mutex;
 extern pthread_mutex_t syn_write_mutex;
 
 /* Queue for holding messages that get processed in a separate thread */
-extern std::vector< std::vector<std::string>* >* message_queue;
+extern std::vector< std::vector<std::string*>* >* message_queue;
 
 /**
  * Processes requests made TO the plugin (by java or anyone else)
@@ -112,7 +112,7 @@ class PluginRequestProcessor : public BusSubscriber
     	void dispatch(void* func_ptr (void*), std::vector<std::string>* message, std::string* src);
 
     	/* Send main window pointer to Java */
-    	void sendWindow(std::vector<std::string>* message_parts);
+    	void sendWindow(std::vector<std::string*>* message_parts);
 
     	/* Stores the variant on java side */
     	void storeVariantInJava(NPVariant variant, std::string* result);
@@ -125,22 +125,22 @@ class PluginRequestProcessor : public BusSubscriber
         virtual bool newMessageOnBus(const char* message);
 
         /* Send member ID to Java */
-        void sendMember(std::vector<std::string>* message_parts);
+        void sendMember(std::vector<std::string*>* message_parts);
 
         /* Set member to given value */
-        void setMember(std::vector<std::string>* message_parts);
+        void setMember(std::vector<std::string*>* message_parts);
 
         /* Send string value of requested object */
-        void sendString(std::vector<std::string>* message_parts);
+        void sendString(std::vector<std::string*>* message_parts);
 
         /* Evaluate the given script */
-        void eval(std::vector<std::string>* message_parts);
+        void eval(std::vector<std::string*>* message_parts);
 
         /* Evaluate the given script */
-        void call(std::vector<std::string>* message_parts);
+        void call(std::vector<std::string*>* message_parts);
 
         /* Decrements reference count for given object */
-        void finalize(std::vector<std::string>* message_parts);
+        void finalize(std::vector<std::string*>* message_parts);
 };
 
 #endif // __ICEDTEAPLUGINREQUESTPROCESSOR_H__

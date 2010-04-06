@@ -60,21 +60,21 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
 {
 
 	// Anything we are waiting for _MUST_ have and instance id and reference #
-	std::vector<std::string>* message_parts = IcedTeaPluginUtilities::strSplit(message, " ");
+	std::vector<std::string*>* message_parts = IcedTeaPluginUtilities::strSplit(message, " ");
 
-	IcedTeaPluginUtilities::printStringVector("JavaRequest::newMessageOnBus:", message_parts);
+	IcedTeaPluginUtilities::printStringPtrVector("JavaRequest::newMessageOnBus:", message_parts);
 
-	if (message_parts->at(0) == "context" && message_parts->at(2) == "reference")
-		if (atoi(message_parts->at(1).c_str()) == this->instance && atoi(message_parts->at(3).c_str()) == this->reference)
+	if (*(message_parts->at(0)) == "context" && *(message_parts->at(2)) == "reference")
+		if (atoi(message_parts->at(1)->c_str()) == this->instance && atoi(message_parts->at(3)->c_str()) == this->reference)
 		{
 			// Gather the results
 
 			// Let's get errors out of the way first
-			if (message_parts->at(4).find("Error") == 0)
+			if (!message_parts->at(4)->find("Error"))
 			{
 				for (int i=5; i < message_parts->size(); i++)
 				{
-					result->error_msg->append(message_parts->at(i));
+					result->error_msg->append(*(message_parts->at(i)));
 					result->error_msg->append(" ");
 				}
 
@@ -83,78 +83,78 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
 				result->error_occurred = true;
 				result_ready = true;
 			}
-			else if (message_parts->at(4) == "GetStringUTFChars" ||
-			         message_parts->at(4) == "GetToStringValue")
+			else if (!message_parts->at(4)->find("GetStringUTFChars") ||
+			         !message_parts->at(4)->find("GetToStringValue"))
 			{
 				// first item is length, and it is radix 10
-				int length = strtol(message_parts->at(5).c_str(), NULL, 10);
+				int length = strtol(message_parts->at(5)->c_str(), NULL, 10);
 
 				IcedTeaPluginUtilities::getUTF8String(length, 6 /* start at */, message_parts, result->return_string);
 				result_ready = true;
 			}
-			else if (message_parts->at(4) == "GetStringChars") // GetStringChars (UTF-16LE/UCS-2)
+			else if (!message_parts->at(4)->find("GetStringChars")) // GetStringChars (UTF-16LE/UCS-2)
 			{
 				// first item is length, and it is radix 10
-				int length = strtol(message_parts->at(5).c_str(), NULL, 10);
+				int length = strtol(message_parts->at(5)->c_str(), NULL, 10);
 
 				IcedTeaPluginUtilities::getUTF16LEString(length, 6 /* start at */, message_parts, result->return_wstring);
 				result_ready = true;
-			} else if ((message_parts->at(4) == "FindClass") ||
-			        (message_parts->at(4) == "GetClassName") ||
-			        (message_parts->at(4) == "GetClassID") ||
-			        (message_parts->at(4) == "GetMethodID") ||
-			        (message_parts->at(4) == "GetStaticMethodID") ||
-			        (message_parts->at(4) == "GetObjectClass") ||
-                    (message_parts->at(4) == "NewObject") ||
-                    (message_parts->at(4) == "NewStringUTF") ||
-                    (message_parts->at(4) == "HasPackage") ||
-                    (message_parts->at(4) == "HasMethod") ||
-                    (message_parts->at(4) == "HasField") ||
-                    (message_parts->at(4) == "GetStaticFieldID") ||
-                    (message_parts->at(4) == "GetFieldID") ||
-                    (message_parts->at(4) == "GetJavaObject") ||
-                    (message_parts->at(4) == "IsInstanceOf") ||
-                    (message_parts->at(4) == "NewArray"))
+			} else if (!message_parts->at(4)->find("FindClass") ||
+			           !message_parts->at(4)->find("GetClassName") ||
+			           !message_parts->at(4)->find("GetClassID") ||
+			           !message_parts->at(4)->find("GetMethodID") ||
+			           !message_parts->at(4)->find("GetStaticMethodID") ||
+			           !message_parts->at(4)->find("GetObjectClass") ||
+			           !message_parts->at(4)->find("NewObject") ||
+			           !message_parts->at(4)->find("NewStringUTF") ||
+			           !message_parts->at(4)->find("HasPackage") ||
+			           !message_parts->at(4)->find("HasMethod") ||
+			           !message_parts->at(4)->find("HasField") ||
+			           !message_parts->at(4)->find("GetStaticFieldID") ||
+			           !message_parts->at(4)->find("GetFieldID") ||
+			           !message_parts->at(4)->find("GetJavaObject") ||
+			           !message_parts->at(4)->find("IsInstanceOf") ||
+			           !message_parts->at(4)->find("NewArray"))
 			{
-				result->return_identifier = atoi(message_parts->at(5).c_str());
-				result->return_string->append(message_parts->at(5)); // store it as a string as well, for easy access
+				result->return_identifier = atoi(message_parts->at(5)->c_str());
+				result->return_string->append(*(message_parts->at(5))); // store it as a string as well, for easy access
 				result_ready = true;
-			}  else if ((message_parts->at(4) == "DeleteLocalRef") ||
-		                (message_parts->at(4) == "NewGlobalRef"))
+			}  else if (!message_parts->at(4)->find("DeleteLocalRef") ||
+			            !message_parts->at(4)->find("NewGlobalRef"))
 			{
 			    result_ready = true; // nothing else to do
-			} else if ((message_parts->at(4) == "CallMethod") ||
-					   (message_parts->at(4) == "CallStaticMethod") ||
-					   (message_parts->at(4) == "GetField") ||
-					   (message_parts->at(4) == "GetStaticField") ||
-					   (message_parts->at(4) == "GetValue") ||
-	                   (message_parts->at(4) == "GetObjectArrayElement"))
+			} else if (!message_parts->at(4)->find("CallMethod") ||
+			           !message_parts->at(4)->find("CallStaticMethod") ||
+			           !message_parts->at(4)->find("GetField") ||
+			           !message_parts->at(4)->find("GetStaticField") ||
+			           !message_parts->at(4)->find("GetValue") ||
+			           !message_parts->at(4)->find("GetObjectArrayElement"))
 			{
 
-			    if (message_parts->at(5) == "literalreturn")
+			    if (!message_parts->at(5)->find("literalreturn"))
                 {
 			        // literal returns don't have a corresponding jni id
 			        result->return_identifier = 0;
-			        result->return_string->append(message_parts->at(5));
+			        result->return_string->append(*(message_parts->at(5)));
 			        result->return_string->append(" ");
-			        result->return_string->append(message_parts->at(6));
+			        result->return_string->append(*(message_parts->at(6)));
 
                 } else
 			    {
                     // Else it is a complex object
 
-			        result->return_identifier = atoi(message_parts->at(5).c_str());
-			        result->return_string->append(message_parts->at(5)); // store it as a string as well, for easy access
+			        result->return_identifier = atoi(message_parts->at(5)->c_str());
+			        result->return_string->append(*(message_parts->at(5))); // store it as a string as well, for easy access
 			    }
 
 				result_ready = true;
-			} else if ((message_parts->at(4) == "GetArrayLength"))
+			} else if (!message_parts->at(4)->find("GetArrayLength"))
             {
 			    result->return_identifier = 0; // length is not an "identifier"
-			    result->return_string->append(message_parts->at(5));
+			    result->return_string->append(*(message_parts->at(5)));
 			    result_ready = true;
-            } else if ((message_parts->at(4) == "SetField") ||
-                       (message_parts->at(4) == "SetObjectArrayElement"))
+            } else if (!message_parts->at(4)->find("SetField") ||
+                       !message_parts->at(4)->find("SetObjectArrayElement"))
             {
 
                 // nothing to do
@@ -163,13 +163,12 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
                 result_ready = true;
             }
 
-			delete message_parts;
+            IcedTeaPluginUtilities::freeStringPtrVector(message_parts);
 			return true;
 		}
 
-	delete message_parts;
+    IcedTeaPluginUtilities::freeStringPtrVector(message_parts);
 	return false;
-
 }
 
 /**

@@ -1,3 +1,44 @@
+2010-04-06  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc
+	(newMessageOnBus): Update to used string pointer vector (form strSplit)
+	instead of a string vector. Correctly free memory.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc: Initialize
+	message_queue to be a string pointer vector vector instead of a string
+	vector vector.
+	(newMessageOnBus): Update to used string pointer vector (form strSplit) 
+	instead of a string vector. Correctly free memory.
+	(sendWindow): Deal with string pointers instead of strings for message
+	parts.
+	(eval): Same.
+	(call): Same.
+	(sendString): Same.
+	(setMember): Same.
+	(sendMember): Same.
+	(finalize): Same.
+	(queue_processor): Same. Also, free message part memory after processing.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.h: Change method
+	signatures to deal with string pointer vectors instead of string vectors.
+	* plugin/icedteanp/IcedTeaPluginUtils.cc
+	(stringToJSID): Added another signature that receives a string pointer.
+	(strSplit): Return string pointer vector instead of string vector.
+	(getUTF8String): Change signature to receive string pointer vector instead
+	of string vector. Update function accordingly.
+	(getUTF16LEString): Same. 
+	(subscribe): Make subscription atomic.
+	(unSubscribe): Make unsubscription atomic, bound to same lock as
+	subscribe().
+	(post): Make list iteration and processing atomic, bound to same lock as
+	subscribe and unSubscribe.
+	* plugin/icedteanp/IcedTeaPluginUtils.h: Added new signature for
+	stringToJSID and updated signatures for strSplit, getUTF8String and
+	getUTF16LEString.
+	* plugin/icedteanp/IcedTeaScriptablePluginObject.cc
+	(IcedTeaScriptableJavaPackageObject::deAllocate): Implemented method.
+	(IcedTeaScriptableJavaPackageObject::invalidate): Same.
+	(IcedTeaScriptableJavaObject::deAllocate): Same.
+	(IcedTeaScriptableJavaObject::invalidate): Same.
+
 2010-04-04  Matthias Klose  <doko@ubuntu.com>
 
 	* configure.ac: Check for shared LLVM library.

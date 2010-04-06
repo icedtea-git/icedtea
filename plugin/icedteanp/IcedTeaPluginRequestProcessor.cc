@@ -50,7 +50,7 @@ exception statement from your version. */
 // Initialize static members used by the queue processing framework
 pthread_mutex_t message_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t syn_write_mutex = PTHREAD_MUTEX_INITIALIZER;
-std::vector< std::vector<std::string>* >* message_queue = new std::vector< std::vector<std::string>* >();
+std::vector< std::vector<std::string*>* >* message_queue = new std::vector< std::vector<std::string*>* >();
 
 /**
  * PluginRequestProcessor constructor.
@@ -91,36 +91,36 @@ PluginRequestProcessor::newMessageOnBus(const char* message)
 {
     PLUGIN_DEBUG_1ARG("PluginRequestProcessor processing %s\n", message);
 
-    std::string type;
-    std::string command;
+    std::string* type;
+    std::string* command;
     int counter = 0;
 
-    std::vector<std::string>* message_parts = IcedTeaPluginUtilities::strSplit(message, " ");
+    std::vector<std::string*>* message_parts = IcedTeaPluginUtilities::strSplit(message, " ");
 
-    std::vector<std::string>::iterator the_iterator;
+    std::vector<std::string*>::iterator the_iterator;
     the_iterator = message_parts->begin();
 
-    IcedTeaPluginUtilities::printStringVector("PluginRequestProcessor::newMessageOnBus:", message_parts);
+    IcedTeaPluginUtilities::printStringPtrVector("PluginRequestProcessor::newMessageOnBus:", message_parts);
 
     type = message_parts->at(0);
     command = message_parts->at(4);
 
-    if (type == "instance")
+    if (!type->find("instance"))
     {
-        if (command == "GetWindow")
+        if (!command->find("GetWindow"))
         {
             // Window can be queried from the main thread only. And this call
             // returns immediately, so we do it in the same thread.
             this->sendWindow(message_parts);
             return true;
-        } else if (command == "GetMember" ||
-                   command == "SetMember" ||
-                   command == "ToString"  ||
-                   command == "Call"      ||
-                   command == "GetSlot"   ||
-                   command == "SetSlot"   ||
-                   command == "Eval"      ||
-                   command == "Finalize")
+        } else if (!command->find("GetMember") ||
+                   !command->find("SetMember") ||
+                   !command->find("ToString") ||
+                   !command->find("Call") ||
+                   !command->find("GetSlot") ||
+                   !command->find("SetSlot") ||
+                   !command->find("Eval") ||
+                   !command->find("Finalize"))
         {
 
             // Update queue synchronously
@@ -136,7 +136,7 @@ PluginRequestProcessor::newMessageOnBus(const char* message)
 
     }
 
-    delete message_parts;
+    IcedTeaPluginUtilities::freeStringPtrVector(message_parts);
 
     // If we got here, it means we couldn't process the message. Let the caller know.
     return false;
@@ -149,10 +149,10 @@ PluginRequestProcessor::newMessageOnBus(const char* message)
  */
 
 void
-PluginRequestProcessor::sendWindow(std::vector<std::string>* message_parts)
+PluginRequestProcessor::sendWindow(std::vector<std::string*>* message_parts)
 {
-    std::string type;
-    std::string command;
+    std::string* type;
+    std::string* command;
     int reference;
     std::string response = std::string();
     std::string window_ptr_str = std::string();
@@ -161,8 +161,8 @@ PluginRequestProcessor::sendWindow(std::vector<std::string>* message_parts)
     int id;
 
     type = message_parts->at(0);
-    id = atoi(message_parts->at(1).c_str());
-    reference = atoi(message_parts->at(3).c_str());
+    id = atoi(message_parts->at(1)->c_str());
+    reference = atoi(message_parts->at(3)->c_str());
     command = message_parts->at(4);
 
     NPP instance;
@@ -182,8 +182,6 @@ PluginRequestProcessor::sendWindow(std::vector<std::string>* message_parts)
 
     plugin_to_java_bus->post(response.c_str());
 
-    delete message_parts;
-
     // store the instance pointer for future reference
     IcedTeaPluginUtilities::storeInstanceID(variant, instance);
 }
@@ -195,7 +193,7 @@ PluginRequestProcessor::sendWindow(std::vector<std::string>* message_parts)
  */
 
 void
-PluginRequestProcessor::eval(std::vector<std::string>* message_parts)
+PluginRequestProcessor::eval(std::vector<std::string*>* message_parts)
 {
     JavaRequestProcessor request_processor = JavaRequestProcessor();
     JavaResultData* java_result;
@@ -209,11 +207,11 @@ PluginRequestProcessor::eval(std::vector<std::string>* message_parts)
     std::string return_type = std::string();
     int id;
 
-    reference = atoi(message_parts->at(3).c_str());
+    reference = atoi(message_parts->at(3)->c_str());
     window_ptr = (NPVariant*) IcedTeaPluginUtilities::stringToJSID(message_parts->at(5));
     instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(window_ptr);
 
-    java_result = request_processor.getString(message_parts->at(6));
+    java_result = request_processor.getString(*(message_parts->at(6)));
     CHECK_JAVA_RESULT(java_result);
     script.append(*(java_result->return_string));
 
@@ -250,9 +248,6 @@ PluginRequestProcessor::eval(std::vector<std::string>* message_parts)
     response += result_variant_jniid;
 
     plugin_to_java_bus->post(response.c_str());
-
-    delete message_parts;
-
 }
 
 /**
@@ -262,10 +257,10 @@ PluginRequestProcessor::eval(std::vector<std::string>* message_parts)
  */
 
 void
-PluginRequestProcessor::call(std::vector<std::string>* message_parts)
+PluginRequestProcessor::call(std::vector<std::string*>* message_parts)
 {
     NPP instance;
-    std::string window_ptr_str;
+    std::string* window_ptr_str;
     NPVariant* window_ptr;
     int reference;
     std::string window_function_name;
@@ -276,7 +271,7 @@ PluginRequestProcessor::call(std::vector<std::string>* message_parts)
     JavaRequestProcessor java_request = JavaRequestProcessor();
     JavaResultData* java_result;
 
-    reference = atoi(message_parts->at(3).c_str());
+    reference = atoi(message_parts->at(3)->c_str());
 
     // window
     window_ptr_str = message_parts->at(5);
@@ -286,14 +281,14 @@ PluginRequestProcessor::call(std::vector<std::string>* message_parts)
     instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(window_ptr);
 
     // function name
-    java_result = java_request.getString(message_parts->at(6));
+    java_result = java_request.getString(*(message_parts->at(6)));
     CHECK_JAVA_RESULT(java_result);
     window_function_name.append(*(java_result->return_string));
 
     // arguments
     for (int i=7; i < message_parts->size(); i++)
     {
-        arg_ids.push_back(message_parts->at(i));
+        arg_ids.push_back(*(message_parts->at(i)));
     }
 
     // determine arguments
@@ -366,7 +361,7 @@ PluginRequestProcessor::call(std::vector<std::string>* message_parts)
  * @param message_parts The request message.
  */
 void
-PluginRequestProcessor::sendString(std::vector<std::string>* message_parts)
+PluginRequestProcessor::sendString(std::vector<std::string*>* message_parts)
 {
     std::string variant_ptr;
     NPVariant* variant;
@@ -375,8 +370,8 @@ PluginRequestProcessor::sendString(std::vector<std::string>* message_parts)
     int reference;
     std::string response = std::string();
 
-    reference = atoi(message_parts->at(3).c_str());
-    variant_ptr = message_parts->at(5);
+    reference = atoi(message_parts->at(3)->c_str());
+    variant_ptr = *(message_parts->at(5));
 
     variant = (NPVariant*) IcedTeaPluginUtilities::stringToJSID(variant_ptr);
     AsyncCallThreadData thread_data = AsyncCallThreadData();
@@ -410,7 +405,6 @@ PluginRequestProcessor::sendString(std::vector<std::string>* message_parts)
     plugin_to_java_bus->post(response.c_str());
 
     cleanup:
-    delete message_parts;
 
     pthread_mutex_lock(&tc_mutex);
     thread_count--;
@@ -424,7 +418,7 @@ PluginRequestProcessor::sendString(std::vector<std::string>* message_parts)
  */
 
 void
-PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
+PluginRequestProcessor::setMember(std::vector<std::string*>* message_parts)
 {
     std::string propertyNameID;
     std::string value = std::string();
@@ -438,28 +432,28 @@ PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
     JavaRequestProcessor java_request = JavaRequestProcessor();
     JavaResultData* java_result;
 
-    IcedTeaPluginUtilities::printStringVector("PluginRequestProcessor::_setMember - ", message_parts);
+    IcedTeaPluginUtilities::printStringPtrVector("PluginRequestProcessor::_setMember - ", message_parts);
 
-    reference = atoi(message_parts->at(3).c_str());
+    reference = atoi(message_parts->at(3)->c_str());
 
-    member = (NPVariant*) (IcedTeaPluginUtilities::stringToJSID(message_parts->at(5)));
-    propertyNameID = message_parts->at(6);
+    member = (NPVariant*) (IcedTeaPluginUtilities::stringToJSID(*(message_parts->at(5))));
+    propertyNameID = *(message_parts->at(6));
 
-    if (message_parts->at(7) == "literalreturn")
+    if (*(message_parts->at(7)) == "literalreturn")
     {
-        value.append(message_parts->at(7));
+        value.append(*(message_parts->at(7)));
         value.append(" ");
-        value.append(message_parts->at(8));
+        value.append(*(message_parts->at(8)));
     } else
     {
-        value.append(message_parts->at(7));
+        value.append(*(message_parts->at(7)));
     }
 
     instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(member);
 
-    if (message_parts->at(4) == "SetSlot")
+    if (*(message_parts->at(4)) == "SetSlot")
     {
-        property_identifier = browser_functions.getintidentifier(atoi(message_parts->at(6).c_str()));
+        property_identifier = browser_functions.getintidentifier(atoi(message_parts->at(6)->c_str()));
     } else
     {
         java_result = java_request.getString(propertyNameID);
@@ -504,7 +498,6 @@ PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
     plugin_to_java_bus->post(response.c_str());
 
     cleanup:
-    delete message_parts;
 
     // property_name, type and value are deleted by _setMember
     pthread_mutex_lock(&tc_mutex);
@@ -524,7 +517,7 @@ PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
  */
 
 void
-PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
+PluginRequestProcessor::sendMember(std::vector<std::string*>* message_parts)
 {
     // member initialization
     std::vector<std::string> args;
@@ -545,17 +538,17 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
     int reference;
 
     // debug printout of parent thread data
-    IcedTeaPluginUtilities::printStringVector("PluginRequestProcessor::getMember:", message_parts);
+    IcedTeaPluginUtilities::printStringPtrVector("PluginRequestProcessor::getMember:", message_parts);
 
-    reference = atoi(message_parts->at(3).c_str());
+    reference = atoi(message_parts->at(3)->c_str());
 
     // store info in local variables for easy access
-    instance_id = atoi(message_parts->at(1).c_str());
+    instance_id = atoi(message_parts->at(1)->c_str());
     parent_ptr = (NPVariant*) (IcedTeaPluginUtilities::stringToJSID(message_parts->at(5)));
-    member_id += message_parts->at(6);
+    member_id.append(*(message_parts->at(6)));
 
     /** Request data from Java if necessary **/
-    if (message_parts->at(4) == "GetSlot")
+    if (*(message_parts->at(4)) == "GetSlot")
     {
         member_identifier = browser_functions.getintidentifier(atoi(member_id.c_str()));
     } else
@@ -647,7 +640,7 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
 
 
     IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &response);
-    if (message_parts->at(2) == "GetSlot")
+    if (*(message_parts->at(2)) == "GetSlot")
     {
         response.append(" JavaScriptGetMember ");
     } else {
@@ -659,7 +652,6 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
 
     // Now be a good citizen and help keep the heap free of garbage
     cleanup:
-    delete message_parts; // message_parts vector that was allocated by the caller
 
     pthread_mutex_lock(&tc_mutex);
     thread_count--;
@@ -673,20 +665,20 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
  */
 
 void
-PluginRequestProcessor::finalize(std::vector<std::string>* message_parts)
+PluginRequestProcessor::finalize(std::vector<std::string*>* message_parts)
 {
-    std::string type;
-    std::string command;
+    std::string* type;
+    std::string* command;
     int reference;
     std::string response = std::string();
-    std::string variant_ptr_str = std::string();
+    std::string* variant_ptr_str;
     NPVariant* variant_ptr;
     NPObject* window_ptr;
     int id;
 
     type = message_parts->at(0);
-    id = atoi(message_parts->at(1).c_str());
-    reference = atoi(message_parts->at(3).c_str());
+    id = atoi(message_parts->at(1)->c_str());
+    reference = atoi(message_parts->at(3)->c_str());
     variant_ptr_str = message_parts->at(5);
 
     NPP instance;
@@ -707,9 +699,6 @@ PluginRequestProcessor::finalize(std::vector<std::string>* message_parts)
     response += " JavaScriptFinalize";
 
     plugin_to_java_bus->post(response.c_str());
-
-    delete message_parts;
-
 }
 
 
@@ -718,7 +707,7 @@ queue_processor(void* data)
 {
 
     PluginRequestProcessor* processor = (PluginRequestProcessor*) data;
-    std::vector<std::string>* message_parts = NULL;
+    std::vector<std::string*>* message_parts = NULL;
     std::string command;
     pthread_mutex_t wait_mutex = PTHREAD_MUTEX_INITIALIZER; // This is needed for API compat. and is unused
 
@@ -736,7 +725,7 @@ queue_processor(void* data)
 
         if (message_parts)
         {
-            command = message_parts->at(4);
+            command = *(message_parts->at(4));
 
             if (command == "GetMember")
             {
@@ -783,9 +772,11 @@ queue_processor(void* data)
             } else
             {
                 // Nothing matched
-                IcedTeaPluginUtilities::printStringVector("Error: Unable to process message: ", message_parts);
-
+                IcedTeaPluginUtilities::printStringPtrVector("Error: Unable to process message: ", message_parts);
             }
+
+            // Free memory for message_parts
+            IcedTeaPluginUtilities::freeStringPtrVector(message_parts);
 
         } else
         {

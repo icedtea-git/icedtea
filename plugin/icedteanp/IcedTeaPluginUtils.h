@@ -210,6 +210,7 @@ class IcedTeaPluginUtilities
 
     	/* Converts the given string representation to a pointer */
     	static void* stringToJSID(std::string id_str);
+    	static void* stringToJSID(std::string* id_str);
 
     	/* Increments reference count and returns it */
     	static int getReference();
@@ -224,12 +225,12 @@ class IcedTeaPluginUtilities
     	static void freeStringPtrVector(std::vector<std::string*>* v);
 
     	/* Splits the given string based on the delimiter provided */
-    	static std::vector<std::string>* strSplit(const char* str,
+    	static std::vector<std::string*>* strSplit(const char* str,
     			                                  const char* delim);
 
     	/* Converts given unicode integer byte array to UTF8 string  */
     	static void getUTF8String(int length, int begin,
-    			std::vector<std::string>* unicode_byte_array,
+    			std::vector<std::string*>* unicode_byte_array,
     			std::string* result_unicode_str);
 
     	/* Converts given UTF8 string to unicode integer byte array */
@@ -238,7 +239,7 @@ class IcedTeaPluginUtilities
 
     	/* Converts given unicode integer byte array to UTF16LE/UCS-2 string */
     	static void getUTF16LEString(int length, int begin,
-    			std::vector<std::string>* unicode_byte_array,
+    			std::vector<std::string*>* unicode_byte_array,
     			std::wstring* result_unicode_str);
 
     	/* Prints contents of given string vector */

@@ -188,6 +188,32 @@ IcedTeaPluginUtilities::stringToJSID(std::string id_str)
 }
 
 /**
+ * Returns a void pointer from a string representation
+ *
+ * @param id_str The pointer to the string representation
+ * @return The pointer
+ */
+
+void*
+IcedTeaPluginUtilities::stringToJSID(std::string* id_str)
+{
+    void* ptr;
+    if (sizeof(void*) == sizeof(long long))
+    {
+        PLUGIN_DEBUG_2ARG("Casting (long long) \"%s\" -- %llu\n", id_str->c_str(), strtoull(id_str->c_str(), NULL, 0));
+        ptr = reinterpret_cast <void*> ((unsigned long long) strtoull(id_str->c_str(), NULL, 0));
+    } else
+    {
+        PLUGIN_DEBUG_2ARG("Casting (long) \"%s\" -- %lu\n", id_str->c_str(), strtoul(id_str->c_str(), NULL, 0));
+        ptr = reinterpret_cast <void*> ((unsigned long)  strtoul(id_str->c_str(), NULL, 0));
+    }
+
+    PLUGIN_DEBUG_1ARG("Casted: %p\n", ptr);
+
+    return ptr;
+}
+
+/**
  * Increments the global reference number and returns it.
  *
  * This function is thread-safe.
@@ -249,8 +275,9 @@ IcedTeaPluginUtilities::freeStringPtrVector(std::vector<std::string*>* v)
 {
 	if (v)
 	{
-		for (int i=0; i < v->size(); i++)
+		for (int i=0; i < v->size(); i++) {
 			delete v->at(i);
+		}
 
 		delete v;
 	}
@@ -265,10 +292,10 @@ IcedTeaPluginUtilities::freeStringPtrVector(std::vector<std::string*>* v)
  * @return A string vector containing the aplit components
  */
 
-std::vector<std::string>*
+std::vector<std::string*>*
 IcedTeaPluginUtilities::strSplit(const char* str, const char* delim)
 {
-	std::vector<std::string>* v = new std::vector<std::string>();
+	std::vector<std::string*>* v = new std::vector<std::string*>();
 	v->reserve(strlen(str)/2);
 	char* copy;
 
@@ -281,9 +308,11 @@ IcedTeaPluginUtilities::strSplit(const char* str, const char* delim)
 
 	while (tok_ptr != NULL)
 	{
+	    // Allocation on heap since caller has no way to knowing how much will
+	    // be needed. Make sure caller cleans up!
 		std::string* s = new std::string();
 		s->append(tok_ptr);
-		v->push_back(*s);
+		v->push_back(s);
 		tok_ptr = strtok (NULL, " ");
 	}
 
@@ -308,12 +337,12 @@ IcedTeaPluginUtilities::strSplit(const char* str, const char* delim)
  */
 
 void
-IcedTeaPluginUtilities::getUTF8String(int length, int begin, std::vector<std::string>* unicode_byte_array, std::string* result_unicode_str)
+IcedTeaPluginUtilities::getUTF8String(int length, int begin, std::vector<std::string*>* unicode_byte_array, std::string* result_unicode_str)
 {
 	result_unicode_str->clear();
 	result_unicode_str->reserve(unicode_byte_array->size()/2);
 	for (int i = begin; i < begin+length; i++)
-	    result_unicode_str->push_back((char) strtol(unicode_byte_array->at(i).c_str(), NULL, 16));
+	    result_unicode_str->push_back((char) strtol(unicode_byte_array->at(i)->c_str(), NULL, 16));
 
 	PLUGIN_DEBUG_2ARG("Converted UTF-8 string: %s. Length=%d\n", result_unicode_str->c_str(), result_unicode_str->length());
 }
@@ -367,7 +396,7 @@ IcedTeaPluginUtilities::convertStringToUTF8(std::string* str, std::string* utf_s
  *        converted string is placed
  */
 void
-IcedTeaPluginUtilities::getUTF16LEString(int length, int begin, std::vector<std::string>* unicode_byte_array, std::wstring* result_unicode_str)
+IcedTeaPluginUtilities::getUTF16LEString(int length, int begin, std::vector<std::string*>* unicode_byte_array, std::wstring* result_unicode_str)
 {
 
 	wchar_t c;
@@ -377,8 +406,8 @@ IcedTeaPluginUtilities::getUTF16LEString(int length, int begin, std::vector<std:
 	result_unicode_str->clear();
 	for (int i = begin; i < begin+length; i+=2)
 	{
-		int low = strtol(unicode_byte_array->at(i).c_str(), NULL, 16);
-		int high = strtol(unicode_byte_array->at(i+1).c_str(), NULL, 16);
+		int low = strtol(unicode_byte_array->at(i)->c_str(), NULL, 16);
+		int high = strtol(unicode_byte_array->at(i+1)->c_str(), NULL, 16);
 
         c = ((high << 8) | low);
 
@@ -963,9 +992,9 @@ MessageBus::subscribe(BusSubscriber* b)
     // Applets may initialize in parallel. So lock before pushing.
 
 	PLUGIN_DEBUG_2ARG("Subscribing %p to bus %p\n", b, this);
-//    pthread_mutex_lock(&subscriber_mutex);
+    pthread_mutex_lock(&subscriber_mutex);
     subscribers.push_back(b);
-//    pthread_mutex_unlock(&subscriber_mutex);
+    pthread_mutex_unlock(&subscriber_mutex);
 }
 
 /**
@@ -979,9 +1008,9 @@ MessageBus::unSubscribe(BusSubscriber* b)
     // Applets may initialize in parallel. So lock before pushing.
 
 	PLUGIN_DEBUG_2ARG("Un-subscribing %p from bus %p\n", b, this);
-//    pthread_mutex_lock(&subscriber_mutex);
+    pthread_mutex_lock(&subscriber_mutex);
     subscribers.remove(b);
-//    pthread_mutex_unlock(&subscriber_mutex);
+    pthread_mutex_unlock(&subscriber_mutex);
 }
 
 /**
@@ -999,7 +1028,7 @@ MessageBus::post(const char* message)
 	strcpy(msg, message);
 
 	PLUGIN_DEBUG_1ARG("Trying to lock %p...\n", &msg_queue_mutex);
-//    pthread_mutex_lock(&msg_queue_mutex);
+	pthread_mutex_lock(&subscriber_mutex);
 
     PLUGIN_DEBUG_1ARG("Message %s received on bus. Notifying subscribers.\n", msg);
 
@@ -1009,7 +1038,7 @@ MessageBus::post(const char* message)
     	message_consumed = ((BusSubscriber*) *i)->newMessageOnBus(msg);
     }
 
-//    pthread_mutex_unlock(&msg_queue_mutex);
+    pthread_mutex_unlock(&subscriber_mutex);
 
     if (!message_consumed)
     	PLUGIN_DEBUG_1ARG("Warning: No consumer found for message %s\n", msg);

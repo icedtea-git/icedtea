@@ -197,13 +197,13 @@ IcedTeaScriptableJavaPackageObject::getPackageName()
 void
 IcedTeaScriptableJavaPackageObject::deAllocate(NPObject *npobj)
 {
-	printf ("** Unimplemented: IcedTeaScriptableJavaPackageObject::deAllocate %p\n", npobj);
+    browser_functions.releaseobject(npobj);
 }
 
 void
 IcedTeaScriptableJavaPackageObject::invalidate(NPObject *npobj)
 {
-	printf ("** Unimplemented: IcedTeaScriptableJavaPackageObject::invalidate %p\n", npobj);
+	// nothing to do for these
 }
 
 bool
@@ -491,13 +491,12 @@ IcedTeaScriptableJavaObject::setIsArray(bool isArray)
 void
 IcedTeaScriptableJavaObject::deAllocate(NPObject *npobj)
 {
-	printf ("** Unimplemented: IcedTeaScriptableJavaObject::deAllocate %p\n", npobj);
+	browser_functions.releaseobject(npobj);
 }
 
 void
 IcedTeaScriptableJavaObject::invalidate(NPObject *npobj)
 {
-	printf ("** Unimplemented: IcedTeaScriptableJavaObject::invalidate %p\n", npobj);
 	IcedTeaPluginUtilities::removeInstanceID(npobj);
 
 	std::string obj_key = std::string();
