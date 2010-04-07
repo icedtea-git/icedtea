@@ -447,7 +447,7 @@ AC_SUBST(LIBFFI_LIBS)
 if test "x${SHARK_BUILD_TRUE}" = x || test "x${ADD_SHARK_BUILD_TRUE}" = x; then
   FIND_TOOL([LLVM_CONFIG], [llvm-config])
   llvm_components="jit engine nativecodegen"
-  LLVM_VERSION="`$LLVM_CONFIG --version | sed 's/svn.*//'`"
+  LLVM_VERSION="`$LLVM_CONFIG --version`"
   dnl LLVM_CFLAGS
   LLVM_CFLAGS=
   for flag in $($LLVM_CONFIG --cxxflags $llvm_components); do
@@ -460,7 +460,7 @@ if test "x${SHARK_BUILD_TRUE}" = x || test "x${ADD_SHARK_BUILD_TRUE}" = x; then
       fi
     fi
   done
-  LLVM_CFLAGS="$LLVM_CFLAGS -DSHARK_LLVM_VERSION=`echo $LLVM_VERSION | sed 's/\.//'`"
+  LLVM_CFLAGS="$LLVM_CFLAGS -DSHARK_LLVM_VERSION=`echo $LLVM_VERSION | sed 's/\.//;s/svn.*//'`"
   dnl LLVM_LDFLAGS
   LLVM_LDFLAGS=
   for flag in $($LLVM_CONFIG --ldflags $llvm_components); do

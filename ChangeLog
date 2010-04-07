@@ -1,3 +1,7 @@
+2010-04-07  Xerxes Rånby  <xerxes@zafena.se>
+
+	* configure.ac: Updated check for shared LLVM library to include svn.
+
 2010-04-06  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc
