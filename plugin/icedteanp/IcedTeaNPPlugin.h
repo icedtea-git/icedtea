@@ -60,12 +60,12 @@ exception statement from your version. */
 // Work around across some chromium issues
 #define CHROMIUM_WORKAROUND
 
-// GCJPluginData stores all the data associated with a single plugin
+// ITNPPluginData stores all the data associated with a single plugin
 // instance.  A separate plugin instance is created for each <APPLET>
 // tag.  For now, each plugin instance spawns its own applet viewer
 // process but this may need to change if we find pages containing
 // multiple applets that expect to be running in the same VM.
-struct GCJPluginData
+struct ITNPPluginData
 {
   // A unique identifier for this plugin window.
   gchar* instance_string;

@@ -467,7 +467,7 @@ IcedTeaPluginUtilities::getSourceFromInstance(NPP instance)
     // source, we cannot use it to make security decisions. Therefore,
     // instance associated source will always return empty
 
-    //GCJPluginData* data = (GCJPluginData*) instance->pdata;
+    //ITNPPluginData* data = (ITNPPluginData*) instance->pdata;
     //return (data->source) ? data->source : "";
 
     return "http://null.null";

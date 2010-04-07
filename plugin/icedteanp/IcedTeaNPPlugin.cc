@@ -131,7 +131,7 @@ exception statement from your version. */
 #define PLUGIN_FILE_EXTS "class,jar,zip"
 #define PLUGIN_MIME_COUNT 1
 
-#define FAILURE_MESSAGE "gcjwebplugin error: Failed to run %s." \
+#define FAILURE_MESSAGE "icedteanp plugin error: Failed to run %s." \
   "  For more detail rerun \"firefox -g\" in a terminal window."
 
 #if MOZILLA_VERSION_COLLAPSED < 1090100
@@ -194,8 +194,8 @@ typedef union
 #endif
 
 // Static instance helper functions.
-// Have the browser allocate a new GCJPluginData structure.
-static void plugin_data_new (GCJPluginData** data);
+// Have the browser allocate a new ITNPPluginData structure.
+static void plugin_data_new (ITNPPluginData** data);
 // Retrieve the current document's documentbase.
 static gchar* plugin_get_documentbase (NPP instance);
 // Notify the user that the appletviewer is not installed correctly.
@@ -208,11 +208,11 @@ static gboolean plugin_in_pipe_callback (GIOChannel* source,
 static gboolean plugin_out_pipe_callback (GIOChannel* source,
                                           GIOCondition condition,
                                           gpointer plugin_data);
-static NPError plugin_start_appletviewer (GCJPluginData* data);
+static NPError plugin_start_appletviewer (ITNPPluginData* data);
 static gchar* plugin_create_applet_tag (int16_t argc, char* argn[],
                                         char* argv[]);
 static void plugin_stop_appletviewer ();
-// Uninitialize GCJPluginData structure
+// Uninitialize ITNPPluginData structure
 static void plugin_data_destroy (NPP instance);
 
 NPError get_cookie_info(const char* siteAddr, char** cookieString, uint32_t* len);
@@ -238,8 +238,8 @@ int plugin_debug = getenv ("ICEDTEAPLUGIN_DEBUG") != NULL;
 
 pthread_cond_t cond_message_available = PTHREAD_COND_INITIALIZER;
 
-// Functions prefixed by GCJ_ are instance functions.  They are called
-// by the browser and operate on instances of GCJPluginData.
+// Functions prefixed by ITNP_ are instance functions.  They are called
+// by the browser and operate on instances of ITNPPluginData.
 // Functions prefixed by plugin_ are static helper functions.
 // Functions prefixed by NP_ are factory functions.  They are called
 // by the browser and provide functionality needed to create plugin
@@ -247,22 +247,22 @@ pthread_cond_t cond_message_available = PTHREAD_COND_INITIALIZER;
 
 // INSTANCE FUNCTIONS
 
-// Creates a new gcjwebplugin instance.  This function creates a
-// GCJPluginData* and stores it in instance->pdata.  The following
-// GCJPluginData fiels are initialized: instance_string, in_pipe_name,
+// Creates a new icedtea np plugin instance.  This function creates a
+// ITNPPluginData* and stores it in instance->pdata.  The following
+// ITNPPluginData fiels are initialized: instance_string, in_pipe_name,
 // in_from_appletviewer, in_watch_source, out_pipe_name,
 // out_to_appletviewer, out_watch_source, appletviewer_mutex, owner,
 // appletviewer_alive.  In addition two pipe files are created.  All
 // of those fields must be properly destroyed, and the pipes deleted,
-// by GCJ_Destroy.  If an error occurs during initialization then this
+// by ITNP_Destroy.  If an error occurs during initialization then this
 // function will free anything that's been allocated so far, set
 // instance->pdata to NULL and return an error code.
 NPError
-GCJ_New (NPMIMEType pluginType, NPP instance, uint16_t mode,
+ITNP_New (NPMIMEType pluginType, NPP instance, uint16_t mode,
          int16_t argc, char* argn[], char* argv[],
          NPSavedData* saved)
 {
-  PLUGIN_DEBUG_0ARG("GCJ_New\n");
+  PLUGIN_DEBUG_0ARG("ITNP_New\n");
 
   static NPObject *window_ptr;
   NPIdentifier identifier;
@@ -280,7 +280,7 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16_t mode,
 
 
   NPError np_error = NPERR_NO_ERROR;
-  GCJPluginData* data = NULL;
+  ITNPPluginData* data = NULL;
 
   gchar* documentbase = NULL;
   gchar* read_message = NULL;
@@ -401,7 +401,7 @@ GCJ_New (NPMIMEType pluginType, NPP instance, uint16_t mode,
   g_hash_table_insert(id_to_instance_map, GINT_TO_POINTER(instance_counter), instance);
   instance_counter++;
 
-  PLUGIN_DEBUG_0ARG ("GCJ_New return\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_New return\n");
 
   return np_error;
 }
@@ -428,7 +428,7 @@ void start_jvm_if_needed()
   PLUGIN_DEBUG_0ARG("No JVM is running. Attempting to start one...\n");
 
   NPError np_error = NPERR_NO_ERROR;
-  GCJPluginData* data = NULL;
+  ITNPPluginData* data = NULL;
 
   // Create appletviewer-to-plugin pipe which we refer to as the input
   // pipe.
@@ -448,14 +448,14 @@ void start_jvm_if_needed()
   // clean up any older pip
   unlink (in_pipe_name);
 
-  PLUGIN_DEBUG_1ARG ("GCJ_New: creating input fifo: %s\n", in_pipe_name);
+  PLUGIN_DEBUG_1ARG ("ITNP_New: creating input fifo: %s\n", in_pipe_name);
   if (mkfifo (in_pipe_name, 0600) == -1 && errno != EEXIST)
     {
       PLUGIN_ERROR_TWO ("Failed to create input pipe", strerror (errno));
       np_error = NPERR_GENERIC_ERROR;
       goto cleanup_in_pipe_name;
     }
-  PLUGIN_DEBUG_1ARG ("GCJ_New: created input fifo: %s\n", in_pipe_name);
+  PLUGIN_DEBUG_1ARG ("ITNP_New: created input fifo: %s\n", in_pipe_name);
 
   // Create plugin-to-appletviewer pipe which we refer to as the
   // output pipe.
@@ -474,14 +474,14 @@ void start_jvm_if_needed()
   // clean up any older pip
   unlink (out_pipe_name);
 
-  PLUGIN_DEBUG_1ARG ("GCJ_New: creating output fifo: %s\n", out_pipe_name);
+  PLUGIN_DEBUG_1ARG ("ITNP_New: creating output fifo: %s\n", out_pipe_name);
   if (mkfifo (out_pipe_name, 0600) == -1 && errno != EEXIST)
     {
       PLUGIN_ERROR_TWO ("Failed to create output pipe", strerror (errno));
       np_error = NPERR_GENERIC_ERROR;
       goto cleanup_out_pipe_name;
     }
-  PLUGIN_DEBUG_1ARG ("GCJ_New: created output fifo: %s\n", out_pipe_name);
+  PLUGIN_DEBUG_1ARG ("ITNP_New: created output fifo: %s\n", out_pipe_name);
 
   // Start a separate appletviewer process for each applet, even if
   // there are multiple applets in the same page.  We may need to
@@ -572,9 +572,9 @@ void start_jvm_if_needed()
 
   // cleanup_out_pipe:
   // Delete output pipe.
-  PLUGIN_DEBUG_1ARG ("GCJ_New: deleting input fifo: %s\n", in_pipe_name);
+  PLUGIN_DEBUG_1ARG ("ITNP_New: deleting input fifo: %s\n", in_pipe_name);
   unlink (out_pipe_name);
-  PLUGIN_DEBUG_1ARG ("GCJ_New: deleted input fifo: %s\n", in_pipe_name);
+  PLUGIN_DEBUG_1ARG ("ITNP_New: deleted input fifo: %s\n", in_pipe_name);
 
  cleanup_out_pipe_name:
   g_free (out_pipe_name);
@@ -582,9 +582,9 @@ void start_jvm_if_needed()
 
   // cleanup_in_pipe:
   // Delete input pipe.
-  PLUGIN_DEBUG_1ARG ("GCJ_New: deleting output fifo: %s\n", out_pipe_name);
+  PLUGIN_DEBUG_1ARG ("ITNP_New: deleting output fifo: %s\n", out_pipe_name);
   unlink (in_pipe_name);
-  PLUGIN_DEBUG_1ARG ("GCJ_New: deleted output fifo: %s\n", out_pipe_name);
+  PLUGIN_DEBUG_1ARG ("ITNP_New: deleted output fifo: %s\n", out_pipe_name);
 
  cleanup_in_pipe_name:
   g_free (in_pipe_name);
@@ -598,9 +598,9 @@ void start_jvm_if_needed()
 }
 
 NPError
-GCJ_GetValue (NPP instance, NPPVariable variable, void* value)
+ITNP_GetValue (NPP instance, NPPVariable variable, void* value)
 {
-  PLUGIN_DEBUG_0ARG ("GCJ_GetValue\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_GetValue\n");
 
   NPError np_error = NPERR_NO_ERROR;
 
@@ -609,7 +609,7 @@ GCJ_GetValue (NPP instance, NPPVariable variable, void* value)
     // This plugin needs XEmbed support.
     case NPPVpluginNeedsXEmbed:
       {
-        PLUGIN_DEBUG_0ARG ("GCJ_GetValue: returning TRUE for NeedsXEmbed.\n");
+        PLUGIN_DEBUG_0ARG ("ITNP_GetValue: returning TRUE for NeedsXEmbed.\n");
         bool* bool_value = (bool*) value;
         *bool_value = true;
       }
@@ -625,17 +625,17 @@ GCJ_GetValue (NPP instance, NPPVariable variable, void* value)
       break;
     }
 
-  PLUGIN_DEBUG_0ARG ("GCJ_GetValue return\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_GetValue return\n");
 
   return np_error;
 }
 
 NPError
-GCJ_Destroy (NPP instance, NPSavedData** save)
+ITNP_Destroy (NPP instance, NPSavedData** save)
 {
-  PLUGIN_DEBUG_1ARG ("GCJ_Destroy %p\n", instance);
+  PLUGIN_DEBUG_1ARG ("ITNP_Destroy %p\n", instance);
 
-  GCJPluginData* data = (GCJPluginData*) instance->pdata;
+  ITNPPluginData* data = (ITNPPluginData*) instance->pdata;
 
   if (data)
     {
@@ -650,15 +650,15 @@ GCJ_Destroy (NPP instance, NPSavedData** save)
 
   IcedTeaPluginUtilities::invalidateInstance(instance);
 
-  PLUGIN_DEBUG_0ARG ("GCJ_Destroy return\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_Destroy return\n");
 
   return NPERR_NO_ERROR;
 }
 
 NPError
-GCJ_SetWindow (NPP instance, NPWindow* window)
+ITNP_SetWindow (NPP instance, NPWindow* window)
 {
-  PLUGIN_DEBUG_0ARG ("GCJ_SetWindow\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_SetWindow\n");
 
   if (instance == NULL)
     {
@@ -675,12 +675,12 @@ GCJ_SetWindow (NPP instance, NPWindow* window)
       id = GPOINTER_TO_INT(id_ptr);
     }
 
-  GCJPluginData* data = (GCJPluginData*) instance->pdata;
+  ITNPPluginData* data = (ITNPPluginData*) instance->pdata;
 
   // Simply return if we receive a NULL window.
   if ((window == NULL) || (window->window == NULL))
     {
-      PLUGIN_DEBUG_0ARG ("GCJ_SetWindow: got NULL window.\n");
+      PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: got NULL window.\n");
 
       return NPERR_NO_ERROR;
     }
@@ -691,7 +691,7 @@ GCJ_SetWindow (NPP instance, NPWindow* window)
       if (data->window_handle == window->window)
     {
           // The parent window is the same as in previous calls.
-          PLUGIN_DEBUG_0ARG ("GCJ_SetWindow: window already exists.\n");
+          PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: window already exists.\n");
 
           // Critical region.  Read data->appletviewer_mutex and send
           // a message to the appletviewer.
@@ -705,7 +705,7 @@ GCJ_SetWindow (NPP instance, NPWindow* window)
           // SetWindow call.
           if (window->width != data->window_width)
         {
-                  PLUGIN_DEBUG_0ARG ("GCJ_SetWindow: window width changed.\n");
+                  PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: window width changed.\n");
           // The width of the plugin window has changed.
 
                   // Store the new width.
@@ -715,7 +715,7 @@ GCJ_SetWindow (NPP instance, NPWindow* window)
 
           if (window->height != data->window_height)
         {
-                  PLUGIN_DEBUG_0ARG ("GCJ_SetWindow: window height changed.\n");
+                  PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: window height changed.\n");
           // The height of the plugin window has changed.
 
                   // Store the new height.
@@ -737,7 +737,7 @@ GCJ_SetWindow (NPP instance, NPWindow* window)
       else
         {
               // The appletviewer is not running.
-          PLUGIN_DEBUG_0ARG ("GCJ_SetWindow: appletviewer is not running.\n");
+          PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: appletviewer is not running.\n");
         }
 
           g_mutex_unlock (data->appletviewer_mutex);
@@ -746,12 +746,12 @@ GCJ_SetWindow (NPP instance, NPWindow* window)
     {
       // The parent window has changed.  This branch does run but
       // doing nothing in response seems to be sufficient.
-      PLUGIN_DEBUG_0ARG ("GCJ_SetWindow: parent window changed.\n");
+      PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: parent window changed.\n");
     }
     }
   else
     {
-      PLUGIN_DEBUG_0ARG ("GCJ_SetWindow: setting window.\n");
+      PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: setting window.\n");
 
       // Critical region.  Send messages to appletviewer.
       g_mutex_lock (data->appletviewer_mutex);
@@ -775,86 +775,86 @@ GCJ_SetWindow (NPP instance, NPWindow* window)
       data->window_handle = window->window;
     }
 
-  PLUGIN_DEBUG_0ARG ("GCJ_SetWindow return\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_SetWindow return\n");
 
   return NPERR_NO_ERROR;
 }
 
 NPError
-GCJ_NewStream (NPP instance, NPMIMEType type, NPStream* stream,
+ITNP_NewStream (NPP instance, NPMIMEType type, NPStream* stream,
                NPBool seekable, uint16_t* stype)
 {
-  PLUGIN_DEBUG_0ARG ("GCJ_NewStream\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_NewStream\n");
 
-  PLUGIN_DEBUG_0ARG ("GCJ_NewStream return\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_NewStream return\n");
 
   return NPERR_NO_ERROR;
 }
 
 void
-GCJ_StreamAsFile (NPP instance, NPStream* stream, const char* filename)
+ITNP_StreamAsFile (NPP instance, NPStream* stream, const char* filename)
 {
-  PLUGIN_DEBUG_0ARG ("GCJ_StreamAsFile\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_StreamAsFile\n");
 
-  PLUGIN_DEBUG_0ARG ("GCJ_StreamAsFile return\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_StreamAsFile return\n");
 }
 
 NPError
-GCJ_DestroyStream (NPP instance, NPStream* stream, NPReason reason)
+ITNP_DestroyStream (NPP instance, NPStream* stream, NPReason reason)
 {
-  PLUGIN_DEBUG_0ARG ("GCJ_DestroyStream\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_DestroyStream\n");
 
-  PLUGIN_DEBUG_0ARG ("GCJ_DestroyStream return\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_DestroyStream return\n");
 
   return NPERR_NO_ERROR;
 }
 
 int32_t
-GCJ_WriteReady (NPP instance, NPStream* stream)
+ITNP_WriteReady (NPP instance, NPStream* stream)
 {
-  PLUGIN_DEBUG_0ARG ("GCJ_WriteReady\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_WriteReady\n");
 
-  PLUGIN_DEBUG_0ARG ("GCJ_WriteReady return\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_WriteReady return\n");
 
   return 0;
 }
 
 int32_t
-GCJ_Write (NPP instance, NPStream* stream, int32_t offset, int32_t len,
+ITNP_Write (NPP instance, NPStream* stream, int32_t offset, int32_t len,
            void* buffer)
 {
-  PLUGIN_DEBUG_0ARG ("GCJ_Write\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_Write\n");
 
-  PLUGIN_DEBUG_0ARG ("GCJ_Write return\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_Write return\n");
 
   return 0;
 }
 
 void
-GCJ_Print (NPP instance, NPPrint* platformPrint)
+ITNP_Print (NPP instance, NPPrint* platformPrint)
 {
-  PLUGIN_DEBUG_0ARG ("GCJ_Print\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_Print\n");
 
-  PLUGIN_DEBUG_0ARG ("GCJ_Print return\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_Print return\n");
 }
 
 int16_t
-GCJ_HandleEvent (NPP instance, void* event)
+ITNP_HandleEvent (NPP instance, void* event)
 {
-  PLUGIN_DEBUG_0ARG ("GCJ_HandleEvent\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_HandleEvent\n");
 
-  PLUGIN_DEBUG_0ARG ("GCJ_HandleEvent return\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_HandleEvent return\n");
 
   return 0;
 }
 
 void
-GCJ_URLNotify (NPP instance, const char* url, NPReason reason,
+ITNP_URLNotify (NPP instance, const char* url, NPReason reason,
                void* notifyData)
 {
-  PLUGIN_DEBUG_0ARG ("GCJ_URLNotify\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_URLNotify\n");
 
-  PLUGIN_DEBUG_0ARG ("GCJ_URLNotify return\n");
+  PLUGIN_DEBUG_0ARG ("ITNP_URLNotify return\n");
 }
 
 NPError
@@ -923,16 +923,16 @@ get_cookie_info(const char* siteAddr, char** cookieString, uint32_t* len)
 // HELPER FUNCTIONS
 
 static void
-plugin_data_new (GCJPluginData** data)
+plugin_data_new (ITNPPluginData** data)
 {
   PLUGIN_DEBUG_0ARG ("plugin_data_new\n");
 
-  *data = (GCJPluginData*)
-    (*browser_functions.memalloc) (sizeof (struct GCJPluginData));
+  *data = (ITNPPluginData*)
+    (*browser_functions.memalloc) (sizeof (struct ITNPPluginData));
 
   // appletviewer_alive is false until the applet viewer is spawned.
   if (*data)
-    memset (*data, 0, sizeof (struct GCJPluginData));
+    memset (*data, 0, sizeof (struct ITNPPluginData));
 
   PLUGIN_DEBUG_0ARG ("plugin_data_new return\n");
 }
@@ -1147,7 +1147,7 @@ void consume_message(gchar* message) {
   if (g_str_has_prefix (message, "instance"))
     {
 
-	  GCJPluginData* data;
+	  ITNPPluginData* data;
       gchar** parts = g_strsplit (message, " ", -1);
       guint parts_sz = g_strv_length (parts);
 
@@ -1162,7 +1162,7 @@ void consume_message(gchar* message) {
         }
       else if (instance)
         {
-           data = (GCJPluginData*) instance->pdata;
+           data = (ITNPPluginData*) instance->pdata;
         }
 
       if (g_str_has_prefix (parts[2], "url"))
@@ -1403,7 +1403,7 @@ plugin_out_pipe_callback (GIOChannel* source,
 {
   PLUGIN_DEBUG_0ARG ("plugin_out_pipe_callback\n");
 
-  GCJPluginData* data = (GCJPluginData*) plugin_data;
+  ITNPPluginData* data = (ITNPPluginData*) plugin_data;
 
   PLUGIN_DEBUG_0ARG ("plugin_out_pipe_callback: appletviewer has stopped.\n");
 
@@ -1452,7 +1452,7 @@ plugin_test_appletviewer ()
 }
 
 static NPError
-plugin_start_appletviewer (GCJPluginData* data)
+plugin_start_appletviewer (ITNPPluginData* data)
 {
   PLUGIN_DEBUG_0ARG ("plugin_start_appletviewer\n");
   NPError error = NPERR_NO_ERROR;
@@ -1799,7 +1799,7 @@ plugin_data_destroy (NPP instance)
 {
   PLUGIN_DEBUG_0ARG ("plugin_data_destroy\n");
 
-  GCJPluginData* tofree = (GCJPluginData*) instance->pdata;
+  ITNPPluginData* tofree = (ITNPPluginData*) instance->pdata;
 
   // Remove instance from map
   gpointer id_ptr = g_hash_table_lookup(instance_to_id_map, instance);
@@ -1940,29 +1940,29 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
   pluginTable->size = sizeof (NPPluginFuncs);
 
 #if MOZILLA_VERSION_COLLAPSED < 1090100
-  pluginTable->newp = NewNPP_NewProc (GCJ_New);
-  pluginTable->destroy = NewNPP_DestroyProc (GCJ_Destroy);
-  pluginTable->setwindow = NewNPP_SetWindowProc (GCJ_SetWindow);
-  pluginTable->newstream = NewNPP_NewStreamProc (GCJ_NewStream);
-  pluginTable->destroystream = NewNPP_DestroyStreamProc (GCJ_DestroyStream);
-  pluginTable->asfile = NewNPP_StreamAsFileProc (GCJ_StreamAsFile);
-  pluginTable->writeready = NewNPP_WriteReadyProc (GCJ_WriteReady);
-  pluginTable->write = NewNPP_WriteProc (GCJ_Write);
-  pluginTable->print = NewNPP_PrintProc (GCJ_Print);
-  pluginTable->urlnotify = NewNPP_URLNotifyProc (GCJ_URLNotify);
-  pluginTable->getvalue = NewNPP_GetValueProc (GCJ_GetValue);
+  pluginTable->newp = NewNPP_NewProc (ITNP_New);
+  pluginTable->destroy = NewNPP_DestroyProc (ITNP_Destroy);
+  pluginTable->setwindow = NewNPP_SetWindowProc (ITNP_SetWindow);
+  pluginTable->newstream = NewNPP_NewStreamProc (ITNP_NewStream);
+  pluginTable->destroystream = NewNPP_DestroyStreamProc (ITNP_DestroyStream);
+  pluginTable->asfile = NewNPP_StreamAsFileProc (ITNP_StreamAsFile);
+  pluginTable->writeready = NewNPP_WriteReadyProc (ITNP_WriteReady);
+  pluginTable->write = NewNPP_WriteProc (ITNP_Write);
+  pluginTable->print = NewNPP_PrintProc (ITNP_Print);
+  pluginTable->urlnotify = NewNPP_URLNotifyProc (ITNP_URLNotify);
+  pluginTable->getvalue = NewNPP_GetValueProc (ITNP_GetValue);
 #else
-  pluginTable->newp = NPP_NewProcPtr (GCJ_New);
-  pluginTable->destroy = NPP_DestroyProcPtr (GCJ_Destroy);
-  pluginTable->setwindow = NPP_SetWindowProcPtr (GCJ_SetWindow);
-  pluginTable->newstream = NPP_NewStreamProcPtr (GCJ_NewStream);
-  pluginTable->destroystream = NPP_DestroyStreamProcPtr (GCJ_DestroyStream);
-  pluginTable->asfile = NPP_StreamAsFileProcPtr (GCJ_StreamAsFile);
-  pluginTable->writeready = NPP_WriteReadyProcPtr (GCJ_WriteReady);
-  pluginTable->write = NPP_WriteProcPtr (GCJ_Write);
-  pluginTable->print = NPP_PrintProcPtr (GCJ_Print);
-  pluginTable->urlnotify = NPP_URLNotifyProcPtr (GCJ_URLNotify);
-  pluginTable->getvalue = NPP_GetValueProcPtr (GCJ_GetValue);
+  pluginTable->newp = NPP_NewProcPtr (ITNP_New);
+  pluginTable->destroy = NPP_DestroyProcPtr (ITNP_Destroy);
+  pluginTable->setwindow = NPP_SetWindowProcPtr (ITNP_SetWindow);
+  pluginTable->newstream = NPP_NewStreamProcPtr (ITNP_NewStream);
+  pluginTable->destroystream = NPP_DestroyStreamProcPtr (ITNP_DestroyStream);
+  pluginTable->asfile = NPP_StreamAsFileProcPtr (ITNP_StreamAsFile);
+  pluginTable->writeready = NPP_WriteReadyProcPtr (ITNP_WriteReady);
+  pluginTable->write = NPP_WriteProcPtr (ITNP_Write);
+  pluginTable->print = NPP_PrintProcPtr (ITNP_Print);
+  pluginTable->urlnotify = NPP_URLNotifyProcPtr (ITNP_URLNotify);
+  pluginTable->getvalue = NPP_GetValueProcPtr (ITNP_GetValue);
 #endif
 
   // Make sure the plugin data directory exists, creating it if
@@ -2034,7 +2034,7 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
   // Set appletviewer_executable.
   Dl_info info;
   int filename_size;
-  if (dladdr ((const void*) GCJ_New, &info) == 0)
+  if (dladdr ((const void*) ITNP_New, &info) == 0)
     {
       PLUGIN_ERROR_TWO ("Failed to determine plugin shared object filename",
                         dlerror ());
@@ -2274,7 +2274,7 @@ NPObject*
 get_scriptable_object(NPP instance)
 {
     NPObject* obj;
-    GCJPluginData* data = (GCJPluginData*) instance->pdata;
+    ITNPPluginData* data = (ITNPPluginData*) instance->pdata;
 
     if (data->is_applet_instance) // dummy instance/package?
     {

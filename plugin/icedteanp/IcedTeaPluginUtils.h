@@ -71,7 +71,7 @@ exception statement from your version. */
   {                                         \
     if (plugin_debug)                       \
     {                                       \
-      fprintf(stderr, "GCJ PLUGIN: thread %p: ", pthread_self()); \
+      fprintf(stderr, "ICEDTEA NP PLUGIN: thread %p: ", pthread_self()); \
       fprintf(stderr, str);                \
     }                                       \
   } while (0)
@@ -81,7 +81,7 @@ exception statement from your version. */
   {                                         \
     if (plugin_debug)                       \
     {                                       \
-      fprintf(stderr, "GCJ PLUGIN: thread %p: ", pthread_self()); \
+      fprintf(stderr, "ICEDTEA NP PLUGIN: thread %p: ", pthread_self()); \
       fprintf(stderr, str, arg1);          \
     }                                       \
   } while (0)
@@ -91,7 +91,7 @@ exception statement from your version. */
   {                                         \
     if (plugin_debug)                       \
     {                                       \
-      fprintf(stderr, "GCJ PLUGIN: thread %p: ", pthread_self()); \
+      fprintf(stderr, "ICEDTEA NP PLUGIN: thread %p: ", pthread_self()); \
       fprintf(stderr, str, arg1, arg2);    \
     }                                       \
   } while (0)
@@ -101,7 +101,7 @@ exception statement from your version. */
   {                                            \
     if (plugin_debug)                          \
     {                                          \
-      fprintf(stderr, "GCJ PLUGIN: thread %p: ", pthread_self()); \
+      fprintf(stderr, "ICEDTEA NP PLUGIN: thread %p: ", pthread_self()); \
       fprintf(stderr, str, arg1, arg2, arg3); \
     }                                          \
   } while (0)
@@ -111,7 +111,7 @@ exception statement from your version. */
   {                                                  \
     if (plugin_debug)                                \
     {                                                \
-      fprintf(stderr, "GCJ PLUGIN: thread %p: ", pthread_self()); \
+      fprintf(stderr, "ICEDTEA NP PLUGIN: thread %p: ", pthread_self()); \
       fprintf(stderr, str, arg1, arg2, arg3, arg4); \
     }                                                \
   } while (0)
@@ -121,7 +121,7 @@ exception statement from your version. */
   {                                                  \
     if (plugin_debug)                                \
     {                                                \
-      fprintf(stderr, "GCJ PLUGIN: thread %p: ", pthread_self()); \
+      fprintf(stderr, "ICEDTEA NP PLUGIN: thread %p: ", pthread_self()); \
       fprintf(stderr, str, arg1, arg2, arg3, arg4, arg5); \
     }                                                \
   } while (0)

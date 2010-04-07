@@ -66,6 +66,8 @@ public class PluginProxyInfoRequest extends PluginCallRequest {
     	    int port = Integer.parseInt(messageComponents[5].split(":")[1]);
 
     	    internal = new URI(protocol, null, host, port, null, null, null);
+    	} catch (ArrayIndexOutOfBoundsException aioobe) {
+    	    // Nothing.. this is expected if there is no proxy
     	} catch (Exception e) {
     	    e.printStackTrace();
     	}

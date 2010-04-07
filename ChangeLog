@@ -1,3 +1,14 @@
+2010-04-07  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaNPPlugin.cc: ReplaceAll "GCJ" with "ITNP", and
+	change other strings to remove reference to GCJ.
+	* plugin/icedteanp/IcedTeaNPPlugin.h : Renamed GCJPluginData to
+	ITNPPluginData.
+	* plugin/icedteanp/IcedTeaPluginUtils.h: Changed debug output to be
+	prefixed with "ICEDTEA NP PLUGIN" instead of "GCJ PLUGIN".
+	* plugin/icedteanp/java/sun/applet/PluginProxyInfoRequest.java: Don't
+	print ArrayIndexOutOfBounds traces. Continue to print any others.
+
 2010-04-07  Xerxes Rånby  <xerxes@zafena.se>
 
 	* configure.ac: Updated check for shared LLVM library to include svn.
