@@ -1,3 +1,14 @@
+2010-04-08  Andrew John Hughes  <ahughes@redhat.com>
+
+	* configure.ac: Move NSS detection to macros
+	in acinclude.m4.
+	* acinclude.m4:
+	(IT_OBTAIN_DEFAULT_LIBDIR): Attempts to discover the
+	system library directory (e.g /usr/lib64)
+	(IT_LOCATE_NSS): Always try and detect NSS
+	and only resort to using the system library directory
+	detection if NSS is not detected.
+
 2010-04-08  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (stamps/icedtea.stamp, stamps/icedtea-debug.stamp):

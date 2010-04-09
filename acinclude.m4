@@ -1805,6 +1805,46 @@ return EXIT_SUCCESS;
 fi
 ])
 
+AC_DEFUN_ONCE([IT_OBTAIN_DEFAULT_LIBDIR],
+[
+dnl find the system library directory
+AC_CACHE_CHECK([for system library directory], [it_cv_default_libdir],
+[
+if test "x$LDD" = x; then
+  it_cv_default_libdir=/usr/lib
+else
+  AC_LANG_CONFTEST([AC_LANG_PROGRAM([[]], [[]])])
+  $CC conftest.c
+  syslibdir=`$LDD a.out | sed -n '/libc\.so./s,.*=> */\(@<:@^/@:>@*\)/.*,\1,p'`
+  rm -f a.out
+  case x${syslibdir} in
+    xlib|xlib64|xlib32|xlibn32) NSS_LIBDIR=/usr/${syslibdir};;
+    *) it_cv_default_libdir=/usr/lib
+  esac
+fi
+])
+AC_SUBST([DEFAULT_LIBDIR], $it_cv_default_libdir)
+])
+
+AC_DEFUN_ONCE([IT_LOCATE_NSS],
+[
+AC_REQUIRE([IT_OBTAIN_DEFAULT_LIBDIR])
+PKG_CHECK_MODULES(NSS, nss, [NSS_FOUND=yes], [NSS_FOUND=no])
+if test "x${NSS_FOUND}" = xno
+then
+  if test "x${ENABLE_NSS}" = "xyes"
+  then
+    AC_MSG_ERROR([Could not find NSS.  Either install it or configure using --disable-nss.])
+  else
+    AC_MSG_WARN([Could not find NSS; using $DEFAULT_LIBDIR as its location.])
+    NSS_LIBDIR=$DEFAULT_LIBDIR
+  fi
+else
+  NSS_LIBDIR=`$PKG_CONFIG --variable=libdir nss`
+fi
+AC_SUBST(NSS_LIBDIR)
+AC_CONFIG_FILES([nss.cfg])
+])
 AC_DEFUN([IT_DIAMOND_CHECK],[
   AC_CACHE_CHECK([if javac lacks support for the diamond operator], it_cv_diamond, [
   CLASS=Test.java
