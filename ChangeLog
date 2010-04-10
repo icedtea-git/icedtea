@@ -3,7 +3,7 @@
 	* Makefile.am (ICEDTEA_PATCHES): Always apply
 	icedtea-nss-6763530.patch. Apply icedtea-nss-not-enabled-config.patch
 	if the NSS-based security provider is disabled by default.
-	* Makefile.am: Be verbose wether the NSS-based security provider
+	* configure.ac: Be verbose whether the NSS-based security provider
 	is enabled or disabled by default.
 	* patches/icedtea-nss-not-enabled-config.patch: New.
 
