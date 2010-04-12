@@ -1412,6 +1412,78 @@ plugin_out_pipe_callback (GIOChannel* source,
   return FALSE;
 }
 
+// remove all components from LD_LIBRARY_PATH, which start with
+// MOZILLA_FIVE_HOME; firefox has its own NSS based security provider,
+// which conflicts with the one configured in nss.cfg.
+static gchar*
+plugin_filter_ld_library_path(gchar *path_old)
+{
+  gchar *moz_home = g_strdup (g_getenv ("MOZILLA_FIVE_HOME"));
+  gchar *moz_prefix;
+  gchar *path_new;
+  gchar** components;
+  int i1, i2;
+
+  if (moz_home == NULL || path_old == NULL || strlen (path_old) == 0)
+    return path_old;
+  if (g_str_has_suffix (moz_home, "/"))
+    moz_home[strlen (moz_home - 1)] = '\0';
+  moz_prefix = g_strconcat (moz_home, "/", NULL);
+
+  components = g_strsplit (path_old, ":", -1);
+  for (i1 = 0, i2 = 0; components[i1] != NULL; i1++)
+    {
+      if (g_strcmp0 (components[i1], moz_home) == 0
+	  || g_str_has_prefix (components[i1], moz_home))
+	components[i2] = components[i1];
+      else
+	components[i2++] = components[i1];
+    }
+  components[i2] = NULL;
+
+  if (i1 > i2)
+    path_new = g_strjoinv (":", components);
+  g_strfreev (components);
+  g_free (moz_home);
+  g_free (moz_prefix);
+  g_free (path_old);
+
+  if (path_new == NULL || strlen (path_new) == 0)
+    {
+      PLUGIN_DEBUG_0ARG("Unset LD_LIBRARY_PATH\n");
+      return NULL;
+    }
+  else
+    {
+      PLUGIN_DEBUG_1ARG ("Set LD_LIBRARY_PATH: %s\n", path_new);
+      return path_new;
+    }
+}
+
+// build the environment to pass to the external plugin process
+static gchar**
+plugin_filter_environment(void)
+{
+  gchar **var_names = g_listenv();
+  gchar **new_env = (gchar**) malloc(sizeof(gchar*) * g_strv_length (var_names));
+  int i_var, i_env;
+
+  for (i_var = 0, i_env = 0; var_names[i_var] != NULL; i_var++)
+    {
+      gchar *env_value = g_strdup (g_getenv (var_names[i_var]));
+
+      if (g_str_has_prefix (var_names[i_var], "LD_LIBRARY_PATH"))
+	env_value = plugin_filter_ld_library_path (env_value);
+      if (env_value != NULL)
+	{
+	  new_env[i_env++] = g_strdup_printf ("%s=%s", var_names[i_var], env_value);
+	  g_free (env_value);
+	}
+    }
+  new_env[i_env] = NULL;
+  return new_env;
+}
+
 static NPError
 plugin_test_appletviewer ()
 {
@@ -1419,13 +1491,16 @@ plugin_test_appletviewer ()
   NPError error = NPERR_NO_ERROR;
 
   gchar* command_line[3] = { NULL, NULL, NULL };
+  gchar** environment;
 
   command_line[0] = g_strdup (appletviewer_executable);
   command_line[1] = g_strdup("-version");
   command_line[2] = NULL;
 
+  environment = plugin_filter_environment();
 
-  if (!g_spawn_async (NULL, command_line, NULL, (GSpawnFlags) 0,
+  if (!g_spawn_async (NULL, command_line, environment,
+		      (GSpawnFlags) 0,
                       NULL, NULL, NULL, &channel_error))
     {
       if (channel_error)
@@ -1439,6 +1514,8 @@ plugin_test_appletviewer ()
         PLUGIN_ERROR ("Failed to spawn applet viewer");
       error = NPERR_GENERIC_ERROR;
     }
+
+  g_strfreev (environment);
 
   g_free (command_line[0]);
   command_line[0] = NULL;
@@ -1458,6 +1535,7 @@ plugin_start_appletviewer (ITNPPluginData* data)
   NPError error = NPERR_NO_ERROR;
 
   gchar** command_line;
+  gchar** environment;
 
   if (plugin_debug)
   {
@@ -1480,7 +1558,10 @@ plugin_start_appletviewer (ITNPPluginData* data)
        command_line[4] = NULL;
    }
 
-  if (!g_spawn_async (NULL, command_line, NULL, (GSpawnFlags) G_SPAWN_DO_NOT_REAP_CHILD,
+  environment = plugin_filter_environment();
+
+  if (!g_spawn_async (NULL, command_line, environment,
+		      (GSpawnFlags) G_SPAWN_DO_NOT_REAP_CHILD,
                       NULL, NULL, &appletviewer_pid, &channel_error))
     {
       if (channel_error)
@@ -1494,6 +1575,8 @@ plugin_start_appletviewer (ITNPPluginData* data)
         PLUGIN_ERROR ("Failed to spawn applet viewer");
       error = NPERR_GENERIC_ERROR;
     }
+
+  g_strfreev (environment);
 
   g_free (command_line[0]);
   command_line[0] = NULL;

@@ -1,3 +1,14 @@
+2010-04-12  Matthias Klose  <doko@ubuntu.com>
+
+	PR icedtea/461
+	* plugin/icedteanp/IcedTeaNPPlugin.cc (plugin_filter_ld_library_path):
+	New, filter out paths in LD_LIBRARY_PATH which start with
+	MOZILLA_FIVE_HOME.
+	(plugin_filter_environment): New, build environment to pass to the
+	appletviewer process.
+	(plugin_test_appletviewer, plugin_start_appletviewer): Start the new
+	process with the filtered environment.
+
 2010-04-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
