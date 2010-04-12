@@ -184,7 +184,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                   Thread.sleep(50);
                   wait += 50;
               } catch (InterruptedException ie) {
-                  ie.printStackTrace();
+                  // just wait
               }
          }
 
@@ -196,7 +196,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                  Thread.sleep(50);
                  PluginDebug.debug("Waiting for applet to initialize...");
              } catch (InterruptedException ie) {
-                 ie.printStackTrace();
+                 // just wait
              }
          }
 
@@ -629,7 +629,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                               Thread.sleep(50);
                               wait += 50;
                           } catch (InterruptedException ie) {
-                              ie.printStackTrace();
+                              // just wait
                           }
                      }
 
@@ -674,7 +674,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                       Thread.sleep(50);
                       wait += 50;
                   } catch (InterruptedException ie) {
-                      ie.printStackTrace();
+                      // just wait
                   }
              }
 
@@ -747,7 +747,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                      Thread.sleep(50);
                      PluginDebug.debug("Waiting for applet to initialize...");
                  } catch (InterruptedException ie) {
-                     ie.printStackTrace();
+                     // just wait
                  }
              }
 

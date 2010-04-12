@@ -269,7 +269,6 @@ ITNP_New (NPMIMEType pluginType, NPP instance, uint16_t mode,
   NPVariant member_ptr;
   browser_functions.getvalue(instance, NPNVWindowNPObject, &window_ptr);
   identifier = browser_functions.getstringidentifier("document");
-  printf("Looking for %p %p %p (%s)\n", instance, window_ptr, identifier, "document");
   if (!browser_functions.hasproperty(instance, window_ptr, identifier))
   {
 	printf("%s not found!\n", "document");

@@ -1,3 +1,11 @@
+2010-04-12  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaNPPlugin.cc (ITNP_New): Removed debug printf
+	statement that didn't belong there.
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java
+	(createPanel): Don't print stack traces on InterruptedException.
+	(handleMessage): Same.
+
 2010-04-12  Matthias Klose  <doko@ubuntu.com>
 
 	PR icedtea/461
