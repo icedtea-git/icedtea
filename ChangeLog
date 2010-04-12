@@ -1,3 +1,7 @@
+2010-04-12  Matthias Klose  <doko@ubuntu.com>
+
+	* configure.ac: Clarify result message of the NSS check.
+
 2010-04-10  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (ICEDTEA_PATCHES): Always apply

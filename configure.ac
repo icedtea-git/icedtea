@@ -135,9 +135,9 @@ AC_ARG_ENABLE([nss],
 AM_CONDITIONAL([ENABLE_NSS], [test x$ENABLE_NSS = xyes])
 if test "x${ENABLE_NSS}" = "xyes"
 then
-  AC_MSG_RESULT([yes])
+  AC_MSG_RESULT([enabled by default (edit java.security to disable)])
 else
-  AC_MSG_RESULT([yes, disabled by default (edit java.security to enable)])
+  AC_MSG_RESULT([disabled by default (edit java.security to enable)])
 fi
 
 IT_GET_PKGVERSION
