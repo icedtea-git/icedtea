@@ -1,3 +1,10 @@
+2010-04-18  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	(FIND_JAR): Log all output to config.log
+	(AC_CHECK_WITH_HG_REVISION): Likewise.
+	(IT_CHECK_PLUGIN_DEPENDENCIES): Likewise.
+
 2010-04-12  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaNPPlugin.cc (ITNP_New): Removed debug printf

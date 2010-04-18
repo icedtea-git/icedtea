@@ -366,7 +366,7 @@ AC_DEFUN([FIND_JAR],
   cat >_config.list <<EOF
 _config.txt
 EOF
-  if $JAR cf _config.jar @_config.list 2>&AS_MESSAGE_LOG_FD; then
+  if $JAR cf _config.jar @_config.list >&AS_MESSAGE_LOG_FD 2>&1; then
     JAR_KNOWS_ATFILE=1
     AC_MSG_RESULT(yes)
   else
@@ -374,7 +374,7 @@ EOF
     AC_MSG_RESULT(no)
   fi
   AC_MSG_CHECKING([whether jar supports stdin file arguments])
-  if cat _config.list | $JAR cf@ _config.jar 2>&AS_MESSAGE_LOG_FD; then
+  if cat _config.list | $JAR cf@ _config.jar >&AS_MESSAGE_LOG_FD 2>&1; then
     JAR_ACCEPTS_STDIN_LIST=1
     AC_MSG_RESULT(yes)
   else
@@ -383,7 +383,7 @@ EOF
   fi
   rm -f _config.list _config.jar
   AC_MSG_CHECKING([whether jar supports -J options at the end])
-  if $JAR cf _config.jar _config.txt -J-Xmx896m 2>&AS_MESSAGE_LOG_FD; then
+  if $JAR cf _config.jar _config.txt -J-Xmx896m >&AS_MESSAGE_LOG_FD 2>&1; then
     JAR_KNOWS_J_OPTIONS=1
     AC_MSG_RESULT(yes)
   else
@@ -1687,7 +1687,7 @@ AC_DEFUN_ONCE([IT_OBTAIN_HG_REVISIONS],
   ICEDTEA_REVISION="none";
   JDK_REVISION="none";
   HOTSPOT_REVISION="none";
-  if which ${HG} >/dev/null; then
+  if which ${HG} >&AS_MESSAGE_LOG_FD 2>&1; then
     AC_MSG_CHECKING([for IcedTea Mercurial revision ID])
     if test -e ${abs_top_srcdir}/.hg ; then 
       ICEDTEA_REVISION="r`(cd ${abs_top_srcdir}; ${HG} tip --template '{node|short}')`" ; 
@@ -1734,8 +1734,7 @@ if test "x${enable_plugin}" = "xyes" ; then
   AC_SUBST(GTK_CFLAGS)
   AC_SUBST(GTK_LIBS)
 
-
-  if $PKG_CONFIG --atleast-version 1.9.2 libxul 2>&AS_MESSAGE_LOG_FD ; then
+  if $PKG_CONFIG --atleast-version 1.9.2 libxul >&AS_MESSAGE_LOG_FD 2>&1; then
     xullibs=libxul
   else
     xullibs="libxul libxul-unstable"
