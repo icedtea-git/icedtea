@@ -1,3 +1,11 @@
+2010-04-19  Xerxes Rånby  <xerxes@zafena.se>
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::memset): Update Shark for LLVM 2.8 API change.
+	LLVM 2.8 added a fifth isVolatile field for memset
+	introduced with LLVM r100304.
+	(SharkBuilder::CreateMemset): Likewise
+
 2010-04-18  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:

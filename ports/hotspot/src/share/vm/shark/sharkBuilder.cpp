@@ -399,7 +399,13 @@ Value* SharkBuilder::memory_barrier() {
 }
 
 Value* SharkBuilder::memset() {
+#if SHARK_LLVM_VERSION >= 28
+  // LLVM 2.8 added a fifth isVolatile field for memset
+  // introduced with LLVM r100304
+  return make_function("llvm.memset.i32", "Cciii", "v");
+#else
   return make_function("llvm.memset.i32", "Ccii", "v");
+#endif
 }
 
 Value* SharkBuilder::unimplemented() {
@@ -447,7 +453,12 @@ CallInst* SharkBuilder::CreateMemset(Value* dst,
                                      Value* value,
                                      Value* len,
                                      Value* align) {
+#if SHARK_LLVM_VERSION >= 28
+  return CreateCall5(memset(), dst, value, len, align,
+                     LLVMValue::jint_constant(0));
+#else
   return CreateCall4(memset(), dst, value, len, align);
+#endif
 }
 
 CallInst* SharkBuilder::CreateUnimplemented(const char* file, int line) {
