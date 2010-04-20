@@ -1,3 +1,10 @@
+2010-04-20  Deepak Bhole <dbhole@redhat.com>
+
+	PR icedtea/474
+	* plugin/icedteanp/IcedTeaNPPlugin.cc
+	(plugin_filter_environment): Increment malloc size by one to account for
+	NULL terminator. Bug# 474.
+
 2010-04-19  Xerxes Rånby  <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
