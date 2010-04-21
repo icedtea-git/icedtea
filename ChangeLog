@@ -1,3 +1,8 @@
+2010-04-21  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaNPPlugin.cc
+	(plugin_filter_environment): Fix typo in previous commit
+
 2010-04-20  Deepak Bhole <dbhole@redhat.com>
 
 	PR icedtea/474

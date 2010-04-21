@@ -1464,7 +1464,7 @@ static gchar**
 plugin_filter_environment(void)
 {
   gchar **var_names = g_listenv();
-  gchar **new_env = (gchar**) malloc(sizeof(gchar*) * g_strv_length (var_names) + 1);
+  gchar **new_env = (gchar**) malloc(sizeof(gchar*) * (g_strv_length (var_names) + 1));
   int i_var, i_env;
 
   for (i_var = 0, i_env = 0; var_names[i_var] != NULL; i_var++)
