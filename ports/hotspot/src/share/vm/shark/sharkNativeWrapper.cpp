@@ -98,7 +98,8 @@ void SharkNativeWrapper::initialize(const char *name) {
   if (is_static()) {
     builder()->CreateStore(
       builder()->CreateInlineOop(
-        JNIHandles::make_local(target()->method_holder())),
+        JNIHandles::make_local(
+        target()->method_holder()->klass_part()->java_mirror())),
       oop_tmp_slot());
 
     param_types.push_back(box_type);
