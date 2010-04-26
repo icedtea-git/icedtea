@@ -1,3 +1,8 @@
+2010-04-26 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(rt.stamp): Change JDK_SHARE to SHARE to match IcedTea6.
+
 2010-03-31 Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

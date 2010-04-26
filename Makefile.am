@@ -2578,7 +2578,7 @@ if LACKS_SUN_AWT_TOOLKIT
 	 cd lib/rt ; \
 	 for dirs in $(ICEDTEA_BOOTSTRAP_RESOURCES) ; \
 	   do \
-	   destpath=`echo $$dirs|sed -e 's#$(LANGTOOLS)/##' -e 's#$(JDK_SHARE)/##'` ; \
+	   destpath=`echo $$dirs|sed -e 's#$(LANGTOOLS)/##' -e 's#$(SHARE)/##'` ; \
 	   mkdir -p `dirname $$destpath` ; \
 	   cp -a ../../$$dirs $$destpath ; \
 	 done ; \
