@@ -70,6 +70,12 @@ ICEDTEA_BOOT_DIR= \
 	$(abs_top_builddir)/bootstrap/jdk1.6.0
 ICEDTEA_RT = \
 	$(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar
+NETX_CLASSES = \
+	$(abs_top_builddir)/netx.build
+NETX_JAR = \
+	$(NETX_CLASSES)/lib/classes.jar
+NETX_SRC = \
+	$(NETX_CLASSES)/lib/src.zip
 ICEDTEA_ENDORSED_DIR = \
 	$(ICEDTEA_BOOT_DIR)/lib/endorsed
 ICEDTEA_BUILD_DIR_BOOT = \
@@ -177,7 +183,10 @@ ICEDTEANPPLUGIN_TARGET = $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaNPPlugin
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
 LIVECONNECT_DIR = sun/applet netscape
-JNLP_ABOUT_TARGET = extra-lib/about.jar 
+JNLP_ABOUT_TARGET = extra-lib/about.jar
+LIVECONNECT_CLASSES = $(abs_top_builddir)/liveconnect
+LIVECONNECT_JAR = $(LIVECONNECT_CLASSES)/lib/classes.jar
+LIVECONNECT_SRC = $(LIVECONNECT_CLASSES)/lib/src.zip
 else
 if ENABLE_PLUGIN
 PLUGIN_SRCDIR=$(abs_top_srcdir)/plugin/icedtea
@@ -187,6 +196,9 @@ ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
 LIVECONNECT_DIR = sun/applet netscape
 JNLP_ABOUT_TARGET = extra-lib/about.jar
+LIVECONNECT_CLASSES = $(abs_top_builddir)/liveconnect
+LIVECONNECT_JAR = $(LIVECONNECT_CLASSES)/lib/classes.jar
+LIVECONNECT_SRC = $(LIVECONNECT_CLASSES)/lib/src.zip
 else
 PLUGIN_PATCH = patches/icedtea-plugin.patch
 endif
@@ -484,8 +496,8 @@ ICEDTEA_ENV = \
 	RHINO_JAR="$(RHINO_JAR)" \
 	DISTRIBUTION_ID="$(DIST_ID)" \
 	ALT_JIBX_LIBS_PATH="$(JIBX_DEPS_DIR)" \
-	ALT_NETX_DIST="$(abs_top_builddir)/netx.build" \
-	ALT_LIVECONNECT_DIST="$(abs_top_builddir)/liveconnect" \
+	ALT_NETX_DIST="$(NETX_CLASSES)" \
+	ALT_LIVECONNECT_DIST="$(LIVECONNECT_CLASSES)" \
 	DEBUG_CLASSFILES="true" \
 	DEBUG_BINARIES="true" \
 	DISABLE_INTREE_EC="true" \
@@ -2050,10 +2062,10 @@ liveconnect-source-files.txt:
 
 stamps/liveconnect.stamp: liveconnect-source-files.txt stamps/netx.stamp
 	if test "x${LIVECONNECT_DIR}" != x; then \
-	  mkdir -p $(abs_top_builddir)/liveconnect ; \
+	  mkdir -p $(LIVECONNECT_CLASSES) ; \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
-	      -d $(abs_top_builddir)/liveconnect \
-	      -classpath $(abs_top_builddir)/lib/rt:$(abs_top_builddir)/netx.build:$(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
+	      -d $(LIVECONNECT_CLASSES) \
+	      -classpath $(ICEDTEA_RT):$(NETX_CLASSES) \
 	      -sourcepath $(SOURCEPATH_DIRS) \
 	      -bootclasspath \'\' \
 	      @liveconnect-source-files.txt ; \
@@ -2063,19 +2075,19 @@ stamps/liveconnect.stamp: liveconnect-source-files.txt stamps/netx.stamp
 
 stamps/liveconnect-dist.stamp: stamps/liveconnect.stamp
 	if test "x${LIVECONNECT_DIR}" != x; then \
-	  (cd $(abs_top_builddir)/liveconnect ; \
+	  (cd $(LIVECONNECT_CLASSES) ; \
 	   mkdir -p lib ; \
-	   $(ICEDTEA_BOOT_DIR)/bin/jar cf lib/classes.jar ${LIVECONNECT_DIR} ; \
+	   $(ICEDTEA_BOOT_DIR)/bin/jar cf $(LIVECONNECT_JAR) $(LIVECONNECT_DIR) ; \
 	   cp -a $(PLUGIN_SRCDIR)/java src; \
 	   find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
 	   cd src ; \
-	   $(ZIP) -qr $(abs_top_builddir)/liveconnect/lib/src.zip ${LIVECONNECT_DIR} ) ; \
+	   $(ZIP) -qr $(LIVECONNECT_SRC) ${LIVECONNECT_DIR} ) ; \
 	fi
 	mkdir -p stamps
 	touch $@
 
 clean-liveconnect:
-	rm -rf $(abs_top_builddir)/liveconnect
+	rm -rf $(LIVECONNECT_CLASSES)
 	rm -f stamps/liveconnect-dist.stamp
 	rm -f liveconnect-source-files.txt
 	rm -f stamps/liveconnect.stamp
@@ -2087,11 +2099,11 @@ clean-liveconnect:
 netx-source-files.txt:
 	find $(NETX_SRCDIR) -name '*.java' | sort > $@
 
-stamps/netx.stamp: netx-source-files.txt stamps/rt-class-files.stamp
-	mkdir -p $(abs_top_builddir)/netx.build
+stamps/netx.stamp: netx-source-files.txt stamps/rt.stamp
+	mkdir -p $(NETX_CLASSES)
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
-	    -d $(abs_top_builddir)/netx.build \
-	    -classpath $(abs_top_builddir)/lib/rt:$(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
+	    -d $(NETX_CLASSES) \
+	    -classpath $(ICEDTEA_RT) \
 	    -sourcepath $(NETX_SRCDIR):$(SOURCEPATH_DIRS) \
 	    -bootclasspath \'\' \
 	    @netx-source-files.txt ;
@@ -2099,20 +2111,20 @@ stamps/netx.stamp: netx-source-files.txt stamps/rt-class-files.stamp
 	touch $@
 
 stamps/netx-dist.stamp: stamps/netx.stamp
-	(cd $(abs_top_builddir)/netx.build ; \
+	(cd $(NETX_CLASSES) ; \
 	 mkdir -p lib ; \
-	 $(ICEDTEA_BOOT_DIR)/bin/jar cf lib/classes.jar javax/jnlp net ; \
+	 $(ICEDTEA_BOOT_DIR)/bin/jar cf $(NETX_JAR) javax/jnlp net ; \
 	 cp -a $(NETX_SRCDIR) src; \
 	 find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
 	 cd src ; \
-	 $(ICEDTEA_BOOT_DIR)/bin/jar uf $(abs_top_builddir)/netx.build/lib/classes.jar \
+	 $(ICEDTEA_BOOT_DIR)/bin/jar uf $(NETX_JAR) \
 	  `find . -type f -not -name '*.java'` ; \
-	 $(ZIP) -qr $(abs_top_builddir)/netx.build/lib/src.zip javax net )
+	 $(ZIP) -qr $(NETX_SRC) javax net )
 	mkdir -p stamps
 	touch $@
 
 clean-netx:
-	rm -rf $(abs_top_builddir)/netx.build
+	rm -rf $(NETX_CLASSES)
 	rm -f stamps/netx-dist.stamp
 	rm -f netx-source-files.txt
 	rm -f stamps/netx.stamp
@@ -2123,10 +2135,10 @@ extra-source-files.txt:
 stamps/extra-class-files.stamp: extra-source-files.txt stamps/netx.stamp
 	mkdir -p extra-lib
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d extra-lib \
-	  -classpath $(abs_top_builddir)/lib/rt:$(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
+	  -classpath $(ICEDTEA_RT):$(NETX_CLASSES) \
 	  -sourcepath $(abs_top_srcdir)/extra:$(SOURCEPATH_DIRS) \
 	  -bootclasspath \'\' \
-	  @extra-source-files.txt ; \
+	  @extra-source-files.txt
 	cp -r $(abs_top_srcdir)/extra/net/sourceforge/jnlp/about/resources \
 	  extra-lib/net/sourceforge/jnlp/about	
 	find extra-lib/net/sourceforge/jnlp/about -type f -exec chmod 640 '{}' ';' \

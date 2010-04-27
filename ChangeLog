@@ -1,5 +1,31 @@
 2010-04-26 Andrew John Hughes  <ahughes@redhat.com>
 
+	Make sure correct classpaths are used by pre-build
+	javac targets and use variables for NetX and plugin
+	classes, JAR files and source files.
+	* Makefile.am:
+	(NETX_CLASSES): Add location of built NetX classes.
+	(NETX_JAR): Add location of NetX JAR file.
+	(NETX_SRC): Add location of NetX source files.
+	(LIVECONNECT_CLASSES): Classes for plugin.
+	(LIVECONNECT_JAR): JAR file for plugin.
+	(LIVECONNECT_SRC): Source files for plugin.
+	(ICEDTEA_ENV): Use NETX_CLASSES and LIVECONNECT_CLASSES
+	variables.
+	(liveconnect.stamp): Set classpath to bootstrap rt.jar
+	and NetX classes.  Use new variables.
+	(liveconnect-dist.stamp): Use new variables.
+	(clean-liveconnect): Likewise.
+	(netx.stamp): Depend on rt.stamp to ensure rt.jar is
+	updated. Use ICEDTEA_RT as classpath and new variables.
+	(netx-dist.stamp): Use new variables.
+	(clean-netx): Likewise.
+	(extra-class-files.stamp): Use ICEDTEA_RT and NETX_CLASSES
+	as classpath.  Make javac invocation a single statement so
+	we break out on failure.
+
+2010-04-26 Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	(rt.stamp): Change JDK_SHARE to SHARE to match IcedTea6.
 
