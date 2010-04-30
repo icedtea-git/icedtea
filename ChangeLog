@@ -1,3 +1,11 @@
+2010-04-30  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/324
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::do_aload): Cope with cases where
+	the array's type is unknown.
+	(SharkTopLevelBlock::do_astore): Likewise.
+
 2010-04-29  Pavel Tisnovsky  <ptisnovs@redhat.com>
 
 	* overlays/openjdk/jdk/test/com/sun/media/sound/AudioFloatConverter/GetFormat.java,

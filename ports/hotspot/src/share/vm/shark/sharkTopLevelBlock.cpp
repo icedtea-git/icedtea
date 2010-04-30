@@ -691,12 +691,6 @@ void SharkTopLevelBlock::do_aload(BasicType basic_type) {
   SharkValue *index = pop();
   SharkValue *array = pop();
 
-  assert(array->type()->is_array_klass(), "should be");
-  ciType *element_type = ((ciArrayKlass *) array->type())->element_type();
-  assert((element_type->basic_type() == T_BOOLEAN && basic_type == T_BYTE) ||
-         (element_type->basic_type() == T_ARRAY && basic_type == T_OBJECT) ||
-         (element_type->basic_type() == basic_type), "type mismatch");
-
   check_null(array);
   check_bounds(array, index);
 
@@ -729,7 +723,21 @@ void SharkTopLevelBlock::do_aload(BasicType basic_type) {
     break;
 
   case T_OBJECT:
-    push(SharkValue::create_generic(element_type, value, false));
+    // You might expect that array->type()->is_array_klass() would
+    // always be true, but it isn't.  If ciTypeFlow detects that a
+    // value is always null then that value becomes an untyped null
+    // object.  Shark doesn't presently support this, so a generic
+    // T_OBJECT is created.  In this case we guess the type using
+    // the BasicType we were supplied.  In reality the generated
+    // code will never be used, as the null value will be caught
+    // by the above null pointer check.
+    // http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=324
+    push(
+      SharkValue::create_generic(
+        array->type()->is_array_klass() ?
+          ((ciArrayKlass *) array->type())->element_type() :
+          ciType::make(basic_type),
+        value, false));
     break;
 
   default:
@@ -742,12 +750,6 @@ void SharkTopLevelBlock::do_astore(BasicType basic_type) {
   SharkValue *svalue = pop();
   SharkValue *index  = pop();
   SharkValue *array  = pop();
-
-  assert(array->type()->is_array_klass(), "should be");
-  ciType *element_type = ((ciArrayKlass *) array->type())->element_type();
-  assert((element_type->basic_type() == T_BOOLEAN && basic_type == T_BYTE) ||
-         (element_type->basic_type() == T_ARRAY && basic_type == T_OBJECT) ||
-         (element_type->basic_type() == basic_type), "type mismatch");
 
   check_null(array);
   check_bounds(array, index);
@@ -792,7 +794,7 @@ void SharkTopLevelBlock::do_astore(BasicType basic_type) {
 
   builder()->CreateStore(value, addr);
 
-  if (!element_type->is_primitive_type())
+  if (basic_type == T_OBJECT) // XXX or T_ARRAY?
     builder()->CreateUpdateBarrierSet(oopDesc::bs(), addr);
 }
 
