@@ -1,3 +1,8 @@
+2009-05-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* INSTALL:
+	Add notes on using alternate HotSpot builds.
+
 2009-10-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

@@ -124,12 +124,51 @@ On architectures where hotspot is available, use
    --with-additional-vms=cacao,zero  (or shark instead of zero)
 on architectures where only zero (or shark) is available, use
    --with-additional-vms=cacao
-to build the additional VM's.  It's not possible to build cacao as the
+to build the additional VMs.  It's not possible to build cacao as the
 default VM, and zero as additional VM.
 To build zero as the default VM and shark as an additional VM, use
    --enable-zero --with-additional-vms=shark
 
-The additional VM's are available by calling the java with the option
+The additional VMs are available by calling the java with the option
 `-cacao', `-zero' or `-shark', or by calling the java tools with
 `-J-<vm name>'. If the build was configured with '--enable-shark',
 use `-Xint' to just use the zero VM.
+
+Support for different versions of HotSpot
+----------------------------------------- 
+
+IcedTea allows the version of HotSpot provided with the upstream build
+drop to be replaced with another.  Support this is provided by the
+--with-hotspot-build option which causes IcedTea to probe the
+hotspot.map file for an entry with the given build name.  The
+hotspot.map file maps the name to a changeset from the repository
+http://hg.openjdk.java.net/hsx/hsx14/master/ which it downloads from
+http://hg.openjdk.java.net/hsx/hsx14/master/archive/${CHANGESET}.tar.gz.
+The resulting download is verified using the MD5 sum stored in
+hotspot.map.
+
+New build selections may be provided by providing further mappings in
+the hotspot.map file.  The name can be anything
+e.g. 'shiny_new_hotspot'.  This is simply used to map the argument to
+--with-hotspot-build to the values in the file and to apply
+appropriate patches (see patches/hotspot, $HSBUILD is available in
+Makefile.am for obtaining the build name).  The special value
+'original' is used to denote the upstream HotSpot and does not appear
+in hotspot.map.  The changeset should map a valid changeset in the
+HotSpot Express master repository (URL shown above).  These can be
+obtained from a local checkout or using the web interface.  The
+simplest way to calculate the MD5 sum is to download the tarball and
+then run the 'md5sum' application on it.  The resulting value should
+be added to hotspot.map.
+
+As with the OpenJDK build tarballs, the location of an alternate zip
+can be specified using --with-hotspot-src-zip.  This skips the
+download stage and just verifies that the zip's MD5 sum matches that
+of the requested build.
+
+At present, the build name 'default' is used in hotspot.map to provide
+the latest version of HotSpot 14 in place of the version of HotSpot 11
+provided by upstream.  Thus, --with-hotspot-build is enabled by
+default, and either --without-hotspot-build or
+--with-hotspot-build=original is required to revert to the upstream
+HotSpot.
