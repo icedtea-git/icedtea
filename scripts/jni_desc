@@ -1,0 +1,1471 @@
+# jni_desc -- Descriptor file of JNI probe points for hotspot_jni.stp.in
+# Copyright (C) 2009  Red Hat, Inc.
+#
+# This file is part of IcedTea.
+#
+# IcedTea is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# IcedTea is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with IcedTea; see the file COPYING.  If not, write to the
+# Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301 USA.
+
+# JNIProbeName<space>Description
+# arg1_name<space><type><space>Description
+# arg2_name...
+# [ret<space><type><space>Description]
+# blank line
+#
+# Notes:
+# JNIProbeName doesn't include __entry or __return.
+# ret is the the return argument
+# (if there is a __return probe, only FatalError never returns)
+# <type>/representation is one of:
+# v - void, s - string, x - hex number, d - number
+# void is only used for return ret arguments.
+
+AllocObject Allocate object without calling any constructors.
+env x JNIEnv pointer.
+clazz x jclass pointer.
+ret x jobject reference to allocated object or NULL
+
+AttachCurrentThreadAsDaemon Attach the current thread as daemon.
+vm x JavaVM pointer.
+penv x pointer to JNIEnv pointer.
+args x pointer to JavaVMAttachArgs struct.
+ret d Zero on success, negative on error.
+
+AttachCurrentThread Attach the current thread.
+vm x JavaVM pointer.
+penv x pointer to JNIEnv pointer.
+args x pointer to JavaVMAttachArgs struct.
+ret d Zero on success, negative on error.
+
+CallBooleanMethodA Call virtual method returning a boolean using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallBooleanMethod Call virtual method returning a boolean.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallBooleanMethodV Call virtual method returning a boolean using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallByteMethodA Call virtual method returning a byte using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallByteMethod Call virtual method returning a byte.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallByteMethodV Call virtual method returning a byte using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallCharMethodA Call virtual method returning a char using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallCharMethod Call virtual method returning a char.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallCharMethodV Call virtual method returning a char using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallDoubleMethodA Call virtual method returning a double using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallDoubleMethod Call virtual method returning a double.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallDoubleMethodV Call virtual method returning a double using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallFloatMethodA Call virtual method returning a float using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallFloatMethod Call virtual method returning a float.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallFloatMethodV Call virtual method returning a float using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallIntMethodA Call virtual method returning a int using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallIntMethod Call virtual method returning a int.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallIntMethodV Call virtual method returning a int using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallLongMethodA Call virtual method returning a long using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallLongMethod Call virtual method returning a long.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallLongMethodV Call virtual method returning a long using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallObjectMethodA Call virtual method returning a object using array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret x The result of the method call.
+
+CallObjectMethod Call virtual method returning a object.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret x The result of the method call.
+
+CallObjectMethodV Call virtual method returning a object using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret x The result of the method call.
+
+CallShortMethodA Call virtual method returning a short using array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallShortMethod Call virtual method returning a short.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallShortMethodV Call virtual method returning a short using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallVoidMethodA Call virtual method returning void using array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallVoidMethod Call virtual method returning void.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallVoidMethodV Call virtual method returning void using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallNonvirtualBooleanMethodA Call non-virtual method returning a boolean using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualBooleanMethod Call non-virtual method returning a boolean.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualBooleanMethodV Call non-virtual method returning a boolean using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualByteMethodA Call non-virtual method returning a byte using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualByteMethod Call non-virtual method returning a byte.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualByteMethodV Call non-virtual method returning a byte using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualCharMethodA Call non-virtual method returning a char using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualCharMethod Call non-virtual method returning a char.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualCharMethodV Call non-virtual method returning a char using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualDoubleMethodA Call non-virtual method returning a double using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallNonvirtualDoubleMethod Call non-virtual method returning a double.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallNonvirtualDoubleMethodV Call non-virtual method returning a double using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallNonvirtualFloatMethodA Call non-virtual method returning a float using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallNonvirtualFloatMethod Call non-virtual method returning a float.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallNonvirtualFloatMethodV Call non-virtual method returning a float using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallNonvirtualIntMethodA Call non-virtual method returning a int using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualIntMethod Call non-virtual method returning a int.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualIntMethodV Call non-virtual method returning a int using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualLongMethodA Call non-virtual method returning a long using an array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualLongMethod Call non-virtual method returning a long.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualLongMethodV Call non-virtual method returning a long using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualObjectMethodA Call non-virtual method returning a object using array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret x The result of the method call.
+
+CallNonvirtualObjectMethod Call non-virtual method returning a object.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret x The result of the method call.
+
+CallNonvirtualObjectMethodV Call non-virtual method returning a object using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret x The result of the method call.
+
+CallNonvirtualShortMethodA Call non-virtual method returning a short using array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualShortMethod Call non-virtual method returning a short.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualShortMethodV Call non-virtual method returning a short using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallNonvirtualVoidMethodA Call non-virtual method returning void using array as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallNonvirtualVoidMethod Call non-virtual method returning void.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallNonvirtualVoidMethodV Call non-virtual method returning void using va_list as arguments.
+env x JNIEnv pointer.
+obj x jobject reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallStaticBooleanMethodA Call static method returning a boolean using an array as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticBooleanMethod Call static method returning a boolean.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticBooleanMethodV Call static method returning a boolean using va_list as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticByteMethodA Call static method returning a byte using an array as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticByteMethod Call static method returning a byte.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticByteMethodV Call static method returning a byte using va_list as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticCharMethodA Call static method returning a char using an array as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticCharMethod Call static method returning a char.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticCharMethodV Call static method returning a char using va_list as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticDoubleMethodA Call static method returning a double using an array as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallStaticDoubleMethod Call static method returning a double.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallStaticDoubleMethodV Call static method returning a double using va_list as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallStaticFloatMethodA Call static method returning a float using an array as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallStaticFloatMethod Call static method returning a float.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallStaticFloatMethodV Call static method returning a float using va_list as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallStaticIntMethodA Call static method returning a int using an array as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticIntMethod Call static method returning a int.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticIntMethodV Call static method returning a int using va_list as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticLongMethodA Call static method returning a long using an array as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticLongMethod Call static method returning a long.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticLongMethodV Call static method returning a long using va_list as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticObjectMethodA Call static method returning a object using array as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret x The result of the method call.
+
+CallStaticObjectMethod Call static method returning a object.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret x The result of the method call.
+
+CallStaticObjectMethodV Call static method returning a object using va_list as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret x The result of the method call.
+
+CallStaticShortMethodA Call static method returning a short using array as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticShortMethod Call static method returning a short.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticShortMethodV Call static method returning a short using va_list as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret d The result of the method call.
+
+CallStaticVoidMethodA Call static method returning void using array as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallStaticVoidMethod Call static method returning void.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CallStaticVoidMethodV Call static method returning void using va_list as arguments.
+env x JNIEnv pointer.
+clazz x jclass reference.
+methodid x ID of the method to call.
+ret v The result of the method call.
+
+CreateJavaVM Creates a java virtual machine instance.
+vm x pointer to a JavaVM pointer.
+penv x pointer to JNIEnv pointer.
+args x pointer to JavaVMInitArgs struct.
+ret d Zero on success, negative on error.
+
+DefineClass Defines a java.lang.Class instance from byte code array.
+env x JNIEnv pointer.
+clazz s Name of class.
+loader x jobject of ClassLoader.
+buf x Pointer to jbyte array.
+buflen d Size of jbyte array.
+ret x jclass or NULL on error.
+
+DeleteGlobalRef Delete a global jobject reference.
+env x JNIEnv pointer.
+gref x jobject reference to free.
+ret v Nothing returned.
+
+DeleteLocalRef Delete a local jobject reference.
+env x JNIEnv pointer.
+lref x jobject reference to free.
+ret v Nothing returned.
+
+DeleteWeakGlobalRef Delete a weak global jobject reference.
+env x JNIEnv pointer.
+wref x jobject reference to free.
+ret v Nothing returned.
+
+DestroyJavaVM Destroys the given java virtual machine instance.
+vm x JavaVM pointer.
+ret d Zero on success, negative on failure.
+
+DetachCurrentThread Detaches current thread.
+vm x JavaVM pointer.
+ret d Zero on success, negative on failure.
+
+EnsureLocalCapacity Make sure capacity local references can be created.
+env x JNIEnv pointer.
+capacity d Number of desired local references.
+ret d Returns zero on success, negative otherwise.
+
+ExceptionCheck Check whether there is a pending exception.
+env x JNIEnv pointer.
+ret d One if there is a pending exception, zero if not.
+
+ExceptionClear Clear any pending exception.
+env x JNIEnv pointer.
+ret v Nothing to return.
+
+ExceptionDescribe Print any pending exception plus backtrace, clearing exception.
+env x JNIEnv pointer.
+ret v Nothing to return.
+
+ExceptionOccurred Returns any pending exception.
+env x JNIEnv pointer.
+ret x Pending jthrowable or NULL when no exception pending.
+
+FatalError Abort JVM because of fatal error.
+env x JNIEnv pointer.
+msg s Fatal exception message.
+# No ret, because never returns.
+
+FindClass Finds the named class.
+env x JNIEnv pointer.
+clazz s Class descriptor.
+ret x jclass pointer or NULL when class cannot be found.
+
+FromReflectedField Returns a jfieldID from a Field instance.
+env x JNIEnv pointer.
+field x jobject field.
+ret x jfieldID or NULL on error.
+
+FromReflectedMethod Returns a jmethodID from a Method instance.
+env x JNIEnv pointer.
+method x jobject method.
+ret x jmethodID or NULL on error.
+
+GetArrayLength Gets the length of an array.
+env x JNIEnv pointer.
+array x jarray.
+ret d Length of the jarray.
+
+GetBooleanArrayElements Returns jboolean array elements.
+env x JNIEnv pointer.
+array x jbooleanArray.
+iscopy x Pointer to jboolean.
+ret x Pointer to jboolean array.
+
+GetBooleanArrayRegion Copies a region out of a jboolean array elements.
+env x JNIEnv pointer.
+array x jbooleanArray to copy from.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jboolean array pointer to copy into.
+ret v Nothing to return.
+
+GetBooleanField Get non-static jboolean field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+ret d jboolean value.
+
+GetByteArrayElements Returns jbyte array elements.
+env x JNIEnv pointer.
+array x jbyteArray.
+iscopy x Pointer to jboolean.
+ret x Pointer to jbyte array.
+
+GetByteArrayRegion Copies a region out of a jbyte array elements.
+env x JNIEnv pointer.
+array x jbyteArray to copy from.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jbyte array pointer to copy into.
+ret v Nothing to return.
+
+GetByteField Get non-static jbyte field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+ret d jbyte value.
+
+GetCharArrayElements Returns jchar array elements.
+env x JNIEnv pointer.
+array x jcharArray.
+iscopy x Pointer to jboolean.
+ret x Pointer to jchar array.
+
+GetCharArrayRegion Copies a region out of a jchar array elements.
+env x JNIEnv pointer.
+array x jcharArray to copy from.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jchar array pointer to copy into.
+ret v Nothing to return.
+
+GetCharField Get non-static jchar field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+ret d jchar value.
+
+GetCreatedJavaVMs Return all created Java Virtual Machines.
+vmbuf x Pointer to JavaVM pointer.
+buflen d Max number of vms returned.
+nvms d Number of JavaVMs returned.
+ret d Zero on success, negative on error.
+
+GetDefaultJavaVMInitArgs Returns default vm configuration.
+vm_args x JDK1_1InitArgs pointer
+ret d Zero if JDK1_1InitArgs version field supporter, negative otherwise.
+
+GetDirectBufferAddress Returns starting memory address of given Buffer.
+env x JNIEnv pointer.
+buf x java.nio.Buffer jobject.
+ret x Address or NULL on error.
+
+GetDirectBufferCapacity Returns size of memory region of given Buffer.
+env x JNIEnv pointer.
+buf x java.nio.Buffer jobject.
+ret d Capacity of buffer or -1 on error.
+
+GetDoubleArrayElements Returns jdouble array elements.
+env x JNIEnv pointer.
+array x jdoubleArray.
+iscopy x Pointer to jboolean.
+ret x Pointer to jdouble array.
+
+GetDoubleArrayRegion Copies a region out of a jdouble array elements.
+env x JNIEnv pointer.
+array x jdoubleArray to copy from.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jdouble array pointer to copy into.
+ret v Nothing to return.
+
+GetDoubleField Get non-static jdouble field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+ret v Doesn't return jdouble value.
+
+GetEnv Returns JNIEnv for current thread if attached and jni version supported.
+vm x JavaVM pointer.
+penv x Pointer to JNIEnv pointer.
+version x JNI version requested.
+ret Zero on success, negative on error.
+
+GetFieldID Get jfieldID of a non-static field of a jclass.
+env x JNIEnv pointer.
+clazz x jclass object.
+field s UTF-8 field name.
+sig s UTF-8 signature of the field.
+ret x jfieldID or NULL on failure.
+
+GetFloatArrayElements Returns jfloat array elements.
+env x JNIEnv pointer.
+array x jfloatArray.
+iscopy x Pointer to jboolean.
+ret x Pointer to jfloat array.
+
+GetFloatArrayRegion Copies a region out of a jfloat array elements.
+env x JNIEnv pointer.
+array x jfloatArray to copy from.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jfloat array pointer to copy into.
+ret v Nothing to return.
+
+GetFloatField Get non-static jfloat field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+ret v Doesn't return jfloat value.
+
+GetIntArrayElements Returns jint array elements.
+env x JNIEnv pointer.
+array x jintArray.
+iscopy x Pointer to jboolean.
+ret x Pointer to jint array.
+
+GetIntArrayRegion Copies a region out of a jint array elements.
+env x JNIEnv pointer.
+array x jintArray to copy from.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jint array pointer to copy into.
+ret v Nothing to return.
+
+GetIntField Get non-static jint field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+ret d jint value.
+
+GetJavaVM Get the JavaVM struct associated with the current JNIEnv.
+env x JNIEnv pointer.
+pvm x Pointer to JavaVM pointer.
+ret d Zero on success, negative on failure.
+
+GetLongArrayElements Returns jlong array elements.
+env x JNIEnv pointer.
+array x jlongArray.
+iscopy x Pointer to jboolean.
+ret x Pointer to jlong array.
+
+GetLongArrayRegion Copies a region out of a jlong array elements.
+env x JNIEnv pointer.
+array x jlongArray to copy from.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jlong array pointer to copy into.
+ret v Nothing to return.
+
+GetLongField Get non-static jlong field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+ret d jlong value.
+
+GetMethodID Returns jmethodID of requested method.
+env x JINEnv pointer.
+clazz x jclass pointer.
+method s Name of the method.
+sig s Signature of the method.
+ret x jmethodID of the requested method or NULL on failure.
+
+GetObjectArrayElement Get Object element from array.
+env x JNIEnv pointer.
+array x jobjectArray.
+index d Element index.
+ret x jobject or NULL on failure.
+
+GetObjectClass Returns the class of a given object.
+env x JNIEnv pointer.
+obj x jobject pointer.
+ret x jclass of the given jobject.
+
+GetObjectField Get non-static jobject field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+ret x jobject value.
+
+GetObjectRefType Whether a jobject is a local, global or weak reference.
+env x JNIEnv pointer.
+obj x jobject.
+ret d 0 for invalid, 1 for local, 2 for global or 3 for weak references.
+
+GetPrimitiveArrayCritical Get pointer to primitive array elements.
+env x JNIEnv pointer.
+array x jarray.
+iscopy x Pointer to jboolean.
+ret x Address of jarray elements or NULL on error.
+
+GetShortArrayElements Returns jshort array elements.
+env x JNIEnv pointer.
+array x jshortArray.
+iscopy x Pointer to jboolean.
+ret x Pointer to jshort array.
+
+GetShortArrayRegion Copies a region out of a jshort array elements.
+env x JNIEnv pointer.
+array x jshortArray to copy from.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jshort array pointer to copy into.
+ret v Nothing to return.
+
+GetShortField Get non-static jshort field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+ret d jshort value.
+
+GetStaticBooleanField Get static jboolean field value.
+env x JNIEnv pointer.
+clazz x jclass.
+field x jfieldID.
+ret d jboolean value.
+
+GetStaticByteField Get static jbyte field value.
+env x JNIEnv pointer.
+clazz x jclass.
+field x jfieldID.
+ret d jbyte value.
+
+GetStaticCharField Get static jchar field value.
+env x JNIEnv pointer.
+clazz x jclass.
+field x jfieldID.
+ret d jchar value.
+
+GetStaticDoubleField Get static jdouble field value.
+env x JNIEnv pointer.
+clazz x jclass.
+field x jfieldID.
+ret v Does not return jdouble value.
+
+GetStaticFieldID Get jfieldID of a static field of a jclass.
+env x JNIEnv pointer.
+clazz x jclass object.
+field s UTF-8 field name.
+sig s UTF-8 signature of the field.
+ret x jfieldID or NULL on failure.
+
+GetStaticFloatField Get static jfloat field value.
+env x JNIEnv pointer.
+clazz x jclass.
+field x jfieldID.
+ret v Does not return jfloat value.
+
+GetStaticIntField Get static jint field value.
+env x JNIEnv pointer.
+clazz x jclass.
+field x jfieldID.
+ret d jint value.
+
+GetStaticLongField Get static jlong field value.
+env x JNIEnv pointer.
+clazz x jclass.
+field x jfieldID.
+ret d jlong value.
+
+GetStaticMethodID Returns jmethodID of requested static method.
+env x JINEnv pointer.
+clazz x jclass pointer.
+method s Name of the method.
+sig s Signature of the method.
+ret x jmethodID of the requested method or NULL on failure.
+
+GetStaticObjectField Get static jobject field value.
+env x JNIEnv pointer.
+clazz x jclass.
+field x jfieldID.
+ret d jobject value.
+
+GetStaticShortField Get static jshort field value.
+env x JNIEnv pointer.
+clazz x jclass.
+field x jfieldID.
+ret d jshort value.
+
+GetStringChars Get unicode jchar array of jstring.
+env x JNIEnv pointer.
+str x jstring.
+iscopy x Pointer to jboolean.
+ret x Pointer to jchar array.
+
+GetStringCritical Get critical unicode jchar array of jstring.
+env x JNIEnv pointer.
+str x jstring.
+iscopy x Pointer to jboolean.
+ret x Pointer to jchar array.
+
+GetStringLength Returns number of unicode jchars in jstring.
+env x JNIEnv pointer.
+str x jstring.
+ret d Length of string.
+
+GetStringRegion Retrieves jchar unicode characters from jstring.
+env x JNIEnv pointer.
+str x jstring.
+start d Starting character to copy.
+len d Number of jchars to copy.
+buf x Pointer to jchar buffer to copy unicode characters in.
+ret v Nothing to return.
+
+GetStringUTFChars Retrieves UTF-8 encoded chars from jstring.
+env x JNIEnv pointer.
+str x jstring pointer.
+iscopy x pointer to a jboolean.
+ret s Pointer to a UTF-8 string or NULL when called failed.
+
+GetStringUTFLength Returns length of jstring in UTF-8 encoded chars.
+env x JNIEnv pointer.
+str x jstring pointer.
+ret d Number of UTF-8 chars in jstring.
+
+GetStringUTFRegion 
+env x JNIEnv pointer.
+str x jstring.
+start d jchar offset to start at.
+len d Number of jchars to get from jstring.
+buf x Native char array to put UTF-8 encoded strings in.
+ret v Nothing to return.
+
+GetSuperclass Returns super class of given jclass.
+env x JNIEnv pointer.
+clazz x jclass.
+ret x Super jclass or NULL if the given jclass is Object or an interface.
+
+GetVersion Returns JNI version.
+env x JNIEnv pointer.
+ret x JNI version.
+
+IsAssignableFrom Whether a given jclass can be cast to another jclass.
+env x JNIEnv pointer.
+clazz1 x jclass to cast from.
+clazz2 x jclass to cast to.
+ret d One if clazz1 can be cast to clazz2, zero otherwise.
+
+IsInstanceOf Whether a given jobject is an instance of a jclass.
+env x JNIEnv pointer.
+obj x jobject.
+clazz x jclass.
+ret d One if obj can be cast to clazz, zero otherwise.
+
+IsSameObject Whether two jobjects identify the same java object.
+env x JNIEnv pointer.
+obj1 x jobject.
+obj2 x jobject.
+ret d One if obj1 and obj2 are references to the same java object.
+
+MonitorEnter Enter monitor for given jobject.
+env x JNIEnv pointer.
+obj x jobject.
+ret d Zero on success, negative on failure.
+
+MonitorExit Exit monitor for given jobject.
+env x JNIEnv pointer.
+obj x jobject.
+ret d Zero on success, negative on failure.
+
+NewBooleanArray Create new boolean array.
+env x JNIEnv pointer.
+length d size of the array.
+ret x jbooleanArray or NULL on failure.
+
+NewByteArray Create new byte array.
+env x JNIEnv pointer.
+length d size of the array.
+ret x jbyteArray or NULL on failure.
+
+NewCharArray Create new char array.
+env x JNIEnv pointer.
+length d size of the array.
+ret x jcharArray or NULL on failure.
+
+NewDirectByteBuffer Create DirectByteBuffer for given address and size.
+env x JNIEnv pointer.
+addr x Address to start.
+size d Capacity of the buffer.
+ret x DirectByteBuffer jobject or NULL on failure.
+
+NewDoubleArray Create new double array.
+env x JNIEnv pointer.
+length d size of the array.
+ret x jdoubleArray or NULL on failure.
+
+NewFloatArray Create new floar array.
+env x JNIEnv pointer.
+length d size of the array.
+ret x jfloatArray or NULL on failure.
+
+NewGlobalRef Create a new global reference for a jobject.
+env x JNIEnv pointer.
+obj x jobject to create a global reference for.
+ret x Global jobject reference, or NULL on failure.
+
+NewIntArray Create new int array.
+env x JNIEnv pointer.
+length d size of the array.
+ret x jintArray or NULL on failure.
+
+NewLocalRef Create a new local reference for a jobject.
+env x JNIEnv pointer.
+obj x jobject to create a local reference for.
+ret x Global jobject reference, or NULL on failure.
+
+NewLongArray Create new long array.
+env x JNIEnv pointer.
+length d size of the array.
+ret x jlongArray or NULL on failure.
+
+NewObjectA Create a new object from jclass from arguments in array.
+env x JNIEnv pointer.
+clazz x jclass.
+methodid x jmethodID of constructor to call.
+ret x jobject or NULL on failure.
+
+NewObjectArray Create new jobject array of given element type.
+env x JNIEnv pointer.
+length d size of the array.
+element x jclass of the elements in the array.
+initial x jobject initial value.
+ret x jarray or NULL on failure.
+
+NewObject Create a new object from jclass using the jmethodID constructor.
+env x JNIEnv pointer.
+clazz x jclass.
+methodid x jmethodID of constructor to call.
+ret x jobject or NULL on failure.
+
+NewObjectV Create a new object from jclass from va_list arguments.
+env x JNIEnv pointer.
+clazz x jclass.
+methodid x jmethodID of constructor to call.
+ret x jobject or NULL on failure.
+
+NewShortArray Create new short array.
+env x JNIEnv pointer.
+length d size of the array.
+ret x jlongArray or NULL on failure.
+
+NewString Create a new string from jchar unicode characters.
+env x JNIEnv pointer.
+chars x jchar array.
+len d Length of jchar array.
+ret x jstring or NULL on error.
+
+NewStringUTF Creates a new string from a UTF-8 array.
+env x JNIEnv pointer.
+bytes s UTF-8 array.
+ret x jstring created or NULL on failure.
+
+NewWeakGlobalRef Create a new weak reference for a jobject.
+env x JNIEnv pointer.
+obj x jobject to create a weak reference for.
+ret x jweak reference, or NULL on failure.
+
+PopLocalFrame Pops local reference frame.
+env x JNIEnv pointer.
+obj x jobject reference in current frame.
+ret x jobject reference in previous frame for given obj or NULL when non given.
+
+PushLocalFrame Pushes local reference frame.
+env x JNIEnv pointer.
+capacity d Minimum number of references needed.
+ret d Zero on success, negative on failure.
+
+RegisterNatives Registers native methods for class.
+env x JNIEnv pointer.
+clazz x jclass to register methods for.
+methods x pointer to JNINativeMethods array.
+nmethods x number of methods.
+ret d Zero on success, negative otherwise.
+
+ReleaseBooleanArrayElements Releases boolean array elements.
+env x JNIEnv pointer.
+array x jbooleanArray.
+elems x jboolean array.
+mode d How array should be released (0 commit back and free, 1 commit back and do not free, 2 free but do not commit back)
+ret v Nothing returned.
+
+ReleaseByteArrayElements Releases byte array elements.
+env x JNIEnv pointer.
+array x jbyteArray.
+elems x jbyte array.
+mode d How array should be released (0 commit back and free, 1 commit back and do not free, 2 free but do not commit back)
+ret v Nothing returned.
+
+ReleaseCharArrayElements Releases char array elements.
+env x JNIEnv pointer.
+array x jcharArray.
+elems x jchar array.
+mode d How array should be released (0 commit back and free, 1 commit back and do not free, 2 free but do not commit back)
+ret v Nothing returned.
+
+ReleaseDoubleArrayElements Releases double array elements.
+env x JNIEnv pointer.
+array x jdoubleArray.
+elems x jdouble array.
+mode d How array should be released (0 commit back and free, 1 commit back and do not free, 2 free but do not commit back)
+ret v Nothing returned.
+
+ReleaseFloatArrayElements Releases float array elements.
+env x JNIEnv pointer.
+array x jfloatArray.
+elems x jfloat array.
+mode d How array should be released (0 commit back and free, 1 commit back and do not free, 2 free but do not commit back)
+ret v Nothing returned.
+
+ReleaseIntArrayElements Releases int array elements.
+env x JNIEnv pointer.
+array x jintArray.
+elems x jint array.
+mode d How array should be released (0 commit back and free, 1 commit back and do not free, 2 free but do not commit back)
+ret v Nothing returned.
+
+ReleaseLongArrayElements Releases long array elements.
+env x JNIEnv pointer.
+array x jlongArray.
+elems x jlong array.
+mode d How array should be released (0 commit back and free, 1 commit back and do not free, 2 free but do not commit back)
+ret v Nothing returned.
+
+ReleasePrimitiveArrayCritical Releases critical array elements.
+env x JNIEnv pointer.
+array x jarray.
+carray x Native elements pointer.
+mode d How array should be released (0 commit back and free, 1 commit back and do not free, 2 free but do not commit back).
+ret v Nothing to return.
+
+ReleaseShortArrayElements Releases short array elements.
+env x JNIEnv pointer.
+array x jshortArray.
+elems x jshort array.
+mode d How array should be released (0 commit back and free, 1 commit back and do not free, 2 free but do not commit back)
+ret v Nothing to return.
+
+ReleaseStringChars Releases GetStringChar jchar array.
+env x JNIEnv pointer.
+str x jstring.
+chars x jchar array to release.
+ret v Nothing to return.
+
+ReleaseStringCritical Releases GetStringCritical jchar array.
+env x JNIEnv pointer.
+str x jstring.
+chars x jchar array to release.
+ret v Nothing to return.
+
+ReleaseStringUTFChars Releases GetStringUTF char array.
+env x JNIEnv pointer.
+str x jstring pointer.
+utf s Pointer to utf-8 chars to release.
+ret v Returns nothing
+
+SetBooleanArrayRegion Copies a region into a jboolean array.
+env x JNIEnv pointer.
+array x jbooleanArray to copy into.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jboolean array pointer to copy from.
+ret v Nothing to return.
+
+SetBooleanField Set non-static jboolean field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+value d jboolean value.
+ret v Nothing to return.
+
+SetByteArrayRegion Copies a region into a jbyte array.
+env x JNIEnv pointer.
+array x jbyteArray to copy into.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jbyte array pointer to copy from.
+ret v Nothing to return.
+
+SetByteField Set non-static jbyte field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+value d jbyte value.
+ret v Nothing to return.
+
+SetCharArrayRegion Copies a region into a jchar array.
+env x JNIEnv pointer.
+array x jcharArray to copy into.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jchar array pointer to copy from.
+ret v Nothing to return.
+
+SetCharField Set non-static jchar field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+value d jchar value.
+ret v Nothing to return.
+
+SetDoubleArrayRegion Copies a region into a jdouble array.
+env x JNIEnv pointer.
+array x jdoubleArray to copy into.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jdouble array pointer to copy from.
+ret v Nothing to return.
+
+SetDoubleField Set non-static jdouble field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+ret v Nothing to return.
+
+SetFloatArrayRegion Copies a region into a jfloat array.
+env x JNIEnv pointer.
+array x jfloatArray to copy into.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jfloat array pointer to copy from.
+ret v Nothing to return.
+
+SetFloatField Set non-static jfloat field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+ret v Nothing to return.
+
+SetIntArrayRegion Copies a region into a jint array.
+env x JNIEnv pointer.
+array x jintArray to copy into.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jint array pointer to copy from.
+ret v Nothing to return.
+
+SetIntField Set non-static jint field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+value d jint value.
+ret v Nothing to return.
+
+SetLongArrayRegion Copies a region into a jlong arry.
+env x JNIEnv pointer.
+array x jlongArray to copy into.
+start d Starting index.
+len d Number of elements to copy.
+buf x Native jlong array pointer to copy from.
+ret v Nothing to return.
+
+SetLongField Set non-static jlong field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+value d jlong value.
+ret v Nothing to return.
+
+SetObjectArrayElement Set jobjectArray element.
+env x JNIEnv pointer.
+array x jobjectArray.
+index d Element index to set.
+value x jobject value.
+ret v Nothing to return.
+
+SetObjectField Set non-static jobject field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+value x jobject value.
+ret v Nothing to return.
+
+SetShortArrayRegion Copies a region into a jshort array.
+env x JNIEnv pointer.
+array x jshortArray to copy into.
+start d Starting index.
+len d Number of elements to copy.
+buf x jshort array pointer to copy from.
+ret v Nothing to return.
+
+SetShortField Set non-static jshort field value.
+env x JNIEnv pointer.
+obj x jobject.
+field x jfieldID.
+value d jshort value.
+ret v Nothing to return.
+
+SetStaticBooleanField Set static jboolean field value.
+env x JNIEnv pointer.
+clazz x jclazz.
+field x jfieldID.
+value d jboolean value.
+ret v Nothing to return.
+
+SetStaticByteField Set static jbyte field value.
+env x JNIEnv pointer.
+clazz x jclazz.
+field x jfieldID.
+value d jbyte value.
+ret v Nothing to return.
+
+SetStaticCharField Set static jchar field value.
+env x JNIEnv pointer.
+clazz x jclazz.
+field x jfieldID.
+value d jchar value.
+ret v Nothing to return.
+
+SetStaticDoubleField Set static jdouble field value.
+env x JNIEnv pointer.
+clazz x jclazz.
+field x jfieldID.
+ret v Nothing to return.
+
+SetStaticFloatField Set static jfloat field value.
+env x JNIEnv pointer.
+clazz x jclazz.
+field x jfieldID.
+ret v Nothing to return.
+
+SetStaticIntField Set static jint field value.
+env x JNIEnv pointer.
+clazz x jclazz.
+field x jfieldID.
+value d jint value.
+ret v Nothing to return.
+
+SetStaticLongField Set static jlong field value.
+env x JNIEnv pointer.
+clazz x jclazz.
+field x jfieldID.
+value d jlong value.
+ret v Nothing to return.
+
+SetStaticObjectField Set static jobject field value.
+env x JNIEnv pointer.
+clazz x jclazz.
+field x jfieldID.
+value x jobject value.
+ret v Nothing to return.
+
+SetStaticShortField Set static jshort field value.
+env x JNIEnv pointer.
+clazz x jclazz.
+field x jfieldID.
+value d jshort value.
+ret v Nothing to return.
+
+Throw Throws a given jthrowable object.
+env x JNIEnv pointer.
+obj x jthrowable to throw.
+ret d Zero on success, negative on error.
+
+ThrowNew Throws a new instance of the given jclass throwable with message.
+env x JNIEnv pointer.
+clazz x jclass of the throwable.
+msg s Message of the throwable.
+ret d Zero on success, negative on error.
+
+ToReflectedField Get Field object from jfieldID.
+env x JNIEnv pointer.
+clazz x jclass.
+field x jfieldID.
+ret x jobject to instance of Field or NULL on failure
+
+ToReflectedMethod Get Method object from jmethodID.
+env x JNIEnv pointer.
+clazz x jclass.
+method x jmethodID.
+ret x jobject to instance of Method or NULL on failure
+
+UnregisterNatives Unregisters native methods from the given jclass.
+env x JNIEnv pointer.
+clazz x jclass to unregister native methods from.
+ret d Zero on success, negative on error.

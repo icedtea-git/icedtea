@@ -379,6 +379,7 @@ public:
   AC_SUBST(ABS_CLIENT_LIBJVM_SO)
   AC_SUBST(ABS_SERVER_LIBJVM_SO)
   AC_CONFIG_FILES([tapset/hotspot.stp])
+  AC_CONFIG_FILES([tapset/hotspot_jni.stp])
 fi
 
 dnl Check for libpng headers and libraries.

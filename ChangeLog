@@ -1,5 +1,15 @@
 2009-10-19  Mark Wielaard  <mjw@redhat.com>
 
+	* tapset/hotspot_jni.stp.in: New tapset.
+	* scripts/jni_create_stap.c: New file.
+	* scripts/jni_desc: Likewise.
+	* configure.ac (AC_CONFIG_FILES): Add tapset/hotspot_jni.stp.
+	* Makefile.am (EXTRA_DIST): Add tapsets and scripts.
+	(stamps/icedtea.stamp): Handle tapset/hotspot_jni.stp.in.
+	(stamps/icedtea-debug.stamp): Likewise.
+
+2009-10-19  Mark Wielaard  <mjw@redhat.com>
+
 	* patches/icedtea-systemtap.patch: Add fix for JNI
 	DEFINE_NEWSCALARARRAY uses DT_RETURN_MARK_DECL_FOR.
 
