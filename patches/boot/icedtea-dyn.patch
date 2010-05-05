@@ -1,12 +1,12 @@
 diff -Nru openjdk-boot.orig/jdk/make/java/Makefile openjdk-boot/jdk/make/java/Makefile
---- openjdk-boot.orig/jdk/make/java/Makefile	2009-05-12 15:54:22.000000000 +0100
-+++ openjdk-boot/jdk/make/java/Makefile	2009-05-18 20:54:22.000000000 +0100
-@@ -39,7 +39,7 @@
- # Others
- #    Note: java_crw_demo java_hprof_demo are demos but must be delivered built in sdk
- SUBDIRS += security npt java_crw_demo java_hprof_demo \
--	    math awt util text applet net nio dyn \
-+	    math awt util text applet net nio \
- 	    sql rmi jar beans logging management instrument
+--- openjdk-boot.orig/jdk/make/java/Makefile	2010-04-28 22:05:26.000000000 +0100
++++ openjdk-boot/jdk/make/java/Makefile	2010-05-04 14:02:16.000000000 +0100
+@@ -44,7 +44,7 @@
+ SUBDIRS_desktop    = awt applet beans
+ SUBDIRS_management = management
+ SUBDIRS_misc       = npt java_crw_demo java_hprof_demo \
+-                     logging instrument dyn sql rmi
++                     logging instrument sql rmi
  
  
+ ifeq ($(PLATFORM), solaris)

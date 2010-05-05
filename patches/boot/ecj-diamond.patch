@@ -49,3 +49,27 @@ diff -r a9b4fde406d4 src/share/classes/sun/io/CharacterEncoding.java
  
          aliasTable.put("us-ascii",              "ASCII");
          aliasTable.put("ascii",                 "ASCII");
+diff -r c1cee45daf4d src/share/classes/sun/net/www/protocol/http/AuthenticationInfo.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/http/AuthenticationInfo.java	Wed Apr 28 22:15:05 2010 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/http/AuthenticationInfo.java	Tue May 04 18:21:07 2010 +0100
+@@ -111,7 +111,7 @@
+      * at the same time, then all but the first will block until
+      * the first completes its authentication.
+      */
+-    static private HashMap<String,Thread> requests = new HashMap<>();
++    static private HashMap<String,Thread> requests = new HashMap<String,Thread>();
+ 
+     /* check if a request for this destination is in progress
+      * return false immediately if not. Otherwise block until
+diff -r c1cee45daf4d src/share/classes/sun/security/provider/JavaKeyStore.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/JavaKeyStore.java	Wed Apr 28 22:15:05 2010 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/JavaKeyStore.java	Wed May 05 11:35:35 2010 +0100
+@@ -683,7 +683,7 @@
+                     // Read the certificate chain
+                     int numOfCerts = dis.readInt();
+                     if (numOfCerts > 0) {
+-                        List<Certificate> certs = new ArrayList<>(
++                        List<Certificate> certs = new ArrayList<Certificate>(
+                                 numOfCerts > 10 ? 10 : numOfCerts);
+                         for (int j = 0; j < numOfCerts; j++) {
+                             if (xVersion == 2) {

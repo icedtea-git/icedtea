@@ -1,7 +1,7 @@
-diff -Nru ../openjdk.orig/openjdk-boot/jdk/make/common/Release.gmk openjdk-boot/jdk/make/common/Release.gmk
---- ../openjdk.orig/openjdk-boot/jdk/make/common/Release.gmk	2009-10-30 16:49:37.000000000 +0000
-+++ openjdk-boot/jdk/make/common/Release.gmk	2009-10-30 16:59:16.000000000 +0000
-@@ -1033,16 +1031,6 @@
+diff -Nru openjdk-boot.orig/jdk/make/common/Release.gmk openjdk-boot/jdk/make/common/Release.gmk
+--- openjdk-boot.orig/jdk/make/common/Release.gmk	2010-05-04 13:14:46.000000000 +0100
++++ openjdk-boot/jdk/make/common/Release.gmk	2010-05-04 13:23:41.000000000 +0100
+@@ -1038,16 +1038,6 @@
  	$(CP) $(PLATFORM_SRC)/bin/java_md.h $(JDK_IMAGE_DIR)/src/launcher
  	$(CD) $(JDK_IMAGE_DIR)/src && $(ZIPEXE) -qr ../src.zip *
  	$(RM) -r $(JDK_IMAGE_DIR)/src
@@ -18,15 +18,15 @@ diff -Nru ../openjdk.orig/openjdk-boot/jdk/make/common/Release.gmk openjdk-boot/
  ifneq ($(PLATFORM), windows)
  	$(call copy-man-pages,$(JDK_IMAGE_DIR),$(JDK_MAN_PAGES))
  endif # !windows
-diff -Nru ../openjdk.orig/openjdk-boot/jdk/make/Makefile openjdk-boot/jdk/make/Makefile
---- ../openjdk.orig/openjdk-boot/jdk/make/Makefile	2009-05-08 16:10:43.000000000 +0100
-+++ openjdk-boot/jdk/make/Makefile	2009-10-30 16:59:16.000000000 +0000
-@@ -239,7 +239,7 @@
+diff -Nru openjdk-boot.orig/jdk/make/Makefile openjdk-boot/jdk/make/Makefile
+--- openjdk-boot.orig/jdk/make/Makefile	2010-04-28 22:05:26.000000000 +0100
++++ openjdk-boot/jdk/make/Makefile	2010-05-04 13:23:57.000000000 +0100
+@@ -242,7 +242,7 @@
  
- all build:: sanity-all post-sanity-all
+ SUBDIRS       = tools java javax sun com
+ SUBDIRS_tools = launchers
+-SUBDIRS_misc  = org sunw jpda mkdemo mksample
++SUBDIRS_misc  = org sunw jpda mksample
  
--SUBDIRS    = tools java javax org sun sunw com jpda mkdemo mksample launchers
-+SUBDIRS    = tools java javax org sun sunw com jpda mksample launchers
- all build::
- 	$(SUBDIRS-loop)
+ include $(BUILDDIR)/common/Subdirs.gmk
  

@@ -1,6 +1,6 @@
-diff -Nru openjdk.o/jdk/make/docs/NON_CORE_PKGS.gmk openjdk/jdk/make/docs/NON_CORE_PKGS.gmk
---- openjdk.o/jdk/make/docs/NON_CORE_PKGS.gmk	2009-07-25 04:30:42.000000000 +0100
-+++ openjdk/jdk/make/docs/NON_CORE_PKGS.gmk	2009-08-04 14:54:12.000000000 +0100
+diff -Nru openjdk.orig/jdk/make/docs/NON_CORE_PKGS.gmk openjdk/jdk/make/docs/NON_CORE_PKGS.gmk
+--- openjdk.orig/jdk/make/docs/NON_CORE_PKGS.gmk	2009-12-04 23:26:19.000000000 +0000
++++ openjdk/jdk/make/docs/NON_CORE_PKGS.gmk	2010-05-04 12:02:43.000000000 +0100
 @@ -84,6 +84,8 @@
  TREEAPI_PKGS 	 = com.sun.source.tree \
  		   com.sun.source.util
@@ -18,21 +18,21 @@ diff -Nru openjdk.o/jdk/make/docs/NON_CORE_PKGS.gmk openjdk/jdk/make/docs/NON_CO
                     $(JAAS_PKGS) \
                     $(JGSS_PKGS) \
                     $(NIO_PKGS) \
-diff -Nru openjdk.o/jdk/make/sun/Makefile openjdk/jdk/make/sun/Makefile
---- openjdk.o/jdk/make/sun/Makefile	2009-07-25 04:30:42.000000000 +0100
-+++ openjdk/jdk/make/sun/Makefile	2009-08-04 14:53:42.000000000 +0100
+diff -Nru openjdk.orig/jdk/make/sun/Makefile openjdk/jdk/make/sun/Makefile
+--- openjdk.orig/jdk/make/sun/Makefile	2010-04-28 22:05:28.000000000 +0100
++++ openjdk/jdk/make/sun/Makefile	2010-05-04 12:06:20.000000000 +0100
 @@ -64,7 +64,7 @@
-           $(HEADLESS_SUBDIR) $(DGA_SUBDIR) \
- 	  font jpeg cmm applet rmi beans $(JDBC_SUBDIR) \
- 	  jawt text launcher management $(ORG_SUBDIR) \
--          native2ascii serialver tools jconsole tracing
-+          plugin native2ascii serialver tools jconsole tracing
- 
- all build clean clobber::
- 	$(SUBDIRS-loop)
-diff -Nru openjdk.o/jdk/make/sun/plugin/Makefile openjdk/jdk/make/sun/plugin/Makefile
---- openjdk.o/jdk/make/sun/plugin/Makefile	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/make/sun/plugin/Makefile	2009-08-04 14:53:42.000000000 +0100
+ SUBDIRS_desktop    = audio $(RENDER_SUBDIR) image \
+                      awt splashscreen $(XAWT_SUBDIR) \
+                      $(HEADLESS_SUBDIR) $(DGA_SUBDIR) \
+-                     jawt font jpeg cmm applet beans
++                     jawt font jpeg cmm applet beans plugin
+ SUBDIRS_management = management
+ SUBDIRS_misc       = jkernel $(ORG_SUBDIR) \
+                      rmi $(JDBC_SUBDIR) tracing
+diff -Nru openjdk.orig/jdk/make/sun/plugin/Makefile openjdk/jdk/make/sun/plugin/Makefile
+--- openjdk.orig/jdk/make/sun/plugin/Makefile	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/jdk/make/sun/plugin/Makefile	2010-05-04 12:02:43.000000000 +0100
 @@ -0,0 +1,53 @@
 +#
 +# Copyright 1995-2005 Sun Microsystems, Inc.  All Rights Reserved.

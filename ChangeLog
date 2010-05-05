@@ -1,3 +1,32 @@
+2010-05-05 Andrew John Hughes  <ahughes@redhat.com>
+
+	Bump to b89.
+	* patches/icedtea-fonts.patch:
+	Removed, applied upstream.
+	* Makefile.am:
+	Bump to b89 changesets.  Remove fonts patch.
+	* generated/sun/nio/cs/ext/HKSCS_XPMapping.java,
+	* generated/sun/nio/cs/ext/MS950.java:
+	Add new generated files required by rt-class-files.stamp.
+	* patches/boot/demos.patch:
+	Recreated due to changes for module build.
+	* patches/boot/ecj-diamond.patch:
+	Add additional files using the <> operator.
+	* patches/boot/icedtea-dbcs.patch:
+	Updated due to change from GenerateDBCS to DBCS.
+	* patches/boot/icedtea-dyn.patch:
+	Recreated due to changes for module build.
+	* patches/boot/icedtea-sbcs.patch:
+	Updated due to change from GenerateSBCS to SBCS.
+	* patches/boot/xbootclasspath.patch:
+	Recreated due to changes for module build.
+	* patches/hotspot/default/icedtea-params-cast-size_t.patch,
+	* patches/hotspot/default/icedtea-shark-build.patch:
+	Rerolled against new HotSpot.
+	* patches/icedtea-liveconnect.patch,
+	* patches/icedtea-rhino.patch:
+	Recreated due to changes for module build.
+
 2010-04-26 Andrew John Hughes  <ahughes@redhat.com>
 
 	Make sure correct classpaths are used by pre-build

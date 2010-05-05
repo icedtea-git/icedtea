@@ -1,6 +1,6 @@
-diff -Nru openjdk-boot.orig/jdk/make/tools/src/build/tools/charsetmapping/GenerateSBCS.java openjdk-boot/jdk/make/tools/src/build/tools/charsetmapping/GenerateSBCS.java
---- openjdk-boot.orig/jdk/make/tools/src/build/tools/charsetmapping/GenerateSBCS.java	2009-08-24 15:47:02.000000000 +0100
-+++ openjdk-boot/jdk/make/tools/src/build/tools/charsetmapping/GenerateSBCS.java	2009-08-24 16:07:07.000000000 +0100
+diff -Nru openjdk-boot.orig/jdk/make/tools/src/build/tools/charsetmapping/SBCS.java openjdk-boot/jdk/make/tools/src/build/tools/charsetmapping/SBCS.java
+--- openjdk-boot.orig/jdk/make/tools/src/build/tools/charsetmapping/SBCS.java	2010-05-04 14:09:01.000000000 +0100
++++ openjdk-boot/jdk/make/tools/src/build/tools/charsetmapping/SBCS.java	2010-05-04 14:17:47.000000000 +0100
 @@ -28,7 +28,6 @@
  import java.io.*;
  import java.util.Arrays;
@@ -11,7 +11,7 @@ diff -Nru openjdk-boot.orig/jdk/make/tools/src/build/tools/charsetmapping/Genera
  import java.nio.charset.*;
 @@ -38,9 +37,8 @@
  
-     public static void genSBCS(String args[]) throws Exception {
+     public static void genClass(String args[]) throws Exception {
  
 -        Scanner s = new Scanner(new File(args[0], args[2]));
 -        while (s.hasNextLine()) {
