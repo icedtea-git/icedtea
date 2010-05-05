@@ -903,6 +903,18 @@ ciMethod* SharkTopLevelBlock::improve_virtual_call(ciMethod*   caller,
       dest_method->holder() == java_lang_Object_klass())
     return dest_method;
 
+#ifdef SHARK_CAN_DEOPTIMIZE_ANYWHERE
+  // This code can replace a virtual call with a direct call if this
+  // class is the only one in the entire set of loaded classes that
+  // implements this method.  This makes the compiled code dependent
+  // on other classes that implement the method not being loaded, a
+  // condition which is enforced by the dependency tracker.  If the
+  // dependency tracker determines a method has become invalid it
+  // will mark it for recompilation, causing running copies to be
+  // deoptimized.  Shark currently can't deoptimize arbitrarily like
+  // that, so this optimization cannot be used.
+  // http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=481
+  
   // All other interesting cases are instance classes
   if (!receiver_type->is_instance_klass())
     return NULL;
@@ -957,6 +969,8 @@ ciMethod* SharkTopLevelBlock::improve_virtual_call(ciMethod*   caller,
   // it can perform a further optimization to replace calls
   // with non-monomorphic targets if the receiver has an exact
   // type.  We don't mark types this way, so we can't do this.
+
+#endif // SHARK_CAN_DEOPTIMIZE_ANYWHERE
 
   return NULL;
 }

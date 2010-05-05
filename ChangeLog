@@ -1,3 +1,10 @@
+2010-05-05  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/481
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::improve_virtual_call): Disable an
+	optimization that cannot currently be supported.
+
 2010-04-30  Gary Benson  <gbenson@redhat.com>
 
 	PR icedtea/324
