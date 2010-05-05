@@ -41,8 +41,6 @@ JAXP_DROP_URL = https://jaxp.dev.java.net/files/documents/913/147490
 JAXP_DROP_ZIP = jdk7-jaxp-m6.zip
 JAXP_DROP_SHA256SUM = 3d9eb7ae71f5365e2a786ba270413c6cb7dc8d1137f56995c087908b3df8446c
 
-OPENJDK_HOTSPOT_URL = http://hg.openjdk.java.net/jdk7/hotspot/hotspot
-
 ICEDTEA_HG_URL = http://hg.openjdk.java.net/icedtea/jdk7
 OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk7/jdk7
 CVMI_HG_URL = http://hg.openjdk.java.net/cvmi/cvmi/
@@ -167,9 +165,9 @@ else
 endif
 
 if WITH_ALT_HSBUILD
-  HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
-  HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
-  HS_URL = $(OPENJDK_HOTSPOT_URL)
+  HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$4}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+  HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+  HS_URL = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
 else
   HS_SHA256SUM = $(HOTSPOT_SHA256SUM)
   HS_CHANGESET = $(HOTSPOT_CHANGESET)
