@@ -1,3 +1,9 @@
+2010-05-05  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/boot/icedtea-pr40616.patch:
+	Regenerated due to change from GenerateEUC_TW
+	to EUC_TW.
+
 2009-10-22  Andrew John Hughes  <ahughes@redhat.com>
 
 	* INSTALL:
