@@ -27,7 +27,7 @@ ant >= 1.6.5
 libXinerama-devel
 giflib-devel
 libpng-devel
-libjpeg-devel = 6b
+libjpeg-devel >= 6b
 zlib-devel
 rhino (can be disabled using --without-rhino)
 

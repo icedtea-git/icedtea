@@ -1,3 +1,8 @@
+2009-10-26 Jon VanAlten <jon.vanalten@redhat.com>
+
+	* patches/icedtea-libraries.patch: Check for libjpeg.so.7.
+	* INSTALL: Indicate newer versions of libjpeg are supported.
+
 2009-10-19  Mark Wielaard  <mjw@redhat.com>
 
 	* tapset/hotspot_jni.stp.in: New tapset.

@@ -700,14 +700,17 @@ diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c ope
  }
  
  
-@@ -2341,6 +2401,142 @@
+@@ -2341,6 +2401,145 @@
  
  /********************** end of destination manager ************/
  
 +METHODDEF(void)
 +initIDs()
 +{
-+    void *handle = dlopen("libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
++    void *handle = dlopen("libjpeg.so.7", RTLD_LAZY | RTLD_GLOBAL);
++    if (handle == NULL) {
++       handle = dlopen("libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
++    }
 +    
 +    jpegstderror = (fn_jpegstderror)dlsym(handle, "jpeg_std_error");
 +    if (jpegstderror == NULL) {
@@ -20984,11 +20987,14 @@ diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c ope
  /* Initialize the Java VM instance variable when the library is
     first loaded */
  JavaVM *jvm;
-@@ -462,6 +490,68 @@
+@@ -462,6 +490,71 @@
  Java_sun_awt_image_JPEGImageDecoder_initIDs(JNIEnv *env, jclass cls,
                                              jclass InputStreamClass)
  {
-+    void *handle = dlopen("libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
++    void *handle = dlopen("libjpeg.so.7", RTLD_LAZY | RTLD_GLOBAL);
++    if (handle == NULL) {
++       handle = dlopen("libjpeg.so.62", RTLD_LAZY | RTLD_GLOBAL);
++    }
 + 
 +    jpegstderror = (fn_jpegstderror)dlsym(handle, "jpeg_std_error");
 +    if (jpegstderror == NULL) {
