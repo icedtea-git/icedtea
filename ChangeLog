@@ -1,3 +1,8 @@
+2010-05-06  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/boot/icedtea-pr40616.patch:
+	Extend with fix for new HKSCS.java file.
+
 2009-01-08  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/no-precompiled.patch: Don't use
