@@ -1,3 +1,9 @@
+2009-10-22  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/no-precompiled.patch: Allow disabling of the
+	precompiled header setting DISABLE_PRECOMPILED_HEADER.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+
 2010-05-06  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/boot/icedtea-pr40616.patch:
