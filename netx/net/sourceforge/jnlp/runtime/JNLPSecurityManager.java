@@ -395,6 +395,24 @@ class JNLPSecurityManager extends SecurityManager {
 				    // Everything else is denied
 				    throw se;
 
+				} else if (perm instanceof SecurityPermission) {
+
+				    // JCE's initialization requires putProviderProperty permission
+				    if (perm.equals(new SecurityPermission("putProviderProperty.SunJCE"))) {
+				        if (inTrustedCallChain("com.sun.crypto.provider.SunJCE", "run")) {
+				            return;
+				        }
+				    }
+
+				} else if (perm instanceof RuntimePermission) {
+
+				    // KeyGenerator's init method requires internal spec access
+				    if (perm.equals(new SecurityPermission("accessClassInPackage.sun.security.internal.spec"))) {
+				        if (inTrustedCallChain("javax.crypto.KeyGenerator", "init")) {
+				            return;
+				        }
+				    }
+
 				} else {
 				    tmpPerm = perm;
 				}
@@ -419,6 +437,34 @@ class JNLPSecurityManager extends SecurityManager {
         }
     }
 
+    /** 
+     * Returns weather the given class and method are in the current stack, 
+     * and whether or not everything upto then is trusted
+     * 
+     * @param className The name of the class to look for in the stack
+     * @param methodName The name of the method for the given class to look for in the stack
+     * @return Weather or not class::method() are in the chain, and everything upto there is trusted
+     */
+    private boolean inTrustedCallChain(String className, String methodName) {
+        
+        StackTraceElement[] stack =  Thread.currentThread().getStackTrace();
+        
+        for (int i=0; i < stack.length; i++) {
+
+            // Everything up to the desired class/method must be trusted
+            if (!stack[i].getClass().getProtectionDomain().implies(new AllPermission())) {
+                return false;
+            }
+
+            if (stack[i].getClassName().equals(className) &&
+                stack[i].getMethodName().equals(methodName)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     /**
      * Asks the user whether or not to grant permission.
      * @param perm the permission to be granted

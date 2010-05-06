@@ -1,3 +1,11 @@
+2010-05-06  Deepak Bhole <dbhole@redhat.com>
+
+	* netx/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java
+	(checkPermission): Allow Runtime and Security permission (for
+	putProvider.SunJCE) if initiated for an https connection.
+	(inTrustedCallChain): New method. Returns if given class/method is
+	in the call chain, and everything upto there is trusted.
+
 2010-05-05  Gary Benson  <gbenson@redhat.com>
 
 	PR icedtea/481
