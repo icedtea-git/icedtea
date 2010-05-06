@@ -1,3 +1,9 @@
+2010-05-06  Andrew John Hughes  <ahughes@redhat.com>
+
+	* NEWS:
+	Add 1.13 with libjpeg7 support, OpenJDK7
+	milestone 7 and the latest security updates.
+
 2010-05-05  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/boot/icedtea-pr40616.patch:
