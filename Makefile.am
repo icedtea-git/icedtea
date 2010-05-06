@@ -423,8 +423,7 @@ SCANNER_PATCHES = patches/boot/icedtea-spp.patch \
 	patches/boot/icedtea-dbcs.patch
 
 if LACKS_JAVA_UTIL_SCANNER
-ICEDTEA_BOOT_PATCHES += $(SCANNER_PATCHES) \
-	patches/boot/icedtea-euctw.patch
+ICEDTEA_BOOT_PATCHES += $(SCANNER_PATCHES)
 else
 if CP40630
 ICEDTEA_BOOT_PATCHES += $(SCANNER_PATCHES)

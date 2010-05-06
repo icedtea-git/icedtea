@@ -1,3 +1,9 @@
+2010-05-06  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am: Remove euctw patch.
+	* patches/boot/icedtea-euctw.patch,
+	Removed; EUCTW class no longer uses java.util.Scanner.
+
 2009-10-22  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/no-precompiled.patch: Allow disabling of the
