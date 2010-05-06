@@ -1,3 +1,7 @@
+2009-10-28  Mark Wielaard  <mjw@redhat.com>
+
+	* NEWS: Mention systemtap JNI class tracing support.
+
 2010-05-06  Andrew John Hughes  <ahughes@redhat.com>
 
 	* NEWS:

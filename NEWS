@@ -24,6 +24,8 @@ New in release 1.13 (2010-XX-XX)
   - 6910590: Application can modify command array in ProcessBuilder
   - 6909597: JPEGImageReader stepX Integer Overflow Vulnerability
   - 6932480: Crash in CompilerThread/Parser. Unloaded array klass?
+- Added JNI call tracing using systemtap version 1.0+ when
+  configuring with --enable-systemtap. See tapset/hotspot_jni.stp.
 
 New in release 1.12 (2009-11-17)
 
