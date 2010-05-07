@@ -440,7 +440,7 @@ public class Launcher {
             Method main = mainClass.getDeclaredMethod("main", new Class[] {String[].class} );
             String args[] = file.getApplication().getArguments();
 
-            setContextClassLoaderForAllThreads(app.getClassLoader());
+            setContextClassLoaderForAllThreads(app.getThreadGroup(), app.getClassLoader());
 
             if (splashScreen != null) {
                 if (splashScreen.isSplashScreenValid()) {
@@ -462,30 +462,24 @@ public class Launcher {
     }
 
     /**
-     * Set the classloader as the context classloader for all threads. This is
-     * required to make some applications work. For example, an application that
-     * provides a custom Swing LnF may ask the swing thread to load resources
-     * from their JNLP, which would only work if the Swing thread knows about
-     * the JNLPClassLoader.
+     * Set the classloader as the context classloader for all threads in 
+     * the given threadgroup. This is required to make some applications 
+     * work. For example, an application that provides a custom Swing LnF 
+     * may ask the swing thread to load resources from their JNLP, which 
+     * would only work if the Swing thread knows about the JNLPClassLoader.
      * 
+     * @param tg The threadgroup for which the context classloader should be set
      * @param classLoader the classloader to set as the context classloader
      */
-    private void setContextClassLoaderForAllThreads(ClassLoader classLoader) {
-        ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-        ThreadGroup root;
-        
-        root = Thread.currentThread().getThreadGroup();
-        while (root.getParent() != null) {
-            root = root.getParent();
-        }
+    private void setContextClassLoaderForAllThreads(ThreadGroup tg, ClassLoader classLoader) {
 
         /* be prepared for change in thread size */
-        int threadCountGuess = threadBean.getThreadCount();
+        int threadCountGuess = tg.activeCount();
         Thread[] threads;
         do {
             threadCountGuess = threadCountGuess * 2;
             threads = new Thread[threadCountGuess];
-            root.enumerate(threads, true);
+            tg.enumerate(threads, true);
         } while (threads[threadCountGuess-1] != null);
         
         
@@ -593,7 +587,7 @@ public class Launcher {
             group.setApplication(appletInstance);
             loader.setApplication(appletInstance);
 
-            setContextClassLoaderForAllThreads(appletInstance.getClassLoader());
+            setContextClassLoaderForAllThreads(appletInstance.getThreadGroup(), appletInstance.getClassLoader());
 
             return appletInstance;
         }

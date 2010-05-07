@@ -1,3 +1,12 @@
+2010-05-07  Deepak Bhole <dbhole@redhat.com>
+
+	* netx/net/sourceforge/jnlp/Launcher.java
+	(setContextClassLoaderForAllThreads): Change to set context CL only for
+	given threadgroup.
+	(launchApplication): Supply threadgroup to
+	setContextClassLoaderForAllThreads.
+	(createApplet): Same.
+
 2010-05-07  Gary Benson  <gbenson@redhat.com>
 
 	* netx/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java:
