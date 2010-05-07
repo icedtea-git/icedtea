@@ -74,6 +74,16 @@
 	(inTrustedCallChain): New method. Returns if given class/method is
 	in the call chain, and everything upto there is trusted.
 
+2010-05-07  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp
+	(SharkRuntime::uncommon_trap): Use new stack overflow code.
+	(FakeStubFrame::build): Likewise.
+	* ports/hotspot/src/cpu/zero/vm/shark_globals_zero.hpp: Updated.
+	* ports/hotspot/src/share/vm/includeDB_shark: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
+	(SharkDecacher::end_frame): Updated for newer HotSpot.
+
 2010-05-05  Gary Benson  <gbenson@redhat.com>
 
 	PR icedtea/481

@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008, 2009 Red Hat, Inc.
+ * Copyright 2008, 2009, 2010 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -195,10 +195,12 @@ bool SharkRuntime::is_subtype_of(klassOop check_klass, klassOop object_klass) {
 void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request) {
   // In C2, uncommon_trap_blob creates a frame, so all the various
   // deoptimization functions expect to find the frame of the method
-  // being deopted one frame down on the stack.  Create a dummy frame
-  // to mirror this.
-  ZeroStack *stack = thread->zero_stack();
-  thread->push_zero_frame(FakeStubFrame::build(stack));
+  // being deopted one frame down on the stack.  We create a dummy
+  // frame to mirror this.
+  FakeStubFrame *stubframe = FakeStubFrame::build(thread);
+  if (thread->has_pending_exception())
+    return;
+  thread->push_zero_frame(stubframe);
 
   // Initiate the trap
   thread->set_last_Java_frame();
@@ -214,11 +216,17 @@ void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request) {
   int number_of_frames = urb->number_of_frames();
   for (int i = 0; i < number_of_frames; i++) {
     intptr_t size = urb->frame_sizes()[i];
-    thread->push_zero_frame(InterpreterFrame::build(stack, size));
+    InterpreterFrame *frame = InterpreterFrame::build(size, thread);
+    if (thread->has_pending_exception())
+      return;
+    thread->push_zero_frame(frame);
   }
 
   // Push another dummy frame
-  thread->push_zero_frame(FakeStubFrame::build(stack));
+  stubframe = FakeStubFrame::build(thread);
+  if (thread->has_pending_exception())
+    return;
+  thread->push_zero_frame(stubframe);
 
   // Fill in the skeleton frames
   thread->set_last_Java_frame();
@@ -236,10 +244,9 @@ void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request) {
 #endif // CC_INTERP
 }
 
-FakeStubFrame* FakeStubFrame::build(ZeroStack* stack) {
-  if (header_words > stack->available_words()) {
-    Unimplemented();
-  }
+FakeStubFrame* FakeStubFrame::build(TRAPS) {
+  ZeroStack *stack = ((JavaThread *) THREAD)->zero_stack();
+  stack->overflow_check(header_words, CHECK_NULL);
 
   stack->push(0); // next_frame, filled in later
   intptr_t *fp = stack->sp();
