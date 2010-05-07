@@ -28,7 +28,7 @@ import java.security.AccessControlException;
 import java.security.AccessController;
 import java.security.Permission;
 import java.security.PrivilegedAction;
-import java.security.SecurityPermission;;
+import java.security.SecurityPermission;
 import java.util.PropertyPermission;
 
 import javax.swing.JWindow;
