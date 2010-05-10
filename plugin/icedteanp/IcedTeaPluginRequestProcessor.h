@@ -90,6 +90,7 @@ void _getMember(void* data);
 void _setMember(void* data);
 void _call(void* data);
 void _eval(void* data);
+void _getString(void* data);
 
 static pthread_mutex_t tc_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int thread_count = 0;

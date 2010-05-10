@@ -633,7 +633,7 @@ GCJ_GetValue (NPP instance, NPPVariable variable, void* value)
 NPError
 GCJ_Destroy (NPP instance, NPSavedData** save)
 {
-  PLUGIN_DEBUG_0ARG ("GCJ_Destroy\n");
+  PLUGIN_DEBUG_1ARG ("GCJ_Destroy %p\n", instance);
 
   GCJPluginData* data = (GCJPluginData*) instance->pdata;
 
@@ -647,6 +647,8 @@ GCJ_Destroy (NPP instance, NPSavedData** save)
 
   g_hash_table_remove(instance_to_id_map, instance);
   g_hash_table_remove(id_to_instance_map, GINT_TO_POINTER(id));
+
+  IcedTeaPluginUtilities::invalidateInstance(instance);
 
   PLUGIN_DEBUG_0ARG ("GCJ_Destroy return\n");
 

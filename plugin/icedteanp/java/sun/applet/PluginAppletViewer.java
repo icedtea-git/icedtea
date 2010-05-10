@@ -376,16 +376,6 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                 ioe.printStackTrace();
         }
 
-    // Panel initialization cannot be aborted mid-way.
-    // Once it is initialized, double check to see if this
-    // panel needs to stay around..
-    if (status.get(identifier).equals(PAV_INIT_STATUS.INACTIVE)) {
-        PluginDebug.debug("Inactive flag set. Destroying applet instance " + identifier);
-        applets.get(identifier).handleMessage(-1, "destroy");
-    } else {
-        status.put(identifier, PAV_INIT_STATUS.ACTIVE);
-    }
-
      }
 
         public static void setStreamhandler(PluginStreamHandler sh) {
@@ -447,6 +437,16 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                                                          new StringReader(request.tag),
                                                          new URL(request.documentbase));
                                          requests.remove(identifier);
+
+                                         // Panel initialization cannot be aborted mid-way.
+                                         // Once it is initialized, double check to see if this
+                                         // panel needs to stay around..
+                                         if (status.get(identifier).equals(PAV_INIT_STATUS.INACTIVE)) {
+                                             PluginDebug.debug("Inactive flag set. Destroying applet instance " + identifier);
+                                             applets.get(identifier).handleMessage(-1, "destroy");
+                                         } else {
+                                             status.put(identifier, PAV_INIT_STATUS.ACTIVE);
+                                         }
 
                                  } else {
                                          PluginDebug.debug ("REQUEST HANDLE NOT SET: " + request.handle + ". BYPASSING");
@@ -971,15 +971,44 @@ import com.sun.jndi.toolkit.url.UrlUtil;
      }
 
      public static void setMember(long internal, String name, Object value) {
+         System.err.println("Setting to class " + value.getClass() + ":" + value.getClass().isPrimitive());
          AppletSecurityContextManager.getSecurityContext(0).store(name);
          int nameID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(name);
-         AppletSecurityContextManager.getSecurityContext(0).store(value);
-         int valueID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(value);
+
+         // work on a copy of value, as we don't want to be manipulating
+         // complex objects
+         String valueToSetTo;
+         if (value instanceof java.lang.Byte ||
+             value instanceof java.lang.Character ||
+             value instanceof java.lang.Short ||
+             value instanceof java.lang.Integer ||
+             value instanceof java.lang.Long ||
+             value instanceof java.lang.Float ||
+             value instanceof java.lang.Double ||
+             value instanceof java.lang.Boolean) {
+
+             valueToSetTo = "literalreturn " + value.toString();
+
+             // Character -> Str results in str value.. we need int value as
+             // per specs.
+             if (value instanceof java.lang.Character) {
+                 valueToSetTo = "literalreturn " + (int) ((java.lang.Character) value).charValue();
+             } else if (value instanceof Float ||
+                        value instanceof Double) {
+                 valueToSetTo = "literalreturn " + String.format("%308.308e", value);
+             }
+
+         } else {
+             AppletSecurityContextManager.getSecurityContext(0).store(value);
+             valueToSetTo = Integer.toString(AppletSecurityContextManager.getSecurityContext(0).getIdentifier(value));
+         }
 
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("void",
-                                                                                "instance " + 0 + " SetMember " + internal + " " + nameID + " " + valueID,
-                                                                                "JavaScriptSetMember");
+                                                                         "instance " + 0 +
+                                                                         " SetMember " + internal +
+                                                                         " " + nameID + " " + valueToSetTo,
+                                                                         "JavaScriptSetMember");
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
@@ -1001,12 +1030,41 @@ import com.sun.jndi.toolkit.url.UrlUtil;
      // FIXME: handle long index as well.
      public static void setSlot(long internal, int index, Object value) {
          AppletSecurityContextManager.getSecurityContext(0).store(value);
-         int valueID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(value);
+
+         // work on a copy of value, as we don't want to be manipulating
+         // complex objects
+         String valueToSetTo;
+         if (value instanceof java.lang.Byte ||
+             value instanceof java.lang.Character ||
+             value instanceof java.lang.Short ||
+             value instanceof java.lang.Integer ||
+             value instanceof java.lang.Long ||
+             value instanceof java.lang.Float ||
+             value instanceof java.lang.Double ||
+             value instanceof java.lang.Boolean) {
+
+             valueToSetTo = "literalreturn " + value.toString();
+
+             // Character -> Str results in str value.. we need int value as
+             // per specs.
+             if (value instanceof java.lang.Character) {
+                 valueToSetTo = "literalreturn " + (int) ((java.lang.Character) value).charValue();
+             } else if (value instanceof Float ||
+                        value instanceof Double) {
+                 valueToSetTo = "literalreturn " + String.format("%308.308e", value);
+             }
+
+         } else {
+             AppletSecurityContextManager.getSecurityContext(0).store(value);
+             valueToSetTo = Integer.toString(AppletSecurityContextManager.getSecurityContext(0).getIdentifier(value));
+         }
 
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("void",
-                                                                        "instance " + 0 + " SetSlot " + internal + " " + index + " " + valueID,
-                                                                        "JavaScriptSetSlot");
+                                                                        "instance " + 0 +
+                                                                         " SetSlot " + internal +
+                                                                         " " + index + " " + valueToSetTo,
+                                                                         "JavaScriptSetSlot");
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
@@ -1713,6 +1771,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
          boolean isAppletTag = false;
          boolean isObjectTag = false;
          boolean isEmbedTag = false;
+         boolean objectTagAlreadyParsed = false;
 
          // warning messages
          String requiresNameWarning = amh.getMessage("parse.warning.requiresname");
@@ -1787,6 +1846,10 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                                  if (nm.equalsIgnoreCase("param")) {
                                          Hashtable t = scanTag(in);
                                          String att = (String)t.get("name");
+
+                                         if (atts.containsKey(att))
+                                             continue;
+
                                          if (att == null) {
                                                  statusMsgStream.println(requiresNameWarning);
                                          } else {
@@ -1855,7 +1918,12 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                                  }
                                  else if (nm.equalsIgnoreCase("object")) {
                                          isObjectTag = true;
+
+                                     // Once code is set, additional nested objects are ignored
+                                     if (!objectTagAlreadyParsed) {
+                                         objectTagAlreadyParsed = true;
                                          atts = scanTag(in);
+                                     }
 
                                          // If there is a classid and no code tag present, transform it to code tag
                                          if (atts.get("code") == null && atts.get("classid") != null &&
@@ -1872,6 +1940,10 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                          // http://java.sun.com/j2se/1.4.2/docs/guide/plugin/developer_guide/using_tags.html#in-ie
                          if (atts.get("java_code") != null) {
                              atts.put("code", ((String) atts.get("java_code")));
+                         }
+
+                         if (atts.containsKey("code")) {
+                             objectTagAlreadyParsed = true;
                          }
 
                          if (atts.get("java_codebase") != null) {

@@ -3,6 +3,110 @@
 	* patches/hotspot/default/icedtea-shark.patch:
 	Recreated against b89.
 
+2009-12-02  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc
+	(newMessageOnBus): Fix error handling code. Add support for NewArray,
+	GetValue, and literal returns (primitives).
+	(getValue): New function. Requests the value of a field from Java,
+	converted to literal for primitives/boxable types.
+	(setSlot): Bypass NPVariant creation.
+	(newArray): New function, creates an array of given type on Java side.
+	(set): Use value directly instead of NPVariant.
+	(setStaticField): Same.
+	(getArrayTypeForJava): New function. Given a variant, returns what type of
+	array should be created to store that variant on Java side.
+	(createJavaObjectFromVariant): Added support for arrays.
+	(callStaticMethod): use direct values instead of NPVariants.
+	(callMethod): Same.
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.h: Updates as needed by
+	changes to IcedTeaJavaRequestProcessor.cc.
+	* plugin/icedteanp/IcedTeaNPPlugin.cc
+	(GCJ_Destroy): Invalidate all NPObjects related to an instance.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc
+	(sendWindow): Use NPVariant address to store windows info on Java side,
+	rather than the corresponding NPObject address.
+	(call): Use IcedTeaPluginUtilities::javaResultToNPVariant for java var to
+	NPVariant conversion, rather than custom conversion.
+	(sendString): Use new AyncCallThreadData struct and
+	pluginthreadasynccall() for calls that need to be in main thread.
+	(setMember): Send value information directly to _setMember, and let it
+	sort out how to set values.
+	(convertToNPVariant): Moved to utilities class.
+	(sendMember): Deal with NPVariants instead of NPObjects.
+	(queue_processor): Add case for GetSlot (WIP).
+	(storeVariantInJava): Remove deprecated function.
+	(_setMember): Use javaResultToNPVariant to get a value loaded into a
+	variant. Deal with NPVariants instead of NPObjects.
+	(_getMember): Deal with NPVariants instead of NPObjects.
+	(_getString): New function. Returns toString values for variables.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.h: Declare new _getString
+	function.
+	* plugin/icedteanp/IcedTeaPluginUtils.cc: Move object map from the plugin
+	request processor class.
+	(strSplit): For efficiency, reserve enough space for strings beforehand.
+	(getUTF8String): Same.
+	(printStringVector): Run only if in debug.
+	(removeInstanceID): New function to remove mapping between an object and
+	an instance.
+	(invalidateInstance): New function. Removes all mappings from objects to
+	the given instance.
+	(getNPObjectFromJavaKey): New function. Given a java object key, returns
+	the corresponding JS object, if any.
+	(storeObjectMapping): New function. Stores a mapping between Java
+	objects and JS objects (peering).
+	(removeObjectMapping): New function. Removes peering between JS object and
+	Java object.
+	(printStringPtrVector): Run only if in debug.
+	(printNPVariant): Same.
+	(NPVariantToString): Store result in provided parameter.
+	(javaResultToNPVariant): New function, moved from 
+	IcedTeaScriptablePluginObject.
+	(isObjectJSArray): New function. Returns if given NPObject represents an
+	array.
+	* plugin/icedteanp/IcedTeaPluginUtils.h: Misc. changes as needed by
+	updates to IcedTeaPluginUtils.cc.
+	* plugin/icedteanp/IcedTeaScriptablePluginObject.cc: Move object_map to
+	utilities class.
+	(getProperty): Supply instance id to findClass.
+	(get_scriptable_java_object): Use the new
+	getNPObjectFromJavaKey/storeObjectMapping functions in the utilities
+	class. Also, create object asynchronously.
+	(_createAndRetainJavaObject): New function. Creates a scriptable Java
+	object and increments reference count.
+	(is_valid_java_object): New function. Returns if the given object is still
+	valid.
+	(invalidate): Remove instance and Java side object mapping for given
+	object.
+	(javaResultToNPVariant): Moved to utilities class.
+	(invoke): Create variants peer on Java side before calling
+	callMethod/callStaticMethod.
+	(setProperty): Create variant peers on Java side before calling
+	setField/setStaticField.
+	(construct): Create variant peers on Java side before calling the
+	constructor.
+	* plugin/icedteanp/IcedTeaScriptablePluginObject.h: Misc. changes as
+	needed by updates to IcedTeaScriptablePluginObject.cc.
+	* plugin/icedteanp/java/netscape/javascript/JSObject.java: Added a new
+	string constructor.
+	* plugin/icedteanp/java/sun/applet/MethodOverloadResolver.java
+	(getCostAndCastedObject): Add support for array type parameters.
+	(isNum): Return true for boolean (booleans are convertible to int as per
+	spec).
+	(getNum): Remove case for char/Character.
+	(getArrayAsString): New function. For debug only.
+	* plugin/icedteanp/java/sun/applet/PluginAppletSecurityContext.java
+	(handleMessage): Add support for getValue. Wire in array creaion support.
+	Support a '[System]' source for privileged calls.
+	(isInt): New function. Returns if given object is an integer/convertible to
+	an int.
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java
+	(setMember): Send primitive/boxable values as literals.
+	(setSlot): Same.
+	(getWindow): Fortify condition for  wait for panel initialization.
+	(parse): Handle nested objected tags, don't allow parameter value
+	overwrite.
+
 2010-01-11  Gary Benson  <gbenson@redhat.com>
 
 	* contrib/checkopts/checkopts: Updated for the above.
