@@ -868,8 +868,6 @@ bool
 IcedTeaScriptableJavaObject::construct(NPObject *npobj, const NPVariant *args, uint32_t argCount,
 	           NPVariant *result)
 {
-    NPUTF8* method_name = "";
-
     // Extract arg type array
     PLUGIN_DEBUG_1ARG("IcedTeaScriptableJavaObject::construct %s. Args follow.\n", ((IcedTeaScriptableJavaObject*) npobj)->getClassID().c_str());
     for (int i=0; i < argCount; i++)

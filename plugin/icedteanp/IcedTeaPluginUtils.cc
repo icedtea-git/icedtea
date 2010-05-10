@@ -589,6 +589,42 @@ IcedTeaPluginUtilities::NPVariantToString(NPVariant variant)
     return ret;
 }
 
+void
+IcedTeaPluginUtilities::decodeURL(const gchar* url, gchar** decoded_url)
+{
+
+    PLUGIN_DEBUG_2ARG("GOT URL: %s -- %s\n", url, *decoded_url);
+    int length = strlen(url);
+    for (int i=0; i < length; i++)
+    {
+        if (url[i] == '%' && i < length - 2)
+        {
+            unsigned char code1 = (unsigned char) url[i+1];
+            unsigned char code2 = (unsigned char) url[i+2];
+
+            if (!IS_VALID_HEX(&code1) || !IS_VALID_HEX(&code2))
+                continue;
+
+            // Convert hex value to integer
+            int converted1 = HEX_TO_INT(&code1);
+            int converted2 = HEX_TO_INT(&code2);
+
+            // bitshift 4 to simulate *16
+            int value = (converted1 << 4) + converted2;
+            char decoded = value;
+
+            strncat(*decoded_url, &decoded, 1);
+
+            i += 2;
+        } else
+        {
+            strncat(*decoded_url, &url[i], 1);
+        }
+    }
+
+    PLUGIN_DEBUG_1ARG("SENDING URL: %s\n", *decoded_url);
+}
+
 /******************************************
  * Begin JavaMessageSender implementation *
  ******************************************

@@ -39,7 +39,7 @@ exception statement from your version. */
 #ifndef __ICEDTEASCRIPTABLEPLUGINOBJECT_H_
 #define __ICEDTEASCRIPTABLEPLUGINOBJECT_H_
 
-#if MOZILLA_VERSION_COLLAPSED < 1090200
+#if MOZILLA_VERSION_COLLAPSED < 1090100
 #include "npupp.h"
 #else
 #include <npapi.h>

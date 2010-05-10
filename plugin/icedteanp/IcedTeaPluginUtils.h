@@ -57,7 +57,7 @@ exception statement from your version. */
 
 #include <npapi.h>
 
-#if MOZILLA_VERSION_COLLAPSED < 1090200
+#if MOZILLA_VERSION_COLLAPSED < 1090100
 #include <npupp.h>
 #else
 #include <npapi.h>
@@ -125,6 +125,16 @@ exception statement from your version. */
         return;                                                      \
     }                                                                \
 }
+
+#define HEX_TO_INT(c) \
+    ((*c >= 'A') ? *c - 'A' + 10 : \
+     (*c >= 'a') ? *c - 'a' + 10 : \
+     *c - '0')
+
+#define IS_VALID_HEX(c) \
+    ((*c >= '0' && *c <= '9') || \
+     (*c >= 'a' && *c <= 'f') || \
+     (*c >= 'A' && *c <= 'F'))
 
 /*
  * Misc. utility functions

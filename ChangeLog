@@ -1,3 +1,26 @@
+2009-12-24  Deepak Bhole <dbhole@redhat.com>
+
+	* Makefile.am: Define XP_UNIX, without which critical plugin API
+	functions don't get	exported from Mozilla API anymore.
+	* plugin/icedteanp/IcedTeaNPPlugin.cc: Update to build with gecko
+	1.9.1.5.
+	(consume_message): Use calloc instead of malloc.
+	(decode_url): Remove function. Rewritten from scratch (this time without
+	using any Mozilla code) in IcedTeaPluginUtils.
+	(get_scriptable_object): Initialize handle to 0 if not already set.
+	(GCJ_SetWindow): Set proper instance id when manipulating height.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc: Add temporary
+	workaround for chromium which seems to free on calls to
+	NPN_PluginThreadAsyncCall.
+	* plugin/icedteanp/IcedTeaPluginUtils.cc
+	(decodeURL): New function. Decodes an encoded URL.
+	* plugin/icedteanp/IcedTeaPluginUtils.h: Added helper macros for
+	decodeURL.
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java: Make panel
+	visible only if handle is non-zero.
+	(parse): Fix regression introduced when fix for Bug# 406 was ported over.
+	Normalized default width and height.
+
 2009-12-22  Gary Benson  <gbenson@redhat.com>
 
 	* contrib/checkopts/checkopts.py: New file.
