@@ -317,7 +317,8 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-disable-intree-ec.patch \
 	patches/icedtea-sources.patch \
 	patches/no-precompiled.patch \
-	patches/parisc.patch
+	patches/parisc.patch \
+	patches/sh4-support.patch
 
 # Conditional patches
 

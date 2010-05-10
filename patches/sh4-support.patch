@@ -1,0 +1,63 @@
+--- openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2009-12-24 14:56:12.000000000 +0900
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2009-12-24 15:02:51.000000000 +0900
+@@ -1753,7 +1753,8 @@
+     {EM_MIPS_RS3_LE, EM_MIPS_RS3_LE, ELFCLASS32, ELFDATA2LSB, (char*)"MIPSel"},
+     {EM_MIPS,        EM_MIPS,    ELFCLASS32, ELFDATA2MSB, (char*)"MIPS"},
+     {EM_PARISC,      EM_PARISC,  ELFCLASS32, ELFDATA2MSB, (char*)"PARISC"},
+-    {EM_68K,         EM_68K,     ELFCLASS32, ELFDATA2MSB, (char*)"M68k"}
++    {EM_68K,         EM_68K,     ELFCLASS32, ELFDATA2MSB, (char*)"M68k"},
++    {EM_SH,          EM_SH,      ELFCLASS32, ELFDATA2LSB, (char*)"SH"} /* Support little endian only*/
+   };
+ 
+   #if  (defined IA32)
+@@ -1784,9 +1785,11 @@
+     static  Elf32_Half running_arch_code=EM_MIPS;
+   #elif  (defined M68K)
+     static  Elf32_Half running_arch_code=EM_68K;
++  #elif  (defined SH)
++    static  Elf32_Half running_arch_code=EM_SH;
+   #else
+     #error Method os::dll_load requires that one of following is defined:\
+-         IA32, AMD64, IA64, __sparc, __powerpc__, ARM, S390, ALPHA, MIPS, MIPSEL, PARISC, M68K
++         IA32, AMD64, IA64, __sparc, __powerpc__, ARM, S390, ALPHA, MIPS, MIPSEL, PARISC, M68K, SH
+   #endif
+ 
+   // Identify compatability class for VM's architecture and library's architecture
+--- openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2009-12-24 14:56:10.000000000 +0900
++++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2009-12-24 15:05:27.000000000 +0900
+@@ -47,7 +47,8 @@
+ #define X_S390X         12
+ #define X_SPARC         13
+ #define X_SPARCV9       14
+-#define X_ZERO          15
++#define X_SH            15
++#define X_ZERO          16
+ 
+ // **********************************
+ // Make sure you set X_PLATFORM and X_ARCH defines correctly.
+--- openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2009-12-24 15:11:52.000000000 +0900
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2009-12-24 15:12:17.000000000 +0900
+@@ -121,6 +121,11 @@
+     REQUIRED_CC_VER = 4.0
+     REQUIRED_GCC_VER = 4.0.*
+   endif
++  ifneq ("$(findstring sh,$(ARCH))", "")
++    # sh4*, sh3*
++    REQUIRED_CC_VER = 4.0
++    REQUIRED_GCC_VER = 4.0.*
++  endif
+   # Option used to create a shared library
+   SHARED_LIBRARY_FLAG = -shared -mimpure-text
+   SUN_COMP_VER := $(shell $(CC) --verbose 2>&1 )
+--- openjdk/corba/make/common/shared/Platform.gmk	2009-12-24 21:30:38.000000000 +0900
++++ openjdk/corba/make/common/shared/Platform.gmk	2009-12-25 10:17:14.000000000 +0900
+@@ -263,6 +263,9 @@
+       ifeq ($(ARCH), s390x)
+         ARCH_DATA_MODEL=64
+       endif
++      ifeq ($(ARCH), sh)
++        ARCH_DATA_MODEL=32
++      endif
+     endif
+   endif
+ 

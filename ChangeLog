@@ -1,3 +1,10 @@
+2009-01-11  Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+	    Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-sh4-support.patch: Add zero support for Hitachi SH.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+	* NEWS: Mention SH support.
+
 2010-05-10  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/hotspot/default/icedtea-shark.patch:

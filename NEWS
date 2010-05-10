@@ -26,6 +26,7 @@ New in release 1.13 (2010-XX-XX)
   - 6932480: Crash in CompilerThread/Parser. Unloaded array klass?
 - Added JNI call tracing using systemtap version 1.0+ when
   configuring with --enable-systemtap. See tapset/hotspot_jni.stp.
+- Add support for Zero build on Hitachi SH.
 
 New in release 1.12 (2009-11-17)
 
