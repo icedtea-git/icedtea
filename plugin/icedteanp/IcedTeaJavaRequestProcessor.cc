@@ -36,8 +36,6 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-#include <typeinfo>
-
 #include "IcedTeaJavaRequestProcessor.h"
 #include "IcedTeaScriptablePluginObject.h"
 
@@ -70,7 +68,7 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
 			// Gather the results
 
 			// Let's get errors out of the way first
-			if (message_parts->at(4).find("Error") == 0)
+			if (message_parts->at(4) == "Error")
 			{
 				for (int i=5; i < message_parts->size(); i++)
 				{
@@ -113,8 +111,7 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
                     (message_parts->at(4) == "GetStaticFieldID") ||
                     (message_parts->at(4) == "GetFieldID") ||
                     (message_parts->at(4) == "GetJavaObject") ||
-                    (message_parts->at(4) == "IsInstanceOf") ||
-                    (message_parts->at(4) == "NewArray"))
+                    (message_parts->at(4) == "IsInstanceOf"))
 			{
 				result->return_identifier = atoi(message_parts->at(5).c_str());
 				result->return_string->append(message_parts->at(5)); // store it as a string as well, for easy access
@@ -127,7 +124,6 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
 					   (message_parts->at(4) == "CallStaticMethod") ||
 					   (message_parts->at(4) == "GetField") ||
 					   (message_parts->at(4) == "GetStaticField") ||
-					   (message_parts->at(4) == "GetValue") ||
 	                   (message_parts->at(4) == "GetObjectArrayElement"))
 			{
 
@@ -135,8 +131,6 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
                 {
 			        // literal returns don't have a corresponding jni id
 			        result->return_identifier = 0;
-			        result->return_string->append(message_parts->at(5));
-			        result->return_string->append(" ");
 			        result->return_string->append(message_parts->at(6));
 
                 } else
@@ -303,33 +297,6 @@ JavaRequestProcessor::getToStringValue(std::string object_id)
 	IcedTeaPluginUtilities::releaseReference();
 
 	return result;
-}
-
-/**
- * Given an object id, fetches the value of that ID from Java
- *
- * @param object_id The ID of the object
- * @return A JavaResultData struct containing the result of the request
- */
-
-JavaResultData*
-JavaRequestProcessor::getValue(std::string object_id)
-{
-    std::string message = std::string();
-
-    this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
-    this->reference = IcedTeaPluginUtilities::getReference();
-
-    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
-
-    message.append(" GetValue "); // get it in UTF8
-    message.append(object_id);
-
-    postAndWaitForResponse(message);
-
-    IcedTeaPluginUtilities::releaseReference();
-
-    return result;
 }
 
 /**
@@ -508,9 +475,12 @@ JavaRequestProcessor::getSlot(std::string objectID, std::string index)
 JavaResultData*
 JavaRequestProcessor::setSlot(std::string objectID,
                               std::string index,
-                              std::string value_id)
+                              NPVariant value)
 {
+    std::string id = std::string();
     std::string message = std::string();
+
+    createJavaObjectFromVariant(value, &id);
 
     this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
     this->reference = IcedTeaPluginUtilities::getReference();
@@ -522,30 +492,7 @@ JavaRequestProcessor::setSlot(std::string objectID,
     message.append(" ");
     message.append(index);
     message.append(" ");
-    message.append(value_id);
-
-    postAndWaitForResponse(message);
-
-    IcedTeaPluginUtilities::releaseReference();
-
-    return result;
-}
-
-JavaResultData*
-JavaRequestProcessor::newArray(std::string array_class,
-                               std::string length)
-{
-    std::string message = std::string();
-
-    this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
-    this->reference = IcedTeaPluginUtilities::getReference();
-
-    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &message);
-
-    message.append(" NewArray ");
-    message.append(array_class);
-    message.append(" ");
-    message.append(length);
+    message.append(id);
 
     postAndWaitForResponse(message);
 
@@ -673,11 +620,14 @@ JavaRequestProcessor::set(std::string source,
                           std::string classID,
                           std::string objectID,
                           std::string fieldName,
-                          std::string value_id)
+                          NPVariant value)
 {
     JavaResultData* java_result;
     JavaRequestProcessor java_request = JavaRequestProcessor();
+    std::string id = std::string();
     std::string message = std::string();
+
+    createJavaObjectFromVariant(value, &id);
 
     java_result = java_request.getFieldID(classID, fieldName);
 
@@ -699,7 +649,7 @@ JavaRequestProcessor::set(std::string source,
     message.append(" ");
     message.append(java_result->return_string->c_str());
     message.append(" ");
-    message.append(value_id);
+    message.append(id);
 
     postAndWaitForResponse(message);
 
@@ -712,9 +662,9 @@ JavaResultData*
 JavaRequestProcessor::setStaticField(std::string source,
                                      std::string classID,
                                      std::string fieldName,
-                                     std::string value_id)
+                                     NPVariant value)
 {
-    return set(source, true, classID, "", fieldName, value_id);
+    return set(source, true, classID, "", fieldName, value);
 }
 
 JavaResultData*
@@ -722,9 +672,9 @@ JavaRequestProcessor::setField(std::string source,
                                std::string classID,
                                std::string objectID,
                                std::string fieldName,
-                               std::string value_id)
+                               NPVariant value)
 {
-    return set(source, false, classID, objectID, fieldName, value_id);
+    return set(source, false, classID, objectID, fieldName, value);
 }
 
 JavaResultData*
@@ -804,35 +754,7 @@ JavaRequestProcessor::getStaticMethodID(std::string classID, NPIdentifier method
 }
 
 void
-getArrayTypeForJava(NPP instance, NPVariant element, std::string* type)
-{
-
-    if (NPVARIANT_IS_BOOLEAN(element)) {
-        type->append("string");
-    } else if (NPVARIANT_IS_INT32(element)) {
-        type->append("string");
-    } else if (NPVARIANT_IS_DOUBLE(element)) {
-        type->append("string");
-    } else if (NPVARIANT_IS_STRING(element)) {
-        type->append("string");
-    } else if (NPVARIANT_IS_OBJECT(element)) {
-
-        NPObject* first_element_obj = NPVARIANT_TO_OBJECT(element);
-        if (IcedTeaScriptableJavaPackageObject::is_valid_java_object(first_element_obj))
-        {
-            std::string class_id = std::string(((IcedTeaScriptableJavaObject*) first_element_obj)->getClassID());
-            type->append(class_id);
-        } else
-        {
-            type->append("jsobject");
-        }
-    } else {
-        type->append("jsobject"); // Else it is a string
-    }
-}
-
-void
-createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id)
+JavaRequestProcessor::createJavaObjectFromVariant(NPVariant variant, std::string* id)
 {
 	JavaResultData* java_result;
 
@@ -851,12 +773,14 @@ createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id)
     	PLUGIN_DEBUG_1ARG("VOID %d\n", variant);
     	id->append("0");
     	return; // no need to go further
-    } else if (NPVARIANT_IS_NULL(variant))
+    }
+    else if (NPVARIANT_IS_NULL(variant))
     {
     	PLUGIN_DEBUG_1ARG("NULL\n", variant);
     	id->append("0");
     	return; // no need to go further
-    } else if (NPVARIANT_IS_BOOLEAN(variant))
+    }
+    else if (NPVARIANT_IS_BOOLEAN(variant))
     {
     	className = "java.lang.Boolean";
 
@@ -865,7 +789,8 @@ createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id)
     	else
     		stringArg = "false";
 
-    } else if (NPVARIANT_IS_INT32(variant))
+    }
+    else if (NPVARIANT_IS_INT32(variant))
     {
     	className = "java.lang.Integer";
 
@@ -873,7 +798,8 @@ createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id)
     	sprintf(valueStr, "%d", NPVARIANT_TO_INT32(variant));
     	stringArg += valueStr;
     	free(valueStr);
-    } else if (NPVARIANT_IS_DOUBLE(variant))
+    }
+    else if (NPVARIANT_IS_DOUBLE(variant))
     {
     	className = "java.lang.Double";
 
@@ -881,7 +807,8 @@ createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id)
     	sprintf(valueStr, "%f", NPVARIANT_TO_DOUBLE(variant));
     	stringArg += valueStr;
     	free(valueStr);
-    } else if (NPVARIANT_IS_STRING(variant))
+    }
+    else if (NPVARIANT_IS_STRING(variant))
     {
     	className = "java.lang.String";
 #if MOZILLA_VERSION_COLLAPSED < 1090200
@@ -889,174 +816,28 @@ createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id)
 #else
     	stringArg += NPVARIANT_TO_STRING(variant).UTF8Characters;
 #endif
-    } else if (NPVARIANT_IS_OBJECT(variant))
+    }
+    else if (browser_functions.getproperty())
     {
 
-        NPObject* obj = NPVARIANT_TO_OBJECT(variant);
-        if (IcedTeaScriptableJavaPackageObject::is_valid_java_object(obj))
-        {
-            PLUGIN_DEBUG_0ARG("NPObject is a Java object\n");
-            alreadyCreated = true;
-        } else
-        {
-            PLUGIN_DEBUG_0ARG("NPObject is not a Java object");
-            NPIdentifier length_id = browser_functions.getstringidentifier("length");
-
-            // FIXME: We currently only handle <= 2 dim arrays. Do we really need more though?
-
-            // Is it an array?
-            if (IcedTeaPluginUtilities::isObjectJSArray(instance, obj)) {
-                PLUGIN_DEBUG_0ARG("NPObject is an array\n");
-
-                std::string array_id = std::string();
-                std::string java_array_type = std::string();
-                NPVariant length = NPVariant();
-                browser_functions.getproperty(instance, obj, length_id, &length);
-
-                std::string length_str = std::string();
-                IcedTeaPluginUtilities::itoa(NPVARIANT_TO_INT32(length), &length_str);
-
-                if (NPVARIANT_TO_INT32(length) > 0)
-                {
-                    NPIdentifier id_0 = browser_functions.getintidentifier(0);
-                    NPVariant first_element = NPVariant();
-                    browser_functions.getproperty(instance, obj, id_0, &first_element);
-
-                    // Check for multi-dim array
-                    if (NPVARIANT_IS_OBJECT(first_element) &&
-                        IcedTeaPluginUtilities::isObjectJSArray(instance, NPVARIANT_TO_OBJECT(first_element))) {
-
-                        NPVariant first_nested_element = NPVariant();
-                        browser_functions.getproperty(instance, NPVARIANT_TO_OBJECT(first_element), id_0, &first_nested_element);
-
-                        getArrayTypeForJava(instance, first_nested_element, &java_array_type);
-
-                        length_str.append(" 0"); // secondary array is created on the fly
-                    } else
-                    {
-                        getArrayTypeForJava(instance, first_element, &java_array_type);
-                    }
-                } else
-                    java_array_type.append("jsobject");
-
-                java_result = java_request.newArray(java_array_type, length_str);
-
-                if (java_result->error_occurred) {
-                    printf("Unable to create array\n");
-                    id->append("-1");
-                    return;
-                }
-
-                id->append(*(java_result->return_string));
-
-                NPIdentifier index_id = NPIdentifier();
-                for (int i=0; i < NPVARIANT_TO_INT32(length); i++)
-                {
-                    NPVariant value = NPVariant();
-
-                    index_id = browser_functions.getintidentifier(i);
-                    browser_functions.getproperty(instance, obj, index_id, &value);
-
-                    std::string value_id = std::string();
-                    createJavaObjectFromVariant(instance, value, &value_id);
-
-                    if (value_id == "-1") {
-                        printf("Unable to populate array\n");
-                        id->clear();
-                        id->append("-1");
-                        return;
-                    }
-
-                    std::string value_str = std::string();
-                    IcedTeaPluginUtilities::itoa(i, &value_str);
-                    java_result = java_request.setSlot(*id, value_str, value_id);
-
-                }
-
-                // Got here => no errors above. We're good to return!
-                return;
-            } else // Else it is not an array
-            {
-
-                NPVariant* variant_copy = new NPVariant();
-                OBJECT_TO_NPVARIANT(NPVARIANT_TO_OBJECT(variant), *variant_copy);
-
-                className = "netscape.javascript.JSObject";
-                IcedTeaPluginUtilities::JSIDToString(variant_copy, &stringArg);
-                browser_functions.retainobject(NPVARIANT_TO_OBJECT(variant));
-
-                std::string jsObjectClassID = std::string();
-                std::string jsObjectConstructorID = std::string();
-                std::vector<std::string> args = std::vector<std::string>();
-
-                java_result = java_request.findClass(0, "netscape.javascript.JSObject");
-
-                // the result we want is in result_string (assuming there was no error)
-                if (java_result->error_occurred)
-                {
-                    printf("Unable to get JSObject class id\n");
-                    id->clear();
-                    id->append("-1");
-                    return;
-                }
-
-                jsObjectClassID.append(*(java_result->return_string));
-                args.push_back("J");
-
-                java_result = java_request.getMethodID(jsObjectClassID,
-                                                       browser_functions.getstringidentifier("<init>"),
-                                                       args);
-
-                // the result we want is in result_string (assuming there was no error)
-                if (java_result->error_occurred)
-                {
-                    printf("Unable to get JSObject constructor id\n");
-                    id->clear();
-                    id->append("-1");
-                    return;
-                }
-
-                jsObjectConstructorID.append(*(java_result->return_string));
-
-                // We have the method id. Now create a new object.
-
-                args.clear();
-                args.push_back(stringArg);
-                java_result = java_request.newObjectWithConstructor("",
-                                                     jsObjectClassID,
-                                                     jsObjectConstructorID,
-                                                     args);
-
-                // Store the instance ID for future reference
-                IcedTeaPluginUtilities::storeInstanceID(variant_copy, instance);
-
-                // the result we want is in result_string (assuming there was no error)
-                // the result we want is in result_string (assuming there was no error)
-                if (java_result->error_occurred)
-                {
-                    printf("Unable to create JSObject\n");
-                    id->clear();
-                    id->append("-1");
-                    return;
-                }
-
-                id->append(*(java_result->return_string));
-                return;
-            }
-        }
+    }
+    else
+    {
+    	alreadyCreated = true;
     }
 
     if (!alreadyCreated) {
-		java_result = java_request.findClass(0, className);
+		java_result = java_request.findClass(0, className.c_str());
 
 		// the result we want is in result_string (assuming there was no error)
 		if (java_result->error_occurred) {
 			printf("Unable to find classid for %s\n", className.c_str());
-			id->append("-1");
+			id->append("0");
 			return;
 		}
 
 		jsObjectClassID.append(*(java_result->return_string));
+		java_request.resetResult();
 
 		std::string stringClassName = "Ljava/lang/String;";
 		args.push_back(stringClassName);
@@ -1067,11 +848,12 @@ createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id)
 		// the result we want is in result_string (assuming there was no error)
 		if (java_result->error_occurred) {
 			printf("Unable to find string constructor for %s\n", className.c_str());
-			id->append("-1");
+			id->append("0");
             return;
 		}
 
 		jsObjectConstructorID.append(*(java_result->return_string));
+		java_request.resetResult();
 
 		// We have class id and constructor ID. So we know we can create the
 		// object.. now create the string that will be provided as the arg
@@ -1079,7 +861,7 @@ createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id)
 
 		if (java_result->error_occurred) {
 			printf("Unable to create requested object\n");
-			id->append("-1");
+			id->append("0");
             return;
 		}
 
@@ -1092,7 +874,7 @@ createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id)
 
         if (java_result->error_occurred) {
             printf("Unable to create requested object\n");
-            id->append("-1");
+            id->append("0");
             return;
         }
 
@@ -1116,24 +898,25 @@ createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id)
 JavaResultData*
 JavaRequestProcessor::callStaticMethod(std::string source, std::string classID,
                                        std::string methodName,
-                                       std::vector<std::string> args)
+                                       const NPVariant* args,
+                                       int numArgs)
 {
-    return call(source, true, classID, methodName, args);
+    return call(source, true, classID, methodName, args, numArgs);
 }
 
 JavaResultData*
 JavaRequestProcessor::callMethod(std::string source,
                                  std::string objectID, std::string methodName,
-                                 std::vector<std::string> args)
+                                 const NPVariant* args, int numArgs)
 {
-    return call(source, false, objectID, methodName, args);
+    return call(source, false, objectID, methodName, args, numArgs);
 }
 
 JavaResultData*
 JavaRequestProcessor::call(std::string source,
                            bool isStatic, std::string objectID,
                            std::string methodName,
-                           std::vector<std::string> args)
+                           const NPVariant* args, int numArgs)
 {
     std::string message = std::string();
     this->instance = 0; // context is always 0 (needed for java-side backwards compat.)
@@ -1151,11 +934,21 @@ JavaRequestProcessor::call(std::string source,
     message += methodName;
     message += " ";
 
-    for (int i=0; i < args.size(); i++)
-    {
-        message += args[i];
-        message += " ";
-    }
+	// First, we need to load the arguments into the java-side table
+    std::string id = std::string();
+	for (int i=0; i < numArgs; i++) {
+	    id.clear();
+		createJavaObjectFromVariant(args[i], &id);
+		if (id == "0")
+		{
+			result->error_occurred = true;
+			result->error_msg->append("Unable to create arguments");
+			return result;
+		}
+
+		message += id;
+		message += " ";
+	}
 
 	postAndWaitForResponse(message);
 
@@ -1186,7 +979,7 @@ JavaRequestProcessor::getObjectClass(std::string objectID)
 
 JavaResultData*
 JavaRequestProcessor::newObject(std::string source, std::string classID,
-                                std::vector<std::string> args)
+                                const NPVariant* args, int argCount)
 {
     JavaRequestProcessor* java_request;
     std::string message = std::string();
@@ -1199,9 +992,19 @@ JavaRequestProcessor::newObject(std::string source, std::string classID,
     message += classID;
     message += " ";
 
-    for (int i=0; i < args.size(); i++)
-    {
-        message += args[i];
+    // First, we need to load the arguments into the java-side table
+    std::string id = std::string();
+    for (int i=0; i < argCount; i++) {
+        id.clear();
+        createJavaObjectFromVariant(args[i], &id);
+        if (id == "0")
+        {
+            result->error_occurred = true;
+            result->error_msg->append("Unable to create arguments");
+            return result;
+        }
+
+        message += id;
         message += " ";
     }
 

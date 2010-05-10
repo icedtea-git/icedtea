@@ -39,10 +39,12 @@ exception statement from your version. */
 #ifndef __ICEDTEANPPLUGIN_H__
 #define	__ICEDTEANPPLUGIN_H__
 
-#define MOZILLA_VERSION_COLLAPSED 1090105
-
-#if MOZILLA_VERSION_COLLAPSED < 1090100
+// Netscape plugin API includes.
+#include <npapi.h>
 #include <nsThreadUtils.h>
+
+#if MOZILLA_VERSION_COLLAPSED < 1090200
+#include <npupp.h>
 #else
 #include <npapi.h>
 #include <npruntime.h>
@@ -58,9 +60,6 @@ exception statement from your version. */
 
 #include "IcedTeaPluginUtils.h"
 #include "IcedTeaPluginRequestProcessor.h"
-
-// Work around across some chromium issues
-#define CHROMIUM_WORKAROUND
 
 // GCJPluginData stores all the data associated with a single plugin
 // instance.  A separate plugin instance is created for each <APPLET>

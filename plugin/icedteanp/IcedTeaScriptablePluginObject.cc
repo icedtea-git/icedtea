@@ -36,8 +36,6 @@ this exception to your version of the library, but you are not
 obligated to do so.  If you do not wish to do so, delete this
 exception statement from your version. */
 
-#include <typeinfo>
-
 #include "IcedTeaScriptablePluginObject.h"
 
 IcedTeaScriptablePluginObject::IcedTeaScriptablePluginObject(NPP instance)
@@ -170,6 +168,8 @@ IcedTeaScriptablePluginObject::get_scriptable_java_package_object(NPP instance, 
 	return scriptable_object;
 }
 
+std::map<std::string, NPObject*>* IcedTeaScriptableJavaPackageObject::object_map = new std::map<std::string, NPObject*>();
+
 IcedTeaScriptableJavaPackageObject::IcedTeaScriptableJavaPackageObject(NPP instance)
 {
     PLUGIN_DEBUG_0ARG("Constructing new scriptable java package object\n");
@@ -286,15 +286,13 @@ IcedTeaScriptableJavaPackageObject::getProperty(NPObject *npobj, NPIdentifier na
 	bool isPropertyClass = false;
 	JavaResultData* java_result;
 	JavaRequestProcessor java_request = JavaRequestProcessor();
-    NPP instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(npobj);
-    int plugin_instance_id = get_id_from_instance(instance);
 
 	std::string property_name = ((IcedTeaScriptableJavaPackageObject*) npobj)->getPackageName();
 	if (property_name.length() > 0)
 	    property_name += ".";
 	property_name += browser_functions.utf8fromidentifier(name);
 
-	java_result = java_request.findClass(plugin_instance_id, property_name);
+	java_result = java_request.findClass(0, property_name);
 	isPropertyClass = (java_result->return_identifier == 0);
 
 	//NPIdentifier property = browser_functions.getstringidentifier(property_name.c_str());
@@ -370,16 +368,16 @@ IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(NPP instance,
     obj_key += ":";
     obj_key += instance_id;
 
+    std::map<std::string, NPObject*>::iterator iterator = object_map->find(obj_key);
     PLUGIN_DEBUG_1ARG("get_scriptable_java_object searching for %s...\n", obj_key.c_str());
-    scriptable_object = IcedTeaPluginUtilities::getNPObjectFromJavaKey(obj_key);
 
-    if (scriptable_object != NULL)
+    if (iterator != object_map->end())
     {
-        PLUGIN_DEBUG_1ARG("Returning existing object %p\n", scriptable_object);
+        scriptable_object = object_map->find(obj_key)->second;
+        PLUGIN_DEBUG_2ARG("Found existing match for key %s. Returning %p\n", obj_key.c_str(), scriptable_object);
         browser_functions.retainobject(scriptable_object);
         return scriptable_object;
     }
-
 
 	NPClass* np_class = new NPClass();
 	np_class->structVersion = NP_CLASS_STRUCT_VERSION;
@@ -396,31 +394,9 @@ IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(NPP instance,
 	np_class->enumerate = IcedTeaScriptableJavaObject::enumerate;
 	np_class->construct = IcedTeaScriptableJavaObject::construct;
 
-	// try to create normally
-    scriptable_object =  browser_functions.createobject(instance, np_class);
-
-    // didn't work? try creating asynch
-    if (!scriptable_object)
-    {
-        AsyncCallThreadData thread_data = AsyncCallThreadData();
-        thread_data.result_ready = false;
-        thread_data.parameters = std::vector<void*>();
-        thread_data.result = std::string();
-
-        thread_data.parameters.push_back(instance);
-        thread_data.parameters.push_back(np_class);
-        thread_data.parameters.push_back(&scriptable_object);
-
-        browser_functions.pluginthreadasynccall(instance, &_createAndRetainJavaObject, &thread_data);
-
-        while (!thread_data.result_ready) usleep(2000); // wait till ready
-    } else
-    {
-        // Else retain object and continue
-        browser_functions.retainobject(scriptable_object);
-    }
-
-    PLUGIN_DEBUG_4ARG("Constructed new Java Object with classid=%s, instanceid=%s, isArray=%d and scriptable_object=%p\n", class_id.c_str(), instance_id.c_str(), isArray, scriptable_object);
+	scriptable_object = browser_functions.createobject(instance, np_class);
+	browser_functions.retainobject(scriptable_object);
+	PLUGIN_DEBUG_3ARG("Constructing new Java Object with classid=%s, instanceid=%s and isArray=%d\n", class_id.c_str(), instance_id.c_str(), isArray);
 
 	((IcedTeaScriptableJavaObject*) scriptable_object)->setClassIdentifier(class_id);
     ((IcedTeaScriptableJavaObject*) scriptable_object)->setIsArray(isArray);
@@ -429,32 +405,11 @@ IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(NPP instance,
 	    ((IcedTeaScriptableJavaObject*) scriptable_object)->setInstanceIdentifier(instance_id);
 
 	IcedTeaPluginUtilities::storeInstanceID(scriptable_object, instance);
-	IcedTeaPluginUtilities::storeObjectMapping(obj_key, scriptable_object);
+
+	object_map->insert(std::make_pair(obj_key, scriptable_object));
 
 	PLUGIN_DEBUG_2ARG("Inserting into object_map key %s->%p\n", obj_key.c_str(), scriptable_object);
 	return scriptable_object;
-}
-
-/* Creates and retains a scriptable java object (intended to be called asynch.) */
-void
-_createAndRetainJavaObject(void* data)
-{
-    PLUGIN_DEBUG_0ARG("Asynchronously creating/retaining object ...\n");
-
-    std::vector<void*> parameters = ((AsyncCallThreadData*) data)->parameters;
-    NPP instance = (NPP) parameters.at(0);
-    NPClass* np_class = (NPClass*) parameters.at(1);
-    NPObject** scriptable_object = (NPObject**) parameters.at(2);
-
-    *scriptable_object = browser_functions.createobject(instance, np_class);
-    browser_functions.retainobject(*scriptable_object);
-
-    ((AsyncCallThreadData*) data)->result_ready = true;
-}
-
-bool
-IcedTeaScriptableJavaPackageObject::is_valid_java_object(NPObject* object_ptr) {
-    return IcedTeaPluginUtilities::getInstanceFromMemberPtr(object_ptr) != NULL;
 }
 
 IcedTeaScriptableJavaObject::IcedTeaScriptableJavaObject(NPP instance)
@@ -498,14 +453,6 @@ void
 IcedTeaScriptableJavaObject::invalidate(NPObject *npobj)
 {
 	printf ("** Unimplemented: IcedTeaScriptableJavaObject::invalidate %p\n", npobj);
-	IcedTeaPluginUtilities::removeInstanceID(npobj);
-
-	std::string obj_key = std::string();
-	obj_key += ((IcedTeaScriptableJavaObject*) npobj)->getClassID();
-	obj_key += ":";
-	obj_key += ((IcedTeaScriptableJavaObject*) npobj)->getInstanceID();
-
-	IcedTeaPluginUtilities::removeObjectMapping(obj_key);
 }
 
 bool
@@ -537,6 +484,118 @@ IcedTeaScriptableJavaObject::hasMethod(NPObject *npobj, NPIdentifier name)
 }
 
 bool
+IcedTeaScriptableJavaObject::javaResultToNPVariant(NPObject *npobj,
+                                                   JavaResultData* java_result,
+                                                   NPVariant* variant)
+{
+    JavaRequestProcessor java_request = JavaRequestProcessor();
+
+    if (java_result->return_identifier == 0)
+    {
+        // VOID/BOOLEAN/NUMBER
+
+        if (*(java_result->return_string) == "void")
+        {
+            PLUGIN_DEBUG_0ARG("Method call returned void\n");
+            VOID_TO_NPVARIANT(*variant);
+        } else if (*(java_result->return_string) == "null")
+        {
+            PLUGIN_DEBUG_0ARG("Method call returned null\n");
+            NULL_TO_NPVARIANT(*variant);
+        }else if (*(java_result->return_string) == "true")
+        {
+            PLUGIN_DEBUG_0ARG("Method call returned a boolean (true)\n");
+            BOOLEAN_TO_NPVARIANT(true, *variant);
+        } else if (*(java_result->return_string) == "false")
+        {
+            PLUGIN_DEBUG_0ARG("Method call returned a boolean (false)\n");
+            BOOLEAN_TO_NPVARIANT(false, *variant);
+        } else
+        {
+            double d = strtod(java_result->return_string->c_str(), NULL);
+
+            // See if it is convertible to int
+            if (java_result->return_string->find(".") != std::string::npos ||
+                d < -(0x7fffffffL - 1L) ||
+                d > 0x7fffffffL)
+            {
+                PLUGIN_DEBUG_1ARG("Method call returned a double %f\n", d);
+                DOUBLE_TO_NPVARIANT(d, *variant);
+            } else
+            {
+                int32_t i = (int32_t) d;
+                PLUGIN_DEBUG_1ARG("Method call returned an int %d\n", i);
+                INT32_TO_NPVARIANT(i, *variant);
+            }
+        }
+    } else {
+        // Else this is a complex java object
+        std::string return_obj_instance_id = std::string();
+        std::string return_obj_class_id = std::string();
+        std::string return_obj_class_name = std::string();
+        return_obj_instance_id.append(*(java_result->return_string));
+
+        // Find out the class name first, because string is a special case
+        java_result = java_request.getClassName(return_obj_instance_id);
+
+        if (java_result->error_occurred)
+        {
+            return false;
+        }
+
+        return_obj_class_name.append(*(java_result->return_string));
+
+        if (return_obj_class_name == "java.lang.String")
+        {
+            // String is a special case as NPVariant can handle it directly
+            java_result = java_request.getString(return_obj_instance_id);
+
+            if (java_result->error_occurred)
+            {
+                return false;
+            }
+
+            // needs to be on the heap
+            NPUTF8* return_str = (NPUTF8*) malloc(sizeof(NPUTF8)*java_result->return_string->size() + 1);
+            strcpy(return_str, java_result->return_string->c_str());
+
+            PLUGIN_DEBUG_1ARG("Method call returned a string: \"%s\"\n", return_str);
+            STRINGZ_TO_NPVARIANT(return_str, *variant);
+
+            // delete string from java side, as it is no longer needed
+            java_request.deleteReference(return_obj_instance_id);
+        } else {
+
+            // Else this is a regular class. Reference the class object so
+            // we can construct an NPObject with it and the instance
+            java_result = java_request.getClassID(return_obj_instance_id);
+
+            if (java_result->error_occurred)
+            {
+                return false;
+            }
+
+            return_obj_class_id.append(*(java_result->return_string));
+
+            NPObject* obj;
+
+            if (return_obj_class_name.find('[') == 0) // array
+                obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(
+                                IcedTeaPluginUtilities::getInstanceFromMemberPtr(npobj),
+                                return_obj_class_id, return_obj_instance_id, true);
+            else
+                obj = IcedTeaScriptableJavaPackageObject::get_scriptable_java_object(
+                                                IcedTeaPluginUtilities::getInstanceFromMemberPtr(npobj),
+                                                return_obj_class_id, return_obj_instance_id, false);
+
+            OBJECT_TO_NPVARIANT(obj, *variant);
+        }
+    }
+
+    return true;
+}
+
+bool
 IcedTeaScriptableJavaObject::invoke(NPObject *npobj, NPIdentifier name, const NPVariant *args,
 			uint32_t argCount, NPVariant *result)
 {
@@ -560,49 +619,32 @@ IcedTeaScriptableJavaObject::invoke(NPObject *npobj, NPIdentifier name, const NP
 
     NPP instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(npobj);
 
-    // First, load the arguments into the java-side table
-    std::string id = std::string();
-    std::vector<std::string> arg_ids = std::vector<std::string>();
-    for (int i=0; i < argCount; i++) {
-        id.clear();
-        createJavaObjectFromVariant(instance, args[i], &id);
-
-        if (id == "-1")
-        {
-            printf("Unable to create arguments on Java side\n");
-            return false;
-        }
-
-        arg_ids.push_back(id);
-    }
-
     if (instance_id.length() == 0) // Static
     {
         PLUGIN_DEBUG_0ARG("Calling static method\n");
         callee = ((IcedTeaScriptableJavaObject*) npobj)->getClassID();
         java_result = java_request.callStaticMethod(
                         IcedTeaPluginUtilities::getSourceFromInstance(instance),
-                        callee, browser_functions.utf8fromidentifier(name), arg_ids);
+                        callee, browser_functions.utf8fromidentifier(name), args, argCount);
     } else
     {
         PLUGIN_DEBUG_0ARG("Calling method normally\n");
         callee = ((IcedTeaScriptableJavaObject*) npobj)->getInstanceID();
         java_result = java_request.callMethod(
                         IcedTeaPluginUtilities::getSourceFromInstance(instance),
-                        callee, browser_functions.utf8fromidentifier(name), arg_ids);
+                        callee, browser_functions.utf8fromidentifier(name), args, argCount);
     }
 
     if (java_result->error_occurred)
     {
         // error message must be allocated on heap
         char* error_msg = (char*) malloc(java_result->error_msg->length()*sizeof(char));
-        strcpy(error_msg, java_result->error_msg->c_str());
         browser_functions.setexception(npobj, error_msg);
         return false;
     }
 
     PLUGIN_DEBUG_0ARG("IcedTeaScriptableJavaObject::invoke converting and returning.\n");
-    return IcedTeaPluginUtilities::javaResultToNPVariant(instance, java_result->return_string, result);
+    return IcedTeaScriptableJavaObject::javaResultToNPVariant(npobj, java_result, result);
 }
 
 bool
@@ -691,7 +733,7 @@ IcedTeaScriptableJavaObject::getProperty(NPObject *npobj, NPIdentifier name, NPV
             // Access beyond size?
             if (browser_functions.intfromidentifier(name) >= length)
             {
-                VOID_TO_NPVARIANT(*result);
+                NULL_TO_NPVARIANT(*result);
                 return true;
             }
 
@@ -732,7 +774,8 @@ IcedTeaScriptableJavaObject::getProperty(NPObject *npobj, NPIdentifier name, NPV
     }
 
     PLUGIN_DEBUG_0ARG("IcedTeaScriptableJavaObject::getProperty converting and returning.\n");
-    return IcedTeaPluginUtilities::javaResultToNPVariant(instance, java_result->return_string, result);
+    return IcedTeaScriptableJavaObject::javaResultToNPVariant(npobj, java_result, result);
+
 }
 
 bool
@@ -781,30 +824,21 @@ IcedTeaScriptableJavaObject::setProperty(NPObject *npobj, NPIdentifier name, con
 
             std::string index = std::string();
             IcedTeaPluginUtilities::itoa(browser_functions.intfromidentifier(name), &index);
-
-            std::string value_id = std::string();
-            createJavaObjectFromVariant(instance, *value, &value_id);
-
-            java_result = java_request.setSlot(instance_id, index, value_id);
+            java_result = java_request.setSlot(instance_id, index, *value);
 
         } else // Everything else
         {
-            std::string value_id = std::string();
-            createJavaObjectFromVariant(instance, *value, &value_id);
 
             java_result = java_request.setField(
                         IcedTeaPluginUtilities::getSourceFromInstance(instance),
-                        class_id, instance_id, browser_functions.utf8fromidentifier(name), value_id);
+                        class_id, instance_id, browser_functions.utf8fromidentifier(name), *value);
         }
     }
     else
     {
-        std::string value_id = std::string();
-        createJavaObjectFromVariant(instance, *value, &value_id);
-
         java_result = java_request.setStaticField(
                                 IcedTeaPluginUtilities::getSourceFromInstance(instance),
-                                class_id, browser_functions.utf8fromidentifier(name), value_id);
+                                class_id, browser_functions.utf8fromidentifier(name), *value);
     }
 
     if (java_result->error_occurred)
@@ -834,6 +868,8 @@ bool
 IcedTeaScriptableJavaObject::construct(NPObject *npobj, const NPVariant *args, uint32_t argCount,
 	           NPVariant *result)
 {
+    NPUTF8* method_name = "";
+
     // Extract arg type array
     PLUGIN_DEBUG_1ARG("IcedTeaScriptableJavaObject::construct %s. Args follow.\n", ((IcedTeaScriptableJavaObject*) npobj)->getClassID().c_str());
     for (int i=0; i < argCount; i++)
@@ -848,29 +884,11 @@ IcedTeaScriptableJavaObject::construct(NPObject *npobj, const NPVariant *args, u
     std::string class_id = ((IcedTeaScriptableJavaObject*) npobj)->getClassID();
     NPP instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(npobj);
 
-    // First, load the arguments into the java-side table
-    std::string id = std::string();
-    std::vector<std::string> arg_ids = std::vector<std::string>();
-    for (int i=0; i < argCount; i++) {
-        id.clear();
-        createJavaObjectFromVariant(instance, args[i], &id);
-        if (id == "0")
-        {
-            // error message must be allocated on heap
-            char* error_msg = (char*) malloc(1024*sizeof(char));
-            strcpy(error_msg, "Unable to create argument on Java side");
-
-            browser_functions.setexception(npobj, error_msg);
-            return false;
-        }
-
-        arg_ids.push_back(id);
-    }
-
     java_result = java_request.newObject(
                             IcedTeaPluginUtilities::getSourceFromInstance(instance),
                             class_id,
-                            arg_ids);
+                            args,
+                            argCount);
 
     if (java_result->error_occurred)
     {

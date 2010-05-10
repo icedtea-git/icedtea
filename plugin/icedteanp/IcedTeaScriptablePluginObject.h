@@ -39,7 +39,7 @@ exception statement from your version. */
 #ifndef __ICEDTEASCRIPTABLEPLUGINOBJECT_H_
 #define __ICEDTEASCRIPTABLEPLUGINOBJECT_H_
 
-#if MOZILLA_VERSION_COLLAPSED < 1090100
+#if MOZILLA_VERSION_COLLAPSED < 1090200
 #include "npupp.h"
 #else
 #include <npapi.h>
@@ -103,6 +103,8 @@ class IcedTeaScriptableJavaPackageObject: public NPObject
     	NPP instance;
     	std::string* package_name;
 
+        static std::map<std::string, NPObject*>* object_map;
+
     public:
     	IcedTeaScriptableJavaPackageObject(NPP instance);
 
@@ -144,8 +146,6 @@ class IcedTeaScriptableJavaPackageObject: public NPObject
                                                     std::string class_id,
                                                     std::string instance_id,
                                                     bool isArray);
-
-        static bool is_valid_java_object(NPObject* object_ptr);
 };
 
 class IcedTeaScriptableJavaObject: public NPObject
@@ -156,6 +156,10 @@ class IcedTeaScriptableJavaObject: public NPObject
     	bool isObjectArray;
     	std::string* class_id;
     	std::string* instance_id;
+
+    	static bool javaResultToNPVariant(NPObject *npobj,
+                                          JavaResultData* java_result,
+                                          NPVariant* variant);
 
     public:
     	IcedTeaScriptableJavaObject(NPP instance);
@@ -204,9 +208,5 @@ class IcedTeaScriptableJavaObject: public NPObject
         static bool construct(NPObject *npobj, const NPVariant *args,
                 uint32_t argCount, NPVariant *result);
 };
-
-/* Creates and retains a scriptable java object (intended to be called asynch.) */
-
-void _createAndRetainJavaObject(void* data);
 
 #endif /* __ICEDTEASCRIPTABLEPLUGINOBJECT_H_ */

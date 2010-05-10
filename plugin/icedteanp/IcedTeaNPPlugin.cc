@@ -47,17 +47,15 @@ exception statement from your version. */
 #include <sys/types.h>
 #include <unistd.h>
 
-// Liveconnect extension
-#include "IcedTeaScriptablePluginObject.h"
-#include "IcedTeaNPPlugin.h"
-
-#if MOZILLA_VERSION_COLLAPSED < 1090100
+#if MOZILLA_VERSION_COLLAPSED < 1090200
 // Documentbase retrieval includes.
 #include <nsIPluginInstance.h>
 #include <nsIPluginInstancePeer.h>
 #include <nsIPluginTagInfo2.h>
+#endif
 
 // API's into Mozilla
+#if MOZILLA_VERSION_COLLAPSED < 1090200
 #include <nsCOMPtr.h>
 #include <nsICookieService.h>
 #include <nsIDNSRecord.h>
@@ -72,6 +70,10 @@ exception statement from your version. */
 #include <nsStringAPI.h>
 #include <nsServiceManagerUtils.h>
 #endif
+
+// Liveconnect extension
+#include "IcedTeaScriptablePluginObject.h"
+#include "IcedTeaNPPlugin.h"
 
 // Error reporting macros.
 #define PLUGIN_ERROR(message)                                       \
@@ -134,7 +136,7 @@ exception statement from your version. */
 #define FAILURE_MESSAGE "gcjwebplugin error: Failed to run %s." \
   "  For more detail rerun \"firefox -g\" in a terminal window."
 
-#if MOZILLA_VERSION_COLLAPSED < 1090100
+#if MOZILLA_VERSION_COLLAPSED < 1090200
 // Documentbase retrieval required definition.
 static NS_DEFINE_IID (kIPluginTagInfo2IID, NS_IPLUGINTAGINFO2_IID);
 #endif
@@ -184,7 +186,7 @@ PluginRequestProcessor* plugin_req_proc;
 // Sends messages to Java over the bus
 JavaMessageSender* java_req_proc;
 
-#if MOZILLA_VERSION_COLLAPSED < 1090100
+#if MOZILLA_VERSION_COLLAPSED < 1090200
 // Documentbase retrieval type-punning union.
 typedef union
 {
@@ -209,7 +211,7 @@ static gboolean plugin_out_pipe_callback (GIOChannel* source,
                                           GIOCondition condition,
                                           gpointer plugin_data);
 static NPError plugin_start_appletviewer (GCJPluginData* data);
-static gchar* plugin_create_applet_tag (int16_t argc, char* argn[],
+static gchar* plugin_create_applet_tag (int16 argc, char* argn[],
                                         char* argv[]);
 static void plugin_stop_appletviewer ();
 // Uninitialize GCJPluginData structure
@@ -217,6 +219,7 @@ static void plugin_data_destroy (NPP instance);
 
 NPError get_cookie_info(const char* siteAddr, char** cookieString, uint32_t* len);
 NPError get_proxy_info(const char* siteAddr, char** proxy, uint32_t* len);
+void decode_url(const gchar* url, gchar** decoded_url);
 void consume_message(gchar* message);
 void start_jvm_if_needed();
 static void appletviewer_monitor(GPid pid, gint status, gpointer data);
@@ -258,8 +261,8 @@ pthread_cond_t cond_message_available = PTHREAD_COND_INITIALIZER;
 // function will free anything that's been allocated so far, set
 // instance->pdata to NULL and return an error code.
 NPError
-GCJ_New (NPMIMEType pluginType, NPP instance, uint16_t mode,
-         int16_t argc, char* argn[], char* argv[],
+GCJ_New (NPMIMEType pluginType, NPP instance, uint16 mode,
+         int16 argc, char* argn[], char* argv[],
          NPSavedData* saved)
 {
   PLUGIN_DEBUG_0ARG("GCJ_New\n");
@@ -610,8 +613,8 @@ GCJ_GetValue (NPP instance, NPPVariable variable, void* value)
     case NPPVpluginNeedsXEmbed:
       {
         PLUGIN_DEBUG_0ARG ("GCJ_GetValue: returning TRUE for NeedsXEmbed.\n");
-        bool* bool_value = (bool*) value;
-        *bool_value = true;
+        PRBool* bool_value = (PRBool*) value;
+        *bool_value = PR_TRUE;
       }
       break;
     case NPPVpluginScriptableNPObject:
@@ -633,7 +636,7 @@ GCJ_GetValue (NPP instance, NPPVariable variable, void* value)
 NPError
 GCJ_Destroy (NPP instance, NPSavedData** save)
 {
-  PLUGIN_DEBUG_1ARG ("GCJ_Destroy %p\n", instance);
+  PLUGIN_DEBUG_0ARG ("GCJ_Destroy\n");
 
   GCJPluginData* data = (GCJPluginData*) instance->pdata;
 
@@ -647,8 +650,6 @@ GCJ_Destroy (NPP instance, NPSavedData** save)
 
   g_hash_table_remove(instance_to_id_map, instance);
   g_hash_table_remove(id_to_instance_map, GINT_TO_POINTER(id));
-
-  IcedTeaPluginUtilities::invalidateInstance(instance);
 
   PLUGIN_DEBUG_0ARG ("GCJ_Destroy return\n");
 
@@ -699,6 +700,7 @@ GCJ_SetWindow (NPP instance, NPWindow* window)
 
       if (jvm_up)
         {
+
           gboolean dim_changed = FALSE;
 
           // The window is the same as it was for the last
@@ -725,8 +727,8 @@ GCJ_SetWindow (NPP instance, NPWindow* window)
         }
 
         if (dim_changed) {
-            gchar* message = g_strdup_printf ("instance %d width %d height %d",
-                                                id, window->width, window->height);
+            gchar* message = g_strdup_printf ("instance 1 width %d height %d",
+                                                          window->width, window->height);
             plugin_send_message_to_appletviewer (message);
             g_free (message);
             message = NULL;
@@ -782,7 +784,7 @@ GCJ_SetWindow (NPP instance, NPWindow* window)
 
 NPError
 GCJ_NewStream (NPP instance, NPMIMEType type, NPStream* stream,
-               NPBool seekable, uint16_t* stype)
+               NPBool seekable, uint16* stype)
 {
   PLUGIN_DEBUG_0ARG ("GCJ_NewStream\n");
 
@@ -809,7 +811,7 @@ GCJ_DestroyStream (NPP instance, NPStream* stream, NPReason reason)
   return NPERR_NO_ERROR;
 }
 
-int32_t
+int32
 GCJ_WriteReady (NPP instance, NPStream* stream)
 {
   PLUGIN_DEBUG_0ARG ("GCJ_WriteReady\n");
@@ -819,8 +821,8 @@ GCJ_WriteReady (NPP instance, NPStream* stream)
   return 0;
 }
 
-int32_t
-GCJ_Write (NPP instance, NPStream* stream, int32_t offset, int32_t len,
+int32
+GCJ_Write (NPP instance, NPStream* stream, int32 offset, int32 len,
            void* buffer)
 {
   PLUGIN_DEBUG_0ARG ("GCJ_Write\n");
@@ -838,7 +840,7 @@ GCJ_Print (NPP instance, NPPrint* platformPrint)
   PLUGIN_DEBUG_0ARG ("GCJ_Print return\n");
 }
 
-int16_t
+int16
 GCJ_HandleEvent (NPP instance, void* event)
 {
   PLUGIN_DEBUG_0ARG ("GCJ_HandleEvent\n");
@@ -860,7 +862,7 @@ GCJ_URLNotify (NPP instance, const char* url, NPReason reason,
 NPError
 get_cookie_info(const char* siteAddr, char** cookieString, uint32_t* len)
 {
-#if MOZILLA_VERSION_COLLAPSED < 1090100
+#if MOZILLA_VERSION_COLLAPSED < 1090200
   nsresult rv;
   nsCOMPtr<nsIScriptSecurityManager> sec_man =
     do_GetService(NS_SCRIPTSECURITYMANAGER_CONTRACTID, &rv);
@@ -945,7 +947,7 @@ plugin_data_new (GCJPluginData** data)
 // browser.  We could not find a way to retrieve the documentbase
 // using the original Netscape plugin API so we use the XPCOM API
 // instead.
-#if MOZILLA_VERSION_COLLAPSED < 1090100
+#if MOZILLA_VERSION_COLLAPSED < 1090200
 static gchar*
 plugin_get_documentbase (NPP instance)
 {
@@ -1029,21 +1031,12 @@ plugin_get_documentbase (NPP instance)
 
   browser_functions.getvalue(instance, NPNVWindowNPObject, &window);
   script_str += "window.location.href";
-#if MOZILLA_VERSION_COLLAPSED < 1090200
-  script.utf8characters = script_str.c_str();
-  script.utf8length = script_str.size();
-#else
   script.UTF8Characters = script_str.c_str();
   script.UTF8Length = script_str.size();
-#endif
   browser_functions.evaluate(instance, window, &script, location);
 
   // Strip everything after the last "/"
-#if MOZILLA_VERSION_COLLAPSED < 1090200
-  gchar** parts = g_strsplit (NPVARIANT_TO_STRING(*location).utf8characters, "/", -1);
-#else
   gchar** parts = g_strsplit (NPVARIANT_TO_STRING(*location).UTF8Characters, "/", -1);
-#endif
   guint parts_sz = g_strv_length (parts);
 
   for (int i=0; i < parts_sz - 1; i++)
@@ -1168,8 +1161,8 @@ void consume_message(gchar* message) {
       if (g_str_has_prefix (parts[2], "url"))
         {
           // Open the URL in a new browser window.
-          gchar* decoded_url = (gchar*) calloc(strlen(parts[3]) + 1, sizeof(gchar));
-          IcedTeaPluginUtilities::decodeURL(parts[3], &decoded_url);
+          gchar* decoded_url = (gchar*) malloc(strlen(parts[3])*sizeof(gchar) + sizeof(gchar));
+          decode_url(parts[3], &decoded_url);
 
           PLUGIN_DEBUG_1ARG ("plugin_in_pipe_callback: opening URL %s\n", decoded_url);
           PLUGIN_DEBUG_1ARG ("plugin_in_pipe_callback: URL target %s\n", parts[4]);
@@ -1228,13 +1221,12 @@ void consume_message(gchar* message) {
         gchar* proxy;
         uint32_t len;
 
-        gchar* decoded_url = (gchar*) calloc(strlen(parts[2]) + 1, sizeof(gchar));
-        IcedTeaPluginUtilities::decodeURL(parts[2], &decoded_url);
-        PLUGIN_DEBUG_4ARG("parts[0]=%s, parts[1]=%s, parts[2]=%s -- decoded_url=%s\n", parts[0], parts[1], parts[2], decoded_url);
+        gchar* decoded_url = (gchar*) malloc(strlen(parts[2])*sizeof(gchar) + sizeof(gchar));
+        decode_url(parts[2], &decoded_url);
 
         gchar* proxy_info;
 
-#if MOZILLA_VERSION_COLLAPSED < 1090100
+#if MOZILLA_VERSION_COLLAPSED < 1090200
 	proxy = (char*) malloc(sizeof(char)*2048);
 #endif
 
@@ -1252,15 +1244,15 @@ void consume_message(gchar* message) {
         g_free(proxy_info);
         proxy_info = NULL;
 
-#if MOZILLA_VERSION_COLLAPSED < 1090100
+#if MOZILLA_VERSION_COLLAPSED < 1090200
 	g_free(proxy);
 	proxy = NULL;
 #endif
 
       } else if (g_str_has_prefix(parts[1], "PluginCookieInfo"))
       {
-        gchar* decoded_url = (gchar*) calloc(strlen(parts[2])+1, sizeof(gchar));
-        IcedTeaPluginUtilities::decodeURL(parts[2], &decoded_url);
+        gchar* decoded_url = (gchar*) malloc(strlen(parts[2])*sizeof(gchar) + sizeof(gchar));
+        decode_url(parts[2], &decoded_url);
 
         gchar* cookie_info = g_strconcat ("plugin PluginCookieInfo ", parts[2], " ", NULL);
         gchar* cookie_string;
@@ -1299,10 +1291,33 @@ int get_id_from_instance(NPP instance)
     return id;
 }
 
+void decode_url(const gchar* url, gchar** decoded_url)
+{
+#if MOZILLA_VERSION_COLLAPSED < 1090200
+    // There is no GLib function to decode urls, so we fallback to Mozilla's
+    // methods
+
+    nsresult rv;
+    nsCOMPtr<nsINetUtil> net_util = do_GetService(NS_NETUTIL_CONTRACTID, &rv);
+
+    if (!net_util)
+        printf("Error instantiating NetUtil service.\n");
+
+    nsDependentCSubstring unescaped_url;
+    net_util->UnescapeString(nsCString(url), 0, unescaped_url);
+
+    // no need for strn. decoded_url is malloced to sizeof unescaped_url, which
+    // will always be <= decoded size
+    strcpy(*decoded_url,  nsCString(unescaped_url).get());
+#else
+
+#endif
+}
+
 NPError
 get_proxy_info(const char* siteAddr, char** proxy, uint32_t* len)
 {
-#if MOZILLA_VERSION_COLLAPSED < 1090100
+#if MOZILLA_VERSION_COLLAPSED < 1090200
   nsresult rv;
 
   // Initialize service variables
@@ -1336,7 +1351,7 @@ get_proxy_info(const char* siteAddr, char** proxy, uint32_t* len)
 
   // if proxy info is available, extract it
   nsCString phost;
-  PRint32_t pport;
+  PRInt32 pport;
   nsCString ptype;
 
   info->GetHost(phost);
@@ -1518,14 +1533,14 @@ plugin_start_appletviewer (GCJPluginData* data)
 // Build up the applet tag string that we'll send to the applet
 // viewer.
 static gchar*
-plugin_create_applet_tag (int16_t argc, char* argn[], char* argv[])
+plugin_create_applet_tag (int16 argc, char* argn[], char* argv[])
 {
   PLUGIN_DEBUG_0ARG ("plugin_create_applet_tag\n");
 
   gchar* applet_tag = g_strdup ("<EMBED ");
   gchar* parameters = g_strdup ("");
 
-  for (int16_t i = 0; i < argc; i++)
+  for (int16 i = 0; i < argc; i++)
     {
       if (!g_ascii_strcasecmp (argn[i], "code"))
         {
@@ -1892,7 +1907,7 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
   browser_functions.releasevariantvalue     = browserTable->releasevariantvalue;
   browser_functions.setexception            = browserTable->setexception;
   browser_functions.pluginthreadasynccall   = browserTable->pluginthreadasynccall;
-#if MOZILLA_VERSION_COLLAPSED >= 1090100
+#if MOZILLA_VERSION_COLLAPSED >= 1090200
   browser_functions.getvalueforurl          = browserTable->getvalueforurl;
   browser_functions.setvalueforurl          = browserTable->setvalueforurl;
 #endif
@@ -1901,7 +1916,7 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
   pluginTable->version = (NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR;
   pluginTable->size = sizeof (NPPluginFuncs);
 
-#if MOZILLA_VERSION_COLLAPSED < 1090100
+#if MOZILLA_VERSION_COLLAPSED < 1090200
   pluginTable->newp = NewNPP_NewProc (GCJ_New);
   pluginTable->destroy = NewNPP_DestroyProc (GCJ_Destroy);
   pluginTable->setwindow = NewNPP_SetWindowProc (GCJ_SetWindow);
@@ -2049,14 +2064,13 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
       data_directory = NULL;
     }
 
-
   return np_error;
 }
 
 // Returns a string describing the MIME type that this plugin
 // handles.
 char*
-NP_GetMIMEDescription ()
+NP_GetMIMEDescription (void)
 {
   PLUGIN_DEBUG_0ARG ("NP_GetMIMEDescription\n");
 
@@ -2207,18 +2221,6 @@ get_scriptable_object(NPP instance)
 
         int id = get_id_from_instance(instance);
         gchar* id_str = g_strdup_printf ("%d", id);
-
-        // Some browsers.. (e.g. chromium) don't call NPP_SetWindow
-        // for 0x0 plugins and therefore require initialization with
-        // a 0 handle
-        if (!data->window_handle)
-        {
-            data->window_handle = 0;
-            gchar *window_message = g_strdup_printf ("instance %s handle %d",
-                                                    id_str, 0);
-            plugin_send_message_to_appletviewer (window_message);
-            g_free (window_message);
-        }
 
         java_result = java_request.getAppletObjectInstance(id_str);
 

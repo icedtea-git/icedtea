@@ -42,10 +42,8 @@ exception statement from your version. */
 #define MOZILLA 1
 #if MOZILLA
 
-#if MOZILLA_VERSION_COLLAPSED < 1090100
 #include <nsIRunnable.h>
 #include <string>
-#endif
 
 /*
  * This struct holds the result from the main-thread dispatched method

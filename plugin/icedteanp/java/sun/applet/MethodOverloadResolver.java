@@ -37,7 +37,6 @@ exception statement from your version. */
 
 package sun.applet;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -298,58 +297,6 @@ public class MethodOverloadResolver {
         Object castedObj;
 
         Class suppliedParamClass = suppliedParam != null ? suppliedParam.getClass() : null ;
-        
-        // Either both are an array, or neither are
-        boolean suppliedParamIsArray = suppliedParamClass != null && suppliedParamClass.isArray();
-        if (paramTypeClass.isArray() != suppliedParamIsArray && 
-                !paramTypeClass.equals(Object.class)         &&
-                !paramTypeClass.equals(String.class)) {
-        	ret[0] = Integer.MIN_VALUE; // Not allowed
-            ret[1] = suppliedParam;
-            return ret;
-        }
-
-        // If param type is an array, supplied obj must be an array, Object or String (guaranteed by checks above)
-        // If it is an array, we need to copy/cast as we scan the array
-        // If it an object, we return "as is" [Everything can be narrowed to an object, cost=6]
-        // If it is a string, we need to convert according to the JS engine rules
-
-        if (paramTypeClass.isArray()) {
-            
-            Object newArray = Array.newInstance(paramTypeClass.getComponentType(), Array.getLength(suppliedParam));
-            for (int i=0; i < Array.getLength(suppliedParam); i++) {
-            	Object original = Array.get(suppliedParam, i);
-            	
-            	// When dealing with arrays, we represent empty slots with 
-            	// null. We need to convert this to 0 before recursive 
-            	// calling, since normal transformation does not allow 
-            	// null -> primitive
-            	
-            	if (original == null && paramTypeClass.getComponentType().isPrimitive())
-            	    original = 0;
-            	
-            	Object[] costAndCastedObject = getCostAndCastedObject(original, paramTypeClass.getComponentType());
-            	
-            	if ((Integer) costAndCastedObject[0] < 0) {
-            		ret[0] = Integer.MIN_VALUE; // Not allowed
-                    ret[1] = suppliedParam;
-                    return ret;
-            	}
-
-            	Array.set(newArray, i, costAndCastedObject[1]);
-            }
-            
-            ret[0] = 9;
-            ret[1] = newArray;
-            return ret;
-        }
-        
-        if (suppliedParamIsArray && paramTypeClass.equals(String.class)) {
-            
-            ret[0] = 9;
-            ret[1] = getArrayAsString(suppliedParam);
-            return ret;
-        }
 
         // If this is null, there are only 2 possible cases
         if (suppliedParamClass == null) {
@@ -373,19 +320,8 @@ public class MethodOverloadResolver {
                         java.lang.Byte.class.isAssignableFrom(paramTypeClass)
                        )
                    ) {
-            cost += 4; // Numeric type to a different primitive type
-
-            if (suppliedParam.toString().equals("true"))
-                suppliedParam = "1";
-            else if (suppliedParam.toString().equals("false"))
-                suppliedParam = "0";
-            
-            if (paramTypeClass.equals(Boolean.TYPE))
-                castedObj = getNum(suppliedParam.toString(), paramTypeClass).doubleValue() != 0D;
-            else if (paramTypeClass.equals(Character.TYPE))
-                castedObj = (char) Short.decode(suppliedParam.toString()).shortValue();
-            else
-                castedObj = getNum(suppliedParam.toString(), paramTypeClass);
+            cost += 4; // Numeric type to a different primitive type 
+            castedObj = getNum(suppliedParam.toString(), paramTypeClass);
         } else if (suppliedParam instanceof java.lang.String &&
                     isNum(suppliedParam) &&
                         (paramTypeClass.isInstance(java.lang.Number.class) ||
@@ -394,33 +330,21 @@ public class MethodOverloadResolver {
                          paramTypeClass.isPrimitive())
                    ) {
             cost += 5; // String to numeric type
-            
-            if (suppliedParam.toString().equals("true"))
-                suppliedParam = "1";
-            else if (suppliedParam.toString().equals("false"))
-                suppliedParam = "0";
-            
-            if (paramTypeClass.equals(Character.TYPE))
-                castedObj = (char) Short.decode(suppliedParam.toString()).shortValue();
-            else
-                castedObj = getNum(suppliedParam.toString(), paramTypeClass);
-        }  else if (suppliedParam instanceof java.lang.String &&
-                     (paramTypeClass.equals(java.lang.Boolean.class) ||
-                      paramTypeClass.equals(java.lang.Boolean.TYPE))
-                    ){
-
-            cost += 5; // Same cost as above
-            castedObj = new Boolean(suppliedParam.toString().length() > 0);
+            castedObj = getNum(suppliedParam.toString(), paramTypeClass);
         } else if (paramTypeClass.isAssignableFrom(suppliedParamClass)) {
             cost += 6; // Class type to superclass type;
             castedObj = paramTypeClass.cast(suppliedParam);
-        } else if (paramTypeClass.equals(String.class)) {
+        } else if (paramTypeClass.equals(java.lang.String.class)) {
             cost += 7; // Any Java value to String
             castedObj = suppliedParam.toString();
         } else if (suppliedParam instanceof JSObject &&
+                   paramTypeClass.equals(String.class)) {
+            cost += 8; // JSObject to String
+            castedObj = suppliedParam.toString();
+        } else if (suppliedParam instanceof JSObject &&
                    paramTypeClass.isArray()) {
-            cost += 8; // JSObject to Java array 
-            castedObj = (JSObject) suppliedParam;
+            cost += 10; // JSObject to Java array 
+            castedObj = (JSObject) suppliedParam; // FIXME: Arrays not yet handled
         } else {
             cost = Integer.MIN_VALUE; // Not allowed
             castedObj = suppliedParam;
@@ -485,12 +409,6 @@ public class MethodOverloadResolver {
         if (o instanceof java.lang.Number)
             return true;
         
-        // Boolean is changeable to number as well
-        if (o instanceof java.lang.Boolean)
-            return true;
-
-        // At this point, it _has_ to be a string else automatically 
-        // return false
         if (!(o instanceof java.lang.String))
             return false;
 
@@ -503,19 +421,18 @@ public class MethodOverloadResolver {
             Float.parseFloat((String) o); // decimal
             return true;
         } catch (NumberFormatException nfe) {}
-
         
         return false;
     }
 
-    private static Number getNum (String s, Class c) throws NumberFormatException {
+    private static Object getNum (String s, Class c) throws NumberFormatException {
 
         Number n;
         if (s.contains("."))
             n = new Double(s);
         else
             n = new Long(s);
-        
+
         // See if we need to collapse first
         if (c.equals(java.lang.Integer.class) ||
             c.equals(java.lang.Integer.TYPE)) {
@@ -547,6 +464,11 @@ public class MethodOverloadResolver {
             return n.byteValue();
         }
 
+        if (c.equals(java.lang.Character.class) ||
+            c.equals(java.lang.Character.TYPE)) {
+            return (char) n.intValue();
+        }
+
         return n;
     }
 
@@ -565,33 +487,6 @@ public class MethodOverloadResolver {
         ret = ret.substring(0, ret.length()-2); // remove last ", "
         ret += " }";
 
-        return ret;
-    }
-    
-    private static String getArrayAsString(Object array) {
-        // We are guaranteed that supplied object is a String
-        
-        String ret = new String();
-        
-        for (int i=0; i < Array.getLength(array); i++) {
-            Object element = Array.get(array, i);
-            
-            if (element != null) {
-                if (element.getClass().isArray()) {
-                    ret += getArrayAsString(element);
-                } else {
-                    ret += element;
-                }
-            }
-            
-            ret += ",";
-        }
-
-        // Trim the final ","
-        if (ret.length() > 0) {
-            ret = ret.substring(0, ret.length() - 1);
-        }
-        
         return ret;
     }
 }

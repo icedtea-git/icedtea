@@ -110,13 +110,6 @@ public final class JSObject {
         this((long) jsobj_addr);
     }
 
-    /**
-     * it is illegal to construct a JSObject manually
-     */
-    public JSObject(String jsobj_addr) {
-        this((long) Long.parseLong(jsobj_addr));
-    }
-
     public JSObject(long jsobj_addr) {
         
         // See if the caller has permission
