@@ -39,7 +39,7 @@ void SharkStateScanner::scan(SharkState* state)
     process_stack_slot(
       i,
       state->stack_addr(i),
-      function()->stack_slots_offset() +
+      stack()->stack_slots_offset() +
         i + max_stack() - state->stack_depth());
   }
   end_stack();
@@ -49,17 +49,17 @@ void SharkStateScanner::scan(SharkState* state)
   for (int i = 0; i < state->num_monitors(); i++) {
     process_monitor(
       i,
-      function()->monitor_offset(i),
-      function()->monitor_object_offset(i));
+      stack()->monitor_offset(i),
+      stack()->monitor_object_offset(i));
   }
   end_monitors();
 
   // Frame header
   start_frame_header();
   process_oop_tmp_slot(
-    state->oop_tmp_addr(), function()->oop_tmp_slot_offset());
-  process_method_slot(state->method_addr(), function()->method_slot_offset());
-  process_pc_slot(function()->pc_slot_offset());
+    state->oop_tmp_addr(), stack()->oop_tmp_slot_offset());
+  process_method_slot(state->method_addr(), stack()->method_slot_offset());
+  process_pc_slot(stack()->pc_slot_offset());
   end_frame_header();
 
   // Local variables
@@ -69,7 +69,7 @@ void SharkStateScanner::scan(SharkState* state)
     process_local_slot(
       i,
       state->local_addr(i),
-      function()->locals_slots_offset() + max_locals() - 1 - i);
+      stack()->locals_slots_offset() + max_locals() - 1 - i);
   }
   end_locals();
 

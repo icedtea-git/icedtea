@@ -24,178 +24,111 @@
  */
 
 class SharkType : public AllStatic {
- public:
-  static void initialize();
-
-  // C types
- public:
-  static const llvm::IntegerType* intptr_type()
-  {
-#if SHARK_LLVM_VERSION >= 26
-    return LP64_ONLY(llvm::Type::getInt64Ty(llvm::getGlobalContext()))
-           NOT_LP64 (llvm::Type::getInt32Ty(llvm::getGlobalContext()));
-#else
-    return LP64_ONLY(llvm::Type::Int64Ty)
-           NOT_LP64 (llvm::Type::Int32Ty);
-#endif
-  }
-
-  // VM types
  private:
-  static const llvm::PointerType*  _cpCacheEntry_type;
-  static const llvm::FunctionType* _entry_point_type;
-  static const llvm::FunctionType* _osr_entry_point_type;
-  static const llvm::PointerType*  _itableOffsetEntry_type;
-  static const llvm::PointerType*  _klass_type;
-  static const llvm::PointerType*  _methodOop_type;
-  static const llvm::ArrayType*    _monitor_type;
-  static const llvm::PointerType*  _oop_type;
-  static const llvm::PointerType*  _thread_type;
-  static const llvm::PointerType*  _zeroStack_type;
-  
- public:
-  static const llvm::PointerType* cpCacheEntry_type()
+  static SharkContext& context()
   {
-    return _cpCacheEntry_type;
-  }
-  static const llvm::FunctionType* entry_point_type()
-  {
-    return _entry_point_type;
-  }
-  static const llvm::FunctionType* osr_entry_point_type()
-  {
-    return _osr_entry_point_type;
-  }
-  static const llvm::PointerType* itableOffsetEntry_type()
-  {
-    return _itableOffsetEntry_type;
-  }
-  static const llvm::PointerType* klass_type()
-  {
-    return _klass_type;
-  }
-  static const llvm::PointerType* methodOop_type()
-  {
-    return _methodOop_type;
-  }
-  static const llvm::ArrayType* monitor_type()
-  {
-    return _monitor_type;
-  }
-  static const llvm::PointerType* oop_type()
-  {
-    return _oop_type;
-  }
-  static const llvm::PointerType* thread_type()
-  {
-    return _thread_type;
-  }
-  static const llvm::PointerType* zeroStack_type()
-  {
-    return _zeroStack_type;
+    return SharkContext::current();
   }
 
-  // Java types
+  // Basic types
  public:
-  static const llvm::IntegerType* jboolean_type()
+  static const llvm::Type* void_type()
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::Type::getInt8Ty(llvm::getGlobalContext());
-#else
-    return llvm::Type::Int8Ty;
-#endif
+    return context().void_type();
+  }
+  static const llvm::IntegerType* bit_type()
+  {
+    return context().bit_type();
   }
   static const llvm::IntegerType* jbyte_type()
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::Type::getInt8Ty(llvm::getGlobalContext());
-#else
-    return llvm::Type::Int8Ty;
-#endif
-  }
-  static const llvm::IntegerType* jchar_type()
-  {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::Type::getInt16Ty(llvm::getGlobalContext());
-#else
-    return llvm::Type::Int16Ty;
-#endif
+    return context().jbyte_type();
   }
   static const llvm::IntegerType* jshort_type()
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::Type::getInt16Ty(llvm::getGlobalContext());
-#else
-    return llvm::Type::Int16Ty;
-#endif
+    return context().jshort_type();
   }
   static const llvm::IntegerType* jint_type()
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::Type::getInt32Ty(llvm::getGlobalContext());
-#else
-    return llvm::Type::Int32Ty;
-#endif
+    return context().jint_type();
   }
   static const llvm::IntegerType* jlong_type()
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::Type::getInt64Ty(llvm::getGlobalContext());
-#else
-    return llvm::Type::Int64Ty;
-#endif
+    return context().jlong_type();
   }
   static const llvm::Type* jfloat_type()
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::Type::getFloatTy(llvm::getGlobalContext());
-#else
-    return llvm::Type::FloatTy;
-#endif
+    return context().jfloat_type();
   }
   static const llvm::Type* jdouble_type()
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::Type::getDoubleTy(llvm::getGlobalContext());
-#else
-    return llvm::Type::DoubleTy;
-#endif
+    return context().jdouble_type();
+  }
+  static const llvm::IntegerType* intptr_type()
+  {
+    return context().intptr_type();
   }
 
-  // Java types as they appear on the stack and in fields
- private:
-  static const llvm::Type* _to_stackType_tab[T_CONFLICT + 1];
+  // Compound types
+ public:
+  static const llvm::PointerType* itableOffsetEntry_type()
+  {
+    return context().itableOffsetEntry_type();
+  }
+  static const llvm::PointerType* jniEnv_type()
+  {
+    return context().jniEnv_type();
+  }
+  static const llvm::PointerType* jniHandleBlock_type()
+  {
+    return context().jniHandleBlock_type();
+  }
+  static const llvm::PointerType* klass_type()
+  {
+    return context().klass_type();
+  }
+  static const llvm::PointerType* methodOop_type()
+  {
+    return context().methodOop_type();
+  }
+  static const llvm::ArrayType* monitor_type()
+  {
+    return context().monitor_type();
+  }
+  static const llvm::PointerType* oop_type()
+  {
+    return context().oop_type();
+  }
+  static const llvm::PointerType* thread_type()
+  {
+    return context().thread_type();
+  }
+  static const llvm::PointerType* zeroStack_type()
+  {
+    return context().zeroStack_type();
+  }
+  static const llvm::FunctionType* entry_point_type()
+  {
+    return context().entry_point_type();
+  }
+  static const llvm::FunctionType* osr_entry_point_type()
+  {
+    return context().osr_entry_point_type();
+  }
 
+  // Mappings
  public:
   static const llvm::Type* to_stackType(BasicType type)
   {
-#ifdef ASSERT
-    if (type < 0 || type > T_CONFLICT || _to_stackType_tab[type] == NULL) {
-      tty->print_cr("Unhandled type %s", type2name(type));
-      ShouldNotReachHere();
-    }
-#endif // ASSERT
-    return _to_stackType_tab[type];
+    return context().to_stackType(type);
   }
   static const llvm::Type* to_stackType(ciType* type)
   {
     return to_stackType(type->basic_type());
   }
-
-  // Java types as they appear in arrays
- private:
-  static const llvm::Type* _to_arrayType_tab[T_CONFLICT + 1];
-
- public:
   static const llvm::Type* to_arrayType(BasicType type)
   {
-#ifdef ASSERT
-    if (type < 0 || type > T_CONFLICT || _to_arrayType_tab[type] == NULL) {
-      tty->print_cr("Unhandled type %s", type2name(type));
-      ShouldNotReachHere();
-    }
-#endif // ASSERT
-    return _to_arrayType_tab[type];
+    return context().to_arrayType(type);
   }
   static const llvm::Type* to_arrayType(ciType* type)
   {

@@ -33,7 +33,7 @@ void SharkDecacher::start_frame()
   // Start recording the debug information
   _pc_offset = code_buffer()->create_unique_offset();
   _oopmap = new OopMap(
-    oopmap_slot_munge(function()->oopmap_frame_size()),
+    oopmap_slot_munge(stack()->oopmap_frame_size()),
     oopmap_slot_munge(arg_size()));
   debug_info()->add_safepoint(pc_offset(), oopmap());
 }
@@ -44,10 +44,10 @@ void SharkDecacher::start_stack(int stack_depth)
   _exparray = new GrowableArray<ScopeValue*>(stack_depth);
 
   // Set the stack pointer
-  function()->CreateStoreZeroStackPointer(
+  stack()->CreateStoreStackPointer(
     builder()->CreatePtrToInt(
-      function()->CreateAddressOfFrameEntry(
-        function()->stack_slots_offset() + max_stack() - stack_depth),
+      stack()->slot_addr(
+        stack()->stack_slots_offset() + max_stack() - stack_depth),
       SharkType::intptr_type()));
 }
 
@@ -120,7 +120,7 @@ void SharkDecacher::process_pc_slot(int offset)
   // Record the PC
   builder()->CreateStore(
     builder()->code_buffer_address(pc_offset()),
-    function()->CreateAddressOfFrameEntry(offset));
+    stack()->slot_addr(offset));
 }
   
 void SharkDecacher::start_locals()
@@ -197,13 +197,11 @@ void SharkOSREntryCacher::process_monitor(int index,
   builder()->CreateStore(
     builder()->CreateLoad(
       CreateAddressOfOSRBufEntry(src_offset, SharkType::intptr_type())),
-    function()->CreateAddressOfFrameEntry(
-      box_offset, SharkType::intptr_type()));
+    stack()->slot_addr(box_offset, SharkType::intptr_type()));
   builder()->CreateStore(
     builder()->CreateLoad(
       CreateAddressOfOSRBufEntry(src_offset + 1, SharkType::oop_type())),
-    function()->CreateAddressOfFrameEntry(
-      obj_offset, SharkType::oop_type()));
+    stack()->slot_addr(obj_offset, SharkType::oop_type()));
 }
 
 void SharkCacher::process_oop_tmp_slot(Value** value, int offset)
@@ -273,12 +271,10 @@ void SharkDecacher::write_value_to_frame(const Type* type,
                                          Value*      value,
                                          int         offset)
 {
-  builder()->CreateStore(
-    value, function()->CreateAddressOfFrameEntry(offset, type));
+  builder()->CreateStore(value, stack()->slot_addr(offset, type));
 }
 
 Value* SharkCacher::read_value_from_frame(const Type* type, int offset)
 {
-  return builder()->CreateLoad(
-    function()->CreateAddressOfFrameEntry(offset, type));
+  return builder()->CreateLoad(stack()->slot_addr(offset, type));
 }

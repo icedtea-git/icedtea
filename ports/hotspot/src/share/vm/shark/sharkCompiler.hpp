@@ -23,6 +23,8 @@
  *
  */
 
+class SharkContext;
+
 class SharkCompiler : public AbstractCompiler {
  public:
   // Creation
@@ -32,7 +34,7 @@ class SharkCompiler : public AbstractCompiler {
   const char *name()     { return "shark"; }
 
   // Missing feature tests
-  bool supports_native() { return false; }
+  bool supports_native() { return true; }
   bool supports_osr()    { return true; }
 
   // Customization
@@ -42,33 +44,81 @@ class SharkCompiler : public AbstractCompiler {
   // Initialization
   void initialize();
 
-  // Compilation entry point for methods
+  // Compile a normal (bytecode) method and install it in the VM
   void compile_method(ciEnv* env, ciMethod* target, int entry_bci);
 
-  // Free compiled methods
+  // Generate a wrapper for a native (JNI) method
+  nmethod* generate_native_wrapper(MacroAssembler* masm,
+                                   methodHandle    target,
+                                   BasicType*      arg_types,
+                                   BasicType       return_type);
+
+  // Free compiled methods (and native wrappers)
   void free_compiled_method(address code);
 
-  // LLVM interface
+  // Each thread generating IR needs its own context.  The normal
+  // context is used for bytecode methods, and is protected from
+  // multiple simultaneous accesses by being restricted to the
+  // compiler thread.  The native context is used for JNI methods,
+  // and is protected from multiple simultaneous accesses by the
+  // adapter handler library lock.
  private:
-  llvm::Module*          _module;
+  SharkContext* _normal_context;
+  SharkContext* _native_context;
+
+ public:
+  SharkContext* context() const
+  {
+    if (JavaThread::current()->is_Compiler_thread()) {
+      return _normal_context;
+    }
+    else {
+      assert(AdapterHandlerLibrary_lock->owned_by_self(), "should be");
+      return _native_context;
+    }
+  }
+
+  // The LLVM execution engine is the JIT we use to generate native
+  // code.  It is thread safe, but we need to protect it with a lock
+  // of our own because otherwise LLVM's lock and HotSpot's locks
+  // interleave and deadlock.  The SharkMemoryManager is not thread
+  // safe, and is protected by the same lock as the execution engine.
+ private:
+  Monitor*               _execution_engine_lock;
   SharkMemoryManager*    _memory_manager;
   llvm::ExecutionEngine* _execution_engine;
 
- public:
-  llvm::Module* module() const
+ private:
+  Monitor* execution_engine_lock() const
   {
-    return _module;
+    return _execution_engine_lock;
   }
   SharkMemoryManager* memory_manager() const
   {
+    assert(execution_engine_lock()->owned_by_self(), "should be");
     return _memory_manager;
   }
   llvm::ExecutionEngine* execution_engine() const
   {
+    assert(execution_engine_lock()->owned_by_self(), "should be");
     return _execution_engine;
   }
 
-  // Helper
+  // Global access
+ public:
+  static SharkCompiler* compiler()
+  {
+    AbstractCompiler *compiler =
+      CompileBroker::compiler(CompLevel_fast_compile);
+    assert(compiler->is_shark() && compiler->is_initialized(), "should be");
+    return (SharkCompiler *) compiler;
+  }
+
+  // Helpers
  private:
-  static const char* methodname(const ciMethod* target);
+  static const char* methodname(const char* klass, const char* method);
+  void generate_native_code(SharkEntry*     entry,
+                            llvm::Function* function,
+                            const char*     name);
+  void free_queued_methods();
 };

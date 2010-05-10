@@ -532,31 +532,19 @@ void SharkBlock::parse_bytecode(int start, int limit)
       b = pop();
       a = pop();
       push(SharkValue::create_jfloat(
-#if SHARK_LLVM_VERSION >= 26
         builder()->CreateFAdd(a->jfloat_value(), b->jfloat_value())));
-#else
-        builder()->CreateAdd(a->jfloat_value(), b->jfloat_value())));
-#endif
       break;
     case Bytecodes::_fsub:
       b = pop();
       a = pop();
       push(SharkValue::create_jfloat(
-#if SHARK_LLVM_VERSION >= 26
         builder()->CreateFSub(a->jfloat_value(), b->jfloat_value())));
-#else
-        builder()->CreateSub(a->jfloat_value(), b->jfloat_value())));
-#endif
       break;
     case Bytecodes::_fmul:
       b = pop();
       a = pop();
       push(SharkValue::create_jfloat(
-#if SHARK_LLVM_VERSION >= 26
         builder()->CreateFMul(a->jfloat_value(), b->jfloat_value())));
-#else
-        builder()->CreateMul(a->jfloat_value(), b->jfloat_value())));
-#endif
       break;
     case Bytecodes::_fdiv:
       b = pop();
@@ -573,42 +561,26 @@ void SharkBlock::parse_bytecode(int start, int limit)
     case Bytecodes::_fneg:
       a = pop();      
       push(SharkValue::create_jfloat(
-#if SHARK_LLVM_VERSION >= 26
         builder()->CreateFNeg(a->jfloat_value())));
-#else
-        builder()->CreateNeg(a->jfloat_value())));
-#endif
       break;
 
     case Bytecodes::_dadd:
       b = pop();
       a = pop();
       push(SharkValue::create_jdouble(
-#if SHARK_LLVM_VERSION >= 26
         builder()->CreateFAdd(a->jdouble_value(), b->jdouble_value())));
-#else
-        builder()->CreateAdd(a->jdouble_value(), b->jdouble_value())));
-#endif
       break;
     case Bytecodes::_dsub:
       b = pop();
       a = pop();
       push(SharkValue::create_jdouble(
-#if SHARK_LLVM_VERSION >= 26
         builder()->CreateFSub(a->jdouble_value(), b->jdouble_value())));
-#else
-        builder()->CreateSub(a->jdouble_value(), b->jdouble_value())));
-#endif
       break;
     case Bytecodes::_dmul:
       b = pop();
       a = pop();
       push(SharkValue::create_jdouble(
-#if SHARK_LLVM_VERSION >= 26
         builder()->CreateFMul(a->jdouble_value(), b->jdouble_value())));
-#else
-        builder()->CreateMul(a->jdouble_value(), b->jdouble_value())));
-#endif
       break;
     case Bytecodes::_ddiv:
       b = pop();
@@ -625,11 +597,7 @@ void SharkBlock::parse_bytecode(int start, int limit)
     case Bytecodes::_dneg:
       a = pop();      
       push(SharkValue::create_jdouble(
-#if SHARK_LLVM_VERSION >= 26
         builder()->CreateFNeg(a->jdouble_value())));
-#else
-        builder()->CreateNeg(a->jdouble_value())));
-#endif
       break;
 
     case Bytecodes::_iinc:

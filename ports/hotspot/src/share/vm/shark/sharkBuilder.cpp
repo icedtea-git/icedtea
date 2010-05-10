@@ -28,16 +28,8 @@
 
 using namespace llvm;
 
-SharkBuilder::SharkBuilder(Module* module, SharkCodeBuffer* code_buffer)
-#if SHARK_LLVM_VERSION >= 26
-  // LLVM 2.6 requires a LLVMContext during IRBuilder construction.
-  // getGlobalConext() returns one that can be used as long as the shark
-  // compiler are single-threaded.
-  : IRBuilder<>(getGlobalContext()),
-#else
-  : IRBuilder<>(),
-#endif // SHARK_LLVM_VERSION >= 26
-    _module(module),
+SharkBuilder::SharkBuilder(SharkCodeBuffer* code_buffer)
+  : IRBuilder<>(SharkContext::current()),
     _code_buffer(code_buffer)
 {
 }
@@ -155,17 +147,9 @@ const Type* SharkBuilder::make_type(char type, bool void_ok)
     // Miscellaneous
   case 'v':
     assert(void_ok, "should be");
-#if SHARK_LLVM_VERSION >= 26
-    return Type::getVoidTy(getGlobalContext());
-#else
-    return Type::VoidTy;
-#endif
+    return SharkType::void_type();
   case '1':
-#if SHARK_LLVM_VERSION >= 26
-    return Type::getInt1Ty(getGlobalContext());
-#else
-    return Type::Int1Ty;
-#endif
+    return SharkType::bit_type();
 
   default:
     ShouldNotReachHere();
@@ -196,7 +180,7 @@ Value* SharkBuilder::make_function(const char* name,
                                    const char* params,
                                    const char* ret)
 {
-  return module()->getOrInsertFunction(name, make_ftype(params, ret));
+  return SharkContext::current().get_external(name, make_ftype(params, ret));
 }
 
 // Create an object representing an external function by inlining a
@@ -372,6 +356,15 @@ Value* SharkBuilder::uncommon_trap()
   return make_function((address) SharkRuntime::uncommon_trap, "Ti", "v");
 }
 
+// Native-Java transition.
+
+Value* SharkBuilder::check_special_condition_for_native_trans()
+{
+  return make_function(
+    (address) JavaThread::check_special_condition_for_native_trans,
+    "T", "v");
+}
+
 // Low-level non-VM calls
 
 // The ARM-specific code here is to work around unimplemented
@@ -520,11 +513,7 @@ CallInst* SharkBuilder::CreateDump(Value* value)
   const char *name;
   if (value->hasName())
     // XXX this leaks, but it's only debug code
-#if SHARK_LLVM_VERSION >= 26
     name = strdup(value->getName().str().c_str());
-#else
-    name = strdup(value->getName().c_str());
-#endif
   else
     name = "unnamed_value";
 
@@ -572,7 +561,7 @@ Value* SharkBuilder::code_buffer_address(int offset)
     LLVMValue::intptr_constant(offset));
 }
 
-Value* SharkBuilder::CreateInlineOop(ciObject* object, const char* name)
+Value* SharkBuilder::CreateInlineOop(jobject object, const char* name)
 {
   return CreateLoad(
     CreateIntToPtr(
@@ -607,9 +596,6 @@ BasicBlock* SharkBuilder::GetBlockInsertionPoint() const
 
 BasicBlock* SharkBuilder::CreateBlock(BasicBlock* ip, const char* name) const
 {
-#if SHARK_LLVM_VERSION >= 26
-  return BasicBlock::Create(getGlobalContext(), name, GetInsertBlock()->getParent(), ip);
-#else
-  return BasicBlock::Create(name, GetInsertBlock()->getParent(), ip);
-#endif
+  return BasicBlock::Create(
+    SharkContext::current(), name, GetInsertBlock()->getParent(), ip);
 }  

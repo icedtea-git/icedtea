@@ -28,15 +28,15 @@ class SharkState;
 class SharkStateScanner : public SharkTargetInvariants {
  protected:
   SharkStateScanner(SharkFunction* function)
-    : SharkTargetInvariants(function), _function(function) {}
+    : SharkTargetInvariants(function), _stack(function->stack()) {}
 
  private:
-  SharkFunction* _function;
+  SharkStack* _stack;
 
  protected:
-  SharkFunction* function() const
+  SharkStack* stack() const
   {
-    return _function;
+    return _stack;
   }
 
   // Scan the frame

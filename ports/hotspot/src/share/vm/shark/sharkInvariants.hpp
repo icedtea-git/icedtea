@@ -31,35 +31,20 @@
 
 class SharkCompileInvariants : public ResourceObj {
  protected:
-  SharkCompileInvariants(SharkCompiler* compiler,
-                         ciEnv*         env,
-                         SharkBuilder*  builder)
-    : _compiler(compiler),
-      _env(env),
+  SharkCompileInvariants(ciEnv* env, SharkBuilder* builder)
+    : _env(env),
       _builder(builder),
       _thread(NULL) {}
 
   SharkCompileInvariants(const SharkCompileInvariants* parent)
-    : _compiler(parent->_compiler),
-      _env(parent->_env),
+    : _env(parent->_env),
       _builder(parent->_builder),
       _thread(parent->_thread) {}
 
  private:
-  SharkCompiler* _compiler;
-  ciEnv*         _env;
-  SharkBuilder*  _builder;
-  llvm::Value*   _thread;
-
-  // The SharkCompiler that is compiling this method.  Holds the
-  // classes that form the interface with LLVM (the module, the
-  // memory manager, etc) and provides the compile() method to
-  // convert LLVM functions to native code.
- protected:
-  SharkCompiler* compiler() const
-  {
-    return _compiler;
-  }
+  ciEnv*        _env;
+  SharkBuilder* _builder;
+  llvm::Value*  _thread;
 
   // Top-level broker for HotSpot's Compiler Interface.
   //
@@ -73,6 +58,7 @@ class SharkCompileInvariants : public ResourceObj {
  private:
   ciEnv* env() const
   {
+    assert(_env != NULL, "env not available");
     return _env;
   }
 
@@ -124,11 +110,8 @@ class SharkCompileInvariants : public ResourceObj {
 
 class SharkTargetInvariants : public SharkCompileInvariants {
  protected:
-  SharkTargetInvariants(SharkCompiler* compiler,
-                        ciEnv*         env,
-                        SharkBuilder*  builder,
-                        ciTypeFlow*    flow)
-    : SharkCompileInvariants(compiler, env, builder),
+  SharkTargetInvariants(ciEnv* env, SharkBuilder* builder, ciTypeFlow* flow)
+    : SharkCompileInvariants(env, builder),
       _target(flow->method()),
       _flow(flow),
       _max_monitors(count_monitors()) {}

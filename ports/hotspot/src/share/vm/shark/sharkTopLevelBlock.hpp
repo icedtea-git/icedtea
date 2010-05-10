@@ -49,6 +49,13 @@ class SharkTopLevelBlock : public SharkBlock {
     return _ciblock;
   }
 
+  // Function properties
+ public:
+  SharkStack* stack() const
+  {
+    return function()->stack();
+  }
+  
   // Typeflow properties
  public:
   int index() const
@@ -272,26 +279,6 @@ class SharkTopLevelBlock : public SharkBlock {
   void check_pending_exception(int action);
   void handle_exception(llvm::Value* exception, int action);
 
-  // Frame anchor
- private:
-  void set_last_Java_frame(llvm::Value* value) const
-  {
-    builder()->CreateStore(
-      value,
-      builder()->CreateAddressOfStructEntry(
-        thread(), JavaThread::last_Java_sp_offset(),
-        llvm::PointerType::getUnqual(SharkType::intptr_type()),
-        "last_Java_sp_addr"));
-  }
-  void set_last_Java_frame() const
-  {
-    set_last_Java_frame(function()->CreateLoadZeroFramePointer());
-  }
-  void reset_last_Java_frame() const
-  {
-    set_last_Java_frame(LLVMValue::intptr_constant(0));
-  }
-
   // VM calls
  private:
   llvm::CallInst* call_vm(llvm::Value*  callee,
@@ -300,9 +287,9 @@ class SharkTopLevelBlock : public SharkBlock {
                           int           exception_action)
   {
     decache_for_VM_call();
-    set_last_Java_frame();
+    stack()->CreateSetLastJavaFrame();
     llvm::CallInst *res = builder()->CreateCall(callee, args_start, args_end);
-    reset_last_Java_frame();
+    stack()->CreateResetLastJavaFrame();
     cache_after_VM_call();
     if (exception_action & EAM_CHECK) {
       check_pending_exception(exception_action);

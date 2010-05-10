@@ -25,24 +25,12 @@
 
 class SharkCodeBuffer : public StackObj {
  public:
-  SharkCodeBuffer(OopRecorder* oop_recorder)
-    : _cb("Shark", 256 * K, 64 * K),
-      _masm(new MacroAssembler(&_cb)),
-      _base_pc(NULL)
-  {
-    cb()->initialize_oop_recorder(oop_recorder);
-  }
+  SharkCodeBuffer(MacroAssembler* masm)
+    : _masm(masm), _base_pc(NULL) {}
 
  private:
-  CodeBuffer      _cb;
   MacroAssembler* _masm;
   llvm::Value*    _base_pc;
-
- public:
-  CodeBuffer* cb()
-  {
-    return &_cb;
-  }
 
  private:
   MacroAssembler* masm() const
@@ -84,11 +72,11 @@ class SharkCodeBuffer : public StackObj {
 
   // Inline an oop into the buffer and return its offset.
  public:
-  int inline_oop(ciObject* object) const
+  int inline_oop(jobject object) const
   {
     masm()->align(BytesPerWord);
     int offset = masm()->offset();
-    masm()->store_oop(object->constant_encoding());
+    masm()->store_oop(object);
     return offset;
   }
 };

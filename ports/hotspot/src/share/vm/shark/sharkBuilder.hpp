@@ -27,18 +27,12 @@ class SharkBuilder : public llvm::IRBuilder<> {
   friend class SharkCompileInvariants;
 
  public:
-  SharkBuilder(llvm::Module* module, SharkCodeBuffer* code_buffer);
+  SharkBuilder(SharkCodeBuffer* code_buffer);
 
-  // The LLVM module and Shark code buffer we are building into.
+  // The code buffer we are building into.
  private:
-  llvm::Module*    _module;
   SharkCodeBuffer* _code_buffer;
 
- private:
-  llvm::Module* module() const
-  {
-    return _module;
-  }
  protected:
   SharkCodeBuffer* code_buffer() const
   {
@@ -138,7 +132,14 @@ class SharkBuilder : public llvm::IRBuilder<> {
  public:
   llvm::Value* uncommon_trap();
 
-  // Intrinsics and external functions, part 4: Low-level non-VM calls.
+  // Intrinsics and external functions, part 4: Native-Java transition.
+  //   This is a special case in that it is invoked during a thread
+  //   state transition.  The stack must be set up for walking, and it
+  //   may throw exceptions, but the state is _thread_in_native_trans.
+ public:
+  llvm::Value* check_special_condition_for_native_trans();
+
+  // Intrinsics and external functions, part 5: Low-level non-VM calls.
   //   These have the same caveats as the high-level non-VM calls
   //   above.  They are not accessed directly; rather, you should
   //   access them via the various Create* methods below.
@@ -184,7 +185,11 @@ class SharkBuilder : public llvm::IRBuilder<> {
   // Helpers for accessing the code buffer.
  public:
   llvm::Value* code_buffer_address(int offset);
-  llvm::Value* CreateInlineOop(ciObject* object, const char* name = "");
+  llvm::Value* CreateInlineOop(jobject object, const char* name = "");
+  llvm::Value* CreateInlineOop(ciObject* object, const char* name = "")
+  {
+    return CreateInlineOop(object->encoding(), name);
+  }
 
   // Helpers for creating basic blocks.
   // NB don't use unless SharkFunction::CreateBlock is unavailable.

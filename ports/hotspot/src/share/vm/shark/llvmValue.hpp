@@ -39,19 +39,11 @@ class LLVMValue : public AllStatic {
   }
   static llvm::ConstantFP* jfloat_constant(jfloat value)
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::ConstantFP::get(llvm::getGlobalContext(), llvm::APFloat(value));
-#else
-    return llvm::ConstantFP::get(SharkType::jfloat_type(), value);
-#endif
+    return llvm::ConstantFP::get(SharkContext::current(), llvm::APFloat(value));
   }
   static llvm::ConstantFP* jdouble_constant(jdouble value)
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::ConstantFP::get(llvm::getGlobalContext(), llvm::APFloat(value));
-#else
-    return llvm::ConstantFP::get(SharkType::jdouble_type(), value);
-#endif
+    return llvm::ConstantFP::get(SharkContext::current(), llvm::APFloat(value));
   }
   static llvm::ConstantPointerNull* null()
   {
@@ -61,11 +53,7 @@ class LLVMValue : public AllStatic {
  public:
   static llvm::ConstantInt* bit_constant(int value)
   {
-#if SHARK_LLVM_VERSION >= 26
-    return llvm::ConstantInt::get(llvm::Type::getInt1Ty(llvm::getGlobalContext()), value, false);
-#else
-    return llvm::ConstantInt::get(llvm::Type::Int1Ty, value, false);
-#endif
+    return llvm::ConstantInt::get(SharkType::bit_type(), value, false);
   }
   static llvm::ConstantInt* intptr_constant(intptr_t value)
   {

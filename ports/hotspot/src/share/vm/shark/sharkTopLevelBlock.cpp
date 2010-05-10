@@ -638,7 +638,7 @@ void SharkTopLevelBlock::handle_return(BasicType type, Value* exception)
     builder()->CreateStore(exception, pending_exception_address());
   }
 
-  Value *result_addr = function()->CreatePopFrame(type2size[type]);
+  Value *result_addr = stack()->CreatePopFrame(type2size[type]);
   if (type != T_VOID) {
     builder()->CreateStore(
       pop_result(type)->generic_value(),
@@ -1648,8 +1648,8 @@ void SharkTopLevelBlock::do_multianewarray()
   // of normal stack order.
   int ndims = iter()->get_dimensions();
 
-  Value *dimensions = function()->CreateAddressOfFrameEntry(
-    function()->stack_slots_offset() + max_stack() - xstack_depth(),
+  Value *dimensions = stack()->slot_addr(
+    stack()->stack_slots_offset() + max_stack() - xstack_depth(),
     ArrayType::get(SharkType::jint_type(), ndims),
     "dimensions");
 
@@ -1707,9 +1707,9 @@ void SharkTopLevelBlock::acquire_lock(Value *lockee, int exception_action)
   BasicBlock *lock_acquired = function()->CreateBlock("lock_acquired");
 
   int monitor = num_monitors();
-  Value *monitor_addr        = function()->monitor_addr(monitor);
-  Value *monitor_object_addr = function()->monitor_object_addr(monitor);
-  Value *monitor_header_addr = function()->monitor_header_addr(monitor);
+  Value *monitor_addr        = stack()->monitor_addr(monitor);
+  Value *monitor_object_addr = stack()->monitor_object_addr(monitor);
+  Value *monitor_header_addr = stack()->monitor_header_addr(monitor);
 
   // Store the object and mark the slot as live
   builder()->CreateStore(lockee, monitor_object_addr);
@@ -1791,9 +1791,9 @@ void SharkTopLevelBlock::release_lock(int exception_action)
   BasicBlock *lock_released = function()->CreateBlock("lock_released");
 
   int monitor = num_monitors() - 1;
-  Value *monitor_addr        = function()->monitor_addr(monitor);
-  Value *monitor_object_addr = function()->monitor_object_addr(monitor);
-  Value *monitor_header_addr = function()->monitor_header_addr(monitor);
+  Value *monitor_addr        = stack()->monitor_addr(monitor);
+  Value *monitor_object_addr = stack()->monitor_object_addr(monitor);
+  Value *monitor_header_addr = stack()->monitor_header_addr(monitor);
 
   // If it is recursive then we're already done
   Value *disp = builder()->CreateLoad(monitor_header_addr);

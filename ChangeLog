@@ -1,5 +1,188 @@
 2009-11-11  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
+	(CppInterpreter::native_entry): Add invocation counting for
+	non-synchronized native methods.
+
+	* ports/hotspot/src/cpu/zero/vm/sharedRuntime_zero.cpp
+	(SharedRuntime::generate_native_wrapper): Implemented.
+
+	* ports/hotspot/src/cpu/zero/vm/sharkFrame_zero.hpp
+	(SharkFrame): Made friendly with SharkStack.  Snubbed
+	SharkFunction.
+
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::SharkBuilder): Removed module argument.
+	(SharkBuilder::_module): Removed.
+	(SharkBuilder::module): Likewise.
+	(SharkBuilder::check_special_condition_for_native_trans): New method.
+	(SharkBuilder::CreateInlineOop): New method with jobject argument.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::SharkBuilder): Removed module argument, and changed
+	to use Shark context instead of global context.
+	(SharkBuilder::make_type): Updated for new SharkType.
+	(SharkBuilder::make_function): Use SharkContext for resolution.
+	(SharkBuilder::check_special_condition_for_native_trans): New method.
+	(SharkBuilder::CreateDump): Removed support for LLVM < 2.6.
+	(SharkBuilder::CreateBlock): Likewise.
+	(SharkBuilder::CreateInlineOop): Changed object argument type.
+
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp
+	(SharkDecacher::oopmap_slot_munge): Defer to SharkStack method.
+	(SharkDecacher::slot2reg): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
+	(SharkDecacher::start_frame): Use new SharkStack code.
+	(SharkDecacher::start_stack): Likewise.
+	(SharkDecacher::process_pc_slot): Likewise.
+	(SharkOSREntryCacher::process_monitor): Likewise.
+	(SharkDecacher::write_value_to_frame): Likewise.
+	(SharkCacher::read_value_from_frame): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkCodeBuffer.hpp
+	(SharkCodeBuffer::SharkCodeBuffer): Wrap a MacroAssembler
+	instead of creating one along with a CodeBuffer.
+	(SharkCodeBuffer::_cb): Removed.
+	(SharkCodeBuffer::_cb): Likewise.
+	(SharkCodeBuffer::inline_oop): Changed object argument type.
+
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp
+	(SharkCompiler::supports_native): Return true instead of false.
+	(SharkCompiler::generate_native_wrapper): New method.
+	(SharkCompiler::_module): Removed.
+	(SharkCompiler::module): Likewise.
+	(SharkCompiler::_normal_context): New field.
+	(SharkCompiler::_native_context): Likewise.
+	(SharkCompiler::_execution_engine_lock): Likewise.
+	(SharkCompiler::context): New method.
+	(SharkCompiler::execution_engine_lock): Likewise.
+	(SharkCompiler::memory_manager): Added assertion.
+	(SharkCompiler::execution_engine): Likewise.
+	(SharkCompiler::compiler): New method.
+	(SharkCompiler::generate_native_code): Likewise.
+	(SharkCompiler::free_queued_methods): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
+	(SharkCompiler::SharkCompiler): Create the lock and the two
+	contexts.  Removed support for LLVM < 2.6.
+	(SharkCompiler::compile_method): Create the HotSpot code buffer
+	and macro assembler, and defer native code generation to new
+	method SharkCompiler::generate_native_code().
+	(SharkCompiler::generate_native_wrapper): New method.
+	(SharkCompiler::generate_native_code): Likewise.
+	(SharkCompiler::free_compiled_method): New implementation.
+	(SharkCompiler::free_queued_methods): New method.
+
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp
+	(SharkEntry::_context): New field.
+	(SharkEntry::context): New method.
+	(SharkEntry::set_context): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp
+	(SharkFunction::build): Removed compiler argument.
+	(SharkFunction::SharkFunction): Likewise.
+	(SharkFunction::_stack): New field.
+	(SharkFunction::stack): New method.
+	(SharkFunction::CreateBlock): Removed support for LLVM < 2.6.
+	(SharkFunction::_zero_stack_base): Removed.
+	(SharkFunction::_zero_stack_pointer_addr): Likewise.
+	(SharkFunction::_zero_frame_pointer_addr): Likewise.
+	(SharkFunction::zero_stack_base): Likewise.
+	(SharkFunction::zero_stack_pointer_addr): Likewise.
+	(SharkFunction::zero_frame_pointer_addr): Likewise.
+	(SharkFunction::CreateInitZeroStack): Likewise.
+	(SharkFunction::CreateLoadZeroStackPointer): Likewise.
+	(SharkFunction::CreateStoreZeroStackPointer): Likewise.
+	(SharkFunction::CreateLoadZeroFramePointer): Likewise.
+	(SharkFunction::CreateStoreZeroFramePointer): Likewise.
+	(SharkFunction::CreateStackOverflowCheck): Likewise.
+	(SharkFunction::CreatePushFrame): Likewise.
+	(SharkFunction::CreatePopFrame): Likewise.
+	(SharkFunction::_frame): Likewise.
+	(SharkFunction::CreateAddressOfFrameEntry): Likewise.
+	(SharkFunction::CreateBuildFrame): Likewise.
+	(SharkFunction::_extended_frame_size): Likewise.
+	(SharkFunction::_stack_slots_offset): Likewise.
+	(SharkFunction::_monitors_slots_offset): Likewise.
+	(SharkFunction::_oop_tmp_slot_offset): Likewise.
+	(SharkFunction::_method_slot_offset): Likewise.
+	(SharkFunction::_pc_slot_offset): Likewise.
+	(SharkFunction::_locals_slots_offset): Likewise.
+	(SharkFunction::extended_frame_size): Likewise.
+	(SharkFunction::oopmap_frame_size): Likewise.
+	(SharkFunction::stack_slots_offset): Likewise.
+	(SharkFunction::monitors_slots_offset): Likewise.
+	(SharkFunction::oop_tmp_slot_offset): Likewise.
+	(SharkFunction::method_slot_offset): Likewise.
+	(SharkFunction::pc_slot_offset): Likewise.
+	(SharkFunction::locals_slots_offset): Likewise.
+	(SharkFunction::monitor_offset): Likewise.
+	(SharkFunction::monitor_object_offset): Likewise.
+	(SharkFunction::monitor_header_offset): Likewise.
+	(SharkFunction::monitor_addr): Likewise.
+	(SharkFunction::monitor_object_addr): Likewise.
+	(SharkFunction::monitor_header_addr): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp
+	(SharkFunction::initialize): Defer stack frame creation to new
+	SharkStack code.
+	(SharkFunction::CreateInitZeroStack): Removed.
+	(SharkFunction::CreateStackOverflowCheck): Likewise.
+	(SharkFunction::CreatePushFrame): Likewise.
+	(SharkFunction::CreatePopFrame): Likewise.
+	(SharkFunction::CreateBuildFrame): Likewise.
+	(SharkFunction::CreateAddressOfFrameEntry): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkInvariants.hpp
+	(SharkCompileInvariants::SharkCompileInvariants): Removed
+	compiler argument. 
+	(SharkTargetInvariants::SharkTargetInvariants): Likewise.
+	(SharkCompileInvariants::_compiler): Removed.
+	(SharkCompileInvariants::env): Added assertion.
+
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.hpp
+	(SharkStateScanner::SharkStateScanner): Updated.
+	(SharkStateScanner::_function): Removed.
+	(SharkStateScanner::function): Likewise.
+	(SharkStateScanner::_stack): New field.
+	(SharkStateScanner::stack): New method.
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.cpp
+	(SharkStateScanner::scan): Use new SharkStack code.
+
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::stack): New method.
+	(SharkTopLevelBlock::set_last_Java_frame): Removed.
+	(SharkTopLevelBlock::reset_last_Java_frame): Likewise.
+	(SharkTopLevelBlock::call_vm): Use new SharkStack code.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::handle_return): Likewise.
+	(SharkTopLevelBlock::do_multianewarray): Likewise.
+	(SharkTopLevelBlock::acquire_lock): Likewise.
+	(SharkTopLevelBlock::release_lock): Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkType.hpp:
+	Defer everything to new SharkContext code.
+	* ports/hotspot/src/share/vm/shark/sharkType.cpp: Removed.
+	
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp:
+	Removed support for LLVM < 2.6.
+	* ports/hotspot/src/share/vm/shark/llvmValue.hpp
+	(LLVMValue::jfloat_constant): Likewise.
+	(LLVMValue::jdouble_constant): Likewise.
+	(LLVMValue::bit_constant): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
+	(SharkBlock::parse_bytecode): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.cpp: Likewise.
+
+	* ports/hotspot/src/share/vm/shark/sharkContext.hpp: New file.
+	* ports/hotspot/src/share/vm/shark/sharkContext.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkNativeWrapper.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkNativeWrapper.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStack.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStack.cpp: Likewise.
+
+	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
+
+2009-11-11  Gary Benson  <gbenson@redhat.com>
+
 	PR icedtea/324:
 	* ports/hotspot/src/share/vm/shark/sharkValue.cpp
 	(SharkNormalValue::jarray_value): Work around the above.

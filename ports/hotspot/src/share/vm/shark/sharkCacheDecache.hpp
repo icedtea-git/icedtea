@@ -116,13 +116,13 @@ class SharkDecacher : public SharkCacherDecacher {
 
   // oopmap and debuginfo helpers
  private:
-  static int oopmap_slot_munge(int x)
+  static int oopmap_slot_munge(int offset)
   {
-    return x << (LogBytesPerWord - LogBytesPerInt);
+    return SharkStack::oopmap_slot_munge(offset);
   }
   static VMReg slot2reg(int offset)
   {
-    return VMRegImpl::stack2reg(oopmap_slot_munge(offset));
+    return SharkStack::slot2reg(offset);
   }
   static Location slot2loc(int offset, Location::Type type)
   {

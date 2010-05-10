@@ -103,8 +103,8 @@ void SharkMemoryManager::deallocateMemForFunction(const Function* F)
 }
 #endif
 
-#if SHARK_LLVM_VERSION >= 26
-uint8_t* SharkMemoryManager::allocateGlobal(uintptr_t Size, unsigned int Alignment)
+uint8_t* SharkMemoryManager::allocateGlobal(uintptr_t Size,
+                                            unsigned int Alignment)
 {
   return mm()->allocateGlobal(Size, Alignment);
 }
@@ -124,12 +124,8 @@ void SharkMemoryManager::setPoisonMemory(bool poison)
   mm()->setPoisonMemory(poison);
 }
 
-#endif
-
-#if SHARK_LLVM_VERSION >= 25
 unsigned char *SharkMemoryManager::allocateSpace(intptr_t Size,
                                                  unsigned int Alignment)
 {
   return mm()->allocateSpace(Size, Alignment);
 }
-#endif

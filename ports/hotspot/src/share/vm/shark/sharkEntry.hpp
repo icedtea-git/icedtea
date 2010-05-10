@@ -23,9 +23,12 @@
  *
  */
 
+class SharkContext;
+
 class SharkEntry : public ZeroEntry {
  private:
   address         _code_limit;
+  SharkContext*   _context;
   llvm::Function* _function;
 
  public:
@@ -37,6 +40,10 @@ class SharkEntry : public ZeroEntry {
   {
     return _code_limit;
   }
+  SharkContext* context() const
+  {
+    return _context;
+  }
   llvm::Function* function() const
   {
     return _function;
@@ -46,6 +53,10 @@ class SharkEntry : public ZeroEntry {
   void set_code_limit(address code_limit)
   {
     _code_limit = code_limit;
+  }
+  void set_context(SharkContext* context)
+  {
+    _context = context;
   }
   void set_function(llvm::Function* function)
   {
