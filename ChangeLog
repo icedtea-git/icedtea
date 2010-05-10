@@ -1,3 +1,13 @@
+2009-12-08  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/make/linux/platform_zero.in: New file.
+
+2009-12-08  Gary Benson  <gbenson@redhat.com>
+
+	* Makefile.am
+	(stamps/ports.stamp): Updated paths, and don't make jvm.cfg or
+	ergo_$arch.c for Zero.
+
 2009-12-03  Gary Benson  <gbenson@redhat.com>
 
 	* patches/icedtea-bytecodeInterpreter.patch: Removed.

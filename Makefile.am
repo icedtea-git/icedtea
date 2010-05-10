@@ -1349,7 +1349,8 @@ clean-extract-jaxws:
 
 # Link ports sources into tree
 stamps/ports.stamp: stamps/extract.stamp
-	for target in $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
+	for target in $(abs_top_srcdir)/ports/hotspot/make/*/platform_zero.in \
+		      $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/cpu/zero/vm/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
 	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'|sed "s#hotspot/build#hotspot/make#"); \
