@@ -1,3 +1,8 @@
+2009-12-19  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-parisc.patch: Fix sanity check for parisc.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+
 2009-12-17  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/cacao/arm-arch-defines.patch: New, fix cacao build on
