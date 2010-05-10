@@ -1,3 +1,8 @@
+2010-05-10  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/hotspot/default/icedtea-shark.patch:
+	Recreated against b89.
+
 2010-01-11  Gary Benson  <gbenson@redhat.com>
 
 	* contrib/checkopts/checkopts: Updated for the above.
