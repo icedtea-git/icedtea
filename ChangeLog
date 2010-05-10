@@ -1,3 +1,11 @@
+2010-01-05  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedtea/java/sun/applet/PluginAppletViewer.java
+	(handleMessage): Decode URL before setting documentbase.
+	(parse): Port over parser fixes from NP plugin tree.
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java
+	(handleMessage): Decode URL before setting documentbase.
+
 2009-12-24  Deepak Bhole <dbhole@redhat.com>
 
 	* Makefile.am: Define XP_UNIX, without which critical plugin API
