@@ -1,3 +1,19 @@
+2009-12-02  Pavel Tisnovsky  <ptisnovs@redhat.com>
+
+	Synchronise Gervill sources stored in IcedTea overlay with OpenJDK sources
+	6833357: Improve time-stamp support in Gervill to reduce jitter.
+	6823449: Gervill: ArrayIndexOutOfBoundsException thrown when trying to
+	6806019: 38 JCK api/javax_sound/midi/ tests fails starting from jdk7 b46
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/CHANGES.txt,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftAudioBuffer.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftChannel.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftLimiter.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftMainMixer.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftReceiver.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftSynthesizer.java,
+	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/SoftVoice.java:
+	Synchronised with upstream.
+
 2009-11-27  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedtea/java/sun/applet/PluginAppletViewer.java
