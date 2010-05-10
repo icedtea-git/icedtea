@@ -1,0 +1,47 @@
+--- cacao/cacao/src/mm/boehm-gc/libatomic_ops-1.2/src/atomic_ops/sysdeps/gcc/arm.h~	2008-08-04 18:51:12.000000000 +0200
++++ cacao/cacao/src/mm/boehm-gc/libatomic_ops-1.2/src/atomic_ops/sysdeps/gcc/arm.h	2009-12-15 16:28:12.000000000 +0100
+@@ -33,7 +33,13 @@
+ 
+ /* NEC LE-IT: gcc has no way to easily check the arm architecture
+  * but defines only one of __ARM_ARCH_x__ to be true			*/
+-#if defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6K__) || defined(__ARM_ARCH_7__)  
++#if defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) \
++	|| defined(__ARM_ARCH_6K__) || defined(__ARM_ARCH_6Z__) \
++	|| defined(__ARM_ARCH_6ZK__) || defined(__ARM_ARCH_6T2__) \
++	|| defined(__ARM_ARCH_6M__) \
++	|| defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) \
++	|| defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__)
++
+ AO_INLINE void
+ AO_nop_full()
+ {
+--- cacao/cacao/src/vm/jit/arm/md-atomic.hpp~	2008-08-04 16:51:28.000000000 +0000
++++ cacao/cacao/src/vm/jit/arm/md-atomic.hpp	2009-12-16 06:40:37.000000000 +0000
+@@ -44,26 +44,7 @@
+  */
+ inline static uint32_t Atomic_compare_and_swap_32(volatile uint32_t *p, uint32_t oldval, uint32_t newval)
+ {
+-	uint32_t result;
+-	uint32_t temp;
+-
+-	/* TODO: improve this one! */
+-	__asm__ __volatile__ (
+-		"1:\t"
+-		"ldr   %0,[%2]\n\t"
+-		"cmp   %0,%4\n\t"
+-		"bne   2f\n\t"
+-		"swp   %1,%3,[%2]\n\t"
+-		"cmp   %1,%0\n\t"
+-		"swpne %0,%1,[%2]\n\t"
+-		"bne   1b\n\t"
+-		"2:"
+-		: "=&r" (result), "=&r" (temp)
+-		: "r" (p), "r" (newval), "r" (oldval)
+-		: "cc", "memory"
+-	);
+-
+-	return result;
++	return __sync_val_compare_and_swap (p, oldval, newval);
+ }
+ 
+ 

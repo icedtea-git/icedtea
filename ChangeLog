@@ -1,3 +1,9 @@
+2009-12-17  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/cacao/arm-arch-defines.patch: New, fix cacao build on
+	ARM in thumb mode. Cacao bug PR135.
+	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
+
 2009-12-13  Mark Wielaard  <mjw@redhat.com>
 
 	* Makefile.am (stamps/icedtea.stamp): Install jstack.stp.

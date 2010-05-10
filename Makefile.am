@@ -334,7 +334,8 @@ ICEDTEA_PATCHES += \
 	patches/cacao/no-strict-aliasing.patch \
 	patches/cacao/openjdk7.patch \
 	patches/cacao/version.patch \
-	patches/cacao/versioninfo.patch
+	patches/cacao/versioninfo.patch \
+	patches/cacao/arm-arch-defines.patch
 endif
 
 if WITH_CACAO
