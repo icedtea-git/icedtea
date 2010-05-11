@@ -10,4 +10,3 @@ config.status
 install-sh
 Makefile.in
 *.sh
-plugin/tests/LiveConnect/*jar

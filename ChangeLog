@@ -1,3 +1,23 @@
+2010-05-11 Andrew John Hughes  <ahughes@redhat.com>
+
+	* .hgignore: Remove jar files.
+
+2010-01-13  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc:
+	Add missing newline.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc
+	(newMessageOnBus): Service GetSlot and SetSlot requests.
+	(call): Create Java object from result only if it is non-null.
+	(setMember): Pass a preset identifier to _setMember. Handle array slot
+	setting.
+	(sendMember): Handle array slot read.
+	(queue_processor): Service GetSlot and SetSlot requests.
+	(_setMember): Work with property NPIdentifier instead of name string.
+	(_getMember): Same.
+	* plugin/icedteanp/IcedTeaPluginUtils.cc
+	(isObjectJSArray): Handle void constructor objects like 'window'.
+
 2010-01-11 Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-libraries.patch:

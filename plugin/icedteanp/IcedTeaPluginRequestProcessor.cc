@@ -333,7 +333,14 @@ PluginRequestProcessor::call(std::vector<std::string>* message_parts)
 
     NPVariant* result_variant = (NPVariant*) IcedTeaPluginUtilities::stringToJSID(thread_data.result);
     std::string result_variant_jniid = std::string();
-    createJavaObjectFromVariant(instance, *result_variant, &result_variant_jniid);
+
+    if (result_variant)
+    {
+        createJavaObjectFromVariant(instance, *result_variant, &result_variant_jniid);
+    } else
+    {
+        result_variant_jniid = "0";
+    }
 
     IcedTeaPluginUtilities::constructMessagePrefix(0, &response);
     response += " JavaScriptCall ";
@@ -414,6 +421,7 @@ PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
 
     NPP instance;
     NPVariant* member;
+    NPIdentifier property_identifier;
 
     JavaRequestProcessor java_request = JavaRequestProcessor();
     JavaResultData* java_result;
@@ -435,20 +443,13 @@ PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
 
     instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(member);
 
-    java_result = java_request.getString(propertyNameID);
-
-        // the result we want is in result_string (assuming there was no error)
-        if (java_result->error_occurred)
-        {
-            printf("Unable to get member name for setMember. Error occurred: %s\n", java_result->error_msg);
-            //goto cleanup;
-        }
-
-        property_identifier = browser_functions.getstringidentifier(java_result->return_string->c_str());
+    if (message_parts->at(2) == "SetSlot")
+    {
+        property_identifier = browser_functions.getintidentifier(atoi(message_parts->at(4).c_str()));
+    } else
+    {
+        java_result = java_request.getString(propertyNameID);
     }
-
-    // Copy into local variable before disposing the object
-    property_name.append(*(java_result->return_string));
 
     AsyncCallThreadData thread_data = AsyncCallThreadData();
     thread_data.result_ready = false;
@@ -457,7 +458,7 @@ PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
 
     thread_data.parameters.push_back(instance);
     thread_data.parameters.push_back(NPVARIANT_TO_OBJECT(*member));
-    thread_data.parameters.push_back(&property_name);
+    thread_data.parameters.push_back(&property_identifier);
     thread_data.parameters.push_back(&value);
 
 #ifdef CHROMIUM_WORKAROUND
@@ -511,6 +512,8 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
 
     NPIdentifier member_identifier;
 
+    NPIdentifier member_identifier;
+
     int method_id;
     int instance_id;
     long reference;
@@ -554,7 +557,7 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
     NPP instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(parent_ptr);
     thread_data.parameters.push_back(instance);
     thread_data.parameters.push_back(NPVARIANT_TO_OBJECT(*parent_ptr));
-    thread_data.parameters.push_back(java_result->return_string);
+    thread_data.parameters.push_back(&member_identifier);
 
 #ifdef CHROMIUM_WORKAROUND
     // Workaround for chromium
@@ -696,6 +699,12 @@ queue_processor(void* data)
                 pthread_mutex_lock(&syn_write_mutex);
                 processor->sendMember(message_parts);
                 pthread_mutex_unlock(&syn_write_mutex);
+            } else if (command == "SetSlot")
+            {
+                // write methods are synchronized
+                pthread_mutex_lock(&syn_write_mutex);
+                processor->setMember(message_parts);
+                pthread_mutex_unlock(&syn_write_mutex);
             } else
             {
                 // Nothing matched
@@ -733,16 +742,16 @@ _setMember(void* data)
     std::vector<void*> parameters = ((AsyncCallThreadData*) data)->parameters;
     instance = (NPP) parameters.at(0);
     member = (NPObject*) parameters.at(1);
-    property_name = (std::string*) parameters.at(2);
+    property = (NPIdentifier*) parameters.at(2);
     value = (std::string*) parameters.at(3);
 
     PLUGIN_DEBUG_4ARG("Setting %s on instance %p, object %p to value %s\n",
-		      property_name->c_str(), instance, member, value->c_str());
+		      browser_functions.utf8fromidentifier(*property),
+		      instance, member, value->c_str());
 
     IcedTeaPluginUtilities::javaResultToNPVariant(instance, value, &value_variant);
 
-    property = browser_functions.getstringidentifier(property_name->c_str());
-    ((AsyncCallThreadData*) data)->call_successful = browser_functions.setproperty(instance, member, property, &value_variant);
+    ((AsyncCallThreadData*) data)->call_successful = browser_functions.setproperty(instance, member, *property, &value_variant);
 
     IcedTeaPluginUtilities::constructMessagePrefix(0, &response);
     response.append(" JavaScriptSetMember ");
@@ -776,7 +785,7 @@ _getMember(void* data)
         printf("%s not found!\n", browser_functions.utf8fromidentifier(*member_identifier));
     }
     ((AsyncCallThreadData*) data)->call_successful =
-      browser_functions.getproperty(instance, parent_ptr, member_identifier, member_ptr);
+      browser_functions.getproperty(instance, parent_ptr, *member_identifier, member_ptr);
 
     IcedTeaPluginUtilities::printNPVariant(*member_ptr);
 
