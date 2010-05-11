@@ -1,22 +1,22 @@
---- cacao/cacao/configure.ac~	2009-03-16 12:42:56.000000000 +0100
-+++ cacao/cacao/configure.ac	2009-06-23 16:19:20.000000000 +0200
-@@ -37,7 +37,7 @@
- 
- dnl set optimization and debugging for all architectures and systems
- if test x"$CFLAGS" = "x"; then
--    OPT_CFLAGS="-g -O2"
-+    OPT_CFLAGS="-g -O2 -fno-strict-aliasing"
+diff -Nru cacao/cacao.orig/configure cacao/cacao/configure
+--- cacao/cacao.orig/configure	2009-03-16 11:44:25.000000000 +0000
++++ cacao/cacao/configure	2010-01-09 00:10:59.000000000 +0000
+@@ -2829,6 +2829,7 @@
  else
      OPT_CFLAGS=$CFLAGS
  fi
---- cacao.orig/cacao/configure		2009-03-16 12:44:25.000000000 +0100
-+++ cacao/cacao/configure		2009-06-05 17:58:48.000000000 +0200
-@@ -2825,7 +2825,7 @@
++OPT_CFLAGS="$OPT_CFLAGS -fno-strict-aliasing"
  
- 
- if test x"$CFLAGS" = "x"; then
--    OPT_CFLAGS="-g -O2"
-+    OPT_CFLAGS="-g -O2 -fno-strict-aliasing"
+ case "$host_cpu" in
+ alpha | alphaev56 | alphapca56 )
+diff -Nru cacao/cacao.orig/configure.ac cacao/cacao/configure.ac
+--- cacao/cacao.orig/configure.ac	2009-03-16 11:42:56.000000000 +0000
++++ cacao/cacao/configure.ac	2010-01-09 00:11:06.000000000 +0000
+@@ -41,6 +41,7 @@
  else
      OPT_CFLAGS=$CFLAGS
  fi
++OPT_CFLAGS="$OPT_CFLAGS -fno-strict-aliasing"
+ 
+ dnl system type
+ case "$host_cpu" in

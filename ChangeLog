@@ -1,4 +1,27 @@
-2009-01-11  Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+2010-05-11 Andrew John Hughes  <ahughes@redhat.com>
+
+	Fix issues with the CACAO build so it at
+	least builds again (though it still fails to
+	bootstrap).
+	* patches/icedtea-plugin.patch,
+	* patches/icedtea-webservices.patch:
+	Remove unused patches.
+	* Makefile.am: Add new patches.
+	* patches/cacao/no-strict-aliasing.patch:
+	Always append -fno-strict-aliasing, even if CFLAGS
+	are specified.  Otherwise, a broken CACAO results.
+	* patches/cacao/ignore-tests.patch:
+	Regenerated against b89.
+	* patches/cacao/6714758.patch:
+	Add JVM_FindClassFromBootLoader introduced by
+	6714758 and modified in 6864003.
+	http://server.complang.tuwien.ac.at/cgi-bin/bugzilla/show_bug.cgi?id=137
+	* patches/cacao/jsig.patch:
+	Place fake libjsig.so in correct location for HotSpot 17+.
+	* patches/sh4-support.patch:
+	Regenerated against b89.
+
+2010-01-11  Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 	    Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-sh4-support.patch: Add zero support for Hitachi SH.

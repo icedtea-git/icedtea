@@ -1,0 +1,36 @@
+diff -Nru cacao.orig/Makefile.am cacao/Makefile.am
+--- cacao.orig/cacao/src/cacao/Makefile.am	2008-08-04 17:51:28.000000000 +0100
++++ cacao/cacao/src/cacao/Makefile.am	2010-05-11 10:29:35.000000000 +0100
+@@ -96,12 +96,12 @@
+ 	$(mkdir_p) $(prefix)/jre/lib/$(JAVA_ARCH)/server
+ 	$(LN_S) -f $(libdir)/libjvm.so $(prefix)/jre/lib/$(JAVA_ARCH)/server
+ 	$(ECHO) $(ECHO_N) > $(prefix)/jre/lib/$(JAVA_ARCH)/server/Xusage.txt
+-	$(ECHO) $(ECHO_N) > $(prefix)/jre/lib/$(JAVA_ARCH)/server/libjsig.so
++	$(ECHO) $(ECHO_N) > $(prefix)/jre/lib/$(JAVA_ARCH)/libjsig.so
+ 
+ uninstall-local:
+ 	rm -f $(prefix)/jre/lib/$(JAVA_ARCH)/server/libjvm.so
+ 	rm -f $(prefix)/jre/lib/$(JAVA_ARCH)/server/Xusage.txt
+-	rm -f $(prefix)/jre/lib/$(JAVA_ARCH)/server/libjsig.so
++	rm -f $(prefix)/jre/lib/$(JAVA_ARCH)/libjsig.so
+ endif
+ 
+ 
+diff -Nru cacao.orig/Makefile.in cacao/Makefile.in
+--- cacao.orig/cacao/src/cacao/Makefile.in	2009-03-16 11:44:18.000000000 +0000
++++ cacao/cacao/src/cacao/Makefile.in	2010-05-11 10:30:06.000000000 +0100
+@@ -625,12 +625,12 @@
+ @WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_TRUE@	$(mkdir_p) $(prefix)/jre/lib/$(JAVA_ARCH)/server
+ @WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_TRUE@	$(LN_S) -f $(libdir)/libjvm.so $(prefix)/jre/lib/$(JAVA_ARCH)/server
+ @WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_TRUE@	$(ECHO) $(ECHO_N) > $(prefix)/jre/lib/$(JAVA_ARCH)/server/Xusage.txt
+-@WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_TRUE@	$(ECHO) $(ECHO_N) > $(prefix)/jre/lib/$(JAVA_ARCH)/server/libjsig.so
++@WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_TRUE@	$(ECHO) $(ECHO_N) > $(prefix)/jre/lib/$(JAVA_ARCH)/libjsig.so
+ 
+ @WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_TRUE@uninstall-local:
+ @WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_TRUE@	rm -f $(prefix)/jre/lib/$(JAVA_ARCH)/server/libjvm.so
+ @WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_TRUE@	rm -f $(prefix)/jre/lib/$(JAVA_ARCH)/server/Xusage.txt
+-@WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_TRUE@	rm -f $(prefix)/jre/lib/$(JAVA_ARCH)/server/libjsig.so
++@WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_TRUE@	rm -f $(prefix)/jre/lib/$(JAVA_ARCH)/libjsig.so
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:

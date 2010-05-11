@@ -19,7 +19,7 @@ LANGTOOLS_SHA256SUM = 96f6be5d89195353f55ef775e0dec9bd9a5da7f869aba6ed428e4a2cac
 OPENJDK_SHA256SUM = 93c536e6bc4e962050a00321e88e694fc4e0000e2ad887b8de22830bfda2649f
 
 CACAO_VERSION = 0.99.4
-CACAO_SHA256SUM = c6090c1d2ed3c60acda0076b62563598267be8dab270ce49ee1035002a2510cf
+CACAO_SHA256SUM = 1dfc4903dc0172286df4f1740fd0f12749ac81d51c602290b47cbe83d51e1d56
 CACAO_BASE_URL = http://www.complang.tuwien.ac.at
 CACAO_URL = $(CACAO_BASE_URL)/cacaojvm/download/cacao-$(CACAO_VERSION)/
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
@@ -197,8 +197,6 @@ JNLP_ABOUT_TARGET = extra-lib/about.jar
 LIVECONNECT_CLASSES = $(abs_top_builddir)/liveconnect
 LIVECONNECT_JAR = $(LIVECONNECT_CLASSES)/lib/classes.jar
 LIVECONNECT_SRC = $(LIVECONNECT_CLASSES)/lib/src.zip
-else
-PLUGIN_PATCH = patches/icedtea-plugin.patch
 endif
 endif
 
@@ -337,7 +335,9 @@ ICEDTEA_PATCHES += \
 	patches/cacao/openjdk7.patch \
 	patches/cacao/version.patch \
 	patches/cacao/versioninfo.patch \
-	patches/cacao/arm-arch-defines.patch
+	patches/cacao/arm-arch-defines.patch \
+	patches/cacao/jsig.patch \
+	patches/cacao/6714758.patch
 endif
 
 if WITH_CACAO

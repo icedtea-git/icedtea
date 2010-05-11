@@ -1,0 +1,39 @@
+diff -Nru cacao.orig/cacao/src/native/vm/openjdk/jvm.c cacao/cacao/src/native/vm/openjdk/jvm.c
+--- cacao.orig/cacao/src/native/vm/openjdk/jvm.c	2010-05-11 12:19:23.000000000 +0100
++++ cacao/cacao/src/native/vm/openjdk/jvm.c	2010-05-11 12:19:47.000000000 +0100
+@@ -792,6 +792,9 @@
+ 
+ 	assert(throwError == false);
+ 
++	if (name == NULL)
++		return NULL;
++
+ 	u  = utf_new_char(name);
+ 	cl = loader_hashtable_classloader_add((java_handle_t *) loader);
+ 
+@@ -809,6 +812,15 @@
+ }
+ 
+ 
++/* JVM_FindClassFromBootLoader */
++
++jclass JVM_FindClassFromBootLoader(JNIEnv* env, const char* name)
++{
++	TRACEJVMCALLS(("JVM_FindClassFromBootLoader(name=%s)", name));
++	return JVM_FindClassFromClassLoader(env, name, JNI_FALSE,
++										(jobject)NULL, false);
++}
++
+ /* JVM_FindClassFromClass */
+ 
+ jclass JVM_FindClassFromClass(JNIEnv *env, const char *name, jboolean init, jclass from)
+--- cacao.orig/cacao/contrib/mapfile-vers-product	2008-08-04 17:51:28.000000000 +0100
++++ cacao/cacao/contrib/mapfile-vers-product	2010-05-11 12:47:51.000000000 +0100
+@@ -86,6 +86,7 @@
+                 JVM_EnableCompiler;
+                 JVM_Exit;
+                 JVM_FillInStackTrace;
++		JVM_FindClassFromBootLoader;
+                 JVM_FindClassFromClass;
+                 JVM_FindClassFromClassLoader;
+                 JVM_FindLibraryEntry;
