@@ -1,3 +1,11 @@
+2010-01-11 Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-libraries.patch:
+	Decide which libjpeg library to load
+	at compile-time not runtime using
+	JPEG_LIB_VERSION.
+	(See http://bugs.debian.org/563999)
+
 2010-05-11 Andrew John Hughes  <ahughes@redhat.com>
 
 	Fix issues with the CACAO build so it at
