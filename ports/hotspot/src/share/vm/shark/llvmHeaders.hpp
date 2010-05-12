@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008, 2009 Red Hat, Inc.
+ * Copyright 2008, 2009, 2010 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,6 +25,11 @@
 
 #ifdef assert
   #undef assert
+#endif
+
+#ifdef DEBUG
+  #define SHARK_DEBUG
+  #undef DEBUG
 #endif
 
 #include <llvm/Argument.h>
@@ -66,4 +71,12 @@
     }
 #else
   #define assert(p, msg)
+#endif
+
+#ifdef DEBUG
+  #undef DEBUG
+#endif
+#ifdef SHARK_DEBUG
+  #define DEBUG
+  #undef SHARK_DEBUG
 #endif

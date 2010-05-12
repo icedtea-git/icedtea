@@ -498,7 +498,13 @@ CallInst* SharkBuilder::CreateDump(Value* value) {
 
   if (isa<PointerType>(value->getType()))
     value = CreatePtrToInt(value, SharkType::intptr_type());
-  else if (value->getType()->isInteger())
+  else if (value->getType()->
+#if SHARK_LLVM_VERSION >= 27
+           isIntegerTy()
+#else
+           isInteger()
+#endif
+           )
     value = CreateIntCast(value, SharkType::intptr_type(), false);
   else
     Unimplemented();
