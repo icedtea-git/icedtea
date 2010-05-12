@@ -1,5 +1,18 @@
 2010-01-16 Andrew John Hughes  <ahughes@redhat.com>
 
+	* acinclude.m4:
+	(IT_CHECK_NUMBER_OF_PARALLEL_JOBS):
+	Handle --with-parallel-jobs and
+	--without-parallel-jobs correctly.
+	--with-parallel-jobs (no arguments) uses
+	available processors + 1, while
+	--without-parallel-jobs (the default) uses 2.
+	(IT_FIND_NUMBER_OF_PROCESSORS):
+	Dependency of above.  Uses getconf to
+	obtain the number of available processors.
+	
+2010-01-16 Andrew John Hughes  <ahughes@redhat.com>
+
 	configure output and option cleanup
 	* acinclude.m4:
 	(FIND_ECJ_JAR): Always produce output,
