@@ -1,3 +1,31 @@
+2010-01-16 Andrew John Hughes  <ahughes@redhat.com>
+
+	configure output and option cleanup
+	* acinclude.m4:
+	(FIND_ECJ_JAR): Always produce output,
+	not just when explicitly specified.
+	(FIND_JAVAH): Handle the yes and no
+	possibilities better.
+	(FIND_JAR): Likewise.
+	(FIND_RMIC): Likewise.
+	(WITH_OPENJDK_SRC_ZIP): Quote checking output.
+	(WITH_ALT_JAR_BINARY): Likewise.
+	(FIND_XALAN2_JAR): Improve wording.
+	(FIND_XALAN2_SERIALIZER_JAR): Likewise.
+	(FIND_XERCES_JAR): Likewise.
+	(FIND_NETBEANS): Handle yes and no
+	possibilities better.
+	(FIND_RHINO_JAR): Quote checking output.
+	(ENABLE_ZERO_BUILD): Quote checking output.
+	(AC_CHECK_WITH_CACAO_SRC_ZIP): Likewise.
+	(AC_CHECK_WITH_CACAO_SRC_DIR): Likewise.
+	(IT_CHECK_NUMBER_OF_PARALLEL_JOBS): Moved to a macro
+	from configure.ac.
+	* configure.ac:
+	Invoke new macros.  Quote output and correct
+	typos.  Perform IT_CHECK_ADDITIONAL_VMS earlier
+	with Shark, Zero and CACAO checks.
+
 2010-01-14  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am (stamps/icedtea-npplugin): New target, add file

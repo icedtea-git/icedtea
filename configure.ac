@@ -66,7 +66,7 @@ AC_ARG_WITH([netbeans-home],
 AC_MSG_RESULT([${SYSTEM_NETBEANS_DIR}])
 AC_SUBST(SYSTEM_NETBEANS_DIR)
 
-AC_MSG_CHECKING(whether to build VisualVM)
+AC_MSG_CHECKING([whether to build VisualVM])
 AC_ARG_ENABLE([visualvm],
               [AS_HELP_STRING([--enable-visualvm],
                                          [Enable compilation of visualvm.])],
@@ -132,25 +132,6 @@ AC_ARG_ENABLE([nss],
 AM_CONDITIONAL([ENABLE_NSS], [test x$ENABLE_NSS = xyes])
 AC_MSG_RESULT(${ENABLE_NSS})
 
-AC_MSG_CHECKING([how many parallel build jobs to execute])
-proc_default=$(($it_cv_proc + 1))
-AC_ARG_WITH([parallel-jobs],
-	[AS_HELP_STRING([--with-parallel-jobs],
-			[build IcedTea using the specified number of parallel jobs])],
-	[
-          if test "x${withval}" = x
-          then
-            PARALLEL_JOBS=${proc_default}
-          else
-            PARALLEL_JOBS=${withval}
-          fi
-        ],
-        [
-          PARALLEL_JOBS=${proc_default}
-        ])
-AC_MSG_RESULT(${PARALLEL_JOBS})
-AC_SUBST(PARALLEL_JOBS)
-
 AC_ARG_WITH([pkgversion],
         [AS_HELP_STRING([--with-pkgversion=PKG],
                         [Use PKG in the version string in addition to "IcedTea"])],
@@ -167,6 +148,7 @@ IT_GET_LSB_DATA
 SET_ARCH_DIRS
 SET_OS_DIRS
 
+IT_CHECK_NUMBER_OF_PARALLEL_JOBS
 IT_CHECK_IF_BOOTSTRAPPING
 IT_CHECK_FOR_JDK
 FIND_JAVA
@@ -215,10 +197,11 @@ AC_CHECK_WITH_CACAO_SRC_ZIP
 DISABLE_OPTIMIZATIONS
 SET_SHARK_BUILD
 ENABLE_ZERO_BUILD
+IT_CHECK_ADDITIONAL_VMS
+
 WITH_VERSION_SUFFIX
 WITH_PROJECT
 ENABLE_HG
-IT_CHECK_ADDITIONAL_VMS
 AC_CHECK_WITH_TZDATA_DIR
 
 AC_PATH_TOOL([HG],[hg])

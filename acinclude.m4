@@ -239,19 +239,17 @@ AC_DEFUN([FIND_ECJ_JAR],
     ECJ_JAR=
   ])
   if test -z "${ECJ_JAR}"; then
-    if test -e "/usr/share/java/eclipse-ecj.jar"; then
-      ECJ_JAR=/usr/share/java/eclipse-ecj.jar
-    elif test -e "/usr/share/java/ecj.jar"; then
-      ECJ_JAR=/usr/share/java/ecj.jar
-    elif test -e "/usr/share/eclipse-ecj-3.3/lib/ecj.jar"; then
-      ECJ_JAR=/usr/share/eclipse-ecj-3.3/lib/ecj.jar
-    elif test -e "/usr/share/eclipse-ecj-3.2/lib/ecj.jar"; then
-      ECJ_JAR=/usr/share/eclipse-ecj-3.2/lib/ecj.jar
-    elif test -e "/usr/share/eclipse-ecj-3.1/lib/ecj.jar"; then
-      ECJ_JAR=/usr/share/eclipse-ecj-3.1/lib/ecj.jar
-    else
-      ECJ_JAR=no
-    fi
+    for jar in /usr/share/java/eclipse-ecj.jar \
+      /usr/share/java/ecj.jar \
+      /usr/share/eclipse-ecj-3.{2,3,4,5}/lib/ecj.jar; do
+        if test -e $jar; then
+          ECJ_JAR=$jar
+	  break
+        fi
+      done
+      if test -z "${ECJ_JAR}"; then
+        ECJ_JAR=no
+      fi
   fi
   AC_MSG_RESULT(${ECJ_JAR})
   if test "x${ECJ_JAR}" = "xno"; then
@@ -274,55 +272,67 @@ AC_DEFUN([AC_CHECK_GCC_VERSION],
 
 AC_DEFUN([FIND_JAVAH],
 [
-  AC_MSG_CHECKING(for javah)
+  JAVAH_DEFAULT=${SYSTEM_JDK_DIR}/bin/javah
+  AC_MSG_CHECKING([if a javah executable is specified])
   AC_ARG_WITH([javah],
-              [AS_HELP_STRING(--with-javah,specify location of the Java header generator)],
+              [AS_HELP_STRING(--with-javah,specify location of javah)],
   [
-    JAVAH="${withval}"
+    if test "x${withval}" = "xyes"; then
+      JAVAH=no
+    else
+      JAVAH="${withval}"
+    fi
   ],
   [
-    JAVAH=${SYSTEM_JDK_DIR}/bin/javah
+    JAVAH=no
   ])
-  if ! test -f "${JAVAH}"; then
-    AC_PATH_PROG(JAVAH, "${JAVAH}")
+  AC_MSG_RESULT(${JAVAH})
+  if test "x${JAVAH}" == "xno"; then
+    JAVAH=${JAVAH_DEFAULT}
+  fi
+  AC_PATH_PROG(JAVAH, "${JAVAH}")
+  if test -z "${JAVAH}"; then
+    AC_PATH_PROG(JAVAH, "javah")
   fi
   if test -z "${JAVAH}"; then
     AC_PATH_PROG(JAVAH, "gjavah")
   fi
   if test -z "${JAVAH}"; then
-    AC_PATH_PROG(JAVAH, "javah")
-  fi
-  if test -z "${JAVAH}"; then
     AC_MSG_ERROR("A Java header generator was not found.")
   fi
-  AC_MSG_RESULT(${JAVAH})
   AC_SUBST(JAVAH)
 ])
 
 AC_DEFUN([FIND_JAR],
 [
-  AC_MSG_CHECKING(for jar)
+  JAR_DEFAULT=${SYSTEM_JDK_DIR}/bin/jar
+  AC_MSG_CHECKING([if a jar executable is specified])
   AC_ARG_WITH([jar],
-              [AS_HELP_STRING(--with-jar,specify location of the Java archive tool (jar))],
+              [AS_HELP_STRING(--with-jar,specify location of jar)],
   [
-    JAR="${withval}"
+    if test "x${withval}" = "xyes"; then
+      JAR=no
+    else
+      JAR="${withval}"
+     fi
   ],
   [
-    JAR=${SYSTEM_JDK_DIR}/bin/jar
+    JAR=no
   ])
-  if ! test -f "${JAR}"; then
-    AC_PATH_PROG(JAR, "${JAR}")
+  AC_MSG_RESULT(${JAR})
+  if test "x${JAR}" == "xno"; then
+    JAR=${JAR_DEFAULT}
+  fi
+  AC_PATH_PROG(JAR, "${JAR}")
+  if test -z "${JAR}"; then
+    AC_PATH_PROG(JAR, "jar")
   fi
   if test -z "${JAR}"; then
     AC_PATH_PROG(JAR, "gjar")
   fi
   if test -z "${JAR}"; then
-    AC_PATH_PROG(JAR, "jar")
-  fi
-  if test -z "${JAR}"; then
     AC_MSG_ERROR("No Java archive tool was found.")
   fi
-  AC_MSG_RESULT(${JAR})
   AC_MSG_CHECKING([whether jar supports @<file> argument])
   touch _config.txt
   cat >_config.list <<EOF
@@ -361,28 +371,34 @@ EOF
 
 AC_DEFUN([FIND_RMIC],
 [
-  AC_MSG_CHECKING(for rmic)
+  RMIC_DEFAULT=${SYSTEM_JDK_DIR}/bin/rmic
+  AC_MSG_CHECKING(if an rmic executable is specified)
   AC_ARG_WITH([rmic],
-              [AS_HELP_STRING(--with-rmic,specify location of the RMI compiler)],
+              [AS_HELP_STRING(--with-rmic,specify location of rmic)],
   [
-    RMIC="${withval}"
+    if test "x${withval}" = "xyes"; then
+      RMIC=no
+    else
+      RMIC="${withval}"
+    fi
   ],
   [
-    RMIC=${SYSTEM_JDK_DIR}/bin/rmic
+    RMIC=no
   ])
-  if ! test -f "${RMIC}"; then
-    AC_PATH_PROG(RMIC, "${RMIC}")
+  AC_MSG_RESULT(${RMIC})
+  if test "x${RMIC}" = "xno"; then
+    RMIC=${RMIC_DEFAULT}
+  fi
+  AC_PATH_PROG(RMIC, "${RMIC}")
+  if test -z "${RMIC}"; then
+    AC_PATH_PROG(RMIC, "rmic")
   fi
   if test -z "${RMIC}"; then
     AC_PATH_PROG(RMIC, "grmic")
   fi
   if test -z "${RMIC}"; then
-    AC_PATH_PROG(RMIC, "rmic")
-  fi
-  if test -z "${RMIC}"; then
     AC_MSG_ERROR("An RMI compiler was not found.")
   fi
-  AC_MSG_RESULT(${RMIC})
   AC_SUBST(RMIC)
 ])
 
@@ -428,7 +444,7 @@ AC_DEFUN([FIND_ENDORSED_JARS],
 
 AC_DEFUN([WITH_OPENJDK_SRC_ZIP],
 [
-  AC_MSG_CHECKING(for an OpenJDK source zip)
+  AC_MSG_CHECKING([for an OpenJDK source zip])
   AC_ARG_WITH([openjdk-src-zip],
               [AS_HELP_STRING(--with-openjdk-src-zip,specify the location of the openjdk source zip)],
   [
@@ -446,7 +462,7 @@ AC_DEFUN([WITH_OPENJDK_SRC_ZIP],
 
 AC_DEFUN([WITH_ALT_JAR_BINARY],
 [
-  AC_MSG_CHECKING(for an alternate jar command)
+  AC_MSG_CHECKING([for an alternate jar command])
   AC_ARG_WITH([alt-jar],
               [AS_HELP_STRING(--with-alt-jar, specify the location of an alternate jar binary to use for building)],
   [
@@ -463,7 +479,7 @@ AC_DEFUN([WITH_ALT_JAR_BINARY],
 
 AC_DEFUN([FIND_XALAN2_JAR],
 [
-  AC_MSG_CHECKING(xalan2 jar)
+  AC_MSG_CHECKING([for a xalan2 jar])
   AC_ARG_WITH([xalan2-jar],
               [AS_HELP_STRING(--with-xalan2-jar,specify location of the xalan2 jar)],
   [
@@ -494,7 +510,7 @@ AC_DEFUN([FIND_XALAN2_JAR],
 
 AC_DEFUN([FIND_XALAN2_SERIALIZER_JAR],
 [
-  AC_MSG_CHECKING(for xalan2 serializer jar)
+  AC_MSG_CHECKING([for a xalan2 serializer jar])
   AC_ARG_WITH([xalan2-serializer-jar],
               [AS_HELP_STRING(--with-xalan2-serializer-jar,specify location of the xalan2-serializer jar)],
   [
@@ -525,7 +541,7 @@ AC_DEFUN([FIND_XALAN2_SERIALIZER_JAR],
 
 AC_DEFUN([FIND_XERCES2_JAR],
 [
-  AC_MSG_CHECKING(for xerces2 jar)
+  AC_MSG_CHECKING([for a xerces2 jar])
   AC_ARG_WITH([xerces2-jar],
               [AS_HELP_STRING(--with-xerces2-jar,specify location of the xerces2 jar)],
   [
@@ -558,20 +574,27 @@ AC_DEFUN([FIND_XERCES2_JAR],
 
 AC_DEFUN([FIND_NETBEANS],
 [
+  AC_MSG_CHECKING([if the location of NetBeans is specified])
   AC_ARG_WITH([netbeans],
               [AS_HELP_STRING(--with-netbeans,specify location of netbeans)],
   [
-    if test -f "${withval}"; then
-      AC_MSG_CHECKING(netbeans)
-      NETBEANS="${withval}"
-      AC_MSG_RESULT(${withval})
+    if test "x${withval}" = "xyes"; then
+      NETBEANS=no
     else
-      AC_PATH_PROG(NETBEANS, "${withval}")
+      NETBEANS="${withval}"
     fi
   ],
   [
-    NETBEANS=
+    NETBEANS=no
   ])
+  AC_MSG_RESULT(${NETBEANS})
+  if ! test -f "${NETBEANS}"; then
+    if test "x${NETBEANS}" = "xno"; then
+      NETBEANS=
+    else
+      AC_PATH_PROG(NETBEANS, "${NETBEANS}")
+    fi
+  fi
   if test -z "${NETBEANS}"; then
     AC_PATH_PROG(NETBEANS, "netbeans")
   fi
@@ -583,7 +606,7 @@ AC_DEFUN([FIND_NETBEANS],
 
 AC_DEFUN([FIND_RHINO_JAR],
 [
-  AC_MSG_CHECKING(whether to include Javascript support via Rhino)
+  AC_MSG_CHECKING([whether to include Javascript support via Rhino])
   AC_ARG_WITH([rhino],
               [AS_HELP_STRING(--with-rhino,specify location of the rhino jar)],
   [
@@ -657,7 +680,7 @@ AC_DEFUN([FIND_TOOL],
 
 AC_DEFUN([ENABLE_ZERO_BUILD],
 [
-  AC_MSG_CHECKING(whether to use the zero-assembler port)
+  AC_MSG_CHECKING([whether to use the zero-assembler port])
   use_zero=no
   AC_ARG_ENABLE([zero],
                 [AS_HELP_STRING(--enable-zero,
@@ -787,7 +810,7 @@ AC_DEFUN([AC_CHECK_ENABLE_CACAO],
 
 AC_DEFUN([AC_CHECK_WITH_CACAO_HOME],
 [
-  AC_MSG_CHECKING(for CACAO home directory)
+  AC_MSG_CHECKING([for a CACAO home directory])
   AC_ARG_WITH([cacao-home],
               [AS_HELP_STRING([--with-cacao-home],
                               [CACAO home directory [[default=/usr/local/cacao]]])],
@@ -812,7 +835,7 @@ AC_DEFUN([AC_CHECK_WITH_CACAO_HOME],
 
 AC_DEFUN([AC_CHECK_WITH_CACAO_SRC_ZIP],
 [
-  AC_MSG_CHECKING(for a CACAO source zip)
+  AC_MSG_CHECKING([for a CACAO source zip])
   AC_ARG_WITH([cacao-src-zip],
               [AS_HELP_STRING(--with-cacao-src-zip,specify the location of the CACAO source zip)],
   [
@@ -1813,4 +1836,25 @@ EOF
   ])
 AM_CONDITIONAL([JAVAC_LACKS_DIAMOND], test x"${it_cv_diamond}" = "xyes")
 AC_PROVIDE([$0])dnl
+])
+
+AC_DEFUN([IT_CHECK_NUMBER_OF_PARALLEL_JOBS],
+[
+AC_MSG_CHECKING([how many parallel build jobs to execute])
+AC_ARG_WITH([parallel-jobs],
+	[AS_HELP_STRING([--with-parallel-jobs],
+			[build IcedTea using the specified number of parallel jobs])],
+	[
+          if test "x${withval}" = x
+          then
+            PARALLEL_JOBS=2
+          else
+            PARALLEL_JOBS=${withval}
+          fi
+        ],
+        [
+          PARALLEL_JOBS=2
+        ])
+AC_MSG_RESULT(${PARALLEL_JOBS})
+AC_SUBST(PARALLEL_JOBS)
 ])
