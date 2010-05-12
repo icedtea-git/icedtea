@@ -1,3 +1,8 @@
+2010-01-14  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/icedtea-npplugin): New target, add file
+	dependencies for building the IcedTeaNPPlugin.so.
+
 2010-05-11 Andrew John Hughes  <ahughes@redhat.com>
 
 	* .hgignore: Remove jar files.

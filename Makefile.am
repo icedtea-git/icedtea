@@ -177,7 +177,7 @@ endif
 if ENABLE_NPPLUGIN
 PLUGIN_SRCDIR=$(abs_top_srcdir)/plugin/icedteanp
 PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin.build/icedteanp
-ICEDTEANPPLUGIN_TARGET = $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so
+ICEDTEANPPLUGIN_TARGET = stamps/icedtea-npplugin
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaNPPlugin
 PLUGIN_PATCH = patches/icedtea-liveconnect.patch
 LIVECONNECT_DIR = sun/applet netscape
@@ -2025,6 +2025,9 @@ $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so: $(addprefix $(PLUGIN_BUILD_DIR)/,$(NPPLU
 	  $(GTK_LIBS) \
 	  $(MOZILLA_LIBS)\
 	  -shared -o $@
+
+stamps/icedtea-npplugin: $(NPPLUGIN_DIR)/IcedTeaNPPlugin.so
+	touch stamps/icedtea-npplugin
 
 clean-IcedTeaNPPlugin:
 	rm -f $(addprefix $(PLUGIN_BUILD_DIR)/,$(NPPLUGIN_OBJECTS))
