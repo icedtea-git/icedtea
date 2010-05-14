@@ -1,3 +1,10 @@
+2010-01-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	PR icedtea/433
+	* Makefile.am:
+	Add set -e to tarball extractions so
+	that they fail immediately.
+
 2010-05-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

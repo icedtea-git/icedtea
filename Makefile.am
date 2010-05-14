@@ -1161,6 +1161,7 @@ stamps/extract-openjdk.stamp: stamps/download-openjdk.stamp
 if OPENJDK_SRC_DIR_FOUND
 	cp -a $(OPENJDK_SRC_DIR) openjdk
 else
+	set -e ; \
 	if ! test -d openjdk ; then \
 	  if [ ! -z $(OPENJDK_SRC_ZIP) ] ; then \
 	    case "$(OPENJDK_SRC_ZIP)" in \
@@ -1176,6 +1177,7 @@ else
 	    false; \
 	  fi; \
 	fi; 
+	set -e ; \
 	if [ ! -z $(CORBA_SRC_ZIP) ] ; then \
 	  if test -e ${CORBA_SRC_ZIP} ; \
 	  then \
@@ -1189,6 +1191,7 @@ else
 	    fi ; \
 	  fi ; \
 	fi
+	set -e ; \
 	if [ ! -z $(JAXP_SRC_ZIP) ] ; then \
 	  if test -e ${JAXP_SRC_ZIP} ; \
 	  then \
@@ -1202,6 +1205,7 @@ else
 	    fi ; \
 	  fi ; \
 	fi
+	set -e ; \
 	if [ ! -z $(JAXWS_SRC_ZIP) ] ; then \
 	  if test -e ${JAXWS_SRC_ZIP} ; \
 	  then \
@@ -1215,6 +1219,7 @@ else
 	    fi ; \
 	  fi ; \
 	fi
+	set -e ; \
 	if [ ! -z $(JDK_SRC_ZIP) ] ; then \
 	  if test -e ${JDK_SRC_ZIP} ; \
 	  then \
@@ -1228,6 +1233,7 @@ else
 	    fi ; \
 	  fi ; \
 	fi
+	set -e ; \
 	if [ ! -z $(LANGTOOLS_SRC_ZIP) ] ; then \
 	  if test -e ${LANGTOOLS_SRC_ZIP} ; \
 	  then \
@@ -1242,6 +1248,7 @@ else
 	  fi ; \
 	fi
 endif
+	set -e ; \
 	if [ ! -z $(HOTSPOT_SRC_ZIP) ] ; then \
 	  if test -e ${HOTSPOT_SRC_ZIP} ; \
 	  then \
@@ -1269,12 +1276,14 @@ clean-extract-openjdk: clean-overlay clean-versioning \
 
 stamps/extract-visualvm.stamp: stamps/download-visualvm.stamp
 if WITH_VISUALVM
+	set -e ; \
 	if ! test -d netbeans ; \
 	then \
 	  mkdir netbeans ; \
 	  $(TAR) xf $(NETBEANS_PROFILER_SRC_ZIP) -C netbeans ; \
 	fi
 
+	set -e ; \
 	if ! test -d visualvm ; \
 	then \
 	  $(TAR) xf $(VISUALVM_SRC_ZIP) ; \
@@ -1292,6 +1301,7 @@ endif
 stamps/extract-cacao.stamp: stamps/download-cacao.stamp
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
+	set -e ; \
 	if ! test -d cacao/cacao ; \
 	then \
 	  mkdir cacao ; \
@@ -1311,6 +1321,7 @@ clean-extract-cacao: clean-cacao
 
 stamps/extract-jaxws.stamp: stamps/extract-openjdk.stamp \
   stamps/download-jaxws-drop.stamp stamps/download-jaf-drop.stamp
+	set -e ; \
 	if test "x$(NEED_JAXWS_SRC)" = "xtrue"; then \
 	  (cd openjdk/jaxws ; \
 	   $(ANT) -Ddrops.dir=$(abs_top_builddir)/drops \
@@ -1319,6 +1330,7 @@ stamps/extract-jaxws.stamp: stamps/extract-openjdk.stamp \
 	   cd $(abs_top_builddir)) ; \
 	fi
 if DTDTYPE_QNAME
+	set -e ; \
 	(cd $(BUILD_OUTPUT_DIR)/jaxws; \
 	 all_patches_ok=yes; \
 	 for p in $(JAXWS_PATCHES) ; \
@@ -1392,6 +1404,7 @@ clean-ports:
 	rm -f stamps/ports.stamp
 
 stamps/generated.stamp: stamps/ports.stamp
+	set -e ; \
 	if [ ! -e $(abs_top_builddir)/generated ]; then \
 	  cp -a $(abs_top_srcdir)/generated $(abs_top_builddir); \
 	  find $(abs_top_builddir)/generated -type f -exec chmod 640 '{}' ';' \
