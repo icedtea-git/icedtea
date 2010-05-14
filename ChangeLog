@@ -1,5 +1,18 @@
 2010-05-14  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkCodeBuffer.hpp
+	(SharkCodeBuffer::inline_data): New method.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::CreateInlineData): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::CreateInlineData): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::handle_exception): Inline the exception
+	handler table in the code buffer rather than creating it on
+	the stack.
+
+2010-05-14  Gary Benson  <gbenson@redhat.com>
+
 	PR icedtea/484
 	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
 	(SharkBuilder::deoptimized_entry_point): New method.

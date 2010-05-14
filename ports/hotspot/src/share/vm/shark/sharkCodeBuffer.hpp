@@ -73,4 +73,15 @@ class SharkCodeBuffer : public StackObj {
     masm()->store_oop(object);
     return offset;
   }
+
+  // Inline a block of non-oop data into the buffer and return its offset.
+ public:
+  int inline_data(void *src, size_t size) const {
+    masm()->align(BytesPerWord);
+    int offset = masm()->offset();
+    void *dst = masm()->pc();
+    masm()->advance(size);
+    memcpy(dst, src, size);
+    return offset;
+  }
 };

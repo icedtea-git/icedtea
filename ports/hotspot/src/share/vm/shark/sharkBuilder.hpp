@@ -194,6 +194,10 @@ class SharkBuilder : public llvm::IRBuilder<> {
   llvm::Value* CreateInlineOop(ciObject* object, const char* name = "") {
     return CreateInlineOop(object->encoding(), name);
   }
+  llvm::Value* CreateInlineData(void*             data,
+                                size_t            size,
+                                const llvm::Type* type, 
+                                const char*       name = ""); 
 
   // Helpers for creating basic blocks.
   // NB don't use unless SharkFunction::CreateBlock is unavailable.

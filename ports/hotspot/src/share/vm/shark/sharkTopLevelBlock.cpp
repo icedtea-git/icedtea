@@ -469,18 +469,12 @@ void SharkTopLevelBlock::handle_exception(Value* exception, int action) {
 
     // Drop into the runtime if there are non-catch-all options
     if (num_options > 0) {
-      Value *options = builder()->CreateAlloca(
-        ArrayType::get(SharkType::jint_type(), num_options),
-        LLVMValue::jint_constant(1));
-
-      for (int i = 0; i < num_options; i++)
-        builder()->CreateStore(
-          LLVMValue::jint_constant(indexes[i]),
-          builder()->CreateStructGEP(options, i));
-
       Value *index = call_vm(
         builder()->find_exception_handler(),
-        builder()->CreateStructGEP(options, 0),
+        builder()->CreateInlineData(
+          indexes,
+          num_options * sizeof(int),
+          PointerType::getUnqual(SharkType::jint_type())),
         LLVMValue::jint_constant(num_options),
         EX_CHECK_NO_CATCH);
 

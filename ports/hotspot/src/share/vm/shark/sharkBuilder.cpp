@@ -546,6 +546,16 @@ Value* SharkBuilder::CreateInlineOop(jobject object, const char* name) {
     name);
 }
 
+Value* SharkBuilder::CreateInlineData(void*       data,
+                                      size_t      size,
+                                      const Type* type, 
+                                      const char* name) {
+  return CreateIntToPtr(
+    code_buffer_address(code_buffer()->inline_data(data, size)),
+    type,
+    name);
+}
+
 // Helpers for creating basic blocks.
 
 BasicBlock* SharkBuilder::GetBlockInsertionPoint() const {
