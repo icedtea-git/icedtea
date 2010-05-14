@@ -283,7 +283,7 @@ void SharkNativeWrapper::initialize(const char *name) {
   builder()->SetInsertPoint(exception);
   CreateResetHandleBlock();
   stack()->CreatePopFrame(0);
-  builder()->CreateRetVoid();
+  builder()->CreateRet(LLVMValue::jint_constant(0));
 
   builder()->SetInsertPoint(no_exception);
 
@@ -348,5 +348,5 @@ void SharkNativeWrapper::initialize(const char *name) {
         result_addr,
         PointerType::getUnqual(SharkType::to_stackType(result_type))));
   }
-  builder()->CreateRetVoid();
+  builder()->CreateRet(LLVMValue::jint_constant(0));
 }

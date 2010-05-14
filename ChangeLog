@@ -1,3 +1,27 @@
+2010-05-14  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/484
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::deoptimized_entry_point): New method.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::uncommon_trap): Return int instead of void.
+	(SharkBuilder::deoptimized_entry_point): New method.
+	* ports/hotspot/src/share/vm/shark/sharkContext.cpp
+	(SharkContext::SharkContext): Updated entry point types.
+	* ports/hotspot/src/share/vm/shark/sharkNativeWrapper.cpp
+	(SharkNativeWrapper::initialize): Make generated wrappers
+	return 0 instead of void.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp
+	(SharkRuntime::uncommon_trap): Return int instead of void.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp
+	(SharkRuntime::uncommon_trap): Don't enter the interpreter,
+	just return the number of frames that have been deoptimized.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::do_trap): Return the number of deoptimized
+	frames instead of void.
+	(SharkTopLevelBlock::handle_return): Return 0 instead of void.
+	(SharkTopLevelBlock::do_call): Deoptimize where necessary.
+
 2010-05-13  Gary Benson  <gbenson@redhat.com>
 
 	PR icedtea/483

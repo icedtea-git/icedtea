@@ -326,7 +326,11 @@ Value* SharkBuilder::throw_StackOverflowError() {
 }
 
 Value* SharkBuilder::uncommon_trap() {
-  return make_function((address) SharkRuntime::uncommon_trap, "Ti", "v");
+  return make_function((address) SharkRuntime::uncommon_trap, "Ti", "i");
+}
+
+Value* SharkBuilder::deoptimized_entry_point() {
+  return make_function((address) CppInterpreter::main_loop, "iT", "v");
 }
 
 // Native-Java transition

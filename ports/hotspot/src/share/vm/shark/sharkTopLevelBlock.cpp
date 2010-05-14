@@ -594,11 +594,11 @@ bool SharkTopLevelBlock::can_reach_helper(SharkTopLevelBlock* other) {
 
 void SharkTopLevelBlock::do_trap(int trap_request) {
   decache_for_trap();
-  builder()->CreateCall2(
-    builder()->uncommon_trap(),
-    thread(),
-    LLVMValue::jint_constant(trap_request));
-  builder()->CreateRetVoid();
+  builder()->CreateRet(
+    builder()->CreateCall2(
+      builder()->uncommon_trap(),
+      thread(),
+      LLVMValue::jint_constant(trap_request)));
 }
 
 void SharkTopLevelBlock::call_register_finalizer(Value *receiver) {
@@ -677,7 +677,7 @@ void SharkTopLevelBlock::handle_return(BasicType type, Value* exception) {
         PointerType::getUnqual(SharkType::to_stackType(type))));
   }
 
-  builder()->CreateRetVoid();
+  builder()->CreateRet(LLVMValue::jint_constant(0));
 }
 
 void SharkTopLevelBlock::do_arraylength() {
@@ -1203,7 +1203,25 @@ void SharkTopLevelBlock::do_call() {
 
   // Make the call
   decache_for_Java_call(call_method);
-  builder()->CreateCall3(entry_point, callee, base_pc, thread());
+  Value *deoptimized_frames = builder()->CreateCall3(
+    entry_point, callee, base_pc, thread());
+
+  // If the callee got deoptimized then reexecute in the interpreter
+  BasicBlock *reexecute      = function()->CreateBlock("reexecute");
+  BasicBlock *call_completed = function()->CreateBlock("call_completed");
+  builder()->CreateCondBr(
+    builder()->CreateICmpNE(deoptimized_frames, LLVMValue::jint_constant(0)),
+    reexecute, call_completed);
+
+  builder()->SetInsertPoint(reexecute);
+  builder()->CreateCall2(
+    builder()->deoptimized_entry_point(),
+    builder()->CreateSub(deoptimized_frames, LLVMValue::jint_constant(1)),
+    thread());
+  builder()->CreateBr(call_completed);
+
+  // Cache after the call
+  builder()->SetInsertPoint(call_completed);
   cache_after_Java_call(call_method);
 
   // Check for pending exceptions

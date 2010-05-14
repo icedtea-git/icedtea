@@ -135,7 +135,7 @@ void SharkStack::CreateStackOverflowCheck(Value* sp) {
   // Handle overflows
   builder()->SetInsertPoint(overflow);
   builder()->CreateCall(builder()->throw_StackOverflowError(), thread());
-  builder()->CreateRetVoid();
+  builder()->CreateRet(LLVMValue::jint_constant(0));
 
   builder()->SetInsertPoint(abi_ok);
 }

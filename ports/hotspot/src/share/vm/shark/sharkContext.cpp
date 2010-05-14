@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2009 Red Hat, Inc.
+ * Copyright 2009, 2010 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -76,14 +76,14 @@ SharkContext::SharkContext(const char* name)
   params.push_back(methodOop_type());
   params.push_back(intptr_type());
   params.push_back(thread_type());
-  _entry_point_type = FunctionType::get(void_type(), params, false);
+  _entry_point_type = FunctionType::get(jint_type(), params, false);
 
   params.clear();
   params.push_back(methodOop_type());
   params.push_back(PointerType::getUnqual(jbyte_type()));
   params.push_back(intptr_type());
   params.push_back(thread_type());
-  _osr_entry_point_type = FunctionType::get(void_type(), params, false);
+  _osr_entry_point_type = FunctionType::get(jint_type(), params, false);
 
   // Create mappings
   for (int i = 0; i < T_CONFLICT; i++) {

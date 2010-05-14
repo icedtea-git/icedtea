@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008, 2009 Red Hat, Inc.
+ * Copyright 2008, 2009, 2010 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -79,5 +79,5 @@ class SharkRuntime : public AllStatic {
  public:
   static void dump(const char *name, intptr_t value);
   static bool is_subtype_of(klassOop check_klass, klassOop object_klass);
-  static void uncommon_trap(JavaThread* thread, int trap_request);
+  static int uncommon_trap(JavaThread* thread, int trap_request);
 };

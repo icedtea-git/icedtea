@@ -192,14 +192,14 @@ bool SharkRuntime::is_subtype_of(klassOop check_klass, klassOop object_klass) {
   return object_klass->klass_part()->is_subtype_of(check_klass);
 }
 
-void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request) {
+int SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request) {
+  Thread *THREAD = thread;
+
   // In C2, uncommon_trap_blob creates a frame, so all the various
   // deoptimization functions expect to find the frame of the method
   // being deopted one frame down on the stack.  We create a dummy
   // frame to mirror this.
-  FakeStubFrame *stubframe = FakeStubFrame::build(thread);
-  if (thread->has_pending_exception())
-    return;
+  FakeStubFrame *stubframe = FakeStubFrame::build(CHECK_0);
   thread->push_zero_frame(stubframe);
 
   // Initiate the trap
@@ -216,16 +216,12 @@ void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request) {
   int number_of_frames = urb->number_of_frames();
   for (int i = 0; i < number_of_frames; i++) {
     intptr_t size = urb->frame_sizes()[i];
-    InterpreterFrame *frame = InterpreterFrame::build(size, thread);
-    if (thread->has_pending_exception())
-      return;
+    InterpreterFrame *frame = InterpreterFrame::build(size, CHECK_0);
     thread->push_zero_frame(frame);
   }
 
   // Push another dummy frame
-  stubframe = FakeStubFrame::build(thread);
-  if (thread->has_pending_exception())
-    return;
+  stubframe = FakeStubFrame::build(CHECK_0);
   thread->push_zero_frame(stubframe);
 
   // Fill in the skeleton frames
@@ -236,12 +232,8 @@ void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request) {
   // Pop our dummy frame
   thread->pop_zero_frame();
 
-  // Jump into the interpreter
-#ifdef CC_INTERP
-  CppInterpreter::main_loop(number_of_frames - 1, thread);
-#else
-  Unimplemented();
-#endif // CC_INTERP
+  // Fall back into the interpreter
+  return number_of_frames;
 }
 
 FakeStubFrame* FakeStubFrame::build(TRAPS) {

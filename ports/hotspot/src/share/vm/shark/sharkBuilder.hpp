@@ -133,6 +133,7 @@ class SharkBuilder : public llvm::IRBuilder<> {
  public:
   llvm::Value* throw_StackOverflowError();
   llvm::Value* uncommon_trap();
+  llvm::Value* deoptimized_entry_point();
 
   // Intrinsics and external functions, part 4: Native-Java transition.
   //   This is a special case in that it is invoked during a thread
