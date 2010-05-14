@@ -1,9 +1,28 @@
 2010-01-25 Andrew John Hughes  <ahughes@redhat.com>
 
+	* IcedTeaPlugin.cc:
+	Standardise plugin versioning.
+	* Makefile.am:
+	Set ICEDTEA_NAME and use in place of literal
+	"IcedTea7".  Use HAS_PKGVERSION to set ICEDTEA_PKG
+	and output DISTRO_PACKAGE_VERSION rather than
+	running test.  Set PLUGIN_VERSION and use for
+	both plugins.
+	* acinclude.m4:
+	(IT_GET_PKGVERSION): Moved from configure.ac and
+	changed to a macro with output.
+	(IT_GET_LSB_DATA): Depend on IT_GET_PKGVERSION.
+	* configure.ac:
+	Invoke new IT_GET_PKGVERSION macro.
+	* plugin/icedteanp/IcedTeaNPPlugin.cc:
+	Standardise plugin versioning.
+
+2010-01-25 Andrew John Hughes  <ahughes@redhat.com>
+
 	* patches/icedtea-libraries.patch:
 	Make all dlopen choices at build-time,
 	not just one.  Support libjpeg8 as well.
-	
+
 2010-01-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	PR icedtea/433

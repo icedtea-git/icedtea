@@ -132,17 +132,7 @@ AC_ARG_ENABLE([nss],
 AM_CONDITIONAL([ENABLE_NSS], [test x$ENABLE_NSS = xyes])
 AC_MSG_RESULT(${ENABLE_NSS})
 
-AC_ARG_WITH([pkgversion],
-        [AS_HELP_STRING([--with-pkgversion=PKG],
-                        [Use PKG in the version string in addition to "IcedTea"])],
-        [case "$withval" in
-          yes) AC_MSG_ERROR([package version not specified]) ;;
-          no)  PKGVERSION= ;;
-          *)   PKGVERSION="$withval" ;;
-         esac],
-        [PKGVERSION=])
-AC_SUBST(PKGVERSION)
-
+IT_GET_PKGVERSION
 IT_GET_LSB_DATA
 
 SET_ARCH_DIRS

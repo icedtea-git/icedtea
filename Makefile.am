@@ -455,9 +455,15 @@ endif
 JDK_UPDATE_VERSION = $(shell echo $(OPENJDK_VERSION) | sed -e "s/^b//")
 COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)
 
+ICEDTEA_NAME="IcedTea7"
 if HAS_ICEDTEA_REVISION
 ICEDTEA_REV="+${ICEDTEA_REVISION}"
 endif
+if HAS_PKGVERSION
+ICEDTEA_PKG="(${PKGVERSION})"
+endif
+
+PLUGIN_VERSION=$(ICEDTEA_NAME) $(PACKAGE_VERSION)$(ICEDTEA_REV) $(ICEDTEA_PKG)
 
 ICEDTEA_ENV = \
 	ALT_JDK_IMPORT_PATH="$(ICEDTEA_BOOT_DIR)" \
@@ -498,7 +504,7 @@ ICEDTEA_ENV = \
 	ANT_RESPECT_JAVA_HOME="TRUE" \
 	RHINO_JAR="$(RHINO_JAR)" \
 	DISTRIBUTION_ID="$(DIST_ID)" \
-	DERIVATIVE_ID="IcedTea6 $(PACKAGE_VERSION)$(ICEDTEA_REV)" \
+	DERIVATIVE_ID="$(ICEDTEA_NAME) $(PACKAGE_VERSION)$(ICEDTEA_REV)" \
 	ALT_JIBX_LIBS_PATH="$(JIBX_DEPS_DIR)" \
 	ALT_NETX_DIST="$(NETX_CLASSES)" \
 	ALT_LIVECONNECT_DIST="$(LIVECONNECT_CLASSES)" \
@@ -1554,10 +1560,10 @@ stamps/versioning.stamp: stamps/patch.stamp
 	if ! test "x$(WITH_CACAO)" = "xno"; then \
 	  echo "JDK_DERIVATIVE_NAME=$${icedtea_version}" \
 	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
-	  echo "PRODUCT_NAME=IcedTea7" \
+	  echo "PRODUCT_NAME=$(ICEDTEA_NAME)" \
 	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
 	else \
-	  echo "JDK_DERIVATIVE_NAME=IcedTea7 $${icedtea_version}" \
+	  echo "JDK_DERIVATIVE_NAME=$(ICEDTEA_NAME) $${icedtea_version}" \
 	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
 	fi ; 
 
@@ -1565,11 +1571,11 @@ if HAS_JDK_REVISION
 	echo "JDK_REVID=$(JDK_REVISION)" >>openjdk/jdk/make/common/shared/Defs.gmk ;
 endif
 
-	echo "DISTRO_NAME=$(DIST_NAME)" >>openjdk/jdk/make/common/shared/Defs.gmk ; \
-	if [ -n "$(PKGVERSION)" ]; then \
+	echo "DISTRO_NAME=$(DIST_NAME)" >>openjdk/jdk/make/common/shared/Defs.gmk ;
+if HAS_PKGVERSION
 	  echo "DISTRO_PACKAGE_VERSION=$(PKGVERSION)" \
-	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
-	fi; \
+	    >>openjdk/jdk/make/common/shared/Defs.gmk ;
+endif
 	if test x"$(PROJECT_NAME)" != "xjdk7"; then \
 	  proj_suffix="-$(PROJECT_NAME)"; \
 	fi ; \
@@ -2024,8 +2030,7 @@ NPPLUGIN_OBJECTS=IcedTeaNPPlugin.o IcedTeaScriptablePluginObject.o \
 $(PLUGIN_BUILD_DIR)/%.o: $(PLUGIN_SRCDIR)/%.cc
 	mkdir -p $(PLUGIN_BUILD_DIR) && \
 	$(CXX) $(CXXFLAGS) \
-	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	  -DPLUGIN_VERSION="\"$(PACKAGE_VERSION)$(ICEDTEA_REV)\"" \
+	  -DPLUGIN_VERSION="\"$(PLUGIN_VERSION)\"" \
 	  -DMOZILLA_VERSION_COLLAPSED="$(MOZILLA_VERSION_COLLAPSED)" \
 	  $(GLIB_CFLAGS) \
 	  $(GTK_CFLAGS) \
@@ -2054,15 +2059,9 @@ if ENABLE_PLUGIN
 # is listed before -l options.  See:
 # http://developer.mozilla.org/en/docs/XPCOM_Glue
 $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.o: IcedTeaPlugin.cc
-	if [ -e $(abs_top_srcdir)/.hg ] && which $(HG) >/dev/null; then \
-	  revision="-r`(cd $(abs_top_srcdir); $(HG) tip --template '{rev}')`" ; \
-	fi ; \
-	if [ -n "$(PKGVERSION)" ]; then plugin_version=" ($(PKGVERSION))"; fi; \
-	plugin_version=" $(PACKAGE_VERSION)$$revision$$plugin_version"; \
 	mkdir -p $(PLUGIN_BUILD_DIR) && \
 	$(CXX) $(CXXFLAGS) \
-	  -DPACKAGE_VERSION="\"$(PACKAGE_VERSION)\"" \
-	  -DPLUGIN_VERSION="\"$$plugin_version\"" \
+	  -DPLUGIN_VERSION="\"$(PLUGIN_VERSION)\"" \
 	  -DMOZILLA_VERSION_COLLAPSED="$(MOZILLA_VERSION_COLLAPSED)" \
 	  $(GTK_CFLAGS) \
 	  $(MOZILLA_CFLAGS) \

@@ -87,8 +87,8 @@ exception statement from your version. */
               __LINE__, g_thread_self (), first, second, third)
 
 // Plugin information passed to about:plugins.
-#define PLUGIN_NAME "IcedTea NPR Web Browser Plugin (using IcedTea)"
-#define PLUGIN_DESC "The " PLUGIN_NAME PLUGIN_VERSION " executes Java applets."
+#define PLUGIN_NAME "IcedTea NPR Web Browser Plugin (using " PLUGIN_VERSION ")"
+#define PLUGIN_DESC "The " PLUGIN_NAME " executes Java applets."
 
 #define PLUGIN_MIME_DESC                                               \
   "application/x-java-vm:class,jar:IcedTea;"                           \
@@ -2079,7 +2079,7 @@ NP_GetValue (void* future, NPPVariable variable, void* value)
     {
     case NPPVpluginNameString:
       PLUGIN_DEBUG_0ARG ("NP_GetValue: returning plugin name.\n");
-      *char_value = g_strdup (PLUGIN_NAME " " PACKAGE_VERSION);
+      *char_value = g_strdup (PLUGIN_NAME);
       break;
 
     case NPPVpluginDescriptionString:
