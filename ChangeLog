@@ -1,3 +1,9 @@
+2010-01-25 Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-libraries.patch:
+	Make all dlopen choices at build-time,
+	not just one.  Support libjpeg8 as well.
+	
 2010-01-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	PR icedtea/433
