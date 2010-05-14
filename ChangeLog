@@ -1,3 +1,21 @@
+2010-01-20  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Pass DERIVATIVE_ID and HOTSPOT_BUILD_VERSION
+	to build (later only when the HotSpot Mercurial
+	revision is available).  Update HotSpot and JDK
+	revisions for related updates there.
+	(patch.stamp): Move revision derivation to configure.
+	* acinclude.m4:
+	(IT_GET_LSB_DATA): Report results.
+	(IT_CHECK_FOR_MERCURIAL): Macro wrapper around check for hg.
+	(IT_OBTAIN_HG_REVISIONS): Obtain Mercurial revisions for
+	IcedTea, JDK and HotSpot if available.
+	* configure.ac:
+	Call new macros.
+	* patches/hotspot/default/icedtea-version.patch:
+	Removed; applied to upstream forest.
+
 2010-01-20  Xerxes Rånby  <xerxes@zafena.se>
 
 	PR icedtea/431:

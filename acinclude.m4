@@ -1668,6 +1668,7 @@ AC_DEFUN([WITH_VISUALVM_ZIP],
 
 AC_DEFUN([IT_GET_LSB_DATA],
 [
+AC_MSG_CHECKING([build identification])
 if test -n "$LSB_RELEASE"; then
   lsb_info="$($LSB_RELEASE -ds | sed 's/^"//;s/"$//')"
   if test -n "$PKGVERSION"; then
@@ -1680,8 +1681,48 @@ else
   DIST_ID="Custom build ($(date))"
   DIST_NAME="$build_os"
 fi
+AC_MSG_RESULT([${DIST_ID}])
 AC_SUBST(DIST_ID)
 AC_SUBST(DIST_NAME)
+])
+
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_MERCURIAL],
+[
+  AC_PATH_TOOL([HG],[hg])
+  AC_SUBST([HG])
+])
+
+AC_DEFUN_ONCE([IT_OBTAIN_HG_REVISIONS],
+[
+  AC_REQUIRE([IT_CHECK_FOR_MERCURIAL])
+  AC_REQUIRE([WITH_OPENJDK_SRC_DIR])
+  ICEDTEA_REVISION="none";
+  JDK_REVISION="none";
+  HOTSPOT_REVISION="none";
+  if which ${HG} >/dev/null; then
+    AC_MSG_CHECKING([for IcedTea Mercurial revision ID])
+    if test -e ${abs_top_srcdir}/.hg ; then 
+      ICEDTEA_REVISION="r`(cd ${abs_top_srcdir}; ${HG} tip --template '{node|short}')`" ; 
+    fi ;
+    AC_MSG_RESULT([${ICEDTEA_REVISION}])
+    AC_SUBST([ICEDTEA_REVISION])
+    AC_MSG_CHECKING([for JDK Mercurial revision ID])
+    if test -e ${OPENJDK_SRC_DIR}/jdk/.hg ; then
+      JDK_REVISION="r`(cd ${OPENJDK_SRC_DIR}/jdk; ${HG} tip --template '{node|short}')`" ;
+    fi ;
+    AC_MSG_RESULT([${JDK_REVISION}])
+    AC_SUBST([JDK_REVISION])
+    AC_MSG_CHECKING([for HotSpot Mercurial revision ID])
+    if test -e ${OPENJDK_SRC_DIR}/hotspot/.hg ; then \
+      HOTSPOT_REVISION="r`(cd ${OPENJDK_SRC_DIR}/hotspot; ${HG} tip --template '{node|short}')`" ;
+    fi ; 
+    AC_MSG_RESULT([${HOTSPOT_REVISION}])
+    AC_SUBST([HOTSPOT_REVISION])
+  fi;
+  AM_CONDITIONAL([HAS_ICEDTEA_REVISION], test "x${ICEDTEA_REVISION}" != xnone)
+  AM_CONDITIONAL([HAS_JDK_REVISION], test "x${JDK_REVISION}" != xnone)
+  AM_CONDITIONAL([HAS_HOTSPOT_REVISION], test "x${HOTSPOT_REVISION}" != xnone)
 ])
 
 AC_DEFUN_ONCE([IT_CHECK_OLD_PLUGIN],

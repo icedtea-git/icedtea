@@ -39,8 +39,8 @@ AC_SUBST([FASTJAR])
 dnl OpenJDK's README-builds.html lists gawk as a build dependency so we
 dnl check for it explicitly rather than using AC_PROG_AWK.
 FIND_TOOL([GAWK], [gawk])
-AC_PATH_TOOL([HG],[hg])
-AC_SUBST([HG])
+IT_CHECK_FOR_MERCURIAL
+IT_OBTAIN_HG_REVISIONS
 AC_PATH_TOOL([LSB_RELEASE],[lsb_release])
 AC_CHECK_WITH_GCJ
 AC_CHECK_WITH_HOTSPOT_BUILD

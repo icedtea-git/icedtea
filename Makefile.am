@@ -3,18 +3,18 @@
 OPENJDK_VERSION = b89
 
 CORBA_CHANGESET = e805b4155d76
-HOTSPOT_CHANGESET = e431f9da7dc9
+HOTSPOT_CHANGESET = 468593ef6b33
 JAXP_CHANGESET  = 826bafcb6c4a
 JAXWS_CHANGESET = 1661166c82dc
-JDK_CHANGESET = c1cee45daf4d
+JDK_CHANGESET = 5d5ee1c92a1b
 LANGTOOLS_CHANGESET = a0499f48ec96
 OPENJDK_CHANGESET = 195fcceefddc
 
 CORBA_SHA256SUM = 870e2eac993a4eef48197ed7309cab176b56a994add1de215a026599052627cb
-HOTSPOT_SHA256SUM = 4783b1b85239ac60b16eac7d184e51a9350670fec6f54a2e986761b7ded92994
+HOTSPOT_SHA256SUM = fc3a387938c2e479ff71989d227baa655b8a68079a144f717081b40e15696cdb
 JAXP_SHA256SUM = 42d004e51a1f01d146ad230ce48996ddf8da3719fe571a41653f431d6b2e8a7b
 JAXWS_SHA256SUM = 4523909cd46fd61b5c6670bf932099d5899236a37a4058e7b2bcb855e503a0e4
-JDK_SHA256SUM = b6d70bc41bbc7d02977ca4b0455bef765a3e8670dfa2f413a5b8bd91e77ee32a
+JDK_SHA256SUM = 5f6035185d862b36e0cb7ca4f5d5f7160914681dfcb33900fac45db1c439668e
 LANGTOOLS_SHA256SUM = 96f6be5d89195353f55ef775e0dec9bd9a5da7f869aba6ed428e4a2cac806991
 OPENJDK_SHA256SUM = 93c536e6bc4e962050a00321e88e694fc4e0000e2ad887b8de22830bfda2649f
 
@@ -456,6 +456,10 @@ endif
 JDK_UPDATE_VERSION = $(shell echo $(OPENJDK_VERSION) | sed -e "s/^b//")
 COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)
 
+if HAS_ICEDTEA_REVISION
+ICEDTEA_REV="+${ICEDTEA_REVISION}"
+endif
+
 ICEDTEA_ENV = \
 	ALT_JDK_IMPORT_PATH="$(ICEDTEA_BOOT_DIR)" \
 	ANT="$(ANT)" \
@@ -495,6 +499,7 @@ ICEDTEA_ENV = \
 	ANT_RESPECT_JAVA_HOME="TRUE" \
 	RHINO_JAR="$(RHINO_JAR)" \
 	DISTRIBUTION_ID="$(DIST_ID)" \
+	DERIVATIVE_ID="IcedTea6 $(PACKAGE_VERSION)$(ICEDTEA_REV)" \
 	ALT_JIBX_LIBS_PATH="$(JIBX_DEPS_DIR)" \
 	ALT_NETX_DIST="$(NETX_CLASSES)" \
 	ALT_LIVECONNECT_DIST="$(LIVECONNECT_CLASSES)" \
@@ -522,6 +527,11 @@ endif
 if USE_ALT_JAR
 ICEDTEA_ENV += \
 	ALT_JAR_CMD="$(ALT_JAR_CMD)"
+endif
+
+if HAS_HOTSPOT_REVISION
+ICEDTEA_ENV += \
+	HOTSPOT_BUILD_VERSION="$(HOTSPOT_REVISION)"
 endif
 
 # OpenJDK boot build environment.
@@ -1528,18 +1538,7 @@ clean-patch:
 
 stamps/versioning.stamp: stamps/patch.stamp
 	cp openjdk/jdk/make/common/shared/Defs.gmk Defs.gmk.bak
-	if which $(HG) >/dev/null; then \
-	  if [ -e $(abs_top_srcdir)/.hg ] ; then \
-	    revision="+r`(cd $(abs_top_srcdir); $(HG) tip --template '{node|short}')`" ; \
-	  fi ; \
-	  if [ -e openjdk/jdk/.hg ] ; then \
-	    jdk_rev="r`(cd openjdk/jdk; $(HG) tip --template '{node|short}')`" ; \
-	  fi ; \
-	  if [ -e openjdk/hotspot/.hg ] ; then \
-	    hotspot_rev="r`(cd openjdk/hotspot; $(HG) tip --template '{node|short}')`" ; \
-	  fi ; \
-	fi ; \
-	icedtea_version="$(PACKAGE_VERSION)$${revision}" ; \
+	icedtea_version="$(PACKAGE_VERSION)$(ICEDTEA_REV)" ; \
 	if ! test "x$(WITH_CACAO)" = "xno"; then \
 	  echo "JDK_DERIVATIVE_NAME=$${icedtea_version}" \
 	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
@@ -1548,9 +1547,12 @@ stamps/versioning.stamp: stamps/patch.stamp
 	else \
 	  echo "JDK_DERIVATIVE_NAME=IcedTea7 $${icedtea_version}" \
 	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
-	fi ; \
-	echo "JDK_REVID=$${jdk_rev}" >>openjdk/jdk/make/common/shared/Defs.gmk ; \
-	echo "HOTSPOT_REVID=$${hotspot_rev}" >>openjdk/jdk/make/common/shared/Defs.gmk ; \
+	fi ; 
+
+if HAS_JDK_REVISION
+	echo "JDK_REVID=$(JDK_REVISION)" >>openjdk/jdk/make/common/shared/Defs.gmk ;
+endif
+
 	echo "DISTRO_NAME=$(DIST_NAME)" >>openjdk/jdk/make/common/shared/Defs.gmk ; \
 	if [ -n "$(PKGVERSION)" ]; then \
 	  echo "DISTRO_PACKAGE_VERSION=$(PKGVERSION)" \
