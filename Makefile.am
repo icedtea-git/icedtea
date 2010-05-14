@@ -2337,6 +2337,7 @@ if !USE_SYSTEM_CACAO
 	  --with-java-runtime-library-classes=$(abs_top_builddir)/lib/rt \
 	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
 	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS) install
+	ln -s server $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/client
 endif
 endif
 	mkdir -p stamps

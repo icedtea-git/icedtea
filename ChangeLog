@@ -1,3 +1,10 @@
+2010-01-20  Xerxes Rånby  <xerxes@zafena.se>
+
+	PR icedtea/431:
+	* Makefile.am:
+	Create a link from client to server after CACAO install
+	to make openjdk find the expected client dir on 32bit systems.
+
 2010-01-18 Andrew John Hughes  <ahughes@redhat.com>
 
 	* configure.ac:
