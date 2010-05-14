@@ -1,3 +1,8 @@
+2010-05-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Remove reference to hotspot/default/icedtea-version.patch.
+
 2010-01-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

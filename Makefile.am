@@ -257,7 +257,6 @@ OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
 # Patch list
 
 ICEDTEA_PATCHES = \
-	patches/hotspot/$(HSBUILD)/icedtea-version.patch \
 	patches/icedtea-copy-plugs.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-text-relocations.patch \
 	patches/icedtea-ssl.patch \
