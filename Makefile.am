@@ -420,9 +420,10 @@ endif
 # Patches for when java.util.Scanner is missing
 # or has the bug #40630 (all these classes rely
 # on Scanner#hasNextLine() looping behaviour)
-SCANNER_PATCHES = patches/boot/icedtea-spp.patch \
-	patches/boot/icedtea-sbcs.patch \
-	patches/boot/icedtea-dbcs.patch
+SCANNER_PATCHES = patches/boot/scanner-spp.patch \
+	patches/boot/scanner-sbcs.patch \
+	patches/boot/scanner-dbcs.patch \
+	patches/boot/scanner-charsets.patch
 
 if LACKS_JAVA_UTIL_SCANNER
 ICEDTEA_BOOT_PATCHES += $(SCANNER_PATCHES)

@@ -1,5 +1,22 @@
 2010-05-17 Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/boot/icedtea-dbcs.patch,
+	* patches/boot/icedtea-sbcs.patch,
+	* patches/boot/icedtea-spp.patch:
+	Renamed to relate to java.util.Scanner.
+	* Makefile.am: Fix paths above and add
+	new patch.
+	* patches/boot/scanner-charsets.patch:
+	New patch to remove Scanner usage in
+	charsetmapping tool.
+	* patches/boot/scanner-dbcs.patch,
+	* patches/boot/scanner-sbcs.patch,
+	* patches/boot/scanner-spp.patch:
+	Collect together all patches to avoid use
+	of java.util.Scanner.
+
+2010-05-17 Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	(stamps/extract-jaxws.stamp): Use absolute
 	path to stamps.
