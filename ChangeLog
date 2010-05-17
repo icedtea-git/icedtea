@@ -1,5 +1,11 @@
 2010-05-17 Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(stamps/extract-jaxws.stamp): Use absolute
+	path to stamps.
+
+2010-05-17 Andrew John Hughes  <ahughes@redhat.com>
+
 	* acinclude.m4:
 	Remove duplicate IT_XULRUNNER_VERSION macro.
 

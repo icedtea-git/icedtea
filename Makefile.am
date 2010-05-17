@@ -1349,10 +1349,10 @@ if DTDTYPE_QNAME
 	    echo Applying $$p ; \
 	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
 	    if ! grep "^\* $$(basename $$p)" $(abs_top_srcdir)/HACKING \
-	      >> stamps/extract-jaxws.stamp.tmp ; \
+	      >> $(abs_top_builddir)/stamps/extract-jaxws.stamp.tmp ; \
 	    then \
 	      echo "* $$(basename $$p): UNDOCUMENTED" \
-	        >> stamps/extract-jaxws.stamp.tmp ; \
+	        >> $(abs_top_builddir)/stamps/extract-jaxws.stamp.tmp ; \
 	    fi ; \
 	   else \
 	     test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
