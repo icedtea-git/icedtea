@@ -1,3 +1,16 @@
+2010-05-17 Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	Remove duplicate IT_XULRUNNER_VERSION macro.
+
+2010-01-22  Deepak Bhole <dbhole@redhat.com>
+
+	* Makefile.am:
+	Use MOZILLA_CFLAGS/LIBS rather than
+	XULRUNNER.
+	* plugin/icedteanp/IcedTeaNPPlugin.cc:
+	Use PRInt32 rather than PRInt32_t for port.
+
 2010-01-25 Andrew John Hughes  <ahughes@redhat.com>
 
 	* IcedTeaPlugin.cc:

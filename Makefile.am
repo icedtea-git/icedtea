@@ -2071,7 +2071,7 @@ $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so: $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.o
 	$(CXX) $(CXXFLAGS) \
 	  $< \
 	  $(GTK_LIBS) \
-	  $(XULRUNNER_LIBS) \
+	  $(MOZILLA_LIBS) \
 	  -shared -o $@
 
 clean-IcedTeaPlugin:
