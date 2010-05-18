@@ -1,3 +1,8 @@
+2010-05-18 Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/boot/scanner-charsets.patch:
+	Patch openjdk-boot not openjdk.
+
 2010-05-17 Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/boot/icedtea-dbcs.patch,

@@ -1,6 +1,6 @@
 diff -r 5d5ee1c92a1b make/tools/src/build/tools/charsetmapping/EUC_TW.java
---- openjdk.orig/jdk/make/tools/src/build/tools/charsetmapping/EUC_TW.java	Fri May 14 14:06:33 2010 +0100
-+++ openjdk/jdk/make/tools/src/build/tools/charsetmapping/EUC_TW.java	Mon May 17 20:40:10 2010 +0100
+--- openjdk-boot.orig/jdk/make/tools/src/build/tools/charsetmapping/EUC_TW.java	Fri May 14 14:06:33 2010 +0100
++++ openjdk-boot/jdk/make/tools/src/build/tools/charsetmapping/EUC_TW.java	Mon May 17 20:40:10 2010 +0100
 @@ -27,7 +27,6 @@
  
  import java.io.*;
@@ -11,7 +11,7 @@ diff -r 5d5ee1c92a1b make/tools/src/build/tools/charsetmapping/EUC_TW.java
  import java.nio.charset.*;
 diff -r 5d5ee1c92a1b make/tools/src/build/tools/charsetmapping/HKSCS.java
 --- openjdk.orig/jdk/make/tools/src/build/tools/charsetmapping/HKSCS.java	Fri May 14 14:06:33 2010 +0100
-+++ openjdk/jdk/make/tools/src/build/tools/charsetmapping/HKSCS.java	Mon May 17 20:40:10 2010 +0100
++++ openjdk-boot/jdk/make/tools/src/build/tools/charsetmapping/HKSCS.java	Mon May 17 20:40:10 2010 +0100
 @@ -28,7 +28,6 @@
  import java.io.*;
  import java.util.Arrays;
@@ -21,8 +21,8 @@ diff -r 5d5ee1c92a1b make/tools/src/build/tools/charsetmapping/HKSCS.java
  import java.util.regex.*;
  import java.nio.charset.*;
 diff -r 5d5ee1c92a1b make/tools/src/build/tools/charsetmapping/Main.java
---- openjdk.orig/jdk/make/tools/src/build/tools/charsetmapping/Main.java	Fri May 14 14:06:33 2010 +0100
-+++ openjdk/jdk/make/tools/src/build/tools/charsetmapping/Main.java	Mon May 17 20:40:10 2010 +0100
+--- openjdk-boot.orig/jdk/make/tools/src/build/tools/charsetmapping/Main.java	Fri May 14 14:06:33 2010 +0100
++++ openjdk-boot/jdk/make/tools/src/build/tools/charsetmapping/Main.java	Mon May 17 20:40:10 2010 +0100
 @@ -25,9 +25,6 @@
  
  package build.tools.charsetmapping;
@@ -34,8 +34,8 @@ diff -r 5d5ee1c92a1b make/tools/src/build/tools/charsetmapping/Main.java
  
      public static void main(String args[]) throws Exception {
 diff -r 5d5ee1c92a1b make/tools/src/build/tools/charsetmapping/Utils.java
---- openjdk.orig/jdk/make/tools/src/build/tools/charsetmapping/Utils.java	Fri May 14 14:06:33 2010 +0100
-+++ openjdk/jdk/make/tools/src/build/tools/charsetmapping/Utils.java	Mon May 17 20:40:10 2010 +0100
+--- openjdk-boot.orig/jdk/make/tools/src/build/tools/charsetmapping/Utils.java	Fri May 14 14:06:33 2010 +0100
++++ openjdk-boot/jdk/make/tools/src/build/tools/charsetmapping/Utils.java	Mon May 17 20:40:10 2010 +0100
 @@ -26,6 +26,7 @@
  package build.tools.charsetmapping;
  
