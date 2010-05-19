@@ -1,3 +1,10 @@
+2010-01-26 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(stamps/plugin-tests.stamp): Add
+	a target for building the plugin tests.
+	(plugin-tests): Alias for the above.
+	
 2010-01-27  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am: Remove quoting from ICEDTEA_NAME ICEDTEA_REV ICEDTEA_PKG.

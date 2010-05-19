@@ -254,6 +254,10 @@ OPENJDK_TREE = stamps/overlay.stamp
 # is available in $(abs_top_builddir)/openjdk-boot
 OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
 
+# Sources list
+
+PLUGIN_TEST_SRCS = $(abs_top_srcdir)/plugin/tests/LiveConnect/*.java
+
 # Patch list
 
 ICEDTEA_PATCHES = \
@@ -2507,6 +2511,33 @@ clean-add-zero-debug:
 
 # end additional VMs
 
+# plugin tests
+
+stamps/plugin-tests.stamp: $(PLUGIN_TEST_SRCS) \
+ bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
+	mkdir -p plugin/tests/LiveConnect
+	if test -d lib/rt/netscape ; then \
+	  set -e ; \
+	  if ! test -d $(ICEDTEA_BOOT_DIR) ; then \
+	    $(JAVAC) $(MEMORY_LIMIT) -g -d plugin/tests/LiveConnect \
+	      -classpath bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+              -source 1.5 $(PLUGIN_TEST_SRCS) ; \
+	    $(JAR) cf plugin/tests/LiveConnect/PluginTest.jar \
+	      plugin/tests/LiveConnect/*.class ; \
+	  else \
+	    $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g \
+	      -d plugin/tests/LiveConnect \
+	      -classpath bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
+	      -source 1.5 $(PLUGIN_TEST_SRCS) ; \
+	    $(ICEDTEA_BOOT_DIR)/bin/jar cf plugin/tests/LiveConnect/PluginTest.jar \
+	      plugin/tests/LiveConnect/*.class ; \
+	  fi ; \
+	  cp -a $(abs_top_srcdir)/plugin/tests/LiveConnect/*.{js,html} plugin/tests/LiveConnect ; \
+	  echo "Done. Now launch \"firefox file://`pwd`/index.html\"" ; \
+	fi
+	mkdir -p stamps
+	touch stamps/plugin-tests.stamp
+
 # jtreg
 
 stamps/jtreg.stamp: stamps/icedtea.stamp
@@ -2751,6 +2782,8 @@ patch-boot: stamps/patch-boot.stamp
 patch-fsg: stamps/patch-fsg.stamp
 
 plugin: stamps/plugin.stamp
+
+plugin-tests: stamps/plugin-tests.stamp
 
 plugs: stamps/plugs.stamp
 
