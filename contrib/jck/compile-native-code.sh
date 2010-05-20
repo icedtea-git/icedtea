@@ -19,6 +19,9 @@ fi
 
 arch=$(uname -m)
 case "$arch" in
+  arm*)
+    MFLAG=
+    ;;
   i?86|ppc)
     MFLAG=-m32
     ;;

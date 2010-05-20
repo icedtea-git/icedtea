@@ -1,3 +1,8 @@
+2009-10-05  Edward Nevill    <ed@camswl.com>
+
+	* contrib/jck/compile-native-code.sh:
+	Support for generation of native libraries for JCK on ARM
+
 2010-02-15 Andrew John Hughes  <ahughes@redhat.com>
 
 	* rewriter/agpl-3.0.txt,
