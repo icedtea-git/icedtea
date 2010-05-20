@@ -1,3 +1,8 @@
+2010-02-02  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java: Re-designed frame
+	embedding code so that the applet is dynamically packed into given handle.
+
 2010-02-01  Xerxes Rånby  <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
