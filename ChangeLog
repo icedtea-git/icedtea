@@ -1,3 +1,38 @@
+2010-02-17 Andrew John Hughes  <ahughes@redhat.com>
+
+	PR icedtea/179
+	* ChangeLog: Remove rogue whitespace highlighted
+	by emacs.
+	* Makefile.am:
+	(REWRITER_SRCS): Sources for class file rewriter.
+	Only set RHINO_JAR when WITH_RHINO is set.  Point
+	to rewritten JAR file in build directory.  Add
+	rewriter and license to EXTRA_DIST.  Make icedtea,
+	icedtea-debug and icedtea-boot depend on rewrite-rhino.stamp.
+	(stamps/rewriter.stamp): Build the class file rewriter.
+	(stamps/rewrite-rhino.stamp): Rewrite the system Rhino JAR
+	file to use the sun.org.mozilla namespace to avoid conflicts.
+	(rewriter): New alias for stamps/rewriter.stamp.
+	(rewrite-rhino): Likewise for stamps/rewrite-rhino.stamp.
+	* patches/icedtea-rhino.patch:
+	Copy rather than symlink the JAR file.  Only drop the
+	internal suffix on the javascript package names.
+	* rewriter/com/redhat/rewriter/ClassRewriter.java:
+	(executor): Use a single threaded executor when
+	debugging is enabled.
+	(tasks): Store the Futures returned by the executor
+	for later checking.
+	(main(String[])): Log what happens when processFile
+	returns and handle any exceptions using Futures.
+	(call()): Ensure srcDir/destDir replacement always
+	matches with a trailing slash to avoid odd rewrites.
+	Loop directory creation to avoid possible race issues.
+	Increase logging and fix a number of issues with the rewrite:
+	  * Fix off-by-one loop bug so final entry is inspected.
+	  * Handle double entries which occur with 8-byte entries
+	    (doubles and longs):
+	http://java.sun.com/docs/books/jvms/second_edition/html/ClassFile.doc.html#16628
+
 2010-02-17  Xerxes Rånby  <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
@@ -9,7 +44,7 @@
 	Allways define llvm/Support/CommandLine.h.
 
 2010-02-16  Gary Benson  <gbenson@redhat.com>
-	
+
 	* contrib/jck/compile-native-code.sh: Add s390.
 
 2009-10-05  Edward Nevill    <ed@camswl.com>

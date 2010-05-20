@@ -258,6 +258,8 @@ OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
 
 PLUGIN_TEST_SRCS = $(abs_top_srcdir)/plugin/tests/LiveConnect/*.java
 
+REWRITER_SRCS = $(abs_top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
+
 # Patch list
 
 ICEDTEA_PATCHES = \
@@ -507,7 +509,6 @@ ICEDTEA_ENV = \
 	JDK_HOME="" \
 	QUIETLY="" \
 	ANT_RESPECT_JAVA_HOME="TRUE" \
-	RHINO_JAR="$(RHINO_JAR)" \
 	DISTRIBUTION_ID="$(DIST_ID)" \
 	DERIVATIVE_ID="$(ICEDTEA_NAME) $(PACKAGE_VERSION)$(ICEDTEA_REV)" \
 	ALT_JIBX_LIBS_PATH="$(JIBX_DEPS_DIR)" \
@@ -542,6 +543,11 @@ endif
 if HAS_HOTSPOT_REVISION
 ICEDTEA_ENV += \
 	HOTSPOT_BUILD_VERSION="$(HOTSPOT_REVISION)"
+endif
+
+if WITH_RHINO
+ICEDTEA_ENV += \
+	RHINO_JAR="$(abs_top_builddir)/rhino/rhino.jar"
 endif
 
 # OpenJDK boot build environment.
@@ -729,7 +735,9 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	tapset/hotspot.stp.in \
 	tapset/hotspot_jni.stp.in \
 	scripts/jni_create_stap.c \
-	scripts/jni_desc
+	scripts/jni_desc \
+	rewriter/agpl-3.0.txt \
+	$(REWRITER_SRCS)
 
 # Top-Level Targets
 # =================
@@ -1781,7 +1789,8 @@ clean-bootstrap-directory-symlink-stage2:
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/plugin.stamp $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
- stamps/netx-dist.stamp stamps/liveconnect-dist.stamp stamps/pulse-java.stamp
+ stamps/netx-dist.stamp stamps/liveconnect-dist.stamp stamps/pulse-java.stamp \
+ stamps/rewrite-rhino.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1864,7 +1873,8 @@ endif
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/plugin.stamp $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
- stamps/netx-dist.stamp stamps/liveconnect-dist.stamp stamps/pulse-java.stamp
+ stamps/netx-dist.stamp stamps/liveconnect-dist.stamp stamps/pulse-java.stamp \
+ stamps/rewrite-rhino.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1975,7 +1985,8 @@ clean-icedtea-debug-stage2:
 
 stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
  stamps/download.stamp $(OPENJDK_BOOT_TREE) stamps/plugs.stamp \
- stamps/netx-dist.stamp stamps/liveconnect-dist.stamp stamps/cacao.stamp
+ stamps/netx-dist.stamp stamps/liveconnect-dist.stamp stamps/cacao.stamp \
+ stamps/rewrite-rhino.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot \
@@ -2269,6 +2280,39 @@ endif
 	rm -f stamps/pulse-java*.stamp
 
 # end of pulse-java
+
+# Rhino support
+
+stamps/rewriter.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
+if WITH_RHINO
+	(cd $(abs_top_srcdir)/rewriter ; \
+	 $(ICEDTEA_BOOT_DIR)/bin/javac -g \
+	 -d $(abs_top_builddir)/rewriter $(REWRITER_SRCS) \
+	)
+endif
+	mkdir -p stamps
+	touch stamps/rewriter.stamp
+
+stamps/rewrite-rhino.stamp: stamps/rewriter.stamp $(RHINO_JAR)
+if WITH_RHINO
+	mkdir -p rhino/rhino.{old,new}
+	(cd rhino/rhino.old ; jar xf $(RHINO_JAR))
+	$(ICEDTEA_BOOT_DIR)/bin/java -cp $(abs_top_builddir)/rewriter \
+	  com.redhat.rewriter.ClassRewriter \
+	  $(abs_top_builddir)/rhino/rhino.old $(abs_top_builddir)/rhino/rhino.new \
+	  org.mozilla sun.org.mozilla
+	(cd rhino/rhino.old ; \
+	 for files in `find -type f -not -name '*.class'` ; do \
+	   new_file=../rhino.new/`echo $$files|sed -e 's#org#sun/org#'` ; \
+	   mkdir -p `dirname $$new_file` ; \
+	   cp -v $$files $$new_file ; \
+	   sed -ie 's#org\.mozilla#sun.org.mozilla#g' $$new_file ; \
+	 done \
+	)
+	(cd rhino/rhino.new ; jar cfm ../rhino.jar META-INF/MANIFEST.MF sun )
+endif
+	mkdir -p stamps
+	touch stamps/rewrite-rhino.stamp
 
 # VisualVM
 
@@ -2784,6 +2828,10 @@ patch-fsg: stamps/patch-fsg.stamp
 plugin: stamps/plugin.stamp
 
 plugin-tests: stamps/plugin-tests.stamp
+
+rewriter: stamps/rewriter.stamp
+
+rewrite-rhino: stamps/rewrite-rhino.stamp
 
 plugs: stamps/plugs.stamp
 

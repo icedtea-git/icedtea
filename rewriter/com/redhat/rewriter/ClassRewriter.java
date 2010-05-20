@@ -27,11 +27,15 @@ import java.io.IOException;
 
 import java.nio.charset.Charset;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import java.util.logging.ConsoleHandler;
@@ -56,15 +60,21 @@ public class ClassRewriter
   /**
    * The executor for submitting rewriting jobs.
    */
-  private static final ExecutorService executor = Executors.newCachedThreadPool();
+  private static final ExecutorService executor = DEBUG ?
+    Executors.newSingleThreadExecutor() : Executors.newCachedThreadPool();
 
   /**
    * The source directory, set once by main.
    */
   private static File srcDir;
 
+  /**
+   * The list of tasks submitted to the executor.
+   */
+  private static List<Future<Void>> tasks = new ArrayList<Future<Void>>();
+
   public static void main(String[] args)
-    throws Exception
+    throws ExecutionException, InterruptedException
   {
     if (args.length < 4)
       {
@@ -78,17 +88,15 @@ public class ClassRewriter
     handler.setLevel(level);
     logger.addHandler(handler);
     srcDir = new File(args[0]);
-    try
-      {
-        processFile(srcDir, args[1], args[2], args[3]);
-      }
-    finally
-      {
-        executor.shutdown();
-        executor.awaitTermination(1, TimeUnit.MINUTES);
-        if (!executor.isTerminated())
-          throw new Exception("Rewriting failed to complete");
-      }
+    processFile(srcDir, args[1], args[2], args[3]);
+    logger.info("Waiting for rewrites to complete...");
+    executor.shutdown();
+    executor.awaitTermination(1, TimeUnit.MINUTES);
+    logger.info("Checking for errors...");
+    // Check for exceptions
+    for (Future<Void> f : tasks)
+      f.get();
+    logger.info("Rewriting completed successfully.");
   }
 
   private static void processFile(File srcDir, String destDir,
@@ -103,7 +111,8 @@ public class ClassRewriter
     else if (srcDir.getName().endsWith(".class"))
       {
         logger.info("Processing class " + srcDir);
-        executor.submit(new ClassRewriter(srcDir, destDir, oldPkg, newPkg));
+        tasks.add(executor.submit(new ClassRewriter(srcDir, destDir,
+                                                    oldPkg, newPkg)));
       }
     else
       logger.fine("Skipping " + srcDir);
@@ -147,8 +156,11 @@ public class ClassRewriter
     String dollaredNewPackage = newPackage.replace(".", "$");
 
     File outClass =
-      new File(classFile.getPath().replace(srcDir.getPath(), destDir).replace(slashedOldPackage, slashedNewPackage));
-    outClass.getParentFile().mkdirs();
+      new File(classFile.getPath().replace(srcDir.getPath() + File.separator,
+                                           destDir + File.separator).replace(slashedOldPackage, slashedNewPackage));
+    File targetDir = outClass.getParentFile();
+    while (!targetDir.exists())
+      outClass.getParentFile().mkdirs();
 
     DataInputStream is = new DataInputStream(new FileInputStream(classFile));
     DataOutputStream os = new DataOutputStream(new FileOutputStream(outClass));
@@ -170,14 +182,14 @@ public class ClassRewriter
       throw new IOException("Could not read version number.");
     os.write(version);
 
-    short cpCount = is.readShort();
+    int cpCount = is.readUnsignedShort();
     os.writeShort(cpCount);
     logger.fine("Constant pool has " + cpCount + " items.");
 
-    for (int a = 1; a < cpCount - 1; ++a)
+    for (int a = 1; a < cpCount ; ++a)
       {
-        String prefix = "At index " + a + " : ";
-        byte tag = (byte) is.read();
+        byte tag = is.readByte();
+        String prefix = "At index " + a + ", tag " + tag + ": ";
         os.write(tag);
         switch (tag)
           {
@@ -186,11 +198,23 @@ public class ClassRewriter
             String data = is.readUTF();
             logger.fine(prefix + "String " + data);
             if (data.contains(oldPackage))
-              data = data.replace(oldPackage, newPackage);
+              {
+                logger.fine(String.format("%s: Found %s\n", outClass.toString(), data));
+                data = data.replace(oldPackage, newPackage);
+                logger.fine(String.format("%s: Rewriting to %s\n", outClass.toString(), data));
+              }
             else if (data.contains(slashedOldPackage))
-              data = data.replace(slashedOldPackage, slashedNewPackage);
+              {
+                logger.fine(String.format("%s: Found %s\n", outClass.toString(), data));
+                data = data.replace(slashedOldPackage, slashedNewPackage);
+                logger.fine(String.format("%s: Rewriting to %s\n", outClass.toString(), data));
+              }
             else if (data.contains(dollaredOldPackage))
-              data = data.replace(dollaredOldPackage, dollaredNewPackage);
+              {
+                logger.fine(String.format("%s: Found %s\n", outClass.toString(), data));
+                data = data.replace(dollaredOldPackage, dollaredNewPackage);
+                logger.fine(String.format("%s: Rewriting to %s\n", outClass.toString(), data));
+              }
             os.writeUTF(data);
             break;
           case 3:
@@ -210,12 +234,14 @@ public class ClassRewriter
             long longBytes = is.readLong();
             logger.fine(prefix + "Long " + longBytes);
             os.writeLong(longBytes);
+            ++a; // longs count as two entries
             break;
           case 6:
             /* CONSTANT_Double_Info */
             double doubleBytes = is.readDouble();
             logger.fine(prefix + "Double " + doubleBytes);
             os.writeDouble(doubleBytes);
+            ++a; // doubles count as two entries
             break;
           case 7:
           case 8:
