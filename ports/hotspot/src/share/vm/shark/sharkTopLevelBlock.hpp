@@ -79,12 +79,6 @@ class SharkTopLevelBlock : public SharkBlock {
   bool falls_through() const {
     return ciblock()->control() == ciBlock::fall_through_bci;
   }
-  int num_exceptions() const {
-    return ciblock()->exceptions()->length();
-  }
-  SharkTopLevelBlock* exception(int index) const {
-    return function()->block(ciblock()->exceptions()->at(index)->pre_order());
-  }
   int num_successors() const {
     return ciblock()->successors()->length();
   }
@@ -92,6 +86,25 @@ class SharkTopLevelBlock : public SharkBlock {
     return function()->block(ciblock()->successors()->at(index)->pre_order());
   }
   SharkTopLevelBlock* bci_successor(int bci) const;
+
+  // Exceptions
+ private:
+  GrowableArray<ciExceptionHandler*>* _exc_handlers;
+  GrowableArray<SharkTopLevelBlock*>* _exceptions;
+
+ private:
+  void compute_exceptions();
+
+ private:
+  int num_exceptions() const {
+    return _exc_handlers->length();
+  }
+  ciExceptionHandler* exc_handler(int index) const {
+    return _exc_handlers->at(index);
+  }
+  SharkTopLevelBlock* exception(int index) const {
+    return _exceptions->at(index);
+  }
 
   // Traps
  private:
@@ -250,6 +263,9 @@ class SharkTopLevelBlock : public SharkBlock {
   };
   void check_pending_exception(int action);
   void handle_exception(llvm::Value* exception, int action);
+  void marshal_exception_fast(int num_options);
+  void marshal_exception_slow(int num_options);
+  llvm::BasicBlock* handler_for_exception(int index);
 
   // VM calls
  private:
@@ -335,6 +351,7 @@ class SharkTopLevelBlock : public SharkBlock {
 
   // Traps
  private:
+  llvm::BasicBlock* make_trap(int trap_bci, int trap_request);
   void do_trap(int trap_request);
 
   // Returns

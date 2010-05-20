@@ -1,6 +1,6 @@
 /*
  * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008, 2009 Red Hat, Inc.
+ * Copyright 2008, 2009, 2010 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -93,10 +93,13 @@ class SharkCompileInvariants : public ResourceObj {
     return builder()->code_buffer();
   }
 
-  // That well-known class...
+  // Commonly used classes
  protected:
   ciInstanceKlass* java_lang_Object_klass() const {
     return env()->Object_klass();
+  }
+  ciInstanceKlass* java_lang_Throwable_klass() const {
+    return env()->Throwable_klass();
   }
 };
 

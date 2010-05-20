@@ -1,3 +1,30 @@
+2010-05-20  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/494
+	* ports/hotspot/src/share/vm/shark/sharkInvariants.hpp
+	(SharkCompileInvariants::java_lang_Throwable_klass): New method.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp
+	(SharkTopLevelBlock::_exc_handlers): New field.
+	(SharkTopLevelBlock::_exceptions): Likewise.
+	(SharkTopLevelBlock::compute_exceptions): New method.
+	(SharkTopLevelBlock::num_exceptions): Rewritten.
+	(SharkTopLevelBlock::exc_handler): New method.
+	(SharkTopLevelBlock::exception): Rewritten.
+	(SharkTopLevelBlock::marshal_exception_fast): New method.
+	(SharkTopLevelBlock::marshal_exception_slow): Likewise.
+	(SharkTopLevelBlock::handler_for_exception): Likewise.
+	(SharkTopLevelBlock::make_trap): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::enter): Compute exceptions on entry,
+	and skip over any null handlers.
+	(SharkTopLevelBlock::compute_exceptions): New method.
+	(SharkTopLevelBlock::handle_exception): Rewritten.
+	(SharkTopLevelBlock::marshal_exception_fast): New method.
+	(SharkTopLevelBlock::marshal_exception_slow): Likewise.
+	(SharkTopLevelBlock::handler_for_exception): Likewise.
+	(SharkTopLevelBlock::make_trap): Likewise.
+	(SharkTopLevelBlock::can_reach_helper): Skip over null handlers.
+
 2010-05-14  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkCodeBuffer.hpp
