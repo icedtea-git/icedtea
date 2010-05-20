@@ -447,12 +447,39 @@ AC_SUBST(LIBFFI_LIBS)
 if test "x${SHARK_BUILD_TRUE}" = x || test "x${ADD_SHARK_BUILD_TRUE}" = x; then
   FIND_TOOL([LLVM_CONFIG], [llvm-config])
   llvm_components="engine nativecodegen"
-  LLVM_CFLAGS=`$LLVM_CONFIG --cflags $llvm_components | \
-    sed -e 's/-O.//g' | sed -e 's/-fomit-frame-pointer//g' | \
-    sed -e 's/-pedantic//g' | sed -e 's/-D_DEBUG//g'`
+  dnl LLVM_CFLAGS
+  LLVM_CFLAGS=
+  for flag in $($LLVM_CONFIG --cxxflags $llvm_components); do
+    if echo "$flag" | grep -q '^-[[ID]]'; then
+      if test "$flag" != "-D_DEBUG"; then
+        if test "x$LLVM_CFLAGS" != "x"; then
+          LLVM_CFLAGS="$LLVM_CFLAGS "
+        fi
+        LLVM_CFLAGS="$LLVM_CFLAGS$flag"
+      fi
+    fi
+  done
+  dnl LLVM_LDFLAGS
+  LLVM_LDFLAGS=
+  for flag in $($LLVM_CONFIG --ldflags $llvm_components); do
+    if echo "$flag" | grep -q '^-L'; then
+      if test "x$LLVM_LDFLAGS" != "x"; then
+        LLVM_LDFLAGS="$LLVM_LDFLAGS "
+      fi
+      LLVM_LDFLAGS="$LLVM_LDFLAGS$flag"
+    fi
+  done
+  dnl LLVM_LIBS
+  LLVM_LIBS=
+  for flag in $($LLVM_CONFIG --libs $llvm_components); do
+    if echo "$flag" | grep -q '^-l'; then
+      if test "x$LLVM_LIBS" != "x"; then
+        LLVM_LIBS="$LLVM_LIBS "
+      fi
+      LLVM_LIBS="$LLVM_LIBS$flag"
+    fi
+  done
   LLVM_CFLAGS="$LLVM_CFLAGS -DSHARK_LLVM_VERSION=`$LLVM_CONFIG --version | sed 's/\.//;s/svn.*//'`"
-  LLVM_LDFLAGS=`$LLVM_CONFIG --ldflags $llvm_components`
-  LLVM_LIBS=`$LLVM_CONFIG --libs $llvm_components`
 fi
 AC_SUBST(LLVM_CFLAGS)
 AC_SUBST(LLVM_LDFLAGS)
