@@ -3,7 +3,7 @@
 OPENJDK_VERSION = b89
 
 CORBA_CHANGESET = e805b4155d76
-HOTSPOT_CHANGESET = 468593ef6b33
+HOTSPOT_CHANGESET = de6965fd4cc5
 JAXP_CHANGESET  = 826bafcb6c4a
 JAXWS_CHANGESET = 1661166c82dc
 JDK_CHANGESET = 3d1a836736bf
@@ -11,7 +11,7 @@ LANGTOOLS_CHANGESET = a0499f48ec96
 OPENJDK_CHANGESET = 195fcceefddc
 
 CORBA_SHA256SUM = 870e2eac993a4eef48197ed7309cab176b56a994add1de215a026599052627cb
-HOTSPOT_SHA256SUM = fc3a387938c2e479ff71989d227baa655b8a68079a144f717081b40e15696cdb
+HOTSPOT_SHA256SUM = be6833f5e7a30091173a7099da9bae304df9e0868403b05660c10a574b4fd2fc
 JAXP_SHA256SUM = 42d004e51a1f01d146ad230ce48996ddf8da3719fe571a41653f431d6b2e8a7b
 JAXWS_SHA256SUM = 4523909cd46fd61b5c6670bf932099d5899236a37a4058e7b2bcb855e503a0e4
 JDK_SHA256SUM = 637372a089a1d50dc85d098e8b897d01e001730dd0ed94a6d347243272dedeeb
@@ -1706,29 +1706,33 @@ stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
 	ln -sf $(JAR) bootstrap/boot/bin/jar
 	ln -sf ../../../javac bootstrap/boot/bin/javac
 	ln -sf ../../../javap bootstrap/boot/bin/javap
-	mkdir -p bootstrap/boot/lib/endorsed
-	ln -sf $(XALAN2_JAR) bootstrap/boot/lib/endorsed/xalan-j2.jar
+	mkdir -p bootstrap/boot/lib/endorsed && \
+	ln -sf $(XALAN2_JAR) bootstrap/boot/lib/endorsed/xalan-j2.jar && \
 	ln -sf $(XALAN2_SERIALIZER_JAR) \
-	  bootstrap/boot/lib/endorsed/xalan-j2-serializer.jar
+	  bootstrap/boot/lib/endorsed/xalan-j2-serializer.jar && \
 	ln -sf $(XERCES2_JAR) bootstrap/boot/lib/endorsed/xerces-j2.jar
-	mkdir -p bootstrap/boot/jre/lib; \
+	mkdir -p bootstrap/boot/jre/lib && \
 	cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
-	  bootstrap/boot/jre/lib/rt.jar; \
-	chmod u+w bootstrap/boot/jre/lib/rt.jar; \
+	  bootstrap/boot/jre/lib/rt.jar && \
+	chmod u+w bootstrap/boot/jre/lib/rt.jar && \
 	ln -sf $(SYSTEM_JDK_DIR)/jre/lib/$(JRE_ARCH_DIR) \
-	  bootstrap/boot/jre/lib/; \
+	  bootstrap/boot/jre/lib/ && \
 	if ! test -d bootstrap/boot/jre/lib/$(INSTALL_ARCH_DIR); \
 	  then \
 	  ln -sf ./$(JRE_ARCH_DIR) \
 	    bootstrap/boot/jre/lib/$(INSTALL_ARCH_DIR); \
-	fi; \
-	mkdir -p bootstrap/boot/include; \
+	fi
+# For HotSpot
+	mkdir -p $(abs_top_builddir)/bootstrap/boot/lib && \
+	ln -sf $(abs_top_builddir)/bootstrap/boot/jre/lib/rt.jar \
+	  $(abs_top_builddir)/bootstrap/boot/lib/tools.jar
+	mkdir -p bootstrap/boot/include && \
 	for i in $(SYSTEM_JDK_DIR)/include/*; do \
 	  test -r $$i | continue; \
 	  i=`basename $$i`; \
 	  rm -f bootstrap/boot/include/$$i; \
 	  ln -s $(SYSTEM_JDK_DIR)/include/$$i bootstrap/boot/include/$$i; \
-	done; \
+	done;
 	mkdir -p stamps
 	touch $@
 
@@ -2285,8 +2289,9 @@ endif
 
 stamps/rewriter.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
 if WITH_RHINO
+	mkdir -p $(abs_top_builddir)/rewriter && \
 	(cd $(abs_top_srcdir)/rewriter ; \
-	 $(ICEDTEA_BOOT_DIR)/bin/javac -g \
+	 $(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	 -d $(abs_top_builddir)/rewriter $(REWRITER_SRCS) \
 	)
 endif
@@ -2295,13 +2300,13 @@ endif
 
 stamps/rewrite-rhino.stamp: stamps/rewriter.stamp $(RHINO_JAR)
 if WITH_RHINO
-	mkdir -p rhino/rhino.{old,new}
-	(cd rhino/rhino.old ; jar xf $(RHINO_JAR))
+	mkdir -p rhino/rhino.{old,new} && \
+	(cd rhino/rhino.old && jar xf $(RHINO_JAR)) && \
 	$(ICEDTEA_BOOT_DIR)/bin/java -cp $(abs_top_builddir)/rewriter \
 	  com.redhat.rewriter.ClassRewriter \
 	  $(abs_top_builddir)/rhino/rhino.old $(abs_top_builddir)/rhino/rhino.new \
-	  org.mozilla sun.org.mozilla
-	(cd rhino/rhino.old ; \
+	  org.mozilla sun.org.mozilla && \
+	(cd rhino/rhino.old && \
 	 for files in `find -type f -not -name '*.class'` ; do \
 	   new_file=../rhino.new/`echo $$files|sed -e 's#org#sun/org#'` ; \
 	   mkdir -p `dirname $$new_file` ; \
@@ -2309,7 +2314,7 @@ if WITH_RHINO
 	   sed -ie 's#org\.mozilla#sun.org.mozilla#g' $$new_file ; \
 	 done \
 	)
-	(cd rhino/rhino.new ; jar cfm ../rhino.jar META-INF/MANIFEST.MF sun )
+	(cd rhino/rhino.new && jar cfm ../rhino.jar META-INF/MANIFEST.MF sun )
 endif
 	mkdir -p stamps
 	touch stamps/rewrite-rhino.stamp
@@ -2729,6 +2734,9 @@ bootstrap/jdk1.7.0/lib/tools.jar: stamps/rt.stamp
 clean-tools-jar:
 	rm -f bootstrap/jdk1.7.0/lib/tools.jar
 	rm -f bootstrap/boot/lib/tools.jar
+	if test -d bootstrap/boot/lib ; then \
+	  rm -f $(abs_top_builddir)/bootstrap/boot/lib/tools.jar; \
+	fi 
 
 # rt-closed.jar.
 bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt.stamp

@@ -1,3 +1,18 @@
+2010-05-26 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Update HotSpot changeset and SHA256 sum to
+	obtain DIST_ID and DERIVATIVE_ID support.
+	(bootstrap-directory-stage1.stamp): Always create
+	the boot tools.jar as a symlink to rt.jar to
+	appease the HotSpot build.  Join dependent parts
+	using &&.
+	(rewriter.stamp): Use IT_JAVACFLAGS and explicitly
+	create destination directory as javac doesn't while
+	ecj does.
+	(rewrite-rhino.stamp): Join dependent parts with &&.
+	(clean-tools-jar): Remove boot tools.jar symlink.
+
 2010-02-17 Andrew John Hughes  <ahughes@redhat.com>
 
 	PR icedtea/179
