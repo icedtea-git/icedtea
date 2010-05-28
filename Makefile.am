@@ -2300,7 +2300,7 @@ if WITH_RHINO
 	   cp -v $$files $$new_file ; \
 	   sed -ie 's#org\.mozilla#sun.org.mozilla#g' $$new_file ; \
 	 done \
-	)
+	) && \
 	(cd rhino/rhino.new && \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar cfm ../rhino.jar META-INF/MANIFEST.MF sun )
 endif
