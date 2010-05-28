@@ -1,3 +1,31 @@
+2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
+
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioStreamVolumeControl.c:
+	Removed, never built and no corresponding
+	Java source file.
+	* Makefile.am:
+	(PULSE_JAVA_NATIVE_SRCS): List of PulseAudio source
+	files.
+	(PULSE_JAVA_NATIVE_OBJECTS): List of PulseAudio object
+	files.
+	(PULSE_JAVA_TARGET): Optional PulseAudio target.
+	(icedtea.stamp): Replace explicit pulse-java.stamp
+	with PULSE_JAVA_TARGET.
+	(icedtea-debug.stamp): Likewise.
+	(pulse-java.stamp): Depend on compiled library rather than
+	headers target.
+	($(PULSE_JAVA_NATIVE_BUILDDIR)/%.o): New target to compile
+	object files from source files using make substitution.
+	($(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so): New target
+	to build the shared library.
+	(pulse-java-jar.stamp): Make ENABLE_PULSE_JAVA conditional
+	encompass all PulseAudio targets.
+	(pulse-java-class.stamp): Likewise.
+	(pulse-java-headers.stamp): Likewise, and remove unneeded
+	BOOT_DIR conditional (pulse-java-class.stamp now depends on
+	the appropriate bootstrap target).
+	(pulse-java-native-code.stamp): Removed.
+
 2010-02-23  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/make/linux/makefiles/shark.make: Whitespace fixes.
