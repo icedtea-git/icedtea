@@ -1816,9 +1816,9 @@ if ENABLE_PLUGIN
 endif
 endif
 if ENABLE_PULSE_JAVA
-	cp -pPRf libpulse-java.so \
+	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf libpulse-java.so \
+	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf pulse-java.jar \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
@@ -1900,9 +1900,9 @@ if ENABLE_PLUGIN
 endif
 endif
 if ENABLE_PULSE_JAVA
-	cp -pPRf libpulse-java.so \
+	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf libpulse-java.so \
+	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf pulse-java.jar \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
@@ -2264,7 +2264,6 @@ if ENABLE_PULSE_JAVA
 	[ -z "$(PULSE_JAVA_NATIVE_BUILDDIR)" ] || rm -rf $(PULSE_JAVA_NATIVE_BUILDDIR)
 	[ -z "$(PULSE_JAVA_CLASS_DIR)" ] || rm -rf $(PULSE_JAVA_CLASS_DIR)
 	rm -f pulse-java.jar
-	rm -f libpulse-java.so
 	if [ $(abs_top_srcdir) != $(abs_top_builddir) ]; then \
 	  rmdir $(abs_top_builddir)/pulseaudio ; \
 	fi

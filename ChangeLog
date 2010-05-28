@@ -1,5 +1,14 @@
 2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(icedtea.stamp): Prefix libpulse-java.so with
+	build directory path.
+	(icedtea-debug.stamp): Likewise.
+	(clean-pulse-java): No need to delete libpulse-java.so
+	as no longer at top-level.
+
+2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
+
 	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioStreamVolumeControl.c:
 	Removed, never built and no corresponding
 	Java source file.
