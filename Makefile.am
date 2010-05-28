@@ -2251,7 +2251,7 @@ stamps/pulse-java-headers.stamp: stamps/pulse-java-class.stamp
 $(PULSE_JAVA_NATIVE_BUILDDIR)/%.o: $(PULSE_JAVA_NATIVE_SRCDIR)/%.c stamps/pulse-java-headers.stamp
 	mkdir -p $(PULSE_JAVA_NATIVE_BUILDDIR)
 	$(CC) $(CFLAGS) -fPIC -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include \
-	 -o $@ -c $<
+	 -I$(PULSE_JAVA_NATIVE_BUILDDIR) -o $@ -c $<
 
 $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so: $(PULSE_JAVA_NATIVE_OBJECTS)
 	$(CC) $(LDFLAGS) -shared $(PULSE_JAVA_NATIVE_OBJECTS) $(LIBPULSE_LIBS) \
@@ -2824,13 +2824,13 @@ plugin: stamps/plugin.stamp
 
 plugin-tests: stamps/plugin-tests.stamp
 
-rewriter: stamps/rewriter.stamp
-
-rewrite-rhino: stamps/rewrite-rhino.stamp
-
 plugs: stamps/plugs.stamp
 
 pulse-java: $(PULSE_JAVA_TARGET)
+
+rewriter: stamps/rewriter.stamp
+
+rewrite-rhino: stamps/rewrite-rhino.stamp
 
 rt: stamps/rt.stamp
 

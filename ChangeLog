@@ -1,6 +1,15 @@
 2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	Add missing pulse-java alias and reorganise
+	existing aliases alphabetically.
+	($(PULSE_JAVA_NATIVE_BUILDDIR)/%.o): Add include
+	directive for build directory to pick up generated
+	headers.
+
+2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(icedtea.stamp): Prefix libpulse-java.so with
 	build directory path.
 	(icedtea-debug.stamp): Likewise.
