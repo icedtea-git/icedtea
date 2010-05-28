@@ -1,6 +1,13 @@
 2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	(rewrite-rhino.stamp): Use full path to
+	jar application to avoid relying on the one
+	on the path.
+
+2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Add missing pulse-java alias and reorganise
 	existing aliases alphabetically.
 	($(PULSE_JAVA_NATIVE_BUILDDIR)/%.o): Add include
