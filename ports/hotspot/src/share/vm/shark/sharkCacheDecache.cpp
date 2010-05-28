@@ -28,8 +28,7 @@
 
 using namespace llvm;
 
-void SharkDecacher::start_frame()
-{
+void SharkDecacher::start_frame() {
   // Start recording the debug information
   _pc_offset = code_buffer()->create_unique_offset();
   _oopmap = new OopMap(
@@ -38,8 +37,7 @@ void SharkDecacher::start_frame()
   debug_info()->add_safepoint(pc_offset(), oopmap());
 }
 
-void SharkDecacher::start_stack(int stack_depth)
-{
+void SharkDecacher::start_stack(int stack_depth) {
   // Create the array we'll record our stack slots in
   _exparray = new GrowableArray<ScopeValue*>(stack_depth);
 
@@ -53,8 +51,7 @@ void SharkDecacher::start_stack(int stack_depth)
 
 void SharkDecacher::process_stack_slot(int          index,
                                        SharkValue** addr,
-                                       int          offset)
-{
+                                       int          offset) {
   SharkValue *value = *addr;
 
   // Write the value to the frame if necessary
@@ -76,14 +73,12 @@ void SharkDecacher::process_stack_slot(int          index,
   }
 }
 
-void SharkDecacher::start_monitors(int num_monitors)
-{
+void SharkDecacher::start_monitors(int num_monitors) {
   // Create the array we'll record our monitors in
   _monarray = new GrowableArray<MonitorValue*>(num_monitors);
 }
 
-void SharkDecacher::process_monitor(int index, int box_offset, int obj_offset)
-{
+void SharkDecacher::process_monitor(int index, int box_offset, int obj_offset) {
   oopmap()->set_oop(slot2reg(obj_offset));
 
   monarray()->append(new MonitorValue(
@@ -91,8 +86,7 @@ void SharkDecacher::process_monitor(int index, int box_offset, int obj_offset)
     slot2loc(box_offset, Location::normal)));
 }
 
-void SharkDecacher::process_oop_tmp_slot(Value** value, int offset)
-{
+void SharkDecacher::process_oop_tmp_slot(Value** value, int offset) {
   // Decache the temporary oop slot
   if (*value) {
     write_value_to_frame(
@@ -104,8 +98,7 @@ void SharkDecacher::process_oop_tmp_slot(Value** value, int offset)
   }
 }
 
-void SharkDecacher::process_method_slot(Value** value, int offset)
-{
+void SharkDecacher::process_method_slot(Value** value, int offset) {
   // Decache the method pointer
   write_value_to_frame(
     SharkType::methodOop_type(),
@@ -115,23 +108,20 @@ void SharkDecacher::process_method_slot(Value** value, int offset)
   oopmap()->set_oop(slot2reg(offset));  
 }
 
-void SharkDecacher::process_pc_slot(int offset)
-{
+void SharkDecacher::process_pc_slot(int offset) {
   // Record the PC
   builder()->CreateStore(
     builder()->code_buffer_address(pc_offset()),
     stack()->slot_addr(offset));
 }
   
-void SharkDecacher::start_locals()
-{
+void SharkDecacher::start_locals() {
   // Create the array we'll record our local variables in
   _locarray = new GrowableArray<ScopeValue*>(max_locals());}
 
 void SharkDecacher::process_local_slot(int          index,
                                        SharkValue** addr,
-                                       int          offset)
-{
+                                       int          offset) {
   SharkValue *value = *addr;
 
   // Write the value to the frame if necessary
@@ -153,8 +143,7 @@ void SharkDecacher::process_local_slot(int          index,
   }
 }
 
-void SharkDecacher::end_frame()
-{
+void SharkDecacher::end_frame() {
   // Record the scope
   debug_info()->describe_scope(
     pc_offset(),
@@ -170,8 +159,7 @@ void SharkDecacher::end_frame()
 
 void SharkCacher::process_stack_slot(int          index,
                                      SharkValue** addr,
-                                     int          offset)
-{
+                                     int          offset) {
   SharkValue *value = *addr;
 
   // Read the value from the frame if necessary
@@ -187,8 +175,7 @@ void SharkCacher::process_stack_slot(int          index,
 
 void SharkOSREntryCacher::process_monitor(int index,
                                           int box_offset,
-                                          int obj_offset)
-{
+                                          int obj_offset) {
   if (max_monitors() > 1)
     Unimplemented();   // XXX which order will they be in?
 
@@ -204,29 +191,25 @@ void SharkOSREntryCacher::process_monitor(int index,
     stack()->slot_addr(obj_offset, SharkType::oop_type()));
 }
 
-void SharkCacher::process_oop_tmp_slot(Value** value, int offset)
-{
+void SharkCacher::process_oop_tmp_slot(Value** value, int offset) {
   // Cache the temporary oop
   if (*value)
     *value = read_value_from_frame(SharkType::oop_type(), offset);
 }
 
-void SharkCacher::process_method_slot(Value** value, int offset)
-{
+void SharkCacher::process_method_slot(Value** value, int offset) {
   // Cache the method pointer
   *value = read_value_from_frame(SharkType::methodOop_type(), offset);
 }
 
-void SharkFunctionEntryCacher::process_method_slot(Value** value, int offset)
-{
+void SharkFunctionEntryCacher::process_method_slot(Value** value, int offset) {
   // "Cache" the method pointer
   *value = method();
 }
 
 void SharkCacher::process_local_slot(int          index,
                                      SharkValue** addr,
-                                     int          offset)
-{
+                                     int          offset) {
   SharkValue *value = *addr;
 
   // Read the value from the frame if necessary
@@ -241,8 +224,7 @@ void SharkCacher::process_local_slot(int          index,
 }
 
 Value* SharkOSREntryCacher::CreateAddressOfOSRBufEntry(int         offset,
-                                                       const Type* type)
-{
+                                                       const Type* type) {
   Value *result = builder()->CreateStructGEP(osr_buf(), offset);
   if (type != SharkType::intptr_type())
     result = builder()->CreateBitCast(result, PointerType::getUnqual(type));
@@ -251,8 +233,7 @@ Value* SharkOSREntryCacher::CreateAddressOfOSRBufEntry(int         offset,
 
 void SharkOSREntryCacher::process_local_slot(int          index,
                                              SharkValue** addr,
-                                             int          offset)
-{
+                                             int          offset) {
   SharkValue *value = *addr;
 
   // Read the value from the OSR buffer if necessary
@@ -269,12 +250,10 @@ void SharkOSREntryCacher::process_local_slot(int          index,
 
 void SharkDecacher::write_value_to_frame(const Type* type,
                                          Value*      value,
-                                         int         offset)
-{
+                                         int         offset) {
   builder()->CreateStore(value, stack()->slot_addr(offset, type));
 }
 
-Value* SharkCacher::read_value_from_frame(const Type* type, int offset)
-{
+Value* SharkCacher::read_value_from_frame(const Type* type, int offset) {
   return builder()->CreateLoad(stack()->slot_addr(offset, type));
 }

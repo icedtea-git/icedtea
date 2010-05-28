@@ -56,16 +56,14 @@ class SharkCompileInvariants : public ResourceObj {
   // Accessing this directly is kind of ugly, so it's private.  Add
   // new accessors below if you need something from it.
  private:
-  ciEnv* env() const
-  {
+  ciEnv* env() const {
     assert(_env != NULL, "env not available");
     return _env;
   }
 
   // The SharkBuilder that is used to build LLVM IR.
  protected:
-  SharkBuilder* builder() const
-  {
+  SharkBuilder* builder() const {
     return _builder;
   }
 
@@ -74,36 +72,30 @@ class SharkCompileInvariants : public ResourceObj {
   // so a setter is required.  Assertions are used to enforce
   // invariance.
  protected:
-  llvm::Value* thread() const
-  {
+  llvm::Value* thread() const {
     assert(_thread != NULL, "thread not available");
     return _thread;
   }
-  void set_thread(llvm::Value* thread)
-  {
+  void set_thread(llvm::Value* thread) {
     assert(_thread == NULL, "thread already set");
     _thread = thread;
   }
   
   // Objects that handle various aspects of the compilation.
  protected:
-  DebugInformationRecorder* debug_info() const
-  {
+  DebugInformationRecorder* debug_info() const {
     return env()->debug_info();
   }
-  Dependencies* dependencies() const
-  {
+  Dependencies* dependencies() const {
     return env()->dependencies();
   }
-  SharkCodeBuffer* code_buffer() const
-  {
+  SharkCodeBuffer* code_buffer() const {
     return builder()->code_buffer();
   }
 
   // That well-known class...
  protected:
-  ciInstanceKlass* java_lang_Object_klass() const
-  {
+  ciInstanceKlass* java_lang_Object_klass() const {
     return env()->Object_klass();
   }
 };
@@ -138,43 +130,35 @@ class SharkTargetInvariants : public SharkCompileInvariants {
 
   // The method being compiled.
  protected:
-  ciMethod* target() const
-  {
+  ciMethod* target() const {
     return _target;
   }
 
   // Typeflow analysis of the method being compiled.
  protected:
-  ciTypeFlow* flow() const
-  {
+  ciTypeFlow* flow() const {
     assert(_flow != NULL, "typeflow not available");
     return _flow;
   }
 
   // Properties of the method.
  protected:
-  int max_locals() const
-  {
+  int max_locals() const {
     return target()->max_locals();
   }
-  int max_stack() const
-  {
+  int max_stack() const {
     return target()->max_stack();
   }
-  int max_monitors() const
-  {
+  int max_monitors() const {
     return _max_monitors;
   }
-  int arg_size() const
-  {
+  int arg_size() const {
     return target()->arg_size();
   }
-  bool is_static() const
-  {
+  bool is_static() const {
     return target()->is_static();
   }
-  bool is_synchronized() const
-  {
+  bool is_synchronized() const {
     return target()->is_synchronized();
   }
 };

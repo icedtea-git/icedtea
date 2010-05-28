@@ -53,24 +53,19 @@ class SharkRuntime : public AllStatic {
 
   // Helpers for VM calls
  private:
-  static const SharkFrame* last_frame(JavaThread *thread)
-  {
+  static const SharkFrame* last_frame(JavaThread *thread) {
     return thread->last_frame().zero_sharkframe();
   }
-  static methodOop method(JavaThread *thread)
-  {
+  static methodOop method(JavaThread *thread) {
     return last_frame(thread)->method();
   }
-  static address bcp(JavaThread *thread, int bci)
-  {
+  static address bcp(JavaThread *thread, int bci) {
     return method(thread)->code_base() + bci;
   }
-  static int two_byte_index(JavaThread *thread, int bci)
-  {
+  static int two_byte_index(JavaThread *thread, int bci) {
     return Bytes::get_Java_u2(bcp(thread, bci) + 1);
   }
-  static intptr_t tos_at(JavaThread *thread, int offset)
-  {
+  static intptr_t tos_at(JavaThread *thread, int offset) {
     return *(thread->zero_stack()->sp() + offset);
   }  
 

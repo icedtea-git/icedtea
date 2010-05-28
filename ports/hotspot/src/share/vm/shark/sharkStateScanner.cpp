@@ -28,8 +28,7 @@
 
 using namespace llvm;
 
-void SharkStateScanner::scan(SharkState* state)
-{
+void SharkStateScanner::scan(SharkState* state) {
   start_frame();
 
   // Expression stack
@@ -77,8 +76,7 @@ void SharkStateScanner::scan(SharkState* state)
 }
 
 #ifndef PRODUCT
-void SharkStateScanner::stack_integrity_checks(SharkState* state)
-{
+void SharkStateScanner::stack_integrity_checks(SharkState* state) {
   for (int i = 0; i < state->stack_depth(); i++) {
     if (state->stack(i)) {
       if (state->stack(i)->is_two_word())
@@ -90,8 +88,7 @@ void SharkStateScanner::stack_integrity_checks(SharkState* state)
   }
 }
   
-void SharkStateScanner::locals_integrity_checks(SharkState* state)
-{
+void SharkStateScanner::locals_integrity_checks(SharkState* state) {
   for (int i = 0; i < max_locals(); i++) {
     if (state->local(i)) {
       if (state->local(i)->is_two_word())

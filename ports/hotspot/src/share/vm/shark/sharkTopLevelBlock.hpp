@@ -40,70 +40,55 @@ class SharkTopLevelBlock : public SharkBlock {
   ciTypeFlow::Block* _ciblock;
 
  public:
-  SharkFunction* function() const
-  {
+  SharkFunction* function() const {
     return _function;
   }
-  ciTypeFlow::Block* ciblock() const
-  {
+  ciTypeFlow::Block* ciblock() const {
     return _ciblock;
   }
 
   // Function properties
  public:
-  SharkStack* stack() const
-  {
+  SharkStack* stack() const {
     return function()->stack();
   }
   
   // Typeflow properties
  public:
-  int index() const
-  {
+  int index() const {
     return ciblock()->pre_order();
   }
-  bool is_backedge_copy() const
-  {
+  bool is_backedge_copy() const {
     return ciblock()->is_backedge_copy();
   }
-  int stack_depth_at_entry() const
-  {
+  int stack_depth_at_entry() const {
     return ciblock()->stack_size();
   }
-  ciType* local_type_at_entry(int index) const
-  {
+  ciType* local_type_at_entry(int index) const {
     return ciblock()->local_type_at(index);
   }
-  ciType* stack_type_at_entry(int slot) const
-  {
+  ciType* stack_type_at_entry(int slot) const {
     return ciblock()->stack_type_at(slot);
   }  
-  int start() const
-  {
+  int start() const {
     return ciblock()->start();
   }
-  int limit() const
-  {
+  int limit() const {
     return ciblock()->limit();
   }
-  bool falls_through() const
-  {
+  bool falls_through() const {
     return ciblock()->control() == ciBlock::fall_through_bci;
   }
-  int num_exceptions() const
-  {
+  int num_exceptions() const {
     return ciblock()->exceptions()->length();
   }
-  SharkTopLevelBlock* exception(int index) const
-  {
+  SharkTopLevelBlock* exception(int index) const {
     return function()->block(ciblock()->exceptions()->at(index)->pre_order());
   }
-  int num_successors() const
-  {
+  int num_successors() const {
     return ciblock()->successors()->length();
   }
-  SharkTopLevelBlock* successor(int index) const
-  {
+  SharkTopLevelBlock* successor(int index) const {
     return function()->block(ciblock()->successors()->at(index)->pre_order());
   }
   SharkTopLevelBlock* bci_successor(int bci) const;
@@ -114,8 +99,7 @@ class SharkTopLevelBlock : public SharkBlock {
   int  _trap_request;
   int  _trap_bci;
 
-  void set_trap(int trap_request, int trap_bci)
-  {
+  void set_trap(int trap_request, int trap_bci) {
     assert(!has_trap(), "shouldn't have");
     _has_trap     = true;
     _trap_request = trap_request;
@@ -123,17 +107,14 @@ class SharkTopLevelBlock : public SharkBlock {
   }
 
  private:
-  bool has_trap()
-  {
+  bool has_trap() {
     return _has_trap;
   }
-  int trap_request()
-  {
+  int trap_request() {
     assert(has_trap(), "should have");
     return _trap_request;
   }
-  int trap_bci()
-  {
+  int trap_bci() {
     assert(has_trap(), "should have");
     return _trap_bci;
   }
@@ -147,12 +128,10 @@ class SharkTopLevelBlock : public SharkBlock {
   bool _needs_phis;
 
  public:
-  bool entered() const
-  {
+  bool entered() const {
     return _entered;
   }
-  bool needs_phis() const
-  {
+  bool needs_phis() const {
     return _needs_phis;
   }
 
@@ -160,8 +139,7 @@ class SharkTopLevelBlock : public SharkBlock {
   void enter(SharkTopLevelBlock* predecessor, bool is_exception);
 
  public:
-  void enter()
-  {
+  void enter() {
     enter(NULL, false);
   }
 
@@ -175,8 +153,7 @@ class SharkTopLevelBlock : public SharkBlock {
   llvm::BasicBlock* _entry_block;
 
  public:
-  llvm::BasicBlock* entry_block() const
-  {
+  llvm::BasicBlock* entry_block() const {
     return _entry_block;
   }
 
@@ -188,21 +165,18 @@ class SharkTopLevelBlock : public SharkBlock {
 
   // Method
  public:
-  llvm::Value* method()
-  {
+  llvm::Value* method() {
     return current_state()->method();
   }
 
   // Temporary oop storage
  public:
-  void set_oop_tmp(llvm::Value* value)
-  {
+  void set_oop_tmp(llvm::Value* value) {
     assert(value, "value must be non-NULL (will be reset by get_oop_tmp)");
     assert(!current_state()->oop_tmp(), "oop_tmp gets and sets must match");
     current_state()->set_oop_tmp(value);
   }
-  llvm::Value* get_oop_tmp()
-  {
+  llvm::Value* get_oop_tmp() {
     llvm::Value* value = current_state()->oop_tmp();
     assert(value, "oop_tmp gets and sets must match");
     current_state()->set_oop_tmp(NULL);
@@ -219,12 +193,10 @@ class SharkTopLevelBlock : public SharkBlock {
 
   // Monitors
  private:
-  int num_monitors()
-  {
+  int num_monitors() {
     return current_state()->num_monitors();
   }
-  int set_num_monitors(int num_monitors)
-  {
+  int set_num_monitors(int num_monitors) {
     current_state()->set_num_monitors(num_monitors);
   }
 
@@ -248,20 +220,17 @@ class SharkTopLevelBlock : public SharkBlock {
                               llvm::BasicBlock* continue_block);
   // Exceptions
  private:
-  llvm::Value* pending_exception_address() const
-  {
+  llvm::Value* pending_exception_address() const {
     return builder()->CreateAddressOfStructEntry(
       thread(), Thread::pending_exception_offset(),
       llvm::PointerType::getUnqual(SharkType::oop_type()),
       "pending_exception_addr");
   }
-  llvm::LoadInst* get_pending_exception() const
-  {
+  llvm::LoadInst* get_pending_exception() const {
     return builder()->CreateLoad(
       pending_exception_address(), "pending_exception");
   }
-  void clear_pending_exception() const
-  {
+  void clear_pending_exception() const {
     builder()->CreateStore(LLVMValue::null(), pending_exception_address());
   }
  public:
@@ -284,8 +253,7 @@ class SharkTopLevelBlock : public SharkBlock {
   llvm::CallInst* call_vm(llvm::Value*  callee,
                           llvm::Value** args_start,
                           llvm::Value** args_end,
-                          int           exception_action)
-  {
+                          int           exception_action) {
     decache_for_VM_call();
     stack()->CreateSetLastJavaFrame();
     llvm::CallInst *res = builder()->CreateCall(callee, args_start, args_end);
@@ -300,23 +268,20 @@ class SharkTopLevelBlock : public SharkBlock {
 
  public:
   llvm::CallInst* call_vm(llvm::Value* callee,
-                          int          exception_action)
-  {
+                          int          exception_action) {
     llvm::Value *args[] = {thread()};
     return call_vm(callee, args, args + 1, exception_action);
   }
   llvm::CallInst* call_vm(llvm::Value* callee,
                           llvm::Value* arg1,
-                          int          exception_action)
-  {
+                          int          exception_action) {
     llvm::Value *args[] = {thread(), arg1};
     return call_vm(callee, args, args + 2, exception_action);
   }
   llvm::CallInst* call_vm(llvm::Value* callee,
                           llvm::Value* arg1,
                           llvm::Value* arg2,
-                          int          exception_action)
-  {
+                          int          exception_action) {
     llvm::Value *args[] = {thread(), arg1, arg2};
     return call_vm(callee, args, args + 3, exception_action);
   }
@@ -324,16 +289,14 @@ class SharkTopLevelBlock : public SharkBlock {
                           llvm::Value* arg1,
                           llvm::Value* arg2,
                           llvm::Value* arg3,
-                          int          exception_action)
-  {
+                          int          exception_action) {
     llvm::Value *args[] = {thread(), arg1, arg2, arg3};
     return call_vm(callee, args, args + 4, exception_action);
   }
 
   // VM call oop return handling
  private:
-  llvm::LoadInst* get_vm_result() const
-  {
+  llvm::LoadInst* get_vm_result() const {
     llvm::Value *addr = builder()->CreateAddressOfStructEntry(
       thread(), JavaThread::vm_result_offset(),
       llvm::PointerType::getUnqual(SharkType::oop_type()),

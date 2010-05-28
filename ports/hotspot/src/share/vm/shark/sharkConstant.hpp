@@ -40,24 +40,20 @@ class SharkConstant : public ResourceObj {
   bool        _is_two_word;
 
  public:
-  bool is_loaded() const
-  {
+  bool is_loaded() const {
     return _is_loaded;
   }
-  bool is_nonzero() const
-  {
+  bool is_nonzero() const {
     assert(is_loaded(), "should be");
     return _is_nonzero;
   }
-  bool is_two_word() const
-  {
+  bool is_two_word() const {
     assert(is_loaded(), "should be");
     return _is_two_word;
   }
 
  public:
-  SharkValue* value(SharkBuilder* builder)
-  {
+  SharkValue* value(SharkBuilder* builder) {
     assert(is_loaded(), "should be");
     if (_value == NULL) {
       _value = SharkValue::create_generic(

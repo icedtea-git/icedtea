@@ -28,8 +28,7 @@
 
 using namespace llvm;
 
-SharkConstant* SharkConstant::for_ldc(ciBytecodeStream *iter)
-{
+SharkConstant* SharkConstant::for_ldc(ciBytecodeStream *iter) {
   ciConstant constant = iter->get_constant();
   ciType *type = NULL;
   if (constant.basic_type() == T_OBJECT) {
@@ -42,8 +41,7 @@ SharkConstant* SharkConstant::for_ldc(ciBytecodeStream *iter)
   return new SharkConstant(constant, type);
 }
 
-SharkConstant* SharkConstant::for_field(ciBytecodeStream *iter)
-{
+SharkConstant* SharkConstant::for_field(ciBytecodeStream *iter) {
   bool will_link;
   ciField *field = iter->get_field(will_link);
   assert(will_link, "typeflow responsibility");
@@ -51,8 +49,7 @@ SharkConstant* SharkConstant::for_field(ciBytecodeStream *iter)
   return new SharkConstant(field->constant_value(), field->type());
 }
 
-SharkConstant::SharkConstant(ciConstant constant, ciType *type)
-{
+SharkConstant::SharkConstant(ciConstant constant, ciType *type) {
   SharkValue *value = NULL;
 
   switch (constant.basic_type()) {

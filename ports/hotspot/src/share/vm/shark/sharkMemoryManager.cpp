@@ -28,33 +28,28 @@
 
 using namespace llvm;
 
-void SharkMemoryManager::AllocateGOT()
-{
+void SharkMemoryManager::AllocateGOT() {
   mm()->AllocateGOT();
 }
 
-unsigned char* SharkMemoryManager::getGOTBase() const
-{
+unsigned char* SharkMemoryManager::getGOTBase() const {
   return mm()->getGOTBase();
 }
 
 unsigned char* SharkMemoryManager::allocateStub(const GlobalValue* F,
                                                 unsigned StubSize,
-                                                unsigned Alignment)
-{
+                                                unsigned Alignment) {
   return mm()->allocateStub(F, StubSize, Alignment);
 }
 
 unsigned char* SharkMemoryManager::startFunctionBody(const Function* F,
-                                                     uintptr_t& ActualSize)
-{
+                                                     uintptr_t& ActualSize) {
   return mm()->startFunctionBody(F, ActualSize);
 }
 
 void SharkMemoryManager::endFunctionBody(const Function* F,
                                          unsigned char* FunctionStart,
-                                         unsigned char* FunctionEnd)
-{
+                                         unsigned char* FunctionEnd) {
   mm()->endFunctionBody(F, FunctionStart, FunctionEnd);
 
   SharkEntry *entry = get_entry_for_function(F);
@@ -63,71 +58,59 @@ void SharkMemoryManager::endFunctionBody(const Function* F,
 }
 
 unsigned char* SharkMemoryManager::startExceptionTable(const Function* F,
-                                                       uintptr_t& ActualSize)
-{
+                                                       uintptr_t& ActualSize) {
   return mm()->startExceptionTable(F, ActualSize);
 }
 
 void SharkMemoryManager::endExceptionTable(const Function* F,
                                            unsigned char* TableStart,
                                            unsigned char* TableEnd,
-                                           unsigned char* FrameRegister)
-{
+                                           unsigned char* FrameRegister) {
   mm()->endExceptionTable(F, TableStart, TableEnd, FrameRegister);
 }
 
-void SharkMemoryManager::setMemoryWritable()
-{
+void SharkMemoryManager::setMemoryWritable() {
   mm()->setMemoryWritable();
 }
 
-void SharkMemoryManager::setMemoryExecutable()
-{
+void SharkMemoryManager::setMemoryExecutable() {
   mm()->setMemoryExecutable();
 }
 
 #if SHARK_LLVM_VERSION >= 27
-void SharkMemoryManager::deallocateExceptionTable(void *ptr)
-{
+void SharkMemoryManager::deallocateExceptionTable(void *ptr) {
   mm()->deallocateExceptionTable(ptr);
 }
 
-void SharkMemoryManager::deallocateFunctionBody(void *ptr)
-{
+void SharkMemoryManager::deallocateFunctionBody(void *ptr) {
   mm()->deallocateFunctionBody(ptr);
 }
 #else
-void SharkMemoryManager::deallocateMemForFunction(const Function* F)
-{
+void SharkMemoryManager::deallocateMemForFunction(const Function* F) {
   return mm()->deallocateMemForFunction(F);
 }
 #endif
 
 uint8_t* SharkMemoryManager::allocateGlobal(uintptr_t Size,
-                                            unsigned int Alignment)
-{
+                                            unsigned int Alignment) {
   return mm()->allocateGlobal(Size, Alignment);
 }
 
 #if SHARK_LLVM_VERSION < 27
-void* SharkMemoryManager::getDlsymTable() const
-{
+void* SharkMemoryManager::getDlsymTable() const {
   return mm()->getDlsymTable();
 }
 
-void SharkMemoryManager::SetDlsymTable(void *ptr)
-{
+void SharkMemoryManager::SetDlsymTable(void *ptr) {
   mm()->SetDlsymTable(ptr);
 }
 #endif
 
-void SharkMemoryManager::setPoisonMemory(bool poison)
-{
+void SharkMemoryManager::setPoisonMemory(bool poison) {
   mm()->setPoisonMemory(poison);
 }
 
 unsigned char *SharkMemoryManager::allocateSpace(intptr_t Size,
-                                                 unsigned int Alignment)
-{
+                                                 unsigned int Alignment) {
   return mm()->allocateSpace(Size, Alignment);
 }

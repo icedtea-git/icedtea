@@ -28,8 +28,7 @@
 
 using namespace llvm;
 
-void SharkStack::initialize(Value* method)
-{
+void SharkStack::initialize(Value* method) {
   bool setup_sp_and_method = (method != NULL);
 
   int locals_words  = max_locals();
@@ -104,8 +103,7 @@ void SharkStack::initialize(Value* method)
 // update.  Overflows here are problematic as we haven't yet
 // created a frame, so it's not clear how to report the error.
 // http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=249
-void SharkStack::CreateHardStackOverflowCheck(Value* sp)
-{
+void SharkStack::CreateHardStackOverflowCheck(Value* sp) {
   BasicBlock *overflow = CreateBlock("stack_overflow");
   BasicBlock *no_overflow = CreateBlock("no_overflow");
   
@@ -123,13 +121,11 @@ void SharkStack::CreateHardStackOverflowCheck(Value* sp)
 // Check that a stack overflow is not imminent, throwing a
 // StackOverflowError if it is while we still have the stack
 // in which to do so.
-void SharkStack::CreateSoftStackOverflowCheck(Value* sp)
-{
+void SharkStack::CreateSoftStackOverflowCheck(Value* sp) {
   // XXX see CppInterpreter::stack_overflow_imminent
 }
 
-Value* SharkStack::CreatePopFrame(int result_slots)
-{
+Value* SharkStack::CreatePopFrame(int result_slots) {
   assert(result_slots >= 0 && result_slots <= 2, "should be");
   int locals_to_pop = max_locals() - result_slots;
 
@@ -149,8 +145,7 @@ Value* SharkStack::CreatePopFrame(int result_slots)
 
 Value* SharkStack::slot_addr(int         offset,
                              const Type* type,
-                             const char* name) const
-{
+                             const char* name) const {
   bool needs_cast = type && type != SharkType::intptr_type();
 
   Value* result = builder()->CreateStructGEP(
@@ -166,20 +161,17 @@ Value* SharkStack::slot_addr(int         offset,
 // The bits that differentiate stacks with normal and native frames on top
 
 SharkStack* SharkStack::CreateBuildAndPushFrame(SharkFunction* function,
-                                                Value*         method)
-{
+                                                Value*         method) {
   return new SharkStackWithNormalFrame(function, method);
 }
 SharkStack* SharkStack::CreateBuildAndPushFrame(SharkNativeWrapper* wrapper,
-                                                Value*              method)
-{
+                                                Value*              method) {
   return new SharkStackWithNativeFrame(wrapper, method);
 }
 
 SharkStackWithNormalFrame::SharkStackWithNormalFrame(SharkFunction* function,
                                                      Value*         method)
-  : SharkStack(function), _function(function)
-{
+  : SharkStack(function), _function(function) {
   // For normal frames, the stack pointer and the method slot will
   // be set during each decache, so it is not necessary to do them
   // at the time the frame is created.  However, we set them for
@@ -188,52 +180,41 @@ SharkStackWithNormalFrame::SharkStackWithNormalFrame(SharkFunction* function,
 }
 SharkStackWithNativeFrame::SharkStackWithNativeFrame(SharkNativeWrapper* wrp,
                                                      Value*              method)
-  : SharkStack(wrp), _wrapper(wrp)
-{
+  : SharkStack(wrp), _wrapper(wrp) {
   initialize(method);
 }
 
-int SharkStackWithNormalFrame::arg_size() const
-{
+int SharkStackWithNormalFrame::arg_size() const {
   return function()->arg_size();
 }
-int SharkStackWithNativeFrame::arg_size() const
-{
+int SharkStackWithNativeFrame::arg_size() const {
   return wrapper()->arg_size();
 }
 
-int SharkStackWithNormalFrame::max_locals() const
-{
+int SharkStackWithNormalFrame::max_locals() const {
   return function()->max_locals();
 }
-int SharkStackWithNativeFrame::max_locals() const
-{
+int SharkStackWithNativeFrame::max_locals() const {
   return wrapper()->arg_size();
 }
 
-int SharkStackWithNormalFrame::max_stack() const
-{
+int SharkStackWithNormalFrame::max_stack() const {
   return function()->max_stack();
 }
-int SharkStackWithNativeFrame::max_stack() const
-{
+int SharkStackWithNativeFrame::max_stack() const {
   return 0;
 }
 
-int SharkStackWithNormalFrame::max_monitors() const
-{
+int SharkStackWithNormalFrame::max_monitors() const {
   return function()->max_monitors();
 }
-int SharkStackWithNativeFrame::max_monitors() const
-{
+int SharkStackWithNativeFrame::max_monitors() const {
   return wrapper()->is_synchronized() ? 1 : 0;
 }
 
-BasicBlock* SharkStackWithNormalFrame::CreateBlock(const char* name) const
-{
+BasicBlock* SharkStackWithNormalFrame::CreateBlock(const char* name) const {
   return function()->CreateBlock(name);
 }
-BasicBlock* SharkStackWithNativeFrame::CreateBlock(const char* name) const
-{
+BasicBlock* SharkStackWithNativeFrame::CreateBlock(const char* name) const {
   return wrapper()->CreateBlock(name);
 }

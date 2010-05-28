@@ -31,8 +31,7 @@ class SharkNativeWrapper : public SharkCompileInvariants {
                                    methodHandle  target,
                                    const char*   name,
                                    BasicType*    arg_types,
-                                   BasicType     return_type)
-  {
+                                   BasicType     return_type) {
     return new SharkNativeWrapper(builder,
                                   target,
                                   name,
@@ -68,106 +67,87 @@ class SharkNativeWrapper : public SharkCompileInvariants {
 
   // The method being compiled.
  protected:
-  methodHandle target() const
-  {
+  methodHandle target() const {
     return _target;
   }
 
   // Properties of the method.
  protected:
-  int arg_size() const
-  {
+  int arg_size() const {
     return target()->size_of_parameters();
   }
-  BasicType arg_type(int i) const
-  {
+  BasicType arg_type(int i) const {
     return _arg_types[i];
   }
-  BasicType return_type() const
-  {
+  BasicType return_type() const {
     return _return_type;
   }
-  bool is_static() const
-  {
+  bool is_static() const {
     return target()->is_static();
   }
-  bool is_synchronized() const
-  {
+  bool is_synchronized() const {
     return target()->is_synchronized();
   }
-  bool is_returning_oop() const
-  {
+  bool is_returning_oop() const {
     return target()->is_returning_oop();
   }
 
   // The LLVM function we are building.
  public:
-  llvm::Function* function() const
-  {
+  llvm::Function* function() const {
     return _function;
   }
 
   // The Zero stack and our frame on it.
  protected:
-  SharkStack* stack() const
-  {
+  SharkStack* stack() const {
     return _stack;
   }
 
   // Temporary oop storage.
  protected:
-  llvm::Value* oop_tmp_slot() const
-  {
+  llvm::Value* oop_tmp_slot() const {
     assert(is_static() || is_returning_oop(), "should be");
     return _oop_tmp_slot;
   }
 
   // Information required by nmethod::new_native_nmethod().
  public:
-  int frame_size() const
-  {
+  int frame_size() const {
     return stack()->oopmap_frame_size();
   }
-  ByteSize receiver_offset() const
-  {
+  ByteSize receiver_offset() const {
     return in_ByteSize(_receiver_slot_offset * wordSize);
   }
-  ByteSize lock_offset() const
-  {
+  ByteSize lock_offset() const {
     return in_ByteSize(_lock_slot_offset * wordSize);
   }
-  OopMapSet* oop_maps() const
-  {
+  OopMapSet* oop_maps() const {
     return _oop_maps;
   }
 
   // Helpers.
  private:
-  llvm::BasicBlock* CreateBlock(const char* name = "") const
-  {
+  llvm::BasicBlock* CreateBlock(const char* name = "") const {
     return llvm::BasicBlock::Create(SharkContext::current(), name, function());
   }
-  llvm::Value* thread_state_address() const
-  {
+  llvm::Value* thread_state_address() const {
     return builder()->CreateAddressOfStructEntry(
       thread(), JavaThread::thread_state_offset(),
       llvm::PointerType::getUnqual(SharkType::jint_type()),
       "thread_state_address");
   }
-  llvm::Value* pending_exception_address() const
-  {
+  llvm::Value* pending_exception_address() const {
     return builder()->CreateAddressOfStructEntry(
       thread(), Thread::pending_exception_offset(),
       llvm::PointerType::getUnqual(SharkType::oop_type()),
       "pending_exception_address");
   }
-  void CreateSetThreadState(JavaThreadState state) const
-  {
+  void CreateSetThreadState(JavaThreadState state) const {
     builder()->CreateStore(
       LLVMValue::jint_constant(state), thread_state_address());
   }
-  void CreateWriteMemorySerializePage() const
-  {
+  void CreateWriteMemorySerializePage() const {
     builder()->CreateStore(
       LLVMValue::jint_constant(1),
       builder()->CreateIntToPtr(
@@ -181,8 +161,7 @@ class SharkNativeWrapper : public SharkCompileInvariants {
             LLVMValue::intptr_constant(os::get_serialize_page_mask()))),
         llvm::PointerType::getUnqual(SharkType::jint_type())));
   }
-  void CreateResetHandleBlock() const
-  {
+  void CreateResetHandleBlock() const {
     llvm::Value *active_handles = builder()->CreateValueOfStructEntry(
       thread(),
       JavaThread::active_handles_offset(),
@@ -196,8 +175,7 @@ class SharkNativeWrapper : public SharkCompileInvariants {
         llvm::PointerType::getUnqual(SharkType::intptr_type()),
         "top"));
   }
-  llvm::LoadInst* CreateLoadPendingException() const
-  {
+  llvm::LoadInst* CreateLoadPendingException() const {
     return builder()->CreateLoad(
       pending_exception_address(), "pending_exception");
   }

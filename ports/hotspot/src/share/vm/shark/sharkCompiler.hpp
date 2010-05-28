@@ -67,8 +67,7 @@ class SharkCompiler : public AbstractCompiler {
   SharkContext* _native_context;
 
  public:
-  SharkContext* context() const
-  {
+  SharkContext* context() const {
     if (JavaThread::current()->is_Compiler_thread()) {
       return _normal_context;
     }
@@ -89,25 +88,21 @@ class SharkCompiler : public AbstractCompiler {
   llvm::ExecutionEngine* _execution_engine;
 
  private:
-  Monitor* execution_engine_lock() const
-  {
+  Monitor* execution_engine_lock() const {
     return _execution_engine_lock;
   }
-  SharkMemoryManager* memory_manager() const
-  {
+  SharkMemoryManager* memory_manager() const {
     assert(execution_engine_lock()->owned_by_self(), "should be");
     return _memory_manager;
   }
-  llvm::ExecutionEngine* execution_engine() const
-  {
+  llvm::ExecutionEngine* execution_engine() const {
     assert(execution_engine_lock()->owned_by_self(), "should be");
     return _execution_engine;
   }
 
   // Global access
  public:
-  static SharkCompiler* compiler()
-  {
+  static SharkCompiler* compiler() {
     AbstractCompiler *compiler =
       CompileBroker::compiler(CompLevel_fast_compile);
     assert(compiler->is_shark() && compiler->is_initialized(), "should be");

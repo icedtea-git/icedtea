@@ -28,8 +28,7 @@
 
 using namespace llvm;
 
-void SharkBlock::parse_bytecode(int start, int limit)
-{
+void SharkBlock::parse_bytecode(int start, int limit) {
   SharkValue *a, *b, *c, *d;
   int i;
 
@@ -890,18 +889,15 @@ void SharkBlock::parse_bytecode(int start, int limit)
   }
 }
 
-SharkState* SharkBlock::initial_current_state()
-{
+SharkState* SharkBlock::initial_current_state() {
   return entry_state()->copy();
 }
 
-int SharkBlock::switch_default_dest()
-{
+int SharkBlock::switch_default_dest() {
   return iter()->get_dest_table(0);
 }
 
-int SharkBlock::switch_table_length()
-{
+int SharkBlock::switch_table_length() {
   switch(bc()) {
   case Bytecodes::_tableswitch:
     return iter()->get_int_table(2) - iter()->get_int_table(1) + 1;
@@ -914,8 +910,7 @@ int SharkBlock::switch_table_length()
   } 
 }
 
-int SharkBlock::switch_key(int i)
-{
+int SharkBlock::switch_key(int i) {
   switch(bc()) {
   case Bytecodes::_tableswitch:
     return iter()->get_int_table(1) + i;
@@ -928,8 +923,7 @@ int SharkBlock::switch_key(int i)
   } 
 }
 
-int SharkBlock::switch_dest(int i)
-{
+int SharkBlock::switch_dest(int i) {
   switch(bc()) {
   case Bytecodes::_tableswitch:
     return iter()->get_dest_table(i + 3);
@@ -942,8 +936,7 @@ int SharkBlock::switch_dest(int i)
   } 
 }
 
-void SharkBlock::do_div_or_rem(bool is_long, bool is_rem)
-{
+void SharkBlock::do_div_or_rem(bool is_long, bool is_rem) {
   SharkValue *sb = pop();
   SharkValue *sa = pop();
 
@@ -1010,8 +1003,7 @@ void SharkBlock::do_div_or_rem(bool is_long, bool is_rem)
     push(SharkValue::create_jint(result, false));
 }
 
-void SharkBlock::do_field_access(bool is_get, bool is_field)
-{
+void SharkBlock::do_field_access(bool is_get, bool is_field) {
   bool will_link;
   ciField *field = iter()->get_field(will_link);
   assert(will_link, "typeflow responsibility");
@@ -1079,8 +1071,7 @@ void SharkBlock::do_field_access(bool is_get, bool is_field)
     push(value);
 }
 
-void SharkBlock::do_lcmp()
-{
+void SharkBlock::do_lcmp() {
   Value *b = pop()->jlong_value();
   Value *a = pop()->jlong_value();
 
@@ -1111,8 +1102,7 @@ void SharkBlock::do_lcmp()
   push(SharkValue::create_jint(result, false));
 }
 
-void SharkBlock::do_fcmp(bool is_double, bool unordered_is_greater)
-{
+void SharkBlock::do_fcmp(bool is_double, bool unordered_is_greater) {
   Value *a, *b;
   if (is_double) {
     b = pop()->jdouble_value();
@@ -1159,137 +1149,110 @@ void SharkBlock::do_fcmp(bool is_double, bool unordered_is_greater)
   push(SharkValue::create_jint(result, false));
 }
 
-void SharkBlock::emit_IR()
-{
+void SharkBlock::emit_IR() {
   ShouldNotCallThis();
 }
 
-SharkState* SharkBlock::entry_state()
-{
+SharkState* SharkBlock::entry_state() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_zero_check(SharkValue* value)
-{
+void SharkBlock::do_zero_check(SharkValue* value) {
   ShouldNotCallThis();
 }
 
-void SharkBlock::maybe_add_backedge_safepoint()
-{
+void SharkBlock::maybe_add_backedge_safepoint() {
   ShouldNotCallThis();
 }
 
-bool SharkBlock::has_trap()
-{
+bool SharkBlock::has_trap() {
   return false;
 }
 
-int SharkBlock::trap_request()
-{
+int SharkBlock::trap_request() {
   ShouldNotCallThis();
 }
 
-int SharkBlock::trap_bci()
-{
+int SharkBlock::trap_bci() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_trap(int trap_request)
-{
+void SharkBlock::do_trap(int trap_request) {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_arraylength()
-{
+void SharkBlock::do_arraylength() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_aload(BasicType basic_type)
-{
+void SharkBlock::do_aload(BasicType basic_type) {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_astore(BasicType basic_type)
-{
+void SharkBlock::do_astore(BasicType basic_type) {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_return(BasicType type)
-{
+void SharkBlock::do_return(BasicType type) {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_athrow()
-{
+void SharkBlock::do_athrow() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_goto()
-{
+void SharkBlock::do_goto() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_jsr()
-{
+void SharkBlock::do_jsr() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_ret()
-{
+void SharkBlock::do_ret() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_if(ICmpInst::Predicate p, SharkValue* b, SharkValue* a)
-{
+void SharkBlock::do_if(ICmpInst::Predicate p, SharkValue* b, SharkValue* a) {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_switch()
-{
+void SharkBlock::do_switch() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_call()
-{
+void SharkBlock::do_call() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_instance_check()
-{
+void SharkBlock::do_instance_check() {
   ShouldNotCallThis();
 }
 
-bool SharkBlock::maybe_do_instanceof_if()
-{
+bool SharkBlock::maybe_do_instanceof_if() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_new()
-{
+void SharkBlock::do_new() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_newarray()
-{
+void SharkBlock::do_newarray() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_anewarray()
-{
+void SharkBlock::do_anewarray() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_multianewarray()
-{
+void SharkBlock::do_multianewarray() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_monitorenter()
-{
+void SharkBlock::do_monitorenter() {
   ShouldNotCallThis();
 }
 
-void SharkBlock::do_monitorexit()
-{
+void SharkBlock::do_monitorexit() {
   ShouldNotCallThis();
 }

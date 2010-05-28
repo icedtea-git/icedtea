@@ -30,8 +30,7 @@ using namespace llvm;
 
 SharkContext::SharkContext(const char* name)
   : LLVMContext(),
-    _free_queue(NULL)
-{
+    _free_queue(NULL) {
   // Create a module to build our functions into
   _module = new Module(name, *this);
 
@@ -157,23 +156,19 @@ class SharkFreeQueueItem : public CHeapObj {
   SharkFreeQueueItem* _next;
 
  public:
-  llvm::Function* function() const
-  {
+  llvm::Function* function() const {
     return _function;
   }
-  SharkFreeQueueItem* next() const
-  {
+  SharkFreeQueueItem* next() const {
     return _next;
   }
 };
 
-void SharkContext::push_to_free_queue(Function* function)
-{
+void SharkContext::push_to_free_queue(Function* function) {
   _free_queue = new SharkFreeQueueItem(function, _free_queue);
 }
 
-Function* SharkContext::pop_from_free_queue()
-{
+Function* SharkContext::pop_from_free_queue() {
   if (_free_queue == NULL)
     return NULL;
 

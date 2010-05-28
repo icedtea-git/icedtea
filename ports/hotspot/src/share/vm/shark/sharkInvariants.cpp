@@ -26,8 +26,7 @@
 #include "incls/_precompiled.incl"
 #include "incls/_sharkInvariants.cpp.incl"
 
-int SharkTargetInvariants::count_monitors()
-{
+int SharkTargetInvariants::count_monitors() {
   int result = 0;
   if (is_synchronized() || target()->has_monitor_bytecodes()) {
     for (int i = 0; i < flow()->block_count(); i++) {

@@ -42,8 +42,7 @@ namespace {
 #endif
 
 SharkCompiler::SharkCompiler()
-  : AbstractCompiler()
-{
+  : AbstractCompiler() {
   // Create the lock to protect the memory manager and execution engine
   _execution_engine_lock = new Monitor(Mutex::leaf, "SharkExecutionEngineLock");
   MutexLocker locker(execution_engine_lock());
@@ -120,13 +119,13 @@ SharkCompiler::SharkCompiler()
   mark_initialized();
 }
 
-void SharkCompiler::initialize()
-{
+void SharkCompiler::initialize() {
   ShouldNotCallThis();
 }
 
-void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
-{
+void SharkCompiler::compile_method(ciEnv*    env,
+                                   ciMethod* target,
+                                   int       entry_bci) {
   assert(is_initialized(), "should be");
   ResourceMark rm;
   const char *name = methodname(
@@ -202,8 +201,7 @@ void SharkCompiler::compile_method(ciEnv* env, ciMethod* target, int entry_bci)
 nmethod* SharkCompiler::generate_native_wrapper(MacroAssembler* masm,
                                                 methodHandle    target,
                                                 BasicType*      arg_types,
-                                                BasicType       return_type)
-{
+                                                BasicType       return_type) {
   assert(is_initialized(), "should be");
   ResourceMark rm;
   const char *name = methodname(
@@ -236,8 +234,7 @@ nmethod* SharkCompiler::generate_native_wrapper(MacroAssembler* masm,
 
 void SharkCompiler::generate_native_code(SharkEntry* entry,
                                          Function*   function,
-                                         const char* name)
-{
+                                         const char* name) {
   // Print the LLVM bitcode, if requested
   if (SharkPrintBitcodeOf != NULL) {
     if (!fnmatch(SharkPrintBitcodeOf, name, 0))
@@ -294,8 +291,7 @@ void SharkCompiler::generate_native_code(SharkEntry* entry,
   }
 }
 
-void SharkCompiler::free_compiled_method(address code)
-{
+void SharkCompiler::free_compiled_method(address code) {
   // This method may only be called when the VM is at a safepoint.
   // All _thread_in_vm threads will be waiting for the safepoint to
   // finish with the exception of the VM thread, so we can consider
@@ -308,8 +304,7 @@ void SharkCompiler::free_compiled_method(address code)
   entry->context()->push_to_free_queue(entry->function());
 }
 
-void SharkCompiler::free_queued_methods()
-{
+void SharkCompiler::free_queued_methods() {
   // The free queue is protected by the execution engine lock
   assert(execution_engine_lock()->owned_by_self(), "should be");
 
@@ -323,8 +318,7 @@ void SharkCompiler::free_queued_methods()
   }
 }
 
-const char* SharkCompiler::methodname(const char* klass, const char* method)
-{
+const char* SharkCompiler::methodname(const char* klass, const char* method) {
   char *buf = NEW_RESOURCE_ARRAY(char, strlen(klass) + 2 + strlen(method) + 1);
 
   char *dst = buf;

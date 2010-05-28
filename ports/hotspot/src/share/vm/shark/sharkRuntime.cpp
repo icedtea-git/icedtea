@@ -31,7 +31,6 @@ using namespace llvm;
 JRT_ENTRY(int, SharkRuntime::find_exception_handler(JavaThread* thread,
                                                     int*        indexes,
                                                     int         num_indexes))
-{
   constantPoolHandle pool(thread, method(thread)->constants());
   KlassHandle exc_klass(thread, ((oop) tos_at(thread, 0))->klass());
 
@@ -47,12 +46,10 @@ JRT_ENTRY(int, SharkRuntime::find_exception_handler(JavaThread* thread,
   }
 
   return -1;
-}
 JRT_END
 
 JRT_ENTRY(void, SharkRuntime::monitorenter(JavaThread*      thread,
                                            BasicObjectLock* lock))
-{
   if (PrintBiasedLockingStatistics)
     Atomic::inc(BiasedLocking::slow_path_entry_count_addr());
 
@@ -65,23 +62,19 @@ JRT_ENTRY(void, SharkRuntime::monitorenter(JavaThread*      thread,
     ObjectSynchronizer::slow_enter(object, lock->lock(), CHECK);
   }
   assert(Universe::heap()->is_in_reserved_or_null(lock->obj()), "should be");
-}
 JRT_END
 
 JRT_ENTRY(void, SharkRuntime::monitorexit(JavaThread*      thread,
                                           BasicObjectLock* lock))
-{
   Handle object(thread, lock->obj());  
   assert(Universe::heap()->is_in_reserved_or_null(object()), "should be");
   if (lock == NULL || object()->is_unlocked()) {
     THROW(vmSymbols::java_lang_IllegalMonitorStateException());
   }
   ObjectSynchronizer::slow_exit(object(), lock->lock(), thread);
-}
 JRT_END
   
 JRT_ENTRY(void, SharkRuntime::new_instance(JavaThread* thread, int index))
-{
   klassOop k_oop = method(thread)->constants()->klass_at(index, CHECK);
   instanceKlassHandle klass(THREAD, k_oop);
   
@@ -107,46 +100,37 @@ JRT_ENTRY(void, SharkRuntime::new_instance(JavaThread* thread, int index))
   //       because the _breakpoint bytecode would be lost.
   oop obj = klass->allocate_instance(CHECK);
   thread->set_vm_result(obj);  
-}
 JRT_END
 
 JRT_ENTRY(void, SharkRuntime::newarray(JavaThread* thread,
                                        BasicType   type,
                                        int         size))
-{
   oop obj = oopFactory::new_typeArray(type, size, CHECK);
   thread->set_vm_result(obj);
-}
 JRT_END
 
 JRT_ENTRY(void, SharkRuntime::anewarray(JavaThread* thread,
                                         int         index,
                                         int         size))
-{
   klassOop klass = method(thread)->constants()->klass_at(index, CHECK);
   objArrayOop obj = oopFactory::new_objArray(klass, size, CHECK);
   thread->set_vm_result(obj);
-}
 JRT_END
 
 JRT_ENTRY(void, SharkRuntime::multianewarray(JavaThread* thread,
                                              int         index,
                                              int         ndims,
                                              int*        dims))
-{
   klassOop klass = method(thread)->constants()->klass_at(index, CHECK);
   oop obj = arrayKlass::cast(klass)->multi_allocate(ndims, dims, CHECK);
   thread->set_vm_result(obj);
-}
 JRT_END
 
 JRT_ENTRY(void, SharkRuntime::register_finalizer(JavaThread* thread,
                                                  oop         object))
-{
   assert(object->is_oop(), "should be");
   assert(object->klass()->klass_part()->has_finalizer(), "should have");
   instanceKlass::register_finalizer(instanceOop(object), CHECK);
-}
 JRT_END
 
 JRT_ENTRY(void, SharkRuntime::throw_ArrayIndexOutOfBoundsException(
@@ -154,32 +138,27 @@ JRT_ENTRY(void, SharkRuntime::throw_ArrayIndexOutOfBoundsException(
                                                      const char* file,
                                                      int         line,
                                                      int         index))
-{
   char msg[jintAsStringSize];
   snprintf(msg, sizeof(msg), "%d", index);
   Exceptions::_throw_msg(
     thread, file, line, 
     vmSymbols::java_lang_ArrayIndexOutOfBoundsException(),
     msg);
-}
 JRT_END
 
 JRT_ENTRY(void, SharkRuntime::throw_NullPointerException(JavaThread* thread,
                                                          const char* file,
                                                          int         line))
-{
   Exceptions::_throw_msg(
     thread, file, line, 
     vmSymbols::java_lang_NullPointerException(),
     "");
-}
 JRT_END
 
 // Non-VM calls
 // Nothing in these must ever GC!
 
-void SharkRuntime::dump(const char *name, intptr_t value)
-{
+void SharkRuntime::dump(const char *name, intptr_t value) {
   oop valueOop = (oop) value;
   tty->print("%s = ", name);
   if (valueOop->is_oop(true))
@@ -191,13 +170,11 @@ void SharkRuntime::dump(const char *name, intptr_t value)
   tty->print_cr("");
 }
 
-bool SharkRuntime::is_subtype_of(klassOop check_klass, klassOop object_klass)
-{
+bool SharkRuntime::is_subtype_of(klassOop check_klass, klassOop object_klass) {
   return object_klass->klass_part()->is_subtype_of(check_klass);
 }
 
-void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request)
-{
+void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request) {
   // In C2, uncommon_trap_blob creates a frame, so all the various
   // deoptimization functions expect to find the frame of the method
   // being deopted one frame down on the stack.  Create a dummy frame
@@ -241,8 +218,7 @@ void SharkRuntime::uncommon_trap(JavaThread* thread, int trap_request)
 #endif // CC_INTERP
 }
 
-FakeStubFrame* FakeStubFrame::build(ZeroStack* stack)
-{
+FakeStubFrame* FakeStubFrame::build(ZeroStack* stack) {
   if (header_words > stack->available_words()) {
     Unimplemented();
   }

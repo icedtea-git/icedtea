@@ -59,32 +59,28 @@ class SharkStack : public SharkCompileInvariants {
   
   // Interface with the Zero stack
  private:
-  llvm::Value* zero_stack() const
-  {
+  llvm::Value* zero_stack() const {
     return builder()->CreateAddressOfStructEntry(
       thread(),
       JavaThread::zero_stack_offset(),
       SharkType::zeroStack_type(),
       "zero_stack");
   }
-  llvm::Value* stack_base() const
-  {
+  llvm::Value* stack_base() const {
     return builder()->CreateValueOfStructEntry(
       zero_stack(),
       ZeroStack::base_offset(),
       SharkType::intptr_type(),
       "stack_base");
   }
-  llvm::Value* stack_pointer_addr() const
-  {
+  llvm::Value* stack_pointer_addr() const {
     return builder()->CreateAddressOfStructEntry(
       zero_stack(),
       ZeroStack::sp_offset(),
       llvm::PointerType::getUnqual(SharkType::intptr_type()),
       "stack_pointer_addr");
   }
-  llvm::Value* frame_pointer_addr() const
-  {
+  llvm::Value* frame_pointer_addr() const {
     return builder()->CreateAddressOfStructEntry(
       thread(),
       JavaThread::top_zero_frame_offset(),
@@ -93,28 +89,23 @@ class SharkStack : public SharkCompileInvariants {
   }
 
  public:
-  llvm::LoadInst* CreateLoadStackPointer(const char *name = "")
-  {
+  llvm::LoadInst* CreateLoadStackPointer(const char *name = "") {
     return builder()->CreateLoad(stack_pointer_addr(), name);
   }
-  llvm::StoreInst* CreateStoreStackPointer(llvm::Value* value)
-  {
+  llvm::StoreInst* CreateStoreStackPointer(llvm::Value* value) {
     return builder()->CreateStore(value, stack_pointer_addr());
   }
-  llvm::LoadInst* CreateLoadFramePointer(const char *name = "")
-  {
+  llvm::LoadInst* CreateLoadFramePointer(const char *name = "") {
     return builder()->CreateLoad(frame_pointer_addr(), name);
   }
-  llvm::StoreInst* CreateStoreFramePointer(llvm::Value* value)
-  {
+  llvm::StoreInst* CreateStoreFramePointer(llvm::Value* value) {
     return builder()->CreateStore(value, frame_pointer_addr());
   }
   llvm::Value* CreatePopFrame(int result_slots); 
 
   // Interface with the frame anchor
  private:
-  llvm::Value* frame_anchor_addr() const
-  {
+  llvm::Value* frame_anchor_addr() const {
     return builder()->CreateAddressOfStructEntry(
       thread(),
       JavaThread::last_Java_sp_offset(),
@@ -123,13 +114,11 @@ class SharkStack : public SharkCompileInvariants {
   }
 
  public:
-  llvm::StoreInst* CreateSetLastJavaFrame()
-  {
+  llvm::StoreInst* CreateSetLastJavaFrame() {
     return builder()->CreateStore(
       CreateLoadFramePointer(), frame_anchor_addr());
   }
-  llvm::StoreInst* CreateResetLastJavaFrame()
-  {
+  llvm::StoreInst* CreateResetLastJavaFrame() {
     return builder()->CreateStore(
       LLVMValue::intptr_constant(0), frame_anchor_addr());
   }
@@ -141,12 +130,10 @@ class SharkStack : public SharkCompileInvariants {
   int          _stack_slots_offset;
 
  public:
-  int extended_frame_size() const
-  {
+  int extended_frame_size() const {
     return _extended_frame_size;
   }
-  int oopmap_frame_size() const
-  {
+  int oopmap_frame_size() const {
     return extended_frame_size() - arg_size();
   }
 
@@ -159,39 +146,31 @@ class SharkStack : public SharkCompileInvariants {
   int _locals_slots_offset;
 
  public:
-  int stack_slots_offset() const
-  {
+  int stack_slots_offset() const {
     return _stack_slots_offset;
   }
-  int oop_tmp_slot_offset() const
-  {
+  int oop_tmp_slot_offset() const {
     return _oop_tmp_slot_offset;
   }
-  int method_slot_offset() const
-  {
+  int method_slot_offset() const {
     return _method_slot_offset;
   }
-  int pc_slot_offset() const
-  {
+  int pc_slot_offset() const {
     return _pc_slot_offset;
   }
-  int locals_slots_offset() const
-  {
+  int locals_slots_offset() const {
     return _locals_slots_offset;
   }
-  int monitor_offset(int index) const
-  {
+  int monitor_offset(int index) const {
     assert(index >= 0 && index < max_monitors(), "invalid monitor index");
     return _monitors_slots_offset +
       (max_monitors() - 1 - index) * frame::interpreter_frame_monitor_size();
   }
-  int monitor_object_offset(int index) const
-  {
+  int monitor_object_offset(int index) const {
     return monitor_offset(index) +
       (BasicObjectLock::obj_offset_in_bytes() >> LogBytesPerWord);
   }
-  int monitor_header_offset(int index) const
-  {
+  int monitor_header_offset(int index) const {
     return monitor_offset(index) +
       ((BasicObjectLock::lock_offset_in_bytes() +
         BasicLock::displaced_header_offset_in_bytes()) >> LogBytesPerWord);
@@ -203,22 +182,19 @@ class SharkStack : public SharkCompileInvariants {
                          const llvm::Type* type = NULL,
                          const char*       name = "") const;
   
-  llvm::Value* monitor_addr(int index) const
-  {
+  llvm::Value* monitor_addr(int index) const {
     return slot_addr(
       monitor_offset(index),
       SharkType::monitor_type(),
       "monitor");
   }
-  llvm::Value* monitor_object_addr(int index) const
-  {
+  llvm::Value* monitor_object_addr(int index) const {
     return slot_addr(
       monitor_object_offset(index),
       SharkType::oop_type(),
       "object_addr");
   }
-  llvm::Value* monitor_header_addr(int index) const
-  {
+  llvm::Value* monitor_header_addr(int index) const {
     return slot_addr(
       monitor_header_offset(index),
       SharkType::intptr_type(),
@@ -227,12 +203,10 @@ class SharkStack : public SharkCompileInvariants {
 
   // oopmap helpers
  public:
-  static int oopmap_slot_munge(int offset)
-  {
+  static int oopmap_slot_munge(int offset) {
     return offset << (LogBytesPerWord - LogBytesPerInt);
   }
-  static VMReg slot2reg(int offset)
-  {
+  static VMReg slot2reg(int offset) {
     return VMRegImpl::stack2reg(oopmap_slot_munge(offset));
   }
 };
@@ -247,8 +221,7 @@ class SharkStackWithNormalFrame : public SharkStack {
   SharkFunction* _function;
 
  private:
-  SharkFunction* function() const
-  {
+  SharkFunction* function() const {
     return _function;
   }
 
@@ -274,8 +247,7 @@ class SharkStackWithNativeFrame : public SharkStack {
   SharkNativeWrapper* _wrapper;
 
  private:
-  SharkNativeWrapper* wrapper() const
-  {
+  SharkNativeWrapper* wrapper() const {
     return _wrapper;
   }
 

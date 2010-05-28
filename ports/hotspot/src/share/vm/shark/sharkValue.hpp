@@ -75,12 +75,10 @@ class SharkValue : public ResourceObj {
 
   virtual int size() const = 0;
 
-  bool is_one_word() const
-  {
+  bool is_one_word() const {
     return size() == 1;
   }
-  bool is_two_word() const
-  {
+  bool is_two_word() const {
     return size() == 2;
   }
 
@@ -96,52 +94,42 @@ class SharkValue : public ResourceObj {
 
   // Typed conversion to SharkValues
  public:
-  static SharkValue* create_jint(llvm::Value* value, bool zero_checked)
-  {
+  static SharkValue* create_jint(llvm::Value* value, bool zero_checked) {
     assert(value->getType() == SharkType::jint_type(), "should be");
     return create_generic(ciType::make(T_INT), value, zero_checked);
   }
-  static SharkValue* create_jlong(llvm::Value* value, bool zero_checked)
-  {
+  static SharkValue* create_jlong(llvm::Value* value, bool zero_checked) {
     assert(value->getType() == SharkType::jlong_type(), "should be");
     return create_generic(ciType::make(T_LONG), value, zero_checked);
   }
-  static SharkValue* create_jfloat(llvm::Value* value)
-  {
+  static SharkValue* create_jfloat(llvm::Value* value) {
     assert(value->getType() == SharkType::jfloat_type(), "should be");
     return create_generic(ciType::make(T_FLOAT), value, false);
   }
-  static SharkValue* create_jdouble(llvm::Value* value)
-  {
+  static SharkValue* create_jdouble(llvm::Value* value) {
     assert(value->getType() == SharkType::jdouble_type(), "should be");
     return create_generic(ciType::make(T_DOUBLE), value, false);
   }
-  static SharkValue* create_jobject(llvm::Value* value, bool zero_checked)
-  {
+  static SharkValue* create_jobject(llvm::Value* value, bool zero_checked) {
     assert(value->getType() == SharkType::oop_type(), "should be");
     return create_generic(ciType::make(T_OBJECT), value, zero_checked);
   }
 
   // Typed conversion from constants of various types
  public:
-  static SharkValue* jint_constant(jint value)
-  {
+  static SharkValue* jint_constant(jint value) {
     return create_jint(LLVMValue::jint_constant(value), value != 0);
   }
-  static SharkValue* jlong_constant(jlong value)
-  {
+  static SharkValue* jlong_constant(jlong value) {
     return create_jlong(LLVMValue::jlong_constant(value), value != 0);
   }
-  static SharkValue* jfloat_constant(jfloat value)
-  {
+  static SharkValue* jfloat_constant(jfloat value) {
     return create_jfloat(LLVMValue::jfloat_constant(value));
   }
-  static SharkValue* jdouble_constant(jdouble value)
-  {
+  static SharkValue* jdouble_constant(jdouble value) {
     return create_jdouble(LLVMValue::jdouble_constant(value));
   }
-  static SharkValue* null()
-  {
+  static SharkValue* null() {
     return create_jobject(LLVMValue::null(), false);
   }
   static inline SharkValue* address_constant(int bci);
@@ -186,8 +174,7 @@ class SharkNormalValue : public SharkValue {
   bool         _zero_checked;
 
  private:
-  llvm::Value* llvm_value() const
-  {
+  llvm::Value* llvm_value() const {
     return _llvm_value;
   }
 
@@ -255,18 +242,15 @@ class SharkPHIValue : public SharkNormalValue {
   bool                 _all_incomers_zero_checked;
 
  private:
-  const SharkPHIValue* parent() const
-  {
+  const SharkPHIValue* parent() const {
     return _parent;
   }
-  bool is_clone() const
-  {
+  bool is_clone() const {
     return parent() != NULL;
   }
 
  public:
-  bool all_incomers_zero_checked() const
-  {
+  bool all_incomers_zero_checked() const {
     if (is_clone())
       return parent()->all_incomers_zero_checked();
 
@@ -333,19 +317,16 @@ class SharkAddressValue : public SharkValue {
 
 inline SharkValue* SharkValue::create_generic(ciType*      type,
                                               llvm::Value* value,
-                                              bool         zero_checked)
-{
+                                              bool         zero_checked) {
   return new SharkNormalValue(type, value, zero_checked);
 }
 
 inline SharkValue* SharkValue::create_phi(ciType*              type,
                                           llvm::PHINode*       phi,
-                                          const SharkPHIValue* parent)
-{
+                                          const SharkPHIValue* parent) {
   return new SharkPHIValue(type, phi, parent);
 }
 
-inline SharkValue* SharkValue::address_constant(int bci)
-{
+inline SharkValue* SharkValue::address_constant(int bci) {
   return new SharkAddressValue(bci);
 }

@@ -1,3 +1,45 @@
+2010-02-23  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp: Reformatted
+	with trailing opening braces to match upstream HotSpot.
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCodeBuffer.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkConstant.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkConstant.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkContext.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkContext.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkInliner.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkIntrinsics.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkIntrinsics.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkInvariants.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkInvariants.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkNativeWrapper.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkNativeWrapper.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStack.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStack.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkType.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp: Likewise.
+
 2010-02-22  Deepak Bhole <dbhole@redhat.com>
 
 	* Makefile.am: Provide JDK_UPDATE_VERSION when compiling the plugin

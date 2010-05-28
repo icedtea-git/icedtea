@@ -33,8 +33,7 @@ class SharkFunction : public SharkTargetInvariants {
   static llvm::Function* build(ciEnv*        env,
                                SharkBuilder* builder,
                                ciTypeFlow*   flow,
-                               const char*   name)
-  {
+                               const char*   name) {
     SharkFunction function(env, builder, flow, name);
     return function.function();
   }
@@ -56,36 +55,29 @@ class SharkFunction : public SharkTargetInvariants {
   SharkStack*                       _stack;
 
  public:
-  llvm::Function* function() const
-  {
+  llvm::Function* function() const {
     return _function;
   }
-  int block_count() const
-  {
+  int block_count() const {
     return flow()->block_count();
   }
-  SharkTopLevelBlock* block(int i) const
-  {
+  SharkTopLevelBlock* block(int i) const {
     assert(i < block_count(), "should be");
     return _blocks[i];
   }
-  GrowableArray<DeferredZeroCheck*>* deferred_zero_checks()
-  {
+  GrowableArray<DeferredZeroCheck*>* deferred_zero_checks() {
     return &_deferred_zero_checks;
   }
-  SharkStack* stack() const
-  {
+  SharkStack* stack() const {
     return _stack;
   }
 
   // On-stack replacement
  private:
-  bool is_osr() const
-  {
+  bool is_osr() const {
     return flow()->is_osr_flow();
   }
-  const llvm::FunctionType* entry_point_type() const
-  {
+  const llvm::FunctionType* entry_point_type() const {
     if (is_osr())
       return SharkType::osr_entry_point_type();      
     else
@@ -96,18 +88,15 @@ class SharkFunction : public SharkTargetInvariants {
  private:
   llvm::BasicBlock* _block_insertion_point;
 
-  void set_block_insertion_point(llvm::BasicBlock* block_insertion_point)
-  {
+  void set_block_insertion_point(llvm::BasicBlock* block_insertion_point) {
     _block_insertion_point = block_insertion_point;
   }
-  llvm::BasicBlock* block_insertion_point() const
-  {
+  llvm::BasicBlock* block_insertion_point() const {
     return _block_insertion_point;
   }
 
  public:
-  llvm::BasicBlock* CreateBlock(const char* name = "") const
-  {
+  llvm::BasicBlock* CreateBlock(const char* name = "") const {
     return llvm::BasicBlock::Create(
       SharkContext::current(), name, function(), block_insertion_point());
   }

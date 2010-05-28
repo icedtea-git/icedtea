@@ -36,8 +36,7 @@ class SharkIntrinsics : public SharkTargetInvariants {
   SharkState* _state;
 
  private:
-  SharkState* state() const
-  {
+  SharkState* state() const {
     return _state;
   }
 

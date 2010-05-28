@@ -34,8 +34,7 @@ class SharkStateScanner : public SharkTargetInvariants {
   SharkStack* _stack;
 
  protected:
-  SharkStack* stack() const
-  {
+  SharkStack* stack() const {
     return _stack;
   }
 

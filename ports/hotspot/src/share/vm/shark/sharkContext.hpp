@@ -41,32 +41,28 @@ class SharkContext : public llvm::LLVMContext {
 #else
  private:
 #endif
-  llvm::Module* module() const
-  {
+  llvm::Module* module() const {
     return _module;
   }
 
   // Get this thread's SharkContext
  public:
-  static SharkContext& current()
-  {
+  static SharkContext& current() {
     return *SharkCompiler::compiler()->context();
   }
 
   // Module accessors
  public:
 #if SHARK_LLVM_VERSION < 27
-  llvm::ModuleProvider* module_provider() const
-  {
+  llvm::ModuleProvider* module_provider() const {
     return new llvm::ExistingModuleProvider(module());
   }
 #endif
-  void add_function(llvm::Function* function) const
-  {
+  void add_function(llvm::Function* function) const {
     module()->getFunctionList().push_back(function);
   }
-  llvm::Constant* get_external(const char* name, const llvm::FunctionType* sig)
-  {
+  llvm::Constant* get_external(const char*               name,
+                               const llvm::FunctionType* sig) {
     return module()->getOrInsertFunction(name, sig);
   }
 
@@ -82,40 +78,31 @@ class SharkContext : public llvm::LLVMContext {
   const llvm::Type*        _jdouble_type;
 
  public:
-  const llvm::Type* void_type() const
-  {
+  const llvm::Type* void_type() const {
     return _void_type;
   }
-  const llvm::IntegerType* bit_type() const
-  {
+  const llvm::IntegerType* bit_type() const {
     return _bit_type;
   }
-  const llvm::IntegerType* jbyte_type() const
-  {
+  const llvm::IntegerType* jbyte_type() const {
     return _jbyte_type;
   }
-  const llvm::IntegerType* jshort_type() const
-  {
+  const llvm::IntegerType* jshort_type() const {
     return _jshort_type;
   }
-  const llvm::IntegerType* jint_type() const
-  {
+  const llvm::IntegerType* jint_type() const {
     return _jint_type;
   }
-  const llvm::IntegerType* jlong_type() const
-  {
+  const llvm::IntegerType* jlong_type() const {
     return _jlong_type;
   }
-  const llvm::Type* jfloat_type() const
-  {
+  const llvm::Type* jfloat_type() const {
     return _jfloat_type;
   }
-  const llvm::Type* jdouble_type() const
-  {
+  const llvm::Type* jdouble_type() const {
     return _jdouble_type;
   }
-  const llvm::IntegerType* intptr_type() const
-  {
+  const llvm::IntegerType* intptr_type() const {
     return LP64_ONLY(jlong_type()) NOT_LP64(jint_type());
   }
 
@@ -134,48 +121,37 @@ class SharkContext : public llvm::LLVMContext {
   const llvm::FunctionType* _osr_entry_point_type;
 
  public:
-  const llvm::PointerType* itableOffsetEntry_type() const
-  {
+  const llvm::PointerType* itableOffsetEntry_type() const {
     return _itableOffsetEntry_type;
   }
-  const llvm::PointerType* jniEnv_type() const
-  {
+  const llvm::PointerType* jniEnv_type() const {
     return _jniEnv_type;
   }
-  const llvm::PointerType* jniHandleBlock_type() const
-  {
+  const llvm::PointerType* jniHandleBlock_type() const {
     return _jniHandleBlock_type;
   }
-  const llvm::PointerType* klass_type() const
-  {
+  const llvm::PointerType* klass_type() const {
     return _klass_type;
   }
-  const llvm::PointerType* methodOop_type() const
-  {
+  const llvm::PointerType* methodOop_type() const {
     return _methodOop_type;
   }
-  const llvm::ArrayType* monitor_type() const
-  {
+  const llvm::ArrayType* monitor_type() const {
     return _monitor_type;
   }
-  const llvm::PointerType* oop_type() const
-  {
+  const llvm::PointerType* oop_type() const {
     return _oop_type;
   }
-  const llvm::PointerType* thread_type() const
-  {
+  const llvm::PointerType* thread_type() const {
     return _thread_type;
   }
-  const llvm::PointerType* zeroStack_type() const
-  {
+  const llvm::PointerType* zeroStack_type() const {
     return _zeroStack_type;
   }
-  const llvm::FunctionType* entry_point_type() const
-  {
+  const llvm::FunctionType* entry_point_type() const {
     return _entry_point_type;
   }
-  const llvm::FunctionType* osr_entry_point_type() const
-  {
+  const llvm::FunctionType* osr_entry_point_type() const {
     return _osr_entry_point_type;
   }
 
@@ -186,8 +162,7 @@ class SharkContext : public llvm::LLVMContext {
 
  private:
   const llvm::Type* map_type(const llvm::Type* const* table,
-                             BasicType                type) const
-  {
+                             BasicType                type) const {
     assert(type >= 0 && type < T_CONFLICT, "unhandled type");
     const llvm::Type* result = table[type];
     assert(type != NULL, "unhandled type");
@@ -195,12 +170,10 @@ class SharkContext : public llvm::LLVMContext {
   }
   
  public:
-  const llvm::Type* to_stackType(BasicType type) const
-  {
+  const llvm::Type* to_stackType(BasicType type) const {
     return map_type(_to_stackType, type);
   }
-  const llvm::Type* to_arrayType(BasicType type) const
-  {
+  const llvm::Type* to_arrayType(BasicType type) const {
     return map_type(_to_arrayType, type);
   }
 

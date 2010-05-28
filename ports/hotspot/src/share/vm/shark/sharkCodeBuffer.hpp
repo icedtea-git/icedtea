@@ -33,18 +33,15 @@ class SharkCodeBuffer : public StackObj {
   llvm::Value*    _base_pc;
 
  private:
-  MacroAssembler* masm() const
-  {
+  MacroAssembler* masm() const {
     return _masm;
   }
 
  public:
-  llvm::Value* base_pc() const
-  {
+  llvm::Value* base_pc() const {
     return _base_pc;
   }
-  void set_base_pc(llvm::Value* base_pc)
-  {
+  void set_base_pc(llvm::Value* base_pc) {
     assert(_base_pc == NULL, "only do this once");
     _base_pc = base_pc;
   }
@@ -53,8 +50,7 @@ class SharkCodeBuffer : public StackObj {
   // This buffer will have been relocated by the time the method
   // is installed, so you can't inline the result in code.
  public:
-  void* malloc(size_t size) const
-  {
+  void* malloc(size_t size) const {
     masm()->align(BytesPerWord);
     void *result = masm()->pc();
     masm()->advance(size);
@@ -63,8 +59,7 @@ class SharkCodeBuffer : public StackObj {
 
   // Create a unique offset in the buffer.
  public:
-  int create_unique_offset() const
-  {
+  int create_unique_offset() const {
     int offset = masm()->offset();
     masm()->advance(1);
     return offset;
@@ -72,8 +67,7 @@ class SharkCodeBuffer : public StackObj {
 
   // Inline an oop into the buffer and return its offset.
  public:
-  int inline_oop(jobject object) const
-  {
+  int inline_oop(jobject object) const {
     masm()->align(BytesPerWord);
     int offset = masm()->offset();
     masm()->store_oop(object);

@@ -28,8 +28,7 @@
 
 using namespace llvm;
 
-bool SharkIntrinsics::is_intrinsic(ciMethod *target)
-{
+bool SharkIntrinsics::is_intrinsic(ciMethod *target) {
   switch (target->intrinsic_id()) {
   case vmIntrinsics::_none:
     return false;
@@ -75,14 +74,12 @@ bool SharkIntrinsics::is_intrinsic(ciMethod *target)
   return false;
 }
 
-void SharkIntrinsics::inline_intrinsic(ciMethod *target, SharkState *state)
-{
+void SharkIntrinsics::inline_intrinsic(ciMethod *target, SharkState *state) {
   SharkIntrinsics intrinsic(state, target);
   intrinsic.do_intrinsic();
 }
 
-void SharkIntrinsics::do_intrinsic()
-{
+void SharkIntrinsics::do_intrinsic() {
   switch (target()->intrinsic_id()) {
     // java.lang.Math
   case vmIntrinsics::_min:
@@ -147,8 +144,7 @@ void SharkIntrinsics::do_intrinsic()
   }
 }
 
-void SharkIntrinsics::do_Math_minmax(ICmpInst::Predicate p)
-{
+void SharkIntrinsics::do_Math_minmax(ICmpInst::Predicate p) {
   // Pop the arguments
   SharkValue *sb = state()->pop();
   SharkValue *sa = state()->pop();
@@ -181,8 +177,7 @@ void SharkIntrinsics::do_Math_minmax(ICmpInst::Predicate p)
       sa->zero_checked() && sb->zero_checked()));
 }
 
-void SharkIntrinsics::do_Math_1to1(Value *function)
-{
+void SharkIntrinsics::do_Math_1to1(Value *function) {
   SharkValue *empty = state()->pop();
   assert(empty == NULL, "should be");
   state()->push(
@@ -192,8 +187,7 @@ void SharkIntrinsics::do_Math_1to1(Value *function)
   state()->push(NULL);
 }
 
-void SharkIntrinsics::do_Math_2to1(Value *function)
-{
+void SharkIntrinsics::do_Math_2to1(Value *function) {
   SharkValue *empty = state()->pop();
   assert(empty == NULL, "should be");
   Value *y = state()->pop()->jdouble_value();
@@ -207,8 +201,7 @@ void SharkIntrinsics::do_Math_2to1(Value *function)
   state()->push(NULL);
 }
 
-void SharkIntrinsics::do_Object_getClass()
-{
+void SharkIntrinsics::do_Object_getClass() {
   Value *klass = builder()->CreateValueOfStructEntry(
     state()->pop()->jobject_value(),
     in_ByteSize(oopDesc::klass_offset_in_bytes()),
@@ -231,8 +224,7 @@ void SharkIntrinsics::do_Object_getClass()
       true));
 }
 
-void SharkIntrinsics::do_System_currentTimeMillis()
-{
+void SharkIntrinsics::do_System_currentTimeMillis() {
   state()->push(
     SharkValue::create_jlong(
       builder()->CreateCall(builder()->current_time_millis()),
@@ -240,8 +232,7 @@ void SharkIntrinsics::do_System_currentTimeMillis()
   state()->push(NULL);
 }
 
-void SharkIntrinsics::do_Thread_currentThread()
-{
+void SharkIntrinsics::do_Thread_currentThread() {
   state()->push(
     SharkValue::create_jobject(
       builder()->CreateValueOfStructEntry(
@@ -251,8 +242,7 @@ void SharkIntrinsics::do_Thread_currentThread()
       true));
 }
 
-void SharkIntrinsics::do_Unsafe_compareAndSwapInt()
-{
+void SharkIntrinsics::do_Unsafe_compareAndSwapInt() {
   // Pop the arguments
   Value *x      = state()->pop()->jint_value();
   Value *e      = state()->pop()->jint_value();

@@ -44,8 +44,7 @@ class SharkCacherDecacher : public SharkStateScanner {
 
   // Helper
  protected:
-  static int adjusted_offset(SharkValue* value, int offset)
-  {
+  static int adjusted_offset(SharkValue* value, int offset) {
     if (value->is_two_word())
       offset--;
     return offset;
@@ -61,8 +60,7 @@ class SharkDecacher : public SharkCacherDecacher {
   int _bci;
   
  protected:
-  int bci() const
-  {
+  int bci() const {
     return _bci;
   }
 
@@ -74,24 +72,19 @@ class SharkDecacher : public SharkCacherDecacher {
   GrowableArray<ScopeValue*>*   _locarray;
 
  private:
-  int pc_offset() const
-  {
+  int pc_offset() const {
     return _pc_offset;
   }
-  OopMap* oopmap() const
-  {
+  OopMap* oopmap() const {
     return _oopmap;
   }
-  GrowableArray<ScopeValue*>* exparray() const
-  {
+  GrowableArray<ScopeValue*>* exparray() const {
     return _exparray;
   }
-  GrowableArray<MonitorValue*>* monarray() const
-  {
+  GrowableArray<MonitorValue*>* monarray() const {
     return _monarray;
   }
-  GrowableArray<ScopeValue*>* locarray() const
-  {
+  GrowableArray<ScopeValue*>* locarray() const {
     return _locarray;
   }
 
@@ -116,24 +109,19 @@ class SharkDecacher : public SharkCacherDecacher {
 
   // oopmap and debuginfo helpers
  private:
-  static int oopmap_slot_munge(int offset)
-  {
+  static int oopmap_slot_munge(int offset) {
     return SharkStack::oopmap_slot_munge(offset);
   }
-  static VMReg slot2reg(int offset)
-  {
+  static VMReg slot2reg(int offset) {
     return SharkStack::slot2reg(offset);
   }
-  static Location slot2loc(int offset, Location::Type type)
-  {
+  static Location slot2loc(int offset, Location::Type type) {
     return Location::new_stk_loc(type, offset * wordSize);
   }
-  static LocationValue* slot2lv(int offset, Location::Type type)
-  {
+  static LocationValue* slot2lv(int offset, Location::Type type) {
     return new LocationValue(slot2loc(offset, type));
   }
-  static Location::Type location_type(SharkValue** addr, bool maybe_two_word)
-  {
+  static Location::Type location_type(SharkValue** addr, bool maybe_two_word) {
     // low addresses this end
     //                           Type       32-bit    64-bit
     //   ----------------------------------------------------
@@ -179,8 +167,7 @@ class SharkDecacher : public SharkCacherDecacher {
   virtual bool stack_slot_needs_oopmap(int index, SharkValue* value) = 0;
   virtual bool stack_slot_needs_debuginfo(int index, SharkValue* value) = 0;
 
-  static Location::Type stack_location_type(int index, SharkValue** addr)
-  {
+  static Location::Type stack_location_type(int index, SharkValue** addr) {
     return location_type(addr, *addr == NULL);
   }
 
@@ -190,8 +177,7 @@ class SharkDecacher : public SharkCacherDecacher {
   virtual bool local_slot_needs_oopmap(int index, SharkValue* value) = 0;
   virtual bool local_slot_needs_debuginfo(int index, SharkValue* value) = 0;
 
-  static Location::Type local_location_type(int index, SharkValue** addr)
-  {
+  static Location::Type local_location_type(int index, SharkValue** addr) {
     return location_type(addr, index > 0);
   }
 
@@ -211,38 +197,31 @@ class SharkJavaCallDecacher : public SharkDecacher {
   ciMethod* _callee;
 
  protected:
-  ciMethod* callee() const
-  {
+  ciMethod* callee() const {
     return _callee;
   }
 
   // Stack slot helpers
  protected:
-  bool stack_slot_needs_write(int index, SharkValue* value)
-  {
+  bool stack_slot_needs_write(int index, SharkValue* value) {
     return value && (index < callee()->arg_size() || value->is_jobject());
   }
-  bool stack_slot_needs_oopmap(int index, SharkValue* value)
-  {
+  bool stack_slot_needs_oopmap(int index, SharkValue* value) {
     return value && value->is_jobject() && index >= callee()->arg_size();
   }
-  bool stack_slot_needs_debuginfo(int index, SharkValue* value)
-  {
+  bool stack_slot_needs_debuginfo(int index, SharkValue* value) {
     return index >= callee()->arg_size();
   }
 
   // Local slot helpers
  protected:
-  bool local_slot_needs_write(int index, SharkValue* value)
-  {
+  bool local_slot_needs_write(int index, SharkValue* value) {
     return value && value->is_jobject();
   }
-  bool local_slot_needs_oopmap(int index, SharkValue* value)
-  {
+  bool local_slot_needs_oopmap(int index, SharkValue* value) {
     return value && value->is_jobject();
   }
-  bool local_slot_needs_debuginfo(int index, SharkValue* value)
-  {
+  bool local_slot_needs_debuginfo(int index, SharkValue* value) {
     return true;
   }
 };
@@ -254,31 +233,25 @@ class SharkVMCallDecacher : public SharkDecacher {
 
   // Stack slot helpers
  protected:
-  bool stack_slot_needs_write(int index, SharkValue* value)
-  {
+  bool stack_slot_needs_write(int index, SharkValue* value) {
     return value && value->is_jobject();
   }
-  bool stack_slot_needs_oopmap(int index, SharkValue* value)
-  {
+  bool stack_slot_needs_oopmap(int index, SharkValue* value) {
     return value && value->is_jobject();
   }
-  bool stack_slot_needs_debuginfo(int index, SharkValue* value)
-  {
+  bool stack_slot_needs_debuginfo(int index, SharkValue* value) {
     return true;
   }
 
   // Local slot helpers
  protected:
-  bool local_slot_needs_write(int index, SharkValue* value)
-  {
+  bool local_slot_needs_write(int index, SharkValue* value) {
     return value && value->is_jobject();
   }
-  bool local_slot_needs_oopmap(int index, SharkValue* value)
-  {
+  bool local_slot_needs_oopmap(int index, SharkValue* value) {
     return value && value->is_jobject();
   }
-  bool local_slot_needs_debuginfo(int index, SharkValue* value)
-  {
+  bool local_slot_needs_debuginfo(int index, SharkValue* value) {
     return true;
   }
 };
@@ -290,31 +263,25 @@ class SharkTrapDecacher : public SharkDecacher {
 
   // Stack slot helpers
  protected:
-  bool stack_slot_needs_write(int index, SharkValue* value)
-  {
+  bool stack_slot_needs_write(int index, SharkValue* value) {
     return value != NULL;
   }
-  bool stack_slot_needs_oopmap(int index, SharkValue* value)
-  {
+  bool stack_slot_needs_oopmap(int index, SharkValue* value) {
     return value && value->is_jobject();
   }
-  bool stack_slot_needs_debuginfo(int index, SharkValue* value)
-  {
+  bool stack_slot_needs_debuginfo(int index, SharkValue* value) {
     return true;
   }
 
   // Local slot helpers
  protected:
-  bool local_slot_needs_write(int index, SharkValue* value)
-  {
+  bool local_slot_needs_write(int index, SharkValue* value) {
     return value != NULL;
   }
-  bool local_slot_needs_oopmap(int index, SharkValue* value)
-  {
+  bool local_slot_needs_oopmap(int index, SharkValue* value) {
     return value && value->is_jobject();
   }
-  bool local_slot_needs_debuginfo(int index, SharkValue* value)
-  {
+  bool local_slot_needs_debuginfo(int index, SharkValue* value) {
     return true;
   }
 };
@@ -339,8 +306,7 @@ class SharkCacher : public SharkCacherDecacher {
 
   // Local slot helper
  protected:
-  virtual bool local_slot_needs_read(int index, SharkValue* value)
-  {
+  virtual bool local_slot_needs_read(int index, SharkValue* value) {
     return value && value->is_jobject();
   }
 
@@ -358,15 +324,13 @@ class SharkJavaCallCacher : public SharkCacher {
   ciMethod* _callee;
 
  protected:
-  ciMethod* callee() const
-  {
+  ciMethod* callee() const {
     return _callee;
   }
 
   // Stack slot helper
  protected:
-  bool stack_slot_needs_read(int index, SharkValue* value)
-  {
+  bool stack_slot_needs_read(int index, SharkValue* value) {
     return value && (index < callee()->return_type()->size() ||
                      value->is_jobject());
   }
@@ -379,8 +343,7 @@ class SharkVMCallCacher : public SharkCacher {
 
   // Stack slot helper
  protected:
-  bool stack_slot_needs_read(int index, SharkValue* value)
-  {
+  bool stack_slot_needs_read(int index, SharkValue* value) {
     return value && value->is_jobject();
   }
 };
@@ -394,8 +357,7 @@ class SharkFunctionEntryCacher : public SharkCacher {
   llvm::Value* _method;
 
  private:
-  llvm::Value* method() const
-  {
+  llvm::Value* method() const {
     return _method;
   }
 
@@ -405,15 +367,13 @@ class SharkFunctionEntryCacher : public SharkCacher {
 
   // Stack slot helper
  protected:
-  bool stack_slot_needs_read(int index, SharkValue* value)
-  {
+  bool stack_slot_needs_read(int index, SharkValue* value) {
     ShouldNotReachHere(); // entry block shouldn't have stack
   }
 
   // Local slot helper
  protected:
-  bool local_slot_needs_read(int index, SharkValue* value)
-  {
+  bool local_slot_needs_read(int index, SharkValue* value) {
     return value != NULL;
   }
 };
@@ -442,8 +402,7 @@ class SharkOSREntryCacher : public SharkFunctionEntryCacher {
   llvm::Value* _osr_buf;
 
  private:
-  llvm::Value* osr_buf() const
-  {
+  llvm::Value* osr_buf() const {
     return _osr_buf;
   }
 

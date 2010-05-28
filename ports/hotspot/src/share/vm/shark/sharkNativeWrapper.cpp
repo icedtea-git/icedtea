@@ -28,8 +28,7 @@
 
 using namespace llvm;
 
-void SharkNativeWrapper::initialize(const char *name)
-{
+void SharkNativeWrapper::initialize(const char *name) {
   // Create the function
   _function = Function::Create(
     SharkType::entry_point_type(),

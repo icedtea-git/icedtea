@@ -33,8 +33,7 @@ class SharkInlineBlock : public SharkBlock {
   SharkInlineBlock(ciMethod* target, SharkState* state)
     : SharkBlock(state, target),
       _outer_state(state),
-      _entry_state(new SharkState(this))
-  {
+      _entry_state(new SharkState(this)) {
     for (int i = target->max_locals() - 1; i >= 0; i--) {
       SharkValue *value = NULL;
       if (i < target->arg_size())
@@ -48,24 +47,20 @@ class SharkInlineBlock : public SharkBlock {
   SharkState* _entry_state;
 
  private:
-  SharkState* outer_state()
-  {
+  SharkState* outer_state() {
     return _outer_state;
   }
-  SharkState* entry_state()
-  {
+  SharkState* entry_state() {
     return _entry_state;
   }
 
  public:
-  void emit_IR()
-  {
+  void emit_IR() {
     parse_bytecode(0, target()->code_size());
   }
 
  private:
-  void do_return(BasicType type)
-  {
+  void do_return(BasicType type) {
     if (type != T_VOID) {
       SharkValue *result = pop_result(type);
       outer_state()->push(result);
@@ -88,30 +83,24 @@ class SharkInlinerHelper : public StackObj {
   ciMethod*        _target;
   
  public:
-  ciBytecodeStream* iter()
-  {
+  ciBytecodeStream* iter() {
     return &_iter;
   }
-  SharkState* entry_state() const
-  {
+  SharkState* entry_state() const {
     return _entry_state;
   }
-  ciMethod* target() const
-  {
+  ciMethod* target() const {
     return _target;
   }
 
  public:
-  Bytecodes::Code bc()
-  {
+  Bytecodes::Code bc() {
     return iter()->cur_bc();
   }
-  int max_locals() const
-  {
+  int max_locals() const {
     return target()->max_locals();
   }
-  int max_stack() const
-  {
+  int max_stack() const {
     return target()->max_stack();
   }
   
@@ -122,16 +111,13 @@ class SharkInlinerHelper : public StackObj {
  private:
   void initialize_for_check();
 
-  bool do_getstatic()
-  {
+  bool do_getstatic() {
     return do_field_access(true, false);
   }
-  bool do_getfield()
-  {
+  bool do_getfield() {
     return do_field_access(true, true);
   }
-  bool do_putfield()
-  {
+  bool do_putfield() {
     return do_field_access(false, true);
   }
   bool do_field_access(bool is_get, bool is_field);
@@ -141,17 +127,14 @@ class SharkInlinerHelper : public StackObj {
   bool* _locals;
 
  public:
-  bool* local_addr(int index) const
-  {
+  bool* local_addr(int index) const {
     assert(index >= 0 && index < max_locals(), "bad local variable index");
     return &_locals[index];
   }
-  bool local(int index) const
-  {
+  bool local(int index) const {
     return *local_addr(index);
   }
-  void set_local(int index, bool value)
-  {
+  void set_local(int index, bool value) {
     *local_addr(index) = value;
   }
 
@@ -161,50 +144,42 @@ class SharkInlinerHelper : public StackObj {
   bool* _sp;
 
  public:
-  int stack_depth() const
-  {
+  int stack_depth() const {
     return _sp - _stack;
   }
-  bool* stack_addr(int slot) const
-  {
+  bool* stack_addr(int slot) const {
     assert(slot >= 0 && slot < stack_depth(), "bad stack slot");
     return &_sp[-(slot + 1)];
   }
-  void push(bool value)
-  {
+  void push(bool value) {
     assert(stack_depth() < max_stack(), "stack overrun");
     *(_sp++) = value;
   }
-  bool pop()
-  {
+  bool pop() {
     assert(stack_depth() > 0, "stack underrun");
     return *(--_sp);
   }
 
   // Methods for two-word locals
  public:
-  void push_pair_local(int index)
-  {
+  void push_pair_local(int index) {
     push(local(index));
     push(local(index + 1));
   }
-  void pop_pair_local(int index)
-  {
+  void pop_pair_local(int index) {
     set_local(index + 1, pop());
     set_local(index, pop());
   }
 
   // Code generation
  public:
-  void do_inline()
-  {
+  void do_inline() {
     (new SharkInlineBlock(target(), entry_state()))->emit_IR();
   }
 };
 
 // Quick checks so we can bail out before doing too much
-bool SharkInliner::may_be_inlinable(ciMethod *target)
-{
+bool SharkInliner::may_be_inlinable(ciMethod *target) {
   // We can't inline native methods
   if (target->is_native())
     return false;
@@ -252,8 +227,7 @@ bool SharkInliner::may_be_inlinable(ciMethod *target)
 // check eliminator to strip the checks.  To do that, we need to
 // walk through the method, tracking which values are and are not
 // zero-checked.
-bool SharkInlinerHelper::is_inlinable()
-{
+bool SharkInlinerHelper::is_inlinable() {
   ResourceMark rm;
   initialize_for_check();
 
@@ -693,8 +667,7 @@ bool SharkInlinerHelper::is_inlinable()
   return true;
 }
 
-void SharkInlinerHelper::initialize_for_check()
-{
+void SharkInlinerHelper::initialize_for_check() {
   _locals = NEW_RESOURCE_ARRAY(bool, max_locals());
   _stack = NEW_RESOURCE_ARRAY(bool, max_stack());
 
@@ -708,8 +681,7 @@ void SharkInlinerHelper::initialize_for_check()
   _sp = _stack;
 }
 
-bool SharkInlinerHelper::do_field_access(bool is_get, bool is_field)
-{
+bool SharkInlinerHelper::do_field_access(bool is_get, bool is_field) {
   assert(is_get || is_field, "can't inline putstatic");
 
   // If the holder isn't linked then there isn't a lot we can do
@@ -760,8 +732,7 @@ bool SharkInlinerHelper::do_field_access(bool is_get, bool is_field)
   return true;
 }
 
-bool SharkInliner::attempt_inline(ciMethod *target, SharkState *state)
-{
+bool SharkInliner::attempt_inline(ciMethod *target, SharkState *state) {
   if (SharkIntrinsics::is_intrinsic(target)) {
     SharkIntrinsics::inline_intrinsic(target, state);
     return true;

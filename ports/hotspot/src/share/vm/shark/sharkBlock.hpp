@@ -42,16 +42,13 @@ class SharkBlock : public SharkTargetInvariants {
   SharkState*      _current_state;
 
  public:
-  ciBytecodeStream* iter()
-  {
+  ciBytecodeStream* iter() {
     return &_iter;
   }
-  Bytecodes::Code bc()
-  {
+  Bytecodes::Code bc() {
     return iter()->cur_bc();
   }
-  int bci()
-  {
+  int bci() {
     return iter()->cur_bci();
   }
 
@@ -64,23 +61,20 @@ class SharkBlock : public SharkTargetInvariants {
   SharkState* initial_current_state();
   
  public:
-  SharkState* current_state()
-  {
+  SharkState* current_state() {
     if (_current_state == NULL)
       set_current_state(initial_current_state());
     return _current_state;
   }
 
  protected:
-  void set_current_state(SharkState* current_state)
-  {
+  void set_current_state(SharkState* current_state) {
     _current_state = current_state;
   }
 
   // Local variables  
  protected:
-  SharkValue* local(int index)
-  {
+  SharkValue* local(int index) {
     SharkValue *value = current_state()->local(index);
     assert(value != NULL, "shouldn't be");
     assert(value->is_one_word() ||
@@ -88,8 +82,7 @@ class SharkBlock : public SharkTargetInvariants {
             current_state()->local(index + 1) == NULL), "should be");
     return value;
   }
-  void set_local(int index, SharkValue* value)
-  {
+  void set_local(int index, SharkValue* value) {
     assert(value != NULL, "shouldn't be");
     current_state()->set_local(index, value);
     if (value->is_two_word())
@@ -98,16 +91,13 @@ class SharkBlock : public SharkTargetInvariants {
 
   // Expression stack (raw)
  protected:
-  void xpush(SharkValue* value)
-  {
+  void xpush(SharkValue* value) {
     current_state()->push(value);
   }
-  SharkValue* xpop()
-  {
+  SharkValue* xpop() {
     return current_state()->pop();
   }
-  SharkValue* xstack(int slot)
-  {
+  SharkValue* xstack(int slot) {
     SharkValue *value = current_state()->stack(slot);
     assert(value != NULL, "shouldn't be");
     assert(value->is_one_word() ||
@@ -115,22 +105,19 @@ class SharkBlock : public SharkTargetInvariants {
             current_state()->stack(slot - 1) == NULL), "should be");
     return value;
   }
-  int xstack_depth()
-  {
+  int xstack_depth() {
     return current_state()->stack_depth();
   }
 
   // Expression stack (cooked)
  protected:
-  void push(SharkValue* value)
-  {
+  void push(SharkValue* value) {
     assert(value != NULL, "shouldn't be");
     xpush(value);
     if (value->is_two_word())
       xpush(NULL);
   }
-  SharkValue* pop()
-  {
+  SharkValue* pop() {
     int size = current_state()->stack(0) == NULL ? 2 : 1;
     if (size == 2)
       xpop();
@@ -138,8 +125,7 @@ class SharkBlock : public SharkTargetInvariants {
     assert(value && value->size() == size, "should be");
     return value;
   }
-  SharkValue* pop_result(BasicType type)
-  {
+  SharkValue* pop_result(BasicType type) {
     SharkValue *result = pop();
 
 #ifdef ASSERT
@@ -176,17 +162,14 @@ class SharkBlock : public SharkTargetInvariants {
 
   // Zero checking
  protected:
-  void check_null(SharkValue* object)
-  {
+  void check_null(SharkValue* object) {
     zero_check(object);
   }
-  void check_divide_by_zero(SharkValue* value)
-  {
+  void check_divide_by_zero(SharkValue* value) {
     zero_check(value);
   }
  private:
-  void zero_check(SharkValue* value)
-  {
+  void zero_check(SharkValue* value) {
     if (!value->zero_checked())
       do_zero_check(value);
   }
@@ -213,40 +196,32 @@ class SharkBlock : public SharkTargetInvariants {
 
   // *div and *rem
  private:
-  void do_idiv()
-  {
+  void do_idiv() {
     do_div_or_rem(false, false);
   }
-  void do_irem()
-  {
+  void do_irem() {
     do_div_or_rem(false, true);
   }
-  void do_ldiv()
-  {
+  void do_ldiv() {
     do_div_or_rem(true, false);
   }
-  void do_lrem()
-  {
+  void do_lrem() {
     do_div_or_rem(true, true);
   }
   void do_div_or_rem(bool is_long, bool is_rem);  
 
   // get* and put*
  private:
-  void do_getstatic()
-  {
+  void do_getstatic() {
     do_field_access(true, false);
   }
-  void do_getfield()
-  {
+  void do_getfield() {
     do_field_access(true, true);
   }
-  void do_putstatic()
-  {
+  void do_putstatic() {
     do_field_access(false, false);
   }
-  void do_putfield()
-  {
+  void do_putfield() {
     do_field_access(false, true);
   }
   void do_field_access(bool is_get, bool is_field);

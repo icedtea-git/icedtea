@@ -51,102 +51,83 @@ class SharkState : public SharkTargetInvariants {
 
   // Method
  public:
-  llvm::Value** method_addr()
-  {
+  llvm::Value** method_addr() {
     return &_method;
   }
-  llvm::Value* method() const
-  {
+  llvm::Value* method() const {
     return _method;
   }
  protected:
-  void set_method(llvm::Value* method)
-  {
+  void set_method(llvm::Value* method) {
     _method = method;
   }
 
   // Local variables
  public:
-  SharkValue** local_addr(int index) const
-  {
+  SharkValue** local_addr(int index) const {
     assert(index >= 0 && index < max_locals(), "bad local variable index");
     return &_locals[index];
   }
-  SharkValue* local(int index) const
-  {
+  SharkValue* local(int index) const {
     return *local_addr(index);
   }
-  void set_local(int index, SharkValue* value)
-  {
+  void set_local(int index, SharkValue* value) {
     *local_addr(index) = value;
   }
 
   // Expression stack
  public:
-  SharkValue** stack_addr(int slot) const
-  {
+  SharkValue** stack_addr(int slot) const {
     assert(slot >= 0 && slot < stack_depth(), "bad stack slot");
     return &_sp[-(slot + 1)];
   }
-  SharkValue* stack(int slot) const
-  {
+  SharkValue* stack(int slot) const {
     return *stack_addr(slot);
   }
  protected:
-  void set_stack(int slot, SharkValue* value)
-  {
+  void set_stack(int slot, SharkValue* value) {
     *stack_addr(slot) = value;
   }
  public:
-  int stack_depth() const
-  {
+  int stack_depth() const {
     return _sp - _stack;
   }
-  void push(SharkValue* value)
-  {
+  void push(SharkValue* value) {
     assert(stack_depth() < max_stack(), "stack overrun");
     *(_sp++) = value;
   }
-  SharkValue* pop()
-  {
+  SharkValue* pop() {
     assert(stack_depth() > 0, "stack underrun");
     return *(--_sp);
   }
 
   // Monitors
  public:
-  int num_monitors() const
-  {
+  int num_monitors() const {
     return _num_monitors;
   }
-  void set_num_monitors(int num_monitors)
-  {
+  void set_num_monitors(int num_monitors) {
     _num_monitors = num_monitors;
   }
 
   // Temporary oop slot
  public:
-  llvm::Value** oop_tmp_addr()
-  {
+  llvm::Value** oop_tmp_addr() {
     return &_oop_tmp;
   }
-  llvm::Value* oop_tmp() const
-  {
+  llvm::Value* oop_tmp() const {
     return _oop_tmp;
   }
-  void set_oop_tmp(llvm::Value* oop_tmp)
-  {
+  void set_oop_tmp(llvm::Value* oop_tmp) {
     _oop_tmp = oop_tmp;
   }
 
   // Safepointed status
  public:
-  bool has_safepointed() const
-  {
+  bool has_safepointed() const {
     return _has_safepointed;
   }
-  void set_has_safepointed(bool has_safepointed)
-  {
+  void set_has_safepointed(bool has_safepointed) {
     _has_safepointed = has_safepointed;
   }
 
@@ -156,8 +137,7 @@ class SharkState : public SharkTargetInvariants {
 
   // Copy and merge
  public:
-  SharkState* copy() const
-  {
+  SharkState* copy() const {
     return new SharkState(this);
   }
   void merge(SharkState*       other,
@@ -199,8 +179,7 @@ class SharkPHIState : public SharkState {
   SharkTopLevelBlock* _block;
 
  private:
-  SharkTopLevelBlock* block() const
-  {
+  SharkTopLevelBlock* block() const {
     return _block;
   }
 
