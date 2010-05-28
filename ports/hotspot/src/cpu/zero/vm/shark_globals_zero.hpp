@@ -1,6 +1,6 @@
 /*
  * Copyright 2000-2007 Sun Microsystems, Inc.  All Rights Reserved.
- * Copyright 2008 Red Hat, Inc.
+ * Copyright 2008, 2009, 2010 Red Hat, Inc.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -23,10 +23,8 @@
  *  
  */
 
-//
-// Sets the default values for platform dependent flags used by the
-// shark compiler.
-//
+// Set the default values for platform dependent flags used by the
+// Shark compiler.  See globals.hpp for details of what they do.
 
 define_pd_global(bool,  BackgroundCompilation,        true );
 define_pd_global(bool,  UseTLAB,                      true );

@@ -1,5 +1,12 @@
 2010-02-23  Gary Benson  <gbenson@redhat.com>
 
+	* ports/hotspot/make/linux/makefiles/shark.make: Update copyright.
+	* ports/hotspot/src/cpu/zero/vm/shark_globals_zero.hpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp: Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkContext.hpp: Likewise.
+
+2010-02-23  Gary Benson  <gbenson@redhat.com>
+
 	* ports/hotspot/make/linux/makefiles/shark.make: Comment fix.
 
 2010-02-21 Andrew John Hughes  <ahughes@redhat.com>
