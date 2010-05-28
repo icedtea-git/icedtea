@@ -61,6 +61,7 @@ HOTSPOT_URL = $(ICEDTEA_HG_URL)/hotspot
 
 OS_DIR = $(BUILD_OS_DIR)-$(BUILD_ARCH_DIR)
 BUILD_OUTPUT_DIR = $(abs_top_builddir)/openjdk/build/$(OS_DIR)
+DEBUG_BUILD_OUTPUT_DIR = $(BUILD_OUTPUT_DIR)-debug
 BOOT_BUILD_OUTPUT_DIR = openjdk-boot/build/$(OS_DIR)
 ICEDTEA_BUILD_DIR = \
 	$(abs_top_builddir)/$(BUILD_OUTPUT_DIR)
@@ -82,7 +83,7 @@ ICEDTEA_CLS_DIR_BOOT = \
 	$(abs_top_builddir)/$(BOOT_BUILD_OUTPUT_DIR)/classes
 SERVER_DIR = hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server
 BUILD_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-BUILD_DEBUG_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+BUILD_DEBUG_JRE_ARCH_DIR = $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 
 # Source directories
 
@@ -1844,31 +1845,31 @@ if WITH_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
 if ENABLE_SYSTEMTAP
-	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset ; \
+	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
 	if test $$? -eq 0; then \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot.stp \
-	    > $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/hotspot.stp; \
+	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    > $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/hotspot_jni.stp; \
+	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
-	    $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/hotspot.stp; \
+	    $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
 	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/hotspot_jni.stp; \
+	    $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
 	fi; \
 	cp $(abs_top_builddir)/tapset/jstack.stp \
-	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/jstack.stp
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/jstack.stp
 endif
 if ENABLE_NSS
 	cp $(abs_top_builddir)/nss.cfg \
-	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/security;
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
 endif
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
-	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib;
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
 endif
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 	mkdir -p stamps
@@ -1883,40 +1884,40 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  $(ICEDTEA_DEBUG_BUILD_TARGET)
-	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
-	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/ext
-	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/ext 
+	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
+	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/ext 
 if ENABLE_NPPLUGIN
 	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
-	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
-	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 else
 if ENABLE_PLUGIN
 	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so \
-	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so \
-	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 endif
 endif
 if ENABLE_PULSE_JAVA
 	cp -pPRf libpulse-java.so \
-	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf libpulse-java.so \
-	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf pulse-java.jar \
-	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/ext
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
 	cp -pPRf pulse-java.jar \
-	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib/ext
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/ext
 endif
 if JNLP_ABOUT_NEEDED
 	cp $(NETX_RESOURCE_DIR)/default.jnlp \
 	  extra-lib/about.jar \
-	  $(BUILD_OUTPUT_DIR)-debug/j2re-image/lib
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib
 	cp $(NETX_RESOURCE_DIR)/default.jnlp \
 	  extra-lib/about.jar \
-	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 endif
 if ZERO_BUILD
 	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
@@ -1928,34 +1929,34 @@ if WITH_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
 if ENABLE_SYSTEMTAP
-	mkdir -p $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset ; \
+	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
 	if test $$? -eq 0; then \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot.stp \
-	    > $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/hotspot.stp; \
+	    > $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	    > $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
-	    $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/tapset/hotspot.stp; \
+	    $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
 	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	    $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
 	fi; \
 	cp $(abs_top_builddir)/tapset/jstack.stp \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/jstack.stp
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/jstack.stp
 endif
 if ENABLE_NSS
 	cp $(abs_top_builddir)/nss.cfg \
-	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib/security;
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
 endif
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
-	  $(BUILD_OUTPUT_DIR)-debug/j2sdk-image/jre/lib;
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
 endif
 	@echo "IcedTea (debug build) is served:" \
-	  $(BUILD_OUTPUT_DIR)-debug
+	  $(DEBUG_BUILD_OUTPUT_DIR)
 	mkdir -p stamps
 	touch $@
 

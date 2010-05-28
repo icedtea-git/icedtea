@@ -1,3 +1,13 @@
+2010-05-28 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(DEBUG_BUILD_OUTPUT_DIR): New variable to represent
+	debug build output directory.
+	(BUILD_DEBUG_JRE_ARCH_DIR): Use DEBUG_BUILD_OUTPUT_DIR.
+	(icedtea): Remove errorneous use of -debug.
+	(icedtea-debug): Replace use of -debug with
+	DEBUG_BUILD_OUTPUT_DIR.
+
 2010-02-23  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/make/linux/makefiles/shark.make: Update copyright.
