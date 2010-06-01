@@ -1,3 +1,32 @@
+2010-03-15  Andrew John Hughes  <ahughes@redhat.com>
+
+	NetX/plugin build sync (2/3):
+	* patches/icedtea-liveconnect-dist.patch,
+	* patches/icedtea-liveconnect.patch,
+	* patches/icedtea-netx.patch,
+	* patches/icedtea-webstart-umask.patch,
+	* patches/icedtea-webstart.patch:
+	Moved to extensions subdirectory.
+	* Makefile.am:
+	(PLUGIN_PATCH): Removed.
+	(ICEDTEA_PATCHES): Add conditional plugin patches in
+	same manner as all other conditional patches.  Fix
+	paths of NetX patches and LiveConnect patches.
+	(stamps/plugin-tests.stamp): Depend on stamps/plugin.stamp,
+	not rt-closed.jar.  Surround by ENABLE_PLUGIN rather than
+	using a (now broken) test on lib/rt/netscape.
+	* acinclude.m4: Add missing ;;.
+	* patches/extensions/liveconnect-dist.patch:
+	Was patches/icedtea-liveconnect-dist.patch.
+	* patches/extensions/liveconnect.patch:
+	Was patches/icedtea-liveconnect.patch.
+	* patches/extensions/netx-dist.patch:
+	Renamed from patches/icedtea-netx.patch.
+	* patches/extensions/netx-umask.patch:
+	Renamed from patches/icedtea-webstart-umask.patch.
+	* patches/extensions/netx.patch:
+	Renamed from patches/icedtea-webstart.patch.
++
 2010-03-13  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java

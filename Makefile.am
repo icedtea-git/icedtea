@@ -127,7 +127,6 @@ ICEDTEA_BOOTSTRAP_DIRS = \
 	$(SHARE)/javax/script \
 	$(SHARE)/javax/security/auth/kerberos \
 	$(SHARE)/javax/security/sasl \
-	$(SHARE)/javax/swing/plaf/basic \
 	$(SHARE)/sun/awt/ \
 	$(SHARE)/sun/rmi/rmic \
 	$(SHARE)/sun/tools/java \
@@ -185,9 +184,8 @@ endif
 if ENABLE_NPPLUGIN
 PLUGIN_SRCDIR=$(abs_top_srcdir)/plugin/icedteanp
 PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin.build/icedteanp
-ICEDTEANPPLUGIN_TARGET = stamps/icedtea-npplugin
+ICEDTEANPPLUGIN_TARGET = stamps/icedtea-npplugin.stamp
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaNPPlugin
-PLUGIN_PATCH = patches/icedtea-liveconnect.patch
 LIVECONNECT_DIR = sun/applet netscape
 JNLP_ABOUT_TARGET = extra-lib/about.jar
 LIVECONNECT_CLASSES = $(abs_top_builddir)/liveconnect
@@ -199,7 +197,6 @@ PLUGIN_SRCDIR=$(abs_top_srcdir)/plugin/icedtea
 PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin.build/icedtea
 ICEDTEAPLUGIN_TARGET = $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
-PLUGIN_PATCH = patches/icedtea-liveconnect.patch
 LIVECONNECT_DIR = sun/applet netscape
 JNLP_ABOUT_TARGET = extra-lib/about.jar
 LIVECONNECT_CLASSES = $(abs_top_builddir)/liveconnect
@@ -271,9 +268,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-copy-plugs.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-text-relocations.patch \
 	patches/icedtea-ssl.patch \
-	$(PLUGIN_PATCH) \
-	patches/icedtea-webstart.patch \
-	patches/icedtea-webstart-umask.patch \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
 	patches/icedtea-demos.patch \
@@ -321,12 +315,14 @@ ICEDTEA_PATCHES = \
 	patches/hotspot/$(HSBUILD)/icedtea-includedb.patch \
 	patches/icedtea-demo-swingapplet.patch \
 	patches/icedtea-jvmtiEnv.patch \
-	patches/icedtea-netx.patch \
 	patches/icedtea-disable-intree-ec.patch \
 	patches/icedtea-sources.patch \
 	patches/no-precompiled.patch \
 	patches/parisc.patch \
-	patches/sh4-support.patch
+	patches/sh4-support.patch \
+	patches/extensions/netx.patch \
+	patches/extensions/netx-dist.patch \
+	patches/extensions/netx-umask.patch
 
 # Conditional patches
 
@@ -378,10 +374,12 @@ ICEDTEA_PATCHES += patches/icedtea-systemtap.patch
 endif
 
 if ENABLE_PLUGIN
-ICEDTEA_PATCHES += patches/icedtea-liveconnect-dist.patch
+ICEDTEA_PATCHES += patches/extensions/liveconnect.patch \
+	patches/extensions/liveconnect-dist.patch
 else
 if ENABLE_NPPLUGIN
-ICEDTEA_PATCHES += patches/icedtea-liveconnect-dist.patch
+ICEDTEA_PATCHES += patches/extensions/liveconnect.patch \
+	patches/extensions/liveconnect-dist.patch
 endif
 endif
 
@@ -1797,8 +1795,7 @@ clean-bootstrap-directory-symlink-stage2:
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/plugin.stamp $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
- stamps/netx-dist.stamp stamps/liveconnect-dist.stamp $(PULSE_JAVA_TARGET) \
- stamps/rewrite-rhino.stamp
+ stamps/netx-dist.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -2070,8 +2067,8 @@ $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so: $(addprefix $(PLUGIN_BUILD_DIR)/,$(NPPLU
 	  $(MOZILLA_LIBS)\
 	  -shared -o $@
 
-stamps/icedtea-npplugin: $(NPPLUGIN_DIR)/IcedTeaNPPlugin.so
-	touch stamps/icedtea-npplugin
+stamps/icedtea-npplugin.stamp: $(NPPLUGIN_DIR)/IcedTeaNPPlugin.so
+	touch stamps/icedtea-npplugin.stamp
 
 clean-IcedTeaNPPlugin:
 	rm -f $(addprefix $(PLUGIN_BUILD_DIR)/,$(NPPLUGIN_OBJECTS))
@@ -2104,7 +2101,8 @@ clean-IcedTeaPlugin:
 	rm -f $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so
 endif
 
-stamps/plugin.stamp: $(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET)
+stamps/plugin.stamp: $(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET) \
+ stamps/liveconnect-dist.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -2555,30 +2553,19 @@ clean-add-zero-debug:
 
 # plugin tests
 
-stamps/plugin-tests.stamp: $(PLUGIN_TEST_SRCS) \
- bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
+if ENABLE_PLUGIN
+stamps/plugin-tests.stamp: $(PLUGIN_TEST_SRCS) stamps/plugin.stamp
 	mkdir -p plugin/tests/LiveConnect
-	if test -d lib/rt/netscape ; then \
-	  set -e ; \
-	  if ! test -d $(ICEDTEA_BOOT_DIR) ; then \
-	    $(JAVAC) $(MEMORY_LIMIT) -g -d plugin/tests/LiveConnect \
-	      -classpath bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-              -source 1.5 $(PLUGIN_TEST_SRCS) ; \
-	    $(JAR) cf plugin/tests/LiveConnect/PluginTest.jar \
-	      plugin/tests/LiveConnect/*.class ; \
-	  else \
-	    $(ICEDTEA_BOOT_DIR)/bin/javac $(MEMORY_LIMIT) -g \
-	      -d plugin/tests/LiveConnect \
-	      -classpath bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-	      -source 1.5 $(PLUGIN_TEST_SRCS) ; \
-	    $(ICEDTEA_BOOT_DIR)/bin/jar cf plugin/tests/LiveConnect/PluginTest.jar \
-	      plugin/tests/LiveConnect/*.class ; \
-	  fi ; \
-	  cp -a $(abs_top_srcdir)/plugin/tests/LiveConnect/*.{js,html} plugin/tests/LiveConnect ; \
-	  echo "Done. Now launch \"firefox file://`pwd`/index.html\"" ; \
-	fi
+	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
+	 -d plugin/tests/LiveConnect \
+	 -classpath $(LIVECONNECT_JAR) $(PLUGIN_TEST_SRCS) ;
+	$(ICEDTEA_BOOT_DIR)/bin/jar cf plugin/tests/LiveConnect/PluginTest.jar \
+	  plugin/tests/LiveConnect/*.class ;
+	cp -a $(abs_top_srcdir)/plugin/tests/LiveConnect/*.{js,html} plugin/tests/LiveConnect ;
+	echo "Done. Now launch \"firefox file://`pwd`/index.html\"" ; \
 	mkdir -p stamps
 	touch stamps/plugin-tests.stamp
+endif
 
 # jtreg
 

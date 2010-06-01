@@ -74,6 +74,7 @@
       JRE_ARCH_DIR=s390x
       CROSS_TARGET_ARCH=s390x
       ARCHFLAG="-m64"
+      ;;
     *)
       BUILD_ARCH_DIR=`uname -m`
       INSTALL_ARCH_DIR=$BUILD_ARCH_DIR
