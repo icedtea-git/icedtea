@@ -2375,7 +2375,7 @@ clean-visualvm:
 
 # CACAO
 
-stamps/cacao.stamp: stamps/rt-class-files.stamp
+stamps/cacao.stamp: stamps/rt.stamp
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao && \
@@ -2386,7 +2386,7 @@ if !USE_SYSTEM_CACAO
 	  --prefix=$(abs_top_builddir)/cacao/install \
 	  --with-java-runtime-library=openjdk \
 	  --with-java-runtime-library-prefix=$(abs_top_builddir)/openjdk \
-	  --with-java-runtime-library-classes=$(abs_top_builddir)/lib/rt \
+	  --with-java-runtime-library-classes=$(ICEDTEA_RT) \
 	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
 	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS) install
 	ln -s server $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/client

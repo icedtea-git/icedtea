@@ -1,6 +1,14 @@
 2010-03-01  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	(stamps/cacao.stamp): Depend on rt.stamp
+	and use updated rt.jar to build against rather
+	than the contents of lib/rt, so that --with-openjdk
+	builds work.
+
+2010-03-01  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(stamps/jtreg.stamp): Depend on
 	stamps/icedtea-stage2.stamp
 
