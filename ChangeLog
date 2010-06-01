@@ -1,3 +1,8 @@
+2010-03-11  Gary Benson  <gbenson@redhat.com>
+
+	* ports/hotspot/src/cpu/zero/vm/shark_globals_zero.hpp:
+	Whitespace changes.
+
 2010-03-09  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaNPPlugin.cc
