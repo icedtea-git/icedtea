@@ -1,59 +1,79 @@
- AC_DEFUN([SET_ARCH_DIRS],
+ AC_DEFUN([IT_SET_ARCH_SETTINGS],
 [
-  case "${host}" in
-    x86_64-*-*)
+  case "${host_cpu}" in
+    x86_64)
       BUILD_ARCH_DIR=amd64
       INSTALL_ARCH_DIR=amd64
       JRE_ARCH_DIR=amd64
+      ARCHFLAG="-m64"
       ;;
-    i?86-*-*)
+    i?86)
       BUILD_ARCH_DIR=i586
       INSTALL_ARCH_DIR=i386
       JRE_ARCH_DIR=i386
       ARCH_PREFIX=${LINUX32}
+      ARCHFLAG="-m32"
       ;;
-    alpha*-*-*)
+    alpha*)
       BUILD_ARCH_DIR=alpha
       INSTALL_ARCH_DIR=alpha
       JRE_ARCH_DIR=alpha
       ;;
-    arm*-*-*)
+    arm*)
       BUILD_ARCH_DIR=arm
       INSTALL_ARCH_DIR=arm
       JRE_ARCH_DIR=arm
       ;;
-    mips-*-*)
+    mips)
       BUILD_ARCH_DIR=mips
       INSTALL_ARCH_DIR=mips
       JRE_ARCH_DIR=mips
        ;;
-    mipsel-*-*)
+    mipsel)
       BUILD_ARCH_DIR=mipsel
       INSTALL_ARCH_DIR=mipsel
       JRE_ARCH_DIR=mipsel
        ;;
-    powerpc-*-*)
+    powerpc)
       BUILD_ARCH_DIR=ppc
       INSTALL_ARCH_DIR=ppc
       JRE_ARCH_DIR=ppc
       ARCH_PREFIX=${LINUX32}
-       ;;
-    powerpc64-*-*)
+      ARCHFLAG="-m32"
+      ;;
+    powerpc64)
       BUILD_ARCH_DIR=ppc64
       INSTALL_ARCH_DIR=ppc64
       JRE_ARCH_DIR=ppc64
+      ARCHFLAG="-m64"
        ;;
-    sparc64-*-*)
+    sparc)
+      BUILD_ARCH_DIR=sparc
+      INSTALL_ARCH_DIR=sparc
+      JRE_ARCH_DIR=sparc
+      CROSS_TARGET_ARCH=sparc
+      ARCH_PREFIX=${LINUX32}
+      ARCHFLAG="-m32"
+       ;;
+    sparc64)
       BUILD_ARCH_DIR=sparcv9
       INSTALL_ARCH_DIR=sparcv9
       JRE_ARCH_DIR=sparc64
+      ARCHFLAG="-m64"
        ;;
-    s390-*-*)
+    s390)
       BUILD_ARCH_DIR=s390
       INSTALL_ARCH_DIR=s390
       JRE_ARCH_DIR=s390
       ARCH_PREFIX=${LINUX32}
+      ARCHFLAG="-m31"
        ;;
+    s390x)
+      BUILD_ARCH_DIR=s390x
+      INSTALL_ARCH_DIR=s390x
+      JRE_ARCH_DIR=s390x
+      CROSS_TARGET_ARCH=s390x
+      ARCHFLAG="-m64"
     *)
       BUILD_ARCH_DIR=`uname -m`
       INSTALL_ARCH_DIR=$BUILD_ARCH_DIR
@@ -64,6 +84,7 @@
   AC_SUBST(INSTALL_ARCH_DIR)
   AC_SUBST(JRE_ARCH_DIR)
   AC_SUBST(ARCH_PREFIX)
+  AC_SUBST(ARCHFLAG)
 ])
 
 AC_DEFUN([SET_OS_DIRS],
@@ -750,23 +771,10 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
     *)
       ZERO_ARCHDEF=`echo ${ZERO_LIBARCH} | tr a-z A-Z`
   esac
-  dnl multilib machines need telling which mode to build for
-  case "${ZERO_LIBARCH}" in
-    i386|ppc|sparc)
-      ZERO_ARCHFLAG="-m32"
-      ;;
-    s390)
-      ZERO_ARCHFLAG="-m31"
-      ;;
-    amd64|ppc64|s390x|sparc64)
-      ZERO_ARCHFLAG="-m64"
-      ;;
-  esac
   AC_SUBST(ZERO_LIBARCH)
   AC_SUBST(ZERO_BITSPERWORD)
   AC_SUBST(ZERO_ENDIANNESS)
   AC_SUBST(ZERO_ARCHDEF)
-  AC_SUBST(ZERO_ARCHFLAG)
   AC_CONFIG_FILES([jvm.cfg])
   AC_CONFIG_FILES([ergo.c])
 ])

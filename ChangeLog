@@ -1,3 +1,21 @@
+2010-03-08  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(IT_CFLAGS): General CFLAGS for all IcedTea
+	C builds, which includes ARCHFLAG.
+	(ICEDTEA_ENV): Set ZERO_ARCHFLAG from ARCHFLAG.
+	(stamps/native-ecj.stamp): Use IT_CFLAGS.
+	($(PULSE_JAVA_NATIVE_BUILDDIR)/%.o): Use IT_CFLAGS.
+	* acinclude.m4:
+	(IT_SET_ARCH_SETTINGS): Renamed from SET_ARCH_DIRS.
+	Use host_cpu rather than host.  Add sections for
+	sparc and s390x.  Set ARCHFLAG to m64 for x86_64,
+	sparc64, powerpc64 and s390x, m31 for s390 and m32
+	for i?86, powerpc and sparc.
+	(ENABLE_ZERO_BUILD): Remove setting of ZERO_ARCHFLAG,
+	generalised to ARCHFLAG.
+	* configure.ac: Call renamed IT_SET_ARCH_SETTINGS.
+
 2010-03-08  Matthias Klose  <doko@ubuntu.com>
 
 	* Makefile.am:

@@ -145,6 +145,9 @@ IT_CLASS_TARGET_VERSION=5
 IT_JAVAC_SETTINGS=-g -encoding utf-8 $(JAVACFLAGS) $(MEMORY_LIMIT) $(PREFER_SOURCE)
 IT_JAVACFLAGS=$(IT_JAVAC_SETTINGS) -source $(IT_LANGUAGE_SOURCE_VERSION) -target $(IT_CLASS_TARGET_VERSION)
 
+# Flags
+IT_CFLAGS=$(CFLAGS) $(ARCHFLAG)
+
 # Conditional defintions
 
 if USE_HG
@@ -494,7 +497,7 @@ ICEDTEA_ENV = \
 	ARCH_DATA_MODEL="$(ZERO_BITSPERWORD)" \
 	ZERO_ENDIANNESS="$(ZERO_ENDIANNESS)" \
 	ZERO_ARCHDEF="$(ZERO_ARCHDEF)" \
-	ZERO_ARCHFLAG="$(ZERO_ARCHFLAG)" \
+	ZERO_ARCHFLAG="$(ARCHFLAG)" \
 	LIBFFI_CFLAGS="$(LIBFFI_CFLAGS)" \
 	LIBFFI_LIBS="$(LIBFFI_LIBS)" \
 	LLVM_CFLAGS="$(LLVM_CFLAGS)" \
@@ -1689,7 +1692,7 @@ clean-patch-boot:
 stamps/native-ecj.stamp:
 	mkdir -p stamps 
 if BUILD_NATIVE_ECJ
-	${GCJ} ${CFLAGS} -Wl,-Bsymbolic -findirect-dispatch -o native-ecj \
+	${GCJ} $(IT_CFLAGS) -Wl,-Bsymbolic -findirect-dispatch -o native-ecj \
 	    --main=org.eclipse.jdt.internal.compiler.batch.Main ${ECJ_JAR}
 endif
 	touch $@
@@ -2252,7 +2255,7 @@ stamps/pulse-java-headers.stamp: stamps/pulse-java-class.stamp
 	touch $@
 
 $(PULSE_JAVA_NATIVE_BUILDDIR)/%.o: $(PULSE_JAVA_NATIVE_SRCDIR)/%.c stamps/pulse-java-headers.stamp
-	$(CC) $(CFLAGS) -fPIC -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include \
+	$(CC) $(IT_CFLAGS) -fPIC -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include \
 	 -I$(PULSE_JAVA_NATIVE_BUILDDIR) -o $@ -c $<
 
 $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so: $(PULSE_JAVA_NATIVE_OBJECTS)
