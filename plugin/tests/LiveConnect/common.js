@@ -66,7 +66,7 @@
             errored = 0;
             document.getElementById("results").innerHTML = "";
             updateTotals();
-        
+       
             try {
                 if (document.getElementById("testForm").jsjget.checked == 1)
                     getMemberTests();
@@ -116,6 +116,7 @@
             document.getElementById("testForm").jjsset.checked = 1;
             document.getElementById("testForm").jjcparam.checked = 1;
             document.getElementById("testForm").jjcrt.checked = 1;
+            document.getElementById("testForm").jjeval.checked = 1;
 
             doTest();
         }

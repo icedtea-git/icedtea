@@ -260,7 +260,7 @@ public class PluginStreamHandler {
     		privileges = privs.split(",");
     		nextIndex += 2;
     	}
-    	
+
     	// rest
     	for (int i=nextIndex; i < msgComponents.length; i++) {
     		rest += msgComponents[i];
@@ -284,7 +284,7 @@ public class PluginStreamHandler {
     				|| rest.contains("JavaScriptFinalize")
     				|| rest.contains("JavaScriptToString")) {
     			
-				finishCallRequest(rest);
+				finishCallRequest("reference " + reference + " " + rest);
     			return;
     		}
 

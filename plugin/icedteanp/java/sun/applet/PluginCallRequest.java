@@ -44,21 +44,17 @@ import java.security.ProtectionDomain;
 // PluginCallRequest.
 public abstract class PluginCallRequest {
     String message;
-    String returnString;
+    Long reference;
     PluginCallRequest next;
     boolean done = false;
 
-    public PluginCallRequest(String message, String returnString) {
+    public PluginCallRequest(String message, Long reference) {
         this.message = message;
-        this.returnString = returnString;
+        this.reference = reference;
     }
 
     public String getMessage() {
     	return this.message;
-    }
-    
-    public String getReturnString() {
-    	return this.returnString;
     }
     
     public boolean isDone() {
@@ -77,9 +73,17 @@ public abstract class PluginCallRequest {
     	return this.next;
     }
 
-    public abstract void parseReturn(String message);
+    /**
+     * Returns whether the given message is serviceable by this object
+     * 
+     * @param message The message to service
+     * @return boolean indicating if message is serviceable
+     */
+    public boolean serviceable(String message) {
+        return message.contains("reference " + reference);
+    }
     
-    public abstract boolean serviceable(String message);
+    public abstract void parseReturn(String message);
     
     public abstract Object getObject();
 }

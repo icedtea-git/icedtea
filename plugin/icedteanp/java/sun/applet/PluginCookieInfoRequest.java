@@ -46,10 +46,10 @@ public class PluginCookieInfoRequest extends PluginCallRequest {
 
     String cookieString = new String();
 
-    public PluginCookieInfoRequest(String message, String returnString) {
-        super(message, returnString);
+    public PluginCookieInfoRequest(String message, Long reference) {
+        super(message, reference);
     }
-    
+
     public void parseReturn(String cookieInfo) {
 
         // try to parse the proxy information. If things go wrong, do nothing .. 
@@ -57,23 +57,15 @@ public class PluginCookieInfoRequest extends PluginCallRequest {
 
     	PluginDebug.debug ("PluginCookieInfoRequest GOT: " + cookieInfo);
 
-    	// Skip the first 3 components. We are guaranteed 3 components, 
+    	// Skip the first 5 components. We are guaranteed 5 components, 
     	// so no index -1 to worry about
+    	cookieInfo = cookieInfo.substring(cookieInfo.indexOf(' ')+1);
+    	cookieInfo = cookieInfo.substring(cookieInfo.indexOf(' ')+1);
     	cookieInfo = cookieInfo.substring(cookieInfo.indexOf(' ')+1);
     	cookieInfo = cookieInfo.substring(cookieInfo.indexOf(' ')+1);
     	cookieString = cookieInfo.substring(cookieInfo.indexOf(' ')+1);
 
         setDone(true);
-    }
-
-    /**
-     * Returns whether the given message is serviceable by this object
-     * 
-     * @param message The message to service
-     * @return boolean indicating if message is serviceable
-     */
-    public boolean serviceable(String message) {
-    	return message.startsWith(returnString);
     }
 
     public String getObject() {

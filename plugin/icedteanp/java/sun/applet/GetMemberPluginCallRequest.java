@@ -41,35 +41,21 @@ package sun.applet;
 public class GetMemberPluginCallRequest extends PluginCallRequest {
     Object object = null;
 
-    public GetMemberPluginCallRequest(String message, String returnString) {
-        super(message, returnString);
-        PluginDebug.debug ("GetMEMBerPLUGINCAlL " + message + " " + returnString);
+    public GetMemberPluginCallRequest(String message, Long reference) {
+        super(message, reference);
+        PluginDebug.debug ("GetMemberPluginCall " + message);
     }
 
     public void parseReturn(String message) {
-    	PluginDebug.debug ("GetMEMBerparseReturn GOT: " + message);
+    	PluginDebug.debug ("GetMemberParseReturn GOT: " + message);
         String[] args = message.split(" ");
         // FIXME: Is it even possible to distinguish between null and void
         // here?
-        if (args[1] != "null" && args[1] != "void")
-        	object = AppletSecurityContextManager.getSecurityContext(0).getObject(Integer.parseInt(args[1]));
+        if (args[3] != "null" && args[3] != "void")
+        	object = AppletSecurityContextManager.getSecurityContext(0).getObject(Integer.parseInt(args[3]));
         setDone(true);
     }
 
-    /**
-     * Returns whether the given message is serviceable by this object
-     * 
-     * @param message The message to service
-     * @return boolean indicating if message is serviceable
-     */
-    public boolean serviceable(String message) {
-    	return message.contains("JavaScriptCall") ||
-    			message.contains("JavaScriptEval") ||
-    			message.contains("JavaScriptGetMember") ||
-    			message.contains("JavaScriptGetSlot") ||
-    			message.contains("JavaScriptToString");
-    }
-    
     public Object getObject() {
     	return this.object;
     }

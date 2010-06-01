@@ -39,26 +39,13 @@ package sun.applet;
 
 
 public class VoidPluginCallRequest extends PluginCallRequest {
-    public VoidPluginCallRequest(String message, String returnString) {
-        super(message, returnString);
-        PluginDebug.debug ("VoidPLUGINCAlL " + message + " " + returnString);
+    public VoidPluginCallRequest(String message, Long reference) {
+        super(message, reference);
+        PluginDebug.debug ("VoidPluginCall " + message);
     }
 
     public void parseReturn(String message) {
     	setDone(true);
-    }
-    
-    /**
-     * Returns whether the given message is serviceable by this object
-     * 
-     * @param message The message to service
-     * @return boolean indicating if message is serviceable
-     */
-    public boolean serviceable(String message) {
-    	return message.contains("JavaScriptFinalize") ||
-    			message.contains("JavaScriptRemoveMember") ||
-    			message.contains("JavaScriptSetMember") ||
-    			message.contains("JavaScriptSetSlot");
     }
     
     public Object getObject() {

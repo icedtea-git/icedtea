@@ -48,8 +48,8 @@ public class PluginProxyInfoRequest extends PluginCallRequest {
     
     URI internal = null;
 
-    public PluginProxyInfoRequest(String message, String returnString) {
-        super(message, returnString);
+    public PluginProxyInfoRequest(String message, Long reference) {
+        super(message, reference);
     }
     
     public void parseReturn(String proxyInfo) {
@@ -61,22 +61,16 @@ public class PluginProxyInfoRequest extends PluginCallRequest {
     	String[] messageComponents = proxyInfo.split(" ");
 
     	try {
-    	    internal = new URI(messageComponents[2], null, messageComponents[3], Integer.parseInt(messageComponents[4]), null, null, null);
+    	    String protocol = messageComponents[4].equals("PROXY") ? "http" : "socks";
+    	    String host = messageComponents[5].split(":")[0];
+    	    int port = Integer.parseInt(messageComponents[5].split(":")[1]);
+
+    	    internal = new URI(protocol, null, host, port, null, null, null);
     	} catch (Exception e) {
-    	    // do nothing
+    	    e.printStackTrace();
     	}
 
         setDone(true);
-    }
-
-    /**
-     * Returns whether the given message is serviceable by this object
-     * 
-     * @param message The message to service
-     * @return boolean indicating if message is serviceable
-     */
-    public boolean serviceable(String message) {
-    	return message.startsWith("plugin PluginProxyInfo");
     }
 
     public URI getObject() {

@@ -46,27 +46,17 @@ public class GetWindowPluginCallRequest extends PluginCallRequest {
     // FIXME: look into int vs long JavaScript internal values.
     long internal;
 
-    public GetWindowPluginCallRequest(String message, String returnString) {
-        super(message, returnString);
+    public GetWindowPluginCallRequest(String message, Long reference) {
+        super(message, reference);
     }
 
     public void parseReturn(String message) {
-    	PluginDebug.debug ("GetWINDOWparseReturn GOT: " + message);
+    	PluginDebug.debug ("GetWindowParseReturn GOT: " + message);
         String[] args = message.split(" ");
         // FIXME: add thread ID to messages to support multiple
         // threads using the netscape.javascript package.
-        internal = Long.parseLong(args[1]);
+        internal = Long.parseLong(args[3]);
         setDone(true);
-    }
-    
-    /**
-     * Returns whether the given message is serviceable by this object
-     * 
-     * @param message The message to service
-     * @return boolean indicating if message is serviceable
-     */
-    public boolean serviceable(String message) {
-    	return message.contains("JavaScriptGetWindow");
     }
 
     public Long getObject() {

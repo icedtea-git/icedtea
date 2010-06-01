@@ -209,7 +209,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
          }
 
          PluginDebug.debug("Applet " + a.getClass() + " initialized");
-         streamhandler.write("instance " + identifier + " initialized");
+         streamhandler.write("instance " + identifier + " reference 0 initialized");
 
          AppletSecurityContextManager.getSecurityContext(0).associateSrc(((NetxPanel) panel).getAppletClassLoader(), doc);
          AppletSecurityContextManager.getSecurityContext(0).associateInstance(identifier, ((NetxPanel) panel).getAppletClassLoader());
@@ -368,8 +368,10 @@ import com.sun.jndi.toolkit.url.UrlUtil;
      private long handle = 0;
      private WindowListener windowEventListener = null;
      private AppletEventListener appletEventListener = null;
-     
+
      public static final int APPLET_TIMEOUT = 60000;
+
+     private static Long requestIdentityCounter = 0L;
 
      /**
       * Null constructor to allow instantiation via newInstance()
@@ -949,11 +951,30 @@ import com.sun.jndi.toolkit.url.UrlUtil;
         }
      }
 
+     /**
+      * Returns an incremental number (unique identifier) for a message.
+      * If identifier hits Long.MAX_VALUE it loops back starting at 0.
+      *
+      *  @return A unique Long identifier for the request
+      */
+     private static Long getRequestIdentifier() {
+         synchronized (requestIdentityCounter) {
+
+             if (requestIdentityCounter == Long.MAX_VALUE)
+                 requestIdentityCounter = 0L;
+
+             return requestIdentityCounter++;
+        }
+     }
+
      public long getWindow() {
          PluginDebug.debug ("STARTING getWindow");
+         Long reference = getRequestIdentifier();
+
          PluginCallRequest request = requestFactory.getPluginCallRequest("window",
-                                                                                "instance " + identifier + " " + "GetWindow",
-                                                                                "JavaScriptGetWindow");
+             "instance " + identifier + " reference " +
+             + reference + " " + "GetWindow", reference);
+
          PluginDebug.debug ("STARTING postCallRequest");
                  streamhandler.postCallRequest(request);
          PluginDebug.debug ("STARTING postCallRequest done");
@@ -980,11 +1001,13 @@ import com.sun.jndi.toolkit.url.UrlUtil;
      {
          AppletSecurityContextManager.getSecurityContext(0).store(name);
          int nameID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(name);
+         Long reference = getRequestIdentifier();
 
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("member",
-                                                                                "instance " + 0 + " GetMember " + internal + " " + nameID,
-                                                                                "JavaScriptGetMember");
+             "instance " + 0 + " reference " + reference + " GetMember " +
+             internal + " " + nameID, reference);
+
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
@@ -1007,6 +1030,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
          System.err.println("Setting to class " + value.getClass() + ":" + value.getClass().isPrimitive());
          AppletSecurityContextManager.getSecurityContext(0).store(name);
          int nameID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(name);
+         Long reference = getRequestIdentifier();
 
          // work on a copy of value, as we don't want to be manipulating
          // complex objects
@@ -1038,10 +1062,9 @@ import com.sun.jndi.toolkit.url.UrlUtil;
 
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("void",
-                                                                         "instance " + 0 +
-                                                                         " SetMember " + internal +
-                                                                         " " + nameID + " " + valueToSetTo,
-                                                                         "JavaScriptSetMember");
+             "instance " + 0 + " reference " + reference + " SetMember " +
+             internal + " " + nameID + " " + valueToSetTo, reference);
+
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
@@ -1063,6 +1086,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
      // FIXME: handle long index as well.
      public static void setSlot(long internal, int index, Object value) {
          AppletSecurityContextManager.getSecurityContext(0).store(value);
+         Long reference = getRequestIdentifier();
 
          // work on a copy of value, as we don't want to be manipulating
          // complex objects
@@ -1094,10 +1118,9 @@ import com.sun.jndi.toolkit.url.UrlUtil;
 
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("void",
-                                                                        "instance " + 0 +
-                                                                         " SetSlot " + internal +
-                                                                         " " + index + " " + valueToSetTo,
-                                                                         "JavaScriptSetSlot");
+             "instance " + 0 + " reference " + reference + " SetSlot " +
+             internal + " " + index + " " + valueToSetTo, reference);
+
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
@@ -1117,10 +1140,12 @@ import com.sun.jndi.toolkit.url.UrlUtil;
 
      public static Object getSlot(long internal, int index)
      {
+         Long reference = getRequestIdentifier();
+
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("member",
-                                                                                        "instance " + 0 + " GetSlot " + internal + " " + index,
-                                                                                        "JavaScriptGetSlot");
+             "instance " + 0 + " reference " + reference + " GetSlot " +
+             internal + " " + index, reference);
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
@@ -1143,11 +1168,13 @@ import com.sun.jndi.toolkit.url.UrlUtil;
      {
          AppletSecurityContextManager.getSecurityContext(0).store(s);
          int stringID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(s);
+         Long reference = getRequestIdentifier();
+
          // Prefix with dummy instance for convenience.
          // FIXME: rename GetMemberPluginCallRequest ObjectPluginCallRequest.
          PluginCallRequest request = requestFactory.getPluginCallRequest("member",
-                                                                                        "instance " + 0 + " Eval " + internal + " " + stringID,
-                                                                                        "JavaScriptEval");
+             "instance " + 0 + " reference " + reference + " Eval " +
+             internal + " " + stringID, reference);
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
@@ -1169,11 +1196,13 @@ import com.sun.jndi.toolkit.url.UrlUtil;
      public static void removeMember (long internal, String name) {
          AppletSecurityContextManager.getSecurityContext(0).store(name);
          int nameID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(name);
+         Long reference = getRequestIdentifier();
 
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("void",
-                                                                        "instance " + 0 + " RemoveMember " + internal + " " + nameID,
-                                                                        "JavaScriptRemoveMember");
+             "instance " + 0 + " reference " + reference + " RemoveMember " +
+             internal + " " + nameID, reference);
+
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
@@ -1198,6 +1227,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
          // FIXME: convenience method for this long line.
          AppletSecurityContextManager.getSecurityContext(0).store(name);
          int nameID = AppletSecurityContextManager.getSecurityContext(0).getIdentifier(name);
+         Long reference = getRequestIdentifier();
 
          String argIDs = "";
          for (Object arg : args)
@@ -1209,8 +1239,9 @@ import com.sun.jndi.toolkit.url.UrlUtil;
 
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("member",
-                                                                                "instance " + 0 + " Call " + internal + " " + nameID + " " + argIDs,
-                                                                                "JavaScriptCall");
+             "instance " + 0 + " reference " + reference + " Call " +
+             internal + " " + nameID + " " + argIDs, reference);
+
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
@@ -1232,12 +1263,14 @@ import com.sun.jndi.toolkit.url.UrlUtil;
      public static Object requestPluginCookieInfo(URI uri) {
 
          PluginCallRequest request;
+         Long reference = getRequestIdentifier();
+
          try
          {
              String encodedURI = UrlUtil.encode(uri.toString(), "UTF-8");
              request = requestFactory.getPluginCallRequest("cookieinfo",
-                               "plugin PluginCookieInfo " + encodedURI,
-                               "plugin PluginCookieInfo " + encodedURI);
+                 "plugin PluginCookieInfo " + "reference " + reference +
+                 " " + encodedURI, reference);
 
          } catch (UnsupportedEncodingException e)
          {
@@ -1266,6 +1299,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
      public static Object requestPluginProxyInfo(URI uri) {
 
          String requestURI = null;
+         Long reference = getRequestIdentifier();
 
          try {
 
@@ -1286,8 +1320,9 @@ import com.sun.jndi.toolkit.url.UrlUtil;
          }
 
          PluginCallRequest request = requestFactory.getPluginCallRequest("proxyinfo",
-                                            "plugin PluginProxyInfo " + requestURI,
-                                            "plugin");
+             "plugin PluginProxyInfo reference " + reference + " " +
+             requestURI, reference);
+
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
@@ -1308,10 +1343,13 @@ import com.sun.jndi.toolkit.url.UrlUtil;
 
      public static void JavaScriptFinalize(long internal)
      {
+         Long reference = getRequestIdentifier();
+
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("void",
-                                                                        "instance " + 0 + " Finalize " + internal,
-                                                                        "JavaScriptFinalize");
+             "instance " + 0 + " reference " + reference + " Finalize " +
+             internal, reference);
+
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {
@@ -1331,10 +1369,13 @@ import com.sun.jndi.toolkit.url.UrlUtil;
 
      public static String javascriptToString(long internal)
      {
+         Long reference = getRequestIdentifier();
+
          // Prefix with dummy instance for convenience.
          PluginCallRequest request = requestFactory.getPluginCallRequest("member",
-                                                                                        "instance " + 0 + " ToString " + internal,
-                                                                                        "JavaScriptToString");
+             "instance " + 0 + " reference " + reference + " ToString " +
+             internal, reference);
+
          streamhandler.postCallRequest(request);
          streamhandler.write(request.getMessage());
          try {

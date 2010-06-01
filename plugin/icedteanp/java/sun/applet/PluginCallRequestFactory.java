@@ -40,19 +40,19 @@ package sun.applet;
 
 
 public class PluginCallRequestFactory {
-
-	public PluginCallRequest getPluginCallRequest(String id, String message, String returnString) {
+    
+	public PluginCallRequest getPluginCallRequest(String id, String message, Long reference) {
 
 		if (id == "member") {
-			return new GetMemberPluginCallRequest(message, returnString);
+			return new GetMemberPluginCallRequest(message, reference);
 		} else if (id == "void") {
-			return new VoidPluginCallRequest(message, returnString);
+			return new VoidPluginCallRequest(message, reference);
 		} else if (id == "window") {
-			return new GetWindowPluginCallRequest(message, returnString);
+			return new GetWindowPluginCallRequest(message, reference);
 		} else if (id == "proxyinfo") {
-            return new PluginProxyInfoRequest(message, returnString);
+            return new PluginProxyInfoRequest(message, reference);
         } else if (id == "cookieinfo") {
-            return new PluginCookieInfoRequest(message, returnString);
+            return new PluginCookieInfoRequest(message, reference);
         } else {
 			throw new RuntimeException ("Unknown plugin call request type requested from factory");
 		}

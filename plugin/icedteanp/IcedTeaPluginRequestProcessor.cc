@@ -103,7 +103,7 @@ PluginRequestProcessor::newMessageOnBus(const char* message)
     IcedTeaPluginUtilities::printStringVector("PluginRequestProcessor::newMessageOnBus:", message_parts);
 
     type = message_parts->at(0);
-    command = message_parts->at(2);
+    command = message_parts->at(4);
 
     if (type == "instance")
     {
@@ -122,7 +122,7 @@ PluginRequestProcessor::newMessageOnBus(const char* message)
                    command == "Eval")
         {
 
-        	// Update queue synchronously
+            // Update queue synchronously
         	pthread_mutex_lock(&message_queue_mutex);
             message_queue->push_back(message_parts);
             pthread_mutex_unlock(&message_queue_mutex);
@@ -152,6 +152,7 @@ PluginRequestProcessor::sendWindow(std::vector<std::string>* message_parts)
 {
     std::string type;
     std::string command;
+    int reference;
     std::string response = std::string();
     std::string window_ptr_str = std::string();
     NPVariant* variant = new NPVariant();
@@ -160,7 +161,8 @@ PluginRequestProcessor::sendWindow(std::vector<std::string>* message_parts)
 
     type = message_parts->at(0);
     id = atoi(message_parts->at(1).c_str());
-    command = message_parts->at(2);
+    reference = atoi(message_parts->at(3).c_str());
+    command = message_parts->at(4);
 
     NPP instance;
     get_instance_from_id(id, instance);
@@ -173,7 +175,7 @@ PluginRequestProcessor::sendWindow(std::vector<std::string>* message_parts)
     IcedTeaPluginUtilities::JSIDToString(variant, &window_ptr_str);
 
     // We need the context 0 for backwards compatibility with the Java side
-    IcedTeaPluginUtilities::constructMessagePrefix(0, &response);
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &response);
     response += " JavaScriptGetWindow ";
     response += window_ptr_str;
 
@@ -201,14 +203,16 @@ PluginRequestProcessor::eval(std::vector<std::string>* message_parts)
     NPP instance;
     std::string script;
     NPVariant result;
+    int reference;
     std::string response = std::string();
     std::string return_type = std::string();
     int id;
 
-    window_ptr = (NPVariant*) IcedTeaPluginUtilities::stringToJSID(message_parts->at(3));
+    reference = atoi(message_parts->at(3).c_str());
+    window_ptr = (NPVariant*) IcedTeaPluginUtilities::stringToJSID(message_parts->at(5));
     instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(window_ptr);
 
-    java_result = request_processor.getString(message_parts->at(4));
+    java_result = request_processor.getString(message_parts->at(6));
     CHECK_JAVA_RESULT(java_result);
     script.append(*(java_result->return_string));
 
@@ -240,7 +244,7 @@ PluginRequestProcessor::eval(std::vector<std::string>* message_parts)
     std::string result_variant_jniid = std::string();
     createJavaObjectFromVariant(instance, *result_variant, &result_variant_jniid);
 
-    IcedTeaPluginUtilities::constructMessagePrefix(0, &response);
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &response);
     response += " JavaScriptEval ";
     response += result_variant_jniid;
 
@@ -262,6 +266,7 @@ PluginRequestProcessor::call(std::vector<std::string>* message_parts)
     NPP instance;
     std::string window_ptr_str;
     NPVariant* window_ptr;
+    int reference;
     std::string window_function_name;
     std::vector<NPVariant> args = std::vector<NPVariant>();
     std::vector<std::string> arg_ids = std::vector<std::string>();
@@ -270,20 +275,22 @@ PluginRequestProcessor::call(std::vector<std::string>* message_parts)
     JavaRequestProcessor java_request = JavaRequestProcessor();
     JavaResultData* java_result;
 
+    reference = atoi(message_parts->at(3).c_str());
+
     // window
-    window_ptr_str = message_parts->at(3);
+    window_ptr_str = message_parts->at(5);
     window_ptr = (NPVariant*) IcedTeaPluginUtilities::stringToJSID(window_ptr_str);
 
     // instance
     instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(window_ptr);
 
     // function name
-    java_result = java_request.getString(message_parts->at(4));
+    java_result = java_request.getString(message_parts->at(6));
     CHECK_JAVA_RESULT(java_result);
     window_function_name.append(*(java_result->return_string));
 
     // arguments
-    for (int i=5; i < message_parts->size(); i++)
+    for (int i=7; i < message_parts->size(); i++)
     {
         arg_ids.push_back(message_parts->at(i));
     }
@@ -342,7 +349,7 @@ PluginRequestProcessor::call(std::vector<std::string>* message_parts)
         result_variant_jniid = "0";
     }
 
-    IcedTeaPluginUtilities::constructMessagePrefix(0, &response);
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &response);
     response += " JavaScriptCall ";
     response += result_variant_jniid;
 
@@ -364,9 +371,11 @@ PluginRequestProcessor::sendString(std::vector<std::string>* message_parts)
     NPVariant* variant;
     JavaRequestProcessor java_request = JavaRequestProcessor();
     JavaResultData* java_result;
+    int reference;
     std::string response = std::string();
 
-    variant_ptr = message_parts->at(3);
+    reference = atoi(message_parts->at(3).c_str());
+    variant_ptr = message_parts->at(5);
 
     variant = (NPVariant*) IcedTeaPluginUtilities::stringToJSID(variant_ptr);
     AsyncCallThreadData thread_data = AsyncCallThreadData();
@@ -393,7 +402,7 @@ PluginRequestProcessor::sendString(std::vector<std::string>* message_parts)
 #endif
 
     // We need the context 0 for backwards compatibility with the Java side
-    IcedTeaPluginUtilities::constructMessagePrefix(0, &response);
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &response);
     response += " JavaScriptToString ";
     response += thread_data.result;
 
@@ -418,6 +427,8 @@ PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
 {
     std::string propertyNameID;
     std::string value = std::string();
+    std::string response = std::string();
+    int reference;
 
     NPP instance;
     NPVariant* member;
@@ -428,24 +439,26 @@ PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
 
     IcedTeaPluginUtilities::printStringVector("PluginRequestProcessor::_setMember - ", message_parts);
 
-    member = (NPVariant*) (IcedTeaPluginUtilities::stringToJSID(message_parts->at(3)));
-    propertyNameID = message_parts->at(4);
+    reference = atoi(message_parts->at(3).c_str());
 
-    if (message_parts->at(5) == "literalreturn")
+    member = (NPVariant*) (IcedTeaPluginUtilities::stringToJSID(message_parts->at(5)));
+    propertyNameID = message_parts->at(6);
+
+    if (message_parts->at(7) == "literalreturn")
     {
-        value.append(message_parts->at(5));
+        value.append(message_parts->at(7));
         value.append(" ");
-        value.append(message_parts->at(6));
+        value.append(message_parts->at(8));
     } else
     {
-        value.append(message_parts->at(5));
+        value.append(message_parts->at(7));
     }
 
     instance = IcedTeaPluginUtilities::getInstanceFromMemberPtr(member);
 
-    if (message_parts->at(2) == "SetSlot")
+    if (message_parts->at(4) == "SetSlot")
     {
-        property_identifier = browser_functions.getintidentifier(atoi(message_parts->at(4).c_str()));
+        property_identifier = browser_functions.getintidentifier(atoi(message_parts->at(6).c_str()));
     } else
     {
         java_result = java_request.getString(propertyNameID);
@@ -476,6 +489,10 @@ PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
     }
 #endif
 
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &response);
+    response.append(" JavaScriptSetMember ");
+    plugin_to_java_bus->post(response.c_str());
+
     cleanup:
     delete message_parts;
 
@@ -505,6 +522,7 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
     JavaResultData* java_result;
     NPVariant* parent_ptr;
 
+    //int reference;
     std::string member_id = std::string();
     std::string jsObjectClassID = std::string();
     std::string jsObjectConstructorID = std::string();
@@ -516,18 +534,20 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
 
     int method_id;
     int instance_id;
-    long reference;
+    int reference;
 
     // debug printout of parent thread data
     IcedTeaPluginUtilities::printStringVector("PluginRequestProcessor::getMember:", message_parts);
 
+    reference = atoi(message_parts->at(3).c_str());
+
     // store info in local variables for easy access
     instance_id = atoi(message_parts->at(1).c_str());
-    parent_ptr = (NPVariant*) (IcedTeaPluginUtilities::stringToJSID(message_parts->at(3)));
-    member_id += message_parts->at(4);
+    parent_ptr = (NPVariant*) (IcedTeaPluginUtilities::stringToJSID(message_parts->at(5)));
+    member_id += message_parts->at(6);
 
     /** Request data from Java if necessary **/
-    if (message_parts->at(2) == "GetSlot")
+    if (message_parts->at(4) == "GetSlot")
     {
         member_identifier = browser_functions.getintidentifier(atoi(member_id.c_str()));
     } else
@@ -544,10 +564,6 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
 
         member_identifier = browser_functions.getstringidentifier(java_result->return_string->c_str());
     }
-
-    /** Make an internal request for the main thread to handle, to get the member pointer **/
-
-    reference = internal_req_ref_counter++;
 
     AsyncCallThreadData thread_data = AsyncCallThreadData();
     thread_data.result_ready = false;
@@ -576,8 +592,6 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
 #endif
 
     PLUGIN_DEBUG_1ARG("Member PTR after internal request: %s\n", thread_data.result.c_str());
-
-    internal_req_ref_counter--;
 
     java_result = java_request.findClass(0, "netscape.javascript.JSObject");
 
@@ -624,7 +638,7 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
     }
 
 
-    IcedTeaPluginUtilities::constructMessagePrefix(0, &response);
+    IcedTeaPluginUtilities::constructMessagePrefix(0, reference, &response);
     if (message_parts->at(2) == "GetSlot")
     {
         response.append(" JavaScriptGetMember ");
@@ -667,7 +681,7 @@ queue_processor(void* data)
 
         if (message_parts)
         {
-            command = message_parts->at(2);
+            command = message_parts->at(4);
 
             if (command == "GetMember")
             {
@@ -732,7 +746,6 @@ void
 _setMember(void* data)
 {
     std::string* value;
-    std::string response = std::string();
 
     NPP instance;
     NPVariant value_variant = NPVariant();
@@ -753,12 +766,7 @@ _setMember(void* data)
 
     ((AsyncCallThreadData*) data)->call_successful = browser_functions.setproperty(instance, member, *property, &value_variant);
 
-    IcedTeaPluginUtilities::constructMessagePrefix(0, &response);
-    response.append(" JavaScriptSetMember ");
-    plugin_to_java_bus->post(response.c_str());
-
     ((AsyncCallThreadData*) data)->result_ready = true;
-
 }
 
 void

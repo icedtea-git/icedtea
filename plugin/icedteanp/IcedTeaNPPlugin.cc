@@ -1222,15 +1222,15 @@ void consume_message(gchar* message) {
   else if (g_str_has_prefix (message, "plugin "))
     {
       // internal plugin related message
-      gchar** parts = g_strsplit (message, " ", 3);
+      gchar** parts = g_strsplit (message, " ", 5);
       if (g_str_has_prefix(parts[1], "PluginProxyInfo"))
       {
         gchar* proxy;
         uint32_t len;
 
-        gchar* decoded_url = (gchar*) calloc(strlen(parts[2]) + 1, sizeof(gchar));
-        IcedTeaPluginUtilities::decodeURL(parts[2], &decoded_url);
-        PLUGIN_DEBUG_4ARG("parts[0]=%s, parts[1]=%s, parts[2]=%s -- decoded_url=%s\n", parts[0], parts[1], parts[2], decoded_url);
+        gchar* decoded_url = (gchar*) calloc(strlen(parts[4]) + 1, sizeof(gchar));
+        IcedTeaPluginUtilities::decodeURL(parts[4], &decoded_url);
+        PLUGIN_DEBUG_5ARG("parts[0]=%s, parts[1]=%s, reference, parts[3]=%s, parts[4]=%s -- decoded_url=%s\n", parts[0], parts[1], parts[3], parts[4], decoded_url);
 
         gchar* proxy_info;
 
@@ -1238,7 +1238,7 @@ void consume_message(gchar* message) {
 	proxy = (char*) malloc(sizeof(char)*2048);
 #endif
 
-        proxy_info = g_strconcat ("plugin PluginProxyInfo ", NULL);
+        proxy_info = g_strconcat ("plugin PluginProxyInfo reference ", parts[3], " ", NULL);
         if (get_proxy_info(decoded_url, &proxy, &len) == NPERR_NO_ERROR)
           {
             proxy_info = g_strconcat (proxy_info, proxy, NULL);
@@ -1259,10 +1259,10 @@ void consume_message(gchar* message) {
 
       } else if (g_str_has_prefix(parts[1], "PluginCookieInfo"))
       {
-        gchar* decoded_url = (gchar*) calloc(strlen(parts[2])+1, sizeof(gchar));
-        IcedTeaPluginUtilities::decodeURL(parts[2], &decoded_url);
+        gchar* decoded_url = (gchar*) calloc(strlen(parts[4])+1, sizeof(gchar));
+        IcedTeaPluginUtilities::decodeURL(parts[4], &decoded_url);
 
-        gchar* cookie_info = g_strconcat ("plugin PluginCookieInfo ", parts[2], " ", NULL);
+        gchar* cookie_info = g_strconcat ("plugin PluginCookieInfo reference ", parts[3], " ", NULL);
         gchar* cookie_string;
         uint32_t len;
         if (get_cookie_info(decoded_url, &cookie_string, &len) == NPERR_NO_ERROR)
@@ -1358,7 +1358,14 @@ get_proxy_info(const char* siteAddr, char** proxy, uint32_t* len)
   nsDependentCString ipAddr;
   record->GetNextAddrAsString(ipAddr);
 
-  snprintf(*proxy, sizeof(char)*1024, "%s://%s:%d", ptype.get(), ipAddr.get(), pport);
+  if (!strcmp(ptype.get(), "http"))
+  {
+      snprintf(*proxy, sizeof(char)*1024, "%s %s:%d", "PROXY", ipAddr.get(), pport);
+  } else
+  {
+      snprintf(*proxy, sizeof(char)*1024, "%s %s:%d", "SOCKS", ipAddr.get(), pport);
+  }
+
   *len = strlen(*proxy);
 
   PLUGIN_DEBUG_2ARG("Proxy info for %s: %s\n", siteAddr, *proxy);

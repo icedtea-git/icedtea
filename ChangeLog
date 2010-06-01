@@ -1,3 +1,83 @@
+2010-03-09  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaNPPlugin.cc
+	(consume_message): Handle the new reference field and send it back when
+	sending proxy and cookie info.
+	(get_proxy_info): Update response format for proxy information to make it
+	consistent with new Gecko API.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc
+	(newMessageOnBus): Account for the new reference field and send it back
+	with the response.
+	(sendWindow): Same.
+	(eval): Same.
+	(call): Same.
+	(sendString): Same.
+	(setMember): Same. Also, move responding code from _setMember to setMember
+	for consistency and to solve a rather bad race condition that affected
+	reliability.
+	(sendMember): Account for the new reference field and send it back 
+	with the response.
+	(queue_processor): Move array index slots based on new positions with
+	reference ids.
+	(_setMember): Move response code back to setMember.
+	* plugin/icedteanp/java/sun/applet/GetMemberPluginCallRequest.java
+	(GetMemberPluginCallRequest): Change method signature to receive a
+	reference identifier.
+	(parse): Update to handle new reference identifiers.
+	(serviceable): Removed method. serviceable() is now implemented in the
+	parent class and uses unique reference identifiers.
+	* plugin/icedteanp/java/sun/applet/GetWindowPluginCallRequest.java
+	(GetWindowPluginCallRequest): Change method signature to receive a 
+	reference identifier.
+	(serviceable): Removed method. serviceable() is now implemented in the
+	parent class and uses unique reference identifiers.
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java: Added new
+	statis private requestIdentityCounter variable that provides unique
+	reference numbers.
+	(createPanel): Send a dummy (0) reference number with initialization msg.
+	(getRequestIdentifier): New method. Returns a unique reference number 
+	and then increments requestIdentityCounter in a thread-safe manner.
+	(getWindow): Send reference id to getPluginCallRequest.
+	(getMember): Same.
+	(setMember): Same.
+	(setSlot): Same.
+	(getSlot): Same.
+	(eval): Same.
+	(removeMember): Same.
+	(call): Same.
+	(requestPluginCookieInfo): Same.
+	(requestPluginProxyInfo): Same.
+	(JavaScriptFinalize): Same.
+	(javascriptToString): Same.
+	* plugin/icedteanp/java/sun/applet/PluginCallRequest.java: Track reference
+	numbers instead of the 'return string' marker.
+	(serviceable): Change from abstract to implemented method, returns weather
+	or not the given message is servicable by this request based on unique
+	reference numbers.
+	* plugin/icedteanp/java/sun/applet/PluginCallRequestFactory.java
+	(getPluginCallRequest): Pass reference numbers to concrete class
+	constructors.
+	* plugin/icedteanp/java/sun/applet/PluginCookieInfoRequest.java
+	(PluginCookieInfoRequest): Receive new reference number and pass it to
+	parent.
+	(parseString): Update to handle new reference numbers in message.
+	(serviceable): Removed method. serviceable() is now implemented in the
+	parent class and uses unique reference identifiers.
+	* plugin/icedteanp/java/sun/applet/PluginProxyInfoRequest.java
+	(PluginProxyInfoRequest): Receive new reference number and pass it to
+	parent.
+	(parseReturn): Update to handle new reference numbers in message. Also,
+	parse based on new format returned by the C++ side.
+	(serviceable): Removed method. serviceable() is now implemented in the
+	parent class and uses unique reference identifiers.
+	* plugin/icedteanp/java/sun/applet/PluginStreamHandler.java
+	(handleMessage): Pass reference to finishCallRequest().
+	* plugin/icedteanp/java/sun/applet/VoidPluginCallRequest.java
+	(VoidPluginCallRequest): Update to handle new reference numbers in
+	message.
+	* plugin/tests/LiveConnect/common.js
+	(testAll): Check eval tests checkbox before calling doTest();
+
 2010-03-08  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
