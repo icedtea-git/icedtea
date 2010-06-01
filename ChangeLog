@@ -1,3 +1,8 @@
+2010-03-08  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am:
+	(ICEDTEA_BOOT_PATCHES): Add DISTRIBUTION_BOOT_PATCHES.
+
 2010-03-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

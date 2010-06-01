@@ -441,6 +441,8 @@ if JAVAC_LACKS_DIAMOND
 ICEDTEA_BOOT_PATCHES += patches/boot/ecj-diamond.patch
 endif
 
+ICEDTEA_BOOT_PATCHES += $(DISTRIBUTION_BOOT_PATCHES)
+
 # Patches for JAXWS
 
 JAXWS_PATCHES = patches/boot/jaxws-getdtdtype.patch
