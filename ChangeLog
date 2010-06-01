@@ -1,3 +1,10 @@
+2010-06-01 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am: Update langtools
+	changeset ID and sha256 sum to bring in
+	fix to no-fork genstubs classpath:
+	http://hg.openjdk.java.net/icedtea/jdk7/langtools/rev/681f1f51926f
+
 2010-02-26  Xerxes Rånby  <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
