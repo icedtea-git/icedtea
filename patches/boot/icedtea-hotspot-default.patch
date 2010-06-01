@@ -40,30 +40,12 @@ diff -Nru ../openjdk.orig/openjdk-boot/hotspot/make/linux/Makefile openjdk-boot/
 diff -Nru ../openjdk.orig/openjdk-boot/hotspot/make/linux/makefiles/sa.make openjdk-boot/hotspot/make/linux/makefiles/sa.make
 --- ../openjdk.orig/openjdk-boot/hotspot/make/linux/makefiles/sa.make	2009-10-30 15:58:31.000000000 +0000
 +++ openjdk-boot/hotspot/make/linux/makefiles/sa.make	2009-10-30 17:44:58.000000000 +0000
-@@ -38,7 +38,9 @@
+@@ -38,7 +38,7 @@
  GENERATED = $(TOPDIR)/../generated
  
  # tools.jar is needed by the JDI - SA binding
 -SA_CLASSPATH = $(BOOT_JAVA_HOME)/lib/tools.jar
-+SA_TOOLS_JAR = $(BOOT_JAVA_HOME)/lib/tools.jar
-+SA_RT_JAR = $(BOOT_JAVA_HOME)/jre/lib/rt.jar
-+SA_CLASSPATH = $(SA_TOOLS_JAR):$(SA_RT_JAR)
++SA_CLASSPATH = $(BOOT_JAVA_HOME)/jre/lib/rt.jar
  
  # gnumake 3.78.1 does not accept the *s that
  # are in AGENT_FILES1 and AGENT_FILES2, so use the shell to expand them
-@@ -65,8 +67,13 @@
- 	  echo "ALT_BOOTDIR, BOOTDIR or JAVA_HOME needs to be defined to build SA"; \
- 	  exit 1; \
- 	fi
--	$(QUIETLY) if [ ! -f $(SA_CLASSPATH) ] ; then \
--	  echo "Missing $(SA_CLASSPATH) file. Use 1.6.0 or later version of JDK";\
-+	$(QUIETLY) if [ ! -f $(SA_TOOLS_JAR) ] ; then \
-+	  echo "Missing $(SA_TOOLS_JAR) file. Use 1.6.0 or later version of JDK";\
-+	  echo ""; \
-+	  exit 1; \
-+	fi
-+	$(QUIETLY) if [ ! -f $(SA_RT_JAR) ] ; then \
-+	  echo "Missing $(SA_RT_JAR) file. Use 1.6.0 or later version of JDK";\
- 	  echo ""; \
- 	  exit 1; \
- 	fi

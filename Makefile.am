@@ -775,9 +775,9 @@ install:
 	clean-bootstrap-directory-symlink-stage2 clean-bootstrap-directory-stage1 \
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot clean-plugs \
-	clean-tools-jar clean-visualvm clean-nbplatform \
-	clean-rt clean-plugin hotspot hotspot-helper clean-extra clean-jtreg \
-	clean-jtreg-reports clean-netx clean-drops
+	clean-visualvm clean-nbplatform clean-rt clean-plugin hotspot \
+	hotspot-helper clean-extra clean-jtreg clean-jtreg-reports clean-netx \
+	clean-drops
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1722,10 +1722,6 @@ stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
 	  ln -sf ./$(JRE_ARCH_DIR) \
 	    bootstrap/boot/jre/lib/$(INSTALL_ARCH_DIR); \
 	fi
-# For HotSpot
-	mkdir -p $(abs_top_builddir)/bootstrap/boot/lib && \
-	ln -sf $(abs_top_builddir)/bootstrap/boot/jre/lib/rt.jar \
-	  $(abs_top_builddir)/bootstrap/boot/lib/tools.jar
 	mkdir -p bootstrap/boot/include && \
 	for i in $(SYSTEM_JDK_DIR)/include/*; do \
 	  test -r $$i | continue; \
@@ -2711,34 +2707,17 @@ clean-rt:
 	rm -f stamps/rt-class-files.stamp stamps/rt.stamp
 	rm -f rt-source-files.txt
 
-# tools.jar
-bootstrap/jdk1.7.0/lib/tools.jar: stamps/rt.stamp
-	mkdir -p bootstrap/boot/lib
-	ln -sf $(abs_top_builddir)/bootstrap/boot/jre/lib/rt.jar \
-	  $(abs_top_builddir)/bootstrap/boot/lib/tools.jar
-	mkdir -p bootstrap/jdk1.7.0/lib
-	ln -sf $(abs_top_builddir)/bootstrap/boot/lib/tools.jar \
-	  $(abs_top_builddir)/bootstrap/jdk1.7.0/lib/tools.jar
-
-clean-tools-jar:
-	rm -f bootstrap/jdk1.7.0/lib/tools.jar
-	rm -f bootstrap/boot/lib/tools.jar
-	if test -d bootstrap/boot/lib ; then \
-	  rm -f $(abs_top_builddir)/bootstrap/boot/lib/tools.jar; \
-	fi 
-
 # rt-closed.jar.
 bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt.stamp
 	mkdir -p bootstrap/jdk1.7.0/jre/lib
 	ln -sf ${abs_top_builddir}/bootstrap/boot/jre/lib/rt.jar \
 		bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 
-stamps/plugs.stamp: bootstrap/jdk1.7.0/jre/lib/rt-closed.jar \
-	bootstrap/jdk1.7.0/lib/tools.jar
+stamps/plugs.stamp: bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 	mkdir -p stamps
 	touch $@
 
-clean-plugs: clean-tools-jar clean-rt
+clean-plugs: clean-rt
 	rm -f stamps/plugs.stamp
 	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
 	rm -rf bootstrap/jdk1.7.0

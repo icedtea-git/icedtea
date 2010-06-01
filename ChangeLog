@@ -1,5 +1,21 @@
 2010-06-01 Andrew John Hughes  <ahughes@redhat.com>
 
+	Drop fake tools.jar in bootstrap JDK.
+	* Makefile.am:
+	(.PHONY): Remove clean-tools-jar.
+	(bootstrap-directory-stage1.stamp): Remove
+	tools.jar symlink; can be avoided by patching
+	HotSpot as part of  patch below.
+	(bootstrap/jdk1.7.0/lib/tools.jar): Removed.
+	(clean-tools-jar): Likewise.
+	(plugs.stamp): Remove dependency on tools.jar.
+	(clean-plugs): Remove dependency on clean-tools-jar.
+	* patches/boot/icedtea-hotspot-default.patch:
+	Remove references to tools.jar, setting SA_CLASSPATH
+	to rt.jar instead of tools.jar.
+
+2010-06-01 Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am: Update langtools
 	changeset ID and sha256 sum to bring in
 	fix to no-fork genstubs classpath:
