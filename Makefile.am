@@ -95,6 +95,7 @@ JAXWS = $(BUILD_OUTPUT_DIR)/jaxws/drop/jaxws_src/src
 
 NETX_SRCDIR = $(abs_top_srcdir)/netx
 NETX_RESOURCE_DIR=$(NETX_SRCDIR)/net/sourceforge/jnlp/resources
+NETX_EXTRA_DIR=$(abs_top_srcdir)/extra/net/sourceforge/jnlp/about/resources
 
 if DTDTYPE_QNAME
 NEED_JAXWS_SRC = true
@@ -135,6 +136,9 @@ ICEDTEA_BOOTSTRAP_DIRS = \
 
 ICEDTEA_BOOTSTRAP_RESOURCES = \
 	$(LANGTOOLS)/com/sun/tools/javac/resources
+
+ICEDTEA_BOOTSTRAP_CLASSES = \
+	$(SHARE)/javax/swing/plaf/basic/BasicDirectoryModel.java
 
 endif
 
@@ -1827,11 +1831,9 @@ if ENABLE_PULSE_JAVA
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/ext
 endif
 if JNLP_ABOUT_NEEDED
-	cp $(NETX_RESOURCE_DIR)/about.jnlp \
-	  extra-lib/about.jar \
+	cp $(NETX_RESOURCE_DIR)/about.jnlp extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
-	cp $(NETX_RESOURCE_DIR)/about.jnlp \
-	  extra-lib/about.jar \
+	cp $(NETX_RESOURCE_DIR)/about.jnlp extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 endif
 if ZERO_BUILD
@@ -1911,11 +1913,9 @@ if ENABLE_PULSE_JAVA
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/ext
 endif
 if JNLP_ABOUT_NEEDED
-	cp $(NETX_RESOURCE_DIR)/default.jnlp \
-	  extra-lib/about.jar \
+	cp $(NETX_RESOURCE_DIR)/default.jnlp extra-lib/about.jar \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib
-	cp $(NETX_RESOURCE_DIR)/default.jnlp \
-	  extra-lib/about.jar \
+	cp $(NETX_RESOURCE_DIR)/default.jnlp extra-lib/about.jar \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 endif
 if ZERO_BUILD
@@ -2122,7 +2122,7 @@ liveconnect-source-files.txt:
 
 stamps/liveconnect.stamp: liveconnect-source-files.txt stamps/netx.stamp
 	if test "x${LIVECONNECT_DIR}" != x; then \
-	  mkdir -p $(LIVECONNECT_CLASSES) ; \
+	  mkdir -p $(LIVECONNECT_CLASSES) && \
 	  $(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	      -d $(LIVECONNECT_CLASSES) \
 	      -classpath $(ICEDTEA_RT):$(NETX_CLASSES) \
@@ -2167,6 +2167,7 @@ stamps/netx.stamp: netx-source-files.txt stamps/rt.stamp
 	    -sourcepath $(NETX_SRCDIR):$(SOURCEPATH_DIRS) \
 	    -bootclasspath \'\' \
 	    @netx-source-files.txt ;
+	cp -r $(NETX_RESOURCE_DIR) $(NETX_CLASSES)/net/sourceforge/jnlp
 	mkdir -p stamps
 	touch $@
 
@@ -2199,8 +2200,7 @@ stamps/extra-class-files.stamp: extra-source-files.txt stamps/netx.stamp
 	  -sourcepath $(abs_top_srcdir)/extra:$(SOURCEPATH_DIRS) \
 	  -bootclasspath \'\' \
 	  @extra-source-files.txt
-	cp -r $(abs_top_srcdir)/extra/net/sourceforge/jnlp/about/resources \
-	  extra-lib/net/sourceforge/jnlp/about	
+	cp -r $(NETX_EXTRA_DIR) extra-lib/net/sourceforge/jnlp/about	
 	find extra-lib/net/sourceforge/jnlp/about -type f -exec chmod 640 '{}' ';' \
 	  -o -type d -exec chmod 750 '{}' ';'
 	mkdir -p stamps
@@ -2676,11 +2676,13 @@ jtregcheck: jtreg check-hotspot check-langtools check-jdk
 # Support classes for non-OpenJDK bootstraps
 
 rt-source-files.txt: $(OPENJDK_BOOT_TREE)
-	$(FIND) $(abs_top_builddir)/rt -name '*.java' \
-	  | sort -u > $@
 	for dir in $(ICEDTEA_BOOTSTRAP_DIRS) ; \
 	do \
 	$(FIND) $(abs_top_builddir)/$$dir -name '*.java' >> $@; \
+	done
+	for files in $(ICEDTEA_BOOTSTRAP_CLASSES) ; \
+	do \
+	  echo $$files >> $@ ; \
 	done
 
 stamps/rt-class-files.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP) rt-source-files.txt
@@ -2798,6 +2800,8 @@ liveconnect-dist: stamps/liveconnect-dist.stamp
 native-ecj: stamps/native-ecj.stamp
 
 nbplatform: stamps/nbplatform.stamp
+
+netx: stamps/netx.stamp
 
 netx-dist: stamps/netx-dist.stamp
 

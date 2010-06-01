@@ -1,3 +1,17 @@
+2010-03-12  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(NETX_EXTRA_DIR): Path to extra NetX resource files.
+	(ICEDTEA_BOOTSTRAP_CLASSES): Explicitly compile BasicDirectoryModel
+	due to http://gcc.gnu.org/bugzilla/show_bug.cgi?id=42003
+	(stamps/icedtea.stamp): Use NETX_RESOURCE_DIR for about.jnlp.
+	(stamps/icedtea-debug.stamp): Likewise.
+	(stamps/netx.stamp): Copy the resources to the build directory.
+	(stamps/extra-class-files.stamp): Use NETX_EXTRA_DIR.
+	(rt-source-files.txt): Don't search rt directory in build tree.
+	Support ICEDTEA_BOOTSTRAP_CLASSES.
+	(netx): New alias.
+
 2010-03-11  Gary Benson  <gbenson@redhat.com>
 
 	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp
