@@ -1,3 +1,14 @@
+2010-03-04  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Don't unset ICEDTEA_BUILD_TARGET if unused.
+	(hotspot): Support the configuration where BOOTSTRAPPING
+	is not set.  Pass ICEDTEA_BUILD_TARGET=hotspot to make rather
+	than having an additional hotspot-helper target.
+	Don't remove bootstrap-directory-symlink-ecj.stamp
+	as this just forces the bootstrap classes to be rebuilt.
+	(hotspot-helper): Removed.
+
 2010-03-04  Xerxes Rånby  <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp

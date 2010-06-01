@@ -230,7 +230,6 @@ if WITH_CACAO
   ICEDTEA_BUILD_TARGET=jdk_only
   ICEDTEA_DEBUG_BUILD_TARGET=jdk_fastdebug_only
 else
-  ICEDTEA_BUILD_TARGET=
   ICEDTEA_DEBUG_BUILD_TARGET=debug_build
 endif
 
@@ -1997,21 +1996,25 @@ stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
 	touch $@
 
 hotspot:
-	rm -f stamps/bootstrap-directory-symlink-stage1.stamp
+if BOOTSTRAPPING
 	rm -f stamps/icedtea-boot.stamp
 	rm -f stamps/icedtea-stage1.stamp
-	$(ARCH_PREFIX) $(MAKE) hotspot-helper
+	$(ARCH_PREFIX) $(MAKE) ICEDTEA_BUILD_TARGET=hotspot icedtea-stage1
 	mkdir -p \
 	   $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
 	cp $(BOOT_BUILD_OUTPUT_DIR)/$(SERVER_DIR)/libjvm.so \
 	   $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
-	@echo "Hotspot is served:" $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image
-
-hotspot-helper: stamps/bootstrap-directory-symlink-stage1.stamp \
-	stamps/plugs.stamp stamps/ports.stamp stamps/patch-boot.stamp
-	$(ARCH_PREFIX) $(MAKE) \
-	  $(ICEDTEA_ENV_BOOT) \
-	  -C openjdk-boot hotspot
+	@echo "HotSpot is served:" $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image
+else
+	rm -f stamps/icedtea.stamp
+	rm -f stamps/icedtea-stage2.stamp
+	$(ARCH_PREFIX) $(MAKE) ICEDTEA_BUILD_TARGET=hotspot icedtea-stage2
+	mkdir -p \
+	   $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
+	cp $(BUILD_OUTPUT_DIR)/$(SERVER_DIR)/libjvm.so \
+	   $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
+	@echo "HotSpot is served:" $(BUILD_OUTPUT_DIR)/j2sdk-image
+endif
 
 clean-icedtea-boot: 
 	if [ -e $(abs_top_builddir)/openjdk-boot ]; then \
