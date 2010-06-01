@@ -2574,7 +2574,7 @@ stamps/plugin-tests.stamp: $(PLUGIN_TEST_SRCS) \
 
 # jtreg
 
-stamps/jtreg.stamp: stamps/icedtea.stamp
+stamps/jtreg.stamp: stamps/icedtea-stage2.stamp
 	rm -rf test/jtreg/classes
 	mkdir -p test/jtreg/classes
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d test/jtreg/classes \

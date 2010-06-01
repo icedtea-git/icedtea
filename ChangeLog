@@ -1,3 +1,9 @@
+2010-03-01  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(stamps/jtreg.stamp): Depend on
+	stamps/icedtea-stage2.stamp
+
 2010-06-01 Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-jaxws-getdtdtype.patch:
