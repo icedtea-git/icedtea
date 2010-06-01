@@ -444,7 +444,7 @@ endif
 
 # Patches for JAXWS
 
-JAXWS_PATCHES = patches/icedtea-jaxws-getdtdtype.patch
+JAXWS_PATCHES = patches/boot/jaxws-getdtdtype.patch
 
 # OpenJDK build environment.
 if ZERO_BUILD

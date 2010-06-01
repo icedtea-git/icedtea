@@ -1,5 +1,14 @@
 2010-06-01 Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/icedtea-jaxws-getdtdtype.patch:
+	Moved to...
+	* Makefile.am:
+	Move jaxws patch to bootstrap subdirectory.
+	* patches/boot/jaxws-getdtdtype.patch:
+	...here.
+
+2010-06-01 Andrew John Hughes  <ahughes@redhat.com>
+
 	Drop fake tools.jar in bootstrap JDK.
 	* Makefile.am:
 	(.PHONY): Remove clean-tools-jar.
