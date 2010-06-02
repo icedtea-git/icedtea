@@ -1,3 +1,28 @@
+2010-03-16  Andrew John Hughes  <ahughes@redhat.com>
+
+	NetX/plugin build sync (3/3):
+	* patches/icedtea-copy-plugs.patch:
+	Remove plug-related segments and move
+	remainder to patches/boot/getannotation-cast.patch.
+	* Makefile.am:
+	(ICEDTEA_BOOTSTRAP_CLASSES): Add javax/management/StandardMBean.java.
+	(ICEDTEA_PATCHES): Remove copy-plugs.patch.
+	(BOOTCLASSPATH_RT_LIBGCJ): Remove duplication of including system rt.jar as well.
+	(ICEDTEA_BOOT_PATCHES): Add getannotation-cast.patch.
+	(clean-local): Don't depend on clean-plugs.
+	(.PHONY): Likewise.
+	(icedtea-debug.stamp): Remove liveconnect-dist.stamp as
+	implied by plugin.stamp.
+	(icedtea-boot.stamp): Likewise and add plugin.stamp.
+	(clean-rt): Revert to system rt.jar.
+	(bootstrap/jdk1.7.0/jre/lib/rt-closed.jar): Removed.
+	(plugs.stamp): Removed.
+	(clean-plugs): Removed.
+	* patches/boot/getannotation-cast.patch:
+	Remaining part of copy-plugs.patch which
+	provides a cast for getAnnotation for older versions
+	of GNU Classpath.
+
 2010-03-16  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc

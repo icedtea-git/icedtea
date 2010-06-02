@@ -136,8 +136,11 @@ ICEDTEA_BOOTSTRAP_DIRS = \
 ICEDTEA_BOOTSTRAP_RESOURCES = \
 	$(LANGTOOLS)/com/sun/tools/javac/resources
 
+# PR42003 - javax.swing.plaf.basic.BasicDirectoryModel
+# PR43389 - javax.management.StandardMBean
 ICEDTEA_BOOTSTRAP_CLASSES = \
-	$(SHARE)/javax/swing/plaf/basic/BasicDirectoryModel.java
+	$(SHARE)/javax/swing/plaf/basic/BasicDirectoryModel.java \
+	$(SHARE)/javax/management/StandardMBean.java
 
 endif
 
@@ -265,7 +268,6 @@ REWRITER_SRCS = $(abs_top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.jav
 # Patch list
 
 ICEDTEA_PATCHES = \
-	patches/icedtea-copy-plugs.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-text-relocations.patch \
 	patches/icedtea-ssl.patch \
 	patches/icedtea-rmi_amd64.patch \
@@ -412,7 +414,8 @@ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/icedtea-jopt.patch \
 	patches/boot/icedtea-dyn.patch \
 	patches/boot/icedtea-jaxp-dependency.patch \
-	patches/boot/genstubs-nofork.patch
+	patches/boot/genstubs-nofork.patch \
+	patches/boot/getannotation-cast.patch
 
 if CP39408_JAVAH
 ICEDTEA_BOOT_PATCHES += patches/boot/icedtea-pr39408.patch
@@ -559,7 +562,7 @@ endif
 ICEDTEA_ENV_BOOT = $(ICEDTEA_ENV) \
 	BOOTCLASSPATH_CLS_RT="-bootclasspath $(ICEDTEA_CLS_DIR_BOOT):$(ICEDTEA_RT)" \
 	BOOTCLASSPATH_CLS="-bootclasspath $(ICEDTEA_CLS_DIR_BOOT)" \
-	BOOTCLASSPATH_RT_LIBGCJ="-bootclasspath $(ICEDTEA_RT):$(SYSTEM_JDK_DIR)/jre/lib/rt.jar" \
+	BOOTCLASSPATH_RT_LIBGCJ="-bootclasspath $(ICEDTEA_RT)" \
 	GENSRCDIR="$(abs_top_builddir)/generated" \
 	JAR_KNOWS_ATFILE="$(JAR_KNOWS_ATFILE)" \
 	JAR_KNOWS_J_OPTIONS="$(JAR_KNOWS_J_OPTIONS)" \
@@ -754,7 +757,7 @@ check-local: jtregcheck
 
 clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
  clean-icedtea clean-icedtea-boot clean-clone clean-clone-boot \
- clean-plugs clean-extra clean-netx clean-visualvm clean-nbplatform \
+ clean-extra clean-netx clean-visualvm clean-nbplatform \
  clean-bootstrap-directory-stage1 clean-bootstrap-directory-stage2 \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
  clean-extract clean-generated clean-plugin clean-liveconnect clean-native-ecj \
@@ -780,7 +783,7 @@ install:
 	clean-clone-boot clean-patch-boot clean-bootstrap-directory-stage2 \
 	clean-bootstrap-directory-symlink-stage2 clean-bootstrap-directory-stage1 \
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
-	clean-icedtea icedtea-stage2 clean-icedtea-boot clean-plugs \
+	clean-icedtea icedtea-stage2 clean-icedtea-boot \
 	clean-visualvm clean-nbplatform clean-rt clean-plugin hotspot \
 	hotspot-helper clean-extra clean-jtreg clean-jtreg-reports clean-netx \
 	clean-drops
@@ -1876,8 +1879,7 @@ endif
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/plugin.stamp $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
- stamps/netx-dist.stamp stamps/liveconnect-dist.stamp $(PULSE_JAVA_TARGET) \
- stamps/rewrite-rhino.stamp
+ stamps/netx-dist.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1985,9 +1987,8 @@ clean-icedtea-debug-stage2:
 # ===================
 
 stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
- stamps/download.stamp $(OPENJDK_BOOT_TREE) stamps/plugs.stamp \
- stamps/netx-dist.stamp stamps/liveconnect-dist.stamp stamps/cacao.stamp \
- stamps/rewrite-rhino.stamp
+ stamps/download.stamp $(OPENJDK_BOOT_TREE) stamps/netx-dist.stamp \
+ stamps/plugin.stamp stamps/cacao.stamp stamps/rewrite-rhino.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot \
@@ -2703,21 +2704,9 @@ clean-rt:
 	rm -rf lib/rt
 	rm -f stamps/rt-class-files.stamp stamps/rt.stamp
 	rm -f rt-source-files.txt
-
-# rt-closed.jar.
-bootstrap/jdk1.7.0/jre/lib/rt-closed.jar: stamps/rt.stamp
-	mkdir -p bootstrap/jdk1.7.0/jre/lib
-	ln -sf ${abs_top_builddir}/bootstrap/boot/jre/lib/rt.jar \
-		bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
-
-stamps/plugs.stamp: bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
-	mkdir -p stamps
-	touch $@
-
-clean-plugs: clean-rt
-	rm -f stamps/plugs.stamp
-	rm -f bootstrap/jdk1.7.0/jre/lib/rt-closed.jar
-	rm -rf bootstrap/jdk1.7.0
+	if [ -e bootstrap/boot/jre/lib ] ; then
+	  cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar bootstrap/boot/jre/lib
+	fi
 
 # Target Aliases
 # ===============
@@ -2803,8 +2792,6 @@ patch-fsg: stamps/patch-fsg.stamp
 plugin: stamps/plugin.stamp
 
 plugin-tests: stamps/plugin-tests.stamp
-
-plugs: stamps/plugs.stamp
 
 pulse-java: $(PULSE_JAVA_TARGET)
 

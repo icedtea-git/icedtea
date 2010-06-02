@@ -1,0 +1,12 @@
+diff -Nru openjdk.orig/jdk/src/share/classes/java/beans/MetaData.java openjdk/jdk/src/share/classes/java/beans/MetaData.java
+--- openjdk.orig/jdk/src/share/classes/java/beans/MetaData.java	2009-02-10 02:25:40.000000000 +0000
++++ openjdk/jdk/src/share/classes/java/beans/MetaData.java	2009-02-10 15:45:15.000000000 +0000
+@@ -1475,7 +1475,7 @@
+     }
+ 
+     private static String[] getAnnotationValue(Constructor<?> constructor) {
+-        ConstructorProperties annotation = constructor.getAnnotation(ConstructorProperties.class);
++        ConstructorProperties annotation = ((ConstructorProperties) constructor.getAnnotation(ConstructorProperties.class));
+         return (annotation != null)
+                 ? annotation.value()
+                 : null;
