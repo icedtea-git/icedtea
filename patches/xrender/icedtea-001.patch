@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/jdk/make/sun/font/FILES_c.gmk openjdk/jdk/make/sun/font/FILES_c.gmk
---- openjdk.orig/jdk/make/sun/font/FILES_c.gmk	2009-06-30 14:05:45.000000000 +0100
-+++ openjdk/jdk/make/sun/font/FILES_c.gmk	2009-10-23 14:35:23.000000000 +0100
+--- openjdk.orig/jdk/make/sun/font/FILES_c.gmk	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/make/sun/font/FILES_c.gmk	2010-06-02 19:03:05.000000000 +0100
 @@ -115,6 +115,7 @@
  FILES_cpp_platform =
  else
@@ -10,9 +10,9 @@ diff -Nru openjdk.orig/jdk/make/sun/font/FILES_c.gmk openjdk/jdk/make/sun/font/F
  FILES_cpp_platform =
  endif
 diff -Nru openjdk.orig/jdk/make/sun/font/Makefile openjdk/jdk/make/sun/font/Makefile
---- openjdk.orig/jdk/make/sun/font/Makefile	2009-10-21 19:24:47.000000000 +0100
-+++ openjdk/jdk/make/sun/font/Makefile	2009-10-23 14:35:23.000000000 +0100
-@@ -86,6 +86,7 @@
+--- openjdk.orig/jdk/make/sun/font/Makefile	2010-06-02 18:53:13.000000000 +0100
++++ openjdk/jdk/make/sun/font/Makefile	2010-06-02 19:03:05.000000000 +0100
+@@ -87,6 +87,7 @@
      sun/font/NativeStrike.java \
      sun/font/NativeStrikeDisposer.java \
      sun/font/X11TextRenderer.java \
@@ -21,8 +21,8 @@ diff -Nru openjdk.orig/jdk/make/sun/font/Makefile openjdk/jdk/make/sun/font/Make
  
  endif # PLATFORM
 diff -Nru openjdk.orig/jdk/make/sun/font/mapfile-vers openjdk/jdk/make/sun/font/mapfile-vers
---- openjdk.orig/jdk/make/sun/font/mapfile-vers	2009-10-21 16:42:03.000000000 +0100
-+++ openjdk/jdk/make/sun/font/mapfile-vers	2009-10-23 14:35:23.000000000 +0100
+--- openjdk.orig/jdk/make/sun/font/mapfile-vers	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/make/sun/font/mapfile-vers	2010-06-02 19:03:05.000000000 +0100
 @@ -56,6 +56,7 @@
                  Java_sun_font_NativeFont_getGlyphImage;
                  Java_sun_font_NativeFont_getGlyphImageNoDefault;
@@ -32,8 +32,8 @@ diff -Nru openjdk.orig/jdk/make/sun/font/mapfile-vers openjdk/jdk/make/sun/font/
  		*;
  };
 diff -Nru openjdk.orig/jdk/make/sun/font/mapfile-vers.openjdk openjdk/jdk/make/sun/font/mapfile-vers.openjdk
---- openjdk.orig/jdk/make/sun/font/mapfile-vers.openjdk	2009-10-21 16:42:03.000000000 +0100
-+++ openjdk/jdk/make/sun/font/mapfile-vers.openjdk	2009-10-23 14:35:23.000000000 +0100
+--- openjdk.orig/jdk/make/sun/font/mapfile-vers.openjdk	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/make/sun/font/mapfile-vers.openjdk	2010-06-02 19:03:05.000000000 +0100
 @@ -75,6 +75,7 @@
                  Java_sun_font_FreetypeFontScaler_getUnitsPerEMNative;
                  Java_sun_font_FreetypeFontScaler_initNativeScaler;
@@ -43,8 +43,8 @@ diff -Nru openjdk.orig/jdk/make/sun/font/mapfile-vers.openjdk openjdk/jdk/make/s
  		*;
  };
 diff -Nru openjdk.orig/jdk/make/sun/xawt/FILES_c_unix.gmk openjdk/jdk/make/sun/xawt/FILES_c_unix.gmk
---- openjdk.orig/jdk/make/sun/xawt/FILES_c_unix.gmk	2009-05-08 16:10:44.000000000 +0100
-+++ openjdk/jdk/make/sun/xawt/FILES_c_unix.gmk	2009-10-23 14:35:23.000000000 +0100
+--- openjdk.orig/jdk/make/sun/xawt/FILES_c_unix.gmk	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/make/sun/xawt/FILES_c_unix.gmk	2010-06-02 19:03:05.000000000 +0100
 @@ -79,4 +79,11 @@
  	gtk2_interface.c \
          swing_GTKEngine.c \
@@ -59,9 +59,9 @@ diff -Nru openjdk.orig/jdk/make/sun/xawt/FILES_c_unix.gmk openjdk/jdk/make/sun/x
 +        XRRenderer.c \
 +        XRPMBlitLoops.c
 diff -Nru openjdk.orig/jdk/make/sun/xawt/Makefile openjdk/jdk/make/sun/xawt/Makefile
---- openjdk.orig/jdk/make/sun/xawt/Makefile	2009-05-08 16:10:44.000000000 +0100
-+++ openjdk/jdk/make/sun/xawt/Makefile	2009-10-23 14:35:23.000000000 +0100
-@@ -87,7 +87,7 @@
+--- openjdk.orig/jdk/make/sun/xawt/Makefile	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/make/sun/xawt/Makefile	2010-06-02 19:03:05.000000000 +0100
+@@ -88,7 +88,7 @@
  vpath %.c   $(PLATFORM_SRC)/native/sun/java2d/opengl
  vpath %.c   $(PLATFORM_SRC)/native/sun/java2d/x11
  
@@ -71,9 +71,9 @@ diff -Nru openjdk.orig/jdk/make/sun/xawt/Makefile openjdk/jdk/make/sun/xawt/Make
  
  ifeq  ($(PLATFORM), solaris)
 diff -Nru openjdk.orig/jdk/make/sun/xawt/mapfile-vers openjdk/jdk/make/sun/xawt/mapfile-vers
---- openjdk.orig/jdk/make/sun/xawt/mapfile-vers	2009-10-21 16:42:03.000000000 +0100
-+++ openjdk/jdk/make/sun/xawt/mapfile-vers	2009-10-23 14:35:23.000000000 +0100
-@@ -367,6 +367,33 @@
+--- openjdk.orig/jdk/make/sun/xawt/mapfile-vers	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/make/sun/xawt/mapfile-vers	2010-06-02 19:03:05.000000000 +0100
+@@ -370,6 +370,33 @@
          Java_sun_java2d_x11_X11SurfaceData_XSetForeground;
          Java_sun_java2d_x11_X11SurfaceData_XSetGraphicsExposures;
  
@@ -108,8 +108,8 @@ diff -Nru openjdk.orig/jdk/make/sun/xawt/mapfile-vers openjdk/jdk/make/sun/xawt/
          Java_com_sun_java_swing_plaf_gtk_GTKEngine_native_1paint_1box;
          Java_com_sun_java_swing_plaf_gtk_GTKEngine_native_1paint_1box_1gap;
 diff -Nru openjdk.orig/jdk/src/share/classes/sun/java2d/pipe/BufferedPaints.java openjdk/jdk/src/share/classes/sun/java2d/pipe/BufferedPaints.java
---- openjdk.orig/jdk/src/share/classes/sun/java2d/pipe/BufferedPaints.java	2009-10-21 19:23:52.000000000 +0100
-+++ openjdk/jdk/src/share/classes/sun/java2d/pipe/BufferedPaints.java	2009-10-23 14:35:23.000000000 +0100
+--- openjdk.orig/jdk/src/share/classes/sun/java2d/pipe/BufferedPaints.java	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/src/share/classes/sun/java2d/pipe/BufferedPaints.java	2010-06-02 19:03:05.000000000 +0100
 @@ -307,7 +307,7 @@
       * linear RGB space.  Copied directly from the
       * MultipleGradientPaintContext class.
@@ -120,8 +120,8 @@ diff -Nru openjdk.orig/jdk/src/share/classes/sun/java2d/pipe/BufferedPaints.java
  
          input = color / 255.0f;
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsDevice.java openjdk/jdk/src/solaris/classes/sun/awt/X11GraphicsDevice.java
---- openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsDevice.java	2009-10-21 19:24:08.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/awt/X11GraphicsDevice.java	2009-10-23 14:35:23.000000000 +0100
+--- openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsDevice.java	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/awt/X11GraphicsDevice.java	2010-06-02 19:03:05.000000000 +0100
 @@ -37,6 +37,7 @@
  import java.util.HashMap;
  
@@ -185,8 +185,8 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsDevice.java op
          }
      }
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.java openjdk/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.java
---- openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.java	2009-10-21 19:24:08.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.java	2009-10-23 14:36:10.000000000 +0100
+--- openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.java	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.java	2010-06-02 19:03:05.000000000 +0100
 @@ -47,9 +47,9 @@
  import sun.font.Font2D;
  import sun.font.FontManager;
@@ -265,7 +265,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.ja
       * Checks if Shared Memory extension can be used.
       * Returns:
 @@ -397,4 +432,14 @@
- 
+     @Override
      public void paletteChanged() {
      }
 +
@@ -281,7 +281,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/X11GraphicsEnvironment.ja
  }
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/font/XRTextRenderer.java openjdk/jdk/src/solaris/classes/sun/font/XRTextRenderer.java
 --- openjdk.orig/jdk/src/solaris/classes/sun/font/XRTextRenderer.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/font/XRTextRenderer.java	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/font/XRTextRenderer.java	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,53 @@
 +/*
 + * Copyright 2000-2006 Sun Microsystems, Inc.  All Rights Reserved.
@@ -337,8 +337,8 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/font/XRTextRenderer.java open
 +    }
 +}
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/UnixSurfaceManagerFactory.java openjdk/jdk/src/solaris/classes/sun/java2d/UnixSurfaceManagerFactory.java
---- openjdk.orig/jdk/src/solaris/classes/sun/java2d/UnixSurfaceManagerFactory.java	2009-10-21 19:24:09.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/UnixSurfaceManagerFactory.java	2009-10-23 14:35:23.000000000 +0100
+--- openjdk.orig/jdk/src/solaris/classes/sun/java2d/UnixSurfaceManagerFactory.java	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/UnixSurfaceManagerFactory.java	2010-06-02 19:03:05.000000000 +0100
 @@ -33,6 +33,7 @@
  import sun.java2d.opengl.GLXGraphicsConfig;
  import sun.java2d.opengl.GLXVolatileSurfaceManager;
@@ -365,8 +365,8 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/UnixSurfaceManagerFact
          }
      }
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java openjdk/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java
---- openjdk.orig/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java	2009-10-21 19:24:09.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java	2009-10-23 14:35:23.000000000 +0100
+--- openjdk.orig/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.java	2010-06-02 19:03:05.000000000 +0100
 @@ -42,10 +42,7 @@
  import java.awt.image.Raster;
  import java.awt.peer.ComponentPeer;
@@ -417,7 +417,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.jav
      /**
       * Returns true if we can use DGA on any of the screens
       */
-@@ -661,7 +668,7 @@
+@@ -664,7 +671,7 @@
      {
          // assert SunToolkit.isAWTLockHeldByCurrentThread();
  
@@ -428,7 +428,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/x11/X11SurfaceData.jav
  
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRDrawImage.java openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRDrawImage.java
 --- openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRDrawImage.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRDrawImage.java	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRDrawImage.java	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,50 @@
 +package sun.java2d.xr;
 +
@@ -482,7 +482,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRDrawImage.java op
 +
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRGraphicsConfig.java openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRGraphicsConfig.java
 --- openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRGraphicsConfig.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRGraphicsConfig.java	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRGraphicsConfig.java	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,42 @@
 +/*
 + * To change this template, choose Tools | Templates
@@ -528,7 +528,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRGraphicsConfig.ja
 +}
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRMaskBlit.java openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRMaskBlit.java
 --- openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRMaskBlit.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRMaskBlit.java	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRMaskBlit.java	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,71 @@
 +package sun.java2d.xr;
 +
@@ -603,7 +603,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRMaskBlit.java ope
 +}
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRMaskFill.java openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRMaskFill.java
 --- openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRMaskFill.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRMaskFill.java	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRMaskFill.java	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,75 @@
 +package sun.java2d.xr;
 +
@@ -682,7 +682,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRMaskFill.java ope
 +}
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRPMBlitLoops.java openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRPMBlitLoops.java
 --- openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRPMBlitLoops.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRPMBlitLoops.java	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRPMBlitLoops.java	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,206 @@
 +/*
 + * Copyright 2000-2007 Sun Microsystems, Inc.  All Rights Reserved.
@@ -893,7 +893,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRPMBlitLoops.java 
 \ No newline at end of file
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRRenderer.java openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRRenderer.java
 --- openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRRenderer.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRRenderer.java	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRRenderer.java	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,255 @@
 +package sun.java2d.xr;
 +
@@ -1152,7 +1152,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRRenderer.java ope
 +}
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceData.java openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceData.java
 --- openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceData.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceData.java	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceData.java	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,1017 @@
 +/*
 + * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
@@ -2173,7 +2173,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceData.java 
 +}
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceDataProxy.java openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceDataProxy.java
 --- openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceDataProxy.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceDataProxy.java	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceDataProxy.java	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,103 @@
 +/*
 + * Copyright 2007 Sun Microsystems, Inc.  All Rights Reserved.
@@ -2280,7 +2280,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRSurfaceDataProxy.
 +}
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRUtils.java openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRUtils.java
 --- openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRUtils.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRUtils.java	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRUtils.java	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,142 @@
 +package sun.java2d.xr;
 +
@@ -2426,7 +2426,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRUtils.java openjd
 +}
 diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRVolatileSurfaceManager.java openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRVolatileSurfaceManager.java
 --- openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRVolatileSurfaceManager.java	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRVolatileSurfaceManager.java	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/java2d/xr/XRVolatileSurfaceManager.java	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,105 @@
 +/*
 + * Copyright 2000-2007 Sun Microsystems, Inc.  All Rights Reserved.
@@ -2535,7 +2535,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/java2d/xr/XRVolatileSurfaceMa
 +}
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/font/XRTextRenderer.c openjdk/jdk/src/solaris/native/sun/font/XRTextRenderer.c
 --- openjdk.orig/jdk/src/solaris/native/sun/font/XRTextRenderer.c	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/font/XRTextRenderer.c	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/font/XRTextRenderer.c	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,77 @@
 +/*
 + * Copyright 2000-2005 Sun Microsystems, Inc.  All Rights Reserved.
@@ -2616,7 +2616,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/font/XRTextRenderer.c openjdk/
 +}
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/ArrayList.c openjdk/jdk/src/solaris/native/sun/java2d/x11/ArrayList.c
 --- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/ArrayList.c	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/ArrayList.c	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/ArrayList.c	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,39 @@
 +#include <malloc.h>
 +#include <string.h>
@@ -2659,7 +2659,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/ArrayList.c openjdk
 +
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/ArrayList.h openjdk/jdk/src/solaris/native/sun/java2d/x11/ArrayList.h
 --- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/ArrayList.h	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/ArrayList.h	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/ArrayList.h	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,18 @@
 +#ifndef ArrayList_h_Included
 +#define ArrayList_h_Included
@@ -2681,7 +2681,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/ArrayList.h openjdk
 +#endif /* ArrayList_h_Included */
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.c openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.c
 --- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.c	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.c	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.c	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,576 @@
 +#include "MaskBuffer.h"
 +#include "XRSurfaceData.h"
@@ -3261,7 +3261,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.c openjd
 +// printf("Rendering region: %d %d %d %d\n", buf->region.x, buf->region.y, buf->region.x2 - buf->region.x, buf->region.y2 - buf->region.y);fflush(stdout);
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.h openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.h
 --- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.h	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.h	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.h	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,80 @@
 +#ifndef MaskBuffer_h_Included
 +#define MaskBuffer_h_Included
@@ -3344,8 +3344,8 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/MaskBuffer.h openjd
 +
 +#endif /* MaskBuffer_h_Included */
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.c openjdk/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.c
---- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.c	2009-03-30 17:23:08.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.c	2009-10-23 14:35:23.000000000 +0100
+--- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.c	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.c	2010-06-02 19:03:05.000000000 +0100
 @@ -71,7 +71,7 @@
  extern AwtGraphicsConfigDataPtr
      getGraphicsConfigFromComponentPeer(JNIEnv *env, jobject this);
@@ -3577,8 +3577,8 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.c op
      if (xsdo->isPixmap == JNI_TRUE) {
          return SD_FAILURE;
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.h openjdk/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.h
---- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.h	2009-03-30 17:23:08.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.h	2009-10-23 14:35:23.000000000 +0100
+--- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.h	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.h	2010-06-02 19:03:05.000000000 +0100
 @@ -30,6 +30,10 @@
  
  #include <jdga.h>
@@ -3630,7 +3630,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/X11SurfaceData.h op
 +
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRGlyphCache.c openjdk/jdk/src/solaris/native/sun/java2d/x11/XRGlyphCache.c
 --- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRGlyphCache.c	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRGlyphCache.c	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRGlyphCache.c	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,313 @@
 +#include <malloc.h>
 +#include "jni.h"
@@ -3947,7 +3947,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRGlyphCache.c open
 +//         fflush(stdout);
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRGlyphCache.h openjdk/jdk/src/solaris/native/sun/java2d/x11/XRGlyphCache.h
 --- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRGlyphCache.h	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRGlyphCache.h	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRGlyphCache.h	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,41 @@
 +#ifndef XRGlyphCache_h_Included
 +#define XRGlyphCache_h_Included
@@ -3992,7 +3992,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRGlyphCache.h open
 +#endif /* XRGlyphCache_h_Included */
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c
 --- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,223 @@
 +/*
 + * Copyright 2000-2007 Sun Microsystems, Inc.  All Rights Reserved.
@@ -4219,7 +4219,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRPMBlitLoops.c ope
 +}
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRRenderer.c openjdk/jdk/src/solaris/native/sun/java2d/x11/XRRenderer.c
 --- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRRenderer.c	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRRenderer.c	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRRenderer.c	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,318 @@
 +/*
 + * Copyright 2000-2006 Sun Microsystems, Inc.  All Rights Reserved.
@@ -4541,7 +4541,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRRenderer.c openjd
 +}
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.c openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.c
 --- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.c	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.c	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.c	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,519 @@
 +#include "GraphicsPrimitiveMgr.h"
 +#include "Region.h"
@@ -5065,7 +5065,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.c ope
 \ No newline at end of file
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.h openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.h
 --- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.h	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.h	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.h	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,33 @@
 +#ifndef XRSurfaceData_h_Included
 +#define XRSurfaceData_h_Included
@@ -5102,7 +5102,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRSurfaceData.h ope
 +#endif //XRSurfaceData_h_Included
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRTextRenderer_md.c openjdk/jdk/src/solaris/native/sun/java2d/x11/XRTextRenderer_md.c
 --- openjdk.orig/jdk/src/solaris/native/sun/java2d/x11/XRTextRenderer_md.c	1970-01-01 01:00:00.000000000 +0100
-+++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRTextRenderer_md.c	2009-10-23 14:35:23.000000000 +0100
++++ openjdk/jdk/src/solaris/native/sun/java2d/x11/XRTextRenderer_md.c	2010-06-02 19:03:05.000000000 +0100
 @@ -0,0 +1,171 @@
 +/*
 + * Copyright 2001-2005 Sun Microsystems, Inc.  All Rights Reserved.

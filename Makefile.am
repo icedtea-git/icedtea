@@ -146,8 +146,8 @@ endif
 
 # Settings for javac
 
-IT_LANGUAGE_SOURCE_VERSION=5
-IT_CLASS_TARGET_VERSION=5
+IT_LANGUAGE_SOURCE_VERSION=6
+IT_CLASS_TARGET_VERSION=6
 IT_JAVAC_SETTINGS=-g -encoding utf-8 $(JAVACFLAGS) $(MEMORY_LIMIT) $(PREFER_SOURCE)
 IT_JAVACFLAGS=$(IT_JAVAC_SETTINGS) -source $(IT_LANGUAGE_SOURCE_VERSION) -target $(IT_CLASS_TARGET_VERSION)
 
@@ -1292,8 +1292,6 @@ endif
 	fi
 	chmod -R ug+w openjdk 
 	sh $(srcdir)/fsg.sh ; 
-	find openjdk -name '*.java' \
-	  -exec sed -i 's/^[[:space:]]*@Override//' {} + ; \
 	mkdir -p stamps 
 	touch $@
 

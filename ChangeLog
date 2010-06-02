@@ -1,3 +1,13 @@
+2010-06-02  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(IT_LANGUAGE_SOURCE_VERSION): Bump to 6
+	to support @Override.
+	(IT_CLASS_TARGET_VERSION): Likewise.
+	(extract-openjdk.stamp): Remove @Override hack.
+	* patches/xrender/icedtea-001.patch:
+	Recreated.
+
 2010-03-16  Andrew John Hughes  <ahughes@redhat.com>
 
 	NetX/plugin build sync (3/3):
