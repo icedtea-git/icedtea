@@ -184,28 +184,16 @@ else
   HS_URL = $(HOTSPOT_URL)
 endif
 
-if ENABLE_NPPLUGIN
+if ENABLE_PLUGIN
 PLUGIN_SRCDIR=$(abs_top_srcdir)/plugin/icedteanp
 PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin.build/icedteanp
-ICEDTEANPPLUGIN_TARGET = stamps/icedtea-npplugin.stamp
-ICEDTEAPLUGIN_CLEAN = clean-IcedTeaNPPlugin
-LIVECONNECT_DIR = sun/applet netscape
-JNLP_ABOUT_TARGET = extra-lib/about.jar
-LIVECONNECT_CLASSES = $(abs_top_builddir)/liveconnect
-LIVECONNECT_JAR = $(LIVECONNECT_CLASSES)/lib/classes.jar
-LIVECONNECT_SRC = $(LIVECONNECT_CLASSES)/lib/src.zip
-else
-if ENABLE_PLUGIN
-PLUGIN_SRCDIR=$(abs_top_srcdir)/plugin/icedtea
-PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin.build/icedtea
-ICEDTEAPLUGIN_TARGET = $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so
+ICEDTEAPLUGIN_TARGET = stamps/icedtea-npplugin.stamp
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
 LIVECONNECT_DIR = sun/applet netscape
 JNLP_ABOUT_TARGET = extra-lib/about.jar
 LIVECONNECT_CLASSES = $(abs_top_builddir)/liveconnect
 LIVECONNECT_JAR = $(LIVECONNECT_CLASSES)/lib/classes.jar
 LIVECONNECT_SRC = $(LIVECONNECT_CLASSES)/lib/src.zip
-endif
 endif
 
 if ENABLE_PULSE_JAVA
@@ -378,11 +366,6 @@ endif
 if ENABLE_PLUGIN
 ICEDTEA_PATCHES += patches/extensions/liveconnect.patch \
 	patches/extensions/liveconnect-dist.patch
-else
-if ENABLE_NPPLUGIN
-ICEDTEA_PATCHES += patches/extensions/liveconnect.patch \
-	patches/extensions/liveconnect-dist.patch
-endif
 endif
 
 if ENABLE_NSS
@@ -736,7 +719,6 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	javaws.png javaws.desktop visualvm.desktop \
 	jconsole.desktop policytool.desktop \
 	$(JTREG_SRCS) \
-	IcedTeaPlugin.cc \
 	HACKING $(PULSEAUDIO_SRCS) fsg.sh \
 	$(abs_top_srcdir)/plugin $(top_srcdir)/netx \
 	hotspot.map autogen.sh \
@@ -1805,18 +1787,11 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2re-image/lib/ext 
-if ENABLE_NPPLUGIN
-	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
-	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-else
 if ENABLE_PLUGIN
-	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so \
+	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so \
+	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-endif
 endif
 if ENABLE_PULSE_JAVA
 	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
@@ -1886,18 +1861,11 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
 	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
 	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/ext 
-if ENABLE_NPPLUGIN
-	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-else
 if ENABLE_PLUGIN
-	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so \
+	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so \
+	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-endif
 endif
 if ENABLE_PULSE_JAVA
 	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
@@ -2034,16 +2002,16 @@ clean-icedtea-stage1:
 
 # Plugin
 
-if ENABLE_NPPLUGIN
+if ENABLE_PLUGIN
 # IcedTeaNPPlugin.so.
 # Separate compile and link invocations to ensure intermediate object
 # is listed before -l options.  See:
 # http://developer.mozilla.org/en/docs/XPCOM_Glue
-NPPLUGIN_SRC=IcedTeaNPPlugin.cc IcedTeaScriptablePluginObject.cc \
+PLUGIN_SRC=IcedTeaNPPlugin.cc IcedTeaScriptablePluginObject.cc \
 	IcedTeaJavaRequestProcessor.cc IcedTeaPluginRequestProcessor.cc \
 	IcedTeaPluginUtils.cc
 
-NPPLUGIN_OBJECTS=IcedTeaNPPlugin.o IcedTeaScriptablePluginObject.o \
+PLUGIN_OBJECTS=IcedTeaNPPlugin.o IcedTeaScriptablePluginObject.o \
 	IcedTeaJavaRequestProcessor.o IcedTeaPluginRequestProcessor.o \
 	IcedTeaPluginUtils.o
 
@@ -2058,54 +2026,27 @@ $(PLUGIN_BUILD_DIR)/%.o: $(PLUGIN_SRCDIR)/%.cc
 	  $(MOZILLA_CFLAGS) \
 	  -fPIC -o $@ -c $<
 
-$(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so: $(addprefix $(PLUGIN_BUILD_DIR)/,$(NPPLUGIN_OBJECTS))
+$(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so: $(addprefix $(PLUGIN_BUILD_DIR)/,$(PLUGIN_OBJECTS))
 	$(CXX) $(CXXFLAGS) \
-	  $(addprefix $(PLUGIN_BUILD_DIR)/,$(NPPLUGIN_OBJECTS)) \
+	  $(addprefix $(PLUGIN_BUILD_DIR)/,$(PLUGIN_OBJECTS)) \
 	  $(GLIB_LIBS) \
 	  $(GTK_LIBS) \
 	  $(MOZILLA_LIBS)\
 	  -shared -o $@
 
-stamps/icedtea-npplugin.stamp: $(NPPLUGIN_DIR)/IcedTeaNPPlugin.so
+stamps/icedtea-npplugin.stamp: $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so
 	touch stamps/icedtea-npplugin.stamp
 
-clean-IcedTeaNPPlugin:
-	rm -f $(addprefix $(PLUGIN_BUILD_DIR)/,$(NPPLUGIN_OBJECTS))
+clean-IcedTeaPlugin:
+	rm -f $(addprefix $(PLUGIN_BUILD_DIR)/,$(PLUGIN_OBJECTS))
 	rm -f $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so
 endif
 
-if ENABLE_PLUGIN
-# IcedTeaPlugin.so.
-# Separate compile and link invocations to ensure intermediate object
-# is listed before -l options.  See:
-# http://developer.mozilla.org/en/docs/XPCOM_Glue
-$(PLUGIN_BUILD_DIR)/IcedTeaPlugin.o: IcedTeaPlugin.cc
-	mkdir -p $(PLUGIN_BUILD_DIR) && \
-	$(CXX) $(CXXFLAGS) \
-	  -DPLUGIN_VERSION="\"$(PLUGIN_VERSION)\"" \
-	  -DMOZILLA_VERSION_COLLAPSED="$(MOZILLA_VERSION_COLLAPSED)" \
-	  $(GTK_CFLAGS) \
-	  $(MOZILLA_CFLAGS) \
-	  -fPIC -c -o $@ $<
-
-$(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so: $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.o
-	$(CXX) $(CXXFLAGS) \
-	  $< \
-	  $(GTK_LIBS) \
-	  $(MOZILLA_LIBS) \
-	  -shared -o $@
-
-clean-IcedTeaPlugin:
-	rm -f $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.o
-	rm -f $(PLUGIN_BUILD_DIR)/IcedTeaPlugin.so
-endif
-
-stamps/plugin.stamp: $(ICEDTEAPLUGIN_TARGET) $(ICEDTEANPPLUGIN_TARGET) \
- stamps/liveconnect-dist.stamp
+stamps/plugin.stamp: $(ICEDTEAPLUGIN_TARGET) stamps/liveconnect-dist.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-plugin: $(ICEDTEAPLUGIN_CLEAN) $(ICEDTEANPPLUGIN_CLEAN)
+clean-plugin: $(ICEDTEAPLUGIN_CLEAN)
 	if [ -e $(PLUGIN_BUILD_DIR) ] ; then \
 	  rmdir $(PLUGIN_BUILD_DIR) ; \
 	fi

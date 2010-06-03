@@ -531,8 +531,6 @@ PluginRequestProcessor::sendMember(std::vector<std::string>* message_parts)
 
     NPIdentifier member_identifier;
 
-    NPIdentifier member_identifier;
-
     int method_id;
     int instance_id;
     int reference;

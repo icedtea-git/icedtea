@@ -1704,7 +1704,7 @@ AC_DEFUN_ONCE([IT_OBTAIN_HG_REVISIONS],
   AM_CONDITIONAL([HAS_JDK_REVISION], test "x${JDK_REVISION}" != xnone)
   AM_CONDITIONAL([HAS_HOTSPOT_REVISION], test "x${HOTSPOT_REVISION}" != xnone)
 ])
-AC_DEFUN_ONCE([IT_CHECK_OLD_PLUGIN],
+AC_DEFUN_ONCE([IT_CHECK_PLUGIN],
 [
 AC_MSG_CHECKING([whether to build the browser plugin])
 AC_ARG_ENABLE([plugin],
@@ -1714,23 +1714,12 @@ AC_ARG_ENABLE([plugin],
 AC_MSG_RESULT(${enable_plugin})
 ])
 
-AC_DEFUN_ONCE([IT_CHECK_NEW_PLUGIN],
-[
-AC_MSG_CHECKING([whether to build the new experimental browser plugin based on npruntime])
-AC_ARG_ENABLE([npplugin],
-              [AS_HELP_STRING([--enable-npplugin],
-                              [Enable compilation of browser plugin (automatically disables default plugin)])],
-              [enable_npplugin="${enableval}"], [enable_npplugin="no"])
-AC_MSG_RESULT(${enable_npplugin})
-])
-
 AC_DEFUN_ONCE([IT_CHECK_PLUGIN_DEPENDENCIES],
 [
 dnl Check for plugin support headers and libraries.
 dnl FIXME: use unstable
-AC_REQUIRE([IT_CHECK_OLD_PLUGIN])
-AC_REQUIRE([IT_CHECK_NEW_PLUGIN])
-if test "x${enable_plugin}" = "xyes" -o "x${enable_npplugin}" = "xyes" ; then
+AC_REQUIRE([IT_CHECK_PLUGIN])
+if test "x${enable_plugin}" = "xyes" ; then
   PKG_CHECK_MODULES(GTK, gtk+-2.0)
   PKG_CHECK_MODULES(GLIB, glib-2.0)
   AC_SUBST(GLIB_CFLAGS)
@@ -1740,41 +1729,24 @@ if test "x${enable_plugin}" = "xyes" -o "x${enable_npplugin}" = "xyes" ; then
 
 
   if $PKG_CONFIG --atleast-version 1.9.2 libxul 2>&AS_MESSAGE_LOG_FD ; then
-    if test "x${enable_npplugin}" != "xyes" ; then
-      AC_MSG_WARN([The old plugin does not work with xulrunner >= 1.9.2.  Enabling new plugin.])
-      enable_npplugin=yes;
-    fi
     xullibs=libxul
   else
     xullibs="libxul libxul-unstable"
   fi
 
-  if test "x${enable_npplugin}" = "xyes" ;
-  then
-    PKG_CHECK_MODULES(MOZILLA, \
-      mozilla-plugin ${xullibs})
+  PKG_CHECK_MODULES(MOZILLA, \
+    mozilla-plugin ${xullibs})
     
-    AC_SUBST(MOZILLA_CFLAGS)
-    AC_SUBST(MOZILLA_LIBS)
-  else
-    if test "x${enable_plugin}" = "xyes"
-    then
-      PKG_CHECK_MODULES(MOZILLA, \
-        nspr mozilla-js mozilla-plugin libxul-unstable >= 1.9)
-
-      AC_SUBST(MOZILLA_CFLAGS)
-      AC_SUBST(MOZILLA_LIBS)
-    fi
-  fi
+  AC_SUBST(MOZILLA_CFLAGS)
+  AC_SUBST(MOZILLA_LIBS)
 fi
 AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")
-AM_CONDITIONAL(ENABLE_NPPLUGIN, test "x${enable_npplugin}" = "xyes")
 ])
 
 AC_DEFUN_ONCE([IT_CHECK_XULRUNNER_VERSION],
 [
 AC_REQUIRE([IT_CHECK_PLUGIN_DEPENDENCIES])
-if test "x${enable_plugin}" = "xyes" -o "x${enable_npplugin}" = "xyes"
+if test "x${enable_plugin}" = "xyes"
 then
   AC_LANG_PUSH([C++])
   OLDCPPFLAGS="$CPPFLAGS"
