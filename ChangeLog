@@ -1,5 +1,11 @@
 2010-06-03  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(clean-rt): Add missing escapes to join lines
+	of if statement.
+
+2010-06-03  Andrew John Hughes  <ahughes@redhat.com>
+
 	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc,
 	* plugin/icedteanp/IcedTeaPluginUtils.cc,
 	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java:

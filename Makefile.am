@@ -2643,8 +2643,8 @@ clean-rt:
 	rm -rf lib/rt
 	rm -f stamps/rt-class-files.stamp stamps/rt.stamp
 	rm -f rt-source-files.txt
-	if [ -e bootstrap/boot/jre/lib ] ; then
-	  cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar bootstrap/boot/jre/lib
+	if [ -e bootstrap/boot/jre/lib ] ; then \
+	  cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar bootstrap/boot/jre/lib ; \
 	fi
 
 # Target Aliases
