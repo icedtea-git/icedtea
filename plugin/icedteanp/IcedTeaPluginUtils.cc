@@ -777,8 +777,6 @@ IcedTeaPluginUtilities::javaResultToNPVariant(NPP instance,
             PLUGIN_DEBUG_1ARG("Method call returned a string: \"%s\"\n", return_str);
             STRINGZ_TO_NPVARIANT(return_str, *variant);
 
-            // delete string from java side, as it is no longer needed
-            java_request.deleteReference(return_obj_instance_id);
         } else {
 
             // Else this is a regular class. Reference the class object so

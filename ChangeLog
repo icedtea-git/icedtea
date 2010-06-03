@@ -1,5 +1,12 @@
 2010-06-03  Andrew John Hughes  <ahughes@redhat.com>
 
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc,
+	* plugin/icedteanp/IcedTeaPluginUtils.cc,
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java:
+	Synchronise with version on IcedTea6 1.7 branch.
+
+2010-06-03  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	(clean-local): Add missing call to clean-rt
 	which should have replaced clean-plugs.

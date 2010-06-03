@@ -556,6 +556,9 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                      request.documentbase =
                          UrlUtil.decode(message.substring("tag".length() + 1, index));
                      request.tag = message.substring(index + 1);
+                     PluginDebug.debug ("REQUEST TAG: " + request.tag + " " +
+                             Thread.currentThread());
+
                          PluginDebug.debug ("REQUEST TAG, PARSING " +
                                  Thread.currentThread());
                          PluginAppletViewer.parse

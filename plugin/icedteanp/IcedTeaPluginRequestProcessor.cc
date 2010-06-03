@@ -463,6 +463,15 @@ PluginRequestProcessor::setMember(std::vector<std::string>* message_parts)
     } else
     {
         java_result = java_request.getString(propertyNameID);
+
+        // the result we want is in result_string (assuming there was no error)
+        if (java_result->error_occurred)
+        {
+            printf("Unable to get member name for setMember. Error occurred: %s\n", java_result->error_msg);
+            //goto cleanup;
+        }
+
+        property_identifier = browser_functions.getstringidentifier(java_result->return_string->c_str());
     }
 
     AsyncCallThreadData thread_data = AsyncCallThreadData();
@@ -937,6 +946,8 @@ _call(void* data)
 
     ((AsyncCallThreadData*) data)->call_successful =
       browser_functions.invoke(instance, window_ptr, function, args, *arg_count, call_result);
+
+    IcedTeaPluginUtilities::printNPVariant(*call_result);
 
     if (((AsyncCallThreadData*) data)->call_successful)
     {
