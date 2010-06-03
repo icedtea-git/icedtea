@@ -1,3 +1,7 @@
+2010-03-17  Matthias Klose  <doko@ubuntu.com>
+
+        * NEWS: Update for 1.8.
+
 2010-06-03  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

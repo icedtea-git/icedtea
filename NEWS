@@ -27,6 +27,32 @@ New in release 1.13 (2010-XX-XX)
 - Added JNI call tracing using systemtap version 1.0+ when
   configuring with --enable-systemtap. See tapset/hotspot_jni.stp.
 - Add support for Zero build on Hitachi SH.
+Bug fixes
+- PR179: Rhino bootclasspath issue
+- Add missing .c file to PulseAudio build
+Zero/Shark
+- Formatting changes and other fixes to match upstream
+- PR428: Shark on ARM precompiled header incls
+- Update Shark for LLVM r95390 API change.
+- S6927165: Zero S/390 fixes (from upstream)
+- Implemented Shark host CPU feature autotuner using LLVM 2.7 APIs.
+- Add s390 support to TCK setup helper script
+- Strip stupid options that llvm-config supplies
+- Update Shark for LLVM r94686 API change.
+- S6914622, S6909153, S6913869 upstream Zero fixes.
+NPPlugin fixes
+- PR446: Use JDK_UPDATE_VERSION to set the jpi version.
+- Re-designed frame embedding code so that the applet is dynamically
+  packed into given handle. This increases stability and breaks
+  reliance on the assumption that the browser will always provide a
+  handle in a certain sequence.
+- Encode new lines, carriage returns, and other special characters
+  before sending them to Java side (de-coding code is already in
+  effect on Java side).
+- Centralised and increased timeouts to give slow-loading applets
+  enough time to load.
+- Fix security permissions related to get/set property, based on
+  specifications.
 
 New in release 1.12 (2009-11-17)
 
