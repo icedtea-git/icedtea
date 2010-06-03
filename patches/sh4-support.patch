@@ -1,7 +1,37 @@
+diff -Nru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/common/Defs-linux.gmk
+--- openjdk.orig/corba/make/common/Defs-linux.gmk	2010-06-03 14:00:19.000000000 +0100
++++ openjdk/corba/make/common/Defs-linux.gmk	2010-06-03 14:08:47.000000000 +0100
+@@ -109,6 +109,7 @@
+ LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
+ CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
+ LDFLAGS_COMMON_sparc    += -m32 -mcpu=v9
++CFLAGS_REQUIRED_sh   += -mieee
+ ifeq ($(ZERO_BUILD), true)
+   CFLAGS_REQUIRED       =  $(ZERO_ARCHFLAG)
+   ifeq ($(ZERO_ENDIANNESS), little)
+@@ -186,7 +187,7 @@
+   CXXFLAGS_DBG	+= $(CC_LOWER_OPT)
+ endif
+ 
+-CPPFLAGS_COMMON = -D_$(ARCH)_ $(if $(filter $(ARCH),alpha),,-D$(ARCH)) \
++CPPFLAGS_COMMON = -D_$(ARCH)_ $(if $(filter $(ARCH),alpha sh),,-D$(ARCH)) \
+ 		  -DARCH='"$(ARCH)"' -DLINUX $(VERSION_DEFINES) \
+ 		  -D_LARGEFILE64_SOURCE -D_GNU_SOURCE -D_REENTRANT
+ 
 diff -Nru openjdk.orig/corba/make/common/shared/Platform.gmk openjdk/corba/make/common/shared/Platform.gmk
---- openjdk.orig/corba/make/common/shared/Platform.gmk	2010-05-10 15:04:44.000000000 +0100
-+++ openjdk/corba/make/common/shared/Platform.gmk	2010-05-10 18:37:14.000000000 +0100
-@@ -220,6 +220,9 @@
+--- openjdk.orig/corba/make/common/shared/Platform.gmk	2010-06-03 14:00:19.000000000 +0100
++++ openjdk/corba/make/common/shared/Platform.gmk	2010-06-03 14:11:30.000000000 +0100
+@@ -193,6 +193,9 @@
+                 arm*) \
+                     echo arm \
+                     ;; \
++                sh*) \
++                    echo sh \
++		    ;; \
+                 *) \
+                     echo $(mach) \
+                     ;; \
+@@ -220,6 +223,9 @@
        else
          ARCH_DATA_MODEL=64
        endif
@@ -12,8 +42,8 @@ diff -Nru openjdk.orig/corba/make/common/shared/Platform.gmk openjdk/corba/make/
    endif
  
 diff -Nru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
---- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2010-05-10 15:04:44.000000000 +0100
-+++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2010-05-10 18:37:14.000000000 +0100
+--- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2010-06-03 14:00:19.000000000 +0100
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2010-06-03 14:08:47.000000000 +0100
 @@ -1756,7 +1756,8 @@
      {EM_MIPS_RS3_LE, EM_MIPS_RS3_LE, ELFCLASS32, ELFDATA2LSB, (char*)"MIPSel"},
      {EM_MIPS,        EM_MIPS,    ELFCLASS32, ELFDATA2MSB, (char*)"MIPS"},
@@ -37,9 +67,29 @@ diff -Nru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/
    #endif
  
    // Identify compatability class for VM's architecture and library's architecture
+diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
+--- openjdk.orig/jdk/make/common/Defs-linux.gmk	2010-06-03 14:00:19.000000000 +0100
++++ openjdk/jdk/make/common/Defs-linux.gmk	2010-06-03 14:08:47.000000000 +0100
+@@ -126,6 +126,7 @@
+ LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
+ CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
+ LDFLAGS_COMMON_sparc    += -m32 -mcpu=v9
++CFLAGS_REQUIRED_sh   += -mieee
+ ifeq ($(ZERO_BUILD), true)
+   CFLAGS_REQUIRED       =  $(ZERO_ARCHFLAG)
+   ifeq ($(ZERO_ENDIANNESS), little)
+@@ -204,7 +205,7 @@
+   CXXFLAGS_DBG	+= $(CC_OPT/$(FASTDEBUG_OPTIMIZATION_LEVEL))
+ endif
+ 
+-CPPFLAGS_COMMON = -D_$(ARCH)_ $(if $(filter $(ARCH),alpha),,-D$(ARCH)) \
++CPPFLAGS_COMMON = -D_$(ARCH)_ $(if $(filter $(ARCH),alpha sh),,-D$(ARCH)) \
+ 		  -DARCH='"$(ARCH)"' -DLINUX $(VERSION_DEFINES) \
+ 		  -D_LARGEFILE64_SOURCE -D_GNU_SOURCE -D_REENTRANT
+ 
 diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2010-05-10 15:04:45.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2010-05-10 18:37:14.000000000 +0100
+--- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2010-06-03 14:00:21.000000000 +0100
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2010-06-03 14:08:47.000000000 +0100
 @@ -117,6 +117,11 @@
      REQUIRED_CC_VER = 3.2
      REQUIRED_GCC_VER = 3.2.*
@@ -52,9 +102,67 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/
    # Option used to create a shared library
    SHARED_LIBRARY_FLAG = -shared -mimpure-text
    SUN_COMP_VER := $(shell $(CC) --verbose 2>&1 )
+diff -Nru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/common/shared/Platform.gmk
+--- openjdk.orig/jdk/make/common/shared/Platform.gmk	2010-06-03 14:00:19.000000000 +0100
++++ openjdk/jdk/make/common/shared/Platform.gmk	2010-06-03 14:08:47.000000000 +0100
+@@ -171,6 +171,9 @@
+                 arm*) \
+                     echo arm \
+                     ;; \
++                sh*) \
++                    echo sh \
++                    ;; \
+                 *) \
+                     echo $(mach) \
+                     ;; \
+@@ -198,6 +201,9 @@
+       else
+         ARCH_DATA_MODEL=64
+       endif
++      ifeq ($(ARCH), sh)
++        ARCH_DATA_MODEL=32
++      endif
+     endif
+   endif
+ 
+diff -Nru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax/sound/SoundDefs.gmk
+--- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2010-06-03 14:00:19.000000000 +0100
++++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2010-06-03 14:10:12.000000000 +0100
+@@ -114,9 +114,9 @@
+     CPPFLAGS += -DX_ARCH=X_SPARCV9
+   endif # ARCH sparcv9
+ 
+-  ifeq ($(ARCH), amd64)
+-    CPPFLAGS += -DX_ARCH=X_AMD64
+-  endif # ARCH amd64
++  ifeq ($(ARCH), sh)
++    CPPFLAGS += -DX_ARCH=X_SH
++  endif # ARCH Renesas SuperH(sh)
+ endif
+ 
+ 
+diff -Nru openjdk.orig/jdk/make/jdk_generic_profile.sh openjdk/jdk/make/jdk_generic_profile.sh
+--- openjdk.orig/jdk/make/jdk_generic_profile.sh	2010-05-19 19:30:53.000000000 +0100
++++ openjdk/jdk/make/jdk_generic_profile.sh	2010-06-03 14:10:57.000000000 +0100
+@@ -349,13 +349,14 @@
+     i?86)    ZERO_LIBARCH=i386      ;;
+     sparc64) ZERO_LIBARCH=sparcv9   ;;
+     arm*)    ZERO_LIBARCH=arm       ;;
++    sh*)     ZERO_LIBARCH=sh        ;;
+     *)       ZERO_LIBARCH="$(arch)"
+   esac
+   export ZERO_LIBARCH
+ 
+   # ARCH_DATA_MODEL is the number of bits in a pointer
+   case "${ZERO_LIBARCH}" in
+-    i386|ppc|s390|sparc|arm)
++    i386|ppc|s390|sparc|arm|sh)
+       ARCH_DATA_MODEL=32
+       ;;
+     amd64|ppc64|s390x|sparcv9|ia64|alpha)
 diff -Nru openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h
---- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2010-05-10 15:04:44.000000000 +0100
-+++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2010-05-10 18:37:14.000000000 +0100
+--- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2010-06-03 14:00:19.000000000 +0100
++++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2010-06-03 14:08:47.000000000 +0100
 @@ -47,7 +47,8 @@
  #define X_S390X         12
  #define X_SPARC         13
