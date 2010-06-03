@@ -27,6 +27,7 @@ New in release 1.13 (2010-XX-XX)
 - Added JNI call tracing using systemtap version 1.0+ when
   configuring with --enable-systemtap. See tapset/hotspot_jni.stp.
 - Add support for Zero build on Hitachi SH.
+- Removed the old plugin, replaced by the NPPlugin.
 Bug fixes
 - PR179: Rhino bootclasspath issue
 - Add missing .c file to PulseAudio build
@@ -40,6 +41,7 @@ Zero/Shark
 - Strip stupid options that llvm-config supplies
 - Update Shark for LLVM r94686 API change.
 - S6914622, S6909153, S6913869 upstream Zero fixes.
+- Fixed Shark sharkCompiler mattr memory corruption bug when using llvm 2.7.
 NPPlugin fixes
 - PR446: Use JDK_UPDATE_VERSION to set the jpi version.
 - Re-designed frame embedding code so that the applet is dynamically

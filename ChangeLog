@@ -1,3 +1,7 @@
+2010-03-17  Matthias Klose  <doko@ubuntu.com>
+
+        * NEWS: More news.
+
 2010-03-17  Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 
 	* acinclude.m4 (IT_SET_ARCH_SETTINGS): Define architecture as sh
