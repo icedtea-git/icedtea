@@ -1,3 +1,9 @@
+2010-06-03  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(clean-local): Add missing call to clean-rt
+	which should have replaced clean-plugs.
+
 2010-03-16  Andrew John Hughes  <ahughes@redhat.com>
 
 	* IcedTeaPlugin.cc,
