@@ -36,6 +36,7 @@ if test "x$FASTJAR" = x; then
 	AC_MSG_ERROR([Can't find fastjar or jar])
 fi
 AC_SUBST([FASTJAR])
+AC_CHECK_TOOL([LDD], [ldd])
 dnl OpenJDK's README-builds.html lists gawk as a build dependency so we
 dnl check for it explicitly rather than using AC_PROG_AWK.
 FIND_TOOL([GAWK], [gawk])
@@ -422,9 +423,23 @@ then
     AC_MSG_ERROR([Could not find NSS.  Either install it or configure using --disable-nss.])
   fi
   NSS_LIBDIR=`$PKG_CONFIG --variable=libdir nss`
-  AC_SUBST(NSS_LIBDIR)
-  AC_CONFIG_FILES([nss.cfg])
+else
+  dnl set it to the system library directory
+  if test "x$LDD" = x; then
+    NSS_LIBDIR=/usr/lib
+  else
+    AC_LANG_CONFTEST([AC_LANG_PROGRAM([[]], [[]])])
+    $CC conftest.c
+    syslibdir=`$LDD a.out | sed -n '/libc\.so./s,.*=> */\(@<:@^/@:>@*\)/.*,\1,p'`
+    rm -f a.out
+    case x${syslibdir} in
+      xlib|xlib64|xlib32|xlibn32) NSS_LIBDIR=/usr/${syslibdir};;
+      *) NSS_LIBDIR=/usr/lib
+    esac
+  fi
 fi
+AC_SUBST(NSS_LIBDIR)
+AC_CONFIG_FILES([nss.cfg])
 
 if test "x${ZERO_BUILD_TRUE}" = x || test "x${ADD_ZERO_BUILD_TRUE}" = x; then
   dnl Check for libffi headers and libraries.

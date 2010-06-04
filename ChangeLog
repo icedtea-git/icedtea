@@ -1,3 +1,10 @@
+2010-04-08  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/icedtea.stamp, stamps/icedtea-debug.stamp):
+	Always install nss.cfg.
+	* configure.ac: Always make nss.cfg a config file, always
+	substitute NSS_LIBDIR.
+
 2010-04-07  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaNPPlugin.cc: ReplaceAll "GCJ" with "ITNP", and

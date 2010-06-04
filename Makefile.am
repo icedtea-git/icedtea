@@ -1847,10 +1847,8 @@ if ENABLE_SYSTEMTAP
 	cp $(abs_top_builddir)/tapset/jstack.stp \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/jstack.stp
 endif
-if ENABLE_NSS
 	cp $(abs_top_builddir)/nss.cfg \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
-endif
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
@@ -1921,10 +1919,8 @@ if ENABLE_SYSTEMTAP
 	cp $(abs_top_builddir)/tapset/jstack.stp \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/jstack.stp
 endif
-if ENABLE_NSS
 	cp $(abs_top_builddir)/nss.cfg \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
-endif
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
