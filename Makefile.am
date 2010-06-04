@@ -732,7 +732,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	jconsole.desktop policytool.desktop \
 	$(JTREG_SRCS) \
 	HACKING $(PULSEAUDIO_SRCS) fsg.sh \
-	$(abs_top_srcdir)/plugin $(top_srcdir)/netx \
+	$(abs_top_srcdir)/plugin $(NETX_SRCDIR) \
 	hotspot.map autogen.sh \
 	tapset/hotspot.stp.in \
 	tapset/hotspot_jni.stp.in \

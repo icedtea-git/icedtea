@@ -1,3 +1,8 @@
+2010-04-12  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Use NETX_SRCDIR in EXTRA_DIST.
+
 2010-04-12  Matthias Klose  <doko@ubuntu.com>
 
 	* configure.ac: Clarify result message of the NSS check.
