@@ -446,7 +446,8 @@ AC_SUBST(LIBFFI_LIBS)
 
 if test "x${SHARK_BUILD_TRUE}" = x || test "x${ADD_SHARK_BUILD_TRUE}" = x; then
   FIND_TOOL([LLVM_CONFIG], [llvm-config])
-  llvm_components="engine nativecodegen"
+  llvm_components="jit engine nativecodegen"
+  LLVM_VERSION="`$LLVM_CONFIG --version | sed 's/svn.*//'`"
   dnl LLVM_CFLAGS
   LLVM_CFLAGS=
   for flag in $($LLVM_CONFIG --cxxflags $llvm_components); do
@@ -459,6 +460,7 @@ if test "x${SHARK_BUILD_TRUE}" = x || test "x${ADD_SHARK_BUILD_TRUE}" = x; then
       fi
     fi
   done
+  LLVM_CFLAGS="$LLVM_CFLAGS -DSHARK_LLVM_VERSION=`echo $LLVM_VERSION | sed 's/\.//'`"
   dnl LLVM_LDFLAGS
   LLVM_LDFLAGS=
   for flag in $($LLVM_CONFIG --ldflags $llvm_components); do
@@ -470,8 +472,17 @@ if test "x${SHARK_BUILD_TRUE}" = x || test "x${ADD_SHARK_BUILD_TRUE}" = x; then
     fi
   done
   dnl LLVM_LIBS
+  LIBS_SAVED=$LIBS
+  LDFLAGS_SAVED=$LDFLAGS
+  LDFLAGS=$LLVM_LDFLAGS
+  AC_CHECK_LIB(LLVM-$LLVM_VERSION, LLVMGetNextInstruction,LLVM_SHARED_LIB=" -lLLVM-$LLVM_VERSION")
+  LIBS=$LIBS_SAVED
+  LDFLAGS=$LDFLAGS_SAVED
   LLVM_LIBS=
   for flag in $($LLVM_CONFIG --libs $llvm_components); do
+    if test "x$LLVM_SHARED_LIB" != x && echo "$flag" | grep -q '^-lLLVM'; then
+      continue
+    fi
     if echo "$flag" | grep -q '^-l'; then
       if test "x$LLVM_LIBS" != "x"; then
         LLVM_LIBS="$LLVM_LIBS "
@@ -479,7 +490,7 @@ if test "x${SHARK_BUILD_TRUE}" = x || test "x${ADD_SHARK_BUILD_TRUE}" = x; then
       LLVM_LIBS="$LLVM_LIBS$flag"
     fi
   done
-  LLVM_CFLAGS="$LLVM_CFLAGS -DSHARK_LLVM_VERSION=`$LLVM_CONFIG --version | sed 's/\.//;s/svn.*//'`"
+  LLVM_LIBS="$LLVM_LIBS$LLVM_SHARED_LIB"
 fi
 AC_SUBST(LLVM_CFLAGS)
 AC_SUBST(LLVM_LDFLAGS)
