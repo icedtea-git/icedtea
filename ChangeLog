@@ -1,3 +1,14 @@
+2010-03-29  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(NETX_BOOTSTRAP_CLASSES): Classes required to
+	bootstrap NetX (only partial so far).
+	(ICEDTEA_BOOTSTRAP_CLASSES): Include
+	NETX_BOOTSTRAP_CLASSES.
+	(extra-class-files.stamp): Use ICEDTEA_RT as bootclasspath.
+	Drop use of SOURCEPATH_DIRS.
+	(pulse-java-class.stamp): Use ICEDTEA_RT on bootclasspath.
+
 2010-03-22  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaNPPlugin.cc

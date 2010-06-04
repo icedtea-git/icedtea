@@ -136,11 +136,20 @@ ICEDTEA_BOOTSTRAP_DIRS = \
 ICEDTEA_BOOTSTRAP_RESOURCES = \
 	$(LANGTOOLS)/com/sun/tools/javac/resources
 
+# PR43578 - java.security.CodeSource.getCodeSigners() missing
+# PR43582 - Missing javax.swing.JTable.setFillsViewportHeight
+# PR43585 - java.security.KeyStore.TrustedCertificateEntry class missing
+NETX_BOOTSTRAP_CLASSES = \
+	$(SHARE)/java/security/CodeSource.java \
+	$(SHARE)/javax/swing/JTable.java \
+	$(SHARE)/java/security/KeyStore.java
+
 # PR42003 - javax.swing.plaf.basic.BasicDirectoryModel
 # PR43389 - javax.management.StandardMBean
 ICEDTEA_BOOTSTRAP_CLASSES = \
 	$(SHARE)/javax/swing/plaf/basic/BasicDirectoryModel.java \
-	$(SHARE)/javax/management/StandardMBean.java
+	$(SHARE)/javax/management/StandardMBean.java \
+	$(NETX_BOOTSTRAP_CLASSES)
 
 endif
 
@@ -2135,10 +2144,8 @@ extra-source-files.txt:
 stamps/extra-class-files.stamp: extra-source-files.txt stamps/netx.stamp
 	mkdir -p extra-lib
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d extra-lib \
-	  -classpath $(ICEDTEA_RT):$(NETX_CLASSES) \
-	  -sourcepath $(abs_top_srcdir)/extra:$(SOURCEPATH_DIRS) \
-	  -bootclasspath \'\' \
-	  @extra-source-files.txt
+	  -sourcepath $(abs_top_srcdir)/extra \
+	  -bootclasspath $(ICEDTEA_RT) @extra-source-files.txt
 	cp -r $(NETX_EXTRA_DIR) extra-lib/net/sourceforge/jnlp/about	
 	find extra-lib/net/sourceforge/jnlp/about -type f -exec chmod 640 '{}' ';' \
 	  -o -type d -exec chmod 750 '{}' ';'
@@ -2165,8 +2172,7 @@ stamps/pulse-java-class.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
 	mkdir -p $(PULSE_JAVA_CLASS_DIR)
 	(cd $(PULSE_JAVA_JAVA_SRCDIR); \
 	 $(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d $(PULSE_JAVA_CLASS_DIR) \
-	 -bootclasspath '$(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar' \
-	 org/classpath/icedtea/pulseaudio/*.java\
+	 -bootclasspath $(ICEDTEA_RT) org/classpath/icedtea/pulseaudio/*.java \
 	)
 	cp  -r $(PULSE_JAVA_JAVA_SRCDIR)/META-INF $(PULSE_JAVA_CLASS_DIR)
 	chmod -R ug+w $(PULSE_JAVA_CLASS_DIR)/META-INF
