@@ -102,7 +102,9 @@ abstract class PulseAudioLine implements Line {
 	@Override
 	public boolean isControlSupported(Type control) {
 		for (Control myControl : controls) {
-			if (myControl.getType().getClass() == control.getClass()) {
+			//Control.Type's known descendants keep a set of
+			//static Types.
+			if (myControl.getType().equals(control)) {
 				return true;
 			}
 		}

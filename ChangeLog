@@ -1,3 +1,12 @@
+2010-06-04 Jon VanAlten  <jon.vanalten@redhat.com>
+
+	PR icedtea/438
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioLine.java:
+	(isControlSupported): Correctly determine if control-type is
+	supported.
+	* Makefile.am
+	(stamps/icedtea.stamp): Add PulseAudio sources to src.zip
+
 2010-06-01  Xerxes Rånby  <xerxes@zafena.se>
 
 	* Makefile.am:

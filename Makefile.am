@@ -1815,6 +1815,8 @@ if ENABLE_PULSE_JAVA
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
 	cp -pPRf pulse-java.jar \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/ext
+	(cd $(PULSE_JAVA_JAVA_SRCDIR) && \
+	   $(ZIP) -qur $(BUILD_OUTPUT_DIR)/j2sdk-image/src.zip org )
 endif
 if JNLP_ABOUT_NEEDED
 	cp $(NETX_RESOURCE_DIR)/about.jnlp extra-lib/about.jar \
