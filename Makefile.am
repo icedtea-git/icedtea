@@ -380,6 +380,8 @@ endif
 
 if ENABLE_NSS
 ICEDTEA_PATCHES += patches/icedtea-nss-config.patch
+else
+ICEDTEA_PATCHES += patches/icedtea-nss-not-enabled-config.patch
 endif
 
 ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)

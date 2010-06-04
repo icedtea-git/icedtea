@@ -125,13 +125,20 @@ AC_ARG_ENABLE([systemtap],
 AM_CONDITIONAL([ENABLE_SYSTEMTAP], [test x$ENABLE_SYSTEMTAP = xyes])
 AC_MSG_RESULT(${ENABLE_SYSTEMTAP})
 
-AC_MSG_CHECKING([whether to include elliptic curve cryptography support via NSS])
+IT_LOCATE_NSS
+
+AC_MSG_CHECKING([whether to include the NSS-based security provider])
 AC_ARG_ENABLE([nss],
 	      [AS_HELP_STRING([--enable-nss],
 	      		      [Enable inclusion of NSS security provider])],
 	      [ENABLE_NSS="${enableval}"], [ENABLE_NSS='no'])
 AM_CONDITIONAL([ENABLE_NSS], [test x$ENABLE_NSS = xyes])
-AC_MSG_RESULT(${ENABLE_NSS})
+if test "x${ENABLE_NSS}" = "xyes"
+then
+  AC_MSG_RESULT([yes])
+else
+  AC_MSG_RESULT([yes, disabled by default (edit java.security to enable)])
+fi
 
 IT_GET_PKGVERSION
 IT_GET_LSB_DATA
@@ -414,8 +421,6 @@ then
   AC_SUBST(LIBPULSE_CFLAGS)
   AC_SUBST(LIBPULSE_LIBS)
 fi
-
-IT_LOCATE_NSS
 
 if test "x${ZERO_BUILD_TRUE}" = x || test "x${ADD_ZERO_BUILD_TRUE}" = x; then
   dnl Check for libffi headers and libraries.

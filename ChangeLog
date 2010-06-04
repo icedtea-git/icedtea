@@ -1,3 +1,12 @@
+2010-04-10  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (ICEDTEA_PATCHES): Always apply
+	icedtea-nss-6763530.patch. Apply icedtea-nss-not-enabled-config.patch
+	if the NSS-based security provider is disabled by default.
+	* Makefile.am: Be verbose wether the NSS-based security provider
+	is enabled or disabled by default.
+	* patches/icedtea-nss-not-enabled-config.patch: New.
+
 2010-04-08  Andrew John Hughes  <ahughes@redhat.com>
 
 	* configure.ac: Move NSS detection to macros
