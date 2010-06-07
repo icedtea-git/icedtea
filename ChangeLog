@@ -1,3 +1,9 @@
+2010-06-07  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-systemtap.patch:
+	Remove parts upstreamed in
+	6893483: DTrace probe return values for a couple JNI methods are wrong
+
 2010-04-28  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

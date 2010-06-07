@@ -1,6 +1,6 @@
-diff -r 945bf7540697 make/linux/makefiles/dtrace.make
---- openjdk/hotspot/make/linux/makefiles/dtrace.make	Thu Jan 22 14:42:01 2009 -0800
-+++ openjdk/hotspot/make/linux/makefiles/dtrace.make	Mon Feb 02 13:47:34 2009 +0100
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/dtrace.make openjdk/hotspot/make/linux/makefiles/dtrace.make
+--- openjdk.orig/hotspot/make/linux/makefiles/dtrace.make	2010-05-14 16:02:53.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/dtrace.make	2010-06-07 17:42:38.000000000 +0100
 @@ -25,3 +25,7 @@
  # Linux does not build jvm_db
  LIBJVM_DB =
@@ -9,9 +9,10 @@ diff -r 945bf7540697 make/linux/makefiles/dtrace.make
 +CFLAGS += -DDTRACE_ENABLED
 +
 +# It doesn't support HAVE_DTRACE_H though.
---- openjdk/hotspot/src/share/vm/prims/jni.cpp	2009-10-13 15:34:52.499809508 +0200
-+++ openjdk/hotspot/src/share/vm/prims/jni.cpp	2009-10-13 15:31:26.117823588 +0200
-@@ -1747,10 +1744,7 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/prims/jni.cpp openjdk/hotspot/src/share/vm/prims/jni.cpp
+--- openjdk.orig/hotspot/src/share/vm/prims/jni.cpp	2010-05-14 16:02:53.000000000 +0100
++++ openjdk/hotspot/src/share/vm/prims/jni.cpp	2010-06-07 17:42:38.000000000 +0100
+@@ -1753,10 +1753,7 @@
  JNI_QUICK_ENTRY(void, jni_Set##Result##Field(JNIEnv *env, jobject obj, jfieldID fieldID, Argument value)) \
    JNIWrapper("Set" XSTR(Result) "Field"); \
  \
@@ -23,7 +24,7 @@ diff -r 945bf7540697 make/linux/makefiles/dtrace.make
  \
    oop o = JNIHandles::resolve_non_null(obj); \
    klassOop k = o->klass(); \
-@@ -1924,10 +1918,7 @@
+@@ -1930,10 +1927,7 @@
  \
  JNI_ENTRY(void, jni_SetStatic##Result##Field(JNIEnv *env, jclass clazz, jfieldID fieldID, Argument value)) \
    JNIWrapper("SetStatic" XSTR(Result) "Field"); \
@@ -35,36 +36,33 @@ diff -r 945bf7540697 make/linux/makefiles/dtrace.make
  \
    JNIid* id = jfieldIDWorkaround::from_static_jfieldID(fieldID); \
    assert(id->is_static_field_id(), "invalid static field id"); \
-@@ -2116,7 +2101,7 @@
-   DT_RETURN_MARK(GetObjectArrayElement, jobject, (const jobject&)ret);
-   objArrayOop a = objArrayOop(JNIHandles::resolve_non_null(array));
-   if (a->is_within_bounds(index)) {
--    jobject ret = JNIHandles::make_local(env, a->obj_at(index));
-+    ret = JNIHandles::make_local(env, a->obj_at(index));
-     return ret;
-   } else {
-     char buf[jintAsStringSize];
-@@ -2150,14 +2150,14 @@
- 
- #define DEFINE_NEWSCALARARRAY(Return,Allocator,Result) \
- \
--  DT_RETURN_MARK_DECL_FOR(Result, New##Result##Array, Return);\
-+  DT_RETURN_MARK_DECL(New##Result##Array, Return);\
- \
- JNI_ENTRY(Return, \
-           jni_New##Result##Array(JNIEnv *env, jsize len)) \
-   JNIWrapper("New" XSTR(Result) "Array"); \
-   DTRACE_PROBE2(hotspot_jni, New##Result##Array__entry, env, len);\
-   Return ret = NULL;\
--  DT_RETURN_MARK_FOR(Result, New##Result##Array, Return, (const Return&)ret);\
-+  DT_RETURN_MARK(New##Result##Array, Return, (const Return&)ret);\
- \
-   oop obj= oopFactory::Allocator(len, CHECK_0); \
-   ret = (Return) JNIHandles::make_local(env, obj); \
-
-diff -r 945bf7540697 src/share/vm/utilities/dtrace.hpp
---- openjdk/hotspot/src/share/vm/utilities/dtrace.hpp	Thu Jan 22 14:42:01 2009 -0800
-+++ openjdk/hotspot/src/share/vm/utilities/dtrace.hpp	Mon Feb 02 13:47:34 2009 +0100
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspot/src/share/vm/runtime/arguments.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2010-06-07 17:41:12.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2010-06-07 17:42:38.000000000 +0100
+@@ -2441,16 +2441,16 @@
+       FLAG_SET_CMDLINE(bool, DisplayVMOutputToStderr, false);
+       FLAG_SET_CMDLINE(bool, DisplayVMOutputToStdout, true);
+     } else if (match_option(option, "-XX:+ExtendedDTraceProbes", &tail)) {
+-#ifdef SOLARIS
++#ifdef DTRACE_ENABLED
+       FLAG_SET_CMDLINE(bool, ExtendedDTraceProbes, true);
+       FLAG_SET_CMDLINE(bool, DTraceMethodProbes, true);
+       FLAG_SET_CMDLINE(bool, DTraceAllocProbes, true);
+       FLAG_SET_CMDLINE(bool, DTraceMonitorProbes, true);
+-#else // ndef SOLARIS
++#else // ndef DTRACE_ENABLED
+       jio_fprintf(defaultStream::error_stream(),
+-                  "ExtendedDTraceProbes flag is only applicable on Solaris\n");
++                  "ExtendedDTraceProbes flag is only applicable on dtrace enabled builds\n");
+       return JNI_EINVAL;
+-#endif // ndef SOLARIS
++#endif // ndef DTRACE_ENABLED
+ #ifdef ASSERT
+     } else if (match_option(option, "-XX:+FullGCALot", &tail)) {
+       FLAG_SET_CMDLINE(bool, FullGCALot, true);
+diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp openjdk/hotspot/src/share/vm/utilities/dtrace.hpp
+--- openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp	2010-05-14 16:02:53.000000000 +0100
++++ openjdk/hotspot/src/share/vm/utilities/dtrace.hpp	2010-06-07 17:42:38.000000000 +0100
 @@ -1,5 +1,6 @@
  /*
   * Copyright 2005-2007 Sun Microsystems, Inc.  All Rights Reserved.
@@ -157,26 +155,3 @@ diff -r 945bf7540697 src/share/vm/utilities/dtrace.hpp
 +#define HS_DTRACE_PROBE10(provider,name,a0,a1,a2,a3,a4,a5,a6,a7,a8)\
 +  DTRACE_PROBE10(provider,name,a0,a1,a2,a3,a4,a5,a6,a7,a8)
 +#endif
---- openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2009-03-04 14:39:43.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2009-03-04 22:11:37.000000000 +0100
-@@ -2375,16 +2375,16 @@
-       FLAG_SET_CMDLINE(bool, DisplayVMOutputToStderr, false);
-       FLAG_SET_CMDLINE(bool, DisplayVMOutputToStdout, true);
-     } else if (match_option(option, "-XX:+ExtendedDTraceProbes", &tail)) {
--#ifdef SOLARIS
-+#ifdef DTRACE_ENABLED
-       FLAG_SET_CMDLINE(bool, ExtendedDTraceProbes, true);
-       FLAG_SET_CMDLINE(bool, DTraceMethodProbes, true);
-       FLAG_SET_CMDLINE(bool, DTraceAllocProbes, true);
-       FLAG_SET_CMDLINE(bool, DTraceMonitorProbes, true);
--#else // ndef SOLARIS
-+#else // ndef DTRACE_ENABLED
-       jio_fprintf(defaultStream::error_stream(),
--                  "ExtendedDTraceProbes flag is only applicable on Solaris\n");
-+                  "ExtendedDTraceProbes flag is only applicable on dtrace enabled builds\n");
-       return JNI_EINVAL;
--#endif // ndef SOLARIS
-+#endif // ndef DTRACE_ENABLED
- #ifdef ASSERT
-     } else if (match_option(option, "-XX:+FullGCALot", &tail)) {
-       FLAG_SET_CMDLINE(bool, FullGCALot, true);
