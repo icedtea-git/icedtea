@@ -1,3 +1,8 @@
+2010-04-24  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (check-langtools, check-jdk): Allow overwriting -samevm
+	with the environment variable ICEDTEA_JTREG_OTHERVM.
+
 2010-04-22  Xerxes Rånby  <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/sharkNativeWrapper.cpp
