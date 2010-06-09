@@ -1,3 +1,9 @@
+2010-05-11  Gary Benson  <gbenson@redhat.com>
+
+	* patches/hotspot/default/icedtea-shark.patch
+	(Deoptimization::create_vframeArray):
+	Remove a now-unnecessary hack.
+
 2010-05-10  Gary Benson  <gbenson@redhat.com>
 
 	PR icedtea/323

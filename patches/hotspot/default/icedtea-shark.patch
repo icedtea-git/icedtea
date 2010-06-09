@@ -279,27 +279,6 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/deoptimization.cpp openjdk/h
  
    UnrollBlock* info = new UnrollBlock(array->frame_size() * BytesPerWord,
                                        caller_adjustment * BytesPerWord,
-@@ -921,7 +928,20 @@
-   // stuff a C2I adapter we can properly fill in the callee-save
-   // register locations.
-   frame caller = fr.sender(reg_map);
-+#ifdef ZERO
-+  int frame_size;
-+  {
-+    // In zero, frame::sp() is the *end* of the frame, so
-+    // caller.sp() - fr.sp() is the size of the *caller*.
-+    RegisterMap dummy_map(thread, false);
-+    frame frame_1 = thread->last_frame();
-+    frame frame_2 = frame_1.sender(&dummy_map);
-+    assert(frame_2.sp() == fr.sp(), "should be");
-+    frame_size = frame_2.sp() - frame_1.sp();
-+  }
-+#else
-   int frame_size = caller.sp() - fr.sp();
-+#endif // ZERO
- 
-   frame sender = caller;
- 
 @@ -1073,7 +1093,7 @@
  JRT_END
  
