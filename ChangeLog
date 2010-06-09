@@ -1,5 +1,10 @@
 2010-05-06  Deepak Bhole <dbhole@redhat.com>
 
+	* netx/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java:
+	Add imports missed in last commit.
+
+2010-05-06  Deepak Bhole <dbhole@redhat.com>
+
 	* netx/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java
 	(checkPermission): Allow Runtime and Security permission (for
 	putProvider.SunJCE) if initiated for an https connection.
