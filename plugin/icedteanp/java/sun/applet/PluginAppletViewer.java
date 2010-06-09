@@ -1,4 +1,4 @@
-/* VoidPluginCallRequest -- represent Java-to-JavaScript requests
+/* PluginAppletViewer -- Handles embedding of the applet panel
    Copyright (C) 2008  Red Hat
 
 This file is part of IcedTea.
@@ -735,7 +735,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
                       Thread.sleep(50);
                       wait += 50;
                   } catch (InterruptedException ie) {
-                      ie.printStackTrace();
+                      // just wait
                   }
              }
 
@@ -1605,9 +1605,14 @@ import com.sun.jndi.toolkit.url.UrlUtil;
          {
              public void run()
              {
+                 ThreadGroup tg = ((JNLPClassLoader) p.applet.getClass().getClassLoader()).getApplication().getThreadGroup();
+
                  appletShutdown(p);
                  appletPanels.removeElement(p);
                  dispose();
+
+                 if (tg.activeCount() > 0)
+                 tg.stop();
 
                  if (countApplets() == 0) {
                      appletSystemExit();

@@ -1,5 +1,12 @@
 2010-05-07  Deepak Bhole <dbhole@redhat.com>
 
+	PR icedtea/436:
+	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java
+	(handleMessage): Don't print stack trace on InterruptedException.
+	(appletClose): Kill misbehaving applets that don't shut down properly.
+
+2010-05-07  Deepak Bhole <dbhole@redhat.com>
+
 	* netx/net/sourceforge/jnlp/Launcher.java
 	(setContextClassLoaderForAllThreads): Change to set context CL only for
 	given threadgroup.
