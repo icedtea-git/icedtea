@@ -327,11 +327,11 @@ void SharkNativeWrapper::initialize(const char *name) {
       needs_cast = true;
       break;
 
-    case T_BYTE:
+    case T_CHAR:
       needs_cast = true;
       break;
 
-    case T_CHAR:
+    case T_BYTE:
     case T_SHORT:
       needs_cast = true;
       is_signed = true;
