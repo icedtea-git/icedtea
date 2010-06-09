@@ -125,12 +125,13 @@ class SharkBuilder : public llvm::IRBuilder<> {
   llvm::Value* unsafe_field_offset_to_byte_offset();
   llvm::Value* osr_migration_end();
 
-  // Intrinsics and external functions, part 3: Uncommon trap.
-  //   This is a special case in that it is invoked like a non-VM
-  //   call but it does VM call stuff.  This is acceptable so long
-  //   as the method that calls uncommon_trap returns to its caller
-  //   immediately that uncommon_trap returns.
+  // Intrinsics and external functions, part 3: semi-VM calls.
+  //   These are special cases that do VM call stuff but are invoked
+  //   as though they were normal calls.  This is acceptable so long
+  //   as the method that calls them returns to its immediately that
+  //   the semi VM call returns.
  public:
+  llvm::Value* throw_StackOverflowError();
   llvm::Value* uncommon_trap();
 
   // Intrinsics and external functions, part 4: Native-Java transition.

@@ -28,7 +28,9 @@
 
 using namespace llvm;
 
-void SharkStack::initialize(Value* method, bool setup_sp_and_method) {
+void SharkStack::initialize(Value* method) {
+  bool setup_sp_and_method = (method != NULL);
+
   int locals_words  = max_locals();
   int extra_locals  = locals_words - arg_size();
   int header_words  = SharkFrame::header_words;
@@ -42,7 +44,7 @@ void SharkStack::initialize(Value* method, bool setup_sp_and_method) {
   Value *stack_pointer = builder()->CreateSub(
     CreateLoadStackPointer(),
     LLVMValue::intptr_constant((frame_words + extra_locals) * wordSize));
-  CreateStackOverflowCheck(stack_pointer, method);
+  CreateStackOverflowCheck(stack_pointer);
   if (setup_sp_and_method)
     CreateStoreStackPointer(stack_pointer);
 
@@ -94,61 +96,48 @@ void SharkStack::initialize(Value* method, bool setup_sp_and_method) {
     builder()->CreatePtrToInt(fp, SharkType::intptr_type()));
 }
 
-// Check that a stack overflow is not imminent, bailing to the
-// interpreter to throw a StackOverflowError if one is while
-// we still have some stack left to do it with.  This function
-// should mirror CppInterpreter::stack_overflow_imminent.
-void SharkStack::CreateStackOverflowCheck(Value* sp, Value* method) {
-  BasicBlock *overflow = CreateBlock("overflow_imminent");
-  BasicBlock *abi_ok   = CreateBlock("abi_stack_ok");
+// This function should match ZeroStack::overflow_check
+void SharkStack::CreateStackOverflowCheck(Value* sp) {
   BasicBlock *zero_ok  = CreateBlock("zero_stack_ok");
+  BasicBlock *overflow = CreateBlock("stack_overflow");
+  BasicBlock *abi_ok   = CreateBlock("abi_stack_ok");
+
+  // Check the Zero stack
+  builder()->CreateCondBr(
+    builder()->CreateICmpULT(sp, stack_base()),
+    overflow, zero_ok);
 
   // Check the ABI stack
-  CreateCheckStack(
-    builder()->CreateSub(
-      builder()->CreateValueOfStructEntry(
-        thread(),
-        Thread::stack_base_offset(),
-        SharkType::intptr_type(),
-        "abi_base"),
-      builder()->CreateValueOfStructEntry(
-        thread(),
-        Thread::stack_size_offset(),
-        SharkType::intptr_type(),
-        "abi_size")),
+  builder()->SetInsertPoint(zero_ok);
+  Value *stack_top = builder()->CreateSub(
+    builder()->CreateValueOfStructEntry(
+      thread(),
+      Thread::stack_base_offset(),
+      SharkType::intptr_type(),
+      "abi_base"),
+    builder()->CreateValueOfStructEntry(
+      thread(),
+      Thread::stack_size_offset(),
+      SharkType::intptr_type(),
+      "abi_size"));
+  Value *free_stack = builder()->CreateSub(
     builder()->CreatePtrToInt(
       builder()->CreateGetFrameAddress(),
       SharkType::intptr_type(),
-      "abi_pointer"),
-    overflow, abi_ok);
-
-  // Check the Zero stack
-  builder()->SetInsertPoint(abi_ok);
-  CreateCheckStack(stack_base(), sp, overflow, zero_ok);
-
-  // Bail to the interpreter if an overflow is imminent
-  builder()->SetInsertPoint(overflow);
-  builder()->CreateCall3(
-    builder()->CreateIntToPtr(
-      LLVMValue::intptr_constant((intptr_t) interpreter_entry_point()),
-      PointerType::getUnqual(SharkType::entry_point_type())),
-    method,
-    LLVMValue::intptr_constant(0),
-    thread());
-  builder()->CreateRetVoid();
-
-  builder()->SetInsertPoint(zero_ok);
-}
-
-void SharkStack::CreateCheckStack(Value*      base,
-                                  Value*      sp,
-                                  BasicBlock* overflow,
-                                  BasicBlock* no_overflow) {
+      "abi_sp"),
+    stack_top);
   builder()->CreateCondBr(
     builder()->CreateICmpULT(
-      builder()->CreateSub(sp, base),
+      free_stack,
       LLVMValue::intptr_constant(StackShadowPages * os::vm_page_size())),
-    overflow, no_overflow);
+    overflow, abi_ok);
+
+  // Handle overflows
+  builder()->SetInsertPoint(overflow);
+  builder()->CreateCall(builder()->throw_StackOverflowError(), thread());
+  builder()->CreateRetVoid();
+
+  builder()->SetInsertPoint(abi_ok);
 }
 
 Value* SharkStack::CreatePopFrame(int result_slots) {
@@ -202,12 +191,12 @@ SharkStackWithNormalFrame::SharkStackWithNormalFrame(SharkFunction* function,
   // be set during each decache, so it is not necessary to do them
   // at the time the frame is created.  However, we set them for
   // non-PRODUCT builds to make crash dumps easier to understand.
-  initialize(method, NOT_PRODUCT(true) PRODUCT_ONLY(false));
+  initialize(PRODUCT_ONLY(NULL) NOT_PRODUCT(method));
 }
 SharkStackWithNativeFrame::SharkStackWithNativeFrame(SharkNativeWrapper* wrp,
                                                      Value*              method)
   : SharkStack(wrp), _wrapper(wrp) {
-  initialize(method, true);
+  initialize(method);
 }
 
 int SharkStackWithNormalFrame::arg_size() const {
@@ -251,3 +240,24 @@ address SharkStackWithNormalFrame::interpreter_entry_point() const {
 address SharkStackWithNativeFrame::interpreter_entry_point() const {
   return (address) CppInterpreter::native_entry;
 }
+
+#ifndef PRODUCT
+void SharkStack::CreateAssertLastJavaSPIsNull() const {
+#ifdef ASSERT
+  BasicBlock *fail = CreateBlock("assert_failed");
+  BasicBlock *pass = CreateBlock("assert_ok");
+
+  builder()->CreateCondBr(
+    builder()->CreateICmpEQ(
+      builder()->CreateLoad(last_Java_sp_addr()),
+      LLVMValue::intptr_constant(0)),
+    pass, fail);
+
+  builder()->SetInsertPoint(fail);
+  builder()->CreateShouldNotReachHere(__FILE__, __LINE__);
+  builder()->CreateUnreachable();
+
+  builder()->SetInsertPoint(pass);
+#endif // ASSERT
+}
+#endif // !PRODUCT

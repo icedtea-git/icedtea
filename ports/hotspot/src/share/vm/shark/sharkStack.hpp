@@ -40,16 +40,10 @@ class SharkStack : public SharkCompileInvariants {
     : SharkCompileInvariants(parent) {}
 
  protected:
-  void initialize(llvm::Value* method, bool setup_sp_and_method);
+  void initialize(llvm::Value* method);
 
  protected:
-  void CreateStackOverflowCheck(llvm::Value* sp, llvm::Value* method);
-
- private:
-  void CreateCheckStack(llvm::Value*      base,
-                        llvm::Value*      sp,
-                        llvm::BasicBlock* overflow,
-                        llvm::BasicBlock* no_overflow);
+  void CreateStackOverflowCheck(llvm::Value* sp);
 
   // Properties of the method being compiled
  protected:
@@ -114,23 +108,38 @@ class SharkStack : public SharkCompileInvariants {
 
   // Interface with the frame anchor
  private:
-  llvm::Value* frame_anchor_addr() const {
+  llvm::Value* last_Java_sp_addr() const {
     return builder()->CreateAddressOfStructEntry(
       thread(),
       JavaThread::last_Java_sp_offset(),
       llvm::PointerType::getUnqual(SharkType::intptr_type()),
-      "frame_anchor_addr");
+      "last_Java_sp_addr");
+  }
+  llvm::Value* last_Java_fp_addr() const {
+    return builder()->CreateAddressOfStructEntry(
+      thread(),
+      JavaThread::last_Java_fp_offset(),
+      llvm::PointerType::getUnqual(SharkType::intptr_type()),
+      "last_Java_fp_addr");
   }
 
  public:
-  llvm::StoreInst* CreateSetLastJavaFrame() {
-    return builder()->CreateStore(
-      CreateLoadFramePointer(), frame_anchor_addr());
+  void CreateSetLastJavaFrame() {
+    // Note that whenever _last_Java_sp != NULL other anchor fields
+    // must be valid.  The profiler apparently depends on this.
+    NOT_PRODUCT(CreateAssertLastJavaSPIsNull());
+    builder()->CreateStore(CreateLoadFramePointer(), last_Java_fp_addr());
+    // XXX There's last_Java_pc as well, but I don't think anything uses it
+    // Also XXX: should we fence here?  Zero doesn't...
+    builder()->CreateStore(CreateLoadStackPointer(), last_Java_sp_addr());
+    // Also also XXX: we could probably cache the sp (and the fp we know??)
   }
-  llvm::StoreInst* CreateResetLastJavaFrame() {
-    return builder()->CreateStore(
-      LLVMValue::intptr_constant(0), frame_anchor_addr());
+  void CreateResetLastJavaFrame() {
+    builder()->CreateStore(LLVMValue::intptr_constant(0), last_Java_sp_addr());
   }
+
+ private:
+  void CreateAssertLastJavaSPIsNull() const PRODUCT_RETURN;
 
   // Our method's frame
  private:

@@ -319,13 +319,17 @@ Value* SharkBuilder::osr_migration_end() {
   return make_function((address) SharedRuntime::OSR_migration_end, "C", "v");
 }
 
-// Uncommon trap
+// Semi-VM calls
+
+Value* SharkBuilder::throw_StackOverflowError() {
+  return make_function((address) ZeroStack::handle_overflow, "T", "v");
+}
 
 Value* SharkBuilder::uncommon_trap() {
   return make_function((address) SharkRuntime::uncommon_trap, "Ti", "v");
 }
 
-// Native-Java transition.
+// Native-Java transition
 
 Value* SharkBuilder::check_special_condition_for_native_trans() {
   return make_function(

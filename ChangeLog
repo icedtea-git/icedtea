@@ -1,3 +1,31 @@
+2010-05-10  Gary Benson  <gbenson@redhat.com>
+
+	PR icedtea/323
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(SharkBuilder::throw_StackOverflowError): New method.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::throw_StackOverflowError): Likewise.
+	* ports/hotspot/src/share/vm/shark/sharkStack.hpp
+	(SharkStack::initialize): Removed argument.
+	(SharkStack::CreateStackOverflowCheck): Updated.
+	(SharkStack::CreateCheckStack): Removed method.
+	(SharkStack::frame_anchor_addr): Likewise.
+	(SharkStack::last_Java_sp_addr): New method.
+	(SharkStack::last_Java_fp_addr): New method.
+	(SharkStack::CreateSetLastJavaFrame): Use new frame anchor code.
+	(SharkStack::CreateResetLastJavaFrame): Likewise.
+	(SharkStack::CreateAssertLastJavaSPIsNull): New method.
+	* ports/hotspot/src/share/vm/shark/sharkStack.cpp
+	(SharkStack::initialize): Updated for new stack overflow code.
+	(SharkStack::CreateStackOverflowCheck): Likewise.
+	(SharkStack::CreateCheckStack): Removed.
+	(SharkStackWithNormalFrame::SharkStackWithNormalFrame): Updated
+	for new stack overflow code.
+	(SharkStackWithNativeFrame::SharkStackWithNativeFrame): Likewise.
+	(SharkStack::CreateAssertLastJavaSPIsNull): New method.
+	* ports/hotspot/src/share/vm/shark/sharkNativeWrapper.cpp
+	(SharkNativeWrapper::initialize): Whitespace fix.
+
 2010-05-07  Deepak Bhole <dbhole@redhat.com>
 
 	PR icedtea/436:
