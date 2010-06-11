@@ -1,3 +1,23 @@
+2010-04-26  Andrew John Hughes  <ahughes@redhat.com>
+
+	Use build directories outside the source
+	tree and use lightweight copies for external
+	source trees where possible.
+	* Makefile.am:
+	(OS_DIR): Removed.
+	(BUILD_DIR): Set to openjdk.build.
+	(BUILD_OUTPUT_DIR): Use BUILD_DIR.
+	(BOOT_BUILD_OUTPUT_DIR): Extend BUILD_OUTPUT_DIR with '-boot'.
+	(ICEDTEA_ENV): Set output directory.
+	(ICEDTEA_ENV_BOOT): Likewise.
+	(clean-icedtea): Simplify by just removing BUILD_OUTPUT_DIR.
+	(clean-icedtea-boot): Likewise, but BOOT_BUILD_OUTPUT_DIR is removed.
+	(extract-openjdk.stamp): Use lightweight copies where possible.
+	(generated.stamp): Likewise.
+	(liveconnect-dist.stamp): Likewise.
+	(netx-dist.stamp): Likewise.
+	(plugin-tests.stamp): Likewise.
+
 2010-06-07 Andrew John Hughes  <ahughes@redhat.com>
 
 	Make BOOT_BUILD_OUTPUT_DIR absolute and dispense

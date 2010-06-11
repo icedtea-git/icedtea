@@ -59,10 +59,10 @@ HOTSPOT_URL = $(ICEDTEA_HG_URL)/hotspot
 
 # Build directories
 
-OS_DIR = $(BUILD_OS_DIR)-$(BUILD_ARCH_DIR)
-BUILD_OUTPUT_DIR = $(abs_top_builddir)/openjdk/build/$(OS_DIR)
+BUILD_DIR = openjdk.build
+BUILD_OUTPUT_DIR = $(abs_top_builddir)/$(BUILD_DIR)
 DEBUG_BUILD_OUTPUT_DIR = $(BUILD_OUTPUT_DIR)-debug
-BOOT_BUILD_OUTPUT_DIR = $(abs_top_builddir)/openjdk-boot/build/$(OS_DIR)
+BOOT_BUILD_OUTPUT_DIR = $(BUILD_OUTPUT_DIR)-boot
 ICEDTEA_BOOT_DIR= $(abs_top_builddir)/bootstrap/jdk1.6.0
 ICEDTEA_RT = $(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar
 NETX_CLASSES = $(abs_top_builddir)/netx.build
@@ -510,7 +510,8 @@ ICEDTEA_ENV = \
 	DEBUG_CLASSFILES="true" \
 	DEBUG_BINARIES="true" \
 	DISABLE_INTREE_EC="true" \
-	ALT_DROPS_DIR="$(abs_top_builddir)/drops"
+	ALT_DROPS_DIR="$(abs_top_builddir)/drops" \
+	ALT_OUTPUTDIR="$(BUILD_OUTPUT_DIR)"
 
 if WITH_CACAO
 ICEDTEA_ENV += \
@@ -553,7 +554,8 @@ ICEDTEA_ENV_BOOT = $(ICEDTEA_ENV) \
 	JAR_KNOWS_J_OPTIONS="$(JAR_KNOWS_J_OPTIONS)" \
 	JAR_ACCEPTS_STDIN_LIST="$(JAR_ACCEPTS_STDIN_LIST)" \
 	DISABLE_NIMBUS="true" \
-	NO_DOCS="true"
+	NO_DOCS="true" \
+	ALT_OUTPUTDIR="$(BOOT_BUILD_OUTPUT_DIR)"
 
 # Source files
 
@@ -1171,7 +1173,7 @@ clean-extract: clean-extract-openjdk clean-extract-visualvm \
 
 stamps/extract-openjdk.stamp: stamps/download-openjdk.stamp
 if OPENJDK_SRC_DIR_FOUND
-	cp -a $(OPENJDK_SRC_DIR) openjdk
+	cp -pPR --reflink=auto $(OPENJDK_SRC_DIR) openjdk
 else
 	set -e ; \
 	if ! test -d openjdk ; then \
@@ -1416,7 +1418,7 @@ clean-ports:
 stamps/generated.stamp: stamps/ports.stamp
 	set -e ; \
 	if [ ! -e $(abs_top_builddir)/generated ]; then \
-	  cp -a $(abs_top_srcdir)/generated $(abs_top_builddir); \
+	  cp -pPR --reflink=auto $(abs_top_srcdir)/generated $(abs_top_builddir); \
 	  find $(abs_top_builddir)/generated -type f -exec chmod 640 '{}' ';' \
 	    -o -type d -exec chmod 750 '{}' ';'; \
 	fi
@@ -1925,11 +1927,7 @@ endif
 	touch $@
 
 clean-icedtea: 
-	if [ -e $(abs_top_builddir)/openjdk ]; then \
-	  $(ARCH_PREFIX) $(MAKE) \
-	    $(ICEDTEA_ENV) \
-	    -C openjdk clobber ; \
-	fi
+	rm -rf $(BUILD_OUTPUT_DIR)
 	rm -f stamps/icedtea.stamp stamps/icedtea-debug.stamp
 
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
@@ -1985,12 +1983,8 @@ else
 	@echo "HotSpot is served:" $(BUILD_OUTPUT_DIR)/j2sdk-image
 endif
 
-clean-icedtea-boot: 
-	if [ -e $(abs_top_builddir)/openjdk-boot ]; then \
-	  $(ARCH_PREFIX) $(MAKE) \
-	    $(ICEDTEA_ENV_BOOT) \
-	    -C openjdk-boot clobber ; \
-	fi 
+clean-icedtea-boot:
+	rm -rf $(BOOT_BUILD_OUTPUT_DIR)
 	rm -f stamps/icedtea-boot.stamp
 
 stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp
@@ -2076,7 +2070,7 @@ stamps/liveconnect-dist.stamp: stamps/liveconnect.stamp
 	  (cd $(LIVECONNECT_CLASSES) ; \
 	   mkdir -p lib ; \
 	   $(ICEDTEA_BOOT_DIR)/bin/jar cf $(LIVECONNECT_JAR) $(LIVECONNECT_DIR) ; \
-	   cp -a $(PLUGIN_SRCDIR)/java src; \
+	   cp -pPR --reflink=auto $(PLUGIN_SRCDIR)/java src; \
 	   find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
 	   cd src ; \
 	   $(ZIP) -qr $(LIVECONNECT_SRC) ${LIVECONNECT_DIR} ) ; \
@@ -2113,7 +2107,7 @@ stamps/netx-dist.stamp: stamps/netx.stamp
 	(cd $(NETX_CLASSES) ; \
 	 mkdir -p lib ; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar cf $(NETX_JAR) javax/jnlp net ; \
-	 cp -a $(NETX_SRCDIR) src; \
+	 cp -pPR --reflink=auto $(NETX_SRCDIR) src; \
 	 find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
 	 cd src ; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar uf $(NETX_JAR) \
@@ -2425,13 +2419,13 @@ if ADD_ZERO_BUILD
 
 if ZERO_BUILD
 	mkdir -p $(BUILD_JRE_ARCH_DIR)/shark
-	cp -a zerovm/openjdk/build/$(OS_DIR)/hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server/* \
+	cp -a zerovm/$(BUILD_DIR)/hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server/* \
 		$(BUILD_JRE_ARCH_DIR)/shark/
 	printf -- '-shark KNOWN\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 	printf -- '-zero ERROR\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 else
 	mkdir -p $(BUILD_JRE_ARCH_DIR)/zero
-	cp -a zerovm/openjdk/build/$(OS_DIR)/hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server/* \
+	cp -a zerovm/$(BUILD_DIR)/hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server/* \
 		$(BUILD_JRE_ARCH_DIR)/zero/
 	printf -- '-zero KNOWN\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 	printf -- '-shark ERROR\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
@@ -2465,12 +2459,12 @@ if ADD_ZERO_BUILD
 
 if ZERO_BUILD
 	mkdir -p $(BUILD_DEBUG_JRE_ARCH_DIR)/shark
-	cp -a zerovm/openjdk/build/$(OS_DIR)/hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server/* \
+	cp -a zerovm/$(BUILD_OUTPUT_DIR)/hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server/* \
 		$(BUILD_DEBUG_JRE_ARCH_DIR)/shark/
 	printf -- '-shark KNOWN\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 else
 	mkdir -p $(BUILD_DEBUG_JRE_ARCH_DIR)/zero
-	cp -a zerovm/openjdk/build/$(OS_DIR)/hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server/* \
+	cp -a zerovm/$(BUILD_OUTPUT_DIR)/hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server/* \
 		$(BUILD_DEBUG_JRE_ARCH_DIR)/zero/
 	printf -- '-zero KNOWN\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
@@ -2498,7 +2492,8 @@ stamps/plugin-tests.stamp: $(PLUGIN_TEST_SRCS) stamps/plugin.stamp
 	 -classpath $(LIVECONNECT_JAR) $(PLUGIN_TEST_SRCS) ;
 	$(ICEDTEA_BOOT_DIR)/bin/jar cf plugin/tests/LiveConnect/PluginTest.jar \
 	  plugin/tests/LiveConnect/*.class ;
-	cp -a $(abs_top_srcdir)/plugin/tests/LiveConnect/*.{js,html} plugin/tests/LiveConnect ;
+	cp -pPR --reflink-auto $(abs_top_srcdir)/plugin/tests/LiveConnect/*.{js,html} \
+	  plugin/tests/LiveConnect ;
 	echo "Done. Now launch \"firefox file://`pwd`/index.html\"" ; \
 	mkdir -p stamps
 	touch stamps/plugin-tests.stamp
