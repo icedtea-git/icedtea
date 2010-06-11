@@ -1,3 +1,10 @@
+2010-06-01  Xerxes Rånby  <xerxes@zafena.se>
+
+	* Makefile.am:
+	(rewrite-rhino.stamp): Use full path to
+	jar application to avoid relying on the one
+	on the path.
+
 2010-05-20  Gary Benson  <gbenson@redhat.com>
 
 	PR icedtea/494

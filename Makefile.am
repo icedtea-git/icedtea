@@ -2237,7 +2237,7 @@ endif
 stamps/rewrite-rhino.stamp: stamps/rewriter.stamp $(RHINO_JAR)
 if WITH_RHINO
 	mkdir -p rhino/rhino.{old,new} && \
-	(cd rhino/rhino.old && jar xf $(RHINO_JAR)) && \
+	(cd rhino/rhino.old && $(ICEDTEA_BOOT_DIR)/bin/jar xf $(RHINO_JAR)) && \
 	$(ICEDTEA_BOOT_DIR)/bin/java -cp $(abs_top_builddir)/rewriter \
 	  com.redhat.rewriter.ClassRewriter \
 	  $(abs_top_builddir)/rhino/rhino.old $(abs_top_builddir)/rhino/rhino.new \
