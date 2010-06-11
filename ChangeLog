@@ -1,3 +1,22 @@
+2010-06-07 Andrew John Hughes  <ahughes@redhat.com>
+
+	Make BOOT_BUILD_OUTPUT_DIR absolute and dispense
+	with ICEDTEA_BUILD_DIR and ICEDTEA_BUILD_DIR_ECJ.
+	* Makefile.am:
+	(ICEDTEA_BUILD_DIR): Dropped.
+	(ECJ_BUILD_OUTPUT_DIR): Make absolute.
+	(ICEDTEA_CLS_DIR_BOOT): Make relative to ECJ_BUILD_OUTPUT_DIR.
+	(ICEDTEA_BUILD_DIR_BOOT): Dropped.
+	(bootstrap-directory.stamp): Use BOOT_BUILD_OUTPUT_DIR
+	rather than ICEDTEA_BUILD_DIR_BOOT.  Remove unneeded
+	$(abs_top_builddir).
+	(icedtea-debug.stamp): Add pulse java src.zip update.
+	(ADD_ZERO_EXTRA_BUILD_ENV): Replace ICEDTEA_BUILD_DIR
+	with BUILD_OUTPUT_DIR.
+	(check-hotspot): Replace unneeded use of pwd.
+	(check-jdk): Likewise.
+	(check-langtools): Likewise.
+
 2010-06-04 Jon VanAlten  <jon.vanalten@redhat.com>
 
 	PR icedtea/438

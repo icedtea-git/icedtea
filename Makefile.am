@@ -62,25 +62,14 @@ HOTSPOT_URL = $(ICEDTEA_HG_URL)/hotspot
 OS_DIR = $(BUILD_OS_DIR)-$(BUILD_ARCH_DIR)
 BUILD_OUTPUT_DIR = $(abs_top_builddir)/openjdk/build/$(OS_DIR)
 DEBUG_BUILD_OUTPUT_DIR = $(BUILD_OUTPUT_DIR)-debug
-BOOT_BUILD_OUTPUT_DIR = openjdk-boot/build/$(OS_DIR)
-ICEDTEA_BUILD_DIR = \
-	$(abs_top_builddir)/$(BUILD_OUTPUT_DIR)
-ICEDTEA_BOOT_DIR= \
-	$(abs_top_builddir)/bootstrap/jdk1.6.0
-ICEDTEA_RT = \
-	$(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar
-NETX_CLASSES = \
-	$(abs_top_builddir)/netx.build
-NETX_JAR = \
-	$(NETX_CLASSES)/lib/classes.jar
-NETX_SRC = \
-	$(NETX_CLASSES)/lib/src.zip
-ICEDTEA_ENDORSED_DIR = \
-	$(ICEDTEA_BOOT_DIR)/lib/endorsed
-ICEDTEA_BUILD_DIR_BOOT = \
-	$(abs_top_builddir)/$(BOOT_BUILD_OUTPUT_DIR)/
-ICEDTEA_CLS_DIR_BOOT = \
-	$(abs_top_builddir)/$(BOOT_BUILD_OUTPUT_DIR)/classes
+BOOT_BUILD_OUTPUT_DIR = $(abs_top_builddir)/openjdk-boot/build/$(OS_DIR)
+ICEDTEA_BOOT_DIR= $(abs_top_builddir)/bootstrap/jdk1.6.0
+ICEDTEA_RT = $(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar
+NETX_CLASSES = $(abs_top_builddir)/netx.build
+NETX_JAR = $(NETX_CLASSES)/lib/classes.jar
+NETX_SRC = $(NETX_CLASSES)/lib/src.zip
+ICEDTEA_ENDORSED_DIR = $(ICEDTEA_BOOT_DIR)/lib/endorsed
+ICEDTEA_CLS_DIR_BOOT = $(BOOT_BUILD_OUTPUT_DIR)/classes
 SERVER_DIR = hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server
 BUILD_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 BUILD_DEBUG_JRE_ARCH_DIR = $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
@@ -1741,11 +1730,9 @@ clean-bootstrap-directory-stage1:
 # bootstrap/stage2.
 stamps/bootstrap-directory-stage2.stamp: stamps/icedtea-stage1.stamp
 	rm -rf bootstrap/icedtea
-	ln -s \
-	  $(abs_top_builddir)/$(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/ \
-	  bootstrap/icedtea
+	ln -s $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/ bootstrap/icedtea
 	if ! test -d bootstrap/icedtea/include; then \
-	  ln -sf $(ICEDTEA_BUILD_DIR_BOOT)/include bootstrap/icedtea/include; \
+	  ln -sf $(BOOT_BUILD_OUTPUT_DIR)/include bootstrap/icedtea/include; \
 	fi
 	mkdir -p stamps
 	touch $@
@@ -1889,6 +1876,8 @@ if ENABLE_PULSE_JAVA
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
 	cp -pPRf pulse-java.jar \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/ext
+	(cd $(PULSE_JAVA_JAVA_SRCDIR) && \
+	   $(ZIP) -qur $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/src.zip org )
 endif
 if JNLP_ABOUT_NEEDED
 	cp $(NETX_RESOURCE_DIR)/default.jnlp extra-lib/about.jar \
@@ -2415,10 +2404,10 @@ ADD_ZERO_CONFIGURE_ARGS += \
 	  $(if $(findstring --with-$(i)-src-zip=, $(CONFIGURE_ARGS)),, --with-$(i)-src-zip=$(abs_top_builddir)/$(i).tar.gz))
 
 ADD_ZERO_EXTRA_BUILD_ENV = \
-	BUILD_LANGTOOLS=false ALT_LANGTOOLS_DIST=$(ICEDTEA_BUILD_DIR)/langtools/dist \
-	BUILD_JAXP=false      ALT_JAXP_DIST=$(ICEDTEA_BUILD_DIR)/jaxp/dist \
-	BUILD_JAXWS=false     ALT_JAXWS_DIST=$(ICEDTEA_BUILD_DIR)/jaxws/dist \
-	BUILD_CORBA=false     ALT_CORBA_DIST=$(ICEDTEA_BUILD_DIR)/corba/dist \
+	BUILD_LANGTOOLS=false ALT_LANGTOOLS_DIST=$(BUILD_OUTPUT_DIR)/langtools/dist \
+	BUILD_JAXP=false      ALT_JAXP_DIST=$(BUILD_OUTPUT_DIR)/jaxp/dist \
+	BUILD_JAXWS=false     ALT_JAXWS_DIST=$(BUILD_OUTPUT_DIR)/jaxws/dist \
+	BUILD_CORBA=false     ALT_CORBA_DIST=$(BUILD_OUTPUT_DIR)/corba/dist \
 	BUILD_JDK=false \
 	DISTRIBUTION_PATCHES='$(foreach p,$(DISTRIBUTION_PATCHES),$(if $(findstring cacao,$(p)),,$(p)))'
 
@@ -2540,7 +2529,7 @@ check-hotspot: stamps/jtreg.stamp
 	mkdir -p test/hotspot/JTwork test/hotspot/JTreport
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/hotspot/JTwork -r:test/hotspot/JTreport \
-		-jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
+		-jdk:$(BUILD_OUTPUT_DIR)/j2sdk-image \
 		$(ICEDTEA_JTREG_OPTIONS) \
 		`pwd`/openjdk/hotspot/test \
 	    | tee test/$@.log
@@ -2550,7 +2539,7 @@ check-langtools: stamps/jtreg.stamp
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/langtools/JTwork -r:test/langtools/JTreport \
 		$${ICEDTEA_JTREG_OTHERVM:--samevm} \
-		-jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
+		-jdk:$(BUILD_OUTPUT_DIR)/j2sdk-image \
 		$(ICEDTEA_JTREG_OPTIONS) \
 		-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.langtools.jtx \
 		`pwd`/openjdk/langtools/test \
@@ -2564,7 +2553,7 @@ endif
 	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/jdk/JTwork -r:test/jdk/JTreport \
 		$${ICEDTEA_JTREG_OTHERVM:--samevm} \
-		-jdk:`pwd`/$(BUILD_OUTPUT_DIR)/j2sdk-image \
+		-jdk:$(BUILD_OUTPUT_DIR)/j2sdk-image \
 		$(ICEDTEA_JTREG_OPTIONS) $(CACAO_EXCLUDE) \
 		-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.jdk.jtx \
 		`pwd`/openjdk/jdk/test \
