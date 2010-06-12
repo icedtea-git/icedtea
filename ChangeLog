@@ -1,3 +1,10 @@
+2010-06-12  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Bump HotSpot and JDK changeset IDs and
+	SHA256 checksums to incorporate recent
+	Zero fixes and NSS error output fix.
+
 2010-04-26  Andrew John Hughes  <ahughes@redhat.com>
 
 	Use build directories outside the source
