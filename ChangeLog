@@ -1,3 +1,8 @@
+2010-06-15  Stefan Ring  <stefan@complang.tuwien.ac.at>
+
+	PR icedtea/495
+	* patches/boot/jar.patch: Apply workaround in more places.
+
 2010-06-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
