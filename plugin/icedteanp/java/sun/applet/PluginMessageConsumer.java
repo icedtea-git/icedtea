@@ -164,11 +164,11 @@ class PluginMessageConsumer {
 	        registerPriorityWait("instance " + instanceNum + " handle");
 	        registerPriorityWait("instance " + instanceNum + " width");
 
-	    } else if (msgParts[2].equals("handle") || msgParts[2].equals("width")) {
+	    } else if (msgParts[2].equals("handle")) {
 	            Integer instanceNum = new Integer(msgParts[1]);
 
 	            // If this instance is not in init, return false immediately. 
-	            // Handle/Width messages should NEVER go before tag messages
+	            // Handle messages should NEVER go before tag messages
 	            if (!isInInit(instanceNum))
 	                return false;
 	    }

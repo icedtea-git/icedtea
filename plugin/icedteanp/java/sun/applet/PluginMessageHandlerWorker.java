@@ -72,7 +72,7 @@ class PluginMessageHandlerWorker extends Thread {
 
 			if (message != null) {
 				
-			    PluginDebug.debug("Consumer thread " + id + " consuming " + message);
+			    PluginDebug.debug("Consumer (priority=" + isPriorityWorker + ") thread " + id + " consuming " + message);
 			    
 				// ideally, whoever returns things object should mark it 
 				// busy first, but just in case..
@@ -90,7 +90,7 @@ class PluginMessageHandlerWorker extends Thread {
 
 				this.message = null;
 				
-				PluginDebug.debug("Consumption completed by consumer thread " + id);
+				PluginDebug.debug("Consumption (priority=" + isPriorityWorker + ") completed by consumer thread " + id);
 
 	            // mark ourselves free again
 				free();

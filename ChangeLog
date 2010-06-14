@@ -1,3 +1,8 @@
+2010-06-14  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/java/sun/applet/PluginMessageConsumer.java: Fix bug
+	causing 100% CPU usage (rhbz# 592553).
+
 2010-06-14  Omair Majid <omajid@redhat.com>
 
 	PR icedtea/488
