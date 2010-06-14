@@ -1,3 +1,8 @@
+2010-06-14  Omair Majid <omajid@redhat.com>
+
+	* plugin/icedteanp/IcedTeaNPPlugin.cc: Use getproperty NPAPI call instead
+	of evaluate, to get page URL.
+
 2010-06-15  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

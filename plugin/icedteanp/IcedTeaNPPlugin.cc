@@ -1021,30 +1021,26 @@ plugin_get_documentbase (NPP instance)
   // Additionally, since it is insecure, we cannot use it for making
   // security decisions.
   NPObject* window;
-  NPString script = NPString();
-  std::string script_str = std::string();
-  NPVariant* location = new NPVariant();
-  std::string location_str = std::string();
-
   browser_functions.getvalue(instance, NPNVWindowNPObject, &window);
-  script_str += "window.location.href";
-#if MOZILLA_VERSION_COLLAPSED < 1090200
-  script.utf8characters = script_str.c_str();
-  script.utf8length = script_str.size();
-#else
-  script.UTF8Characters = script_str.c_str();
-  script.UTF8Length = script_str.size();
-#endif
-  browser_functions.evaluate(instance, window, &script, location);
+
+  NPVariant location;
+  NPIdentifier location_id = browser_functions.getstringidentifier("location");
+  browser_functions.getproperty(instance, window, location_id, &location);
+
+  NPVariant href;
+  NPIdentifier href_id = browser_functions.getstringidentifier("href");
+  browser_functions.getproperty(instance, NPVARIANT_TO_OBJECT(location), 
+                               href_id, &href);
 
   // Strip everything after the last "/"
 #if MOZILLA_VERSION_COLLAPSED < 1090200
-  gchar** parts = g_strsplit (NPVARIANT_TO_STRING(*location).utf8characters, "/", -1);
+  gchar** parts = g_strsplit (NPVARIANT_TO_STRING(href).utf8characters, "/", -1);
 #else
-  gchar** parts = g_strsplit (NPVARIANT_TO_STRING(*location).UTF8Characters, "/", -1);
+  gchar** parts = g_strsplit (NPVARIANT_TO_STRING(href).UTF8Characters, "/", -1);
 #endif
   guint parts_sz = g_strv_length (parts);
 
+  std::string location_str;
   for (int i=0; i < parts_sz - 1; i++)
   {
       location_str += parts[i];
@@ -1054,6 +1050,8 @@ plugin_get_documentbase (NPP instance)
   documentbase_copy = g_strdup (location_str.c_str());
 
   // Release references.
+  browser_functions.releasevariantvalue(&href);
+  browser_functions.releasevariantvalue(&location);
  cleanup_done:
   PLUGIN_DEBUG_0ARG ("plugin_get_documentbase return\n");
   PLUGIN_DEBUG_1ARG("plugin_get_documentbase returning: %s\n", documentbase_copy);
