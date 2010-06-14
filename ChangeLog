@@ -1,6 +1,20 @@
 2010-06-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	(REFLINK): Remove unneeded quotation.
+	(OPENJDK_SRC_DIR_LINK): Use reflink only
+	if hard linking is not possible.
+	* acinclude.m4:
+	(IT_CP_SUPPORTS_REFLINK): Define once only.
+	(WITH_OPENJDK_SRC_DIR): Define once only.
+	Check that directory is valid (to the extent
+	this is discernable by the README being present)
+	and whether hardlinking is possible, defining
+	OPENJDK_SRC_DIR_HARDLINKABLE if it is.
+
+2010-06-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(REFLINK): Set to --reflink=auto if
 	CP_SUPPORTS_REFLINK is defined.
 	(extract-openjdk.stamp): Replace --reflink=auto

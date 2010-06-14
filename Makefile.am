@@ -237,7 +237,13 @@ else
 endif
 
 if CP_SUPPORTS_REFLINK
-  REFLINK="--reflink=auto"
+  REFLINK = --reflink=auto
+endif
+
+if OPENJDK_SRC_DIR_HARDLINKABLE
+  OPENJDK_SRC_DIR_LINK = -l
+else
+  OPENJDK_SRC_DIR_LINK = $(REFLINK)
 endif
 
 # Target to ensure a patched OpenJDK tree containing Zero & Shark
@@ -1177,7 +1183,7 @@ clean-extract: clean-extract-openjdk clean-extract-visualvm \
 
 stamps/extract-openjdk.stamp: stamps/download-openjdk.stamp
 if OPENJDK_SRC_DIR_FOUND
-	cp -pPR $(REFLINK) $(OPENJDK_SRC_DIR) openjdk
+	cp -pPR $(OPENJDK_SRC_DIR_LINK) $(OPENJDK_SRC_DIR) openjdk
 else
 	set -e ; \
 	if ! test -d openjdk ; then \

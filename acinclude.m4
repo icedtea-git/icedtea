@@ -234,7 +234,7 @@ AC_DEFUN([FIND_JAVA],
   AC_SUBST(JAVA)
 ])
 
-AC_DEFUN([IT_CP_SUPPORTS_REFLINK],
+AC_DEFUN_ONCE([IT_CP_SUPPORTS_REFLINK],
 [
   AC_CACHE_CHECK([if cp supports --reflink], it_cv_reflink, [
     touch tmp.$$
@@ -248,23 +248,45 @@ AC_DEFUN([IT_CP_SUPPORTS_REFLINK],
   AM_CONDITIONAL([CP_SUPPORTS_REFLINK], test x"${it_cv_reflink}" = "xyes")
 ])
 
-AC_DEFUN([WITH_OPENJDK_SRC_DIR],
+AC_DEFUN_ONCE([WITH_OPENJDK_SRC_DIR],
 [
-  AC_MSG_CHECKING(for an OpenJDK source directory)
+  DEFAULT_SRC_DIR=${abs_top_builddir}/openjdk
+  AC_MSG_CHECKING([for an OpenJDK source directory])
   AC_ARG_WITH([openjdk-src-dir],
               [AS_HELP_STRING(--with-openjdk-src-dir,specify the location of the openjdk sources)],
   [
     OPENJDK_SRC_DIR=${withval}
-    AC_MSG_RESULT(${withval})
-    conditional_with_openjdk_sources=true
+    with_external_src_dir=true
   ],
   [ 
-    conditional_with_openjdk_sources=false
-    OPENJDK_SRC_DIR=`pwd`/openjdk
-    AC_MSG_RESULT(${OPENJDK_SRC_DIR})
+    OPENJDK_SRC_DIR=${DEFAULT_SRC_DIR}
+    with_external_src_dir=false
   ])
+  AC_MSG_RESULT(${OPENJDK_SRC_DIR})
   AC_SUBST(OPENJDK_SRC_DIR)
-  AM_CONDITIONAL(OPENJDK_SRC_DIR_FOUND, test "x${conditional_with_openjdk_sources}" = xtrue)
+  if test "x${with_external_src_dir}" = "xtrue"; then
+    AC_MSG_CHECKING([if ${OPENJDK_SRC_DIR}/README exists])
+    if test -f ${OPENJDK_SRC_DIR}/README; then
+      openjdk_src_dir_valid=yes;
+    else
+      openjdk_src_dir_valid="no, resetting to ${DEFAULT_SRC_DIR}";
+      OPENJDK_SRC_DIR=${DEFAULT_SRC_DIR}
+      with_external_src_dir=false
+    fi
+    AC_MSG_RESULT(${openjdk_src_dir_valid})
+    if test "x${openjdk_src_dir_valid}" = "xyes"; then
+      AC_MSG_CHECKING([if we can hard link rather than copy the OpenJDK source directory])
+      if cp -l ${OPENJDK_SRC_DIR}/README tmp.$$ >&AS_MESSAGE_LOG_FD 2>&1; then
+        openjdk_src_dir_hardlinkable=yes;
+      else
+        openjdk_src_dir_hardlinkable=no;
+      fi
+      AC_MSG_RESULT(${openjdk_src_dir_hardlinkable})
+      rm -f tmp.$$
+    fi
+  fi
+  AM_CONDITIONAL(OPENJDK_SRC_DIR_FOUND, test "x${with_external_src_dir}" = "xtrue")
+  AM_CONDITIONAL(OPENJDK_SRC_DIR_HARDLINKABLE, test "x${openjdk_src_dir_hardlinkable}" = "xyes")
 ])
 
 AC_DEFUN([FIND_ECJ_JAR],
