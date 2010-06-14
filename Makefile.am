@@ -246,6 +246,12 @@ else
   OPENJDK_SRC_DIR_LINK = $(REFLINK)
 endif
 
+if SRC_DIR_HARDLINKABLE
+  SRC_DIR_LINK = -l
+else
+  SRC_DIR_LINK = $(REFLINK)
+endif
+
 # Target to ensure a patched OpenJDK tree containing Zero & Shark
 # and any overlays is available in $(abs_top_builddir)/openjdk
 OPENJDK_TREE = stamps/overlay.stamp
@@ -1428,7 +1434,7 @@ clean-ports:
 stamps/generated.stamp: stamps/ports.stamp
 	set -e ; \
 	if [ ! -e $(abs_top_builddir)/generated ]; then \
-	  cp -pPR $(REFLINK) $(abs_top_srcdir)/generated $(abs_top_builddir); \
+	  cp -pPR $(SRC_DIR_LINK) $(abs_top_srcdir)/generated $(abs_top_builddir); \
 	  find $(abs_top_builddir)/generated -type f -exec chmod 640 '{}' ';' \
 	    -o -type d -exec chmod 750 '{}' ';'; \
 	fi
@@ -2080,7 +2086,7 @@ stamps/liveconnect-dist.stamp: stamps/liveconnect.stamp
 	  (cd $(LIVECONNECT_CLASSES) ; \
 	   mkdir -p lib ; \
 	   $(ICEDTEA_BOOT_DIR)/bin/jar cf $(LIVECONNECT_JAR) $(LIVECONNECT_DIR) ; \
-	   cp -pPR $(REFLINK) $(PLUGIN_SRCDIR)/java src; \
+	   cp -pPR $(SRC_DIR_LINK) $(PLUGIN_SRCDIR)/java src; \
 	   find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
 	   cd src ; \
 	   $(ZIP) -qr $(LIVECONNECT_SRC) ${LIVECONNECT_DIR} ) ; \
@@ -2117,7 +2123,7 @@ stamps/netx-dist.stamp: stamps/netx.stamp
 	(cd $(NETX_CLASSES) ; \
 	 mkdir -p lib ; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar cf $(NETX_JAR) javax/jnlp net ; \
-	 cp -pPR $(REFLINK) $(NETX_SRCDIR) src; \
+	 cp -pPR $(SRC_DIR_LINK) $(NETX_SRCDIR) src; \
 	 find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
 	 cd src ; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar uf $(NETX_JAR) \

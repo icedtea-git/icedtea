@@ -1,9 +1,27 @@
 2010-06-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	(SRC_DIR_LINK): Use reflink only if hard
+	linking is not possible.
+	(generated.stamp): Replace $(REFLINK) with
+	$(SRC_DIR_LINK).
+	(liveconnect-dist.stamp): Likewise.
+	(netx-dist.stamp): Likewise.
+	* acinclude.m4:
+	(IT_CAN_HARDLINK_TO_SOURCE_TREE): Check if hardlinking
+	to files in the source directory from the build directory
+	is possible.
+	* configure.ac:
+	Invoke IT_CAN_HARDLINK_TO_SOURCE_TREE.
+
+2010-06-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(REFLINK): Remove unneeded quotation.
 	(OPENJDK_SRC_DIR_LINK): Use reflink only
 	if hard linking is not possible.
+	(extract-openjdk.stamp): Replace $(REFLINK)
+	with $(OPENJDK_SRC_DIR_LINK).
 	* acinclude.m4:
 	(IT_CP_SUPPORTS_REFLINK): Define once only.
 	(WITH_OPENJDK_SRC_DIR): Define once only.

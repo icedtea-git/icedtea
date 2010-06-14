@@ -289,6 +289,19 @@ AC_DEFUN_ONCE([WITH_OPENJDK_SRC_DIR],
   AM_CONDITIONAL(OPENJDK_SRC_DIR_HARDLINKABLE, test "x${openjdk_src_dir_hardlinkable}" = "xyes")
 ])
 
+AC_DEFUN_ONCE([IT_CAN_HARDLINK_TO_SOURCE_TREE],
+[
+  AC_CACHE_CHECK([if we can hard link rather than copy from ${abs_top_srcdir}], it_cv_hardlink_src, [
+    if cp -l ${abs_top_srcdir}/README tmp.$$ >&AS_MESSAGE_LOG_FD 2>&1; then
+      it_cv_hardlink_src=yes;
+    else
+      it_cv_hardlink_src=no;
+    fi
+    rm -f tmp.$$
+  ])
+  AM_CONDITIONAL([SRC_DIR_HARDLINKABLE], test x"${it_cv_hardlink_src}" = "xyes")
+])
+
 AC_DEFUN([FIND_ECJ_JAR],
 [
   AC_MSG_CHECKING([for an ecj JAR file])
