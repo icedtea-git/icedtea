@@ -236,6 +236,10 @@ else
   INITIAL_BOOTSTRAP_LINK_STAMP = stamps/bootstrap-directory-symlink-stage2.stamp
 endif
 
+if CP_SUPPORTS_REFLINK
+  REFLINK="--reflink=auto"
+endif
+
 # Target to ensure a patched OpenJDK tree containing Zero & Shark
 # and any overlays is available in $(abs_top_builddir)/openjdk
 OPENJDK_TREE = stamps/overlay.stamp
@@ -1173,7 +1177,7 @@ clean-extract: clean-extract-openjdk clean-extract-visualvm \
 
 stamps/extract-openjdk.stamp: stamps/download-openjdk.stamp
 if OPENJDK_SRC_DIR_FOUND
-	cp -pPR --reflink=auto $(OPENJDK_SRC_DIR) openjdk
+	cp -pPR $(REFLINK) $(OPENJDK_SRC_DIR) openjdk
 else
 	set -e ; \
 	if ! test -d openjdk ; then \
@@ -1418,7 +1422,7 @@ clean-ports:
 stamps/generated.stamp: stamps/ports.stamp
 	set -e ; \
 	if [ ! -e $(abs_top_builddir)/generated ]; then \
-	  cp -pPR --reflink=auto $(abs_top_srcdir)/generated $(abs_top_builddir); \
+	  cp -pPR $(REFLINK) $(abs_top_srcdir)/generated $(abs_top_builddir); \
 	  find $(abs_top_builddir)/generated -type f -exec chmod 640 '{}' ';' \
 	    -o -type d -exec chmod 750 '{}' ';'; \
 	fi
@@ -2070,7 +2074,7 @@ stamps/liveconnect-dist.stamp: stamps/liveconnect.stamp
 	  (cd $(LIVECONNECT_CLASSES) ; \
 	   mkdir -p lib ; \
 	   $(ICEDTEA_BOOT_DIR)/bin/jar cf $(LIVECONNECT_JAR) $(LIVECONNECT_DIR) ; \
-	   cp -pPR --reflink=auto $(PLUGIN_SRCDIR)/java src; \
+	   cp -pPR $(REFLINK) $(PLUGIN_SRCDIR)/java src; \
 	   find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
 	   cd src ; \
 	   $(ZIP) -qr $(LIVECONNECT_SRC) ${LIVECONNECT_DIR} ) ; \
@@ -2107,7 +2111,7 @@ stamps/netx-dist.stamp: stamps/netx.stamp
 	(cd $(NETX_CLASSES) ; \
 	 mkdir -p lib ; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar cf $(NETX_JAR) javax/jnlp net ; \
-	 cp -pPR --reflink=auto $(NETX_SRCDIR) src; \
+	 cp -pPR $(REFLINK) $(NETX_SRCDIR) src; \
 	 find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
 	 cd src ; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar uf $(NETX_JAR) \

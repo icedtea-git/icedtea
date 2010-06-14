@@ -1,3 +1,19 @@
+2010-06-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(REFLINK): Set to --reflink=auto if
+	CP_SUPPORTS_REFLINK is defined.
+	(extract-openjdk.stamp): Replace --reflink=auto
+	with $(REFLINK).
+	(generated.stamp): Likewise.
+	(liveconnect-dist.stamp): Likewise.
+	(netx-dist.stamp): Likewise.
+	* acinclude.m4:
+	(IT_CP_SUPPORTS_REFLINK): New macro to check
+	for a cp new enough to have --reflink.
+	* configure.ac:
+	Invoke IT_CP_SUPPORTS_REFLINK.
+
 2010-06-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

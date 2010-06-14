@@ -234,6 +234,20 @@ AC_DEFUN([FIND_JAVA],
   AC_SUBST(JAVA)
 ])
 
+AC_DEFUN([IT_CP_SUPPORTS_REFLINK],
+[
+  AC_CACHE_CHECK([if cp supports --reflink], it_cv_reflink, [
+    touch tmp.$$
+    if cp --reflink=auto tmp.$$ tmp2.$$ >&AS_MESSAGE_LOG_FD 2>&1; then
+      it_cv_reflink=yes;
+    else
+      it_cv_reflink=no;
+    fi
+    rm -f tmp.$$ tmp2.$$
+  ])
+  AM_CONDITIONAL([CP_SUPPORTS_REFLINK], test x"${it_cv_reflink}" = "xyes")
+])
+
 AC_DEFUN([WITH_OPENJDK_SRC_DIR],
 [
   AC_MSG_CHECKING(for an OpenJDK source directory)
