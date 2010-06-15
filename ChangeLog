@@ -1,5 +1,12 @@
 2010-06-14  Omair Majid <omajid@redhat.com>
 
+	PR icedtea/488
+	* plugin/icedteanp/IcedTeaPluginUtils.h: Bug #488. Fix bug due to
+	incorrect assumption that 'A' > 'a'.
+
+2010-06-14  Omair Majid <omajid@redhat.com>
+
+	PR icedtea/480
 	* plugin/icedteanp/IcedTeaNPPlugin.cc: Use getproperty NPAPI call instead
 	of evaluate, to get page URL.
 

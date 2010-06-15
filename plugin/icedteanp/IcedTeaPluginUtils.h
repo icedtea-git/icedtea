@@ -137,8 +137,8 @@ exception statement from your version. */
 }
 
 #define HEX_TO_INT(c) \
-    ((*c >= 'A') ? *c - 'A' + 10 : \
-     (*c >= 'a') ? *c - 'a' + 10 : \
+    ((*c >= 'a') ? *c - 'a' + 10 : \
+     (*c >= 'A') ? *c - 'A' + 10 : \
      *c - '0')
 
 #define IS_VALID_HEX(c) \
