@@ -1,3 +1,18 @@
+2010-06-14 Andrew John Hughes  <ahughes@redhat.com>
+
+	Don't print out the return value of pthread_self
+	which is a pthread_t.  pthread_t is an opaque type
+	and we don't know what it actually is (it varies
+	from system to system; recent versions of Linux
+	use an unsigned long int).
+	* plugin/icedteanp/IcedTeaPluginUtils.h:
+	(PLUGIN_DEBUG_0ARG(str)): Don't print the thread_t.
+	(PLUGIN_DEBUG_1ARG(str,arg1)): Likewise.
+	(PLUGIN_DEBUG_2ARG(str,arg1,arg2)): Likewise.
+	(PLUGIN_DEBUG_3ARG(str,arg1,arg2,arg3)): Likewise.
+	(PLUGIN_DEBUG_4ARG(str,arg1,arg2,arg3,arg4)): Likewise.
+	(PLUGIN_DEBUG_5ARG(str,arg1,arg2,arg3,arg4,arg5)): Likewise.
+
 2010-06-14  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/java/sun/applet/PluginMessageConsumer.java: Fix bug
