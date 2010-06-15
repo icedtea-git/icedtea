@@ -1,3 +1,9 @@
+2010-06-15  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Bump HotSpot changeset ID and HA256 checksum
+	to incorporate recent Zero fixes (as in OpenJDK6).
+
 2010-06-15  Stefan Ring  <stefan@complang.tuwien.ac.at>
 
 	PR icedtea/495
