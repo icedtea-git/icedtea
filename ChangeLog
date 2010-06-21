@@ -1,3 +1,22 @@
+2010-06-21 Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/cacao/native-resolve.patch,
+	* patches/cacao/no-mmap-first-page.patch,
+	* patches/cacao/no-strict-aliasing.patch,
+	* patches/cacao/openjdk7.patch,
+	* patches/cacao/versioninfo.patch,
+	* patches/cacao/xxoption-warning.patch:
+	Dropped, either upstreamed or redundant.
+	* Makefile.am:
+	Use Mercurial snapshot of CACAO 1.1.0pre.
+	Drop unneeded patches.
+	* patches/cacao/6714758.patch:
+	Drop Makefile.in fragment as CACAO from hg
+	needs the autotools to be run.
+	* patches/cacao/arm-arch-defines.patch,
+	* patches/cacao/jsig.patch:
+	Recreated against hg snapshot of CACAO.
+
 2010-06-14 Andrew John Hughes  <ahughes@redhat.com>
 
 	Don't print out the return value of pthread_self

@@ -18,10 +18,10 @@ JDK_SHA256SUM = ef0d2624d6844516ac079483ea576623733ce0f27fd57bb359ffe07f7c4ac60f
 LANGTOOLS_SHA256SUM = 5ff6f2a6d15403ed8d948a07204904f6ce60e363bd0516e22f1cae830aba84f8
 OPENJDK_SHA256SUM = 93c536e6bc4e962050a00321e88e694fc4e0000e2ad887b8de22830bfda2649f
 
-CACAO_VERSION = 0.99.4
-CACAO_SHA256SUM = 1dfc4903dc0172286df4f1740fd0f12749ac81d51c602290b47cbe83d51e1d56
-CACAO_BASE_URL = http://www.complang.tuwien.ac.at
-CACAO_URL = $(CACAO_BASE_URL)/cacaojvm/download/cacao-$(CACAO_VERSION)/
+CACAO_VERSION = 8948a434c10d
+CACAO_SHA256SUM = e472e11621c3e1f00a5f49c990e68d18db09c6c12aea100950567b1577931412
+CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive/tip.tar.bz2
+CACAO_URL = $(CACAO_BASE_URL)/hg/cacao/archive/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
 NETBEANS_PROFILER_URL = https://visualvm.dev.java.net/files/documents/7163/145168/
@@ -339,13 +339,7 @@ endif
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
-	patches/cacao/no-mmap-first-page.patch \
-	patches/cacao/native-resolve.patch \
-	patches/cacao/xxoption-warning.patch \
-	patches/cacao/no-strict-aliasing.patch \
-	patches/cacao/openjdk7.patch \
 	patches/cacao/version.patch \
-	patches/cacao/versioninfo.patch \
 	patches/cacao/arm-arch-defines.patch \
 	patches/cacao/jsig.patch \
 	patches/cacao/6714758.patch
@@ -2332,6 +2326,7 @@ stamps/cacao.stamp: stamps/rt.stamp
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao && \
+	./autogen.sh && \
 	$(ARCH_PREFIX) ./configure \
 	  --host=$(host_alias) \
 	  --build=$(build_alias) \
