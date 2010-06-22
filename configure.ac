@@ -51,32 +51,6 @@ IT_FIND_NUMBER_OF_PROCESSORS
 IT_CP_SUPPORTS_REFLINK
 IT_CAN_HARDLINK_TO_SOURCE_TREE
 
-AC_MSG_CHECKING([for a NetBeans installation])
-AC_ARG_WITH([netbeans-home],
-           [AS_HELP_STRING([--with-netbeans-home],
-                            [NetBeans home directory (default is /usr/share/netbeans)])],
-            [
-              if test "x${withval}" = x
-              then
-                SYSTEM_NETBEANS_DIR=/usr/share/netbeans
-              else
-                SYSTEM_NETBEANS_DIR=${withval}
-              fi
-            ],
-            [
-              SYSTEM_NETBEANS_DIR=/usr/share/netbeans
-            ])
-AC_MSG_RESULT([${SYSTEM_NETBEANS_DIR}])
-AC_SUBST(SYSTEM_NETBEANS_DIR)
-
-AC_MSG_CHECKING([whether to build VisualVM])
-AC_ARG_ENABLE([visualvm],
-              [AS_HELP_STRING([--enable-visualvm],
-                                         [Enable compilation of visualvm.])],
-              [enable_visualvm="${enableval}"], [enable_visualvm="no"])
-AM_CONDITIONAL(WITH_VISUALVM, test "x${enable_visualvm}" = "xyes")
-AC_MSG_RESULT(${enable_visualvm})
-
 AC_MSG_CHECKING([whether to build the LiveConnect plugin])
 AC_ARG_ENABLE([plugin],
               [AS_HELP_STRING([--disable-plugin],
@@ -188,8 +162,6 @@ WITH_ALT_JAR_BINARY
 WITH_JAXP_DROP_ZIP
 WITH_JAF_DROP_ZIP
 WITH_JAXWS_DROP_ZIP
-WITH_NETBEANS_PROFILER_ZIP
-WITH_VISUALVM_ZIP
 
 AC_CHECK_ENABLE_CACAO
 AC_CHECK_WITH_CACAO_HOME
@@ -218,16 +190,6 @@ AC_SUBST([GCJ])
 
 dnl Plugin
 IT_CHECK_XULRUNNER_VERSION
-
-if test "x${enable_visualvm}" = "xyes"
-then
-  FIND_NETBEANS
-fi
-
-if test "x${enable_visualvm}" = "xyes"
-then
-  FIND_NETBEANS
-fi
 
 dnl pkgconfig cannot be used to find these headers and libraries.
 AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]

@@ -24,14 +24,6 @@ CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive/tip.tar.bz2
 CACAO_URL = $(CACAO_BASE_URL)/hg/cacao/archive/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
-NETBEANS_PROFILER_URL = https://visualvm.dev.java.net/files/documents/7163/145168/
-NETBEANS_PROFILER_SRC_ZIP = netbeans-profiler-visualvm_release67.tar.gz
-NETBEANS_PROFILER_SHA256SUM = 611736b4e6dac2f7ddb669a23a474fb052f4141c04dc2ba5888b9e9db61fe59b
-
-VISUALVM_URL = https://visualvm.dev.java.net/files/documents/7163/145167/
-VISUALVM_SRC_ZIP = visualvm_121-src.tar.gz
-VISUALVM_SHA256SUM = b561207d85da4916e809cc4c104098e1ca979b30192c207b9d6087a31c91b8b0
-
 JAXWS_DROP_URL = http://kenai.com/projects/jdk7-drops/downloads/download
 JAXWS_DROP_ZIP = jdk7-jaxws-2009_09_28.zip
 JAXWS_DROP_SHA256SUM = 272756b999e9ae2435da8d58e259562e61126e1c5b1f9421fe65423217cef8fd
@@ -731,7 +723,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/security/*.patch \
 	$(top_srcdir)/patches/xrender/*.patch \
 	tools-copy contrib ports extra overlays \
-	javaws.png javaws.desktop visualvm.desktop \
+	javaws.png javaws.desktop \
 	jconsole.desktop policytool.desktop \
 	$(JTREG_SRCS) \
 	HACKING $(PULSEAUDIO_SRCS) fsg.sh \
@@ -754,8 +746,7 @@ check-local: jtregcheck
 
 clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
  clean-icedtea clean-icedtea-boot clean-clone clean-clone-boot \
- clean-extra clean-netx clean-visualvm clean-nbplatform \
- clean-bootstrap-directory-stage1 clean-bootstrap-directory-stage2 \
+ clean-extra clean-netx clean-bootstrap-directory-stage1 clean-bootstrap-directory-stage2 \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
  clean-extract clean-generated clean-plugin clean-liveconnect clean-native-ecj \
  clean-hgforest clean-icedtea-stage2 clean-icedtea-debug-stage2 clean-icedtea-stage1 \
@@ -781,9 +772,8 @@ install:
 	clean-bootstrap-directory-symlink-stage2 clean-bootstrap-directory-stage1 \
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot \
-	clean-visualvm clean-nbplatform clean-rt clean-plugin hotspot \
-	hotspot-helper clean-extra clean-jtreg clean-jtreg-reports clean-netx \
-	clean-drops
+	clean-rt clean-plugin hotspot hotspot-helper clean-extra clean-jtreg \
+	clean-jtreg-reports clean-netx clean-drops
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -829,12 +819,11 @@ clean-hgforest:
 # Download OpenJDK sources.
 
 stamps/download.stamp: stamps/download-drops.stamp stamps/download-openjdk.stamp \
- stamps/download-cacao.stamp stamps/download-visualvm.stamp
+ stamps/download-cacao.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-download: clean-drops clean-download-openjdk clean-download-cacao \
- clean-download-visualvm
+clean-download: clean-drops clean-download-openjdk clean-download-cacao
 	rm -f stamps/download.stamp
 
 stamps/download-jaxp-drop.stamp:
@@ -1126,60 +1115,12 @@ clean-download-cacao:
 	rm -f $(CACAO_SRC_ZIP)
 	rm -f stamps/download-cacao.stamp
 
-stamps/download-visualvm.stamp:
-if WITH_VISUALVM
-if USE_ALT_NETBEANS_PROFILER_ZIP
-	ln -sf $(ALT_NETBEANS_PROFILER_ZIP) $(NETBEANS_PROFILER_SRC_ZIP)
-endif
-	if ! echo "$(NETBEANS_PROFILER_SHA256SUM)  $(NETBEANS_PROFILER_SRC_ZIP)" \
-	 | $(SHA256SUM) --check ; \
-	then \
-	 if [ $(NETBEANS_PROFILER_SRC_ZIP) ] ; \
-	 then \
-	  mv $(NETBEANS_PROFILER_SRC_ZIP) $(NETBEANS_PROFILER_SRC_ZIP).old ; \
-	 fi ; \
-	 $(WGET) $(NETBEANS_PROFILER_URL)$(NETBEANS_PROFILER_SRC_ZIP) \
-	  -O $(NETBEANS_PROFILER_SRC_ZIP) ; \
-	 if ! echo "$(NETBEANS_PROFILER_SHA256SUM)  $(NETBEANS_PROFILER_SRC_ZIP)" \
-	   | $(SHA256SUM) --check ; \
-	 then echo "ERROR: Bad download of NetBeans profiler zip"; false; \
-	 fi; \
-	fi
-
-if USE_ALT_VISUALVM_ZIP
-	ln -sf $(ALT_VISUALVM_ZIP) $(VISUALVM_SRC_ZIP)
-endif
-	if ! echo "$(VISUALVM_SHA256SUM)  $(VISUALVM_SRC_ZIP)" \
-         | $(SHA256SUM) --check ; \
-        then \
-         if [ $(VISUALVM_SRC_ZIP) ] ; \
-         then \
-          mv $(VISUALVM_SRC_ZIP) $(VISUALVM_SRC_ZIP).old ; \
-         fi ; \
-         $(WGET) $(VISUALVM_URL)$(VISUALVM_SRC_ZIP) \
-          -O $(VISUALVM_SRC_ZIP) ; \
-	 if ! echo "$(VISUALVM_SHA256SUM)  $(VISUALVM_SRC_ZIP)" \
-	   | $(SHA256SUM) --check ; \
-	 then echo "ERROR: Bad download of VisualVM zip"; false; \
-	 fi; \
-        fi
-endif
-	mkdir -p stamps
-	touch $@
-
-clean-download-visualvm:
-	rm -f $(VISUALVM_SRC_ZIP)
-	rm -f $(NETBEANS_PROFILER_SRC_ZIP)
-	rm -f stamps/download-visualvm.stamp
-
 stamps/extract.stamp: stamps/extract-openjdk.stamp \
- stamps/extract-visualvm.stamp stamps/extract-cacao.stamp \
- stamps/extract-jaxws.stamp
+ stamps/extract-cacao.stamp stamps/extract-jaxws.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-extract: clean-extract-openjdk clean-extract-visualvm \
- clean-extract-cacao clean-extract-jaxws
+clean-extract: clean-extract-openjdk clean-extract-cacao clean-extract-jaxws
 	rm -f stamps/extract.stamp
 
 stamps/extract-openjdk.stamp: stamps/download-openjdk.stamp
@@ -1296,30 +1237,6 @@ clean-extract-openjdk: clean-overlay clean-versioning \
  clean-ports clean-patch-fsg
 	rm -rf openjdk
 	rm -f stamps/extract-openjdk.stamp
-
-stamps/extract-visualvm.stamp: stamps/download-visualvm.stamp
-if WITH_VISUALVM
-	set -e ; \
-	if ! test -d netbeans ; \
-	then \
-	  mkdir netbeans ; \
-	  $(TAR) xf $(NETBEANS_PROFILER_SRC_ZIP) -C netbeans ; \
-	fi
-
-	set -e ; \
-	if ! test -d visualvm ; \
-	then \
-	  $(TAR) xf $(VISUALVM_SRC_ZIP) ; \
-	fi
-endif
-	mkdir -p stamps
-	touch $@
-
-clean-extract-visualvm:
-if WITH_VISUALVM
-	rm -rf netbeans visualvm
-endif
-	rm -f stamps/extract-visualvm.stamp
 
 stamps/extract-cacao.stamp: stamps/download-cacao.stamp
 if BUILD_CACAO
@@ -1942,7 +1859,7 @@ clean-icedtea:
 	rm -f stamps/icedtea.stamp stamps/icedtea-debug.stamp
 
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
- stamps/add-zero.stamp stamps/visualvm.stamp
+ stamps/add-zero.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -1950,8 +1867,7 @@ clean-icedtea-stage2:
 	rm -f stamps/icedtea-stage2.stamp
 
 stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
- stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp \
- stamps/visualvm.stamp
+ stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -2251,75 +2167,6 @@ if WITH_RHINO
 endif
 	mkdir -p stamps
 	touch stamps/rewrite-rhino.stamp
-
-# VisualVM
-
-stamps/nbplatform.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP) stamps/extract-visualvm.stamp
-if WITH_VISUALVM
-	cd netbeans ; \
-        rm nbbuild/external/binaries-list ; \
-	mkdir -p ./nbbuild/netbeans_visualvm/ ; \
-	ln -s $(SYSTEM_NETBEANS_DIR)/platform9/ ./nbbuild/netbeans_visualvm/platform9 ; \
-	ln -s $(SYSTEM_NETBEANS_DIR)/apisupport1/ ./nbbuild/netbeans_visualvm/apisupport1 ; \
-	ln -s $(SYSTEM_NETBEANS_DIR)/harness/ ./nbbuild/netbeans_visualvm/harness ; \
-	if ! (uname -a | grep x86_64) ; then \
-	  mkdir -p lib.profiler/release/lib/deployed/jdk15/linux ; \
-	  mkdir -p lib.profiler/release/lib/deployed/jdk16/linux ; \
-	  buildscript=./buildnative-linux-15.sh ; \
-	else \
-	  mkdir -p lib.profiler/release/lib/deployed/jdk15/linux-amd64 ; \
-	  mkdir -p lib.profiler/release/lib/deployed/jdk16/linux-amd64 ; \
-	  buildscript=./buildnative-linux64-15.sh ; \
-	fi ; \
-	cd lib.profiler/native/build ; \
-	JAVA_HOME_15=$(ICEDTEA_HOME) JAVA_HOME_16=$(ICEDTEA_HOME) \
-	  $$buildscript ; \
-	cd ../../.. ; \
-        JAVA_HOME=$(ICEDTEA_HOME) $(ANT) -Dpermit.jdk6.builds=true \
-            -f nbbuild/build.xml bootstrap ; \
-	for dir in lib.profiler lib.profiler.charts lib.profiler.ui lib.profiler.common profiler ; do \
-	  JAVA_HOME=$(ICEDTEA_HOME) $(ANT) -Dpermit.jdk6.builds=true -Dbuildnumber=091020 \
-            -Dnetbeans.dest.dir=$(abs_top_builddir)/netbeans/nbbuild/netbeans_visualvm \
-	    -f $$dir/build.xml ; \
-	done 
-endif
-	mkdir -p stamps
-	touch $@
-
-clean-nbplatform:
-	rm -rf netbeans
-	rm -f stamps/nbplatform.stamp
-
-stamps/visualvm.stamp: stamps/icedtea.stamp stamps/nbplatform.stamp
-if WITH_VISUALVM
-	cd visualvm ; \
-	ln -s $(abs_top_srcdir)/netbeans/nbbuild/netbeans_visualvm netbeans ; \
-	JAVA_HOME=$(ICEDTEA_HOME) $(ANT) build
-	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc ; \
-	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/visualvm ; \
-	sed "s/APPNAME=\`basename.*\`/APPNAME=visualvm/" \
-	  visualvm/launcher/visualvm >> \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/jvisualvm ; \
-	chmod a+x $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/jvisualvm ; \
-	cp visualvm/launcher/visualvm.conf \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc ; \
-	echo visualvm >> \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc/visualvm.clusters ; \
-	echo profiler3 >> \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/etc/visualvm.clusters ; \
-	cp -r visualvm/build/cluster/* \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm/visualvm ; \
-	cp -r netbeans/nbbuild/netbeans_visualvm/platform9 \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm ; \
-	cp -r netbeans/nbbuild/netbeans_visualvm/profiler3 \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/lib/visualvm	
-endif
-	mkdir -p stamps
-	touch $@
-
-clean-visualvm:
-	rm -rf visualvm
-	rm -f stamps/visualvm.stamp
 
 # CACAO
 
@@ -2686,15 +2533,11 @@ download-jaxws-drop: stamps/download-jaxws-drop.stamp
 
 download-openjdk: stamps/download-openjdk.stamp
 
-download-visualvm: stamps/download-visualvm.stamp
-
 extract: stamps/extract.stamp
 
 extract-cacao: stamps/extract-cacao.stamp
 
 extract-openjdk: stamps/extract-openjdk.stamp
-
-extract-visualvm: stamps/extract-visualvm.stamp
 
 generated: stamps/generated.stamp
 
@@ -2747,5 +2590,3 @@ rewrite-rhino: stamps/rewrite-rhino.stamp
 rt: stamps/rt.stamp
 
 rt-class-files: stamps/rt-class-files.stamp
-
-visualvm: stamps/visualvm.stamp

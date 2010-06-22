@@ -1,3 +1,41 @@
+2010-06-22 Andrew John Hughes  <ahughes@redhat.com>
+
+	Remove VisualVM support, now maintained at
+	http://icedtea.classpath.org/hg/visualvm
+	* Makefile.am:
+	Remove VisualVM targets, references and aliases.
+	(NETBEANS_PROFILER_URL): Removed.
+	(NETBEANS_PROFILER_SRC_ZIP): Likewise.
+	(NETBEANS_PROFILER_SHA256SUM): Likewise.
+	(VISUALVM_URL): Likewise.
+	(VISUALVM_SRC_ZIP): Likewise.
+	(VISUALVM_SHA256SUM): Likewise.
+	(EXTRA_DIST): Remove visualvm.desktop.
+	(clean-local): Remove clean-visualvm and clean-nbplatform.
+	(.PHONY): Likewise.
+	(download): Don't depend on download-visualvm.stamp
+	(clean-download): Don't depend on clean-download-visualvm
+	(download-visualvm): Removed.
+	(clean-download-visualvm): Likewise.
+	(extract): Don't depend on extract-visualvm.stamp
+	(clean-extract): Don't depend on clean-extract-visualvm.
+	(extract-visualvm): Removed.
+	(clean-extract-visualvm): Likewise.
+	(icedtea-stage2): Don't depend on visualvm.stamp
+	(icedtea-debug-stage2): Likewise.
+	(nbplatform): Removed.
+	(visualvm): Removed.
+	* acinclude.m4:
+	Remove VisualVM-related macros.
+	(FIND_NETBEANS): Removed.
+	(WITH_NETBEANS_PROFILER_ZIP): Removed.
+	(WITH_VISUALVM_ZIP): Removed.
+	* configure.ac:
+	Remove --with-netbeans-home and
+	--enable-visualvm options.  Don't invoke
+	VisualVM macros.
+	* visualvm.desktop: Removed.
+
 2010-06-21 Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/cacao/memory.patch:

@@ -649,38 +649,6 @@ AC_DEFUN([FIND_XERCES2_JAR],
   AC_SUBST(XERCES2_JAR)
 ])
 
-AC_DEFUN([FIND_NETBEANS],
-[
-  AC_MSG_CHECKING([if the location of NetBeans is specified])
-  AC_ARG_WITH([netbeans],
-              [AS_HELP_STRING(--with-netbeans,specify location of netbeans)],
-  [
-    if test "x${withval}" = "xyes"; then
-      NETBEANS=no
-    else
-      NETBEANS="${withval}"
-    fi
-  ],
-  [
-    NETBEANS=no
-  ])
-  AC_MSG_RESULT(${NETBEANS})
-  if ! test -f "${NETBEANS}"; then
-    if test "x${NETBEANS}" = "xno"; then
-      NETBEANS=
-    else
-      AC_PATH_PROG(NETBEANS, "${NETBEANS}")
-    fi
-  fi
-  if test -z "${NETBEANS}"; then
-    AC_PATH_PROG(NETBEANS, "netbeans")
-  fi
-  if test -z "${NETBEANS}"; then
-    AC_MSG_ERROR("NetBeans was not found.")
-  fi
-  AC_SUBST(NETBEANS)
-])
-
 AC_DEFUN([FIND_RHINO_JAR],
 [
   AC_MSG_CHECKING([whether to include Javascript support via Rhino])
@@ -1650,38 +1618,6 @@ EOF
   ])
 AM_CONDITIONAL([DTDTYPE_QNAME], test x"${it_cv_dtdtype}" = "xyes")
 AC_PROVIDE([$0])dnl
-])
-
-AC_DEFUN([WITH_NETBEANS_PROFILER_ZIP],
-[
-  AC_MSG_CHECKING(for a NetBeans profiler zip)
-  AC_ARG_WITH([netbeans-profiler-zip],
-              [AS_HELP_STRING(--with-netbeans-profiler-zip,specify the location of the NetBeans profiler zip)],
-  [
-    ALT_NETBEANS_PROFILER_ZIP=${withval}
-  ],
-  [ 
-    ALT_NETBEANS_PROFILER_ZIP="not specified"
-  ])
-  AC_MSG_RESULT(${ALT_NETBEANS_PROFILER_ZIP})
-  AM_CONDITIONAL(USE_ALT_NETBEANS_PROFILER_ZIP, test "x$ALT_NETBEANS_PROFILER_ZIP" != "xnot specified")
-  AC_SUBST(ALT_NETBEANS_PROFILER_ZIP)
-])
-
-AC_DEFUN([WITH_VISUALVM_ZIP],
-[
-  AC_MSG_CHECKING(for a VisualVM zip)
-  AC_ARG_WITH([visualvm-zip],
-              [AS_HELP_STRING(--with-visualvm-zip,specify the location of the VisualVM zip)],
-  [
-    ALT_VISUALVM_ZIP=${withval}
-  ],
-  [ 
-    ALT_VISUALVM_ZIP="not specified"
-  ])
-  AC_MSG_RESULT(${ALT_VISUALVM_ZIP})
-  AM_CONDITIONAL(USE_ALT_VISUALVM_ZIP, test "x$ALT_VISUALVM_ZIP" != "xnot specified")
-  AC_SUBST(ALT_VISUALVM_ZIP)
 ])
 
 AC_DEFUN_ONCE([IT_GET_PKGVERSION],
