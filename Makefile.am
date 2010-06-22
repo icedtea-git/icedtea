@@ -342,7 +342,8 @@ ICEDTEA_PATCHES += \
 	patches/cacao/version.patch \
 	patches/cacao/arm-arch-defines.patch \
 	patches/cacao/jsig.patch \
-	patches/cacao/6714758.patch
+	patches/cacao/6714758.patch \
+	patches/cacao/memory.patch
 endif
 
 if WITH_CACAO

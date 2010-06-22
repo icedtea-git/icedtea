@@ -1,5 +1,13 @@
 2010-06-21 Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/cacao/memory.patch:
+	Increase the memory used in the langtools
+	build when using CACAO.
+	* Makefile.am: Apply above patch when
+	building with CACAO.
+
+2010-06-21 Andrew John Hughes  <ahughes@redhat.com>
+
 	* patches/cacao/native-resolve.patch,
 	* patches/cacao/no-mmap-first-page.patch,
 	* patches/cacao/no-strict-aliasing.patch,

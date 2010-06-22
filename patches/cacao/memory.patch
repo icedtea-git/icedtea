@@ -1,0 +1,10 @@
+--- openjdk.orig/langtools/make/build.xml	2010-06-01 11:25:40.145287816 +0100
++++ openjdk/langtools/make/build.xml	2010-06-21 21:48:41.000000000 +0100
+@@ -554,6 +554,7 @@
+                     <compilerarg value="-implicit:none"/>
+                     <compilerarg value="-Xprefer:source"/>
+                     <compilerarg value="-J-Xbootclasspath/p:@{javac.bootclasspath}"/>
++		     <compilerarg value="-J-Xmx256M"/>
+                     <compilerarg line="@{bootclasspath.opt}"/>
+                     <compilerarg line="${javac.no.jdk.warnings}"/>
+                     <compilerarg line="${javac.version.opt}"/>
