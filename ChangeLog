@@ -1,3 +1,13 @@
+2010-06-24  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/add-cacao.stamp, stamps/add-cacao-debug.stamp):
+	Update libjsig.so installation location.
+	* patches/cacao/package-version.diff: Drop 'preX' from the cacao
+	package version.
+	* patches/cacao/arm-arch-defines.patch: Remove cacao version fromi
+	patched files.
+	* patches/cacao/package-version.patch: Likewise.
+
 2010-06-22 Andrew John Hughes  <ahughes@redhat.com>
 
 	Remove VisualVM support, now maintained at
