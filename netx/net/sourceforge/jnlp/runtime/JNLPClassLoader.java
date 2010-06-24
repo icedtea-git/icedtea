@@ -80,9 +80,6 @@ public class JNLPClassLoader extends URLClassLoader {
     /** map from JNLPFile url to shared classloader */
     private static Map urlToLoader = new HashMap(); // never garbage collected!
 
-    /** number of times a classloader with native code is created */
-    private static int nativeCounter = 0;
-
     /** the directory for native code */
     private File nativeDir = null; // if set, some native code exists
 
@@ -642,8 +639,8 @@ public class JNLPClassLoader extends URLClassLoader {
                             ex.printStackTrace();
                     }
 
-                    if (jar.isNative())
-                        activateNative(jar);
+                    // some programs place a native library in any jar
+                    activateNative(jar);
                 }
 
                 return null;
@@ -654,9 +651,9 @@ public class JNLPClassLoader extends URLClassLoader {
     }
 
     /**
-     * Enable the native code contained in a JAR by copying the
-     * native files into the filesystem.  Called in the security
-     * context of the classloader.
+     * Search for and enable any native code contained in a JAR by copying the
+     * native files into the filesystem. Called in the security context of the
+     * classloader.
      */
     protected void activateNative(JARDesc jar) {
         if (JNLPRuntime.isDebug())
@@ -669,17 +666,33 @@ public class JNLPClassLoader extends URLClassLoader {
         if (nativeDir == null)
             nativeDir = getNativeDir();
 
+        String[] librarySuffixes = { ".so", ".dylib", ".jnilib", ".framework", ".dll" };
+
         try {
             JarFile jarFile = new JarFile(localFile, false);
-            Enumeration entries = jarFile.entries();
+            Enumeration<JarEntry> entries = jarFile.entries();
 
             while (entries.hasMoreElements()) {
-                JarEntry e = (JarEntry) entries.nextElement();
+                JarEntry e = entries.nextElement();
 
-                if (e.isDirectory() || e.getName().indexOf('/') != -1)
+                if (e.isDirectory()) {
                     continue;
+                }
 
-                File outFile = new File(nativeDir, e.getName());
+                String name = new File(e.getName()).getName();
+                boolean isLibrary = false;
+
+                for (String suffix: librarySuffixes) {
+                    if (name.endsWith(suffix)) {
+                       isLibrary = true;
+                       break;
+                    }
+                }
+                if (!isLibrary) {
+                    continue;
+                }
+
+                File outFile = new File(nativeDir, name);
 
                 CacheUtil.streamCopy(jarFile.getInputStream(e),
                                      new FileOutputStream(outFile));

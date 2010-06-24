@@ -31,12 +31,9 @@ import java.awt.AWTPermission;
  */
 public class SecurityDesc {
 
-    // todo: make sure classloader's native code support checks
-    // the security permissions
-
-    // shouldn't need to verify that native code only runs in
-    // trusted environment because the parser and/or classloader
-    // should kick it.
+    /*
+     * We do not verify security here, the classloader deals with security
+     */
 
     /** All permissions. */
     public static final Object ALL_PERMISSIONS = "All";

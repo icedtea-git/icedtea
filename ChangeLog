@@ -1,3 +1,10 @@
+2010-06-24 Omair Majid <omajid@redhat.com>
+
+	* netx/net/sourceforge/jnlp/SecurityDesc.java: Fix comments.
+	* netx/net/sourceforge/jnlp/JNLPClassLoader.java
+	(activateJars): Always call activateNative.
+	(activateNative): Search for native code anywhere in the jar.
+
 2010-07-22  Andrew John Hughes  <ahughes@redhat.com>
 
 	* INSTALL,
