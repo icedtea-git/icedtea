@@ -1259,19 +1259,19 @@ endif
 clean-extract-cacao: clean-cacao
 	rm -f stamps/extract-cacao.stamp
 
-stamps/extract-jaxws.stamp: stamps/extract-openjdk.stamp \
+stamps/extract-jaxws.stamp: $(OPENJDK_BOOT_TREE) \
   stamps/download-jaxws-drop.stamp stamps/download-jaf-drop.stamp
 	set -e ; \
 	if test "x$(NEED_JAXWS_SRC)" = "xtrue"; then \
-	  (cd openjdk/jaxws ; \
+	  (cd openjdk-boot/jaxws ; \
 	   $(ANT) -Ddrops.dir=$(abs_top_builddir)/drops \
-	   -Doutput.dir=$(BUILD_OUTPUT_DIR)/jaxws \
+	   -Doutput.dir=$(BOOT_BUILD_OUTPUT_DIR)/jaxws \
 	   source ; \
 	   cd $(abs_top_builddir)) ; \
 	fi
 if DTDTYPE_QNAME
 	set -e ; \
-	(cd $(BUILD_OUTPUT_DIR)/jaxws; \
+	(cd $(BOOT_BUILD_OUTPUT_DIR)/jaxws; \
 	 all_patches_ok=yes; \
 	 for p in $(JAXWS_PATCHES) ; \
 	 do \
@@ -1296,8 +1296,7 @@ if DTDTYPE_QNAME
 	   echo ERROR patch $${all_patches_ok} FAILED! ; \
 	   echo WARNING make clean-extract-jaxws before retrying a fix ; \
 	   exit 2; \
-	 fi ; \
-	 cd $(abs_top_builddir)) ;
+	 fi )
 endif
 	mkdir -p stamps
 	touch $@

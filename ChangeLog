@@ -1,3 +1,9 @@
+2010-06-25 Andrew John Hughes  <ahughes@redhat.com>
+
+	PR icedtea/512:
+	(extract-jaxws): Depend on $(OPENJDK_BOOT_TREE)
+	and patch that tree instead.
+
 2010-06-24 Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/cacao/package-version.patch:
