@@ -1,6 +1,6 @@
 diff -Nru cacao.orig/cacaog/contrib/mapfile-vers-product cacao/cacao-8948a434c10d/contrib/mapfile-vers-product
---- cacao.orig/cacaog/contrib/mapfile-vers-product	2010-05-19 12:14:46.000000000 +0100
-+++ cacao/cacaog/contrib/mapfile-vers-product	2010-06-21 20:08:28.000000000 +0100
+--- cacao.orig/cacao/contrib/mapfile-vers-product	2010-05-19 12:14:46.000000000 +0100
++++ cacao/cacao/contrib/mapfile-vers-product	2010-06-21 20:08:28.000000000 +0100
 @@ -86,6 +86,7 @@
                  JVM_EnableCompiler;
                  JVM_Exit;
@@ -10,8 +10,8 @@ diff -Nru cacao.orig/cacaog/contrib/mapfile-vers-product cacao/cacao-8948a434c10
                  JVM_FindClassFromClassLoader;
                  JVM_FindLibraryEntry;
 diff -Nru cacao.orig/cacaog/src/native/vm/openjdk/jvm.cpp cacao/cacao-8948a434c10d/src/native/vm/openjdk/jvm.cpp
---- cacao.orig/cacaog/src/native/vm/openjdk/jvm.cpp	2010-05-19 12:14:46.000000000 +0100
-+++ cacao/cacaog/src/native/vm/openjdk/jvm.cpp	2010-06-21 20:08:28.000000000 +0100
+--- cacao.orig/cacao/src/native/vm/openjdk/jvm.cpp	2010-05-19 12:14:46.000000000 +0100
++++ cacao/cacao/src/native/vm/openjdk/jvm.cpp	2010-06-21 20:08:28.000000000 +0100
 @@ -668,6 +668,9 @@
  
  	assert(throwError == false);

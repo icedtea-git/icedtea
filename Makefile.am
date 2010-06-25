@@ -18,10 +18,10 @@ JDK_SHA256SUM = ef0d2624d6844516ac079483ea576623733ce0f27fd57bb359ffe07f7c4ac60f
 LANGTOOLS_SHA256SUM = 5ff6f2a6d15403ed8d948a07204904f6ce60e363bd0516e22f1cae830aba84f8
 OPENJDK_SHA256SUM = 93c536e6bc4e962050a00321e88e694fc4e0000e2ad887b8de22830bfda2649f
 
-CACAO_VERSION = 8948a434c10d
-CACAO_SHA256SUM = e472e11621c3e1f00a5f49c990e68d18db09c6c12aea100950567b1577931412
-CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive/tip.tar.bz2
-CACAO_URL = $(CACAO_BASE_URL)/hg/cacao/archive/$(CACAO_VERSION).tar.bz2
+CACAO_VERSION = 66e762d869dd
+CACAO_SHA256SUM = 9a558ffb69479f2d31995bdeb90cd2abc616050e76a6be7263c72e2e302ca4e6
+CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive
+CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
 JAXWS_DROP_URL = http://kenai.com/projects/jdk7-drops/downloads/download
@@ -335,8 +335,7 @@ ICEDTEA_PATCHES += \
 	patches/cacao/arm-arch-defines.patch \
 	patches/cacao/jsig.patch \
 	patches/cacao/6714758.patch \
-	patches/cacao/memory.patch \
-	patches/cacao/package-version.patch
+	patches/cacao/memory.patch
 endif
 
 if WITH_CACAO
@@ -1101,7 +1100,7 @@ endif
 	 then \
 	   mv $(CACAO_SRC_ZIP) $(CACAO_SRC_ZIP).old ; \
 	 fi ; \
-	 $(WGET) $(CACAO_URL)$(CACAO_SRC_ZIP) -O $(CACAO_SRC_ZIP); \
+	 $(WGET) $(CACAO_URL) -O $(CACAO_SRC_ZIP); \
 	 if ! echo "$(CACAO_SHA256SUM)  $(CACAO_SRC_ZIP)" \
 	   | $(SHA256SUM) --check ; \
 	 then echo "ERROR: Bad download of CACAO zip"; false; \

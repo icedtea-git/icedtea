@@ -1,6 +1,27 @@
+2010-06-24 Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/cacao/package-version.patch:
+	Removed; breaks CACAO versioning.
+	* Makefile.am:
+	Update to new changeset with optimisation
+	and version parsing fix.  Fix downloading.
+	(CACAO_BASE_URL): Remove tip.tar.bz2 suffix.
+	(CACAO_URL): Remove duplication of /hg/cacao/archive.
+	(CACAO_VERSION): Bump to changeset which
+	increases optimisation to -O2 not -O0.
+	(CACAO_SHA256SUM): Updated for above.
+	(download-cacao): Don't append CACAO_SRC_ZIP to URL.
+	* patches/cacao/version-parsing.patch:
+	Fix parsing of the minor version due to
+	the update from 1.1.0pre to 1.1.0pre1 in
+	the new changeset.
+	* patches/cacao/6714758.patch:
+	Fix bad paths introduced by previous changeset.
+
 2010-06-24  Matthias Klose  <doko@ubuntu.com>
 
-	* Makefile.am (stamps/add-cacao.stamp, stamps/add-cacao-debug.stamp):
+	* Makefile.am
+	(stamps/add-cacao.stamp, stamps/add-cacao-debug.stamp):
 	Update libjsig.so installation location.
 	* patches/cacao/package-version.diff: Drop 'preX' from the cacao
 	package version.
