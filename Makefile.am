@@ -251,7 +251,7 @@ OPENJDK_TREE = stamps/overlay.stamp
 # Target to ensure a patched OpenJDK bootstrap tree containing
 # Zero & Shark, any other overlays and the bootstrapping patches
 # is available in $(abs_top_builddir)/openjdk-boot
-OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
+OPENJDK_BOOT_TREE = stamps/patch-jaxws.stamp
 
 # Sources list
 
@@ -1259,45 +1259,15 @@ endif
 clean-extract-cacao: clean-cacao
 	rm -f stamps/extract-cacao.stamp
 
-stamps/extract-jaxws.stamp: $(OPENJDK_BOOT_TREE) \
-  stamps/download-jaxws-drop.stamp stamps/download-jaf-drop.stamp
+stamps/extract-jaxws.stamp: stamps/download-jaxws-drop.stamp \
+ stamps/download-jaf-drop.stamp stamps/extract-openjdk.stamp
 	set -e ; \
 	if test "x$(NEED_JAXWS_SRC)" = "xtrue"; then \
-	  (cd openjdk-boot/jaxws ; \
+	  (cd openjdk/jaxws ; \
 	   $(ANT) -Ddrops.dir=$(abs_top_builddir)/drops \
-	   -Doutput.dir=$(BOOT_BUILD_OUTPUT_DIR)/jaxws \
-	   source ; \
-	   cd $(abs_top_builddir)) ; \
+	   -Doutput.dir=$(BUILD_OUTPUT_DIR)/jaxws \
+	   source ; ) \
 	fi
-if DTDTYPE_QNAME
-	set -e ; \
-	(cd $(BOOT_BUILD_OUTPUT_DIR)/jaxws; \
-	 all_patches_ok=yes; \
-	 for p in $(JAXWS_PATCHES) ; \
-	 do \
-	   if test x$${all_patches_ok} = "xyes" \
-	     && echo Checking $$p \
-	     && $(PATCH) -l -p0 --dry-run -s -t -f \
-	       -F 0 < $(abs_top_srcdir)/$$p ; \
-	   then \
-	    echo Applying $$p ; \
-	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
-	    if ! grep "^\* $$(basename $$p)" $(abs_top_srcdir)/HACKING \
-	      >> $(abs_top_builddir)/stamps/extract-jaxws.stamp.tmp ; \
-	    then \
-	      echo "* $$(basename $$p): UNDOCUMENTED" \
-	        >> $(abs_top_builddir)/stamps/extract-jaxws.stamp.tmp ; \
-	    fi ; \
-	   else \
-	     test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
-	   fi ; \
-	 done ; \
-	 if ! test x$${all_patches_ok} = "xyes"; then \
-	   echo ERROR patch $${all_patches_ok} FAILED! ; \
-	   echo WARNING make clean-extract-jaxws before retrying a fix ; \
-	   exit 2; \
-	 fi )
-endif
 	mkdir -p stamps
 	touch $@
 
@@ -1600,6 +1570,64 @@ clean-patch-boot:
 	  fi ; \
 	  rm -f stamps/patch-boot.stamp ; \
 	fi
+
+stamps/patch-jaxws.stamp: stamps/patch-boot.stamp
+	mkdir -p stamps
+	rm -f stamps/patch-jaxws.stamp.tmp
+	touch stamps/patch-jaxws.stamp.tmp
+if DTDTYPE_QNAME
+	set -e ; \
+	(cd $(BOOT_BUILD_OUTPUT_DIR)/jaxws;o \
+	 all_patches_ok=yes; \
+	 for p in $(JAXWS_PATCHES) ; \
+	 do \
+	   if test x$${all_patches_ok} = "xyes" \
+	     && echo Checking $$p \
+	     && $(PATCH) -l -p0 --dry-run -s -t -f \
+	       -F 0 < $(abs_top_srcdir)/$$p ; \
+	   then \
+	    echo Applying $$p ; \
+	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
+	    if ! grep "^\* $$(basename $$p)" $(abs_top_srcdir)/HACKING \
+	      >> $(abs_top_builddir)/stamps/patch-jaxws.stamp.tmp ; \
+	    then \
+	      echo "* $$(basename $$p): UNDOCUMENTED" \
+	        >> $(abs_top_builddir)/stamps/patch-jaxws.stamp.tmp ; \
+	    fi ; \
+	   else \
+	     test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
+	   fi ; \
+	 done ; \
+	 if ! test x$${all_patches_ok} = "xyes"; then \
+	   echo ERROR patch $${all_patches_ok} FAILED! ; \
+	   echo WARNING make clean-patch-jaxws before retrying a fix ; \
+	   exit 2; \
+	 fi )
+endif
+	mv stamps/patch-jaxws.stamp.tmp stamps/patch-jaxws.stamp
+
+clean-patch-jaxws:
+if DTDTYPE_QNAME
+	if [ -e stamps/patch-jaxws.stamp ] ; then \
+	  all_patches_ok=yes; \
+	  cd $(BOOT_BUILD_OUTPUT_DIR)/jaxws; \
+	  for p in $(JAXWS_PATCHES) ; \
+	  do \
+	    echo Checking $$p ; \
+	    if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
+	    then \
+	      echo Reverting $$p ; \
+	      $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
+	    else \
+	      all_patches_ok=no ; \
+	    fi ; \
+	  done ; \
+	  if ! test x$${all_patches_ok} = "xyes" ; then \
+	    echo "WARNING Not all patches reverted cleanly" ; \
+	  fi ; \
+	fi
+endif
+	rm -f stamps/patch-jaxws.stamp
 
 # Bootstrap Directory Targets
 # ===========================
@@ -2575,6 +2603,8 @@ patch: stamps/patch.stamp
 patch-boot: stamps/patch-boot.stamp
 
 patch-fsg: stamps/patch-fsg.stamp
+
+patch-jaxws: stamps/patch-jaxws.stamp
 
 plugin: stamps/plugin.stamp
 

@@ -1,5 +1,18 @@
 2010-06-25 Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(OPENJDK_BOOT_TREE): Set to patch-jaxws.stamp.
+	(extract-jaxws): Don't depend circularly on
+	OPENJDK_BOOT_TREE, just on the needed drops
+	and OpenJDK tree.  Only extract source, move
+	patching to another target due to dependencies.
+	(patch-jaxws): Patching segment of extract-jaxws.
+	Depends on patch-boot and thus on the openjdk-boot
+	tree.
+	(clean-patch-jaxws): Cleanup for above.
+
+2010-06-25 Andrew John Hughes  <ahughes@redhat.com>
+
 	PR icedtea/512:
 	(extract-jaxws): Depend on $(OPENJDK_BOOT_TREE)
 	and patch that tree instead.
