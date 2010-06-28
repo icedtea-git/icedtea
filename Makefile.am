@@ -1512,6 +1512,9 @@ clean-overlay:
 stamps/clone-boot.stamp: $(OPENJDK_TREE)
 	if ! test -d openjdk-boot ; then \
 	    cp -pPRl openjdk openjdk-boot ; \
+	    if [ -e $(BUILD_OUTPUT_DIR) ] ; then \
+	      cp -pPRl $(BUILD_OUTPUT_DIR) $(BOOT_BUILD_OUTPUT_DIR) ; \
+	    fi ; \
 	fi
 	mkdir -p stamps
 	touch $@
@@ -1577,7 +1580,7 @@ stamps/patch-jaxws.stamp: stamps/patch-boot.stamp
 	touch stamps/patch-jaxws.stamp.tmp
 if DTDTYPE_QNAME
 	set -e ; \
-	(cd $(BOOT_BUILD_OUTPUT_DIR)/jaxws;o \
+	(cd $(BOOT_BUILD_OUTPUT_DIR)/jaxws; \
 	 all_patches_ok=yes; \
 	 for p in $(JAXWS_PATCHES) ; \
 	 do \

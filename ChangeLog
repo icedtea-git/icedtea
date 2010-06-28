@@ -1,4 +1,11 @@
-2010-06-25 Andrew John Hughes  <ahughes@redhat.com>
+2010-06-28 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(clone-boot): Clone build directory too if
+	it exists.
+	(patch-jaxws): Fix typo.
+
+2010-06-27 Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	(OPENJDK_BOOT_TREE): Set to patch-jaxws.stamp.
