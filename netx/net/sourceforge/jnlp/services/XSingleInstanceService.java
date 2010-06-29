@@ -145,14 +145,21 @@ public class XSingleInstanceService implements ExtendedSingleInstanceService {
     }
 
     /**
-     * Start the listening server to accept arguments from new isntances of
+     * Start the listening server to accept arguments from new instances of
      * applications
      * 
      * @param lockFile
+     *            the {@link SingleInstanceLock} that the server should use
      */
     private void startListeningServer(SingleInstanceLock lockFile) {
         SingleInstanceServer server = new SingleInstanceServer(lockFile);
-        new Thread(server).start();
+        Thread serverThread = new Thread(server);
+        /* 
+         * mark as daemon so the JVM can shutdown if the server is the only
+         * thread running
+         */
+        serverThread.setDaemon(true);
+        serverThread.start();
     }
 
     /**

@@ -1,3 +1,9 @@
+2010-06-29  Omair Majid <omajid@redhat.com>
+
+	* netx/net/sourceforge/jnlp/services/XSingleInstanceService.java
+	(startListeningServer): Mark the thread as a daemon so the JVM can
+	shutdown if there are no other non-daemon thread running.
+
 2010-06-29 Omair Majid <omajid@redhat.com>
 
 	* netx/net/sourceforge/jnlp/cache/CacheUtil.java
