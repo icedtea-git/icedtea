@@ -1,5 +1,16 @@
 2010-06-29  Omair Majid <omajid@redhat.com>
 
+	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java
+	nativeDirectories: New variable. Contains a list of directories that
+	contain native libraries.
+	(getInstance): Tell other classloaders about the native directory.
+	(getNativeDir): Add the new native directory to nativeDirectories.
+	(addNativeDirectory): New function.
+	(getNativeDirectories): New function.
+	(findLibrary): Look in all the native directories for the native library.
+
+2010-06-29  Omair Majid <omajid@redhat.com>
+
 	* netx/net/sourceforge/jnlp/services/XSingleInstanceService.java
 	(startListeningServer): Mark the thread as a daemon so the JVM can
 	shutdown if there are no other non-daemon thread running.

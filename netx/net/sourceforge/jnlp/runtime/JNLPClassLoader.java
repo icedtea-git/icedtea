@@ -32,6 +32,7 @@ import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -82,6 +83,9 @@ public class JNLPClassLoader extends URLClassLoader {
 
     /** the directory for native code */
     private File nativeDir = null; // if set, some native code exists
+
+    /** a list of directories that contain native libraries */
+    private List<File> nativeDirectories = Collections.synchronizedList(new LinkedList<File>());
 
     /** security context */
     private AccessControlContext acc = AccessController.getContext();
@@ -237,18 +241,22 @@ public class JNLPClassLoader extends URLClassLoader {
 		        // loader for this unique key. Check.
 		        JNLPClassLoader extLoader = (JNLPClassLoader) urlToLoader.get(uniqueKey);
 
-		        if (extLoader != null) {
+		        if (extLoader != null && extLoader != loader) {
 		            for (URL u : loader.getURLs())
 		                extLoader.addURL(u);
+		            for (File nativeDirectory: loader.getNativeDirectories())
+		                extLoader.addNativeDirectory(nativeDirectory);
 
 		            loader = extLoader;
 		        }
 
                 // loader is now current + ext. But we also need to think of 
                 // the baseLoader
-		        if (baseLoader != null) {
+		        if (baseLoader != null && baseLoader != loader) {
                     for (URL u : loader.getURLs())
                         baseLoader.addURL(u);
+                    for (File nativeDirectory: loader.getNativeDirectories())
+                        baseLoader.addNativeDirectory(nativeDirectory);
 
                     loader = baseLoader;
                 } 
@@ -716,29 +724,47 @@ public class JNLPClassLoader extends URLClassLoader {
 
         if (!nativeDir.mkdirs()) 
             return null;
-        else
+        else {
+            // add this new native directory to the search path
+            addNativeDirectory(nativeDir);
             return nativeDir;
+        }
+    }
+
+    /**
+     * Adds the {@link File} to the search path of this {@link JNLPClassLoader}
+     * when trying to find a native library
+     */
+    protected void addNativeDirectory(File nativeDirectory) {
+        nativeDirectories.add(nativeDirectory);
+    }
+
+    /**
+     * Returns a list of all directories in the search path of the current classloader
+     * when it tires to find a native library.
+     * @return a list of directories in the search path for native libraries
+     */
+    protected List<File> getNativeDirectories() {
+        return nativeDirectories;
     }
 
     /**
      * Return the absolute path to the native library.
      */
     protected String findLibrary(String lib) {
-        if (nativeDir == null)
-            return null;
-
         String syslib = System.mapLibraryName(lib);
 
-        File target = new File(nativeDir, syslib);
-        if (target.exists())
-            return target.toString();
-        else {
-            String result = super.findLibrary(lib);
-            if (result != null)
-                return result;
-
-            return findLibraryExt(lib);
+        for (File dir: getNativeDirectories()) {
+            File target = new File(dir, syslib);
+            if (target.exists())
+                return target.toString();
         }
+
+        String result = super.findLibrary(lib);
+        if (result != null)
+            return result;
+
+        return findLibraryExt(lib);
     }
 
     /**
