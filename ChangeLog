@@ -1,3 +1,13 @@
+2010-06-29 Omair Majid <omajid@redhat.com>
+
+	* netx/net/sourceforge/jnlp/cache/CacheUtil.java
+	(urlToPath): Call FileUtils.sanitizePath.
+	(fixPath): Moved to...
+	* netx/net/sourceforge/jnlp/util/FileUtils.java
+	(sanitizePath): New function. Moved from CacheUtil.java
+	(sanitizeFileName): Use a blacklisting approach rather than a whitelisting
+	approach: should work better with non ascii filenames.
+
 2010-06-24 Omair Majid <omajid@redhat.com>
 
 	* netx/net/sourceforge/jnlp/SecurityDesc.java: Fix comments.

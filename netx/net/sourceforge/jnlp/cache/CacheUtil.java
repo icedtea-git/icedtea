@@ -26,6 +26,7 @@ import javax.jnlp.*;
 
 import net.sourceforge.jnlp.*;
 import net.sourceforge.jnlp.runtime.*;
+import net.sourceforge.jnlp.util.FileUtils;
 
 /**
  * Provides static methods to interact with the cache, download
@@ -300,23 +301,9 @@ public class CacheUtil {
         path.append(File.separatorChar);
         path.append(location.getPath().replace('/', File.separatorChar));
 
-        return new File(JNLPRuntime.getBaseDir(), fixPath(path.toString()));
+        return new File(JNLPRuntime.getBaseDir(), FileUtils.sanitizePath(path.toString()));
     }
 
-    /**
-     * Clean up a string by removing characters that can't appear in
-     * a local file name.
-     */
-    private static String fixPath(String path) {
-        char badChars[] = { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
-
-        for (int i=0; i < badChars.length; i++)
-            if (badChars[i] != File.separatorChar)
-                if (-1 != path.indexOf(badChars[i]))
-                    path = path.replace(badChars[i], 'X');
-
-        return path;
-    }
 
     /**
      * Waits until the resources are downloaded, while showing a

@@ -14,35 +14,58 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-
 package net.sourceforge.jnlp.util;
 
+import java.io.File;
+
 /**
- * This class contains a few file-related utility functions. 
+ * This class contains a few file-related utility functions.
  * 
  * @author Omair Majid
  */
 
-public class FileUtils {
+public final class FileUtils {
 
-    
+    /**
+     * list of characters not allowed in filenames
+     */
+    private static final char INVALID_CHARS[] = { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
+
+    private static final char SANITIZED_CHAR = '_';
+
+    /**
+     * Clean up a string by removing characters that can't appear in a local
+     * file name.
+     *
+     * @param path
+     *        the path to sanitize
+     * @return a sanitized version of the input which is suitable for using as a
+     *         file path
+     */
+    public static String sanitizePath(String path) {
+
+        for (int i = 0; i < INVALID_CHARS.length; i++)
+            if (INVALID_CHARS[i] != File.separatorChar)
+                if (-1 != path.indexOf(INVALID_CHARS[i]))
+                    path = path.replace(INVALID_CHARS[i], SANITIZED_CHAR);
+
+        return path;
+    }
+
     /**
      * Given an input, return a sanitized form of the input suitable for use as
      * a file/directory name
-     * 
+     *
      * @param input
      * @return a sanitized version of the input
      */
-    public static String sanitizeFileName(String input) {
+    public static String sanitizeFileName(String filename) {
 
-        /*
-         * FIXME
-         * 
-         * Assuming safe characters are 'a-z','A-Z','0-9', '_', '.'
-         */
+        for (int i = 0; i < INVALID_CHARS.length; i++)
+            if (-1 != filename.indexOf(INVALID_CHARS[i]))
+                filename = filename.replace(INVALID_CHARS[i], SANITIZED_CHAR);
 
-        String sanitizedName = input.replaceAll("[^a-zA-Z0-9.]", "_");
-        return sanitizedName;
+        return filename;
     }
-    
+
 }
