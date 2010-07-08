@@ -1168,12 +1168,16 @@ class Parser {
             Node document = new Node(TinyParser.parseXML(input));
             Node jnlpNode = getChildNode(document, "jnlp"); // skip comments
             */
+            
+            //A BufferedInputStream is used to allow marking and reseting 
+            //of a stream.    
+            BufferedInputStream bs = new BufferedInputStream(input);
 
             /* NANO */
             final XMLElement xml = new XMLElement();
             final PipedInputStream pin = new PipedInputStream();
-            final PipedOutputStream pout = new PipedOutputStream(pin);
-            final InputStreamReader isr = new InputStreamReader(input);    
+            final PipedOutputStream pout = new PipedOutputStream(pin);   
+            final InputStreamReader isr = new InputStreamReader(bs, getEncoding(bs));    
             // Clean the jnlp xml file of all comments before passing
             // it to the parser.
             new Thread(
@@ -1196,7 +1200,69 @@ class Parser {
             throw new ParseException(R("PBadXML"), ex);
         }
     }
+    
+    /**
+     * Returns the name of the encoding used in this InputStream.
+     *
+     * @param input the InputStream
+     * @return a String representation of encoding
+     */
+    private static String getEncoding(InputStream input) throws IOException{
+        //Fixme: This only recognizes UTF-8, UTF-16, and 
+        //UTF-32, which is enough to parse the prolog portion of xml to
+        //find out the exact encoding (if it exists). The reason being
+        //there could be other encodings, such as ISO 8859 which is 8-bits
+        //but it supports latin characters.  
+        //So what needs to be done is to parse the prolog and retrieve
+        //the exact encoding from it.
 
+        int[] s = new int[4];
+        String encoding = "UTF-8";
+
+        //Determine what the first four bytes are and store 
+        //them into an int array.
+        input.mark(4);
+        for (int i = 0; i < 4; i++) {
+            s[i] = input.read(); 
+        }
+        input.reset();
+
+        //Set the encoding base on what the first four bytes of the
+        //inputstream turn out to be (following the information from
+        //www.w3.org/TR/REC-xml/#sec-guessing).
+        if (s[0] == 255) {
+            if (s[1] == 254) {
+                if (s[2] != 0 || s[3] != 0) {
+                    encoding = "UnicodeLittle";
+                } else {
+                    encoding = "X-UTF-32LE-BOM";
+                }
+            }
+        } else if (s[0] == 254 && s[1] == 255 && (s[2] != 0 || 
+          s[3] != 0)) {
+            encoding = "UTF-16";
+
+        } else if (s[0] == 0 && s[1] == 0 && s[2] == 254 && 
+          s[3] == 255) {
+            encoding = "X-UTF-32BE-BOM";
+
+        } else if (s[0] == 0 && s[1] == 0 && s[2] == 0 && 
+          s[3] == 60) {
+            encoding = "UTF-32BE";
+ 
+        } else if (s[0] == 60 && s[1] == 0 && s[2] == 0 && 
+          s[3] == 0) {
+            encoding = "UTF-32LE";
+
+        } else if (s[0] == 0 && s[1] == 60 && s[2] == 0 && 
+          s[3] == 63) { 
+            encoding = "UTF-16BE"; 
+        } else if (s[0] == 60 && s[1] == 0 && s[2] == 63 &&
+          s[3] == 0) { 
+            encoding = "UTF-16LE";
+        }
+
+        return encoding;
+    }
 }
-
 

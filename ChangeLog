@@ -1,3 +1,13 @@
+2010-07-08  Man Lung Wong  <mwong@redhat.com>
+
+    * netx/net/sourceforge/jnlp/Parser.java:
+    (getRootNode): Used BufferedInputStream instead of InputStream to
+	have mark and reset method available. Passed the encoding to the
+	constructor of InputStreamReader, such that the stream will now
+	be parsed with the encoding the jnlp file is in.
+    (getEncoding): A new method which checks the first four bytes of input
+	and determines what the files encoding is.
+
 2010-07-08  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
