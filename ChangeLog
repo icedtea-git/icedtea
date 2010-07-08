@@ -1,3 +1,10 @@
+2010-07-08  Omair Majid  <omajid@redhat.com>
+
+	PR icedtea/460
+	* plugin/icedteanp/java/netscape/security/ForbiddenTargetException.java:
+	New file. Some applets, for legacy support, expect this class to be
+	present.
+
 2010-06-29  Omair Majid <omajid@redhat.com>
 
 	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java
