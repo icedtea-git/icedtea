@@ -2327,11 +2327,10 @@ endif
 
 clean-add-zero:
 	rm -rf $(BUILD_JRE_ARCH_DIR)/zero
+	rm -rf $(BUILD_JRE_ARCH_DIR)/shark
+	rm -rf zerovm
 	sed -i 's#-zero KNOWN#-zero ERROR#' jvm.cfg
 	sed -i 's#-shark KNOWN#-shark ERROR#' jvm.cfg
-if ADD_ZERO_BUILD
-	rm -rf zerovm
-endif
 	rm -f stamps/add-zero.stamp
 
 stamps/add-zero-debug.stamp: stamps/icedtea-debug.stamp
@@ -2364,7 +2363,9 @@ endif
 	touch $@
 
 clean-add-zero-debug:
-	rm -rf $(BUILD_JRE_ARCH_DIR)/zero
+	rm -rf $(BUILD_DEBUG_JRE_ARCH_DIR)/zero
+	rm -rf $(BUILD_DEBUG_JRE_ARCH_DIR)/shark
+	rm -rf zerovm
 	sed -i 's#-zero KNOWN#-zero ERROR#' jvm.cfg
 	sed -i 's#-shark KNOWN#-shark ERROR#' jvm.cfg
 	rm -f stamps/add-zero-debug.stamp

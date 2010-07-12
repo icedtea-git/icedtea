@@ -1,3 +1,9 @@
+2010-07-12 Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(clean-add-zero): Delete all created directories.
+	(clean-add-debug-zero): Likewise.
+
 2010-06-28 Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
