@@ -86,7 +86,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
 	protected void open(AudioFormat format, int bufferSize)
 			throws LineUnavailableException {
 
-		if (isOpen) {
+		if (isOpen()) {
 			throw new IllegalStateException("Line is already open");
 		}
 
@@ -139,7 +139,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
 			}
 		}
 
-		if (!isOpen) {
+		if (!isOpen()) {
 			throw new IllegalArgumentException("Invalid format");
 		}
 
@@ -299,9 +299,10 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
 	@Override
 	public void close() {
 
-		if (!isOpen) {
-			throw new IllegalStateException(
-					"Line must be open for close() to work");
+		if (!isOpen()) {
+			// For whatever reason, we are being asked to close
+			// a line that is not even open.
+			return;
 		}
 
 		synchronized (eventLoop.threadLock) {
@@ -346,7 +347,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
 
 	@Override
 	public void start() {
-		if (!isOpen) {
+		if (!isOpen()) {
 			throw new IllegalStateException(
 					"Line must be open()ed before it can be start()ed");
 		}
@@ -376,10 +377,10 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
 
 	@Override
 	public synchronized void stop() {
-		if (!isOpen) {
-			throw new IllegalStateException(
-					"Line must be open()ed before it can be start()ed");
-
+		if (!isOpen()) {
+			// For some reason, we are being asked to stop a line
+			// that isn't even open.
+			return;
 		}
 		writeInterrupted = true;
 		if (!isStarted) {
@@ -433,7 +434,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
 			throws LineUnavailableException;
 
 	public Stream getStream() {
-		if (!isOpen) {
+		if (!isOpen()) {
 			throw new IllegalStateException("Line must be open");
 		}
 
@@ -442,7 +443,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
 
 	@Override
 	public int getBufferSize() {
-		if (!isOpen) {
+		if (!isOpen()) {
 			return DEFAULT_BUFFER_SIZE;
 		}
 		return bufferSize;
@@ -450,7 +451,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
 
 	@Override
 	public AudioFormat getFormat() {
-		if (!isOpen) {
+		if (!isOpen()) {
 			return defaultFormat;
 		}
 		return currentFormat;
@@ -467,7 +468,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
 	 *            the name of this audio stream
 	 */
 	public void setName(String streamName) {
-		if (isOpen) {
+		if (isOpen()) {
 
 			Operation o;
 			synchronized (eventLoop.threadLock) {

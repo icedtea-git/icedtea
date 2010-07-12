@@ -76,14 +76,18 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
 
 	@Override
 	synchronized public void close() {
+		if (!isOpen()) {
+			// Probably due to some programmer error, we are being
+			// asked to close an already closed line.  Oh well.
+			Debug.println(DebugLevel.Verbose,
+					"PulseAudioTargetDataLine.close(): "
+					+ "Line closed that wasn't open.");
+			return;
+		}
+
 		/* check for permission to record audio */
 		AudioPermission perm = new AudioPermission("record", null);
 		perm.checkGuard(null);
-
-		if (!isOpen) {
-			throw new IllegalStateException(
-					"Line cant be closed if it isnt open");
-		}
 
 		PulseAudioMixer parentMixer = PulseAudioMixer.getInstance();
 		parentMixer.removeTargetLine(this);
@@ -101,7 +105,7 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
 		AudioPermission perm = new AudioPermission("record", null);
 		perm.checkGuard(null);
 
-		if (isOpen) {
+		if (isOpen()) {
 			throw new IllegalStateException("already open");
 		}
 		super.open(format, bufferSize);
@@ -142,8 +146,9 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
 
 		/* check state and inputs */
 
-		if (!isOpen) {
-			throw new IllegalStateException("must call open() before read()");
+		if (!isOpen()) {
+			// A closed line can produce zero bytes of data.
+			return 0;
 		}
 
 		int frameSize = currentFormat.getFrameSize();
@@ -220,7 +225,7 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
 		while (remainingLength != 0) {
 			synchronized (this) {
 
-				if (!isOpen || !isStarted) {
+				if (!isOpen() || !isStarted) {
 					return sizeRead;
 				}
 
@@ -287,57 +292,57 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
 	@Override
 	public void drain() {
 
-		if (!isOpen) {
-			throw new IllegalStateException("must call open() before drain()");
-		}
-
-		synchronized (this) {
-			drained = true;
-		}
-
 		// blocks when there is data on the line
 		// http://www.jsresources.org/faq_audio.html#stop_drain_tdl
 		while (true) {
 			synchronized (this) {
-				if (!isStarted || !isOpen) {
+				if (!isStarted || !isOpen()) {
 					break;
 				}
 			}
 			try {
+				//TODO: Is this the best length of sleep?
+				//Maybe in case this loop runs for a long time
+				//it would be good to switch to a longer
+				//sleep.  Like bump it up each iteration after
+				//the Nth iteration, up to a MAXSLEEP length.
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				// do nothing
 			}
 		}
 
+		synchronized (this) {
+			drained = true;
+		}
+
 	}
 
 	@Override
 	public void flush() {
-		if (!isOpen) {
-			throw new IllegalStateException("Line must be open");
-		}
+		if (isOpen()) {
 
-		/* flush the buffer on pulseaudio's side */
-		Operation operation;
-		synchronized (eventLoop.threadLock) {
-			operation = stream.flush();
+			/* flush the buffer on pulseaudio's side */
+			Operation operation;
+			synchronized (eventLoop.threadLock) {
+				operation = stream.flush();
+			}
+			operation.waitForCompletion();
+			operation.releaseReference();
 		}
-		operation.waitForCompletion();
-		operation.releaseReference();
 
 		synchronized (this) {
 			flushed = true;
 			/* flush the partial fragment we stored */
 			fragmentBuffer = null;
 		}
-
 	}
 
 	@Override
 	public int available() {
-		if (!isOpen) {
-			throw new IllegalStateException("Line must be open");
+		if (!isOpen()) {
+			// a closed line has 0 bytes available.
+			return 0;
 		}
 
 		synchronized (eventLoop.threadLock) {

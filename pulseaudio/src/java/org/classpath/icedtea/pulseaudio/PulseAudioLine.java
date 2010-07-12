@@ -62,7 +62,7 @@ abstract class PulseAudioLine implements Line {
 
 	@Override
 	public void close() {
-		if (!isOpen) {
+		if (!isOpen()) {
 			throw new IllegalStateException("Line is not open");
 		}
 
@@ -79,7 +79,7 @@ abstract class PulseAudioLine implements Line {
 
 	@Override
 	public Control getControl(Type control) {
-		if (isOpen) {
+		if (isOpen()) {
 			for (Control aControl : controls) {
 				if (aControl.getType() == control) {
 					return aControl;
@@ -92,7 +92,7 @@ abstract class PulseAudioLine implements Line {
 
 	@Override
 	public Control[] getControls() {
-		if (!isOpen) {
+		if (!isOpen()) {
 			return new Control[] {};
 		}
 

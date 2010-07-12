@@ -142,8 +142,9 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
 			writeInterrupted = false;
 		}
 
-		if (!isOpen) {
-			throw new IllegalStateException("must call open() before write()");
+		if (!isOpen()) {
+			// A closed line can write exactly 0 bytes.
+			return 0;
 		}
 
 		int frameSize = currentFormat.getFrameSize();
@@ -259,11 +260,6 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
 
 	@Override
 	public void drain() {
-		if (!isOpen) {
-			throw new IllegalStateException(
-					"Line must be open before it can be drain()ed");
-
-		}
 
 		synchronized (this) {
 			writeInterrupted = true;
@@ -271,13 +267,13 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
 
 		do {
 			synchronized (this) {
-				if (!isOpen) {
+				if (!isOpen()) {
 					return;
 				}
 				if (getBytesInBuffer() == 0) {
 					return;
 				}
-				if (isStarted || !isOpen) {
+				if (isStarted) {
 					break;
 				}
 				try {
@@ -301,29 +297,27 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
 
 	@Override
 	public void flush() {
-		if (!isOpen) {
-			throw new IllegalStateException(
-					"Line must be open before it can be flush()ed");
-		}
 		synchronized (this) {
 			writeInterrupted = true;
 		}
 
-		Operation operation;
-		synchronized (eventLoop.threadLock) {
-			operation = stream.flush();
-		}
+		if (isOpen()) {
+			Operation operation;
+			synchronized (eventLoop.threadLock) {
+				operation = stream.flush();
+			}
 
-		operation.waitForCompletion();
-		operation.releaseReference();
+			operation.waitForCompletion();
+			operation.releaseReference();
+		}
 
 	}
 
 	@Override
 	synchronized public void close() {
 
-		if (!isOpen) {
-			throw new IllegalStateException("not open so cant close");
+		if (!isOpen()) {
+			return;
 		}
 
 		writeInterrupted = true;
