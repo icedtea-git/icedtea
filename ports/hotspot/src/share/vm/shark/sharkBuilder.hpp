@@ -192,7 +192,7 @@ class SharkBuilder : public llvm::IRBuilder<> {
   llvm::Value* code_buffer_address(int offset);
   llvm::Value* CreateInlineOop(jobject object, const char* name = "");
   llvm::Value* CreateInlineOop(ciObject* object, const char* name = "") {
-    return CreateInlineOop(object->encoding(), name);
+    return CreateInlineOop(object->constant_encoding(), name);
   }
   llvm::Value* CreateInlineData(void*             data,
                                 size_t            size,
