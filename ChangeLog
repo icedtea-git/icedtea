@@ -1,3 +1,8 @@
+2010-07-12  Matthias Klose  <doko@ubuntu.com>
+
+	* ports/hotspot/src/cpu/zero/vm/shark_globals_zero.hpp:
+	Set MaxRAM.
+
 2010-07-12 Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
