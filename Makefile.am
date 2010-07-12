@@ -552,7 +552,7 @@ ICEDTEA_ENV_BOOT = $(ICEDTEA_ENV) \
 	BOOTCLASSPATH_CLS_RT="-bootclasspath $(ICEDTEA_CLS_DIR_BOOT):$(ICEDTEA_RT)" \
 	BOOTCLASSPATH_CLS="-bootclasspath $(ICEDTEA_CLS_DIR_BOOT)" \
 	BOOTCLASSPATH_RT_LIBGCJ="-bootclasspath $(ICEDTEA_RT)" \
-	GENSRCDIR="$(abs_top_builddir)/generated" \
+	GENSRCDIR="$(abs_top_builddir)/generated.build" \
 	JAR_KNOWS_ATFILE="$(JAR_KNOWS_ATFILE)" \
 	JAR_KNOWS_J_OPTIONS="$(JAR_KNOWS_J_OPTIONS)" \
 	JAR_ACCEPTS_STDIN_LIST="$(JAR_ACCEPTS_STDIN_LIST)" \
@@ -1314,18 +1314,16 @@ clean-ports:
 
 stamps/generated.stamp: stamps/ports.stamp
 	set -e ; \
-	if [ ! -e $(abs_top_builddir)/generated ]; then \
-	  cp -pPR $(SRC_DIR_LINK) $(abs_top_srcdir)/generated $(abs_top_builddir); \
-	  find $(abs_top_builddir)/generated -type f -exec chmod 640 '{}' ';' \
+	if [ ! -e $(abs_top_builddir)/generated.build ]; then \
+	  cp -pPR $(SRC_DIR_LINK) $(abs_top_srcdir)/generated $(abs_top_builddir)/generated.build; \
+	  find $(abs_top_builddir)/generated.build -type f -exec chmod 640 '{}' ';' \
 	    -o -type d -exec chmod 750 '{}' ';'; \
 	fi
 	mkdir -p stamps
 	touch $@
 
 clean-generated:
-	if [ $(abs_top_srcdir) != $(abs_top_builddir) ]; then \
-	  rm -rf $(abs_top_builddir)/generated ; \
-	fi
+	rm -rf $(abs_top_builddir)/generated.build
 	rm -f stamps/generated.stamp
 
 stamps/patch-fsg.stamp: stamps/generated.stamp

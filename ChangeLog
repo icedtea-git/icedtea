@@ -1,6 +1,15 @@
 2010-07-12 Andrew John Hughes  <ahughes@redhat.com>
 
 	PR icedtea/521
+	(ICEDTEA_ENV): Use generated.build.
+	(generated): Copy to generated.build rather than
+	generated so the source and build copies are clearly
+	distinct (and present on srcdir=builddir builds)
+	(clean-generated): Delete generated.build in all cases.
+
+2010-07-12 Andrew John Hughes  <ahughes@redhat.com>
+
+	PR icedtea/521
 	* Makefile.am:
 	(SOURCEPATH_DIRS): The untainted srcdir
 	version of generated should be used.
