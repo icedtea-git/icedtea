@@ -7,6 +7,11 @@
 
 2010-07-12  Matthias Klose  <doko@ubuntu.com>
 
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp
+	(CreateInlineOop): Rename encoding to constant_encoding.
+
+2010-07-12  Matthias Klose  <doko@ubuntu.com>
+
 	* ports/hotspot/src/cpu/zero/vm/shark_globals_zero.hpp:
 	Set MaxRAM.
 
