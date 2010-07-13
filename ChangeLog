@@ -1,3 +1,10 @@
+2010-07-13  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.h: Set timeout to 120
+	seconds (previous commit mistakenly changed it to 10).
+	* plugin/icedteanp/IcedTeaPluginUtils.h: Print debug info only in debug
+	mode.
+
 2010-06-14  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc: Use variadic macro

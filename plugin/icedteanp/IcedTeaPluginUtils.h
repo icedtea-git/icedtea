@@ -67,8 +67,14 @@ exception statement from your version. */
 #include "IcedTeaNPPlugin.h"
 
 #define PLUGIN_DEBUG(...) \
-	fprintf (stderr, "ITNPP Thread# %d: ", pthread_self()); \
-	fprintf (stderr, __VA_ARGS__)
+  do                                                          \
+  {                                                           \
+    if (plugin_debug)                                         \
+    {                                                         \
+      fprintf (stderr, "ITNPP Thread# %ld: ", pthread_self()); \
+      fprintf (stderr, __VA_ARGS__);                          \
+    }                                                         \
+  } while (0)
 
 #define CHECK_JAVA_RESULT(result_data)                               \
 {                                                                    \
