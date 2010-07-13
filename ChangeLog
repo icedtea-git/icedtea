@@ -1,3 +1,8 @@
+2010-07-13  Mark Wielaard  <mjw@redhat.com>
+
+	Reported by William Cohen <wcohen@redhat.com>
+	* tapset/hotspot.stp.in (object_alloc): size is arg4, not arg3.
+
 2010-07-15 Andrew John Hughes  <ahughes@redhat.com>
 
 	PR icedtea/521
