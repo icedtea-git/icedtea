@@ -1719,14 +1719,7 @@ if test "x${enable_plugin}" = "xyes" ; then
   AC_SUBST(GTK_CFLAGS)
   AC_SUBST(GTK_LIBS)
 
-  if $PKG_CONFIG --atleast-version 1.9.2 libxul >&AS_MESSAGE_LOG_FD 2>&1; then
-    xullibs=libxul
-  else
-    xullibs="libxul libxul-unstable"
-  fi
-
-  PKG_CHECK_MODULES(MOZILLA, \
-    mozilla-plugin ${xullibs})
+  PKG_CHECK_MODULES(MOZILLA, mozilla-plugin)
     
   AC_SUBST(MOZILLA_CFLAGS)
   AC_SUBST(MOZILLA_LIBS)
@@ -1739,52 +1732,13 @@ AC_DEFUN_ONCE([IT_CHECK_XULRUNNER_VERSION],
 AC_REQUIRE([IT_CHECK_PLUGIN_DEPENDENCIES])
 if test "x${enable_plugin}" = "xyes"
 then
-  AC_LANG_PUSH([C++])
-  OLDCPPFLAGS="$CPPFLAGS"
-  CPPFLAGS="$CPPFLAGS $MOZILLA_CFLAGS"
-
-  AC_CACHE_CHECK([for xulrunner version], [xulrunner_cv_collapsed_version],
-      [AC_RUN_IFELSE(
-        [AC_LANG_PROGRAM([[
-#include <mozilla-config.h>
-#include <math.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-]],[[
-int version = 0;
-const char* token = NULL;
-int power=6;
-FILE *datafile;
-
-datafile = fopen ("conftest.vdata", "w");
-if (!datafile) return 1;
-
-// 32 chars is more than enough to hold version
-char* mozilla_version = (char*) malloc(32*sizeof(char));
-snprintf(mozilla_version, 32, "%s", MOZILLA_VERSION);
-
-token = strtok(mozilla_version, ".");
-while (token)
-{
-    version += atoi(token)*(pow(10, power));
-    power -=2;
-    token = strtok(NULL, ".");
-}
-
-fprintf (datafile, "%d\n", version);
-free(mozilla_version);
-if (fclose(datafile)) return 1;
-
-return EXIT_SUCCESS;
-]])],
-    [xulrunner_cv_collapsed_version="$(cat conftest.vdata)"],
-    [AC_MSG_FAILURE([cannot determine xulrunner version])])],
-  [xulrunner_cv_collapsed_version="190000"])
-
-  CPPFLAGS="$OLDCPPFLAGS"
-  AC_LANG_POP([C++])
-
+  AC_CACHE_CHECK([for xulrunner version], [xulrunner_cv_collapsed_version],[
+    if pkg-config --modversion libxul >/dev/null 2>&1
+    then
+      xulrunner_cv_collapsed_version=`pkg-config --modversion libxul | awk -F. '{power=6; v=0; for (i=1; i <= NF; i++) {v += $i * 10 ^ power; power -=2}; print v}'`
+    else
+      AC_MSG_FAILURE([cannot determine xulrunner version])
+    fi])
   AC_SUBST(MOZILLA_VERSION_COLLAPSED, $xulrunner_cv_collapsed_version)
 fi
 ])

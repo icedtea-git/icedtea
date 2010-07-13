@@ -1,3 +1,9 @@
+2010-07-13  Matthias Klose  <doko@ubuntu.com>
+
+	* acinclude.m4 (IT_CHECK_PLUGIN_DEPENDENCIES): Don't require libxul
+	libraries.
+	(IT_CHECK_XULRUNNER_VERSION): Use pkgconfig --modversion as version.
+
 2010-07-12 Andrew John Hughes  <ahughes@redhat.com>
 
 	PR icedtea/521
