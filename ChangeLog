@@ -1,3 +1,11 @@
+2010-07-15 Andrew John Hughes  <ahughes@redhat.com>
+
+	PR icedtea/521
+	* Makefile.am:
+	(generated): Don't use hardlinking as
+	generated is altered by the build.
+	Use chmod -R rather than find.
+
 2010-07-14 Andrew John Hughes  <ahughes@redhat.com>
 
 	Fix new issues with make distcheck.

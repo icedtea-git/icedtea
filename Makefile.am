@@ -1325,9 +1325,8 @@ clean-ports:
 stamps/generated.stamp: stamps/ports.stamp
 	set -e ; \
 	if [ ! -e $(abs_top_builddir)/generated.build ]; then \
-	  cp -pPR $(SRC_DIR_LINK) $(abs_top_srcdir)/generated $(abs_top_builddir)/generated.build; \
-	  find $(abs_top_builddir)/generated.build -type f -exec chmod 640 '{}' ';' \
-	    -o -type d -exec chmod 750 '{}' ';'; \
+	  cp -pPR $(abs_top_srcdir)/generated $(abs_top_builddir)/generated.build; \
+	  chmod -R u+w $(abs_top_builddir)/generated.build ; \
 	fi
 	mkdir -p stamps
 	touch $@
