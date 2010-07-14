@@ -1,3 +1,54 @@
+2010-07-14 Andrew John Hughes  <ahughes@redhat.com>
+
+	Fix new issues with make distcheck.
+	* patches/cacao/version-parsing.patch:
+	Removed; included upstream.
+	* Makefile.am:
+	(REWRITER_BUILD_DIR): New variable to
+	store rewriter build directory.
+	(NETX_SRCDIR): Remove absolute prefix which
+	breaks the use in EXTRA_DIST.
+	(REWRITER_SRCS): Likewise.
+	(GENERATED_SRCS): Updated.
+	(PULSEAUDIO_SRCS): Likewise.
+	(ICEDTEA_PATCHES): Likewise.
+	(EXTRA_DIST): Remove absolute prefix from
+	plugin.  Add $(top_srcdir) prefix to newly
+	abbreviated NETX_SRCDIR.
+	(clean-clone-boot): Remove patch-jaxws.stamp.
+	(icedtea): Add prefix to NETX_RESOURCE_DIR due
+	to change in NETX_SRCDIR.
+	(icedtea-debug): Likewise.
+	(clean-IcedTeaPlugin): Delete the build directories.
+	(clean-plugin): Don't delete the build directory here any more.
+	(netx-source-files.txt): Add prefix to NETX_SRCDIR.
+	(netx): Likewise.  Fix permissions on copied resources.
+	(netx-dist): Add prefix to NETX_SRCDIR.
+
+2010-07-08  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(clean-clone-boot): Don't depend on clean-patch-boot,
+	just delete the stamp.
+	(clean-extract-openjdk): Likewise for clean-patch and
+	clean-patch-fsg.
+
+2010-07-04  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(clean-local): Add missing dependencies.
+	(rewriter): Give the build directory a different
+	name to the source directory (rewriter.build).
+	(clean-rewriter): New target to remove rewriter.
+	(rewrite-rhino): Fix build directory path.
+	(clean-rewrite-rhino): Inverse of rewrite-rhino.
+
+2010-07-01  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(distclean-local): Delete empty tapset
+	directory if srcdir != builddir.
+
 2010-07-13  Matthias Klose  <doko@ubuntu.com>
 
 	* acinclude.m4 (IT_CHECK_PLUGIN_DEPENDENCIES): Don't require libxul

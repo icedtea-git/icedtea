@@ -65,6 +65,7 @@ ICEDTEA_CLS_DIR_BOOT = $(BOOT_BUILD_OUTPUT_DIR)/classes
 SERVER_DIR = hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server
 BUILD_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 BUILD_DEBUG_JRE_ARCH_DIR = $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+REWRITER_BUILD_DIR = $(abs_top_builddir)/rewriter.build
 
 # Source directories
 
@@ -74,7 +75,7 @@ LANGTOOLS = openjdk-boot/langtools/src/share/classes
 CORBA = openjdk-boot/corba/src/share/classes
 JAXWS = $(BUILD_OUTPUT_DIR)/jaxws/drop/jaxws_src/src
 
-NETX_SRCDIR = $(abs_top_srcdir)/netx
+NETX_SRCDIR = netx
 NETX_RESOURCE_DIR=$(NETX_SRCDIR)/net/sourceforge/jnlp/resources
 NETX_EXTRA_DIR=$(abs_top_srcdir)/extra/net/sourceforge/jnlp/about/resources
 
@@ -257,7 +258,7 @@ OPENJDK_BOOT_TREE = stamps/patch-jaxws.stamp
 
 PLUGIN_TEST_SRCS = $(abs_top_srcdir)/plugin/tests/LiveConnect/*.java
 
-REWRITER_SRCS = $(abs_top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
+REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 
 # Patch list
 
@@ -609,6 +610,8 @@ GENERATED_FILES = $(top_srcdir)/generated/com/sun/java/swing/plaf/gtk/resources/
 	$(top_srcdir)/generated/sun/awt/resources/awt*.java \
 	$(top_srcdir)/generated/sun/nio/ch/*.java \
 	$(top_srcdir)/generated/sun/nio/cs/*.java \
+	$(top_srcdir)/generated/sun/nio/cs/ext/*.java \
+	$(top_srcdir)/generated/sun/nio/fs/*.java \
 	$(top_srcdir)/generated/sun/misc/*.java \
 	$(top_srcdir)/generated/sun/util/*.java \
 	$(top_srcdir)/generated/sun/util/logging/resources/logging*.java \
@@ -713,13 +716,14 @@ PULSEAUDIO_SRCS = $(top_srcdir)/pulseaudio/src/java/org/classpath/icedtea/pulsea
 	$(top_srcdir)/pulseaudio/testsounds/logout.wav \
 	$(top_srcdir)/pulseaudio/testsounds/error.wav \
 	$(top_srcdir)/pulseaudio/unittests/org/classpath/icedtea/pulseaudio/*.java \
-	$(top_srcdir)/pulseaudio/AUTHORS \
 	$(top_srcdir)/pulseaudio/COPYING
 
 EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/hotspot/default/*.patch \
 	$(top_srcdir)/patches/boot/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
+	$(top_srcdir)/patches/debian/*.patch \
+	$(top_srcdir)/patches/extensions/*.patch \
 	$(top_srcdir)/patches/security/*.patch \
 	$(top_srcdir)/patches/xrender/*.patch \
 	tools-copy contrib ports extra overlays \
@@ -727,7 +731,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	jconsole.desktop policytool.desktop \
 	$(JTREG_SRCS) \
 	HACKING $(PULSEAUDIO_SRCS) fsg.sh \
-	$(abs_top_srcdir)/plugin $(NETX_SRCDIR) \
+	$(top_srcdir)/plugin $(top_srcdir)/$(NETX_SRCDIR) \
 	hotspot.map autogen.sh \
 	tapset/hotspot.stp.in \
 	tapset/hotspot_jni.stp.in \
@@ -750,7 +754,8 @@ clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
  clean-extract clean-generated clean-plugin clean-liveconnect clean-native-ecj \
  clean-hgforest clean-icedtea-stage2 clean-icedtea-debug-stage2 clean-icedtea-stage1 \
- clean-add-zero clean-add-zero-debug clean-add-cacao clean-add-cacao-debug clean-rt
+ clean-add-zero clean-add-zero-debug clean-add-cacao clean-add-cacao-debug clean-rt \
+ clean-rewrite-rhino clean-rewriter
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -760,6 +765,11 @@ clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
 	rm -f jni-common.o
 
 distclean-local: clean-local clean-download
+	if [ $(abs_top_srcdir) != $(abs_top_builddir) ]; then \
+	  if [ -e tapset ] ; then \
+	    rmdir tapset ; \
+	  fi ; \
+	fi
 	if [ -e stamps ] ; then \
 	  rmdir stamps ; \
 	fi
@@ -1517,8 +1527,10 @@ stamps/clone-boot.stamp: $(OPENJDK_TREE)
 	mkdir -p stamps
 	touch $@
 
-clean-clone-boot: clean-patch-boot
+clean-clone-boot: 
 	rm -rf openjdk-boot
+	rm -f stamps/patch-boot.stamp
+	rm -f stamps/patch-jaxws.stamp
 	rm -f stamps/clone-boot.stamp
 
 stamps/patch-boot.stamp: stamps/clone-boot.stamp
@@ -1764,9 +1776,9 @@ if ENABLE_PULSE_JAVA
 	   $(ZIP) -qur $(BUILD_OUTPUT_DIR)/j2sdk-image/src.zip org )
 endif
 if JNLP_ABOUT_NEEDED
-	cp $(NETX_RESOURCE_DIR)/about.jnlp extra-lib/about.jar \
+	cp $(top_srcdir)/$(NETX_RESOURCE_DIR)/about.jnlp extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
-	cp $(NETX_RESOURCE_DIR)/about.jnlp extra-lib/about.jar \
+	cp $(top_srcdir)/$(NETX_RESOURCE_DIR)/about.jnlp extra-lib/about.jar \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 endif
 if ZERO_BUILD
@@ -1838,9 +1850,9 @@ if ENABLE_PULSE_JAVA
 	   $(ZIP) -qur $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/src.zip org )
 endif
 if JNLP_ABOUT_NEEDED
-	cp $(NETX_RESOURCE_DIR)/default.jnlp extra-lib/about.jar \
+	cp $(top_srcdir)/$(NETX_RESOURCE_DIR)/default.jnlp extra-lib/about.jar \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib
-	cp $(NETX_RESOURCE_DIR)/default.jnlp extra-lib/about.jar \
+	cp $(top_srcdir)/$(NETX_RESOURCE_DIR)/default.jnlp extra-lib/about.jar \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 endif
 if ZERO_BUILD
@@ -1989,6 +2001,9 @@ stamps/icedtea-npplugin.stamp: $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so
 clean-IcedTeaPlugin:
 	rm -f $(addprefix $(PLUGIN_BUILD_DIR)/,$(PLUGIN_OBJECTS))
 	rm -f $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so
+	rmdir $(PLUGIN_BUILD_DIR)
+	rmdir plugin.build
+	rm -f stamps/icedtea-npplugin.stamp
 endif
 
 stamps/plugin.stamp: $(ICEDTEAPLUGIN_TARGET) stamps/liveconnect-dist.stamp
@@ -1996,9 +2011,6 @@ stamps/plugin.stamp: $(ICEDTEAPLUGIN_TARGET) stamps/liveconnect-dist.stamp
 	touch $@
 
 clean-plugin: $(ICEDTEAPLUGIN_CLEAN)
-	if [ -e $(PLUGIN_BUILD_DIR) ] ; then \
-	  rmdir $(PLUGIN_BUILD_DIR) ; \
-	fi
 	rm -f stamps/plugin.stamp
 
 liveconnect-source-files.txt:
@@ -2044,17 +2056,18 @@ clean-liveconnect:
 # a patch applied to sun.plugin.AppletViewerPanel and generated sources
 
 netx-source-files.txt:
-	find $(NETX_SRCDIR) -name '*.java' | sort > $@
+	find $(top_srcdir)/$(NETX_SRCDIR) -name '*.java' | sort > $@
 
 stamps/netx.stamp: netx-source-files.txt stamps/rt.stamp
 	mkdir -p $(NETX_CLASSES)
 	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	    -d $(NETX_CLASSES) \
 	    -classpath $(ICEDTEA_RT) \
-	    -sourcepath $(NETX_SRCDIR):$(SOURCEPATH_DIRS) \
+	    -sourcepath $(top_srcdir)/$(NETX_SRCDIR):$(SOURCEPATH_DIRS) \
 	    -bootclasspath \'\' \
 	    @netx-source-files.txt ;
-	cp -r $(NETX_RESOURCE_DIR) $(NETX_CLASSES)/net/sourceforge/jnlp
+	cp -r $(top_srcdir)/$(NETX_RESOURCE_DIR) $(NETX_CLASSES)/net/sourceforge/jnlp
+	chmod -R u+w $(NETX_CLASSES)/net/sourceforge/jnlp
 	mkdir -p stamps
 	touch $@
 
@@ -2062,7 +2075,7 @@ stamps/netx-dist.stamp: stamps/netx.stamp
 	(cd $(NETX_CLASSES) ; \
 	 mkdir -p lib ; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar cf $(NETX_JAR) javax/jnlp net ; \
-	 cp -pPR $(SRC_DIR_LINK) $(NETX_SRCDIR) src; \
+	 cp -pPR $(SRC_DIR_LINK) $(abs_top_srcdir)/$(NETX_SRCDIR) src; \
 	 find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
 	 cd src ; \
 	 $(ICEDTEA_BOOT_DIR)/bin/jar uf $(NETX_JAR) \
@@ -2165,20 +2178,22 @@ endif
 
 stamps/rewriter.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
 if WITH_RHINO
-	mkdir -p $(abs_top_builddir)/rewriter && \
-	(cd $(abs_top_srcdir)/rewriter ; \
-	 $(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
-	 -d $(abs_top_builddir)/rewriter $(REWRITER_SRCS) \
-	)
+	mkdir -p $(REWRITER_BUILD_DIR)
+	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
+	 -d $(REWRITER_BUILD_DIR) $(REWRITER_SRCS)
 endif
 	mkdir -p stamps
 	touch stamps/rewriter.stamp
+
+clean-rewriter:
+	rm -rf $(REWRITER_BUILD_DIR)
+	rm -f stamps/rewriter.stamp
 
 stamps/rewrite-rhino.stamp: stamps/rewriter.stamp $(RHINO_JAR)
 if WITH_RHINO
 	mkdir -p rhino/rhino.{old,new} && \
 	(cd rhino/rhino.old && $(ICEDTEA_BOOT_DIR)/bin/jar xf $(RHINO_JAR)) && \
-	$(ICEDTEA_BOOT_DIR)/bin/java -cp $(abs_top_builddir)/rewriter \
+	$(ICEDTEA_BOOT_DIR)/bin/java -cp $(REWRITER_BUILD_DIR) \
 	  com.redhat.rewriter.ClassRewriter \
 	  $(abs_top_builddir)/rhino/rhino.old $(abs_top_builddir)/rhino/rhino.new \
 	  org.mozilla sun.org.mozilla && \
@@ -2195,6 +2210,15 @@ if WITH_RHINO
 endif
 	mkdir -p stamps
 	touch stamps/rewrite-rhino.stamp
+
+clean-rewrite-rhino:
+	rm -rf rhino/rhino.old
+	rm -rf rhino/rhino.new
+	rm -f rhino/rhino.jar
+	if [ -e rhino ] ; then \
+	  rmdir rhino ; \
+	fi
+	rm -f stamps/rewrite-rhino.stamp
 
 # CACAO
 
