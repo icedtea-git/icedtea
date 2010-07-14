@@ -1,3 +1,19 @@
+2010-07-14  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/java/sun/applet/PluginMessageConsumer.java: Add a new
+	processedIds list to track which instances have been instantiated.
+	(okToProcess): Register width as priority only after handle is acquired.
+	Process resize messages only after tag and handle are processed.
+	(notifyWorkerIsFree): Add instance id to processedIds list if the worked
+	being free'd is an init worker.
+	(getFreeWorker): Create new normal worked only if worker count is less
+	than MAX_WORKERS - PRIORITY_WORKERS.
+	(dumpWorkerStatus): New method. Useful when debugging -- prints status of
+	all workers.
+	* plugin/icedteanp/java/sun/applet/PluginMessageHandlerWorker.java
+	(toString): New method. Returns the string representation of the worker
+	instance at call time.
+
 2010-07-13  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/IcedTeaJavaRequestProcessor.h: Set timeout to 120

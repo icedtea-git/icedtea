@@ -61,6 +61,7 @@ class PluginMessageConsumer {
 	PluginStreamHandler streamHandler = null;
 	AppletSecurity as;
 	ConsumerThread consumerThread = new ConsumerThread();
+	private static ArrayList<Integer> processedIds = new ArrayList<Integer>();
 
 	/** 
 	 * Registers a reference to wait for. Responses to registered priority 
@@ -162,7 +163,6 @@ class PluginMessageConsumer {
 	        }
 	        
 	        registerPriorityWait("instance " + instanceNum + " handle");
-	        registerPriorityWait("instance " + instanceNum + " width");
 
 	    } else if (msgParts[2].equals("handle")) {
 	            Integer instanceNum = new Integer(msgParts[1]);
@@ -171,6 +171,16 @@ class PluginMessageConsumer {
 	            // Handle messages should NEVER go before tag messages
 	            if (!isInInit(instanceNum))
 	                return false;
+
+		        registerPriorityWait("instance " + instanceNum + " width");
+	    } else if (msgParts[2].equals("width")) {
+	    	
+	    	// width messages cannot proceed until handle and tag have been resolved
+	    	Integer instanceNum = new Integer(msgParts[1]);
+
+	    	if (!processedIds.contains(instanceNum)) {
+                return false;
+            }
 	    }
 
 	    return true;
@@ -181,8 +191,10 @@ class PluginMessageConsumer {
 	        Iterator<Integer> i = initWorkers.keySet().iterator();
             while (i.hasNext()) {
                 Integer key = i.next();
-                if (initWorkers.get(key).equals(worker))
+                if (initWorkers.get(key).equals(worker)) {
+                    processedIds.add(key);
                     initWorkers.remove(key);
+                }
             }
 	    }
 	    
@@ -270,7 +282,7 @@ class PluginMessageConsumer {
 			if (workers.size() <= MAX_WORKERS) {
 			    PluginMessageHandlerWorker worker = null;
 			    
-			    if (workers.size() <= (MAX_WORKERS - PRIORITY_WORKERS)) {
+			    if (workers.size() < (MAX_WORKERS - PRIORITY_WORKERS)) {
 			        PluginDebug.debug("Cannot find free worker, creating worker " + workers.size());
 			        worker = new PluginMessageHandlerWorker(this, streamHandler, workers.size(), as, false);
 			    } else if (prioritized) {
@@ -291,4 +303,9 @@ class PluginMessageConsumer {
 			return null;
 	}
 	
+	private void dumpWorkerStatus() {
+		for (PluginMessageHandlerWorker worker: workers) {
+			PluginDebug.debug(worker.toString());
+		}
+	}
 }

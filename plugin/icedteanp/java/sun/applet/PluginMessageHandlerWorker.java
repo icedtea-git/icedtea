@@ -140,4 +140,8 @@ class PluginMessageHandlerWorker extends Thread {
 	        return free && (prioritized == isPriorityWorker);
 	    }
 	}
+
+	public String toString() {
+		return "Worker #" + this.id + "/IsPriority=" + this.isPriorityWorker + "/IsFree=" + this.free + "/Message=" + message;  
+	}
 }
