@@ -195,7 +195,7 @@ if ENABLE_PULSE_JAVA
 PULSE_JAVA_DIR = $(abs_top_srcdir)/pulseaudio
 PULSE_JAVA_NATIVE_SRCDIR = $(PULSE_JAVA_DIR)/src/native
 PULSE_JAVA_NATIVE_SRCS = $(wildcard $(PULSE_JAVA_NATIVE_SRCDIR)/*.c)
-PULSE_JAVA_BUILDDIR = $(abs_top_builddir)/pulseaudio
+PULSE_JAVA_BUILDDIR = $(abs_top_builddir)/pulseaudio.build
 PULSE_JAVA_NATIVE_BUILDDIR = $(PULSE_JAVA_BUILDDIR)/native
 PULSE_JAVA_NATIVE_OBJECTS = \
 	$(subst $(PULSE_JAVA_NATIVE_SRCDIR),$(PULSE_JAVA_NATIVE_BUILDDIR),$(patsubst %.c,%.o,$(PULSE_JAVA_NATIVE_SRCS)))
@@ -2003,8 +2003,12 @@ stamps/icedtea-npplugin.stamp: $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so
 clean-IcedTeaPlugin:
 	rm -f $(addprefix $(PLUGIN_BUILD_DIR)/,$(PLUGIN_OBJECTS))
 	rm -f $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so
-	rmdir $(PLUGIN_BUILD_DIR)
-	rmdir plugin.build
+	if [ -e $(PLUGIN_BUILD_DIR) ] ; then \
+		rmdir $(PLUGIN_BUILD_DIR) ; \
+	fi
+	if [ -e plugin.build ] ; then \
+		rmdir plugin.build ; \
+	fi
 	rm -f stamps/icedtea-npplugin.stamp
 endif
 
@@ -2168,8 +2172,8 @@ if ENABLE_PULSE_JAVA
 	[ -z "$(PULSE_JAVA_NATIVE_BUILDDIR)" ] || rm -rf $(PULSE_JAVA_NATIVE_BUILDDIR)
 	[ -z "$(PULSE_JAVA_CLASS_DIR)" ] || rm -rf $(PULSE_JAVA_CLASS_DIR)
 	rm -f pulse-java.jar
-	if [ $(abs_top_srcdir) != $(abs_top_builddir) ]; then \
-	  rmdir $(abs_top_builddir)/pulseaudio ; \
+	if [ -e $(PULSE_JAVA_BUILDDIR) ]; then \
+	  rmdir $(PULSE_JAVA_BUILDDIR) ; \
 	fi
 endif
 	rm -f stamps/pulse-java*.stamp

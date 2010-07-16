@@ -1,5 +1,18 @@
 2010-07-16  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(clean-IcedTeaPlugin): Always check for existence
+	before using rmdir.
+	(clean-pulse-java): Likewise.
+
+2010-07-06  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(PULSE_JAVA_BUILDDIR): Use a different name from
+	the source directory to avoid confusion.
+
+2010-07-16  Andrew John Hughes  <ahughes@redhat.com>
+
 	Make variable naming clearer.  Replace bootstrap/boot,
 	bootstrap/icedtea, bootstrap/jdk1.6.0 and $(PLUGIN_SRCDIR)/java
 	throughout with variable equivalents.
