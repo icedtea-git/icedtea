@@ -55,17 +55,19 @@ BUILD_DIR = openjdk.build
 BUILD_OUTPUT_DIR = $(abs_top_builddir)/$(BUILD_DIR)
 DEBUG_BUILD_OUTPUT_DIR = $(BUILD_OUTPUT_DIR)-debug
 BOOT_BUILD_OUTPUT_DIR = $(BUILD_OUTPUT_DIR)-boot
-ICEDTEA_BOOT_DIR= $(abs_top_builddir)/bootstrap/jdk1.6.0
-ICEDTEA_RT = $(ICEDTEA_BOOT_DIR)/jre/lib/rt.jar
+BOOT_DIR = $(abs_top_builddir)/bootstrap/jdk1.6.0
+RUNTIME = $(BOOT_DIR)/jre/lib/rt.jar
 NETX_CLASSES = $(abs_top_builddir)/netx.build
 NETX_JAR = $(NETX_CLASSES)/lib/classes.jar
 NETX_SRC = $(NETX_CLASSES)/lib/src.zip
-ICEDTEA_ENDORSED_DIR = $(ICEDTEA_BOOT_DIR)/lib/endorsed
-ICEDTEA_CLS_DIR_BOOT = $(BOOT_BUILD_OUTPUT_DIR)/classes
+ENDORSED_DIR = $(BOOT_DIR)/lib/endorsed
+CLS_DIR_BOOT = $(BOOT_BUILD_OUTPUT_DIR)/classes
 SERVER_DIR = hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server
 BUILD_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 BUILD_DEBUG_JRE_ARCH_DIR = $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 REWRITER_BUILD_DIR = $(abs_top_builddir)/rewriter.build
+STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
+STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
 
 # Source directories
 
@@ -180,7 +182,8 @@ PLUGIN_SRCDIR=$(abs_top_srcdir)/plugin/icedteanp
 PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin.build/icedteanp
 ICEDTEAPLUGIN_TARGET = stamps/icedtea-npplugin.stamp
 ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
-LIVECONNECT_DIR = sun/applet netscape
+LIVECONNECT_DIR = netscape sun/applet
+LIVECONNECT_SRCS = $(PLUGIN_SRCDIR)/java
 JNLP_ABOUT_TARGET = extra-lib/about.jar
 LIVECONNECT_CLASSES = $(abs_top_builddir)/liveconnect
 LIVECONNECT_JAR = $(LIVECONNECT_CLASSES)/lib/classes.jar
@@ -221,7 +224,7 @@ endif
 
 if BOOTSTRAPPING
   BOOTSTRAP_DIRECTORY_STAMP = stamps/bootstrap-directory-stage2.stamp
-  ICEDTEA_HOME = $(abs_top_builddir)/bootstrap/icedtea
+  ICEDTEA_HOME = $(STAGE2_BOOT_DIR)
   INITIAL_BOOTSTRAP_LINK_STAMP = stamps/bootstrap-directory-symlink-stage1.stamp
 else
   BOOTSTRAP_DIRECTORY_STAMP =
@@ -470,19 +473,19 @@ endif
 PLUGIN_VERSION = $(ICEDTEA_NAME) $(PACKAGE_VERSION)$(ICEDTEA_REV)$(ICEDTEA_PKG)
 
 ICEDTEA_ENV = \
-	ALT_JDK_IMPORT_PATH="$(ICEDTEA_BOOT_DIR)" \
+	ALT_JDK_IMPORT_PATH="$(BOOT_DIR)" \
 	ANT="$(ANT)" \
         BUILD_NUMBER="$(OPENJDK_VERSION)" \
 	JDK_UPDATE_VERSION="$(JDK_UPDATE_VERSION)" \
         JRE_RELEASE_VERSION="1.7.0_$(COMBINED_VERSION)" \
 	MILESTONE="fcs" \
 	LANG="C" \
-	PATH="$(abs_top_builddir)/bootstrap/jdk1.6.0/bin:$(OS_PATH):$$PATH" \
-	ALT_BOOTDIR="$(ICEDTEA_BOOT_DIR)" \
+	PATH="$(BOOT_DIR)/bin:$(OS_PATH):$$PATH" \
+	ALT_BOOTDIR="$(BOOT_DIR)" \
 	BUILD_ARCH_DIR="$(BUILD_ARCH_DIR)" \
-	ICEDTEA_RT="$(ICEDTEA_RT)" \
-	ICEDTEA_ENDORSED_DIR="$(ICEDTEA_ENDORSED_DIR)" \
-	ENDORSED="-Djava.endorsed.dirs=$(ICEDTEA_ENDORSED_DIR)" \
+	ICEDTEA_RT="$(RUNTIME)" \
+	ICEDTEA_ENDORSED_DIR="$(ENDORSED_DIR)" \
+	ENDORSED="-Djava.endorsed.dirs=$(ENDORSED_DIR)" \
 	CLASSPATH="" \
 	LD_LIBRARY_PATH="" \
 	ZERO_BUILD="$(ICEDTEA_ZERO_BUILD)" \
@@ -550,9 +553,9 @@ endif
 
 # OpenJDK boot build environment.
 ICEDTEA_ENV_BOOT = $(ICEDTEA_ENV) \
-	BOOTCLASSPATH_CLS_RT="-bootclasspath $(ICEDTEA_CLS_DIR_BOOT):$(ICEDTEA_RT)" \
-	BOOTCLASSPATH_CLS="-bootclasspath $(ICEDTEA_CLS_DIR_BOOT)" \
-	BOOTCLASSPATH_RT_LIBGCJ="-bootclasspath $(ICEDTEA_RT)" \
+	BOOTCLASSPATH_CLS_RT="-bootclasspath $(CLS_DIR_BOOT):$(RUNTIME)" \
+	BOOTCLASSPATH_CLS="-bootclasspath $(CLS_DIR_BOOT)" \
+	BOOTCLASSPATH_RT_LIBGCJ="-bootclasspath $(RUNTIME)" \
 	GENSRCDIR="$(abs_top_builddir)/generated.build" \
 	JAR_KNOWS_ATFILE="$(JAR_KNOWS_ATFILE)" \
 	JAR_KNOWS_J_OPTIONS="$(JAR_KNOWS_J_OPTIONS)" \
@@ -746,7 +749,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 
 all-local: icedtea-stage2
 
-check-local: jtregcheck
+#check-local: jtregcheck
 
 clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
  clean-icedtea clean-icedtea-boot clean-clone clean-clone-boot \
@@ -1659,76 +1662,76 @@ clean-native-ecj:
 
 # bootstrap/stage1
 stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
-	mkdir -p bootstrap/boot/bin stamps/
-	ln -sf $(JAVA) bootstrap/boot/bin/java
-	ln -sf $(JAVAH) bootstrap/boot/bin/javah
-	ln -sf $(RMIC) bootstrap/boot/bin/rmic
-	ln -sf $(JAR) bootstrap/boot/bin/jar
-	ln -sf ../../../javac bootstrap/boot/bin/javac
-	ln -sf ../../../javap bootstrap/boot/bin/javap
-	mkdir -p bootstrap/boot/lib/endorsed && \
-	ln -sf $(XALAN2_JAR) bootstrap/boot/lib/endorsed/xalan-j2.jar && \
+	mkdir -p $(STAGE1_BOOT_DIR)/bin stamps/
+	ln -sf $(JAVA) $(STAGE1_BOOT_DIR)/bin/java
+	ln -sf $(JAVAH) $(STAGE1_BOOT_DIR)/bin/javah
+	ln -sf $(RMIC) $(STAGE1_BOOT_DIR)/bin/rmic
+	ln -sf $(JAR) $(STAGE1_BOOT_DIR)/bin/jar
+	ln -sf ../../../javac $(STAGE1_BOOT_DIR)/bin/javac
+	ln -sf ../../../javap $(STAGE1_BOOT_DIR)/bin/javap
+	mkdir -p $(STAGE1_BOOT_DIR)/lib/endorsed && \
+	ln -sf $(XALAN2_JAR) $(STAGE1_BOOT_DIR)/lib/endorsed/xalan-j2.jar && \
 	ln -sf $(XALAN2_SERIALIZER_JAR) \
-	  bootstrap/boot/lib/endorsed/xalan-j2-serializer.jar && \
-	ln -sf $(XERCES2_JAR) bootstrap/boot/lib/endorsed/xerces-j2.jar
-	mkdir -p bootstrap/boot/jre/lib && \
+	  $(STAGE1_BOOT_DIR)/lib/endorsed/xalan-j2-serializer.jar && \
+	ln -sf $(XERCES2_JAR) $(STAGE1_BOOT_DIR)/lib/endorsed/xerces-j2.jar
+	mkdir -p $(STAGE1_BOOT_DIR)/jre/lib && \
 	cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
-	  bootstrap/boot/jre/lib/rt.jar && \
-	chmod u+w bootstrap/boot/jre/lib/rt.jar && \
+	  $(STAGE1_BOOT_DIR)/jre/lib/rt.jar && \
+	chmod u+w $(STAGE1_BOOT_DIR)/jre/lib/rt.jar && \
 	ln -sf $(SYSTEM_JDK_DIR)/jre/lib/$(JRE_ARCH_DIR) \
-	  bootstrap/boot/jre/lib/ && \
-	if ! test -d bootstrap/boot/jre/lib/$(INSTALL_ARCH_DIR); \
+	  $(STAGE1_BOOT_DIR)/jre/lib/ && \
+	if ! test -d $(STAGE1_BOOT_DIR)/jre/lib/$(INSTALL_ARCH_DIR); \
 	  then \
 	  ln -sf ./$(JRE_ARCH_DIR) \
-	    bootstrap/boot/jre/lib/$(INSTALL_ARCH_DIR); \
+	    $(STAGE1_BOOT_DIR)/jre/lib/$(INSTALL_ARCH_DIR); \
 	fi
-	mkdir -p bootstrap/boot/include && \
+	mkdir -p $(STAGE1_BOOT_DIR)/include && \
 	for i in $(SYSTEM_JDK_DIR)/include/*; do \
 	  test -r $$i | continue; \
 	  i=`basename $$i`; \
-	  rm -f bootstrap/boot/include/$$i; \
-	  ln -s $(SYSTEM_JDK_DIR)/include/$$i bootstrap/boot/include/$$i; \
+	  rm -f $(STAGE1_BOOT_DIR)/include/$$i; \
+	  ln -s $(SYSTEM_JDK_DIR)/include/$$i $(STAGE1_BOOT_DIR)/include/$$i; \
 	done;
 	mkdir -p stamps
 	touch $@
 
 clean-bootstrap-directory-stage1:
+	rm -rf $(STAGE1_BOOT_DIR)
 	rm -f stamps/bootstrap-directory-stage1.stamp
-	rm -rf bootstrap/boot
 
 # bootstrap/stage2.
 stamps/bootstrap-directory-stage2.stamp: stamps/icedtea-stage1.stamp
-	rm -rf bootstrap/icedtea
-	ln -s $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/ bootstrap/icedtea
-	if ! test -d bootstrap/icedtea/include; then \
-	  ln -sf $(BOOT_BUILD_OUTPUT_DIR)/include bootstrap/icedtea/include; \
+	rm -rf $(STAGE2_BOOT_DIR)
+	ln -s $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/ $(STAGE2_BOOT_DIR)
+	if ! test -d $(STAGE2_BOOT_DIR)/include; then \
+	  ln -sf $(BOOT_BUILD_OUTPUT_DIR)/include $(STAGE2_BOOT_DIR)/include; \
 	fi
 	mkdir -p stamps
 	touch $@
 
 clean-bootstrap-directory-stage2:
+	rm -rf $(STAGE2_BOOT_DIR)
 	rm -f stamps/bootstrap-directory-stage2.stamp
-	rm -rf bootstrap/icedtea
 
 # stage 1 symlink.
 stamps/bootstrap-directory-symlink-stage1.stamp: stamps/bootstrap-directory-stage1.stamp
-	rm -f bootstrap/jdk1.6.0
-	ln -sf boot bootstrap/jdk1.6.0
+	rm -f $(BOOT_DIR)
+	ln -sf $(STAGE1_BOOT_DIR) $(BOOT_DIR)
 	mkdir -p stamps
 	touch $@
 
 clean-bootstrap-directory-symlink-stage1:
+	rm -f $(BOOT_DIR)
 	rm -f stamps/bootstrap-directory-symlink-stage1.stamp
-	rm -f bootstrap/jdk1.6.0
 
 # stage 2 symlink.
 stamps/bootstrap-directory-symlink-stage2.stamp: $(BOOTSTRAP_DIRECTORY_STAMP)
 	mkdir -p bootstrap
-	rm -f bootstrap/jdk1.6.0
-	ln -sf $(ICEDTEA_HOME) bootstrap/jdk1.6.0; \
-	if ! bootstrap/jdk1.6.0/bin/java -version ; \
+	rm -f $(BOOT_DIR)
+	ln -sf $(ICEDTEA_HOME) $(BOOT_DIR); \
+	if ! $(BOOT_DIR)/bin/java -version ; \
          then \
-           echo "bootstrap/jdk1.6.0/bin/java" \
+           echo "$(BOOT_DIR)/bin/java" \
                "cannot be found or is corrupted." ; \
            exit 1; \
         fi
@@ -1736,8 +1739,8 @@ stamps/bootstrap-directory-symlink-stage2.stamp: $(BOOTSTRAP_DIRECTORY_STAMP)
 	touch $@
 
 clean-bootstrap-directory-symlink-stage2:
+	rm -f $(BOOT_DIR)
 	rm -f stamps/bootstrap-directory-symlink-stage2.stamp
-	rm -f bootstrap/jdk1.6.0
 
 # OpenJDK Targets
 # ===============
@@ -2014,16 +2017,16 @@ clean-plugin: $(ICEDTEAPLUGIN_CLEAN)
 
 liveconnect-source-files.txt:
 	if test "x${LIVECONNECT_DIR}" != x; then \
-	  find $(PLUGIN_SRCDIR)/java -name '*.java' | sort > $@ ; \
+	  find $(LIVECONNECT_SRCS) -name '*.java' | sort > $@ ; \
 	fi
 	touch $@
 
 stamps/liveconnect.stamp: liveconnect-source-files.txt stamps/netx.stamp
 	if test "x${LIVECONNECT_DIR}" != x; then \
 	  mkdir -p $(LIVECONNECT_CLASSES) && \
-	  $(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
+	  $(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	      -d $(LIVECONNECT_CLASSES) \
-	      -classpath $(ICEDTEA_RT):$(NETX_CLASSES) \
+	      -classpath $(RUNTIME):$(NETX_CLASSES) \
 	      -sourcepath $(SOURCEPATH_DIRS) \
 	      -bootclasspath \'\' \
 	      @liveconnect-source-files.txt ; \
@@ -2035,8 +2038,8 @@ stamps/liveconnect-dist.stamp: stamps/liveconnect.stamp
 	if test "x${LIVECONNECT_DIR}" != x; then \
 	  (cd $(LIVECONNECT_CLASSES) ; \
 	   mkdir -p lib ; \
-	   $(ICEDTEA_BOOT_DIR)/bin/jar cf $(LIVECONNECT_JAR) $(LIVECONNECT_DIR) ; \
-	   cp -pPR $(SRC_DIR_LINK) $(PLUGIN_SRCDIR)/java src; \
+	   $(BOOT_DIR)/bin/jar cf $(LIVECONNECT_JAR) $(LIVECONNECT_DIR) ; \
+	   cp -pPR $(SRC_DIR_LINK) $(LIVECONNECT_SRCS) src; \
 	   find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
 	   cd src ; \
 	   $(ZIP) -qr $(LIVECONNECT_SRC) ${LIVECONNECT_DIR} ) ; \
@@ -2059,9 +2062,9 @@ netx-source-files.txt:
 
 stamps/netx.stamp: netx-source-files.txt stamps/rt.stamp
 	mkdir -p $(NETX_CLASSES)
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
+	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	    -d $(NETX_CLASSES) \
-	    -classpath $(ICEDTEA_RT) \
+	    -classpath $(RUNTIME) \
 	    -sourcepath $(top_srcdir)/$(NETX_SRCDIR):$(SOURCEPATH_DIRS) \
 	    -bootclasspath \'\' \
 	    @netx-source-files.txt ;
@@ -2073,11 +2076,11 @@ stamps/netx.stamp: netx-source-files.txt stamps/rt.stamp
 stamps/netx-dist.stamp: stamps/netx.stamp
 	(cd $(NETX_CLASSES) ; \
 	 mkdir -p lib ; \
-	 $(ICEDTEA_BOOT_DIR)/bin/jar cf $(NETX_JAR) javax/jnlp net ; \
+	 $(BOOT_DIR)/bin/jar cf $(NETX_JAR) javax/jnlp net ; \
 	 cp -pPR $(SRC_DIR_LINK) $(abs_top_srcdir)/$(NETX_SRCDIR) src; \
 	 find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
 	 cd src ; \
-	 $(ICEDTEA_BOOT_DIR)/bin/jar uf $(NETX_JAR) \
+	 $(BOOT_DIR)/bin/jar uf $(NETX_JAR) \
 	  `find . -type f -not -name '*.java'` ; \
 	 $(ZIP) -qr $(NETX_SRC) javax net )
 	mkdir -p stamps
@@ -2094,9 +2097,9 @@ extra-source-files.txt:
 
 stamps/extra-class-files.stamp: extra-source-files.txt stamps/netx.stamp
 	mkdir -p extra-lib
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d extra-lib \
+	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d extra-lib \
 	  -sourcepath $(abs_top_srcdir)/extra \
-	  -bootclasspath $(ICEDTEA_RT) @extra-source-files.txt
+	  -bootclasspath $(RUNTIME) @extra-source-files.txt
 	cp -r $(NETX_EXTRA_DIR) extra-lib/net/sourceforge/jnlp/about	
 	find extra-lib/net/sourceforge/jnlp/about -type f -exec chmod 640 '{}' ';' \
 	  -o -type d -exec chmod 750 '{}' ';'
@@ -2109,7 +2112,7 @@ clean-extra:
 	rm -f extra-source-files.txt
 
 extra-lib/about.jar: stamps/extra-class-files.stamp
-	$(ICEDTEA_BOOT_DIR)/bin/jar cf $@ -C extra-lib net
+	$(BOOT_DIR)/bin/jar cf $@ -C extra-lib net
 
 # PulseAudio based mixer
 # (pulse-java)
@@ -2122,8 +2125,8 @@ stamps/pulse-java.stamp: stamps/pulse-java-jar.stamp $(PULSE_JAVA_NATIVE_BUILDDI
 stamps/pulse-java-class.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
 	mkdir -p $(PULSE_JAVA_CLASS_DIR)
 	(cd $(PULSE_JAVA_JAVA_SRCDIR); \
-	 $(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d $(PULSE_JAVA_CLASS_DIR) \
-	 -bootclasspath $(ICEDTEA_RT) org/classpath/icedtea/pulseaudio/*.java \
+	 $(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d $(PULSE_JAVA_CLASS_DIR) \
+	 -bootclasspath $(RUNTIME) org/classpath/icedtea/pulseaudio/*.java \
 	)
 	cp  -r $(PULSE_JAVA_JAVA_SRCDIR)/META-INF $(PULSE_JAVA_CLASS_DIR)
 	chmod -R ug+w $(PULSE_JAVA_CLASS_DIR)/META-INF
@@ -2131,27 +2134,27 @@ stamps/pulse-java-class.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
 	touch $@
 
 stamps/pulse-java-jar.stamp: stamps/pulse-java-class.stamp
-	$(ICEDTEA_BOOT_DIR)/bin/jar cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .;
+	$(BOOT_DIR)/bin/jar cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .;
 	mkdir -p stamps
 	touch $@
 
 stamps/pulse-java-headers.stamp: stamps/pulse-java-class.stamp
 	mkdir -p $(PULSE_JAVA_NATIVE_BUILDDIR)
-	$(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
+	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
 	  org.classpath.icedtea.pulseaudio.EventLoop ;
-	$(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
+	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
 	  org.classpath.icedtea.pulseaudio.Stream
-	$(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
+	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
 	  org.classpath.icedtea.pulseaudio.Operation
-	$(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
+	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
 	  org.classpath.icedtea.pulseaudio.PulseAudioSourcePort
-	$(ICEDTEA_BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
+	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
 	  org.classpath.icedtea.pulseaudio.PulseAudioTargetPort
 	mkdir -p stamps
 	touch $@
 
 $(PULSE_JAVA_NATIVE_BUILDDIR)/%.o: $(PULSE_JAVA_NATIVE_SRCDIR)/%.c stamps/pulse-java-headers.stamp
-	$(CC) $(IT_CFLAGS) -fPIC -I$(ICEDTEA_BOOT_DIR)/include/linux -I$(ICEDTEA_BOOT_DIR)/include \
+	$(CC) $(IT_CFLAGS) -fPIC -I$(BOOT_DIR)/include/linux -I$(BOOT_DIR)/include \
 	 -I$(PULSE_JAVA_NATIVE_BUILDDIR) -o $@ -c $<
 
 $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so: $(PULSE_JAVA_NATIVE_OBJECTS)
@@ -2178,7 +2181,7 @@ endif
 stamps/rewriter.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
 if WITH_RHINO
 	mkdir -p $(REWRITER_BUILD_DIR)
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
+	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	 -d $(REWRITER_BUILD_DIR) $(REWRITER_SRCS)
 endif
 	mkdir -p stamps
@@ -2191,8 +2194,8 @@ clean-rewriter:
 stamps/rewrite-rhino.stamp: stamps/rewriter.stamp $(RHINO_JAR)
 if WITH_RHINO
 	mkdir -p rhino/rhino.{old,new} && \
-	(cd rhino/rhino.old && $(ICEDTEA_BOOT_DIR)/bin/jar xf $(RHINO_JAR)) && \
-	$(ICEDTEA_BOOT_DIR)/bin/java -cp $(REWRITER_BUILD_DIR) \
+	(cd rhino/rhino.old && $(BOOT_DIR)/bin/jar xf $(RHINO_JAR)) && \
+	$(BOOT_DIR)/bin/java -cp $(REWRITER_BUILD_DIR) \
 	  com.redhat.rewriter.ClassRewriter \
 	  $(abs_top_builddir)/rhino/rhino.old $(abs_top_builddir)/rhino/rhino.new \
 	  org.mozilla sun.org.mozilla && \
@@ -2205,7 +2208,7 @@ if WITH_RHINO
 	 done \
 	) && \
 	(cd rhino/rhino.new && \
-	 $(ICEDTEA_BOOT_DIR)/bin/jar cfm ../rhino.jar META-INF/MANIFEST.MF sun )
+	 $(BOOT_DIR)/bin/jar cfm ../rhino.jar META-INF/MANIFEST.MF sun )
 endif
 	mkdir -p stamps
 	touch stamps/rewrite-rhino.stamp
@@ -2233,7 +2236,7 @@ if !USE_SYSTEM_CACAO
 	  --prefix=$(abs_top_builddir)/cacao/install \
 	  --with-java-runtime-library=openjdk \
 	  --with-java-runtime-library-prefix=$(abs_top_builddir)/openjdk \
-	  --with-java-runtime-library-classes=$(ICEDTEA_RT) \
+	  --with-java-runtime-library-classes=$(RUNTIME) \
 	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
 	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS) install
 	ln -s server $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/client
@@ -2398,10 +2401,10 @@ clean-add-zero-debug:
 if ENABLE_PLUGIN
 stamps/plugin-tests.stamp: $(PLUGIN_TEST_SRCS) stamps/plugin.stamp
 	mkdir -p plugin/tests/LiveConnect
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
+	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	 -d plugin/tests/LiveConnect \
 	 -classpath $(LIVECONNECT_JAR) $(PLUGIN_TEST_SRCS) ;
-	$(ICEDTEA_BOOT_DIR)/bin/jar cf plugin/tests/LiveConnect/PluginTest.jar \
+	$(BOOT_DIR)/bin/jar cf plugin/tests/LiveConnect/PluginTest.jar \
 	  plugin/tests/LiveConnect/*.class ;
 	cp -pPR --reflink-auto $(abs_top_srcdir)/plugin/tests/LiveConnect/*.{js,html} \
 	  plugin/tests/LiveConnect ;
@@ -2415,10 +2418,10 @@ endif
 stamps/jtreg.stamp: stamps/icedtea-stage2.stamp
 	rm -rf test/jtreg/classes
 	mkdir -p test/jtreg/classes
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d test/jtreg/classes \
+	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d test/jtreg/classes \
 	   `find $(abs_top_srcdir)/test/jtreg/com -name '*.java'`
 	(cd $(abs_top_srcdir)/test/jtreg; \
-	 $(ICEDTEA_BOOT_DIR)/bin/jar cfm $(abs_top_builddir)/test/jtreg.jar \
+	 $(BOOT_DIR)/bin/jar cfm $(abs_top_builddir)/test/jtreg.jar \
 	   META-INF/MANIFEST.MF \
 	   legal  README JavaTest.cmdMgrs.lst JavaTest.toolMgrs.lst \
 	   `find com -type f -a -not -name '*.java'` \
@@ -2433,7 +2436,7 @@ clean-jtreg:
 
 check-hotspot: stamps/jtreg.stamp
 	mkdir -p test/hotspot/JTwork test/hotspot/JTreport
-	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
+	$(BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/hotspot/JTwork -r:test/hotspot/JTreport \
 		-jdk:$(BUILD_OUTPUT_DIR)/j2sdk-image \
 		$(ICEDTEA_JTREG_OPTIONS) \
@@ -2442,7 +2445,7 @@ check-hotspot: stamps/jtreg.stamp
 
 check-langtools: stamps/jtreg.stamp
 	mkdir -p test/langtools/JTwork test/langtools/JTreport
-	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
+	$(BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/langtools/JTwork -r:test/langtools/JTreport \
 		$${ICEDTEA_JTREG_OTHERVM:--samevm} \
 		-jdk:$(BUILD_OUTPUT_DIR)/j2sdk-image \
@@ -2456,7 +2459,7 @@ check-jdk: stamps/jtreg.stamp
 if WITH_CACAO
 	CACAO_EXCLUDE="-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.jdk.cacao.jtx"
 endif
-	$(ICEDTEA_BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
+	$(BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/jdk/JTwork -r:test/jdk/JTreport \
 		$${ICEDTEA_JTREG_OTHERVM:--samevm} \
 		-jdk:$(BUILD_OUTPUT_DIR)/j2sdk-image \
@@ -2520,7 +2523,7 @@ rt-source-files.txt: $(OPENJDK_BOOT_TREE)
 stamps/rt-class-files.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP) rt-source-files.txt
 	mkdir -p lib/rt
 if LACKS_SUN_AWT_TOOLKIT
-	$(ICEDTEA_BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d lib/rt \
+	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d lib/rt \
 	  -classpath $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
           -sourcepath '$(SOURCEPATH_DIRS)' \
           -bootclasspath \'\' @rt-source-files.txt ;
@@ -2538,7 +2541,7 @@ if LACKS_SUN_AWT_TOOLKIT
 	   mkdir -p `dirname $$destpath` ; \
 	   cp -a ../../$$dirs $$destpath ; \
 	 done ; \
-	 $(ZIP) -qur $(abs_top_builddir)/bootstrap/boot/jre/lib/rt.jar \
+	 $(ZIP) -qur $(STAGE1_BOOT_DIR)/jre/lib/rt.jar \
 	 com java javax sun );
 endif
 	mkdir -p stamps
@@ -2548,8 +2551,8 @@ clean-rt:
 	rm -rf lib/rt
 	rm -f stamps/rt-class-files.stamp stamps/rt.stamp
 	rm -f rt-source-files.txt
-	if [ -e bootstrap/boot/jre/lib ] ; then \
-	  cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar bootstrap/boot/jre/lib ; \
+	if [ -e $(STAGE1_BOOT_DIR)/jre/lib ] ; then \
+	  cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar $(STAGE1_BOOT_DIR)/jre/lib ; \
 	fi
 
 # Target Aliases

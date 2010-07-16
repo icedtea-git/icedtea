@@ -1,3 +1,22 @@
+2010-07-16  Andrew John Hughes  <ahughes@redhat.com>
+
+	Make variable naming clearer.  Replace bootstrap/boot,
+	bootstrap/icedtea, bootstrap/jdk1.6.0 and $(PLUGIN_SRCDIR)/java
+	throughout with variable equivalents.
+	* Makefile.am:
+	(BOOT_DIR): Renamed from ICEDTEA_BOOT_DIR.
+	(RUNTIME): Renamed from ICEDTEA_RT.
+	(ENDORSED_DIR): Renamed from ICEDTEA_ENDORSED_DIR.
+	(CLS_DIR_BOOT): Renamed from ICEDTEA_CLS_DIR_BOOT.
+	(STAGE1_BOOT_DIR): Shortcut for bootstrap/boot.
+	(STAGE2_BOOT_DIR): Shortcut for bootstrap/icedtea.
+	(LIVECONNECT_DIR): Match ordering used by IcedTea6.
+	(LIVECONNECT_SRCS): Added from IcedTea6.
+	(clean-bootstrap-directory-stage1): Delete produce before stamp,
+	in case of failure.
+	(clean-bootstrap-directory-stage2): Likewise.
+	(clean-bootstrap-directory-symlink-stage1): Likewise.
+
 2010-07-13  Mark Wielaard  <mjw@redhat.com>
 
 	Reported by William Cohen <wcohen@redhat.com>
