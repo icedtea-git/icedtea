@@ -1855,3 +1855,92 @@ AC_ARG_WITH([parallel-jobs],
 AC_MSG_RESULT(${PARALLEL_JOBS})
 AC_SUBST(PARALLEL_JOBS)
 ])
+
+AC_DEFUN_ONCE([IT_DISABLE_TESTS],
+[
+  AC_MSG_CHECKING([whether to disable the execution of the JTReg tests])
+  AC_ARG_ENABLE([tests],
+                [AS_HELP_STRING(--disable-tests,do not run the JTReg tests via make check [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+        disable_tests=yes
+        ;;
+      *)
+        disable_tests=no
+        ;;
+    esac
+  ],
+  [
+    disable_tests=no
+  ])
+  AC_MSG_RESULT([$disable_tests])
+  AM_CONDITIONAL([DISABLE_TESTS], test x"${disable_tests}" = "xyes")
+])
+
+AC_DEFUN_ONCE([IT_DISABLE_HOTSPOT_TESTS],
+[
+  AC_MSG_CHECKING([whether to disable the execution of the HotSpot JTReg tests])
+  AC_ARG_ENABLE([hotspot-tests],
+                [AS_HELP_STRING(--disable-hotspot-tests,do not run the HotSpot JTReg tests via make check-hotspot [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+        disable_hotspot_tests=yes
+        ;;
+      *)
+        disable_hotspot_tests=no
+        ;;
+    esac
+  ],
+  [
+    disable_hotspot_tests=no
+  ])
+  AC_MSG_RESULT([$disable_hotspot_tests])
+  AM_CONDITIONAL([DISABLE_HOTSPOT_TESTS], test x"${disable_hotspot_tests}" = "xyes")
+])
+
+AC_DEFUN_ONCE([IT_DISABLE_LANGTOOLS_TESTS],
+[
+  AC_MSG_CHECKING([whether to disable the execution of the langtools JTReg tests])
+  AC_ARG_ENABLE([langtools-tests],
+                [AS_HELP_STRING(--disable-tests,do not run the langtools JTReg tests via make check-langtools [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+        disable_langtools_tests=yes
+        ;;
+      *)
+        disable_langtools_tests=no
+        ;;
+    esac
+  ],
+  [
+    disable_langtools_tests=no
+  ])
+  AC_MSG_RESULT([$disable_langtools_tests])
+  AM_CONDITIONAL([DISABLE_LANGTOOLS_TESTS], test x"${disable_langtools_tests}" = "xyes")
+])
+
+AC_DEFUN_ONCE([IT_DISABLE_JDK_TESTS],
+[
+  AC_MSG_CHECKING([whether to disable the execution of the JDK JTReg tests])
+  AC_ARG_ENABLE([jdk-tests],
+                [AS_HELP_STRING(--disable-tests,do not run the JDK JTReg tests via make check-jdk [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+        disable_jdk_tests=yes
+        ;;
+      *)
+        disable_jdk_tests=no
+        ;;
+    esac
+  ],
+  [
+    disable_jdk_tests=no
+  ])
+  AC_MSG_RESULT([$disable_jdk_tests])
+  AM_CONDITIONAL([DISABLE_JDK_TESTS], test x"${disable_jdk_tests}" = "xyes")
+])
+

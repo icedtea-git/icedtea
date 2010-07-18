@@ -248,6 +248,19 @@ else
   SRC_DIR_LINK = $(REFLINK)
 endif
 
+if !DISABLE_TESTS
+if !DISABLE_HOTSPOT_TESTS
+TEST_SUITES = hotspot
+endif
+if !DISABLE_JDK_TESTS
+TEST_SUITES = $(TEST_SUITES) jdk
+endif
+if !DISABLE_LANGTOOLS_TESTS
+TEST_SUITES = $(TEST_SUITES) langtools
+endif
+TESTS_TO_RUN = jtreg $(addprefix check-,$(TEST_SUITES))
+endif
+
 # Target to ensure a patched OpenJDK tree containing Zero & Shark
 # and any overlays is available in $(abs_top_builddir)/openjdk
 OPENJDK_TREE = stamps/overlay.stamp
@@ -749,7 +762,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 
 all-local: icedtea-stage2
 
-#check-local: jtregcheck
+check-local: jtregcheck
 
 clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
  clean-icedtea clean-icedtea-boot clean-clone clean-clone-boot \
@@ -786,7 +799,7 @@ install:
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot \
 	clean-rt clean-plugin hotspot hotspot-helper clean-extra clean-jtreg \
-	clean-jtreg-reports clean-netx clean-drops
+	clean-jtreg-reports clean-netx clean-drops jtregcheck
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -2483,8 +2496,8 @@ jtreg_processes = ps x -ww -o pid,ppid,args \
 jtreg_pids = ps x --no-headers -ww -o pid,ppid,args \
 	| awk '$$2 == 1 && $$3 ~ /^$(subst /,\/,$(CURDIR)/$(sdkimg))/ {print $$1}'
 
-jtregcheck: jtreg check-hotspot check-langtools check-jdk
-	for i in hotspot langtools jdk; do \
+jtregcheck: $(TESTS_TO_RUN)
+	for i in $(TEST_SUITES); do \
 	  echo "--------------- jtreg console summary for $$i ---------------"; \
 	  egrep -v '^(Passed:|Directory|Re[a-z]+\ written\ to)' test/check-$$i.log; \
 	done | tee test/jtreg-summary.log

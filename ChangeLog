@@ -1,3 +1,22 @@
+2010-07-18  Andrew John Hughes  <ahughes@redhat.com>
+
+	Allow all or individual test suites to be
+	disabled.
+	* Makefile.am:
+	(TEST_SUITES): Test suites to run.
+	(TESTS_TO_RUN): Dependencies of jtregcheck.
+	(check-local): Re-enable.
+	(.PHONY): Add jtregcheck.
+	(jtregcheck): Use TEST_SUITES and TESTS_TO_RUN.
+	* acinclude.m4:
+	(IT_DISABLE_TESTS): New option to allow all tests
+	to be turned off.
+	(IT_DISABLE_HOTSPOT_TESTS): Likewise just for HotSpot tests.
+	(IT_DISABLE_LANGTOOLS_TESTS): Likewise just for langtools tests.
+	(IT_DISABLE_JDK_TESTS): Likewise just for JDK tests.
+	* configure.ac:
+	Call new macros.
+
 2010-07-16  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
