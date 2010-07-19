@@ -1,3 +1,10 @@
+2010-07-19  Gary Benson  <gbenson@redhat.com>
+            Xerxes Rånby  <xerxes@zafena.se>
+
+	PR icedtea/498
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp
+	(SharkTopLevelBlock::handle_exception): Catch-all handler can be unloaded.
+
 2010-07-14  Deepak Bhole <dbhole@redhat.com>
 
 	* plugin/icedteanp/java/sun/applet/PluginMessageConsumer.java: Add a new

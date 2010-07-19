@@ -526,11 +526,7 @@ void SharkTopLevelBlock::handle_exception(Value* exception, int action) {
 
     // Install the catch-all handler, if present
     if (has_catch_all) {
-      SharkTopLevelBlock* handler = this->exception(num_options);
-      assert(handler != NULL, "catch-all handler cannot be unloaded");
-
-      builder()->CreateBr(handler->entry_block());
-      handler->add_incoming(current_state());
+      builder()->CreateBr(handler_for_exception(num_options));
       return;
     }
   }
