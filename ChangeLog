@@ -1,5 +1,17 @@
 2010-07-18  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	Avoid recursion in working out which
+	test suites to run.
+	(HOTSPOT_TEST_SUITE): Set to 'hotspot' if
+	the HotSpot test suite is on.
+	(LANGTOOLS_TEST_SUITE): Set to 'langtools' if
+	the langtools test suite is on.
+	(JDK_TEST_SUITE): Set to 'jdk' if
+	the JDK test suite is on.
+
+2010-07-18  Andrew John Hughes  <ahughes@redhat.com>
+
 	Allow all or individual test suites to be
 	disabled.
 	* Makefile.am:
