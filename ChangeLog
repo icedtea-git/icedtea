@@ -1,3 +1,9 @@
+2010-07-20  Mark Wielaard  <mjw@redhat.com>
+
+	* configure.ac (OPENJDK_BUILD_DIR): New AC_SUBST variable.
+	(with-abs-install-dir): Based on OPENJDK_BUILD_DIR when not given.
+	* Makefile.am (BUILD_DIR): Set to @OPENJDK_BUILD_DIR@.
+
 2010-07-20  Omair Majid  <omajid@redhat.com>
 
 	PR icedtea/491

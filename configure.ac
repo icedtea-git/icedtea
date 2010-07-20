@@ -115,6 +115,8 @@ IT_GET_LSB_DATA
 
 IT_SET_ARCH_SETTINGS
 SET_OS_DIRS
+OPENJDK_BUILD_DIR=openjdk.build
+AC_SUBST(OPENJDK_BUILD_DIR)
 
 IT_CHECK_NUMBER_OF_PARALLEL_JOBS
 IT_CHECK_IF_BOOTSTRAPPING
@@ -305,10 +307,10 @@ public:
 	      [AS_HELP_STRING([--with-abs-install-dir], 
 			      [The absolute path where the j2sdk-image dir will be installed])],
 	      [if test "x${withval}" = x; then
-		 ABS_JAVA_HOME_DIR="`pwd`/openjdk/build/${BUILD_OS_DIR}-${BUILD_ARCH_DIR}/j2sdk-image"
+		 ABS_JAVA_HOME_DIR="${abs_top_builddir}/${OPENJDK_BUILD_DIR}/j2sdk-image"
 	       else
 		 ABS_JAVA_HOME_DIR="${withval}"
-	       fi], [ABS_JAVA_HOME_DIR="`pwd`/openjdk/build/${BUILD_OS_DIR}-${BUILD_ARCH_DIR}/j2sdk-image"])
+	       fi], [ABS_JAVA_HOME_DIR="${abs_top_builddir}/${OPENJDK_BUILD_DIR}/j2sdk-image"])
   AC_MSG_RESULT([${ABS_JAVA_HOME_DIR}])
   ABS_CLIENT_LIBJVM_SO="${ABS_JAVA_HOME_DIR}/jre/lib/${INSTALL_ARCH_DIR}/client/libjvm.so"
   ABS_SERVER_LIBJVM_SO="${ABS_JAVA_HOME_DIR}/jre/lib/${INSTALL_ARCH_DIR}/server/libjvm.so"
