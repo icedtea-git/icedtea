@@ -167,6 +167,11 @@ public class JNLPRuntime {
         checkInitialized();
      
         isWebstartApplication = isApplication;
+        
+        //Setting the system property for javawebstart's version.
+        //The version stored will be the same as java's version.
+        System.setProperty("javawebstart.version", "javaws-" +
+            System.getProperty("java.version"));
 
         if (headless == false)
             checkHeadless();

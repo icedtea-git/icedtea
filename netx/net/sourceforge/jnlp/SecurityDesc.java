@@ -94,6 +94,7 @@ public class SecurityDesc {
         new PropertyPermission("java.vm.version", "read"),
         new PropertyPermission("java.vm.vendor", "read"),
         new PropertyPermission("java.vm.name", "read"),
+        new PropertyPermission("javawebstart.version", "read"),
         new RuntimePermission("exitVM"),
         new RuntimePermission("stopThread"),
         new AWTPermission("showWindowWithoutWarningBanner"),
