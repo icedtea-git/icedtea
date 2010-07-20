@@ -1,5 +1,13 @@
 2010-07-20  Andrew John Hughes  <ahughes@redhat.com>
 
+	* configure.ac:
+	Remove redundant call to WITH_OPENJDK_SRC_DIR.
+	Now pulled in by IT_OBTAIN_HG_REVISIONS.
+	* Makefile.am:
+	(JDK_TEST_SUITE): Remove old reference to TEST_SUITES.
+
+2010-07-20  Andrew John Hughes  <ahughes@redhat.com>
+
 	Simplify the plugin build.
 	* Makefile.am:
 	(PLUGIN_SRCDIR): Set unconditionally.
