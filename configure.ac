@@ -63,16 +63,6 @@ AC_ARG_ENABLE([plugin],
 AM_CONDITIONAL(ENABLE_PLUGIN, test "x${enable_plugin}" = "xyes")
 AC_MSG_RESULT(${enable_plugin})
 
-AC_MSG_CHECKING([whether to build the new experimental browser plugin based on npruntime])
-AC_ARG_ENABLE([npplugin],
-              [AS_HELP_STRING([--enable-npplugin],
-                              [Enable compilation of browser plugin (automatically disables default plugin)])],
-              [enable_npplugin="${enableval}"], [enable_npplugin="no"])
-AM_CONDITIONAL(ENABLE_NPPLUGIN, test "x${enable_npplugin}" = "xyes")
-AC_MSG_RESULT(${enable_npplugin})
-
-AM_CONDITIONAL(JNLP_ABOUT_NEEDED, test "x${enable_npplugin}" = "xyes" -o "x${enable_plugin}" = "xyes")
-
 AC_MSG_CHECKING([whether to include PulseAudio support])
 AC_ARG_ENABLE([pulse-java],
               [AS_HELP_STRING([--enable-pulse-java],

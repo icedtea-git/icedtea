@@ -81,6 +81,24 @@ NETX_SRCDIR = netx
 NETX_RESOURCE_DIR=$(NETX_SRCDIR)/net/sourceforge/jnlp/resources
 NETX_EXTRA_DIR=$(abs_top_srcdir)/extra/net/sourceforge/jnlp/about/resources
 
+PLUGIN_SRCDIR=$(abs_top_srcdir)/plugin/icedteanp
+PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin.build/icedteanp
+LIVECONNECT_DIR = netscape sun/applet
+LIVECONNECT_SRCS = $(PLUGIN_SRCDIR)/java
+LIVECONNECT_CLASSES = $(abs_top_builddir)/liveconnect
+LIVECONNECT_JAR = $(LIVECONNECT_CLASSES)/lib/classes.jar
+LIVECONNECT_SRC = $(LIVECONNECT_CLASSES)/lib/src.zip
+
+PULSE_JAVA_DIR = $(abs_top_srcdir)/pulseaudio
+PULSE_JAVA_NATIVE_SRCDIR = $(PULSE_JAVA_DIR)/src/native
+PULSE_JAVA_NATIVE_SRCS = $(wildcard $(PULSE_JAVA_NATIVE_SRCDIR)/*.c)
+PULSE_JAVA_BUILDDIR = $(abs_top_builddir)/pulseaudio.build
+PULSE_JAVA_NATIVE_BUILDDIR = $(PULSE_JAVA_BUILDDIR)/native
+PULSE_JAVA_NATIVE_OBJECTS = \
+	$(subst $(PULSE_JAVA_NATIVE_SRCDIR),$(PULSE_JAVA_NATIVE_BUILDDIR),$(patsubst %.c,%.o,$(PULSE_JAVA_NATIVE_SRCS)))
+PULSE_JAVA_JAVA_SRCDIR = $(PULSE_JAVA_DIR)/src/java
+PULSE_JAVA_CLASS_DIR = $(PULSE_JAVA_BUILDDIR)/classes
+
 if DTDTYPE_QNAME
 NEED_JAXWS_SRC = true
 JAXWS_COND = $(JAXWS)
@@ -178,29 +196,11 @@ else
 endif
 
 if ENABLE_PLUGIN
-PLUGIN_SRCDIR=$(abs_top_srcdir)/plugin/icedteanp
-PLUGIN_BUILD_DIR=$(abs_top_builddir)/plugin.build/icedteanp
 ICEDTEAPLUGIN_TARGET = stamps/icedtea-npplugin.stamp
-ICEDTEAPLUGIN_CLEAN = clean-IcedTeaPlugin
-LIVECONNECT_DIR = netscape sun/applet
-LIVECONNECT_SRCS = $(PLUGIN_SRCDIR)/java
 JNLP_ABOUT_TARGET = extra-lib/about.jar
-LIVECONNECT_CLASSES = $(abs_top_builddir)/liveconnect
-LIVECONNECT_JAR = $(LIVECONNECT_CLASSES)/lib/classes.jar
-LIVECONNECT_SRC = $(LIVECONNECT_CLASSES)/lib/src.zip
 endif
 
 if ENABLE_PULSE_JAVA
-# include the makefile in pulseaudio subdir
-PULSE_JAVA_DIR = $(abs_top_srcdir)/pulseaudio
-PULSE_JAVA_NATIVE_SRCDIR = $(PULSE_JAVA_DIR)/src/native
-PULSE_JAVA_NATIVE_SRCS = $(wildcard $(PULSE_JAVA_NATIVE_SRCDIR)/*.c)
-PULSE_JAVA_BUILDDIR = $(abs_top_builddir)/pulseaudio.build
-PULSE_JAVA_NATIVE_BUILDDIR = $(PULSE_JAVA_BUILDDIR)/native
-PULSE_JAVA_NATIVE_OBJECTS = \
-	$(subst $(PULSE_JAVA_NATIVE_SRCDIR),$(PULSE_JAVA_NATIVE_BUILDDIR),$(patsubst %.c,%.o,$(PULSE_JAVA_NATIVE_SRCS)))
-PULSE_JAVA_JAVA_SRCDIR = $(PULSE_JAVA_DIR)/src/java
-PULSE_JAVA_CLASS_DIR = $(PULSE_JAVA_BUILDDIR)/classes
 PULSE_JAVA_TARGET = stamps/pulse-java.stamp
 endif
 
@@ -530,7 +530,6 @@ ICEDTEA_ENV = \
 	DERIVATIVE_ID="$(ICEDTEA_NAME) $(PACKAGE_VERSION)$(ICEDTEA_REV)" \
 	ALT_JIBX_LIBS_PATH="$(JIBX_DEPS_DIR)" \
 	ALT_NETX_DIST="$(NETX_CLASSES)" \
-	ALT_LIVECONNECT_DIST="$(LIVECONNECT_CLASSES)" \
 	DEBUG_CLASSFILES="true" \
 	DEBUG_BINARIES="true" \
 	DISABLE_INTREE_EC="true" \
@@ -566,6 +565,11 @@ endif
 if WITH_RHINO
 ICEDTEA_ENV += \
 	RHINO_JAR="$(abs_top_builddir)/rhino/rhino.jar"
+endif
+
+if ENABLE_PLUGIN
+ICEDTEA_ENV += \
+	ALT_LIVECONNECT_DIST="$(LIVECONNECT_CLASSES)"
 endif
 
 # OpenJDK boot build environment.
@@ -772,7 +776,7 @@ clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
  clean-icedtea clean-icedtea-boot clean-clone clean-clone-boot \
  clean-extra clean-netx clean-bootstrap-directory-stage1 clean-bootstrap-directory-stage2 \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
- clean-extract clean-generated clean-plugin clean-liveconnect clean-native-ecj \
+ clean-extract clean-generated clean-IcedTeaPlugin clean-liveconnect clean-native-ecj \
  clean-hgforest clean-icedtea-stage2 clean-icedtea-debug-stage2 clean-icedtea-stage1 \
  clean-add-zero clean-add-zero-debug clean-add-cacao clean-add-cacao-debug clean-rt \
  clean-rewrite-rhino clean-rewriter
@@ -802,7 +806,7 @@ install:
 	clean-bootstrap-directory-symlink-stage2 clean-bootstrap-directory-stage1 \
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot \
-	clean-rt clean-plugin hotspot hotspot-helper clean-extra clean-jtreg \
+	clean-rt clean-IcedTeaPlugin hotspot hotspot-helper clean-extra clean-jtreg \
 	clean-jtreg-reports clean-netx clean-drops jtregcheck
 
 env:
@@ -1766,7 +1770,7 @@ clean-bootstrap-directory-symlink-stage2:
 # you change it in the icedtea-debug target as well.
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
- stamps/plugin.stamp $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
+ $(ICEDTEAPLUGIN_TARGET) $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
  stamps/netx-dist.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
@@ -1781,6 +1785,10 @@ if ENABLE_PLUGIN
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	cp $(top_srcdir)/$(NETX_RESOURCE_DIR)/about.jnlp extra-lib/about.jar \
+	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
+	cp $(top_srcdir)/$(NETX_RESOURCE_DIR)/about.jnlp extra-lib/about.jar \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 endif
 if ENABLE_PULSE_JAVA
 	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
@@ -1793,12 +1801,6 @@ if ENABLE_PULSE_JAVA
 	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/ext
 	(cd $(PULSE_JAVA_JAVA_SRCDIR) && \
 	   $(ZIP) -qur $(BUILD_OUTPUT_DIR)/j2sdk-image/src.zip org )
-endif
-if JNLP_ABOUT_NEEDED
-	cp $(top_srcdir)/$(NETX_RESOURCE_DIR)/about.jnlp extra-lib/about.jar \
-	  $(BUILD_OUTPUT_DIR)/j2re-image/lib
-	cp $(top_srcdir)/$(NETX_RESOURCE_DIR)/about.jnlp extra-lib/about.jar \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 endif
 if ZERO_BUILD
 	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
@@ -1840,7 +1842,7 @@ endif
 
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
- stamps/plugin.stamp $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
+ $(ICEDTEAPLUGIN_TARGET) $(JNLP_ABOUT_TARGET) stamps/cacao.stamp \
  stamps/netx-dist.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
@@ -1855,6 +1857,10 @@ if ENABLE_PLUGIN
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	cp $(top_srcdir)/$(NETX_RESOURCE_DIR)/default.jnlp extra-lib/about.jar \
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib
+	cp $(top_srcdir)/$(NETX_RESOURCE_DIR)/default.jnlp extra-lib/about.jar \
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 endif
 if ENABLE_PULSE_JAVA
 	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
@@ -1867,12 +1873,6 @@ if ENABLE_PULSE_JAVA
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/ext
 	(cd $(PULSE_JAVA_JAVA_SRCDIR) && \
 	   $(ZIP) -qur $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/src.zip org )
-endif
-if JNLP_ABOUT_NEEDED
-	cp $(top_srcdir)/$(NETX_RESOURCE_DIR)/default.jnlp extra-lib/about.jar \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib
-	cp $(top_srcdir)/$(NETX_RESOURCE_DIR)/default.jnlp extra-lib/about.jar \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib
 endif
 if ZERO_BUILD
 	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
@@ -1938,7 +1938,7 @@ clean-icedtea-debug-stage2:
 
 stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
  stamps/download.stamp $(OPENJDK_BOOT_TREE) stamps/netx-dist.stamp \
- stamps/plugin.stamp stamps/cacao.stamp stamps/rewrite-rhino.stamp
+ $(ICEDTEAPLUGIN_TARGET) stamps/cacao.stamp stamps/rewrite-rhino.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot \
@@ -2014,8 +2014,37 @@ $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so: $(addprefix $(PLUGIN_BUILD_DIR)/,$(PLUGI
 	  $(MOZILLA_LIBS)\
 	  -shared -o $@
 
-stamps/icedtea-npplugin.stamp: $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so
+liveconnect-source-files.txt:
+	find $(LIVECONNECT_SRCS) -name '*.java' | sort > $@
+	touch $@
+
+stamps/liveconnect.stamp: liveconnect-source-files.txt stamps/netx.stamp
+	mkdir -p $(LIVECONNECT_CLASSES)
+	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
+	  -d $(LIVECONNECT_CLASSES) \
+	  -classpath $(RUNTIME):$(NETX_CLASSES) \
+	  -sourcepath $(SOURCEPATH_DIRS) \
+	  -bootclasspath \'\' \
+	  @liveconnect-source-files.txt
+	mkdir -p stamps
+	touch $@
+
+stamps/liveconnect-dist.stamp: stamps/liveconnect.stamp
+	(cd $(LIVECONNECT_CLASSES) ; \
+	 mkdir -p lib ; \
+	 $(BOOT_DIR)/bin/jar cf $(LIVECONNECT_JAR) $(LIVECONNECT_DIR) ; \
+	 cp -pPR $(SRC_DIR_LINK) $(LIVECONNECT_SRCS) src; \
+	 find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
+	 cd src ; \
+	 $(ZIP) -qr $(LIVECONNECT_SRC) ${LIVECONNECT_DIR} \
+        )
+	mkdir -p stamps
+	touch $@
+
+stamps/icedtea-npplugin.stamp: $(PLUGIN_BUILD_DIR)/IcedTeaNPPlugin.so \
+ stamps/liveconnect-dist.stamp
 	touch stamps/icedtea-npplugin.stamp
+endif
 
 clean-IcedTeaPlugin:
 	rm -f $(addprefix $(PLUGIN_BUILD_DIR)/,$(PLUGIN_OBJECTS))
@@ -2027,46 +2056,6 @@ clean-IcedTeaPlugin:
 		rmdir plugin.build ; \
 	fi
 	rm -f stamps/icedtea-npplugin.stamp
-endif
-
-stamps/plugin.stamp: $(ICEDTEAPLUGIN_TARGET) stamps/liveconnect-dist.stamp
-	mkdir -p stamps
-	touch $@
-
-clean-plugin: $(ICEDTEAPLUGIN_CLEAN)
-	rm -f stamps/plugin.stamp
-
-liveconnect-source-files.txt:
-	if test "x${LIVECONNECT_DIR}" != x; then \
-	  find $(LIVECONNECT_SRCS) -name '*.java' | sort > $@ ; \
-	fi
-	touch $@
-
-stamps/liveconnect.stamp: liveconnect-source-files.txt stamps/netx.stamp
-	if test "x${LIVECONNECT_DIR}" != x; then \
-	  mkdir -p $(LIVECONNECT_CLASSES) && \
-	  $(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
-	      -d $(LIVECONNECT_CLASSES) \
-	      -classpath $(RUNTIME):$(NETX_CLASSES) \
-	      -sourcepath $(SOURCEPATH_DIRS) \
-	      -bootclasspath \'\' \
-	      @liveconnect-source-files.txt ; \
-	fi
-	mkdir -p stamps
-	touch $@
-
-stamps/liveconnect-dist.stamp: stamps/liveconnect.stamp
-	if test "x${LIVECONNECT_DIR}" != x; then \
-	  (cd $(LIVECONNECT_CLASSES) ; \
-	   mkdir -p lib ; \
-	   $(BOOT_DIR)/bin/jar cf $(LIVECONNECT_JAR) $(LIVECONNECT_DIR) ; \
-	   cp -pPR $(SRC_DIR_LINK) $(LIVECONNECT_SRCS) src; \
-	   find src -type f -exec chmod 640 '{}' ';' -o -type d -exec chmod 750 '{}' ';'; \
-	   cd src ; \
-	   $(ZIP) -qr $(LIVECONNECT_SRC) ${LIVECONNECT_DIR} ) ; \
-	fi
-	mkdir -p stamps
-	touch $@
 
 clean-liveconnect:
 	rm -rf $(LIVECONNECT_CLASSES)
@@ -2185,14 +2174,12 @@ $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so: $(PULSE_JAVA_NATIVE_OBJECTS)
 endif
 
 clean-pulse-java:
-if ENABLE_PULSE_JAVA
-	[ -z "$(PULSE_JAVA_NATIVE_BUILDDIR)" ] || rm -rf $(PULSE_JAVA_NATIVE_BUILDDIR)
-	[ -z "$(PULSE_JAVA_CLASS_DIR)" ] || rm -rf $(PULSE_JAVA_CLASS_DIR)
+	rm -rf $(PULSE_JAVA_NATIVE_BUILDDIR)
+	rm -rf $(PULSE_JAVA_CLASS_DIR)
 	rm -f pulse-java.jar
 	if [ -e $(PULSE_JAVA_BUILDDIR) ]; then \
 	  rmdir $(PULSE_JAVA_BUILDDIR) ; \
 	fi
-endif
 	rm -f stamps/pulse-java*.stamp
 
 # end of pulse-java
@@ -2420,7 +2407,7 @@ clean-add-zero-debug:
 # plugin tests
 
 if ENABLE_PLUGIN
-stamps/plugin-tests.stamp: $(PLUGIN_TEST_SRCS) stamps/plugin.stamp
+stamps/plugin-tests.stamp: $(PLUGIN_TEST_SRCS) $(ICEDTEAPLUGIN_TARGET)
 	mkdir -p plugin/tests/LiveConnect
 	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	 -d plugin/tests/LiveConnect \
@@ -2429,7 +2416,7 @@ stamps/plugin-tests.stamp: $(PLUGIN_TEST_SRCS) stamps/plugin.stamp
 	  plugin/tests/LiveConnect/*.class ;
 	cp -pPR --reflink-auto $(abs_top_srcdir)/plugin/tests/LiveConnect/*.{js,html} \
 	  plugin/tests/LiveConnect ;
-	echo "Done. Now launch \"firefox file://`pwd`/index.html\"" ; \
+	echo "Done. Now load \"file://$(abs_top_builddir)/index.html\" in your browser" ; \
 	mkdir -p stamps
 	touch stamps/plugin-tests.stamp
 endif
@@ -2655,7 +2642,7 @@ patch-fsg: stamps/patch-fsg.stamp
 
 patch-jaxws: stamps/patch-jaxws.stamp
 
-plugin: stamps/plugin.stamp
+plugin: stamps/icedtea-npplugin.stamp
 
 plugin-tests: stamps/plugin-tests.stamp
 

@@ -1,3 +1,42 @@
+2010-07-20  Andrew John Hughes  <ahughes@redhat.com>
+
+	Simplify the plugin build.
+	* Makefile.am:
+	(PLUGIN_SRCDIR): Set unconditionally.
+	(PLUGIN_BUILD_DIR): Likewise.
+	(LIVECONNECT_DIR): Likewise.
+	(LIVECONNECT_SRCS): Likewise.
+	(LIVECONNECT_CLASSES): Likewise.
+	(LIVECONNECT_JAR): Likewise.
+	(LIVECONNECT_SRC): Likewise.
+	(PULSE_JAVA_DIR): Likewise.
+	(PULSE_JAVA_NATIVE_SRCDIR): Likewise.
+	(PULSE_JAVA_NATIVE_SRCS): Likewise.
+	(PULSE_JAVA_BUILDDIR): Likewise.
+	(PULSE_JAVA_NATIVE_OBJECTS): Likewise.
+	(PULSE_JAVA_JAVA_SRCDIR): Likewise.
+	(PULSE_JAVA_CLASS_DIR): Likewise.
+	(ICEDTEA_ENV): Set ALT_LIVECONNECT_DIST conditionally.
+	(clean-local): Depend on clean-IcedTeaPlugin rather than clean-plugin.
+	(.PHONY): Replace clean-plugin with clean-IcedTeaPlugin.
+	(icedtea): Depend on ICEDTEAPLUGIN_TARGET rather than plugin.stamp.
+	Merge JNLP_ABOUT_NEEDED block with ENABLE_PLUGIN block.
+	(icedtea-debug): Likewise.
+	(icedtea-boot): Likewise.
+	(liveconnect): Only enable if ENABLE_PLUGIN is set.
+	(liveconnect-source-files): Likewise.
+	(liveconnect-dist): Likewise.
+	(icedtea-npplugin): Depend on liveconnect-dist.
+	(plugin.stamp): Removed, superfluous now there is only one plugin.
+	(clean-plugin): Likewise.
+	(clean-pulse-java): Always perform cleanup.
+	(plugin-tests): Depend on ICEDTEAPLUGIN_TARGET.
+	(plugin): Alias for icedtea-npplugin.stamp.
+	* configure.ac:
+	Remove obsolete enable-npplugin option (which no
+	longer does anything).  Remove JNLP_ABOUT_NEEDED;
+	now identical to ENABLE_PLUGIN.
+
 2010-07-18  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
