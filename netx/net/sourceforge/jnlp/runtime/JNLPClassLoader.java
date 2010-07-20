@@ -167,7 +167,7 @@ public class JNLPClassLoader extends URLClassLoader {
 
     }
 
-    private void setSecurity() {
+    private void setSecurity() throws LaunchException {
 		
         URL codebase = null;
 
@@ -196,15 +196,22 @@ public class JNLPClassLoader extends URLClassLoader {
             }
         } else { //regular jnlp file
 			
-            /**
-             * If the application is signed, then we set the SecurityDesc to the
-             * <security> tag in the jnlp file. Note that if an application is
-             * signed, but there is no <security> tag in the jnlp file, the
-             * application will get sandbox permissions.
-             * If the application is unsigned, we ignore the <security> tag and 
-             * use a sandbox instead. 
+            /*
+             * Various combinations of the jars being signed and <security> tags being
+             * present are possible. They are treated as follows
+             * 
+             * Jars          JNLP File         Result
+             * 
+             * Signed        <security>        Appropriate Permissions
+             * Signed        no <security>     Sandbox
+             * Unsigned      <security>        Error
+             * Unsigned      no <security>     Sandbox
+             * 
              */
-            if (signing == true) {
+            if (!file.getSecurity().getSecurityType().equals(SecurityDesc.SANDBOX_PERMISSIONS) && !signing) {
+                throw new LaunchException(file, null, R("LSFatal"), R("LCClient"), R("LUnsignedJarWithSecurity"), R("LUnsignedJarWithSecurityInfo"));
+            }
+            else if (signing == true) {
                 this.security = file.getSecurity();
             } else {
                 this.security = new SecurityDesc(file, 

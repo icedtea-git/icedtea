@@ -1,3 +1,11 @@
+2010-07-20  Omair Majid  <omajid@redhat.com>
+
+	* netx/net/sourceforge/jnlp/resources/Messages.properties:
+	Add LUnsignedJarWithSecurity LUnsignedJarWithSecurityInfo.
+	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java
+	(setSecurity): Can now throw a LaunchException if the JNLP file requests
+	permissions but the jars are unsigned.
+
 2010-07-19  Omair Majid  <omajid@redhat.com>
 
 	PR icedtea/372
