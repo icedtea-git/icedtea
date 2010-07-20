@@ -1,5 +1,12 @@
 2010-07-20  Omair Majid  <omajid@redhat.com>
 
+	PR icedtea/491
+	* plugin/icedteanp/IcedTeaNPPlugin.cc
+	(plugin_create_applet_tag): Accept and pass on
+	java_{code,codebase,archive} tags to the java side of the plugin.
+
+2010-07-20  Omair Majid  <omajid@redhat.com>
+
 	* netx/net/sourceforge/jnlp/resources/Messages.properties:
 	Add LUnsignedJarWithSecurity LUnsignedJarWithSecurityInfo.
 	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java

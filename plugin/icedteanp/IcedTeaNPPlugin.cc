@@ -1625,12 +1625,26 @@ plugin_create_applet_tag (int16_t argc, char* argn[], char* argv[])
           g_free (code);
           code = NULL;
     }
+      else if (!g_ascii_strcasecmp (argn[i], "java_code"))
+    {
+          gchar* java_code = g_strdup_printf ("JAVA_CODE=\"%s\" ", argv[i]);
+          applet_tag = g_strconcat (applet_tag, java_code, NULL);
+          g_free (java_code);
+          java_code = NULL;
+    }
       else if (!g_ascii_strcasecmp (argn[i], "codebase"))
     {
           gchar* codebase = g_strdup_printf ("CODEBASE=\"%s\" ", argv[i]);
           applet_tag = g_strconcat (applet_tag, codebase, NULL);
           g_free (codebase);
           codebase = NULL;
+    }
+      else if (!g_ascii_strcasecmp (argn[i], "java_codebase"))
+    {
+          gchar* java_codebase = g_strdup_printf ("JAVA_CODEBASE=\"%s\" ", argv[i]);
+          applet_tag = g_strconcat (applet_tag, java_codebase, NULL);
+          g_free (java_codebase);
+          java_codebase = NULL;
     }
       else if (!g_ascii_strcasecmp (argn[i], "classid"))
     {
@@ -1645,6 +1659,13 @@ plugin_create_applet_tag (int16_t argc, char* argn[], char* argv[])
           applet_tag = g_strconcat (applet_tag, archive, NULL);
           g_free (archive);
           archive = NULL;
+    }
+      else if (!g_ascii_strcasecmp (argn[i], "java_archive"))
+    {
+          gchar* java_archive = g_strdup_printf ("JAVA_ARCHIVE=\"%s\" ", argv[i]);
+          applet_tag = g_strconcat (applet_tag, java_archive, NULL);
+          g_free (java_archive);
+          java_archive = NULL;
     }
       else if (!g_ascii_strcasecmp (argn[i], "width"))
     {
