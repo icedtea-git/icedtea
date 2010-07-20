@@ -1,12 +1,12 @@
-2010-07-20  Man Lung Wong  mwong@redhat.com>
+2010-07-20  Man Lung Wong  <mwong@redhat.com>
 
 	* netx/net/sourceforge/jnlp/SecurityDesc.java:
 	Add permission to read javawebstart.version 
 	property as part of sandbox permission.
-
 	* netx/net/sourceforge/jnlp/runtime/JNLPRuntime.java (initialize):
 	Set the javawebstart.version property as part of System property
-	whenever a jnlp file is being launched.
+	whenever a jnlp file is being launched (note: this now allows
+	the jnlp file in bug 486 to launch).
 	
 2010-07-20  Mark Wielaard  <mjw@redhat.com>
 
