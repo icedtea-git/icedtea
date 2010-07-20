@@ -54,30 +54,20 @@ import java.util.Enumeration;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
-import net.sourceforge.jnlp.security.CertVerifier;
-import net.sourceforge.jnlp.security.SecurityDialogUI;
 import net.sourceforge.jnlp.security.SecurityUtil;
 import net.sourceforge.jnlp.security.SecurityWarningDialog;
 import net.sourceforge.jnlp.tools.KeyTool;
 
-//import java.security.KeyStoreException;
-//import java.security.NoSuchAlgorithmException;
-//import java.security.cert.CertificateException;
-//import java.io.FileNotFoundException;
-//import java.io.IOException;
-
-
-// note: We might want to extend OptionPaneUI instead
-public class CertificatePane extends SecurityDialogUI {
+public class CertificatePane extends JPanel {
 	
 	/**
 	 * The certificates stored in the user's trusted.certs file.
@@ -92,14 +82,20 @@ public class CertificatePane extends SecurityDialogUI {
 	
 	private JTable table;
 	
+	private JDialog parent;
+
+	private JComponent defaultFocusComponent = null;
+
 	/**
 	 * The KeyStore associated with the user's trusted.certs file.
 	 */
 	private KeyStore keyStore = null;
 	
-	public CertificatePane(JComponent x) {
-		super(x, null);
+	public CertificatePane(JDialog parent) {
+		super();
+		this.parent = parent;
 		initializeKeyStore();
+		addComponents();
 	}
 	
 	/**
@@ -114,32 +110,8 @@ public class CertificatePane extends SecurityDialogUI {
 		}
 	}
 	
-	/**
-	 * Installs the user interface for the SecurityWarningDialog.
-	 */
-	public void installUI(JComponent c) {
-
-		//Only install the UI when type and file in SecurityWarningDialog
-		//have been set.
-		if (((CertificateViewer)c).isInitialized()) {
-			setSystemLookAndFeel();
-			optionPane = (JOptionPane)c;
-			optionPane.setLayout(new BorderLayout());
-			installComponents();
-			installListeners();
-		}
-	}
-
-	private void setSystemLookAndFeel() {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			//don't worry if we can't.
-		}
-	}
-	
 	//create the GUI here.
-	protected void installComponents() {
+	protected void addComponents() {
 		readKeyStore();
 		
 		JPanel main = new JPanel(new BorderLayout());
@@ -193,13 +165,14 @@ public class CertificatePane extends SecurityDialogUI {
 		JPanel closePanel = new JPanel(new BorderLayout());
 		closePanel.setBorder(BorderFactory.createEmptyBorder(7,7,7,7));
 		JButton closeButton = new JButton("Close");
-		closeButton.addActionListener(createButtonActionListener(0));
+		closeButton.addActionListener(new CloseButtonListener());
+		defaultFocusComponent = closeButton;
 		closePanel.add(closeButton, BorderLayout.EAST);
 		
 		main.add(tablePanel, BorderLayout.CENTER);
 		main.add(closePanel, BorderLayout.SOUTH);
 		
-		optionPane.add(main);
+		add(main);
 
 	}	
 	
@@ -245,14 +218,20 @@ public class CertificatePane extends SecurityDialogUI {
 			= new DefaultTableModel(issuedToAndBy, columnNames);
 		
 		table.setModel(tableModel);
-		optionPane.repaint();
+		repaint();
+	}
+
+	public void focusOnDefaultButton() {
+	    if (defaultFocusComponent != null) {
+	        defaultFocusComponent.requestFocusInWindow();
+	    }
 	}
 	
 	private class ImportButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
 
         	JFileChooser chooser = new JFileChooser();
-        	int returnVal = chooser.showOpenDialog(optionPane);
+        	int returnVal = chooser.showOpenDialog(parent);
         	if(returnVal == JFileChooser.APPROVE_OPTION) {
         		try {
         			KeyTool kt = new KeyTool();
@@ -276,7 +255,7 @@ public class CertificatePane extends SecurityDialogUI {
 				int selectedRow = table.getSelectedRow();
 				if (selectedRow != -1) {
 		        	JFileChooser chooser = new JFileChooser();
-		        	int returnVal = chooser.showOpenDialog(optionPane);
+		        	int returnVal = chooser.showOpenDialog(parent);
 		        	if(returnVal == JFileChooser.APPROVE_OPTION) {
 		        		String alias = keyStore.getCertificateAlias(certs
 		        				.get(selectedRow));
@@ -309,7 +288,7 @@ public class CertificatePane extends SecurityDialogUI {
         			String alias = keyStore.getCertificateAlias(certs.get(selectedRow));
         			if (alias != null) {
         				
-        				int i = JOptionPane.showConfirmDialog(optionPane, 
+        				int i = JOptionPane.showConfirmDialog(parent, 
         						"Are you sure you want to remove the selected certificate?", 
         						"Confirmation - Remove Certificate?", 
         						JOptionPane.YES_NO_OPTION);
@@ -341,10 +320,17 @@ public class CertificatePane extends SecurityDialogUI {
         	int selectedRow = table.getSelectedRow();
         	if (selectedRow != -1 && selectedRow >= 0) {
         		X509Certificate c = certs.get(selectedRow);
-        		SecurityWarningDialog.showSingleCertInfoDialog(c, optionPane);
+        		SecurityWarningDialog.showSingleCertInfoDialog(c, parent);
         	}
         }
     }
+
+	private class CloseButtonListener implements ActionListener {
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+	        parent.dispose();
+	    }
+	}
 	
 }
 

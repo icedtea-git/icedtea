@@ -47,29 +47,27 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import net.sourceforge.jnlp.runtime.JNLPRuntime;
-
 /**
- * Provides the UI for the More Info dialog. This dialog shows details about an
+ * Provides the panel for the More Info dialog. This dialog shows details about an
  * application's signing status.
  *
  * @author <a href="mailto:jsumali@redhat.com">Joshua Sumali</a>
  */
-public class MoreInfoPane extends SecurityDialogUI {
+public class MoreInfoPane extends SecurityDialogPanel {
 
-	public MoreInfoPane(JComponent x, CertVerifier certVerifier) {
+	public MoreInfoPane(SecurityWarningDialog x, CertVerifier certVerifier) {
 		super(x, certVerifier);
+		addComponents();
 	}
 
 	/**
-	 * Constructs the GUI components of this UI
+	 * Constructs the GUI components of this panel
 	 */
-	protected void installComponents() {
+	private void addComponents() {
 		ArrayList<String> details = certVerifier.getDetails();
 
 		int numLabels = details.size();
@@ -93,35 +91,20 @@ public class MoreInfoPane extends SecurityDialogUI {
 		JButton certDetails = new JButton("Certificate Details");
 		certDetails.addActionListener(new CertInfoButtonListener());
 		JButton close = new JButton("Close");
-		close.addActionListener(createButtonActionListener(0));
+		close.addActionListener(createSetValueListener(parent, 0));
         buttonsPanel.add(certDetails, BorderLayout.WEST);
         buttonsPanel.add(close, BorderLayout.EAST);
 		buttonsPanel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 
-        JPanel main = new JPanel(new BorderLayout());
-        main.add(errorPanel, BorderLayout.NORTH);
-        main.add(buttonsPanel, BorderLayout.SOUTH);
+        add(errorPanel, BorderLayout.NORTH);
+        add(buttonsPanel, BorderLayout.SOUTH);
 
-        optionPane.add(main);
 	}
-
-    private static String R(String key) {
-        return JNLPRuntime.getMessage(key);
-    }
-    
-	/**
-	 * Needed to get word-wrap working in JLabels.
-	 */
-	private String htmlWrap (String s) {
-        return "<html>"+s+"</html>";
-    }
 
 	private class CertInfoButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        	//TODO: Change to ((SecurityWarningDialog) optionPane).showCertInfoDialog()
-            SecurityWarningDialog.showCertInfoDialog(
-				((SecurityWarningDialog)optionPane).getJarSigner(),
-				optionPane);
+            SecurityWarningDialog.showCertInfoDialog(parent.getJarSigner(),
+				parent);
         }
     }
 }

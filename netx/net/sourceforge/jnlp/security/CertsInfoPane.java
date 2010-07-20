@@ -58,12 +58,12 @@ import javax.swing.tree.TreeSelectionModel;
 import net.sourceforge.jnlp.tools.*;
 
 /**
- * Provides the UI for the Certificate Info dialog. This dialog displays data from
+ * Provides the panel for the Certificate Info dialog. This dialog displays data from
  * X509Certificate(s) used in jar signing.
  *
  * @author <a href="mailto:jsumali@redhat.com">Joshua Sumali</a>
  */
-public class CertsInfoPane extends SecurityDialogUI {
+public class CertsInfoPane extends SecurityDialogPanel {
 	
 	private ArrayList<CertPath> certs;
     private JList list;
@@ -76,15 +76,16 @@ public class CertsInfoPane extends SecurityDialogUI {
     private String[] columnNames = { "Field", "Value" };
 	protected ArrayList<String[][]> certsData;
 
-	public CertsInfoPane(JComponent x, CertVerifier certVerifier) {
+	public CertsInfoPane(SecurityWarningDialog x, CertVerifier certVerifier) {
 		super(x, certVerifier);
+		addComponents();
 	}
 
 	/**
 	 * Builds the JTree out of CertPaths.
 	 */
 	void buildTree() {
-		certs = ((SecurityWarningDialog)optionPane).getJarSigner().getCerts();
+		certs = parent.getJarSigner().getCerts();
 		//for now, we're only going to display the first signer, even though
 		//jars can be signed by multiple people.
 		CertPath firstPath = certs.get(0);
@@ -176,9 +177,9 @@ public class CertsInfoPane extends SecurityDialogUI {
 	}
 	
 	/**
-	 * Constructs the GUI components of this UI
+	 * Constructs the GUI components of this panel
 	 */
-	protected void installComponents() {
+	protected void addComponents() {
 		buildTree();
 		populateTable();
 		/**
@@ -224,14 +225,14 @@ public class CertsInfoPane extends SecurityDialogUI {
 		JPanel buttonPane = new JPanel(new BorderLayout());
 		JButton close = new JButton("Close");
 		JButton copyToClipboard = new JButton("Copy to Clipboard");
-		close.addActionListener(createButtonActionListener(0));
+		close.addActionListener(createSetValueListener(parent, 0));
 		copyToClipboard.addActionListener(new CopyToClipboardHandler());
 		buttonPane.add(close, BorderLayout.EAST);
 		buttonPane.add(copyToClipboard, BorderLayout.WEST);
 		buttonPane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
-		optionPane.add(mainPane, BorderLayout.CENTER);
-		optionPane.add(buttonPane, BorderLayout.SOUTH);
+		add(mainPane, BorderLayout.CENTER);
+		add(buttonPane, BorderLayout.SOUTH);
 	}
 
 	/**

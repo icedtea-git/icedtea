@@ -42,105 +42,78 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.plaf.OptionPaneUI;
+import javax.swing.UIManager;
 
-public class CertificateViewer extends JOptionPane {
+public class CertificateViewer extends JDialog {
 
-	private boolean initialized = false;
-	
-	public CertificateViewer() throws Exception {
+    private boolean initialized = false;
+    private static final String dialogTitle = "Certificates";
+
+    CertificatePane panel;
+    
+	public CertificateViewer() {
+	    super((Frame)null, dialogTitle, true);
+
+        Container contentPane = getContentPane();
+        contentPane.setLayout(new BorderLayout());
+
+        panel = new CertificatePane(this);
+
+        add(panel);
+
+        pack();
+
+        WindowAdapter adapter = new WindowAdapter() {
+            private boolean gotFocus = false;
+
+            public void windowGainedFocus(WindowEvent we) {
+                // Once window gets focus, set initial focus
+                if (!gotFocus) {
+                    panel.focusOnDefaultButton();
+                    gotFocus = true;
+                }
+            }
+        };
+        addWindowFocusListener(adapter);
 
 		initialized = true;
-		updateUI();
 	}
 		
 	public boolean isInitialized(){
 		return initialized;
 	}
 	
-	public void updateUI() {
-		setUI((OptionPaneUI) new CertificatePane(this));
-	}
-	
-	private static void centerDialog(JDialog dialog) {
+	private void centerDialog() {
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension dialogSize = dialog.getSize();
+		Dimension dialogSize = getSize();
 
-		dialog.setLocation((screen.width - dialogSize.width)/2,
+		setLocation((screen.width - dialogSize.width)/2,
 			(screen.height - dialogSize.height)/2);
 	}
 	
-	//Modified from javax.swing.JOptionPane
-	private JDialog createDialog() {
-		String dialogTitle = "Certificates";
-		final JDialog dialog = new JDialog((Frame)null, dialogTitle, true);
-		
-		Container contentPane = dialog.getContentPane();
-		contentPane.setLayout(new BorderLayout());
-		contentPane.add(this, BorderLayout.CENTER);
-		dialog.pack();
-
-		WindowAdapter adapter = new WindowAdapter() {
-            private boolean gotFocus = false;
-            public void windowClosing(WindowEvent we) {
-                setValue(null);
-            }
-            public void windowGainedFocus(WindowEvent we) {
-                // Once window gets focus, set initial focus
-                if (!gotFocus) {
-                    selectInitialValue();
-                    gotFocus = true;
-                }
-            }
-        };
-		dialog.addWindowListener(adapter);
-		dialog.addWindowFocusListener(adapter);
-
-		dialog.addComponentListener(new ComponentAdapter() {
-            public void componentShown(ComponentEvent ce) {
-                // reset value to ensure closing works properly
-                setValue(JOptionPane.UNINITIALIZED_VALUE);
-            }
-        });
-
-		addPropertyChangeListener( new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent event) {
-                // Let the defaultCloseOperation handle the closing
-                // if the user closed the window without selecting a button
-                // (newValue = null in that case).  Otherwise, close the dialog.
-                if (dialog.isVisible() && 
-                	event.getSource() == CertificateViewer.this &&
-                	(event.getPropertyName().equals(VALUE_PROPERTY) ||
-                	event.getPropertyName().equals(INPUT_VALUE_PROPERTY)) &&
-                	event.getNewValue() != null &&
-                	event.getNewValue() != JOptionPane.UNINITIALIZED_VALUE) {
-                    dialog.setVisible(false);
-                }
-            }
-        });
-
-		return dialog;
-	}
 	
 	public static void showCertificateViewer() throws Exception {
+	    setSystemLookAndFeel();
+	    
 		CertificateViewer cv = new CertificateViewer();
-		JDialog dialog = cv.createDialog();
-		cv.selectInitialValue();
-		dialog.setResizable(true);
-		centerDialog(dialog);
-		dialog.setVisible(true);
-		dialog.dispose();	
+		cv.setResizable(true);
+		cv.centerDialog();
+		cv.setVisible(true);
+		cv.dispose();
 	}
 	
+    private static void setSystemLookAndFeel() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            // don't worry if we can't.
+        }
+    }
+
 	public static void main(String[] args) throws Exception {
 		CertificateViewer.showCertificateViewer();
 	}

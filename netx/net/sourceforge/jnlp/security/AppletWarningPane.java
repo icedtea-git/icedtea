@@ -46,18 +46,18 @@ import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class AppletWarningPane extends SecurityDialogUI {
+public class AppletWarningPane extends SecurityDialogPanel {
 
-	public AppletWarningPane(JComponent x, CertVerifier certVerifier) {
+	public AppletWarningPane(SecurityWarningDialog x, CertVerifier certVerifier) {
 		super(x, certVerifier);
+		addComponents();
 	}
 
-	protected void installComponents() {
+	protected void addComponents() {
 
 		//Top label
 		String topLabelText = "While support for verifying signed code" +
@@ -95,9 +95,9 @@ public class AppletWarningPane extends SecurityDialogUI {
 		yes.setPreferredSize(d);
 		no.setPreferredSize(d);
 		cancel.setPreferredSize(d);
-		yes.addActionListener(createButtonActionListener(0));
-		no.addActionListener(createButtonActionListener(1));
-		cancel.addActionListener(createButtonActionListener(2));
+		yes.addActionListener(createSetValueListener(parent, 0));
+		no.addActionListener(createSetValueListener(parent, 1));
+		cancel.addActionListener(createSetValueListener(parent, 2));
 		initialFocusComponent = cancel;
 		buttonPanel.add(yes);
 		buttonPanel.add(no);
@@ -105,17 +105,12 @@ public class AppletWarningPane extends SecurityDialogUI {
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
 		//all of the above
-		JPanel main = new JPanel();
-		main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
-		main.add(topPanel);
-		main.add(infoPanel);
-		main.add(buttonPanel);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		add(topPanel);
+		add(infoPanel);
+		add(buttonPanel);
 
-		optionPane.add(main, BorderLayout.CENTER);
 	}
 
-	protected String htmlWrap (String s) {
-	        return "<html>"+s+"</html>";
-	}
 }
 

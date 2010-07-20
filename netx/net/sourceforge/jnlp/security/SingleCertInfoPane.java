@@ -40,7 +40,6 @@ package net.sourceforge.jnlp.security;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
-import javax.swing.JComponent;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
@@ -48,12 +47,12 @@ import javax.swing.tree.TreeSelectionModel;
 
 public class SingleCertInfoPane extends CertsInfoPane {
 
-	public SingleCertInfoPane(JComponent x, CertVerifier certVerifier) {
+	public SingleCertInfoPane(SecurityWarningDialog x, CertVerifier certVerifier) {
 		super(x, certVerifier);
 	}
 	
 	protected void buildTree() {
-		X509Certificate cert = ((SecurityWarningDialog)optionPane).getCert();
+		X509Certificate cert = parent.getCert();
 		String subjectString = 
 			SecurityUtil.getCN(cert.getSubjectX500Principal().getName());
 		String issuerString = 
@@ -68,7 +67,7 @@ public class SingleCertInfoPane extends CertsInfoPane {
 	}
 	
 	protected void populateTable() {
-		X509Certificate c = ((SecurityWarningDialog)optionPane).getCert();
+		X509Certificate c = parent.getCert();
 		certNames = new String[1];
 		certsData = new ArrayList<String[][]>();
 		certsData.add(parseCert(c));

@@ -38,14 +38,14 @@ exception statement from your version.
 package net.sourceforge.jnlp.security;
 
 import net.sourceforge.jnlp.JNLPFile;
+import net.sourceforge.jnlp.runtime.JNLPRuntime;
 
 import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
-import javax.swing.plaf.OptionPaneUI;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
+import javax.swing.*;
+
+import java.awt.event.*;
+
 import java.security.cert.X509Certificate;
 
 /**
@@ -54,7 +54,7 @@ import java.security.cert.X509Certificate;
  *
  * @author <a href="mailto:jsumali@redhat.com">Joshua Sumali</a>
  */
-public class SecurityWarningDialog extends JOptionPane {
+public class SecurityWarningDialog extends JDialog {
 
 	/** Types of dialogs we can create */
 	public static enum DialogType {
@@ -86,6 +86,8 @@ public class SecurityWarningDialog extends JOptionPane {
 	/** The type of access that this dialog is for */
 	private AccessType accessType;
 
+	private SecurityDialogPanel panel;
+
 	/** The application file associated with this security warning */
 	private JNLPFile file;
 
@@ -102,56 +104,67 @@ public class SecurityWarningDialog extends JOptionPane {
 	/** Whether or not this object has been fully initialized */
 	private boolean initialized = false;
 
+    /**
+     * the return value of this dialog. result: 0 = Yes, 1 = No, 2 = Cancel,
+     * null = Window closed.
+     */
+	private Object value;
+
 	public SecurityWarningDialog(DialogType dialogType, AccessType accessType,
 			JNLPFile file) {
+	    super();
 		this.dialogType = dialogType;
 		this.accessType = accessType;
 		this.file = file;
 		this.certVerifier = null;
 		initialized = true;
-		updateUI();
+		initDialog();
 	}
 	
 	public SecurityWarningDialog(DialogType dialogType, AccessType accessType,
 			JNLPFile file, CertVerifier jarSigner) {
+	    super();
 		this.dialogType = dialogType;
 		this.accessType = accessType;
 		this.file = file;
 		this.certVerifier = jarSigner;
 		initialized = true;
-		updateUI();
+		initDialog();
 	}
 	
 	public SecurityWarningDialog(DialogType dialogType, AccessType accessType,
 	        CertVerifier certVerifier) {
+	    super();
 	    this.dialogType = dialogType;
 	    this.accessType = accessType;
 	    this.file = null;
 	    this.certVerifier = certVerifier;
 	    initialized = true;
-	    updateUI();
+	    initDialog();
 	}
 
 	public SecurityWarningDialog(DialogType dialogType, AccessType accessType,
 			JNLPFile file, Object[] extras) {
+	    super();
 		this.dialogType = dialogType;
 		this.accessType = accessType;
 		this.file = file;
 		this.certVerifier = null;
 		initialized = true;
 		this.extras = extras;
-		updateUI();
+		initDialog();
 	}
 	
 	//for displaying a single certificate
 	public SecurityWarningDialog(DialogType dialogType, X509Certificate c) {
+	    super();
 		this.dialogType = dialogType;
 		this.accessType = null;
 		this.file = null;
 		this.certVerifier = null;
 		this.cert = c;
 		initialized = true;
-		updateUI();
+		initDialog();
 	}
 	
 	/**
@@ -187,16 +200,12 @@ public class SecurityWarningDialog extends JOptionPane {
 	 */
 	public static boolean showAccessWarningDialog(AccessType accessType, 
 			JNLPFile file, Object[] extras) {
-			SecurityWarningDialog swd = new SecurityWarningDialog(
+			SecurityWarningDialog dialog = new SecurityWarningDialog(
 					DialogType.ACCESS_WARNING, accessType, file, extras);
-			JDialog dialog = swd.createDialog();
-			swd.selectInitialValue();
-			dialog.setResizable(true);
-			centerDialog(dialog);
 			dialog.setVisible(true);
 			dialog.dispose();
 
-			Object selectedValue = swd.getValue();
+			Object selectedValue = dialog.getValue();
 			if (selectedValue == null) {
 				return false;
 			} else if (selectedValue instanceof Integer) {
@@ -221,17 +230,13 @@ public class SecurityWarningDialog extends JOptionPane {
 	 */
 	public static boolean showCertWarningDialog(AccessType accessType, 
 			JNLPFile file, CertVerifier jarSigner) {
-		SecurityWarningDialog swd = 
+		SecurityWarningDialog dialog = 
 			new SecurityWarningDialog(DialogType.CERT_WARNING, accessType, file,
 			jarSigner);
-		JDialog dialog = swd.createDialog();
-		swd.selectInitialValue();
-		dialog.setResizable(true);
-		centerDialog(dialog);
 		dialog.setVisible(true);
 		dialog.dispose();
 
-		Object selectedValue = swd.getValue();
+		Object selectedValue = dialog.getValue();
 		if (selectedValue == null) {
 			return false;
 		} else if (selectedValue instanceof Integer) {
@@ -251,15 +256,11 @@ public class SecurityWarningDialog extends JOptionPane {
 	 * @param parent the parent option pane
 	 */
 	public static void showMoreInfoDialog(
-		CertVerifier jarSigner, JOptionPane parent) {
+		CertVerifier jarSigner, SecurityWarningDialog parent) {
 
-		SecurityWarningDialog swd =
+		SecurityWarningDialog dialog =
 			new SecurityWarningDialog(DialogType.MORE_INFO, null, null,
 			jarSigner);
-		JDialog dialog = swd.createDialog();
-		dialog.setLocationRelativeTo(parent);
-		swd.selectInitialValue();
-		dialog.setResizable(true);
 		dialog.setVisible(true);
 		dialog.dispose();
 	}
@@ -270,13 +271,10 @@ public class SecurityWarningDialog extends JOptionPane {
 	 * @param certs the certificates used in signing.
 	 */
 	public static void showCertInfoDialog(CertVerifier jarSigner,
-		JOptionPane parent) {
-		SecurityWarningDialog swd = new SecurityWarningDialog(DialogType.CERT_INFO,
+		SecurityWarningDialog parent) {
+		SecurityWarningDialog dialog = new SecurityWarningDialog(DialogType.CERT_INFO,
 			null, null, jarSigner);
-		JDialog dialog = swd.createDialog();
 		dialog.setLocationRelativeTo(parent);
-		swd.selectInitialValue();
-		dialog.setResizable(true);
 		dialog.setVisible(true);
 		dialog.dispose();
 	}
@@ -288,28 +286,20 @@ public class SecurityWarningDialog extends JOptionPane {
 	 * @param optionPane
 	 */
 	public static void showSingleCertInfoDialog(X509Certificate c, 
-			JOptionPane parent) {
-
-		SecurityWarningDialog swd = new SecurityWarningDialog(DialogType.SINGLE_CERT_INFO, c);
-			JDialog dialog = swd.createDialog();
+			JDialog parent) {
+		SecurityWarningDialog dialog = new SecurityWarningDialog(DialogType.SINGLE_CERT_INFO, c);
 			dialog.setLocationRelativeTo(parent);
-			swd.selectInitialValue();
-			dialog.setResizable(true);
 			dialog.setVisible(true);
 			dialog.dispose();
 	}
 	
 	public static int showAppletWarning() {
-        	SecurityWarningDialog swd = new SecurityWarningDialog(DialogType.APPLET_WARNING,
+        	SecurityWarningDialog dialog = new SecurityWarningDialog(DialogType.APPLET_WARNING,
             		null, null, (CertVerifier) null);
-        	JDialog dialog = swd.createDialog();
-		centerDialog(dialog);
-        	swd.selectInitialValue();
-        	dialog.setResizable(true);
         	dialog.setVisible(true);
         	dialog.dispose();
 
-		Object selectedValue = swd.getValue();
+		Object selectedValue = dialog.getValue();
 
 		//result 0 = Yes, 1 = No, 2 = Cancel
 		if (selectedValue == null) {
@@ -321,8 +311,9 @@ public class SecurityWarningDialog extends JOptionPane {
 		}
 	}
 
-	//Modified from javax.swing.JOptionPane
-	private JDialog createDialog() {
+	private void initDialog() {
+	    setSystemLookAndFeel();
+
 		String dialogTitle = "";
 		if (dialogType == DialogType.CERT_WARNING)
 			dialogTitle = "Warning - Security";
@@ -335,53 +326,42 @@ public class SecurityWarningDialog extends JOptionPane {
 		else if (dialogType == DialogType.APPLET_WARNING)
 			dialogTitle = "Applet Warning";
 
-		final JDialog dialog = new JDialog((Frame)null, dialogTitle, true);
-		
-		Container contentPane = dialog.getContentPane();
-		contentPane.setLayout(new BorderLayout());
-		contentPane.add(this, BorderLayout.CENTER);
-		dialog.pack();
+		setTitle(dialogTitle);
+		setModal(true);
+
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+		installPanel();
+
+		pack();
 
 		WindowAdapter adapter = new WindowAdapter() {
             private boolean gotFocus = false;
+            @Override
             public void windowClosing(WindowEvent we) {
                 setValue(null);
             }
+            @Override
             public void windowGainedFocus(WindowEvent we) {
                 // Once window gets focus, set initial focus
                 if (!gotFocus) {
-                    selectInitialValue();
+                    selectDefaultButton();
                     gotFocus = true;
                 }
             }
-        };
-		dialog.addWindowListener(adapter);
-		dialog.addWindowFocusListener(adapter);
-
-		dialog.addComponentListener(new ComponentAdapter() {
-            public void componentShown(ComponentEvent ce) {
-                // reset value to ensure closing works properly
-                setValue(JOptionPane.UNINITIALIZED_VALUE);
-            }
-        });
-
-		addPropertyChangeListener( new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent event) {
-                // Let the defaultCloseOperation handle the closing
-                // if the user closed the window without selecting a button
-                // (newValue = null in that case).  Otherwise, close the dialog.
-                if (dialog.isVisible() && 
-                	event.getSource() == SecurityWarningDialog.this &&
-                	(event.getPropertyName().equals(VALUE_PROPERTY) ||
-                	event.getPropertyName().equals(INPUT_VALUE_PROPERTY)) &&
-                	event.getNewValue() != null &&
-                	event.getNewValue() != JOptionPane.UNINITIALIZED_VALUE) {
-                    dialog.setVisible(false);
+            @Override
+            public void windowOpened(WindowEvent e) {
+                if (e.getSource() instanceof SecurityWarningDialog) {
+                    SecurityWarningDialog dialog = (SecurityWarningDialog) e.getSource();
+                    dialog.setResizable(true);
+                    centerDialog(dialog);
+                    dialog.setValue(null);
                 }
             }
-        });
+        };
+		addWindowListener(adapter);
+		addWindowFocusListener(adapter);
 
-		return dialog;
 	}
 
 	public AccessType getType() {
@@ -401,23 +381,24 @@ public class SecurityWarningDialog extends JOptionPane {
 	}
 
 	/**
-	 * Updates the UI using SecurityWarningOptionPane, instead of the
-	 * basic dialog box.
+	 * Adds the appropriate JPanel to this Dialog, based on {@link DialogType}.
 	 */
-	public void updateUI() {
+	private void installPanel() {
 
 		if (dialogType == DialogType.CERT_WARNING)
-			setUI((OptionPaneUI) new CertWarningPane(this, this.certVerifier));
+			panel = new CertWarningPane(this, this.certVerifier);
 		else if (dialogType == DialogType.MORE_INFO)
-			setUI((OptionPaneUI) new MoreInfoPane(this, this.certVerifier));
+			panel = new MoreInfoPane(this, this.certVerifier);
 		else if (dialogType == DialogType.CERT_INFO)
-			setUI((OptionPaneUI) new CertsInfoPane(this, this.certVerifier));
+			panel = new CertsInfoPane(this, this.certVerifier);
 		else if (dialogType == DialogType.SINGLE_CERT_INFO)
-			setUI((OptionPaneUI) new SingleCertInfoPane(this, this.certVerifier));
+			panel = new SingleCertInfoPane(this, this.certVerifier);
 		else if (dialogType == DialogType.ACCESS_WARNING)
-			setUI((OptionPaneUI) new AccessWarningPane(this, extras, this.certVerifier));
+			panel = new AccessWarningPane(this, extras, this.certVerifier);
 		else if (dialogType == DialogType.APPLET_WARNING)
-			setUI((OptionPaneUI) new AppletWarningPane(this, this.certVerifier));
+			panel = new AppletWarningPane(this, this.certVerifier);
+
+		add(panel, BorderLayout.CENTER);
 	}
 
 	private static void centerDialog(JDialog dialog) {
@@ -427,4 +408,36 @@ public class SecurityWarningDialog extends JOptionPane {
 		dialog.setLocation((screen.width - dialogSize.width)/2,
 			(screen.height - dialogSize.height)/2);
 	}
+
+    private void selectDefaultButton() {
+        if (panel == null) {
+            System.out.println("initial value panel is null");
+        }
+        panel.requestFocusOnDefaultButton();
+    }
+
+    protected void setValue(Object value) {
+        if (JNLPRuntime.isDebug()) {
+            System.out.println("Setting value:" + value);
+        }
+        this.value = value;
+    }
+
+    protected Object getValue() {
+        if (JNLPRuntime.isDebug()) {
+            System.out.println("Returning value:" + value);
+        }
+        return value;
+    }
+
+    /**
+     * Updates the look and feel of the window to be the system look and feel
+     */
+    protected void setSystemLookAndFeel() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            //don't worry if we can't.
+        }
+    }
 }

@@ -51,44 +51,42 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import net.sourceforge.jnlp.JNLPFile;
-import net.sourceforge.jnlp.runtime.JNLPRuntime;
 
 /**
- * Provides the look and feel for a SecurityWarningDialog. These dialogs are
+ * Provides a panel to show inside a SecurityWarningDialog. These dialogs are
  * used to warn the user when either signed code (with or without signing 
  * issues) is going to be run, or when service permission (file, clipboard,
  * printer, etc) is needed with unsigned code.
  *
  * @author <a href="mailto:jsumali@redhat.com">Joshua Sumali</a>
  */
-public class AccessWarningPane extends SecurityDialogUI {
+public class AccessWarningPane extends SecurityDialogPanel {
 
 	JCheckBox alwaysAllow;
 	Object[] extras;
 	
-	public AccessWarningPane(JComponent x, CertVerifier certVerifier) {
+	public AccessWarningPane(SecurityWarningDialog x, CertVerifier certVerifier) {
 		super(x, certVerifier);
+		addComponents();
 	}
 
-	public AccessWarningPane(JComponent x, Object[] extras, CertVerifier certVerifier) {
+	public AccessWarningPane(SecurityWarningDialog x, Object[] extras, CertVerifier certVerifier) {
 		super(x, certVerifier);
 		this.extras = extras;
+		addComponents();
 	}
 
 	/**
-	 * Creates the actual GUI components, and adds it to <code>optionPane</code>
+	 * Creates the actual GUI components, and adds it to this panel
 	 */
-	protected void installComponents() {
-		SecurityWarningDialog.AccessType type =
-		    ((SecurityWarningDialog)optionPane).getType();
-		JNLPFile file =
-		    ((SecurityWarningDialog)optionPane).getFile();
+	private void addComponents() {
+		SecurityWarningDialog.AccessType type = parent.getType();
+		JNLPFile file = parent.getFile();
 
 		String name = "";
 		String publisher = "";
@@ -173,35 +171,22 @@ public class AccessWarningPane extends SecurityDialogUI {
 		
 		JButton run = new JButton("Allow");
 		JButton cancel = new JButton("Cancel");
-		run.addActionListener(createButtonActionListener(0));
+		run.addActionListener(createSetValueListener(parent,0));
 		run.addActionListener(new CheckBoxListener());
-		cancel.addActionListener(createButtonActionListener(1));
+		cancel.addActionListener(createSetValueListener(parent, 1));
 		initialFocusComponent = cancel;
 		buttonPanel.add(run);
 		buttonPanel.add(cancel);
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
 		//all of the above
-		JPanel main = new JPanel();
-		main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
-		main.add(topPanel);
-		main.add(infoPanel);
-		main.add(buttonPanel);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		add(topPanel);
+		add(infoPanel);
+		add(buttonPanel);
 
-		optionPane.add(main, BorderLayout.CENTER);
 	}
 
-	private static String R(String key) {
-        return JNLPRuntime.getMessage(key);
-    }
-
-    private static String R(String key, Object param) {
-        return JNLPRuntime.getMessage(key, new Object[] {param});
-    }
-
-	protected String htmlWrap (String s) {
-        return "<html>"+s+"</html>";
-    }
 
 	private class CheckBoxListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {

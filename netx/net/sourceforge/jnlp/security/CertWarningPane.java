@@ -53,7 +53,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -64,33 +63,31 @@ import net.sourceforge.jnlp.runtime.JNLPRuntime;
 import net.sourceforge.jnlp.tools.KeyTool;
 
 /**
- * Provides the look and feel for a SecurityWarningDialog. These dialogs are
+ * Provides the panel for using inside a SecurityWarningDialog. These dialogs are
  * used to warn the user when either signed code (with or without signing 
  * issues) is going to be run, or when service permission (file, clipboard,
  * printer, etc) is needed with unsigned code.
  *
  * @author <a href="mailto:jsumali@redhat.com">Joshua Sumali</a>
  */
-public class CertWarningPane extends SecurityDialogUI {
+public class CertWarningPane extends SecurityDialogPanel {
 
 	JCheckBox alwaysTrust;
 	CertVerifier certVerifier;
 
-	public CertWarningPane(JComponent x, CertVerifier certVerifier) {
+	public CertWarningPane(SecurityWarningDialog x, CertVerifier certVerifier) {
 		super(x, certVerifier);
 		this.certVerifier = certVerifier;
+		addComponents();
 	}
 
 	/**
-	 * Creates the actual GUI components, and adds it to <code>optionPane</code>
+	 * Creates the actual GUI components, and adds it to this panel
 	 */
-	protected void installComponents() {
-		SecurityWarningDialog.AccessType type =
-			((SecurityWarningDialog)optionPane).getType();
-		JNLPFile file =
-			((SecurityWarningDialog)optionPane).getFile();
-		Certificate c = ((SecurityWarningDialog)optionPane)
-                                .getJarSigner().getPublisher();
+	private void addComponents() {
+		SecurityWarningDialog.AccessType type = parent.getType();
+		JNLPFile file = parent.getFile();
+		Certificate c = parent.getJarSigner().getPublisher();
 		
 		String name = "";
 		String publisher = "";
@@ -193,26 +190,25 @@ public class CertWarningPane extends SecurityDialogUI {
 		Dimension d = new Dimension(buttonWidth, buttonHeight);
 		run.setPreferredSize(d);
 		cancel.setPreferredSize(d);
-		run.addActionListener(createButtonActionListener(0));
+		run.addActionListener(createSetValueListener(parent, 0));
 		run.addActionListener(new CheckBoxListener());
-		cancel.addActionListener(createButtonActionListener(1));
+		cancel.addActionListener(createSetValueListener(parent, 1));
 		initialFocusComponent = cancel;
 		buttonPanel.add(run);
 		buttonPanel.add(cancel);
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
 		//all of the above
-		JPanel main = new JPanel();
-		main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
-		main.add(topPanel);
-		main.add(infoPanel);
-		main.add(buttonPanel);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		add(topPanel);
+		add(infoPanel);
+		add(buttonPanel);
 
 		JLabel bottomLabel;
 		JButton moreInfo = new JButton("More information...");
 		moreInfo.addActionListener(new MoreInfoButtonListener());
 		
-		if (((SecurityWarningDialog)optionPane).getJarSigner().getRootInCacerts())
+		if (parent.getJarSigner().getRootInCacerts())
 			bottomLabel = new JLabel(htmlWrap(R("STrustedSource")));
 		else
 			bottomLabel = new JLabel(htmlWrap(R("SUntrustedSource")));
@@ -223,27 +219,14 @@ public class CertWarningPane extends SecurityDialogUI {
 		bottomPanel.add(moreInfo);
 		bottomPanel.setPreferredSize(new Dimension(500,100));
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		main.add(bottomPanel);
+		add(bottomPanel);
 
-		optionPane.add(main, BorderLayout.CENTER);
 	}
-
-	private static String R(String key) {
-        return JNLPRuntime.getMessage(key);
-    }
-
-	protected String htmlWrap (String s) {
-        return "<html>"+s+"</html>";
-    }
 
 	private class MoreInfoButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			
-			// TODO: Can we change this to just
-			// optionPane.showMoreInfo(); ?
-			SecurityWarningDialog.showMoreInfoDialog(
-				((SecurityWarningDialog)optionPane).getJarSigner(), 
-				optionPane);
+			SecurityWarningDialog.showMoreInfoDialog(parent.getJarSigner(), 
+				parent);
 		}
 	}
 
@@ -255,9 +238,11 @@ public class CertWarningPane extends SecurityDialogUI {
 			if (alwaysTrust != null && alwaysTrust.isSelected()) {
 				try {
 					KeyTool kt = new KeyTool();
-					Certificate c =
-						((SecurityWarningDialog)optionPane).getJarSigner().getPublisher();
+					Certificate c = parent.getJarSigner().getPublisher();
 					kt.importCert(c);
+					if (JNLPRuntime.isDebug()) {
+					    System.out.println("certificate is now permanently trusted");
+					}
 				} catch (Exception ex) {
 					//TODO: Let NetX show a dialog here notifying user 
 					//about being unable to add cert to keystore

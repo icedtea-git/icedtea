@@ -1,3 +1,96 @@
+2010-07-19  Omair Majid  <omajid@redhat.com>
+
+	PR icedtea/372
+	* netx/net/sourceforge/jnlp/security/SecurityDialogUI.java: Renamed to..
+	* netx/net/sourceforge/jnlp/security/SecurityDialogPanel.java: New file.
+	Remove all usage of Look and Feel related functionality. Extend JPanel.
+	(createSetValueListener): New method.
+	(setVisible): New method.
+	(requestFocusOnDefaultButton): New method.
+	* netx/net/sourceforge/jnlp/security/AccessWarningPane.java
+	Extend SecurityDialogPanel instead of SecurityDialogUI
+	(AccessWarningPane): Take a SecurityWarningDialog instead of a JComponent
+	as a paramenter. Call addComponents.
+	(installComponents): Renamed to
+	(addComponents): New method.
+	(R): Moved to parent class.
+	(htmlWrap): Likewise.
+	* netx/net/sourceforge/jnlp/security/AppletWarningPane.java
+	Extend SecurityDialogPanel instead of SecurityDialogUI
+	(AppletWarningPane): Take a SecurityWarningDialog instead of a JComponent
+	as a paramter. Call addComponents.
+	(installComponents): Renamed to...
+	(addComponents): New method.
+	(htmlWrap): Moved to parent class.
+	* netx/net/sourceforge/jnlp/security/CertWarningPane.java
+	Extend SecurityDialogPanel instead of SecurityDialogUI
+	(CertWarningPane): Take a SecurityWarningDialog instead of a JComponent as
+	a parameter. Call addComponents.
+	(installComponents): Renamed to...
+	(addComponents): New method.
+	(R): Moved to parent class.
+	(htmlWrap): Likewise.
+	(CheckBoxListener): Add debug information.
+	* netx/net/sourceforge/jnlp/security/CertsInfoPane.java
+	Extend SecurityDialogPanel instead of SecurityDialogUI
+	(CertsInfoPane): Take a SecurityWarningDialog instead of a JComponent as a
+	parameter. Call addComponents.
+	(installComponents): Renamed to...
+	(addComponents): New method.
+	* netx/net/sourceforge/jnlp/security/MoreInfoPane.java
+	Extend SecurityDialogPanel instead of SecurityDialogUI
+	(MoreInfoPane): Take a SecurityWarningDialog instead of a JComponent as a
+	parameter. Call addComponents.
+	(installComponents): Renamed to...
+	(addComponents): New method.
+	(R): Moved to parent class.
+	(htmlWrap): Likewise.
+	* netx/net/sourceforge/jnlp/security/SecurityWarningDialog.java
+	Extend JDialog instead of JOptionPane. Add panel, value as new fields.
+	(SecurityWarningDialog): Call super and initDialog.
+	(showAccessWarningDialog): Modified to use the cleaned-up api.
+	(showCertWarningDialog): Likewise.
+	(showMoreInfoDialog): Likewise.
+	(showCertInfoDialog): Likewise.
+	(showSingleCertInfoDialog): Likewise.
+	(showAppletWarning): Likewise.
+	(createDialog): Renamed to...
+	(initDialog): New method. Clean up api and remove JOptionPane references.
+	(updateUI): Renamed to...
+	(installPanel): Switch from Look and Feel related setUI methods to simple
+	JComponents.
+	(selectDefaultButton): New method. Causes the default button to request
+	focus.
+	(setValue): New method. Set the return value of this dialog.
+	(getValue): New method. Get the return value of this dialog.
+	(setSystemLookAndFeel): New method. Set the Look and Feel to the System
+	look and feel.
+	* netx/net/sourceforge/jnlp/security/SingleCertInfoPane.java
+	(SingleCertInfoPane): Take a SecurityWarningDialog instead of a JComponent
+	as a parameter.
+	(buildTree): Use parant instead of optionPane.
+	(populateTable): Likewise.
+	* netx/net/sourceforge/jnlp/security/viewer/CertificatePane.java: Extend 
+	JPanel instead of SecurityDialogUI. Add two new fields: parent and
+	defaultFocusComponent.
+	(CertificatePane): Take a JDialog as the argument.
+	(installUI): Removed.
+	(setSystemLookAndFeel): Removed.
+	(installComponents): Renamed to ...
+	(addComponents): New method.
+	(focusOnDefaultButton): New method. Makes the defaultFocusComponent get
+	focus.
+	(CloseButtonListener): New class. Disposes the JDialog.
+	* netx/net/sourceforge/jnlp/security/viewer/CertificateViewer.java: Extend
+	JDialog instead of JOptionPane
+	(CertificateViewer): Initialize the JDialog, add the CertificatePanel and
+	set default focus.
+	(updateUI): Removed.
+	(centerDialog): Takes no arguments.
+	(createDialog): Removed.
+	(showCertificateViewer): Use the new cleaned up api for CertificateViewer.
+	(setSystemLookAndFeel): New method. Sets the LookAndFeel of the system.
+
 2010-07-19  Gary Benson  <gbenson@redhat.com>
             Xerxes Rånby  <xerxes@zafena.se>
 
