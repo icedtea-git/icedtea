@@ -216,10 +216,10 @@ else
 endif
 
 if WITH_CACAO
-  ICEDTEA_BUILD_TARGET=jdk_only
-  ICEDTEA_DEBUG_BUILD_TARGET=jdk_fastdebug_only
+  ICEDTEA_BUILD_TARGET = jdk_only
+  ICEDTEA_DEBUG_BUILD_TARGET = jdk_fastdebug_only
 else
-  ICEDTEA_DEBUG_BUILD_TARGET=debug_build
+  ICEDTEA_DEBUG_BUILD_TARGET = debug_build
 endif
 
 if BOOTSTRAPPING
@@ -534,7 +534,8 @@ ICEDTEA_ENV = \
 	DEBUG_BINARIES="true" \
 	DISABLE_INTREE_EC="true" \
 	ALT_DROPS_DIR="$(abs_top_builddir)/drops" \
-	ALT_OUTPUTDIR="$(BUILD_OUTPUT_DIR)"
+	ALT_OUTPUTDIR="$(BUILD_OUTPUT_DIR)" \
+	VERBOSE="$(VERBOSE)"
 
 if WITH_CACAO
 ICEDTEA_ENV += \
@@ -786,7 +787,6 @@ clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
 	if [ -e lib ]; then \
 	  rmdir lib ; \
 	fi
-	rm -f jni-common.o
 
 distclean-local: clean-local clean-download
 	if [ $(abs_top_srcdir) != $(abs_top_builddir) ]; then \
@@ -1320,7 +1320,7 @@ stamps/ports.stamp: stamps/extract.stamp
 		      $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/cpu/zero/vm/* \
 		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
-	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'|sed "s#hotspot/build#hotspot/make#"); \
+	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'); \
 	  ln -sfv $$target $$link; \
 	done
 	if ! test "x$(WITH_CACAO)" = "xno" ; then \
@@ -2413,9 +2413,9 @@ stamps/plugin-tests.stamp: $(PLUGIN_TEST_SRCS) $(ICEDTEAPLUGIN_TARGET)
 	 -d plugin/tests/LiveConnect \
 	 -classpath $(LIVECONNECT_JAR) $(PLUGIN_TEST_SRCS) ;
 	$(BOOT_DIR)/bin/jar cf plugin/tests/LiveConnect/PluginTest.jar \
-	  plugin/tests/LiveConnect/*.class ;
-	cp -pPR --reflink-auto $(abs_top_srcdir)/plugin/tests/LiveConnect/*.{js,html} \
-	  plugin/tests/LiveConnect ;
+	  plugin/tests/LiveConnect/*.class 
+	cp -pPR $(SRC_DIR_LINK) $(abs_top_srcdir)/plugin/tests/LiveConnect/*.{js,html} \
+	  plugin/tests/LiveConnect
 	echo "Done. Now load \"file://$(abs_top_builddir)/index.html\" in your browser" ; \
 	mkdir -p stamps
 	touch stamps/plugin-tests.stamp

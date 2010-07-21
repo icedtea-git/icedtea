@@ -1,5 +1,19 @@
 2010-07-20  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(ICEDTEA_BUILD_TARGET): Match formatting used by IcedTea6.
+	(ICEDTEA_DEBUG_BUILD_TARGET): Likewise.
+	(clean-local): Remove redundant reference to jni-common.o
+	(ports): Remove redundant hotspot/build replacement.
+	(plugin-tests): Fix broken reference to reflink with
+	SRC_DIR_LINK.
+
+2010-02-26  Mark Wielaard  <mark@klomp.org>
+
+	(VERBOSE): Use value of VERBOSE passed from user.
+
+2010-07-20  Andrew John Hughes  <ahughes@redhat.com>
+
 	* configure.ac:
 	Remove redundant call to WITH_OPENJDK_SRC_DIR.
 	Now pulled in by IT_OBTAIN_HG_REVISIONS.
