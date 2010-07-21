@@ -87,6 +87,9 @@ class Parser {
     /** the specification version */
     private Version spec;
 
+    /** the base URL that all hrefs are relative to */
+    private URL base;
+
     /** the codebase URL */
     private URL codebase;
 
@@ -129,8 +132,8 @@ class Parser {
         // JNLP tag information
         this.spec = getVersion(root, "spec", "1.0+");
         this.codebase = addSlash(getURL(root, "codebase", base));
-        
-        fileLocation = getURL(root, "href", codebase);
+        this.base = (codebase!=null) ? codebase : base; // if codebase not specified use default codebase
+        fileLocation = getURL(root, "href", this.base);
 
         // ensure version is supported
         if (!supportedVersions.matchesAny(spec))
@@ -276,7 +279,7 @@ class Parser {
      */
     public JREDesc getJRE(Node node) throws ParseException {
         Version version = getVersion(node, "version", null);
-        URL location = getURL(node, "href", codebase);
+        URL location = getURL(node, "href", base);
         String vmArgs = getAttribute(node, "java-vm-args",null);
         try {
             checkVMArgs(vmArgs);
@@ -303,7 +306,7 @@ class Parser {
      */
     public JARDesc getJAR(Node node) throws ParseException {
         boolean nativeJar = "nativelib".equals(node.getNodeName());
-        URL location = getRequiredURL(node, "href", codebase);
+        URL location = getRequiredURL(node, "href", base);
         Version version = getVersion(node, "version", null);
         String part = getAttribute(node, "part", null);
         boolean main = "true".equals(getAttribute(node, "main", "false"));
@@ -327,7 +330,7 @@ class Parser {
     public ExtensionDesc getExtension(Node node) throws ParseException {
         String name = getAttribute(node, "name", null);
         Version version = getVersion(node, "version", null);
-        URL location = getRequiredURL(node, "href", codebase);
+        URL location = getRequiredURL(node, "href", base);
 
         ExtensionDesc ext = new ExtensionDesc(name, version, location);
 
@@ -430,7 +433,7 @@ class Parser {
                 addInfo(info, child, kind, getSpanText(child));
             }
             if ("homepage".equals(name))
-                addInfo(info, child, null, getRequiredURL(child, "href", codebase));
+                addInfo(info, child, null, getRequiredURL(child, "href", base));
             if ("icon".equals(name))
                 addInfo(info, child, getAttribute(child, "kind", "default"), getIcon(child));
             if ("offline-allowed".equals(name))
@@ -484,7 +487,7 @@ class Parser {
         int height = Integer.parseInt(getAttribute(node, "height", "-1"));
         int size = Integer.parseInt(getAttribute(node, "size", "-1"));
         int depth = Integer.parseInt(getAttribute(node, "depth", "-1"));
-        URL location = getRequiredURL(node, "href", codebase);
+        URL location = getRequiredURL(node, "href", base);
         Object kind = getAttribute(node, "kind", "default"); 
 
         return new IconDesc(location, kind, width, height, depth, size);
@@ -521,8 +524,8 @@ class Parser {
         else if (strict)
             throw new ParseException(R("PEmptySecurity"));
 
-        if (codebase != null)
-            return new SecurityDesc(file, type, codebase.getHost());
+        if (base != null)
+            return new SecurityDesc(file, type, base.getHost());
         else
             return new SecurityDesc(file, type, null);
     }
@@ -589,7 +592,7 @@ class Parser {
     public AppletDesc getApplet(Node node) throws ParseException {
         String name = getRequiredAttribute(node, "name", R("PUnknownApplet"));
         String main = getRequiredAttribute(node, "main-class", null);
-        URL docbase = getURL(node, "documentbase", codebase);
+        URL docbase = getURL(node, "documentbase", base);
         Map paramMap = new HashMap();
         int width = 0;
         int height = 0;
@@ -721,7 +724,7 @@ class Parser {
     public RelatedContentDesc getRelatedContent(Node node) throws ParseException {
         
         getRequiredAttribute(node, "href", null);
-        URL location = getURL(node, "href", codebase);
+        URL location = getURL(node, "href", base);
         
         String title = null;
         String description = null;

@@ -1,3 +1,8 @@
+2010-07-21  Deepak Bhole <dbhole@redhat.com>
+
+	* netx/net/sourceforge/jnlp/Parser.java: Undo changes from 98c88b32cdb4 to
+	Parser.java, since they could cause potential regressions.
+
 2010-07-20  Man Lung Wong  <mwong@redhat.com>
 
 	* netx/net/sourceforge/jnlp/SecurityDesc.java:
