@@ -393,8 +393,7 @@ import com.sun.jndi.toolkit.url.UrlUtil;
          if (oldFrame != null && handle == oldFrame.handle)
              return;
 
-         PluginAppletViewer newFrame = new PluginAppletViewer(handle, identifier, statusMsgStream, heightFactor, widthFactor);
-         newFrame.panel = panel;
+         PluginAppletViewer newFrame = new PluginAppletViewer(handle, identifier, statusMsgStream, heightFactor, widthFactor, panel);
 
          if (oldFrame != null) {
              applets.remove(oldFrame.identifier);
@@ -425,13 +424,14 @@ import com.sun.jndi.toolkit.url.UrlUtil;
       */
      private PluginAppletViewer(long handle, final int identifier,
                                 PrintStream statusMsgStream, double heightFactor,
-                                double widthFactor) {
+                                double widthFactor, AppletViewerPanel appletPanel) {
 
          super(handle, true);
          this.statusMsgStream = statusMsgStream;
          this.identifier = identifier;
          this.proposedHeightFactor = heightFactor;
          this.proposedWidthFactor = widthFactor;
+         this.panel = appletPanel;
 
         if (!appletPanels.contains(panel))
              appletPanels.addElement(panel);
