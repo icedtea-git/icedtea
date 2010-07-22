@@ -55,7 +55,7 @@ IT_DISABLE_HOTSPOT_TESTS
 IT_DISABLE_LANGTOOLS_TESTS
 IT_DISABLE_JDK_TESTS
 
-AC_MSG_CHECKING([whether to build the LiveConnect plugin])
+AC_MSG_CHECKING([whether to build the browser plugin])
 AC_ARG_ENABLE([plugin],
               [AS_HELP_STRING([--disable-plugin],
                               [Disable compilation of browser plugin])],

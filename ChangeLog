@@ -1,3 +1,15 @@
+2010-07-22  Andrew John Hughes  <ahughes@redhat.com>
+
+	* INSTALL,
+	* README: Updated to match current state of
+	play and extended with missing information.
+	* acinclude.m4: Add parameter information to
+	configure help for all options.
+	(FIND_ENDORSED_JARS): Remove unused macro and
+	correct typos.
+	* configure.ac: Make the --disable-plugin help clearer
+	by replacing 'LiveConnect plugin' with 'browser plugin'.
+
 2010-07-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

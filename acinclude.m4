@@ -1,4 +1,4 @@
- AC_DEFUN([IT_SET_ARCH_SETTINGS],
+AC_DEFUN([IT_SET_ARCH_SETTINGS],
 [
   case "${host_cpu}" in
     x86_64)
@@ -130,7 +130,7 @@ AC_DEFUN([FIND_JAVAC],
 AC_DEFUN([IT_FIND_ECJ],
 [
   AC_ARG_WITH([ecj],
-	      [AS_HELP_STRING(--with-ecj,bytecode compilation with ecj)],
+	      [AS_HELP_STRING([--with-ecj[[=PATH]]],the path to an ecj binary)],
   [
     if test "x${withval}" != x && test "x${withval}" != xyes && test "x${withval}" != xno; then
       IT_CHECK_ECJ(${withval})
@@ -177,7 +177,7 @@ AC_DEFUN([IT_CHECK_ECJ],
 AC_DEFUN([IT_FIND_JAVAC],
 [
   AC_ARG_WITH([javac],
-	      [AS_HELP_STRING(--with-javac,bytecode compilation with javac)],
+	      [AS_HELP_STRING([--with-javac[[=PATH]]],the path to a javac binary)],
   [
     if test "x${withval}" != x && test "x${withval}" != xyes && test "x${withval}" != xno; then
       IT_CHECK_JAVAC(${withval})
@@ -211,7 +211,7 @@ AC_DEFUN([FIND_JAVA],
 [
   AC_MSG_CHECKING(for java)
   AC_ARG_WITH([java],
-              [AS_HELP_STRING(--with-java,specify location of the 1.5 java vm)],
+              [AS_HELP_STRING([--with-java[[=PATH]]],specify location of a 1.5 Java VM)],
   [
     JAVA="${withval}"
   ],
@@ -252,8 +252,8 @@ AC_DEFUN_ONCE([WITH_OPENJDK_SRC_DIR],
 [
   DEFAULT_SRC_DIR=${abs_top_builddir}/openjdk
   AC_MSG_CHECKING([for an OpenJDK source directory])
-  AC_ARG_WITH([openjdk-src-dir],
-              [AS_HELP_STRING(--with-openjdk-src-dir,specify the location of the openjdk sources)],
+  AC_ARG_WITH([openjdk-src-dir=DIR],
+              [AS_HELP_STRING([--with-openjdk-src-dir=PATH],specify the location of the OpenJDK source tree)],
   [
     OPENJDK_SRC_DIR=${withval}
     with_external_src_dir=true
@@ -306,7 +306,7 @@ AC_DEFUN([FIND_ECJ_JAR],
 [
   AC_MSG_CHECKING([for an ecj JAR file])
   AC_ARG_WITH([ecj-jar],
-              [AS_HELP_STRING(--with-ecj-jar,specify location of the ECJ jar)],
+              [AS_HELP_STRING([--with-ecj-jar[[=PATH]]],specify location of an ECJ JAR file)],
   [
     if test -f "${withval}"; then
       ECJ_JAR="${withval}"
@@ -352,7 +352,7 @@ AC_DEFUN([FIND_JAVAH],
   JAVAH_DEFAULT=${SYSTEM_JDK_DIR}/bin/javah
   AC_MSG_CHECKING([if a javah executable is specified])
   AC_ARG_WITH([javah],
-              [AS_HELP_STRING(--with-javah,specify location of javah)],
+              [AS_HELP_STRING([--with-javah[[=PATH]]],specify location of javah)],
   [
     if test "x${withval}" = "xyes"; then
       JAVAH=no
@@ -385,7 +385,7 @@ AC_DEFUN([FIND_JAR],
   JAR_DEFAULT=${SYSTEM_JDK_DIR}/bin/jar
   AC_MSG_CHECKING([if a jar executable is specified])
   AC_ARG_WITH([jar],
-              [AS_HELP_STRING(--with-jar,specify location of jar)],
+              [AS_HELP_STRING([--with-jar[[=PATH]]],specify location of jar)],
   [
     if test "x${withval}" = "xyes"; then
       JAR=no
@@ -451,7 +451,7 @@ AC_DEFUN([FIND_RMIC],
   RMIC_DEFAULT=${SYSTEM_JDK_DIR}/bin/rmic
   AC_MSG_CHECKING(if an rmic executable is specified)
   AC_ARG_WITH([rmic],
-              [AS_HELP_STRING(--with-rmic,specify location of rmic)],
+              [AS_HELP_STRING([--with-rmic[[=PATH]]],specify location of rmic)],
   [
     if test "x${withval}" = "xyes"; then
       RMIC=no
@@ -479,51 +479,11 @@ AC_DEFUN([FIND_RMIC],
   AC_SUBST(RMIC)
 ])
 
-AC_DEFUN([FIND_ENDORSED_JARS],
-[
-  AC_MSG_CHECKING(for endorsed jars dir)
-  AC_ARG_WITH([endorsed-dir],
-              [AS_HELP_STRING(--with-endorsed-dir,specify directory of endorsed jars (xalan-j2.jar, xalan-j2-serializer.jar, xerces-j2.jar))],
-  [
-    if test "x${withval}" = "xno"; then
-        ENDORSED_JARS="${withval}"
-        AC_MSG_RESULT(${withval})
-    else if test -f "${withval}/xalan-j2.jar"; then
-      if test -f "${withval}/xalan-j2-serializer.jar"; then
-        if test -f "${withval}/xerces-j2.jar"; then
-          ENDORSED_JARS="${withval}"
-          AC_MSG_RESULT(${withval})
-        fi
-      fi
-    fi
-  ],
-  [
-    ENDORSED_JARS=
-  ])
-  if test -z "${ENDORSED_JARS}"; then
-    if test -f "/usr/share/java/xalan-j2.jar"; then
-      if test -f "/usr/share/java/xalan-j2-serializer.jar"; then
-        if test -f "/usr/share/java/xerces-j2.jar"; then
-          ENDORSED_JARS="/usr/share/java/xalan-j2.jar /usr/share/java/xalan-j2-serializer.jar /usr/share/java/xerces-j2.jar"
-          AC_MSG_RESULT(/usr/share/java)
-        fi
-      fi
-    fi
-    if test -z "${ENDORSED_JARS}"; then
-      AC_MSG_RESULT(missing)
-    fi
-  fi
-  if test -z "${ENDORSED_JARS}"; then
-    AC_MSG_ERROR("A directory containing required jars (xalan-j2.jar, xalan-j2-serializer.jar, xerces-j2.jar) was not found.")
-  fi
-  AC_SUBST(ENDORSED_JARS)
-])
-
 AC_DEFUN([WITH_OPENJDK_SRC_ZIP],
 [
   AC_MSG_CHECKING([for an OpenJDK source zip])
   AC_ARG_WITH([openjdk-src-zip],
-              [AS_HELP_STRING(--with-openjdk-src-zip,specify the location of the openjdk source zip)],
+              [AS_HELP_STRING([--with-openjdk-src-zip[[=PATH]]],specify the location of the OpenJDK source zip)],
   [
     ALT_OPENJDK_SRC_ZIP=${withval}
     AM_CONDITIONAL(USE_ALT_OPENJDK_SRC_ZIP, test x = x)
@@ -541,7 +501,7 @@ AC_DEFUN([WITH_ALT_JAR_BINARY],
 [
   AC_MSG_CHECKING([for an alternate jar command])
   AC_ARG_WITH([alt-jar],
-              [AS_HELP_STRING(--with-alt-jar, specify the location of an alternate jar binary to use for building)],
+              [AS_HELP_STRING(--with-alt-jar=PATH, specify the location of an alternate jar binary to use for building)],
   [
     ALT_JAR_CMD=${withval}
     AM_CONDITIONAL(USE_ALT_JAR, test x = x)
@@ -558,7 +518,7 @@ AC_DEFUN([FIND_XALAN2_JAR],
 [
   AC_MSG_CHECKING([for a xalan2 jar])
   AC_ARG_WITH([xalan2-jar],
-              [AS_HELP_STRING(--with-xalan2-jar,specify location of the xalan2 jar)],
+              [AS_HELP_STRING([--with-xalan2-jar[[=PATH]]],specify location of the xalan2 jar)],
   [
     if test -f "${withval}" ; then
       XALAN2_JAR="${withval}"
@@ -589,7 +549,7 @@ AC_DEFUN([FIND_XALAN2_SERIALIZER_JAR],
 [
   AC_MSG_CHECKING([for a xalan2 serializer jar])
   AC_ARG_WITH([xalan2-serializer-jar],
-              [AS_HELP_STRING(--with-xalan2-serializer-jar,specify location of the xalan2-serializer jar)],
+              [AS_HELP_STRING([--with-xalan2-serializer-jar[[=PATH]]],specify location of the xalan2-serializer jar)],
   [
     if test -f "${withval}" ; then
       XALAN2_SERIALIZER_JAR="${withval}"
@@ -620,7 +580,7 @@ AC_DEFUN([FIND_XERCES2_JAR],
 [
   AC_MSG_CHECKING([for a xerces2 jar])
   AC_ARG_WITH([xerces2-jar],
-              [AS_HELP_STRING(--with-xerces2-jar,specify location of the xerces2 jar)],
+              [AS_HELP_STRING([--with-xerces2-jar[[=PATH]]],specify location of the xerces2 jar)],
   [
     if test -f "${withval}" ; then
       XERCES2_JAR="${withval}"
@@ -653,7 +613,7 @@ AC_DEFUN([FIND_RHINO_JAR],
 [
   AC_MSG_CHECKING([whether to include Javascript support via Rhino])
   AC_ARG_WITH([rhino],
-              [AS_HELP_STRING(--with-rhino,specify location of the rhino jar)],
+              [AS_HELP_STRING([--with-rhino[[=PATH]]],specify location of the rhino jar)],
   [
     case "${withval}" in
       yes)
@@ -849,8 +809,8 @@ AC_DEFUN([AC_CHECK_WITH_CACAO_HOME],
 [
   AC_MSG_CHECKING([for a CACAO home directory])
   AC_ARG_WITH([cacao-home],
-              [AS_HELP_STRING([--with-cacao-home],
-                              [CACAO home directory [[default=/usr/local/cacao]]])],
+              [AS_HELP_STRING([--with-cacao-home[[=PATH]]],
+                              [CACAO home directory [[PATH=/usr/local/cacao]]])],
               [
                 case "${withval}" in
                 yes)
@@ -874,7 +834,7 @@ AC_DEFUN([AC_CHECK_WITH_CACAO_SRC_ZIP],
 [
   AC_MSG_CHECKING([for a CACAO source zip])
   AC_ARG_WITH([cacao-src-zip],
-              [AS_HELP_STRING(--with-cacao-src-zip,specify the location of the CACAO source zip)],
+              [AS_HELP_STRING(--with-cacao-src-zip=PATH,specify the location of the CACAO source zip)],
   [
     ALT_CACAO_SRC_ZIP=${withval}
     AM_CONDITIONAL(USE_ALT_CACAO_SRC_ZIP, test x = x)
@@ -889,6 +849,7 @@ AC_DEFUN([AC_CHECK_WITH_CACAO_SRC_ZIP],
 
 AC_DEFUN([ENABLE_HG],
 [
+  AC_REQUIRE([WITH_PROJECT])
   AC_MSG_CHECKING(whether to retrieve the source code from Mercurial)
   AC_ARG_ENABLE([hg],
                 [AS_HELP_STRING(--enable-hg,download source code from Mercurial [[default=depends on project]])],
@@ -920,7 +881,7 @@ AC_DEFUN([WITH_VERSION_SUFFIX],
 [
   AC_MSG_CHECKING(if a version suffix has been specified)
   AC_ARG_WITH([version-suffix],
-              [AS_HELP_STRING(--with-version-suffix,appends the given text to the JDK version)],
+              [AS_HELP_STRING(--with-version-suffix=TEXT,appends the given text to the JDK version)],
   [
     case "${withval}" in
       yes)
@@ -948,7 +909,7 @@ AC_DEFUN([WITH_PROJECT],
 [
   AC_MSG_CHECKING(which OpenJDK project is being used)
   AC_ARG_WITH([project],
-              [AS_HELP_STRING(--with-project,choose the OpenJDK project to use: icedtea jdk7 closures cvmi caciocavallo bsd nio2 [[default=icedtea]])],
+              [AS_HELP_STRING(--with-project=PROJECT,choose the OpenJDK project to use: icedtea jdk7 closures cvmi caciocavallo bsd nio2 [[PROJECT=icedtea]])],
   [
     case "${withval}" in
       yes)
@@ -979,7 +940,7 @@ AC_DEFUN([AC_CHECK_WITH_GCJ],
 [
   AC_MSG_CHECKING([whether to compile ecj natively])
   AC_ARG_WITH([gcj],
-	      [AS_HELP_STRING(--with-gcj,location of gcj for natively compiling ecj)],
+	      [AS_HELP_STRING([--with-gcj[[=PATH]]],location of gcj for natively compiling ecj)],
   [
     GCJ="${withval}"
   ],
@@ -999,7 +960,7 @@ AC_DEFUN([AC_CHECK_WITH_HOTSPOT_BUILD],
   DEFAULT_BUILD="default"
   AC_MSG_CHECKING([which HotSpot build to use])
   AC_ARG_WITH([hotspot-build],
-	      [AS_HELP_STRING(--with-hotspot-build,the HotSpot build to use)],
+	      [AS_HELP_STRING(--with-hotspot-build=BUILD,the HotSpot build to use [[BUILD=default]])],
   [
     HSBUILD="${withval}"
   ],
@@ -1020,7 +981,7 @@ AC_DEFUN([WITH_HOTSPOT_SRC_ZIP],
 [
   AC_MSG_CHECKING(for a HotSpot source zip)
   AC_ARG_WITH([hotspot-src-zip],
-              [AS_HELP_STRING(--with-hotspot-src-zip,specify the location of the hotspot source zip)],
+              [AS_HELP_STRING(--with-hotspot-src-zip=PATH,specify the location of the HotSpot source zip)],
   [
     ALT_HOTSPOT_SRC_ZIP=${withval}
     AM_CONDITIONAL(USE_ALT_HOTSPOT_SRC_ZIP, test x = x)
@@ -1037,7 +998,7 @@ AC_DEFUN([WITH_CORBA_SRC_ZIP],
 [
   AC_MSG_CHECKING(for a CORBA source zip)
   AC_ARG_WITH([corba-src-zip],
-              [AS_HELP_STRING(--with-corba-src-zip,specify the location of the corba source zip)],
+              [AS_HELP_STRING(--with-corba-src-zip=PATH,specify the location of the CORBA source zip)],
   [
     ALT_CORBA_SRC_ZIP=${withval}
     AM_CONDITIONAL(USE_ALT_CORBA_SRC_ZIP, test x = x)
@@ -1054,7 +1015,7 @@ AC_DEFUN([WITH_JAXP_SRC_ZIP],
 [
   AC_MSG_CHECKING(for a JAXP source zip)
   AC_ARG_WITH([jaxp-src-zip],
-              [AS_HELP_STRING(--with-jaxp-src-zip,specify the location of the jaxp source zip)],
+              [AS_HELP_STRING(--with-jaxp-src-zip=PATH,specify the location of the JAXP source zip)],
   [
     ALT_JAXP_SRC_ZIP=${withval}
     AM_CONDITIONAL(USE_ALT_JAXP_SRC_ZIP, test x = x)
@@ -1071,7 +1032,7 @@ AC_DEFUN([WITH_JAXWS_SRC_ZIP],
 [
   AC_MSG_CHECKING(for a JAXWS source zip)
   AC_ARG_WITH([jaxws-src-zip],
-              [AS_HELP_STRING(--with-jaxws-src-zip,specify the location of the jaxws source zip)],
+              [AS_HELP_STRING(--with-jaxws-src-zip=PATH,specify the location of the JAXWS source zip)],
   [
     ALT_JAXWS_SRC_ZIP=${withval}
     AM_CONDITIONAL(USE_ALT_JAXWS_SRC_ZIP, test x = x)
@@ -1088,7 +1049,7 @@ AC_DEFUN([WITH_JDK_SRC_ZIP],
 [
   AC_MSG_CHECKING(for a JDK source zip)
   AC_ARG_WITH([jdk-src-zip],
-              [AS_HELP_STRING(--with-jdk-src-zip,specify the location of the jdk source zip)],
+              [AS_HELP_STRING(--with-jdk-src-zip=PATH,specify the location of the JDK source zip)],
   [
     ALT_JDK_SRC_ZIP=${withval}
     AM_CONDITIONAL(USE_ALT_JDK_SRC_ZIP, test x = x)
@@ -1105,7 +1066,7 @@ AC_DEFUN([WITH_LANGTOOLS_SRC_ZIP],
 [
   AC_MSG_CHECKING(for a langtools source zip)
   AC_ARG_WITH([langtools-src-zip],
-              [AS_HELP_STRING(--with-langtools-src-zip,specify the location of the langtools source zip)],
+              [AS_HELP_STRING(--with-langtools-src-zip=PATH,specify the location of the langtools source zip)],
   [
     ALT_LANGTOOLS_SRC_ZIP=${withval}
     AM_CONDITIONAL(USE_ALT_LANGTOOLS_SRC_ZIP, test x = x)
@@ -1122,7 +1083,7 @@ AC_DEFUN([WITH_JAXP_DROP_ZIP],
 [
   AC_MSG_CHECKING(for a JAXP drop zip)
   AC_ARG_WITH([jaxp-drop-zip],
-              [AS_HELP_STRING(--with-jaxp-drop-zip,specify the location of the JAXP drop zip)],
+              [AS_HELP_STRING(--with-jaxp-drop-zip=PATH,specify the location of the JAXP drop zip)],
   [
     ALT_JAXP_DROP_ZIP=${withval}
     AM_CONDITIONAL(USE_ALT_JAXP_DROP_ZIP, test x = x)
@@ -1139,7 +1100,7 @@ AC_DEFUN([WITH_JAF_DROP_ZIP],
 [
   AC_MSG_CHECKING(for a JAF drop zip)
   AC_ARG_WITH([jaf-drop-zip],
-              [AS_HELP_STRING(--with-jaf-drop-zip,specify the location of the JAF drop zip)],
+              [AS_HELP_STRING(--with-jaf-drop-zip=PATH,specify the location of the JAF drop zip)],
   [
     ALT_JAF_DROP_ZIP=${withval}
     AM_CONDITIONAL(USE_ALT_JAF_DROP_ZIP, test x = x)
@@ -1156,7 +1117,7 @@ AC_DEFUN([WITH_JAXWS_DROP_ZIP],
 [
   AC_MSG_CHECKING(for a JAXWS drop zip)
   AC_ARG_WITH([jaxws-drop-zip],
-              [AS_HELP_STRING(--with-jaxws-drop-zip,specify the location of the JAXWS drop zip)],
+              [AS_HELP_STRING(--with-jaxws-drop-zip=PATH,specify the location of the JAXWS drop zip)],
   [
     ALT_JAXWS_DROP_ZIP=${withval}
     AM_CONDITIONAL(USE_ALT_JAXWS_DROP_ZIP, test x = x)
@@ -1173,7 +1134,7 @@ AC_DEFUN([AC_CHECK_WITH_HG_REVISION],
 [
   AC_MSG_CHECKING([which Mercurial revision to use])
   AC_ARG_WITH([hg-revision],
-	      [AS_HELP_STRING(--with-hg-revision,the Mercurial revision to use)],
+	      [AS_HELP_STRING(--with-hg-revision=REV,the Mercurial revision to use [[REV=tip]])],
   [
     HGREV="${withval}"
     AC_MSG_RESULT([${HGREV}])
@@ -1212,9 +1173,8 @@ AC_DEFUN([IT_CHECK_FOR_JDK],
 [
   AC_MSG_CHECKING([for a JDK home directory])
   AC_ARG_WITH([jdk-home],
-	      [AS_HELP_STRING([--with-jdk-home],
-                              [jdk home directory \
-                               (default is first predefined JDK found)])],
+	      [AS_HELP_STRING([--with-jdk-home[[=PATH]]],
+                              [jdk home directory (default is first predefined JDK found)])],
               [
                 if test "x${withval}" = xyes
                 then
@@ -1312,7 +1272,7 @@ AC_DEFUN([IT_CHECK_ADDITIONAL_VMS],
 [
 AC_MSG_CHECKING([for additional virtual machines to build])
 AC_ARG_WITH(additional-vms,
-            AC_HELP_STRING([--with-additional-vms=vm-list],
+            AC_HELP_STRING([--with-additional-vms=VM-LIST],
 	    [build additional virtual machines. Valid value is a comma separated string with the backend names `cacao', `zero' and `shark'.]),
 [
 if test "x${withval}" != x ; then
@@ -1468,7 +1428,7 @@ AC_DEFUN([AC_CHECK_WITH_TZDATA_DIR],
   DEFAULT="/usr/share/javazi"
   AC_MSG_CHECKING([which Java timezone data directory to use])
   AC_ARG_WITH([tzdata-dir],
-	      [AS_HELP_STRING(--with-tzdata-dir,set the Java timezone data directory [[default=${DEFAULT}]])],
+	      [AS_HELP_STRING([--with-tzdata-dir[[=DIR]]],set the Java timezone data directory [[DIR=/usr/share/javazi]])],
   [
     if test "x${withval}" = x || test "x${withval}" = xyes; then
       TZDATA_DIR_SET=yes
@@ -1838,7 +1798,7 @@ AC_REQUIRE([IT_FIND_NUMBER_OF_PROCESSORS])
 proc_default=$(($it_cv_proc + 1))
 AC_MSG_CHECKING([how many parallel build jobs to execute])
 AC_ARG_WITH([parallel-jobs],
-	[AS_HELP_STRING([--with-parallel-jobs],
+	[AS_HELP_STRING([--with-parallel-jobs[[=NUM]]],
 			[build IcedTea using the specified number of parallel jobs])],
 	[
           if test "x${withval}" = xyes; then
@@ -1904,7 +1864,7 @@ AC_DEFUN_ONCE([IT_DISABLE_LANGTOOLS_TESTS],
 [
   AC_MSG_CHECKING([whether to disable the execution of the langtools JTReg tests])
   AC_ARG_ENABLE([langtools-tests],
-                [AS_HELP_STRING(--disable-tests,do not run the langtools JTReg tests via make check-langtools [[default=no]])],
+                [AS_HELP_STRING(--disable-langtools-tests,do not run the langtools JTReg tests via make check-langtools [[default=no]])],
   [
     case "${enableval}" in
       no)
@@ -1926,7 +1886,7 @@ AC_DEFUN_ONCE([IT_DISABLE_JDK_TESTS],
 [
   AC_MSG_CHECKING([whether to disable the execution of the JDK JTReg tests])
   AC_ARG_ENABLE([jdk-tests],
-                [AS_HELP_STRING(--disable-tests,do not run the JDK JTReg tests via make check-jdk [[default=no]])],
+                [AS_HELP_STRING(--disable-jdk-tests,do not run the JDK JTReg tests via make check-jdk [[default=no]])],
   [
     case "${enableval}" in
       no)

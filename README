@@ -1,13 +1,14 @@
-IcedTea
-=======
+IcedTea7
+========
 
 The IcedTea project provides a harness to build the source code from
 openjdk.java.net using Free Software tools and dependencies.
 
 IcedTea addresses two problems: it eliminates the build requirement on
-proprietary build tools and it provides implementations of Java Web Start
-and the browser plugin which are missing from OpenJDK.  It also provides
-support for additional architectures via Zero/Shark.
+proprietary build tools and it provides implementations of Java Web
+Start and the browser plugin which are missing from OpenJDK.  It also
+provides support for additional architectures via Zero/Shark or the
+CACAO VM.
 
 IcedTea also provides build scripts and patches that fix a number of issues
 which are as yet unresolved upstream.
@@ -28,7 +29,7 @@ FAQ:
   http://icedtea.classpath.org/wiki/FrequentlyAskedQuestions
 
 Anonymous Mercurial checkout:
-  hg clone http://icedtea.classpath.org/hg/icedtea6
+  hg clone http://icedtea.classpath.org/hg/icedtea
 
 Java compatibility
 ------------------
@@ -42,8 +43,9 @@ subject to minor adjustments, major revisions, or even outright
 removal between now and the time that the Java SE 7 Platform
 Specification is finalized.  Please take these facts into account
 before depending upon IcedTea.  IcedTea provides autotools support, a
-portable interpreter for ppc and ppc64 support, plugin support and Web
-Start support.
+portable interpreter (Zero) and LLVM-based JIT (Shark) for other
+architectures beyond x86/x86_64/SPARC, plugin support and Web Start
+support.
 
 A Note About License Headers
 ----------------------------
@@ -51,30 +53,16 @@ A Note About License Headers
 Some sources downloaded from openjdk.java.net do not display the GPL
 license header.  Instances are:
 
- - The files in openjdk/jdk/src/share/classes/javax/xml/stream/ seem to 
-   comprise the BEA-StAX source code
-
-   http://ftpna2.bea.com/pub/downloads/jsr173.jar
-
-   with some Sun-specific modifications.  We're assuming that Sun is
-   bundling BEA-StAX under the terms of the Apache License 2.0 and
-   that the modifications are owned by Sun.
-
  - We are assuming that these files are owned by Sun:
    openjdk/jdk/src/share/classes/**/resources/*.properties
-
 
 Web Browser Plugin support
 ===========================
 
-The default web browser plugin has LiveConnect support. It will only
-build against a recent version of XULRunner, such as that available in
-Fedora Rawhide as of 2008-05-16.  The required development headers are
-provided by the xulrunner-devel package.
-
-A new plugin is being developed to support the new Mozilla API changes. It can 
-be enabled with the option --enable-npplugin, and it is based on gcjwebplugin.
-At the moment there is no liveconnect support for it.
+IcedTea adds a browser plugin to OpenJDK.  The current version is a
+rewrite, developed to support recent Mozilla API changes. It can be
+enabled with the option --enable-plugin, and is based on
+gcjwebplugin.
 
 NetX
 ====
@@ -91,28 +79,33 @@ IcedTea's NetX currently supports verification of signed jars, trusted
 certificate storing, system certificate store checking, and provides
 the services specified by the jnlp API.
 
-NetX
-====
+The Zero Assembler and Shark Ports
+==================================
 
-NetX provides a drop-in replacement for javaws (Java Web Start). Since
-upstream NetX is dormant, we will be hosting and modifying the sources
-in the IcedTea repository, particularly in the rt/net/sourceforge/jnlp
-directory.
+Gary Benson has developed a port of the interpreter included in the
+HotSpot virtual machine which avoids using any assembly language.  As
+a pure C++ interpreter, it should be possible to build this on most
+architectures and have a working (albeit slow) version of OpenJDK.
+Successful builds have been made on ppc, ppc64 and arm.  The zero
+assembler port is enabled by default on platforms other than x86,
+x86_64 and sparc.  To enable it on these platforms, use the
+--enable-zero option.
 
-The NetX sources are built into rt.jar
-
-IcedTea's NetX currently supports verification of signed jars, trusted
-certificate storing, system certificate store checking, and provides
-the services specified by the jnlp API.
+Gary is now working on a JIT called Shark to provide better
+performance on platforms which need to use the zero port. A
+preliminary version of this is now included with IcedTea and can be
+built with the --enable-shark option.
 
 CACAO as VM
 ===========
 
-The --with-cacao configure option replaces the libjvm.so from Sun's
-HotSpot with the one from the CACAO VM.  This enables the usage of
-IcedTea on architectures which are not supported by the HotSpot VM,
-besides the HotSpot zero port.  In contrast to the HotSpot Zero port,
-CACAO provides a Just-In-Time compiler for various architectures.
+The CACAO virtual machine (http://cacaovm.org) can be used as an
+alternative to the HotSpot virtual machine. One advantage of this is
+that it already provides a JIT for many platforms to which HotSpot has
+not yet been ported, including ppc, ppc64, arm and mips.  To use CACAO
+as the VM, use the --with-cacao option.  This will download a snapshot
+of CACAO during the build, which has been tested with this version of
+IcedTea7.
 
 The environment variable CACAO_CONFIGURE_ARGS can be used to pass
 additional arguments to the cacao configure.
@@ -123,7 +116,7 @@ PulseAudio Mixer
 Passing --enable-pulse-java to configure will build the PulseAudio Mixer for 
 java. This allows java programs to use PulseAudio as the sound backend.
 
-Systemtap support
+SystemTap Support
 =================
 
 The --enable-systemtap configure option will try to find the systemtap
@@ -137,11 +130,11 @@ optionally the systemtap package at run time when the user want to use
 the tapset to trace java programs. The probes have zero overhead when
 not used and can safely be compiled in even when not used at runtime.
 
-Support for additional VMs
+Support for Additional VMs
 ==========================
 
 Although IcedTea can be built multiple times to use a different virtual
-machine, addtional VM's can be built without building the other components
+machine, additional VMs can be built without building the other components
 multiple times.
 
 On architectures where hotspot is available, use
