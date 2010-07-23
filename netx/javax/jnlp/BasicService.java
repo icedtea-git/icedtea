@@ -10,4 +10,3 @@ public interface BasicService {
   public boolean isWebBrowserSupported();
 
 }
-

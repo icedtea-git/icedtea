@@ -8,4 +8,3 @@ public interface FileOpenService {
   public FileContents[] openMultiFileDialog(java.lang.String pathHint, java.lang.String[] extensions) throws java.io.IOException;
 
 }
-

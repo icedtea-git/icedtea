@@ -19,4 +19,3 @@ public interface ExtensionInstallerService {
   public java.lang.String getInstalledJRE(java.net.URL url, java.lang.String version);
 
 }
-

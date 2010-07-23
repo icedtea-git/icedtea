@@ -47,8 +47,8 @@ public class NetxPanel extends AppletViewerPanel
     {
         super(documentURL, atts);
     }
-    
-    // overloaded constructor, called when initialized via plugin 
+
+    // overloaded constructor, called when initialized via plugin
     public NetxPanel(URL documentURL, Hashtable atts, boolean exitOnFailure)
     {
         this(documentURL, atts);
@@ -60,88 +60,87 @@ public class NetxPanel extends AppletViewerPanel
     //in sun.applet.AppletPanel for runLoader().
     protected void runLoader() {
 
-    	try {
-    		bridge = new PluginBridge(baseURL,
-    				getDocumentBase(),
-    				getJarFiles(), 
-    				getCode(),
-    				getWidth(), 
-    				getHeight(), 
-    				atts);
+        try {
+                bridge = new PluginBridge(baseURL,
+                                getDocumentBase(),
+                                getJarFiles(),
+                                getCode(),
+                                getWidth(),
+                                getHeight(),
+                                atts);
 
-    		synchronized(JNLPRuntime.initMutex) {
-    			//The custom NetX Policy and SecurityManager are set here.
-    			if (!JNLPRuntime.isInitialized()) {
-    			    if (JNLPRuntime.isDebug())
-    			        System.out.println("initializing JNLPRuntime...");
+                synchronized(JNLPRuntime.initMutex) {
+                        //The custom NetX Policy and SecurityManager are set here.
+                        if (!JNLPRuntime.isInitialized()) {
+                            if (JNLPRuntime.isDebug())
+                                System.out.println("initializing JNLPRuntime...");
 
-    				JNLPRuntime.initialize(false);
-    			} else {
-    			    if (JNLPRuntime.isDebug())
-    			        System.out.println("JNLPRuntime already initialized");
-    			}
-    		}
+                                JNLPRuntime.initialize(false);
+                        } else {
+                            if (JNLPRuntime.isDebug())
+                                System.out.println("JNLPRuntime already initialized");
+                        }
+                }
 
-    		doInit = true;
-    		dispatchAppletEvent(APPLET_LOADING, null);
-    		status = APPLET_LOAD;
+                doInit = true;
+                dispatchAppletEvent(APPLET_LOADING, null);
+                status = APPLET_LOAD;
 
-    		Launcher l = new Launcher(exitOnFailure);
-    		
+                Launcher l = new Launcher(exitOnFailure);
+
                 try {
                     appInst = (AppletInstance) l.launch(bridge, this);
                 } catch (LaunchException e) {
                     // Assume user has indicated he does not trust the
                     // applet.
-                	if (exitOnFailure)
-                		System.exit(0);
+                        if (exitOnFailure)
+                                System.exit(0);
                 }
-    		applet = appInst.getApplet();
-    		
-    		//On the other hand, if you create an applet this way, it'll work
-    		//fine. Note that you might to open visibility in sun.applet.AppletPanel
-    		//for this to work (the loader field, and getClassLoader).
-    		//loader = getClassLoader(getCodeBase(), getClassLoaderCacheKey());
-    		//applet = createApplet(loader);
-    		
-    		// This shows that when using NetX's JNLPClassLoader, keyboard input
-    		// won't make it to the applet, whereas using sun.applet.AppletClassLoader
-    		// works just fine.
-    		
-    		dispatchAppletEvent(APPLET_LOADING_COMPLETED, null);
+                applet = appInst.getApplet();
 
-    		if (applet != null)
-    		{
-    			// Stick it in the frame
-    			applet.setStub(this);
-    			applet.setVisible(false);
-    			add("Center", applet);
-    			showAppletStatus("loaded");
-    			validate();
-    		}
-    	} catch (Exception e) {
-    	    this.appletAlive = false;
-    		e.printStackTrace();
-    	}
+                //On the other hand, if you create an applet this way, it'll work
+                //fine. Note that you might to open visibility in sun.applet.AppletPanel
+                //for this to work (the loader field, and getClassLoader).
+                //loader = getClassLoader(getCodeBase(), getClassLoaderCacheKey());
+                //applet = createApplet(loader);
+
+                // This shows that when using NetX's JNLPClassLoader, keyboard input
+                // won't make it to the applet, whereas using sun.applet.AppletClassLoader
+                // works just fine.
+
+                dispatchAppletEvent(APPLET_LOADING_COMPLETED, null);
+
+                if (applet != null)
+                {
+                        // Stick it in the frame
+                        applet.setStub(this);
+                        applet.setVisible(false);
+                        add("Center", applet);
+                        showAppletStatus("loaded");
+                        validate();
+                }
+        } catch (Exception e) {
+            this.appletAlive = false;
+                e.printStackTrace();
+        }
     }
 
     // Reminder: Relax visibility in sun.applet.AppletPanel
     protected synchronized void createAppletThread() {
-    	handler = new Thread(this);
-    	handler.start();
+        handler = new Thread(this);
+        handler.start();
     }
-    
+
     public void updateSizeInAtts(int height, int width) {
-    	this.atts.put("height", Integer.toString(height));
-    	this.atts.put("width", Integer.toString(width));
+        this.atts.put("height", Integer.toString(height));
+        this.atts.put("width", Integer.toString(width));
     }
-    
+
     public ClassLoader getAppletClassLoader() {
         return appInst.getClassLoader();
     }
-    
+
     public boolean isAlive() {
         return handler != null && handler.isAlive() && this.appletAlive;
     }
 }
-

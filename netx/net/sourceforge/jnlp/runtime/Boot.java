@@ -61,7 +61,7 @@ public final class Boot implements PrivilegedAction {
 
     // todo: decide whether a spawned netx (external launch)
     // should inherit the same options as this instance (store argv?)
-    
+
     private static String R(String key) { return JNLPRuntime.getMessage(key); }
     private static String R(String key, Object param) { return JNLPRuntime.getMessage(key, new Object[] {param}); }
 
@@ -126,7 +126,7 @@ public final class Boot implements PrivilegedAction {
      */
     public static void main(String[] argsIn) {
         args = argsIn;
-        
+
         if (null != getOption("-viewer")) {
 
             try {
@@ -166,11 +166,11 @@ public final class Boot implements PrivilegedAction {
 
         if (null != getOption("-noupdate"))
             JNLPRuntime.setDefaultUpdatePolicy(UpdatePolicy.NEVER);
-        
+
         if (null != getOption("-Xnofork")) {
             JNLPRuntime.setForksAllowed(false);
         }
-        
+
         // wire in custom authenticator
         try {
             SSLSocketFactory sslSocketFactory;
@@ -178,7 +178,7 @@ public final class Boot implements PrivilegedAction {
             TrustManager[] trust = new TrustManager[] { VariableX509TrustManager.getInstance() };
             context.init(null, trust, null);
             sslSocketFactory = context.getSocketFactory();
-            
+
             HttpsURLConnection.setDefaultSSLSocketFactory(sslSocketFactory);
         } catch (Exception e) {
             System.err.println("Unable to set SSLSocketfactory (may _prevent_ access to sites that should be trusted)! Continuing anyway...");
@@ -186,7 +186,7 @@ public final class Boot implements PrivilegedAction {
         }
 
         JNLPRuntime.setInitialArgments(Arrays.asList(argsIn));
-        
+
         // do in a privileged action to clear the security context of
         // the Boot13 class, which doesn't have any privileges in
         // JRE1.3; JRE1.4 works without Boot13 or this PrivilegedAction.
@@ -212,7 +212,7 @@ public final class Boot implements PrivilegedAction {
             if (JNLPRuntime.isDebug())
                 ex.printStackTrace();
 
-            fatalError(JNLPRuntime.getMessage("RUnexpected", 
+            fatalError(JNLPRuntime.getMessage("RUnexpected",
                         new Object[] {ex.toString(), ex.getStackTrace()[0]} ));
         }
 
@@ -241,9 +241,9 @@ public final class Boot implements PrivilegedAction {
      * specified.
      */
     private static JNLPFile getFile() throws ParseException, MalformedURLException, IOException {
-    
+
         String location = getJNLPFile();
-        
+
         // override -jnlp with aboutFile
         if (getOption("-about") != null) {
             location = getAboutFile();
@@ -257,7 +257,7 @@ public final class Boot implements PrivilegedAction {
             System.out.println(helpMessage);
             System.exit(1);
         }
-        
+
         if (JNLPRuntime.isDebug())
             System.out.println(R("BFileLoc")+": "+location);
 
@@ -266,19 +266,19 @@ public final class Boot implements PrivilegedAction {
         try {
             if (new File(location).exists())
                 url = new File(location).toURL(); // Why use file.getCanonicalFile?
-            else 
+            else
                 url = new URL(ServiceUtil.getBasicService().getCodeBase(), location);
         } catch (Exception e) {
             fatalError("Invalid jnlp file " + location);
             if (JNLPRuntime.isDebug())
                 e.printStackTrace();
         }
-        
+
         boolean strict = (null != getOption("-strict"));
 
         JNLPFile file = new JNLPFile(url, strict);
 
-        // Launches the jnlp file where this file originated. 
+        // Launches the jnlp file where this file originated.
         if (file.getSourceLocation() != null) {
             file = new JNLPFile(file.getSourceLocation(), strict);
         }
@@ -382,7 +382,7 @@ public final class Boot implements PrivilegedAction {
         }
         return null;
     }
-    
+
     /**
      * Return value of the first occurence of the specified
      * option, or null if the option is not present.  If the
@@ -426,7 +426,7 @@ public final class Boot implements PrivilegedAction {
     /**
      * Return the base dir.  If the base dir parameter is not set
      * the value is read from JNLPRuntime.NETX_ABOUT_FILE file.
-     * If that file does not exist, an install dialog is displayed 
+     * If that file does not exist, an install dialog is displayed
      * to select the base directory.
      */
     private static File getBaseDir() {
@@ -448,4 +448,3 @@ public final class Boot implements PrivilegedAction {
     }
 
 }
-

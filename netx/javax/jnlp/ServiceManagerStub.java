@@ -8,4 +8,3 @@ public interface ServiceManagerStub {
   public java.lang.String[] getServiceNames();
 
 }
-

@@ -115,10 +115,10 @@ class XFileSaveService implements FileSaveService {
      */
     private void writeToFile(InputStream stream, File file) throws IOException {
         if (!file.createNewFile()) { //file exists
-            boolean replace = (JOptionPane.showConfirmDialog(null, 
-				file.getAbsolutePath() + " already exists.\n"
-                +"Do you want to replace it?", 
-				"Warning - File Exists", JOptionPane.YES_NO_OPTION) == 0);
+            boolean replace = (JOptionPane.showConfirmDialog(null,
+                                file.getAbsolutePath() + " already exists.\n"
+                +"Do you want to replace it?",
+                                "Warning - File Exists", JOptionPane.YES_NO_OPTION) == 0);
             if (!replace)
                 return;
         } else {

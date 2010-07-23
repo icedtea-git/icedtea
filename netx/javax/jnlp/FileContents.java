@@ -15,4 +15,3 @@ public interface FileContents {
   public long setMaxLength(long maxlength) throws java.io.IOException;
 
 }
-

@@ -81,7 +81,7 @@ class Node {
  * This class converts the TinyXML's ParsedXML nodes into the
  * regular XML Node interface (for the methods used by Parser).
  */
-/* TINY 
+/* TINY
 class Node {
     private ParsedXML tinyNode;
     private Node next;
@@ -144,4 +144,3 @@ class Node {
     }
 }
 */
-

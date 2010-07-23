@@ -1,15 +1,15 @@
 // Copyright (C) 2001-2003 Jon A. Maxwell (JAM)
-// 
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -36,7 +36,7 @@ import java.util.*;
  * 1.4.0-beta1, but may not in future versions.<p>
  *
  * @author <a href="mailto:jmaxwell@users.sourceforge.net">Jon A. Maxwell (JAM)</a> - initial author
- * @version $Revision: 1.5 $ 
+ * @version $Revision: 1.5 $
  */
 public class Version {
 
@@ -59,7 +59,7 @@ public class Version {
 
 
     /**
-     * Create a Version object based on a version string (ie, 
+     * Create a Version object based on a version string (ie,
      * "1.2.3+ 4.56*").
      */
     public Version(String versions) {
@@ -178,7 +178,7 @@ public class Version {
      * Returns whether the parts of one version are equal to the
      * parts of another version.
      *
-     * @param parts1 normalized version parts 
+     * @param parts1 normalized version parts
      * @param parts2 normalized version parts
      */
     protected boolean equal(List parts1, List parts2) {
@@ -191,10 +191,10 @@ public class Version {
     }
 
     /**
-     * Returns whether the parts of one version are greater than 
+     * Returns whether the parts of one version are greater than
      * the parts of another version.
      *
-     * @param parts1 normalized version parts 
+     * @param parts1 normalized version parts
      * @param parts2 normalized version parts
      */
     protected boolean greater(List parts1, List parts2) {
@@ -350,5 +350,3 @@ public class Version {
     */
 
 }
-
-

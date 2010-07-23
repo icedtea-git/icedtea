@@ -13,4 +13,3 @@ public class UnavailableServiceException extends Exception {
   }
 
 }
-

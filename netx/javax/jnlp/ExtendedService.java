@@ -23,16 +23,16 @@ import java.io.IOException;
  * This interface provides a way for the JNLP application to open specific files
  * in the client's system. It asks permission from the user before opening any
  * files.
- * 
+ *
  * @author <a href="mailto:omajid@redhat.com">Omair Majid</a>
- * 
+ *
  */
 public interface ExtendedService {
 
     /**
      * Open a file on the client' system and return its contents. The user must
      * grant permission to the application for this to work.
-     * 
+     *
      * @param file the file to open
      * @return the opened file as a {@link FileContents} object
      * @throws IOException on any io problems
@@ -42,7 +42,7 @@ public interface ExtendedService {
     /**
      * Opens multiple files on the user's sytem and returns their contents as a
      * {@link FileContents} array
-     * 
+     *
      * @param files the files to open
      * @return an array of FileContents objects
      * @throws IOException on any io problems

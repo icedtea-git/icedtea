@@ -1,15 +1,15 @@
 // Copyright (C) 2001-2003 Jon A. Maxwell (JAM)
-// 
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -47,7 +47,7 @@ import net.sourceforge.jnlp.runtime.JNLPRuntime;
  * getResources, getSecurity, etc methods.<p>
  *
  * @author <a href="mailto:jmaxwell@users.sourceforge.net">Jon A. Maxwell (JAM)</a> - initial author
- * @version $Revision: 1.21 $ 
+ * @version $Revision: 1.21 $
  */
 public class JNLPFile {
 
@@ -59,7 +59,7 @@ public class JNLPFile {
     //
     // todo: currently does not filter resources by jvm version.
     //
-    
+
     private static String R(String key) { return JNLPRuntime.getMessage(key); }
 
     /** the location this JNLP file was created from */
@@ -67,7 +67,7 @@ public class JNLPFile {
 
     /** the network location of this JNLP file */
     protected URL fileLocation;
-    
+
     /** A key that uniquely identifies connected instances (main jnlp+ext) */
     protected String uniqueKey = null;
 
@@ -114,7 +114,7 @@ public class JNLPFile {
             // null values will still work, and app can set defaults later
         }
     }
-    
+
     /**
      * Empty stub, allowing child classes to override the constructor
      */
@@ -137,21 +137,21 @@ public class JNLPFile {
      * default policy.
      *
      * @param location the location of the JNLP file
-     * @param strict whether to enforce the spec when 
+     * @param strict whether to enforce the spec when
      * @throws IOException if an IO exception occurred
      * @throws ParseException if the JNLP file was invalid
      */
     public JNLPFile(URL location, boolean strict) throws IOException, ParseException {
         this(location, (Version) null, strict);
     }
-    
+
     /**
-     * Create a JNLPFile from a URL and a Version checking for updates using 
+     * Create a JNLPFile from a URL and a Version checking for updates using
      * the default policy.
      *
      * @param location the location of the JNLP file
      * @param version the version of the JNLP file
-     * @param strict whether to enforce the spec when 
+     * @param strict whether to enforce the spec when
      * @throws IOException if an IO exception occurred
      * @throws ParseException if the JNLP file was invalid
      */
@@ -160,12 +160,12 @@ public class JNLPFile {
     }
 
     /**
-     * Create a JNLPFile from a URL and a version, checking for updates 
+     * Create a JNLPFile from a URL and a version, checking for updates
      * using the specified policy.
      *
      * @param location the location of the JNLP file
      * @param version the version of the JNLP file
-     * @param strict whether to enforce the spec when 
+     * @param strict whether to enforce the spec when
      * @param policy the update policy
      * @throws IOException if an IO exception occurred
      * @throws ParseException if the JNLP file was invalid
@@ -173,17 +173,17 @@ public class JNLPFile {
     public JNLPFile(URL location, Version version, boolean strict, UpdatePolicy policy) throws IOException, ParseException {
         Node root = Parser.getRootNode(openURL(location, version, policy));
         parse(root, strict, location);
-        	
+
         //Downloads the original jnlp file into the cache if possible
-        //(i.e. If the jnlp file being launched exist locally, but it 
+        //(i.e. If the jnlp file being launched exist locally, but it
         //originated from a website, then download the one from the website
-        //into the cache).  		
+        //into the cache).
         if (sourceLocation != null && location.getProtocol() == "file") {
             openURL(sourceLocation, version, policy);
         }
 
         this.fileLocation = location;
-        
+
         this.uniqueKey = Calendar.getInstance().getTimeInMillis() + "-" +
                          Math.abs(((new java.util.Random()).nextInt())) + "-" +
                          location;
@@ -193,13 +193,13 @@ public class JNLPFile {
     }
 
     /**
-     * Create a JNLPFile from a URL, parent URLm a version and checking for 
+     * Create a JNLPFile from a URL, parent URLm a version and checking for
      * updates using the specified policy.
      *
      * @param location the location of the JNLP file
      * @param uniqueKey A string that uniquely identifies connected instances
      * @param version the version of the JNLP file
-     * @param strict whether to enforce the spec when 
+     * @param strict whether to enforce the spec when
      * @param policy the update policy
      * @throws IOException if an IO exception occurred
      * @throws ParseException if the JNLP file was invalid
@@ -226,7 +226,7 @@ public class JNLPFile {
      * Create a JNLPFile from a character stream.
      *
      * @param input the stream
-     * @param strict whether to enforce the spec when 
+     * @param strict whether to enforce the spec when
      * @throws IOException if an IO exception occurred
      * @throws ParseException if the JNLP file was invalid
      */
@@ -313,7 +313,7 @@ public class JNLPFile {
     public URL getCodeBase() {
         return codeBase;
     }
-    
+
     /**
      * Returns the information section of the JNLP file as viewed
      * through the default locale.
@@ -446,28 +446,28 @@ public class JNLPFile {
         return (InstallerDesc) launchType;
     }
 
-    /** 
+    /**
      * Returns whether the lauch descriptor describes an Applet.
      */
     public boolean isApplet() {
         return launchType instanceof AppletDesc;
     }
 
-    /** 
+    /**
      * Returns whether the lauch descriptor describes an Application.
      */
     public boolean isApplication() {
         return launchType instanceof ApplicationDesc;
     }
 
-    /** 
+    /**
      * Returns whether the lauch descriptor describes a Component.
      */
     public boolean isComponent() {
         return launchType instanceof ComponentDesc;
     }
 
-    /** 
+    /**
      * Returns whether the lauch descriptor describes an Installer.
      */
     public boolean isInstaller() {
@@ -545,7 +545,7 @@ public class JNLPFile {
      * from the constructor.
      *
      * @param root the root node
-     * @param strict whether to enforce the spec when 
+     * @param strict whether to enforce the spec when
      * @param location the file location or null
      */
     private void parse(Node root, boolean strict, URL location) throws ParseException {
@@ -577,12 +577,12 @@ public class JNLPFile {
     }
 
     /**
-     * 
-     * @return true if the JNLP file specifies things that can only be 
+     *
+     * @return true if the JNLP file specifies things that can only be
      * applied on a new vm (eg: different max heap memory)
      */
     public boolean needsNewVM() {
-        
+
         if (getNewVMArgs().size() == 0) {
             return false;
         } else {
@@ -591,32 +591,32 @@ public class JNLPFile {
     }
 
     /**
-     *  @return a list of args to pass to the new 
+     *  @return a list of args to pass to the new
      *  JVM based on this JNLP file
      */
     public List<String> getNewVMArgs() {
-        
+
         List<String> newVMArgs = new LinkedList<String>();
-        
+
         JREDesc[] jres = getResources().getJREs();
         for (int jreIndex = 0; jreIndex < jres.length; jreIndex++) {
             String initialHeapSize = jres[jreIndex].getInitialHeapSize();
             if (initialHeapSize != null) {
                 newVMArgs.add("-Xms" + initialHeapSize);
             }
-            
+
             String maxHeapSize = jres[jreIndex].getMaximumHeapSize();
             if (maxHeapSize != null) {
                 newVMArgs.add("-Xmx" + maxHeapSize);
             }
-            
+
             String vmArgsFromJre = jres[jreIndex].getVMArgs();
             if (vmArgsFromJre != null) {
                 String[] args = vmArgsFromJre.split(" ");
                 newVMArgs.addAll(Arrays.asList(args));
             }
         }
-        
+
         return newVMArgs;
     }
 

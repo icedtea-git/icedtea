@@ -52,78 +52,78 @@ import net.sourceforge.jnlp.runtime.JNLPRuntime;
  */
 public abstract class SecurityDialogPanel extends JPanel {
 
-	protected SecurityWarningDialog parent;
-	
-	JComponent initialFocusComponent = null;
-	
-	CertVerifier certVerifier;
+        protected SecurityWarningDialog parent;
 
-	public SecurityDialogPanel(SecurityWarningDialog dialog, CertVerifier certVerifier){
-		this.parent = dialog;
-		this.certVerifier = certVerifier;
-		this.setLayout(new BorderLayout());
-	}
+        JComponent initialFocusComponent = null;
 
-	/*
-	 * String translation functions
-	 */
+        CertVerifier certVerifier;
 
-	protected static String R(String key) {
-		return JNLPRuntime.getMessage(key);
-	}
+        public SecurityDialogPanel(SecurityWarningDialog dialog, CertVerifier certVerifier){
+                this.parent = dialog;
+                this.certVerifier = certVerifier;
+                this.setLayout(new BorderLayout());
+        }
+
+        /*
+         * String translation functions
+         */
+
+        protected static String R(String key) {
+                return JNLPRuntime.getMessage(key);
+        }
 
     protected static String R(String key, Object param) {
         return JNLPRuntime.getMessage(key, new Object[] {param});
     }
 
-	/**
-	 * Needed to get word wrap working in JLabels.
-	 */
-	protected String htmlWrap (String s) {
-		return "<html>"+s+"</html>";
-	}
+        /**
+         * Needed to get word wrap working in JLabels.
+         */
+        protected String htmlWrap (String s) {
+                return "<html>"+s+"</html>";
+        }
 
-	/** 
-	 * Create an ActionListener suitable for use with buttons. When this {@link ActionListener}
-	 * is invoked, it will set the value of the {@link SecurityWarningDialog} and then dispossed.
-	 * 
-	 * @param buttonIndex the index of the button. By convention 0 = Yes. 1 = No, 2 = Cancel
-	 * @return
-	 */
-	protected ActionListener createSetValueListener(SecurityWarningDialog dialog, int buttonIndex) {
-	    return new SetValueHandler(dialog, buttonIndex);
-	}
-	
-	@Override
-	public void setVisible(boolean aFlag) {
-	    super.setVisible(aFlag);
-	    requestFocusOnDefaultButton();
-	}
-	
-	public void requestFocusOnDefaultButton() {
-	       if (initialFocusComponent != null) {
-	            initialFocusComponent.requestFocusInWindow();
-	        }
-	}
-	
-	/**
-	 * Creates a handler that sets a dialog's value and then disposes it when activated
-	 *
-	 */
-	private class SetValueHandler implements ActionListener {
+        /**
+         * Create an ActionListener suitable for use with buttons. When this {@link ActionListener}
+         * is invoked, it will set the value of the {@link SecurityWarningDialog} and then dispossed.
+         *
+         * @param buttonIndex the index of the button. By convention 0 = Yes. 1 = No, 2 = Cancel
+         * @return
+         */
+        protected ActionListener createSetValueListener(SecurityWarningDialog dialog, int buttonIndex) {
+            return new SetValueHandler(dialog, buttonIndex);
+        }
 
-	    Integer buttonIndex;
-	    SecurityWarningDialog dialog;
-	    
-	    public SetValueHandler(SecurityWarningDialog dialog, int buttonIndex) {
-	        this.dialog = dialog;
-	        this.buttonIndex = buttonIndex;
-	    }
-	    
+        @Override
+        public void setVisible(boolean aFlag) {
+            super.setVisible(aFlag);
+            requestFocusOnDefaultButton();
+        }
+
+        public void requestFocusOnDefaultButton() {
+               if (initialFocusComponent != null) {
+                    initialFocusComponent.requestFocusInWindow();
+                }
+        }
+
+        /**
+         * Creates a handler that sets a dialog's value and then disposes it when activated
+         *
+         */
+        private class SetValueHandler implements ActionListener {
+
+            Integer buttonIndex;
+            SecurityWarningDialog dialog;
+
+            public SetValueHandler(SecurityWarningDialog dialog, int buttonIndex) {
+                this.dialog = dialog;
+                this.buttonIndex = buttonIndex;
+            }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             dialog.setValue(buttonIndex);
             dialog.dispose();
         }
-	}
+        }
 }

@@ -8,4 +8,3 @@ public interface ClipboardService {
   public void setContents(java.awt.datatransfer.Transferable contents);
 
 }
-

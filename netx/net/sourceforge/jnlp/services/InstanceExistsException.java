@@ -17,12 +17,12 @@
 package net.sourceforge.jnlp.services;
 
 /**
- * 
+ *
  * This class represents an exception indicating that an application instance
  * already exists for this jnlp file
- * 
+ *
  * @author <a href="mailto:omajid@redhat.com">Omair Majid</a>
- * 
+ *
  */
 public class InstanceExistsException extends RuntimeException {
 

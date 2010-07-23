@@ -51,31 +51,31 @@ import java.awt.Toolkit;
  */
 class XClipboardService implements ClipboardService {
 
-	protected XClipboardService() {
-	}
+        protected XClipboardService() {
+        }
 
-	/**
-	 * Returns the contents of the system clipboard.
-	 */
-	public java.awt.datatransfer.Transferable getContents(){
+        /**
+         * Returns the contents of the system clipboard.
+         */
+        public java.awt.datatransfer.Transferable getContents(){
 
-		if (ServiceUtil.checkAccess(SecurityWarningDialog.AccessType.CLIPBOARD_READ)) {
-			Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-			return (Transferable) ServiceUtil.createPrivilegedProxy(
-				Transferable.class, t);
-		} else {
-			return null;
-		}
-	}
+                if (ServiceUtil.checkAccess(SecurityWarningDialog.AccessType.CLIPBOARD_READ)) {
+                        Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+                        return (Transferable) ServiceUtil.createPrivilegedProxy(
+                                Transferable.class, t);
+                } else {
+                        return null;
+                }
+        }
 
-	/**
-	 * Sets the contents of the system clipboard.
-	 */
-	public void setContents(java.awt.datatransfer.Transferable contents) {
-		if (ServiceUtil.checkAccess(SecurityWarningDialog.AccessType.CLIPBOARD_WRITE)) {
-			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-				contents, null);
-		}
-	}
+        /**
+         * Sets the contents of the system clipboard.
+         */
+        public void setContents(java.awt.datatransfer.Transferable contents) {
+                if (ServiceUtil.checkAccess(SecurityWarningDialog.AccessType.CLIPBOARD_WRITE)) {
+                        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+                                contents, null);
+                }
+        }
 
 }

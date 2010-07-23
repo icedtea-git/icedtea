@@ -64,7 +64,7 @@ public class JNLPSplashScreen extends JFrame {
     public boolean isSplashScreenValid() {
         return (splashImage != null);
     }
-    
+
     private void correctSize() {
 
         Insets insets = getInsets();

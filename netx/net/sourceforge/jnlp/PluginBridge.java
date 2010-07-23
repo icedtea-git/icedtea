@@ -53,27 +53,27 @@ public class PluginBridge extends JNLPFile
 
         // also, see if cache_archive is specified
         if (atts.get("cache_archive") != null && ((String) atts.get("cache_archive")).length() > 0) {
-            
+
             String[] versions = new String[0];
-            
+
             // are there accompanying versions?
             if (atts.get("cache_version") != null) {
                 versions = ((String) atts.get("cache_version")).split(",");
             }
-            
+
             String[] jars = ((String) atts.get("cache_archive")).split(",");
             cache_jars = new String[jars.length];
-            
+
             for (int i=0; i < jars.length; i++) {
-                
+
                 cache_jars[i] = jars[i].trim();
 
                 if (versions.length > 0) {
-                    cache_jars[i] += ";" + versions[i].trim(); 
+                    cache_jars[i] += ";" + versions[i].trim();
                 }
             }
         }
-        
+
         if (atts.get("cache_archive_ex") != null && ((String) atts.get("cache_archive_ex")).length() > 0) {
             cache_ex_jars = ((String) atts.get("cache_archive_ex")).split(",");
         }
@@ -147,23 +147,23 @@ public class PluginBridge extends JNLPFile
                             if (jars[i].length() > 0)
                                 result.add(new JARDesc(new URL(codeBase, jars[i]),
                                         null, null, false, true, false, true));
-                        
+
                         boolean cacheable = true;
 
-                        if (atts.get("cache_option") != null && 
+                        if (atts.get("cache_option") != null &&
                                 ((String) atts.get("cache_option")).equalsIgnoreCase("no"))
                             cacheable = false;
 
                         for (int i = 0; i < cache_jars.length; i++) {
-                            
+
                             String[] jar_and_ver = cache_jars[i].split(";");
-                            
+
                             String jar = jar_and_ver[0];
                             Version version = null;
-                            
+
                             if (jar.length() == 0)
                                 continue;
-                            
+
                             if (jar_and_ver.length > 1) {
                                 version = new Version(jar_and_ver[1]);
                             }
@@ -171,20 +171,20 @@ public class PluginBridge extends JNLPFile
                             result.add(new JARDesc(new URL(codeBase, jar),
                                     version, null, false, true, false, cacheable));
                         }
-                        
+
                         for (int i = 0; i < cache_ex_jars.length; i++) {
 
                             if (cache_ex_jars[i].length() == 0)
                                 continue;
-                            
+
                             String[] jar_info = cache_ex_jars[i].split(";");
-                            
+
                             String jar = jar_info[0].trim();
                             Version version = null;
                             boolean lazy = true;
-                            
+
                             if (jar_info.length > 1) {
-                                
+
                                 // format is name[[;preload];version]
 
                                 if (jar_info[1].equals("preload")) {
@@ -192,7 +192,7 @@ public class PluginBridge extends JNLPFile
                                 } else {
                                     version = new Version(jar_info[1].trim());
                                 }
-                                
+
                                 if (jar_info.length > 2) {
                                     lazy = false;
                                     version = new Version(jar_info[2].trim());
@@ -226,9 +226,9 @@ public class PluginBridge extends JNLPFile
                 for (int i = 0; i < objectArray.length; i++)
                     jarArray[i] = (JARDesc) objectArray[i];
 
-                return jarArray;  
+                return jarArray;
             }
-            
+
             public void addResource(Object resource)
             {
                 // todo: honor the current locale, os, arch values

@@ -1,15 +1,15 @@
 // Copyright (C) 2001-2003 Jon A. Maxwell (JAM)
-// 
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -37,7 +37,7 @@ import net.sourceforge.jnlp.util.*;
  * resizable.
  *
  * @author <a href="mailto:jmaxwell@users.sourceforge.net">Jon A. Maxwell (JAM)</a> - initial author
- * @version $Revision: 1.12 $ 
+ * @version $Revision: 1.12 $
  */
 public class AppletEnvironment implements AppletContext, AppletStub {
 
@@ -168,22 +168,22 @@ public class AppletEnvironment implements AppletContext, AppletStub {
                 frame.setSize(appletDesc.getWidth() + insets.left + insets.right,
                               appletDesc.getHeight() + insets.top + insets.bottom);
             }
-    
+
             try {
-            	SwingUtilities.invokeAndWait(new Runnable() {
-            		public void run() {
-            			// do first because some applets need to be displayed before
-            			// starting (they use Component.getImage or something)
-            			cont.setVisible(true);
+                SwingUtilities.invokeAndWait(new Runnable() {
+                        public void run() {
+                                // do first because some applets need to be displayed before
+                                // starting (they use Component.getImage or something)
+                                cont.setVisible(true);
 
-            			applet.init();
-            			applet.start();
+                                applet.init();
+                                applet.start();
 
-            			cont.invalidate(); // this should force the applet to
-            			cont.validate();   // the correct size and to repaint
-            			cont.repaint();
-            		}
-            	});
+                                cont.invalidate(); // this should force the applet to
+                                cont.validate();   // the correct size and to repaint
+                                cont.repaint();
+                        }
+                });
             } catch (InterruptedException ie) {
 
             } catch (InvocationTargetException ite) {
@@ -198,7 +198,7 @@ public class AppletEnvironment implements AppletContext, AppletStub {
         }
     }
 
-    // applet context methods 
+    // applet context methods
 
     /**
      * Returns the applet if the applet's name is specified,

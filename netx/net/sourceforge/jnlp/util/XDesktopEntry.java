@@ -1,15 +1,15 @@
 // Copyright (C) 2009 Red Hat, Inc.
-// 
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -39,14 +39,14 @@ import net.sourceforge.jnlp.runtime.JNLPRuntime;
  * . This entry can be used to install desktop shortcuts. See xdg-desktop-icon
  * (1) and http://standards.freedesktop.org/desktop-entry-spec/latest/ for more
  * information
- * 
+ *
  * @author Omair Majid
- * 
+ *
  */
 public class XDesktopEntry {
 
     public static final String JAVA_ICON_NAME = "java.png";
-    
+
     private JNLPFile file = null;
     private int iconSize = -1;
     private String iconLocation = null;
@@ -55,7 +55,7 @@ public class XDesktopEntry {
 
     /**
      * Create a XDesktopEntry for the given JNLP file
-     * 
+     *
      * @param file a {@link JNLPFile} that indicates the application to launch
      */
     public XDesktopEntry(JNLPFile file) {
@@ -85,12 +85,12 @@ public class XDesktopEntry {
             fileContents += "Icon=" + iconLocation + "\n";
         } else {
             fileContents += "Icon=" + JAVA_ICON_NAME + "\n";
-            
+
         }
         if (file.getInformation().getVendor() != null) {
             fileContents += "Vendor=" + file.getInformation().getVendor() + "\n";
         }
-        
+
         //Shortcut executes the jnlp from cache and system preferred java..
         fileContents += "Exec=" + "javaws" + " \"" + cacheFile.getAbsolutePath() + "\"\n";
 
@@ -107,7 +107,7 @@ public class XDesktopEntry {
 
     /**
      * Set the icon size to use for the desktop shortcut
-     * 
+     *
      * @param size the size (in pixels) of the icon to use. Commonly used sizes
      *        are of 16, 22, 32, 48, 64 and 128
      */

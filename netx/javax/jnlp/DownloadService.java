@@ -22,4 +22,3 @@ public interface DownloadService {
   public DownloadServiceListener getDefaultProgressWindow();
 
 }
-

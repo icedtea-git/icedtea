@@ -1,15 +1,15 @@
 // Copyright (C) 2001-2003 Jon A. Maxwell (JAM)
-// 
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -33,7 +33,7 @@ import net.sourceforge.jnlp.runtime.*;
  * Show the progress of downloads.
  *
  * @author <a href="mailto:jmaxwell@users.sourceforge.net">Jon A. Maxwell (JAM)</a> - initial author
- * @version $Revision: 1.3 $ 
+ * @version $Revision: 1.3 $
  */
 public class DefaultDownloadIndicator implements DownloadIndicator {
 
@@ -56,12 +56,12 @@ public class DefaultDownloadIndicator implements DownloadIndicator {
     private static final int CLOSE_DELAY = 750;
 
     /** the display window */
-    private static JFrame frame; 
+    private static JFrame frame;
 
     /** shared constraint */
     static GridBagConstraints vertical;
     static GridBagConstraints verticalIndent;
-    static { 
+    static {
         vertical = new GridBagConstraints();
         vertical.gridwidth = GridBagConstraints.REMAINDER;
         vertical.weightx = 1.0;
@@ -112,7 +112,7 @@ public class DefaultDownloadIndicator implements DownloadIndicator {
         if (!frame.isVisible()) {
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(frame.getGraphicsConfiguration());
-            Dimension screen = new Dimension(screenSize.width - insets.left , 
+            Dimension screen = new Dimension(screenSize.width - insets.left ,
                     screenSize.height - insets.top);
             frame.setLocation(screen.width-frame.getWidth(),
                               screen.height-frame.getHeight());
@@ -318,4 +318,3 @@ public class DefaultDownloadIndicator implements DownloadIndicator {
     };
 
 }
-

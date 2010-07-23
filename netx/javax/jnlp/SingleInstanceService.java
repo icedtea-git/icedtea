@@ -20,15 +20,15 @@ package javax.jnlp;
  * The SingleInstanceService provides a way to ensure that only one instance of
  * the application is ever running - singleton behavior at the application
  * level.
- * 
+ *
  */
 public interface SingleInstanceService {
 
     /**
      * Adds the specified SingleInstanceListener to the notification list. This
      * listener is notified when a new instance of the application is started.
-     * 
-     * 
+     *
+     *
      * @param listener the single instance listener to be added. No action is
      *        performed if it is null.
      */
@@ -38,7 +38,7 @@ public interface SingleInstanceService {
      * Removes the specified SingleInstanceListener from the notification list.
      * This listener will not be notified if a new instance of the application
      * is started.
-     * 
+     *
      * @param listener the single instance listener to be removed. No action is
      *        performed if it is null or not in the notification list.
      */

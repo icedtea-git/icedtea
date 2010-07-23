@@ -83,21 +83,21 @@ public class JNLPRuntime {
     /** whether netx is in command-line mode (headless) */
     private static boolean headless = false;
 
-	/** whether we'll be checking for jar signing */
-	private static boolean verify = true;
+        /** whether we'll be checking for jar signing */
+        private static boolean verify = true;
 
     /** whether the runtime uses security */
     private static boolean securityEnabled = true;
 
     /** whether debug mode is on */
     private static boolean debug = false; // package access by Boot
-    
+
     /** mutex to wait on, for initialization */
     public static Object initMutex = new Object();
 
     /** set to true if this is a webstart application. */
-    private static boolean isWebstartApplication; 
-    
+    private static boolean isWebstartApplication;
+
     /** set to false to indicate another JVM should not be spawned, even if necessary */
     private static boolean forksAllowed = true;
 
@@ -134,17 +134,17 @@ public class JNLPRuntime {
 
     /** the java.home directory */
     public static final String JAVA_HOME_DIR = System.getProperty("java.home");
-    
+
     /** the JNLP file to open to display the network-based about window */
     public static final String NETX_ABOUT_FILE = JAVA_HOME_DIR + File.separator + "lib"
             + File.separator + "about.jnlp";
 
-    
-    
+
+
     /**
      * Returns whether the JNLP runtime environment has been
      * initialized.  Once initialized, some properties such as the
-     * base directory cannot be changed.  Before 
+     * base directory cannot be changed.  Before
      */
     public static boolean isInitialized() {
         return initialized;
@@ -165,9 +165,9 @@ public class JNLPRuntime {
      */
     public static void initialize(boolean isApplication) throws IllegalStateException {
         checkInitialized();
-     
+
         isWebstartApplication = isApplication;
-        
+
         //Setting the system property for javawebstart's version.
         //The version stored will be the same as java's version.
         System.setProperty("javawebstart.version", "javaws-" +
@@ -192,7 +192,7 @@ public class JNLPRuntime {
             throw new IllegalStateException(JNLPRuntime.getMessage("BNoBase"));
 
         ServiceManager.setServiceManagerStub(new XServiceManagerStub()); // ignored if we're running under Web Start
-	
+
         policy = new JNLPPolicy();
         security = new JNLPSecurityManager(); // side effect: create JWindow
 
@@ -238,12 +238,12 @@ public class JNLPRuntime {
         return headless;
     }
 
-	/**
-	 * Returns whether we are verifying code signing.
-	 */
-	public static boolean isVerifying() {
-		return verify;
-	}
+        /**
+         * Returns whether we are verifying code signing.
+         */
+        public static boolean isVerifying() {
+                return verify;
+        }
     /**
      * Sets whether the JNLP client will use any AWT/Swing
      * components.  In headless mode, client features that use the
@@ -258,12 +258,12 @@ public class JNLPRuntime {
     }
 
    /**
-	* Sets whether we will verify code signing.
-	* @throws IllegalStateException if the runtime was previously initialized
-	*/
+        * Sets whether we will verify code signing.
+        * @throws IllegalStateException if the runtime was previously initialized
+        */
     public static void setVerify(boolean enabled) {
-		checkInitialized();
-		verify = enabled;
+                checkInitialized();
+                verify = enabled;
     }
 
     /**
@@ -345,14 +345,14 @@ public class JNLPRuntime {
         checkExitClass();
         security.setExitClass(exitClass);
     }
-    
+
     /**
      * Disables applets from calling exit.
-     * 
+     *
      * Once disabled, exit cannot be re-enabled for the duration of the JVM instance
      */
     public static void disableExit() {
-    	security.disableExit();
+        security.disableExit();
     }
 
     /**
@@ -477,12 +477,12 @@ public class JNLPRuntime {
     public static boolean getForksAllowed() {
         return forksAllowed;
     }
-    
+
     public static void setForksAllowed(boolean value) {
         checkInitialized();
         forksAllowed = value;
     }
-    
+
     /**
      * Throws an exception if called when the runtime is
      * already initialized.
@@ -538,7 +538,7 @@ public class JNLPRuntime {
 
         try {
             windowIcon = new javax.swing.ImageIcon((new sun.misc.Launcher())
-            		.getClassLoader().getResource("net/sourceforge/jnlp/resources/netx-icon.png")).getImage();
+                        .getClassLoader().getResource("net/sourceforge/jnlp/resources/netx-icon.png")).getImage();
         }
         catch (Exception ex) {
             if (JNLPRuntime.isDebug())
@@ -554,11 +554,9 @@ public class JNLPRuntime {
             securityManager.checkPermission(new AllPermission());
         initialArguments = args;
     }
-    
+
     public static List<String> getInitialArguments() {
         return initialArguments;
     }
-    
+
 }
-
-

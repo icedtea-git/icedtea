@@ -1,15 +1,15 @@
 // Copyright (C) 2001-2003 Jon A. Maxwell (JAM)
-// 
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -84,12 +84,12 @@ public class ResourcesDesc {
 
         if (jars.length > 0)
             return jars[0];
-        else 
+        else
             return null;
     }
 
     /**
-     * Returns all of the JARs. 
+     * Returns all of the JARs.
      */
     public JARDesc[] getJARs() {
         List resources = getResources(JARDesc.class);
@@ -97,7 +97,7 @@ public class ResourcesDesc {
     }
 
     /**
-     * Returns the JARs with the specified part name. 
+     * Returns the JARs with the specified part name.
      *
      * @param partName the part name, null and "" equivalent
      */
@@ -228,4 +228,3 @@ public class ResourcesDesc {
     }
 
 }
-

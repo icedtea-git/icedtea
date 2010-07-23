@@ -127,18 +127,18 @@ public class ServiceUtil {
     public static SingleInstanceService getSingleInstanceService() {
         return (SingleInstanceService) getService("javax.jnlp.SingleInstanceService");
     }
-    
+
     /**
      * Checks that this application (represented by the jnlp) isnt already running
      * @param jnlpFile the {@link JNLPFile} that specifies the application
-     * 
+     *
      * @throws InstanceExistsException if an instance of this application already exists
      */
     public static void checkExistingSingleInstance(JNLPFile jnlpFile) {
         ExtendedSingleInstanceService esis = (ExtendedSingleInstanceService) getSingleInstanceService();
         esis.checkSingleInstanceRunning(jnlpFile);
     }
-    
+
     /**
      * Returns the service, or null instead of an UnavailableServiceException
      */
@@ -196,9 +196,9 @@ public class ServiceUtil {
 
                 return result;
             } catch (PrivilegedActionException e) {
-                // Any exceptions thrown by the actual methods are wrapped by a 
-                // InvocationTargetException, which is further wrapped by the 
-                // PrivilegedActionException. Lets unwrap them to make the 
+                // Any exceptions thrown by the actual methods are wrapped by a
+                // InvocationTargetException, which is further wrapped by the
+                // PrivilegedActionException. Lets unwrap them to make the
                 // proxy transparent to the callers
                 if (e.getCause() instanceof InvocationTargetException) {
                     throw e.getCause().getCause();
@@ -222,8 +222,8 @@ public class ServiceUtil {
     public static boolean checkAccess(SecurityWarningDialog.AccessType type,
             Object... extras) {
         return checkAccess(null, type, extras);
-    }    
-    
+    }
+
     /**
      * Returns whether the app requesting a service is signed. If the app is
      * unsigned, the user is prompted with a dialog asking if the action
@@ -235,33 +235,33 @@ public class ServiceUtil {
      * message formatting.
      * @return true if the access was granted, false otherwise.
      */
-    public static boolean checkAccess(ApplicationInstance app, 
+    public static boolean checkAccess(ApplicationInstance app,
             SecurityWarningDialog.AccessType type,
-    		Object... extras) {
+                Object... extras) {
 
         if (app == null) {
             app = JNLPRuntime.getApplication();
         }
-        
+
         if (app != null) {
             if (!app.isSigned()) {
-            	final SecurityWarningDialog.AccessType tmpType = type;
-            	final Object[] tmpExtras = extras;
-            	final ApplicationInstance tmpApp = app;
-            	
-            	//We need to do this to allow proper icon loading for unsigned
-            	//applets, otherwise permissions won't be granted to load icons
-            	//from resources.jar.
-            	Object o = AccessController.doPrivileged(new PrivilegedAction() {
+                final SecurityWarningDialog.AccessType tmpType = type;
+                final Object[] tmpExtras = extras;
+                final ApplicationInstance tmpApp = app;
+
+                //We need to do this to allow proper icon loading for unsigned
+                //applets, otherwise permissions won't be granted to load icons
+                //from resources.jar.
+                Object o = AccessController.doPrivileged(new PrivilegedAction() {
                     public Object run() {
-                    	boolean b = SecurityWarningDialog.showAccessWarningDialog(tmpType,
+                        boolean b = SecurityWarningDialog.showAccessWarningDialog(tmpType,
                                 tmpApp.getJNLPFile(), tmpExtras);
-                    	return (Object) new Boolean(b);
+                        return (Object) new Boolean(b);
                     }
                 });
-            	
-            	return ((Boolean)o).booleanValue();
-                 
+
+                return ((Boolean)o).booleanValue();
+
             } else if (app.isSigned()) {
 
                 //just return true here regardless if the app
@@ -273,4 +273,3 @@ public class ServiceUtil {
         return false; //deny
     }
 }
-

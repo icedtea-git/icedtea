@@ -55,7 +55,7 @@ import net.sourceforge.jnlp.tools.KeyTool;
 import sun.security.util.DerValue;
 import sun.security.util.HostnameChecker;
 import sun.security.x509.X500Name;
- 
+
 public class HttpsCertVerifier implements CertVerifier {
 
     private VariableX509TrustManager tm;
@@ -65,9 +65,9 @@ public class HttpsCertVerifier implements CertVerifier {
     private boolean isTrusted;
     private boolean hostMatched;
     private ArrayList<String> details = new ArrayList<String>();
-    
-    public HttpsCertVerifier(VariableX509TrustManager tm, 
-                             X509Certificate[] chain, String authType, 
+
+    public HttpsCertVerifier(VariableX509TrustManager tm,
+                             X509Certificate[] chain, String authType,
                              boolean isTrusted, boolean hostMatched,
                              String hostName) {
         this.tm = tm;
@@ -83,62 +83,62 @@ public class HttpsCertVerifier implements CertVerifier {
     }
 
     public ArrayList<CertPath> getCerts() {
-        
+
         ArrayList<X509Certificate> list = new ArrayList<X509Certificate>();
         for (int i=0; i < chain.length; i++)
             list.add(chain[i]);
 
         ArrayList<CertPath> certPaths = new ArrayList<CertPath>();
-        
+
         try {
             certPaths.add(CertificateFactory.getInstance("X.509").generateCertPath(list));
         } catch (CertificateException ce) {
             ce.printStackTrace();
-            
+
             // carry on
         }
 
-        return certPaths; 
+        return certPaths;
     }
 
     public ArrayList<String> getDetails() {
 
-	boolean hasExpiredCert=false; 
-	boolean hasExpiringCert=false;
-	boolean notYetValidCert=false;
-	boolean isUntrusted=false; 
-	boolean CNMisMatch = !hostMatched;
+        boolean hasExpiredCert=false;
+        boolean hasExpiringCert=false;
+        boolean notYetValidCert=false;
+        boolean isUntrusted=false;
+        boolean CNMisMatch = !hostMatched;
 
-	if (! getAlreadyTrustPublisher())
+        if (! getAlreadyTrustPublisher())
               isUntrusted = true;
 
-	for (int i=0; i < chain.length; i++)
-	{
-	   X509Certificate cert = chain[i];	
+        for (int i=0; i < chain.length; i++)
+        {
+           X509Certificate cert = chain[i];
 
            long now = System.currentTimeMillis();
            long SIX_MONTHS = 180*24*60*60*1000L;
-	   long notAfter = cert.getNotAfter().getTime();
+           long notAfter = cert.getNotAfter().getTime();
            if (notAfter < now) {
              hasExpiredCert = true;
            } else if (notAfter < now + SIX_MONTHS) {
              hasExpiringCert = true;
            }
-	
-	   try {
-	     cert.checkValidity();
-	   } catch (CertificateNotYetValidException cnyve) {
+
+           try {
+             cert.checkValidity();
+           } catch (CertificateNotYetValidException cnyve) {
              notYetValidCert = true;
-	   } catch (CertificateExpiredException cee) {
-	     hasExpiredCert = true;
-	   }
-	}
+           } catch (CertificateExpiredException cee) {
+             hasExpiredCert = true;
+           }
+        }
 
-	String altNames = getNamesForCert(chain[0]);
+        String altNames = getNamesForCert(chain[0]);
 
-	if (isUntrusted || hasExpiredCert || hasExpiringCert || notYetValidCert || CNMisMatch) {
-	      if (isUntrusted)
-	        addToDetails(R("SUntrustedCertificate"));
+        if (isUntrusted || hasExpiredCert || hasExpiringCert || notYetValidCert || CNMisMatch) {
+              if (isUntrusted)
+                addToDetails(R("SUntrustedCertificate"));
               if (hasExpiredCert)
                 addToDetails(R("SHasExpiredCert"));
               if (hasExpiringCert)
@@ -146,19 +146,19 @@ public class HttpsCertVerifier implements CertVerifier {
               if (notYetValidCert)
                 addToDetails(R("SNotYetValidCert"));
               if (CNMisMatch)
-                  addToDetails(R("SCNMisMatch", altNames, this.hostName));  
+                  addToDetails(R("SCNMisMatch", altNames, this.hostName));
         }
-	
-	
-	return details;
+
+
+        return details;
     }
 
     private String getNamesForCert(X509Certificate c) {
-        
+
         String names = "";
-        
-        
-        // We use the specification from 
+
+
+        // We use the specification from
         // http://java.sun.com/j2se/1.5.0/docs/api/java/security/cert/X509Certificate.html#getSubjectAlternativeNames()
         // to determine the type of address
         int ALTNAME_DNS = 2;
@@ -173,14 +173,14 @@ public class HttpsCertVerifier implements CertVerifier {
 
             if (subjAltNames != null) {
                 for (List<?> next : subjAltNames) {
-                    if ( ((Integer)next.get(0)).intValue() == ALTNAME_IP || 
+                    if ( ((Integer)next.get(0)).intValue() == ALTNAME_IP ||
                             ((Integer)next.get(0)).intValue() == ALTNAME_DNS
                     ) {
                         names += ", " + (String)next.get(1);
                     }
                 }
             }
-            
+
             if (subjAltNames != null)
                 names = names.substring(2); // remove proceeding ", "
 
@@ -192,7 +192,7 @@ public class HttpsCertVerifier implements CertVerifier {
 
         return names;
     }
-    
+
     private void addToDetails(String detail) {
       if (!details.contains(detail))
         details.add(detail);
@@ -201,7 +201,7 @@ public class HttpsCertVerifier implements CertVerifier {
     private static String R(String key) {
       return JNLPRuntime.getMessage(key);
     }
-    
+
     private static String R(String key, String arg1, String arg2) {
         return JNLPRuntime.getMessage(key, new Object[] { arg1, arg2 });
     }
@@ -213,18 +213,18 @@ public class HttpsCertVerifier implements CertVerifier {
     }
 
     public Certificate getRoot() {
-      if (chain.length > 0) 
+      if (chain.length > 0)
         return (Certificate)chain[chain.length - 1];
       return null;
     }
 
     public boolean getRootInCacerts() {
-	try {
-	  KeyTool kt = new KeyTool();
+        try {
+          KeyTool kt = new KeyTool();
           return kt.checkCacertsForCertificate(getRoot());
         } catch (Exception e) {
-	}
-	return false;
+        }
+        return false;
     }
 
     public boolean hasSigningIssues() {

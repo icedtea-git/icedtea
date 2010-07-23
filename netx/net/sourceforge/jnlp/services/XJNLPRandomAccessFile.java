@@ -45,164 +45,164 @@ import javax.jnlp.JNLPRandomAccessFile;
 
 public class XJNLPRandomAccessFile implements JNLPRandomAccessFile {
 
-	private RandomAccessFile raf;
-	
-	public XJNLPRandomAccessFile(File file, String mode) {
-		try {
-			raf = new RandomAccessFile(file, mode);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void close() throws IOException {
-		raf.close();
-	}
+        private RandomAccessFile raf;
 
-	public long getFilePointer() throws IOException {
-		return raf.getFilePointer();
-	}
+        public XJNLPRandomAccessFile(File file, String mode) {
+                try {
+                        raf = new RandomAccessFile(file, mode);
+                } catch (FileNotFoundException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                }
+        }
 
-	public long length() throws IOException {
-		return raf.length();
-	}
+        public void close() throws IOException {
+                raf.close();
+        }
 
-	public int read() throws IOException {
-		return raf.read();
-	}
+        public long getFilePointer() throws IOException {
+                return raf.getFilePointer();
+        }
 
-	public int read(byte[] b, int off, int len) throws IOException {
-		return raf.read(b, off, len);
-	}
+        public long length() throws IOException {
+                return raf.length();
+        }
 
-	public int read(byte[] b) throws IOException {
-		return raf.read(b);
-	}
+        public int read() throws IOException {
+                return raf.read();
+        }
 
-	public boolean readBoolean() throws IOException {
-		return raf.readBoolean();
-	}
+        public int read(byte[] b, int off, int len) throws IOException {
+                return raf.read(b, off, len);
+        }
 
-	public byte readByte() throws IOException {
-		return raf.readByte();
-	}
+        public int read(byte[] b) throws IOException {
+                return raf.read(b);
+        }
 
-	public char readChar() throws IOException {
-		return raf.readChar();
-	}
+        public boolean readBoolean() throws IOException {
+                return raf.readBoolean();
+        }
 
-	public double readDouble() throws IOException {
-		return raf.readDouble();
-	}
+        public byte readByte() throws IOException {
+                return raf.readByte();
+        }
 
-	public float readFloat() throws IOException {
-		return raf.readFloat();
-	}
+        public char readChar() throws IOException {
+                return raf.readChar();
+        }
 
-	public void readFully(byte[] b) throws IOException {
-		raf.readFully(b);
-	}
+        public double readDouble() throws IOException {
+                return raf.readDouble();
+        }
 
-	public void readFully(byte[] b, int off, int len) throws IOException {
-		raf.readFully(b, off, len);
-	}
+        public float readFloat() throws IOException {
+                return raf.readFloat();
+        }
 
-	public int readInt() throws IOException {
-		return raf.readInt();
-	}
+        public void readFully(byte[] b) throws IOException {
+                raf.readFully(b);
+        }
 
-	public String readLine() throws IOException {
-		return raf.readLine();
-	}
+        public void readFully(byte[] b, int off, int len) throws IOException {
+                raf.readFully(b, off, len);
+        }
 
-	public long readLong() throws IOException {
-		return raf.readLong();
-	}
+        public int readInt() throws IOException {
+                return raf.readInt();
+        }
 
-	public short readShort() throws IOException {
-		return raf.readShort();
-	}
+        public String readLine() throws IOException {
+                return raf.readLine();
+        }
 
-	public String readUTF() throws IOException {
-		return raf.readUTF();
-	}
+        public long readLong() throws IOException {
+                return raf.readLong();
+        }
 
-	public int readUnsignedByte() throws IOException {
-		return raf.readUnsignedByte();
-	}
+        public short readShort() throws IOException {
+                return raf.readShort();
+        }
 
-	public int readUnsignedShort() throws IOException {
-		return raf.readUnsignedShort();
-	}
+        public String readUTF() throws IOException {
+                return raf.readUTF();
+        }
 
-	public void seek(long pos) throws IOException {
-		raf.seek(pos);
-	}
+        public int readUnsignedByte() throws IOException {
+                return raf.readUnsignedByte();
+        }
 
-	public void setLength(long newLength) throws IOException {
-		raf.setLength(newLength);
-	}
+        public int readUnsignedShort() throws IOException {
+                return raf.readUnsignedShort();
+        }
 
-	public int skipBytes(int n) throws IOException {
-		return raf.skipBytes(n);
-	}
+        public void seek(long pos) throws IOException {
+                raf.seek(pos);
+        }
 
-	public void write(int b) throws IOException {
-		raf.write(b);
+        public void setLength(long newLength) throws IOException {
+                raf.setLength(newLength);
+        }
 
-	}
+        public int skipBytes(int n) throws IOException {
+                return raf.skipBytes(n);
+        }
 
-	public void write(byte[] b) throws IOException {
-		raf.write(b);
-	}
+        public void write(int b) throws IOException {
+                raf.write(b);
 
-	public void write(byte[] b, int off, int len) throws IOException {
-		raf.write(b, off, len);
-	}
+        }
 
-	public void writeBoolean(boolean v) throws IOException {
-		raf.writeBoolean(v);
-	}
+        public void write(byte[] b) throws IOException {
+                raf.write(b);
+        }
 
-	public void writeByte(int v) throws IOException {
-		raf.writeByte(v);
-	}
+        public void write(byte[] b, int off, int len) throws IOException {
+                raf.write(b, off, len);
+        }
 
-	public void writeBytes(String s) throws IOException {
-		raf.writeBytes(s);
-	}
+        public void writeBoolean(boolean v) throws IOException {
+                raf.writeBoolean(v);
+        }
 
-	public void writeChar(int v) throws IOException {
-		raf.writeChar(v);
-	}
+        public void writeByte(int v) throws IOException {
+                raf.writeByte(v);
+        }
 
-	public void writeChars(String s) throws IOException {
-		raf.writeChars(s);
-	}
+        public void writeBytes(String s) throws IOException {
+                raf.writeBytes(s);
+        }
 
-	public void writeDouble(double v) throws IOException {
-		raf.writeDouble(v);
-	}
+        public void writeChar(int v) throws IOException {
+                raf.writeChar(v);
+        }
 
-	public void writeFloat(float v) throws IOException {
-		raf.writeFloat(v);
-	}
+        public void writeChars(String s) throws IOException {
+                raf.writeChars(s);
+        }
 
-	public void writeInt(int v) throws IOException {
-		raf.writeInt(v);
-	}
+        public void writeDouble(double v) throws IOException {
+                raf.writeDouble(v);
+        }
 
-	public void writeLong(long v) throws IOException {
-		raf.writeLong(v);
-	}
+        public void writeFloat(float v) throws IOException {
+                raf.writeFloat(v);
+        }
 
-	public void writeShort(int v) throws IOException {
-		raf.writeShort(v);
-	}
+        public void writeInt(int v) throws IOException {
+                raf.writeInt(v);
+        }
 
-	public void writeUTF(String str) throws IOException {
-		raf.writeUTF(str);
-	}
+        public void writeLong(long v) throws IOException {
+                raf.writeLong(v);
+        }
+
+        public void writeShort(int v) throws IOException {
+                raf.writeShort(v);
+        }
+
+        public void writeUTF(String str) throws IOException {
+                raf.writeUTF(str);
+        }
 
 }

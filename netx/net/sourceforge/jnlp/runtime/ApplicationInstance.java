@@ -1,15 +1,15 @@
 // Copyright (C) 2001-2003 Jon A. Maxwell (JAM)
-// 
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -35,7 +35,7 @@ import net.sourceforge.jnlp.util.*;
  * resources and destroy the application.<p>
  *
  * @author <a href="mailto:jmaxwell@users.sourceforge.net">Jon A. Maxwell (JAM)</a> - initial author
- * @version $Revision: 1.15 $ 
+ * @version $Revision: 1.15 $
  */
 public class ApplicationInstance {
 
@@ -61,8 +61,8 @@ public class ApplicationInstance {
     /** list of application listeners  */
     private EventListenerList listeners = new EventListenerList();
 
-	/** whether or not this application is signed */
-	private boolean isSigned = false;
+        /** whether or not this application is signed */
+        private boolean isSigned = false;
 
     /**
      * Create an application instance for the file.
@@ -112,7 +112,7 @@ public class ApplicationInstance {
 
         //Fixme: -Should check whether a desktop entry already exists for
         //        for this jnlp file, and do nothing if it exists.
-        //       -If no href is specified in the jnlp tag, it should 
+        //       -If no href is specified in the jnlp tag, it should
         //        default to using the one passed in as an argument.
         addMenuAndDesktopEntries();
     }
@@ -172,7 +172,7 @@ public class ApplicationInstance {
         AccessController.doPrivileged(installProps);
     }
 
-    /** 
+    /**
      * Returns the JNLP file for this task.
      */
     public JNLPFile getJNLPFile() {
@@ -251,7 +251,7 @@ public class ApplicationInstance {
         return group;
     }
 
-    /** 
+    /**
      * Returns the classloader.
      *
      * @throws IllegalStateException if the app is not running
@@ -272,11 +272,10 @@ public class ApplicationInstance {
         weakWindows.trimToSize();
     }
 
-	/**
-	 * Returns whether or not this jar is signed.
-	 */
-	public boolean isSigned() {
-		return isSigned;
-	}
+        /**
+         * Returns whether or not this jar is signed.
+         */
+        public boolean isSigned() {
+                return isSigned;
+        }
 }
-

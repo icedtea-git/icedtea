@@ -24,20 +24,20 @@ import net.sourceforge.jnlp.JNLPFile;
  * Extends SingleInstanceService to provide a few additional methods that are
  * required to initialize SingleInstanceService and check things. These methods
  * are not exposed publicly
- * 
+ *
  * @author <a href="mailto:omajid@redhat.com">Omair Majid</a>
- * 
+ *
  */
 interface ExtendedSingleInstanceService extends SingleInstanceService {
 
     /**
      * Check if the instance identified by this jnlp file is already running
-     * 
+     *
      * @param jnlpFile The JNLPFile that specifies the application
-     * 
+     *
      * @throws InstanceExistsException if an instance of this application
      *         already exists
-     * 
+     *
      */
     void checkSingleInstanceRunning(JNLPFile jnlpFile);
 

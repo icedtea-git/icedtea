@@ -19,14 +19,14 @@ package javax.jnlp;
 /**
  * This interface specifies a listener which is notified whenever a new instance
  * of the web start application is launched.
- * 
+ *
  */
 public interface SingleInstanceListener {
 
     /**
      * This method is called when a new instance of the application is launched.
      * The arguments passed to the new instance are passed into this method.
-     * 
+     *
      * @param arguments the arguments passed to the new instance of the
      *        application
      */

@@ -121,14 +121,14 @@ public class JarSigner implements CertVerifier {
 
     private boolean alreadyTrustPublisher = false;
     private boolean rootInCacerts = false;
-    
+
     /**
      * The single certPath used in this JarSiging. We're only keeping
      * track of one here, since in practice there's only one signer
      * for a JNLP Application.
      */
     private CertPath certPath = null;
-    
+
     private boolean noSigningIssues = true;
 
     private boolean anyJarsSigned = false;
@@ -149,20 +149,20 @@ public class JarSigner implements CertVerifier {
      * @see net.sourceforge.jnlp.tools.CertVerifier2#getAlreadyTrustPublisher()
      */
     public boolean getAlreadyTrustPublisher() {
-    	return alreadyTrustPublisher;
+        return alreadyTrustPublisher;
     }
-    
+
     /* (non-Javadoc)
      * @see net.sourceforge.jnlp.tools.CertVerifier2#getRootInCacerts()
      */
     public boolean getRootInCacerts() {
-    	return rootInCacerts;
+        return rootInCacerts;
     }
-    
+
     public CertPath getCertPath() {
-    	return certPath;
+        return certPath;
     }
-    
+
     /* (non-Javadoc)
      * @see net.sourceforge.jnlp.tools.CertVerifier2#hasSigningIssues()
      */
@@ -207,10 +207,10 @@ public class JarSigner implements CertVerifier {
             unverifiedJars = new ArrayList<String>();
 
             try {
-                
+
                 File jarFile = tracker.getCacheFile(jar.getLocation());
-                
-                // some sort of resource download/cache error. Nothing to add 
+
+                // some sort of resource download/cache error. Nothing to add
                 // in that case ... but don't fail here
                 if (jarFile == null) {
                     return;
@@ -229,7 +229,7 @@ public class JarSigner implements CertVerifier {
                 }
             } catch (Exception e){
                 // We may catch exceptions from using verifyJar()
-            	// or from checkTrustedCerts	
+                // or from checkTrustedCerts
                 throw e;
             }
         }
@@ -243,7 +243,7 @@ public class JarSigner implements CertVerifier {
         // certs could be uninitialized if one calls this method directly
         if (certs == null)
             certs = new ArrayList<CertPath>();
-        
+
         try {
             jarFile = new JarFile(jarName, true);
             Vector<JarEntry> entriesVec = new Vector<JarEntry>();
@@ -284,19 +284,19 @@ public class JarSigner implements CertVerifier {
                     hasUnsignedEntry |= !je.isDirectory() && !isSigned
                                         && !signatureRelated(name);
                     if (isSigned) {
-                    	// TODO: Perhaps we should check here that
-                    	// signers.length is only of size 1, and throw an
-                    	// exception if it's not?
+                        // TODO: Perhaps we should check here that
+                        // signers.length is only of size 1, and throw an
+                        // exception if it's not?
                         for (int i = 0; i < signers.length; i++) {
                             CertPath certPath = signers[i].getSignerCertPath();
                             if (!certs.contains(certPath))
                                 certs.add(certPath);
-                            
+
                             //we really only want the first certPath
                             if (!certPath.equals(this.certPath)){
-                            	this.certPath = certPath;
+                                this.certPath = certPath;
                             }
-                            
+
                             Certificate cert = signers[i].getSignerCertPath()
                                 .getCertificates().get(0);
                             if (cert instanceof X509Certificate) {
@@ -358,7 +358,7 @@ public class JarSigner implements CertVerifier {
 
         // check if the certs added above are in the trusted path
         checkTrustedCerts();
-        
+
         //anySigned does not guarantee that all files were signed.
         return anySigned && !(hasUnsignedEntry || hasExpiredCert
                               || badKeyUsage || badExtendedKeyUsage || badNetscapeCertType
@@ -370,64 +370,64 @@ public class JarSigner implements CertVerifier {
      * if a publisher's and/or CA's certificate exists there.
      */
     private void checkTrustedCerts() throws Exception {
-    	if (certPath != null) {
-    		try {
-    			KeyTool kt = new KeyTool();
-    			alreadyTrustPublisher = kt.isTrusted(getPublisher());
-   				rootInCacerts = kt.checkCacertsForCertificate(getRoot());
-    		} catch (Exception e) {
-    			// TODO: Warn user about not being able to
-    			// look through their cacerts/trusted.certs
-    			// file depending on exception.
-    			throw e;
-    		}
-    		
-    		if (!rootInCacerts)
-    			addToDetails(R("SUntrustedCertificate"));
-    		else 
-    			addToDetails(R("STrustedCertificate"));
-    	}
+        if (certPath != null) {
+                try {
+                        KeyTool kt = new KeyTool();
+                        alreadyTrustPublisher = kt.isTrusted(getPublisher());
+                                rootInCacerts = kt.checkCacertsForCertificate(getRoot());
+                } catch (Exception e) {
+                        // TODO: Warn user about not being able to
+                        // look through their cacerts/trusted.certs
+                        // file depending on exception.
+                        throw e;
+                }
+
+                if (!rootInCacerts)
+                        addToDetails(R("SUntrustedCertificate"));
+                else
+                        addToDetails(R("STrustedCertificate"));
+        }
     }
-    
+
     /* (non-Javadoc)
      * @see net.sourceforge.jnlp.tools.CertVerifier2#getPublisher()
      */
     public Certificate getPublisher() {
-    	if (certPath != null) {
-    		List<? extends Certificate> certList 
-			= certPath.getCertificates();
-    		if (certList.size() > 0) {
-    			return (Certificate)certList.get(0);
-    		} else {
-    			return null;
-    		}
-    	} else {
-    		return null;
-    	}
+        if (certPath != null) {
+                List<? extends Certificate> certList
+                        = certPath.getCertificates();
+                if (certList.size() > 0) {
+                        return (Certificate)certList.get(0);
+                } else {
+                        return null;
+                }
+        } else {
+                return null;
+        }
     }
-    
+
     /* (non-Javadoc)
      * @see net.sourceforge.jnlp.tools.CertVerifier2#getRoot()
      */
     public Certificate getRoot() {
-    	if (certPath != null) {
-    		List<? extends Certificate> certList 
-			= certPath.getCertificates();
-    		if (certList.size() > 0) {
-    			return (Certificate)certList.get(
-    				certList.size() - 1);
-    		} else {
-    			return null;
-    		}
-    	} else {
-    		return null;
-    	}
+        if (certPath != null) {
+                List<? extends Certificate> certList
+                        = certPath.getCertificates();
+                if (certList.size() > 0) {
+                        return (Certificate)certList.get(
+                                certList.size() - 1);
+                } else {
+                        return null;
+                }
+        } else {
+                return null;
+        }
     }
-    
-	private void addToDetails(String detail) {
-		if (!details.contains(detail))
-			details.add(detail);
-	}
+
+        private void addToDetails(String detail) {
+                if (!details.contains(detail))
+                        details.add(detail);
+        }
 
     Hashtable<Certificate, String> storeHash =
         new Hashtable<Certificate, String>();
@@ -539,7 +539,3 @@ public class JarSigner implements CertVerifier {
     }
 
 }
-
-
-
-

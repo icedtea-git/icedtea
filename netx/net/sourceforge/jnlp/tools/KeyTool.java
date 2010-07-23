@@ -58,142 +58,142 @@ import sun.security.provider.X509Factory;
  */
 public class KeyTool {
 
-	// The user's keystore.
-	private KeyStore usercerts = null;
-	// JDK cacerts
-	private KeyStore cacerts = null;
-	// System ca-bundle.crt
-	private KeyStore systemcerts = null;
-	
-	private String fullCertPath = SecurityUtil.getTrustedCertsFilename();
+        // The user's keystore.
+        private KeyStore usercerts = null;
+        // JDK cacerts
+        private KeyStore cacerts = null;
+        // System ca-bundle.crt
+        private KeyStore systemcerts = null;
 
-	private FileOutputStream fos = null;
+        private String fullCertPath = SecurityUtil.getTrustedCertsFilename();
 
-	/**
-	 * Whether we trust the system cacerts file.
-	 */
-	private boolean trustcacerts = true;
-	
-	/**
-	 * Whether we print certificates in rfc, base64 encoding.
-	 */
-	private boolean rfc = true;
-	
-	private final char[] password = "changeit".toCharArray();
+        private FileOutputStream fos = null;
 
-	/**
-	 * Whether we prompt for user input.
-	 */
-	private boolean noprompt = true;
-	
-	public KeyTool() throws Exception {
+        /**
+         * Whether we trust the system cacerts file.
+         */
+        private boolean trustcacerts = true;
 
-		// Initialize all the keystores.
-		usercerts = SecurityUtil.getUserKeyStore();
-		cacerts = SecurityUtil.getCacertsKeyStore(); 
-		systemcerts = SecurityUtil.getSystemCertStore();
-	}
+        /**
+         * Whether we print certificates in rfc, base64 encoding.
+         */
+        private boolean rfc = true;
 
-	/**
-	 * Adds a trusted certificate to the user's keystore.
-	 * @return true if the add was successful, false otherwise.
-	 */
-	public boolean importCert(File file) throws Exception {
-	
-		BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-		CertificateFactory cf = CertificateFactory.getInstance("X509");
-		X509Certificate cert = null;
-		
-		if (bis.available() >= 1) {
-			try {
-			cert = (X509Certificate)cf.generateCertificate(bis);
-			} catch (ClassCastException cce) {
-				throw new Exception("Input file is not an X509 Certificate");
-			} catch (CertificateException ce) {
-				throw new Exception("Input file is not an X509 Certificate");
-			}
-		}
-	
-		return importCert((Certificate)cert);
-	}
-	
-	/**
-	 * Adds a trusted certificate to the user's keystore.
-	 * @return true if the add was successful, false otherwise.
-	 */
-	public boolean importCert(Certificate cert) throws Exception {
+        private final char[] password = "changeit".toCharArray();
 
-		String alias = usercerts.getCertificateAlias(cert);
+        /**
+         * Whether we prompt for user input.
+         */
+        private boolean noprompt = true;
 
-		if (alias != null) { //cert already exists
-			return true;
-		} else {
-			String newAlias = getRandomAlias();
-			//check to make sure this alias doesn't exist
-			while (usercerts.getCertificate(newAlias) != null)
-				newAlias = getRandomAlias();
-			return addTrustedCert(newAlias, cert);
-		}
-	}
+        public KeyTool() throws Exception {
 
-	/**
-	 * Generates a random alias for storing a trusted Certificate.
-	 */
-	private String getRandomAlias() {
-		Random r = new Random();
-		String token = Long.toString(Math.abs(r.nextLong()), 36);
-		return "trustedCert-" + token;
-	}
-	
-	/**
+                // Initialize all the keystores.
+                usercerts = SecurityUtil.getUserKeyStore();
+                cacerts = SecurityUtil.getCacertsKeyStore();
+                systemcerts = SecurityUtil.getSystemCertStore();
+        }
+
+        /**
+         * Adds a trusted certificate to the user's keystore.
+         * @return true if the add was successful, false otherwise.
+         */
+        public boolean importCert(File file) throws Exception {
+
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+                CertificateFactory cf = CertificateFactory.getInstance("X509");
+                X509Certificate cert = null;
+
+                if (bis.available() >= 1) {
+                        try {
+                        cert = (X509Certificate)cf.generateCertificate(bis);
+                        } catch (ClassCastException cce) {
+                                throw new Exception("Input file is not an X509 Certificate");
+                        } catch (CertificateException ce) {
+                                throw new Exception("Input file is not an X509 Certificate");
+                        }
+                }
+
+                return importCert((Certificate)cert);
+        }
+
+        /**
+         * Adds a trusted certificate to the user's keystore.
+         * @return true if the add was successful, false otherwise.
+         */
+        public boolean importCert(Certificate cert) throws Exception {
+
+                String alias = usercerts.getCertificateAlias(cert);
+
+                if (alias != null) { //cert already exists
+                        return true;
+                } else {
+                        String newAlias = getRandomAlias();
+                        //check to make sure this alias doesn't exist
+                        while (usercerts.getCertificate(newAlias) != null)
+                                newAlias = getRandomAlias();
+                        return addTrustedCert(newAlias, cert);
+                }
+        }
+
+        /**
+         * Generates a random alias for storing a trusted Certificate.
+         */
+        private String getRandomAlias() {
+                Random r = new Random();
+                String token = Long.toString(Math.abs(r.nextLong()), 36);
+                return "trustedCert-" + token;
+        }
+
+        /**
      * Prints all keystore entries.
      */
-	private void doPrintEntries(PrintStream out) throws Exception {
+        private void doPrintEntries(PrintStream out) throws Exception {
 
-		out.println("KeyStore type: " + usercerts.getType());
-		out.println("KeyStore provider: " + usercerts.getProvider().toString());
-		out.println();
-		
-		for (Enumeration<String> e = usercerts.aliases(); e.hasMoreElements();) {
-			String alias = e.nextElement();
-			doPrintEntry(alias, out, false);
-		}
-	}
-	
+                out.println("KeyStore type: " + usercerts.getType());
+                out.println("KeyStore provider: " + usercerts.getProvider().toString());
+                out.println();
+
+                for (Enumeration<String> e = usercerts.aliases(); e.hasMoreElements();) {
+                        String alias = e.nextElement();
+                        doPrintEntry(alias, out, false);
+                }
+        }
+
     /**
      * Prints a single keystore entry.
      */
-	private void doPrintEntry(String alias, PrintStream out,
-			boolean printWarning) throws Exception {
+        private void doPrintEntry(String alias, PrintStream out,
+                        boolean printWarning) throws Exception {
 
-		if (usercerts.containsAlias(alias) == false) {
-			throw new Exception("Alias does not exist");
-		}
+                if (usercerts.containsAlias(alias) == false) {
+                        throw new Exception("Alias does not exist");
+                }
 
-		if (usercerts.entryInstanceOf(alias, 
-				KeyStore.TrustedCertificateEntry.class)) {
-			Certificate cert = usercerts.getCertificate(alias);
+                if (usercerts.entryInstanceOf(alias,
+                                KeyStore.TrustedCertificateEntry.class)) {
+                        Certificate cert = usercerts.getCertificate(alias);
 
-			out.println("Alias: " + alias);
-			out.println("Date Created: " + usercerts.getCreationDate(alias));
-			out.println("Subject: " + SecurityUtil.getCN(((X509Certificate)usercerts
-				.getCertificate(alias)).getSubjectX500Principal().getName()));
-			out.println("Certificate fingerprint (MD5): "
-					+ getCertFingerPrint("MD5", cert));
-			out.println();
-		}
-	}
+                        out.println("Alias: " + alias);
+                        out.println("Date Created: " + usercerts.getCreationDate(alias));
+                        out.println("Subject: " + SecurityUtil.getCN(((X509Certificate)usercerts
+                                .getCertificate(alias)).getSubjectX500Principal().getName()));
+                        out.println("Certificate fingerprint (MD5): "
+                                        + getCertFingerPrint("MD5", cert));
+                        out.println();
+                }
+        }
 
     /**
      * Gets the requested finger print of the certificate.
      */
-	private String getCertFingerPrint(String mdAlg, Certificate cert)
-		throws Exception {
-		byte[] encCertInfo = cert.getEncoded();
-		MessageDigest md = MessageDigest.getInstance(mdAlg);
-		byte[] digest = md.digest(encCertInfo);
-		return toHexString(digest);
-	}
+        private String getCertFingerPrint(String mdAlg, Certificate cert)
+                throws Exception {
+                byte[] encCertInfo = cert.getEncoded();
+                MessageDigest md = MessageDigest.getInstance(mdAlg);
+                byte[] digest = md.digest(encCertInfo);
+                return toHexString(digest);
+        }
 
     /**
      * Converts a byte to hex digit and writes to the supplied buffer
@@ -222,42 +222,42 @@ public class KeyTool {
         return buf.toString();
     }
 
-	/**
-	 * Adds a certificate to the keystore, and writes new keystore to disk.
-	 */
+        /**
+         * Adds a certificate to the keystore, and writes new keystore to disk.
+         */
     private boolean addTrustedCert(String alias, Certificate cert)
-    	throws Exception {
-    	
-    	if (isSelfSigned((X509Certificate)cert)) {
-			//will throw exception if this fails
-    		cert.verify(cert.getPublicKey());
-		}
-    
-    	if (noprompt) {
-    		usercerts.setCertificateEntry(alias, cert);
-			fos = new FileOutputStream(fullCertPath);
-			usercerts.store(fos, password);
-			fos.close();
-    		return true;
-    	}
-    	
-    	return false;
-    }    
-    
+        throws Exception {
+
+        if (isSelfSigned((X509Certificate)cert)) {
+                        //will throw exception if this fails
+                cert.verify(cert.getPublicKey());
+                }
+
+        if (noprompt) {
+                usercerts.setCertificateEntry(alias, cert);
+                        fos = new FileOutputStream(fullCertPath);
+                        usercerts.store(fos, password);
+                        fos.close();
+                return true;
+        }
+
+        return false;
+    }
+
     /**
      * Returns true if the given certificate is trusted, false otherwise.
      */
     public boolean isTrusted(Certificate cert) throws Exception {
-    	if (cert != null) {
-    		if (usercerts.getCertificateAlias(cert) != null) {
-    			return true; // found in own keystore
-    		}
-    		return false;
-    	} else {
-    		return false;
-    	}
+        if (cert != null) {
+                if (usercerts.getCertificateAlias(cert) != null) {
+                        return true; // found in own keystore
+                }
+                return false;
+        } else {
+                return false;
+        }
     }
-    
+
     /**
      * Returns true if the certificate is self-signed, false otherwise.
      */
@@ -273,27 +273,27 @@ public class KeyTool {
      * false otherwise
      */
     public boolean checkCacertsForCertificate(Certificate c) throws Exception {
-    	if (c != null) {
+        if (c != null) {
 
-			String alias = null;
+                        String alias = null;
 
-			//first try jdk cacerts.
-			if (cacerts != null) {
-    			alias = cacerts.getCertificateAlias(c);
+                        //first try jdk cacerts.
+                        if (cacerts != null) {
+                        alias = cacerts.getCertificateAlias(c);
 
-				//if we can't find it here, try the system certs.
-				if (alias == null && systemcerts != null)
-					alias = systemcerts.getCertificateAlias(c);
-			} 
-			//otherwise try the system certs if you can't use the jdk certs.
-			else if (systemcerts != null)
-				alias = systemcerts.getCertificateAlias(c);
+                                //if we can't find it here, try the system certs.
+                                if (alias == null && systemcerts != null)
+                                        alias = systemcerts.getCertificateAlias(c);
+                        }
+                        //otherwise try the system certs if you can't use the jdk certs.
+                        else if (systemcerts != null)
+                                alias = systemcerts.getCertificateAlias(c);
 
-    		return (alias != null);
-    	} else 
-    		return false;
+                return (alias != null);
+        } else
+                return false;
     }
-    
+
     /**
      * Establishes a certificate chain (using trusted certificates in the
      * keystore), starting with the user certificate
@@ -312,16 +312,16 @@ public class KeyTool {
             PublicKey origPubKey = userCert.getPublicKey();
             PublicKey replyPubKey = certToVerify.getPublicKey();
             if (!origPubKey.equals(replyPubKey)) {
-            	// TODO: something went wrong -- throw exception
+                // TODO: something went wrong -- throw exception
                 throw new Exception(
-                	"Public keys in reply and keystore don't match");
+                        "Public keys in reply and keystore don't match");
             }
 
             // If the two certs are identical, we're done: no need to import
             // anything
             if (certToVerify.equals(userCert)) {
                 throw new Exception(
-                	"Certificate reply and certificate in keystore are identical");
+                        "Certificate reply and certificate in keystore are identical");
             }
         }
 
@@ -335,7 +335,7 @@ public class KeyTool {
             keystorecerts2Hashtable(usercerts, certs);
         }
         if (trustcacerts) { //if we're trusting the cacerts
-        	KeyStore caks = SecurityUtil.getCacertsKeyStore();
+                KeyStore caks = SecurityUtil.getCacertsKeyStore();
             if (caks!=null && caks.size()>0) {
                 if (certs == null) {
                     certs = new Hashtable<Principal, Vector<Certificate>>(11);
@@ -362,7 +362,7 @@ public class KeyTool {
             throw new Exception("Failed to establish chain from reply");
         }
     }
-    
+
     /**
      * Stores the (leaf) certificates of a keystore in a hashtable.
      * All certs belonging to the same CA are stored in a vector that
@@ -391,7 +391,7 @@ public class KeyTool {
             }
         }
     }
-    
+
     /**
      * Recursively tries to establish chain from pool of trusted certs.
      *
@@ -441,9 +441,9 @@ public class KeyTool {
     }
 
     public static void dumpCert(Certificate cert, PrintStream out)
-    	throws IOException, CertificateException {
-    	
-    	boolean printRfc = true;
+        throws IOException, CertificateException {
+
+        boolean printRfc = true;
         if (printRfc) {
             BASE64Encoder encoder = new BASE64Encoder();
             out.println(X509Factory.BEGIN_CERT);
@@ -453,9 +453,9 @@ public class KeyTool {
             out.write(cert.getEncoded()); // binary
         }
     }
-    
-	public static void main(String[] args) throws Exception {
-		KeyTool kt = new KeyTool();
-		kt.doPrintEntries(System.out);
-	}
+
+        public static void main(String[] args) throws Exception {
+                KeyTool kt = new KeyTool();
+                kt.doPrintEntries(System.out);
+        }
 }

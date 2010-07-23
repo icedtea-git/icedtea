@@ -31,9 +31,9 @@ import net.sourceforge.jnlp.util.FileUtils;
 
 /**
  * This class represents a Lock for single instance jnlp applications
- * 
+ *
  * The lock is per-session, per user.
- * 
+ *
  * @author <a href="mailto:omajid@redhat.com">Omair Majid</a>
  */
 class SingleInstanceLock {
@@ -47,7 +47,7 @@ class SingleInstanceLock {
 
     /**
      * Create an object to manage the instance lock for the specified JNLP file.
-     * 
+     *
      * @param jnlpFile the jnlpfile to create the lock for
      */
     public SingleInstanceLock(JNLPFile jnlpFile) {
@@ -58,7 +58,7 @@ class SingleInstanceLock {
 
     /**
      * Create/overwrite the instance lock for the jnlp file.
-     * 
+     *
      * @param localPort the network port for the lock
      * @throws IOException on any io problems
      */
@@ -151,7 +151,7 @@ class SingleInstanceLock {
         if (jnlpFile.getFileVersion() != null) {
             initialName = initialName + jnlpFile.getFileVersion().toString();
         }
-        
+
         initialName = initialName + getCurrentDisplay();
         return FileUtils.sanitizeFileName(initialName);
 
@@ -159,7 +159,7 @@ class SingleInstanceLock {
 
     /**
      * Parse the lock file.
-     * 
+     *
      * @throws NumberFormatException
      * @throws IOException
      */
@@ -172,10 +172,10 @@ class SingleInstanceLock {
 
     /**
      * Returns a string identifying this display.
-     * 
+     *
      * Implementation note: On systems with X support, this is the DISPLAY
      * variable
-     * 
+     *
      * @return a string that is guaranteed to be not null.
      */
     private String getCurrentDisplay() {

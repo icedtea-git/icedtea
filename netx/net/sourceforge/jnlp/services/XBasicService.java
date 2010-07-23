@@ -1,15 +1,15 @@
 // Copyright (C) 2001 Jon A. Maxwell (JAM)
-// 
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -37,7 +37,7 @@ import net.sourceforge.jnlp.util.PropertiesFile;
  * The BasicService JNLP service.
  *
  * @author <a href="mailto:jmaxwell@users.sourceforge.net">Jon A. Maxwell (JAM)</a> - initial author
- * @version $Revision: 1.10 $ 
+ * @version $Revision: 1.10 $
  */
 class XBasicService implements BasicService {
 
@@ -88,9 +88,9 @@ class XBasicService implements BasicService {
      * Return true if the Environment is Offline
      */
     public boolean isOffline() {
-        
+
         URL url = findFirstURLFromJNLPFile();
-        
+
         try {
             url.openConnection().getInputStream().close();
             return false;
@@ -104,34 +104,34 @@ class XBasicService implements BasicService {
      * Or a default URL if no url found in JNLP file
      */
     private URL findFirstURLFromJNLPFile() {
-        
+
         ApplicationInstance app = JNLPRuntime.getApplication();
-        
+
         if (app != null) {
             JNLPFile jnlpFile = app.getJNLPFile();
-            
+
             URL sourceURL = jnlpFile.getSourceLocation();
             if (sourceURL != null) {
                 return sourceURL;
             }
-            
+
             URL codeBaseURL = jnlpFile.getCodeBase();
             if (codeBaseURL != null) {
                 return codeBaseURL;
             }
-    
+
             InformationDesc informationDesc = jnlpFile.getInformation();
             URL homePage = informationDesc.getHomepage();
             if (homePage != null) {
                 return homePage;
             }
-            
+
             JARDesc[] jarDescs = jnlpFile.getResources().getJARs();
             for (JARDesc jarDesc: jarDescs) {
                 return jarDesc.getLocation();
             }
         }
-        
+
         // this section is only reached if the jnlp file has no jars.
         // that doesnt seem very likely.
         URL arbitraryURL;
@@ -140,7 +140,7 @@ class XBasicService implements BasicService {
         } catch (MalformedURLException malformedURL) {
             throw new RuntimeException(malformedURL);
         }
-        
+
         return arbitraryURL;
     }
 
@@ -156,7 +156,7 @@ class XBasicService implements BasicService {
     /**
      * Show a document.
      *
-     * @return whether the document was opened 
+     * @return whether the document was opened
      */
     public boolean showDocument(URL url)  {
         initialize();
@@ -225,10 +225,8 @@ class XBasicService implements BasicService {
         return JOptionPane.showInputDialog(new JPanel(),
                                            "Browser Location:",
                                            "Specify Browser Location",
-                                           JOptionPane.PLAIN_MESSAGE 
+                                           JOptionPane.PLAIN_MESSAGE
                                           );
     }
 
 }
-
-

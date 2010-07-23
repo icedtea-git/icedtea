@@ -244,7 +244,7 @@ public class XMLElement
     {
         this(new Hashtable(), false, true, true);
     }
-    
+
 
     /**
      * Creates and initializes a new XML element.
@@ -1255,7 +1255,7 @@ public class XMLElement
             this.reader = isr;
             this.parserLineNr = 0;
             int newline = 2;
-	    char prev = ' ';
+            char prev = ' ';
 
             while(true) {
                 char ch;
@@ -1320,7 +1320,7 @@ public class XMLElement
                         }
                     }
                 }
-		prev = next;
+                prev = next;
             }
 
             out.close();

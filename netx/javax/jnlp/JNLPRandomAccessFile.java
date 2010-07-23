@@ -43,4 +43,3 @@ public interface JNLPRandomAccessFile {
   public void writeUTF(java.lang.String str) throws java.io.IOException;
 
 }
-

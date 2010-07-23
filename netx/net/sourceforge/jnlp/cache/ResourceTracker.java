@@ -1,15 +1,15 @@
 // Copyright (C) 2001-2003 Jon A. Maxwell (JAM)
-// 
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -64,7 +64,7 @@ import net.sourceforge.jnlp.util.WeakList;
  * as needed.<p>
  *
  * @author <a href="mailto:jmaxwell@users.sourceforge.net">Jon A. Maxwell (JAM)</a> - initial author
- * @version $Revision: 1.22 $ 
+ * @version $Revision: 1.22 $
  */
 public class ResourceTracker {
 
@@ -86,7 +86,7 @@ public class ResourceTracker {
     // version of a resource, but probably not very useful.
 
 
-    // defines 
+    // defines
     //    ResourceTracker.Downloader (download threads)
 
     // separately locks on (in order of aquire order, ie, sync on prefetch never syncs on lock):
@@ -119,7 +119,7 @@ public class ResourceTracker {
     private static ArrayList queue = new ArrayList();
 
     /** resource trackers threads are working for (used for load balancing across multi-tracker downloads) */
-    private static ArrayList active = new ArrayList(); // 
+    private static ArrayList active = new ArrayList(); //
 
     /** the resources known about by this resource tracker */
     private List resources = new ArrayList();
@@ -127,7 +127,7 @@ public class ResourceTracker {
     /** download listeners for this tracker */
     private List listeners = new ArrayList();
 
-    /** whether to download parts before requested */ 
+    /** whether to download parts before requested */
     private boolean prefetch;
 
 
@@ -141,7 +141,7 @@ public class ResourceTracker {
     /**
      * Creates a resource tracker.
      *
-     * @param prefetch whether to download resources before requested. 
+     * @param prefetch whether to download resources before requested.
      */
     public ResourceTracker(boolean prefetch) {
         this.prefetch = prefetch;
@@ -217,7 +217,7 @@ public class ResourceTracker {
      * as already downloaded if found. <p>
      *
      * @param updatePolicy whether to check for updates if already in cache
-     * @return whether the resource are already downloaded 
+     * @return whether the resource are already downloaded
      */
     private boolean checkCache(Resource resource, UpdatePolicy updatePolicy) {
         if (!CacheUtil.isCacheable(resource.location, resource.downloadVersion)) {
@@ -248,7 +248,7 @@ public class ResourceTracker {
                 return true;
             }
         }
-        
+
         if (updatePolicy == UpdatePolicy.FORCE) { // ALWAYS update
             // When we are "always" updating, we update for each instance. Reset resource status.
             resource.changeStatus(Integer.MAX_VALUE, 0);
@@ -420,7 +420,7 @@ public class ResourceTracker {
     public boolean waitForResources(URL urls[], long timeout) throws InterruptedException {
         Resource resources[] = new Resource[ urls.length ];
 
-        synchronized(resources) { 
+        synchronized(resources) {
             // keep the lock so getResource doesn't have to aquire it each time
             for (int i=0; i < urls.length; i++)
                 resources[i] = getResource(urls[i]);
@@ -476,7 +476,7 @@ public class ResourceTracker {
      * by the tracker because the tracker will only prefetch one
      * resource at a time to conserve system resources.
      *
-     * @return true if the resource is already downloaded (or an error occurred) 
+     * @return true if the resource is already downloaded (or an error occurred)
      * @throws IllegalArgumentException if the resource is not being tracked
      */
     public boolean startResource(URL location) {
@@ -489,7 +489,7 @@ public class ResourceTracker {
      * Sets the resource status to connect and download, and
      * enqueues the resource if not already started.
      *
-     * @return true if the resource is already downloaded (or an error occurred) 
+     * @return true if the resource is already downloaded (or an error occurred)
      * @throws IllegalArgumentException if the resource is not being tracked
      */
     private boolean startResource(Resource resource) {
@@ -562,7 +562,7 @@ public class ResourceTracker {
         }
 
         if (threads == 0) {
-            synchronized (prefetchTrackers) { 
+            synchronized (prefetchTrackers) {
                 queue.trimToSize(); // these only accessed by threads so no sync needed
                 active.clear(); // no threads so no trackers actively downloading
                 active.trimToSize();
@@ -615,7 +615,7 @@ public class ResourceTracker {
 
     /**
      * Downloads a resource to a file, uncompressing it if required
-     * 
+     *
      * @param resource the resource to download
      */
     private void downloadResource(Resource resource) {
@@ -625,7 +625,7 @@ public class ResourceTracker {
             // create out second in case in does not exist
             URLConnection con = getVersionedResourceURL(resource).openConnection();
             con.addRequestProperty("Accept-Encoding", "pack200-gzip, gzip");
-            
+
             con.connect();
 
             /*
@@ -666,7 +666,7 @@ public class ResourceTracker {
             // explicitly close the URLConnection.
             if (con instanceof HttpURLConnection)
                 ((HttpURLConnection)con).disconnect();
-            
+
             /*
              * If the file was compressed, uncompress it.
              */
@@ -687,7 +687,7 @@ public class ResourceTracker {
                     outputStream.close();
                     inputStream.close();
                     gzInputStream.close();
-                    
+
                 } else if (contentEncoding.equals("pack200-gzip")) {
                     GZIPInputStream gzInputStream = new GZIPInputStream(new FileInputStream(
                             CacheUtil.getCacheFile(downloadLocation, resource.downloadVersion)));
@@ -704,7 +704,7 @@ public class ResourceTracker {
                     gzInputStream.close();
                 }
             }
-            
+
             resource.changeStatus(DOWNLOADING, DOWNLOADED);
             synchronized(lock) {
                 lock.notifyAll(); // wake up wait's to check for completion
@@ -765,7 +765,7 @@ public class ResourceTracker {
             resource.fireDownloadEvent(); // fire CONNECTED
 
             // explicitly close the URLConnection.
-			if (connection instanceof HttpURLConnection)
+                        if (connection instanceof HttpURLConnection)
                 ((HttpURLConnection)connection).disconnect();
         }
         catch (Exception ex) {
@@ -782,7 +782,7 @@ public class ResourceTracker {
 
     /**
      * Returns the versioned url for a resource
-     * @param resource the resource to get the url for 
+     * @param resource the resource to get the url for
      */
     private URL getVersionedResourceURL(Resource resource) {
         String actualLocation = resource.location.getProtocol() + "://"
@@ -803,8 +803,8 @@ public class ResourceTracker {
         }
         return versionedURL;
     }
- 
-    
+
+
     /**
      * Pick the next resource to download or initialize.  If there
      * are no more resources requested then one is taken from a
@@ -862,7 +862,7 @@ public class ResourceTracker {
         Resource result = null;
         Resource alternate = null;
 
-        // first find one to initialize 
+        // first find one to initialize
         synchronized (prefetchTrackers) {
             for (int i=0; i < prefetchTrackers.size() && result == null; i++) {
                 ResourceTracker tracker = (ResourceTracker) prefetchTrackers.get(i);
@@ -978,10 +978,10 @@ public class ResourceTracker {
             boolean finished = true;
 
             synchronized (lock) {
-                // check for completion 
+                // check for completion
                 for (int i=0; i < resources.length; i++) {
-                	//NetX Deadlocking may be solved by removing this 
-                	//synch block.
+                        //NetX Deadlocking may be solved by removing this
+                        //synch block.
                     synchronized (resources[i]) {
                         if (!resources[i].isSet(DOWNLOADED | ERROR)) {
                             finished = false;
@@ -1009,7 +1009,7 @@ public class ResourceTracker {
 
     // inner classes
 
-    /** 
+    /**
      * This class downloads and initializes the queued resources.
      */
     class Downloader implements Runnable {
@@ -1047,5 +1047,3 @@ public class ResourceTracker {
     };
 
 }
-
-

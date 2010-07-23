@@ -45,7 +45,7 @@ public class JREDesc {
 
     /** args to pass to the vm */
     private String vmArgs;
-    
+
     /** list of ResourceDesc objects */
     private List resources;
 
@@ -60,8 +60,8 @@ public class JREDesc {
      * @param maximumHeadSize maximum head size
      * @param resources list of ResourceDesc objects
      */
-    public JREDesc(Version version, URL location, 
-            String vmArgs, String initialHeapSize, 
+    public JREDesc(Version version, URL location,
+            String vmArgs, String initialHeapSize,
             String maximumHeapSize, List resources) throws ParseException {
         this.version = version;
         this.location = location;
@@ -126,7 +126,7 @@ public class JREDesc {
     public String getVMArgs() {
         return vmArgs;
     }
-    
+
     /**
      * Check for valid heap size string
      * @throws ParseException if heapSize is invalid
@@ -136,7 +136,7 @@ public class JREDesc {
         if (heapSize == null) {
             return;
         }
-        
+
         boolean lastCharacterIsDigit = true;
         // the last character must be 0-9 or k/K/m/M
         char lastChar = Character.toLowerCase(heapSize.charAt(heapSize.length()-1));
@@ -146,12 +146,12 @@ public class JREDesc {
                 throw new ParseException(JNLPRuntime.getMessage("PBadHeapSize",new Object[] {heapSize}));
             }
         }
-        
+
         int indexOfLastDigit = heapSize.length() - 1;
         if (!lastCharacterIsDigit) {
             indexOfLastDigit = indexOfLastDigit - 1;
         }
-        
+
         String size = heapSize.substring(0,indexOfLastDigit);
         try {
             // check that the number is a number!
@@ -159,9 +159,7 @@ public class JREDesc {
         } catch (NumberFormatException numberFormat) {
             throw new ParseException(JNLPRuntime.getMessage("PBadHeapSize", new Object[] {heapSize}), numberFormat);
         }
-              
+
     }
 
 }
-
-

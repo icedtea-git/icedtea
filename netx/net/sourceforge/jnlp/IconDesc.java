@@ -1,15 +1,15 @@
 // Copyright (C) 2001-2003 Jon A. Maxwell (JAM)
-// 
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -43,7 +43,7 @@ public class IconDesc {
 
     /** splash icon */
     public static final Object SPLASH = "splash";
-    
+
     /** destop shortcut icon */
     public static final Object SHORTCUT = "shortcut";
 
@@ -70,7 +70,7 @@ public class IconDesc {
     /**
      * Creates an icon descriptor with the specified information.
      *
-     * @param location the location of the icon 
+     * @param location the location of the icon
      * @param kind the type of icon
      * @param width the width, or -1 if unknown
      * @param height the height, or -1 if unknown
@@ -89,50 +89,47 @@ public class IconDesc {
     /**
      * Returns the location of the icon.
      */
-    public URL getLocation() { 
-        return location; 
+    public URL getLocation() {
+        return location;
     }
 
     /**
      * Returns the icon type.
      */
-    public Object getKind() { 
-        return kind; 
+    public Object getKind() {
+        return kind;
     }
 
     /**
      * Returns the icon width or -1 if not specified in the
      * JNLPFile.
      */
-    public int getWidth() { 
-        return width; 
+    public int getWidth() {
+        return width;
     }
 
     /**
      * Returns the icon height or -1 if not specified in the
      * JNLPFile.
      */
-    public int getHeight() { 
-        return height; 
+    public int getHeight() {
+        return height;
     }
 
     /**
      * Returns the icon size or -1 if not specified in the JNLPFile.
      */
-    public int getSize() { 
-        return size; 
+    public int getSize() {
+        return size;
     }
 
     /**
      * Returns the icon depth or -1 if not specified in the
      * JNLPFile.
      */
-    public int getDepth() { 
-        return depth; 
+    public int getDepth() {
+        return depth;
     }
 
 
 }
-
-
-

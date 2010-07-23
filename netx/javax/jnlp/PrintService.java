@@ -10,4 +10,3 @@ public interface PrintService {
   public boolean print(java.awt.print.Printable painter);
 
 }
-

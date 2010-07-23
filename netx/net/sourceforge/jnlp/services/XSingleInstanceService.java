@@ -1,15 +1,15 @@
 // Copyright (C) 2009 Red Hat, Inc.
-// 
+//
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -33,7 +33,7 @@ import net.sourceforge.jnlp.runtime.JNLPRuntime;
 
 /**
  * This class implements SingleInstanceService
- * 
+ *
  * @author <a href="mailto:omajid@redhat.com">Omair Majid</a>
  */
 public class XSingleInstanceService implements ExtendedSingleInstanceService {
@@ -44,7 +44,7 @@ public class XSingleInstanceService implements ExtendedSingleInstanceService {
     /**
      * Implements a server that listens for arguments from new instances of this
      * application
-     * 
+     *
      */
     class SingleInstanceServer implements Runnable {
 
@@ -100,7 +100,7 @@ public class XSingleInstanceService implements ExtendedSingleInstanceService {
 
     /**
      * Initialize the new SingleInstanceService
-     * 
+     *
      * @throws InstanceAlreadyExistsException if the instance already exists
      */
     public void initializeSingleInstance() {
@@ -121,9 +121,9 @@ public class XSingleInstanceService implements ExtendedSingleInstanceService {
 
     /**
      * Check if another instance of this application is already running
-     * 
+     *
      * @param jnlpFile The {@link JNLPFile} that specifies the application
-     * 
+     *
      * @throws InstanceExistsException if an instance of this application
      *         already exists
      */
@@ -147,14 +147,14 @@ public class XSingleInstanceService implements ExtendedSingleInstanceService {
     /**
      * Start the listening server to accept arguments from new instances of
      * applications
-     * 
+     *
      * @param lockFile
      *            the {@link SingleInstanceLock} that the server should use
      */
     private void startListeningServer(SingleInstanceLock lockFile) {
         SingleInstanceServer server = new SingleInstanceServer(lockFile);
         Thread serverThread = new Thread(server);
-        /* 
+        /*
          * mark as daemon so the JVM can shutdown if the server is the only
          * thread running
          */
@@ -164,7 +164,7 @@ public class XSingleInstanceService implements ExtendedSingleInstanceService {
 
     /**
      * Send the arguments for this application to the main instance
-     * 
+     *
      * @param port the port at which the SingleInstanceServer is listening at
      * @param arguments the new arguments
      * @throws IOException on any io exception
@@ -189,7 +189,7 @@ public class XSingleInstanceService implements ExtendedSingleInstanceService {
 
     /**
      * Notify any SingleInstanceListener with new arguments
-     * 
+     *
      * @param arguments the new arguments to the application
      */
     private void notifySingleInstanceListeners(String[] arguments) {
@@ -202,7 +202,7 @@ public class XSingleInstanceService implements ExtendedSingleInstanceService {
 
     /**
      * Add the specified SingleInstanceListener
-     * 
+     *
      * @throws InstanceExistsException, which is likely to terminate the
      *         application but not guaranteed to
      */
@@ -218,10 +218,10 @@ public class XSingleInstanceService implements ExtendedSingleInstanceService {
 
     /**
      * Remove the specified SingleInstanceListener
-     * 
+     *
      * @throws InstanceExistsException if an instance of this single instance
      *         application already exists
-     * 
+     *
      */
     public void removeSingleInstanceListener(SingleInstanceListener sil) {
         initializeSingleInstance();

@@ -42,7 +42,7 @@ import java.security.cert.Certificate;
 import java.util.ArrayList;
 
 /**
- * An interface that provides various details about a certificate 
+ * An interface that provides various details about a certificate
  */
 
 public interface CertVerifier {
@@ -78,7 +78,7 @@ public interface CertVerifier {
      */
     public ArrayList<CertPath> getCerts();
 
-    /** 
+    /**
      * Returns the application's publisher's certificate.
      */
     public abstract Certificate getPublisher();

@@ -37,8 +37,8 @@ import net.sourceforge.jnlp.util.FileUtils;
  */
 public class CacheUtil {
 
-    private static String R(String key, Object param) { 
-        return JNLPRuntime.getMessage(key, new Object[] {param}); 
+    private static String R(String key, Object param) {
+        return JNLPRuntime.getMessage(key, new Object[] {param});
     }
 
     /**
@@ -120,8 +120,8 @@ public class CacheUtil {
             }
             catch (java.io.IOException ioe) {
                 // should try to figure out the permission
-            	if (JNLPRuntime.isDebug())
-            		ioe.printStackTrace();
+                if (JNLPRuntime.isDebug())
+                        ioe.printStackTrace();
             }
         }
 
@@ -325,7 +325,7 @@ public class CacheUtil {
 
             // see if resources can be downloaded very quickly; avoids
             // overhead of creating display components for the resources
-            if (tracker.waitForResources(resources, indicator.getInitialDelay())) 
+            if (tracker.waitForResources(resources, indicator.getInitialDelay()))
                 return;
 
             // only resources not starting out downloaded are displayed
@@ -377,5 +377,3 @@ public class CacheUtil {
     }
 
 }
-
-

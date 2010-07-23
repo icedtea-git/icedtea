@@ -10,4 +10,3 @@ public interface DownloadServiceListener {
   public void downloadFailed(java.net.URL url, java.lang.String version);
 
 }
-

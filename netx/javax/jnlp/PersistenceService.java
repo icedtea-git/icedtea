@@ -15,4 +15,3 @@ public interface PersistenceService {
   public void setTag(java.net.URL url, int tag) throws java.net.MalformedURLException, java.io.IOException;
 
 }
-
