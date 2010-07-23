@@ -85,7 +85,7 @@ public class AccessWarningPane extends SecurityDialogPanel {
          * Creates the actual GUI components, and adds it to this panel
          */
         private void addComponents() {
-                SecurityWarningDialog.AccessType type = parent.getType();
+                SecurityWarningDialog.AccessType type = parent.getAccessType();
                 JNLPFile file = parent.getFile();
 
                 String name = "";

@@ -1,5 +1,14 @@
 2010-07-23  Andrew John Hughes  <ahughes@redhat.com>
 
+	* netx/net/sourceforge/jnlp/security/AccessWarningPane.java:
+	(addComponents()): Fix call to getType().
+	* netx/net/sourceforge/jnlp/security/CertWarningPane.java: Likewise.
+	* netx/net/sourceforge/jnlp/security/SecurityWarningDialog.java:
+	(getType): Rename to getAccessType() to avoid conflict with
+	Window.getType() in OpenJDK7.
+
+2010-07-23  Andrew John Hughes  <ahughes@redhat.com>
+
 	* netx/javax/jnlp/BasicService.java,
 	* netx/javax/jnlp/ClipboardService.java,
 	* netx/javax/jnlp/DownloadService.java,

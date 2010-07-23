@@ -364,7 +364,7 @@ public class SecurityWarningDialog extends JDialog {
 
         }
 
-        public AccessType getType() {
+        public AccessType getAccessType() {
                 return accessType;
         }
 
