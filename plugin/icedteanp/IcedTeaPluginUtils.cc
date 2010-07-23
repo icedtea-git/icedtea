@@ -157,7 +157,7 @@ IcedTeaPluginUtilities::JSIDToString(void* id, std::string* result)
 
 	result->append(id_str);
 
-	PLUGIN_DEBUG_2ARG("Converting pointer %p to %s\n", id, id_str);
+	PLUGIN_DEBUG("Converting pointer %p to %s\n", id, id_str);
 	free(id_str);
 }
 
@@ -174,15 +174,15 @@ IcedTeaPluginUtilities::stringToJSID(std::string id_str)
 	void* ptr;
 	if (sizeof(void*) == sizeof(long long))
 	{
-		PLUGIN_DEBUG_2ARG("Casting (long long) \"%s\" -- %llu\n", id_str.c_str(), strtoull(id_str.c_str(), NULL, 0));
+		PLUGIN_DEBUG("Casting (long long) \"%s\" -- %llu\n", id_str.c_str(), strtoull(id_str.c_str(), NULL, 0));
 		ptr = reinterpret_cast <void*> ((unsigned long long) strtoull(id_str.c_str(), NULL, 0));
 	} else
 	{
-		PLUGIN_DEBUG_2ARG("Casting (long) \"%s\" -- %lu\n", id_str.c_str(), strtoul(id_str.c_str(), NULL, 0));
+		PLUGIN_DEBUG("Casting (long) \"%s\" -- %lu\n", id_str.c_str(), strtoul(id_str.c_str(), NULL, 0));
 		ptr = reinterpret_cast <void*> ((unsigned long)  strtoul(id_str.c_str(), NULL, 0));
 	}
 
-	PLUGIN_DEBUG_1ARG("Casted: %p\n", ptr);
+	PLUGIN_DEBUG("Casted: %p\n", ptr);
 
 	return ptr;
 }
@@ -200,15 +200,15 @@ IcedTeaPluginUtilities::stringToJSID(std::string* id_str)
     void* ptr;
     if (sizeof(void*) == sizeof(long long))
     {
-        PLUGIN_DEBUG_2ARG("Casting (long long) \"%s\" -- %llu\n", id_str->c_str(), strtoull(id_str->c_str(), NULL, 0));
+        PLUGIN_DEBUG("Casting (long long) \"%s\" -- %llu\n", id_str->c_str(), strtoull(id_str->c_str(), NULL, 0));
         ptr = reinterpret_cast <void*> ((unsigned long long) strtoull(id_str->c_str(), NULL, 0));
     } else
     {
-        PLUGIN_DEBUG_2ARG("Casting (long) \"%s\" -- %lu\n", id_str->c_str(), strtoul(id_str->c_str(), NULL, 0));
+        PLUGIN_DEBUG("Casting (long) \"%s\" -- %lu\n", id_str->c_str(), strtoul(id_str->c_str(), NULL, 0));
         ptr = reinterpret_cast <void*> ((unsigned long)  strtoul(id_str->c_str(), NULL, 0));
     }
 
-    PLUGIN_DEBUG_1ARG("Casted: %p\n", ptr);
+    PLUGIN_DEBUG("Casted: %p\n", ptr);
 
     return ptr;
 }
@@ -344,7 +344,7 @@ IcedTeaPluginUtilities::getUTF8String(int length, int begin, std::vector<std::st
 	for (int i = begin; i < begin+length; i++)
 	    result_unicode_str->push_back((char) strtol(unicode_byte_array->at(i)->c_str(), NULL, 16));
 
-	PLUGIN_DEBUG_2ARG("Converted UTF-8 string: %s. Length=%d\n", result_unicode_str->c_str(), result_unicode_str->length());
+	PLUGIN_DEBUG("Converted UTF-8 string: %s. Length=%d\n", result_unicode_str->c_str(), result_unicode_str->length());
 }
 
 /**
@@ -381,7 +381,7 @@ IcedTeaPluginUtilities::convertStringToUTF8(std::string* str, std::string* utf_s
 	*utf_str = ostream.str();
 
 	free(hex_value);
-	PLUGIN_DEBUG_2ARG("Converted %s to UTF-8 string %s\n", str->c_str(), utf_str->c_str());
+	PLUGIN_DEBUG("Converted %s to UTF-8 string %s\n", str->c_str(), utf_str->c_str());
 }
 
 /**
@@ -451,7 +451,7 @@ IcedTeaPluginUtilities::printStringVector(const char* prefix, std::vector<std::s
 
 	*str += " }";
 
-	PLUGIN_DEBUG_2ARG("%s %s\n", prefix, str->c_str());
+	PLUGIN_DEBUG("%s %s\n", prefix, str->c_str());
 
 	delete str;
 }
@@ -483,7 +483,7 @@ IcedTeaPluginUtilities::getSourceFromInstance(NPP instance)
 void
 IcedTeaPluginUtilities::storeInstanceID(void* member_ptr, NPP instance)
 {
-    PLUGIN_DEBUG_2ARG("Storing instance %p with key %p\n", instance, member_ptr);
+    PLUGIN_DEBUG("Storing instance %p with key %p\n", instance, member_ptr);
     instance_map->insert(std::make_pair(member_ptr, instance));
 }
 
@@ -496,7 +496,7 @@ IcedTeaPluginUtilities::storeInstanceID(void* member_ptr, NPP instance)
 void
 IcedTeaPluginUtilities::removeInstanceID(void* member_ptr)
 {
-    PLUGIN_DEBUG_1ARG("Removing key %p from instance map\n", member_ptr);
+    PLUGIN_DEBUG("Removing key %p from instance map\n", member_ptr);
     instance_map->erase(member_ptr);
 }
 
@@ -506,7 +506,7 @@ IcedTeaPluginUtilities::removeInstanceID(void* member_ptr)
 void
 IcedTeaPluginUtilities::invalidateInstance(NPP instance)
 {
-    PLUGIN_DEBUG_1ARG("Invalidating instance %p\n", instance);
+    PLUGIN_DEBUG("Invalidating instance %p\n", instance);
 
     std::map<void*,NPP>::iterator iterator;
 
@@ -531,14 +531,14 @@ IcedTeaPluginUtilities::getInstanceFromMemberPtr(void* member_ptr)
 {
 
     NPP instance = NULL;
-    PLUGIN_DEBUG_1ARG("getInstanceFromMemberPtr looking for %p\n", member_ptr);
+    PLUGIN_DEBUG("getInstanceFromMemberPtr looking for %p\n", member_ptr);
 
     std::map<void*, NPP>::iterator iterator = instance_map->find(member_ptr);
 
     if (iterator != instance_map->end())
     {
         instance = instance_map->find(member_ptr)->second;
-        PLUGIN_DEBUG_2ARG("getInstanceFromMemberPtr found %p. Instance = %p\n", member_ptr, instance);
+        PLUGIN_DEBUG("getInstanceFromMemberPtr found %p. Instance = %p\n", member_ptr, instance);
     }
 
     return instance;
@@ -556,7 +556,7 @@ IcedTeaPluginUtilities::getNPObjectFromJavaKey(std::string key)
 {
 
     NPObject* object = NULL;
-    PLUGIN_DEBUG_1ARG("getNPObjectFromJavaKey looking for %s\n", key.c_str());
+    PLUGIN_DEBUG("getNPObjectFromJavaKey looking for %s\n", key.c_str());
 
     std::map<std::string, NPObject*>::iterator iterator = object_map->find(key);
 
@@ -567,7 +567,7 @@ IcedTeaPluginUtilities::getNPObjectFromJavaKey(std::string key)
         if (getInstanceFromMemberPtr(mapped_object) != NULL)
         {
             object = mapped_object;
-            PLUGIN_DEBUG_2ARG("getNPObjectFromJavaKey found %s. NPObject = %p\n", key.c_str(), object);
+            PLUGIN_DEBUG("getNPObjectFromJavaKey found %s. NPObject = %p\n", key.c_str(), object);
         }
     }
 
@@ -584,7 +584,7 @@ IcedTeaPluginUtilities::getNPObjectFromJavaKey(std::string key)
 void
 IcedTeaPluginUtilities::storeObjectMapping(std::string key, NPObject* object)
 {
-    PLUGIN_DEBUG_2ARG("Storing object %p with key %s\n", object, key.c_str());
+    PLUGIN_DEBUG("Storing object %p with key %s\n", object, key.c_str());
     object_map->insert(std::make_pair(key, object));
 }
 
@@ -597,7 +597,7 @@ IcedTeaPluginUtilities::storeObjectMapping(std::string key, NPObject* object)
 void
 IcedTeaPluginUtilities::removeObjectMapping(std::string key)
 {
-    PLUGIN_DEBUG_1ARG("Removing key %s from object map\n", key.c_str());
+    PLUGIN_DEBUG("Removing key %s from object map\n", key.c_str());
     object_map->erase(key);
 }
 
@@ -627,7 +627,7 @@ IcedTeaPluginUtilities::printStringPtrVector(const char* prefix, std::vector<std
 
 	*str += " }";
 
-	PLUGIN_DEBUG_2ARG("%s %s\n", prefix, str->c_str());
+	PLUGIN_DEBUG("%s %s\n", prefix, str->c_str());
 
 	delete str;
 }
@@ -641,35 +641,35 @@ IcedTeaPluginUtilities::printNPVariant(NPVariant variant)
 
     if (NPVARIANT_IS_VOID(variant))
     {
-    	PLUGIN_DEBUG_1ARG("VOID %d\n", variant);
+    	PLUGIN_DEBUG("VOID %d\n", variant);
     }
     else if (NPVARIANT_IS_NULL(variant))
     {
-    	PLUGIN_DEBUG_1ARG("NULL\n", variant);
+    	PLUGIN_DEBUG("NULL\n", variant);
     }
     else if (NPVARIANT_IS_BOOLEAN(variant))
     {
-    	PLUGIN_DEBUG_1ARG("BOOL: %d\n", NPVARIANT_TO_BOOLEAN(variant));
+    	PLUGIN_DEBUG("BOOL: %d\n", NPVARIANT_TO_BOOLEAN(variant));
     }
     else if (NPVARIANT_IS_INT32(variant))
     {
-    	PLUGIN_DEBUG_1ARG("INT32: %d\n", NPVARIANT_TO_INT32(variant));
+    	PLUGIN_DEBUG("INT32: %d\n", NPVARIANT_TO_INT32(variant));
     }
     else if (NPVARIANT_IS_DOUBLE(variant))
     {
-    	PLUGIN_DEBUG_1ARG("DOUBLE: %f\n", NPVARIANT_TO_DOUBLE(variant));
+    	PLUGIN_DEBUG("DOUBLE: %f\n", NPVARIANT_TO_DOUBLE(variant));
     }
     else if (NPVARIANT_IS_STRING(variant))
     {
 #if MOZILLA_VERSION_COLLAPSED < 1090200
-    	PLUGIN_DEBUG_1ARG("STRING: %s\n", NPVARIANT_TO_STRING(variant).utf8characters);
+    	PLUGIN_DEBUG("STRING: %s\n", NPVARIANT_TO_STRING(variant).utf8characters);
 #else
-    	PLUGIN_DEBUG_1ARG("STRING: %s\n", NPVARIANT_TO_STRING(variant).UTF8Characters);
+    	PLUGIN_DEBUG("STRING: %s\n", NPVARIANT_TO_STRING(variant).UTF8Characters);
 #endif
     }
     else
     {
-    	PLUGIN_DEBUG_1ARG("OBJ: %p\n", NPVARIANT_TO_OBJECT(variant));
+    	PLUGIN_DEBUG("OBJ: %p\n", NPVARIANT_TO_OBJECT(variant));
     }
 }
 
@@ -738,19 +738,19 @@ IcedTeaPluginUtilities::javaResultToNPVariant(NPP instance,
 
         if (value == "void")
         {
-            PLUGIN_DEBUG_0ARG("Method call returned void\n");
+            PLUGIN_DEBUG("Method call returned void\n");
             VOID_TO_NPVARIANT(*variant);
         } else if (value == "null")
         {
-            PLUGIN_DEBUG_0ARG("Method call returned null\n");
+            PLUGIN_DEBUG("Method call returned null\n");
             NULL_TO_NPVARIANT(*variant);
         }else if (value == "true")
         {
-            PLUGIN_DEBUG_0ARG("Method call returned a boolean (true)\n");
+            PLUGIN_DEBUG("Method call returned a boolean (true)\n");
             BOOLEAN_TO_NPVARIANT(true, *variant);
         } else if (value == "false")
         {
-            PLUGIN_DEBUG_0ARG("Method call returned a boolean (false)\n");
+            PLUGIN_DEBUG("Method call returned a boolean (false)\n");
             BOOLEAN_TO_NPVARIANT(false, *variant);
         } else
         {
@@ -761,12 +761,12 @@ IcedTeaPluginUtilities::javaResultToNPVariant(NPP instance,
                 d < -(0x7fffffffL - 1L) ||
                 d > 0x7fffffffL)
             {
-                PLUGIN_DEBUG_1ARG("Method call returned a double %f\n", d);
+                PLUGIN_DEBUG("Method call returned a double %f\n", d);
                 DOUBLE_TO_NPVARIANT(d, *variant);
             } else
             {
                 int32_t i = (int32_t) d;
-                PLUGIN_DEBUG_1ARG("Method call returned an int %d\n", i);
+                PLUGIN_DEBUG("Method call returned an int %d\n", i);
                 INT32_TO_NPVARIANT(i, *variant);
             }
         }
@@ -803,7 +803,7 @@ IcedTeaPluginUtilities::javaResultToNPVariant(NPP instance,
             NPUTF8* return_str = (NPUTF8*) malloc(sizeof(NPUTF8)*java_result->return_string->size() + 1);
             strcpy(return_str, java_result->return_string->c_str());
 
-            PLUGIN_DEBUG_1ARG("Method call returned a string: \"%s\"\n", return_str);
+            PLUGIN_DEBUG("Method call returned a string: \"%s\"\n", return_str);
             STRINGZ_TO_NPVARIANT(return_str, *variant);
 
         } else {
@@ -865,7 +865,7 @@ IcedTeaPluginUtilities::isObjectJSArray(NPP instance, NPObject* object)
     constructor_name.append(NPVARIANT_TO_STRING(constructor_str).UTF8Characters);
 #endif
 
-    PLUGIN_DEBUG_1ARG("Constructor for NPObject is %s\n", constructor_name.c_str());
+    PLUGIN_DEBUG("Constructor for NPObject is %s\n", constructor_name.c_str());
 
     return constructor_name.find("function Array") == 0;
 }
@@ -874,7 +874,7 @@ void
 IcedTeaPluginUtilities::decodeURL(const gchar* url, gchar** decoded_url)
 {
 
-    PLUGIN_DEBUG_2ARG("GOT URL: %s -- %s\n", url, *decoded_url);
+    PLUGIN_DEBUG("GOT URL: %s -- %s\n", url, *decoded_url);
     int length = strlen(url);
     for (int i=0; i < length; i++)
     {
@@ -903,7 +903,7 @@ IcedTeaPluginUtilities::decodeURL(const gchar* url, gchar** decoded_url)
         }
     }
 
-    PLUGIN_DEBUG_1ARG("SENDING URL: %s\n", *decoded_url);
+    PLUGIN_DEBUG("SENDING URL: %s\n", *decoded_url);
 }
 
 /******************************************
@@ -951,13 +951,13 @@ MessageBus::MessageBus()
 	ret = pthread_mutex_init(&subscriber_mutex, NULL);
 
 	if(ret)
-		PLUGIN_DEBUG_1ARG("Error: Unable to initialize subscriber mutex: %d\n", ret);
+		PLUGIN_DEBUG("Error: Unable to initialize subscriber mutex: %d\n", ret);
 
 	ret = pthread_mutex_init(&msg_queue_mutex, NULL);
 	if(ret)
-		PLUGIN_DEBUG_1ARG("Error: Unable to initialize message queue mutex: %d\n", ret);
+		PLUGIN_DEBUG("Error: Unable to initialize message queue mutex: %d\n", ret);
 
-	PLUGIN_DEBUG_2ARG("Mutexs %p and %p initialized\n", &subscriber_mutex, &msg_queue_mutex);
+	PLUGIN_DEBUG("Mutexs %p and %p initialized\n", &subscriber_mutex, &msg_queue_mutex);
 }
 
 /**
@@ -968,17 +968,17 @@ MessageBus::MessageBus()
 
 MessageBus::~MessageBus()
 {
-    PLUGIN_DEBUG_0ARG("MessageBus::~MessageBus\n");
+    PLUGIN_DEBUG("MessageBus::~MessageBus\n");
 
 	int ret;
 
 	ret = pthread_mutex_destroy(&subscriber_mutex);
 	if(ret)
-		PLUGIN_DEBUG_1ARG("Error: Unable to destroy subscriber mutex: %d\n", ret);
+		PLUGIN_DEBUG("Error: Unable to destroy subscriber mutex: %d\n", ret);
 
 	ret = pthread_mutex_destroy(&msg_queue_mutex);
 	if(ret)
-			PLUGIN_DEBUG_1ARG("Error: Unable to destroy message queue mutex: %d\n", ret);
+			PLUGIN_DEBUG("Error: Unable to destroy message queue mutex: %d\n", ret);
 }
 
 /**
@@ -991,7 +991,7 @@ MessageBus::subscribe(BusSubscriber* b)
 {
     // Applets may initialize in parallel. So lock before pushing.
 
-	PLUGIN_DEBUG_2ARG("Subscribing %p to bus %p\n", b, this);
+	PLUGIN_DEBUG("Subscribing %p to bus %p\n", b, this);
     pthread_mutex_lock(&subscriber_mutex);
     subscribers.push_back(b);
     pthread_mutex_unlock(&subscriber_mutex);
@@ -1007,7 +1007,7 @@ MessageBus::unSubscribe(BusSubscriber* b)
 {
     // Applets may initialize in parallel. So lock before pushing.
 
-	PLUGIN_DEBUG_2ARG("Un-subscribing %p from bus %p\n", b, this);
+	PLUGIN_DEBUG("Un-subscribing %p from bus %p\n", b, this);
     pthread_mutex_lock(&subscriber_mutex);
     subscribers.remove(b);
     pthread_mutex_unlock(&subscriber_mutex);
@@ -1027,21 +1027,21 @@ MessageBus::post(const char* message)
 	// consumer frees this memory
 	strcpy(msg, message);
 
-	PLUGIN_DEBUG_1ARG("Trying to lock %p...\n", &msg_queue_mutex);
+	PLUGIN_DEBUG("Trying to lock %p...\n", &msg_queue_mutex);
 	pthread_mutex_lock(&subscriber_mutex);
 
-    PLUGIN_DEBUG_1ARG("Message %s received on bus. Notifying subscribers.\n", msg);
+    PLUGIN_DEBUG("Message %s received on bus. Notifying subscribers.\n", msg);
 
     std::list<BusSubscriber*>::const_iterator i;
     for( i = subscribers.begin(); i != subscribers.end() && !message_consumed; ++i ) {
-    	PLUGIN_DEBUG_2ARG("Notifying subscriber %p of %s\n", *i, msg);
+    	PLUGIN_DEBUG("Notifying subscriber %p of %s\n", *i, msg);
     	message_consumed = ((BusSubscriber*) *i)->newMessageOnBus(msg);
     }
 
     pthread_mutex_unlock(&subscriber_mutex);
 
     if (!message_consumed)
-    	PLUGIN_DEBUG_1ARG("Warning: No consumer found for message %s\n", msg);
+    	PLUGIN_DEBUG("Warning: No consumer found for message %s\n", msg);
 
-    PLUGIN_DEBUG_1ARG("%p unlocked...\n", &msg_queue_mutex);
+    PLUGIN_DEBUG("%p unlocked...\n", &msg_queue_mutex);
 }

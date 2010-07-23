@@ -66,65 +66,9 @@ exception statement from your version. */
 
 #include "IcedTeaNPPlugin.h"
 
-#define PLUGIN_DEBUG_0ARG(str) \
-  do                                        \
-  {                                         \
-    if (plugin_debug)                       \
-    {                                       \
-      fprintf(stderr, "ICEDTEA NP PLUGIN: "); \
-      fprintf(stderr, str);                \
-    }                                       \
-  } while (0)
-
-#define PLUGIN_DEBUG_1ARG(str, arg1) \
-  do                                        \
-  {                                         \
-    if (plugin_debug)                       \
-    {                                       \
-      fprintf(stderr, "ICEDTEA NP PLUGIN: "); \
-      fprintf(stderr, str, arg1);          \
-    }                                       \
-  } while (0)
-
-#define PLUGIN_DEBUG_2ARG(str, arg1, arg2)  \
-  do                                        \
-  {                                         \
-    if (plugin_debug)                       \
-    {                                       \
-      fprintf(stderr, "ICEDTEA NP PLUGIN: "); \
-      fprintf(stderr, str, arg1, arg2);    \
-    }                                       \
-  } while (0)
-
-#define PLUGIN_DEBUG_3ARG(str, arg1, arg2, arg3) \
-  do                                           \
-  {                                            \
-    if (plugin_debug)                          \
-    {                                          \
-      fprintf(stderr, "ICEDTEA NP PLUGIN: "); \
-      fprintf(stderr, str, arg1, arg2, arg3); \
-    }                                          \
-  } while (0)
-
-#define PLUGIN_DEBUG_4ARG(str, arg1, arg2, arg3, arg4) \
-  do                                                 \
-  {                                                  \
-    if (plugin_debug)                                \
-    {                                                \
-      fprintf(stderr, "ICEDTEA NP PLUGIN: "); \
-      fprintf(stderr, str, arg1, arg2, arg3, arg4); \
-    }                                                \
-  } while (0)
-
-#define PLUGIN_DEBUG_5ARG(str, arg1, arg2, arg3, arg4, arg5) \
-  do                                                 \
-  {                                                  \
-    if (plugin_debug)                                \
-    {                                                \
-      fprintf(stderr, "ICEDTEA NP PLUGIN: "); \
-      fprintf(stderr, str, arg1, arg2, arg3, arg4, arg5); \
-    }                                                \
-  } while (0)
+#define PLUGIN_DEBUG(...) \
+	fprintf (stderr, "ITNPP Thread# %d: ", pthread_self()); \
+	fprintf (stderr, __VA_ARGS__)
 
 #define CHECK_JAVA_RESULT(result_data)                               \
 {                                                                    \

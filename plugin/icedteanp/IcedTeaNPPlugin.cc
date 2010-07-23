@@ -262,7 +262,7 @@ ITNP_New (NPMIMEType pluginType, NPP instance, uint16_t mode,
          int16_t argc, char* argn[], char* argv[],
          NPSavedData* saved)
 {
-  PLUGIN_DEBUG_0ARG("ITNP_New\n");
+  PLUGIN_DEBUG("ITNP_New\n");
 
   static NPObject *window_ptr;
   NPIdentifier identifier;
@@ -275,7 +275,7 @@ ITNP_New (NPMIMEType pluginType, NPP instance, uint16_t mode,
   }
   browser_functions.getproperty(instance, window_ptr, identifier, &member_ptr);
 
-  PLUGIN_DEBUG_1ARG("Got variant %p\n", &member_ptr);
+  PLUGIN_DEBUG("Got variant %p\n", &member_ptr);
 
 
   NPError np_error = NPERR_NO_ERROR;
@@ -395,12 +395,12 @@ ITNP_New (NPMIMEType pluginType, NPP instance, uint16_t mode,
   documentbase = NULL;
 
   // store an identifier for this plugin
-  PLUGIN_DEBUG_2ARG("Mapping id %d and instance %p\n", instance_counter, instance);
+  PLUGIN_DEBUG("Mapping id %d and instance %p\n", instance_counter, instance);
   g_hash_table_insert(instance_to_id_map, instance, GINT_TO_POINTER(instance_counter));
   g_hash_table_insert(id_to_instance_map, GINT_TO_POINTER(instance_counter), instance);
   instance_counter++;
 
-  PLUGIN_DEBUG_0ARG ("ITNP_New return\n");
+  PLUGIN_DEBUG ("ITNP_New return\n");
 
   return np_error;
 }
@@ -415,16 +415,16 @@ void start_jvm_if_needed()
   GMutex *vm_start_mutex = g_mutex_new();
   g_mutex_lock(vm_start_mutex);
 
-  PLUGIN_DEBUG_0ARG("Checking JVM status...\n");
+  PLUGIN_DEBUG("Checking JVM status...\n");
 
   // If the jvm is already up, do nothing
   if (jvm_up)
   {
-      PLUGIN_DEBUG_0ARG("JVM is up. Returning.\n");
+      PLUGIN_DEBUG("JVM is up. Returning.\n");
       return;
   }
 
-  PLUGIN_DEBUG_0ARG("No JVM is running. Attempting to start one...\n");
+  PLUGIN_DEBUG("No JVM is running. Attempting to start one...\n");
 
   NPError np_error = NPERR_NO_ERROR;
   ITNPPluginData* data = NULL;
@@ -447,14 +447,14 @@ void start_jvm_if_needed()
   // clean up any older pip
   unlink (in_pipe_name);
 
-  PLUGIN_DEBUG_1ARG ("ITNP_New: creating input fifo: %s\n", in_pipe_name);
+  PLUGIN_DEBUG ("ITNP_New: creating input fifo: %s\n", in_pipe_name);
   if (mkfifo (in_pipe_name, 0600) == -1 && errno != EEXIST)
     {
       PLUGIN_ERROR_TWO ("Failed to create input pipe", strerror (errno));
       np_error = NPERR_GENERIC_ERROR;
       goto cleanup_in_pipe_name;
     }
-  PLUGIN_DEBUG_1ARG ("ITNP_New: created input fifo: %s\n", in_pipe_name);
+  PLUGIN_DEBUG ("ITNP_New: created input fifo: %s\n", in_pipe_name);
 
   // Create plugin-to-appletviewer pipe which we refer to as the
   // output pipe.
@@ -473,14 +473,14 @@ void start_jvm_if_needed()
   // clean up any older pip
   unlink (out_pipe_name);
 
-  PLUGIN_DEBUG_1ARG ("ITNP_New: creating output fifo: %s\n", out_pipe_name);
+  PLUGIN_DEBUG ("ITNP_New: creating output fifo: %s\n", out_pipe_name);
   if (mkfifo (out_pipe_name, 0600) == -1 && errno != EEXIST)
     {
       PLUGIN_ERROR_TWO ("Failed to create output pipe", strerror (errno));
       np_error = NPERR_GENERIC_ERROR;
       goto cleanup_out_pipe_name;
     }
-  PLUGIN_DEBUG_1ARG ("ITNP_New: created output fifo: %s\n", out_pipe_name);
+  PLUGIN_DEBUG ("ITNP_New: created output fifo: %s\n", out_pipe_name);
 
   // Start a separate appletviewer process for each applet, even if
   // there are multiple applets in the same page.  We may need to
@@ -571,9 +571,9 @@ void start_jvm_if_needed()
 
   // cleanup_out_pipe:
   // Delete output pipe.
-  PLUGIN_DEBUG_1ARG ("ITNP_New: deleting input fifo: %s\n", in_pipe_name);
+  PLUGIN_DEBUG ("ITNP_New: deleting input fifo: %s\n", in_pipe_name);
   unlink (out_pipe_name);
-  PLUGIN_DEBUG_1ARG ("ITNP_New: deleted input fifo: %s\n", in_pipe_name);
+  PLUGIN_DEBUG ("ITNP_New: deleted input fifo: %s\n", in_pipe_name);
 
  cleanup_out_pipe_name:
   g_free (out_pipe_name);
@@ -581,9 +581,9 @@ void start_jvm_if_needed()
 
   // cleanup_in_pipe:
   // Delete input pipe.
-  PLUGIN_DEBUG_1ARG ("ITNP_New: deleting output fifo: %s\n", out_pipe_name);
+  PLUGIN_DEBUG ("ITNP_New: deleting output fifo: %s\n", out_pipe_name);
   unlink (in_pipe_name);
-  PLUGIN_DEBUG_1ARG ("ITNP_New: deleted output fifo: %s\n", out_pipe_name);
+  PLUGIN_DEBUG ("ITNP_New: deleted output fifo: %s\n", out_pipe_name);
 
  cleanup_in_pipe_name:
   g_free (in_pipe_name);
@@ -599,7 +599,7 @@ void start_jvm_if_needed()
 NPError
 ITNP_GetValue (NPP instance, NPPVariable variable, void* value)
 {
-  PLUGIN_DEBUG_0ARG ("ITNP_GetValue\n");
+  PLUGIN_DEBUG ("ITNP_GetValue\n");
 
   NPError np_error = NPERR_NO_ERROR;
 
@@ -608,7 +608,7 @@ ITNP_GetValue (NPP instance, NPPVariable variable, void* value)
     // This plugin needs XEmbed support.
     case NPPVpluginNeedsXEmbed:
       {
-        PLUGIN_DEBUG_0ARG ("ITNP_GetValue: returning TRUE for NeedsXEmbed.\n");
+        PLUGIN_DEBUG ("ITNP_GetValue: returning TRUE for NeedsXEmbed.\n");
         bool* bool_value = (bool*) value;
         *bool_value = true;
       }
@@ -624,7 +624,7 @@ ITNP_GetValue (NPP instance, NPPVariable variable, void* value)
       break;
     }
 
-  PLUGIN_DEBUG_0ARG ("ITNP_GetValue return\n");
+  PLUGIN_DEBUG ("ITNP_GetValue return\n");
 
   return np_error;
 }
@@ -632,7 +632,7 @@ ITNP_GetValue (NPP instance, NPPVariable variable, void* value)
 NPError
 ITNP_Destroy (NPP instance, NPSavedData** save)
 {
-  PLUGIN_DEBUG_1ARG ("ITNP_Destroy %p\n", instance);
+  PLUGIN_DEBUG ("ITNP_Destroy %p\n", instance);
 
   ITNPPluginData* data = (ITNPPluginData*) instance->pdata;
 
@@ -649,7 +649,7 @@ ITNP_Destroy (NPP instance, NPSavedData** save)
 
   IcedTeaPluginUtilities::invalidateInstance(instance);
 
-  PLUGIN_DEBUG_0ARG ("ITNP_Destroy return\n");
+  PLUGIN_DEBUG ("ITNP_Destroy return\n");
 
   return NPERR_NO_ERROR;
 }
@@ -657,7 +657,7 @@ ITNP_Destroy (NPP instance, NPSavedData** save)
 NPError
 ITNP_SetWindow (NPP instance, NPWindow* window)
 {
-  PLUGIN_DEBUG_0ARG ("ITNP_SetWindow\n");
+  PLUGIN_DEBUG ("ITNP_SetWindow\n");
 
   if (instance == NULL)
     {
@@ -679,7 +679,7 @@ ITNP_SetWindow (NPP instance, NPWindow* window)
   // Simply return if we receive a NULL window.
   if ((window == NULL) || (window->window == NULL))
     {
-      PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: got NULL window.\n");
+      PLUGIN_DEBUG ("ITNP_SetWindow: got NULL window.\n");
 
       return NPERR_NO_ERROR;
     }
@@ -690,7 +690,7 @@ ITNP_SetWindow (NPP instance, NPWindow* window)
       if (data->window_handle == window->window)
     {
           // The parent window is the same as in previous calls.
-          PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: window already exists.\n");
+          PLUGIN_DEBUG ("ITNP_SetWindow: window already exists.\n");
 
           // Critical region.  Read data->appletviewer_mutex and send
           // a message to the appletviewer.
@@ -704,7 +704,7 @@ ITNP_SetWindow (NPP instance, NPWindow* window)
           // SetWindow call.
           if (window->width != data->window_width)
         {
-                  PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: window width changed.\n");
+                  PLUGIN_DEBUG ("ITNP_SetWindow: window width changed.\n");
           // The width of the plugin window has changed.
 
                   // Store the new width.
@@ -714,7 +714,7 @@ ITNP_SetWindow (NPP instance, NPWindow* window)
 
           if (window->height != data->window_height)
         {
-                  PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: window height changed.\n");
+                  PLUGIN_DEBUG ("ITNP_SetWindow: window height changed.\n");
           // The height of the plugin window has changed.
 
                   // Store the new height.
@@ -736,7 +736,7 @@ ITNP_SetWindow (NPP instance, NPWindow* window)
       else
         {
               // The appletviewer is not running.
-          PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: appletviewer is not running.\n");
+          PLUGIN_DEBUG ("ITNP_SetWindow: appletviewer is not running.\n");
         }
 
           g_mutex_unlock (data->appletviewer_mutex);
@@ -745,12 +745,12 @@ ITNP_SetWindow (NPP instance, NPWindow* window)
     {
       // The parent window has changed.  This branch does run but
       // doing nothing in response seems to be sufficient.
-      PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: parent window changed.\n");
+      PLUGIN_DEBUG ("ITNP_SetWindow: parent window changed.\n");
     }
     }
   else
     {
-      PLUGIN_DEBUG_0ARG ("ITNP_SetWindow: setting window.\n");
+      PLUGIN_DEBUG ("ITNP_SetWindow: setting window.\n");
 
       // Critical region.  Send messages to appletviewer.
       g_mutex_lock (data->appletviewer_mutex);
@@ -774,7 +774,7 @@ ITNP_SetWindow (NPP instance, NPWindow* window)
       data->window_handle = window->window;
     }
 
-  PLUGIN_DEBUG_0ARG ("ITNP_SetWindow return\n");
+  PLUGIN_DEBUG ("ITNP_SetWindow return\n");
 
   return NPERR_NO_ERROR;
 }
@@ -783,9 +783,9 @@ NPError
 ITNP_NewStream (NPP instance, NPMIMEType type, NPStream* stream,
                NPBool seekable, uint16_t* stype)
 {
-  PLUGIN_DEBUG_0ARG ("ITNP_NewStream\n");
+  PLUGIN_DEBUG ("ITNP_NewStream\n");
 
-  PLUGIN_DEBUG_0ARG ("ITNP_NewStream return\n");
+  PLUGIN_DEBUG ("ITNP_NewStream return\n");
 
   return NPERR_NO_ERROR;
 }
@@ -793,17 +793,17 @@ ITNP_NewStream (NPP instance, NPMIMEType type, NPStream* stream,
 void
 ITNP_StreamAsFile (NPP instance, NPStream* stream, const char* filename)
 {
-  PLUGIN_DEBUG_0ARG ("ITNP_StreamAsFile\n");
+  PLUGIN_DEBUG ("ITNP_StreamAsFile\n");
 
-  PLUGIN_DEBUG_0ARG ("ITNP_StreamAsFile return\n");
+  PLUGIN_DEBUG ("ITNP_StreamAsFile return\n");
 }
 
 NPError
 ITNP_DestroyStream (NPP instance, NPStream* stream, NPReason reason)
 {
-  PLUGIN_DEBUG_0ARG ("ITNP_DestroyStream\n");
+  PLUGIN_DEBUG ("ITNP_DestroyStream\n");
 
-  PLUGIN_DEBUG_0ARG ("ITNP_DestroyStream return\n");
+  PLUGIN_DEBUG ("ITNP_DestroyStream return\n");
 
   return NPERR_NO_ERROR;
 }
@@ -811,9 +811,9 @@ ITNP_DestroyStream (NPP instance, NPStream* stream, NPReason reason)
 int32_t
 ITNP_WriteReady (NPP instance, NPStream* stream)
 {
-  PLUGIN_DEBUG_0ARG ("ITNP_WriteReady\n");
+  PLUGIN_DEBUG ("ITNP_WriteReady\n");
 
-  PLUGIN_DEBUG_0ARG ("ITNP_WriteReady return\n");
+  PLUGIN_DEBUG ("ITNP_WriteReady return\n");
 
   return 0;
 }
@@ -822,9 +822,9 @@ int32_t
 ITNP_Write (NPP instance, NPStream* stream, int32_t offset, int32_t len,
            void* buffer)
 {
-  PLUGIN_DEBUG_0ARG ("ITNP_Write\n");
+  PLUGIN_DEBUG ("ITNP_Write\n");
 
-  PLUGIN_DEBUG_0ARG ("ITNP_Write return\n");
+  PLUGIN_DEBUG ("ITNP_Write return\n");
 
   return 0;
 }
@@ -832,17 +832,17 @@ ITNP_Write (NPP instance, NPStream* stream, int32_t offset, int32_t len,
 void
 ITNP_Print (NPP instance, NPPrint* platformPrint)
 {
-  PLUGIN_DEBUG_0ARG ("ITNP_Print\n");
+  PLUGIN_DEBUG ("ITNP_Print\n");
 
-  PLUGIN_DEBUG_0ARG ("ITNP_Print return\n");
+  PLUGIN_DEBUG ("ITNP_Print return\n");
 }
 
 int16_t
 ITNP_HandleEvent (NPP instance, void* event)
 {
-  PLUGIN_DEBUG_0ARG ("ITNP_HandleEvent\n");
+  PLUGIN_DEBUG ("ITNP_HandleEvent\n");
 
-  PLUGIN_DEBUG_0ARG ("ITNP_HandleEvent return\n");
+  PLUGIN_DEBUG ("ITNP_HandleEvent return\n");
 
   return 0;
 }
@@ -851,9 +851,9 @@ void
 ITNP_URLNotify (NPP instance, const char* url, NPReason reason,
                void* notifyData)
 {
-  PLUGIN_DEBUG_0ARG ("ITNP_URLNotify\n");
+  PLUGIN_DEBUG ("ITNP_URLNotify\n");
 
-  PLUGIN_DEBUG_0ARG ("ITNP_URLNotify return\n");
+  PLUGIN_DEBUG ("ITNP_URLNotify return\n");
 }
 
 NPError
@@ -924,7 +924,7 @@ get_cookie_info(const char* siteAddr, char** cookieString, uint32_t* len)
 static void
 plugin_data_new (ITNPPluginData** data)
 {
-  PLUGIN_DEBUG_0ARG ("plugin_data_new\n");
+  PLUGIN_DEBUG ("plugin_data_new\n");
 
   *data = (ITNPPluginData*)
     (*browser_functions.memalloc) (sizeof (struct ITNPPluginData));
@@ -933,7 +933,7 @@ plugin_data_new (ITNPPluginData** data)
   if (*data)
     memset (*data, 0, sizeof (struct ITNPPluginData));
 
-  PLUGIN_DEBUG_0ARG ("plugin_data_new return\n");
+  PLUGIN_DEBUG ("plugin_data_new return\n");
 }
 
 
@@ -948,7 +948,7 @@ plugin_data_new (ITNPPluginData** data)
 static gchar*
 plugin_get_documentbase (NPP instance)
 {
-  PLUGIN_DEBUG_0ARG ("plugin_get_documentbase\n");
+  PLUGIN_DEBUG ("plugin_get_documentbase\n");
 
   nsIPluginInstance* xpcom_instance = NULL;
   nsIPluginInstancePeer* peer = NULL;
@@ -1000,16 +1000,16 @@ plugin_get_documentbase (NPP instance)
   NS_RELEASE (peer);
 
  cleanup_done:
-  PLUGIN_DEBUG_0ARG ("plugin_get_documentbase return\n");
+  PLUGIN_DEBUG ("plugin_get_documentbase return\n");
 
-  PLUGIN_DEBUG_1ARG("plugin_get_documentbase returning: %s\n", documentbase_copy);
+  PLUGIN_DEBUG("plugin_get_documentbase returning: %s\n", documentbase_copy);
   return documentbase_copy;
 }
 #else
 static gchar*
 plugin_get_documentbase (NPP instance)
 {
-  PLUGIN_DEBUG_0ARG ("plugin_get_documentbase\n");
+  PLUGIN_DEBUG ("plugin_get_documentbase\n");
 
   char const* documentbase = NULL;
   gchar* documentbase_copy = NULL;
@@ -1053,8 +1053,8 @@ plugin_get_documentbase (NPP instance)
   browser_functions.releasevariantvalue(&href);
   browser_functions.releasevariantvalue(&location);
  cleanup_done:
-  PLUGIN_DEBUG_0ARG ("plugin_get_documentbase return\n");
-  PLUGIN_DEBUG_1ARG("plugin_get_documentbase returning: %s\n", documentbase_copy);
+  PLUGIN_DEBUG ("plugin_get_documentbase return\n");
+  PLUGIN_DEBUG("plugin_get_documentbase returning: %s\n", documentbase_copy);
 
   return documentbase_copy;
 }
@@ -1067,7 +1067,7 @@ plugin_display_failure_dialog ()
 {
   GtkWidget* dialog = NULL;
 
-  PLUGIN_DEBUG_0ARG ("plugin_display_failure_dialog\n");
+  PLUGIN_DEBUG ("plugin_display_failure_dialog\n");
 
   dialog = gtk_message_dialog_new (NULL,
                                    GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -1079,7 +1079,7 @@ plugin_display_failure_dialog ()
   gtk_dialog_run (GTK_DIALOG (dialog));
   gtk_widget_destroy (dialog);
 
-  PLUGIN_DEBUG_0ARG ("plugin_display_failure_dialog return\n");
+  PLUGIN_DEBUG ("plugin_display_failure_dialog return\n");
 }
 
 
@@ -1093,7 +1093,7 @@ plugin_in_pipe_callback (GIOChannel* source,
                          GIOCondition condition,
                          gpointer plugin_data)
 {
-  PLUGIN_DEBUG_0ARG ("plugin_in_pipe_callback\n");
+  PLUGIN_DEBUG ("plugin_in_pipe_callback\n");
 
   gboolean keep_installed = TRUE;
 
@@ -1128,18 +1128,18 @@ plugin_in_pipe_callback (GIOChannel* source,
 
   if (condition & (G_IO_ERR | G_IO_HUP))
     {
-      PLUGIN_DEBUG_0ARG ("appletviewer has stopped.\n");
+      PLUGIN_DEBUG ("appletviewer has stopped.\n");
       keep_installed = FALSE;
     }
 
-  PLUGIN_DEBUG_0ARG ("plugin_in_pipe_callback return\n");
+  PLUGIN_DEBUG ("plugin_in_pipe_callback return\n");
 
   return keep_installed;
 }
 
 void consume_message(gchar* message) {
 
-	PLUGIN_DEBUG_1ARG ("  PIPE: plugin read: %s\n", message);
+	PLUGIN_DEBUG ("  PIPE: plugin read: %s\n", message);
 
   if (g_str_has_prefix (message, "instance"))
     {
@@ -1154,7 +1154,7 @@ void consume_message(gchar* message) {
 
       if (instance_id > 0 && !instance)
         {
-          PLUGIN_DEBUG_2ARG("Instance %d is not active. Refusing to consume message \"%s\"\n", instance_id, message);
+          PLUGIN_DEBUG("Instance %d is not active. Refusing to consume message \"%s\"\n", instance_id, message);
           return;
         }
       else if (instance)
@@ -1168,8 +1168,8 @@ void consume_message(gchar* message) {
           gchar* decoded_url = (gchar*) calloc(strlen(parts[3]) + 1, sizeof(gchar));
           IcedTeaPluginUtilities::decodeURL(parts[3], &decoded_url);
 
-          PLUGIN_DEBUG_1ARG ("plugin_in_pipe_callback: opening URL %s\n", decoded_url);
-          PLUGIN_DEBUG_1ARG ("plugin_in_pipe_callback: URL target %s\n", parts[4]);
+          PLUGIN_DEBUG ("plugin_in_pipe_callback: opening URL %s\n", decoded_url);
+          PLUGIN_DEBUG ("plugin_in_pipe_callback: URL target %s\n", parts[4]);
 
           NPError np_error =
             (*browser_functions.geturl) (data->owner, decoded_url, parts[4]);
@@ -1191,7 +1191,7 @@ void consume_message(gchar* message) {
 
           // join the rest
           gchar* status_message = g_strjoinv(" ", parts);
-          PLUGIN_DEBUG_1ARG ("plugin_in_pipe_callback: setting status %s\n", status_message);
+          PLUGIN_DEBUG ("plugin_in_pipe_callback: setting status %s\n", status_message);
           (*browser_functions.status) (data->owner, status_message);
 
           g_free(status_message);
@@ -1227,7 +1227,7 @@ void consume_message(gchar* message) {
 
         gchar* decoded_url = (gchar*) calloc(strlen(parts[4]) + 1, sizeof(gchar));
         IcedTeaPluginUtilities::decodeURL(parts[4], &decoded_url);
-        PLUGIN_DEBUG_5ARG("parts[0]=%s, parts[1]=%s, reference, parts[3]=%s, parts[4]=%s -- decoded_url=%s\n", parts[0], parts[1], parts[3], parts[4], decoded_url);
+        PLUGIN_DEBUG("parts[0]=%s, parts[1]=%s, reference, parts[3]=%s, parts[4]=%s -- decoded_url=%s\n", parts[0], parts[1], parts[3], parts[4], decoded_url);
 
         gchar* proxy_info;
 
@@ -1241,7 +1241,7 @@ void consume_message(gchar* message) {
             proxy_info = g_strconcat (proxy_info, proxy, NULL);
           }
 
-        PLUGIN_DEBUG_1ARG("Proxy info: %s\n", proxy_info);
+        PLUGIN_DEBUG("Proxy info: %s\n", proxy_info);
         plugin_send_message_to_appletviewer(proxy_info);
 
         g_free(decoded_url);
@@ -1267,7 +1267,7 @@ void consume_message(gchar* message) {
             cookie_info = g_strconcat (cookie_info, cookie_string, NULL);
         }
 
-        PLUGIN_DEBUG_1ARG("Cookie info: %s\n", cookie_info);
+        PLUGIN_DEBUG("Cookie info: %s\n", cookie_info);
         plugin_send_message_to_appletviewer(cookie_info);
 
         g_free(decoded_url);
@@ -1292,7 +1292,7 @@ int get_id_from_instance(NPP instance)
 {
     int id = GPOINTER_TO_INT(g_hash_table_lookup(instance_to_id_map,
                                                        instance));
-    PLUGIN_DEBUG_2ARG("Returning id %d for instance %p\n", id, instance);
+    PLUGIN_DEBUG("Returning id %d for instance %p\n", id, instance);
     return id;
 }
 
@@ -1327,7 +1327,7 @@ get_proxy_info(const char* siteAddr, char** proxy, uint32_t* len)
 
   // if there is no proxy found, return immediately
   if (!info) {
-     PLUGIN_DEBUG_1ARG("%s does not need a proxy\n", siteAddr);
+     PLUGIN_DEBUG("%s does not need a proxy\n", siteAddr);
      return NPERR_GENERIC_ERROR;
   }
 
@@ -1365,7 +1365,7 @@ get_proxy_info(const char* siteAddr, char** proxy, uint32_t* len)
 
   *len = strlen(*proxy);
 
-  PLUGIN_DEBUG_2ARG("Proxy info for %s: %s\n", siteAddr, *proxy);
+  PLUGIN_DEBUG("Proxy info for %s: %s\n", siteAddr, *proxy);
 
 #else
 
@@ -1398,13 +1398,13 @@ plugin_out_pipe_callback (GIOChannel* source,
                           GIOCondition condition,
                           gpointer plugin_data)
 {
-  PLUGIN_DEBUG_0ARG ("plugin_out_pipe_callback\n");
+  PLUGIN_DEBUG ("plugin_out_pipe_callback\n");
 
   ITNPPluginData* data = (ITNPPluginData*) plugin_data;
 
-  PLUGIN_DEBUG_0ARG ("plugin_out_pipe_callback: appletviewer has stopped.\n");
+  PLUGIN_DEBUG ("plugin_out_pipe_callback: appletviewer has stopped.\n");
 
-  PLUGIN_DEBUG_0ARG ("plugin_out_pipe_callback return\n");
+  PLUGIN_DEBUG ("plugin_out_pipe_callback return\n");
 
   return FALSE;
 }
@@ -1447,12 +1447,12 @@ plugin_filter_ld_library_path(gchar *path_old)
 
   if (path_new == NULL || strlen (path_new) == 0)
     {
-      PLUGIN_DEBUG_0ARG("Unset LD_LIBRARY_PATH\n");
+      PLUGIN_DEBUG("Unset LD_LIBRARY_PATH\n");
       return NULL;
     }
   else
     {
-      PLUGIN_DEBUG_1ARG ("Set LD_LIBRARY_PATH: %s\n", path_new);
+      PLUGIN_DEBUG ("Set LD_LIBRARY_PATH: %s\n", path_new);
       return path_new;
     }
 }
@@ -1484,7 +1484,7 @@ plugin_filter_environment(void)
 static NPError
 plugin_test_appletviewer ()
 {
-  PLUGIN_DEBUG_1ARG ("plugin_test_appletviewer: %s\n", appletviewer_executable);
+  PLUGIN_DEBUG ("plugin_test_appletviewer: %s\n", appletviewer_executable);
   NPError error = NPERR_NO_ERROR;
 
   gchar* command_line[3] = { NULL, NULL, NULL };
@@ -1521,14 +1521,14 @@ plugin_test_appletviewer ()
   g_free (command_line[2]);
   command_line[2] = NULL;
 
-  PLUGIN_DEBUG_0ARG ("plugin_test_appletviewer return\n");
+  PLUGIN_DEBUG ("plugin_test_appletviewer return\n");
   return error;
 }
 
 static NPError
 plugin_start_appletviewer (ITNPPluginData* data)
 {
-  PLUGIN_DEBUG_0ARG ("plugin_start_appletviewer\n");
+  PLUGIN_DEBUG ("plugin_start_appletviewer\n");
   NPError error = NPERR_NO_ERROR;
 
   gchar** command_line;
@@ -1597,12 +1597,12 @@ plugin_start_appletviewer (ITNPPluginData* data)
 
   if (appletviewer_pid)
     {
-      PLUGIN_DEBUG_1ARG("Initialized VM with pid=%d\n", appletviewer_pid);
+      PLUGIN_DEBUG("Initialized VM with pid=%d\n", appletviewer_pid);
       appletviewer_watch_id = g_child_watch_add(appletviewer_pid, (GChildWatchFunc) appletviewer_monitor, (gpointer) appletviewer_pid);
     }
 
 
-  PLUGIN_DEBUG_0ARG ("plugin_start_appletviewer return\n");
+  PLUGIN_DEBUG ("plugin_start_appletviewer return\n");
   return error;
 }
 
@@ -1611,7 +1611,7 @@ plugin_start_appletviewer (ITNPPluginData* data)
 static gchar*
 plugin_create_applet_tag (int16_t argc, char* argn[], char* argv[])
 {
-  PLUGIN_DEBUG_0ARG ("plugin_create_applet_tag\n");
+  PLUGIN_DEBUG ("plugin_create_applet_tag\n");
 
   gchar* applet_tag = g_strdup ("<EMBED ");
   gchar* parameters = g_strdup ("");
@@ -1710,7 +1710,7 @@ plugin_create_applet_tag (int16_t argc, char* argn[], char* argv[])
   g_free (parameters);
   parameters = NULL;
 
-  PLUGIN_DEBUG_0ARG ("plugin_create_applet_tag return\n");
+  PLUGIN_DEBUG ("plugin_create_applet_tag return\n");
 
   return applet_tag;
 }
@@ -1720,7 +1720,7 @@ plugin_create_applet_tag (int16_t argc, char* argn[], char* argv[])
 void
 plugin_send_message_to_appletviewer (gchar const* message)
 {
-  PLUGIN_DEBUG_0ARG ("plugin_send_message_to_appletviewer\n");
+  PLUGIN_DEBUG ("plugin_send_message_to_appletviewer\n");
 
   if (jvm_up)
     {
@@ -1765,10 +1765,10 @@ plugin_send_message_to_appletviewer (gchar const* message)
       g_free (newline_message);
       newline_message = NULL;
 
-      PLUGIN_DEBUG_1ARG ("  PIPE: plugin wrote: %s\n", message);
+      PLUGIN_DEBUG ("  PIPE: plugin wrote: %s\n", message);
     }
 
-  PLUGIN_DEBUG_0ARG ("plugin_send_message_to_appletviewer return\n");
+  PLUGIN_DEBUG ("plugin_send_message_to_appletviewer return\n");
 }
 
 // Stop the appletviewer process.  When this is called the
@@ -1787,7 +1787,7 @@ plugin_send_message_to_appletviewer (gchar const* message)
 static void
 plugin_stop_appletviewer ()
 {
-  PLUGIN_DEBUG_0ARG ("plugin_stop_appletviewer\n");
+  PLUGIN_DEBUG ("plugin_stop_appletviewer\n");
 
   if (jvm_up)
     {
@@ -1863,21 +1863,21 @@ plugin_stop_appletviewer ()
   jvm_up = FALSE;
   sleep(2); /* Needed to prevent crashes during debug (when JDWP port is not freed by the kernel right away) */
 
-  PLUGIN_DEBUG_0ARG ("plugin_stop_appletviewer return\n");
+  PLUGIN_DEBUG ("plugin_stop_appletviewer return\n");
 }
 
 static void appletviewer_monitor(GPid pid, gint status, gpointer data)
 {
-    PLUGIN_DEBUG_0ARG ("appletviewer_monitor\n");
+    PLUGIN_DEBUG ("appletviewer_monitor\n");
     jvm_up = FALSE;
     pid = -1;
-    PLUGIN_DEBUG_0ARG ("appletviewer_monitor return\n");
+    PLUGIN_DEBUG ("appletviewer_monitor return\n");
 }
 
 static void
 plugin_data_destroy (NPP instance)
 {
-  PLUGIN_DEBUG_0ARG ("plugin_data_destroy\n");
+  PLUGIN_DEBUG ("plugin_data_destroy\n");
 
   ITNPPluginData* tofree = (ITNPPluginData*) instance->pdata;
 
@@ -1912,7 +1912,7 @@ plugin_data_destroy (NPP instance)
   (*browser_functions.memfree) (tofree);
   tofree = NULL;
 
-  PLUGIN_DEBUG_0ARG ("plugin_data_destroy return\n");
+  PLUGIN_DEBUG ("plugin_data_destroy return\n");
 }
 
 // FACTORY FUNCTIONS
@@ -1929,7 +1929,7 @@ plugin_data_destroy (NPP instance)
 NPError
 NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
 {
-  PLUGIN_DEBUG_0ARG ("NP_Initialize\n");
+  PLUGIN_DEBUG ("NP_Initialize\n");
 
   if (initialized)
     return NPERR_NO_ERROR;
@@ -2143,7 +2143,7 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
 
   appletviewer_executable = g_strdup_printf ("%s/../../bin/java",
                                              dirname (filename));
-  PLUGIN_DEBUG_4ARG(".so is located at: %s and the link points to: %s. Executing java from dir %s to run %s\n", info.dli_fname, filename, dirname (filename), appletviewer_executable);
+  PLUGIN_DEBUG(".so is located at: %s and the link points to: %s. Executing java from dir %s to run %s\n", info.dli_fname, filename, dirname (filename), appletviewer_executable);
   if (!appletviewer_executable)
     {
       PLUGIN_ERROR ("Failed to create appletviewer executable name.");
@@ -2167,9 +2167,9 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
 
   plugin_instance_mutex = g_mutex_new ();
 
-  PLUGIN_DEBUG_1ARG ("NP_Initialize: using %s\n", appletviewer_executable);
+  PLUGIN_DEBUG ("NP_Initialize: using %s\n", appletviewer_executable);
 
-  PLUGIN_DEBUG_0ARG ("NP_Initialize return\n");
+  PLUGIN_DEBUG ("NP_Initialize return\n");
 
   plugin_req_proc = new PluginRequestProcessor();
   java_req_proc = new JavaMessageSender();
@@ -2216,9 +2216,9 @@ NP_Initialize (NPNetscapeFuncs* browserTable, NPPluginFuncs* pluginTable)
 char*
 NP_GetMIMEDescription ()
 {
-  PLUGIN_DEBUG_0ARG ("NP_GetMIMEDescription\n");
+  PLUGIN_DEBUG ("NP_GetMIMEDescription\n");
 
-  PLUGIN_DEBUG_0ARG ("NP_GetMIMEDescription return\n");
+  PLUGIN_DEBUG ("NP_GetMIMEDescription return\n");
 
   return (char*) PLUGIN_MIME_DESC;
 }
@@ -2228,7 +2228,7 @@ NP_GetMIMEDescription ()
 NPError
 NP_GetValue (void* future, NPPVariable variable, void* value)
 {
-  PLUGIN_DEBUG_0ARG ("NP_GetValue\n");
+  PLUGIN_DEBUG ("NP_GetValue\n");
 
   NPError result = NPERR_NO_ERROR;
   gchar** char_value = (gchar**) value;
@@ -2236,12 +2236,12 @@ NP_GetValue (void* future, NPPVariable variable, void* value)
   switch (variable)
     {
     case NPPVpluginNameString:
-      PLUGIN_DEBUG_0ARG ("NP_GetValue: returning plugin name.\n");
+      PLUGIN_DEBUG ("NP_GetValue: returning plugin name.\n");
       *char_value = g_strdup (PLUGIN_NAME);
       break;
 
     case NPPVpluginDescriptionString:
-      PLUGIN_DEBUG_0ARG ("NP_GetValue: returning plugin description.\n");
+      PLUGIN_DEBUG ("NP_GetValue: returning plugin description.\n");
       *char_value = g_strdup (PLUGIN_DESC);
       break;
 
@@ -2251,7 +2251,7 @@ NP_GetValue (void* future, NPPVariable variable, void* value)
       break;
     }
 
-  PLUGIN_DEBUG_0ARG ("NP_GetValue return\n");
+  PLUGIN_DEBUG ("NP_GetValue return\n");
 
   return result;
 }
@@ -2261,7 +2261,7 @@ NP_GetValue (void* future, NPPVariable variable, void* value)
 NPError
 NP_Shutdown (void)
 {
-  PLUGIN_DEBUG_0ARG ("NP_Shutdown\n");
+  PLUGIN_DEBUG ("NP_Shutdown\n");
 
   // Free mutex.
   if (plugin_instance_mutex)
@@ -2310,9 +2310,9 @@ NP_Shutdown (void)
 
   // cleanup_out_pipe:
   // Delete output pipe.
-  PLUGIN_DEBUG_1ARG ("NP_Shutdown: deleting output fifo: %s\n", out_pipe_name);
+  PLUGIN_DEBUG ("NP_Shutdown: deleting output fifo: %s\n", out_pipe_name);
   unlink (out_pipe_name);
-  PLUGIN_DEBUG_1ARG ("NP_Shutdown: deleted output fifo: %s\n", out_pipe_name);
+  PLUGIN_DEBUG ("NP_Shutdown: deleted output fifo: %s\n", out_pipe_name);
 
   // cleanup_out_pipe_name:
   g_free (out_pipe_name);
@@ -2320,9 +2320,9 @@ NP_Shutdown (void)
 
   // cleanup_in_pipe:
   // Delete input pipe.
-  PLUGIN_DEBUG_1ARG ("NP_Shutdown: deleting input fifo: %s\n", in_pipe_name);
+  PLUGIN_DEBUG ("NP_Shutdown: deleting input fifo: %s\n", in_pipe_name);
   unlink (in_pipe_name);
-  PLUGIN_DEBUG_1ARG ("NP_Shutdown: deleted input fifo: %s\n", in_pipe_name);
+  PLUGIN_DEBUG ("NP_Shutdown: deleted input fifo: %s\n", in_pipe_name);
 
   // cleanup_in_pipe_name:
   g_free (in_pipe_name);
@@ -2345,7 +2345,7 @@ NP_Shutdown (void)
   delete plugin_to_java_bus;
   //delete internal_bus;
 
-  PLUGIN_DEBUG_0ARG ("NP_Shutdown return\n");
+  PLUGIN_DEBUG ("NP_Shutdown return\n");
 
   return NPERR_NO_ERROR;
 }
@@ -2413,6 +2413,6 @@ get_scriptable_object(NPP instance)
 NPObject*
 allocate_scriptable_object(NPP npp, NPClass *aClass)
 {
-	PLUGIN_DEBUG_0ARG("Allocating new scriptable object\n");
+	PLUGIN_DEBUG("Allocating new scriptable object\n");
 	return new IcedTeaScriptablePluginObject(npp);
 }

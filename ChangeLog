@@ -1,4 +1,16 @@
+2010-06-14  Deepak Bhole <dbhole@redhat.com>
+
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.cc: Use variadic macro
+	for debug message printing.
+	* plugin/icedteanp/IcedTeaJavaRequestProcessor.h: Same.
+	* plugin/icedteanp/IcedTeaNPPlugin.cc: Same.
+	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc: Same.
+	* plugin/icedteanp/IcedTeaPluginUtils.cc: Same.
+	* plugin/icedteanp/IcedTeaPluginUtils.h: Same.
+	* plugin/icedteanp/IcedTeaScriptablePluginObject.cc: Same.
+
 2010-07-12 Jon VanAlten <jon.vanalten@redhat.com>
+
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioLine.java
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java

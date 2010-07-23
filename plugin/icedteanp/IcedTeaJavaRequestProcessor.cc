@@ -179,7 +179,7 @@ JavaRequestProcessor::newMessageOnBus(const char* message)
 
 JavaRequestProcessor::JavaRequestProcessor()
 {
-    PLUGIN_DEBUG_0ARG("JavaRequestProcessor constructor\n");
+    PLUGIN_DEBUG("JavaRequestProcessor constructor\n");
 
 	// caller frees this
 	result = new JavaResultData();
@@ -200,7 +200,7 @@ JavaRequestProcessor::JavaRequestProcessor()
 
 JavaRequestProcessor::~JavaRequestProcessor()
 {
-    PLUGIN_DEBUG_0ARG("JavaRequestProcessor::~JavaRequestProcessor\n");
+    PLUGIN_DEBUG("JavaRequestProcessor::~JavaRequestProcessor\n");
 
 	if (result)
 	{
@@ -271,7 +271,7 @@ JavaRequestProcessor::postAndWaitForResponse(std::string message)
     	result->error_msg->append("Error: Timed out when waiting for response");
 
     	// Report error
-    	PLUGIN_DEBUG_1ARG("Error: Timed out when waiting for response to %s\n", message.c_str());
+    	PLUGIN_DEBUG("Error: Timed out when waiting for response to %s\n", message.c_str());
     }
 
     java_to_plugin_bus->unSubscribe(this);
@@ -847,12 +847,12 @@ createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id)
 
     if (NPVARIANT_IS_VOID(variant))
     {
-    	PLUGIN_DEBUG_1ARG("VOID %d\n", variant);
+    	PLUGIN_DEBUG("VOID %d\n", variant);
     	id->append("0");
     	return; // no need to go further
     } else if (NPVARIANT_IS_NULL(variant))
     {
-    	PLUGIN_DEBUG_1ARG("NULL\n", variant);
+    	PLUGIN_DEBUG("NULL\n", variant);
     	id->append("0");
     	return; // no need to go further
     } else if (NPVARIANT_IS_BOOLEAN(variant))
@@ -894,18 +894,18 @@ createJavaObjectFromVariant(NPP instance, NPVariant variant, std::string* id)
         NPObject* obj = NPVARIANT_TO_OBJECT(variant);
         if (IcedTeaScriptableJavaPackageObject::is_valid_java_object(obj))
         {
-            PLUGIN_DEBUG_0ARG("NPObject is a Java object\n");
+            PLUGIN_DEBUG("NPObject is a Java object\n");
             alreadyCreated = true;
         } else
         {
-            PLUGIN_DEBUG_0ARG("NPObject is not a Java object\n");
+            PLUGIN_DEBUG("NPObject is not a Java object\n");
             NPIdentifier length_id = browser_functions.getstringidentifier("length");
 
             // FIXME: We currently only handle <= 2 dim arrays. Do we really need more though?
 
             // Is it an array?
             if (IcedTeaPluginUtilities::isObjectJSArray(instance, obj)) {
-                PLUGIN_DEBUG_0ARG("NPObject is an array\n");
+                PLUGIN_DEBUG("NPObject is an array\n");
 
                 std::string array_id = std::string();
                 std::string java_array_type = std::string();

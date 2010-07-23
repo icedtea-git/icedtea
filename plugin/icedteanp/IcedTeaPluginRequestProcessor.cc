@@ -73,7 +73,7 @@ PluginRequestProcessor::PluginRequestProcessor()
 
 PluginRequestProcessor::~PluginRequestProcessor()
 {
-    PLUGIN_DEBUG_0ARG("PluginRequestProcessor::~PluginRequestProcessor\n");
+    PLUGIN_DEBUG("PluginRequestProcessor::~PluginRequestProcessor\n");
 
     if (pendingRequests)
         delete pendingRequests;
@@ -89,7 +89,7 @@ PluginRequestProcessor::~PluginRequestProcessor()
 bool
 PluginRequestProcessor::newMessageOnBus(const char* message)
 {
-    PLUGIN_DEBUG_1ARG("PluginRequestProcessor processing %s\n", message);
+    PLUGIN_DEBUG("PluginRequestProcessor processing %s\n", message);
 
     std::string* type;
     std::string* command;
@@ -169,7 +169,7 @@ PluginRequestProcessor::sendWindow(std::vector<std::string*>* message_parts)
     get_instance_from_id(id, instance);
 
     browser_functions.getvalue(instance, NPNVWindowNPObject, &window_ptr);
-    PLUGIN_DEBUG_3ARG("ID=%d, Instance=%p, WindowPTR = %p\n", id, instance, window_ptr);
+    PLUGIN_DEBUG("ID=%d, Instance=%p, WindowPTR = %p\n", id, instance, window_ptr);
 
     OBJECT_TO_NPVARIANT(window_ptr, *variant);
     browser_functions.retainobject(window_ptr);
@@ -592,7 +592,7 @@ PluginRequestProcessor::sendMember(std::vector<std::string*>* message_parts)
     }
 #endif
 
-    PLUGIN_DEBUG_1ARG("Member PTR after internal request: %s\n", thread_data.result.c_str());
+    PLUGIN_DEBUG("Member PTR after internal request: %s\n", thread_data.result.c_str());
 
     java_result = java_request.findClass(0, "netscape.javascript.JSObject");
 
@@ -711,7 +711,7 @@ queue_processor(void* data)
     std::string command;
     pthread_mutex_t wait_mutex = PTHREAD_MUTEX_INITIALIZER; // This is needed for API compat. and is unused
 
-    PLUGIN_DEBUG_1ARG("Queue processor initialized. Queue = %p\n", message_queue);
+    PLUGIN_DEBUG("Queue processor initialized. Queue = %p\n", message_queue);
 
     while (true)
     {
@@ -787,7 +787,7 @@ queue_processor(void* data)
         message_parts = NULL;
     }
 
-    PLUGIN_DEBUG_0ARG("Queue processing stopped.\n");
+    PLUGIN_DEBUG("Queue processing stopped.\n");
 }
 
 /******************************************
@@ -810,9 +810,9 @@ _setMember(void* data)
     property = (NPIdentifier*) parameters.at(2);
     value = (std::string*) parameters.at(3);
 
-    PLUGIN_DEBUG_4ARG("Setting %s on instance %p, object %p to value %s\n",
-		      browser_functions.utf8fromidentifier(*property),
-		      instance, member, value->c_str());
+    PLUGIN_DEBUG("Setting %s on instance %p, object %p to value %s\n",
+		 browser_functions.utf8fromidentifier(*property),
+		 instance, member, value->c_str());
 
     IcedTeaPluginUtilities::javaResultToNPVariant(instance, value, &value_variant);
 
@@ -836,9 +836,9 @@ _getMember(void* data)
     NPIdentifier* member_identifier = (NPIdentifier*) parameters.at(2);
 
     // Get the NPVariant corresponding to this member
-    PLUGIN_DEBUG_4ARG("Looking for %p %p %p (%s)\n",
-		      instance, parent_ptr, member_identifier,
-		      browser_functions.utf8fromidentifier(*member_identifier));
+    PLUGIN_DEBUG("Looking for %p %p %p (%s)\n",
+		 instance, parent_ptr, member_identifier,
+		 browser_functions.utf8fromidentifier(*member_identifier));
 
     if (!browser_functions.hasproperty(instance, parent_ptr, *member_identifier))
     {
@@ -859,7 +859,7 @@ _getMember(void* data)
     // store member -> instance link
     IcedTeaPluginUtilities::storeInstanceID(member_ptr, instance);
 
-    PLUGIN_DEBUG_0ARG("_getMember returning.\n");
+    PLUGIN_DEBUG("_getMember returning.\n");
 }
 
 void
@@ -873,7 +873,7 @@ _eval(void* data)
     NPVariant* eval_result = new NPVariant();
     std::string eval_result_ptr_str = std::string();
 
-    PLUGIN_DEBUG_0ARG("_eval called\n");
+    PLUGIN_DEBUG("_eval called\n");
 
     std::vector<void*>* call_data = (std::vector<void*>*) data;
 
@@ -885,12 +885,12 @@ _eval(void* data)
     script.utf8characters = script_str->c_str();
     script.utf8length = script_str->size();
 
-    PLUGIN_DEBUG_1ARG("Evaluating: %s\n", script.utf8characters);
+    PLUGIN_DEBUG("Evaluating: %s\n", script.utf8characters);
 #else
     script.UTF8Characters = script_str->c_str();
     script.UTF8Length = script_str->size();
 
-    PLUGIN_DEBUG_1ARG("Evaluating: %s\n", script.UTF8Characters);
+    PLUGIN_DEBUG("Evaluating: %s\n", script.UTF8Characters);
 #endif
 
     ((AsyncCallThreadData*) data)->call_successful = browser_functions.evaluate(instance, window_ptr, &script, eval_result);
@@ -903,7 +903,7 @@ _eval(void* data)
     }
     ((AsyncCallThreadData*) data)->result_ready = true;
 
-    PLUGIN_DEBUG_0ARG("_eval returning\n");
+    PLUGIN_DEBUG("_eval returning\n");
 }
 
 
@@ -919,7 +919,7 @@ _call(void* data)
     NPVariant* call_result = new NPVariant();
     std::string call_result_ptr_str = std::string();
 
-    PLUGIN_DEBUG_0ARG("_call called\n");
+    PLUGIN_DEBUG("_call called\n");
 
     std::vector<void*>* call_data = (std::vector<void*>*) data;
 
@@ -935,8 +935,10 @@ _call(void* data)
         IcedTeaPluginUtilities::printNPVariant(args[i]);
     }
 
+    PLUGIN_DEBUG("_calling\n");
     ((AsyncCallThreadData*) data)->call_successful =
       browser_functions.invoke(instance, window_ptr, function, args, *arg_count, call_result);
+    PLUGIN_DEBUG("_called\n");
 
     IcedTeaPluginUtilities::printNPVariant(*call_result);
 
@@ -948,7 +950,7 @@ _call(void* data)
 
     ((AsyncCallThreadData*) data)->result_ready = true;
 
-    PLUGIN_DEBUG_0ARG("_call returning\n");
+    PLUGIN_DEBUG("_call returning\n");
 }
 
 void
@@ -964,7 +966,7 @@ _getString(void* data)
     instance = (NPP) call_data->at(0);
     NPVariant* variant = (NPVariant*) call_data->at(1);
 
-    PLUGIN_DEBUG_2ARG("_getString called with %p and %p\n", instance, variant);
+    PLUGIN_DEBUG("_getString called with %p and %p\n", instance, variant);
 
     if (NPVARIANT_IS_OBJECT(*variant))
     {
@@ -980,7 +982,7 @@ _getString(void* data)
 	((AsyncCallThreadData*) data)->call_successful = true;
     }
 
-    PLUGIN_DEBUG_0ARG("ToString result: ");
+    PLUGIN_DEBUG("ToString result: ");
     IcedTeaPluginUtilities::printNPVariant(tostring_result);
 
     if (((AsyncCallThreadData*) data)->call_successful)
@@ -989,6 +991,6 @@ _getString(void* data)
       }
     ((AsyncCallThreadData*) data)->result_ready = true; 
 
-    PLUGIN_DEBUG_0ARG("_getString returning\n");
+    PLUGIN_DEBUG("_getString returning\n");
 }
 
