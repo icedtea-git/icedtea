@@ -252,8 +252,8 @@ AC_DEFUN_ONCE([WITH_OPENJDK_SRC_DIR],
 [
   DEFAULT_SRC_DIR=${abs_top_builddir}/openjdk
   AC_MSG_CHECKING([for an OpenJDK source directory])
-  AC_ARG_WITH([openjdk-src-dir=DIR],
-              [AS_HELP_STRING([--with-openjdk-src-dir=PATH],specify the location of the OpenJDK source tree)],
+  AC_ARG_WITH([openjdk-src-dir],
+              [AS_HELP_STRING([--with-openjdk-src-dir=DIR],specify the location of the OpenJDK source tree)],
   [
     OPENJDK_SRC_DIR=${withval}
     with_external_src_dir=true

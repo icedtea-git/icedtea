@@ -1,5 +1,15 @@
 2010-07-23  Andrew John Hughes  <ahughes@redhat.com>
 
+	* netx/netscape/javascript/JSObjectCreatePermission.java:
+	Remove duplicate file.
+	* acinclude.m4:
+	(WITH_OPENJDK_SRC_DIR): Fix breakage in parameter caused
+	by previous configure help update.
+	* netx/net/sourceforge/jnlp/Launcher.java: Synchronise
+	with IcedTea6 version.
+
+2010-07-23  Andrew John Hughes  <ahughes@redhat.com>
+
 	* netx/net/sourceforge/jnlp/security/AccessWarningPane.java:
 	(addComponents()): Fix call to getType().
 	* netx/net/sourceforge/jnlp/security/CertWarningPane.java: Likewise.
