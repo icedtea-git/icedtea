@@ -1,3 +1,10 @@
+2010-07-08  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(rebuild): Add new target to allow a quick
+	rebuild of OpenJDK in the manner of the existing
+	hotspot target.
+
 2010-07-08  Omair Majid  <omajid@redhat.com>
 
 	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java:

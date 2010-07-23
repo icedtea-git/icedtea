@@ -1948,6 +1948,21 @@ stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
 	mkdir -p stamps
 	touch $@
 
+# Rebuild targets
+
+rebuild:
+if BOOTSTRAPPING
+	rm -f stamps/icedtea-boot.stamp
+	rm -f stamps/icedtea-stage1.stamp
+	$(ARCH_PREFIX) $(MAKE) icedtea-stage1
+	@echo "bootstrap-poured IcedTea is served (again):" $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image
+else
+	rm -f stamps/icedtea.stamp
+	rm -f stamps/icedtea-stage2.stamp
+	$(ARCH_PREFIX) $(MAKE) icedtea-stage2
+	@echo "IcedTea is served (again):" $(BUILD_OUTPUT_DIR)/j2sdk-image
+endif
+
 hotspot:
 if BOOTSTRAPPING
 	rm -f stamps/icedtea-boot.stamp
