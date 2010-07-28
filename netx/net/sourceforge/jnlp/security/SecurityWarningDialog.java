@@ -63,6 +63,7 @@ public class SecurityWarningDialog extends JDialog {
                 CERT_INFO,
                 SINGLE_CERT_INFO,
                 ACCESS_WARNING,
+                NOTALLSIGNED_WARNING,
                 APPLET_WARNING
         }
 
@@ -77,6 +78,7 @@ public class SecurityWarningDialog extends JDialog {
         NETWORK,
         VERIFIED,
         UNVERIFIED,
+        NOTALLSIGNED,
         SIGNING_ERROR
     }
 
@@ -219,6 +221,31 @@ public class SecurityWarningDialog extends JDialog {
                 }
 
         /**
+         * Shows a warning dialog for when the main application jars are signed,
+         * but extensions aren't
+         *
+         * @return true if permission was granted by the user, false otherwise.
+         */
+        public static boolean showNotAllSignedWarningDialog(JNLPFile file) {
+                        SecurityWarningDialog dialog = new SecurityWarningDialog(
+                                        DialogType.NOTALLSIGNED_WARNING, AccessType.NOTALLSIGNED, file, (new Object[0]));
+                        dialog.setVisible(true);
+                        dialog.dispose();
+
+                        Object selectedValue = dialog.getValue();
+                        if (selectedValue == null) {
+                                return false;
+                        } else if (selectedValue instanceof Integer) {
+                                if (((Integer)selectedValue).intValue() == 0)
+                                        return true;
+                                else
+                                        return false;
+                        } else {
+                                return false;
+                        }
+                }
+
+        /**
          * Shows a security warning dialog according to the specified type of
          * access. If <code>type</code> is one of AccessType.VERIFIED or
          * AccessType.UNVERIFIED, extra details will be available with regards
@@ -325,6 +352,8 @@ public class SecurityWarningDialog extends JDialog {
                         dialogTitle = "Security Warning";
                 else if (dialogType == DialogType.APPLET_WARNING)
                         dialogTitle = "Applet Warning";
+                else if (dialogType == DialogType.NOTALLSIGNED_WARNING)
+                        dialogTitle = "Security Warning";
 
                 setTitle(dialogTitle);
                 setModal(true);
@@ -397,6 +426,8 @@ public class SecurityWarningDialog extends JDialog {
                         panel = new AccessWarningPane(this, extras, this.certVerifier);
                 else if (dialogType == DialogType.APPLET_WARNING)
                         panel = new AppletWarningPane(this, this.certVerifier);
+                else if (dialogType == DialogType.NOTALLSIGNED_WARNING)
+                        panel = new NotAllSignedWarningPane(this);
 
                 add(panel, BorderLayout.CENTER);
         }

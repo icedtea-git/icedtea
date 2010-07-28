@@ -538,4 +538,14 @@ public class JarSigner implements CertVerifier {
         }
     }
 
+
+    /**
+     * Returns if all jars are signed.
+     *
+     * @return True if all jars are signed, false if there are one or more unsigned jars
+     */
+    public boolean allJarsSigned() {
+       return this.unverifiedJars.size() == 0;
+    }
+
 }

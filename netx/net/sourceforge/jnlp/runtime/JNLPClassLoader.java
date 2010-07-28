@@ -249,6 +249,10 @@ public class JNLPClassLoader extends URLClassLoader {
                         JNLPClassLoader extLoader = (JNLPClassLoader) urlToLoader.get(uniqueKey);
 
                         if (extLoader != null && extLoader != loader) {
+                            if (loader.signing && !extLoader.signing)
+                                if (!SecurityWarningDialog.showNotAllSignedWarningDialog(file))
+                                    throw new LaunchException(file, null, R("LSFatal"), R("LCClient"), R("LSignedAppJarUsingUnsignedJar"), R("LSignedAppJarUsingUnsignedJarInfo"));
+
                             for (URL u : extLoader.getURLs())
                                 loader.addURL(u);
                             for (File nativeDirectory: extLoader.getNativeDirectories())
@@ -399,6 +403,11 @@ public class JNLPClassLoader extends URLClassLoader {
                         //Case when at least one jar has some signing
                         if (js.anyJarsSigned()){
                                 signing = true;
+
+                                if (!js.allJarsSigned() &&
+                                    !SecurityWarningDialog.showNotAllSignedWarningDialog(file))
+                                    throw new LaunchException(file, null, R("LSFatal"), R("LCClient"), R("LSignedAppJarUsingUnsignedJar"), R("LSignedAppJarUsingUnsignedJarInfo"));
+
 
                                 //user does not trust this publisher
                                 if (!js.getAlreadyTrustPublisher()) {

@@ -1,9 +1,30 @@
-2010-07-21  Deepak Bhole <dbhole@redhat.com>
+2010-07-28  Deepak Bhole <dbhole@redhat.com>
+
+	* netx/net/sourceforge/jnlp/resources/Messages.properties: Add new strings.
+	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java (getInstance):
+	Prompt user if the main app code is signed, but the extentions aren't.
+	(initializeResources): Prompt user if there are any unsigned jars mixed
+	with signed jars.
+	* netx/net/sourceforge/jnlp/security/NotAllSignedWarningPane.java: New file.
+	Dialog shown to user if the main app code is signed but the extentions aren't.
+	* netx/net/sourceforge/jnlp/security/SecurityDialogUI.java
+	(SecurityDialogUI): Add a constructor that doesn't take a CertVerifier
+	object.
+	* netx/net/sourceforge/jnlp/security/SecurityWarningDialog.java: Added
+	dialog and accesstype enum elements for a 'Not all jars signed' case.
+	(showNotAllSignedWarningDialog): New function. Prompts the user if the
+	main app code is signed but the extentions aren't.
+	(createDialog): Wire in the 'Not all jars signed' case.
+	(updateUI): Same.
+	* netx/net/sourceforge/jnlp/tools/JarSigner.java (allJarsSigned): New
+	function. Returns if there are any unsigned jars.
+
+2010-07-28  Deepak Bhole <dbhole@redhat.com>
 
 	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java (getInstance):
 	Collapse extention loaders into baseloader rather than vice-verse.
 
-2010-07-21  Deepak Bhole <dbhole@redhat.com>
+2010-07-28  Deepak Bhole <dbhole@redhat.com>
 
 	* netx/net/sourceforge/jnlp/SecurityDesc.java: Converge all property
 	permission settings info a single class.

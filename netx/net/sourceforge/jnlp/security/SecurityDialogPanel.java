@@ -56,11 +56,16 @@ public abstract class SecurityDialogPanel extends JPanel {
 
         JComponent initialFocusComponent = null;
 
-        CertVerifier certVerifier;
+        CertVerifier certVerifier = null;
 
         public SecurityDialogPanel(SecurityWarningDialog dialog, CertVerifier certVerifier){
                 this.parent = dialog;
                 this.certVerifier = certVerifier;
+                this.setLayout(new BorderLayout());
+        }
+
+        public SecurityDialogPanel(SecurityWarningDialog dialog) {
+                this.parent = dialog;
                 this.setLayout(new BorderLayout());
         }
 
