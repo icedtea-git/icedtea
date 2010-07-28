@@ -626,8 +626,31 @@ public class JNLPClassLoader extends URLClassLoader {
                                     }
 
                                     try {
-                                        addURL(new URL("file://" + extractedJarLocation));
-                                    } catch (MalformedURLException mfue) {
+                                        URL fileURL = new URL("file://" + extractedJarLocation);
+                                        addURL(fileURL);
+
+                                        SecurityDesc jarSecurity = file.getSecurity();
+
+                                        if (file instanceof PluginBridge) {
+
+                                            URL codebase = null;
+
+                                            if (file.getCodeBase() != null) {
+                                                codebase = file.getCodeBase();
+                                            } else {
+                                                //Fixme: codebase should be the codebase of the Main Jar not
+                                                //the location. Although, it still works in the current state.
+                                                codebase = file.getResources().getMainJAR().getLocation();
+                                            }
+
+                                            jarSecurity = new SecurityDesc(file,
+                                                SecurityDesc.ALL_PERMISSIONS,
+                                                codebase.getHost());
+                                        }
+
+                                        jarLocationSecurityMap.put(fileURL, jarSecurity);
+
+                                     } catch (MalformedURLException mfue) {
                                         if (JNLPRuntime.isDebug())
                                             System.err.println("Unable to add extracted nested jar to classpath");
 

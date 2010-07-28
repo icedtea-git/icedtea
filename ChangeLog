@@ -1,5 +1,10 @@
 2010-07-28  Deepak Bhole <dbhole@redhat.com>
 
+	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java (activateJars): Add
+	security descriptor mapping for nested jars.
+
+2010-07-28  Deepak Bhole <dbhole@redhat.com>
+
 	* netx/net/sourceforge/jnlp/SecurityDesc.java (getPermissions): Clean up
 	method, and make sure sandbox permissions are always a subset of what is
 	returned.
