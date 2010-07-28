@@ -65,7 +65,6 @@ public class NotAllSignedWarningPane extends SecurityDialogPanel {
          * Creates the actual GUI components, and adds it to this panel
          */
         private void addComponents() {
-                SecurityWarningDialog.AccessType type = parent.getType();
                 JNLPFile file = parent.getFile();
 
                 String topLabelText = "Only parts of this application code are signed.";

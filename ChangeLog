@@ -1,5 +1,10 @@
 2010-07-28  Deepak Bhole <dbhole@redhat.com>
 
+	* netx/net/sourceforge/jnlp/security/NotAllSignedWarningPane.java
+	(addComponents): Fix erroneous line that got added when backporting.
+
+2010-07-28  Deepak Bhole <dbhole@redhat.com>
+
 	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Added a new
 	HashMap to map source locations to security descriptors for that location.
 	(getInstance): Use the new merge() method to merge loader data.
