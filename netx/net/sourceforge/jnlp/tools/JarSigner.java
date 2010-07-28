@@ -75,6 +75,8 @@ public class JarSigner implements CertVerifier {
     static final int IN_KEYSTORE = 0x01;
     static final int IN_SCOPE = 0x02;
 
+    static enum verifyResult {UNSIGNED, SIGNED_OK, SIGNED_NOT_OK}
+
     // signer's certificate chain (when composing)
     X509Certificate[] certChain;
 
@@ -217,14 +219,14 @@ public class JarSigner implements CertVerifier {
                 }
 
                 String localFile = jarFile.getAbsolutePath();
-                boolean result = verifyJar(localFile);
+                verifyResult result = verifyJar(localFile);
 
-                if (!result) {
-                    //allVerified is true until we encounter a problem
-                    //with one or more jars
-                    noSigningIssues = false;
+                if (result == verifyResult.UNSIGNED) {
                     unverifiedJars.add(localFile);
-                } else {
+                } else if (result == verifyResult.SIGNED_NOT_OK) {
+                    noSigningIssues = false;
+                    verifiedJars.add(localFile);
+                } else if (result == verifyResult.SIGNED_OK) {
                     verifiedJars.add(localFile);
                 }
             } catch (Exception e){
@@ -235,7 +237,7 @@ public class JarSigner implements CertVerifier {
         }
     }
 
-    public boolean verifyJar(String jarName) throws Exception {
+    public verifyResult verifyJar(String jarName) throws Exception {
         boolean anySigned = false;
         boolean hasUnsignedEntry = false;
         JarFile jarFile = null;
@@ -319,7 +321,7 @@ public class JarSigner implements CertVerifier {
 
             //Alert the user if any of the following are true.
             if (!anySigned) {
-
+                return verifyResult.UNSIGNED;
             } else {
                 anyJarsSigned = true;
 
@@ -360,9 +362,9 @@ public class JarSigner implements CertVerifier {
         checkTrustedCerts();
 
         //anySigned does not guarantee that all files were signed.
-        return anySigned && !(hasUnsignedEntry || hasExpiredCert
+        return (anySigned && !(hasUnsignedEntry || hasExpiredCert
                               || badKeyUsage || badExtendedKeyUsage || badNetscapeCertType
-                              || notYetValidCert);
+                              || notYetValidCert)) ? verifyResult.SIGNED_OK : verifyResult.SIGNED_NOT_OK;
     }
 
     /**
