@@ -225,9 +225,9 @@ public class ServiceUtil {
     }
 
     /**
-     * Returns whether the app requesting a service is signed. If the app is
-     * unsigned, the user is prompted with a dialog asking if the action
-     * should be allowed.
+     * Returns whether the app requesting a service has the right permissions.
+     * If it doesn't, user is prompted for permissions.
+     *
      * @param app the application which is requesting the check. If null, the current
      * application is used.
      * @param type the type of access being requested
@@ -239,12 +239,37 @@ public class ServiceUtil {
             SecurityWarningDialog.AccessType type,
                 Object... extras) {
 
-        if (app == null) {
-            app = JNLPRuntime.getApplication();
+        if (app == null)
+                app = JNLPRuntime.getApplication();
+
+        boolean codeTrusted = true;
+
+        StackTraceElement[] stack =  Thread.currentThread().getStackTrace();
+
+        for (int i=0; i < stack.length; i++) {
+
+                Class c = null;
+
+                try {
+                        c = Class.forName(stack[i].getClassName());
+                } catch (Exception e1) {
+                        try {
+                                c = Class.forName(stack[i].getClassName(), false, app.getClassLoader());
+                        } catch (Exception e2) {
+                                System.err.println(e2.getMessage());
+                        }
+                }
+
+            // Everything up to the desired class/method must be trusted
+            if (c == null || // class not found
+                        ( c.getProtectionDomain().getCodeSource() != null && // class is not in bootclasspath
+                          c.getProtectionDomain().getCodeSource().getCodeSigners() == null) // class is trusted
+                        ) {
+                codeTrusted = false;
+            }
         }
 
-        if (app != null) {
-            if (!app.isSigned()) {
+        if (!codeTrusted) {
                 final SecurityWarningDialog.AccessType tmpType = type;
                 final Object[] tmpExtras = extras;
                 final ApplicationInstance tmpApp = app;
@@ -252,24 +277,17 @@ public class ServiceUtil {
                 //We need to do this to allow proper icon loading for unsigned
                 //applets, otherwise permissions won't be granted to load icons
                 //from resources.jar.
-                Object o = AccessController.doPrivileged(new PrivilegedAction() {
-                    public Object run() {
+                Boolean b = AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+                    public Boolean run() {
                         boolean b = SecurityWarningDialog.showAccessWarningDialog(tmpType,
                                 tmpApp.getJNLPFile(), tmpExtras);
-                        return (Object) new Boolean(b);
+                        return new Boolean(b);
                     }
                 });
 
-                return ((Boolean)o).booleanValue();
-
-            } else if (app.isSigned()) {
-
-                //just return true here regardless if the app
-                //has signing issues -- at this point the user would've
-                //already decided to run the app anyways.
-                return true;
-            }
+                return b.booleanValue();
         }
-        return false; //deny
+
+        return true; //allow
     }
 }
