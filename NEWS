@@ -1,7 +1,9 @@
 New in release 1.13 (2010-07-28)
 
-- Updated to OpenJDK7 milestone 7.
-- libjpeg7 supported.
+- Updated to OpenJDK7 milestone 7/b89.
+- Removed VisualVM support; now hosted at http://icedtea.classpath.org/hg/visualvm.
+- Bumped to CACAO 1.1.0 pre-release snapshot.
+- libjpeg7 & libpng 1.4 supported.
 - Latest security updates and hardening patches:
   - (CVE-2010-0837): JAR "unpack200" must verify input parameters (6902299)
   - (CVE-2010-0845): No ClassCastException for HashAttributeSet constructors if run with -Xcomp (6894807)
@@ -24,38 +26,90 @@ New in release 1.13 (2010-07-28)
   - 6910590: Application can modify command array in ProcessBuilder
   - 6909597: JPEGImageReader stepX Integer Overflow Vulnerability
   - 6932480: Crash in CompilerThread/Parser. Unloaded array klass?
-- Added JNI call tracing using systemtap version 1.0+ when
-  configuring with --enable-systemtap. See tapset/hotspot_jni.stp.
-- Add support for Zero build on Hitachi SH.
-- Removed the old plugin, replaced by the NPPlugin.
-Bug fixes
-- PR179: Rhino bootclasspath issue
-- Add missing .c file to PulseAudio build
-Zero/Shark
-- Formatting changes and other fixes to match upstream
-- PR428: Shark on ARM precompiled header incls
-- Update Shark for LLVM r95390 API change.
-- S6927165: Zero S/390 fixes (from upstream)
-- Implemented Shark host CPU feature autotuner using LLVM 2.7 APIs.
-- Add s390 support to TCK setup helper script
-- Strip stupid options that llvm-config supplies
-- Update Shark for LLVM r94686 API change.
-- S6914622, S6909153, S6913869 upstream Zero fixes.
-- Fixed Shark sharkCompiler mattr memory corruption bug when using llvm 2.7.
-- PR525: Shark made not entrant deopt sigsegv regression after bump to b20 and hs17.
-NPPlugin fixes
-- PR446: Use JDK_UPDATE_VERSION to set the jpi version.
-- Re-designed frame embedding code so that the applet is dynamically
-  packed into given handle. This increases stability and breaks
-  reliance on the assumption that the browser will always provide a
-  handle in a certain sequence.
-- Encode new lines, carriage returns, and other special characters
-  before sending them to Java side (de-coding code is already in
-  effect on Java side).
-- Centralised and increased timeouts to give slow-loading applets
-  enough time to load.
-- Fix security permissions related to get/set property, based on
-  specifications.
+  - (CVE-2010-2783, RH616895): IcedTea 'Extended JNLP Services' arbitrary file access
+  - (CVE-2010-2548, RH616893): IcedTea Incomplete property access check for unsigned applications
+* Bug fixes
+  - PR179: Rhino bootclasspath issue
+  - PR512: Extract jaxws getdtdtype patch to boot tree instead of main tree.
+  - PR521: Don't hardlink the copy of generated.
+  - S6963870: NPE in CompoundBorder.getInsets()
+  - S6967533: Epoch bug: ExceptionInInitializerError on systems with uninitialized clock
+  - S6944361: Missing CKR_ values in PKCS11Exception
+* SystemTap
+  - Added JNI call tracing using systemtap version 1.0+ when
+    configuring with --enable-systemtap. See tapset/hotspot_jni.stp.
+  - Add support for Zero build on Hitachi SH.
+  - Removed the old plugin, replaced by the NPPlugin.
+  - PR476: Enable building SystemTap support on GCC 4.5.
+  - Fix hotspot tapset object_alloc size variable.
+* Zero/Shark
+  - Formatting changes and other fixes to match upstream
+  - PR428: Shark on ARM precompiled header incls
+  - Update Shark for LLVM r95390 API change.
+  - S6927165: Zero S/390 fixes (from upstream)
+  - Implemented Shark host CPU feature autotuner using LLVM 2.7 APIs.
+  - Add s390 support to TCK setup helper script
+  - Strip stupid options that llvm-config supplies
+  - Update Shark for LLVM r94686 API change.
+  - S6914622, S6909153, S6913869 upstream Zero fixes.
+  - Fixed Shark sharkCompiler mattr memory corruption bug when using llvm 2.7.
+  - PR525: Shark made not entrant deopt sigsegv regression after bump to b20 and hs17.
+  - PR shark/483: Fix miscompilation of sun.misc.Unsafe::getByte.
+  - PR icedtea/324, icedtea/481: Fix Shark VM crash.
+  - Update Shark for LLVM 2.8 API change r100304
+  - Shark calling static jni methods jclass argument fix.
+  - PR484: Shark jit code block "0xcdcdcdcd" zombie wipeout Sigsegv crash
+  - Backport new frame anchor and stack overflow code for Zero and Shark
+  - Fix stack leak in Shark
+  - PR494: Shark fails to catch Exception using catch (Throwable e)
+* NPPlugin fixes
+  - PR446: Use JDK_UPDATE_VERSION to set the jpi version.
+  - Re-designed frame embedding code so that the applet is dynamically
+    packed into given handle. This increases stability and breaks
+    reliance on the assumption that the browser will always provide a
+    handle in a certain sequence.
+    - Encode new lines, carriage returns, and other special characters
+    before sending them to Java side (de-coding code is already in
+    effect on Java side).
+    - Centralised and increased timeouts to give slow-loading applets
+    enough time to load.
+    - Fix security permissions related to get/set property, based on
+    specifications.
+  - Added support for JSObject.finalize()
+  - Liveconnect message processing design changes.
+  - Message protocol overhaul to fix race conditions
+  - PR166: Create FIFO pies in temp dir instead of ~/.icedteaplugin
+  - Profiled memory usage and implemented proper cleanup for C++ side.
+  - Update debug output string and function/structure names to
+    change 'GCJ' references to ITNP/IcedTea NP Plugin
+  - PR461: plugin working for NSS enabled builds with firefox including a private NSS copy
+  - Removed unncessary debug and trace output
+  - PR474: Patch from Paulo Cesar Pereira de Andrade, incrementing malloc size to account for NULL terminator.
+  - RH524387: javax.net.ssl.SSLKeyException: RSA premaster secret error
+  - Set context classloader for all threads in an applet's threadgroup
+  - PR436: Close all applet threads on exit
+  - PR480: NPPlugin with NoScript extension.
+  - PR488: Question mark changing into underscore in URL.
+  - RH592553: Fix bug causing 100% CPU usage.
+  - Don't generate a random pointer from a pthread_t in the debug output.
+  - Add ForbiddenTargetException for legacy support.
+  - Use variadic macro for plugin debug message printing.
+  - Don't link the plugin with libxul libraries.
+  - Fix race conditions in plugin initialization code that were causing hangs.
+  - RH506730: BankID (Norwegian common online banking authentication system) applet fails to load.
+  - PR491: pass java_{code,codebase,archive} parameters to Java.
+  - Adds javawebstart.version property and give user permission to read that property.
+* NetX:
+  - Make path sanitization consistent; use a blacklisting approach.
+  - Make the SingleInstanceServer thread a daemon thread.
+  - Handle JNLP files which use native libraries but do not indicate it
+  - Allow JNLP classloaders to share native libraries
+  - Added encoding support
+  - Do not use Look and Feel related methods for setting up security dialogs
+  - Error out when unsigned jnlp applications request permissions
+* PulseAudio:
+  - Add missing .c file to PulseAudio build
+  - Eliminate spurious exception throwing.
 
 New in release 1.12 (2009-11-17)
 
