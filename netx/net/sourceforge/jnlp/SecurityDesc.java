@@ -53,6 +53,11 @@ public class SecurityDesc {
     /** the JNLP file */
     private JNLPFile file;
 
+    // We go by the rules here:
+    // http://java.sun.com/docs/books/tutorial/deployment/doingMoreWithRIA/properties.html
+
+    // Since this is security sensitive, take a conservative approach:
+    // Allow only what is specifically allowed, and deny everything else
 
     /** basic permissions for restricted mode */
     private static Permission j2eePermissions[] = {
@@ -95,6 +100,9 @@ public class SecurityDesc {
         new PropertyPermission("java.vm.vendor", "read"),
         new PropertyPermission("java.vm.name", "read"),
         new PropertyPermission("javawebstart.version", "read"),
+        new PropertyPermission("javaplugin.*", "read"),
+        new PropertyPermission("jnlp.*", "read,write"),
+        new PropertyPermission("javaws.*", "read,write"),
         new RuntimePermission("exitVM"),
         new RuntimePermission("stopThread"),
         new AWTPermission("showWindowWithoutWarningBanner"),
@@ -105,6 +113,26 @@ public class SecurityDesc {
         // new AWTPermission("accessEventQueue"),
     };
 
+    /** basic permissions for restricted mode */
+    private static Permission jnlpRIAPermissions[] = {
+        new PropertyPermission("awt.useSystemAAFontSettings", "read,write"),
+        new PropertyPermission("http.agent", "read,write"),
+        new PropertyPermission("http.keepAlive", "read,write"),
+        new PropertyPermission("java.awt.syncLWRequests", "read,write"),
+        new PropertyPermission("java.awt.Window.locationByPlatform", "read,write"),
+        new PropertyPermission("javaws.cfg.jauthenticator", "read,write"),
+        new PropertyPermission("javax.swing.defaultlf", "read,write"),
+        new PropertyPermission("sun.awt.noerasebackground", "read,write"),
+        new PropertyPermission("sun.awt.erasebackgroundonresize", "read,write"),
+        new PropertyPermission("sun.java2d.d3d", "read,write"),
+        new PropertyPermission("sun.java2d.dpiaware", "read,write"),
+        new PropertyPermission("sun.java2d.noddraw", "read,write"),
+        new PropertyPermission("sun.java2d.opengl", "read,write"),
+        new PropertyPermission("swing.boldMetal", "read,write"),
+        new PropertyPermission("swing.metalTheme", "read,write"),
+        new PropertyPermission("swing.noxp", "read,write"),
+        new PropertyPermission("swing.useSystemFontSettings", "read,write"),
+    };
 
     /**
      * Create a security descriptor.
@@ -155,12 +183,9 @@ public class SecurityDesc {
             for (int i=0; i < j2eePermissions.length; i++)
                 permissions.add(j2eePermissions[i]);
 
-        // properties
-        PropertyDesc props[] = file.getResources().getProperties();
-        for (int i=0; i < props.length; i++) {
-            // should only allow jnlp.* properties if in sandbox?
-            permissions.add(new PropertyPermission(props[i].getKey(), "read,write"));
-        }
+        if (file.isApplication())
+            for (int i=0; i < jnlpRIAPermissions.length; i++)
+                permissions.add(jnlpRIAPermissions[i]);
 
         return permissions;
     }
@@ -175,16 +200,13 @@ public class SecurityDesc {
         for (int i=0; i < sandboxPermissions.length; i++)
             permissions.add(sandboxPermissions[i]);
 
+        if (file.isApplication())
+            for (int i=0; i < jnlpRIAPermissions.length; i++)
+                permissions.add(jnlpRIAPermissions[i]);
+
         if (downloadHost != null)
             permissions.add(new SocketPermission(downloadHost,
                                                  "connect, accept"));
-
-        // properties
-        PropertyDesc props[] = file.getResources().getProperties();
-        for (int i=0; i < props.length; i++) {
-            // should only allow jnlp.* properties if in sandbox?
-            permissions.add(new PropertyPermission(props[i].getKey(), "read,write"));
-        }
 
         return permissions;
     }

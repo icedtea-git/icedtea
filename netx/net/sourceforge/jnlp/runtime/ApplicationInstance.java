@@ -17,17 +17,26 @@
 
 package net.sourceforge.jnlp.runtime;
 
-import java.awt.*;
-import java.util.*;
-import java.util.List;
-import java.security.*;
+import java.awt.Window;
+import java.net.URL;
+import java.security.AccessControlContext;
+import java.security.AccessController;
+import java.security.CodeSource;
+import java.security.PrivilegedAction;
+import java.security.ProtectionDomain;
+
 import javax.swing.event.EventListenerList;
 
-import net.sourceforge.jnlp.*;
-import net.sourceforge.jnlp.event.*;
+import net.sourceforge.jnlp.JNLPFile;
+import net.sourceforge.jnlp.PropertyDesc;
+import net.sourceforge.jnlp.SecurityDesc;
+import net.sourceforge.jnlp.ShortcutDesc;
+import net.sourceforge.jnlp.event.ApplicationEvent;
+import net.sourceforge.jnlp.event.ApplicationListener;
 import net.sourceforge.jnlp.security.SecurityWarningDialog.AccessType;
 import net.sourceforge.jnlp.services.ServiceUtil;
-import net.sourceforge.jnlp.util.*;
+import net.sourceforge.jnlp.util.WeakList;
+import net.sourceforge.jnlp.util.XDesktopEntry;
 
 /**
  * Represents a running instance of an application described in a
@@ -160,6 +169,16 @@ public class ApplicationInstance {
     void installEnvironment() {
         final PropertyDesc props[] = file.getResources().getProperties();
 
+        CodeSource cs = new CodeSource((URL) null, (java.security.cert.Certificate  [])null);
+
+        JNLPClassLoader loader = (JNLPClassLoader) this.loader;
+        SecurityDesc s = loader.getSecurity();
+
+        ProtectionDomain pd = new ProtectionDomain(cs, s.getPermissions(), null, null);
+
+        // Add to hashmap
+        AccessControlContext acc = new AccessControlContext(new ProtectionDomain[] {pd});
+
         PrivilegedAction installProps = new PrivilegedAction() {
             public Object run() {
                 for (int i=0; i < props.length; i++) {
@@ -169,7 +188,7 @@ public class ApplicationInstance {
                 return null;
             }
         };
-        AccessController.doPrivileged(installProps);
+        AccessController.doPrivileged(installProps, acc);
     }
 
     /**
