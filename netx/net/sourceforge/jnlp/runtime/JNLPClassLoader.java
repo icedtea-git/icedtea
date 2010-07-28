@@ -26,6 +26,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.AccessControlContext;
 import java.security.AccessController;
+import java.security.AllPermission;
 import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
@@ -140,6 +141,9 @@ public class JNLPClassLoader extends URLClassLoader {
         /** File entries in the jar files available to this classloader */
         private TreeSet jarEntries = new TreeSet();
 
+        /** Map of specific codesources to securitydesc */
+        private HashMap<URL, SecurityDesc> jarLocationSecurityMap = new HashMap<URL, SecurityDesc>();
+
     /**
      * Create a new JNLPClassLoader from the specified file.
      *
@@ -253,19 +257,13 @@ public class JNLPClassLoader extends URLClassLoader {
                                 if (!SecurityWarningDialog.showNotAllSignedWarningDialog(file))
                                     throw new LaunchException(file, null, R("LSFatal"), R("LCClient"), R("LSignedAppJarUsingUnsignedJar"), R("LSignedAppJarUsingUnsignedJarInfo"));
 
-                            for (URL u : extLoader.getURLs())
-                                loader.addURL(u);
-                            for (File nativeDirectory: extLoader.getNativeDirectories())
-                                loader.addNativeDirectory(nativeDirectory);
+                                loader.merge(extLoader);
                         }
 
                 // loader is now current + ext. But we also need to think of
                 // the baseLoader
                         if (baseLoader != null && baseLoader != loader) {
-                    for (URL u : baseLoader.getURLs())
-                        loader.addURL(u);
-                    for (File nativeDirectory: baseLoader.getNativeDirectories())
-                        loader.addNativeDirectory(nativeDirectory);
+                                loader.merge(baseLoader);
                 }
 
                     } else {
@@ -424,6 +422,34 @@ public class JNLPClassLoader extends URLClassLoader {
                         }
                 }
 
+                for (JARDesc jarDesc: file.getResources().getJARs()) {
+                        try {
+                                URL location = tracker.getCacheFile(jarDesc.getLocation()).toURI().toURL();
+                                SecurityDesc jarSecurity = file.getSecurity();
+
+                                if (file instanceof PluginBridge) {
+
+                                URL codebase = null;
+
+                                if (file.getCodeBase() != null) {
+                                    codebase = file.getCodeBase();
+                                } else {
+                                    //Fixme: codebase should be the codebase of the Main Jar not
+                                    //the location. Although, it still works in the current state.
+                                    codebase = file.getResources().getMainJAR().getLocation();
+                                }
+
+                                        jarSecurity = new SecurityDesc(file,
+                                                        SecurityDesc.ALL_PERMISSIONS,
+                                                        codebase.getHost());
+                                }
+
+                                jarLocationSecurityMap.put(location, jarSecurity);
+                        } catch (MalformedURLException mfe) {
+                                System.err.println(mfe.getMessage());
+                        }
+                }
+
         activateJars(initialJars);
     }
 
@@ -505,13 +531,15 @@ public class JNLPClassLoader extends URLClassLoader {
             // set default perms
             PermissionCollection permissions = security.getSandBoxPermissions();
 
-            // If more than default is needed, evaluate based on codesource
-            if (security.getSecurityType().equals(SecurityDesc.ALL_PERMISSIONS) ||
-                security.getSecurityType().equals(SecurityDesc.J2EE_PERMISSIONS)) {
+            // If more than default is needed:
+            // 1. Code must be signed
+            // 2. ALL or J2EE permissions must be requested (note: plugin requests ALL automatically)
+            if (cs.getCodeSigners() != null &&
+                    (getCodeSourceSecurity(cs.getLocation()).getSecurityType().equals(SecurityDesc.ALL_PERMISSIONS) ||
+                     getCodeSourceSecurity(cs.getLocation()).getSecurityType().equals(SecurityDesc.J2EE_PERMISSIONS))
+                    ) {
 
-                if (cs.getCodeSigners() != null) {
-                    permissions = security.getPermissions();
-                }
+                permissions = getCodeSourceSecurity(cs.getLocation()).getPermissions();
             }
 
             Enumeration<Permission> e = permissions.elements();
@@ -1120,5 +1148,44 @@ public class JNLPClassLoader extends URLClassLoader {
 
         protected SecurityDesc getSecurity() {
                 return security;
+        }
+
+        /**
+         * Returns the security descriptor for given code source URL
+         *
+         * @param source The code source
+         * @return The SecurityDescriptor for that source
+         */
+
+        protected SecurityDesc getCodeSourceSecurity(URL source) {
+                return jarLocationSecurityMap.get(source);
+        }
+
+        /**
+         * Merges the code source/security descriptor mapping from another loader
+         *
+         * @param extLoader The loader form which to merge
+         * @throws SecurityException if the code is called from an untrusted source
+         */
+        private void merge(JNLPClassLoader extLoader) {
+
+                try {
+                        System.getSecurityManager().checkPermission(new AllPermission());
+                } catch (SecurityException se) {
+                        throw new SecurityException("JNLPClassLoader() may only be called from trusted sources!");
+                }
+
+                // jars
+                for (URL u : extLoader.getURLs())
+                addURL(u);
+
+                // native search paths
+        for (File nativeDirectory: extLoader.getNativeDirectories())
+            addNativeDirectory(nativeDirectory);
+
+        // security descriptors
+                for (URL key: extLoader.jarLocationSecurityMap.keySet()) {
+                        jarLocationSecurityMap.put(key, extLoader.jarLocationSecurityMap.get(key));
+                }
         }
 }

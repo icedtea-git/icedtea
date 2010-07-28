@@ -1,5 +1,18 @@
 2010-07-28  Deepak Bhole <dbhole@redhat.com>
 
+	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Added a new
+	HashMap to map source locations to security descriptors for that location.
+	(getInstance): Use the new merge() method to merge loader data.
+	(initializeResources): Add map entries to the new jarLocationSecurityMap.
+	(getPermissions): Decide permissions based on security descriptor
+	associated with the calling code, rather than with the jnlp file.
+	(getCodeSourceSecurity): New method. Returns the security descriptor
+	associated with the given code source URL.
+	(merge): New method. Merges loader classpaths, native dir paths, and
+	security descriptor mappings.
+
+2010-07-28  Deepak Bhole <dbhole@redhat.com>
+
 	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java (activateJars): Add
 	security descriptor mapping for nested jars.
 
