@@ -1,4 +1,4 @@
-New in release 1.13 (2010-XX-XX)
+New in release 1.13 (2010-07-28)
 
 - Updated to OpenJDK7 milestone 7.
 - libjpeg7 supported.
@@ -42,6 +42,7 @@ Zero/Shark
 - Update Shark for LLVM r94686 API change.
 - S6914622, S6909153, S6913869 upstream Zero fixes.
 - Fixed Shark sharkCompiler mattr memory corruption bug when using llvm 2.7.
+- PR525: Shark made not entrant deopt sigsegv regression after bump to b20 and hs17.
 NPPlugin fixes
 - PR446: Use JDK_UPDATE_VERSION to set the jpi version.
 - Re-designed frame embedding code so that the applet is dynamically
