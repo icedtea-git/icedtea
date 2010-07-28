@@ -1,5 +1,10 @@
 2010-07-23  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	Bump to latest JDK tree.
+
+2010-07-23  Andrew John Hughes  <ahughes@redhat.com>
+
 	* netx/netscape/javascript/JSObjectCreatePermission.java:
 	Remove duplicate file.
 	* acinclude.m4:
