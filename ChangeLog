@@ -1,5 +1,11 @@
 2010-07-28  Deepak Bhole <dbhole@redhat.com>
 
+	* netx/net/sourceforge/jnlp/SecurityDesc.java (getPermissions): Clean up
+	method, and make sure sandbox permissions are always a subset of what is
+	returned.
+
+2010-07-28  Deepak Bhole <dbhole@redhat.com>
+
 	* netx/net/sourceforge/jnlp/tools/JarSigner.java: Add new verifyResult enum
 	to track verification status.
 	(verifyJars): Mark jar unverified only if it has no signature.

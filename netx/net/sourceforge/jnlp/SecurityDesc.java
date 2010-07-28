@@ -160,32 +160,19 @@ public class SecurityDesc {
      * permissions granted depending on the security type.
      */
     public PermissionCollection getPermissions() {
-        Permissions permissions = new Permissions();
+        PermissionCollection permissions = getSandBoxPermissions();
 
-        // all
+        // discard sandbox, give all
         if (type == ALL_PERMISSIONS) {
+            permissions = new Permissions();
             permissions.add(new AllPermission());
             return permissions;
         }
 
-        // restricted
-        if (type == SANDBOX_PERMISSIONS) {
-            for (int i=0; i < sandboxPermissions.length; i++)
-                permissions.add(sandboxPermissions[i]);
-
-            if (downloadHost != null)
-                permissions.add(new SocketPermission(downloadHost,
-                                                     "connect, accept"));
-        }
-
-        // j2ee
+        // add j2ee to sandbox if needed
         if (type == J2EE_PERMISSIONS)
             for (int i=0; i < j2eePermissions.length; i++)
                 permissions.add(j2eePermissions[i]);
-
-        if (file.isApplication())
-            for (int i=0; i < jnlpRIAPermissions.length; i++)
-                permissions.add(jnlpRIAPermissions[i]);
 
         return permissions;
     }
