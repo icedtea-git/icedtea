@@ -1,5 +1,10 @@
 2010-07-21  Deepak Bhole <dbhole@redhat.com>
 
+	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java (getInstance):
+	Collapse extention loaders into baseloader rather than vice-verse.
+
+2010-07-21  Deepak Bhole <dbhole@redhat.com>
+
 	* netx/net/sourceforge/jnlp/SecurityDesc.java: Converge all property
 	permission settings info a single class.
 	(getPermissions): Do not give read/write permissions to anything other

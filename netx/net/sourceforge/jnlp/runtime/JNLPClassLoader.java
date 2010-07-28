@@ -249,12 +249,10 @@ public class JNLPClassLoader extends URLClassLoader {
                         JNLPClassLoader extLoader = (JNLPClassLoader) urlToLoader.get(uniqueKey);
 
                         if (extLoader != null && extLoader != loader) {
-                            for (URL u : loader.getURLs())
-                                extLoader.addURL(u);
-                            for (File nativeDirectory: loader.getNativeDirectories())
-                                extLoader.addNativeDirectory(nativeDirectory);
-
-                            loader = extLoader;
+                            for (URL u : extLoader.getURLs())
+                                loader.addURL(u);
+                            for (File nativeDirectory: extLoader.getNativeDirectories())
+                                loader.addNativeDirectory(nativeDirectory);
                         }
 
                 // loader is now current + ext. But we also need to think of
