@@ -1,10 +1,10 @@
-New in release 1.13 (2010-07-28)
+New in release 1.13 (2010-07-29)
 
-- Updated to OpenJDK7 milestone 7/b89.
-- Removed VisualVM support; now hosted at http://icedtea.classpath.org/hg/visualvm.
-- Bumped to CACAO 1.1.0 pre-release snapshot.
-- libjpeg7 & libpng 1.4 supported.
-- Latest security updates and hardening patches:
+* Updated to OpenJDK7 milestone 7/b89.
+* Removed VisualVM support; now hosted at http://icedtea.classpath.org/hg/visualvm.
+* Bumped to CACAO 1.1.0 pre-release snapshot.
+* libjpeg7 & libpng 1.4 supported.
+* Latest security updates and hardening patches:
   - (CVE-2010-0837): JAR "unpack200" must verify input parameters (6902299)
   - (CVE-2010-0845): No ClassCastException for HashAttributeSet constructors if run with -Xcomp (6894807)
   - (CVE-2010-0838): CMM readMabCurveData Buffer Overflow Vulnerability (6899653)
