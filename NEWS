@@ -42,6 +42,7 @@ New in release 1.13 (2010-07-29)
   - Removed the old plugin, replaced by the NPPlugin.
   - PR476: Enable building SystemTap support on GCC 4.5.
   - Fix hotspot tapset object_alloc size variable.
+  - Workaround RH613824: Missing and wrong hotspot.* probepoint arguments
 * Zero/Shark
   - Formatting changes and other fixes to match upstream
   - PR428: Shark on ARM precompiled header incls

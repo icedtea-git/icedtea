@@ -384,7 +384,8 @@ endif
 
 if ENABLE_SYSTEMTAP
 ICEDTEA_PATCHES += patches/icedtea-systemtap.patch \
-	patches/systemtap-gcc-4.5.patch
+	patches/systemtap-gcc-4.5.patch \
+	patches/systemtap-alloc-size-workaround.patch
 endif
 
 if ENABLE_PLUGIN

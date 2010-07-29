@@ -1,3 +1,16 @@
+2010-07-28  Mark Wielaard  <mjw@redhat.com>
+
+	Generating a dwarf location expression for variable * "constant" as used
+	in this probe argument triggers unforseen complications. See
+	https://bugzilla.redhat.com/show_bug.cgi?id=613824
+	Workaround for now by passing the size without HeapWordSize adjustment.
+	See also the hotspot.object_alloc in tapset/hotspot.stp[.in].
+	* Makefile.am: Add patch.
+	* NEWS: Updated.
+	* patches/systemtap-alloc-size-workaround.patch:
+	New patch to remove HeapWordSize adjustment.
+	* tapset/hotspot.stp.in: Add adjustment here.
+
 2010-07-29  Andrew John Hughes  <ahughes@redhat.com>
 
 	* NEWS: Final formatting cleanup.
