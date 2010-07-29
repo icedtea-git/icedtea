@@ -2,6 +2,7 @@ New in release 1.13 (2010-07-29)
 
 * Updated to OpenJDK7 milestone 7/b89.
 * Removed VisualVM support; now hosted at http://icedtea.classpath.org/hg/visualvm.
+* Removed old plugin.
 * Bumped to CACAO 1.1.0 pre-release snapshot.
 * libjpeg7 & libpng 1.4 supported.
 * Latest security updates and hardening patches:

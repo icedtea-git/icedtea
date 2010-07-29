@@ -1,3 +1,7 @@
+2010-07-29  Andrew John Hughes  <ahughes@redhat.com>
+
+	* NEWS: Mention removal of old plugin.
+
 2010-07-28  Mark Wielaard  <mjw@redhat.com>
 
 	Generating a dwarf location expression for variable * "constant" as used
