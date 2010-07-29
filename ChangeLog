@@ -1,5 +1,10 @@
 2010-07-29  Andrew John Hughes  <ahughes@redhat.com>
 
+	* NEWS: Add 1.14 section.
+	* configure.ac: Bump to 1.14-pre.
+
+2010-07-29  Andrew John Hughes  <ahughes@redhat.com>
+
 	* NEWS: Mention removal of old plugin.
 
 2010-07-28  Mark Wielaard  <mjw@redhat.com>
