@@ -1,3 +1,12 @@
+2010-08-05  Gary Benson  <gbenson@redhat.com>
+
+	* NEWS: Updated with LLVM 2.7 non-product fixes.
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp:
+	Prevent LLVM headers to define DEBUG.
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
+	(SharkBuilder::CreateDump): Make non-product debug code
+	LLVM 2.7 API compatible.
+
 2010-08-05  Xerxes Rånby  <xerxes@zafena.se>
 
 	* NEWS: Updated for Shark OSR fix.
