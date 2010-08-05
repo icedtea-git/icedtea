@@ -1,5 +1,10 @@
 2010-08-05  Xerxes Rånby  <xerxes@zafena.se>
 
+	* NEWS: Updated with correct suffix for the
+	llvm.atomic.cmp.swap intrinsic fixes.
+
+2010-08-05  Xerxes Rånby  <xerxes@zafena.se>
+
 	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp
 	(SharkBuilder::cmpxchg_int): Correct suffix for the
 	llvm.atomic.cmp.swap intrinsic.
