@@ -1,5 +1,8 @@
 New in release 1.14 (XXXX-XX-XX)
 
+* Zero/Shark
+  - Match Shark in icedtea6, makes OSR work by removing vestigal check.
+
 New in release 1.13 (2010-07-29)
 
 * Updated to OpenJDK7 milestone 7/b89.

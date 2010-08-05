@@ -1,5 +1,9 @@
 2010-08-05  Xerxes Rånby  <xerxes@zafena.se>
 
+	* NEWS: Updated for Shark OSR fix.
+ 
+2010-08-05  Xerxes Rånby  <xerxes@zafena.se>
+
 	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp
 	(SharkOSREntryCacher::process_monitor): Match Shark in icedtea6,
 	makes OSR work by removing vestigal check.
