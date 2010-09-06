@@ -37,15 +37,3 @@ diff -Nru ../openjdk.orig/openjdk-boot/hotspot/make/linux/Makefile openjdk-boot/
  ifdef INSTALL
  	cd $(OSNAME)_$(VARIANTARCH)_zero/$(patsubst %zero,%,$@) && $(MAKE) $(MFLAGS) install
  endif
-diff -Nru ../openjdk.orig/openjdk-boot/hotspot/make/linux/makefiles/sa.make openjdk-boot/hotspot/make/linux/makefiles/sa.make
---- ../openjdk.orig/openjdk-boot/hotspot/make/linux/makefiles/sa.make	2009-10-30 15:58:31.000000000 +0000
-+++ openjdk-boot/hotspot/make/linux/makefiles/sa.make	2009-10-30 17:44:58.000000000 +0000
-@@ -38,7 +38,7 @@
- GENERATED = $(TOPDIR)/../generated
- 
- # tools.jar is needed by the JDI - SA binding
--SA_CLASSPATH = $(BOOT_JAVA_HOME)/lib/tools.jar
-+SA_CLASSPATH = $(BOOT_JAVA_HOME)/jre/lib/rt.jar
- 
- # gnumake 3.78.1 does not accept the *s that
- # are in AGENT_FILES1 and AGENT_FILES2, so use the shell to expand them

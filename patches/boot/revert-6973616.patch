@@ -1,0 +1,12 @@
+diff -Nru openjdk-boot.orig/jdk/make/common/shared/Defs-versions.gmk openjdk-boot/jdk/make/common/shared/Defs-versions.gmk
+--- openjdk-boot.orig/jdk/make/common/shared/Defs-versions.gmk	2010-09-06 13:47:55.000000000 +0100
++++ openjdk-boot/jdk/make/common/shared/Defs-versions.gmk	2010-09-06 13:54:03.765973618 +0100
+@@ -191,7 +191,7 @@
+ 
+ # Generic
+ REQUIRED_ANT_VER          = 1.6.3
+-REQUIRED_BOOT_VER         = 1.6
++REQUIRED_BOOT_VER         = 1.5
+ REQUIRED_FREETYPE_VERSION = 2.2.1
+ REQUIRED_MAKE_VER         = 3.78
+ REQUIRED_UNZIP_VER        = 5.12

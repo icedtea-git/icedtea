@@ -1,10 +1,11 @@
---- openjdk/hotspot/src/os/linux/vm/os_linux.cpp~	2007-12-14 08:57:02.000000000 +0100
-+++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2008-01-19 16:20:24.206979233 +0100
-@@ -1757,6 +1757,37 @@
+diff -Nru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+--- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2010-08-27 19:15:27.000000000 +0100
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2010-08-31 18:50:26.191830872 +0100
+@@ -1888,6 +1888,37 @@
    return true;
  }
  
-+bool _print_debian_lsb_file(const char* filename, outputStream* st) {
++bool _print_lsb_file(const char* filename, outputStream* st) {
 +  int fd = open(filename, O_RDONLY);
 +  if (fd == -1) {
 +     return false;
@@ -38,11 +39,11 @@
  void os::print_dll_info(outputStream *st) {
     st->print_cr("Dynamic libraries:");
  
-@@ -1785,6 +1816,7 @@
+@@ -1916,6 +1947,7 @@
        !_print_ascii_file("/etc/SuSE-release", st) &&
        !_print_ascii_file("/etc/turbolinux-release", st) &&
        !_print_ascii_file("/etc/gentoo-release", st) &&
-+      !_print_debian_lsb_file("/etc/lsb-release", st) &&
-       !_print_ascii_file("/etc/debian_version", st)) {
-       st->print("Linux");
-   }
++      !_print_lsb_file("/etc/lsb-release", st) &&
+       !_print_ascii_file("/etc/debian_version", st) &&
+       !_print_ascii_file("/etc/ltib-release", st) &&
+       !_print_ascii_file("/etc/angstrom-version", st)) {

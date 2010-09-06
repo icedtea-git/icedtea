@@ -79,14 +79,6 @@ AC_ARG_ENABLE([docs],
 AM_CONDITIONAL([ENABLE_DOCS], [test x$ENABLE_DOCS = xyes])
 AC_MSG_RESULT(${ENABLE_DOCS})
 
-AC_MSG_CHECKING([whether to include the XRender pipeline])
-AC_ARG_ENABLE([xrender],
-	      [AS_HELP_STRING([--disable-xrender],
-	      		      [Disable inclusion of xrender pipeline])],
-	      [ENABLE_XRENDER="${enableval}"], [ENABLE_XRENDER='yes'])
-AM_CONDITIONAL([ENABLE_XRENDER], [test x$ENABLE_XRENDER = xyes])
-AC_MSG_RESULT(${ENABLE_XRENDER})
-
 AC_MSG_CHECKING([whether to include SystemTap tracing support])
 AC_ARG_ENABLE([systemtap],
 	      [AS_HELP_STRING([--enable-systemtap],

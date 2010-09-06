@@ -1,3 +1,127 @@
+2010-09-06  Andrew John Hughes  <ahughes@redhat.com>
+
+	Bump to b106.
+	* ergo.c.in,
+	* jvm.cfg.in: Removed.
+	* patches/boot/icedtea-hotspot-default.patch: Split
+	into test_gamma.patch and tools.jar.patch.
+	* patches/hotspot/default/icedtea-shark-build.patch,
+	* patches/hotspot/default/icedtea-shark.patch:
+	Dropped, Shark now upstream.
+	* patches/icedtea-doc-headers.patch: Dropped,
+	documentation licensing has changed completely due
+	to Sun->Oracle changes.
+	* patches/icedtea-shark-build.patch: Dropped.
+	* patches/xrender/icedtea-001.patch,
+	* patches/xrender/icedtea-002.patch,
+	* patches/xrender/icedtea-003.patch,
+	* patches/xrender/icedtea-004.patch,
+	* patches/xrender/icedtea-005.patch,
+	* patches/xrender/icedtea-006.patch,
+	* patches/xrender/icedtea-007.patch,
+	* patches/xrender/icedtea-008.patch,
+	* patches/xrender/icedtea-009.patch:
+	Dropped, XRender extension now upstream.
+	* ports/hotspot/make/linux/makefiles/shark.make,
+	* ports/hotspot/make/linux/platform_zero.in,
+	* ports/hotspot/src/cpu/zero/vm/shark_globals_zero.hpp,
+	* ports/hotspot/src/share/vm/includeDB_shark,
+	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp,
+	* ports/hotspot/src/share/vm/shark/llvmValue.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBlock.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkBuilder.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkCodeBuffer.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkCompiler.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkConstant.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkConstant.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkContext.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkContext.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkEntry.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkFunction.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkFunction.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkInliner.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkInliner.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkIntrinsics.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkIntrinsics.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkInvariants.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkInvariants.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkMemoryManager.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkNativeWrapper.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkNativeWrapper.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkRuntime.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkStack.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkStack.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkState.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkState.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkStateScanner.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkTopLevelBlock.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkType.hpp,
+	* ports/hotspot/src/share/vm/shark/sharkValue.cpp,
+	* ports/hotspot/src/share/vm/shark/sharkValue.hpp,
+	* ports/hotspot/src/share/vm/shark/shark_globals.cpp,
+	* ports/hotspot/src/share/vm/shark/shark_globals.hpp:
+	Dropped, Shark now upstream.
+	* Makefile.am:
+	Bump to b106 changesets and new JAXWS and JAXP drops.
+	(JAF_DROP_URL): Added to make JAF independent of JAXWS.
+	(ICEDTEA_BOOTSTRAP_CLASSES): Add additional classes
+	needed to bootstrap; java.nio.file.SimpleFileVisitor
+	and javax.management.modelmbean.ModelMBeanInfo.
+	(ICEDTEA_PATCHES): Drop upstream patches.
+	(XRENDER_PATCHES): Removed.
+	(ICEDTEA_BOOT_PATCHES): Add new bootstrap patches.
+	(ICEDTEA_SHARK_BUILD): Set to 'true' not 'yes' for
+	upstream Shark.
+	(ICEDTEA_ENV): Pass SHARK_BUILD not ICEDTEA_SHARK_BUILD
+	for upstream Shark.
+	(download-jaf-drop): Use JAF_DROP_URL instead of JAXWS_DROP_URL.
+	(ports): Removed.
+	(clean-ports): Likewise.
+	(generated): Depend on extract, not ports.
+	(clean-extract-openjdk): Don't call clean-ports.
+	(bootstrap-directory-stage1): Create lib/modules directory.
+	(hotspot-ports): Removed.
+	* acinclude.m4: Don't generate jvm.cfg and ergo.c.
+	* configure.ac: Drop --enable-xrender option.
+	* generated/java/lang/UNIXProcess.java: Updated, including
+	ProcessBuilder workaround.
+	* patches/boot/break-processbuilder-dependency.patch:
+	Prevent UNIXProcess having a dependency on package-private
+	classes in java.lang.ProcessBuilder which only exist in
+	Oracle's implementation.
+	* patches/boot/ecj-diamond.patch: Add new cases of <> usage.
+	* patches/boot/icedtea-jaxp-dependency.patch: Regenerated.
+	* patches/boot/revert-6973616.patch: Revert 1.6 requirement
+	introduced by 6973616.
+	* patches/boot/symbols.patch: Regenerated.
+	* patches/boot/test_gamma.patch: Split from icedtea-hotspot-default.patch.
+	* patches/boot/tools.jar.patch: Likewise, and regenerated
+	due to addition of module directory test.
+	* patches/hotspot/default/icedtea-gcc-suffix.patch,
+	* patches/icedtea-alpha-fixes.patch,
+	* patches/icedtea-clean-crypto.patch,
+	* patches/icedtea-demos.patch,
+	* patches/icedtea-freetypeversion.patch,
+	* patches/icedtea-javafiles.patch,
+	* patches/icedtea-linker-libs-order.patch,
+	* patches/icedtea-print-lsb-release.patch,
+	* patches/icedtea-rhino.patch,
+	* patches/icedtea-sunsrc.patch,
+	* patches/icedtea-systemtap.patch,
+	* patches/icedtea-testenv.patch:
+	* patches/sh4-support.patch: Regenerated.
+	* patches/systemtap-alloc-size-workaround.patch:
+	Patch not added by previous commit.
+
 2010-08-05  Xerxes Rånby  <xerxes@zafena.se>
 
 	* NEWS: Updated with correct suffix for the
@@ -22,7 +146,7 @@
 2010-08-05  Xerxes Rånby  <xerxes@zafena.se>
 
 	* NEWS: Updated for Shark OSR fix.
- 
+
 2010-08-05  Xerxes Rånby  <xerxes@zafena.se>
 
 	* ports/hotspot/src/share/vm/shark/sharkCacheDecache.cpp

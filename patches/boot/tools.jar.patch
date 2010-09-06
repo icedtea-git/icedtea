@@ -1,0 +1,14 @@
+diff -Nru openjdk-boot.orig/hotspot/make/linux/makefiles/sa.make openjdk-boot/hotspot/make/linux/makefiles/sa.make
+--- openjdk-boot.orig/hotspot/make/linux/makefiles/sa.make	2010-08-27 19:15:27.000000000 +0100
++++ openjdk-boot/hotspot/make/linux/makefiles/sa.make	2010-09-01 20:49:39.417105243 +0100
+@@ -71,8 +71,8 @@
+ 	  echo "ALT_BOOTDIR, BOOTDIR or JAVA_HOME needs to be defined to build SA"; \
+ 	  exit 1; \
+ 	fi
+-	$(QUIETLY) if [ ! -f $(SA_CLASSPATH) -a ! -d $(MODULELIB_PATH) ] ; then \
+-	  echo "Missing $(SA_CLASSPATH) file. Use 1.6.0 or later version of JDK";\
++	$(QUIETLY) if [ ! -d $(MODULELIB_PATH) ] ; then \
++	  echo "$(MODULELIB_PATH) is not a directory.";\
+ 	  echo ""; \
+ 	  exit 1; \
+ 	fi

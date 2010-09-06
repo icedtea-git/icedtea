@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/jdk/make/javax/crypto/Makefile openjdk/jdk/make/javax/crypto/Makefile
---- openjdk.orig/jdk/make/javax/crypto/Makefile	2009-08-07 02:44:13.000000000 +0100
-+++ openjdk/jdk/make/javax/crypto/Makefile	2009-08-07 11:26:43.000000000 +0100
-@@ -156,7 +156,8 @@
+--- openjdk.orig/jdk/make/javax/crypto/Makefile	2010-07-29 21:55:27.000000000 +0100
++++ openjdk/jdk/make/javax/crypto/Makefile	2010-09-01 10:37:32.926684780 +0100
+@@ -157,7 +157,8 @@
  #
  
  ifdef OPENJDK
@@ -12,8 +12,8 @@ diff -Nru openjdk.orig/jdk/make/javax/crypto/Makefile openjdk/jdk/make/javax/cry
  ifeq ($(strip $(FILES_java)),)
  all:
 diff -Nru openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jdk/src/share/classes/javax/crypto/Cipher.java
---- openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java	2009-08-07 02:57:08.000000000 +0100
-+++ openjdk/jdk/src/share/classes/javax/crypto/Cipher.java	2009-08-07 11:26:43.000000000 +0100
+--- openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java	2010-07-29 21:55:43.000000000 +0100
++++ openjdk/jdk/src/share/classes/javax/crypto/Cipher.java	2010-09-01 10:37:32.926684780 +0100
 @@ -144,12 +144,6 @@
      // The transformation
      private String transformation;
@@ -336,18 +336,18 @@ diff -Nru openjdk.orig/jdk/src/share/classes/javax/crypto/Cipher.java openjdk/jd
  
      /**
 diff -Nru openjdk.orig/jdk/src/share/classes/javax/crypto/JarVerifier.java openjdk/jdk/src/share/classes/javax/crypto/JarVerifier.java
---- openjdk.orig/jdk/src/share/classes/javax/crypto/JarVerifier.java	2009-08-07 02:57:08.000000000 +0100
+--- openjdk.orig/jdk/src/share/classes/javax/crypto/JarVerifier.java	2010-07-29 21:55:43.000000000 +0100
 +++ openjdk/jdk/src/share/classes/javax/crypto/JarVerifier.java	1970-01-01 01:00:00.000000000 +0100
 @@ -1,157 +0,0 @@
 -/*
-- * Copyright 2007-2009 Sun Microsystems, Inc.  All Rights Reserved.
+- * Copyright (c) 2007, 2009, Oracle and/or its affiliates. All rights reserved.
 - * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 - *
 - * This code is free software; you can redistribute it and/or modify it
 - * under the terms of the GNU General Public License version 2 only, as
-- * published by the Free Software Foundation.  Sun designates this
+- * published by the Free Software Foundation.  Oracle designates this
 - * particular file as subject to the "Classpath" exception as provided
-- * by Sun in the LICENSE file that accompanied this code.
+- * by Oracle in the LICENSE file that accompanied this code.
 - *
 - * This code is distributed in the hope that it will be useful, but WITHOUT
 - * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -359,9 +359,9 @@ diff -Nru openjdk.orig/jdk/src/share/classes/javax/crypto/JarVerifier.java openj
 - * 2 along with this work; if not, write to the Free Software Foundation,
 - * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
 - *
-- * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
-- * CA 95054 USA or visit www.sun.com if you need additional information or
-- * have any questions.
+- * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+- * or visit www.oracle.com if you need additional information or have any
+- * questions.
 - */
 -
 -package javax.crypto;
@@ -497,8 +497,8 @@ diff -Nru openjdk.orig/jdk/src/share/classes/javax/crypto/JarVerifier.java openj
 -    }
 -}
 diff -Nru openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurity.java openjdk/jdk/src/share/classes/javax/crypto/JceSecurity.java
---- openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurity.java	2009-08-07 02:57:08.000000000 +0100
-+++ openjdk/jdk/src/share/classes/javax/crypto/JceSecurity.java	2009-08-07 11:31:24.000000000 +0100
+--- openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurity.java	2010-07-29 21:55:43.000000000 +0100
++++ openjdk/jdk/src/share/classes/javax/crypto/JceSecurity.java	2010-09-01 10:37:32.934684089 +0100
 @@ -27,8 +27,6 @@
  
  import java.util.*;
@@ -797,18 +797,18 @@ diff -Nru openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurity.java openj
      }
  }
 diff -Nru openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurityManager.java openjdk/jdk/src/share/classes/javax/crypto/JceSecurityManager.java
---- openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurityManager.java	2009-08-07 02:57:08.000000000 +0100
+--- openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurityManager.java	2010-07-29 21:55:43.000000000 +0100
 +++ openjdk/jdk/src/share/classes/javax/crypto/JceSecurityManager.java	1970-01-01 01:00:00.000000000 +0100
 @@ -1,252 +0,0 @@
 -/*
-- * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
+- * Copyright (c) 1999, 2007, Oracle and/or its affiliates. All rights reserved.
 - * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 - *
 - * This code is free software; you can redistribute it and/or modify it
 - * under the terms of the GNU General Public License version 2 only, as
-- * published by the Free Software Foundation.  Sun designates this
+- * published by the Free Software Foundation.  Oracle designates this
 - * particular file as subject to the "Classpath" exception as provided
-- * by Sun in the LICENSE file that accompanied this code.
+- * by Oracle in the LICENSE file that accompanied this code.
 - *
 - * This code is distributed in the hope that it will be useful, but WITHOUT
 - * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -820,9 +820,9 @@ diff -Nru openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurityManager.jav
 - * 2 along with this work; if not, write to the Free Software Foundation,
 - * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
 - *
-- * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
-- * CA 95054 USA or visit www.sun.com if you need additional information or
-- * have any questions.
+- * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+- * or visit www.oracle.com if you need additional information or have any
+- * questions.
 - */
 -
 -package javax.crypto;
@@ -1053,8 +1053,8 @@ diff -Nru openjdk.orig/jdk/src/share/classes/javax/crypto/JceSecurityManager.jav
 -    }
 -}
 diff -Nru openjdk.orig/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java openjdk/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java
---- openjdk.orig/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java	2009-08-07 02:57:11.000000000 +0100
-+++ openjdk/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java	2009-08-07 11:26:43.000000000 +0100
+--- openjdk.orig/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java	2010-07-29 21:56:21.000000000 +0100
++++ openjdk/jdk/test/com/sun/crypto/provider/Cipher/UTIL/TestUtil.java	2010-09-01 10:37:32.934684089 +0100
 @@ -44,18 +44,9 @@
          }
      }

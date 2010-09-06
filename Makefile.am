@@ -1,22 +1,22 @@
 # Dependencies
 
-OPENJDK_VERSION = b89
+OPENJDK_VERSION = b106
 
-CORBA_CHANGESET = e805b4155d76
-HOTSPOT_CHANGESET = a393ff93e7e5
-JAXP_CHANGESET  = 826bafcb6c4a
-JAXWS_CHANGESET = 1661166c82dc
-JDK_CHANGESET = 2017795af50a
-LANGTOOLS_CHANGESET = 681f1f51926f
-OPENJDK_CHANGESET = 195fcceefddc
+CORBA_CHANGESET = 00a2834117ff
+HOTSPOT_CHANGESET = a30c85eed5d5
+JAXP_CHANGESET  = 679653c22ae1
+JAXWS_CHANGESET = 191a3ec51d79
+JDK_CHANGESET = a094068f4c7b
+LANGTOOLS_CHANGESET = 68035813467d
+OPENJDK_CHANGESET = b79fce47b7c6
 
-CORBA_SHA256SUM = 870e2eac993a4eef48197ed7309cab176b56a994add1de215a026599052627cb
-HOTSPOT_SHA256SUM = 995d64e272ecde0e00b69e36371bc7f8a82638c1f598c956f98e10538e41d695
-JAXP_SHA256SUM = 42d004e51a1f01d146ad230ce48996ddf8da3719fe571a41653f431d6b2e8a7b
-JAXWS_SHA256SUM = 4523909cd46fd61b5c6670bf932099d5899236a37a4058e7b2bcb855e503a0e4
-JDK_SHA256SUM = 1efc1939a8fae211752369b710d2c549cbc8ec74de4724c2898e772bdba98a3c
-LANGTOOLS_SHA256SUM = 5ff6f2a6d15403ed8d948a07204904f6ce60e363bd0516e22f1cae830aba84f8
-OPENJDK_SHA256SUM = 93c536e6bc4e962050a00321e88e694fc4e0000e2ad887b8de22830bfda2649f
+CORBA_SHA256SUM = 5648b189c94df46bbec9bc7c8640957befffbde68ff7ef9f8f8de9bd7fbe8e7d
+HOTSPOT_SHA256SUM = 93f71928d061f86f6a18f224f92ac217ea4dcc324183b029ece9a862c445714d
+JAXP_SHA256SUM = c7d58a5dd2859ccb8b2d0897a26ce9b37895f530a94a5912179afc25cc1d14ea
+JAXWS_SHA256SUM = 6fd65fd23c085c9c89f904da1b6448460af32d97d76bb0ba49630ee61d70a4d6
+JDK_SHA256SUM = 8b20e0686667a03cf028d57695b4bc2196c51db2d9c0873db7694624c384c446
+LANGTOOLS_SHA256SUM = 81b48f5f5782e62b0555735be24e294d3274c48fa1e027a63eb005465a505385
+OPENJDK_SHA256SUM = edb332586e2442bdbd4eed19c059535ade56dba5b436257031a0e5e827b89f12
 
 CACAO_VERSION = 66e762d869dd
 CACAO_SHA256SUM = 9a558ffb69479f2d31995bdeb90cd2abc616050e76a6be7263c72e2e302ca4e6
@@ -24,14 +24,15 @@ CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
-JAXWS_DROP_URL = http://kenai.com/projects/jdk7-drops/downloads/download
-JAXWS_DROP_ZIP = jdk7-jaxws-2009_09_28.zip
-JAXWS_DROP_SHA256SUM = 272756b999e9ae2435da8d58e259562e61126e1c5b1f9421fe65423217cef8fd
+JAXWS_DROP_URL = https://jax-ws.dev.java.net/files/documents/4202/150896
+JAXWS_DROP_ZIP = jdk7-jaxws-b100.zip
+JAXWS_DROP_SHA256SUM = 06e5f564430954211322fca353b0b8d916ffa8ae051412b7d9b5a5398090d887
+JAF_DROP_URL = http://kenai.com/projects/jdk7-drops/downloads/download
 JAF_DROP_ZIP = jdk7-jaf-2009_08_28.zip
 JAF_DROP_SHA256SUM = 8c81940b3017c0058367d7e7453123442f2cdd77c2bfe74acd9035f97e4db8e8
-JAXP_DROP_URL = https://jaxp.dev.java.net/files/documents/913/147490
-JAXP_DROP_ZIP = jdk7-jaxp-m6.zip
-JAXP_DROP_SHA256SUM = 3d9eb7ae71f5365e2a786ba270413c6cb7dc8d1137f56995c087908b3df8446c
+JAXP_DROP_URL = https://jaxp.dev.java.net/files/documents/913/150785
+JAXP_DROP_ZIP = jdk7-jaxp-m7.zip
+JAXP_DROP_SHA256SUM = d097627d4059d488c5a09d4e33cec275a193d4d8bc0fea8ef4f1337170904156
 
 ICEDTEA_HG_URL = http://hg.openjdk.java.net/icedtea/jdk7
 OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk7/jdk7
@@ -151,6 +152,8 @@ NETX_BOOTSTRAP_CLASSES = \
 ICEDTEA_BOOTSTRAP_CLASSES = \
 	$(SHARE)/javax/swing/plaf/basic/BasicDirectoryModel.java \
 	$(SHARE)/javax/management/StandardMBean.java \
+	$(SHARE)/java/nio/file/SimpleFileVisitor.java \
+	$(SHARE)/javax/management/modelmbean/ModelMBeanInfo.java \
 	$(NETX_BOOTSTRAP_CLASSES)
 
 endif
@@ -303,8 +306,6 @@ ICEDTEA_PATCHES = \
 	patches/hotspot/$(HSBUILD)/icedtea-sparc-ptracefix.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
-	patches/icedtea-shark-build.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-shark-build.patch \
 	patches/icedtea-security-updates.patch \
 	patches/icedtea-hotspot-gcc-pr36917.patch \
 	patches/icedtea-alpha-fixes.patch \
@@ -313,7 +314,6 @@ ICEDTEA_PATCHES = \
 	patches/hotspot/$(HSBUILD)/icedtea-use-idx_t.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-params-cast-size_t.patch \
 	patches/icedtea-clean-crypto.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-shark.patch \
 	$(GCC_PATCH) \
 	patches/cacao/arch.patch \
 	patches/icedtea-signed-types.patch \
@@ -324,7 +324,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-testenv.patch \
 	patches/icedtea-samejvm-safe.patch \
 	patches/icedtea-pr261.patch \
-	patches/icedtea-doc-headers.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-parisc-opt.patch \
         patches/security/icedtea-6592792.patch \
         patches/security/icedtea-6733959.patch \
@@ -367,14 +366,6 @@ endif
 if ENABLE_PULSE_JAVA
 ICEDTEA_PATCHES += \
 	patches/icedtea-pulse-soundproperties.patch
-endif
-
-if ENABLE_XRENDER
-# match against $(abs_top_srcdir) and then remove it again,
-# because stamps/patch.stamp target will also add it
-XRENDER_PATCHES = patches/xrender/icedtea-???.patch
-XRENDER_PATCH_FILES = $(sort $(wildcard $(abs_top_srcdir)/$(XRENDER_PATCHES)))
-ICEDTEA_PATCHES += $(sort $(subst $(abs_top_srcdir)/,,$(XRENDER_PATCH_FILES)))
 endif
 
 if !USE_CVMI
@@ -420,12 +411,15 @@ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/javah.patch \
 	patches/boot/symbols.patch \
 	patches/boot/tobin.patch \
-	patches/boot/icedtea-hotspot-$(HSBUILD).patch \
+	patches/boot/test_gamma.patch \
+	patches/boot/tools.jar.patch \
 	patches/boot/icedtea-jopt.patch \
 	patches/boot/icedtea-dyn.patch \
 	patches/boot/icedtea-jaxp-dependency.patch \
 	patches/boot/genstubs-nofork.patch \
-	patches/boot/getannotation-cast.patch
+	patches/boot/getannotation-cast.patch \
+	patches/boot/break-processbuilder-dependency.patch \
+	patches/boot/revert-6973616.patch
 
 if CP39408_JAVAH
 ICEDTEA_BOOT_PATCHES += patches/boot/icedtea-pr39408.patch
@@ -468,13 +462,9 @@ JAXWS_PATCHES = patches/boot/jaxws-getdtdtype.patch
 # OpenJDK build environment.
 if ZERO_BUILD
   ICEDTEA_ZERO_BUILD = true
-else
-  ICEDTEA_ZERO_BUILD =
 endif
 if SHARK_BUILD
-  ICEDTEA_SHARK_BUILD = yes
-else
-  ICEDTEA_SHARK_BUILD =
+  ICEDTEA_SHARK_BUILD = true
 endif
 
 JDK_UPDATE_VERSION = $(shell echo $(OPENJDK_VERSION) | sed -e "s/^b//")
@@ -507,7 +497,7 @@ ICEDTEA_ENV = \
 	CLASSPATH="" \
 	LD_LIBRARY_PATH="" \
 	ZERO_BUILD="$(ICEDTEA_ZERO_BUILD)" \
-	ICEDTEA_SHARK_BUILD="$(ICEDTEA_SHARK_BUILD)" \
+	SHARK_BUILD="$(ICEDTEA_SHARK_BUILD)" \
 	ZERO_LIBARCH="$(ZERO_LIBARCH)" \
 	ARCH_DATA_MODEL="$(ZERO_BITSPERWORD)" \
 	ZERO_ENDIANNESS="$(ZERO_ENDIANNESS)" \
@@ -898,7 +888,7 @@ endif
 	  then \
 	    mv drops/$(JAF_DROP_ZIP) drops/$(JAF_DROP_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(JAXWS_DROP_URL)/$(JAF_DROP_ZIP) -O drops/$(JAF_DROP_ZIP); \
+	  $(WGET) $(JAF_DROP_URL)/$(JAF_DROP_ZIP) -O drops/$(JAF_DROP_ZIP); \
 	  if ! echo "$(JAF_DROP_SHA256SUM)  drops/$(JAF_DROP_ZIP)" \
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of jaf drop zip"; false; \
@@ -1269,7 +1259,7 @@ endif
 	touch $@
 
 clean-extract-openjdk: clean-overlay clean-versioning \
- clean-ports clean-patch-fsg
+ clean-patch-fsg
 	rm -rf openjdk
 	rm -f stamps/extract-openjdk.stamp
 
@@ -1315,39 +1305,7 @@ clean-extract-jaxws:
 	mkdir -p stamps
 	rm -f stamps/extract-jaxws.stamp
 
-# Link ports sources into tree
-stamps/ports.stamp: stamps/extract.stamp
-	for target in $(abs_top_srcdir)/ports/hotspot/make/*/platform_zero.in \
-		      $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
-		      $(abs_top_srcdir)/ports/hotspot/src/cpu/zero/vm/* \
-		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
-	  link=$$(dirname $$target | sed 's/^.*ports/openjdk/'); \
-	  ln -sfv $$target $$link; \
-	done
-	if ! test "x$(WITH_CACAO)" = "xno" ; then \
-	  mkdir -p openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR) ; \
-	  ln -sf $(abs_top_builddir)/jvm.cfg \
-	    openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg ; \
-	fi
-	if ! test "x$(WITH_CACAO)" = "xno"; then \
-	  ln -sf $(abs_top_builddir)/ergo.c \
-	    openjdk/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c; \
-	fi
-	mkdir -p stamps
-	touch $@
-
-clean-ports:
-	for target in $(abs_top_srcdir)/ports/hotspot/make/*/makefiles/* \
-		      $(abs_top_srcdir)/ports/hotspot/src/cpu/zero/vm/* \
-		      $(abs_top_srcdir)/ports/hotspot/src/share/vm/*; do \
-	  link=$$(echo $$target | sed 's/^.*ports/openjdk/'|sed "s#hotspot/build#hotspot/make#"); \
-	  rm -rf $$link; \
-	done
-	rm -f openjdk/jdk/src/solaris/bin/$(BUILD_ARCH_DIR)/jvm.cfg
-	rm -f openjdk/jdk/src/solaris/bin/ergo_$(BUILD_ARCH_DIR).c 
-	rm -f stamps/ports.stamp
-
-stamps/generated.stamp: stamps/ports.stamp
+stamps/generated.stamp: stamps/extract.stamp
 	set -e ; \
 	if [ ! -e $(abs_top_builddir)/generated.build ]; then \
 	  cp -pPR $(abs_top_srcdir)/generated $(abs_top_builddir)/generated.build; \
@@ -1696,6 +1654,7 @@ stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
 	ln -sf $(XALAN2_SERIALIZER_JAR) \
 	  $(STAGE1_BOOT_DIR)/lib/endorsed/xalan-j2-serializer.jar && \
 	ln -sf $(XERCES2_JAR) $(STAGE1_BOOT_DIR)/lib/endorsed/xerces-j2.jar
+	mkdir -p $(STAGE1_BOOT_DIR)/lib/modules
 	mkdir -p $(STAGE1_BOOT_DIR)/jre/lib && \
 	cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
 	  $(STAGE1_BOOT_DIR)/jre/lib/rt.jar && \
@@ -2619,8 +2578,6 @@ extract-cacao: stamps/extract-cacao.stamp
 extract-openjdk: stamps/extract-openjdk.stamp
 
 generated: stamps/generated.stamp
-
-hotspot-ports: stamps/ports.stamp
 
 icedtea: stamps/icedtea.stamp
 

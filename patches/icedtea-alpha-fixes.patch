@@ -1,19 +1,6 @@
-diff -Nru openjdk.orig/corba/make/common/Defs-linux.gmk openjdk/corba/make/common/Defs-linux.gmk
---- openjdk.orig/corba/make/common/Defs-linux.gmk	2009-10-05 14:09:53.391582691 +0100
-+++ openjdk/corba/make/common/Defs-linux.gmk	2009-10-06 09:39:43.273589275 +0100
-@@ -176,7 +176,8 @@
-   CXXFLAGS_DBG	+= $(CC_LOWER_OPT)
- endif
- 
--CPPFLAGS_COMMON = -D$(ARCH) -DARCH='"$(ARCH)"' -DLINUX $(VERSION_DEFINES) \
-+CPPFLAGS_COMMON = -D_$(ARCH)_ $(if $(filter $(ARCH),alpha),,-D$(ARCH)) \
-+		  -DARCH='"$(ARCH)"' -DLINUX $(VERSION_DEFINES) \
- 		  -D_LARGEFILE64_SOURCE -D_GNU_SOURCE -D_REENTRANT
- 
- ifeq ($(ARCH_DATA_MODEL), 64)
 diff -Nru openjdk.orig/hotspot/agent/src/os/linux/Makefile openjdk/hotspot/agent/src/os/linux/Makefile
---- openjdk.orig/hotspot/agent/src/os/linux/Makefile	2009-10-05 14:09:52.722332564 +0100
-+++ openjdk/hotspot/agent/src/os/linux/Makefile	2009-10-06 09:39:43.274588369 +0100
+--- openjdk.orig/hotspot/agent/src/os/linux/Makefile	2010-09-01 09:57:06.000000000 +0100
++++ openjdk/hotspot/agent/src/os/linux/Makefile	2010-09-01 10:27:09.592191147 +0100
 @@ -40,7 +40,7 @@
  
  LIBS     = -lthread_db
@@ -33,27 +20,14 @@ diff -Nru openjdk.orig/hotspot/agent/src/os/linux/Makefile openjdk/hotspot/agent
  test: test.o
  	$(GCC) -o test test.o -L$(ARCH) -lsaproc $(LIBS)
 diff -Nru openjdk.orig/hotspot/src/share/vm/oops/generateOopMap.cpp openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp
---- openjdk.orig/hotspot/src/share/vm/oops/generateOopMap.cpp	2009-10-05 02:24:10.384274774 +0100
-+++ openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp	2009-10-06 09:39:43.276589489 +0100
-@@ -2117,7 +2117,7 @@
-   // We do not distinguish between different types of errors for verification
-   // errors.  Let the verifier give a better message.
-   const char *msg = "Illegal class file encountered. Try running with -Xverify:all";
--  error_work(msg, NULL);
-+  report_error(msg, NULL);
+--- openjdk.orig/hotspot/src/share/vm/oops/generateOopMap.cpp	2010-08-27 19:15:27.000000000 +0100
++++ openjdk/hotspot/src/share/vm/oops/generateOopMap.cpp	2010-09-01 10:28:08.943025196 +0100
+@@ -2104,7 +2104,7 @@
+ void GenerateOopMap::report_error(const char *format, ...) {
+   va_list ap;
+   va_start(ap, format);
+-  error_work(format, ap);
++  report_error(format, ap);
  }
  
- //
-diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
---- openjdk.orig/jdk/make/common/Defs-linux.gmk	2009-10-05 14:09:53.392583324 +0100
-+++ openjdk/jdk/make/common/Defs-linux.gmk	2009-10-06 09:39:50.428589918 +0100
-@@ -194,7 +194,8 @@
-   CXXFLAGS_DBG	+= $(CC_OPT/$(FASTDEBUG_OPTIMIZATION_LEVEL))
- endif
- 
--CPPFLAGS_COMMON = -D$(ARCH) -DARCH='"$(ARCH)"' -DLINUX $(VERSION_DEFINES) \
-+CPPFLAGS_COMMON = -D_$(ARCH)_ $(if $(filter $(ARCH),alpha),,-D$(ARCH)) \
-+		  -DARCH='"$(ARCH)"' -DLINUX $(VERSION_DEFINES) \
- 		  -D_LARGEFILE64_SOURCE -D_GNU_SOURCE -D_REENTRANT
- 
- ifeq ($(ARCH_DATA_MODEL), 64)
+ void GenerateOopMap::verify_error(const char *format, ...) {

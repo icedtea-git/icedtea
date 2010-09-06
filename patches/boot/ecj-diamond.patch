@@ -73,3 +73,86 @@ diff -r c1cee45daf4d src/share/classes/sun/security/provider/JavaKeyStore.java
                                  numOfCerts > 10 ? 10 : numOfCerts);
                          for (int j = 0; j < numOfCerts; j++) {
                              if (xVersion == 2) {
+diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/net/dns/ResolverConfigurationImpl.java openjdk-boot/jdk/src/solaris/classes/sun/net/dns/ResolverConfigurationImpl.java
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/net/dns/ResolverConfigurationImpl.java	2010-09-01 22:07:18.059282202 +0100
++++ openjdk-boot/jdk/src/solaris/classes/sun/net/dns/ResolverConfigurationImpl.java	2010-09-01 22:07:50.032515630 +0100
+@@ -60,7 +60,7 @@
+                                           int maxperkeyword,
+                                           int maxkeywords)
+     {
+-        LinkedList<String> ll = new LinkedList<>();
++        LinkedList<String> ll = new LinkedList<String>();
+ 
+         try {
+             BufferedReader in =
+@@ -200,7 +200,7 @@
+         // no local domain so try fallback (RPC) domain or
+         // hostname
+ 
+-        sl = new LinkedList<>();
++        sl = new LinkedList<String>();
+         String domain = fallbackDomain0();
+         if (domain != null && domain.length() > 0) {
+             sl.add(domain);
+diff -r a094068f4c7b src/share/classes/sun/net/spi/nameservice/dns/DNSNameService.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/net/spi/nameservice/dns/DNSNameService.java	Fri Aug 27 19:01:53 2010 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/net/spi/nameservice/dns/DNSNameService.java	Mon Sep 06 17:03:29 2010 +0100
+@@ -52,7 +52,7 @@
+ 
+     // Per-thread soft cache of the last temporary context
+     private static ThreadLocal<SoftReference<ThreadContext>> contextRef =
+-            new ThreadLocal<>();
++            new ThreadLocal<SoftReference<ThreadContext>>();
+ 
+     // Simple class to encapsulate the temporary context
+     private static class ThreadContext {
+@@ -99,7 +99,7 @@
+ 
+         // new thread context needs to be created
+         if (thrCtxt == null) {
+-            final Hashtable<String,Object> env = new Hashtable<>();
++            final Hashtable<String,Object> env = new Hashtable<String,Object>();
+             env.put("java.naming.factory.initial",
+                     "com.sun.jndi.dns.DnsContextFactory");
+ 
+@@ -165,7 +165,7 @@
+                                       final String[] ids, int depth)
+             throws UnknownHostException
+     {
+-        ArrayList<String> results = new ArrayList<>();
++        ArrayList<String> results = new ArrayList<String>();
+         Attributes attrs;
+ 
+         // do the query
+diff -r a094068f4c7b src/solaris/classes/sun/nio/cs/ext/CompoundTextSupport.java
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/cs/ext/CompoundTextSupport.java	Fri Aug 27 19:01:53 2010 +0100
++++ openjdk-boot/jdk/src/solaris/classes/sun/nio/cs/ext/CompoundTextSupport.java	Mon Sep 06 18:44:51 2010 +0100
+@@ -153,12 +153,12 @@
+ 
+     static {
+         HashMap<ControlSequence, String> tSequenceToEncodingMap =
+-            new HashMap<>(33, 1.0f);
++            new HashMap<ControlSequence, String>(33, 1.0f);
+         HashMap<ControlSequence, Boolean> tHighBitsMap =
+-            new HashMap<>(31, 1.0f);
++            new HashMap<ControlSequence, Boolean>(31, 1.0f);
+         HashMap<String, ControlSequence> tEncodingToSequenceMap =
+-            new HashMap<>(21, 1.0f);
+-        ArrayList<String> tEncodings = new ArrayList<>(21);
++            new HashMap<String, ControlSequence>(21, 1.0f);
++        ArrayList<String> tEncodings = new ArrayList<String>(21);
+ 
+         if (!(isEncodingSupported("US-ASCII") &&
+               isEncodingSupported("ISO-8859-1")))
+diff -r a094068f4c7b src/share/classes/com/sun/jndi/dns/DnsContextFactory.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DnsContextFactory.java	Fri Aug 27 19:01:53 2010 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/DnsContextFactory.java	Mon Sep 06 18:50:12 2010 +0100
+@@ -132,7 +132,7 @@
+             throw new ConfigurationException("DNS pseudo-URL required");
+         }
+ 
+-        List<String> servers = new ArrayList<>();
++        List<String> servers = new ArrayList<String>();
+ 
+         for (int i = 0; i < urls.length; i++) {
+             String server = urls[i].getHost();

@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/sun/java/pack/Makefile
---- openjdk.orig/jdk/make/com/sun/java/pack/Makefile	2009-09-21 18:42:07.000000000 +0100
-+++ openjdk/jdk/make/com/sun/java/pack/Makefile	2009-09-21 18:47:23.000000000 +0100
-@@ -74,12 +74,12 @@
+--- openjdk.orig/jdk/make/com/sun/java/pack/Makefile	2010-09-01 10:55:50.000000000 +0100
++++ openjdk/jdk/make/com/sun/java/pack/Makefile	2010-09-01 15:54:07.312808721 +0100
+@@ -75,12 +75,12 @@
  	     $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
  	     $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
  
@@ -16,7 +16,7 @@ diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/
  CXXFLAGS_DBG += -DFULL
  CXXFLAGS_OPT += -DPRODUCT
  CXXFLAGS_COMMON += -DFULL
-@@ -96,12 +96,11 @@
+@@ -97,12 +97,11 @@
    RES = $(OBJDIR)/$(PGRM).res
  else
    LDOUTPUT = -o #Have a space 
@@ -31,19 +31,19 @@ diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/
  endif
  endif #LINUX
  endif #PLATFORM
-@@ -144,7 +143,7 @@
+@@ -148,7 +147,7 @@
  
  $(UNPACK_EXE): $(UNPACK_EXE_FILES_o) updatefiles winres
  	$(prep-target)
 -	$(LINKER)  $(LDDFLAGS) $(UNPACK_EXE_FILES_o) $(RES) $(LIBCXX) $(LDOUTPUT)$(TEMPDIR)/unpack200$(EXE_SUFFIX)
 +	$(LINKER)  $(LDDFLAGS) $(UNPACK_EXE_FILES_o) $(RES) $(OTHER_LDLIBS) $(LIBCXX) $(LDOUTPUT)$(TEMPDIR)/unpack200$(EXE_SUFFIX)
  ifdef MT
- 	$(MT) /manifest $(TEMPDIR)/unpack200$(EXE_SUFFIX).manifest /outputresource:$(TEMPDIR)/unpack200$(EXE_SUFFIX);#1
+ 	$(MT) /manifest $(OBJDIR)/unpack200$(EXE_SUFFIX).manifest /outputresource:$(TEMPDIR)/unpack200$(EXE_SUFFIX);#1
  endif
 diff -Nru openjdk.orig/jdk/make/javax/sound/jsoundalsa/Makefile openjdk/jdk/make/javax/sound/jsoundalsa/Makefile
---- openjdk.orig/jdk/make/javax/sound/jsoundalsa/Makefile	2009-03-30 17:23:03.000000000 +0100
-+++ openjdk/jdk/make/javax/sound/jsoundalsa/Makefile	2009-09-21 18:47:23.000000000 +0100
-@@ -65,7 +65,7 @@
+--- openjdk.orig/jdk/make/javax/sound/jsoundalsa/Makefile	2010-07-29 21:55:27.000000000 +0100
++++ openjdk/jdk/make/javax/sound/jsoundalsa/Makefile	2010-09-01 15:54:07.312808721 +0100
+@@ -66,7 +66,7 @@
  	$(MIDIFILES_export) \
  	$(PORTFILES_export)
  

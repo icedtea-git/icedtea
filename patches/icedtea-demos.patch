@@ -252,12 +252,6 @@
  # Build jar file
 --- openjdkb18/jdk/src/share/demo/jvmti/versionCheck/sample.makefile.txt	2007-08-16 03:33:21.000000000 -0400
 +++ openjdk/jdk/src/share/demo/jvmti/versionCheck/sample.makefile.txt	2007-08-23 16:12:58.000000000 -0400
-@@ -1,4 +1,4 @@
--#
-+
- # Copyright 2004-2005 Sun Microsystems, Inc.  All Rights Reserved.
- #
- # Redistribution and use in source and binary forms, with or without
 @@ -43,7 +43,7 @@
  
  # Source lists

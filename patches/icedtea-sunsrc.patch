@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/jdk/make/common/Release.gmk openjdk/jdk/make/common/Release.gmk
---- openjdk.orig/jdk/make/common/Release.gmk	2008-05-23 22:40:01.000000000 +0100
-+++ openjdk/jdk/make/common/Release.gmk	2008-05-23 22:41:52.000000000 +0100
-@@ -338,8 +338,6 @@
+--- openjdk.orig/jdk/make/common/Release.gmk	2010-08-27 19:16:10.000000000 +0100
++++ openjdk/jdk/make/common/Release.gmk	2010-08-31 18:26:34.688231634 +0100
+@@ -345,8 +345,6 @@
  # Bug 5008685 - exclude jconsole from sun/tools
  #
  TOOLS = \
@@ -10,7 +10,7 @@ diff -Nru openjdk.orig/jdk/make/common/Release.gmk openjdk/jdk/make/common/Relea
  	sun/tools/asm		\
  	sun/tools/jar		\
  	sun/tools/java		\
-@@ -381,8 +379,6 @@
+@@ -389,8 +387,6 @@
  	com/sun/tools/corba     \
  	com/sun/tools/internal/xjc       \
  	com/sun/tools/internal/ws       \
@@ -19,7 +19,7 @@ diff -Nru openjdk.orig/jdk/make/common/Release.gmk openjdk/jdk/make/common/Relea
  	com/sun/istack/internal/tools       \
  	com/sun/istack/internal/ws       \
          com/sun/codemodel       \
-@@ -393,7 +389,6 @@
+@@ -401,7 +397,6 @@
  	com/sun/xml/internal/dtdparser \
  	com/sun/tools/jdi	\
  	com/sun/tools/script/shell	\
@@ -27,7 +27,7 @@ diff -Nru openjdk.orig/jdk/make/common/Release.gmk openjdk/jdk/make/common/Relea
  	com/sun/tools/attach	\
  	sun/tools/attach	\
  	sun/tools/jstack        \
-@@ -557,10 +552,6 @@
+@@ -565,10 +560,6 @@
  	$(ECHO) "com/sun/source/" >> $@
  	$(ECHO) "com/sun/istack/internal/tools/" >> $@
  	$(ECHO) "com/sun/istack/internal/ws/" >> $@
@@ -37,8 +37,8 @@ diff -Nru openjdk.orig/jdk/make/common/Release.gmk openjdk/jdk/make/common/Relea
 -	$(ECHO) "META-INF/services/com.sun.tools.xjc.Plugin" >> $@
  	$(ECHO) "com/sun/tools/" >> $@
  	$(ECHO) "sun/jvmstat/" >> $@
- 	$(ECHO) "sun/rmi/rmic/" >> $@
-@@ -592,7 +583,6 @@
+ 	$(ECHO) "sun/nio/cs/ext/" >> $@
+@@ -611,7 +602,6 @@
  	$(ECHO) "javax/crypto/" >> $@
  	$(ECHO) "sun/security/internal/" >> $@
  	$(ECHO) "com/sun/crypto/provider/" >> $@
@@ -46,7 +46,7 @@ diff -Nru openjdk.orig/jdk/make/common/Release.gmk openjdk/jdk/make/common/Relea
  	$(ECHO) "com/sun/tools/attach/" >> $@
  	$(ECHO) "org/relaxng/datatype/" >> $@
  	$(ECHO) "com/sun/codemodel/" >> $@
-@@ -626,6 +616,10 @@
+@@ -645,6 +635,10 @@
  	    $(BOOT_JAVA_CMD) -jar $(JARREORDER_JARFILE) \
  		-o  $@.temp $(ABS_LIBDIR)/classlist $(NOT_RT_JAR_LIST) . )
  	$(MV) $@.temp $@

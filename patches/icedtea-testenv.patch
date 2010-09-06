@@ -1,18 +1,18 @@
 diff -Nru openjdk.orig/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java openjdk/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java
---- openjdk.orig/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java	2009-08-24 15:09:16.000000000 +0100
-+++ openjdk/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java	2009-08-24 15:15:58.000000000 +0100
-@@ -40,7 +40,7 @@
+--- openjdk.orig/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java	2010-07-29 21:56:30.000000000 +0100
++++ openjdk/jdk/test/java/nio/channels/SocketChannel/LocalAddress.java	2010-09-01 16:45:06.244592103 +0100
+@@ -39,7 +39,7 @@
+     static void test1() throws Exception {
          InetAddress bogus = InetAddress.getByName("0.0.0.0");
-         SocketChannel sc = SocketChannel.open();
          InetSocketAddress saddr = new InetSocketAddress(
 -            InetAddress.getByName(TestUtil.HOST), 23);
 +            InetAddress.getByName(TestUtil.HOST), 7);
  
          //Test1: connect only
-         sc.connect(saddr);
+         SocketChannel sc = SocketChannel.open();
 diff -Nru openjdk.orig/jdk/test/java/nio/channels/TestUtil.java openjdk/jdk/test/java/nio/channels/TestUtil.java
---- openjdk.orig/jdk/test/java/nio/channels/TestUtil.java	2009-08-24 15:09:16.000000000 +0100
-+++ openjdk/jdk/test/java/nio/channels/TestUtil.java	2009-08-24 15:15:58.000000000 +0100
+--- openjdk.orig/jdk/test/java/nio/channels/TestUtil.java	2010-07-29 21:56:30.000000000 +0100
++++ openjdk/jdk/test/java/nio/channels/TestUtil.java	2010-09-01 16:45:06.244592103 +0100
 @@ -36,9 +36,9 @@
  
      // Test hosts used by the channels tests - change these when
@@ -27,8 +27,8 @@ diff -Nru openjdk.orig/jdk/test/java/nio/channels/TestUtil.java openjdk/jdk/test
  
      private TestUtil() { }
 diff -Nru openjdk.orig/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh openjdk/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh
---- openjdk.orig/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh	2009-03-30 17:23:12.000000000 +0100
-+++ openjdk/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh	2009-08-24 15:15:58.000000000 +0100
+--- openjdk.orig/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh	2010-07-29 21:56:39.000000000 +0100
++++ openjdk/jdk/test/sun/net/InetAddress/nameservice/dns/cname.sh	2010-09-01 16:45:06.252591410 +0100
 @@ -26,14 +26,14 @@
  
  # @test

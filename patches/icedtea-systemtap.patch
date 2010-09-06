@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/dtrace.make openjdk/hotspot/make/linux/makefiles/dtrace.make
---- openjdk.orig/hotspot/make/linux/makefiles/dtrace.make	2010-05-14 16:02:53.000000000 +0100
-+++ openjdk/hotspot/make/linux/makefiles/dtrace.make	2010-06-07 17:42:38.000000000 +0100
+--- openjdk.orig/hotspot/make/linux/makefiles/dtrace.make	2010-07-29 21:54:46.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/dtrace.make	2010-09-01 20:10:41.490928687 +0100
 @@ -25,3 +25,7 @@
  # Linux does not build jvm_db
  LIBJVM_DB =
@@ -10,8 +10,8 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/dtrace.make openjdk/hotspot/
 +
 +# It doesn't support HAVE_DTRACE_H though.
 diff -Nru openjdk.orig/hotspot/src/share/vm/prims/jni.cpp openjdk/hotspot/src/share/vm/prims/jni.cpp
---- openjdk.orig/hotspot/src/share/vm/prims/jni.cpp	2010-05-14 16:02:53.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/prims/jni.cpp	2010-06-07 17:42:38.000000000 +0100
+--- openjdk.orig/hotspot/src/share/vm/prims/jni.cpp	2010-08-27 19:15:27.000000000 +0100
++++ openjdk/hotspot/src/share/vm/prims/jni.cpp	2010-09-01 20:10:41.498927999 +0100
 @@ -1753,10 +1753,7 @@
  JNI_QUICK_ENTRY(void, jni_Set##Result##Field(JNIEnv *env, jobject obj, jfieldID fieldID, Argument value)) \
    JNIWrapper("Set" XSTR(Result) "Field"); \
@@ -37,9 +37,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/prims/jni.cpp openjdk/hotspot/src/sh
    JNIid* id = jfieldIDWorkaround::from_static_jfieldID(fieldID); \
    assert(id->is_static_field_id(), "invalid static field id"); \
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspot/src/share/vm/runtime/arguments.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2010-06-07 17:41:12.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2010-06-07 17:42:38.000000000 +0100
-@@ -2441,16 +2441,16 @@
+--- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2010-09-01 19:24:41.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2010-09-01 20:10:41.498927999 +0100
+@@ -2490,16 +2490,16 @@
        FLAG_SET_CMDLINE(bool, DisplayVMOutputToStderr, false);
        FLAG_SET_CMDLINE(bool, DisplayVMOutputToStdout, true);
      } else if (match_option(option, "-XX:+ExtendedDTraceProbes", &tail)) {
@@ -61,16 +61,16 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspo
      } else if (match_option(option, "-XX:+FullGCALot", &tail)) {
        FLAG_SET_CMDLINE(bool, FullGCALot, true);
 diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp openjdk/hotspot/src/share/vm/utilities/dtrace.hpp
---- openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp	2010-05-14 16:02:53.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/utilities/dtrace.hpp	2010-06-07 17:42:38.000000000 +0100
+--- openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp	2010-07-29 21:54:53.000000000 +0100
++++ openjdk/hotspot/src/share/vm/utilities/dtrace.hpp	2010-09-01 20:12:19.582467794 +0100
 @@ -1,5 +1,6 @@
  /*
-  * Copyright 2005-2007 Sun Microsystems, Inc.  All Rights Reserved.
+  * Copyright (c) 2005, 2007, Oracle and/or its affiliates. All rights reserved.
 + * Copyright 2009 Red Hat, Inc.
   * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
   *
   * This code is free software; you can redistribute it and/or modify it
-@@ -22,14 +23,14 @@
+@@ -22,7 +23,7 @@
   *
   */
  
@@ -79,15 +79,16 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp openjdk/hotspot
  
  #include <sys/sdt.h>
  
- #define DTRACE_ONLY(x) x
- #define NOT_DTRACE(x)
+@@ -33,7 +34,7 @@
+ #define HS_DTRACE_WORKAROUND_TAIL_CALL_BUG() \
+   do { volatile size_t dtrace_workaround_tail_call_bug = 1; } while (0)
  
 -#else // ndef SOLARIS || ndef DTRACE_ENABLED
 +#else // ndef DTRACE_ENABLED
  
  #define DTRACE_ONLY(x)
  #define NOT_DTRACE(x) x
-@@ -40,9 +41,16 @@
+@@ -44,11 +45,18 @@
  #define DTRACE_PROBE3(a,b,c,d,e) {;}
  #define DTRACE_PROBE4(a,b,c,d,e,f) {;}
  #define DTRACE_PROBE5(a,b,c,d,e,f,g) {;}
@@ -97,6 +98,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp openjdk/hotspot
 +#define DTRACE_PROBE9(a,b,c,d,e,f,g,h,i,j,k) {;}
 +#define DTRACE_PROBE10(a,b,c,d,e,f,g,h,i,j,k,l) {;}
  
+ #define HS_DTRACE_WORKAROUND_TAIL_CALL_BUG()
+ 
  #endif
  
 +#if defined(SOLARIS)
@@ -104,7 +107,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp openjdk/hotspot
  #define HS_DTRACE_PROBE_FN(provider,name)\
    __dtrace_##provider##___##name
  
-@@ -50,6 +58,11 @@
+@@ -56,6 +64,11 @@
    DTRACE_ONLY(extern "C" void HS_DTRACE_PROBE_FN(provider,name) args)
  #define HS_DTRACE_PROBE_CDECL_N(provider,name,args) \
    DTRACE_ONLY(extern void HS_DTRACE_PROBE_FN(provider,name) args)
@@ -116,7 +119,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp openjdk/hotspot
  
  /* Dtrace probe declarations */
  #define HS_DTRACE_PROBE_DECL(provider,name) \
-@@ -88,6 +101,8 @@
+@@ -94,6 +107,8 @@
      uintptr_t,uintptr_t,uintptr_t))
  
  /* Dtrace probe definitions */
@@ -125,7 +128,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp openjdk/hotspot
  #define HS_DTRACE_PROBE_N(provider,name, args) \
    DTRACE_ONLY(HS_DTRACE_PROBE_FN(provider,name) args)
  
-@@ -123,3 +138,29 @@
+@@ -129,3 +144,29 @@
    HS_DTRACE_PROBE_N(provider,name,((uintptr_t)a0,(uintptr_t)a1,(uintptr_t)a2,\
      (uintptr_t)a3,(uintptr_t)a4,(uintptr_t)a5,(uintptr_t)a6,(uintptr_t)a7,\
      (uintptr_t)a8,(uintptr_t)a9))
