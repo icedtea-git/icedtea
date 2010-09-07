@@ -1,3 +1,10 @@
+2010-09-07  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-6977640.patch: Dropped.
+	* Makefile.am: Drop above patch and bump
+	HotSpot changeset/hash to incorporate change
+	instead.
+
 2010-09-07  Matthias Klose  <doko@ubuntu.com>
 
 	PR icedtea/543
