@@ -1,6 +1,5 @@
 syntax: glob
 *~
-build
 configure
 missing
 aclocal.m4
