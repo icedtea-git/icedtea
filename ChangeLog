@@ -1,5 +1,11 @@
 2010-09-07  Matthias Klose  <doko@ubuntu.com>
 
+	PR icedtea/543
+	* patches/icedtea-6977640.patch: New, fix zero build failure.
+	* Makefile.am (ICEDTEA_PATCHES): Apply.
+
+2010-09-07  Matthias Klose  <doko@ubuntu.com>
+
 	* Makefile.am: Bump cacao version to changeset including build
 	fixes for ARM and S390.
 	* patches/cacao/launcher.patch: Regenerate.
