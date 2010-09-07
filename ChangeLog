@@ -1,3 +1,9 @@
+2010-09-07  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am: Bump cacao version to changeset including build
+	fixes for ARM and S390.
+	* patches/cacao/launcher.patch: Regenerate.
+
 2010-09-06  Andrew John Hughes  <ahughes@redhat.com>
 
 	Bump to b106.
