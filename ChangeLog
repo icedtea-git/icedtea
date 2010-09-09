@@ -1,3 +1,7 @@
+2010-09-09  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/hotspot/default/icedtea-no-precompiled.patch: Remove.
+
 2010-09-07  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/icedtea-6977640.patch: Dropped.
