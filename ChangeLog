@@ -1,3 +1,17 @@
+2010-09-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am,
+	(EXTRA_DIST): Remove xrender patches and
+	ports.
+	(clean-add-cacao): Fix path to jvm.cfg and
+	only change if it exists.
+	(clean-add-cacao-debug): Likewise.
+	(clean-add-zero): Likewise.
+	(clean-add-zero-debug): Likewise.
+	(rt-source-files.txt): Remove any existing
+	version prior to generation to avoid duplication
+	of source files.
+
 2010-09-09  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/hotspot/default/icedtea-no-precompiled.patch: Remove.

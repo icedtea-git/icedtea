@@ -741,8 +741,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/debian/*.patch \
 	$(top_srcdir)/patches/extensions/*.patch \
 	$(top_srcdir)/patches/security/*.patch \
-	$(top_srcdir)/patches/xrender/*.patch \
-	tools-copy contrib ports extra overlays \
+	tools-copy contrib extra overlays \
 	javaws.png javaws.desktop \
 	jconsole.desktop policytool.desktop \
 	$(JTREG_SRCS) \
@@ -2251,7 +2250,9 @@ endif
 
 clean-add-cacao:
 	rm -rf $(BUILD_JRE_ARCH_DIR)/cacao
-	sed -i 's#-cacao KNOWN#-cacao ERROR#' jvm.cfg
+	if [ -e $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ] ; then \
+	  sed -i 's#-cacao KNOWN#-cacao ERROR#' $(BUILD_JRE_ARCH_DIR)/jvm.cfg ; \
+	fi
 	rm -f stamps/add-cacao.stamp
 
 stamps/add-cacao-debug.stamp: stamps/icedtea-debug.stamp stamps/cacao.stamp
@@ -2271,7 +2272,9 @@ endif
 
 clean-add-cacao-debug:
 	rm -rf $(BUILD_DEBUG_JRE_ARCH_DIR)/cacao
-	sed -i 's#-cacao KNOWN#-cacao ERROR#' jvm.cfg
+	if [ -e $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ] ; then \
+	  sed -i 's#-cacao KNOWN#-cacao ERROR#' $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ; \
+	fi
 	rm -f stamps/add-cacao-debug.stamp
 
 # configure script arguments, quoted in single quotes
@@ -2336,8 +2339,10 @@ clean-add-zero:
 	rm -rf $(BUILD_JRE_ARCH_DIR)/zero
 	rm -rf $(BUILD_JRE_ARCH_DIR)/shark
 	rm -rf zerovm
-	sed -i 's#-zero KNOWN#-zero ERROR#' jvm.cfg
-	sed -i 's#-shark KNOWN#-shark ERROR#' jvm.cfg
+	if [ -e $(BUILD_JRE_ARCH_DIR)/jvm.cfg ] ; then \
+	  sed -i 's#-zero KNOWN#-zero ERROR#' $(BUILD_JRE_ARCH_DIR)/jvm.cfg ; \
+	  sed -i 's#-shark KNOWN#-shark ERROR#' $(BUILD_JRE_ARCH_DIR)/jvm.cfg ; \
+	fi
 	rm -f stamps/add-zero.stamp
 
 stamps/add-zero-debug.stamp: stamps/icedtea-debug.stamp
@@ -2373,8 +2378,10 @@ clean-add-zero-debug:
 	rm -rf $(BUILD_DEBUG_JRE_ARCH_DIR)/zero
 	rm -rf $(BUILD_DEBUG_JRE_ARCH_DIR)/shark
 	rm -rf zerovm
-	sed -i 's#-zero KNOWN#-zero ERROR#' jvm.cfg
-	sed -i 's#-shark KNOWN#-shark ERROR#' jvm.cfg
+	if [ -e $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ] ; then \
+	  sed -i 's#-zero KNOWN#-zero ERROR#' $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ; \
+	  sed -i 's#-shark KNOWN#-shark ERROR#' $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ; \
+	fi
 	rm -f stamps/add-zero-debug.stamp
 
 # end additional VMs
@@ -2494,6 +2501,7 @@ jtregcheck: $(TESTS_TO_RUN)
 # Support classes for non-OpenJDK bootstraps
 
 rt-source-files.txt: $(OPENJDK_BOOT_TREE)
+	rm -f $@
 	for dir in $(ICEDTEA_BOOTSTRAP_DIRS) ; \
 	do \
 	$(FIND) $(abs_top_builddir)/$$dir -name '*.java' >> $@; \
