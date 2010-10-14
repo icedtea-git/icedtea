@@ -1,3 +1,8 @@
+2011-11-21  Matthias Klose  <doko@ubuntu.com>
+
+	* configure.ac: New option --with-llvm-config.
+	* INSTALL: Document it.
+
 2011-01-21  Deepak Bhole <dbhole@redhat.com>
 
 	* Makefile.am

@@ -152,6 +152,7 @@ to configure:
 * --with-tzdata-dir: Specify the location of Java timezone data, defaulting to /usr/share/javazi.
 * --with-netbeans: Specify the location of NetBeans for VisualVM, defaulting to the netbeans on the path.
 * --with-abs-install-dir: The final install location of the j2sdk-image, for use in the SystemTap tapset.
+* --with-llvm-config: Specify the location of the llvm-config binary.
 * --with-version-suffix: Appends the given text to the JDK version output.
 * --with-project: Build an OpenJDK project from the following: icedtea, jdk7, closures, cvmi, cacaiocavallo,
   bsd, nio2.  The default is icedtea.  Use of others is at the user's risk and builds may fail.  This setting

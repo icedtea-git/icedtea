@@ -391,8 +391,23 @@ fi
 AC_SUBST(LIBFFI_CFLAGS)
 AC_SUBST(LIBFFI_LIBS)
 
+AC_ARG_WITH([llvm-config],
+            [AS_HELP_STRING([--with-llvm-config],
+                            [llvm-config binary (default is llvm-config)])],
+            [
+              if test "x${withval}" != x; then
+	        if which ${withval} >/dev/null 2>&1 && ${withval} --version >/dev/null 2>&1; then
+		  LLVM_CONFIG=${withval}
+		else
+		  AC_MSG_ERROR([invalid argument for --with-llvm-config ($withval)])
+		fi
+              fi
+            ])
+
 if test "x${SHARK_BUILD_TRUE}" = x || test "x${ADD_SHARK_BUILD_TRUE}" = x; then
-  FIND_TOOL([LLVM_CONFIG], [llvm-config])
+  if test "x${LLVM_CONFIG}" = x; then
+    FIND_TOOL([LLVM_CONFIG], [llvm-config])
+  fi
   llvm_components="jit engine nativecodegen"
   LLVM_VERSION="`$LLVM_CONFIG --version`"
   dnl LLVM_CFLAGS
