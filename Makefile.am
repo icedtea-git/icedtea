@@ -1,22 +1,22 @@
 # Dependencies
 
-OPENJDK_VERSION = b106
+OPENJDK_VERSION = b117
 
-CORBA_CHANGESET = 00a2834117ff
-HOTSPOT_CHANGESET = 7f4113719dc5
-JAXP_CHANGESET  = 679653c22ae1
-JAXWS_CHANGESET = 191a3ec51d79
-JDK_CHANGESET = a094068f4c7b
-LANGTOOLS_CHANGESET = 68035813467d
-OPENJDK_CHANGESET = b79fce47b7c6
+CORBA_CHANGESET = 06146786b141
+HOTSPOT_CHANGESET = 81685aa89446
+JAXP_CHANGESET  = 43658f98c582
+JAXWS_CHANGESET = f3444af18aff
+JDK_CHANGESET = c981a387cd86
+LANGTOOLS_CHANGESET = fdf1b74d3437
+OPENJDK_CHANGESET = c94d1673451e
 
-CORBA_SHA256SUM = 5648b189c94df46bbec9bc7c8640957befffbde68ff7ef9f8f8de9bd7fbe8e7d
-HOTSPOT_SHA256SUM = 8ff4445304680ca7b09edd2b5713e5c04b0f68308c593d84429691ff4f7e8cfb
-JAXP_SHA256SUM = c7d58a5dd2859ccb8b2d0897a26ce9b37895f530a94a5912179afc25cc1d14ea
-JAXWS_SHA256SUM = 6fd65fd23c085c9c89f904da1b6448460af32d97d76bb0ba49630ee61d70a4d6
-JDK_SHA256SUM = 8b20e0686667a03cf028d57695b4bc2196c51db2d9c0873db7694624c384c446
-LANGTOOLS_SHA256SUM = 81b48f5f5782e62b0555735be24e294d3274c48fa1e027a63eb005465a505385
-OPENJDK_SHA256SUM = edb332586e2442bdbd4eed19c059535ade56dba5b436257031a0e5e827b89f12
+CORBA_SHA256SUM = 8d5a566e2d51d791d75f1ff25d5ae499317ec9391ed6bbc86eef483d15551d55
+HOTSPOT_SHA256SUM = 7ca6831eb7505c21b8607c7cf8d12cb182fca21c3a40c4696db737d56d80e54b
+JAXP_SHA256SUM = e0aa77b166b30d4d4052110956da831c59c43e22f8d6feeac62a06775bb083b6
+JAXWS_SHA256SUM = ff4124f3765ac5ebac5ecfd0391cb2a54857d80ac7f967f60630ce0879cfd1f4
+JDK_SHA256SUM = d211d0f1ec2baae5560e076eb60e313421c087e85ead4592256c2885a99d8b85
+LANGTOOLS_SHA256SUM = d200c9bcf1c1805e0800a8cd8017e99ff6d12db14a1fcca8e9b67c59dc5ed448
+OPENJDK_SHA256SUM = d7a3a531f0e064898e511f08f1127447b9171adce21ae4cecb3bca84b3f7b531
 
 CACAO_VERSION = e321b101a9ee
 CACAO_SHA256SUM = 46bc5b6212c199dc4a3dbebe6386fe15a8248625a5dffa17115aab394a298444
@@ -24,15 +24,15 @@ CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
-JAXWS_DROP_URL = https://jax-ws.dev.java.net/files/documents/4202/150896
-JAXWS_DROP_ZIP = jdk7-jaxws-b100.zip
-JAXWS_DROP_SHA256SUM = 06e5f564430954211322fca353b0b8d916ffa8ae051412b7d9b5a5398090d887
-JAF_DROP_URL = http://kenai.com/projects/jdk7-drops/downloads/download
-JAF_DROP_ZIP = jdk7-jaf-2009_08_28.zip
-JAF_DROP_SHA256SUM = 8c81940b3017c0058367d7e7453123442f2cdd77c2bfe74acd9035f97e4db8e8
-JAXP_DROP_URL = https://jaxp.dev.java.net/files/documents/913/150785
-JAXP_DROP_ZIP = jdk7-jaxp-m7.zip
-JAXP_DROP_SHA256SUM = d097627d4059d488c5a09d4e33cec275a193d4d8bc0fea8ef4f1337170904156
+JAXWS_DROP_URL = http://icedtea.classpath.org/download/drops
+JAXWS_DROP_ZIP = jdk7-jaxws2_2-2010_08_19.zip
+JAXWS_DROP_SHA256SUM = b8877aafbb15a348babcaee4ee372fb3e2ea0282f8fe93d306272fd24d7847de
+JAF_DROP_URL = http://icedtea.classpath.org/download/drops
+JAF_DROP_ZIP = jdk7-jaf-2010_08_19.zip
+JAF_DROP_SHA256SUM = e6aefedfdbb4673e8019583d1344fb162b94e1b10382c362364dbbfd5889c09e
+JAXP_DROP_URL = http://icedtea.classpath.org/download/drops
+JAXP_DROP_ZIP = jaxp-1_4_4.zip
+JAXP_DROP_SHA256SUM = 10b203bec5b7d3dd8f515a9e098f80abc316faf977bcc220b56efe3dc6e9e5e9
 
 ICEDTEA_HG_URL = http://hg.openjdk.java.net/icedtea/jdk7
 OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk7/jdk7
@@ -319,7 +319,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-signed-types.patch \
 	patches/icedtea-lc_ctype.patch \
 	patches/icedtea-tests-jdk.patch \
-	patches/icedtea-stroker-finish.patch \
 	patches/icedtea-linker-libs-order.patch \
 	patches/icedtea-testenv.patch \
 	patches/icedtea-samejvm-safe.patch \
@@ -397,7 +396,6 @@ ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
 ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/corba-defs.patch \
 	patches/boot/corba-idlj.patch \
-	patches/boot/corba-libgcj.patch \
 	patches/boot/corba-no-gen.patch \
 	patches/boot/corba-orb.patch \
 	patches/boot/demos.patch \
@@ -419,7 +417,9 @@ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/genstubs-nofork.patch \
 	patches/boot/getannotation-cast.patch \
 	patches/boot/break-processbuilder-dependency.patch \
-	patches/boot/revert-6973616.patch
+	patches/boot/revert-6973616.patch \
+	patches/boot/revert-6941137.patch \
+	patches/boot/ecj-stringswitch.patch
 
 if CP39408_JAVAH
 ICEDTEA_BOOT_PATCHES += patches/boot/icedtea-pr39408.patch

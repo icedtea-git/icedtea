@@ -1,27 +1,27 @@
 diff -Nru openjdk.orig/jdk/make/docs/NON_CORE_PKGS.gmk openjdk/jdk/make/docs/NON_CORE_PKGS.gmk
---- openjdk.orig/jdk/make/docs/NON_CORE_PKGS.gmk	2009-08-04 14:58:33.000000000 +0100
-+++ openjdk/jdk/make/docs/NON_CORE_PKGS.gmk	2009-08-04 14:59:43.000000000 +0100
+--- openjdk.orig/jdk/make/docs/NON_CORE_PKGS.gmk	2010-11-12 01:20:48.000000000 +0000
++++ openjdk/jdk/make/docs/NON_CORE_PKGS.gmk	2010-11-19 15:52:19.339315874 +0000
 @@ -93,6 +93,8 @@
- TRACING_PKGS     = com.sun.tracing         \
-                    com.sun.tracing.dtrace
+ 
+ ORACLENET_PKGS   = com.oracle.net
  
 +JNLP_PKGS        = javax.jnlp
 +
  # non-core packages in rt.jar
  NON_CORE_PKGS    = $(DOMAPI_PKGS) \
                     $(MGMT_PKGS) \
-@@ -103,6 +105,7 @@
+@@ -102,6 +104,7 @@
                     $(OLD_JSSE_PKGS) \
                     $(HTTPSERVER_PKGS) \
                     $(SMARTCARDIO_PKGS) \
 +                   $(JNLP_PKGS) \
                     $(TRACING_PKGS) \
-                    $(SCTPAPI_PKGS)
- 
+                    $(SCTPAPI_PKGS) \
+                    $(ORACLENET_PKGS)
 diff -Nru openjdk.orig/jdk/make/launchers/Makefile openjdk/jdk/make/launchers/Makefile
---- openjdk.orig/jdk/make/launchers/Makefile	2009-07-25 04:30:42.000000000 +0100
-+++ openjdk/jdk/make/launchers/Makefile	2009-08-04 14:59:15.000000000 +0100
-@@ -67,6 +67,7 @@
+--- openjdk.orig/jdk/make/launchers/Makefile	2010-07-29 21:55:27.000000000 +0100
++++ openjdk/jdk/make/launchers/Makefile	2010-11-19 15:52:19.339315874 +0000
+@@ -57,6 +57,7 @@
  $(call make-launcher, javadoc, com.sun.tools.javadoc.Main, , )
  $(call make-launcher, javah, com.sun.tools.javah.Main, , )
  $(call make-launcher, javap, com.sun.tools.javap.Main, , )
@@ -30,8 +30,8 @@ diff -Nru openjdk.orig/jdk/make/launchers/Makefile openjdk/jdk/make/launchers/Ma
    -J-Djconsole.showOutputViewer, )
  $(call make-launcher, jdb, com.sun.tools.example.debug.tty.TTY, , )
 diff -Nru openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java openjdk/jdk/src/share/classes/sun/applet/AppletPanel.java
---- openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java	2009-08-04 14:57:54.000000000 +0100
-+++ openjdk/jdk/src/share/classes/sun/applet/AppletPanel.java	2009-08-04 14:59:15.000000000 +0100
+--- openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java	2010-07-29 21:55:50.000000000 +0100
++++ openjdk/jdk/src/share/classes/sun/applet/AppletPanel.java	2010-11-19 15:52:19.339315874 +0000
 @@ -67,7 +67,7 @@
      /**
       * The applet (if loaded).
@@ -71,8 +71,8 @@ diff -Nru openjdk.orig/jdk/src/share/classes/sun/applet/AppletPanel.java openjdk
              showAppletStatus("notdisposed");
              return;
 diff -Nru openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java openjdk/jdk/src/share/classes/sun/applet/AppletViewerPanel.java
---- openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2009-08-04 14:57:54.000000000 +0100
-+++ openjdk/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2009-08-04 14:59:15.000000000 +0100
+--- openjdk.orig/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2010-07-29 21:55:50.000000000 +0100
++++ openjdk/jdk/src/share/classes/sun/applet/AppletViewerPanel.java	2010-11-19 15:52:19.359315121 +0000
 @@ -42,25 +42,25 @@
   *
   * @author      Arthur van Hoff

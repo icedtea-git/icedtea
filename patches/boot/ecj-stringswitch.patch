@@ -1,0 +1,38 @@
+diff -r c981a387cd86 src/share/classes/com/sun/security/ntlm/NTLM.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	Mon Nov 22 21:55:09 2010 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	Wed Nov 24 00:34:39 2010 +0000
+@@ -64,17 +64,23 @@
+ 
+     protected NTLM(String version) throws NTLMException {
+         if (version == null) version = "LMv2/NTLMv2";
+-        switch (version) {
+-            case "LM": v = NTLM; writeLM = true; writeNTLM = false; break;
+-            case "NTLM": v = NTLM; writeLM = false; writeNTLM = true; break;
+-            case "LM/NTLM": v = NTLM; writeLM = writeNTLM = true; break;
+-            case "NTLM2": v = NTLM2; writeLM = writeNTLM = true; break;
+-            case "LMv2": v = NTLMv2; writeLM = true; writeNTLM = false; break;
+-            case "NTLMv2": v = NTLMv2; writeLM = false; writeNTLM = true; break;
+-            case "LMv2/NTLMv2": v = NTLMv2; writeLM = writeNTLM = true; break;
+-            default: throw new NTLMException(NTLMException.BAD_VERSION,
+-                    "Unknown version " + version);
+-        }
++        if (version.equals("LM"))
++          { v = NTLM; writeLM = true; writeNTLM = false; }
++        else if (version.equals("NTLM"))
++          { v = NTLM; writeLM = false; writeNTLM = true; }
++        else if (version.equals("LM/NTLM"))
++          { v = NTLM; writeLM = writeNTLM = true; }
++        else if (version.equals("NTLM2"))
++          { v = NTLM2; writeLM = writeNTLM = true; }
++        else if (version.equals("LMv2"))
++          { v = NTLMv2; writeLM = true; writeNTLM = false; }
++        else if (version.equals("NTLMv2"))
++          { v = NTLMv2; writeLM = false; writeNTLM = true; }
++        else if (version.equals("LMv2/NTLMv2"))
++          { v = NTLMv2; writeLM = writeNTLM = true; }
++        else
++          throw new NTLMException(NTLMException.BAD_VERSION,
++                                  "Unknown version " + version);
+         try {
+             fac = SecretKeyFactory.getInstance ("DES");
+             cipher = Cipher.getInstance ("DES/ECB/NoPadding");

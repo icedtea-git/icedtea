@@ -1,3 +1,55 @@
+2010-11-24  Andrew John Hughes  <ahughes@redhat.com>
+
+	Bump to b117.  Move to using drops from
+	the IcedTea server.
+	* patches/boot/corba-libgcj.patch,
+	* patches/icedtea-stroker-finish.patch,
+	* Makefile.am:
+	(OPENJDK_VERSION): Set to b117.
+	(CORBA_CHANGESET): Updated.
+	(HOTSPOT_CHANGESET): Likewise.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(JAXWS_DROP_URL): Set to IcedTea server.
+	(JAXWS_DROP_ZIP): Updated.
+	(JAXWS_DROP_SHA256SUM): Likewise.
+	(JAF_DROP_URL): Set to IcedTea server.
+	(JAF_DROP_ZIP): Updated.
+	(JAF_DROP_SHA256SUM): Likewise.
+	(JAXP_DROP_URL): Set to IcedTea server.
+	(JAXP_DROP_ZIP): Updated.
+	(JAXP_DROP_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Drop stroker-finish (upstream).
+	(ICEDTEA_BOOT_PATCHES): Drop corba-libgcj (redundant
+	due to native elements of corba build being removed).
+	Add new patches to work around new bootstrap issues.
+	* patches/boot/corba-defs.patch: Rerolled.
+	* patches/boot/ecj-diamond.patch: Handle use in java.util.jar.
+	* patches/boot/ecj-stringswitch.patch:
+	New patch to replace switch statement using a String in NTLM driver.
+	* patches/boot/genstubs-nofork.patch: Rerolled.
+	* patches/boot/icedteart.patch: Drop dead ICEDTEA_JCE.  Put CLASSDESTDIR
+	first so that new classes are found first.
+	* patches/boot/revert-6941137.patch: Revert change to use java.nio.file.FileSystems
+	in ZoneInfoFile.  Avoids trying to load file system providers and failing.
+	* patches/boot/xbootclasspath.patch: Rerolled.
+	* patches/cacao/arch.patch: Remove CORBA chunk.
+	* patches/extensions/netx.patch: Rerolled.
+	* patches/icedtea-gcc-suffix.patch: Remove CORBA chunk.
+	* patches/icedtea-lc_ctype.patch: Recreated.
+	* patches/icedtea-libraries.patch: Rerolled.
+	* patches/sh4-support.patch: Remove CORBA chunk.
+
 2010-09-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am,

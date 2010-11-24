@@ -1,0 +1,12 @@
+diff -r c981a387cd86 src/share/classes/sun/util/calendar/ZoneInfoFile.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/util/calendar/ZoneInfoFile.java	Mon Nov 22 21:55:09 2010 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/util/calendar/ZoneInfoFile.java	Tue Nov 23 23:05:24 2010 +0000
+@@ -486,7 +486,7 @@
+                     String otherDir = getZoneInfoDir(homeDir);
+                     if (otherDir != null)
+                         zi = otherDir;
+-                    zi = FileSystems.getDefault().getPath(zi).toRealPath(true).toString();
++                    zi = new File(zi).getCanonicalPath();
+                 } catch(Exception e) {
+                 }
+                 return zi;

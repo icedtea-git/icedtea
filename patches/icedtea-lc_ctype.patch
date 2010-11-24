@@ -1,23 +1,31 @@
---- oldopenjdk6/jdk/src/solaris/native/java/lang/java_props_md.c	2008-08-28 04:15:51.000000000 -0400
-+++ openjdk/jdk/src/solaris/native/java/lang/java_props_md.c	2008-09-15 10:37:26.000000000 -0400
-@@ -211,7 +211,9 @@
-              * <language name>_<country name>.<encoding name>@<variant name>
-              * <country name>, <encoding name>, and <variant name> are optional.
-              */
--            char temp[64];
-+	    char * temp;
-+	    temp = (char*) malloc(strlen(lc)+1);
-+
-             char *language = NULL, *country = NULL, *variant = NULL,
-                  *encoding = NULL;
-             char *std_language = NULL, *std_country = NULL, *std_variant = NULL,
-@@ -323,6 +325,9 @@
-             /* return same result nl_langinfo would return for en_UK,
-              * in order to use optimizations. */
-             std_encoding = (*p != '\0') ? p : "ISO8859-1";
+diff -Nru openjdk.orig/jdk/src/solaris/native/java/lang/java_props_md.c openjdk/jdk/src/solaris/native/java/lang/java_props_md.c
+--- openjdk.orig/jdk/src/solaris/native/java/lang/java_props_md.c	2010-11-12 01:20:49.000000000 +0000
++++ openjdk/jdk/src/solaris/native/java/lang/java_props_md.c	2010-11-12 18:31:00.049493600 +0000
+@@ -118,7 +118,7 @@
+ #endif
+ 
+ static int ParseLocale(int cat, char ** std_language, char ** std_country, char ** std_variant, char ** std_encoding) {
+-    char temp[64];
++    char *temp;
+     char *language = NULL, *country = NULL, *variant = NULL,
+          *encoding = NULL;
+     char *p, encoding_variant[64];
+@@ -162,6 +162,7 @@
+      * <country name>, <encoding name>, and <variant name> are optional.
+      */
+ 
++    temp = (char*) malloc(strlen(lc)+1);
+     strcpy(temp, lc);
+ 
+     /* Parse the language, country, encoding, and variant from the
+@@ -282,6 +283,10 @@
+ #endif
+     }
+ 
 +	
-+	    /* Free temp */
-+	    free(temp);
++    /* Free temp */
++    free(temp);
++
+     return 1;
+ }
  
- 
- #ifdef __linux__

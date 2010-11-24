@@ -20,9 +20,9 @@ diff -Nru openjdk-boot.orig/jdk/make/common/Rules.gmk openjdk-boot/jdk/make/comm
  	  $(ECHO) "# Running javac:"; \
 -	  $(ECHO) $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$<.filtered; \
 -	  $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$<.filtered; \
-+	  $(ECHO) $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -bootclasspath "$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)" \
++	  $(ECHO) $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -bootclasspath "$(CLASSDESTDIR):$(ICEDTEA_RT)" \
 +          -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
-+          $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -bootclasspath "$(ICEDTEA_RT):$(ICEDTEA_JCE):$(CLASSDESTDIR)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
++          $(JAVAC_CMD) -sourcepath "$(SOURCEPATH)" -bootclasspath "$(CLASSDESTDIR):$(ICEDTEA_RT)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
  	fi
  	@$(java-vm-cleanup)
  

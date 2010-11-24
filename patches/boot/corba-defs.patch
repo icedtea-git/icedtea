@@ -1,6 +1,6 @@
-diff -Nru ../openjdk.orig/openjdk-boot/corba/make/common/Defs.gmk openjdk-boot/corba/make/common/Defs.gmk
---- ../openjdk.orig/openjdk-boot/corba/make/common/Defs.gmk	2009-10-03 00:02:43.000000000 +0100
-+++ openjdk-boot/corba/make/common/Defs.gmk	2009-10-30 16:59:16.000000000 +0000
+diff -Nru openjdk.orig/corba/make/common/Defs.gmk openjdk/corba/make/common/Defs.gmk
+--- openjdk-boot.orig/corba/make/common/Defs.gmk	2010-11-12 01:18:17.000000000 +0000
++++ openjdk-boot/corba/make/common/Defs.gmk	2010-11-19 22:40:28.154937216 +0000
 @@ -53,6 +53,13 @@
  
  _OUTPUTDIR=$(TOPDIR)/build/$(PLATFORM)-$(ARCH)
@@ -15,16 +15,16 @@ diff -Nru ../openjdk.orig/openjdk-boot/corba/make/common/Defs.gmk openjdk-boot/c
  #
  # Get platform definitions
  #
-@@ -129,8 +136,6 @@
+@@ -85,8 +92,6 @@
  # for build tool jar files
  BUILDTOOLJARDIR     = $(OUTPUTDIR)/btjars
  ABS_BUILDTOOLJARDIR = $(ABS_OUTPUTDIR)/btjars
 -# for generated java source files
 -GENSRCDIR           = $(OUTPUTDIR)/gensrc
- # for generated C source files (not javah)
- GENNATIVESRCDIR     = $(OUTPUTDIR)/gennativesrc
  # for imported source files
-@@ -231,7 +236,7 @@
+ IMPORTSRCDIR        = $(OUTPUTDIR)/impsrc
+ # for imported documents
+@@ -167,7 +172,7 @@
  # We define an intermediate variable for Java files because
  # we use its value later to help define $SOURCEPATH
  

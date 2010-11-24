@@ -1,28 +1,3 @@
-diff -Nru openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk openjdk/corba/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/corba/make/common/shared/Compiler-gcc.gmk	2009-07-15 17:35:01.000000000 +0100
-+++ openjdk/corba/make/common/shared/Compiler-gcc.gmk	2009-07-23 16:16:30.000000000 +0100
-@@ -58,17 +58,17 @@
- ifeq ($(PLATFORM), linux)
- 
-   # Settings specific to Linux
--  CC             = $(COMPILER_PATH)gcc
--  CPP            = $(COMPILER_PATH)gcc -E
-+  CC             = $(COMPILER_PATH)gcc$(GCC_SUFFIX)
-+  CPP            = $(COMPILER_PATH)gcc$(GCC_SUFFIX) -E
-   # statically link libstdc++ before C++ ABI is stablized on Linux
-   STATIC_CXX     = true
-   ifeq ($(STATIC_CXX),true)
-     # g++ always dynamically links libstdc++, even we use "-Wl,-Bstatic -lstdc++"
-     # We need to use gcc to statically link the C++ runtime. gcc and g++ use
-     # the same subprocess to compile C++ files, so it is OK to build using gcc.
--    CXX            = $(COMPILER_PATH)gcc
-+    CXX            = $(COMPILER_PATH)gcc$(GCC_SUFFIX)
-   else
--    CXX            = $(COMPILER_PATH)g++
-+    CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
-   endif
-   ifeq ($(ZERO_BUILD), true)
-     # zero
 diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/common/shared/Compiler-gcc.gmk
 --- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2009-03-30 23:08:42.000000000 +0100
 +++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2009-07-23 16:16:30.000000000 +0100
