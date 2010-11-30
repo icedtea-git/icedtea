@@ -1,3 +1,8 @@
+2010-11-30  Matthias Klose  <doko@ubuntu.com>
+
+	* patches/icedtea-hotspot-6b11-7b24.patch: Remove.
+	* patches/icedtea-hotspot-6b14-7b24.patch. Remove.
+
 2010-11-24  Andrew John Hughes  <ahughes@redhat.com>
 
 	Bump to b117.  Move to using drops from
