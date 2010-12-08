@@ -1,3 +1,10 @@
+2010-12-08  Andrew John Hughes  <ahughes@redhat.com>
+
+	* javac.in:
+	Pass -Xprefer:source (if javac is used) to
+	pick up local OpenJDK7 versions of classes
+	prior to those in OpenJDK6.
+
 2010-11-30  Matthias Klose  <doko@ubuntu.com>
 
 	* patches/icedtea-hotspot-6b11-7b24.patch: Remove.
