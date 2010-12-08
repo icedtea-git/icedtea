@@ -20,7 +20,7 @@ my @bcoption;
 push @bcoption, '-bootclasspath', glob '@abs_top_builddir@/bootstrap/jdk1.6.0/jre/lib/rt.jar'
     unless grep {$_ eq '-bootclasspath'} @ARGV;
 my @ecj_parms = ($ECJ_WARNINGS, @bcoption);
-my @javac_parms = ($JAVAC_WARNINGS, '-Xprefer:source', '-J-Xmx1024m')
+my @javac_parms = ($JAVAC_WARNINGS, '-Xprefer:source', '-J-Xmx1024m');
 
 # Work around ecj's inability to handle duplicate command-line
 # options and unknown javac options.

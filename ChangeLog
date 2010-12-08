@@ -1,5 +1,9 @@
 2010-12-08  Andrew John Hughes  <ahughes@redhat.com>
 
+	* javac.in: Add missing semicolon.
+
+2010-12-08  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	(extra-class-files): Depend on netx-dist
 	instead of netx, and include the NetX jar
