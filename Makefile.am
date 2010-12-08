@@ -2079,11 +2079,11 @@ clean-netx:
 extra-source-files.txt:
 	find $(abs_top_srcdir)/extra -name '*.java' | sort > $@
 
-stamps/extra-class-files.stamp: extra-source-files.txt stamps/netx.stamp
+stamps/extra-class-files.stamp: extra-source-files.txt stamps/netx-dist.stamp
 	mkdir -p extra-lib
 	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d extra-lib \
 	  -sourcepath $(abs_top_srcdir)/extra \
-	  -bootclasspath $(RUNTIME) @extra-source-files.txt
+	  -bootclasspath $(NETX_JAR):$(RUNTIME) @extra-source-files.txt
 	cp -r $(NETX_EXTRA_DIR) extra-lib/net/sourceforge/jnlp/about	
 	find extra-lib/net/sourceforge/jnlp/about -type f -exec chmod 640 '{}' ';' \
 	  -o -type d -exec chmod 750 '{}' ';'

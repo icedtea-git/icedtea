@@ -1,5 +1,14 @@
 2010-12-08  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(extra-class-files): Depend on netx-dist
+	instead of netx, and include the NetX jar
+	on the bootclasspath.
+	* javac.in: Pass the memory options to javac
+	as done when --disable-bootstrap is enabled.
+
+2010-12-08  Andrew John Hughes  <ahughes@redhat.com>
+
 	* javac.in:
 	Pass -Xprefer:source (if javac is used) to
 	pick up local OpenJDK7 versions of classes
