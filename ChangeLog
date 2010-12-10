@@ -1,5 +1,29 @@
 2010-12-09  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/hotspot/default/icedtea-gcc-4.3.patch,
+	* patches/hotspot/default/icedtea-sparc-buildfixes.patch,
+	* patches/icedtea-6484091.patch,
+	* patches/icedtea-6497740.patch,
+	* patches/icedtea-6588160.patch,
+	* patches/icedtea-6700047-loopopts.patch,
+	* patches/icedtea-6712835-ifnode.patch,
+	* patches/icedtea-6721753.patch,
+	* patches/icedtea-6726779.patch,
+	* patches/icedtea-6734167.patch,
+	* patches/icedtea-6766136.patch,
+	* patches/icedtea-LCMS-setTagData.patch,
+	* patches/icedtea-color-createcontext.patch,
+	* patches/icedtea-hotspot-params-cast-size_t.patch,
+	* patches/icedtea-hotspot-use-idx_t.patch,
+	* patches/icedtea-hotspot7-build-fixes.patch,
+	* patches/icedtea-lcms-leak.patch,
+	* patches/icedtea-lucene-crash.patch,
+	* patches/icedtea-signed-types-hot6.patch,
+	* patches/icedtea-static-libstdc++.patch:
+	Remove unused patches.
+
+2010-12-09  Andrew John Hughes  <ahughes@redhat.com>
+
 	Remove NetX and the IcedTea plugin; now developed
 	in IcedTea-Web.
 	* NEWS: Updated.
