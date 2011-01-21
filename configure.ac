@@ -395,7 +395,7 @@ AC_ARG_WITH([llvm-config],
             [AS_HELP_STRING([--with-llvm-config],
                             [llvm-config binary (default is llvm-config)])],
             [
-              if test "x${withval}" != x; then
+              if test "x${withval}" != x && test "x${withval}" != xyes && test "x${withval}" != xno; then
 	        if which ${withval} >/dev/null 2>&1 && ${withval} --version >/dev/null 2>&1; then
 		  LLVM_CONFIG=${withval}
 		else

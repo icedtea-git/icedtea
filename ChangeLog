@@ -1,3 +1,7 @@
+2011-01-21  Mark Wielaard  <mark@klomp.org>
+
+	* configure.ac (--with-llvm-config): Handle yes/no.
+
 2011-11-21  Matthias Klose  <doko@ubuntu.com>
 
 	* configure.ac: New option --with-llvm-config.
