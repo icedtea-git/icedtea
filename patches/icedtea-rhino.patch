@@ -1,16 +1,3 @@
-diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/os.cpp openjdk/hotspot/src/share/vm/runtime/os.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/os.cpp	2010-08-27 19:15:27.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/os.cpp	2010-09-01 18:12:38.850408989 +0100
-@@ -1033,6 +1033,9 @@
-         "%/lib/jce.jar:"
-         "%/lib/charsets.jar:"
- 
-+        // IcedTea addition to support Rhino via javax.script
-+	"%/lib/rhino.jar:"
-+
-         // ## TEMPORARY hack to keep the legacy launcher working when
-         // ## only the boot module is installed (cf. j.l.ClassLoader)
-         "%/lib/modules/jdk.boot.jar:"
 diff -Nru openjdk.orig/jdk/make/com/sun/Makefile openjdk/jdk/make/com/sun/Makefile
 --- openjdk.orig/jdk/make/com/sun/Makefile	2010-07-29 21:55:26.000000000 +0100
 +++ openjdk/jdk/make/com/sun/Makefile	2010-09-01 18:08:22.164610031 +0100

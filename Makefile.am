@@ -303,7 +303,8 @@ ICEDTEA_PATCHES = \
 	patches/no-precompiled.patch \
 	patches/parisc.patch \
 	patches/sh4-support.patch \
-	patches/jtreg-httpTest.patch
+	patches/jtreg-httpTest.patch \
+	patches/icedtea-update-bootclasspath.patch
 
 # Conditional patches
 

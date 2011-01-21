@@ -1,0 +1,13 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/os.cpp openjdk/hotspot/src/share/vm/runtime/os.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/os.cpp	2010-09-01 01:23:45.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/os.cpp	2010-09-19 17:34:30.859345954 +0100
+@@ -1032,6 +1032,9 @@
+         "%/lib/jsse.jar:"
+         "%/lib/jce.jar:"
+         "%/lib/charsets.jar:"
++        "%/lib/netx.jar:"
++        "%/lib/plugin.jar:"
++        "%/lib/rhino.jar:"
+ 
+         // ## TEMPORARY hack to keep the legacy launcher working when
+         // ## only the boot module is installed (cf. j.l.ClassLoader)

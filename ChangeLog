@@ -1,3 +1,12 @@
+2011-01-21  Deepak Bhole <dbhole@redhat.com>
+
+	* Makefile.am
+	(ICEDTEA_PATCHES): Apply the new icedtea-update-bootclasspath patch.
+	* patches/hotspot/default/icedtea-update-bootclasspath.patch: New patch.
+	Adds rhino.jar, netx.jar and plugin.jar to the default boot classpath.
+	* patches/icedtea-rhino.patch: Remove the classpath update hunk, as it has
+	now been moved to icedtea-update-bootclasspath.patch.
+
 2010-12-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/hotspot/default/icedtea-gcc-4.3.patch,
