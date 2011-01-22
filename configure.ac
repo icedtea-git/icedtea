@@ -55,6 +55,10 @@ IT_DISABLE_HOTSPOT_TESTS
 IT_DISABLE_LANGTOOLS_TESTS
 IT_DISABLE_JDK_TESTS
 
+# Use xvfb-run if found to run gui tests (check-jdk).
+AC_CHECK_PROG(XVFB_RUN_CMD, xvfb-run, [xvfb-run -a -e xvfb-errors], [])
+AC_SUBST(XVFB_RUN_CMD)
+
 AC_MSG_CHECKING([whether to build the browser plugin])
 AC_ARG_ENABLE([plugin],
               [AS_HELP_STRING([--disable-plugin],

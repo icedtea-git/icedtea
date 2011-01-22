@@ -2216,6 +2216,11 @@ check-jdk: stamps/jtreg.stamp
 if WITH_CACAO
 	CACAO_EXCLUDE="-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.jdk.cacao.jtx"
 endif
+	if test "x$${DISPLAY}" = "x"; then XVFB_RUN="@XVFB_RUN_CMD@"; fi; \
+	if test "x$${DISPLAY}" = "x" && test "x$${XVFB_RUN}" = "x"; then \
+		echo "WARNING: DISPLAY not set and xvfb-run not found"; \
+	fi; \
+	$${XVFB_RUN} \
 	$(BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/jdk/JTwork -r:test/jdk/JTreport \
 		$${ICEDTEA_JTREG_OTHERVM:--samevm} \

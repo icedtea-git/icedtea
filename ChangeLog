@@ -1,3 +1,9 @@
+2010-01-22  Mark Wielaard  <mark@klomp.org>
+
+	* configure.ac: Add xvfb-run AC_CHECK_PROG.
+	* Makefile.am (check-jdk): Use xvfb-run if available and DISPLAY
+	not set.
+
 2011-01-21  Mark Wielaard  <mark@klomp.org>
 
 	* configure.ac (--with-llvm-config): Handle yes/no.
