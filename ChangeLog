@@ -1,5 +1,12 @@
 2011-02-22  Andrew John Hughes  <ahughes@redhat.com>
 
+	PR497: Mercurial revision detection not very reliable
+	* acinclude.m4:
+	(IT_OBTAIN_HG_REVISIONS): Use hg id rather
+	than hg tip.
+
+2011-02-22  Andrew John Hughes  <ahughes@redhat.com>
+
 	PR103: Usage of native2ascii during bootstrap.
 	* Makefile.am:
 	(bootstrap-directory-ecj): Symlink native2ascii.
