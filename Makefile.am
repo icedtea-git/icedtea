@@ -24,14 +24,9 @@ CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
-# The jamvm-3f02679901ac46985c9c3ac3f1b99e8eaf6a7e27.tar.gz got fetched from
-# http://git.berlios.de/cgi-bin/cgit.cgi/jamvm/snapshot/jamvm-3f02679901ac46985c9c3ac3f1b99e8eaf6a7e27.tar.gz
-# Unfortunally the generated .tar.gz by the berlios cgit snapshot function
-# keeps changing sha256sum. I have hosted a snapshot on labb.zafena.se
-# while we wait for the final JamVM 1.6.0 release.
-JAMVM_VERSION = 3f02679901ac46985c9c3ac3f1b99e8eaf6a7e27
-JAMVM_SHA256SUM = 396daf08896a71cfcddfabfbaf2d8b3f07557d8143eaaa93be25e2d80f30e165
-JAMVM_BASE_URL = http://labb.zafena.se/jamvm
+JAMVM_VERSION = 10329d9f3205698af125bba131b4f47339e81d90
+JAMVM_SHA256SUM = 0e87f22bc6a35c327ab343e7ca0e89512e3797aff93ee8a5539f0babfbd40f9b
+JAMVM_BASE_URL = http://icedtea.classpath.org/download/drops/jamvm
 JAMVM_URL = $(JAMVM_BASE_URL)/jamvm-$(JAMVM_VERSION).tar.gz
 JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
 

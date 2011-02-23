@@ -1,5 +1,12 @@
 2011-02-23  Xerxes Ranby  <xerxes@zafena.se>
 
+	* Makefile.am: (JAMVM_BASE_URL): Switch to using IcedTea
+	server for JamVM drops too.
+	(JAMVM_VERSION): Updated to latest JamVM revision.
+	(JAMVM_SHA256SUM): Updated.
+
+2011-02-23  Xerxes Ranby  <xerxes@zafena.se>
+
 	JamVM: Try --with-additional-vms=jamvm topping!
 	* NEWS: Updated.
 	* Makefile.am (stamps/add-jamvm.stamp): New make target.
