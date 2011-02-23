@@ -1963,12 +1963,14 @@ AC_DEFUN([IT_CHECK_WITH_JAMVM_SRC_ZIP],
 	      [AS_HELP_STRING(--with-jamvm-src-zip,specify the location of the JamVM source zip)],
   [
     ALT_JAMVM_SRC_ZIP=${withval}
-    AM_CONDITIONAL(USE_ALT_JAMVM_SRC_ZIP, test x = x)
+    if ! test -f ${ALT_JAMVM_SRC_ZIP} ; then
+      AC_MSG_ERROR([Invalid JamVM source zip specified: ${ALT_JAMVM_SRC_ZIP}])
+    fi
   ],
   [
     ALT_JAMVM_SRC_ZIP="not specified"
-    AM_CONDITIONAL(USE_ALT_JAMVM_SRC_ZIP, test x != x)
   ])
+  AM_CONDITIONAL(USE_ALT_JAMVM_SRC_ZIP, test "x{ALT_JAMVM_SRC_ZIP}" = "xnot specified")
   AC_MSG_RESULT(${ALT_JAMVM_SRC_ZIP})
   AC_SUBST(ALT_JAMVM_SRC_ZIP)
 ])

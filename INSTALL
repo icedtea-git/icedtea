@@ -152,6 +152,7 @@ to configure:
   and building one.
 * --with-cacao-src-zip: Specify the location of a CACAO tarball to avoid downloading.
 * --with-cacao-src-dir: Specify the location of a CACAO source tree to avoid downloading.
+* --with-jamvm-src-zip: Specify the location of a JamVM tarball to avoid downloading.
 * --with-hg-revision: Specify a hg revision to use (as opposed to tip) with the --enable-hg option.
 * --with-tzdata-dir: Specify the location of Java timezone data, defaulting to /usr/share/javazi.
 * --with-netbeans: Specify the location of NetBeans for VisualVM, defaulting to the netbeans on the path.
@@ -260,7 +261,8 @@ JamVM
 IcedTea6 can use JamVM as the virtual machine, as opposed to HotSpot.
 When --enable-jamvm is specified, JamVM will be downloaded and built,
 followed by the JDK portion of OpenJDK resulting in a JamVM+OpenJDK
-image in openjdk/build/<os>-<arch>/j2sdk-image.
+image in openjdk/build/<os>-<arch>/j2sdk-image.  The
+--with-jamvm-src-zip option exists to allow the use of a pre-downloaded zip.
 
 Zero & Shark
 ============
