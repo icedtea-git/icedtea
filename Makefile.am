@@ -923,7 +923,7 @@ endif
 	if ! echo "$(OPENJDK_SHA256SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if [ $(OPENJDK_SRC_ZIP) ] ; \
+	  if [ -e $(OPENJDK_SRC_ZIP) ] ; \
 	  then \
 	    mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
 	  fi ; \
@@ -1019,7 +1019,7 @@ endif
 	if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if [ $(HOTSPOT_SRC_ZIP) ] ; \
+	  if [ -e $(HOTSPOT_SRC_ZIP) ] ; \
 	  then \
 	    mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
 	  fi ; \
@@ -1073,7 +1073,7 @@ endif
 	if ! echo "$(CACAO_SHA256SUM)  $(CACAO_SRC_ZIP)" \
 	 | $(SHA256SUM) --check ; \
 	then \
-	 if [ $(CACAO_SRC_ZIP) ] ; \
+	 if [ -e $(CACAO_SRC_ZIP) ] ; \
 	 then \
 	   mv $(CACAO_SRC_ZIP) $(CACAO_SRC_ZIP).old ; \
 	 fi ; \
@@ -1100,7 +1100,7 @@ endif
 	if ! echo "$(JAMVM_SHA256SUM)  $(JAMVM_SRC_ZIP)" \
 	 | $(SHA256SUM) --check ; \
 	then \
-	 if [ $(JAMVM_SRC_ZIP) ] ; \
+	 if [ -e $(JAMVM_SRC_ZIP) ] ; \
 	 then \
 	   mv $(JAMVM_SRC_ZIP) $(JAMVM_SRC_ZIP).old ; \
 	 fi ; \

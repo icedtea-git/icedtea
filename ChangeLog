@@ -1,3 +1,12 @@
+2011-02-24  Xerxes Ranby  <xerxes@zafena.se>
+
+	* Makefile.am (stamps/download-cacao.stamp):
+	Fix warning, check if the CACAO_SRC_ZIP file exist
+	before trying to rename it.
+	(stamps/download-jamvm.stamp): Likewise for JAMVM_SRC_ZIP.
+	(stamps/download-openjdk.stamp):
+	Likewise for OPENJDK_SRC_ZIP and HOTSPOT_SRC_ZIP.
+ 
 2011-02-23  Xerxes Ranby  <xerxes@zafena.se>
 
 	JamVM: configure --with-jamvm-src-zip
