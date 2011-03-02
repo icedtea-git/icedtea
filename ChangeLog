@@ -1,8 +1,23 @@
+2011-03-02  Xerxes Ranby  <xerxes@zafena.se>
+
+	* patches/jamvm/ignore-more-XX-options.patch:
+	Make JamVM ignore more unrecognised options that fail on jtreg.
+	-esa, -Xbatch, -Xcomp, -Xverify:all, -XX:+AggressiveOpts,
+	-XX:-BlockLayoutRotateLoops, -XX:CompileCommand=, -XX:CompileOnly=,
+	-XX:CompileThreshold, -XX:+DeoptimizeALot, -XX:+DoEscapeAnalysis,
+	-XX:HeapBaseMinAddress, -XX:+IgnoreUnrecognizedVMOptions, -XX:-Inline,
+	-XX:-InlineObjectHash, -XX:InlineSmallCode=, -XX:LoopUnrollLimit=,
+	-XX:-LoopUnswitching, -XX:MaxInlineSize=, -XX:+OptimizeFill,
+	-XX:+PrintCompilation, -XX:-ProfileInterpreter, -XX:+ScavengeALot,
+	-XX:+UnlockDiagnosticVMOptions, -XX:-UseCompressedOops,
+	-XX:+UseCompressedOops, -XX:+UseConcMarkSweepGC, -XX:UseSSE= and
+	-XX:+VerifyBeforeGC
+
 2011-02-27  Xerxes Ranby  <xerxes@zafena.se>
 
 	JamVM: Fix configure --enable-jamvm full bootstrap build.
 	* NEWS: Updated.
-	* Makefile.am: 
+	* Makefile.am:
 	(JAMVM_VERSION): Updated to latest JamVM revision.
 	(JAMVM_SHA256SUM): Updated.
 

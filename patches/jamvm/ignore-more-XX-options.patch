@@ -2,11 +2,40 @@ Index: jamvm/jamvm/src/jni.c
 ===================================================================
 --- jamvm/jamvm.orig/src/jni.c	2011-02-23 09:54:17.000000000 +0100
 +++ jamvm/jamvm/src/jni.c	2011-02-23 09:58:21.000000000 +0100
-@@ -1638,6 +1638,7 @@
+@@ -1638,6 +1638,36 @@
  #endif
          /* Compatibility options */
          } else if(strncmp(string, "-XX:PermSize=", 13) == 0 ||
++                  strncmp(string, "-esa", 4) == 0 ||
++                  strncmp(string, "-Xbatch", 7) == 0 ||
++                  strncmp(string, "-Xcomp", 6) == 0 ||
++                  strncmp(string, "-Xverify:all", 12) == 0 ||
++                  strncmp(string, "-XX:+AggressiveOpts", 19) == 0 ||
++                  strncmp(string, "-XX:-BlockLayoutRotateLoops", 27) == 0 ||
++                  strncmp(string, "-XX:CompileCommand=", 19) == 0 ||
++                  strncmp(string, "-XX:CompileOnly=", 16) == 0 ||
++                  strncmp(string, "-XX:CompileThreshold=", 21) == 0 ||
++                  strncmp(string, "-XX:+DeoptimizeALot", 19) == 0 ||
++                  strncmp(string, "-XX:+DoEscapeAnalysis", 21) == 0 ||
++                  strncmp(string, "-XX:HeapBaseMinAddress=", 23) == 0 ||
++                  strncmp(string, "-XX:+IgnoreUnrecognizedVMOptions", 32) == 0 ||
++                  strncmp(string, "-XX:-Inline", 11) == 0 ||
++                  strncmp(string, "-XX:-InlineObjectHash", 21) == 0 ||
++                  strncmp(string, "-XX:InlineSmallCode=", 20) == 0 ||
++                  strncmp(string, "-XX:LoopUnrollLimit=", 20) == 0 ||
++                  strncmp(string, "-XX:-LoopUnswitching", 20) == 0 ||
++                  strncmp(string, "-XX:MaxInlineSize=", 18) == 0 ||
++                  strncmp(string, "-XX:+OptimizeFill", 17) == 0 ||
++                  strncmp(string, "-XX:+PrintCompilation", 21) == 0 ||
++                  strncmp(string, "-XX:-ProfileInterpreter", 23) == 0 ||
++                  strncmp(string, "-XX:+ScavengeALot", 17) == 0 ||
 +                  strncmp(string, "-XX:ThreadStackSize=", 20) == 0 ||
++                  strncmp(string, "-XX:+UnlockDiagnosticVMOptions", 30) == 0 ||
++                  strncmp(string, "-XX:-UseCompressedOops", 22) == 0 ||
++                  strncmp(string, "-XX:+UseCompressedOops", 22) == 0 ||
++                  strncmp(string, "-XX:+UseConcMarkSweepGC", 23) == 0 ||
++                  strncmp(string, "-XX:UseSSE=", 11) == 0 ||
++                  strncmp(string, "-XX:+VerifyBeforeGC", 19) == 0 ||
                    strncmp(string, "-XX:MaxPermSize=", 16) == 0) {
              /* Ignore */
          } else if(!vm_args->ignoreUnrecognized) {
