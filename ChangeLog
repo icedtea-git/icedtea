@@ -1,3 +1,10 @@
+2011-03-03  Xerxes Ranby  <xerxes@zafena.se>
+
+	JamVM: Ignore all unknown options.
+	* Makefile.am: Replaced JamVM patch.
+	* patches/jamvm/ignore-more-XX-options.patch: Removed.
+	* patches/jamvm/ignore-unknown-options.patch: Added.
+
 2011-03-02  Xerxes Ranby  <xerxes@zafena.se>
 
 	* patches/jamvm/ignore-more-XX-options.patch:

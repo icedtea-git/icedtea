@@ -1,0 +1,13 @@
+Index: jamvm/jamvm/src/jni.c
+===================================================================
+--- jamvm.orig/jamvm/src/jni.c	2011-02-27 04:35:37.000000000 +0100
++++ jamvm/jamvm/src/jni.c	2011-03-03 13:48:31.897900208 +0100
+@@ -1642,7 +1642,7 @@
+             /* Ignore */
+         } else if(!vm_args->ignoreUnrecognized) {
+             optError(args, "Unrecognised option: %s\n", string);
+-            goto error;
++            /* Ignore */
+         }
+     }
+ 

@@ -312,7 +312,7 @@ endif
 
 if BUILD_JAMVM
 ICEDTEA_PATCHES += \
-	patches/jamvm/ignore-more-XX-options.patch
+	patches/jamvm/ignore-unknown-options.patch
 endif
 
 if ENABLE_PULSE_JAVA
