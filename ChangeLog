@@ -1,3 +1,13 @@
+2011-01-26  Damien Raude-Morvan <drazzib@drazzib.com>
+
+	Remove NetX and the IcedTea plugin (drop remaining bits from acinclude.m4
+	and configure.ac)
+	* acinclude.m4:
+	(IT_CHECK_PLUGIN): Removed.
+	(IT_CHECK_PLUGIN_DEPENDENCIES): Likewise.
+	(IT_CHECK_XULRUNNER_VERSION): Likewise.
+	* configure.ac: Don't call IT_CHECK_XULRUNNER_VERSION.
+
 2010-01-22  Mark Wielaard  <mark@klomp.org>
 
 	* configure.ac: Add xvfb-run AC_CHECK_PROG.

@@ -179,9 +179,6 @@ AC_CHECK_WITH_HG_REVISION
 AC_PATH_TOOL([GCJ],[gcj])
 AC_SUBST([GCJ])
 
-dnl Plugin
-IT_CHECK_XULRUNNER_VERSION
-
 dnl pkgconfig cannot be used to find these headers and libraries.
 AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]
 	,[AC_MSG_ERROR("CUPS headers were not found -
