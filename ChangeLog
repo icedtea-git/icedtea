@@ -1,3 +1,10 @@
+2011-03-13  Xerxes Ranby  <xerxes@zafena.se>
+	    Robert Loughter  <rob@jamvm.org.uk>
+
+	JamVM: Compile interp using -marm to work on ARM Thumb2 systems.
+	* Makefile.am: Add new JamVM patch.
+	* patches/jamvm/arm-interp_cflags-marm.patch: New patch.
+
 2011-03-11  Xerxes Ranby  <xerxes@zafena.se>
 
 	JamVM: mips

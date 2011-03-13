@@ -315,7 +315,8 @@ endif
 if BUILD_JAMVM
 ICEDTEA_PATCHES += \
 	patches/jamvm/ignore-unknown-options.patch \
-	patches/jamvm/mips64el.patch
+	patches/jamvm/mips64el.patch \
+	patches/jamvm/arm-interp_cflags-marm.patch
 endif
 
 if ENABLE_PULSE_JAVA
