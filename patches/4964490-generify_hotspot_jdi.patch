@@ -1,0 +1,274 @@
+# HG changeset patch
+# User andrew
+# Date 1300124050 0
+# Node ID e452443363a7f9dcff60404a0ef0fa5369380ddd
+# Parent  7f338a5e5e66b24a3dd82c57c8d1847e5c6f3878
+4964490: Generify HotSpot JDI implementation
+Summary: Fix errors produced by removing -source/-target 1.4 from SA build.
+
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/HelloWorld.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/HelloWorld.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/HelloWorld.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -55,7 +55,7 @@
+     synchronized(lock) {
+       if (useMethodInvoke) {
+         try {
+-          Method method = HelloWorld.class.getMethod("e", null);
++          Method method = HelloWorld.class.getMethod("e");
+           Integer result = (Integer) method.invoke(null, new Object[0]);
+           return result.intValue();
+         }
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/ByteValueImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/ByteValueImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/ByteValueImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -52,12 +52,10 @@
+         return intValue();
+     }
+ 
+-    public int compareTo(Object obj) {
+-        byte other = ((ByteValue)obj).value();
+-        return value() - other;
++    public int compareTo(ByteValue byteVal) {
++        return value() - byteVal.value();
+     }
+ 
+-
+     public Type type() {
+         return vm.theByteType();
+     }
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/CharValueImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/CharValueImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/CharValueImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -52,9 +52,8 @@
+         return intValue();
+     }
+ 
+-    public int compareTo(Object obj) {
+-        char other = ((CharValue)obj).value();
+-        return value() - other;
++    public int compareTo(CharValue charVal) {
++        return value() - charVal.value();
+     }
+ 
+     public Type type() {
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/ConnectorImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/ConnectorImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/ConnectorImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -186,7 +186,7 @@
+         // assert isVMVersionMismatch(throwable), "not a VMVersionMismatch"
+         Class expClass = throwable.getClass();
+         Method targetVersionMethod = expClass.getMethod("getTargetVersion", new Class[0]);
+-        return (String) targetVersionMethod.invoke(throwable, null);
++        return (String) targetVersionMethod.invoke(throwable);
+     }
+ 
+     /** If the causal chain has a sun.jvm.hotspot.runtime.VMVersionMismatchException,
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/DoubleValueImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/DoubleValueImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/DoubleValueImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -45,8 +45,8 @@
+         }
+     }
+ 
+-    public int compareTo(Object obj) {
+-        double other = ((DoubleValue)obj).value();
++    public int compareTo(DoubleValue doubleVal) {
++        double other = doubleVal.value();
+         if (value() < other) {
+             return -1;
+         } else if (value() == other) {
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/FieldImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/FieldImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/FieldImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -145,8 +145,7 @@
+     }
+ 
+     // From interface Comparable
+-    public int compareTo(Object object) {
+-        Field field = (Field)object;
++    public int compareTo(Field field) {
+         ReferenceTypeImpl declaringType = (ReferenceTypeImpl)declaringType();
+         int rc = declaringType.compareTo(field.declaringType());
+         if (rc == 0) {
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/FloatValueImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/FloatValueImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/FloatValueImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -52,8 +52,8 @@
+         return intValue();
+     }
+ 
+-    public int compareTo(Object obj) {
+-        float other = ((FloatValue)obj).value();
++    public int compareTo(FloatValue floatVal) {
++        float other = floatVal.value();
+         if (value() < other) {
+             return -1;
+         } else if (value() == other) {
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/IntegerValueImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/IntegerValueImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/IntegerValueImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -52,9 +52,8 @@
+         return intValue();
+     }
+ 
+-    public int compareTo(Object obj) {
+-        int other = ((IntegerValue)obj).value();
+-        return value() - other;
++    public int compareTo(IntegerValue integerVal) {
++        return value() - integerVal.value();
+     }
+ 
+     public Type type() {
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/LocalVariableImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/LocalVariableImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/LocalVariableImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -67,8 +67,8 @@
+         return (int)method.hashCode() + slot();
+     }
+ 
+-    public int compareTo(Object object) {
+-        LocalVariableImpl other = (LocalVariableImpl)object;
++    public int compareTo(LocalVariable localVar) {
++        LocalVariableImpl other = (LocalVariableImpl) localVar;
+         int rc = method.compareTo(other.method);
+         if (rc == 0) {
+             rc = slot() - other.slot();
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/LocationImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/LocationImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/LocationImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -78,8 +78,7 @@
+         return method().hashCode() + (int)codeIndex();
+     }
+ 
+-    public int compareTo(Object object) {
+-        LocationImpl other = (LocationImpl)object;
++    public int compareTo(Location other) {
+         int rc = method().compareTo(other.method());
+         if (rc == 0) {
+             long diff = codeIndex() - other.codeIndex();
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/LongValueImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/LongValueImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/LongValueImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -52,8 +52,8 @@
+         return intValue();
+     }
+ 
+-    public int compareTo(Object obj) {
+-        long other = ((LongValue)obj).value();
++    public int compareTo(LongValue longVal) {
++        long other = longVal.value();
+         if (value() < other) {
+             return -1;
+         } else if (value() == other) {
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/MethodImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/MethodImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/MethodImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -200,8 +200,7 @@
+     }
+ 
+     // From interface Comparable
+-    public int compareTo(Object object) {
+-      Method method = (Method)object;
++    public int compareTo(Method method) {
+         ReferenceTypeImpl declaringType = (ReferenceTypeImpl)declaringType();
+          int rc = declaringType.compareTo(method.declaringType());
+          if (rc == 0) {
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/ReferenceTypeImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/ReferenceTypeImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/ReferenceTypeImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -99,7 +99,7 @@
+         return saKlass.hashCode();
+     }
+ 
+-    public int compareTo(Object object) {
++    public int compareTo(ReferenceType refType) {
+         /*
+          * Note that it is critical that compareTo() == 0
+          * implies that equals() == true. Otherwise, TreeSet
+@@ -108,7 +108,7 @@
+          * (Classes of the same name loaded by different class loaders
+          * or in different VMs must not return 0).
+          */
+-        ReferenceTypeImpl other = (ReferenceTypeImpl)object;
++        ReferenceTypeImpl other = (ReferenceTypeImpl)refType;
+         int comp = name().compareTo(other.name());
+         if (comp == 0) {
+             Oop rf1 = ref();
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/ShortValueImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/ShortValueImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/ShortValueImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -52,9 +52,8 @@
+         return intValue();
+     }
+ 
+-    public int compareTo(Object obj) {
+-        short other = ((ShortValue)obj).value();
+-        return value() - other;
++    public int compareTo(ShortValue shortVal) {
++        return value() - shortVal.value();
+     }
+ 
+     public Type type() {
+diff -r 7f338a5e5e66 -r e452443363a7 agent/src/share/classes/sun/jvm/hotspot/jdi/VirtualMachineImpl.java
+--- openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/VirtualMachineImpl.java	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/agent/src/share/classes/sun/jvm/hotspot/jdi/VirtualMachineImpl.java	Mon Mar 14 17:34:10 2011 +0000
+@@ -798,12 +798,11 @@
+     }
+ 
+     public String description() {
+-        String[] versionParts = {"" + vmmgr.majorInterfaceVersion(),
+-                                 "" + vmmgr.minorInterfaceVersion(),
+-                                 name()};
+         return java.text.MessageFormat.format(java.util.ResourceBundle.
+                                               getBundle("com.sun.tools.jdi.resources.jdi").getString("version_format"),
+-                                              versionParts);
++                                              "" + vmmgr.majorInterfaceVersion(),
++                                              "" + vmmgr.minorInterfaceVersion(),
++                                              name());
+     }
+ 
+     public String version() {
+diff -r 7f338a5e5e66 -r e452443363a7 make/linux/makefiles/sa.make
+--- openjdk/hotspot/make/linux/makefiles/sa.make	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/make/linux/makefiles/sa.make	Mon Mar 14 17:34:10 2011 +0000
+@@ -97,8 +97,8 @@
+ 	$(foreach file,$(AGENT_FILES1),$(shell echo $(file) >> $(AGENT_FILES1_LIST)))
+ 	$(foreach file,$(AGENT_FILES2),$(shell echo $(file) >> $(AGENT_FILES2_LIST)))
+ 	
+-	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -source 1.4 -target 1.4 -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) @$(AGENT_FILES1_LIST)
+-	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -source 1.4 -target 1.4 -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) @$(AGENT_FILES2_LIST)
++	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) @$(AGENT_FILES1_LIST)
++	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) @$(AGENT_FILES2_LIST)
+ 	
+ 	$(QUIETLY) $(REMOTE) $(COMPILE.RMIC)  -classpath $(SA_CLASSDIR) -d $(SA_CLASSDIR) sun.jvm.hotspot.debugger.remote.RemoteDebuggerServer
+ 	$(QUIETLY) echo "$(SA_BUILD_VERSION_PROP)" > $(SA_PROPERTIES)
+diff -r 7f338a5e5e66 -r e452443363a7 make/solaris/makefiles/sa.make
+--- openjdk/hotspot/make/solaris/makefiles/sa.make	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/make/solaris/makefiles/sa.make	Mon Mar 14 17:34:10 2011 +0000
+@@ -88,8 +88,8 @@
+ 	$(foreach file,$(AGENT_FILES1),$(shell echo $(file) >> $(AGENT_FILES1_LIST)))
+ 	$(foreach file,$(AGENT_FILES2),$(shell echo $(file) >> $(AGENT_FILES2_LIST)))
+ 	
+-	$(QUIETLY) $(COMPILE.JAVAC) -source 1.4 -target 1.4 -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) @$(AGENT_FILES1_LIST)
+-	$(QUIETLY) $(COMPILE.JAVAC) -source 1.4 -target 1.4 -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) @$(AGENT_FILES2_LIST)
++	$(QUIETLY) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) @$(AGENT_FILES1_LIST)
++	$(QUIETLY) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) @$(AGENT_FILES2_LIST)
+ 	
+ 	$(QUIETLY) $(COMPILE.RMIC)  -classpath $(SA_CLASSDIR) -d $(SA_CLASSDIR) sun.jvm.hotspot.debugger.remote.RemoteDebuggerServer
+ 	$(QUIETLY) echo "$(SA_BUILD_VERSION_PROP)" > $(SA_PROPERTIES)
+diff -r 7f338a5e5e66 -r e452443363a7 make/windows/makefiles/sa.make
+--- openjdk/hotspot/make/windows/makefiles/sa.make	Mon Jan 10 16:57:36 2011 +0000
++++ openjdk/hotspot/make/windows/makefiles/sa.make	Mon Mar 14 17:34:10 2011 +0000
+@@ -55,9 +55,9 @@
+ $(GENERATED)\sa-jdi.jar: $(AGENT_FILES1:/=\) $(AGENT_FILES2:/=\)
+ 	@if not exist $(SA_CLASSDIR) mkdir $(SA_CLASSDIR)
+ 	@echo ...Building sa-jdi.jar
+-	@echo ...$(COMPILE_JAVAC) -source 1.4 -target 1.4 -classpath $(SA_CLASSPATH) -d $(SA_CLASSDIR) ....
+-	@$(COMPILE_JAVAC) -source 1.4 -target 1.4 -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) $(AGENT_FILES1:/=\)
+-	@$(COMPILE_JAVAC) -source 1.4 -target 1.4 -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) $(AGENT_FILES2:/=\)
++	@echo ...$(COMPILE_JAVAC) -classpath $(SA_CLASSPATH) -d $(SA_CLASSDIR) ....
++	@$(COMPILE_JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) $(AGENT_FILES1:/=\)
++	@$(COMPILE_JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) $(AGENT_FILES2:/=\)
+ 	$(COMPILE_RMIC) -classpath $(SA_CLASSDIR) -d $(SA_CLASSDIR) sun.jvm.hotspot.debugger.remote.RemoteDebuggerServer
+ 	$(QUIETLY) echo $(SA_BUILD_VERSION_PROP)> $(SA_PROPERTIES)
+ 	$(QUIETLY) rm -f $(SA_CLASSDIR)/sun/jvm/hotspot/utilities/soql/sa.js

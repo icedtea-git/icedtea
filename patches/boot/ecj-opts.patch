@@ -1,18 +1,3 @@
-diff -Nru openjdk-boot.orig/corba/make/common/Rules.gmk openjdk-boot/corba/make/common/Rules.gmk
---- openjdk-boot.orig/corba/make/common/Rules.gmk	2009-10-03 00:02:43.000000000 +0100
-+++ openjdk-boot/corba/make/common/Rules.gmk	2009-12-13 19:03:31.000000000 +0000
-@@ -187,7 +187,10 @@
- 	@$(MKDIR) -p $(CLASSDESTDIR)
- 	if [ -s $(JAVA_SOURCE_LIST) ] ; then \
- 	  $(CAT) $(JAVA_SOURCE_LIST); \
--	  $(JAVAC_CMD) $(JAVAC_PREFER_SOURCE) -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
-+ 	  $(ECHO) $(JAVAC_CMD) -classpath $(ABS_OUTPUTDIR)/corba/classes \
-+ 		 -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
-+ 	  $(JAVAC_CMD) -classpath $(ABS_OUTPUTDIR)/corba/classes \
-+ 		 -sourcepath "$(SOURCEPATH)" -d $(CLASSDESTDIR) @$(JAVA_SOURCE_LIST); \
- 	fi
- 	@$(java-vm-cleanup)
- 
 diff -Nru openjdk-boot.orig/jdk/make/java/nio/Makefile openjdk-boot/jdk/make/java/nio/Makefile
 --- openjdk-boot.orig/jdk/make/java/nio/Makefile	2009-12-13 18:43:31.000000000 +0000
 +++ openjdk-boot/jdk/make/java/nio/Makefile	2009-12-13 19:03:31.000000000 +0000

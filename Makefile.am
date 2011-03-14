@@ -102,35 +102,15 @@ SOURCEPATH_DIRS = $(abs_top_srcdir)/generated:$(OPENJDK_SOURCEPATH_DIRS)
 
 # Sources used from OpenJDK.
 if LACKS_SUN_AWT_TOOLKIT
-ICEDTEA_BOOTSTRAP_DIRS = \
-	$(SHARE)/com/sun/jdi \
-	$(SHARE)/com/sun/tools/jdi \
-	$(SHARE)/com/sun/net/httpserver \
-	$(SHARE)/java/io \
-	$(SHARE)/java/security/cert \
-	$(SHARE)/java/util \
-	$(SHARE)/java/rmi \
-	$(SHARE)/javax/net/ssl \
-	$(SHARE)/javax/rmi/ssl \
-	$(SHARE)/javax/script \
-	$(SHARE)/javax/security/auth/kerberos \
-	$(SHARE)/javax/security/sasl \
-	$(SHARE)/sun/awt/ \
-	$(SHARE)/sun/rmi/rmic \
-	$(SHARE)/sun/tools/java \
-	$(LANGTOOLS)/com/sun/mirror \
-	$(LANGTOOLS)/com/sun/tools/apt
-
-ICEDTEA_BOOTSTRAP_RESOURCES = \
-	$(LANGTOOLS)/com/sun/tools/javac/resources
-
-# PR42003 - javax.swing.plaf.basic.BasicDirectoryModel
-# PR43389 - javax.management.StandardMBean
+#PR43148 - javac fails due to missing java.util.regex.Matcher.quoteReplacement
+#PR48033 - Missing javax.management.remote.JMXServiceURL
+#PR48034 - javax.management.modelmbean.ModelMBeanInfo
+#PR42003 - Missing javax.swing.plaf.basic.BasicDirectoryModel methods cause OpenJDK build failure 
 ICEDTEA_BOOTSTRAP_CLASSES = \
-	$(SHARE)/javax/swing/plaf/basic/BasicDirectoryModel.java \
-	$(SHARE)/javax/management/StandardMBean.java \
-	$(SHARE)/java/nio/file/SimpleFileVisitor.java \
-	$(SHARE)/javax/management/modelmbean/ModelMBeanInfo.java
+	$(SHARE)/java/util/regex/Matcher.java \
+	$(SHARE)/javax/management/remote/JMXServiceURL.java \
+	$(SHARE)/javax/management/modelmbean/ModelMBeanInfo.java \
+	$(SHARE)/javax/swing/plaf/basic/BasicDirectoryModel.java
 endif
 
 # Settings for javac
@@ -304,7 +284,8 @@ ICEDTEA_PATCHES = \
 	patches/parisc.patch \
 	patches/sh4-support.patch \
 	patches/jtreg-httpTest.patch \
-	patches/icedtea-update-bootclasspath.patch
+	patches/icedtea-update-bootclasspath.patch \
+	patches/4964490-generify_hotspot_jdi.patch
 
 # Conditional patches
 
@@ -380,7 +361,12 @@ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/break-processbuilder-dependency.patch \
 	patches/boot/revert-6973616.patch \
 	patches/boot/revert-6941137.patch \
-	patches/boot/ecj-stringswitch.patch
+	patches/boot/ecj-stringswitch.patch \
+	patches/boot/langtools-force-old-jdk.patch \
+	patches/boot/corba-dependencies.patch \
+	patches/boot/jaxws-langtools-dependency.patch \
+	patches/boot/jaxws-jdk-dependency.patch \
+	patches/boot/hotspot-jdk-dependency.patch
 
 if CP39408_JAVAH
 ICEDTEA_BOOT_PATCHES += patches/boot/icedtea-pr39408.patch

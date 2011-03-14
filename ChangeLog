@@ -1,3 +1,32 @@
+2011-03-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	Perform minimal compilation prior to bootstrap
+	build.
+	* Makefile.am:
+	(ICEDTEA_BOOTSTRAP_DIRS): Removed.
+	(ICEDTEA_BOOTSTRAP_RESOURCES): Removed.
+	(ICEDTEA_BOOTSTRAP_CLASSES): Reduced to
+	classes missing altogether or missing required
+	methods.
+	* patches/4964490-generify_hotspot_jdi.patch:
+	Update the servicability agent to build with
+	source/target 1.6.
+	* patches/boot/corba-dependencies.patch:
+	Access JDK sources and classes from langtools build.
+	* patches/boot/ecj-opts.patch: Dropped PREFER_SOURCE
+	CORBA change, incorporated in corba-dependencies.
+	* patches/boot/hotspot-jdk-dependency.patch:
+	Access JDK and generated sources to build servicability
+	agent.
+	* patches/boot/jaxws-jdk-dependency.patch:
+	Access JDK sources for com.sun.net.httpserver.
+	* patches/boot/jaxws-langtools-dependency.patch:
+	Access langtools classes for Javadoc.
+	* patches/boot/langtools-force-old-jdk.patch:
+	Always assume an old JDK is being used, don't
+	try and detect this based on presence of NIO2
+	classes as these may be prebuilt by rt-class-files.
+
 2011-01-26  Damien Raude-Morvan <drazzib@drazzib.com>
 
 	Remove NetX and the IcedTea plugin (drop remaining bits from acinclude.m4

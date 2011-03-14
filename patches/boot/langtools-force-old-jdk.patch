@@ -1,0 +1,16 @@
+diff -Nru openjdk-boot.orig/langtools/make/build.xml openjdk-boot/langtools/make/build.xml
+--- openjdk-boot.orig/langtools/make/build.xml	2011-03-08 11:36:45.555852490 +0000
++++ openjdk-boot/langtools/make/build.xml	2011-03-08 18:33:09.332454251 +0000
+@@ -185,12 +185,6 @@
+         <isset property="import.jdk.jar"/>
+     </condition>
+ 
+-    <condition property="boot.java.provides.latest.jdk">
+-        <available
+-            ignoresystemclasses="true"
+-            classpath="${boot.java.home}/jre/lib/rt.jar" classname="java.nio.file.Path"/>
+-    </condition>
+-
+     <condition property="bootstrap.exclude.files" value="" else="${require.latest.jdk.files}">
+         <isset property="boot.java.provides.latest.jdk"/>
+     </condition>
