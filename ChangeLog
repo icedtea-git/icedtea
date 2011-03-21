@@ -1,3 +1,48 @@
+2011-03-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/4964490-generify_hotspot_jdi.patch:
+	Removed, in IcedTea tree.
+	* patches/hotspot/default/icedtea-includedb.patch,
+	* patches/no-precompiled.patch:
+	Removed, obsolete with b123 HotSpot.
+	* patches/icedtea-ssl.patch:
+	Old unneeded patch from GNU Crypto days.
+	* Makefile.am:
+	(OPENJDK_VERSION): Bump to b123.
+	(CORBA_CHANGESET): Updated.
+	(HOTSPOT_CHANGESET): Likewise.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Remove dropped patches.
+	* generated/java/nio/DirectByteBuffer.java,
+	* generated/java/nio/DirectByteBufferR.java:
+	Regenerated for b123.
+	* patches/boot/demos.patch:
+	Regenerated.
+	* patches/boot/ecj-diamond.patch,
+	* patches/boot/ecj-stringswitch.patch:
+	Extended with new cases.
+	* patches/boot/revert-6973616.patch,
+	* patches/hotspot/default/icedtea-gcc-suffix.patch,
+	* patches/hotspot/default/icedtea-sparc-trapsfix.patch,
+	* patches/hotspot/default/icedtea-text-relocations.patch,
+	* patches/icedtea-freetypeversion.patch,
+	* patches/icedtea-javafiles.patch,
+	* patches/icedtea-lc_ctype.patch,
+	* patches/icedtea-signed-types.patch,
+	* patches/icedtea-systemtap.patch:
+	Regenerated.
+
 2011-03-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	Perform minimal compilation prior to bootstrap

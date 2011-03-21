@@ -1,9 +1,9 @@
 diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp openjdk/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp
---- openjdk.orig/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp	2008-08-04 08:40:18.000000000 +0100
-+++ openjdk/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp	2008-08-09 01:29:51.000000000 +0100
-@@ -25,7 +25,16 @@
- #include "incls/_precompiled.incl"
- #include "incls/_assembler_linux_sparc.cpp.incl"
+--- openjdk.orig/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp	2011-03-14 22:09:02.000000000 +0000
++++ openjdk/hotspot/src/os_cpu/linux_sparc/vm/assembler_linux_sparc.cpp	2011-03-15 23:02:33.883758538 +0000
+@@ -28,7 +28,16 @@
+ #include "runtime/os.hpp"
+ #include "runtime/threadLocalStorage.hpp"
  
 -#include <asm-sparc/traps.h>
 +/* Headers for 32bit sparc with a 32bit userland end up in asm/

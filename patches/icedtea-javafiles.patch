@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_encoding.jmk openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_encoding.jmk
 --- openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_encoding.jmk	2010-07-29 21:54:09.000000000 +0100
-+++ openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_encoding.jmk	2010-09-01 19:20:12.256298401 +0100
++++ openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_encoding.jmk	2011-03-16 20:45:33.914471077 +0000
 @@ -62,7 +62,6 @@
  	com/sun/corba/se/impl/encoding/TypeCodeInputStream.java \
  	com/sun/corba/se/impl/encoding/TypeCodeOutputStream.java \
@@ -14,7 +14,7 @@ diff -Nru openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_e
 +	com/sun/corba/se/impl/encoding/IDLJavaSerializationOutputStream.java
 diff -Nru openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_ior.jmk openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_ior.jmk
 --- openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_ior.jmk	2010-07-29 21:54:09.000000000 +0100
-+++ openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_ior.jmk	2010-09-01 19:20:12.264297713 +0100
++++ openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_ior.jmk	2011-03-16 20:45:33.922471207 +0000
 @@ -66,4 +66,5 @@
  	com/sun/corba/se/impl/ior/iiop/JavaSerializationComponent.java \
  	com/sun/corba/se/impl/ior/iiop/MaxStreamFormatVersionComponentImpl.java \
@@ -24,7 +24,7 @@ diff -Nru openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_i
 +	com/sun/corba/se/impl/ior/iiop/JavaSerializationComponent.java
 diff -Nru openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_orbutil.jmk openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_orbutil.jmk
 --- openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_orbutil.jmk	2010-07-29 21:54:09.000000000 +0100
-+++ openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_orbutil.jmk	2010-09-01 19:20:12.264297713 +0100
++++ openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_orbutil.jmk	2011-03-16 20:45:33.922471207 +0000
 @@ -81,4 +81,5 @@
  	com/sun/corba/se/impl/orbutil/graph/Node.java \
  	com/sun/corba/se/impl/orbutil/graph/NodeData.java \
@@ -34,7 +34,7 @@ diff -Nru openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_o
 +	com/sun/corba/se/impl/orbutil/GetPropertyAction.java
 diff -Nru openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_protocol.jmk openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_protocol.jmk
 --- openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_protocol.jmk	2010-07-29 21:54:09.000000000 +0100
-+++ openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_protocol.jmk	2010-09-01 19:20:12.264297713 +0100
++++ openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_protocol.jmk	2011-03-16 20:45:33.922471207 +0000
 @@ -81,5 +81,5 @@
  	com/sun/corba/se/impl/protocol/giopmsgheaders/RequestMessage_1_1.java \
  	com/sun/corba/se/impl/protocol/giopmsgheaders/RequestMessage_1_2.java \
@@ -45,7 +45,7 @@ diff -Nru openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_impl_p
 +	com/sun/corba/se/impl/protocol/giopmsgheaders/LocateReplyOrReplyMessage.java
 diff -Nru openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_spi_monitoring.jmk openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_spi_monitoring.jmk
 --- openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_spi_monitoring.jmk	2010-07-29 21:54:09.000000000 +0100
-+++ openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_spi_monitoring.jmk	2010-09-01 19:20:12.264297713 +0100
++++ openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_spi_monitoring.jmk	2011-03-16 20:45:33.922471207 +0000
 @@ -30,6 +30,7 @@
  	com/sun/corba/se/spi/monitoring/StringMonitoredAttributeBase.java \
  	com/sun/corba/se/spi/monitoring/LongMonitoredAttributeBase.java \
@@ -56,7 +56,7 @@ diff -Nru openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_spi_mo
  	com/sun/corba/se/spi/monitoring/MonitoredObjectFactory.java \
 diff -Nru openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_spi_presentation_rmi.jmk openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_spi_presentation_rmi.jmk
 --- openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_spi_presentation_rmi.jmk	2010-07-29 21:54:09.000000000 +0100
-+++ openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_spi_presentation_rmi.jmk	2010-09-01 19:20:12.264297713 +0100
++++ openjdk/corba/make/com/sun/corba/minclude/com_sun_corba_se_spi_presentation_rmi.jmk	2011-03-16 20:45:33.922471207 +0000
 @@ -29,5 +29,6 @@
  	com/sun/corba/se/spi/presentation/rmi/IDLNameTranslator.java \
  	com/sun/corba/se/spi/presentation/rmi/PresentationDefaults.java \
@@ -65,8 +65,8 @@ diff -Nru openjdk.orig/corba/make/com/sun/corba/minclude/com_sun_corba_se_spi_pr
  	com/sun/corba/se/spi/presentation/rmi/StubAdapter.java
  
 diff -Nru openjdk.orig/jdk/make/java/java/FILES_java.gmk openjdk/jdk/make/java/java/FILES_java.gmk
---- openjdk.orig/jdk/make/java/java/FILES_java.gmk	2010-07-29 21:55:26.000000000 +0100
-+++ openjdk/jdk/make/java/java/FILES_java.gmk	2010-09-01 19:20:12.268297371 +0100
+--- openjdk.orig/jdk/make/java/java/FILES_java.gmk	2011-03-14 22:10:30.000000000 +0000
++++ openjdk/jdk/make/java/java/FILES_java.gmk	2011-03-16 20:45:33.922471207 +0000
 @@ -29,6 +29,80 @@
  # will generate header files
  #
@@ -148,9 +148,9 @@ diff -Nru openjdk.orig/jdk/make/java/java/FILES_java.gmk openjdk/jdk/make/java/j
      java/lang/Object.java \
      java/lang/AutoCloseable.java \
      java/lang/Class.java \
-@@ -138,13 +212,6 @@
-     java/lang/Readable.java \
+@@ -139,13 +213,6 @@
      java/lang/Override.java \
+     java/lang/SafeVarargs.java \
      java/lang/SuppressWarnings.java \
 -    java/lang/ref/Reference.java \
 -        java/lang/ref/SoftReference.java \

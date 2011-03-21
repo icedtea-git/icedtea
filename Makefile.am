@@ -1,22 +1,22 @@
 # Dependencies
 
-OPENJDK_VERSION = b117
+OPENJDK_VERSION = b123
 
-CORBA_CHANGESET = 06146786b141
-HOTSPOT_CHANGESET = 81685aa89446
-JAXP_CHANGESET  = 43658f98c582
-JAXWS_CHANGESET = f3444af18aff
-JDK_CHANGESET = e7fc51780596
-LANGTOOLS_CHANGESET = fdf1b74d3437
-OPENJDK_CHANGESET = c94d1673451e
+CORBA_CHANGESET = eac2b25431d9
+HOTSPOT_CHANGESET = e452443363a7
+JAXP_CHANGESET  = 17aa584100e9
+JAXWS_CHANGESET = 98bca2ec154b
+JDK_CHANGESET = e251bf6cbfb4
+LANGTOOLS_CHANGESET = a75f9777ae63
+OPENJDK_CHANGESET = 9bf0526ea1a0
 
-CORBA_SHA256SUM = 8d5a566e2d51d791d75f1ff25d5ae499317ec9391ed6bbc86eef483d15551d55
-HOTSPOT_SHA256SUM = 7ca6831eb7505c21b8607c7cf8d12cb182fca21c3a40c4696db737d56d80e54b
-JAXP_SHA256SUM = e0aa77b166b30d4d4052110956da831c59c43e22f8d6feeac62a06775bb083b6
-JAXWS_SHA256SUM = ff4124f3765ac5ebac5ecfd0391cb2a54857d80ac7f967f60630ce0879cfd1f4
-JDK_SHA256SUM = 0a01f5c43c8ef895addbc6c75adf4046d200c7a0d95d8056fa4f127a1b87feec
-LANGTOOLS_SHA256SUM = d200c9bcf1c1805e0800a8cd8017e99ff6d12db14a1fcca8e9b67c59dc5ed448
-OPENJDK_SHA256SUM = d7a3a531f0e064898e511f08f1127447b9171adce21ae4cecb3bca84b3f7b531
+CORBA_SHA256SUM = 106b6ff3765db0d608a7e5542a7b606fe10a2c1ebb155b866aef09f88ce481a7
+HOTSPOT_SHA256SUM = 045f86a3ccd383bde0be5d1f213d5d0165f3e30006081253c86a4545f85071a2
+JAXP_SHA256SUM = 009baa056f2b01e313470b71542b40baab511e179b63decca00b16081e6730bd
+JAXWS_SHA256SUM = 5990beb8e8f2144838d52f0948b088bf74ae3ddd748b996ddbb7e7ff1605389b
+JDK_SHA256SUM = 32f2d2172020046a671cca94fbe647bc9fd1af350f82090ca6edaf9ad2a537dc
+LANGTOOLS_SHA256SUM = c60849a838df72cb7b95562a97af75fa1e3e56fcc15678885a8e154463df8417
+OPENJDK_SHA256SUM = 33a62959bc1a553299983c90ffc2c3ac724ff42300eb1bb4cbc53907ede4635b
 
 CACAO_VERSION = e321b101a9ee
 CACAO_SHA256SUM = 46bc5b6212c199dc4a3dbebe6386fe15a8248625a5dffa17115aab394a298444
@@ -235,7 +235,6 @@ REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 
 ICEDTEA_PATCHES = \
 	patches/hotspot/$(HSBUILD)/icedtea-text-relocations.patch \
-	patches/icedtea-ssl.patch \
 	patches/icedtea-rmi_amd64.patch \
 	patches/icedtea-tools.patch \
 	patches/icedtea-demos.patch \
@@ -275,17 +274,14 @@ ICEDTEA_PATCHES = \
         patches/security/icedtea-6592792.patch \
         patches/security/icedtea-6733959.patch \
         patches/security/icedtea-6755943.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-includedb.patch \
 	patches/icedtea-demo-swingapplet.patch \
 	patches/icedtea-jvmtiEnv.patch \
 	patches/icedtea-disable-intree-ec.patch \
 	patches/icedtea-sources.patch \
-	patches/no-precompiled.patch \
 	patches/parisc.patch \
 	patches/sh4-support.patch \
 	patches/jtreg-httpTest.patch \
-	patches/icedtea-update-bootclasspath.patch \
-	patches/4964490-generify_hotspot_jdi.patch
+	patches/icedtea-update-bootclasspath.patch
 
 # Conditional patches
 

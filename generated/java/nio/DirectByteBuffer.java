@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2005 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Sun designates this
+ * published by the Free Software Foundation.  Oracle designates this
  * particular file as subject to the "Classpath" exception as provided
- * by Sun in the LICENSE file that accompanied this code.
+ * by Oracle in the LICENSE file that accompanied this code.
  *
  * This code is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -18,19 +18,20 @@
  * 2 along with this work; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
- * CA 95054 USA or visit www.sun.com if you need additional information or
- * have any questions.
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
  */
 
 // -- This file was mechanically generated: Do not edit! -- //
 
 package java.nio;
 
+import java.io.FileDescriptor;
 import sun.misc.Cleaner;
 import sun.misc.Unsafe;
+import sun.misc.VM;
 import sun.nio.ch.DirectBuffer;
-import sun.nio.ch.FileChannelImpl;
 
 
 class DirectByteBuffer
@@ -114,9 +115,10 @@ class DirectByteBuffer
     //
     DirectByteBuffer(int cap) {                   // package-private
 
-        super(-1, 0, cap, cap, false);
+        super(-1, 0, cap, cap);
+        boolean pa = VM.isDirectMemoryPageAligned();
         int ps = Bits.pageSize();
-        int size = cap + ps;
+        long size = Math.max(1L, (long)cap + (pa ? ps : 0));
         Bits.reserveMemory(size, cap);
 
         long base = 0;
@@ -127,7 +129,7 @@ class DirectByteBuffer
             throw x;
         }
         unsafe.setMemory(base, size, (byte) 0);
-        if (base % ps != 0) {
+        if (pa && (base % ps != 0)) {
             // Round up to page boundary
             address = base + ps - (base & (ps - 1));
         } else {
@@ -144,7 +146,7 @@ class DirectByteBuffer
     // Invoked only by JNI: NewDirectByteBuffer(void*, long)
     //
     private DirectByteBuffer(long addr, int cap) {
-        super(-1, 0, cap, cap, false);
+        super(-1, 0, cap, cap);
         address = addr;
         cleaner = null;
     }
@@ -153,9 +155,12 @@ class DirectByteBuffer
 
     // For memory-mapped buffers -- invoked by FileChannelImpl via reflection
     //
-    protected DirectByteBuffer(int cap, long addr, Runnable unmapper) {
+    protected DirectByteBuffer(int cap, long addr,
+                                     FileDescriptor fd,
+                                     Runnable unmapper)
+    {
 
-        super(-1, 0, cap, cap, true);
+        super(-1, 0, cap, cap, fd);
         address = addr;
         viewedBuffer = null;
         cleaner = Cleaner.create(this, unmapper);
@@ -365,7 +370,7 @@ class DirectByteBuffer
         unsafe.copyMemory(ix(pos), ix(0), rem << 0);
         position(rem);
         limit(capacity());
-	discardMark();
+        discardMark();
         return this;
 
 
@@ -379,6 +384,8 @@ class DirectByteBuffer
     public boolean isReadOnly() {
         return false;
     }
+
+
 
 
 

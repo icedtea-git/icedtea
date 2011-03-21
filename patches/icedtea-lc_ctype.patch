@@ -1,16 +1,16 @@
 diff -Nru openjdk.orig/jdk/src/solaris/native/java/lang/java_props_md.c openjdk/jdk/src/solaris/native/java/lang/java_props_md.c
---- openjdk.orig/jdk/src/solaris/native/java/lang/java_props_md.c	2010-11-12 01:20:49.000000000 +0000
-+++ openjdk/jdk/src/solaris/native/java/lang/java_props_md.c	2010-11-12 18:31:00.049493600 +0000
-@@ -118,7 +118,7 @@
- #endif
+--- openjdk.orig/jdk/src/solaris/native/java/lang/java_props_md.c	2011-03-14 22:10:33.000000000 +0000
++++ openjdk/jdk/src/solaris/native/java/lang/java_props_md.c	2011-03-15 23:40:55.950143541 +0000
+@@ -119,7 +119,7 @@
  
- static int ParseLocale(int cat, char ** std_language, char ** std_country, char ** std_variant, char ** std_encoding) {
+ static int ParseLocale(int cat, char ** std_language, char ** std_script,
+                        char ** std_country, char ** std_variant, char ** std_encoding) {
 -    char temp[64];
 +    char *temp;
      char *language = NULL, *country = NULL, *variant = NULL,
           *encoding = NULL;
      char *p, encoding_variant[64];
-@@ -162,6 +162,7 @@
+@@ -163,6 +163,7 @@
       * <country name>, <encoding name>, and <variant name> are optional.
       */
  
@@ -18,7 +18,7 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/java/lang/java_props_md.c openjdk/
      strcpy(temp, lc);
  
      /* Parse the language, country, encoding, and variant from the
-@@ -282,6 +283,10 @@
+@@ -301,6 +302,10 @@
  #endif
      }
  

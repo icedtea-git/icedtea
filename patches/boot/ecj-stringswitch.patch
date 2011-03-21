@@ -36,3 +36,75 @@ diff -r c981a387cd86 src/share/classes/com/sun/security/ntlm/NTLM.java
          try {
              fac = SecretKeyFactory.getInstance ("DES");
              cipher = Cipher.getInstance ("DES/ECB/NoPadding");
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-03-21 16:45:04.633739680 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-03-21 16:47:00.579626597 +0000
+@@ -110,21 +110,17 @@
+         String optStr = (opts.length > 1 && opts[1] != null)
+                 ? opts[1].trim()
+                 : "all";
+-        switch (optStr) {
+-            case "vm":
++        if ("vm".equals(optStr))
++            printVmSettings(ostream, maxHeapSize, stackSize, isServer);
++        else if ("properties".equals(optStr))
++            printProperties(ostream);
++        else if ("locale".equals(optStr))
++            printLocale(ostream);
++        else
++            {
+                 printVmSettings(ostream, maxHeapSize, stackSize, isServer);
+-                break;
+-            case "properties":
+                 printProperties(ostream);
+-                break;
+-            case "locale":
+                 printLocale(ostream);
+-                break;
+-            default:
+-                printVmSettings(ostream, maxHeapSize, stackSize, isServer);
+-                printProperties(ostream);
+-                printLocale(ostream);
+-                break;
+         }
+     }
+ 
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2011-03-14 22:10:33.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2011-03-21 15:05:29.000000000 +0000
+@@ -383,19 +383,23 @@
+             GE;         // ">="
+ 
+             static Operator of(String s) {
+-                switch (s) {
+-                    case "==":
+-                        return EQ;
+-                    case "!=":
+-                        return NE;
+-                    case "<":
+-                        return LT;
+-                    case "<=":
+-                        return LE;
+-                    case ">":
+-                        return GT;
+-                    case ">=":
+-                        return GE;
++                if ("==".equals(s)) {
++                    return EQ;
++                }
++                if ("!=".equals(s)) {
++                    return NE;
++                }
++                if ("<".equals(s)) {
++                    return LT;
++                }
++                if ("<=".equals(s)) {
++                    return LE;
++                }
++                if (">".equals(s)) {
++                    return GT;
++                }
++                if (">=".equals(s)) {
++                    return GE;
+                 }
+ 
+                 throw new IllegalArgumentException(

@@ -1,6 +1,390 @@
-diff -r 917976e88f76 src/share/classes/sun/nio/cs/AbstractCharsetProvider.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/nio/cs/AbstractCharsetProvider.java	Mon Feb 22 15:16:55 2010 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/nio/cs/AbstractCharsetProvider.java	Mon Feb 22 16:55:24 2010 +0000
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Attribute.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Attribute.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Attribute.java	2011-03-14 22:10:30.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Attribute.java	2011-03-16 22:41:33.034195793 +0000
+@@ -104,9 +104,9 @@
+     }
+ 
+     private static final byte[] noBytes = {};
+-    private static final Map<List<Attribute>, List<Attribute>> canonLists = new HashMap<>();
+-    private static final Map<Layout, Attribute> attributes = new HashMap<>();
+-    private static final Map<Layout, Attribute> standardDefs = new HashMap<>();
++    private static final Map<List<Attribute>, List<Attribute>> canonLists = new HashMap<List<Attribute>,List<Attribute>>();
++    private static final Map<Layout, Attribute> attributes = new HashMap<Layout, Attribute>();
++    private static final Map<Layout, Attribute> standardDefs = new HashMap<Layout, Attribute>();
+ 
+     // Canonicalized lists of trivial attrs (Deprecated, etc.)
+     // are used by trimToSize, in order to reduce footprint
+@@ -116,7 +116,7 @@
+         synchronized (canonLists) {
+             List<Attribute> cl = canonLists.get(al);
+             if (cl == null) {
+-                cl = new ArrayList<>(al.size());
++                cl = new ArrayList<Attribute>(al.size());
+                 cl.addAll(al);
+                 cl = Collections.unmodifiableList(cl);
+                 canonLists.put(al, cl);
+@@ -337,9 +337,9 @@
+ 
+         public void addAttribute(Attribute a) {
+             if (attributes == null)
+-                attributes = new ArrayList<>(3);
++                attributes = new ArrayList<Attribute>(3);
+             else if (!(attributes instanceof ArrayList))
+-                attributes = new ArrayList<>(attributes);  // unfreeze it
++                attributes = new ArrayList<Attribute>(attributes);  // unfreeze it
+             attributes.add(a);
+         }
+ 
+@@ -347,7 +347,7 @@
+             if (attributes == null)       return null;
+             if (!attributes.contains(a))  return null;
+             if (!(attributes instanceof ArrayList))
+-                attributes = new ArrayList<>(attributes);  // unfreeze it
++                attributes = new ArrayList<Attribute>(attributes);  // unfreeze it
+             attributes.remove(a);
+             return a;
+         }
+@@ -832,7 +832,7 @@
+     */
+     static //private
+     Layout.Element[] tokenizeLayout(Layout self, int curCble, String layout) {
+-        ArrayList<Layout.Element> col = new ArrayList<>(layout.length());
++        ArrayList<Layout.Element> col = new ArrayList<Layout.Element>(layout.length());
+         tokenizeLayout(self, curCble, layout, col);
+         Layout.Element[] res = new Layout.Element[col.size()];
+         col.toArray(res);
+@@ -897,7 +897,7 @@
+             case 'T': // union: 'T' any_int union_case* '(' ')' '[' body ']'
+                 kind = EK_UN;
+                 i = tokenizeSInt(e, layout, i);
+-                ArrayList<Layout.Element> cases = new ArrayList<>();
++                ArrayList<Layout.Element> cases = new ArrayList<Layout.Element>();
+                 for (;;) {
+                     // Keep parsing cases until we hit the default case.
+                     if (layout.charAt(i++) != '(')
+@@ -1051,7 +1051,7 @@
+     }
+     static //private
+     String[] splitBodies(String layout) {
+-        ArrayList<String> bodies = new ArrayList<>();
++        ArrayList<String> bodies = new ArrayList<String>();
+         // Parse several independent layout bodies:  "[foo][bar]...[baz]"
+         for (int i = 0; i < layout.length(); i++) {
+             if (layout.charAt(i++) != '[')
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ConstantPool.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ConstantPool.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ConstantPool.java	2011-03-14 22:10:30.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ConstantPool.java	2011-03-16 22:41:33.034195793 +0000
+@@ -916,7 +916,7 @@
+     public static
+     Index[] partition(Index ix, int[] keys) {
+         // %%% Should move this into class Index.
+-        ArrayList<List<Entry>> parts = new ArrayList<>();
++        ArrayList<List<Entry>> parts = new ArrayList<List<Entry>>();
+         Entry[] cpMap = ix.cpMap;
+         assert(keys.length == cpMap.length);
+         for (int i = 0; i < keys.length; i++) {
+@@ -927,7 +927,7 @@
+             }
+             List<Entry> part = parts.get(key);
+             if (part == null) {
+-                parts.set(key, part = new ArrayList<>());
++                parts.set(key, part = new ArrayList<Entry>());
+             }
+             part.add(cpMap[i]);
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2011-03-14 22:10:30.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2011-03-16 22:41:33.034195793 +0000
+@@ -59,7 +59,7 @@
+                 ResourceBundle.getBundle("com.sun.java.util.jar.pack.DriverResource");
+ 
+     public static void main(String[] ava) throws IOException {
+-        ArrayList<String> av = new ArrayList<>(Arrays.asList(ava));
++        ArrayList<String> av = new ArrayList<String>(Arrays.asList(ava));
+ 
+         boolean doPack   = true;
+         boolean doUnpack = false;
+@@ -82,7 +82,7 @@
+         }
+ 
+         // Collect engine properties here:
+-        HashMap<String,String> engProps = new HashMap<>();
++        HashMap<String,String> engProps = new HashMap<String,String>();
+         engProps.put(verboseProp, System.getProperty(verboseProp));
+ 
+         String optionMap;
+@@ -96,7 +96,7 @@
+         }
+ 
+         // Collect argument properties here:
+-        HashMap<String,String> avProps = new HashMap<>();
++        HashMap<String,String> avProps = new HashMap<String,String>();
+         try {
+             for (;;) {
+                 String state = parseCommandOptions(av, optionMap, avProps);
+@@ -515,7 +515,7 @@
+         String resultString = null;
+ 
+         // Convert options string into optLines dictionary.
+-        TreeMap<String,String[]> optmap = new TreeMap<>();
++        TreeMap<String,String[]> optmap = new TreeMap<String,String[]>();
+     loadOptmap:
+         for (String optline : options.split("\n")) {
+             String[] words = optline.split("\\p{Space}+");
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2011-03-14 22:10:30.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2011-03-16 22:41:33.034195793 +0000
+@@ -111,7 +111,7 @@
+     public static final Attribute.Layout attrSourceFileSpecial;
+     public static final Map attrDefs;
+     static {
+-        HashMap<Layout, Attribute> ad = new HashMap<>(3);
++        HashMap<Layout, Attribute> ad = new HashMap<Layout, Attribute>(3);
+         attrCodeEmpty = Attribute.define(ad, ATTR_CONTEXT_METHOD,
+                                          "Code", "").layout();
+         attrInnerClassesEmpty = Attribute.define(ad, ATTR_CONTEXT_CLASS,
+@@ -181,7 +181,7 @@
+         }
+     }
+ 
+-    ArrayList<Package.Class> classes = new ArrayList<>();
++    ArrayList<Package.Class> classes = new ArrayList<Package.Class>();
+ 
+     public List<Package.Class> getClasses() {
+         return classes;
+@@ -292,7 +292,7 @@
+             if (a != olda) {
+                 if (verbose > 2)
+                     Utils.log.fine("recoding obvious SourceFile="+obvious);
+-                List<Attribute> newAttrs = new ArrayList<>(getAttributes());
++                List<Attribute> newAttrs = new ArrayList<Attribute>(getAttributes());
+                 int where = newAttrs.indexOf(olda);
+                 newAttrs.set(where, a);
+                 setAttributes(newAttrs);
+@@ -341,7 +341,7 @@
+          *  with that of Package.this.allInnerClasses.
+          */
+         public List<InnerClass> computeGloballyImpliedICs() {
+-            HashSet<Entry> cpRefs = new HashSet<>();
++            HashSet<Entry> cpRefs = new HashSet<Entry>();
+             {   // This block temporarily displaces this.innerClasses.
+                 ArrayList<InnerClass> innerClassesSaved = innerClasses;
+                 innerClasses = null;  // ignore for the moment
+@@ -350,7 +350,7 @@
+             }
+             ConstantPool.completeReferencesIn(cpRefs, true);
+ 
+-            HashSet<Entry> icRefs = new HashSet<>();
++            HashSet<Entry> icRefs = new HashSet<Entry>();
+             for (Entry e : cpRefs) {
+                 // Restrict cpRefs to InnerClasses entries only.
+                 if (!(e instanceof ClassEntry))  continue;
+@@ -366,7 +366,7 @@
+             // This loop is structured this way so as to accumulate
+             // entries into impliedICs in an order which reflects
+             // the order of allInnerClasses.
+-            ArrayList<InnerClass> impliedICs = new ArrayList<>();
++            ArrayList<InnerClass> impliedICs = new ArrayList<InnerClass>();
+             for (InnerClass ic : allInnerClasses) {
+                 // This one is locally relevant if it describes
+                 // a member of the current class, or if the current
+@@ -409,8 +409,8 @@
+                 // Diff is A since I is empty.
+             }
+             // (I*A) is non-trivial
+-            HashSet<InnerClass> center = new HashSet<>(actualICs);
+-            center.retainAll(new HashSet<>(impliedICs));
++            HashSet<InnerClass> center = new HashSet<InnerClass>(actualICs);
++            center.retainAll(new HashSet<InnerClass>(impliedICs));
+             impliedICs.addAll(actualICs);
+             impliedICs.removeAll(center);
+             // Diff is now I^A = (I+A)-(I*A).
+@@ -539,7 +539,7 @@
+                 super(flags, descriptor);
+                 assert(!descriptor.isMethod());
+                 if (fields == null)
+-                    fields = new ArrayList<>();
++                    fields = new ArrayList<Field>();
+                 boolean added = fields.add(this);
+                 assert(added);
+                 order = fields.size();
+@@ -564,7 +564,7 @@
+                 super(flags, descriptor);
+                 assert(descriptor.isMethod());
+                 if (methods == null)
+-                    methods = new ArrayList<>();
++                    methods = new ArrayList<Method>();
+                 boolean added = methods.add(this);
+                 assert(added);
+             }
+@@ -734,14 +734,14 @@
+     }
+ 
+     // What non-class files are in this unit?
+-    ArrayList<File> files = new ArrayList<>();
++    ArrayList<File> files = new ArrayList<File>();
+ 
+     public List<File> getFiles() {
+         return files;
+     }
+ 
+     public List<File> getClassStubs() {
+-        ArrayList<File> classStubs = new ArrayList<>(classes.size());
++        ArrayList<File> classStubs = new ArrayList<File>(classes.size());
+         for (Class cls : classes) {
+             assert(cls.file.isClassStub());
+             classStubs.add(cls.file);
+@@ -860,7 +860,7 @@
+         public InputStream getInputStream() {
+             InputStream in = new ByteArrayInputStream(append.toByteArray());
+             if (prepend.size() == 0)  return in;
+-            ArrayList<InputStream> isa = new ArrayList<>(prepend.size()+1);
++            ArrayList<InputStream> isa = new ArrayList<InputStream>(prepend.size()+1);
+             for (Iterator i = prepend.iterator(); i.hasNext(); ) {
+                 byte[] bytes = (byte[]) i.next();
+                 isa.add(new ByteArrayInputStream(bytes));
+@@ -897,7 +897,7 @@
+     }
+ 
+     // Is there a globally declared table of inner classes?
+-    ArrayList<InnerClass> allInnerClasses = new ArrayList<>();
++    ArrayList<InnerClass> allInnerClasses = new ArrayList<InnerClass>();
+     HashMap<ClassEntry, InnerClass>   allInnerClassesByThis;
+ 
+     public
+@@ -912,7 +912,7 @@
+         allInnerClasses.addAll(ics);
+ 
+         // Make an index:
+-        allInnerClassesByThis = new HashMap<>(allInnerClasses.size());
++        allInnerClassesByThis = new HashMap<ClassEntry,InnerClass>(allInnerClasses.size());
+         for (InnerClass ic : allInnerClasses) {
+             Object pic = allInnerClassesByThis.put(ic.thisClass, ic);
+             assert(pic == null);  // caller must ensure key uniqueness!
+@@ -1309,7 +1309,7 @@
+ 
+     // Use this before writing the class files.
+     void ensureAllClassFiles() {
+-        HashSet<File> fileSet = new HashSet<>(files);
++        HashSet<File> fileSet = new HashSet<File>(files);
+         for (Class cls : classes) {
+             // Add to the end of ths list:
+             if (!fileSet.contains(cls.file))
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/TLGlobals.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/TLGlobals.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/TLGlobals.java	2010-09-14 16:01:38.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/TLGlobals.java	2011-03-16 22:41:33.034195793 +0000
+@@ -58,12 +58,12 @@
+     private final Map<String, MemberEntry> memberEntries;
+ 
+     TLGlobals() {
+-        utf8Entries = new HashMap<>();
+-        classEntries = new HashMap<>();
+-        literalEntries = new HashMap<>();
+-        signatureEntries = new HashMap<>();
+-        descriptorEntries = new HashMap<>();
+-        memberEntries = new HashMap<>();
++        utf8Entries = new HashMap<String,Utf8Entry>();
++        classEntries = new HashMap<String,ClassEntry>();
++        literalEntries = new HashMap<Object,LiteralEntry>();
++        signatureEntries = new HashMap<String,SignatureEntry>();
++        descriptorEntries = new HashMap<String,DescriptorEntry>();
++        memberEntries = new HashMap<String,MemberEntry>();
+         props = new PropMap();
+     }
+ 
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	2011-03-14 22:10:30.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	2011-03-16 22:41:33.034195793 +0000
+@@ -225,7 +225,7 @@
+             props.setProperty(java.util.jar.Pack200.Unpacker.PROGRESS,"50");
+             pkg.ensureAllClassFiles();
+             // Now write out the files.
+-            HashSet<Package.Class> classesToWrite = new HashSet<>(pkg.getClasses());
++            HashSet<Package.Class> classesToWrite = new HashSet<Package.Class>(pkg.getClasses());
+             for (Iterator i = pkg.getFiles().iterator(); i.hasNext(); ) {
+                 Package.File file = (Package.File) i.next();
+                 String name = file.nameString;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	2011-03-14 22:10:30.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	2011-03-16 22:41:33.034195793 +0000
+@@ -132,7 +132,7 @@
+     // Keep a TLS point to the global data and environment.
+     // This makes it simpler to supply environmental options
+     // to the engine code, especially the native code.
+-    static final ThreadLocal<TLGlobals> currentInstance = new ThreadLocal<>();
++    static final ThreadLocal<TLGlobals> currentInstance = new ThreadLocal<TLGlobals>();
+ 
+     // convenience methods to access the TL globals
+     static TLGlobals getTLGlobals() {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DnsContextFactory.java openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/DnsContextFactory.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DnsContextFactory.java	2010-11-12 01:20:48.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/DnsContextFactory.java	2011-03-16 22:41:33.034195793 +0000
+@@ -135,7 +135,7 @@
+             throw new ConfigurationException("DNS pseudo-URL required");
+         }
+ 
+-        List<String> servers = new ArrayList<>();
++        List<String> servers = new ArrayList<String>();
+ 
+         for (int i = 0; i < urls.length; i++) {
+             String server = urls[i].getHost();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/io/CharacterEncoding.java openjdk-boot/jdk/src/share/classes/sun/io/CharacterEncoding.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/io/CharacterEncoding.java	2011-03-14 22:10:33.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/io/CharacterEncoding.java	2011-03-16 22:41:33.034195793 +0000
+@@ -54,7 +54,7 @@
+     private static volatile boolean installedAll;
+ 
+     static {
+-        aliasTable = new HashMap<>(460, 1.0f);                    /* MDA */
++        aliasTable = new HashMap<String,String>(460, 1.0f);                    /* MDA */
+ 
+         aliasTable.put("us-ascii",              "ASCII");
+         aliasTable.put("ascii",                 "ASCII");
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/spi/nameservice/dns/DNSNameService.java openjdk-boot/jdk/src/share/classes/sun/net/spi/nameservice/dns/DNSNameService.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/net/spi/nameservice/dns/DNSNameService.java	2010-08-27 19:16:11.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/net/spi/nameservice/dns/DNSNameService.java	2011-03-16 22:41:33.034195793 +0000
+@@ -52,7 +52,7 @@
+ 
+     // Per-thread soft cache of the last temporary context
+     private static ThreadLocal<SoftReference<ThreadContext>> contextRef =
+-            new ThreadLocal<>();
++            new ThreadLocal<SoftReference<ThreadContext>>();
+ 
+     // Simple class to encapsulate the temporary context
+     private static class ThreadContext {
+@@ -99,7 +99,7 @@
+ 
+         // new thread context needs to be created
+         if (thrCtxt == null) {
+-            final Hashtable<String,Object> env = new Hashtable<>();
++            final Hashtable<String,Object> env = new Hashtable<String,Object>();
+             env.put("java.naming.factory.initial",
+                     "com.sun.jndi.dns.DnsContextFactory");
+ 
+@@ -165,7 +165,7 @@
+                                       final String[] ids, int depth)
+             throws UnknownHostException
+     {
+-        ArrayList<String> results = new ArrayList<>();
++        ArrayList<String> results = new ArrayList<String>();
+         Attributes attrs;
+ 
+         // do the query
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/http/AuthenticationInfo.java openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/http/AuthenticationInfo.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/http/AuthenticationInfo.java	2011-03-14 22:10:33.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/http/AuthenticationInfo.java	2011-03-16 22:41:33.034195793 +0000
+@@ -111,7 +111,7 @@
+      * at the same time, then all but the first will block until
+      * the first completes its authentication.
+      */
+-    static private HashMap<String,Thread> requests = new HashMap<>();
++    static private HashMap<String,Thread> requests = new HashMap<String,Thread>();
+ 
+     /* check if a request for this destination is in progress
+      * return false immediately if not. Otherwise block until
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/nio/cs/AbstractCharsetProvider.java openjdk-boot/jdk/src/share/classes/sun/nio/cs/AbstractCharsetProvider.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/nio/cs/AbstractCharsetProvider.java	2011-03-14 22:10:33.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/nio/cs/AbstractCharsetProvider.java	2011-03-16 22:41:33.026195665 +0000
 @@ -49,22 +49,22 @@
      /* Maps canonical names to class names
       */
@@ -37,33 +421,9 @@ diff -r 917976e88f76 src/share/classes/sun/nio/cs/AbstractCharsetProvider.java
          }
  
          return new Iterator<Charset>() {
-diff -r a9b4fde406d4 src/share/classes/sun/io/CharacterEncoding.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/io/CharacterEncoding.java	Thu Feb 18 13:31:46 2010 -0800
-+++ openjdk-boot/jdk/src/share/classes/sun/io/CharacterEncoding.java	Wed Feb 24 11:10:05 2010 +0000
-@@ -54,7 +54,7 @@
-     private static volatile boolean installedAll;
- 
-     static {
--        aliasTable = new HashMap<>(460, 1.0f);                    /* MDA */
-+        aliasTable = new HashMap<String,String>(460, 1.0f);                    /* MDA */
- 
-         aliasTable.put("us-ascii",              "ASCII");
-         aliasTable.put("ascii",                 "ASCII");
-diff -r c1cee45daf4d src/share/classes/sun/net/www/protocol/http/AuthenticationInfo.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/http/AuthenticationInfo.java	Wed Apr 28 22:15:05 2010 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/http/AuthenticationInfo.java	Tue May 04 18:21:07 2010 +0100
-@@ -111,7 +111,7 @@
-      * at the same time, then all but the first will block until
-      * the first completes its authentication.
-      */
--    static private HashMap<String,Thread> requests = new HashMap<>();
-+    static private HashMap<String,Thread> requests = new HashMap<String,Thread>();
- 
-     /* check if a request for this destination is in progress
-      * return false immediately if not. Otherwise block until
-diff -r c1cee45daf4d src/share/classes/sun/security/provider/JavaKeyStore.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/JavaKeyStore.java	Wed Apr 28 22:15:05 2010 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/JavaKeyStore.java	Wed May 05 11:35:35 2010 +0100
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/JavaKeyStore.java openjdk-boot/jdk/src/share/classes/sun/security/provider/JavaKeyStore.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/JavaKeyStore.java	2011-03-14 22:10:33.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/JavaKeyStore.java	2011-03-16 22:41:33.034195793 +0000
 @@ -683,7 +683,7 @@
                      // Read the certificate chain
                      int numOfCerts = dis.readInt();
@@ -74,8 +434,8 @@ diff -r c1cee45daf4d src/share/classes/sun/security/provider/JavaKeyStore.java
                          for (int j = 0; j < numOfCerts; j++) {
                              if (xVersion == 2) {
 diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/net/dns/ResolverConfigurationImpl.java openjdk-boot/jdk/src/solaris/classes/sun/net/dns/ResolverConfigurationImpl.java
---- openjdk-boot.orig/jdk/src/solaris/classes/sun/net/dns/ResolverConfigurationImpl.java	2010-09-01 22:07:18.059282202 +0100
-+++ openjdk-boot/jdk/src/solaris/classes/sun/net/dns/ResolverConfigurationImpl.java	2010-09-01 22:07:50.032515630 +0100
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/net/dns/ResolverConfigurationImpl.java	2010-08-27 19:16:11.000000000 +0100
++++ openjdk-boot/jdk/src/solaris/classes/sun/net/dns/ResolverConfigurationImpl.java	2011-03-16 22:41:33.034195793 +0000
 @@ -60,7 +60,7 @@
                                            int maxperkeyword,
                                            int maxkeywords)
@@ -94,39 +454,9 @@ diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/net/dns/ResolverConfigur
          String domain = fallbackDomain0();
          if (domain != null && domain.length() > 0) {
              sl.add(domain);
-diff -r a094068f4c7b src/share/classes/sun/net/spi/nameservice/dns/DNSNameService.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/net/spi/nameservice/dns/DNSNameService.java	Fri Aug 27 19:01:53 2010 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/net/spi/nameservice/dns/DNSNameService.java	Mon Sep 06 17:03:29 2010 +0100
-@@ -52,7 +52,7 @@
- 
-     // Per-thread soft cache of the last temporary context
-     private static ThreadLocal<SoftReference<ThreadContext>> contextRef =
--            new ThreadLocal<>();
-+            new ThreadLocal<SoftReference<ThreadContext>>();
- 
-     // Simple class to encapsulate the temporary context
-     private static class ThreadContext {
-@@ -99,7 +99,7 @@
- 
-         // new thread context needs to be created
-         if (thrCtxt == null) {
--            final Hashtable<String,Object> env = new Hashtable<>();
-+            final Hashtable<String,Object> env = new Hashtable<String,Object>();
-             env.put("java.naming.factory.initial",
-                     "com.sun.jndi.dns.DnsContextFactory");
- 
-@@ -165,7 +165,7 @@
-                                       final String[] ids, int depth)
-             throws UnknownHostException
-     {
--        ArrayList<String> results = new ArrayList<>();
-+        ArrayList<String> results = new ArrayList<String>();
-         Attributes attrs;
- 
-         // do the query
-diff -r a094068f4c7b src/solaris/classes/sun/nio/cs/ext/CompoundTextSupport.java
---- openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/cs/ext/CompoundTextSupport.java	Fri Aug 27 19:01:53 2010 +0100
-+++ openjdk-boot/jdk/src/solaris/classes/sun/nio/cs/ext/CompoundTextSupport.java	Mon Sep 06 18:44:51 2010 +0100
+diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/cs/ext/CompoundTextSupport.java openjdk-boot/jdk/src/solaris/classes/sun/nio/cs/ext/CompoundTextSupport.java
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/cs/ext/CompoundTextSupport.java	2011-03-14 22:10:33.000000000 +0000
++++ openjdk-boot/jdk/src/solaris/classes/sun/nio/cs/ext/CompoundTextSupport.java	2011-03-16 22:41:33.034195793 +0000
 @@ -153,12 +153,12 @@
  
      static {
@@ -144,345 +474,51 @@ diff -r a094068f4c7b src/solaris/classes/sun/nio/cs/ext/CompoundTextSupport.java
  
          if (!(isEncodingSupported("US-ASCII") &&
                isEncodingSupported("ISO-8859-1")))
-diff -r a094068f4c7b src/share/classes/com/sun/jndi/dns/DnsContextFactory.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DnsContextFactory.java	Fri Aug 27 19:01:53 2010 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/DnsContextFactory.java	Mon Sep 06 18:50:12 2010 +0100
-@@ -132,7 +132,7 @@
-             throw new ConfigurationException("DNS pseudo-URL required");
-         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/zip/ZipFile.java openjdk-boot/jdk/src/share/classes/java/util/zip/ZipFile.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/zip/ZipFile.java	2011-03-16 23:12:35.811715556 +0000
++++ openjdk-boot/jdk/src/share/classes/java/util/zip/ZipFile.java	2011-03-16 23:12:50.331945019 +0000
+@@ -315,7 +315,7 @@
+     private static native void freeEntry(long jzfile, long jzentry);
  
--        List<String> servers = new ArrayList<>();
-+        List<String> servers = new ArrayList<String>();
+     // the outstanding inputstreams that need to be closed.
+-    private Set<InputStream> streams = new HashSet<>();
++    private Set<InputStream> streams = new HashSet<InputStream>();
  
-         for (int i = 0; i < urls.length; i++) {
-             String server = urls[i].getHost();
-diff -r 240d4d3f2db7 src/share/classes/com/sun/java/util/jar/pack/Attribute.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Attribute.java	Tue Sep 14 17:29:58 2010 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Attribute.java	Wed Sep 15 00:00:17 2010 +0100
-@@ -96,9 +96,9 @@
-     }
- 
-     private static final byte[] noBytes = {};
--    private static final Map<List<Attribute>, List<Attribute>> canonLists = new HashMap<>();
--    private static final Map<Layout, Attribute> attributes = new HashMap<>();
--    private static final Map<Layout, Attribute> standardDefs = new HashMap<>();
-+    private static final Map<List<Attribute>, List<Attribute>> canonLists = new HashMap<List<Attribute>,List<Attribute>>();
-+    private static final Map<Layout, Attribute> attributes = new HashMap<Layout, Attribute>();
-+    private static final Map<Layout, Attribute> standardDefs = new HashMap<Layout, Attribute>();
- 
-     // Canonicalized lists of trivial attrs (Deprecated, etc.)
-     // are used by trimToSize, in order to reduce footprint
-@@ -108,7 +108,7 @@
-         synchronized (canonLists) {
-             List<Attribute> cl = canonLists.get(al);
-             if (cl == null) {
--                cl = new ArrayList<>(al.size());
-+                cl = new ArrayList<Attribute>(al.size());
-                 cl.addAll(al);
-                 cl = Collections.unmodifiableList(cl);
-                 canonLists.put(al, cl);
-@@ -329,9 +329,9 @@
- 
-         public void addAttribute(Attribute a) {
-             if (attributes == null)
--                attributes = new ArrayList<>(3);
-+                attributes = new ArrayList<Attribute>(3);
-             else if (!(attributes instanceof ArrayList))
--                attributes = new ArrayList<>(attributes);  // unfreeze it
-+                attributes = new ArrayList<Attribute>(attributes);  // unfreeze it
-             attributes.add(a);
-         }
- 
-@@ -339,7 +339,7 @@
-             if (attributes == null)       return null;
-             if (!attributes.contains(a))  return null;
-             if (!(attributes instanceof ArrayList))
--                attributes = new ArrayList<>(attributes);  // unfreeze it
-+                attributes = new ArrayList<Attribute>(attributes);  // unfreeze it
-             attributes.remove(a);
-             return a;
-         }
-@@ -824,7 +824,7 @@
-     */
-     static //private
-     Layout.Element[] tokenizeLayout(Layout self, int curCble, String layout) {
--        ArrayList<Layout.Element> col = new ArrayList<>(layout.length());
-+        ArrayList<Layout.Element> col = new ArrayList<Layout.Element>(layout.length());
-         tokenizeLayout(self, curCble, layout, col);
-         Layout.Element[] res = new Layout.Element[col.size()];
-         col.toArray(res);
-@@ -889,7 +889,7 @@
-             case 'T': // union: 'T' any_int union_case* '(' ')' '[' body ']'
-                 kind = EK_UN;
-                 i = tokenizeSInt(e, layout, i);
--                ArrayList<Layout.Element> cases = new ArrayList<>();
-+                ArrayList<Layout.Element> cases = new ArrayList<Layout.Element>();
-                 for (;;) {
-                     // Keep parsing cases until we hit the default case.
-                     if (layout.charAt(i++) != '(')
-@@ -1043,7 +1043,7 @@
-     }
-     static //private
-     String[] splitBodies(String layout) {
--        ArrayList<String> bodies = new ArrayList<>();
-+        ArrayList<String> bodies = new ArrayList<String>();
-         // Parse several independent layout bodies:  "[foo][bar]...[baz]"
-         for (int i = 0; i < layout.length(); i++) {
-             if (layout.charAt(i++) != '[')
-diff -r 240d4d3f2db7 src/share/classes/com/sun/java/util/jar/pack/ConstantPool.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ConstantPool.java	Tue Sep 14 17:29:58 2010 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ConstantPool.java	Wed Sep 15 00:00:17 2010 +0100
-@@ -909,7 +909,7 @@
-     public static
-     Index[] partition(Index ix, int[] keys) {
-         // %%% Should move this into class Index.
--        ArrayList<List<Entry>> parts = new ArrayList<>();
-+        ArrayList<List<Entry>> parts = new ArrayList<List<Entry>>();
-         Entry[] cpMap = ix.cpMap;
-         assert(keys.length == cpMap.length);
-         for (int i = 0; i < keys.length; i++) {
-@@ -920,7 +920,7 @@
-             }
-             List<Entry> part = parts.get(key);
-             if (part == null) {
--                parts.set(key, part = new ArrayList<>());
-+                parts.set(key, part = new ArrayList<Entry>());
-             }
-             part.add(cpMap[i]);
-         }
-diff -r 240d4d3f2db7 src/share/classes/com/sun/java/util/jar/pack/Package.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	Tue Sep 14 17:29:58 2010 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	Wed Sep 15 00:00:17 2010 +0100
-@@ -90,7 +90,7 @@
-     public static final Attribute.Layout attrSourceFileSpecial;
-     public static final Map attrDefs;
-     static {
--        HashMap<Layout, Attribute> ad = new HashMap<>(3);
-+        HashMap<Layout, Attribute> ad = new HashMap<Layout, Attribute>(3);
-         attrCodeEmpty = Attribute.define(ad, ATTR_CONTEXT_METHOD,
-                                          "Code", "").layout();
-         attrInnerClassesEmpty = Attribute.define(ad, ATTR_CONTEXT_CLASS,
-@@ -160,7 +160,7 @@
-         }
-     }
- 
--    ArrayList<Package.Class> classes = new ArrayList<>();
-+    ArrayList<Package.Class> classes = new ArrayList<Package.Class>();
- 
-     public List<Package.Class> getClasses() {
-         return classes;
-@@ -271,7 +271,7 @@
-             if (a != olda) {
-                 if (verbose > 2)
-                     Utils.log.fine("recoding obvious SourceFile="+obvious);
--                List<Attribute> newAttrs = new ArrayList<>(getAttributes());
-+                List<Attribute> newAttrs = new ArrayList<Attribute>(getAttributes());
-                 int where = newAttrs.indexOf(olda);
-                 newAttrs.set(where, a);
-                 setAttributes(newAttrs);
-@@ -320,7 +320,7 @@
-          *  with that of Package.this.allInnerClasses.
-          */
-         public List<InnerClass> computeGloballyImpliedICs() {
--            HashSet<Entry> cpRefs = new HashSet<>();
-+            HashSet<Entry> cpRefs = new HashSet<Entry>();
-             {   // This block temporarily displaces this.innerClasses.
-                 ArrayList<InnerClass> innerClassesSaved = innerClasses;
-                 innerClasses = null;  // ignore for the moment
-@@ -329,7 +329,7 @@
-             }
-             ConstantPool.completeReferencesIn(cpRefs, true);
- 
--            HashSet<Entry> icRefs = new HashSet<>();
-+            HashSet<Entry> icRefs = new HashSet<Entry>();
-             for (Entry e : cpRefs) {
-                 // Restrict cpRefs to InnerClasses entries only.
-                 if (!(e instanceof ClassEntry))  continue;
-@@ -345,7 +345,7 @@
-             // This loop is structured this way so as to accumulate
-             // entries into impliedICs in an order which reflects
-             // the order of allInnerClasses.
--            ArrayList<InnerClass> impliedICs = new ArrayList<>();
-+            ArrayList<InnerClass> impliedICs = new ArrayList<InnerClass>();
-             for (InnerClass ic : allInnerClasses) {
-                 // This one is locally relevant if it describes
-                 // a member of the current class, or if the current
-@@ -388,8 +388,8 @@
-                 // Diff is A since I is empty.
-             }
-             // (I*A) is non-trivial
--            HashSet<InnerClass> center = new HashSet<>(actualICs);
--            center.retainAll(new HashSet<>(impliedICs));
-+            HashSet<InnerClass> center = new HashSet<InnerClass>(actualICs);
-+            center.retainAll(new HashSet<InnerClass>(impliedICs));
-             impliedICs.addAll(actualICs);
-             impliedICs.removeAll(center);
-             // Diff is now I^A = (I+A)-(I*A).
-@@ -518,7 +518,7 @@
-                 super(flags, descriptor);
-                 assert(!descriptor.isMethod());
-                 if (fields == null)
--                    fields = new ArrayList<>();
-+                    fields = new ArrayList<Field>();
-                 boolean added = fields.add(this);
-                 assert(added);
-                 order = fields.size();
-@@ -543,7 +543,7 @@
-                 super(flags, descriptor);
-                 assert(descriptor.isMethod());
-                 if (methods == null)
--                    methods = new ArrayList<>();
-+                    methods = new ArrayList<Method>();
-                 boolean added = methods.add(this);
-                 assert(added);
-             }
-@@ -713,14 +713,14 @@
-     }
- 
-     // What non-class files are in this unit?
--    ArrayList<File> files = new ArrayList<>();
-+    ArrayList<File> files = new ArrayList<File>();
- 
-     public List<File> getFiles() {
-         return files;
-     }
- 
-     public List<File> getClassStubs() {
--        ArrayList<File> classStubs = new ArrayList<>(classes.size());
-+        ArrayList<File> classStubs = new ArrayList<File>(classes.size());
-         for (Class cls : classes) {
-             assert(cls.file.isClassStub());
-             classStubs.add(cls.file);
-@@ -839,7 +839,7 @@
-         public InputStream getInputStream() {
-             InputStream in = new ByteArrayInputStream(append.toByteArray());
-             if (prepend.size() == 0)  return in;
--            ArrayList<InputStream> isa = new ArrayList<>(prepend.size()+1);
-+            ArrayList<InputStream> isa = new ArrayList<InputStream>(prepend.size()+1);
-             for (Iterator i = prepend.iterator(); i.hasNext(); ) {
-                 byte[] bytes = (byte[]) i.next();
-                 isa.add(new ByteArrayInputStream(bytes));
-@@ -876,7 +876,7 @@
-     }
- 
-     // Is there a globally declared table of inner classes?
--    ArrayList<InnerClass> allInnerClasses = new ArrayList<>();
-+    ArrayList<InnerClass> allInnerClasses = new ArrayList<InnerClass>();
-     HashMap<ClassEntry, InnerClass>   allInnerClassesByThis;
- 
-     public
-@@ -891,7 +891,7 @@
-         allInnerClasses.addAll(ics);
- 
-         // Make an index:
--        allInnerClassesByThis = new HashMap<>(allInnerClasses.size());
-+        allInnerClassesByThis = new HashMap<ClassEntry,InnerClass>(allInnerClasses.size());
-         for (InnerClass ic : allInnerClasses) {
-             Object pic = allInnerClassesByThis.put(ic.thisClass, ic);
-             assert(pic == null);  // caller must ensure key uniqueness!
-@@ -1288,7 +1288,7 @@
- 
-     // Use this before writing the class files.
-     void ensureAllClassFiles() {
--        HashSet<File> fileSet = new HashSet<>(files);
-+        HashSet<File> fileSet = new HashSet<File>(files);
-         for (Class cls : classes) {
-             // Add to the end of ths list:
-             if (!fileSet.contains(cls.file))
-diff -r 240d4d3f2db7 src/share/classes/com/sun/java/util/jar/pack/PackerImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackerImpl.java	Tue Sep 14 17:29:58 2010 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackerImpl.java	Wed Sep 15 00:00:17 2010 +0100
-@@ -599,7 +599,7 @@
+     /**
+      * Returns an input stream for reading the contents of the specified
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackerImpl.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackerImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackerImpl.java	2011-03-17 00:34:27.949060984 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackerImpl.java	2011-03-17 00:34:40.485261234 +0000
+@@ -630,7 +630,7 @@
  
          List<InFile> scanJar(JarFile jf) throws IOException {
              // Collect jar entries, preserving order.
 -            List<InFile> inFiles = new ArrayList<>();
 +            List<InFile> inFiles = new ArrayList<InFile>();
-             for (JarEntry je : Collections.list(jf.entries())) {
-                 InFile inFile = new InFile(jf, je);
-                 assert(je.isDirectory() == inFile.name.endsWith("/"));
-diff -r 240d4d3f2db7 src/share/classes/com/sun/java/util/jar/pack/TLGlobals.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/TLGlobals.java	Tue Sep 14 17:29:58 2010 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/TLGlobals.java	Wed Sep 15 00:00:17 2010 +0100
-@@ -58,12 +58,12 @@
-     private final Map<String, MemberEntry> memberEntries;
+             try {
+                 for (JarEntry je : Collections.list(jf.entries())) {
+                     InFile inFile = new InFile(jf, je);
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/kr5/internal/ktab/KeyTab.java openjdk-boot/jdk/src/share/classes/sun/security/kr5/internal/ktab/KeyTab.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	2011-03-21 12:40:26.290331039 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	2011-03-21 12:41:22.079230112 +0000
+@@ -436,7 +436,7 @@
+         int count = 0;
  
-     TLGlobals() {
--        utf8Entries = new HashMap<>();
--        classEntries = new HashMap<>();
--        literalEntries = new HashMap<>();
--        signatureEntries = new HashMap<>();
--        descriptorEntries = new HashMap<>();
--        memberEntries = new HashMap<>();
-+        utf8Entries = new HashMap<String,Utf8Entry>();
-+        classEntries = new HashMap<String,ClassEntry>();
-+        literalEntries = new HashMap<Object,LiteralEntry>();
-+        signatureEntries = new HashMap<String,SignatureEntry>();
-+        descriptorEntries = new HashMap<String,DescriptorEntry>();
-+        memberEntries = new HashMap<String,MemberEntry>();
-         props = new PropMap();
-     }
+         // Remember the highest KVNO for each etype. Used for kvno == -2
+-        Map<Integer,Integer> highest = new HashMap<>();
++        Map<Integer,Integer> highest = new HashMap<Integer, Integer>();
  
-diff -r 240d4d3f2db7 src/share/classes/com/sun/java/util/jar/pack/Utils.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	Tue Sep 14 17:29:58 2010 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	Wed Sep 15 00:00:17 2010 +0100
-@@ -123,7 +123,7 @@
-     // Keep a TLS point to the global data and environment.
-     // This makes it simpler to supply environmental options
-     // to the engine code, especially the native code.
--    static final ThreadLocal<TLGlobals> currentInstance = new ThreadLocal<>();
-+    static final ThreadLocal<TLGlobals> currentInstance = new ThreadLocal<TLGlobals>();
- 
-     // convenience methods to access the TL globals
-     static TLGlobals getTLGlobals() {
-diff -r 240d4d3f2db7 src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	Tue Sep 14 17:29:58 2010 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	Wed Sep 15 14:34:26 2010 +0100
-@@ -199,7 +199,7 @@
-             props.setProperty(java.util.jar.Pack200.Unpacker.PROGRESS,"50");
-             pkg.ensureAllClassFiles();
-             // Now write out the files.
--            HashSet<Package.Class> classesToWrite = new HashSet<>(pkg.getClasses());
-+            HashSet<Package.Class> classesToWrite = new HashSet<Package.Class>(pkg.getClasses());
-             for (Iterator i = pkg.getFiles().iterator(); i.hasNext(); ) {
-                 Package.File file = (Package.File) i.next();
-                 String name = file.nameString;
-diff -r 240d4d3f2db7 src/share/classes/com/sun/java/util/jar/pack/Driver.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	Tue Sep 14 17:29:58 2010 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	Wed Sep 15 15:25:40 2010 +0100
-@@ -38,7 +38,7 @@
-                 ResourceBundle.getBundle("com.sun.java.util.jar.pack.DriverResource");
- 
-     public static void main(String[] ava) throws IOException {
--        ArrayList<String> av = new ArrayList<>(Arrays.asList(ava));
-+        ArrayList<String> av = new ArrayList<String>(Arrays.asList(ava));
- 
-         boolean doPack   = true;
-         boolean doUnpack = false;
-@@ -61,7 +61,7 @@
-         }
- 
-         // Collect engine properties here:
--        HashMap<String,String> engProps = new HashMap<>();
-+        HashMap<String,String> engProps = new HashMap<String,String>();
-         engProps.put(verboseProp, System.getProperty(verboseProp));
- 
-         String optionMap;
-@@ -75,7 +75,7 @@
-         }
- 
-         // Collect argument properties here:
--        HashMap<String,String> avProps = new HashMap<>();
-+        HashMap<String,String> avProps = new HashMap<String,String>();
-         try {
-             for (;;) {
-                 String state = parseCommandOptions(av, optionMap, avProps);
-@@ -494,7 +494,7 @@
-         String resultString = null;
- 
-         // Convert options string into optLines dictionary.
--        TreeMap<String,String[]> optmap = new TreeMap<>();
-+        TreeMap<String,String[]> optmap = new TreeMap<String,String[]>();
-     loadOptmap:
-         for (String optline : options.split("\n")) {
-             String[] words = optline.split("\\p{Space}+");
+         for (int i = entries.size()-1; i >= 0; i--) {
+             KeyTabEntry e = entries.get(i);
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-03-21 16:48:19.620912572 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-03-21 16:48:28.193052021 +0000
+@@ -176,7 +176,7 @@
+     private static void printProperties(PrintStream ostream) {
+         Properties p = System.getProperties();
+         ostream.println(PROP_SETTINGS);
+-        List<String> sortedPropertyKeys = new ArrayList<>();
++        List<String> sortedPropertyKeys = new ArrayList<String>();
+         sortedPropertyKeys.addAll(p.stringPropertyNames());
+         Collections.sort(sortedPropertyKeys);
+         for (String x : sortedPropertyKeys) {

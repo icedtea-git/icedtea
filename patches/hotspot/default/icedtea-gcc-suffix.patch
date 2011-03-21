@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/hotspot/agent/src/os/linux/Makefile openjdk/hotspot/agent/src/os/linux/Makefile
 --- openjdk.orig/hotspot/agent/src/os/linux/Makefile	2010-07-29 21:54:38.000000000 +0100
-+++ openjdk/hotspot/agent/src/os/linux/Makefile	2010-08-31 17:54:44.523837437 +0100
++++ openjdk/hotspot/agent/src/os/linux/Makefile	2011-03-15 01:21:20.137504508 +0000
 @@ -23,7 +23,7 @@
  #
  
@@ -11,12 +11,12 @@ diff -Nru openjdk.orig/hotspot/agent/src/os/linux/Makefile openjdk/hotspot/agent
  JAVAH    = ${JAVA_HOME}/bin/javah
  
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
---- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2010-08-31 17:24:48.000000000 +0100
-+++ openjdk/hotspot/make/linux/makefiles/gcc.make	2010-08-31 17:55:09.288779769 +0100
-@@ -26,11 +26,11 @@
- # CC, CPP & AS
- 
- ifdef ALT_COMPILER_PATH
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2011-03-15 01:15:45.000000000 +0000
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2011-03-15 01:22:17.187820176 +0000
+@@ -28,11 +28,11 @@
+ # When cross-compiling the ALT_COMPILER_PATH points
+ # to the cross-compilation toolset
+ ifdef CROSS_COMPILE_ARCH
 -CPP = $(ALT_COMPILER_PATH)/g++
 -CC  = $(ALT_COMPILER_PATH)/gcc
 +CPP = $(ALT_COMPILER_PATH)/g++$(GCC_SUFFIX)

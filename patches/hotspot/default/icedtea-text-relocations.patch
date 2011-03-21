@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
---- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2008-07-17 08:40:27.000000000 +0100
-+++ openjdk/hotspot/make/linux/makefiles/gcc.make	2008-07-21 23:10:50.000000000 +0100
-@@ -46,7 +46,11 @@
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2011-03-14 22:09:02.000000000 +0000
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2011-03-14 22:59:37.765234824 +0000
+@@ -58,7 +58,11 @@
  # Compiler flags
  
  # position-independent code
@@ -13,9 +13,10 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/mak
  
  VM_PICFLAG/LIBJVM = $(PICFLAG)
  VM_PICFLAG/AOUT   =
---- rules.make.orig	2008-12-12 11:23:31.000000000 -0500
-+++ openjdk/hotspot/make/linux/makefiles/rules.make	2008-12-12 11:32:26.000000000 -0500
-@@ -138,20 +138,10 @@
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/rules.make openjdk/hotspot/make/linux/makefiles/rules.make
+--- openjdk.orig/hotspot/make/linux/makefiles/rules.make	2011-03-14 22:09:02.000000000 +0000
++++ openjdk/hotspot/make/linux/makefiles/rules.make	2011-03-14 23:00:47.571188825 +0000
+@@ -146,20 +146,10 @@
  include $(GAMMADIR)/make/pic.make
  endif
  
@@ -24,21 +25,22 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/mak
  %.o: %.cpp
  	@echo Compiling $<
  	$(QUIETLY) $(REMOVE_TARGET)
- 	$(QUIETLY) $(COMPILE.CC) -o $@ $< $(COMPILE_DONE)
+ 	$(QUIETLY) $(COMPILE.CC) $(DEPFLAGS) -o $@ $< $(COMPILE_DONE)
 -else
 -%.o: %.cpp
 -	@echo Compiling $<
 -	$(QUIETLY) $(REMOVE_TARGET)
 -	$(QUIETLY) $(if $(findstring $@, $(NONPIC_OBJ_FILES)), \
--	   $(subst $(VM_PICFLAG), ,$(COMPILE.CC)) -o $@ $< $(COMPILE_DONE), \
--	   $(COMPILE.CC) -o $@ $< $(COMPILE_DONE))
+-	   $(subst $(VM_PICFLAG), ,$(COMPILE.CC)) $(DEPFLAGS) -o $@ $< $(COMPILE_DONE), \
+-	   $(COMPILE.CC) $(DEPFLAGS) -o $@ $< $(COMPILE_DONE))
 -endif
  
  %.o: %.s
  	@echo Assembling $<
---- rules.make.orig	2008-12-12 11:42:55.000000000 -0500
-+++ openjdk/hotspot/make/solaris/makefiles/rules.make	2008-12-12 11:44:01.000000000 -0500
-@@ -138,20 +138,10 @@
+diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/rules.make openjdk/hotspot/make/solaris/makefiles/rules.make
+--- openjdk.orig/hotspot/make/solaris/makefiles/rules.make	2011-03-14 22:09:02.000000000 +0000
++++ openjdk/hotspot/make/solaris/makefiles/rules.make	2011-03-14 23:01:14.490399553 +0000
+@@ -146,20 +146,10 @@
  include $(GAMMADIR)/make/pic.make
  endif
  
@@ -47,14 +49,14 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/mak
  %.o: %.cpp
  	@echo Compiling $<
  	$(QUIETLY) $(REMOVE_TARGET)
- 	$(QUIETLY) $(COMPILE.CC) -o $@ $< $(COMPILE_DONE)
+ 	$(QUIETLY) $(COMPILE.CC) $(DEPFLAGS) -o $@ $< $(COMPILE_DONE)
 -else
 -%.o: %.cpp
 -	@echo Compiling $<
 -	$(QUIETLY) $(REMOVE_TARGET)
 -	$(QUIETLY) $(if $(findstring $@, $(NONPIC_OBJ_FILES)), \
--         $(subst $(VM_PICFLAG), ,$(COMPILE.CC)) -o $@ $< $(COMPILE_DONE), \
--         $(COMPILE.CC) -o $@ $< $(COMPILE_DONE))
+-	   $(subst $(VM_PICFLAG), ,$(COMPILE.CC)) $(DEPFLAGS) -o $@ $< $(COMPILE_DONE), \
+-	   $(COMPILE.CC) $(DEPFLAGS) -o $@ $< $(COMPILE_DONE))
 -endif
  
  %.o: %.s
