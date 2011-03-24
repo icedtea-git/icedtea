@@ -1,3 +1,11 @@
+2011-03-24  Xerxes Ranby  <xerxes@zafena.se>
+
+	JamVM: Base default min and max heap size on physical memory.
+	* NEWS: Updated.
+	* Makefile.am
+	(JAMVM_VERSION): Updated to latest JamVM revision.
+	(JAMVM_SHA256SUM): Updated.
+
 2011-03-21  Xerxes Ranby  <xerxes@zafena.se>
 
 	JamVM: Fix reflective array access.
