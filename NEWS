@@ -13,6 +13,7 @@ New in release 1.14 (XXXX-XX-XX)
   - PR640: JamVM fails to build - Unrecognised option: -XX:ThreadStackSize.
 * JamVM
   - Ignore all unknown options.
+  - Handle overflow in getPhysicalMemory().
   - Base default min and max heap size on physical memory.
   - Fix reflective array access.
   - Handle O_DELETE in JVM_Open.
