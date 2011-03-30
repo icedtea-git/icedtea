@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2009-03-30 23:08:42.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2009-07-23 16:16:30.000000000 +0100
-@@ -54,17 +54,17 @@
+--- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2011-03-29 14:22:49.000000000 +0100
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2011-03-29 23:34:00.169408541 +0100
+@@ -54,8 +54,8 @@
  ifeq ($(PLATFORM), linux)
  
    # Settings specific to Linux
@@ -10,8 +10,9 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/
 +  CC             = $(COMPILER_PATH)gcc$(GCC_SUFFIX)
 +  CPP            = $(COMPILER_PATH)gcc$(GCC_SUFFIX) -E
    # statically link libstdc++ before C++ ABI is stablized on Linux
-   STATIC_CXX     = true
-   ifeq ($(STATIC_CXX),true)
+   ifneq ($(STATIC_CXX),false)
+     STATIC_CXX     = true
+@@ -64,9 +64,9 @@
      # g++ always dynamically links libstdc++, even we use "-Wl,-Bstatic -lstdc++"
      # We need to use gcc to statically link the C++ runtime. gcc and g++ use
      # the same subprocess to compile C++ files, so it is OK to build using gcc.

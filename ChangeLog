@@ -1,3 +1,14 @@
+2011-03-29  Andrew John Hughes  <ahughes@redhat.com>
+
+	PR616, PR99: Don't statically link libstdc++
+	* Makefile.am: Bump changesets and checksums
+	to incorporate static CXX support.
+	(ICEDTEA_ENV): Set STATIC_CXX to false.
+	* NEWS: Mention removal of static linking of
+	libstdc++.
+	* patches/icedtea-gcc-suffix.patch:
+	Regenerated.
+
 2011-03-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/4964490-generify_hotspot_jdi.patch:

@@ -2,6 +2,8 @@ New in release 1.14 (XXXX-XX-XX)
 
 * NetX and the plugin moved to the IcedTea-Web project with a separate
   release cycle.
+* Bug fixes
+  - PR616, PR99: Don't statically link libstdc++
 * Zero/Shark
   - Match Shark in icedtea6, makes OSR work by removing vestigal check.
   - LLVM 2.7 non-product fixes.
