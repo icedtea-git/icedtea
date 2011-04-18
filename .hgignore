@@ -10,4 +10,4 @@ config.sub
 config.status
 install-sh
 Makefile.in
-*.sh
+

@@ -1,3 +1,61 @@
+2011-04-18  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/icedtea-freetypeversion.patch:
+	Moved upstream.
+	* patches/icedtea-jdk-use-ssize_t.patch:
+	No longer applicable (patched file was
+	part of HPI which is now gone).
+	* .hgignore: Don't hide scripts.
+	* Makefile.am:
+	(OPENJDK_VERSION): Bump to b130.
+	(CORBA_CHANGESET): Updated.
+	(HOTSPOT_CHANGESET): Likewise.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(JAXWS_DROP_ZIP): Likewise.
+	(JAXWS_DROP_SHA256SUM): Likewise.
+	(JAXP_DROP_ZIP): Likewise.
+	(JAXP_DROP_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Drop above patches.
+	(ICEDTEA_BOOT_PATCHES): Add multicatch
+	and trywithresources patches.
+	(.PHONY): Add clean-remove-intree-libraries.
+	(extract): Depend on remove-intree-libraries.
+	(clean-extract-openjdk): Depend on clean-remove-intree-libraries.
+	(remove-intree-libraries): Run a script to remove
+	intree copies of libjpeg, zlib, libpng and giflib.
+	(clean-remove-intree-libraries): Remove the stamp.
+	(versioning): Don't alter the original file as it may
+	be hardlinked to an OpenJDK source tree.  Move the original
+	and create a new file.
+	* patches/boot/ecj-diamond.patch: Extended with new cases.
+	* patches/boot/ecj-multicatch.patch: Remove instances of
+	multicatch (Project Coin feature).
+	* patches/boot/ecj-stringswitch.patch: Extended with new cases.
+	* patches/boot/ecj-trywithresources.patch: Remove instances
+	of try-with-resources (Project Coin feature).
+	* patches/boot/fontconfig.patch: Regenerated.
+	* patches/boot/revert-6973616.patch: Likewise.
+	* patches/boot/xbootclasspath.patch: Likewise.
+	* patches/hotspot/default/icedtea-text-relocations.patch: Likewise.
+	* patches/icedtea-libraries.patch:
+	Drop removal of libjpeg files from patch.  Now
+	achieved using remove-intree-libraries script.
+	* patches/systemtap-alloc-size-workaround.patch:
+	Regenerated.
+	* remove-intree-libraries.sh: New script to remove
+	intree libraries.
+
 2011-03-29  Andrew John Hughes  <ahughes@redhat.com>
 
 	PR616, PR99: Don't statically link libstdc++

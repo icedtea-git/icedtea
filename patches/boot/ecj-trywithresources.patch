@@ -1,0 +1,206 @@
+diff -r 7fb9e32b146a src/share/classes/java/nio/file/CopyMoveHelper.java
+--- openjdk-boot/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java	Thu Apr 14 01:28:58 2011 +0100
+@@ -122,9 +122,15 @@
+         if (attrs.isDirectory()) {
+             Files.createDirectory(target);
+         } else {
+-            try (InputStream in = Files.newInputStream(source)) {
++            InputStream in = null;
++            try {
++                in = Files.newInputStream(source);
+                 Files.copy(in, target);
+             }
++            finally {
++                if (in != null)
++                    in.close();
++            }
+         }
+ 
+         // copy basic attributes to target
+diff -r 7fb9e32b146a src/share/classes/java/nio/file/Files.java
+--- openjdk-boot/jdk/src/share/classes/java/nio/file/Files.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/java/nio/file/Files.java	Thu Apr 14 01:28:58 2011 +0100
+@@ -2821,8 +2821,11 @@
+         }
+ 
+         // do the copy
+-        try (OutputStream out = ostream) {
+-            return copy(in, out);
++        try {
++            return copy(in, ostream);
++        }
++        finally {
++            ostream.close();
+         }
+     }
+ 
+@@ -2863,9 +2866,15 @@
+         // ensure not null before opening file
+         Objects.requireNonNull(out);
+ 
+-        try (InputStream in = newInputStream(source)) {
++        InputStream in = null;
++        try {
++            in = newInputStream(source);
+             return copy(in, out);
+         }
++        finally {
++            if (in != null)
++                in.close();
++        }
+     }
+ 
+     /**
+@@ -2931,8 +2940,14 @@
+         if (size > (long)Integer.MAX_VALUE)
+             throw new OutOfMemoryError("Required array size too large");
+ 
+-        try (InputStream in = newInputStream(path)) {
+-             return read(in, (int)size);
++        InputStream in = null;
++        try {
++            in = newInputStream(path);
++            return read(in, (int)size);
++        }
++        finally {
++            if (in != null)
++                in.close();
+         }
+     }
+ 
+@@ -2978,7 +2993,9 @@
+     public static List<String> readAllLines(Path path, Charset cs)
+         throws IOException
+     {
+-        try (BufferedReader reader = newBufferedReader(path, cs)) {
++        BufferedReader reader = null;
++        try {
++            reader = newBufferedReader(path, cs);
+             List<String> result = new ArrayList<>();
+             for (;;) {
+                 String line = reader.readLine();
+@@ -2988,6 +3005,10 @@
+             }
+             return result;
+         }
++        finally {
++            if (reader != null)
++                reader.close();
++        }
+     }
+ 
+     /**
+@@ -3037,7 +3058,9 @@
+         // ensure bytes is not null before opening file
+         Objects.requireNonNull(bytes);
+ 
+-        try (OutputStream out = Files.newOutputStream(path, options)) {
++        OutputStream out = null;
++        try {
++            out = Files.newOutputStream(path, options);
+             int len = bytes.length;
+             int rem = len;
+             while (rem > 0) {
+@@ -3046,6 +3069,10 @@
+                 rem -= n;
+             }
+         }
++        finally {
++            if (out != null)
++                out.close();
++        }
+         return path;
+     }
+ 
+@@ -3097,12 +3124,18 @@
+         Objects.requireNonNull(lines);
+         CharsetEncoder encoder = cs.newEncoder();
+         OutputStream out = newOutputStream(path, options);
+-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, encoder))) {
++        BufferedWriter writer = null;
++        try {
++            writer = new BufferedWriter(new OutputStreamWriter(out, encoder));
+             for (CharSequence line: lines) {
+                 writer.append(line);
+                 writer.newLine();
+             }
+         }
++        finally {
++            if (writer != null)
++                writer.close();
++        }
+         return path;
+     }
+ }
+diff -r 7fb9e32b146a src/share/classes/sun/nio/fs/PollingWatchService.java
+--- openjdk-boot/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java	Thu Apr 14 01:28:58 2011 +0100
+@@ -255,7 +255,9 @@
+             this.entries = new HashMap<Path,CacheEntry>();
+ 
+             // get the initial entries in the directory
+-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
++            DirectoryStream<Path> stream = null;
++            try {
++                stream = Files.newDirectoryStream(dir);
+                 for (Path entry: stream) {
+                     // don't follow links
+                     long lastModified =
+@@ -264,6 +266,10 @@
+                 }
+             } catch (DirectoryIteratorException e) {
+                 throw e.getCause();
++            } finally {
++                if (stream != null) {
++                    stream.close();
++                }
+             }
+         }
+ 
+diff -r 7fb9e32b146a src/share/classes/sun/security/provider/SeedGenerator.java
+--- openjdk-boot/jdk/src/share/classes/sun/security/provider/SeedGenerator.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/SeedGenerator.java	Thu Apr 14 01:28:58 2011 +0100
+@@ -179,7 +179,9 @@
+                         // The temporary dir
+                         File f = new File(p.getProperty("java.io.tmpdir"));
+                         int count = 0;
+-                        try (DirectoryStream<Path> stream = Files.newDirectoryStream(f.toPath())) {
++                        DirectoryStream<Path> stream = null;
++                        try {
++                            stream = Files.newDirectoryStream(f.toPath());
+                             // We use a Random object to choose what file names
+                             // should be used. Otherwise on a machine with too
+                             // many files, the same first 1024 files always get
+@@ -194,6 +196,10 @@
+                                     break;
+                                 }
+                             }
++                        } finally {
++                            if (stream != null) {
++                                stream.close();
++                            }
+                         }
+                     } catch (Exception ex) {
+                         md.update((byte)ex.hashCode());
+diff -r 7fb9e32b146a src/solaris/classes/sun/nio/fs/UnixFileStore.java
+--- openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java	Thu Apr 14 01:28:58 2011 +0100
+@@ -255,9 +255,16 @@
+         String fstypes = System.getProperty("java.home") + "/lib/fstypes.properties";
+         Path file = Paths.get(fstypes);
+         try {
+-            try (ReadableByteChannel rbc = Files.newByteChannel(file)) {
++            ReadableByteChannel rbc = null;
++            try {
++                rbc = Files.newByteChannel(file);
+                 result.load(Channels.newReader(rbc, "UTF-8"));
+             }
++            finally {
++                if (rbc != null) {
++                    rbc.close();
++                }
++            }
+         } catch (IOException x) {
+         }
+         return result;

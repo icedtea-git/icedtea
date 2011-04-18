@@ -1,0 +1,71 @@
+diff -r 7fb9e32b146a src/share/classes/java/io/PrintStream.java
+--- openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java	Wed Apr 13 23:52:09 2011 +0100
+@@ -91,7 +91,10 @@
+         requireNonNull(csn, "charsetName");
+         try {
+             return Charset.forName(csn);
+-        } catch (IllegalCharsetNameException|UnsupportedCharsetException unused) {
++        } catch (IllegalCharsetNameException unused) {
++            // UnsupportedEncodingException should be thrown
++            throw new UnsupportedEncodingException(csn);
++        } catch (UnsupportedCharsetException unused) {
+             // UnsupportedEncodingException should be thrown
+             throw new UnsupportedEncodingException(csn);
+         }
+diff -r 7fb9e32b146a src/share/classes/java/io/PrintWriter.java
+--- openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java	Wed Apr 13 23:52:09 2011 +0100
+@@ -85,7 +85,10 @@
+         Objects.requireNonNull(csn, "charsetName");
+         try {
+             return Charset.forName(csn);
+-        } catch (IllegalCharsetNameException|UnsupportedCharsetException unused) {
++        } catch (IllegalCharsetNameException unused) {
++            // UnsupportedEncodingException should be thrown
++            throw new UnsupportedEncodingException(csn);
++        } catch (UnsupportedCharsetException unused) {
+             // UnsupportedEncodingException should be thrown
+             throw new UnsupportedEncodingException(csn);
+         }
+diff -r 7fb9e32b146a src/share/classes/java/util/Formatter.java
+--- openjdk-boot/jdk/src/share/classes/java/util/Formatter.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/java/util/Formatter.java	Wed Apr 13 23:52:09 2011 +0100
+@@ -1859,7 +1859,10 @@
+         Objects.requireNonNull(csn, "charsetName");
+         try {
+             return Charset.forName(csn);
+-        } catch (IllegalCharsetNameException|UnsupportedCharsetException unused) {
++        } catch (IllegalCharsetNameException unused) {
++            // UnsupportedEncodingException should be thrown
++            throw new UnsupportedEncodingException(csn);
++        } catch (UnsupportedCharsetException unused) {
+             // UnsupportedEncodingException should be thrown
+             throw new UnsupportedEncodingException(csn);
+         }
+diff -r 7fb9e32b146a src/share/classes/java/util/Scanner.java
+--- openjdk-boot/jdk/src/share/classes/java/util/Scanner.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/java/util/Scanner.java	Wed Apr 13 23:52:09 2011 +0100
+@@ -633,7 +633,10 @@
+         Objects.requireNonNull(csn, "charsetName");
+         try {
+             return Charset.forName(csn);
+-        } catch (IllegalCharsetNameException|UnsupportedCharsetException e) {
++        } catch (IllegalCharsetNameException e) {
++            // IllegalArgumentException should be thrown
++            throw new IllegalArgumentException(e);
++        } catch (UnsupportedCharsetException e) {
+             // IllegalArgumentException should be thrown
+             throw new IllegalArgumentException(e);
+         }
+@@ -684,7 +687,9 @@
+         Objects.requireNonNull(charsetName, "charsetName");
+         try {
+             return Charset.forName(charsetName).newDecoder();
+-        } catch (IllegalCharsetNameException|UnsupportedCharsetException unused) {
++        } catch (IllegalCharsetNameException unused) {
++            throw new IllegalArgumentException(charsetName);
++        } catch (UnsupportedCharsetException unused) {
+             throw new IllegalArgumentException(charsetName);
+         }
+     }

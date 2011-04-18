@@ -1,6 +1,149 @@
-diff -r c981a387cd86 src/share/classes/com/sun/security/ntlm/NTLM.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	Mon Nov 22 21:55:09 2010 +0000
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	Wed Nov 24 00:34:39 2010 +0000
+diff -r 7fb9e32b146a src/share/classes/com/sun/java/util/jar/pack/ClassReader.java
+--- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	Sat Apr 16 03:24:55 2011 +0100
+@@ -350,18 +350,15 @@
+             if (attrCommands != null) {
+                 Object lkey = Attribute.keyForLookup(ctype, name);
+                 String cmd = (String) attrCommands.get(lkey);
+-                if (cmd != null) {
+-                    switch (cmd) {
+-                        case "pass":
+-                            String message1 = "passing attribute bitwise in " + h;
+-                            throw new Attribute.FormatException(message1, ctype, name, cmd);
+-                        case "error":
+-                            String message2 = "attribute not allowed in " + h;
+-                            throw new Attribute.FormatException(message2, ctype, name, cmd);
+-                        case "strip":
+-                            skip(length, name + " attribute in " + h);
+-                            continue;
+-                    }
++                if ("pass".equals(cmd)) {
++                    String message1 = "passing attribute bitwise in " + h;
++                    throw new Attribute.FormatException(message1, ctype, name, cmd);
++                } else if ("error".equals(cmd)) {
++                    String message2 = "attribute not allowed in " + h;
++                    throw new Attribute.FormatException(message2, ctype, name, cmd);
++                } else if ("strip".equals(cmd)) {
++                    skip(length, name + " attribute in " + h);
++                    continue;
+                 }
+             }
+             // Find canonical instance of the requested attribute.
+diff -r 7fb9e32b146a src/share/classes/com/sun/java/util/jar/pack/Driver.java
+--- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	Sat Apr 16 03:24:55 2011 +0100
+@@ -71,16 +71,14 @@
+         {
+             // Non-standard, undocumented "--unpack" switch enables unpack mode.
+             String arg0 = av.isEmpty() ? "" : av.get(0);
+-            switch (arg0) {
+-                case "--pack":
++            if ("--pack".equals(arg0))
+                 av.remove(0);
+-                    break;
+-                case "--unpack":
+-                av.remove(0);
+-                doPack = false;
+-                doUnpack = true;
+-                    break;
+-            }
++            else if ("--unpack".equals(arg0))
++                {
++                    av.remove(0);
++                    doPack = false;
++                    doUnpack = true;
++                }
+         }
+ 
+         // Collect engine properties here:
+@@ -180,21 +178,16 @@
+         // Deal with remaining non-engine properties:
+         for (String opt : avProps.keySet()) {
+             String val = avProps.get(opt);
+-            switch (opt) {
+-                case "--repack":
+-                    doRepack = true;
+-                    break;
+-                case "--no-gzip":
+-                    doZip = (val == null);
+-                    break;
+-                case "--log-file=":
+-                    logFile = val;
+-                    break;
+-                default:
+-                    throw new InternalError(MessageFormat.format(
+-                            RESOURCE.getString(DriverResource.BAD_OPTION),
+-                            opt, avProps.get(opt)));
+-            }
++            if ("--repack".equals(opt))
++                doRepack = true;
++            else if ("--no-gzip".equals(opt))
++                doZip = (val == null);
++            else if ("--log-file=".equals(opt))
++                logFile = val;
++            else
++                throw new InternalError(MessageFormat.format(
++                                                             RESOURCE.getString(DriverResource.BAD_OPTION),
++                                                             opt, avProps.get(opt)));
+         }
+ 
+         if (logFile != null && !logFile.equals("")) {
+diff -r 7fb9e32b146a src/share/classes/com/sun/java/util/jar/pack/Package.java
+--- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	Sat Apr 16 03:24:55 2011 +0100
+@@ -1116,30 +1116,25 @@
+         // what is one of { Debug, Compile, Constant, Exceptions, InnerClasses }
+         if (verbose > 0)
+             Utils.log.info("Stripping "+what.toLowerCase()+" data and attributes...");
+-        switch (what) {
+-            case "Debug":
+-                strip("SourceFile");
+-                strip("LineNumberTable");
+-                strip("LocalVariableTable");
+-                strip("LocalVariableTypeTable");
+-                break;
+-            case "Compile":
+-                // Keep the inner classes normally.
+-                // Although they have no effect on execution,
+-                // the Reflection API exposes them, and JCK checks them.
+-                // NO: // strip("InnerClasses");
+-                strip("Deprecated");
+-                strip("Synthetic");
+-                break;
+-            case "Exceptions":
+-                // Keep the exceptions normally.
+-                // Although they have no effect on execution,
+-                // the Reflection API exposes them, and JCK checks them.
+-                strip("Exceptions");
+-                break;
+-            case "Constant":
+-                stripConstantFields();
+-                break;
++        if ("Debug".equals(what)) {
++            strip("SourceFile");
++            strip("LineNumberTable");
++            strip("LocalVariableTable");
++            strip("LocalVariableTypeTable");
++        } else if ("Compile".equals(what)) {
++            // Keep the inner classes normally.
++            // Although they have no effect on execution,
++            // the Reflection API exposes them, and JCK checks them.
++            // NO: // strip("InnerClasses");
++            strip("Deprecated");
++            strip("Synthetic");
++        } else if ("Exceptions".equals(what)) {
++            // Keep the exceptions normally.
++            // Although they have no effect on execution,
++            // the Reflection API exposes them, and JCK checks them.
++            strip("Exceptions");
++        } else if ("Constant".equals(what)) {
++            stripConstantFields();
+         }
+     }
+ 
+diff -r 7fb9e32b146a src/share/classes/com/sun/security/ntlm/NTLM.java
+--- openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	Sat Apr 16 03:24:55 2011 +0100
 @@ -64,17 +64,23 @@
  
      protected NTLM(String version) throws NTLMException {
@@ -36,41 +179,48 @@ diff -r c981a387cd86 src/share/classes/com/sun/security/ntlm/NTLM.java
          try {
              fac = SecretKeyFactory.getInstance ("DES");
              cipher = Cipher.getInstance ("DES/ECB/NoPadding");
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-03-21 16:45:04.633739680 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-03-21 16:47:00.579626597 +0000
-@@ -110,21 +110,17 @@
+diff -r 7fb9e32b146a src/share/classes/sun/launcher/LauncherHelper.java
+--- openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	Sat Apr 16 03:24:55 2011 +0100
+@@ -115,24 +115,20 @@
          String optStr = (opts.length > 1 && opts[1] != null)
                  ? opts[1].trim()
                  : "all";
 -        switch (optStr) {
 -            case "vm":
 +        if ("vm".equals(optStr))
-+            printVmSettings(ostream, maxHeapSize, stackSize, isServer);
++            printVmSettings(ostream, initialHeapSize, maxHeapSize,
++                            stackSize, isServer);
 +        else if ("properties".equals(optStr))
 +            printProperties(ostream);
 +        else if ("locale".equals(optStr))
 +            printLocale(ostream);
 +        else
 +            {
-                 printVmSettings(ostream, maxHeapSize, stackSize, isServer);
+                 printVmSettings(ostream, initialHeapSize, maxHeapSize,
+-                        stackSize, isServer);
 -                break;
 -            case "properties":
-                 printProperties(ostream);
+-                printProperties(ostream);
 -                break;
 -            case "locale":
-                 printLocale(ostream);
--                break;
--            default:
--                printVmSettings(ostream, maxHeapSize, stackSize, isServer);
--                printProperties(ostream);
 -                printLocale(ostream);
 -                break;
-         }
+-            default:
+-                printVmSettings(ostream, initialHeapSize, maxHeapSize,
+-                        stackSize, isServer);
++                                stackSize, isServer);
+                 printProperties(ostream);
+                 printLocale(ostream);
+-                break;
+-        }
++            }
      }
  
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2011-03-14 22:10:33.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2011-03-21 15:05:29.000000000 +0000
+     /*
+diff -r 7fb9e32b146a src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java
+--- openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	Mon Apr 11 14:58:51 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	Sat Apr 16 03:24:55 2011 +0100
 @@ -383,19 +383,23 @@
              GE;         // ">="
  

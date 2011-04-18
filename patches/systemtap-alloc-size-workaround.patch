@@ -1,14 +1,9 @@
-Generating a dwarf location expression for variable * "constant" as used
-in this probe argument triggers unforseen complications. See
-https://bugzilla.redhat.com/show_bug.cgi?id=613824
-Workaround for now by passing the size without HeapWordSize adjustment.
-See also the hotspot.object_alloc in tapset/hotspot.stp[.in].
-
---- openjdk.orig/hotspot/src/share/vm/runtime/sharedRuntime.cpp	2010-05-18 20:00:22.130618755 +0200
-+++ openjdk/hotspot/src/share/vm/runtime/sharedRuntime.cpp	2010-07-28 22:53:23.662310007 +0200
-@@ -711,7 +711,7 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/sharedRuntime.cpp openjdk/hotspot/src/share/vm/runtime/sharedRuntime.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/sharedRuntime.cpp	2011-04-11 12:33:06.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/sharedRuntime.cpp	2011-04-11 16:40:57.825703429 +0100
+@@ -890,7 +890,7 @@
    int size = o->size();
-   symbolOop name = klass->name();
+   Symbol* name = klass->name();
    HS_DTRACE_PROBE4(hotspot, object__alloc, get_java_tid(thread),
 -                   name->bytes(), name->utf8_length(), size * HeapWordSize);
 +                   name->bytes(), name->utf8_length(), size);

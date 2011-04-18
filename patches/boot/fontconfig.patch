@@ -1,7 +1,7 @@
 diff -Nru openjdk-boot.orig/jdk/make/sun/awt/Makefile openjdk-boot/jdk/make/sun/awt/Makefile
---- openjdk-boot.orig/jdk/make/sun/awt/Makefile	2010-03-02 18:01:28.000000000 +0000
-+++ openjdk-boot/jdk/make/sun/awt/Makefile	2010-03-02 18:01:21.000000000 +0000
-@@ -402,11 +402,9 @@
+--- openjdk-boot.orig/jdk/make/sun/awt/Makefile	2011-04-11 12:34:30.000000000 +0100
++++ openjdk-boot/jdk/make/sun/awt/Makefile	2011-04-11 16:51:37.423839968 +0100
+@@ -401,11 +401,9 @@
  
  COMPILEFONTCONFIG_JARFILE = $(BUILDTOOLJARDIR)/compilefontconfig.jar
  
@@ -9,7 +9,7 @@ diff -Nru openjdk-boot.orig/jdk/make/sun/awt/Makefile openjdk-boot/jdk/make/sun/
 -    $(COMPILEFONTCONFIG_JARFILE)
 +$(LIBDIR)/%.bfc: $(GENSRCDIR)/fontconfig/%.bfc
  	$(prep-target)
--	$(BOOT_JAVA_CMD) -jar $(COMPILEFONTCONFIG_JARFILE) $< $@
+-	$(BOOT_JAVA_CMD) -jar $(COMPILEFONTCONFIG_JARFILE) $(COMPILEFONTCONFIG_FLAGS) $< $@
 -	$(install-module-file)
 +	$(install-file)
  	$(call chmod-file, 444)

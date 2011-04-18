@@ -1,22 +1,22 @@
 # Dependencies
 
-OPENJDK_VERSION = b123
+OPENJDK_VERSION = b130
 
-CORBA_CHANGESET = eac2b25431d9
-HOTSPOT_CHANGESET = 011f8af78ea1
-JAXP_CHANGESET = 17aa584100e9
-JAXWS_CHANGESET = 98bca2ec154b
-JDK_CHANGESET = 3b8e4a1215bb
-LANGTOOLS_CHANGESET = a75f9777ae63
-OPENJDK_CHANGESET = 714f89350919
+CORBA_CHANGESET = 59f02c101698
+HOTSPOT_CHANGESET = bbfa41dad6d4
+JAXP_CHANGESET = b6f201c0649a
+JAXWS_CHANGESET = 4c04de31900b
+JDK_CHANGESET = d5404dcb1265
+LANGTOOLS_CHANGESET = 4659da7bff78
+OPENJDK_CHANGESET = d39d0c08731a
 
-CORBA_SHA256SUM = 106b6ff3765db0d608a7e5542a7b606fe10a2c1ebb155b866aef09f88ce481a7
-HOTSPOT_SHA256SUM = cb89a70159a7f124904ecaf17683a5709787e079f476faea4e11645e4676c44d
-JAXP_SHA256SUM = 009baa056f2b01e313470b71542b40baab511e179b63decca00b16081e6730bd
-JAXWS_SHA256SUM = 5990beb8e8f2144838d52f0948b088bf74ae3ddd748b996ddbb7e7ff1605389b
-JDK_SHA256SUM = 5ad0f1d0c4b4ae32675d530d5d786f5b81083fa6a51cb24a823a229f366241b7
-LANGTOOLS_SHA256SUM = c60849a838df72cb7b95562a97af75fa1e3e56fcc15678885a8e154463df8417
-OPENJDK_SHA256SUM = 66137d24a545e15f7be6925ebf92e456c4a42e7c862db2f6eb12cafb8cd4288b
+CORBA_SHA256SUM = 4c6db5299947c3ed11a7f72da55a3cd89197c143f10d77c75036aa2f2cf296a6
+HOTSPOT_SHA256SUM = bf4f93ae5782e4110ffc33fdc997c4c43f798eca9dff6db4784f8da51ff0f2c3
+JAXP_SHA256SUM = a1a5c6b2671f83d4675f9ba25013c6a16a4cf4d1040fcd2ff4143c92bd5496a3
+JAXWS_SHA256SUM = 8fe84a61142d579487bee98133fc26e57aedb97f781dc925ad3803aa40f5c061
+JDK_SHA256SUM = 78ff05e5128898830612dd117e7799f982663132d5fb518835cc5871a18d0427
+LANGTOOLS_SHA256SUM = 1df1bb1edd5f912405398c0024f8290f6a9030172dd1196c52e2c461769a1a07
+OPENJDK_SHA256SUM = 937930cb6c3174f8bdbf3d0034832fbde539fd62591087f1d6fcec695ed20519
 
 CACAO_VERSION = e321b101a9ee
 CACAO_SHA256SUM = 46bc5b6212c199dc4a3dbebe6386fe15a8248625a5dffa17115aab394a298444
@@ -25,14 +25,14 @@ CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
 JAXWS_DROP_URL = http://icedtea.classpath.org/download/drops
-JAXWS_DROP_ZIP = jdk7-jaxws2_2-2010_08_19.zip
-JAXWS_DROP_SHA256SUM = b8877aafbb15a348babcaee4ee372fb3e2ea0282f8fe93d306272fd24d7847de
+JAXWS_DROP_ZIP = jdk7-jaxws2_2_2-2010_12_14.zip
+JAXWS_DROP_SHA256SUM = ef3115dde8ed9a7129e65aab8b1499e11621e343559e6e5a8df9c4542848fb9b
 JAF_DROP_URL = http://icedtea.classpath.org/download/drops
 JAF_DROP_ZIP = jdk7-jaf-2010_08_19.zip
 JAF_DROP_SHA256SUM = e6aefedfdbb4673e8019583d1344fb162b94e1b10382c362364dbbfd5889c09e
 JAXP_DROP_URL = http://icedtea.classpath.org/download/drops
-JAXP_DROP_ZIP = jaxp-1_4_4.zip
-JAXP_DROP_SHA256SUM = 10b203bec5b7d3dd8f515a9e098f80abc316faf977bcc220b56efe3dc6e9e5e9
+JAXP_DROP_ZIP = jaxp-1_4_5-dev.zip
+JAXP_DROP_SHA256SUM = 938cce9d3f0afaa5d076c62a2de081862102d10bfe04a0767122f2dff5bd975e
 
 ICEDTEA_HG_URL = http://hg.openjdk.java.net/icedtea/jdk7
 OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk7/jdk7
@@ -249,7 +249,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-print-lsb-release.patch \
 	patches/icedtea-jpegclasses.patch \
 	patches/debian/icedtea-uname.patch \
-	patches/icedtea-freetypeversion.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-sparc-ptracefix.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-sparc-trapsfix.patch \
 	patches/icedtea-override-redirect-metacity.patch \
@@ -257,7 +256,6 @@ ICEDTEA_PATCHES = \
 	patches/icedtea-hotspot-gcc-pr36917.patch \
 	patches/icedtea-alpha-fixes.patch \
 	patches/icedtea-alt-jar.patch \
-	patches/icedtea-jdk-use-ssize_t.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-use-idx_t.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-params-cast-size_t.patch \
 	patches/icedtea-clean-crypto.patch \
@@ -362,7 +360,9 @@ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/corba-dependencies.patch \
 	patches/boot/jaxws-langtools-dependency.patch \
 	patches/boot/jaxws-jdk-dependency.patch \
-	patches/boot/hotspot-jdk-dependency.patch
+	patches/boot/hotspot-jdk-dependency.patch \
+	patches/boot/ecj-multicatch.patch \
+	patches/boot/ecj-trywithresources.patch
 
 if CP39408_JAVAH
 ICEDTEA_BOOT_PATCHES += patches/boot/icedtea-pr39408.patch
@@ -730,7 +730,7 @@ install:
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot \
 	clean-rt hotspot hotspot-helper clean-jtreg clean-jtreg-reports \
-	clean-drops jtregcheck
+	clean-drops jtregcheck clean-remove-intree-libraries
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1073,7 +1073,8 @@ clean-download-cacao:
 	rm -f stamps/download-cacao.stamp
 
 stamps/extract.stamp: stamps/extract-openjdk.stamp \
- stamps/extract-cacao.stamp stamps/extract-jaxws.stamp
+ stamps/extract-cacao.stamp stamps/extract-jaxws.stamp \
+ stamps/remove-intree-libraries.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -1191,7 +1192,7 @@ endif
 	touch $@
 
 clean-extract-openjdk: clean-overlay clean-versioning \
- clean-patch-fsg
+ clean-patch-fsg clean-remove-intree-libraries
 	rm -rf openjdk
 	rm -f stamps/extract-openjdk.stamp
 
@@ -1236,6 +1237,13 @@ clean-extract-jaxws:
         fi
 	mkdir -p stamps
 	rm -f stamps/extract-jaxws.stamp
+
+stamps/remove-intree-libraries.stamp: stamps/extract-openjdk.stamp
+	sh $(srcdir)/remove-intree-libraries.sh
+	touch stamps/remove-intree-librares.stamp
+
+clean-remove-intree-libraries:
+	rm -f stamps/remove-intree-libraries.stamp
 
 stamps/generated.stamp: stamps/extract.stamp
 	set -e ; \
@@ -1380,7 +1388,8 @@ clean-patch:
 	fi
 
 stamps/versioning.stamp: stamps/patch.stamp
-	cp openjdk/jdk/make/common/shared/Defs.gmk Defs.gmk.bak
+	mv openjdk/jdk/make/common/shared/Defs.gmk Defs.gmk.bak
+	cat Defs.gmk.bak > openjdk/jdk/make/common/shared/Defs.gmk
 	icedtea_version="$(PACKAGE_VERSION)$(ICEDTEA_REV)" ; \
 	if ! test "x$(WITH_CACAO)" = "xno"; then \
 	  echo "JDK_DERIVATIVE_NAME=$${icedtea_version}" \

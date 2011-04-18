@@ -1,10 +1,10 @@
-diff -Nru openjdk.orig/jdk/make/common/shared/Defs-versions.gmk openjdk/jdk/make/common/shared/Defs-versions.gmk
---- openjdk-boot.orig/jdk/make/common/shared/Defs-versions.gmk	2011-03-16 22:23:11.000000000 +0000
-+++ openjdk-boot/jdk/make/common/shared/Defs-versions.gmk	2011-03-16 22:29:36.710722785 +0000
-@@ -206,7 +206,7 @@
+diff -Nru openjdk-boot.orig/jdk/make/common/shared/Defs-versions.gmk openjdk-boot/jdk/make/common/shared/Defs-versions.gmk
+--- openjdk-boot.orig/jdk/make/common/shared/Defs-versions.gmk	2011-04-11 15:03:04.000000000 +0100
++++ openjdk-boot/jdk/make/common/shared/Defs-versions.gmk	2011-04-11 17:19:36.394376477 +0100
+@@ -209,7 +209,7 @@
  
  # Generic
- REQUIRED_ANT_VER          = 1.6.3
+ REQUIRED_ANT_VER          = 1.7.1
 -REQUIRED_BOOT_VER         = 1.6
 +REQUIRED_BOOT_VER         = 1.5
  REQUIRED_FREETYPE_VERSION = 2.2.1
