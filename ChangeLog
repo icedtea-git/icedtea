@@ -1,5 +1,11 @@
 2011-04-18  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(JDK_CHANGESET): Remove unneeded import in Rhino patch.
+	(JDK_SHA256SUM): Likewise.
+
+2011-04-18  Andrew John Hughes  <ahughes@redhat.com>
+
 	* patches/icedtea-freetypeversion.patch:
 	Moved upstream.
 	* patches/icedtea-jdk-use-ssize_t.patch:
