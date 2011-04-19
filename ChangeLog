@@ -1,3 +1,7 @@
+2011-04-19  Omair Majid  <omajid@redhat.com>
+
+	* patches/boot/test_gamma.patch: Skip test_gamma for shark too.
+
 2011-04-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
