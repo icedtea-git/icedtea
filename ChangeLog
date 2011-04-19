@@ -1,6 +1,13 @@
 2011-04-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	(JDK_CHANGESET): Include security fixes
+	from 2011/02/15.
+	(JDK_SHA256SUM): Likewise.
+
+2011-04-19  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(HOTSPOT_CHANGESET): Incorporate ARM interpreter
 	code removal, JSR 292 Zero support and merge issue fix.
 	(HOTSPOT_SHA256SUM): Likewise.
