@@ -1,3 +1,10 @@
+2011-04-19  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(HOTSPOT_CHANGESET): Incorporate Zero/Shark fixes
+	and security fix.
+	(HOTSPOT_SHA256SUM): Likewise.
+
 2011-04-18  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
