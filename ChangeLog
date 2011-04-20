@@ -1,3 +1,7 @@
+2011-04-20  Omair Majid  <omajid@redhat.com>
+
+	* Makefile.am (stamps/remove-intree-libraries.stamp): Typo in file name.
+
 2011-04-19  Omair Majid  <omajid@redhat.com>
 
 	* patches/boot/test_gamma.patch: Skip test_gamma for shark too.

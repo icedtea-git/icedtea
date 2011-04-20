@@ -1240,7 +1240,7 @@ clean-extract-jaxws:
 
 stamps/remove-intree-libraries.stamp: stamps/extract-openjdk.stamp
 	sh $(srcdir)/remove-intree-libraries.sh
-	touch stamps/remove-intree-librares.stamp
+	touch stamps/remove-intree-libraries.stamp
 
 clean-remove-intree-libraries:
 	rm -f stamps/remove-intree-libraries.stamp
