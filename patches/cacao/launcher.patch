@@ -30,7 +30,7 @@
  
        args.argc = argc;
 @@ -1931,7 +1935,17 @@
-       args.classname = classname;
+       args.what = what;
        args.ifn = *ifn;
  
 -      rslt = ContinueInNewThread0(JavaMain, threadStackSize, (void*)&args);

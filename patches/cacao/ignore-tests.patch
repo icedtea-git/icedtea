@@ -2,7 +2,7 @@ diff -Nru openjdk.orig/jdk/test/java/util/concurrent/BlockingQueue/ProducerConsu
 --- openjdk.orig/jdk/test/java/util/concurrent/BlockingQueue/ProducerConsumerLoops.java	2010-05-10 15:04:14.000000000 +0100
 +++ openjdk/jdk/test/java/util/concurrent/BlockingQueue/ProducerConsumerLoops.java	2010-05-10 23:42:41.000000000 +0100
 @@ -37,6 +37,7 @@
-  * @compile ProducerConsumerLoops.java
+  * @compile -source 1.5 ProducerConsumerLoops.java
   * @run main/timeout=3600 ProducerConsumerLoops
   * @summary  multiple producers and consumers using blocking queues
 + * @ignore cacao test hog, ignore for the sake of buildds

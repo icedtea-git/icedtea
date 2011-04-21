@@ -1,5 +1,10 @@
 2011-04-21  Omair Majid  <omajid@redhat.com>
 
+	* patches/cacao/ignore-tests.patch: Update to apply on new sources.
+	* patches/cacao/launcher.patch: Likewise.
+
+2011-04-21  Omair Majid  <omajid@redhat.com>
+
 	* Makefile.am (clean-add-cacao): Fix typo.
 
 2011-04-20  Omair Majid  <omajid@redhat.com>
