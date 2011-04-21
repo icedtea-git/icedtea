@@ -2026,7 +2026,7 @@ endif
 
 clean-add-cacao:
 	rm -rf $(BUILD_JRE_ARCH_DIR)/cacao
-	if [ -e $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ] ; then \
+	if [ -e $(BUILD_JRE_ARCH_DIR)/jvm.cfg ] ; then \
 	  sed -i 's#-cacao KNOWN#-cacao ERROR#' $(BUILD_JRE_ARCH_DIR)/jvm.cfg ; \
 	fi
 	rm -f stamps/add-cacao.stamp
