@@ -1,5 +1,11 @@
 2011-04-21  Omair Majid  <omajid@redhat.com>
 
+	* patches/bytebuffer-compact.patch: Drop patch. It only contained
+	stylistic changes.
+	* Makefile.am: Do not apply dropped patch.
+
+2011-04-21  Omair Majid  <omajid@redhat.com>
+
 	* patches/cacao/ignore-tests.patch: Update to apply on new sources.
 	* patches/cacao/launcher.patch: Likewise.
 
