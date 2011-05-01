@@ -44,27 +44,3 @@ diff -Nru ../openjdk.orig/openjdk-boot/jdk/make/common/Release.gmk openjdk-boot/
  	@$(CD) $(CLASSBINDIR) && $(java-vm-cleanup)
  
  # Meta-index construction to make core class loaders lazier
---- openjdk-boot/jdk/make/modules/Makefile.orig	2010-06-13 10:37:13.000000000 +0200
-+++ openjdk-boot/jdk/make/modules/Makefile	2010-06-13 10:42:37.000000000 +0200
-@@ -111,10 +111,21 @@
-            fi ; \
-            $(MKDIR) -p $(ABS_MODULES_DIR)/$$m/lib; \
- 	   $(CD) $(MODULE_CLASSES) && \
-+ifneq (,$(JAR_KNOWS_ATFILE))
-                $(BOOT_JAR_CMD) c0mf $(MODULE_JAR_MANIFEST_FILE) \
- 		   $(ABS_MODULES_DIR)/$$m/lib/$$m.jar \
- 	           @$(TMP)/tmp.cf \
-                    $(BOOT_JAR_JFLAGS); \
-+else ifneq (,$(JAR_ACCEPTS_STDIN_LIST))
-+               $(CAT) $(TMP)/tmp.cf | \
-+               $(BOOT_JAR_CMD) c0mf@ $(MODULE_JAR_MANIFEST_FILE) \
-+		   $(ABS_MODULES_DIR)/$$m/lib/$$m.jar \
-+                   $(BOOT_JAR_JFLAGS); \
-+else
-+               $(BOOT_JAR_CMD) c0mf $(MODULE_JAR_MANIFEST_FILE) \
-+		   $(ABS_MODULES_DIR)/$$m/lib/$$m.jar \
-+                   $(BOOT_JAR_JFLAGS) `cat $(TMP)/tmp.cf`; \
-+endif
- 	   for s in `$(GREP) "^$$m" $(MODULES_LIST)` ; do \
-                if [ -d $(TMP)/$$s ] ; then \
-                	   $(CP) -rf $(TMP)/$$s/*  $(ABS_MODULES_DIR)/$$m; \

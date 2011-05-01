@@ -1,3 +1,53 @@
+2011-04-29  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/boot/icedtea-dyn.patch:
+	Dropped; java.lang.invoke now compiled in
+	bootstrap mode.
+	* patches/icedtea-demo-swingapplet.patch:
+	Dropped, upstream.
+	* patches/icedtea-tools.patch;
+	Dropped, obsolete.
+	* Makefile.am:
+	(OPENJDK_VERSION): Bump to b136.
+	(CORBA_CHANGESET): Updated.
+	(HOTSPOT_CHANGESET): Likewise.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(JAXP_DROP_ZIP): Likewise.
+	(JAXP_DROP_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Dropped removed patches.
+	(ICEDTEA_BOOT_PATCHES): Drop icedtea-dyn.patch
+	and add ecj-autoboxing.patch.
+	* patches/boot/ecj-autoboxing.patch:
+	New patch to avoid trying to cast to primitive types
+	from Object.
+	* patches/boot/ecj-diamond.patch,
+	* patches/boot/ecj-stringswitch.patch,
+	* patches/boot/ecj-trywithresources.patch:
+	Remove additional cases introduced in b131-b136.
+	* patches/boot/fontconfig.patch,
+	* patches/boot/jar.patch,
+	* patches/boot/xbootclasspath.patch,
+	* patches/cacao/arch.patch,
+	* patches/debian/icedtea-uname.patch,
+	* patches/hotspot/default/icedtea-gcc-suffix.patch,
+	* patches/hotspot/default/icedtea-params-cast-size_t.patch,
+	* patches/icedtea-libraries.patch,
+	* patches/icedtea-rhino.patch,
+	* patches/icedtea-update-bootclasspath.patch,
+	* patches/sh4-support.patch:
+	Updated to apply against b136.
+
 2011-04-21  Omair Majid  <omajid@redhat.com>
 
 	* patches/bytebuffer-compact.patch: Drop patch. It only contained

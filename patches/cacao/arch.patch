@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
---- openjdk.orig/jdk/make/common/Defs-linux.gmk	2010-07-29 21:55:26.000000000 +0100
-+++ openjdk/jdk/make/common/Defs-linux.gmk	2010-11-12 17:41:50.090328335 +0000
-@@ -109,9 +109,19 @@
+--- openjdk.orig/jdk/make/common/Defs-linux.gmk	2011-04-20 04:40:20.000000000 +0100
++++ openjdk/jdk/make/common/Defs-linux.gmk	2011-04-21 14:43:06.855289132 +0100
+@@ -100,9 +100,19 @@
  #    We need this frame pointer to make it easy to walk the stacks.
  #    This should be the default on X86, but ia64 and amd64 may not have this
  #    as the default.
@@ -22,9 +22,9 @@ diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/De
  LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
  CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
 diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2010-11-12 16:56:45.000000000 +0000
-+++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2010-11-12 17:41:50.090328335 +0000
-@@ -66,6 +66,52 @@
+--- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2011-04-21 10:59:53.000000000 +0100
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2011-04-21 14:43:06.855289132 +0100
+@@ -68,6 +68,52 @@
    else
      CXX            = $(COMPILER_PATH)g++$(GCC_SUFFIX)
    endif
@@ -78,8 +78,8 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/
    SHARED_LIBRARY_FLAG = -shared -mimpure-text
    SUN_COMP_VER := $(shell $(CC) --verbose 2>&1 )
 diff -Nru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax/sound/SoundDefs.gmk
---- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2010-07-29 21:55:27.000000000 +0100
-+++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2010-11-12 17:41:50.094328182 +0000
+--- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2011-04-20 04:40:20.000000000 +0100
++++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2011-04-21 14:43:06.855289132 +0100
 @@ -58,10 +58,54 @@
  ifeq ($(ZERO_BUILD), true)
    CPPFLAGS += -DX_ARCH=X_ZERO
@@ -136,33 +136,20 @@ diff -Nru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax
      CPPFLAGS += -DX_ARCH=X_SPARC
    endif # ARCH sparc
 diff -Nru openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h
---- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2010-07-29 21:56:11.000000000 +0100
-+++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2010-11-12 17:41:50.094328182 +0000
-@@ -33,12 +33,21 @@
- #define X_LINUX         3
- 
- // types for X_ARCH
--#define X_I586          1
--#define X_SPARC         2
--#define X_SPARCV9       3
--#define X_IA64          4
--#define X_AMD64         5
--#define X_ZERO          6
-+#define X_ALPHA         1
-+#define X_AMD64         2
-+#define X_ARM           3
-+#define X_I586          4
-+#define X_IA64          5
-+#define X_M68K          6
-+#define X_MIPS          7
-+#define X_MIPSEL        8
-+#define X_PPC           9
-+#define X_PPC64         10
-+#define X_S390          11
-+#define X_S390X         12
-+#define X_SPARC         13
-+#define X_SPARCV9       14
-+#define X_ZERO          15
+--- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2011-04-20 04:40:22.000000000 +0100
++++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2011-04-21 14:44:25.900576412 +0100
+@@ -41,6 +41,14 @@
+ #define X_ZERO          6
+ #define X_ARM           7
+ #define X_PPC           8
++#define X_ALPHA         9
++#define X_M68K          10
++#define X_MIPS          11
++#define X_MIPSEL        12
++#define X_PPC64         13
++#define X_S390          14
++#define X_S390X         15
++
  
  // **********************************
  // Make sure you set X_PLATFORM and X_ARCH defines correctly.

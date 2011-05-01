@@ -1,22 +1,22 @@
 # Dependencies
 
-OPENJDK_VERSION = b130
+OPENJDK_VERSION = b136
 
-CORBA_CHANGESET = 59f02c101698
-HOTSPOT_CHANGESET = 4071da7ef7b3
-JAXP_CHANGESET = b6f201c0649a
-JAXWS_CHANGESET = 4c04de31900b
-JDK_CHANGESET = 6753b79d7bb5
-LANGTOOLS_CHANGESET = 4659da7bff78
-OPENJDK_CHANGESET = d39d0c08731a
+CORBA_CHANGESET = b62418551e20
+HOTSPOT_CHANGESET = ef8632d52263
+JAXP_CHANGESET = 1c2f25bf36b1
+JAXWS_CHANGESET = 339c2d381d80
+JDK_CHANGESET = 1631a3dee8fc
+LANGTOOLS_CHANGESET = 8e26c4aee63c
+OPENJDK_CHANGESET = d4aea1a51d62
 
-CORBA_SHA256SUM = 4c6db5299947c3ed11a7f72da55a3cd89197c143f10d77c75036aa2f2cf296a6
-HOTSPOT_SHA256SUM = 4ec39fddd8d5ff9e7e9e2dfeb4fff37c26e84c1aaa9a3f3953e4bedb00bc6713
-JAXP_SHA256SUM = a1a5c6b2671f83d4675f9ba25013c6a16a4cf4d1040fcd2ff4143c92bd5496a3
-JAXWS_SHA256SUM = 8fe84a61142d579487bee98133fc26e57aedb97f781dc925ad3803aa40f5c061
-JDK_SHA256SUM = 650922377d1e847c26e1ea7475a46ae6f8bac3ba7747a2c1467c7136d1b7b4d6
-LANGTOOLS_SHA256SUM = 1df1bb1edd5f912405398c0024f8290f6a9030172dd1196c52e2c461769a1a07
-OPENJDK_SHA256SUM = 937930cb6c3174f8bdbf3d0034832fbde539fd62591087f1d6fcec695ed20519
+CORBA_SHA256SUM = 82eebaa8a248e18a4e4a0552716453c1f7877135ea73b51f3056fdec850267f9
+HOTSPOT_SHA256SUM = 3868c969833dc3b88523d711fc21cfc2c57fea5b6f387a7082aff5634b35c0a1
+JAXP_SHA256SUM = 91b65e352002079045dc1dee1c2a1af92db74a589b11b0a01777760adca80c64
+JAXWS_SHA256SUM = 01747b77f40ffe554a3ee0ff8b902db0d743a1f8f6260c9141a1fb3d1c6cc230
+JDK_SHA256SUM = f08020de62bef31ff0a42564d06c84817150f943729132045e8af602c608467b
+LANGTOOLS_SHA256SUM = e7384d93ac86c5b91b767bbbcb58a7037089446943935292d0d7706d16becc9f
+OPENJDK_SHA256SUM = 7143dc00cad9b7f8a653e8e22aec9fd3fa354325eaf79007326b16b887b6fbe6
 
 CACAO_VERSION = e321b101a9ee
 CACAO_SHA256SUM = 46bc5b6212c199dc4a3dbebe6386fe15a8248625a5dffa17115aab394a298444
@@ -31,8 +31,8 @@ JAF_DROP_URL = http://icedtea.classpath.org/download/drops
 JAF_DROP_ZIP = jdk7-jaf-2010_08_19.zip
 JAF_DROP_SHA256SUM = e6aefedfdbb4673e8019583d1344fb162b94e1b10382c362364dbbfd5889c09e
 JAXP_DROP_URL = http://icedtea.classpath.org/download/drops
-JAXP_DROP_ZIP = jaxp-1_4_5-dev.zip
-JAXP_DROP_SHA256SUM = 938cce9d3f0afaa5d076c62a2de081862102d10bfe04a0767122f2dff5bd975e
+JAXP_DROP_ZIP = jaxp-1_4_5-dev1.zip
+JAXP_DROP_SHA256SUM = 050cba755c2632dc5ec5ffcdb17f2f4d36a018306c357fdd5c8996d877954de5
 
 ICEDTEA_HG_URL = http://hg.openjdk.java.net/icedtea/jdk7
 OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk7/jdk7
@@ -236,7 +236,6 @@ REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 ICEDTEA_PATCHES = \
 	patches/hotspot/$(HSBUILD)/icedtea-text-relocations.patch \
 	patches/icedtea-rmi_amd64.patch \
-	patches/icedtea-tools.patch \
 	patches/icedtea-demos.patch \
 	patches/icedtea-headers.patch \
 	patches/hotspot/$(HSBUILD)/icedtea-headers.patch \
@@ -271,7 +270,6 @@ ICEDTEA_PATCHES = \
         patches/security/icedtea-6592792.patch \
         patches/security/icedtea-6733959.patch \
         patches/security/icedtea-6755943.patch \
-	patches/icedtea-demo-swingapplet.patch \
 	patches/icedtea-jvmtiEnv.patch \
 	patches/icedtea-disable-intree-ec.patch \
 	patches/icedtea-sources.patch \
@@ -347,7 +345,6 @@ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/test_gamma.patch \
 	patches/boot/tools.jar.patch \
 	patches/boot/icedtea-jopt.patch \
-	patches/boot/icedtea-dyn.patch \
 	patches/boot/icedtea-jaxp-dependency.patch \
 	patches/boot/genstubs-nofork.patch \
 	patches/boot/getannotation-cast.patch \
@@ -361,7 +358,8 @@ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/jaxws-jdk-dependency.patch \
 	patches/boot/hotspot-jdk-dependency.patch \
 	patches/boot/ecj-multicatch.patch \
-	patches/boot/ecj-trywithresources.patch
+	patches/boot/ecj-trywithresources.patch \
+	patches/boot/ecj-autoboxing.patch
 
 if CP39408_JAVAH
 ICEDTEA_BOOT_PATCHES += patches/boot/icedtea-pr39408.patch

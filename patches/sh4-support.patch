@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/corba/make/common/shared/Platform.gmk openjdk/corba/make/common/shared/Platform.gmk
---- openjdk.orig/corba/make/common/shared/Platform.gmk	2010-09-01 17:36:18.000000000 +0100
-+++ openjdk/corba/make/common/shared/Platform.gmk	2010-09-01 17:44:42.267438042 +0100
-@@ -191,6 +191,9 @@
+--- openjdk.orig/corba/make/common/shared/Platform.gmk	2011-04-21 15:22:49.000000000 +0100
++++ openjdk/corba/make/common/shared/Platform.gmk	2011-04-21 19:57:25.486492074 +0100
+@@ -172,6 +172,9 @@
                  arm*) \
                      echo arm \
                      ;; \
@@ -11,7 +11,7 @@ diff -Nru openjdk.orig/corba/make/common/shared/Platform.gmk openjdk/corba/make/
                  *) \
                      echo $(mach) \
                      ;; \
-@@ -218,6 +221,9 @@
+@@ -199,6 +202,9 @@
        else
          ARCH_DATA_MODEL=64
        endif
@@ -22,9 +22,9 @@ diff -Nru openjdk.orig/corba/make/common/shared/Platform.gmk openjdk/corba/make/
    endif
  
 diff -Nru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
---- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2010-09-01 17:36:18.000000000 +0100
-+++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2010-09-01 17:44:42.267438042 +0100
-@@ -1770,7 +1770,8 @@
+--- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2011-04-21 15:22:49.000000000 +0100
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2011-04-21 19:57:25.490492144 +0100
+@@ -1864,7 +1864,8 @@
      {EM_MIPS_RS3_LE, EM_MIPS_RS3_LE, ELFCLASS32, ELFDATA2LSB, (char*)"MIPSel"},
      {EM_MIPS,        EM_MIPS,    ELFCLASS32, ELFDATA2MSB, (char*)"MIPS"},
      {EM_PARISC,      EM_PARISC,  ELFCLASS32, ELFDATA2MSB, (char*)"PARISC"},
@@ -34,7 +34,7 @@ diff -Nru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/
    };
  
    #if  (defined IA32)
-@@ -1801,9 +1802,11 @@
+@@ -1895,9 +1896,11 @@
      static  Elf32_Half running_arch_code=EM_MIPS;
    #elif  (defined M68K)
      static  Elf32_Half running_arch_code=EM_68K;
@@ -48,17 +48,17 @@ diff -Nru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/
  
    // Identify compatability class for VM's architecture and library's architecture
 diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/Defs-linux.gmk
---- openjdk.orig/jdk/make/common/Defs-linux.gmk	2010-09-01 17:36:18.000000000 +0100
-+++ openjdk/jdk/make/common/Defs-linux.gmk	2010-09-01 17:58:18.296843208 +0100
-@@ -126,6 +126,7 @@
- LDFLAGS_COMMON_sparcv9  += -m64 -mcpu=v9
- CFLAGS_REQUIRED_sparc   += -m32 -mcpu=v9
+--- openjdk.orig/jdk/make/common/Defs-linux.gmk	2011-04-21 15:22:49.000000000 +0100
++++ openjdk/jdk/make/common/Defs-linux.gmk	2011-04-21 19:58:06.615219532 +0100
+@@ -119,6 +119,7 @@
  LDFLAGS_COMMON_sparc    += -m32 -mcpu=v9
-+CFLAGS_REQUIRED_sh   += -mieee
+ CFLAGS_REQUIRED_arm     += -fsigned-char -D_LITTLE_ENDIAN
+ CFLAGS_REQUIRED_ppc     += -fsigned-char -D_BIG_ENDIAN
++CFLAGS_REQUIRED_sh      += -mieee
  ifeq ($(ZERO_BUILD), true)
    CFLAGS_REQUIRED       =  $(ZERO_ARCHFLAG)
    ifeq ($(ZERO_ENDIANNESS), little)
-@@ -206,11 +207,15 @@
+@@ -197,11 +198,15 @@
  
  CPP_ARCH_FLAGS = -DARCH='"$(ARCH)"'
  
@@ -78,9 +78,9 @@ diff -Nru openjdk.orig/jdk/make/common/Defs-linux.gmk openjdk/jdk/make/common/De
  
  CPPFLAGS_COMMON = $(CPP_ARCH_FLAGS) -DLINUX $(VERSION_DEFINES) \
 diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/common/shared/Compiler-gcc.gmk
---- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2010-09-01 17:36:18.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2010-09-01 17:44:42.267438042 +0100
-@@ -117,6 +117,11 @@
+--- openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk	2011-04-21 15:22:50.000000000 +0100
++++ openjdk/jdk/make/common/shared/Compiler-gcc.gmk	2011-04-21 19:57:25.490492144 +0100
+@@ -119,6 +119,11 @@
      REQUIRED_CC_VER = 3.2
      REQUIRED_GCC_VER = 3.2.*
    endif
@@ -93,9 +93,9 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Compiler-gcc.gmk openjdk/jdk/make/
    SHARED_LIBRARY_FLAG = -shared -mimpure-text
    SUN_COMP_VER := $(shell $(CC) --verbose 2>&1 )
 diff -Nru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/common/shared/Platform.gmk
---- openjdk.orig/jdk/make/common/shared/Platform.gmk	2010-09-01 17:36:18.000000000 +0100
-+++ openjdk/jdk/make/common/shared/Platform.gmk	2010-09-01 17:44:42.275437349 +0100
-@@ -171,6 +171,9 @@
+--- openjdk.orig/jdk/make/common/shared/Platform.gmk	2011-04-21 15:22:49.000000000 +0100
++++ openjdk/jdk/make/common/shared/Platform.gmk	2011-04-21 19:57:25.490492144 +0100
+@@ -179,6 +179,9 @@
                  arm*) \
                      echo arm \
                      ;; \
@@ -105,8 +105,8 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/comm
                  *) \
                      echo $(mach) \
                      ;; \
-@@ -198,6 +201,9 @@
-       else
+@@ -208,6 +211,9 @@
+       ifeq ($(ARCH), ia64)
          ARCH_DATA_MODEL=64
        endif
 +      ifeq ($(ARCH), sh)
@@ -116,25 +116,23 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/comm
    endif
  
 diff -Nru openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk openjdk/jdk/make/javax/sound/SoundDefs.gmk
---- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2010-09-01 17:36:18.000000000 +0100
-+++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2010-09-01 17:44:42.279437008 +0100
-@@ -114,9 +114,9 @@
-     CPPFLAGS += -DX_ARCH=X_SPARCV9
-   endif # ARCH sparcv9
+--- openjdk.orig/jdk/make/javax/sound/SoundDefs.gmk	2011-04-21 15:22:49.000000000 +0100
++++ openjdk/jdk/make/javax/sound/SoundDefs.gmk	2011-04-21 19:58:38.367780866 +0100
+@@ -126,6 +126,10 @@
+     CPPFLAGS += -DX_ARCH=X_PPC
+   endif # ARCH ppc
  
--  ifeq ($(ARCH), amd64)
--    CPPFLAGS += -DX_ARCH=X_AMD64
--  endif # ARCH amd64
 +  ifeq ($(ARCH), sh)
 +    CPPFLAGS += -DX_ARCH=X_SH
 +  endif # ARCH Renesas SuperH(sh)
++
  endif
  
  
 diff -Nru openjdk.orig/jdk/make/jdk_generic_profile.sh openjdk/jdk/make/jdk_generic_profile.sh
---- openjdk.orig/jdk/make/jdk_generic_profile.sh	2010-07-29 21:55:27.000000000 +0100
-+++ openjdk/jdk/make/jdk_generic_profile.sh	2010-09-01 17:44:42.279437008 +0100
-@@ -349,13 +349,14 @@
+--- openjdk.orig/jdk/make/jdk_generic_profile.sh	2011-04-11 12:34:30.000000000 +0100
++++ openjdk/jdk/make/jdk_generic_profile.sh	2011-04-21 19:57:25.498492286 +0100
+@@ -258,13 +258,14 @@
      i?86)    ZERO_LIBARCH=i386      ;;
      sparc64) ZERO_LIBARCH=sparcv9   ;;
      arm*)    ZERO_LIBARCH=arm       ;;
@@ -151,15 +149,14 @@ diff -Nru openjdk.orig/jdk/make/jdk_generic_profile.sh openjdk/jdk/make/jdk_gene
        ;;
      amd64|ppc64|s390x|sparcv9|ia64|alpha)
 diff -Nru openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h
---- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2010-09-01 17:36:18.000000000 +0100
-+++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2010-09-01 17:44:42.279437008 +0100
-@@ -47,7 +47,8 @@
- #define X_S390X         12
- #define X_SPARC         13
- #define X_SPARCV9       14
--#define X_ZERO          15
-+#define X_SH            15
-+#define X_ZERO          16
+--- openjdk.orig/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2011-04-21 15:22:49.000000000 +0100
++++ openjdk/jdk/src/share/native/com/sun/media/sound/SoundDefs.h	2011-04-21 19:59:08.392311421 +0100
+@@ -48,7 +48,7 @@
+ #define X_PPC64         13
+ #define X_S390          14
+ #define X_S390X         15
+-
++#define X_SH            16
  
  // **********************************
  // Make sure you set X_PLATFORM and X_ARCH defines correctly.
