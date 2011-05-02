@@ -1,3 +1,10 @@
+2011-05-02  Omair Majid  <omajid@redhat.com>
+
+	Remove obsolete information about the plugin and netx
+	* INSTALL,
+	* README: Remove references to plugin and webstart.
+	* configure.ac: Do not check for plugin.
+
 2011-04-29  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/boot/icedtea-dyn.patch:

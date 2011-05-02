@@ -30,7 +30,6 @@ giflib-devel
 libpng-devel
 libjpeg-devel >= 6b
 zlib-devel
-xulrunner-devel (can be disabled using --disable-plugin)
 rhino (can be disabled using --without-rhino)
 libffi (for --enable-zero or on archs other than x86/x86_64/sparc)
 pulseaudio-libs-devel >= 0.9.11 (for --enable-pulse-java)
@@ -172,8 +171,6 @@ These are documented fully in the relevant section below.
 * --enable-cacao: Replace HotSpot with the CACAO VM.
 * --enable-shark: Build the Shark LLVM-based JIT.
 * --enable-zero: Build the zero assembler port on x86/x86_64/sparc platforms.
-* --disable-plugin: Don't build the browser plugin.
-* --disable-npplugin: Build the old unsupported plugin rather than NPPlugin.
 * --with-hotspot-build: The HotSpot to use, defaulting to 'original' i.e. hs14 as bundled with OpenJDK.
 * --with-rhino: Include Javascript support using Rhino.
 * --with-additional-vms=vm-list: Additional VMs to build using the system described
@@ -267,23 +264,6 @@ called Shark has been developed.  This performs Just-In-Time compilation
 on any architecture supported by LLVM.  To enable it, pass the option
 --enable-shark to configure.  Please note that Shark is still in
 development and builds are still likely to fail at present.
-
-The Browser Plugin
-==================
-
-IcedTea7 contains a Free Software browser plugin based on NPRuntime
-called NPPlugin.  By default, this will be built, and it can be turned
-off using the -disable-plugin option.
-
-A test suite is supplied for the browser plugin.  It can be built
-using 'make plugin-tests' and run by loading the HTML page specified
-into a browser with the plugin installed.
-
-For debugging, the environment variable ICEDTEAPLUGIN_DEBUG should be
-set to 'true'.  This will produce output on the console from the C++
-side, and output from the Java side in $HOME/.icedteaplugin/java.stdout
-and $HOME/.icedteaplugin/java.stderr.  It also starts the debug server
-on port 8787.
 
 Support for Different Versions of HotSpot
 =========================================
