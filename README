@@ -5,10 +5,8 @@ The IcedTea project provides a harness to build the source code from
 openjdk.java.net using Free Software tools and dependencies.
 
 IcedTea addresses two problems: it eliminates the build requirement on
-proprietary build tools and it provides implementations of Java Web
-Start and the browser plugin which are missing from OpenJDK.  It also
-provides support for additional architectures via Zero/Shark or the
-CACAO VM.
+proprietary build tools and provides additional patches and features
+(such as Javascript support via Rhino) not available in OpenJDK.
 
 IcedTea also provides build scripts and patches that fix a number of issues
 which are as yet unresolved upstream.
@@ -42,10 +40,7 @@ APIs in the JDK 7 implementation, whether new or old, are therefore
 subject to minor adjustments, major revisions, or even outright
 removal between now and the time that the Java SE 7 Platform
 Specification is finalized.  Please take these facts into account
-before depending upon IcedTea.  IcedTea provides autotools support, a
-portable interpreter (Zero) and LLVM-based JIT (Shark) for other
-architectures beyond x86/x86_64/SPARC, plugin support and Web Start
-support.
+before depending upon IcedTea.
 
 A Note About License Headers
 ----------------------------
@@ -55,29 +50,6 @@ license header.  Instances are:
 
  - We are assuming that these files are owned by Sun:
    openjdk/jdk/src/share/classes/**/resources/*.properties
-
-Web Browser Plugin support
-===========================
-
-IcedTea adds a browser plugin to OpenJDK.  The current version is a
-rewrite, developed to support recent Mozilla API changes. It can be
-enabled with the option --enable-plugin, and is based on
-gcjwebplugin.
-
-NetX
-====
-
-NetX provides a drop-in replacement for javaws (Java Web Start). Since
-upstream NetX is dormant, we will be hosting and modifying the sources
-in the IcedTea repository, particularly in the netx/net/sourceforge/jnlp
-directory.
-
-The NetX sources are built into rt.jar using the same method as
-CORBA, JAXWS, JAXP and langtools.
-
-IcedTea's NetX currently supports verification of signed jars, trusted
-certificate storing, system certificate store checking, and provides
-the services specified by the jnlp API.
 
 The Zero Assembler and Shark Ports
 ==================================
