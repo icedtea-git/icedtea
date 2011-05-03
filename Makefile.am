@@ -234,55 +234,55 @@ REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 # Patch list
 
 ICEDTEA_PATCHES = \
-	patches/hotspot/$(HSBUILD)/icedtea-text-relocations.patch \
-	patches/icedtea-rmi_amd64.patch \
-	patches/icedtea-demos.patch \
-	patches/icedtea-headers.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-headers.patch \
-	patches/icedtea-gcc-suffix.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-gcc-suffix.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-memory-limits.patch \
-	patches/icedtea-sunsrc.patch \
-	patches/icedtea-libraries.patch \
-	patches/icedtea-print-lsb-release.patch \
-	patches/icedtea-jpegclasses.patch \
-	patches/debian/icedtea-uname.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-sparc-ptracefix.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-sparc-trapsfix.patch \
-	patches/icedtea-override-redirect-metacity.patch \
-	patches/icedtea-security-updates.patch \
-	patches/icedtea-hotspot-gcc-pr36917.patch \
-	patches/icedtea-alpha-fixes.patch \
-	patches/icedtea-alt-jar.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-use-idx_t.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-params-cast-size_t.patch \
-	patches/icedtea-clean-crypto.patch \
+	patches/hotspot/$(HSBUILD)/text-relocations.patch \
+	patches/rmi_amd64.patch \
+	patches/demos.patch \
+	patches/headers.patch \
+	patches/hotspot/$(HSBUILD)/headers.patch \
+	patches/gcc-suffix.patch \
+	patches/hotspot/$(HSBUILD)/gcc-suffix.patch \
+	patches/hotspot/$(HSBUILD)/memory-limits.patch \
+	patches/sunsrc.patch \
+	patches/libraries.patch \
+	patches/print-lsb-release.patch \
+	patches/jpegclasses.patch \
+	patches/debian/uname.patch \
+	patches/hotspot/$(HSBUILD)/sparc-ptracefix.patch \
+	patches/hotspot/$(HSBUILD)/sparc-trapsfix.patch \
+	patches/override-redirect-metacity.patch \
+	patches/security-updates.patch \
+	patches/hotspot-gcc-pr36917.patch \
+	patches/alpha-fixes.patch \
+	patches/alt-jar.patch \
+	patches/hotspot/$(HSBUILD)/use-idx_t.patch \
+	patches/hotspot/$(HSBUILD)/params-cast-size_t.patch \
+	patches/clean-crypto.patch \
 	$(GCC_PATCH) \
 	patches/cacao/arch.patch \
-	patches/icedtea-signed-types.patch \
-	patches/icedtea-lc_ctype.patch \
-	patches/icedtea-tests-jdk.patch \
-	patches/icedtea-linker-libs-order.patch \
-	patches/icedtea-testenv.patch \
-	patches/icedtea-samejvm-safe.patch \
-	patches/icedtea-pr261.patch \
-	patches/hotspot/$(HSBUILD)/icedtea-parisc-opt.patch \
-        patches/security/icedtea-6592792.patch \
-        patches/security/icedtea-6733959.patch \
-        patches/security/icedtea-6755943.patch \
-	patches/icedtea-jvmtiEnv.patch \
-	patches/icedtea-disable-intree-ec.patch \
-	patches/icedtea-sources.patch \
+	patches/signed-types.patch \
+	patches/lc_ctype.patch \
+	patches/tests-jdk.patch \
+	patches/linker-libs-order.patch \
+	patches/testenv.patch \
+	patches/samejvm-safe.patch \
+	patches/pr261.patch \
+	patches/hotspot/$(HSBUILD)/parisc-opt.patch \
+        patches/security/6592792.patch \
+        patches/security/6733959.patch \
+        patches/security/6755943.patch \
+	patches/jvmtiEnv.patch \
+	patches/disable-intree-ec.patch \
+	patches/sources.patch \
 	patches/parisc.patch \
 	patches/sh4-support.patch \
 	patches/jtreg-httpTest.patch \
-	patches/icedtea-update-bootclasspath.patch
+	patches/update-bootclasspath.patch
 
 # Conditional patches
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
-	patches/icedtea-rhino.patch
+	patches/rhino.patch
 endif
 
 if BUILD_CACAO
@@ -302,24 +302,24 @@ endif
 
 if ENABLE_PULSE_JAVA
 ICEDTEA_PATCHES += \
-	patches/icedtea-pulse-soundproperties.patch
+	patches/pulse-soundproperties.patch
 endif
 
 if !USE_CVMI
 ICEDTEA_PATCHES += \
-	patches/icedtea-javafiles.patch
+	patches/javafiles.patch
 endif
 
 if ENABLE_SYSTEMTAP
-ICEDTEA_PATCHES += patches/icedtea-systemtap.patch \
+ICEDTEA_PATCHES += patches/systemtap.patch \
 	patches/systemtap-gcc-4.5.patch \
 	patches/systemtap-alloc-size-workaround.patch
 endif
 
 if ENABLE_NSS
-ICEDTEA_PATCHES += patches/icedtea-nss-config.patch
+ICEDTEA_PATCHES += patches/nss-config.patch
 else
-ICEDTEA_PATCHES += patches/icedtea-nss-not-enabled-config.patch
+ICEDTEA_PATCHES += patches/nss-not-enabled-config.patch
 endif
 
 ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
@@ -344,8 +344,8 @@ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/tobin.patch \
 	patches/boot/test_gamma.patch \
 	patches/boot/tools.jar.patch \
-	patches/boot/icedtea-jopt.patch \
-	patches/boot/icedtea-jaxp-dependency.patch \
+	patches/boot/jopt.patch \
+	patches/boot/jaxp-dependency.patch \
 	patches/boot/genstubs-nofork.patch \
 	patches/boot/getannotation-cast.patch \
 	patches/boot/break-processbuilder-dependency.patch \
@@ -362,15 +362,15 @@ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/ecj-autoboxing.patch
 
 if CP39408_JAVAH
-ICEDTEA_BOOT_PATCHES += patches/boot/icedtea-pr39408.patch
+ICEDTEA_BOOT_PATCHES += patches/boot/pr39408.patch
 endif
 
 if CP40188_JAVAH
-ICEDTEA_BOOT_PATCHES += patches/boot/icedtea-pr40188.patch
+ICEDTEA_BOOT_PATCHES += patches/boot/pr40188.patch
 endif
 
 if CP40616
-ICEDTEA_BOOT_PATCHES += patches/boot/icedtea-pr40616.patch
+ICEDTEA_BOOT_PATCHES += patches/boot/pr40616.patch
 endif
 
 # Patches for when java.util.Scanner is missing
