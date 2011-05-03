@@ -1,3 +1,10 @@
+2011-05-03  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(JDK_CHANGESET): Bumped to include
+	7038711 which fixes build on RHEL5.
+	(JDK_SHA256SUM): Likewise.
+
 2011-04-29  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/boot/icedtea-dyn.patch:
