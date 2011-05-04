@@ -234,30 +234,27 @@ REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 # Patch list
 
 ICEDTEA_PATCHES = \
-	patches/hotspot/$(HSBUILD)/text-relocations.patch \
+	patches/text-relocations.patch \
 	patches/rmi_amd64.patch \
 	patches/demos.patch \
 	patches/headers.patch \
-	patches/hotspot/$(HSBUILD)/headers.patch \
 	patches/gcc-suffix.patch \
-	patches/hotspot/$(HSBUILD)/gcc-suffix.patch \
-	patches/hotspot/$(HSBUILD)/memory-limits.patch \
+	patches/memory-limits.patch \
 	patches/sunsrc.patch \
 	patches/libraries.patch \
 	patches/print-lsb-release.patch \
 	patches/jpegclasses.patch \
 	patches/debian/uname.patch \
-	patches/hotspot/$(HSBUILD)/sparc-ptracefix.patch \
-	patches/hotspot/$(HSBUILD)/sparc-trapsfix.patch \
+	patches/sparc-ptracefix.patch \
+	patches/sparc-trapsfix.patch \
 	patches/override-redirect-metacity.patch \
 	patches/security-updates.patch \
 	patches/hotspot-gcc-pr36917.patch \
 	patches/alpha-fixes.patch \
 	patches/alt-jar.patch \
-	patches/hotspot/$(HSBUILD)/use-idx_t.patch \
-	patches/hotspot/$(HSBUILD)/params-cast-size_t.patch \
+	patches/use-idx_t.patch \
+	patches/params-cast-size_t.patch \
 	patches/clean-crypto.patch \
-	$(GCC_PATCH) \
 	patches/cacao/arch.patch \
 	patches/signed-types.patch \
 	patches/lc_ctype.patch \
@@ -266,7 +263,7 @@ ICEDTEA_PATCHES = \
 	patches/testenv.patch \
 	patches/samejvm-safe.patch \
 	patches/pr261.patch \
-	patches/hotspot/$(HSBUILD)/parisc-opt.patch \
+	patches/parisc-opt.patch \
         patches/security/6592792.patch \
         patches/security/6733959.patch \
         patches/security/6755943.patch \

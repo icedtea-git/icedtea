@@ -1,5 +1,31 @@
 2011-05-03  Andrew John Hughes  <ahughes@redhat.com>
 
+	* patches/hotspot/default/gcc-suffix.patch,
+	* patches/hotspot/default/headers.patch,
+	* patches/hotspot/default/memory-limits.patch,
+	* patches/hotspot/default/params-cast-size_t.patch,
+	* patches/hotspot/default/parisc-opt.patch,
+	* patches/hotspot/default/sparc-ptracefix.patch,
+	* patches/hotspot/default/sparc-trapsfix.patch,
+	* patches/hotspot/default/text-relocations.patch,
+	* patches/hotspot/default/use-idx_t.patch:
+	Remove unneeded hotspot/default positioning.
+	* Makefile.am: Remove $(HSBUILD) prefixing on
+	patches.
+	* patches/gcc-suffix.patch,
+	* patches/headers.patch,
+	* patches/memory-limits.patch,
+	* patches/params-cast-size_t.patch,
+	* patches/parisc-opt.patch,
+	* patches/sparc-ptracefix.patch,
+	* patches/sparc-trapsfix.patch,
+	* patches/text-relocations.patch,
+	* patches/use-idx_t.patch:
+	Moved from hotspot/default or merged with existing
+	patches.
+
+2011-05-03  Andrew John Hughes  <ahughes@redhat.com>
+
 	* patches/boot/icedtea-jaxp-dependency.patch,
 	* patches/boot/icedtea-jopt.patch,
 	* patches/boot/icedtea-pr39408.patch,
