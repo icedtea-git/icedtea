@@ -1,3 +1,20 @@
+2011-05-04  Andrew John Hughes  <ahughes@redhat.com>
+
+	Move to using icedtea servers.
+	* Makefile.am:
+	(CORBA_SHA256SUM): Updated.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_PREFIX): Added to avoid hardcoding
+	the prefix for the root directory.
+	(ICEDTEA_HG_URL): Updated to use icedtea.classpath.org
+	(extract-openjdk): Use $(ICEDTEA_PREFIX) in
+	place of 'jdk7'.
+
 2011-05-03  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/hotspot/default/gcc-suffix.patch,
