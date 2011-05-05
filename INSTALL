@@ -87,6 +87,8 @@ to configure:
 * --disable-optimizations: Build with -O0.
 * --enable-hg: Checkout the OpenJDK tree from Mercurial, rather than
   downloading and extracting a tarball.
+* --enable-system-lcms: Build using the system installation of LCMS2, not
+  the version in-tree.
 * --with-gcj: Compile ecj to native code with gcj prior to building.
 * --with-parallel-jobs: Run the specified number of parallel jobs when
   building HotSpot and the JDK.  If this option is passed without an

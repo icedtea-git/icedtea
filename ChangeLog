@@ -1,5 +1,23 @@
 2011-05-04  Andrew John Hughes  <ahughes@redhat.com>
 
+	* remove-intree-libraries.sh: Renamed.
+	* INSTALL: Updated with new option.
+	* Makefile.am:
+	(JDK_CHANGESET): Updated to get LCMS patches.
+	(JDK_SHA256SUM): Likewise.
+	(ICEDTEA_ENV): Set USE_SYSTEM_LCMS, LCMS_LIBS
+	and LCMS_CFLAGS if building with system LCMS.
+	* acinclude.m4:
+	(IT_CHECK_FOR_LCMS): Provide the --enable-system-lcms
+	option, enabled by default.
+	* configure.ac:
+	Call IT_CHECK_FOR_LCMS.
+	* remove-intree-libraries.sh.in:
+	Delete LCMS source code only if system version is
+	being used.
+
+2011-05-04  Andrew John Hughes  <ahughes@redhat.com>
+
 	Move to using icedtea servers.
 	* Makefile.am:
 	(CORBA_SHA256SUM): Updated.

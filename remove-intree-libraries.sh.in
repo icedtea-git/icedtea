@@ -5,6 +5,7 @@ ZIP_SRC=openjdk/jdk/src/share/native/java/util/zip/zlib-${ZLIB_VERSION}
 JPEG_SRC=openjdk/jdk/src/share/native/sun/awt/image/jpeg
 GIF_SRC=openjdk/jdk/src/share/native/sun/awt/giflib
 PNG_SRC=openjdk/jdk/src/share/native/sun/awt/libpng
+LCMS_SRC=openjdk/jdk/src/share/native/sun/java2d/cmm/lcms
 
 echo "Removing zlib"
 rm -rvf ${ZIP_SRC}
@@ -58,3 +59,35 @@ echo "Removing giflib"
 rm -rvf ${GIF_SRC}
 echo "Removing libpng"
 rm -rvf ${PNG_SRC}
+
+if test "x@ENABLE_SYSTEM_LCMS@" = "xyes"; then
+  echo "Removing lcms"
+  rm -vf ${LCMS_SRC}/cmscam02.c
+  rm -vf ${LCMS_SRC}/cmscgats.c
+  rm -vf ${LCMS_SRC}/cmscnvrt.c
+  rm -vf ${LCMS_SRC}/cmserr.c
+  rm -vf ${LCMS_SRC}/cmsgamma.c
+  rm -vf ${LCMS_SRC}/cmsgmt.c
+  rm -vf ${LCMS_SRC}/cmsintrp.c
+  rm -vf ${LCMS_SRC}/cmsio0.c
+  rm -vf ${LCMS_SRC}/cmsio1.c
+  rm -vf ${LCMS_SRC}/cmslut.c
+  rm -vf ${LCMS_SRC}/cmsmd5.c
+  rm -vf ${LCMS_SRC}/cmsmtrx.c
+  rm -vf ${LCMS_SRC}/cmsnamed.c
+  rm -vf ${LCMS_SRC}/cmsopt.c
+  rm -vf ${LCMS_SRC}/cmspack.c
+  rm -vf ${LCMS_SRC}/cmspcs.c
+  rm -vf ${LCMS_SRC}/cmsplugin.c
+  rm -vf ${LCMS_SRC}/cmsps2.c
+  rm -vf ${LCMS_SRC}/cmssamp.c
+  rm -vf ${LCMS_SRC}/cmssm.c
+  rm -vf ${LCMS_SRC}/cmstypes.c
+  rm -vf ${LCMS_SRC}/cmsvirt.c
+  rm -vf ${LCMS_SRC}/cmswtpnt.c
+  rm -vf ${LCMS_SRC}/cmsxform.c
+  rm -vf ${LCMS_SRC}/lcms2.h
+  rm -vf ${LCMS_SRC}/lcms2_internal.h
+  rm -vf ${LCMS_SRC}/lcms2_plugin.h
+fi
+

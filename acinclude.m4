@@ -1856,3 +1856,28 @@ AC_DEFUN_ONCE([IT_DISABLE_JDK_TESTS],
   AM_CONDITIONAL([DISABLE_JDK_TESTS], test x"${disable_jdk_tests}" = "xyes")
 ])
 
+AC_DEFUN_ONCE([IT_CHECK_FOR_LCMS],
+[
+  AC_MSG_CHECKING([whether to use the system LCMS install])
+  AC_ARG_ENABLE([system-lcms],
+	      [AS_HELP_STRING(--enable-system-lcms,use the system LCMS [[default=yes]])],
+  [
+    ENABLE_SYSTEM_LCMS="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_LCMS="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_LCMS})
+  if test x"${ENABLE_SYSTEM_LCMS}" = "xyes"; then
+    dnl Check for LCMS2 headers and libraries.
+    PKG_CHECK_MODULES(LCMS2, lcms2,[LCMS2_FOUND=yes],[LCMS2_FOUND=no])
+    if test "x${LCMS2_FOUND}" = xno
+    then
+      AC_MSG_ERROR([Could not find LCMS2; install LCMS2 or build with --disable-system-lcms to use the in-tree copy.])
+    fi
+    AC_SUBST(LCMS2_CFLAGS)
+    AC_SUBST(LCMS2_LIBS)
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_LCMS, test x"${ENABLE_SYSTEM_LCMS}" = "xyes")
+  AC_SUBST(ENABLE_SYSTEM_LCMS)
+])

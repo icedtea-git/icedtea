@@ -451,6 +451,9 @@ AC_SUBST(LLVM_CFLAGS)
 AC_SUBST(LLVM_LDFLAGS)
 AC_SUBST(LLVM_LIBS)
 
+IT_CHECK_FOR_LCMS
+AC_CONFIG_FILES([remove-intree-libraries.sh])
+
 # Arguments passed to configure.
 AC_SUBST(CONFIGURE_ARGS)
 CONFIGURE_ARGS="$ac_configure_args"

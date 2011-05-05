@@ -6,7 +6,7 @@ CORBA_CHANGESET = b62418551e20
 HOTSPOT_CHANGESET = ef8632d52263
 JAXP_CHANGESET = 1c2f25bf36b1
 JAXWS_CHANGESET = 339c2d381d80
-JDK_CHANGESET = 8ae719dd77c0
+JDK_CHANGESET = 6a3e0bc5471d
 LANGTOOLS_CHANGESET = 8e26c4aee63c
 OPENJDK_CHANGESET = d4aea1a51d62
 
@@ -14,7 +14,7 @@ CORBA_SHA256SUM = 60f8494b1ebf58db75fe8871dcbee1f6e4bd1d8d6c9b6ce49dad7a6a6340c4
 HOTSPOT_SHA256SUM = d939f29993a75c263b9b0bed8ccb74340860681ec8be1a62a76946ca9502255d
 JAXP_SHA256SUM = 9db874ee86a073776674b138c3bcd0b1b2bc90d31ed48d59f88021e93ac8a8d0
 JAXWS_SHA256SUM = 078ad45ced056d147344418e72dce6dca65e01c4ebf2b7008b74733774bcb24c
-JDK_SHA256SUM = b73bde3576c83439dcb141bc94a9257fe495dcbd1892bbf7700c8b1bcb51636e
+JDK_SHA256SUM = 278edd55e7dacb51a4b2411f17f437f7bf54acae468c6f63804e485bd192aa93
 LANGTOOLS_SHA256SUM = e1beab78534a3a0fb18404c3c200e8866da275c7c656172c9f295f11203e5f39
 OPENJDK_SHA256SUM = 856b791751e56f64cc10e4826eefc9af9882969b179595c9642f7c9771965e7d
 
@@ -493,6 +493,13 @@ endif
 if WITH_RHINO
 ICEDTEA_ENV += \
 	RHINO_JAR="$(abs_top_builddir)/rhino/rhino.jar"
+endif
+
+if USE_SYSTEM_LCMS
+ICEDTEA_ENV += \
+	USE_SYSTEM_LCMS="true" \
+	LCMS_LIBS="${LCMS2_LIBS}" \
+	LCMS_CFLAGS="${LCMS2_CFLAGS}"
 endif
 
 # OpenJDK boot build environment.
@@ -1234,7 +1241,7 @@ clean-extract-jaxws:
 	rm -f stamps/extract-jaxws.stamp
 
 stamps/remove-intree-libraries.stamp: stamps/extract-openjdk.stamp
-	sh $(srcdir)/remove-intree-libraries.sh
+	sh $(abs_top_builddir)/remove-intree-libraries.sh
 	touch stamps/remove-intree-libraries.stamp
 
 clean-remove-intree-libraries:
