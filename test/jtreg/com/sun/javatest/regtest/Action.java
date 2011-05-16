@@ -300,6 +300,8 @@ public abstract class Action
         section.setStatus(status);
     } // endAction()
 
+    //----------workarounds-------------------------------------------------------
+
     /**
      * This method pushes the full, constructed command for the action to the
      * log.  The constructed command contains the the action and its arguments
@@ -425,6 +427,13 @@ public abstract class Action
         EXEC_ERROR_CLEANUP    = "Error while cleaning up threads after test",
         CHECK_PASS            = "Test description appears acceptable",
 
+        // used in:  compile, main
+        SAMEVM_CANT_RESET_SECMGR= "Cannot reset security manager",
+        SAMEVM_CANT_RESET_PROPS = "Cannot reset system properties",
+
+        // used in:compile, main
+        AGENTVM_CANT_GET_VM      = "Cannot get VM for test",
+
         UNEXPECT_SYS_EXIT     = "Unexpected exit from test",
         CANT_FIND_SRC         = "Can't file source file: ",
 
@@ -454,6 +463,8 @@ public abstract class Action
         BUILD_UP_TO_DATE      = "All files up to date",
         BUILD_SUCC            = "Build successful",
         BUILD_LIB_LIST        = " in directory-list: ",
+        BUILD_FUTURE_SOURCE   = "WARNING: file %s has a modification time in the future: %s",
+        BUILD_FUTURE_SOURCE_2 = "Unexpected results may occur",
 
         // clean
         CLEAN_SUCC            = "Clean successful",
@@ -478,6 +489,8 @@ public abstract class Action
         COMPILE_PASS          = "Compilation successful",
         COMPILE_FAIL_EXPECT   = "Compilation failed as expected",
         COMPILE_FAIL          = "Compilation failed",
+        COMPILE_CANT_RESET_SECMGR= "Cannot reset security manager",
+        COMPILE_CANT_RESET_PROPS = "Cannot reset system properties",
 
         // ignore
         IGNORE_UNEXPECT_OPTS  = "Unexpected option(s) for `ignore'",
@@ -485,6 +498,11 @@ public abstract class Action
         IGNORE_TEST_IGNORED_C = "Test ignored: ",
         IGNORE_TEST_SUPPRESSED   = "@ignore suppressed by command line option",
         IGNORE_TEST_SUPPRESSED_C = "@ignore suppressed by command line option: ",
+
+        // junit
+        JUNIT_NO_DRIVER        = "No JUnit 4 driver (install junit.jar next to jtreg.jar)",
+        JUNIT_NO_CLASSNAME     = "No class provided for `junit'",
+        JUNIT_BAD_MAIN_ARG     = "Bad argument provided for class in `junit'",
 
         // main
         MAIN_NO_CLASSNAME     = "No class provided for `main'",
@@ -500,6 +518,8 @@ public abstract class Action
         MAIN_UNEXPECT_VMOPT   = ": vm option(s) found, need to specify /othervm",
         MAIN_POLICY_WRITE_PROB= "Problems writing new policy file: ",
         MAIN_POLICY_SM_PROB   = "Unable to create new policy file: ",
+        MAIN_CANT_RESET_SECMGR= "Cannot reset security manager",
+        MAIN_CANT_RESET_PROPS = "Cannot reset system properties",
 
         //    runOtherJVM
         MAIN_CANT_WRITE_ARGS  = "Can't write `main' argument file",

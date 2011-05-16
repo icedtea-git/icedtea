@@ -73,6 +73,7 @@ public class RegressionSecurityManager extends JavaTestSecurityManager {
         }
     }
 
+    @Override
     public void checkExec(String cmd) {
         if (allowExec == false) {
             if (verbose) {
@@ -99,6 +100,7 @@ public class RegressionSecurityManager extends JavaTestSecurityManager {
     static private boolean allowExec = true; // no overrides on this one; API control only
 
 
+    @Override
     public void checkPermission(Permission perm) {
         // allow most stuff, but limit as appropriate
         if (perm instanceof RuntimePermission) {

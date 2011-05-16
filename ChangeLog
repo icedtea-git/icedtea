@@ -1,3 +1,15 @@
+2011-05-16  Pavel Tisnovsky  <ptisnovs@redhat.com>
+
+	* test/jtreg/README:
+	Updated.
+	* test/jtreg/com/sun/javatest/regtest/Path.java:
+	Added.
+	* test/jtreg/com/sun/javatest/regtest/Action.java:
+	* test/jtreg/com/sun/javatest/regtest/CompileAction.java:
+	* test/jtreg/com/sun/javatest/regtest/RegressionSecurityManager.java:
+	Corrected JTreg harness - this tool now accepts "process" flag for
+	"compile" tag.
+
 2011-05-04  Andrew John Hughes  <ahughes@redhat.com>
 
 	* remove-intree-libraries.sh: Renamed.
