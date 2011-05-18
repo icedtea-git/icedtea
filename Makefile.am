@@ -1601,7 +1601,13 @@ stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
 	mkdir -p $(STAGE1_BOOT_DIR)/jre/lib && \
 	cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
 	  $(STAGE1_BOOT_DIR)/jre/lib/rt.jar && \
-	chmod u+w $(STAGE1_BOOT_DIR)/jre/lib/rt.jar && \
+	chmod u+w $(STAGE1_BOOT_DIR)/jre/lib/rt.jar
+	mkdir -p $(STAGE1_BOOT_DIR)/lib && \
+	if [ -e $(SYSTEM_JDK_DIR)/lib/tools.jar ] ; then \
+	  ln -sf $(SYSTEM_JDK_DIR)/lib/tools.jar $(STAGE1_BOOT_DIR)/lib/tools.jar ; \
+	else \
+	  ln -sf $(STAGE1_BOOT_DIR)/jre/lib/rt.jar $(STAGE1_BOOT_DIR)/lib/tools.jar ; \
+	fi
 	ln -sf $(SYSTEM_JDK_DIR)/jre/lib/$(JRE_ARCH_DIR) \
 	  $(STAGE1_BOOT_DIR)/jre/lib/ && \
 	if ! test -d $(STAGE1_BOOT_DIR)/jre/lib/$(INSTALL_ARCH_DIR); \

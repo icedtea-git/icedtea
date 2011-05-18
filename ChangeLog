@@ -1,3 +1,9 @@
+2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(bootstrap-directory-stage1): Link tools.jar
+	if available.  Otherwise, link to existing rt.jar.
+
 2011-05-16  Pavel Tisnovsky  <ptisnovs@redhat.com>
 
 	* test/jtreg/README:
