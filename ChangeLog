@@ -1,3 +1,10 @@
+2011-05-18  Denis Lila  <dlila@redhat.com>
+
+	* Makefile.am:
+	(JDK_CHANGESET): Updated to backout OpenJDK6 fix
+	of 6664512 and include Mutter fix.
+	(JDK_SHA256SUM): Likewise.
+
 2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
