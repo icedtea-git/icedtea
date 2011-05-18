@@ -1,3 +1,13 @@
+2011-05-18  Pavel Tisnovsky  <ptisnovs@redhat.com>
+
+	* Makefile.am:
+	(JDK_CHANGESET): Include fix of regression test
+	sun/net/www/protocol/file/DirPermissionDenied.sh
+	(JDK_SHA256SUM): Likewise.
+	(HOTSPOT_CHANGESET): Include fix of regression
+	test runtime/6929067/Test6929067.sh
+	(HOTSPOT_SHA256SUM): Likewise
+
 2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
 
 	* scripts/update_tarballs.sh:
