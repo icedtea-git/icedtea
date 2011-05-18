@@ -1,3 +1,10 @@
+2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
+
+	* scripts/gen_changeset_and_sha256sums.sh,
+	* scripts/update_tarballs.sh:
+	Add scripts to ease updating changeset IDs
+	and checksums.
+
 2011-05-18  Denis Lila  <dlila@redhat.com>
 
 	* Makefile.am:
