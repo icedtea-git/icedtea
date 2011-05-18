@@ -1,5 +1,11 @@
 2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
 
+	* scripts/update_tarballs.sh:
+	Pass $DOWNLOAD_DIR through to
+	gen_changeset_and_sha256sums.sh.
+
+2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
+
 	* scripts/gen_changeset_and_sha256sums.sh,
 	* scripts/update_tarballs.sh:
 	Add scripts to ease updating changeset IDs

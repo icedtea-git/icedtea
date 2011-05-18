@@ -17,4 +17,4 @@ done
 wget -O openjdk.tar.gz http://icedtea.classpath.org/hg/icedtea7-forest/archive/tip.tar.gz
 echo Generating new changeset IDs and SHA256 sums
 popd
-$RUNNING_DIR/gen_changeset_and_sha256sums.sh
+$RUNNING_DIR/gen_changeset_and_sha256sums.sh $DOWNLOAD_DIR
