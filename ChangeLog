@@ -1,3 +1,11 @@
+2011-05-20  Pavel Tisnovsky  <ptisnovs@redhat.com>
+
+	* Makefile.am:
+	(JDK_CHANGESET): Fixed behaviour of regression test
+	PrintAllXcheckJNI.java, added check if test frame is really initialized
+	to avoid exception thrown when BufferedImage is created.
+	(JDK_SHA256SUM): Likewise
+
 2011-05-19  Pavel Tisnovsky  <ptisnovs@redhat.com>
 
 	* Makefile.am:
