@@ -1,3 +1,19 @@
+2011-03-17  Xerxes Ranby  <xerxes@zafena.se>
+
+	JamVM: Update to latest JamVM revision and remove upstreamed pathes.
+	Update contains the following new JamVM improvements:
+	Handle O_DELETE in JVM_Open
+	Minor performance improvement on ARM
+	First set of changes to support JamVM/OpenJDK on MacOS X
+	Minor memory leak (missing free)
+	Handle integer overflow on i386/amd64
+	* NEWS: Updated.
+	* Makefile.am: Remove upstreamed JamVM patches.
+	(JAMVM_VERSION): Updated to latest JamVM revision.
+	(JAMVM_SHA256SUM): Updated.
+	* patches/jamvm/arm-interp_cflags-marm.patch: Deleted.
+	* patches/jamvm/mips64el.patch: Deleted.
+
 2011-03-13  Xerxes Ranby  <xerxes@zafena.se>
 	    Robert Loughter  <rob@jamvm.org.uk>
 
