@@ -1898,7 +1898,7 @@ clean-icedtea-debug-stage2:
 
 stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
  stamps/download.stamp $(OPENJDK_BOOT_TREE) stamps/cacao.stamp \
- stamps/rewrite-rhino.stamp
+ stamps/rewrite-rhino.stamp stamps/jamvm.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot \

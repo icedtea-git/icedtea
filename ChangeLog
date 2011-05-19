@@ -1,3 +1,8 @@
+2011-02-22  Xerxes Ranby  <xranby@zafena.se>
+
+	Fix icedtea-boot build with --enable-jamvm
+	(stamps/icedtea-boot.stamp): Add stamps/jamvm.stamp
+
 2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
