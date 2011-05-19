@@ -310,6 +310,11 @@ ICEDTEA_PATCHES += \
 	patches/cacao/ignore-tests.patch
 endif
 
+if BUILD_JAMVM
+ICEDTEA_PATCHES += \
+	patches/jamvm/ignore-more-XX-options.patch
+endif
+
 if ENABLE_PULSE_JAVA
 ICEDTEA_PATCHES += \
 	patches/pulse-soundproperties.patch

@@ -7,6 +7,7 @@ New in release 1.14 (XXXX-XX-XX)
 * Allow the location of the JamVM source zip to be specified using --with-jamvm-src-zip
 * Bug fixes
   - PR616, PR99: Don't statically link libstdc++
+  - PR640: JamVM fails to build - Unrecognised option: -XX:ThreadStackSize.
 * Zero/Shark
   - Match Shark in icedtea6, makes OSR work by removing vestigal check.
   - LLVM 2.7 non-product fixes.

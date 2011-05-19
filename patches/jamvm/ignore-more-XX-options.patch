@@ -1,0 +1,12 @@
+Index: jamvm/jamvm/src/jni.c
+===================================================================
+--- jamvm/jamvm.orig/src/jni.c	2011-02-23 09:54:17.000000000 +0100
++++ jamvm/jamvm/src/jni.c	2011-02-23 09:58:21.000000000 +0100
+@@ -1638,6 +1638,7 @@
+ #endif
+         /* Compatibility options */
+         } else if(strncmp(string, "-XX:PermSize=", 13) == 0 ||
++                  strncmp(string, "-XX:ThreadStackSize=", 20) == 0 ||
+                   strncmp(string, "-XX:MaxPermSize=", 16) == 0) {
+             /* Ignore */
+         } else if(!vm_args->ignoreUnrecognized) {
