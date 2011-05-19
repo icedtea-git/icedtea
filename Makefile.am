@@ -303,6 +303,7 @@ ICEDTEA_PATCHES += \
 	patches/cacao/jsig.patch \
 	patches/cacao/6714758.patch \
 	patches/cacao/memory.patch \
+	patches/cacao/arm-memory-barrier.patch \
 	patches/cacao/ignore-unknown-options.patch
 endif
 

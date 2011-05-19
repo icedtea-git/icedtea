@@ -9,6 +9,7 @@ New in release 1.14 (XXXX-XX-XX)
 * Bug fixes
   - PR616, PR99: Don't statically link libstdc++
   - PR640: JamVM fails to build - Unrecognised option: -XX:ThreadStackSize.
+  - CACAO PR157: ARM SMP Assertion thinlock failed.
 * Zero/Shark
   - Match Shark in icedtea6, makes OSR work by removing vestigal check.
   - LLVM 2.7 non-product fixes.
