@@ -1,3 +1,5 @@
+CAX - http://server.complang.tuwien.ac.at/cgi-bin/bugzilla/show_bug.cgi?id=X
+
 New in release 1.14 (XXXX-XX-XX)
 
 * NetX and the plugin moved to the IcedTea-Web project with a separate
@@ -6,6 +8,9 @@ New in release 1.14 (XXXX-XX-XX)
 * Allow building of JamVM beside the default VM by using --with-additional-vms=jamvm
 * Allow the location of the JamVM source zip to be specified using --with-jamvm-src-zip
 * JamVM builds can bootstrap and are self-hosting.
+* Bug fixes
+  - PR616, PR99: Don't statically link libstdc++
+  - PR640: JamVM fails to build - Unrecognised option: -XX:ThreadStackSize.
 * JamVM
   - Ignore all unknown options.
   - Handle O_DELETE in JVM_Open.
@@ -16,10 +21,16 @@ New in release 1.14 (XXXX-XX-XX)
   - On ARM, force interpreter to be built in ARM mode.
   - MIPS: 64-bit and interpreter inlining by default.
   - Trivial implementation of stubs for MIPS.
-* Bug fixes
-  - PR616, PR99: Don't statically link libstdc++
-  - PR640: JamVM fails to build - Unrecognised option: -XX:ThreadStackSize.
-  - CACAO PR157: ARM SMP Assertion thinlock failed.
+* CACAO
+  - Ignore all unknown options, but report them.
+  - Fixes build for newer gcc (at least 4.4) on PPC64, breaks older gcc.
+  - CA123: LD_LIBRARY_PATH and java.library.path.
+  - CA143: don't hang with invalid locale.
+  - CA144: aligned patchers on x86_64.
+  - CA148: support for LCMP bytecode.
+  - CA152: Calling Policy.setPolicy with a new Policy object has no effect on the DefaultSecurityManager.
+  - CA156: uncaughtExceptionHandler doesn't work with OpenJDK 6 b21.
+  - CA157: ARM SMP Assertion thinlock failed.
 * Zero/Shark
   - Match Shark in icedtea6, makes OSR work by removing vestigal check.
   - LLVM 2.7 non-product fixes.

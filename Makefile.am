@@ -18,8 +18,8 @@ JDK_SHA256SUM = 6d12de7cecd01c4ddef1a28fc393dfe5f8d66dea80b7d1484e028e8b921ac219
 LANGTOOLS_SHA256SUM = e1beab78534a3a0fb18404c3c200e8866da275c7c656172c9f295f11203e5f39
 OPENJDK_SHA256SUM = 856b791751e56f64cc10e4826eefc9af9882969b179595c9642f7c9771965e7d
 
-CACAO_VERSION = e321b101a9ee
-CACAO_SHA256SUM = 46bc5b6212c199dc4a3dbebe6386fe15a8248625a5dffa17115aab394a298444
+CACAO_VERSION = c7bf150bfa46
+CACAO_SHA256SUM = 73629f5ac9514afbcf63b6cdf58556e889a5f6a22d4bd70de1dd2816c6500aee
 CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
@@ -299,12 +299,9 @@ if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
 	patches/cacao/version.patch \
-	patches/cacao/arm-arch-defines.patch \
 	patches/cacao/jsig.patch \
 	patches/cacao/6714758.patch \
-	patches/cacao/memory.patch \
-	patches/cacao/arm-memory-barrier.patch \
-	patches/cacao/ignore-unknown-options.patch
+	patches/cacao/memory.patch
 endif
 
 if WITH_CACAO

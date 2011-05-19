@@ -1,5 +1,25 @@
 2011-03-17  Xerxes Ranby  <xerxes@zafena.se>
 
+	CACAO: Update to latest CACAO revision and remove upstreamed pathes.
+	Update contains the following new CACAO improvements:
+	Fixes build for newer gcc (at least 4.4) on PPC64, breaks older gcc.
+	CA123: LD_LIBRARY_PATH and java.library.path.
+	CA143: don't hang with invalid locale.
+	CA144: aligned patchers on x86_64.
+	CA148: support for LCMP bytecode.
+	CA152: Calling Policy.setPolicy with a new Policy object
+	has no effect on the DefaultSecurityManager.
+	CA156: uncaughtExceptionHandler doesn't work with OpenJDK 6 b21.
+	* NEWS: Updated.
+	* Makefile.am: Remove upstreamed CACAO patches.
+	(CACAO_VERSION): Updated to latest CACAO revision.
+	(CACAO_SHA256SUM): Updated.
+	* patches/cacao/arm-arch-defines.patch: Deleted.
+	* patches/cacao/arm-memory-barrier.patch: Deleted.
+	* patches/cacao/ignore-unknown-options.patch: Deleted.
+
+2011-03-17  Xerxes Ranby  <xerxes@zafena.se>
+
 	JamVM: Update to latest JamVM revision and remove upstreamed pathes.
 	Update contains the following new JamVM improvements:
 	Handle O_DELETE in JVM_Open

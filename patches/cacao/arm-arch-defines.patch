@@ -16,34 +16,3 @@ diff -Nru cacao.orig/cacao/src/mm/boehm-gc/libatomic_ops-1.2/src/atomic_ops/sysd
  AO_INLINE void
  AO_nop_full()
  {
-diff -Nru cacao.orig/cacao/src/vm/jit/arm/md-atomic.hpp cacao/cacao/src/vm/jit/arm/md-atomic.hpp
---- cacao.orig/cacao/src/vm/jit/arm/md-atomic.hpp	2010-05-19 12:14:46.000000000 +0100
-+++ cacao/cacao/src/vm/jit/arm/md-atomic.hpp	2010-06-21 18:35:53.000000000 +0100
-@@ -45,26 +45,7 @@
-  */
- inline uint32_t compare_and_swap(volatile uint32_t *p, uint32_t oldval, uint32_t newval)
- {
--	uint32_t result;
--	uint32_t temp;
--
--	/* TODO: improve this one! */
--	__asm__ __volatile__ (
--		"1:\t"
--		"ldr   %0,[%2]\n\t"
--		"cmp   %0,%4\n\t"
--		"bne   2f\n\t"
--		"swp   %1,%3,[%2]\n\t"
--		"cmp   %1,%0\n\t"
--		"swpne %0,%1,[%2]\n\t"
--		"bne   1b\n\t"
--		"2:"
--		: "=&r" (result), "=&r" (temp)
--		: "r" (p), "r" (newval), "r" (oldval)
--		: "cc", "memory"
--	);
--
--	return result;
-+	return __sync_val_compare_and_swap (p, oldval, newval);
- }
- 
- 
