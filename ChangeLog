@@ -1,3 +1,9 @@
+2011-03-04  Xerxes Ranby  <xerxes@zafena.se>
+
+	CACAO: Ignore all unknown options.
+	* Makefile.am: Add CACAO patch.
+	* patches/cacao/ignore-unknown-options.patch: Added.
+
 2011-03-03  Xerxes Ranby  <xerxes@zafena.se>
 
 	JamVM: Ignore all unknown options.
