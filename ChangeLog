@@ -1,3 +1,11 @@
+2011-02-27  Xerxes Ranby  <xerxes@zafena.se>
+
+	JamVM: Fix configure --enable-jamvm full bootstrap build.
+	* NEWS: Updated.
+	* Makefile.am: 
+	(JAMVM_VERSION): Updated to latest JamVM revision.
+	(JAMVM_SHA256SUM): Updated.
+
 2011-02-24  Xerxes Ranby  <xerxes@zafena.se>
 
 	PR640: JamVM fails to build - Unrecognised option: -XX:ThreadStackSize.

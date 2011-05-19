@@ -5,6 +5,7 @@ New in release 1.14 (XXXX-XX-XX)
 * Added out-of-the-box JamVM support using --enable-jamvm
 * Allow building of JamVM beside the default VM by using --with-additional-vms=jamvm
 * Allow the location of the JamVM source zip to be specified using --with-jamvm-src-zip
+* JamVM builds can bootstrap and are self-hosting.
 * Bug fixes
   - PR616, PR99: Don't statically link libstdc++
   - PR640: JamVM fails to build - Unrecognised option: -XX:ThreadStackSize.
