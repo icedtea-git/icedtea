@@ -1905,3 +1905,20 @@ AC_DEFUN([IT_CHECK_ENABLE_JAMVM],
   AM_CONDITIONAL(ENABLE_JAMVM, test x"${ENABLE_JAMVM}" = "xyes")
   AC_SUBST(ENABLE_JAMVM)
 ])
+
+AC_DEFUN([IT_CHECK_WITH_JAMVM_SRC_ZIP],
+[
+  AC_MSG_CHECKING([for a JamVM source zip])
+  AC_ARG_WITH([jamvm-src-zip],
+	      [AS_HELP_STRING(--with-jamvm-src-zip,specify the location of the JamVM source zip)],
+  [
+    ALT_JAMVM_SRC_ZIP=${withval}
+    AM_CONDITIONAL(USE_ALT_JAMVM_SRC_ZIP, test x = x)
+  ],
+  [
+    ALT_JAMVM_SRC_ZIP="not specified"
+    AM_CONDITIONAL(USE_ALT_JAMVM_SRC_ZIP, test x != x)
+  ])
+  AC_MSG_RESULT(${ALT_JAMVM_SRC_ZIP})
+  AC_SUBST(ALT_JAMVM_SRC_ZIP)
+])

@@ -1,5 +1,16 @@
 2011-02-23  Xerxes Ranby  <xerxes@zafena.se>
 
+	JamVM: configure --with-jamvm-src-zip
+	* NEWS: Updated.
+	* Makefile.am (stamps/download-jamvm.stamp):
+	Link in jamvm source zip dependent on USE_ALT_JAMVM_SRC_ZIP
+	* acinclude.m4 (IT_CHECK_WITH_JAMVM_SRC_ZIP): New macro.
+	(USE_ALT_JAMVM_SRC_ZIP): New conditional.
+	(ALT_JAMVM_SRC_ZIP): New variable.
+	* configure.ac: Call IT_CHECK_WITH_JAMVM_SRC_ZIP.
+
+2011-02-23  Xerxes Ranby  <xerxes@zafena.se>
+
 	* Makefile.am: (JAMVM_BASE_URL): Switch to using IcedTea
 	server for JamVM drops too.
 	(JAMVM_VERSION): Updated to latest JamVM revision.

@@ -1094,6 +1094,9 @@ clean-download-cacao:
 
 stamps/download-jamvm.stamp:
 if BUILD_JAMVM
+if USE_ALT_JAMVM_SRC_ZIP
+	ln -sf $(ALT_JAMVM_SRC_ZIP) $(JAMVM_SRC_ZIP)
+endif
 	if ! echo "$(JAMVM_SHA256SUM)  $(JAMVM_SRC_ZIP)" \
 	 | $(SHA256SUM) --check ; \
 	then \
