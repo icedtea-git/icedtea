@@ -755,7 +755,7 @@ install:
 	clean-icedtea icedtea-stage2 clean-icedtea-boot \
 	clean-rt hotspot hotspot-helper clean-jtreg clean-jtreg-reports \
 	clean-drops jtregcheck clean-remove-intree-libraries \
-	clean-jamvm clean-extract-jamvm
+	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1878,19 +1878,19 @@ clean-icedtea:
 	rm -f stamps/icedtea.stamp stamps/icedtea-debug.stamp
 
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
- stamps/add-zero.stamp
+ stamps/add-zero.stamp stamps/add-jamvm.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-stage2:
+clean-icedtea-stage2: clean-add-jamvm
 	rm -f stamps/icedtea-stage2.stamp
 
 stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
- stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp
+ stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-debug-stage2:
+clean-icedtea-debug-stage2: clean-add-jamvm-debug
 	rm -f stamps/icedtea-debug-stage2.stamp
 
 # OpenJDK boot Targets
@@ -2082,6 +2082,40 @@ endif
 clean-jamvm:
 	rm -rf jamvm
 	rm -f stamps/jamvm.stamp
+
+# Targets for additional VMs
+
+stamps/add-jamvm.stamp: stamps/icedtea.stamp stamps/jamvm.stamp
+if ADD_JAMVM_BUILD
+	mkdir -p $(BUILD_JRE_ARCH_DIR)/jamvm
+	install -m 644 jamvm/install/lib/libjvm.so \
+		$(BUILD_JRE_ARCH_DIR)/jamvm/
+	printf -- '-jamvm KNOWN\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
+else
+	printf -- '-jamvm ERROR\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
+endif
+	touch $@
+
+clean-add-jamvm:
+	rm -rf $(BUILD_JRE_ARCH_DIR)/jamvm
+	sed -i 's#-jamvm KNOWN#-jamvm ERROR#' jvm.cfg
+	rm -f stamps/add-jamvm.stamp
+
+stamps/add-jamvm-debug.stamp: stamps/icedtea-debug.stamp stamps/jamvm.stamp
+if ADD_JAMVM_BUILD
+	mkdir -p $(BUILD_DEBUG_JRE_ARCH_DIR)/jamvm
+	install -m 644 jamvm/install/lib/libjvm.so \
+		$(BUILD_DEBUG_JRE_ARCH_DIR)/jamvm/
+	printf -- '-jamvm KNOWN\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+else
+	printf -- '-jamvm ERROR\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+endif
+	touch $@
+
+clean-add-jamvm-debug:
+	rm -rf $(BUILD_DEBUG_JRE_ARCH_DIR)/jamvm
+	sed -i 's#-jamvm KNOWN#-jamvm ERROR#' jvm.cfg
+	rm -f stamps/add-jamvm-debug.stamp
 
 # CACAO
 

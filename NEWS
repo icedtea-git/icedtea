@@ -3,6 +3,7 @@ New in release 1.14 (XXXX-XX-XX)
 * NetX and the plugin moved to the IcedTea-Web project with a separate
   release cycle.
 * Added out-of-the-box JamVM support using --enable-jamvm
+* Allow building of JamVM beside the default VM by using --with-additional-vms=jamvm
 * Bug fixes
   - PR616, PR99: Don't statically link libstdc++
 * Zero/Shark

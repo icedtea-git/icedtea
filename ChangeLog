@@ -1,3 +1,22 @@
+2011-02-23  Xerxes Ranby  <xerxes@zafena.se>
+
+	JamVM: Try --with-additional-vms=jamvm topping!
+	* NEWS: Updated.
+	* Makefile.am (stamps/add-jamvm.stamp): New make target.
+	(clean-add-jamvm): Likewise.
+	(stamps/add-jamvm-debug.stamp): Likewise.
+	(clean-add-jamvm-debug): Likewise.
+	(.PHONY): Add clean-add-jamvm and clean-add-jamvm-debug.
+	(stamps/icedtea-stage2.stamp): Add stamps/add-jamvm.stamp.
+	(clean-icedtea-stage2): Add clean-add-jamvm.
+	(stamps/icedtea-debug-stage2.stamp):
+	Add stamps/add-jamvm-debug.stamp.
+	(clean-icedtea-debug-stage2): Add clean-add-jamvm-debug.
+	* acinclude.m4 (IT_CHECK_ADDITIONAL_VMS):
+	Set add_vm_jamvm if jamvm are found.
+	(BUILD_JAMVM): Add check for add_vm_jamvm.
+	(ADD_JAMVM_BUILD): New conditional dependent on add_vm_jamvm.
+
 2011-02-22  Xerxes Ranby  <xranby@zafena.se>
 
 	Fix icedtea-boot build with --enable-jamvm

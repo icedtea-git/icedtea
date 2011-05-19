@@ -1272,7 +1272,7 @@ AC_DEFUN([IT_CHECK_ADDITIONAL_VMS],
 AC_MSG_CHECKING([for additional virtual machines to build])
 AC_ARG_WITH(additional-vms,
             AC_HELP_STRING([--with-additional-vms=VM-LIST],
-	    [build additional virtual machines. Valid value is a comma separated string with the backend names `cacao', `zero' and `shark'.]),
+	    [build additional virtual machines. Valid value is a comma separated string with the backend names `cacao', `jamvm', `zero' and `shark'.]),
 [
 if test "x${withval}" != x ; then
   with_additional_vms=${withval}
@@ -1281,6 +1281,7 @@ if test "x${withval}" != x ; then
       xcacao) add_vm_cacao=yes;;
       xzero)  add_vm_zero=yes;;
       xshark) add_vm_shark=yes;;
+      xjamvm) add_vm_jamvm=yes;;
       *) AC_MSG_ERROR([proper usage is --with-additional-vms=vm1,vm2,...])
     esac
   done
@@ -1291,12 +1292,16 @@ if test "x${with_additional_vms}" = x; then
 fi
 AC_MSG_RESULT($with_additional_vms)
 
+AM_CONDITIONAL(ADD_JAMVM_BUILD, test x$add_vm_jamvm != x)
 AM_CONDITIONAL(ADD_CACAO_BUILD, test x$add_vm_cacao != x)
 AM_CONDITIONAL(ADD_ZERO_BUILD,  test x$add_vm_zero  != x || test x$add_vm_shark != x)
 AM_CONDITIONAL(ADD_SHARK_BUILD, test x$add_vm_shark != x)
-AM_CONDITIONAL(BUILD_JAMVM, test "x${ENABLE_JAMVM}" = xyes)
+AM_CONDITIONAL(BUILD_JAMVM, test x$add_vm_jamvm != x || test "x${ENABLE_JAMVM}" = xyes)
 AM_CONDITIONAL(BUILD_CACAO, test x$add_vm_cacao != x || test "x${WITH_CACAO}" = xyes)
 
+if test "x${ENABLE_JAMVM}" = xyes && test "x${ADD_JAMVM_BUILD_TRUE}" = x; then
+  AC_MSG_ERROR([additional vm is the default vm])
+fi
 if test "x${WITH_CACAO}" = xyes && test "x${ADD_CACAO_BUILD_TRUE}" = x; then
   AC_MSG_ERROR([additional vm is the default vm])
 fi
