@@ -25,6 +25,7 @@ New in release 1.14 (XXXX-XX-XX)
   - MIPS: 64-bit and interpreter inlining by default.
   - Trivial implementation of stubs for MIPS.
 * CACAO
+  - Threadlist & threadobject improvements.
   - Ignore all unknown options, but report them.
   - Fixes build for newer gcc (at least 4.4) on PPC64, breaks older gcc.
   - CA123: LD_LIBRARY_PATH and java.library.path.

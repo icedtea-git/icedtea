@@ -1,3 +1,11 @@
+2011-05-05  Xerxes Rånby  <xranby@zafena.se>
+
+	CACAO threadlist & threadobject improvements.
+	* NEWS: Updated.
+	* Makefile.am
+	(CACAO_VERSION): Updated to latest CACAO revision.
+	(CACAO_SHA256SUM): Updated.
+
 2011-03-26  Xerxes Ranby  <xerxes@zafena.se>
 
 	JamVM: Handle overflow in getPhysicalMemory().
