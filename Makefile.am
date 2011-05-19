@@ -24,8 +24,8 @@ CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
-JAMVM_VERSION = 30c4a6b93ffa385833360921bfc613829fb081c9
-JAMVM_SHA256SUM = e77434a7d02d75de7fe44e9e1d7d6a3fd7ddcd5447ddd175fde2a7ccb40f8838
+JAMVM_VERSION = 9acc3f22f885340bef0acabb568eaeabe4450bfb
+JAMVM_SHA256SUM = ab8bd9e37d7eea26c3ec2e5e86ac4d782327416bcef1be9deb9453e11b145e83
 JAMVM_BASE_URL = http://icedtea.classpath.org/download/drops/jamvm
 JAMVM_URL = $(JAMVM_BASE_URL)/jamvm-$(JAMVM_VERSION).tar.gz
 JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
@@ -314,7 +314,8 @@ endif
 
 if BUILD_JAMVM
 ICEDTEA_PATCHES += \
-	patches/jamvm/ignore-unknown-options.patch
+	patches/jamvm/ignore-unknown-options.patch \
+	patches/jamvm/mips64el.patch
 endif
 
 if ENABLE_PULSE_JAVA

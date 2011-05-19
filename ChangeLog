@@ -1,5 +1,14 @@
 2011-03-11  Xerxes Ranby  <xerxes@zafena.se>
 
+	JamVM: mips
+	* NEWS: Updated.
+	* Makefile.am: Add new JamVM patch.
+	(JAMVM_VERSION): Updated to latest JamVM revision.
+	(JAMVM_SHA256SUM): Updated.
+	* patches/jamvm/mips64el.patch: New patch.
+
+2011-03-11  Xerxes Ranby  <xerxes@zafena.se>
+
 	CACAO PR157: ARM SMP Assertion thinlock failed.
 	* NEWS: Updated.
 	* Makefile.am: Add new CACAO patch.
