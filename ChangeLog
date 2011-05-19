@@ -1,3 +1,49 @@
+2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(clean-jamvm): Don't remove clean-extract-jamvm.stamp
+	here; use its own target.
+	(clean-extract-jamvm): Added.
+
+2011-02-22  Xerxes Ranby  <xerxes@zafena.se>
+
+	JamVM: Taste the New --enable-jamvm Flavour!
+	* NEWS: Updated.
+	* Makefile.am (JAMVM_VERSION): New variable.
+	(JAMVM_SHA256SUM): Likewise.
+	(JAMVM_BASE_URL): Likewise.
+	(JAMVM_URL): Likewise.
+	(JAMVM_SRC_ZIP): Likewise.
+	(JAMVM_IMPORT_PATH): Likewise.
+	(ICEDTEA_BUILD_TARGET):
+	Build only jdk if jamvm are enabled.
+	(ICEDTEA_DEBUG_BUILD_TARGET): Likewise.
+	(ICEDTEA_ENV): Set ALT_HOTSPOT_IMPORT_PATH to JAMVM_IMPORT_PATH
+	if jamvm are enabled.
+	(PRODUCT_NAME): Make -version report IcedTea6 Runtime Environment
+	if jamvm are enabled.
+	(JDK_DERIVATIVE_NAME): Only show IcedTea version
+	if jamvm are enabled.
+	(stamps/download-jamvm.stamp): New make target.
+	(clean-download-jamvm): Likewise.
+	(stamps/extract-jamvm.stamp): Likewise.
+	(stamps/jamvm.stamp): Likewise.
+	(clean-jamvm): Likewise.
+	(.PHONY): Add clean-jamvm.
+	(stamps/download.stamp): Add stamps/download-jamvm.stamp.
+	(clean-download): Add clean-download-jamvm.
+	(stamps/extract.stamp): Add stamps/extract-jamvm.stamp.
+	(clean-extract): Add clean-jamvm.
+	(stamps/icedtea.stamp): Add stamps/jamvm.stamp.
+	(download-jamvm): Alias to stamps/download-jamvm.stamp.
+	(jamvm): Alias to stamps/jamvm.stamp.
+	* configure.ac (IT_CHECK_ENABLE_JAMVM): Use new macro.
+	* acinclude.m4:
+	(ENABLE_ZERO_BUILD): Do not use zero if jamvm are enabled.
+	(IT_CHECK_ENABLE_JAMVM): New macro.
+	(BUILD_JAMVM): New conditional.
+	(ENABLE_JAMVM): New conditional.
+
 2011-05-18  Pavel Tisnovsky  <ptisnovs@redhat.com>
 
 	* Makefile.am:

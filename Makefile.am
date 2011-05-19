@@ -24,6 +24,17 @@ CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
+# The jamvm-3f02679901ac46985c9c3ac3f1b99e8eaf6a7e27.tar.gz got fetched from
+# http://git.berlios.de/cgi-bin/cgit.cgi/jamvm/snapshot/jamvm-3f02679901ac46985c9c3ac3f1b99e8eaf6a7e27.tar.gz
+# Unfortunally the generated .tar.gz by the berlios cgit snapshot function
+# keeps changing sha256sum. I have hosted a snapshot on labb.zafena.se
+# while we wait for the final JamVM 1.6.0 release.
+JAMVM_VERSION = 3f02679901ac46985c9c3ac3f1b99e8eaf6a7e27
+JAMVM_SHA256SUM = 396daf08896a71cfcddfabfbaf2d8b3f07557d8143eaaa93be25e2d80f30e165
+JAMVM_BASE_URL = http://labb.zafena.se/jamvm
+JAMVM_URL = $(JAMVM_BASE_URL)/jamvm-$(JAMVM_VERSION).tar.gz
+JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
+
 JAXWS_DROP_URL = http://icedtea.classpath.org/download/drops
 JAXWS_DROP_ZIP = jdk7-jaxws2_2_2-2010_12_14.zip
 JAXWS_DROP_SHA256SUM = ef3115dde8ed9a7129e65aab8b1499e11621e343559e6e5a8df9c4542848fb9b
@@ -67,6 +78,7 @@ BUILD_DEBUG_JRE_ARCH_DIR = $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTA
 REWRITER_BUILD_DIR = $(abs_top_builddir)/rewriter.build
 STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
 STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
+JAMVM_IMPORT_PATH = $(abs_top_builddir)/jamvm/install/hotspot
 
 # Source directories
 
@@ -173,7 +185,12 @@ if WITH_CACAO
   ICEDTEA_BUILD_TARGET = jdk_only
   ICEDTEA_DEBUG_BUILD_TARGET = jdk_fastdebug_only
 else
+if ENABLE_JAMVM
+  ICEDTEA_BUILD_TARGET=jdk_only
+  ICEDTEA_DEBUG_BUILD_TARGET = jdk_fastdebug_only
+else
   ICEDTEA_DEBUG_BUILD_TARGET = debug_build
+endif
 endif
 
 if BOOTSTRAPPING
@@ -469,6 +486,11 @@ ICEDTEA_ENV += \
 	ALT_HOTSPOT_IMPORT_PATH="$(CACAO_IMPORT_PATH)"
 endif
 
+if ENABLE_JAMVM
+ICEDTEA_ENV += \
+	ALT_HOTSPOT_IMPORT_PATH="$(JAMVM_IMPORT_PATH)"
+endif
+
 if DISABLE_OPTIMIZATIONS
 ICEDTEA_ENV += \
 	NO_OPTIMIZATIONS="true" \
@@ -732,7 +754,8 @@ install:
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot \
 	clean-rt hotspot hotspot-helper clean-jtreg clean-jtreg-reports \
-	clean-drops jtregcheck clean-remove-intree-libraries
+	clean-drops jtregcheck clean-remove-intree-libraries \
+	clean-jamvm clean-extract-jamvm
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -778,11 +801,11 @@ clean-hgforest:
 # Download OpenJDK sources.
 
 stamps/download.stamp: stamps/download-drops.stamp stamps/download-openjdk.stamp \
- stamps/download-cacao.stamp
+ stamps/download-cacao.stamp stamps/download-jamvm.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-download: clean-drops clean-download-openjdk clean-download-cacao
+clean-download: clean-drops clean-download-openjdk clean-download-cacao clean-download-jamvm
 	rm -f stamps/download.stamp
 
 stamps/download-jaxp-drop.stamp:
@@ -1074,13 +1097,37 @@ clean-download-cacao:
 	rm -f $(CACAO_SRC_ZIP)
 	rm -f stamps/download-cacao.stamp
 
-stamps/extract.stamp: stamps/extract-openjdk.stamp \
- stamps/extract-cacao.stamp stamps/extract-jaxws.stamp \
- stamps/remove-intree-libraries.stamp
+stamps/download-jamvm.stamp:
+if BUILD_JAMVM
+	if ! echo "$(JAMVM_SHA256SUM)  $(JAMVM_SRC_ZIP)" \
+	 | $(SHA256SUM) --check ; \
+	then \
+	 if [ $(JAMVM_SRC_ZIP) ] ; \
+	 then \
+	   mv $(JAMVM_SRC_ZIP) $(JAMVM_SRC_ZIP).old ; \
+	 fi ; \
+	 $(WGET) $(JAMVM_URL) -O $(JAMVM_SRC_ZIP); \
+	 if ! echo "$(JAMVM_SHA256SUM)  $(JAMVM_SRC_ZIP)" \
+	  | $(SHA256SUM) --check ; \
+	 then echo "ERROR: Bad download of JamVM zip"; false; \
+	 fi; \
+	fi
+endif
 	mkdir -p stamps
 	touch $@
 
-clean-extract: clean-extract-openjdk clean-extract-cacao clean-extract-jaxws
+clean-download-jamvm:
+	rm -f $(JAMVM_SRC_ZIP)
+	rm -f stamps/download-jamvm.stamp
+
+stamps/extract.stamp: stamps/extract-openjdk.stamp \
+ stamps/extract-cacao.stamp stamps/extract-jaxws.stamp \
+ stamps/remove-intree-libraries.stamp stamps/extract-jamvm.stamp
+	mkdir -p stamps
+	touch $@
+
+clean-extract: clean-extract-openjdk clean-extract-cacao clean-extract-jaxws \
+ clean-extract-jamvm
 	rm -f stamps/extract.stamp
 
 stamps/extract-openjdk.stamp: stamps/download-openjdk.stamp
@@ -1218,6 +1265,23 @@ endif
 
 clean-extract-cacao: clean-cacao
 	rm -f stamps/extract-cacao.stamp
+
+stamps/extract-jamvm.stamp:
+if BUILD_JAMVM
+	set -e ; \
+	if ! test -d jamvm ; \
+	then \
+	  mkdir jamvm ; \
+	  $(TAR) xf $(JAMVM_SRC_ZIP) -C jamvm ; \
+	  dir=$$(basename jamvm/jamvm-*) ; \
+	  ln -s $$dir jamvm/jamvm ; \
+	fi
+endif
+	mkdir -p stamps
+	touch stamps/extract-jamvm.stamp
+
+clean-extract-jamvm: clean-jamvm
+	rm -f stamps/extract-jamvm.stamp
 
 stamps/extract-jaxws.stamp: stamps/download-jaxws-drop.stamp \
  stamps/download-jaf-drop.stamp stamps/extract-openjdk.stamp
@@ -1393,7 +1457,8 @@ stamps/versioning.stamp: stamps/patch.stamp
 	mv openjdk/jdk/make/common/shared/Defs.gmk Defs.gmk.bak
 	cat Defs.gmk.bak > openjdk/jdk/make/common/shared/Defs.gmk
 	icedtea_version="$(PACKAGE_VERSION)$(ICEDTEA_REV)" ; \
-	if ! test "x$(WITH_CACAO)" = "xno"; then \
+	if test "x$(WITH_CACAO)" = "xyes" || \
+	   test "x$(ENABLE_JAMVM)" = "xyes"; then \
 	  echo "JDK_DERIVATIVE_NAME=$${icedtea_version}" \
 	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
 	  echo "PRODUCT_NAME=$(ICEDTEA_NAME)" \
@@ -1679,7 +1744,8 @@ clean-bootstrap-directory-symlink-stage2:
 # you change it in the icedtea-debug target as well.
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
- stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp
+ stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp \
+ stamps/jamvm.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1734,13 +1800,17 @@ if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
 endif
+if ENABLE_JAMVM
+	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
+endif
 	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
 	mkdir -p stamps
 	touch $@
 
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
- stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp
+ stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp \
+ stamps/jamvm.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
@@ -1794,6 +1864,9 @@ endif
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+endif
+if ENABLE_JAMVM
+	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
 	@echo "IcedTea (debug build) is served:" \
 	  $(DEBUG_BUILD_OUTPUT_DIR)
@@ -1987,6 +2060,28 @@ clean-rewrite-rhino:
 	  rmdir rhino ; \
 	fi
 	rm -f stamps/rewrite-rhino.stamp
+
+# JamVM
+
+stamps/jamvm.stamp: $(OPENJDK_TREE) stamps/rt.stamp
+if BUILD_JAMVM
+	cd jamvm/jamvm && \
+	./autogen.sh --with-java-runtime-library=openjdk \
+	  --prefix=$(abs_top_builddir)/jamvm/install ; \
+	$(MAKE) ; \
+	$(MAKE) install
+	mkdir -p $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server
+	cp $(abs_top_builddir)/jamvm/install/lib/libjvm.so $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server
+	ln -s server $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/client
+	touch $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server/Xusage.txt
+	touch $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/libjsig.so
+endif
+	mkdir -p stamps
+	touch stamps/jamvm.stamp
+
+clean-jamvm:
+	rm -rf jamvm
+	rm -f stamps/jamvm.stamp
 
 # CACAO
 
@@ -2343,6 +2438,8 @@ download-cacao: stamps/download-cacao.stamp
 
 download-drops: stamps/download-drops.stamp
 
+download-jamvm: stamps/download-jamvm.stamp
+
 download-jaf-drop: stamps/download-jaf-drop.stamp
 
 download-jaxp-drop: stamps/download-jaxp-drop.stamp
@@ -2370,6 +2467,8 @@ icedtea-debug-stage2: stamps/icedtea-debug-stage2.stamp
 icedtea-stage1: stamps/icedtea-stage1.stamp
 
 icedtea-stage2: stamps/icedtea-stage2.stamp
+
+jamvm: stamps/jamvm.stamp
 
 jtreg: stamps/jtreg.stamp
 
