@@ -1,5 +1,14 @@
 2011-05-20  Andrew John Hughes  <ahughes@redhat.com>
 
+	* acinclude.m4:
+	Rename top-level IT_FIND_JAVAC
+	to IT_FIND_JAVA_COMPILER.
+	* configure.ac:
+	Call IT_FIND_JAVA_COMPILER not
+	IT_FIND_JAVAC.
+
+2011-05-20  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	(extract-hotspot): Use absolute path when
 	creating symbolic link.
