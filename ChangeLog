@@ -1,6 +1,12 @@
 2011-05-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	(extract-hotspot): Use absolute path when
+	creating symbolic link.
+
+2011-05-20  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(extract): Depend on extract-hotspot and
 	sanitise-hotspot.
 	(extract-jaxws): Depend on sanitise-openjdk
