@@ -1,3 +1,56 @@
+2011-05-20  Andrew John Hughes  <ahughes@redhat.com>
+
+	Ensure all our macros have an IT_ prefix.
+	* acinclude.m4:
+	(IT_WITH_VERSION_SUFFIX): Renamed from WITH_VERSION_SUFFIX.
+	(IT_WITH_PROJECT): Renamed from WITH_PROJECT.
+	(IT_WITH_CORBA_SRC_ZIP): Renamed from WITH_CORBA_SRC_ZIP.
+	(IT_WITH_JAXP_SRC_ZIP): Renamed from WITH_JAXP_SRC_ZIP.
+	(IT_WITH_JAXWS_SRC_ZIP): Renamed from WITH_JAXWS_SRC_ZIP.
+	(IT_WITH_JDK_SRC_ZIP): Renamed from WITH_JDK_SRC_ZIP.
+	(IT_WITH_LANGTOOLS_SRC_ZIP): Renamed from WITH_LANGTOOLS_SRC_ZIP.
+	(IT_ENABLE_HG): Fix dependence of IT_WITH_PROJECT.
+	* configure.ac: Use renamed macros throughout.
+
+2011-02-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	Ensure all our macros have an IT_ prefix.
+	* acinclude.m4:
+	(IT_SET_OS_DIRS): Renamed from SET_OS_DIRS.
+	(IT_FIND_JAVAC): Renamed from FIND_JAVAC.
+	(IT_FIND_JAVA): Renamed from FIND_JAVA.
+	(IT_WITH_OPENJDK_SRC_DIR): Renamed from WITH_OPENJDK_SRC_DIR.
+	(IT_FIND_ECJ_JAR): Renamed from FIND_ECJ_JAR.
+	(IT_CHECK_GCC_VERSION): Renamed from AC_CHECK_GCC_VERSION.
+	(IT_FIND_JAVAH): Renamed from FIND_JAVAH.
+	(IT_FIND_JAR): Renamed from FIND_JAR.
+	(IT_FIND_RMIC): Renamed from FIND_RMIC.
+	(IT_WITH_OPENJDK_SRC_ZIP): Renamed from WITH_OPENJDK_SRC_ZIP.
+	(IT_WITH_ALT_JAR_BINARY): Renamed from WITH_ALT_JAR_BINARY.
+	(IT_FIND_XALAN2_JAR): Renamed from FIND_XALAN2_JAR.
+	(IT_FIND_XALAN2_SERIALIZER_JAR): Renamed from FIND_XALAN2_SERIALIZER_JAR.
+	(IT_FIND_XERCES2_JAR): Renamed from FIND_XERCES2_JAR.
+	(IT_FIND_RHINO_JAR): Renamed from FIND_RHINO_JAR.
+	(IT_DISABLE_OPTIMIZATIONS): Renamed from DISABLE_OPTIMIZATIONS.
+	(IT_FIND_TOOL): Renamed from FIND_TOOL.
+	(IT_ENABLE_ZERO_BUILD): Renamed from ENABLE_ZERO_BUILD.
+	(IT_SET_SHARK_BUILD): Renamed from SET_SHARK_BUILD.
+	(IT_CHECK_ENABLE_CACAO): Renamed from AC_CHECK_ENABLE_CACAO.
+	(IT_CHECK_WITH_CACAO_HOME): Renamed from AC_CHECK_WITH_CACAO_HOME.
+	(IT_CHECK_WITH_CACAO_SRC_ZIP): Renamed from AC_CHECK_WITH_CACAO_SRC_ZIP.
+	(IT_CHECK_WITH_GCJ): Renamed from AC_CHECK_WITH_GCJ.
+	(IT_CHECK_WITH_HOTSPOT_BUILD): Renamed from AC_CHECK_WITH_HOTSPOT_BUILD.
+	(IT_WITH_HOTSPOT_SRC_ZIP): Renamed from WITH_HOTSPOT_SRC_ZIP.
+	(IT_WITH_JAXP_DROP_ZIP): Renamed from WITH_JAXP_DROP_ZIP.
+	(IT_WITH_JAF_DROP_ZIP): Renamed from WITH_JAF_DROP_ZIP.
+	(IT_WITH_JAXWS_DROP_ZIP): Renamed from WITH_JAXWS_DROP_ZIP.
+	(IT_ENABLE_HG): Renamed from ENABLE_HG.
+	(IT_CHECK_WITH_HG_REVISION): Renamed from AC_CHECK_WITH_HG_REVISION.
+	(IT_CHECK_WITH_TZDATA_DIR): Renamed from AC_CHECK_WITH_TZDATA_DIR.
+	(IT_FIND_NUMBER_OF_PROCESSORS): Fix use of FIND_TOOL.
+	(IT_OBTAIN_HG_REVISIONS): Fix dependence on WITH_OPENJDK_SRC_DIR.
+	* configure.ac: Use renamed macros throughout.
+
 2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
 
 	PR714: Forwardport replace-hotspot support.

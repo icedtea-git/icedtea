@@ -94,7 +94,7 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
   AC_SUBST(ARCHFLAG)
 ])
 
-AC_DEFUN([SET_OS_DIRS],
+AC_DEFUN([IT_SET_OS_DIRS],
 [
   case "${host_os}" in
     *linux*)
@@ -117,7 +117,7 @@ AC_DEFUN([SET_OS_DIRS],
   AC_SUBST(OS_PATH)
 ])
 
-AC_DEFUN([FIND_JAVAC],
+AC_DEFUN([IT_FIND_JAVAC],
 [
   JAVAC=${SYSTEM_JDK_DIR}/bin/javac
   IT_FIND_JAVAC
@@ -207,7 +207,7 @@ AC_DEFUN([IT_CHECK_JAVAC],
   fi
 ])
 
-AC_DEFUN([FIND_JAVA],
+AC_DEFUN([IT_FIND_JAVA],
 [
   AC_MSG_CHECKING(for java)
   AC_ARG_WITH([java],
@@ -248,7 +248,7 @@ AC_DEFUN_ONCE([IT_CP_SUPPORTS_REFLINK],
   AM_CONDITIONAL([CP_SUPPORTS_REFLINK], test x"${it_cv_reflink}" = "xyes")
 ])
 
-AC_DEFUN_ONCE([WITH_OPENJDK_SRC_DIR],
+AC_DEFUN_ONCE([IT_WITH_OPENJDK_SRC_DIR],
 [
   DEFAULT_SRC_DIR=${abs_top_builddir}/openjdk
   AC_MSG_CHECKING([for an OpenJDK source directory])
@@ -302,7 +302,7 @@ AC_DEFUN_ONCE([IT_CAN_HARDLINK_TO_SOURCE_TREE],
   AM_CONDITIONAL([SRC_DIR_HARDLINKABLE], test x"${it_cv_hardlink_src}" = "xyes")
 ])
 
-AC_DEFUN([FIND_ECJ_JAR],
+AC_DEFUN([IT_FIND_ECJ_JAR],
 [
   AC_MSG_CHECKING([for an ecj JAR file])
   AC_ARG_WITH([ecj-jar],
@@ -337,7 +337,7 @@ AC_DEFUN([FIND_ECJ_JAR],
   AC_SUBST(ECJ_JAR)
 ])
 
-AC_DEFUN([AC_CHECK_GCC_VERSION],
+AC_DEFUN([IT_CHECK_GCC_VERSION],
 [
   AC_MSG_CHECKING([version of GCC])
   gcc_ver=`${CC} -dumpversion`
@@ -347,7 +347,7 @@ AC_DEFUN([AC_CHECK_GCC_VERSION],
   AC_MSG_RESULT([${gcc_ver} (major version ${gcc_major_ver}, minor version ${gcc_minor_ver})])
 ])
 
-AC_DEFUN([FIND_JAVAH],
+AC_DEFUN([IT_FIND_JAVAH],
 [
   JAVAH_DEFAULT=${SYSTEM_JDK_DIR}/bin/javah
   AC_MSG_CHECKING([if a javah executable is specified])
@@ -380,7 +380,7 @@ AC_DEFUN([FIND_JAVAH],
   AC_SUBST(JAVAH)
 ])
 
-AC_DEFUN([FIND_JAR],
+AC_DEFUN([IT_FIND_JAR],
 [
   JAR_DEFAULT=${SYSTEM_JDK_DIR}/bin/jar
   AC_MSG_CHECKING([if a jar executable is specified])
@@ -446,7 +446,7 @@ EOF
   AC_SUBST(JAR_KNOWS_J_OPTIONS)
 ])
 
-AC_DEFUN([FIND_RMIC],
+AC_DEFUN([IT_FIND_RMIC],
 [
   RMIC_DEFAULT=${SYSTEM_JDK_DIR}/bin/rmic
   AC_MSG_CHECKING(if an rmic executable is specified)
@@ -479,7 +479,7 @@ AC_DEFUN([FIND_RMIC],
   AC_SUBST(RMIC)
 ])
 
-AC_DEFUN([WITH_OPENJDK_SRC_ZIP],
+AC_DEFUN([IT_WITH_OPENJDK_SRC_ZIP],
 [
   AC_MSG_CHECKING([for an OpenJDK source zip])
   AC_ARG_WITH([openjdk-src-zip],
@@ -497,7 +497,7 @@ AC_DEFUN([WITH_OPENJDK_SRC_ZIP],
   AC_SUBST(ALT_OPENJDK_SRC_ZIP)
 ])
 
-AC_DEFUN([WITH_ALT_JAR_BINARY],
+AC_DEFUN([IT_WITH_ALT_JAR_BINARY],
 [
   AC_MSG_CHECKING([for an alternate jar command])
   AC_ARG_WITH([alt-jar],
@@ -514,7 +514,7 @@ AC_DEFUN([WITH_ALT_JAR_BINARY],
   AC_SUBST(ALT_JAR_CMD)
 ])
 
-AC_DEFUN([FIND_XALAN2_JAR],
+AC_DEFUN([IT_FIND_XALAN2_JAR],
 [
   AC_MSG_CHECKING([for a xalan2 jar])
   AC_ARG_WITH([xalan2-jar],
@@ -545,7 +545,7 @@ AC_DEFUN([FIND_XALAN2_JAR],
   AC_SUBST(XALAN2_JAR)
 ])
 
-AC_DEFUN([FIND_XALAN2_SERIALIZER_JAR],
+AC_DEFUN([IT_FIND_XALAN2_SERIALIZER_JAR],
 [
   AC_MSG_CHECKING([for a xalan2 serializer jar])
   AC_ARG_WITH([xalan2-serializer-jar],
@@ -576,7 +576,7 @@ AC_DEFUN([FIND_XALAN2_SERIALIZER_JAR],
   AC_SUBST(XALAN2_SERIALIZER_JAR)
 ])
 
-AC_DEFUN([FIND_XERCES2_JAR],
+AC_DEFUN([IT_FIND_XERCES2_JAR],
 [
   AC_MSG_CHECKING([for a xerces2 jar])
   AC_ARG_WITH([xerces2-jar],
@@ -609,7 +609,7 @@ AC_DEFUN([FIND_XERCES2_JAR],
   AC_SUBST(XERCES2_JAR)
 ])
 
-AC_DEFUN([FIND_RHINO_JAR],
+AC_DEFUN([IT_FIND_RHINO_JAR],
 [
   AC_MSG_CHECKING([whether to include Javascript support via Rhino])
   AC_ARG_WITH([rhino],
@@ -657,7 +657,7 @@ dnl Clear RHINO_JAR if it doesn't contain a valid filename
   AC_SUBST(RHINO_JAR)
 ])
 
-AC_DEFUN([DISABLE_OPTIMIZATIONS],
+AC_DEFUN([IT_DISABLE_OPTIMIZATIONS],
 [
   AC_MSG_CHECKING([whether to disable optimizations and build with -O0 -g])
   AC_ARG_ENABLE([optimizations],
@@ -679,7 +679,7 @@ AC_DEFUN([DISABLE_OPTIMIZATIONS],
   AM_CONDITIONAL([DISABLE_OPTIMIZATIONS], test x"${disable_optimizations}" = "xyes")
 ])
 
-AC_DEFUN([FIND_TOOL],
+AC_DEFUN([IT_FIND_TOOL],
 [AC_PATH_TOOL([$1],[$2])
  if test x"$$1" = x ; then
    AC_MSG_ERROR([$2 program not found in PATH])
@@ -687,7 +687,7 @@ AC_DEFUN([FIND_TOOL],
  AC_SUBST([$1])
 ])
 
-AC_DEFUN([ENABLE_ZERO_BUILD],
+AC_DEFUN([IT_ENABLE_ZERO_BUILD],
 [
   AC_REQUIRE([IT_SET_ARCH_SETTINGS])
   AC_MSG_CHECKING([whether to use the zero-assembler port])
@@ -763,7 +763,7 @@ AC_DEFUN([ENABLE_ZERO_BUILD],
   AC_SUBST(ZERO_ARCHDEF)
 ])
 
-AC_DEFUN([SET_SHARK_BUILD],
+AC_DEFUN([IT_SET_SHARK_BUILD],
 [
   AC_MSG_CHECKING(whether to use the Shark JIT)
   shark_selected=no
@@ -787,7 +787,7 @@ AC_DEFUN([SET_SHARK_BUILD],
   AM_CONDITIONAL(SHARK_BUILD, test "x${use_shark}" = xyes)
 ])
 
-AC_DEFUN([AC_CHECK_ENABLE_CACAO],
+AC_DEFUN([IT_CHECK_ENABLE_CACAO],
 [
   AC_MSG_CHECKING(whether to use CACAO as VM)
   AC_ARG_ENABLE([cacao],
@@ -804,7 +804,7 @@ AC_DEFUN([AC_CHECK_ENABLE_CACAO],
   AC_SUBST(WITH_CACAO)
 ])
 
-AC_DEFUN([AC_CHECK_WITH_CACAO_HOME],
+AC_DEFUN([IT_CHECK_WITH_CACAO_HOME],
 [
   AC_MSG_CHECKING([for a CACAO home directory])
   AC_ARG_WITH([cacao-home],
@@ -829,7 +829,7 @@ AC_DEFUN([AC_CHECK_WITH_CACAO_HOME],
   AC_SUBST(CACAO_IMPORT_PATH)
 ])
 
-AC_DEFUN([AC_CHECK_WITH_CACAO_SRC_ZIP],
+AC_DEFUN([IT_CHECK_WITH_CACAO_SRC_ZIP],
 [
   AC_MSG_CHECKING([for a CACAO source zip])
   AC_ARG_WITH([cacao-src-zip],
@@ -846,9 +846,9 @@ AC_DEFUN([AC_CHECK_WITH_CACAO_SRC_ZIP],
   AC_SUBST(ALT_CACAO_SRC_ZIP)
 ])
 
-AC_DEFUN([ENABLE_HG],
+AC_DEFUN([IT_ENABLE_HG],
 [
-  AC_REQUIRE([WITH_PROJECT])
+  AC_REQUIRE([IT_WITH_PROJECT])
   AC_MSG_CHECKING(whether to retrieve the source code from Mercurial)
   AC_ARG_ENABLE([hg],
                 [AS_HELP_STRING(--enable-hg,download source code from Mercurial [[default=depends on project]])],
@@ -876,7 +876,7 @@ AC_DEFUN([ENABLE_HG],
   AM_CONDITIONAL([USE_HG], test x"${enable_hg}" = "xyes")
 ])
 
-AC_DEFUN([WITH_VERSION_SUFFIX],
+AC_DEFUN([IT_WITH_VERSION_SUFFIX],
 [
   AC_MSG_CHECKING(if a version suffix has been specified)
   AC_ARG_WITH([version-suffix],
@@ -904,7 +904,7 @@ AC_DEFUN([WITH_VERSION_SUFFIX],
   AC_SUBST(VERSION_SUFFIX, $version_suffix)
 ])
 
-AC_DEFUN([WITH_PROJECT],
+AC_DEFUN([IT_WITH_PROJECT],
 [
   AC_MSG_CHECKING(which OpenJDK project is being used)
   AC_ARG_WITH([project],
@@ -935,7 +935,7 @@ AC_DEFUN([WITH_PROJECT],
   AM_CONDITIONAL([USE_JDK7], test x"${project}" = "xjdk7")
 ])
 
-AC_DEFUN([AC_CHECK_WITH_GCJ],
+AC_DEFUN([IT_CHECK_WITH_GCJ],
 [
   AC_MSG_CHECKING([whether to compile ecj natively])
   AC_ARG_WITH([gcj],
@@ -954,7 +954,7 @@ AC_DEFUN([AC_CHECK_WITH_GCJ],
   AC_SUBST([GCJ])
 ])
 
-AC_DEFUN([AC_CHECK_WITH_HOTSPOT_BUILD],
+AC_DEFUN([IT_CHECK_WITH_HOTSPOT_BUILD],
 [
   DEFAULT_BUILD="default"
   AC_MSG_CHECKING([which HotSpot build to use])
@@ -976,7 +976,7 @@ AC_DEFUN([AC_CHECK_WITH_HOTSPOT_BUILD],
   AM_CONDITIONAL(WITH_ALT_HSBUILD, test "x${HSBUILD}" != "xdefault")
 ])
 
-AC_DEFUN([WITH_HOTSPOT_SRC_ZIP],
+AC_DEFUN([IT_WITH_HOTSPOT_SRC_ZIP],
 [
   AC_MSG_CHECKING(for a HotSpot source zip)
   AC_ARG_WITH([hotspot-src-zip],
@@ -993,7 +993,7 @@ AC_DEFUN([WITH_HOTSPOT_SRC_ZIP],
   AC_SUBST(ALT_HOTSPOT_SRC_ZIP)
 ])
 
-AC_DEFUN([WITH_CORBA_SRC_ZIP],
+AC_DEFUN([IT_WITH_CORBA_SRC_ZIP],
 [
   AC_MSG_CHECKING(for a CORBA source zip)
   AC_ARG_WITH([corba-src-zip],
@@ -1010,7 +1010,7 @@ AC_DEFUN([WITH_CORBA_SRC_ZIP],
   AC_SUBST(ALT_CORBA_SRC_ZIP)
 ])
 
-AC_DEFUN([WITH_JAXP_SRC_ZIP],
+AC_DEFUN([IT_WITH_JAXP_SRC_ZIP],
 [
   AC_MSG_CHECKING(for a JAXP source zip)
   AC_ARG_WITH([jaxp-src-zip],
@@ -1027,7 +1027,7 @@ AC_DEFUN([WITH_JAXP_SRC_ZIP],
   AC_SUBST(ALT_JAXP_SRC_ZIP)
 ])
 
-AC_DEFUN([WITH_JAXWS_SRC_ZIP],
+AC_DEFUN([IT_WITH_JAXWS_SRC_ZIP],
 [
   AC_MSG_CHECKING(for a JAXWS source zip)
   AC_ARG_WITH([jaxws-src-zip],
@@ -1044,7 +1044,7 @@ AC_DEFUN([WITH_JAXWS_SRC_ZIP],
   AC_SUBST(ALT_JAXWS_SRC_ZIP)
 ])
 
-AC_DEFUN([WITH_JDK_SRC_ZIP],
+AC_DEFUN([IT_WITH_JDK_SRC_ZIP],
 [
   AC_MSG_CHECKING(for a JDK source zip)
   AC_ARG_WITH([jdk-src-zip],
@@ -1061,7 +1061,7 @@ AC_DEFUN([WITH_JDK_SRC_ZIP],
   AC_SUBST(ALT_JDK_SRC_ZIP)
 ])
 
-AC_DEFUN([WITH_LANGTOOLS_SRC_ZIP],
+AC_DEFUN([IT_WITH_LANGTOOLS_SRC_ZIP],
 [
   AC_MSG_CHECKING(for a langtools source zip)
   AC_ARG_WITH([langtools-src-zip],
@@ -1078,7 +1078,7 @@ AC_DEFUN([WITH_LANGTOOLS_SRC_ZIP],
   AC_SUBST(ALT_LANGTOOLS_SRC_ZIP)
 ])
 
-AC_DEFUN([WITH_JAXP_DROP_ZIP],
+AC_DEFUN([IT_WITH_JAXP_DROP_ZIP],
 [
   AC_MSG_CHECKING(for a JAXP drop zip)
   AC_ARG_WITH([jaxp-drop-zip],
@@ -1095,7 +1095,7 @@ AC_DEFUN([WITH_JAXP_DROP_ZIP],
   AC_SUBST(ALT_JAXP_DROP_ZIP)
 ])
 
-AC_DEFUN([WITH_JAF_DROP_ZIP],
+AC_DEFUN([IT_WITH_JAF_DROP_ZIP],
 [
   AC_MSG_CHECKING(for a JAF drop zip)
   AC_ARG_WITH([jaf-drop-zip],
@@ -1112,7 +1112,7 @@ AC_DEFUN([WITH_JAF_DROP_ZIP],
   AC_SUBST(ALT_JAF_DROP_ZIP)
 ])
 
-AC_DEFUN([WITH_JAXWS_DROP_ZIP],
+AC_DEFUN([IT_WITH_JAXWS_DROP_ZIP],
 [
   AC_MSG_CHECKING(for a JAXWS drop zip)
   AC_ARG_WITH([jaxws-drop-zip],
@@ -1129,7 +1129,7 @@ AC_DEFUN([WITH_JAXWS_DROP_ZIP],
   AC_SUBST(ALT_JAXWS_DROP_ZIP)
 ])
 
-AC_DEFUN([AC_CHECK_WITH_HG_REVISION],
+AC_DEFUN([IT_CHECK_WITH_HG_REVISION],
 [
   AC_MSG_CHECKING([which Mercurial revision to use])
   AC_ARG_WITH([hg-revision],
@@ -1428,7 +1428,7 @@ AC_DEFUN([IT_CHECK_ENABLE_WARNINGS],
   AC_SUBST(ENABLE_WARNINGS)
 ])
 
-AC_DEFUN([AC_CHECK_WITH_TZDATA_DIR],
+AC_DEFUN([IT_CHECK_WITH_TZDATA_DIR],
 [
   DEFAULT="/usr/share/javazi"
   AC_MSG_CHECKING([which Java timezone data directory to use])
@@ -1633,7 +1633,7 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_MERCURIAL],
 AC_DEFUN_ONCE([IT_OBTAIN_HG_REVISIONS],
 [
   AC_REQUIRE([IT_CHECK_FOR_MERCURIAL])
-  AC_REQUIRE([WITH_OPENJDK_SRC_DIR])
+  AC_REQUIRE([IT_WITH_OPENJDK_SRC_DIR])
   ICEDTEA_REVISION="none";
   JDK_REVISION="none";
   HOTSPOT_REVISION="none";
@@ -1736,7 +1736,7 @@ AC_PROVIDE([$0])dnl
 
 # Finds number of available processors using sysconf
 AC_DEFUN_ONCE([IT_FIND_NUMBER_OF_PROCESSORS],[
-  FIND_TOOL([GETCONF], [getconf])
+  IT_FIND_TOOL([GETCONF], [getconf])
   AC_CACHE_CHECK([the number of online processors], it_cv_proc, [
     if number=$($GETCONF _NPROCESSORS_ONLN); then
       it_cv_proc=$number;
