@@ -1125,7 +1125,8 @@ clean-download-jamvm:
 
 stamps/extract.stamp: stamps/extract-openjdk.stamp \
  stamps/extract-cacao.stamp stamps/extract-jaxws.stamp \
- stamps/remove-intree-libraries.stamp stamps/extract-jamvm.stamp
+ stamps/remove-intree-libraries.stamp stamps/extract-jamvm.stamp \
+ stamps/extract-hotspot.stamp stamps/sanitise-openjdk.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -1304,7 +1305,7 @@ clean-extract-jamvm: clean-jamvm
 	rm -f stamps/extract-jamvm.stamp
 
 stamps/extract-jaxws.stamp: stamps/download-jaxws-drop.stamp \
- stamps/download-jaf-drop.stamp stamps/extract-openjdk.stamp
+ stamps/download-jaf-drop.stamp stamps/sanitise-openjdk.stamp
 	set -e ; \
 	if test "x$(NEED_JAXWS_SRC)" = "xtrue"; then \
 	  (cd openjdk/jaxws ; \
@@ -1324,14 +1325,14 @@ clean-extract-jaxws:
 	mkdir -p stamps
 	rm -f stamps/extract-jaxws.stamp
 
-stamps/remove-intree-libraries.stamp: stamps/extract-openjdk.stamp
+stamps/remove-intree-libraries.stamp: stamps/sanitise-openjdk.stamp
 	sh $(abs_top_builddir)/remove-intree-libraries.sh
 	touch stamps/remove-intree-libraries.stamp
 
 clean-remove-intree-libraries:
 	rm -f stamps/remove-intree-libraries.stamp
 
-stamps/generated.stamp: stamps/extract.stamp
+stamps/generated.stamp:
 	set -e ; \
 	if [ ! -e $(abs_top_builddir)/generated.build ]; then \
 	  cp -pPR $(abs_top_srcdir)/generated $(abs_top_builddir)/generated.build; \
@@ -1344,7 +1345,7 @@ clean-generated:
 	rm -rf $(abs_top_builddir)/generated.build
 	rm -f stamps/generated.stamp
 
-stamps/patch-fsg.stamp: stamps/generated.stamp
+stamps/patch-fsg.stamp: stamps/sanitise-openjdk.stamp
 	mkdir -p stamps ; \
 	rm -f stamps/patch-fsg.stamp.tmp ; \
 	touch stamps/patch-fsg.stamp.tmp ; \
@@ -1918,7 +1919,7 @@ clean-icedtea-debug-stage2: clean-add-jamvm-debug
 
 stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
  stamps/download.stamp $(OPENJDK_BOOT_TREE) stamps/cacao.stamp \
- stamps/rewrite-rhino.stamp stamps/jamvm.stamp
+ stamps/rewrite-rhino.stamp stamps/jamvm.stamp stamps/generated.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot \

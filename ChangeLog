@@ -1,5 +1,19 @@
 2011-05-20  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(extract): Depend on extract-hotspot and
+	sanitise-hotspot.
+	(extract-jaxws): Depend on sanitise-openjdk
+	rather than extract-openjdk to get the
+	complete version.
+	(remove-intree-libraries): Likewise.
+	(generated): Remove dependencies.  Doesn't
+	require anything.
+	(patch-fsg): Depend on sanitise-openjdk.
+	(icedtea-boot): Depend on generated.
+
+2011-05-20  Andrew John Hughes  <ahughes@redhat.com>
+
 	Ensure all our macros have an IT_ prefix.
 	* acinclude.m4:
 	(IT_WITH_VERSION_SUFFIX): Renamed from WITH_VERSION_SUFFIX.
