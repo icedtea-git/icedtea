@@ -754,7 +754,8 @@ install:
 	clean-icedtea icedtea-stage2 clean-icedtea-boot \
 	clean-rt hotspot hotspot-helper clean-jtreg clean-jtreg-reports \
 	clean-drops jtregcheck clean-remove-intree-libraries \
-	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug
+	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
+	clean-extract-hotspot clean-sanitise-openjdk
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1144,9 +1145,6 @@ else
 	      *.tar.*) $(TAR) xf $(OPENJDK_SRC_ZIP) ;; \
 	    esac; \
 	    mv $(ICEDTEA_PREFIX)-$(OPENJDK_CHANGESET) openjdk ; \
-	    if test "x${HSBUILD}" != "xdefault"; then \
-	      rm -rf openjdk/hotspot ; \
-	    fi ; \
 	  else \
 	    echo "ERROR: Couldn't extract OpenJDK"; \
 	    false; \
@@ -1212,7 +1210,7 @@ else
 	if [ ! -z $(LANGTOOLS_SRC_ZIP) ] ; then \
 	  if test -e ${LANGTOOLS_SRC_ZIP} ; \
 	  then \
-	    if ! test -d openjdk/hotspot ; \
+	    if ! test -d openjdk/langtools ; \
 	    then \
 	      case "$(LANGTOOLS_SRC_ZIP)" in \
 	        *.zip) $(UNZIP) -q $(LANGTOOLS_SRC_ZIP) ;; \
@@ -1223,29 +1221,49 @@ else
 	  fi ; \
 	fi
 endif
+	touch stamps/extract-openjdk.stamp
+
+clean-extract-openjdk: clean-overlay clean-versioning \
+ clean-patch-fsg clean-remove-intree-libraries \
+ clean-sanitise-openjdk clean-extract-hotspot
+	rm -rf openjdk
+	rm -f stamps/extract-openjdk.stamp
+
+stamps/extract-hotspot.stamp: stamps/extract-openjdk.stamp
 	set -e ; \
 	if [ ! -z $(HOTSPOT_SRC_ZIP) ] ; then \
 	  if test -e ${HOTSPOT_SRC_ZIP} ; \
 	  then \
+	    case "$(HOTSPOT_SRC_ZIP)" in \
+	      *.zip) $(UNZIP) -q $(HOTSPOT_SRC_ZIP) ;; \
+	      *.tar.*) $(TAR) xf $(HOTSPOT_SRC_ZIP) ;; \
+	    esac; \
+	    if test "x${HSBUILD}" != "xdefault"; then \
+	      rm -rf openjdk/hotspot ; \
+	    fi ; \
 	    if ! test -d openjdk/hotspot ; \
 	    then \
-	      case "$(HOTSPOT_SRC_ZIP)" in \
-	        *.zip) $(UNZIP) -q $(HOTSPOT_SRC_ZIP) ;; \
-	        *.tar.*) $(TAR) xf $(HOTSPOT_SRC_ZIP) ;; \
-	      esac; \
-	      mv hotspot-$(HS_CHANGESET) openjdk/hotspot ; \
+	      ln -s hotspot-$(HS_CHANGESET) openjdk/hotspot ; \
 	    fi ; \
 	  fi ; \
 	fi
-	chmod -R ug+w openjdk 
-	sh $(srcdir)/fsg.sh ; 
-	mkdir -p stamps 
-	touch $@
+	touch stamps/extract-hotspot.stamp
 
-clean-extract-openjdk: clean-overlay clean-versioning \
- clean-patch-fsg clean-remove-intree-libraries
-	rm -rf openjdk
-	rm -f stamps/extract-openjdk.stamp
+clean-extract-hotspot:
+	if test -L openjdk/hotspot ; then \
+	  rm -f openjdk/hotspot
+	fi
+	rm -rf hotspot-$(HS_CHANGESET)
+	rm -f stamps/extract-hotspot.stamp
+
+stamps/sanitise-openjdk.stamp: stamps/extract-openjdk.stamp \
+ stamps/extract-hotspot.stamp
+	chmod -R ug+w openjdk 
+	sh $(srcdir)/fsg.sh
+	touch stamps/sanitise-openjdk.stamp
+
+clean-sanitise-openjdk:
+	rm -f stamps/sanitise-openjdk.stamp
 
 stamps/extract-cacao.stamp: stamps/download-cacao.stamp
 if BUILD_CACAO
@@ -2490,6 +2508,8 @@ extract-cacao: stamps/extract-cacao.stamp
 
 extract-openjdk: stamps/extract-openjdk.stamp
 
+extract-hotspot: stamps/extract-hotspot.stamp
+
 generated: stamps/generated.stamp
 
 icedtea: stamps/icedtea.stamp
@@ -2529,3 +2549,5 @@ rewrite-rhino: stamps/rewrite-rhino.stamp
 rt: stamps/rt.stamp
 
 rt-class-files: stamps/rt-class-files.stamp
+
+sanitise-openjdk: stamps/sanitise-openjdk.stamp

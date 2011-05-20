@@ -1,3 +1,21 @@
+2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
+
+	PR714: Forwardport replace-hotspot support.
+	* Makefile.am:
+	(.PHONY): Add clean-extract-hotspot and
+	clean-sanitise-openjdk.
+	(extract-openjdk): Remove deletion of hotspot
+	directory which won't appear from an OpenJDK
+	root tarball.  Fix typo: openjdk/langtools.
+	(clean-extract-openjdk): Add new dependencies.
+	(extract-hotspot): Handle extracting HotSpot as
+	a separate target.
+	(clean-extract-hotspot): Cleanup for extract-hotspot.
+	(sanitise-openjdk): Handle chmod and running of
+	fsg.sh as a separate target.
+	(clean-sanitise-openjdk): Cleanup for sanitise-openjdk.
+	* NEWS: Updated.
+
 2011-05-05  Xerxes Rånby  <xranby@zafena.se>
 
 	CACAO threadlist & threadobject improvements.
