@@ -1686,6 +1686,18 @@ AC_SUBST([DEFAULT_LIBDIR], $it_cv_default_libdir)
 AC_DEFUN_ONCE([IT_LOCATE_NSS],
 [
 AC_REQUIRE([IT_OBTAIN_DEFAULT_LIBDIR])
+AC_MSG_CHECKING([whether to enable the NSS-based security provider])
+AC_ARG_ENABLE([nss],
+	      [AS_HELP_STRING([--enable-nss],
+	      		      [Enable inclusion of NSS security provider])],
+	      [ENABLE_NSS="${enableval}"], [ENABLE_NSS='no'])
+AM_CONDITIONAL([ENABLE_NSS], [test x$ENABLE_NSS = xyes])
+if test "x${ENABLE_NSS}" = "xyes"
+then
+  AC_MSG_RESULT([enabled by default (edit java.security to disable)])
+else
+  AC_MSG_RESULT([disabled by default (edit java.security to enable)])
+fi
 PKG_CHECK_MODULES(NSS, nss, [NSS_FOUND=yes], [NSS_FOUND=no])
 if test "x${NSS_FOUND}" = xno
 then
@@ -1702,6 +1714,7 @@ fi
 AC_SUBST(NSS_LIBDIR)
 AC_CONFIG_FILES([nss.cfg])
 ])
+
 AC_DEFUN([IT_DIAMOND_CHECK],[
   AC_CACHE_CHECK([if javac lacks support for the diamond operator], it_cv_diamond, [
   CLASS=Test.java

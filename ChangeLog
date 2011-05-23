@@ -1,3 +1,11 @@
+2011-05-23  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	(IT_LOCATE_NSS): Add --enable-nss logic.
+	* configure.ac:
+	Move --enable-nss logic to IT_LOCATE_NSS macro.
+	Call IT_LOCATE_NSS macro.
+
 2011-05-22  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
