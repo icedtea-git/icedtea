@@ -6,6 +6,13 @@
 	Move --enable-nss logic to IT_LOCATE_NSS macro.
 	Call IT_LOCATE_NSS macro.
 
+2011-05-23  Pavel Tisnovsky  <ptisnovs@redhat.com>
+
+	* test/jtreg/excludelist.jdk.jtx:
+	Added LocaleEnhanceTest to a JTreg exclude list,
+	because the test base class can not be used
+	in IcedTea due to questionable licence.
+
 2011-05-22  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
