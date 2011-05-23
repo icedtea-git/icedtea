@@ -197,3 +197,9 @@ java/nio/channels/DatagramChannel/NotBound.java
 java/awt/FontClass/CreateFont/fileaccess/FontFile.java
 java/awt/FontClass/CreateFont/DeleteFont.sh
 java/awt/FontClass/CreateFont/bigfont.html
+
+# This test cannot be compiled because it's base class
+# LocaleTestFmwk is deleted during the "liberation" phase
+# of build process (this class has questionable licence).
+java/util/Locale/LocaleEnhanceTest.java
+

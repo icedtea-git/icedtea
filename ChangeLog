@@ -1,3 +1,10 @@
+2011-05-23  Pavel Tisnovsky  <ptisnovs@redhat.com>
+
+	* test/jtreg/excludelist.jdk.jtx:
+	Added LocaleEnhanceTest to a JTreg exclude list,
+	because the test base class can not be used
+	in IcedTea due to questionable licence.
+
 2011-05-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
