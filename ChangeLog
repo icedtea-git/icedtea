@@ -1,3 +1,9 @@
+2011-05-22  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(replace-hotspot): Revert to copying not
+	linking; breaks the build in strange ways.
+
 2011-05-20  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:

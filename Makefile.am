@@ -1244,8 +1244,9 @@ stamps/extract-hotspot.stamp: stamps/extract-openjdk.stamp
 	    fi ; \
 	    if ! test -d openjdk/hotspot ; \
 	    then \
-	      ln -s $(abs_top_builddir)/hotspot-$(HS_CHANGESET) \
-	        openjdk/hotspot ; \
+	      mv hotspot-$(HS_CHANGESET) openjdk/hotspot ; \
+	    else \
+	      rm -rf hotspot-$(HS_CHANGESET) ; \
 	    fi ; \
 	  fi ; \
 	fi
