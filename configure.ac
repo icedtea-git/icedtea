@@ -103,9 +103,7 @@ IT_FIND_RMIC
 IT_FIND_NATIVE2ASCII
 if test "x$enable_bootstrap" = "xyes"; then
   IT_FIND_ECJ_JAR
-  IT_FIND_XALAN2_JAR
-  IT_FIND_XALAN2_SERIALIZER_JAR
-  IT_FIND_XERCES2_JAR
+  IT_FIND_TOOL([XSLTPROC], [xsltproc])
 fi
 AC_CONFIG_FILES([javac], [chmod +x javac])
 AC_CONFIG_FILES([javap], [chmod +x javap])

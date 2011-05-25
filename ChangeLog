@@ -1,5 +1,31 @@
 2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(ENDORSED_DIR): Removed.
+	(ICEDTEA_BOOT_PATCHES): Add xsltproc.patch
+	(ICEDTEA_ENV_BOOT): Set XSLT.  Don't
+	set ICEDTEA_ENDORSED_DIR or ENDORSED.
+	(bootstrap-directory-stage1): Don't link
+	xalan2, xerces2 or xalan2 serialiser.
+	* acinclude.m4:
+	(IT_FIND_XALAN2_JAR): Removed.
+	(IT_FIND_XALAN2_SERIALIZER_JAR): Likewise.
+	(IT_FIND_XERCES2_JAR): Likewise.
+	* configure.ac:
+	Replace calls to IT_FIND_XALAN2_JAR,
+	IT_FIND_XALAN2_SERIALIZER_JAR and
+	IT_FIND_XERCES2_JAR with call to
+	IT_FIND_TOOL for xsltproc.
+	* patches/boot/xsltproc.patch:
+	Patch jvmti.make in HotSpot to use
+	xsltproc instead of Java's XSLT
+	when bootstrapping.
+	* patches/headers.patch:
+	Remove addition of $(ENDORSED) to
+	jvmti.make.
+
+2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+
 	Fix make distcheck.
 	* Makefile.am:
 	(EXTRA_DIST): Remove hotspot/default/*.patch.

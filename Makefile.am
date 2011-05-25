@@ -65,7 +65,6 @@ DEBUG_BUILD_OUTPUT_DIR = $(BUILD_OUTPUT_DIR)-debug
 BOOT_BUILD_OUTPUT_DIR = $(BUILD_OUTPUT_DIR)-boot
 BOOT_DIR = $(abs_top_builddir)/bootstrap/jdk1.6.0
 RUNTIME = $(BOOT_DIR)/jre/lib/rt.jar
-ENDORSED_DIR = $(BOOT_DIR)/lib/endorsed
 CLS_DIR_BOOT = $(BOOT_BUILD_OUTPUT_DIR)/classes
 SERVER_DIR = hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server
 BUILD_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
@@ -373,7 +372,8 @@ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/hotspot-jdk-dependency.patch \
 	patches/boot/ecj-multicatch.patch \
 	patches/boot/ecj-trywithresources.patch \
-	patches/boot/ecj-autoboxing.patch
+	patches/boot/ecj-autoboxing.patch \
+	patches/boot/xsltproc.patch
 
 if CP39408_JAVAH
 ICEDTEA_BOOT_PATCHES += patches/boot/pr39408.patch
@@ -444,8 +444,6 @@ ICEDTEA_ENV = \
 	ALT_BOOTDIR="$(BOOT_DIR)" \
 	BUILD_ARCH_DIR="$(BUILD_ARCH_DIR)" \
 	ICEDTEA_RT="$(RUNTIME)" \
-	ICEDTEA_ENDORSED_DIR="$(ENDORSED_DIR)" \
-	ENDORSED="-Djava.endorsed.dirs=$(ENDORSED_DIR)" \
 	CLASSPATH="" \
 	LD_LIBRARY_PATH="" \
 	ZERO_BUILD="$(ICEDTEA_ZERO_BUILD)" \
@@ -534,7 +532,8 @@ ICEDTEA_ENV_BOOT = $(ICEDTEA_ENV) \
 	JAR_ACCEPTS_STDIN_LIST="$(JAR_ACCEPTS_STDIN_LIST)" \
 	DISABLE_NIMBUS="true" \
 	NO_DOCS="true" \
-	ALT_OUTPUTDIR="$(BOOT_BUILD_OUTPUT_DIR)"
+	ALT_OUTPUTDIR="$(BOOT_BUILD_OUTPUT_DIR)" \
+	XSLT="$(XSLTPROC)"
 
 # Source files
 
@@ -1678,11 +1677,6 @@ stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
 	ln -sf $(NATIVE2ASCII) $(STAGE1_BOOT_DIR)/bin/native2ascii
 	ln -sf ../../../javac $(STAGE1_BOOT_DIR)/bin/javac
 	ln -sf ../../../javap $(STAGE1_BOOT_DIR)/bin/javap
-	mkdir -p $(STAGE1_BOOT_DIR)/lib/endorsed && \
-	ln -sf $(XALAN2_JAR) $(STAGE1_BOOT_DIR)/lib/endorsed/xalan-j2.jar && \
-	ln -sf $(XALAN2_SERIALIZER_JAR) \
-	  $(STAGE1_BOOT_DIR)/lib/endorsed/xalan-j2-serializer.jar && \
-	ln -sf $(XERCES2_JAR) $(STAGE1_BOOT_DIR)/lib/endorsed/xerces-j2.jar
 	mkdir -p $(STAGE1_BOOT_DIR)/lib/modules
 	mkdir -p $(STAGE1_BOOT_DIR)/jre/lib && \
 	cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
