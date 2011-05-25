@@ -1,6 +1,11 @@
 2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
+	(IT_FIND_JAVAH): Add 'fi' missed in merge.
+
+2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
 	(IT_WITH_CORBA_SRC_ZIP): Add missing $.
 	(IT_WITH_JAXP_SRC_ZIP): Likewise.
 	(IT_WITH_JAXWS_SRC_ZIP): Likewise.

@@ -393,6 +393,7 @@ AC_DEFUN([IT_FIND_JAVAH],
     if test -z "${JAVAH}"; then
       AC_MSG_ERROR("A Java header generator was not found.")
     fi
+  fi
   AC_SUBST(JAVAH)
 ])
 
