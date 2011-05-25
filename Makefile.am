@@ -176,7 +176,7 @@ else
   PREFER_SOURCE = -Xprefer:source
 endif
 
-if WITH_CACAO
+if ENABLE_CACAO
   ICEDTEA_BUILD_TARGET = jdk_only
   ICEDTEA_DEBUG_BUILD_TARGET = jdk_fastdebug_only
 else
@@ -304,7 +304,7 @@ ICEDTEA_PATCHES += \
 	patches/cacao/memory.patch
 endif
 
-if WITH_CACAO
+if ENABLE_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/ignore-tests.patch
 endif
@@ -480,7 +480,7 @@ ICEDTEA_ENV = \
 	VERBOSE="$(VERBOSE)" \
 	STATIC_CXX="false"
 
-if WITH_CACAO
+if ENABLE_CACAO
 ICEDTEA_ENV += \
 	ALT_HOTSPOT_IMPORT_PATH="$(CACAO_IMPORT_PATH)"
 endif
@@ -1480,7 +1480,7 @@ stamps/versioning.stamp: stamps/patch.stamp
 	mv openjdk/jdk/make/common/shared/Defs.gmk Defs.gmk.bak
 	cat Defs.gmk.bak > openjdk/jdk/make/common/shared/Defs.gmk
 	icedtea_version="$(PACKAGE_VERSION)$(ICEDTEA_REV)" ; \
-	if test "x$(WITH_CACAO)" = "xyes" || \
+	if test "x$(ENABLE_CACAO)" = "xyes" || \
 	   test "x$(ENABLE_JAMVM)" = "xyes"; then \
 	  echo "JDK_DERIVATIVE_NAME=$${icedtea_version}" \
 	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
@@ -1796,7 +1796,7 @@ endif
 if SHARK_BUILD
 	printf -- '-shark ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
-if WITH_CACAO
+if ENABLE_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
 if ENABLE_SYSTEMTAP
@@ -1861,7 +1861,7 @@ endif
 if SHARK_BUILD
 	printf -- '-shark ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
-if WITH_CACAO
+if ENABLE_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
 if ENABLE_SYSTEMTAP
@@ -2366,7 +2366,7 @@ check-langtools: stamps/jtreg.stamp
 
 check-jdk: stamps/jtreg.stamp
 	mkdir -p test/jdk/JTwork test/jdk/JTreport
-if WITH_CACAO
+if ENABLE_CACAO
 	CACAO_EXCLUDE="-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.jdk.cacao.jtx"
 endif
 	if test "x$${DISPLAY}" = "x"; then XVFB_RUN="@XVFB_RUN_CMD@"; fi; \

@@ -1,5 +1,13 @@
 2011-02-22  Andrew John Hughes  <ahughes@redhat.com>
 
+	Use more accurate ENABLE_CACAO rather
+	than WITH_CACAO.
+	* Makefile.am:
+	Replace WITH_CACAO throughout.
+	* acinclude.m4: Likewise.
+
+2011-02-22  Andrew John Hughes  <ahughes@redhat.com>
+
 	PR497: Mercurial revision detection not very reliable
 	* acinclude.m4:
 	(IT_OBTAIN_HG_REVISIONS): Use hg id rather
