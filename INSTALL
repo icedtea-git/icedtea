@@ -223,7 +223,7 @@ OpenJDK to be used with SystemTap.  This is enabled using the
 or later if you want Java method tracing).  The tapset needs to know
 the final install location of the JDK, so the --with-abs-install-dir
 should also be used to specify this.  If not set, it defaults to the
-in-tree location of openjdk/build/<os>-<arch>/j2sdk-image and requires
+in-tree location of openjdk.build/j2sdk-image and requires
 manual changes to tapset/hotspot.stp to work from elsewhere. For
 example, if you plan to install the resulting build in
 /usr/lib/jvm/java-1.6.0-openjdk, then you should specify
@@ -250,7 +250,7 @@ One advantage of this is that CACAO has a JIT implementation for
 more platforms than HotSpot, including ppc, ppc64, arm and mips.
 When --enable-cacao is specified, CACAO will be downloaded and built,
 followed by the JDK portion of OpenJDK resulting in a CACAO+OpenJDK
-image in openjdk/build/<os>-<arch>/j2sdk-image.  The --with-cacao-home
+image in openjdk.build/j2sdk-image.  The --with-cacao-home
 option can be used to specify the use of an existing CACAO install
 instead, and --with-cacao-src-zip/dir options exist to allow the use
 of a pre-downloaded zip or source tree respectively.
@@ -261,8 +261,8 @@ JamVM
 IcedTea6 can use JamVM as the virtual machine, as opposed to HotSpot.
 When --enable-jamvm is specified, JamVM will be downloaded and built,
 followed by the JDK portion of OpenJDK resulting in a JamVM+OpenJDK
-image in openjdk/build/<os>-<arch>/j2sdk-image.  The
---with-jamvm-src-zip option exists to allow the use of a pre-downloaded zip.
+image in openjdk.build/j2sdk-image.  The --with-jamvm-src-zip option
+exists to allow the use of a pre-downloaded zip.
 
 Zero & Shark
 ============

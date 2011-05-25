@@ -1,3 +1,9 @@
+2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+
+	* INSTALL:
+	Fix references to openjdk/build/<os>-<arch>
+	to reference openjdk.build.
+
 2011-02-23  Andrew John Hughes  <ahughes@redhat.com>
 
 	* INSTALL: Mention --with-alt-jamvm-src-zip.
