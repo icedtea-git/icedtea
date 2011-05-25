@@ -1,3 +1,10 @@
+2011-02-23  Andrew John Hughes  <ahughes@redhat.com>
+
+	* INSTALL:
+	Update with native2ascii option and JamVM.
+	Mention --without-hotspot-build in HotSpot
+	documentation.
+
 2011-02-22  Andrew John Hughes  <ahughes@redhat.com>
 
 	Use more accurate ENABLE_CACAO rather
