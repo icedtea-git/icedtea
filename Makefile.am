@@ -1678,6 +1678,7 @@ stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
 	ln -sf $(JAVAH) $(STAGE1_BOOT_DIR)/bin/javah
 	ln -sf $(RMIC) $(STAGE1_BOOT_DIR)/bin/rmic
 	ln -sf $(JAR) $(STAGE1_BOOT_DIR)/bin/jar
+	ln -sf $(NATIVE2ASCII) $(STAGE1_BOOT_DIR)/bin/native2ascii
 	ln -sf ../../../javac $(STAGE1_BOOT_DIR)/bin/javac
 	ln -sf ../../../javap $(STAGE1_BOOT_DIR)/bin/javap
 	mkdir -p $(STAGE1_BOOT_DIR)/lib/endorsed && \

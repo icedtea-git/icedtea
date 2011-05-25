@@ -12,6 +12,7 @@ New in release 1.14 (XXXX-XX-XX)
   - PR616, PR99: Don't statically link libstdc++
   - PR640: JamVM fails to build - Unrecognised option: -XX:ThreadStackSize.
   - PR714: Forwardport replace-hotspot support from IcedTea6.
+  - PR103: Usage of native2ascii during bootstrap
 * JamVM
   - Ignore all unknown options.
   - Handle overflow in getPhysicalMemory().

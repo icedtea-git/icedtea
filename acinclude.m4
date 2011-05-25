@@ -479,6 +479,43 @@ AC_DEFUN([IT_FIND_RMIC],
   AC_SUBST(RMIC)
 ])
 
+AC_DEFUN([IT_FIND_NATIVE2ASCII],
+[
+  NATIVE2ASCII_DEFAULT=${SYSTEM_JDK_DIR}/bin/native2ascii
+  AC_MSG_CHECKING([if a native2ascii binary was specified])
+  AC_ARG_WITH([native2ascii],
+              [AS_HELP_STRING(--with-native2ascii,specify location of the native2ascii converter)],
+  [
+    if test "x${withval}" = "xyes"; then
+      NATIVE2ASCII=no
+    else
+      NATIVE2ASCII="${withval}"
+   fi
+  ],
+  [
+    NATIVE2ASCII=no
+  ])
+  AC_MSG_RESULT(${NATIVE2ASCII})
+  if test "x${NATIVE2ASCII}" = "xno"; then
+    NATIVE2ASCII=${NATIVE2ASCII_DEFAULT}
+  fi
+  AC_MSG_CHECKING([if $NATIVE2ASCII is a valid executable])
+  if ! test -x "${NATIVE2ASCII}"; then
+    AC_MSG_RESULT([no])
+    NATIVE2ASCII=""
+    AC_PATH_PROG(NATIVE2ASCII, "native2ascii")
+    if test -z "${NATIVE2ASCII}"; then
+      AC_PATH_PROG(NATIVE2ASCII, "gnative2ascii")
+    fi
+    if test -z "${NATIVE2ASCII}"; then
+      AC_MSG_ERROR("A native2ascii converter was not found.")
+    fi
+  else
+    AC_MSG_RESULT([yes])
+  fi
+  AC_SUBST([NATIVE2ASCII])
+])
+
 AC_DEFUN([IT_WITH_OPENJDK_SRC_ZIP],
 [
   AC_MSG_CHECKING([for an OpenJDK source zip])
