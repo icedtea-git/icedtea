@@ -1,5 +1,12 @@
 2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
 
+	* NEWS:
+	Updated with changes since 1.13
+	and added URL key from IcedTea6.
+	* configure.ac: Bump to 1.14 proper.
+
+2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	(ENDORSED_DIR): Removed.
 	(ICEDTEA_BOOT_PATCHES): Add xsltproc.patch

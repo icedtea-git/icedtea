@@ -1,9 +1,19 @@
+Key:
+
+SX  - http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=X
+PRX - http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=X
+RHX - https://bugzilla.redhat.com/show_bug.cgi?id=X
+DX  - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=X
+GX  - http://bugs.gentoo.org/show_bug.cgi?id=X
 CAX - http://server.complang.tuwien.ac.at/cgi-bin/bugzilla/show_bug.cgi?id=X
 
-New in release 1.14 (XXXX-XX-XX)
+CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
+
+New in release 1.14 (2011-05-25):
 
 * NetX and the plugin moved to the IcedTea-Web project with a separate
   release cycle.
+* Builds using system LCMS by default.
 * Added out-of-the-box JamVM support using --enable-jamvm
 * Allow building of JamVM beside the default VM by using --with-additional-vms=jamvm
 * Allow the location of the JamVM source zip to be specified using --with-jamvm-src-zip
@@ -13,6 +23,9 @@ New in release 1.14 (XXXX-XX-XX)
   - PR640: JamVM fails to build - Unrecognised option: -XX:ThreadStackSize.
   - PR714: Forwardport replace-hotspot support from IcedTea6.
   - PR103: Usage of native2ascii during bootstrap
+  - PR543: zero fails to build on icedtea7 trunk 20100907
+  - PR715: Port updated macros from IcedTea6 to 7
+  - PR732: Use xsltproc for bootstrap xslt in place of Xerces/Xalan
 * JamVM
   - Ignore all unknown options.
   - Handle overflow in getPhysicalMemory().
