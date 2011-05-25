@@ -547,7 +547,9 @@ AC_DEFUN([IT_WITH_OPENJDK_SRC_ZIP],
               [AS_HELP_STRING([--with-openjdk-src-zip[[=PATH]]],specify the location of the OpenJDK source zip)],
   [
     ALT_OPENJDK_SRC_ZIP=${withval}
-    if ! test -f ${ALT_OPENJDK_SRC_ZIP} ; then
+    if test "x${ALT_OPENJDK_SRC_ZIP}" = "xno"; then
+      ALT_OPENJDK_SRC_ZIP="not specified"
+    elif ! test -f ${ALT_OPENJDK_SRC_ZIP} ; then
       AC_MSG_ERROR([Invalid OpenJDK source zip specified: ${ALT_OPENJDK_SRC_ZIP}])
     fi
   ],
@@ -898,7 +900,9 @@ AC_DEFUN([IT_CHECK_WITH_CACAO_SRC_ZIP],
               [AS_HELP_STRING(--with-cacao-src-zip=PATH,specify the location of the CACAO source zip)],
   [
     ALT_CACAO_SRC_ZIP=${withval}
-    if ! test -f ${ALT_CACAO_SRC_ZIP} ; then
+    if test "x${ALT_CACAO_SRC_ZIP}" = "xno"; then
+      ALT_CACAO_SRC_ZIP="not specified"
+    elif ! test -f ${ALT_CACAO_SRC_ZIP} ; then
       AC_MSG_ERROR([Invalid CACAO source zip specified: ${ALT_CACAO_SRC_ZIP}])
     fi
   ],
@@ -1047,7 +1051,9 @@ AC_DEFUN([IT_WITH_HOTSPOT_SRC_ZIP],
               [AS_HELP_STRING(--with-hotspot-src-zip=PATH,specify the location of the HotSpot source zip)],
   [
     ALT_HOTSPOT_SRC_ZIP=${withval}
-    if ! test -f ${ALT_HOTSPOT_SRC_ZIP} ; then
+    if test "x${ALT_HOTSPOT_SRC_ZIP}" = "xno"; then
+      ALT_HOTSPOT_SRC_ZIP="not specified"
+    elif ! test -f ${ALT_HOTSPOT_SRC_ZIP} ; then
       AC_MSG_ERROR([Invalid HotSpot source zip specified: ${ALT_HOTSPOT_SRC_ZIP}])
     fi
   ],
@@ -1066,7 +1072,9 @@ AC_DEFUN([IT_WITH_CORBA_SRC_ZIP],
               [AS_HELP_STRING(--with-corba-src-zip=PATH,specify the location of the CORBA source zip)],
   [
     ALT_CORBA_SRC_ZIP=${withval}
-    if ! test -f ${ALT_CORBA_SRC_ZIP} ; then
+    if test "x${ALT_CORBA_SRC_ZIP}" = "xno"; then
+      ALT_CORBA_SRC_ZIP="not specified"
+    elif ! test -f ${ALT_CORBA_SRC_ZIP} ; then
       AC_MSG_ERROR([Invalid CORBA source zip specified: ${ALT_CORBA_SRC_ZIP}])
     fi
   ],
@@ -1085,7 +1093,9 @@ AC_DEFUN([IT_WITH_JAXP_SRC_ZIP],
               [AS_HELP_STRING(--with-jaxp-src-zip=PATH,specify the location of the JAXP source zip)],
   [
     ALT_JAXP_SRC_ZIP=${withval}
-    if ! test -f ${ALT_JAXP_SRC_ZIP} ; then
+    if test "x${ALT_JAXP_SRC_ZIP}" = "xno"; then
+      ALT_JAXP_SRC_ZIP="not specified"
+    elif ! test -f ${ALT_JAXP_SRC_ZIP} ; then
       AC_MSG_ERROR([Invalid JAXP source zip specified: ${ALT_JAXP_SRC_ZIP}])
     fi
   ],
@@ -1104,7 +1114,9 @@ AC_DEFUN([IT_WITH_JAXWS_SRC_ZIP],
               [AS_HELP_STRING(--with-jaxws-src-zip=PATH,specify the location of the JAXWS source zip)],
   [
     ALT_JAXWS_SRC_ZIP=${withval}
-    if ! test -f ${ALT_JAXWS_SRC_ZIP} ; then
+    if test "x${ALT_JAXWS_SRC_ZIP}" = "xno"; then
+      ALT_JAXWS_SRC_ZIP="not specified"
+    elif ! test -f ${ALT_JAXWS_SRC_ZIP} ; then
       AC_MSG_ERROR([Invalid JAXWS source zip specified: ${ALT_JAXWS_SRC_ZIP}])
     fi
   ],
@@ -1123,7 +1135,9 @@ AC_DEFUN([IT_WITH_JDK_SRC_ZIP],
               [AS_HELP_STRING(--with-jdk-src-zip=PATH,specify the location of the JDK source zip)],
   [
     ALT_JDK_SRC_ZIP=${withval}
-    if ! test -f ${ALT_JDK_SRC_ZIP} ; then
+    if test "x${ALT_JDK_SRC_ZIP}" = "xno"; then
+      ALT_JDK_SRC_ZIP="not specified"
+    elif ! test -f ${ALT_JDK_SRC_ZIP} ; then
       AC_MSG_ERROR([Invalid JDK source zip specified: ${ALT_JDK_SRC_ZIP}])
     fi
   ],
@@ -1142,7 +1156,9 @@ AC_DEFUN([IT_WITH_LANGTOOLS_SRC_ZIP],
               [AS_HELP_STRING(--with-langtools-src-zip=PATH,specify the location of the langtools source zip)],
   [
     ALT_LANGTOOLS_SRC_ZIP=${withval}
-    if ! test -f ${ALT_LANGTOOLS_SRC_ZIP} ; then
+    if test "x${ALT_LANGTOOLS_SRC_ZIP}" = "xno"; then
+      ALT_LANGTOOLS_SRC_ZIP="not specified"
+    elif ! test -f ${ALT_LANGTOOLS_SRC_ZIP} ; then
       AC_MSG_ERROR([Invalid langtools source zip specified: ${ALT_LANGTOOLS_SRC_ZIP}])
     fi
   ],
@@ -1161,7 +1177,9 @@ AC_DEFUN([IT_WITH_JAXP_DROP_ZIP],
               [AS_HELP_STRING(--with-jaxp-drop-zip=PATH,specify the location of the JAXP drop zip)],
   [
     ALT_JAXP_DROP_ZIP=${withval}
-    if ! test -f ${ALT_JAXP_DROP_ZIP} ; then
+    if test "x${ALT_JAXP_DROP_ZIP}" = "xno"; then
+      ALT_JAXP_DROP_ZIP="not specified"
+    elif ! test -f ${ALT_JAXP_DROP_ZIP} ; then
       AC_MSG_ERROR([Invalid JAXP drop zip specified: ${ALT_JAXP_DROP_ZIP}])
     fi
   ],
@@ -1180,7 +1198,9 @@ AC_DEFUN([IT_WITH_JAF_DROP_ZIP],
               [AS_HELP_STRING(--with-jaf-drop-zip=PATH,specify the location of the JAF drop zip)],
   [
     ALT_JAF_DROP_ZIP=${withval}
-    if ! test -f ${ALT_JAF_DROP_ZIP} ; then
+    if test "x${ALT_JAF_DROP_ZIP}" = "xno"; then
+      ALT_JAF_DROP_ZIP="not specified"
+    elif ! test -f ${ALT_JAF_DROP_ZIP} ; then
       AC_MSG_ERROR([Invalid JAF drop zip specified: ${ALT_JAF_DROP_ZIP}])
     fi
   ],
@@ -1199,7 +1219,9 @@ AC_DEFUN([IT_WITH_JAXWS_DROP_ZIP],
               [AS_HELP_STRING(--with-jaxws-drop-zip=PATH,specify the location of the JAXWS drop zip)],
   [
     ALT_JAXWS_DROP_ZIP=${withval}
-    if ! test -f ${ALT_JAXWS_DROP_ZIP} ; then
+    if test "x${ALT_JAXWS_DROP_ZIP}" = "xno"; then
+      ALT_JAXWS_DROP_ZIP="not specified"
+    elif ! test -f ${ALT_JAXWS_DROP_ZIP} ; then
       AC_MSG_ERROR([Invalid JAXWS drop zip specified: ${ALT_JAXWS_DROP_ZIP}])
     fi
   ],
@@ -2008,7 +2030,9 @@ AC_DEFUN([IT_CHECK_WITH_JAMVM_SRC_ZIP],
 	      [AS_HELP_STRING(--with-jamvm-src-zip,specify the location of the JamVM source zip)],
   [
     ALT_JAMVM_SRC_ZIP=${withval}
-    if ! test -f ${ALT_JAMVM_SRC_ZIP} ; then
+    if test "x${ALT_JAMVM_SRC_ZIP}" = "xno"; then
+      ALT_JAMVM_SRC_ZIP="not specified"
+    elif ! test -f ${ALT_JAMVM_SRC_ZIP} ; then
       AC_MSG_ERROR([Invalid JamVM source zip specified: ${ALT_JAMVM_SRC_ZIP}])
     fi
   ],
