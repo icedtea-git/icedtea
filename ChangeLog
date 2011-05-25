@@ -1,5 +1,17 @@
 2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
 
+	Fix make distcheck.
+	* Makefile.am:
+	(EXTRA_DIST): Remove hotspot/default/*.patch.
+	Add jamvm/*.patch.
+	(clean-extract-hotspot): Remove remnants of
+	the attempt to symlink the HotSpot directory.
+	(clean-add-jamvm): Check jvm.cfg exists
+	and use full path.
+	(clean-add-jamvm-debug): Likewise for debug mode.
+
+2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+
 	* acinclude.m4:
 	(IT_FIND_JAVAH): Add 'fi' missed in merge.
 

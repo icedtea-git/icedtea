@@ -694,10 +694,10 @@ PULSEAUDIO_SRCS = $(top_srcdir)/pulseaudio/src/java/org/classpath/icedtea/pulsea
 	$(top_srcdir)/pulseaudio/COPYING
 
 EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
-	$(top_srcdir)/patches/hotspot/default/*.patch \
 	$(top_srcdir)/patches/boot/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
 	$(top_srcdir)/patches/debian/*.patch \
+	$(top_srcdir)/patches/jamvm/*.patch \
 	$(top_srcdir)/patches/security/*.patch \
 	tools-copy contrib overlays \
 	javaws.png javaws.desktop \
@@ -1253,10 +1253,7 @@ stamps/extract-hotspot.stamp: stamps/extract-openjdk.stamp
 	touch stamps/extract-hotspot.stamp
 
 clean-extract-hotspot:
-	if test -L openjdk/hotspot ; then \
-	  rm -f openjdk/hotspot
-	fi
-	rm -rf hotspot-$(HS_CHANGESET)
+	rm -rf openjdk/hotspot
 	rm -f stamps/extract-hotspot.stamp
 
 stamps/sanitise-openjdk.stamp: stamps/extract-openjdk.stamp \
@@ -2122,7 +2119,9 @@ endif
 
 clean-add-jamvm:
 	rm -rf $(BUILD_JRE_ARCH_DIR)/jamvm
-	sed -i 's#-jamvm KNOWN#-jamvm ERROR#' jvm.cfg
+	if [ -e $(BUILD_JRE_ARCH_DIR)/jvm.cfg ] ; then \
+	  sed -i 's#-jamvm KNOWN#-jamvm ERROR#' $(BUILD_JRE_ARCH_DIR)/jvm.cfg ; \
+	fi
 	rm -f stamps/add-jamvm.stamp
 
 stamps/add-jamvm-debug.stamp: stamps/icedtea-debug.stamp stamps/jamvm.stamp
@@ -2138,7 +2137,9 @@ endif
 
 clean-add-jamvm-debug:
 	rm -rf $(BUILD_DEBUG_JRE_ARCH_DIR)/jamvm
-	sed -i 's#-jamvm KNOWN#-jamvm ERROR#' jvm.cfg
+	if [ -e $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ] ; then \
+	  sed -i 's#-jamvm KNOWN#-jamvm ERROR#' $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ; \
+	fi
 	rm -f stamps/add-jamvm-debug.stamp
 
 # CACAO
