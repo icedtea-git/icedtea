@@ -209,28 +209,41 @@ AC_DEFUN([IT_CHECK_JAVAC],
 
 AC_DEFUN([IT_FIND_JAVA],
 [
-  AC_MSG_CHECKING(for java)
+  JAVA_DEFAULT=${SYSTEM_JDK_DIR}/bin/java
+  AC_MSG_CHECKING([if a java binary was specified])
   AC_ARG_WITH([java],
               [AS_HELP_STRING([--with-java[[=PATH]]],specify location of a 1.5 Java VM)],
   [
-    JAVA="${withval}"
+    if test "x${withval}" = "xyes"; then
+      JAVA=no
+    else
+      JAVA="${withval}"
+    fi
   ],
   [
-    JAVA=${SYSTEM_JDK_DIR}/bin/java
+    JAVA=no
   ])
-  if ! test -f "${JAVA}"; then
-    AC_PATH_PROG(JAVA, "${JAVA}")
-  fi
-  if test -z "${JAVA}"; then
-    AC_PATH_PROG(JAVA, "gij")
-  fi
-  if test -z "${JAVA}"; then
-    AC_PATH_PROG(JAVA, "java")
-  fi
-  if test -z "${JAVA}"; then
-    AC_MSG_ERROR("A 1.5-compatible Java VM is required.")
-  fi
   AC_MSG_RESULT(${JAVA})
+  if test "x${JAVA}" = "xno"; then
+    JAVA=${JAVA_DEFAULT}
+  fi
+  AC_MSG_CHECKING([if $JAVA is a valid executable])
+  if test -x "${JAVA}"; then
+    AC_MSG_RESULT([yes])
+  else
+    AC_MSG_RESULT([no])
+    JAVA=""
+    AC_PATH_PROG(JAVA, "java")
+    if test -z "${JAVA}"; then
+      AC_PATH_PROG(JAVA, "gij")
+    fi
+    if test -z "${JAVA}"; then
+      AC_PATH_PROG(JAVA, "cacao")
+    fi
+    if test -z "${JAVA}"; then
+      AC_MSG_ERROR("A 1.5-compatible Java VM is required.")
+    fi
+  fi
   AC_SUBST(JAVA)
 ])
 
@@ -367,16 +380,19 @@ AC_DEFUN([IT_FIND_JAVAH],
   if test "x${JAVAH}" == "xno"; then
     JAVAH=${JAVAH_DEFAULT}
   fi
-  AC_PATH_PROG(JAVAH, "${JAVAH}")
-  if test -z "${JAVAH}"; then
+  AC_MSG_CHECKING([if $JAVAH is a valid executable])
+  if test -x "${JAVAH}"; then
+    AC_MSG_RESULT([yes])
+  else
+    AC_MSG_RESULT([no])
+    JAVAH=""
     AC_PATH_PROG(JAVAH, "javah")
-  fi
-  if test -z "${JAVAH}"; then
-    AC_PATH_PROG(JAVAH, "gjavah")
-  fi
-  if test -z "${JAVAH}"; then
-    AC_MSG_ERROR("A Java header generator was not found.")
-  fi
+    if test -z "${JAVAH}"; then
+      AC_PATH_PROG(JAVAH, "gjavah")
+    fi
+    if test -z "${JAVAH}"; then
+      AC_MSG_ERROR("A Java header generator was not found.")
+    fi
   AC_SUBST(JAVAH)
 ])
 
@@ -400,15 +416,19 @@ AC_DEFUN([IT_FIND_JAR],
   if test "x${JAR}" == "xno"; then
     JAR=${JAR_DEFAULT}
   fi
-  AC_PATH_PROG(JAR, "${JAR}")
-  if test -z "${JAR}"; then
+  AC_MSG_CHECKING([if $JAR is a valid executable])
+  if test -x "${JAR}"; then
+    AC_MSG_RESULT([yes])
+  else
+    AC_MSG_RESULT([no])
+    JAR=""
     AC_PATH_PROG(JAR, "jar")
-  fi
-  if test -z "${JAR}"; then
-    AC_PATH_PROG(JAR, "gjar")
-  fi
-  if test -z "${JAR}"; then
-    AC_MSG_ERROR("No Java archive tool was found.")
+    if test -z "${JAR}"; then
+      AC_PATH_PROG(JAR, "gjar")
+    fi
+    if test -z "${JAR}"; then
+      AC_MSG_ERROR("No Java archive tool was found.")
+    fi
   fi
   AC_MSG_CHECKING([whether jar supports @<file> argument])
   touch _config.txt
@@ -466,15 +486,19 @@ AC_DEFUN([IT_FIND_RMIC],
   if test "x${RMIC}" = "xno"; then
     RMIC=${RMIC_DEFAULT}
   fi
-  AC_PATH_PROG(RMIC, "${RMIC}")
-  if test -z "${RMIC}"; then
+  AC_MSG_CHECKING([if $RMIC is a valid executable])
+  if test -x "${RMIC}"; then
+    AC_MSG_RESULT([yes])
+  else
+    AC_MSG_RESULT([no])
+    RMIC=""
     AC_PATH_PROG(RMIC, "rmic")
-  fi
-  if test -z "${RMIC}"; then
-    AC_PATH_PROG(RMIC, "grmic")
-  fi
-  if test -z "${RMIC}"; then
-    AC_MSG_ERROR("An RMI compiler was not found.")
+    if test -z "${RMIC}"; then
+      AC_PATH_PROG(RMIC, "grmic")
+    fi
+    if test -z "${RMIC}"; then
+      AC_MSG_ERROR("An RMI compiler was not found.")
+    fi
   fi
   AC_SUBST(RMIC)
 ])
@@ -500,7 +524,9 @@ AC_DEFUN([IT_FIND_NATIVE2ASCII],
     NATIVE2ASCII=${NATIVE2ASCII_DEFAULT}
   fi
   AC_MSG_CHECKING([if $NATIVE2ASCII is a valid executable])
-  if ! test -x "${NATIVE2ASCII}"; then
+  if test -x "${NATIVE2ASCII}"; then
+    AC_MSG_RESULT([yes])
+  else
     AC_MSG_RESULT([no])
     NATIVE2ASCII=""
     AC_PATH_PROG(NATIVE2ASCII, "native2ascii")
@@ -510,8 +536,6 @@ AC_DEFUN([IT_FIND_NATIVE2ASCII],
     if test -z "${NATIVE2ASCII}"; then
       AC_MSG_ERROR("A native2ascii converter was not found.")
     fi
-  else
-    AC_MSG_RESULT([yes])
   fi
   AC_SUBST([NATIVE2ASCII])
 ])

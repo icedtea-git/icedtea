@@ -1,3 +1,17 @@
+2011-02-23  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	Make java, javah, rmic and jar macros more
+	idiot-proof like the new native2ascii macro.
+	(IT_FIND_JAVA): Improve output, check file
+	exists and is executable and look for alternatives
+	on the path if not.
+	(IT_FIND_JAVAH): Likewise.
+	(IT_FIND_JAR): Likewise.
+	(IT_FIND_RMIC): Likewise.
+	(IT_FIND_NATIVE2ASCII): Invert executable test
+	for clarify.
+
 2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
 
 	* INSTALL:
