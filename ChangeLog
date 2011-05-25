@@ -1,3 +1,17 @@
+2011-02-23  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	(IT_ENABLE_JAMVM): Renamed from IT_CHECK_ENABLE_JAMVM.
+	(IT_WITH_JAMVM_SRC_ZIP): Renamed form IT_CHECK_WITH_JAMVM_SRC_ZIP.
+	(IT_ENABLE_CACAO): Renamed from IT_CHECK_ENABLE_CACAO.
+	(IT_WITH_CACAO_HOME): Renamed form IT_CHECK_WITH_CACAO_HOME.
+	(IT_WITH_CACAO_SRC_ZIP): Renamed form IT_CHECK_WITH_CACAO_SRC_ZIP.
+	(IT_WITH_CACAO_SRC_DIR): Renamed form IT_CHECK_WITH_CACAO_SRC_DIR.
+	(IT_WITH_GCJ): Renamed from IT_CHECK_WITH_GCJ.
+	(IT_WITH_HOTSPOT_BUILD): Renamed from IT_CHECK_WITH_HOTSPOT_BUILD.
+	(IT_WITH_HG_REVISION): Renamed from IT_CHECK_WITH_HG_REVISION.
+	(IT_WITH_TZDATA_DIR): Renamed from IT_CHECK_WITH_TZDATA_DIR.
+
 2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
