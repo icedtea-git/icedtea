@@ -1,3 +1,16 @@
+2011-05-27  Xerxes Rånby  <xranby@zafena.se>
+
+	JamVM
+	- Fix leak of native thread structure.
+	- Consistent naming for classlib functions.
+	- Add extra includes to get rid off compiler warning.
+	- Rework OpenJDK storage of native thread structure.
+	- Implement remaining OpenJDK Array reflection interface.
+	* NEWS: Updated.
+	* Makefile.am
+	(JAMVM_VERSION): Updated JamVM to 2011-04-28 revision.
+	(JAMVM_SHA256SUM): Updated.
+
 2011-05-27  Andrew John Hughes  <ahughes@redhat.com>
 
 	* NEWS: Add 2.0.
