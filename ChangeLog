@@ -1,5 +1,9 @@
 2011-05-27  Xerxes Rånby  <xranby@zafena.se>
 
+	* NEWS: Fix previous commits news entry.
+
+2011-05-27  Xerxes Rånby  <xranby@zafena.se>
+
 	JamVM
 	- Fix leak of native thread structure.
 	- Consistent naming for classlib functions.

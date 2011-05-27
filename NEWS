@@ -11,6 +11,13 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.0 (2011-XX-XX):
 
+* JamVM
+  - Fix leak of native thread structure.
+  - Consistent naming for classlib functions.
+  - Add extra includes to get rid off compiler warning.
+  - Rework OpenJDK storage of native thread structure.
+  - Implement remaining OpenJDK Array reflection interface.
+
 New in release 1.14 (2011-05-25):
 
 * NetX and the plugin moved to the IcedTea-Web project with a separate
@@ -29,11 +36,6 @@ New in release 1.14 (2011-05-25):
   - PR715: Port updated macros from IcedTea6 to 7
   - PR732: Use xsltproc for bootstrap xslt in place of Xerces/Xalan
 * JamVM
-  - Fix leak of native thread structure.
-  - Consistent naming for classlib functions.
-  - Add extra includes to get rid off compiler warning.
-  - Rework OpenJDK storage of native thread structure.
-  - Implement remaining OpenJDK Array reflection interface.
   - Ignore all unknown options.
   - Handle overflow in getPhysicalMemory().
   - Base default min and max heap size on physical memory.
