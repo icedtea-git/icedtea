@@ -9,6 +9,8 @@ CAX - http://server.complang.tuwien.ac.at/cgi-bin/bugzilla/show_bug.cgi?id=X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 2.0 (2011-XX-XX):
+
 New in release 1.14 (2011-05-25):
 
 * NetX and the plugin moved to the IcedTea-Web project with a separate
