@@ -2222,6 +2222,7 @@ ADD_ZERO_CONFIGURE_ARGS += \
 	--disable-docs \
 	$(filter-out '--with-jdk-home=% '--with-ecj=% \
 			'--with-java=% '--with-javah=% \
+			'--with-javac=% '--with-javac=% \
 			'--with-rmic=% '--with-additional-vms=% \
 			'--disable-bootstrap% '--enable-bootstrap% , \
 		$(CONFIGURE_ARGS)) \
@@ -2234,7 +2235,7 @@ ADD_ZERO_EXTRA_BUILD_ENV = \
 	BUILD_JAXWS=false     ALT_JAXWS_DIST=$(BUILD_OUTPUT_DIR)/jaxws/dist \
 	BUILD_CORBA=false     ALT_CORBA_DIST=$(BUILD_OUTPUT_DIR)/corba/dist \
 	BUILD_JDK=false \
-	DISTRIBUTION_PATCHES='$(foreach p,$(DISTRIBUTION_PATCHES),$(if $(findstring cacao,$(p)),,$(p)))'
+	DISTRIBUTION_PATCHES='$(foreach p,$(DISTRIBUTION_PATCHES),$(if $(findstring cacao,$(p)),,$(if $(findstring jamvm,$(p)),,$(p))))'
 
 stamps/add-zero.stamp: stamps/icedtea.stamp
 	mkdir -p stamps
@@ -2246,7 +2247,7 @@ if ADD_ZERO_BUILD
 		$(ARCH_PREFIX) $(abs_top_srcdir)/configure $(ADD_ZERO_CONFIGURE_ARGS)
 
 	$(ADD_ZERO_EXTRA_BUILD_ENV) \
-		$(ARCH_PREFIX) $(MAKE) -C zerovm $(ICEDTEA_BUILD_TARGET)
+		$(ARCH_PREFIX) $(MAKE) -C zerovm ICEDTEA_BUILD_TARGET=hotspot icedtea-stage2
 
 if ZERO_BUILD
 	mkdir -p $(BUILD_JRE_ARCH_DIR)/shark
@@ -2287,7 +2288,7 @@ if ADD_ZERO_BUILD
 		$(ARCH_PREFIX) $(abs_top_srcdir)/configure $(ADD_ZERO_CONFIGURE_ARGS)
 
 	$(ADD_ZERO_EXTRA_BUILD_ENV) \
-		$(ARCH_PREFIX) $(MAKE) -C zerovm $(ICEDTEA_DEBUG_BUILD_TARGET)
+		$(ARCH_PREFIX) $(MAKE) -C zerovm ICEDTEA_DEBUG_BUILD_TARGET=hotspot icedtea-stage2
 
 if ZERO_BUILD
 	mkdir -p $(BUILD_DEBUG_JRE_ARCH_DIR)/shark

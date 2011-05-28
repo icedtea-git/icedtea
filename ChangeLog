@@ -1,3 +1,11 @@
+2011-05-28  Matthias Klose  <doko@ubuntu.com>
+
+	PR 704
+	* Makefile.am (ADD_ZERO_EXTRA_BUILD_ENV): Filter-out distribution
+	specific jamvm patches.
+	(ADD_ZERO_CONFIGURE_ARGS): Filter-out --with-javac.
+	(stamps/add-zero.stamp, stamps/add-zero-debug.stamp): Update build target.
+
 2011-05-27  Xerxes Rånby  <xranby@zafena.se>
 
 	* NEWS: Fix previous commits news entry.
