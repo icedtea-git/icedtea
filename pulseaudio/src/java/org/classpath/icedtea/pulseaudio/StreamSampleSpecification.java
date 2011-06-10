@@ -40,31 +40,31 @@ package org.classpath.icedtea.pulseaudio;
 import org.classpath.icedtea.pulseaudio.Stream.Format;
 
 class StreamSampleSpecification {
-	private Format format;
-	private int rate;
-	private int channels;
+    private Format format;
+    private int rate;
+    private int channels;
 
-	public StreamSampleSpecification(Format format, int rate, int channels) {
-		this.format = format;
-		this.rate = rate;
-		this.channels = channels;
-	}
+    public StreamSampleSpecification(Format format, int rate, int channels) {
+        this.format = format;
+        this.rate = rate;
+        this.channels = channels;
+    }
 
-	public StreamSampleSpecification(String format, int rate, int channels) {
-		this.format = Format.valueOf(format);
-		this.rate = rate;
-		this.channels = channels;
-	}
+    public StreamSampleSpecification(String format, int rate, int channels) {
+        this.format = Format.valueOf(format);
+        this.rate = rate;
+        this.channels = channels;
+    }
 
-	public Format getFormat() {
-		return format;
-	}
+    public Format getFormat() {
+        return format;
+    }
 
-	public int getRate() {
-		return rate;
-	}
+    public int getRate() {
+        return rate;
+    }
 
-	public int getChannels() {
-		return channels;
-	}
+    public int getChannels() {
+        return channels;
+    }
 }

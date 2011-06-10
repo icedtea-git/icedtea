@@ -39,46 +39,46 @@ package org.classpath.icedtea.pulseaudio;
 
 class StreamBufferAttributes {
 
-	public static final int SANE_DEFAULT = 50000;
+    public static final int SANE_DEFAULT = 50000;
 
-	// set these to proper values
-	// integer.max_value will crash the program!
-	public static final int MAX_VALUE = 1000000;
-	public static final int MIN_VALUE = 0;
+    // set these to proper values
+    // integer.max_value will crash the program!
+    public static final int MAX_VALUE = 1000000;
+    public static final int MIN_VALUE = 0;
 
-	private int maxLength;
-	private int targetLength;
-	private int preBuffering;
-	private int minimumRequest;
-	private int fragmentSize;
+    private int maxLength;
+    private int targetLength;
+    private int preBuffering;
+    private int minimumRequest;
+    private int fragmentSize;
 
-	StreamBufferAttributes(int maxLength, int targetLength,
-			int preBuffering, int minimumRequest, int fragmentSize) {
-		this.maxLength = maxLength;
-		this.targetLength = targetLength;
-		this.preBuffering = preBuffering;
-		this.minimumRequest = minimumRequest;
-		this.fragmentSize = fragmentSize;
-	}
+    StreamBufferAttributes(int maxLength, int targetLength,
+            int preBuffering, int minimumRequest, int fragmentSize) {
+        this.maxLength = maxLength;
+        this.targetLength = targetLength;
+        this.preBuffering = preBuffering;
+        this.minimumRequest = minimumRequest;
+        this.fragmentSize = fragmentSize;
+    }
 
-	int getMaxLength() {
-		return maxLength;
-	}
+    int getMaxLength() {
+        return maxLength;
+    }
 
-	int getTargetLength() {
-		return targetLength;
-	}
+    int getTargetLength() {
+        return targetLength;
+    }
 
-	int getPreBuffering() {
-		return preBuffering;
-	}
+    int getPreBuffering() {
+        return preBuffering;
+    }
 
-	int getMinimumRequest() {
-		return minimumRequest;
-	}
+    int getMinimumRequest() {
+        return minimumRequest;
+    }
 
-	int getFragmentSize() {
-		return fragmentSize;
-	}
+    int getFragmentSize() {
+        return fragmentSize;
+    }
 
 }

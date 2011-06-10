@@ -45,14 +45,14 @@
  */
 
 typedef struct java_context_t {
-	JNIEnv* env;
-	jobject obj;
+    JNIEnv* env;
+    jobject obj;
 } java_context_t;
 
 /* Exception Handling */
 
 void throwByName(JNIEnv* const env, const char* const name,
-		const char* const msg);
+        const char* const msg);
 
 #define ILLEGAL_ARGUMENT_EXCEPTION "java/lang/IllegalArgumentException"
 #define ILLEGAL_STATE_EXCEPTION "java/lang/IllegalStateException"
@@ -72,7 +72,7 @@ void setJavaLongField(JNIEnv* env, jobject, char* name, jlong value);
 
 jbyteArray getJavaByteArrayField(JNIEnv* env, jobject obj, char* name);
 void setJavaByteArrayField(JNIEnv* env, jobject obj, char* name,
-		jbyteArray array);
+        jbyteArray array);
 
 /* Pointers and Java */
 

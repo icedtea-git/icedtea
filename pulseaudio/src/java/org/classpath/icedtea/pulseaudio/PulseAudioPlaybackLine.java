@@ -42,44 +42,44 @@ package org.classpath.icedtea.pulseaudio;
  */
 interface PulseAudioPlaybackLine {
 
-	/**
-	 * Set the volume of the Line (ie, sink input, source, or sink)
-	 * 
-	 * @return an Operation object which can be used to check if the operation
-	 *         has completed
-	 */
-	byte[] native_set_volume(float value);
+    /**
+     * Set the volume of the Line (ie, sink input, source, or sink)
+     * 
+     * @return an Operation object which can be used to check if the operation
+     *         has completed
+     */
+    byte[] native_set_volume(float value);
 
-	/**
-	 * 
-	 * Update the volume information of a Line (sink input, source or sink)
-	 * 
-	 * @return an Operation object which can be used to check if the operation
-	 *         has been completed
-	 */
-	byte[] native_update_volume();
-	
-	
-	/**
-	 * Gets the cached volume. To get the current volume, call
-	 * native_update_volume, and then call this method to get the updated
-	 * volume.
-	 * 
-	 * @return the cached volume of the Line
-	 */
-	float getCachedVolume();
+    /**
+     * 
+     * Update the volume information of a Line (sink input, source or sink)
+     * 
+     * @return an Operation object which can be used to check if the operation
+     *         has been completed
+     */
+    byte[] native_update_volume();
+    
+    
+    /**
+     * Gets the cached volume. To get the current volume, call
+     * native_update_volume, and then call this method to get the updated
+     * volume.
+     * 
+     * @return the cached volume of the Line
+     */
+    float getCachedVolume();
 
-	/**
-	 * Set the cached value of a line
-	 * 
-	 */
-	void setCachedVolume(float volume);
+    /**
+     * Set the cached value of a line
+     * 
+     */
+    void setCachedVolume(float volume);
 
-	/**
-	 * Check if a line is open
-	 * 
-	 * @return <code>true</code> if line is open
-	 */
-	boolean isOpen();
+    /**
+     * Check if a line is open
+     * 
+     * @return <code>true</code> if line is open
+     */
+    boolean isOpen();
 
 }

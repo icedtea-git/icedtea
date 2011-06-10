@@ -41,61 +41,61 @@ import javax.sound.sampled.FloatControl;
 
 final class PulseAudioVolumeControl extends FloatControl {
 
-	static final int MAX_VOLUME = 65536;
-	static final int MIN_VOLUME = 0;
+    static final int MAX_VOLUME = 65536;
+    static final int MIN_VOLUME = 0;
 
-	protected PulseAudioVolumeControl(PulseAudioPlaybackLine line,
-			EventLoop eventLoop) {
+    protected PulseAudioVolumeControl(PulseAudioPlaybackLine line,
+            EventLoop eventLoop) {
 
-		/*
-		 * the initial volume is ignored by pulseaudio.
-		 */
-		super(FloatControl.Type.VOLUME, MIN_VOLUME, MAX_VOLUME, 1, -1, line
-				.getCachedVolume(), "pulseaudio units", "Volume Off",
-				"Default Volume", "Full Volume");
-		this.line = line;
-		this.eventLoop = eventLoop;
-	}
+        /*
+         * the initial volume is ignored by pulseaudio.
+         */
+        super(FloatControl.Type.VOLUME, MIN_VOLUME, MAX_VOLUME, 1, -1, line
+                .getCachedVolume(), "pulseaudio units", "Volume Off",
+                "Default Volume", "Full Volume");
+        this.line = line;
+        this.eventLoop = eventLoop;
+    }
 
-	private EventLoop eventLoop;
-	private PulseAudioPlaybackLine line;
+    private EventLoop eventLoop;
+    private PulseAudioPlaybackLine line;
 
-	@Override
-	public synchronized void setValue(float newValue) {
-		if (newValue > MAX_VOLUME || newValue < MIN_VOLUME) {
-			throw new IllegalArgumentException("invalid value");
-		}
+    @Override
+    public synchronized void setValue(float newValue) {
+        if (newValue > MAX_VOLUME || newValue < MIN_VOLUME) {
+            throw new IllegalArgumentException("invalid value");
+        }
 
-		if (!line.isOpen()) {
-			return;
-		}
+        if (!line.isOpen()) {
+            return;
+        }
 
-		setStreamVolume(newValue);
+        setStreamVolume(newValue);
 
-		line.setCachedVolume(newValue);
-	}
+        line.setCachedVolume(newValue);
+    }
 
-	protected synchronized void setStreamVolume(float newValue) {
-		Operation op;
-		synchronized (eventLoop.threadLock) {
-			op = new Operation(line.native_set_volume(newValue));
-		}
+    protected synchronized void setStreamVolume(float newValue) {
+        Operation op;
+        synchronized (eventLoop.threadLock) {
+            op = new Operation(line.native_set_volume(newValue));
+        }
 
-		op.waitForCompletion();
-		op.releaseReference();
+        op.waitForCompletion();
+        op.releaseReference();
 
-	}
+    }
 
-	public synchronized float getValue() {
-		Operation op;
-		synchronized (eventLoop.threadLock) {
-			op = new Operation(line.native_update_volume());
-		}
+    public synchronized float getValue() {
+        Operation op;
+        synchronized (eventLoop.threadLock) {
+            op = new Operation(line.native_update_volume());
+        }
 
-		op.waitForCompletion();
-		op.releaseReference();
+        op.waitForCompletion();
+        op.releaseReference();
 
-		return line.getCachedVolume();
-	}
+        return line.getCachedVolume();
+    }
 
 }

@@ -54,109 +54,109 @@ package org.classpath.icedtea.pulseaudio;
 
 class Operation {
 
-	private byte[] operationPointer;
-	private EventLoop eventLoop;
+    private byte[] operationPointer;
+    private EventLoop eventLoop;
 
-	public enum State {
-		Running, Done, Cancelled,
-	}
+    public enum State {
+        Running, Done, Cancelled,
+    }
 
-	static {
-		SecurityWrapper.loadNativeLibrary();
-	}
+    static {
+        SecurityWrapper.loadNativeLibrary();
+    }
 
-	private native void native_ref();
+    private native void native_ref();
 
-	private native void native_unref();
+    private native void native_unref();
 
-	private native int native_get_state();
+    private native int native_get_state();
 
-	Operation(byte[] operationPointer) {
-		assert (operationPointer != null);
-		this.operationPointer = operationPointer;
-		this.eventLoop = EventLoop.getEventLoop();
-	}
+    Operation(byte[] operationPointer) {
+        assert (operationPointer != null);
+        this.operationPointer = operationPointer;
+        this.eventLoop = EventLoop.getEventLoop();
+    }
 
-	@Override
-	protected void finalize() throws Throwable {
-		// might catch operations which havent been released
-		assert (operationPointer == null);
-		super.finalize();
-	}
+    @Override
+    protected void finalize() throws Throwable {
+        // might catch operations which havent been released
+        assert (operationPointer == null);
+        super.finalize();
+    }
 
-	/**
-	 * Increase reference count by 1
-	 */
-	void addReference() {
-		assert (operationPointer != null);
-		synchronized (eventLoop.threadLock) {
-			native_ref();
-		}
-	}
+    /**
+     * Increase reference count by 1
+     */
+    void addReference() {
+        assert (operationPointer != null);
+        synchronized (eventLoop.threadLock) {
+            native_ref();
+        }
+    }
 
-	/**
-	 * Decrease reference count by 1. If the count reaches 0, object will be freed
-	 */
-	void releaseReference() {
-		assert (operationPointer != null);
-		synchronized (eventLoop.threadLock) {
-			native_unref();
-		}
-		operationPointer = null;
-	}
+    /**
+     * Decrease reference count by 1. If the count reaches 0, object will be freed
+     */
+    void releaseReference() {
+        assert (operationPointer != null);
+        synchronized (eventLoop.threadLock) {
+            native_unref();
+        }
+        operationPointer = null;
+    }
 
-	// FIXME broken function
-	boolean isNull() {
-		if (operationPointer == null) {
-			return true;
-		}
-		return false;
-	}
+    // FIXME broken function
+    boolean isNull() {
+        if (operationPointer == null) {
+            return true;
+        }
+        return false;
+    }
 
-	State getState() {
-		assert (operationPointer != null);
-		int state;
-		synchronized (eventLoop.threadLock) {
-			state = native_get_state();
-		}
-		switch (state) {
-		case 0:
-			return State.Running;
-		case 1:
-			return State.Done;
-		case 2:
-			return State.Cancelled;
-		default:
-			throw new IllegalStateException("Invalid operation State");
-		}
+    State getState() {
+        assert (operationPointer != null);
+        int state;
+        synchronized (eventLoop.threadLock) {
+            state = native_get_state();
+        }
+        switch (state) {
+        case 0:
+            return State.Running;
+        case 1:
+            return State.Done;
+        case 2:
+            return State.Cancelled;
+        default:
+            throw new IllegalStateException("Invalid operation State");
+        }
 
-	}
+    }
 
-	/**
-	 * Block until the operation has completed
-	 * 
-	 */
-	void waitForCompletion() {
-		assert (operationPointer != null);
+    /**
+     * Block until the operation has completed
+     * 
+     */
+    void waitForCompletion() {
+        assert (operationPointer != null);
 
-		boolean interrupted = false;
-		do {
-			synchronized (eventLoop.threadLock) {
-				if (getState() == Operation.State.Done) {
-					return;
-				}
-				try {
-					eventLoop.threadLock.wait();
-				} catch (InterruptedException e) {
-					// ingore the interrupt for now
-					interrupted = true;
-				}
-			}
-		} while (getState() != State.Done);
+        boolean interrupted = false;
+        do {
+            synchronized (eventLoop.threadLock) {
+                if (getState() == Operation.State.Done) {
+                    return;
+                }
+                try {
+                    eventLoop.threadLock.wait();
+                } catch (InterruptedException e) {
+                    // ingore the interrupt for now
+                    interrupted = true;
+                }
+            }
+        } while (getState() != State.Done);
 
-		// let the caller know about the interrupt
-		if (interrupted) {
-			Thread.currentThread().interrupt();
-		}
-	}
+        // let the caller know about the interrupt
+        if (interrupted) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }

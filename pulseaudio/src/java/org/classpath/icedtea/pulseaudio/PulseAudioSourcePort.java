@@ -43,53 +43,53 @@ import javax.sound.sampled.Port;
 
 final class PulseAudioSourcePort extends PulseAudioPort {
 
-	/* aka mic */
+    /* aka mic */
 
-	static {
-		SecurityWrapper.loadNativeLibrary();
-	}
+    static {
+        SecurityWrapper.loadNativeLibrary();
+    }
 
-	PulseAudioSourcePort(String name) {
-		super(name);
-	}
+    PulseAudioSourcePort(String name) {
+        super(name);
+    }
 
-	public void open() {
+    public void open() {
 
-		/* check for permission to record audio */
-		AudioPermission perm = new AudioPermission("record", null);
-		perm.checkGuard(null);
+        /* check for permission to record audio */
+        AudioPermission perm = new AudioPermission("record", null);
+        perm.checkGuard(null);
 
-		super.open();
+        super.open();
 
-		PulseAudioMixer parent = PulseAudioMixer.getInstance();
-		parent.addSourceLine(this);
-	}
+        PulseAudioMixer parent = PulseAudioMixer.getInstance();
+        parent.addSourceLine(this);
+    }
 
-	public void close() {
+    public void close() {
 
-		/* check for permission to record audio */
-		AudioPermission perm = new AudioPermission("record", null);
-		perm.checkGuard(null);
+        /* check for permission to record audio */
+        AudioPermission perm = new AudioPermission("record", null);
+        perm.checkGuard(null);
 
-		if (!isOpen) {
-			throw new IllegalStateException("Port is not open; so cant close");
-		}
+        if (!isOpen) {
+            throw new IllegalStateException("Port is not open; so cant close");
+        }
 
-		PulseAudioMixer parent = PulseAudioMixer.getInstance();
-		parent.removeSourceLine(this);
+        PulseAudioMixer parent = PulseAudioMixer.getInstance();
+        parent.removeSourceLine(this);
 
-		super.close();
-	}
+        super.close();
+    }
 
-	// FIXME
-	public native byte[] native_set_volume(float newValue);
+    // FIXME
+    public native byte[] native_set_volume(float newValue);
 
-	// FIXME
-	public native byte[] native_update_volume();
+    // FIXME
+    public native byte[] native_update_volume();
 
-	@Override
-	public Line.Info getLineInfo() {
-		return new Port.Info(Port.class, getName(), false);
-	}
+    @Override
+    public Line.Info getLineInfo() {
+        return new Port.Info(Port.class, getName(), false);
+    }
 
 }

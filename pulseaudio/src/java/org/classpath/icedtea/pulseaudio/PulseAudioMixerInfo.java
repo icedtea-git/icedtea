@@ -40,23 +40,23 @@ package org.classpath.icedtea.pulseaudio;
 import javax.sound.sampled.Mixer;
 
 public final class PulseAudioMixerInfo extends Mixer.Info {
-	// singleton
+    // singleton
 
-	private static PulseAudioMixerInfo _instance = null;
+    private static PulseAudioMixerInfo _instance = null;
 
-	protected PulseAudioMixerInfo(String name, String vendor,
-			String description, String version) {
-		super(name, vendor, description, version);
-	}
+    protected PulseAudioMixerInfo(String name, String vendor,
+            String description, String version) {
+        super(name, vendor, description, version);
+    }
 
-	// the "getInstance()" method
-	synchronized public static PulseAudioMixerInfo getInfo() {
-		if (_instance == null) {
-			_instance = new PulseAudioMixerInfo("PulseAudio Mixer", "IcedTea",
-					"the ear-candy mixer", "0.02");
-		}
+    // the "getInstance()" method
+    synchronized public static PulseAudioMixerInfo getInfo() {
+        if (_instance == null) {
+            _instance = new PulseAudioMixerInfo("PulseAudio Mixer", "IcedTea",
+                    "the ear-candy mixer", "0.02");
+        }
 
-		return _instance;
-	}
+        return _instance;
+    }
 
 }

@@ -41,23 +41,23 @@ import javax.sound.sampled.Mixer;
 import javax.sound.sampled.Mixer.Info;
 
 public class PulseAudioMixerProvider extends
-		javax.sound.sampled.spi.MixerProvider {
+        javax.sound.sampled.spi.MixerProvider {
 
-	@Override
-	public Mixer getMixer(Info info) {
-		// System.out.println("DEBUG: getMixer called");
-		if (info.equals(PulseAudioMixerInfo.getInfo())) {
-			return PulseAudioMixer.getInstance();
-		} else {
-			throw new IllegalArgumentException("Mixer type not supported");
-		}
-	}
+    @Override
+    public Mixer getMixer(Info info) {
+        // System.out.println("DEBUG: getMixer called");
+        if (info.equals(PulseAudioMixerInfo.getInfo())) {
+            return PulseAudioMixer.getInstance();
+        } else {
+            throw new IllegalArgumentException("Mixer type not supported");
+        }
+    }
 
-	@Override
-	public Info[] getMixerInfo() {
-		// System.out.println("DEBUG: get mixer info called");
-		Mixer.Info[] m = { PulseAudioMixerInfo.getInfo() };
-		return m;
-	}
+    @Override
+    public Info[] getMixerInfo() {
+        // System.out.println("DEBUG: get mixer info called");
+        Mixer.Info[] m = { PulseAudioMixerInfo.getInfo() };
+        return m;
+    }
 
 }
