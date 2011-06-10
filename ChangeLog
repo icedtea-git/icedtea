@@ -1,3 +1,10 @@
+2011-06-10  Denis Lila  <dlila@redhat.com>
+
+	* Makefile.am
+	(stamps/pulse-java-headers.stamp): Prepend the java build directory
+	to the boot class path to avoid generating headers for the system
+	pulse-java classes.
+
 2012-02-16  Xerxes Rånby  <xerxes@zafena.se>
 
 	(HOTSPOT_CHANGESET): Add latest Zero HS22 fixes.
