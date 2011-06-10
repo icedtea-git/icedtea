@@ -49,66 +49,66 @@ package org.classpath.icedtea.pulseaudio;
 
 class Debug {
 
-	enum DebugLevel {
-		Verbose, Debug, Info, Warning, Error, None
-	}
+    enum DebugLevel {
+        Verbose, Debug, Info, Warning, Error, None
+    }
 
-	private static DebugLevel currentDebugLevel = DebugLevel.None;
+    private static DebugLevel currentDebugLevel = DebugLevel.None;
 
-	static {
-		// System.out.println("PulseAudio: initializing Debug");
+    static {
+        // System.out.println("PulseAudio: initializing Debug");
 
-		String systemSetting;
-		try {
-			systemSetting = System.getProperty("pulseaudio.debugLevel");
-		} catch (SecurityException e) {
-			// sigh, we cant read that property
-			systemSetting = null;
-		}
+        String systemSetting;
+        try {
+            systemSetting = System.getProperty("pulseaudio.debugLevel");
+        } catch (SecurityException e) {
+            // sigh, we cant read that property
+            systemSetting = null;
+        }
 
-		DebugLevel wantedLevel;
-		try {
-			wantedLevel = DebugLevel.valueOf(systemSetting);
+        DebugLevel wantedLevel;
+        try {
+            wantedLevel = DebugLevel.valueOf(systemSetting);
 
-		} catch (IllegalArgumentException e) {
-			wantedLevel = DebugLevel.Info;
-		} catch (NullPointerException e) {
-			wantedLevel = DebugLevel.None;
-		}
+        } catch (IllegalArgumentException e) {
+            wantedLevel = DebugLevel.Info;
+        } catch (NullPointerException e) {
+            wantedLevel = DebugLevel.None;
+        }
 
-		currentDebugLevel = wantedLevel;
-		println(DebugLevel.Info, "Using debug level: " + currentDebugLevel);
-	}
+        currentDebugLevel = wantedLevel;
+        println(DebugLevel.Info, "Using debug level: " + currentDebugLevel);
+    }
 
-	static void println(String string) {
-		println(DebugLevel.Info, string);
-	}
+    static void println(String string) {
+        println(DebugLevel.Info, string);
+    }
 
-	static void print(DebugLevel level, String string) {
-		int result = level.compareTo(currentDebugLevel);
-		if (result >= 0) {
-			if (level.compareTo(DebugLevel.Error) >= 0) {
-				System.err.print(string);
-			} else {
-				System.out.print(string);
-			}
-		} else {
-			// do nothing
-		}
-	}
+    static void print(DebugLevel level, String string) {
+        int result = level.compareTo(currentDebugLevel);
+        if (result >= 0) {
+            if (level.compareTo(DebugLevel.Error) >= 0) {
+                System.err.print(string);
+            } else {
+                System.out.print(string);
+            }
+        } else {
+            // do nothing
+        }
+    }
 
-	static void println(DebugLevel level, String string) {
+    static void println(DebugLevel level, String string) {
 
-		int result = level.compareTo(currentDebugLevel);
-		if (result >= 0) {
-			if (level.compareTo(DebugLevel.Error) >= 0) {
-				System.err.println("DEBUG: pulse-java: " + string);
-			} else {
-				System.out.println("DEBUG: pulse-java: " + string);
-			}
-		} else {
-			// do nothing
-		}
-	}
+        int result = level.compareTo(currentDebugLevel);
+        if (result >= 0) {
+            if (level.compareTo(DebugLevel.Error) >= 0) {
+                System.err.println("DEBUG: pulse-java: " + string);
+            } else {
+                System.out.println("DEBUG: pulse-java: " + string);
+            }
+        } else {
+            // do nothing
+        }
+    }
 
 }

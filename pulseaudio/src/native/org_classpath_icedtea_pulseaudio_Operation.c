@@ -48,9 +48,9 @@
 JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Operation_native_1ref
 (JNIEnv* env, jobject obj) {
 
-	pa_operation* operation = (pa_operation*) getJavaPointer(env, obj, "operationPointer");
-	assert(operation);
-	pa_operation_ref(operation);
+    pa_operation* operation = (pa_operation*) getJavaPointer(env, obj, "operationPointer");
+    assert(operation);
+    pa_operation_ref(operation);
 
 }
 
@@ -62,9 +62,9 @@ JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Operation_native_1r
 JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Operation_native_1unref
 (JNIEnv* env, jobject obj) {
 
-	pa_operation* operation = (pa_operation*) getJavaPointer(env, obj, "operationPointer");
-	assert(operation);
-	pa_operation_unref(operation);
+    pa_operation* operation = (pa_operation*) getJavaPointer(env, obj, "operationPointer");
+    assert(operation);
+    pa_operation_unref(operation);
 
 }
 
@@ -76,8 +76,8 @@ JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Operation_native_1u
 JNIEXPORT jint JNICALL Java_org_classpath_icedtea_pulseaudio_Operation_native_1get_1state
 (JNIEnv *env, jobject obj) {
 
-	pa_operation* operation = (pa_operation*) getJavaPointer(env, obj, "operationPointer");
-	assert(operation);
-	int state = pa_operation_get_state(operation);
-	return state;
+    pa_operation* operation = (pa_operation*) getJavaPointer(env, obj, "operationPointer");
+    assert(operation);
+    int state = pa_operation_get_state(operation);
+    return state;
 }

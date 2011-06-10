@@ -43,119 +43,119 @@ import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.Port;
 
 abstract class PulseAudioPort extends PulseAudioLine implements Port,
-		PulseAudioPlaybackLine {
+        PulseAudioPlaybackLine {
 
-	private String name;
+    private String name;
 
-	/*
-	 * Variable used in native code
-	 */
-	@SuppressWarnings("unused")
-	private byte[] contextPointer;
-	@SuppressWarnings("unused")
-	private int channels;
+    /*
+     * Variable used in native code
+     */
+    @SuppressWarnings("unused")
+    private byte[] contextPointer;
+    @SuppressWarnings("unused")
+    private int channels;
 
-	private EventLoop eventLoop;
+    private EventLoop eventLoop;
 
-	private float cachedVolume;
+    private float cachedVolume;
 
-	private PulseAudioVolumeControl volumeControl;
+    private PulseAudioVolumeControl volumeControl;
 
-	static {
-		SecurityWrapper.loadNativeLibrary();
-	}
+    static {
+        SecurityWrapper.loadNativeLibrary();
+    }
 
-	PulseAudioPort(String portName) {
-		this.name = portName;
-		this.eventLoop = EventLoop.getEventLoop();
-		this.contextPointer = eventLoop.getContextPointer();
+    PulseAudioPort(String portName) {
+        this.name = portName;
+        this.eventLoop = EventLoop.getEventLoop();
+        this.contextPointer = eventLoop.getContextPointer();
 
-		updateVolumeInfo();
+        updateVolumeInfo();
 
-		volumeControl = new PulseAudioVolumeControl(this, eventLoop);
-		controls.add(volumeControl);
+        volumeControl = new PulseAudioVolumeControl(this, eventLoop);
+        controls.add(volumeControl);
 
-		/*
-		 * unlike other lines, Ports must either be open or close
-		 * 
-		 * close = no sound. open = sound
-		 */
-		open();
+        /*
+         * unlike other lines, Ports must either be open or close
+         * 
+         * close = no sound. open = sound
+         */
+        open();
 
-		// System.out.println("Opened Target Port " + name);
-	}
+        // System.out.println("Opened Target Port " + name);
+    }
 
-	// FIXME why public
-	@Override
-	public abstract byte[] native_set_volume(float newValue);
+    // FIXME why public
+    @Override
+    public abstract byte[] native_set_volume(float newValue);
 
-	/**
-	 * 
-	 * @see {@link update_channels_and_volume}
-	 */
-	// FIXME why public
-	public abstract byte[] native_update_volume();
+    /**
+     * 
+     * @see {@link update_channels_and_volume}
+     */
+    // FIXME why public
+    public abstract byte[] native_update_volume();
 
-	@Override
-	public float getCachedVolume() {
-		return this.cachedVolume;
-	}
+    @Override
+    public float getCachedVolume() {
+        return this.cachedVolume;
+    }
 
-	@Override
-	public void setCachedVolume(float value) {
-		this.cachedVolume = value;
+    @Override
+    public void setCachedVolume(float value) {
+        this.cachedVolume = value;
 
-	}
+    }
 
-	private void updateVolumeInfo() {
-		Operation op;
-		synchronized (eventLoop.threadLock) {
-			op = new Operation(native_update_volume());
-		}
+    private void updateVolumeInfo() {
+        Operation op;
+        synchronized (eventLoop.threadLock) {
+            op = new Operation(native_update_volume());
+        }
 
-		op.waitForCompletion();
-		op.releaseReference();
-	}
+        op.waitForCompletion();
+        op.releaseReference();
+    }
 
-	/**
-	 * Callback used by JNI when native_update_volume completes
-	 * 
-	 * @param channels
-	 *            the number of channels
-	 * @param cachedVolume
-	 *            the new volume
-	 */
-	@SuppressWarnings("unused")
-	void update_channels_and_volume(int channels, float volume) {
-		this.channels = channels;
-		this.cachedVolume = volume;
-	}
+    /**
+     * Callback used by JNI when native_update_volume completes
+     * 
+     * @param channels
+     *            the number of channels
+     * @param cachedVolume
+     *            the new volume
+     */
+    @SuppressWarnings("unused")
+    void update_channels_and_volume(int channels, float volume) {
+        this.channels = channels;
+        this.cachedVolume = volume;
+    }
 
-	@Override
-	public void close() {
+    @Override
+    public void close() {
 
-		native_set_volume((float) 0);
-		isOpen = false;
-		fireLineEvent(new LineEvent(this, LineEvent.Type.CLOSE,
-				AudioSystem.NOT_SPECIFIED));
-	}
+        native_set_volume((float) 0);
+        isOpen = false;
+        fireLineEvent(new LineEvent(this, LineEvent.Type.CLOSE,
+                AudioSystem.NOT_SPECIFIED));
+    }
 
-	@Override
-	public abstract Line.Info getLineInfo();
+    @Override
+    public abstract Line.Info getLineInfo();
 
-	@Override
-	public void open() {
-		if (isOpen) {
-			return;
-		}
-		native_set_volume(cachedVolume);
-		isOpen = true;
-		fireLineEvent(new LineEvent(this, LineEvent.Type.OPEN,
-				AudioSystem.NOT_SPECIFIED));
-	}
+    @Override
+    public void open() {
+        if (isOpen) {
+            return;
+        }
+        native_set_volume(cachedVolume);
+        isOpen = true;
+        fireLineEvent(new LineEvent(this, LineEvent.Type.OPEN,
+                AudioSystem.NOT_SPECIFIED));
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public String getName() {
+        return this.name;
+    }
 
 }

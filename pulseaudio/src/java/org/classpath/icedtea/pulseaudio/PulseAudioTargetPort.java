@@ -42,47 +42,47 @@ import javax.sound.sampled.Port;
 
 final class PulseAudioTargetPort extends PulseAudioPort {
 
-	/* aka speaker */
+    /* aka speaker */
 
-	static {
-		SecurityWrapper.loadNativeLibrary();
-	}
+    static {
+        SecurityWrapper.loadNativeLibrary();
+    }
 
-	PulseAudioTargetPort(String name) {
-		super(name);
-	}
+    PulseAudioTargetPort(String name) {
+        super(name);
+    }
 
-	@Override
-	public void open() {
+    @Override
+    public void open() {
 
-		super.open();
+        super.open();
 
-		PulseAudioMixer parent = PulseAudioMixer.getInstance();
-		parent.addTargetLine(this);
-	}
+        PulseAudioMixer parent = PulseAudioMixer.getInstance();
+        parent.addTargetLine(this);
+    }
 
-	@Override
-	public void close() {
+    @Override
+    public void close() {
 
-		if (!isOpen) {
-			throw new IllegalStateException("not open, so cant close Port");
-		}
+        if (!isOpen) {
+            throw new IllegalStateException("not open, so cant close Port");
+        }
 
-		PulseAudioMixer parent = PulseAudioMixer.getInstance();
-		parent.removeTargetLine(this);
+        PulseAudioMixer parent = PulseAudioMixer.getInstance();
+        parent.removeTargetLine(this);
 
-		super.close();
-	}
+        super.close();
+    }
 
-	// FIXME
-	public native byte[] native_set_volume(float newValue);
+    // FIXME
+    public native byte[] native_set_volume(float newValue);
 
-	// FIXME
-	public native byte[] native_update_volume();
+    // FIXME
+    public native byte[] native_update_volume();
 
-	@Override
-	public Line.Info getLineInfo() {
-		return new Port.Info(Port.class, getName(), false);
-	}
+    @Override
+    public Line.Info getLineInfo() {
+        return new Port.Info(Port.class, getName(), false);
+    }
 
 }

@@ -48,348 +48,348 @@ import javax.sound.sampled.TargetDataLine;
 import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 
 public final class PulseAudioTargetDataLine extends PulseAudioDataLine
-		implements TargetDataLine {
-
-	/*
-	 * This contains the data from the PulseAudio buffer that has since been
-	 * dropped. If 20 bytes of a fragment of size 200 are read, the other 180
-	 * are dumped in this
-	 */
-	private byte[] fragmentBuffer;
-
-	/*
-	 * these are set to true only by the respective functions (flush(), drain())
-	 * set to false only by read()
-	 */
-	private boolean flushed = false;
-	private boolean drained = false;
-
-	public static final String DEFAULT_TARGETDATALINE_NAME = "Audio Stream";
-
-	PulseAudioTargetDataLine(AudioFormat[] formats, AudioFormat defaultFormat) {
-		this.supportedFormats = formats;
-		this.defaultFormat = defaultFormat;
-		this.currentFormat = defaultFormat;
-		this.streamName = DEFAULT_TARGETDATALINE_NAME;
-
-	}
-
-	@Override
-	synchronized public void close() {
-		if (!isOpen()) {
-			// Probably due to some programmer error, we are being
-			// asked to close an already closed line.  Oh well.
-			Debug.println(DebugLevel.Verbose,
-					"PulseAudioTargetDataLine.close(): "
-					+ "Line closed that wasn't open.");
-			return;
-		}
-
-		/* check for permission to record audio */
-		AudioPermission perm = new AudioPermission("record", null);
-		perm.checkGuard(null);
-
-		PulseAudioMixer parentMixer = PulseAudioMixer.getInstance();
-		parentMixer.removeTargetLine(this);
-
-		super.close();
-
-		Debug.println(DebugLevel.Verbose, "PulseAudioTargetDataLine.close(): "
-				+ "Line closed");
-	}
-
-	@Override
-	synchronized public void open(AudioFormat format, int bufferSize)
-			throws LineUnavailableException {
-		/* check for permission to record audio */
-		AudioPermission perm = new AudioPermission("record", null);
-		perm.checkGuard(null);
-
-		if (isOpen()) {
-			throw new IllegalStateException("already open");
-		}
-		super.open(format, bufferSize);
-
-		/* initialize all the member variables */
-		framesSinceOpen = 0;
-		fragmentBuffer = null;
-		flushed = false;
-		drained = false;
-
-		/* add this open line to the mixer */
-		PulseAudioMixer parentMixer = PulseAudioMixer.getInstance();
-		parentMixer.addTargetLine(this);
-
-		Debug.println(DebugLevel.Verbose, "PulseAudioTargetDataLine.open(): "
-				+ "Line opened");
-	}
-
-	@Override
-	synchronized public void open(AudioFormat format)
-			throws LineUnavailableException {
-		open(format, DEFAULT_BUFFER_SIZE);
-	}
-
-	@Override
-	protected void connectLine(int bufferSize, Stream masterStream)
-			throws LineUnavailableException {
-		int fragmentSize = bufferSize / 10 > 500 ? bufferSize / 10 : 500;
-		StreamBufferAttributes bufferAttributes = new StreamBufferAttributes(
-				bufferSize, 0, 0, 0, fragmentSize);
-		synchronized (eventLoop.threadLock) {
-			stream.connectForRecording(Stream.DEFAULT_DEVICE, bufferAttributes);
-		}
-	}
-
-	@Override
-	public int read(byte[] data, int offset, int length) {
-
-		/* check state and inputs */
-
-		if (!isOpen()) {
-			// A closed line can produce zero bytes of data.
-			return 0;
-		}
-
-		int frameSize = currentFormat.getFrameSize();
-
-		if (length % frameSize != 0) {
-			throw new IllegalArgumentException(
-					"amount of data to read does not represent an integral number of frames");
-		}
-
-		if (length < 0) {
-			throw new IllegalArgumentException("length is negative");
-		}
-		
-		if ( offset < 0 || offset > data.length - length) {
-			throw new ArrayIndexOutOfBoundsException("array size: " + data.length
-					+ " offset:" + offset + " length:" + length );
-		}
-
-		/* everything ok */
-
-		int position = offset;
-		int remainingLength = length;
-		int sizeRead = 0;
-
-		/* bytes read on each iteration of loop */
-		int bytesRead;
-
-		flushed = false;
-		drained = false;
-
-		/*
-		 * to read, we first take stuff from the fragmentBuffer
-		 */
-
-		/* on first read() of the line, fragmentBuffer is null */
-		if (fragmentBuffer != null) {
-			synchronized (this) {
-
-				boolean fragmentBufferSmaller = fragmentBuffer.length < length;
-				int smallerBufferLength = Math.min(fragmentBuffer.length,
-						length);
-				System.arraycopy(fragmentBuffer, 0, data, position,
-						smallerBufferLength);
-				framesSinceOpen += smallerBufferLength
-						/ currentFormat.getFrameSize();
-
-				if (!fragmentBufferSmaller) {
-					/*
-					 * if fragment was larger, then we already have all the data
-					 * we need. clean up the buffer before returning. Make a new
-					 * fragmentBuffer from the remaining bytes
-					 */
-					int remainingBytesInFragment = (fragmentBuffer.length - length);
-					byte[] newFragmentBuffer = new byte[remainingBytesInFragment];
-					System.arraycopy(fragmentBuffer, length, newFragmentBuffer,
-							0, newFragmentBuffer.length);
-					fragmentBuffer = newFragmentBuffer;
-					return length;
-				}
-
-				/* done with fragment buffer, remove it */
-				bytesRead = smallerBufferLength;
-				sizeRead += bytesRead;
-				position += bytesRead;
-				remainingLength -= bytesRead;
-				fragmentBuffer = null;
-
-			}
-		}
-
-		/*
-		 * if we need to read more data, then we read from PulseAudio's buffer
-		 */
-		while (remainingLength != 0) {
-			synchronized (this) {
-
-				if (!isOpen() || !isStarted) {
-					return sizeRead;
-				}
-
-				if (flushed) {
-					flushed = false;
-					return sizeRead;
-				}
-
-				if (drained) {
-					drained = false;
-					return sizeRead;
-				}
-
-				byte[] currentFragment;
-				synchronized (eventLoop.threadLock) {
-
-					/* read a fragment, and drop it from the server */
-					currentFragment = stream.peek();
-
-					stream.drop();
-					if (currentFragment == null) {
-						Debug.println(DebugLevel.Verbose,
-								"PulseAudioTargetDataLine.read(): "
-										+ " error in stream.peek()");
-						continue;
-					}
-
-					bytesRead = Math.min(currentFragment.length,
-							remainingLength);
-
-					/*
-					 * we read more than we required, save the rest of the data
-					 * in the fragmentBuffer
-					 */
-					if (bytesRead < currentFragment.length) {
-						/* allocate a buffer to store unsaved data */
-						fragmentBuffer = new byte[currentFragment.length
-								- bytesRead];
-
-						/* copy over the unsaved data */
-						System.arraycopy(currentFragment, bytesRead,
-								fragmentBuffer, 0, currentFragment.length
-										- bytesRead);
-					}
-
-					System.arraycopy(currentFragment, 0, data, position,
-							bytesRead);
-
-					sizeRead += bytesRead;
-					position += bytesRead;
-					remainingLength -= bytesRead;
-					framesSinceOpen += bytesRead / currentFormat.getFrameSize();
-				}
-			}
-		}
-
-		// all the data should have been played by now
-		assert (sizeRead == length);
-
-		return sizeRead;
-
-	}
-
-	@Override
-	public void drain() {
-
-		// blocks when there is data on the line
-		// http://www.jsresources.org/faq_audio.html#stop_drain_tdl
-		while (true) {
-			synchronized (this) {
-				if (!isStarted || !isOpen()) {
-					break;
-				}
-			}
-			try {
-				//TODO: Is this the best length of sleep?
-				//Maybe in case this loop runs for a long time
-				//it would be good to switch to a longer
-				//sleep.  Like bump it up each iteration after
-				//the Nth iteration, up to a MAXSLEEP length.
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// do nothing
-			}
-		}
-
-		synchronized (this) {
-			drained = true;
-		}
-
-	}
-
-	@Override
-	public void flush() {
-		if (isOpen()) {
-
-			/* flush the buffer on pulseaudio's side */
-			Operation operation;
-			synchronized (eventLoop.threadLock) {
-				operation = stream.flush();
-			}
-			operation.waitForCompletion();
-			operation.releaseReference();
-		}
-
-		synchronized (this) {
-			flushed = true;
-			/* flush the partial fragment we stored */
-			fragmentBuffer = null;
-		}
-	}
-
-	@Override
-	public int available() {
-		if (!isOpen()) {
-			// a closed line has 0 bytes available.
-			return 0;
-		}
-
-		synchronized (eventLoop.threadLock) {
-			return stream.getReableSize();
-		}
-	}
-
-	@Override
-	public int getFramePosition() {
-		return (int) framesSinceOpen;
-	}
-
-	@Override
-	public long getLongFramePosition() {
-		return framesSinceOpen;
-	}
-
-	@Override
-	public long getMicrosecondPosition() {
-		return (long) (framesSinceOpen / currentFormat.getFrameRate());
-	}
-
-	/*
-	 * A TargetData starts when we ask it to and continues playing until we ask
-	 * it to stop. There are no buffer underruns/overflows or anything so we
-	 * will just fire the LineEvents manually
-	 */
-
-	@Override
-	synchronized public void start() {
-		super.start();
-
-		fireLineEvent(new LineEvent(this, LineEvent.Type.START, framesSinceOpen));
-	}
-
-	@Override
-	synchronized public void stop() {
-		super.stop();
-
-		fireLineEvent(new LineEvent(this, LineEvent.Type.STOP, framesSinceOpen));
-	}
-
-	@Override
-	public Line.Info getLineInfo() {
-		return new DataLine.Info(TargetDataLine.class, supportedFormats,
-				StreamBufferAttributes.MIN_VALUE,
-				StreamBufferAttributes.MAX_VALUE);
-	}
+        implements TargetDataLine {
+
+    /*
+     * This contains the data from the PulseAudio buffer that has since been
+     * dropped. If 20 bytes of a fragment of size 200 are read, the other 180
+     * are dumped in this
+     */
+    private byte[] fragmentBuffer;
+
+    /*
+     * these are set to true only by the respective functions (flush(), drain())
+     * set to false only by read()
+     */
+    private boolean flushed = false;
+    private boolean drained = false;
+
+    public static final String DEFAULT_TARGETDATALINE_NAME = "Audio Stream";
+
+    PulseAudioTargetDataLine(AudioFormat[] formats, AudioFormat defaultFormat) {
+        this.supportedFormats = formats;
+        this.defaultFormat = defaultFormat;
+        this.currentFormat = defaultFormat;
+        this.streamName = DEFAULT_TARGETDATALINE_NAME;
+
+    }
+
+    @Override
+    synchronized public void close() {
+        if (!isOpen()) {
+            // Probably due to some programmer error, we are being
+            // asked to close an already closed line.  Oh well.
+            Debug.println(DebugLevel.Verbose,
+                    "PulseAudioTargetDataLine.close(): "
+                    + "Line closed that wasn't open.");
+            return;
+        }
+
+        /* check for permission to record audio */
+        AudioPermission perm = new AudioPermission("record", null);
+        perm.checkGuard(null);
+
+        PulseAudioMixer parentMixer = PulseAudioMixer.getInstance();
+        parentMixer.removeTargetLine(this);
+
+        super.close();
+
+        Debug.println(DebugLevel.Verbose, "PulseAudioTargetDataLine.close(): "
+                + "Line closed");
+    }
+
+    @Override
+    synchronized public void open(AudioFormat format, int bufferSize)
+            throws LineUnavailableException {
+        /* check for permission to record audio */
+        AudioPermission perm = new AudioPermission("record", null);
+        perm.checkGuard(null);
+
+        if (isOpen()) {
+            throw new IllegalStateException("already open");
+        }
+        super.open(format, bufferSize);
+
+        /* initialize all the member variables */
+        framesSinceOpen = 0;
+        fragmentBuffer = null;
+        flushed = false;
+        drained = false;
+
+        /* add this open line to the mixer */
+        PulseAudioMixer parentMixer = PulseAudioMixer.getInstance();
+        parentMixer.addTargetLine(this);
+
+        Debug.println(DebugLevel.Verbose, "PulseAudioTargetDataLine.open(): "
+                + "Line opened");
+    }
+
+    @Override
+    synchronized public void open(AudioFormat format)
+            throws LineUnavailableException {
+        open(format, DEFAULT_BUFFER_SIZE);
+    }
+
+    @Override
+    protected void connectLine(int bufferSize, Stream masterStream)
+            throws LineUnavailableException {
+        int fragmentSize = bufferSize / 10 > 500 ? bufferSize / 10 : 500;
+        StreamBufferAttributes bufferAttributes = new StreamBufferAttributes(
+                bufferSize, 0, 0, 0, fragmentSize);
+        synchronized (eventLoop.threadLock) {
+            stream.connectForRecording(Stream.DEFAULT_DEVICE, bufferAttributes);
+        }
+    }
+
+    @Override
+    public int read(byte[] data, int offset, int length) {
+
+        /* check state and inputs */
+
+        if (!isOpen()) {
+            // A closed line can produce zero bytes of data.
+            return 0;
+        }
+
+        int frameSize = currentFormat.getFrameSize();
+
+        if (length % frameSize != 0) {
+            throw new IllegalArgumentException(
+                    "amount of data to read does not represent an integral number of frames");
+        }
+
+        if (length < 0) {
+            throw new IllegalArgumentException("length is negative");
+        }
+        
+        if ( offset < 0 || offset > data.length - length) {
+            throw new ArrayIndexOutOfBoundsException("array size: " + data.length
+                    + " offset:" + offset + " length:" + length );
+        }
+
+        /* everything ok */
+
+        int position = offset;
+        int remainingLength = length;
+        int sizeRead = 0;
+
+        /* bytes read on each iteration of loop */
+        int bytesRead;
+
+        flushed = false;
+        drained = false;
+
+        /*
+         * to read, we first take stuff from the fragmentBuffer
+         */
+
+        /* on first read() of the line, fragmentBuffer is null */
+        if (fragmentBuffer != null) {
+            synchronized (this) {
+
+                boolean fragmentBufferSmaller = fragmentBuffer.length < length;
+                int smallerBufferLength = Math.min(fragmentBuffer.length,
+                        length);
+                System.arraycopy(fragmentBuffer, 0, data, position,
+                        smallerBufferLength);
+                framesSinceOpen += smallerBufferLength
+                        / currentFormat.getFrameSize();
+
+                if (!fragmentBufferSmaller) {
+                    /*
+                     * if fragment was larger, then we already have all the data
+                     * we need. clean up the buffer before returning. Make a new
+                     * fragmentBuffer from the remaining bytes
+                     */
+                    int remainingBytesInFragment = (fragmentBuffer.length - length);
+                    byte[] newFragmentBuffer = new byte[remainingBytesInFragment];
+                    System.arraycopy(fragmentBuffer, length, newFragmentBuffer,
+                            0, newFragmentBuffer.length);
+                    fragmentBuffer = newFragmentBuffer;
+                    return length;
+                }
+
+                /* done with fragment buffer, remove it */
+                bytesRead = smallerBufferLength;
+                sizeRead += bytesRead;
+                position += bytesRead;
+                remainingLength -= bytesRead;
+                fragmentBuffer = null;
+
+            }
+        }
+
+        /*
+         * if we need to read more data, then we read from PulseAudio's buffer
+         */
+        while (remainingLength != 0) {
+            synchronized (this) {
+
+                if (!isOpen() || !isStarted) {
+                    return sizeRead;
+                }
+
+                if (flushed) {
+                    flushed = false;
+                    return sizeRead;
+                }
+
+                if (drained) {
+                    drained = false;
+                    return sizeRead;
+                }
+
+                byte[] currentFragment;
+                synchronized (eventLoop.threadLock) {
+
+                    /* read a fragment, and drop it from the server */
+                    currentFragment = stream.peek();
+
+                    stream.drop();
+                    if (currentFragment == null) {
+                        Debug.println(DebugLevel.Verbose,
+                                "PulseAudioTargetDataLine.read(): "
+                                        + " error in stream.peek()");
+                        continue;
+                    }
+
+                    bytesRead = Math.min(currentFragment.length,
+                            remainingLength);
+
+                    /*
+                     * we read more than we required, save the rest of the data
+                     * in the fragmentBuffer
+                     */
+                    if (bytesRead < currentFragment.length) {
+                        /* allocate a buffer to store unsaved data */
+                        fragmentBuffer = new byte[currentFragment.length
+                                - bytesRead];
+
+                        /* copy over the unsaved data */
+                        System.arraycopy(currentFragment, bytesRead,
+                                fragmentBuffer, 0, currentFragment.length
+                                        - bytesRead);
+                    }
+
+                    System.arraycopy(currentFragment, 0, data, position,
+                            bytesRead);
+
+                    sizeRead += bytesRead;
+                    position += bytesRead;
+                    remainingLength -= bytesRead;
+                    framesSinceOpen += bytesRead / currentFormat.getFrameSize();
+                }
+            }
+        }
+
+        // all the data should have been played by now
+        assert (sizeRead == length);
+
+        return sizeRead;
+
+    }
+
+    @Override
+    public void drain() {
+
+        // blocks when there is data on the line
+        // http://www.jsresources.org/faq_audio.html#stop_drain_tdl
+        while (true) {
+            synchronized (this) {
+                if (!isStarted || !isOpen()) {
+                    break;
+                }
+            }
+            try {
+                //TODO: Is this the best length of sleep?
+                //Maybe in case this loop runs for a long time
+                //it would be good to switch to a longer
+                //sleep.  Like bump it up each iteration after
+                //the Nth iteration, up to a MAXSLEEP length.
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                // do nothing
+            }
+        }
+
+        synchronized (this) {
+            drained = true;
+        }
+
+    }
+
+    @Override
+    public void flush() {
+        if (isOpen()) {
+
+            /* flush the buffer on pulseaudio's side */
+            Operation operation;
+            synchronized (eventLoop.threadLock) {
+                operation = stream.flush();
+            }
+            operation.waitForCompletion();
+            operation.releaseReference();
+        }
+
+        synchronized (this) {
+            flushed = true;
+            /* flush the partial fragment we stored */
+            fragmentBuffer = null;
+        }
+    }
+
+    @Override
+    public int available() {
+        if (!isOpen()) {
+            // a closed line has 0 bytes available.
+            return 0;
+        }
+
+        synchronized (eventLoop.threadLock) {
+            return stream.getReableSize();
+        }
+    }
+
+    @Override
+    public int getFramePosition() {
+        return (int) framesSinceOpen;
+    }
+
+    @Override
+    public long getLongFramePosition() {
+        return framesSinceOpen;
+    }
+
+    @Override
+    public long getMicrosecondPosition() {
+        return (long) (framesSinceOpen / currentFormat.getFrameRate());
+    }
+
+    /*
+     * A TargetData starts when we ask it to and continues playing until we ask
+     * it to stop. There are no buffer underruns/overflows or anything so we
+     * will just fire the LineEvents manually
+     */
+
+    @Override
+    synchronized public void start() {
+        super.start();
+
+        fireLineEvent(new LineEvent(this, LineEvent.Type.START, framesSinceOpen));
+    }
+
+    @Override
+    synchronized public void stop() {
+        super.stop();
+
+        fireLineEvent(new LineEvent(this, LineEvent.Type.STOP, framesSinceOpen));
+    }
+
+    @Override
+    public Line.Info getLineInfo() {
+        return new DataLine.Info(TargetDataLine.class, supportedFormats,
+                StreamBufferAttributes.MIN_VALUE,
+                StreamBufferAttributes.MAX_VALUE);
+    }
 
 }

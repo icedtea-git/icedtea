@@ -48,77 +48,77 @@ import javax.sound.sampled.Control.Type;
 
 abstract class PulseAudioLine implements Line {
 
-	protected List<LineListener> lineListeners = new ArrayList<LineListener>();
-	protected List<Control> controls = new ArrayList<Control>();
+    protected List<LineListener> lineListeners = new ArrayList<LineListener>();
+    protected List<Control> controls = new ArrayList<Control>();
 
-	// true between open() and close(). ie represents when a line has acquire
-	// resources
-	protected boolean isOpen = false;
+    // true between open() and close(). ie represents when a line has acquire
+    // resources
+    protected boolean isOpen = false;
 
-	@Override
-	public void addLineListener(LineListener listener) {
-		this.lineListeners.add(listener);
-	}
+    @Override
+    public void addLineListener(LineListener listener) {
+        this.lineListeners.add(listener);
+    }
 
-	@Override
-	public void close() {
-		if (!isOpen()) {
-			throw new IllegalStateException("Line is not open");
-		}
+    @Override
+    public void close() {
+        if (!isOpen()) {
+            throw new IllegalStateException("Line is not open");
+        }
 
-		lineListeners.clear();
+        lineListeners.clear();
 
-		isOpen = false;
-	}
+        isOpen = false;
+    }
 
-	protected void fireLineEvent(LineEvent e) {
-		for (LineListener lineListener : lineListeners) {
-			lineListener.update(e);
-		}
-	}
+    protected void fireLineEvent(LineEvent e) {
+        for (LineListener lineListener : lineListeners) {
+            lineListener.update(e);
+        }
+    }
 
-	@Override
-	public Control getControl(Type control) {
-		if (isOpen()) {
-			for (Control aControl : controls) {
-				if (aControl.getType() == control) {
-					return aControl;
-				}
-			}
-		}
-		throw new IllegalArgumentException(control.toString()
-				+ " not supported");
-	}
+    @Override
+    public Control getControl(Type control) {
+        if (isOpen()) {
+            for (Control aControl : controls) {
+                if (aControl.getType() == control) {
+                    return aControl;
+                }
+            }
+        }
+        throw new IllegalArgumentException(control.toString()
+                + " not supported");
+    }
 
-	@Override
-	public Control[] getControls() {
-		if (!isOpen()) {
-			return new Control[] {};
-		}
+    @Override
+    public Control[] getControls() {
+        if (!isOpen()) {
+            return new Control[] {};
+        }
 
-		return (Control[]) controls.toArray(new Control[0]);
-	}
+        return (Control[]) controls.toArray(new Control[0]);
+    }
 
-	@Override
-	public boolean isControlSupported(Type control) {
-		for (Control myControl : controls) {
-			//Control.Type's known descendants keep a set of
-			//static Types.
-			if (myControl.getType().equals(control)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean isControlSupported(Type control) {
+        for (Control myControl : controls) {
+            //Control.Type's known descendants keep a set of
+            //static Types.
+            if (myControl.getType().equals(control)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	@Override
-	public boolean isOpen() {
-		return isOpen;
-	}
+    @Override
+    public boolean isOpen() {
+        return isOpen;
+    }
 
-	@Override
-	public void removeLineListener(LineListener listener) {
-		lineListeners.remove(listener);
-	}
+    @Override
+    public void removeLineListener(LineListener listener) {
+        lineListeners.remove(listener);
+    }
 
 }

@@ -1,5 +1,9 @@
 2011-06-10  Denis Lila  <dlila@redhat.com>
 
+	* pulseaudio/*: Fix whitespace.
+
+2011-06-10  Denis Lila  <dlila@redhat.com>
+
 	* Makefile.am
 	(stamps/pulse-java-headers.stamp): Prepend the java build directory
 	to the boot class path to avoid generating headers for the system

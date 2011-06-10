@@ -9,23 +9,23 @@ import java.security.PrivilegedAction;
  */
 final class SecurityWrapper {
 
-	static void loadNativeLibrary() {
+    static void loadNativeLibrary() {
 
-		if (System.getSecurityManager() != null) {
-			PrivilegedAction<Boolean> action = new PrivilegedAction<Boolean>() {
-				@Override
-				public Boolean run() {
-					System.loadLibrary("pulse-java");
-					return true;
-				}
+        if (System.getSecurityManager() != null) {
+            PrivilegedAction<Boolean> action = new PrivilegedAction<Boolean>() {
+                @Override
+                public Boolean run() {
+                    System.loadLibrary("pulse-java");
+                    return true;
+                }
 
-			};
+            };
 
-			AccessController.doPrivileged(action);
+            AccessController.doPrivileged(action);
 
-		} else {
-			System.loadLibrary("pulse-java");
-		}
+        } else {
+            System.loadLibrary("pulse-java");
+        }
 
-	}
+    }
 }

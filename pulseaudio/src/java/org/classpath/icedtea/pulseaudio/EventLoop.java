@@ -52,231 +52,231 @@ import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 
 final class EventLoop implements Runnable {
 
-	/*
-	 * any methods that can obstruct the behaviour of pa_mainloop should run
-	 * synchronized
-	 */
+    /*
+     * any methods that can obstruct the behaviour of pa_mainloop should run
+     * synchronized
+     */
 
-	/*
-	 * the threadLock object is the object used for synchronizing the
-	 * non-thread-safe operations of pulseaudio's c api
-	 */
-	final Object threadLock = new Object();
+    /*
+     * the threadLock object is the object used for synchronizing the
+     * non-thread-safe operations of pulseaudio's c api
+     */
+    final Object threadLock = new Object();
 
-	private static EventLoop instance = null;
+    private static EventLoop instance = null;
 
-	private List<ContextListener> contextListeners;
-	// private List<SourceDataLine> lines;
-	private String appName;
-	private String serverString;
+    private List<ContextListener> contextListeners;
+    // private List<SourceDataLine> lines;
+    private String appName;
+    private String serverString;
 
-	private int status;
-	// private boolean eventLoopIsRunning = false;
+    private int status;
+    // private boolean eventLoopIsRunning = false;
 
-	private List<String> targetPortNameList = new ArrayList<String>();
-	private List<String> sourcePortNameList = new ArrayList<String>();
+    private List<String> targetPortNameList = new ArrayList<String>();
+    private List<String> sourcePortNameList = new ArrayList<String>();
 
-	/*
-	 * JNI stuff
-	 * 
-	 * Do not synchronize the individual functions, synchronize
-	 * block/method/lines around the call
-	 */
+    /*
+     * JNI stuff
+     * 
+     * Do not synchronize the individual functions, synchronize
+     * block/method/lines around the call
+     */
 
-	private native void native_setup(String appName, String server);
+    private native void native_setup(String appName, String server);
 
-	private native int native_iterate(int timeout);
+    private native int native_iterate(int timeout);
 
-	private native void native_shutdown();
+    private native void native_shutdown();
 
-	private native void native_set_sink_volume(byte[] streamPointer, int volume);
+    private native void native_set_sink_volume(byte[] streamPointer, int volume);
 
-	/*
-	 * These fields hold pointers
-	 */
-	private byte[] contextPointer;
-	private byte[] mainloopPointer;
+    /*
+     * These fields hold pointers
+     */
+    private byte[] contextPointer;
+    private byte[] mainloopPointer;
 
-	/*
-	 * 
-	 */
+    /*
+     * 
+     */
 
-	static {
-		SecurityWrapper.loadNativeLibrary();
-	}
+    static {
+        SecurityWrapper.loadNativeLibrary();
+    }
 
-	private EventLoop() {
-		contextListeners = new ArrayList<ContextListener>();
-	}
+    private EventLoop() {
+        contextListeners = new ArrayList<ContextListener>();
+    }
 
-	synchronized static EventLoop getEventLoop() {
-		if (instance == null) {
-			instance = new EventLoop();
-		}
-		return instance;
-	}
+    synchronized static EventLoop getEventLoop() {
+        if (instance == null) {
+            instance = new EventLoop();
+        }
+        return instance;
+    }
 
-	void setAppName(String appName) {
-		this.appName = appName;
-	}
+    void setAppName(String appName) {
+        this.appName = appName;
+    }
 
-	void setServer(String serverString) {
-		this.serverString = serverString;
-	}
+    void setServer(String serverString) {
+        this.serverString = serverString;
+    }
 
-	@Override
-	public void run() {
-		native_setup(this.appName, this.serverString);
+    @Override
+    public void run() {
+        native_setup(this.appName, this.serverString);
 
-		Debug.println(DebugLevel.Info, "Eventloop.run(): eventloop starting");
+        Debug.println(DebugLevel.Info, "Eventloop.run(): eventloop starting");
 
-		/*
-		 * Perhaps this loop should be written in C doing a Java to C call on
-		 * every iteration of the loop might be slow
-		 */
-		while (true) {
-			synchronized (threadLock) {
-				// timeout is in milliseconds
-				// timout = 0 means dont block
-				native_iterate(100);
+        /*
+         * Perhaps this loop should be written in C doing a Java to C call on
+         * every iteration of the loop might be slow
+         */
+        while (true) {
+            synchronized (threadLock) {
+                // timeout is in milliseconds
+                // timout = 0 means dont block
+                native_iterate(100);
 
-				if (Thread.interrupted()) {
-					native_shutdown();
+                if (Thread.interrupted()) {
+                    native_shutdown();
 
-					// clean up the listeners
-					synchronized (contextListeners) {
-						contextListeners.clear();
-					}
+                    // clean up the listeners
+                    synchronized (contextListeners) {
+                        contextListeners.clear();
+                    }
 
-					Debug.println(DebugLevel.Info,
-							"EventLoop.run(): event loop terminated");
+                    Debug.println(DebugLevel.Info,
+                            "EventLoop.run(): event loop terminated");
 
-					return;
+                    return;
 
-				}
-			}
-		}
+                }
+            }
+        }
 
-	}
+    }
 
-	void addContextListener(ContextListener contextListener) {
-		synchronized (contextListeners) {
-			contextListeners.add(contextListener);
-		}
-	}
+    void addContextListener(ContextListener contextListener) {
+        synchronized (contextListeners) {
+            contextListeners.add(contextListener);
+        }
+    }
 
-	void removeContextListener(ContextListener contextListener) {
-		synchronized (contextListeners) {
-			contextListeners.remove(contextListener);
-		}
-	}
+    void removeContextListener(ContextListener contextListener) {
+        synchronized (contextListeners) {
+            contextListeners.remove(contextListener);
+        }
+    }
 
-	int getStatus() {
-		return this.status;
-	}
+    int getStatus() {
+        return this.status;
+    }
 
-	void update(int status) {
-		synchronized (threadLock) {
-			// System.out.println(this.getClass().getName()
-			// + ".update() called! status = " + status);
-			this.status = status;
-			switch (status) {
-			case 0:
-				fireEvent(new ContextEvent(Type.UNCONNECTED));
-				break;
-			case 1:
-				fireEvent(new ContextEvent(Type.CONNECTING));
-				break;
-			case 2:
-				// no op
-				break;
-			case 3:
-				// no op
-				break;
-			case 4:
-				fireEvent(new ContextEvent(Type.READY));
-				break;
-			case 5:
-				fireEvent(new ContextEvent(Type.FAILED));
-				Debug.println(DebugLevel.Warning,
-						"EventLoop.update(): Context failed");
-				break;
-			case 6:
-				fireEvent(new ContextEvent(Type.TERMINATED));
-				break;
-			default:
+    void update(int status) {
+        synchronized (threadLock) {
+            // System.out.println(this.getClass().getName()
+            // + ".update() called! status = " + status);
+            this.status = status;
+            switch (status) {
+            case 0:
+                fireEvent(new ContextEvent(Type.UNCONNECTED));
+                break;
+            case 1:
+                fireEvent(new ContextEvent(Type.CONNECTING));
+                break;
+            case 2:
+                // no op
+                break;
+            case 3:
+                // no op
+                break;
+            case 4:
+                fireEvent(new ContextEvent(Type.READY));
+                break;
+            case 5:
+                fireEvent(new ContextEvent(Type.FAILED));
+                Debug.println(DebugLevel.Warning,
+                        "EventLoop.update(): Context failed");
+                break;
+            case 6:
+                fireEvent(new ContextEvent(Type.TERMINATED));
+                break;
+            default:
 
-			}
-		}
-	}
+            }
+        }
+    }
 
-	private void fireEvent(final ContextEvent e) {
-		// System.out.println(this.getClass().getName() + "firing event: "
-		// + e.getType().toString());
+    private void fireEvent(final ContextEvent e) {
+        // System.out.println(this.getClass().getName() + "firing event: "
+        // + e.getType().toString());
 
-		synchronized (contextListeners) {
-			// System.out.println(contextListeners.size());
-			for (ContextListener listener : contextListeners) {
-				listener.update(e);
-			}
-		}
+        synchronized (contextListeners) {
+            // System.out.println(contextListeners.size());
+            for (ContextListener listener : contextListeners) {
+                listener.update(e);
+            }
+        }
 
-	}
+    }
 
-	void setVolume(byte[] streamPointer, int volume) {
-		synchronized (threadLock) {
-			native_set_sink_volume(streamPointer, volume);
-		}
-	}
+    void setVolume(byte[] streamPointer, int volume) {
+        synchronized (threadLock) {
+            native_set_sink_volume(streamPointer, volume);
+        }
+    }
 
-	byte[] getContextPointer() {
-		return contextPointer;
-	}
+    byte[] getContextPointer() {
+        return contextPointer;
+    }
 
-	byte[] getMainLoopPointer() {
-		return mainloopPointer;
-	}
+    byte[] getMainLoopPointer() {
+        return mainloopPointer;
+    }
 
-	private native byte[] nativeUpdateTargetPortNameList();
+    private native byte[] nativeUpdateTargetPortNameList();
 
-	private native byte[] nativeUpdateSourcePortNameList();
+    private native byte[] nativeUpdateSourcePortNameList();
 
-	synchronized List<String> updateTargetPortNameList() {
-		targetPortNameList = new ArrayList<String>();
-		Operation op;
-		synchronized (this.threadLock) {
-			op = new Operation(nativeUpdateTargetPortNameList());
-		}
+    synchronized List<String> updateTargetPortNameList() {
+        targetPortNameList = new ArrayList<String>();
+        Operation op;
+        synchronized (this.threadLock) {
+            op = new Operation(nativeUpdateTargetPortNameList());
+        }
 
-		op.waitForCompletion();
+        op.waitForCompletion();
 
-		assert (op.getState() == Operation.State.Done);
+        assert (op.getState() == Operation.State.Done);
 
-		op.releaseReference();
-		return targetPortNameList;
-	}
+        op.releaseReference();
+        return targetPortNameList;
+    }
 
-	protected synchronized List<String> updateSourcePortNameList() {
-		sourcePortNameList = new ArrayList<String>();
-		Operation op;
-		synchronized (this.threadLock) {
-			op = new Operation(nativeUpdateSourcePortNameList());
-		}
+    protected synchronized List<String> updateSourcePortNameList() {
+        sourcePortNameList = new ArrayList<String>();
+        Operation op;
+        synchronized (this.threadLock) {
+            op = new Operation(nativeUpdateSourcePortNameList());
+        }
 
-		op.waitForCompletion();
+        op.waitForCompletion();
 
-		assert (op.getState() == Operation.State.Done);
+        assert (op.getState() == Operation.State.Done);
 
-		op.releaseReference();
-		return sourcePortNameList;
-	}
+        op.releaseReference();
+        return sourcePortNameList;
+    }
 
-	public void source_callback(String name) {
-		sourcePortNameList.add(name);
-	}
+    public void source_callback(String name) {
+        sourcePortNameList.add(name);
+    }
 
-	public void sink_callback(String name) {
-		targetPortNameList.add(name);
-	}
+    public void sink_callback(String name) {
+        targetPortNameList.add(name);
+    }
 
 }

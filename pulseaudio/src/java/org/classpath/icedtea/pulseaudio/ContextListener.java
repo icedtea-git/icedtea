@@ -45,6 +45,6 @@ package org.classpath.icedtea.pulseaudio;
 
 interface ContextListener {
 
-	void update(ContextEvent e);
+    void update(ContextEvent e);
 
 }

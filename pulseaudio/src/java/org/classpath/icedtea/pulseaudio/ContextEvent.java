@@ -47,22 +47,22 @@ package org.classpath.icedtea.pulseaudio;
 
 class ContextEvent {
 
-	/**
-	 *  Basically, what is the new state of the context
-	 * 
-	 */
-	public static enum Type {
-		UNCONNECTED, CONNECTING, AUTHORIZING, SETTING_NAME, READY, FAILED, TERMINATED
-	}
+    /**
+     *  Basically, what is the new state of the context
+     * 
+     */
+    public static enum Type {
+        UNCONNECTED, CONNECTING, AUTHORIZING, SETTING_NAME, READY, FAILED, TERMINATED
+    }
 
-	private Type type;
+    private Type type;
 
-	public ContextEvent(Type type) {
-		this.type = type;
-	}
+    public ContextEvent(Type type) {
+        this.type = type;
+    }
 
-	public Type getType() {
-		return type;
-	}
+    public Type getType() {
+        return type;
+    }
 
 }
