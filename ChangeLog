@@ -1,3 +1,10 @@
+2011-06-15  Denis Lila  <dlila@redhat.com>
+
+	* Makefile.am: Add back the -classpath option to javah in
+	building the pulse audio header files. The bootstrap javah
+	doesn't recognize -J-Xbootclasspath/p: so it couldn't find
+	the classfiles.
+
 2011-06-10  Denis Lila  <dlila@redhat.com>
 
 	* pulseaudio/*: Fix whitespace.

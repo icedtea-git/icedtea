@@ -1838,16 +1838,16 @@ stamps/pulse-java-jar.stamp: stamps/pulse-java-class.stamp
 
 stamps/pulse-java-headers.stamp: stamps/pulse-java-class.stamp
 	mkdir -p $(PULSE_JAVA_NATIVE_BUILDDIR)
-	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -J-Xbootclasspath/p:$(PULSE_JAVA_CLASS_DIR) \
-	  org.classpath.icedtea.pulseaudio.EventLoop ;
-	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -J-Xbootclasspath/p:$(PULSE_JAVA_CLASS_DIR) \
-	  org.classpath.icedtea.pulseaudio.Stream
-	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -J-Xbootclasspath/p:$(PULSE_JAVA_CLASS_DIR) \
-	  org.classpath.icedtea.pulseaudio.Operation
-	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -J-Xbootclasspath/p:$(PULSE_JAVA_CLASS_DIR) \
-	  org.classpath.icedtea.pulseaudio.PulseAudioSourcePort
-	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -J-Xbootclasspath/p:$(PULSE_JAVA_CLASS_DIR) \
-	  org.classpath.icedtea.pulseaudio.PulseAudioTargetPort
+	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
+	  -J-Xbootclasspath/p:$(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.EventLoop ; \
+	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
+	  -J-Xbootclasspath/p:$(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.Stream ; \
+	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
+	  -J-Xbootclasspath/p:$(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.Operation; \
+	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
+	  -J-Xbootclasspath/p:$(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.PulseAudioSourcePort ; \
+	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
+	  -J-Xbootclasspath/p:$(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.PulseAudioTargetPort ; \
 	mkdir -p stamps
 	touch $@
 
