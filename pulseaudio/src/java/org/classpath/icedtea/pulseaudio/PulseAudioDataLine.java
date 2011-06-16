@@ -185,11 +185,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
                                     PulseAudioDataLine.this,
                                     LineEvent.Type.CLOSE, framesSinceOpen)));
                         }
-                        synchronized (this) {
-                            this.notifyAll();
-                        }
                         semaphore.release();
-
                     }
                 }
             }
@@ -217,7 +213,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
                     fireLineEvent(new LineEvent(PulseAudioDataLine.this,
                             LineEvent.Type.START, framesSinceOpen));
                     synchronized (this) {
-                        this.notifyAll();
+                        PulseAudioDataLine.this.notifyAll();
                     }
                 }
                 dataWritten = true;

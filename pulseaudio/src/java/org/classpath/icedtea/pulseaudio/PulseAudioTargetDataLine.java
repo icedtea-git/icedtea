@@ -184,9 +184,8 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
          */
 
         /* on first read() of the line, fragmentBuffer is null */
-        if (fragmentBuffer != null) {
-            synchronized (this) {
-
+        synchronized (this) {
+            if (fragmentBuffer != null) {
                 boolean fragmentBufferSmaller = fragmentBuffer.length < length;
                 int smallerBufferLength = Math.min(fragmentBuffer.length,
                         length);
@@ -215,7 +214,6 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
                 position += bytesRead;
                 remainingLength -= bytesRead;
                 fragmentBuffer = null;
-
             }
         }
 
@@ -315,11 +313,10 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
         synchronized (this) {
             drained = true;
         }
-
     }
 
     @Override
-    public void flush() {
+    public synchronized void flush() {
         if (isOpen()) {
 
             /* flush the buffer on pulseaudio's side */
@@ -331,11 +328,9 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
             operation.releaseReference();
         }
 
-        synchronized (this) {
-            flushed = true;
-            /* flush the partial fragment we stored */
-            fragmentBuffer = null;
-        }
+        flushed = true;
+        /* flush the partial fragment we stored */
+        fragmentBuffer = null;
     }
 
     @Override
