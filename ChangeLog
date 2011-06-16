@@ -1,5 +1,15 @@
 2011-06-16  Denis Lila  <dlila@redhat.com>
 
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	(addStreamListeners): Remove this.notifyAll() from
+	openCloseListener.update; change this.notifyAll() to
+	PulseAudioDataLine.this.notifyAll() in startedListener.update.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(read): Put fragmentBuffer null check in the synchronized block.
+	(flush): Make it synchronized to avoid race condition with read().
+
+2011-06-16  Denis Lila  <dlila@redhat.com>
+
 	* Makefile.am: Add ContextEvent to the list of pulse audio classes that
 	need javah run on them.
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/ContextEvent.java
