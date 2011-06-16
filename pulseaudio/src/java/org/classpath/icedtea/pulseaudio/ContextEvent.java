@@ -37,32 +37,68 @@ exception statement from your version.
 
 package org.classpath.icedtea.pulseaudio;
 
+import java.util.Arrays;
+
 /**
  * This class encapsulates a change in the PulseAudio's connection context.
  * 
  * When this event is fired, something has happened to the connection of this
  * program to the PulseAudio server.
- * 
  */
-
 class ContextEvent {
-
+    // There are certain enumerations from pulse audio that we need to use in
+    // the java side. For all of these, we declare static longs in the proper
+    // java classes and we use static native methods to initialize them to
+    // the values used by pulse audio. This makes us immune to changes in
+    // the integer values of the enum symbols in pulse audio.
     /**
      *  Basically, what is the new state of the context
-     * 
+     *  These will be initialized to the proper values in the JNI.
      */
-    public static enum Type {
-        UNCONNECTED, CONNECTING, AUTHORIZING, SETTING_NAME, READY, FAILED, TERMINATED
+    static long UNCONNECTED  = -1,
+                CONNECTING   = -1,
+                AUTHORIZING  = -1,
+                SETTING_NAME = -1,
+                READY        = -1,
+                FAILED       = -1,
+                TERMINATED   = -1;
+
+    private static native void init_constants();
+
+    static {
+        SecurityWrapper.loadNativeLibrary();
+        init_constants();
     }
 
-    private Type type;
-
-    public ContextEvent(Type type) {
-        this.type = type;
+    /**
+     * Throws an IllegalStateException if value is not one of the above
+     * context events. We do this for all pulse audio enumerations that
+     * we need to use in the java side. If pulse audio decides to add
+     * new events/states, we need to add them to the classes. The exception
+     * will let us know.
+     * return the input if there is no error
+     *
+     * @param value is the context event to be checked against one of the known
+     *        events.
+     * @return value if it is a known event. Otherwise throw an exception.
+     */
+    public static long checkNativeEnumReturn(long value) {
+        if (!Arrays.asList(
+                UNCONNECTED, CONNECTING, AUTHORIZING, SETTING_NAME,
+                READY, FAILED, TERMINATED
+            ).contains(value)) {
+            throw new IllegalStateException("Illegal constant for ContextEvent: " + value);
+        }
+        return value;
     }
 
-    public Type getType() {
+    private long type;
+
+    public ContextEvent(long type) {
+        this.type = checkNativeEnumReturn(type);
+    }
+
+    public long getType() {
         return type;
     }
-
 }

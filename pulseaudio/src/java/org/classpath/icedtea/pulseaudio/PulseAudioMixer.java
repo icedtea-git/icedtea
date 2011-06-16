@@ -658,11 +658,11 @@ public final class PulseAudioMixer implements Mixer {
         ContextListener generalEventListener = new ContextListener() {
             @Override
             public void update(ContextEvent e) {
-                if (e.getType() == ContextEvent.Type.READY) {
+                if (e.getType() == ContextEvent.READY) {
                     fireEvent(new LineEvent(PulseAudioMixer.this,
                             LineEvent.Type.OPEN, AudioSystem.NOT_SPECIFIED));
-                } else if (e.getType() == ContextEvent.Type.FAILED
-                        || e.getType() == ContextEvent.Type.TERMINATED) {
+                } else if (e.getType() == ContextEvent.FAILED
+                        || e.getType() == ContextEvent.TERMINATED) {
                     fireEvent(new LineEvent(PulseAudioMixer.this,
                             LineEvent.Type.CLOSE, AudioSystem.NOT_SPECIFIED));
                 }
@@ -677,9 +677,9 @@ public final class PulseAudioMixer implements Mixer {
 
             @Override
             public void update(ContextEvent e) {
-                if (e.getType() == ContextEvent.Type.READY
-                        || e.getType() == ContextEvent.Type.FAILED
-                        || e.getType() == ContextEvent.Type.TERMINATED) {
+                if (e.getType() == ContextEvent.READY
+                        || e.getType() == ContextEvent.FAILED
+                        || e.getType() == ContextEvent.TERMINATED) {
                     ready.release();
                 }
             }
@@ -701,7 +701,7 @@ public final class PulseAudioMixer implements Mixer {
         try {
             // System.out.println("waiting...");
             ready.acquire();
-            if (eventLoop.getStatus() != 4) {
+            if (eventLoop.getStatus() != ContextEvent.READY) {
                 /*
                  * when exiting, wait for the thread to end otherwise we get one
                  * thread that inits the singleton with new data and the old
@@ -716,8 +716,7 @@ public final class PulseAudioMixer implements Mixer {
             eventLoop.removeContextListener(initListener);
             // System.out.println("got signal");
         } catch (InterruptedException e) {
-            System.out
-                    .println("PulseAudioMixer: got interrupted while waiting for the EventLoop to initialize");
+            System.out.println("PulseAudioMixer: got interrupted while waiting for the EventLoop to initialize");
         }
 
         // System.out.println(this.getClass().getName() + ": ready");

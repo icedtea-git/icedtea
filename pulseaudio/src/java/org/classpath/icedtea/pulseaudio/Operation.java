@@ -37,6 +37,8 @@ exception statement from your version.
 
 package org.classpath.icedtea.pulseaudio;
 
+import java.util.Arrays;
+
 /**
  * Encapsulates a pa_operation object
  * 
@@ -57,19 +59,33 @@ class Operation {
     private byte[] operationPointer;
     private EventLoop eventLoop;
 
-    public enum State {
-        Running, Done, Cancelled,
-    }
+    // These should never be written to in java. They will be initialized
+    // properly in native code.
+    public static long RUNNING   = -1,
+                       DONE      = -1,
+                       CANCELLED = -1;
+
+    private static native void init_constants();
 
     static {
         SecurityWrapper.loadNativeLibrary();
+        init_constants();
+    }
+
+    // If value is not one of RUNNING, DONE, CANCELLED, throw an
+    // IllegalStateException. Otherwise return the input.
+    private static long checkNativeOperationState(long value) {
+        if (!Arrays.asList(RUNNING, DONE, CANCELLED).contains(value)) {
+            throw new IllegalStateException("Unknown operation state: " + value);
+        }
+        return value;
     }
 
     private native void native_ref();
 
     private native void native_unref();
 
-    private native int native_get_state();
+    private native long native_get_state();
 
     Operation(byte[] operationPointer) {
         assert (operationPointer != null);
@@ -113,23 +129,11 @@ class Operation {
         return false;
     }
 
-    State getState() {
+    long getState() {
         assert (operationPointer != null);
-        int state;
         synchronized (eventLoop.threadLock) {
-            state = native_get_state();
+            return checkNativeOperationState(native_get_state());
         }
-        switch (state) {
-        case 0:
-            return State.Running;
-        case 1:
-            return State.Done;
-        case 2:
-            return State.Cancelled;
-        default:
-            throw new IllegalStateException("Invalid operation State");
-        }
-
     }
 
     /**
@@ -142,7 +146,7 @@ class Operation {
         boolean interrupted = false;
         do {
             synchronized (eventLoop.threadLock) {
-                if (getState() == Operation.State.Done) {
+                if (getState() == DONE) {
                     return;
                 }
                 try {
@@ -152,7 +156,7 @@ class Operation {
                     interrupted = true;
                 }
             }
-        } while (getState() != State.Done);
+        } while (getState() != DONE);
 
         // let the caller know about the interrupt
         if (interrupted) {
