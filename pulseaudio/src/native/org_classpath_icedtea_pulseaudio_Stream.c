@@ -240,8 +240,9 @@ static void stream_suspended_callback(pa_stream *stream, void *userdata) {
 
 }
 
-#define SET_STREAM_STATE_ENUM(env, clz, state_name) \
-    SET_JAVA_STATIC_LONG_FIELD_TO_PA_ENUM(env, clz, STREAM, state_name)
+// used to set stream flags and states.
+#define SET_STREAM_ENUM(env, clz, java_prefix, state_name) \
+    SET_JAVA_STATIC_LONG_FIELD_TO_PA_ENUM(env, clz, java_prefix, STREAM, state_name)
 
 /*
  * Class:     org_classpath_icedtea_pulseaudio_Stream
@@ -250,11 +251,33 @@ static void stream_suspended_callback(pa_stream *stream, void *userdata) {
  */
 JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_init_1constants
   (JNIEnv *env, jclass clz) {
-    SET_STREAM_STATE_ENUM(env, clz, UNCONNECTED);
-    SET_STREAM_STATE_ENUM(env, clz, CREATING);
-    SET_STREAM_STATE_ENUM(env, clz, READY);
-    SET_STREAM_STATE_ENUM(env, clz, FAILED);
-    SET_STREAM_STATE_ENUM(env, clz, TERMINATED);
+    // set states.
+    SET_STREAM_ENUM(env, clz, STATE, UNCONNECTED);
+    SET_STREAM_ENUM(env, clz, STATE, CREATING);
+    SET_STREAM_ENUM(env, clz, STATE, READY);
+    SET_STREAM_ENUM(env, clz, STATE, FAILED);
+    SET_STREAM_ENUM(env, clz, STATE, TERMINATED);
+
+    // set flags.
+    SET_STREAM_ENUM(env, clz, FLAG, NOFLAGS);
+    SET_STREAM_ENUM(env, clz, FLAG, START_CORKED);
+    SET_STREAM_ENUM(env, clz, FLAG, INTERPOLATE_TIMING);
+    SET_STREAM_ENUM(env, clz, FLAG, NOT_MONOTONIC);
+    SET_STREAM_ENUM(env, clz, FLAG, AUTO_TIMING_UPDATE);
+    SET_STREAM_ENUM(env, clz, FLAG, NO_REMAP_CHANNELS);
+    SET_STREAM_ENUM(env, clz, FLAG, NO_REMIX_CHANNELS);
+    SET_STREAM_ENUM(env, clz, FLAG, FIX_FORMAT);
+    SET_STREAM_ENUM(env, clz, FLAG, FIX_RATE);
+    SET_STREAM_ENUM(env, clz, FLAG, FIX_CHANNELS);
+    SET_STREAM_ENUM(env, clz, FLAG, DONT_MOVE);
+    SET_STREAM_ENUM(env, clz, FLAG, VARIABLE_RATE);
+    SET_STREAM_ENUM(env, clz, FLAG, PEAK_DETECT);
+    SET_STREAM_ENUM(env, clz, FLAG, START_MUTED);
+    SET_STREAM_ENUM(env, clz, FLAG, ADJUST_LATENCY);
+    SET_STREAM_ENUM(env, clz, FLAG, EARLY_REQUESTS);
+    SET_STREAM_ENUM(env, clz, FLAG, DONT_INHIBIT_AUTO_SUSPEND);
+    SET_STREAM_ENUM(env, clz, FLAG, START_UNMUTED);
+    SET_STREAM_ENUM(env, clz, FLAG, FAIL_ON_SUSPEND);
 }
 
 /*
@@ -440,9 +463,8 @@ JNIEXPORT jint JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1
 JNIEXPORT jint JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1connect_1playback
 (JNIEnv* env, jobject obj, jstring device, jint bufferMaxLength,
         jint bufferTargetLength, jint bufferPreBuffering,
-        jint bufferMinimumRequest, jint bufferFragmentSize, jint flags,
+        jint bufferMinimumRequest, jint bufferFragmentSize, jlong flags,
         jbyteArray volumePointer, jbyteArray sync_streamPointer) {
-
     pa_stream *sync_stream;
     if(sync_streamPointer != NULL) {
         sync_stream = convertJavaPointerToNative(env, sync_streamPointer);
@@ -462,14 +484,6 @@ JNIEXPORT jint JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1
     buffer_attr.prebuf = (uint32_t) bufferPreBuffering;
     buffer_attr.minreq = (uint32_t) bufferMinimumRequest;
 
-    /*
-     printf("buffer maxlength: %u\n", buffer_attr.maxlength);
-     printf("buffer tlength: %u\n", buffer_attr.tlength);
-     printf("buffer prebuf: %u\n", buffer_attr.prebuf);
-     printf("buffer minreq: %u\n", buffer_attr.minreq);
-     printf("buffer fragsize: %u\n", buffer_attr.fragsize);
-     */
-
     const char* dev = NULL;
     if (device != NULL) {
         dev = (*env)->GetStringUTFChars(env, device, NULL);
@@ -477,10 +491,9 @@ JNIEXPORT jint JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1
             return -1; // oome thrown
         }
     }
-    /* Set flags to 0 to fix problem with draining before calling start, might need to
-     be changed back to PA_STREAM_START_CORKED in the future, if we'll be able to implement
-     synchronization*/
-    int value = pa_stream_connect_playback(stream, dev, &buffer_attr, PA_STREAM_START_CORKED, NULL, sync_stream);
+
+    int value = pa_stream_connect_playback(stream, dev, &buffer_attr,
+            (pa_stream_flags_t) flags, NULL, sync_stream);
 
     if (dev != NULL) {
         (*env)->ReleaseStringUTFChars(env, device, dev);
@@ -497,7 +510,7 @@ JNIEXPORT jint JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1
 JNIEXPORT jint JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1connect_1record
 (JNIEnv* env, jobject obj, jstring device, jint bufferMaxLength,
         jint bufferTargetLength, jint bufferPreBuffereing,
-        jint bufferMinimumRequest, jint bufferFragmentSize, jint flags,
+        jint bufferMinimumRequest, jint bufferFragmentSize, jlong flags,
         jbyteArray volumePointer, jbyteArray sync_streamPointer) {
 
     pa_stream* stream = (pa_stream*)getJavaPointer(env, obj, STREAM_POINTER);
@@ -508,14 +521,6 @@ JNIEXPORT jint JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1
     buffer_attr.maxlength = (uint32_t) bufferMaxLength;
     buffer_attr.fragsize = (uint32_t) bufferFragmentSize;
 
-    /*
-     printf("buffer maxlength: %u\n", buffer_attr.maxlength);
-     printf("buffer tlength: %u\n", buffer_attr.tlength);
-     printf("buffer prebuf: %u\n", buffer_attr.prebuf);
-     printf("buffer minreq: %u\n", buffer_attr.minreq);
-     printf("buffer fragsize: %u\n", buffer_attr.fragsize);
-     */
-
     const char* dev = NULL;
     if (device != NULL) {
         dev = (*env)->GetStringUTFChars(env, device, NULL);
@@ -524,7 +529,8 @@ JNIEXPORT jint JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1
         }
     }
 
-    int value = pa_stream_connect_record(stream, dev, &buffer_attr, flags);
+    int value = pa_stream_connect_record(stream, dev, &buffer_attr,
+                                         (pa_stream_flags_t) flags);
 
     if (dev != NULL) {
         (*env)->ReleaseStringUTFChars(env, device, dev);

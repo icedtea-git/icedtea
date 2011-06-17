@@ -170,7 +170,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
                      * the listener is guaranteed to have run
                      */
 
-                    if (stream.getState() == Stream.READY) {
+                    if (stream.getState() == Stream.STATE_READY) {
                         if (sendEvents) {
                             fireLineEvent(new LineEvent(
                                     PulseAudioDataLine.this,
@@ -178,8 +178,8 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
                         }
                         semaphore.release();
 
-                    } else if (stream.getState() == Stream.TERMINATED
-                            || stream.getState() == Stream.FAILED) {
+                    } else if (stream.getState() == Stream.STATE_TERMINATED
+                            || stream.getState() == Stream.STATE_FAILED) {
                         if (sendEvents) {
                             fireLineEvent((new LineEvent(
                                     PulseAudioDataLine.this,
@@ -273,7 +273,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
         try {
             semaphore.acquire();
             synchronized (eventLoop.threadLock) {
-                if (stream.getState() != Stream.READY) {
+                if (stream.getState() != Stream.STATE_READY) {
                     stream.disconnect();
                     stream.free();
                     throw new LineUnavailableException(

@@ -1,3 +1,35 @@
+2011-06-17  Denis Lila  <dlila@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java
+	(FLAG_NOFLAGS, FLAG_START_CORKED, FLAG_INTERPOLATE_TIMING,
+	 FLAG_NOT_MONOTONIC, FLAG_AUTO_TIMING_UPDATE, FLAG_NO_REMAP_CHANNELS,
+	 FLAG_NO_REMIX_CHANNELS, FLAG_FIX_FORMAT, FLAG_FIX_RATE,
+	 FLAG_FIX_CHANNELS, FLAG_DONT_MOVE, FLAG_VARIABLE_RATE, FLAG_PEAK_DETECT,
+	 FLAG_START_MUTED, FLAG_ADJUST_LATENCY, FLAG_EARLY_REQUESTS,
+	 FLAG_DONT_INHIBIT_AUTO_SUSPEND, FLAG_START_UNMUTED, FLAG_FAIL_ON_SUSPEND):
+	New static long variables mirroring pa_stream_flag_t values.
+	(STATE_UNCONNECTED, STATE_CREATING, STATE_READY, STATE_FAILED,
+	 STATE_TERMINATED): Add the STATE_ prefix to distinguish them from
+	the flag variables.
+	(native_pa_stream_connect_playback, native_pa_stream_connect_record):
+	Change flags parameter to long.
+	(connectForPlayback, connectForRecording): Start the stream corked.
+	Change formatting to make it more readable.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(SET_STREAM_ENUM): Renamed from SET_STREAM_STATE_ENUM, since the
+	macro could have been used for any PA_STREAM constants, not just
+	stream states (and indeed, we now use it for flag constants too).
+	(Java_org_classpath_icedtea_pulseaudio_Stream_init_1constants):
+	Initialize flag constants in addition to the stream states.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1connect_1playback):
+	Change flags parameter to jlong (from jint), remove commented out
+	dead code, remove obsolete comment, and start the stream with whatever
+	flags were passed in the flags parameter, instead of ignoring that
+	parameter and using PA_STREAM_START_CORKED.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1connect_1record):
+	Change flags parameter to jlong (from jint), remove commented out
+	dead code.
+
 2012-06-28  Omair Majid  <omajid@redhat.com>
 
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java

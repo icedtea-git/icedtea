@@ -46,11 +46,12 @@
  */
 
 // Sets the field with name field_name from jclass clz to pa_prefix_field_name.
-#define SET_JAVA_STATIC_LONG_FIELD_TO_PA_ENUM(env, clz, pa_prefix, field_name)    \
-    do {                                                                          \
-        jfieldID fid = (*env)->GetStaticFieldID(env, clz, #field_name, "J");      \
-        assert(fid);                                                              \
-        (*env)->SetStaticLongField(env, clz, fid, PA_##pa_prefix##_##field_name); \
+#define SET_JAVA_STATIC_LONG_FIELD_TO_PA_ENUM(env, clz, java_prefix, pa_prefix, name) \
+    do { \
+        char *java_full_name = #java_prefix #name; \
+        jfieldID fid = (*env)->GetStaticFieldID(env, clz, java_full_name, "J"); \
+        assert(fid); \
+        (*env)->SetStaticLongField(env, clz, fid, PA_##pa_prefix##_##name); \
     } while(0);
 
 typedef struct java_context_t {

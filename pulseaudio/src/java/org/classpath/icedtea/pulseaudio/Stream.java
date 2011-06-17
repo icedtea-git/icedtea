@@ -101,24 +101,45 @@ final class Stream {
 
     // see comments in ContextEvent.java and Operation.java
     // These are the possible stream states.
-    // TODO: perhaps we should do this for stream flags too.
-    public static long UNCONNECTED = -1,
-                       CREATING    = -1,
-                       READY       = -1,
-                       FAILED      = -1,
-                       TERMINATED  = -1;
-
-    private static native void init_constants();
+    public static long STATE_UNCONNECTED = -1,
+                       STATE_CREATING    = -1,
+                       STATE_READY       = -1,
+                       STATE_FAILED      = -1,
+                       STATE_TERMINATED  = -1;
 
     // Throw an IllegalStateException if value is not one of the possible
     // states. Otherwise return the input.
     public static long checkNativeStreamState(long value) {
-        if (!Arrays.asList(UNCONNECTED, CREATING, READY, FAILED, TERMINATED)
-                .contains(value)) {
+        if (!Arrays.asList(STATE_UNCONNECTED, STATE_CREATING,
+                STATE_READY, STATE_FAILED, STATE_TERMINATED
+            ).contains(value)) {
             throw new IllegalStateException("Illegal constant for ContextEvent: " + value);
         }
         return value;
     }
+
+    // These are stream flags.
+    public static long FLAG_NOFLAGS                   = -1,
+                       FLAG_START_CORKED              = -1,
+                       FLAG_INTERPOLATE_TIMING        = -1,
+                       FLAG_NOT_MONOTONIC             = -1,
+                       FLAG_AUTO_TIMING_UPDATE        = -1,
+                       FLAG_NO_REMAP_CHANNELS         = -1,
+                       FLAG_NO_REMIX_CHANNELS         = -1,
+                       FLAG_FIX_FORMAT                = -1,
+                       FLAG_FIX_RATE                  = -1,
+                       FLAG_FIX_CHANNELS              = -1,
+                       FLAG_DONT_MOVE                 = -1,
+                       FLAG_VARIABLE_RATE             = -1,
+                       FLAG_PEAK_DETECT               = -1,
+                       FLAG_START_MUTED               = -1,
+                       FLAG_ADJUST_LATENCY            = -1,
+                       FLAG_EARLY_REQUESTS            = -1,
+                       FLAG_DONT_INHIBIT_AUTO_SUSPEND = -1,
+                       FLAG_START_UNMUTED             = -1,
+                       FLAG_FAIL_ON_SUSPEND           = -1;
+
+    private static native void init_constants();
 
     // We don't change this to static longs like we did with all other pulse
     // audio enums mirrored in java because we never use the pulse audio
@@ -183,15 +204,15 @@ final class Stream {
     private native int native_pa_stream_connect_playback(String name,
             int bufferMaxLength, int bufferTargetLength,
             int bufferPreBuffering, int bufferMinimumRequest,
-            int bufferFragmentSize, int flags, byte[] volumePointer,
+            int bufferFragmentSize, long flags, byte[] volumePointer,
             byte[] sync_streamPointer);
 
     private native int native_pa_stream_connect_record(String name,
             int bufferMaxLength, int bufferTargetLength,
             int bufferPreBuffering, int bufferMinimumRequest,
-            int bufferFragmentSize, int flags, byte[] volumePointer,
+            int bufferFragmentSize, long flags, byte[] volumePointer,
             byte[] sync_streamPointer);
-
+    
     private native int native_pa_stream_disconnect();
 
     private native int native_pa_stream_write(byte[] data, int offset,
@@ -471,11 +492,15 @@ final class Stream {
             StreamBufferAttributes bufferAttributes, byte[] syncStreamPointer)
             throws LineUnavailableException {
 
-        int returnValue = native_pa_stream_connect_playback(deviceName,
-                bufferAttributes.getMaxLength(), bufferAttributes
-                        .getTargetLength(), bufferAttributes.getPreBuffering(),
-                bufferAttributes.getMinimumRequest(), bufferAttributes
-                        .getFragmentSize(), 0, null, syncStreamPointer);
+        int returnValue = native_pa_stream_connect_playback(
+                              deviceName,
+                              bufferAttributes.getMaxLength(),
+                              bufferAttributes.getTargetLength(),
+                              bufferAttributes.getPreBuffering(),
+                              bufferAttributes.getMinimumRequest(),
+                              bufferAttributes.getFragmentSize(),
+                              FLAG_START_CORKED, null, syncStreamPointer
+                          );
         if (returnValue < 0) {
             throw new LineUnavailableException(
                     "Unable To connect a line for playback");
@@ -492,11 +517,15 @@ final class Stream {
             StreamBufferAttributes bufferAttributes)
             throws LineUnavailableException {
 
-        int returnValue = native_pa_stream_connect_record(deviceName,
-                bufferAttributes.getMaxLength(), bufferAttributes
-                        .getTargetLength(), bufferAttributes.getPreBuffering(),
-                bufferAttributes.getMinimumRequest(), bufferAttributes
-                        .getFragmentSize(), 0, null, null);
+        int returnValue = native_pa_stream_connect_record(
+                              deviceName,
+                              bufferAttributes.getMaxLength(),
+                              bufferAttributes.getTargetLength(),
+                              bufferAttributes.getPreBuffering(),
+                              bufferAttributes.getMinimumRequest(),
+                              bufferAttributes.getFragmentSize(),
+                              FLAG_START_CORKED, null, null
+                          );
         if (returnValue < 0) {
             throw new LineUnavailableException(
                     "Unable to connect line for recording");

@@ -40,8 +40,10 @@
 #include "org_classpath_icedtea_pulseaudio_ContextEvent.h"
 #include "jni-common.h"
 
+// we don't prefix the java names with anything, so we leave the third argument
+// empty
 #define SET_CONTEXT_ENUM(env, clz, name) \
-    SET_JAVA_STATIC_LONG_FIELD_TO_PA_ENUM(env, clz, CONTEXT, name)
+    SET_JAVA_STATIC_LONG_FIELD_TO_PA_ENUM(env, clz, , CONTEXT, name)
 
 /*
  * Class:     org_classpath_icedtea_pulseaudio_ContextEvent
