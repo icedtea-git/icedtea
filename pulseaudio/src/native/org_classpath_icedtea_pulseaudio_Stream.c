@@ -254,8 +254,12 @@ static void buf_attr_changed_callback(pa_stream *stream, void *userdata) {
 }
 
 // used to set stream flags and states.
+// The names in Stream.java have a {STATE_,FLAG_} prefix, but we don't want to
+// add the underscore in every line in init_constants, so we add it here. If
+// constants with no prefix are ever introduced (i.e. java_prefix is "",
+// it's important to remove the ##_ )
 #define SET_STREAM_ENUM(env, clz, java_prefix, state_name) \
-    SET_JAVA_STATIC_LONG_FIELD_TO_PA_ENUM(env, clz, java_prefix, STREAM, state_name)
+    SET_JAVA_STATIC_LONG_FIELD_TO_PA_ENUM(env, clz, java_prefix##_, STREAM, state_name)
 
 /*
  * Class:     org_classpath_icedtea_pulseaudio_Stream
