@@ -1,3 +1,9 @@
+2011-06-20  Denis Lila  <dlila@redhat.com>
+
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(SET_STREAM_ENUM): Add an underscore after java_prefix so that
+	the produced string matches the names in Stream.java.
+
 2011-10-03  Xerxes Rånby  <xerxes@zafena.se>
 	    David Henningsson <david.henningsson@canonical.com>
 	    Matthias Klose <doko@ubuntu.com>
