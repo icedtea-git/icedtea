@@ -1,3 +1,25 @@
+2011-06-20  Denis Lila  <dlila@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	(bufferSize): Remove.
+	(getBufferSize): Return stream.getBufferSize().
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(connectLine): Improve formatting.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(connectLine): Set up flags to adjust the latency, if needed.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java
+	(bufAttr, bufAttrMutex): New members.
+	(setBufAttr, bufferAttrCallback): New methods. They both set bufAttr.
+	(getBufferSize): Return the current buffer size.
+	(connectForRecording): Add a flags argument to allow callers to chose the
+	flags.
+	(stateCallback): When the stream is ready, set the buffer attributes to
+	the actual ones used by the server.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(buf_attr_changed_callback): New function. 
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1new):
+	Set the buffer attribute callback.
+
 2011-06-16  Denis Lila  <dlila@redhat.com>
 
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java

@@ -169,7 +169,6 @@ static void update_timing_info_callback(pa_stream* stream, int success, void* us
 
 }
 
-
 // requires pulseaudio 0.9.11 :(
 static void stream_started_callback(pa_stream *stream, void *userdata) {
     // printf("stream_started_callback called\n");
@@ -238,6 +237,20 @@ static void stream_suspended_callback(pa_stream *stream, void *userdata) {
         callJavaVoidMethod(pulse_thread_env, context->obj, "suspendedCallback");
     }
 
+}
+
+static void buf_attr_changed_callback(pa_stream *stream, void *userdata) {
+    java_context* context = userdata;
+    assert(stream);
+    assert(context);
+    assert(context->env);
+    assert(context->obj);
+
+    if (pa_stream_get_state(stream) == PA_STREAM_CREATING) {
+        callJavaVoidMethod(context->env, context->obj, "bufferAttrCallback");
+    } else {
+        callJavaVoidMethod(pulse_thread_env, context->obj, "bufferAttrCallback");
+    }
 }
 
 // used to set stream flags and states.
@@ -355,7 +368,7 @@ JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1
     pa_stream_set_latency_update_callback (stream, stream_latency_update_callback, j_context);
     pa_stream_set_moved_callback (stream, stream_moved_callback, j_context);
     pa_stream_set_suspended_callback (stream, stream_suspended_callback, j_context);
-
+    pa_stream_set_buffer_attr_callback(stream, buf_attr_changed_callback, j_context);
 }
 
 /*

@@ -133,11 +133,42 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
     @Override
     protected void connectLine(int bufferSize, Stream masterStream)
             throws LineUnavailableException {
-        int fragmentSize = bufferSize / 10 > 500 ? bufferSize / 10 : 500;
-        StreamBufferAttributes bufferAttributes = new StreamBufferAttributes(
-                bufferSize, 0, 0, 0, fragmentSize);
+        int fs = currentFormat.getFrameSize();
+        float fr = currentFormat.getFrameRate();
+        int bps = (int)(fs*fr); // bytes per second.
+
+        // if 2 seconds' worth of data can fit in the buffer of the specified
+        // size, we don't have to adjust the latency. Otherwise we do, so as
+        // to avoid overruns.
+        long flags = Stream.FLAG_START_CORKED;
+        StreamBufferAttributes bufferAttributes;
+        if (bps*2 < bufferSize) {
+            // pulse audio completely ignores our fragmentSize attribute unless
+            // ADJUST_LATENCY is set, so we just leave it at -1.
+            bufferAttributes = new StreamBufferAttributes(bufferSize, -1, -1, -1, -1);
+        } else {
+            flags |= Stream.FLAG_ADJUST_LATENCY;
+            // in this case, the pulse audio docs:
+            // http://www.pulseaudio.org/wiki/LatencyControl
+            // say every field (including bufferSize) must be initialized
+            // to -1 except fragmentSize.
+            // XXX: but in my tests, it just sets it to about 4MB, which
+            // effectively makes it impossible to allocate a small buffer
+            // and nothing bad happens (yet) when you don't set it to -1
+            // so we just leave it at bufferSize.
+            // XXX: the java api has no way to specify latency, which probably
+            // means it should be as low as possible. Right now this method's
+            // primary concern is avoiding dropouts, and if the user-provided
+            // buffer size is large enough, we leave the latency up to pulse
+            // audio (which sets it to something extremely high - about 2
+            // seconds). We might want to always set a low latency.
+            int fragmentSize = bufferSize/2;
+            fragmentSize = Math.max((fragmentSize/fs)*fs, fs);
+            bufferAttributes = new StreamBufferAttributes(bufferSize, -1, -1, -1, fragmentSize);
+        }
+
         synchronized (eventLoop.threadLock) {
-            stream.connectForRecording(Stream.DEFAULT_DEVICE, bufferAttributes);
+            stream.connectForRecording(Stream.DEFAULT_DEVICE, flags, bufferAttributes);
         }
     }
 

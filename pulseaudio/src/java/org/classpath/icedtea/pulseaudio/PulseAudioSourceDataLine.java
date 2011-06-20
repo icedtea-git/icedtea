@@ -116,10 +116,13 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
     @Override
     protected void connectLine(int bufferSize, Stream masterStream)
             throws LineUnavailableException {
-        StreamBufferAttributes bufferAttributes = new StreamBufferAttributes(
-
-        bufferSize, bufferSize / 4, bufferSize / 8,
-                ((bufferSize / 10) > 100 ? bufferSize / 10 : 100), 0);
+        StreamBufferAttributes bufferAttributes =
+            new StreamBufferAttributes(
+                    bufferSize,
+                    bufferSize / 4,
+                    bufferSize / 8,
+                    Math.max(bufferSize / 10, 100),
+                    0);
 
         if (masterStream != null) {
             synchronized (eventLoop.threadLock) {

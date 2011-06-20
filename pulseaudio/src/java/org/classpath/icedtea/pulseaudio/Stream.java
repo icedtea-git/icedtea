@@ -173,6 +173,9 @@ final class Stream {
     private Format format;
     private float cachedVolume;
 
+    private StreamBufferAttributes bufAttr = new StreamBufferAttributes(0,0,0,0,0);
+    private static final Object bufAttrMutex = new Object();
+
     private List<StateListener> stateListeners;
     private List<WriteListener> writeListeners;
     private List<ReadListener> readListeners;
@@ -462,6 +465,23 @@ final class Stream {
         return native_pa_stream_get_device_index();
     }
 
+    private void setBufAttr() {
+        synchronized(bufAttrMutex) {
+            bufAttr = native_pa_stream_get_buffer_attr();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    private void bufferAttrCallback() {
+        setBufAttr();
+    }
+
+    int getBufferSize() {
+        synchronized (bufAttrMutex) {
+            return bufAttr.getMaxLength();
+        }
+    }
+
     /**
      * 
      * @return the name of the sink or source this stream is connected to in the
@@ -513,7 +533,7 @@ final class Stream {
      * @throws LineUnavailableException
      * 
      */
-    void connectForRecording(String deviceName,
+    void connectForRecording(String deviceName, long flags,
             StreamBufferAttributes bufferAttributes)
             throws LineUnavailableException {
 
@@ -524,7 +544,7 @@ final class Stream {
                               bufferAttributes.getPreBuffering(),
                               bufferAttributes.getMinimumRequest(),
                               bufferAttributes.getFragmentSize(),
-                              FLAG_START_CORKED, null, null
+                              flags, null, null
                           );
         if (returnValue < 0) {
             throw new LineUnavailableException(
@@ -608,6 +628,11 @@ final class Stream {
      */
     @SuppressWarnings("unused")
     private void stateCallback() {
+        synchronized(EventLoop.getEventLoop().threadLock) {
+            if (getState() == Stream.STATE_READY) {
+                setBufAttr();
+            }
+        }
         synchronized (stateListeners) {
             for (StateListener listener : stateListeners) {
                 listener.update();
