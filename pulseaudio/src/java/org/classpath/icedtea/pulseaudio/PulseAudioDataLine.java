@@ -74,7 +74,6 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
     protected AudioFormat defaultFormat = null;
     protected boolean sendEvents = true;
 
-    protected int bufferSize = 0;
     // the total number of frames played since this line was opened
     protected long framesSinceOpen = 0;
 
@@ -265,7 +264,6 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
             throw e;
 
         }
-        this.bufferSize = bufferSize;
         try {
             semaphore.acquire();
             synchronized (eventLoop.threadLock) {
@@ -442,7 +440,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
         if (!isOpen()) {
             return DEFAULT_BUFFER_SIZE;
         }
-        return bufferSize;
+        return stream.getBufferSize();
     }
 
     @Override
