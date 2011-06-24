@@ -1,3 +1,45 @@
+2011-06-24  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/rmi_amd64.patch:
+	Removed, upsteam (OpenJDK).
+	* patches/testenv.patch:
+	Removed, upstream (IcedTea forest).
+	* Makefile.am:
+	(OPENJDK_VERSION): Bumped to b143.
+	(CORBA_CHANGESET): Updated.
+	(HOTSPOT_CHANGESET): Likewise.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(JAXWS_DROP_ZIP): Likewise.
+	(JAXWS_DROP_SHA256SUM): Likewise.
+	(JAXP_DROP_ZIP): Likewise.
+	(JAXP_DROP_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Drop rmi_amd64 and testenv patch.
+	* generated/sun/nio/ch/SocketOptionRegistry.java:
+	Use version from latest build.
+	* patches/boot/ecj-autoboxing.patch,
+	* patches/boot/ecj-diamond.patch,
+	* patches/boot/ecj-multicatch.patch,
+	* patches/boot/ecj-trywithresources.patch:
+	Extended with new cases introduced since b136.
+	* patches/boot/jar.patch:
+	Recreated against b143.
+	* patches/boot/revert-6941137.patch:
+	Updated for b143.
+	* patches/boot/symbols.patch: Likewise.
+	* patches/libraries.patch: Likewise.
+	* patches/linker-libs-order.patch: Likewise.
+
 2011-06-06  Pavel Tisnovsky  <ptisnovs@redhat.com>
 
 	* Makefile.am:

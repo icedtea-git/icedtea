@@ -856,3 +856,73 @@ diff -r 1631a3dee8fc src/solaris/classes/sun/nio/fs/UnixFileStore.java
          } catch (IOException x) {
          }
          return result;
+diff -r d28f54a421b1 src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java
+--- openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	Mon Jun 13 15:58:42 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	Tue Jun 21 14:46:11 2011 +0100
+@@ -92,9 +92,13 @@
+         tabName = filename;
+         try {
+             lastModified = new File(tabName).lastModified();
+-            try (KeyTabInputStream kis =
+-                    new KeyTabInputStream(new FileInputStream(filename))) {
++            KeyTabInputStream kis = null;
++            try {
++                kis = new KeyTabInputStream(new FileInputStream(filename));
+                 load(kis);
++            } finally {
++                if (kis != null)
++                    kis.close();
+             }
+         } catch (FileNotFoundException e) {
+             entries.clear();
+@@ -439,9 +443,13 @@
+     public synchronized static KeyTab create(String name)
+         throws IOException, RealmException {
+ 
+-        try (KeyTabOutputStream kos =
+-                new KeyTabOutputStream(new FileOutputStream(name))) {
++        KeyTabOutputStream kos = null;
++        try {
++            kos = new KeyTabOutputStream(new FileOutputStream(name));
+             kos.writeVersion(KRB5_KT_VNO);
++        } finally {
++            if (kos != null)
++                kos.close();
+         }
+         return new KeyTab(name);
+     }
+@@ -450,12 +458,16 @@
+      * Saves the file at the directory.
+      */
+     public synchronized void save() throws IOException {
+-        try (KeyTabOutputStream kos =
+-                new KeyTabOutputStream(new FileOutputStream(tabName))) {
++        KeyTabOutputStream kos = null;
++        try {
++            kos = new KeyTabOutputStream(new FileOutputStream(tabName));
+             kos.writeVersion(kt_vno);
+             for (int i = 0; i < entries.size(); i++) {
+                 kos.writeEntry(entries.elementAt(i));
+             }
++        } finally {
++            if (kos != null)
++                kos.close();
+         }
+     }
+ 
+@@ -519,9 +531,13 @@
+      * @exception IOException.
+      */
+     public synchronized void createVersion(File file) throws IOException {
+-        try (KeyTabOutputStream kos =
+-                new KeyTabOutputStream(new FileOutputStream(file))) {
++        KeyTabOutputStream kos = null;
++        try {
++            kos = new KeyTabOutputStream(new FileOutputStream(file));
+             kos.write16(KRB5_KT_VNO);
++        } finally {
++            if (kos != null)
++                kos.close();
+         }
+     }
+ }

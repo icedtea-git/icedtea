@@ -261,3 +261,27 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/ToGeneric.java
  
          static private final String CLASS_PREFIX; // "java.lang.invoke.ToGeneric$"
          static {
+diff -r d28f54a421b1 src/share/classes/sun/invoke/util/ValueConversions.java
+--- openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	Mon Jun 13 15:58:42 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	Thu Jun 23 17:29:41 2011 +0100
+@@ -209,9 +209,9 @@
+         if (x instanceof Number) {
+             res = (Number) x;
+         } else if (x instanceof Boolean) {
+-            res = ((boolean)x ? 1 : 0);
++            res = ((Boolean)x ? 1 : 0);
+         } else if (x instanceof Character) {
+-            res = (int)(char)x;
++            res = (int)(Character)x;
+         } else {
+             // this will fail with the required ClassCastException:
+             res = (Number) x;
+@@ -371,7 +371,7 @@
+ 
+     static int unboxRawInteger(Object x) {
+         if (x instanceof Integer)
+-            return (int) x;
++            return (Integer) x;
+         else
+             return (int) unboxLong(x, false);
+     }

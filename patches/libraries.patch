@@ -1,7 +1,7 @@
 diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/sun/java/pack/Makefile
---- openjdk.orig/jdk/make/com/sun/java/pack/Makefile	2011-04-20 04:40:20.000000000 +0100
-+++ openjdk/jdk/make/com/sun/java/pack/Makefile	2011-04-21 09:00:44.681761082 +0100
-@@ -74,12 +74,10 @@
+--- openjdk.orig/jdk/make/com/sun/java/pack/Makefile	2011-06-11 00:38:06.000000000 +0100
++++ openjdk/jdk/make/com/sun/java/pack/Makefile	2011-06-13 15:12:16.465040427 +0100
+@@ -70,12 +70,10 @@
  	     $(ZIPOBJDIR)/inftrees.$(OBJECT_SUFFIX) \
  	     $(ZIPOBJDIR)/inffast.$(OBJECT_SUFFIX)
  
@@ -16,7 +16,7 @@ diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/
  endif
  
  CXXFLAGS_DBG += -DFULL
-@@ -98,12 +96,12 @@
+@@ -94,12 +92,12 @@
    RES = $(OBJDIR)/$(PGRM).res
  else
    LDOUTPUT = -o #Have a space 
@@ -32,9 +32,9 @@ diff -Nru openjdk.orig/jdk/make/com/sun/java/pack/Makefile openjdk/jdk/make/com/
  endif #LINUX
  endif #PLATFORM
 diff -Nru openjdk.orig/jdk/make/common/Program.gmk openjdk/jdk/make/common/Program.gmk
---- openjdk.orig/jdk/make/common/Program.gmk	2011-04-20 04:40:20.000000000 +0100
-+++ openjdk/jdk/make/common/Program.gmk	2011-04-21 09:02:42.995660993 +0100
-@@ -83,6 +83,7 @@
+--- openjdk.orig/jdk/make/common/Program.gmk	2011-06-11 00:38:06.000000000 +0100
++++ openjdk/jdk/make/common/Program.gmk	2011-06-13 15:12:16.465040427 +0100
+@@ -91,6 +91,7 @@
  	endif
      endif
      ifeq ($(PLATFORM), linux)
@@ -42,7 +42,7 @@ diff -Nru openjdk.orig/jdk/make/common/Program.gmk openjdk/jdk/make/common/Progr
  	LDFLAGS += $(LDFLAG_Z_ORIGIN)
  	LDFLAGS += -Wl,--allow-shlib-undefined
  	LDFLAGS += -Wl,-rpath -Wl,\$$ORIGIN/../lib/$(LIBARCH)/jli
-@@ -239,7 +240,6 @@
+@@ -247,7 +248,6 @@
  endif
  
  OTHER_INCLUDES += -I$(LAUNCHER_SHARE_SRC)/bin -I$(LAUNCHER_PLATFORM_SRC)/bin
@@ -51,8 +51,8 @@ diff -Nru openjdk.orig/jdk/make/common/Program.gmk openjdk/jdk/make/common/Progr
  OTHER_CPPFLAGS += -DPROGNAME='"$(PROGRAM)"'
  VERSION_DEFINES += -DFULL_VERSION='"$(FULL_VERSION)"'
 diff -Nru openjdk.orig/jdk/make/java/jli/Makefile openjdk/jdk/make/java/jli/Makefile
---- openjdk.orig/jdk/make/java/jli/Makefile	2011-04-20 04:40:20.000000000 +0100
-+++ openjdk/jdk/make/java/jli/Makefile	2011-04-21 09:00:44.681761082 +0100
+--- openjdk.orig/jdk/make/java/jli/Makefile	2011-06-11 00:38:06.000000000 +0100
++++ openjdk/jdk/make/java/jli/Makefile	2011-06-13 15:12:16.465040427 +0100
 @@ -44,7 +44,6 @@
  
  include $(BUILDDIR)/common/Defs.gmk
@@ -101,7 +101,7 @@ diff -Nru openjdk.orig/jdk/make/java/jli/Makefile openjdk/jdk/make/java/jli/Make
 +vpath %.c $(LAUNCHER_SHARE_SRC) $(LAUNCHER_PLATFORM_SRC)
 diff -Nru openjdk.orig/jdk/make/java/zip/FILES_c.gmk openjdk/jdk/make/java/zip/FILES_c.gmk
 --- openjdk.orig/jdk/make/java/zip/FILES_c.gmk	2010-07-29 21:55:27.000000000 +0100
-+++ openjdk/jdk/make/java/zip/FILES_c.gmk	2011-04-21 09:00:44.681761082 +0100
++++ openjdk/jdk/make/java/zip/FILES_c.gmk	2011-06-13 15:12:16.477040613 +0100
 @@ -29,16 +29,4 @@
  	Deflater.c \
  	Inflater.c \
@@ -121,9 +121,9 @@ diff -Nru openjdk.orig/jdk/make/java/zip/FILES_c.gmk openjdk/jdk/make/java/zip/F
 -	zutil.c 
 +	zip_util.c
 diff -Nru openjdk.orig/jdk/make/java/zip/Makefile openjdk/jdk/make/java/zip/Makefile
---- openjdk.orig/jdk/make/java/zip/Makefile	2011-04-20 04:40:20.000000000 +0100
-+++ openjdk/jdk/make/java/zip/Makefile	2011-04-21 09:00:44.697761341 +0100
-@@ -71,16 +71,10 @@
+--- openjdk.orig/jdk/make/java/zip/Makefile	2011-06-11 00:38:06.000000000 +0100
++++ openjdk/jdk/make/java/zip/Makefile	2011-06-13 15:12:16.477040613 +0100
+@@ -74,16 +74,10 @@
  CPPFLAGS += -UDEBUG 
  endif
  
@@ -143,7 +143,7 @@ diff -Nru openjdk.orig/jdk/make/java/zip/Makefile openjdk/jdk/make/java/zip/Make
 +OTHER_LDLIBS = $(JVMLIB) -lz
 diff -Nru openjdk.orig/jdk/make/sun/jpeg/FILES_c.gmk openjdk/jdk/make/sun/jpeg/FILES_c.gmk
 --- openjdk.orig/jdk/make/sun/jpeg/FILES_c.gmk	2010-07-29 21:55:29.000000000 +0100
-+++ openjdk/jdk/make/sun/jpeg/FILES_c.gmk	2011-04-21 09:00:44.697761341 +0100
++++ openjdk/jdk/make/sun/jpeg/FILES_c.gmk	2011-06-13 15:12:16.477040613 +0100
 @@ -25,51 +25,7 @@
  
  FILES_c = \
@@ -198,9 +198,9 @@ diff -Nru openjdk.orig/jdk/make/sun/jpeg/FILES_c.gmk openjdk/jdk/make/sun/jpeg/F
  ifndef OPENJDK
  FILES_c += \
 diff -Nru openjdk.orig/jdk/make/sun/jpeg/Makefile openjdk/jdk/make/sun/jpeg/Makefile
---- openjdk.orig/jdk/make/sun/jpeg/Makefile	2011-04-20 04:40:21.000000000 +0100
-+++ openjdk/jdk/make/sun/jpeg/Makefile	2011-04-21 09:00:44.697761341 +0100
-@@ -80,6 +80,8 @@
+--- openjdk.orig/jdk/make/sun/jpeg/Makefile	2011-06-11 00:38:07.000000000 +0100
++++ openjdk/jdk/make/sun/jpeg/Makefile	2011-06-13 15:12:16.477040613 +0100
+@@ -86,6 +86,8 @@
  include $(BUILDDIR)/common/Mapfile-vers.gmk
  include $(BUILDDIR)/common/Library.gmk
  
@@ -211,7 +211,7 @@ diff -Nru openjdk.orig/jdk/make/sun/jpeg/Makefile openjdk/jdk/make/sun/jpeg/Make
  #
 diff -Nru openjdk.orig/jdk/make/sun/splashscreen/FILES_c.gmk openjdk/jdk/make/sun/splashscreen/FILES_c.gmk
 --- openjdk.orig/jdk/make/sun/splashscreen/FILES_c.gmk	2010-07-29 21:55:29.000000000 +0100
-+++ openjdk/jdk/make/sun/splashscreen/FILES_c.gmk	2011-04-21 09:00:44.697761341 +0100
++++ openjdk/jdk/make/sun/splashscreen/FILES_c.gmk	2011-06-13 15:12:16.477040613 +0100
 @@ -30,79 +30,5 @@
  	splashscreen_impl.c \
  	splashscreen_jpeg.c \
@@ -294,8 +294,8 @@ diff -Nru openjdk.orig/jdk/make/sun/splashscreen/FILES_c.gmk openjdk/jdk/make/su
 +	splashscreen_sys.c
  
 diff -Nru openjdk.orig/jdk/make/sun/splashscreen/Makefile openjdk/jdk/make/sun/splashscreen/Makefile
---- openjdk.orig/jdk/make/sun/splashscreen/Makefile	2011-04-20 04:40:21.000000000 +0100
-+++ openjdk/jdk/make/sun/splashscreen/Makefile	2011-04-21 09:00:44.697761341 +0100
+--- openjdk.orig/jdk/make/sun/splashscreen/Makefile	2011-06-11 00:38:07.000000000 +0100
++++ openjdk/jdk/make/sun/splashscreen/Makefile	2011-06-13 15:12:16.477040613 +0100
 @@ -59,12 +59,12 @@
  # C Flags
  #
@@ -328,7 +328,7 @@ diff -Nru openjdk.orig/jdk/make/sun/splashscreen/Makefile openjdk/jdk/make/sun/s
  # and use alternative implementations in C.
 diff -Nru openjdk.orig/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h
 --- openjdk.orig/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h	2010-07-29 21:56:11.000000000 +0100
-+++ openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h	2011-04-21 09:00:44.697761341 +0100
++++ openjdk/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h	2011-06-13 15:12:16.477040613 +0100
 @@ -89,11 +89,7 @@
  // bytes and byte arrays
  
@@ -343,7 +343,7 @@ diff -Nru openjdk.orig/jdk/src/share/native/com/sun/java/util/jar/pack/defines.h
  typedef DWORDLONG       julong;
 diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/Adler32.c openjdk/jdk/src/share/native/java/util/zip/Adler32.c
 --- openjdk.orig/jdk/src/share/native/java/util/zip/Adler32.c	2010-07-29 21:56:11.000000000 +0100
-+++ openjdk/jdk/src/share/native/java/util/zip/Adler32.c	2011-04-21 09:00:44.697761341 +0100
++++ openjdk/jdk/src/share/native/java/util/zip/Adler32.c	2011-06-13 15:12:16.477040613 +0100
 @@ -29,7 +29,7 @@
  
  #include "jni.h"
@@ -355,7 +355,7 @@ diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/Adler32.c openjdk/jdk/
  
 diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/CRC32.c openjdk/jdk/src/share/native/java/util/zip/CRC32.c
 --- openjdk.orig/jdk/src/share/native/java/util/zip/CRC32.c	2010-07-29 21:56:11.000000000 +0100
-+++ openjdk/jdk/src/share/native/java/util/zip/CRC32.c	2011-04-21 09:00:44.697761341 +0100
++++ openjdk/jdk/src/share/native/java/util/zip/CRC32.c	2011-06-13 15:12:16.477040613 +0100
 @@ -29,7 +29,7 @@
  
  #include "jni.h"
@@ -366,8 +366,8 @@ diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/CRC32.c openjdk/jdk/sr
  #include "java_util_zip_CRC32.h"
  
 diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/Deflater.c openjdk/jdk/src/share/native/java/util/zip/Deflater.c
---- openjdk.orig/jdk/src/share/native/java/util/zip/Deflater.c	2011-03-14 22:10:33.000000000 +0000
-+++ openjdk/jdk/src/share/native/java/util/zip/Deflater.c	2011-04-21 09:00:44.697761341 +0100
+--- openjdk.orig/jdk/src/share/native/java/util/zip/Deflater.c	2011-06-11 00:38:12.000000000 +0100
++++ openjdk/jdk/src/share/native/java/util/zip/Deflater.c	2011-06-13 15:12:16.481040676 +0100
 @@ -32,7 +32,7 @@
  #include "jlong.h"
  #include "jni.h"
@@ -378,8 +378,8 @@ diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/Deflater.c openjdk/jdk
  #include "java_util_zip_Deflater.h"
  
 diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/Inflater.c openjdk/jdk/src/share/native/java/util/zip/Inflater.c
---- openjdk.orig/jdk/src/share/native/java/util/zip/Inflater.c	2011-03-14 22:10:33.000000000 +0000
-+++ openjdk/jdk/src/share/native/java/util/zip/Inflater.c	2011-04-21 09:00:44.697761341 +0100
+--- openjdk.orig/jdk/src/share/native/java/util/zip/Inflater.c	2011-06-11 00:38:12.000000000 +0100
++++ openjdk/jdk/src/share/native/java/util/zip/Inflater.c	2011-06-13 15:12:16.481040676 +0100
 @@ -35,7 +35,7 @@
  #include "jni.h"
  #include "jvm.h"
@@ -388,10 +388,10 @@ diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/Inflater.c openjdk/jdk
 +#include <zlib.h>
  #include "java_util_zip_Inflater.h"
  
- #define MIN2(x, y)  ((x) < (y) ? (x) : (y))
+ #define ThrowDataFormatException(env, msg) \
 diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/zip_util.c openjdk/jdk/src/share/native/java/util/zip/zip_util.c
 --- openjdk.orig/jdk/src/share/native/java/util/zip/zip_util.c	2011-03-14 22:10:33.000000000 +0000
-+++ openjdk/jdk/src/share/native/java/util/zip/zip_util.c	2011-04-21 09:00:44.697761341 +0100
++++ openjdk/jdk/src/share/native/java/util/zip/zip_util.c	2011-06-13 15:12:16.481040676 +0100
 @@ -44,7 +44,8 @@
  #include "io_util.h"
  #include "io_util_md.h"
@@ -403,8 +403,8 @@ diff -Nru openjdk.orig/jdk/src/share/native/java/util/zip/zip_util.c openjdk/jdk
  /* USE_MMAP means mmap the CEN & ENDHDR part of the zip file. */
  #ifdef USE_MMAP
 diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c
---- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2011-04-20 04:40:22.000000000 +0100
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2011-04-21 09:00:44.697761341 +0100
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2011-06-11 00:38:12.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c	2011-06-13 15:12:16.481040676 +0100
 @@ -51,7 +51,9 @@
  
  /* headers from the JPEG library */
@@ -956,8 +956,8 @@ diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/imageioJPEG.c ope
  
      if (scale != NULL) {
 diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c
---- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2011-04-20 04:40:22.000000000 +0100
-+++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2011-04-21 09:00:44.697761341 +0100
+--- openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2011-06-11 00:38:12.000000000 +0100
++++ openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c	2011-06-13 15:12:16.481040676 +0100
 @@ -45,7 +45,9 @@
  #undef boolean
  #undef FAR
@@ -1221,7 +1221,7 @@ diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c ope
     * Here we postpone it until after no more JPEG errors are possible,
 diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c
 --- openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c	2011-03-14 22:10:33.000000000 +0000
-+++ openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c	2011-04-21 09:00:44.701761405 +0100
++++ openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gif.c	2011-06-13 15:12:16.481040676 +0100
 @@ -26,7 +26,7 @@
  #include "splashscreen_impl.h"
  #include "splashscreen_gfx.h"
@@ -1233,7 +1233,7 @@ diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_gi
  #define GIF_USER_INPUT      0x02
 diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_jpeg.c openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_jpeg.c
 --- openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_jpeg.c	2010-07-29 21:56:12.000000000 +0100
-+++ openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_jpeg.c	2011-04-21 09:00:44.701761405 +0100
++++ openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_jpeg.c	2011-06-13 15:12:16.481040676 +0100
 @@ -25,9 +25,8 @@
  
  #include "splashscreen_impl.h"
@@ -1265,7 +1265,7 @@ diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_jp
      src = (stream_src_ptr) cinfo->src;
 diff -Nru openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_png.c openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_png.c
 --- openjdk.orig/jdk/src/share/native/sun/awt/splashscreen/splashscreen_png.c	2011-03-14 22:10:33.000000000 +0000
-+++ openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_png.c	2011-04-21 09:00:44.701761405 +0100
++++ openjdk/jdk/src/share/native/sun/awt/splashscreen/splashscreen_png.c	2011-06-13 15:12:16.481040676 +0100
 @@ -25,7 +25,7 @@
  
  #include "splashscreen_impl.h"
