@@ -12,6 +12,20 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 2.0 (2011-XX-XX):
 
 * JamVM
+  - Make classlib init functions consistent + warnings.
+  - Correctly implement sun.misc.Unsafe freeMemory().
+  - Move lazy-loading to init function.
+  - Fix various warnings with -Wall.
+  - PrintThreadsDump needs "self" as argument.
+  - CopyMemory, etc. handle negative or truncation in length.
+  - Extra sun.misc.Unsafe functions.
+  - Ignore options for jtreg tests.
+  - Enable shutdownVM to be called with OpenJDK classlib.
+  - Initial implementation of JVM_FindClassFromBootLoader.
+  - Fix callJNIMethod on i386 with -fomit-frame-pointer.
+  - Fix backwards cache conflict resolution code.
+  - Unify command line options parsing.
+  - Remove debug printf.
   - Fix leak of native thread structure.
   - Consistent naming for classlib functions.
   - Add extra includes to get rid off compiler warning.

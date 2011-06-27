@@ -1,5 +1,35 @@
 2011-06-27  Xerxes Rånby  <xerxes@zafena.se>
 
+	JamVM
+	- Make classlib init functions consistent + warnings.
+	- Correctly implement sun.misc.Unsafe freeMemory().
+	- Move lazy-loading to init function.
+	- Fix various warnings with -Wall.
+	- PrintThreadsDump needs "self" as argument.
+	- CopyMemory, etc. handle negative or truncation in length.
+	- Extra sun.misc.Unsafe functions.
+	- Ignore options for jtreg tests.
+	- Enable shutdownVM to be called with OpenJDK classlib.
+	- Initial implementation of JVM_FindClassFromBootLoader.
+	- Fix callJNIMethod on i386 with -fomit-frame-pointer.
+	- Fix backwards cache conflict resolution code.
+	- Unify command line options parsing.
+	- Remove debug printf.
+	* NEWS: Updated.
+	* Makefile.am
+	(ICEDTEA_PATCHES): Remove upstreamed JamVM patch.
+	(JAMVM_VERSION): Updated JamVM to 2011-06-13 revision.
+	(JAMVM_SHA256SUM): Updated.
+	(stamps/jamvm.stamp):
+	Add -f when creating client symlink to handle repeat builds.
+	Link the fake libjsig.so to JamVM libjvm.so to work
+	with latest OpenJDK ALT_HOTSPOT_IMPORT_PATH functionality.
+	* patches/jamvm/ignore-unknown-options.patch: Removed.
+	Replaced by upstream, unify command line options parsing,
+	changeset 1b248439e88ae6cbd1471addc49e2666b8964ced.
+
+2011-06-27  Xerxes Rånby  <xerxes@zafena.se>
+
 	* Makefile.am:
 	(stamps/patch-fsg.stamp): Depend on stamps/extract.stamp.
 	Unbreak JamVM and CACAO builds by fixing the dependency chain.

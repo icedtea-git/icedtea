@@ -24,8 +24,8 @@ CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
-JAMVM_VERSION = 2e52a601883dda84c824b43363c02881def3e06d
-JAMVM_SHA256SUM = b26bc67ddfb50c98761aa4939254470ec9a8f88e9a22628b858603099a784af8
+JAMVM_VERSION = f8b8e8e78ec057a5852ff8c0f3386b48f3eca907
+JAMVM_SHA256SUM = 4107152b0a840656f3551c9b21cb52696417ba6d597457a8b34c86437f9ce64e
 JAMVM_BASE_URL = http://icedtea.classpath.org/download/drops/jamvm
 JAMVM_URL = $(JAMVM_BASE_URL)/jamvm-$(JAMVM_VERSION).tar.gz
 JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
@@ -304,11 +304,6 @@ endif
 if ENABLE_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/ignore-tests.patch
-endif
-
-if BUILD_JAMVM
-ICEDTEA_PATCHES += \
-	patches/jamvm/ignore-unknown-options.patch
 endif
 
 if ENABLE_PULSE_JAVA
@@ -2085,9 +2080,9 @@ if BUILD_JAMVM
 	$(MAKE) install
 	mkdir -p $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server
 	cp $(abs_top_builddir)/jamvm/install/lib/libjvm.so $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server
-	ln -s server $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/client
+	ln -sf server $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/client
 	touch $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server/Xusage.txt
-	touch $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/libjsig.so
+	ln -sf client/libjvm.so $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/libjsig.so
 endif
 	mkdir -p stamps
 	touch stamps/jamvm.stamp
