@@ -1341,7 +1341,7 @@ clean-generated:
 	rm -rf $(abs_top_builddir)/generated.build
 	rm -f stamps/generated.stamp
 
-stamps/patch-fsg.stamp: stamps/sanitise-openjdk.stamp
+stamps/patch-fsg.stamp: stamps/extract.stamp
 	mkdir -p stamps ; \
 	rm -f stamps/patch-fsg.stamp.tmp ; \
 	touch stamps/patch-fsg.stamp.tmp ; \

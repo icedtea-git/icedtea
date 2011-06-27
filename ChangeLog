@@ -1,3 +1,9 @@
+2011-06-27  Xerxes Rånby  <xerxes@zafena.se>
+
+	* Makefile.am:
+	(stamps/patch-fsg.stamp): Depend on stamps/extract.stamp.
+	Unbreak JamVM and CACAO builds by fixing the dependency chain.
+
 2011-06-24  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/rmi_amd64.patch:
