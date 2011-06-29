@@ -1,3 +1,9 @@
+2011-06-28  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am,
+	(HOTSPOT_CHANGESET): Update to bring in Linux 3 fix..
+	(HOTSPOT_SHA256SUM): Likewise.
+
 2011-06-27  Xerxes Rånby  <xerxes@zafena.se>
 
 	JamVM
