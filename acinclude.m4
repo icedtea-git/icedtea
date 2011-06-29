@@ -227,8 +227,8 @@ AC_DEFUN([IT_FIND_JAVA],
   if test "x${JAVA}" = "xno"; then
     JAVA=${JAVA_DEFAULT}
   fi
-  AC_MSG_CHECKING([if $JAVA is a valid executable])
-  if test -x "${JAVA}"; then
+  AC_MSG_CHECKING([if $JAVA is a valid executable file])
+  if test -x "${JAVA}" && test -f "${JAVA}"; then
     AC_MSG_RESULT([yes])
   else
     AC_MSG_RESULT([no])
@@ -380,8 +380,8 @@ AC_DEFUN([IT_FIND_JAVAH],
   if test "x${JAVAH}" == "xno"; then
     JAVAH=${JAVAH_DEFAULT}
   fi
-  AC_MSG_CHECKING([if $JAVAH is a valid executable])
-  if test -x "${JAVAH}"; then
+  AC_MSG_CHECKING([if $JAVAH is a valid executable file])
+  if test -x "${JAVAH}" && test -f "${JAVAH}"; then
     AC_MSG_RESULT([yes])
   else
     AC_MSG_RESULT([no])
@@ -417,8 +417,8 @@ AC_DEFUN([IT_FIND_JAR],
   if test "x${JAR}" == "xno"; then
     JAR=${JAR_DEFAULT}
   fi
-  AC_MSG_CHECKING([if $JAR is a valid executable])
-  if test -x "${JAR}"; then
+  AC_MSG_CHECKING([if $JAR is a valid executable file])
+  if test -x "${JAR}" && test -f "${JAR}"; then
     AC_MSG_RESULT([yes])
   else
     AC_MSG_RESULT([no])
@@ -487,8 +487,8 @@ AC_DEFUN([IT_FIND_RMIC],
   if test "x${RMIC}" = "xno"; then
     RMIC=${RMIC_DEFAULT}
   fi
-  AC_MSG_CHECKING([if $RMIC is a valid executable])
-  if test -x "${RMIC}"; then
+  AC_MSG_CHECKING([if $RMIC is a valid executable file])
+  if test -x "${RMIC}" && test -f "${RMIC}"; then
     AC_MSG_RESULT([yes])
   else
     AC_MSG_RESULT([no])
@@ -524,8 +524,8 @@ AC_DEFUN([IT_FIND_NATIVE2ASCII],
   if test "x${NATIVE2ASCII}" = "xno"; then
     NATIVE2ASCII=${NATIVE2ASCII_DEFAULT}
   fi
-  AC_MSG_CHECKING([if $NATIVE2ASCII is a valid executable])
-  if test -x "${NATIVE2ASCII}"; then
+  AC_MSG_CHECKING([if $NATIVE2ASCII is a valid executable file])
+  if test -x "${NATIVE2ASCII}" && test -f "${NATIVE2ASCII}"; then
     AC_MSG_RESULT([yes])
   else
     AC_MSG_RESULT([no])

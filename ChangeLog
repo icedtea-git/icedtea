@@ -1,3 +1,13 @@
+2011-06-29  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	(IT_FIND_JAVA): Check that the binary is also
+	a regular file as well as executable.
+	(IT_FIND_JAVAH): Likewise.
+	(IT_FIND_JAR): Likewise.
+	(IT_FIND_RMIC): Likewise.
+	(IT_FIND_NATIVE2ASCII): Likewise.
+
 2011-06-28  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am,
