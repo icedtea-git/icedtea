@@ -1,0 +1,42 @@
+diff -r f7e8b10f51c6 make/linux/makefiles/rules.make
+--- openjdk-boot/hotspot/make/linux/makefiles/rules.make	Tue Jun 28 00:25:25 2011 +0100
++++ openjdk-boot/hotspot/make/linux/makefiles/rules.make	Tue Jul 05 11:59:08 2011 +0100
+@@ -139,8 +139,8 @@
+ RUN.JAR$(MAKE_VERBOSE) += >/dev/null
+ 
+ # Settings for javac
+-BOOT_SOURCE_LANGUAGE_VERSION = 6
+-BOOT_TARGET_CLASS_VERSION = 6
++BOOT_SOURCE_LANGUAGE_VERSION = 7
++BOOT_TARGET_CLASS_VERSION = 7
+ JAVAC_FLAGS = -g -encoding ascii
+ BOOTSTRAP_JAVAC_FLAGS = $(JAVAC_FLAGS) -source $(BOOT_SOURCE_LANGUAGE_VERSION) -target $(BOOT_TARGET_CLASS_VERSION)
+ 
+diff -r f7e8b10f51c6 make/solaris/makefiles/rules.make
+--- openjdk-boot/hotspot/make/solaris/makefiles/rules.make	Tue Jun 28 00:25:25 2011 +0100
++++ openjdk-boot/hotspot/make/solaris/makefiles/rules.make	Tue Jul 05 11:59:08 2011 +0100
+@@ -131,8 +131,8 @@
+ RUN.JAR$(MAKE_VERBOSE) += >/dev/null
+ 
+ # Settings for javac
+-BOOT_SOURCE_LANGUAGE_VERSION = 6
+-BOOT_TARGET_CLASS_VERSION = 6
++BOOT_SOURCE_LANGUAGE_VERSION = 7
++BOOT_TARGET_CLASS_VERSION = 7
+ JAVAC_FLAGS = -g -encoding ascii
+ BOOTSTRAP_JAVAC_FLAGS = $(JAVAC_FLAGS) -source $(BOOT_SOURCE_LANGUAGE_VERSION) -target $(BOOT_TARGET_CLASS_VERSION)
+ 
+diff -r f7e8b10f51c6 make/windows/makefiles/rules.make
+--- openjdk-boot/hotspot/make/windows/makefiles/rules.make	Tue Jun 28 00:25:25 2011 +0100
++++ openjdk-boot/hotspot/make/windows/makefiles/rules.make	Tue Jul 05 11:59:08 2011 +0100
+@@ -43,8 +43,8 @@
+ !endif
+ 
+ # Settings for javac
+-BOOT_SOURCE_LANGUAGE_VERSION=6
+-BOOT_TARGET_CLASS_VERSION=6
++BOOT_SOURCE_LANGUAGE_VERSION=7
++BOOT_TARGET_CLASS_VERSION=7
+ JAVAC_FLAGS=-g -encoding ascii
+ BOOTSTRAP_JAVAC_FLAGS=$(JAVAC_FLAGS) -source $(BOOT_SOURCE_LANGUAGE_VERSION) -target $(BOOT_TARGET_CLASS_VERSION)
+ 

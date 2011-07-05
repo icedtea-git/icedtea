@@ -398,6 +398,8 @@ endif
 
 if JAVAC_LACKS_DIAMOND
 ICEDTEA_BOOT_PATCHES += patches/boot/ecj-diamond.patch
+else
+ICEDTEA_BOOT_PATCHES += patches/boot/compile-for-7.patch
 endif
 
 ICEDTEA_BOOT_PATCHES += $(DISTRIBUTION_BOOT_PATCHES)

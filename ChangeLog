@@ -1,3 +1,20 @@
+2011-07-05  Andrew John Hughes  <ahughes@redhat.com>
+
+	PR icedtea/751
+	* Makefile.am:
+	(ICEDTEA_BOOT_PATCHES): Include compile-for-7
+	patch if javac supports diamond.  This makes
+	the HotSpot build use source/target 7, allowing
+	it to compile the JDK code it depends on.
+	* javac.in: Add -XDignore.symbol.file=true
+	when using javac to avoid numerous proprietary
+	warnings.
+	* patches/boot/compile-for-7.patch:
+	Set SOURCE_LANGUAGE_VERSION/TARGET_CLASS_VERSION
+	use 7 in HotSpot instead of 6.
+	* patches/boot/hotspot-jdk-dependency.patch:
+	Include the *nix-specific code in solaris/classes.
+
 2011-06-29  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:

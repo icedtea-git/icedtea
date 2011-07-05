@@ -7,8 +7,8 @@ diff -Nru openjdk-boot.orig/hotspot/make/linux/makefiles/sa.make openjdk-boot/ho
  	
 -	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) @$(AGENT_FILES1_LIST)
 -	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) @$(AGENT_FILES2_LIST)
-+	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR):$(JDK_TOPDIR)/src/share/classes:$(GENSRCDIR) -d $(SA_CLASSDIR) @$(AGENT_FILES1_LIST)
-+	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR):$(JDK_TOPDIR)/src/share/classes:$(GENSRCDIR) -d $(SA_CLASSDIR) @$(AGENT_FILES2_LIST)
++	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR):$(JDK_TOPDIR)/src/share/classes:$(JDK_TOPDIR)/src/solaris/classes:$(GENSRCDIR) -d $(SA_CLASSDIR) @$(AGENT_FILES1_LIST)
++	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR):$(JDK_TOPDIR)/src/share/classes:$(JDK_TOPDIR)/src/solaris/classes:$(GENSRCDIR) -d $(SA_CLASSDIR) @$(AGENT_FILES2_LIST)
  	
  	$(QUIETLY) $(REMOTE) $(COMPILE.RMIC)  -classpath $(SA_CLASSDIR) -d $(SA_CLASSDIR) sun.jvm.hotspot.debugger.remote.RemoteDebuggerServer
  	$(QUIETLY) echo "$(SA_BUILD_VERSION_PROP)" > $(SA_PROPERTIES)
