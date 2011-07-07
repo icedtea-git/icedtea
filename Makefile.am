@@ -345,7 +345,6 @@ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/xbootclasspath.patch \
 	patches/boot/icedteart.patch \
 	patches/boot/jar.patch \
-	patches/boot/javah.patch \
 	patches/boot/symbols.patch \
 	patches/boot/tobin.patch \
 	patches/boot/test_gamma.patch \
@@ -373,7 +372,8 @@ ICEDTEA_BOOT_PATCHES += patches/boot/pr39408.patch
 endif
 
 if CP40188_JAVAH
-ICEDTEA_BOOT_PATCHES += patches/boot/pr40188.patch
+ICEDTEA_BOOT_PATCHES += patches/boot/pr40188.patch \
+	patches/boot/javah.patch
 endif
 
 if CP40616

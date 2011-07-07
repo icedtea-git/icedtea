@@ -1,5 +1,12 @@
 2011-07-05  Andrew John Hughes  <ahughes@redhat.com>
 
+	PR icedtea/751:
+	(ICEDTEA_BOOT_PATCHES): Make application of
+	javah.patch dependent on javah presenting
+	with bug 40188.
+
+2011-07-05  Andrew John Hughes  <ahughes@redhat.com>
+
 	PR icedtea/751
 	* Makefile.am:
 	(ICEDTEA_BOOT_PATCHES): Include compile-for-7
