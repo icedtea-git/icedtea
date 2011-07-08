@@ -12,6 +12,7 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 2.0 (2011-XX-XX):
 
 * JamVM
+  - JamVM is self-hosting.
   - Make classlib init functions consistent + warnings.
   - Correctly implement sun.misc.Unsafe freeMemory().
   - Move lazy-loading to init function.

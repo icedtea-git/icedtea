@@ -1,3 +1,12 @@
+2011-07-08  Xerxes Rånby  <xerxes@zafena.se>
+
+	JamVM: Is self-hosting.
+	* patches/jamvm/remove-sun.misc.Perf-debug-code.patch: New patch.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Apply new patch when building JamVM.
+	* HACKING: Updated.
+	* NEWS: Updated.
+
 2011-07-05  Andrew John Hughes  <ahughes@redhat.com>
 
 	PR icedtea/751:

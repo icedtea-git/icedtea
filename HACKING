@@ -166,6 +166,11 @@ The following patches are only applied when building with the CACAO virtual mach
 * cacao/no-strict-aliasing.patch: Turn off strict aliasing which causes an issue with the verifier
   				  when building with GCC 4.4 (cacao PR129).
 
+The following patches are only applied when building with the JamVM virtual machine:
+* jamvm/remove-sun.misc.Perf-debug-code.patch: Remove use of Hotspot specific
+  sun.misc.Perf debug JNI API inside of the OpenJDK classes that are
+  unsupported by JamVM.
+
 The following patches are to support Xrender pipeline (-Dsun.java2d.xrender):
 
 * icedtea-xrender-xxx.patch: Numbered patches from xrender branch
