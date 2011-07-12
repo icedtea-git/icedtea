@@ -1,3 +1,15 @@
+2011-07-12  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(CORBA_SHA256SUM): Updated after removal of
+	.hg_archival.txt which causes checksum breakage.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+
 2011-07-08  Xerxes Rånby  <xerxes@zafena.se>
 
 	JamVM: Is self-hosting.
