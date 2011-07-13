@@ -1269,11 +1269,19 @@ AC_CACHE_CHECK([if $JAVAH exhibits Classpath bug 40188], it_cv_cp40188_javah, [
     fi
   fi
 ])
+AC_CACHE_CHECK([if $JAVAH supports -X options], it_cv_javahx, [
+  if $JAVAH -Xbootclasspath:${SYSTEM_JDK_DIR}/jre/lib/rt.jar -classpath . $SUB >&AS_MESSAGE_LOG_FD 2>&1; then
+    it_cv_javahx=yes
+  else
+    it_cv_javahx=no
+  fi
+])
 rm -f $SUBCLASS $SUPERCLASS $SUBHEADER *.class
 cd ..
 rmdir tmp.$$
 AM_CONDITIONAL([CP39408_JAVAH], test x"${it_cv_cp39408_javah}" = "xyes")
 AM_CONDITIONAL([CP40188_JAVAH], test x"${it_cv_cp40188_javah}" = "xyes")
+AM_CONDITIONAL([JAVAH_SUPPORTS_X_OPTIONS], test x"${it_cv_javahx}" = "xyes")
 AC_PROVIDE([$0])dnl
 ])
 

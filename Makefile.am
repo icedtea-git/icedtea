@@ -1671,7 +1671,11 @@ clean-native-ecj:
 stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
 	mkdir -p $(STAGE1_BOOT_DIR)/bin stamps/
 	ln -sf $(JAVA) $(STAGE1_BOOT_DIR)/bin/java
+if JAVAH_SUPPORTS_X_OPTIONS
+	ln -sf $(JAVAH) $(STAGE1_BOOT_DIR)/bin/javah
+else
 	ln -sf ../../../javah $(STAGE1_BOOT_DIR)/bin/javah
+endif
 	ln -sf $(RMIC) $(STAGE1_BOOT_DIR)/bin/rmic
 	ln -sf $(JAR) $(STAGE1_BOOT_DIR)/bin/jar
 	ln -sf $(NATIVE2ASCII) $(STAGE1_BOOT_DIR)/bin/native2ascii

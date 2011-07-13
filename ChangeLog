@@ -1,5 +1,15 @@
 2011-07-13  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(bootstrap-directory-stage1): Only use
+	javah script to ignore -X options if unsupported.
+	* acinclude.m4:
+	(IT_JAVAH): Extend to check whether javah supports
+	-Xbootclasspath and set JAVAH_SUPPORTS_X_OPTIONS if
+	so.
+
+2011-07-13  Andrew John Hughes  <ahughes@redhat.com>
+
 	Bump to b147.
 	* Makefile.am:
 	(OPENJDK_VERSION): Bumped to b147.
