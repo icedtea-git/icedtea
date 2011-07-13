@@ -107,6 +107,7 @@ if test "x$enable_bootstrap" = "xyes"; then
 fi
 AC_CONFIG_FILES([javac], [chmod +x javac])
 AC_CONFIG_FILES([javap], [chmod +x javap])
+AC_CONFIG_FILES([javah], [chmod +x javah])
 
 IT_JAVAH
 IT_LIBRARY_CHECK

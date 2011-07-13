@@ -1,6 +1,6 @@
-diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/ClassReader.java
---- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	Sat Apr 30 03:28:15 2011 +0100
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2011-04-30 03:28:27.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2011-07-12 13:58:37.260113734 +0100
 @@ -350,18 +350,15 @@
              if (attrCommands != null) {
                  Object lkey = Attribute.keyForLookup(ctype, name);
@@ -29,9 +29,9 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/ClassReader.ja
                  }
              }
              // Find canonical instance of the requested attribute.
-diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/Driver.java
---- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	Sat Apr 30 03:28:15 2011 +0100
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2011-06-11 00:38:08.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2011-07-12 13:58:37.264113794 +0100
 @@ -71,16 +71,14 @@
          {
              // Non-standard, undocumented "--unpack" switch enables unpack mode.
@@ -88,9 +88,9 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/Driver.java
          }
  
          if (logFile != null && !logFile.equals("")) {
-diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/Package.java
---- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	Sat Apr 30 03:28:15 2011 +0100
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2011-04-30 03:28:27.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2011-07-12 13:58:37.264113794 +0100
 @@ -1116,30 +1116,25 @@
          // what is one of { Debug, Compile, Constant, Exceptions, InnerClasses }
          if (verbose > 0)
@@ -141,9 +141,9 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/Package.java
          }
      }
  
-diff -r 1631a3dee8fc src/share/classes/com/sun/security/ntlm/NTLM.java
---- openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	Sat Apr 30 03:28:15 2011 +0100
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2011-04-30 03:28:32.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2011-07-12 13:58:37.264113794 +0100
 @@ -64,17 +64,23 @@
  
      protected NTLM(String version) throws NTLMException {
@@ -179,53 +179,9 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/security/ntlm/NTLM.java
          try {
              fac = SecretKeyFactory.getInstance ("DES");
              cipher = Cipher.getInstance ("DES/ECB/NoPadding");
-diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/MethodHandles.java
---- openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandles.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandles.java	Sat Apr 30 03:28:15 2011 +0100
-@@ -2293,32 +2293,30 @@
- 
-     private static
-     boolean isObjectMethod(Method m) {
--        switch (m.getName()) {
--        case "toString":
-+        final String name = m.getName();
-+        if ("toString".equals(name))
-             return (m.getReturnType() == String.class
-                     && m.getParameterTypes().length == 0);
--        case "hashCode":
-+        if ("hashCode".equals(name))
-             return (m.getReturnType() == int.class
-                     && m.getParameterTypes().length == 0);
--        case "equals":
-+        if ("equals".equals(name))
-             return (m.getReturnType() == boolean.class
-                     && m.getParameterTypes().length == 1
-                     && m.getParameterTypes()[0] == Object.class);
--        }
-         return false;
-     }
- 
-     private static
-     Object callObjectMethod(Object self, Method m, Object[] args) {
-         assert(isObjectMethod(m)) : m;
--        switch (m.getName()) {
--        case "toString":
-+        final String name = m.getName();
-+        if ("toString".equals(name))
-             return self.getClass().getName() + "@" + Integer.toHexString(self.hashCode());
--        case "hashCode":
-+        if ("hashCode".equals(name))
-             return System.identityHashCode(self);
--        case "equals":
-+        if ("equals".equals(name))
-             return (self == args[0]);
--        }
-         return null;
-     }
- 
-diff -r 1631a3dee8fc src/share/classes/sun/launcher/LauncherHelper.java
---- openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	Sat Apr 30 03:28:15 2011 +0100
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-06-11 00:38:09.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-07-12 13:58:37.268113854 +0100
 @@ -117,24 +117,20 @@
          String optStr = (opts.length > 1 && opts[1] != null)
                  ? opts[1].trim()
@@ -245,26 +201,26 @@ diff -r 1631a3dee8fc src/share/classes/sun/launcher/LauncherHelper.java
 -                        stackSize, isServer);
 -                break;
 -            case "properties":
--                printProperties(ostream);
++                                stackSize, isServer);
+                 printProperties(ostream);
 -                break;
 -            case "locale":
--                printLocale(ostream);
+                 printLocale(ostream);
 -                break;
 -            default:
 -                printVmSettings(ostream, initialHeapSize, maxHeapSize,
 -                        stackSize, isServer);
-+                                stackSize, isServer);
-                 printProperties(ostream);
-                 printLocale(ostream);
+-                printProperties(ostream);
+-                printLocale(ostream);
 -                break;
 -        }
 +            }
      }
  
      /*
-diff -r 1631a3dee8fc src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java
---- openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	Sat Apr 30 03:28:15 2011 +0100
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2011-04-30 03:28:32.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2011-07-12 13:58:37.268113854 +0100
 @@ -383,19 +383,23 @@
              GE;         // ">="
  
@@ -302,3 +258,46 @@ diff -r 1631a3dee8fc src/share/classes/sun/security/util/DisabledAlgorithmConstr
                  }
  
                  throw new IllegalArgumentException(
+diff -r 483d8dacfbd8 src/share/classes/java/lang/invoke/MethodHandleProxies.java
+--- openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	Mon Jul 11 22:06:00 2011 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	Tue Jul 12 19:06:31 2011 +0100
+@@ -211,14 +211,16 @@
+ 
+     private static
+     boolean isObjectMethod(Method m) {
+-        switch (m.getName()) {
+-        case "toString":
++        String name = m.getName();
++        if ("toString".equals(name)) {
+             return (m.getReturnType() == String.class
+                     && m.getParameterTypes().length == 0);
+-        case "hashCode":
++        }
++        if ("hashCode".equals(name)) {
+             return (m.getReturnType() == int.class
+                     && m.getParameterTypes().length == 0);
+-        case "equals":
++        }
++        if ("equals".equals(name)) {
+             return (m.getReturnType() == boolean.class
+                     && m.getParameterTypes().length == 1
+                     && m.getParameterTypes()[0] == Object.class);
+@@ -229,12 +231,14 @@
+     private static
+     Object callObjectMethod(Object self, Method m, Object[] args) {
+         assert(isObjectMethod(m)) : m;
+-        switch (m.getName()) {
+-        case "toString":
++        String name = m.getName();
++        if ("toString".equals(name)) {
+             return self.getClass().getName() + "@" + Integer.toHexString(self.hashCode());
+-        case "hashCode":
++        }
++        if ("hashCode".equals(name)) {
+             return System.identityHashCode(self);
+-        case "equals":
++        }
++        if ("equals".equals(name)) {
+             return (self == args[0]);
+         }
+         return null;
