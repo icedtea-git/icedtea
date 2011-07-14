@@ -1,3 +1,14 @@
+2011-07-14  Mark Wielaard  <mark@klomp.org>
+
+	* Makefile.am (CORBA_SHA256SUM): Updated for new icedtea hg server
+	settings.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+
 2011-07-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	* NEWS: Add section for 3.0 beta 1.
