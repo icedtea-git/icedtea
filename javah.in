@@ -1,0 +1,4 @@
+#!/usr/bin/perl -w
+use strict;
+
+exec '@JAVAH@', (grep !/^-X/, @ARGV) ;

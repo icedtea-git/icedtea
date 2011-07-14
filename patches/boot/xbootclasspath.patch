@@ -1,6 +1,6 @@
 diff -Nru openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk openjdk-boot/corba/make/common/shared/Defs-java.gmk
---- openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk	2011-03-14 22:08:07.000000000 +0000
-+++ openjdk-boot/corba/make/common/shared/Defs-java.gmk	2011-04-22 00:44:23.902652962 +0100
+--- openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk	2011-07-13 22:38:42.000000000 +0100
++++ openjdk-boot/corba/make/common/shared/Defs-java.gmk	2011-07-14 22:24:30.038930301 +0100
 @@ -131,26 +131,14 @@
  CLASS_VERSION = -target $(TARGET_CLASS_VERSION)
  JAVACFLAGS  += $(CLASS_VERSION)
@@ -34,8 +34,8 @@ diff -Nru openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk openjdk-boot/
  # Override of what javac to use (see deploy workspace)
  ifdef JAVAC
 diff -Nru openjdk-boot.orig/jdk/make/common/shared/Defs-java.gmk openjdk-boot/jdk/make/common/shared/Defs-java.gmk
---- openjdk-boot.orig/jdk/make/common/shared/Defs-java.gmk	2011-04-21 23:24:38.000000000 +0100
-+++ openjdk-boot/jdk/make/common/shared/Defs-java.gmk	2011-04-22 00:45:22.723492812 +0100
+--- openjdk-boot.orig/jdk/make/common/shared/Defs-java.gmk	2011-07-14 21:18:41.000000000 +0100
++++ openjdk-boot/jdk/make/common/shared/Defs-java.gmk	2011-07-14 22:24:30.046930435 +0100
 @@ -147,7 +147,7 @@
  JAVACFLAGS  += $(OTHER_JAVACFLAGS)
  
@@ -74,8 +74,8 @@ diff -Nru openjdk-boot.orig/jdk/make/common/shared/Defs-java.gmk openjdk-boot/jd
  
  # Override of what javac to use (see deploy workspace)
 diff -Nru openjdk-boot.orig/jdk/make/java/text/base/Makefile openjdk-boot/jdk/make/java/text/base/Makefile
---- openjdk-boot.orig/jdk/make/java/text/base/Makefile	2011-04-20 04:40:20.000000000 +0100
-+++ openjdk-boot/jdk/make/java/text/base/Makefile	2011-04-22 00:44:23.918653190 +0100
+--- openjdk-boot.orig/jdk/make/java/text/base/Makefile	2011-07-13 22:42:22.000000000 +0100
++++ openjdk-boot/jdk/make/java/text/base/Makefile	2011-07-14 22:24:30.046930435 +0100
 @@ -80,8 +80,8 @@
  		-sourcepath $(TEXT_SRCDIR) \
  		$(TEXT_SOURCES)
@@ -88,8 +88,8 @@ diff -Nru openjdk-boot.orig/jdk/make/java/text/base/Makefile openjdk-boot/jdk/ma
  		-spec $(UNICODEDATA)/UnicodeData.txt
  	@$(java-vm-cleanup)
 diff -Nru openjdk-boot.orig/jdk/make/sun/text/Makefile openjdk-boot/jdk/make/sun/text/Makefile
---- openjdk-boot.orig/jdk/make/sun/text/Makefile	2011-04-20 04:40:21.000000000 +0100
-+++ openjdk-boot/jdk/make/sun/text/Makefile	2011-04-22 00:44:23.918653190 +0100
+--- openjdk-boot.orig/jdk/make/sun/text/Makefile	2011-07-13 22:42:22.000000000 +0100
++++ openjdk-boot/jdk/make/sun/text/Makefile	2011-07-14 22:24:30.046930435 +0100
 @@ -85,8 +85,9 @@
  	$(BOOT_JAVAC_CMD) -d $(TEXT_CLASSES) \
  		-sourcepath $(TEXT_SRCDIR) \
@@ -102,19 +102,15 @@ diff -Nru openjdk-boot.orig/jdk/make/sun/text/Makefile openjdk-boot/jdk/make/sun
  		-o $(CLASSDESTDIR)/sun/text/resources \
  		-spec $(UNICODEDATA)/UnicodeData.txt \
  		-language th
-diff -r 8e26c4aee63c make/build.xml
---- openjdk-boot/langtools/make/build.xml	Wed Apr 20 04:37:56 2011 +0100
-+++ openjdk-boot/langtools/make/build.xml	Tue Apr 26 10:38:14 2011 +0100
-@@ -868,10 +868,8 @@
+diff -Nru openjdk-boot.orig/langtools/make/build.xml openjdk-boot/langtools/make/build.xml
+--- openjdk-boot.orig/langtools/make/build.xml	2011-07-13 22:40:15.000000000 +0100
++++ openjdk-boot/langtools/make/build.xml	2011-07-14 23:00:24.490154931 +0100
+@@ -876,7 +876,7 @@
                 executable="${boot.java.home}/bin/javac"
                 srcdir="${make.tools.dir}/GenStubs"
                 destdir="${build.toolclasses.dir}/"
 -               classpath="${ant.core.lib}"
--               includeantruntime="false">
--            <compilerarg value="-Xbootclasspath/p:${build.bootstrap.dir}/classes"/>
--        </javac>
 +               classpath="${build.bootstrap.dir}/classes:${ant.core.lib}"
-+               includeantruntime="false"/>
-         <taskdef name="genstubs"
-                  classname="GenStubs$$Ant"
-                  classpath="${build.toolclasses.dir}:${build.bootstrap.dir}/classes:${ant.home}/lib/ant.jar"/>
+                includeantruntime="false">
+             <compilerarg value="-Xbootclasspath/p:${build.bootstrap.dir}/classes"/>
+             <compilerarg line="${javac.lint.opts}"/>

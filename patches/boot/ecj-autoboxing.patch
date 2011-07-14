@@ -1,7 +1,7 @@
-diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/CallSite.java
---- openjdk-boot/jdk/src/share/classes/java/lang/invoke/CallSite.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/CallSite.java	Sat Apr 30 02:38:41 2011 +0100
-@@ -309,7 +309,7 @@
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/CallSite.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/CallSite.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/CallSite.java	2011-07-12 12:43:47.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/CallSite.java	2011-07-12 15:12:13.210932096 +0100
+@@ -329,7 +329,7 @@
  
      private static Object maybeReBox(Object x) {
          if (x instanceof Integer) {
@@ -10,10 +10,10 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/CallSite.java
              if (xi == (byte) xi)
                  x = xi;  // must rebox; see JLS 5.1.7
          }
-diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/FromGeneric.java
---- openjdk-boot/jdk/src/share/classes/java/lang/invoke/FromGeneric.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/FromGeneric.java	Sat Apr 30 02:38:41 2011 +0100
-@@ -502,10 +502,10 @@
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/FromGeneric.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/FromGeneric.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/FromGeneric.java	2011-06-11 00:38:08.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/FromGeneric.java	2011-07-12 15:12:13.210932096 +0100
+@@ -505,10 +505,10 @@
          protected A0 makeInstance(MethodHandle e, MethodHandle i, MethodHandle c, MethodHandle t)
                          { return new A0(e, i, c, t); }
          protected Object invoke_L0() throws Throwable { return convert_L((Object)invoker.invokeExact(target)); }
@@ -28,7 +28,7 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/FromGeneric.java
      }
      static class A1 extends Adapter {
          protected A1(MethodHandle entryPoint) { super(entryPoint); }  // to build prototype
-@@ -514,10 +514,10 @@
+@@ -517,10 +517,10 @@
          protected A1 makeInstance(MethodHandle e, MethodHandle i, MethodHandle c, MethodHandle t)
                          { return new A1(e, i, c, t); }
          protected Object invoke_L1(Object a0) throws Throwable { return convert_L((Object)invoker.invokeExact(target, a0)); }
@@ -43,7 +43,7 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/FromGeneric.java
      }
      static class A2 extends Adapter {
          protected A2(MethodHandle entryPoint) { super(entryPoint); }  // to build prototype
-@@ -526,10 +526,10 @@
+@@ -529,10 +529,10 @@
          protected A2 makeInstance(MethodHandle e, MethodHandle i, MethodHandle c, MethodHandle t)
                          { return new A2(e, i, c, t); }
          protected Object invoke_L2(Object a0, Object a1) throws Throwable { return convert_L((Object)invoker.invokeExact(target, a0, a1)); }
@@ -58,7 +58,7 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/FromGeneric.java
      }
      static class A3 extends Adapter {
          protected A3(MethodHandle entryPoint) { super(entryPoint); }  // to build prototype
-@@ -538,10 +538,10 @@
+@@ -541,10 +541,10 @@
          protected A3 makeInstance(MethodHandle e, MethodHandle i, MethodHandle c, MethodHandle t)
                          { return new A3(e, i, c, t); }
          protected Object invoke_L3(Object a0, Object a1, Object a2) throws Throwable { return convert_L((Object)invoker.invokeExact(target, a0, a1, a2)); }
@@ -73,7 +73,7 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/FromGeneric.java
      }
      static class A4 extends Adapter {
          protected A4(MethodHandle entryPoint) { super(entryPoint); }  // to build prototype
-@@ -550,10 +550,10 @@
+@@ -553,10 +553,10 @@
          protected A4 makeInstance(MethodHandle e, MethodHandle i, MethodHandle c, MethodHandle t)
                          { return new A4(e, i, c, t); }
          protected Object invoke_L4(Object a0, Object a1, Object a2, Object a3) throws Throwable { return convert_L((Object)invoker.invokeExact(target, a0, a1, a2, a3)); }
@@ -88,7 +88,7 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/FromGeneric.java
      }
      static class A5 extends Adapter {
          protected A5(MethodHandle entryPoint) { super(entryPoint); }  // to build prototype
-@@ -562,10 +562,10 @@
+@@ -565,10 +565,10 @@
          protected A5 makeInstance(MethodHandle e, MethodHandle i, MethodHandle c, MethodHandle t)
                          { return new A5(e, i, c, t); }
          protected Object invoke_L5(Object a0, Object a1, Object a2, Object a3, Object a4) throws Throwable { return convert_L((Object)invoker.invokeExact(target, a0, a1, a2, a3, a4)); }
@@ -103,7 +103,7 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/FromGeneric.java
      }
      static class A6 extends Adapter {
          protected A6(MethodHandle entryPoint) { super(entryPoint); }  // to build prototype
-@@ -574,10 +574,10 @@
+@@ -577,10 +577,10 @@
          protected A6 makeInstance(MethodHandle e, MethodHandle i, MethodHandle c, MethodHandle t)
                          { return new A6(e, i, c, t); }
          protected Object invoke_L6(Object a0, Object a1, Object a2, Object a3, Object a4, Object a5) throws Throwable { return convert_L((Object)invoker.invokeExact(target, a0, a1, a2, a3, a4, a5)); }
@@ -118,7 +118,7 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/FromGeneric.java
      }
      static class A7 extends Adapter {
          protected A7(MethodHandle entryPoint) { super(entryPoint); }  // to build prototype
-@@ -586,10 +586,10 @@
+@@ -589,10 +589,10 @@
          protected A7 makeInstance(MethodHandle e, MethodHandle i, MethodHandle c, MethodHandle t)
                          { return new A7(e, i, c, t); }
          protected Object invoke_L7(Object a0, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6) throws Throwable { return convert_L((Object)invoker.invokeExact(target, a0, a1, a2, a3, a4, a5, a6)); }
@@ -133,7 +133,7 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/FromGeneric.java
      }
      static class A8 extends Adapter {
          protected A8(MethodHandle entryPoint) { super(entryPoint); }  // to build prototype
-@@ -598,10 +598,10 @@
+@@ -601,10 +601,10 @@
          protected A8 makeInstance(MethodHandle e, MethodHandle i, MethodHandle c, MethodHandle t)
                          { return new A8(e, i, c, t); }
          protected Object invoke_L8(Object a0, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6, Object a7) throws Throwable { return convert_L((Object)invoker.invokeExact(target, a0, a1, a2, a3, a4, a5, a6, a7)); }
@@ -148,7 +148,7 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/FromGeneric.java
      }
      static class A9 extends Adapter {
          protected A9(MethodHandle entryPoint) { super(entryPoint); }  // to build prototype
-@@ -610,10 +610,10 @@
+@@ -613,10 +613,10 @@
          protected A9 makeInstance(MethodHandle e, MethodHandle i, MethodHandle c, MethodHandle t)
                          { return new A9(e, i, c, t); }
          protected Object invoke_L9(Object a0, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6, Object a7, Object a8) throws Throwable { return convert_L((Object)invoker.invokeExact(target, a0, a1, a2, a3, a4, a5, a6, a7, a8)); }
@@ -163,7 +163,7 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/FromGeneric.java
      }
      static class A10 extends Adapter {
          protected A10(MethodHandle entryPoint) { super(entryPoint); }  // to build prototype
-@@ -622,9 +622,9 @@
+@@ -625,9 +625,9 @@
          protected A10 makeInstance(MethodHandle e, MethodHandle i, MethodHandle c, MethodHandle t)
                          { return new A10(e, i, c, t); }
          protected Object invoke_L10(Object a0, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6, Object a7, Object a8, Object a9) throws Throwable { return convert_L((Object)invoker.invokeExact(target, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9)); }
@@ -177,10 +177,10 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/FromGeneric.java
 +        protected Object invoke_D10(Object a0, Object a1, Object a2, Object a3, Object a4, Object a5, Object a6, Object a7, Object a8, Object a9) throws Throwable { return convert_D((Double)invoker.invokeExact(target, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9)); }
      }
  }
-diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/MethodHandleImpl.java
---- openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	Sat Apr 30 02:38:41 2011 +0100
-@@ -832,52 +832,52 @@
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2011-07-12 12:43:47.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2011-07-12 15:12:13.214932157 +0100
+@@ -956,52 +956,52 @@
              return addTypeString(target, this);
          }
          private Object invoke_V(Object... av) throws Throwable {
@@ -243,10 +243,10 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/MethodHandleImpl.java
                  return target.invokeExact(a0, a1, a2, a3, a4, a5, a6, a7);
              return fallback.invokeExact(a0, a1, a2, a3, a4, a5, a6, a7);
          }
-diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/ToGeneric.java
---- openjdk-boot/jdk/src/share/classes/java/lang/invoke/ToGeneric.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/ToGeneric.java	Sat Apr 30 02:38:41 2011 +0100
-@@ -390,10 +390,10 @@
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/ToGeneric.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/ToGeneric.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/ToGeneric.java	2011-06-11 00:38:08.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/ToGeneric.java	2011-07-12 15:12:13.214932157 +0100
+@@ -394,10 +394,10 @@
  
          // Code to run when the generic target has finished and produced a value.
          protected Object return_L(Object res) throws Throwable { return (Object)convert.invokeExact(res); }
@@ -261,22 +261,22 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/invoke/ToGeneric.java
  
          static private final String CLASS_PREFIX; // "java.lang.invoke.ToGeneric$"
          static {
-diff -r d28f54a421b1 src/share/classes/sun/invoke/util/ValueConversions.java
---- openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	Mon Jun 13 15:58:42 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	Thu Jun 23 17:29:41 2011 +0100
-@@ -209,9 +209,9 @@
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversions.java openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2011-07-12 14:52:51.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2011-07-12 15:12:50.499499088 +0100
+@@ -223,9 +223,9 @@
          if (x instanceof Number) {
              res = (Number) x;
          } else if (x instanceof Boolean) {
--            res = ((boolean)x ? 1 : 0);
-+            res = ((Boolean)x ? 1 : 0);
+-            res = ((boolean)x ? ONE_INT : ZERO_INT);
++            res = ((Boolean)x ? ONE_INT : ZERO_INT);
          } else if (x instanceof Character) {
 -            res = (int)(char)x;
 +            res = (int)(Character)x;
          } else {
              // this will fail with the required ClassCastException:
              res = (Number) x;
-@@ -371,7 +371,7 @@
+@@ -386,7 +386,7 @@
  
      static int unboxRawInteger(Object x) {
          if (x instanceof Integer)

@@ -1,3 +1,38 @@
+2011-07-13  Andrew John Hughes  <ahughes@redhat.com>
+
+	Bump to tip.
+	* Makefile.am:
+	(CORBA_CHANGESET): Updated.
+	(HOTSPOT_CHANGESET): Likewise.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(JAXWS_DROP_ZIP): Likewise.
+	(JAXWS_DROP_SHA256SUM): Likewise.
+	(JAXP_DROP_ZIP): Likewise.
+	(JAXP_DROP_SHA256SUM): Likewise.
+	(bootstrap-directory-stage1): Use our
+	script for javah.
+	* configure.ac:
+	Generate script for javah.
+	* javah.in: Filter -X commands from javah.
+	* patches/boot/ecj-autoboxing.patch:
+	Updated to apply against b147.
+	* patches/boot/ecj-diamond.patch,
+	* patches/boot/ecj-stringswitch.patch:
+	Likewise and add new cases.
+	* patches/boot/xbootclasspath.patch:
+	Updated against IcedTea8 forest.
+
 2011-07-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	Update for 8.
