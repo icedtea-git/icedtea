@@ -1,6 +1,6 @@
 # Dependencies
 
-OPENJDK_VERSION = b143
+OPENJDK_VERSION = b00
 
 CORBA_CHANGESET = 279c876d1001
 HOTSPOT_CHANGESET = f7e8b10f51c6
@@ -40,12 +40,12 @@ JAXP_DROP_URL = http://icedtea.classpath.org/download/drops
 JAXP_DROP_ZIP = jaxp-1_4_5.zip
 JAXP_DROP_SHA256SUM = 8145a789a61d21d0ff9902e4dc1c7ba492bb407ee614187dc933321922249ddb
 
-ICEDTEA_PREFIX = icedtea7-forest
+ICEDTEA_PREFIX = icedtea8-forest
 ICEDTEA_HG_URL = http://icedtea.classpath.org/hg/$(ICEDTEA_PREFIX)
-OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk7/jdk7
+OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk8/jdk8
 CVMI_HG_URL = http://hg.openjdk.java.net/cvmi/cvmi/
 CLOSURES_HG_URL = http://hg.openjdk.java.net/closures/closures/
-CACIOCAVALLO_HG_URL = http://hg.openjdk.java.net/caciocavallo/jdk7/
+CACIOCAVALLO_HG_URL = http://hg.openjdk.java.net/caciocavallo/jdk8/
 BSD_HG_URL = http://hg.openjdk.java.net/bsd-port/bsd-port
 NIO2_HG_URL = http://hg.openjdk.java.net/nio/nio/
 
@@ -424,7 +424,7 @@ endif
 JDK_UPDATE_VERSION = $(shell echo $(OPENJDK_VERSION) | sed -e "s/^b//")
 COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)
 
-ICEDTEA_NAME = IcedTea7
+ICEDTEA_NAME = IcedTea8
 if HAS_ICEDTEA_REVISION
 ICEDTEA_REV = +${ICEDTEA_REVISION}
 endif

@@ -1,7 +1,17 @@
+2011-07-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	Update for 8.
+	* Makefile.am:
+	(OPENJDK_VERSION): Set to b00.
+	(ICEDTEA_PREFIX): Set to icedtea8-forest.
+	(OPENJDK_HG_URL): Use OpenJDK8 tree.
+	(CACIOCAVALLO_HG_URL): Likewise.
+	(ICEDTEA_NAME): Change to IcedTea8.
+
 2011-07-14  Mark Wielaard  <mark@klomp.org>
 
-	* Makefile.am (CORBA_SHA256SUM): Updated for new icedtea hg server
-	settings.
+	* Makefile.am (CORBA_SHA256SUM): Updated for new
+	icedtea hg server settings.
 	(HOTSPOT_SHA256SUM): Likewise.
 	(JAXP_SHA256SUM): Likewise.
 	(JAXWS_SHA256SUM): Likewise.
