@@ -1,3 +1,12 @@
+2011-07-20  Marc Schoenefeld <mschoene@redhat.com>
+	    Pavel Tisnovsky  <ptisnovs@redhat.com>
+
+	* Makefile.am:
+	(HOTSPOT_CHANGESET): Update regression test
+	hotspot/7020373: added missing source used
+	to create the reproducer.
+	(HOTSPOT_SHA256SUM): Likewise
+
 2011-07-17  Mark Wielaard  <mark@klomp.org>
 
 	* Makefile.am (CORBA_SHA256SUM): Updated for new icedtea hg server
