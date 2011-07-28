@@ -1,3 +1,21 @@
+2011-07-28  Andrew John Hughes  <ahughes@redhat.com>
+
+	Bring in new JDK build cleanups and
+	HotSpot fixes for Zero/Shark.
+	* Makefile.am:
+	(JDK_CHANGESET): Updated.
+	(JDK_SHA256SUM): Likewise.
+	(HOTSPOT_CHANGESET): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(ICEDTEA_BOOT_PATCHES): Add new patch.
+	* patches/boot/ecj-diamond.patch,
+	* patches/boot/ecj-stringswitch.patch:
+	Updated with new cases.
+	* patches/boot/use_target_6_for_bootstrap_classes.patch:
+	New patch.  Force source/target to 6
+	rather than 7 when building classes needed
+	by the bootstrap tools.
+
 2011-07-20  Marc Schoenefeld <mschoene@redhat.com>
 	    Pavel Tisnovsky  <ptisnovs@redhat.com>
 

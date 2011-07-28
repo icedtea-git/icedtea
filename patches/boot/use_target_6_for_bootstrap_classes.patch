@@ -1,0 +1,64 @@
+diff -r 9cf5ed6b45d6 make/java/text/base/Makefile
+--- openjdk-boot/jdk/make/java/text/base/Makefile	Mon Jul 25 16:20:39 2011 -0700
++++ openjdk-boot/jdk/make/java/text/base/Makefile	Wed Jul 27 19:10:34 2011 +0100
+@@ -34,6 +34,9 @@
+ #
+ include FILES_java.gmk
+ 
++LANGUAGE_VERSION = -source 6
++CLASS_VERSION = -target 6
++
+ #
+ # Include
+ #
+diff -r 9cf5ed6b45d6 make/java/java/Makefile
+--- openjdk-boot/jdk/make/java/java/Makefile	Mon Jul 25 16:20:39 2011 -0700
++++ openjdk-boot/jdk/make/java/java/Makefile	Thu Jul 28 02:14:07 2011 +0100
+@@ -52,6 +52,8 @@
+ OTHER_CFLAGS += -DJDK_UPDATE_VERSION='"$(JDK_UPDATE_VERSION)"'
+ endif
+ 
++LANGUAGE_VERSION = -source 6
++CLASS_VERSION = -target 6
+ 
+ #
+ # Files to compile.
+diff -r 9cf5ed6b45d6 make/sun/rmi/rmi/Makefile
+--- openjdk-boot/jdk/make/sun/rmi/rmi/Makefile	Mon Jul 25 16:20:39 2011 -0700
++++ openjdk-boot/jdk/make/sun/rmi/rmi/Makefile	Thu Jul 28 03:12:35 2011 +0100
+@@ -33,6 +33,9 @@
+ LIBRARY = rmi
+ include $(BUILDDIR)/common/Defs.gmk
+ 
++LANGUAGE_VERSION = -source 6
++CLASS_VERSION = -target 6
++
+ #
+ # Add use of a mapfile
+ #
+diff -r 9cf5ed6b45d6 make/com/sun/jndi/rmi/registry/Makefile
+--- openjdk-boot/jdk/make/com/sun/jndi/rmi/registry/Makefile	Mon Jul 25 16:20:39 2011 -0700
++++ openjdk-boot/jdk/make/com/sun/jndi/rmi/registry/Makefile	Thu Jul 28 04:26:24 2011 +0100
+@@ -32,6 +32,9 @@
+ PRODUCT = sun
+ include $(BUILDDIR)/common/Defs.gmk
+ 
++LANGUAGE_VERSION = -source 6
++CLASS_VERSION = -target 6
++
+ #
+ # Files to compile
+ #
+diff -r 9cf5ed6b45d6 make/com/sun/jndi/cosnaming/Makefile
+--- openjdk-boot/jdk/make/com/sun/jndi/cosnaming/Makefile	Mon Jul 25 16:20:39 2011 -0700
++++ openjdk-boot/jdk/make/com/sun/jndi/cosnaming/Makefile	Thu Jul 28 05:50:27 2011 +0100
+@@ -32,6 +32,9 @@
+ PRODUCT = sun
+ include $(BUILDDIR)/common/Defs.gmk
+ 
++LANGUAGE_VERSION = -source 6
++CLASS_VERSION = -target 6
++
+ #
+ # Resources
+ #

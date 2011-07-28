@@ -1,10 +1,10 @@
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2011-04-30 03:28:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2011-07-12 13:58:37.260113734 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2011-07-27 14:31:14.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2011-07-27 14:54:48.369035615 +0100
 @@ -350,18 +350,15 @@
              if (attrCommands != null) {
-                 Object lkey = Attribute.keyForLookup(ctype, name);
-                 String cmd = (String) attrCommands.get(lkey);
+                 Attribute.Layout lkey = Attribute.keyForLookup(ctype, name);
+                 String cmd = attrCommands.get(lkey);
 -                if (cmd != null) {
 -                    switch (cmd) {
 -                        case "pass":
@@ -31,7 +31,7 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Cla
              // Find canonical instance of the requested attribute.
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java
 --- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2011-06-11 00:38:08.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2011-07-12 13:58:37.264113794 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2011-07-27 14:52:45.595028657 +0100
 @@ -71,16 +71,14 @@
          {
              // Non-standard, undocumented "--unpack" switch enables unpack mode.
@@ -89,9 +89,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Dri
  
          if (logFile != null && !logFile.equals("")) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2011-04-30 03:28:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2011-07-12 13:58:37.264113794 +0100
-@@ -1116,30 +1116,25 @@
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2011-07-27 14:31:14.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2011-07-27 14:52:45.599028722 +0100
+@@ -1107,30 +1107,25 @@
          // what is one of { Debug, Compile, Constant, Exceptions, InnerClasses }
          if (verbose > 0)
              Utils.log.info("Stripping "+what.toLowerCase()+" data and attributes...");
@@ -143,7 +143,7 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Pac
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java
 --- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2011-04-30 03:28:32.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2011-07-12 13:58:37.264113794 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2011-07-27 14:52:45.603028787 +0100
 @@ -64,17 +64,23 @@
  
      protected NTLM(String version) throws NTLMException {
@@ -179,88 +179,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.jav
          try {
              fac = SecretKeyFactory.getInstance ("DES");
              cipher = Cipher.getInstance ("DES/ECB/NoPadding");
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-06-11 00:38:09.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-07-12 13:58:37.268113854 +0100
-@@ -117,24 +117,20 @@
-         String optStr = (opts.length > 1 && opts[1] != null)
-                 ? opts[1].trim()
-                 : "all";
--        switch (optStr) {
--            case "vm":
-+        if ("vm".equals(optStr))
-+            printVmSettings(ostream, initialHeapSize, maxHeapSize,
-+                            stackSize, isServer);
-+        else if ("properties".equals(optStr))
-+            printProperties(ostream);
-+        else if ("locale".equals(optStr))
-+            printLocale(ostream);
-+        else
-+            {
-                 printVmSettings(ostream, initialHeapSize, maxHeapSize,
--                        stackSize, isServer);
--                break;
--            case "properties":
-+                                stackSize, isServer);
-                 printProperties(ostream);
--                break;
--            case "locale":
-                 printLocale(ostream);
--                break;
--            default:
--                printVmSettings(ostream, initialHeapSize, maxHeapSize,
--                        stackSize, isServer);
--                printProperties(ostream);
--                printLocale(ostream);
--                break;
--        }
-+            }
-     }
- 
-     /*
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2011-04-30 03:28:32.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2011-07-12 13:58:37.268113854 +0100
-@@ -383,19 +383,23 @@
-             GE;         // ">="
- 
-             static Operator of(String s) {
--                switch (s) {
--                    case "==":
--                        return EQ;
--                    case "!=":
--                        return NE;
--                    case "<":
--                        return LT;
--                    case "<=":
--                        return LE;
--                    case ">":
--                        return GT;
--                    case ">=":
--                        return GE;
-+                if ("==".equals(s)) {
-+                    return EQ;
-+                }
-+                if ("!=".equals(s)) {
-+                    return NE;
-+                }
-+                if ("<".equals(s)) {
-+                    return LT;
-+                }
-+                if ("<=".equals(s)) {
-+                    return LE;
-+                }
-+                if (">".equals(s)) {
-+                    return GT;
-+                }
-+                if (">=".equals(s)) {
-+                    return GE;
-                 }
- 
-                 throw new IllegalArgumentException(
-diff -r 483d8dacfbd8 src/share/classes/java/lang/invoke/MethodHandleProxies.java
---- openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	Mon Jul 11 22:06:00 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	Tue Jul 12 19:06:31 2011 +0100
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2011-07-12 12:43:47.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2011-07-27 14:52:45.607028852 +0100
 @@ -211,14 +211,16 @@
  
      private static
@@ -301,3 +222,82 @@ diff -r 483d8dacfbd8 src/share/classes/java/lang/invoke/MethodHandleProxies.java
              return (self == args[0]);
          }
          return null;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-06-11 00:38:09.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-07-27 14:52:45.603028787 +0100
+@@ -117,24 +117,20 @@
+         String optStr = (opts.length > 1 && opts[1] != null)
+                 ? opts[1].trim()
+                 : "all";
+-        switch (optStr) {
+-            case "vm":
++        if ("vm".equals(optStr))
++            printVmSettings(ostream, initialHeapSize, maxHeapSize,
++                            stackSize, isServer);
++        else if ("properties".equals(optStr))
++            printProperties(ostream);
++        else if ("locale".equals(optStr))
++            printLocale(ostream);
++        else
++            {
+                 printVmSettings(ostream, initialHeapSize, maxHeapSize,
+-                        stackSize, isServer);
+-                break;
+-            case "properties":
++                                stackSize, isServer);
+                 printProperties(ostream);
+-                break;
+-            case "locale":
+                 printLocale(ostream);
+-                break;
+-            default:
+-                printVmSettings(ostream, initialHeapSize, maxHeapSize,
+-                        stackSize, isServer);
+-                printProperties(ostream);
+-                printLocale(ostream);
+-                break;
+-        }
++            }
+     }
+ 
+     /*
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2011-04-30 03:28:32.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2011-07-27 14:52:45.607028852 +0100
+@@ -383,19 +383,23 @@
+             GE;         // ">="
+ 
+             static Operator of(String s) {
+-                switch (s) {
+-                    case "==":
+-                        return EQ;
+-                    case "!=":
+-                        return NE;
+-                    case "<":
+-                        return LT;
+-                    case "<=":
+-                        return LE;
+-                    case ">":
+-                        return GT;
+-                    case ">=":
+-                        return GE;
++                if ("==".equals(s)) {
++                    return EQ;
++                }
++                if ("!=".equals(s)) {
++                    return NE;
++                }
++                if ("<".equals(s)) {
++                    return LT;
++                }
++                if ("<=".equals(s)) {
++                    return LE;
++                }
++                if (">".equals(s)) {
++                    return GT;
++                }
++                if (">=".equals(s)) {
++                    return GE;
+                 }
+ 
+                 throw new IllegalArgumentException(
