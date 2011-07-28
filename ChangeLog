@@ -1,3 +1,14 @@
+2011-07-29  Andrew John Hughes  <ahughes@redhat.com>
+
+	(CORBA_SHA256SUM): Fix checksums to match
+	those on IcedTea server, not OpenJDK one.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+
 2011-07-13  Andrew John Hughes  <ahughes@redhat.com>
 
 	Bump to tip.
