@@ -11,6 +11,17 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.0 (2011-XX-XX):
 
+* Bug fixes
+  - PR767: Annotation Processing Filer.getResource() always throws FileNotFoundException
+  - Allow the compiler used to be overridden by setting BUILD_GCC/BUILD_CPP.
+  - Fixed regression test runtime/7020373.
+* Zero/Shark
+  - PR757, 7066143: 7009309 regression: x86 stubRoutines
+  - PR753, 7066143: 7009923 regression
+  - methodHandles_zero missing.
+  - sharkContext typo in assert
+  - sharedRuntime needs rework after indy reorg
+  - Add missing describe_pd method for Zero.
 * JamVM
   - JamVM is self-hosting.
   - Make classlib init functions consistent + warnings.

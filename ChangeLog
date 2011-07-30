@@ -1,3 +1,45 @@
+2011-07-29  Andrew John Hughes  <ahughes@redhat.com>
+
+	PR717: All non-bootstrap patches in IcedTea7
+	should be in the forest or dropped
+	PR767: Annotation Processing Filer.getResource()
+	always throws FileNotFoundException
+	* patches/demos.patch:
+	Moved to IcedTea7 forest.
+	* patches/gcc-suffix.patch:
+	Recreated more generically in the forest
+	using BUILD_GCC/BUILD_CPP/HOST_GCC/HOST_CPP
+	to set the names of the appropriate binaries.
+	* patches/headers.patch:
+	Recreated in forest using FT2_CFLAGS and FT2_LIBS
+	for passing FreeType cflags and libraries from
+	pkg-config.
+	* patches/jpegclasses.patch:
+	Removed; the com.sun.jpeg classes should not be
+	in 7.
+	* patches/memory-limits.patch,
+	* patches/print-lsb-release.patch:
+	Moved to IcedTea7 forest.
+	* patches/sunsrc.patch: Obsolete, dropped as
+	in IcedTea6.
+	* patches/text-relocations.patch:
+	Moved to IcedTea7 forest.
+	* Makefile.am:
+	(JDK_CHANGESET): Updated to bring in
+	above patches.
+	(JDK_SHA256SUM): Likewise.
+	(HOTSPOT_CHANGESET): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(LANGTOOLS_CHANGESET): Bring in fix
+	for PR767.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Remove above patches.
+	(ICEDTEA_ENV): Set FT2_CFLAGS, FT2_LIBS,
+	BUILD_GCC and BUILD_CPP.
+	* patches/cacao/arch.patch: Recreated
+	against new forest.
+	* NEWS: Updated.
+
 2011-07-28  Andrew John Hughes  <ahughes@redhat.com>
 
 	Bring in new JDK build cleanups and
