@@ -1,3 +1,16 @@
+2011-08-02  Xerxes Rånby  <xerxes@zafena.se>
+
+	JamVM
+	- Put parsing of -cp and -classpath options back in.
+	- Fix threading of references list during compaction.
+	- Further fix to freeClassData for native methods.
+	- Fix class GC with classes containing Miranda methods.
+	- Propogate initialisation errors to top-level.
+	* NEWS: Updated.
+	* Makefile.am
+	(JAMVM_VERSION): Updated JamVM to 2011-08-01 revision.
+	(JAMVM_SHA256SUM): Updated.
+
 2011-07-29  Andrew John Hughes  <ahughes@redhat.com>
 
 	(CORBA_SHA256SUM): Fix checksums to match

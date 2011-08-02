@@ -15,6 +15,11 @@ New in release 2.0 (2011-XX-XX):
 
 * JamVM
   - JamVM is self-hosting.
+  - Put parsing of -cp and -classpath options back in.
+  - Fix threading of references list during compaction.
+  - Further fix to freeClassData for native methods.
+  - Fix class GC with classes containing Miranda methods.
+  - Propogate initialisation errors to top-level.
   - Make classlib init functions consistent + warnings.
   - Correctly implement sun.misc.Unsafe freeMemory().
   - Move lazy-loading to init function.
