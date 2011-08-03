@@ -1277,10 +1277,46 @@ AC_CACHE_CHECK([if $JAVAH supports -X options], it_cv_javahx, [
   fi
 ])
 rm -f $SUBCLASS $SUPERCLASS $SUBHEADER *.class
+AC_CACHE_CHECK([if $JAVAH exhibits Classpath bug 45526], it_cv_cp45526_javah, [
+SRC=Test.java
+CLASSFILE=$(echo $SRC|sed 's#\.java##')
+HEADER=$(echo $SRC|sed 's#\.java#.h#')
+cat << \EOF > $SRC
+/* [#]line __oline__ "configure" */
+public class Test 
+{
+    public native void doStuff();
+
+    public class Inner
+    {
+        public native int doMoreStuff(long ptr);
+    }
+}
+EOF
+if $JAVAC -cp . $JAVACFLAGS $SRC >&AS_MESSAGE_LOG_FD 2>&1; then
+  if $JAVAH -classpath . $CLASSFILE >&AS_MESSAGE_LOG_FD 2>&1; then
+    if test -e Test_Inner.h ; then
+      it_cv_cp45526_javah=no;
+    else
+      it_cv_cp45526_javah=yes;
+    fi
+  else
+    AC_MSG_ERROR([The Java header generator $JAVAH failed])
+    echo "configure: failed program was:" >&AC_FD_CC
+    cat $SUBCLASS >&AC_FD_CC
+  fi
+else
+  AC_MSG_ERROR([The Java compiler $JAVAC failed])
+  echo "configure: failed program was:" >&AC_FD_CC
+  cat $SUBCLASS >&AC_FD_CC
+fi
+])
+rm -f $SRC *.class *.h
 cd ..
 rmdir tmp.$$
 AM_CONDITIONAL([CP39408_JAVAH], test x"${it_cv_cp39408_javah}" = "xyes")
 AM_CONDITIONAL([CP40188_JAVAH], test x"${it_cv_cp40188_javah}" = "xyes")
+AM_CONDITIONAL([CP45526_JAVAH], test x"${it_cv_cp45526_javah}" = "xyes")
 AM_CONDITIONAL([JAVAH_SUPPORTS_X_OPTIONS], test x"${it_cv_javahx}" = "xyes")
 AC_PROVIDE([$0])dnl
 ])

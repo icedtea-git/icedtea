@@ -1,3 +1,17 @@
+2011-08-03  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	Apply explicit-inner-class-headers patch as required.
+	* acinclude.m4: Test for PR classpath/45526
+	explicitly instead of assuming it is present
+	when the other bugs are (not true with current
+	Classpath CVS).
+	* patches/boot/explicit-inner-class-headers.patch:
+	Split out from javah.patch so as to apply when other
+	bugs aren't present.
+	* patches/boot/javah.patch:
+	Remove above patch.
+
 2011-08-03  Andrew Haley  <aph@redhat.com>
 
 	Fixed bug #7073913 in src/share/vm/runtime/os.cpp

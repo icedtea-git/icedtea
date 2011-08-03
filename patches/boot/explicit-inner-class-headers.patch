@@ -1,0 +1,25 @@
+diff -Nru openjdk-boot.orig/jdk/make/common/Rules.gmk openjdk-boot/jdk/make/common/Rules.gmk
+--- openjdk-boot.orig/jdk/make/common/Rules.gmk	2009-12-13 20:37:41.000000000 +0000
++++ openjdk-boot/jdk/make/common/Rules.gmk	2009-12-13 21:11:04.000000000 +0000
+@@ -303,7 +303,11 @@
+ 	$(prep-target)
+ 	@$(ECHO) "# Running javah:"
+ 	$(JAVAH_CMD) -d $(CLASSHDRDIR)/ \
+-		$(CLASSES.export) $(subst $$,\$$,$(EXPORTED_inner))
++		$(CLASSES.export) 
++	$(foreach innerclass,$(subst $$,\$$,$(EXPORTED_inner)), \
++	  $(JAVAH_CMD) \
++	    -o $(CLASSHDRDIR)/$(subst .,_,$(subst \$$,_,$(innerclass))).h \
++	    $(innerclass))
+ 	@$(java-vm-cleanup)
+ 	@$(TOUCH) $@
+ 
+diff -Nru openjdk-boot.orig/jdk/make/sun/awt/FILES_export_unix.gmk openjdk-boot/jdk/make/sun/awt/FILES_export_unix.gmk
+--- openjdk-boot.orig/jdk/make/sun/awt/FILES_export_unix.gmk	2009-12-04 23:26:35.000000000 +0000
++++ openjdk-boot/jdk/make/sun/awt/FILES_export_unix.gmk	2009-12-13 21:11:04.000000000 +0000
+@@ -189,3 +189,5 @@
+ 	java/awt/dnd/DnDConstants.java \
+ 	sun/awt/CausedFocusEvent.java
+ 
++EXPORTED_inner = \
++    sun.java2d.opengl.OGLContext$$OGLContextCaps

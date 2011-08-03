@@ -374,6 +374,10 @@ ICEDTEA_BOOT_PATCHES += patches/boot/pr40188.patch \
 	patches/boot/javah.patch
 endif
 
+if CP45526_JAVAH
+ICEDTEA_BOOT_PATCHES += patches/boot/explicit-inner-class-headers.patch
+endif
+
 if CP40616
 ICEDTEA_BOOT_PATCHES += patches/boot/pr40616.patch
 endif
