@@ -1,6 +1,14 @@
 2011-08-03  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	(JDK_CHANGESET): Updated to bring in
+	libpng 1.5 and src.zip fixes.
+	(JDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+
+2011-08-03  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	Apply explicit-inner-class-headers patch as required.
 	* acinclude.m4: Test for PR classpath/45526
 	explicitly instead of assuming it is present
