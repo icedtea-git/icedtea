@@ -17,6 +17,10 @@ New in release 2.0 (2011-XX-XX):
   - Fixed regression test runtime/7020373.
   - PR586: Add missing sources to src.zip.
   - G356743: Support building against libpng 1.5.
+  - S7070134: Hotspot crashes with sigsegv from PorterStemmer
+  - S7044738: Loop unroll optimization causes incorrect result
+  - S7068051: SIGSEGV in PhaseIdealLoop::build_loop_late_post
+  - S7073913: Avoid random segfaults.
 * Zero/Shark
   - PR757, 7066143: 7009309 regression: x86 stubRoutines
   - PR753, 7066143: 7009923 regression
