@@ -1,3 +1,13 @@
+2011-08-03  Andrew Haley  <aph@redhat.com>
+
+	Fixed bug #7073913 in src/share/vm/runtime/os.cpp
+	which caused random segfaults due to buffer
+	overflow and incorrect usage of int variable
+	instead of char (byte) one.
+	* Makefile.am:
+	(HOTSPOT_CHANGESET): Updated.
+	(HOTSPOT_SHA256SUM): Likewise.
+
 2011-08-02  Xerxes Rånby  <xerxes@zafena.se>
 
 	JamVM
