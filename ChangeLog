@@ -12,12 +12,14 @@
 	* patches/boot/javah.patch:
 	Remove above patch.
 
-2011-08-03  Andrew Haley  <aph@redhat.com>
+2011-08-03  Pavel Tisnovsky  <ptisnovs@redhat.com>
 
-	Fixed bug #7073913 in src/share/vm/runtime/os.cpp
+	Brought in fix #7073913 in src/share/vm/runtime/os.cpp
 	which caused random segfaults due to buffer
 	overflow and incorrect usage of int variable
-	instead of char (byte) one.
+	instead of char (byte) one.  Also brought in
+	7068051, 7044738 and 7070134 fixes for HotSpot
+	loop bugs.
 	* Makefile.am:
 	(HOTSPOT_CHANGESET): Updated.
 	(HOTSPOT_SHA256SUM): Likewise.
