@@ -107,6 +107,10 @@ New in release 1.14 (2011-05-25):
   - MIPS: 64-bit and interpreter inlining by default.
   - Trivial implementation of stubs for MIPS.
 * CACAO
+  - CA159: Exception handler blocks / register mixup.
+  - Set thread to RUNNABLE during Thread.start.
+  - Removed state-setting function call that would be done by the thread itself,
+    creating a nasty race.
   - Threadlist & threadobject improvements.
   - Ignore all unknown options, but report them.
   - Fixes build for newer gcc (at least 4.4) on PPC64, breaks older gcc.
