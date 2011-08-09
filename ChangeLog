@@ -1,3 +1,14 @@
+2011-08-09  Xerxes Rånby  <xerxes@zafena.se>
+
+	JamVM
+	- Remove empty clobber.
+	- Use dots instead of slashes in classname for exception.
+	- Correct thrown exception by bootstrap loader.
+	* NEWS: Updated.
+	* Makefile.am
+	(JAMVM_VERSION): Updated JamVM to 2011-08-08 revision.
+	(JAMVM_SHA256SUM): Updated.
+
 2011-08-02  Xerxes Rånby  <xerxes@zafena.se>
 
 	JamVM

@@ -15,6 +15,9 @@ New in release 2.0 (2011-XX-XX):
 
 * JamVM
   - JamVM is self-hosting.
+  - Remove empty clobber.
+  - Use dots instead of slashes in classname for exception.
+  - Correct thrown exception by bootstrap loader.
   - Put parsing of -cp and -classpath options back in.
   - Fix threading of references list during compaction.
   - Further fix to freeClassData for native methods.
