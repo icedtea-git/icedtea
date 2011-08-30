@@ -1,3 +1,14 @@
+2011-08-30  Xerxes Rånby  <xerxes@zafena.se>
+
+	CACAO
+	- CA149: Used wrong class loader.
+	- src/vm/javaobjects.cpp (java_lang_reflect_Method::invoke):
+	  [OPENJDK] stack index of caller was off by one, causing many apt
+	  (Annotation Processing Tool) failures.
+	* Makefile.am
+	(CACAO_VERSION): Updated CACAO to 2011-08-29 revision.
+	(CACAO_SHA256SUM): Updated.
+
 2011-08-09  Xerxes Rånby  <xerxes@zafena.se>
 
 	CACAO
