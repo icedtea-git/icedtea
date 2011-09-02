@@ -15,6 +15,7 @@ New in release 2.0 (2011-XX-XX):
 
 * JamVM
   - JamVM is self-hosting.
+  - PR772: jtreg LocalOnlyTest sends SIGQUIT to all processes on exit.
   - Remove empty clobber.
   - Use dots instead of slashes in classname for exception.
   - Correct thrown exception by bootstrap loader.
