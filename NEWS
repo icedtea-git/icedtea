@@ -6,6 +6,7 @@ RHX - https://bugzilla.redhat.com/show_bug.cgi?id=X
 DX  - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=X
 GX  - http://bugs.gentoo.org/show_bug.cgi?id=X
 CAX - http://server.complang.tuwien.ac.at/cgi-bin/bugzilla/show_bug.cgi?id=X
+LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
@@ -16,6 +17,11 @@ New in release 2.0 (2011-XX-XX):
 * JamVM
   - JamVM is self-hosting.
   - PR772: jtreg LocalOnlyTest sends SIGQUIT to all processes on exit.
+  - LP827463: Fix OpenJDK enclosingMethodInfo().
+  - "Fix" handling of CLI bootclasspath options.
+  - Fix for StackTraceElement checkin.
+  - Fix typo in definition of ACC_MIRANDA.
+  - Intern strings when creating a StackTraceElement.
   - Ignore assertions and verify options.
   - Remove empty clobber.
   - Use dots instead of slashes in classname for exception.

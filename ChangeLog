@@ -1,3 +1,16 @@
+2011-08-19  Xerxes Rånby  <xerxes@zafena.se>
+
+	JamVM
+	- LP827463: Fix OpenJDK enclosingMethodInfo().
+	- "Fix" handling of CLI bootclasspath options.
+	- Fix for StackTraceElement checkin.
+	- Fix typo in definition of ACC_MIRANDA.
+	- Intern strings when creating a StackTraceElement.
+	* NEWS: Updated.
+	* Makefile.am
+	(JAMVM_VERSION): Updated JamVM to 2011-08-19 revision.
+	(JAMVM_SHA256SUM): Updated.
+
 2011-08-15  Xerxes Rånby  <xerxes@zafena.se>
 
        JamVM
