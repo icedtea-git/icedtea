@@ -309,7 +309,8 @@ endif
 if BUILD_JAMVM
 ICEDTEA_PATCHES += \
 	patches/jamvm/remove-sun.misc.Perf-debug-code.patch \
-	patches/jamvm/jmm_GetLongAttribute_201.patch
+	patches/jamvm/jmm_GetLongAttribute_201.patch \
+	patches/jamvm/ignore-assertions-and-verify-options.patch
 endif
 
 if ENABLE_PULSE_JAVA

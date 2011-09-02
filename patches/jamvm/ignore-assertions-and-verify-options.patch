@@ -1,0 +1,20 @@
+Index: jamvm/jamvm/src/init.c
+===================================================================
+--- jamvm.orig/jamvm/src/init.c	2011-08-12 14:12:00.775411188 +0200
++++ jamvm/jamvm/src/init.c	2011-08-12 16:22:24.110205028 +0200
+@@ -272,6 +272,15 @@
+     /* Compatibility options */
+     } else if(strcmp(string,  "-Xcomp")  == 0 ||
+               strcmp(string,  "-Xbatch") == 0 ||
++              strcmp(string,  "-ea") == 0 ||
++              strcmp(string,  "-da") == 0 ||
++              strcmp(string,  "-dsa") == 0 ||
++              strcmp(string,  "-esa") == 0 ||
++              strncmp(string, "-ea:", 4) == 0 ||
++              strncmp(string, "-da:", 4) == 0 ||
++              strncmp(string, "-dsa:", 5) == 0 ||
++              strncmp(string, "-esa:", 5) == 0 ||
++              strncmp(string, "-Xverify:", 9) == 0 ||
+               strncmp(string, "-XX:", 4) == 0) {
+         /* Ignore */
+     } else
