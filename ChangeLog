@@ -1,3 +1,11 @@
+2011-08-10  Xerxes Rånby  <xerxes@zafena.se>
+
+	JamVM
+	- PR772: jtreg LocalOnlyTest sends SIGQUIT to all processes on exit.
+	* NEWS: Updated.
+	* patches/jamvm/jmm_GetLongAttribute_201.patch: New patch.
+	* Makefile.am: Apply JamVM patch.
+
 2011-08-09  Xerxes Rånby  <xerxes@zafena.se>
 
 	JamVM
