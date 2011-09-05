@@ -1,3 +1,12 @@
+2011-09-05  Xerxes Rånby  <xerxes@zafena.se>
+
+	JamVM
+	- armhf: ensure stack is 8 byte aligned.
+	* NEWS: Updated.
+	* Makefile.am
+	(JAMVM_VERSION): Updated JamVM to 2011-09-03 revision.
+	(JAMVM_SHA256SUM): Updated.
+
 2011-09-02  Xerxes Rånby  <xerxes@zafena.se>
 
 	JamVM
