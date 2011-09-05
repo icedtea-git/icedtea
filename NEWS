@@ -19,6 +19,7 @@ New in release 2.0 (2011-XX-XX):
   - PR772: jtreg LocalOnlyTest sends SIGQUIT to all processes on exit.
   - LP827463: Fix OpenJDK enclosingMethodInfo().
   - Add support for armhf.
+  - armhf: ensure stack is 8 byte aligned.
   - "Fix" handling of CLI bootclasspath options.
   - Fix for StackTraceElement checkin.
   - Fix typo in definition of ACC_MIRANDA.

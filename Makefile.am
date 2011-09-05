@@ -24,8 +24,8 @@ CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
-JAMVM_VERSION = 6a5776faa95649adae498e349da7a93b8b9fc355
-JAMVM_SHA256SUM = 1482dbd4d1ee44b6c50350904ae44debeaee72fb2fafeca6862db9fa00a04171
+JAMVM_VERSION = 12d05e620a9fda129925104bc848014f91d971db
+JAMVM_SHA256SUM = b7e3999f5b46cfddcf717b2d06460d34167fe9eb3b306a311f1df6d31b99ef32
 JAMVM_BASE_URL = http://icedtea.classpath.org/download/drops/jamvm
 JAMVM_URL = $(JAMVM_BASE_URL)/jamvm-$(JAMVM_VERSION).tar.gz
 JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
