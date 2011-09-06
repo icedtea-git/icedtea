@@ -13,10 +13,11 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 2.0 (2011-XX-XX):
 
 * Bug fixes
-  - PR767: Annotation Processing Filer.getResource() always throws FileNotFoundException
   - Allow the compiler used to be overridden by setting BUILD_GCC/BUILD_CPP.
   - Fixed regression test runtime/7020373.
+  - Convert to optional system library usage via USE_SYSTEM_ZLIB/JPEG/PNG/GIF.
   - PR586: Add missing sources to src.zip.
+  - PR767: Annotation Processing Filer.getResource() always throws FileNotFoundException
   - G356743: Support building against libpng 1.5.
   - S7070134: Hotspot crashes with sigsegv from PorterStemmer
   - S7044738: Loop unroll optimization causes incorrect result
@@ -25,6 +26,7 @@ New in release 2.0 (2011-XX-XX):
 * Zero/Shark
   - PR757, 7066143: 7009309 regression: x86 stubRoutines
   - PR753, 7066143: 7009923 regression
+  - PR770: Zero 7033954 regression: missing mapfile
   - methodHandles_zero missing.
   - sharkContext typo in assert
   - sharedRuntime needs rework after indy reorg

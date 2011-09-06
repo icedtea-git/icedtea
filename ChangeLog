@@ -1,3 +1,36 @@
+2011-09-06  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/hotspot-gcc-pr36917.patch:
+	Redundant, was removed from IcedTea6.
+	* patches/libraries.patch,
+	* patches/linker-libs-order.patch,
+	* patches/pr261.patch:
+	Updated and recreated in the IcedTea7 forest.
+	* Makefile.am:
+	(JDK_CHANGESET): Updated.
+	(JDK_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Remove above.
+	(ICEDTEA_ENV): Set ZLIB_LIBS, ZLIB_CFLAGS,
+	USE_SYSTEM_ZLIB, JPEG_LIBS, JPEG_CFLAGS,
+	USE_SYSTEM_JPEG, PNG_LIBS, PNG_CFLAGS,
+	USE_SYSTEM_PNG, GIF_LIBS, GIF_CFLAGS,
+	USE_SYSTEM_GIF.
+	* NEWS: Mention new system library provision
+	and cleanup ordering.  Mention fix for PR770.
+	* acinclude.m4:
+	(IT_CHECK_FOR_ZLIB): New macro to check for zlib.
+	(IT_CHECK_FOR_JPEG): Likewise for libjpeg.
+	(IT_CHECK_FOR_PNG): Likewise for libpng.
+	(IT_CHECK_FOR_GIF): Likewise for giflib.
+	* configure.ac:
+	Remove old AC_CHECK_LIB calls for jpeg, gif
+	and zlib and PKG_CHECK_MODULES call for libpng.
+	Add calls to new macros above.
+	* remove-intree-libraries.sh.in:
+	Make removal of zlib, libpng, giflib and libjpeg
+	files dependent on whether or not the system versions
+	are used (the default).
+
 2011-09-05  Xerxes Rånby  <xerxes@zafena.se>
 
 	JamVM

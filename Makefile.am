@@ -6,7 +6,7 @@ CORBA_CHANGESET = 616c760dc288
 HOTSPOT_CHANGESET = 1dd9b3d73b22
 JAXP_CHANGESET = c40983d6ae70
 JAXWS_CHANGESET = 83db5e316798
-JDK_CHANGESET = e46d527097f1
+JDK_CHANGESET = db7a2639858b
 LANGTOOLS_CHANGESET = fb7fb3071b64
 OPENJDK_CHANGESET = 3defd24c2671
 
@@ -14,7 +14,7 @@ CORBA_SHA256SUM = 7589c42e88b4342750bea5afa306cc662cc9c5f7607fad96f70083ce70f452
 HOTSPOT_SHA256SUM = ffb1831a63e950bb7ade46a5382cb71d2603e0f40b3f758eb346833e18fca150
 JAXP_SHA256SUM = 6ab0cab1965edb28e4093b55436abd04fbffe0b0251016043c75246c4ee9dc2d
 JAXWS_SHA256SUM = 5567c90ce2857016365b2e346783a3b16ec0e76b80586a0371f601b4fed01f21
-JDK_SHA256SUM = 0cd074fb2400c95d013373847b5c52bb13997acbb6530507e384856583e1abd4
+JDK_SHA256SUM = 81b510c80f3af0a1cd19704c616a68ff131362b517996ae65cb91c9a5849fcdc
 LANGTOOLS_SHA256SUM = 9ddc00ec50fd2f5e331dc2bc10da4e23b69bf644eb92d50b39a2003c18fb5aa1
 OPENJDK_SHA256SUM = 4043a75c2c4385dd735f8dbbf2369311ce1b951217c9dbe9bba9609e24eb291e
 
@@ -246,13 +246,11 @@ REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 # Patch list
 
 ICEDTEA_PATCHES = \
-	patches/libraries.patch \
 	patches/debian/uname.patch \
 	patches/sparc-ptracefix.patch \
 	patches/sparc-trapsfix.patch \
 	patches/override-redirect-metacity.patch \
 	patches/security-updates.patch \
-	patches/hotspot-gcc-pr36917.patch \
 	patches/alpha-fixes.patch \
 	patches/alt-jar.patch \
 	patches/use-idx_t.patch \
@@ -262,9 +260,7 @@ ICEDTEA_PATCHES = \
 	patches/signed-types.patch \
 	patches/lc_ctype.patch \
 	patches/tests-jdk.patch \
-	patches/linker-libs-order.patch \
 	patches/samejvm-safe.patch \
-	patches/pr261.patch \
 	patches/parisc-opt.patch \
         patches/security/6592792.patch \
         patches/security/6733959.patch \
@@ -515,11 +511,39 @@ ICEDTEA_ENV += \
 	RHINO_JAR="$(abs_top_builddir)/rhino/rhino.jar"
 endif
 
+if USE_SYSTEM_ZLIB
+ICEDTEA_ENV += \
+	USE_SYSTEM_ZLIB="true" \
+	ZLIB_LIBS="${ZLIB_LIBS}" \
+	ZLIB_CFLAGS="${ZLIB_CFLAGS}"
+endif
+
 if USE_SYSTEM_LCMS
 ICEDTEA_ENV += \
 	USE_SYSTEM_LCMS="true" \
 	LCMS_LIBS="${LCMS2_LIBS}" \
 	LCMS_CFLAGS="${LCMS2_CFLAGS}"
+endif
+
+if USE_SYSTEM_JPEG
+ICEDTEA_ENV += \
+	USE_SYSTEM_JPEG="true" \
+	JPEG_LIBS="${JPEG_LIBS}" \
+	JPEG_CFLAGS="${JPEG_CFLAGS}"
+endif
+
+if USE_SYSTEM_PNG
+ICEDTEA_ENV += \
+	USE_SYSTEM_PNG="true" \
+	PNG_LIBS="${PNG_LIBS}" \
+	PNG_CFLAGS="${PNG_CFLAGS}"
+endif
+
+if USE_SYSTEM_GIF
+ICEDTEA_ENV += \
+	USE_SYSTEM_GIF="true" \
+	GIF_LIBS="${GIF_LIBS}" \
+	GIF_CFLAGS="${GIF_CFLAGS}"
 endif
 
 # OpenJDK boot build environment.
