@@ -1,3 +1,10 @@
+2011-09-09  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(JDK_CHANGESET): Bring in fix for another
+	duplicate gboolean definition.
+	(JDK_SHA256SUM): Likewise.
+
 2011-09-08  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
