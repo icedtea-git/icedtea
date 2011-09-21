@@ -1,6 +1,17 @@
 2011-09-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	(ICEDTEA_ENV): Set COMPILE_AGAINST_SYSCALLS
+	if USE_SYSCALL_COMPILATION is set.
+	* acinclude.m4:
+	(IT_CHECK_FOR_SYSCALLS): Add --enable-compile-against-syscalls
+	which checks for various syscalls (epolling, extended attributes,
+	*at).
+	* configure.ac: Call IT_CHECK_FOR_SYSCALLS.
+
+2011-09-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(JDK_CHANGESET): Bump to bring in latest
 	GConf->GIO fix for proxy detection.
 	(JDK_SHA256SUM): Likewise.

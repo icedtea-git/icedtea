@@ -174,6 +174,7 @@ IT_CHECK_FOR_GTK
 IT_CHECK_FOR_GIO
 IT_CHECK_FOR_FONTCONFIG
 IT_CHECK_FOR_CUPS
+IT_CHECK_FOR_SYSCALLS
 AC_CONFIG_FILES([remove-intree-libraries.sh])
 
 dnl Check for Xproto headers and libraries.

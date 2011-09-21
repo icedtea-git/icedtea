@@ -2147,6 +2147,27 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_CUPS],
   AC_SUBST(CUPS_LIBS)
 ])
 
+AC_DEFUN_ONCE([IT_CHECK_FOR_SYSCALLS],
+[
+  AC_MSG_CHECKING([whether to build against the required syscalls])
+  AC_ARG_ENABLE([compile-against-syscalls],
+	      [AS_HELP_STRING(--enable-compile-against-syscalls,compile against syscalls [[default=yes]])],
+  [
+    ENABLE_SYSCALL_COMPILATION="${enableval}"
+  ],
+  [
+    ENABLE_SYSCALL_COMPILATION="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSCALL_COMPILATION})
+  if test x"${ENABLE_SYSCALL_COMPILATION}" = "xyes"; then
+    dnl Check for syscalls
+    AC_CHECK_FUNCS([openat64 fstatat64 fgetxattr fsetxattr fremovexattr flistxattr unlinkat renameat futimesat fdopendir epoll_create epoll_ctl epoll_wait],,
+      [AC_MSG_ERROR([Could not find required syscalls; check config.log and use --disable-compile-against-syscalls if necessary.])])
+  fi
+  AM_CONDITIONAL(USE_SYSCALL_COMPILATION, test x"${ENABLE_SYSCALL_COMPILATION}" = "xyes")
+  AC_SUBST(ENABLE_SYSCALL_COMPILATION)
+])
+
 AC_DEFUN([IT_ENABLE_JAMVM],
 [
   AC_MSG_CHECKING(whether to use JamVM as VM)
