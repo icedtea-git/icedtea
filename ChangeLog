@@ -1,3 +1,24 @@
+2011-09-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(JDK_CHANGESET): Bump to bring in latest
+	GConf->GIO fix for proxy detection.
+	(JDK_SHA256SUM): Likewise.
+	(ICEDTEA_ENV): Set USE_SYSTEM_CUPS, CUPS_LIBS,
+	CUPS_CFLAGS, USE_SYSTEM_GTK, GTK_LIBS, GTK_CFLAGS,
+	USE_SYSTEM_GIO, GIO_LIBS, GIO_CFLAGS, USE_SYSTEM_FONTCONFIG,
+	FONTCONFIG_LIBS, FONTCONFIG_CFLAGS.
+	* acinclude.m4,
+	(IT_CHECK_FOR_GTK): Add --enable-system-gtk and detect
+	Gtk+ if enabled.
+	(IT_CHECK_FOR_GIO): Likewise for --enable-system-gio.
+	(IT_CHECK_FOR_FONTCONFIG): Likewise for --enable-system-fontconfig.
+	(IT_CHECK_FOR_CUPS): Detect both CUPS headers and libraries,
+	and set CUPS_LIBS.
+	* configure.ac: Remove old CUPS detection.
+	Add calls to IT_CHECK_FOR_GTK, IT_CHECK_FOR_GIO,
+	IT_CHECK_FOR_FONTCONFIG and IT_CHECK_FOR_CUPS.
+
 2011-09-09  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

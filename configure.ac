@@ -161,9 +161,6 @@ AC_PATH_TOOL([GCJ],[gcj])
 AC_SUBST([GCJ])
 
 dnl pkgconfig cannot be used to find these headers and libraries.
-AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]
-	,[AC_MSG_ERROR("CUPS headers were not found -
-	try installing cups-devel.")])
 AC_CHECK_HEADERS([X11/X.h],[]
 	,[AC_MSG_ERROR("xorg headers were not found -
 	try installing xorg-x11-proto-devel.")])
@@ -173,6 +170,10 @@ IT_CHECK_FOR_JPEG
 IT_CHECK_FOR_PNG
 IT_CHECK_FOR_GIF
 IT_CHECK_FOR_LCMS
+IT_CHECK_FOR_GTK
+IT_CHECK_FOR_GIO
+IT_CHECK_FOR_FONTCONFIG
+IT_CHECK_FOR_CUPS
 AC_CONFIG_FILES([remove-intree-libraries.sh])
 
 dnl Check for Xproto headers and libraries.

@@ -2058,6 +2058,95 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_GIF],
   AC_SUBST(ENABLE_SYSTEM_GIF)
 ])
 
+AC_DEFUN_ONCE([IT_CHECK_FOR_GTK],
+[
+  AC_MSG_CHECKING([whether to use the system Gtk+ install])
+  AC_ARG_ENABLE([system-gtk],
+	      [AS_HELP_STRING(--enable-system-gtk,use the system Gtk+ [[default=yes]])],
+  [
+    ENABLE_SYSTEM_GTK="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_GTK="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_GTK})
+  if test x"${ENABLE_SYSTEM_GTK}" = "xyes"; then
+    dnl Check for Gtk+ headers and libraries.
+    PKG_CHECK_MODULES(GTK, gtk+-2.0,[GTK_FOUND=yes],[GTK_FOUND=no])
+    if test "x${GTK_FOUND}" = xno
+    then
+      AC_MSG_ERROR([Could not find Gtk+; install Gtk+ or build with --disable-system-gtk to use the in-tree headers.])
+    fi
+    AC_SUBST(GTK_CFLAGS)
+    AC_SUBST(GTK_LIBS)
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_GTK, test x"${ENABLE_SYSTEM_GTK}" = "xyes")
+  AC_SUBST(ENABLE_SYSTEM_GTK)
+])
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_GIO],
+[
+  AC_MSG_CHECKING([whether to use the system GIO install])
+  AC_ARG_ENABLE([system-gio],
+	      [AS_HELP_STRING(--enable-system-gio,use the system GIO [[default=yes]])],
+  [
+    ENABLE_SYSTEM_GIO="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_GIO="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_GIO})
+  if test x"${ENABLE_SYSTEM_GIO}" = "xyes"; then
+    dnl Check for Gio+ headers and libraries.
+    PKG_CHECK_MODULES(GIO, gio-2.0,[GIO_FOUND=yes],[GIO_FOUND=no])
+    if test "x${GIO_FOUND}" = xno
+    then
+      AC_MSG_ERROR([Could not find GIO; install GIO or build with --disable-system-gio to use the in-tree headers.])
+    fi
+    AC_SUBST(GIO_CFLAGS)
+    AC_SUBST(GIO_LIBS)
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_GIO, test x"${ENABLE_SYSTEM_GIO}" = "xyes")
+  AC_SUBST(ENABLE_SYSTEM_GIO)
+])
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_FONTCONFIG],
+[
+  AC_MSG_CHECKING([whether to use the system fontconfig install])
+  AC_ARG_ENABLE([system-fontconfig],
+	      [AS_HELP_STRING(--enable-system-fontconfig,use the system fontconfig [[default=yes]])],
+  [
+    ENABLE_SYSTEM_FONTCONFIG="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_FONTCONFIG="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_FONTCONFIG})
+  if test x"${ENABLE_SYSTEM_FONTCONFIG}" = "xyes"; then
+    dnl Check for Fontconfig+ headers and libraries.
+    PKG_CHECK_MODULES(FONTCONFIG, fontconfig,[FONTCONFIG_FOUND=yes],[FONTCONFIG_FOUND=no])
+    if test "x${FONTCONFIG_FOUND}" = xno
+    then
+      AC_MSG_ERROR([Could not find fontconfig; install fontconfig or build with --disable-system-fontconfig to use the in-tree headers.])
+    fi
+    AC_SUBST(FONTCONFIG_CFLAGS)
+    AC_SUBST(FONTCONFIG_LIBS)
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_FONTCONFIG, test x"${ENABLE_SYSTEM_FONTCONFIG}" = "xyes")
+  AC_SUBST(ENABLE_SYSTEM_FONTCONFIG)
+])
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_CUPS],
+[
+  dnl Check for CUPS headers and libraries.
+  AC_CHECK_LIB([cups], [cupsServer],
+      , [AC_MSG_ERROR("Could not find CUPS library; install CUPS.")])
+  AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],
+      , [AC_MSG_ERROR("Could not find CUPS headers; install CUPS (including cups-devel on binary distros).")])
+  CUPS_LIBS="-lcups"
+  AC_SUBST(CUPS_LIBS)
+])
+
 AC_DEFUN([IT_ENABLE_JAMVM],
 [
   AC_MSG_CHECKING(whether to use JamVM as VM)
