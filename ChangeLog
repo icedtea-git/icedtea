@@ -1,6 +1,13 @@
 2011-09-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	(JDK_CHANGESET): Include Damian's compilation fix
+	for building without USE_SYSTEM_CUPS.
+	(JDK_SHA256SUM): Likewise.
+
+2011-09-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(ICEDTEA_ENV): Set COMPILE_AGAINST_SYSCALLS
 	if USE_SYSCALL_COMPILATION is set.
 	* acinclude.m4:
