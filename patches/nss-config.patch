@@ -1,9 +1,10 @@
---- openjdk.orig/jdk/src/share/lib/security/java.security	2009-08-25 11:43:59.000000000 +0100
-+++ openjdk/jdk/src/share/lib/security/java.security		2009-08-27 14:23:54.000000000 +0100
-@@ -51,6 +51,7 @@
- security.provider.6=com.sun.security.sasl.Provider
+diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security openjdk/jdk/src/share/lib/security/java.security
+--- openjdk.orig/jdk/src/share/lib/security/java.security	2011-09-22 01:56:22.000000000 +0100
++++ openjdk/jdk/src/share/lib/security/java.security	2011-09-22 13:51:56.234039451 +0100
+@@ -52,6 +52,7 @@
  security.provider.7=org.jcp.xml.dsig.internal.dom.XMLDSigRI
  security.provider.8=sun.security.smartcardio.SunPCSC
+ #security.provider.9=sun.security.ec.SunEC
 +security.provider.9=sun.security.pkcs11.SunPKCS11 ${java.home}/lib/security/nss.cfg
  
  #

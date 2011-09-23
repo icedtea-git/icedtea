@@ -17,6 +17,7 @@ New in release 2.0 (2011-XX-XX):
   - Fixed regression test runtime/7020373.
   - Convert to optional system library usage via USE_SYSTEM_ZLIB/JPEG/PNG/GIF.
   - PR586: Add missing sources to src.zip.
+  - PR717: All non-bootstrap non-conditional patches in IcedTea7 should be in the forest or dropped.
   - PR767: Annotation Processing Filer.getResource() always throws FileNotFoundException
   - G356743: Support building against libpng 1.5.
   - S7070134: Hotspot crashes with sigsegv from PorterStemmer

@@ -2,19 +2,19 @@
 
 OPENJDK_VERSION = b147
 
-CORBA_CHANGESET = 616c760dc288
-HOTSPOT_CHANGESET = 1dd9b3d73b22
+CORBA_CHANGESET = d034cc90ecc2
+HOTSPOT_CHANGESET = 7693eb0fce1f
 JAXP_CHANGESET = c40983d6ae70
 JAXWS_CHANGESET = 83db5e316798
-JDK_CHANGESET = 0cb15650412a
+JDK_CHANGESET = 7ec1845521ed
 LANGTOOLS_CHANGESET = fb7fb3071b64
 OPENJDK_CHANGESET = 3defd24c2671
 
-CORBA_SHA256SUM = 7589c42e88b4342750bea5afa306cc662cc9c5f7607fad96f70083ce70f4526e
-HOTSPOT_SHA256SUM = ffb1831a63e950bb7ade46a5382cb71d2603e0f40b3f758eb346833e18fca150
+CORBA_SHA256SUM = 06e7778aa1670f064e2c9fef7bdedc66fc679262ab8ee7aee018329e1ec787a8
+HOTSPOT_SHA256SUM = 6b2c9b21918183a383ab380c57f70d4be6199df0e2127bb762a20b6eca39e3a2
 JAXP_SHA256SUM = 6ab0cab1965edb28e4093b55436abd04fbffe0b0251016043c75246c4ee9dc2d
 JAXWS_SHA256SUM = 5567c90ce2857016365b2e346783a3b16ec0e76b80586a0371f601b4fed01f21
-JDK_SHA256SUM = ef2310b4df9e8a7891b927846badadf5441df8ac6203a215c8ef1a7676dfee36
+JDK_SHA256SUM = 843e7ccd4c2bad5c96aaa983e34f1eb27510229f138115fa0951e05358c50b2b
 LANGTOOLS_SHA256SUM = 9ddc00ec50fd2f5e331dc2bc10da4e23b69bf644eb92d50b39a2003c18fb5aa1
 OPENJDK_SHA256SUM = 4043a75c2c4385dd735f8dbbf2369311ce1b951217c9dbe9bba9609e24eb291e
 
@@ -245,33 +245,7 @@ REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 
 # Patch list
 
-ICEDTEA_PATCHES = \
-	patches/debian/uname.patch \
-	patches/sparc-ptracefix.patch \
-	patches/sparc-trapsfix.patch \
-	patches/override-redirect-metacity.patch \
-	patches/security-updates.patch \
-	patches/alpha-fixes.patch \
-	patches/alt-jar.patch \
-	patches/use-idx_t.patch \
-	patches/params-cast-size_t.patch \
-	patches/clean-crypto.patch \
-	patches/cacao/arch.patch \
-	patches/signed-types.patch \
-	patches/lc_ctype.patch \
-	patches/tests-jdk.patch \
-	patches/samejvm-safe.patch \
-	patches/parisc-opt.patch \
-        patches/security/6592792.patch \
-        patches/security/6733959.patch \
-        patches/security/6755943.patch \
-	patches/jvmtiEnv.patch \
-	patches/disable-intree-ec.patch \
-	patches/sources.patch \
-	patches/parisc.patch \
-	patches/sh4-support.patch \
-	patches/jtreg-httpTest.patch \
-	patches/update-bootclasspath.patch
+ICEDTEA_PATCHES =
 
 # Conditional patches
 
@@ -306,14 +280,8 @@ ICEDTEA_PATCHES += \
 	patches/pulse-soundproperties.patch
 endif
 
-if !USE_CVMI
-ICEDTEA_PATCHES += \
-	patches/javafiles.patch
-endif
-
 if ENABLE_SYSTEMTAP
 ICEDTEA_PATCHES += patches/systemtap.patch \
-	patches/systemtap-gcc-4.5.patch \
 	patches/systemtap-alloc-size-workaround.patch
 endif
 
@@ -327,7 +295,9 @@ ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
 
 # Bootstrapping patches
 
-ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
+ICEDTEA_BOOT_PATCHES = \
+	patches/boot/javafiles.patch \
+	patches/boot/ant-javac.patch \
 	patches/boot/corba-defs.patch \
 	patches/boot/corba-idlj.patch \
 	patches/boot/corba-no-gen.patch \
@@ -361,7 +331,7 @@ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
 	patches/boot/ecj-trywithresources.patch \
 	patches/boot/ecj-autoboxing.patch \
 	patches/boot/xsltproc.patch \
-	patches/boot/use_target_6_for_bootstrap_classes.patch
+	patches/boot/use_target_6_for_bootstrap_classes.patch 
 
 if CP39408_JAVAH
 ICEDTEA_BOOT_PATCHES += patches/boot/pr39408.patch

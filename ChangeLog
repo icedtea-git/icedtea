@@ -1,5 +1,64 @@
 2011-09-21  Andrew John Hughes  <ahughes@redhat.com>
 
+	PR717: Remove all non-bootstrap non-conditional
+	patches.
+	* patches/6592792.patch,
+	* patches/6733959.patch,
+	* patches/6755943.patch:
+	Remove unused patches.
+	* patches/alpha-fixes.patch,
+	* patches/alt-jar.patch,
+	* patches/cacao/arch.patch,
+	* patches/clean-crypto.patch,
+	* patches/debian/uname.patch,
+	* patches/disable-intree-ec.patch:
+	Moved upstream.
+	* patches/javafiles.patch:
+	Moved to boot.
+	* patches/jtreg-httpTest.patch,
+	* patches/jvmtiEnv.patch,
+	* patches/lc_ctype.patch,
+	* patches/override-redirect-metacity.patch,
+	* patches/params-cast-size_t.patch:
+	Moved upstream.
+	* patches/parisc-opt.patch: Obsolete.
+	* patches/parisc.patch,
+	* patches/samejvm-safe.patch,
+	* patches/security-updates.patch,
+	* patches/security/6592792.patch,
+	* patches/security/6733959.patch,
+	* patches/security/6755943.patch,
+	* patches/sh4-support.patch,
+	* patches/signed-types.patch:
+	Moved upstream.
+	* patches/sources.patch: Obsolete.
+	* patches/sparc-ptracefix.patch,
+	* patches/sparc-trapsfix.patch,
+	* patches/systemtap-gcc-4.5.patch,
+	* patches/tests-jdk.patch,
+	* patches/update-bootclasspath.patch,
+	* patches/use-idx_t.patch:
+	Moved upstream.
+	* Makefile.am:
+	(JDK_CHANGESET): Bring in upstreamed patches.
+	(JDK_SHA256SUM): Likewise.
+	(CORBA_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(HOTSPOT_CHANGESET): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Set to empty, bar conditional
+	additions.
+	(ICEDTEA_BOOT_PATCHES): Add javafiles.patch.
+	* patches/boot/javafiles.patch:
+	Only needed for bootstrapping to ensure
+	all classes are included.
+	* patches/nss-config.patch,
+	* patches/nss-not-enabled-config.patch:
+	Updated against upstream disable-intree-ec.
+	* NEWS: Updated.
+
+2011-09-21  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	(JDK_CHANGESET): Include Damian's compilation fix
 	for building without USE_SYSTEM_CUPS.
