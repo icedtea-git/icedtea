@@ -1,0 +1,26 @@
+diff -Nru jamvm/jamvm/src/init.c jamvm-a95ca049d3bb257d730535a5d5ec3f73a943d0aa/src/init.c
+--- jamvm.orig/jamvm/src/init.c	2011-03-25 17:36:12.000000000 +0800
++++ jamvm/jamvm/src/init.c	2011-09-26 16:54:08.000000000 +0800
+@@ -123,6 +123,11 @@
+         case '\0':
+             break;
+ 
++        case 'G':
++        case 'g':
++	    n *= GB;
++	    break;
++
+         case 'M':
+         case 'm':
+             n *= MB;
+diff -Nru jamvm/jamvm/src/jam.h jamvm-a95ca049d3bb257d730535a5d5ec3f73a943d0aa/src/jam.h
+--- jamvm.orig/jamvm/src/jam.h	2011-03-25 17:36:12.000000000 +0800
++++ jamvm/jamvm/src/jam.h	2011-09-26 16:51:56.000000000 +0800
+@@ -734,6 +734,7 @@
+ 
+ #define KB 1024
+ #define MB (KB*KB)
++#define GB (MB*KB)
+ 
+ /* minimum allowable size of object heap */
+ #define MIN_HEAP 4*KB

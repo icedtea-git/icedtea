@@ -24,8 +24,8 @@ CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
-JAMVM_VERSION = 12d05e620a9fda129925104bc848014f91d971db
-JAMVM_SHA256SUM = b7e3999f5b46cfddcf717b2d06460d34167fe9eb3b306a311f1df6d31b99ef32
+JAMVM_VERSION = 310c491ddc14e92a6ffff27030a1a1821e6395a8
+JAMVM_SHA256SUM = b5174f59371017087139fd43d51074ad837ae29340220206ca06769c8329881a
 JAMVM_BASE_URL = http://icedtea.classpath.org/download/drops/jamvm
 JAMVM_URL = $(JAMVM_BASE_URL)/jamvm-$(JAMVM_VERSION).tar.gz
 JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
@@ -309,7 +309,7 @@ endif
 if BUILD_JAMVM
 ICEDTEA_PATCHES += \
 	patches/jamvm/remove-sun.misc.Perf-debug-code.patch \
-	patches/jamvm/jmm_GetLongAttribute_201.patch \
+	patches/jamvm/gb-memory-fix.patch \
 	patches/jamvm/ignore-assertions-and-verify-options.patch
 endif
 
