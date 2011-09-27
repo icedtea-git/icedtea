@@ -1997,9 +1997,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_JPEG],
   if test x"${ENABLE_SYSTEM_JPEG}" = "xyes"; then
     dnl Check for JPEG headers and libraries.
     AC_CHECK_LIB([jpeg], [main],
-        , [AC_MSG_ERROR("Could not find JPEG library; install JPEG or build with --disable-system-jpeg to use the in-tree copy.")])
+        , [AC_MSG_ERROR([Could not find JPEG library; install JPEG or build with --disable-system-jpeg to use the in-tree copy.])])
     AC_CHECK_HEADER([jpeglib.h],
-        , [AC_MSG_ERROR("Could not find JPEG header; install JPEG or build with --disable-system-jpeg to use the in-tree copy.")])
+        , [AC_MSG_ERROR([Could not find JPEG header; install JPEG or build with --disable-system-jpeg to use the in-tree copy.])])
     JPEG_LIBS="-ljpeg"
     AC_SUBST(JPEG_LIBS)
   fi
@@ -2048,9 +2048,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_GIF],
   if test x"${ENABLE_SYSTEM_GIF}" = "xyes"; then
     dnl Check for GIF headers and libraries.
     AC_CHECK_LIB([gif], [main],
-        , [AC_MSG_ERROR("Could not find GIF library; install GIF or build with --disable-system-gif to use the in-tree copy.")])
+        , [AC_MSG_ERROR([Could not find GIF library; install GIF or build with --disable-system-gif to use the in-tree copy.])])
     AC_CHECK_HEADER([gif_lib.h],
-        , [AC_MSG_ERROR("Could not find GIF header; install GIF or build with --disable-system-gif to use the in-tree copy.")])
+        , [AC_MSG_ERROR([Could not find GIF header; install GIF or build with --disable-system-gif to use the in-tree copy.])])
     GIF_LIBS="-lgif"
     AC_SUBST(GIF_LIBS)
   fi
@@ -2140,9 +2140,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_CUPS],
 [
   dnl Check for CUPS headers and libraries.
   AC_CHECK_LIB([cups], [cupsServer],
-      , [AC_MSG_ERROR("Could not find CUPS library; install CUPS.")])
+      , [AC_MSG_ERROR([Could not find CUPS library; install CUPS.])])
   AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],
-      , [AC_MSG_ERROR("Could not find CUPS headers; install CUPS (including cups-devel on binary distros).")])
+      , [AC_MSG_ERROR([Could not find CUPS headers; install CUPS (including cups-devel on binary distros).])])
   CUPS_LIBS="-lcups"
   AC_SUBST(CUPS_LIBS)
 ])
@@ -2164,7 +2164,7 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_SYSCALLS],
     AC_CHECK_FUNCS([openat64 fstatat64 fgetxattr fsetxattr fremovexattr flistxattr unlinkat renameat futimesat fdopendir epoll_create epoll_ctl epoll_wait],,
       [AC_MSG_ERROR([Could not find required syscalls; check config.log and use --disable-compile-against-syscalls if necessary.])])
     AC_CHECK_HEADERS([sys/epoll.h attr/xattr.h],
-      , [AC_MSG_ERROR("Could not find required system headers; install the appropriate files or use --disable-compile-against-syscalls if necessary.")])
+      , [AC_MSG_ERROR([Could not find required system headers; install the appropriate files or use --disable-compile-against-syscalls if necessary.])])
   fi
   AM_CONDITIONAL(USE_SYSCALL_COMPILATION, test x"${ENABLE_SYSCALL_COMPILATION}" = "xyes")
   AC_SUBST(ENABLE_SYSCALL_COMPILATION)
