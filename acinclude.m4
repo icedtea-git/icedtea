@@ -2163,6 +2163,8 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_SYSCALLS],
     dnl Check for syscalls
     AC_CHECK_FUNCS([openat64 fstatat64 fgetxattr fsetxattr fremovexattr flistxattr unlinkat renameat futimesat fdopendir epoll_create epoll_ctl epoll_wait],,
       [AC_MSG_ERROR([Could not find required syscalls; check config.log and use --disable-compile-against-syscalls if necessary.])])
+    AC_CHECK_HEADERS([sys/epoll.h attr/xattr.h],
+      , [AC_MSG_ERROR("Could not find required system headers; install the appropriate files or use --disable-compile-against-syscalls if necessary.")])
   fi
   AM_CONDITIONAL(USE_SYSCALL_COMPILATION, test x"${ENABLE_SYSCALL_COMPILATION}" = "xyes")
   AC_SUBST(ENABLE_SYSCALL_COMPILATION)
