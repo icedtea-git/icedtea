@@ -145,9 +145,6 @@ to configure:
 * --with-jdk-src-zip: Specify the location of the JDK tarball to avoid downloading.
 * --with-langtools-src-zip: Specify the location of the langtools tarball to avoid downloading.
 * --with-alt-jar: Use the specified jar binary in the second stage rather than the one just built.
-* --with-jaxp-drop-zip: Specify the location of the JAXP source drop zip file to avoid downloading.
-* --with-jaf-drop-zip: Specify the location of the JAF source drop zip file to avoid downloading.
-* --with-jaxws-drop-zip: Specify the location of the JAXWS source drop zip file to avoid downloading.
 * --with-cacao-home: Specify the location of an installed CACAO to use rather than downloading
   and building one.
 * --with-cacao-src-zip: Specify the location of a CACAO tarball to avoid downloading.

@@ -4,16 +4,16 @@ OPENJDK_VERSION = b147
 
 CORBA_CHANGESET = d034cc90ecc2
 HOTSPOT_CHANGESET = 7693eb0fce1f
-JAXP_CHANGESET = c40983d6ae70
-JAXWS_CHANGESET = 83db5e316798
+JAXP_CHANGESET = b8d01501956a
+JAXWS_CHANGESET = e6cd09c7ef22
 JDK_CHANGESET = 7ec1845521ed
 LANGTOOLS_CHANGESET = fb7fb3071b64
 OPENJDK_CHANGESET = 3defd24c2671
 
 CORBA_SHA256SUM = 06e7778aa1670f064e2c9fef7bdedc66fc679262ab8ee7aee018329e1ec787a8
 HOTSPOT_SHA256SUM = 6b2c9b21918183a383ab380c57f70d4be6199df0e2127bb762a20b6eca39e3a2
-JAXP_SHA256SUM = 6ab0cab1965edb28e4093b55436abd04fbffe0b0251016043c75246c4ee9dc2d
-JAXWS_SHA256SUM = 5567c90ce2857016365b2e346783a3b16ec0e76b80586a0371f601b4fed01f21
+JAXP_SHA256SUM = 4e9c1a2f240cee406d56832e2e7be254a87b511ee781463a95da4f000c188181
+JAXWS_SHA256SUM = 3d13408b4a81111fd88fce043ca2c96c4d31da9aa812a8d608b56248ecac4aca
 JDK_SHA256SUM = 843e7ccd4c2bad5c96aaa983e34f1eb27510229f138115fa0951e05358c50b2b
 LANGTOOLS_SHA256SUM = 9ddc00ec50fd2f5e331dc2bc10da4e23b69bf644eb92d50b39a2003c18fb5aa1
 OPENJDK_SHA256SUM = 4043a75c2c4385dd735f8dbbf2369311ce1b951217c9dbe9bba9609e24eb291e
@@ -29,16 +29,6 @@ JAMVM_SHA256SUM = b5174f59371017087139fd43d51074ad837ae29340220206ca06769c832988
 JAMVM_BASE_URL = http://icedtea.classpath.org/download/drops/jamvm
 JAMVM_URL = $(JAMVM_BASE_URL)/jamvm-$(JAMVM_VERSION).tar.gz
 JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
-
-JAXWS_DROP_URL = http://icedtea.classpath.org/download/drops
-JAXWS_DROP_ZIP = jdk7-jaxws2_2_4-b03-2011_05_27.zip
-JAXWS_DROP_SHA256SUM = 05ae7259b75d0f2307276d61ece1887fcd437cb4ecda42fab8c22d4b537effd6
-JAF_DROP_URL = http://icedtea.classpath.org/download/drops
-JAF_DROP_ZIP = jdk7-jaf-2010_08_19.zip
-JAF_DROP_SHA256SUM = e6aefedfdbb4673e8019583d1344fb162b94e1b10382c362364dbbfd5889c09e
-JAXP_DROP_URL = http://icedtea.classpath.org/download/drops
-JAXP_DROP_ZIP = jaxp145_01.zip
-JAXP_DROP_SHA256SUM = c5924c6188988e2e8397ee5143bd8eaa062569d052567afd2ac9326a54a848cb
 
 ICEDTEA_PREFIX = icedtea7-forest
 ICEDTEA_HG_URL = http://icedtea.classpath.org/hg/$(ICEDTEA_PREFIX)
@@ -80,7 +70,7 @@ SHARE = openjdk-boot/jdk/src/share/classes
 SOLARIS = openjdk-boot/jdk/src/solaris/classes
 LANGTOOLS = openjdk-boot/langtools/src/share/classes
 CORBA = openjdk-boot/corba/src/share/classes
-JAXWS = $(BUILD_OUTPUT_DIR)/jaxws/drop/jaxws_src/src
+JAXWS = openjdk-boot/jaxws/sources/jaxws_src/src
 
 PULSE_JAVA_DIR = $(abs_top_srcdir)/pulseaudio
 PULSE_JAVA_NATIVE_SRCDIR = $(PULSE_JAVA_DIR)/src/native
@@ -93,12 +83,10 @@ PULSE_JAVA_JAVA_SRCDIR = $(PULSE_JAVA_DIR)/src/java
 PULSE_JAVA_CLASS_DIR = $(PULSE_JAVA_BUILDDIR)/classes
 
 if DTDTYPE_QNAME
-NEED_JAXWS_SRC = true
 JAXWS_COND = $(JAXWS)
 endif
 
 if LACKS_JAVAX_ANNOTATION_RESOURCE
-NEED_JAXWS_SRC = true
 JAXWS_COND = $(JAXWS)
 endif
 
@@ -237,7 +225,7 @@ OPENJDK_TREE = stamps/overlay.stamp
 # Target to ensure a patched OpenJDK bootstrap tree containing
 # Zero & Shark, any other overlays and the bootstrapping patches
 # is available in $(abs_top_builddir)/openjdk-boot
-OPENJDK_BOOT_TREE = stamps/patch-jaxws.stamp
+OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
 
 # Sources list
 
@@ -372,11 +360,11 @@ else
 ICEDTEA_BOOT_PATCHES += patches/boot/compile-for-7.patch
 endif
 
+if DTDTYPE_QNAME
+ICEDTEA_BOOT_PATCHES += patches/boot/jaxws-getdtdtype.patch
+endif
+
 ICEDTEA_BOOT_PATCHES += $(DISTRIBUTION_BOOT_PATCHES)
-
-# Patches for JAXWS
-
-JAXWS_PATCHES = patches/boot/jaxws-getdtdtype.patch
 
 # OpenJDK build environment.
 if ZERO_BUILD
@@ -438,7 +426,6 @@ ICEDTEA_ENV = \
 	DEBUG_CLASSFILES="true" \
 	DEBUG_BINARIES="true" \
 	DISABLE_INTREE_EC="true" \
-	ALT_DROPS_DIR="$(abs_top_builddir)/drops" \
 	ALT_OUTPUTDIR="$(BUILD_OUTPUT_DIR)" \
 	VERBOSE="$(VERBOSE)" \
 	STATIC_CXX="false" \
@@ -776,7 +763,7 @@ install:
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot \
 	clean-rt hotspot hotspot-helper clean-jtreg clean-jtreg-reports \
-	clean-drops jtregcheck clean-remove-intree-libraries \
+	jtregcheck clean-remove-intree-libraries \
 	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
 	clean-extract-hotspot clean-sanitise-openjdk
 
@@ -823,100 +810,13 @@ clean-hgforest:
 
 # Download OpenJDK sources.
 
-stamps/download.stamp: stamps/download-drops.stamp stamps/download-openjdk.stamp \
+stamps/download.stamp: stamps/download-openjdk.stamp \
  stamps/download-cacao.stamp stamps/download-jamvm.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-download: clean-drops clean-download-openjdk clean-download-cacao clean-download-jamvm
+clean-download: clean-download-openjdk clean-download-cacao clean-download-jamvm
 	rm -f stamps/download.stamp
-
-stamps/download-jaxp-drop.stamp:
-	mkdir -p drops
-if USE_ALT_JAXP_DROP_ZIP
-	ln -sf $(ALT_JAXP_DROP_ZIP) drops/$(JAXP_DROP_ZIP)
-endif
-	if ! echo "$(JAXP_DROP_SHA256SUM)  drops/$(JAXP_DROP_ZIP)" \
-	  | $(SHA256SUM) --check ; \
-	then \
-	  if [ -f drops/$(JAXP_DROP_ZIP) ] ; \
-	  then \
-	    mv drops/$(JAXP_DROP_ZIP) drops/$(JAXP_DROP_ZIP).old ; \
-	  fi ; \
-	  $(WGET) $(JAXP_DROP_URL)/$(JAXP_DROP_ZIP) -O drops/$(JAXP_DROP_ZIP); \
-	  if ! echo "$(JAXP_DROP_SHA256SUM)  drops/$(JAXP_DROP_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of jaxp drop zip"; false; \
-	  fi; \
-	fi ;
-	mkdir -p stamps
-	touch $@
-
-clean-download-jaxp-drop:
-	rm -f drops/$(JAXP_DROP_ZIP)
-	rm -f stamps/download-jaxp-drop.stamp
-
-stamps/download-jaf-drop.stamp:
-	mkdir -p drops
-if USE_ALT_JAF_DROP_ZIP
-	ln -sf $(ALT_JAF_DROP_ZIP) drops/$(JAF_DROP_ZIP)
-endif
-	if ! echo "$(JAF_DROP_SHA256SUM)  drops/$(JAF_DROP_ZIP)" \
-	  | $(SHA256SUM) --check ; \
-	then \
-	  if [ -f drops/$(JAF_DROP_ZIP) ] ; \
-	  then \
-	    mv drops/$(JAF_DROP_ZIP) drops/$(JAF_DROP_ZIP).old ; \
-	  fi ; \
-	  $(WGET) $(JAF_DROP_URL)/$(JAF_DROP_ZIP) -O drops/$(JAF_DROP_ZIP); \
-	  if ! echo "$(JAF_DROP_SHA256SUM)  drops/$(JAF_DROP_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of jaf drop zip"; false; \
-	  fi; \
-	fi ;
-	mkdir -p stamps
-	touch $@
-
-clean-download-jaf-drop:
-	rm -f drops/$(JAF_DROP_ZIP)
-	rm -f stamps/download-jaf-drop.stamp
-
-stamps/download-jaxws-drop.stamp:
-	mkdir -p drops
-if USE_ALT_JAXWS_DROP_ZIP
-	ln -sf $(ALT_JAXWS_DROP_ZIP) drops/$(JAXWS_DROP_ZIP)
-endif
-	if ! echo "$(JAXWS_DROP_SHA256SUM)  drops/$(JAXWS_DROP_ZIP)" \
-	  | $(SHA256SUM) --check ; \
-	then \
-	  if [ -f drops/$(JAXWS_DROP_ZIP) ] ; \
-	  then \
-	    mv drops/$(JAXWS_DROP_ZIP) drops/$(JAXWS_DROP_ZIP).old ; \
-	  fi ; \
-	  $(WGET) $(JAXWS_DROP_URL)/$(JAXWS_DROP_ZIP) -O drops/$(JAXWS_DROP_ZIP); \
-	  if ! echo "$(JAXWS_DROP_SHA256SUM)  drops/$(JAXWS_DROP_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of jaxws drop zip"; false; \
-	  fi; \
-	fi ;
-	mkdir -p stamps
-	touch $@
-
-clean-download-jaxws-drop:
-	rm -f drops/$(JAXWS_DROP_ZIP)
-	rm -f stamps/download-jaxws-drop.stamp
-
-stamps/download-drops.stamp: stamps/download-jaxp-drop.stamp \
- stamps/download-jaxws-drop.stamp stamps/download-jaf-drop.stamp
-	mkdir -p stamps
-	touch $@
-
-clean-drops: clean-download-jaxp-drop clean-download-jaf-drop \
- clean-download-jaxws-drop
-	if [ -e drops ] ; then \
-	  rmdir drops ; \
-	fi
-	rm -f stamps/download-drops.stamp
 
 stamps/download-openjdk.stamp: stamps/hgforest.stamp
 if !OPENJDK_SRC_DIR_FOUND
@@ -1147,14 +1047,12 @@ clean-download-jamvm:
 	rm -f stamps/download-jamvm.stamp
 
 stamps/extract.stamp: stamps/extract-openjdk.stamp \
- stamps/extract-cacao.stamp stamps/extract-jaxws.stamp \
- stamps/remove-intree-libraries.stamp stamps/extract-jamvm.stamp \
- stamps/extract-hotspot.stamp stamps/sanitise-openjdk.stamp
+ stamps/extract-cacao.stamp stamps/remove-intree-libraries.stamp \
+ stamps/extract-jamvm.stamp stamps/extract-hotspot.stamp stamps/sanitise-openjdk.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-extract: clean-extract-openjdk clean-extract-cacao clean-extract-jaxws \
- clean-extract-jamvm
+clean-extract: clean-extract-openjdk clean-extract-cacao clean-extract-jamvm
 	rm -f stamps/extract.stamp
 
 stamps/extract-openjdk.stamp: stamps/download-openjdk.stamp
@@ -1325,27 +1223,6 @@ endif
 
 clean-extract-jamvm: clean-jamvm
 	rm -f stamps/extract-jamvm.stamp
-
-stamps/extract-jaxws.stamp: stamps/download-jaxws-drop.stamp \
- stamps/download-jaf-drop.stamp stamps/sanitise-openjdk.stamp
-	set -e ; \
-	if test "x$(NEED_JAXWS_SRC)" = "xtrue"; then \
-	  (cd openjdk/jaxws ; \
-	   $(ANT) -Ddrops.dir=$(abs_top_builddir)/drops \
-	   -Doutput.dir=$(BUILD_OUTPUT_DIR)/jaxws \
-	   source ; ) \
-	fi
-	mkdir -p stamps
-	touch $@
-
-clean-extract-jaxws:
-	if [ -d $(BUILD_OUTPUT_DIR)/jaxws ] ; then \
-	  (cd openjdk/jaxws ; \
-	   $(ANT) -Doutput.dir=$(BUILD_OUTPUT_DIR)/jaxws clobber ; \
-	   cd ../../); \
-        fi
-	mkdir -p stamps
-	rm -f stamps/extract-jaxws.stamp
 
 stamps/remove-intree-libraries.stamp: stamps/sanitise-openjdk.stamp
 	sh $(abs_top_builddir)/remove-intree-libraries.sh
@@ -1563,7 +1440,6 @@ stamps/clone-boot.stamp: $(OPENJDK_TREE)
 clean-clone-boot: 
 	rm -rf openjdk-boot
 	rm -f stamps/patch-boot.stamp
-	rm -f stamps/patch-jaxws.stamp
 	rm -f stamps/clone-boot.stamp
 
 stamps/patch-boot.stamp: stamps/clone-boot.stamp
@@ -1616,64 +1492,6 @@ clean-patch-boot:
 	  fi ; \
 	  rm -f stamps/patch-boot.stamp ; \
 	fi
-
-stamps/patch-jaxws.stamp: stamps/patch-boot.stamp
-	mkdir -p stamps
-	rm -f stamps/patch-jaxws.stamp.tmp
-	touch stamps/patch-jaxws.stamp.tmp
-if DTDTYPE_QNAME
-	set -e ; \
-	(cd $(BOOT_BUILD_OUTPUT_DIR)/jaxws; \
-	 all_patches_ok=yes; \
-	 for p in $(JAXWS_PATCHES) ; \
-	 do \
-	   if test x$${all_patches_ok} = "xyes" \
-	     && echo Checking $$p \
-	     && $(PATCH) -l -p0 --dry-run -s -t -f \
-	       -F 0 < $(abs_top_srcdir)/$$p ; \
-	   then \
-	    echo Applying $$p ; \
-	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
-	    if ! grep "^\* $$(basename $$p)" $(abs_top_srcdir)/HACKING \
-	      >> $(abs_top_builddir)/stamps/patch-jaxws.stamp.tmp ; \
-	    then \
-	      echo "* $$(basename $$p): UNDOCUMENTED" \
-	        >> $(abs_top_builddir)/stamps/patch-jaxws.stamp.tmp ; \
-	    fi ; \
-	   else \
-	     test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
-	   fi ; \
-	 done ; \
-	 if ! test x$${all_patches_ok} = "xyes"; then \
-	   echo ERROR patch $${all_patches_ok} FAILED! ; \
-	   echo WARNING make clean-patch-jaxws before retrying a fix ; \
-	   exit 2; \
-	 fi )
-endif
-	mv stamps/patch-jaxws.stamp.tmp stamps/patch-jaxws.stamp
-
-clean-patch-jaxws:
-if DTDTYPE_QNAME
-	if [ -e stamps/patch-jaxws.stamp ] ; then \
-	  all_patches_ok=yes; \
-	  cd $(BOOT_BUILD_OUTPUT_DIR)/jaxws; \
-	  for p in $(JAXWS_PATCHES) ; \
-	  do \
-	    echo Checking $$p ; \
-	    if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
-	    then \
-	      echo Reverting $$p ; \
-	      $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
-	    else \
-	      all_patches_ok=no ; \
-	    fi ; \
-	  done ; \
-	  if ! test x$${all_patches_ok} = "xyes" ; then \
-	    echo "WARNING Not all patches reverted cleanly" ; \
-	  fi ; \
-	fi
-endif
-	rm -f stamps/patch-jaxws.stamp
 
 # Bootstrap Directory Targets
 # ===========================
@@ -2518,8 +2336,6 @@ download: stamps/download.stamp
 
 download-cacao: stamps/download-cacao.stamp
 
-download-drops: stamps/download-drops.stamp
-
 download-jamvm: stamps/download-jamvm.stamp
 
 download-jaf-drop: stamps/download-jaf-drop.stamp
@@ -2565,8 +2381,6 @@ patch: stamps/patch.stamp
 patch-boot: stamps/patch-boot.stamp
 
 patch-fsg: stamps/patch-fsg.stamp
-
-patch-jaxws: stamps/patch-jaxws.stamp
 
 pulse-java: $(PULSE_JAVA_TARGET)
 

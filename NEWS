@@ -19,6 +19,7 @@ New in release 2.0 (2011-XX-XX):
   - PR586: Add missing sources to src.zip.
   - PR717: All non-bootstrap non-conditional patches in IcedTea7 should be in the forest or dropped.
   - PR767: Annotation Processing Filer.getResource() always throws FileNotFoundException
+  - PR790: Re-include JAXP and JAXWS in the source tree
   - G356743: Support building against libpng 1.5.
   - S7070134: Hotspot crashes with sigsegv from PorterStemmer
   - S7044738: Loop unroll optimization causes incorrect result

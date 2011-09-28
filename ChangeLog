@@ -1,3 +1,53 @@
+2011-09-27  Andrew John Hughes  <ahughes@redhat.com>
+
+	PR790: Include JAXP, JAF and JAXWS sources directly
+	in OpenJDK tree, removing the need for drop tarballs.
+	* INSTALL: Remove drop zip options.
+	* Makefile.am:
+	(JAXP_CHANGESET): Updated to bring in JAXP sources.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_CHANGESET): Likewise for JAXWS.
+	(JAXWS_SHA256SUM): Likewise.
+	(JAXWS_DROP_URL): Removed.
+	(JAXWS_DROP_ZIP): Likewise.
+	(JAXWS_DROP_SHA256SUM): Likewise.
+	(JAF_DROP_URL): Likewise.
+	(JAF_DROP_ZIP): Likewise.
+	(JAF_DROP_SHA256SUM): Likewise.
+	(JAXP_DROP_URL): Likewise.
+	(JAXP_DROP_ZIP): Likewise.
+	(JAXP_DROP_SHA256SUM): Likewise.
+	(JAXWS): Fix path to point into source tree.
+	(NEED_JAXWS_SRC): Removed; always available now.
+	(OPENJDK_BOOT_TREE): Remove reference to patch-jaxws.
+	(ICEDTEA_BOOT_PATCHES): Move dtdtype patch to here.
+	(ICEDTEA_ENV): Drop ALT_DROPS_DIR.
+	(.PHONY): Drop clean-drops.
+	(download): Drop download-drops.
+	(clean-download): Drop clean-drops.
+	(download-jaxp-drop): Removed.
+	(clean-download-jaxp-drop): Likewise.
+	(download-jaf-drop): Likewise.
+	(clean-download-jaf-drop): Likewise.
+	(download-jaxws-drop): Likewise.
+	(clean-download-jaxws-drop): Likewise.
+	(download-drops): Likewise.
+	(clean-drops): Likewise.
+	(extract): Drop clean-extract-jaxws.
+	(extract-jaxws): Removed.
+	(clean-extract-jaxws): Removed.
+	(clean-clone-boot): No more patch-jaxws stamp.
+	(patch-jaxws): Removed.
+	(clean-patch-jaxws): Removed.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_WITH_JAXP_DROP_ZIP): Likewise.
+	(IT_WITH_JAF_DROP_ZIP): Likewise.
+	(IT_WITH_JAXWS_DROP_ZIP): Likewise.
+	* configure.ac: Don't call drop macros.
+	* patches/boot/jaxws-getdtdtype.patch:
+	Updated to apply to openjdk-boot tree.
+
 2011-09-27  Mark Wielaard  <mark@klomp.org>
 
 	* acinclude.m4: Add devel package suggestions for epoll/xattr
