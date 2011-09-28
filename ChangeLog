@@ -1,5 +1,11 @@
 2011-09-27  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(EXTRA_DIST): Remove patch directories that
+	no longer exist.
+
+2011-09-27  Andrew John Hughes  <ahughes@redhat.com>
+
 	* acinclude.m4:
 	(AC_CHECK_FOR_JDK): Look for IcedTea7 JDKs.
 	Don't check for IcedTea6 JDKs when bootstrapping
