@@ -211,7 +211,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
                 if (!dataWritten) {
                     fireLineEvent(new LineEvent(PulseAudioDataLine.this,
                             LineEvent.Type.START, framesSinceOpen));
-                    synchronized (this) {
+                    synchronized (PulseAudioDataLine.this) {
                         PulseAudioDataLine.this.notifyAll();
                     }
                 }
