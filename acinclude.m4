@@ -2146,3 +2146,35 @@ AC_DEFUN([IT_WITH_JAMVM_SRC_ZIP],
   AC_MSG_RESULT(${ALT_JAMVM_SRC_ZIP})
   AC_SUBST(ALT_JAMVM_SRC_ZIP)
 ])
+
+AC_DEFUN([IT_BYTECODE7_CHECK],[
+AC_CACHE_CHECK([if the VM lacks support for 1.7 bytecode], it_cv_bytecode7, [
+CLASS=Test.java
+BYTECODE=$(echo $CLASS|sed 's#\.java##')
+mkdir tmp.$$
+cd tmp.$$
+cat << \EOF > $CLASS
+[/* [#]line __oline__ "configure" */
+public class Test 
+{
+  public static void main(String[] args)
+  {
+  }
+}]
+EOF
+if $JAVAC -cp . $JAVACFLAGS -source 7 -target 7 $CLASS >&AS_MESSAGE_LOG_FD 2>&1 ; then
+  if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1 ; then
+    it_cv_bytecode7=no;
+  else
+    it_cv_bytecode7=yes;
+  fi
+else
+  it_cv_bytecode7=yes;
+fi
+])
+rm -f $CLASS *.class
+cd ..
+rmdir tmp.$$
+AM_CONDITIONAL([NO_BYTECODE7], test x"${it_cv_bytecode7}" = "xyes")
+AC_PROVIDE([$0])dnl
+])

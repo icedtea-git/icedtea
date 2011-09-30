@@ -318,8 +318,7 @@ ICEDTEA_BOOT_PATCHES = \
 	patches/boot/ecj-multicatch.patch \
 	patches/boot/ecj-trywithresources.patch \
 	patches/boot/ecj-autoboxing.patch \
-	patches/boot/xsltproc.patch \
-	patches/boot/use_target_6_for_bootstrap_classes.patch 
+	patches/boot/xsltproc.patch
 
 if CP39408_JAVAH
 ICEDTEA_BOOT_PATCHES += patches/boot/pr39408.patch
@@ -362,6 +361,10 @@ endif
 
 if DTDTYPE_QNAME
 ICEDTEA_BOOT_PATCHES += patches/boot/jaxws-getdtdtype.patch
+endif
+
+if NO_BYTECODE7
+ICEDTEA_BOOT_PATCHES +=	patches/boot/use_target_6_for_bootstrap_classes.patch 
 endif
 
 ICEDTEA_BOOT_PATCHES += $(DISTRIBUTION_BOOT_PATCHES)

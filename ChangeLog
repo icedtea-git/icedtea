@@ -1,3 +1,15 @@
+2011-09-30  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(ICEDTEA_BOOT_PATCHES): Only apply
+	use_target_6_for_bootstrap_classes if 1.7
+	bytecode is not supported by the VM.  Fixes
+	bootstrap with IcedTea7.
+	* acinclude.m4:
+	(IT_BYTECODE7_CHECK): Check if the VM supports
+	1.7 bytecode.
+	* configure.ac: Call IT_BYTECODE7_CHECK.
+
 2011-09-27  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
