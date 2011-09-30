@@ -20,8 +20,8 @@ OPENJDK_SHA256SUM = 4043a75c2c4385dd735f8dbbf2369311ce1b951217c9dbe9bba9609e24eb
 
 CACAO_VERSION = d6264eb66506
 CACAO_SHA256SUM = 94ea7899e806ccbc33a732b5113a8f969d8b1f4ce7ffd27cf04577054f65f63c
-CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive
-CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
+CACAO_BASE_URL = http://icedtea.classpath.org/download/drops/cacao
+CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.gz
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
 JAMVM_VERSION = 310c491ddc14e92a6ffff27030a1a1821e6395a8
