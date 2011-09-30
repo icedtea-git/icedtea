@@ -1,3 +1,10 @@
+2010-11-19  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(CACAO_BASE_URL): Switch to using IcedTea
+	server for CACAO drops too.
+	(CACAO_URL): Likewise.
+
 2014-03-24  Pavel Tisnovsky  <ptisnovs@redhat.com>
 
 	* contrib/jck/compile-native-code.sh:

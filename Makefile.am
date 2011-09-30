@@ -22,8 +22,8 @@ HS_URL = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir
 
 CACAO_VERSION = d6264eb66506
 CACAO_SHA256SUM = 94ea7899e806ccbc33a732b5113a8f969d8b1f4ce7ffd27cf04577054f65f63c
-CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive
-CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
+CACAO_BASE_URL = http://icedtea.classpath.org/download/drops/cacao
+CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.gz
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
 JAMVM_VERSION = ec18fb9e49e62dce16c5094ef1527eed619463aa
