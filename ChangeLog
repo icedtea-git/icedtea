@@ -1,3 +1,12 @@
+2011-10-03  Xerxes Rånby  <xerxes@zafena.se>
+	    Robert Lougher <rob@jamvm.org.uk>
+
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	  (Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1get_1buffer_1attr):
+	  Make code compliant to the JNI specification.
+	  Enable pulseaudio to work in combination with JVM that strictly
+	  implement JNI spec.
+
 2011-06-20  Denis Lila  <dlila@redhat.com>
 
 	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c

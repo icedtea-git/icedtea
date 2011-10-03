@@ -898,7 +898,7 @@ JNIEXPORT jobject JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1p
     const pa_buffer_attr* buffer = pa_stream_get_buffer_attr(stream);
     assert(buffer);
 
-    const char* class_name = "Lorg/classpath/icedtea/pulseaudio/StreamBufferAttributes;";
+    const char* class_name = "org/classpath/icedtea/pulseaudio/StreamBufferAttributes";
     jclass cls = (*env)->FindClass(env, class_name);
     assert(cls);
     jmethodID constructor_mid = (*env)->GetMethodID(env, cls, "<init>", "(IIIII)V");
