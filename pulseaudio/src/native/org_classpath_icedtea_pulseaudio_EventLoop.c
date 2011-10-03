@@ -108,7 +108,7 @@ static void context_change_callback(pa_context* context, void* userdata) {
     assert(cls);
     jmethodID mid = (*env)->GetMethodID(env, cls, "update", "(J)V");
     assert(mid);
-    (*env)->CallVoidMethod(env, obj, mid, pa_context_get_state(context));
+    (*env)->CallVoidMethod(env, obj, mid, (jlong) pa_context_get_state(context));
     return;
 
 }
