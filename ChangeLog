@@ -1,3 +1,12 @@
+2011-10-03  Xerxes Rånby  <xerxes@zafena.se>
+	    David Henningsson <david.henningsson@canonical.com>
+	    Matthias Klose <doko@ubuntu.com>
+
+	LP862286
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c
+	  (context_change_callback):
+	  Fix exception on trying to start PulseAudio playback on ARM.
+
 2012-06-28  Omair Majid  <omajid@redhat.com>
 
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
