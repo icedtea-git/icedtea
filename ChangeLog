@@ -1,3 +1,23 @@
+2011-10-10  Xerxes Rånby  <xerxes@zafena.se>
+
+	JamVM
+	- Implement classlibCheckIfOnLoad().
+	- Make thread states JVMTI compatible.
+	- Add OpenBSD/sparc to list of recognised hosts.
+	- Handle 'g' when specifying memory + extra checks.
+	- Make command line compatibility options table-driven.
+	* NEWS: Updated.
+	* patches/jamvm/gb-memory-fix.patch: Replaced by upstream,
+	Handle 'g' when specifying memory + extra checks,
+	changeset 5b66309e20cfd9fe1119e0c9231060a9a583d846.
+	* patches/jamvm/ignore-assertions-and-verify-options.patch:
+	Replaced by upstream, Make command line compatibility options
+	table-driven, changeset d689b6527e26ef1098583ba39725d6e675f8b649.
+	* Makefile.am
+	(ICEDTEA_PATCHES): Remove upstreamed JamVM patches.
+	(JAMVM_VERSION): Updated JamVM to 2011-10-07 revision.
+	(JAMVM_SHA256SUM): Updated.
+
 2011-09-26  Xerxes Rånby  <xerxes@zafena.se>
 	    Mark David Dumlao  <madumlao@gmail.com>
 

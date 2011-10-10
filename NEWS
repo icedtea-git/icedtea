@@ -22,7 +22,10 @@ New in release 2.0 (2011-XX-XX):
   - Skip Java-reflection-related DelegatingClassLoaders,
     enables JamVM to run NetBeans.
   - Generic JNI stubs for common JNI method signatures.
-  - Fix memory heap arguments in terms of gigabytes.
+  - Implement classlibCheckIfOnLoad().
+  - Make thread states JVMTI compatible.
+  - Add OpenBSD/sparc to list of recognised hosts.
+  - Handle 'g' when specifying memory + extra checks.
   - armhf: ensure stack is 8 byte aligned.
   - "Fix" handling of CLI bootclasspath options.
   - Fix for StackTraceElement checkin.
