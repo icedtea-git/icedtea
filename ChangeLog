@@ -1,3 +1,8 @@
+2011-10-19  Andrew John Hughes  <ahughes@redhat.com>
+
+	* NEWS: Move recent JamVM changes
+	to correct section.  Sync with 2.0.
+
 2011-10-10  Xerxes Rånby  <xerxes@zafena.se>
 
 	JamVM
