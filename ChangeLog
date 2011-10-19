@@ -7,6 +7,19 @@
 	(extract-cacao): Use gzip not bzip2.
 	(extract-jamvm): Explicitly use gzip.
 
+2011-10-19  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am: Bring in security updates.
+	(CORBA_CHANGESET): Updated.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	* patches/rhino.patch: Updated to work
+	after 7046823 is applied.
+	* NEWS: Updated.
+
 2011-09-30  Andrew John Hughes  <ahughes@redhat.com>
 
 	* acinclude.m4:
