@@ -1,5 +1,11 @@
 2011-10-19  Andrew John Hughes  <ahughes@redhat.com>
 
+	* NEWS: Set release date of 2.0 and
+	add section for 2.1.
+	* configure.ac: Bump to 2.1pre.
+
+2011-10-19  Andrew John Hughes  <ahughes@redhat.com>
+
 	* patches/cacao/6714758.patch:
 	Removed; upstream.
 	* Makefile.am:
