@@ -12,6 +12,8 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.1 (20XX-XX-XX):
 
+* Bug fixes
+  - S7103224: collision between __LEAF define in interfaceSupport.hpp and /usr/include/sys/cdefs.h with gcc
 * JamVM
   - Implement classlibCheckIfOnLoad().
   - Make thread states JVMTI compatible.

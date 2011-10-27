@@ -1,3 +1,10 @@
+2011-10-27  Omair Majid  <omajid@redhat.com>
+
+	* NEWS: Updated.
+	* Makefile.am
+	(HOTSPOT_CHANGESET): Updated.
+	(HOTSPOT_SHA256SUM): Updated.
+
 2011-10-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	* NEWS: Move recent JamVM changes
