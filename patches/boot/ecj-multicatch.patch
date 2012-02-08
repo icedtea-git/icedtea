@@ -1,6 +1,5 @@
-diff -r 7fb9e32b146a src/share/classes/java/io/PrintStream.java
---- openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java	Mon Apr 11 14:58:51 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java	Wed Apr 13 23:52:09 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java.orig
++++ openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java
 @@ -91,7 +91,10 @@
          requireNonNull(csn, "charsetName");
          try {
@@ -13,9 +12,8 @@ diff -r 7fb9e32b146a src/share/classes/java/io/PrintStream.java
              // UnsupportedEncodingException should be thrown
              throw new UnsupportedEncodingException(csn);
          }
-diff -r 7fb9e32b146a src/share/classes/java/io/PrintWriter.java
---- openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java	Mon Apr 11 14:58:51 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java	Wed Apr 13 23:52:09 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java.orig
++++ openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java
 @@ -85,7 +85,10 @@
          Objects.requireNonNull(csn, "charsetName");
          try {
@@ -28,10 +26,22 @@ diff -r 7fb9e32b146a src/share/classes/java/io/PrintWriter.java
              // UnsupportedEncodingException should be thrown
              throw new UnsupportedEncodingException(csn);
          }
-diff -r 7fb9e32b146a src/share/classes/java/util/Formatter.java
---- openjdk-boot/jdk/src/share/classes/java/util/Formatter.java	Mon Apr 11 14:58:51 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/util/Formatter.java	Wed Apr 13 23:52:09 2011 +0100
-@@ -1859,7 +1859,10 @@
+--- openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java.orig
++++ openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java
+@@ -606,7 +606,9 @@
+             // create an MXBean proxy
+             return JMX.newMXBeanProxy(connection, objName, mxbeanInterface,
+                                       emitter);
+-        } catch (InstanceNotFoundException|MalformedObjectNameException e) {
++        } catch (InstanceNotFoundException e) {
++            throw new IllegalArgumentException(e);
++        } catch (MalformedObjectNameException e) {
+             throw new IllegalArgumentException(e);
+         }
+     }
+--- openjdk-boot/jdk/src/share/classes/java/util/Formatter.java.orig
++++ openjdk-boot/jdk/src/share/classes/java/util/Formatter.java
+@@ -1857,7 +1857,10 @@
          Objects.requireNonNull(csn, "charsetName");
          try {
              return Charset.forName(csn);
@@ -43,9 +53,8 @@ diff -r 7fb9e32b146a src/share/classes/java/util/Formatter.java
              // UnsupportedEncodingException should be thrown
              throw new UnsupportedEncodingException(csn);
          }
-diff -r 7fb9e32b146a src/share/classes/java/util/Scanner.java
---- openjdk-boot/jdk/src/share/classes/java/util/Scanner.java	Mon Apr 11 14:58:51 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/util/Scanner.java	Wed Apr 13 23:52:09 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/java/util/Scanner.java.orig
++++ openjdk-boot/jdk/src/share/classes/java/util/Scanner.java
 @@ -633,7 +633,10 @@
          Objects.requireNonNull(csn, "charsetName");
          try {
@@ -69,38 +78,9 @@ diff -r 7fb9e32b146a src/share/classes/java/util/Scanner.java
              throw new IllegalArgumentException(charsetName);
          }
      }
-diff -r d28f54a421b1 src/share/classes/java/lang/management/ManagementFactory.java
---- openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java	Mon Jun 13 15:58:42 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java	Tue Jun 21 01:53:32 2011 +0100
-@@ -606,7 +606,9 @@
-             // create an MXBean proxy
-             return JMX.newMXBeanProxy(connection, objName, mxbeanInterface,
-                                       emitter);
--        } catch (InstanceNotFoundException|MalformedObjectNameException e) {
-+        } catch (InstanceNotFoundException e) {
-+            throw new IllegalArgumentException(e);
-+        } catch (MalformedObjectNameException e) {
-             throw new IllegalArgumentException(e);
-         }
-     }
-diff -r d28f54a421b1 src/share/classes/sun/text/bidi/BidiBase.java
---- openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java	Mon Jun 13 15:58:42 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java	Tue Jun 21 01:53:32 2011 +0100
-@@ -3477,7 +3477,9 @@
-             try {
-                 Field f = clazz.getField(name);
-                 return f.get(null);
--            } catch (NoSuchFieldException | IllegalAccessException x) {
-+            } catch (NoSuchFieldException x) {
-+                throw new AssertionError(x);
-+            } catch (IllegalAccessException x) {
-                 throw new AssertionError(x);
-             }
-         }
-diff -r d28f54a421b1 src/share/classes/sun/invoke/util/ValueConversions.java
---- openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	Mon Jun 13 15:58:42 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	Thu Jun 23 15:55:48 2011 +0100
-@@ -661,7 +661,11 @@
+--- openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java.orig
++++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java
+@@ -676,7 +676,11 @@
              IGNORE = IMPL_LOOKUP.findStatic(THIS_CLASS, "ignore", ignoreType);
              EMPTY = IMPL_LOOKUP.findStatic(THIS_CLASS, "empty", ignoreType.dropParameterTypes(0, 1));
              NEW_ARRAY = IMPL_LOOKUP.findStatic(THIS_CLASS, "newArray", MethodType.methodType(Object[].class, int.class));
@@ -113,3 +93,40 @@ diff -r d28f54a421b1 src/share/classes/sun/invoke/util/ValueConversions.java
              Error err = new InternalError("uncaught exception");
              err.initCause(ex);
              throw err;
+--- openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/PAData.java.orig
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/PAData.java
+@@ -280,7 +280,9 @@
+                                     .append(info.getSalt())
+                                     .append('\n');
+                         }
+-                    } catch (IOException|Asn1Exception e) {
++                    } catch (Asn1Exception e) {
++                        sb.append("\t <Unparseable PA-ETYPE-INFO>\n");
++                    } catch (IOException e) {
+                         sb.append("\t <Unparseable PA-ETYPE-INFO>\n");
+                     }
+                 }
+@@ -307,7 +309,9 @@
+                                         .encodeBuffer(s2kparams));
+                             }
+                         }
+-                    } catch (IOException|Asn1Exception e) {
++                    } catch (IOException e) {
++                        sb.append("\t <Unparseable PA-ETYPE-INFO>\n");
++                    } catch (Asn1Exception e) {
+                         sb.append("\t <Unparseable PA-ETYPE-INFO>\n");
+                     }
+                 }
+--- openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java.orig
++++ openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java
+@@ -3477,7 +3477,9 @@
+             try {
+                 Field f = clazz.getField(name);
+                 return f.get(null);
+-            } catch (NoSuchFieldException | IllegalAccessException x) {
++            } catch (NoSuchFieldException x) {
++                throw new AssertionError(x);
++            } catch (IllegalAccessException x) {
+                 throw new AssertionError(x);
+             }
+         }

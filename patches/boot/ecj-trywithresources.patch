@@ -1,6 +1,5 @@
-diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/BandStructure.java
---- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java.orig
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java
 @@ -743,7 +743,9 @@
  
          private void dumpBand() throws IOException {
@@ -53,10 +52,9 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/BandStructure.
          }
  
          public void readDataFrom(InputStream in) throws IOException {
-diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/Driver.java
---- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	Fri Apr 29 01:50:44 2011 +0100
-@@ -151,8 +151,13 @@
+--- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java.orig
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java
+@@ -149,8 +149,13 @@
                  if ("--config-file=".equals(state)) {
                      String propFile = av.remove(0);
                      Properties fileProps = new Properties();
@@ -71,7 +69,7 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/Driver.java
                      }
                      if (engProps.get(verboseProp) != null)
                          fileProps.list(System.out);
-@@ -348,9 +353,14 @@
+@@ -341,9 +346,14 @@
                  else
                      fileOut = new FileOutputStream(outfile);
                  fileOut = new BufferedOutputStream(fileOut);
@@ -87,7 +85,7 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/Driver.java
                  }
                  // At this point, we have a good jarfile (or newfile, if -r)
              }
-@@ -411,7 +421,9 @@
+@@ -404,7 +414,9 @@
          long filelen = new File(jarfile).length();
          if (filelen <= 0)  return "";
          long skiplen = Math.max(0, filelen - tail.length);
@@ -98,7 +96,7 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/Driver.java
              in.skip(skiplen);
              in.read(tail);
              for (int i = tail.length-4; i >= 0; i--) {
-@@ -425,6 +437,9 @@
+@@ -418,6 +430,9 @@
                  }
              }
              return "";
@@ -108,9 +106,8 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/Driver.java
          }
      }
  
-diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java
---- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java.orig
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java
 @@ -241,9 +241,15 @@
      void run(File inFile, JarOutputStream jstream) throws IOException {
          // %%% maybe memory-map the file, and pass it straight into unpacker
@@ -128,9 +125,8 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.j
          // Note:  caller is responsible to finish with jstream.
      }
  
-diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/PackageReader.java
---- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java.orig
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java
 @@ -540,9 +540,15 @@
              Index index = initCPIndex(tag, cpMap);
  
@@ -173,9 +169,8 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/PackageReader.
          attr_definition_headers.doneDisbursing();
          attr_definition_name.doneDisbursing();
          attr_definition_layout.doneDisbursing();
-diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java
---- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java.orig
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java
 @@ -458,9 +458,15 @@
                  Utils.log.info("Writing "+cpMap.length+" "+ConstantPool.tagName(tag)+" entries...");
  
@@ -193,7 +188,7 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/PackageWriter.
              }
  
              switch (tag) {
-@@ -923,9 +929,10 @@
+@@ -921,9 +927,10 @@
              }
          });
          attrDefsWritten = new Attribute.Layout[numAttrDefs];
@@ -207,7 +202,7 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/PackageWriter.
              int[] indexForDebug = Arrays.copyOf(attrIndexLimit, ATTR_CONTEXT_LIMIT);
              for (int i = 0; i < defs.length; i++) {
                  int header = ((Integer)defs[i][0]).intValue();
-@@ -951,6 +958,10 @@
+@@ -949,6 +956,10 @@
                  }
              }
          }
@@ -218,10 +213,9 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/PackageWriter.
      }
  
      void writeAttrCounts() throws IOException {
-diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/PropMap.java
---- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java	Fri Apr 29 01:50:44 2011 +0100
-@@ -123,8 +123,9 @@
+--- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java.orig
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java
+@@ -122,8 +122,9 @@
          // Do this after the previous props are put in place,
          // to allow override if necessary.
          String propFile = "intrinsic.properties";
@@ -233,7 +227,7 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/PropMap.java
              if (propStr == null) {
                  throw new RuntimeException(propFile + " cannot be loaded");
              }
-@@ -132,6 +133,14 @@
+@@ -131,6 +132,14 @@
          } catch (IOException ee) {
              throw new RuntimeException(ee);
          }
@@ -248,10 +242,9 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/PropMap.java
  
          for (Map.Entry<Object, Object> e : props.entrySet()) {
              String key = (String) e.getKey();
-diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java
---- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	Fri Apr 29 01:50:44 2011 +0100
-@@ -161,9 +161,15 @@
+--- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java.orig
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java
+@@ -160,9 +160,15 @@
          }
          // Use the stream-based implementation.
          // %%% Reconsider if native unpacker learns to memory-map the file.
@@ -268,9 +261,8 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.j
          if (props.getBoolean(Utils.UNPACK_REMOVE_PACKFILE)) {
              in.delete();
          }
-diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/Utils.java
---- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java.orig
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java
 @@ -268,18 +268,30 @@
          // 4947205 : Peformance is slow when using pack-effort=0
          out = new BufferedOutputStream(out);
@@ -304,10 +296,9 @@ diff -r 1631a3dee8fc src/share/classes/com/sun/java/util/jar/pack/Utils.java
      }
          // Wrapper to prevent closing of client-supplied stream.
      static private
-diff -r 1631a3dee8fc src/share/classes/java/lang/Package.java
---- openjdk-boot/jdk/src/share/classes/java/lang/Package.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/Package.java	Fri Apr 29 01:50:44 2011 +0100
-@@ -576,12 +576,23 @@
+--- openjdk-boot/jdk/src/share/classes/java/lang/Package.java.orig
++++ openjdk-boot/jdk/src/share/classes/java/lang/Package.java
+@@ -575,12 +575,23 @@
       * Returns the Manifest for the specified JAR file name.
       */
      private static Manifest loadManifest(String fn) {
@@ -334,9 +325,8 @@ diff -r 1631a3dee8fc src/share/classes/java/lang/Package.java
          }
      }
  
-diff -r 1631a3dee8fc src/share/classes/java/nio/channels/SocketChannel.java
---- openjdk-boot/jdk/src/share/classes/java/nio/channels/SocketChannel.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/nio/channels/SocketChannel.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/java/nio/channels/SocketChannel.java.orig
++++ openjdk-boot/jdk/src/share/classes/java/nio/channels/SocketChannel.java
 @@ -188,7 +188,7 @@
              } catch (Throwable suppressed) {
                  x.addSuppressed(suppressed);
@@ -346,9 +336,8 @@ diff -r 1631a3dee8fc src/share/classes/java/nio/channels/SocketChannel.java
          }
          assert sc.isConnected();
          return sc;
-diff -r 1631a3dee8fc src/share/classes/java/nio/file/CopyMoveHelper.java
---- openjdk-boot/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java.orig
++++ openjdk-boot/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java
 @@ -122,9 +122,15 @@
          if (attrs.isDirectory()) {
              Files.createDirectory(target);
@@ -375,9 +364,8 @@ diff -r 1631a3dee8fc src/share/classes/java/nio/file/CopyMoveHelper.java
              }
          }
      }
-diff -r 1631a3dee8fc src/share/classes/java/nio/file/Files.java
---- openjdk-boot/jdk/src/share/classes/java/nio/file/Files.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/nio/file/Files.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/java/nio/file/Files.java.orig
++++ openjdk-boot/jdk/src/share/classes/java/nio/file/Files.java
 @@ -2833,8 +2833,11 @@
          }
  
@@ -490,9 +478,8 @@ diff -r 1631a3dee8fc src/share/classes/java/nio/file/Files.java
          return path;
      }
  }
-diff -r 1631a3dee8fc src/share/classes/java/util/Currency.java
---- openjdk-boot/jdk/src/share/classes/java/util/Currency.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/util/Currency.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/java/util/Currency.java.orig
++++ openjdk-boot/jdk/src/share/classes/java/util/Currency.java
 @@ -233,9 +233,14 @@
                                               "currency.properties");
                      if (propFile.exists()) {
@@ -509,9 +496,8 @@ diff -r 1631a3dee8fc src/share/classes/java/util/Currency.java
                          Set<String> keys = props.stringPropertyNames();
                          Pattern propertiesPattern =
                              Pattern.compile("([A-Z]{3})\\s*,\\s*(\\d{3})\\s*,\\s*([0-3])");
-diff -r 1631a3dee8fc src/share/classes/java/util/jar/JarFile.java
---- openjdk-boot/jdk/src/share/classes/java/util/jar/JarFile.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/util/jar/JarFile.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/java/util/jar/JarFile.java.orig
++++ openjdk-boot/jdk/src/share/classes/java/util/jar/JarFile.java
 @@ -376,9 +376,15 @@
       */
      private byte[] getBytes(ZipEntry ze) throws IOException {
@@ -548,9 +534,8 @@ diff -r 1631a3dee8fc src/share/classes/java/util/jar/JarFile.java
                  int last = b.length - src.length;
                  int i = 0;
                  next:
-diff -r 1631a3dee8fc src/share/classes/javax/sql/rowset/serial/SerialClob.java
---- openjdk-boot/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java.orig
++++ openjdk-boot/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java
 @@ -144,8 +144,9 @@
          buf = new char[(int)len];
          int read = 0;
@@ -609,9 +594,8 @@ diff -r 1631a3dee8fc src/share/classes/javax/sql/rowset/serial/SerialClob.java
          origLen = len;
      }
  
-diff -r 1631a3dee8fc src/share/classes/javax/sql/rowset/spi/SyncFactory.java
---- openjdk-boot/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java.orig
++++ openjdk-boot/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java
 @@ -367,9 +367,15 @@
                      // Load user's implementation of SyncProvider
                      // here. -Drowset.properties=/abc/def/pqr.txt
@@ -653,9 +637,8 @@ diff -r 1631a3dee8fc src/share/classes/javax/sql/rowset/spi/SyncFactory.java
                  }
  
                  parseProperties(properties);
-diff -r 1631a3dee8fc src/share/classes/sun/net/www/protocol/jar/URLJarFile.java
---- openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java.orig
++++ openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java
 @@ -194,7 +194,8 @@
       * Given a URL, retrieves a JAR file, caches it to disk, and creates a
       * cached JAR file object.
@@ -688,9 +671,8 @@ diff -r 1631a3dee8fc src/share/classes/sun/net/www/protocol/jar/URLJarFile.java
                              }
                          }
                      });
-diff -r 1631a3dee8fc src/share/classes/sun/nio/fs/PollingWatchService.java
---- openjdk-boot/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java	Fri Apr 29 01:50:44 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java.orig
++++ openjdk-boot/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java
 @@ -255,7 +255,9 @@
              this.entries = new HashMap<Path,CacheEntry>();
  
@@ -713,152 +695,8 @@ diff -r 1631a3dee8fc src/share/classes/sun/nio/fs/PollingWatchService.java
              }
          }
  
-diff -r 1631a3dee8fc src/share/classes/sun/security/provider/SeedGenerator.java
---- openjdk-boot/jdk/src/share/classes/sun/security/provider/SeedGenerator.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/SeedGenerator.java	Fri Apr 29 01:50:44 2011 +0100
-@@ -179,7 +179,9 @@
-                         // The temporary dir
-                         File f = new File(p.getProperty("java.io.tmpdir"));
-                         int count = 0;
--                        try (DirectoryStream<Path> stream = Files.newDirectoryStream(f.toPath())) {
-+                        DirectoryStream<Path> stream = null;
-+                        try {
-+                            stream = Files.newDirectoryStream(f.toPath());
-                             // We use a Random object to choose what file names
-                             // should be used. Otherwise on a machine with too
-                             // many files, the same first 1024 files always get
-@@ -194,6 +196,10 @@
-                                     break;
-                                 }
-                             }
-+                        } finally {
-+                            if (stream != null) {
-+                                stream.close();
-+                            }
-                         }
-                     } catch (Exception ex) {
-                         md.update((byte)ex.hashCode());
-diff -r 1631a3dee8fc src/share/classes/sun/util/calendar/LocalGregorianCalendar.java
---- openjdk-boot/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java	Fri Apr 29 01:50:44 2011 +0100
-@@ -127,9 +127,15 @@
-             calendarProps = (Properties) AccessController.doPrivileged(new PrivilegedExceptionAction() {
-                 public Object run() throws IOException {
-                     Properties props = new Properties();
--                    try (FileInputStream fis = new FileInputStream(fname)) {
-+                    FileInputStream fis = null;
-+                    try {
-+                        fis = new FileInputStream(fname);
-                         props.load(fis);
-                     }
-+                    finally {
-+                        if (fis != null)
-+                            fis.close();
-+                    }
-                     return props;
-                 }
-             });
-diff -r 1631a3dee8fc src/share/demo/jfc/Font2DTest/RangeMenu.java
---- openjdk-boot/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java	Fri Apr 29 01:50:44 2011 +0100
-@@ -191,7 +191,7 @@
-     }
- 
-     private static int[][] getUnicodeRanges() {
--        List<Integer> ranges = new ArrayList<>();
-+        List<Integer> ranges = new ArrayList<Integer>();
-         ranges.add(0);
-         Character.UnicodeBlock currentBlock = Character.UnicodeBlock.of(0);
-         for (int cp = 0x000001; cp < 0x110000; cp++ ) {
-diff -r 1631a3dee8fc src/solaris/classes/java/util/prefs/FileSystemPreferences.java
---- openjdk-boot/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java	Fri Apr 29 01:50:44 2011 +0100
-@@ -569,11 +569,11 @@
-                 public Void run() throws BackingStoreException {
-                     Map<String, String> m = new TreeMap<>();
-                     long newLastSyncTime = 0;
-+                    FileInputStream fis = null;
-                     try {
-                         newLastSyncTime = prefsFile.lastModified();
--                        try (FileInputStream fis = new FileInputStream(prefsFile)) {
--                            XmlSupport.importMap(fis, m);
--                        }
-+                        fis = new FileInputStream(prefsFile);
-+                        XmlSupport.importMap(fis, m);
-                     } catch(Exception e) {
-                         if (e instanceof InvalidPreferencesFormatException) {
-                             getLogger().warning("Invalid preferences format in "
-@@ -588,6 +588,13 @@
-                         } else {
-                             throw new BackingStoreException(e);
-                         }
-+                    } finally {
-+                        try {
-+                            if (fis != null)
-+                                fis.close();
-+                        } catch (IOException e) {
-+                            throw new BackingStoreException(e);
-+                        }
-                     }
-                     // Attempt succeeded; update state
-                     prefsCache = m;
-@@ -614,13 +621,14 @@
-             AccessController.doPrivileged(
-                 new PrivilegedExceptionAction<Void>() {
-                 public Void run() throws BackingStoreException {
-+                    FileOutputStream fos = null;
-                     try {
-                         if (!dir.exists() && !dir.mkdirs())
-                             throw new BackingStoreException(dir +
-                                                              " create failed.");
--                        try (FileOutputStream fos = new FileOutputStream(tmpFile)) {
--                            XmlSupport.exportMap(fos, prefsCache);
--                        }
-+
-+                        fos = new FileOutputStream(tmpFile);
-+                        XmlSupport.exportMap(fos, prefsCache);
-                         if (!tmpFile.renameTo(prefsFile))
-                             throw new BackingStoreException("Can't rename " +
-                             tmpFile + " to " + prefsFile);
-@@ -629,6 +637,14 @@
-                             throw (BackingStoreException)e;
-                         throw new BackingStoreException(e);
-                     }
-+                    finally {
-+                        try {
-+                            if (fos != null)
-+                                fos.close();
-+                        } catch (IOException e) {
-+                            throw new BackingStoreException(e);
-+                        }
-+                    }
-                     return null;
-                 }
-             });
-diff -r 1631a3dee8fc src/solaris/classes/sun/nio/fs/UnixFileStore.java
---- openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java	Wed Apr 20 04:38:36 2011 +0100
-+++ openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java	Fri Apr 29 01:50:44 2011 +0100
-@@ -255,9 +255,16 @@
-         String fstypes = System.getProperty("java.home") + "/lib/fstypes.properties";
-         Path file = Paths.get(fstypes);
-         try {
--            try (ReadableByteChannel rbc = Files.newByteChannel(file)) {
-+            ReadableByteChannel rbc = null;
-+            try {
-+                rbc = Files.newByteChannel(file);
-                 result.load(Channels.newReader(rbc, "UTF-8"));
-             }
-+            finally {
-+                if (rbc != null) {
-+                    rbc.close();
-+                }
-+            }
-         } catch (IOException x) {
-         }
-         return result;
-diff -r d28f54a421b1 src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java
---- openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	Mon Jun 13 15:58:42 2011 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	Tue Jun 21 14:46:11 2011 +0100
+--- openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java.orig
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java
 @@ -92,9 +92,13 @@
          tabName = filename;
          try {
@@ -926,3 +764,141 @@ diff -r d28f54a421b1 src/share/classes/sun/security/krb5/internal/ktab/KeyTab.ja
          }
      }
  }
+--- openjdk-boot/jdk/src/share/classes/sun/security/provider/SeedGenerator.java.orig
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/SeedGenerator.java
+@@ -179,7 +179,9 @@
+                         // The temporary dir
+                         File f = new File(p.getProperty("java.io.tmpdir"));
+                         int count = 0;
+-                        try (DirectoryStream<Path> stream = Files.newDirectoryStream(f.toPath())) {
++                        DirectoryStream<Path> stream = null;
++                        try {
++                            stream = Files.newDirectoryStream(f.toPath());
+                             // We use a Random object to choose what file names
+                             // should be used. Otherwise on a machine with too
+                             // many files, the same first 1024 files always get
+@@ -194,6 +196,10 @@
+                                     break;
+                                 }
+                             }
++                        } finally {
++                            if (stream != null) {
++                                stream.close();
++                            }
+                         }
+                     } catch (Exception ex) {
+                         md.update((byte)ex.hashCode());
+--- openjdk-boot/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java.orig
++++ openjdk-boot/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java
+@@ -127,9 +127,15 @@
+             calendarProps = (Properties) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+                 public Object run() throws IOException {
+                     Properties props = new Properties();
+-                    try (FileInputStream fis = new FileInputStream(fname)) {
++                    FileInputStream fis = null;
++                    try {
++                        fis = new FileInputStream(fname);
+                         props.load(fis);
+                     }
++                    finally {
++                        if (fis != null)
++                            fis.close();
++                    }
+                     return props;
+                 }
+             });
+--- openjdk-boot/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java.orig
++++ openjdk-boot/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java
+@@ -200,7 +200,7 @@
+     }
+ 
+     private static int[][] getUnicodeRanges() {
+-        List<Integer> ranges = new ArrayList<>();
++        List<Integer> ranges = new ArrayList<Integer>();
+         ranges.add(0);
+         Character.UnicodeBlock currentBlock = Character.UnicodeBlock.of(0);
+         for (int cp = 0x000001; cp < 0x110000; cp++ ) {
+--- openjdk-boot/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java.orig
++++ openjdk-boot/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java
+@@ -569,11 +569,11 @@
+                 public Void run() throws BackingStoreException {
+                     Map<String, String> m = new TreeMap<>();
+                     long newLastSyncTime = 0;
++                    FileInputStream fis = null;
+                     try {
+                         newLastSyncTime = prefsFile.lastModified();
+-                        try (FileInputStream fis = new FileInputStream(prefsFile)) {
+-                            XmlSupport.importMap(fis, m);
+-                        }
++                        fis = new FileInputStream(prefsFile);
++                        XmlSupport.importMap(fis, m);
+                     } catch(Exception e) {
+                         if (e instanceof InvalidPreferencesFormatException) {
+                             getLogger().warning("Invalid preferences format in "
+@@ -588,6 +588,13 @@
+                         } else {
+                             throw new BackingStoreException(e);
+                         }
++                    } finally {
++                        try {
++                            if (fis != null)
++                                fis.close();
++                        } catch (IOException e) {
++                            throw new BackingStoreException(e);
++                        }
+                     }
+                     // Attempt succeeded; update state
+                     prefsCache = m;
+@@ -614,13 +621,14 @@
+             AccessController.doPrivileged(
+                 new PrivilegedExceptionAction<Void>() {
+                 public Void run() throws BackingStoreException {
++                    FileOutputStream fos = null;
+                     try {
+                         if (!dir.exists() && !dir.mkdirs())
+                             throw new BackingStoreException(dir +
+                                                              " create failed.");
+-                        try (FileOutputStream fos = new FileOutputStream(tmpFile)) {
+-                            XmlSupport.exportMap(fos, prefsCache);
+-                        }
++
++                        fos = new FileOutputStream(tmpFile);
++                        XmlSupport.exportMap(fos, prefsCache);
+                         if (!tmpFile.renameTo(prefsFile))
+                             throw new BackingStoreException("Can't rename " +
+                             tmpFile + " to " + prefsFile);
+@@ -629,6 +637,14 @@
+                             throw (BackingStoreException)e;
+                         throw new BackingStoreException(e);
+                     }
++                    finally {
++                        try {
++                            if (fos != null)
++                                fos.close();
++                        } catch (IOException e) {
++                            throw new BackingStoreException(e);
++                        }
++                    }
+                     return null;
+                 }
+             });
+--- openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java.orig
++++ openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java
+@@ -255,9 +255,16 @@
+         String fstypes = System.getProperty("java.home") + "/lib/fstypes.properties";
+         Path file = Paths.get(fstypes);
+         try {
+-            try (ReadableByteChannel rbc = Files.newByteChannel(file)) {
++            ReadableByteChannel rbc = null;
++            try {
++                rbc = Files.newByteChannel(file);
+                 result.load(Channels.newReader(rbc, "UTF-8"));
+             }
++            finally {
++                if (rbc != null) {
++                    rbc.close();
++                }
++            }
+         } catch (IOException x) {
+         }
+         return result;

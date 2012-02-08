@@ -1,3 +1,58 @@
+2012-10-08  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am,
+	(CORBA_CHANGESET): Updated.
+	(HOTSPOT_CHANGESET): Likewise.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* generated/java/nio/DirectByteBuffer.java,
+	* generated/java/nio/DirectByteBufferR.java,
+	* generated/java/nio/DirectCharBufferRS.java,
+	* generated/java/nio/DirectCharBufferRU.java,
+	* generated/java/nio/DirectCharBufferS.java,
+	* generated/java/nio/DirectCharBufferU.java,
+	* generated/java/nio/DirectDoubleBufferRS.java,
+	* generated/java/nio/DirectDoubleBufferRU.java,
+	* generated/java/nio/DirectDoubleBufferS.java,
+	* generated/java/nio/DirectDoubleBufferU.java,
+	* generated/java/nio/DirectFloatBufferRS.java,
+	* generated/java/nio/DirectFloatBufferRU.java,
+	* generated/java/nio/DirectFloatBufferS.java,
+	* generated/java/nio/DirectFloatBufferU.java,
+	* generated/java/nio/DirectIntBufferRS.java,
+	* generated/java/nio/DirectIntBufferRU.java,
+	* generated/java/nio/DirectIntBufferS.java,
+	* generated/java/nio/DirectIntBufferU.java,
+	* generated/java/nio/DirectLongBufferRS.java,
+	* generated/java/nio/DirectLongBufferRU.java,
+	* generated/java/nio/DirectLongBufferS.java,
+	* generated/java/nio/DirectLongBufferU.java,
+	* generated/java/nio/DirectShortBufferRS.java,
+	* generated/java/nio/DirectShortBufferRU.java,
+	* generated/java/nio/DirectShortBufferS.java,
+	* generated/java/nio/DirectShortBufferU.java:
+	Use versions from latest IcedTea7 forest build.
+	* generated/sun/nio/cs/ext/EUC_TWMapping.java:
+	Added.
+
+2011-01-15  Damien Raude-Morvan  <drazzib@drazzib.com>
+
+	* patches/boot/ecj-diamond.patch,
+	* patches/boot/ecj-multicatch.patch,
+	* patches/boot/ecj-trywithresources.patch,
+	* patches/rhino.patch:
+	Updated to apply against new checkout.
+
 2011-10-27  Omair Majid  <omajid@redhat.com>
 
 	* NEWS: Updated.
