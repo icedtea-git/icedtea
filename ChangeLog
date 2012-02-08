@@ -1,6 +1,13 @@
 2012-10-08  Andrew John Hughes  <ahughes@redhat.com>
 
-	* Makefile.am,
+	* Makefile.am:
+	Move JDK_UPDATE_VERSION and COMBINED_VERSION
+	to top of file with OPENJDK_VERSION.
+	(JDK_UPDATE_VERSION): Set to 02 for u2.
+
+2012-10-08  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(CORBA_CHANGESET): Updated.
 	(HOTSPOT_CHANGESET): Likewise.
 	(JAXP_CHANGESET): Likewise.
