@@ -1,5 +1,11 @@
 2012-10-08  Andrew John Hughes  <ahughes@redhat.com>
 
+	(HOTSPOT_CHANGESET): Bump to fix HotSpot merge
+	issue.
+	(HOTSPOT_SHA256SUM): Likewise.
+
+2012-10-08  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	Move JDK_UPDATE_VERSION and COMBINED_VERSION
 	to top of file with OPENJDK_VERSION.
