@@ -20,8 +20,8 @@ JDK_SHA256SUM = db85a3ce380b6a3f1ed60178112bcb308b6f5a37eaeaedc4534acfd50275d87c
 LANGTOOLS_SHA256SUM = fc893721f587ac47a24aeec4a41774efd9df7f43db9c76efc1a380b061b23ade
 OPENJDK_SHA256SUM = 714a000514e273bae755f4cc90df839a298583b38bb93518d6cf805dede99b6d
 
-CACAO_VERSION = 4549072ab2de
-CACAO_SHA256SUM = ec097ce96f047abbaeab4faab752c121d29f08bdeae358038a0b7cde03361d07
+CACAO_VERSION = a567bcb7f589
+CACAO_SHA256SUM = d49f79debc131a5694cae6ab3ba2864e7f3249ee8d9dc09aae8afdd4dc6b09f9
 CACAO_BASE_URL = http://icedtea.classpath.org/download/drops/cacao
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.gz
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.gz
@@ -247,7 +247,6 @@ endif
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
-	patches/cacao/version.patch \
 	patches/cacao/jsig.patch \
 	patches/cacao/memory.patch
 endif
@@ -1991,12 +1990,14 @@ if !USE_SYSTEM_CACAO
 	  --build=$(build_alias) \
 	  --target=$(target_alias) \
 	  --prefix=$(abs_top_builddir)/cacao/install \
-	  --with-java-runtime-library=openjdk \
+	  --with-java-runtime-library=openjdk7 \
 	  --with-java-runtime-library-prefix=$(abs_top_builddir)/openjdk \
 	  --with-java-runtime-library-classes=$(RUNTIME) \
 	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
 	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS) install
-	ln -s server $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/client
+	ln -sf server $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/client
+	touch $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/server/Xusage.txt
+	ln -sf client/libjvm.so $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/libjsig.so
 endif
 endif
 	mkdir -p stamps
