@@ -10,10 +10,310 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.1 (20XX-XX-XX):
+New in release 2.1 (2012-02-14):
 
 * Bug fixes
+  - S4909150: WindowsTreeUI can cause NullPointerException occasionally
+  - S4965777: GC changes to support use of discovered field for pending references
+  - S6476261: (reflect) GenericSignatureFormatError When signature includes nested inner classes
+  - S6478991: C1 NullCheckEliminator yields incorrect exceptions
+  - S6484982: G1: process references during evacuation pauses
+  - S6591247: C2 cleans up the merge point too early during SplitIf
+  - S6670868: StackOverFlow with authenticated Proxy tunnels
+  - S6735320: StringIndexOutOfBoundsException for empty @serialField tag
+  - S6791672: enable 1G and larger pages on solaris
+  - S6810861: G1: support -XX:+{PrintClassHistogram,HeapDump}{Before,After}FullGC
+  - S6814390: G1: remove the concept of non-generational G1
+  - S6898310: (cs) Charset cache lookups should be synchronized
+  - S6916968: CMS: freeList.cpp:304 assert(_allocation_stats.prevSweep() + ..., "Conservation Principle")
+  - S6918185: Remove unused code for lost card-marking optimization in BacktraceBuilder
+  - S6929868: G1: introduce min / max young gen size bounds
+  - S6941169: XML parsing cannot be trusted
+  - S6941923: RFE: Handling large log files produced by long running Java Applications
+  - S6951623: 3/3 possible performance problems in FollowReferences() and GetObjectsWithTags()
+  - S6956668: misbehavior of XOR operator (^) with int
+  - S6963006: Javacard exception when trying to access card during read operation
+  - S6990015: Incorrect Icache line size is used for 64 bit x86
+  - S6990212: JSR 292 JVMTI MethodEnter hook is not called for JSR 292 bootstrap and target methods
+  - S6994322: Remove the is_tlab and is_noref / is_large_noref parameters from the CollectedHeap
+  - S7004681: G1: Extend marking verification to Full GCs
+  - S7012081: JSR 292: SA-JDI can't read MH/MT/Indy ConstantPool entries
+  - S7012206: ~20 tools tests failing due to -XX:-UsePerfData default in Java SE Embedded
+  - S7012364: test/java/util/Locale/LocaleCategory.sh fails on Cygwin
+  - S7012783: JFileChooser fails to resolve DFS links on Windows Vista SP2
+  - S7016112: CMS: crash during promotion testing
+  - S7016797: Hotspot: securely/restrictive load dlls and new API for loading system dlls
+  - S7016881: JSR 292: JDI: sun.jvm.hotspot.utilities.AssertionFailure: index out of bounds
+  - S7019773: Problem with java/classes_awt
+  - S7019963: The goto parent directory button doesn't operate in JFileChooser
+  - S7020373: JSR rewriting can overflow memory address size variables
+  - S7022113: Security icon can be moved behind the window using the com.sun.SecurityWarning.setPosition() method
+  - S7024697: SessionRef.dispose() should determine if the token referred to by the token object is still valid
+  - S7029903: Splash screen is not shown in 64-bit Linux with 16-bit color depth
+  - S7030332: Default borders in tables looks incorrect JEditorPane
+  - S7031830: bad_record_mac failure on TLSv1.2 enabled connection with SSLEngine
+  - S7032531: G1: enhance GC logging to include more accurate eden / survivor size transitions
+  - S7033141: assert(has_cp_cache(i)) failed: oob
+  - S7035946: Up to 15% regression on JDK 7 b136 vs b135 on specjvm2008.crypto.rsa on x64
+  - S7039182: PPC: NIO: java.io.IOException: Invalid argument in sun.nio.ch.FileDispatcherImpl.read0
+  - S7039627: G1: avoid BOT updates for survivor allocations and dirty survivor regions incrementally
+  - S7039731: arraycopy could use prefetch on SPARC
+  - S7041125: LDAP API does not catch malformed filters that contain two operands for the ! operator
+  - S7041800: URI.equals may incorrectly return true with escaped octets
+  - S7042148: closed/java/awt/font/TextLayout/CheckLayoutLTR.java failed
+  - S7042740: CMS: assert(n> q) failed: Looping at: ... blockOffsetTable.cpp:557
+  - S7043737: klist does not detect non-existing keytab
+  - S7043847: NTML impl of SaslServer throws UnsupportedOperationException from (un)wrap method
+  - S7043987: 3/3 JVMTI FollowReferences is slow
+  - S7044486: open jdk repos have files with incorrect copyright headers, which can end up in src bundles
+  - S7044738: Loop unroll optimization causes incorrect result
+  - S7045232: G1: pool names are inconsistent with other collectors (don't have 'Space')
+  - S7045330: G1: Simplify/fix the HeapRegionSeq class
+  - S7045514: SPARC assembly code for JSR 292 ricochet frames
+  - S7045662: G1: OopsInHeapRegionClosure::set_region() should not be virtual
+  - S7045697: JDK7 THIRD PARTY README update
+  - S7045751: G1: +ExplicitGCInvokesConcurrent causes excessive single region evacuation pauses
+  - S7046182: G1: remove unnecessary iterations over the collection set
+  - S7046490: Preallocated OOME objects should obey Throwable stack trace protocol
+  - S7046558: G1: concurrent marking optimizations
+  - S7046778: Project Coin: problem with diamond and member inner classes
+  - S7047069: Array can dynamically change size when assigned to an object field
+  - S7047325: Internal API to improve management of direct buffers
+  - S7047491: C1: registers saved incorrectly when calling checkcast_arraycopy stub
+  - S7047697: MethodHandle.invokeExact call for wrong method causes VM failure if run with -Xcomp
+  - S7047954: VM crashes with assert(is_Mem()) failed
+  - S7047961: JSR 292 MethodHandleWalk swap args doesn't handle T_LONG and T_DOUBLE properly
+  - S7048009: Update .jcheck/conf files for JDK 8
+  - S7048332: Cadd_cmpLTMask doesn't handle 64-bit tmp register properly
+  - S7048342: CMS: eob == _limit || fc->isFree() failed: Only a free chunk should allow us to cross over the limit
+  - S7048782: CMS: assert(last_chunk_index_to_check<= last_chunk_index) failed: parCardTableModRefBS.cpp:359
+  - S7049079: NTSYSTEM CLASS IS LEAKING WINDOWS TOKENS
+  - S7049339: AnyBlit is broken with non-rectangular clips.
+  - S7049410: JSR 292 old method name MethodHandle.invokeGeneric should not be accepted by the JVM
+  - S7049415: Failure of resolution of sym.reference to the c.s.s. should be wrapped in BootstrapMethodError
+  - S7049774: UID construction appears to hang if time changed backwards
+  - S7049928: VM crashes with "assert(_adapter != NULL) failed: must have" at methodOop.cpp:63
+  - S7049963: DISTINGUISHED NAMES FOR CERT ARE ESCAPED IN JROCKIT 1.6(NOT COMPATIBLE WITH JROC
+  - S7049999: G1: Make the G1PrintHeapRegions output consistent and complete
+  - S7050280: assert(u->as_Unlock()->is_eliminated()) failed: sanity
+  - S7050392: G1: Introduce flag to generate a log of the G1 ergonomic decisions
+  - S7050554: JSR 292 - need optimization for selectAlternative
+  - S7050826: Hebrew characters are not rendered on OEL 5.6
+  - S7050935: closed/java/awt/Choice/WheelEventsConsumed/WheelEventsConsumed.html fails on win32
+  - S7051430: CMS: ongoing CMS cycle should terminate abruptly to allow prompt JVM termination at exit
+  - S7051516: ThreadLocalRandom seed is never initialized so all instances generate the same sequence
+  - S7051798: SA-JDI: NPE in Frame.addressOfStackSlot(Frame.java:244)
+  - S7052219: JSR 292: Crash in ~BufferBlob::MethodHandles adapters
+  - S7052494: Eclipse test fails on JDK 7 b142
+  - S7052988: JPRT embedded builds don't set MINIMIZE_RAM_USAGE
+  - S7053189: remove some unnecessary platform-dependent includes
+  - S7053520: JSR292: crash in invokedynamic with C1 using tiered and compressed oops
+  - S7054211: No loop unrolling done in jdk7b144 for a test update() while loop
+  - S7054637: Enable PKCS11 to use raw encoding for the EC point in an Elliptic Curve public key
+  - S7055073: G1: code cleanup in the concurrentMark.* files
+  - S7055247: Ignore test of # 7020373
+  - S7055355: JSR 292: crash while throwing WrongMethodTypeException
+  - S7056328: JSR 292 invocation sometimes fails in adapters for types not on boot class path
+  - S7056380: VM crashes with SIGSEGV in compiled code
+  - S7057046: Add embedded license to THIRD PARTY README
+  - S7057120: Tiered: Allow C1 to inline methods with loops
+  - S7057297: Project Coin: diamond erroneously accepts in array initializer expressions
+  - S7057459: Regression:  Performance degradation with java.beans.XMLEncoder
+  - S7057705: can't generate api docs for JDK7 updates
+  - S7057857, CVE-2011-3554: insufficient pack200 JAR files uncompress error checks
+  - S7057857: SIGSEGV [libunpack.so] store_Utf8_char(signed char*, unsigned short) in java.util.jar.pack200
+  - S7057978: improve robustness of c1 ARM back-end wrt non encodable constants
+  - S7058036: FieldsAllocationStyle=2 does not work in 32-bit VM
+  - S7058510: multinewarray with 6 dimensions uncommon traps in server compiler
+  - S7058689: Tiered: Reprofiling doesn't happen in presence of level 4 OSR methods
+  - S7058828: test/java/util/concurrent/Phaser/Arrive.java fails intermittently
+  - S7059019: G1: add G1 support to the SA
+  - S7059034: Use movxtod/movdtox on T4
+  - S7059037: Use BIS for zeroing on T4
+  - S7059259: (process) ProcessBuilder.start permission check should be improved when redirecting output to append
+  - S7059905: (javadoc) promote method visibility for netbeans usage
+  - S7060619: C1 should respect inline and dontinline directives from CompilerOracle
+  - S7060642: (javadoc) improve performance on accessing inlinedTags
+  - S7060836: RHEL 5.5 and 5.6 should support UseNUMA
+  - S7060842: UseNUMA crash with UseHugreTLBFS running SPECjvm2008
+  - S7060926: Attr.PostAttrAnalyzer misses a case
+  - S7061101: adlc should complain about mixing block and expression forms of ins_encode
+  - S7061125: Proposed javac argument processing performance improvement
+  - S7061187: need some includes for arm/ppc
+  - S7061192: option handling adjustments for oracle and embedded builds
+  - S7061197: ThreadLocalStorage sp map table should be optional
+  - S7061204: clean the chunk table synchronously in embedded builds
+  - S7061212: use o/s low memory notification in embedded builds
+  - S7061225: os::print_cpu_info() should support os-specific data
+  - S7061379: [Kerberos] Cross-realm authentication fails, due to nameType problem
+  - S7061691: Fork HS21 to HS22 - renumber Minor and build numbers of JVM
+  - S7061768: Backout fix # 6941169
+  - S7062745: Regression: difference in overload resolution when two methods are maximally specific
+  - S7062856: Disassembler needs to be smarter about finding hsdis after 1.7 launcher changes
+  - S7062969: java -help still shows http://java.sun.com/javase/reference
+  - S7063628: Use cbcond on T4
+  - S7063629: use cbcond in C2 generated code on T4
+  - S7064279: Introspector.getBeanInfo() should release some resources in timely manner
+  - S7064544: (javadoc) miscellaneous fixes requested by netbeans
+  - S7065535: Mistyped function name that disabled UseLargePages on Windows
+  - S7065972: Some race condition may happen in SSLSocketImpl class
+  - S7066143: JSR 292: Zero support after regressions from 7009923 and 7009309
+  - S7066203: Update currency data to the latest ISO 4217 standard
+  - S7066339: Tiered: policy should make consistent decisions about osr levels
+  - S7066490: @since 1.7 tag is missing for java.util.regex.Matcher.group(java.lang.String)
+  - S7066713: Separate demos from the bundles on Solaris and Linux
+  - S7066841: remove MacroAssembler::br_on_reg_cond() on sparc
+  - S7067288: compiler regression test Test7052494 timeouts with client VM
+  - S7067784: TEST: move testcase for # 7023640 from open to close in 7u1
+  - S7067811: Update demo/sample code to state it should not be used for production
+  - S7067922: (launcher) java -jar throws NPE if JAR file does not contain Main-Class attribute
+  - S7067974: multiple ETYPE-INFO-ENTRY with same etype and different salt
+  - S7068047: DnDMerlinQLTestsuite_DnDJTextArea test fails with an java.awt.dnd.InvalidDnDOperationException
+  - S7068051: SIGSEGV in PhaseIdealLoop::build_loop_late_post
+  - S7068215: G1: Print reference processing time during remark
+  - S7068240: G1: Long "parallel other time" and "ext root scanning" when running specific benchmark
+  - S7068328: BufferPoolMXBean and PlatformLoggingMXBean getObjectName may return null
+  - S7068416: Lightweight HTTP Server should support TCP_NODELAY
+  - S7068437: Regression: Filer.getResource(SOURCE_OUTPUT, ...) no longer works in JDK 7 w/o -s
+  - S7068451: Regression: javac compiles fixed sources against previous, not current, version of generated sources
+  - S7068902: (javac) allow enabling or disabling of String folding
+  - S7069176: Update the JDK version numbers in Hotspot for JDK 8
+  - S7069452: Cleanup NodeFlags
+  - S7069863: G1: SIGSEGV running SPECjbb2011 and -UseBiasedLocking
+  - S7070061: Adjust Hotspot make/jprt.properties for new JDK8 settings
+  - S7070134: Hotspot crashes with sigsegv from PorterStemmer
+  - S7071166: LayoutStyle.getPreferredGap()  - IAE is expected but not thrown
+  - S7071246: Enclosing string literal in parenthesis in switch-case crashes javac
+  - S7071248: IME composition window does not disappear when file dialog is closed : Japanese WinXP
+  - S7071307: MethodHandle bimorphic inlining should consider the frequency
+  - S7071427: AdapterFingerPrint can hold 8 entries per int
+  - S7071609: javax/swing/JPopupMenu/6694823/bug6694823.java failed on solaris10
+  - S7071653: JSR 292: call site change notification should be pushed not pulled
+  - S7071709: JSR 292: switchpoint invalidation should be pushed not pulled
+  - S7071823: Zero: zero/shark doesn't build after b147-fcs
+  - S7071904: 4/4 HotSpot: Full Debug Symbols
+  - S7072527: CMS: JMM GC counters overcount in some cases
+  - S7072645: Toolkit.addPropertyChangeListener(name, pcl) throws NPE for null name
+  - S7073337: Crash after playing Java game on Pogo
+  - S7073491: -Dsun.net.maxDatagramSockets=1 does not work correctly with system.gc()
+  - S7073508: Regression: NullPointerException at com.sun.tools.javac.code.Lint$AugmentVisitor.augment
+  - S7073631: (javac) javac parser improvements for error position reporting
+  - S7073913: The fix for 7017193 causes segfaults
+  - S7074017: Introduce MemBarAcquireLock/MemBarReleaseLock nodes for monitor enter/exit code paths
+  - S7074189: some javac tests fail with latest jtreg 4.1 b03
+  - S7074386: fallback to fontconfig.<major_version>.bfc/properties if fontconfig.<major_version>.<minor_version>.
+  - S7074416: Regression: JSR199: javac doesn't unwrap clientcodewrapper objects
+  - S7074579: G1: JVM crash with JDK7 running ATG CRMDemo Fusion App
+  - S7075098: Remove unused fdlibm files
+  - S7075105: WIN: Provide a way to format HTML on drop
+  - S7075559: JPRT windows_x64 build failure
+  - S7075623: 6990212 broke raiseException in 64 bit
+  - S7075646: G1: fix inconsistencies in the monitoring data
+  - S7076831: TEST_BUG: compiler/5091921/Test7005594.java fails on LOW MEM SYSTEMS
+  - S7077439: Possible reference through NULL in loopPredicate.cpp:726
+  - S7077769: (zipfs) ZipFileSystem.writeCEN() writes wrong "data size" for ZIP64 extended information extra field
+  - S7077806: ARM: java.lang.InternalError: bound subword value does not fit into the subword type
+  - S7078382: JSR 292: don't count method handle adapters against inlining budgets
+  - S7079317: Incorrect branch's destination block in PrintoOptoAssembly output
+  - S7079329: Adjust allocation prefetching for T4
+  - S7079626: x64 emits unnecessary REX prefix
+  - S7079673: JSR 292: C1 should inline bytecoded method handle adapters
+  - S7079769: JSR 292: incorrect size() for CallStaticJavaHandle on sparc
+  - S7080038: (ann) Serializable types in sun.reflect.annotation do not declare serialVersionUIDs
+  - S7080289: java/awt/AWTKeyStroke/AlienClass/Test2.java failed on jdk1.5.0_32b02 but passed on previous build
+  - S7080389: G1: refactor marking code in evacuation pause copy closures
+  - S7080431: VM asserts if specified size(x) in .ad is larger than emitted size
+  - S7081012: REGRESSION:Component.transferFocusBackward invokes clearGlobalFocusOwner()
+  - S7081064: G1: remove develop params G1FixedSurvivorSpaceSize, G1FixedTenuringThreshold, and G1FixedEdenSize
+  - S7081251: bump the hs22 build number to 02
+  - S7081926: assert(VM_Version::supports_sse2()) failed: must support
+  - S7082220: Visual Studio projects broken after change 7016797: Hotspot: securely/restrictive load dlls and new
+  - S7082263: Reflection::resolve_field/field_get/field_set are broken
+  - S7082631: JSR 292: need profiling support in GWTs
+  - S7082645: Hotspot doesn't compile on old linuxes after 7060836
+  - S7082689: allow duplicate bug ids in jdk7u repos
+  - S7082769: FileInputStream/FileOutputStream/RandomAccessFile allow file descriptor be closed when still in use
+  - S7082949: JSR 292: missing ResourceMark in methodOopDesc::make_invoke_method
+  - S7082969: NUMA interleaving
+  - S7083184: JSR 292: don't store context class argument with call site dependencies
+  - S7083786: dead various dead chunks of code
+  - S7083916: Bump the hs22 build number to 03
+  - S7084509: G1: fix inconsistencies and mistakes in the young list target length calculations
+  - S7085012: ARM: com/sun/jdi/PopSynchronousTest.java still fails
+  - S7085137: -XX:+VerifyOops is broken
+  - S7085279: C1 overflows code buffer with VerifyOops and CompressedOops
+  - S7085404: JSR 292: VolatileCallSites should have push notification too
+  - S7085860: JSR 292: implement CallSite.setTargetNormal and setTargetVolatile as native methods
+  - S7085906: Replace the permgen allocated sentinelRef with a self-looped end
+  - S7085944: FDS: gdb does not find debug symbols for libjsig link
+  - S7086226: UseNUMA fails on old versions of windows
+  - S7086261: javac doesn't report error as expected, it only reports ClientCodeWrapper$DiagnosticSourceUnwrapper
+  - S7086394: c2/arm: enable UseFPUForSpilling
+  - S7086533: G1: assert(!_g1->is_obj_dead(obj)): We should not be preserving dead objs: g1CollectedHeap.cpp:3835
+  - S7086560: 7085404 changes broke VM with -XX:-EnableInvokeDynamic
+  - S7086585: make Java field injection more flexible
+  - S7086589: bump the hs22 build number to 04
+  - S7087445: Improve platform independence of JSR292 shared code
+  - S7087453: PhaseChaitin::yank_if_dead() should handle MachTemp inputs
+  - S7087583: Hotspot fails to allocate heap with mmap(MAP_HUGETLB)
+  - S7087717: G1: make the G1PrintRegionLivenessInfo parameter diagnostic
+  - S7087947: Add regression test for 7068051
+  - S7087956: add libattach.so to embedded JRE to enable additional troubleshooting support
+  - S7088020: SEGV in JNIHandleBlock::release_block
+  - S7088287: libpng need to be updated.
+  - S7088955: add C2 IR support to the SA
+  - S7088991: Bump ths hs22 build number to 05
+  - S7089625: G1: policy for how many old regions to add to the CSet (when young gen is fixed) is broken
+  - S7089632: assert(machtmp->outcnt() == 1) failed: expected for a MachTemp
+  - S7089709: type "jushort" not found
+  - S7090069: Java launcher hangs in infinite loop on windows when UseNUMA[Interleaving] is specified
+  - S7090259: Fix hotspot sources to build with old compilers
+  - S7090654: nightly failures after 7086585
+  - S7090843: (tz) Support tzdata2011j
+  - S7090844: Support a timezone whose offset is changed more than once in the future
+  - S7091032: G1: assert failure when NewRatio is used
+  - S7091141: JAXP 1.4.5 update 1 for 7u2
+  - S7091255: Bump the hs22 build number to 06
+  - S7091294: disable quicksort tests
+  - S7091369: DatagramSocket/Limit.java failing on 8 and 7u2
+  - S7091528: javadoc attempts to parse .class files
+  - S7092186: adjust package access in rmiregistry
+  - S7092236: java/util/EnumSet/EnumSetBash.java fails
+  - S7092238: G1: Uninitialized field gc_efficiency in G1PrintRegionLivenessInfo output
+  - S7092245: G1: Wrong format specifier in G1PrintRegionLivenessInfo header output
+  - S7092278: "jmap -finalizerinfo" throws "sun.jvm.hotspot.utilities.AssertionFailure: invalid cp index 0 137"
+  - S7092412: G1: Some roots not marked during an initial mark that gets an evacuation failure
+  - S7092679: (tz) Java getting wrong timezone/DST info on Solaris 11
+  - S7093108: Bump the hs22 build number to 07
+  - S7095698: jdk7u2 does not work as a bootstrap after 7091141
+  - S7096366: PPC: corruption of floating-point values with DeoptimizeALot
+  - S7097048: G1: extend the G1 SA changes to print per-heap space information
+  - S7097053: G1: assert(da ? referent->is_oop() : referent->is_oop_or_null()) failed: referenceProcessor.cpp:1054
+  - S7098719: -Dsun.net.maxDatagramSockets and Socket constructor does not work correctly with System.gc()
+  - S7099017: jdk7u2-dev does not build
+  - S7099228: Use a PKCS11 config attribute to control encoding of an EC point
+  - S7099399: cannot deal with CRL file larger than 16MB
+  - S7099488: TwoStacksPlainSocketImpl should invoke super.create(stream), typo in fix for 7098719
+  - S7100165: JSR 292: leftover printing code in methodHandleWalk.cpp
+  - S7100757: The BitSet.nextSetBit() produces incorrect result in 32bit VM on Sparc
+  - S7101102: Bump the hs22 build number to 08
+  - S7101658: Backout 7082769 changes
+  - S7102337: Third Party License Readme updates for 7u2
+  - S7102369: remove java.rmi.server.codebase property parsing from registyimpl
+  - S7102515: javac running very very long and not returning
+  - S7103108: (tz) Support tzdata2011l
   - S7103224: collision between __LEAF define in interfaceSupport.hpp and /usr/include/sys/cdefs.h with gcc
+  - S7103405: Correct display names for Pacific/Apia timezone
+  - S7103610: _NET_WM_PID and WM_CLIENT_MACHINE are not set
+  - S7104126: Insert openjdk copyright header back into TZdata files
+  - S7108550: Bump the hs22 build number to 09
+  - S7108598: Pogo Table Games freeze with JDK 7
+  - S7110428: Crash during HeapDump operation
+  - S7110586: C2 generates incorrect results
+  - S7110590: DnDMerlinQLTestsuite_DnDJTextArea test fails with an java.awt.dnd.InvalidDnDOperationException
+  - S7112766: Bump the hs22 build number to 10
+  - S7140882: Don't return booleans from methods returning pointers
+  - Don't force -Werror on in com/sun/java/pack
 * JamVM
   - Implement classlibCheckIfOnLoad().
   - Make thread states JVMTI compatible.
