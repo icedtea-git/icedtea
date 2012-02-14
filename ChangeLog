@@ -1,3 +1,13 @@
+2012-10-14  Andrew John Hughes  <ahughes@redhat.com>
+
+	(HOTSPOT_CHANGESET): Add latest fixes:
+	7140882, 7049339 and 7091528.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+
 2012-02-10  Xerxes Rånby  <xerxes@zafena.se>
 
 	* Makefile.am
