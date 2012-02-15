@@ -10,8 +10,20 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 2.2 (2012-XX-XX):
+
 New in release 2.1 (2012-02-14):
 
+* Security fixes
+  - S7082299, CVE-2011-3571: Fix in AtomicReferenceArray
+  - S7088367, CVE-2011-3563: Fix issues in java sound
+  - S7110683, CVE-2012-0502: Issues with some KeyboardFocusManager method
+  - S7110687, CVE-2012-0503: Issues with TimeZone class
+  - S7110700, CVE-2012-0505: Enhance exception throwing mechanism in ObjectStreamClass
+  - S7110704, CVE-2012-0506: Issues with some method in corba
+  - S7112642, CVE-2012-0497: Incorrect checking for graphics rendering object
+  - S7118283, CVE-2012-0501: Better input parameter checking in zip file processing
+  - S7126960, CVE-2011-5035: Add property to limit number of request headers to the HTTP Server
 * Bug fixes
   - S4909150: WindowsTreeUI can cause NullPointerException occasionally
   - S4965777: GC changes to support use of discovered field for pending references
@@ -319,6 +331,21 @@ New in release 2.1 (2012-02-14):
   - Make thread states JVMTI compatible.
   - Add OpenBSD/sparc to list of recognised hosts.
   - Handle 'g' when specifying memory + extra checks.
+
+New in release 2.0.1 (2012-02-14):
+
+* Security fixes
+  - S7082299, CVE-2011-3571: Fix in AtomicReferenceArray
+  - S7088367, CVE-2011-3563: Fix issues in java sound
+  - S7110683, CVE-2012-0502: Issues with some KeyboardFocusManager method
+  - S7110687, CVE-2012-0503: Issues with TimeZone class
+  - S7110700, CVE-2012-0505: Enhance exception throwing mechanism in ObjectStreamClass
+  - S7110704, CVE-2012-0506: Issues with some method in corba
+  - S7112642, CVE-2012-0497: Incorrect checking for graphics rendering object
+  - S7118283, CVE-2012-0501: Better input parameter checking in zip file processing
+  - S7126960, CVE-2011-5035: Add property to limit number of request headers to the HTTP Server
+* Bug fixes
+  - S7103610: _NET_WM_PID and WM_CLIENT_MACHINE are not set
 
 New in release 2.0 (2011-10-19):
 

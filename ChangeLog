@@ -1,9 +1,14 @@
-2012-10-14  Andrew John Hughes  <ahughes@redhat.com>
+2012-02-15  Andrew John Hughes  <ahughes@redhat.com>
+
+	* NEWS: Add 2.0.1 and 2.1.0 release notes.
+	* configure.ac: Bump to 2.2pre.
+
+2012-02-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	* NEWS: Update with OpenJDK fixes and
 	add release date for 2.1.
 
-2012-10-14  Andrew John Hughes  <ahughes@redhat.com>
+2012-02-14  Andrew John Hughes  <ahughes@redhat.com>
 
 	(HOTSPOT_CHANGESET): Add latest fixes:
 	7140882, 7049339 and 7091528.
@@ -24,20 +29,20 @@
 	to work with latest OpenJDK ALT_HOTSPOT_IMPORT_PATH functionality.
 	* patches/cacao/version.patch: Removed, replaced by upstream CACAO changeset 30edcde287d9.
 
-2012-10-08  Andrew John Hughes  <ahughes@redhat.com>
+2012-02-08  Andrew John Hughes  <ahughes@redhat.com>
 
 	(HOTSPOT_CHANGESET): Bump to fix HotSpot merge
 	issue.
 	(HOTSPOT_SHA256SUM): Likewise.
 
-2012-10-08  Andrew John Hughes  <ahughes@redhat.com>
+2012-02-08  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	Move JDK_UPDATE_VERSION and COMBINED_VERSION
 	to top of file with OPENJDK_VERSION.
 	(JDK_UPDATE_VERSION): Set to 02 for u2.
 
-2012-10-08  Andrew John Hughes  <ahughes@redhat.com>
+2012-02-08  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
 	(CORBA_CHANGESET): Updated.
