@@ -1,3 +1,8 @@
+2012-02-16  Xerxes Rånby  <xerxes@zafena.se>
+
+	(HOTSPOT_CHANGESET): Add latest Zero HS22 fixes.
+	(HOTSPOT_SHA256SUM): Likewise.
+
 2012-02-15  Andrew John Hughes  <ahughes@redhat.com>
 
 	* NEWS: Add 2.0.1 and 2.1.0 release notes.
