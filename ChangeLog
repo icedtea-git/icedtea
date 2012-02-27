@@ -1,3 +1,8 @@
+2012-02-24  Deepak Bhole <dbhole@redhat.com>
+
+	PR885: IcedTea7 does not build scripting support
+	* patches/rhino.patch: Added 'script' to list of modules built.
+
 2011-10-03  Xerxes Rånby  <xerxes@zafena.se>
 	    Robert Lougher <rob@jamvm.org.uk>
 
