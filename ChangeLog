@@ -1,3 +1,7 @@
+2012-03-13  Mark Wielaard  <mjw@redhat.com>
+
+	* tapset/jstack.stp.in: Don't hard code constantPoolOopDesc_size.
+
 2012-02-24  Deepak Bhole <dbhole@redhat.com>
 
 	PR885: IcedTea7 does not build scripting support

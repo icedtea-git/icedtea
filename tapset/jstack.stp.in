@@ -1,5 +1,5 @@
 /* jstack systemtap tapset, for extracting hotspot java backtraces.
-   Copyright (C) 2009, Red Hat Inc.
+   Copyright (C) 2009, 2012 Red Hat Inc.
 
 This file is part of IcedTea.
 
@@ -110,16 +110,18 @@ probe hotspot.vm_init_end
      pc_register = "eip";
      ptr_size = 4;
      ptr_mask = 0xFFFFFFFF;
-     constantPoolOopDesc_size = 32; // Should use dwarf @size
   %: %(arch == "x86_64" %?
      sp_register = "rsp";
      fp_register = "rbp";
      pc_register = "rip";
      ptr_size = 8; // XXX - might be probing 32-on-64 jvm.
      ptr_mask = 0xFFFFFFFFFFFFFFFF;
-     constantPoolOopDesc_size = 56; // Should use dwarf @size
   %: **ERROR** unknown architecture
   %) %)
+
+  // Pretend we have an array at address zero and take address of second
+  // element and we have the size.
+  constantPoolOopDesc_size = &@cast(0, "constantPoolOopDesc")[1];
 
   // Really should get from dwarf: @size("HeapBlock::Header"), @size("oopDesc")
   HeapBlock_Header_size = 2 * ptr_size;
