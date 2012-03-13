@@ -309,129 +309,143 @@ function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
             }
           block = CodeCache_low + (segment << CodeHeap_log2_segment_size);
 
-          // Do some sanity checking.
-          used = @cast(block, "HeapBlock",
-                       "@ABS_SERVER_LIBJVM_SO@")->_header->_used;
-          if (used != 1)
+          // Some of this is "fuzzy" so catch any read error in case we
+          // "guessed" wrong.
+          try
             {
-              // Something very odd has happened.
-              frame = sprintf("0x%x <?unused-code-block?>", pc);
-              blob_name = "unused";
-              trust_fp = 0;
-              frame_size = 0;
-            }
-          else
-            {
-	      // We don't like spaces in frames (makes it hard to return
-              // a space separated frame list). So make sure they are
-              // replaced by underscores when used in frames.
-              blob = block + HeapBlock_Header_size;
-              blob_name_ptr = @cast(blob, "CodeBlob",
-                                    "@ABS_SERVER_LIBJVM_SO@")->_name;
-              blob_name = ((blob_name_ptr == 0) ? "<unknown-code-blob>"
-                           : user_string(blob_name_ptr));
-            }
 
-	  // For compiled code the methodOop is part of the code blob.
-          // For the interpreter (and other code blobs) it is on the
-          // stack relative to the frame pointer.
-          if (blob_name == "nmethod")
-            methodOopPtr = @cast(blob, "nmethod",
-                                 "@ABS_SERVER_LIBJVM_SO@")->_method
-          else 
-            methodOopPtr = user_long(fp + (-3 * ptr_size)) & ptr_mask
-
-          // Start optimistic. A methodOop is only valid if it was
-          // heap allocated. And if the "type class" oop equals the
-          // Universe::methodKlassObj.
-          if (heap_start > methodOopPtr || methodOopPtr >= heap_end)
-            isMethodOop = 0
-          else
-            {
-              methodOopKlass = @cast(methodOopPtr, "methodOopDesc",
-                                     "@ABS_SERVER_LIBJVM_SO@")->_metadata->_klass;
-              isMethodOop = (methodOopKlass == Universe_methodKlassObj[pid()]);
-            }
-
-          if (isMethodOop)
-            {
-              // The java class is the holder of the constants (strings)
-              // that describe the method and signature. This constant pool
-              // contains symbolic information that describe the properties
-              // of the class. The indexes for methods and signaturates in
-              // the constant pool are symbolOopDescs that contain utf8
-              // strings (plus lenghts). (We could also sanity check that
-              // the tag value is correct [CONSTANT_String = 8]).
-              // Note that the class name uses '/' instead of '.' as
-              // package name separator and that the method signature is
-              // encoded as a method descriptor string. Both of which we
-              // don't demangle here.
-              constantPoolOopDesc = @cast(methodOopPtr, "methodOopDesc",
-                                          "@ABS_SERVER_LIBJVM_SO@")->_constants;
-              constantPoolOop_base = constantPoolOopDesc + constantPoolOopDesc_size;
-
-              klassPtr = @cast(constantPoolOopDesc, "constantPoolOopDesc",
-                               "@ABS_SERVER_LIBJVM_SO@")->_pool_holder;
-              klassSymbol = @cast(klassPtr + oopDesc_size, "Klass",
-                                  "@ABS_SERVER_LIBJVM_SO@")->_name;
-              klassName = &@cast(klassSymbol, "symbolOopDesc",
-                                 "@ABS_SERVER_LIBJVM_SO@")->_body[0];
-              klassLength = @cast(klassSymbol, "symbolOopDesc",
-                                  "@ABS_SERVER_LIBJVM_SO@")->_length;
-
-              methodIndex = @cast(methodOopPtr, "methodOopDesc",
-                                  "@ABS_SERVER_LIBJVM_SO@")->_constMethod->_name_index;
-              methodOopDesc = user_long(constantPoolOop_base + (methodIndex * ptr_size));
-              methodName = &@cast(methodOopDesc, "symbolOopDesc",
-                                  "@ABS_SERVER_LIBJVM_SO@")->_body[0];
-              methodLength = @cast(methodOopDesc, "symbolOopDesc",
-                                   "@ABS_SERVER_LIBJVM_SO@")->_length;
-
-              if (log_sig)
+              // Do some sanity checking.
+              used = @cast(block, "HeapBlock",
+                           "@ABS_SERVER_LIBJVM_SO@")->_header->_used;
+              if (used != 1)
                 {
-                  sigIndex = @cast(methodOopPtr, "methodOopDesc",
-                                   "@ABS_SERVER_LIBJVM_SO@")->_constMethod->_signature_index;
-                  sigOopDesc = user_long(constantPoolOop_base
-                                         + (sigIndex * ptr_size));
-                  sigName = &@cast(sigOopDesc, "symbolOopDesc",
-                                   "@ABS_SERVER_LIBJVM_SO@")->_body[0];
-                  sigLength = @cast(sigOopDesc, "symbolOopDesc",
-                                    "@ABS_SERVER_LIBJVM_SO@")->_length;
-                  sig = user_string_n(sigName, sigLength);
+                  // Something very odd has happened.
+                  frame = sprintf("<unused_code_block@0x%x>", pc);
+                  blob_name = "unused";
+                  trust_fp = 0;
+                  frame_size = 0;
                 }
               else
-                sig = "";
+                {
+                  // We don't like spaces in frames (makes it hard to return
+                  // a space separated frame list). So make sure they are
+                  // replaced by underscores when used in frames.
+                  blob = block + HeapBlock_Header_size;
+                  blob_name_ptr = @cast(blob, "CodeBlob",
+                                        "@ABS_SERVER_LIBJVM_SO@")->_name;
+                  blob_name = ((blob_name_ptr == 0) ? "<unknown-code-blob>"
+                               : user_string(blob_name_ptr));
+                }
 
-              code_name = (log_native
-                           ? sprintf("<%s@0x%x>",
-                                     str_replace(blob_name, " ", "_"), pc)
-                           : "");
+              // For compiled code the methodOop is part of the code blob.
+              // For the interpreter (and other code blobs) it is on the
+              // stack relative to the frame pointer.
+              if (blob_name == "nmethod")
+                methodOopPtr = @cast(blob, "nmethod",
+                                     "@ABS_SERVER_LIBJVM_SO@")->_method
+              else 
+                methodOopPtr = user_long(fp + (-3 * ptr_size)) & ptr_mask
 
-              frame = sprintf("%s.%s%s%s",
-                              user_string_n(klassName, klassLength),
-                              user_string_n(methodName, methodLength),
-                              sig, code_name);
+              // Start optimistic. A methodOop is only valid if it was
+              // heap allocated. And if the "type class" oop equals the
+              // Universe::methodKlassObj.
+              if (heap_start > methodOopPtr || methodOopPtr >= heap_end)
+                isMethodOop = 0
+              else
+                {
+                  methodOopKlass = @cast(methodOopPtr, "methodOopDesc",
+                                         "@ABS_SERVER_LIBJVM_SO@")->_metadata->_klass;
+                  isMethodOop = (methodOopKlass == Universe_methodKlassObj[pid()]);
+                }
+
+              if (isMethodOop)
+                {
+                  // The java class is the holder of the constants (strings)
+                  // that describe the method and signature. This constant pool
+                  // contains symbolic information that describe the properties
+                  // of the class. The indexes for methods and signaturates in
+                  // the constant pool are symbolOopDescs that contain utf8
+                  // strings (plus lenghts). (We could also sanity check that
+                  // the tag value is correct [CONSTANT_String = 8]).
+                  // Note that the class name uses '/' instead of '.' as
+                  // package name separator and that the method signature is
+                  // encoded as a method descriptor string. Both of which we
+                  // don't demangle here.
+                  constantPoolOopDesc = @cast(methodOopPtr, "methodOopDesc",
+                                              "@ABS_SERVER_LIBJVM_SO@")->_constants;
+                  constantPoolOop_base = constantPoolOopDesc + constantPoolOopDesc_size;
+
+                  klassPtr = @cast(constantPoolOopDesc, "constantPoolOopDesc",
+                                   "@ABS_SERVER_LIBJVM_SO@")->_pool_holder;
+                  klassSymbol = @cast(klassPtr + oopDesc_size, "Klass",
+                                      "@ABS_SERVER_LIBJVM_SO@")->_name;
+                  klassName = &@cast(klassSymbol, "symbolOopDesc",
+                                     "@ABS_SERVER_LIBJVM_SO@")->_body[0];
+                  klassLength = @cast(klassSymbol, "symbolOopDesc",
+                                      "@ABS_SERVER_LIBJVM_SO@")->_length;
+
+                  methodIndex = @cast(methodOopPtr, "methodOopDesc",
+                                      "@ABS_SERVER_LIBJVM_SO@")->_constMethod->_name_index;
+                  methodOopDesc = user_long(constantPoolOop_base + (methodIndex * ptr_size));
+                  methodName = &@cast(methodOopDesc, "symbolOopDesc",
+                                      "@ABS_SERVER_LIBJVM_SO@")->_body[0];
+                  methodLength = @cast(methodOopDesc, "symbolOopDesc",
+                                       "@ABS_SERVER_LIBJVM_SO@")->_length;
+
+                  if (log_sig)
+                    {
+                      sigIndex = @cast(methodOopPtr, "methodOopDesc",
+                                       "@ABS_SERVER_LIBJVM_SO@")->_constMethod->_signature_index;
+                      sigOopDesc = user_long(constantPoolOop_base
+                                             + (sigIndex * ptr_size));
+                      sigName = &@cast(sigOopDesc, "symbolOopDesc",
+                                       "@ABS_SERVER_LIBJVM_SO@")->_body[0];
+                      sigLength = @cast(sigOopDesc, "symbolOopDesc",
+                                        "@ABS_SERVER_LIBJVM_SO@")->_length;
+                      sig = user_string_n(sigName, sigLength);
+                    }
+                  else
+                    sig = "";
+
+                  code_name = (log_native
+                               ? sprintf("<%s@0x%x>",
+                                         str_replace(blob_name, " ", "_"), pc)
+                               : "");
+
+                  frame = sprintf("%s.%s%s%s",
+                                  user_string_n(klassName, klassLength),
+                                  user_string_n(methodName, methodLength),
+                                  sig, code_name);
+                }
+              else
+                {
+                  // This is probably just an internal function, not a java
+                  // method, just print the blob_name and continue.
+                  // fp is probably still trusted.
+                  if (log_native)
+                    frame = sprintf("<%s@0x%x>",
+                                    str_replace(blob_name, " ", "_"), pc);
+                }
+
+              // We cannot trust the frame pointer of compiled methods.
+              // The server (c2) jit compiler uses the fp register.
+              // We do know the method frame size on the stack. But
+              // this seems to be useful only as a hint of the minimum
+              // stack being used.
+              if (blob_name == "nmethod")
+                {
+                  trust_fp = 0;
+                  frame_size = @cast(blob, "CodeBlob",
+                                     "@ABS_SERVER_LIBJVM_SO@")->_frame_size;
+                }
+
             }
-          else
+          catch
             {
-              // This is probably just an internal function, not a java
-              // method, just print the blob_name and continue.
-              // fp is probably still trusted.
-              if (log_native)
-                frame = sprintf("<%s@0x%x>",
-                                str_replace(blob_name, " ", "_"), pc);
-            }
-
-          // We cannot trust the frame pointer of compiled methods.
-          // The server (c2) jit compiler uses the fp register.
-          // We do know the method frame size on the stack. But
-          // this seems to be useful only as a hint of the minimum
-          // stack being used.
-          if (blob_name == "nmethod")
-            {
+              // Some assumption above totally failed and we got an address
+              // read error. Give up and mark frame pointer as suspect.
+              frame = sprintf("<unknown_frame@0x%x>", pc);
               trust_fp = 0;
-              frame_size = @cast(blob, "CodeBlob",
-                                 "@ABS_SERVER_LIBJVM_SO@")->_frame_size;
             }
         }
       else
