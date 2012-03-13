@@ -1,3 +1,7 @@
+2012-03-13  Mark Wielaard  <mjw@redhat.com>
+
+	* tapset/jstack.stp.in: Don't hard code constantPoolOopDesc_size.
+
 2014-08-18  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1935: HotSpot extraction needs to depend on the
