@@ -67,7 +67,9 @@ global vm_inited;
 probe hotspot.vm_init_end
 {
   // The parent/type oop for a methodOop.
-  Universe_methodKlassObj[pid()] = $_methodKlassObj;
+  Universe_methodKlassObj[pid()] = %( systemtap_v >= "1.8"
+                                     %? @var("_methodKlassObj@universe.cpp")
+                                     %: $_methodKlassObj %);
 
   // For compressed oops.
   // Universe_heap_base = $_heap_base;
@@ -82,7 +84,9 @@ probe hotspot.vm_init_end
    *
    * Note that we access it through its "short name" _collectedHeap.
    */
-  Universe_collectedHeap[pid()] = $_collectedHeap;
+  Universe_collectedHeap[pid()] = %( systemtap_v >= "1.8"
+                                    %? @var("_collectedHeap@universe.cpp")
+                                    %: $_collectedHeap %);
   HeapWordSize[pid()] = $HeapWordSize;
 
   /**
@@ -101,7 +105,9 @@ probe hotspot.vm_init_end
    * the segment at index - N (which can be recursive if a block
    * contains more than 0xFE segments).
    */
-  CodeCache_heap[pid()] = $_heap;
+  CodeCache_heap[pid()] = %( systemtap_v >= "1.8"
+                            %? @var("_heap@codeCache.cpp")
+                            %: $_heap %);
 
   // Should really check arch of user space (for 32bit jvm on 64bit kernel).
   %( arch == "i386" %?

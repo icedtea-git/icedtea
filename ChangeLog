@@ -1,5 +1,11 @@
 2012-03-13  Mark Wielaard  <mjw@redhat.com>
 
+	* tapset/jstack.stp.in: Use @var construct if available to pick
+	target variable from the right CU (needed by newer DWARF/gcc
+	versions).
+
+2012-03-13  Mark Wielaard  <mjw@redhat.com>
+
 	* tapset/jstack.stp.in: Index globals on pid() to support multiple
 	running hotspot jstacks at the same time.
 
