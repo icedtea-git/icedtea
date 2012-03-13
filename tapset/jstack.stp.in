@@ -67,7 +67,7 @@ global vm_inited;
 probe hotspot.vm_init_end
 {
   // The parent/type oop for a methodOop.
-  Universe_methodKlassObj = $_methodKlassObj;
+  Universe_methodKlassObj[pid()] = $_methodKlassObj;
 
   // For compressed oops.
   // Universe_heap_base = $_heap_base;
@@ -82,8 +82,8 @@ probe hotspot.vm_init_end
    *
    * Note that we access it through its "short name" _collectedHeap.
    */
-  Universe_collectedHeap = $_collectedHeap;
-  HeapWordSize = $HeapWordSize;
+  Universe_collectedHeap[pid()] = $_collectedHeap;
+  HeapWordSize[pid()] = $HeapWordSize;
 
   /**
    * The CodeCache class contains the static CodeHeap _heap that
@@ -101,7 +101,7 @@ probe hotspot.vm_init_end
    * the segment at index - N (which can be recursive if a block
    * contains more than 0xFE segments).
    */
-  CodeCache_heap = $_heap;
+  CodeCache_heap[pid()] = $_heap;
 
   // Should really check arch of user space (for 32bit jvm on 64bit kernel).
   %( arch == "i386" %?
@@ -127,7 +127,16 @@ probe hotspot.vm_init_end
   HeapBlock_Header_size = 2 * ptr_size;
   oopDesc_size = 2 * ptr_size;
 
-  vm_inited = 1;
+  vm_inited[pid()] = 1;
+}
+
+probe hotspot.vm_shutdown
+{
+  delete(Universe_methodKlassObj[pid()]);
+  delete(Universe_collectedHeap[pid()]);
+  delete(HeapWordSize[pid()]);
+  delete(CodeCache_heap[pid()]);
+  delete(vm_inited[pid()]);
 }
 
 function jstack:string()
@@ -225,7 +234,7 @@ function print_jstack_full_n:string(max_depth:long)
 function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
                             print_frames:long)
 {
-  if (! vm_inited)
+  if (! vm_inited[pid()])
     {
       frame = "<vm-not-inited>";
       if (print_frames)
@@ -238,23 +247,23 @@ function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
     }
 
   // Extract heap and code bounds.
-  heap_start = @cast(Universe_collectedHeap,
+  heap_start = @cast(Universe_collectedHeap[pid()],
                      "CollectedHeap",
                      "@ABS_SERVER_LIBJVM_SO@")->_reserved->_start;
-  heap_size = HeapWordSize * @cast(Universe_collectedHeap,
+  heap_size = HeapWordSize[pid()] * @cast(Universe_collectedHeap[pid()],
                                    "CollectedHeap",
                                    "@ABS_SERVER_LIBJVM_SO@")->_reserved->_word_size;
   heap_end = heap_start + heap_size;
 
-  CodeCache_low = @cast(CodeCache_heap, "CodeHeap",
+  CodeCache_low = @cast(CodeCache_heap[pid()], "CodeHeap",
                         "@ABS_SERVER_LIBJVM_SO@")->_memory->_low;
-  CodeCache_high =  @cast(CodeCache_heap, "CodeHeap",
+  CodeCache_high =  @cast(CodeCache_heap[pid()], "CodeHeap",
                           "@ABS_SERVER_LIBJVM_SO@")->_memory->_high;
 
-  CodeHeap_log2_segment_size = @cast(CodeCache_heap,
+  CodeHeap_log2_segment_size = @cast(CodeCache_heap[pid()],
                                      "CodeHeap",
                                      "@ABS_SERVER_LIBJVM_SO@")->_log2_segment_size;
-  CodeCache_segmap_low = @cast(CodeCache_heap,
+  CodeCache_segmap_low = @cast(CodeCache_heap[pid()],
                                "CodeHeap",
                                "@ABS_SERVER_LIBJVM_SO@")->_segmap->_low;
 
@@ -335,7 +344,7 @@ function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
             {
               methodOopKlass = @cast(methodOopPtr, "methodOopDesc",
                                      "@ABS_SERVER_LIBJVM_SO@")->_metadata->_klass;
-              isMethodOop = (methodOopKlass == Universe_methodKlassObj);
+              isMethodOop = (methodOopKlass == Universe_methodKlassObj[pid()]);
             }
 
           if (isMethodOop)
