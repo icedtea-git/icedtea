@@ -1,5 +1,10 @@
 2012-03-13  Mark Wielaard  <mjw@redhat.com>
 
+	* tapset/jstack.stp.in: Wrap heap accessors in try-catch block to be
+	able to report unusual frames.
+
+2012-03-13  Mark Wielaard  <mjw@redhat.com>
+
 	* tapset/jstack.stp.in: Use @var construct if available to pick
 	target variable from the right CU (needed by newer DWARF/gcc
 	versions).
