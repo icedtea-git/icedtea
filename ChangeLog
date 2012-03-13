@@ -1,5 +1,10 @@
 2012-03-13  Mark Wielaard  <mjw@redhat.com>
 
+	* tapset/jstack.stp.in: Index globals on pid() to support multiple
+	running hotspot jstacks at the same time.
+
+2012-03-13  Mark Wielaard  <mjw@redhat.com>
+
 	* tapset/jstack.stp.in: Don't hard code constantPoolOopDesc_size.
 
 2014-08-18  Andrew John Hughes  <gnu.andrew@member.fsf.org>
