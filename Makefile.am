@@ -713,6 +713,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	hotspot.map autogen.sh \
 	tapset/hotspot.stp.in \
 	tapset/hotspot_jni.stp.in \
+	tapset/jstack.stp.in \
 	scripts/jni_create_stap.c \
 	scripts/jni_desc \
 	rewriter/agpl-3.0.txt \
