@@ -388,7 +388,7 @@ function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
                   // that describe the method and signature. This constant pool
                   // contains symbolic information that describe the properties
                   // of the class. The indexes for methods and signaturates in
-                  // the constant pool are symbolOopDescs that contain utf8
+                  // the constant pool are Symbols that contain utf8
                   // strings (plus lenghts). (We could also sanity check that
                   // the tag value is correct [CONSTANT_String = 8]).
                   // Note that the class name uses '/' instead of '.' as
@@ -403,17 +403,17 @@ function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
                                    "@ABS_SERVER_LIBJVM_SO@")->_pool_holder;
                   klassSymbol = @cast(klassPtr + oopDesc_size, "Klass",
                                       "@ABS_SERVER_LIBJVM_SO@")->_name;
-                  klassName = &@cast(klassSymbol, "symbolOopDesc",
+                  klassName = &@cast(klassSymbol, "Symbol",
                                      "@ABS_SERVER_LIBJVM_SO@")->_body[0];
-                  klassLength = @cast(klassSymbol, "symbolOopDesc",
+                  klassLength = @cast(klassSymbol, "Symbol",
                                       "@ABS_SERVER_LIBJVM_SO@")->_length;
 
                   methodIndex = @cast(methodOopPtr, "methodOopDesc",
                                       "@ABS_SERVER_LIBJVM_SO@")->_constMethod->_name_index;
-                  methodOopDesc = user_long(constantPoolOop_base + (methodIndex * ptr_size));
-                  methodName = &@cast(methodOopDesc, "symbolOopDesc",
+                  methodOopDesc = user_long(constantPoolOop_base + (methodIndex * ptr_size)) - 1;
+                  methodName = &@cast(methodOopDesc, "Symbol",
                                       "@ABS_SERVER_LIBJVM_SO@")->_body[0];
-                  methodLength = @cast(methodOopDesc, "symbolOopDesc",
+                  methodLength = @cast(methodOopDesc, "Symbol",
                                        "@ABS_SERVER_LIBJVM_SO@")->_length;
 
                   if (log_sig)
@@ -421,10 +421,10 @@ function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
                       sigIndex = @cast(methodOopPtr, "methodOopDesc",
                                        "@ABS_SERVER_LIBJVM_SO@")->_constMethod->_signature_index;
                       sigOopDesc = user_long(constantPoolOop_base
-                                             + (sigIndex * ptr_size));
-                      sigName = &@cast(sigOopDesc, "symbolOopDesc",
+                                             + (sigIndex * ptr_size)) - 1;
+                      sigName = &@cast(sigOopDesc, "Symbol",
                                        "@ABS_SERVER_LIBJVM_SO@")->_body[0];
-                      sigLength = @cast(sigOopDesc, "symbolOopDesc",
+                      sigLength = @cast(sigOopDesc, "Symbol",
                                         "@ABS_SERVER_LIBJVM_SO@")->_length;
                       sig = user_string_n(sigName, sigLength);
                     }

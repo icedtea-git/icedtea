@@ -1,3 +1,9 @@
+2012-03-16  Mark Wielaard  <mjw@redhat.com>
+
+	* tapset/jstack.stp.in: Change symbolOopDesc to Symbol to accomodate
+	S6990754 - Use native memory and reference counting to implement
+	SymbolTable.
+
 2012-08-03  Yasumasa Suenaga  <suenaga.yasumasa@lab.ntt.co.jp>
 
 	* tapset/jstack.stp.in (NarrowOopStruct): New global.
