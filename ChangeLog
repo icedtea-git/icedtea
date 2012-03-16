@@ -1,3 +1,9 @@
+2012-03-16  Mark Wielaard  <mjw@redhat.com>
+
+	* tapset/jstack.stp.in: Change symbolOopDesc to Symbol to accomodate
+	S6990754 - Use native memory and reference counting to implement
+	SymbolTable.
+
 2012-03-14  Mark Wielaard  <mjw@redhat.com>
 
 	* Makefile.am (EXTRA_DIST): Add tapset/jstack.stp.in.
