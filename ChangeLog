@@ -1,3 +1,9 @@
+2012-03-19  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(JDK_CHANGESET): Update to tip.
+	(JDK_SHA256SUM): Likewise.
+
 2011-10-10  Xerxes Rånby  <xerxes@zafena.se>
 
 	JamVM
