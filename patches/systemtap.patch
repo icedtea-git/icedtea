@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/dtrace.make openjdk/hotspot/make/linux/makefiles/dtrace.make
---- openjdk.orig/hotspot/make/linux/makefiles/dtrace.make	2010-07-29 21:54:46.000000000 +0100
-+++ openjdk/hotspot/make/linux/makefiles/dtrace.make	2011-03-16 20:52:47.269527251 +0000
+--- openjdk.orig/hotspot/make/linux/makefiles/dtrace.make	2012-02-22 14:54:31.000000000 +0000
++++ openjdk/hotspot/make/linux/makefiles/dtrace.make	2012-03-18 18:54:13.482968139 +0000
 @@ -25,3 +25,7 @@
  # Linux does not build jvm_db
  LIBJVM_DB =
@@ -10,9 +10,9 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/dtrace.make openjdk/hotspot/
 +
 +# It doesn't support HAVE_DTRACE_H though.
 diff -Nru openjdk.orig/hotspot/src/share/vm/prims/jni.cpp openjdk/hotspot/src/share/vm/prims/jni.cpp
---- openjdk.orig/hotspot/src/share/vm/prims/jni.cpp	2011-03-14 22:09:03.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/prims/jni.cpp	2011-03-16 20:52:47.277527381 +0000
-@@ -1817,10 +1817,7 @@
+--- openjdk.orig/hotspot/src/share/vm/prims/jni.cpp	2012-02-22 14:54:31.000000000 +0000
++++ openjdk/hotspot/src/share/vm/prims/jni.cpp	2012-03-18 18:54:13.502968466 +0000
+@@ -2818,10 +2818,7 @@
  JNI_QUICK_ENTRY(void, jni_Set##Result##Field(JNIEnv *env, jobject obj, jfieldID fieldID, Argument value)) \
    JNIWrapper("Set" XSTR(Result) "Field"); \
  \
@@ -24,7 +24,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/prims/jni.cpp openjdk/hotspot/src/sh
  \
    oop o = JNIHandles::resolve_non_null(obj); \
    klassOop k = o->klass(); \
-@@ -1994,10 +1991,7 @@
+@@ -3128,10 +3125,7 @@
  \
  JNI_ENTRY(void, jni_SetStatic##Result##Field(JNIEnv *env, jclass clazz, jfieldID fieldID, Argument value)) \
    JNIWrapper("SetStatic" XSTR(Result) "Field"); \
@@ -36,33 +36,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/prims/jni.cpp openjdk/hotspot/src/sh
  \
    JNIid* id = jfieldIDWorkaround::from_static_jfieldID(fieldID); \
    assert(id->is_static_field_id(), "invalid static field id"); \
-diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspot/src/share/vm/runtime/arguments.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2011-03-16 20:51:33.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2011-03-16 20:52:47.277527381 +0000
-@@ -2634,16 +2634,16 @@
-       FLAG_SET_CMDLINE(bool, DisplayVMOutputToStderr, false);
-       FLAG_SET_CMDLINE(bool, DisplayVMOutputToStdout, true);
-     } else if (match_option(option, "-XX:+ExtendedDTraceProbes", &tail)) {
--#ifdef SOLARIS
-+#ifdef DTRACE_ENABLED
-       FLAG_SET_CMDLINE(bool, ExtendedDTraceProbes, true);
-       FLAG_SET_CMDLINE(bool, DTraceMethodProbes, true);
-       FLAG_SET_CMDLINE(bool, DTraceAllocProbes, true);
-       FLAG_SET_CMDLINE(bool, DTraceMonitorProbes, true);
--#else // ndef SOLARIS
-+#else // ndef DTRACE_ENABLED
-       jio_fprintf(defaultStream::error_stream(),
--                  "ExtendedDTraceProbes flag is only applicable on Solaris\n");
-+                  "ExtendedDTraceProbes flag is only applicable on dtrace enabled builds\n");
-       return JNI_EINVAL;
--#endif // ndef SOLARIS
-+#endif // ndef DTRACE_ENABLED
- #ifdef ASSERT
-     } else if (match_option(option, "-XX:+FullGCALot", &tail)) {
-       FLAG_SET_CMDLINE(bool, FullGCALot, true);
 diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp openjdk/hotspot/src/share/vm/utilities/dtrace.hpp
---- openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp	2011-03-14 22:09:03.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/utilities/dtrace.hpp	2011-03-16 20:53:58.314683506 +0000
+--- openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp	2012-02-22 14:54:31.000000000 +0000
++++ openjdk/hotspot/src/share/vm/utilities/dtrace.hpp	2012-03-18 19:05:33.266067964 +0000
 @@ -1,5 +1,6 @@
  /*
   * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
@@ -70,48 +46,44 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp openjdk/hotspot
   * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
   *
   * This code is free software; you can redistribute it and/or modify it
-@@ -25,7 +26,7 @@
- #ifndef SHARE_VM_UTILITIES_DTRACE_HPP
- #define SHARE_VM_UTILITIES_DTRACE_HPP
- 
--#if defined(SOLARIS) && defined(DTRACE_ENABLED)
-+#if defined(DTRACE_ENABLED)
- 
- #include <sys/sdt.h>
- 
-@@ -36,7 +37,7 @@
- #define HS_DTRACE_WORKAROUND_TAIL_CALL_BUG() \
-   do { volatile size_t dtrace_workaround_tail_call_bug = 1; } while (0)
- 
--#else // ndef SOLARIS || ndef DTRACE_ENABLED
-+#else // ndef DTRACE_ENABLED
- 
- #define DTRACE_ONLY(x)
- #define NOT_DTRACE(x) x
-@@ -47,11 +48,18 @@
- #define DTRACE_PROBE3(a,b,c,d,e) {;}
+@@ -44,6 +45,8 @@
+ #include "dtracefiles/hotspot.h"
+ #include "dtracefiles/hotspot_jni.h"
+ #include "dtracefiles/hs_private.h"
++#elif defined(LINUX)
++#define USDT3 1
+ #else
+ #error "dtrace enabled for unknown os"
+ #endif /* defined(SOLARIS) */
+@@ -64,6 +67,14 @@
  #define DTRACE_PROBE4(a,b,c,d,e,f) {;}
  #define DTRACE_PROBE5(a,b,c,d,e,f,g) {;}
+ 
++#ifdef USDT3
 +#define DTRACE_PROBE6(a,b,c,d,e,f,g,h) {;}
 +#define DTRACE_PROBE7(a,b,c,d,e,f,g,h,i) {;}
 +#define DTRACE_PROBE8(a,b,c,d,e,f,g,h,i,j) {;}
 +#define DTRACE_PROBE9(a,b,c,d,e,f,g,h,i,j,k) {;}
 +#define DTRACE_PROBE10(a,b,c,d,e,f,g,h,i,j,k,l) {;}
++#endif
++
+ #else /* USDT2 */
  
- #define HS_DTRACE_WORKAROUND_TAIL_CALL_BUG()
+ #include "dtrace_usdt2_disabled.hpp"
+@@ -71,7 +82,7 @@
  
- #endif
+ #endif /* defined(DTRACE_ENABLED) */
  
-+#if defined(SOLARIS)
-+// Solaris dtrace needs actual extern function decls.
+-#ifndef USDT2
++#ifdef USDT1
+ 
  #define HS_DTRACE_PROBE_FN(provider,name)\
    __dtrace_##provider##___##name
- 
-@@ -59,6 +67,11 @@
+@@ -80,6 +91,11 @@
    DTRACE_ONLY(extern "C" void HS_DTRACE_PROBE_FN(provider,name) args)
  #define HS_DTRACE_PROBE_CDECL_N(provider,name,args) \
    DTRACE_ONLY(extern void HS_DTRACE_PROBE_FN(provider,name) args)
-+#else
++#elif defined(USDT3)
 +// Systemtap dtrace compatible probes on GNU/Linux don't.
 +#define HS_DTRACE_PROBE_DECL_N(provider,name,args)
 +#define HS_DTRACE_PROBE_CDECL_N(provider,name,args)
@@ -119,16 +91,16 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp openjdk/hotspot
  
  /* Dtrace probe declarations */
  #define HS_DTRACE_PROBE_DECL(provider,name) \
-@@ -97,6 +110,8 @@
+@@ -118,6 +134,8 @@
      uintptr_t,uintptr_t,uintptr_t))
  
  /* Dtrace probe definitions */
-+#if defined(SOLARIS)
++#ifndef USDT3
 +// Solaris dtrace uses actual function calls.
  #define HS_DTRACE_PROBE_N(provider,name, args) \
    DTRACE_ONLY(HS_DTRACE_PROBE_FN(provider,name) args)
  
-@@ -132,5 +147,31 @@
+@@ -153,7 +171,32 @@
    HS_DTRACE_PROBE_N(provider,name,((uintptr_t)a0,(uintptr_t)a1,(uintptr_t)a2,\
      (uintptr_t)a3,(uintptr_t)a4,(uintptr_t)a5,(uintptr_t)a6,(uintptr_t)a7,\
      (uintptr_t)a8,(uintptr_t)a9))
@@ -157,6 +129,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp openjdk/hotspot
 +  DTRACE_PROBE9(provider,name,a0,a1,a2,a3,a4,a5,a6,a7,a8)
 +#define HS_DTRACE_PROBE10(provider,name,a0,a1,a2,a3,a4,a5,a6,a7,a8)\
 +  DTRACE_PROBE10(provider,name,a0,a1,a2,a3,a4,a5,a6,a7,a8)
-+#endif
+ 
+-#endif /* !USDT2 */
++#endif /* !USDT3 */
  
  #endif // SHARE_VM_UTILITIES_DTRACE_HPP

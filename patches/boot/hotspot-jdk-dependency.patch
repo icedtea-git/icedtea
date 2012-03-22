@@ -1,20 +1,18 @@
 diff -Nru openjdk-boot.orig/hotspot/make/linux/makefiles/sa.make openjdk-boot/hotspot/make/linux/makefiles/sa.make
---- openjdk-boot.orig/hotspot/make/linux/makefiles/sa.make	2011-03-14 17:45:38.000000000 +0000
-+++ openjdk-boot/hotspot/make/linux/makefiles/sa.make	2011-03-14 19:28:26.633153480 +0000
-@@ -97,8 +97,8 @@
- 	$(foreach file,$(AGENT_FILES1),$(shell echo $(file) >> $(AGENT_FILES1_LIST)))
- 	$(foreach file,$(AGENT_FILES2),$(shell echo $(file) >> $(AGENT_FILES2_LIST)))
- 	
--	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) @$(AGENT_FILES1_LIST)
--	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) @$(AGENT_FILES2_LIST)
-+	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR):$(JDK_TOPDIR)/src/share/classes:$(JDK_TOPDIR)/src/solaris/classes:$(GENSRCDIR) -d $(SA_CLASSDIR) @$(AGENT_FILES1_LIST)
-+	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR):$(JDK_TOPDIR)/src/share/classes:$(JDK_TOPDIR)/src/solaris/classes:$(GENSRCDIR) -d $(SA_CLASSDIR) @$(AGENT_FILES2_LIST)
- 	
+--- openjdk-boot.orig/hotspot/make/linux/makefiles/sa.make	2012-03-19 00:51:21.849858323 +0000
++++ openjdk-boot/hotspot/make/linux/makefiles/sa.make	2012-03-19 12:29:05.891038498 +0000
+@@ -91,7 +91,7 @@
+ # are in AGENT_FILES, so use the shell to expand them.
+ # Be extra carefull to not produce too long command lines in the shell!
+ 	$(foreach file,$(AGENT_FILES),$(shell ls -1 $(file) >> $(AGENT_FILES_LIST)))
+-	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR) -d $(SA_CLASSDIR) @$(AGENT_FILES_LIST)
++	$(QUIETLY) $(REMOTE) $(COMPILE.JAVAC) -classpath $(SA_CLASSPATH) -sourcepath $(AGENT_SRC_DIR):$(JDK_TOPDIR)/src/share/classes:$(JDK_TOPDIR)/src/solaris/classes:$(GENSRCDIR) -d $(SA_CLASSDIR) @$(AGENT_FILES_LIST)
  	$(QUIETLY) $(REMOTE) $(COMPILE.RMIC)  -classpath $(SA_CLASSDIR) -d $(SA_CLASSDIR) sun.jvm.hotspot.debugger.remote.RemoteDebuggerServer
  	$(QUIETLY) echo "$(SA_BUILD_VERSION_PROP)" > $(SA_PROPERTIES)
+ 	$(QUIETLY) rm -f $(SA_CLASSDIR)/sun/jvm/hotspot/utilities/soql/sa.js
 diff -Nru openjdk-boot.orig/make/hotspot-rules.gmk openjdk-boot/make/hotspot-rules.gmk
---- openjdk-boot.orig/make/hotspot-rules.gmk	2011-03-14 19:26:01.289492705 +0000
-+++ openjdk-boot/make/hotspot-rules.gmk	2011-03-14 19:26:34.640496978 +0000
+--- openjdk-boot.orig/make/hotspot-rules.gmk	2012-02-15 17:07:58.000000000 +0000
++++ openjdk-boot/make/hotspot-rules.gmk	2012-03-19 12:28:07.850089852 +0000
 @@ -83,6 +83,7 @@
  HOTSPOT_BUILD_ARGUMENTS += $(COMMON_BUILD_ARGUMENTS)
  HOTSPOT_BUILD_ARGUMENTS += ALT_OUTPUTDIR=$(HOTSPOT_OUTPUTDIR)
