@@ -1,3 +1,33 @@
+2012-03-23  Jon VanAlten  <jon.vanalten@redhat.com>
+
+	* Makefile.am:
+	Add target to run tapset tests.
+	* tapset/hotspot_jni.stp.in:
+	Add notes regarding required JVM option to Get<PrimitiveType>Field
+	family of probe aliases.
+	* test/tapset/ClassUnloadedProbeTester.java:
+	Part of test coverage for hotspot.stp and hotspot_jni.stp tapsets.
+	* test/tapset/JNIStapTest.c:
+	Likewise.
+	* test/tapset/JNITestClass.c:
+	Likewise.
+	* test/tapset/JNITestClass.h:
+	Likewise.
+	* test/tapset/JNITestClass.java:
+	Likewise.
+	* test/tapset/RunWrapper.java:
+	Likewise.
+	* test/tapset/StapJNIClassLoader.java:
+	Likewise.
+	* test/tapset/StapURLClassLoader.java:
+	Likewise.
+	* test/tapset/SystemtapTester.java:
+	Likewise.
+	* test/tapset/TestingRunner.java:
+	Likewise.
+	* test/tapset/jstaptest.pl:
+	Wrapper script, compiles and runs tests for tapsets.
+
 2012-03-16  Mark Wielaard  <mjw@redhat.com>
 
 	* tapset/jstack.stp.in: Change symbolOopDesc to Symbol to accomodate

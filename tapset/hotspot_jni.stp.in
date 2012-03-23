@@ -3472,6 +3472,7 @@ probe hotspot.jni.GetBooleanArrayRegion.return =
 
 /* hotspot.jni.GetBooleanField
  * Get non-static jboolean field value.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * env - JNIEnv pointer.
  * obj - jobject.
@@ -3490,6 +3491,7 @@ probe hotspot.jni.GetBooleanField =
 
 /* hotspot.jni.GetBooleanField.return
  * Get non-static jboolean field value. Return.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * ret - jboolean value.
  */
@@ -3569,6 +3571,7 @@ probe hotspot.jni.GetByteArrayRegion.return =
 
 /* hotspot.jni.GetByteField
  * Get non-static jbyte field value.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * env - JNIEnv pointer.
  * obj - jobject.
@@ -3587,6 +3590,7 @@ probe hotspot.jni.GetByteField =
 
 /* hotspot.jni.GetByteField.return
  * Get non-static jbyte field value. Return.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * ret - jbyte value.
  */
@@ -3666,6 +3670,7 @@ probe hotspot.jni.GetCharArrayRegion.return =
 
 /* hotspot.jni.GetCharField
  * Get non-static jchar field value.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * env - JNIEnv pointer.
  * obj - jobject.
@@ -3684,6 +3689,7 @@ probe hotspot.jni.GetCharField =
 
 /* hotspot.jni.GetCharField.return
  * Get non-static jchar field value. Return.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * ret - jchar value.
  */
@@ -3701,7 +3707,7 @@ probe hotspot.jni.GetCharField.return =
  *
  * vmbuf - Pointer to JavaVM pointer.
  * buflen - Max number of vms returned.
- * nvms - Number of JavaVMs returned.
+ * nvms - Pointer to where the number of created JavaVMs will be returned.
  */
 probe hotspot.jni.GetCreatedJavaVMs =
   process("@ABS_CLIENT_LIBJVM_SO@").mark("GetCreatedJavaVMs__entry"),
@@ -3711,7 +3717,7 @@ probe hotspot.jni.GetCreatedJavaVMs =
   vmbuf = $arg1
   buflen = $arg2
   nvms = $arg3
-  probestr = sprintf("%s(vmbuf=0x%x,buflen=%d,nvms=%d)", name, vmbuf, buflen, nvms)
+  probestr = sprintf("%s(vmbuf=0x%x,buflen=%d,nvms=0x%x)", name, vmbuf, buflen, nvms)
 }
 
 /* hotspot.jni.GetCreatedJavaVMs.return
@@ -3883,6 +3889,7 @@ probe hotspot.jni.GetDoubleArrayRegion.return =
 
 /* hotspot.jni.GetDoubleField
  * Get non-static jdouble field value.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * env - JNIEnv pointer.
  * obj - jobject.
@@ -3901,6 +3908,7 @@ probe hotspot.jni.GetDoubleField =
 
 /* hotspot.jni.GetDoubleField.return
  * Get non-static jdouble field value. Return.
+ * NEEDS: -XX:-UseFastJNIAccessors
  */
 probe hotspot.jni.GetDoubleField.return =
   process("@ABS_CLIENT_LIBJVM_SO@").mark("GetDoubleField__return"),
@@ -4043,6 +4051,7 @@ probe hotspot.jni.GetFloatArrayRegion.return =
 
 /* hotspot.jni.GetFloatField
  * Get non-static jfloat field value.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * env - JNIEnv pointer.
  * obj - jobject.
@@ -4061,6 +4070,7 @@ probe hotspot.jni.GetFloatField =
 
 /* hotspot.jni.GetFloatField.return
  * Get non-static jfloat field value. Return.
+ * NEEDS: -XX:-UseFastJNIAccessors
  */
 probe hotspot.jni.GetFloatField.return =
   process("@ABS_CLIENT_LIBJVM_SO@").mark("GetFloatField__return"),
@@ -4137,6 +4147,7 @@ probe hotspot.jni.GetIntArrayRegion.return =
 
 /* hotspot.jni.GetIntField
  * Get non-static jint field value.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * env - JNIEnv pointer.
  * obj - jobject.
@@ -4155,6 +4166,7 @@ probe hotspot.jni.GetIntField =
 
 /* hotspot.jni.GetIntField.return
  * Get non-static jint field value. Return.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * ret - jint value.
  */
@@ -4264,6 +4276,7 @@ probe hotspot.jni.GetLongArrayRegion.return =
 
 /* hotspot.jni.GetLongField
  * Get non-static jlong field value.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * env - JNIEnv pointer.
  * obj - jobject.
@@ -4282,6 +4295,7 @@ probe hotspot.jni.GetLongField =
 
 /* hotspot.jni.GetLongField.return
  * Get non-static jlong field value. Return.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * ret - jlong value.
  */
@@ -4551,6 +4565,7 @@ probe hotspot.jni.GetShortArrayRegion.return =
 
 /* hotspot.jni.GetShortField
  * Get non-static jshort field value.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * env - JNIEnv pointer.
  * obj - jobject.
@@ -4569,6 +4584,7 @@ probe hotspot.jni.GetShortField =
 
 /* hotspot.jni.GetShortField.return
  * Get non-static jshort field value. Return.
+ * NEEDS: -XX:-UseFastJNIAccessors
  *
  * ret - jshort value.
  */
