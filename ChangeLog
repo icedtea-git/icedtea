@@ -1,3 +1,9 @@
+2012-03-23  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/boot/pr39408.patch,
+	* patches/cacao/launcher.patch:
+	Regenerated.
+
 2012-03-22  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/systemtap-alloc-size-workaround.patch:

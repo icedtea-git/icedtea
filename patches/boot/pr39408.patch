@@ -1,9 +1,9 @@
 diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c openjdk/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c
---- openjdk-boot.orig/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c	2009-03-18 16:25:52.000000000 +0000
-+++ openjdk-boot/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c	2009-03-18 16:27:03.000000000 +0000
-@@ -36,6 +36,14 @@
- #include "nio.h"
- #include "nio_util.h"
+--- openjdk-boot.orig/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c	2012-03-21 17:09:55.000000000 +0000
++++ openjdk-boot/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c	2012-03-23 10:31:52.798787906 +0000
+@@ -55,6 +55,14 @@
+ static int preCloseFD = -1;     /* File descriptor to which we dup other fd's
+                                    before closing them for real */
  
 +#undef sun_nio_ch_FileDispatcher_NO_LOCK
 +#define sun_nio_ch_FileDispatcher_NO_LOCK -1L
@@ -14,5 +14,5 @@ diff -Nru openjdk.orig/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c op
 +#undef sun_nio_ch_FileDispatcher_INTERRUPTED
 +#define sun_nio_ch_FileDispatcher_INTERRUPTED 2L
  
- static int preCloseFD = -1;     /* File descriptor to which we dup other fd's
-                                    before closing them for real */
+ JNIEXPORT void JNICALL
+ Java_sun_nio_ch_FileDispatcherImpl_init(JNIEnv *env, jclass cl)
