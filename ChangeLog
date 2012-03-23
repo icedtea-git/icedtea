@@ -1,3 +1,7 @@
+2012-03-23  Mark Wielaard  <mjw@redhat.com>
+
+	* test/tapset/jstaptest.pl: Add jstack tests.
+
 2015-03-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
