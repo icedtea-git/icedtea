@@ -532,6 +532,8 @@ my $jni_regex = "^hotspot\.jni\.";
 my $working_count = 0;
 my $undetected_count = 0;
 my $broken_count = 0;
+my $working_jstack = 0;
+my $broken_jstack = 0;
 
 # Stuffed based on argument(s), used as argument to stap executable.
 my @tapset_dirs = ();
@@ -554,6 +556,7 @@ build_tests();
 my @detected_probes = detect_probes(@probestrings);
 if (can_run_probes()) {
   test_probes(@detected_probes);
+  test_jstack();
 }
 summarize();
 log_postamble();
@@ -786,6 +789,53 @@ sub test_probes {
     print("\n");
 }
 
+sub test_jstack {
+    log_and_print("Testing if jstack works as expected...");
+    my ($stap_pre, $stap_script, $stap_post, $stap_command, $stap_result);
+
+    # Run staptest.SystemtapTester compiled_method_unload which does a lot
+    # and can generate a somewhat "deep" stack.
+    $stap_pre = "stap " . join(' ', @tapset_dirs) . " -e '";
+    $stap_post = "' -c '$java_exec staptest.SystemtapTester compiled_method_unload'";
+
+    # Simple test jstack() should at least show our main method.
+    # The test program runs the unloaded probe tester twice, pick the second
+    # run to test output.
+    $stap_script = "global hits = 0; probe hotspot.class_loaded { if (class == \"staptest/ClassUnloadedProbeTester\") { hits++; if (hits == 2) print_jstack(); } }";
+    $stap_command = "$stap_pre $stap_script $stap_post";
+    just_log($stap_command);
+    print(".");
+    $stap_result = `$stap_command`;
+    just_log($stap_result);
+    # Is our main method there?
+    if ($? == 0 && $stap_result =~ /staptest\/SystemtapTester.main/) {
+      $working_jstack++;
+    } else {
+      $broken_jstack++;
+      print("\n");
+      log_and_print("simple jstack failed.");
+    }
+
+    # Same, but with full stack (also internal hotspot frames) and signatures.
+    $stap_script = "global hits = 0; probe hotspot.class_loaded { if (class == \"staptest/ClassUnloadedProbeTester\") { hits++; if (hits == 2) print_jstack_full(); } }";
+    $stap_command = "$stap_pre $stap_script $stap_post";
+    just_log($stap_command);
+    print(".");
+    $stap_result = `$stap_command`;
+    just_log($stap_result);
+    # We expect to find at least our URLClassLoader (plus correct signature)
+    # in the backtrace.
+    if ($? == 0 and $stap_result =~ /staptest\/StapURLClassLoader.loadClass\(Ljava\/lang\/String;\)Ljava\/lang\/Class;/) {
+      $working_jstack++;
+    } else {
+      $broken_jstack++;
+      print("\n");
+      log_and_print("full jstack failed.");
+    }
+
+    print("\n");
+}
+
 # Output a tally of test results.
 sub summarize {
     if ($working_count) {
@@ -797,7 +847,12 @@ sub summarize {
     if ($undetected_count) {
         log_and_print("Undetected probes:     $undetected_count");
     }
-
+    if ($working_jstack) {
+        log_and_print("Working jstack tests:     $working_jstack");
+    }
+    if ($broken_jstack) {
+        log_and_print("Broken jstack tests:     $broken_jstack");
+    }
 }
 
 # Any text that should follow a test run in the log file goes here.
