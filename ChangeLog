@@ -1,3 +1,8 @@
+2012-03-26  Mark Wielaard  <mjw@redhat.com>
+
+	* test/tapset/jstaptest.pl: thread_start and thread_stop thread id
+	can be any positive number.
+
 2012-03-23  Mark Wielaard  <mjw@redhat.com>
 
 	* test/tapset/jstaptest.pl: Add jstack tests.
