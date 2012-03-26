@@ -130,3 +130,49 @@
                  throw new AssertionError(x);
              }
          }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2012-03-22 10:00:56.029260268 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2012-03-22 10:02:41.275789667 +0000
+@@ -94,7 +94,7 @@
+                         && mainClass.indexOf(arg.getProcessSubstring()) != -1) {
+                             pids.add(vmd.id());
+                     }
+-                } catch (MonitorException|URISyntaxException e) {
++                } catch (MonitorException e) {
+                     if (e.getMessage() != null) {
+                         System.err.println(e.getMessage());
+                     } else {
+@@ -105,7 +105,18 @@
+                             e.printStackTrace();
+                         }
+                     }
+-                }
++                } catch (URISyntaxException e) {
++                    if (e.getMessage() != null) {
++                        System.err.println(e.getMessage());
++                    } else {
++                        Throwable cause = e.getCause();
++                        if ((cause != null) && (cause.getMessage() != null)) {
++                            System.err.println(cause.getMessage());
++                        } else {
++                            e.printStackTrace();
++                        }
++                    }
++		}
+             }
+             if (pids.isEmpty()) {
+                 System.err.println("Could not find any processes matching : '"
+@@ -185,9 +196,11 @@
+         try {
+             String mainClass = getMainClass(vmd);
+             return mainClass != null && mainClass.equals(JCmd.class.getName());
+-        } catch (URISyntaxException|MonitorException ex) {
++        } catch (URISyntaxException ex) {
+             return false;
+-        }
++        } catch (MonitorException ex) {
++	    return false;
++	}
+     }
+ 
+     private static String getMainClass(VirtualMachineDescriptor vmd)

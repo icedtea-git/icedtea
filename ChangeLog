@@ -1,3 +1,44 @@
+2012-03-23  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/boot/pr39408.patch,
+	* patches/cacao/launcher.patch:
+	Regenerated.
+
+2012-03-22  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/systemtap-alloc-size-workaround.patch:
+	Removed; upstream.
+	* Makefile.am:
+	(JDK_UPDATE_VERSION): Bump to 4.
+	(CORBA_CHANGESET): Update to IcedTea7 forest head.
+	(HOTSPOT_CHANGESET): Likewise.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Drop upstreamed patch.
+	* patches/boot/ant-javac.patch,
+	* patches/boot/corba-defs.patch,
+	* patches/boot/demos.patch:
+	Regenerated.
+	* patches/boot/ecj-diamond.patch,
+	* patches/boot/ecj-multicatch.patch,
+	* patches/boot/ecj-trywithresources.patch:
+	Regenerated; additional cases added.
+	* patches/boot/hotspot-jdk-dependency.patch,
+	* patches/rhino.patch:
+	Regenerated.
+	* patches/systemtap.patch:
+	Rewritten.
+
 2012-03-23  Mark Wielaard  <mjw@redhat.com>
 
 	* test/tapset/jstaptest.pl: Add jstack tests.
