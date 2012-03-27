@@ -36,75 +36,78 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/prims/jni.cpp openjdk/hotspot/src/sh
  \
    JNIid* id = jfieldIDWorkaround::from_static_jfieldID(fieldID); \
    assert(id->is_static_field_id(), "invalid static field id"); \
-diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp openjdk/hotspot/src/share/vm/utilities/dtrace.hpp
---- openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp	2012-02-22 14:54:31.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/utilities/dtrace.hpp	2012-03-18 19:05:33.266067964 +0000
+--- openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp	2012-02-22 15:54:31.000000000 +0100
++++ openjdk/hotspot/src/share/vm/utilities/dtrace.hpp	2012-03-27 13:12:15.857491730 +0200
 @@ -1,5 +1,6 @@
  /*
   * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
-+ * Copyright 2009 Red Hat, Inc.
++ * Copyright (c) 2009, 2012 Red Hat, Inc.
   * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
   *
   * This code is free software; you can redistribute it and/or modify it
-@@ -44,6 +45,8 @@
- #include "dtracefiles/hotspot.h"
- #include "dtracefiles/hotspot_jni.h"
- #include "dtracefiles/hs_private.h"
+@@ -32,12 +33,15 @@
+ #define DTRACE_ONLY(x) x
+ #define NOT_DTRACE(x)
+ 
++#if defined(SOLARIS)
+ // Work around dtrace tail call bug 6672627 until it is fixed in solaris 10.
+ #define HS_DTRACE_WORKAROUND_TAIL_CALL_BUG() \
+   do { volatile size_t dtrace_workaround_tail_call_bug = 1; } while (0)
+ 
+-#if defined(SOLARIS)
+ #define USDT1 1
 +#elif defined(LINUX)
-+#define USDT3 1
- #else
- #error "dtrace enabled for unknown os"
- #endif /* defined(SOLARIS) */
-@@ -64,6 +67,14 @@
++#define USDT1 1
++#define HS_DTRACE_WORKAROUND_TAIL_CALL_BUG()
+ #elif defined(__APPLE__)
+ #define USDT2 1
+ #include <sys/types.h>
+@@ -63,6 +67,11 @@
+ #define DTRACE_PROBE3(a,b,c,d,e) {;}
  #define DTRACE_PROBE4(a,b,c,d,e,f) {;}
  #define DTRACE_PROBE5(a,b,c,d,e,f,g) {;}
- 
-+#ifdef USDT3
 +#define DTRACE_PROBE6(a,b,c,d,e,f,g,h) {;}
 +#define DTRACE_PROBE7(a,b,c,d,e,f,g,h,i) {;}
 +#define DTRACE_PROBE8(a,b,c,d,e,f,g,h,i,j) {;}
 +#define DTRACE_PROBE9(a,b,c,d,e,f,g,h,i,j,k) {;}
 +#define DTRACE_PROBE10(a,b,c,d,e,f,g,h,i,j,k,l) {;}
-+#endif
-+
+ 
  #else /* USDT2 */
  
- #include "dtrace_usdt2_disabled.hpp"
-@@ -71,7 +82,7 @@
- 
- #endif /* defined(DTRACE_ENABLED) */
- 
--#ifndef USDT2
-+#ifdef USDT1
- 
+@@ -76,10 +85,19 @@
  #define HS_DTRACE_PROBE_FN(provider,name)\
    __dtrace_##provider##___##name
-@@ -80,6 +91,11 @@
+ 
++#ifdef SOLARIS
++// Solaris dtrace needs actual extern function decls.
+ #define HS_DTRACE_PROBE_DECL_N(provider,name,args) \
    DTRACE_ONLY(extern "C" void HS_DTRACE_PROBE_FN(provider,name) args)
  #define HS_DTRACE_PROBE_CDECL_N(provider,name,args) \
    DTRACE_ONLY(extern void HS_DTRACE_PROBE_FN(provider,name) args)
-+#elif defined(USDT3)
++#elif defined(LINUX)
 +// Systemtap dtrace compatible probes on GNU/Linux don't.
 +#define HS_DTRACE_PROBE_DECL_N(provider,name,args)
 +#define HS_DTRACE_PROBE_CDECL_N(provider,name,args)
-+#endif 
++#else
++#error "USDT1 enabled for unknown os"
++#endif
  
  /* Dtrace probe declarations */
  #define HS_DTRACE_PROBE_DECL(provider,name) \
-@@ -118,6 +134,8 @@
+@@ -118,6 +136,8 @@
      uintptr_t,uintptr_t,uintptr_t))
  
  /* Dtrace probe definitions */
-+#ifndef USDT3
++#if defined(SOLARIS)
 +// Solaris dtrace uses actual function calls.
  #define HS_DTRACE_PROBE_N(provider,name, args) \
    DTRACE_ONLY(HS_DTRACE_PROBE_FN(provider,name) args)
  
-@@ -153,7 +171,32 @@
+@@ -153,6 +173,34 @@
    HS_DTRACE_PROBE_N(provider,name,((uintptr_t)a0,(uintptr_t)a1,(uintptr_t)a2,\
      (uintptr_t)a3,(uintptr_t)a4,(uintptr_t)a5,(uintptr_t)a6,(uintptr_t)a7,\
      (uintptr_t)a8,(uintptr_t)a9))
-+#else
++#elif defined(LINUX)
 +// Systemtap dtrace compatible probes on GNU/Linux use direct macros.
 +#define HS_DTRACE_PROBE(provider,name) HS_DTRACE_PROBE0(provider,name)
 +#define HS_DTRACE_PROBE0(provider,name)\
@@ -129,8 +132,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/dtrace.hpp openjdk/hotspot
 +  DTRACE_PROBE9(provider,name,a0,a1,a2,a3,a4,a5,a6,a7,a8)
 +#define HS_DTRACE_PROBE10(provider,name,a0,a1,a2,a3,a4,a5,a6,a7,a8)\
 +  DTRACE_PROBE10(provider,name,a0,a1,a2,a3,a4,a5,a6,a7,a8)
++#else
++#error "USDT1 enabled for unknown os"
++#endif
  
--#endif /* !USDT2 */
-+#endif /* !USDT3 */
+ #endif /* !USDT2 */
  
- #endif // SHARE_VM_UTILITIES_DTRACE_HPP
