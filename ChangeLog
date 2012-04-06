@@ -1,5 +1,11 @@
 2012-04-06  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(JDK_CHANGESET): Bump to include generalied crypto tests.
+	(JDK_SHA256SUM): Likewise.
+
+2012-04-06  Andrew John Hughes  <ahughes@redhat.com>
+
 	* acinclude.m4:
 	(IT_CHECK_FOR_GTK): Work with glib >= 2.32
 	by explicitly asking for gthread.
