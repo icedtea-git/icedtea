@@ -1,3 +1,9 @@
+2012-04-06  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	(IT_CHECK_FOR_GTK): Work with glib >= 2.32
+	by explicitly asking for gthread.
+
 2012-03-27  Mark Wielaard  <mjw@redhat.com>
 
 	* patches/systemtap.patch: Rewrite using just USDT1 with macros

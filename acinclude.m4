@@ -2011,7 +2011,7 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_GTK],
   AC_MSG_RESULT(${ENABLE_SYSTEM_GTK})
   if test x"${ENABLE_SYSTEM_GTK}" = "xyes"; then
     dnl Check for Gtk+ headers and libraries.
-    PKG_CHECK_MODULES(GTK, gtk+-2.0,[GTK_FOUND=yes],[GTK_FOUND=no])
+    PKG_CHECK_MODULES(GTK, gtk+-2.0 gthread-2.0,[GTK_FOUND=yes],[GTK_FOUND=no])
     if test "x${GTK_FOUND}" = xno
     then
       AC_MSG_ERROR([Could not find Gtk+; install Gtk+ or build with --disable-system-gtk to use the in-tree headers.])
