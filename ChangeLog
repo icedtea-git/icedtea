@@ -1,6 +1,12 @@
 2012-04-11  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	(JDK_CHANGESET): Bump to include GCC 4.7 build fixes.
+	(JDK_SHA256SUM): Likewise.
+
+2012-04-11  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(download-openjdk): Don't download unless
 	enable_downloading is set.
 	(download-cacao): Likewise.
