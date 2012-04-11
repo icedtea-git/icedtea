@@ -1,3 +1,15 @@
+2012-04-11  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(download-openjdk): Don't download unless
+	enable_downloading is set.
+	(download-cacao): Likewise.
+	(download-jamvm): Likewise.
+	* acinclude.m4:
+	(IT_CHECK_FOR_DOWNLOADING): New option
+	--disable-downloading.
+	* configure.ac: Call IT_CHECK_FOR_DOWNLOADING.
+
 2012-04-06  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
