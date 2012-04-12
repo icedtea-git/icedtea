@@ -588,7 +588,7 @@ endif
 	if ! echo "$(OPENJDK_SHA256SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if test "x$${enable_downloading}" = "xyes"; then \
+	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ -e $(OPENJDK_SRC_ZIP) ] ; then \
 	      mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
 	    fi ; \
@@ -607,7 +607,7 @@ endif
 	if ! echo "$(CORBA_SHA256SUM)  $(CORBA_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if test "x$${enable_downloading}" = "xyes"; then \
+	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ $(CORBA_SRC_ZIP) ] ; then \
 	      mv $(CORBA_SRC_ZIP) $(CORBA_SRC_ZIP).old ; \
 	    fi ; \
@@ -626,7 +626,7 @@ endif
 	if ! echo "$(JAXP_SHA256SUM)  $(JAXP_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if test "x$${enable_downloading}" = "xyes"; then \
+	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ $(JAXP_SRC_ZIP) ] ; then \
 	      mv $(JAXP_SRC_ZIP) $(JAXP_SRC_ZIP).old ; \
 	    fi ; \
@@ -645,7 +645,7 @@ endif
 	if ! echo "$(JAXWS_SHA256SUM)  $(JAXWS_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if test "x$${enable_downloading}" = "xyes"; then \
+	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ $(JAXWS_SRC_ZIP) ] ; then \
 	      mv $(JAXWS_SRC_ZIP) $(JAXWS_SRC_ZIP).old ; \
 	    fi ; \
@@ -664,7 +664,7 @@ endif
 	if ! echo "$(JDK_SHA256SUM)  $(JDK_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if test "x$${enable_downloading}" = "xyes"; then \
+	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ $(JDK_SRC_ZIP) ] ; then \
 	      mv $(JDK_SRC_ZIP) $(JDK_SRC_ZIP).old ; \
 	    fi ; \
@@ -683,7 +683,7 @@ endif
 	if ! echo "$(LANGTOOLS_SHA256SUM)  $(LANGTOOLS_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if test "x$${enable_downloading}" = "xyes"; then \
+	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ $(LANGTOOLS_SRC_ZIP) ] ; then \
 	      mv $(LANGTOOLS_SRC_ZIP) $(LANGTOOLS_SRC_ZIP).old ; \
 	    fi ; \
@@ -731,7 +731,7 @@ endif
 	if ! echo "$(CACAO_SHA256SUM)  $(CACAO_SRC_ZIP)" \
 	 | $(SHA256SUM) --check ; \
 	then \
-	 if test "x$${enable_downloading}" = "xyes"; then \
+	 if test "x$(enable_downloading)" = "xyes"; then \
 	   if [ -e $(CACAO_SRC_ZIP) ] ; then \
 	     mv $(CACAO_SRC_ZIP) $(CACAO_SRC_ZIP).old ; \
 	   fi ; \
@@ -761,7 +761,7 @@ endif
 	if ! echo "$(JAMVM_SHA256SUM)  $(JAMVM_SRC_ZIP)" \
 	 | $(SHA256SUM) --check ; \
 	then \
-	  if test "x$${enable_downloading}" = "xyes"; then \
+	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ -e $(JAMVM_SRC_ZIP) ] ; then \
 	      mv $(JAMVM_SRC_ZIP) $(JAMVM_SRC_ZIP).old ; \
 	    fi ; \
@@ -830,7 +830,7 @@ endif
 	if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if test "x$${enable_downloading}" = "xyes"; then \
+	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ -e $(HOTSPOT_SRC_ZIP) ] ; then \
 	      mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
 	    fi ; \

@@ -1,9 +1,16 @@
+2012-04-12  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(download-openjdk): Fix syntax.
+	(download-cacao): Likewise.
+	(download-jamvm): Likewise.
+	(download-hotspot): Likewise.
+
 2015-02-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
 	(download-nashorn): Don't download unless
 	enable_downloading is set.
-	(download-hotspot): Likewise.
 
 2012-04-11  Andrew John Hughes  <ahughes@redhat.com>
 
@@ -12,6 +19,7 @@
 	enable_downloading is set.
 	(download-cacao): Likewise.
 	(download-jamvm): Likewise.
+	(download-hotspot): Likewise.
 	* NEWS: Updated.
 	* acinclude.m4:
 	(IT_CHECK_FOR_DOWNLOADING): New option
