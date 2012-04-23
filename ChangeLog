@@ -1,3 +1,12 @@
+2012-04-23  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(HOTSPOT_CHANGESET): Bump to bring in
+	ALT_STRIP_POLICY fix.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(ICEDTEA_ENV): Set ALT_STRIP_POLICY to
+	no_strip.
+
 2012-04-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
