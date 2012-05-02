@@ -6030,3 +6030,15 @@ diff -Nru openjdk-boot.orig/jdk/test/java/util/Random/DistinctSeeds.java openjdk
          List<Thread> threads = new ArrayList<Thread>();
          for (int i = 0; i < threadCount; i++) {
              RandomCollector r = new RandomCollector();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2012-05-02 20:54:14.597408672 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2012-05-02 20:54:23.977558137 +0100
+@@ -42,7 +42,7 @@
+  */
+ public final class UntrustedCertificates {
+ 
+-    private final static Set<X509Certificate> untrustedCerts = new HashSet<>();
++    private final static Set<X509Certificate> untrustedCerts = new HashSet<X509Certificate>();
+ 
+     /**
+      * Checks if a certificate is untrusted.

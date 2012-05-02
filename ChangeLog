@@ -1,3 +1,29 @@
+2012-05-02  Andrew John Hughes  <ahughes@redhat.com>
+
+	Bump to jdk7u4 b13.
+	* Makefile.am:
+	(OPENJDK_VERSION): Set to b13.
+	(CORBA_CHANGESET): Update to IcedTea7 forest head.
+	(HOTSPOT_CHANGESET): Likewise.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_ENV): Set BUILD_CXX not BUILD_CPP
+	due to build-infra changes in HotSpot.
+	* patches/boot/ecj-diamond.patch:
+	Add cases in UntrustedCertificates.java.
+	* patches/boot/ecj-multicatch.patch: Likewise.
+	* patches/boot/ecj-trywithresources.patch: Likewise.
+
 2012-04-23  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

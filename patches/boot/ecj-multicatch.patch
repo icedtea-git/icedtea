@@ -176,3 +176,18 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java openj
      }
  
      private static String getMainClass(VirtualMachineDescriptor vmd)
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2012-05-02 20:50:17.549643066 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2012-05-02 20:52:03.435320716 +0100
+@@ -65,7 +65,10 @@
+                 throw new RuntimeException("Duplicate untrusted certificate: " +
+                     cert.getSubjectX500Principal());
+             }
+-        } catch (CertificateException | IOException e) {
++	} catch (CertificateException e) {
++            throw new RuntimeException(
++                        "Incorrect untrusted certificate: " + alias, e);
++	} catch (IOException e) {
+             throw new RuntimeException(
+                         "Incorrect untrusted certificate: " + alias, e);
+         }
