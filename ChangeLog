@@ -1,5 +1,11 @@
 2012-05-21  Andrew John Hughes  <ahughes@redhat.com>
 
+	(JDK_CHANGESET): Bump to bring in the
+	aliasing and wrap mode fixes.
+	(JDK_SHA256SUM): Likewise.
+
+2012-05-21  Andrew John Hughes  <ahughes@redhat.com>
+
 	* AUTHORS: Add Ralph Sennhauser.
 
 2012-02-03  Ralph Sennhauser <sera@gentoo.org>
