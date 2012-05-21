@@ -147,6 +147,9 @@ IT_WITH_PROJECT
 IT_ENABLE_HG
 IT_WITH_TZDATA_DIR
 
+IT_WITH_PAX
+AC_CONFIG_FILES([pax-mark-vm], [chmod +x pax-mark-vm])
+
 AC_PATH_TOOL([HG],[hg])
 if test "x${enable_hg}" = "xyes"; then
   if test "x${HG}" = x; then

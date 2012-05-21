@@ -1,3 +1,28 @@
+2012-05-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	* AUTHORS: Add Ralph Sennhauser.
+
+2012-02-03  Ralph Sennhauser <sera@gentoo.org>
+
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add test_gamma patch if
+	WITH_PAX is set.
+	(ICEDTEA_BOOT_PATCHES): Only add test_gamma patch
+	if WITH_PAX is not set.
+	(icedtea): Run pax-mark-vm on the just-built image.
+	(icedtea-debug): Likewise.
+	(icedtea-boot): Likewise.
+	* acinclude.m4:
+	(IT_WITH_PAX): Check for a pax command being specified.
+	* configure.ac:
+	Call IT_WITH_PAX.
+	* patches/test_gamma.patch:
+	Patch to be applied for the main OpenJDK tree when
+	--with-pax is specified.  Stops the test_gamma app being
+	run, which will fail as the JDK is not yet PaX marked.
+	* pax-mark-vm.in:
+	Script to PaX mark a JDK image.
+
 2012-05-02  Andrew John Hughes  <ahughes@redhat.com>
 
 	Bump to jdk7u4 b13.

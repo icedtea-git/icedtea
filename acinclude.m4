@@ -2201,3 +2201,46 @@ AC_DEFUN([IT_CHECK_IF_DOWNLOADING],
   AM_CONDITIONAL([DOWNLOADING], test x"${enable_downloading}" = "xyes")
   AC_SUBST([enable_downloading])
 ])
+
+AC_DEFUN_ONCE([IT_WITH_PAX],
+[
+  AC_MSG_CHECKING([for pax utility to use])
+  AC_ARG_WITH([pax],
+              [AS_HELP_STRING(--with-pax=COMMAND,the command used for pax marking)],
+  [
+    PAX_COMMAND=${withval}
+  ],
+  [ 
+    PAX_COMMAND="not specified"
+  ])
+  case "x${PAX_COMMAND}" in
+    xchpax)
+      case "${host_cpu}" in
+        i?86)
+          PAX_COMMAND_ARGS="-msp"
+          ;;
+        *)
+          PAX_COMMAND_ARGS="-m"
+          ;;
+      esac
+      ;;
+    xpaxctl)
+      case "${host_cpu}" in
+        i?86)
+          PAX_COMMAND_ARGS="-msp"
+          ;;
+        *)
+          PAX_COMMAND_ARGS="-m"
+          ;;
+      esac
+      ;;
+    *)
+      PAX_COMMAND="not specified"
+      PAX_COMMAND_ARGS="not specified"
+      ;;
+  esac
+  AM_CONDITIONAL(WITH_PAX, test "x${PAX_COMMAND}" != "xnot specified")
+  AC_MSG_RESULT(${PAX_COMMAND})
+  AC_SUBST(PAX_COMMAND)
+  AC_SUBST(PAX_COMMAND_ARGS)
+])

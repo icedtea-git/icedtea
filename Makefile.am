@@ -276,6 +276,10 @@ else
 ICEDTEA_PATCHES += patches/nss-not-enabled-config.patch
 endif
 
+if WITH_PAX
+ICEDTEA_PATCHES += patches/test_gamma.patch
+endif
+
 ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
 
 # Bootstrapping patches
@@ -297,7 +301,6 @@ ICEDTEA_BOOT_PATCHES = \
 	patches/boot/jar.patch \
 	patches/boot/symbols.patch \
 	patches/boot/tobin.patch \
-	patches/boot/test_gamma.patch \
 	patches/boot/tools.jar.patch \
 	patches/boot/jopt.patch \
 	patches/boot/jaxp-dependency.patch \
@@ -316,6 +319,10 @@ ICEDTEA_BOOT_PATCHES = \
 	patches/boot/ecj-trywithresources.patch \
 	patches/boot/ecj-autoboxing.patch \
 	patches/boot/xsltproc.patch
+
+if !WITH_PAX
+ICEDTEA_BOOT_PATCHES += patches/boot/test_gamma.patch
+endif
 
 if CP39408_JAVAH
 ICEDTEA_BOOT_PATCHES += patches/boot/pr39408.patch
@@ -1643,6 +1650,7 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  $(ICEDTEA_BUILD_TARGET)
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_OUTPUT_DIR)/j2sdk-image
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
@@ -1708,6 +1716,7 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  $(ICEDTEA_DEBUG_BUILD_TARGET)
+	$(abs_top_builddir)/pax-mark-vm $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image
 	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
@@ -1796,6 +1805,7 @@ stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot \
 	  $(ICEDTEA_BUILD_TARGET)
+	$(abs_top_builddir)/pax-mark-vm $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image
 	@echo "Bootstrapped IcedTea is served:" \
 	  $(BOOT_BUILD_OUTPUT_DIR)
 	mkdir -p stamps
