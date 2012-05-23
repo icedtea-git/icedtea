@@ -16,6 +16,27 @@ New in release 2.2 (2012-XX-XX):
 
 * Bug fixes
   - PR885: IcedTea7 does not build scripting support
+  - Support glib >= 2.32.
+  - Fix build on GCC 4.7.
+  - Allow downloading to be disabled.
+  - Generalise new ucrypto cryptography tests.
+  - Stop libraries being stripped in the OpenJDK build.
+  - PR817: Support kernels that require PaX marking on the JDK binaries.
+* PulseAudio
+  - PR734: Fix pulse-java latency problem
+  - PR758: [regression] javah from 6hg/b23 generates `jlong' from `private int'
+  - LP862286: Fix exception on trying to start PulseAudio playback
+  - Replace pulse audio enums with static longs.
+  - Fix a few concurrency problems in pulse audio.
+  - Start PulseAudioTargetDataLines in the corked state.
+* SystemTap
+  - Support multiple running HotSpots by indexing globals by pid()
+  - Don't hard code constantPoolOopDesc_size.
+  - Use @var construct if available.
+  - Wrap heap accessors in try-catch block.
+  - Change symbolOopDesc to Symbol to accomodate S6990754.
+  - Add tapset tests.
+  - jstaptest.pl: thread_start and stop thread id can be any positive number.
 
 New in release 2.1 (2012-02-14):
 

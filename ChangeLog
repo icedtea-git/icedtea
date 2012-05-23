@@ -1,5 +1,9 @@
 2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
 
+	* NEWS: Sync with 2.2 branch.
+
+2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
+
 	* configure.ac: Bump to 2.3pre.
 	* NEWS: Add 2.3 section.
 
