@@ -1,5 +1,13 @@
 2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
 
+	(CORBA_CHANGESET): Bump to bring in typo fix.
+	(CORBA_SHA256SUM): Likewise.
+	(JDK_CHANGESET): Bump to bring in the
+	digest cloning fix.
+	(JDK_SHA256SUM): Likewise.
+
+2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
+
 	* NEWS: Sync with 2.2 branch.
 
 2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
