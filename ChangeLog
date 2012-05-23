@@ -1,3 +1,32 @@
+2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/boot/corba-defs.patch:
+	Removed.  Makes changes which aren't needed
+	and break the build with IcedTea7.
+	* Makefile.am:
+	(ICEDTEA_BOOT_PATCHES): Drop corba-defs.patch.
+	* patches/boot/corba-dependencies.patch:
+	Reduce to just the necessary change of adding jdk
+	tree dependencies to the CORBA build.  Add solaris
+	too so the build with IcedTea7 works (needs
+	DefaultInterface).
+	* patches/boot/jaxws-jdk-dependency.patch:
+	Add solaris dependency (DefaultInterface).
+	* patches/boot/xbootclasspath.patch:
+	Don't set JAVACFLAGS to point to non-existent rt.jar
+	in {JDK_HOME}/lib.  Point to just-built langtools instead.
+
+2011-03-02  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(icedtea): Explicitly set -j1 for the
+	legacy OpenJDK build as it can't handle
+	parallelism correctly.  This allows the
+	main IcedTea build to be parallel while
+	still allowing OpenJDK to build.
+	(icedtea-debug): Likewise.
+	(icedtea-ecj): Likewise.
+
 2012-05-21  Andrew John Hughes  <ahughes@redhat.com>
 
 	(JDK_CHANGESET): Bump to bring in the

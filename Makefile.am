@@ -287,7 +287,6 @@ ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
 ICEDTEA_BOOT_PATCHES = \
 	patches/boot/javafiles.patch \
 	patches/boot/ant-javac.patch \
-	patches/boot/corba-defs.patch \
 	patches/boot/corba-idlj.patch \
 	patches/boot/corba-no-gen.patch \
 	patches/boot/corba-orb.patch \
@@ -1646,7 +1645,7 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp \
  stamps/jamvm.stamp
-	$(ARCH_PREFIX) $(MAKE) \
+	$(ARCH_PREFIX) $(MAKE) -j1 \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  $(ICEDTEA_BUILD_TARGET)
@@ -1712,7 +1711,7 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp \
  stamps/jamvm.stamp
-	$(ARCH_PREFIX) $(MAKE) \
+	$(ARCH_PREFIX) $(MAKE) -j1 \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  $(ICEDTEA_DEBUG_BUILD_TARGET)
@@ -1801,7 +1800,7 @@ clean-icedtea-debug-stage2: clean-add-jamvm-debug
 stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
  stamps/download.stamp $(OPENJDK_BOOT_TREE) stamps/cacao.stamp \
  stamps/rewrite-rhino.stamp stamps/jamvm.stamp stamps/generated.stamp
-	$(ARCH_PREFIX) $(MAKE) \
+	$(ARCH_PREFIX) $(MAKE) -j1 \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot \
 	  $(ICEDTEA_BUILD_TARGET)

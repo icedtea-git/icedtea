@@ -5,7 +5,7 @@
  jaxp.classes.dir=${output.dir}/../jaxp/build/classes
  
 +# JDK sources
-+jdk.sources=${jdk.topdir}/src/share/classes
++jdk.sources=${jdk.topdir}/src/share/classes:${jdk.topdir}/src/solaris/classes
 +
  # Distributed results
  dist.dir=${output.dir}/dist

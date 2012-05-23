@@ -6,7 +6,7 @@ diff -Nru openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk openjdk-boot/
  JAVACFLAGS  += $(CLASS_VERSION)
  JAVACFLAGS  += -encoding ascii
 -JAVACFLAGS  += -classpath $(BOOTDIR)/lib/tools.jar
-+JAVACFLAGS  += -classpath $(BOOTDIR)/lib/rt.jar
++JAVACFLAGS  += -classpath $(LANGTOOLS_DIST)/lib/classes.jar
  JAVACFLAGS  += $(OTHER_JAVACFLAGS)
  
  # Langtools
