@@ -1104,7 +1104,7 @@ else
 	      *.zip) $(UNZIP) -q $(OPENJDK_SRC_ZIP) ;; \
 	      *.tar.*) $(TAR) xf $(OPENJDK_SRC_ZIP) ;; \
 	    esac; \
-	    mv $(ICEDTEA_PREFIX)-$(OPENJDK_CHANGESET) openjdk ; \
+	    mv `echo $(ICEDTEA_PREFIX)|sed 's#\.#-#'`-$(OPENJDK_CHANGESET) openjdk ; \
 	  else \
 	    echo "ERROR: Couldn't extract OpenJDK"; \
 	    false; \

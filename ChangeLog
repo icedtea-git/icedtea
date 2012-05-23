@@ -1,5 +1,11 @@
 2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
 
+	* Makefile.am:
+	(extract-openjdk): Mirror replacement of '.' with
+	'-' done by Mercurial server when creating tarball.
+
+2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
+
 	(CORBA_CHANGESET): Bump to bring in typo fix.
 	(CORBA_SHA256SUM): Likewise.
 	(JDK_CHANGESET): Bump to bring in the
