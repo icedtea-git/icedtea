@@ -10,7 +10,10 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 2.3 (2012-XX-XX):
+
 New in release 2.2 (2012-XX-XX):
+
 * Bug fixes
   - PR885: IcedTea7 does not build scripting support
 

@@ -1,5 +1,10 @@
 2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
 
+	* configure.ac: Bump to 2.3pre.
+	* NEWS: Add 2.3 section.
+
+2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
+
 	* patches/boot/corba-defs.patch:
 	Removed.  Makes changes which aren't needed
 	and break the build with IcedTea7.
