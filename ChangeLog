@@ -1,3 +1,33 @@
+2012-05-25  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(OPENJDK_VERSION): Bump to b10.
+	(JDK_UPDATE_VERSION): Bump to u6.
+	(CORBA_CHANGESET): Update to IcedTea7 forest head.
+	(HOTSPOT_CHANGESET): Likewise.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(HOTSPOT_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(STRIP_POLICY): Changed from ALT_STRIP_POLICY
+	due to upstream changes.
+	* patches/boot/ecj-diamond.patch:
+	Recreated, new case added in java.io.FileDescriptor.
+	* patches/boot/ecj-trywithresources.patch:
+	New case added (also in java.io.FileDescriptor).
+	* patches/boot/hotspot-jdk-dependency.patch:
+	Recreated.
+	* patches/boot/use_target_6_for_bootstrap_classes.patch,
+	Added new case in sun.security.action (caused timezone
+	generation application to fail, presumably due to variable
+	moving from private to package-private).
+
 2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

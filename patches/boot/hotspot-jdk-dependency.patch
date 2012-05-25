@@ -1,6 +1,6 @@
 diff -Nru openjdk-boot.orig/hotspot/make/linux/makefiles/sa.make openjdk-boot/hotspot/make/linux/makefiles/sa.make
---- openjdk-boot.orig/hotspot/make/linux/makefiles/sa.make	2012-03-19 00:51:21.849858323 +0000
-+++ openjdk-boot/hotspot/make/linux/makefiles/sa.make	2012-03-19 12:29:05.891038498 +0000
+--- openjdk-boot.orig/hotspot/make/linux/makefiles/sa.make	2012-05-23 22:15:04.747642641 +0100
++++ openjdk-boot/hotspot/make/linux/makefiles/sa.make	2012-05-23 22:16:32.825095823 +0100
 @@ -91,7 +91,7 @@
  # are in AGENT_FILES, so use the shell to expand them.
  # Be extra carefull to not produce too long command lines in the shell!
@@ -11,12 +11,12 @@ diff -Nru openjdk-boot.orig/hotspot/make/linux/makefiles/sa.make openjdk-boot/ho
  	$(QUIETLY) echo "$(SA_BUILD_VERSION_PROP)" > $(SA_PROPERTIES)
  	$(QUIETLY) rm -f $(SA_CLASSDIR)/sun/jvm/hotspot/utilities/soql/sa.js
 diff -Nru openjdk-boot.orig/make/hotspot-rules.gmk openjdk-boot/make/hotspot-rules.gmk
---- openjdk-boot.orig/make/hotspot-rules.gmk	2012-02-15 17:07:58.000000000 +0000
-+++ openjdk-boot/make/hotspot-rules.gmk	2012-03-19 12:28:07.850089852 +0000
-@@ -83,6 +83,7 @@
- HOTSPOT_BUILD_ARGUMENTS += $(COMMON_BUILD_ARGUMENTS)
+--- openjdk-boot.orig/make/hotspot-rules.gmk	2012-05-23 20:37:39.000000000 +0100
++++ openjdk-boot/make/hotspot-rules.gmk	2012-05-23 22:16:52.425419199 +0100
+@@ -85,6 +85,7 @@
  HOTSPOT_BUILD_ARGUMENTS += ALT_OUTPUTDIR=$(HOTSPOT_OUTPUTDIR)
  HOTSPOT_BUILD_ARGUMENTS += ALT_EXPORT_PATH=$(HOTSPOT_EXPORT_PATH)
+ HOTSPOT_BUILD_ARGUMENTS += BUILD_FLAVOR=$(BUILD_FLAVOR)
 +HOTSPOT_BUILD_ARGUMENTS += GENSRCDIR=$(GENSRCDIR)
  
  # Why do these need to be passed in? Because of windows nmake? and MAKEFLAGS=?

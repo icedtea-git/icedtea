@@ -62,3 +62,16 @@ diff -r 9cf5ed6b45d6 make/com/sun/jndi/cosnaming/Makefile
  #
  # Resources
  #
+diff --git a/make/sun/security/action/Makefile b/make/sun/security/action/Makefile
+--- openjdk-boot/jdk/make/sun/security/action/Makefile
++++ openjdk-boot/jdk/make/sun/security/action/Makefile
+@@ -28,6 +28,9 @@
+ PRODUCT = sun
+ include $(BUILDDIR)/common/Defs.gmk
+ 
++LANGUAGE_VERSION = -source 6
++CLASS_VERSION = -target 6
++
+ #
+ # Files
+ #
