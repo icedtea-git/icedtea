@@ -1,6 +1,12 @@
 2012-05-25  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
+	(versioning): Don't add a suffix if building
+	the default project, 'icedtea'.
+
+2012-05-25  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
 	(OPENJDK_VERSION): Bump to b10.
 	(JDK_UPDATE_VERSION): Bump to u6.
 	(CORBA_CHANGESET): Update to IcedTea7 forest head.
