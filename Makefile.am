@@ -724,7 +724,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	scripts/jni_desc \
 	rewriter/agpl-3.0.txt \
 	$(REWRITER_SRCS) \
-	THANKYOU
+	THANKYOU test/tapset
 
 # Top-Level Targets
 # =================
@@ -733,14 +733,14 @@ all-local: icedtea-stage2
 
 check-local: jtregcheck check-tapset
 
-clean-tests: clean-jtreg clean-tapset-report
+clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports
 	if [ $(abs_top_srcdir) != $(abs_top_builddir) ] ; then \
 	  if [ -e test ] ; then \
 	    rmdir test ; \
 	  fi \
 	fi
 
-clean-local: clean-tests clean-jtreg-reports clean-pulse-java \
+clean-local: clean-tests clean-pulse-java \
  clean-icedtea clean-icedtea-boot clean-clone clean-clone-boot \
  clean-bootstrap-directory-stage1 clean-bootstrap-directory-stage2 \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
@@ -2228,6 +2228,11 @@ stamps/jtreg.stamp: stamps/icedtea-stage2.stamp
 
 clean-jtreg:
 	rm -rf test/jtreg/classes
+	if [ $(abs_top_srcdir) != $(abs_top_builddir) ] ; then \
+	  if [ -e test/jtreg ] ; then \
+	    rmdir test/jtreg ; \
+	  fi ; \
+	fi
 	rm -f test/jtreg.jar
 	rm -f stamps/jtreg.stamp
 
