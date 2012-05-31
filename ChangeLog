@@ -1,5 +1,9 @@
 2012-05-30  Andrew John Hughes  <ahughes@redhat.com>
 
+	* NEWS: Add 2.2 release notes.
+
+2012-05-30  Andrew John Hughes  <ahughes@redhat.com>
+
 	* Makefile.am:
 	(EXTRA_DIST): Add test/tapset.
 	(clean-tests): Add clean-jtreg-reports.
