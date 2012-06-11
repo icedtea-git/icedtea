@@ -1,6 +1,6 @@
-diff -Nru openjdk-boot.orig/jdk/make/common/Release.gmk openjdk-boot/jdk/make/common/Release.gmk
---- openjdk-boot.orig/jdk/make/common/Release.gmk	2012-03-18 22:39:44.298585468 +0000
-+++ openjdk-boot/jdk/make/common/Release.gmk	2012-03-19 00:50:02.224588936 +0000
+diff -Nru openjdk.orig/jdk/make/common/Release.gmk openjdk/jdk/make/common/Release.gmk
+--- openjdk-boot.orig/jdk/make/common/Release.gmk	2012-06-11 14:24:46.531375308 +0100
++++ openjdk-boot/jdk/make/common/Release.gmk	2012-06-11 14:28:47.215136389 +0100
 @@ -1104,16 +1104,6 @@
  	$(CP) $(FILES_launcher) $(JDK_IMAGE_DIR)/src/launcher
  	$(CD) $(JDK_IMAGE_DIR)/src && $(ZIPEXE) -qr ../src.zip *
@@ -18,11 +18,11 @@ diff -Nru openjdk-boot.orig/jdk/make/common/Release.gmk openjdk-boot/jdk/make/co
  ifneq ($(PLATFORM), windows)
  	$(call copy-man-pages,$(JDK_IMAGE_DIR),$(JDK_MAN_PAGES))
  endif # !windows
-diff -Nru openjdk-boot.orig/jdk/make/Makefile openjdk-boot/jdk/make/Makefile
---- openjdk-boot.orig/jdk/make/Makefile	2012-03-12 17:25:51.000000000 +0000
-+++ openjdk-boot/jdk/make/Makefile	2012-03-19 00:50:02.224588936 +0000
-@@ -237,7 +237,7 @@
-   SUBDIRS += apple
+diff -Nru openjdk.orig/jdk/make/Makefile openjdk/jdk/make/Makefile
+--- openjdk-boot.orig/jdk/make/Makefile	2012-06-08 17:12:17.000000000 +0100
++++ openjdk-boot/jdk/make/Makefile	2012-06-11 14:28:47.223136515 +0100
+@@ -240,7 +240,7 @@
+   SUBDIRS += bridge
  endif
  SUBDIRS_tools = launchers
 -SUBDIRS_misc  = org sunw jpda mkdemo mksample

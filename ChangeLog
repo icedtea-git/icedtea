@@ -1,3 +1,17 @@
+2012-06-11  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	(OPENJDK_VERSION): Bump to b13.
+	* patches/boot/demos.patch,
+	* patches/boot/ecj-diamond.patch:
+	Regenerated.  Update Hashtable changes
+	to use <K,V> not <Object,Object>.
+	* patches/boot/ecj-multicatch.patch:
+	Add additional cases in Hashtable and HashMap.
+	* patches/boot/ecj-trywithresources.patch,
+	* patches/boot/jaxws-jdk-dependency.patch:
+	Regenerated.
+
 2012-05-30  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Add 2.2 release notes.

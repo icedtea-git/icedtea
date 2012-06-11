@@ -191,3 +191,31 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCer
              throw new RuntimeException(
                          "Incorrect untrusted certificate: " + alias, e);
          }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/HashMap.java openjdk-boot/jdk/src/share/classes/java/util/HashMap.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/HashMap.java	2012-06-08 17:12:17.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/util/HashMap.java	2012-06-11 14:54:16.123125601 +0100
+@@ -237,7 +237,9 @@
+                 UNSAFE = sun.misc.Unsafe.getUnsafe();
+                 HASHSEED_OFFSET = UNSAFE.objectFieldOffset(
+                     HashMap.class.getDeclaredField("hashSeed"));
+-            } catch (NoSuchFieldException | SecurityException e) {
++            } catch (NoSuchFieldException e ) {
++                throw new Error("Failed to record hashSeed offset", e);
++            } catch (SecurityException e) {
+                 throw new Error("Failed to record hashSeed offset", e);
+             }
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Hashtable.java openjdk-boot/jdk/src/share/classes/java/util/Hashtable.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/Hashtable.java	2012-06-08 17:12:17.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/util/Hashtable.java	2012-06-11 14:54:40.275511896 +0100
+@@ -227,7 +227,9 @@
+             UNSAFE = sun.misc.Unsafe.getUnsafe();
+             HASHSEED_OFFSET = UNSAFE.objectFieldOffset(
+                 Hashtable.class.getDeclaredField("hashSeed"));
+-        } catch (NoSuchFieldException | SecurityException e) {
++        } catch (NoSuchFieldException e) {
++            throw new Error("Failed to record hashSeed offset", e);
++        } catch (SecurityException e) {
+             throw new Error("Failed to record hashSeed offset", e);
+         }
+      }

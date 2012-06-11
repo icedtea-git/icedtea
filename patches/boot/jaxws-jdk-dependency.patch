@@ -1,26 +1,29 @@
---- openjdk-boot.orig/jaxws/build.properties	2011-03-08 18:40:33.955159212 +0000
-+++ openjdk-boot/jaxws/build.properties	2011-03-08 20:19:51.000000000 +0000
-@@ -66,6 +66,9 @@
+diff -Nru openjdk-boot.orig/jaxws/build.properties openjdk-boot/jaxws/build.properties
+--- openjdk-boot.orig/jaxws/build.properties	2012-06-11 14:30:27.904723311 +0100
++++ openjdk-boot/jaxws/build.properties	2012-06-11 14:38:13.847981281 +0100
+@@ -62,6 +62,10 @@
  # JAXP built files
  jaxp.classes.dir=${output.dir}/../jaxp/build/classes
  
 +# JDK sources
++
 +jdk.sources=${jdk.topdir}/src/share/classes:${jdk.topdir}/src/solaris/classes
 +
  # Distributed results
  dist.dir=${output.dir}/dist
  dist.lib.dir=${dist.dir}/lib
-@@ -110,6 +113,7 @@
+@@ -92,6 +96,7 @@
+   output.dir=${output.dir}${line.separator}\
+   build.dir=${build.dir}${line.separator}\
    dist.dir=${dist.dir}${line.separator}\
-   drop.dir=${drop.dir}${line.separator}\
-   drops.dir=${drops.dir}${line.separator}\
 +  jdk.topdir=${jdk.topdir}${line.separator}\
  ${line.separator}
  
- # Failure messages when source cannot be found on the file system
---- openjdk-boot.orig/jaxws/build.xml	2011-03-08 18:40:29.639288336 +0000
-+++ openjdk-boot/jaxws/build.xml	2011-03-08 20:22:31.000000000 +0000
-@@ -125,6 +125,7 @@
+ #------------------------------------------------------------
+diff -Nru openjdk-boot.orig/jaxws/build.xml openjdk-boot/jaxws/build.xml
+--- openjdk-boot.orig/jaxws/build.xml	2012-06-11 14:30:27.904723311 +0100
++++ openjdk-boot/jaxws/build.xml	2012-06-11 14:36:04.005990816 +0100
+@@ -138,6 +138,7 @@
          <javac 
  	     includeAntRuntime="false" 
  	     classpath="${jaxp.classes.dir}:${build.classes.dir}:${langtools.jar}"
@@ -28,9 +31,10 @@
  	     fork="true"
               destdir="${build.classes.dir}"
               memoryInitialSize="${javac.memoryInitialSize}"
---- openjdk-boot.orig/jaxws/make/Makefile	2011-03-08 18:40:14.167751211 +0000
-+++ openjdk-boot/jaxws/make/Makefile	2011-03-08 20:18:23.000000000 +0000
-@@ -140,6 +140,10 @@
+diff -Nru openjdk-boot.orig/jaxws/make/Makefile openjdk-boot/jaxws/make/Makefile
+--- openjdk-boot.orig/jaxws/make/Makefile	2012-06-11 14:30:27.904723311 +0100
++++ openjdk-boot/jaxws/make/Makefile	2012-06-11 14:36:04.005990816 +0100
+@@ -123,6 +123,10 @@
    endif
  endif
  
