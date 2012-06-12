@@ -12,6 +12,9 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.3 (2012-XX-XX):
 
+* Bug fixes
+  - PR986: IcedTea7 fails to build with IcedTea6 CACAO due to low max heap size
+
 New in release 2.2 (2012-05-30):
 
 * Bug fixes

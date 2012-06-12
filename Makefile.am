@@ -249,6 +249,11 @@ ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
 	patches/cacao/jsig.patch \
 	patches/cacao/memory.patch
+else
+if USING_CACAO
+ICEDTEA_PATCHES += \
+	patches/cacao/memory.patch
+endif
 endif
 
 if ENABLE_CACAO

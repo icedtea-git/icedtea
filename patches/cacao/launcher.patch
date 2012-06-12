@@ -1,15 +1,3 @@
-diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
---- openjdk.orig/jdk/make/docs/Makefile	2012-03-21 17:09:55.000000000 +0000
-+++ openjdk/jdk/make/docs/Makefile	2012-03-23 00:46:49.461847958 +0000
-@@ -73,7 +73,7 @@
- else ifeq ($(ARCH),universal)
-   MAX_VM_MEMORY = 1024
- else
--  MAX_VM_MEMORY = 512
-+  MAX_VM_MEMORY = 768
- endif
- 
- # List of all possible directories for javadoc to look for sources
 diff -Nru openjdk.orig/jdk/src/share/bin/java.c openjdk/jdk/src/share/bin/java.c
 --- openjdk.orig/jdk/src/share/bin/java.c	2012-03-21 17:09:55.000000000 +0000
 +++ openjdk/jdk/src/share/bin/java.c	2012-03-23 00:46:49.461847958 +0000
