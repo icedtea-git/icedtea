@@ -15,6 +15,65 @@ New in release 2.3 (2012-XX-XX):
 * Bug fixes
   - PR986: IcedTea7 fails to build with IcedTea6 CACAO due to low max heap size
 
+New in release 2.2.1 (2012-06-12):
+
+* Security fixes
+  - S7079902, CVE-2012-1711: Refine CORBA data models
+  - S7110720: Issue with vm config file loadingIssue with vm config file loading
+  - S7143606, CVE-2012-1717: File.createTempFile should be improved for temporary files created by the platform.
+  - S7143614, CVE-2012-1716: SynthLookAndFeel stability improvement
+  - S7143617, CVE-2012-1713: Improve fontmanager layout lookup operations
+  - S7143851, CVE-2012-1719: Improve IIOP stub and tie generation in RMIC
+  - S7143872, CVE-2012-1718: Improve certificate extension processing
+  - S7145239: Finetune package definition restriction
+  - S7152811, CVE-2012-1723: Issues in client compiler
+  - S7157609, CVE-2012-1724: Issues with loop
+  - S7160677: missing else in fix for 7152811
+  - S7160757, CVE-2012-1725: Problem with hotspot/runtime_classfile
+  - S7165628, CVE-2012-1726: Issues with java.lang.invoke.MethodHandles.Lookup
+
+New in release 2.1.1 (2012-06-12):
+
+* Security fixes
+  - S7079902, CVE-2012-1711: Refine CORBA data models
+  - S7110720: Issue with vm config file loadingIssue with vm config file loading
+  - S7143606, CVE-2012-1717: File.createTempFile should be improved for temporary files created by the platform.
+  - S7143614, CVE-2012-1716: SynthLookAndFeel stability improvement
+  - S7143617, CVE-2012-1713: Improve fontmanager layout lookup operations
+  - S7143851, CVE-2012-1719: Improve IIOP stub and tie generation in RMIC
+  - S7143872, CVE-2012-1718: Improve certificate extension processing
+  - S7145239: Finetune package definition restriction
+  - S7152811, CVE-2012-1723: Issues in client compiler
+  - S7157609, CVE-2012-1724: Issues with loop
+  - S7160677: missing else in fix for 7152811
+  - S7160757, CVE-2012-1725: Problem with hotspot/runtime_classfile
+  - S7165628, CVE-2012-1726: Issues with java.lang.invoke.MethodHandles.Lookup
+* Bug fixes
+  - PR885: IcedTea7 does not build scripting support
+  - Fix bug whereby JPEG_LIBS were not set by jdk_generic_profile.sh
+  - S7150392: Linux build breaks with GCC 4.7 due to unrecognized option
+  - Support glib >= 2.32.
+* ARM port
+  - Add arm_port from IcedTea 6
+  - added jvmti event generation for dynamic_generate and compiled_method_load events to ARM JIT compiler
+  - Adjust saved SP when safepointing.
+  - ARM: First cut of invokedynamic
+  - ARM: JIT-compilation of ldc methodHandle
+  - Changes for HSX22
+  - corrected call from fast_method_handle_entry to CppInterpreter::method_handle_entry so that thread is loaded into r2
+  - Don't save locals at a return.
+  - Fix JIT bug that miscompiles org.eclipse.ui.internal.contexts.ContextAuthority.sourceChanged
+  - invokedynamic and aldc for JIT
+  - Minor review cleanups.
+  - modified safepoint check to rely on memory protect signal instead of polling
+  - patched method handle adapter code to deal with failures in TCK
+  - Phase 1
+  - Phase 2
+  - RTC Thumb2 JIT enhancements.
+  - Zero fails to build in hsx22+, fix for hsx22 after runs gamma OK, hsx23 still nogo.
+  - Use ldrexd for atomic reads on ARMv7.
+  - Use unified syntax for thumb code.
+
 New in release 2.2 (2012-05-30):
 
 * Bug fixes
