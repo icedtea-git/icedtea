@@ -6021,3 +6021,114 @@ diff -Nru openjdk-boot.orig/jdk/test/java/util/Random/DistinctSeeds.java openjdk
          List<Thread> threads = new ArrayList<Thread>();
          for (int i = 0; i < threadCount; i++) {
              RandomCollector r = new RandomCollector();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/x509/X509CertImpl.java openjdk-boot/jdk/src/share/classes/sun/security/x509/X509CertImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/x509/X509CertImpl.java	2012-06-13 00:23:50.888084888 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/x509/X509CertImpl.java	2012-06-13 00:24:25.328561965 +0100
+@@ -1214,7 +1214,7 @@
+             if (exts == null) {
+                 return null;
+             }
+-            Set<String> extSet = new TreeSet<>();
++            Set<String> extSet = new TreeSet<String>();
+             for (Extension ex : exts.getAllExtensions()) {
+                 if (ex.isCritical()) {
+                     extSet.add(ex.getExtensionId().toString());
+@@ -1244,7 +1244,7 @@
+             if (exts == null) {
+                 return null;
+             }
+-            Set<String> extSet = new TreeSet<>();
++            Set<String> extSet = new TreeSet<String>();
+             for (Extension ex : exts.getAllExtensions()) {
+                 if (!ex.isCritical()) {
+                     extSet.add(ex.getExtensionId().toString());
+@@ -1484,10 +1484,10 @@
+         if (names.isEmpty()) {
+             return Collections.<List<?>>emptySet();
+         }
+-        List<List<?>> newNames = new ArrayList<>();
++        List<List<?>> newNames = new ArrayList<List<?>>();
+         for (GeneralName gname : names.names()) {
+             GeneralNameInterface name = gname.getName();
+-            List<Object> nameEntry = new ArrayList<>(2);
++            List<Object> nameEntry = new ArrayList<Object>(2);
+             nameEntry.add(Integer.valueOf(name.getType()));
+             switch (name.getType()) {
+             case GeneralNameInterface.NAME_RFC822:
+@@ -1545,12 +1545,12 @@
+             }
+         }
+         if (mustClone) {
+-            List<List<?>> namesCopy = new ArrayList<>();
++            List<List<?>> namesCopy = new ArrayList<List<?>>();
+             for (List<?> nameEntry : altNames) {
+                 Object nameObject = nameEntry.get(1);
+                 if (nameObject instanceof byte[]) {
+                     List<Object> nameEntryCopy =
+-                                        new ArrayList<>(nameEntry);
++                                        new ArrayList<Object>(nameEntry);
+                     nameEntryCopy.set(1, ((byte[])nameObject).clone());
+                     namesCopy.add(Collections.unmodifiableList(nameEntryCopy));
+                 } else {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/x509/X509CRLEntryImpl.java openjdk-boot/jdk/src/share/classes/sun/security/x509/X509CRLEntryImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/x509/X509CRLEntryImpl.java	2012-06-13 00:23:34.591859370 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/x509/X509CRLEntryImpl.java	2012-06-13 00:25:17.953292153 +0100
+@@ -352,7 +352,7 @@
+         if (extensions == null) {
+             return null;
+         }
+-        Set<String> extSet = new TreeSet<>();
++        Set<String> extSet = new TreeSet<String>();
+         for (Extension ex : extensions.getAllExtensions()) {
+             if (ex.isCritical()) {
+                 extSet.add(ex.getExtensionId().toString());
+@@ -373,7 +373,7 @@
+         if (extensions == null) {
+             return null;
+         }
+-        Set<String> extSet = new TreeSet<>();
++        Set<String> extSet = new TreeSet<String>();
+         for (Extension ex : extensions.getAllExtensions()) {
+             if (!ex.isCritical()) {
+                 extSet.add(ex.getExtensionId().toString());
+@@ -510,7 +510,7 @@
+             return Collections.emptyMap();
+         }
+         Collection<Extension> exts = extensions.getAllExtensions();
+-        Map<String, java.security.cert.Extension> map = new TreeMap<>();
++        Map<String, java.security.cert.Extension> map = new TreeMap<String, java.security.cert.Extension>();
+         for (Extension ext : exts) {
+             map.put(ext.getId(), ext);
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/x509/X509CRLImpl.java openjdk-boot/jdk/src/share/classes/sun/security/x509/X509CRLImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/x509/X509CRLImpl.java	2012-06-13 00:23:41.063948918 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/x509/X509CRLImpl.java	2012-06-13 00:24:53.264949412 +0100
+@@ -104,8 +104,8 @@
+     private X500Principal    issuerPrincipal = null;
+     private Date             thisUpdate = null;
+     private Date             nextUpdate = null;
+-    private Map<X509IssuerSerial,X509CRLEntry> revokedMap = new TreeMap<>();
+-    private List<X509CRLEntry> revokedList = new LinkedList<>();
++    private Map<X509IssuerSerial,X509CRLEntry> revokedMap = new TreeMap<X509IssuerSerial,X509CRLEntry>();
++    private List<X509CRLEntry> revokedList = new LinkedList<X509CRLEntry>();
+     private CRLExtensions    extensions = null;
+     private final static boolean isExplicit = true;
+     private static final long YR_2050 = 2524636800000L;
+@@ -907,7 +907,7 @@
+         if (extensions == null) {
+             return null;
+         }
+-        Set<String> extSet = new TreeSet<>();
++        Set<String> extSet = new TreeSet<String>();
+         for (Extension ex : extensions.getAllExtensions()) {
+             if (ex.isCritical()) {
+                 extSet.add(ex.getExtensionId().toString());
+@@ -928,7 +928,7 @@
+         if (extensions == null) {
+             return null;
+         }
+-        Set<String> extSet = new TreeSet<>();
++        Set<String> extSet = new TreeSet<String>();
+         for (Extension ex : extensions.getAllExtensions()) {
+             if (!ex.isCritical()) {
+                 extSet.add(ex.getExtensionId().toString());
