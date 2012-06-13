@@ -364,7 +364,15 @@ endif
 if JAVAC_LACKS_DIAMOND
 ICEDTEA_BOOT_PATCHES += patches/boot/ecj-diamond.patch
 else
+if USING_CACAO
+ICEDTEA_BOOT_PATCHES += patches/boot/compile-for-7-cacao-mem.patch
+else
+if BUILD_CACAO
+ICEDTEA_BOOT_PATCHES += patches/boot/compile-for-7-cacao-mem.patch
+else
 ICEDTEA_BOOT_PATCHES += patches/boot/compile-for-7.patch
+endif
+endif
 endif
 
 if DTDTYPE_QNAME

@@ -1,0 +1,42 @@
+diff -Nru openjdk-boot.orig/hotspot/make/linux/makefiles/rules.make openjdk-boot/hotspot/make/linux/makefiles/rules.make
+--- openjdk-boot.orig/hotspot/make/linux/makefiles/rules.make	2012-06-13 03:40:41.009311243 +0100
++++ openjdk-boot/hotspot/make/linux/makefiles/rules.make	2012-06-13 03:48:41.838257784 +0100
+@@ -139,8 +139,8 @@
+ RUN.JAR$(MAKE_VERBOSE) += >/dev/null
+ 
+ # Settings for javac
+-BOOT_SOURCE_LANGUAGE_VERSION = 6
+-BOOT_TARGET_CLASS_VERSION = 6
++BOOT_SOURCE_LANGUAGE_VERSION = 7
++BOOT_TARGET_CLASS_VERSION = 7
+ JAVAC_FLAGS = -g -encoding ascii -J-Xmx256m
+ BOOTSTRAP_JAVAC_FLAGS = $(JAVAC_FLAGS) -source $(BOOT_SOURCE_LANGUAGE_VERSION) -target $(BOOT_TARGET_CLASS_VERSION)
+ 
+diff -Nru openjdk-boot.orig/hotspot/make/solaris/makefiles/rules.make openjdk-boot/hotspot/make/solaris/makefiles/rules.make
+--- openjdk-boot.orig/hotspot/make/solaris/makefiles/rules.make	2012-06-13 03:40:41.009311243 +0100
++++ openjdk-boot/hotspot/make/solaris/makefiles/rules.make	2012-06-13 11:36:03.057522188 +0100
+@@ -131,8 +131,8 @@
+ RUN.JAR$(MAKE_VERBOSE) += >/dev/null
+ 
+ # Settings for javac
+-BOOT_SOURCE_LANGUAGE_VERSION = 6
+-BOOT_TARGET_CLASS_VERSION = 6
++BOOT_SOURCE_LANGUAGE_VERSION = 7
++BOOT_TARGET_CLASS_VERSION = 7
+ JAVAC_FLAGS = -g -encoding ascii -J-Xmx256m
+ BOOTSTRAP_JAVAC_FLAGS = $(JAVAC_FLAGS) -source $(BOOT_SOURCE_LANGUAGE_VERSION) -target $(BOOT_TARGET_CLASS_VERSION)
+ 
+diff -Nru openjdk-boot.orig/hotspot/make/windows/makefiles/rules.make openjdk-boot/hotspot/make/windows/makefiles/rules.make
+--- openjdk-boot.orig/hotspot/make/windows/makefiles/rules.make	2012-06-13 03:40:41.009311243 +0100
++++ openjdk-boot/hotspot/make/windows/makefiles/rules.make	2012-06-13 11:36:19.537797380 +0100
+@@ -43,8 +43,8 @@
+ !endif
+ 
+ # Settings for javac
+-BOOT_SOURCE_LANGUAGE_VERSION=6
+-BOOT_TARGET_CLASS_VERSION=6
++BOOT_SOURCE_LANGUAGE_VERSION=7
++BOOT_TARGET_CLASS_VERSION=7
+ JAVAC_FLAGS=-g -encoding ascii -J-Xmx256m
+ BOOTSTRAP_JAVAC_FLAGS=$(JAVAC_FLAGS) -source $(BOOT_SOURCE_LANGUAGE_VERSION) -target $(BOOT_TARGET_CLASS_VERSION)
+ 
