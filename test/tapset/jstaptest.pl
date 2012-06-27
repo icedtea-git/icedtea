@@ -908,7 +908,7 @@ sub get_arch_dir {
         return "amd64";
     }
     elsif ($sys_arch =~ m/i.86/) {
-        return "i586";
+        return "i386";
     }
     elsif ($sys_arch =~ m/alpha/) {
         return "alpha";
