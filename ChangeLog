@@ -1,3 +1,19 @@
+2012-06-28  Omair Majid  <omajid@redhat.com>
+
+	PR1050: Stream objects not garbage collected
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java:
+	Add new member variable contextPointer.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1new):
+	Save j_context as contextPointer.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1unref):
+	Delete the global ref and dellocate the java context.
+	(cork_callback): Don't check userdata. It is NULL.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1cork):
+	Dont allocate and pass a java_context to pa_stream_cork. It is not needed.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java
+	(testOpenCloseLotsOfTimes): New method.
+
 2011-06-10  Denis Lila  <dlila@redhat.com>
 
 	* pulseaudio/*: Fix whitespace.

@@ -115,6 +115,19 @@ public class PulseAudioClipTest {
 		clip.close();
 	}
 
+    @Test
+    public void testOpenCloseLotsOfTimes() throws LineUnavailableException,
+            UnsupportedAudioFileException, IOException {
+        File soundFile = new File("testsounds/startup.wav");
+        AudioInputStream audioInputStream = AudioSystem
+                .getAudioInputStream(soundFile);
+        for (int i = 0; i < 1000; i++) {
+            Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
+            clip.open(audioInputStream);
+            clip.close();
+        }
+    }
+
 	@Test
 	public void testLoop4Times() throws LineUnavailableException, IOException,
 			UnsupportedAudioFileException {

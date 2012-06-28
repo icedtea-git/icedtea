@@ -256,6 +256,8 @@ JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1
     j_context->env = env;
     j_context->obj = (*env)->NewGlobalRef(env, obj);
 
+    setJavaPointer(env, obj, CONTEXT_POINTER, j_context);
+
     pa_context* context = convertJavaPointerToNative(env, contextPointer);
     assert(context);
 
@@ -295,7 +297,7 @@ JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1
         (*env)->ReleaseStringUTFChars(env, nameString,name);
     }
 
-    setJavaPointer(env, obj, "streamPointer", stream);
+    setJavaPointer(env, obj, STREAM_POINTER, stream);
 
     /*
      *
@@ -323,10 +325,17 @@ JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1
  */
 JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1unref
 (JNIEnv* env, jobject obj) {
+
+    java_context* j_context = getJavaPointer(env, obj, CONTEXT_POINTER);
+    assert(j_context);
+    (*env)->DeleteGlobalRef(env, j_context->obj);
+    free(j_context);
+    setJavaPointer(env, obj, CONTEXT_POINTER, NULL);
+
     pa_stream* stream = getJavaPointer(env, obj, STREAM_POINTER);
     assert(stream);
     pa_stream_unref(stream);
-    setJavaPointer(env, obj, "streamPointer", NULL);
+    setJavaPointer(env, obj, STREAM_POINTER, NULL);
 }
 
 /*
@@ -656,9 +665,7 @@ JNIEXPORT jint JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1
 
 static void cork_callback(pa_stream* stream, int success, void* userdata) {
 
-    java_context* context = userdata;
     assert(stream);
-    assert(context);
     JNIEnv* env = pulse_thread_env;
     assert(env);
     notifyWaitingOperations(env);
@@ -678,11 +685,7 @@ JNIEXPORT jbyteArray JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native
 (JNIEnv* env, jobject obj, jint yes) {
     pa_stream* stream = (pa_stream*)getJavaPointer(env, obj, STREAM_POINTER);
     assert(stream);
-    java_context* j_context = malloc(sizeof(java_context));
-    assert(j_context);
-    j_context->env = env;
-    j_context->obj = (*env)->NewGlobalRef(env, obj);
-    pa_operation* operation = pa_stream_cork(stream, yes, cork_callback, j_context);
+    pa_operation* operation = pa_stream_cork(stream, yes, cork_callback, NULL);
     assert(operation);
     return convertNativePointerToJava(env, operation);
 }
