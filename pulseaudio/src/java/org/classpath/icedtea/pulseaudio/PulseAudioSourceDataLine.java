@@ -179,8 +179,10 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
             synchronized (eventLoop.threadLock) {
 
                 do {
-                    if (writeInterrupted) {
-                        return sizeWritten;
+                    synchronized (this) {
+                        if (writeInterrupted) {
+                            return sizeWritten;
+                        }
                     }
 
                     if (availableSize == -1) {
