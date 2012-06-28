@@ -160,7 +160,10 @@ final class Stream {
 
     public static final String DEFAULT_DEVICE = null;
 
+    // stores a pointer to pa_stream
     private byte[] streamPointer;
+    // stores a pointer to the java_context/this object for callbacks
+    private byte[] contextPointer;
 
     static {
         SecurityWrapper.loadNativeLibrary();
