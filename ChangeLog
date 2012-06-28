@@ -1,5 +1,16 @@
 2012-06-28  Omair Majid  <omajid@redhat.com>
 
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(getMicrosecondLength, getMicrosecondPosition)
+	(setMicrosecondPosition): Use correct factor to convert seconds to
+	microseconds.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(getMicrosecondPosition): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPlaybackLine.java:
+	Define SECONDS_TO_MICROSECONDS.
+
+2012-06-28  Omair Majid  <omajid@redhat.com>
+
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
 	(write): Synchronize access to writeInterrupted flag.
 

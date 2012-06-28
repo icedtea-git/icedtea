@@ -42,6 +42,8 @@ package org.classpath.icedtea.pulseaudio;
  */
 interface PulseAudioPlaybackLine {
 
+    static final int SECONDS_TO_MICROSECONDS = 1000000;
+
     /**
      * Set the volume of the Line (ie, sink input, source, or sink)
      * 

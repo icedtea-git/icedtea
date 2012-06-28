@@ -13,6 +13,7 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 2.3 (2012-XX-XX):
 
 * Bug fixes
+  - PR902: PulseAudioClip getMicrosecondsLength() returns length in milliseconds, not microseconds
   - PR986: IcedTea7 fails to build with IcedTea6 CACAO due to low max heap size
   - PR1050: Stream objects not garbage collected
 
