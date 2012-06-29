@@ -1,3 +1,8 @@
+2012-06-28  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(write): Synchronize access to writeInterrupted flag.
+
 2011-09-29  Xerxes Rånby  <xerxes@zafena.se>
 	    David Henningsson <david.henningsson@canonical.com>
 
