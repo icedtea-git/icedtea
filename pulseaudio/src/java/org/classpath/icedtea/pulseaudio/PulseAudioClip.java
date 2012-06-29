@@ -343,7 +343,7 @@ public final class PulseAudioClip extends PulseAudioDataLine implements Clip,
             return AudioSystem.NOT_SPECIFIED;
         }
         synchronized (clipLock) {
-            return (long) (frameCount / currentFormat.getFrameRate() * 1000);
+            return (long) (frameCount / currentFormat.getFrameRate() * SECONDS_TO_MICROSECONDS);
         }
     }
 
@@ -354,7 +354,7 @@ public final class PulseAudioClip extends PulseAudioDataLine implements Clip,
         }
 
         synchronized (clipLock) {
-            return (long) (framesSinceOpen / currentFormat.getFrameRate() * 1000);
+            return (long) (framesSinceOpen / currentFormat.getFrameRate() * SECONDS_TO_MICROSECONDS);
         }
     }
 
@@ -503,7 +503,7 @@ public final class PulseAudioClip extends PulseAudioDataLine implements Clip,
             throw new IllegalStateException("Line not open");
         }
 
-        float frameIndex = microseconds * currentFormat.getFrameRate() / 1000;
+        float frameIndex = microseconds * currentFormat.getFrameRate() / SECONDS_TO_MICROSECONDS;
 
         /* make frameIndex positive */
         while (frameIndex < 0) {

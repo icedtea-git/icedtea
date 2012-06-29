@@ -254,7 +254,7 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
 
         float frameRate = currentFormat.getFrameRate();
         float time = framesSinceOpen / frameRate; // seconds
-        long microseconds = (long) (time * 1000);
+        long microseconds = (long) (time * SECONDS_TO_MICROSECONDS);
         return microseconds;
     }
 
