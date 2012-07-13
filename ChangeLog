@@ -1,3 +1,11 @@
+2012-07-13  Pavel Tisnovsky  <ptisnovs@redhat.com>
+
+	Resolved conflict between merge jdk7u6-b16 and the fix
+	7043963: AWT workaround missing for Mutter.
+	* Makefile.am,
+	(HOTSPOT_CHANGESET): Updated.
+	(HOTSPOT_SHA256SUM): Likewise.
+
 2012-06-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am,
