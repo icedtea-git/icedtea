@@ -650,7 +650,7 @@ AC_DEFUN([IT_FIND_TOOL],
  AC_SUBST([$1])
 ])
 
-AC_DEFUN([IT_ENABLE_ZERO_BUILD],
+AC_DEFUN_ONCE([IT_ENABLE_ZERO_BUILD],
 [
   AC_REQUIRE([IT_SET_ARCH_SETTINGS])
   AC_MSG_CHECKING([whether to use the zero-assembler port])
@@ -923,7 +923,12 @@ AC_DEFUN([IT_WITH_GCJ],
 
 AC_DEFUN([IT_WITH_HOTSPOT_BUILD],
 [
-  DEFAULT_BUILD="default"
+  AC_REQUIRE([IT_ENABLE_ZERO_BUILD])
+  if test "x${use_zero}" = "xyes"; then
+    DEFAULT_BUILD="zero"
+  else
+    DEFAULT_BUILD="default"
+  fi
   AC_MSG_CHECKING([which HotSpot build to use])
   AC_ARG_WITH([hotspot-build],
 	      [AS_HELP_STRING(--with-hotspot-build=BUILD,the HotSpot build to use [[BUILD=default]])],

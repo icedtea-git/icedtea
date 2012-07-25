@@ -8,7 +8,7 @@ CORBA_CHANGESET = a7ae26981729
 HOTSPOT_CHANGESET = 3359eef69d1e
 JAXP_CHANGESET = 411912b74c9c
 JAXWS_CHANGESET = d5997e503698
-JDK_CHANGESET = 1e341b69c2f7
+JDK_CHANGESET = 0f03c3a0bf94
 LANGTOOLS_CHANGESET = 480d4eb554fc
 OPENJDK_CHANGESET = 7f5ea73378df
 
@@ -16,7 +16,7 @@ CORBA_SHA256SUM = d1e6246b72f4efcc2834ce22fa6d7e9540af77803b4450e3c7b8beebc553b2
 HOTSPOT_SHA256SUM = c10b4208b76c1012e91774bc8a29f561fbb4747fb5bbebe3267f3cbaa24b8c5a
 JAXP_SHA256SUM = 77de1a8c4ab40652d0cf9c862c543376a877eb9399ad20e653c7103c599640e4
 JAXWS_SHA256SUM = 4fdb7a02b9d42fef84a7fb0f2de2b4c15a737a14be93b5de1c5f6d658072cdea
-JDK_SHA256SUM = c8b080004b6e61f66c27a8213ed54840cd5aedc4e141999db7e3e4181bbef1da
+JDK_SHA256SUM = 9c5790b4e35f52c351900b9e71ce0c81479961a6146cbf6b74ef2a2d3c802fd5
 LANGTOOLS_SHA256SUM = 6a3995facdaae90fd7c68faa6c8a566825317136a0064892d71a76f5d5f09efe
 OPENJDK_SHA256SUM = a426ab622e51d5ca40a7da4af4b42c2c216f7c27b56190df36e3bf7fea8529ca
 
@@ -47,7 +47,10 @@ JAXP_URL = $(ICEDTEA_HG_URL)/jaxp
 JAXWS_URL = $(ICEDTEA_HG_URL)/jaxws
 JDK_URL = $(ICEDTEA_HG_URL)/jdk
 LANGTOOLS_URL = $(ICEDTEA_HG_URL)/langtools
-HOTSPOT_URL = $(ICEDTEA_HG_URL)/hotspot
+
+HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$4}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+HS_URL = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
 
 # Build directories
 
@@ -140,16 +143,6 @@ else
   HOTSPOT_SRC_ZIP = hotspot.tar.gz
 endif
 
-if WITH_ALT_HSBUILD
-  HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$4}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
-  HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
-  HS_URL = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
-else
-  HS_SHA256SUM = $(HOTSPOT_SHA256SUM)
-  HS_CHANGESET = $(HOTSPOT_CHANGESET)
-  HS_URL = $(HOTSPOT_URL)
-endif
-
 if ENABLE_PULSE_JAVA
 PULSE_JAVA_TARGET = stamps/pulse-java.stamp
 endif
@@ -239,6 +232,15 @@ ICEDTEA_PATCHES =
 
 # Conditional patches
 
+if WITH_ALT_HSBUILD
+ICEDTEA_PATCHES += \
+	patches/hotspot/$(HSBUILD)/7089790-bsd_port.patch \
+	patches/hotspot/$(HSBUILD)/7098194-macosx_port.patch \
+	patches/hotspot/$(HSBUILD)/7116189-setnativethreadname.patch \
+	patches/hotspot/$(HSBUILD)/6924259-string_offset.patch \
+	patches/hotspot/$(HSBUILD)/revert_arm_debug.patch
+endif
+
 if WITH_RHINO
 ICEDTEA_PATCHES += \
 	patches/rhino.patch
@@ -318,7 +320,7 @@ ICEDTEA_BOOT_PATCHES = \
 	patches/boot/corba-dependencies.patch \
 	patches/boot/jaxws-langtools-dependency.patch \
 	patches/boot/jaxws-jdk-dependency.patch \
-	patches/boot/hotspot-jdk-dependency.patch \
+	patches/boot/hotspot/${HSBUILD}/jdk-dependency.patch \
 	patches/boot/ecj-multicatch.patch \
 	patches/boot/ecj-trywithresources.patch \
 	patches/boot/ecj-autoboxing.patch \
@@ -986,6 +988,7 @@ endif
 if USE_ALT_HOTSPOT_SRC_ZIP
 	ln -sf $(ALT_HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP)
 endif
+	echo "Using HotSpot build: ${HSBUILD}"
 	if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \

@@ -1,3 +1,34 @@
+2012-07-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	(JDK_CHANGESET): Temporarily revert to u6-b16.
+	(JDK_SHA256SUM): Likewise.
+	(HS_SHA256SUM): Always set from hotspot.map
+	(HS_CHANGESET): Likewise.
+	(HS_URL): LIkewise.
+	(ICEDTEA_PATCHES): Add additional patches for HotSpot zero.
+	(ICEDTEA_BOOT_PATCHES): Use different hotspot-jdk-dependency
+	patch dependent on version of HotSpot in use.
+	(download-openjdk): Echo HotSpot build being used.
+	* acinclude.m4:
+	(IT_ENABLE_ZERO_BUILD): Use AC_DEFUN_ONCE.
+	(IT_WITH_HOTSPOT_BUILD): Make default "zero" if Zero is enabled.
+	* hotspot.map:
+	Add default (previous configuration) and zero (from 2.1).
+	* patches/boot/hotspot/zero/jdk-dependency.patch:
+	Regenerated against 2.1 HotSpot.
+	* patches/hotspot/zero/6924259-string_offset.patch:
+	Backport so that HotSpot can work with current java.lang.String.
+	* patches/hotspot/zero/7089790-bsd_port.patch,
+	* patches/hotspot/zero/7098194-macosx_port.patch:
+	Backported for modern SystemTap support & setnativethreadname.
+	* patches/hotspot/zero/7116189-setnativethreadname.patch:
+	Expose setnativethreadname.
+	* patches/hotspot/zero/7175133-string_offset.patch:
+	Fix jinfo with new java.lang.String.
+	* patches/hotspot/zero/revert_arm_debug.patch:
+	Remove definition of ps() in vmError.cpp (now defined in debug.cpp)
+
 2012-07-13  Pavel Tisnovsky  <ptisnovs@redhat.com>
 
 	Resolved conflict between merge jdk7u6-b16 and the fix

@@ -1,0 +1,55 @@
+# HG changeset patch
+# User aph
+# Date 1331812639 14400
+# Node ID c1d02b230f8f510a81f90af5aecd987ae682ebf2
+# Parent  61248c69e562f003071f4fd8c814b62b25d5fe94
+Add patches/arm-debug.patch from IcedTea 6
+
+diff --git a/src/share/vm/utilities/vmError.cpp b/src/share/vm/utilities/vmError.cpp
+--- openjdk/hotspot/src/share/vm/utilities/vmError.cpp
++++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp
+@@ -248,19 +248,6 @@
+   return buf;
+ }
+ 
+-#ifdef PRODUCT
+-extern "C" void ps() {
+-  fdStream out(defaultStream::output_fd());
+-  JavaThread* thread = JavaThread::active();
+-  char *buf = new char[1024*1024];
+-  VMError err(thread, "", 0, "", "");
+-
+-  err.print_stack_trace(&out, thread, buf, 1024*1024, true);
+-
+-  delete[] buf;
+-}
+-#endif // PRODUCT
+-
+ void VMError::print_stack_trace(outputStream* st, JavaThread* jt,
+                                 char* buf, int buflen, bool verbose) {
+ #ifdef ZERO
+diff --git a/src/share/vm/utilities/vmError.hpp b/src/share/vm/utilities/vmError.hpp
+--- openjdk/hotspot/src/share/vm/utilities/vmError.hpp
++++ openjdk/hotspot/src/share/vm/utilities/vmError.hpp
+@@ -30,10 +30,6 @@
+ 
+ class VM_ReportJavaOutOfMemory;
+ 
+-#ifdef PRODUCT
+-extern "C" void ps();
+-#endif // PRODUCT
+-
+ class VMError : public StackObj {
+   friend class VM_ReportJavaOutOfMemory;
+ 
+@@ -97,10 +101,6 @@
+   const char* detail_msg() const { return _detail_msg; }
+   bool should_report_bug(unsigned int id) { return id != oom_error; }
+ 
+-#ifdef PRODUCT
+-  friend void ps();
+-#endif // PRODUCT
+-
+ public:
+   // Constructor for crashes
+   VMError(Thread* thread, unsigned int sig, address pc, void* siginfo,

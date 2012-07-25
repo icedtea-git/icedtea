@@ -1,0 +1,67 @@
+# HG changeset patch
+# User phh
+# Date 1322576462 18000
+# Node ID 242b4e0e6f739e6225c4a95e4cb779c881d032f9
+# Parent  c17bc65648de3d12a0c5aa8d84b509b1ddfe1a4a
+7116189: Export JVM_SetNativeThreadName from Hotspot
+Summary: Added JVM_SetNativeThreadName to linker mapfiles on Solaris and Linux.
+Reviewed-by: dcubed, dholmes
+Contributed-by: michael.x.mcmahon@oracle.com
+
+diff --git a/make/linux/makefiles/mapfile-vers-debug b/make/linux/makefiles/mapfile-vers-debug
+--- openjdk/hotspot/make/linux/makefiles/mapfile-vers-debug
++++ openjdk/hotspot/make/linux/makefiles/mapfile-vers-debug
+@@ -1,7 +1,3 @@
+-#
+-# @(#)mapfile-vers-debug	1.18 07/10/25 16:47:35
+-#
+-
+ #
+ # Copyright (c) 2002, 2011, Oracle and/or its affiliates. All rights reserved.
+ # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+@@ -221,6 +217,7 @@
+                 JVM_SetArrayElement;
+                 JVM_SetClassSigners;
+                 JVM_SetLength;
++                JVM_SetNativeThreadName;
+                 JVM_SetPrimitiveArrayElement;
+                 JVM_SetProtectionDomain;
+                 JVM_SetSockOpt;
+diff --git a/make/linux/makefiles/mapfile-vers-product b/make/linux/makefiles/mapfile-vers-product
+--- openjdk/hotspot/make/linux/makefiles/mapfile-vers-product
++++ openjdk/hotspot/make/linux/makefiles/mapfile-vers-product
+@@ -1,7 +1,3 @@
+-#
+-# @(#)mapfile-vers-product	1.19 08/02/12 10:56:37
+-#
+-
+ #
+ # Copyright (c) 2002, 2011, Oracle and/or its affiliates. All rights reserved.
+ # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+@@ -221,6 +217,7 @@
+                 JVM_SetArrayElement;
+                 JVM_SetClassSigners;
+                 JVM_SetLength;
++                JVM_SetNativeThreadName;
+                 JVM_SetPrimitiveArrayElement;
+                 JVM_SetProtectionDomain;
+                 JVM_SetSockOpt;
+diff --git a/make/solaris/makefiles/mapfile-vers b/make/solaris/makefiles/mapfile-vers
+--- openjdk/hotspot/make/solaris/makefiles/mapfile-vers
++++ openjdk/hotspot/make/solaris/makefiles/mapfile-vers
+@@ -1,7 +1,3 @@
+-#
+-# @(#)mapfile-vers	1.32 07/10/25 16:47:36
+-#
+-
+ #
+ # Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
+ # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+@@ -221,6 +217,7 @@
+ 		JVM_SetArrayElement;
+ 		JVM_SetClassSigners;
+ 		JVM_SetLength;
++                JVM_SetNativeThreadName;
+ 		JVM_SetPrimitiveArrayElement;
+ 		JVM_SetProtectionDomain;
+ 		JVM_SetSockOpt;

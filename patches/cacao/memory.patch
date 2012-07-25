@@ -1,15 +1,3 @@
-diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/rules.make openjdk/hotspot/make/bsd/makefiles/rules.make
---- openjdk.orig/hotspot/make/bsd/makefiles/rules.make	2012-06-08 17:13:09.000000000 +0100
-+++ openjdk/hotspot/make/bsd/makefiles/rules.make	2012-06-12 10:50:20.974290246 +0100
-@@ -128,7 +128,7 @@
- # Settings for javac
- BOOT_SOURCE_LANGUAGE_VERSION = 6
- BOOT_TARGET_CLASS_VERSION = 6
--JAVAC_FLAGS = -g -encoding ascii
-+JAVAC_FLAGS = -g -encoding ascii -J-Xmx256m
- BOOTSTRAP_JAVAC_FLAGS = $(JAVAC_FLAGS) -source $(BOOT_SOURCE_LANGUAGE_VERSION) -target $(BOOT_TARGET_CLASS_VERSION)
- 
- # With parallel makes, print a message at the end of compilation.
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/rules.make openjdk/hotspot/make/linux/makefiles/rules.make
 --- openjdk.orig/hotspot/make/linux/makefiles/rules.make	2012-06-08 17:13:09.000000000 +0100
 +++ openjdk/hotspot/make/linux/makefiles/rules.make	2012-06-12 10:50:20.982290377 +0100
@@ -84,3 +72,15 @@ diff -Nru openjdk.orig/langtools/make/build.xml openjdk/langtools/make/build.xml
                      <compilerarg line="@{bootclasspath.opt}"/>
                      <compilerarg line="${javac.no.jdk.warnings}"/>
                      <compilerarg line="${javac.version.opt}"/>
+diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/rules.make openjdk/hotspot/make/bsd/makefiles/rules.make
+--- openjdk.orig/hotspot/make/bsd/makefiles/rules.make	2012-06-08 17:13:09.000000000 +0100
++++ openjdk/hotspot/make/bsd/makefiles/rules.make	2012-06-12 10:50:20.974290246 +0100
+@@ -128,7 +128,7 @@
+ # Settings for javac
+ BOOT_SOURCE_LANGUAGE_VERSION = 6
+ BOOT_TARGET_CLASS_VERSION = 6
+-JAVAC_FLAGS = -g -encoding ascii
++JAVAC_FLAGS = -g -encoding ascii -J-Xmx256m
+ BOOTSTRAP_JAVAC_FLAGS = $(JAVAC_FLAGS) -source $(BOOT_SOURCE_LANGUAGE_VERSION) -target $(BOOT_TARGET_CLASS_VERSION)
+ 
+ # With parallel makes, print a message at the end of compilation.
