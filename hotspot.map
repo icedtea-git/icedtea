@@ -1,3 +1,3 @@
 # version url changeset sha256sum
-default http://icedtea.classpath.org/hg/icedtea7-forest/hotspot 3359eef69d1e c10b4208b76c1012e91774bc8a29f561fbb4747fb5bbebe3267f3cbaa24b8c5a
-zero http://icedtea.classpath.org/hg/release/icedtea7-forest-2.1/hotspot 8b7c4c5f6ba9 22866990d143e76ced94b76defa3051e5e5d9a51fd272d63daa0df272d6406a2
+default http://icedtea.classpath.org/hg/icedtea7-forest/hotspot 37da454d89f8 9df26636ed3133d08a5a9c6fe248d8306265c57b50efd3ab9580655898bbe9a2
+zero http://icedtea.classpath.org/hg/release/icedtea7-forest-2.1/hotspot b41a43560dc8 25d13a4be1c343b620d2a85a47b8b654abaee3541968d205128ca69cf46fc17c
