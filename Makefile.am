@@ -99,16 +99,26 @@ OPENJDK_SOURCEPATH_DIRS = \
 SOURCEPATH_DIRS = $(abs_top_srcdir)/generated:$(OPENJDK_SOURCEPATH_DIRS)
 
 # Sources used from OpenJDK.
+ICEDTEA_BOOTSTRAP_CLASSES =
+
 if LACKS_SUN_AWT_TOOLKIT
 #PR43148 - javac fails due to missing java.util.regex.Matcher.quoteReplacement
-#PR48033 - Missing javax.management.remote.JMXServiceURL
-#PR48034 - javax.management.modelmbean.ModelMBeanInfo
 #PR42003 - Missing javax.swing.plaf.basic.BasicDirectoryModel methods cause OpenJDK build failure 
-ICEDTEA_BOOTSTRAP_CLASSES = \
+ICEDTEA_BOOTSTRAP_CLASSES += \
 	$(SHARE)/java/util/regex/Matcher.java \
-	$(SHARE)/javax/management/remote/JMXServiceURL.java \
-	$(SHARE)/javax/management/modelmbean/ModelMBeanInfo.java \
 	$(SHARE)/javax/swing/plaf/basic/BasicDirectoryModel.java
+endif
+
+#PR48033 - Missing javax.management.remote.JMXServiceURL
+if LACKS_JAVAX_MANAGEMENT_REMOTE_JMXSERVICEURL
+ICEDTEA_BOOTSTRAP_CLASSES += \
+	$(SHARE)/javax/management/remote/JMXServiceURL.java
+endif
+
+#PR48034 - javax.management.modelmbean.ModelMBeanInfo
+if LACKS_JAVAX_MANAGEMENT_MODELMBEAN_MODELMBEANINFO
+ICEDTEA_BOOTSTRAP_CLASSES = \
+	$(SHARE)/javax/management/modelmbean/ModelMBeanInfo.java
 endif
 
 # Settings for javac

@@ -1,3 +1,14 @@
+2012-08-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	(ICEDTEA_BOOTSTRAP_CLASSES): Only add
+	javax.management.remote.JMXServiceURL
+	and javax.management.modelmbean.ModelMBeanInfo
+	if missing.
+	* configure.ac: Check for
+	javax.management.remote.JMXServiceURL and
+	javax.management.modelmbean.ModelMBeanInfo
+
 2012-07-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
