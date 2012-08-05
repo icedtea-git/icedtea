@@ -14,7 +14,7 @@ my $logfile_name;
 use Getopt::Std;
 $Getopt::Std::OUTPUT_HELP_VERSION = 1;
 # sub main::HELP_MESSAGE defined below.
-our($opt_B, $opt_A, $opt_o, $opt_a, $opt_S, $opt_J);
+our($opt_B, $opt_A, $opt_o, $opt_a, $opt_S, $opt_J, $opt_p, $opt_j);
 
 # Gigantic nested array.
 # Each element in outer array should be of the form:
@@ -546,6 +546,8 @@ my $jvm_dir = "";
 my $jvm_so = "";
 my $test_sourcedir = ".";
 my @include_dirs = ();
+my $run_test_probes = 1;
+my $run_test_jstack = 1;
 
 
 ### MAIN BODY
@@ -553,11 +555,30 @@ my @include_dirs = ();
 process_args();
 log_preamble();
 build_tests();
-my @detected_probes = detect_probes(@probestrings);
-if (can_run_probes()) {
-  test_probes(@detected_probes);
-  test_jstack();
+
+my $can_probe = can_run_probes();
+my @detected_probes;
+
+if ($run_test_probes) {
+  @detected_probes = detect_probes(@probestrings);
+  if ($can_probe) {
+    test_probes(@detected_probes);
+  }
 }
+
+if ($run_test_jstack && $can_probe) {
+  # Default, no arguments.
+  test_jstack("");
+  # Explicitly turn on compressed oops.
+  test_jstack("-XX:+UseCompressedOops");
+  # Explicitly turn off compressed oops.
+  test_jstack("-XX:-UseCompressedOops");
+  # Force some shift value for compressed oops by having a 4GB+ heap.
+  test_jstack("-XX:+UseCompressedOops -Xmx5G");
+  # Explicitly disable compressed oops, but use large heap anyway.
+  test_jstack("-XX:-UseCompressedOops -Xmx5G");
+}
+
 summarize();
 log_postamble();
 clean_up();
@@ -571,8 +592,9 @@ exit($broken_count | $undetected_count);
 #     based on args. 
 sub process_args {
     die "Try \"jstaptest.pl --help\" for usage information.\n"
-            if (!getopts('B:A:J:o:a:S:') || ($opt_o && $opt_a));
-                                            # -o and -a are mutually exclusive.
+            if (!getopts('B:A:J:o:a:S:pj')
+                || ($opt_o && $opt_a)   # -o and -a are mutually exclusive.
+                || ($opt_p && $opt_j)); # -p and -j are mutually exclusive.
     if ($opt_B && $opt_A) {
         die "Directory $opt_B not found." unless (-d $opt_B);
         die "Directory $opt_B/j2sdk-image/tapset not found.\nTry rebuilding Icedtea with systemtap support.\n"
@@ -609,6 +631,14 @@ sub process_args {
                 unless (-d dirname($opt_a));
         open($log_file, '>>', $opt_a) or
                 die "Couldn't open log file: $opt_a\n$!";
+    }
+    if ($opt_p) {
+      $run_test_probes = 1;
+      $run_test_jstack = 0;
+    }
+    if ($opt_j) {
+      $run_test_probes = 0;
+      $run_test_jstack = 1;
     }
 }
 
@@ -790,13 +820,14 @@ sub test_probes {
 }
 
 sub test_jstack {
-    log_and_print("Testing if jstack works as expected...");
     my ($stap_pre, $stap_script, $stap_post, $stap_command, $stap_result);
+    my ($jargs) = @_;
+    log_and_print("Testing if jstack works as expected with '$jargs'...");
 
     # Run staptest.SystemtapTester compiled_method_unload which does a lot
     # and can generate a somewhat "deep" stack.
     $stap_pre = "stap " . join(' ', @tapset_dirs) . " -e '";
-    $stap_post = "' -c '$java_exec staptest.SystemtapTester compiled_method_unload'";
+    $stap_post = "' -c '$java_exec $jargs staptest.SystemtapTester compiled_method_unload'";
 
     # Simple test jstack() should at least show our main method.
     # The test program runs the unloaded probe tester twice, pick the second
@@ -857,7 +888,7 @@ sub summarize {
 
 # Any text that should follow a test run in the log file goes here.
 sub log_postamble {
-    if ($broken_count | $undetected_count) {
+    if ($broken_count | $undetected_count | $broken_jstack) {
         log_and_print("Some tests did not work as expected.  See file " . 
             $logfile_name . " for details.");
     }
@@ -964,7 +995,7 @@ sub main::HELP_MESSAGE {
     print("\n");
     print("To run test suite:\n");
     print("\n");
-    print("   $ ./jstaptest.sh [[--help] | [<[-B <DIR> -A <ARCH>] | [-J <DIR>]> [-S <DIR>] [-<o|a> <LOGFILE>]]]\n");
+    print("   $ ./jstaptest.sh [[--help] | [<[-B <DIR> -A <ARCH>] | [-J <DIR>]> [-S <DIR>] [-<o|a> <LOGFILE>]]] -<p|j>\n");
     print("\n");
     print("--help will display this help message.\n");
     print("\n");
@@ -1002,6 +1033,11 @@ sub main::HELP_MESSAGE {
     print("    or are not detected by systemtap, along with a record of\n");
     print("    the arguments passed to the script and the command executed\n");
     print("    for each test\n");
+    print("\n");
+    print("-p specifies that only the tapset probes should be tested.\n");
+    print("-j specifies that only the jstack tapset should be tested.\n");
+    print("Only one of -p or -j may be given. Both are tested by default.\n");
+    print("\n");
     print("\n");
 }
 
