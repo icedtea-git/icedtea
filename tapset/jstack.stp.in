@@ -49,6 +49,7 @@ global Universe_methodKlassObj;
 global Universe_collectedHeap;
 global HeapWordSize;
 global CodeCache_heap;
+global NarrowOopStruct;
 
 global sp_register;
 global fp_register;
@@ -70,9 +71,6 @@ probe hotspot.vm_init_end
   Universe_methodKlassObj[pid()] = %( systemtap_v >= "1.8"
                                      %? @var("_methodKlassObj@universe.cpp")
                                      %: $_methodKlassObj %);
-
-  // For compressed oops.
-  // Universe_heap_base = $_heap_base;
 
   /**
    * The Universe class holds some of the interesting statics for
@@ -109,6 +107,17 @@ probe hotspot.vm_init_end
                             %? @var("_heap@codeCache.cpp")
                             %: $_heap %);
 
+  /**
+   * Does target process use CompressedOops ?
+   */
+  NarrowOopStruct[pid()] = 0;
+  %( systemtap_v >= "1.8"
+    %? if (@var("UseCompressedOops@globals.cpp"))
+         NarrowOopStruct[pid()] = &@var("_narrow_oop@universe.cpp");
+    %: if($UseCompressedOops)
+         NarrowOopStruct[pid()] = $_narrow_oop;
+  %)
+
   // Should really check arch of user space (for 32bit jvm on 64bit kernel).
   %( arch == "i386" %?
      sp_register = "esp";
@@ -142,6 +151,7 @@ probe hotspot.vm_shutdown
   delete(Universe_collectedHeap[pid()]);
   delete(HeapWordSize[pid()]);
   delete(CodeCache_heap[pid()]);
+  delete(NarrowOopStruct[pid()]);
   delete(vm_inited[pid()]);
 }
 
@@ -353,8 +363,22 @@ function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
                 isMethodOop = 0
               else
                 {
-                  methodOopKlass = @cast(methodOopPtr, "methodOopDesc",
-                                         "@ABS_SERVER_LIBJVM_SO@")->_metadata->_klass;
+                  if (NarrowOopStruct[pid()])
+                    {
+                      methodOopKlass = @cast(methodOopPtr, "methodOopDesc",
+                                             "@ABS_SERVER_LIBJVM_SO@")->_metadata->_compressed_klass;
+                      methodOopKlass = (@cast(NarrowOopStruct[pid()],
+                                              "NarrowOopStruct",
+                                              "@ABS_SERVER_LIBJVM_SO@")->_base
+                                        + (methodOopKlass
+                                           << @cast(NarrowOopStruct[pid()],
+                                                    "NarrowOopStruct",
+                                                    "@ABS_SERVER_LIBJVM_SO@")->_shift));
+                    }
+                  else
+                    methodOopKlass = @cast(methodOopPtr, "methodOopDesc",
+                                           "@ABS_SERVER_LIBJVM_SO@")->_metadata->_klass;
+
                   isMethodOop = (methodOopKlass == Universe_methodKlassObj[pid()]);
                 }
 
