@@ -1,3 +1,10 @@
+2012-08-03  Yasumasa Suenaga  <suenaga.yasumasa@lab.ntt.co.jp>
+
+	* tapset/jstack.stp.in (NarrowOopStruct): New global.
+	(hotspot.vm_init_end): Initialize NarrowOopStruct.
+	(hotspot.vm_shutdown): Delete NarrowOopStruct for pid.
+	(jstack_call): Use NarrowOopStruct to calculate methodOopKlass.
+
 2012-03-13  Mark Wielaard  <mjw@redhat.com>
 
 	* tapset/jstack.stp.in: Wrap heap accessors in try-catch block to be
