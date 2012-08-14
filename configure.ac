@@ -120,6 +120,7 @@ IT_GETDTDTYPE_CHECK
 IT_CHECK_FOR_CLASS([SUN_AWT_TOOLKIT], [sun.awt.SunToolkit])
 IT_CHECK_FOR_CLASS([JAVAX_MANAGEMENT_REMOTE_JMXSERVICEURL], [javax.management.remote.JMXServiceURL])
 IT_CHECK_FOR_CLASS([JAVAX_MANAGEMENT_MODELMBEAN_MODELMBEANINFO], [javax.management.modelmbean.ModelMBeanInfo])
+IT_CHECK_FOR_METHOD([JAVA_UTIL_REGEX_MATCHER_QUOTEREPLACEMENT],[java.util.regex.Matcher.quoteReplacement],[java.util.regex.Matcher],["quoteReplacement",String.class],java.util.regex.Matcher.quoteReplacement("Blah"))
 IT_CHECK_ENABLE_WARNINGS
 IT_DIAMOND_CHECK
 IT_BYTECODE7_CHECK

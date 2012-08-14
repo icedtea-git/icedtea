@@ -1180,7 +1180,7 @@ public class TestImpl
   public native void doStuff();
 }
 EOF
-if $JAVAC -cp . $JAVACFLAGS $SUBCLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+if $JAVAC -cp . $JAVACFLAGS -source 5 -target 5 $SUBCLASS >&AS_MESSAGE_LOG_FD 2>&1; then
   if $JAVAH -classpath . $SUB >&AS_MESSAGE_LOG_FD 2>&1; then
     if cat $SUBHEADER | grep POTATO >&AS_MESSAGE_LOG_FD 2>&1; then
       it_cv_cp39408_javah=no;
@@ -1231,7 +1231,7 @@ public class Test
     }
 }
 EOF
-if $JAVAC -cp . $JAVACFLAGS $SRC >&AS_MESSAGE_LOG_FD 2>&1; then
+if $JAVAC -cp . $JAVACFLAGS -source 5 -target 5 $SRC >&AS_MESSAGE_LOG_FD 2>&1; then
   if $JAVAH -classpath . $CLASSFILE >&AS_MESSAGE_LOG_FD 2>&1; then
     if test -e Test_Inner.h ; then
       it_cv_cp45526_javah=no;
@@ -1332,7 +1332,7 @@ public class Test
   }
 }]
 EOF
-if $JAVAC -cp . $JAVACFLAGS $CLASS >&AS_MESSAGE_LOG_FD 2>&1 ; then
+if $JAVAC -cp . $JAVACFLAGS -source 5 -target 5 $CLASS >&AS_MESSAGE_LOG_FD 2>&1 ; then
   if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1 ; then
     it_cv_cp40616=no;
   else
@@ -1372,7 +1372,7 @@ public class Test
   }
 }]
 EOF
-  if $JAVAC -cp . $JAVACFLAGS $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+  if $JAVAC -cp . $JAVACFLAGS -source 5 -target 5 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
     if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1; then
       it_cv_cp40630=no;
     else
@@ -1513,7 +1513,7 @@ public class Test
 }
 ]
 EOF
-if $JAVAC -cp . $JAVACFLAGS -nowarn $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+if $JAVAC -cp . $JAVACFLAGS -source 5 -target 5 -nowarn $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
   if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1; then
       it_cv_$1=no;
   else
@@ -1766,7 +1766,7 @@ public class Test
     }
 }]
 EOF
-  if $JAVAC -cp . $JAVACFLAGS -source 7 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+  if $JAVAC -cp . $JAVACFLAGS -source 7 -target 7 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
     it_cv_diamond=no;
   else
     it_cv_diamond=yes;
@@ -2297,4 +2297,62 @@ AC_DEFUN([IT_USING_CACAO],[
   AC_SUBST(USING_CACAO)
   AM_CONDITIONAL(USING_CACAO, test "x${USING_CACAO}" = "xyes")
   AC_PROVIDE([$0])dnl
+])
+
+dnl Generic macro to check for a Java method
+dnl Takes four arguments: the name of the macro,
+dnl the name of the class, the method signature
+dnl and an example call to the method.  The macro name
+dnl is usually the name of the class with '.'
+dnl replaced by '_' and all letters capitalised.
+dnl e.g. IT_CHECK_FOR_METHOD([JAVA_UTIL_REGEX_MATCHER_QUOTEREPLACEMENT],[java.util.regex.Matcher.quoteReplacement],[java.util.regex.Matcher],["quoteReplacement",String.class],java.util.regex.Matcher.quoteReplacement("Blah"))
+AC_DEFUN([IT_CHECK_FOR_METHOD],[
+AC_REQUIRE([IT_CHECK_JAVA_AND_JAVAC_WORK])
+AC_CACHE_CHECK([if $2 is missing], it_cv_$1, [
+CLASS=Test.java
+BYTECODE=$(echo $CLASS|sed 's#\.java##')
+mkdir tmp.$$
+cd tmp.$$
+cat << \EOF > $CLASS
+[/* [#]line __oline__ "configure" */
+import java.lang.reflect.Method;
+
+public class Test
+{
+  public static void main(String[] args)
+  {
+    Class<?> cl = $3.class;
+    try
+      {
+        Method m = cl.getDeclaredMethod($4);
+      }
+    catch (NoSuchMethodException e)
+      {
+        System.exit(-1);
+      }
+  }
+
+  public void dontRun()
+  {
+    $5;
+  }
+
+}
+]
+EOF
+if $JAVAC -cp . $JAVACFLAGS -source 5 -target 5 -nowarn $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+  if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1; then
+      it_cv_$1=no;
+  else
+      it_cv_$1=yes;
+  fi
+else
+  it_cv_$1=yes;
+fi
+])
+rm -f $CLASS *.class
+cd ..
+rmdir tmp.$$
+AM_CONDITIONAL([LACKS_$1], test x"${it_cv_$1}" = "xyes")
+AC_PROVIDE([$0])dnl
 ])

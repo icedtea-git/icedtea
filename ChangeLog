@@ -1,3 +1,21 @@
+2012-08-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	(ICEDTEA_BOOTSTRAP_CLASSES): Only add Matcher if
+	the quoteReplacement method is absent.  Fix use of
+	= instead of += with ModelMBeanInfo.
+	* acinclude.m4:
+	(IT_JAVAH): Explicitly set source & target.
+	(IT_LIBRARY_CHECK): Likewise.
+	(IT_PR40630_CHECK): Likewise.
+	(IT_CHECK_JAVA_AND_JAVAC_WORK): Likewise.
+	(IT_CHECK_FOR_CLASS): Likewise.
+	(IT_DIAMOND_CHECK): Specify target as 7 as well.
+	(IT_CHECK_FOR_METHOD): New macro to check for the
+	existence of a Java method both at build and runtime.
+	* configure.ac:
+	Check for java.util.regex.Matcher.quoteReplacement.
+
 2012-08-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
