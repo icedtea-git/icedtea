@@ -16,6 +16,28 @@
 	* configure.ac:
 	Check for java.util.regex.Matcher.quoteReplacement.
 
+2012-08-06  Mark Wielaard  <mjw@redhat.com>
+
+	* test/tapset/jstaptest.pl (probestrings): Expect non-zero value
+	for hotspot.jni.NewObjectA.return.
+
+2012-08-03  Mark Wielaard  <mjw@redhat.com>
+
+	* Makefile.am (check-tapset-probes): New target.
+	(check-tapset-jstack): Likewise.
+	(check-tapset): Depend on check-tapset-probes check-tapset-jstack.
+	* test/tapset/jstaptest.pl (process_args): Add -p [$run_test_probes]
+	and -j [$run_test_jstack].
+	(test_jstack): Takes argument to pass to java process.
+	Pass -XX:+UseCompressedOops and/or -Xmx5G.
+
+2012-08-03  Yasumasa Suenaga  <suenaga.yasumasa@lab.ntt.co.jp>
+
+	* tapset/jstack.stp.in (NarrowOopStruct): New global.
+	(hotspot.vm_init_end): Initialize NarrowOopStruct.
+	(hotspot.vm_shutdown): Delete NarrowOopStruct for pid.
+	(jstack_call): Use NarrowOopStruct to calculate methodOopKlass.
+
 2012-08-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
