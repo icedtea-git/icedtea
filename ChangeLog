@@ -1,3 +1,22 @@
+2012-08-15  Xerxes Rånby  <xerxes@zafena.se>
+	    Robert Lougher  <rob@jamvm.org.uk>
+
+	JamVM
+	- Make JamVM work with latest OpenJDK 7
+	- ARMv6 armhf: Changes for Raspbian (Raspberry Pi)
+	- PPC: Don't use lwsync if it isn't supported
+	- X86: Generate machine-dependent stubs for i386
+	- When suspending, ignore detached threads that have died, this prevents
+	a user caused deadlock when an external thread has been attached to the
+	VM via JNI and it has exited without detaching
+	- Add missing REF_TO_OBJs for references passed from JNI,
+	this enable JamVM to run Qt-Jambi
+	* NEWS: Updated.
+	* Makefile.am
+	(JAMVM_VERSION): Updated JamVM to 2012-08-15 revision.
+	(JAMVM_SHA256SUM): Updated.
+	(stamps/jamvm.stamp): Use --with-java-runtime-library=openjdk7
+
 2012-08-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:

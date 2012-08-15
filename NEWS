@@ -16,6 +16,15 @@ New in release 2.3 (2012-XX-XX):
   - PR902: PulseAudioClip getMicrosecondsLength() returns length in milliseconds, not microseconds
   - PR986: IcedTea7 fails to build with IcedTea6 CACAO due to low max heap size
   - PR1050: Stream objects not garbage collected
+* JamVM
+  - ARMv6 armhf: Changes for Raspbian (Raspberry Pi)
+  - PPC: Don't use lwsync if it isn't supported
+  - X86: Generate machine-dependent stubs for i386
+  - When suspending, ignore detached threads that have died, this prevents
+    a user caused deadlock when an external thread has been attached to the VM
+    via JNI and it has exited without detaching
+  - Add missing REF_TO_OBJs for references passed from JNI, this enable JamVM
+    to run Qt-Jambi
 
 New in release 2.2.1 (2012-06-12):
 

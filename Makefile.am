@@ -24,8 +24,8 @@ CACAO_BASE_URL = http://icedtea.classpath.org/download/drops/cacao
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.gz
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.gz
 
-JAMVM_VERSION = 4617da717ecb05654ea5bb9572338061106a414d
-JAMVM_SHA256SUM = 47fce7bd556c1b1d29a93b8c45497e0d872b48b7f535066b303336f29d0f0d8d
+JAMVM_VERSION = e70f2450890b82c37422616cc85e1a23385f03cd
+JAMVM_SHA256SUM = 3ca7e297ef4daa56c3dd733e21bce795d57ab071243369aa9400c0384ada8a4c
 JAMVM_BASE_URL = http://icedtea.classpath.org/download/drops/jamvm
 JAMVM_URL = $(JAMVM_BASE_URL)/jamvm-$(JAMVM_VERSION).tar.gz
 JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
@@ -1998,7 +1998,7 @@ clean-rewrite-rhino:
 stamps/jamvm.stamp: $(OPENJDK_TREE) stamps/rt.stamp
 if BUILD_JAMVM
 	cd jamvm/jamvm && \
-	./autogen.sh --with-java-runtime-library=openjdk \
+	./autogen.sh --with-java-runtime-library=openjdk7 \
 	  --prefix=$(abs_top_builddir)/jamvm/install ; \
 	$(MAKE) ; \
 	$(MAKE) install
