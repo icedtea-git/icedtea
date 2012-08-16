@@ -117,10 +117,20 @@ IT_CHECK_FOR_CLASS([JAVA_UTIL_SCANNER], [java.util.Scanner])
 IT_PR40630_CHECK
 IT_CHECK_FOR_CLASS([JAVAX_ANNOTATION_RESOURCE], [javax.annotation.Resource])
 IT_GETDTDTYPE_CHECK
-IT_CHECK_FOR_CLASS([SUN_AWT_TOOLKIT], [sun.awt.SunToolkit])
 IT_CHECK_FOR_CLASS([JAVAX_MANAGEMENT_REMOTE_JMXSERVICEURL], [javax.management.remote.JMXServiceURL])
 IT_CHECK_FOR_CLASS([JAVAX_MANAGEMENT_MODELMBEAN_MODELMBEANINFO], [javax.management.modelmbean.ModelMBeanInfo])
-IT_CHECK_FOR_METHOD([JAVA_UTIL_REGEX_MATCHER_QUOTEREPLACEMENT],[java.util.regex.Matcher.quoteReplacement],[java.util.regex.Matcher],["quoteReplacement",String.class],java.util.regex.Matcher.quoteReplacement("Blah"))
+IT_CHECK_FOR_METHOD([JAVA_UTIL_REGEX_MATCHER_QUOTEREPLACEMENT],
+  [java.util.regex.Matcher.quoteReplacement],
+  [java.util.regex.Matcher],
+  ["quoteReplacement",String.class],
+  [java.util.regex.Matcher.quoteReplacement("Blah")]
+)
+IT_CHECK_FOR_METHOD([JAVAX_SWING_PLAF_BASIC_BASICDIRECTORYMODEL_ADDPROPERTYCHANGELISTENER],
+  [javax.swing.plaf.basic.BasicDirectoryModel.addPropertyChangeListener],
+  [javax.swing.plaf.basic.BasicDirectoryModel],
+  ["addPropertyChangeListener",java.beans.PropertyChangeListener.class],
+  [javax.swing.plaf.basic.BasicDirectoryModel model = new javax.swing.plaf.basic.BasicDirectoryModel(new javax.swing.JFileChooser()); model.addPropertyChangeListener(model)]
+)
 IT_CHECK_ENABLE_WARNINGS
 IT_DIAMOND_CHECK
 IT_BYTECODE7_CHECK
