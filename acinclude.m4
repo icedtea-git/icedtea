@@ -2356,3 +2356,25 @@ rmdir tmp.$$
 AM_CONDITIONAL([LACKS_$1], test x"${it_cv_$1}" = "xyes")
 AC_PROVIDE([$0])dnl
 ])
+
+AC_DEFUN([IT_ENABLE_WERROR],
+[
+  AC_MSG_CHECKING([whether to enable -Werror])
+  AC_ARG_ENABLE([Werror],
+                [AS_HELP_STRING(--enable-Werror,build with -Werror [[default=no]])],
+  [
+    case "${enableval}" in
+      yes)
+        enable_werror=yes
+        ;;
+      *)
+        enable_werror=no
+        ;;
+    esac
+  ],
+  [
+    enable_werror=no
+  ])
+  AC_MSG_RESULT([$enable_werror])
+  AM_CONDITIONAL([ENABLE_WERROR], test x"${enable_werror}" = "xyes")
+])

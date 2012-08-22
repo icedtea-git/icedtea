@@ -240,7 +240,10 @@ REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 
 # Patch list
 
-ICEDTEA_PATCHES =
+ICEDTEA_PATCHES = \
+	patches/werror-jdk.patch \
+	patches/werror-langtools.patch \
+	patches/werror-hotspot.patch
 
 # Conditional patches
 
@@ -311,7 +314,6 @@ ICEDTEA_BOOT_PATCHES = \
 	patches/boot/corba-orb.patch \
 	patches/boot/demos.patch \
 	patches/boot/ecj-fphexconstants.patch \
-	patches/boot/ecj-opts.patch \
 	patches/boot/fontconfig.patch \
 	patches/boot/generated-comments.patch \
 	patches/boot/xbootclasspath.patch \
@@ -415,6 +417,12 @@ if HAS_PKGVERSION
 ICEDTEA_PKG = $(EMPTY) (${PKGVERSION})
 endif
 
+if ENABLE_WERROR
+WERROR_STATUS=true
+else
+WERROR_STATUS=false
+endif
+
 ICEDTEA_ENV = \
 	ALT_JDK_IMPORT_PATH="$(BOOT_DIR)" \
 	ANT="$(ANT)" \
@@ -464,7 +472,9 @@ ICEDTEA_ENV = \
 	USE_SYSTEM_CUPS="true" \
 	CUPS_LIBS="${CUPS_LIBS}" \
 	CUPS_CFLAGS="${CUPS_CFLAGS}" \
-	STRIP_POLICY=no_strip
+	STRIP_POLICY=no_strip \
+	JAVAC_WARNINGS_FATAL="$(WERROR_STATUS)" \
+	COMPILER_WARNINGS_FATAL="$(WERROR_STATUS)"
 
 if ENABLE_CACAO
 ICEDTEA_ENV += \

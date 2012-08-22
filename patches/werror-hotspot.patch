@@ -1,0 +1,56 @@
+diff --git a/make/linux/makefiles/adlc.make b/make/linux/makefiles/adlc.make
+--- openjdk/hotspot/make/linux/makefiles/adlc.make
++++ openjdk/hotspot/make/linux/makefiles/adlc.make
+@@ -68,7 +68,9 @@
+ 
+ # CFLAGS_WARN holds compiler options to suppress/enable warnings.
+ # Compiler warnings are treated as errors
++ifneq ($(COMPILER_WARNINGS_FATAL),false)
+ CFLAGS_WARN = -Werror
++endif
+ CFLAGS += $(CFLAGS_WARN)
+ 
+ OBJECTNAMES = \
+diff --git a/make/linux/makefiles/gcc.make b/make/linux/makefiles/gcc.make
+--- openjdk/hotspot/make/linux/makefiles/gcc.make
++++ openjdk/hotspot/make/linux/makefiles/gcc.make
+@@ -150,7 +150,9 @@
+ endif
+ 
+ # Compiler warnings are treated as errors
++ifneq ($(COMPILER_WARNINGS_FATAL),false)
+ WARNINGS_ARE_ERRORS = -Werror
++endif
+ 
+ # Except for a few acceptable ones
+ # Since GCC 4.3, -Wconversion has changed its meanings to warn these implicit
+diff --git a/make/solaris/makefiles/adlc.make b/make/solaris/makefiles/adlc.make
+--- openjdk/hotspot/make/solaris/makefiles/adlc.make
++++ openjdk/hotspot/make/solaris/makefiles/adlc.make
+@@ -75,8 +75,10 @@
+ 
+ # CFLAGS_WARN holds compiler options to suppress/enable warnings.
+ # Compiler warnings are treated as errors
+-ifeq ($(shell expr $(COMPILER_REV_NUMERIC) \>= 509), 1)
+-  CFLAGS_WARN = +w -errwarn
++ifneq ($(COMPILER_WARNINGS_FATAL),false)
++  ifeq ($(shell expr $(COMPILER_REV_NUMERIC) \>= 509), 1)
++    CFLAGS_WARN = +w -errwarn
++  endif
+ endif
+ CFLAGS += $(CFLAGS_WARN)
+ 
+diff --git a/make/solaris/makefiles/gcc.make b/make/solaris/makefiles/gcc.make
+--- openjdk/hotspot/make/solaris/makefiles/gcc.make
++++ openjdk/hotspot/make/solaris/makefiles/gcc.make
+@@ -112,7 +112,9 @@
+ 
+ 
+ # Compiler warnings are treated as errors 
+-WARNINGS_ARE_ERRORS = -Werror 
++ifneq ($(COMPILER_WARNINGS_FATAL),false)
++WARNINGS_ARE_ERRORS = -Werror
++endif
+ # Enable these warnings. See 'info gcc' about details on these options
+ ADDITIONAL_WARNINGS = -Wpointer-arith -Wconversion -Wsign-compare 
+ CFLAGS_WARN/DEFAULT = $(WARNINGS_ARE_ERRORS) $(ADDITIONAL_WARNINGS) 

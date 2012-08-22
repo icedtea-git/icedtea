@@ -1,6 +1,32 @@
 2012-08-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
+	(ICEDTEA_PATCHES): Add -Werror patches
+	from IcedTea7 HEAD.  Drop ecj-opts patch
+	as replaced by change to javac.in.
+	(WERROR_STATUS): Set to true or false
+	depending on if ENABLE_WERROR is set or not.
+	(ICEDTEA_ENV): Use WERROR_STATUS to set
+	JAVAC_WARNINGS_FATAL & COMPILER_WARNINGS_FATAL.
+	* acinclude.m4:
+	(IT_ENABLE_WERROR): New macro to enable -Werror.
+	This is disabled by default.
+	* configure.ac: Call IT_ENABLE_WERROR.
+	* javac.in: Handle stripping of arguments which
+	take parameters, specifically -Xmaxwarns.
+	* patches/werror-hotspot.patch:
+	Allow COMPILER_WARNINGS_FATAL to turn off -Werror.
+	* patches/werror-jdk.patch:
+	Remove cases where -Werror is forced on, allowing
+	JAVAC_WARNINGS_FATAL and COMPILER_WARNINGS_FATAL
+	to work correctly throughout.
+	* patches/werror-langtools.patch:
+	Allow JAVAC_WARNINGS_FATAL=false to turn off -Werror.
+	* NEWS: Updated.
+
+2012-08-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
 	(ICEDTEA_BOOTSTRAP_CLASSES): Only add
 	BasicDirectoryModel if addPropertyListener
 	is missing.  Dispense with LACKS_SUN_AWT_TOOLKIT

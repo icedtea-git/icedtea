@@ -1,0 +1,28 @@
+diff --git a/make/Makefile b/make/Makefile
+--- openjdk/langtools/make/Makefile
++++ openjdk/langtools/make/Makefile
+@@ -111,6 +111,12 @@
+   ANT_OPTIONS += -Ddebug.classfiles=true
+ endif
+ 
++ifeq ($(JAVAC_WARNINGS_FATAL), true)
++  ANT_OPTIONS += -Dwarnings.fatal=-Werror
++else
++  ANT_OPTIONS += -Dwarnings.fatal=
++endif
++
+ # Note: jdk/make/common/Defs.gmk uses LANGUAGE_VERSION (-source NN)
+ # and the somewhat misnamed CLASS_VERSION (-target NN)
+ ifdef TARGET_CLASS_VERSION
+diff --git a/make/build.properties b/make/build.properties
+--- openjdk/langtools/make/build.properties
++++ openjdk/langtools/make/build.properties
+@@ -68,7 +68,7 @@
+ # set the following to -version to verify the versions of javac being used
+ javac.version.opt =
+ # in time, there should be no exceptions to -Xlint:all
+-javac.lint.opts = -Xlint:all,-deprecation -Werror
++javac.lint.opts = -Xlint:all,-deprecation ${warnings.fatal}
+ 
+ # options for the <javadoc> task for javac
+ #javadoc.jls3.url=http://java.sun.com/docs/books/jls/
