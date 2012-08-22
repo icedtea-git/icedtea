@@ -573,6 +573,11 @@ ICEDTEA_ENV += \
 	COMPILE_AGAINST_SYSCALLS="true"
 endif
 
+if ENABLE_JAR_COMPRESSION
+ICEDTEA_ENV += \
+	COMPRESS_JARS="true"
+endif
+
 # OpenJDK boot build environment.
 ICEDTEA_ENV_BOOT = $(ICEDTEA_ENV) \
 	BOOTCLASSPATH_CLS_RT="-bootclasspath $(CLS_DIR_BOOT):$(RUNTIME)" \

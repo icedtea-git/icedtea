@@ -19,6 +19,7 @@ New in release 2.3 (2012-XX-XX):
   - PR1119: Only add classes to rt-source-files.txt if the class (or one or more of its methods/fields)
     are actually missing from the boot JDK
   - PR1095: Add configure option for -Werror
+  - PR1137: Allow JARs to be optionally compressed by setting COMPRESS_JARS
 * JamVM
   - ARMv6 armhf: Changes for Raspbian (Raspberry Pi)
   - PPC: Don't use lwsync if it isn't supported
