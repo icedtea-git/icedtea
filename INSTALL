@@ -89,6 +89,19 @@ to configure:
   downloading and extracting a tarball.
 * --enable-system-lcms: Build using the system installation of LCMS2, not
   the version in-tree.
+* --enable-system-zlib: Build using the system installation of Zlib, not
+  the version in-tree.
+* --enable-system-png: Build using the system installation of libpng, not
+  the version in-tree.
+* --enable-system-gif: Build using the system installation of giflib, not
+  the version in-tree.
+* --enable-system-gtk: Build and link against the system installation of
+  Gtk+ instead of trying to dynamically open it at runtime.
+* --enable-system-gio: Build and link against the system installation of
+  GIO instead of trying to dynamically open it at runtime.
+* --enable-system-fontconfig: Build and link against the system installation of
+  fontconfig instead of trying to dynamically open it at runtime.
+* --enable-compile-against-syscalls: Check for syscalls at compile-time not runtime.
 * --with-gcj: Compile ecj to native code with gcj prior to building.
 * --with-parallel-jobs: Run the specified number of parallel jobs when
   building HotSpot and the JDK.  If this option is passed without an
@@ -152,13 +165,17 @@ to configure:
 * --with-jamvm-src-zip: Specify the location of a JamVM tarball to avoid downloading.
 * --with-hg-revision: Specify a hg revision to use (as opposed to tip) with the --enable-hg option.
 * --with-tzdata-dir: Specify the location of Java timezone data, defaulting to /usr/share/javazi.
-* --with-netbeans: Specify the location of NetBeans for VisualVM, defaulting to the netbeans on the path.
 * --with-abs-install-dir: The final install location of the j2sdk-image, for use in the SystemTap tapset.
 * --with-llvm-config: Specify the location of the llvm-config binary.
 * --with-version-suffix: Appends the given text to the JDK version output.
 * --with-project: Build an OpenJDK project from the following: icedtea, jdk7, closures, cvmi, cacaiocavallo,
   bsd, nio2.  The default is icedtea.  Use of others is at the user's risk and builds may fail.  This setting
   affects which forest is checked out when --enable-hg is used and the set of patches applied.
+* --with-hotspot-build: The HotSpot to use, defaulting to 'original' i.e. hs14 as bundled with OpenJDK.
+* --with-pax: The command used to PaX-mark built binaries.
+* --enable-Werror: Turn gcc & javac warnings into errors.
+* --disable-jar-compression: Don't compress the OpenJDK JAR files.
+* --disable-downloading: Don't download tarballs if not available; fail instead.
 
 Other options may be supplied which enable or disable new features.
 These are documented fully in the relevant section below.
@@ -175,8 +192,7 @@ These are documented fully in the relevant section below.
 * --enable-jamvm: Replace HotSpot with JamVM.
 * --enable-shark: Build the Shark LLVM-based JIT.
 * --enable-zero: Build the zero assembler port on x86/x86_64/sparc platforms.
-* --with-hotspot-build: The HotSpot to use, defaulting to 'original' i.e. hs14 as bundled with OpenJDK.
-* --with-rhino: Include Javascript support using Rhino.
+* --with-rhino: Include Javascript support using Rhino (location may optionally be specified).
 * --with-additional-vms=vm-list: Additional VMs to build using the system described
   below.
 

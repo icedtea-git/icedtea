@@ -2383,7 +2383,7 @@ AC_DEFUN([IT_ENABLE_JAR_COMPRESSION],
 [
   AC_MSG_CHECKING([whether to enable JAR compression])
   AC_ARG_ENABLE([jar-compression],
-                [AS_HELP_STRING(--enable-jar-compression,compress built jars [[default=yes]])],
+                [AS_HELP_STRING(--disable-jar-compression,compress built jars [[default=yes]])],
   [
     case "${enableval}" in
       no)
