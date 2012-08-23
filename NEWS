@@ -20,6 +20,7 @@ New in release 2.3 (2012-XX-XX):
     are actually missing from the boot JDK
   - PR1095: Add configure option for -Werror
   - PR1137: Allow JARs to be optionally compressed by setting COMPRESS_JARS
+  - PR1140: Unnecessary diz files should not be installed
 * JamVM
   - ARMv6 armhf: Changes for Raspbian (Raspberry Pi)
   - PPC: Don't use lwsync if it isn't supported

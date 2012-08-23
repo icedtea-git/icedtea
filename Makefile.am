@@ -243,7 +243,8 @@ REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 ICEDTEA_PATCHES = \
 	patches/werror-jdk.patch \
 	patches/werror-langtools.patch \
-	patches/werror-hotspot.patch
+	patches/werror-hotspot.patch \
+	patches/no_diz_files.patch
 
 # Conditional patches
 
