@@ -244,7 +244,8 @@ ICEDTEA_PATCHES = \
 	patches/werror-jdk.patch \
 	patches/werror-langtools.patch \
 	patches/werror-hotspot.patch \
-	patches/no_diz_files.patch
+	patches/no_diz_files.patch \
+	patches/7192804-jvisualvm.patch
 
 # Conditional patches
 

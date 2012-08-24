@@ -1,0 +1,31 @@
+# HG changeset patch
+# User andrew
+# Date 1345732943 -3600
+# Node ID d06702bfc987d0679d0c047b0897fbe7a684a608
+# Parent  968de9a6cf662529fd0fac7b54d9f8614d338da0
+7192804: Build should not install jvisualvm man page for OpenJDK
+Summary: OpenJDK builds don't ship VisualVM so shouldn't ship its man page either.
+Reviewed-by: dholmes
+
+diff --git a/make/common/Release.gmk b/make/common/Release.gmk
+--- openjdk/jdk/make/common/Release.gmk
++++ openjdk/jdk/make/common/Release.gmk
+@@ -158,7 +158,6 @@
+         jstack.1           \
+         jstat.1            \
+         jstatd.1           \
+-        jvisualvm.1        \
+ 	native2ascii.1     \
+ 	rmic.1             \
+         schemagen.1        \
+@@ -167,6 +166,10 @@
+         wsimport.1         \
+         xjc.1
+ 
++ifndef OPENJDK
++  JDK_MAN_PAGES += jvisualvm.1
++endif
++
+ ifeq ($(PLATFORM), solaris)
+   MANBASEDIRS=$(JDK_TOPDIR)/src/solaris/doc $(IMPORTDOCDIR)
+   MAN1SUBDIR=sun/man/man1
