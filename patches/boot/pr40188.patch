@@ -1,10 +1,10 @@
 diff -Nru openjdk-boot.orig/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c openjdk-boot/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c
---- openjdk-boot.orig/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c	2009-03-30 17:23:08.000000000 +0100
-+++ openjdk-boot/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c	2009-05-18 19:58:36.000000000 +0100
-@@ -192,9 +192,9 @@
+--- openjdk-boot.orig/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c	2012-08-29 16:19:35.860554102 +0100
++++ openjdk-boot/jdk/src/solaris/native/sun/nio/ch/FileDispatcherImpl.c	2012-08-29 16:23:37.688539537 +0100
+@@ -209,9 +209,9 @@
      lockResult = fcntl(fd, cmd, &fl);
      if (lockResult < 0) {
-         if ((cmd == F_SETLK64) && (errno == EAGAIN))
+         if ((cmd == F_SETLK64) && (errno == EAGAIN || errno == EACCES))
 -            return sun_nio_ch_FileDispatcherImpl_NO_LOCK;
 +            return sun_nio_ch_FileDispatcher_NO_LOCK;
          if (errno == EINTR)
