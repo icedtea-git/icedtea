@@ -12,18 +12,74 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.4 (2012-XX-XX):
 
-New in release 2.3 (2012-XX-XX):
+New in release 2.1.2 (2012-09-02):
 
+* Security fixes
+  - RH852051, CVE-2012-4681, S7162473: Reintroduce PackageAccessible checks removed in 6788531.
+  - S7162476, CVE-2012-1682: XMLDecoder security issue via ClassFinder
+  - S7194567, CVE-2012-3136: Improve long term persistence of java.beans objects
+  - S7163201, CVE-2012-0547: Simplify toolkit internals references
+* OpenJDK
+  - PR1101: Undefined symbols on GNU/Linux SPARC
+  - S7182135: Impossible to use some editors directly
+  - S7183701: [TEST] closed/java/beans/security/TestClassFinder.java - compilation failed
+  - S7185678: java/awt/Menu/NullMenuLabelTest/NullMenuLabelTest.java failed with NPE
+  - S7190813: (launcher) RPATH needs to have additional paths
+* ARM
+  - ARM: Fix trashed thread ptr after recursive re-entry from
+  - ARM: Rename a bunch of misleadingly-named functions
+  - Enable _adapter_opt_spread* jsr 292 code, now passes
+  - Fix call to handle_special_method().  Fix compareAndSwapLong.
+
+New in release 2.2.2 (2012-08-31):
+
+* Security fixes
+  - RH852051, CVE-2012-4681, S7162473: Reintroduce PackageAccessible checks removed in 6788531.
+  - S7162476, CVE-2012-1682: XMLDecoder security issue via ClassFinder
+  - S7194567, CVE-2012-3136: Improve long term persistence of java.beans objects
+  - S7163201, CVE-2012-0547: Simplify toolkit internals references
+* OpenJDK
+  - Fix Zero FTBFS issues
+  - PR1101: Undefined symbols on GNU/Linux SPARC
+  - S7180036: Build failure in Mac platform caused by fix # 7163201
+  - S7182135: Impossible to use some editors directly
+  - S7183701: [TEST] closed/java/beans/security/TestClassFinder.java - compilation failed
+  - S7185678: java/awt/Menu/NullMenuLabelTest/NullMenuLabelTest.java failed with NPE
+  - S7188168: 7071904 broke the DEBUG_BINARIES option on Linux
+  - S7190813: (launcher) RPATH needs to have additional paths
+
+New in release 2.3.2 (2012-08-31):
+
+* Security fixes
+  - S7162476, CVE-2012-1682: XMLDecoder security issue via ClassFinder
+  - S7194567, CVE-2012-3136: Improve long term persistence of java.beans objects
+  - S7163201, CVE-2012-0547: Simplify toolkit internals references
+* OpenJDK
+  - Fix Zero FTBFS issues with 2.3
+  - S7180036: Build failure in Mac platform caused by fix # 7163201
+  - S7182135: Impossible to use some editors directly
+  - S7183701: [TEST] closed/java/beans/security/TestClassFinder.java - compilation failed
+  - S7185678: java/awt/Menu/NullMenuLabelTest/NullMenuLabelTest.java failed with NPE
+* Bug fixes
+  - PR1149: Zero-specific patch files not being packaged
+
+New in release 2.3.1 (2012-08-29):
+
+* Security fixes
+  - RH852051, CVE-2012-4681, S7162473: Reintroduce PackageAccessible checks removed in 6788531.
 * Bug fixes
   - PR902: PulseAudioClip getMicrosecondsLength() returns length in milliseconds, not microseconds
   - PR986: IcedTea7 fails to build with IcedTea6 CACAO due to low max heap size
   - PR1050: Stream objects not garbage collected
   - PR1119: Only add classes to rt-source-files.txt if the class (or one or more of its methods/fields)
     are actually missing from the boot JDK
-  - PR1095: Add configure option for -Werror
   - PR1137: Allow JARs to be optionally compressed by setting COMPRESS_JARS
+* OpenJDK
+  - Make dynamic support for GConf work again.
+  - PR1095: Add configure option for -Werror
+  - PR1101: Undefined symbols on GNU/Linux SPARC
   - PR1140: Unnecessary diz files should not be installed
-  - PR1138: jvisualvm.1 should not be installed in OpenJDK builds
+  - S7192804, PR1138: Build should not install jvisualvm man page for OpenJDK
 * JamVM
   - ARMv6 armhf: Changes for Raspbian (Raspberry Pi)
   - PPC: Don't use lwsync if it isn't supported
@@ -33,6 +89,377 @@ New in release 2.3 (2012-XX-XX):
     via JNI and it has exited without detaching
   - Add missing REF_TO_OBJs for references passed from JNI, this enable JamVM
     to run Qt-Jambi
+
+New in release 2.3 (2012-08-15):
+
+* OpenJDK
+  - S6310967: SA: jstack -m produce failures in output
+  - S6346658: (se) Selector briefly spins when asynchronously closing a registered channel [win]
+  - S6414899: P11Digest  should support cloning
+  - S6888634: test/closed/javax/swing/Popup/TaskbarPositionTest.java fails
+  - S6893617: JDK 6 CNCtx always uses the default ORB
+  - S6924259: Remove offset and count fields from java.lang.String
+  - S6961765: Double byte characters corrupted in DN for LDAP referrals
+  - S6994562: Swing classes (both JTextArea and JTextField) don't support caret width tuning
+  - S7013850: Please change the mnemonic assignment system to avoid translation issue
+  - S7024749: JDK7 b131---a crash in: Java_sun_awt_windows_ThemeReader_isGetThemeTransitionDurationDefined+0x75
+  - S7024963: Notepad demo: remove non-translatable resources from Notepad.properties file
+  - S7024965: Stylepad demo: remove non-translatable resources from Stylepad.properties file
+  - S7027139: getFirstIndex() does not return the first index that has changed
+  - S7027300: Unsynchronized HashMap access causes endless loop
+  - S7043963: AWT workaround missing for Mutter.
+  - S7049339: AnyBlit is broken with non-rectangular clips.
+  - S7063674: Wrong results from basic comparisons after calls to Long.bitCount(long)
+  - S7071826: Avoid benign race condition in initialization of UUID
+  - S7071907: JDK: Full Debug Symbols
+  - S7074616: java.lang.management.ManagementFactory.getPlatformManagementInterfaces fails
+  - S7074853: TransparentRuler demos Readme should mention the correct jar file name
+  - S7079902: Refine CORBA data models
+  - S7080109: Dialog.show() lacks doPrivileged() to access system event queue
+  - S7087428: move client tests out of jdk_misc
+  - S7090832: Some locale info are not localized for some languages.
+  - S7092140: Test: java/util/concurrent/locks/Lock/TimedAcquireLeak.java fails on SE-E due to -XX:-UsePerfData
+  - S7092551: Double-click in TextField sets caret to the beginning
+  - S7093156: NLS Please change the mnemonic assignment system to avoid translation issue (Swing files)
+  - S7096436: (sc) SocketChannel.connect fails on Windows 8 when channel configured non-blocking
+  - S7100140: [macosx] Test closed/javax/sound/sampled/DirectAudio/bug6400879.java is invalid
+  - S7102323: RFE: enable Full Debug Symbols Phase 1 on Solaris
+  - S7103665: HeapWord*ParallelScavengeHeap::failed_mem_allocate(unsigned long,bool)+0x97
+  - S7103889: (fs) Reduce String concatenation when iterating over directory
+  - S7104147: the fix for cr6887286 was not appropriate for backporting
+  - S7105952: Improve finalisation for FileInputStream/FileOutputStream/RandomAccessFile
+  - S7107063: Fork hs22.1 hsx from hs22.0 for 7u3 and reinitialize build number
+  - S7107099: JScrollBar does not show up even if there are enough lebgth of textstring in textField
+  - S7110104: It should be possible to stop and start JMX Agent at runtime
+  - S7110396: Sound code fails to build with gcc 4.6 on multiarch Linux systems
+  - S7110720: Issue with vm config file loadingIssue with vm config file loading
+  - S7112115: Component.getLocationOnScreen() work incorrectly if create window in point (0, 0) on oel
+  - S7112427: The doclet needs to be able to generate JavaFX documentation.
+  - S7113740: hotspot_version file has wrong JDK_MINOR_VER
+  - S7116462: Bump the hs21.1 build number to 02
+  - S7118100: (prefs) Inconsistency when using system and user preference on OSX Lion
+  - S7118280: The gbyc00102 JCK7 test causes an assert in JVM 7.0 fastdebug mode
+  - S7118373: (se) Potential leak file descriptor when deregistrating at around the same time as an async close
+  - S7120481: storeStore barrier in constructor with final field
+  - S7120895: FontConfiguration should not use thread contextClassLoader
+  - S7122740: PropertyDescriptor Performance Slow
+  - S7123170: JCK vm/jvmti/ResourceExhausted/resexh001/resexh00101/ tests fails since 7u4 b02
+  - S7123582: (launcher) display the -version and -XshowSettings
+  - S7123896: Unexpected behavior due to Solaris using separate IPv4 and IPv6 port spaces
+  - S7123957: Switch of Gnome theme ends up deadlocked in GTKEngine.native_switch_theme
+  - S7124210: [macosx] Replacing text in a TextField does generate an extra TextEvent
+  - S7124219: [macosx] Unable to draw images to fullscreen
+  - S7124239: [macosx] sun.awt.SunToolkit.InfiniteLoop exception in realSync called from SwingTestHelper
+  - S7124247: [macosx] Implement GraphicsDevice.setDisplayMode()
+  - S7124262: [macosx] Drag events go to a wrong child.
+  - S7124286: [macosx] Option modifier should work like AltGr as in Apple jdk 6
+  - S7124321: [macosx] TrayIcon MouseListener is never triggered
+  - S7124326: [macosx] An issue similar to autoshutdown one in two AppContexts situation.
+  - S7124328: [macosx] javax.swing.JDesktopPane.getAllFramesInLayer returns unexpected value
+  - S7124376: [macosx] Modal dialog lost focus
+  - S7124400: [macosx] CGraphicsDevice.getConfigurations() returns reference to member (does not copy configs)
+  - S7124411: [macosx] There's no KEY_TYPED for VK_ESCAPE
+  - S7124428: [macosx] Frame.setExtendedState() doesn't work for undecorated windows
+  - S7124523: [macosx] b216: Mising part of applet UI
+  - S7124537: [macosx] Menu shortcuts for all menu items should be disabled if a menu itself is disabled
+  - S7124551: [macosx] Once added, Menu shortcut cannot be removed
+  - S7125044: [macosx] Test failure because Component.transferFocus() works differently in applet and application
+  - S7126277: Alternative String hashing implementation
+  - S7127235: (fs) NPE in Files.walkFileTree if cached attributes are GC'ed
+  - S7128699: Change the bundle name so it won't be overwritten when installing a new version
+  - S7128738: dragged dialog freezes system on dispose
+  - S7129401: PPC: runtime/7100935/TestShortArraycopy.java fails
+  - S7129715: MAC: SIGBUS in nsk stress test
+  - S7129872: test/sun/security/pkcs11/KeyStore/SecretKeysBasic.sh failing on non-Solaris platforms on 7u4
+  - S7130241: [macosx] TransparentRuler demo can not run due to lacking of perpixel transparency support
+  - S7130404: [macosx] "os.arch" value should be "x86_64" for compatibility with Apple JDK6
+  - S7130521: [macosx] closed/javax/swing/JMenuItem/6209975/bug6209975.java failed on macosx
+  - S7131021: [macosx] Consider using system properties to pass arguments from the launcher to AWT/SplashScreen
+  - S7132070: Use a mach_port_t as the OSThread thread_id rather than pthread_t on BSD/OSX
+  - S7132692: [macosx] Class com.apple.eawt not functioning
+  - S7132793: [macosx] setWheelScrollEnabled action reversed
+  - S7132808: [macosx] closed/javax/swing/JFileChooser/4524490/bug4524490.java fails on MacOS
+  - S7133138: Improve io performance around timezone lookups
+  - S7133566: [macosx] closed/javax/swing/JTable/4220171/bug4220171.java fails on MacOS
+  - S7133571: [macosx] closed/javax/swing/JToolBar/4247996/bug4247996.java fails on MacOS
+  - S7133573: [macosx] closed/javax/swing/JToolTip/4846413/bug4846413.java fails on MacOS
+  - S7133581: [macosx] closed/javax/swing/JTree/4330357/bug4330357.java fails on MacOS
+  - S7134701: [macosx] Support legacy native library names
+  - S7136506: FDS: rework jdk repo Full Debug Symbols support
+  - S7141141: Add 3 new test scenarios for testing Main-Class attribute in jar manifest file
+  - S7142091: [macosx] RFE: Refactoring of peer initialization/disposing
+  - S7142172: Custom TrustManagers that return null for getAcceptedIssuers will NPE
+  - S7142641: -Xshared:on fails on ARM
+  - S7142847: TEST_BUG: java/nio/file/WatchService/SensitivityModifier.java has incorrect @run tag, runs Basic
+  - S7143353: -Xrunhprof fails in Java 7 due to bad switch
+  - S7143606: File.createTempFile should be improved for temporary files created by the platform.
+  - S7143614: SynthLookAndFeel stability improvement
+  - S7143617: Improve fontmanager layout lookup operations
+  - S7143744: (se) Stabilize KQueue SelectorProvider and make default on MacOSX
+  - S7143851: Improve IIOP stub and tie generation in RMIC
+  - S7143872: Improve certificate extension processing
+  - S7144063: [macosx] Swing JMenu mnemonic doesn't work; hint misleading; cross symbol typed
+  - S7144086: TEST_BUG: java/nio/file/WatchService/SensitivityModifier.java failing intermittently
+  - S7144328: Improper commandlines for -XX:+-UnlockCommercialFeatures require proper warning/error messages
+  - S7144423: StAX EventReader swallows the cause of error
+  - S7144488: Infinite recursion for some equals tests in Collections
+  - S7144530: KeyTab.getInstance(String) no longer handles keyTabNames with "file:" prefix
+  - S7144542: [macosx] Crash in liblwawt.dylib setBusy() when exiting an FX app
+  - S7145024: Crashes in ucrypto related to C2
+  - S7145239: Finetune package definition restriction
+  - S7145768: [macosx] Regression: failure in b11 of ModalDialogInFocusEventTest
+  - S7145771: [macosx] CreateFont/Register.java test fails because of cached results of getAllFonts()
+  - S7145798: System.loadLibrary does not search current working directory
+  - S7145827: [macosx] JCK failure in b11: FocusableWindow3
+  - S7145980: Dispose method of window.java takes long
+  - S7146099: NLS: [de,es,it,ko,pt_BR]launcher_**.properties, double backslash issue.
+  - S7146131: [macosx] When click the show optionpane button,it display partly of dialog and hung until timeout
+  - S7146431: java.security files out-of-sync
+  - S7146442: assert(false) failed: bad AD file
+  - S7146550: [macosx] DnD test failure in createCompatibleWritableRaster()
+  - S7146564: DefaultProxySelector should filter 0.0.0.0 and ::0 [macosx]
+  - S7146728: Inconsistent length for the generated secret using DH key agreement impl from SunJCE and PKCS11
+  - S7147055: [macosx] Cursors are changing over a blocked window; also blinking
+  - S7147066: [macosx] FileDialog.getDirectory() returns incorrect directory
+  - S7147078: [macosx] Echo char set in TextField doesn't prevent word jumping
+  - S7147407: remove never used debug code in DnsClient.java
+  - S7147666: High lock time for com.sun.org.apache.xerces.internal.impl.dv.DTDDVFactory.getInstance()
+  - S7147724: G1: hang in SurrogateLockerThread::manipulatePLL
+  - S7147848: com.sun.management.UnixOperatingSystem uses hardcoded dummy values [macosx]
+  - S7148143: PropertyChangeSupport.addPropertyChangeListener can throw ClassCastException
+  - S7148242: Regression: valid code rejected during generic type well-formedness check
+  - S7148275: [macosx] setIconImages() not working correctly (distorted icon when minimized)
+  - S7148281: [macosx] JTabbedPane tabs with HTML text do not render correctly
+  - S7148289: [macosx] Deadlock in sun.lwawt.macosx.CWrapper$NSScreen.visibleFrame
+  - S7148556: Implementing a generic interface causes a public clone() to become inaccessible
+  - S7148584: Jar tools fails to generate manifest correctly when boundary condition hit
+  - S7148663: new hotspot build - hs23-b17
+  - S7148921: More ProblemList updates (2/2012)
+  - S7149005: [macosx] Java Control Panel's UI controls are distorted when draging scroll bar.
+  - S7149005: [macosx] Orphaned Choice popup window
+  - S7149062: [macosx] dock menu don't show available frames
+  - S7149085: [macosx] Quit with QuitStrategy CLOSE_ALL_WINDOWS does terminate application
+  - S7149320: Move sun.misc.VM.booted() to the end of System.initializeSystemClass()
+  - S7149608: Default TZ detection fails on linux when symbolic links to non default location used.
+  - S7149785: Minor corrections to ScriptEngineManager javadoc
+  - S7149913: [macosx] Deadlock in LWTextComponentPeer
+  - S7150051: incorrect oopmap in critical native
+  - S7150089: [macosx] Default for a custom cursor created from non-existent image is not transparent
+  - S7150105: [macosx] four scroll-buttons don't display. scroll-sliders cursors are TextCursor
+  - S7150322: Stop using drop source bundles in jaxws
+  - S7150326: new hotspot build - hs23-b18
+  - S7150345: [macosx] Can't type into applets
+  - S7150349: [macosx] Applets attempting to show popup menus activate the applet process
+  - S7150390: JFR test crashed on assert(_jni_lock_count == count) failed: must be equal
+  - S7150392: Linux build breaks with GCC 4.7 due to unrecognized option
+  - S7150454: add release jdk7u4 to jprt.properties
+  - S7150516: [macosx] appletviewer shouldn't link against libX11 on the Mac
+  - S7150637: No newline emitted after XML decl in XSLT output
+  - S7151070: NullPointerException in Resolve.isAccessible
+  - S7151118: Regressions on 7u4 b11 comp. 7u4 b06 on specjvm2008.xml.transform subbenchmark
+  - S7151484: NullPointerException caused by a bug in XMLDocumentFragmentScannerImpl
+  - S7151573: Fork hs23.1 hsx from hs23.0 for 7u5 and reinitialize build number
+  - S7152564: Improve CodeSource.matchLocation(CodeSource) performance
+  - S7152608: [macosx] Crash in liblwawt.dylib in AccelGlyphCache_RemoveCellInfo
+  - S7152690: Initialization error with charset SJIS_0213 when security manager is enabled
+  - S7152784: new hotspot build - hs23-b19
+  - S7152800: All tests using the attach API fail with "well-known file is not secure" on Mac OS X
+  - S7152811: Issues in client compiler
+  - S7152952: [macosx] List rows overlap with enlarged font
+  - S7152954: G1: Native memory leak during full GCs
+  - S7153184: NullPointerException when calling SSLEngineImpl.getSupportedCipherSuites
+  - S7153693: Three 2D_ImageIO tests failed due ImageFormatException on OEL 6.* Unbreakable Kernel x64
+  - S7153735: [macosx] Text with diacritics is pasted with broken encoding
+  - S7153977: Generate English man pages for JDK 7u4
+  - S7154047: [macosx] When we choose print one page in the print dialog,it still prints all the pages.
+  - S7154048: [macosx] At least drag twice, the toolbar can be dragged to the left side.
+  - S7154062: [macosx] Mouse cursor isn't updated in applets
+  - S7154072: [macosx] swallowing key events
+  - S7154088: [macosx] Regression: Component.createImage do not inherits component attributes
+  - S7154130: Add Mac OS X Instructions to README-builds.html
+  - S7154177: [macosx] An invisible owner frame becomes visible upon clicking a child window
+  - S7154333: JVM fails to start if -XX:+AggressiveHeap is set
+  - S7154480: [macosx] Not all popup menu items are visible
+  - S7154505: [macosx] NetBeans sometimes starts with no text rendered
+  - S7154516: [macosx] Popup menus have no visible borders
+  - S7154677: new hotspot build - hs23-b20
+  - S7154724: jdk7u4 test properties missing from jprt.properties
+  - S7154758: NLS: 7u4 message drop 20
+  - S7154770: NLS: 7u4 man page update
+  - S7154809: JDI: update JDI/JDB debugee commandline option parsing
+  - S7154822: forward port fix for Bug 13645891 to JDK8 jcmd (1024 byte file size limit issue)
+  - S7155051: DNS provider may return incorrect results
+  - S7155419: Remove reference to JRockit and commercial features from java man page
+  - S7155453: [macosx] re-enable jbb tests in JPRT
+  - S7155757: make jdk7u4 the default jprt release for hs23
+  - S7156000: Change makefile to reflect refactored classes
+  - S7156191: [macosx] Can't type into applet demos in Pivot
+  - S7156194: [macosx] Can't type non-ASCII characters into applets
+  - S7156657: Version 7 doesn't support translucent popup menus against a translucent window
+  - S7156729: PPC: R_PPC_REL24 relocation error related to some libraries built without -fPIC
+  - S7156831: The jcmd man page is not included in generated bundles
+  - S7156842: test/java/util/zip/ZipFile/vmcrash.zip triggers McAffe virus warning
+  - S7156960: Incorrect copyright headers in parts of the Serviceability agent
+  - S7156963: Incorrect copyright header in java/io/SerialCallbackContext
+  - S7157141: crash in 64 bit with corrupted oops
+  - S7157296: FDS: ENABLE_FULL_DEBUG_SYMBOLS flag should only affect OPT builds
+  - S7157365: jruby/bench.bench_timeout crashes with JVM internal error
+  - S7157608: One feature is not recognized.
+  - S7157609: Issues with loop
+  - S7157610: NullPointerException occurs when parsing XML doc
+  - S7157659: [macosx] Landscape Printing orientation doesn't work
+  - S7157855: jvisualvm.1 not included in binaries
+  - S7157903: JSSE client sockets are very slow
+  - S7158067: FDS: ENABLE_FULL_DEBUG_SYMBOLS flag should only affect product builds
+  - S7158116: Bump the hs23.1 build number to b02
+  - S7158135: new hotspot build - hs23-b21
+  - S7158366: [macosx] Print-to-file dialog doesn't have an entry field for a name
+  - S7158457: division by zero in adaptiveweightedaverage
+  - S7158483: (tz) Support tzdata2012c
+  - S7158712: Synth Property "ComboBox.popupInsets" is ignored
+  - S7158800: Improve storage of symbol tables
+  - S7158928: [macosx] NLS: Please change the mnemonic assignment system
+  - S7159016: Static import of member in processor-generated class fails in JDK 7
+  - S7159266: [macosx] ApplicationDelegate should not be set in the headless mode
+  - S7159320: change default ZIP_DEBUGINFO_FILES back to '1' after fix for 7133529 is available
+  - S7159381: [macosx] Dock Icon defaults to Generic Java Application Category
+  - S7159766: Tiered compilation causes performance regressions
+  - S7160293: [macosx] FileDialog appears on secondary display
+  - S7160539: JDeveloper crashes on 64-bit Windows
+  - S7160623: [macosx] Editable TextArea/TextField are blocking GUI applications from exit
+  - S7160677: missing else in fix for 7152811
+  - S7160757: Problem with hotspot/runtime_classfile
+  - S7160895: tools/launcher/VersionCheck.java attempts to launch .debuginfo
+  - S7161105: unused classes in jdk7u repository
+  - S7161766: [macosx] javax/swing/JPopupMenu/6694823/bug6694823.java failed on Mac OS X
+  - S7161881: (dc) DatagramChannel.bind(null) fails if IPv4 socket and running with preferIPv6Addresses=true
+  - S7162043: Add headless mode tests to problem list [macosx]
+  - S7162144: Missing AWT thread in headless mode in 7u4 b06
+  - S7162440: Fix typo in BUNDLE_ID-related macro names
+  - S7162440: Fix typo in BUNDLE_ID variable so it can be overridden
+  - S7162440: Fix typo in macro so BUNDLE_ID can be overridden
+  - S7162902: Umbrella port of a number of corba bug fixes from JDK 6 to jdk7u/8
+  - S7163117: Agent can't connect to process on Mac OSX
+  - S7163470: Licensee source bundle build failed with CipherSpi not found (7u4)
+  - S7163471: Licensee source bundle failed around 7u4
+  - S7163524: Add SecTaskAccess attribute to jstack [macosx]
+  - S7163621: Bump the hs23.1 build number to b03
+  - S7164344: enabling ZIP_DEBUGINFO_FILES causes unexpected test failures on Solaris and Windows
+  - S7165060: dtrace tests fail with FDS debug info files
+  - S7165257: Add JFR tests to the JDK code base
+  - S7165598: enable FDS on Solaris X64 when 7165593 is fixed
+  - S7165628: Issues with java.lang.invoke.MethodHandles.Lookup
+  - S7165725: JAVA6 HTML PARSER CANNOT PARSE MULTIPLE SCRIPT TAGS IN A LINE CORRECTLY
+  - S7165755: OS Information much longer on linux than other platforms
+  - S7166437: [macosx] Support for Window.Type.UTILITY on the Mac
+  - S7166498: JVM crash in ClassVerifier
+  - S7166570: JSSE certificate validation has started to fail for certificate chains
+  - S7166687: InetAddress.getLocalHost().getHostName() returns FQDN
+  - S7166956: Integrate the Java Access Bridge with Java Runtime
+  - S7167028: new hotspot build - hs23.2-b01
+  - S7167142: Consider a warning when finding a .hotspotrc or .hotspot_compiler file that isn't used
+  - S7167157: jcmd command file parsing does not respect the "stop" command
+  - S7167254: Crash on OSX in Enumerator.nextElement() with compressed oops
+  - S7167266: missing copyright notes in 3rd party code
+  - S7167359: (tz) SEGV on solaris if TZ variable not set
+  - S7167406: (Zero) Fix for InvokeDynamic needed
+  - S7167625: Adjustments for SE-Embedded build process
+  - S7168098: Adjustments for SE-Embedded build process
+  - S7168110: Misleading jstack error message
+  - S7168191: Signature validation can fail under certain circumstances
+  - S7168249: new hotspot build - hs23.2-b02
+  - S7168374: Upgrade of XML components to JAXB 2.2.4-2, SAAJ 1.3.16, JAXWS 2.2.4-1
+  - S7168505: (bf) MappedByteBuffer.load does not load buffer's content into memory
+  - S7168520: No jdk8 TL Nightly linux builds due to broken link in b39-2012-05-13_231
+  - S7168550: [macosx] duplicate OGL context state changes related to vertex cache
+  - S7169050: (se) Selector.select slow on Solaris due to insertion of POLLREMOVE and 0 events
+  - S7169111: Unreadable menu bar with Ambiance theme in GTK L&F
+  - S7169226: NLS: Please change the mnemonic assignment system for windows and motif properties
+  - S7169782: C2: SIGSEGV in LShiftLNode::Ideal(PhaseGVN*, bool)
+  - S7170009: new hotspot build - hs23.2-b03
+  - S7170145: C1 doesn't respect the JMM with volatile field loads
+  - S7170169: (props) System.getProperty("os.name") should return "Windows 8" when run on Windows 8
+  - S7170197: Update JPRT default build targets to support embedded builds
+  - S7170203: TEST_BUG: test/java/nio/MappedByteBuffer/Truncate.java failing intermittently
+  - S7170275: os::print_os_info needs to know about Windows 8
+  - S7170449: Management is completely broken at least on Solaris 11 X86
+  - S7170657: [macosx] There seems to be no keyboard/mouse action to select non-contiguous items in List
+  - S7170716: JVM crash when opening an AWT app from a registered file.
+  - S7171163: [macosx] Shortcomings in the design of the secondary native event loop made JavaFX DnD deadlock
+  - S7171223: Building ExtensionSubtables.cpp should use -fno-strict-aliasing
+  - S7171653: 32-bit cross-compile on 64-bit build host generates 64-bit data for awt/X11 leading to crash
+  - S7171703: JNI DefineClass crashes client VM when first parameter is NULL
+  - S7171852: new hotspot build - hs23.2-b04
+  - S7172430: [macosx] debug message in non debug jdk build
+  - S7172552: jabswitch utility should not request elevated privilege on the system
+  - S7172708: 32/64 bit type issues on Windows after Mac OS X port
+  - S7172722: Latest jdk7u from OSX broke universal build
+  - S7173329: Fix build broken by 7126277 to jdk7u-dev
+  - S7173432: Handle null key at HashMap resize
+  - S7173436: new hotspot build - hs23.2-b05
+  - S7173487: [macosx] Problems with popup menus, tooltips and dialog boxes in dual monitor setup
+  - S7173515: (se) Selector.open fails with OOME on Solaris when unlimited file descriptors
+  - S7173635: jprt.properties should include release jdk7u6
+  - S7173645: (props) System.getProperty("os.name") should return "Windows Server 2012" for Windows Server 2012
+  - S7173918: set alternative string hashing threshold.
+  - S7174244: NPE in Krb5ProxyImpl.getServerKeys()
+  - S7174363: Arrays.copyOfRange leads to VM crash with -Xcomp -server if executed by testing framework
+  - S7174510: 19 JCK compiler tests fail with C2 error: memNode.cpp:812 - ShouldNotReachHere
+  - S7174645: Could not enable access bridge
+  - S7174704: [macosx] New issue in 7u6 b12: HeadlessPrintingTest failure
+  - S7174718: [macosx] Regression in 7u6 b12: PopupFactory leaks DefaultFrames.
+  - S7174736: JCK test api/java_util/HashMap/index_EntrySet failing
+  - S7174861: all/OPT jdk build on Solaris with FDS enabled sets wrong options
+  - S7174928: JSR 292: unresolved invokedynamic call sites deopt and osr infinitely
+  - S7174970: NLS [ccjk] Extra mnemonic keys at standard filechooserdialog (open and save) in metal L&F
+  - S7175133: jinfo failed to get system properties after 6924259
+  - S7175255: symlinks are wrong, which caused jdk8-promote-2 to fail (client/64/64 directories in debuginfo zips)
+  - S7175331: Remove FDS files from embedded JRE images
+  - S7175367: NLS: 7u6 message drop10 integration
+  - S7175516: new hotspot build - hs23.2-b06
+  - S7175758: Improve unit test of Map iterators and Iterator.remove()
+  - S7175802: Missing jdk_jfr in top-level make file
+  - S7175845: "jar uf" changes file permissions unexpectedly
+  - S7176630: (sc) SocketChannel.write does not write more than 128k when channel configured blocking [win]
+  - S7176784: Windows authentication not working on some computers
+  - S7176894: back out LocaleNames_xx.properties files from 7u6 message drop10
+  - S7177128: SA cannot get correct system properties after 7126277
+  - S7177144: [macosx] Drag and drop not working (regression in 7u6)
+  - S7177173: [macosx] JFrame.setExtendedState(JFrame.MAXIMIZED_BOTH) not working as expected in JDK 7
+  - S7177216: native2ascii changes file permissions of input file
+  - S7177365: new hotspot build - hs23.2-b07
+  - S7177617: TEST_BUG: java/nio/channels/AsyncCloseAndInterrupt.java failing (win)
+  - S7177701: error: Filling jar message during javax/imageio/metadata/IIOMetadataFormatImpl compilation
+  - S7178079: REGRESSION: Some AWT Drag-n-Drop tests fail since JDK 7u6 b13
+  - S7178113: build environment change
+  - S7178483: Change version string for Embedded releases
+  - S7178548: Hashtable alternative hashing threshold default ignored
+  - S7178670: runtime/7158800/BadUtf8.java fails in SymbolTable::rehash_table
+  - S7179138: Incorrect result with String concatenation optimization
+  - S7179194: new hotspot build - hs23.2-b08
+  - S7179349: [macosx] Java processes on Mac should not use default Apple icon
+  - S7179759: ENV: Nightly fails during jdk copiyng for solaris platforms after FDS unzipping
+  - S7180240: Disable alternative string hashing by default
+  - S7180621: Hashtable has incorrect alternative hashing threshold default value
+  - S7180884: new hotspot build - hs23.2-b09
+  - S7180907: Jarsigner -verify fails if rsa file used sha-256 with authenticated attributes
+  - S7181027: [macosx] Unable to use headless mode
+  - S7181200: JVM new hashing code breaks SA in product mode
+  - S7182135: Impossible to use some editors directly
+  - S7182226: NLS: jdk7u6 message drop20 integration
+  - S7182500: OCSP revocation checking fails if OCSP responce does not contain certificates
+  - S7182902: [macosx] Test api/java_awt/GraphicsDevice/indexTGF.html#SetDisplayMode fails on Mac OS X 10.7
+  - S7182971: Need to include documentation content for JCMD man page
+  - S7183209: Backout 7105952 changes for jdk7u
+  - S7183251: Netbeans editor renders text wrong on JDK 7u6 build
+  - S7183292: HttpURLConnection.getHeaderFields() throws IllegalArgumentException: Illegal cookie name
+  - S7184145: (pack200) pack200 --repack throws NullPointerException when JAR file specified without path
+  - S7184401: JDk7u6 : Missing main menu bar in Netbeans after fix for 7162144
+  - S7184845: Apps6: menu tree bean in form throws npe in jre 7 while closing
+  - S7184951: [macosx] Exception at java.awt.datatransfer on headless mode (only in GUI session)
+  - S7185512: The printout doesn't match image on screen.
+  - S7188168: 7071904 broke the DEBUG_BINARIES option on Linux
+  - S7190813: (launcher) RPATH needs to have additional paths
 
 New in release 2.2.1 (2012-06-12):
 
