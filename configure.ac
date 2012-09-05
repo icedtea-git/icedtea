@@ -194,16 +194,6 @@ fi
 AC_SUBST(XT_CFLAGS)
 AC_SUBST(XT_LIBS)
 
-dnl Check for libXp headers and libraries.
-PKG_CHECK_MODULES(XP, xp,[XP_FOUND=yes],[XP_FOUND=no])
-if test "x${XP_FOUND}" = xno
-then
-  AC_MSG_ERROR([Could not find Xp - \
-  Try installing libXp-devel.])
-fi
-AC_SUBST(XP_CFLAGS)
-AC_SUBST(XP_LIBS)
-
 dnl Check for libX11 headers and libraries.
 PKG_CHECK_MODULES(X11, x11,[X11_FOUND=yes],[X11_FOUND=no])
 if test "x${X11_FOUND}" = xno

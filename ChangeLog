@@ -1,3 +1,7 @@
+2012-09-05  Matthias Klose  <doko@ubuntu.com>
+
+	 configure.ac: Remove the Xp header and library checks.
+
 2012-03-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
