@@ -1,3 +1,27 @@
+2012-09-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am,
+	(OPENJDK_VERSION): Bump to b07.
+	(JDK_UPDATE_VERSION): Bump to u10.
+	(CORBA_CHANGESET): Update to IcedTea7 forest head.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* hotspot.map: Update default to head of IcedTea7
+	forest HotSpot.
+	* patches/boot/ecj-diamond.patch:
+	Add additional cases in sun.launcher.LauncherHelper.
+	* patches/boot/ecj-trywithresources.patch:
+	Add new case in sun.launcher.LauncherHelper.
+
 2012-09-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Add new releases: 2.1.2, 2.2.2,

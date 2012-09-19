@@ -3694,6 +3694,24 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.ja
          for (Locale l : tlocales) {
              sortedSet.add(l.toString());
          }
+@@ -532,7 +532,7 @@
+     }
+ 
+     static String[] expandArgs(String[] argArray) {
+-        List<StdArg> aList = new ArrayList<>();
++        List<StdArg> aList = new ArrayList<StdArg>();
+         for (String x : argArray) {
+             aList.add(new StdArg(x));
+         }
+@@ -540,7 +540,7 @@
+     }
+ 
+     static String[] expandArgs(List<StdArg> argList) {
+-        ArrayList<String> out = new ArrayList<>();
++        ArrayList<String> out = new ArrayList<String>();
+         if (trace) {
+             System.err.println("Incoming arguments:");
+         }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/management/ManagementFactoryHelper.java openjdk-boot/jdk/src/share/classes/sun/management/ManagementFactoryHelper.java
 --- openjdk-boot.orig/jdk/src/share/classes/sun/management/ManagementFactoryHelper.java	2012-08-29 13:24:58.000000000 +0100
 +++ openjdk-boot/jdk/src/share/classes/sun/management/ManagementFactoryHelper.java	2012-08-29 13:51:21.645694645 +0100

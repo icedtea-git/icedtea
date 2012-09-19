@@ -1056,3 +1056,28 @@ diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.jav
          } catch (IOException x) {
          }
          return result;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2012-09-19 03:56:50.376373385 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2012-09-19 04:02:15.841559851 +0100
+@@ -555,8 +555,9 @@
+                 if (parent == null) {
+                     parent = new File(".");
+                 }
+-                try (DirectoryStream<Path> dstream =
+-                        Files.newDirectoryStream(parent.toPath(), glob)) {
++                DirectoryStream<Path> dstream = null;
++                try {
++                    dstream = Files.newDirectoryStream(parent.toPath(), glob);
+                     int entries = 0;
+                     for (Path p : dstream) {
+                         out.add(p.normalize().toString());
+@@ -571,6 +572,9 @@
+                         System.err.println("Warning: passing argument as-is " + a);
+                         System.err.print(e);
+                     }
++                } finally {
++                    if (dstream != null)
++                        try { dstream.close(); } catch (IOException e) {}
+                 }
+             } else {
+                 out.add(a.arg);
