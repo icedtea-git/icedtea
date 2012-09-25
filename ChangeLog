@@ -1,3 +1,12 @@
+2012-09-25  Xerxes Rånby  <xerxes@zafena.se>
+
+	JamVM
+	PR1155: Do not put version number in libjvm.so SONAME
+	* NEWS: Updated.
+	* Makefile.am
+	(JAMVM_VERSION): Updated JamVM to 2012-09-25 revision.
+	(JAMVM_SHA256SUM): Updated.
+
 2012-09-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* hotspot.map:

@@ -11,6 +11,8 @@ LPX - https://bugs.launchpad.net/bugs/X
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.4 (2012-XX-XX):
+* JamVM
+  - PR1155: Do not put version number in libjvm.so SONAME
 
 New in release 2.1.2 (2012-09-02):
 
