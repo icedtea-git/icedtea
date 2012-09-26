@@ -1,10 +1,10 @@
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2011-07-27 14:31:14.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2011-07-27 14:54:48.369035615 +0100
-@@ -350,18 +350,15 @@
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2012-09-24 21:55:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2012-09-26 02:12:25.636743366 +0100
+@@ -350,19 +350,16 @@
              if (attrCommands != null) {
-                 Attribute.Layout lkey = Attribute.keyForLookup(ctype, name);
-                 String cmd = attrCommands.get(lkey);
+                 Object lkey = Attribute.keyForLookup(ctype, name);
+                 String cmd = (String) attrCommands.get(lkey);
 -                if (cmd != null) {
 -                    switch (cmd) {
 -                        case "pass":
@@ -17,6 +17,7 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Cla
 -                            skip(length, name + " attribute in " + h);
 -                            continue;
 -                    }
+-                }
 +                if ("pass".equals(cmd)) {
 +                    String message1 = "passing attribute bitwise in " + h;
 +                    throw new Attribute.FormatException(message1, ctype, name, cmd);
@@ -26,13 +27,14 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Cla
 +                } else if ("strip".equals(cmd)) {
 +                    skip(length, name + " attribute in " + h);
 +                    continue;
-                 }
++                 }
              }
              // Find canonical instance of the requested attribute.
+             Attribute a = Attribute.lookup(Package.attrDefs, ctype, name);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2011-06-11 00:38:08.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2011-07-27 14:52:45.595028657 +0100
-@@ -71,16 +71,14 @@
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2012-09-24 21:55:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2012-09-26 02:11:37.444030490 +0100
+@@ -73,16 +73,14 @@
          {
              // Non-standard, undocumented "--unpack" switch enables unpack mode.
              String arg0 = av.isEmpty() ? "" : av.get(0);
@@ -56,7 +58,7 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Dri
          }
  
          // Collect engine properties here:
-@@ -180,21 +178,16 @@
+@@ -182,21 +180,16 @@
          // Deal with remaining non-engine properties:
          for (String opt : avProps.keySet()) {
              String val = avProps.get(opt);
@@ -89,9 +91,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Dri
  
          if (logFile != null && !logFile.equals("")) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2011-07-27 14:31:14.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2011-07-27 14:52:45.599028722 +0100
-@@ -1107,30 +1107,25 @@
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2012-09-24 21:55:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2012-09-26 02:11:37.444030490 +0100
+@@ -1116,30 +1116,25 @@
          // what is one of { Debug, Compile, Constant, Exceptions, InnerClasses }
          if (verbose > 0)
              Utils.log.info("Stripping "+what.toLowerCase()+" data and attributes...");
@@ -142,8 +144,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Pac
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2011-04-30 03:28:32.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2011-07-27 14:52:45.603028787 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2012-09-24 21:55:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2012-09-26 02:11:37.444030490 +0100
 @@ -64,17 +64,23 @@
  
      protected NTLM(String version) throws NTLMException {
@@ -180,9 +182,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.jav
              fac = SecretKeyFactory.getInstance ("DES");
              cipher = Cipher.getInstance ("DES/ECB/NoPadding");
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2011-07-12 12:43:47.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2011-07-27 14:52:45.607028852 +0100
-@@ -211,14 +211,16 @@
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2012-09-24 21:55:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2012-09-26 02:11:37.444030490 +0100
+@@ -219,14 +219,16 @@
  
      private static
      boolean isObjectMethod(Method m) {
@@ -203,7 +205,7 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleP
              return (m.getReturnType() == boolean.class
                      && m.getParameterTypes().length == 1
                      && m.getParameterTypes()[0] == Object.class);
-@@ -229,12 +231,14 @@
+@@ -237,12 +239,14 @@
      private static
      Object callObjectMethod(Object self, Method m, Object[] args) {
          assert(isObjectMethod(m)) : m;
@@ -223,9 +225,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleP
          }
          return null;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-06-11 00:38:09.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2011-07-27 14:52:45.603028787 +0100
-@@ -117,24 +117,20 @@
+--- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2012-09-24 21:55:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2012-09-26 02:11:37.444030490 +0100
+@@ -119,24 +119,20 @@
          String optStr = (opts.length > 1 && opts[1] != null)
                  ? opts[1].trim()
                  : "all";
@@ -262,9 +264,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.ja
  
      /*
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2011-04-30 03:28:32.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2011-07-27 14:52:45.607028852 +0100
-@@ -383,19 +383,23 @@
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2012-09-24 21:55:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2012-09-26 02:11:37.444030490 +0100
+@@ -378,19 +378,23 @@
              GE;         // ">="
  
              static Operator of(String s) {

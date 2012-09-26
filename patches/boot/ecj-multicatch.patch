@@ -219,3 +219,36 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Hashtable.java openj
              throw new Error("Failed to record hashSeed offset", e);
          }
       }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.java openjdk-boot/jdk/src/share/classes/sun/tools/jconsole/Resources.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2012-09-26 03:08:32.776450958 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2012-09-26 03:09:50.525678273 +0100
+@@ -129,7 +129,9 @@
+     private static void setFieldValue(Field field, String value) {
+         try {
+             field.set(null, value);
+-        } catch (IllegalArgumentException | IllegalAccessException e) {
++        } catch (IllegalArgumentException e) {
++            throw new Error("Unable to access or set message for field " + field.getName());
++        } catch (IllegalAccessException e) {
+             throw new Error("Unable to access or set message for field " + field.getName());
+         }
+     }
+@@ -200,8 +202,16 @@
+         try {
+             return KeyEvent.class.getDeclaredField("VK_" + c.toUpperCase())
+                     .getInt(null);
+-        } catch (IllegalArgumentException | IllegalAccessException
+-                | NoSuchFieldException | SecurityException e) {
++        } catch (IllegalArgumentException e) {
++            // Missing VK is okay
++            return 0;
++        } catch (IllegalAccessException e) {
++            // Missing VK is okay
++            return 0;
++        } catch (NoSuchFieldException e) {
++            // Missing VK is okay
++            return 0;
++        } catch (SecurityException e) {
+             // Missing VK is okay
+             return 0;
+         }
