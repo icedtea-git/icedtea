@@ -11,8 +11,114 @@ LPX - https://bugs.launchpad.net/bugs/X
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.4 (2012-XX-XX):
+
+New in release 2.3.3 (2012-10-17):
+
+* Security fixes
+  - S6631398, CVE-2012-3216: FilePermission improved path checking
+  - S7093490: adjust package access in rmiregistry
+  - S7143535, CVE-2012-5068: ScriptEngine corrected permissions
+  - S7158796, CVE-2012-5070: Tighten properties checking in EnvHelp
+  - S7158807: Revise stack management with volatile call sites
+  - S7163198, CVE-2012-5076: Tightened package accessibility
+  - S7167656, CVE-2012-5077: Multiple Seeders are being created
+  - S7169884, CVE-2012-5073: LogManager checks do not work correctly for sub-types
+  - S7169887, CVE-2012-5074: Tightened package accessibility
+  - S7169888, CVE-2012-5075: Narrowing resource definitions in JMX RMI connector
+  - S7172522, CVE-2012-5072: Improve DomainCombiner checking
+  - S7186286, CVE-2012-5081: TLS implementation to better adhere to RFC
+  - S7189103, CVE-2012-5069: Executors needs to maintain state
+  - S7189490: More improvements to DomainCombiner checking
+  - S7189567, CVE-2012-5085: java net obselete protocol
+  - S7192975, CVE-2012-5071: Issue with JMX reflection
+  - S7195194, CVE-2012-5084: Better data validation for Swing
+  - S7195549, CVE-2012-5087: Better bean object persistence
+  - S7195917, CVE-2012-5086: XMLDecoder parsing at close-time should be improved
+  - S7195919, CVE-2012-5979: (sl) ServiceLoader can throw CCE without needing to create instance
+  - S7196190, CVE-2012-5088: Improve method of handling MethodHandles
+  - S7198296, CVE-2012-5089: Refactor classloader usage
+  - S7158800: Improve storage of symbol tables
+  - S7158801: Improve VM CompileOnly option
+  - S7158804: Improve config file parsing
+  - S7198606, CVE-2012-4416: Improve VM optimization
+* Bug fixes
+  - Remove merge artefact.
+  - Remove the Xp header and library checks.
 * JamVM
   - PR1155: Do not put version number in libjvm.so SONAME
+
+New in release 2.2.3 (2012-10-17):
+
+* Security fixes
+  - S6631398, CVE-2012-3216: FilePermission improved path checking
+  - S7093490: adjust package access in rmiregistry
+  - S7143535, CVE-2012-5068: ScriptEngine corrected permissions
+  - S7158796, CVE-2012-5070: Tighten properties checking in EnvHelp
+  - S7158807: Revise stack management with volatile call sites
+  - S7163198, CVE-2012-5076: Tightened package accessibility
+  - S7167656, CVE-2012-5077: Multiple Seeders are being created
+  - S7169884, CVE-2012-5073: LogManager checks do not work correctly for sub-types
+  - S7169887, CVE-2012-5074: Tightened package accessibility
+  - S7169888, CVE-2012-5075: Narrowing resource definitions in JMX RMI connector
+  - S7172522, CVE-2012-5072: Improve DomainCombiner checking
+  - S7186286, CVE-2012-5081: TLS implementation to better adhere to RFC
+  - S7189103, CVE-2012-5069: Executors needs to maintain state
+  - S7189490: More improvements to DomainCombiner checking
+  - S7189567, CVE-2012-5085: java net obselete protocol
+  - S7192975, CVE-2012-5071: Issue with JMX reflection
+  - S7195194, CVE-2012-5084: Better data validation for Swing
+  - S7195549, CVE-2012-5087: Better bean object persistence
+  - S7195917, CVE-2012-5086: XMLDecoder parsing at close-time should be improved
+  - S7195919, CVE-2012-5979: (sl) ServiceLoader can throw CCE without needing to create instance
+  - S7196190, CVE-2012-5088: Improve method of handling MethodHandles
+  - S7198296, CVE-2012-5089: Refactor classloader usage
+  - S7158801: Improve VM CompileOnly option
+  - S7158804: Improve config file parsing
+  - S7198606, CVE-2012-4416: Improve VM optimization
+* Backports
+  - S7175845: "jar uf" changes file permissions unexpectedly
+  - S7177216: native2ascii changes file permissions of input file
+  - S7158800: Improve storage of symbol tables
+* Bug fixes
+  - Remove merge artefact.
+  - Remove the Xp header and library checks.
+
+New in release 2.1.3 (2012-10-17):
+
+* Security fixes
+  - S6631398, CVE-2012-3216: FilePermission improved path checking
+  - S7093490: adjust package access in rmiregistry
+  - S7143535, CVE-2012-5068: ScriptEngine corrected permissions
+  - S7158796, CVE-2012-5070: Tighten properties checking in EnvHelp
+  - S7158807: Revise stack management with volatile call sites
+  - S7163198, CVE-2012-5076: Tightened package accessibility
+  - S7167656, CVE-2012-5077: Multiple Seeders are being created
+  - S7169884, CVE-2012-5073: LogManager checks do not work correctly for sub-types
+  - S7169887, CVE-2012-5074: Tightened package accessibility
+  - S7169888, CVE-2012-5075: Narrowing resource definitions in JMX RMI connector
+  - S7172522, CVE-2012-5072: Improve DomainCombiner checking
+  - S7186286, CVE-2012-5081: TLS implementation to better adhere to RFC
+  - S7189103, CVE-2012-5069: Executors needs to maintain state
+  - S7189490: More improvements to DomainCombiner checking
+  - S7189567, CVE-2012-5085: java net obselete protocol
+  - S7192975, CVE-2012-5071: Issue with JMX reflection
+  - S7195194, CVE-2012-5084: Better data validation for Swing
+  - S7195549, CVE-2012-5087: Better bean object persistence
+  - S7195917, CVE-2012-5086: XMLDecoder parsing at close-time should be improved
+  - S7195919, CVE-2012-5979: (sl) ServiceLoader can throw CCE without needing to create instance
+  - S7196190, CVE-2012-5088: Improve method of handling MethodHandles
+  - S7198296, CVE-2012-5089: Refactor classloader usage
+  - S7158801: Improve VM CompileOnly option
+  - S7158804: Improve config file parsing
+  - S7198606, CVE-2012-4416: Improve VM optimization
+* Backports
+  - S7175845: "jar uf" changes file permissions unexpectedly
+  - S7177216: native2ascii changes file permissions of input file
+  - S7106773: 512 bits RSA key cannot work with SHA384 and SHA512
+  - S7158800: Improve storage of symbol tables
+* Bug fixes
+  - Remove merge artefact.
+  - Remove the Xp header and library checks.
 
 New in release 2.1.2 (2012-09-02):
 
