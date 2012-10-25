@@ -1,3 +1,23 @@
+2012-10-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	(OPENJDK_VERSION): Bump to b09.
+	(CORBA_CHANGESET): Update to IcedTea7 forest head.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_ENV): Use SYSTEM_ZLIB rather than USE_SYSTEM_ZLIB.
+	* hotspot.map: Update default to head of IcedTea7
+	forest HotSpot.
+
 2012-10-24  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Add 2.1.3, 2.2.3 and 2.3.3
