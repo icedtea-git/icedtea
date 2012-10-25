@@ -305,6 +305,7 @@ public:
   AC_CONFIG_FILES([tapset/hotspot.stp])
   AC_CONFIG_FILES([tapset/hotspot_jni.stp])
   AC_CONFIG_FILES([tapset/jstack.stp])
+  AC_CONFIG_FILES([tapset/hotspot_gc.stp])
 fi
 
 dnl Check for libXtst headers and libraries.
