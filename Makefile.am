@@ -286,7 +286,9 @@ ICEDTEA_PATCHES += \
 endif
 
 if ENABLE_SYSTEMTAP
-ICEDTEA_PATCHES += patches/systemtap.patch
+ICEDTEA_PATCHES += \
+	patches/systemtap.patch \
+	patches/systemtap_gc.patch
 endif
 
 if ENABLE_NSS
@@ -760,6 +762,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	tapset/hotspot.stp.in \
 	tapset/hotspot_jni.stp.in \
 	tapset/jstack.stp.in \
+	tapset/hotspot_gc.stp.in \
 	scripts/jni_create_stap.c \
 	scripts/jni_desc \
 	rewriter/agpl-3.0.txt \
@@ -1726,11 +1729,16 @@ if ENABLE_SYSTEMTAP
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
 	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	  sed -e '/\/client\/libjvm.so/d' \
+	    < $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
 	    $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
 	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
 	    $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	  cp $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
 	fi; \
 	cp $(abs_top_builddir)/tapset/jstack.stp \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/jstack.stp
@@ -1792,11 +1800,16 @@ if ENABLE_SYSTEMTAP
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
 	    > $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	  sed -e '/\/client\/libjvm.so/d' \
+	    < $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    > $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
 	    $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
 	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
 	    $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	  cp $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
 	fi; \
 	cp $(abs_top_builddir)/tapset/jstack.stp \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/jstack.stp

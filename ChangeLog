@@ -1,3 +1,16 @@
+2012-10-24  Lukas Berk  <lberk@redhat.com>
+
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add patches/systemtap.patch.
+	(EXTRA_DIST): Add tapset/hotspot_gc.stp.in.
+	(stamps/icedtea.stamp): Build tapset/hotspot_gc.stp.
+	(stamps/icedtea-debug.stamp): Likewise.
+	* configure.ac: Generate tapset/hotspot_gc.stp.
+	* patches/systemtap_gc.patch:
+	Add Garbage Collection dtrace/systemtap probes to hotspot.
+	* tapset/hotspot_gc.stp.in:
+	Systemtap tapset allowing use of GC probes more comfortablely.
+
 2012-09-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
