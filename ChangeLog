@@ -1,3 +1,24 @@
+2012-11-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/systemtap.patch: Removed.
+	* INSTALL: Update SystemTap documentation.
+	* Makefile.am:
+	(JDK_CHANGESET): Updated to tip.
+	(JDK_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Remove systemtap.patch
+	(ICEDTEA_ENV): Set UNLIMITED_CRYPTO.
+	* README: Update SystemTap documentation.
+	* configure.ac:
+	Remove --enable-systemtap option.  Only
+	issue a warning and not set
+	ENABLE_SYSTEMTAP if sdt.h is not found
+	or is outdated.
+	* hotspot.map: Update default HotSpot to tip.
+	* nss.cfg.in: Set handleStartupErrors
+	to ignoreMultipleInitialisation so that our
+	PKCS11 provider configuration is silently
+	dropped if the user has already configured it.
+
 2012-10-24  Lukas Berk  <lberk@redhat.com>
 
 	* Makefile.am:
