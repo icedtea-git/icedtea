@@ -12,6 +12,9 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.4 (2012-XX-XX):
 
+* Bug fixes
+  - PR1212: IcedTea7 fails to build because Resources.getText() is no longer available for code to use
+
 New in release 2.3.3 (2012-10-17):
 
 * Security fixes
