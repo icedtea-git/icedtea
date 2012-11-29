@@ -14,8 +14,11 @@ New in release 2.4 (2012-XX-XX):
 
 * Backports
   - PR1197, S8003120: ResourceManager.getApplicationResources() does not close InputStreams
+  - PR1206, S7201205: Add Makefile configuration option to build with unlimited crypto in OpenJDK
+  - PR1209, S7170638: Use DTRACE_PROBE[N] in JNI Set and SetStatic Field.
 * Bug fixes
   - PR1212: IcedTea7 fails to build because Resources.getText() is no longer available for code to use
+  - PR473: NSS PKCS11 regression - due to java.security automatic loading
 
 New in release 2.3.3 (2012-10-17):
 

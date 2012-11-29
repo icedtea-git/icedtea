@@ -1,5 +1,9 @@
 2012-11-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* NEWS: Updated.
+
+2012-11-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR1197
 	* Makefile.am:
 	(JDK_CHANGESET): Updated to tip.
@@ -15,6 +19,7 @@
 
 2012-11-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR1206, PR1209, PR473:
 	* patches/systemtap.patch: Removed.
 	* INSTALL: Update SystemTap documentation.
 	* Makefile.am:
