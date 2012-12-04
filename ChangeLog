@@ -1,3 +1,37 @@
+2012-12-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/boot/ecj-opts.patch:
+	Remove unused patch.
+	* Makefile.am:
+	(OPENJDK_VERSION): Set to b03.
+	(JDK_UPDATE_VERSION): Set to u12.
+	(CORBA_CHANGESET): Update to IcedTea7 forest head.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_BOOT_PATCHES): Add new patch.
+	* hotspot.map:
+	Update to latest HotSpot in IcedTea7 forest.
+	* patches/boot/ecj-autoboxing.patch,
+	* patches/boot/ecj-diamond.patch,
+	* patches/boot/ecj-multicatch.patch,
+	* patches/boot/ecj-stringswitch.patch,
+	* patches/boot/ecj-trywithresources.patch:
+	Updated to handle latest updates, mainly
+	in java.lang.invoke but also in sun.print.
+	* patches/boot/ecj-odd.patch:
+	New patch due to Throwable being thrown without
+	a throws clause; odd that this passes with javac.
+	* patches/systemtap_gc.patch: Regenerated.
+
 2012-11-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Updated.

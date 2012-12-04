@@ -1081,3 +1081,120 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.ja
                  }
              } else {
                  out.add(a.arg);
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2012-11-30 17:35:03.823185224 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2012-11-30 17:35:55.920030051 +0000
+@@ -927,10 +927,15 @@
+                             java.net.URLConnection uconn = tClass.getResource(tResource).openConnection();
+                             int len = uconn.getContentLength();
+                             byte[] bytes = new byte[len];
+-                            try (java.io.InputStream str = uconn.getInputStream()) {
++			    java.io.InputStream str = null;
++                            try {
++			        str = uconn.getInputStream();
+                                 int nr = str.read(bytes);
+                                 if (nr != len)  throw new java.io.IOException(tResource);
+-                            }
++                            } finally {
++			      if (str != null)
++				str.close();
++			    }
+                             values[0] = bytes;
+                         } catch (java.io.IOException ex) {
+                             throw newInternalError(ex);
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/print/PSPrinterJob.java openjdk-boot/jdk/src/share/classes/sun/print/PSPrinterJob.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/print/PSPrinterJob.java	2012-12-04 05:13:31.292848926 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/print/PSPrinterJob.java	2012-12-04 05:18:24.261609680 +0000
+@@ -680,25 +680,38 @@
+ 
+         private void handleProcessFailure(final Process failedProcess,
+                 final String[] execCmd, final int result) throws IOException {
+-            try (StringWriter sw = new StringWriter();
+-                    PrintWriter pw = new PrintWriter(sw)) {
++	    StringWriter sw = null;
++	    PrintWriter pw = null;
++            try { 
++		sw = new StringWriter();
++		pw = new PrintWriter(sw);
+                 pw.append("error=").append(Integer.toString(result));
+                 pw.append(" running:");
+                 for (String arg: execCmd) {
+                     pw.append(" '").append(arg).append("'");
+                 }
+-                try (InputStream is = failedProcess.getErrorStream();
+-                        InputStreamReader isr = new InputStreamReader(is);
+-                        BufferedReader br = new BufferedReader(isr)) {
++		InputStream is = null;
++		InputStreamReader isr = null;
++		BufferedReader br = null;
++                try {
++		    is = failedProcess.getErrorStream();
++                    isr = new InputStreamReader(is);
++                    br = new BufferedReader(isr);
+                     while (br.ready()) {
+                         pw.println();
+                         pw.append("\t\t").append(br.readLine());
+                     }
+                 } finally {
+                     pw.flush();
++		    if (br != null) br.close();
++		    if (isr != null) isr.close();
++		    if (is != null) is.close();
+                     throw new IOException(sw.toString());
+                 }
+-            }
++            } finally {
++		if (pw != null) pw.close();
++		if (sw != null) sw.close();
++	    }
+         }
+ 
+         public Object run() {
+diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/print/UnixPrintJob.java openjdk-boot/jdk/src/solaris/classes/sun/print/UnixPrintJob.java
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/print/UnixPrintJob.java	2012-12-04 05:12:45.884111471 +0000
++++ openjdk-boot/jdk/src/solaris/classes/sun/print/UnixPrintJob.java	2012-12-04 05:18:59.906188886 +0000
+@@ -960,25 +960,38 @@
+ 
+         private void handleProcessFailure(final Process failedProcess,
+                 final String[] execCmd, final int result) throws IOException {
+-            try (StringWriter sw = new StringWriter();
+-                    PrintWriter pw = new PrintWriter(sw)) {
++	    StringWriter sw = null;
++	    PrintWriter pw = null;
++            try {
++		sw = new StringWriter();
++                pw = new PrintWriter(sw);
+                 pw.append("error=").append(Integer.toString(result));
+                 pw.append(" running:");
+                 for (String arg: execCmd) {
+                     pw.append(" '").append(arg).append("'");
+                 }
+-                try (InputStream is = failedProcess.getErrorStream();
+-                        InputStreamReader isr = new InputStreamReader(is);
+-                        BufferedReader br = new BufferedReader(isr)) {
++		InputStream is = null;
++		InputStreamReader isr = null;
++		BufferedReader br = null;
++                try {
++		    is = failedProcess.getErrorStream();
++                    isr = new InputStreamReader(is);
++                    br = new BufferedReader(isr);
+                     while (br.ready()) {
+                         pw.println();
+                         pw.append("\t\t").append(br.readLine());
+                     }
+                 } finally {
+                     pw.flush();
++		    if (br != null) br.close();
++		    if (isr != null) isr.close();
++		    if (is != null) is.close();
+                     throw new IOException(sw.toString());
+                 }
+-            }
++            } finally {
++		if (pw != null) pw.close();
++		if (sw != null) sw.close();
++	    }
+         }
+ 
+         public Object run() {

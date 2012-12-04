@@ -303,3 +303,171 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgo
                  }
  
                  throw new IllegalArgumentException(
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2012-11-30 17:43:24.199320360 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2012-12-03 17:54:57.757827289 +0000
+@@ -327,12 +327,11 @@
+                                      Object[] appendixResult) {
+         try {
+             if (defc == MethodHandle.class && refKind == REF_invokeVirtual) {
+-                switch (name) {
+-                case "invoke":
+-                    return Invokers.genericInvokerMethod(fixMethodType(callerClass, type), appendixResult);
+-                case "invokeExact":
+-                    return Invokers.exactInvokerMethod(fixMethodType(callerClass, type), appendixResult);
+-                }
++	      if ("invoke".equals(name)) {
++		return Invokers.genericInvokerMethod(fixMethodType(callerClass, type), appendixResult);
++	      } else if ("invokeExact".equals(name)) {
++		return Invokers.exactInvokerMethod(fixMethodType(callerClass, type), appendixResult);
++	      }
+             }
+         } catch (Throwable ex) {
+             if (ex instanceof LinkageError)
+@@ -395,91 +394,82 @@
+     static boolean isCallerSensitive(MemberName mem) {
+         assert(mem.isInvocable());
+         Class<?> defc = mem.getDeclaringClass();
+-        switch (mem.getName()) {
+-        case "doPrivileged":
++	String memName = mem.getName();
++	if ("doPrivileged".equals(memName))
+             return defc == java.security.AccessController.class;
+-        case "getUnsafe":
++	else if ("getUnsafe".equals(memName)) 
+             return defc == sun.misc.Unsafe.class;
+-        case "lookup":
++        else if ("lookup".equals(memName)) 
+             return defc == java.lang.invoke.MethodHandles.class;
+-        case "invoke":
++        else if ("invoke".equals(memName)) 
+             return defc == java.lang.reflect.Method.class;
+-        case "get":
+-        case "getBoolean":
+-        case "getByte":
+-        case "getChar":
+-        case "getShort":
+-        case "getInt":
+-        case "getLong":
+-        case "getFloat":
+-        case "getDouble":
+-        case "set":
+-        case "setBoolean":
+-        case "setByte":
+-        case "setChar":
+-        case "setShort":
+-        case "setInt":
+-        case "setLong":
+-        case "setFloat":
+-        case "setDouble":
+-            return defc == java.lang.reflect.Field.class;
+-        case "newInstance":
++        else if ("get".equals(memName) ||
++	    "getBoolean".equals(memName) ||
++	    "getByte".equals(memName) ||
++	    "getChar".equals(memName) ||
++	    "getShort".equals(memName) ||
++	    "getInt".equals(memName) ||
++	    "getLong".equals(memName) ||
++	    "getFloat".equals(memName) ||
++	    "getDouble".equals(memName) ||
++	    "set".equals(memName) ||
++	    "setBoolean".equals(memName) ||
++	    "setByte".equals(memName) ||
++	    "setChar".equals(memName) ||
++	    "setShort".equals(memName) ||
++	    "setInt".equals(memName) ||
++	    "setLong".equals(memName) ||
++	    "setFloat".equals(memName) ||
++	    "setDouble".equals(memName))
++	  return defc == java.lang.reflect.Field.class;
++        else if ("newInstance".equals(memName)) {
+             if (defc == java.lang.reflect.Constructor.class)  return true;
+             if (defc == java.lang.Class.class)  return true;
+-            break;
+-        case "forName":
+-        case "getClassLoader":
+-        case "getClasses":
+-        case "getFields":
+-        case "getMethods":
+-        case "getConstructors":
+-        case "getDeclaredClasses":
+-        case "getDeclaredFields":
+-        case "getDeclaredMethods":
+-        case "getDeclaredConstructors":
+-        case "getField":
+-        case "getMethod":
+-        case "getConstructor":
+-        case "getDeclaredField":
+-        case "getDeclaredMethod":
+-        case "getDeclaredConstructor":
++	}
++        else if ("forName".equals(memName) ||
++		 "getClassLoader".equals(memName) ||
++		 "getClasses".equals(memName) ||
++		 "getFields".equals(memName) ||
++		 "getMethods".equals(memName) ||
++		 "getConstructors".equals(memName) ||
++		 "getDeclaredClasses".equals(memName) ||
++		 "getDeclaredFields".equals(memName) ||
++		 "getDeclaredMethods".equals(memName) ||
++		 "getDeclaredConstructors".equals(memName) ||
++		 "getField".equals(memName) ||
++		 "getMethod".equals(memName) ||
++		 "getConstructor".equals(memName) ||
++		 "getDeclaredField".equals(memName) ||
++		 "getDeclaredMethod".equals(memName) ||
++		 "getDeclaredConstructor".equals(memName))
+             return defc == java.lang.Class.class;
+-        case "getConnection":
+-        case "getDriver":
+-        case "getDrivers":
+-        case "deregisterDriver":
++        else if ("getConnection".equals(memName) ||
++		 "getDriver".equals(memName) ||
++		 "getDrivers".equals(memName) ||
++		 "deregisterDriver".equals(memName)) {
+             return defc == java.sql.DriverManager.class;
+-        case "newUpdater":
++        } else if ("newUpdater".equals(memName)) {
+             if (defc == java.util.concurrent.atomic.AtomicIntegerFieldUpdater.class)  return true;
+             if (defc == java.util.concurrent.atomic.AtomicLongFieldUpdater.class)  return true;
+             if (defc == java.util.concurrent.atomic.AtomicReferenceFieldUpdater.class)  return true;
+-            break;
+-        case "getContextClassLoader":
++        } else if ("getContextClassLoader".equals(memName))
+             return defc == java.lang.Thread.class;
+-        case "getPackage":
+-        case "getPackages":
++        else if ("getPackage".equals(memName) || "getPackages".equals(memName))
+             return defc == java.lang.Package.class;
+-        case "getParent":
+-        case "getSystemClassLoader":
++        else if ("getParent".equals(memName) || "getSystemClassLoader".equals(memName))
+             return defc == java.lang.ClassLoader.class;
+-        case "load":
+-        case "loadLibrary":
++        else if ("load".equals(memName) || "loadLibrary".equals(memName)) {
+             if (defc == java.lang.Runtime.class)  return true;
+             if (defc == java.lang.System.class)  return true;
+-            break;
+-        case "getCallerClass":
++        } else if ("getCallerClass".equals(memName)) {
+             if (defc == sun.reflect.Reflection.class)  return true;
+             if (defc == java.lang.System.class)  return true;
+-            break;
+-        case "getCallerClassLoader":
++        } else if ("getCallerClassLoader".equals(memName))
+             return defc == java.lang.ClassLoader.class;
+-        case "getProxyClass":
+-        case "newProxyInstance":
++        else if ("getProxyClass".equals(memName) || "newProxyInstance".equals(memName))
+             return defc == java.lang.reflect.Proxy.class;
+-        case "getBundle":
+-        case "clearCache":
++        else if ("getBundle".equals(memName) || "clearCache".equals(memName))
+             return defc == java.util.ResourceBundle.class;
+-        }
+         return false;
+     }
+ }

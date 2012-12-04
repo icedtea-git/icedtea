@@ -1,0 +1,12 @@
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2012-12-03 18:30:23.136253013 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2012-12-03 18:30:33.288416832 +0000
+@@ -364,7 +364,7 @@
+             return res;
+         } catch (Throwable ex) {
+             System.out.println("linkMethod => throw "+ex);
+-            throw ex;
++            throw new Error(ex);
+         }
+     }
+ 

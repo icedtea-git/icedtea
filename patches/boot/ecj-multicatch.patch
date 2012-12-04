@@ -1,5 +1,6 @@
---- openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java.orig
-+++ openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/io/PrintStream.java openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/io/PrintStream.java	2012-11-30 12:17:08.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java	2012-11-30 14:51:29.846368398 +0000
 @@ -91,7 +91,10 @@
          requireNonNull(csn, "charsetName");
          try {
@@ -12,8 +13,9 @@
              // UnsupportedEncodingException should be thrown
              throw new UnsupportedEncodingException(csn);
          }
---- openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java.orig
-+++ openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/io/PrintWriter.java openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/io/PrintWriter.java	2012-11-30 12:17:08.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java	2012-11-30 14:51:29.858368581 +0000
 @@ -85,7 +85,10 @@
          Objects.requireNonNull(csn, "charsetName");
          try {
@@ -26,8 +28,9 @@
              // UnsupportedEncodingException should be thrown
              throw new UnsupportedEncodingException(csn);
          }
---- openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java.orig
-+++ openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/management/ManagementFactory.java openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/management/ManagementFactory.java	2012-11-30 12:17:08.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java	2012-11-30 14:51:29.858368581 +0000
 @@ -606,7 +606,9 @@
              // create an MXBean proxy
              return JMX.newMXBeanProxy(connection, objName, mxbeanInterface,
@@ -39,8 +42,9 @@
              throw new IllegalArgumentException(e);
          }
      }
---- openjdk-boot/jdk/src/share/classes/java/util/Formatter.java.orig
-+++ openjdk-boot/jdk/src/share/classes/java/util/Formatter.java
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Formatter.java openjdk-boot/jdk/src/share/classes/java/util/Formatter.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/Formatter.java	2012-11-30 12:17:08.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/util/Formatter.java	2012-11-30 14:51:29.858368581 +0000
 @@ -1857,7 +1857,10 @@
          Objects.requireNonNull(csn, "charsetName");
          try {
@@ -53,8 +57,37 @@
              // UnsupportedEncodingException should be thrown
              throw new UnsupportedEncodingException(csn);
          }
---- openjdk-boot/jdk/src/share/classes/java/util/Scanner.java.orig
-+++ openjdk-boot/jdk/src/share/classes/java/util/Scanner.java
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/HashMap.java openjdk-boot/jdk/src/share/classes/java/util/HashMap.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/HashMap.java	2012-11-30 12:17:08.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/util/HashMap.java	2012-11-30 14:51:29.862368643 +0000
+@@ -236,7 +236,9 @@
+                 UNSAFE = sun.misc.Unsafe.getUnsafe();
+                 HASHSEED_OFFSET = UNSAFE.objectFieldOffset(
+                     HashMap.class.getDeclaredField("hashSeed"));
+-            } catch (NoSuchFieldException | SecurityException e) {
++            } catch (NoSuchFieldException e ) {
++                throw new Error("Failed to record hashSeed offset", e);
++            } catch (SecurityException e) {
+                 throw new Error("Failed to record hashSeed offset", e);
+             }
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Hashtable.java openjdk-boot/jdk/src/share/classes/java/util/Hashtable.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/Hashtable.java	2012-11-30 12:17:08.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/util/Hashtable.java	2012-11-30 14:51:29.862368643 +0000
+@@ -234,7 +234,9 @@
+             UNSAFE = sun.misc.Unsafe.getUnsafe();
+             HASHSEED_OFFSET = UNSAFE.objectFieldOffset(
+                 Hashtable.class.getDeclaredField("hashSeed"));
+-        } catch (NoSuchFieldException | SecurityException e) {
++        } catch (NoSuchFieldException e) {
++            throw new Error("Failed to record hashSeed offset", e);
++        } catch (SecurityException e) {
+             throw new Error("Failed to record hashSeed offset", e);
+         }
+      }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Scanner.java openjdk-boot/jdk/src/share/classes/java/util/Scanner.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/Scanner.java	2012-11-30 12:17:08.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/util/Scanner.java	2012-11-30 14:51:29.858368581 +0000
 @@ -633,7 +633,10 @@
          Objects.requireNonNull(csn, "charsetName");
          try {
@@ -78,23 +111,23 @@
              throw new IllegalArgumentException(charsetName);
          }
      }
---- openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java.orig
-+++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java
-@@ -676,7 +676,11 @@
-             IGNORE = IMPL_LOOKUP.findStatic(THIS_CLASS, "ignore", ignoreType);
-             EMPTY = IMPL_LOOKUP.findStatic(THIS_CLASS, "empty", ignoreType.dropParameterTypes(0, 1));
-             NEW_ARRAY = IMPL_LOOKUP.findStatic(THIS_CLASS, "newArray", MethodType.methodType(Object[].class, int.class));
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversions.java openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2012-11-30 12:17:08.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2012-11-30 14:54:56.693599035 +0000
+@@ -474,7 +474,9 @@
+             FILL_NEW_TYPED_ARRAY = IMPL_LOOKUP
+                     .findStatic(THIS_CLASS, "fillNewTypedArray",
+                           MethodType.methodType(Object[].class, Object[].class, Integer.class, Object[].class));
 -        } catch (NoSuchMethodException | IllegalAccessException ex) {
 +        } catch (NoSuchMethodException ex) {
-+            Error err = new InternalError("uncaught exception");
-+            err.initCause(ex);
-+            throw err;
++            throw newInternalError("uncaught exception", ex);
 +        } catch (IllegalAccessException ex) {
-             Error err = new InternalError("uncaught exception");
-             err.initCause(ex);
-             throw err;
---- openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/PAData.java.orig
-+++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/PAData.java
+             throw newInternalError("uncaught exception", ex);
+         }
+     }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/PAData.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/PAData.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/PAData.java	2012-11-30 12:17:08.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/PAData.java	2012-11-30 14:51:29.858368581 +0000
 @@ -280,7 +280,9 @@
                                      .append(info.getSalt())
                                      .append('\n');
@@ -117,9 +150,25 @@
                          sb.append("\t <Unparseable PA-ETYPE-INFO>\n");
                      }
                  }
---- openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java.orig
-+++ openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java
-@@ -3477,7 +3477,9 @@
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2012-11-30 12:17:08.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2012-11-30 14:51:29.862368643 +0000
+@@ -65,7 +65,10 @@
+                 throw new RuntimeException("Duplicate untrusted certificate: " +
+                     cert.getSubjectX500Principal());
+             }
+-        } catch (CertificateException | IOException e) {
++	} catch (CertificateException e) {
++            throw new RuntimeException(
++                        "Incorrect untrusted certificate: " + alias, e);
++	} catch (IOException e) {
+             throw new RuntimeException(
+                         "Incorrect untrusted certificate: " + alias, e);
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/text/bidi/BidiBase.java openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/text/bidi/BidiBase.java	2012-11-30 12:17:08.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java	2012-11-30 14:51:29.858368581 +0000
+@@ -3479,7 +3479,9 @@
              try {
                  Field f = clazz.getField(name);
                  return f.get(null);
@@ -131,8 +180,8 @@
              }
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2012-03-22 10:00:56.029260268 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2012-03-22 10:02:41.275789667 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2012-11-30 12:17:08.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2012-11-30 14:51:29.862368643 +0000
 @@ -94,7 +94,7 @@
                          && mainClass.indexOf(arg.getProcessSubstring()) != -1) {
                              pids.add(vmd.id());
@@ -162,7 +211,7 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java openj
              }
              if (pids.isEmpty()) {
                  System.err.println("Could not find any processes matching : '"
-@@ -185,9 +196,11 @@
+@@ -191,9 +202,11 @@
          try {
              String mainClass = getMainClass(vmd);
              return mainClass != null && mainClass.equals(JCmd.class.getName());
@@ -176,52 +225,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java openj
      }
  
      private static String getMainClass(VirtualMachineDescriptor vmd)
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2012-05-02 20:50:17.549643066 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2012-05-02 20:52:03.435320716 +0100
-@@ -65,7 +65,10 @@
-                 throw new RuntimeException("Duplicate untrusted certificate: " +
-                     cert.getSubjectX500Principal());
-             }
--        } catch (CertificateException | IOException e) {
-+	} catch (CertificateException e) {
-+            throw new RuntimeException(
-+                        "Incorrect untrusted certificate: " + alias, e);
-+	} catch (IOException e) {
-             throw new RuntimeException(
-                         "Incorrect untrusted certificate: " + alias, e);
-         }
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/HashMap.java openjdk-boot/jdk/src/share/classes/java/util/HashMap.java
---- openjdk-boot.orig/jdk/src/share/classes/java/util/HashMap.java	2012-06-08 17:12:17.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/util/HashMap.java	2012-06-11 14:54:16.123125601 +0100
-@@ -237,7 +237,9 @@
-                 UNSAFE = sun.misc.Unsafe.getUnsafe();
-                 HASHSEED_OFFSET = UNSAFE.objectFieldOffset(
-                     HashMap.class.getDeclaredField("hashSeed"));
--            } catch (NoSuchFieldException | SecurityException e) {
-+            } catch (NoSuchFieldException e ) {
-+                throw new Error("Failed to record hashSeed offset", e);
-+            } catch (SecurityException e) {
-                 throw new Error("Failed to record hashSeed offset", e);
-             }
-         }
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Hashtable.java openjdk-boot/jdk/src/share/classes/java/util/Hashtable.java
---- openjdk-boot.orig/jdk/src/share/classes/java/util/Hashtable.java	2012-06-08 17:12:17.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/util/Hashtable.java	2012-06-11 14:54:40.275511896 +0100
-@@ -227,7 +227,9 @@
-             UNSAFE = sun.misc.Unsafe.getUnsafe();
-             HASHSEED_OFFSET = UNSAFE.objectFieldOffset(
-                 Hashtable.class.getDeclaredField("hashSeed"));
--        } catch (NoSuchFieldException | SecurityException e) {
-+        } catch (NoSuchFieldException e) {
-+            throw new Error("Failed to record hashSeed offset", e);
-+        } catch (SecurityException e) {
-             throw new Error("Failed to record hashSeed offset", e);
-         }
-      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.java openjdk-boot/jdk/src/share/classes/sun/tools/jconsole/Resources.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2012-09-26 03:08:32.776450958 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2012-09-26 03:09:50.525678273 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2012-11-30 12:17:08.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2012-11-30 14:51:29.862368643 +0000
 @@ -129,7 +129,9 @@
      private static void setFieldValue(Field field, String value) {
          try {
@@ -252,3 +258,80 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.j
              // Missing VK is okay
              return 0;
          }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2012-11-30 17:41:36.097551748 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2012-11-30 17:40:44.604709097 +0000
+@@ -747,7 +747,9 @@
+             Class<?> fieldType = Wrapper.forBasicType(types.charAt(index)).primitiveType();
+             try {
+                 return LOOKUP.findGetter(cbmhClass, fieldName, fieldType);
+-            } catch (NoSuchFieldException | IllegalAccessException e) {
++            } catch (NoSuchFieldException e) {
++                throw newInternalError(e);
++            } catch (IllegalAccessException e) {
+                 throw newInternalError(e);
+             }
+         }
+@@ -801,7 +803,13 @@
+         static MethodHandle makeCbmhCtor(Class<? extends BoundMethodHandle> cbmh, String types) {
+             try {
+                 return linkConstructor(LOOKUP.findConstructor(cbmh, MethodType.fromMethodDescriptorString(makeSignature(types, true), null)));
+-            } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | TypeNotPresentException e) {
++            } catch (NoSuchMethodException e) {
++                throw newInternalError(e);
++            } catch (IllegalAccessException e) {
++                throw newInternalError(e);
++            } catch (IllegalArgumentException e) {
++                throw newInternalError(e);
++            } catch (TypeNotPresentException e) {
+                 throw newInternalError(e);
+             }
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/LambdaForm.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2012-11-30 17:37:04.389140174 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2012-11-30 17:37:48.621857219 +0000
+@@ -456,9 +456,11 @@
+                 traceInterpreter("compileToBytecode", this);
+             isCompiled = true;
+             return vmentry;
+-        } catch (Error | Exception ex) {
++        } catch (Error ex) {
+             throw newInternalError(this.toString(), ex);
+-        }
++        } catch (Exception ex) {
++            throw newInternalError(this.toString(), ex);
++	}
+     }
+ 
+     private static final ConcurrentHashMap<String,LambdaForm> PREPARED_FORMS;
+@@ -1546,9 +1548,11 @@
+             MemberName zmem = new MemberName(LambdaForm.class, "zero"+bt, MethodType.methodType(wrap.primitiveType()), REF_invokeStatic);
+             try {
+                 zmem = IMPL_NAMES.resolveOrFail(REF_invokeStatic, zmem, null, NoSuchMethodException.class);
+-            } catch (IllegalAccessException|NoSuchMethodException ex) {
++            } catch (IllegalAccessException ex) {
+                 throw newInternalError(ex);
+-            }
++            } catch (NoSuchMethodException ex) {
++                throw newInternalError(ex);
++	    }
+             NamedFunction zcon = new NamedFunction(zmem);
+             Name n = new Name(zcon).newIndex(0);
+             assert(n.type == ALL_TYPES.charAt(tn));
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2012-11-30 17:38:44.434761848 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2012-11-30 17:39:19.443329202 +0000
+@@ -263,7 +263,12 @@
+                     continue;
+                 }
+                 throw new InternalError(err);
+-            } catch (NoSuchFieldException | IllegalAccessException ex) {
++            } catch (NoSuchFieldException ex) {
++                String err = (name+": JVM has "+vmval+" which Java does not define");
++                // ignore exotic ops the JVM cares about; we just wont issue them
++                //System.err.println("warning: "+err);
++                continue;
++            } catch (IllegalAccessException ex) {
+                 String err = (name+": JVM has "+vmval+" which Java does not define");
+                 // ignore exotic ops the JVM cares about; we just wont issue them
+                 //System.err.println("warning: "+err);
