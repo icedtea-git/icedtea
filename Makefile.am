@@ -790,7 +790,8 @@ clean-local: clean-tests clean-pulse-java \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
  clean-extract clean-generated clean-native-ecj clean-hgforest clean-icedtea-stage2 \
  clean-icedtea-debug-stage2 clean-icedtea-stage1 clean-add-zero clean-add-zero-debug \
- clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter
+ clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter \
+ clean-add-systemtap clean-add-systemtap-debug
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -810,7 +811,7 @@ distclean-local: clean-local clean-download
 
 install:
 
-.PHONY: \
+.PHON: \
 	env env-boot snapshot clean-clone clean-patch \
 	clean-clone-boot clean-patch-boot clean-bootstrap-directory-stage2 \
 	clean-bootstrap-directory-symlink-stage2 clean-bootstrap-directory-stage1 \
@@ -820,7 +821,8 @@ install:
 	jtregcheck clean-remove-intree-libraries \
 	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
 	clean-extract-hotspot clean-sanitise-openjdk \
-	clean-tests clean-tapset-report
+	clean-tests clean-tapset-report clean-add-systemtap \
+	clean-add-systemtap-debug
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1720,6 +1722,20 @@ endif
 if ENABLE_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
+	cp $(abs_top_builddir)/nss.cfg \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
+if WITH_TZDATA_DIR
+	cp $(abs_top_builddir)/tz.properties \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+endif
+if ENABLE_JAMVM
+	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
+endif
+	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
+	mkdir -p stamps
+	touch $@
+
+stamps/add-systemtap.stamp: stamps/icedtea.stamp
 if ENABLE_SYSTEMTAP
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
@@ -1744,18 +1760,11 @@ if ENABLE_SYSTEMTAP
 	cp $(abs_top_builddir)/tapset/jstack.stp \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/jstack.stp
 endif
-	cp $(abs_top_builddir)/nss.cfg \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
-if WITH_TZDATA_DIR
-	cp $(abs_top_builddir)/tz.properties \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
-endif
-if ENABLE_JAMVM
-	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
-endif
-	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
-	mkdir -p stamps
-	touch $@
+	touch stamps/add-systemtap.stamp
+
+clean-add-systemtap:
+	rm -rf $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset
+	rm -f stamps/add-systemtap.stamp
 
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
@@ -1791,6 +1800,25 @@ endif
 if ENABLE_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
+	cp $(abs_top_builddir)/nss.cfg \
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
+if WITH_TZDATA_DIR
+	cp $(abs_top_builddir)/tz.properties \
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+endif
+if ENABLE_JAMVM
+	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+endif
+	@echo "IcedTea (debug build) is served:" \
+	  $(DEBUG_BUILD_OUTPUT_DIR)
+	mkdir -p stamps
+	touch $@
+
+clean-icedtea: 
+	rm -rf $(BUILD_OUTPUT_DIR)
+	rm -f stamps/icedtea.stamp stamps/icedtea-debug.stamp
+
+stamps/add-systemtap-debug.stamp: stamps/icedtea-debug.stamp
 if ENABLE_SYSTEMTAP
 	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
@@ -1815,26 +1843,14 @@ if ENABLE_SYSTEMTAP
 	cp $(abs_top_builddir)/tapset/jstack.stp \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/jstack.stp
 endif
-	cp $(abs_top_builddir)/nss.cfg \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
-if WITH_TZDATA_DIR
-	cp $(abs_top_builddir)/tz.properties \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
-endif
-if ENABLE_JAMVM
-	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
-endif
-	@echo "IcedTea (debug build) is served:" \
-	  $(DEBUG_BUILD_OUTPUT_DIR)
-	mkdir -p stamps
-	touch $@
+	touch stamps/add-systemtap-debug.stamp
 
-clean-icedtea: 
-	rm -rf $(BUILD_OUTPUT_DIR)
-	rm -f stamps/icedtea.stamp stamps/icedtea-debug.stamp
+clean-add-systemtap-debug:
+	rm -rf $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset
+	rm -f stamps/add-systemtap-debug.stamp
 
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
- stamps/add-zero.stamp stamps/add-jamvm.stamp
+ stamps/add-zero.stamp stamps/add-jamvm.stamp stamps/add-systemtap.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -1842,7 +1858,8 @@ clean-icedtea-stage2: clean-add-jamvm
 	rm -f stamps/icedtea-stage2.stamp
 
 stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
- stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp
+ stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp \
+ stamps/add-systemtap-debug.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -2438,6 +2455,10 @@ clean-rt:
 
 # Target Aliases
 # ===============
+
+add-systemtap: stamps/add-systemtap.stamp
+
+add-systemtap-debug: stamps/add-systemtap-debug.stamp
 
 add-zero: stamps/add-zero.stamp
 
