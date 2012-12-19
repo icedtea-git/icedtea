@@ -1,6 +1,25 @@
 2010-09-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
+	(.PHONY): Add clean-add-nss, clean-add-nss-debug,
+	clean-add-tzdata-support and clean-add-tzdata-support-debug.
+	(clean-local): Likewise.
+	(icedtea): Remove NSS and tzdata support.
+	(add-nss): New target to add NSS support to the build.
+	(clean-add-nss): Remove NSS support from the build.
+	(add-tzdata-support): New target to add alternate timezone data support to the build.
+	(clean-add-tzdata-support): Remove alternate timezone data support from the build.
+	(icedtea-debug): Remove NSS and tzdata support.
+	(add-nss-debug): Likewise for debug.
+	(clean-add-nss-debug): Likewise for debug.
+	(add-tzdata-support-debug): Likewise for debug.
+	(clean-add-tzdata-support-debug): Likewise for debug.
+	(icedtea-stage2): Depend on add-nss and add-tzdata-support.
+	(icedtea-debug-stage2): Depend on add-nss-debug and add-tzdata-support-debug.
+
+2010-09-23  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
 	(.PHONY): Add clean-add-pulseaudio and
 	clean-add-pulseaudio-debug.
 	(clean-local): Likewise.

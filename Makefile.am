@@ -791,7 +791,8 @@ clean-local: clean-tests clean-pulse-java \
  clean-extract clean-generated clean-native-ecj clean-hgforest clean-icedtea-stage2 \
  clean-icedtea-debug-stage2 clean-icedtea-stage1 clean-add-zero clean-add-zero-debug \
  clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter \
- clean-add-systemtap clean-add-systemtap-debug clean-add-pulseaudio clean-add-pulseaudio-debug
+ clean-add-systemtap clean-add-systemtap-debug clean-add-pulseaudio clean-add-pulseaudio-debug \
+ clean-add-nss clean-add-nss-debug clean-add-tzdata-support clean-add-tzdata-support-debug
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -822,7 +823,8 @@ install:
 	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
 	clean-extract-hotspot clean-sanitise-openjdk \
 	clean-tests clean-tapset-report clean-add-systemtap \
-	clean-add-systemtap-debug clean-add-pulseaudio clean-add-pulseaudio-debug
+	clean-add-systemtap-debug clean-add-pulseaudio clean-add-pulseaudio-debug \
+	clean-add-nss clean-add-nss-debug clean-add-tzdata-support clean-add-tzdata-support-debug
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1709,12 +1711,6 @@ endif
 if ENABLE_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
-	cp $(abs_top_builddir)/nss.cfg \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
-if WITH_TZDATA_DIR
-	cp $(abs_top_builddir)/tz.properties \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
-endif
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
@@ -1776,6 +1772,26 @@ clean-add-pulseaudio:
 	rm -f $(BUILD_OUTPUT_DIR)/j2re-image/lib/ext/pulse-java.jar
 	rm -f stamps/add-pulseaudio.stamp
 
+stamps/add-nss.stamp: stamps/icedtea.stamp
+	cp $(abs_top_builddir)/nss.cfg \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
+	touch stamps/add-nss.stamp
+
+clean-add-nss:
+	rm -f $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security/nss.cfg
+	rm -f stamps/add-nss.stamp
+
+stamps/add-tzdata-support.stamp: stamps/icedtea.stamp
+if WITH_TZDATA_DIR
+	cp $(abs_top_builddir)/tz.properties \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+endif
+	touch stamps/add-tzdata-support.stamp
+
+clean-add-tzdata-support:
+	rm -f $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/tz.properties
+	rm -f stamps/add-tzdata-support.stamp
+
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/cacao.stamp stamps/rewrite-rhino.stamp stamps/jamvm.stamp
@@ -1796,12 +1812,6 @@ if SHARK_BUILD
 endif
 if ENABLE_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
-endif
-	cp $(abs_top_builddir)/nss.cfg \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
-if WITH_TZDATA_DIR
-	cp $(abs_top_builddir)/tz.properties \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
 endif
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
@@ -1869,9 +1879,29 @@ clean-add-pulseaudio-debug:
 	rm -f $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/ext/pulse-java.jar
 	rm -f stamps/add-pulseaudio-debug.stamp
 
+stamps/add-nss-debug.stamp: stamps/icedtea-debug.stamp
+	cp $(abs_top_builddir)/nss.cfg \
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
+	touch stamps/add-nss-debug.stamp
+
+clean-add-nss-debug:
+	rm -f $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security/nss.cfg
+	rm -f stamps/add-nss-debug.stamp
+
+stamps/add-tzdata-support-debug.stamp: stamps/icedtea.stamp
+if WITH_TZDATA_DIR
+	cp $(abs_top_builddir)/tz.properties \
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+endif
+	touch stamps/add-tzdata-support-debug.stamp
+
+clean-add-tzdata-support-debug:
+	rm -f $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/tz.properties
+	rm -f stamps/add-tzdata-support-debug.stamp
+
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
  stamps/add-zero.stamp stamps/add-jamvm.stamp stamps/add-systemtap.stamp \
- stamps/add-pulseaudio.stamp
+ stamps/add-pulseaudio.stamp stamps/add-nss.stamp stamps/add-tzdata-support.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -1880,7 +1910,8 @@ clean-icedtea-stage2: clean-add-jamvm
 
 stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
  stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp \
- stamps/add-systemtap-debug.stamp stamps/add-pulseaudio-debug.stamp
+ stamps/add-systemtap-debug.stamp stamps/add-pulseaudio-debug.stamp \
+ stamps/add-nss-debug.stamp stamps/add/tzdata-support-debug.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -2477,6 +2508,10 @@ clean-rt:
 # Target Aliases
 # ===============
 
+add-nss: stamps/add-nss.stamp
+
+add-nss-debug: stamps/add-nss-debug.stamp
+
 add-pulseaudio: stamps/add-pulseaudio.stamp
 
 add-pulseaudio-debug: stamps/add-pulseaudio-debug.stamp
@@ -2484,6 +2519,10 @@ add-pulseaudio-debug: stamps/add-pulseaudio-debug.stamp
 add-systemtap: stamps/add-systemtap.stamp
 
 add-systemtap-debug: stamps/add-systemtap-debug.stamp
+
+add-tzdata-support: stamps/add-tzdata-support.stamp
+
+add-tzdata-support-debug: stamps/add-tzdata-support-debug.stamp
 
 add-zero: stamps/add-zero.stamp
 
