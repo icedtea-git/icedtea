@@ -1,3 +1,18 @@
+2010-09-24  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	(.PHONY): Add new clean targets.  Fix name.
+	(add-systemtap-boot): Add SystemTap support to the boot build.
+	(clean-add-systemtap-boot): Remove SystemTap support from the boot build.
+	(add-pulseaudio-boot): New target to add PulseAudio support to the boot build.
+	(clean-add-pulseaudio-boot): Remove PulseAudio support from the boot build.
+	(add-nss-boot): New target to add NSS support to the boot build.
+	(clean-add-nss-boot): Remove NSS support from the boot build.
+	(add-tzdata-support-boot): New target to add alternate timezone data support to the boot build.
+	(clean-add-tzdata-support-boot): Remove alternate timezone data support from the boot build.
+	(icedtea-stage1): Add new add-x-boot targets.
+	(clean-icedtea-stage1): Add new clean-add-x-boot targets.
+
 2010-09-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:

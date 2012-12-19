@@ -812,7 +812,7 @@ distclean-local: clean-local clean-download
 
 install:
 
-.PHON: \
+.PHONY: \
 	env env-boot snapshot clean-clone clean-patch \
 	clean-clone-boot clean-patch-boot clean-bootstrap-directory-stage2 \
 	clean-bootstrap-directory-symlink-stage2 clean-bootstrap-directory-stage1 \
@@ -824,7 +824,8 @@ install:
 	clean-extract-hotspot clean-sanitise-openjdk \
 	clean-tests clean-tapset-report clean-add-systemtap \
 	clean-add-systemtap-debug clean-add-pulseaudio clean-add-pulseaudio-debug \
-	clean-add-nss clean-add-nss-debug clean-add-tzdata-support clean-add-tzdata-support-debug
+	clean-add-nss clean-add-nss-debug clean-add-tzdata-support clean-add-tzdata-support-debug \
+	clean-add-systemtap-boot clean-add-pulseaudio-boot clean-add-nss-boot clean-add-tzdata-support-boot
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1888,7 +1889,7 @@ clean-add-nss-debug:
 	rm -f $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security/nss.cfg
 	rm -f stamps/add-nss-debug.stamp
 
-stamps/add-tzdata-support-debug.stamp: stamps/icedtea.stamp
+stamps/add-tzdata-support-debug.stamp: stamps/icedtea-debug.stamp
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
@@ -1934,6 +1935,94 @@ stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
 	mkdir -p stamps
 	touch $@
 
+clean-icedtea-boot:
+	rm -rf $(BOOT_BUILD_OUTPUT_DIR)
+	rm -f stamps/icedtea-boot.stamp
+
+stamps/add-systemtap-boot.stamp: stamps/icedtea-boot.stamp
+if ENABLE_SYSTEMTAP
+	mkdir -p $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
+	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
+	if test $$? -eq 0; then \
+	  sed -e '/\/client\/libjvm.so/d' \
+	    < $(abs_top_builddir)/tapset/hotspot.stp \
+	    > $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	  sed -e '/\/client\/libjvm.so/d' \
+	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
+	    > $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	  sed -e '/\/client\/libjvm.so/d' \
+	    < $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    > $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
+	else \
+	  cp $(abs_top_builddir)/tapset/hotspot.stp \
+	    $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
+	    $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	  cp $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
+	fi; \
+	cp $(abs_top_builddir)/tapset/jstack.stp \
+	  $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/jstack.stp
+endif
+	touch stamps/add-systemtap-boot.stamp
+
+clean-add-systemtap-boot:
+	rm -rf $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset
+	rm -f stamps/add-systemtap-boot.stamp
+
+stamps/add-pulseaudio-boot.stamp: stamps/icedtea-boot.stamp $(PULSE_JAVA_TARGET)
+if ENABLE_PULSE_JAVA
+	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
+	  $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
+	  $(BOOT_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf pulse-java.jar \
+	  $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
+	cp -pPRf pulse-java.jar \
+	  $(BOOT_BUILD_OUTPUT_DIR)/j2re-image/lib/ext
+	(cd $(PULSE_JAVA_JAVA_SRCDIR) && \
+	   $(ZIP) -qur $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/src.zip org )
+endif
+	touch stamps/add-pulseaudio-boot.stamp
+
+# Note: for simplicity, we don't revert the update of src.zip
+clean-add-pulseaudio-boot:
+	rm -f $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/libpulse-java.so
+	rm -f $(BOOT_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)/libpulse-java.so
+	rm -f $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext/pulse-java.jar
+	rm -f $(BOOT_BUILD_OUTPUT_DIR)/j2re-image/lib/ext/pulse-java.jar
+	rm -f stamps/add-pulseaudio-boot.stamp
+
+stamps/add-nss-boot.stamp: stamps/icedtea-boot.stamp
+	cp $(abs_top_builddir)/nss.cfg \
+	  $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
+	touch stamps/add-nss-boot.stamp
+
+clean-add-nss-boot:
+	rm -f $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security/nss.cfg
+	rm -f stamps/add-nss-boot.stamp
+
+stamps/add-tzdata-support-boot.stamp: stamps/icedtea-boot.stamp
+if WITH_TZDATA_DIR
+	cp $(abs_top_builddir)/tz.properties \
+	  $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+endif
+	touch stamps/add-tzdata-support-boot.stamp
+
+clean-add-tzdata-support-boot:
+	rm -f $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/tz.properties
+	rm -f stamps/add-tzdata-support-boot.stamp
+
+stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp \
+ stamps/add-systemtap-boot.stamp stamps/add-pulseaudio-boot.stamp \
+ stamps/add-nss-boot.stamp stamps/add-tzdata-support-boot.stamp
+	mkdir -p stamps
+	touch $@
+
+clean-icedtea-stage1: clean-add-systemtap-boot clean-add-pulseaudio-boot \
+ clean-add-nss-boot clean-add-tzdata-support-boot
+	rm -f stamps/icedtea-stage1.stamp
+
 # Rebuild targets
 
 rebuild:
@@ -1969,17 +2058,6 @@ else
 	   $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
 	@echo "HotSpot is served:" $(BUILD_OUTPUT_DIR)/j2sdk-image
 endif
-
-clean-icedtea-boot:
-	rm -rf $(BOOT_BUILD_OUTPUT_DIR)
-	rm -f stamps/icedtea-boot.stamp
-
-stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp
-	mkdir -p stamps
-	touch $@
-
-clean-icedtea-stage1:
-	rm -f stamps/icedtea-stage1.stamp
 
 # PulseAudio based mixer
 # (pulse-java)
