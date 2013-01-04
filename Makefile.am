@@ -1,22 +1,22 @@
 # Dependencies
 
-OPENJDK_VERSION = b03
+OPENJDK_VERSION = b06
 JDK_UPDATE_VERSION = 12
 COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)
 
-CORBA_CHANGESET = c76fd939af52
-JAXP_CHANGESET = ff514c638d9c
-JAXWS_CHANGESET = c24ace5f1fd8
-JDK_CHANGESET = b10e1311a206
-LANGTOOLS_CHANGESET = a4f9ef26ecb2
-OPENJDK_CHANGESET = af7f3ffa51f0
+CORBA_CHANGESET = 1fc876ad27f5
+JAXP_CHANGESET = b67573b17099
+JAXWS_CHANGESET = 8c8c122d0fa8
+JDK_CHANGESET = 880acd2bf8d1
+LANGTOOLS_CHANGESET = 698d52b36615
+OPENJDK_CHANGESET = 9b35dbaf2afa
 
-CORBA_SHA256SUM = 66b69e1c9ef33fd241e7aafc718acc23c690961644fed1d13c85b6a29cfecf7b
-JAXP_SHA256SUM = b409e5656e6194c4d559d435e5ab0ec4ce2723c12e958f9ba429478719fe2db4
-JAXWS_SHA256SUM = f1732dca7254e8f3c00116eb2cd1fdcd44b6d1da1b19537f23e610acad6764b4
-JDK_SHA256SUM = 654a1fd889d17a8a6fd0a6f3fda697f18e7a0d81a4baff45f3c96014524bbb54
-LANGTOOLS_SHA256SUM = 224feb6a121c3da9a9e4c592c966bf9f2bfab589bb614419d4ca176248f08bc8
-OPENJDK_SHA256SUM = 21aaf8e746fcf51535b9e42b9ab0546c4de2dd3d1846d10b9123f16939f0ca6b
+CORBA_SHA256SUM = 2945cef860c0a3e5af69ffe370ed762bb620db855f97e16efef5b639144e3d93
+JAXP_SHA256SUM = 4eb3f831cb486c81e16ac5d37b30e0e309ba8e2e8d4a400382ee4fa0790ca268
+JAXWS_SHA256SUM = 35e075fc9d4c9de7df8905cf3238e87a9388e4028ff984b494b7fb6c36fd17e1
+JDK_SHA256SUM = c6db11a2f5e90f37a37d65615d7e5ffa0e0e066e4eb303cc98e23ac245b3425d
+LANGTOOLS_SHA256SUM = 6ec950b34cb8cc1c6aa64e25b492952a3ba0a53370bb6e5d5431922fa940b506
+OPENJDK_SHA256SUM = c42c018e3f2a5037d9c07e98ffb8784a732c5e1ebd5bb18c3587ca0e8825b27b
 
 CACAO_VERSION = a567bcb7f589
 CACAO_SHA256SUM = d49f79debc131a5694cae6ab3ba2864e7f3249ee8d9dc09aae8afdd4dc6b09f9
@@ -227,7 +227,7 @@ endif
 
 # Target to ensure a patched OpenJDK tree containing Zero & Shark
 # and any overlays is available in $(abs_top_builddir)/openjdk
-OPENJDK_TREE = stamps/overlay.stamp
+OPENJDK_TREE = stamps/overlay.stamp stamps/add-nss.stamp
 
 # Target to ensure a patched OpenJDK bootstrap tree containing
 # Zero & Shark, any other overlays and the bootstrapping patches
@@ -292,8 +292,6 @@ endif
 
 if ENABLE_NSS
 ICEDTEA_PATCHES += patches/nss-config.patch
-else
-ICEDTEA_PATCHES += patches/nss-not-enabled-config.patch
 endif
 
 if WITH_PAX
@@ -792,7 +790,7 @@ clean-local: clean-tests clean-pulse-java \
  clean-icedtea-debug-stage2 clean-icedtea-stage1 clean-add-zero clean-add-zero-debug \
  clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter \
  clean-add-systemtap clean-add-systemtap-debug clean-add-pulseaudio clean-add-pulseaudio-debug \
- clean-add-nss clean-add-nss-debug clean-add-tzdata-support clean-add-tzdata-support-debug
+ clean-add-nss clean-add-tzdata-support clean-add-tzdata-support-debug
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -824,8 +822,8 @@ install:
 	clean-extract-hotspot clean-sanitise-openjdk \
 	clean-tests clean-tapset-report clean-add-systemtap \
 	clean-add-systemtap-debug clean-add-pulseaudio clean-add-pulseaudio-debug \
-	clean-add-nss clean-add-nss-debug clean-add-tzdata-support clean-add-tzdata-support-debug \
-	clean-add-systemtap-boot clean-add-pulseaudio-boot clean-add-nss-boot clean-add-tzdata-support-boot
+	clean-add-nss clean-add-tzdata-support clean-add-tzdata-support-debug \
+	clean-add-systemtap-boot clean-add-pulseaudio-boot clean-add-tzdata-support-boot
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1773,13 +1771,12 @@ clean-add-pulseaudio:
 	rm -f $(BUILD_OUTPUT_DIR)/j2re-image/lib/ext/pulse-java.jar
 	rm -f stamps/add-pulseaudio.stamp
 
-stamps/add-nss.stamp: stamps/icedtea.stamp
-	cp $(abs_top_builddir)/nss.cfg \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
+stamps/add-nss.stamp: stamps/extract-openjdk.stamp
+	cp -v $(abs_top_builddir)/nss.cfg openjdk/jdk/src/share/lib/security;
 	touch stamps/add-nss.stamp
 
 clean-add-nss:
-	rm -f $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security/nss.cfg
+	rm -f openjdk/jdk/src/share/lib/security/nss.cfg
 	rm -f stamps/add-nss.stamp
 
 stamps/add-tzdata-support.stamp: stamps/icedtea.stamp
@@ -1880,15 +1877,6 @@ clean-add-pulseaudio-debug:
 	rm -f $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/ext/pulse-java.jar
 	rm -f stamps/add-pulseaudio-debug.stamp
 
-stamps/add-nss-debug.stamp: stamps/icedtea-debug.stamp
-	cp $(abs_top_builddir)/nss.cfg \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
-	touch stamps/add-nss-debug.stamp
-
-clean-add-nss-debug:
-	rm -f $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security/nss.cfg
-	rm -f stamps/add-nss-debug.stamp
-
 stamps/add-tzdata-support-debug.stamp: stamps/icedtea-debug.stamp
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
@@ -1902,7 +1890,7 @@ clean-add-tzdata-support-debug:
 
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
  stamps/add-zero.stamp stamps/add-jamvm.stamp stamps/add-systemtap.stamp \
- stamps/add-pulseaudio.stamp stamps/add-nss.stamp stamps/add-tzdata-support.stamp
+ stamps/add-pulseaudio.stamp stamps/add-tzdata-support.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -1912,7 +1900,7 @@ clean-icedtea-stage2: clean-add-jamvm
 stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
  stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp \
  stamps/add-systemtap-debug.stamp stamps/add-pulseaudio-debug.stamp \
- stamps/add-nss-debug.stamp stamps/add/tzdata-support-debug.stamp
+ stamps/add/tzdata-support-debug.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -1993,15 +1981,6 @@ clean-add-pulseaudio-boot:
 	rm -f $(BOOT_BUILD_OUTPUT_DIR)/j2re-image/lib/ext/pulse-java.jar
 	rm -f stamps/add-pulseaudio-boot.stamp
 
-stamps/add-nss-boot.stamp: stamps/icedtea-boot.stamp
-	cp $(abs_top_builddir)/nss.cfg \
-	  $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
-	touch stamps/add-nss-boot.stamp
-
-clean-add-nss-boot:
-	rm -f $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security/nss.cfg
-	rm -f stamps/add-nss-boot.stamp
-
 stamps/add-tzdata-support-boot.stamp: stamps/icedtea-boot.stamp
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
@@ -2015,12 +1994,12 @@ clean-add-tzdata-support-boot:
 
 stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp \
  stamps/add-systemtap-boot.stamp stamps/add-pulseaudio-boot.stamp \
- stamps/add-nss-boot.stamp stamps/add-tzdata-support-boot.stamp
+ stamps/add-tzdata-support-boot.stamp
 	mkdir -p stamps
 	touch $@
 
 clean-icedtea-stage1: clean-add-systemtap-boot clean-add-pulseaudio-boot \
- clean-add-nss-boot clean-add-tzdata-support-boot
+ clean-add-tzdata-support-boot
 	rm -f stamps/icedtea-stage1.stamp
 
 # Rebuild targets
