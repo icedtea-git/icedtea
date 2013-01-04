@@ -1,3 +1,9 @@
+2013-01-04  Pavel Tisnovsky  <ptisnovs@redhat.com>
+
+	* patches/boot/use_target_6_for_bootstrap_classes.patch:
+	Fixed build failure caused by changes in one Makefile altered by this
+	patch (make/sun/rmi/rmi/Makefile).
+
 2013-01-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* patches/nss-not-enabled-config.patch:

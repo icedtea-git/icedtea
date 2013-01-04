@@ -26,15 +26,16 @@ diff -r 9cf5ed6b45d6 make/java/java/Makefile
 diff -r 9cf5ed6b45d6 make/sun/rmi/rmi/Makefile
 --- openjdk-boot/jdk/make/sun/rmi/rmi/Makefile	Mon Jul 25 16:20:39 2011 -0700
 +++ openjdk-boot/jdk/make/sun/rmi/rmi/Makefile	Thu Jul 28 03:12:35 2011 +0100
-@@ -33,6 +33,9 @@
- LIBRARY = rmi
+@@ -34,6 +32,10 @@
+ PRODUCT = sun
  include $(BUILDDIR)/common/Defs.gmk
  
 +LANGUAGE_VERSION = -source 6
 +CLASS_VERSION = -target 6
 +
++
  #
- # Add use of a mapfile
+ # Java files to compile.
  #
 diff -r 9cf5ed6b45d6 make/com/sun/jndi/rmi/registry/Makefile
 --- openjdk-boot/jdk/make/com/sun/jndi/rmi/registry/Makefile	Mon Jul 25 16:20:39 2011 -0700
