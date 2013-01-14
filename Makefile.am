@@ -1781,13 +1781,17 @@ clean-add-nss:
 
 stamps/add-tzdata-support.stamp: stamps/icedtea.stamp
 if WITH_TZDATA_DIR
-	cp $(abs_top_builddir)/tz.properties \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+	if [ -e $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib ] ; then \
+	  cp -v $(abs_top_builddir)/tz.properties \
+	    $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib ; \
+	fi
 endif
 	touch stamps/add-tzdata-support.stamp
 
 clean-add-tzdata-support:
-	rm -f $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/tz.properties
+	if [ -e $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/tz.properties ] ; then \
+	  rm -vf $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/tz.properties ; \
+	fi
 	rm -f stamps/add-tzdata-support.stamp
 
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
@@ -1879,13 +1883,17 @@ clean-add-pulseaudio-debug:
 
 stamps/add-tzdata-support-debug.stamp: stamps/icedtea-debug.stamp
 if WITH_TZDATA_DIR
-	cp $(abs_top_builddir)/tz.properties \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+	if [ -e $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib ] ; then \
+	  cp -v $(abs_top_builddir)/tz.properties \
+	    $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib; \
+	fi
 endif
 	touch stamps/add-tzdata-support-debug.stamp
 
 clean-add-tzdata-support-debug:
-	rm -f $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/tz.properties
+	if [ -e $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/tz.properties ] ; then \
+	  rm -vf $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/tz.properties ; \
+	fi
 	rm -f stamps/add-tzdata-support-debug.stamp
 
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
@@ -1983,13 +1991,17 @@ clean-add-pulseaudio-boot:
 
 stamps/add-tzdata-support-boot.stamp: stamps/icedtea-boot.stamp
 if WITH_TZDATA_DIR
-	cp $(abs_top_builddir)/tz.properties \
-	  $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+	if [ -e $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib ] ; then \
+	  cp -v $(abs_top_builddir)/tz.properties \
+	    $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib; \
+	fi
 endif
 	touch stamps/add-tzdata-support-boot.stamp
 
 clean-add-tzdata-support-boot:
-	rm -f $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/tz.properties
+	if [ -e $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/tz.properties ] ; then \
+	  rm -vf $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/tz.properties ; \
+	fi
 	rm -f stamps/add-tzdata-support-boot.stamp
 
 stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp \

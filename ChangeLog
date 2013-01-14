@@ -1,5 +1,20 @@
 2013-01-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	(add-tzdata-support): Only copy tz.properties if
+	destination exists.  Do it verbosely.
+	(clean-add-tzdata-support): Only remove tz.properties
+	if present and do so verbosely.
+	(add-tzdata-support-debug): Same as add-tzdata-support
+	but for debug.
+	(clean-add-tzdata-support-debug): Same as
+	clean-add-tzdata-support but for debug.
+	(add-tzdata-support-boot): Same as add-tzdata-support
+	but for bootstrap.
+	(clean-add-tzdata-support-boot): Same as
+	clean-add-tzdata-support but for bootstrap.
+
+2013-01-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* fsg.sh:
 	Remove source code for the EC provider which
 	isn't built.  Make the removals verbose so
