@@ -7,13 +7,13 @@ echo "Further liberating OpenJDK..."
 
 # PR146/S6713083
 # Remove binaries
-rm -f \
+rm -vf \
   openjdk/jdk/test/sun/management/windows/revokeall.exe \
   openjdk/jdk/test/sun/management/jmxremote/bootstrap/linux-i586/launcher \
   openjdk/jdk/test/sun/management/jmxremote/bootstrap/solaris-sparc/launcher \
   openjdk/jdk/test/sun/management/jmxremote/bootstrap/solaris-i586/launcher
 
-rm -f \
+rm -vf \
   openjdk/jdk/test/java/nio/channels/spi/SelectorProvider/inheritedChannel/lib/linux-i586/libLauncher.so \
   openjdk/jdk/test/java/nio/channels/spi/SelectorProvider/inheritedChannel/lib/solaris-i586/libLauncher.so \
   openjdk/jdk/test/java/nio/channels/spi/SelectorProvider/inheritedChannel/lib/solaris-sparc/libLauncher.so \
@@ -25,7 +25,7 @@ rm -f \
   openjdk/jdk/test/tools/launcher/lib/sparc/lib64/lib64/liblibrary.so \
   openjdk/jdk/test/tools/launcher/lib/sparc/lib64/liblibrary.so
 
-rm -f \
+rm -vf \
   openjdk/jdk/test/java/util/Locale/data/deflocale.exe \
   openjdk/jdk/test/java/util/Locale/data/deflocale.jds3 \
   openjdk/jdk/test/java/util/Locale/data/deflocale.rhel4 \
@@ -35,7 +35,7 @@ rm -f \
   openjdk/jdk/test/java/util/Locale/data/deflocale.winxp \
 
 # Remove test sources with questionable license headers.
-rm -f \
+rm -vf \
    openjdk/jdk/test/java/util/ResourceBundle/Bug4168625Resource3.java \
    openjdk/jdk/test/java/util/ResourceBundle/Bug4168625Resource3_en_IE.java \
    openjdk/jdk/test/java/util/ResourceBundle/Bug4165815Test.java \
@@ -73,13 +73,13 @@ rm -f \
 
 # Remove J2DBench sources, some of which have questionable license
 # headers.
-rm -rf \
+rm -rvf \
   openjdk/jdk/src/share/demo/java2d/J2DBench
 
 # BEGIN Debian/Ubuntu additions
 
 # binary files
-rm -f \
+rm -vf \
   openjdk/jdk/test/sun/net/idn/nfscis.spp
 
 # TODO
@@ -87,20 +87,29 @@ rm -f \
 
 # PR140, S6695776
 # Also see patches/icedtea-jscheme.patch
-rm -rf openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/lib
-rm -rf openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/scripts
+rm -rvf openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/lib
+rm -rvf openjdk/corba/src/share/classes/com/sun/tools/corba/se/logutil/scripts
 
 # PR139, S6710791
-rm -f \
+rm -vf \
   openjdk/hotspot/agent/kk/src/share/lib/maf-1_0.jar \
   openjdk/hotspot/agent/kk/src/share/lib/jlfgr-1_0.jar \
 
 # END Debian/Ubuntu additions
 
-# Remove support for proprietary SNMP plug
-rm -rf openjdk/jdk/src/share/classes/sun/management/snmp
-rm -rf openjdk/jdk/src/share/classes/com/sun/jmx/snmp
-rm -rf openjdk/jdk/test/com/sun/jmx/snmp
+echo "Removing support for proprietary SNMP plug"
+rm -rvf openjdk/jdk/src/share/classes/sun/management/snmp
+rm -rvf openjdk/jdk/src/share/classes/com/sun/jmx/snmp
+rm -rvf openjdk/jdk/test/com/sun/jmx/snmp
 
-# Remove registration tests
-rm -rf openjdk/jdk/test/com/sun/servicetag
+echo "Removing registration tests"
+rm -rvf openjdk/jdk/test/com/sun/servicetag
+
+echo "Removing EC source code we don't build"
+rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECDHKeyAgreement.java
+rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECDSASignature.java
+rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECKeyPairGenerator.java
+rm -vf openjdk/jdk/src/share/classes/sun/security/ec/SunEC.java
+rm -vf openjdk/jdk/src/share/classes/sun/security/ec/SunECEntries.java
+rm -rvf openjdk/jdk/src/share/native/sun/security/ec
+rm -rvf openjdk/jdk/make/sun/security/ec
