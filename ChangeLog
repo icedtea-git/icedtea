@@ -1,3 +1,11 @@
+2013-01-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* fsg.sh:
+	Remove source code for the EC provider which
+	isn't built.  Make the removals verbose so
+	they appear in logs as with
+	remove-intree-libraries.sh.
+
 2013-01-04  Pavel Tisnovsky  <ptisnovs@redhat.com>
 
 	* patches/boot/use_target_6_for_bootstrap_classes.patch:
