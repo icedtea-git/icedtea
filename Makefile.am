@@ -240,18 +240,9 @@ REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 
 # Patch list
 
-ICEDTEA_PATCHES =
+ICEDTEA_PATCHES = patches/zero_libffi.patch
 
 # Conditional patches
-
-if WITH_ALT_HSBUILD
-ICEDTEA_PATCHES += \
-	patches/hotspot/$(HSBUILD)/7089790-bsd_port.patch \
-	patches/hotspot/$(HSBUILD)/7098194-macosx_port.patch \
-	patches/hotspot/$(HSBUILD)/7116189-setnativethreadname.patch \
-	patches/hotspot/$(HSBUILD)/6924259-string_offset.patch \
-	patches/hotspot/$(HSBUILD)/revert_arm_debug.patch
-endif
 
 if WITH_RHINO
 ICEDTEA_PATCHES += \
