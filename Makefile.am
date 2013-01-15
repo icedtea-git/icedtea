@@ -296,7 +296,9 @@ ICEDTEA_PATCHES += patches/nss-config.patch
 endif
 
 if WITH_PAX
-ICEDTEA_PATCHES += patches/test_gamma.patch
+ICEDTEA_PATCHES += \
+	patches/test_gamma.patch \
+	patches/pax-mark-rmic-java.patch
 endif
 
 ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)

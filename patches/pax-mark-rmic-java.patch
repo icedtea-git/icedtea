@@ -1,0 +1,10 @@
+--- openjdk/jdk/make/com/sun/jmx/Makefile
++++ openjdk/jdk/make/com/sun/jmx/Makefile
+@@ -119,6 +119,7 @@
+ 
+ $(CLASSDESTDIR)/%_Stub.class: $(CLASSDESTDIR)/%.class
+ 	$(prep-target)
++	"$(TOPDIR)"/../../pax-mark-vm "$(OUTPUTDIR)"
+ 	$(RMIC) -classpath "$(CLASSDESTDIR)"    \
+                 -d $(CLASSDESTDIR)              \
+                 -v1.2                           \
