@@ -541,7 +541,6 @@ OpenJDK
   - S7197106: renumber hs23.4 to hs23.6
   - S7197619: Using modifiers for the dead key detection on Windows
   - S7197652: Impossible to run any signed JNLP applications or applets, OCSP off by default
-  - S7197906: BlockOffsetArray::power_to_cards_back() needs to handle > 32 bit shifts
   - S7198073: (prefs) user prefs not saved [macosx]
   - S7198084: NPG: distance is too big for short branches in test_invocation_counter_for_mdp()
   - S7198130: G1: PrintReferenceGC output comes out of order
@@ -679,6 +678,33 @@ OpenJDK
   - Revert 7060849
   - Set UNLIMITED_CRYPTO=true to ensure we use the unlimited policy.
   - Set handleStartupErrors to ignoreMultipleInitialisation in nss.cfg to fix PR473
+
+New in release 2.3.4 (2013-01-15):
+
+* Security fixes
+  - S8004933, CVE-2012-3174: Improve MethodHandle interaction with libraries
+  - S8006017, CVE-2013-0422: Improve lookup resolutions
+  - S8006125: Update MethodHandles library interactions
+* Backports
+  - S7197906: BlockOffsetArray::power_to_cards_back() needs to handle > 32 bit shifts
+* Bug fixes
+  - G422525: Fix building with PaX enabled kernels.
+
+New in release 2.2.4 (2013-01-15):
+
+* Security fixes
+  - S8004933, CVE-2012-3174: Improve MethodHandle interaction with libraries
+  - S8006017, CVE-2013-0422: Improve lookup resolutions
+  - S8006125: Update MethodHandles library interactions
+* Bug fixes
+  - G422525: Fix building with PaX enabled kernels.
+
+New in release 2.1.4 (2013-01-15):
+
+* Security fixes
+  - S8004933, CVE-2012-3174: Improve MethodHandle interaction with libraries
+  - S8006017, CVE-2013-0422: Improve lookup resolutions
+  - S8006125: Update MethodHandles library interactions
 
 New in release 2.3.3 (2012-10-17):
 
