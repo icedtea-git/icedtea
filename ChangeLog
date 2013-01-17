@@ -1,5 +1,36 @@
 2013-01-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* patches/hotspot/zero/6924259-string_offset.patch:
+	Remove patch missed in last but one change.
+	* Makefile.am:
+	(OPENJDK_VERSION): Bump to b09.
+	(CORBA_CHANGESET): Update to IcedTea7 forest head.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(JAXWS): Fix paths, including both JAXWS and JAF.
+	(JAXWS_COND): Removed.
+	(OPENJDK_SOURCEPATH_DIRS): Add JAXWS source tree,
+	required by new implementaton of java.lang.invoke
+	that relies on the copy of ASM in the JAXWS tree.
+	* hotspot.map: Update to IcedTea7 forest head.
+	* patches/boot/ecj-diamond.patch,
+	* patches/boot/ecj-multicatch.patch,
+	* patches/boot/ecj-stringswitch.patch,
+	* patches/boot/ecj-trywithresources.patch:
+	Updated due to changes from the security patches
+	and warning fixes in rmic.
+
+2013-01-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* NEWS: Add 2.1.4, 2.2.4 and 2.3.4 release
 	notes.
 

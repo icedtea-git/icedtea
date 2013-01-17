@@ -335,3 +335,83 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleN
                  String err = (name+": JVM has "+vmval+" which Java does not define");
                  // ignore exotic ops the JVM cares about; we just wont issue them
                  //System.err.println("warning: "+err);
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java	2013-01-16 03:05:55.869280923 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java	2013-01-16 03:07:23.334672142 +0000
+@@ -296,7 +296,16 @@
+             active.put(id, entry);
+             return entry.mobj;
+ 
+-        } catch (NoSuchMethodException | NoSuchMethodError e) {
++        } catch (NoSuchMethodException e) {
++            /* user forgot to provide activatable constructor?
++             * or code recompiled and user forgot to provide
++             *  activatable constructor?
++             */
++            throw new ActivationException
++                ("Activatable object must provide an activation"+
++                 " constructor", e );
++
++        } catch (NoSuchMethodError e) {
+             /* user forgot to provide activatable constructor?
+              * or code recompiled and user forgot to provide
+              *  activatable constructor?
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java	2013-01-16 03:05:55.877281050 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java	2013-01-16 13:56:44.714207763 +0000
+@@ -261,11 +261,14 @@
+ 
+                     annotation = urlsToPath(urls);
+                 }
+-            } catch (SecurityException | IOException e) {
++            } catch (SecurityException e) {
+                 /*
+                  * SecurityException: If access was denied to the knowledge of
+                  * the class loader's URLs, fall back to the default behavior.
+                  *
++		 */
++            } catch (IOException e) {
++                /*
+                  * IOException: This shouldn't happen, although it is declared
+                  * to be thrown by openConnection() and getPermission().  If it
+                  * does happen, forget about this class loader's URLs and
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2013-01-16 03:05:55.885281177 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2013-01-16 03:08:26.639679256 +0000
+@@ -208,7 +208,9 @@
+ 
+             return initialSocket;
+ 
+-        } catch (UnknownHostException | NoRouteToHostException e) {
++        } catch (UnknownHostException e) {
++            initialFailure = e;
++        } catch (NoRouteToHostException e) {
+             initialFailure = e;
+         } catch (SocketException e) {
+             if (eagerHttpFallback) {
+@@ -273,7 +275,9 @@
+                 }
+                 // if connector ever does get socket, it won't be used
+                 connector.notUsed();
+-            } catch (UnknownHostException | NoRouteToHostException e) {
++            } catch (UnknownHostException e) {
++                initialFailure = e;
++            } catch (NoRouteToHostException e) {
+                 initialFailure = e;
+             } catch (SocketException e) {
+                 if (eagerHttpFallback) {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java	2013-01-16 03:05:55.893281305 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java	2013-01-16 13:53:13.570765705 +0000
+@@ -623,7 +623,10 @@
+             try {
+                 TCPEndpoint.shedConnectionCaches();
+                 // REMIND: should we retry createSocket?
+-            } catch (OutOfMemoryError | Exception mem) {
++            } catch (OutOfMemoryError mem) {
++                // don't quit if out of memory
++                // or shed fails non-catastrophically
++            } catch (Exception mem) {
+                 // don't quit if out of memory
+                 // or shed fails non-catastrophically
+             }

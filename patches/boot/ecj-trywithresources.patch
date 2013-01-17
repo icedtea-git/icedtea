@@ -1198,3 +1198,97 @@ diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/print/UnixPrintJob.java 
          }
  
          public Object run() {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2013-01-16 03:08:26.639679256 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2013-01-16 13:59:47.925194291 +0000
+@@ -233,13 +233,14 @@
+                         proxyLog.log(Log.BRIEF,
+                             "trying with factory: " + factory);
+                     }
+-                    try (Socket testSocket =
+-                            factory.createSocket(host, port)) {
++		    Socket testSocket = null;
++                    try {
+                         // For HTTP connections, the output (POST request) must
+                         // be sent before we verify a successful connection.
+                         // So, sacrifice a socket for the sake of testing...
+                         // The following sequence should verify a successful
+                         // HTTP connection if no IOException is thrown.
++			testSocket = factory.createSocket(host, port);
+                         InputStream in = testSocket.getInputStream();
+                         int b = in.read(); // probably -1 for EOF...
+                     } catch (IOException ex) {
+@@ -249,6 +250,10 @@
+ 
+                         continue;
+                     }
++		    finally {
++			if (testSocket != null)
++			    testSocket.close();
++		    }
+                     proxyLog.log(Log.BRIEF, "factory succeeded");
+ 
+                     // factory succeeded, open new socket for caller's use
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/log/ReliableLog.java openjdk-boot/jdk/src/share/classes/sun/rmi/log/ReliableLog.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/log/ReliableLog.java	2013-01-16 23:38:17.177227257 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/log/ReliableLog.java	2013-01-16 23:41:03.015896389 +0000
+@@ -594,10 +594,16 @@
+         } else {
+             name = versionFile;
+         }
+-        try (FileOutputStream fos = new FileOutputStream(fName(name));
+-             DataOutputStream out = new DataOutputStream(fos)) {
++	FileOutputStream fos = null;
++	DataOutputStream out = null;
++        try {
++	    fos = new FileOutputStream(fName(name));
++	    out = new DataOutputStream(fos);
+             writeInt(out, version);
+-        }
++        } finally {
++	    if (out != null) out.close();
++	    if (fos != null) fos.close();
++	}
+     }
+ 
+     /**
+@@ -628,10 +634,13 @@
+      * @exception IOException If an I/O error has occurred.
+      */
+     private int readVersion(String name) throws IOException {
+-        try (DataInputStream in = new DataInputStream
+-                (new FileInputStream(name))) {
++	DataInputStream in = null;
++        try {
++	    in = new DataInputStream(new FileInputStream(name));
+             return in.readInt();
+-        }
++        } finally {
++	    if (in != null) in.close();
++	}
+     }
+ 
+     /**
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Activation.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/Activation.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Activation.java	2013-01-16 23:37:20.528316758 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/Activation.java	2013-01-16 23:41:48.704634678 +0000
+@@ -1233,13 +1233,16 @@
+                     PipeWriter.plugTogetherPair
+                         (child.getInputStream(), System.out,
+                          child.getErrorStream(), System.err);
+-                    try (MarshalOutputStream out =
+-                            new MarshalOutputStream(child.getOutputStream())) {
++		    MarshalOutputStream out = null;
++                    try {
++			out = new MarshalOutputStream(child.getOutputStream());
+                         out.writeObject(id);
+                         out.writeObject(desc);
+                         out.writeLong(incarnation);
+                         out.flush();
+-                    }
++                    } finally {
++			if (out != null) out.close();
++		    }
+ 
+ 
+                 } catch (IOException e) {

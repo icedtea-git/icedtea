@@ -6437,3 +6437,511 @@ diff -Nru openjdk-boot.orig/jdk/test/java/util/Random/DistinctSeeds.java openjdk
          List<Thread> threads = new ArrayList<Thread>();
          for (int i = 0; i < threadCount; i++) {
              RandomCollector r = new RandomCollector();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/registry/RegistryImpl.java openjdk-boot/jdk/src/share/classes/sun/rmi/registry/RegistryImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/registry/RegistryImpl.java	2013-01-16 02:31:22.300240401 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/registry/RegistryImpl.java	2013-01-16 02:31:46.772630169 +0000
+@@ -78,9 +78,9 @@
+     /* indicate compatibility with JDK 1.1.x version of class */
+     private static final long serialVersionUID = 4666870661827494597L;
+     private Hashtable<String, Remote> bindings
+-        = new Hashtable<>(101);
++        = new Hashtable<String, Remote>(101);
+     private static Hashtable<InetAddress, InetAddress> allowedAccessCache
+-        = new Hashtable<>(3);
++        = new Hashtable<InetAddress, InetAddress>(3);
+     private static RegistryImpl registry;
+     private static ObjID id = new ObjID(ObjID.REGISTRY_ID);
+ 
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java	2013-01-16 02:31:22.308240528 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java	2013-01-16 02:37:55.086500471 +0000
+@@ -66,10 +66,10 @@
+ 
+     /** maps persistent IDs to activated remote objects */
+     private final Hashtable<ActivationID,ActiveEntry> active =
+-        new Hashtable<>();
++        new Hashtable<ActivationID,ActiveEntry>();
+     private boolean groupInactive = false;
+     private final ActivationGroupID groupID;
+-    private final List<ActivationID> lockedIDs = new ArrayList<>();
++    private final List<ActivationID> lockedIDs = new ArrayList<ActivationID>();
+ 
+     /**
+      * Creates a default activation group implementation.
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java	2013-01-16 02:31:22.316240656 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java	2013-01-16 02:38:14.518810403 +0000
+@@ -112,11 +112,11 @@
+      * garbage collected.
+      */
+     private static final HashMap<LoaderKey, LoaderEntry> loaderTable
+-        = new HashMap<>(5);
++        = new HashMap<LoaderKey, LoaderEntry>(5);
+ 
+     /** reference queue for cleared class loader entries */
+     private static final ReferenceQueue<Loader> refQueue
+-        = new ReferenceQueue<>();
++        = new ReferenceQueue<Loader>();
+ 
+     /*
+      * Disallow anyone from creating one of these.
+@@ -776,7 +776,7 @@
+ 
+     /** map from weak(key=string) to [URL[], soft(key)] */
+     private static final Map<String, Object[]> pathToURLsCache
+-        = new WeakHashMap<>(5);
++        = new WeakHashMap<String, Object[]>(5);
+ 
+     /**
+      * Convert an array of URL objects into a corresponding string
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/MarshalInputStream.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/MarshalInputStream.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/MarshalInputStream.java	2013-01-16 02:31:22.324240784 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/MarshalInputStream.java	2013-01-16 02:38:36.627163040 +0000
+@@ -65,14 +65,14 @@
+ 
+     /** table to hold sun classes to which access is explicitly permitted */
+     protected static Map<String, Class<?>> permittedSunClasses
+-        = new HashMap<>(3);
++        = new HashMap<String, Class<?>>(3);
+ 
+     /** if true, don't try superclass first in resolveClass() */
+     private boolean skipDefaultResolveClass = false;
+ 
+     /** callbacks to make when done() called: maps Object to Runnable */
+     private final Map<Object, Runnable> doneCallbacks
+-        = new HashMap<>(3);
++        = new HashMap<Object, Runnable>(3);
+ 
+     /**
+      * if true, load classes (if not available locally) only from the
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java	2013-01-16 02:31:22.336240974 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java	2013-01-16 02:39:03.071584874 +0000
+@@ -537,7 +537,7 @@
+         HashToMethod_Maps() {}
+ 
+         protected Map<Long,Method> computeValue(Class<?> remoteClass) {
+-            Map<Long,Method> map = new HashMap<>();
++            Map<Long,Method> map = new HashMap<Long,Method>();
+             for (Class<?> cl = remoteClass;
+                  cl != null;
+                  cl = cl.getSuperclass())
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Util.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/Util.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Util.java	2013-01-16 02:31:22.344241102 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/Util.java	2013-01-16 02:39:18.027823469 +0000
+@@ -207,7 +207,7 @@
+      * @throws  NullPointerException if remoteClass is null
+      */
+     private static Class<?>[] getRemoteInterfaces(Class<?> remoteClass) {
+-        ArrayList<Class<?>> list = new ArrayList<>();
++        ArrayList<Class<?>> list = new ArrayList<Class<?>>();
+         getRemoteInterfaces(list, remoteClass);
+         return list.toArray(new Class<?>[list.size()]);
+     }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/WeakClassHashMap.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/WeakClassHashMap.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/WeakClassHashMap.java	2013-01-16 02:31:22.352241229 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/WeakClassHashMap.java	2013-01-16 02:39:39.284162590 +0000
+@@ -46,7 +46,7 @@
+  **/
+ public abstract class WeakClassHashMap<V> {
+ 
+-    private Map<Class<?>,ValueCell<V>> internalMap = new WeakHashMap<>();
++    private Map<Class<?>,ValueCell<V>> internalMap = new WeakHashMap<Class<?>,ValueCell<V>>();
+ 
+     protected WeakClassHashMap() { }
+ 
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/ConnectionInputStream.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/ConnectionInputStream.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/ConnectionInputStream.java	2013-01-16 02:31:22.360241357 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/ConnectionInputStream.java	2013-01-16 02:37:32.806145141 +0000
+@@ -43,7 +43,7 @@
+     private boolean dgcAckNeeded = false;
+ 
+     /** Hashtable mapping Endpoints to lists of LiveRefs to register */
+-    private Map<Endpoint, List<LiveRef>> incomingRefTable = new HashMap<>(5);
++    private Map<Endpoint, List<LiveRef>> incomingRefTable = new HashMap<Endpoint, List<LiveRef>>(5);
+ 
+     /** identifier for gc ack*/
+     private UID ackID;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCAckHandler.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCAckHandler.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCAckHandler.java	2013-01-16 02:31:22.368241485 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCAckHandler.java	2013-01-16 02:36:17.440943411 +0000
+@@ -78,7 +78,7 @@
+         Collections.synchronizedMap(new HashMap<UID,DGCAckHandler>());
+ 
+     private final UID id;
+-    private List<Object> objList = new ArrayList<>(); // null if released
++    private List<Object> objList = new ArrayList<Object>(); // null if released
+     private Future<?> task = null;
+ 
+     /**
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCClient.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCClient.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCClient.java	2013-01-16 02:31:22.380241675 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCClient.java	2013-01-16 02:33:21.178134084 +0000
+@@ -176,9 +176,9 @@
+         private DGC dgc;
+ 
+         /** table of refs held for endpoint: maps LiveRef to RefEntry */
+-        private Map<LiveRef, RefEntry> refTable = new HashMap<>(5);
++        private Map<LiveRef, RefEntry> refTable = new HashMap<LiveRef, RefEntry>(5);
+         /** set of RefEntry instances from last (failed) dirty call */
+-        private Set<RefEntry> invalidRefs = new HashSet<>(5);
++        private Set<RefEntry> invalidRefs = new HashSet<RefEntry>(5);
+ 
+         /** true if this entry has been removed from the global table */
+         private boolean removed = false;
+@@ -200,12 +200,12 @@
+         private boolean interruptible = false;
+ 
+         /** reference queue for phantom references */
+-        private ReferenceQueue<LiveRef> refQueue = new ReferenceQueue<>();
++        private ReferenceQueue<LiveRef> refQueue = new ReferenceQueue<LiveRef>();
+         /** set of clean calls that need to be made */
+-        private Set<CleanRequest> pendingCleans = new HashSet<>(5);
++        private Set<CleanRequest> pendingCleans = new HashSet<CleanRequest>(5);
+ 
+         /** global endpoint table: maps Endpoint to EndpointEntry */
+-        private static Map<Endpoint,EndpointEntry> endpointTable = new HashMap<>(5);
++        private static Map<Endpoint,EndpointEntry> endpointTable = new HashMap<Endpoint,EndpointEntry>(5);
+         /** handle for GC latency request (for future cancellation) */
+         private static GC.LatencyRequest gcLatencyRequest = null;
+ 
+@@ -282,7 +282,7 @@
+                         refEntry = new RefEntry(refClone);
+                         refTable.put(refClone, refEntry);
+                         if (refsToDirty == null) {
+-                            refsToDirty = new HashSet<>(5);
++                            refsToDirty = new HashSet<RefEntry>(5);
+                         }
+                         refsToDirty.add(refEntry);
+                     }
+@@ -564,7 +564,7 @@
+                             needRenewal = true;
+                             if (!invalidRefs.isEmpty()) {
+                                 refsToDirty = invalidRefs;
+-                                invalidRefs = new HashSet<>(5);
++                                invalidRefs = new HashSet<RefEntry>(5);
+                             }
+                             sequenceNum = getNextSequenceNum();
+                         }
+@@ -603,12 +603,12 @@
+                 if (refEntry.isRefSetEmpty()) {
+                     if (refEntry.hasDirtyFailed()) {
+                         if (strongCleans == null) {
+-                            strongCleans = new HashSet<>(5);
++                            strongCleans = new HashSet<RefEntry>(5);
+                         }
+                         strongCleans.add(refEntry);
+                     } else {
+                         if (normalCleans == null) {
+-                            normalCleans = new HashSet<>(5);
++                            normalCleans = new HashSet<RefEntry>(5);
+                         }
+                         normalCleans.add(refEntry);
+                     }
+@@ -704,7 +704,7 @@
+             /** LiveRef value for this entry (not a registered instance) */
+             private LiveRef ref;
+             /** set of phantom references to registered instances */
+-            private Set<PhantomLiveRef> refSet = new HashSet<>(5);
++            private Set<PhantomLiveRef> refSet = new HashSet<PhantomLiveRef>(5);
+             /** true if a dirty call containing this ref has failed */
+             private boolean dirtyFailed = false;
+ 
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCImpl.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCImpl.java	2013-01-16 02:31:22.388241803 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCImpl.java	2013-01-16 02:36:08.824806043 +0000
+@@ -84,7 +84,7 @@
+     /** remote implementation of DGC interface for this VM */
+     private static DGCImpl dgc;
+     /** table that maps VMID to LeaseInfo */
+-    private Map<VMID,LeaseInfo> leaseTable = new HashMap<>();
++    private Map<VMID,LeaseInfo> leaseTable = new HashMap<VMID,LeaseInfo>();
+     /** checks for lease expiration */
+     private Future<?> checker = null;
+ 
+@@ -236,7 +236,7 @@
+         long time = System.currentTimeMillis();
+ 
+         /* List of vmids that need to be removed from the leaseTable */
+-        List<LeaseInfo> toUnregister = new ArrayList<>();
++        List<LeaseInfo> toUnregister = new ArrayList<LeaseInfo>();
+ 
+         /* Build a list of leaseInfo objects that need to have
+          * targets removed from their notifySet.  Remove expired
+@@ -313,7 +313,7 @@
+     private static class LeaseInfo {
+         VMID vmid;
+         long expiration;
+-        Set<Target> notifySet = new HashSet<>();
++        Set<Target> notifySet = new HashSet<Target>();
+ 
+         LeaseInfo(VMID vmid, long lease) {
+             this.vmid = vmid;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/ObjectTable.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/ObjectTable.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/ObjectTable.java	2013-01-16 02:31:22.396241930 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/ObjectTable.java	2013-01-16 02:37:15.185864150 +0000
+@@ -62,9 +62,9 @@
+ 
+     /** tables mapping to Target, keyed from ObjectEndpoint and impl object */
+     private static final Map<ObjectEndpoint,Target> objTable =
+-        new HashMap<>();
++        new HashMap<ObjectEndpoint,Target>();
+     private static final Map<WeakRef,Target> implTable =
+-        new HashMap<>();
++        new HashMap<WeakRef,Target>();
+ 
+     /**
+      * lock guarding keepAliveCount, reaper, and gcLatencyRequest.
+@@ -79,7 +79,7 @@
+     private static Thread reaper = null;
+ 
+     /** queue notified when weak refs in the table are cleared */
+-    static final ReferenceQueue<Object> reapQueue = new ReferenceQueue<>();
++    static final ReferenceQueue<Object> reapQueue = new ReferenceQueue<Object>();
+ 
+     /** handle for GC latency request (for future cancellation) */
+     private static GC.LatencyRequest gcLatencyRequest = null;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2013-01-16 02:31:22.404242057 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2013-01-16 02:34:03.586809842 +0000
+@@ -75,13 +75,13 @@
+ 
+     /** table of hosts successfully connected to and the factory used */
+     private Hashtable<String, RMISocketFactory> successTable =
+-        new Hashtable<>();
++        new Hashtable<String, RMISocketFactory>();
+ 
+     /** maximum number of hosts to remember successful connection to */
+     private static final int MaxRememberedHosts = 64;
+ 
+     /** list of the hosts in successTable in initial connection order */
+-    private Vector<String> hostList = new Vector<>(MaxRememberedHosts);
++    private Vector<String> hostList = new Vector<String>(MaxRememberedHosts);
+ 
+     /** default factory for initial use for direct socket connection */
+     protected RMISocketFactory initialFactory = new RMIDirectSocketFactory();
+@@ -96,7 +96,7 @@
+      * socket connection fails.
+      */
+     public RMIMasterSocketFactory() {
+-        altFactoryList = new Vector<>(2);
++        altFactoryList = new Vector<RMISocketFactory>(2);
+         boolean setFactories = false;
+ 
+         try {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/Target.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/Target.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/Target.java	2013-01-16 02:31:22.412242185 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/Target.java	2013-01-16 02:36:35.937238312 +0000
+@@ -53,10 +53,10 @@
+     /** stub for remote object */
+     private final Remote stub;
+     /** set of clients that hold references to this target */
+-    private final Vector<VMID> refSet = new Vector<>();
++    private final Vector<VMID> refSet = new Vector<VMID>();
+     /** table that maps client endpoints to sequence numbers */
+     private final Hashtable<VMID, SequenceEntry> sequenceTable =
+-        new Hashtable<>(5);
++        new Hashtable<VMID, SequenceEntry>(5);
+     /** access control context in which target was created */
+     private final AccessControlContext acc;
+     /** context class loader in which target was created */
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/ConnectionMultiplexer.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/ConnectionMultiplexer.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/ConnectionMultiplexer.java	2013-01-16 02:31:22.424242376 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/ConnectionMultiplexer.java	2013-01-16 02:34:20.691082418 +0000
+@@ -85,7 +85,7 @@
+     private DataOutputStream dataOut;
+ 
+     /** table holding currently open connection IDs and related info */
+-    private Hashtable<Integer, MultiplexConnectionInfo> connectionTable = new Hashtable<>(7);
++    private Hashtable<Integer, MultiplexConnectionInfo> connectionTable = new Hashtable<Integer, MultiplexConnectionInfo>(7);
+ 
+     /** number of currently open connections */
+     private int numConnections = 0;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPChannel.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPChannel.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPChannel.java	2013-01-16 02:31:22.432242504 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPChannel.java	2013-01-16 02:34:36.327331615 +0000
+@@ -64,7 +64,7 @@
+     private final TCPTransport tr;
+     /** list of cached connections */
+     private final List<TCPConnection> freeList =
+-        new ArrayList<>();
++        new ArrayList<TCPConnection>();
+     /** frees cached connections that have expired (guarded by freeList) */
+     private Future<?> reaper = null;
+ 
+@@ -480,7 +480,7 @@
+     private TCPTransport transport;
+ 
+     /** queue of connections to be accepted */
+-    private List<Connection> queue = new ArrayList<>();
++    private List<Connection> queue = new ArrayList<Connection>();
+ 
+     /** thread ID counter */
+     private static int threadNum = 0;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java	2013-01-16 02:31:22.440242630 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java	2013-01-16 02:34:52.623591345 +0000
+@@ -148,7 +148,7 @@
+     // TBD: should this be a weak hash table?
+     private static final
+         Map<TCPEndpoint,LinkedList<TCPEndpoint>> localEndpoints =
+-        new HashMap<>();
++        new HashMap<TCPEndpoint,LinkedList<TCPEndpoint>>();
+ 
+     /**
+      * Create an endpoint for a specified host and port.
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPTransport.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPTransport.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPTransport.java	2013-01-16 02:31:22.448242758 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPTransport.java	2013-01-16 02:35:46.984457860 +0000
+@@ -120,7 +120,7 @@
+ 
+     /** client host for the current thread's connection */
+     private static final ThreadLocal<ConnectionHandler>
+-        threadConnectionHandler = new ThreadLocal<>();
++        threadConnectionHandler = new ThreadLocal<ConnectionHandler>();
+ 
+     /** endpoints for this transport */
+     private final LinkedList<TCPEndpoint> epList;
+@@ -130,7 +130,7 @@
+     private ServerSocket server = null;
+     /** table mapping endpoints to channels */
+     private final Map<TCPEndpoint,Reference<TCPChannel>> channelTable =
+-        new WeakHashMap<>();
++        new WeakHashMap<TCPEndpoint,Reference<TCPChannel>>();
+ 
+     static final RMISocketFactory defaultSocketFactory =
+         RMISocketFactory.getDefaultSocketFactory();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/Transport.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/Transport.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/Transport.java	2013-01-16 02:31:22.456242886 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/Transport.java	2013-01-16 02:36:47.305419575 +0000
+@@ -62,7 +62,7 @@
+         Log.getLog("sun.rmi.transport.misc", "transport", Transport.logLevel);
+ 
+     /** References the current transport when a call is being serviced */
+-    private static final ThreadLocal<Transport> currentTransport = new ThreadLocal<>();
++    private static final ThreadLocal<Transport> currentTransport = new ThreadLocal<Transport>();
+ 
+     /** ObjID for DGCImpl */
+     private static final ObjID dgcID = new ObjID(ObjID.DGC_ID);
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/rmic/BatchEnvironment.java openjdk-boot/jdk/src/share/classes/sun/rmi/rmic/BatchEnvironment.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/rmic/BatchEnvironment.java	2013-01-16 14:03:24.004644191 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/rmic/BatchEnvironment.java	2013-01-16 14:04:14.265446248 +0000
+@@ -160,7 +160,7 @@
+     }
+ 
+     /** list of generated source files created in this environment */
+-    private Vector<File> generatedFiles = new Vector<>();
++    private Vector<File> generatedFiles = new Vector<File>();
+ 
+     /**
+      * Remember a generated source file generated so that it
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/rmic/Main.java openjdk-boot/jdk/src/share/classes/sun/rmi/rmic/Main.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/rmic/Main.java	2013-01-16 14:03:38.676878309 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/rmic/Main.java	2013-01-16 14:04:07.289334912 +0000
+@@ -184,7 +184,7 @@
+         destDir = null;
+         flags = F_WARNINGS;
+         tm = System.currentTimeMillis();
+-        classes = new Vector<>();
++        classes = new Vector<String>();
+         nowrite = false;
+         nocompile = false;
+         keepGenerated = false;
+@@ -192,7 +192,7 @@
+         if (generatorArgs == null) {
+             return false;
+         }
+-        generators = new Vector<>();
++        generators = new Vector<Generator>();
+ 
+         // Pre-process command line for @file arguments
+         try {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/rmic/RMIGenerator.java openjdk-boot/jdk/src/share/classes/sun/rmi/rmic/RMIGenerator.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/rmic/RMIGenerator.java	2013-01-16 16:50:47.126498571 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/rmic/RMIGenerator.java	2013-01-16 16:51:10.246872404 +0000
+@@ -61,7 +61,7 @@
+  */
+ public class RMIGenerator implements RMIConstants, Generator {
+ 
+-    private static final Hashtable<String, Integer> versionOptions = new Hashtable<>();
++    private static final Hashtable<String, Integer> versionOptions = new Hashtable<String, Integer>();
+     static {
+         versionOptions.put("-v1.1", new Integer(STUB_VERSION_1_1));
+         versionOptions.put("-vcompat", new Integer(STUB_VERSION_FAT));
+@@ -651,7 +651,7 @@
+      * that no exceptions need to be caught.
+      */
+     private Vector<ClassDefinition> computeUniqueCatchList(ClassDeclaration[] exceptions) {
+-        Vector<ClassDefinition> uniqueList = new Vector<>();       // unique exceptions to catch
++        Vector<ClassDefinition> uniqueList = new Vector<ClassDefinition>();       // unique exceptions to catch
+ 
+         uniqueList.addElement(defRuntimeException);
+         uniqueList.addElement(defRemoteException);
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/rmi/rmid/ExecOptionPermission.java openjdk-boot/jdk/src/share/classes/com/sun/rmi/rmid/ExecOptionPermission.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/rmi/rmid/ExecOptionPermission.java	2013-01-16 23:35:20.034379856 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/rmi/rmid/ExecOptionPermission.java	2013-01-16 23:44:22.819124371 +0000
+@@ -231,7 +231,7 @@
+          * Create an empty ExecOptionPermissionCollection.
+          */
+         public ExecOptionPermissionCollection() {
+-            permissions = new Hashtable<>(11);
++            permissions = new Hashtable<String, Permission>(11);
+             all_allowed = false;
+         }
+ 
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/rmi/rmid/ExecPermission.java openjdk-boot/jdk/src/share/classes/com/sun/rmi/rmid/ExecPermission.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/rmi/rmid/ExecPermission.java	2013-01-16 23:35:39.518693083 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/rmi/rmid/ExecPermission.java	2013-01-16 23:44:07.314873946 +0000
+@@ -235,7 +235,7 @@
+          * Create an empty ExecPermissionCollection.
+          */
+         public ExecPermissionCollection() {
+-            permissions = new Vector<>();
++            permissions = new Vector<Permission>();
+         }
+ 
+         /**
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Activation.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/Activation.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Activation.java	2013-01-16 23:41:48.704634678 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/Activation.java	2013-01-16 23:43:38.474408088 +0000
+@@ -805,8 +805,8 @@
+         ActivationGroupDesc desc = null;
+         ActivationGroupID groupID = null;
+         long incarnation = 0;
+-        Map<ActivationID,ObjectEntry> objects = new HashMap<>();
+-        Set<ActivationID> restartSet = new HashSet<>();
++        Map<ActivationID,ObjectEntry> objects = new HashMap<ActivationID,ObjectEntry>();
++        Set<ActivationID> restartSet = new HashSet<ActivationID>();
+ 
+         transient ActivationInstantiator group = null;
+         transient int status = NORMAL;
+@@ -1359,7 +1359,7 @@
+         cmdenv = desc.getCommandEnvironment();
+ 
+         // argv is the literal command to exec
+-        List<String> argv = new ArrayList<>();
++        List<String> argv = new ArrayList<String>();
+ 
+         // Command name/path
+         argv.add((cmdenv != null && cmdenv.getCommandPath() != null)
+@@ -1964,7 +1964,7 @@
+             }
+ 
+             String log = null;
+-            List<String> childArgs = new ArrayList<>();
++            List<String> childArgs = new ArrayList<String>();
+ 
+             /*
+              * Parse arguments
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/CGIHandler.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/CGIHandler.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/CGIHandler.java	2013-01-16 23:36:11.307204093 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/CGIHandler.java	2013-01-16 23:43:11.741976248 +0000
+@@ -116,7 +116,7 @@
+     /* construct table mapping command strings to handlers */
+     private static Hashtable<String, CGICommandHandler> commandLookup;
+     static {
+-        commandLookup = new Hashtable<>();
++        commandLookup = new Hashtable<String, CGICommandHandler>();
+         for (int i = 0; i < commands.length; ++ i)
+             commandLookup.put(commands[i].getName(), commands[i]);
+     }
