@@ -1,3 +1,8 @@
+2013-02-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(extract-jamvm): Depend on download-jamvm.
+
 2013-02-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Add release notes for 2.3.6, 2.1.5 &
