@@ -679,94 +679,48 @@ OpenJDK
   - Set UNLIMITED_CRYPTO=true to ensure we use the unlimited policy.
   - Set handleStartupErrors to ignoreMultipleInitialisation in nss.cfg to fix PR473
 
-New in release 2.1.5 (2013-02-13):
+New in release 2.3.7 (2013-02-20):
 
 * Security fixes
-  - S6563318, CVE-2013-0424: RMI data sanitization
-  - S6664509, CVE-2013-0425: Add logging context
-  - S6664528, CVE-2013-0426: Find log level matching its name or value given at construction time
-  - S6776941: CVE-2013-0427: Improve thread pool shutdown
-  - S7141694, CVE-2013-0429: Improving CORBA internals
-  - S7173145: Improve in-memory representation of splashscreens
-  - S7186945: Unpack200 improvement
-  - S7186946: Refine unpacker resource usage
-  - S7186948: Improve Swing data validation
-  - S7186952, CVE-2013-0432: Improve clipboard access
-  - S7186954: Improve connection performance
-  - S7186957: Improve Pack200 data validation
-  - S7192392, CVE-2013-0443: Better validation of client keys
-  - S7192393, CVE-2013-0440: Better Checking of order of TLS Messages
-  - S7192977, CVE-2013-0442: Issue in toolkit thread
-  - S7197546, CVE-2013-0428: (proxy) Reflect about creating reflective proxies
-  - S7200491: Tighten up JTable layout code
-  - S7200493, CVE-2013-0444: Improve cache handling
-  - S7200499: Better data validation for options
-  - S7200500: Launcher better input validation
-  - S7201064: Better dialogue checking
-  - S7201066, CVE-2013-0441: Change modifiers on unused fields
-  - S7201068, CVE-2013-0435: Better handling of UI elements
-  - S7201070: Serialization to conform to protocol
-  - S7201071, CVE-2013-0433: InetSocketAddress serialization issue
-  - S8000210: Improve JarFile code quality
-  - S8000537, CVE-2013-0450: Contextualize RequiredModelMBean class
-  - S8000539, CVE-2013-0431: Introspect JMX data handling
-  - S8000540, CVE-2013-1475: Improve IIOP type reuse management
-  - S8000631, CVE-2013-1476: Restrict access to class constructor
-  - S8001235, CVE-2013-0434: Improve JAXP HTTP handling
-  - S8001242: Improve RMI HTTP conformance
-  - S8001307: Modify ACC_SUPER behavior
-  - S8001972, CVE-2013-1478: Improve image processing
-  - S8002325, CVE-2013-1480: Improve management of images
+  - S8004937, CVE-2013-1484: Improve proxy construction
+  - S8006439, CVE-2013-1485: Improve MethodHandles coverage
+  - S8006446, CVE-2013-1486: Restrict MBeanServer access
+  - S8006777, CVE-2013-0169: Improve TLS handling of invalid messages
+  - S8007688: Blacklist known bad certificate
 * Backports
-  - S7054590: (JSR-292) MethodHandleProxies.asInterfaceInstance() accepts private/protected nested interfaces
-  - S7175616: Port fix for TimeZone from JDK 8 to JDK 7
-  - S8002068: Build broken: corba code changes unable to use new JDK 7 classes
-  - S8004341: Two JCK tests fails with 7u11 b06
-  - S8005615: Java Logger fails to load tomcat logger implementation (JULI)
+  - S8007393: Possible race condition after JDK-6664509
+  - S8007611: logging behavior in applet changed
+* Bug fixes
+  - PR1303: Support building with giflib 5
 
-New in release 2.2.5 (2013-02-13):
+New in release 2.2.6 (2013-02-20):
 
 * Security fixes
-  - S6563318, CVE-2013-0424: RMI data sanitization
-  - S6664509, CVE-2013-0425: Add logging context
-  - S6664528, CVE-2013-0426: Find log level matching its name or value given at construction time
-  - S6776941: CVE-2013-0427: Improve thread pool shutdown
-  - S7141694, CVE-2013-0429: Improving CORBA internals
-  - S7173145: Improve in-memory representation of splashscreens
-  - S7186945: Unpack200 improvement
-  - S7186946: Refine unpacker resource usage
-  - S7186948: Improve Swing data validation
-  - S7186952, CVE-2013-0432: Improve clipboard access
-  - S7186954: Improve connection performance
-  - S7186957: Improve Pack200 data validation
-  - S7192392, CVE-2013-0443: Better validation of client keys
-  - S7192393, CVE-2013-0440: Better Checking of order of TLS Messages
-  - S7192977, CVE-2013-0442: Issue in toolkit thread
-  - S7197546, CVE-2013-0428: (proxy) Reflect about creating reflective proxies
-  - S7200491: Tighten up JTable layout code
-  - S7200493, CVE-2013-0444: Improve cache handling
-  - S7200499: Better data validation for options
-  - S7200500: Launcher better input validation
-  - S7201064: Better dialogue checking
-  - S7201066, CVE-2013-0441: Change modifiers on unused fields
-  - S7201068, CVE-2013-0435: Better handling of UI elements
-  - S7201070: Serialization to conform to protocol
-  - S7201071, CVE-2013-0433: InetSocketAddress serialization issue
-  - S8000210: Improve JarFile code quality
-  - S8000537, CVE-2013-0450: Contextualize RequiredModelMBean class
-  - S8000539, CVE-2013-0431: Introspect JMX data handling
-  - S8000540, CVE-2013-1475: Improve IIOP type reuse management
-  - S8000631, CVE-2013-1476: Restrict access to class constructor
-  - S8001235, CVE-2013-0434: Improve JAXP HTTP handling
-  - S8001242: Improve RMI HTTP conformance
-  - S8001307: Modify ACC_SUPER behavior
-  - S8001972, CVE-2013-1478: Improve image processing
-  - S8002325, CVE-2013-1480: Improve management of images
+  - S8004937, CVE-2013-1484: Improve proxy construction
+  - S8006439, CVE-2013-1485: Improve MethodHandles coverage
+  - S8006446, CVE-2013-1486: Restrict MBeanServer access
+  - S8006777, CVE-2013-0169: Improve TLS handling of invalid messages
+  - S8007688: Blacklist known bad certificate
 * Backports
-  - S7175616: Port fix for TimeZone from JDK 8 to JDK 7
-  - S8002068: Build broken: corba code changes unable to use new JDK 7 classes
-  - S8004341: Two JCK tests fails with 7u11 b06
-  - S8005615: Java Logger fails to load tomcat logger implementation (JULI)
+  - S8007393: Possible race condition after JDK-6664509
+  - S8007611: logging behavior in applet changed
+* Bug fixes
+  - PR1303: Support building with giflib 5
+
+New in release 2.1.6 (2013-02-20):
+
+* Security fixes
+  - S8004937, CVE-2013-1484: Improve proxy construction
+  - S8006439, CVE-2013-1485: Improve MethodHandles coverage
+  - S8006446, CVE-2013-1486: Restrict MBeanServer access
+  - S8006777, CVE-2013-0169: Improve TLS handling of invalid messages
+  - S8007688: Blacklist known bad certificate
+* Backports
+  - S7123519: problems with certification path
+  - S8007393: Possible race condition after JDK-6664509
+  - S8007611: logging behavior in applet changed
+* Bug fixes
+  - PR1303: Support building with giflib 5
 
 New in release 2.3.6 (2013-02-12):
 
@@ -867,6 +821,95 @@ New in release 2.3.6 (2013-02-12):
 * Bug fixes
   - Fix build using Zero's HotSpot so all patches apply again.
   - PR1295: jamvm parallel unpack failure
+
+New in release 2.2.5 (2013-02-13):
+
+* Security fixes
+  - S6563318, CVE-2013-0424: RMI data sanitization
+  - S6664509, CVE-2013-0425: Add logging context
+  - S6664528, CVE-2013-0426: Find log level matching its name or value given at construction time
+  - S6776941: CVE-2013-0427: Improve thread pool shutdown
+  - S7141694, CVE-2013-0429: Improving CORBA internals
+  - S7173145: Improve in-memory representation of splashscreens
+  - S7186945: Unpack200 improvement
+  - S7186946: Refine unpacker resource usage
+  - S7186948: Improve Swing data validation
+  - S7186952, CVE-2013-0432: Improve clipboard access
+  - S7186954: Improve connection performance
+  - S7186957: Improve Pack200 data validation
+  - S7192392, CVE-2013-0443: Better validation of client keys
+  - S7192393, CVE-2013-0440: Better Checking of order of TLS Messages
+  - S7192977, CVE-2013-0442: Issue in toolkit thread
+  - S7197546, CVE-2013-0428: (proxy) Reflect about creating reflective proxies
+  - S7200491: Tighten up JTable layout code
+  - S7200493, CVE-2013-0444: Improve cache handling
+  - S7200499: Better data validation for options
+  - S7200500: Launcher better input validation
+  - S7201064: Better dialogue checking
+  - S7201066, CVE-2013-0441: Change modifiers on unused fields
+  - S7201068, CVE-2013-0435: Better handling of UI elements
+  - S7201070: Serialization to conform to protocol
+  - S7201071, CVE-2013-0433: InetSocketAddress serialization issue
+  - S8000210: Improve JarFile code quality
+  - S8000537, CVE-2013-0450: Contextualize RequiredModelMBean class
+  - S8000539, CVE-2013-0431: Introspect JMX data handling
+  - S8000540, CVE-2013-1475: Improve IIOP type reuse management
+  - S8000631, CVE-2013-1476: Restrict access to class constructor
+  - S8001235, CVE-2013-0434: Improve JAXP HTTP handling
+  - S8001242: Improve RMI HTTP conformance
+  - S8001307: Modify ACC_SUPER behavior
+  - S8001972, CVE-2013-1478: Improve image processing
+  - S8002325, CVE-2013-1480: Improve management of images
+* Backports
+  - S7175616: Port fix for TimeZone from JDK 8 to JDK 7
+  - S8002068: Build broken: corba code changes unable to use new JDK 7 classes
+  - S8004341: Two JCK tests fails with 7u11 b06
+  - S8005615: Java Logger fails to load tomcat logger implementation (JULI)
+
+New in release 2.1.5 (2013-02-13):
+
+* Security fixes
+  - S6563318, CVE-2013-0424: RMI data sanitization
+  - S6664509, CVE-2013-0425: Add logging context
+  - S6664528, CVE-2013-0426: Find log level matching its name or value given at construction time
+  - S6776941: CVE-2013-0427: Improve thread pool shutdown
+  - S7141694, CVE-2013-0429: Improving CORBA internals
+  - S7173145: Improve in-memory representation of splashscreens
+  - S7186945: Unpack200 improvement
+  - S7186946: Refine unpacker resource usage
+  - S7186948: Improve Swing data validation
+  - S7186952, CVE-2013-0432: Improve clipboard access
+  - S7186954: Improve connection performance
+  - S7186957: Improve Pack200 data validation
+  - S7192392, CVE-2013-0443: Better validation of client keys
+  - S7192393, CVE-2013-0440: Better Checking of order of TLS Messages
+  - S7192977, CVE-2013-0442: Issue in toolkit thread
+  - S7197546, CVE-2013-0428: (proxy) Reflect about creating reflective proxies
+  - S7200491: Tighten up JTable layout code
+  - S7200493, CVE-2013-0444: Improve cache handling
+  - S7200499: Better data validation for options
+  - S7200500: Launcher better input validation
+  - S7201064: Better dialogue checking
+  - S7201066, CVE-2013-0441: Change modifiers on unused fields
+  - S7201068, CVE-2013-0435: Better handling of UI elements
+  - S7201070: Serialization to conform to protocol
+  - S7201071, CVE-2013-0433: InetSocketAddress serialization issue
+  - S8000210: Improve JarFile code quality
+  - S8000537, CVE-2013-0450: Contextualize RequiredModelMBean class
+  - S8000539, CVE-2013-0431: Introspect JMX data handling
+  - S8000540, CVE-2013-1475: Improve IIOP type reuse management
+  - S8000631, CVE-2013-1476: Restrict access to class constructor
+  - S8001235, CVE-2013-0434: Improve JAXP HTTP handling
+  - S8001242: Improve RMI HTTP conformance
+  - S8001307: Modify ACC_SUPER behavior
+  - S8001972, CVE-2013-1478: Improve image processing
+  - S8002325, CVE-2013-1480: Improve management of images
+* Backports
+  - S7054590: (JSR-292) MethodHandleProxies.asInterfaceInstance() accepts private/protected nested interfaces
+  - S7175616: Port fix for TimeZone from JDK 8 to JDK 7
+  - S8002068: Build broken: corba code changes unable to use new JDK 7 classes
+  - S8004341: Two JCK tests fails with 7u11 b06
+  - S8005615: Java Logger fails to load tomcat logger implementation (JULI)
 
 New in release 2.3.4 (2013-01-15):
 
