@@ -60,8 +60,8 @@ public class ClassRewriter
   /**
    * The executor for submitting rewriting jobs.
    */
-  private static final ExecutorService executor = DEBUG ?
-    Executors.newSingleThreadExecutor() : Executors.newCachedThreadPool();
+  private static final ExecutorService executor = 
+    Executors.newSingleThreadExecutor();
 
   /**
    * The source directory, set once by main.
