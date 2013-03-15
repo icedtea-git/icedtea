@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security openjdk/jdk/src/share/lib/security/java.security
---- openjdk.orig/jdk/src/share/lib/security/java.security	2009-09-10 19:04:25.000000000 +0100
-+++ openjdk/jdk/src/share/lib/security/java.security	2009-09-11 14:53:07.000000000 +0100
+--- openjdk.orig/jdk/src/share/lib/security/java.security-linux	2009-09-10 19:04:25.000000000 +0100
++++ openjdk/jdk/src/share/lib/security/java.security-linux	2009-09-11 14:53:07.000000000 +0100
 @@ -45,13 +45,12 @@
  #
  security.provider.1=sun.security.provider.Sun

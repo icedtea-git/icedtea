@@ -1,22 +1,24 @@
 # Dependencies
 
-OPENJDK_VERSION = b00
+OPENJDK_VERSION = b80
 
-CORBA_CHANGESET = 635ebbe236a9
-HOTSPOT_CHANGESET = dc6631a3d175
-JAXP_CHANGESET = bf4b076e4556
-JAXWS_CHANGESET = 8ff499dc157f
-JDK_CHANGESET = 9a59860aaccb
-LANGTOOLS_CHANGESET = 8caec3672381
-OPENJDK_CHANGESET = 5057eaa7e88a
+CORBA_CHANGESET = 2a00aeeb466b
+JAXP_CHANGESET = ef3495555a4c
+JAXWS_CHANGESET = c88bb21560cc
+JDK_CHANGESET = 758db1c4c65c
+LANGTOOLS_CHANGESET = ed69d087fdfd
+OPENJDK_CHANGESET = cd7f2c7e2a0e
 
-CORBA_SHA256SUM = edd7cb8ae6a9d9b0e8f9748ecdf31a0f4decc8a06b418baa7b2ef1e7a9d3474a
-HOTSPOT_SHA256SUM = dd59a52bed76f01b382c0c3b44905390bd5e7a77a54b3c8f6de71001376e4b99
-JAXP_SHA256SUM = 4daf673635e1a09339695ec246afbc154c5fc31715a4748a5c6d6ae7332ffdfb
-JAXWS_SHA256SUM = b1a54b1f295451d449683b04de8dc8b6c82014e647f1b41543798d401d011ca3
-JDK_SHA256SUM = cca1a534ac98baf2b06b60cac6ed66960b1d432a3f14d8be02642d1de16701fd
-LANGTOOLS_SHA256SUM = 495b601afd6b12bee9a8ccc3e1d067bb14789d4f3c0a9d21388b1708d946e3fb
-OPENJDK_SHA256SUM = 6dada5c4c04640ef4b95b7ceeff20baeb69ff4cd64e2591eb64bb33c6035b5cf
+CORBA_SHA256SUM = fd30dec3d15ad284365facb0a9195188c95033e908c8c247d137046fc501b2df
+JAXP_SHA256SUM = f7f5ee6e725499bc0b2944182d6b206a661d1da271ab2dff59c282550d89e6e4
+JAXWS_SHA256SUM = b8e27c4fe7214c0c916f554b91a6f1ecff522c7b76b06be1abaf71a835bbca37
+JDK_SHA256SUM = a0918d63bdc9da8461dbb47b0135a8ce522ca943bb2a88558cbf0a63c75a506a
+LANGTOOLS_SHA256SUM = b2f3407fbcc539d61bd6d4830b7e97cc53e5175fea262d6543610fccb3f7c0f3
+OPENJDK_SHA256SUM = b02a1a2ac30e8611e9110e03ea6705a80c21c286411118be5300cab7a65eb651
+
+HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$4}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+HS_URL = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
 
 CACAO_VERSION = d6264eb66506
 CACAO_SHA256SUM = 94ea7899e806ccbc33a732b5113a8f969d8b1f4ce7ffd27cf04577054f65f63c
@@ -30,16 +32,6 @@ JAMVM_BASE_URL = http://icedtea.classpath.org/download/drops/jamvm
 JAMVM_URL = $(JAMVM_BASE_URL)/jamvm-$(JAMVM_VERSION).tar.gz
 JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
 
-JAXWS_DROP_URL = http://icedtea.classpath.org/download/drops
-JAXWS_DROP_ZIP = jdk7-jaxws2_2_4-b03-2011_05_27.zip
-JAXWS_DROP_SHA256SUM = 05ae7259b75d0f2307276d61ece1887fcd437cb4ecda42fab8c22d4b537effd6
-JAF_DROP_URL = http://icedtea.classpath.org/download/drops
-JAF_DROP_ZIP = jdk7-jaf-2010_08_19.zip
-JAF_DROP_SHA256SUM = e6aefedfdbb4673e8019583d1344fb162b94e1b10382c362364dbbfd5889c09e
-JAXP_DROP_URL = http://icedtea.classpath.org/download/drops
-JAXP_DROP_ZIP = jaxp145_01.zip
-JAXP_DROP_SHA256SUM = c5924c6188988e2e8397ee5143bd8eaa062569d052567afd2ac9326a54a848cb
-
 ICEDTEA_PREFIX = icedtea8-forest
 ICEDTEA_HG_URL = http://icedtea.classpath.org/hg/$(ICEDTEA_PREFIX)
 OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk8/jdk8
@@ -49,13 +41,13 @@ CACIOCAVALLO_HG_URL = http://hg.openjdk.java.net/caciocavallo/jdk8/
 BSD_HG_URL = http://hg.openjdk.java.net/bsd-port/bsd-port
 NIO2_HG_URL = http://hg.openjdk.java.net/nio/nio/
 
-OPENJDK_URL = $(ICEDTEA_HG_URL)
-CORBA_URL = $(ICEDTEA_HG_URL)/corba
-JAXP_URL = $(ICEDTEA_HG_URL)/jaxp
-JAXWS_URL = $(ICEDTEA_HG_URL)/jaxws
-JDK_URL = $(ICEDTEA_HG_URL)/jdk
-LANGTOOLS_URL = $(ICEDTEA_HG_URL)/langtools
-HOTSPOT_URL = $(ICEDTEA_HG_URL)/hotspot
+OPENJDK_URL = $(OPENJDK_HG_URL)
+CORBA_URL = $(OPENJDK_HG_URL)/corba
+JAXP_URL = $(OPENJDK_HG_URL)/jaxp
+JAXWS_URL = $(OPENJDK_HG_URL)/jaxws
+JDK_URL = $(OPENJDK_HG_URL)/jdk
+LANGTOOLS_URL = $(OPENJDK_HG_URL)/langtools
+HOTSPOT_URL = $(OPENJDK_HG_URL)/hotspot
 
 # Build directories
 
@@ -63,12 +55,15 @@ BUILD_DIR = @OPENJDK_BUILD_DIR@
 BUILD_OUTPUT_DIR = $(abs_top_builddir)/$(BUILD_DIR)
 DEBUG_BUILD_OUTPUT_DIR = $(BUILD_OUTPUT_DIR)-debug
 BOOT_BUILD_OUTPUT_DIR = $(BUILD_OUTPUT_DIR)-boot
-BOOT_DIR = $(abs_top_builddir)/bootstrap/jdk1.6.0
+BOOT_DIR = $(abs_top_builddir)/bootstrap/jdk1.7.0
 RUNTIME = $(BOOT_DIR)/jre/lib/rt.jar
 CLS_DIR_BOOT = $(BOOT_BUILD_OUTPUT_DIR)/classes
-SERVER_DIR = hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server
-BUILD_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-BUILD_DEBUG_JRE_ARCH_DIR = $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+SERVER_DIR = hotspot/dist/jre/lib/$(INSTALL_ARCH_DIR)/server
+BUILD_IMAGE_DIR = $(BUILD_OUTPUT_DIR)/images
+BUILD_JRE_ARCH_DIR = $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+BUILD_DEBUG_IMAGE_DIR = $(DEBUG_BUILD_OUTPUT_DIR)/images
+BUILD_DEBUG_JRE_ARCH_DIR = $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+BUILD_BOOT_IMAGE_DIR = $(BOOT_BUILD_OUTPUT_DIR)/images
 REWRITER_BUILD_DIR = $(abs_top_builddir)/rewriter.build
 STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
 STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
@@ -80,7 +75,7 @@ SHARE = openjdk-boot/jdk/src/share/classes
 SOLARIS = openjdk-boot/jdk/src/solaris/classes
 LANGTOOLS = openjdk-boot/langtools/src/share/classes
 CORBA = openjdk-boot/corba/src/share/classes
-JAXWS = $(BUILD_OUTPUT_DIR)/jaxws/drop/jaxws_src/src
+JAXWS = openjdk-boot/jaxws/src/share/jaxws_classes
 
 PULSE_JAVA_DIR = $(abs_top_srcdir)/pulseaudio
 PULSE_JAVA_NATIVE_SRCDIR = $(PULSE_JAVA_DIR)/src/native
@@ -92,33 +87,17 @@ PULSE_JAVA_NATIVE_OBJECTS = \
 PULSE_JAVA_JAVA_SRCDIR = $(PULSE_JAVA_DIR)/src/java
 PULSE_JAVA_CLASS_DIR = $(PULSE_JAVA_BUILDDIR)/classes
 
-if DTDTYPE_QNAME
-NEED_JAXWS_SRC = true
-JAXWS_COND = $(JAXWS)
-endif
-
-if LACKS_JAVAX_ANNOTATION_RESOURCE
-NEED_JAXWS_SRC = true
-JAXWS_COND = $(JAXWS)
-endif
-
 OPENJDK_SOURCEPATH_DIRS = \
-        $(SHARE):$(SOLARIS):$(LANGTOOLS):$(CORBA):$(JAXWS_COND)
+        $(SHARE):$(SOLARIS):$(LANGTOOLS):$(CORBA):$(JAXWS)
 
-SOURCEPATH_DIRS = $(abs_top_srcdir)/generated:$(OPENJDK_SOURCEPATH_DIRS)
+SOURCEPATH_DIRS = $(OPENJDK_SOURCEPATH_DIRS)
 
 # Sources used from OpenJDK.
-if LACKS_SUN_AWT_TOOLKIT
 #PR43148 - javac fails due to missing java.util.regex.Matcher.quoteReplacement
 #PR48033 - Missing javax.management.remote.JMXServiceURL
 #PR48034 - javax.management.modelmbean.ModelMBeanInfo
 #PR42003 - Missing javax.swing.plaf.basic.BasicDirectoryModel methods cause OpenJDK build failure 
-ICEDTEA_BOOTSTRAP_CLASSES = \
-	$(SHARE)/java/util/regex/Matcher.java \
-	$(SHARE)/javax/management/remote/JMXServiceURL.java \
-	$(SHARE)/javax/management/modelmbean/ModelMBeanInfo.java \
-	$(SHARE)/javax/swing/plaf/basic/BasicDirectoryModel.java
-endif
+ICEDTEA_BOOTSTRAP_CLASSES =
 
 # Settings for javac
 
@@ -150,16 +129,6 @@ else
   HOTSPOT_SRC_ZIP = hotspot.tar.gz
 endif
 
-if WITH_ALT_HSBUILD
-  HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$4}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
-  HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
-  HS_URL = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
-else
-  HS_SHA256SUM = $(HOTSPOT_SHA256SUM)
-  HS_CHANGESET = $(HOTSPOT_CHANGESET)
-  HS_URL = $(HOTSPOT_URL)
-endif
-
 if ENABLE_PULSE_JAVA
 PULSE_JAVA_TARGET = stamps/pulse-java.stamp
 endif
@@ -175,16 +144,10 @@ else
   PREFER_SOURCE = -Xprefer:source
 endif
 
-if ENABLE_CACAO
-  ICEDTEA_BUILD_TARGET = jdk_only
-  ICEDTEA_DEBUG_BUILD_TARGET = jdk_fastdebug_only
-else
-if ENABLE_JAMVM
-  ICEDTEA_BUILD_TARGET=jdk_only
-  ICEDTEA_DEBUG_BUILD_TARGET = jdk_fastdebug_only
-else
-  ICEDTEA_DEBUG_BUILD_TARGET = debug_build
-endif
+ICEDTEA_BUILD_TARGET=images
+
+if ENABLE_DOCS
+  ICEDTEA_BUILD_TARGET += docs
 endif
 
 if BOOTSTRAPPING
@@ -237,7 +200,7 @@ OPENJDK_TREE = stamps/overlay.stamp
 # Target to ensure a patched OpenJDK bootstrap tree containing
 # Zero & Shark, any other overlays and the bootstrapping patches
 # is available in $(abs_top_builddir)/openjdk-boot
-OPENJDK_BOOT_TREE = stamps/patch-jaxws.stamp
+OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
 
 # Sources list
 
@@ -246,44 +209,12 @@ REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 # Patch list
 
 ICEDTEA_PATCHES = \
-	patches/text-relocations.patch \
-	patches/demos.patch \
-	patches/headers.patch \
-	patches/gcc-suffix.patch \
 	patches/memory-limits.patch \
-	patches/sunsrc.patch \
-	patches/libraries.patch \
-	patches/print-lsb-release.patch \
-	patches/jpegclasses.patch \
 	patches/debian/uname.patch \
-	patches/sparc-ptracefix.patch \
-	patches/sparc-trapsfix.patch \
 	patches/override-redirect-metacity.patch \
-	patches/security-updates.patch \
-	patches/hotspot-gcc-pr36917.patch \
-	patches/alpha-fixes.patch \
 	patches/alt-jar.patch \
-	patches/use-idx_t.patch \
-	patches/params-cast-size_t.patch \
-	patches/clean-crypto.patch \
 	patches/cacao/arch.patch \
-	patches/signed-types.patch \
-	patches/lc_ctype.patch \
-	patches/tests-jdk.patch \
-	patches/linker-libs-order.patch \
-	patches/samejvm-safe.patch \
-	patches/pr261.patch \
-	patches/parisc-opt.patch \
-        patches/security/6592792.patch \
-        patches/security/6733959.patch \
-        patches/security/6755943.patch \
-	patches/jvmtiEnv.patch \
-	patches/disable-intree-ec.patch \
-	patches/sources.patch \
-	patches/parisc.patch \
-	patches/sh4-support.patch \
-	patches/jtreg-httpTest.patch \
-	patches/update-bootclasspath.patch
+	patches/disable-intree-ec.patch
 
 # Conditional patches
 
@@ -316,15 +247,8 @@ ICEDTEA_PATCHES += \
 	patches/pulse-soundproperties.patch
 endif
 
-if !USE_CVMI
-ICEDTEA_PATCHES += \
-	patches/javafiles.patch
-endif
-
 if ENABLE_SYSTEMTAP
-ICEDTEA_PATCHES += patches/systemtap.patch \
-	patches/systemtap-gcc-4.5.patch \
-	patches/systemtap-alloc-size-workaround.patch
+ICEDTEA_PATCHES += patches/systemtap-gcc-4.5.patch
 endif
 
 if ENABLE_NSS
@@ -337,81 +261,9 @@ ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
 
 # Bootstrapping patches
 
-ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
-	patches/boot/corba-defs.patch \
-	patches/boot/corba-idlj.patch \
-	patches/boot/corba-no-gen.patch \
-	patches/boot/corba-orb.patch \
-	patches/boot/demos.patch \
-	patches/boot/ecj-fphexconstants.patch \
-	patches/boot/ecj-opts.patch \
-	patches/boot/fontconfig.patch \
-	patches/boot/generated-comments.patch \
-	patches/boot/xbootclasspath.patch \
-	patches/boot/icedteart.patch \
-	patches/boot/jar.patch \
-	patches/boot/symbols.patch \
-	patches/boot/tobin.patch \
-	patches/boot/test_gamma.patch \
-	patches/boot/tools.jar.patch \
-	patches/boot/jopt.patch \
-	patches/boot/jaxp-dependency.patch \
-	patches/boot/genstubs-nofork.patch \
-	patches/boot/getannotation-cast.patch \
-	patches/boot/break-processbuilder-dependency.patch \
-	patches/boot/revert-6973616.patch \
-	patches/boot/revert-6941137.patch \
-	patches/boot/ecj-stringswitch.patch \
-	patches/boot/langtools-force-old-jdk.patch \
-	patches/boot/corba-dependencies.patch \
-	patches/boot/jaxws-langtools-dependency.patch \
-	patches/boot/jaxws-jdk-dependency.patch \
-	patches/boot/hotspot-jdk-dependency.patch \
-	patches/boot/ecj-multicatch.patch \
-	patches/boot/ecj-trywithresources.patch \
-	patches/boot/ecj-autoboxing.patch \
-	patches/boot/xsltproc.patch
-
-if CP39408_JAVAH
-ICEDTEA_BOOT_PATCHES += patches/boot/pr39408.patch
-endif
-
-if CP40188_JAVAH
-ICEDTEA_BOOT_PATCHES += patches/boot/pr40188.patch \
-	patches/boot/javah.patch
-endif
-
-if CP40616
-ICEDTEA_BOOT_PATCHES += patches/boot/pr40616.patch
-endif
-
-# Patches for when java.util.Scanner is missing
-# or has the bug #40630 (all these classes rely
-# on Scanner#hasNextLine() looping behaviour)
-SCANNER_PATCHES = patches/boot/scanner-spp.patch \
-	patches/boot/scanner-sbcs.patch \
-	patches/boot/scanner-dbcs.patch \
-	patches/boot/scanner-charsets.patch
-
-if LACKS_JAVA_UTIL_SCANNER
-ICEDTEA_BOOT_PATCHES += $(SCANNER_PATCHES)
-else
-if CP40630
-ICEDTEA_BOOT_PATCHES += $(SCANNER_PATCHES)
-endif
-endif
-
-if JAVAC_LACKS_DIAMOND
-ICEDTEA_BOOT_PATCHES += patches/boot/ecj-diamond.patch
-else
-ICEDTEA_BOOT_PATCHES += patches/boot/compile-for-7.patch
-endif
+ICEDTEA_BOOT_PATCHES =
 
 ICEDTEA_BOOT_PATCHES += $(DISTRIBUTION_BOOT_PATCHES)
-
-# Patches for JAXWS
-
-JAXWS_PATCHES = patches/boot/jaxws-getdtdtype.patch
 
 # OpenJDK build environment.
 if ZERO_BUILD
@@ -424,7 +276,7 @@ endif
 JDK_UPDATE_VERSION = $(shell echo $(OPENJDK_VERSION) | sed -e "s/^b//")
 COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)
 
-ICEDTEA_NAME = IcedTea8
+ICEDTEA_NAME = IcedTea
 if HAS_ICEDTEA_REVISION
 ICEDTEA_REV = +${ICEDTEA_REVISION}
 endif
@@ -432,18 +284,19 @@ if HAS_PKGVERSION
 ICEDTEA_PKG = $(EMPTY) (${PKGVERSION})
 endif
 
+ICEDTEA_CONFIGURE = \
+	  --enable-unlimited-crypto \
+	  --with-cacerts-file=$(SYSTEM_JDK_DIR)/jre/lib/security/cacerts \
+	  --with-zlib=system --with-stdc++lib=dynamic \
+	  --with-boot-jdk=$(BOOT_DIR)
+
 ICEDTEA_ENV = \
-	ALT_JDK_IMPORT_PATH="$(BOOT_DIR)" \
-	ANT="$(ANT)" \
         BUILD_NUMBER="$(OPENJDK_VERSION)" \
 	JDK_UPDATE_VERSION="$(JDK_UPDATE_VERSION)" \
-        JRE_RELEASE_VERSION="1.7.0_$(COMBINED_VERSION)" \
+        JRE_RELEASE_VERSION="1.8.0_$(COMBINED_VERSION)" \
 	MILESTONE="fcs" \
 	LANG="C" \
 	PATH="$(BOOT_DIR)/bin:$(OS_PATH):$$PATH" \
-	ALT_BOOTDIR="$(BOOT_DIR)" \
-	BUILD_ARCH_DIR="$(BUILD_ARCH_DIR)" \
-	ICEDTEA_RT="$(RUNTIME)" \
 	CLASSPATH="" \
 	LD_LIBRARY_PATH="" \
 	ZERO_BUILD="$(ICEDTEA_ZERO_BUILD)" \
@@ -458,25 +311,17 @@ ICEDTEA_ENV = \
 	LLVM_CFLAGS="$(LLVM_CFLAGS)" \
 	LLVM_LDFLAGS="$(LLVM_LDFLAGS)" \
 	LLVM_LIBS="$(LLVM_LIBS)" \
-	FREETYPE2_HEADERS="$(FREETYPE2_CFLAGS)" \
-	FT2_LIB="$(FREETYPE2_LIBS)" \
-	ALT_PARALLEL_COMPILE_JOBS="$(PARALLEL_JOBS)" \
-	HOTSPOT_BUILD_JOBS="$(PARALLEL_JOBS)" \
-	JAVAC="" \
 	JAVA_HOME="" \
 	JDK_HOME="" \
 	QUIETLY="" \
 	ANT_RESPECT_JAVA_HOME="TRUE" \
 	DISTRIBUTION_ID="$(DIST_ID)" \
 	DERIVATIVE_ID="$(ICEDTEA_NAME) $(PACKAGE_VERSION)$(ICEDTEA_REV)" \
-	ALT_JIBX_LIBS_PATH="$(JIBX_DEPS_DIR)" \
 	DEBUG_CLASSFILES="true" \
 	DEBUG_BINARIES="true" \
 	DISABLE_INTREE_EC="true" \
-	ALT_DROPS_DIR="$(abs_top_builddir)/drops" \
-	ALT_OUTPUTDIR="$(BUILD_OUTPUT_DIR)" \
-	VERBOSE="$(VERBOSE)" \
-	STATIC_CXX="false"
+	LOG="debug" SCTP_WERROR= \
+	POST_STRIP_CMD= STRIP_POLICY="no_strip"
 
 if ENABLE_CACAO
 ICEDTEA_ENV += \
@@ -492,11 +337,6 @@ if DISABLE_OPTIMIZATIONS
 ICEDTEA_ENV += \
 	NO_OPTIMIZATIONS="true" \
 	CC_NO_OPT="-O0 -g"
-endif
-
-if !ENABLE_DOCS
-ICEDTEA_ENV += \
-	NO_DOCS="true"
 endif
 
 if USE_ALT_JAR
@@ -521,85 +361,35 @@ ICEDTEA_ENV += \
 	LCMS_CFLAGS="${LCMS2_CFLAGS}"
 endif
 
+# Dropped for new build
+#	ALT_JDK_IMPORT_PATH="$(BOOT_DIR)" 
+#	ANT="$(ANT)" 
+#	ALT_BOOTDIR="$(BOOT_DIR)" 
+#	BUILD_ARCH_DIR="$(BUILD_ARCH_DIR)" 
+#	ICEDTEA_RT="$(RUNTIME)" 
+#	FREETYPE2_HEADERS="$(FREETYPE2_CFLAGS)" 
+#	FT2_LIB="$(FREETYPE2_LIBS)" 
+#	ALT_PARALLEL_COMPILE_JOBS="$(PARALLEL_JOBS)" 
+#	HOTSPOT_BUILD_JOBS="$(PARALLEL_JOBS)" 
+#	ALT_OUTPUTDIR="$(BUILD_OUTPUT_DIR)" 
+#	ALT_JIBX_LIBS_PATH="$(JIBX_DEPS_DIR)"
+
 # OpenJDK boot build environment.
+ICEDTEA_CONFIGURE_BOOT = $(ICEDTEA_CONFIGURE)
 ICEDTEA_ENV_BOOT = $(ICEDTEA_ENV) \
-	BOOTCLASSPATH_CLS_RT="-bootclasspath $(CLS_DIR_BOOT):$(RUNTIME)" \
-	BOOTCLASSPATH_CLS="-bootclasspath $(CLS_DIR_BOOT)" \
-	BOOTCLASSPATH_RT_LIBGCJ="-bootclasspath $(RUNTIME)" \
-	GENSRCDIR="$(abs_top_builddir)/generated.build" \
 	JAR_KNOWS_ATFILE="$(JAR_KNOWS_ATFILE)" \
 	JAR_KNOWS_J_OPTIONS="$(JAR_KNOWS_J_OPTIONS)" \
 	JAR_ACCEPTS_STDIN_LIST="$(JAR_ACCEPTS_STDIN_LIST)" \
-	DISABLE_NIMBUS="true" \
-	NO_DOCS="true" \
-	ALT_OUTPUTDIR="$(BOOT_BUILD_OUTPUT_DIR)" \
-	XSLT="$(XSLTPROC)"
+	DISABLE_NIMBUS="true"
+
+# Dropped for new build
+#	BOOTCLASSPATH_CLS_RT="-bootclasspath $(CLS_DIR_BOOT):$(RUNTIME)" 
+#	BOOTCLASSPATH_CLS="-bootclasspath $(CLS_DIR_BOOT)" 
+#	BOOTCLASSPATH_RT_LIBGCJ="-bootclasspath $(RUNTIME)" 
+#	ALT_OUTPUTDIR="$(BOOT_BUILD_OUTPUT_DIR)"
+#	XSLT="$(XSLTPROC)"
 
 # Source files
-
-GENERATED_FILES = $(top_srcdir)/generated/com/sun/java/swing/plaf/gtk/resources/gtk*.java \
-	$(top_srcdir)/generated/com/sun/java/swing/plaf/motif/resources/motif*.java \
-	$(top_srcdir)/generated/com/sun/java/swing/plaf/windows/resources/windows*.java \
-	$(top_srcdir)/generated/com/sun/corba/se/spi/activation/*.java \
-	$(top_srcdir)/generated/com/sun/corba/se/spi/activation/LocatorPackage/*.java \
-	$(top_srcdir)/generated/com/sun/corba/se/spi/activation/InitialNameServicePackage/*.java \
-	$(top_srcdir)/generated/com/sun/corba/se/spi/activation/RepositoryPackage/*.java \
-	$(top_srcdir)/generated/com/sun/corba/se/impl/logging/*.resource \
-	$(top_srcdir)/generated/com/sun/corba/se/impl/logging/*.java \
-	$(top_srcdir)/generated/com/sun/corba/se/impl/logging/*.properties \
-	$(top_srcdir)/generated/com/sun/corba/se/PortableActivationIDL/*.java \
-	$(top_srcdir)/generated/com/sun/corba/se/PortableActivationIDL/LocatorPackage/*.java \
-	$(top_srcdir)/generated/com/sun/corba/se/PortableActivationIDL/InitialNameServicePackage/*.java \
-	$(top_srcdir)/generated/com/sun/corba/se/PortableActivationIDL/RepositoryPackage/*.java \
-	$(top_srcdir)/generated/com/sun/swing/internal/plaf/basic/resources/basic*.java \
-	$(top_srcdir)/generated/com/sun/swing/internal/plaf/metal/resources/metal*.java \
-	$(top_srcdir)/generated/com/sun/swing/internal/plaf/synth/resources/synth*.java \
-	$(top_srcdir)/generated/com/sun/tools/apt/resources/apt*.java \
-	$(top_srcdir)/generated/com/sun/tools/jdi/*.java \
-	$(top_srcdir)/generated/com/sun/tools/jdi/resources/jdi*.java \
-	$(top_srcdir)/generated/com/sun/tools/javac/resources/*.java \
-	$(top_srcdir)/generated/com/sun/tools/doclets/formats/html/resources/standard*.java \
-	$(top_srcdir)/generated/com/sun/tools/doclets/internal/toolkit/resources/doclets*.java \
-	$(top_srcdir)/generated/com/sun/tools/javadoc/resources/javadoc*.java \
-	$(top_srcdir)/generated/com/sun/accessibility/internal/resources/accessibility*.java \
-	$(top_srcdir)/generated/org/omg/IOP/*.java \
-	$(top_srcdir)/generated/org/omg/IOP/CodecPackage/*.java \
-	$(top_srcdir)/generated/org/omg/IOP/CodecFactoryPackage/*.java \
-	$(top_srcdir)/generated/org/omg/CORBA/*.java \
-	$(top_srcdir)/generated/org/omg/PortableInterceptor/*.java \
-	$(top_srcdir)/generated/org/omg/PortableInterceptor/ORBInitInfoPackage/*.java \
-	$(top_srcdir)/generated/org/omg/CosNaming/*.java \
-	$(top_srcdir)/generated/org/omg/CosNaming/NamingContextPackage/*.java \
-	$(top_srcdir)/generated/org/omg/CosNaming/NamingContextExtPackage/*.java \
-	$(top_srcdir)/generated/org/omg/Messaging/*.java \
-	$(top_srcdir)/generated/org/omg/Dynamic/*.java \
-	$(top_srcdir)/generated/org/omg/DynamicAny/*.java \
-	$(top_srcdir)/generated/org/omg/DynamicAny/DynAnyPackage/*.java \
-	$(top_srcdir)/generated/org/omg/DynamicAny/DynAnyFactoryPackage/*.java \
-	$(top_srcdir)/generated/org/omg/PortableServer/*.java \
-	$(top_srcdir)/generated/org/omg/PortableServer/CurrentPackage/*.java \
-	$(top_srcdir)/generated/org/omg/PortableServer/POAManagerPackage/*.java \
-	$(top_srcdir)/generated/org/omg/PortableServer/POAPackage/*.java \
-	$(top_srcdir)/generated/sun/awt/X11/*.java \
-	$(top_srcdir)/generated/sun/awt/resources/awt*.java \
-	$(top_srcdir)/generated/sun/nio/ch/*.java \
-	$(top_srcdir)/generated/sun/nio/cs/*.java \
-	$(top_srcdir)/generated/sun/nio/cs/ext/*.java \
-	$(top_srcdir)/generated/sun/nio/fs/*.java \
-	$(top_srcdir)/generated/sun/misc/*.java \
-	$(top_srcdir)/generated/sun/util/*.java \
-	$(top_srcdir)/generated/sun/util/logging/resources/logging*.java \
-	$(top_srcdir)/generated/sun/util/resources/*.java \
-	$(top_srcdir)/generated/sun/print/resources/serviceui*.java \
-	$(top_srcdir)/generated/sun/tools/jar/resources/jar*.java \
-	$(top_srcdir)/generated/sun/tools/jconsole/*.java \
-	$(top_srcdir)/generated/sun/management/resources/agent*.java \
-	$(top_srcdir)/generated/java/nio/*.java \
-	$(top_srcdir)/generated/java/nio/channels/*.java \
-	$(top_srcdir)/generated/java/lang/*.java \
-	$(top_srcdir)/generated/java/util/*.java \
-	$(top_srcdir)/generated/javax/management/remote/rmi/*.java \
-	$(top_srcdir)/generated/fontconfig/fontconfig*.bfc
 
 JTREG_SRCS = $(top_srcdir)/test/jtreg/com/sun/javatest/cof/i18n.properties \
 	$(top_srcdir)/test/jtreg/com/sun/javatest/cof/COF2_0_2.xsd \
@@ -692,7 +482,7 @@ PULSEAUDIO_SRCS = $(top_srcdir)/pulseaudio/src/java/org/classpath/icedtea/pulsea
 	$(top_srcdir)/pulseaudio/unittests/org/classpath/icedtea/pulseaudio/*.java \
 	$(top_srcdir)/pulseaudio/COPYING
 
-EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
+EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/boot/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
 	$(top_srcdir)/patches/debian/*.patch \
@@ -720,7 +510,7 @@ all-local: icedtea-stage2
 check-local: jtregcheck
 
 clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
- clean-icedtea clean-icedtea-boot clean-clone clean-clone-boot \
+ clean-icedtea clean-icedtea-debug clean-icedtea-boot clean-clone clean-clone-boot \
  clean-bootstrap-directory-stage1 clean-bootstrap-directory-stage2 \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
  clean-extract clean-generated clean-native-ecj clean-hgforest clean-icedtea-stage2 \
@@ -752,9 +542,9 @@ install:
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot \
 	clean-rt hotspot hotspot-helper clean-jtreg clean-jtreg-reports \
-	clean-drops jtregcheck clean-remove-intree-libraries \
+	jtregcheck clean-remove-intree-libraries \
 	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
-	clean-extract-hotspot clean-sanitise-openjdk
+	clean-extract-hotspot clean-sanitise-openjdk clean-icedtea-debug
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -799,100 +589,12 @@ clean-hgforest:
 
 # Download OpenJDK sources.
 
-stamps/download.stamp: stamps/download-drops.stamp stamps/download-openjdk.stamp \
- stamps/download-cacao.stamp stamps/download-jamvm.stamp
+stamps/download.stamp: stamps/download-openjdk.stamp stamps/download-cacao.stamp stamps/download-jamvm.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-download: clean-drops clean-download-openjdk clean-download-cacao clean-download-jamvm
+clean-download: clean-download-openjdk clean-download-cacao clean-download-jamvm
 	rm -f stamps/download.stamp
-
-stamps/download-jaxp-drop.stamp:
-	mkdir -p drops
-if USE_ALT_JAXP_DROP_ZIP
-	ln -sf $(ALT_JAXP_DROP_ZIP) drops/$(JAXP_DROP_ZIP)
-endif
-	if ! echo "$(JAXP_DROP_SHA256SUM)  drops/$(JAXP_DROP_ZIP)" \
-	  | $(SHA256SUM) --check ; \
-	then \
-	  if [ -f drops/$(JAXP_DROP_ZIP) ] ; \
-	  then \
-	    mv drops/$(JAXP_DROP_ZIP) drops/$(JAXP_DROP_ZIP).old ; \
-	  fi ; \
-	  $(WGET) $(JAXP_DROP_URL)/$(JAXP_DROP_ZIP) -O drops/$(JAXP_DROP_ZIP); \
-	  if ! echo "$(JAXP_DROP_SHA256SUM)  drops/$(JAXP_DROP_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of jaxp drop zip"; false; \
-	  fi; \
-	fi ;
-	mkdir -p stamps
-	touch $@
-
-clean-download-jaxp-drop:
-	rm -f drops/$(JAXP_DROP_ZIP)
-	rm -f stamps/download-jaxp-drop.stamp
-
-stamps/download-jaf-drop.stamp:
-	mkdir -p drops
-if USE_ALT_JAF_DROP_ZIP
-	ln -sf $(ALT_JAF_DROP_ZIP) drops/$(JAF_DROP_ZIP)
-endif
-	if ! echo "$(JAF_DROP_SHA256SUM)  drops/$(JAF_DROP_ZIP)" \
-	  | $(SHA256SUM) --check ; \
-	then \
-	  if [ -f drops/$(JAF_DROP_ZIP) ] ; \
-	  then \
-	    mv drops/$(JAF_DROP_ZIP) drops/$(JAF_DROP_ZIP).old ; \
-	  fi ; \
-	  $(WGET) $(JAF_DROP_URL)/$(JAF_DROP_ZIP) -O drops/$(JAF_DROP_ZIP); \
-	  if ! echo "$(JAF_DROP_SHA256SUM)  drops/$(JAF_DROP_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of jaf drop zip"; false; \
-	  fi; \
-	fi ;
-	mkdir -p stamps
-	touch $@
-
-clean-download-jaf-drop:
-	rm -f drops/$(JAF_DROP_ZIP)
-	rm -f stamps/download-jaf-drop.stamp
-
-stamps/download-jaxws-drop.stamp:
-	mkdir -p drops
-if USE_ALT_JAXWS_DROP_ZIP
-	ln -sf $(ALT_JAXWS_DROP_ZIP) drops/$(JAXWS_DROP_ZIP)
-endif
-	if ! echo "$(JAXWS_DROP_SHA256SUM)  drops/$(JAXWS_DROP_ZIP)" \
-	  | $(SHA256SUM) --check ; \
-	then \
-	  if [ -f drops/$(JAXWS_DROP_ZIP) ] ; \
-	  then \
-	    mv drops/$(JAXWS_DROP_ZIP) drops/$(JAXWS_DROP_ZIP).old ; \
-	  fi ; \
-	  $(WGET) $(JAXWS_DROP_URL)/$(JAXWS_DROP_ZIP) -O drops/$(JAXWS_DROP_ZIP); \
-	  if ! echo "$(JAXWS_DROP_SHA256SUM)  drops/$(JAXWS_DROP_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of jaxws drop zip"; false; \
-	  fi; \
-	fi ;
-	mkdir -p stamps
-	touch $@
-
-clean-download-jaxws-drop:
-	rm -f drops/$(JAXWS_DROP_ZIP)
-	rm -f stamps/download-jaxws-drop.stamp
-
-stamps/download-drops.stamp: stamps/download-jaxp-drop.stamp \
- stamps/download-jaxws-drop.stamp stamps/download-jaf-drop.stamp
-	mkdir -p stamps
-	touch $@
-
-clean-drops: clean-download-jaxp-drop clean-download-jaf-drop \
- clean-download-jaxws-drop
-	if [ -e drops ] ; then \
-	  rmdir drops ; \
-	fi
-	rm -f stamps/download-drops.stamp
 
 stamps/download-openjdk.stamp: stamps/hgforest.stamp
 if !OPENJDK_SRC_DIR_FOUND
@@ -911,14 +613,14 @@ else
 if USE_NIO2
 	hg fclone $(NIO2_HG_URL) openjdk;
 else
-if USE_JDK7
-	hg fclone $(OPENJDK_HG_URL) openjdk;
+if USE_ICEDTEA
+	hg fclone $(ICEDTEA_HG_URL) openjdk;
 else
 if USE_HG
 if WITH_HGREV
-	$(HG) fclone -r $(HGREV) $(ICEDTEA_HG_URL) openjdk;
+	$(HG) fclone -r $(HGREV) $(OPENJDK_HG_URL) openjdk;
 else
-	$(HG) fclone $(ICEDTEA_HG_URL) openjdk;
+	$(HG) fclone $(OPENJDK_HG_URL) openjdk;
 endif
 else
 if USE_ALT_OPENJDK_SRC_ZIP
@@ -1123,14 +825,13 @@ clean-download-jamvm:
 	rm -f stamps/download-jamvm.stamp
 
 stamps/extract.stamp: stamps/extract-openjdk.stamp \
- stamps/extract-cacao.stamp stamps/extract-jaxws.stamp \
- stamps/remove-intree-libraries.stamp stamps/extract-jamvm.stamp \
- stamps/extract-hotspot.stamp stamps/sanitise-openjdk.stamp
+ stamps/extract-cacao.stamp stamps/remove-intree-libraries.stamp \
+ stamps/extract-jamvm.stamp stamps/extract-hotspot.stamp \
+ stamps/sanitise-openjdk.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-extract: clean-extract-openjdk clean-extract-cacao clean-extract-jaxws \
- clean-extract-jamvm
+clean-extract: clean-extract-openjdk clean-extract-cacao clean-extract-jamvm
 	rm -f stamps/extract.stamp
 
 stamps/extract-openjdk.stamp: stamps/download-openjdk.stamp
@@ -1144,7 +845,7 @@ else
 	      *.zip) $(UNZIP) -q $(OPENJDK_SRC_ZIP) ;; \
 	      *.tar.*) $(TAR) xf $(OPENJDK_SRC_ZIP) ;; \
 	    esac; \
-	    mv $(ICEDTEA_PREFIX)-$(OPENJDK_CHANGESET) openjdk ; \
+	    mv *-$(OPENJDK_CHANGESET) openjdk ; \
 	  else \
 	    echo "ERROR: Couldn't extract OpenJDK"; \
 	    false; \
@@ -1221,6 +922,8 @@ else
 	  fi ; \
 	fi
 endif
+# Remove broken javazic tool
+	rm -rf openjdk/jdk/make/tools/src/build/tools/javazic
 	touch stamps/extract-openjdk.stamp
 
 clean-extract-openjdk: clean-overlay clean-versioning \
@@ -1302,46 +1005,12 @@ endif
 clean-extract-jamvm: clean-jamvm
 	rm -f stamps/extract-jamvm.stamp
 
-stamps/extract-jaxws.stamp: stamps/download-jaxws-drop.stamp \
- stamps/download-jaf-drop.stamp stamps/sanitise-openjdk.stamp
-	set -e ; \
-	if test "x$(NEED_JAXWS_SRC)" = "xtrue"; then \
-	  (cd openjdk/jaxws ; \
-	   $(ANT) -Ddrops.dir=$(abs_top_builddir)/drops \
-	   -Doutput.dir=$(BUILD_OUTPUT_DIR)/jaxws \
-	   source ; ) \
-	fi
-	mkdir -p stamps
-	touch $@
-
-clean-extract-jaxws:
-	if [ -d $(BUILD_OUTPUT_DIR)/jaxws ] ; then \
-	  (cd openjdk/jaxws ; \
-	   $(ANT) -Doutput.dir=$(BUILD_OUTPUT_DIR)/jaxws clobber ; \
-	   cd ../../); \
-        fi
-	mkdir -p stamps
-	rm -f stamps/extract-jaxws.stamp
-
 stamps/remove-intree-libraries.stamp: stamps/sanitise-openjdk.stamp
 	sh $(abs_top_builddir)/remove-intree-libraries.sh
 	touch stamps/remove-intree-libraries.stamp
 
 clean-remove-intree-libraries:
 	rm -f stamps/remove-intree-libraries.stamp
-
-stamps/generated.stamp:
-	set -e ; \
-	if [ ! -e $(abs_top_builddir)/generated.build ]; then \
-	  cp -pPR $(abs_top_srcdir)/generated $(abs_top_builddir)/generated.build; \
-	  chmod -R u+w $(abs_top_builddir)/generated.build ; \
-	fi
-	mkdir -p stamps
-	touch $@
-
-clean-generated:
-	rm -rf $(abs_top_builddir)/generated.build
-	rm -f stamps/generated.stamp
 
 stamps/patch-fsg.stamp: stamps/extract.stamp
 	mkdir -p stamps ; \
@@ -1496,7 +1165,7 @@ if HAS_PKGVERSION
 	  echo "DISTRO_PACKAGE_VERSION=$(PKGVERSION)" \
 	    >>openjdk/jdk/make/common/shared/Defs.gmk ;
 endif
-	if test x"$(PROJECT_NAME)" != "xjdk7"; then \
+	if test x"$(PROJECT_NAME)" != "xjdk8"; then \
 	  proj_suffix="-$(PROJECT_NAME)"; \
 	fi ; \
 	if test x"$(VERSION_SUFFIX)" != "x"; then \
@@ -1539,7 +1208,6 @@ stamps/clone-boot.stamp: $(OPENJDK_TREE)
 clean-clone-boot: 
 	rm -rf openjdk-boot
 	rm -f stamps/patch-boot.stamp
-	rm -f stamps/patch-jaxws.stamp
 	rm -f stamps/clone-boot.stamp
 
 stamps/patch-boot.stamp: stamps/clone-boot.stamp
@@ -1592,64 +1260,6 @@ clean-patch-boot:
 	  fi ; \
 	  rm -f stamps/patch-boot.stamp ; \
 	fi
-
-stamps/patch-jaxws.stamp: stamps/patch-boot.stamp
-	mkdir -p stamps
-	rm -f stamps/patch-jaxws.stamp.tmp
-	touch stamps/patch-jaxws.stamp.tmp
-if DTDTYPE_QNAME
-	set -e ; \
-	(cd $(BOOT_BUILD_OUTPUT_DIR)/jaxws; \
-	 all_patches_ok=yes; \
-	 for p in $(JAXWS_PATCHES) ; \
-	 do \
-	   if test x$${all_patches_ok} = "xyes" \
-	     && echo Checking $$p \
-	     && $(PATCH) -l -p0 --dry-run -s -t -f \
-	       -F 0 < $(abs_top_srcdir)/$$p ; \
-	   then \
-	    echo Applying $$p ; \
-	    $(PATCH) -l -p0 < $(abs_top_srcdir)/$$p ; \
-	    if ! grep "^\* $$(basename $$p)" $(abs_top_srcdir)/HACKING \
-	      >> $(abs_top_builddir)/stamps/patch-jaxws.stamp.tmp ; \
-	    then \
-	      echo "* $$(basename $$p): UNDOCUMENTED" \
-	        >> $(abs_top_builddir)/stamps/patch-jaxws.stamp.tmp ; \
-	    fi ; \
-	   else \
-	     test x$${all_patches_ok} = "xyes" && all_patches_ok=$$p ; \
-	   fi ; \
-	 done ; \
-	 if ! test x$${all_patches_ok} = "xyes"; then \
-	   echo ERROR patch $${all_patches_ok} FAILED! ; \
-	   echo WARNING make clean-patch-jaxws before retrying a fix ; \
-	   exit 2; \
-	 fi )
-endif
-	mv stamps/patch-jaxws.stamp.tmp stamps/patch-jaxws.stamp
-
-clean-patch-jaxws:
-if DTDTYPE_QNAME
-	if [ -e stamps/patch-jaxws.stamp ] ; then \
-	  all_patches_ok=yes; \
-	  cd $(BOOT_BUILD_OUTPUT_DIR)/jaxws; \
-	  for p in $(JAXWS_PATCHES) ; \
-	  do \
-	    echo Checking $$p ; \
-	    if $(PATCH) -l -p0 -R --dry-run -s -t -f < $(abs_top_srcdir)/$$p ; \
-	    then \
-	      echo Reverting $$p ; \
-	      $(PATCH) -l -p0 -R < $(abs_top_srcdir)/$$p ; \
-	    else \
-	      all_patches_ok=no ; \
-	    fi ; \
-	  done ; \
-	  if ! test x$${all_patches_ok} = "xyes" ; then \
-	    echo "WARNING Not all patches reverted cleanly" ; \
-	  fi ; \
-	fi
-endif
-	rm -f stamps/patch-jaxws.stamp
 
 # Bootstrap Directory Targets
 # ===========================
@@ -1712,7 +1322,7 @@ clean-bootstrap-directory-stage1:
 # bootstrap/stage2.
 stamps/bootstrap-directory-stage2.stamp: stamps/icedtea-stage1.stamp
 	rm -rf $(STAGE2_BOOT_DIR)
-	ln -s $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/ $(STAGE2_BOOT_DIR)
+	ln -s $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/ $(STAGE2_BOOT_DIR)
 	if ! test -d $(STAGE2_BOOT_DIR)/include; then \
 	  ln -sf $(BOOT_BUILD_OUTPUT_DIR)/include $(STAGE2_BOOT_DIR)/include; \
 	fi
@@ -1757,29 +1367,36 @@ clean-bootstrap-directory-symlink-stage2:
 
 # If you change anything here in the icedtea target, please make sure
 # you change it in the icedtea-debug target as well.
-stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
+stamps/icedtea-configure.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp \
  stamps/jamvm.stamp
+	mkdir -p $(BUILD_OUTPUT_DIR)
+	cd $(BUILD_OUTPUT_DIR) && \
+	$(SHELL) $(abs_top_builddir)/openjdk/configure $(ICEDTEA_CONFIGURE)
+	mkdir -p stamps
+	touch $@
+
+stamps/icedtea.stamp: stamps/icedtea-configure.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
-	  -C openjdk/ \
+	  -C $(BUILD_OUTPUT_DIR) \
 	  $(ICEDTEA_BUILD_TARGET)
-	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	mkdir -p $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
-	mkdir -p $(BUILD_OUTPUT_DIR)/j2re-image/lib/ext 
+	mkdir -p $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_IMAGE_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/ext
+	mkdir -p $(BUILD_IMAGE_DIR)/j2re-image/lib/ext 
 if ENABLE_PULSE_JAVA
 	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	  $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
-	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	  $(BUILD_IMAGE_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf pulse-java.jar \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
+	  $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/ext
 	cp -pPRf pulse-java.jar \
-	  $(BUILD_OUTPUT_DIR)/j2re-image/lib/ext
+	  $(BUILD_IMAGE_DIR)/j2re-image/lib/ext
 	(cd $(PULSE_JAVA_JAVA_SRCDIR) && \
-	   $(ZIP) -qur $(BUILD_OUTPUT_DIR)/j2sdk-image/src.zip org )
+	   $(ZIP) -qur $(BUILD_IMAGE_DIR)/j2sdk-image/src.zip org )
 endif
 if ZERO_BUILD
 	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
@@ -1791,60 +1408,68 @@ if ENABLE_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
 if ENABLE_SYSTEMTAP
-	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
+	mkdir -p $(BUILD_IMAGE_DIR)/j2sdk-image/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
 	if test $$? -eq 0; then \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot.stp \
-	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	    > $(BUILD_IMAGE_DIR)/j2sdk-image/tapset/hotspot.stp; \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	    > $(BUILD_IMAGE_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
-	    $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	    $(BUILD_IMAGE_DIR)/j2sdk-image/tapset/hotspot.stp; \
 	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	    $(BUILD_IMAGE_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
 	fi; \
 	cp $(abs_top_builddir)/tapset/jstack.stp \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/jstack.stp
+	  $(BUILD_IMAGE_DIR)/j2sdk-image/tapset/jstack.stp
 endif
 	cp $(abs_top_builddir)/nss.cfg \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
+	  $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/security;
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+	  $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib;
 endif
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
-	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)
+	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)/images
 	mkdir -p stamps
 	touch $@
 
-stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
+stamps/icedtea-debug-configure.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp \
  stamps/jamvm.stamp
+	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)
+	cd $(DEBUG_BUILD_OUTPUT_DIR) && \
+	$(SHELL) $(abs_top_builddir)/openjdk/configure $(ICEDTEA_CONFIGURE) \
+	  --with-debug-level=slowdebug
+	mkdir -p stamps
+	touch $@
+
+stamps/icedtea-debug.stamp: stamps/icedtea-debug-configure.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV) \
-	  -C openjdk/ \
-	  $(ICEDTEA_DEBUG_BUILD_TARGET)
-	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
-	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/ext 
+	  -C $(DEBUG_BUILD_OUTPUT_DIR) \
+	  $(ICEDTEA_BUILD_TARGET)
+	mkdir -p $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_DEBUG_IMAGE_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/ext
+	mkdir -p $(BUILD_DEBUG_IMAGE_DIR)/j2re-image/lib/ext 
 if ENABLE_PULSE_JAVA
 	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	  $(BUILD_DEBUG_IMAGE_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf pulse-java.jar \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/ext
+	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/ext
 	cp -pPRf pulse-java.jar \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2re-image/lib/ext
+	  $(BUILD_DEBUG_IMAGE_DIR)/j2re-image/lib/ext
 	(cd $(PULSE_JAVA_JAVA_SRCDIR) && \
-	   $(ZIP) -qur $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/src.zip org )
+	   $(ZIP) -qur $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/src.zip org )
 endif
 if ZERO_BUILD
 	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
@@ -1856,29 +1481,29 @@ if ENABLE_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
 if ENABLE_SYSTEMTAP
-	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
+	mkdir -p $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
 	if test $$? -eq 0; then \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot.stp \
-	    > $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	    > $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/tapset/hotspot.stp; \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    > $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	    > $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
-	    $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	    $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/tapset/hotspot.stp; \
 	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	    $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
 	fi; \
 	cp $(abs_top_builddir)/tapset/jstack.stp \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/jstack.stp
+	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/tapset/jstack.stp
 endif
 	cp $(abs_top_builddir)/nss.cfg \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/security;
+	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/security;
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
-	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib;
+	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib;
 endif
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
@@ -1890,7 +1515,12 @@ endif
 
 clean-icedtea: 
 	rm -rf $(BUILD_OUTPUT_DIR)
-	rm -f stamps/icedtea.stamp stamps/icedtea-debug.stamp
+	rm -f stamps/icedtea-configure.stamp stamps/icedtea.stamp
+
+clean-icedtea-debug:
+	rm -rf $(DEBUG_BUILD_OUTPUT_DIR)
+	rm -f stamps/icedtea-debug-configure.stamp
+	rm -f stamps/icedtea-debug.stamp
 
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
  stamps/add-zero.stamp stamps/add-jamvm.stamp
@@ -1911,15 +1541,22 @@ clean-icedtea-debug-stage2: clean-add-jamvm-debug
 # OpenJDK boot Targets
 # ===================
 
-stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
+stamps/icedtea-boot-configure.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
  stamps/download.stamp $(OPENJDK_BOOT_TREE) stamps/cacao.stamp \
- stamps/rewrite-rhino.stamp stamps/jamvm.stamp stamps/generated.stamp
+ stamps/rewrite-rhino.stamp stamps/jamvm.stamp
+	mkdir -p $(BOOT_BUILD_OUTPUT_DIR)
+	cd $(BOOT_BUILD_OUTPUT_DIR) && \
+	$(SHELL) $(abs_top_builddir)/openjdk-boot/configure $(ICEDTEA_CONFIGURE_BOOT)
+	mkdir -p stamps
+	touch $@
+
+stamps/icedtea-boot.stamp: stamps/icedtea-boot-configure.stamp
 	$(ARCH_PREFIX) $(MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
-	  -C openjdk-boot \
-	  $(ICEDTEA_BUILD_TARGET)
+	  -C $(BOOT_BUILD_OUTPUT_DIR) \
+	  images
 	@echo "Bootstrapped IcedTea is served:" \
-	  $(BOOT_BUILD_OUTPUT_DIR)
+	  $(BOOT_BUILD_OUTPUT_DIR)/images
 	mkdir -p stamps
 	touch $@
 
@@ -1930,12 +1567,12 @@ if BOOTSTRAPPING
 	rm -f stamps/icedtea-boot.stamp
 	rm -f stamps/icedtea-stage1.stamp
 	$(ARCH_PREFIX) $(MAKE) icedtea-stage1
-	@echo "bootstrap-poured IcedTea is served (again):" $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image
+	@echo "bootstrap-poured IcedTea is served (again):" $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image
 else
 	rm -f stamps/icedtea.stamp
 	rm -f stamps/icedtea-stage2.stamp
 	$(ARCH_PREFIX) $(MAKE) icedtea-stage2
-	@echo "IcedTea is served (again):" $(BUILD_OUTPUT_DIR)/j2sdk-image
+	@echo "IcedTea is served (again):" $(BUILD_IMAGE_DIR)/j2sdk-image
 endif
 
 hotspot:
@@ -1944,23 +1581,24 @@ if BOOTSTRAPPING
 	rm -f stamps/icedtea-stage1.stamp
 	$(ARCH_PREFIX) $(MAKE) ICEDTEA_BUILD_TARGET=hotspot icedtea-stage1
 	mkdir -p \
-	   $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
+	   $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
 	cp $(BOOT_BUILD_OUTPUT_DIR)/$(SERVER_DIR)/libjvm.so \
-	   $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
-	@echo "HotSpot is served:" $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image
+	   $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
+	@echo "HotSpot is served:" $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image
 else
 	rm -f stamps/icedtea.stamp
 	rm -f stamps/icedtea-stage2.stamp
 	$(ARCH_PREFIX) $(MAKE) ICEDTEA_BUILD_TARGET=hotspot icedtea-stage2
 	mkdir -p \
-	   $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
-	cp $(BUILD_OUTPUT_DIR)/$(SERVER_DIR)/libjvm.so \
-	   $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
-	@echo "HotSpot is served:" $(BUILD_OUTPUT_DIR)/j2sdk-image
+	   $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
+	cp $(BOOT_BUILD_OUTPUT_DIR)/$(SERVER_DIR)/libjvm.so \
+	   $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
+	@echo "HotSpot is served:" $(BUILD_IMAGE_DIR)/j2sdk-image
 endif
 
 clean-icedtea-boot:
 	rm -rf $(BOOT_BUILD_OUTPUT_DIR)
+	rm -f stamps/icedtea-boot-configure.stamp
 	rm -f stamps/icedtea-boot.stamp
 
 stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp
@@ -2212,7 +1850,7 @@ clean-add-cacao-debug:
 # configure script arguments, quoted in single quotes
 CONFIGURE_ARGS = @CONFIGURE_ARGS@
 ADD_ZERO_CONFIGURE_ARGS = \
-	--with-jdk-home=$(BUILD_OUTPUT_DIR)/j2sdk-image \
+	--with-jdk-home=$(BUILD_IMAGE_DIR)/j2sdk-image \
 	--disable-bootstrap --enable-zero
 if ADD_SHARK_BUILD
 ADD_ZERO_CONFIGURE_ARGS += \
@@ -2288,7 +1926,7 @@ if ADD_ZERO_BUILD
 		$(ARCH_PREFIX) $(abs_top_srcdir)/configure $(ADD_ZERO_CONFIGURE_ARGS)
 
 	$(ADD_ZERO_EXTRA_BUILD_ENV) \
-		$(ARCH_PREFIX) $(MAKE) -C zerovm ICEDTEA_DEBUG_BUILD_TARGET=hotspot icedtea-stage2
+		$(ARCH_PREFIX) $(MAKE) -C zerovm ICEDTEA_BUILD_TARGET=hotspot icedtea-stage2
 
 if ZERO_BUILD
 	mkdir -p $(BUILD_DEBUG_JRE_ARCH_DIR)/shark
@@ -2344,7 +1982,7 @@ check-hotspot: stamps/jtreg.stamp
 	mkdir -p test/hotspot/JTwork test/hotspot/JTreport
 	$(BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/hotspot/JTwork -r:test/hotspot/JTreport \
-		-jdk:$(BUILD_OUTPUT_DIR)/j2sdk-image \
+		-jdk:$(BUILD_IMAGE_DIR)/j2sdk-image \
 		$(ICEDTEA_JTREG_OPTIONS) \
 		`pwd`/openjdk/hotspot/test \
 	    | tee test/$@.log
@@ -2354,7 +1992,7 @@ check-langtools: stamps/jtreg.stamp
 	$(BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/langtools/JTwork -r:test/langtools/JTreport \
 		$${ICEDTEA_JTREG_OTHERVM:--samevm} \
-		-jdk:$(BUILD_OUTPUT_DIR)/j2sdk-image \
+		-jdk:$(BUILD_IMAGE_DIR)/j2sdk-image \
 		$(ICEDTEA_JTREG_OPTIONS) \
 		-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.langtools.jtx \
 		`pwd`/openjdk/langtools/test \
@@ -2373,7 +2011,7 @@ endif
 	$(BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/jdk/JTwork -r:test/jdk/JTreport \
 		$${ICEDTEA_JTREG_OTHERVM:--samevm} \
-		-jdk:$(BUILD_OUTPUT_DIR)/j2sdk-image \
+		-jdk:$(BUILD_IMAGE_DIR)/j2sdk-image \
 		$(ICEDTEA_JTREG_OPTIONS) $(CACAO_EXCLUDE) \
 		-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.jdk.jtx \
 		`pwd`/openjdk/jdk/test \
@@ -2431,6 +2069,7 @@ rt-source-files.txt: $(OPENJDK_BOOT_TREE)
 	do \
 	  echo $$files >> $@ ; \
 	done
+	touch $@
 
 stamps/rt-class-files.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP) rt-source-files.txt
 	mkdir -p lib/rt
@@ -2490,15 +2129,7 @@ download: stamps/download.stamp
 
 download-cacao: stamps/download-cacao.stamp
 
-download-drops: stamps/download-drops.stamp
-
 download-jamvm: stamps/download-jamvm.stamp
-
-download-jaf-drop: stamps/download-jaf-drop.stamp
-
-download-jaxp-drop: stamps/download-jaxp-drop.stamp
-
-download-jaxws-drop: stamps/download-jaxws-drop.stamp
 
 download-openjdk: stamps/download-openjdk.stamp
 
@@ -2510,11 +2141,15 @@ extract-openjdk: stamps/extract-openjdk.stamp
 
 extract-hotspot: stamps/extract-hotspot.stamp
 
-generated: stamps/generated.stamp
+icedtea-configure: stamps/icedtea-configure.stamp
 
 icedtea: stamps/icedtea.stamp
 
+icedtea-boot-configure: stamps/icedtea-boot-configure.stamp
+
 icedtea-boot: stamps/icedtea-boot.stamp
+
+icedtea-debug-configure: stamps/icedtea-debug-configure.stamp
 
 icedtea-debug: stamps/icedtea-debug.stamp
 
@@ -2537,8 +2172,6 @@ patch: stamps/patch.stamp
 patch-boot: stamps/patch-boot.stamp
 
 patch-fsg: stamps/patch-fsg.stamp
-
-patch-jaxws: stamps/patch-jaxws.stamp
 
 pulse-java: $(PULSE_JAVA_TARGET)
 

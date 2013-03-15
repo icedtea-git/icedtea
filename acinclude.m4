@@ -838,7 +838,7 @@ AC_DEFUN([IT_ENABLE_HG],
   ],
   [
     case "${project}" in
-      icedtea)
+      jdk8)
         enable_hg=no
         ;;
       *)
@@ -880,13 +880,14 @@ AC_DEFUN([IT_WITH_VERSION_SUFFIX],
 
 AC_DEFUN([IT_WITH_PROJECT],
 [
+  DEFAULT_PROJECT="jdk8"
   AC_MSG_CHECKING(which OpenJDK project is being used)
   AC_ARG_WITH([project],
               [AS_HELP_STRING(--with-project=PROJECT,choose the OpenJDK project to use: icedtea jdk7 closures cvmi caciocavallo bsd nio2 [[PROJECT=icedtea]])],
   [
     case "${withval}" in
       yes)
-	project=icedtea
+	project="${DEFAULT_PROJECT}"
         ;;
       no)
 	AC_MSG_ERROR([argument passed to --with-project should be a supported OpenJDK project (see help)])
@@ -897,7 +898,7 @@ AC_DEFUN([IT_WITH_PROJECT],
     esac
   ],
   [
-    project=icedtea
+    project="${DEFAULT_PROJECT}"
   ])
   AC_MSG_RESULT([${project}])
   AC_SUBST(PROJECT_NAME, $project)
@@ -906,7 +907,7 @@ AC_DEFUN([IT_WITH_PROJECT],
   AM_CONDITIONAL([USE_CACIOCAVALLO], test x"${project}" = "xcaciocavallo")
   AM_CONDITIONAL([USE_BSD], test x"${project}" = "xbsd")
   AM_CONDITIONAL([USE_NIO2], test x"${project}" = "xnio2")
-  AM_CONDITIONAL([USE_JDK7], test x"${project}" = "xjdk7")
+  AM_CONDITIONAL([USE_ICEDTEA], test x"${project}" = "xicedtea")
 ])
 
 AC_DEFUN([IT_WITH_GCJ],
@@ -1074,69 +1075,6 @@ AC_DEFUN([IT_WITH_LANGTOOLS_SRC_ZIP],
   AM_CONDITIONAL(USE_ALT_LANGTOOLS_SRC_ZIP, test "x${ALT_LANGTOOLS_SRC_ZIP}" != "xnot specified")
   AC_MSG_RESULT(${ALT_LANGTOOLS_SRC_ZIP})
   AC_SUBST(ALT_LANGTOOLS_SRC_ZIP)
-])
-
-AC_DEFUN([IT_WITH_JAXP_DROP_ZIP],
-[
-  AC_MSG_CHECKING([for a JAXP drop zip])
-  AC_ARG_WITH([jaxp-drop-zip],
-              [AS_HELP_STRING(--with-jaxp-drop-zip=PATH,specify the location of the JAXP drop zip)],
-  [
-    ALT_JAXP_DROP_ZIP=${withval}
-    if test "x${ALT_JAXP_DROP_ZIP}" = "xno"; then
-      ALT_JAXP_DROP_ZIP="not specified"
-    elif ! test -f ${ALT_JAXP_DROP_ZIP} ; then
-      AC_MSG_ERROR([Invalid JAXP drop zip specified: ${ALT_JAXP_DROP_ZIP}])
-    fi
-  ],
-  [ 
-    ALT_JAXP_DROP_ZIP="not specified"
-  ])
-  AM_CONDITIONAL(USE_ALT_JAXP_DROP_ZIP, test "x${ALT_JAXP_DROP_ZIP}" != "xnot specified")
-  AC_MSG_RESULT(${ALT_JAXP_DROP_ZIP})
-  AC_SUBST(ALT_JAXP_DROP_ZIP)
-])
-
-AC_DEFUN([IT_WITH_JAF_DROP_ZIP],
-[
-  AC_MSG_CHECKING([for a JAF drop zip])
-  AC_ARG_WITH([jaf-drop-zip],
-              [AS_HELP_STRING(--with-jaf-drop-zip=PATH,specify the location of the JAF drop zip)],
-  [
-    ALT_JAF_DROP_ZIP=${withval}
-    if test "x${ALT_JAF_DROP_ZIP}" = "xno"; then
-      ALT_JAF_DROP_ZIP="not specified"
-    elif ! test -f ${ALT_JAF_DROP_ZIP} ; then
-      AC_MSG_ERROR([Invalid JAF drop zip specified: ${ALT_JAF_DROP_ZIP}])
-    fi
-  ],
-  [ 
-    ALT_JAF_DROP_ZIP="not specified"
-  ])
-  AM_CONDITIONAL(USE_ALT_JAF_DROP_ZIP, test "x${ALT_JAF_DROP_ZIP}" != "xnot specified")
-  AC_MSG_RESULT(${ALT_JAF_DROP_ZIP})
-  AC_SUBST(ALT_JAF_DROP_ZIP)
-])
-
-AC_DEFUN([IT_WITH_JAXWS_DROP_ZIP],
-[
-  AC_MSG_CHECKING([for a JAXWS drop zip])
-  AC_ARG_WITH([jaxws-drop-zip],
-              [AS_HELP_STRING(--with-jaxws-drop-zip=PATH,specify the location of the JAXWS drop zip)],
-  [
-    ALT_JAXWS_DROP_ZIP=${withval}
-    if test "x${ALT_JAXWS_DROP_ZIP}" = "xno"; then
-      ALT_JAXWS_DROP_ZIP="not specified"
-    elif ! test -f ${ALT_JAXWS_DROP_ZIP} ; then
-      AC_MSG_ERROR([Invalid JAXWS drop zip specified: ${ALT_JAXWS_DROP_ZIP}])
-    fi
-  ],
-  [ 
-    ALT_JAXWS_DROP_ZIP="not specified"
-  ])
-  AM_CONDITIONAL(USE_ALT_JAXWS_DROP_ZIP, test "x${ALT_JAXWS_DROP_ZIP}" != "xnot specified")
-  AC_MSG_RESULT(${ALT_JAXWS_DROP_ZIP})
-  AC_SUBST(ALT_JAXWS_DROP_ZIP)
 ])
 
 AC_DEFUN([IT_WITH_HG_REVISION],
@@ -1753,7 +1691,9 @@ EOF
   cd ..
   rmdir tmp.$$
   ])
-AM_CONDITIONAL([JAVAC_LACKS_DIAMOND], test x"${it_cv_diamond}" = "xyes")
+if test x"${it_cv_diamond}" = "xyes"; then
+  AC_MSG_ERROR([$JAVAC does not support the diamond operator])
+fi
 AC_PROVIDE([$0])dnl
 ])
 
@@ -1895,7 +1835,7 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_LCMS],
     ENABLE_SYSTEM_LCMS="${enableval}"
   ],
   [
-    ENABLE_SYSTEM_LCMS="yes"
+    ENABLE_SYSTEM_LCMS="no"
   ])
   AC_MSG_RESULT(${ENABLE_SYSTEM_LCMS})
   if test x"${ENABLE_SYSTEM_LCMS}" = "xyes"; then
