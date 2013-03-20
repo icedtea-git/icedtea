@@ -108,6 +108,7 @@ IT_JAVACFLAGS=$(IT_JAVAC_SETTINGS) -source $(IT_LANGUAGE_SOURCE_VERSION) -target
 
 # Flags
 IT_CFLAGS=$(CFLAGS) $(ARCHFLAG)
+ICEDTEA_MAKE=$(subst -j,JOBS=,$(MAKE))
 
 # Conditional defintions
 
@@ -321,7 +322,8 @@ ICEDTEA_ENV = \
 	DEBUG_BINARIES="true" \
 	DISABLE_INTREE_EC="true" \
 	LOG="debug" SCTP_WERROR= \
-	POST_STRIP_CMD= STRIP_POLICY="no_strip"
+	POST_STRIP_CMD= STRIP_POLICY="no_strip" \
+	JOBS="$(PARALLEL_JOBS)"
 
 if ENABLE_CACAO
 ICEDTEA_ENV += \
@@ -1378,7 +1380,7 @@ stamps/icedtea-configure.stamp: stamps/bootstrap-directory-symlink-stage2.stamp 
 	touch $@
 
 stamps/icedtea.stamp: stamps/icedtea-configure.stamp
-	$(ARCH_PREFIX) $(MAKE) \
+	$(ARCH_PREFIX) $(ICEDTEA_MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C $(BUILD_OUTPUT_DIR) \
 	  $(ICEDTEA_BUILD_TARGET)
@@ -1451,7 +1453,7 @@ stamps/icedtea-debug-configure.stamp: stamps/bootstrap-directory-symlink-stage2.
 	touch $@
 
 stamps/icedtea-debug.stamp: stamps/icedtea-debug-configure.stamp
-	$(ARCH_PREFIX) $(MAKE) \
+	$(ARCH_PREFIX) $(ICEDTEA_MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C $(DEBUG_BUILD_OUTPUT_DIR) \
 	  $(ICEDTEA_BUILD_TARGET)
@@ -1551,7 +1553,7 @@ stamps/icedtea-boot-configure.stamp: stamps/bootstrap-directory-symlink-stage1.s
 	touch $@
 
 stamps/icedtea-boot.stamp: stamps/icedtea-boot-configure.stamp
-	$(ARCH_PREFIX) $(MAKE) \
+	$(ARCH_PREFIX) $(ICEDTEA_MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C $(BOOT_BUILD_OUTPUT_DIR) \
 	  images

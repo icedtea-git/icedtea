@@ -12,6 +12,9 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.0 beta 1 (2011-XX-XX):
 
+* Bug fixes
+  - PR1346: Filter out -j option to make
+
 New in release 2.0 (2011-XX-XX):
 
 * JamVM
