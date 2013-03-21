@@ -1,5 +1,10 @@
 2013-03-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* patches/nss-not-enabled-config.patch:
+	Fix path on this version too.
+
+2013-03-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR1347: Update list of checked JDKs
 	* acinclude.m4:
 	(IT_CHECK_FOR_JDK): Split out GCJ_VMS and don't

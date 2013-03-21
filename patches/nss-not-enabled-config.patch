@@ -1,5 +1,5 @@
---- openjdk.orig/jdk/src/share/lib/security/java.security	2009-08-25 11:43:59.000000000 +0100
-+++ openjdk/jdk/src/share/lib/security/java.security		2009-08-27 14:23:54.000000000 +0100
+--- openjdk.orig/jdk/src/share/lib/security/java.security-linux	2009-08-25 11:43:59.000000000 +0100
++++ openjdk/jdk/src/share/lib/security/java.security-linux		2009-08-27 14:23:54.000000000 +0100
 @@ -51,6 +51,10 @@
  security.provider.6=com.sun.security.sasl.Provider
  security.provider.7=org.jcp.xml.dsig.internal.dom.XMLDSigRI
