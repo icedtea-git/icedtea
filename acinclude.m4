@@ -1138,12 +1138,12 @@ AC_DEFUN([IT_CHECK_FOR_JDK],
               ])
   if test -z "${SYSTEM_JDK_DIR}"; then
     if test "x${enable_bootstrap}" = "xyes"; then
-      BOOTSTRAP_VMS="/usr/lib/jvm/java-gcj /usr/lib/jvm/gcj-jdk /usr/lib/jvm/cacao";
-    else
-      ICEDTEA6_VMS="/usr/lib/jvm/icedtea6 /usr/lib/jvm/java-6-openjdk"
+      GCJ_VMS="/usr/lib/jvm/java-gcj /usr/lib/jvm/gcj-jdk";
+      BOOTSTRAP_VMS="/usr/lib/jvm/cacao";
     fi
     ICEDTEA7_VMS="/usr/lib/jvm/icedtea7 /usr/lib/jvm/java-1.7.0-openjdk"
-    for dir in ${BOOTSTRAP_VMS} ${ICEDTEA7_VMS} ${ICEDTEA6_VMS} \
+    ICEDTEA8_VMS="/usr/lib/jvm/icedtea8 /usr/lib/jvm/java-1.8.0-openjdk"
+    for dir in ${BOOTSTRAP_VMS} ${ICEDTEA8_VMS} ${ICEDTEA7_VMS} \
     	       /usr/lib/jvm/java-openjdk /usr/lib/jvm/openjdk /usr/lib/jvm/java-icedtea ; do
        if test -d $dir; then
          SYSTEM_JDK_DIR=$dir
@@ -1684,7 +1684,7 @@ public class Test
     }
 }]
 EOF
-  if $JAVAC -cp . $JAVACFLAGS -source 7 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+  if $JAVAC -cp . $JAVACFLAGS -source 7 -target 7 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
     it_cv_diamond=no;
   else
     it_cv_diamond=yes;
