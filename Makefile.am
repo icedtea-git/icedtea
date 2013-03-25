@@ -2063,10 +2063,6 @@ jtregcheck: $(TESTS_TO_RUN)
 
 rt-source-files.txt: $(OPENJDK_BOOT_TREE)
 	rm -f $@
-	for dir in $(ICEDTEA_BOOTSTRAP_DIRS) ; \
-	do \
-	$(FIND) $(abs_top_builddir)/$$dir -name '*.java' >> $@; \
-	done
 	for files in $(ICEDTEA_BOOTSTRAP_CLASSES) ; \
 	do \
 	  echo $$files >> $@ ; \
@@ -2075,28 +2071,28 @@ rt-source-files.txt: $(OPENJDK_BOOT_TREE)
 
 stamps/rt-class-files.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP) rt-source-files.txt
 	mkdir -p lib/rt
-if LACKS_SUN_AWT_TOOLKIT
-	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d lib/rt \
-	  -classpath $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
-          -sourcepath '$(SOURCEPATH_DIRS)' \
-          -bootclasspath \'\' @rt-source-files.txt ;
-endif
+	if echo $(ICEDTEA_BOOTSTRAP_CLASSES) | grep '\S' &> /dev/null ; then \
+	  $(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d lib/rt \
+	    -classpath $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
+            -sourcepath '$(SOURCEPATH_DIRS)' \
+            -bootclasspath \'\' @rt-source-files.txt ; \
+	fi
 	mkdir -p stamps
 	touch $@
 
 stamps/rt.stamp: stamps/rt-class-files.stamp
-if LACKS_SUN_AWT_TOOLKIT
-	(set -e ; \
-	 cd lib/rt ; \
-	 for dirs in $(ICEDTEA_BOOTSTRAP_RESOURCES) ; \
-	   do \
-	   destpath=`echo $$dirs|sed -e 's#$(LANGTOOLS)/##' -e 's#$(SHARE)/##'` ; \
-	   mkdir -p `dirname $$destpath` ; \
-	   cp -a ../../$$dirs $$destpath ; \
-	 done ; \
-	 $(ZIP) -qur $(STAGE1_BOOT_DIR)/jre/lib/rt.jar \
-	 com java javax sun );
-endif
+	if echo $(ICEDTEA_BOOTSTRAP_CLASSES) | grep '\S' &> /dev/null ; then \
+	  (set -e ; \
+	   cd lib/rt ; \
+	   for dirs in $(ICEDTEA_BOOTSTRAP_RESOURCES) ; \
+	     do \
+	     destpath=`echo $$dirs|sed -e 's#$(LANGTOOLS)/##' -e 's#$(SHARE)/##'` ; \
+	     mkdir -p `dirname $$destpath` ; \
+	     cp -a ../../$$dirs $$destpath ; \
+	   done ; \
+	   $(ZIP) -qur $(STAGE1_BOOT_DIR)/jre/lib/rt.jar \
+	     com java javax sun ); \
+	fi
 	mkdir -p stamps
 	touch $@
 
