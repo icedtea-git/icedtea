@@ -1153,7 +1153,7 @@ AC_DEFUN([IT_CHECK_FOR_JDK],
   fi
   AC_MSG_RESULT(${SYSTEM_JDK_DIR})
   if ! test -d "${SYSTEM_JDK_DIR}"; then
-    AC_MSG_ERROR("A JDK JDK home directory could not be found.")
+    AC_MSG_ERROR("A JDK home directory could not be found.")
   fi
   AC_SUBST(SYSTEM_JDK_DIR)
 ])
