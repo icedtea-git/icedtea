@@ -215,7 +215,8 @@ ICEDTEA_PATCHES = \
 	patches/override-redirect-metacity.patch \
 	patches/alt-jar.patch \
 	patches/cacao/arch.patch \
-	patches/disable-intree-ec.patch
+	patches/disable-intree-ec.patch \
+	patches/pr1368-debug_jdk_libs.patch
 
 # Conditional patches
 
