@@ -1,3 +1,8 @@
+2013-03-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	(clean-local): Remove non-existent clean-generated.
+
 2012-08-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR1325: Only add classes to rt-source-files.txt if the

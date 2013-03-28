@@ -515,7 +515,7 @@ clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
  clean-icedtea clean-icedtea-debug clean-icedtea-boot clean-clone clean-clone-boot \
  clean-bootstrap-directory-stage1 clean-bootstrap-directory-stage2 \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
- clean-extract clean-generated clean-native-ecj clean-hgforest clean-icedtea-stage2 \
+ clean-extract clean-native-ecj clean-hgforest clean-icedtea-stage2 \
  clean-icedtea-debug-stage2 clean-icedtea-stage1 clean-add-zero clean-add-zero-debug \
  clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter
 	if [ -e bootstrap ]; then \
