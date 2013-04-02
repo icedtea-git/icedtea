@@ -216,7 +216,8 @@ ICEDTEA_PATCHES = \
 	patches/alt-jar.patch \
 	patches/cacao/arch.patch \
 	patches/disable-intree-ec.patch \
-	patches/pr1368-debug_jdk_libs.patch
+	patches/pr1368-debug_jdk_libs.patch \
+	patches/pr1368-debug_jdk_programs.patch
 
 # Conditional patches
 
