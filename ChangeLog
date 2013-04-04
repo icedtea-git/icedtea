@@ -1,3 +1,39 @@
+2013-04-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/zero_libffi.patch:
+	Removed; upstreamed to IcedTea.
+	* Makefile.am:
+	(OPENJDK_VERSION): Bump to b17.
+	(JDK_UPDATE_VERSION): Bump to 20.
+	(CORBA_CHANGESET): Update to IcedTea7 forest head.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Set empty again.
+	* hotspot.map: Update to IcedTea7 forest head.
+	* patches/boot/ecj-diamond.patch:
+	Regenerate, add new cases in JarFileFactory.java,
+	java.util.logging.Level, java.util.logging.LogManager
+	and JdpPacketReader.
+	* patches/boot/ecj-multicatch.patch:
+	Regenerate, add new case in java.lang.reflect.Proxy.
+	* patches/boot/ecj-stringswitch.patch,
+	* patches/boot/ecj-trywithresources.patch:
+	Regenerated.
+	* patches/boot/xsltproc.patch:
+	Undo removal of XSLT setting as not needed (command
+	line overrides anyway).  Patch new trace.make as
+	well.
+	* patches/systemtap_gc.patch: Regenerated.
+
 2013-03-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:

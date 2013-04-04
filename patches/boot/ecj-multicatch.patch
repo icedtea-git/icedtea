@@ -1,6 +1,6 @@
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/io/PrintStream.java openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java
---- openjdk-boot.orig/jdk/src/share/classes/java/io/PrintStream.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java	2012-11-30 14:51:29.846368398 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/java/io/PrintStream.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java	2013-04-04 13:42:21.263677653 +0100
 @@ -91,7 +91,10 @@
          requireNonNull(csn, "charsetName");
          try {
@@ -14,8 +14,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/io/PrintStream.java openj
              throw new UnsupportedEncodingException(csn);
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/io/PrintWriter.java openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java
---- openjdk-boot.orig/jdk/src/share/classes/java/io/PrintWriter.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java	2012-11-30 14:51:29.858368581 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/java/io/PrintWriter.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java	2013-04-04 13:42:21.275677843 +0100
 @@ -85,7 +85,10 @@
          Objects.requireNonNull(csn, "charsetName");
          try {
@@ -28,9 +28,86 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/io/PrintWriter.java openj
              // UnsupportedEncodingException should be thrown
              throw new UnsupportedEncodingException(csn);
          }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2013-04-04 13:42:21.315678473 +0100
+@@ -747,7 +747,9 @@
+             Class<?> fieldType = Wrapper.forBasicType(types.charAt(index)).primitiveType();
+             try {
+                 return LOOKUP.findGetter(cbmhClass, fieldName, fieldType);
+-            } catch (NoSuchFieldException | IllegalAccessException e) {
++            } catch (NoSuchFieldException e) {
++                throw newInternalError(e);
++            } catch (IllegalAccessException e) {
+                 throw newInternalError(e);
+             }
+         }
+@@ -801,7 +803,13 @@
+         static MethodHandle makeCbmhCtor(Class<? extends BoundMethodHandle> cbmh, String types) {
+             try {
+                 return linkConstructor(LOOKUP.findConstructor(cbmh, MethodType.fromMethodDescriptorString(makeSignature(types, true), null)));
+-            } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | TypeNotPresentException e) {
++            } catch (NoSuchMethodException e) {
++                throw newInternalError(e);
++            } catch (IllegalAccessException e) {
++                throw newInternalError(e);
++            } catch (IllegalArgumentException e) {
++                throw newInternalError(e);
++            } catch (TypeNotPresentException e) {
+                 throw newInternalError(e);
+             }
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/LambdaForm.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2013-04-04 13:42:21.323678600 +0100
+@@ -456,9 +456,11 @@
+                 traceInterpreter("compileToBytecode", this);
+             isCompiled = true;
+             return vmentry;
+-        } catch (Error | Exception ex) {
++        } catch (Error ex) {
+             throw newInternalError(this.toString(), ex);
+-        }
++        } catch (Exception ex) {
++            throw newInternalError(this.toString(), ex);
++	}
+     }
+ 
+     private static final ConcurrentHashMap<String,LambdaForm> PREPARED_FORMS;
+@@ -1548,9 +1550,11 @@
+             MemberName zmem = new MemberName(LambdaForm.class, "zero"+bt, MethodType.methodType(wrap.primitiveType()), REF_invokeStatic);
+             try {
+                 zmem = IMPL_NAMES.resolveOrFail(REF_invokeStatic, zmem, null, NoSuchMethodException.class);
+-            } catch (IllegalAccessException|NoSuchMethodException ex) {
++            } catch (IllegalAccessException ex) {
+                 throw newInternalError(ex);
+-            }
++            } catch (NoSuchMethodException ex) {
++                throw newInternalError(ex);
++	    }
+             NamedFunction zcon = new NamedFunction(zmem);
+             Name n = new Name(zcon).newIndex(0);
+             assert(n.type == ALL_TYPES.charAt(tn));
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2013-04-04 13:34:02.223748460 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2013-04-04 13:42:21.323678600 +0100
+@@ -263,7 +263,12 @@
+                     continue;
+                 }
+                 throw new InternalError(err);
+-            } catch (NoSuchFieldException | IllegalAccessException ex) {
++            } catch (NoSuchFieldException ex) {
++                String err = (name+": JVM has "+vmval+" which Java does not define");
++                // ignore exotic ops the JVM cares about; we just wont issue them
++                //System.err.println("warning: "+err);
++                continue;
++            } catch (IllegalAccessException ex) {
+                 String err = (name+": JVM has "+vmval+" which Java does not define");
+                 // ignore exotic ops the JVM cares about; we just wont issue them
+                 //System.err.println("warning: "+err);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/management/ManagementFactory.java openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/management/ManagementFactory.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java	2012-11-30 14:51:29.858368581 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/management/ManagementFactory.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java	2013-04-04 13:42:21.279677906 +0100
 @@ -606,7 +606,9 @@
              // create an MXBean proxy
              return JMX.newMXBeanProxy(connection, objName, mxbeanInterface,
@@ -43,8 +120,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/management/Managemen
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Formatter.java openjdk-boot/jdk/src/share/classes/java/util/Formatter.java
---- openjdk-boot.orig/jdk/src/share/classes/java/util/Formatter.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/util/Formatter.java	2012-11-30 14:51:29.858368581 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/Formatter.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/util/Formatter.java	2013-04-04 13:42:21.283677969 +0100
 @@ -1857,7 +1857,10 @@
          Objects.requireNonNull(csn, "charsetName");
          try {
@@ -57,37 +134,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Formatter.java openj
              // UnsupportedEncodingException should be thrown
              throw new UnsupportedEncodingException(csn);
          }
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/HashMap.java openjdk-boot/jdk/src/share/classes/java/util/HashMap.java
---- openjdk-boot.orig/jdk/src/share/classes/java/util/HashMap.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/util/HashMap.java	2012-11-30 14:51:29.862368643 +0000
-@@ -236,7 +236,9 @@
-                 UNSAFE = sun.misc.Unsafe.getUnsafe();
-                 HASHSEED_OFFSET = UNSAFE.objectFieldOffset(
-                     HashMap.class.getDeclaredField("hashSeed"));
--            } catch (NoSuchFieldException | SecurityException e) {
-+            } catch (NoSuchFieldException e ) {
-+                throw new Error("Failed to record hashSeed offset", e);
-+            } catch (SecurityException e) {
-                 throw new Error("Failed to record hashSeed offset", e);
-             }
-         }
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Hashtable.java openjdk-boot/jdk/src/share/classes/java/util/Hashtable.java
---- openjdk-boot.orig/jdk/src/share/classes/java/util/Hashtable.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/util/Hashtable.java	2012-11-30 14:51:29.862368643 +0000
-@@ -234,7 +234,9 @@
-             UNSAFE = sun.misc.Unsafe.getUnsafe();
-             HASHSEED_OFFSET = UNSAFE.objectFieldOffset(
-                 Hashtable.class.getDeclaredField("hashSeed"));
--        } catch (NoSuchFieldException | SecurityException e) {
-+        } catch (NoSuchFieldException e) {
-+            throw new Error("Failed to record hashSeed offset", e);
-+        } catch (SecurityException e) {
-             throw new Error("Failed to record hashSeed offset", e);
-         }
-      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Scanner.java openjdk-boot/jdk/src/share/classes/java/util/Scanner.java
---- openjdk-boot.orig/jdk/src/share/classes/java/util/Scanner.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/util/Scanner.java	2012-11-30 14:51:29.858368581 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/Scanner.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/util/Scanner.java	2013-04-04 13:42:21.299678221 +0100
 @@ -633,7 +633,10 @@
          Objects.requireNonNull(csn, "charsetName");
          try {
@@ -112,9 +161,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Scanner.java openjdk
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversions.java openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2012-11-30 14:54:56.693599035 +0000
-@@ -474,7 +474,9 @@
+--- openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2013-04-04 13:42:21.303678284 +0100
+@@ -482,7 +482,9 @@
              FILL_NEW_TYPED_ARRAY = IMPL_LOOKUP
                      .findStatic(THIS_CLASS, "fillNewTypedArray",
                            MethodType.methodType(Object[].class, Object[].class, Integer.class, Object[].class));
@@ -125,9 +174,89 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversio
              throw newInternalError("uncaught exception", ex);
          }
      }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java	2013-04-04 13:42:21.327678663 +0100
+@@ -296,7 +296,16 @@
+             active.put(id, entry);
+             return entry.mobj;
+ 
+-        } catch (NoSuchMethodException | NoSuchMethodError e) {
++        } catch (NoSuchMethodException e) {
++            /* user forgot to provide activatable constructor?
++             * or code recompiled and user forgot to provide
++             *  activatable constructor?
++             */
++            throw new ActivationException
++                ("Activatable object must provide an activation"+
++                 " constructor", e );
++
++        } catch (NoSuchMethodError e) {
+             /* user forgot to provide activatable constructor?
+              * or code recompiled and user forgot to provide
+              *  activatable constructor?
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java	2013-04-04 13:42:21.327678663 +0100
+@@ -261,11 +261,14 @@
+ 
+                     annotation = urlsToPath(urls);
+                 }
+-            } catch (SecurityException | IOException e) {
++            } catch (SecurityException e) {
+                 /*
+                  * SecurityException: If access was denied to the knowledge of
+                  * the class loader's URLs, fall back to the default behavior.
+                  *
++		 */
++            } catch (IOException e) {
++                /*
+                  * IOException: This shouldn't happen, although it is declared
+                  * to be thrown by openConnection() and getPermission().  If it
+                  * does happen, forget about this class loader's URLs and
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2013-04-04 13:42:21.331678726 +0100
+@@ -208,7 +208,9 @@
+ 
+             return initialSocket;
+ 
+-        } catch (UnknownHostException | NoRouteToHostException e) {
++        } catch (UnknownHostException e) {
++            initialFailure = e;
++        } catch (NoRouteToHostException e) {
+             initialFailure = e;
+         } catch (SocketException e) {
+             if (eagerHttpFallback) {
+@@ -273,7 +275,9 @@
+                 }
+                 // if connector ever does get socket, it won't be used
+                 connector.notUsed();
+-            } catch (UnknownHostException | NoRouteToHostException e) {
++            } catch (UnknownHostException e) {
++                initialFailure = e;
++            } catch (NoRouteToHostException e) {
+                 initialFailure = e;
+             } catch (SocketException e) {
+                 if (eagerHttpFallback) {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java	2013-04-04 13:42:21.335678789 +0100
+@@ -623,7 +623,10 @@
+             try {
+                 TCPEndpoint.shedConnectionCaches();
+                 // REMIND: should we retry createSocket?
+-            } catch (OutOfMemoryError | Exception mem) {
++            } catch (OutOfMemoryError mem) {
++                // don't quit if out of memory
++                // or shed fails non-catastrophically
++            } catch (Exception mem) {
+                 // don't quit if out of memory
+                 // or shed fails non-catastrophically
+             }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/PAData.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/PAData.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/PAData.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/PAData.java	2012-11-30 14:51:29.858368581 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/PAData.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/PAData.java	2013-04-04 13:42:21.303678284 +0100
 @@ -280,7 +280,9 @@
                                      .append(info.getSalt())
                                      .append('\n');
@@ -151,8 +280,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/PAD
                      }
                  }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2012-11-30 14:51:29.862368643 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2013-04-04 13:42:21.307678347 +0100
 @@ -65,7 +65,10 @@
                  throw new RuntimeException("Duplicate untrusted certificate: " +
                      cert.getSubjectX500Principal());
@@ -166,9 +295,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCer
                          "Incorrect untrusted certificate: " + alias, e);
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/text/bidi/BidiBase.java openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/text/bidi/BidiBase.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java	2012-11-30 14:51:29.858368581 +0000
-@@ -3479,7 +3479,9 @@
+--- openjdk-boot.orig/jdk/src/share/classes/sun/text/bidi/BidiBase.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java	2013-04-04 13:42:21.311678410 +0100
+@@ -3478,7 +3478,9 @@
              try {
                  Field f = clazz.getField(name);
                  return f.get(null);
@@ -180,8 +309,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/text/bidi/BidiBase.java op
              }
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2012-11-30 14:51:29.862368643 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2013-04-04 13:42:21.311678410 +0100
 @@ -94,7 +94,7 @@
                          && mainClass.indexOf(arg.getProcessSubstring()) != -1) {
                              pids.add(vmd.id());
@@ -226,8 +355,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java openj
  
      private static String getMainClass(VirtualMachineDescriptor vmd)
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.java openjdk-boot/jdk/src/share/classes/sun/tools/jconsole/Resources.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2012-11-30 14:51:29.862368643 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2013-04-03 14:18:05.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2013-04-04 13:42:21.315678473 +0100
 @@ -129,7 +129,9 @@
      private static void setFieldValue(Field field, String value) {
          try {
@@ -258,160 +387,17 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.j
              // Missing VK is okay
              return 0;
          }
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2012-11-30 17:41:36.097551748 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2012-11-30 17:40:44.604709097 +0000
-@@ -747,7 +747,9 @@
-             Class<?> fieldType = Wrapper.forBasicType(types.charAt(index)).primitiveType();
-             try {
-                 return LOOKUP.findGetter(cbmhClass, fieldName, fieldType);
--            } catch (NoSuchFieldException | IllegalAccessException e) {
-+            } catch (NoSuchFieldException e) {
-+                throw newInternalError(e);
-+            } catch (IllegalAccessException e) {
-                 throw newInternalError(e);
-             }
-         }
-@@ -801,7 +803,13 @@
-         static MethodHandle makeCbmhCtor(Class<? extends BoundMethodHandle> cbmh, String types) {
-             try {
-                 return linkConstructor(LOOKUP.findConstructor(cbmh, MethodType.fromMethodDescriptorString(makeSignature(types, true), null)));
--            } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | TypeNotPresentException e) {
-+            } catch (NoSuchMethodException e) {
-+                throw newInternalError(e);
-+            } catch (IllegalAccessException e) {
-+                throw newInternalError(e);
-+            } catch (IllegalArgumentException e) {
-+                throw newInternalError(e);
-+            } catch (TypeNotPresentException e) {
-                 throw newInternalError(e);
-             }
-         }
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/LambdaForm.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2012-11-30 17:37:04.389140174 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2012-11-30 17:37:48.621857219 +0000
-@@ -456,9 +456,11 @@
-                 traceInterpreter("compileToBytecode", this);
-             isCompiled = true;
-             return vmentry;
--        } catch (Error | Exception ex) {
-+        } catch (Error ex) {
-             throw newInternalError(this.toString(), ex);
--        }
-+        } catch (Exception ex) {
-+            throw newInternalError(this.toString(), ex);
-+	}
-     }
- 
-     private static final ConcurrentHashMap<String,LambdaForm> PREPARED_FORMS;
-@@ -1546,9 +1548,11 @@
-             MemberName zmem = new MemberName(LambdaForm.class, "zero"+bt, MethodType.methodType(wrap.primitiveType()), REF_invokeStatic);
-             try {
-                 zmem = IMPL_NAMES.resolveOrFail(REF_invokeStatic, zmem, null, NoSuchMethodException.class);
--            } catch (IllegalAccessException|NoSuchMethodException ex) {
-+            } catch (IllegalAccessException ex) {
-                 throw newInternalError(ex);
--            }
-+            } catch (NoSuchMethodException ex) {
-+                throw newInternalError(ex);
-+	    }
-             NamedFunction zcon = new NamedFunction(zmem);
-             Name n = new Name(zcon).newIndex(0);
-             assert(n.type == ALL_TYPES.charAt(tn));
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2012-11-30 17:38:44.434761848 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2012-11-30 17:39:19.443329202 +0000
-@@ -263,7 +263,12 @@
-                     continue;
-                 }
-                 throw new InternalError(err);
--            } catch (NoSuchFieldException | IllegalAccessException ex) {
-+            } catch (NoSuchFieldException ex) {
-+                String err = (name+": JVM has "+vmval+" which Java does not define");
-+                // ignore exotic ops the JVM cares about; we just wont issue them
-+                //System.err.println("warning: "+err);
-+                continue;
-+            } catch (IllegalAccessException ex) {
-                 String err = (name+": JVM has "+vmval+" which Java does not define");
-                 // ignore exotic ops the JVM cares about; we just wont issue them
-                 //System.err.println("warning: "+err);
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java	2013-01-16 03:05:55.869280923 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java	2013-01-16 03:07:23.334672142 +0000
-@@ -296,7 +296,16 @@
-             active.put(id, entry);
-             return entry.mobj;
- 
--        } catch (NoSuchMethodException | NoSuchMethodError e) {
-+        } catch (NoSuchMethodException e) {
-+            /* user forgot to provide activatable constructor?
-+             * or code recompiled and user forgot to provide
-+             *  activatable constructor?
-+             */
-+            throw new ActivationException
-+                ("Activatable object must provide an activation"+
-+                 " constructor", e );
-+
-+        } catch (NoSuchMethodError e) {
-             /* user forgot to provide activatable constructor?
-              * or code recompiled and user forgot to provide
-              *  activatable constructor?
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java	2013-01-16 03:05:55.877281050 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java	2013-01-16 13:56:44.714207763 +0000
-@@ -261,11 +261,14 @@
- 
-                     annotation = urlsToPath(urls);
-                 }
--            } catch (SecurityException | IOException e) {
-+            } catch (SecurityException e) {
-                 /*
-                  * SecurityException: If access was denied to the knowledge of
-                  * the class loader's URLs, fall back to the default behavior.
-                  *
-+		 */
-+            } catch (IOException e) {
-+                /*
-                  * IOException: This shouldn't happen, although it is declared
-                  * to be thrown by openConnection() and getPermission().  If it
-                  * does happen, forget about this class loader's URLs and
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2013-01-16 03:05:55.885281177 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2013-01-16 03:08:26.639679256 +0000
-@@ -208,7 +208,9 @@
- 
-             return initialSocket;
- 
--        } catch (UnknownHostException | NoRouteToHostException e) {
-+        } catch (UnknownHostException e) {
-+            initialFailure = e;
-+        } catch (NoRouteToHostException e) {
-             initialFailure = e;
-         } catch (SocketException e) {
-             if (eagerHttpFallback) {
-@@ -273,7 +275,9 @@
-                 }
-                 // if connector ever does get socket, it won't be used
-                 connector.notUsed();
--            } catch (UnknownHostException | NoRouteToHostException e) {
-+            } catch (UnknownHostException e) {
-+                initialFailure = e;
-+            } catch (NoRouteToHostException e) {
-                 initialFailure = e;
-             } catch (SocketException e) {
-                 if (eagerHttpFallback) {
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java	2013-01-16 03:05:55.893281305 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java	2013-01-16 13:53:13.570765705 +0000
-@@ -623,7 +623,10 @@
-             try {
-                 TCPEndpoint.shedConnectionCaches();
-                 // REMIND: should we retry createSocket?
--            } catch (OutOfMemoryError | Exception mem) {
-+            } catch (OutOfMemoryError mem) {
-+                // don't quit if out of memory
-+                // or shed fails non-catastrophically
-+            } catch (Exception mem) {
-                 // don't quit if out of memory
-                 // or shed fails non-catastrophically
-             }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/reflect/Proxy.java openjdk-boot/jdk/src/share/classes/java/lang/reflect/Proxy.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/reflect/Proxy.java	2013-04-04 18:27:48.018006729 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/reflect/Proxy.java	2013-04-04 18:28:12.750398303 +0100
+@@ -738,7 +738,9 @@
+     private static Object newInstance(Constructor<?> cons, InvocationHandler h) {
+         try {
+             return cons.newInstance(new Object[] {h} );
+-        } catch (IllegalAccessException | InstantiationException e) {
++        } catch (IllegalAccessException e) {
++            throw new InternalError(e.toString());
++        } catch (InstantiationException e) {
+             throw new InternalError(e.toString());
+         } catch (InvocationTargetException e) {
+             Throwable t = e.getCause();

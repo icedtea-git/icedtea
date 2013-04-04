@@ -1,15 +1,6 @@
 diff -r 591c7dc0b2ee make/linux/makefiles/jvmti.make
 --- openjdk-boot/hotspot/make/linux/makefiles/jvmti.make	Thu May 19 13:27:44 2011 +0200
 +++ openjdk-boot/hotspot/make/linux/makefiles/jvmti.make	Wed May 25 20:01:25 2011 +0100
-@@ -58,8 +58,6 @@
- 
- JvmtiGeneratedFiles = $(JvmtiGeneratedNames:%=$(JvmtiOutDir)/%)
- 
--XSLT = $(QUIETLY) $(REMOTE) $(RUN.JAVA) -classpath $(JvmtiOutDir) jvmtiGen
--
- .PHONY: all jvmtidocs clean cleanall
- 
- # #########################################################################
 @@ -76,34 +74,34 @@
  
  $(JvmtiOutDir)/jvmtiEnter.cpp: $(both) $(JvmtiSrcDir)/jvmtiEnter.xsl
@@ -52,3 +43,15 @@ diff -r 591c7dc0b2ee make/linux/makefiles/jvmti.make
  
  # #########################################################################
  
+diff -Nru openjdk-boot.orig/hotspot/make/linux/makefiles/trace.make openjdk-boot/hotspot/make/linux/makefiles/trace.make
+--- openjdk-boot.orig/hotspot/make/linux/makefiles/trace.make	2013-04-04 18:37:50.547524781 +0100
++++ openjdk-boot/hotspot/make/linux/makefiles/trace.make	2013-04-04 18:39:42.497290041 +0100
+@@ -82,7 +82,7 @@
+ 
+ GENERATE_CODE= \
+   $(QUIETLY) echo Generating $@; \
+-  $(XSLT) -IN $(word 1,$^) -XSL $(word 2,$^) -OUT $@; \
++  $(XSLT) --xinclude -o $@ $(word 2,$^) $(word 1,$^) ; \
+   test -f $@
+ 
+ $(TraceOutDir)/traceEventIds.hpp: $(TraceSrcDir)/trace.xml $(TraceSrcDir)/traceEventIds.xsl $(XML_DEPS)
