@@ -12,6 +12,12 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.0 beta 1 (2013-XX-XX):
 
+* JamVM
+  - JSR 292: Invoke Dynamic
+  - JSR 308: Type Annotations
+  - JEP 171: Implement fence methods in sun.misc.Unsafe
+  - Set anonymous class protection domain
+  - Dummy implementation of sun.misc.Perf natives
 * Bug fixes
   - PR1346: Filter out -j option to make
   - PR1347: Update list of checked JDKs

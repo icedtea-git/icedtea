@@ -26,8 +26,8 @@ CACAO_BASE_URL = http://mips.complang.tuwien.ac.at/hg/cacao/archive
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.bz2
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
-JAMVM_VERSION = 4617da717ecb05654ea5bb9572338061106a414d
-JAMVM_SHA256SUM = 47fce7bd556c1b1d29a93b8c45497e0d872b48b7f535066b303336f29d0f0d8d
+JAMVM_VERSION = 10b7c81c597809b2aaf28c8243453a21c33d4af3
+JAMVM_SHA256SUM = 6cce595ee2cfcfbaa425527be9c2fa880ade7b47475925f1c4bf18b017bffffd
 JAMVM_BASE_URL = http://icedtea.classpath.org/download/drops/jamvm
 JAMVM_URL = $(JAMVM_BASE_URL)/jamvm-$(JAMVM_VERSION).tar.gz
 JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
@@ -240,11 +240,6 @@ ICEDTEA_PATCHES += \
 	patches/cacao/ignore-tests.patch
 endif
 
-if BUILD_JAMVM
-ICEDTEA_PATCHES += \
-	patches/jamvm/remove-sun.misc.Perf-debug-code.patch
-endif
-
 if ENABLE_PULSE_JAVA
 ICEDTEA_PATCHES += \
 	patches/pulse-soundproperties.patch
@@ -328,13 +323,13 @@ ICEDTEA_ENV = \
 	JOBS="$(PARALLEL_JOBS)"
 
 if ENABLE_CACAO
-ICEDTEA_ENV += \
-	ALT_HOTSPOT_IMPORT_PATH="$(CACAO_IMPORT_PATH)"
+ICEDTEA_CONFIGURE += \
+	--with-import-hotspot="$(CACAO_IMPORT_PATH)"
 endif
 
 if ENABLE_JAMVM
-ICEDTEA_ENV += \
-	ALT_HOTSPOT_IMPORT_PATH="$(JAMVM_IMPORT_PATH)"
+ICEDTEA_CONFIGURE += \
+	--with-import-hotspot="$(JAMVM_IMPORT_PATH)"
 endif
 
 if DISABLE_OPTIMIZATIONS
@@ -1721,10 +1716,11 @@ clean-rewrite-rhino:
 stamps/jamvm.stamp: $(OPENJDK_TREE) stamps/rt.stamp
 if BUILD_JAMVM
 	cd jamvm/jamvm && \
-	./autogen.sh --with-java-runtime-library=openjdk \
+	./autogen.sh --with-java-runtime-library=openjdk8 \
 	  --prefix=$(abs_top_builddir)/jamvm/install ; \
 	$(MAKE) ; \
 	$(MAKE) install
+	mkdir -p $(abs_top_builddir)/jamvm/install/hotspot/lib
 	mkdir -p $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server
 	cp $(abs_top_builddir)/jamvm/install/lib/libjvm.so $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server
 	ln -sf server $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/client
@@ -1793,6 +1789,7 @@ if !USE_SYSTEM_CACAO
 	  --with-java-runtime-library-classes=$(RUNTIME) \
 	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
 	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS) install
+	mkdir -p $(abs_top_builddir)/cacao/install/lib
 	ln -s server $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/client
 endif
 endif

@@ -1,3 +1,27 @@
+2013-04-11  Xerxes Rånby  <xerxes@zafena.se>
+
+        JamVM
+        - JSR 292: Invoke Dynamic
+        - JSR 308: Type Annotations
+	- JEP 171: Implement fence methods in sun.misc.Unsafe
+	- Set anonymous class protection domain
+	- Dummy implementation of sun.misc.Perf natives
+        * NEWS: Updated.
+        * Makefile.am
+        (JAMVM_VERSION): Updated JamVM to 2013-04-04 revision.
+        (JAMVM_SHA256SUM): Updated.
+	(BUILD_JAMVM): ICEDTEA_PATCHES remove use of
+	               remove-sun.misc.Perf-debug-code.patch
+	(ENABLE_JAMVM): Use ICEDTEA_CONFIGURE --with-import-hotspot
+	                in compliance with the OpenJDK 8 build scrips.
+	(ENABLE_CACAO): Likewise.
+	(stamps/jamvm.stamp): Use --with-java-runtime-library=openjdk8
+	(stamps/jamvm.stamp): OpenJDK 8 --with-import-hotspot checks
+	                      for both lib and jre/lib. mkdir -p of the missing
+                              lib dir in order to pass the sanity test.
+	(stamps/cacao.stamp): Likewise.
+	* patches/jamvm/remove-sun.misc.Perf-debug-code.patch: Removed.
+
 2013-04-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
