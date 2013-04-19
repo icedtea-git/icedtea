@@ -1,3 +1,29 @@
+2013-04-18  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1404: Failure to bootstrap with ecj 4.2
+	* Makefile.am:
+	(ICEDTEA_BOOTSTRAP_CLASSES): Add SSLContext,
+	SSLEngine and SslRMIServerSocketFactory if
+	methods are missing.
+	(IT_LANGUAGE_SOURCE_VERSION): Set to 7 if supported.
+	(IT_CLASS_TARGET_VERSION): Likewise.
+	* configure.ac: Mention bugs in comments.
+	Add tests for getDefaultSSLParameters/setSSLParameters
+	and new 7 SslRMIServerSocketFactory.
+
+2013-01-11  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* acinclude.m4:
+	(IT_CHECK_FOR_CLASS): Write class toString() output
+	to System.err rather than throwing it away.  It then
+	appears in config.log and may be useful in debugging.
+	(IT_CHECK_FOR_METHOD): Fix documentation and add
+	System.err output as for IT_CHECK_FOR_CLASS.
+	(IT_CHECK_FOR_CONSTRUCTOR): New macro to test for
+	the presence of a specific constructor.  Works
+	with both private & protected constructors by
+	using a subclass for the compile test.
+
 2013-04-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* patches/zero_libffi.patch:

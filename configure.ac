@@ -109,20 +109,45 @@ IT_CHECK_FOR_CLASS([JAVA_UTIL_SCANNER], [java.util.Scanner])
 IT_PR40630_CHECK
 IT_CHECK_FOR_CLASS([JAVAX_ANNOTATION_RESOURCE], [javax.annotation.Resource])
 IT_GETDTDTYPE_CHECK
+dnl PR48033 - Missing javax.management.remote.JMXServiceURL
 IT_CHECK_FOR_CLASS([JAVAX_MANAGEMENT_REMOTE_JMXSERVICEURL], [javax.management.remote.JMXServiceURL])
+dnl PR48034 - javax.management.modelmbean.ModelMBeanInfo
 IT_CHECK_FOR_CLASS([JAVAX_MANAGEMENT_MODELMBEAN_MODELMBEANINFO], [javax.management.modelmbean.ModelMBeanInfo])
+dnl PR43148 - javac fails due to missing java.util.regex.Matcher.quoteReplacement
 IT_CHECK_FOR_METHOD([JAVA_UTIL_REGEX_MATCHER_QUOTEREPLACEMENT],
   [java.util.regex.Matcher.quoteReplacement],
   [java.util.regex.Matcher],
   ["quoteReplacement",String.class],
   [java.util.regex.Matcher.quoteReplacement("Blah")]
 )
+dnl PR42003 - Missing javax.swing.plaf.basic.BasicDirectoryModel methods cause OpenJDK build failure 
 IT_CHECK_FOR_METHOD([JAVAX_SWING_PLAF_BASIC_BASICDIRECTORYMODEL_ADDPROPERTYCHANGELISTENER],
   [javax.swing.plaf.basic.BasicDirectoryModel.addPropertyChangeListener],
   [javax.swing.plaf.basic.BasicDirectoryModel],
   ["addPropertyChangeListener",java.beans.PropertyChangeListener.class],
   [javax.swing.plaf.basic.BasicDirectoryModel model = new javax.swing.plaf.basic.BasicDirectoryModel(new javax.swing.JFileChooser()); model.addPropertyChangeListener(model)]
 )
+dnl PR56553 - SSLParameters support missing
+IT_CHECK_FOR_METHOD([JAVAX_NET_SSL_SSLCONTEXT_GETDEFAULTSSLPARAMETERS],
+  [javax.net.ssl.SSLContext.getDefaultSSLParameters],
+  [javax.net.ssl.SSLContext],
+  ["getDefaultSSLParameters"],
+  [try { javax.net.ssl.SSLContext.getDefault().getDefaultSSLParameters(); } catch (Exception e) {}]
+)
+IT_CHECK_FOR_METHOD([JAVAX_NET_SSL_SSLENGINE_SETSSLPARAMETERS],
+  [javax.net.ssl.SSLEngine.setSSLParameters],
+  [javax.net.ssl.SSLEngine],
+  ["setSSLParameters", javax.net.ssl.SSLParameters.class],
+  [try { javax.net.ssl.SSLContext.getDefault().createSSLEngine().setSSLParameters(new javax.net.ssl.SSLParameters()); }
+   catch (Exception e) {}]
+)
+dnl PR57008 - Add missing SslRMIServerSocketFactory constructor from 7
+IT_CHECK_FOR_CONSTRUCTOR([JAVAX_RMI_SSL_SSLRMISERVERSOCKETFACTORY_7],
+  [javax.rmi.ssl.SslRMIServerSocketFactory],
+  [javax.net.ssl.SSLContext.class,String@<:@@:>@.class,String@<:@@:>@.class,Boolean.TYPE],
+  [null,null,null,true]
+)
+
 IT_CHECK_ENABLE_WARNINGS
 IT_DIAMOND_CHECK
 IT_BYTECODE7_CHECK
