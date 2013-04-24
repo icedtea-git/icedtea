@@ -1,5 +1,15 @@
 2013-04-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* patches/cacao/jsig.patch:
+	Removed.
+	* Makefile.am:
+	(CACAO_VERSION): Bump to current tip.
+	(CACAO_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Drop unneeded jsig patch.
+	* NEWS: Updated.
+
+2013-04-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* Makefile.am,
 	(OPENJDK_VERSION): Bump to b20.
 	(JDK_UPDATE_VERSION): Bump to 40.

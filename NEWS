@@ -678,7 +678,44 @@ OpenJDK
   - Revert 7060849
   - Set UNLIMITED_CRYPTO=true to ensure we use the unlimited policy.
   - Set handleStartupErrors to ignoreMultipleInitialisation in nss.cfg to fix PR473
-
+* CACAO
+  - src/vm/jit/x86_64/asmpart.S (asm_abstractmethoderror): Keep stack aligned.
+  - src/native/jni.cpp (GetObjectClass): Remove null pointer check.
+  - Removing the cache flush was not the brightest idea. Putting it back in.
+  - arm: Make md_dcacheflush a compiler barrier, as on x86.
+  - src/vm/jit/codegen-common.cpp: Removed superfluous memory barrier
+  - CA168: Updating to the new assertion interface of GNU Classpath
+  - src/vm/jit/trap.cpp (trap_handle): Print stack trace before aborting.
+  - arm: Thumb interworking should work on armv5
+  - Fixed using typename declarations for clang
+  - src/native/vm/openjdk/sun_misc_Perf.cpp: Implement high resolution timer.
+  - Loop analysis completed.
+  - Finding variable assignments between block and idom(block).
+  - fully redundant ABC removal
+  - finding counter variables
+  - more efficient version of Interval, Scalar and NumericInstruction.
+  - simple loop duplication
+  - loop duplication: nested loops
+  - loop duplication: non-negative increments
+  - loop duplication: decreasing index
+  - ABC grouping implemented, NullPointerException now thrown at correct position after loop duplication
+  - NullPointerException now thrown at the correct position after ABC grouping.
+  - IntervalMap improved.
+  - CA166: make check-langtools failure: MineField.sh
+  - CA167: intern strings in get_StackTraceElement
+  - src/native/vm/openjdk/jvm.cpp: Recreate JVM_Available.
+  - Export JVM_SetNativeThreadName (noop)
+  - src/vm/initialize.cpp: Explicitly initialize java/lang/Class early.
+  - Adapt to recent java.lang.String changes in openjdk7
+  - jdk_str_ops broke the GNU classpath build.
+  - Support class version 51 unconditionally. Also identify as Java 6.
+  - Stop creating pseudo files for OpenJDK (libjsig.so, Xusage.txt)
+  - src/vm/jit/alpha/asmpart.S: Properly set up GP in asm_abstractmethoderror
+  - CA172, PR1266, G453612: ARM hardfloat support
+  - Clang fix for the i386 backend
+  - Fix rt-timing
+  - Moved rt-timing.{c,h} to C++
+  
 New in release 2.3.8 (2013-03-11):
 
 * Security fixes

@@ -18,8 +18,8 @@ JDK_SHA256SUM = 4a03854b630151719fa9747525c08bc6b86362d7d2a26e62e349dc9ebfc27e51
 LANGTOOLS_SHA256SUM = c412b61b095154fee4c45dc133f2baca3100fecd48b742f80da49a52ec473b02
 OPENJDK_SHA256SUM = 44c3e4a130fe4b76c1ba977ae2251884cefa774b82a24c4415b64395aef9594c
 
-CACAO_VERSION = a567bcb7f589
-CACAO_SHA256SUM = d49f79debc131a5694cae6ab3ba2864e7f3249ee8d9dc09aae8afdd4dc6b09f9
+CACAO_VERSION = e215e36be9fc
+CACAO_SHA256SUM = 4966514c72ee7ed108b882d9b6e65c3adf8a8f9c2dccb029f971b3c8cb4870ab
 CACAO_BASE_URL = http://icedtea.classpath.org/download/drops/cacao
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.gz
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.gz
@@ -266,7 +266,6 @@ endif
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
-	patches/cacao/jsig.patch \
 	patches/cacao/memory.patch
 else
 if USING_CACAO
