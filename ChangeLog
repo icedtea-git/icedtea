@@ -1,3 +1,20 @@
+2013-04-30  Xerxes Rånby  <xerxes@zafena.se>
+
+	JamVM
+	- JSR 901: VM support for method parameter reflection
+	- JSR 335: (lambda expressions) initial hack
+	- JVM_IsVMGeneratedMethodIx stub
+	- Fix invokesuper check in invokespecial opcode
+	- Do not free unprepared Miranda method code data
+	* NEWS: Updated.
+	* Makefile.am
+	(JAMVM_VERSION): Updated JamVM to 2013-04-30 revision.
+	(JAMVM_SHA256SUM): Updated.
+	(stamps/jamvm.stamp): OpenJDK 8 --with-import-hotspot require
+	the fake libjsig.so to be found next to the imported libjvm.so.
+	OpenJDK 8 also require a fake lib/sa-jdi.jar to be present.
+	(stamps/cacao.stamp): Likewise, add a fake lib/sa-jdi.jar.
+
 2013-04-11  Xerxes Rånby  <xerxes@zafena.se>
 
         JamVM

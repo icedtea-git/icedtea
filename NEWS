@@ -15,8 +15,13 @@ New in release 3.0 beta 1 (2013-XX-XX):
 * JamVM
   - JSR 292: Invoke Dynamic
   - JSR 308: Type Annotations
+  - JSR 335: (lambda expressions) initial hack
+  - JSR 901: VM support for method parameter reflection
   - JEP 171: Implement fence methods in sun.misc.Unsafe
+  - Fix invokesuper check in invokespecial opcode
+  - Do not free unprepared Miranda method code data
   - Set anonymous class protection domain
+  - JVM_IsVMGeneratedMethodIx stub
   - Dummy implementation of sun.misc.Perf natives
 * Bug fixes
   - PR1346: Filter out -j option to make
