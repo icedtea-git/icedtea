@@ -1024,8 +1024,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/beans/ThreadGroupContext.
   */
  final class ThreadGroupContext {
  
--    private static final Map<ThreadGroup, ThreadGroupContext> contexts = new WeakHashMap<>();
-+    private static final Map<ThreadGroup, ThreadGroupContext> contexts = new WeakHashMap();
+-    private static final WeakIdentityMap<ThreadGroupContext> contexts = new WeakIdentityMap<>();
++    private static final WeakIdentityMap<ThreadGroupContext> contexts = new WeakIdentityMap<ThreadGroupContext>();
  
      /**
       * Returns the appropriate {@code AppContext} for the caller,
