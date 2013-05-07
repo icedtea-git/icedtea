@@ -715,6 +715,16 @@ OpenJDK
   - Clang fix for the i386 backend
   - Fix rt-timing
   - Moved rt-timing.{c,h} to C++
+* JamVM
+  - JSR 335: (lambda expressions) initial hack
+  - JEP 171: Implement fence methods in sun.misc.Unsafe
+  - Fix invokesuper check in invokespecial opcode
+  - Fix non-direct interpreter invokespecial super-class check
+  - When GC'ing a native method don't try to free code
+  - Do not free unprepared Miranda method code data
+  - Set anonymous class protection domain
+  - JVM_IsVMGeneratedMethodIx stub
+  - Dummy implementation of sun.misc.Perf natives
   
 New in release 2.3.8 (2013-03-11):
 

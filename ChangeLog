@@ -1,3 +1,22 @@
+2013-05-07  Xerxes Rånby  <xerxes@zafena.se>
+
+	JamVM
+	- JSR 335: (lambda expressions) initial hack
+	- JEP 171: Implement fence methods in sun.misc.Unsafe
+	- Fix invokesuper check in invokespecial opcode
+	- Fix non-direct interpreter invokespecial super-class check
+	- When GC'ing a native method don't try to free code
+	- Do not free unprepared Miranda method code data
+	- Set anonymous class protection domain
+	- JVM_IsVMGeneratedMethodIx stub
+	- Dummy implementation of sun.misc.Perf natives
+	* NEWS: Updated.
+	* patches/jamvm/remove-sun.misc.Perf-debug-code.patch: Removed.
+	* Makefile.am
+	(JAMVM_VERSION): Updated JamVM to 2013-05-06 revision.
+	(JAMVM_SHA256SUM): Updated.
+	(ICEDTEA_PATCHES): Drop unneeded sun.misc.Perf patch. 
+
 2013-04-17  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* patches/boot/ecj-diamond.patch:
