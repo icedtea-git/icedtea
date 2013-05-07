@@ -19,6 +19,8 @@ New in release 3.0 beta 1 (2013-XX-XX):
   - JSR 901: VM support for method parameter reflection
   - JEP 171: Implement fence methods in sun.misc.Unsafe
   - Fix invokesuper check in invokespecial opcode
+  - Fix non-direct interpreter invokespecial super-class check
+  - When GC'ing a native method don't try to free code
   - Do not free unprepared Miranda method code data
   - Set anonymous class protection domain
   - JVM_IsVMGeneratedMethodIx stub

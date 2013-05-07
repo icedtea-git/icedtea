@@ -1,3 +1,13 @@
+2013-05-07  Xerxes Rånby  <xerxes@zafena.se>
+
+	JamVM
+	- Fix non-direct interpreter invokespecial super-class check
+	- When GC'ing a native method don't try to free code
+	* NEWS: Updated.
+	* Makefile.am
+	(JAMVM_VERSION): Updated JamVM to 2013-05-06 revision.
+	(JAMVM_SHA256SUM): Updated.
+
 2013-04-30  Xerxes Rånby  <xerxes@zafena.se>
 
 	JamVM
