@@ -39,3 +39,37 @@ diff -Nru openjdk-boot.orig/jdk/make/sun/javazic/Makefile openjdk-boot/jdk/make/
  	@$(java-vm-cleanup)
  
  $(INSTALLDIR)/$(MAPFILE): $(WORKDIR)/$(MAPFILE)
+diff -Nru openjdk-boot.orig/jdk/make/common/shared/Defs-java.gmk openjdk-boot/jdk/make/common/shared/Defs-java.gmk
+--- openjdk-boot.orig/jdk/make/common/shared/Defs-java.gmk	2012-06-29 15:21:00.000000000 +0100
++++ openjdk-boot/jdk/make/common/shared/Defs-java.gmk	2012-06-29 18:53:43.337711469 +0100
+@@ -157,7 +157,7 @@
+ JAVACFLAGS  += $(OTHER_JAVACFLAGS)
+ 
+ # Needed for javah
+-JAVAHFLAGS += -bootclasspath "$(CLASSBINDIR)$(JCE_PATH)"
++JAVAHFLAGS += -bootclasspath "$(CLASSBINDIR)$(JCE_PATH):$(ICEDTEA_RT):$(CLASSDESTDIR)"
+ 
+ # Needed for javadoc to ensure it builds documentation
+ # against the newly built classes
+diff --git a/make/java/text/base/Makefile b/make/java/text/base/Makefile
+--- openjdk-boot/jdk/make/java/text/base/Makefile
++++ openjdk-boot/jdk/make/java/text/base/Makefile
+@@ -81,6 +81,7 @@
+ 		$(TEXT_SOURCES)
+ 	$(MKDIR) -p  $(TEXT_CLASSDIR)
+ 	$(BOOT_JAVA_CMD) -Xbootclasspath/p:$(TEXT_CLASSES) \
++		-Xbootclasspath/a:$(ABS_OUTPUTDIR)/classes \
+ 		-jar $(GENERATEBREAKITERATORDATA_JARFILE) \
+ 		-o $(TEXT_CLASSDIR) \
+ 		-spec $(UNICODEDATA)/UnicodeData.txt
+diff --git a/make/sun/text/Makefile b/make/sun/text/Makefile
+--- openjdk-boot/jdk/make/sun/text/Makefile
++++ openjdk-boot/jdk/make/sun/text/Makefile
+@@ -86,6 +86,7 @@
+ 		-sourcepath $(TEXT_SRCDIR) \
+ 		$(BIRULES) $(BIINFO)
+ 	$(BOOT_JAVA_CMD) -Xbootclasspath/p:$(TEXT_CLASSES) \
++		-Xbootclasspath/a:$(ABS_OUTPUTDIR)/classes \
+ 		-jar $(GENERATEBREAKITERATORDATA_JARFILE) \
+ 		-o $(CLASSDESTDIR)/sun/text/resources \
+ 		-spec $(UNICODEDATA)/UnicodeData.txt \

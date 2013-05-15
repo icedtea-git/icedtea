@@ -176,6 +176,7 @@ to configure:
 * --enable-Werror: Turn gcc & javac warnings into errors.
 * --disable-jar-compression: Don't compress the OpenJDK JAR files.
 * --disable-downloading: Don't download tarballs if not available; fail instead.
+* --disable-bootstrap-tools: Use javac and javah from langtools, not the bootstrap JDK.
 
 Other options may be supplied which enable or disable new features.
 These are documented fully in the relevant section below.
@@ -217,7 +218,7 @@ IcedTea7 includes an implementation of the javax.sound.* APIs using
 PulseAudio which can be enabled using --enable-pulse-java.   The resulting
 provider is org.classpath.icedtea.pulseaudio.PulseAudioMixerProvider.
 
-Xrender Support
+XRender Support
 ===============
 
 IcedTea7 includes support for an Xrender-based rendering pipeline
@@ -327,7 +328,7 @@ of the requested build.
 Currently, IcedTea7 only supports the 'original' HotSpot provided as
 part of the upstream IcedTea forest.
 
-Javascript Support
+JavaScript Support
 ==================
 
 IcedTea7 adds Javascript support via the javax.script API by using
@@ -345,6 +346,15 @@ Note that the final installed JAR file is a modified version with the
 namespace prefixed by 'sun.' as in the proprietary Oracle JDK.  This
 avoids conflicts between the JDK's copy of Rhino and any used by other
 applications.
+
+Bootstrap Tools
+===============
+
+For bootstrap builds, the option --disable-bootstrap-tools can be used
+to make use of the javac and javah built as part of the langtools build,
+rather than the bootstrap tools.  The default setting of this option is
+to use the bootstrap tools when they support Java 1.7 (tested at
+configure time).
 
 Building Additional Virtual Machines
 ====================================

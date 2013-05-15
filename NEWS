@@ -678,6 +678,7 @@ OpenJDK
   - Revert 7060849
   - Set UNLIMITED_CRYPTO=true to ensure we use the unlimited policy.
   - Set handleStartupErrors to ignoreMultipleInitialisation in nss.cfg to fix PR473
+  - PR716: IcedTea7 should bootstrap with IcedTea6
 * CACAO
   - src/vm/jit/x86_64/asmpart.S (asm_abstractmethoderror): Keep stack aligned.
   - src/native/jni.cpp (GetObjectClass): Remove null pointer check.

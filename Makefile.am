@@ -7,14 +7,14 @@ COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)
 CORBA_CHANGESET = 4366e0fe59d5
 JAXP_CHANGESET = 5a11895b645d
 JAXWS_CHANGESET = 29619865cc64
-JDK_CHANGESET = d4cd8f10764d
+JDK_CHANGESET = 5e20c1a72aa8
 LANGTOOLS_CHANGESET = 718a945bfdb9
 OPENJDK_CHANGESET = 6579f526e5e4
 
 CORBA_SHA256SUM = b23b0980c704247a0a690f6fb663ec561f56e2fcdc5d69f13d9629d2c1937f32
 JAXP_SHA256SUM = a0f4516cdabb60bea73ce157db3c31c24634bc4058d35257b981b6b1be5114ba
 JAXWS_SHA256SUM = 53e63c8b63380f4a34ae955f91455ece2f687dbe3dd47e4c14ac03761cb3daee
-JDK_SHA256SUM = 4a03854b630151719fa9747525c08bc6b86362d7d2a26e62e349dc9ebfc27e51
+JDK_SHA256SUM = 5b9f736df39198eec25a697792783d361e4ea4a8289b4dc7f156bcb307278b0c
 LANGTOOLS_SHA256SUM = c412b61b095154fee4c45dc133f2baca3100fecd48b742f80da49a52ec473b02
 OPENJDK_SHA256SUM = 44c3e4a130fe4b76c1ba977ae2251884cefa774b82a24c4415b64395aef9594c
 
@@ -308,10 +308,9 @@ ICEDTEA_BOOT_PATCHES = \
 	patches/boot/corba-no-gen.patch \
 	patches/boot/corba-orb.patch \
 	patches/boot/demos.patch \
-	patches/boot/ecj-fphexconstants.patch \
+	patches/boot/fphexconstants.patch \
 	patches/boot/fontconfig.patch \
 	patches/boot/generated-comments.patch \
-	patches/boot/xbootclasspath.patch \
 	patches/boot/icedteart.patch \
 	patches/boot/jar.patch \
 	patches/boot/symbols.patch \
@@ -335,6 +334,16 @@ ICEDTEA_BOOT_PATCHES = \
 	patches/boot/ecj-autoboxing.patch \
 	patches/boot/xsltproc.patch \
 	patches/boot/ecj-odd.patch
+
+if !DISABLE_BOOTSTRAP_TOOLS
+ICEDTEA_BOOT_PATCHES += \
+	patches/boot/bootstrap-tools.patch
+endif
+
+if !VM_SUPPORTS_XBOOTCLASSPATH
+ICEDTEA_BOOT_PATCHES += \
+	patches/boot/xbootclasspath.patch
+endif
 
 if !WITH_PAX
 ICEDTEA_BOOT_PATCHES += patches/boot/test_gamma.patch

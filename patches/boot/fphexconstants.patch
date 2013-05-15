@@ -58,3 +58,24 @@ diff -Nru ../openjdk.orig/openjdk-boot/jdk/src/share/classes/java/lang/Float.jav
  
      /**
       * Maximum exponent a finite {@code float} variable may have.  It
+diff --git a/src/share/classes/java/lang/Math.java b/src/share/classes/java/lang/Math.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/Math.java
++++ openjdk-boot/jdk/src/share/classes/java/lang/Math.java
+@@ -647,7 +647,7 @@
+      * @see     java.lang.Integer#MIN_VALUE
+      */
+     public static int round(float a) {
+-        if (a != 0x1.fffffep-2f) // greatest float value less than 0.5
++        if (a != nextAfter(0.5f, 0.4f)) // greatest float value less than 0.5
+             return (int)floor(a + 0.5f);
+         else
+             return 0;
+@@ -674,7 +674,7 @@
+      * @see     java.lang.Long#MIN_VALUE
+      */
+     public static long round(double a) {
+-        if (a != 0x1.fffffffffffffp-2) // greatest double value less than 0.5
++        if (a != nextAfter(0.5d, 0.4d)) // greatest double value less than 0.5
+             return (long)floor(a + 0.5d);
+         else
+             return 0;

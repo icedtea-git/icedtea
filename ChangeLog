@@ -1,3 +1,48 @@
+2013-05-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR716: IcedTea7 should bootstrap with IcedTea6
+	* NEWS: Updated.
+	* Makefile.am:
+	(JDK_CHANGESET): Bring in CertificateRevokedException
+	ambiguity fix.
+	(JDK_SHA256SUM): Likewise.
+	(ICEDTEA_BOOT_PATCHES): Rename ecj-fphexconstants
+	to fphexconstants.  Make xbootclasspath and the new
+	bootstrap-tools split-off patch conditional.
+	* INSTALL: Document --disable-bootstrap-tools.
+	* acinclude.m4:
+	(IT_BYTECODE7_CHECK): Use AC_DEFUN_ONCE.
+	(IT_USE_BOOTSTRAP_TOOLS): Add --disable-bootstrap-tools
+	to decide whether to use the boot javac/javah or the
+	one built as part of langtools.  Defaults to on for
+	bootstrap tools that support Java 1.7.
+	(IT_CHECK_FOR_XBOOTCLASSPATH): Check whether java
+	can be passed -Xbootclasspath/p to prepend a path
+	to the bootclasspath or not.
+	* configure.ac: Invoke the new macros.
+	* javac.in: Handle -Xbootclasspath/p by prepending
+	its value to the bootclasspath option used to ecj.
+	* patches/boot/bootstrap-tools.patch:
+	Split from xbootclasspath.patch.  Uses the bootstrap
+	javac and javah rather than the langtools one for
+	CORBA and JDK.
+	* patches/boot/corba-dependencies.patch:
+	Include the langtools source directory on the sourcepath.
+	* patches/boot/fphexconstants.patch:
+	Replace additional cases in java.lang.Math (needed
+	when using javac via gcj).
+	* patches/boot/icedteart.patch:
+	Split from xbootclasspath.patch; the parts that
+	extend the classpath.  The java.text Makefile changes
+	are changed to use -Xbootclasspath/a rather than a
+	complete rewrite.
+	* patches/boot/jaxws-jdk-dependency.patch:
+	Include the generated sources on the sourcepath.
+	* patches/boot/xbootclasspath.patch:
+	Revised version of the java.text Makefile changes
+	that replaces the use of -Xbootclasspath for those
+	VMs that don't support it.
+
 2013-05-07  Xerxes Rånby  <xerxes@zafena.se>
 
 	JamVM

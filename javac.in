@@ -18,7 +18,15 @@ else
 }
 
 my @bcoption;
-push @bcoption, '-bootclasspath', glob '@abs_top_builddir@/bootstrap/jdk1.6.0/jre/lib/rt.jar'
+my @bcoptions = grep {$_ =~ '^-Xbootclasspath/p:' } @ARGV;
+my $bc = $bcoptions[0];
+my $systembc = glob '/home/andrew/builder/icedtea7/bootstrap/jdk1.6.0/jre/lib/rt.jar';
+if ($bc)
+{
+    $bc =~ s/^[^:]*://;
+    $systembc = join ":", $bc, $systembc;
+}
+push @bcoption, '-bootclasspath', $systembc
     unless grep {$_ eq '-bootclasspath'} @ARGV;
 my @ecj_parms = ($ECJ_WARNINGS, @bcoption);
 my @javac_parms = ($JAVAC_WARNINGS, '-Xprefer:source',

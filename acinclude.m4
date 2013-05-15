@@ -2184,7 +2184,7 @@ AC_DEFUN([IT_WITH_JAMVM_SRC_ZIP],
   AC_SUBST(ALT_JAMVM_SRC_ZIP)
 ])
 
-AC_DEFUN([IT_BYTECODE7_CHECK],[
+AC_DEFUN_ONCE([IT_BYTECODE7_CHECK],[
 AC_CACHE_CHECK([if the VM lacks support for 1.7 bytecode], it_cv_bytecode7, [
 CLASS=Test.java
 BYTECODE=$(echo $CLASS|sed 's#\.java##')
@@ -2462,4 +2462,70 @@ cd ..
 rmdir tmp.$$
 AM_CONDITIONAL([LACKS_$1], test x"${it_cv_$1}" = "xyes")
 AC_PROVIDE([$0])dnl
+])
+
+AC_DEFUN_ONCE([IT_USE_BOOTSTRAP_TOOLS],
+[
+  AC_REQUIRE([IT_BYTECODE7_CHECK])
+  AC_MSG_CHECKING([whether to disable the use of bootstrap tools for bootstrapping])
+  AC_ARG_ENABLE([bootstrap-tools],
+                [AS_HELP_STRING(--disable-bootstrap-tools,
+		disable the use of bootstrap tools for bootstrapping [[default=no if they support 7]])],
+  [
+    case "${enableval}" in
+      no)
+        disable_bootstrap_tools=yes
+        ;;
+      *)
+        disable_bootstrap_tools=no
+        ;;
+    esac
+  ],
+  [
+    if test "x${it_cv_bytecode7}" = "xyes"; then
+      disable_bootstrap_tools=yes;
+    else
+      disable_bootstrap_tools=no;
+    fi
+  ])
+  AC_MSG_RESULT([$disable_bootstrap_tools])
+  AM_CONDITIONAL([DISABLE_BOOTSTRAP_TOOLS], test x"${disable_bootstrap_tools}" = "xyes")
+])
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_XBOOTCLASSPATH],
+[
+  AC_REQUIRE([IT_CHECK_JAVA_AND_JAVAC_WORK])
+  AC_CACHE_CHECK([if the VM supports -Xbootclasspath], it_cv_xbootclasspath_works, [
+  CLASS=Test.java
+  BYTECODE=$(echo $CLASS|sed 's#\.java##')
+  mkdir tmp.$$
+  cd tmp.$$
+  cat << \EOF > $CLASS
+[/* [#]line __oline__ "configure" */
+
+public class Test
+{
+    public static void main(String[] args)
+    {
+      System.out.println("Hello World!");
+    }
+}]
+EOF
+  mkdir build
+  if $JAVAC -d build -cp . $JAVACFLAGS -source 5 -target 5 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+    if $JAVA -Xbootclasspath/p:build $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1; then
+      it_cv_xbootclasspath_works=yes;
+    else
+      it_cv_xbootclasspath_works=no;
+    fi
+  else
+    it_cv_xbootclasspath_works=no;
+  fi
+  rm -f $CLASS build/*.class
+  rmdir build
+  cd ..
+  rmdir tmp.$$
+  ])
+  AC_PROVIDE([$0])dnl
+  AM_CONDITIONAL([VM_SUPPORTS_XBOOTCLASSPATH], test x"${it_cv_xbootclasspath_works}" = "xyes")
 ])
