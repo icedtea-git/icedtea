@@ -20,7 +20,7 @@ else
 my @bcoption;
 my @bcoptions = grep {$_ =~ '^-Xbootclasspath/p:' } @ARGV;
 my $bc = $bcoptions[0];
-my $systembc = glob '/home/andrew/builder/icedtea7/bootstrap/jdk1.6.0/jre/lib/rt.jar';
+my $systembc = glob '@abs_top_builddir@/bootstrap/jdk1.6.0/jre/lib/rt.jar';
 if ($bc)
 {
     $bc =~ s/^[^:]*://;

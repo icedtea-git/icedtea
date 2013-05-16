@@ -1,3 +1,8 @@
+2013-05-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* javac.in: Fix accidental inclusion of
+	hardcoded path.
+
 2013-05-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR716: IcedTea7 should bootstrap with IcedTea6
