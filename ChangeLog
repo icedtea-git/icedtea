@@ -1,5 +1,10 @@
 2013-05-22  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS: Remove CACAO changes which only appear
+	on the loop branch.
+
+2013-05-22  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* NEWS: Add latest release notes.
 
 2013-05-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
