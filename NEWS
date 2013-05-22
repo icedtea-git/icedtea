@@ -727,6 +727,134 @@ OpenJDK
   - JVM_IsVMGeneratedMethodIx stub
   - Dummy implementation of sun.misc.Perf natives
   
+New in release 2.1.8 (2013-05-02):
+
+* Security fixes
+  - S6657673, CVE-2013-1518: Issues with JAXP
+  - S7200507: Refactor Introspector internals
+  - S8000724, CVE-2013-2417: Improve networking serialization
+  - S8001031, CVE-2013-2419: Better font processing
+  - S8001040, CVE-2013-1537: Rework RMI model
+  - S8001322: Refactor deserialization
+  - S8001329, CVE-2013-1557: Augment RMI logging
+  - S8003335: Better handling of Finalizer thread
+  - S8003445: Adjust JAX-WS to focus on API
+  - S8003543, CVE-2013-2415: Improve processing of MTOM attachments
+  - S8004261: Improve input validation
+  - S8004336, CVE-2013-2431: Better handling of method handle intrinsic frames
+  - S8004986, CVE-2013-2383: Better handling of glyph table
+  - S8004987, CVE-2013-2384: Improve font layout
+  - S8004994, CVE-2013-1569: Improve checking of glyph table
+  - S8005432: Update access to JAX-WS
+  - S8005943: (process) Improved Runtime.exec
+  - S8006309: More reliable control panel operation
+  - S8006435, CVE-2013-2424: Improvements in JMX
+  - S8006790: Improve checking for windows
+  - S8006795: Improve font warning messages
+  - S8007406: Improve accessibility of AccessBridge
+  - S8007617, CVE-2013-2420: Better validation of images
+  - S8007667, CVE-2013-2430: Better image reading
+  - S8007918, CVE-2013-2429: Better image writing
+  - S8008140: Better method handle resolution
+  - S8009049, CVE-2013-2436: Better method handle binding
+  - S8009063, CVE-2013-2426: Improve reliability of ConcurrentHashMap
+  - S8009305, CVE-2013-0401: Improve AWT data transfer
+  - S8009677, CVE-2013-2423: Better setting of setters
+  - S8009699, CVE-2013-2421: Methodhandle lookup
+  - S8009814, CVE-2013-1488: Better driver management
+  - S8009857, CVE-2013-2422: Problem with plugin
+* Backports
+  - S7130662, RH928500: GTK file dialog crashes with a NPE
+* Bug fixes
+  - PR1363: Fedora 19 / rawhide FTBFS SIGILL
+  - Fix offset problem in ICU LETableReference.
+  - Don't create debuginfo files if not stripping.
+
+New in release 2.2.8 (2013-04-30):
+
+* Security fixes
+  - S6657673, CVE-2013-1518: Issues with JAXP
+  - S7200507: Refactor Introspector internals
+  - S8000724, CVE-2013-2417: Improve networking serialization
+  - S8001031, CVE-2013-2419: Better font processing
+  - S8001040, CVE-2013-1537: Rework RMI model
+  - S8001322: Refactor deserialization
+  - S8001329, CVE-2013-1557: Augment RMI logging
+  - S8003335: Better handling of Finalizer thread
+  - S8003445: Adjust JAX-WS to focus on API
+  - S8003543, CVE-2013-2415: Improve processing of MTOM attachments
+  - S8004261: Improve input validation
+  - S8004336, CVE-2013-2431: Better handling of method handle intrinsic frames
+  - S8004986, CVE-2013-2383: Better handling of glyph table
+  - S8004987, CVE-2013-2384: Improve font layout
+  - S8004994, CVE-2013-1569: Improve checking of glyph table
+  - S8005432: Update access to JAX-WS
+  - S8005943: (process) Improved Runtime.exec
+  - S8006309: More reliable control panel operation
+  - S8006435, CVE-2013-2424: Improvements in JMX
+  - S8006790: Improve checking for windows
+  - S8006795: Improve font warning messages
+  - S8007406: Improve accessibility of AccessBridge
+  - S8007617, CVE-2013-2420: Better validation of images
+  - S8007667, CVE-2013-2430: Better image reading
+  - S8007918, CVE-2013-2429: Better image writing
+  - S8008140: Better method handle resolution
+  - S8009049, CVE-2013-2436: Better method handle binding
+  - S8009063, CVE-2013-2426: Improve reliability of ConcurrentHashMap
+  - S8009305, CVE-2013-0401: Improve AWT data transfer
+  - S8009677, CVE-2013-2423: Better setting of setters
+  - S8009699, CVE-2013-2421: Methodhandle lookup
+  - S8009814, CVE-2013-1488: Better driver management
+  - S8009857, CVE-2013-2422: Problem with plugin
+* Backports
+  - S7130662, RH928500: GTK file dialog crashes with a NPE
+  - S8009530: ICU Kern table support broken
+
+New in release 2.3.9 (2013-04-21):
+
+* Security fixes
+  - S6657673, CVE-2013-1518: Issues with JAXP
+  - S7200507: Refactor Introspector internals
+  - S8000724, CVE-2013-2417: Improve networking serialization
+  - S8001031, CVE-2013-2419: Better font processing
+  - S8001040, CVE-2013-1537: Rework RMI model
+  - S8001322: Refactor deserialization
+  - S8001329, CVE-2013-1557: Augment RMI logging
+  - S8003335: Better handling of Finalizer thread
+  - S8003445: Adjust JAX-WS to focus on API
+  - S8003543, CVE-2013-2415: Improve processing of MTOM attachments
+  - S8004261: Improve input validation
+  - S8004336, CVE-2013-2431: Better handling of method handle intrinsic frames
+  - S8004986, CVE-2013-2383: Better handling of glyph table
+  - S8004987, CVE-2013-2384: Improve font layout
+  - S8004994, CVE-2013-1569: Improve checking of glyph table
+  - S8005432: Update access to JAX-WS
+  - S8005943: (process) Improved Runtime.exec
+  - S8006309: More reliable control panel operation
+  - S8006435, CVE-2013-2424: Improvements in JMX
+  - S8006790: Improve checking for windows
+  - S8006795: Improve font warning messages
+  - S8007406: Improve accessibility of AccessBridge
+  - S8007617, CVE-2013-2420: Better validation of images
+  - S8007667, CVE-2013-2430: Better image reading
+  - S8007918, CVE-2013-2429: Better image writing
+  - S8008140: Better method handle resolution
+  - S8009049, CVE-2013-2436: Better method handle binding
+  - S8009063, CVE-2013-2426: Improve reliability of ConcurrentHashMap
+  - S8009305, CVE-2013-0401: Improve AWT data transfer
+  - S8009677, CVE-2013-2423: Better setting of setters
+  - S8009699, CVE-2013-2421: Methodhandle lookup
+  - S8009814, CVE-2013-1488: Better driver management
+  - S8009857, CVE-2013-2422: Problem with plugin
+* Backports
+  - S7130662, RH928500: GTK file dialog crashes with a NPE
+* Bug fixes
+  - PR1363: Fedora 19 / rawhide FTBFS SIGILL
+  - PR1401: Fix Zero build on 2.3.8
+  - Fix offset problem in ICU LETableReference.
+  - Change -Werror fix to preserve OpenJDK default.
+  - PR1404: Failure to bootstrap with ecj 4.2
+
 New in release 2.3.8 (2013-03-11):
 
 * Security fixes
