@@ -1,3 +1,8 @@
+2013-05-23  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Update with fixes brought in by latest
+	forest updates.
+
 2013-05-22  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Remove CACAO changes which only appear
