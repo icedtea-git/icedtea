@@ -809,6 +809,7 @@ OpenJDK
   - Include defs.make in buildtree.make so ZERO_BUILD is recognised and JVM_VARIANT_ZERO set.
   - Make sure libffi cflags and libs are used.
   - PR1378: Add AArch64 support to Zero
+  - PR1170: Ensure unlimited crypto policy is in place.
 * CACAO
   - src/vm/jit/x86_64/asmpart.S (asm_abstractmethoderror): Keep stack aligned.
   - src/native/jni.cpp (GetObjectClass): Remove null pointer check.

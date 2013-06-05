@@ -66,6 +66,7 @@ REWRITER_BUILD_DIR = $(abs_top_builddir)/rewriter.build
 STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
 STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
 JAMVM_IMPORT_PATH = $(abs_top_builddir)/jamvm/install/hotspot
+CRYPTO_CHECK_BUILD_DIR = $(abs_top_builddir)/cryptocheck.build
 
 # Source directories
 
@@ -251,6 +252,7 @@ OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
 # Sources list
 
 REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
+CRYPTO_CHECK_SRCS = $(top_srcdir)/TestCryptoLevel.java
 
 # Patch list
 
@@ -774,7 +776,8 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	scripts/jni_desc \
 	rewriter/agpl-3.0.txt \
 	$(REWRITER_SRCS) \
-	THANKYOU test/tapset
+	THANKYOU test/tapset \
+	$(CRYPTO_CHECK_SRCS)
 
 # Top-Level Targets
 # =================
@@ -831,7 +834,8 @@ install:
 	clean-tests clean-tapset-report clean-add-systemtap \
 	clean-add-systemtap-debug clean-add-pulseaudio clean-add-pulseaudio-debug \
 	clean-add-nss clean-add-tzdata-support clean-add-tzdata-support-debug \
-	clean-add-systemtap-boot clean-add-pulseaudio-boot clean-add-tzdata-support-boot
+	clean-add-systemtap-boot clean-add-pulseaudio-boot clean-add-tzdata-support-boot \
+	clean-check-crypto clean-check-crypto-debug clean-check-crypto-boot
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1802,6 +1806,16 @@ clean-add-tzdata-support:
 	fi
 	rm -f stamps/add-tzdata-support.stamp
 
+stamps/check-crypto.stamp: stamps/cryptocheck.stamp
+	if [ -e $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
+	fi
+	mkdir -p stamps
+	touch $@
+
+clean-check-crypto:
+	rm -f stamps/check-crypto.stamp
+
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/cacao.stamp stamps/rewrite-rhino.stamp stamps/jamvm.stamp
@@ -1904,23 +1918,33 @@ clean-add-tzdata-support-debug:
 	fi
 	rm -f stamps/add-tzdata-support-debug.stamp
 
-stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
- stamps/add-zero.stamp stamps/add-jamvm.stamp stamps/add-systemtap.stamp \
- stamps/add-pulseaudio.stamp stamps/add-tzdata-support.stamp
+stamps/check-crypto-debug.stamp: stamps/cryptocheck.stamp
+	if [ -e $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
+	fi
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-stage2: clean-add-jamvm
+clean-check-crypto-debug:
+	rm -f stamps/check-crypto-debug.stamp
+
+stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
+ stamps/add-zero.stamp stamps/add-jamvm.stamp stamps/add-systemtap.stamp \
+ stamps/add-pulseaudio.stamp stamps/add-tzdata-support.stamp stamps/check-crypto.stamp
+	mkdir -p stamps
+	touch $@
+
+clean-icedtea-stage2: clean-add-jamvm clean-check-crypto
 	rm -f stamps/icedtea-stage2.stamp
 
 stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
  stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp \
  stamps/add-systemtap-debug.stamp stamps/add-pulseaudio-debug.stamp \
- stamps/add/tzdata-support-debug.stamp
+ stamps/add/tzdata-support-debug.stamp stamps/check-crypto-debug.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-debug-stage2: clean-add-jamvm-debug
+clean-icedtea-debug-stage2: clean-add-jamvm-debug clean-check-crypto-debug
 	rm -f stamps/icedtea-debug-stage2.stamp
 
 # OpenJDK boot Targets
@@ -2012,14 +2036,24 @@ clean-add-tzdata-support-boot:
 	fi
 	rm -f stamps/add-tzdata-support-boot.stamp
 
+stamps/check-crypto-boot.stamp: stamps/cryptocheck.stamp
+	if [ -e $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
+	  $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
+	fi
+	mkdir -p stamps
+	touch $@
+
+clean-check-crypto-boot:
+	rm -f stamps/check-crypto-boot.stamp
+
 stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp \
  stamps/add-systemtap-boot.stamp stamps/add-pulseaudio-boot.stamp \
- stamps/add-tzdata-support-boot.stamp
+ stamps/add-tzdata-support-boot.stamp stamps/check-crypto-boot.stamp
 	mkdir -p stamps
 	touch $@
 
 clean-icedtea-stage1: clean-add-systemtap-boot clean-add-pulseaudio-boot \
- clean-add-tzdata-support-boot
+ clean-add-tzdata-support-boot clean-check-crypto-boot
 	rm -f stamps/icedtea-stage1.stamp
 
 # Rebuild targets
@@ -2582,6 +2616,19 @@ clean-rt:
 	  cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar $(STAGE1_BOOT_DIR)/jre/lib ; \
 	fi
 
+# Crypto Level Check
+
+stamps/cryptocheck.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
+	mkdir -p $(CRYPTO_CHECK_BUILD_DIR)
+	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
+	  -d $(CRYPTO_CHECK_BUILD_DIR) $(CRYPTO_CHECK_SRCS)
+	mkdir -p stamps
+	touch $@
+
+clean-cryptocheck:
+	rm -rf $(CRYPTO_CHECK_BUILD_DIR)
+	rm -f stamps/cryptocheck.stamp
+
 # Target Aliases
 # ===============
 
@@ -2615,7 +2662,15 @@ bootstrap-directory-symlink-stage2: stamps/bootstrap-directory-symlink-stage2.st
 
 cacao: stamps/cacao.stamp
 
+check-crypto: stamps/check-crypto.stamp
+
+check-crypto-boot: stamps/check-crypto-boot.stamp
+
+check-crypto-debug: stamps/check-crypto-debug.stamp
+
 clone-boot: stamps/clone-boot.stamp
+
+cryptocheck: stamps/cryptocheck.stamp
 
 download: stamps/download.stamp
 
