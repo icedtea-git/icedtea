@@ -1807,7 +1807,7 @@ clean-add-tzdata-support:
 	fi
 	rm -f stamps/add-tzdata-support.stamp
 
-stamps/check-crypto.stamp: stamps/cryptocheck.stamp
+stamps/check-crypto.stamp: stamps/cryptocheck.stamp stamps/icedtea.stamp
 	if [ -e $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
 	  $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
 	fi
@@ -1816,6 +1816,22 @@ stamps/check-crypto.stamp: stamps/cryptocheck.stamp
 
 clean-check-crypto:
 	rm -f stamps/check-crypto.stamp
+
+stamps/add-archive.stamp: stamps/icedtea.stamp
+if !ENABLE_JAMVM
+if !ENABLE_CACAO
+if !ZERO_BUILD
+	if [ -e $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
+	fi
+endif
+endif
+endif
+	touch stamps/add-archive.stamp
+
+clean-add-archive:
+	rm -vf $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -f stamps/add-archive.stamp
 
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
@@ -1919,7 +1935,7 @@ clean-add-tzdata-support-debug:
 	fi
 	rm -f stamps/add-tzdata-support-debug.stamp
 
-stamps/check-crypto-debug.stamp: stamps/cryptocheck.stamp
+stamps/check-crypto-debug.stamp: stamps/cryptocheck.stamp stamps/icedtea-debug.stamp
 	if [ -e $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
 	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
 	fi
@@ -1928,22 +1944,6 @@ stamps/check-crypto-debug.stamp: stamps/cryptocheck.stamp
 
 clean-check-crypto-debug:
 	rm -f stamps/check-crypto-debug.stamp
-
-stamps/add-archive.stamp: stamps/icedtea.stamp
-if !ENABLE_JAMVM
-if !ENABLE_CACAO
-if !ZERO_BUILD
-	if [ -e $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
-	  $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
-	fi
-endif
-endif
-endif
-	touch stamps/add-archive.stamp
-
-clean-add-archive:
-	rm -vf $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
-	rm -f stamps/add-archive.stamp
 
 stamps/add-archive-debug.stamp: stamps/icedtea-debug.stamp
 if !ENABLE_JAMVM
@@ -2072,7 +2072,7 @@ clean-add-tzdata-support-boot:
 	fi
 	rm -f stamps/add-tzdata-support-boot.stamp
 
-stamps/check-crypto-boot.stamp: stamps/cryptocheck.stamp
+stamps/check-crypto-boot.stamp: stamps/cryptocheck.stamp stamps/icedtea-boot.stamp
 	if [ -e $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
 	  $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
 	fi

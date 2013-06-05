@@ -1,5 +1,14 @@
 2013-06-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* Makefile.am:
+	(check-crypto): Depend on icedtea.stamp.
+	(add-archive): Move into correct position in file.
+	(clean-add-archive): Likewise.
+	(check-crypto-debug): Depend on icedtea-debug.stamp.
+	(clean-crypto-boot): Depend on icedtea-boot.stamp.
+
+2013-06-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR1280: Updating/Installing OpenJDK should recreate the
 	shared class-data archive
 	* Makefile.am:
