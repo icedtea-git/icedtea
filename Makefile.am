@@ -835,7 +835,8 @@ install:
 	clean-add-systemtap-debug clean-add-pulseaudio clean-add-pulseaudio-debug \
 	clean-add-nss clean-add-tzdata-support clean-add-tzdata-support-debug \
 	clean-add-systemtap-boot clean-add-pulseaudio-boot clean-add-tzdata-support-boot \
-	clean-check-crypto clean-check-crypto-debug clean-check-crypto-boot
+	clean-check-crypto clean-check-crypto-debug clean-check-crypto-boot \
+	clean-add-archive clean-add-archive-debug clean-add-archive-boot
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1928,23 +1929,58 @@ stamps/check-crypto-debug.stamp: stamps/cryptocheck.stamp
 clean-check-crypto-debug:
 	rm -f stamps/check-crypto-debug.stamp
 
+stamps/add-archive.stamp: stamps/icedtea.stamp
+if !ENABLE_JAMVM
+if !ENABLE_CACAO
+if !ZERO_BUILD
+	if [ -e $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
+	  $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
+	fi
+endif
+endif
+endif
+	touch stamps/add-archive.stamp
+
+clean-add-archive:
+	rm -vf $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -f stamps/add-archive.stamp
+
+stamps/add-archive-debug.stamp: stamps/icedtea-debug.stamp
+if !ENABLE_JAMVM
+if !ENABLE_CACAO
+if !ZERO_BUILD
+	if [ -e $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
+	  $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
+	fi
+endif
+endif
+endif
+	touch stamps/add-archive-debug.stamp
+
+clean-add-archive-debug:
+	rm -vf $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -f stamps/add-archive-debug.stamp
+
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
  stamps/add-zero.stamp stamps/add-jamvm.stamp stamps/add-systemtap.stamp \
- stamps/add-pulseaudio.stamp stamps/add-tzdata-support.stamp stamps/check-crypto.stamp
+ stamps/add-pulseaudio.stamp stamps/add-tzdata-support.stamp stamps/check-crypto.stamp \
+ stamps/add-archive.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-stage2: clean-add-jamvm clean-check-crypto
+clean-icedtea-stage2: clean-add-jamvm clean-check-crypto clean-add-archive
 	rm -f stamps/icedtea-stage2.stamp
 
 stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
  stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp \
  stamps/add-systemtap-debug.stamp stamps/add-pulseaudio-debug.stamp \
- stamps/add/tzdata-support-debug.stamp stamps/check-crypto-debug.stamp
+ stamps/add/tzdata-support-debug.stamp stamps/check-crypto-debug.stamp \
+ stamps/add-archive-debug.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-debug-stage2: clean-add-jamvm-debug clean-check-crypto-debug
+clean-icedtea-debug-stage2: clean-add-jamvm-debug clean-check-crypto-debug \
+ clean-add-archive-debug
 	rm -f stamps/icedtea-debug-stage2.stamp
 
 # OpenJDK boot Targets
@@ -2046,14 +2082,31 @@ stamps/check-crypto-boot.stamp: stamps/cryptocheck.stamp
 clean-check-crypto-boot:
 	rm -f stamps/check-crypto-boot.stamp
 
+stamps/add-archive-boot.stamp: stamps/icedtea-boot.stamp
+if !ENABLE_JAMVM
+if !ENABLE_CACAO
+if !ZERO_BUILD
+	if [ -e $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
+	  $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
+	fi
+endif
+endif
+endif
+	touch $@
+
+clean-add-archive-boot:
+	rm -vf $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -f stamps/add-archive-boot.stamp
+
 stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp \
  stamps/add-systemtap-boot.stamp stamps/add-pulseaudio-boot.stamp \
- stamps/add-tzdata-support-boot.stamp stamps/check-crypto-boot.stamp
+ stamps/add-tzdata-support-boot.stamp stamps/check-crypto-boot.stamp \
+ stamps/add-archive-boot.stamp
 	mkdir -p stamps
 	touch $@
 
 clean-icedtea-stage1: clean-add-systemtap-boot clean-add-pulseaudio-boot \
- clean-add-tzdata-support-boot clean-check-crypto-boot
+ clean-add-tzdata-support-boot clean-check-crypto-boot clean-add-archive-boot
 	rm -f stamps/icedtea-stage1.stamp
 
 # Rebuild targets
@@ -2631,6 +2684,12 @@ clean-cryptocheck:
 
 # Target Aliases
 # ===============
+
+add-archive: stamps/add-archive.stamp
+
+add-archive-boot: stamps/add-archive-ecj.stamp
+
+add-archive-debug: stamps/add-archive-debug.stamp
 
 add-nss: stamps/add-nss.stamp
 
