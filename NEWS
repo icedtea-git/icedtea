@@ -811,6 +811,8 @@ OpenJDK
   - PR1378: Add AArch64 support to Zero
   - PR1170: Ensure unlimited crypto policy is in place.
   - RH513605, PR1280: Updating/Installing OpenJDK should recreate the shared class-data archive
+  - PR1358: Make XRender mandatory
+  - PR1360: Check for /usr/lib64 JVMs and generic JPackage alternative
 * CACAO
   - src/vm/jit/x86_64/asmpart.S (asm_abstractmethoderror): Keep stack aligned.
   - src/native/jni.cpp (GetObjectClass): Remove null pointer check.

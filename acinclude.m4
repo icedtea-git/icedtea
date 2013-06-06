@@ -1132,21 +1132,31 @@ AC_DEFUN([IT_CHECK_FOR_JDK],
 	        SYSTEM_JDK_DIR=
               ])
   if test -z "${SYSTEM_JDK_DIR}"; then
+    AC_MSG_RESULT([not specified])
     if test "x${enable_bootstrap}" = "xyes"; then
       BOOTSTRAP_VMS="/usr/lib/jvm/java-gcj /usr/lib/jvm/gcj-jdk /usr/lib/jvm/cacao";
-    else
-      ICEDTEA6_VMS="/usr/lib/jvm/icedtea6 /usr/lib/jvm/java-6-openjdk"
     fi
-    ICEDTEA7_VMS="/usr/lib/jvm/icedtea7 /usr/lib/jvm/java-1.7.0-openjdk"
+    ICEDTEA6_VMS="/usr/lib/jvm/icedtea-6 /usr/lib/jvm/icedtea6 /usr/lib/jvm/java-6-openjdk
+    		  /usr/lib/jvm/java-1.6.0-openjdk.x86_64 /usr/lib64/jvm/java-1.6.0-openjdk
+		  /usr/lib/jvm/java-1.6.0"
+    ICEDTEA7_VMS="/usr/lib/jvm/icedtea-7 /usr/lib/jvm/icedtea7 /usr/lib/jvm/java-1.7.0-openjdk
+    		  /usr/lib/jvm/java-1.7.0-openjdk.x86_64 /usr/lib64/jvm/java-1.7.0-openjdk
+		  /usr/lib/jvm/java-1.7.0"
     for dir in ${BOOTSTRAP_VMS} ${ICEDTEA7_VMS} ${ICEDTEA6_VMS} \
-    	       /usr/lib/jvm/java-openjdk /usr/lib/jvm/openjdk /usr/lib/jvm/java-icedtea ; do
+    	       /usr/lib/jvm/java-openjdk /usr/lib/jvm/openjdk /usr/lib/jvm/java-icedtea \
+	       /etc/alternatives/java_sdk_openjdk ; do
+       AC_MSG_CHECKING([for ${dir}]);
        if test -d $dir; then
-         SYSTEM_JDK_DIR=$dir
-	 break
+         SYSTEM_JDK_DIR=$dir ;
+	 AC_MSG_RESULT([found]) ;
+	 break ;
+       else
+         AC_MSG_RESULT([not found]) ;
        fi
     done
+  else
+    AC_MSG_RESULT(${SYSTEM_JDK_DIR})
   fi
-  AC_MSG_RESULT(${SYSTEM_JDK_DIR})
   if ! test -d "${SYSTEM_JDK_DIR}"; then
     AC_MSG_ERROR("A JDK JDK home directory could not be found.")
   fi
