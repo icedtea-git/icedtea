@@ -776,7 +776,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	scripts/jni_desc \
 	rewriter/agpl-3.0.txt \
 	$(REWRITER_SRCS) \
-	THANKYOU test/tapset \
+	test/tapset \
 	$(CRYPTO_CHECK_SRCS)
 
 # Top-Level Targets

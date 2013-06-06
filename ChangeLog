@@ -1,5 +1,10 @@
 2013-06-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* AUTHORS: Include entries from THANKYOU.
+	* THANKYOU: Removed.
+
+2013-06-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* INSTALL:
 	Synchronise list of VMs with macro in acinclude.m4.
 	* acinclude.m4: Provide separate output for user
