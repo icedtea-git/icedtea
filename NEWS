@@ -547,6 +547,7 @@ OpenJDK
   - S7191556: (fs) UnixNativeDispatcher.getextmntent should be moved into platform specific code
   - S7191587: (se) SelectionKey.interestOps does not defer changing the interest set to the next select [macosx]
   - S7191765: make jdk8 the default jprt release for hs24
+  - S7191872: Xrender: No text displayed using 64 bit JDK on solaris11-sparc
   - S7191926: Remove MKS dependency in Hotspot regression tests
   - S7192128: G1: Extend fix for 6948537 to G1's BOT
   - S7192167: JSR 292: C1 has old broken code which needs to be removed
@@ -789,8 +790,10 @@ OpenJDK
   - S8011745: Unknown CertificateChoices
   - S8011867: Accept unknown PKCS #9 attributes
   - S8012572: Exclude sun/tools/jmap/Basic.sh for short term
+  - S8014469: (tz) Support tzdata2013c
 * Backports
   - PR1197, S8003120, RH868136: ResourceManager.getApplicationResources() does not close InputStreams
+  - S8014618, RH962568: Need to strip leading zeros in TlsPremasterSecret of DHKeyAgreement
 * Bug fixes
   - PR1212: IcedTea7 fails to build because Resources.getText() is no longer available for code to use
   - Add NSS (commented out) to other platforms.
@@ -813,6 +816,8 @@ OpenJDK
   - RH513605, PR1280: Updating/Installing OpenJDK should recreate the shared class-data archive
   - PR1358: Make XRender mandatory
   - PR1360: Check for /usr/lib64 JVMs and generic JPackage alternative
+  - PR1435: OpenJDK 7 returns incorrect TrueType font metrics
+  - PR728: GTKLookAndFeel does not honor gtk-alternative-button-order
 * CACAO
   - src/vm/jit/x86_64/asmpart.S (asm_abstractmethoderror): Keep stack aligned.
   - src/native/jni.cpp (GetObjectClass): Remove null pointer check.

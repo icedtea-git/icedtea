@@ -1,5 +1,33 @@
 2013-06-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	S7191872: Xrender: No text displayed using
+	64 bit JDK on solaris11-sparc
+	S8014469: (tz) Support tzdata2013c
+	S8014618, RH962568: Need to strip leading zeros
+	in TlsPremasterSecret of DHKeyAgreement
+	PR1435: OpenJDK 7 returns incorrect TrueType
+	font metrics
+	PR728: GTKLookAndFeel does not honor
+	gtk-alternative-button-order
+	* Makefile.am,
+	(CORBA_CHANGESET): Update to IcedTea7 forest head.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Mention S7191872, S8014469, S8014618/RH962568,
+	PR1435 and PR728.
+	* hotspot.map: Update to IcedTea7 forest head.
+
+2013-06-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* ChangeLog: Update my Red Hat e-mail address.
 
 2013-06-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
