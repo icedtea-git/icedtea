@@ -255,14 +255,11 @@ fi
 AC_SUBST(XINERAMA_CFLAGS)
 AC_SUBST(XINERAMA_LIBS)
 
-if test "x${ENABLE_XRENDER}" = "xyes"
+PKG_CHECK_MODULES(XRENDER, xrender, [XRENDER_FOUND=yes], [XRENDER_FOUND=no])
+if test "x${XRENDER_FOUND}" = xno
 then
-  PKG_CHECK_MODULES(XRENDER, xrender, [XRENDER_FOUND=yes], [XRENDER_FOUND=no])
-  if test "x${XRENDER_FOUND}" = xno
-  then
-    AC_MSG_ERROR([Could not find Xrender extension - \
-Try installing libXrender-devel or configure --disable-xrender.])
-  fi
+  AC_MSG_ERROR([Could not find Xrender extension - \
+Try installing libXrender-devel.])
 fi
 
 AC_CHECK_HEADER([sys/sdt.h], [SDT_H_FOUND='yes'],

@@ -1,3 +1,10 @@
+2013-03-21  Michal Vyskocil  <mvyskocil@suse.cz>
+
+	PR1358: Make XRender mandatory.
+	* configure.ac:
+	Remove check on ENABLE_XRENDER variable
+	which is no longer set.
+
 2013-06-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
