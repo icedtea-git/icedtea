@@ -801,7 +801,7 @@ clean-local: clean-tests clean-pulse-java \
  clean-icedtea-debug-stage2 clean-icedtea-stage1 clean-add-zero clean-add-zero-debug \
  clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter \
  clean-add-systemtap clean-add-systemtap-debug clean-add-pulseaudio clean-add-pulseaudio-debug \
- clean-add-nss clean-add-tzdata-support clean-add-tzdata-support-debug
+ clean-add-nss clean-add-tzdata-support clean-add-tzdata-support-debug clean-cryptocheck
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -836,7 +836,7 @@ install:
 	clean-add-nss clean-add-tzdata-support clean-add-tzdata-support-debug \
 	clean-add-systemtap-boot clean-add-pulseaudio-boot clean-add-tzdata-support-boot \
 	clean-check-crypto clean-check-crypto-debug clean-check-crypto-boot \
-	clean-add-archive clean-add-archive-debug clean-add-archive-boot
+	clean-add-archive clean-add-archive-debug clean-add-archive-boot clean-cryptocheck
 
 env:
 	@echo 'unset JAVA_HOME'
