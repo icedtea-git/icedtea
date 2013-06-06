@@ -1,5 +1,9 @@
 2013-06-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* ChangeLog: Update my Red Hat e-mail address.
+
+2013-06-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* AUTHORS: Include entries from THANKYOU.
 	* THANKYOU: Removed.
 
@@ -1140,7 +1144,7 @@
 	Extend with additional cases in HotSpot and
 	the JDK.
 
-2012-03-20  Andrew John Hughes  <ahughes@redhat.com>
+2012-03-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_FIND_COMPILER): Define only once and
@@ -1189,7 +1193,7 @@
 	(versioning): Don't add a suffix if building
 	the default project, 'icedtea'.
 
-2012-05-25  Andrew John Hughes  <ahughes@redhat.com>
+2012-05-25  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(OPENJDK_VERSION): Bump to b10.
@@ -1219,13 +1223,13 @@
 	generation application to fail, presumably due to variable
 	moving from private to package-private).
 
-2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
+2012-05-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(extract-openjdk): Mirror replacement of '.' with
 	'-' done by Mercurial server when creating tarball.
 
-2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
+2012-05-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	(CORBA_CHANGESET): Bump to bring in typo fix.
 	(CORBA_SHA256SUM): Likewise.
@@ -1233,16 +1237,16 @@
 	digest cloning fix.
 	(JDK_SHA256SUM): Likewise.
 
-2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
+2012-05-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Sync with 2.2 branch.
 
-2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
+2012-05-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* configure.ac: Bump to 2.3pre.
 	* NEWS: Add 2.3 section.
 
-2012-05-23  Andrew John Hughes  <ahughes@redhat.com>
+2012-05-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/boot/corba-defs.patch:
 	Removed.  Makes changes which aren't needed
@@ -1260,7 +1264,7 @@
 	Don't set JAVACFLAGS to point to non-existent rt.jar
 	in {JDK_HOME}/lib.  Point to just-built langtools instead.
 
-2011-03-02  Andrew John Hughes  <ahughes@redhat.com>
+2011-03-02  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(icedtea): Explicitly set -j1 for the
@@ -1271,13 +1275,13 @@
 	(icedtea-debug): Likewise.
 	(icedtea-ecj): Likewise.
 
-2012-05-21  Andrew John Hughes  <ahughes@redhat.com>
+2012-05-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	(JDK_CHANGESET): Bump to bring in the
 	aliasing and wrap mode fixes.
 	(JDK_SHA256SUM): Likewise.
 
-2012-05-21  Andrew John Hughes  <ahughes@redhat.com>
+2012-05-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* AUTHORS: Add Ralph Sennhauser.
 
@@ -1302,7 +1306,7 @@
 	* pax-mark-vm.in:
 	Script to PaX mark a JDK image.
 
-2012-05-02  Andrew John Hughes  <ahughes@redhat.com>
+2012-05-02  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Bump to jdk7u4 b13.
 	* Makefile.am:
@@ -1328,7 +1332,7 @@
 	* patches/boot/ecj-multicatch.patch: Likewise.
 	* patches/boot/ecj-trywithresources.patch: Likewise.
 
-2012-04-23  Andrew John Hughes  <ahughes@redhat.com>
+2012-04-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(HOTSPOT_CHANGESET): Bump to bring in
@@ -1337,20 +1341,20 @@
 	(ICEDTEA_ENV): Set ALT_STRIP_POLICY to
 	no_strip.
 
-2012-04-12  Andrew John Hughes  <ahughes@redhat.com>
+2012-04-12  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(download-openjdk): Fix syntax.
 	(download-cacao): Likewise.
 	(download-jamvm): Likewise.
 
-2012-04-11  Andrew John Hughes  <ahughes@redhat.com>
+2012-04-11  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(JDK_CHANGESET): Bump to include GCC 4.7 build fixes.
 	(JDK_SHA256SUM): Likewise.
 
-2012-04-11  Andrew John Hughes  <ahughes@redhat.com>
+2012-04-11  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(download-openjdk): Don't download unless
@@ -1362,13 +1366,13 @@
 	--disable-downloading.
 	* configure.ac: Call IT_CHECK_FOR_DOWNLOADING.
 
-2012-04-06  Andrew John Hughes  <ahughes@redhat.com>
+2012-04-06  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(JDK_CHANGESET): Bump to include generalied crypto tests.
 	(JDK_SHA256SUM): Likewise.
 
-2012-04-06  Andrew John Hughes  <ahughes@redhat.com>
+2012-04-06  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_CHECK_FOR_GTK): Work with glib >= 2.32
@@ -1385,13 +1389,13 @@
 	* test/tapset/jstaptest.pl: thread_start and thread_stop thread id
 	can be any positive number.
 
-2012-03-23  Andrew John Hughes  <ahughes@redhat.com>
+2012-03-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/boot/pr39408.patch,
 	* patches/cacao/launcher.patch:
 	Regenerated.
 
-2012-03-22  Andrew John Hughes  <ahughes@redhat.com>
+2012-03-22  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/systemtap-alloc-size-workaround.patch:
 	Removed; upstream.
@@ -1683,17 +1687,17 @@
 	(HOTSPOT_CHANGESET): Add latest Zero HS22 fixes.
 	(HOTSPOT_SHA256SUM): Likewise.
 
-2012-02-15  Andrew John Hughes  <ahughes@redhat.com>
+2012-02-15  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Add 2.0.1 and 2.1.0 release notes.
 	* configure.ac: Bump to 2.2pre.
 
-2012-02-14  Andrew John Hughes  <ahughes@redhat.com>
+2012-02-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Update with OpenJDK fixes and
 	add release date for 2.1.
 
-2012-02-14  Andrew John Hughes  <ahughes@redhat.com>
+2012-02-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	(HOTSPOT_CHANGESET): Add latest fixes:
 	7140882, 7049339 and 7091528.
@@ -1714,20 +1718,20 @@
 	to work with latest OpenJDK ALT_HOTSPOT_IMPORT_PATH functionality.
 	* patches/cacao/version.patch: Removed, replaced by upstream CACAO changeset 30edcde287d9.
 
-2012-02-08  Andrew John Hughes  <ahughes@redhat.com>
+2012-02-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	(HOTSPOT_CHANGESET): Bump to fix HotSpot merge
 	issue.
 	(HOTSPOT_SHA256SUM): Likewise.
 
-2012-02-08  Andrew John Hughes  <ahughes@redhat.com>
+2012-02-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Move JDK_UPDATE_VERSION and COMBINED_VERSION
 	to top of file with OPENJDK_VERSION.
 	(JDK_UPDATE_VERSION): Set to 02 for u2.
 
-2012-02-08  Andrew John Hughes  <ahughes@redhat.com>
+2012-02-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(CORBA_CHANGESET): Updated.
@@ -1789,7 +1793,7 @@
 	(HOTSPOT_CHANGESET): Updated.
 	(HOTSPOT_SHA256SUM): Updated.
 
-2011-10-19  Andrew John Hughes  <ahughes@redhat.com>
+2011-10-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Move recent JamVM changes
 	to correct section.  Sync with 2.0.
@@ -1814,13 +1818,13 @@
 	(JAMVM_VERSION): Updated JamVM to 2011-10-07 revision.
 	(JAMVM_SHA256SUM): Updated.
 
-2011-10-19  Andrew John Hughes  <ahughes@redhat.com>
+2011-10-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Set release date of 2.0 and
 	add section for 2.1.
 	* configure.ac: Bump to 2.1pre.
 
-2011-10-19  Andrew John Hughes  <ahughes@redhat.com>
+2011-10-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/cacao/6714758.patch:
 	Removed; upstream.
@@ -1829,7 +1833,7 @@
 	(extract-cacao): Use gzip not bzip2.
 	(extract-jamvm): Explicitly use gzip.
 
-2011-10-19  Andrew John Hughes  <ahughes@redhat.com>
+2011-10-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Bring in security updates.
 	(CORBA_CHANGESET): Updated.
@@ -1842,13 +1846,13 @@
 	after 7046823 is applied.
 	* NEWS: Updated.
 
-2011-09-30  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-30  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_CHECK_FOR_GIO): Require 2.26 and
 	above for GSettings.
 
-2011-09-30  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-30  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Bump changesets to bring in fix which
 	turns off forced -Werror.
@@ -1873,7 +1877,7 @@
 	* Makefile.am: Upgrade CACAO version,
 	use .tar.gz archive
 
-2011-09-30  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-30  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Cleanup.
 
@@ -1901,14 +1905,14 @@
 	(CACAO_VERSION): Updated CACAO to 2011-08-08 revision.
 	(CACAO_SHA256SUM): Updated.
 
-2010-11-19  Andrew John Hughes  <ahughes@redhat.com>
+2010-11-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(CACAO_BASE_URL): Switch to using IcedTea
 	server for CACAO drops too.
 	(CACAO_URL): Likewise.
 
-2011-09-30  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-30  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(ICEDTEA_BOOT_PATCHES): Only apply
@@ -1920,20 +1924,20 @@
 	1.7 bytecode.
 	* configure.ac: Call IT_BYTECODE7_CHECK.
 
-2011-09-27  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(EXTRA_DIST): Remove patch directories that
 	no longer exist.
 
-2011-09-27  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(AC_CHECK_FOR_JDK): Look for IcedTea7 JDKs.
 	Don't check for IcedTea6 JDKs when bootstrapping
 	until PR716 is fixed.
 
-2011-09-27  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR790: Include JAXP, JAF and JAXWS sources directly
 	in OpenJDK tree, removing the need for drop tarballs.
@@ -1988,7 +1992,7 @@
 	* acinclude.m4: Add devel package suggestions for epoll/xattr
 	check failure.
 
-2011-09-27  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	Always quote using '[' and ']' in macro calls.
@@ -1998,7 +2002,7 @@
 	(IT_CHECK_FOR_CUPS): Likewise.
 	(IT_CHECK_FOR_SYSCALLS): Likewise.
 
-2011-09-27  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_CHECK_FOR_SYSCALLS): Include checks
@@ -2024,7 +2028,7 @@
 	(JAMVM_VERSION): Updated JamVM to 2011-09-24 revision.
 	(JAMVM_SHA256SUM): Updated.
 
-2011-09-21  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR717: Remove all non-bootstrap non-conditional
 	patches.
@@ -2083,14 +2087,14 @@
 	Updated against upstream disable-intree-ec.
 	* NEWS: Updated.
 
-2011-09-21  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(JDK_CHANGESET): Include Damian's compilation fix
 	for building without USE_SYSTEM_CUPS.
 	(JDK_SHA256SUM): Likewise.
 
-2011-09-21  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(ICEDTEA_ENV): Set COMPILE_AGAINST_SYSCALLS
@@ -2101,7 +2105,7 @@
 	*at).
 	* configure.ac: Call IT_CHECK_FOR_SYSCALLS.
 
-2011-09-21  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(JDK_CHANGESET): Bump to bring in latest
@@ -2122,21 +2126,21 @@
 	Add calls to IT_CHECK_FOR_GTK, IT_CHECK_FOR_GIO,
 	IT_CHECK_FOR_FONTCONFIG and IT_CHECK_FOR_CUPS.
 
-2011-09-09  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-09  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(JDK_CHANGESET): Bring in fix for another
 	duplicate gboolean definition.
 	(JDK_SHA256SUM): Likewise.
 
-2011-09-08  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(JDK_CHANGESET): Bring in fix for duplicate
 	gboolean definition.
 	(JDK_SHA256SUM): Likewise.
 
-2011-09-06  Andrew John Hughes  <ahughes@redhat.com>
+2011-09-06  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/hotspot-gcc-pr36917.patch:
 	Redundant, was removed from IcedTea6.
@@ -2227,12 +2231,12 @@
 	(JAMVM_VERSION): Updated JamVM to 2011-08-08 revision.
 	(JAMVM_SHA256SUM): Updated.
 
-2011-08-03  Andrew John Hughes  <ahughes@redhat.com>
+2011-08-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Updated with changes from
 	Pavel's HotSpot update.
 
-2011-08-03  Andrew John Hughes  <ahughes@redhat.com>
+2011-08-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(JDK_CHANGESET): Updated to bring in
@@ -2240,7 +2244,7 @@
 	(JDK_SHA256SUM): Likewise.
 	* NEWS: Updated.
 
-2011-08-03  Andrew John Hughes  <ahughes@redhat.com>
+2011-08-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Apply explicit-inner-class-headers patch as required.
@@ -2279,7 +2283,7 @@
 	(JAMVM_VERSION): Updated JamVM to 2011-08-01 revision.
 	(JAMVM_SHA256SUM): Updated.
 
-2011-07-29  Andrew John Hughes  <ahughes@redhat.com>
+2011-07-29  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR717: All non-bootstrap patches in IcedTea7
 	should be in the forest or dropped
@@ -2321,7 +2325,7 @@
 	against new forest.
 	* NEWS: Updated.
 
-2011-07-28  Andrew John Hughes  <ahughes@redhat.com>
+2011-07-28  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Bring in new JDK build cleanups and
 	HotSpot fixes for Zero/Shark.
@@ -2359,7 +2363,7 @@
 	(LANGTOOLS_SHA256SUM): Likewise.
 	(OPENJDK_SHA256SUM): Likewise.
 
-2011-07-13  Andrew John Hughes  <ahughes@redhat.com>
+2011-07-13  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(bootstrap-directory-stage1): Only use
@@ -2369,7 +2373,7 @@
 	-Xbootclasspath and set JAVAH_SUPPORTS_X_OPTIONS if
 	so.
 
-2011-07-13  Andrew John Hughes  <ahughes@redhat.com>
+2011-07-13  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Bump to b147.
 	* Makefile.am:
@@ -2403,7 +2407,7 @@
 	* patches/boot/ecj-stringswitch.patch:
 	Likewise and add new cases.
 
-2011-07-12  Andrew John Hughes  <ahughes@redhat.com>
+2011-07-12  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(CORBA_SHA256SUM): Updated after removal of
@@ -2424,14 +2428,14 @@
 	* HACKING: Updated.
 	* NEWS: Updated.
 
-2011-07-05  Andrew John Hughes  <ahughes@redhat.com>
+2011-07-05  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR icedtea/751:
 	(ICEDTEA_BOOT_PATCHES): Make application of
 	javah.patch dependent on javah presenting
 	with bug 40188.
 
-2011-07-05  Andrew John Hughes  <ahughes@redhat.com>
+2011-07-05  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR icedtea/751
 	* Makefile.am:
@@ -2448,7 +2452,7 @@
 	* patches/boot/hotspot-jdk-dependency.patch:
 	Include the *nix-specific code in solaris/classes.
 
-2011-06-29  Andrew John Hughes  <ahughes@redhat.com>
+2011-06-29  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_FIND_JAVA): Check that the binary is also
@@ -2458,7 +2462,7 @@
 	(IT_FIND_RMIC): Likewise.
 	(IT_FIND_NATIVE2ASCII): Likewise.
 
-2011-06-28  Andrew John Hughes  <ahughes@redhat.com>
+2011-06-28  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am,
 	(HOTSPOT_CHANGESET): Update to bring in Linux 3 fix..
@@ -2500,7 +2504,7 @@
 	(stamps/patch-fsg.stamp): Depend on stamps/extract.stamp.
 	Unbreak JamVM and CACAO builds by fixing the dependency chain.
 
-2011-06-24  Andrew John Hughes  <ahughes@redhat.com>
+2011-06-24  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/rmi_amd64.patch:
 	Removed, upsteam (OpenJDK).
@@ -2572,19 +2576,19 @@
 	(JAMVM_VERSION): Updated JamVM to 2011-04-28 revision.
 	(JAMVM_SHA256SUM): Updated.
 
-2011-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Add 2.0.
 	* configure.ac: Bump to 2.0pre.
 
-2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-25  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS:
 	Updated with changes since 1.13
 	and added URL key from IcedTea6.
 	* configure.ac: Bump to 1.14 proper.
 
-2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-25  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(ENDORSED_DIR): Removed.
@@ -2610,7 +2614,7 @@
 	Remove addition of $(ENDORSED) to
 	jvmti.make.
 
-2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-25  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Fix make distcheck.
 	* Makefile.am:
@@ -2622,12 +2626,12 @@
 	and use full path.
 	(clean-add-jamvm-debug): Likewise for debug mode.
 
-2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-25  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_FIND_JAVAH): Add 'fi' missed in merge.
 
-2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-25  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_WITH_CORBA_SRC_ZIP): Add missing $.
@@ -2636,7 +2640,7 @@
 	(IT_WITH_JDK_SRC_ZIP): Likewise.
 	(IT_WITH_LANGTOOLS_DROP_ZIP): Likewise.
 
-2011-02-23  Andrew John Hughes  <ahughes@redhat.com>
+2011-02-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_CHECK_WITH_CACAO_SRC_ZIP): Add missing $.
@@ -2647,7 +2651,7 @@
 	(IT_WITH_JAF_DROP_ZIP): Likewise.
 	(IT_WITH_JAXWS_DROP_ZIP): Likewise.
 
-2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-25  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_WITH_CORBA_SRC_ZIP): Invert
@@ -2657,7 +2661,7 @@
 	(IT_WITH_JDK_SRC_ZIP): Likewise.
 	(IT_WITH_LANGTOOLS_DROP_ZIP): Likewise.
 
-2011-02-23  Andrew John Hughes  <ahughes@redhat.com>
+2011-02-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_CHECK_WITH_CACAO_SRC_ZIP): Invert
@@ -2669,7 +2673,7 @@
 	(IT_WITH_JAF_DROP_ZIP): Likewise.
 	(IT_WITH_JAXWS_DROP_ZIP): Likewise.
 
-2011-02-23  Andrew John Hughes  <ahughes@redhat.com>
+2011-02-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_ENABLE_JAMVM): Renamed from IT_CHECK_ENABLE_JAMVM.
@@ -2683,7 +2687,7 @@
 	(IT_WITH_HG_REVISION): Renamed from IT_CHECK_WITH_HG_REVISION.
 	(IT_WITH_TZDATA_DIR): Renamed from IT_CHECK_WITH_TZDATA_DIR.
 
-2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-25  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_WITH_CORBA_SRC_ZIP): Treat
@@ -2693,7 +2697,7 @@
 	(IT_WITH_JDK_SRC_ZIP): Likewise.
 	(IT_WITH_LANGTOOLS_DROP_ZIP): Likewise.
 
-2011-02-23  Andrew John Hughes  <ahughes@redhat.com>
+2011-02-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_CHECK_WITH_CACAO_SRC_ZIP): Treat
@@ -2705,7 +2709,7 @@
 	(IT_WITH_JAF_DROP_ZIP): Likewise.
 	(IT_WITH_JAXWS_DROP_ZIP): Likewise.
 
-2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-25  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_WITH_CORBA_SRC_ZIP): Check zip exists
@@ -2715,7 +2719,7 @@
 	(IT_WITH_JDK_SRC_ZIP): Likewise.
 	(IT_WITH_LANGTOOLS_SRC_ZIP): Likewise.
 
-2011-02-23  Andrew John Hughes  <ahughes@redhat.com>
+2011-02-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_CHECK_WITH_CACAO_SRC_ZIP): Check zip exists
@@ -2726,7 +2730,7 @@
 	(IT_WITH_JAF_DROP_ZIP): Likewise.
 	(IT_WITH_JAXWS_DROP_ZIP): Likewise.
 
-2011-02-23  Andrew John Hughes  <ahughes@redhat.com>
+2011-02-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	Make java, javah, rmic and jar macros more
@@ -2740,13 +2744,13 @@
 	(IT_FIND_NATIVE2ASCII): Invert executable test
 	for clarify.
 
-2011-05-25  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-25  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* INSTALL:
 	Fix references to openjdk/build/<os>-<arch>
 	to reference openjdk.build.
 
-2011-02-23  Andrew John Hughes  <ahughes@redhat.com>
+2011-02-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* INSTALL: Mention --with-alt-jamvm-src-zip.
 	* acinclude.m4:
@@ -2754,14 +2758,14 @@
 	AM_CONDITIONAL.  Check that the specified value
 	is a valid file using test.
 
-2011-02-23  Andrew John Hughes  <ahughes@redhat.com>
+2011-02-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* INSTALL:
 	Update with native2ascii option and JamVM.
 	Mention --without-hotspot-build in HotSpot
 	documentation.
 
-2011-02-22  Andrew John Hughes  <ahughes@redhat.com>
+2011-02-22  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Use more accurate ENABLE_CACAO rather
 	than WITH_CACAO.
@@ -2769,14 +2773,14 @@
 	Replace WITH_CACAO throughout.
 	* acinclude.m4: Likewise.
 
-2011-02-22  Andrew John Hughes  <ahughes@redhat.com>
+2011-02-22  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR497: Mercurial revision detection not very reliable
 	* acinclude.m4:
 	(IT_OBTAIN_HG_REVISIONS): Use hg id rather
 	than hg tip.
 
-2011-02-22  Andrew John Hughes  <ahughes@redhat.com>
+2011-02-22  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR103: Usage of native2ascii during bootstrap.
 	* Makefile.am:
@@ -2786,7 +2790,7 @@
 	(IT_FIND_NATIVE2ASCII): Added.
 	* configure.ac: Call IT_FIND_NATIVE2ASCII.
 
-2011-05-23  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_LOCATE_NSS): Add --enable-nss logic.
@@ -2801,13 +2805,13 @@
 	because the test base class can not be used
 	in IcedTea due to questionable licence.
 
-2011-05-22  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-22  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(replace-hotspot): Revert to copying not
 	linking; breaks the build in strange ways.
 
-2011-05-20  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	Rename top-level IT_FIND_JAVAC
@@ -2816,13 +2820,13 @@
 	Call IT_FIND_JAVA_COMPILER not
 	IT_FIND_JAVAC.
 
-2011-05-20  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(extract-hotspot): Use absolute path when
 	creating symbolic link.
 
-2011-05-20  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(extract): Depend on extract-hotspot and
@@ -2836,7 +2840,7 @@
 	(patch-fsg): Depend on sanitise-openjdk.
 	(icedtea-boot): Depend on generated.
 
-2011-05-20  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Ensure all our macros have an IT_ prefix.
 	* acinclude.m4:
@@ -2850,7 +2854,7 @@
 	(IT_ENABLE_HG): Fix dependence of IT_WITH_PROJECT.
 	* configure.ac: Use renamed macros throughout.
 
-2011-02-21  Andrew John Hughes  <ahughes@redhat.com>
+2011-02-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Ensure all our macros have an IT_ prefix.
 	* acinclude.m4:
@@ -2889,7 +2893,7 @@
 	(IT_OBTAIN_HG_REVISIONS): Fix dependence on WITH_OPENJDK_SRC_DIR.
 	* configure.ac: Use renamed macros throughout.
 
-2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR714: Forwardport replace-hotspot support.
 	* Makefile.am:
@@ -3109,7 +3113,7 @@
 	to avoid exception thrown when BufferedImage is created.
 	(JDK_SHA256SUM): Likewise
 
-2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(clean-jamvm): Don't remove clean-extract-jamvm.stamp
@@ -3165,13 +3169,13 @@
 	test runtime/6929067/Test6929067.sh
 	(HOTSPOT_SHA256SUM): Likewise
 
-2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* scripts/update_tarballs.sh:
 	Pass $DOWNLOAD_DIR through to
 	gen_changeset_and_sha256sums.sh.
 
-2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* scripts/gen_changeset_and_sha256sums.sh,
 	* scripts/update_tarballs.sh:
@@ -3185,7 +3189,7 @@
 	of 6664512 and include Mutter fix.
 	(JDK_SHA256SUM): Likewise.
 
-2011-05-18  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(bootstrap-directory-stage1): Link tools.jar
@@ -3203,7 +3207,7 @@
 	Corrected JTreg harness - this tool now accepts "process" flag for
 	"compile" tag.
 
-2011-05-04  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* remove-intree-libraries.sh: Renamed.
 	* INSTALL: Updated with new option.
@@ -3221,7 +3225,7 @@
 	Delete LCMS source code only if system version is
 	being used.
 
-2011-05-04  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Move to using icedtea servers.
 	* Makefile.am:
@@ -3238,7 +3242,7 @@
 	(extract-openjdk): Use $(ICEDTEA_PREFIX) in
 	place of 'jdk7'.
 
-2011-05-03  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/hotspot/default/gcc-suffix.patch,
 	* patches/hotspot/default/headers.patch,
@@ -3264,7 +3268,7 @@
 	Moved from hotspot/default or merged with existing
 	patches.
 
-2011-05-03  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/boot/icedtea-jaxp-dependency.patch,
 	* patches/boot/icedtea-jopt.patch,
@@ -3379,7 +3383,7 @@
 	* patches/update-bootclasspath.patch:
 	Relocated versions of above.
 
-2011-05-03  Andrew John Hughes  <ahughes@redhat.com>
+2011-05-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(JDK_CHANGESET): Bumped to include
@@ -3393,7 +3397,7 @@
 	* README: Remove references to plugin and webstart.
 	* configure.ac: Do not check for plugin.
 
-2011-04-29  Andrew John Hughes  <ahughes@redhat.com>
+2011-04-29  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/boot/icedtea-dyn.patch:
 	Dropped; java.lang.invoke now compiled in
@@ -3466,34 +3470,34 @@
 
 	* patches/boot/test_gamma.patch: Skip test_gamma for shark too.
 
-2011-04-19  Andrew John Hughes  <ahughes@redhat.com>
+2011-04-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(JDK_CHANGESET): Include security fixes
 	from 2011/02/15.
 	(JDK_SHA256SUM): Likewise.
 
-2011-04-19  Andrew John Hughes  <ahughes@redhat.com>
+2011-04-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(HOTSPOT_CHANGESET): Incorporate ARM interpreter
 	code removal, JSR 292 Zero support and merge issue fix.
 	(HOTSPOT_SHA256SUM): Likewise.
 
-2011-04-19  Andrew John Hughes  <ahughes@redhat.com>
+2011-04-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(HOTSPOT_CHANGESET): Incorporate Zero/Shark fixes
 	and security fix.
 	(HOTSPOT_SHA256SUM): Likewise.
 
-2011-04-18  Andrew John Hughes  <ahughes@redhat.com>
+2011-04-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(JDK_CHANGESET): Remove unneeded import in Rhino patch.
 	(JDK_SHA256SUM): Likewise.
 
-2011-04-18  Andrew John Hughes  <ahughes@redhat.com>
+2011-04-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-freetypeversion.patch:
 	Moved upstream.
@@ -3551,7 +3555,7 @@
 	* remove-intree-libraries.sh: New script to remove
 	intree libraries.
 
-2011-03-29  Andrew John Hughes  <ahughes@redhat.com>
+2011-03-29  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR616, PR99: Don't statically link libstdc++
 	* Makefile.am: Bump changesets and checksums
@@ -3562,7 +3566,7 @@
 	* patches/icedtea-gcc-suffix.patch:
 	Regenerated.
 
-2011-03-21  Andrew John Hughes  <ahughes@redhat.com>
+2011-03-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/4964490-generify_hotspot_jdi.patch:
 	Removed, in IcedTea tree.
@@ -3607,7 +3611,7 @@
 	* patches/icedtea-systemtap.patch:
 	Regenerated.
 
-2011-03-14  Andrew John Hughes  <ahughes@redhat.com>
+2011-03-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Perform minimal compilation prior to bootstrap
 	build.
@@ -3670,7 +3674,7 @@
 	* patches/icedtea-rhino.patch: Remove the classpath update hunk, as it has
 	now been moved to icedtea-update-bootclasspath.patch.
 
-2010-12-09  Andrew John Hughes  <ahughes@redhat.com>
+2010-12-09  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/hotspot/default/icedtea-gcc-4.3.patch,
 	* patches/hotspot/default/icedtea-sparc-buildfixes.patch,
@@ -3694,7 +3698,7 @@
 	* patches/icedtea-static-libstdc++.patch:
 	Remove unused patches.
 
-2010-12-09  Andrew John Hughes  <ahughes@redhat.com>
+2010-12-09  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Remove NetX and the IcedTea plugin; now developed
 	in IcedTea-Web.
@@ -3952,11 +3956,11 @@
 	(extra-lib/about.jar): Likewise.
 	(plugin-tests): Likewise.
 
-2010-12-08  Andrew John Hughes  <ahughes@redhat.com>
+2010-12-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* javac.in: Add missing semicolon.
 
-2010-12-08  Andrew John Hughes  <ahughes@redhat.com>
+2010-12-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(extra-class-files): Depend on netx-dist
@@ -3965,7 +3969,7 @@
 	* javac.in: Pass the memory options to javac
 	as done when --disable-bootstrap is enabled.
 
-2010-12-08  Andrew John Hughes  <ahughes@redhat.com>
+2010-12-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* javac.in:
 	Pass -Xprefer:source (if javac is used) to
@@ -3977,7 +3981,7 @@
 	* patches/icedtea-hotspot-6b11-7b24.patch: Remove.
 	* patches/icedtea-hotspot-6b14-7b24.patch. Remove.
 
-2010-11-24  Andrew John Hughes  <ahughes@redhat.com>
+2010-11-24  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Bump to b117.  Move to using drops from
 	the IcedTea server.
@@ -4029,7 +4033,7 @@
 	* patches/icedtea-libraries.patch: Rerolled.
 	* patches/sh4-support.patch: Remove CORBA chunk.
 
-2010-09-14  Andrew John Hughes  <ahughes@redhat.com>
+2010-09-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am,
 	(EXTRA_DIST): Remove xrender patches and
@@ -4049,7 +4053,7 @@
 	* patches/icedtea-hotspot-use-idx_t.patch: Remove.
 	* patches/icedtea-hotspot-params-cast-size_t.patch: Remove.
 
-2010-09-07  Andrew John Hughes  <ahughes@redhat.com>
+2010-09-07  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-6977640.patch: Dropped.
 	* Makefile.am: Drop above patch and bump
@@ -4068,7 +4072,7 @@
 	fixes for ARM and S390.
 	* patches/cacao/launcher.patch: Regenerate.
 
-2010-09-06  Andrew John Hughes  <ahughes@redhat.com>
+2010-09-06  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Bump to b106.
 	* ergo.c.in,
@@ -4223,12 +4227,12 @@
 	(SharkOSREntryCacher::process_monitor): Match Shark in icedtea6,
 	makes OSR work by removing vestigal check.
 
-2010-07-29  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-29  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Add 1.14 section.
 	* configure.ac: Bump to 1.14-pre.
 
-2010-07-29  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-29  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Mention removal of old plugin.
 
@@ -4245,11 +4249,11 @@
 	New patch to remove HeapWordSize adjustment.
 	* tapset/hotspot.stp.in: Add adjustment here.
 
-2010-07-29  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-29  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Final formatting cleanup.
 
-2010-07-28  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-28  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Updated.
 	* configure.ac: Bump version to 1.13.
@@ -4347,12 +4351,12 @@
 	(checkPermission): Remove all property permission decision making code
 	and collapse it all into SecurityDesc.java.
 
-2010-07-23  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump to latest JDK tree.
 
-2010-07-23  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* netx/netscape/javascript/JSObjectCreatePermission.java:
 	Remove duplicate file.
@@ -4362,7 +4366,7 @@
 	* netx/net/sourceforge/jnlp/Launcher.java: Synchronise
 	with IcedTea6 version.
 
-2010-07-23  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* netx/net/sourceforge/jnlp/security/AccessWarningPane.java:
 	(addComponents()): Fix call to getType().
@@ -4371,7 +4375,7 @@
 	(getType): Rename to getAccessType() to avoid conflict with
 	Window.getType() in OpenJDK7.
 
-2010-07-23  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* netx/javax/jnlp/BasicService.java,
 	* netx/javax/jnlp/ClipboardService.java,
@@ -4674,7 +4678,7 @@
     (getEncoding): A new method which checks the first four bytes of input
 	and determines what the files encoding is.
 
-2010-07-08  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(rebuild): Add new target to allow a quick
@@ -4729,7 +4733,7 @@
 	(activateJars): Always call activateNative.
 	(activateNative): Search for native code anywhere in the jar.
 
-2010-07-22  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-22  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* INSTALL,
 	* README: Updated to match current state of
@@ -4741,7 +4745,7 @@
 	* configure.ac: Make the --disable-plugin help clearer
 	by replacing 'LiveConnect plugin' with 'browser plugin'.
 
-2010-07-20  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(ICEDTEA_BUILD_TARGET): Match formatting used by IcedTea6.
@@ -4755,7 +4759,7 @@
 
 	(VERBOSE): Use value of VERBOSE passed from user.
 
-2010-07-20  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* configure.ac:
 	Remove redundant call to WITH_OPENJDK_SRC_DIR.
@@ -4763,7 +4767,7 @@
 	* Makefile.am:
 	(JDK_TEST_SUITE): Remove old reference to TEST_SUITES.
 
-2010-07-20  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Simplify the plugin build.
 	* Makefile.am:
@@ -4802,7 +4806,7 @@
 	longer does anything).  Remove JNLP_ABOUT_NEEDED;
 	now identical to ENABLE_PLUGIN.
 
-2010-07-18  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Avoid recursion in working out which
@@ -4814,7 +4818,7 @@
 	(JDK_TEST_SUITE): Set to 'jdk' if
 	the JDK test suite is on.
 
-2010-07-18  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Allow all or individual test suites to be
 	disabled.
@@ -4833,20 +4837,20 @@
 	* configure.ac:
 	Call new macros.
 
-2010-07-16  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-16  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(clean-IcedTeaPlugin): Always check for existence
 	before using rmdir.
 	(clean-pulse-java): Likewise.
 
-2010-07-06  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-06  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(PULSE_JAVA_BUILDDIR): Use a different name from
 	the source directory to avoid confusion.
 
-2010-07-16  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-16  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Make variable naming clearer.  Replace bootstrap/boot,
 	bootstrap/icedtea, bootstrap/jdk1.6.0 and $(PLUGIN_SRCDIR)/java
@@ -4870,7 +4874,7 @@
 	Reported by William Cohen <wcohen@redhat.com>
 	* tapset/hotspot.stp.in (object_alloc): size is arg4, not arg3.
 
-2010-07-15 Andrew John Hughes  <ahughes@redhat.com>
+2010-07-15 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR icedtea/521
 	* Makefile.am:
@@ -4878,7 +4882,7 @@
 	generated is altered by the build.
 	Use chmod -R rather than find.
 
-2010-07-14 Andrew John Hughes  <ahughes@redhat.com>
+2010-07-14 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Fix new issues with make distcheck.
 	* patches/cacao/version-parsing.patch:
@@ -4905,7 +4909,7 @@
 	(netx): Likewise.  Fix permissions on copied resources.
 	(netx-dist): Add prefix to NETX_SRCDIR.
 
-2010-07-08  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(clean-clone-boot): Don't depend on clean-patch-boot,
@@ -4913,7 +4917,7 @@
 	(clean-extract-openjdk): Likewise for clean-patch and
 	clean-patch-fsg.
 
-2010-07-04  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(clean-local): Add missing dependencies.
@@ -4923,7 +4927,7 @@
 	(rewrite-rhino): Fix build directory path.
 	(clean-rewrite-rhino): Inverse of rewrite-rhino.
 
-2010-07-01  Andrew John Hughes  <ahughes@redhat.com>
+2010-07-01  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(distclean-local): Delete empty tapset
@@ -4935,7 +4939,7 @@
 	libraries.
 	(IT_CHECK_XULRUNNER_VERSION): Use pkgconfig --modversion as version.
 
-2010-07-12 Andrew John Hughes  <ahughes@redhat.com>
+2010-07-12 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR icedtea/521
 	(ICEDTEA_ENV): Use generated.build.
@@ -4944,7 +4948,7 @@
 	distinct (and present on srcdir=builddir builds)
 	(clean-generated): Delete generated.build in all cases.
 
-2010-07-12 Andrew John Hughes  <ahughes@redhat.com>
+2010-07-12 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR icedtea/521
 	* Makefile.am:
@@ -4961,20 +4965,20 @@
 	* ports/hotspot/src/cpu/zero/vm/shark_globals_zero.hpp:
 	Set MaxRAM.
 
-2010-07-12 Andrew John Hughes  <ahughes@redhat.com>
+2010-07-12 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(clean-add-zero): Delete all created directories.
 	(clean-add-debug-zero): Likewise.
 
-2010-06-28 Andrew John Hughes  <ahughes@redhat.com>
+2010-06-28 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(clone-boot): Clone build directory too if
 	it exists.
 	(patch-jaxws): Fix typo.
 
-2010-06-27 Andrew John Hughes  <ahughes@redhat.com>
+2010-06-27 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(OPENJDK_BOOT_TREE): Set to patch-jaxws.stamp.
@@ -4987,13 +4991,13 @@
 	tree.
 	(clean-patch-jaxws): Cleanup for above.
 
-2010-06-25 Andrew John Hughes  <ahughes@redhat.com>
+2010-06-25 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR icedtea/512:
 	(extract-jaxws): Depend on $(OPENJDK_BOOT_TREE)
 	and patch that tree instead.
 
-2010-06-24 Andrew John Hughes  <ahughes@redhat.com>
+2010-06-24 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/cacao/package-version.patch:
 	Removed; breaks CACAO versioning.
@@ -5024,7 +5028,7 @@
 	patched files.
 	* patches/cacao/package-version.patch: Likewise.
 
-2010-06-22 Andrew John Hughes  <ahughes@redhat.com>
+2010-06-22 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Remove VisualVM support, now maintained at
 	http://icedtea.classpath.org/hg/visualvm
@@ -5062,7 +5066,7 @@
 	VisualVM macros.
 	* visualvm.desktop: Removed.
 
-2010-06-21 Andrew John Hughes  <ahughes@redhat.com>
+2010-06-21 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/cacao/memory.patch:
 	Increase the memory used in the langtools
@@ -5070,7 +5074,7 @@
 	* Makefile.am: Apply above patch when
 	building with CACAO.
 
-2010-06-21 Andrew John Hughes  <ahughes@redhat.com>
+2010-06-21 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/cacao/native-resolve.patch,
 	* patches/cacao/no-mmap-first-page.patch,
@@ -5089,7 +5093,7 @@
 	* patches/cacao/jsig.patch:
 	Recreated against hg snapshot of CACAO.
 
-2010-06-14 Andrew John Hughes  <ahughes@redhat.com>
+2010-06-14 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Don't print out the return value of pthread_self
 	which is a pthread_t.  pthread_t is an opaque type
@@ -5121,7 +5125,7 @@
 	* plugin/icedteanp/IcedTeaNPPlugin.cc: Use getproperty NPAPI call instead
 	of evaluate, to get page URL.
 
-2010-06-15  Andrew John Hughes  <ahughes@redhat.com>
+2010-06-15  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump HotSpot changeset ID and HA256 checksum
@@ -5132,7 +5136,7 @@
 	PR icedtea/495
 	* patches/boot/jar.patch: Apply workaround in more places.
 
-2010-06-14  Andrew John Hughes  <ahughes@redhat.com>
+2010-06-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(SRC_DIR_LINK): Use reflink only if hard
@@ -5148,7 +5152,7 @@
 	* configure.ac:
 	Invoke IT_CAN_HARDLINK_TO_SOURCE_TREE.
 
-2010-06-14  Andrew John Hughes  <ahughes@redhat.com>
+2010-06-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(REFLINK): Remove unneeded quotation.
@@ -5164,7 +5168,7 @@
 	and whether hardlinking is possible, defining
 	OPENJDK_SRC_DIR_HARDLINKABLE if it is.
 
-2010-06-14  Andrew John Hughes  <ahughes@redhat.com>
+2010-06-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(REFLINK): Set to --reflink=auto if
@@ -5180,14 +5184,14 @@
 	* configure.ac:
 	Invoke IT_CP_SUPPORTS_REFLINK.
 
-2010-06-12  Andrew John Hughes  <ahughes@redhat.com>
+2010-06-12  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump HotSpot and JDK changeset IDs and
 	SHA256 checksums to incorporate recent
 	Zero fixes and NSS error output fix.
 
-2010-04-26  Andrew John Hughes  <ahughes@redhat.com>
+2010-04-26  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Use build directories outside the source
 	tree and use lightweight copies for external
@@ -5207,7 +5211,7 @@
 	(netx-dist.stamp): Likewise.
 	(plugin-tests.stamp): Likewise.
 
-2010-06-07 Andrew John Hughes  <ahughes@redhat.com>
+2010-06-07 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Make BOOT_BUILD_OUTPUT_DIR absolute and dispense
 	with ICEDTEA_BUILD_DIR and ICEDTEA_BUILD_DIR_ECJ.
@@ -5655,13 +5659,13 @@
 	Removed, upstream versions are now used.
 	* AUTHORS: Add myself.
 
-2010-06-07  Andrew John Hughes  <ahughes@redhat.com>
+2010-06-07  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-systemtap.patch:
 	Remove parts upstreamed in
 	6893483: DTrace probe return values for a couple JNI methods are wrong
 
-2010-04-28  Andrew John Hughes  <ahughes@redhat.com>
+2010-04-28  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Add patch when SystemTap is enabled to support
@@ -5701,7 +5705,7 @@
 	introduced with LLVM r100304.
 	(SharkBuilder::CreateMemset): Likewise
 
-2010-04-18  Andrew John Hughes  <ahughes@redhat.com>
+2010-04-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(FIND_JAR): Log all output to config.log
@@ -5727,7 +5731,7 @@
 	(plugin_test_appletviewer, plugin_start_appletviewer): Start the new
 	process with the filtered environment.
 
-2010-04-12  Andrew John Hughes  <ahughes@redhat.com>
+2010-04-12  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Use NETX_SRCDIR in EXTRA_DIST.
@@ -5745,7 +5749,7 @@
 	is enabled or disabled by default.
 	* patches/icedtea-nss-not-enabled-config.patch: New.
 
-2010-04-08  Andrew John Hughes  <ahughes@redhat.com>
+2010-04-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* configure.ac: Move NSS detection to macros
 	in acinclude.m4.
@@ -5832,7 +5836,7 @@
 
 	* acinclude.m4 (ENABLE_ZERO_BUILD): Depend on IT_SET_ARCH_SETTINGS.
 
-2010-03-29  Andrew John Hughes  <ahughes@redhat.com>
+2010-03-29  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(NETX_BOOTSTRAP_CLASSES): Classes required to
@@ -5934,26 +5938,26 @@
 
         * NEWS: Update for 1.8.
 
-2010-06-03  Andrew John Hughes  <ahughes@redhat.com>
+2010-06-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(clean-rt): Add missing escapes to join lines
 	of if statement.
 
-2010-06-03  Andrew John Hughes  <ahughes@redhat.com>
+2010-06-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* plugin/icedteanp/IcedTeaPluginRequestProcessor.cc,
 	* plugin/icedteanp/IcedTeaPluginUtils.cc,
 	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java:
 	Synchronise with version on IcedTea6 1.7 branch.
 
-2010-06-03  Andrew John Hughes  <ahughes@redhat.com>
+2010-06-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(clean-local): Add missing call to clean-rt
 	which should have replaced clean-plugs.
 
-2010-03-16  Andrew John Hughes  <ahughes@redhat.com>
+2010-03-16  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* IcedTeaPlugin.cc,
 	* plugin/icedtea/java/netscape/javascript/JSException.java,
@@ -6016,7 +6020,7 @@
 	Remove duplicate declaration of member_identifier
 	arising from merge.
 
-2010-06-02  Andrew John Hughes  <ahughes@redhat.com>
+2010-06-02  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(IT_LANGUAGE_SOURCE_VERSION): Bump to 6
@@ -6026,7 +6030,7 @@
 	* patches/xrender/icedtea-001.patch:
 	Recreated.
 
-2010-03-16  Andrew John Hughes  <ahughes@redhat.com>
+2010-03-16  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	NetX/plugin build sync (3/3):
 	* patches/icedtea-copy-plugs.patch:
@@ -6060,7 +6064,7 @@
 	* plugin/icedteanp/IcedTeaPluginRequestProcessor.h: Removed unused
 	function declerations. Added decleration for finalize.
 
-2010-03-15  Andrew John Hughes  <ahughes@redhat.com>
+2010-03-15  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	NetX/plugin build sync (2/3):
 	* patches/icedtea-liveconnect-dist.patch,
@@ -6132,7 +6136,7 @@
 	(startProcessing): Call consumer.queue() instead of consumer.consume().
 	(postMessage): Remove unused method.
 
-2010-03-12  Andrew John Hughes  <ahughes@redhat.com>
+2010-03-12  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(NETX_EXTRA_DIR): Path to extra NetX resource files.
@@ -6242,7 +6246,7 @@
 	* plugin/tests/LiveConnect/common.js
 	(testAll): Check eval tests checkbox before calling doTest();
 
-2010-03-08  Andrew John Hughes  <ahughes@redhat.com>
+2010-03-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(IT_CFLAGS): General CFLAGS for all IcedTea
@@ -6265,7 +6269,7 @@
 	* Makefile.am:
 	(ICEDTEA_BOOT_PATCHES): Add DISTRIBUTION_BOOT_PATCHES.
 
-2010-03-04  Andrew John Hughes  <ahughes@redhat.com>
+2010-03-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Don't unset ICEDTEA_BUILD_TARGET if unused.
@@ -6282,7 +6286,7 @@
 	(sharkCompiler::sharkCompiler): Move mattr define to make its memory
 	valid in the scope where it are used by the args vector.
 
-2010-03-01  Andrew John Hughes  <ahughes@redhat.com>
+2010-03-01  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(stamps/cacao.stamp): Depend on rt.stamp
@@ -6290,13 +6294,13 @@
 	than the contents of lib/rt, so that --with-openjdk
 	builds work.
 
-2010-03-01  Andrew John Hughes  <ahughes@redhat.com>
+2010-03-01  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(stamps/jtreg.stamp): Depend on
 	stamps/icedtea-stage2.stamp
 
-2010-06-01 Andrew John Hughes  <ahughes@redhat.com>
+2010-06-01 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-jaxws-getdtdtype.patch:
 	Moved to...
@@ -6305,7 +6309,7 @@
 	* patches/boot/jaxws-getdtdtype.patch:
 	...here.
 
-2010-06-01 Andrew John Hughes  <ahughes@redhat.com>
+2010-06-01 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Drop fake tools.jar in bootstrap JDK.
 	* Makefile.am:
@@ -6321,7 +6325,7 @@
 	Remove references to tools.jar, setting SA_CLASSPATH
 	to rt.jar instead of tools.jar.
 
-2010-06-01 Andrew John Hughes  <ahughes@redhat.com>
+2010-06-01 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Update langtools
 	changeset ID and sha256 sum to bring in
@@ -6334,7 +6338,7 @@
 	(SharkCompiler::generate_native_code): Undefine debug code for
 	NDEBUG builds
 
-2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
+2010-02-24 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Add THANKYOU to
 	EXTRA_DIST.
@@ -6348,20 +6352,20 @@
 	* rt/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java: Implement
 	allowed property get/set based on specifications.
 
-2010-05-28 Andrew John Hughes  <ahughes@redhat.com>
+2010-05-28 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(rewrite-rhino.stamp): Join class building
 	to jar creation with &&.
 
-2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
+2010-02-24 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(rewrite-rhino.stamp): Use full path to
 	jar application to avoid relying on the one
 	on the path.
 
-2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
+2010-02-24 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Add missing pulse-java alias and reorganise
@@ -6370,7 +6374,7 @@
 	directive for build directory to pick up generated
 	headers.
 
-2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
+2010-02-24 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(icedtea.stamp): Prefix libpulse-java.so with
@@ -6379,7 +6383,7 @@
 	(clean-pulse-java): No need to delete libpulse-java.so
 	as no longer at top-level.
 
-2010-02-24 Andrew John Hughes  <ahughes@redhat.com>
+2010-02-24 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioStreamVolumeControl.c:
 	Removed, never built and no corresponding
@@ -6490,7 +6494,7 @@
 	* plugin/icedteanp/IcedTeaNPPlugin.cc: Use JDK_UPDATE_VERSION to set the
 	jpi version.
 
-2010-05-28 Andrew John Hughes  <ahughes@redhat.com>
+2010-05-28 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(DEBUG_BUILD_OUTPUT_DIR): New variable to represent
@@ -6511,7 +6515,7 @@
 
 	* ports/hotspot/make/linux/makefiles/shark.make: Comment fix.
 
-2010-02-21 Andrew John Hughes  <ahughes@redhat.com>
+2010-02-21 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(icedtea-debug.stamp): Add missing -debug on
@@ -6533,14 +6537,14 @@
 	* plugin/icedteanp/java/sun/applet/PluginAppletViewer.java: Centralized
 	and increased timeouts to give slow-loading applets enough time to load.
 
-2010-02-19 Andrew John Hughes  <ahughes@redhat.com>
+2010-02-19 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(FIND_RHINO_JAR): Clear RHINO_JAR variable
 	if it still contains "no" at the end of the
 	macro.
 
-2010-05-26 Andrew John Hughes  <ahughes@redhat.com>
+2010-05-26 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Update HotSpot changeset and SHA256 sum to
@@ -6555,7 +6559,7 @@
 	(rewrite-rhino.stamp): Join dependent parts with &&.
 	(clean-tools-jar): Remove boot tools.jar symlink.
 
-2010-02-17 Andrew John Hughes  <ahughes@redhat.com>
+2010-02-17 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR icedtea/179
 	* ChangeLog: Remove rogue whitespace highlighted
@@ -6609,7 +6613,7 @@
 	* contrib/jck/compile-native-code.sh:
 	Support for generation of native libraries for JCK on ARM
 
-2010-02-15 Andrew John Hughes  <ahughes@redhat.com>
+2010-02-15 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* rewriter/agpl-3.0.txt,
 	* rewriter/com/redhat/rewriter/ClassRewriter.java:
@@ -6654,13 +6658,13 @@
 	* ports/hotspot/src/share/vm/shark/llvmHeaders.hpp
 	(llvm/ModuleProvider.h): Undefine when using LLVM 2.7.
 
-2010-05-19 Andrew John Hughes  <ahughes@redhat.com>
+2010-05-19 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Patch splashscreen to build against libpng 1.4.
 	* Makefile.am:
 	Bump JDK changeset and SHA256 sum.
 
-2010-01-26 Andrew John Hughes  <ahughes@redhat.com>
+2010-01-26 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(stamps/plugin-tests.stamp): Add
@@ -6671,19 +6675,19 @@
 
 	* Makefile.am: Remove quoting from ICEDTEA_NAME ICEDTEA_REV ICEDTEA_PKG.
 
-2010-01-25 Andrew John Hughes  <ahughes@redhat.com>
+2010-01-25 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Remove trailing space after IcedTea version
 	in plugin version information when package
 	version is not set.
 	
-2010-05-18 Andrew John Hughes  <ahughes@redhat.com>
+2010-05-18 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/boot/scanner-charsets.patch:
 	Patch openjdk-boot not openjdk.
 
-2010-05-17 Andrew John Hughes  <ahughes@redhat.com>
+2010-05-17 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/boot/icedtea-dbcs.patch,
 	* patches/boot/icedtea-sbcs.patch,
@@ -6700,13 +6704,13 @@
 	Collect together all patches to avoid use
 	of java.util.Scanner.
 
-2010-05-17 Andrew John Hughes  <ahughes@redhat.com>
+2010-05-17 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(stamps/extract-jaxws.stamp): Use absolute
 	path to stamps.
 
-2010-05-17 Andrew John Hughes  <ahughes@redhat.com>
+2010-05-17 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	Remove duplicate IT_XULRUNNER_VERSION macro.
@@ -6719,7 +6723,7 @@
 	* plugin/icedteanp/IcedTeaNPPlugin.cc:
 	Use PRInt32 rather than PRInt32_t for port.
 
-2010-01-25 Andrew John Hughes  <ahughes@redhat.com>
+2010-01-25 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* IcedTeaPlugin.cc:
 	Standardise plugin versioning.
@@ -6738,25 +6742,25 @@
 	* plugin/icedteanp/IcedTeaNPPlugin.cc:
 	Standardise plugin versioning.
 
-2010-01-25 Andrew John Hughes  <ahughes@redhat.com>
+2010-01-25 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-libraries.patch:
 	Make all dlopen choices at build-time,
 	not just one.  Support libjpeg8 as well.
 
-2010-01-21  Andrew John Hughes  <ahughes@redhat.com>
+2010-01-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR icedtea/433
 	* Makefile.am:
 	Add set -e to tarball extractions so
 	that they fail immediately.
 
-2010-05-14  Andrew John Hughes  <ahughes@redhat.com>
+2010-05-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Remove reference to hotspot/default/icedtea-version.patch.
 
-2010-01-20  Andrew John Hughes  <ahughes@redhat.com>
+2010-01-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Pass DERIVATIVE_ID and HOTSPOT_BUILD_VERSION
@@ -6781,13 +6785,13 @@
 	Create a link from client to server after CACAO install
 	to make openjdk find the expected client dir on 32bit systems.
 
-2010-01-18 Andrew John Hughes  <ahughes@redhat.com>
+2010-01-18 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* configure.ac:
 	Use AC_LANG_PUSH and AC_LANG_POP instead
 	of deprecated SAVE and RESTORE macros.
 	
-2010-01-16 Andrew John Hughes  <ahughes@redhat.com>
+2010-01-16 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_CHECK_NUMBER_OF_PARALLEL_JOBS):
@@ -6800,7 +6804,7 @@
 	Dependency of above.  Uses getconf to
 	obtain the number of available processors.
 	
-2010-01-16 Andrew John Hughes  <ahughes@redhat.com>
+2010-01-16 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	configure output and option cleanup
 	* acinclude.m4:
@@ -6833,7 +6837,7 @@
 	* Makefile.am (stamps/icedtea-npplugin): New target, add file
 	dependencies for building the IcedTeaNPPlugin.so.
 
-2010-05-11 Andrew John Hughes  <ahughes@redhat.com>
+2010-05-11 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* .hgignore: Remove jar files.
 
@@ -6853,7 +6857,7 @@
 	* plugin/icedteanp/IcedTeaPluginUtils.cc
 	(isObjectJSArray): Handle void constructor objects like 'window'.
 
-2010-01-11 Andrew John Hughes  <ahughes@redhat.com>
+2010-01-11 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-libraries.patch:
 	Decide which libjpeg library to load
@@ -6861,7 +6865,7 @@
 	JPEG_LIB_VERSION.
 	(See http://bugs.debian.org/563999)
 
-2010-05-11 Andrew John Hughes  <ahughes@redhat.com>
+2010-05-11 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Fix issues with the CACAO build so it at
 	least builds again (though it still fails to
@@ -6891,7 +6895,7 @@
 	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
 	* NEWS: Mention SH support.
 
-2010-05-10  Andrew John Hughes  <ahughes@redhat.com>
+2010-05-10  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/hotspot/default/icedtea-shark.patch:
 	Recreated against b89.
@@ -7368,7 +7372,7 @@
 	dependent on the llvm version.
 	Made deallocateMemForFunction method dependent on the llvm version.
 
-2010-05-06  Andrew John Hughes  <ahughes@redhat.com>
+2010-05-06  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Remove euctw patch.
 	* patches/boot/icedtea-euctw.patch,
@@ -7380,7 +7384,7 @@
 	precompiled header setting DISABLE_PRECOMPILED_HEADER.
 	* Makefile.am (ICEDTEA_PATCHES): Apply the above.
 
-2010-05-06  Andrew John Hughes  <ahughes@redhat.com>
+2010-05-06  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/boot/icedtea-pr40616.patch:
 	Extend with fix for new HKSCS.java file.
@@ -7394,29 +7398,29 @@
 
 	* NEWS: Mention systemtap JNI class tracing support.
 
-2010-05-06  Andrew John Hughes  <ahughes@redhat.com>
+2010-05-06  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS:
 	Add 1.13 with libjpeg7 support, OpenJDK7
 	milestone 7 and the latest security updates.
 
-2010-05-05  Andrew John Hughes  <ahughes@redhat.com>
+2010-05-05  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/boot/icedtea-pr40616.patch:
 	Regenerated due to change from GenerateEUC_TW
 	to EUC_TW.
 
-2009-10-22  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-22  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* INSTALL:
 	Update HotSpot build documentation.
 
-2009-05-14  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* INSTALL:
 	Add notes on using alternate HotSpot builds.
 
-2009-10-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Pick up HotSpot URL from hotspot.map.
@@ -7462,7 +7466,7 @@
 
 	* tapsets/hotspot.stp.in (hotspot.gc_end): Match gc__end, not begin.
 
-2010-05-05 Andrew John Hughes  <ahughes@redhat.com>
+2010-05-05 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Bump to b89.
 	* patches/icedtea-fonts.patch:
@@ -7491,7 +7495,7 @@
 	* patches/icedtea-rhino.patch:
 	Recreated due to changes for module build.
 
-2010-04-26 Andrew John Hughes  <ahughes@redhat.com>
+2010-04-26 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Make sure correct classpaths are used by pre-build
 	javac targets and use variables for NetX and plugin
@@ -7517,12 +7521,12 @@
 	as classpath.  Make javac invocation a single statement so
 	we break out on failure.
 
-2010-04-26 Andrew John Hughes  <ahughes@redhat.com>
+2010-04-26 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(rt.stamp): Change JDK_SHARE to SHARE to match IcedTea6.
 
-2010-03-31 Andrew John Hughes  <ahughes@redhat.com>
+2010-03-31 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(HOTSPOT_CHANGESET): Updated for new security patches.
@@ -7545,14 +7549,14 @@
 	fix line numbers and context for the
 	openjdk/hotspot/src/share/vm/runtime/arguments.cpp hunk
 
-2010-03-03 Andrew John Hughes  <ahughes@redhat.com>
+2010-03-03 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	($(PLUGIN_BUILD_DIR)/%.o): Remove unnecessary cd.
 	($(PLUGIN_BUILD_DIR)/IcedTeaPlugin.o): Create
 	build directory.
 
-2010-03-03 Andrew John Hughes  <ahughes@redhat.com>
+2010-03-03 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(PLUGIN_BUILD_DIR): Name the build directory
@@ -7566,14 +7570,14 @@
 	using rmdir.  This will fail if anything unexpected
 	is left in the build directory.
 
-2010-03-02 Andrew John Hughes  <ahughes@redhat.com>
+2010-03-02 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/boot/genstubs-nofork.patch:
 	Add missing patch.  This causes the
 	genstubs Ant task to not fork a new process.
 	Doing so with gcj causes the build to hang.
 
-2010-03-02 Andrew John Hughes  <ahughes@redhat.com>
+2010-03-02 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-cc-interp-backedge.patch,
 	* patches/icedtea-ia64-bugfix.patch,
@@ -7640,7 +7644,7 @@
 	* patches/icedtea-headers.patch:
 	Recreated.
 
-2010-01-25 Andrew John Hughes  <ahughes@redhat.com>
+2010-01-25 Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_CHECK_OLD_PLUGIN): New macro for
@@ -7759,7 +7763,7 @@
 	* plugin/tests/LiveConnect/jsj_type_casting_tests.js: New file. Contains
 	JS -> Java type conversion tests.
 
-2010-01-08  Andrew John Hughes  <ahughes@redhat.com>
+2010-01-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump JDK revision and sha256sum to pick
@@ -7775,7 +7779,7 @@
 	* configure.ac:
 	Invoke IT_GET_LSB_DATA macro.
 
-2010-01-07  Andrew John Hughes  <ahughes@redhat.com>
+2010-01-07  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Bump to b78.
 	* patches/icedtea-alsa-default-device.patch:
@@ -7802,7 +7806,7 @@
 
 	* Makefile.am: Set JDK_UPDATE_VERSION based on upstream drop version 
 
-2009-12-23  Andrew John Hughes  <ahughes@redhat.com>
+2009-12-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(rt.stamp): Also make zip updating dependent
@@ -7813,7 +7817,7 @@
 	* Makefile.am (ADD_ZERO_CONFIGURE_ARGS): Fix path for
 	--with-jdk-home= option.
 
-2009-12-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-12-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Only set ICEDTEA_BOOTSTRAP_DIRS and build
@@ -7830,13 +7834,13 @@
 	Check for sun.awt.SunToolkit and set
 	LACKS_SUN_AWT_TOOLKIT if missing.
 
-2009-12-15  Andrew John Hughes  <ahughes@redhat.com>
+2009-12-15  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Always turn off doc generation for bootstrap
 	build.
 	
-2009-12-14  Andrew John Hughes  <ahughes@redhat.com>
+2009-12-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Add Ant patch to explicitly set the
@@ -7852,7 +7856,7 @@
 	(launch): File is not launched if offline-allowed tag not present and 
 	system offline.
 
-2009-12-14  Andrew John Hughes  <ahughes@redhat.com>
+2009-12-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/boot/icedtea.patch:
 	Split into individual patches for easier maintenance.
@@ -7901,7 +7905,7 @@
 	Debian-specific as use dpkg-architecture.
 	* HACKING: Updated
 	
-2009-12-07  Andrew John Hughes  <ahughes@redhat.com>
+2009-12-07  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(clean-icedtea): Only run make if openjdk
@@ -7942,29 +7946,29 @@
 	* Makefile.am (ICEDTEA_PATCHES): Don't apply the above.
 	* HACKING: Document the above.
 
-2009-12-02  Andrew John Hughes  <ahughes@redhat.com>
+2009-12-02  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Include latest IcedTea6 LCMS fixes.
 	
-2009-11-23  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* INSTALL: Update NetBeans requirement
 	to 6.7.1.
 
-2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS:
 	Mention VisualVM and changes in building
 	the Java plugin code.
 
-2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-jaxws-getdtdtype.patch:
 	Replace getDTDType method, don't add another.
 	* HACKING: Document the patch.
 	
-2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(clean-download-openjdk): Remove conditionals
@@ -7984,12 +7988,12 @@
 
 	* Makefile.am: Update to VisualVM 1.2.1.
 	
-2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-jaxws-getdtdtype.patch:
 	Add additional fix for AttributeBase.java
 	
-2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Use SHA256 checksums for all.
@@ -8000,7 +8004,7 @@
 	* configure.ac:
 	Remove search for MD5SUM tool.
 	
-2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Always compute the checksums of zip files
@@ -8015,12 +8019,12 @@
 	* hotspot.map: Remove dead redundant line for
 	old original build.
 
-2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-jaxws-getdtdtype.patch:
 	Fix path.
 
-2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Make use of JAXWS dependent on absence of
@@ -8052,12 +8056,12 @@
 	* patches/hotspot/default/icedtea-core-zero-build.patch:
 	Removed unused file.
 
-2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_CHECK_FOR_CLASS): Remove errant semi-colon.
 	
-2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_CHECK_FOR_CLASS): Call toString() on the
@@ -8065,7 +8069,7 @@
 	out the line.  Drop the -source 5 option as this
 	isn't needed if Class<?> is not used.
 	
-2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Add missing CORBA CurrentPackage directory to
@@ -8091,7 +8095,7 @@
 	* configure.ac:
 	Bump to 1.12.
 
-2009-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_FIND_NUMBER_OF_PROCESSORS): Add
@@ -8106,7 +8110,7 @@
 	* Makefile.am:
 	(clean-extract-jaxws): Add missing backslash.
 	
-2009-11-13  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-13  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-xjc.patch:
 	Move to upstream jaxws repository.
@@ -8144,20 +8148,20 @@
 	and javax.annotation.Resource classes using the
 	new IT_CHECK_FOR_CLASS macro.
 	
-2009-11-13  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-13  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Set ARCH_DATA_MODEL rather than
 	ZERO_BITSPERWORD.
 	
-2009-11-12  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-12  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* test/jtreg/com/sun/javatest/agent/Agent.java,
 	* test/jtreg/com/sun/javatest/finder/HTMLTestFinder.java:
 	Replace literal copyright symbol with its Unicode
 	number to avoid encoding issues.
 
-2009-11-12  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-12  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* test/jtreg/com/sun/interview/AllFilesFileFilter.java,
 	* test/jtreg/com/sun/interview/Checklist.java,
@@ -8604,11 +8608,11 @@
 	* test/jtreg/com/sun/javatest/util/XMLWriter.java:
 	Normalize whitespace using Sun's normalizer script.
 
-2009-11-10  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-10  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* HACKING: Document icedtea-sources.patch.
 	
-2009-11-10  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-10  Andrew John Hughes  <gnu.andrew@redhat.com>
 	
 	* plugin/icedtea/netscape/javascript/JSException.java,
 	* plugin/icedtea/netscape/javascript/JSObject.java,
@@ -8700,13 +8704,13 @@
 	* plugin/icedtea/java/sun/applet/VoidPluginCallRequest.java:
 	Moved from plugin/icedtea.
 
-2009-11-04  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Make sure bootstrap/jdk1.7.0 gets deleted
 	on clean.
 	
-2009-11-04  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-use-system-tzdata.patch:
 	Dropped, updated version included in upstream
@@ -8734,7 +8738,7 @@
 	New generated file used to specify the timezone
 	data directory.
 
-2009-11-02  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-02  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(stamps/plugin.stamp): Added to unify
@@ -8749,13 +8753,13 @@
 	(clean-icedtea-debug-stage2): Same for
 	icedtea-debug-stage2.
 	
-2009-11-02  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-02  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Make sure all downloading and extracting
 	occurs before building OpenJDK.
 	
-2009-11-02  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-02  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Replace explicit touch stamps/<file>
@@ -8778,7 +8782,7 @@
 	code generation for PulseAudio plugin.
 	(clean-pulse-java): Always remove stamps.
 
-2009-11-02  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-02  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(clean-local): New target which removes all
@@ -8820,7 +8824,7 @@
 	(clean-netx): Likewise for stamps/netx.stamp and stamps/netx-dist.stamp
 	(clean): Removed; provided by automake.
 	
-2009-11-01  Andrew John Hughes  <ahughes@redhat.com>
+2009-11-01  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-float-double-trailing-zeros.patch:
 	Dropped, in b75.
@@ -8839,7 +8843,7 @@
 	* ports/hotspot/src/share/vm/shark/sharkConstant.cpp:
 	Use should_be_constant instead of has_encoding inline with upstream.
 
-2009-10-28  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-28  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Fix build failures with Shark.
 	* patches/icedtea-shark.patch: Removed, unused.
@@ -9014,13 +9018,13 @@
 
 	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
 
-2009-10-28  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-28  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Fix the checksum for the jaxws drop.
 	Check the md5sum of newly downloaded zips.
 	
-2009-10-28  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-28  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Have one jar to rule them all (rt.jar)
@@ -9030,7 +9034,7 @@
 	building rt.jar.  Use zip rather than jar
 	to update rt.jar for efficiency.
 
-2009-10-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Bump to b74.
 	* patches/boot/icedtea.patch,
@@ -9041,7 +9045,7 @@
 	* patches/xrender/icedtea-007.patch:
 	Recreated.
 
-2009-10-08  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* ChangeLog: Remove stray tab.
 	* Makefile.am: Bump to b73,
@@ -9076,7 +9080,7 @@
 	* acinclude.m4: Allow shark as additional vm when default vm is zero.
 	* INSTALL, README: Document new build options.
 
-2009-10-08  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-08  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* netx/net/sourceforge/jnlp/runtime/JNLPClassLoader.java:
 	Synchronise whitespace with IcedTea6 copy.
@@ -9450,13 +9454,13 @@
 	Uses a cost-based approach to resolve overloaded methods when JavaScript
 	calls Java methods with potentially ambiguous type arguments.
 
-2009-10-02  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-02  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	icedtea-against-boot target should be
 	icedtea-stage1.
 
-2009-10-02  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-02  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Create versioning.stamp so target is
@@ -9466,7 +9470,7 @@
 	Shift BOOTSTRAPPING conditional to top
 	with other conditionals.
 
-2009-10-02  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-02  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Fix alias renamed to 'native-boot' by
@@ -9474,12 +9478,12 @@
 	one actually related to ecj.  The others
 	were bootstrap targets.
 
-2009-10-01  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-01  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS:
 	Updated with Makefile changes.
 
-2009-10-01  Andrew John Hughes  <ahughes@redhat.com>
+2009-10-01  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Reorganise Makefile and rename some
 	targets to better refer to the two stages
@@ -9516,7 +9520,7 @@
 	* patches/boot/icedtea-spp.patch,
 	* patches/boot/icedtea.patch: here.
 
-2009-09-30  Andrew John Hughes  <ahughes@redhat.com>
+2009-09-30  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* generated/javax/swing/plaf/nimbus/ArrowButtonPainter.java,
 	* generated/javax/swing/plaf/nimbus/ButtonPainter.java,
@@ -9606,12 +9610,12 @@
 	* generated/javax/swing/plaf/nimbus/TreeTreeCellPainter.java:
 	Removed.
 
-2009-09-30  Andrew John Hughes  <ahughes@redhat.com>
+2009-09-30  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS:
 	Updated.
 
-2009-09-30  Andrew John Hughes  <ahughes@redhat.com>
+2009-09-30  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-pregenerated-nimbus.patch:
 	No longer needed.
@@ -9640,7 +9644,7 @@
 	* Makefile.am:
 	Build PulseAudio class files into distinct subdirectory.
 
-2009-09-04  Andrew John Hughes  <ahughes@redhat.com>
+2009-09-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* HACKING: Updated.
 	* Makefile.am:
@@ -9657,7 +9661,7 @@
 	* patches/icedtea-nss-config.patch: Patch java.security
 	with the PCKS11 provider configuration.
 
-2009-09-11  Andrew John Hughes  <ahughes@redhat.com>
+2009-09-11  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump to b71.  Turn on DISABLE_INTREE_EC to
@@ -9670,7 +9674,7 @@
 	* acinclude.m4, configure.ac (FIND_PULSEAUDIO): Remove.
 	* INSTALL: Don't require the pulseaudio binary.
 
-2009-08-24  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-24  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-graphics.patch:
 	Removed; applied upstream.
@@ -9679,7 +9683,7 @@
 	* patches/icedtea-testenv.patch:
 	Recreated.
 
-2009-08-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Add variables for source, target and other
@@ -9697,18 +9701,18 @@
 	and use SA_TOOLS_JAR and SA_RT_JAR for the individual
 	files.
 
-2009-08-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump to b69.
 
-2009-08-07  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-07  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(ENABLE_HG): Remove duplicate from
 	IcedTea6 merge.
 
-2009-08-07  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-07  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump to b68, remove additional -source option.
@@ -9736,7 +9740,7 @@
 	* Makefile.am (ADD_ZERO_CONFIGURE_ARGS): Adjust for added/removed
 	configuration options.
 
-2009-08-06  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-06  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump to b67.
@@ -9751,7 +9755,7 @@
 	* Makefile.am (ICEDTEA_PATCHES): Make $(DISTRIBUTION_PATCHES) the
 	last patches in the list.
 
-2009-08-06  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-06  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump JDK changeset to obtain execvpe fix.
@@ -9766,7 +9770,7 @@
 	* INSTALL: Add that java method tracing support needs systemtap
 	0.9.9 or higher.
 
-2009-08-06  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-06  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* INSTALL:
 	Mention Shark requirements.
@@ -9776,7 +9780,7 @@
 	Bump to 1.11 proper, remove duplicate
 	VisualVM/NetBeans macros.
 
-2009-08-05  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-05  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Update md5sums and changeset IDs to include
@@ -9797,13 +9801,13 @@
 	Likewise.
 	* netx/netscape/javascript/JSObjectCreatePermission.java: Likewise.
 
-2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Remove IcedTeaNPPlugin.cc from EXTRA_DIST
 	as now under plugin directory tree.
 
-2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Remove unnecessary whitespace.
@@ -9815,7 +9819,7 @@
 	* javac.in:
 	Turn on warnings only when specified.
 
-2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Add new CACAO patches.
@@ -9830,14 +9834,14 @@
 	ConstantInt API moved back to the 2.5 API, ConstantFP partially moved
 	back to the 2.5 API.
 
-2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* test/jtreg/com/sun/javatest/exec/FileTable.java,
 	* test/jtreg/com/sun/javatest/mrep/ConflictResolutionDialog.java,
 	* test/jtreg/com/sun/javatest/report/XMLReportMaker.java:
 	Remove more DOS line endings.
 
-2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* netx/net/sourceforge/jnlp/DefaultLaunchHandler.java,
 	* netx/net/sourceforge/jnlp/ExtensionDesc.java,
@@ -9875,7 +9879,7 @@
 	(openFile): Remove @Override of interface method.
 	(openFiles): Likewise.
 
-2009-08-04  Andrew John Hughes  <ahughes@redhat.com>
+2009-08-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-webstart.patch,
 	* patches/icedtea-liveconnect.patch:
@@ -10757,17 +10761,17 @@
 
 	* ports/hotspot/src/share/vm/includeDB_shark: Updated.	
 
-2009-07-26  Andrew John Hughes  <ahughes@redhat.com>
+2009-07-26  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump to b66.
 
-2009-07-26  Andrew John Hughes  <ahughes@redhat.com>
+2009-07-26  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* javac.in:
 	Turn off more ecj warnings to reduce clutter.
 
-2009-07-26  Andrew John Hughes  <ahughes@redhat.com>
+2009-07-26  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/hotspot/default/icedtea-core-build.patch,
 	* patches/hotspot/default/icedtea-static-libstdc++.patch,
@@ -10868,13 +10872,13 @@
 	* ports/hotspot/src/cpu/zero/vm/shark_globals_zero.hpp:
 	Drop InlineSmallCode as in globals_zero.hpp upstream.
 	
-2009-07-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-07-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	Replace use of /dev/null with AS_MESSAGE_LOG_FD,
 	so output is logged to config.log.
 
-2009-07-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-07-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(AC_FIND_JAVAC): Check whether we are using
@@ -10895,14 +10899,14 @@
 	and vary arguments as needed depending on @USING_ECJ@.
 	Use same warning settings as GNU Classpath.
 
-2009-07-20  Andrew John Hughes  <ahughes@redhat.com>
+2009-07-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_LIBRARY_CHECK): Check the class can be
 	run as well, for when java and javac use
 	different class libraries.
 
-2009-07-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-07-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Remove use of WITH_OPENJDK, WITH_ICEDTEA
@@ -10929,7 +10933,7 @@
 	* javac.in:
 	Replace SYSTEM_GCJ_DIR with SYSTEM_JDK_DIR.
 
-2009-07-15  Andrew John Hughes  <ahughes@redhat.com>
+2009-07-15  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Turn on euctw patch for systems without
@@ -10937,7 +10941,7 @@
 	* patches/ecj/icedtea-euctw.patch:
 	Remove java.util.Scanner from GenerateEUC_TW.java
 
-2009-07-14  Andrew John Hughes  <ahughes@redhat.com>
+2009-07-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-messageutils.patch,
 	* patches/icedtea-toolkit.patch:
@@ -10949,12 +10953,12 @@
 	* patches/icedtea-webstart.patch:
 	Recreated.
 
-2009-07-09  Andrew John Hughes  <ahughes@redhat.com>
+2009-07-09  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/ecj/icedtea-pr40616.patch:
 	Add missing patch.
 
-2009-07-09  Andrew John Hughes  <ahughes@redhat.com>
+2009-07-09  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump to b63 and latest IcedTea changesets.
@@ -10982,7 +10986,7 @@
 
 	* patches/cacao/no-strict-aliasing.patch: Apply for configure.ac.
 
-2009-06-11  Andrew John Hughes  <ahughes@redhat.com>
+2009-06-11  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/hotspot/default/icedtea-debuginfo.patch,
 	* patches/icedtea-debuginfo.patch,
@@ -10994,12 +10998,12 @@
 	* patches/hotspot/default/icedtea-zero-build.patch:
 	Rerolled.
 
-2009-06-11  Andrew John Hughes  <ahughes@redhat.com>
+2009-06-11  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* configure.ac:
 	Bump to 1.11-pre.
 
-2009-06-10  Andrew John Hughes  <ahughes@redhat.com>
+2009-06-10  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/stackPrinter_zero.hpp:
 	Replace PTR_FORMAT with %p as pointer is of type
@@ -11504,7 +11508,7 @@
 	* ports/hotspot/src/share/vm/shark/sharkCompiler.cpp:
 	Fix for x86 debug builds.
 
-2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* HACKING: Updated.
 	* Makefile.am:
@@ -11531,7 +11535,7 @@
 	* patches/icedtea-nio2.patch: Removed.
 	* overlays/nio2/*: Removed.
 
-2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Remove netx target as conflicts with
@@ -11539,7 +11543,7 @@
 	* configure.ac:
 	Bump to 1.10 proper.
 
-2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS:
 	Add IcedTea7 1.10 release notes.
@@ -11549,12 +11553,12 @@
 	of javaws, plugin and additional architecture support
 	by IcedTea.
 
-2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-liveconnect-dist.patch:
 	Recreated with netx.patch applied.
 
-2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Only distribute liveconnect code when
@@ -11585,7 +11589,7 @@
 	* Makefile.am (ICEDTEA_PATCHES): Apply above patch.
 	* HACKING: Update.
 
-2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/ecj/icedtea.patch:
 	Fix for PR338. The path to tools.jar was
@@ -11593,21 +11597,21 @@
 	rather than lib/tools.jar).  For some reason,
 	only Debian/Ubuntu users get hit by this.
 
-2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	Search java-icedtea last not first.  It's
 	from the old 1.7 packages on Fedora (and can
 	be empty), so should be our last choice.
 	
-2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump changeset to include NIO2 fix
 	(/etc/mtab --> /proc/mounts).
 	See PR339.
 	
-2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/openjdk/jdk/src/share/classes/javax/jnlp/BasicService.java,
 	* overlays/openjdk/jdk/src/share/classes/javax/jnlp/ClipboardService.java,
@@ -11840,18 +11844,18 @@
 	Include netx and netscape classes via the same import mechanism
 	as jaxws, jaxp, corba and langtools (extracting a classes.zip).
 
-2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Allow setting of some zip files and not
 	others.
 	
-2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Fix endif placement.
 
-2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Add support for IcedTea project and make this
@@ -11862,7 +11866,7 @@
 	(WITH_PROJECT): Add support for IcedTea and make it the
 	default.
 
-2009-05-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Replace !ENABLE_OPTIMIZATIONS with DISABLE_OPTIMIZATIONS
@@ -11907,7 +11911,7 @@
 	* Makefile.am (LIVECONNECT_DIR): Add -C lib/rt net.
 	(rt-closed.jar): Don't unconditionally add -C lib/rt net.
 
-2009-05-22  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-22  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp:
 	Define InlineSmallCode, using x86 value to begin with.
@@ -11922,7 +11926,7 @@
 
 	* Makefile.am: Fixed typo.
 
-2009-05-22  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-22  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Copy over Nimbus source files manually
@@ -11967,7 +11971,7 @@
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services:
 	removed.
 
-2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* ports/hotspot/src/cpu/zero/vm/assembler_zero.cpp:
 	(delayed_value_impl(intptr_t,Register,int)): Add stub.
@@ -11994,13 +11998,13 @@
 	* ports/hotspot/src/os_cpu/linux_zero/vm/globals_linux_zero.hpp:
 	Define HeapBaseMinAddress as 2G (copied from x86_64).
 
-2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	Search same directories when using
 	--with-openjdk as --with-icedtea.
 
-2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* generated/java/nio/channels/AlreadyBoundException.java,
 	* generated/sun/awt/X11/generator/sizer.64.c,
@@ -12011,32 +12015,32 @@
 
 	* .hgignore: Updated.
 
-2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump JDK changeset/md5sum to include aph's
 	LCMS patch.
 
-2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* generated/javax/swing/plaf/nimbus/NimbusDefaults.java:
 	Remove @Override annotations which cause ecj to spew.
 
-2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-pregenerated-nimbus.patch:
 	Also patch the Nimbus Makefile to not set
 	CLASSES_INIT and thus avoid invoking the
 	generator.
 
-2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/ecj/icedtea-pr39408.patch:
 	Updated to put the file in the state
 	where PR40188 is present so that gcj 4.3/4.4
 	builds work.
 
-2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-stop-nimbus-generation.patch:
 	Renamed.
@@ -12047,7 +12051,7 @@
 	Turns the make/javax/swing/plaf/nimbus subdirectory
 	back on.
 
-2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Update list of generated files with
@@ -12055,7 +12059,7 @@
 	* acinclude.m4:
 	Turn off Nimbus source code generation by default.
 
-2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Apply patch and use our generated source directory
@@ -12157,7 +12161,7 @@
 	Turn off building Nimbus tool when --disable-nimbus-generation
 	is given.
 
-2009-05-21  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Cleanup Makefile, make sure JNLP classes
@@ -12302,7 +12306,7 @@
 	* overlays/openjdk/jdk/src/share/classes/net/sourceforge/jnlp/NetxPanel.java: Add support for improved
 	initialization failure detection.
 
-2009-05-20  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* HACKING: Updated.
 	
@@ -12312,7 +12316,7 @@
 	* patches/icedtea-test-atomic-operations.patch: Only test on Zero.
 	* HACKING: Updated. 
 
-2009-05-20  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_XULRUNNER_VERSION): New macro.
@@ -12393,7 +12397,7 @@
 	* INSTALL: Document build requirements for systemtap support.
 	* NEWS: Mention systemtap support.
 
-2009-04-29 Andrew John Hughes <ahughes@redhat.com>
+2009-04-29 Andrew John Hughes <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Use abs_top_builddir to locate generated
@@ -12638,13 +12642,13 @@
 	(SharkPHIState::SharkPHIState): Create SharkPHIValues.
 	(SharkState::merge): Defer to SharkValue::merge.
 
-2009-05-19  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Update build to b59 and changesets/md5sums
 	to current IcedTea forest tip.
 
-2009-05-19  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* HACKING: Updated with new ecj patches.
 	* Makefile.am: Move JIBX_DEPS_DIR definition
@@ -12662,13 +12666,13 @@
 	New patch for when bug PR40188 is present
 	in javah (incorrect naming of constants).
 	
-2009-05-14  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* configure.ac:
 	Turn --with-icedtea on by default.
 	Only this build works at present for b58.
 	
-2009-05-14  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Add support for DISABLE_NIMBUS, correct
@@ -12679,7 +12683,7 @@
 	Enable --disable-nimbus, only search for JIBX
 	and dependencies when enabled.
 
-2009-05-14  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	(OPENJDK_VERSION): Added back.
@@ -12695,7 +12699,7 @@
 	* configure.ac:
 	Include new macros for finding Nimbus dependencies.
 
-2009-05-14  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Update list of generated files.
@@ -12749,7 +12753,7 @@
 	* generated/sun/awt/X11/XkbStateNotifyEvent.java:
 	Add new generated files.
 
-2009-05-12  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-12  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-idl.patch,
 	* patches/security/icedtea-6484091.patch,
@@ -12771,7 +12775,7 @@
 	* patches/xrender/icedtea-001.patch:
 	Recreated against b58.
 
-2009-05-07  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-07  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Support replacing the zips for CORBA,
@@ -12785,13 +12789,13 @@
 	* configure.ac:
 	Include new macros.
 	
-2009-05-07  Andrew John Hughes  <ahughes@redhat.com>
+2009-05-07  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Support downloading and extracting from
 	the forest repositories rather than one megatarball.
 
-2009-04-16  Andrew John Hughes  <ahughes@redhat.com>
+2009-04-16  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-java2d-dasher.patch,
 	* patches/icedtea-jscheme.patch,
@@ -12812,19 +12816,19 @@
 	* patches/icedtea-zero-build.patch:
 	Recreated.
 
-2009-03-20  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Switch to IcedTea
 	forest rather than build drop x.
 	* NEWS,
 	* configure.ac: Prepare for next release.
 
-2009-03-20  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Add release date for 1.9.
 	* configure.ac: Bump to 1.9 proper.
 
-2009-03-19  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-cacao-ignore-jdi-tests.patch:
 	Removed; replaced by exclude list.
@@ -12841,7 +12845,7 @@
 	* test/jtreg/excludelist.jdk.cacao.jtx:
 	Replacement exclude list for CACAO JDI tests.
 
-2009-03-19  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	Cleanup options so only --enable-shark is
@@ -12863,7 +12867,7 @@
 
 	* Makefile.am (icedtea.stamp, icedtea-debug.stamp): Create target dirs.
 	
-2009-03-19  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* ChangeLog,
 	* ports/hotspot/src/share/vm/includeDB_shark,
@@ -13192,17 +13196,17 @@
 	* Makefile.am (check-*): Pass $(ICEDTEA_JTREG_OPTIONS), unset
 	by default.
 
-2009-03-19  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Fix issues that break make distcheck.
 
-2009-03-18  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Replace IcedTea6 with IcedTea7.
 
-2009-03-18  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Enable new PR39408 patch when bug is
@@ -13214,7 +13218,7 @@
 	New patch to fix build failure when PR39408
 	is present in gjavah.
 
-2009-03-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(IT_CP39408_JAVAH): New test for Classpath
@@ -13222,7 +13226,7 @@
 	* configure.ac: Enable new test.  Result
 	as yet unused.
 
-2009-03-17  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/java/nio/file/attribute/NamedAttributeView.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileLockImpl.java,
@@ -13241,7 +13245,7 @@
 	* patches/icedtea-nio2.patch: Recreated against b50.
 	* patches/icedtea-pr261.patch: Likewise.
 
-2009-03-06  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-06  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/make/mksample/nio/file/Makefile,
 	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedCopyOption.java,
@@ -13537,7 +13541,7 @@
 	Removed; in b50.
 	* Makefile.am: Bump to b50.
 
-2009-03-06  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-06  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/io/Inputs/Basic.java,
 	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/channels/AsynchronousChannelGroup/AsExecutor.java,
@@ -13746,7 +13750,7 @@
 
 	* ports/hotspot/src/share/vm/includeDB_shark: Updated.
 
-2009-03-03  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* AUTHORS: Add Michael Franz.
 	
@@ -13774,7 +13778,7 @@
 	* ports/hotspot/src/share/vm/shark/sharkBlock.cpp
 	(SharkBlock::parse): Remove bytecode tracer code.
 
-2009-03-03  Andrew John Hughes  <ahughes@redhat.com>
+2009-03-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/ecj/icedtea-hotspot-original.patch,
 	* patches/hotspot/original/icedtea-bytecodeInterpreter.patch,
@@ -13825,11 +13829,11 @@
 	* patches/hotspot/default/icedtea-version.patch,
 	* patches/hotspot/default/icedtea-zero-build.patch: here.
 
-2009-02-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Bump to b49.
 	
-2009-02-24  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-24  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/hotspot/original/icedtea-6791168.patch,
 	* patches/hotspot/original/icedtea-format.patch,
@@ -14091,12 +14095,12 @@
 	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp:
 	Fixed conditional.
 
-2009-02-20  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* AUTHORS:
 	Add back my main e-mail address.
 	
-2009-02-20  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
  	* overlays/nio2/openjdk/jdk/src/share/classes/java/io/File.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/java/io/FilePermission.java,
@@ -14361,7 +14365,7 @@
 	* ports/hotspot/src/cpu/zero/vm/bytecodes_zero.hpp:
 	Deleted contents (was all comment).
 
-2009-02-13  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-13  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/io/File.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/io/FilePermission.java,
@@ -14582,7 +14586,7 @@
 	* overlays/nio2/openjdk/jdk/src/share/classes/java/util/Scanner.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/java/util/concurrent/ScheduledThreadPoolExecutor.java: to here.
 
-2009-02-13  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-13  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/hotspot/14.0b08/icedtea-format.patch:
 	Moved...
@@ -14599,7 +14603,7 @@
 	* patches/icedtea-pr261.patch,
 	* patches/icedtea-version.patch: Regenerated.
 
-2009-02-12  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-12  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* configure.ac:
 	Fix typo in --enable-nio2.
@@ -14628,7 +14632,7 @@
 	* rt/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java: Same, and
 	update support in checkPermission() for exit permissions.
 
-2009-02-10  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-10  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Merge from IcedTea6.
 	* patches/ecj/icedtea-pr261.patch: Merged.
@@ -15071,7 +15075,7 @@
 	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourcePortTest.java,
 	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetPortTest.java: Merged.
 	
-2009-02-10  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-10  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Bump to b46.
 	* patches/icedtea-directaudio-close-trick.patch,
@@ -15092,12 +15096,12 @@
 	* patches/icedtea-version.patch: Changed PRODUCT_NAME from IcedTea6 to
 	OpenJDK.
 
-2009-02-05  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-05  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Depend on overlay.stamp rather than patch.stamp.
 	
-2009-02-05  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-05  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Ensure the NIO2 code is in sync with the latest
 	build drop, b98.
@@ -15117,7 +15121,7 @@
 	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/Path/InterruptCopy.java,
 	* overlays/nio2/openjdk/jdk/test/org/classpath/icedtea/java/nio/file/attribute/NamedAttributeView/Basic.java,
 
-2009-02-04  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(AC_CHECK_FOR_GCJ_JDK): Drop out of loop
@@ -15125,7 +15129,7 @@
 	(AC_CHECK_FOR_OPENJDK): Likewise.
 	(AC_CHECK_FOR_ICEDTEA): Likewise.
 	
-2009-02-04  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Add new patch.
@@ -15133,13 +15137,13 @@
 	Fix warnings that cause the build to fail with
 	GCC 4.3.3.
 	
-2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-nio2.patch:
 	(docs/NON_CORE_PKGS.gmk): Rename NIO to NIO2.
 	(docs/Makefile): Add rule for generating NIO2 docs.
 	
-2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Move doc headers patch above NIO2 patch,
@@ -15148,19 +15152,19 @@
 	Add IcedTea bugzilla URL and common licensing
 	to all documentation.
 
-2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump to b45.
 
-2009-02-03  Andrew John Hughes  <ahughes@redhat.com>
+2009-02-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Add new patch.
 	* patches/icedtea-doc-headers.patch:
 	Fix licensing of documentation.
 
-2009-01-30  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-30  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Rename PULSEAUDIO_SOURCES and JTREG_SOURCES
@@ -15169,7 +15173,7 @@
 	* patches/icedtea-rhino.patch:
 	Remove merge conflicts.
 
-2009-01-28  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-28  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-nio2.patch:
 	(mapfile-linux): Add new functions in sun.nio.ch.Net.
@@ -15197,7 +15201,7 @@
 
 	* NEWS: Updated for 1.4.
 
-2009-01-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java:
 	Use org.classpath.icedtea.java.nio.channels.FileChannel.
@@ -15225,7 +15229,7 @@
 	* overlays/nio2/openjdk/jdk/src/solaris/classes/sun/nio/fs/UnixFileSystemProvider.java:
 	Use org.classpath.icedtea.java.nio.channels.FileChannel.
 
-2009-01-27  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java:
 	(positionSBC(long)): Renamed from position(long).
@@ -15244,7 +15248,7 @@
 	* ports/hotspot/src/os_cpu/linux_zero/vm/orderAccess_linux_zero.inline.hpp:
 	Add memory barriers where needed for PPC.
 
-2009-01-26  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-26  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Bump to b44.
 	* patches/icedtea-io_util-overflow.patch:
@@ -15254,7 +15258,7 @@
 	* patches/icedtea-linker-libs-order.patch:
 	Recreated against b44.
 
-2009-01-26  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-26  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/ch/AsynchronousFileLockImpl.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java,
@@ -15561,7 +15565,7 @@
 	* ports/hotspot/src/cpu/zero/vm/frame_zero.hpp (fp): Remove PRODUCT
 	conditional, make the not-PRODUCT bit the default.
 
-2009-01-19  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaNetGetIndexAccess.java:
 	(getByIndex(int)): New method.
@@ -15637,7 +15641,7 @@
 	(FileDispatcher.lock0(FileDescriptor, boolean, long, long, boolean)): Likewise.
 	(FileDispatcher.release0(FileDescriptor, long, long)): Likewise.
 
-2009-01-19  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Merge with IcedTea6.
 	* patches/hotspot/original/icedtea-sparc64-linux.patch,
@@ -15738,7 +15742,7 @@
 	* rt/net/sourceforge/jnlp/tools/JarSigner.java: Implement the new
 	CertVerifier verifier interface.
 
-2009-01-18  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Bump to b43.
 	* patches/icedtea-6761856-freetypescaler.patch,
@@ -15752,7 +15756,7 @@
 	GenerateSBCS.java using java.util.Scanner for ecj builds.
 	* patches/xrender/icedtea-002.patch: Recreated against b43.
 
-2009-01-19  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* generated/sun/nio/ch/SocketOptionRegistry.java:
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/DatagramChannel.java:
@@ -15803,7 +15807,7 @@
 	* ports/hotspot/src/cpu/zero/vm/globals_zero.hpp
 	(StackShadowPages): Increase for 64-bit builds.
 
-2009-01-14  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/nio/channels/FileChannel.java:
 	Extend java.nio.channels.FileChannel to minimise code.
@@ -15821,12 +15825,12 @@
 	* patches/icedtea-nio2.patch:
 	Update implementation of secrets interface.
 
-2008-12-22  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-22  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Fix b42 tarball name and checksum
 	due to reroll.
 
-2008-12-20  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* HACKING: Updated.
 	* Makefile.am: Bump to b42.
@@ -15868,13 +15872,13 @@
 	(getVersionedResourceURL): New function. Constructs a URL with a
 	version-id as the query.
 
-2009-01-13  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-13  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/JavaIODeleteOnExitAccess.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/misc/SharedSecrets.java:
 	Add missing SharedSecrets files.
 
-2009-01-13  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-13  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/StandardProtocolFamily.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/org/classpath/icedtea/java/net/StandardSocketOption.java:
@@ -15915,7 +15919,7 @@
 	Patch ThreadPoolExecutor to allow access to private variables, add missing files to
 	nio/FILES_java.gmk
 
-2009-01-12  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-12  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedCopyOption.java,
 	* overlays/nio2/openjdk/jdk/src/share/classes/com/sun/nio/file/ExtendedOpenOption.java,
@@ -15974,7 +15978,7 @@
 
 	* contrib/jck/compile-native-code.sh: Build with -m32 or -m64.
 
-2009-01-12  Andrew John Hughes  <ahughes@redhat.com>
+2009-01-12  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Initial import of NIO2 code.
 	* patches/ecj/icedtea-pr261.patch: Moved to general patches.
@@ -16434,13 +16438,13 @@
 	(stamps/extract.stamp): Use AWK here rather than cut.
 	* hotspot.map: Add md5sum for 14.0b08.
 
-2008-12-17  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	(FIND_RHINO_JAR): Check for js.jar
 	in Gentoo install location too.
 
-2008-12-17  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	No need to check again that SYSTEM_GCJ_DIR exists.
@@ -16453,7 +16457,7 @@
 	More --with-x-home options to macros in acinclude.m4.
 	Remove redundant erroneous use of GCC_OLD.
 
-2008-12-17  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Remove use of LIBGCJ_JAR, replacing with
@@ -16467,7 +16471,7 @@
 	* javac.in:
 	Use SYSTEM_GCJ_DIR/jre/lib/rt.jar not LIBGCJ_JAR.
 
-2008-12-17  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Remove the HotSpot directory while extracting
@@ -16539,7 +16543,7 @@
 	* rt/net/sourceforge/jnlp/runtime/JNLPClassLoader.java: Provide new 
 	cacheable param to JARDesc constructor.
 
-2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-09  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/xrender/icedtea-000.patch:
 	Removed, already applied in OpenJDK7.
@@ -16548,7 +16552,7 @@
 	* patches/xrender/icedtea-004.patch:
 	Recreated against OpenJDK7.
 
-2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-09  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Support use of HGREV.
@@ -16557,7 +16561,7 @@
 	* configure.ac:
 	Call AC_CHECK_WITH_HG_REVISION.
 
-2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-09  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* configure.ac:
 	Capitalise 'XRender' in configure option.
@@ -16568,14 +16572,14 @@
 	Fix XRender wildcard to work where
 	srcdir != builddir.
 
-2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-09  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Properly support --with-openjdk-src-dir.
 	* acinclude.m4:
 	Correct the define for OPENJDK_SRC_DIR.
 
-2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-09  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Support downloading from the Mercurial repository.
@@ -16584,7 +16588,7 @@
 	* configure.ac:
 	Check for --enable-hg.
 
-2008-12-09  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-09  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Don't use find to locate the hotspot directory,
@@ -16661,7 +16665,7 @@
 	* acinclude.m4:
 	Apply linux32 on s390 as well.
 
-2008-12-04  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/ecj/icedtea-hotspot-14.0b08.patch,
 	* patches/hotspot/14.0b08/icedtea-bytecodeInterpreter.patch,
@@ -16704,7 +16708,7 @@
 	* patches/hotspot/original/icedtea-version.patch,
 	* patches/hotspot/original/icedtea-zero-build.patch: here.
 
-2008-12-04  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Prefix make invocations with
@@ -16716,7 +16720,7 @@
 	* configure.ac:
 	Check for linux32.
 
-2008-12-04  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-04  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Prefix make invocations with
@@ -16942,7 +16946,7 @@
 	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamSampleSpecification.java:
 	Make class package-private.
 
-2008-12-03  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Create hierarchical patch space.
 	* patches/icedtea-4486841.patch,
@@ -17124,7 +17128,7 @@
 	patches/icedtea-6755943.patch,
 	patches/icedtea-6766136.patch: New files.
 	
-2008-12-02  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-02  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-bytecodeInterpreter.patch,
 	* patches/icedtea-hotspot7-build-fixes.patch:
@@ -17143,7 +17147,7 @@
 	* ports/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp:
 	Updated using IcedTea7 versions for 14.0b08.
 
-2008-12-03  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-03  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-4486841.patch,
 	* patches/icedtea-6728542-epoll.patch:
@@ -17171,7 +17175,7 @@
 	* Makefile.am (stamps/pulse-java.stamp): Add missing include
 	directives.
 
-2008-12-02  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-02  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Merge from IcedTea6.
 	* .hgignore,
@@ -17253,7 +17257,7 @@
 	patches/icedtea-6755943.patch,
 	patches/icedtea-6766136.patch: New file
 	
-2008-12-01  Andrew John Hughes  <ahughes@redhat.com>
+2008-12-01  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-hotspot-params-cast-size_t.patch,
 	* patches/icedtea-hotspot-use-idx_t.patch,
@@ -17363,24 +17367,24 @@
 
 	* .hgignore: Add test/jtreg-summary.log.
 
-2008-11-21  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Bump to b40.
 	
-2008-11-21  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS,
 	* configure.ac:
 	Bump to 1.9-pre.
 
-2008-11-20  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Prepare for 1.8 release.
 	* NEWS: Updated.
 	* configure.ac: Bump to 1.8.
 
-2008-11-20  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 	PR icedtea/236:
 	* gcjwebplugin.cc,
 	* Makefile.am,
@@ -17393,13 +17397,13 @@
 	* acinclude.m4:
 	Add support for NIO2.
 
-2008-11-19  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-19  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-version.patch,
 	Reapply Mark Wielaard's patch from
 	recent merge.
 	
-2008-11-18  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-18  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Fix issues with
 	distcheck so generated, pulse-audio
@@ -17408,12 +17412,12 @@
 	Add conditional for native ecj,
 	BUILD_NATIVE_ECJ.
 
-2008-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* test/jtreg/excludelist.jdk.jtx:
 	Remove NIO tests following mjw's fix.
 	
-2008-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Merge with IcedTea6.
 	* .hgignore,
@@ -17489,7 +17493,7 @@
 	* test/jtreg/com/sun/javatest/regtest/RegressionTestFinder.java,
 	* test/jtreg/com/sun/javatest/regtest/i18n.properties: Merged.
 
-2008-11-17  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 	
 	* Makefile.am:
 	Expand generated and pulseaudio.  Lock
@@ -17628,7 +17632,7 @@
 	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
 	* HACKING: Document new patch.
 
-2008-11-14  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.MidiDeviceProvider,
 	* overlays/openjdk/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.MidiFileReader,
@@ -17669,7 +17673,7 @@
 	(loadNativeLibrary): Loads libpulse-java.so in a privileged operation to
 	work when a security manager is installed.
 
-2008-11-14  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-14  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* HACKING: List new plugs patches.
 	* Makefile.am: Remove use of rt from source dir,
@@ -17709,7 +17713,7 @@
 	* rt/com/sun/media/sound/SimpleInputDeviceProvider.java:
 	Remove redundant stubs.
 
-2008-11-10  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-10  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* javac.in:
 	Update with native ecj changes.
@@ -17736,7 +17740,7 @@
 
 	* patches/icedtea-uname.patch: Fix ARCH on powerpc-linux-gnu
 
-2008-11-10  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-10  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Fix make dist.
 
@@ -17797,7 +17801,7 @@
 	SoftJitterCorrector.java,SoftMainMixer.java,SoftVoice.java:
 	Updated to new Gervill CVS.
 
-2008-11-09  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-09  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Bump to b39.
 	* patches/icedtea-hotspot-use-idx_t.patch,
@@ -17854,7 +17858,7 @@
 	* patches/icedtea-6open-6756202.patch: Removed.
 	* NEWS: Add integration of b13.
 
-2008-11-07  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-07  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Use 'node|short' instead of 'rev'
 	for Mercurial revision number.
@@ -17864,7 +17868,7 @@
 	* patches/icedtea-jsoundhs.patch: Added two more diffs to remove all uses 
 	of jsoundhs and Headspace libraries.
 
-2008-11-07  Andrew John Hughes  <ahughes@redhat.com>
+2008-11-07  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Remove unneeded citypeflow fix,
 	move zero patching to the end.
@@ -18037,13 +18041,13 @@
 	* Makefile.am: Updated for new visualvm 1.0.1.
 	* patches/icedtea-visualvm.patch: Updated.
 
-2008-10-30  Andrew John Hughes  <ahughes@redhat.com>
+2008-10-30  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am: Add bootstrap-directory-symlink
 	target to icedtea-ecj so it works as the user-specified
 	make target.
 
-2008-10-29  Andrew John Hughes  <ahughes@redhat.com>
+2008-10-29  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Merge from IcedTea6 1.3.1.
 	* ChangeLog,
@@ -18082,7 +18086,7 @@
 	* rt/net/sourceforge/jnlp/runtime/JNLPSecurityManager.java: Act on window
 	close events (Bug# 215)
 
-2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
+2008-10-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* acinclude.m4:
 	Add path of Gentoo rhino JAR file.
@@ -18099,7 +18103,7 @@
 
 	* NEWS: Updated for 1.3.1 release.
 
-2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
+2008-10-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR icedtea/234:
 	* Makefile.am:
@@ -18122,7 +18126,7 @@
 	* Makefile.am (ICEDTEA_PATCHES): Add new patch.
 	* HACKING: Document new patch.
 
-2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
+2008-10-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-license-headers.patch,
 	* patches/icedtea-timerqueue.patch:
@@ -18130,7 +18134,7 @@
 	* HACKING: Updated.
 	* Makefile.am: Bump to b38.
 
-2008-10-27  Andrew John Hughes  <ahughes@redhat.com>
+2008-10-27  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* configure.ac:
 	Quote checking output.
@@ -18140,7 +18144,7 @@
 	* patches/icedtea-uname.dpatch: Only call dpkg-architecture if it is
 	available.
 	
-2008-10-24  Andrew John Hughes  <ahughes@redhat.com>
+2008-10-24  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Merge from IcedTea6.
 	* ChangeLog,
@@ -18188,7 +18192,7 @@
 
 	* Makefile.am (clean-pulse-java): Remove object files.
 
-2008-10-22  Andrew John Hughes  <ahughes@redhat.com>
+2008-10-22  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/icedtea-constructor-properties.patch:
 	Removed.
@@ -18296,7 +18300,7 @@
 	(stamps/patch.stamp): Encode PKGVERSION in IcedTea version.
 	* patches/icedtea-version.patch: Add DISTRIBUTION_ID in vm crash report.
 
-2008-10-20  Andrew John Hughes  <ahughes@redhat.com>
+2008-10-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* HACKING: Add new patch.
 	* Makefile.am: Compile PulseAudio Java
@@ -18316,7 +18320,7 @@
 	* Makefile.am: Changed all instances of $(srcdir) to
 	$(abs_top_srcdir).
 
-2008-10-20  Andrew John Hughes  <ahughes@redhat.com>
+2008-10-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Use GCJ if not equal to no instead
@@ -18327,7 +18331,7 @@
 	Use AC_CHECK_WITH_GCJ in preference to
 	just checking for GCJ.
 
-2008-10-20  Andrew John Hughes  <ahughes@redhat.com>
+2008-10-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Build native ecj for ecj builds when
@@ -18339,7 +18343,7 @@
 	and readable.
 	* javac.in: Use native ecj when available.
 
-2008-10-20  Andrew John Hughes  <ahughes@redhat.com>
+2008-10-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
 	Fix LiveConnect and PulseAudio paths to work
