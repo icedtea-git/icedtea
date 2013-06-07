@@ -843,6 +843,8 @@ OpenJDK
   - Clang fix for the i386 backend
   - Fix rt-timing
   - Moved rt-timing.{c,h} to C++
+  - PR1278: Synchronise CACAO versions between IcedTea6/7/8 where possible
+  - PR1276: Synchronise CACAO rules between IcedTea6/7/8 where possible
 * JamVM
   - JSR 335: (lambda expressions) initial hack
   - JEP 171: Implement fence methods in sun.misc.Unsafe

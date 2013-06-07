@@ -1088,6 +1088,8 @@ clean-download-openjdk:
 stamps/download-cacao.stamp:
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
+if USE_ALT_CACAO_SRC_DIR
+else
 if USE_ALT_CACAO_SRC_ZIP
 	ln -sf $(ALT_CACAO_SRC_ZIP) $(CACAO_SRC_ZIP)
 endif
@@ -1107,6 +1109,7 @@ endif
 	   echo "ERROR: No up-to-date CACAO zip available"; exit -1; \
 	 fi ; \
 	fi
+endif
 endif
 endif
 	mkdir -p stamps
@@ -1288,6 +1291,13 @@ clean-sanitise-openjdk:
 stamps/extract-cacao.stamp: stamps/download-cacao.stamp
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
+if USE_ALT_CACAO_SRC_DIR
+	if ! test -d cacao ; \
+	then \
+	  mkdir -p cacao/cacao ; \
+	  cp -r $(ALT_CACAO_SRC_DIR)/* cacao/cacao/ ; \
+	fi
+else
 	set -e ; \
 	if ! test -d cacao/cacao ; \
 	then \
@@ -1298,6 +1308,7 @@ if !USE_SYSTEM_CACAO
 	  cd cacao/cacao ; \
 	  cd .. ; \
 	fi
+endif
 endif
 endif
 	mkdir -p stamps
