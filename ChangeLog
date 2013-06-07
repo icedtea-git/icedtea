@@ -1,5 +1,10 @@
 2013-06-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* configure.ac: Set to 2.5pre.
+	* NEWS: Add 2.5.0 section.
+
+2013-06-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR1276: Synchronise CACAO rules between IcedTea6/7/8
 	where possible
 	* NEWS: Updated.
