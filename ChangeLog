@@ -1,5 +1,10 @@
 2013-06-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* Makefile.am:
+	Remove jconsole directory from GENERATED_FILES.
+
+2013-06-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* NEWS: Add Debian bug ID for PR1435.
 
 2013-06-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>

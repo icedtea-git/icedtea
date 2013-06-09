@@ -657,7 +657,6 @@ GENERATED_FILES = $(top_srcdir)/generated/com/sun/java/swing/plaf/gtk/resources/
 	$(top_srcdir)/generated/sun/util/resources/*.java \
 	$(top_srcdir)/generated/sun/print/resources/serviceui*.java \
 	$(top_srcdir)/generated/sun/tools/jar/resources/jar*.java \
-	$(top_srcdir)/generated/sun/tools/jconsole/*.java \
 	$(top_srcdir)/generated/sun/management/resources/agent*.java \
 	$(top_srcdir)/generated/java/nio/*.java \
 	$(top_srcdir)/generated/java/nio/channels/*.java \
