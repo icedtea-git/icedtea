@@ -1,7 +1,14 @@
 2013-06-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
-	Remove jconsole directory from GENERATED_FILES.
+	(EXTRA_DIST): Remove non-existent JamVM patch
+	directory.
+
+2013-06-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(GENERATED_FILES): Remove non-existent jconsole
+	directory.
 
 2013-06-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
