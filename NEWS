@@ -818,7 +818,7 @@ OpenJDK
   - RH513605, PR1280: Updating/Installing OpenJDK should recreate the shared class-data archive
   - PR1358: Make XRender mandatory
   - PR1360: Check for /usr/lib64 JVMs and generic JPackage alternative
-  - PR1435: OpenJDK 7 returns incorrect TrueType font metrics
+  - PR1435, D657854: OpenJDK 7 returns incorrect TrueType font metrics
   - PR728: GTKLookAndFeel does not honor gtk-alternative-button-order
 * CACAO
   - src/vm/jit/x86_64/asmpart.S (asm_abstractmethoderror): Keep stack aligned.
