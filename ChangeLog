@@ -1,3 +1,8 @@
+2013-04-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(ICEDTEA_NAME): Make same across all versions.
+
 2013-06-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
