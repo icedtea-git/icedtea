@@ -7,12 +7,14 @@ DX  - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=X
 GX  - http://bugs.gentoo.org/show_bug.cgi?id=X
 CAX - http://server.complang.tuwien.ac.at/cgi-bin/bugzilla/show_bug.cgi?id=X
 LPX - https://bugs.launchpad.net/bugs/X
+JSRX - http://jcp.org/en/jsr/detail?id=X
+JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.5.0 (2012-XX-XX):
 
-New in release 2.4.0 (2012-XX-XX):
+New in release 2.4.0 (2013-06-09):
 
 OpenJDK
   - PR1209, S7170638: Use DTRACE_PROBE[N] in JNI Set and SetStatic Field.
@@ -793,6 +795,7 @@ OpenJDK
   - S8011867: Accept unknown PKCS #9 attributes
   - S8012572: Exclude sun/tools/jmap/Basic.sh for short term
   - S8014469: (tz) Support tzdata2013c
+  - S8015275: Resolve ambiguity in OCSPChecker & CrlRevocationChecker
 * Backports
   - PR1197, S8003120, RH868136: ResourceManager.getApplicationResources() does not close InputStreams
   - S8014618, RH962568: Need to strip leading zeros in TlsPremasterSecret of DHKeyAgreement
@@ -804,13 +807,12 @@ OpenJDK
   - Include defs.make in buildtree.make so ZERO_BUILD is recognised and JVM_VARIANT_ZERO set.
   - Provide support for using PKCS11 provider with NSS
   - Remove file apparently removed as part of upstreaming of Zero.
-  - Revert 7060849
+  - Revert S7060849
   - Set UNLIMITED_CRYPTO=true to ensure we use the unlimited policy.
   - PR473: Set handleStartupErrors to ignoreMultipleInitialisation in nss.cfg
   - PR716: IcedTea7 should bootstrap with IcedTea6
-  - Expand java.security.cert.* imports to avoid conflict when building with OpenJDK 6.
   - Fix indentation on Makefile block not executed when STRIP_POLICY=no_strip is set
-  - Fix invalid XSL stylesheets and DTD introduced as part of JEP 167.
+  - JEP167: Fix invalid XSL stylesheets and DTD.
   - Include defs.make in buildtree.make so ZERO_BUILD is recognised and JVM_VARIANT_ZERO set.
   - Make sure libffi cflags and libs are used.
   - PR1378: Add AArch64 support to Zero
@@ -848,8 +850,8 @@ OpenJDK
   - PR1278: Synchronise CACAO versions between IcedTea6/7/8 where possible
   - PR1276: Synchronise CACAO rules between IcedTea6/7/8 where possible
 * JamVM
-  - JSR 335: (lambda expressions) initial hack
-  - JEP 171: Implement fence methods in sun.misc.Unsafe
+  - JSR335: (lambda expressions) initial hack
+  - JEP171: Implement fence methods in sun.misc.Unsafe
   - Fix invokesuper check in invokespecial opcode
   - Fix non-direct interpreter invokespecial super-class check
   - When GC'ing a native method don't try to free code
@@ -857,6 +859,8 @@ OpenJDK
   - Set anonymous class protection domain
   - JVM_IsVMGeneratedMethodIx stub
   - Dummy implementation of sun.misc.Perf natives
+* SystemTap
+  - Add garbage collection probes
   
 New in release 2.1.8 (2013-05-02):
 
