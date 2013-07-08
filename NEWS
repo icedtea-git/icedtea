@@ -14,6 +14,778 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.5.0 (2012-XX-XX):
 
+New in release 2.4.1 (2013-07-05):
+
+* Security fixes
+  - S6741606, CVE-2013-2407: Integrate Apache Santuario
+  - S7158805, CVE-2013-2445: Better rewriting of nested subroutine calls
+  - S7170730, CVE-2013-2451: Improve Windows network stack support.
+  - S8000638, CVE-2013-2450: Improve deserialization
+  - S8000642, CVE-2013-2446: Better handling of objects for transportation
+  - S8001032: Restrict object access
+  - S8001033, CVE-2013-2452: Refactor network address handling in virtual machine identifiers
+  - S8001034, CVE-2013-1500: Memory management improvements
+  - S8001038, CVE-2013-2444: Resourcefully handle resources
+  - S8001043: Clarify definition restrictions
+  - S8001308: Update display of applet windows
+  - S8001309: Better handling of annotation interfaces
+  - S8001318, CVE-2013-2447: Socket.getLocalAddress not consistent with InetAddress.getLocalHost
+  - S8001330, CVE-2013-2443: Improve on checking order (non-Zero builds only)
+  - S8003703, CVE-2013-2412: Update RMI connection dialog box
+  - S8004288, CVE-2013-2449: (fs) Files.probeContentType problems
+  - S8004584: Augment applet contextualization
+  - S8005007: Better glyph processing
+  - S8006328, CVE-2013-2448: Improve robustness of sound classes
+  - S8006611: Improve scripting
+  - S8007467: Improve robustness of JMX internal APIs
+  - S8007471: Improve MBean notifications
+  - S8007812, CVE-2013-2455: (reflect) Class.getEnclosingMethod problematic for some classes
+  - S8007925: Improve cmsStageAllocLabV2ToV4curves
+  - S8007926: Improve cmsPipelineDup
+  - S8007927: Improve cmsAllocProfileSequenceDescription
+  - S8007929: Improve CurvesAlloc
+  - S8008120, CVE-2013-2457: Improve JMX class checking
+  - S8008124, CVE-2013-2453: Better compliance testing
+  - S8008128: Better API coherence for JMX
+  - S8008132, CVE-2013-2456: Better serialization support
+  - S8008585: Better JMX data handling
+  - S8008593: Better URLClassLoader resource management
+  - S8008603: Improve provision of JMX providers
+  - S8008607: Better input checking in JMX
+  - S8008611: Better handling of annotations in JMX
+  - S8008615: Improve robustness of JMX internal APIs
+  - S8008623: Better handling of MBeanServers
+  - S8008744, CVE-2013-2407: Rework part of fix for JDK-6741606
+  - S8008982: Adjust JMX for underlying interface changes
+  - S8009004: Better implementation of RMI connections
+  - S8009008: Better manage management-api
+  - S8009013: Better handling of T2K glyphs
+  - S8009034: Improve resulting notifications in JMX
+  - S8009038: Improve JMX notification support
+  - S8009057, CVE-2013-2448: Improve MIDI event handling
+  - S8009067: Improve storing keys in KeyStore
+  - S8009071, CVE-2013-2459: Improve shape handling
+  - S8009235: Improve handling of TSA data
+  - S8009424, CVE-2013-2458: Adapt Nashorn to JSR-292 implementation change
+  - S8009554, CVE-2013-2454: Improve SerialJavaObject.getFields
+  - S8009654: Improve stability of cmsnamed
+  - S8010209, CVE-2013-2460: Better provision of factories
+  - S8011243, CVE-2013-2470: Improve ImagingLib
+  - S8011248, CVE-2013-2471: Better Component Rasters
+  - S8011253, CVE-2013-2472: Better Short Component Rasters
+  - S8011257, CVE-2013-2473: Better Byte Component Rasters
+  - S8012375, CVE-2013-1571: Improve Javadoc framing
+  - S8012421: Better positioning of PairPositioning
+  - S8012438, CVE-2013-2463: Better image validation
+  - S8012597, CVE-2013-2465: Better image channel verification
+  - S8012601, CVE-2013-2469: Better validation of image layouts
+  - S8014281, CVE-2013-2461: Better checking of XML signature
+  - S8015997: Additional improvement in Javadoc framing
+* OpenJDK
+  - S2223192: [macosx] "opposite" seems always null in focus events
+  - S4504275: CORBA boolean type unions do not generate compilable code from idlj
+  - S6337518: Null Arrow Button Throws Exception in BasicComboBoxUI
+  - S6429204: (se) Concurrent Selector.register and SelectionKey.interestOps can ignore interestOps
+  - S6436314: Vector could be created with appropriate size in DefaultComboBoxModel
+  - S6443505: Ideal() function for CmpLTMask
+  - S6470730: Disconnect button leads to wrong popup message
+  - S6725714: par compact - add a table to speed up bitmap searches
+  - S6761744: Hotspot crashes if process size limit is exceeded
+  - S6843375: Debuggee VM crashes performing mark-sweep-compact
+  - S7038105: File.isHidden() should return true for pagefile.sys and hiberfil.sys
+  - S7053526: Upgrade JDK 8 to use Little CMS 2.4
+  - S7056447: test/java/lang/management/ManagementFactory/MBeanServerMXBeanUnsupportedTest.java fails in agentvm
+  - S7066063: CMS: "Conservation Principle" assert failed
+  - S7068740: If you wrap a JTable in a JLayer you can't use the page up and page down cmds
+  - S7105030: [TEST_BUG] [macosx] The tests never finishes
+  - S7109087: gc/7072527/TestFullGCCount.java fails when GC is set in command-line
+  - S7109977: [macosx] MixingInHwPanel.java test fails on Mac trying to click in the reserved corner
+  - S7115383: TEST_BUG: some jtreg tests fail because they explicitly specify -server option
+  - S7124520: [macosx] re:6373505 Toolkit.getScreenResolution() != GraphicsConfiguration.getNormalizingTransform()
+  - S7132378: Race in FutureTask if used with explicit set ( not Runnable )
+  - S7142919: TEST_BUG: java/nio/channels/AsyncCloseAndInterrupt.java failing intermittently [sol11]
+  - S7151823: The test incorrectly recognizing OS
+  - S7152798: TEST_BUG: sun/management/HotspotClassLoadingMBean/GetClassLoadingTime.java does not compile
+  - S7152866: Tests not run because they are missing the @run tag
+  - S7157656: (zipfs) SeekableByteChannel to entry in zip file always reports its position as 0
+  - S7158350: [macosx] Strange results of SwingUIText printing
+  - S7160084: javac fails to compile an apparently valid class/interface combination
+  - S7163898: add isLoggable() check to doLog()
+  - S7164256: EnumMap clone doesn't clear the entrySet keeping a reference to the original Map
+  - S7174966: With OCSP enabled on Java 7 get error 'Wrong key usage' with Comodo certificate
+  - S7176220: 'Full GC' events miss date stamp information occasionally
+  - S7176479: G1: JVM crashes on T5-8 system with 1.5 TB heap
+  - S7179050: [macosx] Make LWAWT be able to run on AppKit thread
+  - S7179353: try-with-resources fails to compile with generic exception parameters
+  - S7181710: [macosx] jawt_md.h shipped with jdk is outdated
+  - S7183520: [macosx]Unable to print out the defined page for 2D_PrintingTiger/JTablePrintPageRangesTest
+  - S7183800: TEST_BUG: Update tests to run on Ubuntu 12.04 (localhost is 127.0.1.1)
+  - S7184908: TEST_BUG: [macosx] closed/com/sun/java/swing/plaf/gtk/4928019/bug4928019.java fails
+  - S7184945: [macosx] NPE in AquaComboBoxUI since jdk7u6b17, jdk8b47
+  - S7186737: Unable to allocate bit maps or card tables for parallel gc for the requested heap
+  - S7190897: (fs) Files.isWritable method returns false when the path is writable (win)
+  - S7194902: [macosx] closed/java/awt/Button/DoubleActionEventTest/DoubleActionEventTest failed since jdk8b49
+  - S7196080: assert(max_heap >= InitialHeapSize) in arguments.cpp
+  - S7196277: JSR 292: Two jck/runtime tests crash on java.lang.invoke.MethodHandle.invokeExact
+  - S7197666: java -d64 -version core dumps in a box with lots of memory
+  - S7198229: Painting during resizing of the frame should be more smooth
+  - S7199143: RFE: OCSP revocation checker should provide possibility to specify connection timeout
+  - S8000435: [macosx] Button painting error under Java 7 on Mac
+  - S8000450: Restrict access to com/sun/corba/se/impl package
+  - S8000529: Regression: SimpleDateFormat incorrectly parses dates formatted with Z and z pattern letters
+  - S8000629: [macosx] Blurry rendering with Java 7 on Retina display
+  - S8000973: SA on windows thread inspection is broken
+  - S8002070: Remove the stack search for a resource bundle for Logger to use
+  - S8002308: [macosx] 7198229 should be applied to the user action only
+  - S8002390: (zipfs) Problems moving files between zip file systems
+  - S8003169: [macosx] JVM crash after disconnecting from projector
+  - S8003173: [macosx] Fullscreen on Mac leaves an empty rectangle
+  - S8003268: SharedRuntime::generate_native_wrapper doesn't save all registers across runtime tracing calls for JNI critical native methods
+  - S8003992: File and other classes in java.io do not handle embedded nulls properly
+  - S8004821: Graphics2D.drawPolygon() fails with IllegalPathStateException
+  - S8004866: [macosx] HiDPI support in Aqua L&F
+  - S8005032: G1: Cleanup serial reference processing closures in concurrent marking
+  - S8005405: [macosx] Drag and Drop: wrong animation when dropped outside any drop target.
+  - S8005527: [TEST_BUG] console.sh failed Automatically with exit code 1.
+  - S8005555: TEST_BUG: java/io/Serializable/accessConstants/AccessConstants.java should be removed
+  - S8005956: C2: assert(!def_outside->member(r)) failed: Use of external LRG overlaps the same LRG defined in this block
+  - S8005997: [macosx] Printer Dialog opens an additional title bar
+  - S8006008: Memory leak in hotspot/src/share/vm/adlc/archDesc.cpp
+  - S8006014: Memory leak in hotspot/src/share/vm/adlc/dfa.cpp
+  - S8006016: Memory leak at hotspot/src/share/vm/adlc/output_c.cpp
+  - S8006242: G1: WorkerDataArray<T>::verify() too strict for double calculations
+  - S8006328: Improve robustness of sound classes
+  - S8006423: SA: NullPointerException in sun.jvm.hotspot.debugger.bsd.BsdThread.getContext(BsdThread.java:67)
+  - S8006611: Improve scripting
+  - S8006634: Unify LWCToolkit.invokeAndWait() and sun.awt.datatransfer.ToolkitThreadBlockedHandler
+  - S8006894: G1: Number of marking threads missing from PrintFlagsFinal output
+  - S8007028: java/util/NavigableMap/LockStep hit assert(flat != TypePtr::BOTTOM) failed: cannot alias-analyze an untyped ptr
+  - S8007036: G1: Too many old regions added to last mixed GC
+  - S8007150: Event based tracing is missing truncated field in stack trace content type
+  - S8007221: G1: concurrent phase durations do not state the time units ("secs")
+  - S8007333: [launcher] removes multiple back slashes
+  - S8007458: [findbugs] One more beans issue, with ReflectionUtils
+  - S8007699: Move some tests from test/sun/security/provider/certpath/X509CertPath to closed repo
+  - S8007703: Remove com.sun.servicetag API
+  - S8008289: DefaultButtonModel instance keeps stale listeners in html FormView
+  - S8008301: G1: guarantee(satb_mq_set.completed_buffers_num() == 0) failure
+  - S8008366: [macosx] ActionListener called twice for JMenuItem using ScreenMenuBar
+  - S8008391: Incorrect metadata for event based tracing
+  - S8008454: test/runtime/NMT/PrintNMTStatistics is broken
+  - S8008535: JDK7 Printing : CJK and Latin Text in a string overlap
+  - S8008660: Failure in 2D Queue Flusher thread on Mac
+  - S8008738: Issue in com.sun.org.apache.xml.internal.serializer.Encodings causes some JCK tests to fail intermittently
+  - S8008744: Rework part of fix for JDK-6741606
+  - S8008804: file descriptor leak in src/windows/native/java/net/DualStackPlainSocketImpl.c
+  - S8008916: G1: Evacuation failed tracing event
+  - S8009012: [macosx] DisplayChangedListener is not implemented in LWWindowPeer/CGraphicsEnvironment
+  - S8009125: Add NMT tests for Virtual Memory operations
+  - S8009152: A number of jtreg tests need review/improvement
+  - S8009199: Printed text become garbage on Mac OSX
+  - S8009217: REGRESSION: test com/sun/org/apache/xml/internal/security/transforms/ClassLoaderTest.java fails to compile since 7u21b03
+  - S8009259: TEST_BUG: sun/misc/Cleaner/exitOnThrow.sh failing intermittently
+  - S8009302: Mac OS X: JVM crash on infinite recursion on Appkit Thread
+  - S8009536: G1: Apache Lucene hang during reference processing
+  - S8009638: Wrong comment for PL in LocaleISOData, 1989 forward Poland is Republic of Poland
+  - S8009751: (se) Selector spin when select, close and interestOps(0) invoked at same time (lnx)
+  - S8009911: [macosx] SWT app freeze when going full screen using Java 7 on Mac
+  - S8009928: PSR:PERF Increase default string table size
+  - S8009940: G1: assert(_finger == _heap_end) failed, concurrentMark.cpp:809
+  - S8009996: tests javax/management/mxbean/MiscTest.java and javax/management/mxbean/StandardMBeanOverrideTest.java fail
+  - S8009999: Test sun/tools/jcmd/jcmd-f.sh failing after JDK-8008820
+  - S8010009: [macosx] Unable type into online word games on MacOSX
+  - S8010090: GC ID has the wrong type
+  - S8010118: Annotate jdk caller sensitive methods with @sun.reflect.CallerSensitive
+  - S8010151: nsk/regression/b6653214 fails "assert(snapshot != NULL) failed: Worker should not be started"
+  - S8010213: Some api/javax_net/SocketFactory tests fail in 7u25 nightly build
+  - S8010309: Improve PlatformLogger.isLoggable performance by direct mapping from an integer to Level
+  - S8010399: Test8009761.java "Failed: init recursive calls: 5498. After deopt 5494".
+  - S8010437: guarantee(this->is8bit(imm8)) failed: Short forward jump exceeds 8-bit offset
+  - S8010463: G1: Crashes with -UseTLAB and heap verification
+  - S8010514: G1: Concurrent mode failure tracing event
+  - S8010714: XML DSig API allows a RetrievalMethod to reference another RetrievalMethod
+  - S8010721: In JDK7 the menu bar disappears when a Dialog is shown
+  - S8010727: WLS fails to add a logger with "" in its own LogManager subclass instance
+  - S8010770: Zero: back port of 8000780 to HS24 broke JSR 292
+  - S8010780: G1: Eden occupancy/capacity output wrong after a full GC
+  - S8010913: compiler/6863420 often exceeds timeout
+  - S8010927: Kitchensink crashed with SIGSEGV, Problematic frame: v ~StubRoutines::checkcast_arraycopy
+  - S8011102: Clear AVX registers after return from JNI call
+  - S8011128: (fs) Files.createDirectory fails if the resolved path is exactly 248 characters long
+  - S8011139: (reflect) Revise checking in getEnclosingClass
+  - S8011154: java/awt/Frame/ShapeNotSetSometimes/ShapeNotSetSometimes.java failed since 7u25b03 on windows
+  - S8011161: NMT: Memory leak when encountering out of memory error while initializing memory snapshot
+  - S8011186: [TEST_BUG] java/awt/Focus/OverrideRedirectWindowActivationTest/OverrideRedirectWindowActivationTest.java failed on windows 8
+  - S8011200: (coll) Optimize empty HashMap and ArrayList
+  - S8011218: Kitchensink hanged, likely NMT is to blame
+  - S8011313: OCSP timeout set to wrong value if com.sun.security.ocsp.timeout not defined
+  - S8011380: FX dependency on PlatformLogger broken by 8010309
+  - S8011425: NPE in TestObjectCountAfterGCEvent.java on Linux32
+  - S8011557: Improve reflection utility classes
+  - S8011653: Upgrade to JAXP 1.5
+  - S8011686: [macosx] AWT accidentally disables the NSApplicationDelegate of SWT, causing loss of OS X integration functionality
+  - S8011695: [tck-red] Application can not be run, the Security Warning dialog is gray.
+  - S8011806: 7u25-b05 hotspot fastdebug build failure
+  - S8011882: Replace spin loops as back off when suspending
+  - S8011891: The vm/gc/heap/heap_summary_after_gc event for CMS contains old data
+  - S8011901: Unsafe.getAndAddLong(obj, off, delta) does not work properly with long deltas
+  - S8011947: new hotspot build - hs24-b41
+  - S8011952: Missing ResourceMarks in TraceMethodHandles
+  - S8011968: Kitchensink crashed with SIGSEGV in MemBaseline::baseline
+  - S8011986: [corba] idlj generates read/write union helper methods that throw wrong exception in some cases
+  - S8011990: TEST_BUG: java/util/logging/bundlesearch/ResourceBundleSearchTest.java fails on Windows
+  - S8011992: java/awt/image/mlib/MlibOpsTest.java failed since jdk7u25b05
+  - S8012004: JInternalFrame not being finalized after closing
+  - S8012019: (fc) Thread.interrupt triggers hang in FileChannelImpl.pread (win)
+  - S8012037: Test8009761.java "Failed: init recursive calls: 7224. After deopt 58824"
+  - S8012044: Give more information about self-suppression from Throwable.addSuppressed
+  - S8012082: SASL: auth-conf negotiated, but unencrypted data is accepted, reset to unencrypt
+  - S8012086: The object count event should only send events for instances occupying more than 0.5% of the heap
+  - S8012102: CollectedHeap::ensure_parsability is not always called during heap inspection
+  - S8012112: java/awt/image/mlib/MlibOpsTest.java fails on sparc solaris
+  - S8012182: Add information about class loading and unloading to event based tracing framework
+  - S8012210: Make TracingTime available when INCLUDE_TRACE = 0
+  - S8012212: Want to link against kstat on solaris x86 as well as sparc
+  - S8012243: about 30% regression on specjvm2008.serial on 7u25 comparing 7u21
+  - S8012265: VM often crashes on solaris with a lot of memory
+  - S8012330: [macosx] Sometimes the applet showing the modal dialog itself loses the ability to gain focus
+  - S8012335: G1: Fix bug with compressed oops in template interpreter on x86 and sparc.
+  - S8012381: [macosx]  Collation selection ignored when printing on MacOSX
+  - S8012453: (process) Runtime.exec(String) fails if command contains spaces [win]
+  - S8012455: Missing time and date stamps for PrintGCApplicationConcurrentTime and PrintGCApplicationStoppedTime
+  - S8012558: new hotspot build - hs24-b42
+  - S8012586: [x11] Modal dialogs for fullscreen window may show behind its owner
+  - S8012617: ArrayIndexOutOfBoundsException with some fonts using LineBreakMeasurer
+  - S8012683: Remove unused, obsolete ObjectFactory classes
+  - S8012714: Assign the unique traceid directly to the Klass upon creation
+  - S8012715: G1: GraphKit accesses PtrQueue::_index as int but is size_t
+  - S8012933: Test closed/java/awt/Dialog/DialogAnotherThread/JaWSTest.java fails since jdk 7u25 b07
+  - S8013057: assert(_needs_gc || SafepointSynchronize::is_at_safepoint()) failed: only read at safepoint
+  - S8013117: Thread-local trace_buffer has wrong type and name
+  - S8013120: NMT: Kitchensink crashes with assert(next_region == NULL || !next_region->is_committed_region()) failed: Sanity check
+  - S8013140: Heap corruption with NetworkInterface.getByInetAddress() and long i/f name
+  - S8013196: TimeZone.getDefault() throws NPE due to sun.awt.AppContext.getAppContext()
+  - S8013214: BigApps fails due to 'fatal error: Illegal threadstate encountered: 6'
+  - S8013226: new hotspot build - hs24-b43
+  - S8013228: Create new system properties to control allowable OCSP clock skew and CRL connection timeout
+  - S8013370: Null pointer exception when adding more than 9 accelators to a JMenuBar
+  - S8013380: Removal of stack walk to find resource bundle breaks Glassfish startup
+  - S8013398: Adjust number of stack guard pages on systems with large memory page size
+  - S8013416: Java Bean Persistence with XMLEncoder
+  - S8013557: XMLEncoder in 1.7 can't encode objects initialized in no argument constructor
+  - S8013651: NMT: reserve/release sequence id's in incorrect order due to race
+  - S8013799: new hotspot build - hs24-b44
+  - S8013810: PrintServiceLookup.lookupPrintServices() does not return consistent result
+  - S8013827: File.createTempFile hangs with temp file starting with 'com1.4'
+  - S8013900: More warnings compiling jaxp.
+  - S8013917: Kitchensink crashed with SIGSEGV in BaselineReporter::diff_callsites
+  - S8013934: Garbage collection event for CMS has wrong cause for System.gc()
+  - S8014048: Online user guide of jconsole points incorrect link
+  - S8014129: makefile changes to allow integration of new features
+  - S8014189: JVM crash with SEGV in ConnectionGraph::record_for_escape_analysis()
+  - S8014196: ktab creates a file with zero kt_vno
+  - S8014205: Most of the Swing dialogs are blank on one win7 MUI
+  - S8014278: new hotspot build - hs24-b45
+  - S8014326: [OSX] All libjvm symbols are exported
+  - S8014408: G1: crashes with assert assert(prev_committed_card_num == _committed_max_card_num) failed
+  - S8014411: Decrease lock order rank for event tracing locks
+  - S8014420: Default JDP address does not match the one assigned by IANA
+  - S8014423: [macosx] The scrollbar's block increment performs incorrectly
+  - S8014427: REGRESSION: closed/javax/imageio/plugins/bmp/Write3ByteBgrTest.java fails since 7u25 b09
+  - S8014478: EnableTracing: output from multiple threads may be mixed together
+  - S8014611: reserve_and_align() assumptions are invalid on windows
+  - S8014669: arch specific flags not passed to some link commands
+  - S8014676: Java debugger may fail to run
+  - S8014718: Netbeans IDE begins to throw a lot exceptions since 7u25 b10
+  - S8014721: TEST_BUG: java/awt/TrayIcon/DragEventSource/DragEventSource.java fails with java.lang.UnsupportedOperationException
+  - S8014724: Broken 7u-dev build
+  - S8014745: Provide a switch to allow stack walk search of resource bundle
+  - S8014759: new hotspot build - hs24-b46
+  - S8014811: loopTransform.cpp assert(cmp_end->in(2) == limit) failed
+  - S8014821: Regression: Focus issues with Oracle WebCenter Capture applet
+  - S8014863: Line break calculations in Java 7 are incorrect
+  - S8014891: Redundant setting of external access properties in setFeatures
+  - S8014924: JToolTip#setTipText() sometimes (very often) not repaints component.
+  - S8014941: make jdk7u40 the default jprt release for hs24
+  - S8014968: OCSP and CRL connection timeout is set to four hours by default
+  - S8014969: Use open man pages for non commercial builds
+  - S8015016: Improve JAXP 1.5 error message
+  - S8015275: Resolve ambiguity in OCSPChecker & CrlRevocationChecker
+  - S8015303: [macosx] Application launched via custom URL Scheme does not receive URL
+  - S8015304: new hotspot build - hs24-b47
+  - S8015334: Memory leak when kerning is used on Windows.
+  - S8015375: Edits to text components hang for clipboard access
+  - S8015556: [macosx] surrogate pairs do not render properly.
+  - S8015604: JDP packets containing ideographic characters are broken
+  - S8015606: Text is not rendered correctly if destination buffer is custom
+  - S8015683: object_count_after_gc should have the same timestamp for all events
+  - S8015689: new hotspot build - hs24-b48
+  - S8015972: Refactor the sending of the object count after GC event
+  - S8016046: (process) Strict validation of input should be security manager case only [win].
+  - S8016063: getFinalAttributes should use FindClose
+  - S8016065: Write regression test for 7167142
+  - S8016077: new hotspot build - hs24-b49
+  - S8016153: Property http://javax.xml.XMLConstants/property/accessExternalDTD is not recognized.
+  - S8016170: GC id variable in gcTrace.cpp should use typedef GCId
+  - S8016187: assert(nbits == 32 || (-(1 << nbits-1) <= x && x < ( 1 << nbits-1))) failed: value out of range
+  - S8016556: G1: Use ArrayAllocator for BitMaps
+  - S8016566: new hotspot build - hs24-b50
+  - S8016735: Remove superfluous EnableInvokeDynamic warning from UnlockDiagnosticVMOptions check
+  - S8016814: sun.reflect.Reflection.getCallerClass returns the frame off by 1
+
+New in release 2.2.9 (2013-06-29):
+
+* New features
+  - PR1378: Add AArch64 support to Zero
+* Security fixes
+  - S6741606, CVE-2013-2407: Integrate Apache Santuario
+  - S7158805, CVE-2013-2445: Better rewriting of nested subroutine calls
+  - S7170730, CVE-2013-2451: Improve Windows network stack support.
+  - S8000638, CVE-2013-2450: Improve deserialization
+  - S8000642, CVE-2013-2446: Better handling of objects for transportation
+  - S8001032: Restrict object access
+  - S8001033, CVE-2013-2452: Refactor network address handling in virtual machine identifiers
+  - S8001034, CVE-2013-1500: Memory management improvements
+  - S8001038, CVE-2013-2444: Resourcefully handle resources
+  - S8001043: Clarify definition restrictions
+  - S8001308: Update display of applet windows
+  - S8001309: Better handling of annotation interfaces
+  - S8001318, CVE-2013-2447: Socket.getLocalAddress not consistent with InetAddress.getLocalHost
+  - S8003703, CVE-2013-2412: Update RMI connection dialog box
+  - S8004288, CVE-2013-2449: (fs) Files.probeContentType problems
+  - S8004584: Augment applet contextualization
+  - S8005007: Better glyph processing
+  - S8006328, CVE-2013-2448: Improve robustness of sound classes
+  - S8006611: Improve scripting
+  - S8007467: Improve robustness of JMX internal APIs
+  - S8007471: Improve MBean notifications
+  - S8007812, CVE-2013-2455: (reflect) Class.getEnclosingMethod problematic for some classes
+  - S8007925: Improve cmsStageAllocLabV2ToV4curves
+  - S8007926: Improve cmsPipelineDup
+  - S8007927: Improve cmsAllocProfileSequenceDescription
+  - S8007929: Improve CurvesAlloc
+  - S8008120, CVE-2013-2457: Improve JMX class checking
+  - S8008124, CVE-2013-2453: Better compliance testing
+  - S8008128: Better API coherence for JMX
+  - S8008132, CVE-2013-2456: Better serialization support
+  - S8008585: Better JMX data handling
+  - S8008593: Better URLClassLoader resource management
+  - S8008603: Improve provision of JMX providers
+  - S8008607: Better input checking in JMX
+  - S8008611: Better handling of annotations in JMX
+  - S8008615: Improve robustness of JMX internal APIs
+  - S8008623: Better handling of MBeanServers
+  - S8008744, CVE-2013-2407: Rework part of fix for JDK-6741606
+  - S8008982: Adjust JMX for underlying interface changes
+  - S8009004: Better implementation of RMI connections
+  - S8009008: Better manage management-api
+  - S8009013: Better handling of T2K glyphs
+  - S8009034: Improve resulting notifications in JMX
+  - S8009038: Improve JMX notification support
+  - S8009057, CVE-2013-2448: Improve MIDI event handling
+  - S8009067: Improve storing keys in KeyStore
+  - S8009071, CVE-2013-2459: Improve shape handling
+  - S8009235: Improve handling of TSA data
+  - S8009424, CVE-2013-2458: Adapt Nashorn to JSR-292 implementation change
+  - S8009554, CVE-2013-2454: Improve SerialJavaObject.getFields
+  - S8009654: Improve stability of cmsnamed
+  - S8010209, CVE-2013-2460: Better provision of factories
+  - S8011243, CVE-2013-2470: Improve ImagingLib
+  - S8011248, CVE-2013-2471: Better Component Rasters
+  - S8011253, CVE-2013-2472: Better Short Component Rasters
+  - S8011257, CVE-2013-2473: Better Byte Component Rasters
+  - S8012375, CVE-2013-1571: Improve Javadoc framing
+  - S8012421: Better positioning of PairPositioning
+  - S8012438, CVE-2013-2463: Better image validation
+  - S8012597, CVE-2013-2465: Better image channel verification
+  - S8012601, CVE-2013-2469: Better validation of image layouts
+  - S8014281, CVE-2013-2461: Better checking of XML signature
+  - S8015997: Additional improvement in Javadoc framing
+* Bug fixes
+  - S7053526: Upgrade JDK 8 to use Little CMS 2.4
+  - S7124347: [macosx] java.lang.InternalError: not implemented yet on call Graphics2D.drawRenderedImage
+  - S7142091: [macosx] RFE: Refactoring of peer initialization/disposing
+  - S7142596: RMI JPRT tests are failing
+  - S7150345: [macosx] Can't type into applets
+  - S7151434, RH969884: java -jar -XX crashes java launcher
+  - S7156191: [macosx] Can't type into applet demos in Pivot
+  - S7156194: [macosx] Can't type non-ASCII characters into applets
+  - S7171223: Building ExtensionSubtables.cpp should use -fno-strict-aliasing
+  - S7174718: [macosx] Regression in 7u6 b12: PopupFactory leaks DefaultFrames.
+  - S7188114: (launcher) need an alternate command line parser for Windows
+  - S7195301: XML Signature DOM implementation should not use instanceof to determine type of Node
+  - S7198570: (tz) Support tzdata2012f
+  - S7199143: RFE: OCSP revocation checker should provide possibility to specify connection timeout
+  - S8001161: mac: EmbeddedFrame doesn't become active window
+  - S8002070: Remove the stack search for a resource bundle for Logger to use
+  - S8002225: (tz) Support tzdata2012i
+  - S8005932: Java 7 on mac os x only provides text clipboard formats
+  - S8006120: Provide "Server JRE" for 7u train
+  - S8006417: JComboBox.showPopup(), hidePopup() fails in JRE 1.7 on OS X
+  - S8006536: [launcher]  removes trailing slashes on arguments
+  - S8009165: Fix for 8006435 needs revision
+  - S8009217: REGRESSION: test com/sun/org/apache/xml/internal/security/transforms/ClassLoaderTest.java fails to compile since 7u21b03
+  - S8009463: Regression test test\java\lang\Runtime\exec\ArgWithSpaceAndFinalBackslash.java failing.
+  - S8009610: Blacklist certificate used with malware.
+  - S8009987: (tz) Support tzdata2013b
+  - S8009996: tests javax/management/mxbean/MiscTest.java and javax/management/mxbean/StandardMBeanOverrideTest.java fail
+  - S8010009: [macosx] Unable type into online word games on MacOSX
+  - S8010118: Annotate jdk caller sensitive methods with @sun.reflect.CallerSensitive
+  - S8010213: Some api/javax_net/SocketFactory tests fail in 7u25 nightly build
+  - S8010714: XML DSig API allows a RetrievalMethod to reference another RetrievalMethod
+  - S8010727: WLS fails to add a logger with "" in its own LogManager subclass instance
+  - S8010939: Deadlock in LogManager
+  - S8011139: (reflect) Revise checking in getEnclosingClass
+  - S8011154: java/awt/Frame/ShapeNotSetSometimes/ShapeNotSetSometimes.java failed since 7u25b03 on windows
+  - S8011313: OCSP timeout set to wrong value if com.sun.security.ocsp.timeout not defined
+  - S8011557: Improve reflection utility classes
+  - S8011806: 7u25-b05 hotspot fastdebug build failure
+  - S8011990: TEST_BUG: java/util/logging/bundlesearch/ResourceBundleSearchTest.java fails on Windows
+  - S8011992: java/awt/image/mlib/MlibOpsTest.java failed since jdk7u25b05
+  - S8012112: java/awt/image/mlib/MlibOpsTest.java fails on sparc solaris
+  - S8012243: about 30% regression on specjvm2008.serial on 7u25 comparing 7u21
+  - S8012330: [macosx] Sometimes the applet showing the modal dialog itself loses the ability to gain focus
+  - S8012453: (process) Runtime.exec(String) fails if command contains spaces [win]
+  - S8012617: ArrayIndexOutOfBoundsException with some fonts using LineBreakMeasurer
+  - S8012933: Test closed/java/awt/Dialog/DialogAnotherThread/JaWSTest.java fails since jdk 7u25 b07
+  - S8013196: TimeZone.getDefault() throws NPE due to sun.awt.AppContext.getAppContext()
+  - S8013228: Create new system properties to control allowable OCSP clock skew and CRL connection timeout
+  - S8013380: Removal of stack walk to find resource bundle breaks Glassfish startup
+  - S8014205: Most of the Swing dialogs are blank on one win7 MUI
+  - S8014423: [macosx] The scrollbar's block increment performs incorrectly
+  - S8014427: REGRESSION: closed/javax/imageio/plugins/bmp/Write3ByteBgrTest.java fails since 7u25 b09
+  - S8014618, RH868136: Need to strip leading zeros in TlsPremasterSecret of DHKeyAgreement
+  - S8014676: Java debugger may fail to run
+  - S8014718: Netbeans IDE begins to throw a lot exceptions since 7u25 b10
+  - S8014745: Provide a switch to allow stack walk search of resource bundle
+  - S8014968: OCSP and CRL connection timeout is set to four hours by default
+
+New in release 2.1.9 (2013-06-29):
+
+* New features
+  - PR1378: Add AArch64 support to Zero
+* Security fixes
+  - S6741606, CVE-2013-2407: Integrate Apache Santuario
+  - S7158805, CVE-2013-2445: Better rewriting of nested subroutine calls
+  - S7170730, CVE-2013-2451: Improve Windows network stack support.
+  - S8000638, CVE-2013-2450: Improve deserialization
+  - S8000642, CVE-2013-2446: Better handling of objects for transportation
+  - S8001032: Restrict object access
+  - S8001033, CVE-2013-2452: Refactor network address handling in virtual machine identifiers
+  - S8001034, CVE-2013-1500: Memory management improvements
+  - S8001038, CVE-2013-2444: Resourcefully handle resources
+  - S8001043: Clarify definition restrictions
+  - S8001308: Update display of applet windows
+  - S8001309: Better handling of annotation interfaces
+  - S8001318, CVE-2013-2447: Socket.getLocalAddress not consistent with InetAddress.getLocalHost
+  - S8003703, CVE-2013-2412: Update RMI connection dialog box
+  - S8004288, CVE-2013-2449: (fs) Files.probeContentType problems
+  - S8004584: Augment applet contextualization
+  - S8005007: Better glyph processing
+  - S8006328, CVE-2013-2448: Improve robustness of sound classes
+  - S8006611: Improve scripting
+  - S8007467: Improve robustness of JMX internal APIs
+  - S8007471: Improve MBean notifications
+  - S8007812, CVE-2013-2455: (reflect) Class.getEnclosingMethod problematic for some classes
+  - S8007925: Improve cmsStageAllocLabV2ToV4curves
+  - S8007926: Improve cmsPipelineDup
+  - S8007927: Improve cmsAllocProfileSequenceDescription
+  - S8007929: Improve CurvesAlloc
+  - S8008120, CVE-2013-2457: Improve JMX class checking
+  - S8008124, CVE-2013-2453: Better compliance testing
+  - S8008128: Better API coherence for JMX
+  - S8008132, CVE-2013-2456: Better serialization support
+  - S8008585: Better JMX data handling
+  - S8008593: Better URLClassLoader resource management
+  - S8008603: Improve provision of JMX providers
+  - S8008607: Better input checking in JMX
+  - S8008611: Better handling of annotations in JMX
+  - S8008615: Improve robustness of JMX internal APIs
+  - S8008623: Better handling of MBeanServers
+  - S8008744, CVE-2013-2407: Rework part of fix for JDK-6741606
+  - S8008982: Adjust JMX for underlying interface changes
+  - S8009004: Better implementation of RMI connections
+  - S8009008: Better manage management-api
+  - S8009013: Better handling of T2K glyphs
+  - S8009034: Improve resulting notifications in JMX
+  - S8009038: Improve JMX notification support
+  - S8009057, CVE-2013-2448: Improve MIDI event handling
+  - S8009067: Improve storing keys in KeyStore
+  - S8009071, CVE-2013-2459: Improve shape handling
+  - S8009235: Improve handling of TSA data
+  - S8009424, CVE-2013-2458: Adapt Nashorn to JSR-292 implementation change
+  - S8009554, CVE-2013-2454: Improve SerialJavaObject.getFields
+  - S8009654: Improve stability of cmsnamed
+  - S8010209, CVE-2013-2460: Better provision of factories
+  - S8011243, CVE-2013-2470: Improve ImagingLib
+  - S8011248, CVE-2013-2471: Better Component Rasters
+  - S8011253, CVE-2013-2472: Better Short Component Rasters
+  - S8011257, CVE-2013-2473: Better Byte Component Rasters
+  - S8012375, CVE-2013-1571: Improve Javadoc framing
+  - S8012421: Better positioning of PairPositioning
+  - S8012438, CVE-2013-2463: Better image validation
+  - S8012597, CVE-2013-2465: Better image channel verification
+  - S8012601, CVE-2013-2469: Better validation of image layouts
+  - S8014281, CVE-2013-2461: Better checking of XML signature
+  - S8015997: Additional improvement in Javadoc framing
+* Backports
+  - S7171223, RH967436: Building ExtensionSubtables.cpp should use -fno-strict-aliasing
+  - S7053526: Upgrade JDK 8 to use Little CMS 2.4
+  - S7077803: java.lang.InternalError in java.lang.invoke.MethodHandleNatives.init
+  - S7124347: [macosx] java.lang.InternalError: not implemented yet on call Graphics2D.drawRenderedImage
+  - S7142596: RMI JPRT tests are failing
+  - S7151434, RH969884: java -jar -XX crashes java launcher
+  - S7158483: (tz) Support tzdata2012c
+  - S7188114: (launcher) need an alternate command line parser for Windows
+  - S7195301: XML Signature DOM implementation should not use instanceof to determine type of Node
+  - S7198570: (tz) Support tzdata2012f
+  - S7199143: RFE: OCSP revocation checker should provide possibility to specify connection timeout
+  - S8002070: Remove the stack search for a resource bundle for Logger to use
+  - S8002225: (tz) Support tzdata2012i
+  - S8006120: Provide "Server JRE" for 7u train
+  - S8006536: [launcher]  removes trailing slashes on arguments
+  - S8009165: Fix for 8006435 needs revision
+  - S8009217: REGRESSION: test com/sun/org/apache/xml/internal/security/transforms/ClassLoaderTest.java fails to compile since 7u21b03
+  - S8009463: Regression test test\java\lang\Runtime\exec\ArgWithSpaceAndFinalBackslash.java failing.
+  - S8009610: Blacklist certificate used with malware.
+  - S8009987: (tz) Support tzdata2013b
+  - S8009996: tests javax/management/mxbean/MiscTest.java and javax/management/mxbean/StandardMBeanOverrideTest.java fail
+  - S8010118: Annotate jdk caller sensitive methods with @sun.reflect.CallerSensitive
+  - S8010213: Some api/javax_net/SocketFactory tests fail in 7u25 nightly build
+  - S8010714: XML DSig API allows a RetrievalMethod to reference another RetrievalMethod
+  - S8010727: WLS fails to add a logger with "" in its own LogManager subclass instance
+  - S8010939: Deadlock in LogManager
+  - S8011139: (reflect) Revise checking in getEnclosingClass
+  - S8011154: java/awt/Frame/ShapeNotSetSometimes/ShapeNotSetSometimes.java failed since 7u25b03 on windows
+  - S8011313: OCSP timeout set to wrong value if com.sun.security.ocsp.timeout not defined
+  - S8011557: Improve reflection utility classes
+  - S8011806: 7u25-b05 hotspot fastdebug build failure
+  - S8011990: TEST_BUG: java/util/logging/bundlesearch/ResourceBundleSearchTest.java fails on Windows
+  - S8011992: java/awt/image/mlib/MlibOpsTest.java failed since jdk7u25b05
+  - S8012112: java/awt/image/mlib/MlibOpsTest.java fails on sparc solaris
+  - S8012243: about 30% regression on specjvm2008.serial on 7u25 comparing 7u21
+  - S8012453: (process) Runtime.exec(String) fails if command contains spaces [win]
+  - S8012617: ArrayIndexOutOfBoundsException with some fonts using LineBreakMeasurer
+  - S8012933: Test closed/java/awt/Dialog/DialogAnotherThread/JaWSTest.java fails since jdk 7u25 b07
+  - S8013196: TimeZone.getDefault() throws NPE due to sun.awt.AppContext.getAppContext()
+  - S8013228: Create new system properties to control allowable OCSP clock skew and CRL connection timeout
+  - S8013380: Removal of stack walk to find resource bundle breaks Glassfish startup
+  - S8014205: Most of the Swing dialogs are blank on one win7 MUI
+  - S8014427: REGRESSION: closed/javax/imageio/plugins/bmp/Write3ByteBgrTest.java fails since 7u25 b09
+  - S8014618, RH868136: Need to strip leading zeros in TlsPremasterSecret of DHKeyAgreement
+  - S8014676: Java debugger may fail to run
+  - S8014718: Netbeans IDE begins to throw a lot exceptions since 7u25 b10
+  - S8014745: Provide a switch to allow stack walk search of resource bundle
+  - S8014968: OCSP and CRL connection timeout is set to four hours by default
+* Bug fixes
+  - PR1095, PR1409: Allow -Werror to be turned off (HotSpot repository only).
+  - PR1188: ASM Interpreter and Thumb2 JIT javac miscompile modulo reminder on armel
+
+New in release 2.3.10 (2013-06-28):
+
+* Security fixes
+  - S6741606, CVE-2013-2407: Integrate Apache Santuario
+  - S7158805, CVE-2013-2445: Better rewriting of nested subroutine calls
+  - S7170730, CVE-2013-2451: Improve Windows network stack support.
+  - S8000638, CVE-2013-2450: Improve deserialization
+  - S8000642, CVE-2013-2446: Better handling of objects for transportation
+  - S8001032: Restrict object access
+  - S8001033, CVE-2013-2452: Refactor network address handling in virtual machine identifiers
+  - S8001034, CVE-2013-1500: Memory management improvements
+  - S8001038, CVE-2013-2444: Resourcefully handle resources
+  - S8001043: Clarify definition restrictions
+  - S8001308: Update display of applet windows
+  - S8001309: Better handling of annotation interfaces
+  - S8001318, CVE-2013-2447: Socket.getLocalAddress not consistent with InetAddress.getLocalHost
+  - S8001330, CVE-2013-2443: Improve on checking order (non-Zero builds only)
+  - S8003703, CVE-2013-2412: Update RMI connection dialog box
+  - S8004288, CVE-2013-2449: (fs) Files.probeContentType problems
+  - S8004584: Augment applet contextualization
+  - S8005007: Better glyph processing
+  - S8006328, CVE-2013-2448: Improve robustness of sound classes
+  - S8006611: Improve scripting
+  - S8007467: Improve robustness of JMX internal APIs
+  - S8007471: Improve MBean notifications
+  - S8007812, CVE-2013-2455: (reflect) Class.getEnclosingMethod problematic for some classes
+  - S8007925: Improve cmsStageAllocLabV2ToV4curves
+  - S8007926: Improve cmsPipelineDup
+  - S8007927: Improve cmsAllocProfileSequenceDescription
+  - S8007929: Improve CurvesAlloc
+  - S8008120, CVE-2013-2457: Improve JMX class checking
+  - S8008124, CVE-2013-2453: Better compliance testing
+  - S8008128: Better API coherence for JMX
+  - S8008132, CVE-2013-2456: Better serialization support
+  - S8008585: Better JMX data handling
+  - S8008593: Better URLClassLoader resource management
+  - S8008603: Improve provision of JMX providers
+  - S8008607: Better input checking in JMX
+  - S8008611: Better handling of annotations in JMX
+  - S8008615: Improve robustness of JMX internal APIs
+  - S8008623: Better handling of MBeanServers
+  - S8008744, CVE-2013-2407: Rework part of fix for JDK-6741606
+  - S8008982: Adjust JMX for underlying interface changes
+  - S8009004: Better implementation of RMI connections
+  - S8009008: Better manage management-api
+  - S8009013: Better handling of T2K glyphs
+  - S8009034: Improve resulting notifications in JMX
+  - S8009038: Improve JMX notification support
+  - S8009057, CVE-2013-2448: Improve MIDI event handling
+  - S8009067: Improve storing keys in KeyStore
+  - S8009071, CVE-2013-2459: Improve shape handling
+  - S8009235: Improve handling of TSA data
+  - S8009424, CVE-2013-2458: Adapt Nashorn to JSR-292 implementation change
+  - S8009554, CVE-2013-2454: Improve SerialJavaObject.getFields
+  - S8009654: Improve stability of cmsnamed
+  - S8010209, CVE-2013-2460: Better provision of factories
+  - S8011243, CVE-2013-2470: Improve ImagingLib
+  - S8011248, CVE-2013-2471: Better Component Rasters
+  - S8011253, CVE-2013-2472: Better Short Component Rasters
+  - S8011257, CVE-2013-2473: Better Byte Component Rasters
+  - S8012375, CVE-2013-1571: Improve Javadoc framing
+  - S8012421: Better positioning of PairPositioning
+  - S8012438, CVE-2013-2463: Better image validation
+  - S8012597, CVE-2013-2465: Better image channel verification
+  - S8012601, CVE-2013-2469: Better validation of image layouts
+  - S8014281, CVE-2013-2461: Better checking of XML signature
+  - S8015997: Additional improvement in Javadoc framing
+* New features
+  - PR1378: Add AArch64 support to Zero
+* Bug fixes
+  - PR1409: IcedTea 2.3.9 fails to build Zero due to -Werror
+  - PR1410: Icedtea 2.3.9 fails to build using icedtea 1.12.4
+* Backports
+  - S6720349: (ch) Channels tests depending on hosts inside Sun
+  - S6736316: Timeout value in java/util/concurrent/locks/Lock/FlakyMutex.java is insufficient
+  - S6776144: java/lang/ThreadGroup/NullThreadName.java fails with Thread group is not destroyed ,fastdebug LINUX
+  - S6818464: TEST_BUG: java/util/Timer/KillThread.java failing intermittently
+  - S6860309: TEST_BUG: Insufficient sleep time in java/lang/Runtime/exec/StreamsSurviveDestroy.java
+  - S6948101: java/rmi/transport/pinLastArguments/PinLastArguments.java failing intermittently
+  - S6957683: test/java/util/concurrent/ThreadPoolExecutor/Custom.java failing
+  - S6963102: Testcase failures sun/tools/jstatd/jstatdExternalRegistry.sh and sun/tools/jstatd/jstatdDefaults.sh
+  - S6963841: java/util/concurrent/Phaser/Basic.java fails intermittently
+  - S6965150: TEST_BUG: java/nio/channels/AsynchronousSocketChannel/Basic.java takes too long
+  - S7030573: test/java/io/FileInputStream/LargeFileAvailable.java fails when there is insufficient disk space
+  - S7032247: java/net/InetAddress/GetLocalHostWithSM.java fails if hostname resolves to loopback address
+  - S7044870: java/nio/channels/DatagramChannel/SelectWhenRefused.java failed on SUSE Linux 10
+  - S7053526: Upgrade JDK 8 to use Little CMS 2.4
+  - S7054918: jdk_security1 test target cleanup
+  - S7055362: jdk_security2 test target cleanup
+  - S7055363: jdk_security3 test target cleanup
+  - S7072120: No mac os x support in several regression tests
+  - S7073295: TEST_BUG: test/java/lang/instrument/ManifestTest.sh causing havoc (win)
+  - S7076756: TEST_BUG: com/sun/jdi/BreakpointWithFullGC.sh fails to cleanup in Cygwin
+  - S7076791: closed/javax/swing/JColorChooser/Test6827032.java failed on windows
+  - S7077259: [TEST_BUG] [macosx] Test work correctly only when default L&F is Metal
+  - S7084033: TEST_BUG: test/java/lang/ThreadGroup/Stop.java fails intermittently
+  - S7089131: test/java/lang/invoke/InvokeGenericTest.java does not compile
+  - S7102106: TEST_BUG: sun/security/util/Oid/S11N.sh should be modified
+  - S7104161: test/sun/tools/jinfo/Basic.sh fails on Ubuntu
+  - S7104594: [macosx] Test closed/javax/swing/JFrame/4962534/bug4962534 expects Metal L&F by default
+  - S7105929: java/util/concurrent/FutureTask/BlockingTaskExecutor.java fails on solaris sparc
+  - S7124347: [macosx] "java.lang.InternalError: not implemented yet" on call Graphics2D.drawRenderedImage
+  - S7129800: [macosx] Regression test OverrideRedirectWindowActivationTest fails due to timing issue
+  - S7132247: java/rmi/registry/readTest/readTest.sh failing with Cygwin
+  - S7140868: TEST_BUG: jcmd tests need to use -XX:+UsePerfData
+  - S7142596: RMI JPRT tests are failing
+  - S7144833: sun/tools/jcmd/jcmd-Defaults.sh failing intermittently
+  - S7144861: speed up RMI activation tests
+  - S7147408: [macosx] Add autodelay to fix a regression test
+  - S7151434, RH969884: java -jar -XX crashes java launcher
+  - S7152183: TEST_BUG: java/lang/ProcessBuilder/Basic.java failing intermittently [sol]
+  - S7152796: TEST_BUG: java/net/Socks/SocksV4Test.java does not terminate
+  - S7152856: TEST_BUG: sun/net/www/protocol/jar/B4957695.java failing on Windows
+  - S7154113: jcmd, jps and jstat tests failing when there are unknown Java processes on the system
+  - S7154114: jstat tests failing on non-english locales
+  - S7161759: TEST_BUG: java/awt/Frame/WindowDragTest/WindowDragTest.java fails to compile, should be modified
+  - S7162111: TEST_BUG: change tests run in headless mode [macosx]
+  - S7162385: TEST_BUG: sun/net/www/protocol/jar/B4957695.java failing again
+  - S7175775: Disable SA options in jinfo/Basic.java test until SA updated for new hash and String count/offset
+  - S7178649: TEST BUG: BadKdc3.java needs improvement to ignore the unlikely but possible timeout
+  - S7183203: ShortRSAKeynnn.sh tests intermittent failure
+  - S7183753: [TEST] Some colon in the diff for this test
+  - S7184943: fix failing test com/sun/jndi/rmi/registry/RegistryContext/UnbindIdempotent.java
+  - S7184946: fix failing test com/sun/jndi/rmi/registry/RegistryContext/ContextWithNullProperties.java
+  - S7185340: TEST_BUG: java/nio/channels/AsynchronousSocketChannel/Leaky.java failing intermittently [win]
+  - S7186111: fix bugs in java/rmi/activation/ActivationSystem/unregisterGroup/UnregisterGroup
+  - S7187882: TEST_BUG: java/rmi/activation/checkusage/CheckUsage.java fails intermittently
+  - S7193219: JComboBox serialization fails in JDK 1.7
+  - S7194032: update tests for upcoming changes for jtreg
+  - S7194035: update tests for upcoming changes for jtreg
+  - S7199143: RFE: OCSP revocation checker should provide possibility to specify connection timeout
+  - S7199637: TEST_BUG: add serialization tests to jdk7u problem list for macosx
+  - S8000817: Reinstate accidentally removed sleep() from ProcessBuilder/Basic.java
+  - S8001161: mac: EmbeddedFrame doesn't become active window
+  - S8001621: Update awk scripts that check output from jps/jcmd
+  - S8002070: Remove the stack search for a resource bundle for Logger to use
+  - S8002297: sun/net/www/protocol/http/StackTraceTest.java fails intermittently
+  - S8002313: TEST_BUG : jdk/test/java/security/Security/ClassLoaderDeadlock/ClassLoaderDeadlock.java should run in headless mode
+  - S8003597: TEST_BUG: Eliminate dependency on javaweb from closed net tests
+  - S8003982: new test javax/swing/AncestorNotifier/7193219/bug7193219.java failed on macosx
+  - S8004317: TestLibrary.getUnusedRandomPort() fails intermittently, but exception not reported
+  - S8004748: clean up @build tags in RMI tests
+  - S8004925: java/net/Socks/SocksV4Test.java failing on all platforms
+  - S8005290: remove -showversion from RMI test library subprocess mechanism
+  - S8005556: java/net/Socks/SocksV4Test.java is missing @run tag
+  - S8005646: TEST_BUG: java/rmi/activation/ActivationSystem/unregisterGroup/UnregisterGroup leaves process running
+  - S8005920: After pressing combination Windows Key and M key, the frame, the instruction and the dialog can't be minimized.
+  - S8005932: Java 7 on mac os x only provides text clipboard formats
+  - S8006120: Provide "Server JRE" for 7u train
+  - S8006417: JComboBox.showPopup(), hidePopup() fails in JRE 1.7 on OS X
+  - S8006534: CLONE - TestLibrary.getUnusedRandomPort() fails intermittently-doesn't retry enough times
+  - S8006536: [launcher]  removes trailing slashes on arguments
+  - S8006560: java/net/ipv6tests/B6521014.java fails intermittently
+  - S8006564: Test sun/security/util/Oid/S11N.sh fails with timeout on Linux 32-bit
+  - S8006669: sun/security/ssl/sun/net/www/protocol/https/HttpsURLConnection/PostThruProxy.sh fails on mac
+  - S8007515: TEST_BUG: update ProblemList.txt and TEST.ROOT in jdk7u-dev to match jdk8
+  - S8007699: Move some tests from test/sun/security/provider/certpath/X509CertPath to closed repo
+  - S8008223: java/net/BindException/Test.java fails rarely
+  - S8008249: Sync ICU into JDK :
+  - S8008379: TEST_BUG: Fail automatically with java.lang.NullPointerException.
+  - S8008815: [TEST_BUG] Add back tests to the Problemlist files post the jdk7u -> 7u-cpu test sync up
+  - S8009165: Fix for 8008817 needs revision
+  - S8009217: REGRESSION: test com/sun/org/apache/xml/internal/security/transforms/ClassLoaderTest.java fails to compile since 7u21b03
+  - S8009463: Regression test test\java\lang\Runtime\exec\ArgWithSpaceAndFinalBackslash.java failing.
+  - S8009530: ICU Kern table support broken
+  - S8009610: Blacklist certificate used with malware.
+  - S8009634: TEST_BUG: sun/misc/Version/Version.java handle 2 digit minor in VM version
+  - S8009750: javax/xml/crypto/dsig/SecurityManager/XMLDSigWithSecMgr.java should run in other vm mode
+  - S8009987: (tz) Support tzdata2013b
+  - S8009996: tests javax/management/mxbean/MiscTest.java and javax/management/mxbean/StandardMBeanOverrideTest.java fail
+  - S8009999: Test sun/tools/jcmd/jcmd-f.sh failing after JDK-8008820
+  - S8010009: [macosx] Unable type into online word games on MacOSX
+  - S8010118: Annotate jdk caller sensitive methods with @sun.reflect.CallerSensitive
+  - S8010166: TEST_BUG: fix for 8009634 overlooks possible version strings (sun/misc/Version/Version.java)
+  - S8010213: Some api/javax_net/SocketFactory tests fail in 7u25 nightly build
+  - S8010714: XML DSig API allows a RetrievalMethod to reference another RetrievalMethod
+  - S8010727: WLS fails to add a logger with "" in its own LogManager subclass instance
+  - S8010939: Deadlock in LogManager
+  - S8011139: (reflect) Revise checking in getEnclosingClass
+  - S8011154: java/awt/Frame/ShapeNotSetSometimes/ShapeNotSetSometimes.java failed since 7u25b03 on windows
+  - S8011313: OCSP timeout set to wrong value if com.sun.security.ocsp.timeout not defined
+  - S8011557: Improve reflection utility classes
+  - S8011695: [tck-red] Application can not be run, the Security Warning dialog is gray.
+  - S8011806: 7u25-b05 hotspot fastdebug build failure
+  - S8011896: Add check for invalid offset for new AccessControlContext isAuthorized field
+  - S8011990: TEST_BUG: java/util/logging/bundlesearch/ResourceBundleSearchTest.java fails on Windows
+  - S8011992: java/awt/image/mlib/MlibOpsTest.java failed since jdk7u25b05
+  - S8012112: java/awt/image/mlib/MlibOpsTest.java fails on sparc solaris
+  - S8012243: about 30% regression on specjvm2008.serial on 7u25 comparing 7u21
+  - S8012330: [macosx] Sometimes the applet showing the modal dialog itself loses the ability to gain focus
+  - S8012453: (process) Runtime.exec(String) fails if command contains spaces [win]
+  - S8012617: ArrayIndexOutOfBoundsException with some fonts using LineBreakMeasurer
+  - S8012933: Test closed/java/awt/Dialog/DialogAnotherThread/JaWSTest.java fails since jdk 7u25 b07
+  - S8013196: TimeZone.getDefault() throws NPE due to sun.awt.AppContext.getAppContext()
+  - S8013228: Create new system properties to control allowable OCSP clock skew and CRL connection timeout
+  - S8013380: Removal of stack walk to find resource bundle breaks Glassfish startup
+  - S8014205: Most of the Swing dialogs are blank on one win7 MUI
+  - S8014423: [macosx] The scrollbar's block increment performs incorrectly
+  - S8014427: REGRESSION: closed/javax/imageio/plugins/bmp/Write3ByteBgrTest.java fails since 7u25 b09
+  - S8014618, RH868136: Need to strip leading zeros in TlsPremasterSecret of DHKeyAgreement
+  - S8014676: Java debugger may fail to run
+  - S8014718: Netbeans IDE begins to throw a lot exceptions since 7u25 b10
+  - S8014745: Provide a switch to allow stack walk search of resource bundle
+  - S8014968: OCSP and CRL connection timeout is set to four hours by default
+
 New in release 2.4.0 (2013-06-09):
 
 OpenJDK
@@ -222,7 +994,7 @@ OpenJDK
   - S7151089: PS NUMA: NUMA allocator should not attempt to free pages when using SHM large pages
   - S7151348: Build breaks due to warning clean up in sun.rmi.*(7146763)
   - S7151427: Fix the potential memory leak in error handling code in X11SurfaceData.c
-  - S7151434: java -jar -XX crashes java launcher
+  - S7151434, RH969884: java -jar -XX crashes java launcher
   - S7151532: DCmd for hotspot native memory tracking
   - S7152007: Fix warnings in sun/rmi/rmic
   - S7152031: Hotspot needs updated xawt path [macosx]

@@ -1,5 +1,10 @@
 2013-06-11  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS: Add release notes for 2.1.9, 2.2.9,
+	2.3.10 and 2.4.1
+
+2013-06-11  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* NEWS: Update 2.4.0 following release
 	annoucement, including setting release
 	date.
