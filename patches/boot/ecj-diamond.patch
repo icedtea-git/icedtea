@@ -6997,3 +6997,63 @@ diff -Nru openjdk-boot.orig/jdk/test/java/util/Random/DistinctSeeds.java openjdk
          List<Thread> threads = new ArrayList<Thread>();
          for (int i = 0; i < threadCount; i++) {
              RandomCollector r = new RandomCollector();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/io/ObjectStreamClass.java openjdk-boot/jdk/src/share/classes/java/io/ObjectStreamClass.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/io/ObjectStreamClass.java	2013-06-27 16:06:42.289384018 +0100
++++ openjdk-boot/jdk/src/share/classes/java/io/ObjectStreamClass.java	2013-06-27 16:07:06.489768521 +0100
+@@ -1164,7 +1164,7 @@
+             end = end.getSuperclass();
+         }
+ 
+-        HashSet<String> oscNames = new HashSet<>(3);
++        HashSet<String> oscNames = new HashSet<String>(3);
+ 
+         for (ObjectStreamClass d = this; d != null; d = d.superDesc) {
+             if (oscNames.contains(d.name)) {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/font/CreatedFontTracker.java openjdk-boot/jdk/src/share/classes/sun/font/CreatedFontTracker.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/font/CreatedFontTracker.java	2013-06-27 16:06:53.297558922 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/font/CreatedFontTracker.java	2013-06-27 16:07:32.294178507 +0100
+@@ -106,7 +106,7 @@
+      * Note that this only applies to createFont() from an InputStream object.
+      */
+     private static class TempFileDeletionHook {
+-        private static HashMap<File, OutputStream> files = new HashMap<>();
++        private static HashMap<File, OutputStream> files = new HashMap<File, OutputStream>();
+ 
+         private static Thread t = null;
+         static void init() {
+diff --git a/src/share/classes/com/sun/media/sound/AbstractLine.java b/src/share/classes/com/sun/media/sound/AbstractLine.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/media/sound/AbstractLine.java
++++ openjdk-boot/jdk/src/share/classes/com/sun/media/sound/AbstractLine.java
+@@ -54,7 +54,7 @@
+      * Contains event dispatcher per thread group.
+      */
+     private static final Map<ThreadGroup, EventDispatcher> dispatchers =
+-            new WeakHashMap<>();
++      new WeakHashMap<ThreadGroup, EventDispatcher>();
+ 
+     /**
+      * Constructs a new AbstractLine.
+diff --git a/src/share/classes/com/sun/media/sound/RealTimeSequencer.java b/src/share/classes/com/sun/media/sound/RealTimeSequencer.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/media/sound/RealTimeSequencer.java
++++ openjdk-boot/jdk/src/share/classes/com/sun/media/sound/RealTimeSequencer.java
+@@ -59,7 +59,7 @@
+      * dispatcher instance with a factory in EventDispatcher
+      */
+     private static final Map<ThreadGroup, EventDispatcher> dispatchers =
+-            new WeakHashMap<>();
++      new WeakHashMap<ThreadGroup, EventDispatcher>();
+ 
+     /**
+      * All RealTimeSequencers share this info object.
+diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/ch/SctpNet.java openjdk-boot/jdk/src/solaris/classes/sun/nio/ch/SctpNet.java
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/ch/SctpNet.java	2013-06-27 20:05:19.200970932 +0100
++++ openjdk-boot/jdk/src/solaris/classes/sun/nio/ch/SctpNet.java	2013-06-27 20:05:33.857203747 +0100
+@@ -113,7 +113,7 @@
+             SocketAddress[] saa)
+     {
+          SecurityManager sm = System.getSecurityManager();
+-         Set<SocketAddress> set = new HashSet<>(saa.length);
++         Set<SocketAddress> set = new HashSet<SocketAddress>(saa.length);
+          for (SocketAddress sa : saa) {
+              set.add(getRevealedLocalAddress(sa, sm));
+          }

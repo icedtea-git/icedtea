@@ -1,6 +1,6 @@
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2013-04-03 14:18:05.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2013-04-04 13:22:25.036506097 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2013-07-02 03:38:10.090272900 +0100
 @@ -350,19 +350,16 @@
              if (attrCommands != null) {
                  Object lkey = Attribute.keyForLookup(ctype, name);
@@ -32,8 +32,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Cla
              // Find canonical instance of the requested attribute.
              Attribute a = Attribute.lookup(Package.attrDefs, ctype, name);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2013-04-03 14:18:05.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2013-04-04 13:22:25.048506291 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2013-07-02 03:38:10.106273156 +0100
 @@ -73,16 +73,14 @@
          {
              // Non-standard, undocumented "--unpack" switch enables unpack mode.
@@ -91,8 +91,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Dri
  
          if (logFile != null && !logFile.equals("")) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2013-04-03 14:18:05.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2013-04-04 13:22:25.052506355 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2013-07-02 03:38:10.106273156 +0100
 @@ -1116,30 +1116,25 @@
          // what is one of { Debug, Compile, Constant, Exceptions, InnerClasses }
          if (verbose > 0)
@@ -144,8 +144,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Pac
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2013-04-03 14:18:05.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2013-04-04 13:22:25.056506419 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2013-07-02 03:38:10.106273156 +0100
 @@ -64,17 +64,23 @@
  
      protected NTLM(String version) throws NTLMException {
@@ -182,9 +182,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.jav
              fac = SecretKeyFactory.getInstance ("DES");
              cipher = Cipher.getInstance ("DES/ECB/NoPadding");
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2013-04-03 14:18:05.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2013-04-04 13:32:45.886517863 +0100
-@@ -327,12 +327,11 @@
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2013-07-02 03:42:53.718781065 +0100
+@@ -328,12 +328,11 @@
                                       Object[] appendixResult) {
          try {
              if (defc == MethodHandle.class && refKind == REF_invokeVirtual) {
@@ -202,59 +202,24 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleN
              }
          } catch (Throwable ex) {
              if (ex instanceof LinkageError)
-@@ -395,111 +394,106 @@
-     static boolean isCallerSensitive(MemberName mem) {
-         if (!mem.isInvocable())  return false;  // fields are not caller sensitive
-         Class<?> defc = mem.getDeclaringClass();
--        switch (mem.getName()) {
+@@ -403,122 +402,118 @@
+     // this method is also called by test/sun/reflect/CallerSensitiveFinder
+     // to validate the hand-maintained list
+     private static boolean isCallerSensitiveMethod(Class<?> defc, String method) {
+-        switch (method) {
 -        case "doPrivileged":
 -        case "doPrivilegedWithCombiner":
-+	String memName = mem.getName();
-+	if ("doPrivileged".equals(memName) ||
-+	    "doPrivilegedWithCombiner".equals(memName)) {
++	if ("doPrivileged".equals(method) ||
++	    "doPrivilegedWithCombiner".equals(method)) {
              return defc == java.security.AccessController.class;
 -        case "checkMemberAccess":
-+	} else if ("checkMemberAccess".equals(memName)) {
-             return canBeCalledVirtual(mem, java.lang.SecurityManager.class);
+-            return defc == java.lang.SecurityManager.class;
 -        case "getUnsafe":
 -            return defc == sun.misc.Unsafe.class;
 -        case "lookup":
-+        } else if ("getUnsafe".equals(memName)) {
-+             return defc == sun.misc.Unsafe.class;
-+	} else if ("lookup".equals(memName)) {
-             return defc == java.lang.invoke.MethodHandles.class;
--        case "findStatic":
--        case "findVirtual":
--        case "findConstructor":
--        case "findSpecial":
--        case "findGetter":
--        case "findSetter":
--        case "findStaticGetter":
--        case "findStaticSetter":
--        case "bind":
--        case "unreflect":
--        case "unreflectSpecial":
--        case "unreflectConstructor":
--        case "unreflectGetter":
--        case "unreflectSetter":
-+	} else if ("findStatic".equals(memName) ||
-+		   "findVirtual".equals(memName) || 
-+		   "findConstructor".equals(memName) ||
-+		   "findSpecial".equals(memName) ||
-+		   "findGetter".equals(memName) ||
-+		   "findSetter".equals(memName) ||
-+		   "findStaticGetter".equals(memName) ||
-+		   "findStaticSetter".equals(memName) ||
-+		   "bind".equals(memName) ||
-+		   "unreflect".equals(memName) ||
-+		   "unreflectSpecial".equals(memName) ||
-+		   "unreflectConstructor".equals(memName) ||
-+		   "unreflectGetter".equals(memName) ||
-+		   "unreflectSetter".equals(memName)) {
-             return defc == java.lang.invoke.MethodHandles.Lookup.class;
+-            return defc == java.lang.invoke.MethodHandles.class;
 -        case "invoke":
-+        } else if ("invoke".equals(memName)) {
-             return defc == java.lang.reflect.Method.class;
+-            return defc == java.lang.reflect.Method.class;
 -        case "get":
 -        case "getBoolean":
 -        case "getByte":
@@ -273,33 +238,17 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleN
 -        case "setLong":
 -        case "setFloat":
 -        case "setDouble":
-+	} else if ("get".equals(memName) ||
-+		   "getBoolean".equals(memName) ||
-+		   "getByte".equals(memName) ||
-+		   "getChar".equals(memName) ||
-+		   "getShort".equals(memName) ||
-+		   "getInt".equals(memName) ||
-+		   "getFloat".equals(memName) ||
-+		   "getDouble".equals(memName) ||
-+		   "set".equals(memName) ||
-+		   "setBoolean".equals(memName) ||
-+		   "setByte".equals(memName) ||
-+		   "setChar".equals(memName) ||
-+		   "setShort".equals(memName) ||
-+		   "setInt".equals(memName) ||
-+		   "setLong".equals(memName) ||
-+		   "setFloat".equals(memName) ||
-+		   "setDouble".equals(memName)) {
-             return defc == java.lang.reflect.Field.class;
+-            return defc == java.lang.reflect.Field.class;
 -        case "newInstance":
-+	} else if ("newInstance".equals(memName)) {
-             if (defc == java.lang.reflect.Constructor.class)  return true;
-             if (defc == java.lang.Class.class)  return true;
+-            if (defc == java.lang.reflect.Constructor.class)  return true;
+-            if (defc == java.lang.Class.class)  return true;
 -            break;
+-        case "getFields":
+-            return defc == java.lang.Class.class ||
+-                   defc == javax.sql.rowset.serial.SerialJavaObject.class;
 -        case "forName":
 -        case "getClassLoader":
 -        case "getClasses":
--        case "getFields":
 -        case "getMethods":
 -        case "getConstructors":
 -        case "getDeclaredClasses":
@@ -312,88 +261,178 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleN
 -        case "getDeclaredField":
 -        case "getDeclaredMethod":
 -        case "getDeclaredConstructor":
-+	} else if ("forName".equals(memName) ||
-+		   "getClassLoader".equals(memName) ||
-+		   "getClasses".equals(memName) ||
-+		   "getFields".equals(memName) ||
-+		   "getMethods".equals(memName) ||
-+		   "getConstructors".equals(memName) ||
-+		   "getDeclaredClasses".equals(memName) ||
-+		   "getDeclaredFields".equals(memName) ||
-+		   "getDeclaredMethods".equals(memName) ||
-+		   "getDeclaredConstructors".equals(memName) ||
-+		   "getField".equals(memName) ||
-+		   "getMethod".equals(memName) ||
-+		   "getConstructor".equals(memName) ||
-+		   "getDeclaredField".equals(memName) ||
-+		   "getDeclaredMethod".equals(memName) ||
-+		   "getDeclaredConstructor".equals(memName)) {
-             return defc == java.lang.Class.class;
+-        case "getEnclosingClass":
+-        case "getEnclosingMethod":
+-        case "getEnclosingConstructor":
+-            return defc == java.lang.Class.class;
 -        case "getConnection":
 -        case "getDriver":
 -        case "getDrivers":
 -        case "deregisterDriver":
-+	} else if ("getConnection".equals(memName) ||
-+		   "getDriver".equals(memName) ||
-+		   "getDrivers".equals(memName) ||
-+		   "deregisterDriver".equals(memName)) {
-             return defc == java.sql.DriverManager.class;
+-            return defc == java.sql.DriverManager.class;
 -        case "newUpdater":
-+        } else if ("newUpdater".equals(memName)) {
-             if (defc == java.util.concurrent.atomic.AtomicIntegerFieldUpdater.class)  return true;
-             if (defc == java.util.concurrent.atomic.AtomicLongFieldUpdater.class)  return true;
-             if (defc == java.util.concurrent.atomic.AtomicReferenceFieldUpdater.class)  return true;
+-            if (defc == java.util.concurrent.atomic.AtomicIntegerFieldUpdater.class)  return true;
+-            if (defc == java.util.concurrent.atomic.AtomicLongFieldUpdater.class)  return true;
+-            if (defc == java.util.concurrent.atomic.AtomicReferenceFieldUpdater.class)  return true;
 -            break;
+-        case "getContextClassLoader":
+-            return defc == java.lang.Thread.class;
+-        case "getPackage":
+-        case "getPackages":
+-            return defc == java.lang.Package.class;
+-        case "getParent":
+-        case "getSystemClassLoader":
+-            return defc == java.lang.ClassLoader.class;
+-        case "load":
+-        case "loadLibrary":
+-            if (defc == java.lang.Runtime.class)  return true;
+-            if (defc == java.lang.System.class)  return true;
+-            break;
+-        case "getCallerClass":
+-            if (defc == sun.reflect.Reflection.class)  return true;
+-            if (defc == java.lang.System.class)  return true;
+-            break;
+-        case "getCallerClassLoader":
+-            return defc == java.lang.ClassLoader.class;
+-        case "registerAsParallelCapable":
+-            return defc == java.lang.ClassLoader.class;
+-        case "getProxyClass":
+-        case "newProxyInstance":
+-            return defc == java.lang.reflect.Proxy.class;
+-        case "asInterfaceInstance":
+-            return defc == java.lang.invoke.MethodHandleProxies.class;
+-        case "getBundle":
+-        case "clearCache":
+-            return defc == java.util.ResourceBundle.class;
+-        case "getType":
+-            return defc == java.io.ObjectStreamField.class;
+-        case "forClass":
+-            return defc == java.io.ObjectStreamClass.class;
+-        case "getLogger":
+-            return defc == java.util.logging.Logger.class;
+-        case "getAnonymousLogger":
+-            return defc == java.util.logging.Logger.class;
+-        }
+-        return false;
++	} else if ("checkMemberAccess".equals(method)) {
++             return defc == java.lang.SecurityManager.class;
++        } else if ("getUnsafe".equals(method)) {
++             return defc == sun.misc.Unsafe.class;
++	} else if ("lookup".equals(method)) {
++             return defc == java.lang.invoke.MethodHandles.class;
++	} else if ("invoke".equals(method)) {
++             return defc == java.lang.reflect.Method.class;
++	} else if ("get".equals(method) ||
++		   "getBoolean".equals(method) ||
++		   "getByte".equals(method) ||
++		   "getChar".equals(method) ||
++		   "getShort".equals(method) ||
++		   "getInt".equals(method) ||
++		   "getLong".equals(method) ||
++		   "getFloat".equals(method) ||
++		   "getDouble".equals(method) ||
++		   "set".equals(method) ||
++		   "setBoolean".equals(method) ||
++		   "setByte".equals(method) ||
++		   "setChar".equals(method) ||
++		   "setShort".equals(method) ||
++		   "setInt".equals(method) ||
++		   "setLong".equals(method) ||
++		   "setFloat".equals(method) ||
++		   "setDouble".equals(method)) {
++             return defc == java.lang.reflect.Field.class;
++	} else if ("newInstance".equals(method)) {
++             if (defc == java.lang.reflect.Constructor.class)  return true;
++             if (defc == java.lang.Class.class)  return true;
++	} else if ("getFields".equals(method)) {
++             return defc == java.lang.Class.class ||
++                    defc == javax.sql.rowset.serial.SerialJavaObject.class;
++	} else if ("forName".equals(method) ||
++		   "getClassLoader".equals(method) ||
++		   "getClasses".equals(method) ||
++		   "getFields".equals(method) ||
++		   "getMethods".equals(method) ||
++		   "getConstructors".equals(method) ||
++		   "getDeclaredClasses".equals(method) ||
++		   "getDeclaredFields".equals(method) ||
++		   "getDeclaredMethods".equals(method) ||
++		   "getDeclaredConstructors".equals(method) ||
++		   "getField".equals(method) ||
++		   "getMethod".equals(method) ||
++		   "getConstructor".equals(method) ||
++		   "getDeclaredField".equals(method) ||
++		   "getDeclaredMethod".equals(method) ||
++		   "getDeclaredConstructor".equals(method) ||
++		   "getEnclosingClass".equals(method) ||
++		   "getEnclosingMethod".equals(method) ||
++		   "getEnclosingConstructor".equals(method)) {
++             return defc == java.lang.Class.class;
++	} else if ("getConnection".equals(method) ||
++		   "getDriver".equals(method) ||
++		   "getDrivers".equals(method) ||
++		   "deregisterDriver".equals(method)) {
++             return defc == java.sql.DriverManager.class;
++        } else if ("newUpdater".equals(method)) {
++             if (defc == java.util.concurrent.atomic.AtomicIntegerFieldUpdater.class)  return true;
++             if (defc == java.util.concurrent.atomic.AtomicLongFieldUpdater.class)  return true;
++             if (defc == java.util.concurrent.atomic.AtomicReferenceFieldUpdater.class)  return true;
++        } else if ("getContextClassLoader".equals(method)) {
++             return defc == java.lang.Thread.class;
++        } else if ("getPackage".equals(method) ||
++		   "getPackages".equals(method)) {
++             return defc == java.lang.Package.class;
++        } else if ("getParent".equals(method) ||
++		   "getSystemClassLoader".equals(method)) {
++             return defc == java.lang.ClassLoader.class;
++        } else if ("load".equals(method) ||
++		   "loadLibrary".equals(method)) {
++             if (defc == java.lang.Runtime.class)  return true;
++             if (defc == java.lang.System.class)  return true;
++        } else if ("getCallerClass".equals(method)) {
++             if (defc == sun.reflect.Reflection.class)  return true;
++             if (defc == java.lang.System.class)  return true;
++	} else if ("getCallerClassLoader".equals(method)) {
++             return defc == java.lang.ClassLoader.class;
++        } else if ("registerAsParallelCapable".equals(method)) {
++             return defc == java.lang.ClassLoader.class;
++        } else if ("getProxyClass".equals(method) ||
++		   "newProxyInstance".equals(method)) {
++             return defc == java.lang.reflect.Proxy.class;
++        } else if ("asInterfaceInstance".equals(method)) {
++             return defc == java.lang.invoke.MethodHandleProxies.class;
++        } else if ("getBundle".equals(method) ||
++		   "clearCache".equals(method)) {
++             return defc == java.util.ResourceBundle.class;
++        } else if ("getType".equals(method)) {
++             return defc == java.io.ObjectStreamField.class;
++        } else if ("forClass".equals(method)) {
++             return defc == java.io.ObjectStreamClass.class;
++        } else if ("getLogger".equals(method)) {
++             return defc == java.util.logging.Logger.class;
++        } else if ("getAnonymousLogger".equals(method)) {
++             return defc == java.util.logging.Logger.class;
++         }
++         return false;
+     }
+ 
+ 
+     private static boolean canBeCalledVirtual(MemberName mem) {
+         assert(mem.isInvocable());
+         Class<?> defc = mem.getDeclaringClass();
+-        switch (mem.getName()) {
+-        case "checkMemberAccess":
++	String memName = mem.getName();
++	if ("checkMemberAccess".equals(memName)) {
+             return canBeCalledVirtual(mem, java.lang.SecurityManager.class);
 -        case "getContextClassLoader":
 +        } else if ("getContextClassLoader".equals(memName)) {
              return canBeCalledVirtual(mem, java.lang.Thread.class);
--        case "getPackage":
--        case "getPackages":
-+        } else if ("getPackage".equals(memName) ||
-+		   "getPackages".equals(memName)) {
-             return defc == java.lang.Package.class;
--        case "getParent":
--        case "getSystemClassLoader":
-+        } else if ("getParent".equals(memName) ||
-+		   "getSystemClassLoader".equals(memName)) {
-             return defc == java.lang.ClassLoader.class;
--        case "load":
--        case "loadLibrary":
-+        } else if ("load".equals(memName) ||
-+		   "loadLibrary".equals(memName)) {
-             if (defc == java.lang.Runtime.class)  return true;
-             if (defc == java.lang.System.class)  return true;
--            break;
--        case "getCallerClass":
-+        } else if ("getCallerClass".equals(memName)) {
-             if (defc == sun.reflect.Reflection.class)  return true;
-             if (defc == java.lang.System.class)  return true;
--            break;
--        case "getCallerClassLoader":
-+	} else if ("getCallerClassLoader".equals(memName)) {
-             return defc == java.lang.ClassLoader.class;
--        case "registerAsParallelCapable":
-+        } else if ("registerAsParallelCapable".equals(memName)) {
-             return canBeCalledVirtual(mem, java.lang.ClassLoader.class);
--        case "getProxyClass":
--        case "newProxyInstance":
-+        } else if ("getProxyClass".equals(memName) ||
-+		   "newProxyInstance".equals(memName)) {
-             return defc == java.lang.reflect.Proxy.class;
--        case "asInterfaceInstance":
-+        } else if ("asInterfaceInstance".equals(memName)) {
-             return defc == java.lang.invoke.MethodHandleProxies.class;
--        case "getBundle":
--        case "clearCache":
-+        } else if ("getBundle".equals(memName) ||
-+		   "clearCache".equals(memName)) {
-             return defc == java.util.ResourceBundle.class;
          }
          return false;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2013-04-03 14:18:05.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2013-04-04 13:22:25.068506613 +0100
-@@ -268,14 +268,16 @@
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2013-07-02 03:38:10.106273156 +0100
+@@ -269,14 +269,16 @@
  
      private static
      boolean isObjectMethod(Method m) {
@@ -414,7 +453,7 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleP
              return (m.getReturnType() == boolean.class
                      && m.getParameterTypes().length == 1
                      && m.getParameterTypes()[0] == Object.class);
-@@ -286,12 +288,14 @@
+@@ -287,12 +289,14 @@
      private static
      Object callObjectMethod(Object self, Method m, Object[] args) {
          assert(isObjectMethod(m)) : m;
@@ -434,8 +473,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleP
          }
          return null;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2013-04-03 14:18:05.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2013-04-04 13:22:25.068506613 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2013-07-02 03:38:10.106273156 +0100
 @@ -119,24 +119,20 @@
          String optStr = (opts.length > 1 && opts[1] != null)
                  ? opts[1].trim()
@@ -473,8 +512,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.ja
  
      /*
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2013-04-03 14:18:05.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2013-04-04 13:22:25.080506807 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2013-07-02 03:38:10.106273156 +0100
 @@ -378,19 +378,23 @@
              GE;         // ">="
  

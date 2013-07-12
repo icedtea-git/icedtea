@@ -401,3 +401,54 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/reflect/Proxy.java o
              throw new InternalError(e.toString());
          } catch (InvocationTargetException e) {
              Throwable t = e.getCause();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jmx/remote/internal/ArrayNotificationBuffer.java openjdk-boot/jdk/src/share/classes/com/sun/jmx/remote/internal/ArrayNotificationBuffer.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jmx/remote/internal/ArrayNotificationBuffer.java	2013-06-27 15:56:57.456088537 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/jmx/remote/internal/ArrayNotificationBuffer.java	2013-06-27 16:02:12.857102777 +0100
+@@ -402,7 +402,13 @@
+                         try {
+                             ServerNotifForwarder.checkMBeanPermission(this.mBeanServer,
+                                                       candidate.getObjectName(),"addNotificationListener");
+-                        } catch (InstanceNotFoundException | SecurityException e) {
++                        } catch (InstanceNotFoundException e) {
++                            if (logger.debugOn()) {
++                                logger.debug("fetchNotifications", "candidate: " + candidate + " skipped. exception " + e);
++                            }
++                            ++nextSeq;
++                            continue;
++                        } catch (SecurityException e) {
+                             if (logger.debugOn()) {
+                                 logger.debug("fetchNotifications", "candidate: " + candidate + " skipped. exception " + e);
+                             }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/ProcessBuilder.java openjdk-boot/jdk/src/share/classes/java/lang/ProcessBuilder.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/ProcessBuilder.java	2013-06-27 15:56:27.295609027 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/ProcessBuilder.java	2013-06-27 16:00:59.631938678 +0100
+@@ -1024,10 +1024,10 @@
+                                      dir,
+                                      redirects,
+                                      redirectErrorStream);
+-        } catch (IOException | IllegalArgumentException e) {
++        } catch (IOException e) {
+             String exceptionInfo = ": " + e.getMessage();
+             Throwable cause = e;
+-            if ((e instanceof IOException) && security != null) {
++            if (security != null) {
+                 // Can not disclose the fail reason for read-protected files.
+                 try {
+                     security.checkRead(prog);
+@@ -1039,6 +1039,16 @@
+             // It's much easier for us to create a high-quality error
+             // message than the low-level C code which found the problem.
+             throw new IOException(
++                "Cannot run program \"" + prog + "\""
++                + (dir == null ? "" : " (in directory \"" + dir + "\")")
++                + exceptionInfo,
++                cause);
++        } catch (IllegalArgumentException e) {
++            String exceptionInfo = ": " + e.getMessage();
++            Throwable cause = e;
++            // It's much easier for us to create a high-quality error
++            // message than the low-level C code which found the problem.
++            throw new IOException(
+                 "Cannot run program \"" + prog + "\""
+                 + (dir == null ? "" : " (in directory \"" + dir + "\")")
+                 + exceptionInfo,

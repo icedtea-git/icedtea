@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/jdk/make/com/sun/Makefile openjdk/jdk/make/com/sun/Makefile
---- openjdk.orig/jdk/make/com/sun/Makefile	2012-03-12 17:25:51.000000000 +0000
-+++ openjdk/jdk/make/com/sun/Makefile	2012-03-18 18:29:38.835009659 +0000
+--- openjdk.orig/jdk/make/com/sun/Makefile	2013-07-01 15:22:10.000000000 +0100
++++ openjdk/jdk/make/com/sun/Makefile	2013-07-02 03:23:41.216478448 +0100
 @@ -31,13 +31,6 @@
  PRODUCT = sun
  include $(BUILDDIR)/common/Defs.gmk
@@ -19,14 +19,14 @@ diff -Nru openjdk.orig/jdk/make/com/sun/Makefile openjdk/jdk/make/com/sun/Makefi
  SUBDIRS_desktop    = image
  SUBDIRS_enterprise = crypto/provider jndi \
                       org rowset net/httpserver
--SUBDIRS_misc       = $(SCRIPT_SUBDIR) tracing servicetag nio demo
-+SUBDIRS_misc       = script tracing servicetag nio demo
+-SUBDIRS_misc       = $(SCRIPT_SUBDIR) tracing nio demo
++SUBDIRS_misc       = script tracing nio demo
  
  # Omit mirror since it's built with the apt tool.
  SUBDIRS_tools      = tools
 diff -Nru openjdk.orig/jdk/make/com/sun/script/Makefile openjdk/jdk/make/com/sun/script/Makefile
---- openjdk.orig/jdk/make/com/sun/script/Makefile	2012-03-12 17:25:51.000000000 +0000
-+++ openjdk/jdk/make/com/sun/script/Makefile	2012-03-18 18:29:38.843009789 +0000
+--- openjdk.orig/jdk/make/com/sun/script/Makefile	2013-07-01 15:22:10.000000000 +0100
++++ openjdk/jdk/make/com/sun/script/Makefile	2013-07-02 03:20:37.373563985 +0100
 @@ -31,6 +31,8 @@
  
  AUTO_FILES_JAVA_DIRS = com/sun/script
@@ -37,9 +37,9 @@ diff -Nru openjdk.orig/jdk/make/com/sun/script/Makefile openjdk/jdk/make/com/sun
  # Files that need to be copied
  #
 diff -Nru openjdk.orig/jdk/make/common/Release.gmk openjdk/jdk/make/common/Release.gmk
---- openjdk.orig/jdk/make/common/Release.gmk	2012-03-12 17:25:51.000000000 +0000
-+++ openjdk/jdk/make/common/Release.gmk	2012-03-18 18:30:00.367359553 +0000
-@@ -821,6 +821,7 @@
+--- openjdk.orig/jdk/make/common/Release.gmk	2013-07-01 15:22:10.000000000 +0100
++++ openjdk/jdk/make/common/Release.gmk	2013-07-02 03:20:37.381564110 +0100
+@@ -838,6 +838,7 @@
  	$(CP) $(RT_JAR) $(JRE_IMAGE_DIR)/lib/rt.jar
  	$(CP) $(RESOURCES_JAR) $(JRE_IMAGE_DIR)/lib/resources.jar
  	$(CP) $(JSSE_JAR) $(JRE_IMAGE_DIR)/lib/jsse.jar
@@ -48,8 +48,8 @@ diff -Nru openjdk.orig/jdk/make/common/Release.gmk openjdk/jdk/make/common/Relea
  	$(CP) $(JFR_JAR) $(JRE_IMAGE_DIR)/lib/jfr.jar
  endif
 diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/ExternalScriptable.java openjdk/jdk/src/share/classes/com/sun/script/javascript/ExternalScriptable.java
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/ExternalScriptable.java	2012-03-12 17:25:51.000000000 +0000
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/ExternalScriptable.java	2012-03-18 18:29:38.843009789 +0000
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/ExternalScriptable.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/ExternalScriptable.java	2013-07-02 03:20:37.381564110 +0100
 @@ -24,7 +24,7 @@
   */
  
@@ -60,8 +60,8 @@ diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/ExternalS
  import java.util.*;
  
 diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/JavaAdapter.java openjdk/jdk/src/share/classes/com/sun/script/javascript/JavaAdapter.java
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/JavaAdapter.java	2012-03-12 17:25:51.000000000 +0000
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/JavaAdapter.java	2012-03-18 18:29:38.843009789 +0000
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/JavaAdapter.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/JavaAdapter.java	2013-07-02 03:20:37.385564173 +0100
 @@ -26,7 +26,7 @@
  package com.sun.script.javascript;
  
@@ -72,8 +72,8 @@ diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/JavaAdapt
  /**
   * This class implements Rhino-like JavaAdapter to help implement a Java
 diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/JSAdapter.java openjdk/jdk/src/share/classes/com/sun/script/javascript/JSAdapter.java
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/JSAdapter.java	2012-03-12 17:25:51.000000000 +0000
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/JSAdapter.java	2012-03-18 18:29:38.843009789 +0000
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/JSAdapter.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/JSAdapter.java	2013-07-02 03:20:37.385564173 +0100
 @@ -25,7 +25,7 @@
  
  package com.sun.script.javascript;
@@ -84,8 +84,8 @@ diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/JSAdapter
  
  /**
 diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoClassShutter.java openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoClassShutter.java
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoClassShutter.java	2012-03-12 17:25:51.000000000 +0000
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoClassShutter.java	2012-03-18 18:29:38.843009789 +0000
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoClassShutter.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoClassShutter.java	2013-07-02 03:20:37.385564173 +0100
 @@ -26,7 +26,7 @@
  package com.sun.script.javascript;
  
@@ -96,8 +96,8 @@ diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoClas
  /**
   * This class prevents script access to certain sensitive classes.
 diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoCompiledScript.java openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoCompiledScript.java
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoCompiledScript.java	2012-03-12 17:25:51.000000000 +0000
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoCompiledScript.java	2012-03-18 18:29:38.843009789 +0000
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoCompiledScript.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoCompiledScript.java	2013-07-02 03:20:37.385564173 +0100
 @@ -25,7 +25,7 @@
  
  package com.sun.script.javascript;
@@ -108,8 +108,8 @@ diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoComp
  /**
   * Represents compiled JavaScript code.
 diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngineFactory.java openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngineFactory.java
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngineFactory.java	2012-03-12 17:25:51.000000000 +0000
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngineFactory.java	2012-03-18 18:29:38.843009789 +0000
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngineFactory.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngineFactory.java	2013-07-02 03:20:37.385564173 +0100
 @@ -26,7 +26,7 @@
  package com.sun.script.javascript;
  import javax.script.*;
@@ -120,8 +120,8 @@ diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoScri
  
  /**
 diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngine.java openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngine.java
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngine.java	2012-03-12 17:25:51.000000000 +0000
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngine.java	2012-03-18 18:29:38.843009789 +0000
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngine.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoScriptEngine.java	2013-07-02 03:20:37.385564173 +0100
 @@ -26,7 +26,7 @@
  package com.sun.script.javascript;
  import com.sun.script.util.*;
@@ -132,8 +132,8 @@ diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoScri
  import java.io.*;
  import java.security.*;
 diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoTopLevel.java openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoTopLevel.java
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoTopLevel.java	2012-03-12 17:25:51.000000000 +0000
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoTopLevel.java	2012-03-18 18:29:38.843009789 +0000
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoTopLevel.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoTopLevel.java	2013-07-02 03:20:37.385564173 +0100
 @@ -25,7 +25,7 @@
  
  package com.sun.script.javascript;
@@ -144,8 +144,8 @@ diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoTopL
  import javax.script.*;
  import java.security.AccessControlContext;
 diff -Nru openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoWrapFactory.java openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoWrapFactory.java
---- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoWrapFactory.java	2012-03-12 17:25:51.000000000 +0000
-+++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoWrapFactory.java	2012-03-18 18:29:38.843009789 +0000
+--- openjdk.orig/jdk/src/share/classes/com/sun/script/javascript/RhinoWrapFactory.java	2013-07-01 15:22:10.000000000 +0100
++++ openjdk/jdk/src/share/classes/com/sun/script/javascript/RhinoWrapFactory.java	2013-07-02 03:20:37.385564173 +0100
 @@ -27,7 +27,7 @@
  
  import java.lang.reflect.*;

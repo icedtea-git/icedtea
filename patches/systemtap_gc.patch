@@ -1,6 +1,6 @@
 diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/oopMap.cpp openjdk/hotspot/src/share/vm/compiler/oopMap.cpp
---- openjdk.orig/hotspot/src/share/vm/compiler/oopMap.cpp	2013-04-23 23:15:10.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/compiler/oopMap.cpp	2013-04-24 09:29:58.431723500 +0100
+--- openjdk.orig/hotspot/src/share/vm/compiler/oopMap.cpp	2013-07-01 15:21:44.000000000 +0100
++++ openjdk/hotspot/src/share/vm/compiler/oopMap.cpp	2013-07-02 03:27:01.515655212 +0100
 @@ -33,9 +33,13 @@
  #include "memory/resourceArea.hpp"
  #include "runtime/frame.inline.hpp"
@@ -26,8 +26,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/oopMap.cpp openjdk/hotspot/
      // Delete entry
      delete entry;
 diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp
---- openjdk.orig/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2013-04-23 23:15:10.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2013-04-24 09:29:58.439723629 +0100
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2013-07-01 15:21:44.000000000 +0100
++++ openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2013-07-02 03:27:01.527655402 +0100
 @@ -59,6 +59,12 @@
  #include "runtime/vmThread.hpp"
  #include "services/memoryService.hpp"
@@ -41,7 +41,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/concurrentMarkSwee
  
  // statics
  CMSCollector* ConcurrentMarkSweepGeneration::_collector = NULL;
-@@ -1646,7 +1652,13 @@
+@@ -1647,7 +1653,13 @@
                                              size_t size,
                                              bool   tlab)
  {
@@ -56,8 +56,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/concurrentMarkSwee
  
  void CMSCollector::collect(bool   full,
 diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1MarkSweep.cpp openjdk/hotspot/src/share/vm/gc_implementation/g1/g1MarkSweep.cpp
---- openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1MarkSweep.cpp	2013-04-23 23:15:10.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1MarkSweep.cpp	2013-04-24 09:29:58.439723629 +0100
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1MarkSweep.cpp	2013-07-01 15:21:44.000000000 +0100
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1MarkSweep.cpp	2013-07-02 03:27:01.527655402 +0100
 @@ -50,8 +50,13 @@
  #include "runtime/thread.hpp"
  #include "runtime/vmThread.hpp"
@@ -93,8 +93,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1MarkSweep.cpp
    // CHF: cheating for now!!!
    //  Universe::set_heap_capacity_at_last_gc(Universe::heap()->capacity());
 diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/parallelScavengeHeap.cpp openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/parallelScavengeHeap.cpp
---- openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/parallelScavengeHeap.cpp	2013-04-23 23:15:10.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/parallelScavengeHeap.cpp	2013-04-24 09:29:58.443723700 +0100
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/parallelScavengeHeap.cpp	2013-07-01 15:21:44.000000000 +0100
++++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/parallelScavengeHeap.cpp	2013-07-02 03:27:01.527655402 +0100
 @@ -43,8 +43,14 @@
  #include "runtime/java.hpp"
  #include "runtime/vmThread.hpp"
@@ -110,7 +110,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/p
  PSYoungGen*  ParallelScavengeHeap::_young_gen = NULL;
  PSOldGen*    ParallelScavengeHeap::_old_gen = NULL;
  PSPermGen*   ParallelScavengeHeap::_perm_gen = NULL;
-@@ -811,7 +817,13 @@
+@@ -816,7 +822,13 @@
    }
  
    VM_ParallelGCSystemGC op(gc_count, full_gc_count, cause);
@@ -125,8 +125,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/p
  
  // This interface assumes that it's being called by the
 diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp
---- openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	2013-04-23 23:15:10.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	2013-04-24 09:29:58.447723769 +0100
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	2013-07-01 15:21:44.000000000 +0100
++++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	2013-07-02 03:28:20.476907895 +0100
 @@ -58,11 +58,18 @@
  #include "services/management.hpp"
  #include "services/memoryService.hpp"
@@ -144,9 +144,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/p
 +#endif /* !USDT2 */
 +
  // All sizes are in HeapWords.
- const size_t ParallelCompactData::Log2RegionSize  = 9; // 512 words
+ const size_t ParallelCompactData::Log2RegionSize  = 16; // 64K words
  const size_t ParallelCompactData::RegionSize      = (size_t)1 << Log2RegionSize;
-@@ -440,6 +447,9 @@
+@@ -469,6 +476,9 @@
  
  void ParallelCompactData::clear()
  {
@@ -154,9 +154,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/p
 +  HS_DTRACE_PROBE2(hotspot, gc__collection__ParallelCompact__clear, &_region_data, _region_data->data_location());
 +#endif /* !USDT2 */
    memset(_region_data, 0, _region_vspace->committed_size());
+   memset(_block_data, 0, _block_vspace->committed_size());
  }
- 
-@@ -1980,6 +1990,9 @@
+@@ -2012,6 +2022,9 @@
           "should be in vm thread");
  
    ParallelScavengeHeap* heap = gc_heap();
@@ -166,7 +166,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/p
    GCCause::Cause gc_cause = heap->gc_cause();
    assert(!heap->is_gc_active(), "not reentrant");
  
-@@ -3397,6 +3410,9 @@
+@@ -3511,6 +3524,9 @@
    // past the end of the partial object entering the region (if any).
    HeapWord* const dest_addr = sd.partial_obj_end(dp_region);
    HeapWord* const new_top = _space_info[space_id].new_top();
@@ -177,8 +177,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/p
    const size_t words = pointer_delta(new_top, dest_addr);
  
 diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psScavenge.cpp openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psScavenge.cpp
---- openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psScavenge.cpp	2013-04-23 23:15:10.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psScavenge.cpp	2013-04-24 09:29:58.447723769 +0100
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psScavenge.cpp	2013-07-01 15:21:44.000000000 +0100
++++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psScavenge.cpp	2013-07-02 03:27:01.527655402 +0100
 @@ -55,8 +55,17 @@
  #include "runtime/vmThread.hpp"
  #include "runtime/vm_operations.hpp"
@@ -234,8 +234,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/p
    }
  
 diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp openjdk/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp
---- openjdk.orig/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp	2013-04-23 23:15:10.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp	2013-04-24 09:29:58.451723832 +0100
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp	2013-07-01 15:21:44.000000000 +0100
++++ openjdk/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp	2013-07-02 03:27:01.531655466 +0100
 @@ -54,6 +54,12 @@
  #include "utilities/copy.hpp"
  #include "utilities/globalDefinitions.hpp"
@@ -271,8 +271,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parNew/parNewGener
      TASKQUEUE_STATS_ONLY(thread_state_set.print_termination_stats());
      TASKQUEUE_STATS_ONLY(thread_state_set.print_taskqueue_stats());
 diff -Nru openjdk.orig/hotspot/src/share/vm/memory/defNewGeneration.cpp openjdk/hotspot/src/share/vm/memory/defNewGeneration.cpp
---- openjdk.orig/hotspot/src/share/vm/memory/defNewGeneration.cpp	2013-04-23 23:15:10.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/memory/defNewGeneration.cpp	2013-04-24 09:30:36.336328227 +0100
+--- openjdk.orig/hotspot/src/share/vm/memory/defNewGeneration.cpp	2013-07-01 15:21:44.000000000 +0100
++++ openjdk/hotspot/src/share/vm/memory/defNewGeneration.cpp	2013-07-02 03:27:01.531655466 +0100
 @@ -42,6 +42,7 @@
  #include "oops/oop.inline.hpp"
  #include "runtime/java.hpp"
@@ -315,8 +315,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/memory/defNewGeneration.cpp openjdk/
    gc_tracer.report_tenuring_threshold(tenuring_threshold());
  
 diff -Nru openjdk.orig/hotspot/src/share/vm/memory/generation.cpp openjdk/hotspot/src/share/vm/memory/generation.cpp
---- openjdk.orig/hotspot/src/share/vm/memory/generation.cpp	2013-04-23 23:15:10.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/memory/generation.cpp	2013-04-24 09:29:58.459723953 +0100
+--- openjdk.orig/hotspot/src/share/vm/memory/generation.cpp	2013-07-01 15:21:44.000000000 +0100
++++ openjdk/hotspot/src/share/vm/memory/generation.cpp	2013-07-02 03:27:01.531655466 +0100
 @@ -41,8 +41,14 @@
  #include "oops/oop.inline.hpp"
  #include "runtime/java.hpp"
@@ -347,8 +347,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/memory/generation.cpp openjdk/hotspo
    gc_timer->register_gc_end(os::elapsed_counter());
  
 diff -Nru openjdk.orig/hotspot/src/share/vm/memory/tenuredGeneration.cpp openjdk/hotspot/src/share/vm/memory/tenuredGeneration.cpp
---- openjdk.orig/hotspot/src/share/vm/memory/tenuredGeneration.cpp	2013-04-23 23:15:10.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/memory/tenuredGeneration.cpp	2013-04-24 09:29:58.459723953 +0100
+--- openjdk.orig/hotspot/src/share/vm/memory/tenuredGeneration.cpp	2013-07-01 15:21:44.000000000 +0100
++++ openjdk/hotspot/src/share/vm/memory/tenuredGeneration.cpp	2013-07-02 03:27:01.531655466 +0100
 @@ -33,6 +33,12 @@
  #include "memory/tenuredGeneration.hpp"
  #include "oops/oop.inline.hpp"
