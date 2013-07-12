@@ -1,5 +1,17 @@
 2013-07-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* patches/boot/ecj-diamond.patch:
+	Regenerate.  Add new cases in
+	com.sun.org.apache.xml.internal.serializer.Encodings,
+	sun.nio.ch.EPollArrayWrapper and
+	sun.nio.ch.EPollSelectorImpl.
+	Remove case in sun.util.logging.PlatformLogger.
+	* patches/boot/ecj-multicatch.patch:
+	Add new case in
+	com.sun.org.apache.xml.internal.serializer.Encodings.
+
+2013-07-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* Makefile.am:
 	(OPENJDK_VERSION): Bump to b31.
 	(CORBA_CHANGESET): Update to current HEAD.

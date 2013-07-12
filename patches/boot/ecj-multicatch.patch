@@ -452,3 +452,17 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/ProcessBuilder.java 
                  "Cannot run program \"" + prog + "\""
                  + (dir == null ? "" : " (in directory \"" + dir + "\")")
                  + exceptionInfo,
+diff -Nru openjdk-boot.orig/jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.java openjdk-boot/jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.java
+--- openjdk-boot.orig/jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.java	2013-07-12 17:05:47.376339879 +0100
++++ openjdk-boot/jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.java	2013-07-12 17:06:19.304846651 +0100
+@@ -145,7 +145,9 @@
+                 final String name = c.name();
+                 ei = new EncodingInfo(name, name);
+                 _encodingInfos.putEncoding(normalizedEncoding, ei);
+-            } catch (IllegalCharsetNameException | UnsupportedCharsetException x) {
++            } catch (IllegalCharsetNameException x) {
++                ei = new EncodingInfo(null,null);
++            } catch (UnsupportedCharsetException x) {
+                 ei = new EncodingInfo(null,null);
+             }
+         }
