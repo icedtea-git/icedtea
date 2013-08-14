@@ -14,6 +14,11 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.5.0 (2012-XX-XX):
 
+* JamVM
+  - JSR 292: Invoke Dynamic
+  - JSR 335: Lambda Expressions
+  - FreeClassData: adjust method count for Miranda methods
+
 New in release 2.4.1 (2013-07-05):
 
 * Security fixes
