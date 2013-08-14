@@ -1,3 +1,24 @@
+2013-08-14  Xerxes Rånby  <xerxes@zafena.se>
+	    Robert Lougher  <rob@jamvm.org.uk>
+
+	JamVM
+	- JSR 292: enable for OpenJDK 7/IcedTea 2
+	- JSR 335: invokeinterface check in method resolution
+	- JSR 335: java.lang.invoke.MagicLambdaImpl
+	- JSR 292: invokedynamic is 5 bytes - non-direct interp
+	- JSR 292: invokedynamic is 5 bytes in length
+	- Minor formatting change
+	- Minor fixes: use perror for mmap failure
+	- FreeClassData: fix comment
+	- FreeClassData: adjust method count for Miranda methods
+	- JSR 335: remove GC hack
+	- JSR 335: implement "bridge" methods for Mirandas
+	- JSR 335: handle multiple defaults and conflicts
+	* NEWS: Updated.
+	* Makefile.am
+	(JAMVM_VERSION): Updated JamVM to 2013-07-14 revision.
+	(JAMVM_SHA256SUM): Updated.
+
 2013-05-07  Xerxes Rånby  <xerxes@zafena.se>
 
 	JamVM

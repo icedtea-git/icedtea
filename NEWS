@@ -15,9 +15,10 @@ New in release 3.0 beta 1 (2013-XX-XX):
 * JamVM
   - JSR 292: Invoke Dynamic
   - JSR 308: Type Annotations
-  - JSR 335: (lambda expressions) initial hack
+  - JSR 335: Lambda Expressions
   - JSR 901: VM support for method parameter reflection
   - JEP 171: Implement fence methods in sun.misc.Unsafe
+  - FreeClassData: adjust method count for Miranda methods
   - Fix invokesuper check in invokespecial opcode
   - Fix non-direct interpreter invokespecial super-class check
   - When GC'ing a native method don't try to free code
