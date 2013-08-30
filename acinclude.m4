@@ -2510,9 +2510,9 @@ AC_DEFUN_ONCE([IT_USE_BOOTSTRAP_TOOLS],
   ],
   [
     if test "x${it_cv_bytecode7}" = "xyes"; then
-      disable_bootstrap_tools=yes;
-    else
       disable_bootstrap_tools=no;
+    else
+      disable_bootstrap_tools=yes;
     fi
   ])
   AC_MSG_RESULT([$disable_bootstrap_tools])

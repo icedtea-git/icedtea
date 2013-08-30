@@ -1,6 +1,12 @@
 2013-08-30  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* acinclude.m4:
+	(IT_USE_BOOTSTRAP_TOOLS): Fix default following
+	change to IT_BYTECODE7_CHECK.
+
+2013-08-30  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* acinclude.m4:
 	(IT_BYTECODE7_CHECK): Remove inverse logic to
 	make things clearer.
 
