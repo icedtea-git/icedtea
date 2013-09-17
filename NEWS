@@ -16,7 +16,8 @@ New in release 2.5.0 (2012-XX-XX):
 
 * JamVM
   - JSR 292: Invoke Dynamic
-  - JSR 335: Lambda Expressions
+  - sun.misc.Unsafe: additional methods get/putAddress:
+    allows JamVM with OpenJDK 7/8 to run recent versions of JEdit.
   - FreeClassData: adjust method count for Miranda methods
 
 New in release 2.4.1 (2013-07-05):

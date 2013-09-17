@@ -24,8 +24,8 @@ CACAO_BASE_URL = http://icedtea.classpath.org/download/drops/cacao
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.gz
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.gz
 
-JAMVM_VERSION = 1a58072f8339270f9372c273d82a00790e04375d
-JAMVM_SHA256SUM = b6dafea4924a2772877597b07a59108ac5f95d6ec85fbb0bb2ea80653cdaaaaf
+JAMVM_VERSION = ac22c9948434e528ece451642b4ebde40953ee7e
+JAMVM_SHA256SUM = 4662da1fe3e0e11d8fa685c7f2fc748576b9f3d3e37dc56b798dd6a5bd6b61e7
 JAMVM_BASE_URL = http://icedtea.classpath.org/download/drops/jamvm
 JAMVM_URL = $(JAMVM_BASE_URL)/jamvm-$(JAMVM_VERSION).tar.gz
 JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
