@@ -1,3 +1,17 @@
+2013-09-17  Xerxes Rånby  <xerxes@zafena.se>
+	    Robert Lougher  <rob@jamvm.org.uk>
+
+	JamVM
+	- JSR 335: fix frame.c
+	- Add support for CallerSensitive
+	- JSR 335: handle interfaces when resolving a method
+	- sun.misc.Unsafe: additional methods get/putAddress
+	- JSR 292: make internal functions static
+	* NEWS: Updated.
+	* Makefile.am
+	(JAMVM_VERSION): Updated JamVM to 2013-08-28 revision.
+	(JAMVM_SHA256SUM): Updated.
+
 2013-08-14  Xerxes Rånby  <xerxes@zafena.se>
 	    Robert Lougher  <rob@jamvm.org.uk>
 
