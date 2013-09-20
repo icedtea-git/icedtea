@@ -1,3 +1,26 @@
+2013-09-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(OPENJDK_VERSION): Set to b00.
+	(JDK_UPDATE_VERSION): Set to 60.
+	(CORBA_CHANGESET): Update to current HEAD.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* hotspot.map: Update to HEAD.
+	* patches/boot/ecj-diamond.patch:
+	Regenerated.
+	* patches/boot/ecj-trywithresources.patch:
+	Add case in java.nio.file.Files.
+
 2013-09-17  Xerxes Rånby  <xerxes@zafena.se>
 	    Robert Lougher  <rob@jamvm.org.uk>
 
@@ -12,7 +35,7 @@
 	* Makefile.am
 	(JAMVM_VERSION): Updated JamVM to 2013-08-28 revision.
 	(JAMVM_SHA256SUM): Updated.
-	
+
 2013-08-30  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* acinclude.m4:
