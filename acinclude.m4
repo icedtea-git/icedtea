@@ -1957,7 +1957,7 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_LCMS],
     PKG_CHECK_MODULES(LCMS2, lcms2 >= 2.5,[LCMS2_FOUND=yes],[LCMS2_FOUND=no])
     if test "x${LCMS2_FOUND}" = xno
     then
-      AC_MSG_ERROR([Could not find LCMS2; install LCMS2 or build with --disable-system-lcms to use the in-tree copy.])
+      AC_MSG_ERROR([Could not find LCMS >= 2.5; install it or build with --disable-system-lcms to use the in-tree copy.])
     fi
     AC_SUBST(LCMS2_CFLAGS)
     AC_SUBST(LCMS2_LIBS)

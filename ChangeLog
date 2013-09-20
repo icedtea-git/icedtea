@@ -1,3 +1,9 @@
+2013-09-11  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* acinclude.m4:
+	(IT_CHECK_FOR_LCMS): Make error message mention
+	version.
+
 2013-09-10  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
