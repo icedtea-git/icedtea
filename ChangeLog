@@ -1,3 +1,10 @@
+2013-07-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* acinclude.m4:
+	(IT_CHECK_FOR_LCMS): Turn system LCMS on by
+	default if the version is 2.5 or above with the
+	latest security fixes.
+
 2013-09-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:

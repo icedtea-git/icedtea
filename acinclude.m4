@@ -1947,7 +1947,7 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_LCMS],
   AC_MSG_RESULT(${ENABLE_SYSTEM_LCMS})
   if test x"${ENABLE_SYSTEM_LCMS}" = "xyes"; then
     dnl Check for LCMS2 headers and libraries.
-    PKG_CHECK_MODULES(LCMS2, lcms2,[LCMS2_FOUND=yes],[LCMS2_FOUND=no])
+    PKG_CHECK_MODULES(LCMS2, lcms2 >= 2.5,[LCMS2_FOUND=yes],[LCMS2_FOUND=no])
     if test "x${LCMS2_FOUND}" = xno
     then
       AC_MSG_ERROR([Could not find LCMS2; install LCMS2 or build with --disable-system-lcms to use the in-tree copy.])
