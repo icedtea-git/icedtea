@@ -1,3 +1,15 @@
+2013-05-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1410: Icedtea 2.3.9 fails to build using icedtea 1.12.4
+	* Makefile.am:
+	(STAGE1_BOOT_RUNTIME): New variable to store path
+	to stage 1 rt.jar.
+	(STAGE2_BOOT_RUNTIME): Likewise for stage 2.
+	(bootstrap-directory-stage1): Use STAGE1_BOOT_RUNTIME.
+	(rt): Only update STAGE1_BOOT_RUNTIME if it exists.
+	(clean-rt): Mirror creation of STAGE1_BOOT_RUNTIME in
+	bootstrap-directory-stage1.
+
 2013-01-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
