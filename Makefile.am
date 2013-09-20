@@ -586,6 +586,13 @@ ICEDTEA_ENV += \
 	COMPRESS_JARS="true"
 endif
 
+if USE_SYSTEM_KERBEROS
+ICEDTEA_ENV += \
+	SYSTEM_KRB5="true" \
+	KRB5_LIBS="${KRB5_LIBS}" \
+	KRB5_CFLAGS="${KRB5_CFLAGS}"
+endif
+
 # OpenJDK boot build environment.
 ICEDTEA_ENV_BOOT = $(ICEDTEA_ENV) \
 	BOOTCLASSPATH_CLS_RT="-bootclasspath $(CLS_DIR_BOOT):$(RUNTIME)" \

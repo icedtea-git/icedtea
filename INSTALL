@@ -201,6 +201,9 @@ These are documented fully in the relevant section below.
 * --with-rhino: Include Javascript support using Rhino (location may optionally be specified).
 * --with-additional-vms=vm-list: Additional VMs to build using the system described
   below.
+* --enable-system-kerberos: Link against the system Kerberos library and
+  query it at runtime to obtain the cache location, rather than using a
+  hardcoded value.
 
 Testing
 =======

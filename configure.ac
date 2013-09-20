@@ -198,6 +198,8 @@ IT_WITH_HG_REVISION
 AC_PATH_TOOL([GCJ],[gcj])
 AC_SUBST([GCJ])
 
+IT_CHECK_FOR_KERBEROS
+
 dnl pkgconfig cannot be used to find these headers and libraries.
 AC_CHECK_HEADERS([X11/X.h],[]
 	,[AC_MSG_ERROR("xorg headers were not found -

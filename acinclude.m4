@@ -23,6 +23,13 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       BUILD_ARCH_DIR=arm
       INSTALL_ARCH_DIR=arm
       JRE_ARCH_DIR=arm
+      ARCHFLAG="-D_LITTLE_ENDIAN"
+      ;;
+    arm64|aarch64)
+      BUILD_ARCH_DIR=aarch64
+      INSTALL_ARCH_DIR=aarch64
+      JRE_ARCH_DIR=aarch64
+      ARCHFLAG="-D_LITTLE_ENDIAN"
       ;;
     mips)
       BUILD_ARCH_DIR=mips
@@ -695,10 +702,10 @@ AC_DEFUN_ONCE([IT_ENABLE_ZERO_BUILD],
   ZERO_LIBARCH="${INSTALL_ARCH_DIR}"
   dnl can't use AC_CHECK_SIZEOF on multilib
   case "${ZERO_LIBARCH}" in
-    i386|ppc|s390|sparc)
+    arm|i386|ppc|s390|sh|sparc)
       ZERO_BITSPERWORD=32
       ;;
-    amd64|ppc64|s390x|sparc64)
+    aarch64|alpha|amd64|ia64|ppc64|s390x|sparcv9)
       ZERO_BITSPERWORD=64
       ;;
     *)
@@ -2059,6 +2066,32 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_GIF],
   fi
   AM_CONDITIONAL(USE_SYSTEM_GIF, test x"${ENABLE_SYSTEM_GIF}" = "xyes")
   AC_SUBST(ENABLE_SYSTEM_GIF)
+])
+
+dnl Check for Kerberos library in order to lookup cache location at runtime.
+AC_DEFUN_ONCE([IT_CHECK_FOR_KERBEROS],
+[
+  AC_MSG_CHECKING([whether to use the system Kerberos install])
+  AC_ARG_ENABLE([system-kerberos],
+	      [AS_HELP_STRING(--enable-system-kerberos,use the system kerberos [[default=yes]])],
+  [
+    ENABLE_SYSTEM_KERBEROS="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_KERBEROS="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_KERBEROS})
+  if test x"${ENABLE_SYSTEM_KERBEROS}" = "xyes"; then
+    dnl Check for krb5 header and library.
+    AC_CHECK_LIB([krb5], [krb5_cc_default],
+        , [AC_MSG_ERROR([Could not find Kerberos library; install Kerberos or build with --disable-system-kerberos to use the default cache location.])])
+    AC_CHECK_HEADER([krb5.h],
+        , [AC_MSG_ERROR([Could not find Kerberos header; install Kerberos or build with --disable-system-kerberos to use the default cache location.])])
+    KRB5_LIBS="-lkrb5"
+    AC_SUBST(KRB5_LIBS)
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_KERBEROS, test x"${ENABLE_SYSTEM_KERBEROS}" = "xyes")
+  AC_SUBST(ENABLE_SYSTEM_KERBEROS)
 ])
 
 AC_DEFUN_ONCE([IT_CHECK_FOR_GTK],
