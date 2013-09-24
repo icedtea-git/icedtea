@@ -1,3 +1,7 @@
+2013-09-23  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Add 2.4.2 release notes.
+
 2013-05-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1410: Icedtea 2.3.9 fails to build using icedtea 1.12.4
