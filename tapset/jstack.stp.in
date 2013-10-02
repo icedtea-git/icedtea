@@ -85,7 +85,9 @@ probe hotspot.vm_init_end
   Universe_collectedHeap[pid()] = %( systemtap_v >= "1.8"
                                     %? @var("_collectedHeap@universe.cpp")
                                     %: $_collectedHeap %);
-  HeapWordSize[pid()] = $HeapWordSize;
+  HeapWordSize[pid()] = %( systemtap_v >= "1.8"
+                          %? @var("HeapWordSize")
+                          %: $HeapWordSize %);
 
   /**
    * The CodeCache class contains the static CodeHeap _heap that
@@ -395,7 +397,9 @@ function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
                   // package name separator and that the method signature is
                   // encoded as a method descriptor string. Both of which we
                   // don't demangle here.
-                  constantPoolOopDesc = @cast(methodOopPtr, "methodOopDesc",
+                  constMethodOopPtr = @cast(methodOopPtr, "methodOopDesc",
+                                            "@ABS_SERVER_LIBJVM_SO@")->_constMethod;
+                  constantPoolOopDesc = @cast(constMethodOopPtr, "constMethodOopDesc",
                                               "@ABS_SERVER_LIBJVM_SO@")->_constants;
                   constantPoolOop_base = constantPoolOopDesc + constantPoolOopDesc_size;
 

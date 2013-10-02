@@ -1,3 +1,7 @@
+2013-10-02  Yasumasa Suenaga  <yasu@ysfactory.dip.jp>
+
+	* jstack.stp should be adapted CR#7172967
+
 2012-03-16  Mark Wielaard  <mjw@redhat.com>
 
 	* tapset/jstack.stp.in: Change symbolOopDesc to Symbol to accomodate
