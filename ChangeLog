@@ -1,3 +1,7 @@
+2013-10-02  Yasumasa Suenaga  <yasu@ysfactory.dip.jp>
+
+	* jstack.stp should be adapted CR#7172967
+
 2013-09-23  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add 2.4.2 release notes.
