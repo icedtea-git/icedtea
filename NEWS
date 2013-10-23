@@ -14,6 +14,103 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.5.0 (2012-XX-XX):
 
+New in release 2.4.3 (2013-10-21):
+
+* Security fixes
+  - S8006900, CVE-2013-3829: Add new date/time capability
+  - S8008589: Better MBean permission validation
+  - S8011071, CVE-2013-5780: Better crypto provider handling
+  - S8011081, CVE-2013-5772: Improve jhat
+  - S8011157, CVE-2013-5814: Improve CORBA portablility
+  - S8012071, CVE-2013-5790: Better Building of Beans
+  - S8012147: Improve tool support
+  - S8012277: CVE-2013-5849: Improve AWT DataFlavor
+  - S8012425, CVE-2013-5802: Transform TransformerFactory
+  - S8013503, CVE-2013-5851: Improve stream factories
+  - S8013506: Better Pack200 data handling
+  - S8013510, CVE-2013-5809: Augment image writing code
+  - S8013514: Improve stability of cmap class
+  - S8013739, CVE-2013-5817: Better LDAP resource management
+  - S8013744, CVE-2013-5783: Better tabling for AWT
+  - S8014085: Better serialization support in JMX classes
+  - S8014093, CVE-2013-5782: Improve parsing of images
+  - S8014098: Better profile validation
+  - S8014102, CVE-2013-5778: Improve image conversion
+  - S8014341, CVE-2013-5803: Better service from Kerberos servers
+  - S8014349, CVE-2013-5840: (cl) Class.getDeclaredClass problematic in some class loader configurations
+  - S8014530, CVE-2013-5825: Better digital signature processing
+  - S8014534: Better profiling support
+  - S8014987, CVE-2013-5842: Augment serialization handling
+  - S8015614: Update build settings
+  - S8015731: Subject java.security.auth.subject to improvements
+  - S8015743, CVE-2013-5774: Address internet addresses
+  - S8016256: Make finalization final
+  - S8016653, CVE-2013-5804: javadoc should ignore ignoreable characters in names
+  - S8016675, CVE-2013-5797: Make Javadoc pages more robust
+  - S8017196, CVE-2013-5850: Ensure Proxies are handled appropriately
+  - S8017287, CVE-2013-5829: Better resource disposal
+  - S8017291, CVE-2013-5830: Cast Proxies Aside
+  - S8017298, CVE-2013-4002: Better XML support
+  - S8017300, CVE-2013-5784: Improve Interface Implementation
+  - S8017505, CVE-2013-5820: Better Client Service
+  - S8019292: Better Attribute Value Exceptions
+  - S8019617: Better view of objects
+  - S8020293: JVM crash
+  - S8021275, CVE-2013-5805: Better screening for ScreenMenu
+  - S8021282, CVE-2013-5806: Better recycling of object instances
+  - S8021286: Improve MacOS resourcing
+  - S8021290, CVE-2013-5823: Better signature validation
+  - S8022931, CVE-2013-5800: Enhance Kerberos exceptions
+  - S8022940: Enhance CORBA translations
+  - S8023683: Enhance class file parsing
+* Backports
+  - S6614237: missing codepage Cp290 at java runtime
+  - S8005932: Java 7 on mac os x only provides text clipboard formats
+  - S8014046: (process) Runtime.exec(String) fails if command contains spaces [win]
+  - S8015144: Performance regression in ICU OpenType Layout library
+  - S8015965: (process) Typo in name of property to allow ambiguous commands
+  - S8015978: Incorrect transformation of XPath expression "string(-0)"
+  - S8016357: Update hotspot diagnostic class
+  - S8019584: javax/management/remote/mandatory/loading/MissingClassTest.java failed in nightly against jdk7u45: java.io.InvalidObjectException: Invalid notification: null
+  - S8019969: nioNetworkChannelInet6/SetOptionGetOptionTestInet6 test case crashes
+  - S8020032: 7u fastdebug doesn't generate fastdebuginfo file
+  - S8020085: Linux ARM build failure for 7u45
+  - S8020088: Increment minor version of HSx for 7u45 and initialize the build number
+  - S8020551: increment hsx build to b03 for 7u45-b03
+  - S8020943: Memory leak when GCNotifier uses create_from_platform_dependent_str()
+  - S8021287: Improve MacOS resourcing
+  - S8021355: REGRESSION: Five closed/java/awt/SplashScreen tests fail since 7u45 b01 on Linux, Solaris
+  - S8021360: object not exported" on start of JMXConnectorServer for RMI-IIOP protocol with security manager
+  - S8021366: java_util/Properties/PropertiesWithOtherEncodings fails during 7u45 nightly testing
+  - S8021577: JCK test api/javax_management/jmx_serial/modelmbean/ModelMBeanNotificationInfo/serial/index.html#Input has failed since jdk 7u45 b01
+  - S8021899: Re-adjust fix of # 8020498 in 7u45 after mergeing 7u40
+  - S8021901: Increment hsx build to b05 for 7u45-b05
+  - S8021933: Add extra check for fix # JDK-8014530
+  - S8021969: The index_AccessAllowed jnlp can not load successfully with exception thrown in the log.
+  - S8022066: Evaluation of method reference to signature polymorphic method crashes VM
+  - S8022086: Fixing licence of newly added files
+  - S8022254: Remove incorrect jdk7u45-b05 tag from jdk7u-cpu forest
+  - S8022661: InetAddress.writeObject() performs flush() on object output stream
+  - S8022682: Supporting XOM
+  - S8022808: Kitchensink hangs on macos
+  - S8022856: 7u45 l10n resource file translation update
+  - S8023323: Increment hsx build to b06 for 7u45-b08
+  - S8023457: Event based tracing framework needs a mutex for thread groups
+  - S8023478: Test fails with HS crash in GCNotifier.
+  - S8023741: Increment hsx 24.45 build to b07 for 7u45-b09
+  - S8023771: when USER_RELEASE_SUFFIX is set in order to add a string to java -version, build number in the bundles names should not be changed to b00
+  - S8023888: Increment hsx 24.45 build to b08 for 7u45-b10
+  - S8023964: java/io/IOException/LastErrorString.java should be @ignore-d
+  - S8024369: Increment build # of hs24.0 to b57 for 7u40-b61 psu
+  - S8024668: api/java_nio/charset/Charset/index.html#Methods JCK-runtime test fails with 7u45 b11
+  - S8024697: Fix for 8020983 causes Xcheck:jni warnings
+  - S8024863, PR1400: X11: Support GNOME Shell as mutter
+  - S8024883, RH1011051: (se) SelectableChannel.register throws NPE if fd >= 64k (lnx)
+  - S8025128: File.createTempFile fails if prefix is absolute path
+  - S8025170: jdk7u51 7u-1-prebuild is failing since 9/19
+* Bug fixes
+  - PR1400: Menu of maximized AWT window not working in Mate
+
 New in release 2.4.2 (2013-09-20):
 
 * System LCMS 2 support again enabled by default, requiring 2.5 or above.
