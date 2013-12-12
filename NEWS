@@ -12,7 +12,11 @@ JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.5.0 (2012-XX-XX):
+New in release 2.5.0 (2013-XX-XX):
+
+* Bug fixes
+ - Fix implicit function declarations
+ - PR1617: Include defs.make in vm.make so zeroshark.make is included
 
 New in release 2.4.3 (2013-10-21):
 
@@ -1810,7 +1814,6 @@ OpenJDK
   - PR716: IcedTea7 should bootstrap with IcedTea6
   - Fix indentation on Makefile block not executed when STRIP_POLICY=no_strip is set
   - JEP167: Fix invalid XSL stylesheets and DTD.
-  - Include defs.make in buildtree.make so ZERO_BUILD is recognised and JVM_VARIANT_ZERO set.
   - Make sure libffi cflags and libs are used.
   - PR1378: Add AArch64 support to Zero
   - PR1170: Ensure unlimited crypto policy is in place.

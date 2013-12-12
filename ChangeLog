@@ -1,3 +1,13 @@
+2013-12-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1617: Include defs.make in vm.make so
+	zeroshark.make is included
+	* Makefile.am:
+	(JDK_CHANGESET): Set to current HEAD.
+	(JDK_SHA256SUM): Likewise.
+	* NEWS: Updated with changes brought in.
+	* hotspot.map: Set to current HEAD.
+
 2013-10-23  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add 2.4.3 release notes.
