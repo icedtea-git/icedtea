@@ -28,6 +28,17 @@ New in release 3.0 beta 1 (2013-XX-XX):
   - Set anonymous class protection domain
   - JVM_IsVMGeneratedMethodIx stub
   - Dummy implementation of sun.misc.Perf natives
+  - JVM_NewMultiArray: element class may be an array
+  - jtreg test java/lang/reflect/Array/ExceedMaxDim
+  - OpenJDK: Fix Local/Anonymous class checks
+  - classlibMarkThreadTerminated should return Object*
+  - Fix race-condition in constant-pool resolution code
+  - JSR 292: MethodHandle constant-pool refs may be resolved
+  - JSR 292: bootstrap method args error handling
+  - JSR 308: update to match OpenJDK changes
+  - JSR 292: correct intrinsic cache COMPARE function
+  - Race condition in setting up imethod table
+  - GC: Minor performance improvement
 * Bug fixes
   - PR1346: Filter out -j option to make
   - PR1347: Update list of checked JDKs
