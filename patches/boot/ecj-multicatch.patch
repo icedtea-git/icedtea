@@ -466,3 +466,18 @@ diff -Nru openjdk-boot.orig/jaxp/src/com/sun/org/apache/xml/internal/serializer/
                  ei = new EncodingInfo(null,null);
              }
          }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/charset/Charset.java openjdk-boot/jdk/src/share/classes/java/nio/charset/Charset.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/nio/charset/Charset.java	2013-12-26 22:36:18.267285222 +0000
++++ openjdk-boot/jdk/src/share/classes/java/nio/charset/Charset.java	2013-12-26 22:36:43.439705661 +0000
+@@ -440,8 +440,9 @@
+                                 } catch (ClassNotFoundException x) {
+                                     // Extended charsets not available
+                                     // (charsets.jar not present)
+-                                } catch (InstantiationException |
+-                                         IllegalAccessException x) {
++                                } catch (InstantiationException x) {
++                                  throw new Error(x);
++                                } catch (IllegalAccessException x) {
+                                   throw new Error(x);
+                                 }
+                                 return null;

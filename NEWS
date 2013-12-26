@@ -14,18 +14,114 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.5.0 (2013-XX-XX):
 
+* OpenJDK
+  - S5049299: (process) Use posix_spawn, not fork, on S10 to avoid swap exhaustion
+  - S6889597: TEST_BUG: javax/management/remote/mandatory/URLTest.java test should be updated in jdk7 Workspace
+  - S6900441: PlatformEvent.park(millis) on Linux could still be affected by changes to the time-of-day clock
+  - S6989981: jstack causes "fatal error: ExceptionMark destructor expects no pending exceptions"
+  - S7123493: (proxy) Proxy.getProxyClass doesn't scale under high load
+  - S7124232: [TEST_BUG] [macosx] JSplitPane has wrong divider location
+  - S7124314: [TEST_BUG] [macosx] Aqua LAF: JTree doesn't select element by keyboards left and right keys
+  - S7124320: [TEST_BUG] [macosx] JComboBox doesn't change selection on mouse over
+  - S7124338: [macosx] Selection lost if a selected item removed from a java.awt.List
+  - S7129133: [macosx] Accelerators are displayed as Meta instead of the Command symbol
+  - S7133122: SA throws sun.jvm.hotspot.debugger.UnmappedAddressException when it should not
+  - S7133146: [macosx] closed/javax/swing/JInternalFrame/4193219/IconCoord fails on MacOS
+  - S7133154: [TEST_BUG] [macosx] closed/javax/swing/JInternalFrame/4251301/bug4251301.java fails on MacOS
+  - S7147084: (process) appA hangs when read output stream of appB which starts appC that runs forever
+  - S7171591: getDefaultScopeID() in src/solaris/native/java/net/net_util_md.c should return a value
+  - S7173464: Clipboard.getAvailableDataFlavors: Comparison method violates contract
+  - S7197210: java/lang/invoke/CallSiteTest.java failing on armsflt.
+  - S8003262: reverse translation required changes in xalan resource bundles
+  - S8004032: [TEST_BUG] [macosx] There is no effect when double clicking on the Icon, after right clicking on the Icon and the Icon disappear
+  - S8004051: assert(_oprs_len[mode] < maxNumberOfOperands) failed: array overflow
+  - S8004476: XSLT Extension Functions Don't Work in WebStart
+  - S8006395: Race in async socket close on Linux
+  - S8007454: (process) SetHandleInformation parameters DWORD (not BOOLEAN)
+  - S8008118: (process) Possible null pointer dereference in jdk/src/solaris/native/java/lang/UNIXProcess_md.c
+  - S8008733: Psr:perf:osb performance regression (18%) in wss_bodyenc
+  - S8009213: sun/management/jdp/JdpTest.sh fails with exit code 1
+  - S8012326: Deadlock occurs when Charset.availableCharsets() is called by several threads at the same time
+  - S8012615: Realm.getRealmsList returns realms list in wrong
+  - S8012925: [parfait] Missing return value in jdk/src/macosx/native/sun/awt/AWTEvent.m
+  - S8015092: SchemaFactory cannot parse schema if whitespace added within patterns in Selector XPath expression
+  - S8015243: SchemaFactory does not catch enum. value that is not in the value space of the base type, anyURI
+  - S8015599: [TEST_BUG] [macosx] Test closed/javax/swing/Popup/TaskbarPositionTest.java fails since JDK 8 b75 on MacOSX
+  - S8015600: [TEST_BUG] [macosx] Test closed/javax/swing/plaf/basic/BasicMenuUI/4983388/bug4983388.java fails since JDK 8 b75 on MacOSX
+  - S8016018: Typo in AbstractStringBuilder#indexOf and #lastIndexOf descriptions
+  - S8016271: wsimport -clientjar does not create portable jars on Windows due to hardcoded backslash
+  - S8016500: Unlocalized warnings.
+  - S8017180: [macosx] [TEST_BUG] alt-key doesn't work on macos for menu
+  - S8017195: Introduce option to setKeepAlive parameter on CORBA sockets
+  - S8019396: SA-JDI: OSThread class initialization throws an exception
+  - S8021257: com.sun.corba.se.** should be on restricted package list
+  - S8021898: Broken JIT compiler optimization for loop unswitching
+  - S8021943: FileDialog getFile returns corrupted string after previous setFile
+  - S8022507: SIGSEGV at ParMarkBitMap::verify_clear()
+  - S8022584: Memory leak in some NetworkInterface methods
+  - S8022585: VM crashes when ran with -XX:+PrintInlining
+  - S8022993: Convert MAX_UNROLL constant to LoopMaxUnroll C2 flag
+  - S8023130: (process) ProcessBuilder#inheritIO does not work on Windows
+  - S8023310: Thread contention in the method Beans.IsDesignTime()
+  - S8023472: C2 optimization breaks with G1
+  - S8023580: Add jtreg test for 8004051 and 8005722
+  - S8023720: (hotspot) setjmp/longjmp changes the process signal mask on OS X
+  - S8023786: (jdk) setjmp/longjmp changes the process signal mask on OS X
+  - S8024027: Test sun/misc/IoTrace/IoTraceSocketReadWrite.java crashes VM
+  - S8024163: [macosx] NullPointerException at javax.swing.TransferHandler$DropHandler.handleDrag since jdk8b93, 7u40b28
+  - S8024461: [macosx] Java crashed on mac10.9 for swing and 2d function manual test
+  - S8024521: (process) Async close issues with Process InputStream
+  - S8024707: TransformerException : item() return null with node list of length != 1
+  - S8024830: SEGV in org.apache.lucene.codecs.compressing.CompressingTermVectorsReader.get
+  - S8024861: Incomplete token triggers GSS-API NullPointerException
+  - S8024876: [TEST_BUG] javax/xml/jaxp/parsers/8022548/XOMParserTest.java failed when testbase dir has read only permissions
+  - S8024952: ClassCastException in PlainSocketImpl.accept() when using custom socketImpl
+  - S8025145: [macosx]: java 7 does not recognize tiff image on clipboard
+  - S8025204: Intermittent test failure: javax/management/remote/mandatory/connection/IdleTimeoutTest.java
+  - S8025205: Intermittent test failure: javax/management/remote/mandatory/connection/BrokenConnectionTest.java
+  - S8025206: Intermittent test failure:     javax/management/monitor/NullAttributeValueTest.java
+  - S8025207: Intermittent test failure: javax/management/monitor/CounterMonitorThresholdTest.java
+  - S8025255: (tz) Support tzdata2013g
+  - S8025512: NPE with logging while launching webstart on jre7u40 if logging is disabled
+  - S8025713: Syncing indendation/comment/copyright year differences with upstream projects
+  - S8025860: new hotspot build - hs24.60-b02
+  - S8025861: Set minor version for hotspot in 7u60 to 60 and build number to b01
+  - S8025920: webrev.ksh does not provide any details about changes in zip files
+  - S8026293: Schedule part of G1 pre-barrier late
+  - S8026486: Significant slowdown due to transparent huge pages
+  - S8026502: java/lang/invoke/MethodHandleConstants.java fails on all platforms
+  - S8026794: Test tools/pack200/TimeStamp.java fails while opening golden.jar.native.IST on linux-ppc(v2)
+  - S8027066: XMLDecoder in java 7 cannot properly deserialize object arrays
+  - S8027172: new hotspot build - hs24.60-b03
+  - S8027426: String.toLowerCase incorrectly increases length, if string contains \u0130 char
+  - S8027579: new hotspot build - hs24.60-b04
+  - S8027837: JDK-8021257 causes CORBA build failure on emdedded platforms
+  - S8027839: C1 crashes in Weblogic with G1 enabled
+  - S8027840: C2 allows safepoint checks to leak into G1 pre-barriers
+  - S8027860: [TEST_BUG] File not closed in javax/xml/jaxp/parsers/8022548/XOMParserTest.java
+  - S8027997: G1: SPECjbb2013 crashes due to a broken object reference
+  - S8028054: com.sun.beans.finder.MethodFinder has unsynchronized access to a static Map
+  - S8028215: ORB.init fails with SecurityException if properties select the JDK default ORB
+  - S8028351: JWS doesn't get authenticated when using kerberos auth proxy
+  - S8028412: AsyncGetCallTrace() is broken on x86 in JDK 7u40
+  - S8029304: JFR broken in 7u train for JDK Linux for ARM or OpenJDK
+  - S8029599: JVM crashes on solaris-i586 with -Xverify:all if stack overflow happens during recursive reflective call
 * Bug fixes
- - Fix implicit function declarations
- - PR1617: Include defs.make in vm.make so zeroshark.make is included
+  - Fix implicit function declarations
+  - PR1617: Include defs.make in vm.make so zeroshark.make is included
+  - Add Shark definitions from 8003868
+  - D729448: 32-bit alignment on mips and mipsel
+  - Drop compile_method argument removed in 7083786 from sharkCompiler.cpp
+  - Remove binary files and unlicensed generated files
 * JamVM
   - JVM_NewMultiArray: element class may be an array
   - jtreg test java/lang/reflect/Array/ExceedMaxDim
   - OpenJDK: Fix Local/Anonymous class checks
   - classlibMarkThreadTerminated should return Object*
   - Fix race-condition in constant-pool resolution code
-  - JSR 292: MethodHandle constant-pool refs may be resolved
-  - JSR 292: bootstrap method args error handling
-  - JSR 292: correct intrinsic cache COMPARE function
+  - JSR292: MethodHandle constant-pool refs may be resolved
+  - JSR292: bootstrap method args error handling
+  - JSR292: correct intrinsic cache COMPARE function
   - Race condition in setting up imethod table
   - GC: Minor performance improvement
 

@@ -1,3 +1,34 @@
+2013-12-26  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(BUILD_VERSION): Bump to b02.
+	(CORBA_CHANGESET): Update to current HEAD.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Add changes brought in and fix
+	formatting.
+	* hotspot.map: Sync with forest HEAD.
+	* patches/boot/break-processbuilder-dependency.patch:
+	Regenerated.
+	* patches/boot/ecj-diamond.patch:
+	Regenerated.  Add new cases in com.sun.beans.util.Cache
+	and java.lang.reflect.WeakCache. Drop ThreadGroupContext
+	changes as no longer needed.
+	* patches/boot/ecj-multicatch.patch:
+	Add new case in java.nio.charset.Charset.
+	* patches/boot/ecj-stringswitch.patch:
+	Update MethodHandleNatives change to include getDeclaringClass
+	and getInvocationHandler.
+
 2013-12-20  Xerxes Rånby  <xerxes@zafena.se>
 	    Robert Lougher  <rob@jamvm.org.uk>
 
