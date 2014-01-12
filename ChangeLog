@@ -1,3 +1,13 @@
+2014-01-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* acinclude.m4:
+	(IT_ENABLE_ZERO_BUILD): Require IT_ENABLE_SHARK
+	so use_shark is set.
+	(IT_ENABLE_SHARK): Rewrite of IT_SET_SHARK_BUILD
+	to simplify & match style of similar macros.
+	* configure.ac:
+	Don't invoke IT_SET_SHARK_BUILD explicitly.
+
 2013-12-26  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
