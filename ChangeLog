@@ -1,3 +1,18 @@
+2014-01-17  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* patches/boot/hotspot/default/jdk-dependency.patch:
+	Moved to...
+	* patches/boot/hotspot/zero/jdk-dependency.patch:
+	Removed.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add 8026703.  Fix path to
+	jdk-dependency patch.
+	* hotspot.map: Add ppc.
+	* patches/boot/hotspot-jdk-dependency.patch:
+	...here.
+	* patches/ppc/8026703-xsl_include.patch:
+	Needed for PPC HotSpot build to bootstrap.
+
 2014-01-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* acinclude.m4:

@@ -1,0 +1,48 @@
+# HG changeset patch
+# User simonis
+# Date 1381928799 -7200
+#      Wed Oct 16 15:06:39 2013 +0200
+# Node ID 042cf42c72bd7fb3e5b50dd88d908985926f5284
+# Parent  7fe6ef09d2424c8f92244fa61393fa64f555ebd7
+8026703: Wrongly placed <xsl:import> element in Event-Based JVM Tracing .xsl files
+Reviewed-by: sla, kamg
+
+diff -r 7fe6ef09d242 -r 042cf42c72bd src/share/vm/trace/traceEventClasses.xsl
+--- openjdk/hotspot/src/share/vm/trace/traceEventClasses.xsl	Wed Oct 16 09:20:23 2013 +0200
++++ openjdk/hotspot/src/share/vm/trace/traceEventClasses.xsl	Wed Oct 16 15:06:39 2013 +0200
+@@ -23,8 +23,8 @@
+ -->
+ 
+ <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
++<xsl:import href="xsl_util.xsl"/>
+ <xsl:output method="text" indent="no" omit-xml-declaration="yes"/>
+-<xsl:import href="xsl_util.xsl"/>
+ 
+ <xsl:template match="/">
+   <xsl:call-template name="file-header"/>
+diff -r 7fe6ef09d242 -r 042cf42c72bd src/share/vm/trace/traceEventIds.xsl
+--- openjdk/hotspot/src/share/vm/trace/traceEventIds.xsl	Wed Oct 16 09:20:23 2013 +0200
++++ openjdk/hotspot/src/share/vm/trace/traceEventIds.xsl	Wed Oct 16 15:06:39 2013 +0200
+@@ -23,8 +23,8 @@
+ -->
+ 
+ <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
++<xsl:import href="xsl_util.xsl"/>
+ <xsl:output method="text" indent="no" omit-xml-declaration="yes"/>
+-<xsl:import href="xsl_util.xsl"/>
+ 
+ <xsl:template match="/">
+   <xsl:call-template name="file-header"/>
+diff -r 7fe6ef09d242 -r 042cf42c72bd src/share/vm/trace/traceTypes.xsl
+--- openjdk/hotspot/src/share/vm/trace/traceTypes.xsl	Wed Oct 16 09:20:23 2013 +0200
++++ openjdk/hotspot/src/share/vm/trace/traceTypes.xsl	Wed Oct 16 15:06:39 2013 +0200
+@@ -23,8 +23,8 @@
+ -->
+ 
+ <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
++<xsl:import href="xsl_util.xsl"/>
+ <xsl:output method="text" indent="no" omit-xml-declaration="yes"/>
+-<xsl:import href="xsl_util.xsl"/>
+ 
+ <xsl:template match="/">
+   <xsl:call-template name="file-header"/>

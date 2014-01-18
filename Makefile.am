@@ -262,6 +262,11 @@ ICEDTEA_PATCHES =
 
 # Conditional patches
 
+if WITH_ALT_HSBUILD
+ICEDTEA_PATCHES += \
+	patches/ppc/8026703-xsl_include.patch
+endif
+
 if WITH_RHINO
 ICEDTEA_PATCHES += \
 	patches/rhino.patch
@@ -334,7 +339,7 @@ ICEDTEA_BOOT_PATCHES = \
 	patches/boot/corba-dependencies.patch \
 	patches/boot/jaxws-langtools-dependency.patch \
 	patches/boot/jaxws-jdk-dependency.patch \
-	patches/boot/hotspot/${HSBUILD}/jdk-dependency.patch \
+	patches/boot/hotspot-jdk-dependency.patch \
 	patches/boot/ecj-multicatch.patch \
 	patches/boot/ecj-trywithresources.patch \
 	patches/boot/ecj-autoboxing.patch \
