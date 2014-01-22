@@ -110,7 +110,6 @@ New in release 2.5.0 (2013-XX-XX):
   - Fix implicit function declarations
   - PR1617: Include defs.make in vm.make so zeroshark.make is included
   - Add Shark definitions from 8003868
-  - D729448: 32-bit alignment on mips and mipsel
   - Drop compile_method argument removed in 7083786 from sharkCompiler.cpp
   - Remove binary files and unlicensed generated files
 * JamVM
@@ -124,6 +123,217 @@ New in release 2.5.0 (2013-XX-XX):
   - JSR292: correct intrinsic cache COMPARE function
   - Race condition in setting up imethod table
   - GC: Minor performance improvement
+
+New in release 2.4.4 (2014-01-14):
+
+* Security fixes
+  - S6727821: Enhance JAAS Configuration
+  - S7068126, CVE-2014-0373: Enhance SNMP statuses
+  - S8010935: Better XML handling
+  - S8011786, CVE-2014-0368: Better applet networking
+  - S8021257, CVE-2013-5896: com.sun.corba.se.** should be on restricted package list
+  - S8021271, CVE-2014-0408: Better buffering in ObjC code
+  - S8022904: Enhance JDBC Parsers
+  - S8022927: Input validation for byte/endian conversions
+  - S8022935: Enhance Apache resolver classes
+  - S8022945: Enhance JNDI implementation classes
+  - S8023057: Enhance start up image display
+  - S8023069, CVE-2014-0411: Enhance TLS connections
+  - S8023245, CVE-2014-0423: Enhance Beans decoding
+  - S8023301: Enhance generic classes
+  - S8023338: Update jarsigner to encourage timestamping
+  - S8023672: Enhance jar file validation
+  - S8024302: Clarify jar verifications
+  - S8024306, CVE-2014-0416: Enhance Subject consistency
+  - S8024530: Enhance font process resilience
+  - S8024867: Enhance logging start up
+  - S8025014: Enhance Security Policy
+  - S8025018, CVE-2014-0376: Enhance JAX-P set up
+  - S8025026, CVE-2013-5878: Enhance canonicalization
+  - S8025034, CVE-2013-5907: Improve layout lookups
+  - S8025448: Enhance listening events
+  - S8025758, CVE-2014-0422: Enhance Naming management
+  - S8025767, CVE-2014-0428: Enhance IIOP Streams
+  - S8026172: Enhance UI Management
+  - S8026176: Enhance document printing
+  - S8026193, CVE-2013-5884: Enhance CORBA stub factories
+  - S8026204: Enhance auth login contexts
+  - S8026417, CVE-2013-5910: Enhance XML canonicalization
+  - S8026502: java/lang/invoke/MethodHandleConstants.java fails on all platforms
+  - S8027201, CVE-2014-0376: Enhance JAX-P set up
+  - S8029507, CVE-2013-5893: Enhance JVM method processing
+  - S8029533: REGRESSION: closed/java/lang/invoke/8008140/Test8008140.java fails agains
+* Backports
+  - S8025255: (tz) Support tzdata2013g
+  - S8026826: JDK 7 fix for 8010935 broke the build
+* Bug fixes
+  - PR1618: Include defs.make in vm.make so VM_LITTLE_ENDIAN is defined on Zero builds
+  - D729448: 32-bit alignment on mips and mipsel
+  - PR1623: Collision between OpenJDK 6 & 7 classes when bootstrapping with OpenJDK 6
+  - Remove binary files and unlicensed generated files
+
+New in release 2.3.13 (2014-01-14):
+
+* Security fixes
+  - S6727821: Enhance JAAS Configuration
+  - S7068126, CVE-2014-0373: Enhance SNMP statuses
+  - S8006900, CVE-2013-3829: Add new date/time capability
+  - S8008589: Better MBean permission validation
+  - S8010935: Better XML handling
+  - S8011071, CVE-2013-5780: Better crypto provider handling
+  - S8011081, CVE-2013-5772: Improve jhat
+  - S8011157, CVE-2013-5814: Improve CORBA portablility
+  - S8011786, CVE-2014-0368: Better applet networking
+  - S8012071, CVE-2013-5790: Better Building of Beans
+  - S8012147: Improve tool support
+  - S8012277: CVE-2013-5849: Improve AWT DataFlavor
+  - S8012425, CVE-2013-5802: Transform TransformerFactory
+  - S8013503, CVE-2013-5851: Improve stream factories
+  - S8013506: Better Pack200 data handling
+  - S8013510, CVE-2013-5809: Augment image writing code
+  - S8013514: Improve stability of cmap class
+  - S8013739, CVE-2013-5817: Better LDAP resource management
+  - S8013744, CVE-2013-5783: Better tabling for AWT
+  - S8014085: Better serialization support in JMX classes
+  - S8014093, CVE-2013-5782: Improve parsing of images
+  - S8014098: Better profile validation
+  - S8014102, CVE-2013-5778: Improve image conversion
+  - S8014341, CVE-2013-5803: Better service from Kerberos servers
+  - S8014349, CVE-2013-5840: (cl) Class.getDeclaredClass problematic in some class loader configurations
+  - S8014530, CVE-2013-5825: Better digital signature processing
+  - S8014534: Better profiling support
+  - S8014987, CVE-2013-5842: Augment serialization handling
+  - S8015614: Update build settings
+  - S8015731: Subject java.security.auth.subject to improvements
+  - S8015743, CVE-2013-5774: Address internet addresses
+  - S8016256: Make finalization final
+  - S8016653, CVE-2013-5804: javadoc should ignore ignoreable characters in names
+  - S8016675, CVE-2013-5797: Make Javadoc pages more robust
+  - S8017196, CVE-2013-5850: Ensure Proxies are handled appropriately
+  - S8017287, CVE-2013-5829: Better resource disposal
+  - S8017291, CVE-2013-5830: Cast Proxies Aside
+  - S8017298, CVE-2013-4002: Better XML support
+  - S8017300, CVE-2013-5784: Improve Interface Implementation
+  - S8017505, CVE-2013-5820: Better Client Service
+  - S8019292: Better Attribute Value Exceptions
+  - S8019617: Better view of objects
+  - S8020293: JVM crash
+  - S8021257, CVE-2013-5896: com.sun.corba.se.** should be on restricted package list
+  - S8021271, CVE-2014-0408: Better buffering in ObjC code
+  - S8021275, CVE-2013-5805: Better screening for ScreenMenu
+  - S8021282, CVE-2013-5806: Better recycling of object instances
+  - S8021286: Improve MacOS resourcing
+  - S8021290, CVE-2013-5823: Better signature validation
+  - S8022904: Enhance JDBC Parsers
+  - S8022927: Input validation for byte/endian conversions
+  - S8022931, CVE-2013-5800: Enhance Kerberos exceptions
+  - S8022935: Enhance Apache resolver classes
+  - S8022940: Enhance CORBA translations
+  - S8022945: Enhance JNDI implementation classes
+  - S8023057: Enhance start up image display
+  - S8023069, CVE-2014-0411: Enhance TLS connections
+  - S8023245, CVE-2014-0423: Enhance Beans decoding
+  - S8023301: Enhance generic classes
+  - S8023338: Update jarsigner to encourage timestamping
+  - S8023672: Enhance jar file validation
+  - S8023683: Enhance class file parsing
+  - S8024302: Clarify jar verifications
+  - S8024306, CVE-2014-0416: Enhance Subject consistency
+  - S8024530: Enhance font process resilience
+  - S8024867: Enhance logging start up
+  - S8025014: Enhance Security Policy
+  - S8025018, CVE-2014-0376: Enhance JAX-P set up
+  - S8025026, CVE-2013-5878: Enhance canonicalization
+  - S8025034, CVE-2013-5907: Improve layout lookups
+  - S8025448: Enhance listening events
+  - S8025758, CVE-2014-0422: Enhance Naming management
+  - S8025767, CVE-2014-0428: Enhance IIOP Streams
+  - S8026172: Enhance UI Management
+  - S8026176: Enhance document printing
+  - S8026193, CVE-2013-5884: Enhance CORBA stub factories
+  - S8026204: Enhance auth login contexts
+  - S8026417, CVE-2013-5910: Enhance XML canonicalization
+  - S8027201, CVE-2014-0376: Enhance JAX-P set up
+* Backports
+  - S6614237: missing codepage Cp290 at java runtime
+  - S7149012: jarsigner needs not warn about cert expiration if the jar has a TSA timestamp
+  - S7167593: Changed get_source.sh to allow for getting full oracle jdk repo forest
+  - S7167976: Fix broken get_source.sh script
+  - S7170091: Fix missing wait between repo cloning in hgforest.sh
+  - S7173959: Jvm crashed during coherence exabus (tmb) testing
+  - S7182152: Instrumentation hot swap test incorrect monitor count
+  - S7184406: Adjust get_source/hgforest script to allow for trailing // characters
+  - S7192449: fix up tests to accommodate jtreg spec change
+  - S7192744: fix up tests to accommodate jtreg spec change
+  - S7196533: TimeZone.getDefault() slow due to synchronization bottleneck
+  - S8000450: Restrict access to com/sun/corba/se/impl package
+  - S8003992: File and other classes in java.io do not handle embedded nulls properly
+  - S8004391: Bug fix in jtreg causes test failures in pre jdk 8 langtools tests
+  - S8005194: [parfait] #353 sun/awt/image/jpeg/imageioJPEG.c Memory leak of pointer 'scale' allocated with calloc()
+  - S8009399: Bump the hsx build number for APRIL CPU
+  - S8011806: 7u25-b05 hotspot fastdebug build failure
+  - S8013827: File.createTempFile hangs with temp file starting with 'com1.4'
+  - S8014312: Fork hs23.25 hsx from hs23.21 for jdk7u25 and reinitialize build number
+  - S8014469: (tz) Support tzdata2013c
+  - S8014925: Disable sun.reflect.Reflection.getCallerClass(int) with a temporary switch to re-enable it
+  - S8015144: Performance regression in ICU OpenType Layout library
+  - S8015614: Update build settings
+  - S8015965: (process) Typo in name of property to allow ambiguous commands
+  - S8015978: Incorrect transformation of XPath expression "string(-0)"
+  - S8015998: Additional improvement in Javadoc framing
+  - S8016256: Make finalization final
+  - S8016357: Update hotspot diagnostic class
+  - S8016814: sun.reflect.Reflection.getCallerClass returns the frame off by 1
+  - S8017566: Backout 8000450 - Cannot access to com.sun.corba.se.impl.orb.ORBImpl
+  - S8019584: javax/management/remote/mandatory/loading/MissingClassTest.java failed in nightly against jdk7u45: java.io.InvalidObjectException: Invalid notification: null
+  - S8019969: nioNetworkChannelInet6/SetOptionGetOptionTestInet6 test case crashes
+  - S8019979: Replace CheckPackageAccess test with better one from closed repo
+  - S8020054: (tz) Support tzdata2013d
+  - S8020085: Linux ARM build failure for 7u45
+  - S8020943: Memory leak when GCNotifier uses create_from_platform_dependent_str()
+  - S8020983: OutOfMemoryError caused by non garbage collected JPEGImageWriter Instances
+  - S8021355: REGRESSION: Five closed/java/awt/SplashScreen tests fail since 7u45 b01 on Linux, Solaris
+  - S8021360: object not exported" on start of JMXConnectorServer for RMI-IIOP protocol with security manager
+  - S8021366: java_util/Properties/PropertiesWithOtherEncodings fails during 7u45 nightly testing
+  - S8021577: JCK test api/javax_management/jmx_serial/modelmbean/ModelMBeanNotificationInfo/serial/index.html#Input has failed since jdk 7u45 b01
+  - S8021933: Add extra check for fix # JDK-8014530
+  - S8021946: Disabling sun.reflect.Reflection.getCallerCaller(int) by default breaks several frameworks and libraries
+  - S8021969: The index_AccessAllowed jnlp can not load successfully with exception thrown in the log.
+  - S8022086: Fixing licence of newly added files
+  - S8022661: InetAddress.writeObject() performs flush() on object output stream
+  - S8022682: Supporting XOM
+  - S8022856: 7u45 l10n resource file translation update
+  - S8023457: Event based tracing framework needs a mutex for thread groups
+  - S8023478: Test fails with HS crash in GCNotifier.
+  - S8023771: when USER_RELEASE_SUFFIX is set in order to add a string to java -version, build number in the bundles names should not be changed to b00
+  - S8023964: java/io/IOException/LastErrorString.java should be @ignore-d
+  - S8024668: api/java_nio/charset/Charset/index.html#Methods JCK-runtime test fails with 7u45 b11
+  - S8024697: Fix for 8020983 causes Xcheck:jni warnings
+  - S8024863: X11: Support GNOME Shell as mutter
+  - S8023683: Enhance class file parsing
+  - S8024914: Swapped usage of idx_t and bm_word_t types in bitMap.inline.hpp
+  - S8025128: File.createTempFile fails if prefix is absolute path
+  - S8025170: jdk7u51 7u-1-prebuild is failing since 9/19
+  - S8026826: JDK 7 fix for 8010935 broke the build
+* Bug fixes
+  - Enable Zero when there is no HotSpot JIT and an alternate VM has not been explictly enabled.
+  - Add casts to fix build on S390
+  - Add -D_LITTLE_ENDIAN for AArch64.
+  - Add tests missing from 8014618 backport
+  - Cast should use same type as GCDrainStackTargetSize (uintx).
+  - Cleanup file resources properly in TimeZone_md.
+  - RH991170: Handle alternative Kerberos credential cache locations
+  - Fix Kerberos cache support to check for null, fallback on old path support and not hardcode the krb5 library.
+  - Only define _GNU_SOURCE if not already defined.
+  - Include defs.make in vm.make so VM_LITTLE_ENDIAN is defined on Zero builds
+  - Fix merge issues caused by faulty AOT 8010118 patch.
+  - PR1400: Menu of maximized AWT window not working in Mate
+  - PR1551: Add build support for Zero AArch64
+  - PR1553: Add Debian AArch64 support
+  - PR1554: Fix build on Mac OS X
+  - RH661505: JPEGs with sRGB IEC61966-2.1 color profiles have wrong colors
+  - RH995488: Java thinks that the default timezone is Busingen instead of Zurich
+  - Set ZERO_BUILD in flags.make so it is set on rebuilds
 
 New in release 2.4.3 (2013-10-21):
 
