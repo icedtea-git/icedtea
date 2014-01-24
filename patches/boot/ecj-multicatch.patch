@@ -481,3 +481,51 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/charset/Charset.java 
                                    throw new Error(x);
                                  }
                                  return null;
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/Handshaker.java	2014-01-16 00:34:01.264963408 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/Handshaker.java	2014-01-16 00:35:24.562264096 +0000
+@@ -1051,8 +1051,7 @@
+             KeyGenerator kg = JsseJce.getKeyGenerator(masterAlg);
+             kg.init(spec);
+             return kg.generateKey();
+-        } catch (InvalidAlgorithmParameterException |
+-                NoSuchAlgorithmException iae) {
++        } catch (InvalidAlgorithmParameterException iae) {
+             // unlikely to happen, otherwise, must be a provider exception
+             //
+             // For RSA premaster secrets, do not signal a protocol error
+@@ -1060,6 +1059,12 @@
+             if (debug != null && Debug.isOn("handshake")) {
+                 System.out.println("RSA master secret generation error:");
+                 iae.printStackTrace(System.out);
++            }
++            throw new ProviderException(iae);
++	} catch (NoSuchAlgorithmException iae) {
++            if (debug != null && Debug.isOn("handshake")) {
++                System.out.println("RSA master secret generation error:");
++                iae.printStackTrace(System.out);
+             }
+             throw new ProviderException(iae);
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java openjdk-boot/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java	2014-01-16 00:34:14.005162368 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java	2014-01-16 00:36:09.446964834 +0000
+@@ -271,12 +271,17 @@
+             kg.init(new TlsRsaPremasterSecretParameterSpec(
+                     version.major, version.minor, encodedSecret), generator);
+             return kg.generateKey();
+-        } catch (InvalidAlgorithmParameterException |
+-                NoSuchAlgorithmException iae) {
++        } catch (InvalidAlgorithmParameterException iae) {
+             // unlikely to happen, otherwise, must be a provider exception
+             if (debug != null && Debug.isOn("handshake")) {
+                 System.out.println("RSA premaster secret generation error:");
+                 iae.printStackTrace(System.out);
++            }
++            throw new RuntimeException("Could not generate dummy secret", iae);
++	} catch (NoSuchAlgorithmException iae) {
++            if (debug != null && Debug.isOn("handshake")) {
++                System.out.println("RSA premaster secret generation error:");
++                iae.printStackTrace(System.out);
+             }
+             throw new RuntimeException("Could not generate dummy secret", iae);
+         }

@@ -1,3 +1,28 @@
+2014-01-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Update to u60b03 and additional IcedTea fixes
+	PR1653, PR1654 and PR1655.
+	* Makefile.am:
+	(BUILD_VERSION): Bump to b03.
+	(CORBA_CHANGESET): Update to current HEAD.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated with changes.
+	* hotspot.map: Sync with forest HEAD.
+	* patches/boot/ecj-multicatch.patch:
+	Add new cases in RSAClientKeyExchange
+	and Handshaker.
+	* patches/systemtap_gc.patch: Regenerated.
+
 2014-01-22  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add 2.3.13 & 2.4.4 release notes.
