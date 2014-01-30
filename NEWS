@@ -12,7 +12,7 @@ JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.5.0 (2013-XX-XX):
+New in release 2.5.0 (2014-XX-XX):
 
 * OpenJDK
   - S5049299: (process) Use posix_spawn, not fork, on S10 to avoid swap exhaustion
@@ -50,7 +50,6 @@ New in release 2.5.0 (2013-XX-XX):
   - S8015243: SchemaFactory does not catch enum. value that is not in the value space of the base type, anyURI
   - S8015599: [TEST_BUG] [macosx] Test closed/javax/swing/Popup/TaskbarPositionTest.java fails since JDK 8 b75 on MacOSX
   - S8015600: [TEST_BUG] [macosx] Test closed/javax/swing/plaf/basic/BasicMenuUI/4983388/bug4983388.java fails since JDK 8 b75 on MacOSX
-  - S8015976: OpenJDK part of bug JDK-8015812 [TEST_BUG] Tests have conflicting test descriptions
   - S8016018: Typo in AbstractStringBuilder#indexOf and #lastIndexOf descriptions
   - S8016271: wsimport -clientjar does not create portable jars on Windows due to hardcoded backslash
   - S8016500: Unlocalized warnings.
@@ -65,18 +64,14 @@ New in release 2.5.0 (2013-XX-XX):
   - S8022507: SIGSEGV at ParMarkBitMap::verify_clear()
   - S8022584: Memory leak in some NetworkInterface methods
   - S8022585: VM crashes when ran with -XX:+PrintInlining
-  - S8022698: javax/script/GetInterfaceTest.java fails since 7u45 b04 with -agentvm option
-  - S8022868: missing codepage Cp290 at java runtime
   - S8022993: Convert MAX_UNROLL constant to LoopMaxUnroll C2 flag
   - S8023130: (process) ProcessBuilder#inheritIO does not work on Windows
-  - S8023310: Thread contention in the method Beans.IsDesignTime()
   - S8023472: C2 optimization breaks with G1
   - S8023580: Add jtreg test for 8004051 and 8005722
   - S8023720: (hotspot) setjmp/longjmp changes the process signal mask on OS X
   - S8023786: (jdk) setjmp/longjmp changes the process signal mask on OS X
   - S8024027: Test sun/misc/IoTrace/IoTraceSocketReadWrite.java crashes VM
   - S8024163: [macosx] NullPointerException at javax.swing.TransferHandler$DropHandler.handleDrag since jdk8b93, 7u40b28
-  - S8024461: [macosx] Java crashed on mac10.9 for swing and 2d function manual test
   - S8024521: (process) Async close issues with Process InputStream
   - S8024707: TransformerException : item() return null with node list of length != 1
   - S8024830: SEGV in org.apache.lucene.codecs.compressing.CompressingTermVectorsReader.get
@@ -90,58 +85,36 @@ New in release 2.5.0 (2013-XX-XX):
   - S8025207: Intermittent test failure: javax/management/monitor/CounterMonitorThresholdTest.java
   - S8025255: (tz) Support tzdata2013g
   - S8025512: NPE with logging while launching webstart on jre7u40 if logging is disabled
-  - S8025679: Increment minor version of HSx for 7u51 and initialize the build number
   - S8025713: Syncing indendation/comment/copyright year differences with upstream projects
   - S8025775: JNI warnings in TryXShmAttach
   - S8025860: new hotspot build - hs24.60-b02
   - S8025861: Set minor version for hotspot in 7u60 to 60 and build number to b01
   - S8025920: webrev.ksh does not provide any details about changes in zip files
-  - S8026037: [TESTBUG] sun/security/tools/jarsigner/warnings.sh test fails on Solaris
   - S8026293: Schedule part of G1 pre-barrier late
-  - S8026304: jarsigner output bad grammar
   - S8026405: javax/xml/ws/clientjar/TestWsImport.java failing on JDK 8 nightly aurora test runs
   - S8026486: Significant slowdown due to transparent huge pages
   - S8026502: java/lang/invoke/MethodHandleConstants.java fails on all platforms
   - S8026794: Test tools/pack200/TimeStamp.java fails while opening golden.jar.native.IST on linux-ppc(v2)
-  - S8026887: Make issues due to failed large pages allocations easier to debug
   - S8027066: XMLDecoder in java 7 cannot properly deserialize object arrays
   - S8027172: new hotspot build - hs24.60-b03
-  - S8027204: Revise the update of 8026204 and 8025758
-  - S8027224: test regression - ClassNotFoundException
   - S8027351: (ref) Private finalize method invoked in preference to protected superclass method
-  - S8027370: Support tzdata2013h
-  - S8027378: Two closed/javax/xml/8005432 fails with jdk7u51b04
   - S8027426: String.toLowerCase incorrectly increases length, if string contains \u0130 char
   - S8027579: new hotspot build - hs24.60-b04
-  - S8027787: 7u51 l10n resource file translation update 1
-  - S8027837: JDK-8021257 causes CORBA build failure on emdedded platforms
   - S8027839: C1 crashes in Weblogic with G1 enabled
   - S8027840: C2 allows safepoint checks to leak into G1 pre-barriers
   - S8027860: [TEST_BUG] File not closed in javax/xml/jaxp/parsers/8022548/XOMParserTest.java
-  - S8027943: serial version of com.sun.corba.se.spi.orbutil.proxy.CompositeInvocationHandlerImpl changed in 7u45
-  - S8027944: Increment hsx 24.51 build to b02 for 7u51-b07
   - S8027997: G1: SPECjbb2013 crashes due to a broken object reference
   - S8028054: com.sun.beans.finder.MethodFinder has unsynchronized access to a static Map
-  - S8028057: Modify jarsigner man page documentation to document CCC 8024302: Clarify jar verifications
-  - S8028090: reverting change - changeset pushed with incorrect commit message, linked to wrong issue
-  - S8028111: XML readers share the same entity expansion counter
   - S8028208: (aio) Assertion in clearPendingIoMap when closing at around time file lock is acquired immediately (win)
-  - S8028215: ORB.init fails with SecurityException if properties select the JDK default ORB
-  - S8028293: Check local configuration for actual ephemeral port range
   - S8028351: JWS doesn't get authenticated when using kerberos auth proxy
-  - S8028382: Two javax/xml/8005433 tests still fail after the fix JDK-8028147
   - S8028412: AsyncGetCallTrace() is broken on x86 in JDK 7u40
-  - S8028453: AsynchronousSocketChannel.connect() requires SocketPermission due to bind to local address (win)
   - S8028520: JVM should not throw VerifyError when a private method overrides a final method
   - S8028583: Add helper methods to test libraries
   - S8028814: new hotspot build - hs24.60-b06
-  - S8028823: java/net/Makefile tabs converted to spaces
-  - S8029038: Revise fix for XML readers share the same entity expansion counter
   - S8029304: JFR broken in 7u train for JDK Linux for ARM or OpenJDK
   - S8029318: Native Windows ccache still reads DES tickets
   - S8029366: ShouldNotReachHere error when creating an array with component type of void
   - S8029599: JVM crashes on solaris-i586 with -Xverify:all if stack overflow happens during recursive reflective call
-  - S8029842: Increment hsx 24.51 build to b03 for 7u51-b11
   - S8029903: Add a type safe alternative for working with counter based data
   - S8030061: new hotspot build - hs24.60-b05
   - S8030070: Test java/io/File/CheckPermission.java fails due to unfinished recursion (java.lang.StackOverflowError) when JIT'ed code (-client,-server) is running
@@ -152,8 +125,6 @@ New in release 2.5.0 (2013-XX-XX):
   - Add Shark definitions from 8003868
   - Drop compile_method argument removed in 7083786 from sharkCompiler.cpp
   - Remove binary files and unlicensed generated files
-  - PR1653: Support ppc64le via Zero
-  - PR1654: ppc32 needs a larger ThreadStackSize to build
   - PR1655: Don't add IcedTea-Web jars to bootclasspath
 * JamVM
   - JVM_NewMultiArray: element class may be an array
@@ -166,6 +137,44 @@ New in release 2.5.0 (2013-XX-XX):
   - JSR292: correct intrinsic cache COMPARE function
   - Race condition in setting up imethod table
   - GC: Minor performance improvement
+
+New in release 2.4.5 (2014-01-29):
+
+* Backports
+  - S8015976: OpenJDK part of bug JDK-8015812 [TEST_BUG] Tests have conflicting test descriptions
+  - S8022698: javax/script/GetInterfaceTest.java fails since 7u45 b04 with -agentvm option
+  - S8022868: missing codepage Cp290 at java runtime
+  - S8023310: Thread contention in the method Beans.IsDesignTime()
+  - S8024461: [macosx] Java crashed on mac10.9 for swing and 2d function manual test
+  - S8025679: Increment minor version of HSx for 7u51 and initialize the build number
+  - S8026037: [TESTBUG] sun/security/tools/jarsigner/warnings.sh test fails on Solaris
+  - S8026304: jarsigner output bad grammar
+  - S8026772: test/sun/util/resources/TimeZone/Bug6317929.java failing
+  - S8026887: Make issues due to failed large pages allocations easier to debug
+  - S8027204: Revise the update of 8026204 and 8025758
+  - S8027224: test regression - ClassNotFoundException
+  - S8027370: Support tzdata2013h
+  - S8027378: Two closed/javax/xml/8005432 fails with jdk7u51b04
+  - S8027787: 7u51 l10n resource file translation update 1
+  - S8027837: JDK-8021257 causes CORBA build failure on emdedded platforms
+  - S8027943: serial version of com.sun.corba.se.spi.orbutil.proxy.CompositeInvocationHandlerImpl changed in 7u45
+  - S8027944: Increment hsx 24.51 build to b02 for 7u51-b07
+  - S8028057: Modify jarsigner man page documentation to document CCC 8024302: Clarify jar verifications
+  - S8028090: reverting change - changeset pushed with incorrect commit message, linked to wrong issue
+  - S8028111: XML readers share the same entity expansion counter
+  - S8028215: ORB.init fails with SecurityException if properties select the JDK default ORB
+  - S8028293: Check local configuration for actual ephemeral port range
+  - S8028382: Two javax/xml/8005433 tests still fail after the fix JDK-8028147
+  - S8028453: AsynchronousSocketChannel.connect() requires SocketPermission due to bind to local address (win)
+  - S8028823: java/net/Makefile tabs converted to spaces
+  - S8029038: Revise fix for XML readers share the same entity expansion counter
+  - S8029842: Increment hsx 24.51 build to b03 for 7u51-b11
+* Bug fixes
+  - Fix broken bootstrap build by updating ecj-multicatch.patch
+  - PR1653: Support ppc64le via Zero
+  - PR1654: ppc32 needs a larger ThreadStackSize to build
+  - RH1015432: java-1.7.0-openjdk: Fails on PPC with StackOverflowError
+  - RH910107: fail to load PC/SC library
 
 New in release 2.4.4 (2014-01-14):
 
