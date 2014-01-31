@@ -682,10 +682,11 @@ AC_DEFUN_ONCE([IT_ENABLE_ZERO_BUILD],
     if test "x${use_shark}" = "xyes"; then
       use_zero=yes;
     else
-      case "${host}" in
-        i?86-*-*) ;;
-        sparc*-*-*) ;;
-        x86_64-*-*) ;;
+      case "${host_cpu}" in
+        i?86) ;;
+        sparc) ;;
+        x86_64) ;;
+	ppc64) ;;
         *)
           if test "x${ENABLE_CACAO}" != xno || \
 	     test "x${ENABLE_JAMVM}" = xyes; then
@@ -2197,6 +2198,32 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_SYSCALLS],
   fi
   AM_CONDITIONAL(USE_SYSCALL_COMPILATION, test x"${ENABLE_SYSCALL_COMPILATION}" = "xyes")
   AC_SUBST(ENABLE_SYSCALL_COMPILATION)
+])
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_PCSC],
+[
+  AC_MSG_CHECKING([whether to use the system libpcsclite install])
+  AC_ARG_ENABLE([system-pcsc],
+	      [AS_HELP_STRING(--enable-system-pcsc,use the system PCSC [[default=yes]])],
+  [
+    ENABLE_SYSTEM_PCSC="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_PCSC="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_PCSC})
+  if test x"${ENABLE_SYSTEM_PCSC}" = "xyes"; then
+    dnl Check for PCSC headers and libraries.
+    PKG_CHECK_MODULES(PCSC, libpcsclite,[LIBPCSC_FOUND=yes],[LIBPCSC_FOUND=no])
+    if test "x${LIBPCSC_FOUND}" = xno
+    then
+      AC_MSG_ERROR([Could not find libpcsc; install libpcsc or build with --disable-system-pcsc to use dynamic loading.])
+    fi
+    AC_SUBST(PCSC_CFLAGS)
+    AC_SUBST(PCSC_LIBS)
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_PCSC, test x"${ENABLE_SYSTEM_PCSC}" = "xyes")
+  AC_SUBST(ENABLE_SYSTEM_PCSC)
 ])
 
 AC_DEFUN([IT_ENABLE_JAMVM],

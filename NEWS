@@ -119,6 +119,231 @@ New in release 2.5.0 (2014-XX-XX):
   - S8030061: new hotspot build - hs24.60-b05
   - S8030070: Test java/io/File/CheckPermission.java fails due to unfinished recursion (java.lang.StackOverflowError) when JIT'ed code (-client,-server) is running
   - S8031787: Remove fix JDK-8026887 from 7u60
+* PPC & AIX port
+  - Add AIX-specific build instructions to README-ppc.html
+  - Added AIX as testing platform for more jtreg tests written in shell-script
+  - Added AIX specific build defs file
+  - Added AIX to list of operating systems to include in static jli build
+  - Added AIX version of classlist
+  - Added enumIPv4Interfaces, enumIPv6Interfaces and getMacAddress implementation for AIX.
+  - Added initial AIX version of UNIXProcess.java  copied from existing Solaris one
+  - Added missing B_FALSE and B_TRUE definitions for AIX when building ec component.
+  - Added missing Dlinfo structure for SAP version of hprof_md.c
+  - Added section about problems with pre-installed ANT and our bootstrap JDK on Linux and how to solve them
+  - Added UnixOperatingSystem.getTotalPhysicalMemorySize and getFreePhysicalMemorySize implementation for AIX by facilitating perfstat APIs.
+  - add "<jrepath>/lib/<arch>/jli/" to the runtime library path in the java launcher for AIX because AIX ld doesn't support $ORIGIN and libjli.so isn't found otherwise
+  - Add libmawt linking for libfontmanager on AIX platform
+  - Add memory limit requirements (ulimit) for AIX to README-ppc.html
+  - Addon for merge 5851:b717d0d99407 - add missing file AixNativeDispatcher.c
+  - Add OS and Compiler information to the VM version string on AIX
+  - Add section about the necessity of 'GNU tar' during the build process
+  - Add some AIX-specific files which were missing from changeset 5101:a06818b39f7c
+  - adlc: do safe call to constant_offset() in debug coding
+  - aix: add macros AIX_ONLY and NOT_AIX
+  - aix: AIX platform files as required to start up the interpreter.
+  - AIX changes to build the complete OpenJDK on a vanilla AIX system
+  - aix: fix disclaiming memory.
+  - Aix port: add file globalDefinitions_xlc.hpp.
+  - aix: remove warnings about memory allocation
+  - asm: fix DelayedConstant
+  - Basic AIX adaption. With this change the VM can successfully run 'HelloWorld' on AIX
+  - Build "fdlibm" without optimizations and with -qfloat=nomaf on AIX
+  - C argument in register AND stack slot.
+  - Check consistency of the PPC-specific flag 'UseSIGTRAP' with 'ImplicitRangeChecks' and 'ImplicitNullChecks'
+  - C-interpreter: add biased locking support
+  - C-interpreter: basic fixes
+  - C-interpreter: Fix for OSR.
+  - C-interpreter: implement bytecode profiling.
+  - C-interpreter: implement G1 support
+  - C-interpreter: implement support for compressed Oops.
+  - C++ interpreter: implement support for early return
+  - C-interpreter: improve memory ordering implementation.
+  - C-interpreter: memory ordering as required for platforms with weak memory ordering (PPC)
+  - C-interpreter: some diffs I missed before
+  - C-interpreter: support for method handles.
+  - Corrected incorrect use of ps -e on AIX
+  - Disable sctp support for now on AIX platform
+  - Disable use of sys/swap.h when building UnixOperatingSystem_md.c on AIX
+  - dlopen() on AIX does not support RTLD_NOLOAD, so use RTLD_LZAY to workaround.
+  - Enable AWT/Swing on AIX
+  - Enable awt to build on AIX
+  - Enable building jaas library on AIX platform
+  - Enabled SoundDefs to build on AIX
+  - Enable jdi script based tests to run on AIX.  (fixed issue with uname -s result not being understood by tests)
+  - Enable mannual and Javadoc on AIX platform
+  - Enable medialib to build on AIX
+  - Enable the build of HotSpot 'CORE' targets from the top-level makefile by setting CORE_BUILD=true.
+  - Enable Tls operations in jdwp socket transport module for AIX platform
+  - Expand conditional include in several more source files to not include
+  - Expanded check for which wait.h to use. Changed so on AIX sys/wait.h is used.
+  - Expanded platform choice logic to include AIX when deciding to create the MB macro.
+  - Explicitly defined ARCH_DATA_MODEL for AIX to be 64
+  - Export 'USE_PTHREADS' on Linux trough CPPFLAGS to fix the build because java_md_solinux.c now only relies on 'USE_PTHREADS' beeing defined.
+  - Extended BSD remapping of special 64 bit directory function names to generic versions to now apply to AIX.
+  - Extended decision to use pthreads in java_md_solinux to include specific use of USE_PTHREADS define
+  - Extended existing ifdef to cover AIX so that npt does not include link.h
+  - Extended find zone info functionaility to compile on AIX
+  - Extend existing Solaris behaviour to cover AIX and treat empty TZ envvar same as no TZ envvar
+  - Extend Load and Store nodes to know about memory ordering.
+  - fastdebug build: images step fails building installer binaries
+  - Fix aix build error.
+  - Fix broken AIX build
+  - Fix build on Linux with 64kb default page size
+  - Fix build with gcc 4.7
+  - Fix calls to the LoadLNode constructor with the Load semantics argument in the wrong position.
+  - Fixed from 8 port moved to 7.
+  - Fixed JTreg failure from java/util/ResourceBundle/Control/ExpirationTest.sh
+  - Fixed memory handling/bookkeeping of mmaped memory on AIX
+  - Fixed sun/nio/ch implementation on AIX
+  - Fix IA64 preprocessor conditionals on AIX!!!
+  - Fix iconv encoding problem on AIX < 7.1 in SplashConvertStringAlloc
+  - Fix JTreg failure from java/nio/charset/Charset/NIOCharsetAvailabilityTest.java
+  - Fix JTreg failure from java/nio/charset/spi/basic.sh
+  - Fix native multicast sockets implementation on AIX
+  - Fix native stack traces in hs_err files on Linux/PPC64
+  - Fix setting of SO_REUSEADDR socket option on AIX (where the socket option is called SO_REUSEPORT)
+  - Fix small mistake introduced by the port which breaks the Windows build
+  - Fix typo in change 'Fix native stack traces in hs_err files..'
+  - Fix usage of feature detection on ppc for fsqrt instruction. Also guarantee no wrong instructions are used.
+  - Fix -Xcheck:jni on AIX
+  - Fix Xrender backend on  64-bit Big-endian architectures
+  - Further format fixes after removing ppc_ prefixes.
+  - G1: Fix problem with nonvolatile field
+  - G1: Port C-interpreter to support G1.
+  - gethostbyname_r and gethostbyaddr_r have got different syntax on AIX, this patch added the support of host entry getting.
+  - Implement AttachListener for AIX
+  - Implemented a no-op version of getPlatformTimeZoneID() for AIX
+  - Implemented os::thread_cpu_time for AIX
+  - Implement printing CodeComments in stubs.
+  - Implement printing CodeComments in stubs: fix product build.
+  - Implement support for the "System V Print Subsystem" on AIX
+  - Implement workaround for I/O cancellation on AIX (by using the Linux wrappers from "linux_close.c")
+  - Improve adlc usability.
+  - Improve handling of memory ordering in taskqueue.hpp.
+  - Include dlfcn.h since link.h is not available on AIX
+  - Include files needed for PPC C2 build.
+  - Initial AIX build config files primarily based on changes from SAP.  This is to preserve any Hotspot speciific settings
+  - Initial Aix-Port checkin.
+  - Initial PPC-Port checkin
+  - link.h not required (and does not exist) on AIX.  Expanded conditional include to cover AIX
+  - linux: extend signal handler to catch SIGTRAP on ppc.
+  - Make hsdis build and work on Linux/PPC64
+  - make: Implement aix ppc64 build.
+  - make: Implement linux ppc64 support in makefiles.
+  - Make nio module to build on AIX
+  - make: Reenable CORE build
+  - Memory ordering as required for platforms with weak memory ordering (PPC)
+  - Memory ordering: introduce functions to specify platform properties.
+  - method handles: some smaller fixes and extensions for ppc
+  - New HS24 JSR292 implementation for PPC64
+  - opto: adapt assertion in postaloc.cpp for ppc.
+  - opto: Basic fixes for the ppc C2 port
+  - opto: Do not relocate in scratch emit.
+  - opto: explicit specification of rematerialization in ad file.
+  - opto: Extend adlc to generate fields into nodes.
+  - opto: Extend ImplicitNullCheck optimizations.
+  - opto: Extend Load and Store nodes to know about memory ordering.
+  - Opto: extend MachConstantNode functionality to ins_encode statements.
+  - opto: hook to postprocess matcher output platform dependent.
+  - opto: initialize _node_regs_max_index
+  - Opto: introduce phase lateExpand to expand nodes after register allocation.
+  - opto: issue more memory barriers as neede on PPC.
+  - opto: Move static _in_dump_cnt to Compile object.
+  - opto: Pass output stream to more debug routines.
+  - opto/ppc: trap based null and range checks
+  - opto / regalloc: Fix problem with rematerialization
+  - opto,rt: Support for C calling conventions that require 64-bit ints.
+  - opto: specify offset of IC load in java_to_interp stub.
+  - Opto: Support for constants in stub code.
+  - opto: support for constants on ppc
+  - opto: switch off OptimizeFill on PPC as it causes errors.
+  - opto: Trampoline relocations
+  - opto: trap based null and range checks
+  - Part assembler and macroassembler into two files.
+  - posix: fix build errors on aix 7.1 and sparc
+  - posix: Implement methods giving infos about signals.
+  - ppc/aix: Adaptions needed for recent update.
+  - ppc/aix: Fixes for recent update
+  - PPC assembler and register definitions.
+  - PPC assembly needed to start up the interpreter.
+  - ppc: compiler fixes & enable OSR
+  - PPC: Continue C2 port: now jvm98 runs with compiler
+  - ppc: enable better implicit null check recognition with cOops
+  - ppc: fix cOops problem on aix
+  - ppc: fix gcc 4.3.4 build
+  - ppc: Fix issue in trap based null check optimization
+  - ppc: Fix register usage in GetAndAdd & friends.
+  - ppc: fix safepoint node.
+  - ppc: fix trap based range checks.
+  - ppc: Implement card mark emitter for concurrentMarkSweep.
+  - PPC: Initial C2 compiler port.
+  - ppc: Initial C2 compiler port, ppc files
+  - ppc: port method handles support (hs21-hs23 version)
+  - ppc: PPC platform files as required to start up the interpreter.
+  - ppc: Relax load aquire and various minor changes
+  - ppc: SIGTRAP based checks
+  - PPC specific C2 flags: add macro PD_C2_FLAGS to global flag definitions.
+  - PPC specific flags: add macro PD_FLAGS to global flag definitions.
+  - ppc: support for g1, cOops
+  - Propagate HOTSPOT_BUILD_JOBS and PARALLEL_COMPILE_JOBS from the top-level make to the corresponding sub-makes.
+  - Recent changes to ppc files, especially to ppc.ad file.
+  - Recent improvements by SAP.
+  - Re-enable the 'gamma' test at the end of the HotSpot build, but only for HotSpot based bootstrap JDKs.
+  - Removed unused DL_info declaration in java_md_solinux.c that caused AIX compiler failure
+  - Remove ppc_ prefixes in ppc files.
+  - Remove some unnecessary diffs to Oracle coding.
+  - rt: add fence to taskqueue to fix probelms showing in torture tests
+  - rt: C argument in register AND stack slot.
+  - rt: extend ELF-decoder to ppc function descriptor tables
+  - rt: Use stubs to implement safefetch.
+  - S7177701: error: Filling jar message during javax/imageio/metadata/IIOMetadataFormatImpl compilation
+  - S8003850 opto: introduce phase lateExpand to expand nodes after register allocation.
+  - S8003850: add support for constants in stub code
+  - S8003853 opto: specify offset of IC load in java_to_interp stub.
+  - S8005055: pass outputStream to more opto debug routines
+  - S8006971 rt: Improve handling of memory ordering in taskqueue.hpp.
+  - Several NIO fixes for AIX to pass JCK tests
+  - shared assembler: fix DelayedConstant.
+  - shared: Basic non-functional fixes needed for the ppc port.
+  - shared: Fix IA64 preprocessor conditionals on AIX.
+  - shared: introduce functions to specify memory ordering properties of platforms.
+  - shared: Make adapter_code_size a function.
+  - shared: Make hotspot build with gcc 4.7.2 and newer
+  - shared: Make hsdis build and work on Linux/PPC64
+  - shared: Memory ordering as required for platforms with weak memory ordering (PPC)
+  - shared: ordering of Independent Reads of Independent Writes
+  - Some basic AIX changes to let the VM bootstrap itself and run JVM98.
+  - Support for C calling conventions that require 64-bit ints.
+  - Switched LD path setup for freetype version check so AIX can be covered by the 'everything else' part
+  - Switch off Compressed Oops on AIX until we fix them
+  - Temporarily disable 'EnableInvokeDynamic' while working on the new HS24 indy implementation
+  - Temporarily switch off 'TrapBasedRangeChecks'
+  - Trampoline relocations.
+  - Trampoline relocations.  Add some more functionality.
+  - Turned off ImplicitNullChecks on AIX by default because it requires UseSIGTRAP which isn't currently implemented on AIX
+  - Updated conditional handling for AIX when BLOCK_SOURCE enabled. Resolved Undefined symbol: .isSourceFilterSupported
+  - Updated Defs-versions to understand about using xlc compiler on AIX
+  - Updated genUnixConstants.c to compile on AIX.  Made location of fcntl.h file platform specific and added a default value for O_NOFOLLOW as not supported on AIX
+  - Updated hprof demo to build on AIX.  Added SAP changes to fake out DLinfo etc
+  - Updated hprof_md.c to include AIX as platform without hires timer
+  - Updated location of bootstrap JDKs
+  - Updated Platform.gmk to set PLATFORM=aix when uname is AIX
+  - Updated README-ppc.html to reflect the current project status
+  - Updated README to reflect the current status of the project (mainly the availability of a mixed-mode VM on Linux and AIX)
+  - Updated test scripts to understand AIX os environment
+  - Updated using pthreads in java_md_solinux.c to just rely on USE_PTHREADS. Removed the superflous __linux__ as  USE_PTHREADS is already explictly turned on for linux builds
+  - Use fork() to provide FORK() as Linux
+  - Use LIBPATH in the launcher on AIX insted of LD_LIBRARY_PATH
+  - Use macosx's BsdVirtualMachine implementation to provide tools/attach on AIX platform.
+  - Use stubs to implement safefetch.
+  - Use the solaris' approach of doing IsXRenderAvailable check for AIX
+* Backports
+  - S7103549: Remove dependencies on libjava and libjvm from security libraries
+  - S8000204: Memory leak in com/sun/security/auth/module/Unix.c
+  - S8000476: Memory Leaks and uninitialized memory access in PKCS11 and other native code
+  - S8001579: Cleanup warnings in security native code
+  - S8007607: security native code doesn't always use malloc, realloc, and calloc correctly
+  - S8014307: Memory leak ... security/jgss/wrapper/GSSLibStub.c
 * Bug fixes
   - Fix implicit function declarations
   - PR1617: Include defs.make in vm.make so zeroshark.make is included
@@ -126,6 +351,10 @@ New in release 2.5.0 (2014-XX-XX):
   - Drop compile_method argument removed in 7083786 from sharkCompiler.cpp
   - Remove binary files and unlicensed generated files
   - PR1655: Don't add IcedTea-Web jars to bootclasspath
+  - Enable CC_INTERP on ppc64
+  - Fix Zero following integration of PPC port
+  - PR1660: Allow use of system PCSC
+  - RH1015432: java-1.7.0-openjdk: Fails on PPC with StackOverflowError (revised fix)
 * JamVM
   - JVM_NewMultiArray: element class may be an array
   - jtreg test java/lang/reflect/Array/ExceedMaxDim

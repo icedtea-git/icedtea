@@ -1,7 +1,7 @@
 diff -Nru openjdk-boot.orig/jaxws/build.properties openjdk-boot/jaxws/build.properties
---- openjdk-boot.orig/jaxws/build.properties	2011-03-08 18:42:23.703875234 +0000
-+++ openjdk-boot/jaxws/build.properties	2011-03-08 18:40:33.955159212 +0000
-@@ -32,7 +32,8 @@
+--- openjdk-boot.orig/jaxws/build.properties	2014-01-30 19:01:55.000000000 +0000
++++ openjdk-boot/jaxws/build.properties	2014-01-31 20:04:24.425553307 +0000
+@@ -28,7 +28,8 @@
  # other tools, and product versions of all the tools.
  # Override this path as needed, either on the command line or in 
  # one of the standard user build.properties files (see build.xml)
@@ -11,7 +11,7 @@ diff -Nru openjdk-boot.orig/jaxws/build.properties openjdk-boot/jaxws/build.prop
  
  # The tools.jar is needed in the classpath to compile these sources
  jdk.home=${java.home}/..
-@@ -93,8 +94,9 @@
+@@ -77,8 +78,9 @@
    os.name=${os.name}${line.separator}\
    os.arch=${os.arch}${line.separator}\
    os.version=${os.version}${line.separator}\
@@ -23,21 +23,21 @@ diff -Nru openjdk-boot.orig/jaxws/build.properties openjdk-boot/jaxws/build.prop
    javac.memoryMaximumSize=${javac.memoryMaximumSize}${line.separator}\
    javac.source=${javac.source}${line.separator}\
 diff -Nru openjdk-boot.orig/jaxws/build.xml openjdk-boot/jaxws/build.xml
---- openjdk-boot.orig/jaxws/build.xml	2011-03-08 18:43:11.778436442 +0000
-+++ openjdk-boot/jaxws/build.xml	2011-03-08 18:40:29.639288336 +0000
-@@ -124,7 +124,7 @@
-         <mkdir dir="${build.classes.dir}"/>
-         <javac 
- 	     includeAntRuntime="false" 
+--- openjdk-boot.orig/jaxws/build.xml	2014-01-31 20:03:12.768449571 +0000
++++ openjdk-boot/jaxws/build.xml	2014-01-31 20:04:40.337798308 +0000
+@@ -143,7 +143,7 @@
+ 	-->
+         <javac
+ 	     includeAntRuntime="false"
 -	     classpath="${jaxp.classes.dir}:${build.classes.dir}:${tools.jar}"
 +	     classpath="${jaxp.classes.dir}:${build.classes.dir}:${langtools.jar}"
  	     fork="true"
               destdir="${build.classes.dir}"
               memoryInitialSize="${javac.memoryInitialSize}"
 diff -Nru openjdk-boot.orig/jaxws/make/Makefile openjdk-boot/jaxws/make/Makefile
---- openjdk-boot.orig/jaxws/make/Makefile	2011-03-08 18:41:00.178374622 +0000
-+++ openjdk-boot/jaxws/make/Makefile	2011-03-08 18:40:14.167751211 +0000
-@@ -120,7 +120,7 @@
+--- openjdk-boot.orig/jaxws/make/Makefile	2014-01-30 19:01:55.000000000 +0000
++++ openjdk-boot/jaxws/make/Makefile	2014-01-31 20:04:24.429553368 +0000
+@@ -103,7 +103,7 @@
      ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
      ANT_OPTIONS += -Djdk.home=$(ALT_BOOTDIR)
    endif

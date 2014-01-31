@@ -10,9 +10,8 @@ The build requirements are as follows:
 A bootstrap JDK, either:
   - GNU libgcj 4.4.0 (or equivalent class library based on GNU Classpath >= 0.95) for --enable-bootstrap mode (the default)
   - IcedTea6 or IcedTea7 for --disable-bootstrap mode
-Eclipse Java Compiler (ecj)
 CUPS
-libX11 (libXp, libXtst, libXi, libXt)
+libX11 (libXp, libXtst, libXi, libXt, libXinerama)
 Freetype2
 patch
 sed
@@ -20,18 +19,19 @@ tar
 sha256sum (from coreutils)
 wget
 alsa
-xalan
-xerces
-glib2-devel 
-gtk2-devel
+xsltproc (for bootstrapping)
 ant >= 1.6.5 with the regexp task from ant-nodeps
-libXinerama-devel
-giflib-devel
-libpng-devel
-libjpeg-devel >= 6b
-zlib-devel
+glib2-devel (for --enable-system-gio)
+gtk2-devel (for --enable-system-gtk)
+giflib-devel (for --enable-system-gif)
+libpng-devel (for --enable-system-png)
+libjpeg-devel >= 6b (for --enable-system-jpeg)
+zlib-devel (for --enable-system-zlib)
+fontconfig (for --enable-system-fontconfig)
+libc6-dev & libattr-devel/libattr1-dev (for --enable-compile-against-syscalls)
+libpcsclite (for --enable-system-pcsc)
 rhino (can be disabled using --without-rhino)
-libffi (for --enable-zero or on archs other than x86/x86_64/sparc)
+libffi (for --enable-zero or on archs other than x86/x86_64/sparc/ppc64)
 pulseaudio-libs-devel >= 0.9.11 (for --enable-pulse-java)
 LLVM 2.5 or later (for --enable-shark)
 systemtap-sdl-devel >= 0.9.5 (Java method tracing requires systemtap >= 0.9.9)
@@ -106,6 +106,8 @@ to configure:
   GIO instead of trying to dynamically open it at runtime.
 * --enable-system-fontconfig: Build and link against the system installation of
   fontconfig instead of trying to dynamically open it at runtime.
+* --enable-system-pcsc: Build and link against the system installation of
+  libpcsclite instead of trying to dynamically open it at runtime.
 * --enable-compile-against-syscalls: Check for syscalls at compile-time not runtime.
 * --with-gcj: Compile ecj to native code with gcj prior to building.
 * --with-parallel-jobs: Run the specified number of parallel jobs when
