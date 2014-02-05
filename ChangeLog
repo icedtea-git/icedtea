@@ -1,3 +1,29 @@
+2014-02-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(JDK_CHANGESET): Sync to HEAD.
+	(JDK_SHA256SUM): Likewise.
+	(ICEDTEA_ENV): Use updated SYSTEM_* variables
+	and always set them.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_CHECK_FOR_LCMS): Set ENABLE_SYSTEM_LCMS to true,
+	not yes.
+	(IT_CHECK_FOR_ZLIB): Likewise for ENABLE_SYSTEM_ZLIB.
+	(IT_CHECK_FOR_JPEG): Likewise for ENABLE_SYSTEM_JPEG.
+	(IT_CHECK_FOR_JPEG): Likewise for ENABLE_SYSTEM_JPEG.
+	(IT_CHECK_FOR_PNG): Likewise for ENABLE_SYSTEM_PNG.
+	(IT_CHECK_FOR_GIF): Likewise for ENABLE_SYSTEM_GIF.
+	(IT_CHECK_FOR_KERBEROS): Likewise for ENABLE_SYSTEM_KERBEROS.
+	(IT_CHECK_FOR_GTK): Likewise for ENABLE_SYSTEM_GTK.
+	(IT_CHECK_FOR_GIO): Likewise for ENABLE_SYSTEM_GIO.
+	(IT_CHECK_FOR_FONTCONFIG): Likewise for ENABLE_SYSTEM_FONTCONFIG.
+	(IT_CHECK_FOR_SYSCALLS): Likewise for ENABLE_SYSCALL_COMPILATION.
+	(IT_CHECK_FOR_PCSC): Likewise for ENABLE_SYSTEM_PCSC.
+	(IT_ENABLE_JAR_COMPRESSION): Use standard capitalisation and
+	set to true rather than yes. Call AC_SUBST on ENABLE_JAR_COMPRESSION.
+	* hotspot.map: Sync to HEAD.
+
 2014-01-31  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* patches/boot/jaxp-dependency.patch:

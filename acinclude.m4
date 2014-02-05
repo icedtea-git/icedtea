@@ -1955,8 +1955,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_LCMS],
     fi
     AC_SUBST(LCMS2_CFLAGS)
     AC_SUBST(LCMS2_LIBS)
+    ENABLE_SYSTEM_LCMS=true
   fi
-  AM_CONDITIONAL(USE_SYSTEM_LCMS, test x"${ENABLE_SYSTEM_LCMS}" = "xyes")
+  AM_CONDITIONAL(USE_SYSTEM_LCMS, test x"${ENABLE_SYSTEM_LCMS}" = "xtrue")
   AC_SUBST(ENABLE_SYSTEM_LCMS)
 ])
 
@@ -1981,8 +1982,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_ZLIB],
     fi
     AC_SUBST(ZLIB_CFLAGS)
     AC_SUBST(ZLIB_LIBS)
+    ENABLE_SYSTEM_ZLIB=true
   fi
-  AM_CONDITIONAL(USE_SYSTEM_ZLIB, test x"${ENABLE_SYSTEM_ZLIB}" = "xyes")
+  AM_CONDITIONAL(USE_SYSTEM_ZLIB, test x"${ENABLE_SYSTEM_ZLIB}" = "xtrue")
   AC_SUBST(ENABLE_SYSTEM_ZLIB)
 ])
 
@@ -2006,8 +2008,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_JPEG],
         , [AC_MSG_ERROR([Could not find JPEG header; install JPEG or build with --disable-system-jpeg to use the in-tree copy.])])
     JPEG_LIBS="-ljpeg"
     AC_SUBST(JPEG_LIBS)
+    ENABLE_SYSTEM_JPEG=true
   fi
-  AM_CONDITIONAL(USE_SYSTEM_JPEG, test x"${ENABLE_SYSTEM_JPEG}" = "xyes")
+  AM_CONDITIONAL(USE_SYSTEM_JPEG, test x"${ENABLE_SYSTEM_JPEG}" = "xtrue")
   AC_SUBST(ENABLE_SYSTEM_JPEG)
 ])
 
@@ -2032,8 +2035,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_PNG],
     fi
     AC_SUBST(PNG_CFLAGS)
     AC_SUBST(PNG_LIBS)
+    ENABLE_SYSTEM_PNG=true
   fi
-  AM_CONDITIONAL(USE_SYSTEM_PNG, test x"${ENABLE_SYSTEM_PNG}" = "xyes")
+  AM_CONDITIONAL(USE_SYSTEM_PNG, test x"${ENABLE_SYSTEM_PNG}" = "xtrue")
   AC_SUBST(ENABLE_SYSTEM_PNG)
 ])
 
@@ -2057,8 +2061,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_GIF],
         , [AC_MSG_ERROR([Could not find GIF header; install GIF or build with --disable-system-gif to use the in-tree copy.])])
     GIF_LIBS="-lgif"
     AC_SUBST(GIF_LIBS)
+    ENABLE_SYSTEM_GIF=true
   fi
-  AM_CONDITIONAL(USE_SYSTEM_GIF, test x"${ENABLE_SYSTEM_GIF}" = "xyes")
+  AM_CONDITIONAL(USE_SYSTEM_GIF, test x"${ENABLE_SYSTEM_GIF}" = "xtrue")
   AC_SUBST(ENABLE_SYSTEM_GIF)
 ])
 
@@ -2083,8 +2088,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_KERBEROS],
         , [AC_MSG_ERROR([Could not find Kerberos header; install Kerberos or build with --disable-system-kerberos to use the default cache location.])])
     KRB5_LIBS="-lkrb5"
     AC_SUBST(KRB5_LIBS)
+    ENABLE_SYSTEM_KERBEROS=true
   fi
-  AM_CONDITIONAL(USE_SYSTEM_KERBEROS, test x"${ENABLE_SYSTEM_KERBEROS}" = "xyes")
+  AM_CONDITIONAL(USE_SYSTEM_KERBEROS, test x"${ENABLE_SYSTEM_KERBEROS}" = "xtrue")
   AC_SUBST(ENABLE_SYSTEM_KERBEROS)
 ])
 
@@ -2109,8 +2115,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_GTK],
     fi
     AC_SUBST(GTK_CFLAGS)
     AC_SUBST(GTK_LIBS)
+    ENABLE_SYSTEM_GTK=true
   fi
-  AM_CONDITIONAL(USE_SYSTEM_GTK, test x"${ENABLE_SYSTEM_GTK}" = "xyes")
+  AM_CONDITIONAL(USE_SYSTEM_GTK, test x"${ENABLE_SYSTEM_GTK}" = "xtrue")
   AC_SUBST(ENABLE_SYSTEM_GTK)
 ])
 
@@ -2135,8 +2142,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_GIO],
     fi
     AC_SUBST(GIO_CFLAGS)
     AC_SUBST(GIO_LIBS)
+    ENABLE_SYSTEM_GIO=true
   fi
-  AM_CONDITIONAL(USE_SYSTEM_GIO, test x"${ENABLE_SYSTEM_GIO}" = "xyes")
+  AM_CONDITIONAL(USE_SYSTEM_GIO, test x"${ENABLE_SYSTEM_GIO}" = "xtrue")
   AC_SUBST(ENABLE_SYSTEM_GIO)
 ])
 
@@ -2161,8 +2169,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_FONTCONFIG],
     fi
     AC_SUBST(FONTCONFIG_CFLAGS)
     AC_SUBST(FONTCONFIG_LIBS)
+    ENABLE_SYSTEM_FONTCONFIG=true
   fi
-  AM_CONDITIONAL(USE_SYSTEM_FONTCONFIG, test x"${ENABLE_SYSTEM_FONTCONFIG}" = "xyes")
+  AM_CONDITIONAL(USE_SYSTEM_FONTCONFIG, test x"${ENABLE_SYSTEM_FONTCONFIG}" = "xtrue")
   AC_SUBST(ENABLE_SYSTEM_FONTCONFIG)
 ])
 
@@ -2195,8 +2204,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_SYSCALLS],
       [AC_MSG_ERROR([Could not find required syscalls; check config.log and use --disable-compile-against-syscalls if necessary.])])
     AC_CHECK_HEADERS([sys/epoll.h attr/xattr.h],
       , [AC_MSG_ERROR([Could not find required system headers; install the appropriate files from glibc-headers, libc6-dev and/or libattr-devel, libattr1-dev or use --disable-compile-against-syscalls if necessary.])])
+    ENABLE_SYSCALL_COMPILATION=true
   fi
-  AM_CONDITIONAL(USE_SYSCALL_COMPILATION, test x"${ENABLE_SYSCALL_COMPILATION}" = "xyes")
+  AM_CONDITIONAL(USE_SYSCALL_COMPILATION, test x"${ENABLE_SYSCALL_COMPILATION}" = "xtrue")
   AC_SUBST(ENABLE_SYSCALL_COMPILATION)
 ])
 
@@ -2221,8 +2231,9 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_PCSC],
     fi
     AC_SUBST(PCSC_CFLAGS)
     AC_SUBST(PCSC_LIBS)
+    ENABLE_SYSTEM_PCSC=true
   fi
-  AM_CONDITIONAL(USE_SYSTEM_PCSC, test x"${ENABLE_SYSTEM_PCSC}" = "xyes")
+  AM_CONDITIONAL(USE_SYSTEM_PCSC, test x"${ENABLE_SYSTEM_PCSC}" = "xtrue")
   AC_SUBST(ENABLE_SYSTEM_PCSC)
 ])
 
@@ -2467,18 +2478,19 @@ AC_DEFUN([IT_ENABLE_JAR_COMPRESSION],
   [
     case "${enableval}" in
       no)
-        enable_jar_compression=no
+        ENABLE_JAR_COMPRESSION=false
         ;;
       *)
-        enable_jar_compression=yes
+        ENABLE_JAR_COMPRESSION=true
         ;;
     esac
   ],
   [
-    enable_jar_compression=yes
+    ENABLE_JAR_COMPRESSION=true
   ])
-  AC_MSG_RESULT([$enable_jar_compression])
-  AM_CONDITIONAL([ENABLE_JAR_COMPRESSION], test x"${enable_jar_compression}" = "xyes")
+  AC_MSG_RESULT([$ENABLE_JAR_COMPRESSION])
+  AM_CONDITIONAL([ENABLE_JAR_COMPRESSION], test x"${enable_jar_compression}" = "xtrue")
+  AC_SUBST(ENABLE_JAR_COMPRESSION)
 ])
 
 dnl Generic macro to check for a Java constructor

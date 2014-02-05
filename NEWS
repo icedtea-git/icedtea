@@ -302,6 +302,7 @@ New in release 2.5.0 (2014-XX-XX):
   - S8003853 opto: specify offset of IC load in java_to_interp stub.
   - S8005055: pass outputStream to more opto debug routines
   - S8006971 rt: Improve handling of memory ordering in taskqueue.hpp.
+  - S8019929: PPC64 (part 107): Extend ELF-decoder to support PPC64 function descriptor tables
   - Several NIO fixes for AIX to pass JCK tests
   - shared assembler: fix DelayedConstant.
   - shared: Basic non-functional fixes needed for the ppc port.
@@ -343,6 +344,7 @@ New in release 2.5.0 (2014-XX-XX):
   - S8000476: Memory Leaks and uninitialized memory access in PKCS11 and other native code
   - S8001579: Cleanup warnings in security native code
   - S8007607: security native code doesn't always use malloc, realloc, and calloc correctly
+  - S8008509: 6588413 changed JNIEXPORT visibility for GCC on HSX, jdk's jni_md.h needs similar change
   - S8014307: Memory leak ... security/jgss/wrapper/GSSLibStub.c
 * Bug fixes
   - Fix implicit function declarations
@@ -355,6 +357,25 @@ New in release 2.5.0 (2014-XX-XX):
   - Fix Zero following integration of PPC port
   - PR1660: Allow use of system PCSC
   - RH1015432: java-1.7.0-openjdk: Fails on PPC with StackOverflowError (revised fix)
+  - PR1659: OpenJDK 7 returns incorrect TrueType font metrics when bold style is set
+  - PR1661: Cleanup COMPILE_AGAINST_SYSCALLS option and allow it to be set false
+  - PR1661: Cleanup COMPRESS_JARS option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_CUPS option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_FONTCONFIG option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_GIF option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_GIO option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_GTK option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_JPEG option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_LCMS option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_PCSC option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_PNG option and allow it to be set false
+  - PR1664: Ensure all SYSTEM_* options are in jdk_generic_profile.sh
+  - Link against $(LIBDL) if SYSTEM_CUPS is not true
+  - Only get CFLAGS/LIBS for libpcsclite if installed
+  - Add lost #endif
+  - Add new files from 8019229
+  - Remove duplicate ElfFuncDescTable code in elfSymbolTable.cpp
+  - Remove duplicate ElfFuncDescTable code in elfSymbolTable.hpp
 * JamVM
   - JVM_NewMultiArray: element class may be an array
   - jtreg test java/lang/reflect/Array/ExceedMaxDim
