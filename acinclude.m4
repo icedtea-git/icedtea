@@ -2655,3 +2655,25 @@ EOF
   AC_PROVIDE([$0])dnl
   AM_CONDITIONAL([VM_SUPPORTS_XBOOTCLASSPATH], test x"${it_cv_xbootclasspath_works}" = "xyes")
 ])
+
+AC_DEFUN([IT_ENABLE_ARM32JIT],
+[
+  AC_MSG_CHECKING([whether to enable the ARM32 JIT])
+  AC_ARG_ENABLE([arm32-jit],
+                [AS_HELP_STRING(--enable-arm32-jit,build with the ARM32 JIT [[default=no]])],
+  [
+    case "${enableval}" in
+      yes)
+        enable_arm32jit=yes
+        ;;
+      *)
+        enable_arm32jit=no
+        ;;
+    esac
+  ],
+  [
+    enable_arm32jit=no
+  ])
+  AC_MSG_RESULT([$enable_arm32jit])
+  AM_CONDITIONAL([ENABLE_ARM32JIT], test x"${enable_arm32jit}" = "xyes")
+])

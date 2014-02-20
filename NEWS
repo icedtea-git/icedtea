@@ -119,6 +119,46 @@ New in release 2.5.0 (2014-XX-XX):
   - S8030061: new hotspot build - hs24.60-b05
   - S8030070: Test java/io/File/CheckPermission.java fails due to unfinished recursion (java.lang.StackOverflowError) when JIT'ed code (-client,-server) is running
   - S8031787: Remove fix JDK-8026887 from 7u60
+* Backports
+  - S7103549: Remove dependencies on libjava and libjvm from security libraries
+  - S8000204: Memory leak in com/sun/security/auth/module/Unix.c
+  - S8000476: Memory Leaks and uninitialized memory access in PKCS11 and other native code
+  - S8001579: Cleanup warnings in security native code
+  - S8007607: security native code doesn't always use malloc, realloc, and calloc correctly
+  - S8008509: 6588413 changed JNIEXPORT visibility for GCC on HSX, jdk's jni_md.h needs similar change
+  - S8014307: Memory leak ... security/jgss/wrapper/GSSLibStub.c
+* Bug fixes
+  - Fix implicit function declarations
+  - PR1617: Include defs.make in vm.make so zeroshark.make is included
+  - Add Shark definitions from 8003868
+  - Drop compile_method argument removed in 7083786 from sharkCompiler.cpp
+  - Remove binary files and unlicensed generated files
+  - PR1655: Don't add IcedTea-Web jars to bootclasspath
+  - Enable CC_INTERP on ppc64
+  - Fix Zero following integration of PPC port
+  - PR1660: Allow use of system PCSC
+  - RH1015432: java-1.7.0-openjdk: Fails on PPC with StackOverflowError (revised fix)
+  - PR1659: OpenJDK 7 returns incorrect TrueType font metrics when bold style is set
+  - PR1661: Cleanup COMPILE_AGAINST_SYSCALLS option and allow it to be set false
+  - PR1661: Cleanup COMPRESS_JARS option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_CUPS option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_FONTCONFIG option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_GIF option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_GIO option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_GTK option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_JPEG option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_LCMS option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_PCSC option and allow it to be set false
+  - PR1661: Cleanup SYSTEM_PNG option and allow it to be set false
+  - PR1664: Ensure all SYSTEM_* options are in jdk_generic_profile.sh
+  - Link against $(LIBDL) if SYSTEM_CUPS is not true
+  - Only get CFLAGS/LIBS for libpcsclite if installed
+  - Add lost #endif
+  - Add new files from 8019229
+  - Remove duplicate ElfFuncDescTable code in elfSymbolTable.cpp
+  - Remove duplicate ElfFuncDescTable code in elfSymbolTable.hpp
+  - PR1677: Update PaX support to detect running PaX kernel and use newer tools
+  - PR1679: Allow OpenJDK to build on PaX-enabled kernels
 * PPC & AIX port
   - Add AIX-specific build instructions to README-ppc.html
   - Added AIX as testing platform for more jtreg tests written in shell-script
@@ -338,45 +378,8 @@ New in release 2.5.0 (2014-XX-XX):
   - Use macosx's BsdVirtualMachine implementation to provide tools/attach on AIX platform.
   - Use stubs to implement safefetch.
   - Use the solaris' approach of doing IsXRenderAvailable check for AIX
-* Backports
-  - S7103549: Remove dependencies on libjava and libjvm from security libraries
-  - S8000204: Memory leak in com/sun/security/auth/module/Unix.c
-  - S8000476: Memory Leaks and uninitialized memory access in PKCS11 and other native code
-  - S8001579: Cleanup warnings in security native code
-  - S8007607: security native code doesn't always use malloc, realloc, and calloc correctly
-  - S8008509: 6588413 changed JNIEXPORT visibility for GCC on HSX, jdk's jni_md.h needs similar change
-  - S8014307: Memory leak ... security/jgss/wrapper/GSSLibStub.c
-* Bug fixes
-  - Fix implicit function declarations
-  - PR1617: Include defs.make in vm.make so zeroshark.make is included
-  - Add Shark definitions from 8003868
-  - Drop compile_method argument removed in 7083786 from sharkCompiler.cpp
-  - Remove binary files and unlicensed generated files
-  - PR1655: Don't add IcedTea-Web jars to bootclasspath
-  - Enable CC_INTERP on ppc64
-  - Fix Zero following integration of PPC port
-  - PR1660: Allow use of system PCSC
-  - RH1015432: java-1.7.0-openjdk: Fails on PPC with StackOverflowError (revised fix)
-  - PR1659: OpenJDK 7 returns incorrect TrueType font metrics when bold style is set
-  - PR1661: Cleanup COMPILE_AGAINST_SYSCALLS option and allow it to be set false
-  - PR1661: Cleanup COMPRESS_JARS option and allow it to be set false
-  - PR1661: Cleanup SYSTEM_CUPS option and allow it to be set false
-  - PR1661: Cleanup SYSTEM_FONTCONFIG option and allow it to be set false
-  - PR1661: Cleanup SYSTEM_GIF option and allow it to be set false
-  - PR1661: Cleanup SYSTEM_GIO option and allow it to be set false
-  - PR1661: Cleanup SYSTEM_GTK option and allow it to be set false
-  - PR1661: Cleanup SYSTEM_JPEG option and allow it to be set false
-  - PR1661: Cleanup SYSTEM_LCMS option and allow it to be set false
-  - PR1661: Cleanup SYSTEM_PCSC option and allow it to be set false
-  - PR1661: Cleanup SYSTEM_PNG option and allow it to be set false
-  - PR1664: Ensure all SYSTEM_* options are in jdk_generic_profile.sh
-  - Link against $(LIBDL) if SYSTEM_CUPS is not true
-  - Only get CFLAGS/LIBS for libpcsclite if installed
-  - Add lost #endif
-  - Add new files from 8019229
-  - Remove duplicate ElfFuncDescTable code in elfSymbolTable.cpp
-  - Remove duplicate ElfFuncDescTable code in elfSymbolTable.hpp
-  - PR1677: Update PaX support to detect running PaX kernel and use newer tools
+* ARM port
+  - ARM32 assembler update for hsx24. Use ARM32JIT to turn it on/off.
 * JamVM
   - JVM_NewMultiArray: element class may be an array
   - jtreg test java/lang/reflect/Array/ExceedMaxDim

@@ -1,4 +1,4 @@
-AC_INIT([icedtea], [2.5pre], [distro-pkg-dev@openjdk.java.net])
+AC_INIT([icedtea], [2.5pre02], [distro-pkg-dev@openjdk.java.net])
 AM_INIT_AUTOMAKE([1.9 tar-pax foreign])
 AC_CONFIG_FILES([Makefile])
 
@@ -175,6 +175,7 @@ IT_DISABLE_OPTIMIZATIONS
 IT_ENABLE_WERROR
 IT_ENABLE_JAR_COMPRESSION
 IT_CHECK_ADDITIONAL_VMS
+IT_ENABLE_ARM32JIT
 
 IT_WITH_VERSION_SUFFIX
 IT_WITH_PROJECT

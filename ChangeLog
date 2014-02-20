@@ -1,5 +1,43 @@
 2014-02-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* patches/boot/test_gamma.patch,
+	* patches/pax-mark-rmic-java.patch,
+	* patches/test_gamma.patch:
+	Removed.
+	* INSTALL:
+	Document ARM32 JIT and --enable-arm32-jit option.
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-2.5pre02 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Remove PaX patches.
+	(ICEDTEA_BOOT_PATCHES): Remove test_gamma
+	patch (fixed by detection of non-Oracle JDK
+	addition from PPC port)
+	(ARM32JIT_STATUS): Set based on ENABLE_ARM32JIT.
+	(ICEDTEA_ENV): Pass ARM32JIT and PAX_COMMAND to
+	OpenJDK build.
+	* NEWS: Move backports and bug fixes common to
+	all archs above PPC items. Updated with PaX and
+	ARM changes.
+	* acinclude.m4:
+	(IT_ENABLE_ARM32JIT): Allow the ARM32 JIT to be
+	enabled.
+	* configure.ac: Bump to 2.5pre02. Run
+	IT_ENABLE_ARM32JIT macro.
+	* hotspot.map: Update to icedtea-2.5pre02 tag.
+
+2014-02-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR1677: Update PaX support to detect running PaX
 	kernel and use newer tools
 	* NEWS: Updated.
