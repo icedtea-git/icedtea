@@ -379,7 +379,7 @@ New in release 2.5.0 (2014-XX-XX):
   - Use stubs to implement safefetch.
   - Use the solaris' approach of doing IsXRenderAvailable check for AIX
 * ARM port
-  - ARM32 assembler update for hsx24. Use ARM32JIT to turn it on/off.
+  - PR1626: ARM32 assembler update for hsx24. Use ARM32JIT to turn it on/off.
 * JamVM
   - JVM_NewMultiArray: element class may be an array
   - jtreg test java/lang/reflect/Array/ExceedMaxDim

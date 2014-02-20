@@ -1,3 +1,7 @@
+2014-02-20  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Mention PR1626.
+
 2014-02-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* patches/boot/test_gamma.patch,
