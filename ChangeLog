@@ -1,5 +1,10 @@
 2014-02-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS: Add Gentoo bug reference for
+	PaX update.
+
+2014-02-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR1684: Build fails with empty PAX_COMMAND
 	* Makefile.am:
 	(ICEDTEA_ENV): Only add PAX_COMMAND when defined.

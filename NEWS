@@ -157,7 +157,7 @@ New in release 2.5.0 (2014-XX-XX):
   - Add new files from 8019229
   - Remove duplicate ElfFuncDescTable code in elfSymbolTable.cpp
   - Remove duplicate ElfFuncDescTable code in elfSymbolTable.hpp
-  - PR1677: Update PaX support to detect running PaX kernel and use newer tools
+  - PR1677, G498288: Update PaX support to detect running PaX kernel and use newer tools
   - PR1679: Allow OpenJDK to build on PaX-enabled kernels
   - PR1684: Build fails with empty PAX_COMMAND
 * PPC & AIX port
