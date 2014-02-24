@@ -514,8 +514,7 @@ ICEDTEA_ENV = \
 	PCSC_LIBS="${PCSC_LIBS}" \
 	PCSC_CFLAGS="${PCSC_CFLAGS}" \
 	COMPRESS_JARS="${ENABLE_JAR_COMPRESSION}" \
-	ARM32JIT="${ARM32JIT_STATUS}" \
-	PAX_COMMAND="${PAX_COMMAND}"
+	ARM32JIT="${ARM32JIT_STATUS}"
 
 if ENABLE_CACAO
 ICEDTEA_ENV += \
@@ -551,6 +550,11 @@ endif
 if WITH_RHINO
 ICEDTEA_ENV += \
 	RHINO_JAR="$(abs_top_builddir)/rhino/rhino.jar"
+endif
+
+if WITH_PAX
+ICEDTEA_ENV += \
+	PAX_COMMAND="${PAX_COMMAND}"
 endif
 
 # OpenJDK boot build environment.
