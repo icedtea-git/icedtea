@@ -290,7 +290,7 @@ endif
 
 if ENABLE_SYSTEMTAP
 ICEDTEA_PATCHES += \
-	patches/systemtap_gc.patch
+	patches/hotspot/$(HSBUILD)/systemtap_gc.patch
 endif
 
 if ENABLE_NSS

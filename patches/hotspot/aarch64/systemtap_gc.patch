@@ -1,0 +1,373 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/oopMap.cpp openjdk/hotspot/src/share/vm/compiler/oopMap.cpp
+--- openjdk.orig/hotspot/src/share/vm/compiler/oopMap.cpp	2014-03-06 09:11:53.000000000 +0000
++++ openjdk/hotspot/src/share/vm/compiler/oopMap.cpp	2014-03-07 04:29:33.230530073 +0000
+@@ -33,9 +33,13 @@
+ #include "memory/resourceArea.hpp"
+ #include "runtime/frame.inline.hpp"
+ #include "runtime/signature.hpp"
++#include "utilities/dtrace.hpp"
+ #ifdef COMPILER1
+ #include "c1/c1_Defs.hpp"
+ #endif
++#ifndef USDT2
++  HS_DTRACE_PROBE_DECL1(provider, gc__collection__delete, *uintptr_t);
++#endif /* !USDT2 */
+ 
+ // OopMapStream
+ 
+@@ -677,6 +681,9 @@
+                     " - Derived: " INTPTR_FORMAT "  Base: " INTPTR_FORMAT " (Offset: %d)",
+           derived_loc, (address)*derived_loc, (address)base, offset);
+     }
++#ifndef USDT2
++  HS_DTRACE_PROBE1(hotspot, gc__collection__delete, entry);
++#endif /* !USDT2 */
+ 
+     // Delete entry
+     delete entry;
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2014-03-06 09:11:53.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2014-03-07 04:29:33.234530133 +0000
+@@ -62,6 +62,12 @@
+ #include "runtime/vmThread.hpp"
+ #include "services/memoryService.hpp"
+ #include "services/runtimeService.hpp"
++#include "utilities/dtrace.hpp"
++
++#ifndef USDT2
++  HS_DTRACE_PROBE_DECL4(provider, gc__collection__contig__begin, bool, bool, size_t, bool);
++  HS_DTRACE_PROBE_DECL4(provider, gc__collection__contig__end, bool, bool, size_t, bool);
++#endif /* !USDT2 */
+ 
+ // statics
+ CMSCollector* ConcurrentMarkSweepGeneration::_collector = NULL;
+@@ -1642,7 +1648,13 @@
+                                             size_t size,
+                                             bool   tlab)
+ {
++#ifndef USDT2
++  HS_DTRACE_PROBE4(hotspot, gc__collection__contig__begin, full, clear_all_soft_refs, size, tlab);
++#endif /* !USDT2 */
+   collector()->collect(full, clear_all_soft_refs, size, tlab);
++#ifndef USDT2
++  HS_DTRACE_PROBE4(hotspot, gc__collection__contig__end, full, clear_all_soft_refs, size, tlab);
++#endif /* !USDT2 */
+ }
+ 
+ void CMSCollector::collect(bool   full,
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1MarkSweep.cpp openjdk/hotspot/src/share/vm/gc_implementation/g1/g1MarkSweep.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1MarkSweep.cpp	2014-03-06 09:11:53.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1MarkSweep.cpp	2014-03-07 04:33:00.601620772 +0000
+@@ -49,8 +49,13 @@
+ #include "runtime/thread.hpp"
+ #include "runtime/vmThread.hpp"
+ #include "utilities/copy.hpp"
++#include "utilities/dtrace.hpp"
+ #include "utilities/events.hpp"
+ 
++#ifndef USDT2
++  HS_DTRACE_PROBE_DECL2(provider, gc__collection__G1__begin, *uintptr_t, *uintptr_t);
++  HS_DTRACE_PROBE_DECL2(provider, gc__collection__G1__end, *uintptr_t, *uintptr_t);
++ #endif /* !USDT2 */ 
+ class HeapRegion;
+ 
+ void G1MarkSweep::invoke_at_safepoint(ReferenceProcessor* rp,
+@@ -84,6 +89,9 @@
+   // The marking doesn't preserve the marks of biased objects.
+   BiasedLocking::preserve_marks();
+ 
++#ifndef USDT2
++  HS_DTRACE_PROBE2(hotspot, gc__collection__G1__begin, &sh, sh->gc_cause());
++#endif /* !USDT2 */
+   mark_sweep_phase1(marked_for_unloading, clear_all_softrefs);
+ 
+   mark_sweep_phase2();
+@@ -99,6 +107,9 @@
+   BiasedLocking::restore_marks();
+   GenMarkSweep::deallocate_stacks();
+ 
++#ifndef USDT2
++  HS_DTRACE_PROBE2(hotspot, gc__collection__G1__end, &sh, sh->gc_cause());
++#endif /* !USDT2 */
+   // "free at last gc" is calculated from these.
+   // CHF: cheating for now!!!
+   //  Universe::set_heap_capacity_at_last_gc(Universe::heap()->capacity());
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/parallelScavengeHeap.cpp openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/parallelScavengeHeap.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/parallelScavengeHeap.cpp	2014-03-06 09:11:53.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/parallelScavengeHeap.cpp	2014-03-07 04:31:58.396693660 +0000
+@@ -43,8 +43,14 @@
+ #include "runtime/java.hpp"
+ #include "runtime/vmThread.hpp"
+ #include "services/memTracker.hpp"
++#include "utilities/dtrace.hpp"
+ #include "utilities/vmError.hpp"
+ 
++#ifndef USDT2
++  HS_DTRACE_PROBE_DECL2(provider, gc__collection__parscavenge__heap__begin, *uintptr_t, *uintptr_t);
++  HS_DTRACE_PROBE_DECL2(provider, gc__collection__parscavenge__heap__end, *uintptr_t, *uintptr_t);
++#endif /* !USDT2 */
++
+ PSYoungGen*  ParallelScavengeHeap::_young_gen = NULL;
+ PSOldGen*    ParallelScavengeHeap::_old_gen = NULL;
+ PSAdaptiveSizePolicy* ParallelScavengeHeap::_size_policy = NULL;
+@@ -530,7 +536,13 @@
+   }
+ 
+   VM_ParallelGCSystemGC op(gc_count, full_gc_count, cause);
++#ifndef USDT2
++  HS_DTRACE_PROBE2(hotspot, gc__collection__parscavenge__heap__begin, &op, cause);
++#endif /* !USDT2 */
+   VMThread::execute(&op);
++#ifndef USDT2
++  HS_DTRACE_PROBE2(hotspot, gc__collection__parscavenge__heap__end, &op, cause);
++#endif /* !USDT2 */
+ }
+ 
+ void ParallelScavengeHeap::oop_iterate(ExtendedOopClosure* cl) {
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	2014-03-06 09:11:53.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	2014-03-07 04:29:33.234530133 +0000
+@@ -56,11 +56,18 @@
+ #include "services/management.hpp"
+ #include "services/memoryService.hpp"
+ #include "services/memTracker.hpp"
++#include "utilities/dtrace.hpp"
+ #include "utilities/events.hpp"
+ #include "utilities/stack.inline.hpp"
+ 
+ #include <math.h>
+ 
++#ifndef USDT2
++  HS_DTRACE_PROBE_DECL2(provider, gc__collection__ParallelCompact__clear, *uintptr_t, *uintptr_t);
++  HS_DTRACE_PROBE_DECL2(provider, gc__collection__parallel__collect, *uintptr_t, *uintptr_t);
++  HS_DTRACE_PROBE_DECL4(provider, gc__collection__move, *uintptr_t, *uintptr_t, *uintptr_t, *uintptr_t);
++#endif /* !USDT2 */
++
+ // All sizes are in HeapWords.
+ const size_t ParallelCompactData::Log2RegionSize  = 16; // 64K words
+ const size_t ParallelCompactData::RegionSize      = (size_t)1 << Log2RegionSize;
+@@ -451,6 +458,9 @@
+ 
+ void ParallelCompactData::clear()
+ {
++#ifndef USDT2
++  HS_DTRACE_PROBE2(hotspot, gc__collection__ParallelCompact__clear, &_region_data, _region_data->data_location());
++#endif /* !USDT2 */
+   memset(_region_data, 0, _region_vspace->committed_size());
+   memset(_block_data, 0, _block_vspace->committed_size());
+ }
+@@ -1977,6 +1987,9 @@
+          "should be in vm thread");
+ 
+   ParallelScavengeHeap* heap = gc_heap();
++#ifndef USDT2
++  HS_DTRACE_PROBE2(hotspot, gc__collection__parallel__collect, heap, heap->gc_cause());
++#endif /* !USDT2 */
+   GCCause::Cause gc_cause = heap->gc_cause();
+   assert(!heap->is_gc_active(), "not reentrant");
+ 
+@@ -3269,6 +3282,9 @@
+   // past the end of the partial object entering the region (if any).
+   HeapWord* const dest_addr = sd.partial_obj_end(dp_region);
+   HeapWord* const new_top = _space_info[space_id].new_top();
++#ifndef USDT2
++  HS_DTRACE_PROBE4(hotspot, gc__collection__move, &beg_addr, &end_addr, &dest_addr, &new_top);
++#endif /* !USDT2 */
+   assert(new_top >= dest_addr, "bad new_top value");
+   const size_t words = pointer_delta(new_top, dest_addr);
+ 
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psScavenge.cpp openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psScavenge.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psScavenge.cpp	2014-03-06 09:11:53.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psScavenge.cpp	2014-03-07 04:29:33.234530133 +0000
+@@ -54,8 +54,17 @@
+ #include "runtime/vmThread.hpp"
+ #include "runtime/vm_operations.hpp"
+ #include "services/memoryService.hpp"
++#include "utilities/dtrace.hpp"
+ #include "utilities/stack.inline.hpp"
+ 
++#ifndef USDT2
++  HS_DTRACE_PROBE_DECL2(provider, gc__collection__PSScavenge__begin, *uintptr_t, *uintptr_t);
++  HS_DTRACE_PROBE_DECL2(provider, gc__collection__PSScavenge__end, *uintptr_t, *uintptr_t);
++  HS_DTRACE_PROBE_DECL2(provider, gc__collection__PSParallelCompact__begin, *uintptr_t, *uintptr_t);
++  HS_DTRACE_PROBE_DECL2(provider, gc__collection__PSParallelCompact__end, *uintptr_t, *uintptr_t);
++  HS_DTRACE_PROBE_DECL2(provider, gc__collection__PSMarkSweep__begin, *uintptr_t, *uintptr_t);
++  HS_DTRACE_PROBE_DECL2(provider, gc__collection__PSMarkSweep__end, *uintptr_t, *uintptr_t);
++#endif /* !USDT2 */
+ 
+ HeapWord*                  PSScavenge::_to_space_top_before_gc = NULL;
+ int                        PSScavenge::_consecutive_skipped_scavenges = 0;
+@@ -228,7 +237,13 @@
+   PSAdaptiveSizePolicy* policy = heap->size_policy();
+   IsGCActiveMark mark;
+ 
++#ifndef USDT2
++  HS_DTRACE_PROBE2(hotspot, gc__collection__PSScavenge__begin, &heap, heap->gc_cause());
++#endif /* !USDT2 */
+   const bool scavenge_done = PSScavenge::invoke_no_policy();
++#ifndef USDT2
++  HS_DTRACE_PROBE2(hotspot, gc__collection__PSScavenge__end, &heap, heap->gc_cause());
++#endif /* !USDT2 */
+   const bool need_full_gc = !scavenge_done ||
+     policy->should_full_GC(heap->old_gen()->free_in_bytes());
+   bool full_gc_done = false;
+@@ -245,9 +260,21 @@
+     const bool clear_all_softrefs = cp->should_clear_all_soft_refs();
+ 
+     if (UseParallelOldGC) {
++#ifndef USDT2
++  HS_DTRACE_PROBE2(hotspot, gc__collection__PSParallelCompact__begin, &heap, heap->gc_cause());
++#endif /* !USDT2 */
+       full_gc_done = PSParallelCompact::invoke_no_policy(clear_all_softrefs);
++#ifndef USDT2
++  HS_DTRACE_PROBE2(hotspot, gc__collection__PSParallelCompact__end, &heap, heap->gc_cause());
++#endif /* !USDT2 */
+     } else {
++#ifndef USDT2
++  HS_DTRACE_PROBE2(hotspot, gc__collection__PSMarkSweep__begin, &heap, heap->gc_cause());
++#endif /* !USDT2 */
+       full_gc_done = PSMarkSweep::invoke_no_policy(clear_all_softrefs);
++#ifndef USDT2
++  HS_DTRACE_PROBE2(hotspot, gc__collection__PSMarkSweep__end, &heap, heap->gc_cause());
++#endif /* !USDT2 */
+     }
+   }
+ 
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp openjdk/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp	2014-03-06 09:11:53.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp	2014-03-07 04:29:33.234530133 +0000
+@@ -54,6 +54,12 @@
+ #include "utilities/copy.hpp"
+ #include "utilities/globalDefinitions.hpp"
+ #include "utilities/workgroup.hpp"
++#include "utilities/dtrace.hpp"
++
++#ifndef USDT2
++  HS_DTRACE_PROBE_DECL4(provider, gc__collection__parnew__begin, bool, bool, size_t, bool);
++  HS_DTRACE_PROBE_DECL4(provider, gc__collection__parnew__end, bool, bool, size_t, bool);
++#endif /* !USDT2 */
+ 
+ #ifdef _MSC_VER
+ #pragma warning( push )
+@@ -911,6 +917,9 @@
+                                bool   clear_all_soft_refs,
+                                size_t size,
+                                bool   is_tlab) {
++#ifndef USDT2
++  HS_DTRACE_PROBE4(hotspot, gc__collection__parnew__begin, full, clear_all_soft_refs, size, is_tlab);
++#endif  /* !USDT2 */
+   assert(full || size > 0, "otherwise we don't want to collect");
+ 
+   GenCollectedHeap* gch = GenCollectedHeap::heap();
+@@ -1061,6 +1070,10 @@
+     gch->print_heap_change(gch_prev_used);
+   }
+ 
++#ifndef USDT2
++  HS_DTRACE_PROBE4(hotspot, gc__collection__parnew__end, full, clear_all_soft_refs, size, is_tlab);
++#endif  /* !USDT2 */
++
+   if (PrintGCDetails && ParallelGCVerbose) {
+     TASKQUEUE_STATS_ONLY(thread_state_set.print_termination_stats());
+     TASKQUEUE_STATS_ONLY(thread_state_set.print_taskqueue_stats());
+diff -Nru openjdk.orig/hotspot/src/share/vm/memory/defNewGeneration.cpp openjdk/hotspot/src/share/vm/memory/defNewGeneration.cpp
+--- openjdk.orig/hotspot/src/share/vm/memory/defNewGeneration.cpp	2014-03-06 09:11:53.000000000 +0000
++++ openjdk/hotspot/src/share/vm/memory/defNewGeneration.cpp	2014-03-07 04:31:15.676056944 +0000
+@@ -44,8 +44,13 @@
+ #include "runtime/java.hpp"
+ #include "runtime/thread.inline.hpp"
+ #include "utilities/copy.hpp"
++#include "utilities/dtrace.hpp"
+ #include "utilities/stack.inline.hpp"
+ 
++#ifndef USDT2
++  HS_DTRACE_PROBE_DECL4(provider, gc__collection__defnew__begin, bool, bool, size_t, bool);
++  HS_DTRACE_PROBE_DECL4(provider, gc__collection__defnew__end, bool, bool, size_t, bool);
++#endif /* !USDT2 */
+ //
+ // DefNewGeneration functions.
+ 
+@@ -558,6 +563,9 @@
+                                bool   clear_all_soft_refs,
+                                size_t size,
+                                bool   is_tlab) {
++#ifndef USDT2
++  HS_DTRACE_PROBE4(hotspot, gc__collection__defnew__begin, full, clear_all_soft_refs, size, is_tlab);
++#endif  /* !USDT2 */
+   assert(full || size > 0, "otherwise we don't want to collect");
+ 
+   GenCollectedHeap* gch = GenCollectedHeap::heap();
+@@ -706,6 +714,10 @@
+   jlong now = os::javaTimeNanos() / NANOSECS_PER_MILLISEC;
+   update_time_of_last_gc(now);
+ 
++#ifndef USDT2
++  HS_DTRACE_PROBE4(hotspot, gc__collection__defnew__end, full, clear_all_soft_refs, size, is_tlab);
++#endif  /* !USDT2 */
++
+   gch->trace_heap_after_gc(&gc_tracer);
+   gc_tracer.report_tenuring_threshold(tenuring_threshold());
+ 
+diff -Nru openjdk.orig/hotspot/src/share/vm/memory/generation.cpp openjdk/hotspot/src/share/vm/memory/generation.cpp
+--- openjdk.orig/hotspot/src/share/vm/memory/generation.cpp	2014-03-06 09:11:53.000000000 +0000
++++ openjdk/hotspot/src/share/vm/memory/generation.cpp	2014-03-07 04:29:33.234530133 +0000
+@@ -41,8 +41,14 @@
+ #include "oops/oop.inline.hpp"
+ #include "runtime/java.hpp"
+ #include "utilities/copy.hpp"
++#include "utilities/dtrace.hpp"
+ #include "utilities/events.hpp"
+ 
++#ifndef USDT2
++  HS_DTRACE_PROBE_DECL4(provider, gc__collection__contig__begin, bool, bool, size_t, bool);
++  HS_DTRACE_PROBE_DECL4(provider, gc__collection__contig__end, bool, bool, size_t, bool);
++#endif /* !USDT2 */
++
+ Generation::Generation(ReservedSpace rs, size_t initial_size, int level) :
+   _level(level),
+   _ref_processor(NULL) {
+@@ -640,7 +646,13 @@
+   SerialOldTracer* gc_tracer = GenMarkSweep::gc_tracer();
+   gc_tracer->report_gc_start(gch->gc_cause(), gc_timer->gc_start());
+ 
++#ifndef USDT2
++  HS_DTRACE_PROBE4(hotspot, gc__collection__contig__begin, full, clear_all_soft_refs, size, is_tlab);
++#endif  /* !USDT2 */
+   GenMarkSweep::invoke_at_safepoint(_level, ref_processor(), clear_all_soft_refs);
++#ifndef USDT2
++  HS_DTRACE_PROBE4(hotspot, gc__collection__contig__end, full, clear_all_soft_refs, size, is_tlab);
++#endif  /* !USDT2 */
+ 
+   gc_timer->register_gc_end();
+ 
+diff -Nru openjdk.orig/hotspot/src/share/vm/memory/tenuredGeneration.cpp openjdk/hotspot/src/share/vm/memory/tenuredGeneration.cpp
+--- openjdk.orig/hotspot/src/share/vm/memory/tenuredGeneration.cpp	2014-03-06 09:11:53.000000000 +0000
++++ openjdk/hotspot/src/share/vm/memory/tenuredGeneration.cpp	2014-03-07 04:30:33.691431197 +0000
+@@ -34,6 +34,12 @@
+ #include "oops/oop.inline.hpp"
+ #include "runtime/java.hpp"
+ #include "utilities/macros.hpp"
++#include "utilities/dtrace.hpp"
++
++#ifndef USDT2
++  HS_DTRACE_PROBE_DECL4(provider, gc__collection__tenured__begin, bool, bool, size_t, bool);
++  HS_DTRACE_PROBE_DECL4(provider, gc__collection__tenured__end, bool, bool, size_t, bool);
++#endif /* !USDT2 */
+ 
+ TenuredGeneration::TenuredGeneration(ReservedSpace rs,
+                                      size_t initial_byte_size, int level,
+@@ -152,8 +158,14 @@
+                                 size_t size,
+                                 bool   is_tlab) {
+   retire_alloc_buffers_before_full_gc();
++#ifndef USDT2
++  HS_DTRACE_PROBE4(hotspot, gc__collection__tenured__begin, full, clear_all_soft_refs, size, is_tlab);
++#endif  /* !USDT2 */
+   OneContigSpaceCardGeneration::collect(full, clear_all_soft_refs,
+                                         size, is_tlab);
++#ifndef USDT2
++  HS_DTRACE_PROBE4(hotspot, gc__collection__tenured__end, full, clear_all_soft_refs, size, is_tlab);
++#endif  /* !USDT2 */
+ }
+ 
+ void TenuredGeneration::compute_new_size() {

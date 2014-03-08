@@ -1,3 +1,13 @@
+2014-03-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* patches/systemtap_gc.patch: Moved to...
+	* Makefile.am: Make systemtap_gc.patch HotSpot-dependent.
+	* hotspot.map: Add aarch64 HotSpot.
+	* patches/hotspot/aarch64/systemtap_gc.patch:
+	New patch against AArch64 HotSpot tarball.
+	* patches/hotspot/default/systemtap_gc.patch:
+	... here.
+
 2014-02-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add Gentoo bug reference for
