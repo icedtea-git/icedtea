@@ -1,5 +1,10 @@
 2014-03-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* acinclude:
+	(IT_CHECK_FOR_PCSC): Default to off.
+
+2014-03-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* patches/systemtap_gc.patch: Moved to...
 	* Makefile.am: Make systemtap_gc.patch HotSpot-dependent.
 	* hotspot.map: Add aarch64 HotSpot.

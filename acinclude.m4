@@ -2219,7 +2219,7 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_PCSC],
     ENABLE_SYSTEM_PCSC="${enableval}"
   ],
   [
-    ENABLE_SYSTEM_PCSC="yes"
+    ENABLE_SYSTEM_PCSC="no"
   ])
   AC_MSG_RESULT(${ENABLE_SYSTEM_PCSC})
   if test x"${ENABLE_SYSTEM_PCSC}" = "xyes"; then
