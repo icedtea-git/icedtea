@@ -2669,7 +2669,7 @@ AC_DEFUN([IT_ENABLE_ARM32JIT],
     esac
   ],
   [
-    enable_arm32jit=no
+    enable_arm32jit=yes
   ])
   AC_MSG_RESULT([$enable_arm32jit])
   AM_CONDITIONAL([ENABLE_ARM32JIT], test x"${enable_arm32jit}" = "xyes")

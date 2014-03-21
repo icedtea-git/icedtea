@@ -1,4 +1,9 @@
-2014-03-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+2014-03-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* acinclude.m4:
+	(IT_ENABLE_ARM32JIT): Turn JIT on by default.
+
+2014-03-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* acinclude:
 	(IT_CHECK_FOR_PCSC): Default to off.
