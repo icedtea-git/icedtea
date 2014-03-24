@@ -31,6 +31,9 @@ case "$arch" in
   x86_64|ppc64|s390x)
     MFLAG=-m64
     ;;
+  aarch64)
+    MFLAG=-march=armv8-a
+    ;;
   *)
     echo 1>&2 "error: unhandled arch '$arch'"
     exit 1
