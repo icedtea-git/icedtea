@@ -1,5 +1,10 @@
 2014-03-27  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* hotspot.map:
+	Update to latest aarch64 tree.
+
+2014-03-27  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* Makefile.am:
 	(EXTRA_DIST): Don't look for patches in
 	boot/hotspot/*. Do look for patches in
