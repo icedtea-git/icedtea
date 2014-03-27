@@ -1,3 +1,19 @@
+2014-03-26  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Perform configure checks using ecj.jar
+	if native ecj is enabled.
+	* Makefile.am:
+	(native-ecj): Link against gcj explicitly.
+	* acinclude.m4:
+	(IT_FIND_COMPILER): Run IT_WITH_GCJ
+	and set JAVAC to an invocation of the ECJ_JAR
+	if native ecj is used. Depend on IT_FIND_JAVA
+	and IT_FIND_ECJ_JAR for this.
+	(IT_FIND_ECJ_JAR): Define only once.
+	(IT_WITH_GCJ): Likewise.
+	(IT_DIAMOND_CHECK): Depend on IT_CHECK_JAVA_AND_JAVAC_WORK.
+	* configure.ac: Remove invocation of IT_WITH_GCJ.
+
 2014-03-24  Pavel Tisnovsky  <ptisnovs@redhat.com>
 
 	* contrib/jck/compile-native-code.sh:

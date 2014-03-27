@@ -1584,7 +1584,7 @@ stamps/native-ecj.stamp:
 	mkdir -p stamps 
 if BUILD_NATIVE_ECJ
 	${GCJ} $(IT_CFLAGS) -Wl,-Bsymbolic -findirect-dispatch -o native-ecj \
-	    --main=org.eclipse.jdt.internal.compiler.batch.Main ${ECJ_JAR}
+	    --main=org.eclipse.jdt.internal.compiler.batch.Main -lgcj ${ECJ_JAR}
 endif
 	touch $@
 

@@ -126,9 +126,17 @@ AC_DEFUN([IT_SET_OS_DIRS],
 
 AC_DEFUN([IT_FIND_COMPILER],
 [
+  AC_REQUIRE([IT_FIND_JAVA])
+  AC_REQUIRE([IT_FIND_ECJ_JAR])
+
   IT_FIND_JAVAC
   IT_FIND_ECJ
   IT_USING_ECJ
+  IT_WITH_GCJ
+  
+  if test x"${GCJ}" != xno ; then
+    JAVAC="${JAVA} -classpath ${ECJ_JAR} org.eclipse.jdt.internal.compiler.batch.Main"
+  fi
 
   AC_SUBST(ECJ)
   AC_SUBST(JAVAC)
@@ -315,7 +323,7 @@ AC_DEFUN_ONCE([IT_CAN_HARDLINK_TO_SOURCE_TREE],
   AM_CONDITIONAL([SRC_DIR_HARDLINKABLE], test x"${it_cv_hardlink_src}" = "xyes")
 ])
 
-AC_DEFUN([IT_FIND_ECJ_JAR],
+AC_DEFUN_ONCE([IT_FIND_ECJ_JAR],
 [
   AC_MSG_CHECKING([for an ecj JAR file])
   AC_ARG_WITH([ecj-jar],
@@ -922,7 +930,7 @@ AC_DEFUN([IT_WITH_PROJECT],
   AM_CONDITIONAL([USE_JDK7], test x"${project}" = "xjdk7")
 ])
 
-AC_DEFUN([IT_WITH_GCJ],
+AC_DEFUN_ONCE([IT_WITH_GCJ],
 [
   AC_MSG_CHECKING([whether to compile ecj natively])
   AC_ARG_WITH([gcj],
@@ -1774,6 +1782,7 @@ AC_CONFIG_FILES([nss.cfg])
 ])
 
 AC_DEFUN([IT_DIAMOND_CHECK],[
+  AC_REQUIRE([IT_CHECK_JAVA_AND_JAVAC_WORK])
   AC_CACHE_CHECK([if javac lacks support for the diamond operator], it_cv_diamond, [
   CLASS=Test.java
   BYTECODE=$(echo $CLASS|sed 's#\.java##')
