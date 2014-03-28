@@ -134,6 +134,12 @@ AC_DEFUN([IT_FIND_COMPILER],
   IT_USING_ECJ
   IT_WITH_GCJ
   
+  if test "x${ECJ_JAR}" = "xno"; then
+    if test "x${JAVAC}" = "x"; then
+      AC_MSG_ERROR("No compiler or ecj JAR file was found.")
+    fi
+  fi
+
   if test x"${GCJ}" != xno ; then
     JAVAC="${JAVA} -classpath ${ECJ_JAR} org.eclipse.jdt.internal.compiler.batch.Main"
   fi
@@ -350,11 +356,6 @@ AC_DEFUN_ONCE([IT_FIND_ECJ_JAR],
       fi
   fi
   AC_MSG_RESULT(${ECJ_JAR})
-  if test "x${ECJ_JAR}" = "xno"; then
-    if test "x${JAVAC}" = "x"; then
-      AC_MSG_ERROR("No compiler or ecj JAR file was found.")
-    fi
-  fi
   AC_SUBST(ECJ_JAR)
 ])
 

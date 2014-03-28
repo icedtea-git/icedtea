@@ -160,6 +160,7 @@ New in release 2.5.0 (2014-XX-XX):
   - PR1677, G498288: Update PaX support to detect running PaX kernel and use newer tools
   - PR1679: Allow OpenJDK to build on PaX-enabled kernels
   - PR1684: Build fails with empty PAX_COMMAND
+  - PR1726: configure fails looking for ecj.jar before even trying to find javac
 * PPC & AIX port
   - Add AIX-specific build instructions to README-ppc.html
   - Added AIX as testing platform for more jtreg tests written in shell-script

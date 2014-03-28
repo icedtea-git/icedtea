@@ -1,3 +1,11 @@
+2014-03-28  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* acinclude.m4:
+	(IT_FIND_COMPILER): Check value of ECJ_JAR
+	and JAVAC here ...
+	(IT_FIND_ECJ_JAR): ... rather than here where
+	${JAVAC} may not yet be defined.
+
 2014-03-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* acinclude.m4:
