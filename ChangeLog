@@ -5,6 +5,7 @@
 	and JAVAC here ...
 	(IT_FIND_ECJ_JAR): ... rather than here where
 	${JAVAC} may not yet be defined.
+	* NEWS: Updated.
 
 2014-03-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
