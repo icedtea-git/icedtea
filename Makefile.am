@@ -297,6 +297,10 @@ if ENABLE_NSS
 ICEDTEA_PATCHES += patches/nss-config.patch
 endif
 
+if WITH_ALT_HSBUILD
+ICEDTEA_PATCHES += patches/hotspot/aarch64/werror.patch
+endif
+
 ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
 
 # Bootstrapping patches
