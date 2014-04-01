@@ -1,3 +1,12 @@
+2013-04-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* patches/cacao/jsig.patch:
+	Removed.
+	* Makefile.am:
+	(CACAO_VERSION): Bump to current tip.
+	(CACAO_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Drop unneeded jsig patch.
+
 2012-02-10  Xerxes Rånby  <xerxes@zafena.se>
 
 	* Makefile.am

@@ -20,8 +20,8 @@ HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$4}' version=$(HSBUILD) $(abs_top_
 HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
 HS_URL = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
 
-CACAO_VERSION = a567bcb7f589
-CACAO_SHA256SUM = d49f79debc131a5694cae6ab3ba2864e7f3249ee8d9dc09aae8afdd4dc6b09f9
+CACAO_VERSION = e215e36be9fc
+CACAO_SHA256SUM = 4966514c72ee7ed108b882d9b6e65c3adf8a8f9c2dccb029f971b3c8cb4870ab
 CACAO_BASE_URL = http://icedtea.classpath.org/download/drops/cacao
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.gz
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
@@ -229,7 +229,6 @@ endif
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
-	patches/cacao/jsig.patch \
 	patches/cacao/6714758.patch \
 	patches/cacao/memory.patch
 endif
