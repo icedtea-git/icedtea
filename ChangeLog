@@ -1,3 +1,14 @@
+2011-08-09  Xerxes Rånby  <xerxes@zafena.se>
+
+	CACAO
+	- CA159: Exception handler blocks / register mixup.
+	- Set thread to RUNNABLE during Thread.start.
+	- Removed state-setting function call that would be done by the thread
+	  itself, creating a nasty race.
+	* Makefile.am
+	(CACAO_VERSION): Updated CACAO to 2011-08-08 revision.
+	(CACAO_SHA256SUM): Updated.
+
 2010-11-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
