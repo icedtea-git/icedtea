@@ -1,3 +1,14 @@
+2012-02-10  Xerxes Rånby  <xerxes@zafena.se>
+
+	* Makefile.am
+	(CACAO_VERSION): Updated CACAO to 2012-02-09 revision.
+	(CACAO_SHA256SUM): Updated.
+	(stamps/cacao.stamp): Use --with-java-runtime-library=openjdk7.
+	Add -f when creating client and server symlinks to handle repeat builds.
+	Link the fake libjsig.so to CACAO libjvm.so, and touch fake Xusage.txt
+	to work with latest OpenJDK ALT_HOTSPOT_IMPORT_PATH functionality.
+	* patches/cacao/version.patch: Removed, replaced by upstream CACAO changeset 30edcde287d9.
+
 2011-08-30  Xerxes Rånby  <xerxes@zafena.se>
 
 	CACAO

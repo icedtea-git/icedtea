@@ -20,8 +20,8 @@ HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$4}' version=$(HSBUILD) $(abs_top_
 HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
 HS_URL = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
 
-CACAO_VERSION = 4549072ab2de
-CACAO_SHA256SUM = ec097ce96f047abbaeab4faab752c121d29f08bdeae358038a0b7cde03361d07
+CACAO_VERSION = a567bcb7f589
+CACAO_SHA256SUM = d49f79debc131a5694cae6ab3ba2864e7f3249ee8d9dc09aae8afdd4dc6b09f9
 CACAO_BASE_URL = http://icedtea.classpath.org/download/drops/cacao
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.gz
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
@@ -229,7 +229,6 @@ endif
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
-	patches/cacao/version.patch \
 	patches/cacao/jsig.patch \
 	patches/cacao/6714758.patch \
 	patches/cacao/memory.patch
@@ -1785,14 +1784,16 @@ if !USE_SYSTEM_CACAO
 	  --build=$(build_alias) \
 	  --target=$(target_alias) \
 	  --prefix=$(abs_top_builddir)/cacao/install \
-	  --with-java-runtime-library=openjdk \
+	  --with-java-runtime-library=openjdk7 \
 	  --with-java-runtime-library-prefix=$(abs_top_builddir)/openjdk \
 	  --with-java-runtime-library-classes=$(RUNTIME) \
 	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
 	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS) install
 	mkdir -p $(abs_top_builddir)/cacao/install/lib
 	touch $(abs_top_builddir)/cacao/install/hotspot/lib/sa-jdi.jar
-	ln -s server $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/client
+	ln -sf server $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/client
+	touch $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/server/Xusage.txt
+	ln -sf client/libjvm.so $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/libjsig.so
 endif
 endif
 	mkdir -p stamps
