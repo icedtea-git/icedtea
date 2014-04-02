@@ -83,7 +83,6 @@ New in release 2.5.0 (2014-XX-XX):
   - S8025205: Intermittent test failure: javax/management/remote/mandatory/connection/BrokenConnectionTest.java
   - S8025206: Intermittent test failure:     javax/management/monitor/NullAttributeValueTest.java
   - S8025207: Intermittent test failure: javax/management/monitor/CounterMonitorThresholdTest.java
-  - S8025255: (tz) Support tzdata2013g
   - S8025512: NPE with logging while launching webstart on jre7u40 if logging is disabled
   - S8025713: Syncing indendation/comment/copyright year differences with upstream projects
   - S8025775: JNI warnings in TryXShmAttach
@@ -130,15 +129,11 @@ New in release 2.5.0 (2014-XX-XX):
 * Bug fixes
   - Fix implicit function declarations
   - PR1617: Include defs.make in vm.make so zeroshark.make is included
-  - Add Shark definitions from 8003868
-  - Drop compile_method argument removed in 7083786 from sharkCompiler.cpp
   - Remove binary files and unlicensed generated files
   - PR1655: Don't add IcedTea-Web jars to bootclasspath
   - Enable CC_INTERP on ppc64
   - Fix Zero following integration of PPC port
   - PR1660: Allow use of system PCSC
-  - RH1015432: java-1.7.0-openjdk: Fails on PPC with StackOverflowError (revised fix)
-  - PR1659: OpenJDK 7 returns incorrect TrueType font metrics when bold style is set
   - PR1661: Cleanup COMPILE_AGAINST_SYSCALLS option and allow it to be set false
   - PR1661: Cleanup COMPRESS_JARS option and allow it to be set false
   - PR1661: Cleanup SYSTEM_CUPS option and allow it to be set false
@@ -151,15 +146,11 @@ New in release 2.5.0 (2014-XX-XX):
   - PR1661: Cleanup SYSTEM_PCSC option and allow it to be set false
   - PR1661: Cleanup SYSTEM_PNG option and allow it to be set false
   - PR1664: Ensure all SYSTEM_* options are in jdk_generic_profile.sh
-  - Link against $(LIBDL) if SYSTEM_CUPS is not true
   - Only get CFLAGS/LIBS for libpcsclite if installed
   - Add lost #endif
   - Add new files from 8019229
   - Remove duplicate ElfFuncDescTable code in elfSymbolTable.cpp
   - Remove duplicate ElfFuncDescTable code in elfSymbolTable.hpp
-  - PR1677, G498288: Update PaX support to detect running PaX kernel and use newer tools
-  - PR1679: Allow OpenJDK to build on PaX-enabled kernels
-  - PR1684: Build fails with empty PAX_COMMAND
   - PR1726: configure fails looking for ecj.jar before even trying to find javac
 * PPC & AIX port
   - Add AIX-specific build instructions to README-ppc.html
@@ -330,7 +321,6 @@ New in release 2.5.0 (2014-XX-XX):
   - Propagate HOTSPOT_BUILD_JOBS and PARALLEL_COMPILE_JOBS from the top-level make to the corresponding sub-makes.
   - Recent changes to ppc files, especially to ppc.ad file.
   - Recent improvements by SAP.
-  - Re-enable the 'gamma' test at the end of the HotSpot build, but only for HotSpot based bootstrap JDKs.
   - Removed unused DL_info declaration in java_md_solinux.c that caused AIX compiler failure
   - Remove ppc_ prefixes in ppc files.
   - Remove some unnecessary diffs to Oracle coding.
@@ -380,8 +370,6 @@ New in release 2.5.0 (2014-XX-XX):
   - Use macosx's BsdVirtualMachine implementation to provide tools/attach on AIX platform.
   - Use stubs to implement safefetch.
   - Use the solaris' approach of doing IsXRenderAvailable check for AIX
-* ARM port
-  - PR1626: ARM32 assembler update for hsx24. Use ARM32JIT to turn it on/off.
 * JamVM
   - JVM_NewMultiArray: element class may be an array
   - jtreg test java/lang/reflect/Array/ExceedMaxDim
@@ -393,6 +381,128 @@ New in release 2.5.0 (2014-XX-XX):
   - JSR292: correct intrinsic cache COMPARE function
   - Race condition in setting up imethod table
   - GC: Minor performance improvement
+
+New in release 2.4.6 (2014-03-28):
+
+* Backports
+  - S8009062: poor performance of JNI AttachCurrentThread after fix for 7017193
+  - S8035893: JVM_GetVersionInfo fails to zero structure
+  - Re-enable the 'gamma' test at the end of the HotSpot build, but only for HotSpot based bootstrap JDKs.
+* Bug fixes
+  - PR1101: Undefined symbols on GNU/Linux SPARC
+  - PR1659: OpenJDK 7 returns incorrect TrueType font metrics when bold style is set
+  - PR1677, G498288: Update PaX support to detect running PaX kernel and use newer tools
+  - PR1679: Allow OpenJDK to build on PaX-enabled kernels
+  - PR1684: Build fails with empty PAX_COMMAND
+  - RH1015432: java-1.7.0-openjdk: Fails on PPC with StackOverflowError (revised fix)
+  - Link against $(LIBDL) if SYSTEM_CUPS is not true
+  - Perform configure checks using ecj.jar when --with-gcj (native ecj build) is enabled.
+* ARM32 port
+  - Add arm_port from IcedTea 6
+  - Add patches/arm.patch from IcedTea 6
+  - Add patches/arm-debug.patch from IcedTea 6
+  - Add patches/arm-hsdis.patch from IcedTea 6
+  - added jvmti event generation for dynamic_generate and compiled_method_load events to ARM JIT compiler
+  - Adjust saved SP when safepointing.
+  - First cut of invokedynamic
+  - Fix trashed thread ptr after recursive re-entry from asm JIT.
+  - JIT-compilation of ldc methodHandle
+  - Rename a bunch of misleadingly-named functions
+  - Changes for HSX22
+  - Rename a bunch of misleadingly-named functions
+  - Patched method handle adapter code to deal with failures in TCK
+  - Phase 1
+  - Phase 2
+  - RTC Thumb2 JIT enhancements.
+  - Zero fails to build in hsx22+, fix for hsx22 after runs gamma OK, hsx23 still nogo.
+  - Use ldrexd for atomic reads on ARMv7.
+  - Use unified syntax for thumb code.
+  - Corrected call from fast_method_handle_entry to CppInterpreter::method_handle_entry so that thread is loaded into r2
+  - Don't save locals at a return.
+  - Fix call to handle_special_method().  Fix compareAndSwapLong.
+  - Fix JIT bug that miscompiles org.eclipse.ui.internal.contexts.ContextAuthority.sourceChanged
+  - invokedynamic and aldc for JIT
+  - Modified safepoint check to rely on memory protect signal instead of polling
+  - Minor review cleanups.
+  - PR1188: ASM Interpreter and Thumb2 JIT javac miscompile modulo reminder on armel
+  - PR1363: Fedora 19 / rawhide FTBFS SIGILL
+  - Changes for HSX23
+  - Remove fragment from method that has been removed
+  - Remove C++ flags from CC_COMPILE and fix usage in zeroshark.make.
+  - Use $(CC) to compile mkbc instead of $(CC_COMPILE) to avoid C++-only flags
+  - Add note about use of $(CFLAGS)/$(CXXFLAGS)/$(CPPFLAGS) at present.
+  - Override automatic detection of source language for bytecodes_arm.def
+  - Include $(CFLAGS) in assembler stage
+  - PR1626: ARM32 assembler update for hsx24. Use ARM32JIT to turn it on/off.
+  - Replace literal offsets for METHOD_SIZEOFPARAMETERS and ISTATE_NEXT_FRAME with correct symbolic names.
+  - Turn ARM32 JIT on by default
+* AArch64 port
+  - PR1713: Support AArch64 Port
+* Shark
+  - Add Shark definitions from 8003868
+  - Drop compile_method argument removed in 7083786 from sharkCompiler.cpp
+
+New in release 2.3.14 (2014-03-28):
+
+* Security fixes
+  - S7023639, CVE-2013-5838: JSR 292 method handle invocation needs a fast path for compiled code (JSR292 update only)
+  - S8029507, CVE-2013-5893: Enhance JVM method processing (JSR292 update only)
+* Backports
+  - S7024118: possible hardcoded mnemonic for JFileChooser metal and motif l&f
+  - S7032018: The file list in JFileChooser does not have an accessible name
+  - S7032436: When running with the Nimbus look and feel, the JFileChooser does not display mnemonics
+  - S7151089: PS NUMA: NUMA allocator should not attempt to free pages when using SHM large pages
+  - S7192406: JSR 292: C2 needs exact return type information for invokedynamic and invokehandle call sites (JSR292 update only)
+  - S7196242: vm/mlvm/indy/stress/java/loopsAndThreads crashed (JSR292 update only)
+  - S7200949: JSR 292: rubybench/bench/time/bench_base64.rb fails with jruby.jar not on boot class path (JSR292 update only)
+  - S8000780: make Zero build and run with JDK8 (JSR292 update only)
+  - S8008764: 7uX l10n resource file translation update
+  - S8009062: poor performance of JNI AttachCurrentThread after fix for 7017193
+  - S8013057: assert(_needs_gc || SafepointSynchronize::is_at_safepoint()) failed: only read at safepoint
+  - S8015976: OpenJDK part of bug JDK-8015812 [TEST_BUG] Tests have conflicting test descriptions
+  - S8022698: javax/script/GetInterfaceTest.java fails since 7u45 b04 with -agentvm option
+  - S8023310: Thread contention in the method Beans.IsDesignTime()
+  - S8024302: Clarify jar verifications
+  - S8024461: [macosx] Java crashed on mac10.9 for swing and 2d function manual test
+  - S8025255: (tz) Support tzdata2013g
+  - S8026037: [TESTBUG] sun/security/tools/jarsigner/warnings.sh test fails on Solaris
+  - S8026304: jarsigner output bad grammar
+  - S8026887: Make issues due to failed large pages allocations easier to debug
+  - S8027204: Revise the update of 8026204 and 8025758
+  - S8027224: test regression - ClassNotFoundException
+  - S8027370: Support tzdata2013h
+  - S8027378: Two closed/javax/xml/8005432 fails with jdk7u51b04
+  - S8027837: JDK-8021257 causes CORBA build failure on emdedded platforms
+  - S8027943: serial version of com.sun.corba.se.spi.orbutil.proxy.CompositeInvocationHandlerImpl changed in 7u45
+  - S8028057: Modify jarsigner man page documentation to document CCC 8024302: Clarify jar verifications
+  - S8028111: XML readers share the same entity expansion counter
+  - S8028215: ORB.init fails with SecurityException if properties select the JDK default ORB
+  - S8028293: Check local configuration for actual ephemeral port range
+  - S8028382: Two javax/xml/8005433 tests still fail after the fix JDK-8028147
+  - S8028453: AsynchronousSocketChannel.connect() requires SocketPermission due to bind to local address (win)
+  - S8028823: java/net/Makefile tabs converted to spaces
+  - S8029038: Revise fix for XML readers share the same entity expansion counter
+  - S8035893: JVM_GetVersionInfo fails to zero structure
+* Bug fixes
+  - Fix broken bootstrap build by updating ecj-multicatch.patch
+  - PR1626: ARM32 assembler update for hsx24 (JSR292 update only)
+  - PR1654: ppc32 needs a larger ThreadStackSize to build
+  - PR1677, G498288: Update PaX support to detect running PaX kernel and use newer tools
+  - PR1679: Allow OpenJDK to build on PaX-enabled kernels
+  - PR1684: Build fails with empty PAX_COMMAND
+  - Re-enable the 'gamma' test at the end of the HotSpot build, but only for HotSpot based bootstrap JDKs.
+  - RH1015432: java-1.7.0-openjdk: Fails on PPC with StackOverflowError (revised fix)
+  - RH910107: fail to load PC/SC library
+  - Perform configure checks using ecj.jar when --with-gcj (native ecj build) is enabled.
+* New features
+  - PR1653: Support ppc64le via Zero
+* ARM port
+  - Allow ARM32 JIT to be disabled
+  - Replace literal offsets for METHOD_SIZEOFPARAMETERS and ISTATE_NEXT_FRAME with correct symbolic names.
+  - Turn ARM32 JIT on by default
+* Shark
+  - Add Shark definitions from 8003868
+  - Drop compile_method argument removed in 7083786 from sharkCompiler.cpp
 
 New in release 2.4.5 (2014-01-29):
 
