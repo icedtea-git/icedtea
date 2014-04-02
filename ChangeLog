@@ -1,5 +1,10 @@
 2014-04-02  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* configure.ac: Set to 2.6pre00.
+	* NEWS: Add 2.6.0 section.
+
+2014-04-02  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* NEWS: Add release notes for 2.3.14 & 2.4.6.
 
 2014-03-28  Andrew John Hughes  <gnu.andrew@redhat.com>
