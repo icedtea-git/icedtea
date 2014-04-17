@@ -59,6 +59,8 @@ New in release 2.6.0 (2014-XX-XX):
   - S8036778: new hotspot build - hs24.80-b05
   - S8036863: Update jdk7 testlibrary to match jdk8 in hotspot
   - S8037340: Linux semaphores to use CLOCK_REALTIME
+* Bug fixes
+  - PR1737: Support prefixed variants of GNU tools used on *BSD systems
 
 New in release 2.5.0 (2014-XX-XX):
 
