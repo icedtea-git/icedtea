@@ -1,3 +1,33 @@
+2014-04-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* AUTHORS: Add Radim Kolar.
+	* acinclude.m4:
+	(IT_FIND_TOOL): Cleanup error message.
+	(IT_FIND_TOOLS): Likewise.
+
+2014-03-20  Radim Kolar  <hsn@sanatana.filez.com>
+
+	* Makefile.am:
+	(extract-openjdk): Use $(SED) instead of 'sed'.
+	(versioning): Likewise.
+	(add-systemtap): Likewise.
+	(add-systemtap-debug): Likewise.
+	(add-systemtap-boot): Likewise.
+	(rewrite-rhino): Likewise.
+	(clean-add-jamvm): Likewise.
+	(clean-add-jamvm-debug): Likewise.
+	(clean-add-cacao): Likewise.
+	(clean-add-cacao-debug): Likewise.
+	(clean-add-zero): Likewise.
+	(clean-add-zero-debug): Likewise.
+	(jtreg_processes): Likewise.
+	(rt): Likewise.
+	* acinclude.m4:
+	(IT_FIND_TOOLS): New macro to check for
+	multiple tools.
+	* configure.ac: Check for gmake, gfind, gpatch,
+	gsha256sum and gsed (GNU tools on *BSD).
+
 2014-04-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:

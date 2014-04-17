@@ -1145,7 +1145,7 @@ else
 	      *.zip) $(UNZIP) -q $(OPENJDK_SRC_ZIP) ;; \
 	      *.tar.*) $(TAR) xf $(OPENJDK_SRC_ZIP) ;; \
 	    esac; \
-	    mv `echo $(ICEDTEA_PREFIX)|sed 's#\.#-#'`-$(OPENJDK_CHANGESET) openjdk ; \
+	    mv `echo $(ICEDTEA_PREFIX)|$(SED) 's#\.#-#'`-$(OPENJDK_CHANGESET) openjdk ; \
 	  else \
 	    echo "ERROR: Couldn't extract OpenJDK"; \
 	    false; \
@@ -1490,7 +1490,7 @@ endif
 	if test x"$(VERSION_SUFFIX)" != "x"; then \
 	  ver_suffix="-$(VERSION_SUFFIX)"; \
 	fi ; \
-	sed -i "s#BUILD_VARIANT_RELEASE)#BUILD_VARIANT_RELEASE)$${proj_suffix}$${ver_suffix}#" \
+	$(SED) -i "s#BUILD_VARIANT_RELEASE)#BUILD_VARIANT_RELEASE)$${proj_suffix}$${ver_suffix}#" \
 	  openjdk/jdk/make/common/shared/Defs.gmk;
 	mkdir -p stamps
 	touch $@
@@ -1722,13 +1722,13 @@ if ENABLE_SYSTEMTAP
 	mkdir -p $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
 	if test $$? -eq 0; then \
-	  sed -e '/\/client\/libjvm.so/d' \
+	  $(SED) -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot.stp \
 	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
-	  sed -e '/\/client\/libjvm.so/d' \
+	  $(SED) -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
 	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
-	  sed -e '/\/client\/libjvm.so/d' \
+	  $(SED) -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_gc.stp \
 	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
 	else \
@@ -1858,13 +1858,13 @@ if ENABLE_SYSTEMTAP
 	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
 	if test $$? -eq 0; then \
-	  sed -e '/\/client\/libjvm.so/d' \
+	  $(SED) -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot.stp \
 	    > $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
-	  sed -e '/\/client\/libjvm.so/d' \
+	  $(SED) -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
 	    > $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
-	  sed -e '/\/client\/libjvm.so/d' \
+	  $(SED) -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_gc.stp \
 	    > $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
 	else \
@@ -1995,13 +1995,13 @@ if ENABLE_SYSTEMTAP
 	mkdir -p $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
 	if test $$? -eq 0; then \
-	  sed -e '/\/client\/libjvm.so/d' \
+	  $(SED) -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot.stp \
 	    > $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot.stp; \
-	  sed -e '/\/client\/libjvm.so/d' \
+	  $(SED) -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
 	    > $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
-	  sed -e '/\/client\/libjvm.so/d' \
+	  $(SED) -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_gc.stp \
 	    > $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
 	else \
@@ -2219,10 +2219,10 @@ if WITH_RHINO
 	  org.mozilla sun.org.mozilla && \
 	(cd rhino/rhino.old && \
 	 for files in `find -type f -not -name '*.class'` ; do \
-	   new_file=../rhino.new/`echo $$files|sed -e 's#org#sun/org#'` ; \
+	   new_file=../rhino.new/`echo $$files|$(SED) -e 's#org#sun/org#'` ; \
 	   mkdir -p `dirname $$new_file` ; \
 	   cp -v $$files $$new_file ; \
-	   sed -ie 's#org\.mozilla#sun.org.mozilla#g' $$new_file ; \
+	   $(SED) -ie 's#org\.mozilla#sun.org.mozilla#g' $$new_file ; \
 	 done \
 	) && \
 	(cd rhino/rhino.new && \
@@ -2278,7 +2278,7 @@ endif
 clean-add-jamvm:
 	rm -rf $(BUILD_JRE_ARCH_DIR)/jamvm
 	if [ -e $(BUILD_JRE_ARCH_DIR)/jvm.cfg ] ; then \
-	  sed -i 's#-jamvm KNOWN#-jamvm ERROR#' $(BUILD_JRE_ARCH_DIR)/jvm.cfg ; \
+	  $(SED) -i 's#-jamvm KNOWN#-jamvm ERROR#' $(BUILD_JRE_ARCH_DIR)/jvm.cfg ; \
 	fi
 	rm -f stamps/add-jamvm.stamp
 
@@ -2296,7 +2296,7 @@ endif
 clean-add-jamvm-debug:
 	rm -rf $(BUILD_DEBUG_JRE_ARCH_DIR)/jamvm
 	if [ -e $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ] ; then \
-	  sed -i 's#-jamvm KNOWN#-jamvm ERROR#' $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ; \
+	  $(SED) -i 's#-jamvm KNOWN#-jamvm ERROR#' $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ; \
 	fi
 	rm -f stamps/add-jamvm-debug.stamp
 
@@ -2349,7 +2349,7 @@ endif
 clean-add-cacao:
 	rm -rf $(BUILD_JRE_ARCH_DIR)/cacao
 	if [ -e $(BUILD_JRE_ARCH_DIR)/jvm.cfg ] ; then \
-	  sed -i 's#-cacao KNOWN#-cacao ERROR#' $(BUILD_JRE_ARCH_DIR)/jvm.cfg ; \
+	  $(SED) -i 's#-cacao KNOWN#-cacao ERROR#' $(BUILD_JRE_ARCH_DIR)/jvm.cfg ; \
 	fi
 	rm -f stamps/add-cacao.stamp
 
@@ -2371,7 +2371,7 @@ endif
 clean-add-cacao-debug:
 	rm -rf $(BUILD_DEBUG_JRE_ARCH_DIR)/cacao
 	if [ -e $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ] ; then \
-	  sed -i 's#-cacao KNOWN#-cacao ERROR#' $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ; \
+	  $(SED) -i 's#-cacao KNOWN#-cacao ERROR#' $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ; \
 	fi
 	rm -f stamps/add-cacao-debug.stamp
 
@@ -2439,8 +2439,8 @@ clean-add-zero:
 	rm -rf $(BUILD_JRE_ARCH_DIR)/shark
 	rm -rf zerovm
 	if [ -e $(BUILD_JRE_ARCH_DIR)/jvm.cfg ] ; then \
-	  sed -i 's#-zero KNOWN#-zero ERROR#' $(BUILD_JRE_ARCH_DIR)/jvm.cfg ; \
-	  sed -i 's#-shark KNOWN#-shark ERROR#' $(BUILD_JRE_ARCH_DIR)/jvm.cfg ; \
+	  $(SED) -i 's#-zero KNOWN#-zero ERROR#' $(BUILD_JRE_ARCH_DIR)/jvm.cfg ; \
+	  $(SED) -i 's#-shark KNOWN#-shark ERROR#' $(BUILD_JRE_ARCH_DIR)/jvm.cfg ; \
 	fi
 	rm -f stamps/add-zero.stamp
 
@@ -2478,8 +2478,8 @@ clean-add-zero-debug:
 	rm -rf $(BUILD_DEBUG_JRE_ARCH_DIR)/shark
 	rm -rf zerovm
 	if [ -e $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ] ; then \
-	  sed -i 's#-zero KNOWN#-zero ERROR#' $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ; \
-	  sed -i 's#-shark KNOWN#-shark ERROR#' $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ; \
+	  $(SED) -i 's#-zero KNOWN#-zero ERROR#' $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ; \
+	  $(SED) -i 's#-shark KNOWN#-shark ERROR#' $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg ; \
 	fi
 	rm -f stamps/add-zero-debug.stamp
 
@@ -2557,7 +2557,7 @@ clean-jtreg-reports:
 # FIXME: this might need some adjustment for other OS than Linux
 jtreg_processes = ps x -ww -o pid,ppid,args \
 	| awk '$$2 == 1 && $$3 ~ /^$(subst /,\/,/scratch)/' \
-	| sed 's,$(CURDIR)/$(sdkimg),<sdkimg>,g;s,$(CURDIR),<pwd>,g'
+	| $(SED) 's,$(CURDIR)/$(sdkimg),<sdkimg>,g;s,$(CURDIR),<pwd>,g'
 jtreg_pids = ps x --no-headers -ww -o pid,ppid,args \
 	| awk '$$2 == 1 && $$3 ~ /^$(subst /,\/,$(CURDIR)/$(sdkimg))/ {print $$1}'
 
@@ -2638,7 +2638,7 @@ stamps/rt.stamp: stamps/rt-class-files.stamp
 	   cd lib/rt ; \
 	   for dirs in $(ICEDTEA_BOOTSTRAP_RESOURCES) ; \
 	     do \
-	     destpath=`echo $$dirs|sed -e 's#$(LANGTOOLS)/##' -e 's#$(SHARE)/##'` ; \
+	     destpath=`echo $$dirs|$(SED) -e 's#$(LANGTOOLS)/##' -e 's#$(SHARE)/##'` ; \
 	     mkdir -p `dirname $$destpath` ; \
 	     cp -a ../../$$dirs $$destpath ; \
 	   done ; \
