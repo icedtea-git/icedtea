@@ -10,16 +10,22 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.0 beta 1 (2013-XX-XX):
+New in release 3.0.0 (2014-XX-XX):
 
+* Bug fixes
+  - PR1279: Synchronise CACAO versions between IcedTea6/7/8 where possible
+  - PR1325: Only add classes to rt-source-files.txt if actually needed
+  - PR1346: Filter out -j option to make
+  - PR1347: Update list of checked JDKs
+  - PR1357: Make XRender mandatory
+  - PR1359: Check for /usr/lib64 JVMs and generic JPackage alternative
 * JamVM
   - JSR 292: Invoke Dynamic
   - JSR 308: Type Annotations
   - JSR 335: Lambda Expressions
   - JSR 901: VM support for method parameter reflection
   - JEP 171: Implement fence methods in sun.misc.Unsafe
-  - sun.misc.Unsafe: additional methods get/putAddress:
-    allows JamVM with OpenJDK 7/8 to run recent versions of JEdit.
+  - sun.misc.Unsafe: additional methods get/putAddress.
   - FreeClassData: adjust method count for Miranda methods
   - Fix invokesuper check in invokespecial opcode
   - Fix non-direct interpreter invokespecial super-class check
@@ -39,13 +45,6 @@ New in release 3.0 beta 1 (2013-XX-XX):
   - JSR 292: correct intrinsic cache COMPARE function
   - Race condition in setting up imethod table
   - GC: Minor performance improvement
-* Bug fixes
-  - PR1346: Filter out -j option to make
-  - PR1347: Update list of checked JDKs
-  - PR1357: Make XRender mandatory
-  - PR1325: Only add classes to rt-source-files.txt if the class (or one or more of its methods/fields)
-    are actually missing from the boot JDK
-  - PR1359: Check for /usr/lib64 JVMs and generic JPackage alternative
 
 New in release 2.0 (2011-XX-XX):
 

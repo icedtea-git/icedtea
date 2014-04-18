@@ -1,3 +1,10 @@
+2014-04-18  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS:
+	Fix ordering, cleanup formatting and add
+	missing entry for PR1279. Change to 3.0.0
+	and move into 2014.
+
 2013-06-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* INSTALL:
