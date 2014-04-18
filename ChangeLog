@@ -1,3 +1,28 @@
+2014-04-18  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(ICEDTEA_ENV): Only add DISABLE_INTREE_EC if
+	ENABLE_SUNEC is not set. Set SYSTEM_NSS in both
+	cases and NSS_LIBS, NSS_CFLAGS and ECC_JUST_SUITE_B
+	when ENABLE_SUNEC is set.
+	* acinclude.m4:
+	(IT_LOCATE_NSS): Fix wording to make it clear that
+	this is the PKCS11 provider, using NSS as the
+	implementation.
+	(IT_ENABLE_SUNEC): Allow the Sun elliptic curve
+	crypto provider to be enabled.
+	* configure.ac:
+	Replace IT_LOCATE_NSS with IT_ENABLE_SUNEC (which
+	depends on the former).
+	* fsg.sh:
+	Only delete the SunEC implementation code at this
+	level. This is the part that is legally dubious,
+	due to the use of many more elliptic curves than
+	those provided by the NSS version.
+	* remove-intree-libraries.sh.in:
+	Include the remaining SunEC deletion from fsg.sh
+	here and make it optional.
+
 2014-04-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS:

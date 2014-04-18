@@ -473,7 +473,6 @@ ICEDTEA_ENV = \
 	ALT_JIBX_LIBS_PATH="$(JIBX_DEPS_DIR)" \
 	DEBUG_CLASSFILES="true" \
 	DEBUG_BINARIES="true" \
-	DISABLE_INTREE_EC="true" \
 	ALT_OUTPUTDIR="$(BUILD_OUTPUT_DIR)" \
 	VERBOSE="$(VERBOSE)" \
 	STATIC_CXX="false" \
@@ -559,6 +558,18 @@ endif
 if WITH_PAX
 ICEDTEA_ENV += \
 	PAX_COMMAND="${PAX_COMMAND}"
+endif
+
+if ENABLE_SUNEC
+ICEDTEA_ENV += \
+	SYSTEM_NSS="true" \
+	NSS_LIBS="${NSS_LIBS}" \
+	NSS_CFLAGS="${NSS_CFLAGS}" \
+	ECC_JUST_SUITE_B="true"
+else
+ICEDTEA_ENV += \
+	SYSTEM_NSS="false" \
+	DISABLE_INTREE_EC="true"
 endif
 
 # OpenJDK boot build environment.
