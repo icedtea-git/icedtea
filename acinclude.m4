@@ -1137,21 +1137,32 @@ AC_DEFUN([IT_CHECK_FOR_JDK],
 	        SYSTEM_JDK_DIR=
               ])
   if test -z "${SYSTEM_JDK_DIR}"; then
+    AC_MSG_RESULT([not specified])
     if test "x${enable_bootstrap}" = "xyes"; then
       GCJ_VMS="/usr/lib/jvm/java-gcj /usr/lib/jvm/gcj-jdk";
       BOOTSTRAP_VMS="/usr/lib/jvm/cacao";
     fi
-    ICEDTEA7_VMS="/usr/lib/jvm/icedtea7 /usr/lib/jvm/java-1.7.0-openjdk"
-    ICEDTEA8_VMS="/usr/lib/jvm/icedtea8 /usr/lib/jvm/java-1.8.0-openjdk"
-    for dir in ${BOOTSTRAP_VMS} ${ICEDTEA8_VMS} ${ICEDTEA7_VMS} \
-    	       /usr/lib/jvm/java-openjdk /usr/lib/jvm/openjdk /usr/lib/jvm/java-icedtea ; do
+    ICEDTEA7_VMS="/usr/lib/jvm/icedtea-7 /usr/lib/jvm/icedtea7 /usr/lib/jvm/java-1.7.0-openjdk
+    		  /usr/lib/jvm/java-1.7.0-openjdk.x86_64 /usr/lib64/jvm/java-1.7.0-openjdk
+		  /usr/lib/jvm/java-1.7.0"
+    ICEDTEA8_VMS="/usr/lib/jvm/icedtea-8 /usr/lib/jvm/java-1.8.0-openjdk
+    		  /usr/lib/jvm/java-1.8.0-openjdk.x86_64 /usr/lib64/jvm/java-1.8.0-openjdk
+		  /usr/lib/jvm/java-1.8.0"
+    for dir in ${ICEDTEA8_VMS} ${ICEDTEA7_VMS} ${BOOTSTRAP_VMS} \
+    	       /usr/lib/jvm/java-openjdk /usr/lib/jvm/openjdk /usr/lib/jvm/java-icedtea \
+	       /etc/alternatives/java_sdk_openjdk ; do
+       AC_MSG_CHECKING([for ${dir}]);
        if test -d $dir; then
-         SYSTEM_JDK_DIR=$dir
-	 break
+         SYSTEM_JDK_DIR=$dir ;
+	 AC_MSG_RESULT([found]) ;
+	 break ;
+       else
+         AC_MSG_RESULT([not found]) ;
        fi
     done
+  else
+    AC_MSG_RESULT(${SYSTEM_JDK_DIR})
   fi
-  AC_MSG_RESULT(${SYSTEM_JDK_DIR})
   if ! test -d "${SYSTEM_JDK_DIR}"; then
     AC_MSG_ERROR("A JDK home directory could not be found.")
   fi

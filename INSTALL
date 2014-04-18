@@ -7,10 +7,7 @@ download, extract and patch the source code from the IcedTea forest
 
 The build requirements are as follows:
 
-A bootstrap JDK, either:
-  - GNU libgcj 4.4.0 (or equivalent class library based on GNU Classpath >= 0.95) for --enable-bootstrap mode (the default)
-  - IcedTea6 or IcedTea7 for --disable-bootstrap mode
-Eclipse Java Compiler (ecj)
+A bootstrap JDK, either IcedTea7 or IcedTea8
 CUPS
 libX11 (libXp, libXtst, libXi, libXt)
 Freetype2
@@ -49,17 +46,27 @@ To build IcedTea with an older version of IcedTea, use:
 make
 
 The following locations are checked for a JDK:
-    * /usr/lib/jvm/java-openjdk
-    * /usr/lib/jvm/icedtea6
-    * /usr/lib/jvm/java-6-openjdk
-    * /usr/lib/jvm/openjdk
-    * /usr/lib/jvm/java-icedtea
+    * /usr/lib/jvm/icedtea-8
+    * /usr/lib/jvm/java-1.8.0-openjdk
+    * /usr/lib/jvm/java-1.8.0-openjdk.x86_64
+    * /usr/lib64/jvm/java-1.8.0-openjdk
+    * /usr/lib/jvm/java-1.8.0
+    * /usr/lib/jvm/icedtea-7
+    * /usr/lib/jvm/icedtea7
+    * /usr/lib/jvm/java-1.7.0-openjdk
+    * /usr/lib/jvm/java-1.7.0-openjdk.x86_64
+    * /usr/lib64/jvm/java-1.7.0-openjdk
+    * /usr/lib/jvm/java-1.7.0
 in the order given above.
 
-If bootstrapping is enabled, the following JDK locations are prepended to the above list:
-   * /usr/lib/jvm/java-gcj
-   * /usr/lib/jvm/gcj-jdk
+If bootstrapping is enabled, the following JDK locations are appended to the above list:
    * /usr/lib/jvm/cacao
+
+Finally, the following generic locations are checked as a last resort:
+    * /usr/lib/jvm/java-openjdk
+    * /usr/lib/jvm/openjdk
+    * /usr/lib/jvm/java-icedtea
+    * /etc/alternatives/java_sdk_openjdk
 
 There is currently no install target.  IcedTea ends up in
 openjdk.build when the build completes.

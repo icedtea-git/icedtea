@@ -45,6 +45,7 @@ New in release 3.0 beta 1 (2013-XX-XX):
   - PR1357: Make XRender mandatory
   - PR1325: Only add classes to rt-source-files.txt if the class (or one or more of its methods/fields)
     are actually missing from the boot JDK
+  - PR1359: Check for /usr/lib64 JVMs and generic JPackage alternative
 
 New in release 2.0 (2011-XX-XX):
 

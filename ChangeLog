@@ -1,3 +1,23 @@
+2013-06-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* INSTALL:
+	Synchronise list of VMs with macro in acinclude.m4.
+	* acinclude.m4: Provide separate output for user
+	specified JDKs and the checking process.  Extend
+	the list of JVMs to include more from Fedora &
+	RHEL and the newer Gentoo variants.
+	* NEWS: Updated.
+
+2013-03-21  Michal Vyskocil  <mvyskocil@suse.cz>
+
+	PR1359: Check for /usr/lib64 JVMs and generic JPackage alternative
+	* INSTALL: Add /etc/alternatives/java_sdk_openjdk.
+	* acinclude.m4: Likewise.
+
+2013-06-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* AUTHORS: Updated with Michal.
+
 2013-04-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* patches/cacao/jsig.patch:
