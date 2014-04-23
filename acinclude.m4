@@ -2718,15 +2718,15 @@ AC_DEFUN_ONCE([IT_ENABLE_SUNEC],
     PKG_CHECK_MODULES(NSS_SOFTOKN, nss-softokn >= 3.16.1, [NSS_SOFTOKN_FOUND=yes], [NSS_SOFTOKN_FOUND=no])
     PKG_CHECK_MODULES(NSS_JAVA, nss-java, [NSS_JAVA_FOUND=yes], [NSS_JAVA_FOUND=no])
     if test "x${NSS_SOFTOKN_FOUND}" = "xyes"; then
-      NSS_CFLAGS=$NSS_SOFTOKN_CFLAGS;
-      NSS_LIBS=$NSS_SOFTOKN_LIBS;
+      SUNEC_CFLAGS="$NSS_SOFTOKN_CFLAGS -lfreebl";
+      SUNEC_LIBS=$NSS_SOFTOKN_LIBS;
     elif test "x${NSS_JAVA_FOUND}" = "xyes"; then
-      NSS_CFLAGS=$NSS_JAVA_CFLAGS;
-      NSS_LIBS=$NSS_JAVA_LIBS;
+      SUNEC_CFLAGS="$NSS_JAVA_CFLAGS -DLEGACY_NSS";
+      SUNEC_LIBS=$NSS_JAVA_LIBS;
     else
       AC_MSG_ERROR([Could not find a suitable NSS installation to use for the SunEC provider.])
     fi
-    AC_SUBST(NSS_CFLAGS)
-    AC_SUBST(NSS_LIBS)
+    AC_SUBST(SUNEC_CFLAGS)
+    AC_SUBST(SUNEC_LIBS)
   fi
 ])

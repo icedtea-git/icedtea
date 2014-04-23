@@ -1,3 +1,33 @@
+2014-04-23  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1742: Allow SunEC provider to be built with changes
+	in NSS >= 3.16.1
+	* Makefile.am:
+	(BUILD_VERSION): Bump to b13.
+	(CORBA_CHANGESET): Update to icedtea-2.6pre02 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_ENV): Use SUNEC_LIBS and SUNEC_CFLAGS
+	instead of NSS_LIBS and NSS_CFLAGS respectively.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_SUNEC): Use SUNEC_CFLAGS and SUNEC_LIBS
+	for clarity as NSS_CFLAGS and NSS_LIBS are also set
+	by the NSS detection.
+	* configure.ac: Bump to pre02.
+	* hotspot.map: Update to icedtea-2.6pre03 tag.
+	* patches/boot/break-processbuilder-dependency.patch:
+	Regenerated.
+
 2014-04-18  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
