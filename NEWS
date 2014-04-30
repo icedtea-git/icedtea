@@ -132,6 +132,25 @@ New in release 2.6.0 (2014-XX-XX):
   - S8038481: CMM Testing: Min/MaxHeapFreeRatio flags should be manageable through the API
   - S8038640: new hotspot build - hs24.80-b06
   - S8038785: hot workaround fix for a crash in C2 compiler at Node::rematerialize
+* PPC & AIX port
+  - Fix handling of scalar replaced objects.
+  - New files for template interpreter
+  - PPC64: Support for ABI_ELFv2.
+  - S016696: PPC64 (part 4): add relocation for trampoline stubs
+  - S8016491: PPC64 (part 2): Clean up PPC defines.
+  - S8016586: PPC64 (part 3): basic changes for PPC64
+  - S8017313: PPC64 (part 6): stack handling improvements
+  - S8017317: PPC64 (part 7): cppInterpreter: implement support for biased locking
+  - S8019517: PPC64 (part 102): cppInterpreter: implement G1 support
+  - S8019929: PPC64 (part 107): Extend ELF-decoder to support PPC64 function descriptor tables
+  - S8019973: PPC64 (part 11): Fix IA64 preprocessor conditionals on AIX.
+  - S8024344: PPC64 (part 112): C argument in register AND stack slot.
+  - S8024468: PPC64 (part 201): cppInterpreter: implement bytecode profiling
+  - S8033168: PPC64: gcc 4.8 warning in output_c.cpp
+  - S8035396: Introduce accessor for tmp_oop in frame.
+  - S8036767: PPC64: Support for little endian execution model
+  - S8036976: PPC64: implement the template interpreter
+  - S8037915: PPC64/AIX: Several smaller fixes
 * Bug fixes
   - PR1737: Support prefixed variants of GNU tools used on *BSD systems
   - Fix accidental reversion of PR1188 for armel
@@ -139,6 +158,9 @@ New in release 2.6.0 (2014-XX-XX):
   - PR1742: Allow SunEC provider to be built with changes in NSS >= 3.16.1
   - Remove unused hgforest script
   - Red Hat local: Fix for repo with path statting with / .
+  - S8041658: Use of -fdevirtualize on macroAssembler_x86.o (via -O2) with gcc 4.9.0 creates broken VM
+  - Extend S8041658 to all files in the HotSpot build.
+  - PR1753: Ant does not respect JAVA_HOME/jdk.home setting
 
 New in release 2.5.0 (2014-XX-XX):
 

@@ -1,6 +1,6 @@
 diff -Nru openjdk-boot.orig/jaxws/build.properties openjdk-boot/jaxws/build.properties
---- openjdk-boot.orig/jaxws/build.properties	2014-01-30 19:01:55.000000000 +0000
-+++ openjdk-boot/jaxws/build.properties	2014-01-31 20:04:24.425553307 +0000
+--- openjdk-boot.orig/jaxws/build.properties	2014-04-29 21:54:42.000000000 +0100
++++ openjdk-boot/jaxws/build.properties	2014-04-30 13:33:12.468199995 +0100
 @@ -28,7 +28,8 @@
  # other tools, and product versions of all the tools.
  # Override this path as needed, either on the command line or in 
@@ -23,8 +23,8 @@ diff -Nru openjdk-boot.orig/jaxws/build.properties openjdk-boot/jaxws/build.prop
    javac.memoryMaximumSize=${javac.memoryMaximumSize}${line.separator}\
    javac.source=${javac.source}${line.separator}\
 diff -Nru openjdk-boot.orig/jaxws/build.xml openjdk-boot/jaxws/build.xml
---- openjdk-boot.orig/jaxws/build.xml	2014-01-31 20:03:12.768449571 +0000
-+++ openjdk-boot/jaxws/build.xml	2014-01-31 20:04:40.337798308 +0000
+--- openjdk-boot.orig/jaxws/build.xml	2014-04-30 13:32:03.203168981 +0100
++++ openjdk-boot/jaxws/build.xml	2014-04-30 13:33:12.468199995 +0100
 @@ -143,7 +143,7 @@
  	-->
          <javac
@@ -35,11 +35,11 @@ diff -Nru openjdk-boot.orig/jaxws/build.xml openjdk-boot/jaxws/build.xml
               destdir="${build.classes.dir}"
               memoryInitialSize="${javac.memoryInitialSize}"
 diff -Nru openjdk-boot.orig/jaxws/make/Makefile openjdk-boot/jaxws/make/Makefile
---- openjdk-boot.orig/jaxws/make/Makefile	2014-01-30 19:01:55.000000000 +0000
-+++ openjdk-boot/jaxws/make/Makefile	2014-01-31 20:04:24.429553368 +0000
+--- openjdk-boot.orig/jaxws/make/Makefile	2014-04-29 21:54:42.000000000 +0100
++++ openjdk-boot/jaxws/make/Makefile	2014-04-30 13:33:43.148656691 +0100
 @@ -103,7 +103,7 @@
      ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
-     ANT_OPTIONS += -Djdk.home=$(ALT_BOOTDIR)
+     ANT_OPTIONS += -Djdk.home=$(ALT_BOOTDIR) -Djava.home=$(ALT_BOOTDIR)
    endif
 -  ANT_OPTIONS += -Dbootstrap.dir=$(ALT_LANGTOOLS_DIST)/bootstrap
 +  ANT_OPTIONS += -Dlangtools.dist=$(ALT_LANGTOOLS_DIST)
