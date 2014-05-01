@@ -161,6 +161,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S8041658: Use of -fdevirtualize on macroAssembler_x86.o (via -O2) with gcc 4.9.0 creates broken VM
   - Extend S8041658 to all files in the HotSpot build.
   - PR1753: Ant does not respect JAVA_HOME/jdk.home setting
+  - PR1756: Bootstrap with IcedTea broken
 
 New in release 2.5.0 (2014-XX-XX):
 

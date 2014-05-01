@@ -1,48 +1,46 @@
-diff -Nru openjdk-boot.orig/jaxws/build.properties openjdk-boot/jaxws/build.properties
---- openjdk-boot.orig/jaxws/build.properties	2014-04-29 21:54:42.000000000 +0100
-+++ openjdk-boot/jaxws/build.properties	2014-04-30 13:33:12.468199995 +0100
-@@ -28,7 +28,8 @@
- # other tools, and product versions of all the tools.
- # Override this path as needed, either on the command line or in 
- # one of the standard user build.properties files (see build.xml)
--javac.jar=${bootstrap.dir}/lib/javac.jar
-+javac.jar=${langtools.dist}/bootstrap/lib/javac.jar
-+langtools.jar=${langtools.dist}/lib/classes.jar
+diff -r 8114c2755c90 build.properties
+--- openjdk-boot/jaxws/build.properties	Wed Apr 30 15:40:30 2014 +0100
++++ openjdk-boot/jaxws/build.properties	Wed Apr 30 21:06:30 2014 +0100
+@@ -61,6 +61,9 @@
+ # JAXP built files
+ jaxp.classes.dir=${output.dir}/../jaxp/build/classes
  
- # The tools.jar is needed in the classpath to compile these sources
- jdk.home=${java.home}/..
-@@ -77,8 +78,9 @@
-   os.name=${os.name}${line.separator}\
-   os.arch=${os.arch}${line.separator}\
-   os.version=${os.version}${line.separator}\
--  bootstrap.dir=${bootstrap.dir}${line.separator}\
-+  bootstrap.dir=${langtools.dist}/bootstrap${line.separator}\
-   javac.jar=${javac.jar}${line.separator}\
-+  langtools.jar=${langtools.jar}${line.separator}\
-   javac.memoryInitialSize=${javac.memoryInitialSize}${line.separator}\
-   javac.memoryMaximumSize=${javac.memoryMaximumSize}${line.separator}\
-   javac.source=${javac.source}${line.separator}\
-diff -Nru openjdk-boot.orig/jaxws/build.xml openjdk-boot/jaxws/build.xml
---- openjdk-boot.orig/jaxws/build.xml	2014-04-30 13:32:03.203168981 +0100
-+++ openjdk-boot/jaxws/build.xml	2014-04-30 13:33:12.468199995 +0100
-@@ -143,7 +143,7 @@
- 	-->
++# Langtools sources
++langtools.sources=${langtools.topdir}/src/share/classes
++
+ # Distributed results
+ dist.dir=${output.dir}/dist
+ dist.lib.dir=${dist.dir}/lib
+@@ -90,6 +93,7 @@
+   output.dir=${output.dir}${line.separator}\
+   build.dir=${build.dir}${line.separator}\
+   dist.dir=${dist.dir}${line.separator}\
++  langtools.sources=${langtools.sources}${line.separator}\
+ ${line.separator}
+ 
+ #------------------------------------------------------------
+diff -r 8114c2755c90 build.xml
+--- openjdk-boot/jaxws/build.xml	Wed Apr 30 15:40:30 2014 +0100
++++ openjdk-boot/jaxws/build.xml	Wed Apr 30 21:06:30 2014 +0100
+@@ -144,6 +144,7 @@
          <javac
  	     includeAntRuntime="false"
--	     classpath="${jaxp.classes.dir}:${build.classes.dir}:${tools.jar}"
-+	     classpath="${jaxp.classes.dir}:${build.classes.dir}:${langtools.jar}"
+ 	     classpath="${jaxp.classes.dir}:${build.classes.dir}:${tools.jar}"
++	     sourcepath="${langtools.sources}"
  	     fork="true"
               destdir="${build.classes.dir}"
               memoryInitialSize="${javac.memoryInitialSize}"
-diff -Nru openjdk-boot.orig/jaxws/make/Makefile openjdk-boot/jaxws/make/Makefile
---- openjdk-boot.orig/jaxws/make/Makefile	2014-04-29 21:54:42.000000000 +0100
-+++ openjdk-boot/jaxws/make/Makefile	2014-04-30 13:33:43.148656691 +0100
-@@ -103,7 +103,7 @@
-     ANT_JAVA_HOME = JAVA_HOME=$(ALT_BOOTDIR)
-     ANT_OPTIONS += -Djdk.home=$(ALT_BOOTDIR) -Djava.home=$(ALT_BOOTDIR)
+diff -r 8114c2755c90 make/Makefile
+--- openjdk-boot/jaxws/make/Makefile	Wed Apr 30 15:40:30 2014 +0100
++++ openjdk-boot/jaxws/make/Makefile	Wed Apr 30 21:06:30 2014 +0100
+@@ -123,6 +123,10 @@
    endif
--  ANT_OPTIONS += -Dbootstrap.dir=$(ALT_LANGTOOLS_DIST)/bootstrap
-+  ANT_OPTIONS += -Dlangtools.dist=$(ALT_LANGTOOLS_DIST)
- else
-   ifdef ALT_JDK_IMPORT_PATH
-     ANT_JAVA_HOME = JAVA_HOME=$(ALT_JDK_IMPORT_PATH)
+ endif
+ 
++ifdef LANGTOOLS_TOPDIR
++  ANT_OPTIONS += -Dlangtools.topdir=$(LANGTOOLS_TOPDIR)
++endif
++
+ # Default target and expected 'do everything' target
+ default: all
+ 

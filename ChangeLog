@@ -1,3 +1,31 @@
+2014-05-01  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1756: Bootstrap with IcedTea broken
+	* Makefile.am:
+	(ICEDTEA_BOOT_PATCHES): Only apply ant-javac.patch
+	when using bootstrap tools. Only patch JAXWS build
+	when the bootstrap JDK doesn't have the com.sun.*
+	classes it requires. Split the root patch in
+	corba-dependencies.patch into its own file.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_CHECK_FOR_JDK): Make DEFUN_ONCE and fix typo.
+	(IT_CHECK_FOR_CLASS): Depend on IT_CHECK_TOOLS_JAR_EXISTS
+	and adds TOOLS_JAR to classpath.
+	(IT_CHECK_TOOLS_JAR_EXISTS): Find a tools.jar so
+	we can check for classes it contains.
+	* configure.ac:
+	Check for com.sun.mirror.type.TypeMirror and
+	com.sun.net.httpserver.Headers, required by JAXWS.
+	* patches/boot/corba-dependencies.patch:
+	Remove root part of patch.
+	* patches/boot/dependencies.patch:
+	Root part of patch from corba-dependencies.
+	* patches/boot/jaxws-jdk-dependency.patch:
+	Regenerated.
+	* patches/boot/jaxws-langtools-dependency.patch:
+	Rewrite to use sources, not classes.
+
 2014-04-30  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:

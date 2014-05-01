@@ -307,7 +307,6 @@ ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
 
 ICEDTEA_BOOT_PATCHES = \
 	patches/boot/javafiles.patch \
-	patches/boot/ant-javac.patch \
 	patches/boot/corba-idlj.patch \
 	patches/boot/corba-no-gen.patch \
 	patches/boot/corba-orb.patch \
@@ -328,9 +327,8 @@ ICEDTEA_BOOT_PATCHES = \
 	patches/boot/revert-6941137.patch \
 	patches/boot/ecj-stringswitch.patch \
 	patches/boot/langtools-force-old-jdk.patch \
+	patches/boot/dependencies.patch \
 	patches/boot/corba-dependencies.patch \
-	patches/boot/jaxws-langtools-dependency.patch \
-	patches/boot/jaxws-jdk-dependency.patch \
 	patches/boot/hotspot-jdk-dependency.patch \
 	patches/boot/ecj-multicatch.patch \
 	patches/boot/ecj-trywithresources.patch \
@@ -340,7 +338,18 @@ ICEDTEA_BOOT_PATCHES = \
 
 if !DISABLE_BOOTSTRAP_TOOLS
 ICEDTEA_BOOT_PATCHES += \
-	patches/boot/bootstrap-tools.patch
+	patches/boot/bootstrap-tools.patch \
+	patches/boot/ant-javac.patch
+endif
+
+if LACKS_COM_SUN_MIRROR_TYPE_TYPEMIRROR
+ICEDTEA_BOOT_PATCHES += \
+	patches/boot/jaxws-langtools-dependency.patch
+endif
+
+if LACKS_COM_SUN_NET_HTTPSERVER_HEADERS
+ICEDTEA_BOOT_PATCHES += \
+	patches/boot/jaxws-jdk-dependency.patch
 endif
 
 if !VM_SUPPORTS_XBOOTCLASSPATH

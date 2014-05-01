@@ -144,6 +144,12 @@ IT_CHECK_FOR_CONSTRUCTOR([JAVAX_RMI_SSL_SSLRMISERVERSOCKETFACTORY_7],
   [null,null,null,true]
 )
 
+dnl Check whether the obsolete Mirror API is present in the bootstrap JDK, required by JAXWS
+IT_CHECK_FOR_CLASS([COM_SUN_MIRROR_TYPE_TYPEMIRROR], [com.sun.mirror.type.TypeMirror])
+
+dnl Check whether the HTTP server API is present in the bootstrap JDK, required by JAXWS
+IT_CHECK_FOR_CLASS([COM_SUN_NET_HTTPSERVER_HEADERS], [com.sun.net.httpserver.Headers])
+
 IT_CHECK_ENABLE_WARNINGS
 IT_DIAMOND_CHECK
 IT_BYTECODE7_CHECK

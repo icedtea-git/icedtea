@@ -1,0 +1,11 @@
+diff --git a/make/Defs-internal.gmk b/make/Defs-internal.gmk
+--- openjdk-boot.orig/make/Defs-internal.gmk
++++ openjdk-boot/make/Defs-internal.gmk
+@@ -305,6 +305,7 @@
+ 
+ # Common make arguments (supplied to all component builds)
+ COMMON_BUILD_ARGUMENTS = \
++    LANGTOOLS_TOPDIR=$(ABS_LANGTOOLS_TOPDIR) \
+     JDK_TOPDIR=$(ABS_JDK_TOPDIR) \
+     JDK_MAKE_SHARED_DIR=$(ABS_JDK_TOPDIR)/make/common/shared \
+     EXTERNALSANITYCONTROL=true \

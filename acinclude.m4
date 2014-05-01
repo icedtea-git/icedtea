@@ -1146,7 +1146,7 @@ AC_DEFUN([IT_CHECK_IF_BOOTSTRAPPING],
   AM_CONDITIONAL([BOOTSTRAPPING], test x"${enable_bootstrap}" = "xyes")
 ])
 
-AC_DEFUN([IT_CHECK_FOR_JDK],
+AC_DEFUN_ONCE([IT_CHECK_FOR_JDK],
 [
   AC_MSG_CHECKING([for a JDK home directory])
   AC_ARG_WITH([jdk-home],
@@ -1193,7 +1193,7 @@ AC_DEFUN([IT_CHECK_FOR_JDK],
     AC_MSG_RESULT(${SYSTEM_JDK_DIR})
   fi
   if ! test -d "${SYSTEM_JDK_DIR}"; then
-    AC_MSG_ERROR("A JDK JDK home directory could not be found.")
+    AC_MSG_ERROR("A JDK home directory could not be found.")
   fi
   AC_SUBST(SYSTEM_JDK_DIR)
 ])
@@ -1540,6 +1540,7 @@ dnl replaced by '_' and all letters capitalised.
 dnl e.g. IT_CHECK_FOR_CLASS([JAVA_UTIL_SCANNER],[java.util.Scanner])
 AC_DEFUN([IT_CHECK_FOR_CLASS],[
 AC_REQUIRE([IT_CHECK_JAVA_AND_JAVAC_WORK])
+AC_REQUIRE([IT_CHECK_TOOLS_JAR_EXISTS])
 AC_CACHE_CHECK([if $2 is missing], it_cv_$1, [
 CLASS=Test.java
 BYTECODE=$(echo $CLASS|sed 's#\.java##')
@@ -1556,8 +1557,12 @@ public class Test
 }
 ]
 EOF
-if $JAVAC -cp . $JAVACFLAGS -source 5 -target 5 -nowarn $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
-  if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1; then
+TEST_CP=.
+if test "x$TOOLS_JAR" != x; then
+  TEST_CP=${TEST_CP}:${TOOLS_JAR}
+fi
+if $JAVAC -cp ${TEST_CP} $JAVACFLAGS -source 5 -target 5 -nowarn $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+  if $JAVA -classpath ${TEST_CP} $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1; then
       it_cv_$1=no;
   else
       it_cv_$1=yes;
@@ -2730,3 +2735,36 @@ AC_DEFUN_ONCE([IT_ENABLE_SUNEC],
     AC_SUBST(SUNEC_LIBS)
   fi
 ])
+
+AC_DEFUN_ONCE([IT_CHECK_TOOLS_JAR_EXISTS],
+[
+  AC_MSG_CHECKING([for a tools.jar])
+  AC_ARG_WITH([tools-jar],
+	      [AS_HELP_STRING([--with-tools-jar[[=PATH]]],
+                              [location of tools JAR file (default is lib/tools.jar in the JDK being used)])],
+              [
+                if test "x${withval}" = xyes
+                then
+                  TOOLS_JAR=
+                elif test "x${withval}" = xno
+                then
+	          TOOLS_JAR=
+	        else
+                  TOOLS_JAR=${withval}
+                fi
+              ],
+              [
+	        TOOLS_JAR=
+              ])
+  if test -z "${TOOLS_JAR}"; then
+    AC_MSG_RESULT([not specified])
+    TOOLS_JAR=${SYSTEM_JDK_DIR}/lib/tools.jar;
+    AC_MSG_NOTICE([Using ${TOOLS_JAR} for tools.jar])
+  else
+    AC_MSG_RESULT(${TOOLS_JAR})
+  fi
+  if ! test -e "${TOOLS_JAR}"; then
+    AC_MSG_WARN("A tools.jar file could not be found.")
+  fi
+  AC_SUBST(TOOLS_JAR)
+])  

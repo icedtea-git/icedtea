@@ -1,42 +1,41 @@
 diff -Nru openjdk-boot.orig/jaxws/build.properties openjdk-boot/jaxws/build.properties
---- openjdk-boot.orig/jaxws/build.properties	2012-06-11 14:30:27.904723311 +0100
-+++ openjdk-boot/jaxws/build.properties	2012-06-11 14:38:13.847981281 +0100
-@@ -62,6 +62,10 @@
- # JAXP built files
- jaxp.classes.dir=${output.dir}/../jaxp/build/classes
+--- openjdk-boot.orig/jaxws/build.properties	2014-04-30 21:13:09.461731412 +0100
++++ openjdk-boot/jaxws/build.properties	2014-04-30 21:15:05.711492067 +0100
+@@ -64,6 +64,9 @@
+ # Langtools sources
+ langtools.sources=${langtools.topdir}/src/share/classes
  
 +# JDK sources
-+
 +jdk.sources=${jdk.topdir}/src/share/classes:${jdk.topdir}/src/solaris/classes:${jdk.gensrcdir}
 +
  # Distributed results
  dist.dir=${output.dir}/dist
  dist.lib.dir=${dist.dir}/lib
-@@ -92,6 +96,8 @@
-   output.dir=${output.dir}${line.separator}\
+@@ -94,6 +97,7 @@
    build.dir=${build.dir}${line.separator}\
    dist.dir=${dist.dir}${line.separator}\
-+  jdk.topdir=${jdk.topdir}${line.separator}\
-+  jdk.gensrcdir=${jdk.gensrcdir}${line.separator}\
+   langtools.sources=${langtools.sources}${line.separator}\
++  jdk.sources=${jdk.sources}${line.separator}\
  ${line.separator}
  
  #------------------------------------------------------------
 diff -Nru openjdk-boot.orig/jaxws/build.xml openjdk-boot/jaxws/build.xml
---- openjdk-boot.orig/jaxws/build.xml	2012-06-11 14:30:27.904723311 +0100
-+++ openjdk-boot/jaxws/build.xml	2012-06-11 14:36:04.005990816 +0100
-@@ -138,6 +138,7 @@
-         <javac 
- 	     includeAntRuntime="false" 
- 	     classpath="${jaxp.classes.dir}:${build.classes.dir}:${langtools.jar}"
-+	     sourcepath="${jdk.sources}"
+--- openjdk-boot.orig/jaxws/build.xml	2014-04-30 21:13:09.461731412 +0100
++++ openjdk-boot/jaxws/build.xml	2014-04-30 21:15:49.100149136 +0100
+@@ -144,7 +144,7 @@
+         <javac
+ 	     includeAntRuntime="false"
+ 	     classpath="${jaxp.classes.dir}:${build.classes.dir}:${tools.jar}"
+-	     sourcepath="${langtools.sources}"
++	     sourcepath="${langtools.sources}:${jdk.sources}"
  	     fork="true"
               destdir="${build.classes.dir}"
               memoryInitialSize="${javac.memoryInitialSize}"
 diff -Nru openjdk-boot.orig/jaxws/make/Makefile openjdk-boot/jaxws/make/Makefile
---- openjdk-boot.orig/jaxws/make/Makefile	2012-06-11 14:30:27.904723311 +0100
-+++ openjdk-boot/jaxws/make/Makefile	2012-06-11 14:36:04.005990816 +0100
-@@ -123,6 +123,14 @@
-   endif
+--- openjdk-boot.orig/jaxws/make/Makefile	2014-04-30 21:13:09.461731412 +0100
++++ openjdk-boot/jaxws/make/Makefile	2014-04-30 21:15:29.343849955 +0100
+@@ -127,6 +127,14 @@
+   ANT_OPTIONS += -Dlangtools.topdir=$(LANGTOOLS_TOPDIR)
  endif
  
 +ifdef JDK_TOPDIR
@@ -50,8 +49,9 @@ diff -Nru openjdk-boot.orig/jaxws/make/Makefile openjdk-boot/jaxws/make/Makefile
  # Default target and expected 'do everything' target
  default: all
  
---- openjdk-boot.orig/make/jaxws-rules.gmk.orig	2013-05-07 13:46:03.172779265 +0100
-+++ openjdk-boot/make/jaxws-rules.gmk	2013-05-07 13:46:15.332968843 +0100
+diff -Nru openjdk-boot.orig/make/jaxws-rules.gmk openjdk-boot/make/jaxws-rules.gmk
+--- openjdk-boot.orig/make/jaxws-rules.gmk	2014-04-23 22:32:57.000000000 +0100
++++ openjdk-boot/make/jaxws-rules.gmk	2014-04-30 21:14:26.178893360 +0100
 @@ -31,7 +31,8 @@
     $(COMMON_BUILD_ARGUMENTS) \
     ALT_OUTPUTDIR=$(JAXWS_OUTPUTDIR) \
