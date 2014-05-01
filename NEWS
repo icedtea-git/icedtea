@@ -162,6 +162,7 @@ New in release 2.6.0 (2014-XX-XX):
   - Extend S8041658 to all files in the HotSpot build.
   - PR1753: Ant does not respect JAVA_HOME/jdk.home setting
   - PR1756: Bootstrap with IcedTea broken
+  - PR1758: Support PPC64 JIT on ppc64le
 
 New in release 2.5.0 (2014-XX-XX):
 

@@ -54,6 +54,12 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       JRE_ARCH_DIR=ppc64
       ARCHFLAG="-m64"
        ;;
+    powerpc64le)
+      BUILD_ARCH_DIR=ppc64
+      INSTALL_ARCH_DIR=ppc64
+      JRE_ARCH_DIR=ppc64
+      ARCHFLAG="-m64"
+       ;;
     sparc)
       BUILD_ARCH_DIR=sparc
       INSTALL_ARCH_DIR=sparc
@@ -703,7 +709,8 @@ AC_DEFUN_ONCE([IT_ENABLE_ZERO_BUILD],
         i?86) ;;
         sparc) ;;
         x86_64) ;;
-	ppc64) ;;
+	powerpc64) ;;
+	powerpc64le) ;;
         *)
           if test "x${ENABLE_CACAO}" != xno || \
 	     test "x${ENABLE_JAMVM}" = xyes; then

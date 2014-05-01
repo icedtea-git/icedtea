@@ -1,5 +1,21 @@
 2014-05-01  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* AUTHORS: Add Tiago.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_SET_ARCH_SETTINGS): Expand ppc64le to its
+	own block to avoid potential future collisions.
+	(IT_ENABLE_ZERO_BUILD): Likewise.
+
+2014-05-01  Tiago Sturmer Daitx  <tdaitx@linux.vnet.ibm.com>
+
+	* acinclude.m4:
+	(IT_SET_ARCH_SETTINGS): Support ppc64le.
+	(IT_ENABLE_ZERO_BUILD): Likewise and use correct
+	host_cpu value for ppc64.
+
+2014-05-01  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR1756: Bootstrap with IcedTea broken
 	* Makefile.am:
 	(ICEDTEA_BOOT_PATCHES): Only apply ant-javac.patch
