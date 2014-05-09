@@ -181,6 +181,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR1758: Support PPC64 JIT on ppc64le
   - PR1757: register_method usage in sharkCompiler.cpp needs to be adjusted following S7196199
   - Correct placement of S8041658 fix
+  - PR1762: Undefined references when building with NSS 3.16.1
 
 New in release 2.5.0 (2014-XX-XX):
 
