@@ -22,6 +22,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S7076487: (sctp) SCTP API classes does not exist in JDK for Mac
   - S7084032: test/java/net/Inet6Address/B6558853.java fails on Windows XP/2003 if IPv6
   - S7122142: (ann) Race condition between isAnnotationPresent and getAnnotations
+  - S7131153: GetDC called way too many times - causes bad performance.
   - S7142035: assert in j.l.instrument agents during shutdown when daemon thread is running
   - S7152892: some jtreg tests fail with permission denied
   - S7161320: TEST_BUG: java/awt/event/KeyEvent/SwallowKeyEvents/SwallowKeyEvents.java fails (Invalid key code)
@@ -29,6 +30,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S7176574: sun/security/krb5/auto/TcpTimeout.java failed with solaris-i586
   - S7186887: Test T6567415.java can fail on a slow machine
   - S7187554: JSR 292: JVMTI PopFrame needs to handle appendix arguments
+  - S7190349: [macosx] Text (Label) is incorrectly drawn with a rotated g2d
   - S7199674: (props) user.home property does not return an accessible location in sandboxed environment [macosx]
   - S8002148: [TEST_BUG] The four lines printed are not the bold typeface.
   - S8003253: TEST_BUG: java/nio/channels/AsynchronousChannelGroup/Unbounded.java hang intermittently [win]
@@ -75,8 +77,11 @@ New in release 2.6.0 (2014-XX-XX):
   - S8024648: 7141246 & 8016131 break Zero port
   - S8024675: java/net/NetworkInterface/UniqueMacAddressesTest.java fails on Windows
   - S8025305: Cleanup CardTableModRefBS usage in G1
+  - S8025588: [macosx] Frozen AppKit thread in 7u40
   - S8025796: hgforest.sh could trigger unbuffered output from hg without complicated machinations
+  - S8026705: [TEST_BUG] java/beans/Introspector/TestTypeResolver.java failed
   - S8027026: Change keytool -genkeypair to use -keyalg RSA
+  - S8027196: Increment minor version of HSx for 7u55 and initialize the build number
   - S8027212: java/nio/channels/Selector/SelectAfterRead.java fails intermittently
   - S8027348: (process) Enhancement of handling async close of ProcessInputStream
   - S8027359: XML parser returns incorrect parsing results
@@ -87,11 +92,16 @@ New in release 2.6.0 (2014-XX-XX):
   - S8028623: SA: hash codes in SymbolTable mismatching java_lang_String::hash_code for extended characters.
   - S8029073: (corba) New connection reclaimed when number of connection is greater than highwatermark
   - S8029281: Synchronization issues in Logger and LogManager
+  - S8030655: Regression: 14_01 Security fix 8024306 causes test failures
   - S8030698: Several GUI labels in jconsole need correction
   - S8030712: TEST_BUG : java/lang/ProcessBuilder/BasicLauncher.java fails if java output contains VM warning
+  - S8030813: Signed applet fails to load when CRLs are stored in an LDAP directory
   - S8030822: (tz) Support tzdata2013i
   - S8030878: JConsole issues meaningless message if SSL connection fails
+  - S8031050: (thread) Change Thread initialization so that thread name is set before invoking SecurityManager
   - S8031061: new hotspot build - hs24.60-b07
+  - S8031462: Fonts with morx tables are broken with latest ICU fixes
+  - S8031477: [macosx] Loading AWT native library fails
   - S8031572: jarsigner -verify exits with 0 when a jar file is not properly signed
   - S8031743: C2: loadI2L_immI broken for negative memory values
   - S8031764: tmtools/jmap/heap_config tests fail on Linux-ia32 because it Cant attach to the core file
@@ -114,6 +124,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S8033970: new hotspot build - hs24.80-b02
   - S8034181: SIGBUS in SctpChannelImpl receive
   - S8034262: Test java/lang/ProcessBuilder/CloseRace.java fails
+  - S8034772: JDK-8028795 brought a specification change to 7u55 release and caused JCK7 signature test failure
   - S8034920: new hotspot build - hs24.80-b03
   - S8035283: Second phase of branch shortening doesn't account for loop alignment
   - S8035435: new hotspot build - hs24.80-b04
@@ -123,15 +134,20 @@ New in release 2.6.0 (2014-XX-XX):
   - S8035973: NPE in ForwardBuilder
   - S8035988: 7u60 l10n resource file translation update 1
   - S8036022: D3D: rendering with XOR composite causes InternalError.
+  - S8036027: Increment hsx 24.51 build to b04 for 7u51-b34
+  - S8036147: Increment hsx 24.55 build to b02 for 7u55-b11
   - S8036584: Review comments from 8035897
   - S8036778: new hotspot build - hs24.80-b05
   - S8036786: Update jdk7 testlibrary to match jdk8
+  - S8036837: Increment hsx 24.55 build to b03 for 7u55-b12
   - S8036863: Update jdk7 testlibrary to match jdk8 in hotspot
   - S8037012: (tz) Support tzdata2014a
   - S8037340: Linux semaphores to use CLOCK_REALTIME
+  - S8037510: CMM Testing: Min/MaxHeapFreeRatio flags should be manageable through the API
   - S8038481: CMM Testing: Min/MaxHeapFreeRatio flags should be manageable through the API
   - S8038640: new hotspot build - hs24.80-b06
   - S8038785: hot workaround fix for a crash in C2 compiler at Node::rematerialize
+  - S8039097: Some tests fail with NPE since 7u60 b12
 * PPC & AIX port
   - Fix handling of scalar replaced objects.
   - New files for template interpreter
@@ -163,6 +179,8 @@ New in release 2.6.0 (2014-XX-XX):
   - PR1753: Ant does not respect JAVA_HOME/jdk.home setting
   - PR1756: Bootstrap with IcedTea broken
   - PR1758: Support PPC64 JIT on ppc64le
+  - PR1757: register_method usage in sharkCompiler.cpp needs to be adjusted following S7196199
+  - Correct placement of S8041658 fix
 
 New in release 2.5.0 (2014-XX-XX):
 

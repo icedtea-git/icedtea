@@ -1,6 +1,6 @@
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java	2014-04-03 15:33:28.168483033 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java	2014-05-07 08:43:18.530502916 +0100
 @@ -743,7 +743,9 @@
  
          private void dumpBand() throws IOException {
@@ -54,8 +54,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Ban
  
          public void readDataFrom(InputStream in) throws IOException {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2014-04-03 15:19:22.907958832 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2014-04-03 15:33:28.168483033 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2014-05-07 08:41:46.517143430 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2014-05-07 08:43:18.530502916 +0100
 @@ -151,8 +151,13 @@
                  if ("--config-file=".equals(state)) {
                      String propFile = av.remove(0);
@@ -109,8 +109,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Dri
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java	2014-04-03 15:33:28.168483033 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java	2014-05-07 08:43:18.530502916 +0100
 @@ -245,9 +245,15 @@
      void run(File inFile, JarOutputStream jstream) throws IOException {
          // %%% maybe memory-map the file, and pass it straight into unpacker
@@ -129,8 +129,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Nat
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java	2014-04-03 15:33:28.172483093 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java	2014-05-07 08:43:18.530502916 +0100
 @@ -540,9 +540,15 @@
              Index index = initCPIndex(tag, cpMap);
  
@@ -174,8 +174,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Pac
          attr_definition_name.doneDisbursing();
          attr_definition_layout.doneDisbursing();
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java	2014-04-03 15:33:28.172483093 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java	2014-05-07 08:43:18.530502916 +0100
 @@ -458,9 +458,15 @@
                  Utils.log.info("Writing "+cpMap.length+" "+ConstantPool.tagName(tag)+" entries...");
  
@@ -219,8 +219,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Pac
  
      void writeAttrCounts() throws IOException {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java	2014-04-03 15:33:28.172483093 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java	2014-05-07 08:43:18.530502916 +0100
 @@ -123,8 +123,9 @@
          // Do this after the previous props are put in place,
          // to allow override if necessary.
@@ -249,8 +249,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Pro
          for (Map.Entry<Object, Object> e : props.entrySet()) {
              String key = (String) e.getKey();
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	2014-04-03 15:33:28.172483093 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	2014-05-07 08:43:18.530502916 +0100
 @@ -161,9 +161,15 @@
          }
          // Use the stream-based implementation.
@@ -269,8 +269,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Unp
              in.delete();
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	2014-04-03 15:33:28.172483093 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	2014-05-07 08:43:18.534502974 +0100
 @@ -268,18 +268,30 @@
          // 4947205 : Peformance is slow when using pack-effort=0
          out = new BufferedOutputStream(out);
@@ -305,8 +305,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Uti
          // Wrapper to prevent closing of client-supplied stream.
      static private
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2014-04-03 15:33:28.172483093 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2014-05-07 08:43:18.534502974 +0100
 @@ -914,10 +914,15 @@
                              java.net.URLConnection uconn = tClass.getResource(tResource).openConnection();
                              int len = uconn.getContentLength();
@@ -326,8 +326,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleI
                          } catch (java.io.IOException ex) {
                              throw newInternalError(ex);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/Package.java openjdk-boot/jdk/src/share/classes/java/lang/Package.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/Package.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/Package.java	2014-04-03 15:33:28.172483093 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/Package.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/Package.java	2014-05-07 08:43:18.534502974 +0100
 @@ -578,12 +578,23 @@
       * Returns the Manifest for the specified JAR file name.
       */
@@ -356,8 +356,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/Package.java openjdk
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/channels/SocketChannel.java openjdk-boot/jdk/src/share/classes/java/nio/channels/SocketChannel.java
---- openjdk-boot.orig/jdk/src/share/classes/java/nio/channels/SocketChannel.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/nio/channels/SocketChannel.java	2014-04-03 15:33:28.172483093 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/nio/channels/SocketChannel.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/nio/channels/SocketChannel.java	2014-05-07 08:43:18.534502974 +0100
 @@ -188,7 +188,7 @@
              } catch (Throwable suppressed) {
                  x.addSuppressed(suppressed);
@@ -368,8 +368,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/channels/SocketChanne
          assert sc.isConnected();
          return sc;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java openjdk-boot/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java
---- openjdk-boot.orig/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java	2014-04-03 15:33:28.172483093 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java	2014-05-07 08:43:18.534502974 +0100
 @@ -122,9 +122,15 @@
          if (attrs.isDirectory()) {
              Files.createDirectory(target);
@@ -397,8 +397,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/file/CopyMoveHelper.j
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/file/Files.java openjdk-boot/jdk/src/share/classes/java/nio/file/Files.java
---- openjdk-boot.orig/jdk/src/share/classes/java/nio/file/Files.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/nio/file/Files.java	2014-04-03 15:34:55.417773401 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/nio/file/Files.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/nio/file/Files.java	2014-05-07 08:43:18.534502974 +0100
 @@ -2850,8 +2850,11 @@
          }
  
@@ -526,8 +526,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/file/Files.java openj
      }
  }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Currency.java openjdk-boot/jdk/src/share/classes/java/util/Currency.java
---- openjdk-boot.orig/jdk/src/share/classes/java/util/Currency.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/util/Currency.java	2014-04-03 15:33:28.172483093 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/Currency.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/util/Currency.java	2014-05-07 08:43:18.534502974 +0100
 @@ -233,9 +233,14 @@
                                               "currency.properties");
                      if (propFile.exists()) {
@@ -545,8 +545,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Currency.java openjd
                          Pattern propertiesPattern =
                              Pattern.compile("([A-Z]{3})\\s*,\\s*(\\d{3})\\s*,\\s*([0-3])");
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/jar/JarFile.java openjdk-boot/jdk/src/share/classes/java/util/jar/JarFile.java
---- openjdk-boot.orig/jdk/src/share/classes/java/util/jar/JarFile.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/util/jar/JarFile.java	2014-04-03 15:33:28.172483093 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/jar/JarFile.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/util/jar/JarFile.java	2014-05-07 08:43:18.534502974 +0100
 @@ -386,9 +386,14 @@
       * META-INF files.
       */
@@ -565,8 +565,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/jar/JarFile.java ope
  
      /**
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java openjdk-boot/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java
---- openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java	2014-04-03 15:33:28.172483093 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java	2014-05-07 08:43:18.534502974 +0100
 @@ -144,8 +144,9 @@
          buf = new char[(int)len];
          int read = 0;
@@ -626,9 +626,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/serial/Serial
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java openjdk-boot/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java
---- openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java	2014-04-03 15:33:28.172483093 +0100
-@@ -378,9 +378,15 @@
+--- openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java	2014-05-07 08:49:57.504351776 +0100
+@@ -382,9 +382,15 @@
                      // Load user's implementation of SyncProvider
                      // here. -Drowset.properties=/abc/def/pqr.txt
                      ROWSET_PROPERTIES = strRowsetProperties;
@@ -645,33 +645,41 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/spi/SyncFacto
                      parseProperties(properties);
                  }
  
-@@ -392,15 +398,19 @@
-                         "rowset.properties";
- 
-                 ClassLoader cl = Thread.currentThread().getContextClassLoader();
+@@ -401,17 +407,20 @@
+                     AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
+                         @Override
+                         public Void run()  throws SyncFactoryException, IOException, FileNotFoundException {
+-                            try (InputStream stream  = (cl == null) ?
+-                                    ClassLoader.getSystemResourceAsStream(ROWSET_PROPERTIES)
+-                                    : cl.getResourceAsStream(ROWSET_PROPERTIES)) {
+-                                if (stream == null) {
+-                                    throw new SyncFactoryException("Resource " + ROWSET_PROPERTIES + " not found");
+-                                }
+-                                properties.load(stream);
+-                            }
+-                            return null;
+-                        }
 -
--                try (InputStream stream =
--                         (cl == null) ? ClassLoader.getSystemResourceAsStream(ROWSET_PROPERTIES)
--                                      : cl.getResourceAsStream(ROWSET_PROPERTIES)) {
-+                InputStream stream = null;
-+                try {
-+                    stream =
-+                        (cl == null) ? ClassLoader.getSystemResourceAsStream(ROWSET_PROPERTIES)
-+                        : cl.getResourceAsStream(ROWSET_PROPERTIES);
-                     if (stream == null) {
-                         throw new SyncFactoryException(
-                             "Resource " + ROWSET_PROPERTIES + " not found");
-                     }
-                     properties.load(stream);
-+                } finally {
-+                    if (stream != null)
-+                        stream.close();
-                 }
- 
-                 parseProperties(properties);
++			  InputStream stream = null;
++			  try {
++			    stream =
++			      (cl == null) ? ClassLoader.getSystemResourceAsStream(ROWSET_PROPERTIES)
++			      : cl.getResourceAsStream(ROWSET_PROPERTIES);
++			    if (stream == null) {
++			      throw new SyncFactoryException("Resource " + ROWSET_PROPERTIES + " not found");
++			    }
++			    properties.load(stream);
++			  } finally {
++			    if (stream != null)
++			      stream.close();
++			  }
++			  return null; }
+                     });
+                 } catch (PrivilegedActionException ex) {
+                     Throwable e = ex.getException();
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2014-04-03 15:19:22.907958832 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2014-05-07 08:41:46.521143489 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2014-05-07 08:43:18.534502974 +0100
 @@ -555,8 +555,9 @@
                  if (parent == null) {
                      parent = new File(".");
@@ -695,8 +703,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.ja
              } else {
                  out.add(a.arg);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java	2014-05-07 08:43:18.534502974 +0100
 @@ -194,7 +194,8 @@
       * Given a URL, retrieves a JAR file, caches it to disk, and creates a
       * cached JAR file object.
@@ -730,8 +738,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/jar/URLJa
                          }
                      });
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java openjdk-boot/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java	2014-05-07 08:43:18.534502974 +0100
 @@ -255,7 +255,9 @@
              this.entries = new HashMap<Path,CacheEntry>();
  
@@ -755,8 +763,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/nio/fs/PollingWatchService
          }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/print/PSPrinterJob.java openjdk-boot/jdk/src/share/classes/sun/print/PSPrinterJob.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/print/PSPrinterJob.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/print/PSPrinterJob.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/print/PSPrinterJob.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/print/PSPrinterJob.java	2014-05-07 08:43:18.534502974 +0100
 @@ -680,25 +680,38 @@
  
          private void handleProcessFailure(final Process failedProcess,
@@ -803,8 +811,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/print/PSPrinterJob.java op
  
          public Object run() {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/log/ReliableLog.java openjdk-boot/jdk/src/share/classes/sun/rmi/log/ReliableLog.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/log/ReliableLog.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/log/ReliableLog.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/log/ReliableLog.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/log/ReliableLog.java	2014-05-07 08:43:18.534502974 +0100
 @@ -594,10 +594,16 @@
          } else {
              name = versionFile;
@@ -843,8 +851,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/log/ReliableLog.java o
  
      /**
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Activation.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/Activation.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Activation.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/Activation.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Activation.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/Activation.java	2014-05-07 08:43:18.538503033 +0100
 @@ -1233,13 +1233,16 @@
                      PipeWriter.plugTogetherPair
                          (child.getInputStream(), System.out,
@@ -866,8 +874,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Activation.java
  
                  } catch (IOException e) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2014-04-03 15:19:22.999960198 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2014-05-07 08:41:46.633145144 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2014-05-07 08:43:18.538503033 +0100
 @@ -233,13 +233,14 @@
                          proxyLog.log(Log.BRIEF,
                              "trying with factory: " + factory);
@@ -897,8 +905,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMas
  
                      // factory succeeded, open new socket for caller's use
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	2014-05-07 08:43:18.538503033 +0100
 @@ -92,9 +92,13 @@
          tabName = filename;
          try {
@@ -967,8 +975,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/kta
      }
  }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SeedGenerator.java openjdk-boot/jdk/src/share/classes/sun/security/provider/SeedGenerator.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SeedGenerator.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/SeedGenerator.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SeedGenerator.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/SeedGenerator.java	2014-05-07 08:43:18.538503033 +0100
 @@ -179,7 +179,9 @@
                          // The temporary dir
                          File f = new File(p.getProperty("java.io.tmpdir"));
@@ -992,8 +1000,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SeedGene
                      } catch (Exception ex) {
                          md.update((byte)ex.hashCode());
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/KeyTool.java openjdk-boot/jdk/src/share/classes/sun/security/tools/KeyTool.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/KeyTool.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/tools/KeyTool.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/KeyTool.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/tools/KeyTool.java	2014-05-07 08:43:18.538503033 +0100
 @@ -1149,9 +1149,14 @@
                  } else {
                      ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -1012,8 +1020,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/KeyTool.jav
              }
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2014-04-03 15:19:22.999960198 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2014-05-07 08:41:46.633145144 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2014-05-07 08:43:18.538503033 +0100
 @@ -56,8 +56,9 @@
  
      private static void add(String alias, String pemCert) {
@@ -1047,8 +1055,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCer
  
      static {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/Arguments.java openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/Arguments.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/Arguments.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/Arguments.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/Arguments.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/Arguments.java	2014-05-07 08:43:18.538503033 +0100
 @@ -99,14 +99,19 @@
      }
  
@@ -1078,8 +1086,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/Arguments.java 
  
      public static void usage() {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2014-04-03 15:19:23.003960257 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2014-05-07 08:41:46.637145203 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2014-05-07 08:43:18.538503033 +0100
 @@ -116,7 +116,7 @@
                              e.printStackTrace();
                          }
@@ -1122,8 +1130,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java openj
  
      private static String getMainClass(VirtualMachineDescriptor vmd)
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java openjdk-boot/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java	2014-04-03 15:33:28.176483151 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java	2014-05-07 08:43:18.538503033 +0100
 @@ -127,9 +127,15 @@
              calendarProps = (Properties) AccessController.doPrivileged(new PrivilegedExceptionAction() {
                  public Object run() throws IOException {
@@ -1142,8 +1150,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/util/calendar/LocalGregori
                  }
              });
 diff -Nru openjdk-boot.orig/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java openjdk-boot/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java
---- openjdk-boot.orig/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java	2014-04-03 15:33:28.180483210 +0100
+--- openjdk-boot.orig/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java	2014-05-07 08:43:18.538503033 +0100
 @@ -200,7 +200,7 @@
      }
  
@@ -1154,8 +1162,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java ope
          Character.UnicodeBlock currentBlock = Character.UnicodeBlock.of(0);
          for (int cp = 0x000001; cp < 0x110000; cp++ ) {
 diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java openjdk-boot/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java
---- openjdk-boot.orig/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java	2014-04-03 15:33:28.180483210 +0100
+--- openjdk-boot.orig/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java	2014-05-07 08:43:18.538503033 +0100
 @@ -569,11 +569,11 @@
                  public Void run() throws BackingStoreException {
                      Map<String, String> m = new TreeMap<>();
@@ -1219,8 +1227,8 @@ diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/java/util/prefs/FileSystemPr
                  }
              });
 diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java
---- openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java	2014-04-03 15:33:28.180483210 +0100
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java	2014-05-07 08:43:18.538503033 +0100
 @@ -255,9 +255,16 @@
          String fstypes = System.getProperty("java.home") + "/lib/fstypes.properties";
          Path file = Paths.get(fstypes);
@@ -1240,8 +1248,8 @@ diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.jav
          }
          return result;
 diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/print/UnixPrintJob.java openjdk-boot/jdk/src/solaris/classes/sun/print/UnixPrintJob.java
---- openjdk-boot.orig/jdk/src/solaris/classes/sun/print/UnixPrintJob.java	2014-04-03 00:39:02.000000000 +0100
-+++ openjdk-boot/jdk/src/solaris/classes/sun/print/UnixPrintJob.java	2014-04-03 15:33:28.180483210 +0100
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/print/UnixPrintJob.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/solaris/classes/sun/print/UnixPrintJob.java	2014-05-07 08:43:18.538503033 +0100
 @@ -960,25 +960,38 @@
  
          private void handleProcessFailure(final Process failedProcess,

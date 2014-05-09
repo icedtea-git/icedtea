@@ -1,6 +1,52 @@
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2014-05-07 08:51:32.125735531 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2014-05-07 09:00:03.601219315 +0100
+@@ -71,11 +71,11 @@
+             case 'I':
+                 return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('I').constructor[0].invokeBasic(type, form, ValueConversions.widenSubword(x));
+             case 'J':
+-                return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('J').constructor[0].invokeBasic(type, form, (long) x);
++                return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('J').constructor[0].invokeBasic(type, form, (Long) x);
+             case 'F':
+-                return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('F').constructor[0].invokeBasic(type, form, (float) x);
++                return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('F').constructor[0].invokeBasic(type, form, (Float) x);
+             case 'D':
+-                return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('D').constructor[0].invokeBasic(type, form, (double) x);
++                return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('D').constructor[0].invokeBasic(type, form, (Double) x);
+             default : throw new InternalError("unexpected xtype: " + xtype);
+             }
+         } catch (Throwable t) {
+@@ -92,9 +92,9 @@
+             switch (xtype) {
+             case 'L': return cloneExtendL(type, form, x);
+             case 'I': return cloneExtendI(type, form, ValueConversions.widenSubword(x));
+-            case 'J': return cloneExtendJ(type, form, (long) x);
+-            case 'F': return cloneExtendF(type, form, (float) x);
+-            case 'D': return cloneExtendD(type, form, (double) x);
++            case 'J': return cloneExtendJ(type, form, (Long) x);
++            case 'F': return cloneExtendF(type, form, (Float) x);
++            case 'D': return cloneExtendD(type, form, (Double) x);
+             }
+         } catch (Throwable t) {
+             throw newInternalError(t);
+@@ -171,10 +171,10 @@
+         throw new InternalError("unexpected type: " + speciesData().types+"."+i);
+     }
+     /*non-public*/ final Object argL(int i) throws Throwable { return          speciesData().getters[i].invokeBasic(this); }
+-    /*non-public*/ final int    argI(int i) throws Throwable { return (int)    speciesData().getters[i].invokeBasic(this); }
+-    /*non-public*/ final float  argF(int i) throws Throwable { return (float)  speciesData().getters[i].invokeBasic(this); }
+-    /*non-public*/ final double argD(int i) throws Throwable { return (double) speciesData().getters[i].invokeBasic(this); }
+-    /*non-public*/ final long   argJ(int i) throws Throwable { return (long)   speciesData().getters[i].invokeBasic(this); }
++    /*non-public*/ final int    argI(int i) throws Throwable { return (Integer)    speciesData().getters[i].invokeBasic(this); }
++    /*non-public*/ final float  argF(int i) throws Throwable { return (Float)  speciesData().getters[i].invokeBasic(this); }
++    /*non-public*/ final double argD(int i) throws Throwable { return (Double) speciesData().getters[i].invokeBasic(this); }
++    /*non-public*/ final long   argJ(int i) throws Throwable { return (Long)   speciesData().getters[i].invokeBasic(this); }
+ 
+     //
+     // cloning API
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/CallSite.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/CallSite.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/CallSite.java	2012-11-30 12:17:08.000000000 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/CallSite.java	2012-11-30 15:01:56.540165063 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/CallSite.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/CallSite.java	2014-05-07 08:59:22.660620050 +0100
 @@ -303,7 +303,7 @@
  
      private static Object maybeReBox(Object x) {
@@ -10,9 +56,77 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/CallSite.java
              if (xi == (byte) xi)
                  x = xi;  // must rebox; see JLS 5.1.7
          }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/InvokerBytecodeGenerator.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/InvokerBytecodeGenerator.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/InvokerBytecodeGenerator.java	2014-05-02 20:39:34.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/InvokerBytecodeGenerator.java	2014-05-07 08:59:22.664620110 +0100
+@@ -315,11 +315,11 @@
+             return;
+         }
+         if (con instanceof Integer) {
+-            emitIconstInsn((int) con);
++            emitIconstInsn((Integer) con);
+             return;
+         }
+         if (con instanceof Long) {
+-            long x = (long) con;
++            long x = (Long) con;
+             if (x == (short) x) {
+                 emitIconstInsn((int) x);
+                 mv.visitInsn(Opcodes.I2L);
+@@ -327,7 +327,7 @@
+             }
+         }
+         if (con instanceof Float) {
+-            float x = (float) con;
++            float x = (Float) con;
+             if (x == (short) x) {
+                 emitIconstInsn((int) x);
+                 mv.visitInsn(Opcodes.I2F);
+@@ -335,7 +335,7 @@
+             }
+         }
+         if (con instanceof Double) {
+-            double x = (double) con;
++            double x = (Double) con;
+             if (x == (short) x) {
+                 emitIconstInsn((int) x);
+                 mv.visitInsn(Opcodes.I2D);
+@@ -343,7 +343,7 @@
+             }
+         }
+         if (con instanceof Boolean) {
+-            emitIconstInsn((boolean) con ? 1 : 0);
++            emitIconstInsn((Boolean) con ? 1 : 0);
+             return;
+         }
+         // fall through:
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/LambdaForm.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2014-05-07 08:51:32.125735531 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2014-05-07 08:59:22.664620110 +0100
+@@ -1444,7 +1444,7 @@
+                         if (a1 instanceof Integer && a2 instanceof Integer) {
+                             if (sawInt)  continue;
+                             sawInt = true;
+-                            if ((int)a1 < (int)a2)  continue;  // still might be true
++                            if (((Integer)a1).intValue() < ((Integer)a2).intValue())  continue;  // still might be true
+                         }
+                         return false;
+                     }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2014-05-07 08:51:32.961747758 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2014-05-07 08:59:22.664620110 +0100
+@@ -885,7 +885,7 @@
+                 MH_checkCallerClass = IMPL_LOOKUP
+                     .findStatic(THIS_CLASS, "checkCallerClass",
+                                 MethodType.methodType(boolean.class, Class.class, Class.class));
+-                assert((boolean) MH_checkCallerClass.invokeExact(THIS_CLASS, THIS_CLASS));
++                assert((Boolean) MH_checkCallerClass.invokeExact(THIS_CLASS, THIS_CLASS));
+             } catch (Throwable ex) {
+                 throw newInternalError(ex);
+             }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversions.java openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2012-11-30 14:59:33.053919817 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2012-11-30 15:02:05.216300867 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2014-05-07 08:51:32.133735648 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2014-05-07 08:59:22.664620110 +0100
 @@ -191,9 +191,9 @@
          if (x instanceof Number) {
              res = (Number) x;
@@ -92,117 +206,3 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversio
      }
  
      private static MethodType boxType(Wrapper wrap) {
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2012-11-30 17:27:25.095740183 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2012-11-30 17:29:35.229853381 +0000
-@@ -71,11 +71,11 @@
-             case 'I':
-                 return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('I').constructor[0].invokeBasic(type, form, ValueConversions.widenSubword(x));
-             case 'J':
--                return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('J').constructor[0].invokeBasic(type, form, (long) x);
-+                return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('J').constructor[0].invokeBasic(type, form, (Long) x);
-             case 'F':
--                return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('F').constructor[0].invokeBasic(type, form, (float) x);
-+                return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('F').constructor[0].invokeBasic(type, form, (Float) x);
-             case 'D':
--                return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('D').constructor[0].invokeBasic(type, form, (double) x);
-+                return (BoundMethodHandle) SpeciesData.EMPTY.extendWithType('D').constructor[0].invokeBasic(type, form, (Double) x);
-             default : throw new InternalError("unexpected xtype: " + xtype);
-             }
-         } catch (Throwable t) {
-@@ -92,9 +92,9 @@
-             switch (xtype) {
-             case 'L': return cloneExtendL(type, form, x);
-             case 'I': return cloneExtendI(type, form, ValueConversions.widenSubword(x));
--            case 'J': return cloneExtendJ(type, form, (long) x);
--            case 'F': return cloneExtendF(type, form, (float) x);
--            case 'D': return cloneExtendD(type, form, (double) x);
-+            case 'J': return cloneExtendJ(type, form, (Long) x);
-+            case 'F': return cloneExtendF(type, form, (Float) x);
-+            case 'D': return cloneExtendD(type, form, (Double) x);
-             }
-         } catch (Throwable t) {
-             throw newInternalError(t);
-@@ -171,10 +171,10 @@
-         throw new InternalError("unexpected type: " + speciesData().types+"."+i);
-     }
-     public final Object argL(int i) throws Throwable { return          speciesData().getters[i].invokeBasic(this); }
--    public final int    argI(int i) throws Throwable { return (int)    speciesData().getters[i].invokeBasic(this); }
--    public final float  argF(int i) throws Throwable { return (float)  speciesData().getters[i].invokeBasic(this); }
--    public final double argD(int i) throws Throwable { return (double) speciesData().getters[i].invokeBasic(this); }
--    public final long   argJ(int i) throws Throwable { return (long)   speciesData().getters[i].invokeBasic(this); }
-+    public final int    argI(int i) throws Throwable { return (Integer)    speciesData().getters[i].invokeBasic(this); }
-+    public final float  argF(int i) throws Throwable { return (Float)  speciesData().getters[i].invokeBasic(this); }
-+    public final double argD(int i) throws Throwable { return (Double) speciesData().getters[i].invokeBasic(this); }
-+    public final long   argJ(int i) throws Throwable { return (Long)   speciesData().getters[i].invokeBasic(this); }
- 
-     //
-     // cloning API
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/InvokerBytecodeGenerator.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/InvokerBytecodeGenerator.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/InvokerBytecodeGenerator.java	2012-11-30 17:25:45.038114739 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/InvokerBytecodeGenerator.java	2012-11-30 17:26:34.766922659 +0000
-@@ -317,11 +317,11 @@
-             return;
-         }
-         if (con instanceof Integer) {
--            emitIconstInsn((int) con);
-+            emitIconstInsn((Integer) con);
-             return;
-         }
-         if (con instanceof Long) {
--            long x = (long) con;
-+            long x = (Long) con;
-             if (x == (short) x) {
-                 emitIconstInsn((int) x);
-                 mv.visitInsn(Opcodes.I2L);
-@@ -329,7 +329,7 @@
-             }
-         }
-         if (con instanceof Float) {
--            float x = (float) con;
-+            float x = (Float) con;
-             if (x == (short) x) {
-                 emitIconstInsn((int) x);
-                 mv.visitInsn(Opcodes.I2F);
-@@ -337,7 +337,7 @@
-             }
-         }
-         if (con instanceof Double) {
--            double x = (double) con;
-+            double x = (Double) con;
-             if (x == (short) x) {
-                 emitIconstInsn((int) x);
-                 mv.visitInsn(Opcodes.I2D);
-@@ -345,7 +345,7 @@
-             }
-         }
-         if (con instanceof Boolean) {
--            emitIconstInsn((boolean) con ? 1 : 0);
-+            emitIconstInsn((Boolean) con ? 1 : 0);
-             return;
-         }
-         // fall through:
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/LambdaForm.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2012-11-30 17:23:21.555782849 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2012-11-30 17:24:24.244801829 +0000
-@@ -1440,7 +1440,7 @@
-                         if (a1 instanceof Integer && a2 instanceof Integer) {
-                             if (sawInt)  continue;
-                             sawInt = true;
--                            if ((int)a1 < (int)a2)  continue;  // still might be true
-+                            if (((Integer)a1).intValue() < ((Integer)a2).intValue())  continue;  // still might be true
-                         }
-                         return false;
-                     }
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2012-11-30 17:22:27.146898269 +0000
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2012-11-30 17:22:51.067287189 +0000
-@@ -900,7 +900,7 @@
-                 MH_checkCallerClass = IMPL_LOOKUP
-                     .findStatic(THIS_CLASS, "checkCallerClass",
-                                 MethodType.methodType(boolean.class, Class.class, Class.class));
--                assert((boolean) MH_checkCallerClass.invokeExact(THIS_CLASS, THIS_CLASS));
-+                assert((Boolean) MH_checkCallerClass.invokeExact(THIS_CLASS, THIS_CLASS));
-             } catch (Throwable ex) {
-                 throw newInternalError(ex);
-             }
