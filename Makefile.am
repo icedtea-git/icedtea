@@ -1619,32 +1619,38 @@ clean-native-ecj:
 # bootstrap/stage1
 stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
 	mkdir -p $(STAGE1_BOOT_DIR)/bin stamps/
-	ln -sf $(JAVA) $(STAGE1_BOOT_DIR)/bin/java
+	ln -sfv $(JAVA) $(STAGE1_BOOT_DIR)/bin/java
 if JAVAH_SUPPORTS_X_OPTIONS
-	ln -sf $(JAVAH) $(STAGE1_BOOT_DIR)/bin/javah
+	ln -sfv $(JAVAH) $(STAGE1_BOOT_DIR)/bin/javah
 else
-	ln -sf ../../../javah $(STAGE1_BOOT_DIR)/bin/javah
+	ln -sfv ../../../javah $(STAGE1_BOOT_DIR)/bin/javah
 endif
-	ln -sf $(RMIC) $(STAGE1_BOOT_DIR)/bin/rmic
-	ln -sf $(JAR) $(STAGE1_BOOT_DIR)/bin/jar
-	ln -sf $(NATIVE2ASCII) $(STAGE1_BOOT_DIR)/bin/native2ascii
-	ln -sf ../../../javac $(STAGE1_BOOT_DIR)/bin/javac
-	ln -sf ../../../javap $(STAGE1_BOOT_DIR)/bin/javap
+	ln -sfv $(RMIC) $(STAGE1_BOOT_DIR)/bin/rmic
+	ln -sfv $(JAR) $(STAGE1_BOOT_DIR)/bin/jar
+	ln -sfv $(NATIVE2ASCII) $(STAGE1_BOOT_DIR)/bin/native2ascii
+	ln -sfv ../../../javac $(STAGE1_BOOT_DIR)/bin/javac
+	ln -sfv ../../../javap $(STAGE1_BOOT_DIR)/bin/javap
 	mkdir -p $(STAGE1_BOOT_DIR)/lib/modules
 	mkdir -p $(STAGE1_BOOT_DIR)/jre/lib && \
 	cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar $(STAGE1_BOOT_RUNTIME) && \
 	chmod u+w $(STAGE1_BOOT_RUNTIME)
 	mkdir -p $(STAGE1_BOOT_DIR)/lib && \
 	if [ -e $(SYSTEM_JDK_DIR)/lib/tools.jar ] ; then \
-	  ln -sf $(SYSTEM_JDK_DIR)/lib/tools.jar $(STAGE1_BOOT_DIR)/lib/tools.jar ; \
+	  ln -sfv $(SYSTEM_JDK_DIR)/lib/tools.jar $(STAGE1_BOOT_DIR)/lib/tools.jar ; \
 	else \
-	  ln -sf $(STAGE1_BOOT_RUNTIME) $(STAGE1_BOOT_DIR)/lib/tools.jar ; \
+	  ln -sfv $(STAGE1_BOOT_RUNTIME) $(STAGE1_BOOT_DIR)/lib/tools.jar ; \
 	fi
-	ln -sf $(SYSTEM_JDK_DIR)/jre/lib/$(JRE_ARCH_DIR) \
-	  $(STAGE1_BOOT_DIR)/jre/lib/ && \
+# Workaround some older ppc64le builds installing to 'ppc64le' rather than 'ppc64'
+	if test -d $(SYSTEM_JDK_DIR)/jre/lib/ppc64le ; then \
+	  ln -sfv $(SYSTEM_JDK_DIR)/jre/lib/ppc64le \
+	    $(STAGE1_BOOT_DIR)/jre/lib/$(JRE_ARCH_DIR) ; \
+	else \
+	  ln -sfv $(SYSTEM_JDK_DIR)/jre/lib/$(JRE_ARCH_DIR) \
+	    $(STAGE1_BOOT_DIR)/jre/lib/ ; \
+	fi
 	if ! test -d $(STAGE1_BOOT_DIR)/jre/lib/$(INSTALL_ARCH_DIR); \
 	  then \
-	  ln -sf ./$(JRE_ARCH_DIR) \
+	  ln -sfv ./$(JRE_ARCH_DIR) \
 	    $(STAGE1_BOOT_DIR)/jre/lib/$(INSTALL_ARCH_DIR); \
 	fi
 	mkdir -p $(STAGE1_BOOT_DIR)/include && \
@@ -1652,7 +1658,7 @@ endif
 	  test -r $$i | continue; \
 	  i=`basename $$i`; \
 	  rm -f $(STAGE1_BOOT_DIR)/include/$$i; \
-	  ln -s $(SYSTEM_JDK_DIR)/include/$$i $(STAGE1_BOOT_DIR)/include/$$i; \
+	  ln -sv $(SYSTEM_JDK_DIR)/include/$$i $(STAGE1_BOOT_DIR)/include/$$i; \
 	done;
 	mkdir -p stamps
 	touch $@

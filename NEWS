@@ -183,6 +183,7 @@ New in release 2.6.0 (2014-XX-XX):
   - Correct placement of S8041658 fix
   - PR1762: Undefined references when building with NSS 3.16.1
   - PR1763: ppc64 JIT doesn't support class data sharing
+  - PR1765: Boot JDK on ppc64le uses differently named arch directory to final build
 
 New in release 2.5.0 (2014-XX-XX):
 

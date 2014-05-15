@@ -1,3 +1,13 @@
+2014-05-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1765: Boot JDK on ppc64le uses differently named
+	arch directory to final build
+	* Makefile.am:
+	(bootstrap-directory-stage1): Handle ppc64le boot
+	JDK using a different arch directory to the final
+	build. Make output more verbose.
+	* NEWS: Updated.
+
 2014-05-13  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1763: ppc64 JIT doesn't support class data sharing
