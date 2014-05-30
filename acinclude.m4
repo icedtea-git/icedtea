@@ -1902,3 +1902,24 @@ AC_DEFUN([IT_WITH_JAMVM_SRC_ZIP],
   AC_MSG_RESULT(${ALT_JAMVM_SRC_ZIP})
   AC_SUBST(ALT_JAMVM_SRC_ZIP)
 ])
+
+AC_DEFUN([IT_WITH_NASHORN_SRC_ZIP],
+[
+  AC_MSG_CHECKING([for a NASHORN source zip])
+  AC_ARG_WITH([nashorn-src-zip],
+              [AS_HELP_STRING(--with-nashorn-src-zip=PATH,specify the location of the Nashorn source zip)],
+  [
+    ALT_NASHORN_SRC_ZIP=${withval}
+    if test "x${ALT_NASHORN_SRC_ZIP}" = "xno"; then
+      ALT_NASHORN_SRC_ZIP="not specified"
+    elif ! test -f ${ALT_NASHORN_SRC_ZIP} ; then
+      AC_MSG_ERROR([Invalid NASHORN source zip specified: ${ALT_NASHORN_SRC_ZIP}])
+    fi
+  ],
+  [ 
+    ALT_NASHORN_SRC_ZIP="not specified"
+  ])
+  AM_CONDITIONAL(USE_ALT_NASHORN_SRC_ZIP, test "x${ALT_NASHORN_SRC_ZIP}" != "xnot specified")
+  AC_MSG_RESULT(${ALT_NASHORN_SRC_ZIP})
+  AC_SUBST(ALT_NASHORN_SRC_ZIP)
+])

@@ -1,4 +1,4 @@
-AC_INIT([icedtea], [3.0b1pre], [distro-pkg-dev@openjdk.java.net])
+AC_INIT([icedtea], [3.0.0pre01], [distro-pkg-dev@openjdk.java.net])
 AM_INIT_AUTOMAKE([1.9 tar-pax foreign])
 AC_CONFIG_FILES([Makefile])
 
@@ -126,6 +126,7 @@ IT_WITH_JAXP_SRC_ZIP
 IT_WITH_JAXWS_SRC_ZIP
 IT_WITH_JDK_SRC_ZIP
 IT_WITH_LANGTOOLS_SRC_ZIP
+IT_WITH_NASHORN_SRC_ZIP
 IT_WITH_ALT_JAR_BINARY
 
 IT_ENABLE_CACAO

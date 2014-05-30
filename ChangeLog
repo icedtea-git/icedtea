@@ -1,3 +1,70 @@
+2014-05-29  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/alt-jar.patch,
+	* patches/cacao/arch.patch,
+	* patches/debian/uname.patch:
+	Applied to upstream IcedTea forest.
+	* patches/pr1368-debug_jdk_libs.patch,
+	* patches/pr1368-debug_jdk_programs.patch:
+	Applied to upstream OpenJDK.
+	* patches/rhino.patch:
+	Rhino has been removed.
+	* INSTALL: Mention --with-nashorn-src-zip.
+	* Makefile.am:
+	(OPENJDK_VERSION): Bump to b10.
+	(JDK_UPDATE_VERSION): Bump to 20.
+	(CORBA_CHANGESET): Update to 3.0.0pre01          .
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Added & likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Added & likewise.
+	(OPENJDK_URL): Switch back to IcedTea.
+	(CORBA_URL): Likewise.
+	(JAXP_URL): Likewise.
+	(JAXWS_URL): Likewise.
+	(JDK_URL): Likewise.
+	(LANGTOOLS_URL): Likewise.
+	(HOTSPOT_URL): Likewise.
+	(NASHORN_URL): Added.
+	(VERSION_SETTINGS_FILE): Store path of file
+	needed to store version variable settings.
+	(NASHORN_SRC_ZIP): Added.
+	(ICEDTEA_PATCHES): Drop upstreamed & removed
+	patches.
+	(.PHONY): Add clean-download-nashorn and
+	clean-extract-nashorn.
+	(download): Depend on download-nashorn.
+	(clean-download): Depend on clean-download-nashorn.
+	(download-nashorn): Download the Nashorn source
+	zip if necessary.
+	(clean-download-nashorn): Cleanup for download-nashorn.
+	(extract): Depend on extract-nashorn.
+	(extract-nashorn); Extract the Nashorn source zip if
+	necessary.
+	(clean-extract-nashorn): Cleanup for extract-nashorn.
+	(versioning): Replace hardcoded path with VERSION_SETTINGS_FILE.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_WITH_NASHORN_SRC_ZIP): New macro to allow Nashorn
+	source file to be set.
+	* configure.ac:
+	Bump version to 3.0.0pre01. Invoke IT_WITH_NASHORN_SRC_ZIP.
+	* hotspot.map:
+	Bump to 3.0.0pre01.
+	* patches/memory-limits.patch,
+	* patches/nss-config.patch,
+	* patches/nss-not-enabled-config.patch:
+	Regenerated.
+
 2012-10-08  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

@@ -1,9 +1,9 @@
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp openjdk/hotspot/src/share/vm/runtime/globals.hpp
---- openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp	2010-02-19 17:14:39.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	2010-02-22 12:46:54.000000000 +0000
-@@ -2919,7 +2919,7 @@
+--- openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp	2014-04-23 22:06:29.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	2014-05-12 20:42:01.633428300 +0100
+@@ -3113,7 +3113,7 @@
    product(uintx, InitialHeapSize, 0,                                        \
-           "Initial heap size (in bytes); zero means OldSize + NewSize")     \
+           "Initial heap size (in bytes); zero means use ergonomics")        \
                                                                              \
 -  product(uintx, MaxHeapSize, ScaleForWordSize(96*M),                       \
 +  product(uintx, MaxHeapSize, ScaleForWordSize(512*M),                      \

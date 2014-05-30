@@ -12,13 +12,29 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.0.0 (2014-XX-XX):
 
+* Backports
+  - S8011278: Allow using a system-installed giflib
+  - S8035341: Allow using a system installed libpng
+  - S8038392: Generating prelink cache breaks JAVA 'jinfo' utility normal behavior
+  - S8042159: Allow using a system-installed lcms2
+  - S8042806: Splashscreen uses libjpeg-internal macros
 * Bug fixes
+  - S8041658: Use of -fdevirtualize on macroAssembler_x86.o (via -O2) with gcc 4.9.0 creates broken VM
   - PR1279: Synchronise CACAO versions between IcedTea6/7/8 where possible
   - PR1325: Only add classes to rt-source-files.txt if actually needed
   - PR1346: Filter out -j option to make
   - PR1347: Update list of checked JDKs
   - PR1357: Make XRender mandatory
   - PR1359: Check for /usr/lib64 JVMs and generic JPackage alternative
+  - Don't substitute 'j' for '-j' inside -I directives
+  - Extend 8041658 to all files in the HotSpot build.
+  - PR1748: Allow clang to be used to build
+  - PR1766: Expand architecture support
+  - PR1774: Correct #ifdef to #if
+  - PR1774: Support GIF lib v5
+  - PR1778: Allow an alternate JAR program to be used
+  - PR1796: make fails with "computed checksum did NOT match"
+  - Remove jcheck
 * JamVM
   - JSR 292: Invoke Dynamic
   - JSR 308: Type Annotations

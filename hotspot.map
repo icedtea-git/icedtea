@@ -1,2 +1,2 @@
 # version url changeset md5sum
-default http://hg.openjdk.java.net/jdk8/jdk8/hotspot 65b797426a3b a91ac222d0cd8fd2d3e02bb5ec53d49d3ecebffa2dc4506c86679709217b2366
+default http://icedtea.classpath.org/hg/icedtea8-forest/hotspot c2767d721605 153ad9d1405ee6878b0871cd6df7ff9c7bb62b5117a293aa063783e379bc337e

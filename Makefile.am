@@ -1,22 +1,24 @@
 # Dependencies
 
-OPENJDK_VERSION = b80
-JDK_UPDATE_VERSION = 02
+OPENJDK_VERSION = b10
+JDK_UPDATE_VERSION = 20
 COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)
 
-CORBA_CHANGESET = 2a00aeeb466b
-JAXP_CHANGESET = ef3495555a4c
-JAXWS_CHANGESET = c88bb21560cc
-JDK_CHANGESET = 758db1c4c65c
-LANGTOOLS_CHANGESET = ed69d087fdfd
-OPENJDK_CHANGESET = cd7f2c7e2a0e
+CORBA_CHANGESET = a96c01f523be
+JAXP_CHANGESET = e16be40cfc32
+JAXWS_CHANGESET = 806fa0e68d92
+JDK_CHANGESET = dc14d13daa5e
+LANGTOOLS_CHANGESET = dd7b57ab4ab1
+OPENJDK_CHANGESET = e0a10e6be00a
+NASHORN_CHANGESET = fdcdffd5b5b1
 
-CORBA_SHA256SUM = fd30dec3d15ad284365facb0a9195188c95033e908c8c247d137046fc501b2df
-JAXP_SHA256SUM = f7f5ee6e725499bc0b2944182d6b206a661d1da271ab2dff59c282550d89e6e4
-JAXWS_SHA256SUM = b8e27c4fe7214c0c916f554b91a6f1ecff522c7b76b06be1abaf71a835bbca37
-JDK_SHA256SUM = a0918d63bdc9da8461dbb47b0135a8ce522ca943bb2a88558cbf0a63c75a506a
-LANGTOOLS_SHA256SUM = b2f3407fbcc539d61bd6d4830b7e97cc53e5175fea262d6543610fccb3f7c0f3
-OPENJDK_SHA256SUM = b02a1a2ac30e8611e9110e03ea6705a80c21c286411118be5300cab7a65eb651
+CORBA_SHA256SUM = 1ce659773584949b01ecdbc897099352aea4fa2ac40b7a55ff64f4b68e12ffc9
+JAXP_SHA256SUM = c2422395c291cfdf8fce7e87c7a45226ba4c64fd73d614675659f21a7c82b902
+JAXWS_SHA256SUM = 4364b4ddf7031b1b4a17fdd11d0e642203e0e66242a2c4d2ba02fc5587d2711d
+JDK_SHA256SUM = 7db207899441a22daeef26620930ec76653c0860fcb6fc288f9547ae436fdc83
+LANGTOOLS_SHA256SUM = 1aa3b505f3fbb3cc01d480dae0196c7038982bd29ae2df84ad14d587d29976cc
+OPENJDK_SHA256SUM = c8f540a9eccec00df2fa0d93595fdb8eab6384ad3d0579095928aed1591c7a39
+NASHORN_SHA256SUM = fb245c9a4a47b68aece3c4f0cac6fc8ac91c8458bb91648b9a8e3d95ed3981ea
 
 HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$4}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
 HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
@@ -43,13 +45,14 @@ CACIOCAVALLO_HG_URL = http://hg.openjdk.java.net/caciocavallo/jdk8/
 BSD_HG_URL = http://hg.openjdk.java.net/bsd-port/bsd-port
 NIO2_HG_URL = http://hg.openjdk.java.net/nio/nio/
 
-OPENJDK_URL = $(OPENJDK_HG_URL)
-CORBA_URL = $(OPENJDK_HG_URL)/corba
-JAXP_URL = $(OPENJDK_HG_URL)/jaxp
-JAXWS_URL = $(OPENJDK_HG_URL)/jaxws
-JDK_URL = $(OPENJDK_HG_URL)/jdk
-LANGTOOLS_URL = $(OPENJDK_HG_URL)/langtools
-HOTSPOT_URL = $(OPENJDK_HG_URL)/hotspot
+OPENJDK_URL = $(ICEDTEA_HG_URL)
+CORBA_URL = $(ICEDTEA_HG_URL)/corba
+JAXP_URL = $(ICEDTEA_HG_URL)/jaxp
+JAXWS_URL = $(ICEDTEA_HG_URL)/jaxws
+JDK_URL = $(ICEDTEA_HG_URL)/jdk
+LANGTOOLS_URL = $(ICEDTEA_HG_URL)/langtools
+HOTSPOT_URL = $(ICEDTEA_HG_URL)/hotspot
+NASHORN_URL = $(ICEDTEA_HG_URL)/nashorn
 
 # Build directories
 
@@ -94,6 +97,8 @@ OPENJDK_SOURCEPATH_DIRS = \
 
 SOURCEPATH_DIRS = $(OPENJDK_SOURCEPATH_DIRS)
 
+VERSION_SETTINGS_FILE = openjdk/jdk/make/ProfileNames.gmk
+
 # Sources used from OpenJDK.
 #PR43148 - javac fails due to missing java.util.regex.Matcher.quoteReplacement
 #PR48033 - Missing javax.management.remote.JMXServiceURL
@@ -122,6 +127,7 @@ if USE_HG
   JDK_SRC_ZIP =
   LANGTOOLS_SRC_ZIP =
   HOTSPOT_SRC_ZIP =
+  NASHORN_SRC_ZIP =
 else
   OPENJDK_SRC_ZIP = openjdk.tar.gz
   CORBA_SRC_ZIP = corba.tar.gz
@@ -130,6 +136,7 @@ else
   JDK_SRC_ZIP = jdk.tar.gz
   LANGTOOLS_SRC_ZIP = langtools.tar.gz
   HOTSPOT_SRC_ZIP = hotspot.tar.gz
+  NASHORN_SRC_ZIP = nashorn.tar.gz
 endif
 
 if ENABLE_PULSE_JAVA
@@ -213,20 +220,9 @@ REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 
 ICEDTEA_PATCHES = \
 	patches/memory-limits.patch \
-	patches/debian/uname.patch \
-	patches/override-redirect-metacity.patch \
-	patches/alt-jar.patch \
-	patches/cacao/arch.patch \
-	patches/disable-intree-ec.patch \
-	patches/pr1368-debug_jdk_libs.patch \
-	patches/pr1368-debug_jdk_programs.patch
+	patches/override-redirect-metacity.patch
 
 # Conditional patches
-
-if WITH_RHINO
-ICEDTEA_PATCHES += \
-	patches/rhino.patch
-endif
 
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
@@ -538,7 +534,8 @@ install:
 	clean-rt hotspot hotspot-helper clean-jtreg clean-jtreg-reports \
 	jtregcheck clean-remove-intree-libraries \
 	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
-	clean-extract-hotspot clean-sanitise-openjdk clean-icedtea-debug
+	clean-extract-hotspot clean-sanitise-openjdk clean-icedtea-debug \
+	clean-download-nashorn clean-extract-nashorn
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -583,11 +580,12 @@ clean-hgforest:
 
 # Download OpenJDK sources.
 
-stamps/download.stamp: stamps/download-openjdk.stamp stamps/download-cacao.stamp stamps/download-jamvm.stamp
+stamps/download.stamp: stamps/download-openjdk.stamp stamps/download-cacao.stamp stamps/download-jamvm.stamp \
+ stamps/download-nashorn.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-download: clean-download-openjdk clean-download-cacao clean-download-jamvm
+clean-download: clean-download-openjdk clean-download-cacao clean-download-jamvm clean-download-nashorn
 	rm -f stamps/download.stamp
 
 stamps/download-openjdk.stamp: stamps/hgforest.stamp
@@ -818,10 +816,39 @@ clean-download-jamvm:
 	rm -f $(JAMVM_SRC_ZIP)
 	rm -f stamps/download-jamvm.stamp
 
+stamps/download-nashorn.stamp:
+if !OPENJDK_SRC_DIR_FOUND
+if USE_ALT_NASHORN_SRC_ZIP
+	ln -sf $(ALT_NASHORN_SRC_ZIP) $(NASHORN_SRC_ZIP)
+else
+	if ! echo "$(NASHORN_SHA256SUM)  $(NASHORN_SRC_ZIP)" \
+	  | $(SHA256SUM) --check ; \
+	then \
+	  if [ $(NASHORN_SRC_ZIP) ] ; \
+	  then \
+	    mv $(NASHORN_SRC_ZIP) $(NASHORN_SRC_ZIP).old ; \
+	  fi ; \
+	  $(WGET) $(NASHORN_URL)/archive/$(NASHORN_CHANGESET).tar.gz -O $(NASHORN_SRC_ZIP); \
+	  if ! echo "$(NASHORN_SHA256SUM)  $(NASHORN_SRC_ZIP)" \
+	    | $(SHA256SUM) --check ; \
+	  then echo "ERROR: Bad download of NASHORN zip"; false; \
+	  fi; \
+	fi ;
+endif
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-download-nashorn:
+	if [ ! -z $(NASHORN_SRC_ZIP) ] ; then \
+	  rm -f $(NASHORN_SRC_ZIP) ; \
+	fi
+	rm -f stamps/download-nashorn.stamp
+
 stamps/extract.stamp: stamps/extract-openjdk.stamp \
  stamps/extract-cacao.stamp stamps/remove-intree-libraries.stamp \
  stamps/extract-jamvm.stamp stamps/extract-hotspot.stamp \
- stamps/sanitise-openjdk.stamp
+ stamps/sanitise-openjdk.stamp stamps/extract-nashorn.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -952,8 +979,32 @@ clean-extract-hotspot:
 	rm -rf openjdk/hotspot
 	rm -f stamps/extract-hotspot.stamp
 
+stamps/extract-nashorn.stamp: stamps/extract-openjdk.stamp stamps/download-nashorn.stamp
+if !OPENJDK_SRC_DIR_FOUND
+	set -e ; \
+	if [ ! -z $(NASHORN_SRC_ZIP) ] ; then \
+	  if test -e ${NASHORN_SRC_ZIP} ; \
+	  then \
+	    if ! test -d openjdk/nashorn ; \
+	    then \
+	      case "$(NASHORN_SRC_ZIP)" in \
+	        *.zip) $(UNZIP) -q $(NASHORN_SRC_ZIP) ;; \
+	        *.tar.*) $(TAR) xf $(NASHORN_SRC_ZIP) ;; \
+	      esac; \
+	      mv nashorn-$(NASHORN_CHANGESET) openjdk/nashorn ; \
+	    fi ; \
+	  fi ; \
+	fi
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-extract-nashorn:
+	rm -rf openjdk/nashorn
+	rm -f stamps/extract-nashorn.stamp
+
 stamps/sanitise-openjdk.stamp: stamps/extract-openjdk.stamp \
- stamps/extract-hotspot.stamp
+ stamps/extract-hotspot.stamp stamps/extract-nashorn.stamp
 	chmod -R ug+w openjdk 
 	sh $(srcdir)/fsg.sh
 	touch stamps/sanitise-openjdk.stamp
@@ -1136,28 +1187,28 @@ clean-patch:
 	fi
 
 stamps/versioning.stamp: stamps/patch.stamp
-	mv openjdk/jdk/make/common/shared/Defs.gmk Defs.gmk.bak
-	cat Defs.gmk.bak > openjdk/jdk/make/common/shared/Defs.gmk
+	mv $(VERSION_SETTINGS_FILE) ProfileNames.gmk.bak
+	cat ProfileNames.gmk.bak > $(VERSION_SETTINGS_FILE)
 	icedtea_version="$(PACKAGE_VERSION)$(ICEDTEA_REV)" ; \
 	if test "x$(ENABLE_CACAO)" = "xyes" || \
 	   test "x$(ENABLE_JAMVM)" = "xyes"; then \
 	  echo "JDK_DERIVATIVE_NAME=$${icedtea_version}" \
-	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
+	    >>$(VERSION_SETTINGS_FILE) ; \
 	  echo "PRODUCT_NAME=$(ICEDTEA_NAME)" \
-	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
+	    >>$(VERSION_SETTINGS_FILE) ; \
 	else \
 	  echo "JDK_DERIVATIVE_NAME=$(ICEDTEA_NAME) $${icedtea_version}" \
-	    >>openjdk/jdk/make/common/shared/Defs.gmk ; \
+	    >>$(VERSION_SETTINGS_FILE) ; \
 	fi ; 
 
 if HAS_JDK_REVISION
-	echo "JDK_REVID=$(JDK_REVISION)" >>openjdk/jdk/make/common/shared/Defs.gmk ;
+	echo "JDK_REVID=$(JDK_REVISION)" >>$(VERSION_SETTINGS_FILE) ;
 endif
 
-	echo "DISTRO_NAME=$(DIST_NAME)" >>openjdk/jdk/make/common/shared/Defs.gmk ;
+	echo "DISTRO_NAME=$(DIST_NAME)" >>$(VERSION_SETTINGS_FILE) ;
 if HAS_PKGVERSION
 	  echo "DISTRO_PACKAGE_VERSION=$(PKGVERSION)" \
-	    >>openjdk/jdk/make/common/shared/Defs.gmk ;
+	    >>$(VERSION_SETTINGS_FILE) ;
 endif
 	if test x"$(PROJECT_NAME)" != "xjdk8"; then \
 	  proj_suffix="-$(PROJECT_NAME)"; \
@@ -1166,7 +1217,7 @@ endif
 	  ver_suffix="-$(VERSION_SUFFIX)"; \
 	fi ; \
 	sed -i "s#BUILD_VARIANT_RELEASE)#BUILD_VARIANT_RELEASE)$${proj_suffix}$${ver_suffix}#" \
-	  openjdk/jdk/make/common/shared/Defs.gmk;
+	  $(VERSION_SETTINGS_FILE);
 	mkdir -p stamps
 	touch $@
 
