@@ -1,3 +1,13 @@
+2014-05-30  Andrew John Hughes  <ahughes@redhat.com>
+
+	PR1806: Support Debian/Ubuntu 7 & 8 OpenJDK
+	Installs as Boot JDK
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_CHECK_FOR_JDK): Add java-7-openjdk
+	and java-8-openjdk to ICEDTEA7_VMS and
+	ICEDTEA8_VMS respectively.
+
 2014-05-29  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/alt-jar.patch,

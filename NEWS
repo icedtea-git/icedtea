@@ -35,6 +35,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR1778: Allow an alternate JAR program to be used
   - PR1796: make fails with "computed checksum did NOT match"
   - Remove jcheck
+  - PR1806: Support Debian/Ubuntu 7 & 8 OpenJDK Installs as Boot JDK
 * JamVM
   - JSR 292: Invoke Dynamic
   - JSR 308: Type Annotations

@@ -1144,10 +1144,10 @@ AC_DEFUN([IT_CHECK_FOR_JDK],
     fi
     ICEDTEA7_VMS="/usr/lib/jvm/icedtea-7 /usr/lib/jvm/icedtea7 /usr/lib/jvm/java-1.7.0-openjdk
     		  /usr/lib/jvm/java-1.7.0-openjdk.x86_64 /usr/lib64/jvm/java-1.7.0-openjdk
-		  /usr/lib/jvm/java-1.7.0"
+		  /usr/lib/jvm/java-1.7.0 /usr/lib/jvm/java-7-openjdk"
     ICEDTEA8_VMS="/usr/lib/jvm/icedtea-8 /usr/lib/jvm/java-1.8.0-openjdk
     		  /usr/lib/jvm/java-1.8.0-openjdk.x86_64 /usr/lib64/jvm/java-1.8.0-openjdk
-		  /usr/lib/jvm/java-1.8.0"
+		  /usr/lib/jvm/java-1.8.0 /usr/lib/jvm/java-8-openjdk"
     for dir in ${ICEDTEA8_VMS} ${ICEDTEA7_VMS} ${BOOTSTRAP_VMS} \
     	       /usr/lib/jvm/java-openjdk /usr/lib/jvm/openjdk /usr/lib/jvm/java-icedtea \
 	       /etc/alternatives/java_sdk_openjdk ; do
