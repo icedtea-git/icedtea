@@ -38,6 +38,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR1806: Support Debian/Ubuntu 7 & 8 OpenJDK Installs as Boot JDK
   - PR1812: Unable to locate HotSpot checksum when downloading
   - PR1364: Replace hgforest support
+  - PR1813: HotSpot URL should be used with --enable-hg
 * JamVM
   - JSR 292: Invoke Dynamic
   - JSR 308: Type Annotations

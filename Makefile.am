@@ -45,7 +45,6 @@ JAXP_URL = $(ICEDTEA_HG_URL)/jaxp
 JAXWS_URL = $(ICEDTEA_HG_URL)/jaxws
 JDK_URL = $(ICEDTEA_HG_URL)/jdk
 LANGTOOLS_URL = $(ICEDTEA_HG_URL)/langtools
-HOTSPOT_URL = $(ICEDTEA_HG_URL)/hotspot
 NASHORN_URL = $(ICEDTEA_HG_URL)/nashorn
 
 # Build directories
@@ -533,7 +532,7 @@ install:
 	jtregcheck clean-remove-intree-libraries \
 	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
 	clean-extract-hotspot clean-sanitise-openjdk clean-icedtea-debug \
-	clean-download-nashorn clean-extract-nashorn
+	clean-download-nashorn clean-extract-nashorn clean-download-hotspot
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -562,11 +561,11 @@ dist-openjdk-fsg: stamps/patch-fsg.stamp
 # Download OpenJDK sources.
 
 stamps/download.stamp: stamps/download-openjdk.stamp stamps/download-cacao.stamp stamps/download-jamvm.stamp \
- stamps/download-nashorn.stamp
+ stamps/download-nashorn.stamp stamps/download-hotspot.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-download: clean-download-openjdk clean-download-cacao clean-download-jamvm clean-download-nashorn
+clean-download: clean-download-openjdk clean-download-cacao clean-download-jamvm
 	rm -f stamps/download.stamp
 
 stamps/download-openjdk.stamp:
@@ -574,7 +573,7 @@ if OPENJDK_SRC_DIR_FOUND
 else
 if USE_HG
 	$(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL) openjdk;
-	for repos in corba jaxp jaxws langtools hotspot jdk ; do \
+	for repos in corba jaxp jaxws langtools jdk ; do \
 	  $(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL)/$${repos} openjdk/$${repos}; \
 	done
 else
@@ -674,28 +673,12 @@ endif
 	  then echo "ERROR: Bad download of langtools zip"; false; \
 	  fi; \
 	fi ;
-if USE_ALT_HOTSPOT_SRC_ZIP
-	ln -sf $(ALT_HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP)
-endif
-	if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
-	  | $(SHA256SUM) --check ; \
-	then \
-	  if [ -e $(HOTSPOT_SRC_ZIP) ] ; \
-	  then \
-	    mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
-	  fi ; \
-	  $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
-	  if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of HotSpot zip"; false; \
-	  fi; \
-	fi
 endif
 endif
 	mkdir -p stamps
 	touch $@
 
-clean-download-openjdk:
+clean-download-openjdk: clean-download-nashorn clean-download-hotspot
 	if [ ! -z $(OPENJDK_SRC_ZIP) ] ; then \
 	  rm -f $(OPENJDK_SRC_ZIP) ; \
 	fi
@@ -713,9 +696,6 @@ clean-download-openjdk:
 	fi
 	if [ ! -z $(LANGTOOLS_SRC_ZIP) ] ; then \
 	  rm -f $(LANGTOOLS_SRC_ZIP) ; \
-	fi
-	if [ ! -z $(HOTSPOT_SRC_ZIP) ] ; then \
-	  rm -f $(HOTSPOT_SRC_ZIP) ; \
 	fi
 	rm -f stamps/download-openjdk.stamp
 
@@ -773,7 +753,7 @@ clean-download-jamvm:
 	rm -f $(JAMVM_SRC_ZIP)
 	rm -f stamps/download-jamvm.stamp
 
-stamps/download-nashorn.stamp:
+stamps/download-nashorn.stamp: stamps/download-openjdk.stamp
 if OPENJDK_SRC_DIR_FOUND
 else
 if USE_HG
@@ -805,6 +785,39 @@ clean-download-nashorn:
 	  rm -f $(NASHORN_SRC_ZIP) ; \
 	fi
 	rm -f stamps/download-nashorn.stamp
+
+stamps/download-hotspot.stamp: stamps/download-openjdk.stamp
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+	$(HG) clone $(REV_ARG) $(HS_URL) openjdk/hotspot
+else
+if USE_ALT_HOTSPOT_SRC_ZIP
+	ln -sf $(ALT_HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP)
+endif
+	if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
+	  | $(SHA256SUM) --check ; \
+	then \
+	  if [ -e $(HOTSPOT_SRC_ZIP) ] ; \
+	  then \
+	    mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
+	  fi ; \
+	  $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
+	  if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
+	    | $(SHA256SUM) --check ; \
+	  then echo "ERROR: Bad download of HotSpot zip"; false; \
+	  fi; \
+	fi
+endif
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-download-hotspot:
+	if [ ! -z $(HOTSPOT_SRC_ZIP) ] ; then \
+	  rm -f $(HOTSPOT_SRC_ZIP) ; \
+	fi
+	rm -f stamps/download-hotspot.stamp
 
 stamps/extract.stamp: stamps/extract-openjdk.stamp \
  stamps/extract-cacao.stamp stamps/remove-intree-libraries.stamp \

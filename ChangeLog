@@ -1,5 +1,27 @@
 2014-06-02  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR1813: HotSpot URL should be used with --enable-hg
+	* Makefile.am:
+	(HOTSPOT_URL): Drop unused variable to avoid
+	confusion.
+	(.PHONY): Add clean-download-hotspot.
+	(download); Depend on download-hotspot.
+	(clean-download): Move clean-download-nashorn
+	to clean-download-openjdk to retain ordering.
+	(download-openjdk): Remove hotspot from for loop
+	and HotSpot zip download rules.
+	(clean-download-openjdk): Depend on clean-download-nashorn
+	and clean-download-hotspot.
+	(download-nashorn): Depend on download-openjdk so
+	root directory exists for Nashorn checkout.
+	(download-hotspot): New target. Cloning now uses HS_URL
+	as with zip downloading.
+	(clean-download-hotspot): Separated from clean-download-openjdk.
+	* NEWS: Updated.
+
+2014-06-02  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1364: Replace hgforest support
 	* INSTALL:
 	Remove documentation of --with-project as
 	option is being removed.
