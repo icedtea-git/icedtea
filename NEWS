@@ -184,6 +184,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR1762: Undefined references when building with NSS 3.16.1
   - PR1763: ppc64 JIT doesn't support class data sharing
   - PR1765: Boot JDK on ppc64le uses differently named arch directory to final build
+  - PR1807: Support Debian/Ubuntu 7 OpenJDK Install as Boot JDK
 
 New in release 2.5.0 (2014-XX-XX):
 
