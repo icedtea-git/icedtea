@@ -186,6 +186,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR1765: Boot JDK on ppc64le uses differently named arch directory to final build
   - PR1807: Support Debian/Ubuntu 7 OpenJDK Install as Boot JDK
   - PR1365: Replace hgforest support
+  - PR1814: HotSpot URL should be used with --enable-hg
 
 New in release 2.5.0 (2014-XX-XX):
 

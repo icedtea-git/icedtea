@@ -827,7 +827,8 @@ install:
 	clean-add-nss clean-add-tzdata-support clean-add-tzdata-support-debug \
 	clean-add-systemtap-boot clean-add-pulseaudio-boot clean-add-tzdata-support-boot \
 	clean-check-crypto clean-check-crypto-debug clean-check-crypto-boot \
-	clean-add-archive clean-add-archive-debug clean-add-archive-boot clean-cryptocheck
+	clean-add-archive clean-add-archive-debug clean-add-archive-boot clean-cryptocheck \
+	clean-download-hotspot
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -860,7 +861,7 @@ dist-openjdk-fsg-xz: stamps/patch-fsg.stamp
 # Download OpenJDK sources.
 
 stamps/download.stamp: stamps/download-openjdk.stamp \
- stamps/download-cacao.stamp stamps/download-jamvm.stamp
+ stamps/download-cacao.stamp stamps/download-jamvm.stamp stamps/download-hotspot.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -872,7 +873,7 @@ if OPENJDK_SRC_DIR_FOUND
 else
 if USE_HG
 	$(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL) openjdk;
-	for repos in corba jaxp jaxws langtools hotspot jdk ; do \
+	for repos in corba jaxp jaxws langtools jdk ; do \
 	  $(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL)/$${repos} openjdk/$${repos}; \
 	done
 else
@@ -990,32 +991,12 @@ endif
 	    echo "ERROR: No up-to-date OpenJDK langtools zip available"; exit -1; \
 	  fi ; \
 	fi ;
-if USE_ALT_HOTSPOT_SRC_ZIP
-	ln -sf $(ALT_HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP)
-endif
-	echo "Using HotSpot build: ${HSBUILD}"
-	if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
-	  | $(SHA256SUM) --check ; \
-	then \
-	  if test "x$(enable_downloading)" = "xyes"; then \
-	    if [ -e $(HOTSPOT_SRC_ZIP) ] ; then \
-	      mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
-	    fi ; \
-	    $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
-	    if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
-	      | $(SHA256SUM) --check ; then \
-	      echo "ERROR: Bad download of HotSpot zip"; false; \
-	    fi; \
-	  else \
-	    echo "ERROR: No up-to-date OpenJDK HotSpot zip available"; exit -1; \
-	  fi ; \
-	fi
 endif
 endif
 	mkdir -p stamps
 	touch $@
 
-clean-download-openjdk:
+clean-download-openjdk: clean-download-hotspot
 	if [ ! -z $(OPENJDK_SRC_ZIP) ] ; then \
 	  rm -f $(OPENJDK_SRC_ZIP) ; \
 	fi
@@ -1033,9 +1014,6 @@ clean-download-openjdk:
 	fi
 	if [ ! -z $(LANGTOOLS_SRC_ZIP) ] ; then \
 	  rm -f $(LANGTOOLS_SRC_ZIP) ; \
-	fi
-	if [ ! -z $(HOTSPOT_SRC_ZIP) ] ; then \
-	  rm -f $(HOTSPOT_SRC_ZIP) ; \
 	fi
 	rm -f stamps/download-openjdk.stamp
 
@@ -1101,6 +1079,43 @@ endif
 clean-download-jamvm:
 	rm -f $(JAMVM_SRC_ZIP)
 	rm -f stamps/download-jamvm.stamp
+
+stamps/download-hotspot.stamp: stamps/download-openjdk.stamp
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+	$(HG) clone $(REV_ARG) $(HS_URL) openjdk/hotspot
+else
+if USE_ALT_HOTSPOT_SRC_ZIP
+	ln -sf $(ALT_HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP)
+endif
+	echo "Using HotSpot build: ${HSBUILD}"
+	if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
+	  | $(SHA256SUM) --check ; \
+	then \
+	  if test "x$(enable_downloading)" = "xyes"; then \
+	    if [ -e $(HOTSPOT_SRC_ZIP) ] ; then \
+	      mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
+	    fi ; \
+	    $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
+	    if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
+	      | $(SHA256SUM) --check ; then \
+	      echo "ERROR: Bad download of HotSpot zip"; false; \
+	    fi; \
+	  else \
+	    echo "ERROR: No up-to-date OpenJDK HotSpot zip available"; exit -1; \
+	  fi ; \
+	fi
+endif
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-download-hotspot:
+	if [ ! -z $(HOTSPOT_SRC_ZIP) ] ; then \
+	  rm -f $(HOTSPOT_SRC_ZIP) ; \
+	fi
+	rm -f stamps/download-hotspot.stamp
 
 stamps/extract.stamp: stamps/extract-openjdk.stamp \
  stamps/extract-cacao.stamp stamps/remove-intree-libraries.stamp \
@@ -1207,7 +1222,7 @@ clean-extract-openjdk: clean-overlay clean-versioning \
 	rm -rf openjdk
 	rm -f stamps/extract-openjdk.stamp
 
-stamps/extract-hotspot.stamp: stamps/extract-openjdk.stamp
+stamps/extract-hotspot.stamp: stamps/extract-openjdk.stamp stamps/download-hotspot.stamp
 	set -e ; \
 	if [ ! -z $(HOTSPOT_SRC_ZIP) ] ; then \
 	  if test -e ${HOTSPOT_SRC_ZIP} ; \
@@ -2713,13 +2728,9 @@ download: stamps/download.stamp
 
 download-cacao: stamps/download-cacao.stamp
 
+download-hotspot: stamps/download-hotspot.stamp
+
 download-jamvm: stamps/download-jamvm.stamp
-
-download-jaf-drop: stamps/download-jaf-drop.stamp
-
-download-jaxp-drop: stamps/download-jaxp-drop.stamp
-
-download-jaxws-drop: stamps/download-jaxws-drop.stamp
 
 download-openjdk: stamps/download-openjdk.stamp
 
