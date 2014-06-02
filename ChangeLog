@@ -1,11 +1,38 @@
-2014-06-02  Andrew John Hughes  <ahughes@redhat.com>
+2014-06-02  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* INSTALL:
+	Remove documentation of --with-project as
+	option is being removed.
+	* Makefile.am:
+	(OPENJDK_HG_URL): Removed.
+	(CVMI_HG_URL): Likewise.
+	(CLOSURES_HG_URL): Likewise.
+	(CACIOCAVALLO_HG_URL): Likewise.
+	(BSD_HG_URL): Likewise.
+	(NIO2_HG_URL): Likewise.
+	(REV_ARG): Added and set conditionally if
+	$(HGREV) is set.
+	(clean-local): Drop clean-hgforest.
+	(hgforest): Removed.
+	(clean-hgforest): Likewise.
+	(download-openjdk): Remove project conditionals.
+	Replace fclone usage with multiple clone calls.
+	(download-nashorn): Add hg support.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_HG): Drop IT_WITH_PROJECT dependency
+	and simply to yes/no.
+	(IT_WITH_PROJECT): Removed.
+	* configure.ac: Drop IT_WITH_PROJECT.
+
+2014-06-02  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
 	(download-openjdk): Fix typo using
 	HOTSPOT_SHA256SUM instead of HS_SHA256SUM.
 	* NEWS: Updated.
 
-2014-05-30  Andrew John Hughes  <ahughes@redhat.com>
+2014-05-30  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1806: Support Debian/Ubuntu 7 & 8 OpenJDK
 	Installs as Boot JDK
@@ -15,7 +42,7 @@
 	and java-8-openjdk to ICEDTEA7_VMS and
 	ICEDTEA8_VMS respectively.
 
-2014-05-29  Andrew John Hughes  <ahughes@redhat.com>
+2014-05-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* patches/alt-jar.patch,
 	* patches/cacao/arch.patch,

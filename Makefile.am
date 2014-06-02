@@ -38,12 +38,6 @@ JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
 
 ICEDTEA_PREFIX = icedtea8-forest
 ICEDTEA_HG_URL = http://icedtea.classpath.org/hg/$(ICEDTEA_PREFIX)
-OPENJDK_HG_URL = http://hg.openjdk.java.net/jdk8/jdk8
-CVMI_HG_URL = http://hg.openjdk.java.net/cvmi/cvmi/
-CLOSURES_HG_URL = http://hg.openjdk.java.net/closures/closures/
-CACIOCAVALLO_HG_URL = http://hg.openjdk.java.net/caciocavallo/jdk8/
-BSD_HG_URL = http://hg.openjdk.java.net/bsd-port/bsd-port
-NIO2_HG_URL = http://hg.openjdk.java.net/nio/nio/
 
 OPENJDK_URL = $(ICEDTEA_HG_URL)
 CORBA_URL = $(ICEDTEA_HG_URL)/corba
@@ -137,6 +131,10 @@ else
   LANGTOOLS_SRC_ZIP = langtools.tar.gz
   HOTSPOT_SRC_ZIP = hotspot.tar.gz
   NASHORN_SRC_ZIP = nashorn.tar.gz
+endif
+
+if WITH_HGREV
+REV_ARG = -r $(HGREV)
 endif
 
 if ENABLE_PULSE_JAVA
@@ -503,7 +501,7 @@ clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
  clean-icedtea clean-icedtea-debug clean-icedtea-boot clean-clone clean-clone-boot \
  clean-bootstrap-directory-stage1 clean-bootstrap-directory-stage2 \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
- clean-extract clean-native-ecj clean-hgforest clean-icedtea-stage2 \
+ clean-extract clean-native-ecj clean-icedtea-stage2 \
  clean-icedtea-debug-stage2 clean-icedtea-stage1 clean-add-zero clean-add-zero-debug \
  clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter
 	if [ -e bootstrap ]; then \
@@ -561,23 +559,6 @@ dist-openjdk-fsg: stamps/patch-fsg.stamp
 # OpenJDK Source Preparation Targets
 # ==================================
 
-# Check for forest support
-
-stamps/hgforest.stamp:
-if USE_HG
-	if ! $(HG) fclone -h; \
-          then \
-          echo "No forest extension found. Please refer to" \
-            "http://selenic.com/mercurial/wiki/index.cgi/ForestExtension"; \
-          exit 1; \
-        fi;
-endif
-	mkdir -p stamps 
-	touch $@
-
-clean-hgforest:
-	rm -f stamps/hgforest.stamp
-
 # Download OpenJDK sources.
 
 stamps/download.stamp: stamps/download-openjdk.stamp stamps/download-cacao.stamp stamps/download-jamvm.stamp \
@@ -588,32 +569,14 @@ stamps/download.stamp: stamps/download-openjdk.stamp stamps/download-cacao.stamp
 clean-download: clean-download-openjdk clean-download-cacao clean-download-jamvm clean-download-nashorn
 	rm -f stamps/download.stamp
 
-stamps/download-openjdk.stamp: stamps/hgforest.stamp
-if !OPENJDK_SRC_DIR_FOUND
-if USE_CLOSURES
-	$(HG) fclone $(CLOSURES_HG_URL) openjdk; 
-else
-if USE_CVMI
-	$(HG) fclone $(CVMI_HG_URL) openjdk; 
-else
-if USE_CACIOCAVALLO
-	$(HG) fclone $(CACIOCAVALLO_HG_URL) openjdk;
-else
-if USE_BSD
-	$(HG) fclone $(BSD_HG_URL) openjdk;
-else
-if USE_NIO2
-	hg fclone $(NIO2_HG_URL) openjdk;
-else
-if USE_ICEDTEA
-	hg fclone $(ICEDTEA_HG_URL) openjdk;
+stamps/download-openjdk.stamp:
+if OPENJDK_SRC_DIR_FOUND
 else
 if USE_HG
-if WITH_HGREV
-	$(HG) fclone -r $(HGREV) $(OPENJDK_HG_URL) openjdk;
-else
-	$(HG) fclone $(OPENJDK_HG_URL) openjdk;
-endif
+	$(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL) openjdk;
+	for repos in corba jaxp jaxws langtools hotspot jdk ; do \
+	  $(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL)/$${repos} openjdk/$${repos}; \
+	done
 else
 if USE_ALT_OPENJDK_SRC_ZIP
 	ln -sf $(ALT_OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP)
@@ -729,12 +692,6 @@ endif
 	fi
 endif
 endif
-endif
-endif
-endif
-endif
-endif
-endif
 	mkdir -p stamps
 	touch $@
 
@@ -817,10 +774,14 @@ clean-download-jamvm:
 	rm -f stamps/download-jamvm.stamp
 
 stamps/download-nashorn.stamp:
-if !OPENJDK_SRC_DIR_FOUND
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+	$(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL)/nashorn openjdk/nashorn
+else
 if USE_ALT_NASHORN_SRC_ZIP
 	ln -sf $(ALT_NASHORN_SRC_ZIP) $(NASHORN_SRC_ZIP)
-else
+endif
 	if ! echo "$(NASHORN_SHA256SUM)  $(NASHORN_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \

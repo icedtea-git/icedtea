@@ -822,10 +822,9 @@ AC_DEFUN([IT_WITH_CACAO_SRC_ZIP],
 
 AC_DEFUN([IT_ENABLE_HG],
 [
-  AC_REQUIRE([IT_WITH_PROJECT])
   AC_MSG_CHECKING(whether to retrieve the source code from Mercurial)
   AC_ARG_ENABLE([hg],
-                [AS_HELP_STRING(--enable-hg,download source code from Mercurial [[default=depends on project]])],
+                [AS_HELP_STRING(--enable-hg,download source code from Mercurial [[default=no]])],
   [
     case "${enableval}" in
       no)
@@ -837,14 +836,7 @@ AC_DEFUN([IT_ENABLE_HG],
     esac
   ],
   [
-    case "${project}" in
-      jdk8)
-        enable_hg=no
-        ;;
-      *)
-        enable_hg=yes
-        ;;
-    esac
+    enable_hg=no
   ])
   AC_MSG_RESULT([${enable_hg}])
   AM_CONDITIONAL([USE_HG], test x"${enable_hg}" = "xyes")
@@ -876,38 +868,6 @@ AC_DEFUN([IT_WITH_VERSION_SUFFIX],
     AC_MSG_RESULT([no])
   ])
   AC_SUBST(VERSION_SUFFIX, $version_suffix)
-])
-
-AC_DEFUN([IT_WITH_PROJECT],
-[
-  DEFAULT_PROJECT="jdk8"
-  AC_MSG_CHECKING(which OpenJDK project is being used)
-  AC_ARG_WITH([project],
-              [AS_HELP_STRING(--with-project=PROJECT,choose the OpenJDK project to use: icedtea jdk7 closures cvmi caciocavallo bsd nio2 [[PROJECT=icedtea]])],
-  [
-    case "${withval}" in
-      yes)
-	project="${DEFAULT_PROJECT}"
-        ;;
-      no)
-	AC_MSG_ERROR([argument passed to --with-project should be a supported OpenJDK project (see help)])
-	;;
-      *)
-        project=${withval}
-        ;;
-    esac
-  ],
-  [
-    project="${DEFAULT_PROJECT}"
-  ])
-  AC_MSG_RESULT([${project}])
-  AC_SUBST(PROJECT_NAME, $project)
-  AM_CONDITIONAL([USE_CLOSURES], test x"${project}" = "xclosures")
-  AM_CONDITIONAL([USE_CVMI], test x"${project}" = "xcvmi")
-  AM_CONDITIONAL([USE_CACIOCAVALLO], test x"${project}" = "xcaciocavallo")
-  AM_CONDITIONAL([USE_BSD], test x"${project}" = "xbsd")
-  AM_CONDITIONAL([USE_NIO2], test x"${project}" = "xnio2")
-  AM_CONDITIONAL([USE_ICEDTEA], test x"${project}" = "xicedtea")
 ])
 
 AC_DEFUN([IT_WITH_GCJ],
