@@ -175,9 +175,6 @@ to configure:
 * --with-abs-install-dir: The final install location of the j2sdk-image, for use in the SystemTap tapset.
 * --with-llvm-config: Specify the location of the llvm-config binary.
 * --with-version-suffix: Appends the given text to the JDK version output.
-* --with-project: Build an OpenJDK project from the following: icedtea, jdk7, closures, cvmi, cacaiocavallo,
-  bsd, nio2.  The default is icedtea.  Use of others is at the user's risk and builds may fail.  This setting
-  affects which forest is checked out when --enable-hg is used and the set of patches applied.
 * --with-hotspot-build: The HotSpot to use, defaulting to 'original' i.e. hs14 as bundled with OpenJDK.
 * --with-pax: The command used to PaX-mark built binaries.
 * --enable-Werror: Turn gcc & javac warnings into errors.
