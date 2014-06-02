@@ -722,7 +722,7 @@ endif
 	    mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
 	  fi ; \
 	  $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
-	  if ! echo "$(HOTSPOT_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
+	  if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of HotSpot zip"; false; \
 	  fi; \

@@ -1,3 +1,10 @@
+2014-06-02  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(download-openjdk): Fix typo using
+	HOTSPOT_SHA256SUM instead of HS_SHA256SUM.
+	* NEWS: Updated.
+
 2014-05-30  Andrew John Hughes  <ahughes@redhat.com>
 
 	PR1806: Support Debian/Ubuntu 7 & 8 OpenJDK
