@@ -292,7 +292,14 @@ if ENABLE_SYSTEMTAP
 endif
 
 if ENABLE_NSS
-ICEDTEA_PATCHES += patches/nss-config.patch
+ICEDTEA_PATCHES += patches/nss-config.patch \
+	patches/rh1022017.patch
+endif
+
+if ENABLE_SUNEC
+if !ENABLE_NSS
+ICEDTEA_PATCHES += patches/rh1022017.patch
+endif
 endif
 
 if WITH_ALT_HSBUILD

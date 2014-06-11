@@ -1,5 +1,19 @@
 2014-06-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR1833, RH1022017: Report elliptic curves
+	supported by NSS, not the SunEC library
+	* NEWS: Updated.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new patch when
+	PKCS11+NSS or SunEC+NSS are enabled, so
+	that the NSS set of curves are announced
+	via SSL.
+	* patches/rh1022017.patch:
+	Reduce number of curves announced over SSL
+	to just those supported by NSS.
+
+2014-06-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR1830: Drop version requirement for LCMS 2
 	* INSTALL: Document lcms2 requirement.
 	* NEWS: Updated.
