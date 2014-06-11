@@ -1,5 +1,12 @@
 2014-06-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR1827: Support AM_MAINTAINER_MODE
+	* NEWS: Updated.
+	* configure.ac: Invoke the AM_MAINTAINER_MODE
+	macro with a default of enabled.
+
+2014-06-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR1371: Provide option to build without debugging
 	* INSTALL: Updated.
 	* Makefile.am:
