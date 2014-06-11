@@ -1,5 +1,13 @@
 2014-06-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR1830: Drop version requirement for LCMS 2
+	* INSTALL: Document lcms2 requirement.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_CHECK_FOR_LCMS): Drop 2.5 requirement.
+
+2014-06-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR1827: Support AM_MAINTAINER_MODE
 	* NEWS: Updated.
 	* configure.ac: Invoke the AM_MAINTAINER_MODE

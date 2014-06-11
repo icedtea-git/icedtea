@@ -189,6 +189,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR1814: HotSpot URL should be used with --enable-hg
   - PR1371: Provide option to build without debugging
   - PR1827: Support AM_MAINTAINER_MODE
+  - PR1830: Drop version requirement for LCMS 2
 
 New in release 2.5.0 (2014-XX-XX):
 
