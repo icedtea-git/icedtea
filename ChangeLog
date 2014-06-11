@@ -1,3 +1,19 @@
+2014-06-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1371: Provide option to build without debugging
+	* INSTALL: Updated.
+	* Makefile.am:
+	(ICEDTEA_ENV): Only set DEBUG_CLASSFILES
+	and DEBUG_BINARIES when ENABLE_JAVA_DEBUGINFO
+	and ENABLE_NATIVE_DEBUGINFO are set, respectively.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_NATIVE_DEBUGINFO): New macro to add
+	option --enable-native-debuginfo.
+	(IT_ENABLE_JAVA_DEBUGINFO): New macro to add
+	option --enable-java-debuginfo.
+	* configure.ac: Invoke new macros.
+
 2014-06-02  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1814: HotSpot URL should be used with --enable-hg

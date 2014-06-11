@@ -204,6 +204,9 @@ These are documented fully in the relevant section below.
   query it at runtime to obtain the cache location, rather than using a
   hardcoded value.
 * --enable-arm32-jit: Build the ARM32 JIT.
+* --enable-sunec: Build the SunEC crypto provider against system NSS.
+* --enable-native-debuginfo: Include debuginfo in native binaries.
+* --enable-java-debuginfo: Include debuginfo in Java class files.
 
 Testing
 =======

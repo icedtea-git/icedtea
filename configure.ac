@@ -51,6 +51,8 @@ IT_DISABLE_HOTSPOT_TESTS
 IT_DISABLE_LANGTOOLS_TESTS
 IT_DISABLE_JDK_TESTS
 IT_ENABLE_SUNEC
+IT_ENABLE_NATIVE_DEBUGINFO
+IT_ENABLE_JAVA_DEBUGINFO
 
 # Use xvfb-run if found to run gui tests (check-jdk).
 AC_CHECK_PROG(XVFB_RUN_CMD, xvfb-run, [xvfb-run -a -e xvfb-errors], [])
