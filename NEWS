@@ -191,6 +191,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR1827: Support AM_MAINTAINER_MODE
   - PR1830: Drop version requirement for LCMS 2
   - PR1833, RH1022017: Report elliptic curves supported by NSS, not the SunEC library
+  - PR1741: Break PulseAudio provider out into IcedTea-Sound
 
 New in release 2.5.0 (2014-XX-XX):
 
