@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use constant NO_DUP_ARGS => qw(-source -target -d -encoding);
-use constant STRIP_ARGS_1 => qw(-Werror -implicit:none);
+use constant STRIP_ARGS_1 => qw(-Werror -implicit:none -J-Xbootclasspath/p:);
 use constant STRIP_ARGS_2 => qw(-Xmaxwarns);
 
 my ($ECJ_WARNINGS, $JAVAC_WARNINGS);
@@ -18,19 +18,32 @@ else
 }
 
 my @bcoption;
-my @bcoptions = grep {$_ =~ '^-Xbootclasspath/p:' } @ARGV;
+my @bcoptionsp = grep {$_ =~ '^-Xbootclasspath/p:' } @ARGV;
+my @bcoptions = grep {$_ =~ '^-Xbootclasspath:' } @ARGV;
+my @bcoptionsa = grep {$_ =~ '^-Xbootclasspath/a:' } @ARGV;
+my $bcp = $bcoptionsp[0];
 my $bc = $bcoptions[0];
+my $bca = $bcoptionsa[0];
 my $systembc = glob '@abs_top_builddir@/bootstrap/jdk1.6.0/jre/lib/rt.jar';
+if ($bcp)
+{
+    $bcp =~ s/^[^:]*://;
+    $systembc = join ":", $bcp, $systembc;
+}
 if ($bc)
 {
     $bc =~ s/^[^:]*://;
-    $systembc = join ":", $bc, $systembc;
+    $systembc = $bc;
+}
+if ($bca)
+{
+    $bca =~ s/^[^:]*://;
+    $systembc = join ":", $systembc, $bca;
 }
 push @bcoption, '-bootclasspath', $systembc
     unless grep {$_ eq '-bootclasspath'} @ARGV;
 my @ecj_parms = ($ECJ_WARNINGS, @bcoption);
-my @javac_parms = ($JAVAC_WARNINGS, '-Xprefer:source',
-		   '-XDignore.symbol.file=true', '-J-Xmx1024m');
+my @javac_parms = ($JAVAC_WARNINGS, '-Xprefer:source', '-XDignore.symbol.file=true');
 
 # Work around ecj's inability to handle duplicate command-line
 # options and unknown javac options.
@@ -59,31 +72,46 @@ sub gen_ecj_opts
 	splice @new_args, $_, 2 for @indices;
     }
 
-    return @new_args;
+    return \@new_args;
+}
+
+sub split_vm_args
+{
+    my @new_args = @{$_[0]};
+
+    my @vm_args = map { substr $_, 2 } grep $_ =~ /^-J/, @new_args;
+    my @javac_args = grep $_ !~ /^-J/, @new_args;
+
+    return (\@vm_args, \@javac_args);
 }
 
 if ( -e "@abs_top_builddir@/native-ecj" )
 {
-    my @ecj_args = gen_ecj_opts( \@ARGV );
-    exec '@abs_top_builddir@/native-ecj', @ecj_parms, @ecj_args ;
+    my $ecj_args = gen_ecj_opts( \@ARGV );
+    exec '@abs_top_builddir@/native-ecj', @ecj_parms, @$ecj_args ;
 }
 elsif ( -e "@JAVAC@" )
 {
     if ("@USING_ECJ@" eq "yes")
     {
-	my @ecj_args = gen_ecj_opts( \@ARGV );
-	exec '@JAVAC@', @ecj_parms, @ecj_args ;
+	my $ecj_args = gen_ecj_opts( \@ARGV );
+	exec '@JAVAC@', @ecj_parms, @$ecj_args ;
     }
     else
     {
 	exec '@JAVAC@', @javac_parms, @ARGV ;
     }
 }
-else
+elsif ( -e "@ECJ_JAR@" )
 {
-    my @ecj_args = gen_ecj_opts( \@ARGV );
+    my ($vm_args, $javac_args) = split_vm_args (gen_ecj_opts( \@ARGV ));
     my @CLASSPATH = ('@ECJ_JAR@');
     push @CLASSPATH, split /:/, $ENV{"CLASSPATH"} if exists $ENV{"CLASSPATH"};
     $ENV{"CLASSPATH"} = join ':', @CLASSPATH;
-    exec '@JAVA@', 'org.eclipse.jdt.internal.compiler.batch.Main', @ecj_parms, @ecj_args;
+    exec '@JAVA@', @$vm_args, 'org.eclipse.jdt.internal.compiler.batch.Main', @ecj_parms, @$javac_args;
+}
+else
+{
+    print STDERR "No Java compiler to run";
+    exit -1;
 }

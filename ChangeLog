@@ -1,5 +1,31 @@
 2014-06-13  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR1847: Synchronise javac.in with IcedTea6
+	* NEWS: Updated.
+
+2013-05-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* javac.in: Handle -Xbootclasspath/p, -Xbootclasspath
+	and -Xbootclasspath/a by prepending, setting or appending
+	its value to the bootclasspath option used to ecj,
+	respectively.
+
+2012-05-09  Andrew John Hughes  <ahughes@redhat.com>
+
+	* javac.in:
+	Split out '-J' prefixed options and pass them
+	to the VM rather than ecj.  Filter out
+	'-J-Xbootclasspath/p:', which makes no sense
+	as there's nothing to prepend, and confuses
+	the VM.
+
+2012-11-28  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* javac.in:
+	Add final else block which exits with an error.
+
+2014-06-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* NEWS:
 	Add release notes for 2.5.0 and remove
 	duplicates.
