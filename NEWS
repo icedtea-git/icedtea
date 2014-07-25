@@ -29,29 +29,22 @@ New in release 2.6.0 (2014-XX-XX):
   - S8002148: [TEST_BUG] The four lines printed are not the bold typeface.
   - S8006023: Embedded Builds fail management test because of requirement for UsePerfData being enabled.
   - S8012026: [macosx] Component.getMousePosition() does not work in an applet on MacOS
-  - S8013611: Modal dialog fails to obtain keyboard focus
   - S8015421: NegativeArraySizeException occurs in ChunkedOutputStream() with Integer.MAX_VALUE
   - S8019623: Lack of synchronization in AppContext.getAppContext()
   - S8019800: Test sun/tools/jcmd/jcmd-f.sh failing after JDK-8017011
-  - S8019990: IM candidate window appears on the South-East corner of the display.
-  - S8020191: System.getProperty("os.name") returns "Windows NT (unknown)" on Windows 8.1
   - S8021372: NetworkInterface.getNetworkInterfaces() returns duplicate hardware address
   - S8022531: [TEST_BUG] After double-click on the folder names , there is no 'OK' button in the dialog.
   - S8022836: JVM crashes in JVMTIENVBASE::GET_CURRENT_CONTENDED_MONITOR and GET_OWNED_MONITOR
-  - S8023990: Regression: postscript size increase from 6u18
   - S8024675: java/net/NetworkInterface/UniqueMacAddressesTest.java fails on Windows
   - S8027026: Change keytool -genkeypair to use -keyalg RSA
-  - S8027212: java/nio/channels/Selector/SelectAfterRead.java fails intermittently
   - S8027348: (process) Enhancement of handling async close of ProcessInputStream
   - S8027359: XML parser returns incorrect parsing results
   - S8028073: race condition in ObjectMonitor implementation causing deadlocks
   - S8028616: Htmleditorkit parser doesn't handle leading slash (/)
   - S8028623: SA: hash codes in SymbolTable mismatching java_lang_String::hash_code for extended characters.
   - S8029073: (corba) New connection reclaimed when number of connection is greater than highwatermark
-  - S8030655: Regression: 14_01 Security fix 8024306 causes test failures
   - S8030698: Several GUI labels in jconsole need correction
   - S8030712: TEST_BUG : java/lang/ProcessBuilder/BasicLauncher.java fails if java output contains VM warning
-  - S8030813: Signed applet fails to load when CRLs are stored in an LDAP directory
   - S8030878: JConsole issues meaningless message if SSL connection fails
   - S8031061: new hotspot build - hs24.60-b07
   - S8031572: jarsigner -verify exits with 0 when a jar file is not properly signed
@@ -73,13 +66,221 @@ New in release 2.6.0 (2014-XX-XX):
   - S8035988: 7u60 l10n resource file translation update 1
   - S8036022: D3D: rendering with XOR composite causes InternalError.
   - S8036778: new hotspot build - hs24.80-b05
-  - S8036786: Update jdk7 testlibrary to match jdk8
   - S8036863: Update jdk7 testlibrary to match jdk8 in hotspot
   - S8038481: CMM Testing: Min/MaxHeapFreeRatio flags should be manageable through the API
   - S8038640: new hotspot build - hs24.80-b06
   - S8038785: hot workaround fix for a crash in C2 compiler at Node::rematerialize
 * Bug fixes
   - PR1847: Synchronise javac.in with IcedTea6
+
+New in release 2.4.8 (2014-07-23):
+
+* Security fixes
+  - S8029755, CVE-2014-4209: Enhance subject class
+  - S8030763: Validate global memory allocation
+  - S8031340, CVE-2014-4264: Better TLS/EC management
+  - S8031346, CVE-2014-4244: Enhance RSA key handling
+  - S8031540: Introduce document horizon
+  - S8032536: JVM resolves wrong method in some unusual cases
+  - S8033055: Issues in 2d
+  - S8033301, CVE-2014-4266: Build more informative InfoBuilder
+  - S8034267: Probabilistic native crash
+  - S8034272: Do not cram data into CRAM arrays
+  - S8034985, CVE-2014-2483: Better form for Lambda Forms
+  - S8035004, CVE-2014-4252: Provider provides less service
+  - S8035009, CVE-2014-4218: Make Proxy representations consistent
+  - S8035119, CVE-2014-4219: Fix exceptions to bytecode verification
+  - S8035699, CVE-2014-4268: File choosers should be choosier
+  - S8035788. CVE-2014-4221: Provide more consistency for lookups
+  - S8035793, CVE-2014-4223: Maximum arity maxed out
+  - S8036571: (process) Process process arguments carefully
+  - S8036800: Attribute OOM to correct part of code
+  - S8037046: Validate libraries to be loaded
+  - S8037076, CVE-2014-2490: Check constant pool constants
+  - S8037157: Verify <init> call
+  - S8037162, CVE-2014-4263: More robust DH exchanges
+  - S8037167, CVE-2014-4216: Better method signature resolution
+  - S8039520, CVE-2014-4262: More atomicity of atomic updates
+* Backports
+  - S5049299: (process) Use posix_spawn, not fork, on S10 to avoid swap exhaustion
+  - S6571600: JNI use results in UnsatisfiedLinkError looking for libmawt.so
+  - S7131153: GetDC called way too many times - causes bad performance.
+  - S7190349: [macosx] Text (Label) is incorrectly drawn with a rotated g2d
+  - S8001108: an attempt to use "<init>" as a method name should elicit NoSuchMethodException
+  - S8001109: arity mismatch on a call to spreader method handle should elicit IllegalArgumentException
+  - S8008118: (process) Possible null pointer dereference in jdk/src/solaris/native/java/lang/UNIXProcess_md.c
+  - S8013611: Modal dialog fails to obtain keyboard focus
+  - S8013809: deadlock in SSLSocketImpl between between write and close
+  - S8013836: getFirstDayOfWeek reports wrong day for pt-BR locale
+  - S8014460: Need to check for non-empty EXT_LIBS_PATH before using it
+  - S8019853: Break logging and AWT circular dependency
+  - S8019990: IM candidate window appears on the South-East corner of the display.
+  - S8020191: System.getProperty("os.name") returns "Windows NT (unknown)" on Windows 8.1
+  - S8022452: Hotspot needs to know about Windows 8.1 and Windows Server 2012 R2
+  - S8023990: Regression: postscript size increase from 6u18
+  - S8024283: 10 nashorn tests fail with similar stack trace InternalError with cause being NoClassDefFoundError
+  - S8024616: JSR292: lazily initialize core NamedFunctions used for bootstrapping
+  - S8024648: 7141246 & 8016131 break Zero port (AArch64 only)
+  - S8024830: SEGV in org.apache.lucene.codecs.compressing.CompressingTermVectorsReader.get
+  - S8025588: [macosx] Frozen AppKit thread in 7u40
+  - S8026404: Logging in Applet can trigger ACE: access denied ("java.lang.RuntimePermission" "modifyThreadGroup")
+  - S8026705: [TEST_BUG] java/beans/Introspector/TestTypeResolver.java failed
+  - S8027196: Increment minor version of HSx for 7u55 and initialize the build number
+  - S8027212: java/nio/channels/Selector/SelectAfterRead.java fails intermittently
+  - S8028285: RMI Thread can no longer call out to AWT
+  - S8029177: [Parfait] warnings from b117 for jdk.src.share.native.com.sun.java.util.jar: JNI exception pending
+  - S8030655: Regression: 14_01 Security fix 8024306 causes test failures
+  - S8030813: Signed applet fails to load when CRLs are stored in an LDAP directory
+  - S8030822: (tz) Support tzdata2013i
+  - S8031050: (thread) Change Thread initialization so that thread name is set before invoking SecurityManager
+  - S8031075: [Regression] focus disappears with shift+tab on dialog having one focus component
+  - S8031462: Fonts with morx tables are broken with latest ICU fixes
+  - S8032585: JSR292: IllegalAccessError when attempting to invoke protected method from different package
+  - S8032740: Need to create SE Embedded Source Bundles in 7 Release
+  - S8033278: Missed access checks for Lookup.unreflect* after 8032585
+  - S8034772: JDK-8028795 brought a specification change to 7u55 release and caused JCK7 signature test failure
+  - S8035283: Second phase of branch shortening doesn't account for loop alignment
+  - S8035613: With active Securitymanager JAXBContext.newInstance fails
+  - S8035618: Four api/org_omg/CORBA TCK tests fail under plugin only
+  - S8036147: Increment hsx 24.55 build to b02 for 7u55-b11
+  - S8036786: Update jdk7 testlibrary to match jdk8
+  - S8036837: Increment hsx 24.55 build to b03 for 7u55-b12
+  - S8037012: (tz) Support tzdata2014a
+  - S8038306: (tz) Support tzdata2014b
+  - S8038392: Generating prelink cache breaks JAVA 'jinfo' utility normal behavior
+  - S8042264: 7u65 l10n resource file translation update 1
+  - S8042582: Test java/awt/KeyboardFocusmanager/ChangeKFMTest/ChangeKFMTest.html fails on Windows x64
+  - S8042590: Running form URL throws NPE
+  - S8042789: org.omg.CORBA.ORBSingletonClass loading no longer uses context class loader
+  - S8043012: (tz) Support tzdata2014c
+* Bug fixes
+  - Fix accidental reversion of PR1188 for armel
+  - PR1781: NSS PKCS11 provider fails to handle multipart AES encryption
+  - PR1830: Drop version requirement for LCMS 2
+  - PR1833, RH1022017: Report elliptic curves supported by NSS, not the SunEC library
+  - RH905128: [CRASH] OpenJDK-1.7.0 while using NSS security provider and kerberos
+* AArch64 port
+  - AArch64 C2 instruct for smull
+  - Add a constructor as a conversion from Register - RegSet.  Use it.
+  - Add RegSet::operator+=.
+  - Add support for a few simple intrinsics
+  - Add support for builtin crc32 instructions
+  - Add support for CRC32 intrinsic
+  - Add support for Neon implementation of CRC32
+  - All address constants are 48 bits in size.
+  - C1: Fix offset overflow when profiling.
+  - Common frame handling for C1/C2 which correctly handle all frame sizes
+  - Correct costs for operations with shifts.
+  - Correct OptoAssembly for prologs and epilogs.
+  - Delete useless instruction.
+  - Don't use any form of _call_VM_leaf when we're calling a stub.
+  - Fast string comparison
+  - Fast String.equals()
+  - Fix a tonne of bogus comments.
+  - Fix biased locking and enable as default
+  - Fix instruction size from 8 to 4
+  - Fix opto assembly for shifts.
+  - Fix register misuse in verify_method_data_pointer
+  - Fix register usage in generate_verify_oop().
+  - Implement various locked memory operations.
+  - Improve C1 performance improvements in ic_cache checks
+  - Improve code generation for pop(), as suggested by Edward Nevill.
+  - Improvements to safepoint polling
+  - Make code entry alignment 64 for C2
+  - Minor optimisation for divide by 2
+  - New cost model for instruction selection.
+  - Offsets in lookupswitch instructions should be signed.
+  - Optimise addressing of card table byte map base
+  - Optimise C2 entry point verification
+  - Optimise long divide by 2
+  - Performance improvement and ease of use changes pulled from upstream
+  - Preserve callee save FP registers around call to java code
+  - Remove obsolete C1 patching code.
+  - Remove special-case handling of division arguments.  AArch64 doesn't need it.
+  - Remove unnecessary memory barriers around CAS operations
+  - Restore sp from sender sp, r13 in crc32 code
+  - Restrict default ReservedCodeCacheSize to 128M
+  - Rewrite CAS operations to be more conservative
+  - Save intermediate state before removing C1 patching code.
+  - Tidy up register usage in push/pop instructions.
+  - Tidy up stack frame handling.
+  - Use 2- and 3-instruction immediate form of movoop and mov_metadata in C2-generated code.
+  - Use an explicit set of registers rather than a bitmap for psh and pop operations.
+  - Use explicit barrier instructions in C1.
+  - Use gcc __clear_cache instead of doing it ourselves
+
+New in release 2.5.1 (2014-07-16):
+
+* Security fixes
+  - S8029755, CVE-2014-4209: Enhance subject class
+  - S8030763: Validate global memory allocation
+  - S8031340, CVE-2014-4264: Better TLS/EC management
+  - S8031346, CVE-2014-4244: Enhance RSA key handling
+  - S8031540: Introduce document horizon
+  - S8032536: JVM resolves wrong method in some unusual cases
+  - S8033055: Issues in 2d
+  - S8033301, CVE-2014-4266: Build more informative InfoBuilder
+  - S8034267: Probabilistic native crash
+  - S8034272: Do not cram data into CRAM arrays
+  - S8034985, CVE-2014-2483: Better form for Lambda Forms
+  - S8035004, CVE-2014-4252: Provider provides less service
+  - S8035009, CVE-2014-4218: Make Proxy representations consistent
+  - S8035119, CVE-2014-4219: Fix exceptions to bytecode verification
+  - S8035699, CVE-2014-4268: File choosers should be choosier
+  - S8035788. CVE-2014-4221: Provide more consistency for lookups
+  - S8035793, CVE-2014-4223: Maximum arity maxed out
+  - S8036571: (process) Process process arguments carefully
+  - S8036800: Attribute OOM to correct part of code
+  - S8037046: Validate libraries to be loaded
+  - S8037076, CVE-2014-2490: Check constant pool constants
+  - S8037157: Verify <init> call
+  - S8037162, CVE-2014-4263: More robust DH exchanges
+  - S8037167, CVE-2014-4216: Better method signature resolution
+  - S8039520, CVE-2014-4262: More atomicity of atomic updates
+* Backports
+  - S8001108: an attempt to use "<init>" as a method name should elicit NoSuchMethodException
+  - S8001109: arity mismatch on a call to spreader method handle should elicit IllegalArgumentException
+  - S8013611: Modal dialog fails to obtain keyboard focus
+  - S8013836: getFirstDayOfWeek reports wrong day for pt-BR locale
+  - S8019990: IM candidate window appears on the South-East corner of the display.
+  - S8023990: Regression: postscript size increase from 6u18
+  - S8024283: 10 nashorn tests fail with similar stack trace InternalError with cause being NoClassDefFoundError
+  - S8024616: JSR292: lazily initialize core NamedFunctions used for bootstrapping
+  - S8025030: Enhance stream handling
+  - S8026188: Enhance envelope factory
+  - S8027212: java/nio/channels/Selector/SelectAfterRead.java fails intermittently
+  - S8028285: RMI Thread can no longer call out to AWT
+  - S8029177: [Parfait] warnings from b117 for jdk.src.share.native.com.sun.java.util.jar: JNI exception pending
+  - S8031075: [Regression] focus disappears with shift+tab on dialog having one focus component
+  - S8032585: JSR292: IllegalAccessError when attempting to invoke protected method from different package
+  - S8032686: Issues with method invoke
+  - S8033278: Missed access checks for Lookup.unreflect* after 8032585
+  - S8033618: Correct logging output
+  - S8034926: Attribute classes properly
+  - S8035613: With active Securitymanager JAXBContext.newInstance fails
+  - S8035834: InetAddress.getLocalHost() can hang after JDK-8030731 was fixed
+  - S8035923: Set minor version for hotspot in 7u65 to 65 and build number to b01
+  - S8036786: Update jdk7 testlibrary to match jdk8
+  - S8036794: Manage JavaScript instances
+  - S8039324: Increment hsx 24.65 build to b02 for 7u65-b07
+  - S8040156: Increment hsx 24.65 build to b03 for 7u65-b08
+  - S8041264: Increment hsx 24.65 build to b04 for 7u65-b09
+  - S8042264: 7u65 l10n resource file translation update 1
+  - S8042582: Test java/awt/KeyboardFocusmanager/ChangeKFMTest/ChangeKFMTest.html fails on Windows x64
+  - S8042590: Running form URL throws NPE
+  - S8042789: org.omg.CORBA.ORBSingletonClass loading no longer uses context class loader
+  - S8043012: (tz) Support tzdata2014c
+* Bug fixes
+  - PR1853: Revert PR729 from minor release
+  - PR1864: PCSC + OpenJDK 1.7 crash on Fedora 20
+  - PR1867: Turn the infinality patch off by default
+  - PR1868: Avoid x86 workaround when running Zero rather than a JIT
+* AArch64 port
+  - Common frame handling for C1/C2 which correctly handle all frame sizes
+  - Fix register misuse in verify_method_data_pointer
+  - Fix register usage in generate_verify_oop().
+  - Restrict default ReservedCodeCacheSize to 128M
+  - Use explicit barrier instructions in C1.
 
 New in release 2.5.0 (2014-06-13):
 

@@ -1,3 +1,8 @@
+2014-07-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Add release notes for 2.4.8 & 2.5.1.
+	Remove duplicates listed under 2.6.0.
+
 2014-06-13  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1847: Synchronise javac.in with IcedTea6
