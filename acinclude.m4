@@ -2791,6 +2791,34 @@ AC_DEFUN_ONCE([IT_ENABLE_JAVA_DEBUGINFO],
   AM_CONDITIONAL([ENABLE_JAVA_DEBUGINFO], test x"${enable_java_debuginfo}" = "xyes")
 ])
 
+AC_DEFUN_ONCE([IT_ENABLE_INFINALITY],
+[
+  AC_REQUIRE([IT_CHECK_FOR_FONTCONFIG])
+  AC_MSG_CHECKING([whether to use fontconfig to provide better font rendering])
+  AC_ARG_ENABLE([infinality],
+                [AS_HELP_STRING(--enable-infinality,build with fontconfig font rendering [[default=yes]])],
+  [
+    case "${enableval}" in
+      yes)
+        enable_infinality=yes
+        ;;
+      *)
+        enable_infinality=no
+        ;;
+    esac
+  ],
+  [
+    enable_infinality=yes
+  ])
+  AC_MSG_RESULT([$enable_infinality])
+  AM_CONDITIONAL([ENABLE_INFINALITY], test x"${enable_infinality}" = "xyes")
+  if test "x${enable_infinality}" = "xyes"; then
+    if test "x${ENABLE_SYSTEM_FONTCONFIG}" != "xtrue"; then
+      AC_MSG_ERROR([Infinality support requires fontconfig. Either --enable-system-fontconfig or --disable-infinality])
+    fi
+  fi
+])
+
 AC_DEFUN_ONCE([IT_HAS_NATIVE_HOTSPOT_PORT],
 [
   AC_MSG_CHECKING([if a native HotSpot port is available for this architecture])

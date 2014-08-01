@@ -1,3 +1,68 @@
+2014-07-31  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-2.6pre05 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to pre05.
+	* hotspot.map: Update to icedtea-2.6pre05tag. Set
+	type of default to drop and aarch64 to hg.
+	* patches/rhino.patch: Regenerated following
+	removal of merge artefact.
+
+2014-06-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* AUTHORS:
+	Add authors of infinality patch. Websites are used
+	as present as couldn't find any e-mail addresses.
+	* INSTALL: Document --enable-infinality.
+	* Makefile.am:
+	(DROP_URL): Added to point to drops on IcedTea server.
+	(CACAO_BASE_URL): Reference DROP_URL.
+	(JAMVM_BASE_URL): Likewise.
+	(ICEDTEA_MAJOR): Split out major release name ('IcedTea7')
+	(ICEDTEA_PREFIX): Use ICEDTEA_MAJOR.
+	(ICEDTEA_URL): Path to drops.
+	(OPENJDK_URL): Removed.
+	(CORBA_URL): Likewise.
+	(JAXP_URL): Likewise.
+	(JAXWS_URL): Likewise.
+	(JDK_URL): Likewise.
+	(LANGTOOLS_URL): Likewise.
+	(HS_TYPE): Added. Differentiate between a drop tarball
+	and a hg archive in hotspot.map.
+	(HS_URL): Bump field number by 1 following addition of type.
+	(HS_CHANGESET): Likewise.
+	(HS_SHA256SUM): Likewise.
+	(OPENJDK_SRC_ZIP): Change suffix to bz2.
+	(CORBA_SRC_ZIP): Likewise.
+	(JAXP_SRC_ZIP): Likewise.
+	(JAXWS_SRC_ZIP): Likewise.
+	(JDK_SRC_ZIP): Likewise.
+	(LANGTOOLS_SRC_ZIP): Likewise.
+	(HOTSPOT_SRC_ZIP): Likewise.
+	(ICEDTEA_ENV): Set INFINALITY_SUPPORT=true when
+	infinality is enabled.
+	(download-openjdk): Use ICEDTEA_URL for all drops.
+	(download-hotspot); Support HS_TYPE, appending
+	"archive/$(HS_CHANGESET)" to hg archive URLs and
+	"$(HOTSPOT_SRC_ZIP)" to drop URLs.
+	(ADD_ZERO_CONFIGURE_ARGS): Change suffix to bz2.
+	* acinclude.m4:
+	(IT_ENABLE_INFINALITY): Macro for new option.
+	* configure.ac: Invoke IT_ENABLE_INFINALITY instead
+	of its dependency, IT_CHECK_FOR_FONTCONFIG.
+
 2014-07-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add release notes for 2.4.8 & 2.5.1.

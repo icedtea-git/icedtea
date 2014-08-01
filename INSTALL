@@ -206,6 +206,7 @@ These are documented fully in the relevant section below.
 * --enable-sunec: Build the SunEC crypto provider against system NSS.
 * --enable-native-debuginfo: Include debuginfo in native binaries.
 * --enable-java-debuginfo: Include debuginfo in Java class files.
+* --enable-infinality: Use fontconfig for better font rendering
 
 Testing
 =======

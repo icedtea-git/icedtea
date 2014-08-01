@@ -1,4 +1,4 @@
-AC_INIT([icedtea], [2.6pre04], [distro-pkg-dev@openjdk.java.net])
+AC_INIT([icedtea], [2.6pre05], [distro-pkg-dev@openjdk.java.net])
 AM_INIT_AUTOMAKE([1.9 tar-pax foreign])
 AM_MAINTAINER_MODE([enable])
 AC_CONFIG_FILES([Makefile])
@@ -207,7 +207,7 @@ IT_CHECK_FOR_GIF
 IT_CHECK_FOR_LCMS
 IT_CHECK_FOR_GTK
 IT_CHECK_FOR_GIO
-IT_CHECK_FOR_FONTCONFIG
+IT_ENABLE_INFINALITY
 IT_CHECK_FOR_CUPS
 IT_CHECK_FOR_SYSCALLS
 IT_CHECK_FOR_PCSC

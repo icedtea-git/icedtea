@@ -71,6 +71,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S8038640: new hotspot build - hs24.80-b06
   - S8038785: hot workaround fix for a crash in C2 compiler at Node::rematerialize
 * Bug fixes
+  - PR1786: Allow x86 build to occur on x86_64 using a previously built x86_64 build
   - PR1847: Synchronise javac.in with IcedTea6
 
 New in release 2.4.8 (2014-07-23):
