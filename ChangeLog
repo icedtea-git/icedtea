@@ -1,3 +1,11 @@
+2014-06-13  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* javaws.desktop,
+	* javaws.png:
+	Remove obsolete files.
+	* Makefile.am:
+	(EXTRA_DIST): Remove above.
+
 2014-06-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* .hgignore: Add compile script added by
