@@ -1464,13 +1464,10 @@ if HAS_PKGVERSION
 	  echo "DISTRO_PACKAGE_VERSION=$(PKGVERSION)" \
 	    >>openjdk/jdk/make/common/shared/Defs.gmk ;
 endif
-	if test x"$(PROJECT_NAME)" != "xjdk7" && test x"$(PROJECT_NAME)" != "xicedtea"; then \
-	  proj_suffix="-$(PROJECT_NAME)"; \
-	fi ; \
 	if test x"$(VERSION_SUFFIX)" != "x"; then \
 	  ver_suffix="-$(VERSION_SUFFIX)"; \
 	fi ; \
-	$(SED) -i "s#BUILD_VARIANT_RELEASE)#BUILD_VARIANT_RELEASE)$${proj_suffix}$${ver_suffix}#" \
+	$(SED) -i "s#BUILD_VARIANT_RELEASE)#BUILD_VARIANT_RELEASE)$${ver_suffix}#" \
 	  openjdk/jdk/make/common/shared/Defs.gmk;
 	mkdir -p stamps
 	touch $@
