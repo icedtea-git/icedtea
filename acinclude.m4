@@ -2796,7 +2796,7 @@ AC_DEFUN_ONCE([IT_ENABLE_INFINALITY],
   AC_REQUIRE([IT_CHECK_FOR_FONTCONFIG])
   AC_MSG_CHECKING([whether to use fontconfig to provide better font rendering])
   AC_ARG_ENABLE([infinality],
-                [AS_HELP_STRING(--enable-infinality,build with fontconfig font rendering [[default=yes]])],
+                [AS_HELP_STRING(--enable-infinality,build with fontconfig font rendering [[default=no]])],
   [
     case "${enableval}" in
       yes)
@@ -2808,7 +2808,7 @@ AC_DEFUN_ONCE([IT_ENABLE_INFINALITY],
     esac
   ],
   [
-    enable_infinality=yes
+    enable_infinality=no
   ])
   AC_MSG_RESULT([$enable_infinality])
   AM_CONDITIONAL([ENABLE_INFINALITY], test x"${enable_infinality}" = "xyes")

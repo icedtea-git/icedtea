@@ -1,3 +1,9 @@
+2014-07-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1867: Turn the infinality patch off by default
+	* acinclude.m4:
+	(IT_ENABLE_INFINALITY): Set default to no.
+
 2014-08-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1846: Build fails when using IcedTea7 as bootstrap
@@ -14,7 +20,6 @@
 	* Makefile.am:
 	(versioning): Drop use of PROJECT_NAME removed
 	in PR1365.
-	* NEWS: Updated.
 
 2014-06-13  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
