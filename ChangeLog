@@ -1,3 +1,9 @@
+2014-07-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2931: Turn the infinality patch off by default
+	* acinclude.m4:
+	(IT_ENABLE_INFINALITY): Set default to no.
+
 2016-07-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
