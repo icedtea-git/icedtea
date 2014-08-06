@@ -73,6 +73,7 @@ New in release 2.6.0 (2014-XX-XX):
 * Bug fixes
   - PR1786: Allow x86 build to occur on x86_64 using a previously built x86_64 build
   - PR1847: Synchronise javac.in with IcedTea6
+  - PR1846: Build fails when using IcedTea7 as bootstrap JDK with native ecj
 
 New in release 2.4.8 (2014-07-23):
 

@@ -1,3 +1,12 @@
+2014-08-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1846: Build fails when using IcedTea7 as bootstrap
+	JDK with native ecj
+	* NEWS: Updated.
+	* patches/boot/icedteart.patch:
+	Remove additions of ICEDTEA_RT to classpath which
+	are no longer needed.
+
 2014-06-13  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1848: Removal of project support leaves
