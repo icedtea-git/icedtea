@@ -7193,3 +7193,24 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/script/ScriptEngineManag
          try {
              while (itr.hasNext()) {
                  try {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/beans/MethodRef.java openjdk-boot/jdk/src/share/classes/java/beans/MethodRef.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/beans/MethodRef.java	2014-08-13 18:32:51.997691114 +0100
++++ openjdk-boot/jdk/src/share/classes/java/beans/MethodRef.java	2014-08-13 18:33:16.046036326 +0100
+@@ -44,7 +44,7 @@
+         }
+         else {
+             this.signature = method.toGenericString();
+-            this.methodRef = new SoftReference<>(method);
++            this.methodRef = new SoftReference<Method>(method);
+             this.typeRef = new WeakReference<Class<?>>(method.getDeclaringClass());
+         }
+     }
+@@ -66,7 +66,7 @@
+                 this.typeRef = null;
+             }
+             else {
+-                this.methodRef = new SoftReference<>(method);
++                this.methodRef = new SoftReference<Method>(method);
+             }
+         }
+         return isPackageAccessible(method.getDeclaringClass()) ? method : null;
