@@ -1,3 +1,13 @@
+2014-08-18  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* AUTHORS: Add Yasumasa Suenaga.
+	* NEWS: Updated.
+
+2014-08-18  Yasumasa Suenaga  <yasuenag@gmail.com>
+
+	PR1845: jstack.stp in OpenJDK8 is broken
+	* tapset/jstack.stp.in: Updated.
+
 2013-10-02  Yasumasa Suenaga  <yasu@ysfactory.dip.jp>
 
 	* jstack.stp should be adapted CR#7172967
