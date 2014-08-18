@@ -26,19 +26,20 @@ New in release 3.0.0 (2014-XX-XX):
   - PR1347: Update list of checked JDKs
   - PR1357: Make XRender mandatory
   - PR1359: Check for /usr/lib64 JVMs and generic JPackage alternative
-  - Don't substitute 'j' for '-j' inside -I directives
-  - Extend 8041658 to all files in the HotSpot build.
+  - PR1364: Replace hgforest support
   - PR1748: Allow clang to be used to build
   - PR1766: Expand architecture support
-  - PR1774: Correct #ifdef to #if
   - PR1774: Support GIF lib v5
+  - PR1774: Correct #ifdef to #if
   - PR1778: Allow an alternate JAR program to be used
   - PR1796: make fails with "computed checksum did NOT match"
-  - Remove jcheck
   - PR1806: Support Debian/Ubuntu 7 & 8 OpenJDK Installs as Boot JDK
   - PR1812: Unable to locate HotSpot checksum when downloading
-  - PR1364: Replace hgforest support
   - PR1813: HotSpot URL should be used with --enable-hg
+  - PR1935: HotSpot extraction needs to depend on the tarball being downloaded
+  - Don't substitute 'j' for '-j' inside -I directives
+  - Extend 8041658 to all files in the HotSpot build.
+  - Remove jcheck
 * JamVM
   - JSR 292: Invoke Dynamic
   - JSR 308: Type Annotations

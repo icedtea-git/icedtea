@@ -927,7 +927,8 @@ clean-extract-openjdk: clean-overlay clean-versioning \
 	rm -rf openjdk
 	rm -f stamps/extract-openjdk.stamp
 
-stamps/extract-hotspot.stamp: stamps/extract-openjdk.stamp
+stamps/extract-hotspot.stamp: stamps/extract-openjdk.stamp \
+ stamps/download-hotspot.stamp
 	set -e ; \
 	if [ ! -z $(HOTSPOT_SRC_ZIP) ] ; then \
 	  if test -e ${HOTSPOT_SRC_ZIP} ; \
