@@ -1,3 +1,3 @@
 # version type(drop/hg) url changeset sha256sum
-default drop http://icedtea.classpath.org/download/drops/icedtea7 b517477362d1 9c8fc60f6c697d4799b74aef01fb17d59c1773ce2895c710030d0201560857aa
+default drop http://icedtea.classpath.org/download/drops/icedtea7 8ffb87775f56 4ebe884633a09388f1801303e77307ceb1987d2228963c6f517939ac5f26cd0c
 aarch64 hg http://hg.openjdk.java.net/aarch64-port/jdk7u/hotspot f50993b6c38d 64c2d0bfa71d6eecf18ab28fd64d5bd79af096f77548d80de7953c306fd9c22c

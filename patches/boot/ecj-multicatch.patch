@@ -507,3 +507,80 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.j
              // Missing VK is okay
              return 0;
          }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/swing/SortingFocusTraversalPolicy.java openjdk-boot/jdk/src/share/classes/javax/swing/SortingFocusTraversalPolicy.java
+--- openjdk-boot.orig/jdk/src/share/classes/javax/swing/SortingFocusTraversalPolicy.java	2014-08-27 20:53:44.085699527 +0100
++++ openjdk-boot/jdk/src/share/classes/javax/swing/SortingFocusTraversalPolicy.java	2014-08-27 21:03:00.405546421 +0100
+@@ -113,7 +113,10 @@
+                         Method m = c.getDeclaredMethod("legacyMergeSort", new Class[]{Object[].class, Comparator.class});
+                         m.setAccessible(true);
+                         return m;
+-                    } catch (ClassNotFoundException | NoSuchMethodException e) {
++                    } catch (ClassNotFoundException e) {
++                        // using default sorting algo
++                        return null;
++                    } catch (NoSuchMethodException e) {
+                         // using default sorting algo
+                         return null;
+                     }
+@@ -181,7 +184,9 @@
+         Object[] a = l.toArray();
+         try {
+             legacyMergeSortMethod.invoke(null, a, c);
+-        } catch (IllegalAccessException | InvocationTargetException e) {
++        } catch (InvocationTargetException e) {
++            return false;
++        } catch (IllegalAccessException e) {
+             return false;
+         }
+         ListIterator<Component> i = l.listIterator();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SecureRandom.java openjdk-boot/jdk/src/share/classes/sun/security/provider/SecureRandom.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SecureRandom.java	2014-08-27 20:53:32.749539654 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/SecureRandom.java	2014-08-27 21:04:37.802920426 +0100
+@@ -100,7 +100,15 @@
+              * performance overhead.
+              */
+             digest = MessageDigest.getInstance("SHA", "SUN");
+-        } catch (NoSuchProviderException | NoSuchAlgorithmException e) {
++        } catch (NoSuchProviderException e) {
++            // Fallback to any available.
++            try {
++                digest = MessageDigest.getInstance("SHA");
++            } catch (NoSuchAlgorithmException exc) {
++                throw new InternalError(
++                    "internal error: SHA-1 not available.");
++            }
++        } catch (NoSuchAlgorithmException e) {
+             // Fallback to any available.
+             try {
+                 digest = MessageDigest.getInstance("SHA");
+@@ -274,7 +282,15 @@
+              * performance overhead.
+              */
+             digest = MessageDigest.getInstance("SHA", "SUN");
+-        } catch (NoSuchProviderException | NoSuchAlgorithmException e) {
++        } catch (NoSuchProviderException e) {
++            // Fallback to any available.
++            try {
++                digest = MessageDigest.getInstance("SHA");
++            } catch (NoSuchAlgorithmException exc) {
++                throw new InternalError(
++                    "internal error: SHA-1 not available.");
++            }
++        } catch (NoSuchAlgorithmException e) {
+             // Fallback to any available.
+             try {
+                 digest = MessageDigest.getInstance("SHA");
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/ECDHCrypt.java	2014-08-27 21:41:43.610396872 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/ECDHCrypt.java	2014-08-27 21:42:10.642779220 +0100
+@@ -111,7 +111,10 @@
+             ECPublicKeySpec spec = new ECPublicKeySpec(point, params);
+             PublicKey peerPublicKey = kf.generatePublic(spec);
+             return getAgreedSecret(peerPublicKey);
+-        } catch (GeneralSecurityException | java.io.IOException e) {
++        } catch (GeneralSecurityException e) {
++            throw (SSLHandshakeException) new SSLHandshakeException(
++                "Could not generate secret").initCause(e);
++        } catch (java.io.IOException e) {
+             throw (SSLHandshakeException) new SSLHandshakeException(
+                 "Could not generate secret").initCause(e);
+         }
