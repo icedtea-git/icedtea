@@ -1884,45 +1884,79 @@ AC_DEFUN([IT_WITH_NASHORN_SRC_ZIP],
   AC_SUBST(ALT_NASHORN_SRC_ZIP)
 ])
 
+AC_DEFUN_ONCE([IT_HAS_PAX],
+[
+  AC_MSG_CHECKING([if a PaX kernel is in use])
+  if cat /proc/self/status | grep '^PaX' >&AS_MESSAGE_LOG_FD 2>&1; then
+    pax_active=yes;
+  else
+    pax_active=no;
+  fi
+  AC_MSG_RESULT([${pax_active}])
+  AM_CONDITIONAL([USING_PAX], test x"${pax_active}" = "xyes")
+])
+
 AC_DEFUN_ONCE([IT_WITH_PAX],
 [
-  AC_MSG_CHECKING([for pax utility to use])
+  AC_REQUIRE([IT_HAS_PAX])
+  PAX_DEFAULT=/usr/sbin/paxmark.sh
+  AC_MSG_CHECKING([if a PaX utility was specified])
   AC_ARG_WITH([pax],
               [AS_HELP_STRING(--with-pax=COMMAND,the command used for pax marking)],
   [
-    PAX_COMMAND=${withval}
+    if test "x${withval}" = "xyes"; then
+      PAX_COMMAND=no
+    else
+      PAX_COMMAND="${withval}"
+    fi
   ],
   [ 
-    PAX_COMMAND="not specified"
+    PAX_COMMAND=no
   ])
-  case "x${PAX_COMMAND}" in
-    xchpax)
-      case "${host_cpu}" in
-        i?86)
-          PAX_COMMAND_ARGS="-msp"
-          ;;
-        *)
-          PAX_COMMAND_ARGS="-m"
-          ;;
-      esac
-      ;;
-    xpaxctl)
-      case "${host_cpu}" in
-        i?86)
-          PAX_COMMAND_ARGS="-msp"
-          ;;
-        *)
-          PAX_COMMAND_ARGS="-m"
-          ;;
-      esac
-      ;;
-    *)
-      PAX_COMMAND="not specified"
-      PAX_COMMAND_ARGS="not specified"
-      ;;
-  esac
-  AM_CONDITIONAL(WITH_PAX, test "x${PAX_COMMAND}" != "xnot specified")
   AC_MSG_RESULT(${PAX_COMMAND})
+  if test "x${PAX_COMMAND}" == "xno"; then
+    PAX_COMMAND=${PAX_DEFAULT}
+  fi
+  AC_MSG_CHECKING([if $PAX_COMMAND is a valid executable file])
+  if test -x "${PAX_COMMAND}" && test -f "${PAX_COMMAND}"; then
+    AC_MSG_RESULT([yes])
+  else
+    AC_MSG_RESULT([no])
+    PAX_COMMAND=""
+    AC_PATH_PROG(PAX_COMMAND, "paxmark.sh")
+    if test -z "${PAX_COMMAND}"; then
+      AC_PATH_PROG(PAX_COMMAND, "paxctl-ng")
+    fi
+    if test -z "${PAX_COMMAND}"; then
+      AC_PATH_PROG(PAX_COMMAND, "chpax")
+    fi
+    if test -z "${PAX_COMMAND}"; then
+      AC_PATH_PROG(PAX_COMMAND, "paxctl")
+    fi
+    if test -z "${PAX_COMMAND}"; then
+      if test "x${pax_active}" = "xyes"; then
+        AC_MSG_ERROR("No PaX utility found and running on a PaX kernel.")
+      else
+        AC_MSG_WARN("No PaX utility found.")
+      fi
+    fi
+  fi
+  if test -z "${PAX_COMMAND}"; then
+    PAX_COMMAND="not specified"
+    PAX_COMMAND_ARGS="not specified"
+  else
+    AC_MSG_CHECKING([which options to pass to ${PAX_COMMAND}])
+    case "${host_cpu}" in
+      i?86)
+        PAX_COMMAND_ARGS="-msp"
+        ;;
+      *)
+        PAX_COMMAND_ARGS="-m"
+        ;;
+    esac
+    AC_MSG_RESULT(${PAX_COMMAND_ARGS})
+  fi
+  AM_CONDITIONAL(WITH_PAX, test "x${PAX_COMMAND}" != "xnot specified")
   AC_SUBST(PAX_COMMAND)
   AC_SUBST(PAX_COMMAND_ARGS)
 ])

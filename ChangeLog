@@ -1,3 +1,16 @@
+2014-02-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1965: Update PaX support to detect running PaX
+	kernel and use newer tools
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_HAS_PAX): New macro to detect whether the running
+	kernel uses PaX.
+	(IT_WITH_PAX): Rewritten to search for PaX tools -
+	currently paxmark.sh, paxctl-ng, chpax and paxctl -
+	and fail if a tool isn't found and a PaX kernel is
+	being used.
+
 2014-08-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
