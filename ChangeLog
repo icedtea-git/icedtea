@@ -5,7 +5,7 @@
 2014-08-27  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am,
-	(BUILD_VERSION): Set to b01.
+	(BUILD_VERSION): Set to b02.
 	(CORBA_CHANGESET): Update to icedtea-2.6pre07.
 	(JAXP_CHANGESET): Likewise.
 	(JAXWS_CHANGESET): Likewise.
