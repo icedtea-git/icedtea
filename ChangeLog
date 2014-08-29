@@ -1,3 +1,67 @@
+2014-08-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(OPENJDK_VERSION): Bump to b23.
+	(CORBA_CHANGESET): Update to icedtea-3.0.0pre02 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	(ICEDTEA_MAJOR): Split out major release name ('icedtea8')
+	(NASHORN_URL): Removed.
+	(OPENJDK_SRC_ZIP): Change suffix to xz.
+	(CORBA_SRC_ZIP): Likewise.
+	(JAXP_SRC_ZIP): Likewise.
+	(JAXWS_SRC_ZIP): Likewise.
+	(JDK_SRC_ZIP): Likewise.
+	(LANGTOOLS_SRC_ZIP): Likewise.
+	(HOTSPOT_SRC_ZIP): Likewise.
+	(NASHORN_SRC_ZIP): Likewise.
+	(ICEDTEA_CONFIGURE): Pass --with-lcms using either
+	'system' or 'bundled' as needed.
+	(ICEDTEA_ENV): Drop unused USE_SYSTEM_LCMS.
+	(download-nashorn): Use ICEDTEA_URL.
+	(ADD_ZERO_CONFIGURE_ARGS): Change suffix to xz.
+	* NEWS: Updated.
+	* configure.ac: Bump to 3.0.0pre02.
+	* hotspot.map: Update to icedtea-3.0.0pre02 tag. Set
+	type of default to drop.
+	* remove-intree-libraries.sh.in: Add cmshalf.c to
+	LCMS section.
+
+2014-06-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(HS_TYPE): Added. Differentiate between a drop tarball
+	and a hg archive in hotspot.map.
+	(HS_URL): Bump field number by 1 following addition of type.
+	(HS_CHANGESET): Likewise.
+	(HS_SHA256SUM): Likewise.
+	(DROP_URL): Added to point to drops on IcedTea server.
+	(CACAO_BASE_URL): Reference DROP_URL.
+	(JAMVM_BASE_URL): Likewise.
+	(ICEDTEA_PREFIX): Use ICEDTEA_MAJOR.
+	(OPENJDK_URL): Removed.
+	(CORBA_URL): Likewise.
+	(JAXP_URL): Likewise.
+	(JAXWS_URL): Likewise.
+	(JDK_URL): Likewise.
+	(LANGTOOLS_URL): Likewise.
+	(ICEDTEA_URL): Path to drops.
+	(download-openjdk): Use ICEDTEA_URL for all drops.
+	(download-hotspot); Support HS_TYPE, appending
+	"archive/$(HS_CHANGESET)" to hg archive URLs and
+	"$(HOTSPOT_SRC_ZIP)" to drop URLs.
+
 2014-08-18  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* AUTHORS: Add Yasumasa Suenaga.

@@ -1,2 +1,2 @@
 # version url changeset md5sum
-default http://icedtea.classpath.org/hg/icedtea8-forest/hotspot c2767d721605 153ad9d1405ee6878b0871cd6df7ff9c7bb62b5117a293aa063783e379bc337e
+default drop http://icedtea.classpath.org/download/drops/icedtea8 877471da7fbb cf305e49c36efd556972146213716283d261c40de2c7443e1e0cfe5e0e6cd32b

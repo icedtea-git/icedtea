@@ -80,6 +80,7 @@ if test "x@ENABLE_SYSTEM_LCMS@" = "xyes"; then
   rm -vf ${LCMS_SRC}/cmserr.c
   rm -vf ${LCMS_SRC}/cmsgamma.c
   rm -vf ${LCMS_SRC}/cmsgmt.c
+  rm -vf ${LCMS_SRC}/cmshalf.c
   rm -vf ${LCMS_SRC}/cmsintrp.c
   rm -vf ${LCMS_SRC}/cmsio0.c
   rm -vf ${LCMS_SRC}/cmsio1.c

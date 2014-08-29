@@ -1,51 +1,48 @@
 # Dependencies
 
-OPENJDK_VERSION = b10
+OPENJDK_VERSION = b23
 JDK_UPDATE_VERSION = 20
 COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)
 
-CORBA_CHANGESET = a96c01f523be
-JAXP_CHANGESET = e16be40cfc32
-JAXWS_CHANGESET = 806fa0e68d92
-JDK_CHANGESET = dc14d13daa5e
-LANGTOOLS_CHANGESET = dd7b57ab4ab1
-OPENJDK_CHANGESET = e0a10e6be00a
-NASHORN_CHANGESET = fdcdffd5b5b1
+CORBA_CHANGESET = 83ebbcc0dda5
+JAXP_CHANGESET = 888f90c5e7da
+JAXWS_CHANGESET = 9be5317def51
+JDK_CHANGESET = 03f9102db2c0
+LANGTOOLS_CHANGESET = 948daf9c5e22
+OPENJDK_CHANGESET = a81a301b0f89
+NASHORN_CHANGESET = 2a866ca13bc6
 
-CORBA_SHA256SUM = 1ce659773584949b01ecdbc897099352aea4fa2ac40b7a55ff64f4b68e12ffc9
-JAXP_SHA256SUM = c2422395c291cfdf8fce7e87c7a45226ba4c64fd73d614675659f21a7c82b902
-JAXWS_SHA256SUM = 4364b4ddf7031b1b4a17fdd11d0e642203e0e66242a2c4d2ba02fc5587d2711d
-JDK_SHA256SUM = 7db207899441a22daeef26620930ec76653c0860fcb6fc288f9547ae436fdc83
-LANGTOOLS_SHA256SUM = 1aa3b505f3fbb3cc01d480dae0196c7038982bd29ae2df84ad14d587d29976cc
-OPENJDK_SHA256SUM = c8f540a9eccec00df2fa0d93595fdb8eab6384ad3d0579095928aed1591c7a39
-NASHORN_SHA256SUM = fb245c9a4a47b68aece3c4f0cac6fc8ac91c8458bb91648b9a8e3d95ed3981ea
+CORBA_SHA256SUM = 023aea7e793e57404380318fc827250dc5c711219dd85bc90fdf46a41497f1b6
+JAXP_SHA256SUM = 6436cce532e70421483307aafcc6a9eb6b607812617fefba668c321a6190d4c5
+JAXWS_SHA256SUM = 2f696e725176e8b24dad07eb7ab5442ee4601b40ed115c3cabae987ce49a48c3
+JDK_SHA256SUM = 88d4b37120269e5e31f8de22660a29e09bfa07beda8b37cc79b32d00b10d19aa
+LANGTOOLS_SHA256SUM = 9f9457e40f1e354e305aca01108285d5714cd59c2ab4e84ac4edd2ab418e5ae9
+OPENJDK_SHA256SUM = a2d87a9a688ed97b91483a12c9fbd12669f12ea297595788a75b15891267dd11
+NASHORN_SHA256SUM = a5053e8698569821278786efd816fed4c4264ad5017f6a95d6ff735331d30116
 
-HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$4}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
-HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
-HS_URL = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+HS_TYPE = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+HS_URL = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$4}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$5}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+
+DROP_URL = http://icedtea.classpath.org/download/drops
 
 CACAO_VERSION = e215e36be9fc
 CACAO_SHA256SUM = 4966514c72ee7ed108b882d9b6e65c3adf8a8f9c2dccb029f971b3c8cb4870ab
-CACAO_BASE_URL = http://icedtea.classpath.org/download/drops/cacao
+CACAO_BASE_URL = $(DROP_URL)/cacao
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.gz
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.bz2
 
 JAMVM_VERSION = ec18fb9e49e62dce16c5094ef1527eed619463aa
 JAMVM_SHA256SUM = 31810266666c23822942aac62a78019c2c4589e1c5ee48329cbf42652d4437bc
-JAMVM_BASE_URL = http://icedtea.classpath.org/download/drops/jamvm
+JAMVM_BASE_URL = $(DROP_URL)/jamvm
 JAMVM_URL = $(JAMVM_BASE_URL)/jamvm-$(JAMVM_VERSION).tar.gz
 JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
 
-ICEDTEA_PREFIX = icedtea8-forest
+ICEDTEA_MAJOR = icedtea8
+ICEDTEA_PREFIX = $(ICEDTEA_MAJOR)-forest
 ICEDTEA_HG_URL = http://icedtea.classpath.org/hg/$(ICEDTEA_PREFIX)
-
-OPENJDK_URL = $(ICEDTEA_HG_URL)
-CORBA_URL = $(ICEDTEA_HG_URL)/corba
-JAXP_URL = $(ICEDTEA_HG_URL)/jaxp
-JAXWS_URL = $(ICEDTEA_HG_URL)/jaxws
-JDK_URL = $(ICEDTEA_HG_URL)/jdk
-LANGTOOLS_URL = $(ICEDTEA_HG_URL)/langtools
-NASHORN_URL = $(ICEDTEA_HG_URL)/nashorn
+ICEDTEA_URL = $(DROP_URL)/$(ICEDTEA_MAJOR)
 
 # Build directories
 
@@ -122,14 +119,14 @@ if USE_HG
   HOTSPOT_SRC_ZIP =
   NASHORN_SRC_ZIP =
 else
-  OPENJDK_SRC_ZIP = openjdk.tar.gz
-  CORBA_SRC_ZIP = corba.tar.gz
-  JAXP_SRC_ZIP = jaxp.tar.gz
-  JAXWS_SRC_ZIP = jaxws.tar.gz
-  JDK_SRC_ZIP = jdk.tar.gz
-  LANGTOOLS_SRC_ZIP = langtools.tar.gz
-  HOTSPOT_SRC_ZIP = hotspot.tar.gz
-  NASHORN_SRC_ZIP = nashorn.tar.gz
+  OPENJDK_SRC_ZIP = openjdk.tar.xz
+  CORBA_SRC_ZIP = corba.tar.xz
+  JAXP_SRC_ZIP = jaxp.tar.xz
+  JAXWS_SRC_ZIP = jaxws.tar.xz
+  JDK_SRC_ZIP = jdk.tar.xz
+  LANGTOOLS_SRC_ZIP = langtools.tar.xz
+  HOTSPOT_SRC_ZIP = hotspot.tar.xz
+  NASHORN_SRC_ZIP = nashorn.tar.xz
 endif
 
 if WITH_HGREV
@@ -278,6 +275,24 @@ ICEDTEA_CONFIGURE = \
 	  --with-zlib=system --with-stdc++lib=dynamic \
 	  --with-boot-jdk=$(BOOT_DIR)
 
+if ENABLE_CACAO
+ICEDTEA_CONFIGURE += \
+	--with-import-hotspot="$(CACAO_IMPORT_PATH)"
+endif
+
+if ENABLE_JAMVM
+ICEDTEA_CONFIGURE += \
+	--with-import-hotspot="$(JAMVM_IMPORT_PATH)"
+endif
+
+if USE_SYSTEM_LCMS
+ICEDTEA_CONFIGURE += \
+	--with-lcms=system
+else
+ICEDTEA_CONFIGURE += \
+	--with-lcms=bundled
+endif
+
 ICEDTEA_ENV = \
         BUILD_NUMBER="$(OPENJDK_VERSION)" \
 	JDK_UPDATE_VERSION="$(JDK_UPDATE_VERSION)" \
@@ -312,16 +327,6 @@ ICEDTEA_ENV = \
 	POST_STRIP_CMD= STRIP_POLICY="no_strip" \
 	JOBS="$(PARALLEL_JOBS)"
 
-if ENABLE_CACAO
-ICEDTEA_CONFIGURE += \
-	--with-import-hotspot="$(CACAO_IMPORT_PATH)"
-endif
-
-if ENABLE_JAMVM
-ICEDTEA_CONFIGURE += \
-	--with-import-hotspot="$(JAMVM_IMPORT_PATH)"
-endif
-
 if DISABLE_OPTIMIZATIONS
 ICEDTEA_ENV += \
 	NO_OPTIMIZATIONS="true" \
@@ -345,7 +350,6 @@ endif
 
 if USE_SYSTEM_LCMS
 ICEDTEA_ENV += \
-	USE_SYSTEM_LCMS="true" \
 	LCMS_LIBS="${LCMS2_LIBS}" \
 	LCMS_CFLAGS="${LCMS2_CFLAGS}"
 endif
@@ -587,7 +591,7 @@ endif
 	  then \
 	    mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(OPENJDK_URL)/archive/$(OPENJDK_CHANGESET).tar.gz -O $(OPENJDK_SRC_ZIP); \
+	  $(WGET) $(ICEDTEA_URL)/$(OPENJDK_SRC_ZIP); \
 	  if ! echo "$(OPENJDK_SHA256SUM)  $(OPENJDK_SRC_ZIP)" \
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of OpenJDK root zip"; false; \
@@ -603,7 +607,7 @@ endif
 	  then \
 	    mv $(CORBA_SRC_ZIP) $(CORBA_SRC_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(CORBA_URL)/archive/$(CORBA_CHANGESET).tar.gz -O $(CORBA_SRC_ZIP); \
+	  $(WGET) $(ICEDTEA_URL)/$(CORBA_SRC_ZIP); \
 	  if ! echo "$(CORBA_SHA256SUM)  $(CORBA_SRC_ZIP)" \
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of CORBA zip"; false; \
@@ -619,7 +623,7 @@ endif
 	  then \
 	    mv $(JAXP_SRC_ZIP) $(JAXP_SRC_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(JAXP_URL)/archive/$(JAXP_CHANGESET).tar.gz -O $(JAXP_SRC_ZIP); \
+	  $(WGET) $(ICEDTEA_URL)/$(JAXP_SRC_ZIP); \
 	  if ! echo "$(JAXP_SHA256SUM)  $(JAXP_SRC_ZIP)" \
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of JAXP zip"; false; \
@@ -635,7 +639,7 @@ endif
 	  then \
 	    mv $(JAXWS_SRC_ZIP) $(JAXWS_SRC_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(JAXWS_URL)/archive/$(JAXWS_CHANGESET).tar.gz -O $(JAXWS_SRC_ZIP); \
+	  $(WGET) $(ICEDTEA_URL)/$(JAXWS_SRC_ZIP); \
 	  if ! echo "$(JAXWS_SHA256SUM)  $(JAXWS_SRC_ZIP)" \
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of JAXWS zip"; false; \
@@ -651,7 +655,7 @@ endif
 	  then \
 	    mv $(JDK_SRC_ZIP) $(JDK_SRC_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(JDK_URL)/archive/$(JDK_CHANGESET).tar.gz -O $(JDK_SRC_ZIP); \
+	  $(WGET) $(ICEDTEA_URL)/$(JDK_SRC_ZIP); \
 	  if ! echo "$(JDK_SHA256SUM)  $(JDK_SRC_ZIP)" \
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of JDK zip"; false; \
@@ -667,7 +671,7 @@ endif
 	  then \
 	    mv $(LANGTOOLS_SRC_ZIP) $(LANGTOOLS_SRC_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(LANGTOOLS_URL)/archive/$(LANGTOOLS_CHANGESET).tar.gz -O $(LANGTOOLS_SRC_ZIP); \
+	  $(WGET) $(ICEDTEA_URL)/$(LANGTOOLS_SRC_ZIP); \
 	  if ! echo "$(LANGTOOLS_SHA256SUM)  $(LANGTOOLS_SRC_ZIP)" \
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of langtools zip"; false; \
@@ -769,7 +773,7 @@ endif
 	  then \
 	    mv $(NASHORN_SRC_ZIP) $(NASHORN_SRC_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(NASHORN_URL)/archive/$(NASHORN_CHANGESET).tar.gz -O $(NASHORN_SRC_ZIP); \
+	  $(WGET) $(ICEDTEA_URL)/$(NASHORN_SRC_ZIP); \
 	  if ! echo "$(NASHORN_SHA256SUM)  $(NASHORN_SRC_ZIP)" \
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of NASHORN zip"; false; \
@@ -802,7 +806,11 @@ endif
 	  then \
 	    mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
 	  fi ; \
-	  $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
+	  if test "x$(HS_TYPE)" = "xhg"; then \
+	    $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
+	  else \
+	    $(WGET) $(HS_URL)/$(HOTSPOT_SRC_ZIP) ; \
+          fi ; \
 	  if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
 	    | $(SHA256SUM) --check ; \
 	  then echo "ERROR: Bad download of HotSpot zip"; false; \
@@ -1891,7 +1899,7 @@ ADD_ZERO_CONFIGURE_ARGS += \
 			'--disable-bootstrap% '--enable-bootstrap% , \
 		$(CONFIGURE_ARGS)) \
 	$(foreach i, openjdk hotspot corba jaxp jaxws jdk langtools, \
-	  $(if $(findstring --with-$(i)-src-zip=, $(CONFIGURE_ARGS)),, --with-$(i)-src-zip=$(abs_top_builddir)/$(i).tar.gz))
+	  $(if $(findstring --with-$(i)-src-zip=, $(CONFIGURE_ARGS)),, --with-$(i)-src-zip=$(abs_top_builddir)/$(i).tar.xz))
 
 ADD_ZERO_EXTRA_BUILD_ENV = \
 	BUILD_LANGTOOLS=false ALT_LANGTOOLS_DIST=$(BUILD_OUTPUT_DIR)/langtools/dist \

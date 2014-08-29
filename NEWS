@@ -14,33 +14,42 @@ New in release 3.0.0 (2014-XX-XX):
 
 * Backports
   - S8011278: Allow using a system-installed giflib
+  - S8012224: AWT_TopLevels/TopLevelEvents/Automated/WindowIconifyDeiconifyEventsTest02 fails on Ubuntu 12.04 Unity shell
   - S8035341: Allow using a system installed libpng
   - S8038392: Generating prelink cache breaks JAVA 'jinfo' utility normal behavior
   - S8042159: Allow using a system-installed lcms2
   - S8042806: Splashscreen uses libjpeg-internal macros
+  - S8043805: Allow using a system-installed libjpeg
+  - S8044235: src.zip should include all sources
 * Bug fixes
   - S8041658: Use of -fdevirtualize on macroAssembler_x86.o (via -O2) with gcc 4.9.0 creates broken VM
+  - PR729: GTKLookAndFeel should be the system look&feel on all GNU/Linux desktops
   - PR1279: Synchronise CACAO versions between IcedTea6/7/8 where possible
   - PR1325: Only add classes to rt-source-files.txt if actually needed
   - PR1346: Filter out -j option to make
   - PR1347: Update list of checked JDKs
+  - PR1348: java -version output is broken
   - PR1357: Make XRender mandatory
   - PR1359: Check for /usr/lib64 JVMs and generic JPackage alternative
   - PR1364: Replace hgforest support
-  - PR1748: Allow clang to be used to build
+  - PR1379: Add build support for Zero AArch64
   - PR1766: Expand architecture support
   - PR1774: Support GIF lib v5
   - PR1774: Correct #ifdef to #if
-  - PR1778: Allow an alternate JAR program to be used
   - PR1796: make fails with "computed checksum did NOT match"
   - PR1806: Support Debian/Ubuntu 7 & 8 OpenJDK Installs as Boot JDK
   - PR1812: Unable to locate HotSpot checksum when downloading
   - PR1813: HotSpot URL should be used with --enable-hg
   - PR1845: jstack.stp in OpenJDK8 is broken
   - PR1935: HotSpot extraction needs to depend on the tarball being downloaded
+  - PR1938: Zero broken by enforced use of -Werror
+  - PR1942: Bug reports lack IcedTea version & distribution packaging information
+  - PR1950: Add build support for Zero SH
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck
+* AArch64 port
+  - Imported from aarch64 jdk8 repository.
 * JamVM
   - JSR 292: Invoke Dynamic
   - JSR 308: Type Annotations
