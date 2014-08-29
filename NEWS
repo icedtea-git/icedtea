@@ -50,7 +50,7 @@ New in release 3.0.0 (2014-XX-XX):
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck
 * AArch64 port
-  - Imported from aarch64 jdk8 repository.
+  - PR1970: Imported from aarch64 jdk8 repository.
 * JamVM
   - JSR 292: Invoke Dynamic
   - JSR 308: Type Annotations

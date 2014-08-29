@@ -1,3 +1,7 @@
+2014-08-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Add bug reference for AArch64 import.
+
 2014-02-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add Gentoo bug reference for
