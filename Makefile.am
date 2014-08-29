@@ -1410,6 +1410,7 @@ stamps/icedtea.stamp: stamps/icedtea-configure.stamp
 	  $(ICEDTEA_ENV) \
 	  -C $(BUILD_OUTPUT_DIR) \
 	  $(ICEDTEA_BUILD_TARGET)
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_IMAGE_DIR)/j2sdk-image
 	mkdir -p $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_IMAGE_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/ext
@@ -1463,7 +1464,7 @@ endif
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
-	@echo "IcedTea is served:" $(BUILD_OUTPUT_DIR)/images
+	@echo "IcedTea is served:" $(BUILD_IMAGE_DIR)/j2sdk-image
 	mkdir -p stamps
 	touch $@
 
@@ -1483,6 +1484,7 @@ stamps/icedtea-debug.stamp: stamps/icedtea-debug-configure.stamp
 	  $(ICEDTEA_ENV) \
 	  -C $(DEBUG_BUILD_OUTPUT_DIR) \
 	  $(ICEDTEA_BUILD_TARGET)
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image
 	mkdir -p $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_DEBUG_IMAGE_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/ext
@@ -1536,8 +1538,7 @@ endif
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
-	@echo "IcedTea (debug build) is served:" \
-	  $(DEBUG_BUILD_OUTPUT_DIR)
+	@echo "IcedTea (debug build) is served:" $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image
 	mkdir -p stamps
 	touch $@
 
@@ -1583,8 +1584,8 @@ stamps/icedtea-boot.stamp: stamps/icedtea-boot-configure.stamp
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C $(BOOT_BUILD_OUTPUT_DIR) \
 	  images
-	@echo "Bootstrapped IcedTea is served:" \
-	  $(BOOT_BUILD_OUTPUT_DIR)/images
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image
+	@echo "Bootstrapped IcedTea is served:" $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image
 	mkdir -p stamps
 	touch $@
 

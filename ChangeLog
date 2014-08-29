@@ -1,6 +1,30 @@
 2014-08-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
+	(icedtea): Fix path to finished image.
+	(icedtea-debug): Likewise.
+	(icedtea-boot): Likewise.
+
+2012-05-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	* AUTHORS: Add Ralph Sennhauser.
+
+2012-02-03  Ralph Sennhauser <sera@gentoo.org>
+
+	* Makefile.am:
+	(icedtea): Run pax-mark-vm on the just-built image.
+	(icedtea-debug): Likewise.
+	(icedtea-boot): Likewise.
+	* acinclude.m4:
+	(IT_WITH_PAX): Check for a pax command being specified.
+	* configure.ac:
+	Call IT_WITH_PAX.
+	* pax-mark-vm.in:
+	Script to PaX mark a JDK image.
+
+2014-08-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
 	(OPENJDK_VERSION): Bump to b23.
 	(CORBA_CHANGESET): Update to icedtea-3.0.0pre02 tag.
 	(JAXP_CHANGESET): Likewise.
