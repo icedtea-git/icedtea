@@ -1941,10 +1941,7 @@ AC_DEFUN_ONCE([IT_WITH_PAX],
       fi
     fi
   fi
-  if test -z "${PAX_COMMAND}"; then
-    PAX_COMMAND="not specified"
-    PAX_COMMAND_ARGS="not specified"
-  else
+  if test -n "${PAX_COMMAND}"; then
     AC_MSG_CHECKING([which options to pass to ${PAX_COMMAND}])
     case "${host_cpu}" in
       i?86)
@@ -1956,7 +1953,7 @@ AC_DEFUN_ONCE([IT_WITH_PAX],
     esac
     AC_MSG_RESULT(${PAX_COMMAND_ARGS})
   fi
-  AM_CONDITIONAL(WITH_PAX, test "x${PAX_COMMAND}" != "xnot specified")
+  AM_CONDITIONAL(WITH_PAX, test "x${PAX_COMMAND}" != "x")
   AC_SUBST(PAX_COMMAND)
   AC_SUBST(PAX_COMMAND_ARGS)
 ])

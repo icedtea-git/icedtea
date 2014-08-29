@@ -1,3 +1,11 @@
+2014-02-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* acinclude.m4:
+	(IT_WITH_PAX): Leave PAX_COMMAND with the empty
+	string rather than "not specified" to avoid build
+	failures.
+	* pax-mark-vm.in: Update PAX_COMMAND check.
+
 2014-02-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1965: Update PaX support to detect running PaX
