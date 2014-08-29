@@ -1,3 +1,7 @@
+2014-08-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Update OpenJDK bug URL.
+
 2014-08-27  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am,

@@ -1,6 +1,6 @@
 Key:
 
-SX  - http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=X
+SX  - https://bugs.openjdk.java.net/browse/JDK-X
 PRX - http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=X
 RHX - https://bugzilla.redhat.com/show_bug.cgi?id=X
 DX  - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=X
