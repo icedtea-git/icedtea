@@ -180,14 +180,12 @@ New in release 2.6.0 (2014-XX-XX):
   - S8048506: [macosx] javax.swing.PopupFactory issue with null owner
   - S8048887: SortingFocusTraversalPolicy throws IllegalArgumentException from the sort method
   - S8049250: Need a flag to invert the Card.disconnect(reset) argument
-  - S8049480: Current versions of Java can't verify jars signed and timestamped with Java 9
   - S8049514: FEATURE_SECURE_PROCESSING can not be turned off on a validator through SchemaFactory
   - S8049542: C2: assert(size_in_words <= (julong)max_jint) failed: no overflow
   - S8050165: linux-sparcv9: NMT detail causes assert((intptr_t*)younger_sp[FP->sp_offset_in_saved_window()] == (intptr_t*)((intptr_t)sp - STACK_BIAS)) failed: younger_sp must be valid
   - S8050167: linux-sparcv9: hs_err file does not show any stack information
   - S8050386: javac, follow-up of fix for JDK-8049305
   - S8051004: javac, incorrect bug id in tests for JDK-8050386
-  - S8051012: Regression in verifier for <init> method call from inside of a branch
   - S8051844: BootstrapMethods attribute cannot be empty again
   - S8052159: TEST_BUG: javax/swing/JTextField/8036819/bug8036819.java fails to compile
   - S8054841: (process) ProcessBuilder leaks native memory
@@ -198,9 +196,18 @@ New in release 2.6.0 (2014-XX-XX):
   - PR1786: Allow x86 build to occur on x86_64 using a previously built x86_64 build
   - PR1846: Build fails when using IcedTea7 as bootstrap JDK with native ecj
   - PR1847: Synchronise javac.in with IcedTea6
+
+New in release 2.5.2 (2014-08-29):
+
+* Backports
+  - S8049480: Current versions of Java can't verify jars signed and timestamped with Java 9
+  - S8051012, LP1360392: Regression in verifier for <init> method call from inside of a branch
+* Bug fixes
   - PR1903: [REGRESSION] Bug reports now lack IcedTea version & distribution packaging information
   - PR1948: Only try and symlink debuginfo if STRIP_POLICY is other than no_strip
   - PR1948: Fix indenting
+  - PR1966: Move to new OpenJDK bug URL format
+  - RH1015432: java-1.7.0-openjdk: Fails on PPC with StackOverflowError (revised fix for PPC32)
 * PPC & AIX port
   - Adapt AIX port to 5049299: (process) Use posix_spawn, not fork, on S10 to avoid swap exhaustion
   - Adapt aix to 8022507
