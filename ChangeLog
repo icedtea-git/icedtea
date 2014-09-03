@@ -1,3 +1,7 @@
+2014-09-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Add bug reference for system LCMS support.
+
 2014-08-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add bug reference for AArch64 import.

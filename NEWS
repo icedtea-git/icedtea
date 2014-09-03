@@ -32,6 +32,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR1357: Make XRender mandatory
   - PR1359: Check for /usr/lib64 JVMs and generic JPackage alternative
   - PR1364: Replace hgforest support
+  - PR1367: Support using the system installation of LCMS
   - PR1379: Add build support for Zero AArch64
   - PR1766: Expand architecture support
   - PR1774: Support GIF lib v5
