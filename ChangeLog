@@ -1,3 +1,14 @@
+2013-09-10  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	(BUILD_VERSION): Renamed from OPENJDK_VERSION.
+	(COMBINED_VERSION): Use BUILD_VERSION.
+	(ICEDTEA_ENV): Likewise.
+	(dist-openjdk): Should really use COMBINED_VERSION.
+	(dist-openjdk-fsg): Likewise.
+	(dist-openjdk-fsg-tz): Additional target which
+	makes an xz tarball instead of a zip (for Jiri ;)
+
 2014-09-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add bug reference for system LCMS support.

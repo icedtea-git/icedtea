@@ -1,8 +1,8 @@
 # Dependencies
 
-OPENJDK_VERSION = b23
 JDK_UPDATE_VERSION = 20
-COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(OPENJDK_VERSION)
+BUILD_VERSION = b23
+COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(BUILD_VERSION)
 
 CORBA_CHANGESET = 83ebbcc0dda5
 JAXP_CHANGESET = 888f90c5e7da
@@ -294,7 +294,7 @@ ICEDTEA_CONFIGURE += \
 endif
 
 ICEDTEA_ENV = \
-        BUILD_NUMBER="$(OPENJDK_VERSION)" \
+        BUILD_NUMBER="$(BUILD_VERSION)" \
 	JDK_UPDATE_VERSION="$(JDK_UPDATE_VERSION)" \
         JRE_RELEASE_VERSION="1.8.0_$(COMBINED_VERSION)" \
 	MILESTONE="fcs" \
@@ -553,11 +553,15 @@ snapshot: dist
 # Creates archive of openjdk.
 dist-openjdk: stamps/extract-cacao.stamp
 	find openjdk/ -name \\.hg* | xargs rm -rf	
-	$(ZIP) -r openjdk-$(OPENJDK_VERSION) openjdk/
+	$(ZIP) -r openjdk-$(COMBINED_VERSION) openjdk/
 
 # Creates archive of openjdk that is compliant with Free Software guidelines.
 dist-openjdk-fsg: stamps/patch-fsg.stamp
-	$(ZIP) -r openjdk-fsg-$(OPENJDK_VERSION) openjdk/
+	$(ZIP) -r openjdk-fsg-$(COMBINED_VERSION) openjdk/
+
+dist-openjdk-fsg-xz: stamps/patch-fsg.stamp
+	tardir=openjdk/ && $(am__tar) | XZ_OPT=$${XZ_OPT--e} xz -c \
+	  >openjdk-fsg-$(COMBINED_VERSION).tar.xz
 
 # OpenJDK Source Preparation Targets
 # ==================================
