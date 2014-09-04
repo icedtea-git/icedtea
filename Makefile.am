@@ -273,7 +273,10 @@ ICEDTEA_CONFIGURE = \
 	  --enable-unlimited-crypto \
 	  --with-cacerts-file=$(SYSTEM_JDK_DIR)/jre/lib/security/cacerts \
 	  --with-zlib=system --with-stdc++lib=dynamic \
-	  --with-boot-jdk=$(BOOT_DIR)
+	  --with-boot-jdk=$(BOOT_DIR) \
+	  --with-update-version=$(JDK_UPDATE_VERSION) \
+	  --with-build-number=$(BUILD_VERSION) \
+	  --with-milestone="fcs"
 
 if ENABLE_CACAO
 ICEDTEA_CONFIGURE += \
@@ -294,10 +297,6 @@ ICEDTEA_CONFIGURE += \
 endif
 
 ICEDTEA_ENV = \
-        BUILD_NUMBER="$(BUILD_VERSION)" \
-	JDK_UPDATE_VERSION="$(JDK_UPDATE_VERSION)" \
-        JRE_RELEASE_VERSION="1.8.0_$(COMBINED_VERSION)" \
-	MILESTONE="fcs" \
 	LANG="C" \
 	PATH="$(BOOT_DIR)/bin:$(OS_PATH):$$PATH" \
 	CLASSPATH="" \

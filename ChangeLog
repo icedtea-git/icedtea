@@ -1,3 +1,13 @@
+2014-09-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE): Add update version,
+	build number and milestone options.
+	(ICEDTEA_ENV): Drop BUILD_NUMBER,
+	JDK_UPDATE_VERSION, JRE_RELEASE_VERSION
+	and MILESTONE, which appear to be no
+	longer used.
+
 2013-09-10  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* Makefile.am:
