@@ -476,8 +476,6 @@ PULSEAUDIO_SRCS = $(top_srcdir)/pulseaudio/src/java/org/classpath/icedtea/pulsea
 
 EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
-	$(top_srcdir)/patches/debian/*.patch \
-	$(top_srcdir)/patches/jamvm/*.patch \
 	tools-copy contrib overlays \
 	javaws.png javaws.desktop \
 	jconsole.desktop policytool.desktop \

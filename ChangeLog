@@ -1,3 +1,11 @@
+2014-09-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(EXTRA_DIST): Remove references to debian
+	and jamvm patch directories that no longer
+	exist.
+	* NEWS: Updated.
+
 2014-09-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
