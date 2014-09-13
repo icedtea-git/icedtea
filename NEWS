@@ -190,12 +190,16 @@ New in release 2.6.0 (2014-XX-XX):
   - S8052159: TEST_BUG: javax/swing/JTextField/8036819/bug8036819.java fails to compile
   - S8054841: (process) ProcessBuilder leaks native memory
 * Backports
-  - S4963723: Implement SHA-224
+  - S4963723, RH1131221: Implement SHA-224
   - S7044060, RH1131221: Need to support NSA Suite B Cryptography algorithms
+  - S8006935, RH1131221: Need to take care of long secret keys in HMAC/PRF compuation
 * Bug fixes
   - PR1786: Allow x86 build to occur on x86_64 using a previously built x86_64 build
   - PR1846: Build fails when using IcedTea7 as bootstrap JDK with native ecj
   - PR1847: Synchronise javac.in with IcedTea6
+  - PR1988: C++ Interpreter should no longer be used on ppc64
+  - PR1989: Make jdk_generic_profile.sh handle missing programs better and be more verbose
+  - PR1992, RH735336: Support retrieving proxy settings on GNOME 3.12.2
 
 New in release 2.5.2 (2014-08-29):
 
