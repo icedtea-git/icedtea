@@ -1,3 +1,19 @@
+2014-09-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* hotspot.map: Moved to...
+	* Makefile.am:
+	(ICEDTEA_URL): Include release in path to match
+	release branches.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DETERMINE_VERSION): Obtain branch and release
+	version automatically from package version.
+	* configure.ac: Call IT_DETERMINE_VERSION and
+	generate hotspot.map. Add a trailing zero to the
+	first release (2.6.0 instead of 2.6).
+	* hotspot.map.in: ... here so the URL can be
+	generated using the release version.
+
 2014-09-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am,

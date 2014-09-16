@@ -1,4 +1,4 @@
-AC_INIT([icedtea], [2.6pre08], [distro-pkg-dev@openjdk.java.net])
+AC_INIT([icedtea], [2.6.0pre08], [distro-pkg-dev@openjdk.java.net])
 AM_INIT_AUTOMAKE([1.9 tar-pax foreign])
 AM_MAINTAINER_MODE([enable])
 AC_CONFIG_FILES([Makefile])
@@ -11,6 +11,9 @@ cd $abs_top_srcdir
 abs_top_srcdir=`pwd`
 cd $abs_top_builddir
 AC_SUBST(abs_top_srcdir)
+
+IT_DETERMINE_VERSION
+AC_CONFIG_FILES([hotspot.map])
 
 AC_CANONICAL_HOST
 

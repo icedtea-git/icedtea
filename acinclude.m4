@@ -2835,3 +2835,14 @@ AC_DEFUN_ONCE([IT_HAS_NATIVE_HOTSPOT_PORT],
   esac
   AC_MSG_RESULT([$has_native_hotspot_port])
 ])
+
+AC_DEFUN_ONCE([IT_DETERMINE_VERSION],
+[
+  AC_MSG_CHECKING([which branch and release of IcedTea is being built])
+  ICEDTEA_RELEASE=$(echo ${PACKAGE_VERSION} | sed 's#pre.*##')
+  ICEDTEA_BRANCH=$(echo ${ICEDTEA_RELEASE}|sed 's|\.[[0-9]]$||')
+  AC_MSG_RESULT([branch ${ICEDTEA_BRANCH}, release ${ICEDTEA_RELEASE}])
+  AC_SUBST([ICEDTEA_RELEASE])
+  AC_SUBST([ICEDTEA_BRANCH])
+])
+

@@ -200,6 +200,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR1988: C++ Interpreter should no longer be used on ppc64
   - PR1989: Make jdk_generic_profile.sh handle missing programs better and be more verbose
   - PR1992, RH735336: Support retrieving proxy settings on GNOME 3.12.2
+  - PR2000: Synchronise HEAD tarball paths with release branch paths
 
 New in release 2.5.2 (2014-08-29):
 

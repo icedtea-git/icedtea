@@ -35,7 +35,7 @@ JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
 ICEDTEA_MAJOR = icedtea7
 ICEDTEA_PREFIX = $(ICEDTEA_MAJOR)-forest
 ICEDTEA_HG_URL = http://icedtea.classpath.org/hg/$(ICEDTEA_PREFIX)
-ICEDTEA_URL = $(DROP_URL)/$(ICEDTEA_MAJOR)
+ICEDTEA_URL = $(DROP_URL)/$(ICEDTEA_MAJOR)/$(ICEDTEA_RELEASE)
 
 HS_TYPE = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
 HS_URL = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
