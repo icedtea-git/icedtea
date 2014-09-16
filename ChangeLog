@@ -1,5 +1,17 @@
 2014-09-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* Makefile.am:
+	(HS_TYPE): Fix hotspot.map path.
+	(HS_URL): Likewise.
+	(HS_CHANGESET): Likewise.
+	(HS_SHA256SUM): Likewise.
+	(EXTRA_DIST): Remove hotspot.map.
+	hotspot.map.in is automatically added
+	by autoconf.
+	* NEWS: Updated.
+
+2014-09-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* hotspot.map: Moved to...
 	* Makefile.am:
 	(ICEDTEA_URL): Include release in path to match
