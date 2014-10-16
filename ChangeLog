@@ -1,3 +1,31 @@
+2014-10-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am,
+	(CORBA_CHANGESET): Update to icedtea-2.6pre09.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 2.6.0pre09.
+	* hotspot.map.in: Update to icedtea-2.6.0pre09.
+	* patches/boot/ecj-diamond.patch:
+	Add new cases in javax.swing.JDesktopPane and
+	jdk.net.Sockets.
+	* patches/boot/ecj-multicatch.patch:
+	Add new cases in javax.crypto.CipherInputStream
+	and javax.crypto.CipherOutputStream.
+	* patches/boot/ecj-stringswitch.patch:
+	Add new case in
+	sun.reflect.annotation.AnnotationInvocationHandler.
+
 2014-10-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add 2.5.3 release notes.

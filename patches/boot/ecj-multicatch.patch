@@ -584,3 +584,48 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SecureRa
              throw (SSLHandshakeException) new SSLHandshakeException(
                  "Could not generate secret").initCause(e);
          }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/crypto/CipherInputStream.java openjdk-boot/jdk/src/share/classes/javax/crypto/CipherInputStream.java
+--- openjdk-boot.orig/jdk/src/share/classes/javax/crypto/CipherInputStream.java	2014-10-14 19:58:01.679349189 +0100
++++ openjdk-boot/jdk/src/share/classes/javax/crypto/CipherInputStream.java	2014-10-14 19:58:59.096156147 +0100
+@@ -110,7 +110,10 @@
+             done = true;
+             try {
+                 obuffer = cipher.doFinal();
+-            } catch (IllegalBlockSizeException | BadPaddingException e) {
++            } catch (IllegalBlockSizeException e) {
++                obuffer = null;
++                throw new IOException(e);
++            } catch (BadPaddingException e) {
+                 obuffer = null;
+                 throw new IOException(e);
+             }
+@@ -314,7 +317,14 @@
+                 cipher.doFinal();
+             }
+         }
+-        catch (BadPaddingException | IllegalBlockSizeException ex) {
++        catch (BadPaddingException ex) {
++            /* If no data has been read from the stream to be en/decrypted,
++               we supress any exceptions, and close quietly. */
++            if (read) {
++                throw new IOException(ex);
++            }
++        }
++        catch (IllegalBlockSizeException ex) {
+             /* If no data has been read from the stream to be en/decrypted,
+                we supress any exceptions, and close quietly. */
+             if (read) {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/crypto/CipherOutputStream.java openjdk-boot/jdk/src/share/classes/javax/crypto/CipherOutputStream.java
+--- openjdk-boot.orig/jdk/src/share/classes/javax/crypto/CipherOutputStream.java	2014-10-14 19:57:56.383275536 +0100
++++ openjdk-boot/jdk/src/share/classes/javax/crypto/CipherOutputStream.java	2014-10-14 19:59:16.160397935 +0100
+@@ -208,7 +208,9 @@
+         closed = true;
+         try {
+             obuffer = cipher.doFinal();
+-        } catch (IllegalBlockSizeException | BadPaddingException e) {
++        } catch (IllegalBlockSizeException e) {
++            obuffer = null;
++        } catch (BadPaddingException e) {
+             obuffer = null;
+         }
+         try {

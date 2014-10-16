@@ -555,3 +555,24 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgo
                  }
  
                  throw new IllegalArgumentException(
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java openjdk-boot/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java	2014-10-14 19:33:10.606587037 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java	2014-10-14 19:34:06.831372783 +0100
+@@ -64,14 +64,12 @@
+         if (paramTypes.length != 0)
+             throw new AssertionError("Too many parameters for an annotation method");
+ 
+-        switch(member) {
+-        case "toString":
++	if ("toString".equals(member))
+             return toStringImpl();
+-        case "hashCode":
++	if ("hashCode".equals(member))
+             return hashCodeImpl();
+-        case "annotationType":
++	if ("annotationType".equals(member))
+             return type;
+-        }
+ 
+         // Handle annotation member accessors
+         Object result = memberValues.get(member);

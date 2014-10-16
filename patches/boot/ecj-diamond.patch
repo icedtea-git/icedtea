@@ -7214,3 +7214,63 @@ diff -Nru openjdk-boot.orig/jdk/test/java/util/Random/DistinctSeeds.java openjdk
          List<Thread> threads = new ArrayList<Thread>();
          for (int i = 0; i < threadCount; i++) {
              RandomCollector r = new RandomCollector();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/swing/JDesktopPane.java openjdk-boot/jdk/src/share/classes/javax/swing/JDesktopPane.java
+--- openjdk-boot.orig/jdk/src/share/classes/javax/swing/JDesktopPane.java	2014-10-16 16:01:29.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/javax/swing/JDesktopPane.java	2014-10-16 16:53:18.417845002 +0100
+@@ -267,7 +267,7 @@
+ 
+     private static Collection<JInternalFrame> getAllFrames(Container parent) {
+         int i, count;
+-        Collection<JInternalFrame> results = new LinkedHashSet<>();
++        Collection<JInternalFrame> results = new LinkedHashSet<JInternalFrame>();
+         count = parent.getComponentCount();
+         for (i = 0; i < count; i++) {
+             Component next = parent.getComponent(i);
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/jdk/net/Sockets.java openjdk-boot/jdk/src/share/classes/jdk/net/Sockets.java
+--- openjdk-boot.orig/jdk/src/share/classes/jdk/net/Sockets.java	2014-10-16 20:15:06.087116645 +0100
++++ openjdk-boot/jdk/src/share/classes/jdk/net/Sockets.java	2014-10-16 20:18:48.586149429 +0100
+@@ -58,7 +58,7 @@
+ public class Sockets {
+ 
+     private final static HashMap<Class<?>,Set<SocketOption<?>>>
+-        options = new HashMap<>();
++      options = new HashMap<Class<?>,Set<SocketOption<?>>>();
+ 
+     static {
+         initOptionSets();
+@@ -351,7 +351,7 @@
+ 
+         // Socket
+ 
+-        Set<SocketOption<?>> set = new HashSet<>();
++        Set<SocketOption<?>> set = new HashSet<SocketOption<?>>();
+         set.add(StandardSocketOptions.SO_KEEPALIVE);
+         set.add(StandardSocketOptions.SO_SNDBUF);
+         set.add(StandardSocketOptions.SO_RCVBUF);
+@@ -367,7 +367,7 @@
+ 
+         // ServerSocket
+ 
+-        set = new HashSet<>();
++        set = new HashSet<SocketOption<?>>();
+         set.add(StandardSocketOptions.SO_RCVBUF);
+         set.add(StandardSocketOptions.SO_REUSEADDR);
+         set = Collections.unmodifiableSet(set);
+@@ -375,7 +375,7 @@
+ 
+         // DatagramSocket
+ 
+-        set = new HashSet<>();
++        set = new HashSet<SocketOption<?>>();
+         set.add(StandardSocketOptions.SO_SNDBUF);
+         set.add(StandardSocketOptions.SO_RCVBUF);
+         set.add(StandardSocketOptions.SO_REUSEADDR);
+@@ -388,7 +388,7 @@
+ 
+         // MulticastSocket
+ 
+-        set = new HashSet<>();
++        set = new HashSet<SocketOption<?>>();
+         set.add(StandardSocketOptions.SO_SNDBUF);
+         set.add(StandardSocketOptions.SO_RCVBUF);
+         set.add(StandardSocketOptions.SO_REUSEADDR);
