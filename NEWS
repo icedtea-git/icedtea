@@ -30,7 +30,6 @@ New in release 2.6.0 (2014-XX-XX):
   - S7095856: OutputStreamHook doesn't handle null values
   - S7094099: DropDown List of JComboBox detached
   - S7121403: [TESTBUG] runtime/7051189/Xchecksig.sh fails on 64bit solaris
-  - S7122142: (ann) Race condition between isAnnotationPresent and getAnnotations
   - S7130140: using horizontal scroll button on mouse causes a message to be printed on stdout
   - S7142035: assert in j.l.instrument agents during shutdown when daemon thread is running
   - S7152892: some jtreg tests fail with permission denied
@@ -71,7 +70,6 @@ New in release 2.6.0 (2014-XX-XX):
   - S8027359: XML parser returns incorrect parsing results
   - S8028073: race condition in ObjectMonitor implementation causing deadlocks
   - S8028074: InetAddress.getByName fails with UHE "invalid IPv6 address" if host name starts with a-f
-  - S8028192: Use of PKCS11-NSS provider in FIPS mode broken
   - S8028616: Htmleditorkit parser doesn't handle leading slash (/)
   - S8028617: Dvorak keyboard mapping not honored when ctrl key pressed
   - S8028623: SA: hash codes in SymbolTable mismatching java_lang_String::hash_code for extended characters.
@@ -125,7 +123,6 @@ New in release 2.6.0 (2014-XX-XX):
   - S8036983: JAB:Multiselection Ctrl+CursorUp/Down and ActivateDescenderPropertyChanged event
   - S8037477: Reproducible hang of JAWS and webstart application with JAB 2.0.4
   - S8037945: Paths.get("").normalize() throws ArrayIndexOutOfBoundsException
-  - S8038000: java.awt.image.RasterFormatException: Incorrect scanline stride
   - S8038440: backport few C2 fixes
   - S8038481: CMM Testing: Min/MaxHeapFreeRatio flags should be manageable through the API
   - S8038640: new hotspot build - hs24.80-b06
@@ -139,7 +136,6 @@ New in release 2.6.0 (2014-XX-XX):
   - S8039298: assert(base == NULL || t_adr->isa_rawptr() || ! phase->type(base)->higher_equal(TypePtr::NULL_PTR))
   - S8039319: (smartcardio) Card.transmitControlCommand() does not work on Mac OS X
   - S8039368: Remove testcase from npt utf.c
-  - S8039396: NPE when writing a class descriptor object to a custom ObjectOutputStream
   - S8039891: Remove ppcsflt builds from JPRT
   - S8039899: Missing licence headers in test for JDK-8033113
   - S8040076: Memory leak: java.awt.List objects allowing multiple selections are not GC-ed.
@@ -189,19 +185,92 @@ New in release 2.6.0 (2014-XX-XX):
   - S8051844: BootstrapMethods attribute cannot be empty again
   - S8052159: TEST_BUG: javax/swing/JTextField/8036819/bug8036819.java fails to compile
   - S8054841: (process) ProcessBuilder leaks native memory
-* Backports
-  - S4963723, RH1131221: Implement SHA-224
-  - S7044060, RH1131221: Need to support NSA Suite B Cryptography algorithms
-  - S8006935, RH1131221: Need to take care of long secret keys in HMAC/PRF compuation
 * Bug fixes
   - PR1786: Allow x86 build to occur on x86_64 using a previously built x86_64 build
   - PR1846: Build fails when using IcedTea7 as bootstrap JDK with native ecj
   - PR1847: Synchronise javac.in with IcedTea6
+
+New in release 2.5.3 (2014-10-14):
+
+* Security fixes
+  - S8015256: Better class accessibility
+  - S8022783, CVE-2014-6504: Optimize C2 optimizations
+  - S8035162: Service printing service
+  - S8035781: Improve equality for annotations
+  - S8036805: Correct linker method lookup.
+  - S8036810: Correct linker field lookup
+  - S8036936: Use local locales
+  - S8037066, CVE-2014-6457: Secure transport layer
+  - S8037846, CVE-2014-6558: Ensure streaming of input cipher streams
+  - S8038364: Use certificate exceptions correctly
+  - S8038899: Safer safepoints
+  - S8038903: More native monitor monitoring
+  - S8038908: Make Signature more robust
+  - S8038913: Bolster XML support
+  - S8039509, CVE-2014-6512: Wrap sockets more thoroughly
+  - S8039533, CVE-2014-6517: Higher resolution resolvers
+  - S8041540, CVE-2014-6511: Better use of pages in font processing
+  - S8041529: Better parameterization of parameter lists
+  - S8041545: Better validation of generated rasters
+  - S8041564, CVE-2014-6506: Improved management of logger resources
+  - S8041717, CVE-2014-6519: Issue with class file parser
+  - S8042609, CVE-2014-6513: Limit splashiness of splash images
+  - S8042797, CVE-2014-6502: Avoid strawberries in LogRecord
+  - S8044274, CVE-2014-6531: Proper property processing
+* Backports
+  - S4963723, RH1131221: Implement SHA-224
+  - S7044060, RH1131221: Need to support NSA Suite B Cryptography algorithms
+  - S7122142: (ann) Race condition between isAnnotationPresent and getAnnotations
+  - S7160837: DigestOutputStream does not turn off digest calculation when "close()" is called
+  - S8006935, RH1131221: Need to take care of long secret keys in HMAC/PRF compuation
+  - S8012637: Adjust CipherInputStream class to work in AEAD/GCM mode
+  - S8028192: Use of PKCS11-NSS provider in FIPS mode broken
+  - S8038000: java.awt.image.RasterFormatException: Incorrect scanline stride
+  - S8039396: NPE when writing a class descriptor object to a custom ObjectOutputStream
+  - S8042603: 'SafepointPollOffset' was not declared in static member function 'static bool Arguments::check_vm_args_consistency()'
+  - S8042850: Extra unused entries in ICU ScriptCodes enum
+  - S8052162: REGRESSION: sun/java2d/cmm/ColorConvertOp tests fail since 7u71 b01
+  - S8053963: (dc) Use DatagramChannel.receive() instead of read() in connect()
+  - S8055176: 7u71 l10n resource file translation update
+* Bug fixes
   - PR1988: C++ Interpreter should no longer be used on ppc64
   - PR1989: Make jdk_generic_profile.sh handle missing programs better and be more verbose
   - PR1992, RH735336: Support retrieving proxy settings on GNOME 3.12.2
   - PR2000: Synchronise HEAD tarball paths with release branch paths
   - PR2002: Fix references to hotspot.map following PR2000
+  - PR2003: --disable-system-gtk option broken by refactoring in PR1736
+  - PR2009: Checksum of policy JAR files changes on every build
+  - PR2014: Use version from hotspot.map to create tarball filename
+  - PR2015: Update hotspot.map documentation in INSTALL
+  - PR2025: LCMS_CFLAGS & LCMS_LIBS should not be used unless SYSTEM_LCMS is enabled
+  - RH1015432: java-1.7.0-openjdk: Fails on PPC with StackOverflowError (revised comprehensive fix)
+* CACAO
+  - PR2030, G453612, CA172: ARM hardfloat support for CACAO
+* AArch64 port
+  - AArch64 C2 instruct for smull
+  - Add frame anchor fences.
+  - Add MacroAssembler::maybe_isb()
+  - Add missing instruction synchronization barriers and cache flushes.
+  - Add support for a few simple intrinsics
+  - Add support for builtin crc32 instructions
+  - Add support for Neon implementation of CRC32
+  - All address constants are 48 bits in size.
+  - array load must only read 32 bits
+  - Define uabs().  Use it everywhere an absolute value is wanted.
+  - Fast string comparison
+  - Fast String.equals()
+  - Fix register usage in generate_verify_oop().
+  - Fix thinko in Atomic::xchg_ptr.
+  - Fix typo in fsqrts
+  - Improve C1 performance improvements in ic_cache checks
+  - Performance improvement and ease of use changes pulled from upstream
+  - Remove obsolete C1 patching code.
+  - Replace hotspot jtreg test suite with tests from jdk7u
+  - S8024648: 7141246 breaks Zero port
+  - Save intermediate state before removing C1 patching code.
+  - Unwind native AArch64 frames.
+  - Use 2- and 3-instruction immediate form of movoop and mov_metadata in C2-generated code.
+  - Various concurrency fixes.
 
 New in release 2.5.2 (2014-08-29):
 
