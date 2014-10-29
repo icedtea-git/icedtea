@@ -136,6 +136,7 @@ IT_CFLAGS=$(CFLAGS) $(ARCHFLAG)
 
 # Conditional defintions
 
+TAR_SUFFIX = tar.bz2
 if USE_HG
   OPENJDK_SRC_ZIP = 
   CORBA_SRC_ZIP =
@@ -145,13 +146,13 @@ if USE_HG
   LANGTOOLS_SRC_ZIP =
   HOTSPOT_SRC_ZIP =
 else
-  OPENJDK_SRC_ZIP = openjdk.tar.bz2
-  CORBA_SRC_ZIP = corba.tar.bz2
-  JAXP_SRC_ZIP = jaxp.tar.bz2
-  JAXWS_SRC_ZIP = jaxws.tar.bz2
-  JDK_SRC_ZIP = jdk.tar.bz2
-  LANGTOOLS_SRC_ZIP = langtools.tar.bz2
-  HOTSPOT_SRC_ZIP = hotspot.tar.bz2
+  OPENJDK_SRC_ZIP = openjdk.$(TAR_SUFFIX)
+  CORBA_SRC_ZIP = corba.$(TAR_SUFFIX)
+  JAXP_SRC_ZIP = jaxp.$(TAR_SUFFIX)
+  JAXWS_SRC_ZIP = jaxws.$(TAR_SUFFIX)
+  JDK_SRC_ZIP = jdk.$(TAR_SUFFIX)
+  LANGTOOLS_SRC_ZIP = langtools.$(TAR_SUFFIX)
+  HOTSPOT_SRC_ZIP = hotspot.$(TAR_SUFFIX)
 endif
 
 if WITH_HGREV
@@ -1083,7 +1084,11 @@ endif
 	    if test "x$(HS_TYPE)" = "xhg"; then \
 	      $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
 	    else \
-	      $(WGET) $(HS_URL)/$(HOTSPOT_SRC_ZIP) ; \
+		if test "x$(HSBUILD)" = "xdefault"; then \
+	          $(WGET) $(HS_URL)/$(HOTSPOT_SRC_ZIP) ; \
+		else \
+		  $(WGET) $(HS_URL)/$(HSBUILD).$(TAR_SUFFIX) -O $(HOTSPOT_SRC_ZIP) ; \
+		fi ; \
             fi ; \
 	    if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
 	      | $(SHA256SUM) --check ; then \
@@ -2247,7 +2252,7 @@ ADD_ZERO_CONFIGURE_ARGS += \
 			'--disable-bootstrap% '--enable-bootstrap% , \
 		$(CONFIGURE_ARGS)) \
 	$(foreach i, openjdk hotspot corba jaxp jaxws jdk langtools, \
-	  $(if $(findstring --with-$(i)-src-zip=, $(CONFIGURE_ARGS)),, --with-$(i)-src-zip=$(abs_top_builddir)/$(i).tar.bz2))
+	  $(if $(findstring --with-$(i)-src-zip=, $(CONFIGURE_ARGS)),, --with-$(i)-src-zip=$(abs_top_builddir)/$(i).$(TAR_SUFFIX)))
 
 ADD_ZERO_EXTRA_BUILD_ENV = \
 	BUILD_LANGTOOLS=false ALT_LANGTOOLS_DIST=$(BUILD_OUTPUT_DIR)/langtools/dist \
