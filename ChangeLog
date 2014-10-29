@@ -1,5 +1,13 @@
 2014-10-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* INSTALL: Update section on hotspot.map
+	to reflect recent changes.
+	* Makefile.am:
+	(download-hotspot): Use $(TAR_SUFFIX) in hg drops
+	as well.
+
+2014-10-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* Makefile.am:
 	(TAR_SUFFIX): New variable to store filename
 	suffix of OpenJDK drop tarballs.
