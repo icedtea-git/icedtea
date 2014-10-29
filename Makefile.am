@@ -253,7 +253,8 @@ endif
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
-	patches/cacao/memory.patch
+	patches/cacao/memory.patch \
+	patches/cacao/armhf.patch
 else
 if USING_CACAO
 ICEDTEA_PATCHES += \
