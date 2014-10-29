@@ -261,6 +261,8 @@ New in release 2.6.0 (2014-XX-XX):
   - PR1786: Allow x86 build to occur on x86_64 using a previously built x86_64 build
   - PR1846: Build fails when using IcedTea7 as bootstrap JDK with native ecj
   - PR1847: Synchronise javac.in with IcedTea6
+* CACAO
+  - PR2032: CACAO lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
 
 New in release 2.5.3 (2014-10-14):
 
