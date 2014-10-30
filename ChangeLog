@@ -1,3 +1,17 @@
+2014-06-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* INSTALL: Replace documentation of
+	--with-abs-install-dir with --prefix.
+	* Makefile.am:
+	(ICEDTEA_ENV): Set INSTALL_LOCATION to prefix.
+	* configure.ac: Drop abs-install-dir
+	option and use prefix in ABS_CLIENT_LIBJVM_SO and
+	ABS_SERVER_LIBJVM_SO instead.
+	* tapset/hotspot.stp.in,
+	* tapset/hotspot_jni.stp.in,
+	* tapset/jstack.stp.in:
+	Replace ABS_JAVA_HOME_DIR with prefix.
+
 2014-10-29  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* patches/hotspot/aarch64/systemtap_gc.patch,
