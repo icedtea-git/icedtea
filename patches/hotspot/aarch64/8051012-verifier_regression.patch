@@ -1,0 +1,179 @@
+# HG changeset patch
+# User hseigel
+# Date 1407294645 14400
+#      Tue Aug 05 23:10:45 2014 -0400
+# Node ID 342e3e35fdc12a05d4ad6140ebf134842c08efd0
+# Parent  44a114f679c20a364b44d5ac98dbb29746fe8ba7
+8051012: Regression in verifier for <init> method call from inside of a branch
+Summary: Fix stackmap matching for branches.
+Reviewed-by: coleenp, lfoltan, acorn
+
+diff -r 44a114f679c2 -r 342e3e35fdc1 src/share/vm/classfile/stackMapTable.cpp
+--- openjdk/hotspot/src/share/vm/classfile/stackMapTable.cpp	Tue Aug 05 13:49:42 2014 +0100
++++ openjdk/hotspot/src/share/vm/classfile/stackMapTable.cpp	Tue Aug 05 23:10:45 2014 -0400
+@@ -70,24 +70,26 @@
+ 
+ bool StackMapTable::match_stackmap(
+     StackMapFrame* frame, int32_t target,
+-    bool match, bool update, ErrorContext* ctx, TRAPS) const {
++    bool match, bool update, bool handler, ErrorContext* ctx, TRAPS) const {
+   int index = get_index_from_offset(target);
+-  return match_stackmap(frame, target, index, match, update, ctx, THREAD);
++  return match_stackmap(frame, target, index, match, update, handler, ctx, THREAD);
+ }
+ 
+ // Match and/or update current_frame to the frame in stackmap table with
+ // specified offset and frame index. Return true if the two frames match.
++// handler is true if the frame in stackmap_table is for an exception handler.
+ //
+-// The values of match and update are:                  _match__update_
++// The values of match and update are:                  _match__update__handler
+ //
+-// checking a branch target/exception handler:           true   false
++// checking a branch target:                             true   false   false
++// checking an exception handler:                        true   false   true
+ // linear bytecode verification following an
+-// unconditional branch:                                 false  true
++// unconditional branch:                                 false  true    false
+ // linear bytecode verification not following an
+-// unconditional branch:                                 true   true
++// unconditional branch:                                 true   true    false
+ bool StackMapTable::match_stackmap(
+     StackMapFrame* frame, int32_t target, int32_t frame_index,
+-    bool match, bool update, ErrorContext* ctx, TRAPS) const {
++    bool match, bool update, bool handler, ErrorContext* ctx, TRAPS) const {
+   if (frame_index < 0 || frame_index >= _frame_count) {
+     *ctx = ErrorContext::missing_stackmap(frame->offset());
+     frame->verifier()->verify_error(
+@@ -98,11 +100,9 @@
+   StackMapFrame *stackmap_frame = _frame_array[frame_index];
+   bool result = true;
+   if (match) {
+-    // when checking handler target, match == true && update == false
+-    bool is_exception_handler = !update;
+     // Has direct control flow from last instruction, need to match the two
+     // frames.
+-    result = frame->is_assignable_to(stackmap_frame, is_exception_handler,
++    result = frame->is_assignable_to(stackmap_frame, handler,
+         ctx, CHECK_VERIFY_(frame->verifier(), result));
+   }
+   if (update) {
+@@ -126,7 +126,7 @@
+     StackMapFrame* frame, int32_t target, TRAPS) const {
+   ErrorContext ctx;
+   bool match = match_stackmap(
+-    frame, target, true, false, &ctx, CHECK_VERIFY(frame->verifier()));
++    frame, target, true, false, false, &ctx, CHECK_VERIFY(frame->verifier()));
+   if (!match || (target < 0 || target >= _code_length)) {
+     frame->verifier()->verify_error(ctx,
+         "Inconsistent stackmap frames at branch target %d", target);
+@@ -134,7 +134,6 @@
+   }
+   // check if uninitialized objects exist on backward branches
+   check_new_object(frame, target, CHECK_VERIFY(frame->verifier()));
+-  frame->verifier()->update_furthest_jump(target);
+ }
+ 
+ void StackMapTable::check_new_object(
+diff -r 44a114f679c2 -r 342e3e35fdc1 src/share/vm/classfile/stackMapTable.hpp
+--- openjdk/hotspot/src/share/vm/classfile/stackMapTable.hpp	Tue Aug 05 13:49:42 2014 +0100
++++ openjdk/hotspot/src/share/vm/classfile/stackMapTable.hpp	Tue Aug 05 23:10:45 2014 -0400
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 2003, 2012, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 2003, 2014, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -74,12 +74,12 @@
+   // specified offset. Return true if the two frames match.
+   bool match_stackmap(
+     StackMapFrame* current_frame, int32_t offset,
+-    bool match, bool update, ErrorContext* ctx, TRAPS) const;
++    bool match, bool update, bool handler, ErrorContext* ctx, TRAPS) const;
+   // Match and/or update current_frame to the frame in stackmap table with
+   // specified offset and frame index. Return true if the two frames match.
+   bool match_stackmap(
+     StackMapFrame* current_frame, int32_t offset, int32_t frame_index,
+-    bool match, bool update, ErrorContext* ctx, TRAPS) const;
++    bool match, bool update, bool handler, ErrorContext* ctx, TRAPS) const;
+ 
+   // Check jump instructions. Make sure there are no uninitialized
+   // instances on backward branch.
+diff -r 44a114f679c2 -r 342e3e35fdc1 src/share/vm/classfile/verifier.cpp
+--- openjdk/hotspot/src/share/vm/classfile/verifier.cpp	Tue Aug 05 13:49:42 2014 +0100
++++ openjdk/hotspot/src/share/vm/classfile/verifier.cpp	Tue Aug 05 23:10:45 2014 -0400
+@@ -630,8 +630,6 @@
+                                 // flow from current instruction to the next
+                                 // instruction in sequence
+ 
+-  set_furthest_jump(0);
+-
+   Bytecodes::Code opcode;
+   while (!bcs.is_last_bytecode()) {
+     // Check for recursive re-verification before each bytecode.
+@@ -1788,7 +1786,7 @@
+       // If matched, current_frame will be updated by this method.
+       bool matches = stackmap_table->match_stackmap(
+         current_frame, this_offset, stackmap_index,
+-        !no_control_flow, true, &ctx, CHECK_VERIFY_(this, 0));
++        !no_control_flow, true, false, &ctx, CHECK_VERIFY_(this, 0));
+       if (!matches) {
+         // report type error
+         verify_error(ctx, "Instruction type does not match stack map");
+@@ -1835,7 +1833,7 @@
+       }
+       ErrorContext ctx;
+       bool matches = stackmap_table->match_stackmap(
+-        new_frame, handler_pc, true, false, &ctx, CHECK_VERIFY(this));
++        new_frame, handler_pc, true, false, true, &ctx, CHECK_VERIFY(this));
+       if (!matches) {
+         verify_error(ctx, "Stack map does not match the one at "
+             "exception handler %d", handler_pc);
+@@ -2243,13 +2241,6 @@
+       return;
+     }
+ 
+-    // Make sure that this call is not jumped over.
+-    if (bci < furthest_jump()) {
+-      verify_error(ErrorContext::bad_code(bci),
+-                   "Bad <init> method call from inside of a branch");
+-      return;
+-    }
+-
+     // Make sure that this call is not done from within a TRY block because
+     // that can result in returning an incomplete object.  Simply checking
+     // (bci >= start_pc) also ensures that this call is not done after a TRY
+diff -r 44a114f679c2 -r 342e3e35fdc1 src/share/vm/classfile/verifier.hpp
+--- openjdk/hotspot/src/share/vm/classfile/verifier.hpp	Tue Aug 05 13:49:42 2014 +0100
++++ openjdk/hotspot/src/share/vm/classfile/verifier.hpp	Tue Aug 05 23:10:45 2014 -0400
+@@ -256,9 +256,6 @@
+ 
+   ErrorContext _error_context;  // contains information about an error
+ 
+-  // Used to detect illegal jumps over calls to super() and this() in ctors.
+-  int32_t _furthest_jump;
+-
+   void verify_method(methodHandle method, TRAPS);
+   char* generate_code_data(methodHandle m, u4 code_length, TRAPS);
+   void verify_exception_handler_table(u4 code_length, char* code_data,
+@@ -402,19 +399,6 @@
+ 
+   TypeOrigin ref_ctx(const char* str, TRAPS);
+ 
+-  // Keep track of the furthest branch done in a method to make sure that
+-  // there are no branches over calls to super() or this() from inside of
+-  // a constructor.
+-  int32_t furthest_jump() { return _furthest_jump; }
+-
+-  void set_furthest_jump(int32_t target) {
+-    _furthest_jump = target;
+-  }
+-
+-  void update_furthest_jump(int32_t target) {
+-    if (target > _furthest_jump) _furthest_jump = target;
+-  }
+-
+ };
+ 
+ inline int ClassVerifier::change_sig_to_verificationType(

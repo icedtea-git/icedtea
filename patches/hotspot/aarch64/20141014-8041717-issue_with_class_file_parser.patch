@@ -1,0 +1,33 @@
+# HG changeset patch
+# User hseigel
+# Date 1401471524 14400
+#      Fri May 30 13:38:44 2014 -0400
+# Node ID 761de55063900bd2fd89a750c59ef70bca10c5ee
+# Parent  fa1a8360ff78706def477a195b73d9ddb644bf64
+8041717: Issue with class file parser
+Summary: Add better checking for bad values.
+Reviewed-by: coleenp, lfoltan, mschoene
+
+diff -r fa1a8360ff78 -r 761de5506390 src/share/vm/classfile/classFileParser.cpp
+--- openjdk/hotspot/src/share/vm/classfile/classFileParser.cpp	Wed May 28 10:08:39 2014 -0700
++++ openjdk/hotspot/src/share/vm/classfile/classFileParser.cpp	Fri May 30 13:38:44 2014 -0400
+@@ -2721,6 +2721,11 @@
+       "bootstrap_method_index %u has bad constant type in class file %s",
+       bootstrap_method_index,
+       CHECK);
++
++    guarantee_property((operand_fill_index + 1 + argument_count) < operands->length(),
++      "Invalid BootstrapMethods num_bootstrap_methods or num_bootstrap_arguments value in class file %s",
++      CHECK);
++
+     operands->short_at_put(operand_fill_index++, bootstrap_method_index);
+     operands->short_at_put(operand_fill_index++, argument_count);
+ 
+@@ -2738,7 +2743,6 @@
+   }
+ 
+   assert(operand_fill_index == operands()->length(), "exact fill");
+-  assert(constantPoolOopDesc::operand_array_length(operands()) == attribute_array_length, "correct decode");
+ 
+   u1* current_end = cfs->current();
+   guarantee_property(current_end == current_start + attribute_byte_length,

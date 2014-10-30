@@ -1,0 +1,119 @@
+# HG changeset patch
+# User hseigel
+# Date 1395266649 14400
+#      Wed Mar 19 18:04:09 2014 -0400
+# Node ID 458f18560343240fdd8002937d5930ca77f3e12f
+# Parent  c650f71b9c677cac304ce64be1e3959c018ebd8b
+8035119: Fix exceptions to bytecode verification
+Summary: Prevent ctor calls to super() and this() from avoidable code (try blocks, if stmts, etc.)
+Reviewed-by: coleenp, acorn, mschoene
+
+diff -r c650f71b9c67 -r 458f18560343 src/share/vm/classfile/stackMapTable.cpp
+--- openjdk/hotspot/src/share/vm/classfile/stackMapTable.cpp	Wed Mar 19 14:18:19 2014 -0400
++++ openjdk/hotspot/src/share/vm/classfile/stackMapTable.cpp	Wed Mar 19 18:04:09 2014 -0400
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 2003, 2012, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 2003, 2014, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -134,6 +134,7 @@
+   }
+   // check if uninitialized objects exist on backward branches
+   check_new_object(frame, target, CHECK_VERIFY(frame->verifier()));
++  frame->verifier()->update_furthest_jump(target);
+ }
+ 
+ void StackMapTable::check_new_object(
+diff -r c650f71b9c67 -r 458f18560343 src/share/vm/classfile/verifier.cpp
+--- openjdk/hotspot/src/share/vm/classfile/verifier.cpp	Wed Mar 19 14:18:19 2014 -0400
++++ openjdk/hotspot/src/share/vm/classfile/verifier.cpp	Wed Mar 19 18:04:09 2014 -0400
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 1998, 2012, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 1998, 2014, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -629,6 +629,9 @@
+   bool no_control_flow = false; // Set to true when there is no direct control
+                                 // flow from current instruction to the next
+                                 // instruction in sequence
++
++  set_furthest_jump(0);
++
+   Bytecodes::Code opcode;
+   while (!bcs.is_last_bytecode()) {
+     // Check for recursive re-verification before each bytecode.
+@@ -2239,6 +2242,29 @@
+           "Bad <init> method call");
+       return;
+     }
++
++    // Make sure that this call is not jumped over.
++    if (bci < furthest_jump()) {
++      verify_error(ErrorContext::bad_code(bci),
++                   "Bad <init> method call from inside of a branch");
++      return;
++    }
++
++    // Make sure that this call is not done from within a TRY block because
++    // that can result in returning an incomplete object.  Simply checking
++    // (bci >= start_pc) also ensures that this call is not done after a TRY
++    // block.  That is also illegal because this call must be the first Java
++    // statement in the constructor.
++    ExceptionTable exhandlers(_method());
++    int exlength = exhandlers.length();
++    for(int i = 0; i < exlength; i++) {
++      if (bci >= exhandlers.start_pc(i)) {
++        verify_error(ErrorContext::bad_code(bci),
++                     "Bad <init> method call from after the start of a try block");
++        return;
++      }
++    }
++
+     current_frame->initialize_object(type, current_type());
+     *this_uninit = true;
+   } else if (type.is_uninitialized()) {
+diff -r c650f71b9c67 -r 458f18560343 src/share/vm/classfile/verifier.hpp
+--- openjdk/hotspot/src/share/vm/classfile/verifier.hpp	Wed Mar 19 14:18:19 2014 -0400
++++ openjdk/hotspot/src/share/vm/classfile/verifier.hpp	Wed Mar 19 18:04:09 2014 -0400
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 1998, 2012, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 1998, 2014, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -256,6 +256,9 @@
+ 
+   ErrorContext _error_context;  // contains information about an error
+ 
++  // Used to detect illegal jumps over calls to super() and this() in ctors.
++  int32_t _furthest_jump;
++
+   void verify_method(methodHandle method, TRAPS);
+   char* generate_code_data(methodHandle m, u4 code_length, TRAPS);
+   void verify_exception_handler_table(u4 code_length, char* code_data,
+@@ -398,6 +401,20 @@
+   Symbol* create_temporary_symbol(const char *s, int length, TRAPS);
+ 
+   TypeOrigin ref_ctx(const char* str, TRAPS);
++
++  // Keep track of the furthest branch done in a method to make sure that
++  // there are no branches over calls to super() or this() from inside of
++  // a constructor.
++  int32_t furthest_jump() { return _furthest_jump; }
++
++  void set_furthest_jump(int32_t target) {
++    _furthest_jump = target;
++  }
++
++  void update_furthest_jump(int32_t target) {
++    if (target > _furthest_jump) _furthest_jump = target;
++  }
++
+ };
+ 
+ inline int ClassVerifier::change_sig_to_verificationType(

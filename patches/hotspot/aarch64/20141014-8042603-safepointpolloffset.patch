@@ -1,0 +1,22 @@
+# HG changeset patch
+# User twisti
+# Date 1400640638 25200
+#      Tue May 20 19:50:38 2014 -0700
+# Node ID 79abf6cf78074950b9206f5747734a59b0985c40
+# Parent  97fb076fab01e679c8e20b6653f217e467bf2693
+8042603: 'SafepointPollOffset' was not declared in static member function 'static bool Arguments::check_vm_args_consistency()'
+Reviewed-by: kvn
+
+diff -r 97fb076fab01 -r 79abf6cf7807 src/share/vm/runtime/arguments.cpp
+--- openjdk/hotspot/src/share/vm/runtime/arguments.cpp	Fri Oct 18 10:50:17 2013 +0200
++++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	Tue May 20 19:50:38 2014 -0700
+@@ -2057,7 +2057,9 @@
+     PrintNMTStatistics = false;
+   }
+ 
++#ifdef COMPILER1
+   status &= verify_interval(SafepointPollOffset, 0, os::vm_page_size() - BytesPerWord, "SafepointPollOffset");
++#endif
+ 
+   return status;
+ }

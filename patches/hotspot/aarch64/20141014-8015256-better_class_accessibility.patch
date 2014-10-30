@@ -1,0 +1,174 @@
+diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/mapfile-vers-debug openjdk/hotspot/make/bsd/makefiles/mapfile-vers-debug
+--- openjdk.orig/hotspot/make/bsd/makefiles/mapfile-vers-debug	2014-10-21 10:09:50.000000000 +0100
++++ openjdk/hotspot/make/bsd/makefiles/mapfile-vers-debug	2014-10-29 18:19:45.802384144 +0000
+@@ -1,5 +1,5 @@
+ #
+-# Copyright (c) 2002, 2013, Oracle and/or its affiliates. All rights reserved.
++# Copyright (c) 2002, 2014, Oracle and/or its affiliates. All rights reserved.
+ # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ #
+ # This code is free software; you can redistribute it and/or modify it
+@@ -82,6 +82,7 @@
+                 _JVM_EnableCompiler
+                 _JVM_Exit
+                 _JVM_FillInStackTrace
++                _JVM_FindClassFromCaller
+                 _JVM_FindClassFromClass
+                 _JVM_FindClassFromClassLoader
+                 _JVM_FindClassFromBootLoader
+diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/mapfile-vers-product openjdk/hotspot/make/bsd/makefiles/mapfile-vers-product
+--- openjdk.orig/hotspot/make/bsd/makefiles/mapfile-vers-product	2014-10-21 10:09:50.000000000 +0100
++++ openjdk/hotspot/make/bsd/makefiles/mapfile-vers-product	2014-10-29 18:19:45.802384144 +0000
+@@ -1,5 +1,5 @@
+ #
+-# Copyright (c) 2002, 2013, Oracle and/or its affiliates. All rights reserved.
++# Copyright (c) 2002, 2014, Oracle and/or its affiliates. All rights reserved.
+ # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ #
+ # This code is free software; you can redistribute it and/or modify it
+@@ -82,6 +82,7 @@
+                 _JVM_EnableCompiler
+                 _JVM_Exit
+                 _JVM_FillInStackTrace
++                _JVM_FindClassFromCaller
+                 _JVM_FindClassFromClass
+                 _JVM_FindClassFromClassLoader
+                 _JVM_FindClassFromBootLoader
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/mapfile-vers-debug openjdk/hotspot/make/linux/makefiles/mapfile-vers-debug
+--- openjdk.orig/hotspot/make/linux/makefiles/mapfile-vers-debug	2014-10-21 10:09:50.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/mapfile-vers-debug	2014-10-29 18:19:45.802384144 +0000
+@@ -1,5 +1,5 @@
+ #
+-# Copyright (c) 2002, 2011, Oracle and/or its affiliates. All rights reserved.
++# Copyright (c) 2002, 2014, Oracle and/or its affiliates. All rights reserved.
+ # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ #
+ # This code is free software; you can redistribute it and/or modify it
+@@ -84,6 +84,7 @@
+                 JVM_EnableCompiler;
+                 JVM_Exit;
+                 JVM_FillInStackTrace;
++                JVM_FindClassFromCaller;
+                 JVM_FindClassFromClass;
+                 JVM_FindClassFromClassLoader;
+                 JVM_FindClassFromBootLoader;
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/mapfile-vers-product openjdk/hotspot/make/linux/makefiles/mapfile-vers-product
+--- openjdk.orig/hotspot/make/linux/makefiles/mapfile-vers-product	2014-10-21 10:09:50.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/mapfile-vers-product	2014-10-29 18:19:45.802384144 +0000
+@@ -1,5 +1,5 @@
+ #
+-# Copyright (c) 2002, 2011, Oracle and/or its affiliates. All rights reserved.
++# Copyright (c) 2002, 2014, Oracle and/or its affiliates. All rights reserved.
+ # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ #
+ # This code is free software; you can redistribute it and/or modify it
+@@ -84,6 +84,7 @@
+                 JVM_EnableCompiler;
+                 JVM_Exit;
+                 JVM_FillInStackTrace;
++                JVM_FindClassFromCaller;
+                 JVM_FindClassFromClass;
+                 JVM_FindClassFromClassLoader;
+                 JVM_FindClassFromBootLoader;
+diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/mapfile-vers openjdk/hotspot/make/solaris/makefiles/mapfile-vers
+--- openjdk.orig/hotspot/make/solaris/makefiles/mapfile-vers	2014-10-21 10:09:50.000000000 +0100
++++ openjdk/hotspot/make/solaris/makefiles/mapfile-vers	2014-10-29 18:19:45.802384144 +0000
+@@ -1,5 +1,5 @@
+ #
+-# Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
++# Copyright (c) 2000, 2014, Oracle and/or its affiliates. All rights reserved.
+ # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ #
+ # This code is free software; you can redistribute it and/or modify it
+@@ -84,6 +84,7 @@
+ 		JVM_EnableCompiler;
+ 		JVM_Exit;
+ 		JVM_FillInStackTrace;
++		JVM_FindClassFromCaller;
+ 		JVM_FindClassFromClass;
+ 		JVM_FindClassFromClassLoader;
+ 		JVM_FindClassFromBootLoader;
+diff -Nru openjdk.orig/hotspot/src/share/vm/prims/jvm.cpp openjdk/hotspot/src/share/vm/prims/jvm.cpp
+--- openjdk.orig/hotspot/src/share/vm/prims/jvm.cpp	2014-10-21 10:09:50.000000000 +0100
++++ openjdk/hotspot/src/share/vm/prims/jvm.cpp	2014-10-29 18:20:34.399060035 +0000
+@@ -755,6 +755,7 @@
+   return (jclass) JNIHandles::make_local(env, Klass::cast(k)->java_mirror());
+ JVM_END
+ 
++// Not used; JVM_FindClassFromCaller replaces this.
+ JVM_ENTRY(jclass, JVM_FindClassFromClassLoader(JNIEnv* env, const char* name,
+                                                jboolean init, jobject loader,
+                                                jboolean throwError))
+@@ -781,6 +782,42 @@
+   return result;
+ JVM_END
+ 
++// Find a class with this name in this loader, using the caller's protection domain.
++JVM_ENTRY(jclass, JVM_FindClassFromCaller(JNIEnv* env, const char* name,
++                                          jboolean init, jobject loader,
++                                          jclass caller))
++  JVMWrapper2("JVM_FindClassFromCaller %s throws ClassNotFoundException", name);
++  // Java libraries should ensure that name is never null...
++  if (name == NULL || (int)strlen(name) > Symbol::max_length()) {
++    // It's impossible to create this class;  the name cannot fit
++    // into the constant pool.
++    THROW_MSG_0(vmSymbols::java_lang_ClassNotFoundException(), name);
++  }
++
++  TempNewSymbol h_name = SymbolTable::new_symbol(name, CHECK_NULL);
++
++  oop loader_oop = JNIHandles::resolve(loader);
++  oop from_class = JNIHandles::resolve(caller);
++  oop protection_domain = NULL;
++  // If loader is null, shouldn't call ClassLoader.checkPackageAccess; otherwise get
++  // NPE. Put it in another way, the bootstrap class loader has all permission and
++  // thus no checkPackageAccess equivalence in the VM class loader.
++  // The caller is also passed as NULL by the java code if there is no security
++  // manager to avoid the performance cost of getting the calling class.
++  if (from_class != NULL && loader_oop != NULL) {
++    protection_domain = instanceKlass::cast(java_lang_Class::as_klassOop(from_class))->protection_domain();
++  }
++
++  Handle h_loader(THREAD, loader_oop);
++  Handle h_prot(THREAD, protection_domain);
++  jclass result = find_class_from_class_loader(env, h_name, init, h_loader,
++                                               h_prot, false, THREAD);
++
++  if (TraceClassResolution && result != NULL) {
++    trace_class_resolution(java_lang_Class::as_klassOop(JNIHandles::resolve_non_null(result)));
++  }
++  return result;
++JVM_END
+ 
+ JVM_ENTRY(jclass, JVM_FindClassFromClass(JNIEnv *env, const char *name,
+                                          jboolean init, jclass from))
+diff -Nru openjdk.orig/hotspot/src/share/vm/prims/jvm.h openjdk/hotspot/src/share/vm/prims/jvm.h
+--- openjdk.orig/hotspot/src/share/vm/prims/jvm.h	2014-10-21 10:09:50.000000000 +0100
++++ openjdk/hotspot/src/share/vm/prims/jvm.h	2014-10-29 18:19:45.802384144 +0000
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 1997, 2014, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -418,6 +418,19 @@
+ JVM_FindClassFromBootLoader(JNIEnv *env, const char *name);
+ 
+ /*
++ * Find a class from a given class loader.  Throws ClassNotFoundException.
++ *  name:   name of class
++ *  init:   whether initialization is done
++ *  loader: class loader to look up the class. This may not be the same as the caller's
++ *          class loader.
++ *  caller: initiating class. The initiating class may be null when a security
++ *          manager is not installed.
++ */
++JNIEXPORT jclass JNICALL
++JVM_FindClassFromCaller(JNIEnv *env, const char *name, jboolean init,
++                        jobject loader, jclass caller);
++
++/*
+  * Find a class from a given class.
+  */
+ JNIEXPORT jclass JNICALL

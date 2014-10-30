@@ -263,6 +263,8 @@ New in release 2.6.0 (2014-XX-XX):
   - PR1847: Synchronise javac.in with IcedTea6
 * CACAO
   - PR2032: CACAO lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
+* AArch64 port
+  - Use the IcedTea7 fork version rather than the one based on HotSpot 25.
 
 New in release 2.5.3 (2014-10-14):
 

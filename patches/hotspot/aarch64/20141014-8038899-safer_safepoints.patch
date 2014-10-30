@@ -1,0 +1,21 @@
+# HG changeset patch
+# User twisti
+# Date 1397876733 36000
+#      Fri Apr 18 17:05:33 2014 -1000
+# Node ID 81c8c56eecf670bc717bdf22bc7aea7bef1a8502
+# Parent  dc31bfb7b37ad09bb1451c42bda33287ec5c5abf
+8038899: Safer safepoints
+Reviewed-by: kvn, ahgross
+
+diff -r dc31bfb7b37a -r 81c8c56eecf6 src/share/vm/runtime/arguments.cpp
+--- openjdk/hotspot/src/share/vm/runtime/arguments.cpp	Wed Apr 16 22:09:02 2014 -0700
++++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	Fri Apr 18 17:05:33 2014 -1000
+@@ -2057,6 +2057,8 @@
+     PrintNMTStatistics = false;
+   }
+ 
++  status &= verify_interval(SafepointPollOffset, 0, os::vm_page_size() - BytesPerWord, "SafepointPollOffset");
++
+   return status;
+ }
+ 
