@@ -181,6 +181,7 @@ to configure:
 * --disable-jar-compression: Don't compress the OpenJDK JAR files.
 * --disable-downloading: Don't download tarballs if not available; fail instead.
 * --disable-bootstrap-tools: Use javac and javah from langtools, not the bootstrap JDK.
+* --disable-hotspot-test-in-build: Turn off the Queens test. Always turned off for bootstrapping.
 
 Other options may be supplied which enable or disable new features.
 These are documented fully in the relevant section below.

@@ -257,10 +257,15 @@ New in release 2.6.0 (2014-XX-XX):
   - S8057564: JVM hangs at getAgentProperties after attaching to VM with lower
   - S8057813: Alterations to jdk_security3 test target
   - S8058936: hotspot/test/Makefile should use jtreg script from $JT_HOME/bin/jreg (instead of $JT_HOME/win32/bin/jtreg)
+* Backports
+  - S7172012, PR2067: Make test-in-build an option (Queens)
+  - S8000897, RH1155012: VM crash in CompileBroker
 * Bug fixes
   - PR1786: Allow x86 build to occur on x86_64 using a previously built x86_64 build
   - PR1846: Build fails when using IcedTea7 as bootstrap JDK with native ecj
   - PR1847: Synchronise javac.in with IcedTea6
+  - PR2060: Fix warnings found by Gentoo ebuild QA with gcc 4.9.1
+  - PR2069: Type-punning warnings still evident on RHEL 5
 * CACAO
   - PR2032: CACAO lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
 * AArch64 port

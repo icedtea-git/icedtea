@@ -1,4 +1,4 @@
-AC_INIT([icedtea], [2.6.0pre09], [distro-pkg-dev@openjdk.java.net])
+AC_INIT([icedtea], [2.6.0pre10], [distro-pkg-dev@openjdk.java.net])
 AM_INIT_AUTOMAKE([1.9 tar-pax foreign])
 AM_MAINTAINER_MODE([enable])
 AC_CONFIG_FILES([Makefile])
@@ -153,6 +153,7 @@ IT_DIAMOND_CHECK
 IT_BYTECODE7_CHECK
 IT_USE_BOOTSTRAP_TOOLS
 IT_CHECK_FOR_XBOOTCLASSPATH
+IT_ENABLE_QUEENS_TEST
 
 IT_FIND_RHINO_JAR
 IT_WITH_OPENJDK_SRC_ZIP

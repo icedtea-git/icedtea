@@ -2846,3 +2846,25 @@ AC_DEFUN_ONCE([IT_DETERMINE_VERSION],
   AC_SUBST([ICEDTEA_BRANCH])
 ])
 
+AC_DEFUN_ONCE([IT_ENABLE_QUEENS_TEST],
+[
+  AC_MSG_CHECKING([whether to run the HotSpot Queens test])
+  AC_ARG_ENABLE([hotspot-test-in-build],
+                [AS_HELP_STRING(--disable-hotspot-test-in-build,
+		don't run the Queens test after the HotSpot build [[default=yes]])],
+  [
+    case "${enableval}" in
+      yes)
+        enable_queens=yes
+        ;;
+      *)
+        enable_queens=no
+        ;;
+    esac
+  ],
+  [
+    enable_queens=yes
+  ])
+  AC_MSG_RESULT([$enable_queens])
+  AM_CONDITIONAL([ENABLE_QUEENS], test x"${enable_queens}" = "xyes")
+])

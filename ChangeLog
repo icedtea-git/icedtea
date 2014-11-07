@@ -1,3 +1,38 @@
+2014-11-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* INSTALL: Updated.
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-2.6pre10.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Only apply SystemTap GC
+	patch to AArch64 port, as it's now in the main
+	IcedTea7 forest.
+	(TEST_IN_BUILD): New variable, set in accordance
+	with the ENABLE_QUEENS conditional.
+	(ICEDTEA_ENV): Pass user setting of TEST_IN_BUILD.
+	(ICEDTEA_ENV_BOOT): Override above with false for
+	bootstrap builds. Worksaround an issue with not
+	being able to link to the OpenJDK 6 VM.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_QUEENS_TEST): New
+	--disable-hotspot-test-in-build option which allows
+	the Queens test (test_gamma) to be toggled by the
+	user.
+	* configure.ac: Bump to 2.6.0pre10. Call
+	IT_ENABLE_QUEENS_TEST.
+	* hotspot.map.in: Update to icedtea-2.6.0pre10.
+
 2014-06-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* INSTALL: Replace documentation of
