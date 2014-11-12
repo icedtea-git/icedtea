@@ -270,6 +270,112 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2032: CACAO lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
 * AArch64 port
   - Use the IcedTea7 fork version rather than the one based on HotSpot 25.
+  - Add arch-specific processing of tmp1 register needed for d/f2i
+  - Added make rules to allow aarch64-x86 hybrid build to progress
+  - Added missing aarch64-specific include
+  - Added missing aarch64-specific make file
+  - Added missing changes for debug code
+  - Added missing inline method
+  - Added missing shared global UseCRC32Intrinsics
+  - Added pd global UseVectoredExceptions
+  - Add local method to redirect to AbstractAssembler::relocate
+  - Add missing declarations for CRC32 methods
+  - Add missing include
+  - Add missing special case code for aarch64
+  - Add rules to assemble .S files
+  - Add support for storing aarch64 call format
+  - Add wrapper method to avoid dependency on not yet defined code buffer class
+  - Aded missing endif
+  - Array load must only read 32 bits
+  - Backout 8c8b5e62e624 and instead move .S rule from zeroshark.make to rules.make
+  - Backout additional changes made in ec6a6772fed6, which revert parts of the PPC/AIX port and IcedTea fixes.
+  - Changed klass oop encode to heap oop encode
+  - Changed Method* to methodOop
+  - Corrcted type
+  - Correct assert to allow for AArch64
+  - Corrected error in disassembler code
+  - Corrected include
+  - Corrected include path
+  - Corrected typo
+  - Correct includes
+  - Correct Method to methdoOopDesc
+  - Defn of BIND does not need to use __ macro
+  - Don't test arraycopy routines when using AArch64 simulator
+  - Emit_int64 is renamed
+  - Ensure C1 static call stub employs absolute move to allow patching
+  - Ensure C2 static calls use correct call adddress in static stub reloc
+  - Fix couple of mistakes in generate of method handle dispatch
+  - Fix cut and paste-o in header
+  - Fixed another typo
+  - Fixed error in include
+  - Fixed hsdis for aarch64 native or simulated
+  - Fixed various typos and omissions
+  - Fixed various typos, overlooked cases and wrong accessors
+  - Fix error introduced into profiling code
+  - Fix more errors introduced into interpreter profile counter increment
+  - Fix relocations
+  - Fix several small typos
+  - Fix some typos
+  - Fix typo
+  - Fix up aarch64-specific patching code
+  - Fix up crc32 support
+  - Fix various typos
+  - Get rid of unnecessary declaration
+  - Guess at how to implement C1 deoptimize_trap generator
+  - Initial cut of aarch64 code pulled from jdk8 tree
+  - Make aarch64-x86 hybrid build use correct paths
+  - Make hsdis handle aarch64 native case
+  - Make static stubs load methodOop in cpool to avoid problems at GC
+  - Missing change needed to support aarch64 build
+  - Modified make files to support aarch64 build
+  - Modified shared src to support full aarch64 backport
+  - Moved fields which need access from java to top level
+  - Need to pass CFLAGS when assembling .S files using CC_COMPILE
+  - Provide missing CRC32 methods
+  - Reload rcpool register after a VM call in case a permgen GC has moved the cache
+  - Relocated aarch64 vtable generate code to conform to jdk7
+  - Remove comment to avoid breaking macro
+  - Removed aarch64 compiled_IC implementation to conform to jdk7
+  - Removed metaspaceShared code to conform to jdk7
+  - Removed redundant field use_XOR_for_compressed_class_base
+  - Removed some errors in signal handling code
+  - Removed undefined metadata case
+  - Remove redundant bracket
+  - Remove support for volatile load/store rules in ad file
+  - Renamed emit_int32 to emit_long and added local emit_long64 in place of missing emit_int64
+  - Restored missing open brace
+  - Restore working x86 build
+  - Reverted aarch64 architecture description (ad) file to conform to jdk7
+  - Reverted aarch64 c1_xxx files to conform to jdk7
+  - Reverted aarch64 c2 globals to conform to jdk7
+  - Reverted aarch64 frame code to conform to jdk7
+  - Reverted aarch64 runtime code to conform to jdk7
+  - Reverted aarch64 stubs code to conform to jdk7
+  - Reverted aarch64 template interpreter code to conform to jdk7
+  - Reverted aarch64 vm structs code to conform to jdk7
+  - Reverted aarch64 vm version code to conform to jdk7
+  - Reverted aarch64 vtable stubs code to conform to jdk7
+  - Reverted assembler_aarch64.cpp/hpp to conform to jdk7
+  - Reverted bytecodeInterpreter_aarch64 to conform to jdk7
+  - Reverted global defs code to conform to jdk7
+  - Reverted instr cache code to conform to jdk7
+  - Reverted interpreter code to conform to jdk7
+  - Reverted interpreter masm code to conform to jdk7
+  - Reverted jni code to conform to jdk7
+  - Reverted method handles code to conform to jdk7
+  - Reverted native instr code to conform to jdk7
+  - Reverted os_cpu/linux_aarch64 code to conform to jdk7
+  - Reverted reloc info code to conform to jdk7
+  - Revert Method:: etc to methodOopDesc:: etc
+  - Some errors revealed when building debug image
+  - Temporarily disable running test_gamma
+  - Use correct post-increment size in repne_scanw
+  - Use membar rules and delete special case volatile rules
+  - Use method register to access counter increment field
+  - Use movoop in C1 ic_call to keep verifier happy
+  - Use the correct return value from the VM resolve call
+  - Various changes to accommodate inclusion of ppc port in icedtea7
+  - Work around weird compiler issue
 
 New in release 2.5.3 (2014-10-14):
 

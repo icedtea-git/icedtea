@@ -4,19 +4,19 @@ JDK_UPDATE_VERSION = 80
 BUILD_VERSION = b02
 COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(BUILD_VERSION)
 
-CORBA_CHANGESET = 1a346ad4e322
-JAXP_CHANGESET = 603009854864
-JAXWS_CHANGESET = 70a94bce8d6e
-JDK_CHANGESET = 33a33bbea1ae
-LANGTOOLS_CHANGESET = cf836e0ed10d
-OPENJDK_CHANGESET = 200124c2f78d
+CORBA_CHANGESET = c11c54a2675c
+JAXP_CHANGESET = 79d217da0a7a
+JAXWS_CHANGESET = 2823343ab244
+JDK_CHANGESET = 8a445d1b5af5
+LANGTOOLS_CHANGESET = 510234036e06
+OPENJDK_CHANGESET = 05e485acec14
 
-CORBA_SHA256SUM = 6bbf09732d6a9be121d2a5c35e080324096702dd51fc60e13f1f34f214b2c99c
-JAXP_SHA256SUM = da4d472957b4f067b84ae1fe95f0ba95b62172c847ac1bf8cd826b62304c1926
-JAXWS_SHA256SUM = e04ac70c852471e36e6cf18352f720411e310df5393ac05ee9f45ce7a8ca7685
-JDK_SHA256SUM = f85e1e35b1c06e858712d1543928eae2169b4d6e02a7c266074b4a344b09d613
-LANGTOOLS_SHA256SUM = b351d1ac749817fff2618cf115a5484d78feecc35c46e180c7192b3596b60ef5
-OPENJDK_SHA256SUM = b7bfea4e2d9df2a0d1c4095bb820e04ba8d54e9ffea247742ea129bea8e9373a
+CORBA_SHA256SUM = 34423a2478ce65ce73c0dc55f947323365b1471252d2e3b6c785adb54042c21b
+JAXP_SHA256SUM = 1d8bcb0612d2d3b6079d4bb84d656aacafe5f3061ceadc2d7e9814270c77ac53
+JAXWS_SHA256SUM = 33a5c2f6dc84c09d40a4fe6d6beaff4f1bfecb82bb69f9730f03d50e9af782c0
+JDK_SHA256SUM = 0836221bc6aa763ff8814d15a15f0ed2410e727cf8461e609db82a535cdc2027
+LANGTOOLS_SHA256SUM = cc85aa73a186475590c54d980dfd04ae37665155ea07ee6f1418e4d2e55429d0
+OPENJDK_SHA256SUM = 56d5f39698e91571c8155767577126b4106cf67fad0a6743918063970c208b93
 
 DROP_URL = http://icedtea.classpath.org/download/drops
 
@@ -276,29 +276,6 @@ endif
 if ENABLE_SUNEC
 if !ENABLE_NSS
 ICEDTEA_PATCHES += patches/rh1022017.patch
-endif
-endif
-
-if WITH_ALT_HSBUILD
-ICEDTEA_PATCHES += \
-	patches/hotspot/aarch64/20140715-8030763-validate_global_memory_allocation.patch \
-	patches/hotspot/aarch64/20140715-8032536-jvm_resolves_wrong_method.patch \
-	patches/hotspot/aarch64/20140715-8035119-fix_exceptions_to_bytecode_verification.patch \
-	patches/hotspot/aarch64/20140715-8036800-attribute_oom_to_right_code.patch \
-	patches/hotspot/aarch64/20140715-8037076-check_constant_pool_constants.patch \
-	patches/hotspot/aarch64/20140715-8037157-verify_init_call.patch \
-	patches/hotspot/aarch64/20140715-8037167-better_method_signature_resolution.patch \
-	patches/hotspot/aarch64/8051012-verifier_regression.patch \
-	patches/hotspot/aarch64/20141014-8015256-better_class_accessibility.patch \
-	patches/hotspot/aarch64/20141014-8036805-correct_linker_method_lookup.patch \
-	patches/hotspot/aarch64/20141014-8038899-safer_safepoints.patch \
-	patches/hotspot/aarch64/20141014-8038903-more_native_monitor_monitoring.patch \
-	patches/hotspot/aarch64/20141014-8041717-issue_with_class_file_parser.patch \
-	patches/hotspot/aarch64/20141014-8042603-safepointpolloffset.patch \
-	patches/hotspot/aarch64/20141014-8050485-super_causes_verifyerror.patch
-if ENABLE_SYSTEMTAP
-ICEDTEA_PATCHES += \
-	patches/systemtap_gc.patch
 endif
 endif
 

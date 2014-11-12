@@ -360,8 +360,7 @@ of the requested build.
 
 Currently, IcedTea 2.x supports the 'default' HotSpot tree, which is
 part of the IcedTea forest for the particular minor release series
-being used, and 'aarch64', which uses snapshots of the AArch64 HotSpot
-port available at http://icedtea.classpath.org/hg/icedtea7-forest-aarch64/hotspot/
+being used.
 
 JavaScript Support
 ==================

@@ -1,3 +1,45 @@
+2014-11-11  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Merge AArch64 port into mainline IcedTea7.
+	* patches/hotspot/aarch64/20140715-8030763-validate_global_memory_allocation.patch,
+	* patches/hotspot/aarch64/20140715-8032536-jvm_resolves_wrong_method.patch,
+	* patches/hotspot/aarch64/20140715-8035119-fix_exceptions_to_bytecode_verification.patch,
+	* patches/hotspot/aarch64/20140715-8036800-attribute_oom_to_right_code.patch,
+	* patches/hotspot/aarch64/20140715-8037076-check_constant_pool_constants.patch,
+	* patches/hotspot/aarch64/20140715-8037157-verify_init_call.patch,
+	* patches/hotspot/aarch64/20140715-8037167-better_method_signature_resolution.patch,
+	* patches/hotspot/aarch64/20141014-8015256-better_class_accessibility.patch,
+	* patches/hotspot/aarch64/20141014-8036805-correct_linker_method_lookup.patch,
+	* patches/hotspot/aarch64/20141014-8038899-safer_safepoints.patch,
+	* patches/hotspot/aarch64/20141014-8038903-more_native_monitor_monitoring.patch,
+	* patches/hotspot/aarch64/20141014-8041717-issue_with_class_file_parser.patch,
+	* patches/hotspot/aarch64/20141014-8042603-safepointpolloffset.patch,
+	* patches/hotspot/aarch64/20141014-8050485-super_causes_verifyerror.patch,
+	* patches/hotspot/aarch64/8051012-verifier_regression.patch:
+	Remove unneeded patches from AArch64 HotSpot build.
+	* INSTALL: Remove mention of AArch64 HotSpot build.
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-2.6pre11.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Remove AArch64 HotSpot build
+	patches.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_WITH_HOTSPOT_BUILD): Always use 'default'.
+	* configure.ac: Bump to 2.6.0pre11.
+	* hotspot.map.in: Update to icedtea-2.6.0pre11.
+	Drop AArch64 build.
+
 2014-11-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* INSTALL: Updated.
