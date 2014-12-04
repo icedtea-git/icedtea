@@ -1,0 +1,21 @@
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/CurrencyData.properties openjdk-boot/jdk/src/share/classes/java/util/CurrencyData.properties
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/CurrencyData.properties	2014-12-04 15:09:06.030312835 +0000
++++ openjdk-boot/jdk/src/share/classes/java/util/CurrencyData.properties	2014-12-04 15:10:07.527160626 +0000
+@@ -320,7 +320,7 @@
+ # LAO PEOPLE'S DEMOCRATIC REPUBLIC
+ LA=LAK
+ # LATVIA
+-LV=LVL;2013-12-31-22-00-00;EUR
++LV=EUR
+ # LEBANON
+ LB=LBP
+ # LESOTHO
+@@ -332,7 +332,7 @@
+ # LIECHTENSTEIN
+ LI=CHF
+ # LITHUANIA
+-LT=LTL;2014-12-31-22-00-00;EUR
++LT=LTL;2015-01-01-00-00-00;EUR
+ # LUXEMBOURG
+ LU=EUR
+ # MACAU

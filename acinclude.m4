@@ -2864,3 +2864,49 @@ AC_DEFUN_ONCE([IT_ENABLE_QUEENS_TEST],
   AC_MSG_RESULT([$enable_queens])
   AM_CONDITIONAL([ENABLE_QUEENS], test x"${enable_queens}" = "xyes")
 ])
+
+AC_DEFUN_ONCE([IT_PR64174_CHECK],[
+AC_REQUIRE([IT_CHECK_JAVA_AND_JAVAC_WORK])
+AC_CACHE_CHECK([if java.text.SimpleDateFormat exhibits Classpath bug 64174], it_cv_cp64174, [
+  CLASS=Test.java
+  BYTECODE=$(echo $CLASS|sed 's#\.java##')
+  mkdir tmp.$$
+  cd tmp.$$
+  cat << \EOF > $CLASS
+[/* [#]line __oline__ "configure" */
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
+public class Test
+{
+  public static void main(String[] args)
+    throws ParseException
+  {
+    SimpleDateFormat format;
+
+    format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.US);
+    format.setTimeZone(TimeZone.getTimeZone("GMT"));
+    format.setLenient(false);
+    System.out.println(format.parse("2014-12-31-22-00-00"));
+  }
+}]
+EOF
+  if $JAVAC -cp . $JAVACFLAGS -source 5 -target 5 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+    if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1; then
+      it_cv_cp64174=no;
+    else
+      it_cv_cp64174=yes;
+    fi
+  else
+    it_cv_cp64174=yes;
+  fi
+  rm -f $CLASS *.class
+  cd ..
+  rmdir tmp.$$
+  ])
+AM_CONDITIONAL([CP64174], test x"${it_cv_cp64174}" = "xyes")
+AC_PROVIDE([$0])dnl
+])
