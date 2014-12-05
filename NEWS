@@ -319,6 +319,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2060: Fix warnings found by Gentoo ebuild QA with gcc 4.9.1
   - PR2069: Type-punning warnings still evident on RHEL 5
   - PR2094, RH1163501: 2048-bit DH upper bound too small for Fedora infrastructure
+  - PR2123: SunEC provider crashes when built using system NSS
 * CACAO
   - PR2032: CACAO lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
 * AArch64 port
