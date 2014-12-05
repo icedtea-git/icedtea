@@ -1,5 +1,22 @@
 2014-12-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2124: Synchronise elliptic curves in
+	sun.security.ec.NamedCurve with those listed by NSS
+	* fsg.sh: Moved to...
+	* Makefile.am:
+	(EXTRA_DIST): Remove fsg.sh, now generated
+	by configure.
+	(sanitise-openjdk): Fix path to new generated
+	fsg.sh and mark as executable
+	* NEWS: Updated.
+	* configure.ac: Add fsg.sh to AC_CONFIG_FILES.
+	* fsg.sh.in: ... here and added application
+	of PR2124 patch.
+	* patches/pr2124.patch: Patch to remove curves
+	unsupported by NSS.
+
+2014-12-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2123: SunEC provider crashes when built
 	using system NSS
 	* Makefile.am:

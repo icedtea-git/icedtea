@@ -751,7 +751,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/hotspot/*/*.patch \
 	tools-copy contrib overlays \
 	jconsole.desktop policytool.desktop \
-	$(JTREG_SRCS) HACKING fsg.sh autogen.sh \
+	$(JTREG_SRCS) HACKING autogen.sh \
 	tapset/hotspot.stp.in \
 	tapset/hotspot_jni.stp.in \
 	tapset/jstack.stp.in \
@@ -1251,8 +1251,9 @@ clean-extract-hotspot:
 
 stamps/sanitise-openjdk.stamp: stamps/extract-openjdk.stamp \
  stamps/extract-hotspot.stamp
-	chmod -R ug+w openjdk 
-	sh $(srcdir)/fsg.sh
+	chmod -R ug+w openjdk
+	chmod +x $(builddir)/fsg.sh
+	sh $(builddir)/fsg.sh
 	touch stamps/sanitise-openjdk.stamp
 
 clean-sanitise-openjdk:
