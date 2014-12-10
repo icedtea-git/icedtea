@@ -321,11 +321,20 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2094, RH1163501: 2048-bit DH upper bound too small for Fedora infrastructure
   - PR2123: SunEC provider crashes when built using system NSS
   - PR2124: Synchronise elliptic curves in sun.security.ec.NamedCurve with those listed by NSS
+  - PR2135: Race condition in SunEC provider with system NSS
 * CACAO
   - PR2032: CACAO lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
 * AArch64 port
   - Use the IcedTea7 fork version rather than the one based on HotSpot 25.
   - Add arch-specific processing of tmp1 register needed for d/f2i
+  - Add char_array_equals intrinsic
+  - Add CNEG and CNEGW to macro assembler.
+  - Add frame anchor fences.
+  - Add missing instruction synchronization barriers and cache flushes.
+  - Add some memory barriers for object creation and runtime calls.
+  - Add support for AES Intrinsics
+  - Add support for pipeline scheduling
+  - Add support for String.indexOf intrinsic
   - Added make rules to allow aarch64-x86 hybrid build to progress
   - Added missing aarch64-specific include
   - Added missing aarch64-specific make file
@@ -340,25 +349,37 @@ New in release 2.6.0 (2014-XX-XX):
   - Add rules to assemble .S files
   - Add support for storing aarch64 call format
   - Add wrapper method to avoid dependency on not yet defined code buffer class
-  - Aded missing endif
+  - Added missing endif
+  - Allow for 0x400 aligned offsets for byte_map_base
   - Array load must only read 32 bits
+  - A more efficient sequence for C1_MacroAssembler::float_cmp.
   - Backout 8c8b5e62e624 and instead move .S rule from zeroshark.make to rules.make
   - Backout additional changes made in ec6a6772fed6, which revert parts of the PPC/AIX port and IcedTea fixes.
+  - Call ICache::invalidate_range() from Relocation::pd_set_data_value().
   - Changed klass oop encode to heap oop encode
   - Changed Method* to methodOop
-  - Corrcted type
   - Correct assert to allow for AArch64
+  - Correct for difference in include hierarchy
+  - Correct typos
   - Corrected error in disassembler code
   - Corrected include
   - Corrected include path
+  - Corrected type
   - Corrected typo
   - Correct includes
   - Correct Method to methdoOopDesc
+  - Define uabs().  Use it everywhere an absolute value is wanted.
   - Defn of BIND does not need to use __ macro
+  - Delete dead code.
+  - Disassembler library should be built as hsdis-aarch64.so
   - Don't test arraycopy routines when using AArch64 simulator
   - Emit_int64 is renamed
+  - Ensure byte_map_base can be loaded using adrp with no need for following ldr
   - Ensure C1 static call stub employs absolute move to allow patching
   - Ensure C2 static calls use correct call adddress in static stub reloc
+  - Ensure perm gen size is not rounded down to zero
+  - Ensure rmethod is reloaded from stack when interpreter makes non leaf VM call
+  - Ensure we pick up hsdis-aarch64.so if BUILTIN_SIM is true
   - Fix couple of mistakes in generate of method handle dispatch
   - Fix cut and paste-o in header
   - Fixed another typo
@@ -371,6 +392,7 @@ New in release 2.6.0 (2014-XX-XX):
   - Fix relocations
   - Fix several small typos
   - Fix some typos
+  - Fix thinko in Atomic::xchg_ptr.
   - Fix typo
   - Fix up aarch64-specific patching code
   - Fix up crc32 support
@@ -381,11 +403,14 @@ New in release 2.6.0 (2014-XX-XX):
   - Make aarch64-x86 hybrid build use correct paths
   - Make hsdis handle aarch64 native case
   - Make static stubs load methodOop in cpool to avoid problems at GC
+  - Miscellaneous bug fixes.
   - Missing change needed to support aarch64 build
   - Modified make files to support aarch64 build
   - Modified shared src to support full aarch64 backport
   - Moved fields which need access from java to top level
+  - Need to actually return the adapter code size
   - Need to pass CFLAGS when assembling .S files using CC_COMPILE
+  - Need to use class handle not class
   - Provide missing CRC32 methods
   - Reload rcpool register after a VM call in case a permgen GC has moved the cache
   - Relocated aarch64 vtable generate code to conform to jdk7
@@ -399,6 +424,7 @@ New in release 2.6.0 (2014-XX-XX):
   - Remove support for volatile load/store rules in ad file
   - Renamed emit_int32 to emit_long and added local emit_long64 in place of missing emit_int64
   - Restored missing open brace
+  - Restored several load_heap_oop calls lost in translation
   - Restore working x86 build
   - Reverted aarch64 architecture description (ad) file to conform to jdk7
   - Reverted aarch64 c1_xxx files to conform to jdk7
@@ -422,14 +448,19 @@ New in release 2.6.0 (2014-XX-XX):
   - Reverted os_cpu/linux_aarch64 code to conform to jdk7
   - Reverted reloc info code to conform to jdk7
   - Revert Method:: etc to methodOopDesc:: etc
+  - Scripts to build aarch64-x86 hybrid and aarch64 native debug images
   - Some errors revealed when building debug image
   - Temporarily disable running test_gamma
+  - Tidy up allocation prefetch
   - Use correct post-increment size in repne_scanw
   - Use membar rules and delete special case volatile rules
   - Use method register to access counter increment field
   - Use movoop in C1 ic_call to keep verifier happy
+  - Use os::malloc to allocate the register map.
   - Use the correct return value from the VM resolve call
+  - Use TLS for ThreadLocalStorage::thread()
   - Various changes to accommodate inclusion of ppc port in icedtea7
+  - Various concurrency fixes.
   - Work around weird compiler issue
 
 New in release 2.5.3 (2014-10-14):
