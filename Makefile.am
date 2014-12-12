@@ -748,7 +748,6 @@ JTREG_SRCS = $(top_srcdir)/test/jtreg/com/sun/javatest/cof/i18n.properties \
 EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/boot/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
-	$(top_srcdir)/patches/hotspot/*/*.patch \
 	tools-copy contrib overlays \
 	jconsole.desktop policytool.desktop \
 	$(JTREG_SRCS) HACKING autogen.sh \

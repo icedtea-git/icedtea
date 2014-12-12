@@ -322,6 +322,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2123: SunEC provider crashes when built using system NSS
   - PR2124: Synchronise elliptic curves in sun.security.ec.NamedCurve with those listed by NSS
   - PR2135: Race condition in SunEC provider with system NSS
+  - PR2144: make dist fails due to lack of HotSpot-specific patches
 * CACAO
   - PR2032: CACAO lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
 * AArch64 port
