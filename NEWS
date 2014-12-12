@@ -332,6 +332,7 @@ New in release 2.6.0 (2014-XX-XX):
   - Add frame anchor fences.
   - Add missing instruction synchronization barriers and cache flushes.
   - Add some memory barriers for object creation and runtime calls.
+  - Add support for A53 multiply accumulate
   - Add support for AES Intrinsics
   - Add support for pipeline scheduling
   - Add support for String.indexOf intrinsic
@@ -364,6 +365,7 @@ New in release 2.6.0 (2014-XX-XX):
   - Corrected error in disassembler code
   - Corrected include
   - Corrected include path
+  - Corrected pipeline class for countTrailingZerosL
   - Corrected type
   - Corrected typo
   - Correct includes
