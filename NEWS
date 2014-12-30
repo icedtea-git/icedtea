@@ -88,6 +88,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S8019623: Lack of synchronization in AppContext.getAppContext()
   - S8019800: Test sun/tools/jcmd/jcmd-f.sh failing after JDK-8017011
   - S8019834: InetAddress.getByName hangs for bad IPv6 literals
+  - S8020190, PR2160, RH1176718: Fatal: Bug in native code: jfieldID must match object
   - S8021121: ISO 4217 Amendment Number 156
   - S8021372: NetworkInterface.getNetworkInterfaces() returns duplicate hardware address
   - S8021804: Certpath validation fails if validity period of root cert does not include validity period of intermediate cert
@@ -323,6 +324,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2124: Synchronise elliptic curves in sun.security.ec.NamedCurve with those listed by NSS
   - PR2135: Race condition in SunEC provider with system NSS
   - PR2144: make dist fails due to lack of HotSpot-specific patches
+  - PR2145, RH114622: Printing to Postscript doesn't support dieresis
 * CACAO
   - PR2032: CACAO lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
 * AArch64 port
