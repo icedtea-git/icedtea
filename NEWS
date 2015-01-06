@@ -496,11 +496,11 @@ New in release 2.5.3 (2014-10-14):
   - S8042797, CVE-2014-6502: Avoid strawberries in LogRecord
   - S8044274, CVE-2014-6531: Proper property processing
 * Backports
-  - S4963723, RH1131221: Implement SHA-224
-  - S7044060, RH1131221: Need to support NSA Suite B Cryptography algorithms
+  - S4963723, RH1145848: Implement SHA-224
+  - S7044060, RH1145848: Need to support NSA Suite B Cryptography algorithms
   - S7122142: (ann) Race condition between isAnnotationPresent and getAnnotations
   - S7160837: DigestOutputStream does not turn off digest calculation when "close()" is called
-  - S8006935, RH1131221: Need to take care of long secret keys in HMAC/PRF compuation
+  - S8006935, RH1145848: Need to take care of long secret keys in HMAC/PRF compuation
   - S8012637: Adjust CipherInputStream class to work in AEAD/GCM mode
   - S8028192: Use of PKCS11-NSS provider in FIPS mode broken
   - S8038000: java.awt.image.RasterFormatException: Incorrect scanline stride
