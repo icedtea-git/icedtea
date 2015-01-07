@@ -1,3 +1,12 @@
+2015-01-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2161: RHEL 6 has a version of GIO which meets
+	the version criteria, but has no g_settings_*
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_CHECK_FOR_GIO): Replace version test with
+	a check for g_settings_new.
+
 2015-01-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2064: Unset OS before running OpenJDK build

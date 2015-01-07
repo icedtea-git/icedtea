@@ -2125,10 +2125,13 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_GIO],
   AC_MSG_RESULT(${ENABLE_SYSTEM_GIO})
   if test x"${ENABLE_SYSTEM_GIO}" = "xyes"; then
     dnl Check for Gio+ headers and libraries.
-    PKG_CHECK_MODULES(GIO, gio-2.0 >= 2.26,[GIO_FOUND=yes],[GIO_FOUND=no])
-    if test "x${GIO_FOUND}" = xno
-    then
-      AC_MSG_ERROR([Could not find GIO >= 2.26; install GIO or build with --disable-system-gio to use the in-tree headers.])
+    PKG_CHECK_MODULES(GIO, gio-2.0,[GIO_FOUND=yes],[GIO_FOUND=no])
+    OLD_LIBS=${LIBS}
+    LIBS="${LIBS} ${GIO_LIBS}"
+    AC_CHECK_FUNC([g_settings_new],[GIO_FUNC_FOUND=yes],[GIO_FUNC_FOUND=no])
+    LIBS=${OLD_LIBS}
+    if test "x${GIO_FOUND}" = xno -o "x${GIO_FUNC_FOUND}" = xno; then
+      AC_MSG_ERROR([Could not find GIO; install GIO or build with --disable-system-gio to use the in-tree headers.])
     fi
     AC_SUBST(GIO_CFLAGS)
     AC_SUBST(GIO_LIBS)
