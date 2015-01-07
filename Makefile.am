@@ -433,6 +433,12 @@ else
 TEST_IN_BUILD=false
 endif
 
+ICEDTEA_UNSET = \
+	JAVAC= \
+	JAVA_HOME= \
+	JDK_HOME= \
+	OS=
+
 ICEDTEA_ENV = \
 	ALT_JDK_IMPORT_PATH="$(BOOT_DIR)" \
 	ANT="$(ANT)" \
@@ -463,9 +469,6 @@ ICEDTEA_ENV = \
 	FT2_LIBS="$(FREETYPE2_LIBS)" \
 	ALT_PARALLEL_COMPILE_JOBS="$(PARALLEL_JOBS)" \
 	HOTSPOT_BUILD_JOBS="$(PARALLEL_JOBS)" \
-	JAVAC="" \
-	JAVA_HOME="" \
-	JDK_HOME="" \
 	QUIETLY="" \
 	ANT_RESPECT_JAVA_HOME="TRUE" \
 	DISTRIBUTION_ID="$(DIST_ID)" \
@@ -1688,7 +1691,7 @@ clean-bootstrap-directory-symlink-stage2:
 stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/cacao.stamp stamps/rewrite-rhino.stamp stamps/jamvm.stamp
-	$(ARCH_PREFIX) $(MAKE) -j1 \
+	$(ICEDTEA_UNSET) $(ARCH_PREFIX) $(MAKE) -j1 \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  $(ICEDTEA_BUILD_TARGET)
@@ -1798,7 +1801,7 @@ clean-add-archive:
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/cacao.stamp stamps/rewrite-rhino.stamp stamps/jamvm.stamp
-	$(ARCH_PREFIX) $(MAKE) -j1 \
+	$(ICEDTEA_UNSET) $(ARCH_PREFIX) $(MAKE) -j1 \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  $(ICEDTEA_DEBUG_BUILD_TARGET)
@@ -1928,7 +1931,7 @@ clean-icedtea-debug-stage2: clean-add-jamvm-debug clean-check-crypto-debug \
 stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
  stamps/download.stamp $(OPENJDK_BOOT_TREE) stamps/cacao.stamp \
  stamps/rewrite-rhino.stamp stamps/jamvm.stamp stamps/generated.stamp
-	$(ARCH_PREFIX) $(MAKE) -j1 \
+	$(ICEDTEA_UNSET) $(ARCH_PREFIX) $(MAKE) -j1 \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot \
 	  $(ICEDTEA_BUILD_TARGET)

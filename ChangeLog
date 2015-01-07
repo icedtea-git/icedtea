@@ -1,5 +1,19 @@
 2015-01-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2064: Unset OS before running OpenJDK build
+	* Makefile.am:
+	(ICEDTEA_UNSET): Introduce variable to
+	store unsetting of environment variables.
+	(ICEDTEA_ENV): Move JAVAC, JAVA_HOME and
+	JDK_HOME to ICEDTEA_UNSET.
+	(icedtea): Unset variables prior to running
+	$(MAKE).
+	(icedtea-debug): Likewise.
+	(icedtea-boot): Likewise.
+	* NEWS: Updated.
+
+2015-01-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* NEWS:
 	Fix RH bug reference in 2.5.3 release notes.
 

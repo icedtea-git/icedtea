@@ -318,6 +318,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR1846: Build fails when using IcedTea7 as bootstrap JDK with native ecj
   - PR1847: Synchronise javac.in with IcedTea6
   - PR2060: Fix warnings found by Gentoo ebuild QA with gcc 4.9.1
+  - PR2064: Unset OS before running OpenJDK build
   - PR2069: Type-punning warnings still evident on RHEL 5
   - PR2094, RH1163501: 2048-bit DH upper bound too small for Fedora infrastructure
   - PR2123: SunEC provider crashes when built using system NSS
