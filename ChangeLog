@@ -1,5 +1,17 @@
 2015-01-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2050: JamVM lacks JVM_FindClassFromCaller introduced
+	by security patch in 2.5.3
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new patch when building
+	JamVM.
+	(EXTRA_DIST): Include patches from JamVM directory.
+	* NEWS: Updated.
+	* patches/jamvm/find_class_from_caller.patch:
+	Backport JamVM patch to implement FindClassFromCaller.
+
+2015-01-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2161: RHEL 6 has a version of GIO which meets
 	the version criteria, but has no g_settings_*
 	* NEWS: Updated.

@@ -329,6 +329,8 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2161: RHEL 6 has a version of GIO which meets the version criteria, but has no g_settings_*
 * CACAO
   - PR2032: CACAO lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
+* JamVM
+  - PR2050: JamVM lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
 * AArch64 port
   - Use the IcedTea7 fork version rather than the one based on HotSpot 25.
   - Add arch-specific processing of tmp1 register needed for d/f2i

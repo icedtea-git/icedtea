@@ -268,6 +268,11 @@ ICEDTEA_PATCHES += \
 	patches/cacao/ignore-tests.patch
 endif
 
+if BUILD_JAMVM
+ICEDTEA_PATCHES += \
+	patches/jamvm/find_class_from_caller.patch
+endif
+
 if ENABLE_NSS
 ICEDTEA_PATCHES += patches/nss-config.patch \
 	patches/rh1022017.patch
@@ -751,6 +756,7 @@ JTREG_SRCS = $(top_srcdir)/test/jtreg/com/sun/javatest/cof/i18n.properties \
 EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/boot/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
+	$(top_srcdir)/patches/jamvm/*.patch \
 	tools-copy contrib overlays \
 	jconsole.desktop policytool.desktop \
 	$(JTREG_SRCS) HACKING autogen.sh \
