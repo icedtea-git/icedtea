@@ -2122,6 +2122,7 @@ clean-rewrite-rhino:
 stamps/jamvm.stamp: $(OPENJDK_TREE) stamps/rt.stamp
 if BUILD_JAMVM
 	cd jamvm/jamvm && \
+	LDFLAGS="-Xlinker -z -Xlinker noexecstack" \
 	./autogen.sh --with-java-runtime-library=openjdk7 \
 	  --prefix=$(abs_top_builddir)/jamvm/install ; \
 	$(MAKE) ; \

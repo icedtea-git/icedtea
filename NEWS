@@ -331,6 +331,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2032: CACAO lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
 * JamVM
   - PR2050: JamVM lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
+  - PR2171: JamVM builds with executable stack, causing failures on SELinux & PaX kernels
 * AArch64 port
   - Use the IcedTea7 fork version rather than the one based on HotSpot 25.
   - Add arch-specific processing of tmp1 register needed for d/f2i

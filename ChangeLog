@@ -1,3 +1,11 @@
+2011-08-15  Pavel Tisnovsky  <ptisnovs@redhat.com>
+
+	PR2171: JamVM builds with executable stack,
+	causing failures on SELinux & PaX kernels
+	* Makefile.am:
+	(jamvm): Added LDFLAGS for JamVM
+	to fix the SELinux executable flag issue.
+
 2015-01-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2050: JamVM lacks JVM_FindClassFromCaller introduced
