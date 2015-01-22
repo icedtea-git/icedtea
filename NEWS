@@ -14,6 +14,13 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.6.0 (2014-XX-XX):
 
+* Security fixes
+  - S8047125, CVE-2015-0395: (ref) More phantom object references
+  - S8047130: Fewer escapes from escape analysis
+  - S8049253: Better GC validation
+  - S8050807, CVE-2015-0383: Better performing performance data handling
+  - S8055479: TLAB stability
+  - S8058982, CVE-2014-6601: Better verification of an exceptional invokespecial
 * OpenJDK
   - S4792059: test/java/io/pathNames/GeneralSolaris.java fails on symbolic links
   - S4991647: PNGMetadata.getAsTree() sets bitDepth to invalid value
@@ -301,6 +308,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S8057813: Alterations to jdk_security3 test target
   - S8058120: Rendering / caret errors with HTMLDocument
   - S8058473: "Comparison method violates its general contract" when using Clipboard
+  - S8058715: stability issues when being launched as an embedded JVM via JNI
   - S8058927: ATG throws ClassNotFoundException
   - S8058932: java/net/InetAddress/IPv4Formats.java failed because hello.foo.bar does exist
   - S8058936: hotspot/test/Makefile should use jtreg script from $JT_HOME/bin/jreg (instead of $JT_HOME/win32/bin/jtreg)
@@ -309,6 +317,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S8059563: (proxy) sun.misc.ProxyGenerator.generateProxyClass should create intermediate directories
   - S8060006: No Russian time zones mapping for Windows
   - S8060169: Update the Crash Reporting URL in the Java crash log
+  - S8061785: [TEST_BUG] serviceability/sa/jmap-hashcode/Test8028623.java has utf8 character corrupted by earlier merge
   - S8062744: jdk.net.Sockets.setOption/getOption does not support IP_TOS
 * Backports
   - S7172012, PR2067: Make test-in-build an option (Queens)
@@ -398,6 +407,7 @@ New in release 2.6.0 (2014-XX-XX):
   - Fixed various typos and omissions
   - Fixed various typos, overlooked cases and wrong accessors
   - Fix error introduced into profiling code
+  - Fix guarantee failure in synchronizer.cpp
   - Fix more errors introduced into interpreter profile counter increment
   - Fix relocations
   - Fix several small typos
