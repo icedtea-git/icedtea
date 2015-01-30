@@ -1295,3 +1295,87 @@ diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/print/UnixPrintJob.java 
          }
  
          public Object run() {
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/ccache/FileCredentialsCache.java	2015-01-08 18:26:59.716746329 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ccache/FileCredentialsCache.java	2015-01-16 02:58:39.413460990 +0000
+@@ -159,18 +154,33 @@
+         throws IOException, KrbException {
+         primaryPrincipal = principal;
+         primaryRealm = principal.getRealm();
+-        try (FileOutputStream fos = new FileOutputStream(name);
+-             CCacheOutputStream cos = new CCacheOutputStream(fos)) {
++        FileOutputStream fos = null;
++        CCacheOutputStream cos = null;
++        try {
++            fos = new FileOutputStream(name);
++            cos = new CCacheOutputStream(fos);
+             version = KRB5_FCC_FVNO_3;
+             cos.writeHeader(primaryPrincipal, version);
++        } finally {
++            try {
++                if (cos != null)
++                    cos.close();
++            } finally {
++                if (fos != null)
++                    fos.close();
++            }
+         }
++
+         load(name);
+     }
+ 
+     synchronized void load(String name) throws IOException, KrbException {
+         PrincipalName p;
+-        try (FileInputStream fis = new FileInputStream(name);
+-             CCacheInputStream cis = new CCacheInputStream(fis)) {
++        FileInputStream fis = null;
++        CCacheInputStream cis = null;
++        try {
++            fis = new FileInputStream(name);
++            cis = new CCacheInputStream(fis);
+             version = cis.readVersion();
+             if (version == KRB5_FCC_FVNO_4) {
+                 tag = cis.readTag();
+@@ -196,6 +206,14 @@
+                     credentialsList.addElement(cred);
+                 }
+             }
++        } finally {
++            try {
++                if (cis != null)
++                    cis.close();
++            } finally {
++                if (fis != null)
++                    fis.close();
++            }
+         }
+     }
+ 
+@@ -255,8 +273,11 @@
+      * Saves the credentials cache file to the disk.
+      */
+     public synchronized void save() throws IOException, Asn1Exception {
+-        try (FileOutputStream fos = new FileOutputStream(cacheName);
+-             CCacheOutputStream cos = new CCacheOutputStream(fos)) {
++        FileOutputStream fos = null;
++        CCacheOutputStream cos = null;
++        try {
++            fos = new FileOutputStream(cacheName);
++            cos = new CCacheOutputStream(fos);
+             cos.writeHeader(primaryPrincipal, version);
+             Credentials[] tmp = null;
+             if ((tmp = getCredsList()) != null) {
+@@ -264,6 +285,14 @@
+                     cos.addCreds(tmp[i]);
+                 }
+             }
++        } finally {
++            try {
++                if (cos != null)
++                    cos.close();
++            } finally {
++                if (fos != null)
++                    fos.close();
++            }
+         }
+     }
+ 

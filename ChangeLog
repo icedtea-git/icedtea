@@ -1,3 +1,38 @@
+2015-01-30  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(BUILD_VERSION): Bump to b05.
+	(CORBA_CHANGESET): Update to icedtea-2.6pre18.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 2.6.0pre18.
+	* hotspot.map.in: Update to icedtea-2.6pre18.
+
+2015-01-20  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* patches/boot/ecj-diamond.patch:
+	Regenerated. Add new cases introduced in
+	sun.security.ssl.ProtocolVersion and
+	sun.security.ssl.SSLContextImpl
+
+2015-01-20  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* patches/boot/ecj-trywithresources.patch:
+	Add new case in
+	sun.security.krb5.internal.ccache.FileCredentialsCache.
+	Change is taken from the OpenJDK 6 version of
+	the file.
+
 2015-01-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
