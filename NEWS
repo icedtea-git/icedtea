@@ -399,6 +399,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S8068507: (fc) Rename the new jdk.net.enableFastFileTransfer system property to jdk.nio.enableFastFileTransfer
   - S8068639: Make certain annotation classfile warnings opt-in
 * Backports
+  - S6584008, PR2193, RH1173326: jvmtiStringPrimitiveCallback should not be invoked when string value is null
   - S7172012, PR2067: Make test-in-build an option (Queens)
   - S8000897, RH1155012: VM crash in CompileBroker
 * Bug fixes
@@ -415,6 +416,9 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2144: make dist fails due to lack of HotSpot-specific patches
   - PR2145, RH114622: Printing to Postscript doesn't support dieresis
   - PR2161: RHEL 6 has a version of GIO which meets the version criteria, but has no g_settings_*
+  - PR2196, RH1164762: jhat man page has broken URL
+  - PR2200: Support giflib 5.1.0
+  - PR2210: DGifCloseFile call should check the return value, not the error code, for failure
 * CACAO
   - PR2032: CACAO lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
 * JamVM
@@ -426,6 +430,7 @@ New in release 2.6.0 (2014-XX-XX):
   - Add char_array_equals intrinsic
   - Add CNEG and CNEGW to macro assembler.
   - Add frame anchor fences.
+  - Add java.lang.ref.Reference.get intrinsic to template interpreter
   - Add missing instruction synchronization barriers and cache flushes.
   - Add some memory barriers for object creation and runtime calls.
   - Add support for A53 multiply accumulate
@@ -487,6 +492,7 @@ New in release 2.6.0 (2014-XX-XX):
   - Fixed various typos, overlooked cases and wrong accessors
   - Fix error introduced into profiling code
   - Fix guarantee failure in synchronizer.cpp
+  - Fix implementation of InterpreterMacroAssembler::increment_mdp_data_at().
   - Fix more errors introduced into interpreter profile counter increment
   - Fix relocations
   - Fix several small typos
@@ -519,6 +525,7 @@ New in release 2.6.0 (2014-XX-XX):
   - Removed redundant field use_XOR_for_compressed_class_base
   - Removed some errors in signal handling code
   - Removed undefined metadata case
+  - Remove insanely large stack allocation in entry frame.
   - Remove redundant bracket
   - Remove support for volatile load/store rules in ad file
   - Renamed emit_int32 to emit_long and added local emit_long64 in place of missing emit_int64
@@ -547,6 +554,7 @@ New in release 2.6.0 (2014-XX-XX):
   - Reverted os_cpu/linux_aarch64 code to conform to jdk7
   - Reverted reloc info code to conform to jdk7
   - Revert Method:: etc to methodOopDesc:: etc
+  - S8072129: [AARCH64] missing fix for 8066900
   - Scripts to build aarch64-x86 hybrid and aarch64 native debug images
   - Some errors revealed when building debug image
   - Temporarily disable running test_gamma
