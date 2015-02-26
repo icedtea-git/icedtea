@@ -1,3 +1,23 @@
+2015-02-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(download-nashorn): Don't download unless
+	enable_downloading is set.
+	(download-hotspot): Likewise.
+
+2012-04-11  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(download-openjdk): Don't download unless
+	enable_downloading is set.
+	(download-cacao): Likewise.
+	(download-jamvm): Likewise.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_CHECK_FOR_DOWNLOADING): New option
+	--disable-downloading.
+	* configure.ac: Call IT_CHECK_FOR_DOWNLOADING.
+
 2014-09-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:

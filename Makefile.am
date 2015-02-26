@@ -588,15 +588,18 @@ endif
 	if ! echo "$(OPENJDK_SHA256SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if [ -e $(OPENJDK_SRC_ZIP) ] ; \
-	  then \
-	    mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
+	  if test "x$${enable_downloading}" = "xyes"; then \
+	    if [ -e $(OPENJDK_SRC_ZIP) ] ; then \
+	      mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
+	    fi ; \
+	    $(WGET) $(ICEDTEA_URL)/$(OPENJDK_SRC_ZIP); \
+	    if ! echo "$(OPENJDK_SHA256SUM)  $(OPENJDK_SRC_ZIP)" \
+	      | $(SHA256SUM) --check ; then \
+	      echo "ERROR: Bad download of OpenJDK root zip"; false; \
+	    fi; \
+	  else \
+	    echo "ERROR: No up-to-date OpenJDK root zip available"; exit -1; \
 	  fi ; \
-	  $(WGET) $(ICEDTEA_URL)/$(OPENJDK_SRC_ZIP); \
-	  if ! echo "$(OPENJDK_SHA256SUM)  $(OPENJDK_SRC_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of OpenJDK root zip"; false; \
-	  fi; \
 	fi ;
 if USE_ALT_CORBA_SRC_ZIP
 	ln -sf $(ALT_CORBA_SRC_ZIP) $(CORBA_SRC_ZIP)
@@ -604,15 +607,18 @@ endif
 	if ! echo "$(CORBA_SHA256SUM)  $(CORBA_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if [ $(CORBA_SRC_ZIP) ] ; \
-	  then \
-	    mv $(CORBA_SRC_ZIP) $(CORBA_SRC_ZIP).old ; \
+	  if test "x$${enable_downloading}" = "xyes"; then \
+	    if [ $(CORBA_SRC_ZIP) ] ; then \
+	      mv $(CORBA_SRC_ZIP) $(CORBA_SRC_ZIP).old ; \
+	    fi ; \
+	    $(WGET) $(ICEDTEA_URL)/$(CORBA_SRC_ZIP); \
+	    if ! echo "$(CORBA_SHA256SUM)  $(CORBA_SRC_ZIP)" \
+	      | $(SHA256SUM) --check ; then \
+	      echo "ERROR: Bad download of CORBA zip"; false; \
+	    fi; \
+	  else \
+	    echo "ERROR: No up-to-date OpenJDK CORBA zip available"; exit -1; \
 	  fi ; \
-	  $(WGET) $(ICEDTEA_URL)/$(CORBA_SRC_ZIP); \
-	  if ! echo "$(CORBA_SHA256SUM)  $(CORBA_SRC_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of CORBA zip"; false; \
-	  fi; \
 	fi ;
 if USE_ALT_JAXP_SRC_ZIP
 	ln -sf $(ALT_JAXP_SRC_ZIP) $(JAXP_SRC_ZIP)
@@ -620,15 +626,18 @@ endif
 	if ! echo "$(JAXP_SHA256SUM)  $(JAXP_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if [ $(JAXP_SRC_ZIP) ] ; \
-	  then \
-	    mv $(JAXP_SRC_ZIP) $(JAXP_SRC_ZIP).old ; \
+	  if test "x$${enable_downloading}" = "xyes"; then \
+	    if [ $(JAXP_SRC_ZIP) ] ; then \
+	      mv $(JAXP_SRC_ZIP) $(JAXP_SRC_ZIP).old ; \
+	    fi ; \
+	    $(WGET) $(ICEDTEA_URL)/$(JAXP_SRC_ZIP); \
+	    if ! echo "$(JAXP_SHA256SUM)  $(JAXP_SRC_ZIP)" \
+	      | $(SHA256SUM) --check ; then \
+	      echo "ERROR: Bad download of JAXP zip"; false; \
+	    fi; \
+	  else \
+	    echo "ERROR: No up-to-date JAXP root zip available"; exit -1; \
 	  fi ; \
-	  $(WGET) $(ICEDTEA_URL)/$(JAXP_SRC_ZIP); \
-	  if ! echo "$(JAXP_SHA256SUM)  $(JAXP_SRC_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of JAXP zip"; false; \
-	  fi; \
 	fi ;
 if USE_ALT_JAXWS_SRC_ZIP
 	ln -sf $(ALT_JAXWS_SRC_ZIP) $(JAXWS_SRC_ZIP)
@@ -636,15 +645,18 @@ endif
 	if ! echo "$(JAXWS_SHA256SUM)  $(JAXWS_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if [ $(JAXWS_SRC_ZIP) ] ; \
-	  then \
-	    mv $(JAXWS_SRC_ZIP) $(JAXWS_SRC_ZIP).old ; \
+	  if test "x$${enable_downloading}" = "xyes"; then \
+	    if [ $(JAXWS_SRC_ZIP) ] ; then \
+	      mv $(JAXWS_SRC_ZIP) $(JAXWS_SRC_ZIP).old ; \
+	    fi ; \
+	    $(WGET) $(ICEDTEA_URL)/$(JAXWS_SRC_ZIP); \
+	    if ! echo "$(JAXWS_SHA256SUM)  $(JAXWS_SRC_ZIP)" \
+	      | $(SHA256SUM) --check ; then \
+	      echo "ERROR: Bad download of JAXWS zip"; false; \
+	    fi; \
+	  else \
+	    echo "ERROR: No up-to-date OpenJDK JAXWS zip available"; exit -1; \
 	  fi ; \
-	  $(WGET) $(ICEDTEA_URL)/$(JAXWS_SRC_ZIP); \
-	  if ! echo "$(JAXWS_SHA256SUM)  $(JAXWS_SRC_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of JAXWS zip"; false; \
-	  fi; \
 	fi ;
 if USE_ALT_JDK_SRC_ZIP
 	ln -sf $(ALT_JDK_SRC_ZIP) $(JDK_SRC_ZIP)
@@ -652,15 +664,18 @@ endif
 	if ! echo "$(JDK_SHA256SUM)  $(JDK_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if [ $(JDK_SRC_ZIP) ] ; \
-	  then \
-	    mv $(JDK_SRC_ZIP) $(JDK_SRC_ZIP).old ; \
+	  if test "x$${enable_downloading}" = "xyes"; then \
+	    if [ $(JDK_SRC_ZIP) ] ; then \
+	      mv $(JDK_SRC_ZIP) $(JDK_SRC_ZIP).old ; \
+	    fi ; \
+	    $(WGET) $(ICEDTEA_URL)/$(JDK_SRC_ZIP); \
+	    if ! echo "$(JDK_SHA256SUM)  $(JDK_SRC_ZIP)" \
+	      | $(SHA256SUM) --check ; then \
+	      echo "ERROR: Bad download of JDK zip"; false; \
+	    fi; \
+	  else \
+	    echo "ERROR: No up-to-date OpenJDK JDK zip available"; exit -1; \
 	  fi ; \
-	  $(WGET) $(ICEDTEA_URL)/$(JDK_SRC_ZIP); \
-	  if ! echo "$(JDK_SHA256SUM)  $(JDK_SRC_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of JDK zip"; false; \
-	  fi; \
 	fi ;
 if USE_ALT_LANGTOOLS_SRC_ZIP
 	ln -sf $(ALT_LANGTOOLS_SRC_ZIP) $(LANGTOOLS_SRC_ZIP)
@@ -668,15 +683,18 @@ endif
 	if ! echo "$(LANGTOOLS_SHA256SUM)  $(LANGTOOLS_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if [ $(LANGTOOLS_SRC_ZIP) ] ; \
-	  then \
-	    mv $(LANGTOOLS_SRC_ZIP) $(LANGTOOLS_SRC_ZIP).old ; \
+	  if test "x$${enable_downloading}" = "xyes"; then \
+	    if [ $(LANGTOOLS_SRC_ZIP) ] ; then \
+	      mv $(LANGTOOLS_SRC_ZIP) $(LANGTOOLS_SRC_ZIP).old ; \
+	    fi ; \
+	    $(WGET) $(ICEDTEA_URL)/$(LANGTOOLS_SRC_ZIP); \
+	    if ! echo "$(LANGTOOLS_SHA256SUM)  $(LANGTOOLS_SRC_ZIP)" \
+	      | $(SHA256SUM) --check ; then \
+	      echo "ERROR: Bad download of langtools zip"; false; \
+	    fi; \
+	  else \
+	    echo "ERROR: No up-to-date OpenJDK langtools zip available"; exit -1; \
 	  fi ; \
-	  $(WGET) $(ICEDTEA_URL)/$(LANGTOOLS_SRC_ZIP); \
-	  if ! echo "$(LANGTOOLS_SHA256SUM)  $(LANGTOOLS_SRC_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of langtools zip"; false; \
-	  fi; \
 	fi ;
 endif
 endif
@@ -713,15 +731,18 @@ endif
 	if ! echo "$(CACAO_SHA256SUM)  $(CACAO_SRC_ZIP)" \
 	 | $(SHA256SUM) --check ; \
 	then \
-	 if [ -e $(CACAO_SRC_ZIP) ] ; \
-	 then \
-	   mv $(CACAO_SRC_ZIP) $(CACAO_SRC_ZIP).old ; \
+	 if test "x$${enable_downloading}" = "xyes"; then \
+	   if [ -e $(CACAO_SRC_ZIP) ] ; then \
+	     mv $(CACAO_SRC_ZIP) $(CACAO_SRC_ZIP).old ; \
+	   fi ; \
+	   $(WGET) $(CACAO_URL) -O $(CACAO_SRC_ZIP); \
+	   if ! echo "$(CACAO_SHA256SUM)  $(CACAO_SRC_ZIP)" \
+	     | $(SHA256SUM) --check ; then \
+	     echo "ERROR: Bad download of CACAO zip"; false; \
+	   fi; \
+	 else \
+	   echo "ERROR: No up-to-date CACAO zip available"; exit -1; \
 	 fi ; \
-	 $(WGET) $(CACAO_URL) -O $(CACAO_SRC_ZIP); \
-	 if ! echo "$(CACAO_SHA256SUM)  $(CACAO_SRC_ZIP)" \
-	   | $(SHA256SUM) --check ; \
-	 then echo "ERROR: Bad download of CACAO zip"; false; \
-	 fi; \
 	fi
 endif
 endif
@@ -740,15 +761,18 @@ endif
 	if ! echo "$(JAMVM_SHA256SUM)  $(JAMVM_SRC_ZIP)" \
 	 | $(SHA256SUM) --check ; \
 	then \
-	 if [ -e $(JAMVM_SRC_ZIP) ] ; \
-	 then \
-	   mv $(JAMVM_SRC_ZIP) $(JAMVM_SRC_ZIP).old ; \
-	 fi ; \
-	 $(WGET) $(JAMVM_URL) -O $(JAMVM_SRC_ZIP); \
-	 if ! echo "$(JAMVM_SHA256SUM)  $(JAMVM_SRC_ZIP)" \
-	  | $(SHA256SUM) --check ; \
-	 then echo "ERROR: Bad download of JamVM zip"; false; \
-	 fi; \
+	  if test "x$${enable_downloading}" = "xyes"; then \
+	    if [ -e $(JAMVM_SRC_ZIP) ] ; then \
+	      mv $(JAMVM_SRC_ZIP) $(JAMVM_SRC_ZIP).old ; \
+	    fi ; \
+	    $(WGET) $(JAMVM_URL) -O $(JAMVM_SRC_ZIP); \
+	    if ! echo "$(JAMVM_SHA256SUM)  $(JAMVM_SRC_ZIP)" \
+	      | $(SHA256SUM) --check ; then \
+	      echo "ERROR: Bad download of JamVM zip"; false; \
+	    fi; \
+	  else \
+	    echo "ERROR: No up-to-date JamVM zip available"; exit -1; \
+	  fi ; \
 	fi
 endif
 	mkdir -p stamps
@@ -770,16 +794,19 @@ endif
 	if ! echo "$(NASHORN_SHA256SUM)  $(NASHORN_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if [ $(NASHORN_SRC_ZIP) ] ; \
-	  then \
-	    mv $(NASHORN_SRC_ZIP) $(NASHORN_SRC_ZIP).old ; \
+	  if test "x$${enable_downloading}" = "xyes"; then \
+	    if [ -e $(NASHORN_SRC_ZIP) ] ; then \
+	      mv $(NASHORN_SRC_ZIP) $(NASHORN_SRC_ZIP).old ; \
+	    fi ; \
+	    $(WGET) $(ICEDTEA_URL)/$(NASHORN_SRC_ZIP); \
+	    if ! echo "$(NASHORN_SHA256SUM)  $(NASHORN_SRC_ZIP)" \
+	      | $(SHA256SUM) --check ; then \
+	      echo "ERROR: Bad download of NASHORN zip"; false; \
+	    fi; \
+	  else \
+	    echo "ERROR: No up-to-date OpenJDK Nashorn zip available"; exit -1; \
 	  fi ; \
-	  $(WGET) $(ICEDTEA_URL)/$(NASHORN_SRC_ZIP); \
-	  if ! echo "$(NASHORN_SHA256SUM)  $(NASHORN_SRC_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of NASHORN zip"; false; \
-	  fi; \
-	fi ;
+	fi
 endif
 endif
 	mkdir -p stamps
@@ -803,19 +830,22 @@ endif
 	if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if [ -e $(HOTSPOT_SRC_ZIP) ] ; \
-	  then \
-	    mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
-	  fi ; \
-	  if test "x$(HS_TYPE)" = "xhg"; then \
-	    $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
+	  if test "x$${enable_downloading}" = "xyes"; then \
+	    if [ -e $(HOTSPOT_SRC_ZIP) ] ; then \
+	      mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
+	    fi ; \
+	    if test "x$(HS_TYPE)" = "xhg"; then \
+	      $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
+	    else \
+	      $(WGET) $(HS_URL)/$(HOTSPOT_SRC_ZIP) ; \
+            fi ; \
+	    if ! echo "$(HOTSPOT_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
+	      | $(SHA256SUM) --check ; then \
+	      echo "ERROR: Bad download of HotSpot zip"; false; \
+	    fi; \
 	  else \
-	    $(WGET) $(HS_URL)/$(HOTSPOT_SRC_ZIP) ; \
-          fi ; \
-	  if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
-	    | $(SHA256SUM) --check ; \
-	  then echo "ERROR: Bad download of HotSpot zip"; false; \
-	  fi; \
+	    echo "ERROR: No up-to-date OpenJDK HotSpot zip available"; exit -1; \
+	  fi ; \
 	fi
 endif
 endif
