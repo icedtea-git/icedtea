@@ -839,7 +839,7 @@ endif
 	    else \
 	      $(WGET) $(HS_URL)/$(HOTSPOT_SRC_ZIP) ; \
             fi ; \
-	    if ! echo "$(HOTSPOT_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
+	    if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
 	      | $(SHA256SUM) --check ; then \
 	      echo "ERROR: Bad download of HotSpot zip"; false; \
 	    fi; \
