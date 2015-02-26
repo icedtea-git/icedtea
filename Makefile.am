@@ -794,7 +794,7 @@ endif
 	if ! echo "$(NASHORN_SHA256SUM)  $(NASHORN_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \
-	  if test "x$${enable_downloading}" = "xyes"; then \
+	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ -e $(NASHORN_SRC_ZIP) ] ; then \
 	      mv $(NASHORN_SRC_ZIP) $(NASHORN_SRC_ZIP).old ; \
 	    fi ; \

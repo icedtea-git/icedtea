@@ -1,3 +1,8 @@
+2015-02-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(download-nashorn): Fix syntax.
+
 2012-04-12  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:
