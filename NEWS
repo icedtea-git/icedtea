@@ -49,6 +49,9 @@ New in release 3.0.0 (2014-XX-XX):
   - PR1950: Add build support for Zero SH
   - PR1965, G498288: Allow builds on PaX kernels
   - PR1994: make dist broken
+  - PR2199: Support giflib 5.1.0
+  - PR2212: DGifCloseFile call should check the return value, not the error code, for failure
+  - PR2227: giflib 5.1 conditional excludes 6.0, 7.0, etc.
   - PR2248: HotSpot tarball fails verification after download
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
