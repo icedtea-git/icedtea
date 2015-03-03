@@ -1,6 +1,70 @@
 2015-03-02  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
+	(add-archive): Change from BUILD_OUTPUT_DIR to
+	BUILD_IMAGE_DIR.
+	(clean-add-archive): Likewise.
+	(add-archive-debug): Change from DEBUG_BUILD_OUTPUT_DIR
+	to BUILD_DEBUG_IMAGE_DIR.
+	(clean-add-archive-debug): Likewise.
+	(add-archive-boot): Change from BOOT_BUILD_OUTPUT_DIR
+	to BUILD_BOOT_IMAGE_DIR.
+	(clean-add-archive-boot): Likewise.
+
+2013-06-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1281: Updating/Installing OpenJDK should recreate the
+	shared class-data archive
+	* Makefile.am:
+	(.PHONY): Add clean-add-archive, clean-add-archive-debug
+	and clean-add-archive-boot.
+
+2013-02-08  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR1301: PR1171 causes Zero builds to fail
+	* Makefile.am:
+	(add-archive): Don't run -Xshare:dump if building
+	Zero.
+	(add-archive-debug): Likewise.
+	(add-archive-boot): Likewise.
+
+2013-01-25  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	(clean-add-archive): Delete the archive.
+	(clean-add-archive-debug): Likewise for debug.
+	(clean-add-archive-boot): Likewise for bootstrap.
+
+2012-11-28  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	(add-archive): Only run -Xshare:dump when java
+	exists and we aren't building CACAO or JamVM.
+	(add-archive-debug): Likewise.
+	(add-archive-boot): Likewise.
+
+2012-11-20  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	RH513605: Updating/Installing OpenJDK should recreate
+	the shared class-data archive
+	* Makefile.am:
+	(add-archive): Run -Xshare:dump on the newly built JDK.
+	(clean-add-archive): Delete stamp.
+	(add-archive-debug): Same as add-archive for icedtea-debug.
+	(clean-add-archive-debug): Same as clean-add-archive for icedtea-debug.
+	(icedtea-stage2): Depend on add-archive.
+	(clean-icedtea-stage2): Depend on clean-add-archive.
+	(icedtea-debug-stage2): Depend on add-archive-debug.
+	(clean-icedtea-debug-stage2): Depend on clean-add-archive-debug.
+	(add-archive-boot): Same as add-archive for icedtea-boot.
+	(clean-add-archive-boot): Same as clean-add-archive for icedtea-boot.
+	(icedtea-stage1): Depend on add-archive-boot.
+	(clean-icedtea-stage1): Depend on clean-add-archive-boot.
+	* NEWS: Mention.
+
+2015-03-02  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
 	(JDK_UPDATE_VERSION): Bump to 40.
 	(BUILD_VERSION): Set to b21.
 	(CORBA_CHANGESET): Update to icedtea-3.0.0pre03 tag.

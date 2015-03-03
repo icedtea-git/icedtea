@@ -533,7 +533,8 @@ install:
 	jtregcheck clean-remove-intree-libraries \
 	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
 	clean-extract-hotspot clean-sanitise-openjdk clean-icedtea-debug \
-	clean-download-nashorn clean-extract-nashorn clean-download-hotspot
+	clean-download-nashorn clean-extract-nashorn clean-download-hotspot \
+	clean-add-archive clean-add-archive-debug clean-add-archive-boot
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1582,20 +1583,53 @@ clean-icedtea-debug:
 	rm -f stamps/icedtea-debug-configure.stamp
 	rm -f stamps/icedtea-debug.stamp
 
+stamps/add-archive.stamp: stamps/icedtea.stamp
+if !ENABLE_JAMVM
+if !ENABLE_CACAO
+if !ZERO_BUILD
+	if [ -e $(BUILD_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
+	  $(BUILD_IMAGE_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
+	fi
+endif
+endif
+endif
+	touch stamps/add-archive.stamp
+
+clean-add-archive:
+	rm -vf $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -f stamps/add-archive.stamp
+
+stamps/add-archive-debug.stamp: stamps/icedtea-debug.stamp
+if !ENABLE_JAMVM
+if !ENABLE_CACAO
+if !ZERO_BUILD
+	if [ -e $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
+	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
+	fi
+endif
+endif
+endif
+	touch stamps/add-archive-debug.stamp
+
+clean-add-archive-debug:
+	rm -vf $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -f stamps/add-archive-debug.stamp
+
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
- stamps/add-zero.stamp stamps/add-jamvm.stamp
+ stamps/add-zero.stamp stamps/add-jamvm.stamp stamps/add-archive.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-stage2: clean-add-jamvm
+clean-icedtea-stage2: clean-add-jamvm clean-add-archive
 	rm -f stamps/icedtea-stage2.stamp
 
 stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
- stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp
+ stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp \
+ stamps/add-archive-debug.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-debug-stage2: clean-add-jamvm-debug
+clean-icedtea-debug-stage2: clean-add-jamvm-debug clean-add-archive-debug
 	rm -f stamps/icedtea-debug-stage2.stamp
 
 # OpenJDK boot Targets
@@ -1661,11 +1695,27 @@ clean-icedtea-boot:
 	rm -f stamps/icedtea-boot-configure.stamp
 	rm -f stamps/icedtea-boot.stamp
 
-stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp
+stamps/add-archive-boot.stamp: stamps/icedtea-boot.stamp
+if !ENABLE_JAMVM
+if !ENABLE_CACAO
+if !ZERO_BUILD
+	if [ -e $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
+	  $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
+	fi
+endif
+endif
+endif
+	touch $@
+
+clean-add-archive-boot:
+	rm -vf $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -f stamps/add-archive-boot.stamp
+
+stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp stamps/add-archive-boot.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-stage1:
+clean-icedtea-stage1: clean-add-archive-boot
 	rm -f stamps/icedtea-stage1.stamp
 
 # PulseAudio based mixer
@@ -2170,6 +2220,12 @@ clean-rt:
 
 # Target Aliases
 # ===============
+
+add-archive: stamps/add-archive.stamp
+
+add-archive-boot: stamps/add-archive-ecj.stamp
+
+add-archive-debug: stamps/add-archive-debug.stamp
 
 add-zero: stamps/add-zero.stamp
 
