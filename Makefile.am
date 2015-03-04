@@ -488,7 +488,7 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	scripts/jni_desc \
 	rewriter/agpl-3.0.txt \
 	$(REWRITER_SRCS) \
-	THANKYOU
+	THANKYOU test/tapset
 
 # Top-Level Targets
 # =================
@@ -2099,6 +2099,11 @@ stamps/jtreg.stamp: stamps/icedtea-stage2.stamp
 
 clean-jtreg:
 	rm -rf test/jtreg/classes
+	if [ $(abs_top_srcdir) != $(abs_top_builddir) ] ; then \
+	  if [ -e test/jtreg ] ; then \
+	    rmdir test/jtreg ; \
+	  fi ; \
+	fi
 	rm -f test/jtreg.jar
 	rm -f stamps/jtreg.stamp
 
