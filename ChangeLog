@@ -1,3 +1,9 @@
+2013-06-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(.PHONY): Add clean-cryptocheck.
+	(clean-local): Likewise.
+
 2013-06-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:

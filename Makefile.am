@@ -513,7 +513,8 @@ clean-local: clean-tests clean-pulse-java \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
  clean-extract clean-native-ecj clean-icedtea-stage2 \
  clean-icedtea-debug-stage2 clean-icedtea-stage1 clean-add-zero clean-add-zero-debug \
- clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter
+ clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter \
+ clean-cryptocheck
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -545,7 +546,7 @@ install:
 	clean-extract-hotspot clean-sanitise-openjdk clean-icedtea-debug \
 	clean-download-nashorn clean-extract-nashorn clean-download-hotspot \
 	clean-check-crypto clean-check-crypto-debug clean-check-crypto-boot \
-	clean-add-archive clean-add-archive-debug clean-add-archive-boot \
+	clean-add-archive clean-add-archive-debug clean-add-archive-boot clean-cryptocheck \
 	clean-tests clean-tapset-report
 
 env:
