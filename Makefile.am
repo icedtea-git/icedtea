@@ -1595,7 +1595,7 @@ clean-icedtea-debug:
 	rm -f stamps/icedtea-debug-configure.stamp
 	rm -f stamps/icedtea-debug.stamp
 
-stamps/check-crypto.stamp: stamps/cryptocheck.stamp
+stamps/check-crypto.stamp: stamps/cryptocheck.stamp stamps/icedtea.stamp
 	if [ -e $(BUILD_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
 	  $(BUILD_IMAGE_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
 	fi
@@ -1621,7 +1621,7 @@ clean-add-archive:
 	rm -vf $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive.stamp
 
-stamps/check-crypto-debug.stamp: stamps/cryptocheck.stamp
+stamps/check-crypto-debug.stamp: stamps/cryptocheck.stamp stamps/icedtea-debug.stamp
 	if [ -e $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
 	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
 	fi
@@ -1729,7 +1729,7 @@ clean-icedtea-boot:
 	rm -f stamps/icedtea-boot-configure.stamp
 	rm -f stamps/icedtea-boot.stamp
 
-stamps/check-crypto-boot.stamp: stamps/cryptocheck.stamp
+stamps/check-crypto-boot.stamp: stamps/cryptocheck.stamp stamps/icedtea-boot.stamp
 	if [ -e $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
 	  $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
 	fi

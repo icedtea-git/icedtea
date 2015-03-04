@@ -1,5 +1,12 @@
 2013-06-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* Makefile.am:
+	(check-crypto): Depend on icedtea.stamp.
+	(check-crypto-debug): Depend on icedtea-debug.stamp.
+	(clean-crypto-boot): Depend on icedtea-boot.stamp.
+
+2013-06-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR1291: Ensure unlimited crypto policy is in place.
 	* Makefile.am:
 	(CRYPTO_CHECK_BUILD_DIR): New variable.
