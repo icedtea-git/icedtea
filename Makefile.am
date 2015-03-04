@@ -975,7 +975,8 @@ endif
 
 clean-extract-openjdk: clean-overlay clean-versioning \
  clean-patch-fsg clean-remove-intree-libraries \
- clean-sanitise-openjdk clean-extract-hotspot
+ clean-sanitise-openjdk clean-extract-hotspot \
+ clean-extract-nashorn
 	rm -rf openjdk
 	rm -f stamps/extract-openjdk.stamp
 
