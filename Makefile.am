@@ -495,9 +495,16 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 
 all-local: icedtea-stage2
 
-check-local: jtregcheck
+check-local: jtregcheck check-tapset
 
-clean-local: clean-jtreg clean-jtreg-reports clean-pulse-java \
+clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports
+	if [ $(abs_top_srcdir) != $(abs_top_builddir) ] ; then \
+	  if [ -e test ] ; then \
+	    rmdir test ; \
+	  fi \
+	fi
+
+clean-local: clean-tests clean-pulse-java \
  clean-icedtea clean-icedtea-debug clean-icedtea-boot clean-clone clean-clone-boot \
  clean-bootstrap-directory-stage1 clean-bootstrap-directory-stage2 \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
@@ -534,7 +541,8 @@ install:
 	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
 	clean-extract-hotspot clean-sanitise-openjdk clean-icedtea-debug \
 	clean-download-nashorn clean-extract-nashorn clean-download-hotspot \
-	clean-add-archive clean-add-archive-debug clean-add-archive-boot
+	clean-add-archive clean-add-archive-debug clean-add-archive-boot \
+	clean-tests clean-tapset-report
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -2172,6 +2180,19 @@ jtregcheck: $(TESTS_TO_RUN)
 	  echo "leftover processes..."; \
 	  $(jtreg_processes); \
 	fi
+
+check-tapset:
+if ENABLE_SYSTEMTAP
+	$(abs_top_srcdir)/test/tapset/jstaptest.pl \
+	  -B $(BUILD_OUTPUT_DIR) -A $(BUILD_ARCH_DIR) \
+	  -S $(abs_top_srcdir)/test/tapset \
+	  -o test/check-stap.log
+endif
+
+clean-tapset-report:
+if ENABLE_SYSTEMTAP
+	rm -f test/check-stap.log
+endif
 
 # Support classes for non-OpenJDK bootstraps
 

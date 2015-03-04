@@ -1,3 +1,47 @@
+2015-03-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(clean-tests): Add dependency on clean-jtreg-reports.
+	(clean-local): Drop clean-jtreg-reports.
+	* NEWS: Updated.
+
+2012-03-23  Jon VanAlten  <jon.vanalten@redhat.com>
+
+	* Makefile.am:
+	(check-local): Depend on check-tapset.
+	(clean-tests): New target to group test cleanup
+	rules.
+	(clean-local): Depend on clean-tests rather than
+	clean-jtreg.
+	(.PHONY): Add clean-tests and clean-tapset-report.
+	(check-tapset): Add target to run tapset tests.
+	(clean-tapset-report): Cleanup tapset test output.
+	* tapset/hotspot_jni.stp.in:
+	Add notes regarding required JVM option to Get<PrimitiveType>Field
+	family of probe aliases.
+	* test/tapset/ClassUnloadedProbeTester.java:
+	Part of test coverage for hotspot.stp and hotspot_jni.stp tapsets.
+	* test/tapset/JNIStapTest.c:
+	Likewise.
+	* test/tapset/JNITestClass.c:
+	Likewise.
+	* test/tapset/JNITestClass.h:
+	Likewise.
+	* test/tapset/JNITestClass.java:
+	Likewise.
+	* test/tapset/RunWrapper.java:
+	Likewise.
+	* test/tapset/StapJNIClassLoader.java:
+	Likewise.
+	* test/tapset/StapURLClassLoader.java:
+	Likewise.
+	* test/tapset/SystemtapTester.java:
+	Likewise.
+	* test/tapset/TestingRunner.java:
+	Likewise.
+	* test/tapset/jstaptest.pl:
+	Wrapper script, compiles and runs tests for tapsets.
+
 2015-03-02  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
