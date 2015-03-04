@@ -63,6 +63,7 @@ REWRITER_BUILD_DIR = $(abs_top_builddir)/rewriter.build
 STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
 STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
 JAMVM_IMPORT_PATH = $(abs_top_builddir)/jamvm/install/hotspot
+CRYPTO_CHECK_BUILD_DIR = $(abs_top_builddir)/cryptocheck.build
 
 # Source directories
 
@@ -209,6 +210,7 @@ OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
 # Sources list
 
 REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
+CRYPTO_CHECK_SRCS = $(top_srcdir)/TestCryptoLevel.java
 
 # Patch list
 
@@ -488,7 +490,8 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	scripts/jni_desc \
 	rewriter/agpl-3.0.txt \
 	$(REWRITER_SRCS) \
-	THANKYOU test/tapset
+	THANKYOU test/tapset \
+	$(CRYPTO_CHECK_SRCS)
 
 # Top-Level Targets
 # =================
@@ -541,6 +544,7 @@ install:
 	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
 	clean-extract-hotspot clean-sanitise-openjdk clean-icedtea-debug \
 	clean-download-nashorn clean-extract-nashorn clean-download-hotspot \
+	clean-check-crypto clean-check-crypto-debug clean-check-crypto-boot \
 	clean-add-archive clean-add-archive-debug clean-add-archive-boot \
 	clean-tests clean-tapset-report
 
@@ -1591,6 +1595,16 @@ clean-icedtea-debug:
 	rm -f stamps/icedtea-debug-configure.stamp
 	rm -f stamps/icedtea-debug.stamp
 
+stamps/check-crypto.stamp: stamps/cryptocheck.stamp
+	if [ -e $(BUILD_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
+	  $(BUILD_IMAGE_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
+	fi
+	mkdir -p stamps
+	touch $@
+
+clean-check-crypto:
+	rm -f stamps/check-crypto.stamp
+
 stamps/add-archive.stamp: stamps/icedtea.stamp
 if !ENABLE_JAMVM
 if !ENABLE_CACAO
@@ -1606,6 +1620,16 @@ endif
 clean-add-archive:
 	rm -vf $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive.stamp
+
+stamps/check-crypto-debug.stamp: stamps/cryptocheck.stamp
+	if [ -e $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
+	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
+	fi
+	mkdir -p stamps
+	touch $@
+
+clean-check-crypto-debug:
+	rm -f stamps/check-crypto-debug.stamp
 
 stamps/add-archive-debug.stamp: stamps/icedtea-debug.stamp
 if !ENABLE_JAMVM
@@ -1624,20 +1648,22 @@ clean-add-archive-debug:
 	rm -f stamps/add-archive-debug.stamp
 
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
- stamps/add-zero.stamp stamps/add-jamvm.stamp stamps/add-archive.stamp
+ stamps/add-zero.stamp stamps/add-jamvm.stamp stamps/check-crypto.stamp \
+ stamps/add-archive.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-stage2: clean-add-jamvm clean-add-archive
+clean-icedtea-stage2: clean-add-jamvm clean-check-crypto clean-add-archive
 	rm -f stamps/icedtea-stage2.stamp
 
 stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
  stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp \
- stamps/add-archive-debug.stamp
+ stamps/check-crypto-debug.stamp stamps/add-archive-debug.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-debug-stage2: clean-add-jamvm-debug clean-add-archive-debug
+clean-icedtea-debug-stage2: clean-add-jamvm-debug clean-check-crypto-debug \
+ clean-add-archive-debug
 	rm -f stamps/icedtea-debug-stage2.stamp
 
 # OpenJDK boot Targets
@@ -1703,6 +1729,16 @@ clean-icedtea-boot:
 	rm -f stamps/icedtea-boot-configure.stamp
 	rm -f stamps/icedtea-boot.stamp
 
+stamps/check-crypto-boot.stamp: stamps/cryptocheck.stamp
+	if [ -e $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
+	  $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
+	fi
+	mkdir -p stamps
+	touch $@
+
+clean-check-crypto-boot:
+	rm -f stamps/check-crypto-boot.stamp
+
 stamps/add-archive-boot.stamp: stamps/icedtea-boot.stamp
 if !ENABLE_JAMVM
 if !ENABLE_CACAO
@@ -1719,11 +1755,12 @@ clean-add-archive-boot:
 	rm -vf $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive-boot.stamp
 
-stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp stamps/add-archive-boot.stamp
+stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp stamps/check-crypto-boot.stamp \
+ stamps/add-archive-boot.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-stage1: clean-add-archive-boot
+clean-icedtea-stage1: clean-check-crypto-boot clean-add-archive-boot
 	rm -f stamps/icedtea-stage1.stamp
 
 # PulseAudio based mixer
@@ -2254,6 +2291,19 @@ clean-rt:
 	  cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar $(STAGE1_BOOT_DIR)/jre/lib ; \
 	fi
 
+# Crypto Level Check
+
+stamps/cryptocheck.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
+	mkdir -p $(CRYPTO_CHECK_BUILD_DIR)
+	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
+	  -d $(CRYPTO_CHECK_BUILD_DIR) $(CRYPTO_CHECK_SRCS)
+	mkdir -p stamps
+	touch $@
+
+clean-cryptocheck:
+	rm -rf $(CRYPTO_CHECK_BUILD_DIR)
+	rm -f stamps/cryptocheck.stamp
+
 # Target Aliases
 # ===============
 
@@ -2277,7 +2327,15 @@ bootstrap-directory-symlink-stage2: stamps/bootstrap-directory-symlink-stage2.st
 
 cacao: stamps/cacao.stamp
 
+check-crypto: stamps/check-crypto.stamp
+
+check-crypto-boot: stamps/check-crypto-boot.stamp
+
+check-crypto-debug: stamps/check-crypto-debug.stamp
+
 clone-boot: stamps/clone-boot.stamp
+
+cryptocheck: stamps/cryptocheck.stamp
 
 download: stamps/download.stamp
 

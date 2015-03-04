@@ -1,3 +1,37 @@
+2013-06-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1291: Ensure unlimited crypto policy is in place.
+	* Makefile.am:
+	(CRYPTO_CHECK_BUILD_DIR): New variable.
+	(CRYPTO_CHECK_SRCS): Likewise.
+	(EXTRA_DIST): Add CRYPTO_CHECK_SRCS.
+	(.PHONY): Add new clean targets.
+	(check-crypto): Run the crypto checker on a normal
+	stage 2 build.
+	(clean-check-crypto): Delete the check-crypto stamp.
+	(check-crypto-debug): Run the crypto checker on a
+	debug stage 2 build.
+	(clean-check-crypto-debug): Delete the
+	check-crypto-debug stamp.
+	(icedtea-stage2): Depend on check-crypto.
+	(clean-icedtea-stage2): Depend on clean-check-crypto.
+	(icedtea-debug-stage2): Depend on check-crypto-debug.
+	(clean-icedtea-debug-stage2): Depend on
+	clean-check-crypto-debug.
+	(check-crypto-boot): Run the crypto checker on
+	the stage 1 build.
+	(clean-check-crypto-boot): Delete the
+	check-crypto-boot stamp.
+	(icedtea-stage1): Depend on check-crypto-boot.
+	(clean-icedtea-stage1): Depend on
+	clean-check-crypto-boot.
+	(cryptocheck): Build the crypto checker.
+	(clean-cryptocheck): Revert cryptocheck.
+	* NEWS: Updated.
+	* TestCryptoLevel.java:
+	Checks whether the unlimited crypto policy is in
+	place or not.
+
 2012-05-30  Andrew John Hughes  <ahughes@redhat.com>
 
 	* Makefile.am:

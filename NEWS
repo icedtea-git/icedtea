@@ -27,6 +27,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR1275: Provide option to turn off downloading of tarballs
   - PR1279: Synchronise CACAO versions between IcedTea6/7/8 where possible
   - PR1281, RH513605: Updating/Installing OpenJDK should recreate the shared class-data archive
+  - PR1291: Ensure unlimited crypto policy is in place.
   - PR1325: Only add classes to rt-source-files.txt if actually needed
   - PR1346: Filter out -j option to make
   - PR1347: Update list of checked JDKs
