@@ -2181,13 +2181,23 @@ jtregcheck: $(TESTS_TO_RUN)
 	  $(jtreg_processes); \
 	fi
 
-check-tapset:
+check-tapset-probes: 
 if ENABLE_SYSTEMTAP
 	$(abs_top_srcdir)/test/tapset/jstaptest.pl \
 	  -B $(BUILD_OUTPUT_DIR) -A $(BUILD_ARCH_DIR) \
 	  -S $(abs_top_srcdir)/test/tapset \
-	  -o test/check-stap.log
+	  -a test/check-stap.log -p
 endif
+
+check-tapset-jstack: 
+if ENABLE_SYSTEMTAP
+	$(abs_top_srcdir)/test/tapset/jstaptest.pl \
+	  -B $(BUILD_OUTPUT_DIR) -A $(BUILD_ARCH_DIR) \
+	  -S $(abs_top_srcdir)/test/tapset \
+	  -a test/check-stap.log -j
+endif
+
+check-tapset: check-tapset-probes check-tapset-jstack
 
 clean-tapset-report:
 if ENABLE_SYSTEMTAP

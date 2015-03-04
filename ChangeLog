@@ -1,3 +1,13 @@
+2012-08-03  Mark Wielaard  <mjw@redhat.com>
+
+	* Makefile.am (check-tapset-probes): New target.
+	(check-tapset-jstack): Likewise.
+	(check-tapset): Depend on check-tapset-probes check-tapset-jstack.
+	* test/tapset/jstaptest.pl (process_args): Add -p [$run_test_probes]
+	and -j [$run_test_jstack].
+	(test_jstack): Takes argument to pass to java process.
+	Pass -XX:+UseCompressedOops and/or -Xmx5G.
+
 2012-06-26  Omair Majid  <omajid@redhat.com>
 
 	* test/tapset/jstaptest.pl (get_arch_dir): Fix dir for x86.
