@@ -1980,3 +1980,25 @@ AC_DEFUN_ONCE([IT_WITH_PAX],
   AC_SUBST(PAX_COMMAND)
   AC_SUBST(PAX_COMMAND_ARGS)
 ])
+
+AC_DEFUN([IT_ENABLE_JAR_COMPRESSION],
+[
+  AC_MSG_CHECKING([whether to enable JAR compression])
+  AC_ARG_ENABLE([jar-compression],
+                [AS_HELP_STRING(--enable-jar-compression,compress built jars [[default=yes]])],
+  [
+    case "${enableval}" in
+      no)
+        enable_jar_compression=no
+        ;;
+      *)
+        enable_jar_compression=yes
+        ;;
+    esac
+  ],
+  [
+    enable_jar_compression=yes
+  ])
+  AC_MSG_RESULT([$enable_jar_compression])
+  AM_CONDITIONAL([ENABLE_JAR_COMPRESSION], test x"${enable_jar_compression}" = "xyes")
+])
