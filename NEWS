@@ -14,22 +14,12 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.6.0 (2014-XX-XX):
 
-* Security fixes
-  - S8047125, CVE-2015-0395: (ref) More phantom object references
-  - S8047130: Fewer escapes from escape analysis
-  - S8049253: Better GC validation
-  - S8050807, CVE-2015-0383: Better performing performance data handling
-  - S8055479: TLAB stability
-  - S8058982, CVE-2014-6601: Better verification of an exceptional invokespecial
 * OpenJDK
   - S4792059: test/java/io/pathNames/GeneralSolaris.java fails on symbolic links
   - S4991647: PNGMetadata.getAsTree() sets bitDepth to invalid value
   - S5036554: unmarshal error on CORBA alias type in CORBA any
   - S6458027: Disabling IPv6 on a specific network interface causes problems
-  - S6461635: [TESTBUG] BasicTests.sh test fails intermittently
-  - S6545422: [TESTBUG] NativeErrors.java uses wrong path name in exec
   - S6642881: Improve performance of Class.getClassLoader()
-  - S6653795: C2 intrinsic for Unsafe.getAddress performs pointer sign extension on 32-bit systems
   - S6695379: Copy method annotations and parameter annotations to synthetic bridge methods
   - S6883953: java -client -XX:ValueMapInitialSize=0 crashes
   - S6931564: Incorrect display name of Locale for south africa
@@ -38,16 +28,12 @@ New in release 2.6.0 (2014-XX-XX):
   - S6993873: java/awt/Focus/FocusOwnerFrameOnClick/FocusOwnerFrameOnClick.java test indicates ".a frame wasn't focused on click" jdk7 issue on linux
   - S7010989: Duplicate closure of file descriptors leads to unexpected and incorrect closure of sockets
   - S7017962: Obsolete link is used in URL class level spec
-  - S7028073: The currency symbol for Peru is wrong
   - S7033533: realSync() doesn't work with Xfce
   - S7036518: TEST_BUG: add cygwin support to test/java/nio/charset/coders/CheckSJISMappingProp.sh
-  - S7047033: (smartcardio) Card.disconnect(boolean reset) does not reset when reset is true
   - S7052170: javadoc -charset option generates wrong meta tag
   - S7058832: com/sun/net/httpserver/bugs/B6373555.java failing intermittently
   - S7076487: (sctp) SCTP API classes does not exist in JDK for Mac
-  - S7077119: remove past transition dates from CurrencyData.properties file
   - S7084032: test/java/net/Inet6Address/B6558853.java fails on Windows XP/2003 if IPv6
-  - S7085757: Currency Data: ISO 4217 Amendment 152
   - S7087021: TEST: com/sun/crypto/provider/Mac/MacClone.java failed on Solaris sparc 5.10
   - S7090324: gclog rotation via external tool
   - S7095856: OutputStreamHook doesn't handle null values
@@ -63,36 +49,28 @@ New in release 2.6.0 (2014-XX-XX):
   - S7160604: Using non-opaque windows - popups are initially not painted correctly
   - S7161320: TEST_BUG: java/awt/event/KeyEvent/SwallowKeyEvents/SwallowKeyEvents.java fails (Invalid key code)
   - S7164841: Improvements to the GC log file rotation
-  - S7169142: CookieHandler does not work with localhost
   - S7172176: test/sun/tools/jconsole/ImmutableResourceTest.sh failing
   - S7172865: PropertyDescriptor fails to work with setter method name if setter is non-void
   - S7180038: regression test failure, SSLEngineBadBufferArrayAccess.java
-  - S7185456: (ann) Optimize Annotation handling in java/sun.reflect.* code for small number of annotations
   - S7195480: javax.smartcardio does not detect cards on Mac OS X
-  - S7195759: ISO 4217 Amendment 154
   - S7199674: (props) user.home property does not return an accessible location in sandboxed environment [macosx]
-  - S8001105: findVirtual of Object[].clone produces internal error
   - S8001472: api/java_awt/Window/indexTGF_* tests fail because expected colors aren't equal
   - S8001633: Wrong alt processing during switching between windows.
   - S8002148: [TEST_BUG] The four lines printed are not the bold typeface.
   - S8004488: wrong permissions checked in krb5
-  - S8005232: (JEP-149) Class Instance size reduction
   - S8006023: Embedded Builds fail management test because of requirement for UsePerfData being enabled.
-  - S8006748: getISO3Country() returns wrong value
   - S8008328: [partfait] Null pointer defererence in hotspot/src/cpu/x86/vm/frame_x86.inline.hpp
   - S8008759: Do not let internal JDK zlib symbols leak out of fastdebug libzip.so
   - S8009258: TEST_BUG:java/io/pathNames/GeneralWin32.java fails intermittently
   - S8010738: G1: Output for full GCs with +PrintGCDetails should contain perm gen/meta data size change info
   - S8011646: SEGV in compiled code with loop predication
   - S8011795: DOM Serializer prints stack traces to System.err
-  - S8012026: [macosx] Component.getMousePosition() does not work in an applet on MacOS
   - S8012625: Incorrect handling of HTTP/1.1 " Expect: 100-continue " in HttpURLConnection
   - S8012941: JSR 292: too deep inlining might crash compiler because of stack overflow
   - S8013098: [macosx] localized aqua_xx.properties are not included in rt.jar
   - S8013485: javac can't handle annotations with a <clinit> from a previous compilation unit
   - S8013849: Awt assert on Hashtable.cpp:124
   - S8014254: Selector in HttpServer introduces a 1000 ms delay when using KeepAlive
-  - S8015421: NegativeArraySizeException occurs in ChunkedOutputStream() with Integer.MAX_VALUE
   - S8015586: [macosx] Test closed/java/awt/print/PrinterJob/PrintToDir.java fails on MacOSX
   - S8015628: Test Failure in closed/java/io/pathNames/GeneralSolaris.java
   - S8015780: java/lang/reflect/Method/GenericStringTest.java failing
@@ -103,30 +81,23 @@ New in release 2.6.0 (2014-XX-XX):
   - S8019623: Lack of synchronization in AppContext.getAppContext()
   - S8019800: Test sun/tools/jcmd/jcmd-f.sh failing after JDK-8017011
   - S8019834: InetAddress.getByName hangs for bad IPv6 literals
-  - S8020190, PR2160, RH1176718: Fatal: Bug in native code: jfieldID must match object
   - S8020675: invalid jar file in the bootclasspath could lead to jvm fatal error
   - S8020829: NMT tests fail on platforms if NMT detail is not supported
-  - S8021121: ISO 4217 Amendment Number 156
-  - S8021372: NetworkInterface.getNetworkInterfaces() returns duplicate hardware address
   - S8021804: Certpath validation fails if validity period of root cert does not include validity period of intermediate cert
   - S8022070: Compilation error in stubGenerator_sparc.cpp with some compilers
   - S8022229: Intermittent test failures in sun/tools/jstatd
   - S8022531: [TEST_BUG] After double-click on the folder names , there is no 'OK' button in the dialog.
-  - S8022721: TEST_BUG: AnnotationTypeDeadlockTest.java throws java.lang.IllegalStateException: unexpected condition
   - S8022836: JVM crashes in JVMTIENVBASE::GET_CURRENT_CONTENDED_MONITOR and GET_OWNED_MONITOR
   - S8024061: Exception thrown when drag and drop between two components is executed quickly
   - S8024675: java/net/NetworkInterface/UniqueMacAddressesTest.java fails on Windows
   - S8024677: [TESTBUG] Move tests for classes in /testlibrary
   - S8024932: [TEST_BUG] [macosx] javax/swing/text/StyledEditorKit/8016833/bug8016833.java failed
-  - S8025051: Update resource files for TimeZone display names
   - S8025644: java/util/stream/test/org/openjdk/tests/java/util/stream/ToArrayOpTest.java fails with TestData): failure java.lang.AssertionError: expected [true] but found [false]
   - S8025710: Proxied HTTPS connections reused by HttpClient can send CONNECT to the server
   - S8025917: JDK demo applets not running with >=7u40 or (JDK 8 and JDK 9)
   - S8026303: CMS: JVM intermittently crashes with "FreeList of size 258 violates Conservation Principle" assert
-  - S8026792: HOTSPOT: licensee reports a JDK8 build failure after 8005849/8005008 fixes integrated.
   - S8027026: Change keytool -genkeypair to use -keyalg RSA
   - S8027348: (process) Enhancement of handling async close of ProcessInputStream
-  - S8027359: XML parser returns incorrect parsing results
   - S8027695: There should be a space before % sign in Swedish locale
   - S8028073: race condition in ObjectMonitor implementation causing deadlocks
   - S8028074: InetAddress.getByName fails with UHE "invalid IPv6 address" if host name starts with a-f
@@ -135,9 +106,6 @@ New in release 2.6.0 (2014-XX-XX):
   - S8028484: [TEST_BUG][macosx] closed/java/awt/MouseInfo/JContainerMousePositionTest fails
   - S8028616: Htmleditorkit parser doesn't handle leading slash (/)
   - S8028617: Dvorak keyboard mapping not honored when ctrl key pressed
-  - S8028623: SA: hash codes in SymbolTable mismatching java_lang_String::hash_code for extended characters.
-  - S8028627: Unsynchronized code path from javax.crypto.Cipher to the WeakHashMap used by JceSecurity to store codebase mappings
-  - S8028726: (prefs) Check src/solaris/native/java/util/FileSystemPreferences.c for JNI pending exceptions
   - S8029073: (corba) New connection reclaimed when number of connection is greater than highwatermark
   - S8029190: VM_Version::determine_features() asserts on Fujitsu Sparc64 CPUs
   - S8029302: Performance regression in Math.pow intrinsic
@@ -150,7 +118,6 @@ New in release 2.6.0 (2014-XX-XX):
   - S8030712: TEST_BUG : java/lang/ProcessBuilder/BasicLauncher.java fails if java output contains VM warning
   - S8030878: JConsole issues meaningless message if SSL connection fails
   - S8030976: Untaken paths should be more vigorously pruned at highest optimization level
-  - S8031046: Native Windows ccache might still get unsupported ticket
   - S8031061: new hotspot build - hs24.60-b07
   - S8031068: java/util/logging/ParentLoggersTest.java: checkLoggers: getLoggerNames() returned unexpected loggers
   - S8031290: Adjust call to getisax() for additional words returned
@@ -161,10 +128,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S8031743: C2: loadI2L_immI broken for negative memory values
   - S8031764: tmtools/jmap/heap_config tests fail on Linux-ia32 because it Cant attach to the core file
   - S8031765: Child process error stream is not empty!
-  - S8032078: [macosx] CPlatformWindow.setWindowState throws RuntimeException, if windowState=ICONIFIED|MAXIMIZED_BOTH
   - S8032466: serviceability/sa/jmap-hashcode/Test8028623.java fails with compilation errors
-  - S8032669: Mouse release not being delivered to Swing component in 7u45
-  - S8032788: ImageIcon constructor throws an NPE and hangs when passed a null String parameter
   - S8032808: Support Solaris SO_FLOW_SLA socket option
   - S8032832: Applet/browser deadlocks, when IIS integrated authentication is used
   - S8032864: [macosx] sigsegv (0Xb) Being Generated When Starting JDev With Voiceover Running
@@ -173,7 +137,6 @@ New in release 2.6.0 (2014-XX-XX):
   - S8032878: Editable combos in table do not behave as expected
   - S8032901: WaitForMultipleObjects() return value not handled appropriately
   - S8032908: getTextContent doesn't return string in JAXP
-  - S8032909: XSLT string-length returns incorrect length when string includes complementary chars
   - S8033113: wsimport fails on WSDL:header parameter name customization
   - S8033524: Set minor version for hotspot in 7u80 to 80 and build number to b01
   - S8033571: [parfait] warning from b128 for security/smartcardio/pcsc_md.c: JNI exception pending
@@ -184,7 +147,6 @@ New in release 2.6.0 (2014-XX-XX):
   - S8038919: Requesting focus to a modeless dialog doesn't work on Safari
   - S8038966: JAX-WS handles wrongly xsd:any arguments for Web services
   - S8034118: [parfait] JNI exception pending in macosx/native/sun/awt/JavaComponentAccessibility.m
-  - S8034200: Test java/net/CookieHandler/LocalHostCookie.java fails after fix of JDK-7169142
   - S8034262: Test java/lang/ProcessBuilder/CloseRace.java fails
   - S8034768: [parfait] JNI exception pending in jdk/src/macosx/native/sun/awt/JavaTextAccessibility.m
   - S8034920: new hotspot build - hs24.80-b03
@@ -196,7 +158,6 @@ New in release 2.6.0 (2014-XX-XX):
   - S8036778: new hotspot build - hs24.80-b05
   - S8036819: JAB: mneumonics not read for textboxes
   - S8036823: Stack trace sometimes shows 'locked' instead of 'waiting to lock'
-  - S8036863: Update jdk7 testlibrary to match jdk8 in hotspot
   - S8036981: JAXB not preserving formatting for xsd:any Mixed content
   - S8036983: JAB:Multiselection Ctrl+CursorUp/Down and ActivateDescenderPropertyChanged event
   - S8037477: Reproducible hang of JAWS and webstart application with JAB 2.0.4
@@ -218,16 +179,11 @@ New in release 2.6.0 (2014-XX-XX):
   - S8039891: Remove ppcsflt builds from JPRT
   - S8039899: Missing licence headers in test for JDK-8033113
   - S8040076: Memory leak: java.awt.List objects allowing multiple selections are not GC-ed.
-  - S8040168: Set hotspot version to hs24.66 and build to b01 for 7u66
-  - S8040617: [macosx] Large JTable cell results in a OutOfMemoryException
   - S8040664: Revert temporary fix JDK-8038785
   - S8040790: [TEST_BUG] tools/javac/innerClassFile/Driver.sh fails to cleanup files after it
-  - S8041132: Increment hsx 24.66 build to b02 for 7u66-b09
   - S8041351: Crash in src/share/vm/opto/loopnode.cpp:3215 - assert(! had_error) failed: bad dominance
-  - S8041408: Increment hsx 24.55 build to b04 for 7u55-b34
   - S8041451: com.sun.jndi.ldap.Connection:ReadTimeout should abandon ldap request
   - S8041507: Java Access Bridge version strings need to be fixed
-  - S8041572: [macosx] huge native memory leak in AWTWindow.m
   - S8041725: Nimbus JList selection colors persist across L&F changes
   - S8041791: String.toLowerCase regression - violates Unicode standard
   - S8041918: BootstrapMethods attribute cannot be empty.
@@ -235,7 +191,6 @@ New in release 2.6.0 (2014-XX-XX):
   - S8041979: sun/jvmstat/monitor/MonitoredVm/CR6672135.java failing on all platforms
   - S8041980: (hotspot) sun/jvmstat/monitor/MonitoredVm/CR6672135.java failing on all platforms
   - S8041984: CompilerThread seems to occupy all CPU in a very rare situation
-  - S8041990: [macosx] Language specific keys does not work in applets when opened outside the browser
   - S8042052: assert(t != NULL) failed: must set before get
   - S8042059: Various fixes to linux/sparc
   - S8042235: redefining method used by multiple MethodHandles crashes VM
@@ -254,11 +209,9 @@ New in release 2.6.0 (2014-XX-XX):
   - S8043354: OptimizePtrCompare too aggressive when allocations are present
   - S8043413: REGRESSION: Hotspot causes segmentation fault in jdk8ux, but not in jdk7ux
   - S8043507: javax.smartcardio.CardTerminals.list() fails on MacOSX
-  - S8043610: Sorting columns in JFileChooser fails with AppContext NPE
   - S8043720: (smartcardio) Native memory should be handled more accurately
   - S8044406: JVM crash with JDK8 (build 1.8.0-b132) with G1 GC
   - S8044602: Increment minor version of HSx for 7u72 and initialize the build number
-  - S8044603: Increment minor version of HSx for 7u71 and initialize the build number
   - S8044614: [macosx] Focus issue with 2 applets in firefox
   - S8044659: Java SecureRandom on SPARC T4 much slower than on x86/Linux
   - S8044725: Bug in zlib 1.2.5 prevents inflation of some gzipped files (zlib 1.2.8 port)
@@ -269,7 +222,6 @@ New in release 2.6.0 (2014-XX-XX):
   - S8046275: Fastdebug build failing on jdk9/hs/ control jobs after pulling some hs-comp changes
   - S8046287: [TESTBUG] runtime/Thread/TestThreadDumpMonitorContention.java failed error_cnt=12
   - S8046289: compiler/6340864/TestLongVect.java timeout with
-  - S8046343: (smartcardio) CardTerminal.connect('direct') does not work on MacOSX
   - S8046495: KeyEvent can not be accepted in quick mouse clicking
   - S8046516: Segmentation fault in JVM (easily reproducible)
   - S8046559: NPE when changing Windows theme
@@ -289,23 +241,17 @@ New in release 2.6.0 (2014-XX-XX):
   - S8048506: [macosx] javax.swing.PopupFactory issue with null owner
   - S8048887: SortingFocusTraversalPolicy throws IllegalArgumentException from the sort method
   - S8049081: Increment hsx 24.72 build to b02 for 7u72-b03
-  - S8049250: Need a flag to invert the Card.disconnect(reset) argument
-  - S8049343: (tz) Support tzdata2014g
   - S8049514: FEATURE_SECURE_PROCESSING can not be turned off on a validator through SchemaFactory
   - S8049542: C2: assert(size_in_words <= (julong)max_jint) failed: no overflow
   - S8049684: pstack crashes on java core dump
-  - S8049758: Increment minor version of HSx for 7u75 and initialize the build number
   - S8049787: Increment hsx 24.72 build to b03 for 7u72-b04
   - S8050022: linux-sparcv9: assert(SharedSkipVerify || obj->is_oop()) failed: sanity check
   - S8050158: Introduce system property to maintain RC4 preference order
   - S8050165: linux-sparcv9: NMT detail causes assert((intptr_t*)younger_sp[FP->sp_offset_in_saved_window()] == (intptr_t*)((intptr_t)sp - STACK_BIAS)) failed: younger_sp must be valid
   - S8050167: linux-sparcv9: hs_err file does not show any stack information
   - S8050386: javac, follow-up of fix for JDK-8049305
-  - S8050485: super() in a try block in a ctor causes VerifyError
   - S8050983: Misplaced parentheses in sun.net.www.http.HttpClient break HTTP PUT streaming
   - S8051004: javac, incorrect bug id in tests for JDK-8050386
-  - S8051359: JPopupMenu creation in headless mode with JDK9b23 causes NPE
-  - S8051614: smartcardio TCK tests fail due to lack of 'reset' permission
   - S8051844: BootstrapMethods attribute cannot be empty again
   - S8051857: OperationTimedOut exception inside from XToolkit.syncNativeQueue call
   - S8052159: TEST_BUG: javax/swing/JTextField/8036819/bug8036819.java fails to compile
@@ -317,7 +263,6 @@ New in release 2.6.0 (2014-XX-XX):
   - S8054817: File ccache only recognizes Linux and Solaris defaults
   - S8054841: (process) ProcessBuilder leaks native memory
   - S8054883: Segmentation error while running program
-  - S8055222: Currency update needed for ISO 4217 Amendment #159
   - S8055304: More boxing for DirectoryComboBoxModel
   - S8055309: RMI needs better transportation considerations
   - S8055421: (fs) bad error handling in java.base/unix/native/libnio/fs/UnixNativeDispatcher.c
@@ -327,12 +272,10 @@ New in release 2.6.0 (2014-XX-XX):
   - S8055949: ByteArrayOutputStream capacity should be maximal array size permitted by VM
   - S8056026: Debug security logging should print Provider used for each crypto operation
   - S8056156: [TEST_BUG] Test javax/swing/JFileChooser/8046391/bug8046391.java fails in Windows
-  - S8056211: api/java_awt/Event/InputMethodEvent/serial/index.html#Input[serial2002] failure
   - S8056264: Multicast support improvements
   - S8056276: Fontmanager feature improvements
   - S8056309: Set minor version for hotspot in 7u76 to 76 and build number to b01
   - S8056914: Right Click Menu for Paste not showing after upgrading to java 7
-  - S8057184: JCK8's api/javax_swing/JDesktopPane/descriptions.html#getset failed with GTKLookAndFeel on Linux and Solaris
   - S8057530: (process) Runtime.exec throws garbled message in jp locale
   - S8057555: Less cryptic cipher suite management
   - S8057564: JVM hangs at getAgentProperties after attaching to VM with lower
@@ -340,12 +283,10 @@ New in release 2.6.0 (2014-XX-XX):
   - S8058120: Rendering / caret errors with HTMLDocument
   - S8058473: "Comparison method violates its general contract" when using Clipboard
   - S8058583: Remove CompilationRepeat
-  - S8058715: stability issues when being launched as an embedded JVM via JNI
   - S8058927: ATG throws ClassNotFoundException
   - S8058932: java/net/InetAddress/IPv4Formats.java failed because hello.foo.bar does exist
   - S8058935: CPU detection gives 0 cores per cpu, 2 threads per core in Amazon EC2 environment
   - S8058936: hotspot/test/Makefile should use jtreg script from $JT_HOME/bin/jreg (instead of $JT_HOME/win32/bin/jtreg)
-  - S8059206: (tz) Support tzdata2014i
   - S8059216: Make PrintGCApplicationStoppedTime print information about stopping threads
   - S8059299: assert(adr_type != NULL) failed: expecting TypeKlassPtr
   - S8059327: XML parser returns corrupt attribute value
@@ -353,45 +294,34 @@ New in release 2.6.0 (2014-XX-XX):
   - S8059563: (proxy) sun.misc.ProxyGenerator.generateProxyClass should create intermediate directories
   - S8060006: No Russian time zones mapping for Windows
   - S8060169: Update the Crash Reporting URL in the Java crash log
-  - S8060474: Resolve more parsing ambiguity
   - S8061210: Issues in TLS
   - S8061507: Increment hsx 24.76 build to b02 for 7u76-b05
-  - S8061685: Increment hsx 24.75 build to b02 for 7u75-b06
   - S8061694: Increment hsx 24.76 build to b03 for 7u76-b06
-  - S8061785: [TEST_BUG] serviceability/sa/jmap-hashcode/Test8028623.java has utf8 character corrupted by earlier merge
-  - S8061826: Part of JDK-8060474 should be reverted
   - S8061954: 7u76 - deployment warning dialogs do not work on Linux
   - S8062021: NPE in sun/lwawt/macosx/CPlatformWindow::toFront after JDK-8060146
   - S8062178: merge issue: Test closed/java/util/TimeZone/Bug6329116.java fails in 7u-cpu nightly
-  - S8062561: Test bug8055304 fails if file system default directory has read access
   - S8062608: BCEL corrupts debug data of methods that use generics
   - S8062672: JVM crashes during GC on various asserts which checks that HeapWord ptr is an oop
   - S8062744: jdk.net.Sockets.setOption/getOption does not support IP_TOS
   - S8062771: Core reflection should use final fields whenever possible
-  - S8062807: Exporting RMI objects fails when run under restrictive SecurityManager
-  - S8064300: Increment hsx 24.75 build to b03 for 7u75-b06
   - S8064391: More thread safety problems in core reflection
   - S8064407: (fc) FileChannel transferTo should use TransmitFile on Windows
   - S8064493: Increment the build value to b04 for hs24.76 in 7u76-b08
   - S8064516: BCEL still corrupts generic methods if bytecode offsets are modified
   - S8064532: 7u76 build failed with # 8041979
   - S8064533: Remove and retag jdk7u76-b08 tag in 7u76/jdk repo
-  - S8064560: (tz) Support tzdata2014j
   - S8064667: Add -XX:+CheckEndorsedAndExtDirs flag to JDK 8
   - S8064846: Lazy-init thread safety problems in core reflection
   - S8065098: JColorChooser no longer supports drag and drop between two JVM instances
   - S8065552: setAccessible(true) on fields of Class may throw a SecurityException
-  - S8065608: 7u75 l10n resource file translation update
   - S8065609: 7u76 l10n resource file translation update
   - S8065618: C2 RA incorrectly removes kill projections
   - S8065674: javac generates incorrect LVT table for trivial cases
   - S8065765: Missing space in output message from -XX:+CheckEndorsedAndExtDirs
-  - S8065787: Increment hsx 24.75 build to b04 for 7u75-b10
   - S8066045: opto/node.hpp:355, assert(i < _max) failed: oob: i=1, _max=1
   - S8066103: C2's range check smearing allows out of bound array accesses
   - S8066612: Add a test that will call getDeclaredFields() on all classes and try to set them accessible.
   - S8066649: 8u backport for 8065618 is incorrect
-  - S8066747: Backing out Japanese translation change in awt_ja.properties
   - S8066756: Test test/sun/awt/dnd/8024061/bug8024061.java fails
   - S8066775: opto/node.hpp:355, assert(i < _max) failed: oob: i=1, _max=1
   - S8068338: Better message about incompatible zlib in Deflater.init
@@ -400,25 +330,119 @@ New in release 2.6.0 (2014-XX-XX):
   - S8068639: Make certain annotation classfile warnings opt-in
 * Backports
   - S6584008, PR2193, RH1173326: jvmtiStringPrimitiveCallback should not be invoked when string value is null
-  - S7172012, PR2067: Make test-in-build an option (Queens)
-  - S8000897, RH1155012: VM crash in CompileBroker
 * Bug fixes
   - PR1786: Allow x86 build to occur on x86_64 using a previously built x86_64 build
   - PR1846: Build fails when using IcedTea7 as bootstrap JDK with native ecj
   - PR1847: Synchronise javac.in with IcedTea6
   - PR2060: Fix warnings found by Gentoo ebuild QA with gcc 4.9.1
+  - PR2144: make dist fails due to lack of HotSpot-specific patches
+  - PR2196, RH1164762: jhat man page has broken URL
+  - PR2200: Support giflib 5.1.0
+  - PR2210: DGifCloseFile call should check the return value, not the error code, for failure
+* AArch64 port
+  - Add java.lang.ref.Reference.get intrinsic to template interpreter
+  - Fix implementation of InterpreterMacroAssembler::increment_mdp_data_at().
+  - Remove insanely large stack allocation in entry frame.
+  - S8072129: [AARCH64] missing fix for 8066900
+
+New in release 2.5.4 (2015-01-21):
+
+* Security fixes
+  - S8046656: Update protocol support
+  - S8047125, CVE-2015-0395: (ref) More phantom object references
+  - S8047130: Fewer escapes from escape analysis
+  - S8048035, CVE-2015-0400: Ensure proper proxy protocols
+  - S8049253: Better GC validation
+  - S8050807, CVE-2015-0383: Better performing performance data handling
+  - S8054367, CVE-2015-0412: More references for endpoints
+  - S8055304, CVE-2015-0407: More boxing for DirectoryComboBoxModel
+  - S8055309, CVE-2015-0408: RMI needs better transportation considerations
+  - S8055479: TLAB stability
+  - S8055489, CVE-2014-6585: Better substitution formats
+  - S8056264, CVE-2014-6587: Multicast support improvements
+  - S8056276, CVE-2014-6591: Fontmanager feature improvements
+  - S8057555, CVE-2014-6593: Less cryptic cipher suite management
+  - S8058982, CVE-2014-6601: Better verification of an exceptional invokespecial
+  - S8059485, CVE-2015-0410: Resolve parsing ambiguity
+  - S8061210, CVE-2014-3566: Issues in TLS
+* Backports
+  - S6461635: [TESTBUG] BasicTests.sh test fails intermittently
+  - S6545422: [TESTBUG] NativeErrors.java uses wrong path name in exec
+  - S6653795: C2 intrinsic for Unsafe.getAddress performs pointer sign extension on 32-bit systems
+  - S7028073: The currency symbol for Peru is wrong
+  - S7047033: (smartcardio) Card.disconnect(boolean reset) does not reset when reset is true
+  - S7077119, PR2165, G534118: remove past transition dates from CurrencyData.properties file
+  - S7085757: Currency Data: ISO 4217 Amendment 152
+  - S7169142: CookieHandler does not work with localhost
+  - S7172012, PR2067: Make test-in-build an option (Queens)
+  - S7183753: [TEST] Some colon in the diff for this test
+  - S7185456: (ann) Optimize Annotation handling in java/sun.reflect.* code for small number of annotations
+  - S7195759: ISO 4217 Amendment 154
+  - S8000897, RH1155012: VM crash in CompileBroker
+  - S8001105: findVirtual of Object[].clone produces internal error
+  - S8005232: (JEP-149) Class Instance size reduction
+  - S8006748: getISO3Country() returns wrong value
+  - S8012026: [macosx] Component.getMousePosition() does not work in an applet on MacOS
+  - S8015421: NegativeArraySizeException occurs in ChunkedOutputStream() with Integer.MAX_VALUE
+  - S8020190, PR2160, RH1176718: Fatal: Bug in native code: jfieldID must match object
+  - S8021121: ISO 4217 Amendment Number 156
+  - S8021372: NetworkInterface.getNetworkInterfaces() returns duplicate hardware address
+  - S8022721: TEST_BUG: AnnotationTypeDeadlockTest.java throws java.lang.IllegalStateException: unexpected condition
+  - S8025051: Update resource files for TimeZone display names
+  - S8026792: HOTSPOT: licensee reports a JDK8 build failure after 8005849/8005008 fixes integrated.
+  - S8027359: XML parser returns incorrect parsing results
+  - S8028623, PR2112, RH1168693: SA: hash codes in SymbolTable mismatching java_lang_String::hash_code for extended characters.
+  - S8028627: Unsynchronized code path from javax.crypto.Cipher to the WeakHashMap used by JceSecurity to store codebase mappings
+  - S8028726: (prefs) Check src/solaris/native/java/util/FileSystemPreferences.c for JNI pending exceptions
+  - S8029153: [TESTBUG] test/compiler/7141637/SpreadNullArg.java fails because it expects NullPointerException
+  - S8031046: Native Windows ccache might still get unsupported ticket
+  - S8031502: JSR292: IncompatibleClassChangeError in LambdaForm for CharSequence.toString() method handle type converter
+  - S8032078: [macosx] CPlatformWindow.setWindowState throws RuntimeException, if windowState=ICONIFIED|MAXIMIZED_BOTH
+  - S8032669: Mouse release not being delivered to Swing component in 7u45
+  - S8032788: ImageIcon constructor throws an NPE and hangs when passed a null String parameter
+  - S8032909: XSLT string-length returns incorrect length when string includes complementary chars
+  - S8034200: Test java/net/CookieHandler/LocalHostCookie.java fails after fix of JDK-7169142
+  - S8036863: Update jdk7 testlibrary to match jdk8 in hotspot
+  - S8040168: Set hotspot version to hs24.66 and build to b01 for 7u66
+  - S8040617: [macosx] Large JTable cell results in a OutOfMemoryException
+  - S8041132: Increment hsx 24.66 build to b02 for 7u66-b09
+  - S8041408: Increment hsx 24.55 build to b04 for 7u55-b34
+  - S8041572: [macosx] huge native memory leak in AWTWindow.m
+  - S8041990: [macosx] Language specific keys does not work in applets when opened outside the browser
+  - S8043610: Sorting columns in JFileChooser fails with AppContext NPE
+  - S8044603: Increment minor version of HSx for 7u71 and initialize the build number
+  - S8046343: (smartcardio) CardTerminal.connect('direct') does not work on MacOSX
+  - S8049250: Need a flag to invert the Card.disconnect(reset) argument
+  - S8049343: (tz) Support tzdata2014g
+  - S8049758: Increment minor version of HSx for 7u75 and initialize the build number
+  - S8050485: super() in a try block in a ctor causes VerifyError
+  - S8051359: JPopupMenu creation in headless mode with JDK9b23 causes NPE
+  - S8051614: smartcardio TCK tests fail due to lack of 'reset' permission
+  - S8055222: Currency update needed for ISO 4217 Amendment #159
+  - S8056211: api/java_awt/Event/InputMethodEvent/serial/index.html#Input[serial2002] failure
+  - S8057184: JCK8's api/javax_swing/JDesktopPane/descriptions.html#getset failed with GTKLookAndFeel on Linux and Solaris
+  - S8058715: stability issues when being launched as an embedded JVM via JNI
+  - S8059206: (tz) Support tzdata2014i
+  - S8060474: Resolve more parsing ambiguity
+  - S8061685: Increment hsx 24.75 build to b02 for 7u75-b06
+  - S8061785: [TEST_BUG] serviceability/sa/jmap-hashcode/Test8028623.java has utf8 character corrupted by earlier merge
+  - S8061826: Part of JDK-8060474 should be reverted
+  - S8062561: Test bug8055304 fails if file system default directory has read access
+  - S8062807: Exporting RMI objects fails when run under restrictive SecurityManager
+  - S8064300: Increment hsx 24.75 build to b03 for 7u75-b06
+  - S8064560: (tz) Support tzdata2014j
+  - S8065608: 7u75 l10n resource file translation update
+  - S8065787: Increment hsx 24.75 build to b04 for 7u75-b10
+  - S8066747: Backing out Japanese translation change in awt_ja.properties
+  - S8067364, PR2145, RH114622: Printing to Postscript doesn't support dieresis
+* Bug fixes
   - PR2064: Unset OS before running OpenJDK build
   - PR2069: Type-punning warnings still evident on RHEL 5
   - PR2094, RH1163501: 2048-bit DH upper bound too small for Fedora infrastructure
   - PR2123: SunEC provider crashes when built using system NSS
   - PR2124: Synchronise elliptic curves in sun.security.ec.NamedCurve with those listed by NSS
   - PR2135: Race condition in SunEC provider with system NSS
-  - PR2144: make dist fails due to lack of HotSpot-specific patches
-  - PR2145, RH114622: Printing to Postscript doesn't support dieresis
   - PR2161: RHEL 6 has a version of GIO which meets the version criteria, but has no g_settings_*
-  - PR2196, RH1164762: jhat man page has broken URL
-  - PR2200: Support giflib 5.1.0
-  - PR2210: DGifCloseFile call should check the return value, not the error code, for failure
 * CACAO
   - PR2032: CACAO lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
 * JamVM
@@ -430,7 +454,6 @@ New in release 2.6.0 (2014-XX-XX):
   - Add char_array_equals intrinsic
   - Add CNEG and CNEGW to macro assembler.
   - Add frame anchor fences.
-  - Add java.lang.ref.Reference.get intrinsic to template interpreter
   - Add missing instruction synchronization barriers and cache flushes.
   - Add some memory barriers for object creation and runtime calls.
   - Add support for A53 multiply accumulate
@@ -492,7 +515,6 @@ New in release 2.6.0 (2014-XX-XX):
   - Fixed various typos, overlooked cases and wrong accessors
   - Fix error introduced into profiling code
   - Fix guarantee failure in synchronizer.cpp
-  - Fix implementation of InterpreterMacroAssembler::increment_mdp_data_at().
   - Fix more errors introduced into interpreter profile counter increment
   - Fix relocations
   - Fix several small typos
@@ -525,7 +547,6 @@ New in release 2.6.0 (2014-XX-XX):
   - Removed redundant field use_XOR_for_compressed_class_base
   - Removed some errors in signal handling code
   - Removed undefined metadata case
-  - Remove insanely large stack allocation in entry frame.
   - Remove redundant bracket
   - Remove support for volatile load/store rules in ad file
   - Renamed emit_int32 to emit_long and added local emit_long64 in place of missing emit_int64
@@ -554,7 +575,6 @@ New in release 2.6.0 (2014-XX-XX):
   - Reverted os_cpu/linux_aarch64 code to conform to jdk7
   - Reverted reloc info code to conform to jdk7
   - Revert Method:: etc to methodOopDesc:: etc
-  - S8072129: [AARCH64] missing fix for 8066900
   - Scripts to build aarch64-x86 hybrid and aarch64 native debug images
   - Some errors revealed when building debug image
   - Temporarily disable running test_gamma
