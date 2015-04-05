@@ -23,6 +23,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S6695379: Copy method annotations and parameter annotations to synthetic bridge methods
   - S6883953: java -client -XX:ValueMapInitialSize=0 crashes
   - S6931564: Incorrect display name of Locale for south africa
+  - S6956398, PR2250: make ephemeral DH key match the length of the certificate key
   - S6976528: PS: assert(!limit_exceeded || softrefs_clear) failed: Should have been cleared
   - S6984762: Invalid close of file descriptor '-1' in findZoneinfoFile
   - S6993873: java/awt/Focus/FocusOwnerFrameOnClick/FocusOwnerFrameOnClick.java test indicates ".a frame wasn't focused on click" jdk7 issue on linux
@@ -328,6 +329,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S8068405: GenerateCurrencyData throws RuntimeException for old data
   - S8068507: (fc) Rename the new jdk.net.enableFastFileTransfer system property to jdk.nio.enableFastFileTransfer
   - S8068639: Make certain annotation classfile warnings opt-in
+  - S8074312, PR2254: Enable hotspot builds on 4.x Linux kernels
 * Backports
   - S6584008, PR2193, RH1173326: jvmtiStringPrimitiveCallback should not be invoked when string value is null
 * Bug fixes
@@ -339,11 +341,20 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2196, RH1164762: jhat man page has broken URL
   - PR2200: Support giflib 5.1.0
   - PR2210: DGifCloseFile call should check the return value, not the error code, for failure
+  - PR2225: giflib 5.1 conditional excludes 6.0, 7.0, etc.
+  - PR2233, RH1190835: Discover gsettings symbols separately so early versions of GLib can be used (e.g. on RHEL 6)
+  - PR2236: ppc64le should report its os.arch as ppc64le so tools can detect it
+  - PR2250: JSSE server is still limited to 768-bit DHE
 * AArch64 port
   - Add java.lang.ref.Reference.get intrinsic to template interpreter
   - Fix implementation of InterpreterMacroAssembler::increment_mdp_data_at().
   - Remove insanely large stack allocation in entry frame.
+  - S8071947: AARCH64: frame::safe_for_sender() computes incorrect sender_sp value for interpreted frames
   - S8072129: [AARCH64] missing fix for 8066900
+  - S8072483: AARCH64: aarch64.ad uses the wrong operand class for some operations
+* ARM32 port
+  - PR2228: Add ARM32 JIT
+  - Several bug fixes to get Eclipse working
 
 New in release 2.5.4 (2015-01-21):
 

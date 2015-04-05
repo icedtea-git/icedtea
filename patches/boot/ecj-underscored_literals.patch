@@ -1,0 +1,11 @@
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/ServerHandshaker.java.old	2015-04-03 20:33:29.164024020 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/ServerHandshaker.java	2015-04-03 20:33:38.840136632 +0100
+@@ -1850,7 +1850,7 @@
+                     return Integer.parseInt(s, radix);
+                 } else {
+                     long ell = Long.parseLong(s, radix);
+-                    if ((ell & 0xffff_ffff_0000_0000L) == 0) {
++                    if ((ell & 0xffffffff00000000L) == 0) {
+                         return (int) ell;
+                     } else {
+                         throw new

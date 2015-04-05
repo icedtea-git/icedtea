@@ -2913,3 +2913,42 @@ EOF
 AM_CONDITIONAL([CP64174], test x"${it_cv_cp64174}" = "xyes")
 AC_PROVIDE([$0])dnl
 ])
+
+AC_DEFUN([IT_UNDERSCORE_CHECK],[
+  AC_REQUIRE([IT_CHECK_JAVA_AND_JAVAC_WORK])
+  AC_CACHE_CHECK([if javac lacks support for underscored literals], it_cv_underscore, [
+  CLASS=Test.java
+  BYTECODE=$(echo $CLASS|sed 's#\.java##')
+  mkdir tmp.$$
+  cd tmp.$$
+  cat << \EOF > $CLASS
+[/* [#]line __oline__ "configure" */
+
+public class Test
+{
+    public static void main(String[] args)
+    {
+      if (args.length == 0)
+      	 System.exit(-1);
+      long value = Long.parseLong(args[0]);
+      if ((value & 0xffff_ffff_0000_0000L) == 0)
+        System.out.println(args[0] + " is below Integer.MAX_VALUE");
+    }
+}]
+EOF
+  if $JAVAC -cp . $JAVACFLAGS -source 7 -target 7 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+    if $JAVA -classpath . $BYTECODE $$ >&AS_MESSAGE_LOG_FD 2>&1 ; then
+       it_cv_underscore=no;
+    else
+       it_cv_underscore=yes;
+    fi
+  else
+    it_cv_underscore=yes;
+  fi
+  rm -f $CLASS *.class
+  cd ..
+  rmdir tmp.$$
+  ])
+AM_CONDITIONAL([JAVAC_LACKS_UNDERSCORED_LITERALS], test x"${it_cv_underscore}" = "xyes")
+AC_PROVIDE([$0])dnl
+])

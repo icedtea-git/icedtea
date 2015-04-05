@@ -1,2 +1,2 @@
 # version type(drop/hg) url changeset sha256sum
-default drop http://icedtea.classpath.org/download/drops/icedtea7/@ICEDTEA_RELEASE@ 8f3c9cf0636f f15695c17c75dcab85d94f9be9a93378da88cdf8d1c4685115a260c61b823702
+default drop http://icedtea.classpath.org/download/drops/icedtea7/@ICEDTEA_RELEASE@ 904317834a25 b5d129a569016dadd359b7aa7b28b4832476b3eec2aafe42e21f1c9fd85f18de
