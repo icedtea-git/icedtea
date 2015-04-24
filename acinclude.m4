@@ -55,9 +55,9 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       ARCHFLAG="-m64"
        ;;
     powerpc64le)
-      BUILD_ARCH_DIR=ppc64
-      INSTALL_ARCH_DIR=ppc64
-      JRE_ARCH_DIR=ppc64
+      BUILD_ARCH_DIR=ppc64le
+      INSTALL_ARCH_DIR=ppc64le
+      JRE_ARCH_DIR=ppc64le
       ARCHFLAG="-m64"
        ;;
     sparc)
@@ -723,7 +723,7 @@ AC_DEFUN_ONCE([IT_ENABLE_ZERO_BUILD],
     arm|i386|ppc|s390|sh|sparc)
       ZERO_BITSPERWORD=32
       ;;
-    aarch64|alpha|amd64|ia64|ppc64|s390x|sparcv9)
+    aarch64|alpha|amd64|ia64|ppc64|ppc64le|s390x|sparcv9)
       ZERO_BITSPERWORD=64
       ;;
     *)
@@ -2126,19 +2126,27 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_GIO],
   if test x"${ENABLE_SYSTEM_GIO}" = "xyes"; then
     dnl Check for Gio+ headers and libraries.
     PKG_CHECK_MODULES(GIO, gio-2.0,[GIO_FOUND=yes],[GIO_FOUND=no])
+    if test "x${GIO_FOUND}" = xno; then
+      AC_MSG_ERROR([Could not find GIO; install GIO or build with --disable-system-gio to use the in-tree headers.])
+    fi
     OLD_LIBS=${LIBS}
     LIBS="${LIBS} ${GIO_LIBS}"
     AC_CHECK_FUNC([g_settings_new],[GIO_FUNC_FOUND=yes],[GIO_FUNC_FOUND=no])
     LIBS=${OLD_LIBS}
-    if test "x${GIO_FOUND}" = xno -o "x${GIO_FUNC_FOUND}" = xno; then
-      AC_MSG_ERROR([Could not find GIO; install GIO or build with --disable-system-gio to use the in-tree headers.])
+    if test "x${GIO_FUNC_FOUND}" = xno; then
+      AC_MSG_WARN([Could not find GSettings API; native proxy support will use GConf])
+      ENABLE_SYSTEM_GSETTINGS=false
+    else
+      ENABLE_SYSTEM_GSETTINGS=true
     fi
     AC_SUBST(GIO_CFLAGS)
     AC_SUBST(GIO_LIBS)
     ENABLE_SYSTEM_GIO=true
   fi
   AM_CONDITIONAL(USE_SYSTEM_GIO, test x"${ENABLE_SYSTEM_GIO}" = "xtrue")
+  AM_CONDITIONAL(USE_SYSTEM_GSETTINGS, test x"${ENABLE_SYSTEM_GSETTINGS}" = "xtrue")
   AC_SUBST(ENABLE_SYSTEM_GIO)
+  AC_SUBST(ENABLE_SYSTEM_GSETTINGS)
 ])
 
 AC_DEFUN_ONCE([IT_CHECK_FOR_FONTCONFIG],

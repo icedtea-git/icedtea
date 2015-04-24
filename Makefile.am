@@ -514,6 +514,7 @@ ICEDTEA_ENV = \
 	GTK_LIBS="${GTK_LIBS}" \
 	GTK_CFLAGS="${GTK_CFLAGS}" \
 	SYSTEM_GIO="${ENABLE_SYSTEM_GIO}" \
+	SYSTEM_GSETTINGS="${ENABLE_SYSTEM_GSETTINGS}" \
 	GIO_LIBS="${GIO_LIBS}" \
 	GIO_CFLAGS="${GIO_CFLAGS}" \
 	SYSTEM_FONTCONFIG="${ENABLE_SYSTEM_FONTCONFIG}" \
@@ -1623,9 +1624,9 @@ endif
 	else \
 	  ln -sfv $(STAGE1_BOOT_RUNTIME) $(STAGE1_BOOT_DIR)/lib/tools.jar ; \
 	fi
-# Workaround some older ppc64le builds installing to 'ppc64le' rather than 'ppc64'
-	if test -d $(SYSTEM_JDK_DIR)/jre/lib/ppc64le ; then \
-	  ln -sfv $(SYSTEM_JDK_DIR)/jre/lib/ppc64le \
+# Workaround some older ppc64le builds installing to 'ppc64' rather than 'ppc64le'
+	if test -d $(SYSTEM_JDK_DIR)/jre/lib/ppc64 ; then \
+	  ln -sfv $(SYSTEM_JDK_DIR)/jre/lib/ppc64 \
 	    $(STAGE1_BOOT_DIR)/jre/lib/$(JRE_ARCH_DIR) ; \
 	else \
 	  ln -sfv $(SYSTEM_JDK_DIR)/jre/lib/$(JRE_ARCH_DIR) \

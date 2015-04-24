@@ -1,3 +1,20 @@
+2015-04-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Update build following PR2233 & PR2236.
+	* Makefile.am:
+	(ICEDTEA_ENV): Set SYSTEM_GSETTINGS.
+	(bootstrap-directory-stage1): Update ppc64le
+	workaround for 2.5.x ppc64 -> 2.6.x ppc64le
+	transition rather than 2.4.x ppc64le -> 2.5.x
+	ppc64 transition.
+	* acinclude.m4:
+	(IT_SET_ARCH_SETTINGS): Update powerpc64le
+	to use ppc64le for arch directory.
+	(IT_ENABLE_ZERO_BUILD): Include ppc64le in
+	ZERO_LIBARCH test, as ZERO_LIBARCH is based
+	on INSTALL_ARCH_DIR.
+	(IT_CHECK_FOR_GIO): Make GSettings API optional.
+
 2015-04-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add 2.5.5 release notes.
