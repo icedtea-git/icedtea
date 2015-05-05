@@ -1,3 +1,36 @@
+2013-06-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1277: Synchronise CACAO rules between IcedTea6/7/8
+	where possible
+	* NEWS: Updated.
+
+2011-02-23  Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	(IT_WITH_CACAO_SRC_DIR): Renamed from
+	IT_CHECK_WITH_CACAO_SRC_DIR.
+	* configure.ac: Synchronise naming.
+
+2011-02-21  Andrew John Hughes  <ahughes@redhat.com>
+
+	Ensure all our macros have an IT_ prefix.
+	* acinclude.m4:
+	(IT_CHECK_WITH_CACAO_SRC_DIR): Renamed from
+	AC_CHECK_WITH_CACAO_SRC_DIR.
+	* configure.ac: Synchronise naming.
+
+2010-01-16 Andrew John Hughes  <ahughes@redhat.com>
+
+	* acinclude.m4:
+	(AC_CHECK_WITH_CACAO_SRC_DIR): Quote checking
+	output.
+
+2009-10-01  Robert Schuster  <robertschuster@fsfe.org>
+
+	* configure.ac: Added --with-cacao-src-dir option.
+	* acinclude: New macro AC_CHECK_WITH_CACAO_SRC_DIR.
+	* Makefile.am: Copy Cacao sources when USE_ALT_CACAO_SRC_DIR is used.
+
 2010-11-11  Stefan Ring  <stefan@complang.tuwien.ac.at>
 
 	* Makefile.am: Upgrade CACAO version,
