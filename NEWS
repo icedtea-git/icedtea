@@ -59,6 +59,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2248: HotSpot tarball fails verification after download
   - PR2256: Add SystemTap tests
   - PR2257: clean-extract-nashorn rule is never run
+  - PR2329: jamvm parallel unpack failures
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck

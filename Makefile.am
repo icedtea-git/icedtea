@@ -1078,7 +1078,7 @@ endif
 clean-extract-cacao: clean-cacao
 	rm -f stamps/extract-cacao.stamp
 
-stamps/extract-jamvm.stamp:
+stamps/extract-jamvm.stamp: stamps/download-jamvm.stamp
 if BUILD_JAMVM
 	set -e ; \
 	if ! test -d jamvm ; \
