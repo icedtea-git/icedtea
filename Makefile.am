@@ -223,7 +223,6 @@ ICEDTEA_PATCHES = \
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
-	patches/cacao/6714758.patch \
 	patches/cacao/memory.patch
 endif
 
@@ -1063,7 +1062,7 @@ else
 	if ! test -d cacao/cacao ; \
 	then \
 	  mkdir cacao ; \
-	  $(TAR) xjf $(CACAO_SRC_ZIP) -C cacao ; \
+	  $(TAR) xzf $(CACAO_SRC_ZIP) -C cacao ; \
 	  dir=$$(basename cacao/cacao-*) ; \
 	  ln -s $$dir cacao/cacao ; \
 	  cd cacao/cacao ; \
@@ -1084,7 +1083,7 @@ if BUILD_JAMVM
 	if ! test -d jamvm ; \
 	then \
 	  mkdir jamvm ; \
-	  $(TAR) xf $(JAMVM_SRC_ZIP) -C jamvm ; \
+	  $(TAR) xzf $(JAMVM_SRC_ZIP) -C jamvm ; \
 	  dir=$$(basename jamvm/jamvm-*) ; \
 	  ln -s $$dir jamvm/jamvm ; \
 	fi

@@ -1,3 +1,12 @@
+2011-10-19  Andrew John Hughes  <ahughes@redhat.com>
+
+	* patches/cacao/6714758.patch:
+	Removed; upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Drop above patch.
+	(extract-cacao): Use gzip not bzip2.
+	(extract-jamvm): Explicitly use gzip.
+
 2013-02-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
