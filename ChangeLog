@@ -1,3 +1,14 @@
+2013-01-23  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	CA172, PR2330, G453612: Add ARM hardfloat support
+	to CACAO on Gentoo.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add armhf patch when building
+	CACAO.
+	* NEWS: Updated, adding CACAO section.
+	* patches/cacao/armhf.patch:
+	Patch to enable hardfloat on triplet used by Gentoo.
+
 2011-10-19  Andrew John Hughes  <ahughes@redhat.com>
 
 	* patches/cacao/6714758.patch:

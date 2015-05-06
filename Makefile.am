@@ -223,7 +223,8 @@ ICEDTEA_PATCHES = \
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
-	patches/cacao/memory.patch
+	patches/cacao/memory.patch \
+	patches/cacao/armhf.patch
 endif
 
 if ENABLE_CACAO
