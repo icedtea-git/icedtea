@@ -1,0 +1,75 @@
+# HG changeset patch
+# User Xerxes Rånby <xerxes@gudinna.com>
+# Date 1414362363 -3600
+# Node ID ec6bd33b3e927738d1353e6e639e76f74d55635f
+# Parent  ea3c9a40d975430d1e9dcb598bf25b4bd7aec4ca
+OpenJDK: Implement JVM_FindClassFromCaller
+
+8015256: Better class accessibility
+Summary: Improve protection domain check in forName()
+
+* contrib/mapfile-vers-product: Export said function.
+* src/native/vm/openjdk/jvm.cpp (JVM_FindClassFromCaller): Implement it.
+
+diff --git a/contrib/mapfile-vers-product b/contrib/mapfile-vers-product
+--- cacao/cacao/contrib/mapfile-vers-product
++++ cacao/cacao/contrib/mapfile-vers-product
+@@ -87,6 +87,7 @@
+                 JVM_Exit;
+                 JVM_FillInStackTrace;
+                 JVM_FindClassFromBootLoader;
++                JVM_FindClassFromCaller;
+                 JVM_FindClassFromClass;
+                 JVM_FindClassFromClassLoader;
+                 JVM_FindLibraryEntry;
+--- cacao/cacao/src/native/vm/openjdk/jvm.cpp.orig	2014-10-29 16:40:30.732305204 +0000
++++ cacao/cacao/src/native/vm/openjdk/jvm.cpp	2014-10-29 16:44:06.643292016 +0000
+@@ -684,6 +684,48 @@
+ }
+ 
+ 
++/* JVM_FindClassFromCaller
++ * Find a class from a given class loader.  Throws ClassNotFoundException.
++ *  name:   name of class
++ *  init:   whether initialization is done
++ *  loader: class loader to look up the class.
++ *          This may not be the same as the caller's class loader.
++ *  caller: initiating class. The initiating class may be null when a security
++ *          manager is not installed.
++ *
++ * Find a class with this name in this loader,
++ * using the caller's "protection domain".
++ */
++
++jclass JVM_FindClassFromCaller(JNIEnv* env, const char* name, jboolean init, jobject loader, jclass caller)
++{
++	classinfo     *c;
++	utf           *u;
++	classloader_t *cl;
++
++	TRACEJVMCALLS(("JVM_FindClassFromCaller(name=%s, init=%d, loader=%p, caller=%p)", name, init, loader, caller));
++
++	u  = utf_new_char(name);
++	cl = loader_hashtable_classloader_add((java_handle_t *) loader);
++
++	/* XXX The caller's protection domain should be used during
++	   the load_class_from_classloader but there is no specification or
++	   unit-test in OpenJDK documenting the desired effect */
++
++	c = load_class_from_classloader(u, cl);
++
++	if (c == NULL)
++		return NULL;
++
++	if (init)
++		if (!(c->state & CLASS_INITIALIZED))
++			if (!initialize_class(c))
++				return NULL;
++
++	return (jclass) LLNI_classinfo_wrap(c);
++}
++
++
+ /* JVM_FindClassFromClassLoader */
+ 
+ jclass JVM_FindClassFromClassLoader(JNIEnv* env, const char* name, jboolean init, jobject loader, jboolean throwError)
