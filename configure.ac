@@ -102,6 +102,7 @@ IT_FIND_JAVAH
 IT_FIND_JAR
 IT_FIND_RMIC
 IT_FIND_NATIVE2ASCII
+IT_USING_CACAO
 if test "x$enable_bootstrap" = "xyes"; then
   IT_FIND_ECJ_JAR
   IT_FIND_TOOL([XSLTPROC], [xsltproc])

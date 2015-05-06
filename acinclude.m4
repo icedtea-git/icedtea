@@ -1998,6 +1998,21 @@ AC_DEFUN_ONCE([IT_WITH_PAX],
   AC_SUBST(PAX_COMMAND_ARGS)
 ])
 
+AC_DEFUN([IT_USING_CACAO],[
+  AC_REQUIRE([IT_FIND_JAVA])
+  AC_CACHE_CHECK([if we are using CACAO as the build VM], it_cv_cacao, [
+  if $JAVA -version 2>&1| grep '^CACAO' >&AS_MESSAGE_LOG_FD ; then
+    it_cv_cacao=yes;
+  else
+    it_cv_cacao=no;
+  fi
+  ])
+  USING_CACAO=$it_cv_cacao
+  AC_SUBST(USING_CACAO)
+  AM_CONDITIONAL(USING_CACAO, test "x${USING_CACAO}" = "xyes")
+  AC_PROVIDE([$0])dnl
+])
+
 AC_DEFUN([IT_ENABLE_JAR_COMPRESSION],
 [
   AC_MSG_CHECKING([whether to enable JAR compression])
