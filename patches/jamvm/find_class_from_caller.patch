@@ -1,0 +1,93 @@
+diff -Nru jamvm.old/src/classlib/openjdk/class.c jamvm/src/classlib/openjdk/class.c
+--- jamvm/jamvm.old/src/classlib/openjdk/class.c	2013-11-18 03:45:44.000000000 +0000
++++ jamvm/jamvm/src/classlib/openjdk/class.c	2015-01-07 16:14:57.599311159 +0000
+@@ -23,6 +23,7 @@
+ #include "jam.h"
+ #include "hash.h"
+ #include "class.h"
++#include "excep.h"
+ #include "symbol.h"
+ 
+ /* Cached offset of classes field in java.lang.ClassLoader objects */
+@@ -161,3 +162,24 @@
+ 
+     return strcat(strcpy(endorsed_dirs, java_home), "/lib/endorsed");
+ }
++
++Class *findClassFromLoader(char *name, int init, Object *loader,
++                           int throw_error) {
++
++    Class *class = findClassFromClassLoader(name, loader);
++
++    if(class == NULL) {
++        if(!throw_error) {
++            Object *excep = exceptionOccurred();
++            char *dot_name = slash2DotsDup(name);
++
++            clearException();
++            signalChainedException(java_lang_ClassNotFoundException,
++                                   dot_name, excep);
++            sysFree(dot_name);
++        }
++    } else if(init)
++        initClass(class);
++
++    return class;
++}
+diff -Nru jamvm.old/src/classlib/openjdk/jvm.c jamvm/src/classlib/openjdk/jvm.c
+--- jamvm/jamvm.old/src/classlib/openjdk/jvm.c	2013-11-18 03:45:44.000000000 +0000
++++ jamvm/jamvm/src/classlib/openjdk/jvm.c	2015-01-07 16:16:43.560605105 +0000
+@@ -520,26 +520,22 @@
+ jclass JVM_FindClassFromClassLoader(JNIEnv *env, const char *name,
+                                     jboolean init, jobject loader,
+                                     jboolean throw_error) {
+-    Class *class;
+ 
+     TRACE("JVM_FindClassFromClassLoader(env=%p, name=%s, init=%d, loader=%p,"
+           " throwError=%d)", env, name, init, loader, throwError);
+ 
+-    class = findClassFromClassLoader((char *)name, loader);
++    return findClassFromLoader((char *)name, init, loader, throw_error);
++}
++
++/* JVM_FindClassFromCaller */
++
++jclass JVM_FindClassFromCaller(JNIEnv *env, const char *name, jboolean init,
++                               jobject loader, jclass caller) {
+ 
+-    if(class == NULL && !throw_error) {
+-        Object *excep = exceptionOccurred();
+-        char *dot_name = slash2DotsDup((char*)name);
+-
+-        clearException();
+-        signalChainedException(java_lang_ClassNotFoundException,
+-                               dot_name, excep);
+-        sysFree(dot_name);
+-    } else
+-        if(init)
+-            initClass(class);
++    TRACE("JVM_FindClassFromCaller(env=%p, name=%s, init=%d, loader=%p,"
++          " caller=%p)", env, name, init, loader, caller);
+ 
+-    return class;
++    return findClassFromLoader((char *)name, init, loader, FALSE);
+ }
+ 
+ 
+diff -Nru jamvm.old/src/classlib/openjdk/openjdk.h jamvm/src/classlib/openjdk/openjdk.h
+--- jamvm/jamvm.old/src/classlib/openjdk/openjdk.h	2013-11-18 03:45:44.000000000 +0000
++++ jamvm/jamvm/src/classlib/openjdk/openjdk.h	2015-01-07 16:14:57.599311159 +0000
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2010, 2011, 2013 Robert Lougher <rob@jamvm.org.uk>.
++ * Copyright (C) 2010, 2011, 2013, 2014 Robert Lougher <rob@jamvm.org.uk>.
+  *
+  * This file is part of JamVM.
+  *
+@@ -53,3 +53,6 @@
+ extern Object *resolveMemberName(Class *mh_class, Object *mname);
+ 
+ extern Object *getMethodParameters(Object *method);
++
++extern Class *findClassFromLoader(char *name, int init, Object *loader,
++                                  int throw_error);

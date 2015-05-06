@@ -1,5 +1,17 @@
-2014-10-29  Andrew John Hughes  <gnu.andrew@redhat.com>
+2015-01-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2336: JamVM lacks JVM_FindClassFromCaller
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new patch when building
+	JamVM.
+	(EXTRA_DIST): Include patches from JamVM directory.
+	* NEWS: Updated.
+	* patches/jamvm/find_class_from_caller.patch:
+	Backport JamVM patch to implement FindClassFromCaller.
+
+2014-10-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2335: CACAO lacks JVM_FindClassFromCaller
 	* Makefile.am:
 	(ICEDTEA_PATCHES): Add new patch for CACAO
 	builds.

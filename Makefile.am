@@ -247,6 +247,11 @@ if ENABLE_SYSTEMTAP
 ICEDTEA_PATCHES += patches/systemtap-gcc-4.5.patch
 endif
 
+if BUILD_JAMVM
+ICEDTEA_PATCHES += \
+	patches/jamvm/find_class_from_caller.patch
+endif
+
 if ENABLE_NSS
 ICEDTEA_PATCHES += patches/nss-config.patch
 else
@@ -489,6 +494,7 @@ PULSEAUDIO_SRCS = $(top_srcdir)/pulseaudio/src/java/org/classpath/icedtea/pulsea
 
 EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
+	$(top_srcdir)/patches/jamvm/*.patch \
 	tools-copy contrib overlays \
 	javaws.png javaws.desktop \
 	jconsole.desktop policytool.desktop \

@@ -89,12 +89,13 @@ New in release 3.0.0 (2014-XX-XX):
   - JSR 292: correct intrinsic cache COMPARE function
   - Race condition in setting up imethod table
   - GC: Minor performance improvement
+  - PR2336: JamVM lacks JVM_FindClassFromCaller
 * CACAO
   - PR1277: Synchronise CACAO rules between IcedTea6/7/8 where possible
   - PR1279: Synchronise CACAO versions between IcedTea6/7/8 where possible
   - CA172, PR2330, G453612: Add ARM hardfloat support to CACAO on Gentoo
   - PR2331: IcedTea8 fails to build with IcedTea7 CACAO due to low max heap size
-  - PR2335: CACAO lacks JVM_FindClassFromCaller introduced by security patch in 2.5.3
+  - PR2335: CACAO lacks JVM_FindClassFromCaller
 
 New in release 2.0 (2011-XX-XX):
 
