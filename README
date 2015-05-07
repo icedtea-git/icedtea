@@ -6,7 +6,7 @@ openjdk.java.net using Free Software tools and dependencies.
 
 IcedTea addresses two problems: it eliminates the build requirement on
 proprietary build tools and provides additional patches and features
-(such as Javascript support via Rhino) not available in OpenJDK.
+not available in OpenJDK.
 
 IcedTea also provides build scripts and patches that fix a number of issues
 which are as yet unresolved upstream.

@@ -1,3 +1,30 @@
+2015-05-06  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR1341: Remove Rhino support
+	* rewriter/agpl-3.0.txt,
+	* rewriter/com/redhat/rewriter/ClassRewriter.java:
+	Removed.
+	* INSTALL: Remove references to Rhino.
+	* Makefile.am:
+	(REWRITER_BUILD_DIR): Removed.
+	(REWRITER_SRCS): Likewise.
+	(ICEDTEA_ENV): Drop RHINO_JAR.
+	(EXTRA_DIST): Remove REWRITER_SRCS and agpl-3.0.txt.
+	(clean-local): Drop clean-rewrite-rhino and clean-rewriter.
+	(icedtea-configure): Don't depend on rewrite-rhino.
+	(icedtea-debug-configure): Likewise.
+	(icedtea-boot-configure): Likewise.
+	(rewriter): Removed.
+	(clean-rewriter): Likewise.
+	(rewrite-rhino): Likewise.
+	(clean-rewrite-rhino): Likewise.
+	* NEWS: Updated.
+	* README: Remove references to Rhino.
+	* acinclude.m4:
+	(IT_FIND_RHINO_JAR): Removed.
+	* configure.ac:
+	Don't invoke IT_FIND_RHINO_JAR.
+
 2015-01-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2336: JamVM lacks JVM_FindClassFromCaller

@@ -29,6 +29,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR1289: Allow JARs to be optionally compressed by setting COMPRESS_JARS
   - PR1291: Ensure unlimited crypto policy is in place.
   - PR1325: Only add classes to rt-source-files.txt if actually needed
+  - PR1341: Remove Rhino support
   - PR1346: Filter out -j option to make
   - PR1347: Update list of checked JDKs
   - PR1348: java -version output is broken

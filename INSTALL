@@ -27,7 +27,6 @@ giflib-devel
 libpng-devel
 libjpeg-devel >= 6b
 zlib-devel
-rhino (can be disabled using --without-rhino)
 libffi (for --enable-zero or on archs other than x86/x86_64/sparc)
 pulseaudio-libs-devel >= 0.9.11 (for --enable-pulse-java)
 LLVM 2.5 or later (for --enable-shark)
@@ -184,7 +183,6 @@ These are documented fully in the relevant section below.
 * --enable-shark: Build the Shark LLVM-based JIT.
 * --enable-zero: Build the zero assembler port on x86/x86_64/sparc platforms.
 * --with-hotspot-build: The HotSpot to use, defaulting to 'original' i.e. hs14 as bundled with OpenJDK.
-* --with-rhino: Include Javascript support using Rhino.
 * --with-additional-vms=vm-list: Additional VMs to build using the system described
   below.
 
@@ -320,25 +318,6 @@ of the requested build.
 
 Currently, IcedTea7 only supports the 'original' HotSpot provided as
 part of the upstream IcedTea forest.
-
-Javascript Support
-==================
-
-IcedTea7 adds Javascript support via the javax.script API by using
-an existing installation of Rhino.  Support is enabled by default,
-with the following locations being searched for a Rhino JAR file:
-
-* /usr/share/java/rhino.jar
-* /usr/share/java/js.jar
-* /usr/share/rhino-1.6/lib/js.jar
-
-A JAR file can instead be specified using the --with-rhino option,
-or support may be disabled by specifying --without-rhino.
-
-Note that the final installed JAR file is a modified version with the
-namespace prefixed by 'sun.' as in the proprietary Oracle JDK.  This
-avoids conflicts between the JDK's copy of Rhino and any used by other
-applications.
 
 Building Additional Virtual Machines
 ====================================

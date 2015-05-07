@@ -59,7 +59,6 @@ BUILD_JRE_ARCH_DIR = $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 BUILD_DEBUG_IMAGE_DIR = $(DEBUG_BUILD_OUTPUT_DIR)/images
 BUILD_DEBUG_JRE_ARCH_DIR = $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 BUILD_BOOT_IMAGE_DIR = $(BOOT_BUILD_OUTPUT_DIR)/images
-REWRITER_BUILD_DIR = $(abs_top_builddir)/rewriter.build
 STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
 STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
 JAMVM_IMPORT_PATH = $(abs_top_builddir)/jamvm/install/hotspot
@@ -209,7 +208,6 @@ OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
 
 # Sources list
 
-REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 CRYPTO_CHECK_SRCS = $(top_srcdir)/TestCryptoLevel.java
 
 # Patch list
@@ -353,11 +351,6 @@ endif
 if HAS_HOTSPOT_REVISION
 ICEDTEA_ENV += \
 	HOTSPOT_BUILD_VERSION="$(HOTSPOT_REVISION)"
-endif
-
-if WITH_RHINO
-ICEDTEA_ENV += \
-	RHINO_JAR="$(abs_top_builddir)/rhino/rhino.jar"
 endif
 
 if USE_SYSTEM_LCMS
@@ -505,8 +498,6 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	tapset/hotspot_jni.stp.in \
 	scripts/jni_create_stap.c \
 	scripts/jni_desc \
-	rewriter/agpl-3.0.txt \
-	$(REWRITER_SRCS) \
 	THANKYOU test/tapset \
 	$(CRYPTO_CHECK_SRCS)
 
@@ -530,8 +521,7 @@ clean-local: clean-tests clean-pulse-java \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
  clean-extract clean-native-ecj clean-icedtea-stage2 \
  clean-icedtea-debug-stage2 clean-icedtea-stage1 clean-add-zero clean-add-zero-debug \
- clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter \
- clean-cryptocheck
+ clean-add-cacao clean-add-cacao-debug clean-rt clean-cryptocheck
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -1471,8 +1461,7 @@ clean-bootstrap-directory-symlink-stage2:
 # you change it in the icedtea-debug target as well.
 stamps/icedtea-configure.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
- stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp \
- stamps/jamvm.stamp
+ stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/jamvm.stamp
 	mkdir -p $(BUILD_OUTPUT_DIR)
 	cd $(BUILD_OUTPUT_DIR) && \
 	$(SHELL) $(abs_top_builddir)/openjdk/configure $(ICEDTEA_CONFIGURE)
@@ -1544,8 +1533,7 @@ endif
 
 stamps/icedtea-debug-configure.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
- stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/rewrite-rhino.stamp \
- stamps/jamvm.stamp
+ stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/jamvm.stamp
 	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)
 	cd $(DEBUG_BUILD_OUTPUT_DIR) && \
 	$(SHELL) $(abs_top_builddir)/openjdk/configure $(ICEDTEA_CONFIGURE) \
@@ -1700,8 +1688,7 @@ clean-icedtea-debug-stage2: clean-add-jamvm-debug clean-check-crypto-debug \
 # ===================
 
 stamps/icedtea-boot-configure.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
- stamps/download.stamp $(OPENJDK_BOOT_TREE) stamps/cacao.stamp \
- stamps/rewrite-rhino.stamp stamps/jamvm.stamp
+ stamps/download.stamp $(OPENJDK_BOOT_TREE) stamps/cacao.stamp stamps/jamvm.stamp
 	mkdir -p $(BOOT_BUILD_OUTPUT_DIR)
 	cd $(BOOT_BUILD_OUTPUT_DIR) && \
 	$(SHELL) $(abs_top_builddir)/openjdk-boot/configure $(ICEDTEA_CONFIGURE_BOOT)
@@ -1852,52 +1839,6 @@ clean-pulse-java:
 	rm -f stamps/pulse-java*.stamp
 
 # end of pulse-java
-
-# Rhino support
-
-stamps/rewriter.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
-if WITH_RHINO
-	mkdir -p $(REWRITER_BUILD_DIR)
-	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
-	 -d $(REWRITER_BUILD_DIR) $(REWRITER_SRCS)
-endif
-	mkdir -p stamps
-	touch stamps/rewriter.stamp
-
-clean-rewriter:
-	rm -rf $(REWRITER_BUILD_DIR)
-	rm -f stamps/rewriter.stamp
-
-stamps/rewrite-rhino.stamp: stamps/rewriter.stamp $(RHINO_JAR)
-if WITH_RHINO
-	mkdir -p rhino/rhino.{old,new} && \
-	(cd rhino/rhino.old && $(BOOT_DIR)/bin/jar xf $(RHINO_JAR)) && \
-	$(BOOT_DIR)/bin/java -cp $(REWRITER_BUILD_DIR) \
-	  com.redhat.rewriter.ClassRewriter \
-	  $(abs_top_builddir)/rhino/rhino.old $(abs_top_builddir)/rhino/rhino.new \
-	  org.mozilla sun.org.mozilla && \
-	(cd rhino/rhino.old && \
-	 for files in `find -type f -not -name '*.class'` ; do \
-	   new_file=../rhino.new/`echo $$files|sed -e 's#org#sun/org#'` ; \
-	   mkdir -p `dirname $$new_file` ; \
-	   cp -v $$files $$new_file ; \
-	   sed -ie 's#org\.mozilla#sun.org.mozilla#g' $$new_file ; \
-	 done \
-	) && \
-	(cd rhino/rhino.new && \
-	 $(BOOT_DIR)/bin/jar cfm ../rhino.jar META-INF/MANIFEST.MF sun )
-endif
-	mkdir -p stamps
-	touch stamps/rewrite-rhino.stamp
-
-clean-rewrite-rhino:
-	rm -rf rhino/rhino.old
-	rm -rf rhino/rhino.new
-	rm -f rhino/rhino.jar
-	if [ -e rhino ] ; then \
-	  rmdir rhino ; \
-	fi
-	rm -f stamps/rewrite-rhino.stamp
 
 # JamVM
 
@@ -2416,10 +2357,6 @@ patch-boot: stamps/patch-boot.stamp
 patch-fsg: stamps/patch-fsg.stamp
 
 pulse-java: $(PULSE_JAVA_TARGET)
-
-rewriter: stamps/rewriter.stamp
-
-rewrite-rhino: stamps/rewrite-rhino.stamp
 
 rt: stamps/rt.stamp
 
