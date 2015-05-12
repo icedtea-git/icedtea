@@ -1098,65 +1098,6 @@ AC_DEFUN([IT_CHECK_FOR_JDK],
   AC_SUBST(SYSTEM_JDK_DIR)
 ])
 
-AC_DEFUN([IT_JAVAH],[
-AC_CACHE_CHECK([if $JAVAH exhibits Classpath bug 39408], it_cv_cp39408_javah, [
-SUPERCLASS=Test.java
-SUBCLASS=TestImpl.java
-SUB=$(echo $SUBCLASS|sed 's#\.java##')
-SUBHEADER=$(echo $SUBCLASS|sed 's#\.java#.h#')
-mkdir tmp.$$
-cd tmp.$$
-cat << \EOF > $SUPERCLASS
-/* [#]line __oline__ "configure" */
-public class Test 
-{
-  public static final int POTATO = 0;
-  public static final int CABBAGE = 1;
-}
-EOF
-cat << \EOF > $SUBCLASS
-/* [#]line __oline__ "configure" */
-public class TestImpl
-  extends Test
-{
-  public native void doStuff();
-}
-EOF
-if $JAVAC -cp . $JAVACFLAGS $SUBCLASS >&AS_MESSAGE_LOG_FD 2>&1; then
-  if $JAVAH -classpath . $SUB >&AS_MESSAGE_LOG_FD 2>&1; then
-    if cat $SUBHEADER | grep POTATO >&AS_MESSAGE_LOG_FD 2>&1; then
-      it_cv_cp39408_javah=no;
-    else
-      it_cv_cp39408_javah=yes;
-    fi
-  else
-    AC_MSG_ERROR([The Java header generator $JAVAH failed])
-    echo "configure: failed program was:" >&AC_FD_CC
-    cat $SUBCLASS >&AC_FD_CC
-  fi
-else
-  AC_MSG_ERROR([The Java compiler $JAVAC failed])
-  echo "configure: failed program was:" >&AC_FD_CC
-  cat $SUBCLASS >&AC_FD_CC
-fi
-])
-AC_CACHE_CHECK([if $JAVAH exhibits Classpath bug 40188], it_cv_cp40188_javah, [
-  if test -e $SUBHEADER ; then
-    if cat $SUBHEADER | grep TestImpl_POTATO >&AS_MESSAGE_LOG_FD 2>&1; then
-      it_cv_cp40188_javah=no;
-    else
-      it_cv_cp40188_javah=yes;
-    fi
-  fi
-])
-rm -f $SUBCLASS $SUPERCLASS $SUBHEADER *.class
-cd ..
-rmdir tmp.$$
-AM_CONDITIONAL([CP39408_JAVAH], test x"${it_cv_cp39408_javah}" = "xyes")
-AM_CONDITIONAL([CP40188_JAVAH], test x"${it_cv_cp40188_javah}" = "xyes")
-AC_PROVIDE([$0])dnl
-])
-
 AC_DEFUN([IT_CHECK_ADDITIONAL_VMS],
 [
 AC_MSG_CHECKING([for additional virtual machines to build])
@@ -1209,85 +1150,6 @@ if test "x${ADD_ZERO_BUILD_TRUE}" = x && test "x${abs_top_builddir}" = "x${abs_t
 fi
 ])
 
-AC_DEFUN([IT_LIBRARY_CHECK],[
-AC_CACHE_CHECK([if java.io.PrintStream is missing the 1.5 constructors (PR40616)], it_cv_cp40616, [
-CLASS=Test.java
-BYTECODE=$(echo $CLASS|sed 's#\.java##')
-mkdir tmp.$$
-cd tmp.$$
-cat << \EOF > $CLASS
-[/* [#]line __oline__ "configure" */
-import java.io.File;
-import java.io.PrintStream;
-
-public class Test 
-{
-  public static void main(String[] args)
-  throws Exception
-  {
-    PrintStream p = new PrintStream(new File("bluh"), "UTF-8");
-    p.close();
-  }
-}]
-EOF
-if $JAVAC -cp . $JAVACFLAGS $CLASS >&AS_MESSAGE_LOG_FD 2>&1 ; then
-  if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1 ; then
-    it_cv_cp40616=no;
-  else
-    it_cv_cp40616=yes;
-  fi
-else
-  it_cv_cp40616=yes;
-fi
-])
-rm -f $CLASS *.class bluh
-cd ..
-rmdir tmp.$$
-AM_CONDITIONAL([CP40616], test x"${it_cv_cp40616}" = "xyes")
-AC_PROVIDE([$0])dnl
-])
-
-AC_DEFUN([IT_PR40630_CHECK],[
-if test "x${it_cv_JAVA_UTIL_SCANNER}" = "xno"; then
-  AC_CACHE_CHECK([if java.util.Scanner exhibits Classpath bug 40630], it_cv_cp40630, [
-  CLASS=Test.java
-  BYTECODE=$(echo $CLASS|sed 's#\.java##')
-  mkdir tmp.$$
-  cd tmp.$$
-  cat << \EOF > $CLASS
-[/* [#]line __oline__ "configure" */
-import java.util.Scanner;
-
-public class Test 
-{
-  public static void main(String[] args)
-  throws Exception
-  {
-    Scanner s = new Scanner("Blah\nBlah\n\nBlah\n\n");
-    for (int i = 0; i < 5; ++i)
-      s.nextLine();
-    s.hasNextLine();
-  }
-}]
-EOF
-  if $JAVAC -cp . $JAVACFLAGS $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
-    if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1; then
-      it_cv_cp40630=no;
-    else
-      it_cv_cp40630=yes;
-    fi
-  else
-    it_cv_cp40630=yes;
-  fi
-  rm -f $CLASS *.class
-  cd ..
-  rmdir tmp.$$
-  ])
-fi
-AM_CONDITIONAL([CP40630], test x"${it_cv_cp40630}" = "xyes")
-AC_PROVIDE([$0])dnl
-])
-
 AC_DEFUN([IT_USING_ECJ],[
 AC_CACHE_CHECK([if we are using ecj as javac], it_cv_ecj, [
 if $JAVAC -version 2>&1| grep '^Eclipse' >&AS_MESSAGE_LOG_FD ; then
@@ -1316,37 +1178,6 @@ AC_DEFUN([IT_CHECK_ENABLE_WARNINGS],
   AC_MSG_RESULT(${ENABLE_WARNINGS})
   AM_CONDITIONAL(ENABLE_WARNINGS, test x"${ENABLE_WARNINGS}" = "xyes")
   AC_SUBST(ENABLE_WARNINGS)
-])
-
-AC_DEFUN([IT_WITH_TZDATA_DIR],
-[
-  DEFAULT="/usr/share/javazi"
-  AC_MSG_CHECKING([which Java timezone data directory to use])
-  AC_ARG_WITH([tzdata-dir],
-	      [AS_HELP_STRING([--with-tzdata-dir[[=DIR]]],set the Java timezone data directory [[DIR=/usr/share/javazi]])],
-  [
-    if test "x${withval}" = x || test "x${withval}" = xyes; then
-      TZDATA_DIR_SET=yes
-      TZDATA_DIR="${DEFAULT}"
-    else
-      if test "x${withval}" = xno; then
-        TZDATA_DIR_SET=no
-        AC_MSG_RESULT([no])
-      else
-        TZDATA_DIR_SET=yes
-        TZDATA_DIR="${withval}"
-      fi
-    fi
-  ],
-  [ 
-    TZDATA_DIR="${DEFAULT}"
-  ])
-  if test "x${TZDATA_DIR}" != "x"; then
-    AC_MSG_RESULT([${TZDATA_DIR}])
-  fi
-  AC_SUBST([TZDATA_DIR])
-  AM_CONDITIONAL(WITH_TZDATA_DIR, test "x${TZDATA_DIR}" != "x")
-  AC_CONFIG_FILES([tz.properties])
 ])
 
 dnl Generic macro to check for a Java class
@@ -1399,80 +1230,6 @@ AC_DEFUN([IT_FIND_NUMBER_OF_PROCESSORS],[
     fi
   ])
   AC_PROVIDE([$0])dnl
-])
-
-AC_DEFUN([IT_GETDTDTYPE_CHECK],[
-  AC_CACHE_CHECK([if javax.xml.stream.events.Attribute.getDTDType() wrongly returns a QName], it_cv_dtdtype, [
-  CLASS=Test.java
-  BYTECODE=$(echo $CLASS|sed 's#\.java##')
-  mkdir tmp.$$
-  cd tmp.$$
-  cat << \EOF > $CLASS
-[/* [#]line __oline__ "configure" */
-import javax.xml.namespace.QName;
-import javax.xml.stream.Location;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.Characters;
-import javax.xml.stream.events.EndElement;
-import javax.xml.stream.events.StartElement;
-
-import java.lang.reflect.Method;
-
-public class Test
-    implements Attribute
-{
-    // This method will not qualify if using an
-    // old version of Classpath where it returns
-    // a QName.
-    public String getDTDType() { return "Boom"; }
-
-    // Other Attribute methods
-    public QName getName() { return null; }
-    public String getValue() { return "Bang"; }
-    public boolean isSpecified() { return false; }
-
-    // XMLEvent methods
-    public Characters asCharacters() { return null; }
-    public EndElement asEndElement() { return null; }
-    public StartElement asStartElement() { return null; }
-    public int getEventType() { return 42; }
-    public Location getLocation() { return null; }
-    public QName getSchemaType() { return null; }
-    public boolean isAttribute() { return true; }
-    public boolean isCharacters() { return false; }
-    public boolean isEndDocument() { return false; }
-    public boolean isEndElement() { return false; }
-    public boolean isEntityReference() { return false; }
-    public boolean isNamespace() { return false; }
-    public boolean isProcessingInstruction() { return false; }
-    public boolean isStartDocument() { return false; }
-    public boolean isStartElement() { return false; }
-    public void writeAsEncodedUnicode(java.io.Writer w) {}
-
-    public static void main(String[] args)
-    {
-        for (Method m : Attribute.class.getMethods())
-            if (m.getName().equals("getDTDType"))
-                if (m.getReturnType().equals(QName.class))
-                    System.exit(1);
-    }
-}]
-EOF
-  if $JAVAC -cp . $JAVACFLAGS -source 5 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
-    if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1; then
-      it_cv_dtdtype=no;
-    else
-      it_cv_dtdtype=yes;
-    fi
-  else
-    it_cv_dtdtype=yes;
-  fi
-  rm -f $CLASS *.class
-  cd ..
-  rmdir tmp.$$
-  ])
-AM_CONDITIONAL([DTDTYPE_QNAME], test x"${it_cv_dtdtype}" = "xyes")
-AC_PROVIDE([$0])dnl
 ])
 
 AC_DEFUN_ONCE([IT_GET_PKGVERSION],

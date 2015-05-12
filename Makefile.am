@@ -489,7 +489,6 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
 	$(top_srcdir)/patches/jamvm/*.patch \
 	tools-copy contrib overlays \
-	javaws.png javaws.desktop \
 	jconsole.desktop policytool.desktop \
 	$(JTREG_SRCS) \
 	HACKING $(PULSEAUDIO_SRCS) fsg.sh \
@@ -521,7 +520,7 @@ clean-local: clean-tests clean-pulse-java \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
  clean-extract clean-native-ecj clean-icedtea-stage2 \
  clean-icedtea-debug-stage2 clean-icedtea-stage1 clean-add-zero clean-add-zero-debug \
- clean-add-cacao clean-add-cacao-debug clean-rt clean-cryptocheck
+ clean-add-cacao clean-add-cacao-debug clean-cryptocheck
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -547,7 +546,7 @@ install:
 	clean-bootstrap-directory-symlink-stage2 clean-bootstrap-directory-stage1 \
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot \
-	clean-rt hotspot hotspot-helper clean-jtreg clean-jtreg-reports \
+	hotspot hotspot-helper clean-jtreg clean-jtreg-reports \
 	jtregcheck clean-remove-intree-libraries \
 	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
 	clean-extract-hotspot clean-sanitise-openjdk clean-icedtea-debug \
@@ -1520,10 +1519,6 @@ if ENABLE_SYSTEMTAP
 endif
 	cp $(abs_top_builddir)/nss.cfg \
 	  $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/security;
-if WITH_TZDATA_DIR
-	cp $(abs_top_builddir)/tz.properties \
-	  $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib;
-endif
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
@@ -1593,10 +1588,6 @@ if ENABLE_SYSTEMTAP
 endif
 	cp $(abs_top_builddir)/nss.cfg \
 	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/security;
-if WITH_TZDATA_DIR
-	cp $(abs_top_builddir)/tz.properties \
-	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib;
-endif
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
@@ -1842,7 +1833,7 @@ clean-pulse-java:
 
 # JamVM
 
-stamps/jamvm.stamp: $(OPENJDK_TREE) stamps/rt.stamp
+stamps/jamvm.stamp: $(OPENJDK_TREE)
 if BUILD_JAMVM
 	cd jamvm/jamvm && \
 	./autogen.sh --with-java-runtime-library=openjdk8 \
@@ -1904,7 +1895,7 @@ clean-add-jamvm-debug:
 
 # CACAO
 
-stamps/cacao.stamp: stamps/rt.stamp
+stamps/cacao.stamp: $(OPENJDK_TREE)
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao && \
@@ -2217,51 +2208,6 @@ if ENABLE_SYSTEMTAP
 	rm -f test/check-stap.log
 endif
 
-# Support classes for non-OpenJDK bootstraps
-
-rt-source-files.txt: $(OPENJDK_BOOT_TREE)
-	rm -f $@
-	for files in $(ICEDTEA_BOOTSTRAP_CLASSES) ; \
-	do \
-	  echo $$files >> $@ ; \
-	done
-	touch $@
-
-stamps/rt-class-files.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP) rt-source-files.txt
-	mkdir -p lib/rt
-	if echo $(ICEDTEA_BOOTSTRAP_CLASSES) | grep '\S' &> /dev/null ; then \
-	  $(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d lib/rt \
-	    -classpath $(SYSTEM_JDK_DIR)/jre/lib/rt.jar \
-            -sourcepath '$(SOURCEPATH_DIRS)' \
-            -bootclasspath \'\' @rt-source-files.txt ; \
-	fi
-	mkdir -p stamps
-	touch $@
-
-stamps/rt.stamp: stamps/rt-class-files.stamp
-	if echo $(ICEDTEA_BOOTSTRAP_CLASSES) | grep '\S' &> /dev/null ; then \
-	  (set -e ; \
-	   cd lib/rt ; \
-	   for dirs in $(ICEDTEA_BOOTSTRAP_RESOURCES) ; \
-	     do \
-	     destpath=`echo $$dirs|sed -e 's#$(LANGTOOLS)/##' -e 's#$(SHARE)/##'` ; \
-	     mkdir -p `dirname $$destpath` ; \
-	     cp -a ../../$$dirs $$destpath ; \
-	   done ; \
-	   $(ZIP) -qur $(STAGE1_BOOT_DIR)/jre/lib/rt.jar \
-	     com java javax sun ); \
-	fi
-	mkdir -p stamps
-	touch $@
-
-clean-rt:
-	rm -rf lib/rt
-	rm -f stamps/rt-class-files.stamp stamps/rt.stamp
-	rm -f rt-source-files.txt
-	if [ -e $(STAGE1_BOOT_DIR)/jre/lib ] ; then \
-	  cp $(SYSTEM_JDK_DIR)/jre/lib/rt.jar $(STAGE1_BOOT_DIR)/jre/lib ; \
-	fi
-
 # Crypto Level Check
 
 stamps/cryptocheck.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
@@ -2357,9 +2303,5 @@ patch-boot: stamps/patch-boot.stamp
 patch-fsg: stamps/patch-fsg.stamp
 
 pulse-java: $(PULSE_JAVA_TARGET)
-
-rt: stamps/rt.stamp
-
-rt-class-files: stamps/rt-class-files.stamp
 
 sanitise-openjdk: stamps/sanitise-openjdk.stamp

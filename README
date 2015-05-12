@@ -32,15 +32,9 @@ Anonymous Mercurial checkout:
 Java compatibility
 ------------------
 
-IcedTea is derived from OpenJDK, Sun's open-source implementation of
-the Java SE platform.  At this time the build from which IcedTea was
-constructed corresponds to an early build of JDK 7.  When JDK 7 is
-complete it will implement the Java SE 7 Platform Specification.  Any
-APIs in the JDK 7 implementation, whether new or old, are therefore
-subject to minor adjustments, major revisions, or even outright
-removal between now and the time that the Java SE 7 Platform
-Specification is finalized.  Please take these facts into account
-before depending upon IcedTea.
+IcedTea is derived from OpenJDK, an open-source implementation of
+the Java SE platform. See http://openjdk.java.net/groups/conformance/
+for information on compatibility testing.
 
 A Note About License Headers
 ----------------------------

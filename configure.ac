@@ -20,7 +20,6 @@ AC_PROG_CXX
 
 IT_FIND_TOOL([MAKE], [make])
 IT_FIND_TOOL([GZIP], [gzip])
-IT_FIND_TOOL([ANT], [ant])
 IT_FIND_TOOL([FIND], [find])
 IT_FIND_TOOL([PATCH], [patch])
 IT_FIND_TOOL([TAR], [tar])
@@ -105,18 +104,11 @@ IT_FIND_NATIVE2ASCII
 IT_USING_CACAO
 if test "x$enable_bootstrap" = "xyes"; then
   IT_FIND_ECJ_JAR
-  IT_FIND_TOOL([XSLTPROC], [xsltproc])
 fi
 AC_CONFIG_FILES([javac], [chmod +x javac])
 AC_CONFIG_FILES([javap], [chmod +x javap])
 AC_CONFIG_FILES([javah], [chmod +x javah])
 
-IT_JAVAH
-IT_LIBRARY_CHECK
-IT_CHECK_FOR_CLASS([JAVA_UTIL_SCANNER], [java.util.Scanner])
-IT_PR40630_CHECK
-IT_CHECK_FOR_CLASS([JAVAX_ANNOTATION_RESOURCE], [javax.annotation.Resource])
-IT_GETDTDTYPE_CHECK
 IT_CHECK_ENABLE_WARNINGS
 IT_DIAMOND_CHECK
 
@@ -145,7 +137,6 @@ IT_CHECK_ADDITIONAL_VMS
 
 IT_WITH_VERSION_SUFFIX
 IT_ENABLE_HG
-IT_WITH_TZDATA_DIR
 
 IT_WITH_PAX
 AC_CONFIG_FILES([pax-mark-vm], [chmod +x pax-mark-vm])

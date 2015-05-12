@@ -21,7 +21,6 @@ xalan
 xerces
 glib2-devel 
 gtk2-devel
-ant >= 1.6.5 with the regexp task from ant-nodeps
 libXinerama-devel
 giflib-devel
 libpng-devel
@@ -99,14 +98,10 @@ to configure:
 * --with-parallel-jobs: Run the specified number of parallel jobs when
   building HotSpot and the JDK.  If this option is passed without an
   argument, the number of online processors plus one is used.
-* --with-netbeans-home: The location of NetBeans for use in the VisualVM build,
-  defaults to /usr/share/netbeans.
-* --with-ant-home: The location of Ant, defaults to /usr/share/ant.
 * --with-pkgversion=PKG: Include the specified distro package information in
   the output of java -version.
-* --with-gcj-home: Perform a full bootstrap build using an installed
-  copy of a GNU Classpath JDK such as gcj.  If a directory is not specified,
-  a check against the list presented above is performed.
+* --with-jdk-home: Use the specified JDK to bootstrap.  If this option is
+  not specified, a check against the list presented above is performed.
 * --with-java: Specify the location of a 'java' binary.  By default, the path
   is checked for gij and java.
 * --with-ecj: Specify the location of a 'ecj' binary.  By default, the path
@@ -127,22 +122,6 @@ to configure:
     - /usr/share/java/eclipse-ecj.jar
     - /usr/share/java/ecj.jar
     - /usr/share/eclipse-ecj-3.{2,3,4,5}/lib/ecj.jar
-* --with-xalan2-jar: Specify the location of a xalan2 JAR file.  By default, the
-  following paths are checked:
-    - /usr/share/java/xalan-j2.jar
-    - /usr/share/java/xalan2.jar
-    - /usr/share/xalan/lib/xalan.jar
-* --with-xalan2-serializer-jar: Specify the location of a xalan2 serializer JAR file.
-  By default, the following paths are checked:
-    - /usr/share/java/xalan-j2-serializer.jar
-    - /usr/share/xalan-serializer/lib/serializer.jar
-    - /usr/share/java/serializer.jar
-* --with-xerces2-jar: Specify the location of a xerces2 JAR file.  By default, the
-  following paths are checked:
-    - /usr/share/java/xerces-j2.jar
-    - /usr/share/java/xerces2.jar
-    - /usr/share/xerces-2/lib/xercesImpl.jar
-    - /usr/share/java/xercesImpl.jar
 * --with-openjdk-src-zip: Specify the location of the OpenJDK tarball to avoid downloading.
 * --with-hotspot-src-zip: Specify the location of the HotSpot tarball to avoid downloading.
 * --with-corba-src-zip: Specify the location of the CORBA tarball to avoid downloading.
@@ -152,17 +131,12 @@ to configure:
 * --with-langtools-src-zip: Specify the location of the langtools tarball to avoid downloading.
 * --with-nashorn-src-zip: Specify the location of the Nashorn tarball to avoid downloading.
 * --with-alt-jar: Use the specified jar binary in the second stage rather than the one just built.
-* --with-jaxp-drop-zip: Specify the location of the JAXP source drop zip file to avoid downloading.
-* --with-jaf-drop-zip: Specify the location of the JAF source drop zip file to avoid downloading.
-* --with-jaxws-drop-zip: Specify the location of the JAXWS source drop zip file to avoid downloading.
 * --with-cacao-home: Specify the location of an installed CACAO to use rather than downloading
   and building one.
 * --with-cacao-src-zip: Specify the location of a CACAO tarball to avoid downloading.
 * --with-cacao-src-dir: Specify the location of a CACAO source tree to avoid downloading.
 * --with-jamvm-src-zip: Specify the location of a JamVM tarball to avoid downloading.
 * --with-hg-revision: Specify a hg revision to use (as opposed to tip) with the --enable-hg option.
-* --with-tzdata-dir: Specify the location of Java timezone data, defaulting to /usr/share/javazi.
-* --with-netbeans: Specify the location of NetBeans for VisualVM, defaulting to the netbeans on the path.
 * --with-abs-install-dir: The final install location of the j2sdk-image, for use in the SystemTap tapset.
 * --with-llvm-config: Specify the location of the llvm-config binary.
 * --with-version-suffix: Appends the given text to the JDK version output.
