@@ -1,5 +1,18 @@
 2015-05-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2347: Fix CACAO patches to apply again
+	* patches/cacao/memory.patch:
+	Removed; needs a complete rewrite
+	if still required.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Drop CACAO memory
+	patch.
+	* NEWS: Updated.
+	* patches/cacao/launcher.patch:
+	Regenerated.
+
+2015-05-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR1369: Remove outdated bootstrap configure tests
 	or make them fail on error
 	* INSTALL:

@@ -221,13 +221,11 @@ ICEDTEA_PATCHES = \
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
-	patches/cacao/memory.patch \
 	patches/cacao/armhf.patch \
 	patches/cacao/pr2032.patch
 else
 if USING_CACAO
-ICEDTEA_PATCHES += \
-	patches/cacao/memory.patch
+ICEDTEA_PATCHES +=
 endif
 endif
 
