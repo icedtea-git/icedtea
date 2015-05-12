@@ -1064,9 +1064,8 @@ else
 	  mkdir cacao ; \
 	  $(TAR) xzf $(CACAO_SRC_ZIP) -C cacao ; \
 	  dir=$$(basename cacao/cacao-*) ; \
-	  ln -s $$dir cacao/cacao ; \
-	  cd cacao/cacao ; \
-	  cd .. ; \
+	  mv -v cacao/$$dir cacao/cacao ; \
+	  ln -s cacao cacao/$$dir ; \
 	fi
 endif
 endif
@@ -1085,7 +1084,8 @@ if BUILD_JAMVM
 	  mkdir jamvm ; \
 	  $(TAR) xzf $(JAMVM_SRC_ZIP) -C jamvm ; \
 	  dir=$$(basename jamvm/jamvm-*) ; \
-	  ln -s $$dir jamvm/jamvm ; \
+	  mv -v jamvm/$$dir jamvm/jamvm ; \
+	  ln -s jamvm jamvm/$$dir ; \
 	fi
 endif
 	mkdir -p stamps

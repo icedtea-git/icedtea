@@ -1,5 +1,16 @@
 2015-05-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2348: Avoid following symlinks for CACAO
+	and JamVM patches
+	* Makefile.am:
+	(extract-cacao): Move extracted directory
+	to cacao/cacao and create version-specific
+	symlink.
+	(extract-jamvm): Likewise but for jamvm/jamvm.
+	* NEWS: Updated.
+
+2015-05-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2347: Fix CACAO patches to apply again
 	* patches/cacao/memory.patch:
 	Removed; needs a complete rewrite
