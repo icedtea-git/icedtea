@@ -60,7 +60,6 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2256: Add SystemTap tests
   - PR2257: clean-extract-nashorn rule is never run
   - PR2329: jamvm parallel unpack failures
-  - PR2347: Fix CACAO patches to apply again
   - PR2348: Avoid following symlinks for CACAO and JamVM patches
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
@@ -100,7 +99,9 @@ New in release 3.0.0 (2014-XX-XX):
   - CA172, PR2330, G453612: Add ARM hardfloat support to CACAO on Gentoo
   - PR2331: IcedTea8 fails to build with IcedTea7 CACAO due to low max heap size
   - PR2335: CACAO lacks JVM_FindClassFromCaller
-
+  - PR2347: Fix CACAO patches to apply again
+  - PR2350: Update to latest CACAO
+  
 New in release 2.0 (2011-XX-XX):
 
 * JamVM
