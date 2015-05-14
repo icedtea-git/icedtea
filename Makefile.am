@@ -1910,7 +1910,7 @@ if !USE_SYSTEM_CACAO
 	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
 	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS) install
 	mkdir -p $(abs_top_builddir)/cacao/install/lib
-	touch $(abs_top_builddir)/cacao/install/hotspot/lib/sa-jdi.jar
+	touch $(abs_top_builddir)/cacao/install/lib/sa-jdi.jar
 	ln -sf server $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/client
 	touch $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/server/Xusage.txt
 	ln -sf client/libjvm.so $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/libjsig.so

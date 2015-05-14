@@ -61,7 +61,6 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2257: clean-extract-nashorn rule is never run
   - PR2329: jamvm parallel unpack failures
   - PR2348: Avoid following symlinks for CACAO and JamVM patches
-  - PR2349: ‘struct jvm_version_info’ has no member named ‘is_kernel_jvm’
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck
@@ -101,7 +100,9 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2331: IcedTea8 fails to build with IcedTea7 CACAO due to low max heap size
   - PR2335: CACAO lacks JVM_FindClassFromCaller
   - PR2347: Fix CACAO patches to apply again
+  - PR2349: ‘struct jvm_version_info’ has no member named ‘is_kernel_jvm’
   - PR2350: Update to latest CACAO
+  - PR2354: stamps/cacao.stamp tries to touch a file in a directory which doesn't exist
   
 New in release 2.0 (2011-XX-XX):
 
