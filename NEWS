@@ -46,6 +46,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR1806: Support Debian/Ubuntu 7 & 8 OpenJDK Installs as Boot JDK
   - PR1812: Unable to locate HotSpot checksum when downloading
   - PR1813: HotSpot URL should be used with --enable-hg
+  - PR1829: Support AM_MAINTAINER_MODE
   - PR1834, RH1022017: Report elliptic curves supported by NSS, not the SunEC library
   - PR1845: jstack.stp in OpenJDK8 is broken
   - PR1935: HotSpot extraction needs to depend on the tarball being downloaded
