@@ -1,6 +1,6 @@
 Key:
 
-SX  - http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=X
+SX  - https://bugs.openjdk.java.net/browse/JDK-X
 PRX - http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=X
 RHX - https://bugzilla.redhat.com/show_bug.cgi?id=X
 DX  - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=X
@@ -54,6 +54,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR1942: Bug reports lack IcedTea version & distribution packaging information
   - PR1950: Add build support for Zero SH
   - PR1965, G498288: Allow builds on PaX kernels
+  - PR1968: Move to new OpenJDK bug URL format
   - PR1994: make dist broken
   - PR2199: Support giflib 5.1.0
   - PR2212: DGifCloseFile call should check the return value, not the error code, for failure

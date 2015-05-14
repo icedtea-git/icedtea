@@ -1,3 +1,8 @@
+2014-08-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1968: Move to new OpenJDK bug URL format
+	* NEWS: Update OpenJDK bug URL.
+
 2014-06-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1829: Support AM_MAINTAINER_MODE
