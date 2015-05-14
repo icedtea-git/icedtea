@@ -1,3 +1,16 @@
+2014-06-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1834, RH1022017: Report elliptic curves
+	supported by NSS, not the SunEC library
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new patch so
+	that the NSS set of curves are announced
+	via SSL.
+	* NEWS: Updated.
+	* patches/rh1022017.patch:
+	Reduce number of curves announced over SSL
+	to just those supported by NSS.
+
 2015-05-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2355: CACAO build fails to use JRE layout

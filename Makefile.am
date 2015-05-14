@@ -214,7 +214,8 @@ CRYPTO_CHECK_SRCS = $(top_srcdir)/TestCryptoLevel.java
 
 ICEDTEA_PATCHES = \
 	patches/memory-limits.patch \
-	patches/override-redirect-metacity.patch
+	patches/override-redirect-metacity.patch \
+	patches/rh1022017.patch
 
 # Conditional patches
 
