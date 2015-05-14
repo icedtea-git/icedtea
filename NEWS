@@ -103,7 +103,8 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2349: ‘struct jvm_version_info’ has no member named ‘is_kernel_jvm’
   - PR2350: Update to latest CACAO
   - PR2354: stamps/cacao.stamp tries to touch a file in a directory which doesn't exist
-  
+  - PR2355: CACAO build fails to use JRE layout
+
 New in release 2.0 (2011-XX-XX):
 
 * JamVM
