@@ -1,3 +1,18 @@
+2015-05-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2349: ‘struct jvm_version_info’ has
+	no member named ‘is_kernel_jvm’
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new CACAO
+	patch.
+	(cacao): Set runtime library argument
+	to 'openjdk8'.
+	* NEWS: Updated.
+	* patches/cacao/pr2349.patch:
+	Add support for 'openjdk8' runtime library
+	argument and don't attempt to set
+	is_kernel_jvm in this mode.
+
 2015-05-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2350: Update to latest CACAO

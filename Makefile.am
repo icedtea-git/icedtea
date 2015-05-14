@@ -221,7 +221,8 @@ ICEDTEA_PATCHES = \
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
-	patches/cacao/pr2032.patch
+	patches/cacao/pr2032.patch \
+	patches/cacao/pr2349.patch
 else
 if USING_CACAO
 ICEDTEA_PATCHES +=
@@ -1902,7 +1903,7 @@ if !USE_SYSTEM_CACAO
 	  --build=$(build_alias) \
 	  --target=$(target_alias) \
 	  --prefix=$(abs_top_builddir)/cacao/install \
-	  --with-java-runtime-library=openjdk7 \
+	  --with-java-runtime-library=openjdk8 \
 	  --with-java-runtime-library-prefix=$(abs_top_builddir)/openjdk \
 	  --with-java-runtime-library-classes=$(RUNTIME) \
 	  --with-libatomic-ops=no \

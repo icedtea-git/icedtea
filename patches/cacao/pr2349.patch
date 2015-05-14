@@ -1,0 +1,82 @@
+diff -r c182f119eaad m4/disable-test-dependency-checks.m4
+--- cacao/cacao/m4/disable-test-dependency-checks.m4	Fri Dec 12 22:14:45 2014 +0100
++++ cacao/cacao/m4/disable-test-dependency-checks.m4	Wed May 13 19:08:20 2015 +0100
+@@ -35,7 +35,7 @@
+                   cldc1.1 | gnuclasspath)
+                       disable_test_dependency_checks=no
+                       ;;
+-                  openjdk | openjdk7)
++                  openjdk | openjdk7 | openjdk8 )
+                       disable_test_dependency_checks=yes
+                       ;;
+                   *)
+diff -r c182f119eaad m4/java-runtime-library.m4
+--- cacao/cacao/m4/java-runtime-library.m4	Fri Dec 12 22:14:45 2014 +0100
++++ cacao/cacao/m4/java-runtime-library.m4	Wed May 13 18:50:10 2015 +0100
+@@ -26,7 +26,7 @@
+ AC_DEFUN([AC_CHECK_WITH_JAVA_RUNTIME_LIBRARY],[
+ AC_MSG_CHECKING(which Java runtime library to use)
+ AC_ARG_WITH([java-runtime-library],
+-            [AS_HELP_STRING(--with-java-runtime-library=<type>,specifies which type of classpath to use as Java runtime library (cldc1.1,gnuclasspath,openjdk,openjdk7) [[default=gnuclasspath]])],
++            [AS_HELP_STRING(--with-java-runtime-library=<type>,specifies which type of classpath to use as Java runtime library (cldc1.1,gnuclasspath,openjdk,openjdk7,openjdk8) [[default=gnuclasspath]])],
+             [case "${withval}" in
+                 cldc1.1)
+                     WITH_JAVA_RUNTIME_LIBRARY=cldc1.1
+@@ -38,6 +38,15 @@
+                     AC_DEFINE([WITH_JAVA_RUNTIME_LIBRARY_GNU_CLASSPATH], 1, [use GNU Classpath])
+                     AC_SUBST(WITH_JAVA_RUNTIME_LIBRARY_GNU_CLASSPATH)
+                     ;;
++                openjdk8)
++                    WITH_JAVA_RUNTIME_LIBRARY=openjdk8
++                    AC_DEFINE([WITH_JAVA_RUNTIME_LIBRARY_OPENJDK], 1, [use OpenJDK's Java SE classes])
++                    AC_DEFINE([WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_7], 1, [use OpenJDK's version 7])
++                    AC_DEFINE([WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_8], 1, [use OpenJDK's version 8])
++                    AC_SUBST(WITH_JAVA_RUNTIME_LIBRARY_OPENJDK)
++                    AC_SUBST(WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_7)
++                    AC_SUBST(WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_8)
++                    ;;
+                 openjdk7)
+                     WITH_JAVA_RUNTIME_LIBRARY=openjdk7
+                     AC_DEFINE([WITH_JAVA_RUNTIME_LIBRARY_OPENJDK], 1, [use OpenJDK's Java SE classes])
+@@ -62,6 +71,7 @@
+ AM_CONDITIONAL([WITH_JAVA_RUNTIME_LIBRARY_GNU_CLASSPATH], test x"${WITH_JAVA_RUNTIME_LIBRARY}" = "xgnuclasspath")
+ AM_CONDITIONAL([WITH_JAVA_RUNTIME_LIBRARY_OPENJDK], test x"${WITH_JAVA_RUNTIME_LIBRARY}" = "xopenjdk" -o x"${WITH_JAVA_RUNTIME_LIBRARY}" = "xopenjdk7")
+ AM_CONDITIONAL([WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_7], test x"${WITH_JAVA_RUNTIME_LIBRARY}" = "xopenjdk7")
++AM_CONDITIONAL([WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_8], test x"${WITH_JAVA_RUNTIME_LIBRARY}" = "xopenjdk8")
+ ])
+ 
+ 
+diff -r c182f119eaad src/native/vm/openjdk/jvm.cpp
+--- cacao/cacao/src/native/vm/openjdk/jvm.cpp	Fri Dec 12 22:14:45 2014 +0100
++++ cacao/cacao/src/native/vm/openjdk/jvm.cpp	Wed May 13 18:50:10 2015 +0100
+@@ -3733,7 +3733,9 @@
+ 	info->update_version = 0;
+ 	info->special_update_version = 0;
+ 	info->is_attach_supported = 0;
++#ifndef WITH_JAVA_RUNTIME_LIBRARY_OPENJDK_8
+ 	info->is_kernel_jvm = 0;
++#endif
+ }
+ 
+ 
+diff -r c182f119eaad configure.ac
+--- cacao/cacao/configure.ac	Fri Dec 12 22:14:45 2014 +0100
++++ cacao/cacao/configure.ac	Wed May 13 22:09:49 2015 +0100
+@@ -678,7 +678,7 @@
+         AC_CHECK_WITH_HPI_H
+         AC_CHECK_WITH_JMM_H
+         ;;
+-    openjdk7)
++    openjdk7 | openjdk8 )
+         AC_CHECK_WITH_JVM_MD_H
+         AC_CHECK_WITH_JVM_H
+         AC_CHECK_WITH_JMM_H
+@@ -693,7 +693,7 @@
+     cldc1.1 | gnuclasspath)
+         AC_PROG_JAVAC
+         ;;
+-    openjdk | openjdk7)
++    openjdk | openjdk7 | openjdk8 )
+         ;;
+     *)
+         AC_MSG_ERROR(unknown classpath configuration ${WITH_JAVA_RUNTIME_LIBRARY})
