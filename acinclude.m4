@@ -1557,7 +1557,7 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_LCMS],
     ENABLE_SYSTEM_LCMS="${enableval}"
   ],
   [
-    ENABLE_SYSTEM_LCMS="no"
+    ENABLE_SYSTEM_LCMS="yes"
   ])
   AC_MSG_RESULT(${ENABLE_SYSTEM_LCMS})
   if test x"${ENABLE_SYSTEM_LCMS}" = "xyes"; then
@@ -1572,6 +1572,108 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_LCMS],
   fi
   AM_CONDITIONAL(USE_SYSTEM_LCMS, test x"${ENABLE_SYSTEM_LCMS}" = "xyes")
   AC_SUBST(ENABLE_SYSTEM_LCMS)
+])
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_ZLIB],
+[
+  AC_MSG_CHECKING([whether to use the system zlib install])
+  AC_ARG_ENABLE([system-zlib],
+	      [AS_HELP_STRING(--enable-system-zlib,use the system ZLIB [[default=yes]])],
+  [
+    ENABLE_SYSTEM_ZLIB="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_ZLIB="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_ZLIB})
+  if test x"${ENABLE_SYSTEM_ZLIB}" = "xyes"; then
+    dnl Check for ZLIB headers and libraries.
+    PKG_CHECK_MODULES(ZLIB, zlib,[ZLIB_FOUND=yes],[ZLIB_FOUND=no])
+    if test "x${ZLIB_FOUND}" = xno
+    then
+      AC_MSG_ERROR([Could not find ZLIB; install ZLIB or build with --disable-system-zlib to use the in-tree copy.])
+    fi
+    AC_SUBST(ZLIB_CFLAGS)
+    AC_SUBST(ZLIB_LIBS)
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_ZLIB, test x"${ENABLE_SYSTEM_ZLIB}" = "xyes")
+  AC_SUBST(ENABLE_SYSTEM_ZLIB)
+])
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_JPEG],
+[
+  AC_MSG_CHECKING([whether to use the system jpeg install])
+  AC_ARG_ENABLE([system-jpeg],
+	      [AS_HELP_STRING(--enable-system-jpeg,use the system libjpeg [[default=yes]])],
+  [
+    ENABLE_SYSTEM_JPEG="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_JPEG="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_JPEG})
+  if test x"${ENABLE_SYSTEM_JPEG}" = "xyes"; then
+    dnl Check for JPEG headers and libraries.
+    AC_CHECK_LIB([jpeg], [main],
+        , [AC_MSG_ERROR("Could not find JPEG library; install JPEG or build with --disable-system-jpeg to use the in-tree copy.")])
+    AC_CHECK_HEADER([jpeglib.h],
+        , [AC_MSG_ERROR("Could not find JPEG header; install JPEG or build with --disable-system-jpeg to use the in-tree copy.")])
+    JPEG_LIBS="-ljpeg"
+    AC_SUBST(JPEG_LIBS)
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_JPEG, test x"${ENABLE_SYSTEM_JPEG}" = "xyes")
+  AC_SUBST(ENABLE_SYSTEM_JPEG)
+])
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_PNG],
+[
+  AC_MSG_CHECKING([whether to use the system libpng install])
+  AC_ARG_ENABLE([system-png],
+	      [AS_HELP_STRING(--enable-system-png,use the system PNG [[default=yes]])],
+  [
+    ENABLE_SYSTEM_PNG="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_PNG="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_PNG})
+  if test x"${ENABLE_SYSTEM_PNG}" = "xyes"; then
+    dnl Check for PNG headers and libraries.
+    PKG_CHECK_MODULES(PNG, libpng,[LIBPNG_FOUND=yes],[LIBPNG_FOUND=no])
+    if test "x${LIBPNG_FOUND}" = xno
+    then
+      AC_MSG_ERROR([Could not find libpng; install libpng or build with --disable-system-png to use the in-tree copy.])
+    fi
+    AC_SUBST(PNG_CFLAGS)
+    AC_SUBST(PNG_LIBS)
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_PNG, test x"${ENABLE_SYSTEM_PNG}" = "xyes")
+  AC_SUBST(ENABLE_SYSTEM_PNG)
+])
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_GIF],
+[
+  AC_MSG_CHECKING([whether to use the system giflib install])
+  AC_ARG_ENABLE([system-gif],
+	      [AS_HELP_STRING(--enable-system-gif,use the system giflib [[default=yes]])],
+  [
+    ENABLE_SYSTEM_GIF="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_GIF="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_GIF})
+  if test x"${ENABLE_SYSTEM_GIF}" = "xyes"; then
+    dnl Check for GIF headers and libraries.
+    AC_CHECK_LIB([gif], [main],
+        , [AC_MSG_ERROR("Could not find GIF library; install GIF or build with --disable-system-gif to use the in-tree copy.")])
+    AC_CHECK_HEADER([gif_lib.h],
+        , [AC_MSG_ERROR("Could not find GIF header; install GIF or build with --disable-system-gif to use the in-tree copy.")])
+    GIF_LIBS="-lgif"
+    AC_SUBST(GIF_LIBS)
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_GIF, test x"${ENABLE_SYSTEM_GIF}" = "xyes")
+  AC_SUBST(ENABLE_SYSTEM_GIF)
 ])
 
 AC_DEFUN([IT_ENABLE_JAMVM],

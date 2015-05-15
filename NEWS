@@ -55,6 +55,10 @@ New in release 3.0.0 (2014-XX-XX):
   - PR1950: Add build support for Zero SH
   - PR1965, G498288: Allow builds on PaX kernels
   - PR1968: Move to new OpenJDK bug URL format
+  - PR1977: Support using the system installation of Zlib
+  - PR1979: Support using the system installation of libjpeg
+  - PR1980: Support using the system installation of giflib
+  - PR1981: Support using the system installation of libpng
   - PR1994: make dist broken
   - PR2199: Support giflib 5.1.0
   - PR2212: DGifCloseFile call should check the return value, not the error code, for failure

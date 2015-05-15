@@ -1,3 +1,43 @@
+2015-05-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR1977: Support using the system installation of Zlib
+	PR1979: Support using the system installation of libjpeg
+	PR1980: Support using the system installation of giflib
+	PR1981: Support using the system installation of libpng
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE): Remove hardcoded
+	--with-zlib=system argument. Add appropriate
+	--with-zlib/--with-libjpeg/--with-libpng/
+	--with-giflib argument, depending on options
+	passed to configure, replacing USE_SYSTEM_ZLIB,
+	USE_SYSTEM_JPEG, USE_SYSTEM_PNG and USE_SYSTEM_GIF.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_CHECK_FOR_LCMS): Enable system LCMS by default.
+	* remove-intree-libraries.sh.in:
+	Update ZLIB_VERSION to match version in
+	OpenJDK (1.2.8). Update JPEG source list
+	and arrange alphabetically. Drop duplicate
+	echo statement for zlib.
+
+2011-09-06  Andrew John Hughes  <ahughes@redhat.com>
+
+	* Makefile.am:
+	(ICEDTEA_ENV): Set ZLIB_LIBS, ZLIB_CFLAGS,
+	USE_SYSTEM_ZLIB, JPEG_LIBS, JPEG_CFLAGS,
+	USE_SYSTEM_JPEG, PNG_LIBS, PNG_CFLAGS,
+	USE_SYSTEM_PNG, GIF_LIBS, GIF_CFLAGS,
+	USE_SYSTEM_GIF.
+	* acinclude.m4:
+	(IT_CHECK_FOR_ZLIB): New macro to check for zlib.
+	(IT_CHECK_FOR_JPEG): Likewise for libjpeg.
+	(IT_CHECK_FOR_PNG): Likewise for libpng.
+	(IT_CHECK_FOR_GIF): Likewise for giflib.
+	* configure.ac:
+	Remove old AC_CHECK_LIB calls for jpeg, gif
+	and zlib and PKG_CHECK_MODULES call for libpng.
+	Add calls to new macros above.
+
 2014-08-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1968: Move to new OpenJDK bug URL format

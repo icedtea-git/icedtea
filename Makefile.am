@@ -282,7 +282,7 @@ endif
 ICEDTEA_CONFIGURE = \
 	  --enable-unlimited-crypto \
 	  --with-cacerts-file=$(SYSTEM_JDK_DIR)/jre/lib/security/cacerts \
-	  --with-zlib=system --with-stdc++lib=dynamic \
+	  --with-stdc++lib=dynamic \
 	  --with-boot-jdk=$(BOOT_DIR) \
 	  --with-update-version=$(JDK_UPDATE_VERSION) \
 	  --with-build-number=$(BUILD_VERSION) \
@@ -298,12 +298,44 @@ ICEDTEA_CONFIGURE += \
 	--with-import-hotspot="$(JAMVM_IMPORT_PATH)"
 endif
 
+if USE_SYSTEM_ZLIB
+ICEDTEA_CONFIGURE += \
+	--with-zlib=system
+else
+ICEDTEA_CONFIGURE += \
+	--with-zlib=bundled
+endif
+
 if USE_SYSTEM_LCMS
 ICEDTEA_CONFIGURE += \
 	--with-lcms=system
 else
 ICEDTEA_CONFIGURE += \
 	--with-lcms=bundled
+endif
+
+if USE_SYSTEM_JPEG
+ICEDTEA_CONFIGURE += \
+	--with-libjpeg=system
+else
+ICEDTEA_CONFIGURE += \
+	--with-libjpeg=bundled
+endif
+
+if USE_SYSTEM_PNG
+ICEDTEA_CONFIGURE += \
+	--with-libpng=system
+else
+ICEDTEA_CONFIGURE += \
+	--with-libpng=bundled
+endif
+
+if USE_SYSTEM_GIF
+ICEDTEA_CONFIGURE += \
+	--with-giflib=system
+else
+ICEDTEA_CONFIGURE += \
+	--with-giflib=bundled
 endif
 
 ICEDTEA_ENV = \
@@ -352,6 +384,12 @@ ICEDTEA_ENV += \
 	HOTSPOT_BUILD_VERSION="$(HOTSPOT_REVISION)"
 endif
 
+if USE_SYSTEM_ZLIB
+ICEDTEA_ENV += \
+	ZLIB_LIBS="${ZLIB_LIBS}" \
+	ZLIB_CFLAGS="${ZLIB_CFLAGS}"
+endif
+
 if USE_SYSTEM_LCMS
 ICEDTEA_ENV += \
 	LCMS_LIBS="${LCMS2_LIBS}" \
@@ -374,6 +412,24 @@ endif
 if ENABLE_JAR_COMPRESSION
 ICEDTEA_ENV += \
 	COMPRESS_JARS="true"
+endif
+
+if USE_SYSTEM_JPEG
+ICEDTEA_ENV += \
+	JPEG_LIBS="${JPEG_LIBS}" \
+	JPEG_CFLAGS="${JPEG_CFLAGS}"
+endif
+
+if USE_SYSTEM_PNG
+ICEDTEA_ENV += \
+	PNG_LIBS="${PNG_LIBS}" \
+	PNG_CFLAGS="${PNG_CFLAGS}"
+endif
+
+if USE_SYSTEM_GIF
+ICEDTEA_ENV += \
+	GIF_LIBS="${GIF_LIBS}" \
+	GIF_CFLAGS="${GIF_CFLAGS}"
 endif
 
 # OpenJDK boot build environment.

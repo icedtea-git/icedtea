@@ -161,12 +161,13 @@ AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]
 AC_CHECK_HEADERS([X11/X.h],[]
 	,[AC_MSG_ERROR("xorg headers were not found -
 	try installing xorg-x11-proto-devel.")])
-AC_CHECK_LIB(jpeg, main,
-        , [AC_MSG_ERROR("libjpeg not found - try installing libjpeg-devel")])
-AC_CHECK_LIB(gif, main,
-        , [AC_MSG_ERROR("giflib not found - try installing giflib-devel")])
-AC_CHECK_LIB(z, main,
-	, [AC_MSG_ERROR("zlib not found - try installing zlib-devel")])
+
+IT_CHECK_FOR_ZLIB
+IT_CHECK_FOR_JPEG
+IT_CHECK_FOR_PNG
+IT_CHECK_FOR_GIF
+IT_CHECK_FOR_LCMS
+AC_CONFIG_FILES([remove-intree-libraries.sh])
 
 dnl Check for Xproto headers and libraries.
 PKG_CHECK_MODULES(XPROTO, xproto,[XPROTO_FOUND=yes],[XPROTO_FOUND=no])
@@ -276,17 +277,6 @@ public:
   AC_CONFIG_FILES([tapset/hotspot_jni.stp])
   AC_CONFIG_FILES([tapset/jstack.stp])
 fi
-
-dnl Check for libpng headers and libraries.
-PKG_CHECK_MODULES(LIBPNG, libpng,[LIBPNG_FOUND=yes]
-	,[LIBPNG_FOUND=no])
-if test "x${LIBPNG_FOUND}" = xno
-then
-  AC_MSG_ERROR([Could not find libpng - \
-  Try installing libpng-devel.])
-fi
-AC_SUBST(LIBPNG_CFLAGS)
-AC_SUBST(LIBPNG_LIBS)
 
 dnl Check for libXtst headers and libraries.
 PKG_CHECK_MODULES(XTST, xtst,[XTST_FOUND=yes],[XTST_FOUND=no])
@@ -420,9 +410,6 @@ fi
 AC_SUBST(LLVM_CFLAGS)
 AC_SUBST(LLVM_LDFLAGS)
 AC_SUBST(LLVM_LIBS)
-
-IT_CHECK_FOR_LCMS
-AC_CONFIG_FILES([remove-intree-libraries.sh])
 
 # Arguments passed to configure.
 AC_SUBST(CONFIGURE_ARGS)
