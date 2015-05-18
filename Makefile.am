@@ -55,10 +55,16 @@ RUNTIME = $(BOOT_DIR)/jre/lib/rt.jar
 CLS_DIR_BOOT = $(BOOT_BUILD_OUTPUT_DIR)/classes
 SERVER_DIR = hotspot/dist/jre/lib/$(INSTALL_ARCH_DIR)/server
 BUILD_IMAGE_DIR = $(BUILD_OUTPUT_DIR)/images
-BUILD_JRE_ARCH_DIR = $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+BUILD_SDK_DIR = $(BUILD_IMAGE_DIR)/j2sdk-image
+BUILD_JRE_DIR = $(BUILD_IMAGE_DIR)/j2re-image
+BUILD_JRE_ARCH_DIR = $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
 BUILD_DEBUG_IMAGE_DIR = $(DEBUG_BUILD_OUTPUT_DIR)/images
-BUILD_DEBUG_JRE_ARCH_DIR = $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+BUILD_DEBUG_SDK_DIR = $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image
+BUILD_DEBUG_JRE_DIR = $(BUILD_DEBUG_IMAGE_DIR)/j2re-image
+BUILD_DEBUG_JRE_ARCH_DIR = $(BUILD_DEBUG_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
 BUILD_BOOT_IMAGE_DIR = $(BOOT_BUILD_OUTPUT_DIR)/images
+BUILD_BOOT_SDK_DIR = $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image
+BUILD_BOOT_JRE_DIR = $(BUILD_BOOT_IMAGE_DIR)/j2re-image
 STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
 STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
 JAMVM_IMPORT_PATH = $(abs_top_builddir)/jamvm/install/hotspot
@@ -540,12 +546,13 @@ PULSEAUDIO_SRCS = $(top_srcdir)/pulseaudio/src/java/org/classpath/icedtea/pulsea
 	$(top_srcdir)/pulseaudio/unittests/org/classpath/icedtea/pulseaudio/*.java \
 	$(top_srcdir)/pulseaudio/COPYING
 
+DESKTOP_FILES = jconsole.desktop policytool.desktop
+
 EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
 	$(top_srcdir)/patches/jamvm/*.patch \
 	tools-copy contrib overlays \
-	jconsole.desktop policytool.desktop \
-	$(JTREG_SRCS) \
+	$(JTREG_SRCS) $(DESKTOP_FILES) \
 	HACKING $(PULSEAUDIO_SRCS) fsg.sh \
 	hotspot.map autogen.sh \
 	tapset/hotspot.stp.in \
@@ -592,8 +599,6 @@ distclean-local: clean-local clean-download
 	if [ -e stamps ] ; then \
 	  rmdir stamps ; \
 	fi
-
-install:
 
 .PHONY: \
 	env env-boot snapshot clean-clone clean-patch \
@@ -1468,7 +1473,7 @@ clean-bootstrap-directory-stage1:
 # bootstrap/stage2.
 stamps/bootstrap-directory-stage2.stamp: stamps/icedtea-stage1.stamp
 	rm -rf $(STAGE2_BOOT_DIR)
-	ln -s $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/ $(STAGE2_BOOT_DIR)
+	ln -s $(BUILD_BOOT_SDK_DIR)/ $(STAGE2_BOOT_DIR)
 	if ! test -d $(STAGE2_BOOT_DIR)/include; then \
 	  ln -sf $(BOOT_BUILD_OUTPUT_DIR)/include $(STAGE2_BOOT_DIR)/include; \
 	fi
@@ -1527,22 +1532,20 @@ stamps/icedtea.stamp: stamps/icedtea-configure.stamp
 	  $(ICEDTEA_ENV) \
 	  -C $(BUILD_OUTPUT_DIR) \
 	  $(ICEDTEA_BUILD_TARGET)
-	$(abs_top_builddir)/pax-mark-vm $(BUILD_IMAGE_DIR)/j2sdk-image
-	mkdir -p $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	mkdir -p $(BUILD_IMAGE_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-	mkdir -p $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/ext
-	mkdir -p $(BUILD_IMAGE_DIR)/j2re-image/lib/ext 
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_SDK_DIR)
+	mkdir -p $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_SDK_DIR)/jre/lib/ext
+	mkdir -p $(BUILD_JRE_DIR)/lib/ext 
 if ENABLE_PULSE_JAVA
 	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
-	  $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	  $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
-	  $(BUILD_IMAGE_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf pulse-java.jar \
-	  $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/ext
-	cp -pPRf pulse-java.jar \
-	  $(BUILD_IMAGE_DIR)/j2re-image/lib/ext
+	  $(BUILD_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
+	cp -pPRf pulse-java.jar $(BUILD_SDK_DIR)/jre/lib/ext
+	cp -pPRf pulse-java.jar $(BUILD_JRE_DIR)/lib/ext
 	(cd $(PULSE_JAVA_JAVA_SRCDIR) && \
-	   $(ZIP) -qur $(BUILD_IMAGE_DIR)/j2sdk-image/src.zip org )
+	   $(ZIP) -qur $(BUILD_SDK_DIR)/src.zip org )
 endif
 if ZERO_BUILD
 	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
@@ -1554,30 +1557,30 @@ if ENABLE_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
 if ENABLE_SYSTEMTAP
-	mkdir -p $(BUILD_IMAGE_DIR)/j2sdk-image/tapset ; \
+	mkdir -p $(BUILD_SDK_DIR)/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
 	if test $$? -eq 0; then \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot.stp \
-	    > $(BUILD_IMAGE_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	    > $(BUILD_SDK_DIR)/tapset/hotspot.stp; \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    > $(BUILD_IMAGE_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	    > $(BUILD_SDK_DIR)/tapset/hotspot_jni.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
-	    $(BUILD_IMAGE_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	    $(BUILD_SDK_DIR)/tapset/hotspot.stp; \
 	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    $(BUILD_IMAGE_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	    $(BUILD_SDK_DIR)/tapset/hotspot_jni.stp; \
 	fi; \
 	cp $(abs_top_builddir)/tapset/jstack.stp \
-	  $(BUILD_IMAGE_DIR)/j2sdk-image/tapset/jstack.stp
+	  $(BUILD_SDK_DIR)/tapset/jstack.stp
 endif
 	cp $(abs_top_builddir)/nss.cfg \
-	  $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/security;
+	  $(BUILD_SDK_DIR)/jre/lib/security;
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
-	@echo "IcedTea is served:" $(BUILD_IMAGE_DIR)/j2sdk-image
+	@echo "IcedTea is served:" $(BUILD_SDK_DIR)
 	mkdir -p stamps
 	touch $@
 
@@ -1596,22 +1599,22 @@ stamps/icedtea-debug.stamp: stamps/icedtea-debug-configure.stamp
 	  $(ICEDTEA_ENV) \
 	  -C $(DEBUG_BUILD_OUTPUT_DIR) \
 	  $(ICEDTEA_BUILD_TARGET)
-	$(abs_top_builddir)/pax-mark-vm $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image
-	mkdir -p $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
-	mkdir -p $(BUILD_DEBUG_IMAGE_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
-	mkdir -p $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/ext
-	mkdir -p $(BUILD_DEBUG_IMAGE_DIR)/j2re-image/lib/ext 
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_DEBUG_SDK_DIR)
+	mkdir -p $(BUILD_DEBUG_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_DEBUG_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_DEBUG_SDK_DIR)/jre/lib/ext
+	mkdir -p $(BUILD_DEBUG_JRE_DIR)/lib/ext 
 if ENABLE_PULSE_JAVA
 	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
-	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+	  $(BUILD_DEBUG_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
-	  $(BUILD_DEBUG_IMAGE_DIR)/j2re-image/lib/$(INSTALL_ARCH_DIR)
+	  $(BUILD_DEBUG_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
 	cp -pPRf pulse-java.jar \
-	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/ext
+	  $(BUILD_DEBUG_SDK_DIR)/jre/lib/ext
 	cp -pPRf pulse-java.jar \
-	  $(BUILD_DEBUG_IMAGE_DIR)/j2re-image/lib/ext
+	  $(BUILD_DEBUG_JRE_DIR)/lib/ext
 	(cd $(PULSE_JAVA_JAVA_SRCDIR) && \
-	   $(ZIP) -qur $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/src.zip org )
+	   $(ZIP) -qur $(BUILD_DEBUG_SDK_DIR)/src.zip org )
 endif
 if ZERO_BUILD
 	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
@@ -1623,30 +1626,30 @@ if ENABLE_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
 if ENABLE_SYSTEMTAP
-	mkdir -p $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/tapset ; \
+	mkdir -p $(BUILD_DEBUG_SDK_DIR)/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
 	if test $$? -eq 0; then \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot.stp \
-	    > $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	    > $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot.stp; \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    > $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	    > $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_jni.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
-	    $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/tapset/hotspot.stp; \
+	    $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot.stp; \
 	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/tapset/hotspot_jni.stp; \
+	    $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_jni.stp; \
 	fi; \
 	cp $(abs_top_builddir)/tapset/jstack.stp \
-	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/tapset/jstack.stp
+	  $(BUILD_DEBUG_SDK_DIR)/tapset/jstack.stp
 endif
 	cp $(abs_top_builddir)/nss.cfg \
-	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/security;
+	  $(BUILD_DEBUG_SDK_DIR)/jre/lib/security;
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
-	@echo "IcedTea (debug build) is served:" $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image
+	@echo "IcedTea (debug build) is served:" $(BUILD_DEBUG_SDK_DIR)
 	mkdir -p stamps
 	touch $@
 
@@ -1660,8 +1663,8 @@ clean-icedtea-debug:
 	rm -f stamps/icedtea-debug.stamp
 
 stamps/check-crypto.stamp: stamps/cryptocheck.stamp stamps/icedtea.stamp
-	if [ -e $(BUILD_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
-	  $(BUILD_IMAGE_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
+	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
+	  $(BUILD_SDK_DIR)/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
 	fi
 	mkdir -p stamps
 	touch $@
@@ -1673,8 +1676,8 @@ stamps/add-archive.stamp: stamps/icedtea.stamp
 if !ENABLE_JAMVM
 if !ENABLE_CACAO
 if !ZERO_BUILD
-	if [ -e $(BUILD_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
-	  $(BUILD_IMAGE_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
+	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
+	  $(BUILD_SDK_DIR)/bin/java -Xshare:dump ; \
 	fi
 endif
 endif
@@ -1682,12 +1685,12 @@ endif
 	touch stamps/add-archive.stamp
 
 clean-add-archive:
-	rm -vf $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -vf $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive.stamp
 
 stamps/check-crypto-debug.stamp: stamps/cryptocheck.stamp stamps/icedtea-debug.stamp
-	if [ -e $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
-	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
+	if [ -e $(BUILD_DEBUG_SDK_DIR)/bin/java ] ; then \
+	  $(BUILD_DEBUG_SDK_DIR)/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
 	fi
 	mkdir -p stamps
 	touch $@
@@ -1699,8 +1702,8 @@ stamps/add-archive-debug.stamp: stamps/icedtea-debug.stamp
 if !ENABLE_JAMVM
 if !ENABLE_CACAO
 if !ZERO_BUILD
-	if [ -e $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
-	  $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
+	if [ -e $(BUILD_DEBUG_SDK_DIR)/bin/java ] ; then \
+	  $(BUILD_DEBUG_SDK_DIR)/bin/java -Xshare:dump ; \
 	fi
 endif
 endif
@@ -1708,7 +1711,7 @@ endif
 	touch stamps/add-archive-debug.stamp
 
 clean-add-archive-debug:
-	rm -vf $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -vf $(BUILD_DEBUG_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive-debug.stamp
 
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
@@ -1746,8 +1749,8 @@ stamps/icedtea-boot.stamp: stamps/icedtea-boot-configure.stamp
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C $(BOOT_BUILD_OUTPUT_DIR) \
 	  images
-	$(abs_top_builddir)/pax-mark-vm $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image
-	@echo "Bootstrapped IcedTea is served:" $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_BOOT_SDK_DIR)
+	@echo "Bootstrapped IcedTea is served:" $(BUILD_BOOT_SDK_DIR)
 	mkdir -p stamps
 	touch $@
 
@@ -1758,12 +1761,12 @@ if BOOTSTRAPPING
 	rm -f stamps/icedtea-boot.stamp
 	rm -f stamps/icedtea-stage1.stamp
 	$(ARCH_PREFIX) $(MAKE) icedtea-stage1
-	@echo "bootstrap-poured IcedTea is served (again):" $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image
+	@echo "bootstrap-poured IcedTea is served (again):" $(BUILD_BOOT_SDK_DIR)
 else
 	rm -f stamps/icedtea.stamp
 	rm -f stamps/icedtea-stage2.stamp
 	$(ARCH_PREFIX) $(MAKE) icedtea-stage2
-	@echo "IcedTea is served (again):" $(BUILD_IMAGE_DIR)/j2sdk-image
+	@echo "IcedTea is served (again):" $(BUILD_SDK_DIR)
 endif
 
 hotspot:
@@ -1772,19 +1775,19 @@ if BOOTSTRAPPING
 	rm -f stamps/icedtea-stage1.stamp
 	$(ARCH_PREFIX) $(MAKE) ICEDTEA_BUILD_TARGET=hotspot icedtea-stage1
 	mkdir -p \
-	   $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
+	   $(BUILD_BOOT_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/server
 	cp $(BOOT_BUILD_OUTPUT_DIR)/$(SERVER_DIR)/libjvm.so \
-	   $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
-	@echo "HotSpot is served:" $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image
+	   $(BUILD_BOOT_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/server
+	@echo "HotSpot is served:" $(BUILD_BOOT_SDK_DIR)
 else
 	rm -f stamps/icedtea.stamp
 	rm -f stamps/icedtea-stage2.stamp
 	$(ARCH_PREFIX) $(MAKE) ICEDTEA_BUILD_TARGET=hotspot icedtea-stage2
 	mkdir -p \
-	   $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
+	   $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/server
 	cp $(BOOT_BUILD_OUTPUT_DIR)/$(SERVER_DIR)/libjvm.so \
-	   $(BUILD_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/server
-	@echo "HotSpot is served:" $(BUILD_IMAGE_DIR)/j2sdk-image
+	   $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/server
+	@echo "HotSpot is served:" $(BUILD_SDK_DIR)
 endif
 
 clean-icedtea-boot:
@@ -1793,8 +1796,8 @@ clean-icedtea-boot:
 	rm -f stamps/icedtea-boot.stamp
 
 stamps/check-crypto-boot.stamp: stamps/cryptocheck.stamp stamps/icedtea-boot.stamp
-	if [ -e $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
-	  $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
+	if [ -e $(BUILD_BOOT_SDK_DIR)/bin/java ] ; then \
+	  $(BUILD_BOOT_SDK_DIR)/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
 	fi
 	mkdir -p stamps
 	touch $@
@@ -1806,8 +1809,8 @@ stamps/add-archive-boot.stamp: stamps/icedtea-boot.stamp
 if !ENABLE_JAMVM
 if !ENABLE_CACAO
 if !ZERO_BUILD
-	if [ -e $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/bin/java ] ; then \
-	  $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
+	if [ -e $(BUILD_BOOT_SDK_DIR)/bin/java ] ; then \
+	  $(BUILD_BOOT_SDK_DIR)/bin/java -Xshare:dump ; \
 	fi
 endif
 endif
@@ -1815,7 +1818,7 @@ endif
 	touch $@
 
 clean-add-archive-boot:
-	rm -vf $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -vf $(BUILD_BOOT_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive-boot.stamp
 
 stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp stamps/check-crypto-boot.stamp \
@@ -2029,7 +2032,7 @@ clean-add-cacao-debug:
 # configure script arguments, quoted in single quotes
 CONFIGURE_ARGS = @CONFIGURE_ARGS@
 ADD_ZERO_CONFIGURE_ARGS = \
-	--with-jdk-home=$(BUILD_IMAGE_DIR)/j2sdk-image \
+	--with-jdk-home=$(BUILD_SDK_DIR) \
 	--disable-bootstrap --enable-zero
 if ADD_SHARK_BUILD
 ADD_ZERO_CONFIGURE_ARGS += \
@@ -2166,7 +2169,7 @@ check-hotspot: stamps/jtreg.stamp
 	mkdir -p test/hotspot/JTwork test/hotspot/JTreport
 	$(BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/hotspot/JTwork -r:test/hotspot/JTreport \
-		-jdk:$(BUILD_IMAGE_DIR)/j2sdk-image \
+		-jdk:$(BUILD_SDK_DIR) \
 		$(ICEDTEA_JTREG_OPTIONS) \
 		`pwd`/openjdk/hotspot/test \
 	    | tee test/$@.log
@@ -2176,7 +2179,7 @@ check-langtools: stamps/jtreg.stamp
 	$(BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/langtools/JTwork -r:test/langtools/JTreport \
 		$${ICEDTEA_JTREG_OTHERVM:--samevm} \
-		-jdk:$(BUILD_IMAGE_DIR)/j2sdk-image \
+		-jdk:$(BUILD_SDK_DIR) \
 		$(ICEDTEA_JTREG_OPTIONS) \
 		-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.langtools.jtx \
 		`pwd`/openjdk/langtools/test \
@@ -2195,7 +2198,7 @@ endif
 	$(BOOT_DIR)/bin/java -jar test/jtreg.jar -v1 -a -ignore:quiet \
 		-w:test/jdk/JTwork -r:test/jdk/JTreport \
 		$${ICEDTEA_JTREG_OTHERVM:--samevm} \
-		-jdk:$(BUILD_IMAGE_DIR)/j2sdk-image \
+		-jdk:$(BUILD_SDK_DIR) \
 		$(ICEDTEA_JTREG_OPTIONS) $(CACAO_EXCLUDE) \
 		-exclude:$(abs_top_srcdir)/test/jtreg/excludelist.jdk.jtx \
 		`pwd`/openjdk/jdk/test \
@@ -2277,6 +2280,172 @@ clean-cryptocheck:
 	rm -rf $(CRYPTO_CHECK_BUILD_DIR)
 	rm -f stamps/cryptocheck.stamp
 
+# Installation Targets
+# ====================
+
+install-exec-local:
+	${mkinstalldirs} $(DESTDIR)$(bindir) $(DESTDIR)$(includedir) $(DESTDIR)${exec_prefix}/lib
+	${mkinstalldirs} $(DESTDIR)$(includedir)/$(BUILD_OS_DIR) $(DESTDIR)${exec_prefix}/lib/$(BUILD_ARCH_DIR)
+	${mkinstalldirs} $(DESTDIR)${exec_prefix}/lib/$(BUILD_ARCH_DIR)/jli
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/bin $(DESTDIR)${prefix}/jre/lib
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/jli
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/ext
+	${mkinstalldirs} $(DESTDIR)${prefix}/tapset
+	for files in $(BUILD_SDK_DIR)/bin/*; do \
+	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)$(bindir); \
+	done
+	for files in $(BUILD_SDK_DIR)/include/*.h; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)$(includedir); \
+	done
+	for files in $(BUILD_SDK_DIR)/include/$(BUILD_OS_DIR)/*.h; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)$(includedir)/$(BUILD_OS_DIR); \
+	done
+	for files in $(BUILD_SDK_DIR)/lib/*.jar; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)${exec_prefix}/lib; \
+	done
+	for files in $(BUILD_SDK_DIR)/lib/*.idl; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)${exec_prefix}/lib; \
+	done
+	$(INSTALL_PROGRAM) $(BUILD_SDK_DIR)/lib/jexec $(DESTDIR)${exec_prefix}/lib
+	for files in $(BUILD_SDK_DIR)/lib/$(BUILD_ARCH_DIR)/*.so; do \
+	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${exec_prefix}/lib/$(BUILD_ARCH_DIR); \
+	done
+	for files in $(BUILD_SDK_DIR)/lib/$(BUILD_ARCH_DIR)/jli/*.so; do \
+	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${exec_prefix}/lib/$(BUILD_ARCH_DIR)/jli; \
+	done
+	for files in $(BUILD_SDK_DIR)/jre/bin/*; do \
+	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/bin; \
+	done
+	for files in $(BUILD_SDK_DIR)/jre/lib/*.jar; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib; \
+	done
+	$(INSTALL_PROGRAM) $(BUILD_SDK_DIR)/lib/jexec $(DESTDIR)${prefix}/jre/lib
+	for files in $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/*.so; do \
+	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR); \
+	done
+	for files in $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/jli/*.so; do \
+	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/jli; \
+	done
+	for vms in client server ; do \
+	  if [ -d $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ] ; then \
+	    ${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ; \
+	    for files in $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/$${vms}/*.so; do \
+	      $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/$${vms}; \
+	    done ; \
+	  fi ; \
+	done
+	for files in $(BUILD_SDK_DIR)/jre/lib/ext/*.jar; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/ext; \
+	done
+	for files in $(BUILD_SDK_DIR)/tapset/*.stp; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/tapset; \
+	done
+
+install-data-local:
+	${mkinstalldirs} $(DESTDIR)${prefix}
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/.systemPrefs
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/{cmm,ext,images/cursors,management,security}
+	${mkinstalldirs} $(DESTDIR)$(mandir)/{man1,ja_JP.UTF-8/man1}
+	${mkinstalldirs} $(DESTDIR)${prefix}/demo
+	${mkinstalldirs} $(DESTDIR)${prefix}/sample
+	${mkinstalldirs} $(DESTDIR)$(docdir)
+	${mkinstalldirs} $(DESTDIR)$(datadir)/applications
+	${mkinstalldirs} $(DESTDIR)$(sysconfdir)/.java/.systemPrefs
+	for files in $(BUILD_SDK_DIR)/jre/lib/*.properties; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib; \
+	done
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/release $(DESTDIR)${prefix}
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/src.zip $(DESTDIR)${prefix}
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/classlist $(DESTDIR)${prefix}/jre/lib
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/currency.data $(DESTDIR)${prefix}/jre/lib
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/jvm.hprof.txt $(DESTDIR)${prefix}/jre/lib
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/meta-index $(DESTDIR)${prefix}/jre/lib
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/psfont.properties.ja $(DESTDIR)${prefix}/jre/lib
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/tzdb.dat $(DESTDIR)${prefix}/jre/lib
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/jvm.cfg \
+	  $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)
+	for vms in client server ; do \
+	  if [ -d $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ] ; then \
+	    ${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ; \
+	    $(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/$${vms}/Xusage.txt \
+	      $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ; \
+	  fi ; \
+	done
+	for files in $(BUILD_SDK_DIR)/jre/lib/cmm/*.pf; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/cmm; \
+	done
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/ext/meta-index $(DESTDIR)${prefix}/jre/lib/ext
+	for files in $(BUILD_SDK_DIR)/jre/lib/images/cursors/*.gif; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/images/cursors; \
+	done
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/images/cursors/cursors.properties \
+	  $(DESTDIR)${prefix}/jre/lib/images/cursors
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/management/jmxremote.access \
+	  $(DESTDIR)${prefix}/jre/lib/management
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/management/management.properties \
+	  $(DESTDIR)${prefix}/jre/lib/management
+	for files in $(BUILD_SDK_DIR)/jre/lib/management/*.template; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/management; \
+	done
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/security/java.policy \
+	  $(DESTDIR)${prefix}/jre/lib/security
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/security/java.security \
+	  $(DESTDIR)${prefix}/jre/lib/security
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/security/nss.cfg \
+	  $(DESTDIR)${prefix}/jre/lib/security
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/security/blacklisted.certs \
+	  $(DESTDIR)${prefix}/jre/lib/security
+	for files in $(BUILD_SDK_DIR)/jre/lib/security/*.jar; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/security; \
+	done
+	for files in $(BUILD_SDK_DIR)/man/man1/*.1; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)$(mandir)/man1; \
+	done
+	for files in $(BUILD_SDK_DIR)/man/ja_JP.UTF-8/man1/*.1; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)$(mandir)/ja_JP.UTF-8/man1; \
+	done
+	for items in $(BUILD_SDK_DIR)/demo/*; do \
+	  cp -RP $${items} $(DESTDIR)${prefix}/demo ; \
+	done
+	for items in $(BUILD_SDK_DIR)/sample/*; do \
+	  cp -RP $${items} $(DESTDIR)${prefix}/sample ; \
+	done
+	${INSTALL_DATA} $(srcdir)/README $(DESTDIR)$(docdir)
+	${INSTALL_DATA} $(srcdir)/NEWS $(DESTDIR)$(docdir)
+	${INSTALL_DATA} $(srcdir)/AUTHORS $(DESTDIR)$(docdir)
+	${INSTALL_DATA} $(srcdir)/HACKING $(DESTDIR)$(docdir)
+	${INSTALL_DATA} $(BUILD_SDK_DIR)/ASSEMBLY_EXCEPTION $(DESTDIR)$(docdir)
+	${INSTALL_DATA} $(BUILD_SDK_DIR)/LICENSE $(DESTDIR)$(docdir)
+	${INSTALL_DATA} $(BUILD_SDK_DIR)/THIRD_PARTY_README $(DESTDIR)$(docdir)
+	for sizes in 16 24 32 48 ; do \
+	  ${mkinstalldirs} $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps ; \
+	  ${INSTALL_DATA} openjdk/jdk/src/solaris/classes/sun/awt/X11/java-icon$${sizes}.png \
+	    $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-1.8.0.png ; \
+	done
+	for files in $(DESKTOP_FILES) ; do \
+	  ${INSTALL_DATA} $(srcdir)/$${files} $(DESTDIR)$(datadir)/applications ; \
+	done
+	touch $(DESTDIR)/${prefix}/jre/.systemPrefs/.system.lock
+	touch $(DESTDIR)/${prefix}/jre/.systemPrefs/.systemRootModFile
+if ENABLE_DOCS
+	${mkinstalldirs} $(DESTDIR)$(docdir)/html
+	cp -RP $(BUILD_IMAGE_DIR)/docs $(DESTDIR)$(docdir)/html
+endif
+if !ENABLE_JAMVM
+if !ENABLE_CACAO
+if !ZERO_BUILD
+	for vms in client server ; do \
+	  if [ -d $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ] ; then \
+	    $(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/$${vms}/classes.jsa \
+	      $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ; \
+	  fi ; \
+	done
+endif
+endif
+endif
 # Target Aliases
 # ===============
 

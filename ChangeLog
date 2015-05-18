@@ -1,3 +1,49 @@
+2015-05-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR94: empty install target in Makefile.am
+	* Makefile.am:
+	(BUILD_SDK_DIR): Added.
+	(BUILD_JRE_DIR): Likewise.
+	(BUILD_JRE_ARCH_DIR): Redefine using BUILD_SDK_DIR.
+	(BUILD_DEBUG_SDK_DIR): Added.
+	(BUILD_DEBUG_JRE_DIR): Likewise.
+	(BUILD_DEBUG_JRE_ARCH_DIR): Redefine using
+	BUILD_DEBUG_SDK_DIR.
+	(BUILD_BOOT_SDK_DIR): Added.
+	(BUILD_BOOT_JRE_DIR): Likewise.
+	(DESKTOP_FILES): Likewise.
+	(EXTRA_DIST): Redefine using DESKTOP_FILES.
+	(install): Removed.
+	(bootstrap-directory-stage2): Redefine using
+	BUILD_BOOT_SDK_DIR.
+	(icedtea): Redefine using BUILD_SDK_DIR and
+	BUILD_JRE_DIR.
+	(icedtea-debug): Likewise using BUILD_DEBUG_SDK_DIR
+	and BUILD_DEBUG_JRE_DIR.
+	(check-crypto): Redefine using BUILD_SDK_DIR.
+	(add-archive): Likewise.
+	(clean-add-archive): Likewise.
+	(check-crypto-debug): Redefine using BUILD_DEBUG_SDK_DIR.
+	(add-archive-debug): Likewise.
+	(clean-add-archive-debug): Likewise.
+	(icedtea-boot): Redefine using BUILD_BOOT_SDK_DIR.
+	(rebuild): Likewise.
+	(hotspot): Redefine using BUILD_SDK_DIR and
+	BUILD_BOOT_SDK_DIR.
+	(check-crypto-boot): Redefine using BUILD_BOOT_SDK_DIR.
+	(add-archive-boot): Likewise.
+	(clean-add-archive-boot): Likewise.
+	(icedtea-stage1): Redefine using BUILD_SDK_DIR.
+	(check-hotspot): Likewise.
+	(check-langtools): Likewise.
+	(check-jdk): Likewise.
+	(install-exec-local): Added. Installs JDK binaries,
+	headers, native libraries, tapsets, JAR and IDL files.
+	(install-data-local): Installs property files, man
+	pages, images, documentation and other miscellaneous
+	data files, such as the timezone database.
+	* NEWS: Updated.
+
 2013-01-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2363: Remove EC source code prior to build
