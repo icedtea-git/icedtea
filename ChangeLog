@@ -1,5 +1,13 @@
 2015-05-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2377: PaX mark the installed JDK so it runs
+	on hardened systems
+	* Makefile.am:
+	(install-exec-local): PaX mark installed JDK.
+	* NEWS: Updated.
+
+2015-05-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2369: SunEC provider is partially installed
 	* TestCryptoLevel.java: Moved to...
 	* Makefile.am:

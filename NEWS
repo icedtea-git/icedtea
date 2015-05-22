@@ -71,6 +71,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2348: Avoid following symlinks for CACAO and JamVM patches
   - PR2363: Remove EC source code prior to build
   - PR2369: SunEC provider is partially installed
+  - PR2377: PaX mark the installed JDK so it runs on hardened systems
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck

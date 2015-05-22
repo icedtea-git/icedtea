@@ -2369,6 +2369,7 @@ install-exec-local:
 	for files in $(BUILD_SDK_DIR)/tapset/*.stp; do \
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/tapset; \
 	done
+	$(abs_top_builddir)/pax-mark-vm $(DESTDIR)${prefix}
 
 install-data-local:
 	${mkinstalldirs} $(DESTDIR)${prefix}
