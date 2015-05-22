@@ -1,7 +1,7 @@
-diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security openjdk/jdk/src/share/lib/security/java.security
---- openjdk.orig/jdk/src/share/lib/security/java.security-linux	2009-09-10 19:04:25.000000000 +0100
-+++ openjdk/jdk/src/share/lib/security/java.security-linux	2009-09-11 14:53:07.000000000 +0100
-@@ -45,13 +45,12 @@
+diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security-linux openjdk/jdk/src/share/lib/security/java.security-linux
+--- openjdk.orig/jdk/src/share/lib/security/java.security-linux	2015-02-10 16:24:28.000000000 +0000
++++ openjdk/jdk/src/share/lib/security/java.security-linux	2015-05-20 06:53:32.666803554 +0100
+@@ -67,13 +67,12 @@
  #
  security.provider.1=sun.security.provider.Sun
  security.provider.2=sun.security.rsa.SunRsaSign
@@ -20,4 +20,4 @@ diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security openjdk/jdk/src/
 +security.provider.8=sun.security.smartcardio.SunPCSC
  
  #
- # Select the source of seed data for SecureRandom. By default an
+ # Sun Provider SecureRandom seed source.

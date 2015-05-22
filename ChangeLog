@@ -1,3 +1,36 @@
+2015-05-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2369: SunEC provider is partially installed
+	* TestCryptoLevel.java: Moved to...
+	* Makefile.am:
+	(ECC_CHECK_BUILD_DIR): Added.
+	(CRYPTO_CHECK_SRCS): Update TestCryptoLevel.java
+	path.
+	(ECC_CHECK_SRCS): Added.
+	(ICEDTEA_PATCHES): Re-add updated disable-intree-ec.patch
+	(EXTRA_DIST): Add ECC_CHECK_SRCS.
+	(check-local): Add check-ecc.stamp.
+	(clean-tests): Add clean-check-ecc.
+	(clean-local): Add clean-ecccheck.
+	(.PHONY). ADd clean-ecccheck and clean-check-ecc.
+	(ecccheck): Build ECC check test.
+	(clean-ecccheck): Cleanup ECC check test.
+	(check-ecc): Run ECC check test.
+	(clean-check-ecc): Cleanup run of ECC check test.
+	* NEWS: Updated.
+	* fsg.sh: Don't remove SunEC.java and SunECEntries.java,
+	which are still needed by the PKCS11 provider in 8.
+	* patches/disable-intree-ec.patch:
+	Regenerated.
+	* patches/nss-config.patch: Likewise.
+	* patches/nss-not-enabled-config.patch: Likewise.
+	* test/standalone/TestCryptoLevel.java: ...here.
+	* test/standalone/TestEllipticCurveCryptoSupport.java:
+	Add check for elliptic curve cryptography support.
+	* test/standalone/agpl-3.0.txt:
+	Add back AGPL 3 license as this is used by TestCryptoLevel
+	and the new TestEllipticCurveCryptoSupport tests.
+
 2015-05-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR94: empty install target in Makefile.am

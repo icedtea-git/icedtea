@@ -69,6 +69,7 @@ STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
 STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
 JAMVM_IMPORT_PATH = $(abs_top_builddir)/jamvm/install/hotspot
 CRYPTO_CHECK_BUILD_DIR = $(abs_top_builddir)/cryptocheck.build
+ECC_CHECK_BUILD_DIR = $(abs_top_builddir)/ecccheck.build
 
 # Source directories
 
@@ -214,14 +215,17 @@ OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
 
 # Sources list
 
-CRYPTO_CHECK_SRCS = $(top_srcdir)/TestCryptoLevel.java
+CRYPTO_CHECK_SRCS = $(top_srcdir)/test/standalone/TestCryptoLevel.java
+
+ECC_CHECK_SRCS = $(top_srcdir)/test/standalone/TestEllipticCurveCryptoSupport.java
 
 # Patch list
 
 ICEDTEA_PATCHES = \
 	patches/memory-limits.patch \
 	patches/override-redirect-metacity.patch \
-	patches/rh1022017.patch
+	patches/rh1022017.patch \
+	patches/disable-intree-ec.patch
 
 # Conditional patches
 
@@ -560,16 +564,17 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	scripts/jni_create_stap.c \
 	scripts/jni_desc \
 	THANKYOU test/tapset \
-	$(CRYPTO_CHECK_SRCS)
+	$(CRYPTO_CHECK_SRCS) \
+	$(ECC_CHECK_SRCS)
 
 # Top-Level Targets
 # =================
 
 all-local: icedtea-stage2
 
-check-local: jtregcheck check-tapset
+check-local: jtregcheck check-tapset stamps/check-ecc.stamp
 
-clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports
+clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports clean-check-ecc
 	if [ $(abs_top_srcdir) != $(abs_top_builddir) ] ; then \
 	  if [ -e test ] ; then \
 	    rmdir test ; \
@@ -582,7 +587,7 @@ clean-local: clean-tests clean-pulse-java \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
  clean-extract clean-native-ecj clean-icedtea-stage2 \
  clean-icedtea-debug-stage2 clean-icedtea-stage1 clean-add-zero clean-add-zero-debug \
- clean-add-cacao clean-add-cacao-debug clean-cryptocheck
+ clean-add-cacao clean-add-cacao-debug clean-cryptocheck clean-ecccheck
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -613,7 +618,7 @@ distclean-local: clean-local clean-download
 	clean-download-nashorn clean-extract-nashorn clean-download-hotspot \
 	clean-check-crypto clean-check-crypto-debug clean-check-crypto-boot \
 	clean-add-archive clean-add-archive-debug clean-add-archive-boot clean-cryptocheck \
-	clean-tests clean-tapset-report
+	clean-tests clean-tapset-report clean-ecccheck clean-check-ecc
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -2280,6 +2285,29 @@ clean-cryptocheck:
 	rm -rf $(CRYPTO_CHECK_BUILD_DIR)
 	rm -f stamps/cryptocheck.stamp
 
+# ECC Availability Check
+
+stamps/ecccheck.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
+	mkdir -p $(ECC_CHECK_BUILD_DIR)
+	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
+	  -d $(ECC_CHECK_BUILD_DIR) $(ECC_CHECK_SRCS)
+	mkdir -p stamps
+	touch $@
+
+clean-ecccheck:
+	rm -rf $(ECC_CHECK_BUILD_DIR)
+	rm -f stamps/ecccheck.stamp
+
+stamps/check-ecc.stamp: stamps/ecccheck.stamp stamps/icedtea.stamp
+	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
+	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestEllipticCurveCryptoSupport no ; \
+	fi
+	mkdir -p stamps
+	touch $@
+
+clean-check-ecc:
+	rm -f stamps/check-ecc.stamp
+
 # Installation Targets
 # ====================
 
@@ -2475,6 +2503,8 @@ check-crypto-boot: stamps/check-crypto-boot.stamp
 
 check-crypto-debug: stamps/check-crypto-debug.stamp
 
+check-ecc: stamps/check-ecc.stamp
+
 clone-boot: stamps/clone-boot.stamp
 
 cryptocheck: stamps/cryptocheck.stamp
@@ -2486,6 +2516,8 @@ download-cacao: stamps/download-cacao.stamp
 download-jamvm: stamps/download-jamvm.stamp
 
 download-openjdk: stamps/download-openjdk.stamp
+
+ecccheck: stamps/ecccheck.stamp
 
 extract: stamps/extract.stamp
 

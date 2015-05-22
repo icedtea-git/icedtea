@@ -109,7 +109,5 @@ echo "Removing EC source code we don't build"
 rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECDHKeyAgreement.java
 rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECDSASignature.java
 rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECKeyPairGenerator.java
-rm -vf openjdk/jdk/src/share/classes/sun/security/ec/SunEC.java
-rm -vf openjdk/jdk/src/share/classes/sun/security/ec/SunECEntries.java
 rm -rvf openjdk/jdk/src/share/native/sun/security/ec
 rm -rvf openjdk/jdk/make/sun/security/ec
