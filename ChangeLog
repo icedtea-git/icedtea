@@ -1,5 +1,16 @@
 2015-06-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS: Updated.
+
+2015-05-01  Tiago Sturmer Daitx  <tdaitx@linux.vnet.ibm.com>
+
+	PR2328: GCJ uses ppc64el named libarch directory on ppc64le
+	* Makefile.am:
+	(bootstrap-directory-stage1): Handle boot JDK having
+	a ppc64el directory by symlinking to ppc64le.
+
+2015-06-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2394: ppc64le does not support -Xshare:dump
 	* Makefile.am:
 	(add-archive): Exclude ppc64le as well as ppc64.
