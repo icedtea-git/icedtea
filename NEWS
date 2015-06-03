@@ -276,6 +276,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2144: make dist fails due to lack of HotSpot-specific patches
   - PR2233, RH1190835: Discover gsettings symbols separately so early versions of GLib can be used (e.g. on RHEL 6)
   - PR2236: ppc64le should report its os.arch as ppc64le so tools can detect it
+  - PR2394: ppc64le does not support -Xshare:dump
 
 New in release 2.5.5 (2015-04-14):
 

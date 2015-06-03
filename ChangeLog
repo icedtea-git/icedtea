@@ -1,3 +1,12 @@
+2015-06-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2394: ppc64le does not support -Xshare:dump
+	* Makefile.am:
+	(add-archive): Exclude ppc64le as well as ppc64.
+	(add-archive-debug): Likewise.
+	(add-archive-boot): Likewise.
+	* NEWS: Updated.
+
 2015-04-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	Update build following PR2233 & PR2236.

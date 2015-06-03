@@ -1796,7 +1796,7 @@ if !ENABLE_JAMVM
 if !ENABLE_CACAO
 if !ZERO_BUILD
 	if [ -e $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
-	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64"; then \
+	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64" -a "x$(INSTALL_ARCH_DIR)" != "xppc64le" ; then \
 	    $(BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
 	  fi ; \
 	fi
@@ -1903,7 +1903,7 @@ if !ENABLE_JAMVM
 if !ENABLE_CACAO
 if !ZERO_BUILD
 	if [ -e $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
-	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64"; then \
+	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64" -a "x$(INSTALL_ARCH_DIR)" != "xppc64le" ; then \
 	    $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
 	  fi ; \
 	fi
@@ -2017,7 +2017,7 @@ if !ENABLE_JAMVM
 if !ENABLE_CACAO
 if !ZERO_BUILD
 	if [ -e $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java ] ; then \
-	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64"; then \
+	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64" -a "x$(INSTALL_ARCH_DIR)" != "xppc64le" ; then \
 	    $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/bin/java -Xshare:dump ; \
 	  fi ; \
 	fi
