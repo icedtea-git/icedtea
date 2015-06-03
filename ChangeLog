@@ -1,5 +1,10 @@
 2015-06-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS: Remove backport listed in 2.5.5
+	which was already fixed in 2.5.3.
+
+2015-06-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* Makefile.am:
 	(CORBA_CHANGESET): Update to icedtea-2.6pre21.
 	(JAXP_CHANGESET): Likewise.

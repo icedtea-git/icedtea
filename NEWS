@@ -306,7 +306,6 @@ New in release 2.5.5 (2015-04-14):
   - S7195480: javax.smartcardio does not detect cards on Mac OS X
   - S8001472: api/java_awt/Window/indexTGF_* tests fail because expected colors aren't equal
   - S8011646: SEGV in compiled code with loop predication
-  - S8012637: Adjust CipherInputStream class to work in AEAD/GCM mode
   - S8016545: java.beans.XMLEncoder.writeObject output is wrong
   - S8019324: assert(_f2 == 0 || _f2 == f2) failed: illegal field change
   - S8019623: Lack of synchronization in AppContext.getAppContext()
