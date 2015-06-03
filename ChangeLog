@@ -1,5 +1,23 @@
 2015-06-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-2.6pre21.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* configure.ac: Bump to 2.6.0pre21.
+	* hotspot.map.in: Update to icedtea-2.6pre21.
+
+2015-06-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2395: Path to jvm.cfg is wrong in add-systemtap-boot
 	* Makefile.am:
 	(BUILD_BOOT_JRE_ARCH_DIR): Added.
