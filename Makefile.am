@@ -54,6 +54,7 @@ CLS_DIR_BOOT = $(BOOT_BUILD_OUTPUT_DIR)/classes
 SERVER_DIR = hotspot/import/jre/lib/$(INSTALL_ARCH_DIR)/server
 BUILD_JRE_ARCH_DIR = $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 BUILD_DEBUG_JRE_ARCH_DIR = $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
+BUILD_BOOT_JRE_ARCH_DIR = $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)
 REWRITER_BUILD_DIR = $(abs_top_builddir)/rewriter.build
 STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
 STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
@@ -1809,7 +1810,7 @@ endif
 	touch stamps/add-archive.stamp
 
 clean-add-archive:
-	rm -vf $(BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -vf $(BUILD_JRE_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive.stamp
 
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
@@ -1916,7 +1917,7 @@ endif
 	touch stamps/add-archive-debug.stamp
 
 clean-add-archive-debug:
-	rm -vf $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -vf $(BUILD_DEBUG_JRE_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive-debug.stamp
 
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
@@ -1962,7 +1963,7 @@ clean-icedtea-boot:
 stamps/add-systemtap-boot.stamp: stamps/icedtea-boot.stamp
 if ENABLE_SYSTEMTAP
 	mkdir -p $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/tapset ; \
-	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
+	grep "client IGNORE" $(BUILD_BOOT_JRE_ARCH_DIR)/jvm.cfg; \
 	if test $$? -eq 0; then \
 	  $(SED) -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot.stp \
@@ -2030,7 +2031,7 @@ endif
 	touch $@
 
 clean-add-archive-boot:
-	rm -vf $(BOOT_BUILD_OUTPUT_DIR)/j2sdk-image/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -vf $(BUILD_BOOT_JRE_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive-boot.stamp
 
 stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp \

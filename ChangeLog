@@ -1,5 +1,17 @@
 2015-06-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2395: Path to jvm.cfg is wrong in add-systemtap-boot
+	* Makefile.am:
+	(BUILD_BOOT_JRE_ARCH_DIR): Added.
+	(clean-add-archive): Use BUILD_JRE_ARCH_DIR.
+	(clean-add-archive-debug): Use BUILD_DEBUG_JRE_ARCH_DIR.
+	(add-systemtap-boot): Use BUILD_BOOT_JRE_ARCH_DIR
+	instead of BUILD_JRE_ARCH_DIR which doesn't yet exist.
+	(clean-add-archive-boot): Use BUILD_BOOT_JRE_ARCH_DIR.
+	* NEWS: Updated.
+
+2015-06-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* NEWS: Updated.
 
 2015-05-01  Tiago Sturmer Daitx  <tdaitx@linux.vnet.ibm.com>
