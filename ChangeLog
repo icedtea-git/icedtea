@@ -1,3 +1,22 @@
+2015-06-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2407: Fix automatic enabling of the Zero build
+	on non-JIT architectures which don't use CACAO or JamVM
+	* NEWS: Updated.
+
+2013-01-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2407: Fix automatic enabling of the Zero build
+	on non-JIT architectures which don't use CACAO or JamVM
+	* acinclude.m4:
+	(IT_ENABLE_ZERO_BUILD): Depend on
+	IT_ENABLE_CACAO and IT_ENABLE_JAMVM so that
+	ENABLE_CACAO and ENABLE_JAMVM are set.  This
+	makes the tests work correctly again and means
+	that Zero is turned on automatically where there
+	is no CACAO or JamVM and the architecture is not
+	supported by a HotSpot JIT.
+
 2014-06-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2339: Fail early if there is no native HotSpot JIT

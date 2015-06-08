@@ -75,6 +75,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2369: SunEC provider is partially installed
   - PR2377: PaX mark the installed JDK so it runs on hardened systems
   - PR2383: Location of docs directory in install-data-local is incorrect
+  - PR2407: Fix automatic enabling of the Zero build on non-JIT architectures which don't use CACAO or JamVM
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck
