@@ -1,3 +1,16 @@
+2014-09-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2411: Fix references to hotspot.map following PR2001
+	* Makefile.am:
+	(HS_TYPE): Fix hotspot.map path.
+	(HS_URL): Likewise.
+	(HS_CHANGESET): Likewise.
+	(HS_SHA256SUM): Likewise.
+	(EXTRA_DIST): Remove hotspot.map.
+	hotspot.map.in is automatically added
+	by autoconf.
+	* NEWS: Updated.
+
 2014-05-01  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2410: Support PPC64 JIT on ppc64le

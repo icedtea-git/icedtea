@@ -20,10 +20,10 @@ LANGTOOLS_SHA256SUM = 71dbcb8990f66749332d72001ea79b458baa51fcd1086907178c83f070
 OPENJDK_SHA256SUM = b915757c7c17448c670e93b7b9885e46afad43fbf6585c2e0f9d3582237a8bd7
 NASHORN_SHA256SUM = b85c66df90280d529894563ab774968a462a57ad9568d8a2ab31a7f897cbe1e2
 
-HS_TYPE = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
-HS_URL = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
-HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$4}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
-HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$5}' version=$(HSBUILD) $(abs_top_srcdir)/hotspot.map`"
+HS_TYPE = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_builddir)/hotspot.map`"
+HS_URL = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_builddir)/hotspot.map`"
+HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$4}' version=$(HSBUILD) $(abs_top_builddir)/hotspot.map`"
+HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$5}' version=$(HSBUILD) $(abs_top_builddir)/hotspot.map`"
 
 DROP_URL = http://icedtea.classpath.org/download/drops
 
@@ -556,9 +556,8 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
 	$(top_srcdir)/patches/jamvm/*.patch \
 	tools-copy contrib overlays \
-	$(JTREG_SRCS) $(DESKTOP_FILES) \
-	HACKING $(PULSEAUDIO_SRCS) fsg.sh \
-	hotspot.map autogen.sh \
+	$(JTREG_SRCS) $(DESKTOP_FILES) HACKING \
+	$(PULSEAUDIO_SRCS) fsg.sh autogen.sh \
 	tapset/hotspot.stp.in \
 	tapset/hotspot_jni.stp.in \
 	scripts/jni_create_stap.c \
