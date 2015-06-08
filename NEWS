@@ -77,6 +77,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2383: Location of docs directory in install-data-local is incorrect
   - PR2407: Fix automatic enabling of the Zero build on non-JIT architectures which don't use CACAO or JamVM
   - PR2408: Enable Zero when Shark is enabled
+  - PR2409: Update Zero macro to match one in IcedTea 2.x
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck

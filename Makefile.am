@@ -915,6 +915,7 @@ else
 if USE_ALT_HOTSPOT_SRC_ZIP
 	ln -sf $(ALT_HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP)
 endif
+	echo "Using HotSpot build: ${HSBUILD}"
 	if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
 	  | $(SHA256SUM) --check ; \
 	then \

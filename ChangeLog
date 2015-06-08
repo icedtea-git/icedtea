@@ -1,5 +1,28 @@
 2015-06-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2409: Update Zero macro to match one in IcedTea 2.x
+	* NEWS: Updated.
+
+2012-07-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2409: Update Zero macro to match one in IcedTea 2.x
+	* Makefile.am:
+	(download-openjdk): Echo HotSpot build being used.
+	* acinclude.m4:
+	(IT_ENABLE_ZERO_BUILD): Use AC_DEFUN_ONCE.
+
+2013-09-09  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR2409: Update Zero macro to match one in IcedTea 2.x
+	* acinclude.m4:
+	(IT_SET_ARCH_SETTINGS): Add -D_LITTLE_ENDIAN to arm
+	and support arm64|aarch64.
+	(IT_ENABLE_ZERO_BUILD): Explicitly set ZERO_BITSPERWORD
+	for aarch64, alpha, arm, ia64 && sh.  Replace sparc64 with
+	sparcv9 which is what INSTALL_ARCH_DIR is set to.
+
+2015-06-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2408: Enable Zero when Shark is enabled
 	* NEWS: Updated.
 

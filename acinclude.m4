@@ -23,6 +23,13 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       BUILD_ARCH_DIR=arm
       INSTALL_ARCH_DIR=arm
       JRE_ARCH_DIR=arm
+      ARCHFLAG="-D_LITTLE_ENDIAN"
+      ;;
+    arm64|aarch64)
+      BUILD_ARCH_DIR=aarch64
+      INSTALL_ARCH_DIR=aarch64
+      JRE_ARCH_DIR=aarch64
+      ARCHFLAG="-D_LITTLE_ENDIAN"
       ;;
     mips)
       BUILD_ARCH_DIR=mips
@@ -609,7 +616,7 @@ AC_DEFUN([IT_FIND_TOOL],
  AC_SUBST([$1])
 ])
 
-AC_DEFUN([IT_ENABLE_ZERO_BUILD],
+AC_DEFUN_ONCE([IT_ENABLE_ZERO_BUILD],
 [
   AC_REQUIRE([IT_SET_ARCH_SETTINGS])
   AC_REQUIRE([IT_ENABLE_CACAO])
@@ -649,10 +656,10 @@ AC_DEFUN([IT_ENABLE_ZERO_BUILD],
   ZERO_LIBARCH="${INSTALL_ARCH_DIR}"
   dnl can't use AC_CHECK_SIZEOF on multilib
   case "${ZERO_LIBARCH}" in
-    i386|ppc|s390|sparc)
+    arm|i386|ppc|s390|sh|sparc)
       ZERO_BITSPERWORD=32
       ;;
-    amd64|ppc64|s390x|sparc64)
+    aarch64|alpha|amd64|ia64|ppc64|s390x|sparcv9)
       ZERO_BITSPERWORD=64
       ;;
     *)
