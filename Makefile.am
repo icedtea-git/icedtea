@@ -42,7 +42,7 @@ JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
 ICEDTEA_MAJOR = icedtea8
 ICEDTEA_PREFIX = $(ICEDTEA_MAJOR)-forest
 ICEDTEA_HG_URL = http://icedtea.classpath.org/hg/$(ICEDTEA_PREFIX)
-ICEDTEA_URL = $(DROP_URL)/$(ICEDTEA_MAJOR)
+ICEDTEA_URL = $(DROP_URL)/$(ICEDTEA_MAJOR)/$(ICEDTEA_RELEASE)
 
 # Build directories
 

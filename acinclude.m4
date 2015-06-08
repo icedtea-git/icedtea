@@ -1845,3 +1845,14 @@ AC_DEFUN([IT_ENABLE_JAR_COMPRESSION],
   AC_MSG_RESULT([$enable_jar_compression])
   AM_CONDITIONAL([ENABLE_JAR_COMPRESSION], test x"${enable_jar_compression}" = "xyes")
 ])
+
+AC_DEFUN_ONCE([IT_DETERMINE_VERSION],
+[
+  AC_MSG_CHECKING([which branch and release of IcedTea is being built])
+  ICEDTEA_RELEASE=$(echo ${PACKAGE_VERSION} | sed 's#pre.*##')
+  ICEDTEA_BRANCH=$(echo ${ICEDTEA_RELEASE}|sed 's|\.[[0-9]]$||')
+  AC_MSG_RESULT([branch ${ICEDTEA_BRANCH}, release ${ICEDTEA_RELEASE}])
+  AC_SUBST([ICEDTEA_RELEASE])
+  AC_SUBST([ICEDTEA_BRANCH])
+])
+

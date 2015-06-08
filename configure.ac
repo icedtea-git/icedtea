@@ -12,6 +12,9 @@ abs_top_srcdir=`pwd`
 cd $abs_top_builddir
 AC_SUBST(abs_top_srcdir)
 
+IT_DETERMINE_VERSION
+AC_CONFIG_FILES([hotspot.map])
+
 AC_CANONICAL_HOST
 
 AC_PREFIX_DEFAULT([bootstrap])

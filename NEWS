@@ -61,6 +61,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR1980: Support using the system installation of giflib
   - PR1981: Support using the system installation of libpng
   - PR1994: make dist broken
+  - PR2001: Synchronise HEAD tarball paths with release branch paths
   - PR2199: Support giflib 5.1.0
   - PR2212: DGifCloseFile call should check the return value, not the error code, for failure
   - PR2227: giflib 5.1 conditional excludes 6.0, 7.0, etc.
