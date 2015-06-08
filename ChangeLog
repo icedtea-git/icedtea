@@ -1,5 +1,21 @@
 2015-06-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2408: Enable Zero when Shark is enabled
+	* NEWS: Updated.
+
+2014-01-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2408: Enable Zero when Shark is enabled
+	* acinclude.m4:
+	(IT_ENABLE_ZERO_BUILD): Require IT_ENABLE_SHARK
+	so use_shark is set.
+	(IT_ENABLE_SHARK): Rewrite of IT_SET_SHARK_BUILD
+	to simplify & match style of similar macros.
+	* configure.ac:
+	Don't invoke IT_SET_SHARK_BUILD explicitly.
+
+2015-06-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2407: Fix automatic enabling of the Zero build
 	on non-JIT architectures which don't use CACAO or JamVM
 	* NEWS: Updated.

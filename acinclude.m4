@@ -614,6 +614,7 @@ AC_DEFUN([IT_ENABLE_ZERO_BUILD],
   AC_REQUIRE([IT_SET_ARCH_SETTINGS])
   AC_REQUIRE([IT_ENABLE_CACAO])
   AC_REQUIRE([IT_ENABLE_JAMVM])
+  AC_REQUIRE([IT_ENABLE_SHARK])
   AC_REQUIRE([IT_HAS_NATIVE_HOTSPOT_PORT])
   AC_MSG_CHECKING([whether to use the zero-assembler port])
   use_zero=no
@@ -681,28 +682,20 @@ AC_DEFUN([IT_ENABLE_ZERO_BUILD],
   AC_SUBST(ZERO_ARCHDEF)
 ])
 
-AC_DEFUN([IT_SET_SHARK_BUILD],
+AC_DEFUN_ONCE([IT_ENABLE_SHARK],
 [
-  AC_MSG_CHECKING(whether to use the Shark JIT)
-  shark_selected=no
+  AC_MSG_CHECKING([whether to use the Shark JIT])
   AC_ARG_ENABLE([shark], [AS_HELP_STRING(--enable-shark, use Shark JIT)],
   [
-    case "${enableval}" in
-      no)
-        ;;
-      *)
-        shark_selected=yes
-        ;;
-    esac
+    use_shark="${enableval}"
+  ],
+  [
+    use_shark=no
   ])
 
-  use_shark=no
-  if test "x${shark_selected}" = "xyes"; then
-      use_shark=yes
-  fi
   AC_MSG_RESULT($use_shark)
-
   AM_CONDITIONAL(SHARK_BUILD, test "x${use_shark}" = xyes)
+  AC_SUBST(ENABLE_SHARK)
 ])
 
 AC_DEFUN([IT_ENABLE_CACAO],
