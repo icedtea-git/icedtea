@@ -13,6 +13,9 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 3.0.0 (2014-XX-XX):
 
 * Backports
+  - S4890063, PR2304, RH1214835: HPROF: default text truncated when using doe=n option
+  - S6584008, PR2192, RH1173326: jvmtiStringPrimitiveCallback should not be invoked when string value is null
+  - S6991580, PR2403: IPv6 Nameservers in resolv.conf throws NumberFormatException
   - S8011278: Allow using a system-installed giflib
   - S8012224: AWT_TopLevels/TopLevelEvents/Automated/WindowIconifyDeiconifyEventsTest02 fails on Ubuntu 12.04 Unity shell
   - S8035341: Allow using a system installed libpng
@@ -21,6 +24,17 @@ New in release 3.0.0 (2014-XX-XX):
   - S8042806: Splashscreen uses libjpeg-internal macros
   - S8043805: Allow using a system-installed libjpeg
   - S8044235: src.zip should include all sources
+  - S8067231, PR2401: Zero builds fail after JDK-6898462
+  - S8067364, PR2146, RH114622: Printing to Postscript doesn't support dieresis
+  - S8069072, PR1961, RH1135504: GHASH performance improvement
+  - S8071705. PR2399, RH1182694: Java application menu misbehaves when running multiple screen stacked vertically
+  - S8072385, PR2404: Only the first DNSName entry is checked for endpoint identification
+  - S8074312, PR2253: Enable hotspot builds on 4.x Linux kernels
+  - S8074859, PR1937: Turn on warnings as error
+  - S8076212, PR2402: AllocateHeap() and ReallocateHeap() should be inlined.
+  - S8078482, PR2398, RH1201393: ppc: pass thread to throw_AbstractMethodError
+  - S8078654, PR2332: CloseTTFontFileFunc callback should be removed
+  - S8078666, PR2325: JVM fastdebug build compiled with GCC 5 asserts with "widen increases"
 * Bug fixes
   - S8041658: Use of -fdevirtualize on macroAssembler_x86.o (via -O2) with gcc 4.9.0 creates broken VM
   - PR94: empty install target in Makefile.am
@@ -40,6 +54,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR1367: Support using the system installation of LCMS
   - PR1369: Remove outdated bootstrap configure tests or make them fail on error
   - PR1379: Add build support for Zero AArch64
+  - PR1413: Undefined reference to libz during link of unpack200
   - PR1766: Expand architecture support
   - PR1774: Support GIF lib v5
   - PR1774: Correct #ifdef to #if
@@ -50,21 +65,26 @@ New in release 3.0.0 (2014-XX-XX):
   - PR1829: Support AM_MAINTAINER_MODE
   - PR1834, RH1022017: Report elliptic curves supported by NSS, not the SunEC library
   - PR1845: jstack.stp in OpenJDK8 is broken
+  - PR1869: Avoid x86 workaround when running Zero rather than a JIT
   - PR1935: HotSpot extraction needs to depend on the tarball being downloaded
+  - PR1937: Add configure option for -Werror
   - PR1938: Zero broken by enforced use of -Werror
   - PR1942: Bug reports lack IcedTea version & distribution packaging information
   - PR1950: Add build support for Zero SH
   - PR1965, G498288: Allow builds on PaX kernels
   - PR1968: Move to new OpenJDK bug URL format
+  - PR1975: SystemTap probes for the garbage collector.
   - PR1977: Support using the system installation of Zlib
   - PR1979: Support using the system installation of libjpeg
   - PR1980: Support using the system installation of giflib
   - PR1981: Support using the system installation of libpng
   - PR1994: make dist broken
   - PR2001: Synchronise HEAD tarball paths with release branch paths
+  - PR2095, RH1163501: 2048-bit DH upper bound too small for Fedora infrastructure
   - PR2199: Support giflib 5.1.0
   - PR2212: DGifCloseFile call should check the return value, not the error code, for failure
   - PR2227: giflib 5.1 conditional excludes 6.0, 7.0, etc.
+  - PR2237, RH1194378: ppc64le should report its os.arch as ppc64le so tools can detect it
   - PR2248: HotSpot tarball fails verification after download
   - PR2256: Add SystemTap tests
   - PR2257: clean-extract-nashorn rule is never run
@@ -75,6 +95,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2369: SunEC provider is partially installed
   - PR2377: PaX mark the installed JDK so it runs on hardened systems
   - PR2383: Location of docs directory in install-data-local is incorrect
+  - PR2400, RH1206656: Zero JVM crashes on startup when built with GCC 5
   - PR2407: Fix automatic enabling of the Zero build on non-JIT architectures which don't use CACAO or JamVM
   - PR2408: Enable Zero when Shark is enabled
   - PR2409: Update Zero macro to match one in IcedTea 2.x
