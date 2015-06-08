@@ -418,4 +418,13 @@ AC_SUBST(LLVM_LIBS)
 AC_SUBST(CONFIGURE_ARGS)
 CONFIGURE_ARGS="$ac_configure_args"
 
+# Sanity check; make sure we have a JVM
+if test "x$has_native_hotspot_port" = "xno" ; then
+  if test "x${use_zero}" = "xno" ; then
+    if test "x${ENABLE_CACAO}" = "xno" -a "x${ENABLE_JAMVM}" = "xno"; then
+      AC_MSG_ERROR([No native HotSpot port available for ${host_cpu} and all alternatives disabled.])
+    fi
+  fi
+fi
+
 AC_OUTPUT

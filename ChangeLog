@@ -1,3 +1,23 @@
+2014-06-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2339: Fail early if there is no native HotSpot JIT
+	& all other options are disabled
+	* acinclude.m4:
+	(IT_ENABLE_ZERO_BUILD): Depend on
+	IT_HAS_NATIVE_HOTSPOT_PORT. Split out arch-dependent
+	code into that macro. Make ENABLE_CACAO test more
+	readable.
+	(IT_ENABLE_CACAO): Handle enableval same as other macros
+	so possible values are only ever yes or no.
+	(IT_ENABLE_JAMVM): Likewise.
+	(IT_HAS_NATIVE_HOTSPOT_PORT): Architecture detection
+	split out from IT_ENABLE_ZERO_BUILD. Now sets
+	has_native_hotspot_port for later reference.
+	* configure.ac:
+	Error out if there is no native HotSpot port and
+	Zero (which implies Shark & ARM32 JIT), CACAO and
+	JamVM are all disabled.
+
 2014-09-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2001: Synchronise HEAD tarball paths with

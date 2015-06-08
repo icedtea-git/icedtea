@@ -69,6 +69,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2256: Add SystemTap tests
   - PR2257: clean-extract-nashorn rule is never run
   - PR2329: jamvm parallel unpack failures
+  - PR2339: Fail early if there is no native HotSpot JIT & all other options are disabled
   - PR2348: Avoid following symlinks for CACAO and JamVM patches
   - PR2363: Remove EC source code prior to build
   - PR2369: SunEC provider is partially installed
