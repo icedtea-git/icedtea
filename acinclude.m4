@@ -54,6 +54,12 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       JRE_ARCH_DIR=ppc64
       ARCHFLAG="-m64"
        ;;
+    powerpc64le)
+      BUILD_ARCH_DIR=ppc64
+      INSTALL_ARCH_DIR=ppc64
+      JRE_ARCH_DIR=ppc64
+      ARCHFLAG="-m64"
+       ;;
     sparc)
       BUILD_ARCH_DIR=sparc
       INSTALL_ARCH_DIR=sparc

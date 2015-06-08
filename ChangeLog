@@ -1,3 +1,18 @@
+2014-05-01  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2410: Support PPC64 JIT on ppc64le
+	* AUTHORS: Add Tiago.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_SET_ARCH_SETTINGS): Expand ppc64le to its
+	own block to avoid potential future collisions.
+
+2014-05-01  Tiago Sturmer Daitx  <tdaitx@linux.vnet.ibm.com>
+
+	PR2410: Support PPC64 JIT on ppc64le
+	* acinclude.m4:
+	(IT_SET_ARCH_SETTINGS): Support ppc64le.
+
 2015-06-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2409: Update Zero macro to match one in IcedTea 2.x
