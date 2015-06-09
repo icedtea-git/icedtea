@@ -268,17 +268,42 @@ New in release 2.6.0 (2014-XX-XX):
   - S8068338: Better message about incompatible zlib in Deflater.init
   - S8068507: (fc) Rename the new jdk.net.enableFastFileTransfer system property to jdk.nio.enableFastFileTransfer
   - S8068639: Make certain annotation classfile warnings opt-in
+* Backports
+  - S4890063, PR2305, RH1214835: HPROF: default text truncated when using doe=n option
+  - S6991580, PR2308: IPv6 Nameservers in resolv.conf throws NumberFormatException
+  - S8021120, PR2301: TieredCompilation can be enabled even if TIERED is undefined
+  - S8048214, PR2357: Linker error when compiling G1SATBCardTableModRefBS after include order changes
+  - S8072385, PR2387: Only the first DNSName entry is checked for endpoint identification
+  - S8075136: Unnecessary sign extension for byte array access
+  - S8076212, PR2314: AllocateHeap() and ReallocateHeap() should be inlined.
+  - S8078654, PR2333: CloseTTFontFileFunc callback should be removed
+  - S8078666, PR2326: JVM fastdebug build compiled with GCC 5 asserts with "widen increases"
 * Bug fixes
+  - PR1661: Cleanup SYSTEM_GCONF option and allow it to be set false
   - PR1786: Allow x86 build to occur on x86_64 using a previously built x86_64 build
   - PR1846: Build fails when using IcedTea7 as bootstrap JDK with native ecj
   - PR1847: Synchronise javac.in with IcedTea6
   - PR2060: Fix warnings found by Gentoo ebuild QA with gcc 4.9.1
   - PR2144: make dist fails due to lack of HotSpot-specific patches
+  - PR2161: RHEL 6 has a version of GIO which meets the version criteria, but has no g_settings_*
   - PR2233, RH1190835: Discover gsettings symbols separately so early versions of GLib can be used (e.g. on RHEL 6)
   - PR2236: ppc64le should report its os.arch as ppc64le so tools can detect it
+  - PR2320: Allow use of system GConf
+  - PR2323: System GConf without system GIO configuration broken
   - PR2328: GCJ uses ppc64el named libarch directory on ppc64le
   - PR2394: ppc64le does not support -Xshare:dump
   - PR2395: Path to jvm.cfg is wrong in add-systemtap-boot
+* AArch64 port
+  - Add copyright to aarch64_ad.m4
+  - S8069593: Changes to JavaThread::_thread_state must use acquire and release
+  - S8074349: AARCH64: C2 generates poor code for some byte and character stores
+  - S8075045: AARCH64: Stack banging should use store rather than load
+  - S8075324: Costs of memory operands in aarch64.ad are inconsistent
+  - S8075443: AARCH64: Missed L2I optimizations in C2
+  - S8075930: AARCH64: Use FP Register in C2
+  - S8076467: AARCH64: assertion fail with -XX:+UseG1GC
+  - S8079203: AARCH64: Need to cater for different partner implementations
+  - S8080586: aarch64: hotspot test compiler/codegen/7184394/TestAESMain.java fails
 
 New in release 2.5.5 (2015-04-14):
 
