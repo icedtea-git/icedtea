@@ -1,5 +1,10 @@
 2015-06-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS: Add additional Red Hat and
+	Gentoo bugs for issues fixed in 2.6pre22.
+
+2015-06-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* Makefile.am,
 	(CORBA_CHANGESET): Update to icedtea-2.6pre22.
 	(JAXP_CHANGESET): Likewise.

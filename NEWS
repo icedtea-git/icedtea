@@ -270,8 +270,8 @@ New in release 2.6.0 (2014-XX-XX):
   - S8068639: Make certain annotation classfile warnings opt-in
 * Backports
   - S4890063, PR2305, RH1214835: HPROF: default text truncated when using doe=n option
-  - S6991580, PR2308: IPv6 Nameservers in resolv.conf throws NumberFormatException
-  - S8021120, PR2301: TieredCompilation can be enabled even if TIERED is undefined
+  - S6991580, PR2308, RH1210739: IPv6 Nameservers in resolv.conf throws NumberFormatException
+  - S8021120, PR2301, G548784: TieredCompilation can be enabled even if TIERED is undefined
   - S8048214, PR2357: Linker error when compiling G1SATBCardTableModRefBS after include order changes
   - S8072385, PR2387: Only the first DNSName entry is checked for endpoint identification
   - S8075136: Unnecessary sign extension for byte array access
