@@ -1,3 +1,18 @@
+2015-06-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* INSTALL:
+	Document GConf2 option and requirements.
+	* Makefile.am:
+	(ICEDTEA_ENV): Add SYSTEM_GCONF, GCONF_LIBS
+	and GCONF_CFLAGS.
+	* acinclude.m4:
+	(IT_CHECK_FOR_GCONF): Add --enable-system-gconf
+	for building using the system installation of
+	GConf. This is disabled by default on
+	systems where the preferable GSettings API in GIO
+	is found.
+	* configure.ac: Call IT_CHECK_FOR_GCONF.
+
 2015-06-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add additional Red Hat and

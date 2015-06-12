@@ -22,6 +22,7 @@ alsa
 xsltproc (for bootstrapping)
 ant >= 1.6.5 with the regexp task from ant-nodeps
 glib2-devel (for --enable-system-gio)
+GConf2-devel (for --enable-system-gconf)
 gtk2-devel (for --enable-system-gtk)
 giflib-devel (for --enable-system-gif)
 libpng-devel (for --enable-system-png)
@@ -105,6 +106,9 @@ to configure:
   Gtk+ instead of trying to dynamically open it at runtime.
 * --enable-system-gio: Build and link against the system installation of
   GIO instead of trying to dynamically open it at runtime.
+* --enable-system-gconf: Build and link against the system installation of
+  GConf instead of trying to dynamically open it at runtime (only enabled
+  by default on systems with older versions of Glib/GIO without the GSettings API)
 * --enable-system-fontconfig: Build and link against the system installation of
   fontconfig instead of trying to dynamically open it at runtime.
 * --enable-system-pcsc: Build and link against the system installation of

@@ -2960,3 +2960,34 @@ EOF
 AM_CONDITIONAL([JAVAC_LACKS_UNDERSCORED_LITERALS], test x"${it_cv_underscore}" = "xyes")
 AC_PROVIDE([$0])dnl
 ])
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_GCONF],
+[
+  AC_REQUIRE([IT_CHECK_FOR_GIO])
+  AC_MSG_CHECKING([whether to use the system GConf install])
+  AC_ARG_ENABLE([system-gconf],
+	      [AS_HELP_STRING(--enable-system-gconf,use the system GConf [[default=no if g_settings is available]])],
+  [
+    ENABLE_SYSTEM_GCONF="${enableval}"
+  ],
+  [
+    if test x"${ENABLE_SYSTEM_GSETTINGS}" = "xtrue"; then
+      ENABLE_SYSTEM_GCONF="no"
+    else
+      ENABLE_SYSTEM_GCONF="yes"
+    fi
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_GCONF})
+  if test x"${ENABLE_SYSTEM_GCONF}" = "xyes"; then
+    dnl Check for Gconf+ headers and libraries.
+    PKG_CHECK_MODULES(GCONF, gconf-2.0 gobject-2.0,[GCONF_FOUND=yes],[GCONF_FOUND=no])
+    if test "x${GCONF_FOUND}" = xno; then
+      AC_MSG_ERROR([Could not find GConf; install GConf or build with --disable-system-gconf to use the in-tree headers.])
+    fi
+    AC_SUBST(GCONF_CFLAGS)
+    AC_SUBST(GCONF_LIBS)
+    ENABLE_SYSTEM_GCONF=true
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_GCONF, test x"${ENABLE_SYSTEM_GCONF}" = "xtrue")
+  AC_SUBST(ENABLE_SYSTEM_GCONF)
+])
