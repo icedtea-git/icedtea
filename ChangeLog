@@ -1,3 +1,14 @@
+2015-06-15  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2414: CFLAGS, CXXFLAGS and LDFLAGS should be
+	passed to OpenJDK build
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE): Pass --with-extra-cflags,
+	--with-extra-cxxflags and --with-extra-ldflags,
+	using CFLAGS, CXXFLAGS and LDFLAGS values
+	held by make.
+	* NEWS: Updated.
+
 2015-06-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:

@@ -296,7 +296,10 @@ ICEDTEA_CONFIGURE = \
 	  --with-boot-jdk=$(BOOT_DIR) \
 	  --with-update-version=$(JDK_UPDATE_VERSION) \
 	  --with-build-number=$(BUILD_VERSION) \
-	  --with-milestone="fcs"
+	  --with-milestone="fcs" \
+	  --with-extra-cflags="$(CFLAGS)" \
+	  --with-extra-cxxflags="$(CXXFLAGS)" \
+	  --with-extra-ldflags="$(LDFLAGS)"
 
 if ENABLE_CACAO
 ICEDTEA_CONFIGURE += \
