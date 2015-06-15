@@ -95,7 +95,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S8029073: (corba) New connection reclaimed when number of connection is greater than highwatermark
   - S8029190: VM_Version::determine_features() asserts on Fujitsu Sparc64 CPUs
   - S8029302: Performance regression in Math.pow intrinsic
-  - S8029607: Type of Service (TOS) cannot be set in IPv6 header
+  - S8029607, RH1230702, PR2418: Type of Service (TOS) cannot be set in IPv6 header
   - S8029775: Solaris code cleanup
   - S8030114: [parfait] warnings from b119 for jdk.src.share.native.sun.security.smartcardio: JNI exception pending
   - S8030192: TESTFAIL: java/util/logging/TestLoggerBundleSync.java failed with NPE
@@ -190,7 +190,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S8048050: Agent NullPointerException when rmi.port in use
   - S8048110: Using tables in JTextPane leads to infinite loop in FlowLayout.layoutRow
   - S8048170: Test closed/java/text/Normalizer/ConformanceTest.java failed
-  - S8048212: Two tests failed with "java.net.SocketException: Bad protocol option" on Windows after 8029607
+  - S8048212, PR2418: Two tests failed with "java.net.SocketException: Bad protocol option" on Windows after 8029607
   - S8048271: Minor GC times doubled from JDK 6u35 to JDK 7u51
   - S8048506: [macosx] javax.swing.PopupFactory issue with null owner
   - S8048887: SortingFocusTraversalPolicy throws IllegalArgumentException from the sort method
@@ -287,8 +287,8 @@ New in release 2.6.0 (2014-XX-XX):
 * Backports
   - S4890063, PR2305, RH1214835: HPROF: default text truncated when using doe=n option
   - S6991580, PR2308, RH1210739: IPv6 Nameservers in resolv.conf throws NumberFormatException
-  - S8021120, PR2301, G548784: TieredCompilation can be enabled even if TIERED is undefined
-  - S8048214, PR2357: Linker error when compiling G1SATBCardTableModRefBS after include order changes
+  - S8021120, PR2301: TieredCompilation can be enabled even if TIERED is undefined
+  - S8048214, PR2357, G548784: Linker error when compiling G1SATBCardTableModRefBS after include order changes
   - S8072385, PR2387: Only the first DNSName entry is checked for endpoint identification
   - S8075136: Unnecessary sign extension for byte array access
   - S8076212, PR2314: AllocateHeap() and ReallocateHeap() should be inlined.
@@ -303,7 +303,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2144: make dist fails due to lack of HotSpot-specific patches
   - PR2161: RHEL 6 has a version of GIO which meets the version criteria, but has no g_settings_*
   - PR2233, RH1190835: Discover gsettings symbols separately so early versions of GLib can be used (e.g. on RHEL 6)
-  - PR2236: ppc64le should report its os.arch as ppc64le so tools can detect it
+  - PR2236, RH1191652: ppc64le should report its os.arch as ppc64le so tools can detect it
   - PR2320: Allow use of system GConf
   - PR2323: System GConf without system GIO configuration broken
   - PR2328: GCJ uses ppc64el named libarch directory on ppc64le
@@ -323,7 +323,7 @@ New in release 2.6.0 (2014-XX-XX):
 * PPC & AIX port
   - Changes to make aix compile after the merge
   - S8069590: AIX port of "8050807: Better performing performance data handling"
-  - S8078482, PR2307: ppc: pass thread to throw_AbstractMethodError
+  - S8078482, PR2307, RH1201393: ppc: pass thread to throw_AbstractMethodError
   - S8080190: PPC64: Fix wrong rotate instructions in the .ad file
 
 New in release 2.5.5 (2015-04-14):

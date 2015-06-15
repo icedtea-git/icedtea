@@ -1,3 +1,9 @@
+2015-06-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS:
+	Add missing external bug references. Add
+	backport bug (PR2418) for S8029607 / RH1230702.
+
 2015-06-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
