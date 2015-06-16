@@ -96,6 +96,11 @@ SOURCEPATH_DIRS = $(OPENJDK_SOURCEPATH_DIRS)
 
 VERSION_SETTINGS_FILE = openjdk/jdk/make/ProfileNames.gmk
 
+JDK_CACERTS_FILE = $(SYSTEM_JDK_DIR)/jre/lib/security/cacerts
+
+CACERTS_FILE = \
+  `if [ -h $(JDK_CACERTS_FILE) ] ; then $(READLINK) -e $(JDK_CACERTS_FILE) ; else echo $(JDK_CACERTS_FILE); fi`
+
 # Sources used from OpenJDK.
 #PR43148 - javac fails due to missing java.util.regex.Matcher.quoteReplacement
 #PR48033 - Missing javax.management.remote.JMXServiceURL
@@ -284,7 +289,7 @@ endif
 
 ICEDTEA_CONFIGURE = \
 	  --enable-unlimited-crypto \
-	  --with-cacerts-file=$(SYSTEM_JDK_DIR)/jre/lib/security/cacerts \
+	  --with-cacerts-file=$(CACERTS_FILE) \
 	  --with-stdc++lib=dynamic \
 	  --with-boot-jdk=$(BOOT_DIR) \
 	  --with-update-version=$(JDK_UPDATE_VERSION) \

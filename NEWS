@@ -103,6 +103,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2411: Fix references to hotspot.map following PR2001
   - PR2413: OpenJDK doesn't auto-select Zero on architectures where no server JVM is available
   - PR2414: CFLAGS, CXXFLAGS and LDFLAGS should be passed to OpenJDK build
+  - PR2429: OpenJDK build does not copy a symlinked cacerts file
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck

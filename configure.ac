@@ -34,6 +34,7 @@ IT_FIND_TOOL([ZIP], [zip])
 IT_FIND_TOOL([UNZIP], [unzip])
 IT_FIND_TOOL([CPIO], [cpio])
 IT_FIND_TOOL([FILE], [file])
+IT_FIND_TOOL([READLINK], [readlink])
 AC_CHECK_TOOLS([FASTJAR], [fastjar jar])
 if test "x$FASTJAR" = x; then
 	AC_MSG_ERROR([Can't find fastjar or jar])
