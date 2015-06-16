@@ -1,3 +1,12 @@
+2015-06-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2433: ppc64le does not support -Xshare:dump
+	* Makefile.am:
+	(add-archive): Exclude ppc64le as well as ppc64.
+	(add-archive-debug): Likewise.
+	(add-archive-boot): Likewise.
+	* NEWS: Updated.
+
 2014-05-13  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2432: ppc64 JIT doesn't support class data sharing
