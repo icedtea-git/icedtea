@@ -108,6 +108,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2433: ppc64le does not support -Xshare:dump
   - PR2434: SystemTap support is no longer optional
   - PR2439: NSS PKCS11 regression - due to java.security automatic loading
+  - PR2443: install stage fails where BUILD_ARCH_DIR != INSTALL_ARCH_DIR
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck

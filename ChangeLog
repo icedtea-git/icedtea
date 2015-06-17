@@ -1,3 +1,14 @@
+2015-06-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2443: install stage fails where
+	BUILD_ARCH_DIR != INSTALL_ARCH_DIR
+	* Makefile.am:
+	(install-exec-local): Use INSTALL_ARCH_DIR
+	rather than BUILD_ARCH_DIR as the two are not
+	the same on x86 (i386 vs. i586)
+	(install-data-local): Likewise.
+	* NEWS: Updated.
+
 2012-03-14  Mark Wielaard  <mjw@redhat.com>
 
 	PR2256: Add SystemTap tests

@@ -2340,11 +2340,11 @@ clean-check-ecc:
 
 install-exec-local:
 	${mkinstalldirs} $(DESTDIR)$(bindir) $(DESTDIR)$(includedir) $(DESTDIR)${exec_prefix}/lib
-	${mkinstalldirs} $(DESTDIR)$(includedir)/$(BUILD_OS_DIR) $(DESTDIR)${exec_prefix}/lib/$(BUILD_ARCH_DIR)
-	${mkinstalldirs} $(DESTDIR)${exec_prefix}/lib/$(BUILD_ARCH_DIR)/jli
+	${mkinstalldirs} $(DESTDIR)$(includedir)/$(BUILD_OS_DIR) $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)
+	${mkinstalldirs} $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli
 	${mkinstalldirs} $(DESTDIR)${prefix}/jre/bin $(DESTDIR)${prefix}/jre/lib
-	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)
-	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/jli
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli
 	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/ext
 	${mkinstalldirs} $(DESTDIR)${prefix}/tapset
 	for files in $(BUILD_SDK_DIR)/bin/*; do \
@@ -2363,11 +2363,11 @@ install-exec-local:
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${exec_prefix}/lib; \
 	done
 	$(INSTALL_PROGRAM) $(BUILD_SDK_DIR)/lib/jexec $(DESTDIR)${exec_prefix}/lib
-	for files in $(BUILD_SDK_DIR)/lib/$(BUILD_ARCH_DIR)/*.so; do \
-	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${exec_prefix}/lib/$(BUILD_ARCH_DIR); \
+	for files in $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR)/*.so; do \
+	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR); \
 	done
-	for files in $(BUILD_SDK_DIR)/lib/$(BUILD_ARCH_DIR)/jli/*.so; do \
-	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${exec_prefix}/lib/$(BUILD_ARCH_DIR)/jli; \
+	for files in $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR)/jli/*.so; do \
+	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/bin/*; do \
 	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/bin; \
@@ -2376,17 +2376,17 @@ install-exec-local:
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib; \
 	done
 	$(INSTALL_PROGRAM) $(BUILD_SDK_DIR)/lib/jexec $(DESTDIR)${prefix}/jre/lib
-	for files in $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/*.so; do \
-	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR); \
+	for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*.so; do \
+	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR); \
 	done
-	for files in $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/jli/*.so; do \
-	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/jli; \
+	for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/jli/*.so; do \
+	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli; \
 	done
 	for vms in client server ; do \
-	  if [ -d $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ] ; then \
-	    ${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ; \
-	    for files in $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/$${vms}/*.so; do \
-	      $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/$${vms}; \
+	  if [ -d $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ] ; then \
+	    ${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ; \
+	    for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/*.so; do \
+	      $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}; \
 	    done ; \
 	  fi ; \
 	done
@@ -2404,7 +2404,7 @@ install-data-local:
 	${mkinstalldirs} $(DESTDIR)${prefix}
 	${mkinstalldirs} $(DESTDIR)${prefix}/jre/.systemPrefs
 	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib
-	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)
 	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/{cmm,ext,images/cursors,management,security}
 	${mkinstalldirs} $(DESTDIR)$(mandir)/{man1,ja_JP.UTF-8/man1}
 	${mkinstalldirs} $(DESTDIR)${prefix}/demo
@@ -2423,13 +2423,13 @@ install-data-local:
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/meta-index $(DESTDIR)${prefix}/jre/lib
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/psfont.properties.ja $(DESTDIR)${prefix}/jre/lib
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/tzdb.dat $(DESTDIR)${prefix}/jre/lib
-	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/jvm.cfg \
-	  $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/jvm.cfg \
+	  $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)
 	for vms in client server ; do \
-	  if [ -d $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ] ; then \
-	    ${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ; \
-	    $(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/$${vms}/Xusage.txt \
-	      $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ; \
+	  if [ -d $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ] ; then \
+	    ${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ; \
+	    $(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/Xusage.txt \
+	      $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ; \
 	  fi ; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/lib/cmm/*.pf; do \
@@ -2496,9 +2496,9 @@ if !ENABLE_JAMVM
 if !ENABLE_CACAO
 if !ZERO_BUILD
 	for vms in client server ; do \
-	  if [ -d $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ] ; then \
-	    $(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/$(BUILD_ARCH_DIR)/$${vms}/classes.jsa \
-	      $(DESTDIR)${prefix}/jre/lib/$(BUILD_ARCH_DIR)/$${vms} ; \
+	  if [ -d $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ] ; then \
+	    $(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/classes.jsa \
+	      $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ; \
 	  fi ; \
 	done
 endif
