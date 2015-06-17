@@ -29,7 +29,7 @@ zlib-devel
 libffi (for --enable-zero or on archs other than x86/x86_64/sparc)
 pulseaudio-libs-devel >= 0.9.11 (for --enable-pulse-java)
 LLVM 2.5 or later (for --enable-shark)
-systemtap-sdl-devel >= 0.9.5 (for --enable-systemtap, Java method tracing requires systemtap >= 0.9.9)
+systemtap-sdl-devel >= 0.9.5 (Java method tracing requires systemtap >= 0.9.9)
 
 See ./configure --help if you need to override the defaults.
 
@@ -195,16 +195,14 @@ SystemTap
 =========
 
 IcedTea7 includes work to allow the existing DTrace probes included in
-OpenJDK to be used with SystemTap.  This is enabled using the
---enable-systemtap option, and requires version 0.9.5 or later (0.9.9
+OpenJDK to be used with SystemTap.  This requires version 0.9.5 or later (0.9.9
 or later if you want Java method tracing).  The tapset needs to know
-the final install location of the JDK, so the --with-abs-install-dir
+the final install location of the JDK, so the --with-abs-install-dir option
 should also be used to specify this.  If not set, it defaults to the
 in-tree location of openjdk.build/j2sdk-image and requires
 manual changes to tapset/hotspot.stp to work from elsewhere. For
 example, if you plan to install the resulting build in
 /usr/lib/jvm/java-1.6.0-openjdk, then you should specify
---enable-systemtap
 --with-abs-install-dir=/usr/lib/jvm/java-1.6.0-openjdk.
 
 NSS Security Provider

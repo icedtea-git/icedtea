@@ -85,15 +85,14 @@ java. This allows java programs to use PulseAudio as the sound backend.
 SystemTap Support
 =================
 
-The --enable-systemtap configure option will try to find the systemtap
-runtime development files (sdt.h and the dtrace python script wrapper),
-enable compilation of static markers in the hotspot code and install a
-systemtap hotspot.stp tapset for easy tracing with systemtap's stap
-utility. The probes are documented in tapset/hotspot.stp.
+configure will try to find the systemtap runtime development files (sdt.h and
+the dtrace python script wrapper), enable compilation of static markers in the
+hotspot code and install a systemtap hotspot.stp tapset for easy tracing with
+systemtap's stap utility. The probes are documented in tapset/hotspot.stp.
 
-This requires the systemtap-sdt-devel package as build dependency and
+This requires the systemtap-sdt-devel package as a build dependency and
 optionally the systemtap package at run time when the user want to use
-the tapset to trace java programs. The probes have zero overhead when
+the tapset to trace Java programs. The probes have zero overhead when
 not used and can safely be compiled in even when not used at runtime.
 
 Support for Additional VMs

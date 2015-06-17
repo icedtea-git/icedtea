@@ -79,14 +79,6 @@ AC_ARG_ENABLE([docs],
 AM_CONDITIONAL([ENABLE_DOCS], [test x$ENABLE_DOCS = xyes])
 AC_MSG_RESULT(${ENABLE_DOCS})
 
-AC_MSG_CHECKING([whether to include SystemTap tracing support])
-AC_ARG_ENABLE([systemtap],
-	      [AS_HELP_STRING([--enable-systemtap],
-	      		      [Enable inclusion of SystemTap trace support])],
-	      [ENABLE_SYSTEMTAP="${enableval}"], [ENABLE_SYSTEMTAP='no'])
-AM_CONDITIONAL([ENABLE_SYSTEMTAP], [test x$ENABLE_SYSTEMTAP = xyes])
-AC_MSG_RESULT(${ENABLE_SYSTEMTAP})
-
 IT_LOCATE_NSS
 IT_GET_PKGVERSION
 IT_GET_LSB_DATA
@@ -220,14 +212,13 @@ then
 Try installing libXrender-devel.])
 fi
 
-if test "x${ENABLE_SYSTEMTAP}" = xyes; then
 AC_CHECK_HEADER([sys/sdt.h], [SDT_H_FOUND='yes'],
                 [SDT_H_FOUND='no';
-                   AC_MSG_ERROR([systemtap support needs sys/sdt.h header])])
+                   AC_MSG_WARN([systemtap support needs sys/sdt.h header])])
 
- AC_MSG_CHECKING([working sys/sdt.h and g++ support])
- AC_LANG_PUSH([C++])
- AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+AC_MSG_CHECKING([working sys/sdt.h and g++ support])
+AC_LANG_PUSH([C++])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[
 #include <sys/sdt.h>
 class ProbeClass
 {
@@ -258,11 +249,12 @@ public:
   DTRACE_PROBE1(_test_, call, i);
   ProbeClass inst = ProbeClass(i, "call");
   inst.method(24);
-]])], [AC_MSG_RESULT([yes])], [AC_MSG_ERROR([systemtap sdt.h or g++ too old])])
-  AC_LANG_POP([C++])
+]])], [AC_MSG_RESULT([yes])], [SDT_H_FOUND='no'; AC_MSG_WARN([systemtap sdt.h or g++ too old])])
+AC_LANG_POP([C++])
+AM_CONDITIONAL([ENABLE_SYSTEMTAP], [test x$SDT_H_FOUND = xyes])
 
-  AC_MSG_CHECKING([for absolute java home install dir])
-  AC_ARG_WITH([abs-install-dir],
+AC_MSG_CHECKING([for absolute java home install dir])
+AC_ARG_WITH([abs-install-dir],
 	      [AS_HELP_STRING([--with-abs-install-dir], 
 			      [The absolute path where the j2sdk-image dir will be installed])],
 	      [if test "x${withval}" = x; then
@@ -270,16 +262,15 @@ public:
 	       else
 		 ABS_JAVA_HOME_DIR="${withval}"
 	       fi], [ABS_JAVA_HOME_DIR="${abs_top_builddir}/${OPENJDK_BUILD_DIR}/j2sdk-image"])
-  AC_MSG_RESULT([${ABS_JAVA_HOME_DIR}])
-  ABS_CLIENT_LIBJVM_SO="${ABS_JAVA_HOME_DIR}/jre/lib/${INSTALL_ARCH_DIR}/client/libjvm.so"
-  ABS_SERVER_LIBJVM_SO="${ABS_JAVA_HOME_DIR}/jre/lib/${INSTALL_ARCH_DIR}/server/libjvm.so"
-  AC_SUBST(ABS_JAVA_HOME_DIR)
-  AC_SUBST(ABS_CLIENT_LIBJVM_SO)
-  AC_SUBST(ABS_SERVER_LIBJVM_SO)
-  AC_CONFIG_FILES([tapset/hotspot.stp])
-  AC_CONFIG_FILES([tapset/hotspot_jni.stp])
-  AC_CONFIG_FILES([tapset/jstack.stp])
-fi
+AC_MSG_RESULT([${ABS_JAVA_HOME_DIR}])
+ABS_CLIENT_LIBJVM_SO="${ABS_JAVA_HOME_DIR}/jre/lib/${INSTALL_ARCH_DIR}/client/libjvm.so"
+ABS_SERVER_LIBJVM_SO="${ABS_JAVA_HOME_DIR}/jre/lib/${INSTALL_ARCH_DIR}/server/libjvm.so"
+AC_SUBST(ABS_JAVA_HOME_DIR)
+AC_SUBST(ABS_CLIENT_LIBJVM_SO)
+AC_SUBST(ABS_SERVER_LIBJVM_SO)
+AC_CONFIG_FILES([tapset/hotspot.stp])
+AC_CONFIG_FILES([tapset/hotspot_jni.stp])
+AC_CONFIG_FILES([tapset/jstack.stp])
 
 dnl Check for libXtst headers and libraries.
 PKG_CHECK_MODULES(XTST, xtst,[XTST_FOUND=yes],[XTST_FOUND=no])

@@ -2381,9 +2381,11 @@ install-exec-local:
 	for files in $(BUILD_SDK_DIR)/jre/lib/ext/*.jar; do \
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/ext; \
 	done
+if ENABLE_SYSTEMTAP
 	for files in $(BUILD_SDK_DIR)/tapset/*.stp; do \
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/tapset; \
 	done
+endif
 	$(abs_top_builddir)/pax-mark-vm $(DESTDIR)${prefix}
 
 install-data-local:

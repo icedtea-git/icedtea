@@ -1,3 +1,22 @@
+2015-06-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2434: SystemTap support is no longer optional
+	* Makefile.am:
+	(install-exec-local): Make tapset installation
+	conditional on ENABLE_SYSTEMTAP to match
+	creation in icedtea target.
+	* NEWS: Updated.
+
+2012-11-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* INSTALL: Update SystemTap documentation.
+	* README: Update SystemTap documentation.
+	* configure.ac:
+	Remove --enable-systemtap option.  Only
+	issue a warning and not set
+	ENABLE_SYSTEMTAP if sdt.h is not found
+	or is outdated.
+
 2015-06-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2433: ppc64le does not support -Xshare:dump

@@ -106,6 +106,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2429: OpenJDK build does not copy a symlinked cacerts file
   - PR2432: ppc64 JIT doesn't support class data sharing
   - PR2433: ppc64le does not support -Xshare:dump
+  - PR2434: SystemTap support is no longer optional
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck
