@@ -2475,9 +2475,12 @@ install-data-local:
 	${INSTALL_DATA} $(srcdir)/NEWS $(DESTDIR)$(docdir)
 	${INSTALL_DATA} $(srcdir)/AUTHORS $(DESTDIR)$(docdir)
 	${INSTALL_DATA} $(srcdir)/HACKING $(DESTDIR)$(docdir)
+	${INSTALL_DATA} $(srcdir)/COPYING $(DESTDIR)$(docdir)
+	${INSTALL_DATA} $(srcdir)/ChangeLog $(DESTDIR)$(docdir)
 	${INSTALL_DATA} $(BUILD_SDK_DIR)/ASSEMBLY_EXCEPTION $(DESTDIR)$(docdir)
 	${INSTALL_DATA} $(BUILD_SDK_DIR)/LICENSE $(DESTDIR)$(docdir)
 	${INSTALL_DATA} $(BUILD_SDK_DIR)/THIRD_PARTY_README $(DESTDIR)$(docdir)
+	${INSTALL_DATA} openjdk/jaxp/TRADEMARK $(DESTDIR)$(docdir)
 	for sizes in 16 24 32 48 ; do \
 	  ${mkinstalldirs} $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps ; \
 	  ${INSTALL_DATA} openjdk/jdk/src/solaris/classes/sun/awt/X11/java-icon$${sizes}.png \
