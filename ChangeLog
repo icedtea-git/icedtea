@@ -1,5 +1,17 @@
 2015-06-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2447: Allow greater control of Javadoc
+	installation directory
+	* Makefile.am:
+	(install-data-local): Install Javadocs into
+	$htmldir rather than $docdir/html, so the
+	user has more control over where they end up.
+	Copy the contents of docs rather than the
+	directory itself.
+	* NEWS: Updated.
+
+2015-06-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2443: install stage fails where
 	BUILD_ARCH_DIR != INSTALL_ARCH_DIR
 	* Makefile.am:

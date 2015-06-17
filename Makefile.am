@@ -2489,8 +2489,8 @@ install-data-local:
 	touch $(DESTDIR)/${prefix}/jre/.systemPrefs/.system.lock
 	touch $(DESTDIR)/${prefix}/jre/.systemPrefs/.systemRootModFile
 if ENABLE_DOCS
-	${mkinstalldirs} $(DESTDIR)$(docdir)/html
-	cp -RP $(BUILD_OUTPUT_DIR)/docs $(DESTDIR)$(docdir)/html
+	${mkinstalldirs} $(DESTDIR)$(htmldir)
+	cp -RP $(BUILD_OUTPUT_DIR)/docs/* $(DESTDIR)$(htmldir)
 endif
 if !ENABLE_JAMVM
 if !ENABLE_CACAO
