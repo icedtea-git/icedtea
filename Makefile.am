@@ -569,6 +569,7 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	$(PULSEAUDIO_SRCS) fsg.sh autogen.sh \
 	tapset/hotspot.stp.in \
 	tapset/hotspot_jni.stp.in \
+	tapset/hotspot_gc.stp.in \
 	scripts/jni_create_stap.c \
 	scripts/jni_desc \
 	THANKYOU test/tapset \
@@ -1580,11 +1581,16 @@ if ENABLE_SYSTEMTAP
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
 	    > $(BUILD_SDK_DIR)/tapset/hotspot_jni.stp; \
+	  sed -e '/\/client\/libjvm.so/d' \
+	    < $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
 	    $(BUILD_SDK_DIR)/tapset/hotspot.stp; \
 	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
 	    $(BUILD_SDK_DIR)/tapset/hotspot_jni.stp; \
+	  cp $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    $(BUILD_SDK_DIR)/tapset/hotspot_gc.stp; \
 	fi; \
 	cp $(abs_top_builddir)/tapset/jstack.stp \
 	  $(BUILD_SDK_DIR)/tapset/jstack.stp
@@ -1649,11 +1655,16 @@ if ENABLE_SYSTEMTAP
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
 	    > $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_jni.stp; \
+	  sed -e '/\/client\/libjvm.so/d' \
+	    < $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    > $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
 	    $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot.stp; \
 	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
 	    $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_jni.stp; \
+	  cp $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
 	fi; \
 	cp $(abs_top_builddir)/tapset/jstack.stp \
 	  $(BUILD_DEBUG_SDK_DIR)/tapset/jstack.stp

@@ -271,6 +271,7 @@ AC_SUBST(ABS_SERVER_LIBJVM_SO)
 AC_CONFIG_FILES([tapset/hotspot.stp])
 AC_CONFIG_FILES([tapset/hotspot_jni.stp])
 AC_CONFIG_FILES([tapset/jstack.stp])
+AC_CONFIG_FILES([tapset/hotspot_gc.stp])
 
 dnl Check for libXtst headers and libraries.
 PKG_CHECK_MODULES(XTST, xtst,[XTST_FOUND=yes],[XTST_FOUND=no])

@@ -1,0 +1,534 @@
+/*
+ * probe - gc_collect_contig_begin
+ * 
+ * @name: gc_collect_contig_begin
+ * @is_full: If TRUE, attempt a full collection of the generation.
+ *           Else; perform a scavenge
+ * @size: The collection should achieve a minimum region of available
+ *        memory to allow for an allocation of 'size'.
+ * @is_tlab: Is this a Thread Local Allocation Buffer?
+ *
+ * Description: This marks the start of a contiguous space generation collection.
+ * 
+ */
+
+probe hotspot.gc_collect_contig_begin = 
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__contig__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__contig__begin")
+{
+
+  name = "gc_collect_contig_begin";
+  is_full = $arg2;
+  size = $arg3;
+  is_tlab = $arg4;
+  probestr = sprintf("%s(is_full='%d', size='%d', is_tlab='%d')", name, is_full, size, is_tlab);
+
+}
+
+/*
+ * probe - gc_collect_contig_end
+ * 
+ * @name: gc_collect_contig_end_
+ * @is_full: If TRUE, attempt a full collection of the generation.
+ *           Else; perform a scavenge.
+ * @size: The collection should achieve a minimum region of available
+ *        memory to allow for an allocation of 'size'.
+ * @is_tlab: Is this a Thread Local Allocation Buffer?
+ *
+ * Description: This marks the end of a contiguous space generation collection.
+ * 
+ */
+
+probe hotspot.gc_collect_contig_end = 
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__contig__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__contig__end")
+{
+
+  name = "gc_collect_contig_end";
+  is_full = $arg2;
+  size = $arg3;
+  is_tlab = $arg4;
+  probestr = sprintf("%s(is_full='%d', size='%d', is_tlab='%d')", name, is_full, size, is_tlab);
+
+}
+
+/*
+ * probe - gc_collect_parnew_begin
+ * 
+ * @name: gc_collect_parnew_begin
+ * @is_full: If TRUE, attempt a full collection of the generation.
+ *           Else; perform a scavenge
+ * @size: The collection should achieve a minimum region of available
+ *        memory to allow for an allocation of 'size'.
+ * @is_tlab: Is this a Thread Local Allocation Buffer?
+ *
+ * Description: This marks the beginning of a parallel collection of a new 
+ * generation.
+ * 
+ */
+
+probe hotspot.gc_collect_parnew = 
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__parnew__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__parnew__begin")
+{
+
+  name = "gc_collect_parnew_begin";
+  is_full = $arg2;
+  size = $arg3;
+  is_tlab = $arg4;
+  probestr = sprintf("%s(is_full='%d', size='%d', is_tlab='%d')", name, is_full, size, is_tlab);
+
+}
+
+/*
+ * probe - gc_collect_parnew_end
+ * 
+ * @name: gc_collect_parnew_end
+ * @is_full: If TRUE, attempt a full collection of the generation.
+ *           Else; perform a scavenge
+ * @size: The collection should achieve a minimum region of available
+ *        memory to allow for an allocation of 'size'.
+ * @is_tlab: Is this a Thread Local Allocation Buffer?
+ *
+ * Description: This marks the end of a parallel collection of a new 
+ * generation.
+ * 
+ */
+
+probe hotspot.gc_collect_parnew_end = 
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__parnew__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__parnew__end")
+{
+
+  name = "gc_collect_parnew_end";
+  is_full = $arg2;
+  size = $arg3;
+  is_tlab = $arg4;
+  probestr = sprintf("%s(is_full='%d', size='%d', is_tlab='%d')", name, is_full, size, is_tlab);
+
+}
+
+/*
+ * probe - gc_collect_defnew_begin
+ * 
+ * @name: gc_collect_defnew_begin
+ * @is_full: If TRUE, attempt a full collection of the generation.
+ *           Else; perform a scavenge
+ * @size: The collection should achieve a minimum region of available
+ *        memory to allow for an allocation of 'size'.
+ * @is_tlab: Is this a Thread Local Allocation Buffer?
+ *
+ * Description: This marks the start of a newly defined generation
+ * collection
+ * 
+ */
+
+probe hotspot.gc_collect_defnew_begin = 
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__defnew__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__defnew__begin")
+{
+
+  name = "gc_collect_defnew_begin";
+  is_full = $arg2;
+  size = $arg3;
+  is_tlab = $arg4;
+  probestr = sprintf("%s(is_full='%d', size='%d', is_tlab='%d')", name, is_full, size, is_tlab);
+
+}
+
+/*
+ * probe - gc_collect_defnew_end
+ * 
+ * @name: gc_collect_defnew_end
+ * @is_full: If TRUE, attempt a full collection of the generation.
+ *           Else; perform a scavenge
+ * @size: The collection should achieve a minimum region of available
+ *        memory to allow for an allocation of 'size'.
+ * @is_tlab: Is this a Thread Local Allocation Buffer?
+ *
+ * Description: This marks the end of a newly defined generation
+ * collection
+ * 
+ */
+
+probe hotspot.gc_collect_defnew_end = 
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__defnew__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__defnew__end")
+{
+
+  name = "gc_collect_defnew_end";
+  is_full = $arg2;
+  size = $arg3;
+  is_tlab = $arg4;
+  probestr = sprintf("%s(is_full='%d', size='%d', is_tlab='%d')", name, is_full, size, is_tlab);
+
+}
+
+/*
+ * probe - gc_collect_tenured_begin
+ * 
+ * @name: gc_collect_tenured_begin
+ * @is_full: If TRUE, attempt a full collection of the generation.
+ *           Else; perform a scavenge
+ * @size: The collection should achieve a minimum region of available
+ *        memory to allow for an allocation of 'size'.
+ * @is_tlab: Is this a Thread Local Allocation Buffer?
+ *
+ * Description: This is the start of a collection of a tenured generation
+ * (a generation that has survived multiple garbage collections and is 
+ * now in a 'tenured' object space.
+ * 
+ */
+
+probe hotspot.gc_collect_tenured_begin = 
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__tenured__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__tenured__begin")
+{
+
+  name = "gc_collect_tenured_begin";
+  is_full = $arg2;
+  size = $arg3;
+  is_tlab = $arg4;
+  probestr = sprintf("%s(is_full='%d', size='%d', is_tlab='%d')", name, is_full, size, is_tlab);
+
+}
+
+/*
+ * probe - gc_collect_tenured_end
+ * 
+ * @name: gc_collect_tenured_end
+ * @is_full: If TRUE, attempt a full collection of the generation.
+ *           Else; perform a scavenge
+ * @size: The collection should achieve a minimum region of available
+ *        memory to allow for an allocation of 'size'.
+ * @is_tlab: Is this a Thread Local Allocation Buffer?
+ *
+ * Description: This is the end of a collection of a tenured generation
+ * (a generation that has survived multiple garbage collections and is 
+ * now in a 'tenured' object space.
+ * 
+ */
+
+probe hotspot.gc_collect_tenured_end = 
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__tenured__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__tenured__end")
+{
+
+  name = "gc_collect_tenured_end";
+  is_full = $arg2;
+  size = $arg3;
+  is_tlab = $arg4;
+  probestr = sprintf("%s(is_full='%d', size='%d', is_tlab='%d')", name, is_full, size, is_tlab);
+
+}
+
+/*
+ * probe - gc_collect_parallel_scavenge_heap_begin
+ * 
+ * @name: gc_collect_parallel_scavenge_heap_begin
+ * @address: Address of region being collected.
+ * @cause: Cause of the collection.
+ * 
+ * Description: This is a parallel heap scavenge beginning, the jvm process doesn't
+ * have to halt while the gc is being completed.
+ */
+
+probe hotspot.gc_collect_parallel_scavenge =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__parscavenge__heap__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__parscavenge__heap__begin")
+{
+  name = "gc_collect_parallel_scavenge_heap_begin";
+  address = sprintf("0x%x", $arg1);
+  cause = $arg2;
+  probestr = sprintf("%s(address='%s', cause='%d')", name, address, cause);
+}
+
+/*
+ * probe - gc_collect_parallel_scavenge_heap_end
+ * 
+ * @name: gc_collect_parallel_scavenge_heap_end
+ * @address: Address of region being collected.
+ * @cause: Cause of the collection.
+ * 
+ * Description: This is a parallel heap scavenge ending, the jvm process doesn't
+ * have to halt while the gc is being completed.
+ */
+
+probe hotspot.gc_collect_parallel_scavenge_heap_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__parscavenge__heap__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__parscavenge__heap__end")
+{
+  name = "gc_collect_parallel_scavenge_heap_end";
+  address = sprintf("0x%x", $arg1);
+  cause = $arg2;
+  probestr = sprintf("%s(address='%s', cause='%d')", name, address, cause);
+}
+
+/*
+ * probe - gc_collect_parallel_collect
+ * 
+ * @name: gc_collect_parallel_collect
+ * @address: Address of object being collected.
+ * @cause: Cause of the collection.
+ *
+ * Description: This marks a parallel collection.
+ * 
+ */
+
+probe hotspot.gc_collect_parallel_collect =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__parallel__collect"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__parallel__collect")
+{
+  name = "gc_collect_parallel_collect";
+  address = sprintf("0x%x", $arg1);
+  cause = $arg2;
+  probestr = sprintf("%s(address='%s', cause='%d')", name, address, cause);
+}
+
+/*
+ * probe - gc_collect_g1_begin
+ * 
+ * @name: gc_collect_g1_begin
+ * @address: Address of object being collected.
+ * @cause: Cause of the collection.
+ *
+ * Description: This marks the start of a G1 style garbage collection
+ * (Garbage-First Garbage Collector).
+ * 
+ */
+
+probe hotspot.gc_collect_g1_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__G1__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__G1__begin")
+{
+  name = "gc_collect_g1_begin";
+  address = sprintf("0x%x", $arg1);
+  cause = $arg2;
+  probestr = sprintf("%s(address='%s', cause='%d')", name, address, cause);
+}
+
+/*
+ * probe - gc_collect_g1_end
+ * 
+ * @name: gc_collect_g1_end
+ * @address: Address of object being collected.
+ * @cause: Cause of the collection.
+ *
+ * Description: This marks then end of a  G1 style garbage collection
+ * (Garbage-First Garbage Collector).
+ * 
+ */
+
+probe hotspot.gc_collect_g1_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__G1__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__G1__end")
+{
+  name = "gc_collect_g1_end";
+  address = sprintf("0x%x", $arg1);
+  cause = $arg2;
+  probestr = sprintf("%s(address='%s', cause='%d')", name, address, cause);
+}
+
+/*
+ * probe - gc_collect_delete
+ * 
+ * @name: gc_collect_delete
+ * @address: Address of object being collected.
+ * @cause: Cause of the collection.
+ *
+ * Description: A delete statement of an object.
+ * 
+ */
+
+probe hotspot.gc_collect_delete =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__delete"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__delete")
+{
+  name = "gc_collect_delete";
+  address = sprintf("0x%x", $arg1);
+  probestr = sprintf("%s(address='%s')", name, address);
+}
+
+/*
+ * probe - gc_collect_PSScavenge_begin
+ * 
+ * @name: gc_collect_PSScavenge_begin
+ * @address: Address of scavenge
+ * @cause: Cause of the collection.
+ *
+ * Description: A parallel scavenge begins.  A scavenge is a partial garbage
+ * collection which should be much more common than a full garbage collection
+ * throughout the course of the java program.
+ * 
+ */
+
+probe hotspot.gc_collect_PSScavenge_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__PSScavenge__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__PSScavenge__begin")
+{
+  name = "gc_collect_PSScavenge_begin";
+  address = sprintf("0x%x", $arg1);
+  cause = $arg2;
+  probestr = sprintf("%s(address='%s', cause='%d')", name, address, cause);
+}
+
+/*
+ * probe - gc_collect_PSScavenge_end
+ * 
+ * @name: gc_collect_PSScavenge_end
+ * @address: Address of scavenge.
+ * @cause: Cause of the collection.
+ *
+ * Description: The end of the parallel scavenge.  The beginning and end of
+ * the scavenge is noted due to the possbility of multiple scavenges occuring
+ * at the same time.
+ * 
+ */
+
+probe hotspot.gc_collect_PSScavenge_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__PSScavenge__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__PSScavenge__end")
+{
+  name = "gc_collect_PSScavenge_end";
+  address = sprintf("0x%x", $arg1);
+  cause = $arg2;
+  probestr = sprintf("%s(address='%s', cause='%d')", name, address, cause);
+}
+
+/*
+ * probe - gc_collect_PSParallelCompact_begin
+ * 
+ * @name: gc_collect_PSParallelCompact_begin
+ * @address: Address of compaction.
+ * @cause: Cause of the collection.
+ *
+ * Description: This marks the start of a parallel compaction.
+ * 
+ */
+
+probe hotspot.gc_collect_PSParallelCompact_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__PSParallelCompact__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__PSParallelCompact__begin")
+{
+  name = "gc_collect_PSParallelCompact_begin";
+  address = sprintf("0x%x", $arg1);
+  cause = $arg2;
+  probestr = sprintf("%s(address='%s', cause='%d')", name, address, cause);
+}
+
+/*
+ * probe - gc_collect_PSParallelCompact_end
+ * 
+ * @name: gc_collect_PSParallelCompact_end
+ * @address: Address of compaction.
+ * @cause: Cause of the collection.
+ *
+ * Description: This marks the end of a  parallel compaction.
+ * 
+ */
+
+probe hotspot.gc_collect_PSParallelCompact_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__PSParallelCompact__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__PSParallelCompact__end")
+{
+  name = "gc_collect_PSParallelCompact_end";
+  address = sprintf("0x%x", $arg1);
+  cause = $arg2;
+  probestr = sprintf("%s(address='%s', cause='%d')", name, address, cause);
+}
+
+/*
+ * probe - gc_collect_PSMarkSweep_begin
+ * 
+ * @name: gc_collect_PSMarkSweep_begin
+ * @address: Address of parallel mark sweep process.
+ * @cause: Cause of the collection.
+ *
+ * Description: This marks the start of a parallel mark sweep for
+ * objects that require collection.
+ * 
+ */
+
+probe hotspot.gc_collect_PSMarkSweep_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__PSMarkSweep__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__PSMarkSweep__begin")
+{
+  name = "gc_collect_PSMarkSweep_begin";
+  address = sprintf("0x%x", $arg1);
+  cause = $arg2;
+  probestr = sprintf("%s(address='%s', cause='%d')", name, address, cause);
+}
+
+/*
+ * probe - gc_collect_PSMarkSweep_end
+ * 
+ * @name: gc_collect_PSMarkSweep_end
+ * @address: Address of parallel mark sweep process.
+ * @cause: Cause of the collection.
+ *
+ * Description: This marks the start of a parallel mark sweep for
+ * objects that require collection.
+ * 
+ */
+
+probe hotspot.gc_collect_PSMarkSweep_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__PSMarkSweep__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__PSMarkSweep__end")
+{
+  name = "gc_collect_PSMarkSweep_end";
+  address = sprintf("0x%x", $arg1);
+  cause = $arg2;
+  probestr = sprintf("%s(address='%s', cause='%d')", name, address, cause);
+}
+
+/*
+ * probe - gc_collect_move
+ * 
+ * @name: gc_collect_move
+ * @from_bottom_address: The bottom address of the object being moved.
+ * @from_top_address: The top address of the object being moved.
+ * @to_bottom_address: The bottom address of where the object is being moved to.
+ * @to_top_address: The top address of where the object is being moved to.
+ * @cause: Cause of the collection.
+ *
+ * Description: During garbage collections there are times where objects or 
+ * blocks of memory need to be moved.  This probe will detail from where 
+ * the memory is moving and where to.
+ * 
+ */
+
+probe hotspot.gc_collect_move =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__move"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__move")
+{
+  name = "gc_collect_move";
+  from_bottom_address = sprintf("0x%x", $arg1);
+  from_top_address = sprintf("0x%x", $arg2);
+  to_bottom_address = sprintf("0x%x", $arg3);
+  to_top_address = sprintf("0x%x", $arg4);
+  probestr = sprintf("%s(from_bottom_address='%s', from_top_address='%s', to_bottom_address='%s', to_top_address='%s')", name, from_bottom_address, from_top_address, to_bottom_address, to_top_address);
+
+}
+
+/*
+ * probe - gc_collect_clear
+ * 
+ * @name: gc_collect_clear
+ * @address: Address of object being collected.
+ * @cause: Cause of the collection.
+ *
+ * Description: This probe dictates the region of data that needs to be 
+ * cleared in a compaction action.
+ * 
+ */
+
+probe hotspot.gc_collect_clear =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__collection__ParallelCompact__clear"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__collection__ParallelCompact__clear")
+{
+  name = "gc_collect_clear";
+  region_data = sprintf("0x%x", $arg1);
+  data_location = sprintf("0x%x", $arg2);
+  probestr = sprintf("%s(region_data='%s', data_location='%s')", name, region_data, data_location);
+  
+}

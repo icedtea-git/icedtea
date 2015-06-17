@@ -1,4 +1,15 @@
-2015-06-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2012-10-24  Lukas Berk  <lberk@redhat.com>
+
+	PR1975: Add garbage collection probes for SystemTap
+	* Makefile.am:
+	(EXTRA_DIST): Add tapset/hotspot_gc.stp.in.
+	(stamps/icedtea.stamp): Build tapset/hotspot_gc.stp.
+	(stamps/icedtea-debug.stamp): Likewise.
+	* configure.ac: Generate tapset/hotspot_gc.stp.
+	* tapset/hotspot_gc.stp.in:
+	Systemtap tapset allowing use of GC probes more comfortablely.
+
+2015-06-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2439: NSS PKCS11 regression - due to java.security
 	automatic loading
