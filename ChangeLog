@@ -1,5 +1,18 @@
 2015-06-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2439: NSS PKCS11 regression - due to java.security
+	automatic loading
+	* NEWS: Updated.
+
+2012-11-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* nss.cfg.in: Set handleStartupErrors
+	to ignoreMultipleInitialisation so that our
+	PKCS11 provider configuration is silently
+	dropped if the user has already configured it.
+
+2015-06-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2434: SystemTap support is no longer optional
 	* Makefile.am:
 	(install-exec-local): Make tapset installation
