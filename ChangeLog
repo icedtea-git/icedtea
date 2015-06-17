@@ -1,3 +1,8 @@
+2012-03-14  Mark Wielaard  <mjw@redhat.com>
+
+	PR2256: Add SystemTap tests
+	* Makefile.am (EXTRA_DIST): Add tapset/jstack.stp.in.
+
 2012-10-24  Lukas Berk  <lberk@redhat.com>
 
 	PR1975: Add garbage collection probes for SystemTap

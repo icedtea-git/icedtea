@@ -569,6 +569,7 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	$(PULSEAUDIO_SRCS) fsg.sh autogen.sh \
 	tapset/hotspot.stp.in \
 	tapset/hotspot_jni.stp.in \
+	tapset/jstack.stp.in \
 	tapset/hotspot_gc.stp.in \
 	scripts/jni_create_stap.c \
 	scripts/jni_desc \
