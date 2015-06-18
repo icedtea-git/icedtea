@@ -1584,7 +1584,7 @@ if ENABLE_SYSTEMTAP
 	    > $(BUILD_SDK_DIR)/tapset/hotspot_jni.stp; \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_gc.stp \
-	    > $(BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
+	    > $(BUILD_SDK_DIR)/tapset/hotspot_gc.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
 	    $(BUILD_SDK_DIR)/tapset/hotspot.stp; \
@@ -1658,14 +1658,14 @@ if ENABLE_SYSTEMTAP
 	    > $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_jni.stp; \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot_gc.stp \
-	    > $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
+	    > $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_gc.stp; \
 	else \
 	  cp $(abs_top_builddir)/tapset/hotspot.stp \
 	    $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot.stp; \
 	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
 	    $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_jni.stp; \
 	  cp $(abs_top_builddir)/tapset/hotspot_gc.stp \
-	    $(DEBUG_BUILD_OUTPUT_DIR)/j2sdk-image/tapset/hotspot_gc.stp; \
+	    $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_gc.stp; \
 	fi; \
 	cp $(abs_top_builddir)/tapset/jstack.stp \
 	  $(BUILD_DEBUG_SDK_DIR)/tapset/jstack.stp
