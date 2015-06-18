@@ -2495,18 +2495,13 @@ if ENABLE_DOCS
 	${mkinstalldirs} $(DESTDIR)$(htmldir)
 	cp -RP $(BUILD_OUTPUT_DIR)/docs/* $(DESTDIR)$(htmldir)
 endif
-if !ENABLE_JAMVM
-if !ENABLE_CACAO
-if !ZERO_BUILD
 	for vms in client server ; do \
-	  if [ -d $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ] ; then \
+	  if [ -f $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/classes.jsa ] ; then \
+	    ${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ; \
 	    $(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/classes.jsa \
 	      $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ; \
 	  fi ; \
 	done
-endif
-endif
-endif
 # Target Aliases
 # ===============
 

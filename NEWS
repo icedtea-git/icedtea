@@ -111,6 +111,7 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2443: install stage fails where BUILD_ARCH_DIR != INSTALL_ARCH_DIR
   - PR2447: Allow greater control of Javadoc installation directory
   - PR2448: Install TRADEMARK, COPYING and ChangeLog as RPM spec file does
+  - PR2454: install-data-local needs to check that classes.jsa actually exists
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck
