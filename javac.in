@@ -1,7 +1,8 @@
 #!/usr/bin/perl -w
 use strict;
 use constant NO_DUP_ARGS => qw(-source -target -d -encoding);
-use constant STRIP_ARGS => qw(-Werror -implicit:none);
+use constant STRIP_ARGS_1 => qw(-Werror -implicit:none);
+use constant STRIP_ARGS_2 => qw(-Xmaxwarns);
 
 my ($ECJ_WARNINGS, $JAVAC_WARNINGS);
 
@@ -38,10 +39,16 @@ sub gen_ecj_opts
 	}
     }
 
-    for my $opt (STRIP_ARGS) 
+    for my $opt (STRIP_ARGS_1) 
     {
 	my @indices = reverse grep {$new_args[$_] eq $opt} 0..$#new_args;
 	splice @new_args, $_, 1 for @indices;
+    }
+
+    for my $opt (STRIP_ARGS_2) 
+    {
+	my @indices = reverse grep {$new_args[$_] eq $opt} 0..$#new_args;
+	splice @new_args, $_, 2 for @indices;
     }
 
     return @new_args;

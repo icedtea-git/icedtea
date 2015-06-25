@@ -359,6 +359,14 @@ ICEDTEA_CONFIGURE += \
 	--with-jvm-variants=zeroshark
 endif
 
+if ENABLE_WERROR
+ICEDTEA_CONFIGURE += \
+	--enable-warnings-as-errors
+else
+ICEDTEA_CONFIGURE += \
+	--disable-warnings-as-errors
+endif
+
 ICEDTEA_ENV = \
 	LANG="C" \
 	PATH="$(BOOT_DIR)/bin:$(OS_PATH):$$PATH" \

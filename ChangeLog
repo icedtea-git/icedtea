@@ -1,3 +1,19 @@
+2015-06-24  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE): Pass --enable-warnings-as-errors
+	or --disable-warnings-as-errors, depending on whether
+	or not ENABLE_WERROR is set.
+
+2012-08-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* acinclude.m4:
+	(IT_ENABLE_WERROR): New macro to enable -Werror.
+	This is disabled by default.
+	* configure.ac: Call IT_ENABLE_WERROR.
+	* javac.in: Handle stripping of arguments which
+	take parameters, specifically -Xmaxwarns.
+
 2015-06-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2456: Installation path for hotspot_gc.stp is
