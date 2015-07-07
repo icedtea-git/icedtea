@@ -1139,11 +1139,11 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_JDK],
       BOOTSTRAP_VMS="/usr/lib/jvm/java-gcj /usr/lib/jvm/gcj-jdk /usr/lib/jvm/cacao";
     fi
     ICEDTEA6_VMS="/usr/lib/jvm/icedtea-6 /usr/lib/jvm/icedtea6 /usr/lib/jvm/java-6-openjdk
-    		  /usr/lib/jvm/java-1.6.0-openjdk.x86_64 /usr/lib64/jvm/java-1.6.0-openjdk
-		  /usr/lib/jvm/java-1.6.0"
-    ICEDTEA7_VMS="/usr/lib/jvm/icedtea-7 /usr/lib/jvm/icedtea7 /usr/lib/jvm/java-1.7.0-openjdk
-    		  /usr/lib/jvm/java-1.7.0-openjdk.x86_64 /usr/lib64/jvm/java-1.7.0-openjdk
-		  /usr/lib/jvm/java-1.7.0 /usr/lib/jvm/java-7-openjdk"
+    		  /usr/lib/jvm/java-1.6.0-openjdk /usr/lib/jvm/java-1.6.0-openjdk.x86_64
+		  /usr/lib64/jvm/java-1.6.0-openjdk /usr/lib/jvm/java-1.6.0"
+    ICEDTEA7_VMS="/usr/lib/jvm/icedtea-7 /usr/lib/jvm/icedtea7 /usr/lib/jvm/java-7-openjdk
+                  /usr/lib/jvm/java-1.7.0-openjdk /usr/lib/jvm/java-1.7.0-openjdk.x86_64
+		  /usr/lib64/jvm/java-1.7.0-openjdk /usr/lib/jvm/java-1.7.0"
     for dir in ${BOOTSTRAP_VMS} ${ICEDTEA7_VMS} ${ICEDTEA6_VMS} \
     	       /usr/lib/jvm/java-openjdk /usr/lib/jvm/openjdk /usr/lib/jvm/java-icedtea \
 	       /etc/alternatives/java_sdk_openjdk ; do

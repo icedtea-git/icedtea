@@ -1,5 +1,29 @@
 2015-07-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* INSTALL: Update list of detected
+	JDKs, specifying that bootstrap mode is
+	not specific to Classpath JDKs. Remove
+	dead --with-netbeans-home, --with-ant-home,
+	--with-xalan2-jar, --with-xalan2-serializer-jar,
+	--with-xerces2-jar, --enable-systemtap and
+	--with-gcj-home options. Document --with-jdk-home.
+	Move --enable-system-kerberos to be listed with other
+	system library options. Update XRender and SystemTap
+	documentation. Document the SunEC provider. Update
+	list of architectures supported by native HotSpot ports.
+	Mention ARM32 JIT.
+	* NEWS: Updated.
+	* README: Remove outdated notes about in-development
+	OpenJDK 7. Update list of architectures supported
+	by native HotSpot ports and mention ARM32 JIT.
+	Remove section about PulseAudio mixer (moved
+	to IcedTea-Sound).
+	* acinclude.m4:
+	(IT_CHECK_FOR_JDK): Match ICEDTEA7_VMS ordering
+	to ICEDTEA6_VMS ordering.
+
+2015-07-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR1816: Split download/extraction rules for OpenJDK
 	so they can run in parallel
 	* Makefile.am:

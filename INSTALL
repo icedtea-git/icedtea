@@ -8,8 +8,8 @@ download, extract and patch the source code from the IcedTea forest
 The build requirements are as follows:
 
 A bootstrap JDK, either:
-  - GNU libgcj 4.4.0 (or equivalent class library based on GNU Classpath >= 0.95) for --enable-bootstrap mode (the default)
-  - IcedTea6 or IcedTea7 for --disable-bootstrap mode
+  - GNU libgcj 4.4.0 (or equivalent class library based on GNU Classpath >= 0.95) (--enable-bootstrap mode only, the default)
+  - IcedTea6 or IcedTea7
 CUPS
 libX11 (libXp, libXtst, libXi, libXt, libXinerama)
 Freetype2
@@ -50,6 +50,12 @@ To build IcedTea with an older version of IcedTea, use:
 make
 
 The following locations are checked for a JDK:
+    * /usr/lib/jvm/icedtea-7
+    * /usr/lib/jvm/icedtea7
+    * /usr/lib/jvm/java-7-openjdk
+    * /usr/lib/jvm/java-1.7.0-openjdk.x86_64
+    * /usr/lib64/jvm/java-1.7.0-openjdk
+    * /usr/lib/jvm/java-1.7.0
     * /usr/lib/jvm/icedtea-6
     * /usr/lib/jvm/icedtea6
     * /usr/lib/jvm/java-6-openjdk
@@ -113,19 +119,19 @@ to configure:
   fontconfig instead of trying to dynamically open it at runtime.
 * --enable-system-pcsc: Build and link against the system installation of
   libpcsclite instead of trying to dynamically open it at runtime.
+* --enable-system-kerberos: Link against the system Kerberos library and
+  query it at runtime to obtain the cache location, rather than using a
+  hardcoded value.
 * --enable-compile-against-syscalls: Check for syscalls at compile-time not runtime.
 * --with-gcj: Compile ecj to native code with gcj prior to building.
 * --with-parallel-jobs: Run the specified number of parallel jobs when
   building HotSpot and the JDK.  If this option is passed without an
   argument, the number of online processors plus one is used.
-* --with-netbeans-home: The location of NetBeans for use in the VisualVM build,
-  defaults to /usr/share/netbeans.
-* --with-ant-home: The location of Ant, defaults to /usr/share/ant.
 * --with-pkgversion=PKG: Include the specified distro package information in
   the output of java -version.
-* --with-gcj-home: Perform a full bootstrap build using an installed
-  copy of a GNU Classpath JDK such as gcj.  If a directory is not specified,
-  a check against the list presented above is performed.
+* --with-jdk-home: Perform a build using the installed JDK, such as gcj or IcedTea,
+  to bootstrap.  If a directory is not specified, a check against the list presented
+  above is performed.
 * --with-java: Specify the location of a 'java' binary.  By default, the path
   is checked for gij and java.
 * --with-ecj: Specify the location of a 'ecj' binary.  By default, the path
@@ -146,22 +152,6 @@ to configure:
     - /usr/share/java/eclipse-ecj.jar
     - /usr/share/java/ecj.jar
     - /usr/share/eclipse-ecj-3.{2,3,4,5}/lib/ecj.jar
-* --with-xalan2-jar: Specify the location of a xalan2 JAR file.  By default, the
-  following paths are checked:
-    - /usr/share/java/xalan-j2.jar
-    - /usr/share/java/xalan2.jar
-    - /usr/share/xalan/lib/xalan.jar
-* --with-xalan2-serializer-jar: Specify the location of a xalan2 serializer JAR file.
-  By default, the following paths are checked:
-    - /usr/share/java/xalan-j2-serializer.jar
-    - /usr/share/xalan-serializer/lib/serializer.jar
-    - /usr/share/java/serializer.jar
-* --with-xerces2-jar: Specify the location of a xerces2 JAR file.  By default, the
-  following paths are checked:
-    - /usr/share/java/xerces-j2.jar
-    - /usr/share/java/xerces2.jar
-    - /usr/share/xerces-2/lib/xercesImpl.jar
-    - /usr/share/java/xercesImpl.jar
 * --with-openjdk-src-zip: Specify the location of the OpenJDK tarball to avoid downloading.
 * --with-hotspot-src-zip: Specify the location of the HotSpot tarball to avoid downloading.
 * --with-corba-src-zip: Specify the location of the CORBA tarball to avoid downloading.
@@ -195,7 +185,6 @@ These are documented fully in the relevant section below.
 * --disable-langtools-tests: Disable the running of the langtools JTReg suite.
 * --disable-jdk-tests: Disable the running of the jdk JTreg suite.
 * --disable-xrender: Don't include the XRender pipeline.
-* --enable-systemtap: Include support for tracing using systemtap.
 * --enable-nss: Enable the NSS security provider.
 * --enable-cacao: Replace HotSpot with the CACAO VM.
 * --enable-jamvm: Replace HotSpot with JamVM.
@@ -204,9 +193,6 @@ These are documented fully in the relevant section below.
 * --with-rhino: Include Javascript support using Rhino (location may optionally be specified).
 * --with-additional-vms=vm-list: Additional VMs to build using the system described
   below.
-* --enable-system-kerberos: Link against the system Kerberos library and
-  query it at runtime to obtain the cache location, rather than using a
-  hardcoded value.
 * --enable-arm32-jit: Build the ARM32 JIT.
 * --enable-sunec: Build the SunEC crypto provider against system NSS.
 * --enable-native-debuginfo: Include debuginfo in native binaries.
@@ -232,10 +218,9 @@ XRender Support
 
 IcedTea7 includes support for an Xrender-based rendering pipeline
 developed by Clemens Eisserer (http://linuxhippy.blogspot.com/).  This
-is compiled by default, and can be disabled using --disable-xrender.
-To actually use the pipeline, the sun.java2d.xrender property needs to
-be set to true, e.g.  by passing the -Dsun.java2d.xrender=True option
-to java.
+is compiled by default.  To actually use the pipeline, the
+sun.java2d.xrender property needs to be set to true, e.g.  by passing
+the -Dsun.java2d.xrender=True option to java.
 
 SystemTap
 =========
@@ -243,16 +228,16 @@ SystemTap
 IcedTea7 includes work to allow the existing DTrace probes included in
 OpenJDK to be used with SystemTap.  This requires version 0.9.5 or later (0.9.9
 or later if you want Java method tracing).  The tapset needs to know
-the final install location of the JDK, so the --with-abs-install-dir option
+the final install location of the JDK, so the --prefix option
 should also be used to specify this.  If not set, it defaults to the
 in-tree location of openjdk.build/j2sdk-image and requires
 manual changes to tapset/hotspot.stp to work from elsewhere. For
 example, if you plan to install the resulting build in
 /usr/lib/jvm/java-1.6.0-openjdk, then you should specify
---with-abs-install-dir=/usr/lib/jvm/java-1.6.0-openjdk.
+--prefix=/usr/lib/jvm/java-1.6.0-openjdk.
 
-NSS Security Provider
-=====================
+The NSS PKCS11 Security Provider and Elliptic Curve Cryptography
+================================================================
 
 OpenJDK includes an NSS-based security provider in the form of
 sun.security.pkcs11.SunPKCS11.  However, as this needs to know the
@@ -263,12 +248,20 @@ a configuration file for the NSS provider.  If --enable-nss is specified,
 this configuration will be turned on in lib/security/java.security.
 This can also be done manually at a later date.
 
+The PKCS11 option was originally added as it was the only way that
+elliptic curve cryptography support could be provided. From OpenJDK 7
+onwards, there is another provider, SunEC. This also utilises NSS, but
+directly via its ECC functions rather than the PKCS11 interface.
+Specifying --enable-sunec will build this provider, linked against
+NSS. Version 3.16.1 or later of NSS is required so that the
+appropriate softokn ABI is available to the provider.
+
 CACAO
 =====
 
 IcedTea7 can use CACAO as the virtual machine, as opposed to HotSpot.
 One advantage of this is that CACAO has a JIT implementation for
-more platforms than HotSpot, including ppc, ppc64, arm and mips.
+more platforms than HotSpot, including ppc, arm and mips.
 When --enable-cacao is specified, CACAO will be downloaded and built,
 followed by the JDK portion of OpenJDK resulting in a CACAO+OpenJDK
 image in openjdk.build/j2sdk-image.  The --with-cacao-home
@@ -291,10 +284,10 @@ Zero & Shark
 IcedTea7 includes a zero assembler port of HotSpot, which avoids
 architecture-specific code as much as possible, allowing an
 interpreter to be built and run on most platforms (albeit very
-slowly).  As HotSpot only includes JITs for x86, x86_64 and SPARC, the
-zero assembler port is automatically enabled on all other
-architectures.  On x86, x86_64 and SPARC, it may be built using
---enable-zero.
+slowly).  As HotSpot only includes JITs for x86, x86_64, AArch64,
+ppc64, ppc64le and SPARC, the zero assembler port is automatically
+enabled on all other architectures.  On HotSpot architectures, it may
+be built using --enable-zero.
 
 To overcome the performance issues inherent in zero, a LLVM-based JIT
 called Shark has been developed.  This performs Just-In-Time compilation
@@ -302,9 +295,8 @@ on any architecture supported by LLVM.  To enable it, pass the option
 --enable-shark to configure.  Please note that Shark is still in
 development and builds are still likely to fail at present.
 
-On ARM32, there is also a native JIT port built on top of Zero. This
-still has issues and is thus not enabled by default. To enable it,
-pass --enable-arm32-jit to configure.
+On ARM32, there is also a native JIT port built on top of Zero, which
+is built on this platform by default.
 
 Support for Different Versions of HotSpot
 =========================================

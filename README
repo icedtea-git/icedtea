@@ -32,15 +32,9 @@ Anonymous Mercurial checkout:
 Java compatibility
 ------------------
 
-IcedTea is derived from OpenJDK, Sun's open-source implementation of
-the Java SE platform.  At this time the build from which IcedTea was
-constructed corresponds to an early build of JDK 7.  When JDK 7 is
-complete it will implement the Java SE 7 Platform Specification.  Any
-APIs in the JDK 7 implementation, whether new or old, are therefore
-subject to minor adjustments, major revisions, or even outright
-removal between now and the time that the Java SE 7 Platform
-Specification is finalized.  Please take these facts into account
-before depending upon IcedTea.
+IcedTea is derived from OpenJDK, an open-source implementation of
+the Java SE platform. See http://openjdk.java.net/groups/conformance/
+for information on compatibility testing.
 
 A Note About License Headers
 ----------------------------
@@ -48,7 +42,7 @@ A Note About License Headers
 Some sources downloaded from openjdk.java.net do not display the GPL
 license header.  Instances are:
 
- - We are assuming that these files are owned by Sun:
+ - We are assuming that these files are owned by Sun/Oracle:
    openjdk/jdk/src/share/classes/**/resources/*.properties
 
 The Zero Assembler and Shark Ports
@@ -59,8 +53,9 @@ HotSpot virtual machine which avoids using any assembly language.  As
 a pure C++ interpreter, it should be possible to build this on most
 architectures and have a working (albeit slow) version of OpenJDK.
 Successful builds have been made on ppc, ppc64 and arm.  The zero
-assembler port is enabled by default on platforms other than x86,
-x86_64 and sparc.  To enable it on these platforms, use the
+assembler port is enabled by default on platforms without a
+native HotSpot port (i.e. other than x86, x86_64, sparc, AArch64,
+ppc64, ppc64le).  To enable it on these platforms, use the
 --enable-zero option.
 
 Gary is now working on a JIT called Shark to provide better
@@ -68,25 +63,22 @@ performance on platforms which need to use the zero port. A
 preliminary version of this is now included with IcedTea and can be
 built with the --enable-shark option.
 
+On ARM32, there is also a native JIT port built on top of Zero, which
+is built on this platform by default.
+
 CACAO as VM
 ===========
 
 The CACAO virtual machine (http://cacaovm.org) can be used as an
 alternative to the HotSpot virtual machine. One advantage of this is
 that it already provides a JIT for many platforms to which HotSpot has
-not yet been ported, including ppc, ppc64, arm and mips.  To use CACAO
-as the VM, use the --with-cacao option.  This will download a snapshot
-of CACAO during the build, which has been tested with this version of
+not yet been ported, including ppc, arm and mips.  To use CACAO as the
+VM, use the --with-cacao option.  This will download a snapshot of
+CACAO during the build, which has been tested with this version of
 IcedTea7.
 
 The environment variable CACAO_CONFIGURE_ARGS can be used to pass
 additional arguments to the cacao configure.
-
-PulseAudio Mixer
-================
-
-Passing --enable-pulse-java to configure will build the PulseAudio Mixer for 
-java. This allows java programs to use PulseAudio as the sound backend.
 
 SystemTap Support
 =================
