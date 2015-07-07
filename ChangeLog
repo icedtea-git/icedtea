@@ -1,3 +1,52 @@
+2015-07-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1816: Split download/extraction rules for OpenJDK
+	so they can run in parallel
+	* Makefile.am:
+	(.PHONY): Add new clean-download-* and
+	clean-extract-* targets.
+	(download): Depend on download-{corba,hotspot,
+	jaxp,jaxws,jdk,langtools}.
+	(clean-download): Depend on
+	clean-download-{hotspot,corba,jaxp,jaxws,jdk,langtools}.
+	(download-openjdk): Don't do Mercurial checkout here.
+	Do it as part of extract. Split corba, jaxp, jaxws,
+	jdk and langtools downloads into their own targets.
+	(download-corba): Split from download-openjdk.
+	(download-jaxp): Likewise.
+	(download-jaxws): Likewise.
+	(download-jdk): Likewise.
+	(download-langtools): Likewise.
+	(clean-download-openjdk): Don't depend on
+	clean-download-hotspot. Split corba, jaxp, jaxws,
+	jdk and langtools cleanup into their own targets.
+	(clean-download-corba): Split from clean-download-openjdk.
+	(clean-download-jaxp): Likewise.
+	(clean-download-jaxws): Likewise.
+	(clean-download-jdk): Likewise.
+	(clean-download-langtools): Likewise.
+	(download-hotspot): No need to depend on download-openjdk.
+	(extract): Depend on extract-{corba,jaxp,jaxws,jdk,langtools}.
+	(extract-openjdk): Add cloning of root repository here.
+	Split extraction of corba, jaxp, jaxws, jdk and langtools
+	into their own targets.
+	(clean-extract-openjdk): Depend on
+	clean-extract-{jdk,jaxp,jaxws,corba,langtools}.
+	(extract-corba): Split from extract-openjdk.
+	(clean-extract-corba): New target to just remove corba.
+	(extract-jaxp): Split from extract-openjdk.
+	(clean-extract-jaxp): New target to just remove jaxp.
+	(extract-jaxws): Split from extract-openjdk.
+	(clean-extract-jaxws): New target to just remove jaxws.
+	(extract-jdk): Split from extract-openjdk.
+	(clean-extract-jdk): New target to just remove jdk.
+	(extract-langtools): Split from extract-openlangtools.
+	(clean-extract-langtools): New target to just remove langtools.
+	(extract-hotspot): Handle Mercurial checkout.
+	(sanitise-openjdk): Depend on extract-{jdk,langtools,corba,jaxp,jaxws}.
+	(add-nss): Depend on extract-jdk.
+	* NEWS: Updated.
+
 2015-06-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS:
