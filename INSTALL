@@ -32,6 +32,7 @@ lcms2-devel (for --enable-system-lcms)
 fontconfig (for --enable-system-fontconfig)
 libc6-dev & libattr-devel/libattr1-dev (for --enable-compile-against-syscalls)
 libpcsclite (for --enable-system-pcsc)
+lksctp-tools (for --enable-system-sctp)
 rhino (can be disabled using --without-rhino)
 libffi (for --enable-zero or on archs other than x86/x86_64/sparc/ppc64)
 LLVM 2.5 or later (for --enable-shark)
@@ -119,6 +120,8 @@ to configure:
   fontconfig instead of trying to dynamically open it at runtime.
 * --enable-system-pcsc: Build and link against the system installation of
   libpcsclite instead of trying to dynamically open it at runtime.
+* --enable-system-sctp: Build and link against the system installation of
+  libsctp instead of trying to dynamically open it at runtime.
 * --enable-system-kerberos: Link against the system Kerberos library and
   query it at runtime to obtain the cache location, rather than using a
   hardcoded value.

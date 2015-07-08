@@ -1,4 +1,4 @@
-AC_INIT([icedtea], [2.6.0pre23], [distro-pkg-dev@openjdk.java.net])
+AC_INIT([icedtea], [2.6.0pre24], [distro-pkg-dev@openjdk.java.net])
 AM_INIT_AUTOMAKE([1.9 tar-pax foreign])
 AM_MAINTAINER_MODE([enable])
 AC_CONFIG_FILES([Makefile])
@@ -220,6 +220,7 @@ IT_ENABLE_INFINALITY
 IT_CHECK_FOR_CUPS
 IT_CHECK_FOR_SYSCALLS
 IT_CHECK_FOR_PCSC
+IT_CHECK_FOR_SCTP
 AC_CONFIG_FILES([remove-intree-libraries.sh])
 
 dnl Check for Xproto headers and libraries.

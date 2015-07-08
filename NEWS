@@ -288,18 +288,24 @@ New in release 2.6.0 (2014-XX-XX):
   - S4890063, PR2305, RH1214835: HPROF: default text truncated when using doe=n option
   - S6991580, PR2308, RH1210739: IPv6 Nameservers in resolv.conf throws NumberFormatException
   - S8021120, PR2301: TieredCompilation can be enabled even if TIERED is undefined
+  - S8025613, PR2437: clang: remove -Wno-unused-value
+  - S8039921, PR2421: SHA1WithDSA with key > 1024 bits not working
   - S8048214, PR2357, G548784: Linker error when compiling G1SATBCardTableModRefBS after include order changes
   - S8072385, PR2387: Only the first DNSName entry is checked for endpoint identification
+  - S8074761, PR2470, RH1194226: Empty optional parameters of LDAP query are not interpreted as empty
   - S8075136: Unnecessary sign extension for byte array access
   - S8076212, PR2314: AllocateHeap() and ReallocateHeap() should be inlined.
   - S8078654, PR2333: CloseTTFontFileFunc callback should be removed
   - S8078666, PR2326: JVM fastdebug build compiled with GCC 5 asserts with "widen increases"
+  - S8081315, PR2405: Avoid giflib interlacing workaround with giflib 5.0.0 on
+  - S8081475, PR2494: SystemTap does not work when JDK is compiled with GCC 5
 * Bug fixes
   - PR1661: Cleanup SYSTEM_GCONF option and allow it to be set false
   - PR1786: Allow x86 build to occur on x86_64 using a previously built x86_64 build
   - PR1816: Split download/extraction rules for OpenJDK so they can run in parallel
   - PR1846: Build fails when using IcedTea7 as bootstrap JDK with native ecj
   - PR1847: Synchronise javac.in with IcedTea6
+  - PR1883: Search Debian multiarch paths when looking for pcsclite
   - PR2060: Fix warnings found by Gentoo ebuild QA with gcc 4.9.1
   - PR2144: make dist fails due to lack of HotSpot-specific patches
   - PR2161: RHEL 6 has a version of GIO which meets the version criteria, but has no g_settings_*
@@ -311,6 +317,10 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2341: Update README & INSTALL files
   - PR2394: ppc64le does not support -Xshare:dump
   - PR2395: Path to jvm.cfg is wrong in add-systemtap-boot
+  - PR2446: Support system libsctp
+  - PR2458: Policy JAR files should be timestamped with the date of the policy file they hold
+  - PR2482, RH489586, RH1236619: OpenJDK can't handle spaces in zone names in /etc/sysconfig/clock
+  - PR2496: Enable system PCSC support by default
 * AArch64 port
   - Add copyright to aarch64_ad.m4
   - S8069593: Changes to JavaThread::_thread_state must use acquire and release

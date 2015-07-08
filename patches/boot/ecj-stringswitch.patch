@@ -576,3 +576,33 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/reflect/annotation/Annotat
  
          // Handle annotation member accessors
          Object result = memberValues.get(member);
+diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java openjdk-boot/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java	2015-07-08 04:13:13.914186008 +0100
++++ openjdk-boot/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java	2015-07-08 04:14:07.193257306 +0100
+@@ -101,19 +101,17 @@
+         k = lib.indexOf("$ARCH");
+         if (k != -1) {
+             String arch = System.getProperty("os.arch");
+-            switch (arch) {
+-            case "amd64":
++	    if ("amd64".equals(arch)) {
+                 arch = "x86_64";
+-                break;
+-            case "ppc":
++	    }
++	    if ("ppc".equals(arch)) {
+                 arch = "powerpc";
+-                break;
+-            case "ppc64":
++	    }
++	    if ("ppc64".equals(arch)) {
+                 arch = "powerpc64";
+-                break;
+-            case "ppc64le":
++	    }
++            if ("ppc64le".equals(arch)) {
+                 arch = "powerpc64le";
+-                break;
+             }
+             lib = replace(k, lib, "$ARCH", arch);
+         }
