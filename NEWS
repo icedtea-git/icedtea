@@ -436,6 +436,7 @@ New in release 2.5.5 (2015-04-14):
   - PR2225: giflib 5.1 conditional excludes 6.0, 7.0, etc.
   - PR2250: JSSE server is still limited to 768-bit DHE
 * CACAO
+  - PR2380: Raise javadoc and JAVAC_FLAGS memory limits for CACAO
   - PR2519: Update to latest CACAO
   - PR2520: --enable-cacao builds broken, missing JVM_GetTemporaryDirectory impl.
 * ARM32 port

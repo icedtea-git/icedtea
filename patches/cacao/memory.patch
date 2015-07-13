@@ -6,7 +6,7 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/rules.make openjdk/hotspot/m
  BOOT_SOURCE_LANGUAGE_VERSION = 6
  BOOT_TARGET_CLASS_VERSION = 6
 -JAVAC_FLAGS = -g -encoding ascii
-+JAVAC_FLAGS = -g -encoding ascii -J-Xmx256m
++JAVAC_FLAGS = -g -encoding ascii -J-Xmx512m
  BOOTSTRAP_JAVAC_FLAGS = $(JAVAC_FLAGS) -source $(BOOT_SOURCE_LANGUAGE_VERSION) -target $(BOOT_TARGET_CLASS_VERSION)
  
  # With parallel makes, print a message at the end of compilation.
@@ -18,7 +18,7 @@ diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/rules.make openjdk/hotspot
  BOOT_SOURCE_LANGUAGE_VERSION = 6
  BOOT_TARGET_CLASS_VERSION = 6
 -JAVAC_FLAGS = -g -encoding ascii
-+JAVAC_FLAGS = -g -encoding ascii -J-Xmx256m
++JAVAC_FLAGS = -g -encoding ascii -J-Xmx512m
  BOOTSTRAP_JAVAC_FLAGS = $(JAVAC_FLAGS) -source $(BOOT_SOURCE_LANGUAGE_VERSION) -target $(BOOT_TARGET_CLASS_VERSION)
  
  # With parallel makes, print a message at the end of compilation.
@@ -30,7 +30,7 @@ diff -Nru openjdk.orig/hotspot/make/windows/makefiles/rules.make openjdk/hotspot
  BOOT_SOURCE_LANGUAGE_VERSION=6
  BOOT_TARGET_CLASS_VERSION=6
 -JAVAC_FLAGS=-g -encoding ascii
-+JAVAC_FLAGS=-g -encoding ascii -J-Xmx256m
++JAVAC_FLAGS=-g -encoding ascii -J-Xmx512m
  BOOTSTRAP_JAVAC_FLAGS=$(JAVAC_FLAGS) -source $(BOOT_SOURCE_LANGUAGE_VERSION) -target $(BOOT_TARGET_CLASS_VERSION)
  
  ProjectFile=jvm.vcproj
@@ -42,14 +42,14 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/comm
          echo "false"; \
        fi)
 -    MAX_VM_MEMORY := 512
-+    MAX_VM_MEMORY := 1536
++    MAX_VM_MEMORY := 1792
      MIN_VM_MEMORY := $(MAX_VM_MEMORY)
    else
      MB_OF_MEMORY       := unknown
 diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
 --- openjdk.orig/jdk/make/docs/Makefile	2012-06-08 17:12:17.000000000 +0100
 +++ openjdk/jdk/make/docs/Makefile	2012-06-12 11:09:31.616702981 +0100
-@@ -69,9 +69,9 @@
+@@ -69,11 +69,11 @@
  #    NOTE: javadoc will not complete without these larger settings.
  #    WARNING: This could cause thrashing on low memory machines.
  ifeq ($(ARCH_DATA_MODEL),64)
@@ -59,8 +59,11 @@ diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
 -  MAX_VM_MEMORY = 1536
 +  MAX_VM_MEMORY = 1792
  else
-   MAX_VM_MEMORY = 768
+-  MAX_VM_MEMORY = 768
++  MAX_VM_MEMORY = 2048
  endif
+ 
+ # List of all possible directories for javadoc to look for sources
 diff -Nru openjdk.orig/langtools/make/build.xml openjdk/langtools/make/build.xml
 --- openjdk.orig/langtools/make/build.xml	2012-06-08 17:12:36.000000000 +0100
 +++ openjdk/langtools/make/build.xml	2012-06-12 10:50:20.974290246 +0100
@@ -80,7 +83,7 @@ diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/rules.make openjdk/hotspot/mak
  BOOT_SOURCE_LANGUAGE_VERSION = 6
  BOOT_TARGET_CLASS_VERSION = 6
 -JAVAC_FLAGS = -g -encoding ascii
-+JAVAC_FLAGS = -g -encoding ascii -J-Xmx256m
++JAVAC_FLAGS = -g -encoding ascii -J-Xmx512m
  BOOTSTRAP_JAVAC_FLAGS = $(JAVAC_FLAGS) -source $(BOOT_SOURCE_LANGUAGE_VERSION) -target $(BOOT_TARGET_CLASS_VERSION)
  
  # With parallel makes, print a message at the end of compilation.
