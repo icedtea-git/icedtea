@@ -22,9 +22,10 @@ diff --git a/contrib/mapfile-vers-product b/contrib/mapfile-vers-product
                  JVM_FindClassFromClass;
                  JVM_FindClassFromClassLoader;
                  JVM_FindLibraryEntry;
---- cacao/cacao/src/native/vm/openjdk/jvm.cpp.orig	2014-10-29 16:40:30.732305204 +0000
-+++ cacao/cacao/src/native/vm/openjdk/jvm.cpp	2014-10-29 16:44:06.643292016 +0000
-@@ -684,6 +684,48 @@
+diff --git a/src/native/vm/openjdk/jvm.cpp b/src/native/vm/openjdk/jvm.cpp
+--- cacao/cacao/src/native/vm/openjdk/jvm.cpp
++++ cacao/cacao/src/native/vm/openjdk/jvm.cpp
+@@ -655,6 +655,44 @@
  }
  
  
@@ -43,30 +44,26 @@ diff --git a/contrib/mapfile-vers-product b/contrib/mapfile-vers-product
 +
 +jclass JVM_FindClassFromCaller(JNIEnv* env, const char* name, jboolean init, jobject loader, jclass caller)
 +{
-+	classinfo     *c;
-+	utf           *u;
-+	classloader_t *cl;
++        TRACEJVMCALLS(("JVM_FindClassFromCaller(name=%s, init=%d, loader=%p, caller=%p)", name, init, loader, caller));
 +
-+	TRACEJVMCALLS(("JVM_FindClassFromCaller(name=%s, init=%d, loader=%p, caller=%p)", name, init, loader, caller));
++        Utf8String     u  = Utf8String::from_utf8(name);
++        classloader_t *cl = loader_hashtable_classloader_add((java_handle_t *) loader);
 +
-+	u  = utf_new_char(name);
-+	cl = loader_hashtable_classloader_add((java_handle_t *) loader);
++        /* XXX The caller's protection domain should be used during
++           the load_class_from_classloader but there is no specification or
++           unit-test in OpenJDK documenting the desired effect */
 +
-+	/* XXX The caller's protection domain should be used during
-+	   the load_class_from_classloader but there is no specification or
-+	   unit-test in OpenJDK documenting the desired effect */
++        classinfo     *c  = load_class_from_classloader(u, cl);
 +
-+	c = load_class_from_classloader(u, cl);
++        if (c == NULL)
++                return NULL;
 +
-+	if (c == NULL)
-+		return NULL;
++        if (init)
++                if (!(c->state & CLASS_INITIALIZED))
++                        if (!initialize_class(c))
++                                return NULL;
 +
-+	if (init)
-+		if (!(c->state & CLASS_INITIALIZED))
-+			if (!initialize_class(c))
-+				return NULL;
-+
-+	return (jclass) LLNI_classinfo_wrap(c);
++        return (jclass) LLNI_classinfo_wrap(c);
 +}
 +
 +

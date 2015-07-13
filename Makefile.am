@@ -20,11 +20,11 @@ OPENJDK_SHA256SUM = 20dd3e250ba5ee96546a8a86d5d6c85e6546df97b3a05df7a5a2d99d0e44
 
 DROP_URL = http://icedtea.classpath.org/download/drops
 
-CACAO_VERSION = e215e36be9fc
-CACAO_SHA256SUM = 4966514c72ee7ed108b882d9b6e65c3adf8a8f9c2dccb029f971b3c8cb4870ab
+CACAO_VERSION = c182f119eaad
+CACAO_SHA256SUM = eade43f6c5da8b3b5a64e6b206b624eaca88539f80101d7164d6aa426eb590b1
 CACAO_BASE_URL = $(DROP_URL)/cacao
-CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_VERSION).tar.gz
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.gz
+CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_SRC_ZIP)
 
 JAMVM_VERSION = ec18fb9e49e62dce16c5094ef1527eed619463aa
 JAMVM_SHA256SUM = 31810266666c23822942aac62a78019c2c4589e1c5ee48329cbf42652d4437bc
@@ -255,7 +255,6 @@ if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
 	patches/cacao/memory.patch \
-	patches/cacao/armhf.patch \
 	patches/cacao/pr2032.patch
 else
 if USING_CACAO
@@ -2361,6 +2360,7 @@ if !USE_SYSTEM_CACAO
 	  --with-java-runtime-library=openjdk7 \
 	  --with-java-runtime-library-prefix=$(abs_top_builddir)/openjdk \
 	  --with-java-runtime-library-classes=$(RUNTIME) \
+	  --with-libatomic-ops=no \
 	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
 	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS) install
 	ln -sf server $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/client
