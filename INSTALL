@@ -201,6 +201,7 @@ These are documented fully in the relevant section below.
 * --enable-native-debuginfo: Include debuginfo in native binaries.
 * --enable-java-debuginfo: Include debuginfo in Java class files.
 * --enable-infinality: Use fontconfig for better font rendering
+* --enable-non-nss-curves: Define curves beyond the three specified by NSS (NIST P-{256,384,521})
 
 Testing
 =======

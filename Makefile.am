@@ -276,14 +276,11 @@ ICEDTEA_PATCHES += \
 endif
 
 if ENABLE_NSS
-ICEDTEA_PATCHES += patches/nss-config.patch \
-	patches/rh1022017.patch
+ICEDTEA_PATCHES += patches/nss-config.patch
 endif
 
-if ENABLE_SUNEC
-if !ENABLE_NSS
+if !USE_NON_NSS_CURVES
 ICEDTEA_PATCHES += patches/rh1022017.patch
-endif
 endif
 
 ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)

@@ -3017,3 +3017,19 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_SCTP],
   AM_CONDITIONAL(USE_SYSTEM_SCTP, test x"${ENABLE_SYSTEM_SCTP}" = "xtrue")
   AC_SUBST(ENABLE_SYSTEM_SCTP)
 ])
+
+AC_DEFUN_ONCE([IT_ENABLE_NON_NSS_CURVES],
+[
+  AC_MSG_CHECKING([whether to enable elliptic curves beyond those supported by NSS])
+  AC_ARG_ENABLE([non-nss-curves],
+	      [AS_HELP_STRING(--enable-non-nss-curves,register curves beyond the 3 NSS defines [[default=no]])],
+  [
+    ENABLE_NON_NSS_CURVES="${enableval}"
+  ],
+  [
+    ENABLE_NON_NSS_CURVES="no"
+  ])
+  AC_MSG_RESULT(${ENABLE_NON_NSS_CURVES})
+  AM_CONDITIONAL(USE_NON_NSS_CURVES, test x"${ENABLE_NON_NSS_CURVES}" = "xyes")
+  AC_SUBST(ENABLE_NON_NSS_CURVES)
+])

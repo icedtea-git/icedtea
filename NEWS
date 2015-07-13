@@ -315,6 +315,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2323: System GConf without system GIO configuration broken
   - PR2328: GCJ uses ppc64el named libarch directory on ppc64le
   - PR2341: Update README & INSTALL files
+  - PR2390: Make elliptic curve removal optional
   - PR2394: ppc64le does not support -Xshare:dump
   - PR2395: Path to jvm.cfg is wrong in add-systemtap-boot
   - PR2446: Support system libsctp
