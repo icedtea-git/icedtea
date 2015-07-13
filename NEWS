@@ -437,6 +437,7 @@ New in release 2.5.5 (2015-04-14):
   - PR2250: JSSE server is still limited to 768-bit DHE
 * CACAO
   - PR2519: Update to latest CACAO
+  - PR2520: --enable-cacao builds broken, missing JVM_GetTemporaryDirectory impl.
 * ARM32 port
   - PR2228: Add ARM32 JIT
   - PR2297: Use the IcedTea 2.6.0 HotSpot on ARM32 by default
