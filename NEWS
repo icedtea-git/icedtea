@@ -258,7 +258,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S8064667: Add -XX:+CheckEndorsedAndExtDirs flag to JDK 8
   - S8064846: Lazy-init thread safety problems in core reflection
   - S8065098: JColorChooser no longer supports drag and drop between two JVM instances
-  - S8065238: javax.naming.NamingException after upgrade to JDK 8
+  - S8065238, PR2478: javax.naming.NamingException after upgrade to JDK 8
   - S8065552: setAccessible(true) on fields of Class may throw a SecurityException
   - S8065553: Failed Java web start via IPv6 (Java7u71 or later)
   - S8065609: 7u76 l10n resource file translation update
