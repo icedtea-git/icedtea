@@ -323,6 +323,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2482, RH489586, RH1236619: OpenJDK can't handle spaces in zone names in /etc/sysconfig/clock
   - PR2496: Enable system PCSC support by default
   - PR2499: Update remove-intree-libraries.sh script
+  - PR2507, G541462: Only apply PaX markings by default on running PaX kernels
 * AArch64 port
   - Add copyright to aarch64_ad.m4
   - S8069593: Changes to JavaThread::_thread_state must use acquire and release
