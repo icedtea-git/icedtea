@@ -2692,19 +2692,18 @@ AC_DEFUN_ONCE([IT_ENABLE_SUNEC],
   [
     case "${enableval}" in
       yes)
-        enable_sunec=yes
+        ENABLE_SUNEC=yes
         ;;
       *)
-        enable_sunec=no
+        ENABLE_SUNEC=no
         ;;
     esac
   ],
   [
-    enable_sunec=no
+    ENABLE_SUNEC=no
   ])
-  AC_MSG_RESULT([$enable_sunec])
-  AM_CONDITIONAL([ENABLE_SUNEC], test x"${enable_sunec}" = "xyes")
-  if test x"${enable_sunec}" = "xyes"; then
+  AC_MSG_RESULT([$ENABLE_SUNEC])
+  if test x"${ENABLE_SUNEC}" = "xyes"; then
     PKG_CHECK_MODULES(NSS_SOFTOKN, nss-softokn >= 3.16.1, [NSS_SOFTOKN_FOUND=yes], [NSS_SOFTOKN_FOUND=no])
     PKG_CHECK_MODULES(NSS_JAVA, nss-java, [NSS_JAVA_FOUND=yes], [NSS_JAVA_FOUND=no])
     if test "x${NSS_SOFTOKN_FOUND}" = "xyes"; then
@@ -2719,6 +2718,8 @@ AC_DEFUN_ONCE([IT_ENABLE_SUNEC],
     AC_SUBST(SUNEC_CFLAGS)
     AC_SUBST(SUNEC_LIBS)
   fi
+  AM_CONDITIONAL([ENABLE_SUNEC], test x"${ENABLE_SUNEC}" = "xyes")
+  AC_SUBST(ENABLE_SUNEC)
 ])
 
 AC_DEFUN_ONCE([IT_CHECK_TOOLS_JAR_EXISTS],

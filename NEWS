@@ -322,6 +322,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2458: Policy JAR files should be timestamped with the date of the policy file they hold
   - PR2482, RH489586, RH1236619: OpenJDK can't handle spaces in zone names in /etc/sysconfig/clock
   - PR2496: Enable system PCSC support by default
+  - PR2499: Update remove-intree-libraries.sh script
 * AArch64 port
   - Add copyright to aarch64_ad.m4
   - S8069593: Changes to JavaThread::_thread_state must use acquire and release
