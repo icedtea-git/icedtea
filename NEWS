@@ -330,6 +330,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2532: install stage fails where BUILD_ARCH_DIR != INSTALL_ARCH_DIR
   - PR2533: Allow greater control of Javadoc installation directory
   - PR2534: Install TRADEMARK, COPYING and ChangeLog as RPM spec file does
+  - PR2535: install-data-local needs to check that classes.jsa actually exists
 * AArch64 port
   - Add copyright to aarch64_ad.m4
   - S8069593: Changes to JavaThread::_thread_state must use acquire and release
