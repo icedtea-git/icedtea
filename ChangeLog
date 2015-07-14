@@ -1,3 +1,71 @@
+2015-07-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR94: empty install target in Makefile.am
+	* Makefile.am:
+	(add-tzdata-support): Redefine using BUILD_SDK_DIR.
+	(clean-add-tzdata-support): Likewise.
+	(add-tzdata-support-debug): Likewise using BUILD_DEBUG_SDK_DIR.
+	(clean-add-tzdata-support-debug): Likewise.
+	(add-tzdata-support-boot): Likewise using BUILD_BOOT_SDK_DIR.
+	(clean-add-tzdata-support-boot): Likewise.
+	(install-exec-local): Remove copying of *.so files
+	from $(BUILD_SDK_DIR)/lib ; none in OpenJDK 7.
+	(install-data-local): Remove blacklisted.certs and
+	tzdb.dat which don't exist in OpenJDK 7. Add
+	jre/lib/zi and fontconfig files. Copy icons as
+	java-1.7.0.png.
+
+2015-05-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR94: empty install target in Makefile.am
+	* Makefile.am:
+	(BUILD_SDK_DIR): Added.
+	(BUILD_JRE_DIR): Likewise.
+	(BUILD_JRE_ARCH_DIR): Redefine using BUILD_SDK_DIR.
+	(BUILD_DEBUG_SDK_DIR): Added.
+	(BUILD_DEBUG_JRE_DIR): Likewise.
+	(BUILD_DEBUG_JRE_ARCH_DIR): Redefine using
+	BUILD_DEBUG_SDK_DIR.
+	(BUILD_BOOT_SDK_DIR): Added.
+	(BUILD_BOOT_JRE_DIR): Likewise.
+	(BUILD_BOOT_JRE_ARCH_DIR): Redefine using
+	BUILD_BOOT_SDK_DIR.
+	(DESKTOP_FILES): Likewise.
+	(EXTRA_DIST): Redefine using DESKTOP_FILES.
+	(install): Removed.
+	(bootstrap-directory-stage2): Redefine using
+	BUILD_BOOT_SDK_DIR.
+	(icedtea): Redefine using BUILD_SDK_DIR and
+	BUILD_JRE_DIR.
+	(add-systemtap): Likewise.
+	(clean-add-systemtap): Likewise.
+	(check-crypto): Redefine using BUILD_SDK_DIR.
+	(add-archive): Likewise.
+	(icedtea-debug): Likewise using BUILD_DEBUG_SDK_DIR
+	and BUILD_DEBUG_JRE_DIR.
+	(add-systemtap-debug): Likewise.
+	(clean-add-systemtap-debug): Likewise.
+	(check-crypto-debug): Redefine using BUILD_DEBUG_SDK_DIR.
+	(add-archive-debug): Likewise.
+	(icedtea-boot): Redefine using BUILD_BOOT_SDK_DIR.
+	(add-systemtap-boot): Likewise.
+	(clean-add-systemtap-boot): Likewise.
+	(check-crypto-boot): Redefine using BUILD_BOOT_SDK_DIR.
+	(add-archive-boot): Likewise.
+	(rebuild): Likewise.
+	(hotspot): Redefine using BUILD_SDK_DIR and
+	BUILD_BOOT_SDK_DIR.
+	(ADD_ZERO_CONFIGURE_ARGS): Redefine using $(BUILD_SDK_DIR).
+	(check-hotspot): Likewise.
+	(check-langtools): Likewise.
+	(check-jdk): Likewise.
+	(install-exec-local): Added. Installs JDK binaries,
+	headers, native libraries, tapsets, JAR and IDL files.
+	(install-data-local): Installs property files, man
+	pages, images, documentation and other miscellaneous
+	data files, such as the timezone database.
+	* NEWS: Updated.
+
 2015-07-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2507, G541462: Only apply PaX markings by default
