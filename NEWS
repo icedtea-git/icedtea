@@ -443,6 +443,7 @@ New in release 2.5.5 (2015-04-14):
   - PR2520: --enable-cacao builds broken, missing JVM_GetTemporaryDirectory impl.
 * JamVM
   - PR2172: --enable-jamvm builds broken, missing JVM_GetTemporaryDirectory impl
+  - PR2500: Add executable stack markings to callNative.S on JamVM
 * ARM32 port
   - PR2228: Add ARM32 JIT
   - PR2297: Use the IcedTea 2.6.0 HotSpot on ARM32 by default
