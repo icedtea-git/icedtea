@@ -327,6 +327,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2507, G541462: Only apply PaX markings by default on running PaX kernels
   - PR2530: PaX mark the installed JDK so it runs on hardened systems
   - PR2531: Location of docs directory in install-data-local is incorrect
+  - PR2532: install stage fails where BUILD_ARCH_DIR != INSTALL_ARCH_DIR
 * AArch64 port
   - Add copyright to aarch64_ad.m4
   - S8069593: Changes to JavaThread::_thread_state must use acquire and release
