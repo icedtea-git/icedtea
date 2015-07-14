@@ -326,6 +326,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR2499: Update remove-intree-libraries.sh script
   - PR2507, G541462: Only apply PaX markings by default on running PaX kernels
   - PR2530: PaX mark the installed JDK so it runs on hardened systems
+  - PR2531: Location of docs directory in install-data-local is incorrect
 * AArch64 port
   - Add copyright to aarch64_ad.m4
   - S8069593: Changes to JavaThread::_thread_state must use acquire and release

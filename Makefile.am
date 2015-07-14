@@ -2873,7 +2873,7 @@ install-data-local:
 	touch $(DESTDIR)/${prefix}/jre/.systemPrefs/.systemRootModFile
 if ENABLE_DOCS
 	${mkinstalldirs} $(DESTDIR)$(docdir)/html
-	cp -RP $(BUILD_IMAGE_DIR)/docs $(DESTDIR)$(docdir)/html
+	cp -RP $(BUILD_OUTPUT_DIR)/docs $(DESTDIR)$(docdir)/html
 endif
 if !ENABLE_JAMVM
 if !ENABLE_CACAO
