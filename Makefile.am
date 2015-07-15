@@ -3081,15 +3081,27 @@ add-archive-boot: stamps/add-archive-ecj.stamp
 
 add-archive-debug: stamps/add-archive-debug.stamp
 
+add-cacao: stamps/add-cacao.stamp
+
+add-cacao-debug: stamps/add-cacao-debug.stamp
+
+add-jamvm: stamps/add-jamvm.stamp
+
+add-jamvm-debug: stamps/add-jamvm-debug.stamp
+
 add-nss: stamps/add-nss.stamp
 
 add-nss-debug: stamps/add-nss-debug.stamp
 
 add-systemtap: stamps/add-systemtap.stamp
 
+add-systemtap-boot: stamps/add-systemtap-boot.stamp
+
 add-systemtap-debug: stamps/add-systemtap-debug.stamp
 
 add-tzdata-support: stamps/add-tzdata-support.stamp
+
+add-tzdata-support-boot: stamps/add-tzdata-support-boot.stamp
 
 add-tzdata-support-debug: stamps/add-tzdata-support-debug.stamp
 
@@ -3147,6 +3159,8 @@ extract-openjdk: stamps/extract-openjdk.stamp
 
 extract-hotspot: stamps/extract-hotspot.stamp
 
+extract-jamvm: stamps/extract-jamvm.stamp
+
 extract-jaxp: stamps/extract-jaxp.stamp
 
 extract-jaxws: stamps/extract-jaxws.stamp
@@ -3183,6 +3197,8 @@ patch-boot: stamps/patch-boot.stamp
 
 patch-fsg: stamps/patch-fsg.stamp
 
+remove-intree-libraries: stamps/remove-intree-libraries.stamp
+
 rewriter: stamps/rewriter.stamp
 
 rewrite-rhino: stamps/rewrite-rhino.stamp
@@ -3192,3 +3208,11 @@ rt: stamps/rt.stamp
 rt-class-files: stamps/rt-class-files.stamp
 
 sanitise-openjdk: stamps/sanitise-openjdk.stamp
+
+split-debuginfo: stamps/split-debuginfo.stamp
+
+split-debuginfo-boot: stamps/split-debuginfo-boot.stamp
+
+split-debuginfo-debug: stamps/split-debuginfo-debug.stamp
+
+versioning: stamps/versioning.stamp
