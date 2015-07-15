@@ -301,6 +301,7 @@ New in release 2.6.0 (2014-XX-XX):
   - S8081475, PR2494: SystemTap does not work when JDK is compiled with GCC 5
 * Bug fixes
   - PR94: empty install target in Makefile.am
+  - PR1374: Provide option to strip and link debugging info after build
   - PR1661: Cleanup SYSTEM_GCONF option and allow it to be set false
   - PR1786: Allow x86 build to occur on x86_64 using a previously built x86_64 build
   - PR1816: Split download/extraction rules for OpenJDK so they can run in parallel

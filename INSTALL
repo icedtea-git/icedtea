@@ -37,6 +37,7 @@ rhino (can be disabled using --without-rhino)
 libffi (for --enable-zero or on archs other than x86/x86_64/sparc/ppc64)
 LLVM 2.5 or later (for --enable-shark)
 systemtap-sdl-devel >= 0.9.5 (Java method tracing requires systemtap >= 0.9.9)
+objcopy (for --enable-split-debuginfo)
 
 See ./configure --help if you need to override the defaults.
 
@@ -201,7 +202,11 @@ These are documented fully in the relevant section below.
 * --enable-native-debuginfo: Include debuginfo in native binaries.
 * --enable-java-debuginfo: Include debuginfo in Java class files.
 * --enable-infinality: Use fontconfig for better font rendering
-* --enable-non-nss-curves: Define curves beyond the three specified by NSS (NIST P-{256,384,521})
+* --enable-non-nss-curves: Define curves beyond the three specified
+  by NSS (NIST P-{256,384,521})
+* --enable-split-debuginfo: Strip debuginfo from binaries and libraries
+  and install in .debug files under ${libdir}/debug instead.  objcopy
+  from binutils must be available to perform the stripping.
 
 Testing
 =======
