@@ -308,6 +308,7 @@ New in release 2.6.0 (2014-XX-XX):
   - PR1846: Build fails when using IcedTea7 as bootstrap JDK with native ecj
   - PR1847: Synchronise javac.in with IcedTea6
   - PR1883: Search Debian multiarch paths when looking for pcsclite
+  - PR1888: Allow tarball checksumming to be disabled
   - PR2060: Fix warnings found by Gentoo ebuild QA with gcc 4.9.1
   - PR2144: make dist fails due to lack of HotSpot-specific patches
   - PR2161: RHEL 6 has a version of GIO which meets the version criteria, but has no g_settings_*
