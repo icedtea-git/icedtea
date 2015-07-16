@@ -2866,8 +2866,7 @@ install-exec-local:
 	${mkinstalldirs} $(DESTDIR)$(includedir)/$(BUILD_OS_DIR) $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)
 	${mkinstalldirs} $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli
 	${mkinstalldirs} $(DESTDIR)${prefix}/jre/bin $(DESTDIR)${prefix}/jre/lib
-	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)
-	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/{.,headless,jli,xawt}
 	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/ext
 	${mkinstalldirs} $(DESTDIR)${prefix}/tapset
 if SPLIT_DEBUGINFO
@@ -2875,8 +2874,7 @@ if SPLIT_DEBUGINFO
 	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${exec_prefix}/lib/$(INSTALL_ARCH_DIR)
 	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli
 	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/bin $(DESTDIR)${prefix}/jre/lib
-	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)
-	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli
+	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/{.,headless,jli,xawt}
 endif
 	for files in $(BUILD_SDK_DIR)/bin/*; do \
 	  name=$$(basename $${files}) ; \
@@ -2935,25 +2933,19 @@ endif
 	else \
 	  $(INSTALL_PROGRAM) $(BUILD_SDK_DIR)/jre/lib/jexec $(DESTDIR)${exec_prefix}/jre/lib ; \
 	fi
-	for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*.so; do \
-	  if test "x$(enable_split_debuginfo)" = "xyes" -a ! -h $${files}; then \
-	    name=$$(basename $${files}) ; \
-	    dir=$$(echo $$(dirname $${files}) | $(SED) "s#$(BUILD_SDK_DIR)#$(BUILD_DEBUGINFO_DIR)#") ; \
-	    $(INSTALL_PROGRAM) $${dir}/$${name}.stripped $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${name}; \
-	    $(INSTALL_PROGRAM) $${dir}/$${name}.debug $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR); \
-	  else \
-	    $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR); \
-	  fi ; \
-	done
-	for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/jli/*.so; do \
-	  if test "x$(enable_split_debuginfo)" = "xyes" -a ! -h $${files} ; then \
-	    name=$$(basename $${files}) ; \
-	    dir=$$(echo $$(dirname $${files}) | $(SED) "s#$(BUILD_SDK_DIR)#$(BUILD_DEBUGINFO_DIR)#") ; \
-	    $(INSTALL_PROGRAM) $${dir}/$${name}.stripped $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli/$${name}; \
-	    $(INSTALL_PROGRAM) $${dir}/$${name}.debug $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli; \
-	  else \
-	    $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli; \
-	  fi ; \
+	for subdirs in . headless jli xawt ; do \
+	  for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${subdirs}/*.so; do \
+	    if test "x$(enable_split_debuginfo)" = "xyes" -a ! -h $${files}; then \
+	      name=$$(basename $${files}) ; \
+	      dir=$$(echo $$(dirname $${files}) | $(SED) "s#$(BUILD_SDK_DIR)#$(BUILD_DEBUGINFO_DIR)#") ; \
+	      $(INSTALL_PROGRAM) $${dir}/$${name}.stripped \
+	        $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${subdirs}/$${name}; \
+	      $(INSTALL_PROGRAM) $${dir}/$${name}.debug \
+	        $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${subdirs}; \
+	    else \
+	      $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${subdirs}; \
+	    fi ; \
+	  done ; \
 	done
 	for vms in client server ; do \
 	  if [ -d $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ] ; then \
