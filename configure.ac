@@ -14,10 +14,10 @@ AC_SUBST(abs_top_srcdir)
 
 IT_DETERMINE_VERSION
 AC_CONFIG_FILES([hotspot.map fsg.sh])
+AC_CONFIG_FILES([jconsole.desktop])
+AC_CONFIG_FILES([policytool.desktop])
 
 AC_CANONICAL_HOST
-
-AC_PREFIX_DEFAULT([bootstrap])
 
 AC_PROG_CC
 AC_PROG_CXX

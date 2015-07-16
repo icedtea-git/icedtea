@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=OpenJDK Policy Tool
+Name=OpenJDK @JAVA_VER@ Policy Tool
 Comment=Manage OpenJDK policy files
-Exec=/usr/bin/policytool
+Exec=_BINDIR_/policytool
 Icon=java
 Terminal=false
 Type=Application

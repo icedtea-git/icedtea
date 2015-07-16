@@ -520,7 +520,7 @@ ICEDTEA_ENV = \
 	ANT="$(ANT)" \
         BUILD_NUMBER="$(BUILD_VERSION)" \
 	JDK_UPDATE_VERSION="$(JDK_UPDATE_VERSION)" \
-        JRE_RELEASE_VERSION="1.7.0_$(COMBINED_VERSION)" \
+        JRE_RELEASE_VERSION="@JAVA_VER@_$(COMBINED_VERSION)" \
 	MILESTONE="fcs" \
 	LANG="C" \
 	PATH="$(BOOT_DIR)/bin:$(OS_PATH):$$PATH" \
@@ -831,15 +831,14 @@ JTREG_SRCS = $(top_srcdir)/test/jtreg/com/sun/javatest/cof/i18n.properties \
 	$(top_srcdir)/test/jtreg/JavaTest.cmdMgrs.lst \
 	$(top_srcdir)/test/jtreg/excludelist.langtools.jtx 
 
-DESKTOP_FILES = jconsole.desktop policytool.desktop
+DESKTOP_FILES = jconsole-@JAVA_VER@.desktop policytool-@JAVA_VER@.desktop
 
 EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/boot/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
 	$(top_srcdir)/patches/jamvm/*.patch \
 	tools-copy contrib overlays \
-	$(JTREG_SRCS) $(DESKTOP_FILES) \
-	HACKING autogen.sh \
+	$(JTREG_SRCS) HACKING autogen.sh \
 	tapset/hotspot.stp.in \
 	tapset/hotspot_jni.stp.in \
 	tapset/jstack.stp.in \
@@ -854,7 +853,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 # Top-Level Targets
 # =================
 
-all-local: icedtea-stage2
+all-local: icedtea-stage2 $(DESKTOP_FILES)
 
 check-local: jtregcheck check-tapset
 
@@ -873,7 +872,8 @@ clean-local: clean-tests \
  clean-icedtea-debug-stage2 clean-icedtea-stage1 clean-add-zero clean-add-zero-debug \
  clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter \
  clean-add-systemtap clean-add-systemtap-debug clean-add-nss clean-add-tzdata-support \
- clean-add-tzdata-support-debug clean-cryptocheck
+ clean-add-tzdata-support-debug clean-cryptocheck clean-policytool-@JAVA_VER@.desktop \
+ clean-jconsole-@JAVA_VER@.desktop
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -911,7 +911,7 @@ distclean-local: clean-local clean-download
 	clean-download-jaxws clean-download-langtools clean-download-jdk clean-download-openjdk \
 	clean-extract-corba clean-extract-jaxp clean-extract-jaxws clean-extract-jdk \
 	clean-extract-langtools clean-split-debuginfo clean-split-debuginfo-debug \
-	clean-split-debuginfo-boot
+	clean-split-debuginfo-boot clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -2844,6 +2844,20 @@ clean-cryptocheck:
 	rm -rf $(CRYPTO_CHECK_BUILD_DIR)
 	rm -f stamps/cryptocheck.stamp
 
+# File substitution
+
+policytool-@JAVA_VER@.desktop: policytool.desktop
+	cat $< | $(SED) "s#_BINDIR_#$(bindir)#" > $@
+
+clean-policytool-@JAVA_VER@.desktop:
+	rm -f policytool-@JAVA_VER@.desktop
+
+jconsole-@JAVA_VER@.desktop: jconsole.desktop
+	cat $< | $(SED) "s#_BINDIR_#$(bindir)#" > $@
+
+clean-jconsole-@JAVA_VER@.desktop:
+	rm -f jconsole-@JAVA_VER@.desktop
+
 # Installation Targets
 # ====================
 
@@ -3054,10 +3068,10 @@ install-data-local:
 	for sizes in 16 24 32 48 ; do \
 	  ${mkinstalldirs} $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps ; \
 	  ${INSTALL_DATA} openjdk/jdk/src/solaris/classes/sun/awt/X11/java-icon$${sizes}.png \
-	    $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-1.7.0.png ; \
+	    $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-@JAVA_VER@.png ; \
 	done
 	for files in $(DESKTOP_FILES) ; do \
-	  ${INSTALL_DATA} $(srcdir)/$${files} $(DESTDIR)$(datadir)/applications ; \
+	  ${INSTALL_DATA} $(builddir)/$${files} $(DESTDIR)$(datadir)/applications ; \
 	done
 	touch $(DESTDIR)/${prefix}/jre/.systemPrefs/.system.lock
 	touch $(DESTDIR)/${prefix}/jre/.systemPrefs/.systemRootModFile

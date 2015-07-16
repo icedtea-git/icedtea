@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=OpenJDK Monitoring & Management Console
+Name=OpenJDK @JAVA_VER@ Monitoring & Management Console
 Comment=Monitor and manage OpenJDK applications
-Exec=/usr/bin/jconsole
+Exec=_BINDIR_/jconsole
 Icon=java
 Terminal=false
 Type=Application
