@@ -1,5 +1,35 @@
 2015-07-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2540: Specify a cacerts file for the OpenJDK
+	build as we do for OpenJDK 8
+	* INSTALL: Document --with-cacerts-file.
+	* Makefile.am:
+	(ICEDTEA_ENV): Pass ALT_CACERTS_FILE to OpenJDK
+	build if specified and valid.
+	(install-data-local): Install the cacerts file.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_WITH_CACERTS_FILE): Allow a cacerts file to
+	be specified, defaulting to
+	${SYSTEM_JDK_DIR}/jre/lib/security/cacerts
+	* configure.ac:
+	Invoke IT_WITH_CACERTS_FILE.
+
+2015-06-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2540: Specify a cacerts file for the OpenJDK
+	build as we do for OpenJDK 8
+	* Makefile.am:
+	(JDK_CACERTS_FILE): Added to specify the location
+	of cacerts within the bootstrap JDK.
+	(CACERTS_FILE): Find the regular cacerts file,
+	dereferencing any symlinks which point to it.
+	* configure.ac:
+	Call IT_FIND_TOOL to locate the readlink tool,
+	which is part of coreutils.
+
+2015-07-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2539: Libraries in some subdirectories of
 	jre/lib/{arch} are not installed
 	* Makefile.am:

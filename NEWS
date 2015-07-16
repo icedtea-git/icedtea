@@ -336,6 +336,7 @@ New in release 2.6.0 (2015-07-15):
   - PR2535: install-data-local needs to check that classes.jsa actually exists
   - PR2537: Desktop files do not allow installation from multiple versions of IcedTea 
   - PR2539: Libraries in some subdirectories of jre/lib/{arch} are not installed
+  - PR2540: Specify a cacerts file for the OpenJDK build as we do for OpenJDK 8
 * AArch64 port
   - Add copyright to aarch64_ad.m4
   - S8069593: Changes to JavaThread::_thread_state must use acquire and release

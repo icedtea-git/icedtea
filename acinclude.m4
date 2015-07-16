@@ -3321,3 +3321,35 @@ AC_DEFUN_ONCE([IT_ENABLE_HOTSPOT_CHECKSUM],
   AM_CONDITIONAL(DISABLE_HOTSPOT_CHECKSUM, test x"${ENABLE_HOTSPOT_CHECKSUM}" = "xno")
   AC_SUBST(ENABLE_HOTSPOT_CHECKSUM)
 ])
+
+AC_DEFUN_ONCE([IT_WITH_CACERTS_FILE],
+[
+  CACERTS_DEFAULT=${SYSTEM_JDK_DIR}/jre/lib/security/cacerts
+  AC_MSG_CHECKING([whether to copy a certificate authority certificates (cacerts) file])
+  AC_ARG_WITH([cacerts-file],
+              [AS_HELP_STRING([--with-cacerts-file[[=PATH]]],specify the location of the cacerts file)],
+  [
+    ALT_CACERTS_FILE=${withval}
+  ],
+  [ 
+    ALT_CACERTS_FILE="yes"
+  ])
+  AC_MSG_RESULT(${ALT_CACERTS_FILE})
+  if test "x${ALT_CACERTS_FILE}" != "xno"; then
+    if test "x${ALT_CACERTS_FILE}" = "xyes"; then
+      AC_MSG_NOTICE([No cacerts file specified; using ${CACERTS_DEFAULT}])
+      ALT_CACERTS_FILE=${CACERTS_DEFAULT} ;
+    fi
+    AC_MSG_CHECKING([if $ALT_CACERTS_FILE is a valid keystore file])
+    if test -f "${ALT_CACERTS_FILE}" && \
+     ${FILE} ${ALT_CACERTS_FILE} | ${GREP} 'Java KeyStore' >&AS_MESSAGE_LOG_FD 2>&1; then
+      AC_MSG_RESULT([yes])
+    else
+      AC_MSG_RESULT([no])
+      AC_MSG_WARN([No valid cacerts file found; one won't be passed to the OpenJDK build])
+      ALT_CACERTS_FILE="no"
+    fi
+  fi
+  AM_CONDITIONAL(USE_ALT_CACERTS_FILE, test "x${ALT_CACERTS_FILE}" != "xno")
+  AC_SUBST(ALT_CACERTS_FILE)
+])

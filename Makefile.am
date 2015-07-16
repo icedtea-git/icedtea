@@ -89,6 +89,11 @@ OPENJDK_SOURCEPATH_DIRS = \
 
 SOURCEPATH_DIRS = $(abs_top_srcdir)/generated:$(OPENJDK_SOURCEPATH_DIRS)
 
+JDK_CACERTS_FILE = @ALT_CACERTS_FILE@
+
+CACERTS_FILE = \
+  `if [ -h $(JDK_CACERTS_FILE) ] ; then $(READLINK) -e $(JDK_CACERTS_FILE) ; else echo $(JDK_CACERTS_FILE); fi`
+
 # Sources used from OpenJDK.
 ICEDTEA_BOOTSTRAP_CLASSES =
 
@@ -671,6 +676,11 @@ endif
 if ENABLE_INFINALITY
 ICEDTEA_ENV += \
        INFINALITY_SUPPORT="true"
+endif
+
+if USE_ALT_CACERTS_FILE
+ICEDTEA_ENV += \
+	ALT_CACERTS_FILE="${CACERTS_FILE}"
 endif
 
 # OpenJDK boot build environment.
@@ -3023,6 +3033,8 @@ install-data-local:
 	for files in $(BUILD_SDK_DIR)/jre/lib/management/*.template; do \
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/management; \
 	done
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/security/cacerts \
+	  $(DESTDIR)${prefix}/jre/lib/security
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/security/java.policy \
 	  $(DESTDIR)${prefix}/jre/lib/security
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/security/java.security \
