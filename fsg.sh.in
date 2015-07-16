@@ -111,3 +111,6 @@ rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECDSASignature.java
 rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECKeyPairGenerator.java
 rm -rvf openjdk/jdk/src/share/native/sun/security/ec
 rm -rvf openjdk/jdk/make/sun/security/ec
+
+echo "Syncing EC list with NSS"
+patch -Np0 < @abs_top_srcdir@/patches/pr2126.patch

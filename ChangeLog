@@ -1,3 +1,20 @@
+2014-12-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2126: Synchronise elliptic curves in
+	sun.security.ec.NamedCurve with those listed by NSS
+	* fsg.sh: Moved to...
+	* Makefile.am:
+	(EXTRA_DIST): Remove fsg.sh, now generated
+	by configure.
+	(sanitise-openjdk): Fix path to new generated
+	fsg.sh and mark as executable
+	* NEWS: Updated.
+	* configure.ac: Add fsg.sh to AC_CONFIG_FILES.
+	* fsg.sh.in: ... here and added application
+	of PR2126 patch.
+	* patches/pr2126.patch: Patch to remove curves
+	unsupported by NSS.
+
 2015-06-24  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:

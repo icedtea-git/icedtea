@@ -574,7 +574,7 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/jamvm/*.patch \
 	tools-copy contrib overlays \
 	$(JTREG_SRCS) $(DESKTOP_FILES) HACKING \
-	$(PULSEAUDIO_SRCS) fsg.sh autogen.sh \
+	$(PULSEAUDIO_SRCS) autogen.sh \
 	tapset/hotspot.stp.in \
 	tapset/hotspot_jni.stp.in \
 	tapset/jstack.stp.in \
@@ -1128,7 +1128,8 @@ clean-extract-nashorn:
 stamps/sanitise-openjdk.stamp: stamps/extract-openjdk.stamp \
  stamps/extract-hotspot.stamp stamps/extract-nashorn.stamp
 	chmod -R ug+w openjdk 
-	sh $(srcdir)/fsg.sh
+	chmod +x $(builddir)/fsg.sh
+	sh $(builddir)/fsg.sh
 	touch stamps/sanitise-openjdk.stamp
 
 clean-sanitise-openjdk:
