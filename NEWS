@@ -12,7 +12,7 @@ JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.0 (2015-07-15):
+New in release 2.6.0 (2015-07-17):
 
 * OpenJDK
   - S4792059: test/java/io/pathNames/GeneralSolaris.java fails on symbolic links
