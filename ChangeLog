@@ -1,3 +1,16 @@
+2015-07-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2548: install stage doesn't install symbolic links
+	* Makefile.am:
+	(install_file): Add function for installing
+	files which handles symlinks correctly.
+	(install-exec-local): Use install_file
+	function to install files where symlinks
+	may be encountered.
+	(install-data-local): Likewise. Also
+	copy the man/ja symlink.
+	* NEWS: Updated.
+
 2015-07-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2545: Extend tarball checksumming option to

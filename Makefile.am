@@ -2925,6 +2925,9 @@ clean-jconsole-@JAVA_VER@.desktop:
 # Installation Targets
 # ====================
 
+# install doesn't work with symlinks
+install_file = if [ -h $(1) ] ; then cp -a $(1) $(2) ; else $(3) $(1) $(2) ; fi
+
 install-exec-local:
 	${mkinstalldirs} $(DESTDIR)$(bindir) $(DESTDIR)$(includedir) $(DESTDIR)${exec_prefix}/lib
 	${mkinstalldirs} $(DESTDIR)$(includedir)/$(BUILD_OS_DIR) $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)
@@ -2947,20 +2950,20 @@ endif
 	    $(INSTALL_PROGRAM) $${dir}/$${name}.stripped $(DESTDIR)$(bindir)/$${name}; \
 	    $(INSTALL_PROGRAM) $${dir}/$${name}.debug $(DESTDIR)$(DEBUG_PREFIX)/$(bindir); \
 	  else \
-	    $(INSTALL_PROGRAM) $${files} $(DESTDIR)$(bindir); \
+	    $(call install_file,$${files},$(DESTDIR)$(bindir),$(INSTALL_PROGRAM)) ; \
 	  fi ; \
 	done
 	for files in $(BUILD_SDK_DIR)/include/*.h; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)$(includedir); \
+	  $(call install_file,$${files},$(DESTDIR)$(includedir),$(INSTALL_DATA)) ; \
 	done
 	for files in $(BUILD_SDK_DIR)/include/$(BUILD_OS_DIR)/*.h; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)$(includedir)/$(BUILD_OS_DIR); \
+	  $(call install_file,$${files},$(DESTDIR)$(includedir)/$(BUILD_OS_DIR),$(INSTALL_DATA)) ; \
 	done
 	for files in $(BUILD_SDK_DIR)/lib/*.jar; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)${exec_prefix}/lib; \
+	  $(call install_file,$${files},$(DESTDIR)${exec_prefix}/lib,$(INSTALL_DATA)) ; \
 	done
 	for files in $(BUILD_SDK_DIR)/lib/*.idl; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)${exec_prefix}/lib; \
+	  $(call install_file,$${files},$(DESTDIR)${exec_prefix}/lib,$(INSTALL_DATA)) ; \
 	done
 	if test "x$(enable_split_debuginfo)" = "xyes"; then \
 	  $(INSTALL_PROGRAM) $(BUILD_DEBUGINFO_DIR)/lib/jexec.stripped $(DESTDIR)${exec_prefix}/lib/jexec ; \
@@ -2975,7 +2978,7 @@ endif
 	    $(INSTALL_PROGRAM) $${dir}/$${name}.stripped $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli/$${name}; \
 	    $(INSTALL_PROGRAM) $${dir}/$${name}.debug $(DESTDIR)$(DEBUG_PREFIX)/${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli; \
 	  else \
-	    $(INSTALL_PROGRAM) $${files} $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli; \
+	    $(call install_file,$${files},$(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli,$(INSTALL_PROGRAM)) ; \
 	  fi ; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/bin/*; do \
@@ -2985,11 +2988,11 @@ endif
 	    $(INSTALL_PROGRAM) $${dir}/$${name}.stripped $(DESTDIR)${prefix}/jre/bin/$${name}; \
 	    $(INSTALL_PROGRAM) $${dir}/$${name}.debug $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/bin; \
 	  else \
-	    $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/bin; \
+	    $(call install_file,$${files},$(DESTDIR)${prefix}/jre/bin,$(INSTALL_PROGRAM)) ; \
 	  fi ; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/lib/*.jar; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib; \
+	  $(call install_file,$${files},$(DESTDIR)${prefix}/jre/lib,$(INSTALL_DATA)) ; \
 	done
 	if test "x$(enable_split_debuginfo)" = "xyes"; then \
 	  $(INSTALL_PROGRAM) $(BUILD_DEBUGINFO_DIR)/jre/lib/jexec.stripped $(DESTDIR)${exec_prefix}/jre/lib/jexec ; \
@@ -3007,7 +3010,7 @@ endif
 	      $(INSTALL_PROGRAM) $${dir}/$${name}.debug \
 	        $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${subdirs}; \
 	    else \
-	      $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${subdirs}; \
+	      $(call install_file,$${files},$(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${subdirs},$(INSTALL_PROGRAM));\
 	    fi ; \
 	  done ; \
 	done
@@ -3024,16 +3027,16 @@ endif
 	        $(INSTALL_PROGRAM) $${dir}/$${name}.debug \
 	          $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}; \
 	      else \
-	        $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}; \
+	        $(call install_file,$${files},$(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms},$(INSTALL_PROGRAM));\
 	      fi ; \
 	    done ; \
 	  fi ; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/lib/ext/*.jar; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/ext; \
+	  $(call install_file,$${files},$(DESTDIR)${prefix}/jre/lib/ext,$(INSTALL_DATA));\
 	done
 	for files in $(BUILD_SDK_DIR)/tapset/*.stp; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/tapset; \
+	  $(call install_file,$${files},$(DESTDIR)${prefix}/tapset,$(INSTALL_DATA));\
 	done
 	$(abs_top_builddir)/pax-mark-vm $(DESTDIR)${prefix}
 
@@ -3050,10 +3053,10 @@ install-data-local:
 	${mkinstalldirs} $(DESTDIR)$(datadir)/applications
 	${mkinstalldirs} $(DESTDIR)$(sysconfdir)/.java/.systemPrefs
 	for files in $(BUILD_SDK_DIR)/jre/lib/*.properties; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib; \
+	  $(call install_file,$${files},$(DESTDIR)${prefix}/jre/lib,$(INSTALL_DATA)) ; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/lib/fontconfig*.{properties.src,bfc}; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib; \
+	  $(call install_file,$${files},$(DESTDIR)${prefix}/jre/lib,$(INSTALL_DATA)) ; \
 	done
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/release $(DESTDIR)${prefix}
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/src.zip $(DESTDIR)${prefix}
@@ -3072,11 +3075,11 @@ install-data-local:
 	  fi ; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/lib/cmm/*.pf; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/cmm; \
+	  $(call install_file,$${files},$(DESTDIR)${prefix}/jre/lib/cmm,$(INSTALL_DATA)) ; \
 	done
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/ext/meta-index $(DESTDIR)${prefix}/jre/lib/ext
 	for files in $(BUILD_SDK_DIR)/jre/lib/images/cursors/*.gif; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/images/cursors; \
+	  $(call install_file,$${files},$(DESTDIR)${prefix}/jre/lib/images/cursors,$(INSTALL_DATA)) ; \
 	done
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/images/cursors/cursors.properties \
 	  $(DESTDIR)${prefix}/jre/lib/images/cursors
@@ -3085,7 +3088,7 @@ install-data-local:
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/management/management.properties \
 	  $(DESTDIR)${prefix}/jre/lib/management
 	for files in $(BUILD_SDK_DIR)/jre/lib/management/*.template; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/management; \
+	  $(call install_file,$${files},$(DESTDIR)${prefix}/jre/lib/management,$(INSTALL_DATA)) ; \
 	done
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/security/cacerts \
 	  $(DESTDIR)${prefix}/jre/lib/security
@@ -3096,17 +3099,18 @@ install-data-local:
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/security/nss.cfg \
 	  $(DESTDIR)${prefix}/jre/lib/security
 	for files in $(BUILD_SDK_DIR)/jre/lib/security/*.jar; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/security; \
+	  $(call install_file,$${files},$(DESTDIR)${prefix}/jre/lib/security,$(INSTALL_DATA)) ; \
 	done
 	for items in $(BUILD_SDK_DIR)/jre/lib/zi/*; do \
 	  cp -RP $${items} $(DESTDIR)${prefix}/jre/lib/zi ; \
 	done
 	for files in $(BUILD_SDK_DIR)/man/man1/*.1; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)$(mandir)/man1; \
+	  $(call install_file,$${files},$(DESTDIR)$(mandir)/man1,$(INSTALL_DATA)) ; \
 	done
 	for files in $(BUILD_SDK_DIR)/man/ja_JP.UTF-8/man1/*.1; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)$(mandir)/ja_JP.UTF-8/man1; \
+	  $(call install_file,$${files},$(DESTDIR)$(mandir)/ja_JP.UTF-8/man1,$(INSTALL_DATA)) ; \
 	done
+	cp -a $(BUILD_SDK_DIR)/man/ja $(DESTDIR)$(mandir)
 	for items in $(BUILD_SDK_DIR)/demo/*; do \
 	  cp -RP $${items} $(DESTDIR)${prefix}/demo ; \
 	done
