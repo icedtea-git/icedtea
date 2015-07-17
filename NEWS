@@ -339,6 +339,7 @@ New in release 2.6.0 (2015-07-15):
   - PR2540: Specify a cacerts file for the OpenJDK build as we do for OpenJDK 8
   - PR2545: Extend tarball checksumming option to allow the checksum to be specified
   - PR2548: install stage doesn't install symbolic links
+  - PR2550: Desktop file doesn't reference versioned icon
 * AArch64 port
   - Add copyright to aarch64_ad.m4
   - S8069593: Changes to JavaThread::_thread_state must use acquire and release
