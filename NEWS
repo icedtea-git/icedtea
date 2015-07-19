@@ -340,6 +340,13 @@ New in release 2.6.0 (2015-07-17):
   - PR2545: Extend tarball checksumming option to allow the checksum to be specified
   - PR2548: install stage doesn't install symbolic links
   - PR2550: Desktop file doesn't reference versioned icon
+* CACAO
+  - PR2380: Raise javadoc and JAVAC_FLAGS memory limits for CACAO
+  - PR2519: Update to latest CACAO
+  - PR2520: --enable-cacao builds broken, missing JVM_GetTemporaryDirectory impl.
+* JamVM
+  - PR2172: --enable-jamvm builds broken, missing JVM_GetTemporaryDirectory impl
+  - PR2500: Add executable stack markings to callNative.S on JamVM
 * AArch64 port
   - Add copyright to aarch64_ad.m4
   - S8069593: Changes to JavaThread::_thread_state must use acquire and release
@@ -454,13 +461,6 @@ New in release 2.5.5 (2015-04-14):
   - PR2210: DGifCloseFile call should check the return value, not the error code, for failure
   - PR2225: giflib 5.1 conditional excludes 6.0, 7.0, etc.
   - PR2250: JSSE server is still limited to 768-bit DHE
-* CACAO
-  - PR2380: Raise javadoc and JAVAC_FLAGS memory limits for CACAO
-  - PR2519: Update to latest CACAO
-  - PR2520: --enable-cacao builds broken, missing JVM_GetTemporaryDirectory impl.
-* JamVM
-  - PR2172: --enable-jamvm builds broken, missing JVM_GetTemporaryDirectory impl
-  - PR2500: Add executable stack markings to callNative.S on JamVM
 * ARM32 port
   - PR2228: Add ARM32 JIT
   - PR2297: Use the IcedTea 2.6.0 HotSpot on ARM32 by default
