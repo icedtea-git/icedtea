@@ -1,3 +1,37 @@
+2015-07-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	(JDK_UPDATE_VERSION): Set to 85.
+	(BUILD_VERSION): Set to b01.
+	(CORBA_CHANGESET): Update to icedtea-2.6.1.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_BRANCH): Split out branch version ('2.6')
+	(ICEDTEA_PREFIX): Use ICEDTEA_MAJOR and ICEDTEA_BRANCH.
+	(ICEDTEA_HG_URL): Use release branch.
+	* NEWS: Add 2.6.1 section and update with fixes.
+	* configure.ac: Bump to 2.6.1.
+	* hotspot.map.in: Update to icedtea-2.6.1.
+	* patches/boot/ecj-diamond.patch:
+	Regenerated without SSLAlgorithmConstraints
+	patch. Added new cases in
+	sun.security.util.AlgorithmDecomposer,
+	sun.security.ssl.SSLAlgorithmDecomposer and
+	sun.security.util.LegacyAlgorithmConstraints.
+	* patches/boot/ecj-multicatch.patch:
+	Add cases in com.apple.laf.AquaUtils,
+	sun.security.ssl.ECDHCrypt and Notepad.java
+	demo code. Update CipherInputStream case.
+
 2015-07-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Fix placement of CACAO and
