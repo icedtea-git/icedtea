@@ -14,6 +14,209 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.7.0 (201X-XX-XX):
 
+New in release 2.5.6 (2015-07-22):
+
+* Security fixes
+  - S8043202, CVE-2015-2808: Prohibit RC4 cipher suites
+  - S8067694, CVE-2015-2625: Improved certification checking
+  - S8071715, CVE-2015-4760: Tune font layout engine
+  - S8071731: Better scaling for C1
+  - S8072490: Better font morphing redux
+  - S8072887: Better font handling improvements
+  - S8073334: Improved font substitutions
+  - S8073773: Presume path preparedness
+  - S8073894: Getting to the root of certificate chains
+  - S8074330: Set font anchors more solidly
+  - S8074335: Substitute for substitution formats
+  - S8074865, CVE-2015-2601: General crypto resilience changes
+  - S8074871: Adjust device table handling
+  - S8075374, CVE-2015-4748: Responding to OCSP responses
+  - S8075378, CVE-2015-4749: JNDI DnsClient Exception Handling
+  - S8075738: Better multi-JVM sharing
+  - S8075833, CVE-2015-2613: Straighter Elliptic Curves
+  - S8075838: Method for typing MethodTypes
+  - S8075853, CVE-2015-2621: Proxy for MBean proxies
+  - S8076328, CVE-2015-4000: Enforce key exchange constraints
+  - S8076376, CVE-2015-2628: Enhance IIOP operations
+  - S8076397, CVE-2015-4731: Better MBean connections
+  - S8076401, CVE-2015-2590: Serialize OIS data
+  - S8076405, CVE-2015-4732: Improve serial serialization
+  - S8076409, CVE-2015-4733: Reinforce RMI framework
+  - S8077520, CVE-2015-2632: Morph tables into improved form
+  - PR2487, CVE-2015-4000: Make jdk8 mode the default for jdk.tls.ephemeralDHKeySize
+* Backports
+  - S4890063, PR2305, RH1214835: HPROF: default text truncated when using doe=n option
+  - S6991580, PR2308: IPv6 Nameservers in resolv.conf throws NumberFormatException
+  - S7124253: [macosx] Flavor change notification not coming
+  - S8007219: [macosx] Frame size reverts meaning of maximized attribute if frame size close to display
+  - S8013581: [macosx] Key Bindings break with awt GraphicsEnvironment setFullScreenWindow
+  - S8020210: [macosx] JVM crashes in CWrapper$NSWindow.screen(long)
+  - S8021120, PR2301: TieredCompilation can be enabled even if TIERED is undefined
+  - S8027058: sun/management/jmxremote/bootstrap/RmiBootstrapTest.sh Failed to initialize connector
+  - S8027561: [macosx] Cleanup "may not respond to selector" warnings in native code
+  - S8029607, PR2418: Type of Service (TOS) cannot be set in IPv6 header
+  - S8029868: Fix KSS issues in sun.lwawt.macosx
+  - S8039921, PR2421: SHA1WithDSA with key > 1024 bits not working
+  - S8042205: javax/management/monitor/*: some tests didn't  get all the notifications
+  - S8042982: Unexpected RuntimeExceptions being thrown by SSLEngine
+  - S8043201: Deprecate RC4 in SunJSSE provider
+  - S8043129, PR2338: JAF initialisation in SAAJ clashing with the one in javax.mail
+  - S8046817: JDK 8 schemagen tool does not generate xsd files for enum types
+  - S8048194: GSSContext.acceptSecContext fails when a supported mech is not initiator preferred
+  - S8048212, PR2418: Two tests failed with "java.net.SocketException: Bad protocol option" on Windows after 8029607
+  - S8048214, PR2357: Linker error when compiling G1SATBCardTableModRefBS after include order changes
+  - S8062923: XSL: Run-time internal error in 'substring()'
+  - S8062924: XSL: wrong answer from substring() function
+  - S8064546: CipherInputStream throws BadPaddingException if stream is not fully read
+  - S8065238, PR2478: javax.naming.NamingException after upgrade to JDK 8
+  - S8065764: javax/management/monitor/CounterMonitorTest.java hangs
+  - S8066952: [TEST-BUG] javax/management/monitor/CounterMonitorTest.java hangs
+  - S8071668: [macosx] Clipboard does not work with 3rd parties Clipboard Managers
+  - S8072385, PR2387: Only the first DNSName entry is checked for endpoint identification
+  - S8073357: schema1.xsd has wrong content. Sequence of the enum values has been changed
+  - S8073385: Bad error message on parsing illegal character in XML attribute
+  - S8074098: 2D_Font/Bug8067699 test fails with SIGBUS crash on Solaris Sparc
+  - S8074297: substring in XSLT returns wrong character if string contains supplementary chars
+  - S8074761, PR2470: Empty optional parameters of LDAP query are not interpreted as empty
+  - S8075575: com/sun/security/auth/login/ConfigFile/InconsistentError.java failed in certain env.
+  - S8075576: com/sun/security/auth/module/KeyStoreLoginModule/OptionTest.java failed in certain env.
+  - S8075667: (tz) Support tzdata2015b
+  - S8076290: JCK test api/xsl/conf/string/string17 starts failing after JDK-8074297
+  - S8077685: (tz) Support tzdata2015d
+  - S8078348: sun/security/pkcs11/sslecc/ClientJSSEServerJSSE.java fails with BindException
+  - S8078439: SPNEGO auth fails if client proposes MS krb5 OID
+  - S8078562: Add modified dates
+  - S8078654, PR2333: CloseTTFontFileFunc callback should be removed
+  - S8078666, PR2326: JVM fastdebug build compiled with GCC 5 asserts with "widen increases"
+  - S8080318: jdk8u51 l10n resource file translation update
+  - S8081315, PR2405: Avoid giflib interlacing workaround with giflib 5.0.0 on
+  - S8081386: Test sun/management/jmxremote/bootstrap/RmiSslBootstrapTest.sh test has RC4 dependencies
+  - S8081475, PR2494: SystemTap does not work when JDK is compiled with GCC 5
+  - S8081775: two lib/testlibrary tests are failing with "Error. failed to clean up files after test" with jtreg 4.1 b12
+  - S8087120, RH1206656, PR2553: [GCC5] java.lang.StackOverflowError on Zero JVM initialization on non x86 platforms.
+  - OJ03: Only apply PaX-marking when needed by a running PaX kernel
+  - OJ04: Revert introduction of lambda expression in sun.lwawt.macosx.LWCToolkit
+  - OJ05: Fix mistake in 8075374 backport
+* Bug fixes
+  - PR2328: GCJ uses ppc64el named libarch directory on ppc64le
+  - PR2341: Update README & INSTALL files
+  - PR2367: 7 no longer builds with 6 - Util is not public in sun.management
+  - PR2390: Make elliptic curve removal optional
+  - PR2395: Path to jvm.cfg is wrong in add-systemtap-boot
+  - PR2458: Policy JAR files should be timestamped with the date of the policy file they hold
+  - PR2482, RH489586, RH1236619: OpenJDK can't handle spaces in zone names in /etc/sysconfig/clock
+  - PR2499: Update remove-intree-libraries.sh script
+  - PR2502: Remove -fno-tree-vectorize workaround now http://gcc.gnu.org/PR63341 is fixed
+  - PR2507, G541462: Only apply PaX markings by default on running PaX kernels
+* CACAO
+  - PR2380: Raise javadoc and JAVAC_FLAGS memory limits for CACAO
+* JamVM
+  - PR2500: Add executable stack markings to callNative.S on JamVM
+* AArch64 port
+  - Changes to make aix compile after the merge
+  - S8025613, PR2437: clang: remove -Wno-unused-value
+  - S8035938: Memory leak in JvmtiEnv::GetConstantPool
+  - S8058113: Execution of OnOutOfMemoryError command hangs on linux-sparc
+  - S8068674: Increment minor version of HSx for 7u85 and initialize the build number
+  - S8069593: Changes to JavaThread::_thread_state must use acquire and release
+  - S8071423: Increment hsx 24.80 build to b08 for 7u80-b07
+  - S8071807: Increment hsx 24.80 build to b09 for 7u80-b08
+  - S8072639: Increment hsx 24.80 build to b10 for 7u80-b09
+  - S8074349: AARCH64: C2 generates poor code for some byte and character stores
+  - S8075045: AARCH64: Stack banging should use store rather than load
+  - S8075136: Unnecessary sign extension for byte array access
+  - S8075324: Costs of memory operands in aarch64.ad are inconsistent
+  - S8075443: AARCH64: Missed L2I optimizations in C2
+  - S8075930: AARCH64: Use FP Register in C2
+  - S8076212, PR2314: AllocateHeap() and ReallocateHeap() should be inlined.
+  - S8076467: AARCH64: assertion fail with -XX:+UseG1GC
+  - S8078529: Increment the build value to b02 for hs24.85 in 8u85
+  - S8079203: AARCH64: Need to cater for different partner implementations
+  - S8080586: aarch64: hotspot test compiler/codegen/7184394/TestAESMain.java fails
+  - S8081622: Increment the build value to b03 for hs24.85 in 8u51
+* PPC & AIX port
+  - S8069590: AIX port of "8050807: Better performing performance data handling"
+  - S8078482, PR2307: ppc: pass thread to throw_AbstractMethodError
+  - S8080190: PPC64: Fix wrong rotate instructions in the .ad file
+
+New in release 2.6.1 (2015-07-21):
+
+* Security fixes
+  - S8043202, CVE-2015-2808: Prohibit RC4 cipher suites
+  - S8067694, CVE-2015-2625: Improved certification checking
+  - S8071715, CVE-2015-4760: Tune font layout engine
+  - S8071731: Better scaling for C1
+  - S8072490: Better font morphing redux
+  - S8072887: Better font handling improvements
+  - S8073334: Improved font substitutions
+  - S8073773: Presume path preparedness
+  - S8073894: Getting to the root of certificate chains
+  - S8074330: Set font anchors more solidly
+  - S8074335: Substitute for substitution formats
+  - S8074865, CVE-2015-2601: General crypto resilience changes
+  - S8074871: Adjust device table handling
+  - S8075374, CVE-2015-4748: Responding to OCSP responses
+  - S8075378, CVE-2015-4749: JNDI DnsClient Exception Handling
+  - S8075738: Better multi-JVM sharing
+  - S8075833, CVE-2015-2613: Straighter Elliptic Curves
+  - S8075838: Method for typing MethodTypes
+  - S8075853, CVE-2015-2621: Proxy for MBean proxies
+  - S8076328, CVE-2015-4000: Enforce key exchange constraints
+  - S8076376, CVE-2015-2628: Enhance IIOP operations
+  - S8076397, CVE-2015-4731: Better MBean connections
+  - S8076401, CVE-2015-2590: Serialize OIS data
+  - S8076405, CVE-2015-4732: Improve serial serialization
+  - S8076409, CVE-2015-4733: Reinforce RMI framework
+  - S8077520, CVE-2015-2632: Morph tables into improved form
+  - PR2487, CVE-2015-4000: Make jdk8 mode the default for jdk.tls.ephemeralDHKeySize
+* OpenJDK
+  - S7124253: [macosx] Flavor change notification not coming
+  - S8007219: [macosx] Frame size reverts meaning of maximized attribute if frame size close to display
+  - S8013581: [macosx] Key Bindings break with awt GraphicsEnvironment setFullScreenWindow
+  - S8014464: Update jcheck for OpenJDK 7
+  - S8020210: [macosx] JVM crashes in CWrapper$NSWindow.screen(long)
+  - S8027058: sun/management/jmxremote/bootstrap/RmiBootstrapTest.sh Failed to initialize connector
+  - S8027561: [macosx] Cleanup "may not respond to selector" warnings in native code
+  - S8029868: Fix KSS issues in sun.lwawt.macosx
+  - S8042205: javax/management/monitor/*: some tests didn't  get all the notifications
+  - S8043201: Deprecate RC4 in SunJSSE provider
+  - S8046817: JDK 8 schemagen tool does not generate xsd files for enum types
+  - S8048194: GSSContext.acceptSecContext fails when a supported mech is not initiator preferred
+  - S8064546: CipherInputStream throws BadPaddingException if stream is not fully read
+  - S8065764: javax/management/monitor/CounterMonitorTest.java hangs
+  - S8066952: [TEST-BUG] javax/management/monitor/CounterMonitorTest.java hangs
+  - S8068674: Increment minor version of HSx for 7u85 and initialize the build number
+  - S8071668: [macosx] Clipboard does not work with 3rd parties Clipboard Managers
+  - S8073357: schema1.xsd has wrong content. Sequence of the enum values has been changed
+  - S8073385: Bad error message on parsing illegal character in XML attribute
+  - S8074098: 2D_Font/Bug8067699 test fails with SIGBUS crash on Solaris Sparc
+  - S8074297: substring in XSLT returns wrong character if string contains supplementary chars
+  - S8075575: com/sun/security/auth/login/ConfigFile/InconsistentError.java failed in certain env.
+  - S8075576: com/sun/security/auth/module/KeyStoreLoginModule/OptionTest.java failed in certain env.
+  - S8075667: (tz) Support tzdata2015b
+  - S8076290: JCK test api/xsl/conf/string/string17 starts failing after JDK-8074297
+  - S8077685: (tz) Support tzdata2015d
+  - S8078348: sun/security/pkcs11/sslecc/ClientJSSEServerJSSE.java fails with BindException
+  - S8078439: SPNEGO auth fails if client proposes MS krb5 OID
+  - S8078529: Increment the build value to b02 for hs24.85 in 7u85
+  - S8078562: Add modified dates
+  - S8080318: jdk8u51 l10n resource file translation update
+  - S8081386: Test sun/management/jmxremote/bootstrap/RmiSslBootstrapTest.sh test has RC4 dependencies
+  - S8081622: Increment the build value to b03 for hs24.85 in 7u85
+  - S8081775: two lib/testlibrary tests are failing with "Error. failed to clean up files after test" with jtreg 4.1 b12
+  - OJ01: Allow OpenJDK to build on PaX-enabled kernels
+  - OJ02: Fix build where PAX_COMMAND is not specified
+  - OJ03: Only apply PaX-marking when needed by a running PaX kernel
+  - OJ04: Revert introduction of lambda expression in sun.lwawt.macosx.LWCToolkit
+  - OJ05: Fix mistake in 8075374 backport
+* Backports
+  - S8087120, RH1206656, PR2553: [GCC5] java.lang.StackOverflowError on Zero JVM initialization on non x86 platforms.
+* Bug fixes
+  - PR2501: libjavasctp.so doesn't need to link against libdl when linking against libsctp
+  - PR2502: Remove -fno-tree-vectorize workaround now http://gcc.gnu.org/PR63341 is fixed
+  - PR2503: Add existence check for all optional dependencies in jdk_generic_profile.sh
+  - PR2521: Systems with a GLib without libgio segfault when obtaining proxy information
+
 New in release 2.6.0 (2015-07-17):
 
 * OpenJDK
