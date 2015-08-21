@@ -1,3 +1,9 @@
+2015-08-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Replace temporary OpenJDK 7
+	bug IDs with allocated ones from the
+	OpenJDK bug database.
+
 2015-07-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Add 2.6.2 section.
