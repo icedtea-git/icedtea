@@ -94,9 +94,9 @@ New in release 2.5.6 (2015-07-22):
   - S8081475, PR2494: SystemTap does not work when JDK is compiled with GCC 5
   - S8081775: two lib/testlibrary tests are failing with "Error. failed to clean up files after test" with jtreg 4.1 b12
   - S8087120, RH1206656, PR2553: [GCC5] java.lang.StackOverflowError on Zero JVM initialization on non x86 platforms.
-  - OJ03: Only apply PaX-marking when needed by a running PaX kernel
-  - OJ04: Revert introduction of lambda expression in sun.lwawt.macosx.LWCToolkit
-  - OJ05: Fix mistake in 8075374 backport
+  - S8133970: Only apply PaX-marking when needed by a running PaX kernel
+  - S8133990: Revert introduction of lambda expression in sun.lwawt.macosx.LWCToolkit
+  - S8133991: Fix mistake in 8075374 backport
 * Bug fixes
   - PR2328: GCJ uses ppc64el named libarch directory on ppc64le
   - PR2341: Update README & INSTALL files
@@ -204,11 +204,11 @@ New in release 2.6.1 (2015-07-21):
   - S8081386: Test sun/management/jmxremote/bootstrap/RmiSslBootstrapTest.sh test has RC4 dependencies
   - S8081622: Increment the build value to b03 for hs24.85 in 7u85
   - S8081775: two lib/testlibrary tests are failing with "Error. failed to clean up files after test" with jtreg 4.1 b12
-  - OJ01: Allow OpenJDK to build on PaX-enabled kernels
-  - OJ02: Fix build where PAX_COMMAND is not specified
-  - OJ03: Only apply PaX-marking when needed by a running PaX kernel
-  - OJ04: Revert introduction of lambda expression in sun.lwawt.macosx.LWCToolkit
-  - OJ05: Fix mistake in 8075374 backport
+  - S8133966: Allow OpenJDK to build on PaX-enabled kernels
+  - S8133967: Fix build where PAX_COMMAND is not specified
+  - S8133970: Only apply PaX-marking when needed by a running PaX kernel
+  - S8133990: Revert introduction of lambda expression in sun.lwawt.macosx.LWCToolkit
+  - S8133991: Fix mistake in 8075374 backport
 * Backports
   - S8087120, RH1206656, PR2553: [GCC5] java.lang.StackOverflowError on Zero JVM initialization on non x86 platforms.
 * Bug fixes
