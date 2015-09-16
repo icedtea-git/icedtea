@@ -16,10 +16,12 @@ New in release 3.0.0 (2014-XX-XX):
   - S4890063, PR2304, RH1214835: HPROF: default text truncated when using doe=n option
   - S6584008, PR2192, RH1173326: jvmtiStringPrimitiveCallback should not be invoked when string value is null
   - S6991580, PR2403: IPv6 Nameservers in resolv.conf throws NumberFormatException
+  - S8000650, PR2462: unpack200.exe should check gzip crc
   - S8011278: Allow using a system-installed giflib
   - S8012224: AWT_TopLevels/TopLevelEvents/Automated/WindowIconifyDeiconifyEventsTest02 fails on Ubuntu 12.04 Unity shell
   - S8035341: Allow using a system installed libpng
   - S8038392: Generating prelink cache breaks JAVA 'jinfo' utility normal behavior
+  - S8039921, PR2467: SHA1WithDSA with key > 1024 bits not working
   - S8042159: Allow using a system-installed lcms2
   - S8042806: Splashscreen uses libjpeg-internal macros
   - S8043805: Allow using a system-installed libjpeg
@@ -30,11 +32,17 @@ New in release 3.0.0 (2014-XX-XX):
   - S8071705. PR2399, RH1182694: Java application menu misbehaves when running multiple screen stacked vertically
   - S8072385, PR2404: Only the first DNSName entry is checked for endpoint identification
   - S8074312, PR2253: Enable hotspot builds on 4.x Linux kernels
+  - S8074761, PR2471: Empty optional parameters of LDAP query are not interpreted as empty
+  - S8074839, PR2462: Resolve disabled warnings for libunpack and the unpack200 binary
   - S8074859, PR1937: Turn on warnings as error
   - S8076212, PR2402: AllocateHeap() and ReallocateHeap() should be inlined.
+  - S8078439, PR2430, RH1231999: SPNEGO auth fails if client proposes MS krb5 OID
   - S8078482, PR2398, RH1201393: ppc: pass thread to throw_AbstractMethodError
+  - S8078490, PR2431, RH1213280: Missed submissions in ForkJoinPool
   - S8078654, PR2332: CloseTTFontFileFunc callback should be removed
   - S8078666, PR2325: JVM fastdebug build compiled with GCC 5 asserts with "widen increases"
+  - S8081475, PR2427: SystemTap does not work when JDK is compiled with GCC 5
+  - S8087156, PR2444: SetupNativeCompilation ignores CFLAGS_release for cpp files
 * Bug fixes
   - S8041658: Use of -fdevirtualize on macroAssembler_x86.o (via -O2) with gcc 4.9.0 creates broken VM
   - PR94: empty install target in Makefile.am
@@ -104,6 +112,8 @@ New in release 3.0.0 (2014-XX-XX):
   - PR2411: Fix references to hotspot.map following PR2001
   - PR2413: OpenJDK doesn't auto-select Zero on architectures where no server JVM is available
   - PR2414: CFLAGS, CXXFLAGS and LDFLAGS should be passed to OpenJDK build
+  - PR2415: JVM -Xmx requirement is too high on s390
+  - PR2428: OpenJDK build can't handle commas in LDFLAGS
   - PR2429: OpenJDK build does not copy a symlinked cacerts file
   - PR2432: ppc64 JIT doesn't support class data sharing
   - PR2433: ppc64le does not support -Xshare:dump
