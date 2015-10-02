@@ -1,3 +1,28 @@
+2015-10-01  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(JDK_UPDATE_VERSION): Bump to 60.
+	(BUILD_VERSION): Bump to b24.
+	(CORBA_CHANGESET): Update to icedtea-3.0.0pre06 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	* NEWS: Update potential release date and
+	remove backport entries resolved upstream
+	as of 8u60-b24.
+	* configure.ac: Bump to 3.0.0pre06.
+	* hotspot.map: Update to icedtea-3.0.0pre06 tag.
+
 2015-09-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am,
