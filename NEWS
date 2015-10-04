@@ -15,12 +15,23 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 2.7.0 (201X-XX-XX):
 
 * Backports
+  - S7105461, PR2571: Large JTables are not rendered correctly with Xrender pipeline
   - S7105883, PR2560: JDWP: agent crash if there exists a ThreadGroup with null name
+  - S7150134, PR2571: JCK api/java_awt/Graphics/index.html#DrawLine fails with OOM for jdk8 with XRender pipeline
+  - S8011709, PR2509: [parfait] False positive: memory leak in jdk/src/share/native/sun/font/layout/CanonShaping.cpp
   - S8016105, PR2560: Add complementary RETURN_NULL allocation macros in allocation.hpp
   - S8021897, PR2560: EXCEPTION_ACCESS_VIOLATION on debugging String.contentEquals()
   - S8022683, PR2560: JNI GetStringUTFChars should return NULL on allocation failure not abort the VM
+  - S8023052, PR2509: JVM crash in native layout
   - S8025922, PR2560: JNI access to Strings need to check if the value field is non-null
+  - S8042855, PR2509: [parfait] Potential null pointer dereference in IndicLayoutEngine.cpp
+  - S8056122, PR1896: Upgrade JDK to use LittleCMS 2.6
+  - S8057934, PR1896: Upgrade to LittleCMS 2.6 breaks AIX build
+  - S8078331, PR1896: Upgrade JDK to use LittleCMS 2.7
+  - S8081756, PR1896: Mastering Matrix Manipulations
+  - S8087120, RH1206656, PR2553: [GCC5] java.lang.StackOverflowError on Zero JVM initialization on non x86 platforms.
 * Bug fixes
+  - PR2512: Reset success following calls in LayoutManager.cpp
   - PR2568: openjdk causes a full desktop crash on RHEL 6 i586
 
 New in release 2.5.6 (2015-07-22):
