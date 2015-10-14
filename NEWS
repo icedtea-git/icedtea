@@ -13,6 +13,8 @@ JEPX - http://openjdk.java.net/jeps/X
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.6.2 (2015-10-XX):
+* CACAO
+  - PR2652: Set classLoader field in java.lang.Class as expected by JDK
 
 New in release 2.6.1 (2015-07-21):
 

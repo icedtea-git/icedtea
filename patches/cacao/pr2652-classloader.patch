@@ -1,0 +1,74 @@
+Set classLoader field in java.lang.Class as expected by JDK
+
+--- cacao/cacao/src/vm/class.cpp
++++ cacao/cacao/src/vm/class.cpp
+@@ -314,6 +314,9 @@
+ 
+ 	c = classcache_store(cl, c, true);
+ 
++	java_lang_Class jlc(LLNI_classinfo_wrap(c));
++	jlc.set_classLoader(cl);
++
+ 	return c;
+ }
+ 
+--- cacao/cacao/src/vm/javaobjects.cpp
++++ cacao/cacao/src/vm/javaobjects.cpp
+@@ -270,11 +270,19 @@
+ 	{ 0, 0 }
+ };
+ 
++off_t java_lang_Class::offset_classLoader;
++
++static DynOffsetEntry dyn_entries_java_lang_Class[] = {
++	{ &java_lang_Class::set_classLoader_offset, "classLoader" },
++	{ 0, 0 }
++};
++
+ #endif
+ 
+ void jobjects_register_dyn_offsets()
+ {
+ 	register_dyn_entry_table(class_java_lang_Thread, dyn_entries_java_lang_Thread);
++	register_dyn_entry_table(class_java_lang_Class, dyn_entries_java_lang_Class);
+ }
+ 
+ #endif // ENABLE_JAVASE
+--- cacao/cacao/src/vm/javaobjects.hpp
++++ cacao/cacao/src/vm/javaobjects.hpp
+@@ -1847,6 +1847,35 @@
+ 
+ 
+ /**
++ * OpenJDK java/lang/Class
++ *
++ * Object layout:
++ *
++ * 0. object header
++ * ? java.lang.ClassLoader classLoader
++ */
++class java_lang_Class : public java_lang_Object, private FieldAccess {
++private:
++	// Static offsets of the object's instance fields.
++	static off_t offset_classLoader;
++
++public:
++	java_lang_Class(java_handle_t* h) : java_lang_Object(h) {}
++
++	// Setters.
++	void set_classLoader(java_handle_t* value);
++
++	// Offset initializers
++	static void set_classLoader_offset(int32_t off) { offset_classLoader = off; }
++};
++
++inline void java_lang_Class::set_classLoader(java_handle_t* value)
++{
++	assert(offset_classLoader);
++	set(_handle, offset_classLoader, value);
++}
++
++/**
+  * OpenJDK java/lang/ClassLoader
+  *
+  * Object layout:
