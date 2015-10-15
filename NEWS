@@ -14,6 +14,12 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.7.0 (201X-XX-XX):
 
+* Import of OpenJDK 7 u85 build 2
+  - S8133968: Revert 8014464 on OpenJDK 7
+  - S8133993: [TEST_BUG] Make CipherInputStreamExceptions compile on OpenJDK 7
+  - S8134248: Fix recently backported tests to work with OpenJDK 7u
+  - S8134610: Mac OS X build fails after July 2015 CPU
+  - S8134618: test/javax/xml/jaxp/transform/8062923/XslSubstringTest.java has bad license header
 * Backports
   - S7105461, PR2571: Large JTables are not rendered correctly with Xrender pipeline
   - S7105883, PR2560: JDWP: agent crash if there exists a ThreadGroup with null name
