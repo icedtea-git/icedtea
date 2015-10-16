@@ -55,9 +55,9 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       ARCHFLAG="-m64"
        ;;
     powerpc64le)
-      BUILD_ARCH_DIR=ppc64
-      INSTALL_ARCH_DIR=ppc64
-      JRE_ARCH_DIR=ppc64
+      BUILD_ARCH_DIR=ppc64le
+      INSTALL_ARCH_DIR=ppc64le
+      JRE_ARCH_DIR=ppc64le
       ARCHFLAG="-m64"
        ;;
     sparc)
@@ -665,7 +665,7 @@ AC_DEFUN_ONCE([IT_ENABLE_ZERO_BUILD],
     arm|i386|ppc|s390|sh|sparc)
       ZERO_BITSPERWORD=32
       ;;
-    aarch64|alpha|amd64|ia64|ppc64|s390x|sparcv9)
+    aarch64|alpha|amd64|ia64|ppc64|ppc64le|s390x|sparcv9)
       ZERO_BITSPERWORD=64
       ;;
     *)

@@ -1,3 +1,20 @@
+2015-10-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2675: Update ppc64le autotools infrastructure
+	following PR2237
+	* NEWS: Updated.
+
+2015-04-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2675: Update ppc64le autotools infrastructure
+	following PR2237
+	* acinclude.m4:
+	(IT_SET_ARCH_SETTINGS): Update powerpc64le
+	to use ppc64le for arch directory.
+	(IT_ENABLE_ZERO_BUILD): Include ppc64le in
+	ZERO_LIBARCH test, as ZERO_LIBARCH is based
+	on INSTALL_ARCH_DIR.
+
 2015-10-01  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
