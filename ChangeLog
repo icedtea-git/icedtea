@@ -1,3 +1,28 @@
+2015-10-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-2.6.2pre02.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 2.6.2pre02.
+	* hotspot.map.in: Update to icedtea-2.6.2pre02.
+	* patches/boot/ecj-stringswitch.patch:
+	Add new case in sun.security.krb.Config.
+	* patches/boot/ecj-trywithresources.patch:
+	Regenerated due to changes in java.util.Currency.
+	* patches/boot/ecj-underscored_literals.patch:
+	Add new case in com.sun.jndi.ldap.Connection.
+
 2015-08-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Replace temporary OpenJDK 7
