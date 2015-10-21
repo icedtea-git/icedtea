@@ -12,14 +12,55 @@ JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.2 (2015-10-XX):
+New in release 2.6.2 (2015-10-21):
 
+* Security fixes
+  - S8048030, CVE-2015-4734: Expectations should be consistent
+  - S8068842, CVE-2015-4803: Better JAXP data handling
+  - S8076339, CVE-2015-4903: Better handling of remote object invocation
+  - S8076383, CVE-2015-4835: Better CORBA exception handling
+  - S8076387, CVE-2015-4882: Better CORBA value handling
+  - S8076392. CVE-2015-4881: Improve IIOPInputStream consistency
+  - S8076413, CVE-2015-4883: Better JRMP message handling
+  - S8078427, CVE-2015-4842: More supportive home environment
+  - S8078440: Safer managed types
+  - S8080541: More direct property handling
+  - S8080688, CVE-2015-4860: Service for DGC services
+  - S8081760: Better group dynamics
+  - S8086092, CVE-2015-4840: More palette improvements
+  - S8086733, CVE-2015-4893: Improve namespace handling
+  - S8087350: Improve array conversions
+  - S8103671, CVE-2015-4805: More objective stream classes
+  - S8103675: Better Binary searches
+  - S8130078, CVE-2015-4911: Document better processing
+  - S8130193, CVE-2015-4806: Improve HTTP connections
+  - S8130864: Better server identity handling
+  - S8130891, CVE-2015-4843: (bf) More direct buffering
+  - S8131291, CVE-2015-4872: Perfect parameter patterning
+  - S8132042, CVE-2015-4844: Preserve layout presentation
 * Import of OpenJDK 7 u85 build 2
   - S8133968: Revert 8014464 on OpenJDK 7
   - S8133993: [TEST_BUG] Make CipherInputStreamExceptions compile on OpenJDK 7
   - S8134248: Fix recently backported tests to work with OpenJDK 7u
   - S8134610: Mac OS X build fails after July 2015 CPU
   - S8134618: test/javax/xml/jaxp/transform/8062923/XslSubstringTest.java has bad license header
+* Import of OpenJDK 7 u91 build 1
+  - S6854417: TESTBUG: java/util/regex/RegExTest.java fails intermittently
+  - S6966259: Make PrincipalName and Realm immutable
+  - S8005226: java/rmi/transport/pinClientSocketFactory/PinClientSocketFactory.java fails intermittently
+  - S8014097: add doPrivileged methods with limited privilege scope
+  - S8021191: Add isAuthorized check to limited doPrivileged methods
+  - S8028780: JDK KRB5 module throws OutOfMemoryError when CCache is corrupt
+  - S8064331: JavaSecurityAccess.doIntersectionPrivilege() drops the information about the domain combiner of the stack ACC
+  - S8072932: Test fails with java.security.AccessControlException: access denied ("java.security.SecurityPermission" "getDomainCombiner")
+  - S8076506: Increment minor version of HSx for 7u91 and initialize the build number
+  - S8078822: 8068842 fix missed one new file PrimeNumberSequenceGenerator.java
+  - S8079323: Serialization compatibility for Templates: need to exclude Hashtable from serialization
+  - S8087118: Remove missing package from java.security files
+  - S8098547: (tz) Support tzdata2015e
+  - S8130253: ObjectStreamClass.getFields too restrictive
+  - S8133321: (tz) Support tzdata2015f
+  - S8135043: ObjectStreamClass.getField(String) too restrictive
 * Backports
   - S6880559, PR2674: Enable PKCS11 64-bit windows builds
   - S6904403, PR2674: assert(f == k-&gt;has_finalizer(),&quot;inconsistent has_finalizer&quot;) with debug VM
@@ -46,6 +87,7 @@ New in release 2.6.2 (2015-10-XX):
   - S8022683, PR2560: JNI GetStringUTFChars should return NULL on allocation failure not abort the VM
   - S8023052, PR2509: JVM crash in native layout
   - S8025922, PR2560: JNI access to Strings need to check if the value field is non-null
+  - S8026119. PR2679: Regression test DHEKeySizing.java failing intermittently
   - S8027624, PR2674: com/sun/crypto/provider/KeyFactory/TestProviderLeak.java unstable again
   - S8033069, PR2674: mouse wheel scroll closes combobox popup
   - S8035150, PR2674: ShouldNotReachHere() in ConstantPool::copy_entry_to
@@ -68,6 +110,7 @@ New in release 2.6.2 (2015-10-XX):
   - S8075609, PR2674: java.lang.IllegalArgumentException: aContainer is not a focus cycle root of aComponent
   - S8075773, PR2674: jps running as root fails after the fix of JDK-8050807
   - S8076040, PR2674: Test com/sun/crypto/provider/KeyFactory/TestProviderLeak.java fails with -XX:+UseG1GC
+  - S8076328, PR2679: Enforce key exchange constraints
   - S8076455, PR2674: IME Composition Window is displayed on incorrect position
   - S8076968, PR2674: PICL based initialization of L2 cache line size on some SPARC systems is incorrect
   - S8077102, PR2674: dns_lookup_realm should be false by default

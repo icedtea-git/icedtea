@@ -667,3 +667,17 @@ diff -Nru openjdk-boot.orig/jdk/src/share/demo/jfc/Notepad/Notepad.java openjdk-
              System.err.println("resources/Notepad.properties "
                      + "or resources/NotepadSystem.properties not found");
              System.exit(1);
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/PrincipalName.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/PrincipalName.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/PrincipalName.java	2015-10-21 17:51:56.658513049 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/PrincipalName.java	2015-10-21 18:07:12.935153166 +0100
+@@ -421,7 +421,9 @@
+                                 hostName.toLowerCase(Locale.ENGLISH)+".")) {
+                         hostName = canonicalized;
+                     }
+-                } catch (UnknownHostException | SecurityException e) {
++                } catch (UnknownHostException e) {
++                    // not canonicalized or no permission to do so, use old
++                } catch (SecurityException e) {
+                     // not canonicalized or no permission to do so, use old
+                 }
+                 nameParts[1] = hostName.toLowerCase(Locale.ENGLISH);

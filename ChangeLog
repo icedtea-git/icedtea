@@ -1,3 +1,30 @@
+2015-10-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(JDK_UPDATE_VERSION): Bump to 91.
+	(CORBA_CHANGESET): Update to icedtea-2.6.2.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 2.6.2.
+	* hotspot.map.in: Update to icedtea-2.6.2.
+	* patches/boot/ecj-diamond.patch:
+	Regenerated. Add new case in sun.security.ssl.DHCrypt
+	and numerous ones in JAXP.
+	* patches/boot/ecj-multicatch.patch:
+	Add new case in sun.security.krb5.PrincipalName.
+	* patches/boot/ecj-trywithresources.patch:
+	Regenerated.
+
 2015-10-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:
