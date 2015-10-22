@@ -125,6 +125,7 @@ New in release 2.6.2 (2015-10-21):
   - S8133636, PR2674: [TEST_BUG] Import/add tests for the problem seen in 8076110
 * Bug fixes
   - PR2512: Reset success following calls in LayoutManager.cpp
+  - PR2557, G390663: Update Gentoo font configuration and allow font directory to be specified 
   - PR2568: openjdk causes a full desktop crash on RHEL 6 i586
 
 New in release 2.6.1 (2015-07-21):

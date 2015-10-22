@@ -1637,11 +1637,13 @@ stamps/fonts.stamp: stamps/extract.stamp
 	cp $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.properties $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.10.properties
 	cp $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.properties $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.11.properties
 	cp $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.properties $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.12.properties
+	cp linux.fontconfig.Gentoo.properties $(FONTCONFIG_PATH)
 	mkdir -p stamps
-	touch stamps/fonts.stamp
+	touch $@
 
 clean-fonts:
 	rm -f $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.{9,10,11,12}.properties
+	rm -f $(FONTCONFIG_PATH)/linux.fontconfig.Gentoo.properties
 	rm -f stamps/fonts.stamp
 
 stamps/patch-fsg.stamp: stamps/extract.stamp stamps/fonts.stamp

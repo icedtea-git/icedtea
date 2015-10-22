@@ -1,3 +1,32 @@
+2015-10-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2557, G390663: Update Gentoo font configuration
+	and allow font directory to be specified
+	* Makefile.am:
+	(clean-fonts): Remove linux.fontconfig.Gentoo.properties
+
+2015-07-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2557, G390663: Update Gentoo font configuration
+	and allow font directory to be specified
+	* INSTALL: Document --with-fonts-dir.
+	* Makefile.am:
+	(fonts): Copy the generated Gentoo
+	font properties file into the OpenJDK
+	tree.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_WITH_FONTS_DIR): Allow the user
+	to specify where the fonts are stored.
+	* configure.ac: Invoke IT_WITH_FONTS_DIR
+	and generate linux.fontconfig.Gentoo.properties
+	* linux.fontconfig.Gentoo.properties.in:
+	Template fontconfig file for Gentoo copied from
+	the main Portage tree.
+	* patches/fonts-gentoo.patch:
+	Remove outdated copy of
+	linux.fontconfig.Gentoo.properties from patch.
+
 2010-08-02  Andrew John Hughes  <ahughes@redhat.com>
 
 	PR2557: Forwardport Gentoo font configuration support
