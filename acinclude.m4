@@ -2835,10 +2835,10 @@ AC_DEFUN_ONCE([IT_HAS_NATIVE_HOTSPOT_PORT],
   AC_MSG_CHECKING([if a native HotSpot port is available for this architecture])
   has_native_hotspot_port=yes;
   case "${host_cpu}" in
-    aarch64) ;;
-    arm64) ;;
+    arm64|aarch64) ;;
     i?86) ;;
     sparc) ;;
+    sparc64) ;;
     x86_64) ;;
     powerpc64) ;;
     powerpc64le) ;;
