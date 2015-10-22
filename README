@@ -69,7 +69,7 @@ is built on this platform by default.
 CACAO as VM
 ===========
 
-The CACAO virtual machine (http://cacaovm.org) can be used as an
+The CACAO virtual machine (http://cacaojvm.org) can be used as an
 alternative to the HotSpot virtual machine. One advantage of this is
 that it already provides a JIT for many platforms to which HotSpot has
 not yet been ported, including ppc, arm and mips.  To use CACAO as the

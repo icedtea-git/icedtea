@@ -127,6 +127,8 @@ New in release 2.6.2 (2015-10-21):
   - PR2512: Reset success following calls in LayoutManager.cpp
   - PR2557, G390663: Update Gentoo font configuration and allow font directory to be specified 
   - PR2568: openjdk causes a full desktop crash on RHEL 6 i586
+* CACAO
+  - PR2652: Set classLoader field in java.lang.Class as expected by JDK
 
 New in release 2.6.1 (2015-07-21):
 
