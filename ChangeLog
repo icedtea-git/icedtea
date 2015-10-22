@@ -1,3 +1,24 @@
+2015-10-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2557: Forwardport Fedora font configuration support
+	* Makefile.am:
+	Add alias for stamps/fonts.stamp
+	(.PHONY): Add clean-fonts.
+	(clean-extract-openjdk): Depend on clean-fonts.
+	(clean-fonts): Add reversal for fonts target.
+
+2010-11-10  Jiri Vanek  <jvanek@redhat.com>
+
+	* Makefile.am:
+        (FONTCONFIG_PATH): Added path to fontconfig files.
+	(ICEDTEA_PATCHES): Add f14-fonts.patch.
+	(fonts): Added cloning of fontconfig.Fedora
+        to Fedora.12,11,10,9.
+	(patch-fsg): Add stamps/fonts.stamp
+	* patches/f14-fonts.patch
+	Updated font configurations for Fedora 9-14
+	Add additional fontconfig files to Makefile.
+
 2016-04-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add 2.6.5 release notes.
