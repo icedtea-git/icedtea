@@ -1,0 +1,682 @@
+diff -Nru openjdk.orig/jdk/make/sun/awt/Makefile openjdk/jdk/make/sun/awt/Makefile
+--- openjdk.orig/jdk/make/sun/awt/Makefile	2015-07-23 09:51:31.000000000 +0100
++++ openjdk/jdk/make/sun/awt/Makefile	2015-10-22 03:11:54.125969881 +0100
+@@ -482,7 +482,11 @@
+ 	fontconfig.properties				\
+ 	fontconfig.SuSE.properties                      \
+ 	fontconfig.Ubuntu.properties                    \
+-	fontconfig.Fedora.properties
++	fontconfig.Fedora.properties			\
++	fontconfig.Fedora.9.properties			\
++	fontconfig.Fedora.10.properties			\
++	fontconfig.Fedora.11.properties			\
++	fontconfig.Fedora.12.properties
+ else
+ 
+ FONTCONFIGS_SRC	= $(CLOSED_SRC)/solaris/classes/sun/awt/fontconfigs
+diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.11.properties openjdk/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.11.properties
+--- openjdk.orig/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.11.properties	2015-10-22 03:05:18.236546475 +0100
++++ openjdk/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.11.properties	2015-10-22 03:09:01.004845677 +0100
+@@ -36,6 +36,8 @@
+ dialog.plain.korean=Baekmuk Gulim
+ dialog.plain.chinese-big5=AR PL ShanHeiSun Uni
+ dialog.plain.chinese-gb18030=AR PL ShanHeiSun Uni
++dialog.plain.assamese=Lohit Assamese
++dialog.plain.devanagari=Lohit Devanagari
+ dialog.plain.bengali=Lohit Bengali
+ dialog.plain.gujarati=Lohit Gujarati
+ dialog.plain.hindi=Lohit Hindi
+@@ -51,6 +53,8 @@
+ dialog.bold.korean=Baekmuk Gulim
+ dialog.bold.chinese-big5=AR PL ShanHeiSun Uni
+ dialog.bold.chinese-gb18030=AR PL ShanHeiSun Uni
++dialog.bold.assamese=Lohit Assamese
++dialog.bold.devanagari=Lohit Devanagari
+ dialog.bold.bengali=Lohit Bengali
+ dialog.bold.gujarati=Lohit Gujarati
+ dialog.bold.hindi=Lohit Hindi
+@@ -66,6 +70,8 @@
+ dialog.italic.korean=Baekmuk Gulim
+ dialog.italic.chinese-big5=AR PL ShanHeiSun Uni
+ dialog.italic.chinese-gb18030=AR PL ShanHeiSun Uni
++dialog.italic.assamese=Lohit Assamese
++dialog.italic.devanagari=Lohit Devanagari
+ dialog.italic.bengali=Lohit Bengali
+ dialog.italic.gujarati=Lohit Gujarati
+ dialog.italic.hindi=Lohit Hindi
+@@ -81,6 +87,8 @@
+ dialog.bolditalic.korean=Baekmuk Gulim
+ dialog.bolditalic.chinese-big5=AR PL ShanHeiSun Uni
+ dialog.bolditalic.chinese-gb18030=AR PL ShanHeiSun Uni
++dialog.bolditalic.assamese=Lohit Assamese
++dialog.bolditalic.devanagari=Lohit Devanagari
+ dialog.bolditalic.bengali=Lohit Bengali
+ dialog.bolditalic.gujarati=Lohit Gujarati
+ dialog.bolditalic.hindi=Lohit Hindi
+@@ -96,6 +104,8 @@
+ sansserif.plain.korean=Baekmuk Gulim
+ sansserif.plain.chinese-big5=AR PL ShanHeiSun Uni
+ sansserif.plain.chinese-gb18030=AR PL ShanHeiSun Uni
++sansserif.plain.assamese=Lohit Assamese
++sansserif.plain.devanagari=Lohit Devanagari
+ sansserif.plain.bengali=Lohit Bengali
+ sansserif.plain.gujarati=Lohit Gujarati
+ sansserif.plain.hindi=Lohit Hindi
+@@ -111,6 +121,8 @@
+ sansserif.bold.korean=Baekmuk Gulim
+ sansserif.bold.chinese-big5=AR PL ShanHeiSun Uni
+ sansserif.bold.chinese-gb18030=AR PL ShanHeiSun Uni
++sansserif.bold.assamese=Lohit Assamese
++sansserif.bold.devanagari=Lohit Devanagari
+ sansserif.bold.bengali=Lohit Bengali
+ sansserif.bold.gujarati=Lohit Gujarati
+ sansserif.bold.hindi=Lohit Hindi
+@@ -126,6 +138,8 @@
+ sansserif.italic.korean=Baekmuk Gulim
+ sansserif.italic.chinese-big5=AR PL ShanHeiSun Uni
+ sansserif.italic.chinese-gb18030=AR PL ShanHeiSun Uni
++sansserif.italic.assamese=Lohit Assamese
++sansserif.italic.devanagari=Lohit Devanagari
+ sansserif.italic.bengali=Lohit Bengali
+ sansserif.italic.gujarati=Lohit Gujarati
+ sansserif.italic.hindi=Lohit Hindi
+@@ -141,6 +155,8 @@
+ sansserif.bolditalic.korean=Baekmuk Gulim
+ sansserif.bolditalic.chinese-big5=AR PL ShanHeiSun Uni
+ sansserif.bolditalic.chinese-gb18030=AR PL ShanHeiSun Uni
++sansserif.bolditalic.assamese=Lohit Assamese
++sansserif.bolditalic.devanagari=Lohit Devanagari
+ sansserif.bolditalic.bengali=Lohit Bengali
+ sansserif.bolditalic.gujarati=Lohit Gujarati
+ sansserif.bolditalic.hindi=Lohit Hindi
+@@ -156,6 +172,8 @@
+ serif.plain.korean=Baekmuk Batang
+ serif.plain.chinese-big5=AR PL ZenKai Uni
+ serif.plain.chinese-gb18030=AR PL ZenKai Uni
++serif.plain.assamese=Lohit Assamese
++serif.plain.devanagari=Lohit Devanagari
+ serif.plain.bengali=Lohit Bengali
+ serif.plain.gujarati=Lohit Gujarati
+ serif.plain.hindi=Lohit Hindi
+@@ -171,6 +189,8 @@
+ serif.bold.korean=Baekmuk Batang
+ serif.bold.chinese-big5=AR PL ZenKai Uni
+ serif.bold.chinese-gb18030=AR PL ZenKai Uni
++serif.bold.assamese=Lohit Assamese
++serif.bold.devanagari=Lohit Devanagari
+ serif.bold.bengali=Lohit Bengali
+ serif.bold.gujarati=Lohit Gujarati
+ serif.bold.hindi=Lohit Hindi
+@@ -186,6 +206,8 @@
+ serif.italic.korean=Baekmuk Batang
+ serif.italic.chinese-big5=AR PL ZenKai Uni
+ serif.italic.chinese-gb18030=AR PL ZenKai Uni
++serif.italic.assamese=Lohit Assamese
++serif.italic.devanagari=Lohit Devanagari
+ serif.italic.bengali=Lohit Bengali
+ serif.italic.gujarati=Lohit Gujarati
+ serif.italic.hindi=Lohit Hindi
+@@ -201,6 +223,8 @@
+ serif.bolditalic.korean=Baekmuk Batang
+ serif.bolditalic.chinese-big5=AR PL ZenKai Uni
+ serif.bolditalic.chinese-gb18030=AR PL ZenKai Uni
++serif.bolditalic.assamese=Lohit Assamese
++serif.bolditalic.devanagari=Lohit Devanagari
+ serif.bolditalic.bengali=Lohit Bengali
+ serif.bolditalic.gujarati=Lohit Gujarati
+ serif.bolditalic.hindi=Lohit Hindi
+@@ -216,6 +240,8 @@
+ monospaced.plain.korean=Baekmuk Gulim
+ monospaced.plain.chinese-big5=AR PL ShanHeiSun Uni
+ monospaced.plain.chinese-gb18030=AR PL ShanHeiSun Uni
++monospaced.plain.assamese=Lohit Assamese
++monospaced.plain.devanagari=Lohit Devanagari
+ monospaced.plain.bengali=Lohit Bengali
+ monospaced.plain.gujarati=Lohit Gujarati
+ monospaced.plain.hindi=Lohit Hindi
+@@ -231,6 +257,8 @@
+ monospaced.bold.korean=Baekmuk Gulim
+ monospaced.bold.chinese-big5=AR PL ShanHeiSun Uni
+ monospaced.bold.chinese-gb18030=AR PL ShanHeiSun Uni
++monospaced.bold.assamese=Lohit Assamese
++monospaced.bold.devanagari=Lohit Devanagari
+ monospaced.bold.bengali=Lohit Bengali
+ monospaced.bold.gujarati=Lohit Gujarati
+ monospaced.bold.hindi=Lohit Hindi
+@@ -246,6 +274,8 @@
+ monospaced.italic.korean=Baekmuk Gulim
+ monospaced.italic.chinese-big5=AR PL ShanHeiSun Uni
+ monospaced.italic.chinese-gb18030=AR PL ShanHeiSun Uni
++monospaced.italic.assamese=Lohit Assamese
++monospaced.italic.devanagari=Lohit Devanagari
+ monospaced.italic.bengali=Lohit Bengali
+ monospaced.italic.gujarati=Lohit Gujarati
+ monospaced.italic.hindi=Lohit Hindi
+@@ -261,6 +291,8 @@
+ monospaced.bolditalic.korean=Baekmuk Gulim
+ monospaced.bolditalic.chinese-big5=AR PL ShanHeiSun Uni
+ monospaced.bolditalic.chinese-gb18030=AR PL ShanHeiSun Uni
++monospaced.bolditalic.assamese=Lohit Assamese
++monospaced.bolditalic.devanagari=Lohit Devanagari
+ monospaced.bolditalic.bengali=Lohit Bengali
+ monospaced.bolditalic.gujarati=Lohit Gujarati
+ monospaced.bolditalic.hindi=Lohit Hindi
+@@ -276,6 +308,8 @@
+ dialoginput.plain.korean=Baekmuk Gulim
+ dialoginput.plain.chinese-big5=AR PL ShanHeiSun Uni
+ dialoginput.plain.chinese-gb18030=AR PL ShanHeiSun Uni
++dialoginput.plain.assamese=Lohit Assamese
++dialoginput.plain.devanagari=Lohit Devanagari
+ dialoginput.plain.bengali=Lohit Bengali
+ dialoginput.plain.gujarati=Lohit Gujarati
+ dialoginput.plain.hindi=Lohit Hindi
+@@ -291,6 +325,8 @@
+ dialoginput.bold.korean=Baekmuk Gulim
+ dialoginput.bold.chinese-big5=AR PL ShanHeiSun Uni
+ dialoginput.bold.chinese-gb18030=AR PL ShanHeiSun Uni
++dialoginput.bold.assamese=Lohit Assamese
++dialoginput.bold.devanagari=Lohit Devanagari
+ dialoginput.bold.bengali=Lohit Bengali
+ dialoginput.bold.gujarati=Lohit Gujarati
+ dialoginput.bold.hindi=Lohit Hindi
+@@ -306,6 +342,8 @@
+ dialoginput.italic.korean=Baekmuk Gulim
+ dialoginput.italic.chinese-big5=AR PL ShanHeiSun Uni
+ dialoginput.italic.chinese-gb18030=AR PL ShanHeiSun Uni
++dialoginput.italic.assamese=Lohit Assamese
++dialoginput.italic.devanagari=Lohit Devanagari
+ dialoginput.italic.bengali=Lohit Bengali
+ dialoginput.italic.gujarati=Lohit Gujarati
+ dialoginput.italic.hindi=Lohit Hindi
+@@ -321,6 +359,8 @@
+ dialoginput.bolditalic.korean=Baekmuk Gulim
+ dialoginput.bolditalic.chinese-big5=AR PL ShanHeiSun Uni
+ dialoginput.bolditalic.chinese-gb18030=AR PL ShanHeiSun Uni
++dialoginput.bolditalic.assamese=Lohit Assamese
++dialoginput.bolditalic.devanagari=Lohit Devanagari
+ dialoginput.bolditalic.bengali=Lohit Bengali
+ dialoginput.bolditalic.gujarati=Lohit Gujarati
+ dialoginput.bolditalic.hindi=Lohit Hindi
+@@ -357,21 +397,24 @@
+ filename.DejaVu_Serif_Oblique=/usr/share/fonts/dejavu/DejaVuSerif-Oblique.ttf
+ filename.DejaVu_Serif_Bold_Oblique=/usr/share/fonts/dejavu/DejaVuSerif-BoldOblique.ttf
+ 
+-filename.Sazanami_Gothic=/usr/share/fonts/sazanami-fonts-gothic/sazanami-gothic.ttf
+-filename.Sazanami_Mincho=/usr/share/fonts/sazanami-fonts-mincho/sazanami-mincho.ttf
++filename.Sazanami_Gothic=/usr/share/fonts/sazanami/gothic/sazanami-gothic.ttf
++filename.Sazanami_Mincho=/usr/share/fonts/sazanami/mincho/sazanami-mincho.ttf
+ filename.AR_PL_ShanHeiSun_Uni=/usr/share/fonts/cjkunifonts-uming/uming.ttc
+ filename.AR_PL_ZenKai_Uni=/usr/share/fonts/cjkunifonts-ukai/ukai.ttc
+-filename.Baekmuk_Gulim=/usr/share/fonts/baekmuk-ttf-gulim/gulim.ttf
+-filename.Baekmuk_Batang=/usr/share/fonts/baekmuk-ttf-batang/batang.ttf
++filename.Baekmuk_Gulim=/usr/share/fonts/baekmuk-ttf/gulim.ttf
++filename.Baekmuk_Batang=/usr/share/fonts/baekmuk-ttf/batang.ttf
++
++filename.Lohit_Assamese=/usr/share/fonts/lohit-assamese/Lohit-Assamese.ttf
++filename.Lohit_Devanagari=/usr/share/fonts/lohit-devanagari/Lohit-Devanagari.ttf
++filename.Lohit_Bengali=/usr/share/fonts/lohit-bengali/Lohit-Bengali.ttf
++filename.Lohit_Gujarati=/usr/share/fonts/lohit-gujarati/Lohit-Gujarati.ttf
++filename.Lohit_Hindi=/usr/share/fonts/lohit-hindi/Lohit-Hindi.ttf
++filename.Lohit_Kannda=/usr/share/fonts/lohit-kannada/Lohit-Kannada.ttf
++filename.Lohit_Malayalam=/usr/share/fonts/lohit-malayalam/Lohit-Malayalam.ttf
++filename.Lohit_Oriya=/usr/share/fonts/lohit-oriya/Lohit-Oriya.ttf
++filename.Lohit_Punjabi=/usr/share/fonts/lohit-punjabi/Lohit-Punjabi.ttf
++filename.Lohit_Tamil=/usr/share/fonts/lohit-tamil/Lohit-Tamil.ttf
++filename.Lohit_Telugu=/usr/share/fonts/lohit-telugu/Lohit-Telugu.ttf
+ 
+-filename.Lohit_Bengali=/usr/share/fonts/lohit-bengali/lohit_bn.ttf
+-filename.Lohit_Gujarati=/usr/share/fonts/lohit-gujarati/lohit_gu.ttf
+-filename.Lohit_Hindi=/usr/share/fonts/lohit-hindi/lohit_hi.ttf
+-filename.Lohit_Kannda=/usr/share/fonts/lohit-kannada/lohit_kn.ttf
+-filename.Lohit_Malayalam=/usr/share/fonts/lohit-malayalam/lohit_ml.ttf
+-filename.Lohit_Oriya=/usr/share/fonts/lohit-oriya/lohit_or.ttf
+-filename.Lohit_Punjabi=/usr/share/fonts/lohit-punjabi/lohit_pa.ttf
+-filename.Lohit_Tamil=/usr/share/fonts/lohit-tamil/lohit_ta.ttf
+-filename.Lohit_Telugu=/usr/share/fonts/lohit-telugu/lohit_te.ttf
+ filename.LKLUG=/usr/share/fonts/lklug/lklug.ttf
+ 
+diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.12.properties openjdk/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.12.properties
+--- openjdk.orig/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.12.properties	2015-10-22 03:05:18.236546475 +0100
++++ openjdk/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.12.properties	2015-10-22 03:09:01.008845611 +0100
+@@ -36,6 +36,8 @@
+ dialog.plain.korean=Baekmuk Gulim
+ dialog.plain.chinese-big5=AR PL ShanHeiSun Uni
+ dialog.plain.chinese-gb18030=AR PL ShanHeiSun Uni
++dialog.plain.assamese=Lohit Assamese
++dialog.plain.devanagari=Lohit Devanagari
+ dialog.plain.bengali=Lohit Bengali
+ dialog.plain.gujarati=Lohit Gujarati
+ dialog.plain.hindi=Lohit Hindi
+@@ -51,6 +53,8 @@
+ dialog.bold.korean=Baekmuk Gulim
+ dialog.bold.chinese-big5=AR PL ShanHeiSun Uni
+ dialog.bold.chinese-gb18030=AR PL ShanHeiSun Uni
++dialog.bold.assamese=Lohit Assamese
++dialog.bold.devanagari=Lohit Devanagari
+ dialog.bold.bengali=Lohit Bengali
+ dialog.bold.gujarati=Lohit Gujarati
+ dialog.bold.hindi=Lohit Hindi
+@@ -66,6 +70,8 @@
+ dialog.italic.korean=Baekmuk Gulim
+ dialog.italic.chinese-big5=AR PL ShanHeiSun Uni
+ dialog.italic.chinese-gb18030=AR PL ShanHeiSun Uni
++dialog.italic.assamese=Lohit Assamese
++dialog.italic.devanagari=Lohit Devanagari
+ dialog.italic.bengali=Lohit Bengali
+ dialog.italic.gujarati=Lohit Gujarati
+ dialog.italic.hindi=Lohit Hindi
+@@ -81,6 +87,8 @@
+ dialog.bolditalic.korean=Baekmuk Gulim
+ dialog.bolditalic.chinese-big5=AR PL ShanHeiSun Uni
+ dialog.bolditalic.chinese-gb18030=AR PL ShanHeiSun Uni
++dialog.bolditalic.assamese=Lohit Assamese
++dialog.bolditalic.devanagari=Lohit Devanagari
+ dialog.bolditalic.bengali=Lohit Bengali
+ dialog.bolditalic.gujarati=Lohit Gujarati
+ dialog.bolditalic.hindi=Lohit Hindi
+@@ -96,6 +104,8 @@
+ sansserif.plain.korean=Baekmuk Gulim
+ sansserif.plain.chinese-big5=AR PL ShanHeiSun Uni
+ sansserif.plain.chinese-gb18030=AR PL ShanHeiSun Uni
++sansserif.plain.assamese=Lohit Assamese
++sansserif.plain.devanagari=Lohit Devanagari
+ sansserif.plain.bengali=Lohit Bengali
+ sansserif.plain.gujarati=Lohit Gujarati
+ sansserif.plain.hindi=Lohit Hindi
+@@ -111,6 +121,8 @@
+ sansserif.bold.korean=Baekmuk Gulim
+ sansserif.bold.chinese-big5=AR PL ShanHeiSun Uni
+ sansserif.bold.chinese-gb18030=AR PL ShanHeiSun Uni
++sansserif.bold.assamese=Lohit Assamese
++sansserif.bold.devanagari=Lohit Devanagari
+ sansserif.bold.bengali=Lohit Bengali
+ sansserif.bold.gujarati=Lohit Gujarati
+ sansserif.bold.hindi=Lohit Hindi
+@@ -126,6 +138,8 @@
+ sansserif.italic.korean=Baekmuk Gulim
+ sansserif.italic.chinese-big5=AR PL ShanHeiSun Uni
+ sansserif.italic.chinese-gb18030=AR PL ShanHeiSun Uni
++sansserif.italic.assamese=Lohit Assamese
++sansserif.italic.devanagari=Lohit Devanagari
+ sansserif.italic.bengali=Lohit Bengali
+ sansserif.italic.gujarati=Lohit Gujarati
+ sansserif.italic.hindi=Lohit Hindi
+@@ -141,6 +155,8 @@
+ sansserif.bolditalic.korean=Baekmuk Gulim
+ sansserif.bolditalic.chinese-big5=AR PL ShanHeiSun Uni
+ sansserif.bolditalic.chinese-gb18030=AR PL ShanHeiSun Uni
++sansserif.bolditalic.assamese=Lohit Assamese
++sansserif.bolditalic.devanagari=Lohit Devanagari
+ sansserif.bolditalic.bengali=Lohit Bengali
+ sansserif.bolditalic.gujarati=Lohit Gujarati
+ sansserif.bolditalic.hindi=Lohit Hindi
+@@ -156,6 +172,8 @@
+ serif.plain.korean=Baekmuk Batang
+ serif.plain.chinese-big5=AR PL ZenKai Uni
+ serif.plain.chinese-gb18030=AR PL ZenKai Uni
++serif.plain.assamese=Lohit Assamese
++serif.plain.devanagari=Lohit Devanagari
+ serif.plain.bengali=Lohit Bengali
+ serif.plain.gujarati=Lohit Gujarati
+ serif.plain.hindi=Lohit Hindi
+@@ -171,6 +189,8 @@
+ serif.bold.korean=Baekmuk Batang
+ serif.bold.chinese-big5=AR PL ZenKai Uni
+ serif.bold.chinese-gb18030=AR PL ZenKai Uni
++serif.bold.assamese=Lohit Assamese
++serif.bold.devanagari=Lohit Devanagari
+ serif.bold.bengali=Lohit Bengali
+ serif.bold.gujarati=Lohit Gujarati
+ serif.bold.hindi=Lohit Hindi
+@@ -186,6 +206,8 @@
+ serif.italic.korean=Baekmuk Batang
+ serif.italic.chinese-big5=AR PL ZenKai Uni
+ serif.italic.chinese-gb18030=AR PL ZenKai Uni
++serif.italic.assamese=Lohit Assamese
++serif.italic.devanagari=Lohit Devanagari
+ serif.italic.bengali=Lohit Bengali
+ serif.italic.gujarati=Lohit Gujarati
+ serif.italic.hindi=Lohit Hindi
+@@ -201,6 +223,8 @@
+ serif.bolditalic.korean=Baekmuk Batang
+ serif.bolditalic.chinese-big5=AR PL ZenKai Uni
+ serif.bolditalic.chinese-gb18030=AR PL ZenKai Uni
++serif.bolditalic.assamese=Lohit Assamese
++serif.bolditalic.devanagari=Lohit Devanagari
+ serif.bolditalic.bengali=Lohit Bengali
+ serif.bolditalic.gujarati=Lohit Gujarati
+ serif.bolditalic.hindi=Lohit Hindi
+@@ -216,6 +240,8 @@
+ monospaced.plain.korean=Baekmuk Gulim
+ monospaced.plain.chinese-big5=AR PL ShanHeiSun Uni
+ monospaced.plain.chinese-gb18030=AR PL ShanHeiSun Uni
++monospaced.plain.assamese=Lohit Assamese
++monospaced.plain.devanagari=Lohit Devanagari
+ monospaced.plain.bengali=Lohit Bengali
+ monospaced.plain.gujarati=Lohit Gujarati
+ monospaced.plain.hindi=Lohit Hindi
+@@ -231,6 +257,8 @@
+ monospaced.bold.korean=Baekmuk Gulim
+ monospaced.bold.chinese-big5=AR PL ShanHeiSun Uni
+ monospaced.bold.chinese-gb18030=AR PL ShanHeiSun Uni
++monospaced.bold.assamese=Lohit Assamese
++monospaced.bold.devanagari=Lohit Devanagari
+ monospaced.bold.bengali=Lohit Bengali
+ monospaced.bold.gujarati=Lohit Gujarati
+ monospaced.bold.hindi=Lohit Hindi
+@@ -246,6 +274,8 @@
+ monospaced.italic.korean=Baekmuk Gulim
+ monospaced.italic.chinese-big5=AR PL ShanHeiSun Uni
+ monospaced.italic.chinese-gb18030=AR PL ShanHeiSun Uni
++monospaced.italic.assamese=Lohit Assamese
++monospaced.italic.devanagari=Lohit Devanagari
+ monospaced.italic.bengali=Lohit Bengali
+ monospaced.italic.gujarati=Lohit Gujarati
+ monospaced.italic.hindi=Lohit Hindi
+@@ -261,6 +291,8 @@
+ monospaced.bolditalic.korean=Baekmuk Gulim
+ monospaced.bolditalic.chinese-big5=AR PL ShanHeiSun Uni
+ monospaced.bolditalic.chinese-gb18030=AR PL ShanHeiSun Uni
++monospaced.bolditalic.assamese=Lohit Assamese
++monospaced.bolditalic.devanagari=Lohit Devanagari
+ monospaced.bolditalic.bengali=Lohit Bengali
+ monospaced.bolditalic.gujarati=Lohit Gujarati
+ monospaced.bolditalic.hindi=Lohit Hindi
+@@ -276,6 +308,8 @@
+ dialoginput.plain.korean=Baekmuk Gulim
+ dialoginput.plain.chinese-big5=AR PL ShanHeiSun Uni
+ dialoginput.plain.chinese-gb18030=AR PL ShanHeiSun Uni
++dialoginput.plain.assamese=Lohit Assamese
++dialoginput.plain.devanagari=Lohit Devanagari
+ dialoginput.plain.bengali=Lohit Bengali
+ dialoginput.plain.gujarati=Lohit Gujarati
+ dialoginput.plain.hindi=Lohit Hindi
+@@ -291,6 +325,8 @@
+ dialoginput.bold.korean=Baekmuk Gulim
+ dialoginput.bold.chinese-big5=AR PL ShanHeiSun Uni
+ dialoginput.bold.chinese-gb18030=AR PL ShanHeiSun Uni
++dialoginput.bold.assamese=Lohit Assamese
++dialoginput.bold.devanagari=Lohit Devanagari
+ dialoginput.bold.bengali=Lohit Bengali
+ dialoginput.bold.gujarati=Lohit Gujarati
+ dialoginput.bold.hindi=Lohit Hindi
+@@ -306,6 +342,8 @@
+ dialoginput.italic.korean=Baekmuk Gulim
+ dialoginput.italic.chinese-big5=AR PL ShanHeiSun Uni
+ dialoginput.italic.chinese-gb18030=AR PL ShanHeiSun Uni
++dialoginput.italic.assamese=Lohit Assamese
++dialoginput.italic.devanagari=Lohit Devanagari
+ dialoginput.italic.bengali=Lohit Bengali
+ dialoginput.italic.gujarati=Lohit Gujarati
+ dialoginput.italic.hindi=Lohit Hindi
+@@ -321,6 +359,8 @@
+ dialoginput.bolditalic.korean=Baekmuk Gulim
+ dialoginput.bolditalic.chinese-big5=AR PL ShanHeiSun Uni
+ dialoginput.bolditalic.chinese-gb18030=AR PL ShanHeiSun Uni
++dialoginput.bolditalic.assamese=Lohit Assamese
++dialoginput.bolditalic.devanagari=Lohit Devanagari
+ dialoginput.bolditalic.bengali=Lohit Bengali
+ dialoginput.bolditalic.gujarati=Lohit Gujarati
+ dialoginput.bolditalic.hindi=Lohit Hindi
+@@ -357,21 +397,24 @@
+ filename.DejaVu_Serif_Oblique=/usr/share/fonts/dejavu/DejaVuSerif-Oblique.ttf
+ filename.DejaVu_Serif_Bold_Oblique=/usr/share/fonts/dejavu/DejaVuSerif-BoldOblique.ttf
+ 
+-filename.Sazanami_Gothic=/usr/share/fonts/sazanami-fonts-gothic/sazanami-gothic.ttf
+-filename.Sazanami_Mincho=/usr/share/fonts/sazanami-fonts-mincho/sazanami-mincho.ttf
++filename.Sazanami_Gothic=/usr/share/fonts/sazanami/gothic/sazanami-gothic.ttf
++filename.Sazanami_Mincho=/usr/share/fonts/sazanami/mincho/sazanami-mincho.ttf
+ filename.AR_PL_ShanHeiSun_Uni=/usr/share/fonts/cjkunifonts-uming/uming.ttc
+ filename.AR_PL_ZenKai_Uni=/usr/share/fonts/cjkunifonts-ukai/ukai.ttc
+-filename.Baekmuk_Gulim=/usr/share/fonts/baekmuk-ttf-gulim/gulim.ttf
+-filename.Baekmuk_Batang=/usr/share/fonts/baekmuk-ttf-batang/batang.ttf
++filename.Baekmuk_Gulim=/usr/share/fonts/baekmuk-ttf/gulim.ttf
++filename.Baekmuk_Batang=/usr/share/fonts/baekmuk-ttf/batang.ttf
++
++filename.Lohit_Assamese=/usr/share/fonts/lohit-assamese/Lohit-Assamese.ttf
++filename.Lohit_Devanagari=/usr/share/fonts/lohit-devanagari/Lohit-Devanagari.ttf
++filename.Lohit_Bengali=/usr/share/fonts/lohit-bengali/Lohit-Bengali.ttf
++filename.Lohit_Gujarati=/usr/share/fonts/lohit-gujarati/Lohit-Gujarati.ttf
++filename.Lohit_Hindi=/usr/share/fonts/lohit-devanagari/Lohit-Devanagari.ttf
++filename.Lohit_Kannda=/usr/share/fonts/lohit-kannada/Lohit-Kannada.ttf
++filename.Lohit_Malayalam=/usr/share/fonts/lohit-malayalam/Lohit-Malayalam.ttf
++filename.Lohit_Oriya=/usr/share/fonts/lohit-oriya/Lohit-Oriya.ttf
++filename.Lohit_Punjabi=/usr/share/fonts/lohit-punjabi/Lohit-Punjabi.ttf
++filename.Lohit_Tamil=/usr/share/fonts/lohit-tamil/Lohit-Tamil.ttf
++filename.Lohit_Telugu=/usr/share/fonts/lohit-telugu/Lohit-Telugu.ttf
+ 
+-filename.Lohit_Bengali=/usr/share/fonts/lohit-bengali/lohit_bn.ttf
+-filename.Lohit_Gujarati=/usr/share/fonts/lohit-gujarati/lohit_gu.ttf
+-filename.Lohit_Hindi=/usr/share/fonts/lohit-hindi/lohit_hi.ttf
+-filename.Lohit_Kannda=/usr/share/fonts/lohit-kannada/lohit_kn.ttf
+-filename.Lohit_Malayalam=/usr/share/fonts/lohit-malayalam/lohit_ml.ttf
+-filename.Lohit_Oriya=/usr/share/fonts/lohit-oriya/lohit_or.ttf
+-filename.Lohit_Punjabi=/usr/share/fonts/lohit-punjabi/lohit_pa.ttf
+-filename.Lohit_Tamil=/usr/share/fonts/lohit-tamil/lohit_ta.ttf
+-filename.Lohit_Telugu=/usr/share/fonts/lohit-telugu/lohit_te.ttf
+ filename.LKLUG=/usr/share/fonts/lklug/lklug.ttf
+ 
+diff -Nru openjdk.orig/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.properties openjdk/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.properties
+--- openjdk.orig/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.properties	2015-07-23 09:51:31.000000000 +0100
++++ openjdk/jdk/src/solaris/classes/sun/awt/fontconfigs/linux.fontconfig.Fedora.properties	2015-10-22 03:09:01.008845611 +0100
+@@ -36,6 +36,8 @@
+ dialog.plain.korean=Baekmuk Gulim
+ dialog.plain.chinese-big5=AR PL ShanHeiSun Uni
+ dialog.plain.chinese-gb18030=AR PL ShanHeiSun Uni
++dialog.plain.assamese=Lohit Assamese
++dialog.plain.devanagari=Lohit Devanagari
+ dialog.plain.bengali=Lohit Bengali
+ dialog.plain.gujarati=Lohit Gujarati
+ dialog.plain.hindi=Lohit Hindi
+@@ -51,6 +53,8 @@
+ dialog.bold.korean=Baekmuk Gulim
+ dialog.bold.chinese-big5=AR PL ShanHeiSun Uni
+ dialog.bold.chinese-gb18030=AR PL ShanHeiSun Uni
++dialog.bold.assamese=Lohit Assamese
++dialog.bold.devanagari=Lohit Devanagari
+ dialog.bold.bengali=Lohit Bengali
+ dialog.bold.gujarati=Lohit Gujarati
+ dialog.bold.hindi=Lohit Hindi
+@@ -66,6 +70,8 @@
+ dialog.italic.korean=Baekmuk Gulim
+ dialog.italic.chinese-big5=AR PL ShanHeiSun Uni
+ dialog.italic.chinese-gb18030=AR PL ShanHeiSun Uni
++dialog.italic.assamese=Lohit Assamese
++dialog.italic.devanagari=Lohit Devanagari
+ dialog.italic.bengali=Lohit Bengali
+ dialog.italic.gujarati=Lohit Gujarati
+ dialog.italic.hindi=Lohit Hindi
+@@ -81,6 +87,8 @@
+ dialog.bolditalic.korean=Baekmuk Gulim
+ dialog.bolditalic.chinese-big5=AR PL ShanHeiSun Uni
+ dialog.bolditalic.chinese-gb18030=AR PL ShanHeiSun Uni
++dialog.bolditalic.assamese=Lohit Assamese
++dialog.bolditalic.devanagari=Lohit Devanagari
+ dialog.bolditalic.bengali=Lohit Bengali
+ dialog.bolditalic.gujarati=Lohit Gujarati
+ dialog.bolditalic.hindi=Lohit Hindi
+@@ -96,6 +104,8 @@
+ sansserif.plain.korean=Baekmuk Gulim
+ sansserif.plain.chinese-big5=AR PL ShanHeiSun Uni
+ sansserif.plain.chinese-gb18030=AR PL ShanHeiSun Uni
++sansserif.plain.assamese=Lohit Assamese
++sansserif.plain.devanagari=Lohit Devanagari
+ sansserif.plain.bengali=Lohit Bengali
+ sansserif.plain.gujarati=Lohit Gujarati
+ sansserif.plain.hindi=Lohit Hindi
+@@ -111,6 +121,8 @@
+ sansserif.bold.korean=Baekmuk Gulim
+ sansserif.bold.chinese-big5=AR PL ShanHeiSun Uni
+ sansserif.bold.chinese-gb18030=AR PL ShanHeiSun Uni
++sansserif.bold.assamese=Lohit Assamese
++sansserif.bold.devanagari=Lohit Devanagari
+ sansserif.bold.bengali=Lohit Bengali
+ sansserif.bold.gujarati=Lohit Gujarati
+ sansserif.bold.hindi=Lohit Hindi
+@@ -126,6 +138,8 @@
+ sansserif.italic.korean=Baekmuk Gulim
+ sansserif.italic.chinese-big5=AR PL ShanHeiSun Uni
+ sansserif.italic.chinese-gb18030=AR PL ShanHeiSun Uni
++sansserif.italic.assamese=Lohit Assamese
++sansserif.italic.devanagari=Lohit Devanagari
+ sansserif.italic.bengali=Lohit Bengali
+ sansserif.italic.gujarati=Lohit Gujarati
+ sansserif.italic.hindi=Lohit Hindi
+@@ -141,6 +155,8 @@
+ sansserif.bolditalic.korean=Baekmuk Gulim
+ sansserif.bolditalic.chinese-big5=AR PL ShanHeiSun Uni
+ sansserif.bolditalic.chinese-gb18030=AR PL ShanHeiSun Uni
++sansserif.bolditalic.assamese=Lohit Assamese
++sansserif.bolditalic.devanagari=Lohit Devanagari
+ sansserif.bolditalic.bengali=Lohit Bengali
+ sansserif.bolditalic.gujarati=Lohit Gujarati
+ sansserif.bolditalic.hindi=Lohit Hindi
+@@ -156,6 +172,8 @@
+ serif.plain.korean=Baekmuk Batang
+ serif.plain.chinese-big5=AR PL ZenKai Uni
+ serif.plain.chinese-gb18030=AR PL ZenKai Uni
++serif.plain.assamese=Lohit Assamese
++serif.plain.devanagari=Lohit Devanagari
+ serif.plain.bengali=Lohit Bengali
+ serif.plain.gujarati=Lohit Gujarati
+ serif.plain.hindi=Lohit Hindi
+@@ -171,6 +189,8 @@
+ serif.bold.korean=Baekmuk Batang
+ serif.bold.chinese-big5=AR PL ZenKai Uni
+ serif.bold.chinese-gb18030=AR PL ZenKai Uni
++serif.bold.assamese=Lohit Assamese
++serif.bold.devanagari=Lohit Devanagari
+ serif.bold.bengali=Lohit Bengali
+ serif.bold.gujarati=Lohit Gujarati
+ serif.bold.hindi=Lohit Hindi
+@@ -186,6 +206,8 @@
+ serif.italic.korean=Baekmuk Batang
+ serif.italic.chinese-big5=AR PL ZenKai Uni
+ serif.italic.chinese-gb18030=AR PL ZenKai Uni
++serif.italic.assamese=Lohit Assamese
++serif.italic.devanagari=Lohit Devanagari
+ serif.italic.bengali=Lohit Bengali
+ serif.italic.gujarati=Lohit Gujarati
+ serif.italic.hindi=Lohit Hindi
+@@ -201,6 +223,8 @@
+ serif.bolditalic.korean=Baekmuk Batang
+ serif.bolditalic.chinese-big5=AR PL ZenKai Uni
+ serif.bolditalic.chinese-gb18030=AR PL ZenKai Uni
++serif.bolditalic.assamese=Lohit Assamese
++serif.bolditalic.devanagari=Lohit Devanagari
+ serif.bolditalic.bengali=Lohit Bengali
+ serif.bolditalic.gujarati=Lohit Gujarati
+ serif.bolditalic.hindi=Lohit Hindi
+@@ -216,6 +240,8 @@
+ monospaced.plain.korean=Baekmuk Gulim
+ monospaced.plain.chinese-big5=AR PL ShanHeiSun Uni
+ monospaced.plain.chinese-gb18030=AR PL ShanHeiSun Uni
++monospaced.plain.assamese=Lohit Assamese
++monospaced.plain.devanagari=Lohit Devanagari
+ monospaced.plain.bengali=Lohit Bengali
+ monospaced.plain.gujarati=Lohit Gujarati
+ monospaced.plain.hindi=Lohit Hindi
+@@ -231,6 +257,8 @@
+ monospaced.bold.korean=Baekmuk Gulim
+ monospaced.bold.chinese-big5=AR PL ShanHeiSun Uni
+ monospaced.bold.chinese-gb18030=AR PL ShanHeiSun Uni
++monospaced.bold.assamese=Lohit Assamese
++monospaced.bold.devanagari=Lohit Devanagari
+ monospaced.bold.bengali=Lohit Bengali
+ monospaced.bold.gujarati=Lohit Gujarati
+ monospaced.bold.hindi=Lohit Hindi
+@@ -246,6 +274,8 @@
+ monospaced.italic.korean=Baekmuk Gulim
+ monospaced.italic.chinese-big5=AR PL ShanHeiSun Uni
+ monospaced.italic.chinese-gb18030=AR PL ShanHeiSun Uni
++monospaced.italic.assamese=Lohit Assamese
++monospaced.italic.devanagari=Lohit Devanagari
+ monospaced.italic.bengali=Lohit Bengali
+ monospaced.italic.gujarati=Lohit Gujarati
+ monospaced.italic.hindi=Lohit Hindi
+@@ -261,6 +291,8 @@
+ monospaced.bolditalic.korean=Baekmuk Gulim
+ monospaced.bolditalic.chinese-big5=AR PL ShanHeiSun Uni
+ monospaced.bolditalic.chinese-gb18030=AR PL ShanHeiSun Uni
++monospaced.bolditalic.assamese=Lohit Assamese
++monospaced.bolditalic.devanagari=Lohit Devanagari
+ monospaced.bolditalic.bengali=Lohit Bengali
+ monospaced.bolditalic.gujarati=Lohit Gujarati
+ monospaced.bolditalic.hindi=Lohit Hindi
+@@ -276,6 +308,8 @@
+ dialoginput.plain.korean=Baekmuk Gulim
+ dialoginput.plain.chinese-big5=AR PL ShanHeiSun Uni
+ dialoginput.plain.chinese-gb18030=AR PL ShanHeiSun Uni
++dialoginput.plain.assamese=Lohit Assamese
++dialoginput.plain.devanagari=Lohit Devanagari
+ dialoginput.plain.bengali=Lohit Bengali
+ dialoginput.plain.gujarati=Lohit Gujarati
+ dialoginput.plain.hindi=Lohit Hindi
+@@ -291,6 +325,8 @@
+ dialoginput.bold.korean=Baekmuk Gulim
+ dialoginput.bold.chinese-big5=AR PL ShanHeiSun Uni
+ dialoginput.bold.chinese-gb18030=AR PL ShanHeiSun Uni
++dialoginput.bold.assamese=Lohit Assamese
++dialoginput.bold.devanagari=Lohit Devanagari
+ dialoginput.bold.bengali=Lohit Bengali
+ dialoginput.bold.gujarati=Lohit Gujarati
+ dialoginput.bold.hindi=Lohit Hindi
+@@ -306,6 +342,8 @@
+ dialoginput.italic.korean=Baekmuk Gulim
+ dialoginput.italic.chinese-big5=AR PL ShanHeiSun Uni
+ dialoginput.italic.chinese-gb18030=AR PL ShanHeiSun Uni
++dialoginput.italic.assamese=Lohit Assamese
++dialoginput.italic.devanagari=Lohit Devanagari
+ dialoginput.italic.bengali=Lohit Bengali
+ dialoginput.italic.gujarati=Lohit Gujarati
+ dialoginput.italic.hindi=Lohit Hindi
+@@ -321,6 +359,8 @@
+ dialoginput.bolditalic.korean=Baekmuk Gulim
+ dialoginput.bolditalic.chinese-big5=AR PL ShanHeiSun Uni
+ dialoginput.bolditalic.chinese-gb18030=AR PL ShanHeiSun Uni
++dialoginput.bolditalic.assamese=Lohit Assamese
++dialoginput.bolditalic.devanagari=Lohit Devanagari
+ dialoginput.bolditalic.bengali=Lohit Bengali
+ dialoginput.bolditalic.gujarati=Lohit Gujarati
+ dialoginput.bolditalic.hindi=Lohit Hindi
+@@ -357,21 +397,24 @@
+ filename.DejaVu_Serif_Oblique=/usr/share/fonts/dejavu/DejaVuSerif-Oblique.ttf
+ filename.DejaVu_Serif_Bold_Oblique=/usr/share/fonts/dejavu/DejaVuSerif-BoldOblique.ttf
+ 
+-filename.Sazanami_Gothic=/usr/share/fonts/sazanami-fonts-gothic/sazanami-gothic.ttf
+-filename.Sazanami_Mincho=/usr/share/fonts/sazanami-fonts-mincho/sazanami-mincho.ttf
+-filename.AR_PL_ShanHeiSun_Uni=/usr/share/fonts/cjkunifonts-uming/uming.ttc
+-filename.AR_PL_ZenKai_Uni=/usr/share/fonts/cjkunifonts-ukai/ukai.ttc
+-filename.Baekmuk_Gulim=/usr/share/fonts/baekmuk-ttf-gulim/gulim.ttf
+-filename.Baekmuk_Batang=/usr/share/fonts/baekmuk-ttf-batang/batang.ttf
+-
+-filename.Lohit_Bengali=/usr/share/fonts/lohit-bengali/lohit_bn.ttf
+-filename.Lohit_Gujarati=/usr/share/fonts/lohit-gujarati/lohit_gu.ttf
+-filename.Lohit_Hindi=/usr/share/fonts/lohit-hindi/lohit_hi.ttf
+-filename.Lohit_Kannda=/usr/share/fonts/lohit-kannada/lohit_kn.ttf
+-filename.Lohit_Malayalam=/usr/share/fonts/lohit-malayalam/lohit_ml.ttf
+-filename.Lohit_Oriya=/usr/share/fonts/lohit-oriya/lohit_or.ttf
+-filename.Lohit_Punjabi=/usr/share/fonts/lohit-punjabi/lohit_pa.ttf
+-filename.Lohit_Tamil=/usr/share/fonts/lohit-tamil/lohit_ta.ttf
+-filename.Lohit_Telugu=/usr/share/fonts/lohit-telugu/lohit_te.ttf
++filename.Sazanami_Gothic=/usr/share/fonts/sazanami/gothic/sazanami-gothic.ttf
++filename.Sazanami_Mincho=/usr/share/fonts/sazanami/mincho/sazanami-mincho.ttf
++filename.AR_PL_ShanHeiSun_Uni=/usr/share/fonts/cjkuni-uming/uming.ttc
++filename.AR_PL_ZenKai_Uni=/usr/share/fonts/cjkuni-ukai/ukai.ttc
++filename.Baekmuk_Gulim=/usr/share/fonts/baekmuk-ttf/gulim.ttf
++filename.Baekmuk_Batang=/usr/share/fonts/baekmuk-ttf/batang.ttf
++
++filename.Lohit_Assamese=/usr/share/fonts/lohit-assamese/Lohit-Assamese.ttf
++filename.Lohit_Devanagari=/usr/share/fonts/lohit-devanagari/Lohit-Devanagari.ttf
++filename.Lohit_Bengali=/usr/share/fonts/lohit-bengali/Lohit-Bengali.ttf
++filename.Lohit_Gujarati=/usr/share/fonts/lohit-gujarati/Lohit-Gujarati.ttf
++filename.Lohit_Hindi=/usr/share/fonts/lohit-devanagari/Lohit-Devanagari.ttf
++filename.Lohit_Kannda=/usr/share/fonts/lohit-kannada/Lohit-Kannada.ttf
++filename.Lohit_Malayalam=/usr/share/fonts/lohit-malayalam/Lohit-Malayalam.ttf
++filename.Lohit_Oriya=/usr/share/fonts/lohit-oriya/Lohit-Oriya.ttf
++filename.Lohit_Punjabi=/usr/share/fonts/lohit-punjabi/Lohit-Punjabi.ttf
++filename.Lohit_Tamil=/usr/share/fonts/lohit-tamil/Lohit-Tamil.ttf
++filename.Lohit_Telugu=/usr/share/fonts/lohit-telugu/Lohit-Telugu.ttf
++
+ filename.LKLUG=/usr/share/fonts/lklug/lklug.ttf
+ 

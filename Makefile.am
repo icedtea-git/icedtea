@@ -72,6 +72,7 @@ JAMVM_IMPORT_PATH = $(abs_top_builddir)/jamvm/install/hotspot
 CRYPTO_CHECK_BUILD_DIR = $(abs_top_builddir)/cryptocheck.build
 STAGE1_BOOT_RUNTIME = $(STAGE1_BOOT_DIR)/jre/lib/rt.jar
 STAGE2_BOOT_RUNTIME = $(STAGE2_BOOT_DIR)/jre/lib/rt.jar
+FONTCONFIG_PATH = openjdk/jdk/src/solaris/classes/sun/awt/fontconfigs
 
 # Installation directories
 
@@ -369,7 +370,7 @@ CRYPTO_CHECK_SRCS = $(top_srcdir)/TestCryptoLevel.java
 
 # Patch list
 
-ICEDTEA_PATCHES = 
+ICEDTEA_PATCHES = patches/f14-fonts.patch
 
 # Conditional patches
 
@@ -976,7 +977,8 @@ distclean-local: clean-local clean-download
 	clean-download-jaxws clean-download-langtools clean-download-jdk clean-download-openjdk \
 	clean-extract-corba clean-extract-jaxp clean-extract-jaxws clean-extract-jdk \
 	clean-extract-langtools clean-split-debuginfo clean-split-debuginfo-debug \
-	clean-split-debuginfo-boot clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop
+	clean-split-debuginfo-boot clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop \
+	clean-fonts
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1375,7 +1377,7 @@ clean-extract-openjdk: clean-overlay clean-versioning \
  clean-patch-fsg clean-remove-intree-libraries \
  clean-sanitise-openjdk clean-extract-hotspot \
  clean-extract-jdk clean-extract-jaxp clean-extract-jaxws \
- clean-extract-corba clean-extract-langtools
+ clean-extract-corba clean-extract-langtools clean-fonts
 	rm -rf openjdk
 	rm -f stamps/extract-openjdk.stamp
 
@@ -1630,7 +1632,19 @@ clean-generated:
 	rm -rf $(abs_top_builddir)/generated.build
 	rm -f stamps/generated.stamp
 
-stamps/patch-fsg.stamp: stamps/extract.stamp
+stamps/fonts.stamp: stamps/extract.stamp
+	cp $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.properties $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.9.properties
+	cp $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.properties $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.10.properties
+	cp $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.properties $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.11.properties
+	cp $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.properties $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.12.properties
+	mkdir -p stamps
+	touch stamps/fonts.stamp
+
+clean-fonts:
+	rm -f $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.{9,10,11,12}.properties
+	rm -f stamps/fonts.stamp
+
+stamps/patch-fsg.stamp: stamps/extract.stamp stamps/fonts.stamp
 	mkdir -p stamps ; \
 	rm -f stamps/patch-fsg.stamp.tmp ; \
 	touch stamps/patch-fsg.stamp.tmp ; \
@@ -3245,6 +3259,8 @@ extract-jaxws: stamps/extract-jaxws.stamp
 extract-jdk: stamps/extract-jdk.stamp
 
 extract-langtools: stamps/extract-langtools.stamp
+
+fonts: stamps/fonts.stamp
 
 generated: stamps/generated.stamp
 
