@@ -370,7 +370,8 @@ CRYPTO_CHECK_SRCS = $(top_srcdir)/TestCryptoLevel.java
 
 # Patch list
 
-ICEDTEA_PATCHES = patches/f14-fonts.patch patches/fonts-gentoo.patch
+ICEDTEA_PATCHES = patches/f14-fonts.patch patches/fonts-gentoo.patch \
+	patches/pr2683.patch
 
 # Conditional patches
 

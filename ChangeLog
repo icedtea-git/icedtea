@@ -1,5 +1,15 @@
 2015-10-22  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2683: AArch64 port has broken Zero on AArch64
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new patch.
+	* NEWS: Updated.
+	* patches/pr2683.patch:
+	Turn off _updateBytesCRC32 and _crc_table_adr
+	when building Zero on AArch64.
+
+2015-10-22  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2686: Add generated Fedora & Gentoo font
 	configurations for bootstrap stage
 	* NEWS: Updated.

@@ -1,0 +1,16 @@
+diff -r f40363c11191 src/share/vm/runtime/vmStructs.cpp
+--- openjdk/hotspot/src/share/vm/runtime/vmStructs.cpp	Wed Oct 21 03:15:32 2015 +0100
++++ openjdk/hotspot/src/share/vm/runtime/vmStructs.cpp	Thu Oct 22 22:52:31 2015 +0100
+@@ -843,10 +843,10 @@
+   /***********************************/                                                                                              \
+                                                                                                                                      \
+      static_field(StubRoutines,                _call_stub_return_address,                     address)                               \
+-  AARCH64_ONLY(                                      \
++  AARCH64_ONLY(NOT_ZERO(						\
+       static_field(StubRoutines,                _updateBytesCRC32,                             address)                              \
+      static_field(StubRoutines,                _crc_table_adr,                                address)                               \
+-  )                                                  \
++  ))   \
+                                                                                                                                      \
+   /***************************************/                                                                                          \
+   /* PcDesc and other compiled code info */                                                                                          \

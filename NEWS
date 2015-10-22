@@ -127,6 +127,7 @@ New in release 2.6.2 (2015-10-21):
   - PR2512: Reset success following calls in LayoutManager.cpp
   - PR2557, G390663: Update Gentoo font configuration and allow font directory to be specified 
   - PR2568: openjdk causes a full desktop crash on RHEL 6 i586
+  - PR2683: AArch64 port has broken Zero on AArch64
   - PR2684: AArch64 port not selected on architectureswhere host_cpu != aarch64
   - PR2686: Add generated Fedora & Gentoo font configurations for bootstrap stage
 * CACAO
