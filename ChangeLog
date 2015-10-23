@@ -1,5 +1,9 @@
 2015-10-22  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS: Bump release date.
+
+2015-10-22  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2683: AArch64 port has broken Zero on AArch64
 	* Makefile.am:
 	(ICEDTEA_PATCHES): Add new patch.

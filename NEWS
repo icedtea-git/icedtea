@@ -12,7 +12,7 @@ JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.2 (2015-10-21):
+New in release 2.6.2 (2015-10-22):
 
 * Security fixes
   - S8048030, CVE-2015-4734: Expectations should be consistent
