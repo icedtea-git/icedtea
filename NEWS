@@ -20,7 +20,7 @@ New in release 2.6.2 (2015-10-22):
   - S8076339, CVE-2015-4903: Better handling of remote object invocation
   - S8076383, CVE-2015-4835: Better CORBA exception handling
   - S8076387, CVE-2015-4882: Better CORBA value handling
-  - S8076392. CVE-2015-4881: Improve IIOPInputStream consistency
+  - S8076392, CVE-2015-4881: Improve IIOPInputStream consistency
   - S8076413, CVE-2015-4883: Better JRMP message handling
   - S8078427, CVE-2015-4842: More supportive home environment
   - S8078440: Safer managed types
