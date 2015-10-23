@@ -44,7 +44,7 @@ New in release 2.6.2 (2015-10-22):
   - S8134248: Fix recently backported tests to work with OpenJDK 7u
   - S8134610: Mac OS X build fails after July 2015 CPU
   - S8134618: test/javax/xml/jaxp/transform/8062923/XslSubstringTest.java has bad license header
-* Import of OpenJDK 7 u91 build 1
+* Import of OpenJDK 7 u91 build 0
   - S6854417: TESTBUG: java/util/regex/RegExTest.java fails intermittently
   - S6966259: Make PrincipalName and Realm immutable
   - S8005226: java/rmi/transport/pinClientSocketFactory/PinClientSocketFactory.java fails intermittently
@@ -52,7 +52,6 @@ New in release 2.6.2 (2015-10-22):
   - S8021191: Add isAuthorized check to limited doPrivileged methods
   - S8028780: JDK KRB5 module throws OutOfMemoryError when CCache is corrupt
   - S8064331: JavaSecurityAccess.doIntersectionPrivilege() drops the information about the domain combiner of the stack ACC
-  - S8072932: Test fails with java.security.AccessControlException: access denied ("java.security.SecurityPermission" "getDomainCombiner")
   - S8076506: Increment minor version of HSx for 7u91 and initialize the build number
   - S8078822: 8068842 fix missed one new file PrimeNumberSequenceGenerator.java
   - S8079323: Serialization compatibility for Templates: need to exclude Hashtable from serialization
@@ -61,6 +60,8 @@ New in release 2.6.2 (2015-10-22):
   - S8130253: ObjectStreamClass.getFields too restrictive
   - S8133321: (tz) Support tzdata2015f
   - S8135043: ObjectStreamClass.getField(String) too restrictive
+* Import of OpenJDK 7 u91 build 1
+  - S8072932: Test fails with java.security.AccessControlException: access denied ("java.security.SecurityPermission" "getDomainCombiner")
 * Backports
   - S6880559, PR2674: Enable PKCS11 64-bit windows builds
   - S6904403, PR2674: assert(f == k-&gt;has_finalizer(),&quot;inconsistent has_finalizer&quot;) with debug VM
