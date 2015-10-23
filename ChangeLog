@@ -1,3 +1,8 @@
+2015-10-22  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* NEWS: Add 2.6.3 section.
+	* configure.ac: Bump to 2.6.3pre00.
+
 2015-10-22  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Separate 7u91 b00 and 7u91 b01.
