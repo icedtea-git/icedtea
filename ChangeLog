@@ -1,3 +1,8 @@
+2015-11-03  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* NEWS: Fix typos in 2.6.2 release
+	notes and add missing RH bug ID.
+
 2015-10-22  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Add 2.6.3 section.

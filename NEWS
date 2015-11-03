@@ -70,7 +70,7 @@ New in release 2.6.2 (2015-10-22):
   - S7011441, PR2674: jndi/ldap/Connection.java needs to avoid spurious wakeup
   - S7059542, PR2674: JNDI name operations should be locale independent
   - S7105461, PR2571: Large JTables are not rendered correctly with Xrender pipeline
-  - S7105883, PR2560: JDWP: agent crash if there exists a ThreadGroup with null name
+  - S7105883, PR2560, RH1245855: JDWP: agent crash if there exists a ThreadGroup with null name
   - S7107611, PR2674: sun.security.pkcs11.SessionManager is scalability blocker
   - S7127066, PR2674: Class verifier accepts an invalid class file
   - S7150092, PR2674: NTLM authentication fail if user specified a different realm
@@ -83,14 +83,14 @@ New in release 2.6.2 (2015-10-22):
   - S8009438, PR2674: sun/security/pkcs11/Secmod tests failing on Ubuntu 12.04
   - S8011709, PR2509: [parfait] False positive: memory leak in jdk/src/share/native/sun/font/layout/CanonShaping.cpp
   - S8012971, PR2674: PKCS11Test hiding exception failures
-  - S8016105, PR2560: Add complementary RETURN_NULL allocation macros in allocation.hpp
+  - S8016105, PR2560, RH1245855: Add complementary RETURN_NULL allocation macros in allocation.hpp
   - S8020424, PR2674: The NSS version should be detected before running crypto tests
   - S8020443, PR2674: Frame is not created on the specified GraphicsDevice with two monitors
-  - S8021897, PR2560: EXCEPTION_ACCESS_VIOLATION on debugging String.contentEquals()
-  - S8022683, PR2560: JNI GetStringUTFChars should return NULL on allocation failure not abort the VM
+  - S8021897, PR2560, RH1245855: EXCEPTION_ACCESS_VIOLATION on debugging String.contentEquals()
+  - S8022683, PR2560, RH1245855: JNI GetStringUTFChars should return NULL on allocation failure not abort the VM
   - S8023052, PR2509: JVM crash in native layout
-  - S8025922, PR2560: JNI access to Strings need to check if the value field is non-null
-  - S8026119. PR2679: Regression test DHEKeySizing.java failing intermittently
+  - S8025922, PR2560, RH1245855: JNI access to Strings need to check if the value field is non-null
+  - S8026119, PR2679: Regression test DHEKeySizing.java failing intermittently
   - S8027624, PR2674: com/sun/crypto/provider/KeyFactory/TestProviderLeak.java unstable again
   - S8033069, PR2674: mouse wheel scroll closes combobox popup
   - S8035150, PR2674: ShouldNotReachHere() in ConstantPool::copy_entry_to
@@ -131,7 +131,7 @@ New in release 2.6.2 (2015-10-22):
   - PR2557, G390663: Update Gentoo font configuration and allow font directory to be specified 
   - PR2568: openjdk causes a full desktop crash on RHEL 6 i586
   - PR2683: AArch64 port has broken Zero on AArch64
-  - PR2684: AArch64 port not selected on architectureswhere host_cpu != aarch64
+  - PR2684: AArch64 port not selected on architectures where host_cpu != aarch64
   - PR2686: Add generated Fedora & Gentoo font configurations for bootstrap stage
 * CACAO
   - PR2652: Set classLoader field in java.lang.Class as expected by JDK
