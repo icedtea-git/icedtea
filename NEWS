@@ -12,7 +12,13 @@ JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.3 (2016-01-XX):
+New in release 2.6.3 (2015-11-13):
+
+* Security fixes
+  - S8142882, CVE-2015-4871: rebinding of the receiver of a DirectMethodHandle may allow a protected method to be accessed
+* Backports
+  - S8133196, PR2712, RH1251935: HTTPS hostname invalid issue with InetAddress
+  - S8140620, PR2710: Find and load default.sf2 as the default soundbank on Linux
 
 New in release 2.6.2 (2015-10-22):
 
