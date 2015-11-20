@@ -14,31 +14,135 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.7.0 (201X-XX-XX):
 
+New in release 2.6.3 (2015-11-13):
+
+* Security fixes
+  - S8142882, CVE-2015-4871: rebinding of the receiver of a DirectMethodHandle may allow a protected method to be accessed
+* Backports
+  - S8133196, PR2712, RH1251935: HTTPS hostname invalid issue with InetAddress
+  - S8140620, PR2710: Find and load default.sf2 as the default soundbank on Linux
+
+New in release 2.6.2 (2015-10-22):
+
+* Security fixes
+  - S8048030, CVE-2015-4734: Expectations should be consistent
+  - S8068842, CVE-2015-4803: Better JAXP data handling
+  - S8076339, CVE-2015-4903: Better handling of remote object invocation
+  - S8076383, CVE-2015-4835: Better CORBA exception handling
+  - S8076387, CVE-2015-4882: Better CORBA value handling
+  - S8076392, CVE-2015-4881: Improve IIOPInputStream consistency
+  - S8076413, CVE-2015-4883: Better JRMP message handling
+  - S8078427, CVE-2015-4842: More supportive home environment
+  - S8078440: Safer managed types
+  - S8080541: More direct property handling
+  - S8080688, CVE-2015-4860: Service for DGC services
+  - S8081760: Better group dynamics
+  - S8086092, CVE-2015-4840: More palette improvements
+  - S8086733, CVE-2015-4893: Improve namespace handling
+  - S8087350: Improve array conversions
+  - S8103671, CVE-2015-4805: More objective stream classes
+  - S8103675: Better Binary searches
+  - S8130078, CVE-2015-4911: Document better processing
+  - S8130193, CVE-2015-4806: Improve HTTP connections
+  - S8130864: Better server identity handling
+  - S8130891, CVE-2015-4843: (bf) More direct buffering
+  - S8131291, CVE-2015-4872: Perfect parameter patterning
+  - S8132042, CVE-2015-4844: Preserve layout presentation
 * Import of OpenJDK 7 u85 build 2
   - S8133968: Revert 8014464 on OpenJDK 7
   - S8133993: [TEST_BUG] Make CipherInputStreamExceptions compile on OpenJDK 7
   - S8134248: Fix recently backported tests to work with OpenJDK 7u
   - S8134610: Mac OS X build fails after July 2015 CPU
   - S8134618: test/javax/xml/jaxp/transform/8062923/XslSubstringTest.java has bad license header
+* Import of OpenJDK 7 u91 build 0
+  - S6854417: TESTBUG: java/util/regex/RegExTest.java fails intermittently
+  - S6966259: Make PrincipalName and Realm immutable
+  - S8005226: java/rmi/transport/pinClientSocketFactory/PinClientSocketFactory.java fails intermittently
+  - S8014097: add doPrivileged methods with limited privilege scope
+  - S8021191: Add isAuthorized check to limited doPrivileged methods
+  - S8028780: JDK KRB5 module throws OutOfMemoryError when CCache is corrupt
+  - S8064331: JavaSecurityAccess.doIntersectionPrivilege() drops the information about the domain combiner of the stack ACC
+  - S8076506: Increment minor version of HSx for 7u91 and initialize the build number
+  - S8078822: 8068842 fix missed one new file PrimeNumberSequenceGenerator.java
+  - S8079323: Serialization compatibility for Templates: need to exclude Hashtable from serialization
+  - S8087118: Remove missing package from java.security files
+  - S8098547: (tz) Support tzdata2015e
+  - S8130253: ObjectStreamClass.getFields too restrictive
+  - S8133321: (tz) Support tzdata2015f
+  - S8135043: ObjectStreamClass.getField(String) too restrictive
+* Import of OpenJDK 7 u91 build 1
+  - S8072932: Test fails with java.security.AccessControlException: access denied ("java.security.SecurityPermission" "getDomainCombiner")
 * Backports
+  - S6880559, PR2674: Enable PKCS11 64-bit windows builds
+  - S6904403, PR2674: assert(f == k-&gt;has_finalizer(),&quot;inconsistent has_finalizer&quot;) with debug VM
+  - S7011441, PR2674: jndi/ldap/Connection.java needs to avoid spurious wakeup
+  - S7059542, PR2674: JNDI name operations should be locale independent
   - S7105461, PR2571: Large JTables are not rendered correctly with Xrender pipeline
-  - S7105883, PR2560: JDWP: agent crash if there exists a ThreadGroup with null name
+  - S7105883, PR2560, RH1245855: JDWP: agent crash if there exists a ThreadGroup with null name
+  - S7107611, PR2674: sun.security.pkcs11.SessionManager is scalability blocker
+  - S7127066, PR2674: Class verifier accepts an invalid class file
+  - S7150092, PR2674: NTLM authentication fail if user specified a different realm
   - S7150134, PR2571: JCK api/java_awt/Graphics/index.html#DrawLine fails with OOM for jdk8 with XRender pipeline
+  - S7152582, PR2674: PKCS11 tests should use the NSS libraries available in the OS
+  - S7156085, PR2674: ArrayIndexOutOfBoundsException throws in UTF8Reader of SAXParser
+  - S7177045, PR2674: Rework the TestProviderLeak.java regression test, it is too fragile to low memory errors.
+  - S7190945, PR2674: pkcs11 problem loading NSS libs on Ubuntu
+  - S8005226, PR2674: java/rmi/transport/pinClientSocketFactory/PinClientSocketFactory.java fails intermittently
+  - S8009438, PR2674: sun/security/pkcs11/Secmod tests failing on Ubuntu 12.04
   - S8011709, PR2509: [parfait] False positive: memory leak in jdk/src/share/native/sun/font/layout/CanonShaping.cpp
-  - S8016105, PR2560: Add complementary RETURN_NULL allocation macros in allocation.hpp
-  - S8021897, PR2560: EXCEPTION_ACCESS_VIOLATION on debugging String.contentEquals()
-  - S8022683, PR2560: JNI GetStringUTFChars should return NULL on allocation failure not abort the VM
+  - S8012971, PR2674: PKCS11Test hiding exception failures
+  - S8016105, PR2560, RH1245855: Add complementary RETURN_NULL allocation macros in allocation.hpp
+  - S8020424, PR2674: The NSS version should be detected before running crypto tests
+  - S8020443, PR2674: Frame is not created on the specified GraphicsDevice with two monitors
+  - S8021897, PR2560, RH1245855: EXCEPTION_ACCESS_VIOLATION on debugging String.contentEquals()
+  - S8022683, PR2560, RH1245855: JNI GetStringUTFChars should return NULL on allocation failure not abort the VM
   - S8023052, PR2509: JVM crash in native layout
-  - S8025922, PR2560: JNI access to Strings need to check if the value field is non-null
+  - S8025922, PR2560, RH1245855: JNI access to Strings need to check if the value field is non-null
+  - S8026119, PR2679: Regression test DHEKeySizing.java failing intermittently
+  - S8027624, PR2674: com/sun/crypto/provider/KeyFactory/TestProviderLeak.java unstable again
+  - S8033069, PR2674: mouse wheel scroll closes combobox popup
+  - S8035150, PR2674: ShouldNotReachHere() in ConstantPool::copy_entry_to
+  - S8039212, PR2674: SecretKeyBasic.sh needs to avoid NSS libnss3 and libsoftokn3 version mismatches
   - S8042855, PR2509: [parfait] Potential null pointer dereference in IndicLayoutEngine.cpp
+  - S8044364, PR2674: runtime/RedefineFinalizer test fails on windows
+  - S8048353, PR2674: jstack -l crashes VM when a Java mirror for a primitive type is locked
+  - S8050123, PR2674: Incorrect property name documented in CORBA InputStream API
   - S8056122, PR1896: Upgrade JDK to use LittleCMS 2.6
+  - S8056124, PR2674: Hotspot should use PICL interface to get cacheline size on SPARC
   - S8057934, PR1896: Upgrade to LittleCMS 2.6 breaks AIX build
+  - S8059200, PR2674: Promoted JDK9 b31 for Solaris-amd64 fails (Error: dl failure on line 744, no picl library) on Solaris 11.1
+  - S8059588, PR2674: deadlock in java/io/PrintStream when verbose java.security.debug flags are set
+  - S8062518, PR2674: AIOBE occurs when accessing to document function in extended function in JAXP
+  - S8062591, PR2674: SPARC PICL causes significantly longer startup times
+  - S8072863, PR2674: Replace fatal() with vm_exit_during_initialization() when an incorrect class is found on the bootclasspath
+  - S8073453, PR2674: Focus doesn't move when pressing Shift + Tab keys
+  - S8074350, PR2674: Support ISO 4217 "Current funds codes" table (A.2)
+  - S8074869, PR2674: C2 code generator can replace -0.0f with +0.0f on Linux
+  - S8075609, PR2674: java.lang.IllegalArgumentException: aContainer is not a focus cycle root of aComponent
+  - S8075773, PR2674: jps running as root fails after the fix of JDK-8050807
+  - S8076040, PR2674: Test com/sun/crypto/provider/KeyFactory/TestProviderLeak.java fails with -XX:+UseG1GC
+  - S8076328, PR2679: Enforce key exchange constraints
+  - S8076455, PR2674: IME Composition Window is displayed on incorrect position
+  - S8076968, PR2674: PICL based initialization of L2 cache line size on some SPARC systems is incorrect
+  - S8077102, PR2674: dns_lookup_realm should be false by default
+  - S8077409, PR2674: Drawing deviates when validate() is invoked on java.awt.ScrollPane
+  - S8078113, PR2674: 8011102 changes may cause incorrect results
   - S8078331, PR1896: Upgrade JDK to use LittleCMS 2.7
+  - S8080012, PR2674: JVM times out with vdbench on SPARC M7-16
+  - S8081392, PR2674: getNodeValue should return 'null' value for Element nodes
+  - S8081470, PR2674: com/sun/jdi tests are failing with "Error. failed to clean up files after test" with jtreg 4.1 b12
   - S8081756, PR1896: Mastering Matrix Manipulations
-  - S8087120, RH1206656, PR2553: [GCC5] java.lang.StackOverflowError on Zero JVM initialization on non x86 platforms.
+  - S8130297, PR2674: com/sun/crypto/provider/KeyFactory/TestProviderLeak.java still failing after JDK-8076040
+  - S8133636, PR2674: [TEST_BUG] Import/add tests for the problem seen in 8076110
 * Bug fixes
   - PR2512: Reset success following calls in LayoutManager.cpp
+  - PR2557, G390663: Update Gentoo font configuration and allow font directory to be specified 
   - PR2568: openjdk causes a full desktop crash on RHEL 6 i586
+  - PR2683: AArch64 port has broken Zero on AArch64
+  - PR2684: AArch64 port not selected on architectures where host_cpu != aarch64
+  - PR2686: Add generated Fedora & Gentoo font configurations for bootstrap stage
+* CACAO
+  - PR2652: Set classLoader field in java.lang.Class as expected by JDK
 
 New in release 2.5.6 (2015-07-22):
 
