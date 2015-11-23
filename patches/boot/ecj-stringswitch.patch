@@ -606,3 +606,24 @@ diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/security/smartcardio/Pla
              }
              lib = replace(k, lib, "$ARCH", arch);
          }
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/Config.java	2015-10-20 02:20:59.588588403 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/Config.java	2015-10-20 02:22:51.051758602 +0100
+@@ -420,14 +420,13 @@
+         if (s == null) {
+             return null;
+         }
+-        switch (s.toLowerCase(Locale.US)) {
+-            case "yes": case "true":
++        String lCase = s.toLowerCase(Locale.US);
++        if ("yes".equals(lCase) || "true".equals(lCase)) {
+                 return Boolean.TRUE;
+-            case "no": case "false":
++        } else if ("no".equals(lCase) || "false".equals(lCase)) {
+                 return Boolean.FALSE;
+-            default:
+-                return null;
+         }
++        return null;
+     }
+ 
+     /**
