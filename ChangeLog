@@ -1,3 +1,24 @@
+2015-12-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-3.0.0pre07 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 3.0.0pre07.
+	* hotspot.map: Update to icedtea-3.0.0pre07 tag.
+
 2015-10-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2675: Update ppc64le autotools infrastructure
