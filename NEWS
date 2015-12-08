@@ -113,7 +113,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2631: jvm.cfg missing for ppc64le
   - PR2633: s390 builds still fail as BUILD_NUM_BITS is never set
   - PR2675: Update ppc64le autotools infrastructure following PR2237
-  - PR2691: ./configure is unable to compile using distcc for icedtea-3.0.0_pre06
+  - PR2691, G564746: ./configure is unable to compile using distcc for icedtea-3.0.0_pre06
   - PR2737: Allow multiple PKCS11 library initialisation to be a non-critical error.
   - PR2738: java.lang.UnsatisfiedLinkError: no javalcms in java.library.path
   - PR2743: Remove bad AArch64 merge fragment

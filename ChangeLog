@@ -1,5 +1,9 @@
 2015-12-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS: Add G564746 to PR2691 distcc bug.
+
+2015-12-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR1377: Forwardport javac detection / usability
 	test from IcedTea 2.x
 	* NEWS: Updated.
