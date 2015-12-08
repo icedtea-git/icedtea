@@ -1,3 +1,28 @@
+2015-12-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1377: Forwardport javac detection / usability
+	test from IcedTea 2.x
+	* NEWS: Updated.
+
+2012-03-20  Andrew John Hughes  <ahughes@redhat.com>
+
+	PR1377: Forwardport javac detection / usability
+	test from IcedTea 2.x
+	* acinclude.m4:
+	(IT_FIND_COMPILER): Define only once and
+	rename from IT_FIND_JAVA_COMPILER. Move
+	default value for javac into its own macro.
+	(IT_FIND_ECJ): Use same form as detection
+	for java, javah, jar and rmic.
+	(IT_FIND_JAVAC): Likewise.
+	(IT_FIND_JAVA): Define only once.
+	(IT_CHECK_JAVA_AND_JAVAC_WORK): New macro to check
+	java and javac actually work together to compile code
+	before running other tests such as the dtdtype one.
+	(IT_CHECK_FOR_CLASS): Depend on java/javac working.
+	* configure.ac: Invoke IT_FIND_COMPILER rather than
+	IT_FIND_JAVA_COMPILER.
+
 2015-12-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:

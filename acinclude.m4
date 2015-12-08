@@ -130,50 +130,41 @@ AC_DEFUN([IT_SET_OS_DIRS],
   AC_SUBST(OS_PATH)
 ])
 
-AC_DEFUN([IT_FIND_JAVA_COMPILER],
+AC_DEFUN([IT_FIND_COMPILER],
 [
-  JAVAC=${SYSTEM_JDK_DIR}/bin/javac
   IT_FIND_JAVAC
   IT_FIND_ECJ
   IT_USING_ECJ
 
+  AC_SUBST(ECJ)
   AC_SUBST(JAVAC)
 ])
 
-AC_DEFUN([IT_FIND_ECJ],
+AC_DEFUN_ONCE([IT_FIND_ECJ],
 [
+  ECJ_DEFAULT=/usr/bin/ecj
+  AC_MSG_CHECKING([if an ecj binary was specified])
   AC_ARG_WITH([ecj],
-	      [AS_HELP_STRING([--with-ecj[[=PATH]]],the path to an ecj binary)],
+	      [AS_HELP_STRING(--with-ecj,bytecode compilation with ecj)],
   [
-    if test "x${withval}" != x && test "x${withval}" != xyes && test "x${withval}" != xno; then
-      IT_CHECK_ECJ(${withval})
+    if test "x${withval}" = "xyes"; then
+      ECJ=no
     else
-      if test "x${withval}" != xno; then
-        IT_CHECK_ECJ
-      fi
+      ECJ="${withval}"
     fi
   ],
   [ 
-    IT_CHECK_ECJ
+    ECJ=no
   ])
-  if test "x${JAVAC}" = "x"; then
-    if test "x{ECJ}" != "x"; then
-      JAVAC="${ECJ}"
-    fi
+  AC_MSG_RESULT(${ECJ})
+  if test "x${ECJ}" = "xno"; then
+    ECJ=${ECJ_DEFAULT}
   fi
-])
-
-AC_DEFUN([IT_CHECK_ECJ],
-[
-  if test "x$1" != x; then
-    if test -f "$1"; then
-      AC_MSG_CHECKING(for ecj)
-      ECJ="$1"
-      AC_MSG_RESULT(${ECJ})
-    else
-      AC_PATH_PROG(ECJ, "$1")
-    fi
+  AC_MSG_CHECKING([if $ECJ is a valid executable file])
+  if test -x "${ECJ}" && test -f "${ECJ}"; then
+    AC_MSG_RESULT([yes])
   else
+    ECJ=""
     AC_PATH_PROG(ECJ, "ecj")
     if test -z "${ECJ}"; then
       AC_PATH_PROG(ECJ, "ecj-3.1")
@@ -184,43 +175,45 @@ AC_DEFUN([IT_CHECK_ECJ],
     if test -z "${ECJ}"; then
       AC_PATH_PROG(ECJ, "ecj-3.3")
     fi
+    if test -z "${ECJ}"; then
+      AC_PATH_PROG(ECJ, "ecj-3.4")
+    fi
   fi
 ])
 
-AC_DEFUN([IT_FIND_JAVAC],
+AC_DEFUN_ONCE([IT_FIND_JAVAC],
 [
+  JAVAC_DEFAULT=${SYSTEM_JDK_DIR}/bin/javac
+  AC_MSG_CHECKING([if a javac binary was specified])
   AC_ARG_WITH([javac],
 	      [AS_HELP_STRING([--with-javac[[=PATH]]],the path to a javac binary)],
   [
-    if test "x${withval}" != x && test "x${withval}" != xyes && test "x${withval}" != xno; then
-      IT_CHECK_JAVAC(${withval})
+    if test "x${withval}" = "xyes"; then
+      JAVAC=no
     else
-      if test "x${withval}" != xno; then
-        IT_CHECK_JAVAC(${JAVAC})
-      fi
+      JAVAC="${withval}"
     fi
   ],
-  [ 
-    IT_CHECK_JAVAC(${JAVAC})
+  [
+    JAVAC=no
+  ])
+  AC_MSG_RESULT(${JAVAC})
+  if test "x${JAVAC}" = "xno"; then
+    JAVAC=${JAVAC_DEFAULT}
+  fi
+  AC_MSG_CHECKING([if $JAVAC is a valid executable file])
+  if test -x "${JAVAC}" && test -f "${JAVAC}"; then
+    AC_MSG_RESULT([yes])
+  else
+    AC_MSG_RESULT([no])
+    JAVAC=""
+    AC_PATH_PROG(JAVAC, "javac")
+  fi
+  AC_SUBST(JAVAC)
   ])
 ])
 
-AC_DEFUN([IT_CHECK_JAVAC],
-[
-  if test "x$1" != x; then
-    if test -f "$1"; then
-      AC_MSG_CHECKING(for javac)
-      JAVAC="$1"
-      AC_MSG_RESULT(${JAVAC})
-    else
-      AC_PATH_PROG(JAVAC, "$1")
-    fi
-  else
-    AC_PATH_PROG(JAVAC, "javac")
-  fi
-])
-
-AC_DEFUN([IT_FIND_JAVA],
+AC_DEFUN_ONCE([IT_FIND_JAVA],
 [
   JAVA_DEFAULT=${SYSTEM_JDK_DIR}/bin/java
   AC_MSG_CHECKING([if a java binary was specified])
@@ -1189,6 +1182,44 @@ AC_DEFUN([IT_CHECK_ENABLE_WARNINGS],
   AC_SUBST(ENABLE_WARNINGS)
 ])
 
+dnl check that javac and java work
+AC_DEFUN_ONCE([IT_CHECK_JAVA_AND_JAVAC_WORK],[
+  AC_REQUIRE([IT_FIND_JAVA])
+  AC_REQUIRE([IT_FIND_COMPILER])
+  AC_CACHE_CHECK([if the VM and compiler work together], it_cv_jdk_works, [
+  CLASS=Test.java
+  BYTECODE=$(echo $CLASS|sed 's#\.java##')
+  mkdir tmp.$$
+  cd tmp.$$
+  cat << \EOF > $CLASS
+[/* [#]line __oline__ "configure" */
+
+public class Test
+{
+    public static void main(String[] args)
+    {
+      System.out.println("Hello World!");
+    }
+}]
+EOF
+  if $JAVAC -cp . $JAVACFLAGS -source 5 -target 5 $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+    if $JAVA -classpath . $BYTECODE >&AS_MESSAGE_LOG_FD 2>&1; then
+      it_cv_jdk_works=yes;
+    else
+      it_cv_jdk_works=no;
+      AC_MSG_ERROR([VM failed to run compiled class.])
+    fi
+  else
+    it_cv_jdk_works=no;
+    AC_MSG_ERROR([Compiler failed to compile Java code.])
+  fi
+  rm -f $CLASS *.class
+  cd ..
+  rmdir tmp.$$
+  ])
+AC_PROVIDE([$0])dnl
+])
+
 dnl Generic macro to check for a Java class
 dnl Takes two arguments: the name of the macro
 dnl and the name of the class.  The macro name
@@ -1196,6 +1227,7 @@ dnl is usually the name of the class with '.'
 dnl replaced by '_' and all letters capitalised.
 dnl e.g. IT_CHECK_FOR_CLASS([JAVA_UTIL_SCANNER],[java.util.Scanner])
 AC_DEFUN([IT_CHECK_FOR_CLASS],[
+AC_REQUIRE([IT_CHECK_JAVA_AND_JAVAC_WORK])
 AC_CACHE_CHECK([if $2 is missing], it_cv_$1, [
 CLASS=Test.java
 BYTECODE=$(echo $CLASS|sed 's#\.java##')

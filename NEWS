@@ -45,6 +45,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR1364: Replace hgforest support
   - PR1367: Support using the system installation of LCMS
   - PR1369: Remove outdated bootstrap configure tests or make them fail on error
+  - PR1377: Forwardport javac detection / usability test from IcedTea 2.x
   - PR1379: Add build support for Zero AArch64
   - PR1413: Undefined reference to libz during link of unpack200
   - PR1766: Expand architecture support
