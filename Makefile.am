@@ -2524,6 +2524,14 @@ add-archive-boot: stamps/add-archive-ecj.stamp
 
 add-archive-debug: stamps/add-archive-debug.stamp
 
+add-cacao: stamps/add-cacao.stamp
+
+add-cacao-debug: stamps/add-cacao-debug.stamp
+
+add-jamvm: stamps/add-jamvm.stamp
+
+add-jamvm-debug: stamps/add-jamvm-debug.stamp
+
 add-zero: stamps/add-zero.stamp
 
 add-zero-debug: stamps/add-zero-debug.stamp
@@ -2554,7 +2562,11 @@ download: stamps/download.stamp
 
 download-cacao: stamps/download-cacao.stamp
 
+download-hotspot: stamps/download-hotspot.stamp
+
 download-jamvm: stamps/download-jamvm.stamp
+
+download-nashorn: stamps/download-nashorn.stamp
 
 download-openjdk: stamps/download-openjdk.stamp
 
@@ -2563,6 +2575,10 @@ ecccheck: stamps/ecccheck.stamp
 extract: stamps/extract.stamp
 
 extract-cacao: stamps/extract-cacao.stamp
+
+extract-jamvm: stamps/extract-jamvm.stamp
+
+extract-nashorn: stamps/extract-nashorn.stamp
 
 extract-openjdk: stamps/extract-openjdk.stamp
 
@@ -2602,4 +2618,8 @@ patch-fsg: stamps/patch-fsg.stamp
 
 pulse-java: $(PULSE_JAVA_TARGET)
 
+remove-intree-libraries: stamps/remove-intree-libraries.stamp
+
 sanitise-openjdk: stamps/sanitise-openjdk.stamp
+
+versioning: stamps/versioning.stamp

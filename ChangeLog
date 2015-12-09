@@ -1,5 +1,16 @@
 2015-12-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2358: Ensure all stamp targets have aliases
+	* Makefile.am:
+	Add missing aliases for add-cacao,
+	add-cacao-debug, add-jamvm, add-jamvm-debug,
+	download-hotspot, download-nashorn,
+	extract-jamvm, extract-nashorn,
+	remove-intree-libraries and versioning.
+	* NEWS: Updated.
+
+2015-12-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2356: Update NEWS
 	* NEWS: Updated with IcedTea 2.x history
 	as opposed to partial details of the 2.0.0
