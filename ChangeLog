@@ -1,5 +1,17 @@
 2015-12-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2362: Update HACKING & fsg.sh.in
+	* HACKING: Update to match current list
+	of patches applied by IcedTea. Update
+	bug URL.
+	* NEWS: Updated.
+	* fsg.sh.in: Remove files that either no
+	longer exist or have GPL/BSD-style headers.
+	Add additional binaries which have appeared
+	since the last check. Update bug URL.
+
+2015-12-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2358: Ensure all stamp targets have aliases
 	* Makefile.am:
 	Add missing aliases for add-cacao,

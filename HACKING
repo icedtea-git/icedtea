@@ -2,224 +2,36 @@ Patches
 =======
 
 PRx denotes bug x in the IcedTea bug database (http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=x)
-Sx denotes bug x in the Sun bug database (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=x)
+Sx denotes bug x in the Sun/Oracle bug database (https://bugs.openjdk.java.net/browse/JDK-X)
 
 The fsg.sh script is also run to delete certain files with dubious licensing and/or only occuring
 in binary format.
 
-The following patches are currently applied before the building of OpenJDK7 or OpenJDK6 by IcedTea:
+The following patches are currently applied before the building of OpenJDK 8 by IcedTea:
 
-* icedtea-bytebuffer-compact.patch: Add clearMark() method to java.nio.Buffer (PR60/S6593946). 
-  Partially fixed by addition of discardMark() in OpenJDK7.
-* icedtea-copy-plugs.patch: Add IcedTea's 'plugs' for Java WebStart support, add
-  cast to getAnnotation and trapAuthenticationFailure variable to com.sun.jmx.snmp.SnmpPduTrap.
-* icedtea-debuginfo.patch: Add -g option to build to generate debugging information.
-* icedtea-demos.patch: Fix building of JVMTI demo.
-* icedtea-float-double-trailing-zeros.patch: Remove trailing zeros from Double/Float (PR29/30)
-* icedtea-freetypeversion.patch: freetype backend only requires 2.2.1.
-* icedtea-fonts.patch: Add Fedora fontconfig.
-* icedtea-gcc-suffix.patch: Append $(GCC_SUFFIX) to end of 'gcc' binary name.
-* icedtea-graphics.patch: Fix word wrap in JTextArea (PR57/S6593649)
-* icedtea-javac-debuginfo.patch: Ensure debugging information is generated for all class files.
-* icedtea-javafiles.patch: Add missing Java files to list.
-* icedtea-jdk-docs-target.patch: Always set DOCS_TARGET.
-* icedtea-jpegclasses.patch: Add com.sun.image.codec.jpeg support.
-* icedtea-lcms-leak.patch: Fix LCMS memory leak.
-* icedtea-LCMS-setTagData.patch: Add support for setTagData to LCMS peer.
-* icedtea-libraries.patch: Use system JPEG and zlib libraries.
-* icedtea-linker-options.patch: Add -Xlinker option when linking.
-* icedtea-memory-limits.patch: Increase default memory limits.
-* icedtea-override-redirect-metacity.patch: Enable override redirect for Metacity window manager.
-* icedtea-print-lsb-release.patch: Use information from Debian LSB file for crash reports.
-* icedtea-rhino.patch: Add support for Javascript.
-* icedtea-rmi_amd64.patch: Build RMI binaries on all platforms not just 32-bit ones.
-* icedtea-security-updates.patch: OpenJDK security patches from Sun.
-* icedtea-sparc64-linux.patch: Fixes needed to build the SPARC port on 32-bit SPARC as used by Fedora.
-* icedtea-sparc-ptracefix.patch: Avoid importing asm-sparc/ptrace.h by including pt_regs directly.
-* icedtea-sparc-trapsfix.patch: Include traps.h from correct directory.
-* icedtea-ssl.patch: Add casts to AlgorithmParameterSpec in sun.security.ssl package.
-* icedtea-static-libstdc++.patch: Don't use static C++ on PPC64.
-* icedtea-sunsrc.patch: Remove service property files from TOOLS list.
-* icedtea-text-relocations.patch: Use correct -fPIC/-fpic flag on all platforms.
-* icedtea-tools.patch: Remove DebugHelperHelper and add sources in make/java/awt/Makefile to fix build of jvmti.
-* icedtea-use-system-tzdata.patch: Use timezone data from the system (PR70/S6593486).
-* icedtea-version.patch: Replace name and bug URL with IcedTea versions.
-* icedtea-webservices.patch: Add applet support.
-* icedtea-shark-build.patch: Add support for building the Shark JIT.
-* icedtea-alpha-fixes.patch: Fix build issues on alpha-linux.
-* icedtea-arch.patch: Add support for additional architectures.
-* icedtea-alt-jar.patch: Add support for using an alternate jar tool in JDK building. 
-* icedtea-hotspot7-tests.patch: Adds hotspot compiler tests from jdk7 tree.
-* icedtea-renderer-crossing.patch: Check whether crossing is initialized in Pisces Renderer.
-* icedtea-stroker-finish.patch: Make sure cap calculation doesn't result in
-  divide by zero on tiny paths.
-* icedtea-alsa-default-device.patch: Fix problems with using the ALSA 'default' device.
-* icedtea-linker-libs-order.patch: When linking, put the referenced libraries after the object files (PR237).
-* icedtea-testenv.patch: Provide public reachable machines for net/nio tests.
-* icedtea-samejvm-safe.patch: Add samejvmsafe dirs to TEST.ROOT.
-* icedtea-6728542-epoll.patch: Make EPoll work on non-x86 platforms. (PR265)
-* icedtea-fortify-source.patch: Fix build failures with -D_FORTIFY_SOURCE=2.
-* icedtea-cc-interp-jvmti.patch: Disable some JVMTI capabilities which are unsupported or do not work with the C++ interpreter.
-* icedtea-demo-swingapplet.patch: Add missing html file needed to run the demo.
-* icedtea-no-precompiled.patch: Don't use precompiled header files in hotspot.
-* icedtea-java2d-dasher.patch: Fix interpretation of dash array elements in BasicStroke (S6793344).
-* icedtea-cc-interp-backedge.patch: Remove some duplicated code in DO_BACKEDGE_CHECKS.
-* icedtea-includedb.patch: Add missing include files. (S6793825, mostly applied in b47)
-* icedtea-xml-encodinginfo.patch: Fix possible StackOverflowError in EncodingInfo (PR295).
-
-The following patches are only applied to OpenJDK6 in IcedTea6:
-
-* icedtea-ant.patch: Remove use of $(ANT_HOME).
-* icedtea-awt-window-size.patch: Fix X11 window size calculation (S6721088, applied in OpenJDK7 b48).
-* icedtea-corba.patch: Adds additional files to org.omg.CORBA Makefile.
-* icedtea-display-mode-changer.patch: Add extra test class. (applied in OpenJDK7 b43)
-* icedtea-enum-bug-181.patch: Fixes class type check (PR181/S6736248)
-* icedtea-f2i-overflow.patch: Replaces the code used by [fd]2[il] bytecodes to correctly handle overflows. (PR244)
-* icedtea-format-warnings.patch: Fix build failures with -Wformat=1. (S6781583, applied in b47).
-* icedtea-gcc-4.3.patch: Fix code to compile with GCC 4.3 and turn off -Werror.
-* icedtea-generated.patch: Force use of /bin/bash.
-* icedtea-ia64-fdlibm.patch: Fix name of ia64 architecture from _M_IA64 to ia64.
-* icedtea-lib64.patch: Add support for building on platforms with /usr/lib64. (S6778662, applied in b47).
-* icedtea-no-bcopy.patch: Don't define local copies of bcopy, bzero and bcmp from BSD (S6781583, applied in b47).
-* icedtea-nomotif.patch: Remove sanity and GrabShell.h dependency on Motif/Lesstif library.
-* icedtea-nomotif-6706121.patch: Remove Motif AWT peers (S6706121).
-* icedtea-nss-config.patch: Add the NSS PKCS11 security provider. (PR356)
-* icedtea-nss-6763530.patch: Fix PKCS11 provider when used with newer version of NSS (>=3.12.3) (PR356, S6763530).
-* icedtea-sparc.patch: Add support for GNU/Linux on SPARC (version in IcedTea includes only minimal build changes).
-* icedtea-jdk-docs-target.patch: Always set DOCS_TARGET.
-* icedtea-lucene-crash.patch: Fix lucene bad code generation bug #6707044.
-* icedtea-6700047-loopopts.patch: Fix partial peeling issue, bug #6700047.
-* icedtea-6712835-ifnode.patch: Fix infinite loop in PhaseIterGVN::transform.
-* icedtea-6761856-freetypescaler.patch: swing TextLayout.getBounds() returns shifted bounds
-  (PR 227, S6761856, applied in OpenJDK7 b43).
-* icedtea-6791168.patch: Fix build failure with GCC-4.4 (PR 38725) and compiler warnings. (S6791168)
-* icedtea-timerqueue.patch: Fix setting of running variable (PR87/S6623943).
-* icedtea-version.patch: Fix (langtools) ant build to honor fcs MILESTONE setting (S6778493).
-* icedtea-io_util-overflow.patch: Replace some code to correctly handle overflows. (S6788196)
-* icedtea-hotspot7-build-fixes.patch: Remove KERNEL #ifdef.
-* icedtea-ia64-bugfix.patch: Remove workaround for IA64 GCC bug.
-* icedtea-signature-iterator.patch: Add zero-specific signature handling.
-* icedtea-signed-types.patch: Make use of unsigned/signed types explicit.
-* icedtea-test-atomic-operations.patch: Add check to see if GCC's sync_lock_test works.
-* icedtea-zero.patch: Generalise architecture support, add ARM and #ifdef out non-zero applicable parts.
-* icedtea-shark.patch: Add support for the Shark JIT.
-* icedtea-uname.patch: Handle output of uname on arm and mips{,el}.
-
-The following patches are only applied to OpenJDK in IcedTea7:
-
-* icedtea-constructor-properties.patch: Explicitly cast to ConstructorProperties
-  as getAnnotation is broken in libgcj 4.3.
-* legacy/mbeanintrospector.patch: Explicitly cast to Description as getAnnotation
-  is broken in libgcj 4.3.
-* icedtea-override.patch: Remove @Override annotation in
-  javax.management.AttributeValueExp (unsupported by ecj < 3.4).
-* icedtea-sources.patch: Include netx and plugin sources in src.zip
-* icedtea-jaxws-getdtdtype.patch: Workaround for incorrect return type in gcj < 4.4 / GNU Classpath < 0.98
-
-The following patches are only applied to the icedtea-ecj/boot bootstrap tree:
-
-* ecj/icedtea-jopt.patch: Disable -J options to jar when unsupported.
-* ecj/icedtea-pr261.patch: Adds a couple of classes that are omitted from rt.jar. (PR261)
-* ecj/icedtea-spp.patch: Fixes Spp.java to not use java.util.Scanner.
-
-The following patches are only applied to the icedtea-boot bootstrap tree in IcedTea7:
-
-* ant-javac.patch: Explicitly set the patch to the javac executable.
-* corba-defs.patch: Add LANGTOOLS_DIST, remove GENSRCDIR, remove PLATFORMSRC from VPATH0.java.
-* corba-idlj.patch: Turn off calls to idlj.
-* corba-libgcj.patch: Link against libgcj instead of libjava.
-* corba-no-gen.patch: Disable source generation.
-* corba-orb.patch: Add makefile for org.omg.CORBA.ORB.
-* demos.patch: Disable building demos.
-* ecj-fphexconstants.patch: Replace use of floating point hex constants unsupported by ecj+Classpath.
-* ecj-opts.patch: Avoid use of JAVAC_PREFER_SOURCE and -Xmaxwarns.
-* fontconfig.patch: Don't generate fontconfigs, copy them from generated.
-* generated-comments.patch: Remove date comments in generated files.
-* xbootclasspath.patch: Avoid use of -Xbootclasspath/p (unsupported by gij).
-* icedteart.patch: Add ICEDTEA_RT to classpath (links to local rt.jar extended with Sun classes).
-* jar.patch: Support JAR_KNOWS_ATFILE.
-* javah.patch: Handle differences between gjavah and javah output, specifically in OpenGL headers.
-* symbols.patch: Turn off generation of javac.sym.
-* tobin.patch: Don't run sun.awt.X11.ToBin, use hardcoded 0,0.
-* ecj/icedtea-dyn.patch: Don't build java.dyn (needs javac 1.7)
-* ecj/icedtea-pr39408.patch: Add missing constants from superclass not generated by gjavah
-* ecj/icedtea-pr40188.patch: Fix names to refer to constants generated by gjavah.
-* ecj/icedtea-sbcs.patch: Fixes GenerateSBCS.java to not use java.util.Scanner.
-
-The following patches are only applied to the icedtea-ecj bootstrap tree in IcedTea6:
-
-* ecj/icedtea.patch: Don't generate CORBA sources using MC/idlj, link against -lgcj
-  instead of -ljava, force use of boot tools, don't run HotSpot's test_gamma, use
-  javac executable with Ant, remove -Werror from javac call, don't build JDK demos,
-  don't run sun.awt.X11.ToBin, explicitly pull in timezone data and rt.jar in javac
-  calls, replace hexadecimal floating point literals with decimal variants in
-  java.lang.Double and java.lang.Float.
+* disable-intree-ec.patch: Turn off the SunEC provider in java.security.
+* memory-limits.patch: Increase default memory limits.
+* nss-config.patch: Add and enable the PKCS11 provider in java.security
+* nss-not-enabled-config.patch: Add but disable the PKCS11 provider in java.security.
+* override-redirect-metacity.patch: Enable override redirect for Metacity window manager.
+* pr2126.patch: Applied as part of fsg.sh to remove elliptic curves unsupported by NSS.
+* rh1022017.patch: Only announce supported elliptic curves over TLS connections.
 
 The following patches are only applied when building with the CACAO virtual machine:
 
 * cacao/ignore-tests.patch: Ignore tests known to fail on CACAO.
 * cacao/launcher.patch: For the 'java' command, create new thread depending on the current VM.
-* cacao/no-mmap-first-page.patch: Don't mmap the first memory page.
-* cacao/native-resolve.patch: Changes CACAO resolution order for native methods. (cacao PR128).
-* cacao/xxoption-warning.patch: Makes CACAO print warnings to stderr (cacao PR128).
-* cacao/openjdk7.patch: Turn on java.c functions for OpenJDK7.
-* cacao/no-strict-aliasing.patch: Turn off strict aliasing which causes an issue with the verifier
-  				  when building with GCC 4.4 (cacao PR129).
+* cacao/pr2032.patch: Implement JVM_FindClassFromCaller.
+* cacao/pr2349.patch: Allow CACAO to recognise OpenJDK 8.
 
 The following patches are only applied when building with the JamVM virtual machine:
-* jamvm/remove-sun.misc.Perf-debug-code.patch: Remove use of Hotspot specific
-  sun.misc.Perf debug JNI API inside of the OpenJDK classes that are
-  unsupported by JamVM.
 
-The following patches are to support Xrender pipeline (-Dsun.java2d.xrender):
+* jamvm/find_class_from_caller.patch: Implement JVM_FindClassFromCaller.
 
-* icedtea-xrender-xxx.patch: Numbered patches from xrender branch
-  http://hg.openjdk.java.net/xrender/xrender/jdk
+The following patches are only applied when building the PulseAudio sound provider:
 
-Obsolete Patches
-================
+* pulse-soundproperties.patch: Add disabled settings for the PulseAudio provider to sound.properties
 
-The following patches were applied early in the build to meet the Free Software guidelines and are also
-included in the tarball resulting from the dist-openjdk-fsg target:
+The following patches are only applied when SystemTap is found:
 
-* icedtea-idl.patch: Fix IDL licenses (PR141/S6565364).
-* icedtea-jscheme.patch: Replace use of jscheme.jar with Java alternative (PR140/S6695776).
-
-The following patches were previously applied, but have been made obsolete by
-changes to the OpenJDK code base and/or changes within IcedTea:
-
-* icedtea-certbundle.patch: Add support for certificates packaged by
-Fedora in /etc/pki: Methodology for certificates changed.
-* icedtea-color-profiles.patch: Add missing color profiles (S6523403):
-Included upstream in OpenJDK6 b10 and OpenJDK7 b28.
-* icedtea-hat-spl-gpl.patch: JHat has conflicting GPL/SPL licensing
-terms (PR143/S6695553): Included upstream in OpenJDK6 b10 and OpenJDK7
-b29.
-* icedtea-freetype.patch: Use detected freetype in $FT2_LIB and
-$FREETYPE_HEADERS_PATH: Obsoleted by icedtea-headers.patch.
-* icedtea-gervill.patch: Add support for Gervill from the overlay.
-* icedtea-liveconnect.patch: Add LiveConnect support to plugin: No
-longer developed.
-* icedtea-netx-applet-visibility.patch: Make applet classes
-package-private for the plugin: Obsoleted by
-icedtea-webservices.patch.
-* icedtea-xinerama.patch: Fix crash talking to second X screen
-(S6604044): Included upstream in OpenJDK6 b10 and OpenJDK7 b28.
-* icedtea-xslfix.patch: Fix malformed bytecodeInterpreterWithChecks
-XSL file (S6707485): Included upstream in OpenJDK7 b29/hs13.
-* openjdk-color.patch: Include Free java.awt.color and java.awt.image
-(S6662775): Included upstream in OpenJDK6 b06 and OpenJDK7 b28.
-* icedtea-license-headers.patch: Generate GPL header from automulti tool (PR148/S6713083).
-* icedtea-cc-interp-no-fer.patch: Replaced with icedtea-cc-interp-jvmti.patch, of which it is a subset.
-* icedtea-sound.patch: Remove proprietary MIDI support hooks.
-* icedtea-hotspot-6b12-7b24.patch: Upgrade to HotSpot from OpenJDK b24 (OpenJDK6 only).
-   - Never edit this patch.  It should be regenerated by unzipping the
-     openjdk6 build you're using into openjdk6, and the openjdk7 build
-     you want to use into openjdk, then running:
-       diff -ruNb openjdk{6,}/hotspot/src/share > icedtea-hotspot-6bXX-7bYY.patch
-       diff -ruNb openjdk{6,}/hotspot/src/os/linux >> icedtea-hotspot-6bXX-7bYY.patch
-* icedtea-bytecodeInterpreterWithChecks.patch: Same as icedtea-xslfix.patch (OpenJDK6 only, S6707485).
-* icedtea-eclipse-hotspot-6614100-7b24.patch: Fix Eclipse crash (S6614100). Fixed in OpenJDK7 b29/hs13.
-* icedtea-bytecodeInterpreter.patch: Replace fast opcodes with opc_default.
-* icedtea-core-build.patch: Add support for building IcedTea core VM.
-* icedtea-zero-build.patch: Add support for the zero assembler build.
+* systemtap-gcc-4.5.patch: Enable building SystemTap support on GCC >= 4.5 (PR476)
