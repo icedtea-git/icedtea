@@ -1,3 +1,11 @@
+2015-12-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2356: Update NEWS
+	* NEWS: Updated with IcedTea 2.x history
+	as opposed to partial details of the 2.0.0
+	release. Upstream details for OpenJDK 8 already
+	updated as part of bump to u60.
+
 2015-01-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2066: Unset OS before running OpenJDK build
