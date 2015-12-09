@@ -73,6 +73,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR1981: Support using the system installation of libpng
   - PR1994: make dist broken
   - PR2001: Synchronise HEAD tarball paths with release branch paths
+  - PR2066: Unset OS before running OpenJDK build
   - PR2095, RH1163501: 2048-bit DH upper bound too small for Fedora infrastructure
   - PR2126: Synchronise elliptic curves in sun.security.ec.NamedCurve with those listed by NSS
   - PR2199: Support giflib 5.1.0

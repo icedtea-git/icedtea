@@ -367,6 +367,12 @@ ICEDTEA_CONFIGURE += \
 	--disable-warnings-as-errors
 endif
 
+ICEDTEA_UNSET = \
+	JAVAC= \
+	JAVA_HOME= \
+	JDK_HOME= \
+	OS=
+
 ICEDTEA_ENV = \
 	LANG="C" \
 	PATH="$(BOOT_DIR)/bin:$(OS_PATH):$$PATH" \
@@ -382,8 +388,6 @@ ICEDTEA_ENV = \
 	LLVM_CFLAGS="$(LLVM_CFLAGS)" \
 	LLVM_LDFLAGS="$(LLVM_LDFLAGS)" \
 	LLVM_LIBS="$(LLVM_LIBS)" \
-	JAVA_HOME="" \
-	JDK_HOME="" \
 	QUIETLY="" \
 	ANT_RESPECT_JAVA_HOME="TRUE" \
 	DISTRIBUTION_ID="$(DIST_ID)" \
@@ -1553,7 +1557,7 @@ stamps/icedtea-configure.stamp: stamps/bootstrap-directory-symlink-stage2.stamp 
 	touch $@
 
 stamps/icedtea.stamp: stamps/icedtea-configure.stamp
-	$(ARCH_PREFIX) $(ICEDTEA_MAKE) \
+	$(ICEDTEA_UNSET) $(ARCH_PREFIX) $(ICEDTEA_MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C $(BUILD_OUTPUT_DIR) \
 	  $(ICEDTEA_BUILD_TARGET)
@@ -1625,7 +1629,7 @@ stamps/icedtea-debug-configure.stamp: stamps/bootstrap-directory-symlink-stage2.
 	touch $@
 
 stamps/icedtea-debug.stamp: stamps/icedtea-debug-configure.stamp
-	$(ARCH_PREFIX) $(ICEDTEA_MAKE) \
+	$(ICEDTEA_UNSET) $(ARCH_PREFIX) $(ICEDTEA_MAKE) \
 	  $(ICEDTEA_ENV) \
 	  -C $(DEBUG_BUILD_OUTPUT_DIR) \
 	  $(ICEDTEA_BUILD_TARGET)
@@ -1784,7 +1788,7 @@ stamps/icedtea-boot-configure.stamp: stamps/bootstrap-directory-symlink-stage1.s
 	touch $@
 
 stamps/icedtea-boot.stamp: stamps/icedtea-boot-configure.stamp
-	$(ARCH_PREFIX) $(ICEDTEA_MAKE) \
+	$(ICEDTEA_UNSET) $(ARCH_PREFIX) $(ICEDTEA_MAKE) \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C $(BOOT_BUILD_OUTPUT_DIR) \
 	  images
