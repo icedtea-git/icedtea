@@ -230,7 +230,8 @@ ICEDTEA_PATCHES = \
 	patches/memory-limits.patch \
 	patches/override-redirect-metacity.patch \
 	patches/rh1022017.patch \
-	patches/disable-intree-ec.patch
+	patches/disable-intree-ec.patch \
+	patches/pr2777.patch
 
 # Conditional patches
 

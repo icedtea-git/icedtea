@@ -1,3 +1,12 @@
+2015-12-23  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new patch.
+	* NEWS: Updated.
+	* patches/pr2777.patch:
+	Fix size_t/uintx mismatches apparent on s390
+	MIN/MAX template instantiations.
+
 2015-12-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2362: Update HACKING & fsg.sh.in

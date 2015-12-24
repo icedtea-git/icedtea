@@ -121,6 +121,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2738: java.lang.UnsatisfiedLinkError: no javalcms in java.library.path
   - PR2743: Remove bad AArch64 merge fragment
   - PR2759: LCMS library should be named javalcms, not lcms, to avoid potential conflicts with the system library
+  - PR2777: Fix MAX/MIN template usage on s390
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck
