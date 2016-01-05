@@ -1,3 +1,12 @@
+2015-10-15  Stefan Ring <stefan@complang.tuwien.ac.at>
+
+	PR2652: CACAO fails as a build VM for icedtea
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add CACAO patch for PR2652.
+	* README: Fix CACAO URL.
+	* patches/cacao/pr2652-classloader.patch:
+	Set classLoader field in java.lang.Class as expected by JDK.
+
 2015-11-20  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am,
