@@ -2832,16 +2832,17 @@ AC_DEFUN_ONCE([IT_ENABLE_INFINALITY],
 
 AC_DEFUN_ONCE([IT_HAS_NATIVE_HOTSPOT_PORT],
 [
+  AC_REQUIRE([IT_SET_ARCH_SETTINGS])
   AC_MSG_CHECKING([if a native HotSpot port is available for this architecture])
   has_native_hotspot_port=yes;
-  case "${host_cpu}" in
+  case "${INSTALL_ARCH_DIR}" in
     aarch64) ;;
-    arm64) ;;
-    i?86) ;;
+    amd64) ;;
+    i386) ;;
+    ppc64) ;;
+    ppc64le) ;;
     sparc) ;;
-    x86_64) ;;
-    powerpc64) ;;
-    powerpc64le) ;;
+    sparcv9) ;;
     *) has_native_hotspot_port=no;
   esac
   AC_MSG_RESULT([$has_native_hotspot_port])

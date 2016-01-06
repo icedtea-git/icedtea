@@ -1,3 +1,13 @@
+2016-01-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2684: AArch64 port not selected on architectures
+	where host_cpu != aarch64
+	* acinclude.m4:
+	(IT_HAS_NATIVE_HOTSPOT_PORT): Depend on
+	IT_SET_ARCH_SETTINGS and use values of
+	INSTALL_ARCH_DIR to determine port availability
+	rather than host_cpu.
+
 2015-10-15  Stefan Ring <stefan@complang.tuwien.ac.at>
 
 	PR2652: CACAO fails as a build VM for icedtea
