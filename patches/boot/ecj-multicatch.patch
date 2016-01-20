@@ -681,3 +681,28 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/PrincipalNam
                      // not canonicalized or no permission to do so, use old
                  }
                  nameParts[1] = hostName.toLowerCase(Locale.ENGLISH);
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java	2016-01-15 14:11:41.430617166 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java	2016-01-19 21:33:14.378797471 +0000
+@@ -173,14 +171,20 @@
+                     clientVersion, serverVersion, encodedSecret),
+                     generator);
+             return kg.generateKey();
+-        } catch (InvalidAlgorithmParameterException |
+-                NoSuchAlgorithmException iae) {
++        } catch (InvalidAlgorithmParameterException iae) {
+             // unlikely to happen, otherwise, must be a provider exception
+             if (debug != null && Debug.isOn("handshake")) {
+                 System.out.println("RSA premaster secret generation error:");
+                 iae.printStackTrace(System.out);
+             }
+             throw new RuntimeException("Could not generate premaster secret", iae);
++        } catch (NoSuchAlgorithmException nsae) {
++            // unlikely to happen, otherwise, must be a provider exception
++            if (debug != null && Debug.isOn("handshake")) {
++                System.out.println("RSA premaster secret generation error:");
++                nsae.printStackTrace(System.out);
++            }
++            throw new RuntimeException("Could not generate premaster secret", nsae);
+         }
+     }
+ 

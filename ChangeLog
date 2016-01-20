@@ -1,3 +1,29 @@
+2016-01-19  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am,
+	(JDK_UPDATE_VERSION): Bump to 95.
+	(BUILD_VERSION): Reset to b00.
+	(CORBA_CHANGESET): Update to icedtea-2.6.4.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Update and set release date.
+	* configure.ac: Bump to 2.6.4.
+	* hotspot.map.in: Update to icedtea-2.6.4.
+	* patches/boot/ecj-diamond.patch:
+	Regenerated. Add new case in
+	sun.reflect.annotation.AnnotationInvocationHandler.
+	* patches/boot/ecj-multicatch.patch:
+	Add new case in sun.security.ssl.RSAClientKeyExchange
+
 2015-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	* NEWS: Add 2.6.4 section.
