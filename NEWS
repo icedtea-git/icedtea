@@ -14,6 +14,44 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.7.0 (201X-XX-XX):
 
+New in release 2.6.4 (2016-01-19):
+
+* Security fixes
+  - S8059054, CVE-2016-0402: Better URL processing
+  - S8130710, CVE-2016-0448: Better attributes processing
+  - S8132210: Reinforce JMX collector internals
+  - S8132988: Better printing dialogues
+  - S8133962, CVE-2016-0466: More general limits
+  - S8137060: JMX memory management improvements
+  - S8139012: Better font substitutions
+  - S8139017, CVE-2016-0483: More stable image decoding
+  - S8140543, CVE-2016-0494: Arrange font actions
+  - S8143185: Cleanup for handling proxies
+  - S8143941, CVE-2015-8126, CVE-2015-8472: Update splashscreen displays
+  - S8144773, CVE-2015-7575: Further reduce use of MD5 (SLOTH)
+* Import of OpenJDK 7 u95 build 0
+  - S7167988: PKIX CertPathBuilder in reverse mode doesn't work if more than one trust anchor is specified
+  - S8068761: [TEST_BUG] java/nio/channels/ServerSocketChannel/AdaptServerSocket.java failed with SocketTimeoutException
+  - S8074068: Cleanup in src/share/classes/sun/security/x509/
+  - S8075773: jps running as root fails after the fix of JDK-8050807
+  - S8081297: SSL Problem with Tomcat
+  - S8131181: Increment minor version of HSx for 7u95 and initialize the build number
+  - S8132082: Let OracleUcrypto accept RSAPrivateKey
+  - S8134605: Partial rework of the fix for 8081297
+  - S8134861: XSLT: Extension func call cause exception if namespace URI contains partial package name
+  - S8135307: CompletionFailure thrown when calling FieldDoc.type, if the field's type is missing
+  - S8138716: (tz) Support tzdata2015g
+  - S8140244: Port fix of JDK-8075773 to MacOSX
+  - S8141213: [Parfait]Potentially blocking function GetArrayLength called in JNI critical region at line 239 of jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c in function GET_ARRAYS
+  - S8141287: Add MD5 to jdk.certpath.disabledAlgorithms - Take 2
+  - S8142928: [TEST_BUG] sun/security/provider/certpath/ReverseBuilder/ReverseBuild.java 8u71 failure
+  - S8143132: L10n resource file translation update
+  - S8144955: Wrong changes were pushed with 8143942
+  - S8145551: Test failed with Crash for Improved font lookups
+  - S8147466: Add -fno-strict-overflow to IndicRearrangementProcessor{,2}.cpp
+* Backports
+  - S8140244: Port fix of JDK-8075773 to AIX
+
 New in release 2.6.3 (2015-11-13):
 
 * Security fixes
