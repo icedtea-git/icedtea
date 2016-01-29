@@ -5,24 +5,6 @@ echo "Further liberating OpenJDK..."
 # PRx denotes bug x in the IcedTea bug database (http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=x)
 # Sx denotes bug x in the Sun/Oracle bug database (https://bugs.openjdk.java.net/browse/JDK-X)
 
-# PR146/S6713083
-# Remove binaries
-rm -vf \
-  openjdk/jdk/test/sun/management/jmxremote/bootstrap/solaris-amd64/launcher \
-  openjdk/jdk/test/sun/management/jmxremote/bootstrap/solaris-sparcv9/launcher \
-  openjdk/jdk/test/sun/management/jmxremote/bootstrap/linux-amd64/launcher
-
-rm -vf \
-  openjdk/jdk/test/java/nio/channels/spi/SelectorProvider/inheritedChannel/lib/solaris-amd64/libLauncher.so
-
-# BEGIN Debian/Ubuntu additions
-
-# binary files
-rm -vf \
-  openjdk/jdk/test/sun/net/idn/*.spp
-
-# END Debian/Ubuntu additions
-
 echo "Removing support for proprietary SNMP plug"
 rm -rvf openjdk/jdk/src/share/classes/sun/management/snmp
 rm -rvf openjdk/jdk/src/share/classes/com/sun/jmx/snmp

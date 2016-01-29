@@ -1,3 +1,29 @@
+2016-01-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Bump to icedtea-3.0.0pre08.
+	* patches/pr2777.patch: Removed; upstream.
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-3.0.0pre08 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Remove pr2777 patch.
+	* NEWS: Updated.
+	* configure.ac: Bump to 3.0.0pre08.
+	* fsg.sh.in: Remove deletions of files which have
+	now been deleted upstream (PR2767)
+	* hotspot.map.in: Update to icedtea-3.0.0pre08 tag.
+
 2015-12-23  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* Makefile.am:

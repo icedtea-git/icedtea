@@ -27,6 +27,7 @@ New in release 3.0.0 (2015-XX-XX):
   - S8087218, PR2740: Constant fold loads from final instance fields in VM anonymous classes
   - S8139932, PR2739: Typo in makefile changes for 8043805 [Allow using a system-installed libjpeg]
   - S8140483, PR2740: Atomic*FieldUpdaters final fields should be trusted
+  - S8140620, PR2769: Find and load default.sf2 as the default soundbank on Linux
 * Bug fixes
   - S8041658: Use of -fdevirtualize on macroAssembler_x86.o (via -O2) with gcc 4.9.0 creates broken VM
   - PR94: empty install target in Makefile.am
@@ -44,6 +45,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR1359: Check for /usr/lib64 JVMs and generic JPackage alternative
   - PR1364: Replace hgforest support
   - PR1367: Support using the system installation of LCMS
+  - PR1368: Ensure debug data is available for all libraries and binaries without redundant files
   - PR1369: Remove outdated bootstrap configure tests or make them fail on error
   - PR1377: Forwardport javac detection / usability test from IcedTea 2.x
   - PR1379: Add build support for Zero AArch64
@@ -71,11 +73,13 @@ New in release 3.0.0 (2015-XX-XX):
   - PR1979: Support using the system installation of libjpeg
   - PR1980: Support using the system installation of giflib
   - PR1981: Support using the system installation of libpng
+  - PR1983: Support using the system installation of NSS with the SunEC provider
   - PR1994: make dist broken
   - PR2001: Synchronise HEAD tarball paths with release branch paths
   - PR2066: Unset OS before running OpenJDK build
   - PR2095, RH1163501: 2048-bit DH upper bound too small for Fedora infrastructure
   - PR2126: Synchronise elliptic curves in sun.security.ec.NamedCurve with those listed by NSS
+  - PR2127: SunEC provider crashes when built using system NSS
   - PR2199: Support giflib 5.1.0
   - PR2212: DGifCloseFile call should check the return value, not the error code, for failure
   - PR2227: giflib 5.1 conditional excludes 6.0, 7.0, etc.
@@ -83,6 +87,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2248: HotSpot tarball fails verification after download
   - PR2256: Add SystemTap tests
   - PR2257: clean-extract-nashorn rule is never run
+  - PR2321: Checksum of policy JAR files changes on every build
   - PR2329: jamvm parallel unpack failures
   - PR2339: Fail early if there is no native HotSpot JIT & all other options are disabled
   - PR2348: Avoid following symlinks for CACAO and JamVM patches
@@ -112,6 +117,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2448: Install TRADEMARK, COPYING and ChangeLog as RPM spec file does
   - PR2454: install-data-local needs to check that classes.jsa actually exists
   - PR2456: Installation path for hotspot_gc.stp is wrong, due to changed j2sdk-image location
+  - PR2459: Policy JAR files should be timestamped with the date of the policy file they hold
   - PR2511: Reset success following calls in LayoutManager.cpp
   - PR2631: jvm.cfg missing for ppc64le
   - PR2633: s390 builds still fail as BUILD_NUM_BITS is never set
@@ -121,7 +127,9 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2738: java.lang.UnsatisfiedLinkError: no javalcms in java.library.path
   - PR2743: Remove bad AArch64 merge fragment
   - PR2759: LCMS library should be named javalcms, not lcms, to avoid potential conflicts with the system library
+  - PR2767: Remove remaining rogue binaries from OpenJDK tree
   - PR2777: Fix MAX/MIN template usage on s390
+  - PR2815: Race condition in SunEC provider with system NSS
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck
