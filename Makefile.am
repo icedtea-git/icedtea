@@ -229,8 +229,7 @@ ECC_CHECK_SRCS = $(top_srcdir)/test/standalone/TestEllipticCurveCryptoSupport.ja
 ICEDTEA_PATCHES = \
 	patches/memory-limits.patch \
 	patches/override-redirect-metacity.patch \
-	patches/rh1022017.patch \
-	patches/disable-intree-ec.patch
+	patches/rh1022017.patch
 
 # Conditional patches
 
@@ -260,10 +259,23 @@ ICEDTEA_PATCHES += \
 	patches/jamvm/find_class_from_caller.patch
 endif
 
+if !ENABLE_SUNEC
+ICEDTEA_PATCHES += \
+	patches/disable-intree-ec.patch
+endif
+
 if ENABLE_NSS
+if ENABLE_SUNEC
+ICEDTEA_PATCHES += patches/nss-config-with-sunec.patch
+else
 ICEDTEA_PATCHES += patches/nss-config.patch
+endif
+else
+if ENABLE_SUNEC
+ICEDTEA_PATCHES += patches/nss-not-enabled-config-with-sunec.patch
 else
 ICEDTEA_PATCHES += patches/nss-not-enabled-config.patch
+endif
 endif
 
 ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
@@ -345,6 +357,14 @@ ICEDTEA_CONFIGURE += \
 	--with-giflib=bundled
 endif
 
+if ENABLE_SUNEC
+ICEDTEA_CONFIGURE += \
+	--enable-system-nss
+else
+ICEDTEA_CONFIGURE += \
+	--disable-system-nss
+endif
+
 if ZERO_BUILD
 ICEDTEA_CONFIGURE += \
 	--with-jvm-variants=zero
@@ -390,7 +410,6 @@ ICEDTEA_ENV = \
 	DERIVATIVE_ID="$(ICEDTEA_NAME) $(PACKAGE_VERSION)$(ICEDTEA_REV)" \
 	DEBUG_CLASSFILES="true" \
 	DEBUG_BINARIES="true" \
-	DISABLE_INTREE_EC="true" \
 	LOG="debug" SCTP_WERROR= \
 	POST_STRIP_CMD= STRIP_POLICY="no_strip" \
 	JOBS="$(PARALLEL_JOBS)"
@@ -457,6 +476,12 @@ if USE_SYSTEM_GIF
 ICEDTEA_ENV += \
 	GIF_LIBS="${GIF_LIBS}" \
 	GIF_CFLAGS="${GIF_CFLAGS}"
+endif
+
+if ENABLE_SUNEC
+ICEDTEA_ENV += \
+	NSS_LIBS="${SUNEC_LIBS}" \
+	NSS_CFLAGS="${SUNEC_CFLAGS}"
 endif
 
 # OpenJDK boot build environment.

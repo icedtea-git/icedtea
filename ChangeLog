@@ -1,5 +1,75 @@
 2016-01-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR1983: Support using the system installation
+	of NSS with the SunEC provider
+	* INSTALL: Fix header from 'IcedTea7' to 'IcedTea'.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Make disable-intree-ec patch
+	conditional on whether or not the SunEC provider
+	is enabled. Add new variants of the NSS/PKCS11
+	configuration patch for cases where it is not applied.
+	(ICEDTEA_CONFIGURE): Pass --enable-system-nss or
+	--disable-system-nss, depending on whether or
+	not the SunEC provider is enabled.
+	(ICEDTEA_ENV): Remove DISABLE_INTREE_EC which
+	is not applicable in OpenJDK 8.
+	* README: Fix header from 'IcedTea7' to 'IcedTea'.
+	* patches/nss-config-with-sunec.patch,
+	* patches/nss-not-enabled-config-with-sunec.patch:
+	New variants of nss-config.patch and nss-not-enabled-config.patch
+	which apply when the SunEC provider is also enabled.
+
+2015-07-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* INSTALL: Document the SunEC provider.
+
+2014-05-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1762: Undefined references when building with NSS 3.16.1
+	* acinclude.m4:
+	(IT_ENABLE_SUNEC): For NSS >= 3.16.1, add -lfreebl
+	to SUNEC_LIBS, not SUNEC_CFLAGS, and use NSS_LIBS as
+	the base, not NSS_SOFTOKN_LIBS.
+
+2014-04-23  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1742: Allow SunEC provider to be built with changes
+	in NSS >= 3.16.1
+	* Makefile.am:
+	(ICEDTEA_ENV): Use SUNEC_LIBS and SUNEC_CFLAGS
+	instead of NSS_LIBS and NSS_CFLAGS respectively.
+	* acinclude.m4:
+	(IT_ENABLE_SUNEC): Use SUNEC_CFLAGS and SUNEC_LIBS
+	for clarity as NSS_CFLAGS and NSS_LIBS are also set
+	by the NSS detection.
+
+2014-04-18  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1699: Support building the SunEC provider
+	with system NSS
+	* Makefile.am:
+	(ICEDTEA_ENV): Set NSS_LIBS and NSS_CFLAGS
+	when ENABLE_SUNEC is set.
+	* acinclude.m4:
+	(IT_LOCATE_NSS): Fix wording to make it clear that
+	this is the PKCS11 provider, using NSS as the
+	implementation.
+	(IT_ENABLE_SUNEC): Allow the Sun elliptic curve
+	crypto provider to be enabled.
+	* configure.ac:
+	Replace IT_LOCATE_NSS with IT_ENABLE_SUNEC (which
+	depends on the former).
+	* fsg.sh.in:
+	Only delete the SunEC implementation code at this
+	level. This is the part that is legally dubious,
+	due to the use of many more elliptic curves than
+	those provided by the NSS version.
+	* remove-intree-libraries.sh.in:
+	Include the remaining SunEC deletion from fsg.sh
+	here and make it optional.
+
+2016-01-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2768: Move SystemTap GCC 4.5 patch to OpenJDK
 	tree or discard if no longer needed
 	* patches/systemtap-gcc-4.5.patch:

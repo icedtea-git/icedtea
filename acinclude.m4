@@ -1396,10 +1396,10 @@ AC_SUBST([DEFAULT_LIBDIR], $it_cv_default_libdir)
 AC_DEFUN_ONCE([IT_LOCATE_NSS],
 [
 AC_REQUIRE([IT_OBTAIN_DEFAULT_LIBDIR])
-AC_MSG_CHECKING([whether to enable the NSS-based security provider])
+AC_MSG_CHECKING([whether to enable the PKCS11 crypto provider using NSS])
 AC_ARG_ENABLE([nss],
 	      [AS_HELP_STRING([--enable-nss],
-	      		      [Enable inclusion of NSS security provider])],
+	      		      [Enable inclusion of PKCS11 crypto provider using NSS])],
 	      [ENABLE_NSS="${enableval}"], [ENABLE_NSS='no'])
 AM_CONDITIONAL([ENABLE_NSS], [test x$ENABLE_NSS = xyes])
 if test "x${ENABLE_NSS}" = "xyes"
@@ -1943,3 +1943,40 @@ AC_DEFUN_ONCE([IT_HAS_NATIVE_HOTSPOT_PORT],
   AC_MSG_RESULT([$has_native_hotspot_port])
 ])
 
+AC_DEFUN_ONCE([IT_ENABLE_SUNEC],
+[
+  AC_REQUIRE([IT_LOCATE_NSS])
+  AC_MSG_CHECKING([whether to enable the Sun elliptic curve crypto provider])
+  AC_ARG_ENABLE([sunec],
+                [AS_HELP_STRING(--enable-sunec,build the Sun elliptic curve crypto provider [[default=no]])],
+  [
+    case "${enableval}" in
+      yes)
+        enable_sunec=yes
+        ;;
+      *)
+        enable_sunec=no
+        ;;
+    esac
+  ],
+  [
+    enable_sunec=no
+  ])
+  AC_MSG_RESULT([$enable_sunec])
+  AM_CONDITIONAL([ENABLE_SUNEC], test x"${enable_sunec}" = "xyes")
+  if test x"${enable_sunec}" = "xyes"; then
+    PKG_CHECK_MODULES(NSS_SOFTOKN, nss-softokn >= 3.16.1, [NSS_SOFTOKN_FOUND=yes], [NSS_SOFTOKN_FOUND=no])
+    PKG_CHECK_MODULES(NSS_JAVA, nss-java, [NSS_JAVA_FOUND=yes], [NSS_JAVA_FOUND=no])
+    if test "x${NSS_SOFTOKN_FOUND}" = "xyes"; then
+      SUNEC_CFLAGS=$NSS_SOFTOKN_CFLAGS;
+      SUNEC_LIBS="$NSS_LIBS -lfreebl";
+   elif test "x${NSS_JAVA_FOUND}" = "xyes"; then
+      SUNEC_CFLAGS="$NSS_JAVA_CFLAGS -DLEGACY_NSS";
+      SUNEC_LIBS=$NSS_JAVA_LIBS;
+    else
+      AC_MSG_ERROR([Could not find a suitable NSS installation to use for the SunEC provider.])
+    fi
+    AC_SUBST(SUNEC_CFLAGS)
+    AC_SUBST(SUNEC_LIBS)
+  fi
+])

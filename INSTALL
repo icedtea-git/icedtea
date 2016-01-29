@@ -1,5 +1,5 @@
-Building IcedTea7
-=================
+Building IcedTea
+================
 
 For convenience we've provided make targets that automatically
 download, extract and patch the source code from the IcedTea forest
@@ -159,6 +159,7 @@ These are documented fully in the relevant section below.
 * --with-hotspot-build: The HotSpot to use, defaulting to 'original' i.e. hs14 as bundled with OpenJDK.
 * --with-additional-vms=vm-list: Additional VMs to build using the system described
   below.
+* --enable-sunec: Build the SunEC crypto provider against system NSS.
 
 Testing
 =======
@@ -205,8 +206,8 @@ example, if you plan to install the resulting build in
 /usr/lib/jvm/java-1.6.0-openjdk, then you should specify
 --with-abs-install-dir=/usr/lib/jvm/java-1.6.0-openjdk.
 
-NSS Security Provider
-=====================
+The NSS PKCS11 Security Provider and Elliptic Curve Cryptography
+================================================================
 
 OpenJDK includes an NSS-based security provider in the form of
 sun.security.pkcs11.SunPKCS11.  However, as this needs to know the
@@ -216,6 +217,14 @@ it can simplify the process of enabling this provider by generating
 a configuration file for the NSS provider.  If --enable-nss is specified,
 this configuration will be turned on in lib/security/java.security.
 This can also be done manually at a later date.
+
+The PKCS11 option was originally added as it was the only way that
+elliptic curve cryptography support could be provided. From OpenJDK 7
+onwards, there is another provider, SunEC. This also utilises NSS, but
+directly via its ECC functions rather than the PKCS11 interface.
+Specifying --enable-sunec will build this provider, linked against
+NSS. Version 3.16.1 or later of NSS is required so that the
+appropriate softokn ABI is available to the provider.
 
 CACAO
 =====

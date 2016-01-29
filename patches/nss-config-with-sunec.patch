@@ -1,0 +1,11 @@
+diff -Nru openjdk.orig/jdk/src/share/lib/security/java.security-linux openjdk/jdk/src/share/lib/security/java.security-linux
+--- openjdk.orig/jdk/src/share/lib/security/java.security-linux	2015-10-27 19:19:15.000000000 +0000
++++ openjdk/jdk/src/share/lib/security/java.security-linux	2016-01-29 15:41:59.434852299 +0000
+@@ -74,6 +74,7 @@
+ security.provider.7=com.sun.security.sasl.Provider
+ security.provider.8=org.jcp.xml.dsig.internal.dom.XMLDSigRI
+ security.provider.9=sun.security.smartcardio.SunPCSC
++security.provider.10=sun.security.pkcs11.SunPKCS11 ${java.home}/lib/security/nss.cfg
+ 
+ #
+ # Sun Provider SecureRandom seed source.
