@@ -1,5 +1,19 @@
 2016-01-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2804: test/tapset/jstaptest.pl should be executable
+	* Makefile.am:
+	(check-tapset-probes): Check that Perl is available
+	and, if, so use it to invoke the script. Replace
+	BUILD_OUTPUT_DIR with the OpenJDK 8 equivalent,
+	BUILD_IMAGE_DIR.
+	(check-tapset-jstack): Likewise.
+	* NEWS: Updated.
+	* configure.ac:
+	Check for Perl if SystemTap is found, so the
+	tests can be run if required.
+
+2016-01-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR1983: Support using the system installation
 	of NSS with the SunEC provider
 	* INSTALL: Fix header from 'IcedTea7' to 'IcedTea'.

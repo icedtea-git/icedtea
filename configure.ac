@@ -252,6 +252,14 @@ public:
   inst.method(24);
 ]])], [AC_MSG_RESULT([yes])], [SDT_H_FOUND='no'; AC_MSG_WARN([systemtap sdt.h or g++ too old])])
 AC_LANG_POP([C++])
+if test "x${SDT_H_FOUND}" = "xyes"; then
+ AC_PATH_TOOL([PERL],[perl])
+ if test x"${PERL}" = x ; then
+   AC_MSG_WARN([Perl not found in PATH; SystemTap tests will not be able to run])
+ fi
+ AC_SUBST(PERL)
+fi
+
 AM_CONDITIONAL([ENABLE_SYSTEMTAP], [test x$SDT_H_FOUND = xyes])
 
 AC_MSG_CHECKING([for absolute java home install dir])

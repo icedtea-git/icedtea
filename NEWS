@@ -130,6 +130,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2767: Remove remaining rogue binaries from OpenJDK tree
   - PR2768: Move SystemTap GCC 4.5 patch to OpenJDK tree or discard if no longer needed
   - PR2777: Fix MAX/MIN template usage on s390
+  - PR2804: test/tapset/jstaptest.pl should be executable
   - PR2815: Race condition in SunEC provider with system NSS
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
