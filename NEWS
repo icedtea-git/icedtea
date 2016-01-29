@@ -128,6 +128,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2743: Remove bad AArch64 merge fragment
   - PR2759: LCMS library should be named javalcms, not lcms, to avoid potential conflicts with the system library
   - PR2767: Remove remaining rogue binaries from OpenJDK tree
+  - PR2768: Move SystemTap GCC 4.5 patch to OpenJDK tree or discard if no longer needed
   - PR2777: Fix MAX/MIN template usage on s390
   - PR2815: Race condition in SunEC provider with system NSS
   - Don't substitute 'j' for '-j' inside -I directives

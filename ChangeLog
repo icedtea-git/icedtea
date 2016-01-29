@@ -1,3 +1,13 @@
+2016-01-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2768: Move SystemTap GCC 4.5 patch to OpenJDK
+	tree or discard if no longer needed
+	* patches/systemtap-gcc-4.5.patch:
+	Removed; seems to be no longer needed.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove above patch.
+	* NEWS: Updated.
+
 2016-01-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	Bump to icedtea-3.0.0pre08.
