@@ -2367,7 +2367,7 @@ clean-ecccheck:
 
 stamps/check-ecc.stamp: stamps/ecccheck.stamp stamps/icedtea.stamp
 	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
-	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestEllipticCurveCryptoSupport no ; \
+	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestEllipticCurveCryptoSupport yes ; \
 	fi
 	mkdir -p stamps
 	touch $@

@@ -1,5 +1,13 @@
 2016-01-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR1983: Support using the system installation
+	of NSS with the SunEC provider
+	* Makefile.am:
+	(check-ecc): Argument passed to the test should
+	now be "yes".
+
+2016-01-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2804: test/tapset/jstaptest.pl should be executable
 	* Makefile.am:
 	(check-tapset-jstack): Actually replace BUILD_OUTPUT_DIR
