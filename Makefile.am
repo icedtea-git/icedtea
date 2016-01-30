@@ -209,6 +209,12 @@ TEST_SUITES = $(HOTSPOT_TEST_SUITE) $(JDK_TEST_SUITE) $(LANGTOOLS_TEST_SUITE)
 TESTS_TO_RUN = jtreg $(addprefix check-,$(TEST_SUITES))
 endif
 
+if ENABLE_SUNEC
+ECC_RESULT = yes
+else
+ECC_RESULT = no
+endif
+
 # Target to ensure a patched OpenJDK tree containing Zero & Shark
 # and any overlays is available in $(abs_top_builddir)/openjdk
 OPENJDK_TREE = stamps/overlay.stamp
@@ -2367,7 +2373,7 @@ clean-ecccheck:
 
 stamps/check-ecc.stamp: stamps/ecccheck.stamp stamps/icedtea.stamp
 	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
-	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestEllipticCurveCryptoSupport yes ; \
+	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestEllipticCurveCryptoSupport $(ECC_RESULT) ; \
 	fi
 	mkdir -p stamps
 	touch $@
