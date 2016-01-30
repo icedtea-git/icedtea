@@ -1969,7 +1969,7 @@ AC_DEFUN_ONCE([IT_ENABLE_SUNEC],
     PKG_CHECK_MODULES(NSS_JAVA, nss-java, [NSS_JAVA_FOUND=yes], [NSS_JAVA_FOUND=no])
     if test "x${NSS_SOFTOKN_FOUND}" = "xyes"; then
       SUNEC_CFLAGS=$NSS_SOFTOKN_CFLAGS;
-      SUNEC_LIBS="$NSS_LIBS -lfreebl";
+      SUNEC_LIBS="-lfreebl $NSS_LIBS";
    elif test "x${NSS_JAVA_FOUND}" = "xyes"; then
       SUNEC_CFLAGS="$NSS_JAVA_CFLAGS -DLEGACY_NSS";
       SUNEC_LIBS=$NSS_JAVA_LIBS;

@@ -1,5 +1,14 @@
 2016-01-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2825: Placement of -lfreebl matters when
+	using bfd linker
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_SUNEC): Move -lfreebl to start of
+	SUNEC_LIBS.
+
+2016-01-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2804: test/tapset/jstaptest.pl should be executable
 	* Makefile.am:
 	(check-tapset-probes): Check that Perl is available
