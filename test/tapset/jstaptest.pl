@@ -597,7 +597,7 @@ sub process_args {
                 || ($opt_p && $opt_j)); # -p and -j are mutually exclusive.
     if ($opt_B && $opt_A) {
         die "Directory $opt_B not found." unless (-d $opt_B);
-        die "Directory $opt_B/j2sdk-image/tapset not found.\nTry rebuilding Icedtea with systemtap support.\n"
+        die "Directory $opt_B/j2sdk-image/tapset not found.\nTry rebuilding IcedTea with systemtap support.\n"
                 unless (-d "$opt_B/j2sdk-image/tapset");
         push(@tapset_dirs, "-I$opt_B/j2sdk-image/tapset");
         set_java_vars("$opt_B/j2sdk-image", $opt_A);

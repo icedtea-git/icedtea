@@ -1,5 +1,14 @@
 2016-01-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2804: test/tapset/jstaptest.pl should be executable
+	* Makefile.am:
+	(check-tapset-jstack): Actually replace BUILD_OUTPUT_DIR
+	as mentioned in previous commit.
+	* test/tapset/jstaptest.pl: Fix capitalisation of
+	"IcedTea".
+
+2016-01-29  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2825: Placement of -lfreebl matters when
 	using bfd linker
 	* NEWS: Updated.

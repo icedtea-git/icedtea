@@ -2327,7 +2327,7 @@ if ENABLE_SYSTEMTAP
 	  echo "ERROR: Perl not found"; exit -1; \
 	fi
 	${PERL} $(abs_top_srcdir)/test/tapset/jstaptest.pl \
-	  -B $(BUILD_OUTPUT_DIR) -A $(BUILD_ARCH_DIR) \
+	  -B $(BUILD_IMAGE_DIR) -A $(BUILD_ARCH_DIR) \
 	  -S $(abs_top_srcdir)/test/tapset \
 	  -a test/check-stap.log -j
 endif
