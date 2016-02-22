@@ -12,10 +12,11 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.0.0 (2015-XX-XX):
 
-* Rebase on jdk8u60-b24
+* Rebase on jdk8u72-b15
 * Backports
   - S4890063, PR2304, RH1214835: HPROF: default text truncated when using doe=n option
   - S8000650, PR2462: unpack200.exe should check gzip crc
+  - S8031668, PR2842: TOOLCHAIN_FIND_COMPILER unexpectedly resolves symbolic links
   - S8035341: Allow using a system installed libpng
   - S8038392: Generating prelink cache breaks JAVA 'jinfo' utility normal behavior
   - S8042159: Allow using a system-installed lcms2
@@ -28,6 +29,7 @@ New in release 3.0.0 (2015-XX-XX):
   - S8139932, PR2739: Typo in makefile changes for 8043805 [Allow using a system-installed libjpeg]
   - S8140483, PR2740: Atomic*FieldUpdaters final fields should be trusted
   - S8140620, PR2769: Find and load default.sf2 as the default soundbank on Linux
+  - S8148351, PR2842: Only display resolved symlink for compiler, do not change path
 * Bug fixes
   - S8041658: Use of -fdevirtualize on macroAssembler_x86.o (via -O2) with gcc 4.9.0 creates broken VM
   - PR94: empty install target in Makefile.am
@@ -133,6 +135,14 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2804: test/tapset/jstaptest.pl should be executable
   - PR2815: Race condition in SunEC provider with system NSS
   - PR2825: Placement of -lfreebl matters when using bfd linker
+  - PR2841: Parallelism issues resulting from PR2459
+  - PR2853: Fix build for aarch64/zero
+  - PR2853: Remaining miscellaneous synchronisation changes from aarch64/jdk8u
+  - PR2853: Remove AArch64-specific code in generateOptoStub.cpp.
+  - PR2853: Remove some AArch64-specific code in share/.
+  - PR2853: Remove some unnecessary divergences from jdk8u.
+  - PR2853: Revert AArch64 jvm.cfg divergence
+  - PR2853: Revert changes to libpng source code now 8078245 is in place.
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck
