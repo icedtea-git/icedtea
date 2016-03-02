@@ -1,5 +1,5 @@
-/* org_classpath_icedtea_pulseaudio_Operation.c
- Copyright (C) 2008 Red Hat, Inc.
+/* org_classpath_icedtea_pulseaudio_EventLoop.c
+ Copyright (C) 2011 Red Hat, Inc.
 
  This file is part of IcedTea.
 
@@ -35,64 +35,27 @@
  exception statement from your version.
  */
 
-#include "org_classpath_icedtea_pulseaudio_Operation.h"
-
-#include "jni-common.h"
 #include <pulse/pulseaudio.h>
 
-#define SET_OP_ENUM(env, clz, name) \
-    SET_JAVA_STATIC_LONG_FIELD_TO_PA_ENUM(env, clz, OPERATION, name)
+#include "org_classpath_icedtea_pulseaudio_ContextEvent.h"
+#include "jni-common.h"
+
+#define SET_CONTEXT_ENUM(env, clz, name) \
+    SET_JAVA_STATIC_LONG_FIELD_TO_PA_ENUM(env, clz, CONTEXT, name)
 
 /*
- * Class:     org_classpath_icedtea_pulseaudio_Operation
+ * Class:     org_classpath_icedtea_pulseaudio_ContextEvent
  * Method:    init_constants
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Operation_init_1constants
+JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_ContextEvent_init_1constants
   (JNIEnv *env, jclass clz) {
-    SET_OP_ENUM(env, clz, RUNNING);
-    SET_OP_ENUM(env, clz, DONE);
-    SET_OP_ENUM(env, clz, CANCELLED);
+    SET_CONTEXT_ENUM(env, clz, UNCONNECTED);
+    SET_CONTEXT_ENUM(env, clz, CONNECTING);
+    SET_CONTEXT_ENUM(env, clz, AUTHORIZING);
+    SET_CONTEXT_ENUM(env, clz, SETTING_NAME);
+    SET_CONTEXT_ENUM(env, clz, READY);
+    SET_CONTEXT_ENUM(env, clz, FAILED);
+    SET_CONTEXT_ENUM(env, clz, TERMINATED);
 }
 
-
-/*
- * Class:     org_classpath_icedtea_pulseaudio_Operation
- * Method:    native_ref
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Operation_native_1ref
-(JNIEnv* env, jobject obj) {
-
-    pa_operation* operation = (pa_operation*) getJavaPointer(env, obj, "operationPointer");
-    assert(operation);
-    pa_operation_ref(operation);
-
-}
-
-/*
- * Class:     org_classpath_icedtea_pulseaudio_Operation
- * Method:    native_unref
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Operation_native_1unref
-(JNIEnv* env, jobject obj) {
-
-    pa_operation* operation = (pa_operation*) getJavaPointer(env, obj, "operationPointer");
-    assert(operation);
-    pa_operation_unref(operation);
-}
-
-/*
- * Class:     org_classpath_icedtea_pulseaudio_Operation
- * Method:    native_get_state
- * Signature: ()I
- */
-JNIEXPORT jlong JNICALL Java_org_classpath_icedtea_pulseaudio_Operation_native_1get_1state
-(JNIEnv *env, jobject obj) {
-
-    pa_operation* operation = (pa_operation*) getJavaPointer(env, obj, "operationPointer");
-    assert(operation);
-    jlong state = pa_operation_get_state(operation);
-    return state;
-}

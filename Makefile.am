@@ -1937,6 +1937,8 @@ stamps/pulse-java-headers.stamp: stamps/pulse-java-class.stamp
 	  org.classpath.icedtea.pulseaudio.PulseAudioSourcePort
 	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
 	  org.classpath.icedtea.pulseaudio.PulseAudioTargetPort
+	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
+	  -J-Xbootclasspath/p:$(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.ContextEvent;
 	mkdir -p stamps
 	touch $@
 

@@ -106,7 +106,7 @@ static void context_change_callback(pa_context* context, void* userdata) {
      */
     jclass cls = (*env)->GetObjectClass(env, obj);
     assert(cls);
-    jmethodID mid = (*env)->GetMethodID(env, cls, "update", "(I)V");
+    jmethodID mid = (*env)->GetMethodID(env, cls, "update", "(J)V");
     assert(mid);
     (*env)->CallVoidMethod(env, obj, mid, pa_context_get_state(context));
     return;
@@ -281,7 +281,7 @@ JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_EventLoop_native_1s
     } else {
         pa_operation_unref(o);
     }
-    
+
     pa_context_unref(context);
     (*env)->DeleteGlobalRef(env, java_context->obj);
 

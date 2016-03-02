@@ -240,6 +240,23 @@ static void stream_suspended_callback(pa_stream *stream, void *userdata) {
 
 }
 
+#define SET_STREAM_STATE_ENUM(env, clz, state_name) \
+    SET_JAVA_STATIC_LONG_FIELD_TO_PA_ENUM(env, clz, STREAM, state_name)
+
+/*
+ * Class:     org_classpath_icedtea_pulseaudio_Stream
+ * Method:    init_constants
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_init_1constants
+  (JNIEnv *env, jclass clz) {
+    SET_STREAM_STATE_ENUM(env, clz, UNCONNECTED);
+    SET_STREAM_STATE_ENUM(env, clz, CREATING);
+    SET_STREAM_STATE_ENUM(env, clz, READY);
+    SET_STREAM_STATE_ENUM(env, clz, FAILED);
+    SET_STREAM_STATE_ENUM(env, clz, TERMINATED);
+}
+
 /*
  * Class:     org_classpath_icedtea_pulseaudio_Stream
  * Method:    native_pa_stream_new
@@ -343,7 +360,7 @@ JNIEXPORT void JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1
  * Method:    native_pa_stream_get_state
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1get_1state
+JNIEXPORT jlong JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1get_1state
 (JNIEnv* env, jobject obj) {
     pa_stream* stream = (pa_stream*) getJavaPointer(env, obj, STREAM_POINTER);
     assert(stream);

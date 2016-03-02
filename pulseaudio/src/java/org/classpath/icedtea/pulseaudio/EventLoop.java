@@ -40,14 +40,12 @@ package org.classpath.icedtea.pulseaudio;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.classpath.icedtea.pulseaudio.ContextEvent.Type;
+import org.classpath.icedtea.pulseaudio.ContextEvent;
 import org.classpath.icedtea.pulseaudio.Debug.DebugLevel;
 
 /**
  * This class wraps pulseaudio's event loop. It also holds the lock used in the
  * rest of pulse-java
- * 
- * 
  */
 
 final class EventLoop implements Runnable {
@@ -70,7 +68,7 @@ final class EventLoop implements Runnable {
     private String appName;
     private String serverString;
 
-    private int status;
+    private long status;
     // private boolean eventLoopIsRunning = false;
 
     private List<String> targetPortNameList = new ArrayList<String>();
@@ -89,17 +87,11 @@ final class EventLoop implements Runnable {
 
     private native void native_shutdown();
 
-    private native void native_set_sink_volume(byte[] streamPointer, int volume);
-
     /*
      * These fields hold pointers
      */
     private byte[] contextPointer;
     private byte[] mainloopPointer;
-
-    /*
-     * 
-     */
 
     static {
         SecurityWrapper.loadNativeLibrary();
@@ -171,42 +163,21 @@ final class EventLoop implements Runnable {
         }
     }
 
-    int getStatus() {
+    long getStatus() {
         return this.status;
     }
 
-    void update(int status) {
+    void update(long status) {
         synchronized (threadLock) {
             // System.out.println(this.getClass().getName()
             // + ".update() called! status = " + status);
             this.status = status;
-            switch (status) {
-            case 0:
-                fireEvent(new ContextEvent(Type.UNCONNECTED));
-                break;
-            case 1:
-                fireEvent(new ContextEvent(Type.CONNECTING));
-                break;
-            case 2:
-                // no op
-                break;
-            case 3:
-                // no op
-                break;
-            case 4:
-                fireEvent(new ContextEvent(Type.READY));
-                break;
-            case 5:
-                fireEvent(new ContextEvent(Type.FAILED));
-                Debug.println(DebugLevel.Warning,
-                        "EventLoop.update(): Context failed");
-                break;
-            case 6:
-                fireEvent(new ContextEvent(Type.TERMINATED));
-                break;
-            default:
+            fireEvent(new ContextEvent(status));
+        }
 
-            }
+        if (status == ContextEvent.FAILED) {
+            Debug.println(DebugLevel.Warning,
+                          "EventLoop.update(): Context failed");
         }
     }
 
@@ -221,12 +192,6 @@ final class EventLoop implements Runnable {
             }
         }
 
-    }
-
-    void setVolume(byte[] streamPointer, int volume) {
-        synchronized (threadLock) {
-            native_set_sink_volume(streamPointer, volume);
-        }
     }
 
     byte[] getContextPointer() {
@@ -250,7 +215,7 @@ final class EventLoop implements Runnable {
 
         op.waitForCompletion();
 
-        assert (op.getState() == Operation.State.Done);
+        assert (op.getState() == Operation.DONE);
 
         op.releaseReference();
         return targetPortNameList;
@@ -265,7 +230,7 @@ final class EventLoop implements Runnable {
 
         op.waitForCompletion();
 
-        assert (op.getState() == Operation.State.Done);
+        assert (op.getState() == Operation.DONE);
 
         op.releaseReference();
         return sourcePortNameList;
@@ -278,5 +243,4 @@ final class EventLoop implements Runnable {
     public void sink_callback(String name) {
         targetPortNameList.add(name);
     }
-
 }

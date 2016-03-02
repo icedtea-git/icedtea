@@ -1,3 +1,71 @@
+2011-06-16  Denis Lila  <dlila@redhat.com>
+
+	* Makefile.am: Add ContextEvent to the list of pulse audio classes that
+	need javah run on them.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/ContextEvent.java
+	(Type): Remove and replace with...
+	(UNCONNECTED, CONNECTING, AUTHORIZING, SETTING_NAME, READY, FAILED,
+	 TERMINATED): New static long variables replacing enum Type.
+	(init_constants): New native method to initialize the above variables.
+	(checkNativeEnumReturn): Make sure that the input is one of the longs
+	representing the type of ContextEvent.
+	(type): Change type from Type to long.
+	(ContextEvent): Take a long argument, instead of a Type.
+	(getType): Return a long, not a Type.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java
+	(status): Change from int to long.
+	(native_set_sink_volume): Remove. It was unimplemented in the JNI side.
+	(getStatus): Return long instead of int.
+	(update): Replace int argument with long argument. Remove the switch
+	statement.
+	(setVolume): Remove. Unused.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Operation.java
+	(State): Remove and replace with...
+	(Running, Done, Cancelled): Static longs, enumerating the possible
+	operation states.
+	(init_constants): New native method to initialize the above variables.
+	(checkNativeOperationState): Make sure that the input is one of the longs
+	representing the operation state.
+	(native_get_state): Change return type from int to long.
+	(getState): Change return type to long; remove switch.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	Remove the names of enums from the names of constants since most of them
+	were changed to static longs.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	Same changes as in PulseAudioDataLine.java.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java
+	(State): Remove and replace with...
+	(UNCONNECTED, CREATING, READY, FAILED, TERMINATED): New static long variables
+	replacing enum Type.
+	(init_constants): New native method to initialize the above variables.
+	(checkNativeStreamState): Make sure that the input is one of the longs
+	representing the kind of StreamState.
+	(native_pa_stream_get_state): Change the return from int to long.
+	(getState): Remove the switch.
+	* pulseaudio/src/native/jni-common.h
+	(SET_JAVA_STATIC_LONG_FIELD_TO_PA_ENUM): Macro that sets one of the java
+	 static longs to the corresponding pa_constant.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_ContextEvent.c
+	New file.
+	(SET_CONTEXT_ENUM): Macro that sets the ContextEvent types.
+	(Java_org_classpath_icedtea_pulseaudio_ContextEvent_init_1constants):
+	Implementation of ContextEvent.init_constants.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c
+	(context_change_callback): Change the fourth argument of GetMethodID
+	to "(J)V" to reflect the change in the signature of EventLoop.update.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Operation.c
+	(SET_OP_ENUM): Macro that sets the operation types.
+	(Java_org_classpath_icedtea_pulseaudio_Operation_init_1constants):
+	Implementation of Operation.init_constants.
+	(Java_org_classpath_icedtea_pulseaudio_Operation_native_1get_1state):
+	Change return type to jlong.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(SET_STREAM_ENUM): Macro that sets the stream states.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_init_1constants):
+	Implementation of Stream.init_constants.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1get_1state):
+	Change return type to jlong.
+
 2012-06-28  Omair Majid  <omajid@redhat.com>
 
 	PR1050: Stream objects not garbage collected

@@ -37,6 +37,7 @@ exception statement from your version.
 
 package org.classpath.icedtea.pulseaudio;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -98,12 +99,42 @@ final class Stream {
         public void update();
     }
 
-    public static enum State {
-        UNCONNECTED, CREATING, READY, FAILED, TERMINATED,
+    // see comments in ContextEvent.java and Operation.java
+    // These are the possible stream states.
+    // TODO: perhaps we should do this for stream flags too.
+    public static long UNCONNECTED = -1,
+                       CREATING    = -1,
+                       READY       = -1,
+                       FAILED      = -1,
+                       TERMINATED  = -1;
+
+    private static native void init_constants();
+
+    // Throw an IllegalStateException if value is not one of the possible
+    // states. Otherwise return the input.
+    public static long checkNativeStreamState(long value) {
+        if (!Arrays.asList(UNCONNECTED, CREATING, READY, FAILED, TERMINATED)
+                .contains(value)) {
+            throw new IllegalStateException("Illegal constant for ContextEvent: " + value);
+        }
+        return value;
     }
 
+    // We don't change this to static longs like we did with all other pulse
+    // audio enums mirrored in java because we never use the pulse audio
+    // integer value of formats on the java side. In java, the handling of
+    // formats is strictly symbolic and string based. For that, enums are
+    // better.
     public static enum Format {
-        PA_SAMPLE_U8, PA_SAMPLE_ULAW, PA_SAMPLE_ALAW, PA_SAMPLE_S16LE, PA_SAMPLE_S16BE, PA_SAMPLE_FLOAT32LE, PA_SAMPLE_FLOAT32BE, PA_SAMPLE_S32LE, PA_SAMPLE_S32BE
+        PA_SAMPLE_U8,
+        PA_SAMPLE_ULAW,
+        PA_SAMPLE_ALAW,
+        PA_SAMPLE_S16LE,
+        PA_SAMPLE_S16BE,
+        PA_SAMPLE_FLOAT32LE,
+        PA_SAMPLE_FLOAT32BE,
+        PA_SAMPLE_S32LE,
+        PA_SAMPLE_S32BE
     }
 
     public static final String DEFAULT_DEVICE = null;
@@ -115,6 +146,7 @@ final class Stream {
 
     static {
         SecurityWrapper.loadNativeLibrary();
+        init_constants();
     }
 
     private Format format;
@@ -136,7 +168,7 @@ final class Stream {
 
     private native void native_pa_stream_unref();
 
-    private native int native_pa_stream_get_state();
+    private native long native_pa_stream_get_state();
 
     private native byte[] native_pa_stream_get_context();
 
@@ -388,23 +420,8 @@ final class Stream {
         }
     }
 
-    Stream.State getState() {
-        int state = native_pa_stream_get_state();
-        switch (state) {
-        case 0:
-            return State.UNCONNECTED;
-        case 1:
-            return State.CREATING;
-        case 2:
-            return State.READY;
-        case 3:
-            return State.FAILED;
-        case 4:
-            return State.TERMINATED;
-        default:
-            throw new IllegalStateException("invalid stream state");
-        }
-
+    long getState() {
+        return checkNativeStreamState(native_pa_stream_get_state());
     }
 
     byte[] getContextPointer() {
