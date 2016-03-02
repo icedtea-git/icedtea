@@ -52,6 +52,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR1377: Forwardport javac detection / usability test from IcedTea 2.x
   - PR1379: Add build support for Zero AArch64
   - PR1413: Undefined reference to libz during link of unpack200
+  - PR1741: Break PulseAudio provider out into IcedTea-Sound
   - PR1766: Expand architecture support
   - PR1774: Support GIF lib v5
   - PR1774: Correct #ifdef to #if

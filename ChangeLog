@@ -1,3 +1,84 @@
+2014-06-11  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1741: Break PulseAudio provider out into IcedTea-Sound
+	* patches/pulse-soundproperties.patch,
+	* pulseaudio/COPYING,
+	* pulseaudio/README,
+	* pulseaudio/src/java/META-INF/services/javax.sound.sampled.spi.MixerProvider,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/ContextEvent.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/ContextListener.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Debug.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Operation.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerInfo.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerProvider.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPlaybackLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioVolumeControl.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/SecurityWrapper.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamBufferAttributes.java,
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamSampleSpecification.java,
+	* pulseaudio/src/native/jni-common.c,
+	* pulseaudio/src/native/jni-common.h,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_ContextEvent.c,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Operation.c,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c,
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c,
+	* pulseaudio/testsounds/README,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/OtherSoundProvidersAvailableTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioEventLoopOverhead.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioMixerProviderTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioMixerRawTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioMixerTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineRawTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourcePortTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLineTest.java,
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetPortTest.java:
+	Moved to IcedTea-Sound.
+	* INSTALL: Remove PulseAudio references.
+	* Makefile.am:
+	(PULSE_JAVA_DIR): Removed.
+	(PULSE_JAVA_NATIVE_SRCDIR): Likewise.
+	(PULSE_JAVA_NATIVE_SRCS): Likewise.
+	(PULSE_JAVA_BUILDDIR): Likewise.
+	(PULSE_JAVA_NATIVE_BUILDDIR): Likewise.
+	(PULSE_JAVA_NATIVE_OBJECTS): Likewise.
+	(PULSE_JAVA_JAVA_SRCDIR): Likewise.
+	(PULSE_JAVA_CLASS_DIR): Likewise.
+	(PULSE_JAVA_TARGET): Removed.
+	(ICEDTEA_PATCHES): Drop PulseAudio patch.
+	(PULSEAUDIO_SRCS): Removed.
+	(EXTRA_DIST): Removed PULSEAUDIO_SRCS.
+	(clean-local): Remove clean-pulse-java.
+	(icedtea-configure): Remove PULSE_JAVA_TARGET.
+	(icedtea): Remove PulseAudio provider installation.
+	(icedtea-debug-configure): Remove PULSE_JAVA_TARGET.
+	(icedtea-debug): Remove PulseAudio provider installation.
+	(pulse-java): Removed.
+	(pulse-java-class): Likewise.
+	(pulse-java-jar): Likewise.
+	(pulse-java-headers): Likewise.
+	($(PULSE_JAVA_NATIVE_BUILDDIR)/%.o): Likewise.
+	($(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so): Likewise.
+	(clean-pulse-java): Likewise.
+	* NEWS: Updated.
+	* configure.ac:
+	Remove --enable-pulse-java option and PulseAudio library
+	checks.
+
 2011-10-03  Xerxes Rånby  <xerxes@zafena.se>
 	    Robert Lougher <rob@jamvm.org.uk>
 

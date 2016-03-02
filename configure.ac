@@ -64,14 +64,6 @@ IT_ENABLE_SUNEC
 AC_CHECK_PROG(XVFB_RUN_CMD, xvfb-run, [xvfb-run -a -e xvfb-errors], [])
 AC_SUBST(XVFB_RUN_CMD)
 
-AC_MSG_CHECKING([whether to include PulseAudio support])
-AC_ARG_ENABLE([pulse-java],
-              [AS_HELP_STRING([--enable-pulse-java],
-                              [Enable pulse-java - an audio mixer spi that uses PulseAudio])],
-              [enable_pulse_java="${enableval}"], [enable_pulse_java="no"])
-AM_CONDITIONAL(ENABLE_PULSE_JAVA, test "x${enable_pulse_java}" = "xyes")
-AC_MSG_RESULT(${enable_pulse_java})
-
 AC_MSG_CHECKING([whether to build documentation])
 AC_ARG_ENABLE([docs],
 	      [AS_HELP_STRING([--disable-docs],
@@ -314,20 +306,6 @@ then
   fi
 AC_SUBST(ALSA_CFLAGS)
 AC_SUBST(ALSA_LIBS)
-fi
-
-if test "x${enable_pulse_java}" = "xyes"
-then
-  dnl Check for pulseaudio libraries.
-  PKG_CHECK_MODULES(LIBPULSE,[libpulse >= 0.9.11],[LIBPULSE_FOUND=yes]
-    ,[LIBPULSE_FOUND=no])
-  if test "x${LIBPULSE_FOUND}" = xno
-  then
-    AC_MSG_ERROR([Could not find pulseaudio>=0.9.11 libraries - \
-    Try installing pulseaudio-libs-devel>=0.9.11.])
-  fi
-  AC_SUBST(LIBPULSE_CFLAGS)
-  AC_SUBST(LIBPULSE_LIBS)
 fi
 
 if test "x${ZERO_BUILD_TRUE}" = x || test "x${ADD_ZERO_BUILD_TRUE}" = x; then

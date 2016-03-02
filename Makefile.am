@@ -79,16 +79,6 @@ LANGTOOLS = openjdk-boot/langtools/src/share/classes
 CORBA = openjdk-boot/corba/src/share/classes
 JAXWS = openjdk-boot/jaxws/src/share/jaxws_classes
 
-PULSE_JAVA_DIR = $(abs_top_srcdir)/pulseaudio
-PULSE_JAVA_NATIVE_SRCDIR = $(PULSE_JAVA_DIR)/src/native
-PULSE_JAVA_NATIVE_SRCS = $(wildcard $(PULSE_JAVA_NATIVE_SRCDIR)/*.c)
-PULSE_JAVA_BUILDDIR = $(abs_top_builddir)/pulseaudio.build
-PULSE_JAVA_NATIVE_BUILDDIR = $(PULSE_JAVA_BUILDDIR)/native
-PULSE_JAVA_NATIVE_OBJECTS = \
-	$(subst $(PULSE_JAVA_NATIVE_SRCDIR),$(PULSE_JAVA_NATIVE_BUILDDIR),$(patsubst %.c,%.o,$(PULSE_JAVA_NATIVE_SRCS)))
-PULSE_JAVA_JAVA_SRCDIR = $(PULSE_JAVA_DIR)/src/java
-PULSE_JAVA_CLASS_DIR = $(PULSE_JAVA_BUILDDIR)/classes
-
 OPENJDK_SOURCEPATH_DIRS = \
         $(SHARE):$(SOLARIS):$(LANGTOOLS):$(CORBA):$(JAXWS)
 
@@ -143,10 +133,6 @@ endif
 
 if WITH_HGREV
 REV_ARG = -r $(HGREV)
-endif
-
-if ENABLE_PULSE_JAVA
-PULSE_JAVA_TARGET = stamps/pulse-java.stamp
 endif
 
 # This should not depend on bootstrapping
@@ -253,11 +239,6 @@ endif
 if ENABLE_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/ignore-tests.patch
-endif
-
-if ENABLE_PULSE_JAVA
-ICEDTEA_PATCHES += \
-	patches/pulse-soundproperties.patch
 endif
 
 if BUILD_JAMVM
@@ -585,27 +566,14 @@ JTREG_SRCS = $(top_srcdir)/test/jtreg/com/sun/javatest/cof/i18n.properties \
 	$(top_srcdir)/test/jtreg/JavaTest.cmdMgrs.lst \
 	$(top_srcdir)/test/jtreg/excludelist.langtools.jtx 
 
-PULSEAUDIO_SRCS = $(top_srcdir)/pulseaudio/src/java/org/classpath/icedtea/pulseaudio/*.java \
-	$(top_srcdir)/pulseaudio/src/java/META-INF/services/javax.sound.sampled.spi.MixerProvider \
-	$(top_srcdir)/pulseaudio/src/native/*.h \
-	$(top_srcdir)/pulseaudio/src/native/*.c \
-	$(top_srcdir)/pulseaudio/TODO \
-	$(top_srcdir)/pulseaudio/README \
-	$(top_srcdir)/pulseaudio/testsounds/README \
-	$(top_srcdir)/pulseaudio/testsounds/startup.wav \
-	$(top_srcdir)/pulseaudio/testsounds/logout.wav \
-	$(top_srcdir)/pulseaudio/testsounds/error.wav \
-	$(top_srcdir)/pulseaudio/unittests/org/classpath/icedtea/pulseaudio/*.java \
-	$(top_srcdir)/pulseaudio/COPYING
-
 DESKTOP_FILES = jconsole.desktop policytool.desktop
 
 EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
 	$(top_srcdir)/patches/jamvm/*.patch \
 	tools-copy contrib overlays \
-	$(JTREG_SRCS) $(DESKTOP_FILES) HACKING \
-	$(PULSEAUDIO_SRCS) autogen.sh \
+	$(JTREG_SRCS) $(DESKTOP_FILES) \
+	HACKING autogen.sh \
 	tapset/hotspot.stp.in \
 	tapset/hotspot_jni.stp.in \
 	tapset/jstack.stp.in \
@@ -630,7 +598,7 @@ clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports clean-check-ecc
 	  fi \
 	fi
 
-clean-local: clean-tests clean-pulse-java \
+clean-local: clean-tests \
  clean-icedtea clean-icedtea-debug clean-icedtea-boot clean-clone clean-clone-boot \
  clean-bootstrap-directory-stage1 clean-bootstrap-directory-stage2 \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
@@ -1576,7 +1544,7 @@ clean-bootstrap-directory-symlink-stage2:
 # you change it in the icedtea-debug target as well.
 stamps/icedtea-configure.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
- stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/jamvm.stamp
+ stamps/cacao.stamp stamps/jamvm.stamp
 	mkdir -p $(BUILD_OUTPUT_DIR)
 	cd $(BUILD_OUTPUT_DIR) && \
 	$(SHELL) $(abs_top_builddir)/openjdk/configure $(ICEDTEA_CONFIGURE)
@@ -1593,16 +1561,6 @@ stamps/icedtea.stamp: stamps/icedtea-configure.stamp
 	mkdir -p $(BUILD_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_SDK_DIR)/jre/lib/ext
 	mkdir -p $(BUILD_JRE_DIR)/lib/ext 
-if ENABLE_PULSE_JAVA
-	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
-	  $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
-	  $(BUILD_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf pulse-java.jar $(BUILD_SDK_DIR)/jre/lib/ext
-	cp -pPRf pulse-java.jar $(BUILD_JRE_DIR)/lib/ext
-	(cd $(PULSE_JAVA_JAVA_SRCDIR) && \
-	   $(ZIP) -qur $(BUILD_SDK_DIR)/src.zip org )
-endif
 if ZERO_BUILD
 	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
@@ -1647,7 +1605,7 @@ endif
 
 stamps/icedtea-debug-configure.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
- stamps/cacao.stamp $(PULSE_JAVA_TARGET) stamps/jamvm.stamp
+ stamps/cacao.stamp stamps/jamvm.stamp
 	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)
 	cd $(DEBUG_BUILD_OUTPUT_DIR) && \
 	$(SHELL) $(abs_top_builddir)/openjdk/configure $(ICEDTEA_CONFIGURE) \
@@ -1665,18 +1623,6 @@ stamps/icedtea-debug.stamp: stamps/icedtea-debug-configure.stamp
 	mkdir -p $(BUILD_DEBUG_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_DEBUG_SDK_DIR)/jre/lib/ext
 	mkdir -p $(BUILD_DEBUG_JRE_DIR)/lib/ext 
-if ENABLE_PULSE_JAVA
-	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
-	  $(BUILD_DEBUG_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so \
-	  $(BUILD_DEBUG_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
-	cp -pPRf pulse-java.jar \
-	  $(BUILD_DEBUG_SDK_DIR)/jre/lib/ext
-	cp -pPRf pulse-java.jar \
-	  $(BUILD_DEBUG_JRE_DIR)/lib/ext
-	(cd $(PULSE_JAVA_JAVA_SRCDIR) && \
-	   $(ZIP) -qur $(BUILD_DEBUG_SDK_DIR)/src.zip org )
-endif
 if ZERO_BUILD
 	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
@@ -1900,68 +1846,6 @@ stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp stamps/check-crypto-boot.
 
 clean-icedtea-stage1: clean-check-crypto-boot clean-add-archive-boot
 	rm -f stamps/icedtea-stage1.stamp
-
-# PulseAudio based mixer
-# (pulse-java)
-if ENABLE_PULSE_JAVA
-
-stamps/pulse-java.stamp: stamps/pulse-java-jar.stamp $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so
-	mkdir -p stamps
-	touch $@
-
-stamps/pulse-java-class.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
-	mkdir -p $(PULSE_JAVA_CLASS_DIR)
-	(cd $(PULSE_JAVA_JAVA_SRCDIR); \
-	 $(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -d $(PULSE_JAVA_CLASS_DIR) \
-	 -bootclasspath $(RUNTIME) org/classpath/icedtea/pulseaudio/*.java \
-	)
-	cp  -r $(PULSE_JAVA_JAVA_SRCDIR)/META-INF $(PULSE_JAVA_CLASS_DIR)
-	chmod -R ug+w $(PULSE_JAVA_CLASS_DIR)/META-INF
-	mkdir -p stamps
-	touch $@
-
-stamps/pulse-java-jar.stamp: stamps/pulse-java-class.stamp
-	$(BOOT_DIR)/bin/jar cf pulse-java.jar -C $(PULSE_JAVA_CLASS_DIR) .;
-	mkdir -p stamps
-	touch $@
-
-stamps/pulse-java-headers.stamp: stamps/pulse-java-class.stamp
-	mkdir -p $(PULSE_JAVA_NATIVE_BUILDDIR)
-	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
-	  org.classpath.icedtea.pulseaudio.EventLoop ;
-	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
-	  org.classpath.icedtea.pulseaudio.Stream
-	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
-	  org.classpath.icedtea.pulseaudio.Operation
-	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
-	  org.classpath.icedtea.pulseaudio.PulseAudioSourcePort
-	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
-	  org.classpath.icedtea.pulseaudio.PulseAudioTargetPort
-	$(BOOT_DIR)/bin/javah -d $(PULSE_JAVA_NATIVE_BUILDDIR) -classpath $(PULSE_JAVA_CLASS_DIR) \
-	  -J-Xbootclasspath/p:$(PULSE_JAVA_CLASS_DIR) org.classpath.icedtea.pulseaudio.ContextEvent;
-	mkdir -p stamps
-	touch $@
-
-$(PULSE_JAVA_NATIVE_BUILDDIR)/%.o: $(PULSE_JAVA_NATIVE_SRCDIR)/%.c stamps/pulse-java-headers.stamp
-	$(CC) $(IT_CFLAGS) -fPIC -I$(BOOT_DIR)/include/linux -I$(BOOT_DIR)/include \
-	 -I$(PULSE_JAVA_NATIVE_BUILDDIR) -o $@ -c $<
-
-$(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so: $(PULSE_JAVA_NATIVE_OBJECTS)
-	$(CC) $(LDFLAGS) -shared $(PULSE_JAVA_NATIVE_OBJECTS) $(LIBPULSE_LIBS) \
-	 -o $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so
-
-endif
-
-clean-pulse-java:
-	rm -rf $(PULSE_JAVA_NATIVE_BUILDDIR)
-	rm -rf $(PULSE_JAVA_CLASS_DIR)
-	rm -f pulse-java.jar
-	if [ -e $(PULSE_JAVA_BUILDDIR) ]; then \
-	  rmdir $(PULSE_JAVA_BUILDDIR) ; \
-	fi
-	rm -f stamps/pulse-java*.stamp
-
-# end of pulse-java
 
 # JamVM
 
@@ -2650,8 +2534,6 @@ patch: stamps/patch.stamp
 patch-boot: stamps/patch-boot.stamp
 
 patch-fsg: stamps/patch-fsg.stamp
-
-pulse-java: $(PULSE_JAVA_TARGET)
 
 remove-intree-libraries: stamps/remove-intree-libraries.stamp
 

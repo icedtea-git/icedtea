@@ -27,7 +27,6 @@ libpng-devel
 libjpeg-devel >= 6b
 zlib-devel
 libffi (for --enable-zero or on archs other than x86/x86_64/sparc)
-pulseaudio-libs-devel >= 0.9.11 (for --enable-pulse-java)
 LLVM 2.5 or later (for --enable-shark)
 systemtap-sdl-devel >= 0.9.5 (Java method tracing requires systemtap >= 0.9.9)
 
@@ -148,7 +147,6 @@ These are documented fully in the relevant section below.
 * --disable-hotspot-tests: Disable the running of the HotSpot JTReg suite.
 * --disable-langtools-tests: Disable the running of the langtools JTReg suite.
 * --disable-jdk-tests: Disable the running of the jdk JTreg suite.
-* --enable-pulse-java: Build the PulseAudio sound provider.
 * --disable-xrender: Don't include the XRender pipeline.
 * --enable-systemtap: Include support for tracing using systemtap.
 * --enable-nss: Enable the NSS security provider.
@@ -174,13 +172,6 @@ can be used to turn off all tests, and the
 off individual suites.  This is useful when using 'make distcheck'
 as a way of avoiding running the extensive JDK test suite which
 takes several hours.
-
-The PulseAudio provider
-=======================
-
-IcedTea7 includes an implementation of the javax.sound.* APIs using
-PulseAudio which can be enabled using --enable-pulse-java.   The resulting
-provider is org.classpath.icedtea.pulseaudio.PulseAudioMixerProvider.
 
 Xrender Support
 ===============
