@@ -1,3 +1,17 @@
+2016-03-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2865: Handle uninstallation.
+	* Makefile.am:
+	(uninstall-local): Implemented. Deletes files
+	installed by install-exec-local and install-data-local,
+	then removes directories created by those targets.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_CHECK_FOR_RMDIR): Check that rmdir is installed
+	and see if it supports the --ignore-fail-on-empty option.
+	* configure.ac:
+	Invoke IT_CHECK_FOR_RMDIR.
+
 2014-06-11  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1741: Break PulseAudio provider out into IcedTea-Sound

@@ -2434,6 +2434,150 @@ endif
 	      $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ; \
 	  fi ; \
 	done
+
+uninstall-local:
+	for files in $(BUILD_SDK_DIR)/bin/*; do \
+	  rm -vf $(DESTDIR)$(bindir)/$$(basename $${files}); \
+	done
+	for files in $(BUILD_SDK_DIR)/include/*.h; do \
+	  rm -vf $(DESTDIR)$(includedir)/$$(basename $${files}); \
+	done
+	for files in $(BUILD_SDK_DIR)/include/$(BUILD_OS_DIR)/*.h; do \
+	  rm -vf $(DESTDIR)$(includedir)/$(BUILD_OS_DIR)/$$(basename $${files}); \
+	done
+	for files in $(BUILD_SDK_DIR)/lib/*.jar; do \
+	  rm -vf $(DESTDIR)${exec_prefix}/lib/$$(basename $${files}); \
+	done
+	for files in $(BUILD_SDK_DIR)/lib/*.idl; do \
+	  rm -vf $(DESTDIR)${exec_prefix}/lib/$$(basename $${files}); \
+	done
+	rm -vf $(DESTDIR)${exec_prefix}/lib/jexec
+	for files in $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR)/*.so; do \
+	  rm -vf $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/$$(basename $${files}); \
+	done
+	for files in $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR)/jli/*.so; do \
+	  rm -vf $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli/$$(basename $${files}); \
+	done
+	for files in $(BUILD_SDK_DIR)/jre/bin/*; do \
+	  rm -vf $(DESTDIR)${prefix}/jre/bin/$$(basename $${files}); \
+	done
+	for files in $(BUILD_SDK_DIR)/jre/lib/*.jar; do \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/$$(basename $${files}); \
+	done
+	rm -vf $(DESTDIR)${prefix}/jre/lib/jexec
+	for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*.so; do \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$$(basename $${files}); \
+	done
+	for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/jli/*.so; do \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli/$$(basename $${files}); \
+	done
+	for vms in client server ; do \
+	  for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/*.so; do \
+	    rm -vf $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/$$(basename $${files}); \
+	  done ; \
+	done
+	for files in $(BUILD_SDK_DIR)/jre/lib/ext/*.jar; do \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/ext/$$(basename $${files}); \
+	done
+	for files in $(BUILD_SDK_DIR)/tapset/*.stp; do \
+	  rm -vf $(DESTDIR)${prefix}/tapset/$$(basename $${files}); \
+	done
+	for files in $(BUILD_SDK_DIR)/jre/lib/*.properties; do \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/$$(basename $${files}); \
+	done
+	rm -vf $(DESTDIR)${prefix}/release
+	rm -vf $(DESTDIR)${prefix}/src.zip
+	rm -vf $(DESTDIR)${prefix}/jre/lib/classlist
+	rm -vf $(DESTDIR)${prefix}/jre/lib/currency.data
+	rm -vf $(DESTDIR)${prefix}/jre/lib/jvm.hprof.txt
+	rm -vf $(DESTDIR)${prefix}/jre/lib/meta-index
+	rm -vf $(DESTDIR)${prefix}/jre/lib/psfont.properties.ja
+	rm -vf $(DESTDIR)${prefix}/jre/lib/tzdb.dat
+	rm -vf $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jvm.cfg
+	for vms in client server ; do \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/Xusage.txt; \
+	done
+	for files in $(BUILD_SDK_DIR)/jre/lib/cmm/*.pf; do \
+	  rm -vf $(DESTDIR)/${prefix}/jre/lib/cmm/$$(basename $${files}); \
+	done
+	rm -vf $(DESTDIR)${prefix}/jre/lib/ext/meta-index
+	for files in $(BUILD_SDK_DIR)/jre/lib/images/cursors/*.gif; do \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/images/cursors/$$(basename $${files}); \
+	done
+	rm -vf $(DESTDIR)${prefix}/jre/lib/images/cursors/cursors.properties
+	rm -vf $(DESTDIR)${prefix}/jre/lib/management/jmxremote.access
+	rm -vf $(DESTDIR)${prefix}/jre/lib/management/management.properties
+	for files in $(BUILD_SDK_DIR)/jre/lib/management/*.template; do \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/management/$$(basename $${files}); \
+	done
+	rm -vf $(DESTDIR)${prefix}/jre/lib/security/java.policy
+	rm -vf $(DESTDIR)${prefix}/jre/lib/security/java.security
+	rm -vf $(DESTDIR)${prefix}/jre/lib/security/nss.cfg
+	rm -vf $(DESTDIR)${prefix}/jre/lib/security/blacklisted.certs
+	for files in $(BUILD_SDK_DIR)/jre/lib/security/*.jar; do \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/security/$$(basename $${files}); \
+	done
+	for files in $(BUILD_SDK_DIR)/man/man1/*.1; do \
+	  rm -vf $(DESTDIR)$(mandir)/man1/$$(basename $${files}); \
+	done
+	for files in $(BUILD_SDK_DIR)/man/ja_JP.UTF-8/man1/*.1; do \
+	  rm -vf $(DESTDIR)$(mandir)/ja_JP.UTF-8/man1/$$(basename $${files}); \
+	done
+	for items in $(BUILD_SDK_DIR)/demo/*; do \
+	  rm -rvf $(DESTDIR)${prefix}/demo/$$(basename $${items}); \
+	done
+	for items in $(BUILD_SDK_DIR)/sample/*; do \
+	  rm -rvf $(DESTDIR)${prefix}/sample/$$(basename $${items}); \
+	done
+	rm -rf $(DESTDIR)$(docdir)/README
+	rm -rf $(DESTDIR)$(docdir)/NEWS
+	rm -rf $(DESTDIR)$(docdir)/AUTHORS
+	rm -rf $(DESTDIR)$(docdir)/HACKING
+	rm -rf $(DESTDIR)$(docdir)/COPYING
+	rm -rf $(DESTDIR)$(docdir)/ChangeLog
+	rm -rf $(DESTDIR)$(docdir)/ASSEMBLY_EXCEPTION
+	rm -rf $(DESTDIR)$(docdir)/LICENSE
+	rm -rf $(DESTDIR)$(docdir)/THIRD_PARTY_README
+	rm -rf $(DESTDIR)$(docdir)/TRADEMARK
+	for sizes in 16 24 32 48 ; do \
+	  rm -vf $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-1.8.0.png; \
+	done
+	for files in $(DESKTOP_FILES) ; do \
+	  rm -vf $(DESTDIR)$(datadir)/applications/$$(basename $${files}); \
+	done
+	rm -vf $(DESTDIR)${prefix}/jre/.systemPrefs/.system.lock
+	rm -vf $(DESTDIR)${prefix}/jre/.systemPrefs/.systemRootModFile
+if ENABLE_DOCS
+	rm -rvf $(BUILD_OUTPUT_DIR)/docs/* $(DESTDIR)$(htmldir)
+	$(RMDIR) $(DESTDIR)$(htmldir)
+endif
+	for vms in client server ; do \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/classes.jsa; \
+	  if [ -e $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ] ; then \
+	    $(RMDIR) $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ; \
+	  fi ; \
+	done
+	$(RMDIR) $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli
+	$(RMDIR) $(DESTDIR)$(includedir)/$(BUILD_OS_DIR) $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)
+	$(RMDIR) $(DESTDIR)$(bindir) $(DESTDIR)$(includedir) $(DESTDIR)${exec_prefix}/lib
+	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli
+	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)
+	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/{cmm,ext,images/cursors,management,security}
+	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/images
+	$(RMDIR) $(DESTDIR)${prefix}/jre/bin $(DESTDIR)${prefix}/jre/lib
+	$(RMDIR) $(DESTDIR)${prefix}/jre/.systemPrefs
+	$(RMDIR) $(DESTDIR)${prefix}/jre
+	$(RMDIR) $(DESTDIR)${prefix}/tapset
+	$(RMDIR) $(DESTDIR)${prefix}/demo
+	$(RMDIR) $(DESTDIR)${prefix}/sample
+	$(RMDIR) $(DESTDIR)$(docdir)
+	$(RMDIR) $(DESTDIR)$(datadir)/applications
+	$(RMDIR) $(DESTDIR)$(sysconfdir)/.java/.systemPrefs
+	$(RMDIR) $(DESTDIR)$(mandir)/{man1,ja_JP.UTF-8/man1}
+	for sizes in 16 24 32 48 ; do \
+	  $(RMDIR) $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps ; \
+	done
+
 # Target Aliases
 # ===============
 

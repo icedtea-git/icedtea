@@ -1980,3 +1980,20 @@ AC_DEFUN_ONCE([IT_ENABLE_SUNEC],
     AC_SUBST(SUNEC_LIBS)
   fi
 ])
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_RMDIR],
+[
+  IT_FIND_TOOL([RMDIR],[rmdir])
+  AC_CACHE_CHECK([if ${RMDIR} supports --ignore-fail-on-non-empty], it_cv_RMDIR, [
+    mkdir tmp.$$
+    touch tmp.$$/t
+    if ${RMDIR} --ignore-fail-on-non-empty tmp.$$ >&AS_MESSAGE_LOG_FD 2>&1; then
+       it_cv_RMDIR=yes;
+       RMDIR="${RMDIR} --ignore-fail-on-non-empty"
+    else
+       it_cv_RMDIR=no;
+    fi
+  ])
+  rm -f tmp.$$/t
+  ${RMDIR} tmp.$$
+])

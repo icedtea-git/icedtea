@@ -144,6 +144,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2853: Remove some unnecessary divergences from jdk8u.
   - PR2853: Revert AArch64 jvm.cfg divergence
   - PR2853: Revert changes to libpng source code now 8078245 is in place.
+  - PR2865: Handle uninstallation.
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck
