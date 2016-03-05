@@ -1,5 +1,24 @@
 2016-03-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2826: Provide option to disable SystemTap tests
+	* INSTALL: Document --disable-systemtap-tests.
+	* Makefile.am:
+	(SYSTEMTAP_TEST_SUITE): Define if SystemTap tests
+	are enabled.
+	(check-local): Use SYSTEMTAP_TEST_SUITE in place
+	of check-tapset.
+	(.PHONY): Add check-jdk, check-hotspot, check-langtools,
+	jtregcheck, check-tapset, check-tapset-probes and
+	check-tapset-jstack
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DISABLE_SYSTEMTAP_TESTS): Add option to
+	disable SystemTap tests.
+	* configure.ac:
+	Call IT_DISABLE_SYSTEMTAP_TESTS.
+
+2016-03-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2865: Handle uninstallation.
 	* Makefile.am:
 	(uninstall-local): Implemented. Deletes files

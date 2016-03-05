@@ -195,6 +195,10 @@ TEST_SUITES = $(HOTSPOT_TEST_SUITE) $(JDK_TEST_SUITE) $(LANGTOOLS_TEST_SUITE)
 TESTS_TO_RUN = jtreg $(addprefix check-,$(TEST_SUITES))
 endif
 
+if !DISABLE_SYSTEMTAP_TESTS
+SYSTEMTAP_TEST_SUITE = check-tapset
+endif
+
 if ENABLE_SUNEC
 ECC_RESULT = yes
 else
@@ -589,7 +593,7 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 
 all-local: icedtea-stage2
 
-check-local: jtregcheck check-tapset stamps/check-ecc.stamp
+check-local: jtregcheck $(SYSTEMTAP_TEST_SUITE) stamps/check-ecc.stamp
 
 clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports clean-check-ecc
 	if [ $(abs_top_srcdir) != $(abs_top_builddir) ] ; then \
@@ -635,7 +639,9 @@ distclean-local: clean-local clean-download
 	clean-download-nashorn clean-extract-nashorn clean-download-hotspot \
 	clean-check-crypto clean-check-crypto-debug clean-check-crypto-boot \
 	clean-add-archive clean-add-archive-debug clean-add-archive-boot clean-cryptocheck \
-	clean-tests clean-tapset-report clean-ecccheck clean-check-ecc
+	clean-tests clean-tapset-report clean-ecccheck clean-check-ecc \
+	check-jdk check-hotspot check-langtools jtregcheck check-tapset check-tapset-probes \
+	check-tapset-jstack
 
 env:
 	@echo 'unset JAVA_HOME'

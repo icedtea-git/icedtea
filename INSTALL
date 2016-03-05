@@ -147,6 +147,7 @@ These are documented fully in the relevant section below.
 * --disable-hotspot-tests: Disable the running of the HotSpot JTReg suite.
 * --disable-langtools-tests: Disable the running of the langtools JTReg suite.
 * --disable-jdk-tests: Disable the running of the jdk JTreg suite.
+* --disable-systemtap-tests: Disable the running of the SystemTap test suite.
 * --disable-xrender: Don't include the XRender pipeline.
 * --enable-systemtap: Include support for tracing using systemtap.
 * --enable-nss: Enable the NSS security provider.

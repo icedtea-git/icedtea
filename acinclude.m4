@@ -1997,3 +1997,25 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_RMDIR],
   rm -f tmp.$$/t
   ${RMDIR} tmp.$$
 ])
+
+AC_DEFUN_ONCE([IT_DISABLE_SYSTEMTAP_TESTS],
+[
+  AC_MSG_CHECKING([whether to disable the execution of the SystemTap tests])
+  AC_ARG_ENABLE([systemtap-tests],
+                [AS_HELP_STRING(--disable-systemtap-tests,do not run the SystemTap tests via make check [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+        disable_systemtap_tests=yes
+        ;;
+      *)
+        disable_systemtap_tests=no
+        ;;
+    esac
+  ],
+  [
+    disable_systemtap_tests=no
+  ])
+  AC_MSG_RESULT([$disable_systemtap_tests])
+  AM_CONDITIONAL([DISABLE_SYSTEMTAP_TESTS], test x"${disable_systemtap_tests}" = "xyes")
+])

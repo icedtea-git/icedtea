@@ -136,6 +136,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2804: test/tapset/jstaptest.pl should be executable
   - PR2815: Race condition in SunEC provider with system NSS
   - PR2825: Placement of -lfreebl matters when using bfd linker
+  - PR2826: Provide option to disable SystemTap tests
   - PR2841: Parallelism issues resulting from PR2459
   - PR2853: Fix build for aarch64/zero
   - PR2853: Remaining miscellaneous synchronisation changes from aarch64/jdk8u
