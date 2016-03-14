@@ -1,3 +1,16 @@
+2016-03-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2880: Add missing test directory in make check
+	* Makefile.am:
+	(CRYPTO_CHECK_BUILD_DIR): Locate inside the test
+	directory.
+	(ECC_CHECK_BUILD_DIR): Likewise.
+	(jtregcheck): Create the test directory if it
+	doesn't exist.
+	(check-tapset-probes): Likewise.
+	(check-tapset-jstack): Likewise.
+	* NEWS: Updated.
+
 2016-03-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2873: Fix make distcheck

@@ -68,8 +68,8 @@ BUILD_BOOT_JRE_DIR = $(BUILD_BOOT_IMAGE_DIR)/j2re-image
 STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
 STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
 JAMVM_IMPORT_PATH = $(abs_top_builddir)/jamvm/install/hotspot
-CRYPTO_CHECK_BUILD_DIR = $(abs_top_builddir)/cryptocheck.build
-ECC_CHECK_BUILD_DIR = $(abs_top_builddir)/ecccheck.build
+CRYPTO_CHECK_BUILD_DIR = $(abs_top_builddir)/test/cryptocheck.build
+ECC_CHECK_BUILD_DIR = $(abs_top_builddir)/test/ecccheck.build
 
 # Source directories
 
@@ -2182,6 +2182,7 @@ jtreg_pids = ps x --no-headers -ww -o pid,ppid,args \
 	| awk '$$2 == 1 && $$3 ~ /^$(subst /,\/,$(CURDIR)/$(sdkimg))/ {print $$1}'
 
 jtregcheck: $(TESTS_TO_RUN)
+	$(MKDIR_P) test
 	for i in $(TEST_SUITES); do \
 	  echo "--------------- jtreg console summary for $$i ---------------"; \
 	  egrep -v '^(Passed:|Directory|Re[a-z]+\ written\ to)' test/check-$$i.log; \
@@ -2215,6 +2216,7 @@ if ENABLE_SYSTEMTAP
 	if test "x${PERL}" = "x"; then \
 	  echo "ERROR: Perl not found"; exit -1; \
 	fi
+	$(MKDIR_P) test
 	${PERL} $(abs_top_srcdir)/test/tapset/jstaptest.pl \
 	  -B $(BUILD_IMAGE_DIR) -A $(BUILD_ARCH_DIR) \
 	  -S $(abs_top_srcdir)/test/tapset \
@@ -2226,6 +2228,7 @@ if ENABLE_SYSTEMTAP
 	if test "x${PERL}" = "x"; then \
 	  echo "ERROR: Perl not found"; exit -1; \
 	fi
+	$(MKDIR_P) test
 	${PERL} $(abs_top_srcdir)/test/tapset/jstaptest.pl \
 	  -B $(BUILD_IMAGE_DIR) -A $(BUILD_ARCH_DIR) \
 	  -S $(abs_top_srcdir)/test/tapset \
