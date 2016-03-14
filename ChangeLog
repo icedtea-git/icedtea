@@ -1,5 +1,17 @@
 2016-03-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2873: Fix make distcheck
+	* Makefile.am:
+	(VERSION_SETTINGS_FILE_BACKUP): Added.
+	(versioning): Use VERSION_SETTINGS_FILE_BACKUP
+	rather than hardcoding a name.
+	(clean-versioning): Replace the outdated Defs.gmk
+	usage with VERSION_SETTINGS_FILE and
+	VERSION_SETTINGS_FILE_BACKUP.
+	* NEWS: Updated.
+
+2016-03-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2826: Provide option to disable SystemTap tests
 	* INSTALL: Document --disable-systemtap-tests.
 	* Makefile.am:

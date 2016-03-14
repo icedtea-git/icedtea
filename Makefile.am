@@ -86,6 +86,8 @@ SOURCEPATH_DIRS = $(OPENJDK_SOURCEPATH_DIRS)
 
 VERSION_SETTINGS_FILE = openjdk/jdk/make/ProfileNames.gmk
 
+VERSION_SETTINGS_FILE_BACKUP = $$(basename $(VERSION_SETTINGS_FILE)).bak
+
 JDK_CACERTS_FILE = $(SYSTEM_JDK_DIR)/jre/lib/security/cacerts
 
 CACERTS_FILE = \
@@ -1323,8 +1325,8 @@ clean-patch:
 	fi
 
 stamps/versioning.stamp: stamps/patch.stamp
-	mv $(VERSION_SETTINGS_FILE) ProfileNames.gmk.bak
-	cat ProfileNames.gmk.bak > $(VERSION_SETTINGS_FILE)
+	mv $(VERSION_SETTINGS_FILE) $(VERSION_SETTINGS_FILE_BACKUP)
+	cat $(VERSION_SETTINGS_FILE_BACKUP) > $(VERSION_SETTINGS_FILE)
 	icedtea_version="$(PACKAGE_VERSION)$(ICEDTEA_REV)" ; \
 	if test "x$(ENABLE_CACAO)" = "xyes" || \
 	   test "x$(ENABLE_JAMVM)" = "xyes"; then \
@@ -1358,8 +1360,8 @@ endif
 	touch $@
 
 clean-versioning:
-	if [ -e Defs.gmk.bak ] ; then \
-	  mv Defs.gmk.bak openjdk/jdk/make/common/shared/Defs.gmk ; \
+	if [ -e $(VERSION_SETTINGS_FILE_BACKUP) ] ; then \
+	  mv $(VERSION_SETTINGS_FILE_BACKUP) $(VERSION_SETTINGS_FILE) ; \
 	fi
 	rm -f stamps/versioning.stamp
 
