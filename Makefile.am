@@ -2216,8 +2216,11 @@ if ENABLE_SYSTEMTAP
 	if test "x${PERL}" = "x"; then \
 	  echo "ERROR: Perl not found"; exit -1; \
 	fi
+	if test "x${STAP}" = "x"; then \
+	  echo "ERROR: stap not found"; exit -1; \
+	fi
 	$(MKDIR_P) test
-	${PERL} $(abs_top_srcdir)/test/tapset/jstaptest.pl \
+	${PERL} $(abs_top_builddir)/test/tapset/jstaptest.pl \
 	  -B $(BUILD_IMAGE_DIR) -A $(BUILD_ARCH_DIR) \
 	  -S $(abs_top_srcdir)/test/tapset \
 	  -a test/check-stap.log -p
@@ -2228,8 +2231,11 @@ if ENABLE_SYSTEMTAP
 	if test "x${PERL}" = "x"; then \
 	  echo "ERROR: Perl not found"; exit -1; \
 	fi
+	if test "x${STAP}" = "x"; then \
+	  echo "ERROR: stap not found"; exit -1; \
+	fi
 	$(MKDIR_P) test
-	${PERL} $(abs_top_srcdir)/test/tapset/jstaptest.pl \
+	${PERL} $(abs_top_builddir)/test/tapset/jstaptest.pl \
 	  -B $(BUILD_IMAGE_DIR) -A $(BUILD_ARCH_DIR) \
 	  -S $(abs_top_srcdir)/test/tapset \
 	  -a test/check-stap.log -j

@@ -1,3 +1,16 @@
+2016-03-18  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2885: Location of 'stap' executable is hard-coded
+	* Makefile.am:
+	(check-tapset-probes): Check for STAP and invoke
+	generated script from build directory.
+	(check-tapset-jstack): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Detect stap and warn if not found.
+	* test/tapset/jstaptest.pl.in:
+	Moved from test/tapset/jstaptest.pl. Fill in location
+	of stap and perl binaries from configure output.
+
 2016-03-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2880: Add missing test directory in make check

@@ -252,6 +252,11 @@ if test "x${SDT_H_FOUND}" = "xyes"; then
    AC_MSG_WARN([Perl not found in PATH; SystemTap tests will not be able to run])
  fi
  AC_SUBST(PERL)
+ AC_PATH_TOOL([STAP],[stap])
+ if test x"${STAP}" = x ; then
+   AC_MSG_WARN([stap not found in PATH; SystemTap tests will not be able to run])
+ fi
+ AC_SUBST(STAP)
 fi
 
 AM_CONDITIONAL([ENABLE_SYSTEMTAP], [test x$SDT_H_FOUND = xyes])
@@ -275,6 +280,7 @@ AC_CONFIG_FILES([tapset/hotspot.stp])
 AC_CONFIG_FILES([tapset/hotspot_jni.stp])
 AC_CONFIG_FILES([tapset/jstack.stp])
 AC_CONFIG_FILES([tapset/hotspot_gc.stp])
+AC_CONFIG_FILES([test/tapset/jstaptest.pl])
 
 dnl Check for libXtst headers and libraries.
 PKG_CHECK_MODULES(XTST, xtst,[XTST_FOUND=yes],[XTST_FOUND=no])
