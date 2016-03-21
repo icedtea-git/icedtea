@@ -639,7 +639,10 @@ distclean-local: clean-local clean-download
 	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
 	clean-extract-hotspot clean-sanitise-openjdk clean-icedtea-debug \
 	clean-download-nashorn clean-extract-nashorn clean-download-hotspot \
-	clean-check-crypto clean-check-crypto-debug clean-check-crypto-boot \
+	clean-download-corba clean-download-jaxp clean-download-jaxws \
+	clean-download-langtools clean-download-jdk clean-download-openjdk \
+	clean-extract-corba clean-extract-jaxp clean-extract-jaxws clean-extract-jdk \
+	clean-extract-langtools clean-check-crypto clean-check-crypto-debug clean-check-crypto-boot \
 	clean-add-archive clean-add-archive-debug clean-add-archive-boot clean-cryptocheck \
 	clean-tests clean-tapset-report clean-ecccheck clean-check-ecc \
 	check-jdk check-hotspot check-langtools jtregcheck check-tapset check-tapset-probes \
@@ -675,22 +678,22 @@ dist-openjdk-fsg-xz: stamps/patch-fsg.stamp
 
 # Download OpenJDK sources.
 
-stamps/download.stamp: stamps/download-openjdk.stamp stamps/download-cacao.stamp stamps/download-jamvm.stamp \
- stamps/download-nashorn.stamp stamps/download-hotspot.stamp
+stamps/download.stamp: stamps/download-openjdk.stamp stamps/download-corba.stamp \
+ stamps/download-jaxp.stamp stamps/download-jaxws.stamp stamps/download-jdk.stamp \
+ stamps/download-cacao.stamp stamps/download-jamvm.stamp stamps/download-hotspot.stamp \
+ stamps/download-langtools.stamp stamps/download-nashorn.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-download: clean-download-openjdk clean-download-cacao clean-download-jamvm
+clean-download: clean-download-openjdk clean-download-cacao clean-download-jamvm \
+ clean-download-hotspot clean-download-corba clean-download-jaxp clean-download-jaxws \
+ clean-download-jdk clean-download-langtools clean-download-nashorn
 	rm -f stamps/download.stamp
 
 stamps/download-openjdk.stamp:
 if OPENJDK_SRC_DIR_FOUND
 else
 if USE_HG
-	$(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL) openjdk;
-	for repos in corba jaxp jaxws langtools jdk ; do \
-	  $(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL)/$${repos} openjdk/$${repos}; \
-	done
 else
 if USE_ALT_OPENJDK_SRC_ZIP
 	ln -sf $(ALT_OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP)
@@ -711,6 +714,16 @@ endif
 	    echo "ERROR: No up-to-date OpenJDK root zip available"; exit -1; \
 	  fi ; \
 	fi ;
+endif
+endif
+	mkdir -p stamps
+	touch $@
+
+stamps/download-corba.stamp:
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+else
 if USE_ALT_CORBA_SRC_ZIP
 	ln -sf $(ALT_CORBA_SRC_ZIP) $(CORBA_SRC_ZIP)
 endif
@@ -730,6 +743,16 @@ endif
 	    echo "ERROR: No up-to-date OpenJDK CORBA zip available"; exit -1; \
 	  fi ; \
 	fi ;
+endif
+endif
+	mkdir -p stamps
+	touch $@
+
+stamps/download-jaxp.stamp:
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+else
 if USE_ALT_JAXP_SRC_ZIP
 	ln -sf $(ALT_JAXP_SRC_ZIP) $(JAXP_SRC_ZIP)
 endif
@@ -749,6 +772,16 @@ endif
 	    echo "ERROR: No up-to-date JAXP root zip available"; exit -1; \
 	  fi ; \
 	fi ;
+endif
+endif
+	mkdir -p stamps
+	touch $@
+
+stamps/download-jaxws.stamp:
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+else
 if USE_ALT_JAXWS_SRC_ZIP
 	ln -sf $(ALT_JAXWS_SRC_ZIP) $(JAXWS_SRC_ZIP)
 endif
@@ -768,6 +801,16 @@ endif
 	    echo "ERROR: No up-to-date OpenJDK JAXWS zip available"; exit -1; \
 	  fi ; \
 	fi ;
+endif
+endif
+	mkdir -p stamps
+	touch $@
+
+stamps/download-jdk.stamp:
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+else
 if USE_ALT_JDK_SRC_ZIP
 	ln -sf $(ALT_JDK_SRC_ZIP) $(JDK_SRC_ZIP)
 endif
@@ -787,6 +830,16 @@ endif
 	    echo "ERROR: No up-to-date OpenJDK JDK zip available"; exit -1; \
 	  fi ; \
 	fi ;
+endif
+endif
+	mkdir -p stamps
+	touch $@
+
+stamps/download-langtools.stamp:
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+else
 if USE_ALT_LANGTOOLS_SRC_ZIP
 	ln -sf $(ALT_LANGTOOLS_SRC_ZIP) $(LANGTOOLS_SRC_ZIP)
 endif
@@ -811,22 +864,37 @@ endif
 	mkdir -p stamps
 	touch $@
 
-clean-download-openjdk: clean-download-nashorn clean-download-hotspot
+clean-download-openjdk:
 	if [ ! -z $(OPENJDK_SRC_ZIP) ] ; then \
 	  rm -f $(OPENJDK_SRC_ZIP) ; \
 	fi
+	rm -f stamps/download-openjdk.stamp
+
+clean-download-corba:
 	if [ ! -z $(CORBA_SRC_ZIP) ] ; then \
 	  rm -f $(CORBA_SRC_ZIP) ; \
 	fi
+	rm -f stamps/download-corba.stamp
+
+clean-download-jaxp:
 	if [ ! -z $(JAXP_SRC_ZIP) ] ; then \
 	  rm -f $(JAXP_SRC_ZIP) ; \
 	fi
+	rm -f stamps/download-jaxp.stamp
+
+clean-download-jaxws:
 	if [ ! -z $(JAXWS_SRC_ZIP) ] ; then \
 	  rm -f $(JAXWS_SRC_ZIP) ; \
 	fi
+	rm -f stamps/download-jaxws.stamp
+
+clean-download-jdk:
 	if [ ! -z $(JDK_SRC_ZIP) ] ; then \
 	  rm -f $(JDK_SRC_ZIP) ; \
 	fi
+	rm -f stamps/download-jdk.stamp
+
+clean-download-langtools:
 	if [ ! -z $(LANGTOOLS_SRC_ZIP) ] ; then \
 	  rm -f $(LANGTOOLS_SRC_ZIP) ; \
 	fi
@@ -931,11 +999,10 @@ clean-download-nashorn:
 	fi
 	rm -f stamps/download-nashorn.stamp
 
-stamps/download-hotspot.stamp: stamps/download-openjdk.stamp
+stamps/download-hotspot.stamp:
 if OPENJDK_SRC_DIR_FOUND
 else
 if USE_HG
-	$(HG) clone $(REV_ARG) $(HS_URL) openjdk/hotspot
 else
 if USE_ALT_HOTSPOT_SRC_ZIP
 	ln -sf $(ALT_HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP)
@@ -972,10 +1039,12 @@ clean-download-hotspot:
 	fi
 	rm -f stamps/download-hotspot.stamp
 
-stamps/extract.stamp: stamps/extract-openjdk.stamp \
+stamps/extract.stamp: stamps/extract-openjdk.stamp stamps/extract-corba.stamp \
+ stamps/extract-jaxp.stamp stamps/extract-jaxws.stamp stamps/extract-jdk.stamp \
  stamps/extract-cacao.stamp stamps/remove-intree-libraries.stamp \
- stamps/extract-jamvm.stamp stamps/extract-hotspot.stamp \
- stamps/sanitise-openjdk.stamp stamps/extract-nashorn.stamp
+ stamps/extract-langtools.stamp stamps/extract-jamvm.stamp \
+ stamps/extract-hotspot.stamp stamps/sanitise-openjdk.stamp \
+ stamps/extract-nashorn.stamp
 	mkdir -p stamps
 	touch $@
 
@@ -985,6 +1054,9 @@ clean-extract: clean-extract-openjdk clean-extract-cacao clean-extract-jamvm
 stamps/extract-openjdk.stamp: stamps/download-openjdk.stamp
 if OPENJDK_SRC_DIR_FOUND
 	cp -pPR $(OPENJDK_SRC_DIR_LINK) $(OPENJDK_SRC_DIR) openjdk
+else
+if USE_HG
+	$(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL) openjdk;
 else
 	set -e ; \
 	if ! test -d openjdk ; then \
@@ -999,6 +1071,24 @@ else
 	    false; \
 	  fi; \
 	fi; 
+endif
+endif
+	touch $@
+
+clean-extract-openjdk: clean-overlay clean-versioning \
+ clean-patch-fsg clean-remove-intree-libraries \
+ clean-sanitise-openjdk clean-extract-hotspot \
+ clean-extract-jdk clean-extract-jaxp clean-extract-jaxws \
+ clean-extract-corba clean-extract-langtools
+	rm -rf openjdk
+	rm -f stamps/extract-openjdk.stamp
+
+stamps/extract-corba.stamp: stamps/extract-openjdk.stamp stamps/download-corba.stamp
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+	$(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL)/corba openjdk/corba
+else
 	set -e ; \
 	if [ ! -z $(CORBA_SRC_ZIP) ] ; then \
 	  if test -e ${CORBA_SRC_ZIP} ; \
@@ -1013,6 +1103,20 @@ else
 	    fi ; \
 	  fi ; \
 	fi
+endif
+endif
+	touch $@
+
+clean-extract-corba:
+	rm -rf openjdk/corba
+	rm -f stamps/extract-corba.stamp
+
+stamps/extract-jaxp.stamp: stamps/extract-openjdk.stamp stamps/download-jaxp.stamp
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+	$(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL)/jaxp openjdk/jaxp
+else
 	set -e ; \
 	if [ ! -z $(JAXP_SRC_ZIP) ] ; then \
 	  if test -e ${JAXP_SRC_ZIP} ; \
@@ -1027,6 +1131,20 @@ else
 	    fi ; \
 	  fi ; \
 	fi
+endif
+endif
+	touch $@
+
+clean-extract-jaxp:
+	rm -rf openjdk/jaxp
+	rm -f stamps/extract-jaxp.stamp
+
+stamps/extract-jaxws.stamp: stamps/extract-openjdk.stamp stamps/download-jaxws.stamp
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+	$(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL)/jaxws openjdk/jaxws
+else
 	set -e ; \
 	if [ ! -z $(JAXWS_SRC_ZIP) ] ; then \
 	  if test -e ${JAXWS_SRC_ZIP} ; \
@@ -1041,6 +1159,20 @@ else
 	    fi ; \
 	  fi ; \
 	fi
+endif
+endif
+	touch $@
+
+clean-extract-jaxws:
+	rm -rf openjdk/jaxws
+	rm -f stamps/extract-jaxws.stamp
+
+stamps/extract-jdk.stamp: stamps/extract-openjdk.stamp stamps/download-jdk.stamp
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+	$(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL)/jdk openjdk/jdk
+else
 	set -e ; \
 	if [ ! -z $(JDK_SRC_ZIP) ] ; then \
 	  if test -e ${JDK_SRC_ZIP} ; \
@@ -1055,6 +1187,20 @@ else
 	    fi ; \
 	  fi ; \
 	fi
+endif
+endif
+	touch $@
+
+clean-extract-jdk:
+	rm -rf openjdk/jdk
+	rm -f stamps/extract-jdk.stamp
+
+stamps/extract-langtools.stamp: stamps/extract-openjdk.stamp stamps/download-langtools.stamp
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+	$(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL)/langtools openjdk/langtools
+else
 	set -e ; \
 	if [ ! -z $(LANGTOOLS_SRC_ZIP) ] ; then \
 	  if test -e ${LANGTOOLS_SRC_ZIP} ; \
@@ -1070,19 +1216,19 @@ else
 	  fi ; \
 	fi
 endif
-# Remove broken javazic tool
-	rm -rf openjdk/jdk/make/tools/src/build/tools/javazic
-	touch stamps/extract-openjdk.stamp
+endif
+	touch $@
 
-clean-extract-openjdk: clean-overlay clean-versioning \
- clean-patch-fsg clean-remove-intree-libraries \
- clean-sanitise-openjdk clean-extract-hotspot \
- clean-extract-nashorn
-	rm -rf openjdk
-	rm -f stamps/extract-openjdk.stamp
+clean-extract-langtools:
+	rm -rf openjdk/langtools
+	rm -f stamps/extract-langtools.stamp
 
-stamps/extract-hotspot.stamp: stamps/extract-openjdk.stamp \
- stamps/download-hotspot.stamp
+stamps/extract-hotspot.stamp: stamps/extract-openjdk.stamp stamps/download-hotspot.stamp
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+	$(HG) clone $(REV_ARG) $(HS_URL) openjdk/hotspot
+else
 	set -e ; \
 	if [ ! -z $(HOTSPOT_SRC_ZIP) ] ; then \
 	  if test -e ${HOTSPOT_SRC_ZIP} ; \
@@ -1102,14 +1248,20 @@ stamps/extract-hotspot.stamp: stamps/extract-openjdk.stamp \
 	    fi ; \
 	  fi ; \
 	fi
-	touch stamps/extract-hotspot.stamp
+endif
+endif
+	touch $@
 
 clean-extract-hotspot:
 	rm -rf openjdk/hotspot
 	rm -f stamps/extract-hotspot.stamp
 
 stamps/extract-nashorn.stamp: stamps/extract-openjdk.stamp stamps/download-nashorn.stamp
-if !OPENJDK_SRC_DIR_FOUND
+if OPENJDK_SRC_DIR_FOUND
+else
+if USE_HG
+	$(HG) clone $(REV_ARG) $(ICEDTEA_HG_URL)/nashorn openjdk/nashorn
+else
 	set -e ; \
 	if [ ! -z $(NASHORN_SRC_ZIP) ] ; then \
 	  if test -e ${NASHORN_SRC_ZIP} ; \
@@ -1125,7 +1277,7 @@ if !OPENJDK_SRC_DIR_FOUND
 	  fi ; \
 	fi
 endif
-	mkdir -p stamps
+endif
 	touch $@
 
 clean-extract-nashorn:
@@ -1133,7 +1285,10 @@ clean-extract-nashorn:
 	rm -f stamps/extract-nashorn.stamp
 
 stamps/sanitise-openjdk.stamp: stamps/extract-openjdk.stamp \
- stamps/extract-hotspot.stamp stamps/extract-nashorn.stamp
+ stamps/extract-hotspot.stamp stamps/extract-jdk.stamp \
+ stamps/extract-langtools.stamp stamps/extract-corba.stamp \
+ stamps/extract-jaxp.stamp stamps/extract-jaxws.stamp \
+ stamps/extract-nashorn.stamp
 	chmod -R ug+w openjdk 
 	chmod +x $(builddir)/fsg.sh
 	sh $(builddir)/fsg.sh
@@ -2642,9 +2797,19 @@ download: stamps/download.stamp
 
 download-cacao: stamps/download-cacao.stamp
 
+download-corba: stamps/download-corba.stamp
+
 download-hotspot: stamps/download-hotspot.stamp
 
 download-jamvm: stamps/download-jamvm.stamp
+
+download-jaxp: stamps/download-jaxp.stamp
+
+download-jaxws: stamps/download-jaxws.stamp
+
+download-jdk: stamps/download-jdk.stamp
+
+download-langtools: stamps/download-langtools.stamp
 
 download-nashorn: stamps/download-nashorn.stamp
 
@@ -2656,13 +2821,23 @@ extract: stamps/extract.stamp
 
 extract-cacao: stamps/extract-cacao.stamp
 
+extract-corba: stamps/extract-corba.stamp
+
+extract-hotspot: stamps/extract-hotspot.stamp
+
 extract-jamvm: stamps/extract-jamvm.stamp
+
+extract-jaxp: stamps/extract-jaxp.stamp
+
+extract-jaxws: stamps/extract-jaxws.stamp
+
+extract-jdk: stamps/extract-jdk.stamp
+
+extract-langtools: stamps/extract-langtools.stamp
 
 extract-nashorn: stamps/extract-nashorn.stamp
 
 extract-openjdk: stamps/extract-openjdk.stamp
-
-extract-hotspot: stamps/extract-hotspot.stamp
 
 icedtea-configure: stamps/icedtea-configure.stamp
 
