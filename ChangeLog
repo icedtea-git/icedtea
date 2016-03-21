@@ -1,3 +1,92 @@
+2016-03-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1889: Allow tarball checksumming to be disabled
+	* INSTALL: Document --disable-nashorn-checksum.
+	* Makefile.am:
+	(NASHORN_SHA256SUM_BIN): Define to either
+	$(SHA256SUM) or true, depending on whether or
+	not checksumming should be performed.
+	(download-nashorn): Use NASHORN_SHA256SUM_BIN
+	instead of SHA256SUM directly.
+	* acinclude.m4:
+	(IT_WITH_NASHORN_SRC_ZIP): Define only once.
+	(IT_ENABLE_HOTSPOT_CHECKSUM): Provide
+	--disable-nashorn-checksum option.
+	* configure.ac: Replace call to
+	IT_WITH_NASHORN_SRC_ZIP macros with call
+	to IT_ENABLE_NASHORN_CHECKSUM macro, which
+	in turn requires the IT_WITH_NASHORN_SRC_ZIP
+	macro.
+
+2015-07-15  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR1889: Allow tarball checksumming to be disabled
+	* INSTALL: Document new options.
+	* Makefile.am:
+	(OPENJDK_SHA256SUM_BIN): Define to either
+	$(SHA256SUM) or true, depending on whether or
+	not checksumming should be performed.
+	(CORBA_SHA256SUM_BIN): Likewise.
+	(JAXP_SHA256SUM_BIN): Likewise.
+	(JAXWS_SHA256SUM_BIN): Likewise.
+	(JDK_SHA256SUM_BIN): Likewise.
+	(LANGTOOLS_SHA256SUM_BIN): Likewise.
+	(CACAO_SHA256SUM_BIN): Likewise.
+	(JAMVM_SHA256SUM_BIN): Likewise.
+	(HOTSPOT_SHA256SUM_BIN): Likewise.
+	(download-openjdk): Use OPENJDK_SHA256SUM_BIN
+	instead of SHA256SUM directly.
+	(download-corba): Use CORBA_SHA256SUM_BIN
+	instead of SHA256SUM directly.
+	(download-jaxp): Use JAXP_SHA256SUM_BIN
+	instead of SHA256SUM directly.
+	(download-jaxws): Use JAXWS_SHA256SUM_BIN
+	instead of SHA256SUM directly.
+	(download-jdk): Use JDK_SHA256SUM_BIN
+	instead of SHA256SUM directly.
+	(download-langtools): Use LANGTOOLS_SHA256SUM_BIN
+	instead of SHA256SUM directly.
+	(download-cacao): Use CACAO_SHA256SUM_BIN
+	instead of SHA256SUM directly.
+	(download-jamvm): Use JAMVM_SHA256SUM_BIN
+	instead of SHA256SUM directly.
+	(download-hotspot): Use HOTSPOT_SHA256SUM_BIN
+	instead of SHA256SUM directly.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_WITH_OPENJDK_SRC_ZIP): Define only once.
+	(IT_WITH_CACAO_SRC_ZIP): Likewise.
+	(IT_WITH_HOTSPOT_SRC_ZIP): Likewise.
+	(IT_WITH_CORBA_SRC_ZIP): Likewise.
+	(IT_WITH_JAXP_SRC_ZIP): Likewise.
+	(IT_WITH_JAXWS_SRC_ZIP): Likewise.
+	(IT_WITH_JDK_SRC_ZIP): Likewise.
+	(IT_WITH_LANGTOOLS_SRC_ZIP): Likewise.
+	(IT_WITH_JAMVM_SRC_ZIP): Likewise.
+	(IT_ENABLE_OPENJDK_CHECKSUM): Provide
+	--disable-openjdk-checksum option.
+	(IT_ENABLE_CORBA_CHECKSUM): Provide
+	--disable-corba-checksum option.
+	(IT_ENABLE_JAXP_CHECKSUM): Provide
+	--disable-jaxp-checksum option.
+	(IT_ENABLE_JAXWS_CHECKSUM): Provide
+	--disable-jaxws-checksum option.
+	(IT_ENABLE_JDK_CHECKSUM): Provide
+	--disable-jdk-checksum option.
+	(IT_ENABLE_LANGTOOLS_CHECKSUM): Provide
+	--disable-langtools-checksum option.
+	(IT_ENABLE_CACAO_CHECKSUM): Provide
+	--disable-cacao-checksum option.
+	(IT_ENABLE_JAMVM_CHECKSUM): Provide
+	--disable-jamvm-checksum option.
+	(IT_ENABLE_HOTSPOT_CHECKSUM): Provide
+	--disable-hotspot-checksum option.
+	* configure.ac: Replace calls to
+	IT_WITH_X_SRC_ZIP macros with calls
+	to IT_ENABLE_X_CHECKSUM macros, which
+	in turn require the IT_WITH_X_SRC_ZIP
+	macro.
+
 2016-03-20  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1815: Split download/extraction rules for OpenJDK

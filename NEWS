@@ -65,6 +65,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR1834, RH1022017: Report elliptic curves supported by NSS, not the SunEC library
   - PR1845: jstack.stp in OpenJDK8 is broken
   - PR1869: Avoid x86 workaround when running Zero rather than a JIT
+  - PR1889: Allow tarball checksumming to be disabled
   - PR1935: HotSpot extraction needs to depend on the tarball being downloaded
   - PR1937: Add configure option for -Werror
   - PR1938: Zero broken by enforced use of -Werror

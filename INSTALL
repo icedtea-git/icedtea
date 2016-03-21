@@ -122,19 +122,49 @@ to configure:
     - /usr/share/java/ecj.jar
     - /usr/share/eclipse-ecj-3.{2,3,4,5}/lib/ecj.jar
 * --with-openjdk-src-zip: Specify the location of the OpenJDK tarball to avoid downloading.
+* --disable-openjdk-checksum: Don't check that the tarball specified by --with-openjdk-src-zip
+  has the same checksum as the expected OpenJDK source zip, so a locally modified version can
+  be used instead.
 * --with-hotspot-src-zip: Specify the location of the HotSpot tarball to avoid downloading.
+* --disable-hotspot-checksum: Don't check that the tarball specified by --with-hotspot-src-zip
+  has the same checksum as the expected HotSpot source zip, so a locally modified version can
+  be used instead.
 * --with-corba-src-zip: Specify the location of the CORBA tarball to avoid downloading.
+* --disable-corba-checksum: Don't check that the tarball specified by --with-corba-src-zip
+  has the same checksum as the expected CORBA source zip, so a locally modified version can
+  be used instead.
 * --with-jaxp-src-zip: Specify the location of the JAXP tarball to avoid downloading.
+* --disable-jaxp-checksum: Don't check that the tarball specified by --with-jaxp-src-zip
+  has the same checksum as the expected JAXP source zip, so a locally modified version can
+  be used instead.
 * --with-jaxws-src-zip: Specify the location of the JAXWS tarball to avoid downloading.
+* --disable-jaxws-checksum: Don't check that the tarball specified by --with-jaxws-src-zip
+  has the same checksum as the expected JAXWS source zip, so a locally modified version can
+  be used instead.
 * --with-jdk-src-zip: Specify the location of the JDK tarball to avoid downloading.
+* --disable-jdk-checksum: Don't check that the tarball specified by --with-jdk-src-zip
+  has the same checksum as the expected JDK source zip, so a locally modified version can
+  be used instead.
 * --with-langtools-src-zip: Specify the location of the langtools tarball to avoid downloading.
+* --disable-langtools-checksum: Don't check that the tarball specified by --with-langtools-src-zip
+  has the same checksum as the expected langtools source zip, so a locally modified version can
+  be used instead.
 * --with-nashorn-src-zip: Specify the location of the Nashorn tarball to avoid downloading.
+* --disable-nashorn-checksum: Don't check that the tarball specified by --with-nashorn-src-zip
+  has the same checksum as the expected Nashorn source zip, so a locally modified version can
+  be used instead.
 * --with-alt-jar: Use the specified jar binary in the second stage rather than the one just built.
 * --with-cacao-home: Specify the location of an installed CACAO to use rather than downloading
   and building one.
 * --with-cacao-src-zip: Specify the location of a CACAO tarball to avoid downloading.
+* --disable-cacao-checksum: Don't check that the tarball specified by --with-cacao-src-zip
+  has the same checksum as the expected CACAO source zip, so a locally modified version can
+  be used instead.
 * --with-cacao-src-dir: Specify the location of a CACAO source tree to avoid downloading.
 * --with-jamvm-src-zip: Specify the location of a JamVM tarball to avoid downloading.
+* --disable-jamvm-checksum: Don't check that the tarball specified by --with-jamvm-src-zip
+  has the same checksum as the expected JamVM source zip, so a locally modified version can
+  be used instead.
 * --with-hg-revision: Specify a hg revision to use (as opposed to tip) with the --enable-hg option.
 * --with-abs-install-dir: The final install location of the j2sdk-image, for use in the SystemTap tapset.
 * --with-llvm-config: Specify the location of the llvm-config binary.

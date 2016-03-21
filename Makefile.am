@@ -133,6 +133,66 @@ else
   NASHORN_SRC_ZIP = nashorn.tar.xz
 endif
 
+if DISABLE_OPENJDK_CHECKSUM
+OPENJDK_SHA256SUM_BIN = true
+else
+OPENJDK_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if DISABLE_CORBA_CHECKSUM
+CORBA_SHA256SUM_BIN = true
+else
+CORBA_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if DISABLE_JAXP_CHECKSUM
+JAXP_SHA256SUM_BIN = true
+else
+JAXP_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if DISABLE_JAXWS_CHECKSUM
+JAXWS_SHA256SUM_BIN = true
+else
+JAXWS_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if DISABLE_JDK_CHECKSUM
+JDK_SHA256SUM_BIN = true
+else
+JDK_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if DISABLE_LANGTOOLS_CHECKSUM
+LANGTOOLS_SHA256SUM_BIN = true
+else
+LANGTOOLS_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if DISABLE_CACAO_CHECKSUM
+CACAO_SHA256SUM_BIN = true
+else
+CACAO_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if DISABLE_JAMVM_CHECKSUM
+JAMVM_SHA256SUM_BIN = true
+else
+JAMVM_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if DISABLE_HOTSPOT_CHECKSUM
+HOTSPOT_SHA256SUM_BIN = true
+else
+HOTSPOT_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if DISABLE_NASHORN_CHECKSUM
+NASHORN_SHA256SUM_BIN = true
+else
+NASHORN_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
 if WITH_HGREV
 REV_ARG = -r $(HGREV)
 endif
@@ -699,7 +759,7 @@ if USE_ALT_OPENJDK_SRC_ZIP
 	ln -sf $(ALT_OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP)
 endif
 	if ! echo "$(OPENJDK_SHA256SUM)  $(OPENJDK_SRC_ZIP)" \
-	  | $(SHA256SUM) --check ; \
+	  | $(OPENJDK_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ -e $(OPENJDK_SRC_ZIP) ] ; then \
@@ -728,7 +788,7 @@ if USE_ALT_CORBA_SRC_ZIP
 	ln -sf $(ALT_CORBA_SRC_ZIP) $(CORBA_SRC_ZIP)
 endif
 	if ! echo "$(CORBA_SHA256SUM)  $(CORBA_SRC_ZIP)" \
-	  | $(SHA256SUM) --check ; \
+	  | $(CORBA_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ $(CORBA_SRC_ZIP) ] ; then \
@@ -757,7 +817,7 @@ if USE_ALT_JAXP_SRC_ZIP
 	ln -sf $(ALT_JAXP_SRC_ZIP) $(JAXP_SRC_ZIP)
 endif
 	if ! echo "$(JAXP_SHA256SUM)  $(JAXP_SRC_ZIP)" \
-	  | $(SHA256SUM) --check ; \
+	  | $(JAXP_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ $(JAXP_SRC_ZIP) ] ; then \
@@ -786,7 +846,7 @@ if USE_ALT_JAXWS_SRC_ZIP
 	ln -sf $(ALT_JAXWS_SRC_ZIP) $(JAXWS_SRC_ZIP)
 endif
 	if ! echo "$(JAXWS_SHA256SUM)  $(JAXWS_SRC_ZIP)" \
-	  | $(SHA256SUM) --check ; \
+	  | $(JAXWS_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ $(JAXWS_SRC_ZIP) ] ; then \
@@ -815,7 +875,7 @@ if USE_ALT_JDK_SRC_ZIP
 	ln -sf $(ALT_JDK_SRC_ZIP) $(JDK_SRC_ZIP)
 endif
 	if ! echo "$(JDK_SHA256SUM)  $(JDK_SRC_ZIP)" \
-	  | $(SHA256SUM) --check ; \
+	  | $(JDK_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ $(JDK_SRC_ZIP) ] ; then \
@@ -844,7 +904,7 @@ if USE_ALT_LANGTOOLS_SRC_ZIP
 	ln -sf $(ALT_LANGTOOLS_SRC_ZIP) $(LANGTOOLS_SRC_ZIP)
 endif
 	if ! echo "$(LANGTOOLS_SHA256SUM)  $(LANGTOOLS_SRC_ZIP)" \
-	  | $(SHA256SUM) --check ; \
+	  | $(LANGTOOLS_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ $(LANGTOOLS_SRC_ZIP) ] ; then \
@@ -909,7 +969,7 @@ if USE_ALT_CACAO_SRC_ZIP
 	ln -sf $(ALT_CACAO_SRC_ZIP) $(CACAO_SRC_ZIP)
 endif
 	if ! echo "$(CACAO_SHA256SUM)  $(CACAO_SRC_ZIP)" \
-	 | $(SHA256SUM) --check ; \
+	 | $(CACAO_SHA256SUM_BIN) --check ; \
 	then \
 	 if test "x$(enable_downloading)" = "xyes"; then \
 	   if [ -e $(CACAO_SRC_ZIP) ] ; then \
@@ -940,7 +1000,7 @@ if USE_ALT_JAMVM_SRC_ZIP
 	ln -sf $(ALT_JAMVM_SRC_ZIP) $(JAMVM_SRC_ZIP)
 endif
 	if ! echo "$(JAMVM_SHA256SUM)  $(JAMVM_SRC_ZIP)" \
-	 | $(SHA256SUM) --check ; \
+	 | $(JAMVM_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ -e $(JAMVM_SRC_ZIP) ] ; then \
@@ -973,7 +1033,7 @@ if USE_ALT_NASHORN_SRC_ZIP
 	ln -sf $(ALT_NASHORN_SRC_ZIP) $(NASHORN_SRC_ZIP)
 endif
 	if ! echo "$(NASHORN_SHA256SUM)  $(NASHORN_SRC_ZIP)" \
-	  | $(SHA256SUM) --check ; \
+	  | $(NASHORN_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ -e $(NASHORN_SRC_ZIP) ] ; then \
@@ -1009,7 +1069,7 @@ if USE_ALT_HOTSPOT_SRC_ZIP
 endif
 	echo "Using HotSpot build: ${HSBUILD}"
 	if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
-	  | $(SHA256SUM) --check ; \
+	  | $(HOTSPOT_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
 	    if [ -e $(HOTSPOT_SRC_ZIP) ] ; then \
