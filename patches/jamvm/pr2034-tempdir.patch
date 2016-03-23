@@ -1,0 +1,24 @@
+diff --git a/src/classlib/openjdk/jvm.c b/src/classlib/openjdk/jvm.c
+index 971ac75..b5f4cae 100644
+--- jamvm.old/jamvm/src/classlib/openjdk/jvm.c
++++ jamvm/jamvm/src/classlib/openjdk/jvm.c
+@@ -3038,3 +3038,19 @@ jint JVM_FindSignal(const char *name) {
+ 
+     return signals[i].number;
+ }
++
++/* JVM_GetTemporaryDirectory
++ * Return the temporary directory that the VM uses for the attach
++ * and perf data files.
++ *
++ * It is important that this directory is well-known and the
++ * same for all VM instances. It cannot be affected by configuration
++ * variables such as java.io.tmpdir.
++ */
++jstring JVM_GetTemporaryDirectory(JNIEnv *env) {
++    TRACE("JVM_GetTemporaryDirectory(env=%p)", env);
++
++// This must be hard coded because it's the system's temporary
++// directory not the java application's temp directory, ala java.io.tmpdir.
++    return createString("/tmp");
++}

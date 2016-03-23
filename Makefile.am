@@ -309,7 +309,8 @@ endif
 
 if BUILD_JAMVM
 ICEDTEA_PATCHES += \
-	patches/jamvm/find_class_from_caller.patch
+	patches/jamvm/find_class_from_caller.patch \
+	patches/jamvm/pr2034-tempdir.patch
 endif
 
 if !ENABLE_SUNEC

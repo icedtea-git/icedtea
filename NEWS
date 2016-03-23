@@ -182,6 +182,7 @@ New in release 3.0.0 (2015-XX-XX):
   - JSR 292: correct intrinsic cache COMPARE function
   - Race condition in setting up imethod table
   - GC: Minor performance improvement
+  - PR2034: --enable-jamvm builds broken, missing JVM_GetTemporaryDirectory impl
   - PR2336: JamVM lacks JVM_FindClassFromCaller
 * CACAO
   - PR1277: Synchronise CACAO rules between IcedTea6/7/8 where possible
