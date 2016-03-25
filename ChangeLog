@@ -1,3 +1,31 @@
+2016-03-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Bump to icedtea-2.6.5.
+	* INSTALL: Update X11 dependency documentation.
+	* Makefile.am:
+	(JDK_UPDATE_VERSION): Bump to 99.
+	(CORBA_CHANGESET): Update to icedtea-2.6.5.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 2.6.5. Add check
+	for libXcomposite as required by fix
+	for PR2866. Correct variables used by
+	xproto check.
+	* hotspot.map.in: Update to icedtea-2.6.5.
+	* patches/boot/ecj-multicatch.patch:
+	Add new cases in java.lang.invoke.MemberName
+	and sun.invoke.util.VerifyAccess
+
 2016-03-18  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2886: Location of 'stap' executable is hard-coded

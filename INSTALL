@@ -11,7 +11,7 @@ A bootstrap JDK, either:
   - GNU libgcj 4.4.0 (or equivalent class library based on GNU Classpath >= 0.95) (--enable-bootstrap mode only, the default)
   - IcedTea6 or IcedTea7
 CUPS
-libX11 (libXp, libXtst, libXi, libXt, libXinerama)
+libX11 (xproto, libX11, libXext, libXtst, libXi, libXt, libXinerama, libXrender, libXcomposite, libXau, libXdmcp)
 Freetype2
 patch
 sed

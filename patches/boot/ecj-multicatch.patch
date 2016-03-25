@@ -706,3 +706,34 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/PrincipalNam
          }
      }
  
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MemberName.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MemberName.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MemberName.java	2016-03-25 04:42:21.295105700 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MemberName.java	2016-03-25 04:43:14.778216824 +0000
+@@ -862,7 +862,12 @@
+                 m = MethodHandleNatives.resolve(m, lookupClass);
+                 m.checkForTypeAlias(m.getDeclaringClass());
+                 m.resolution = null;
+-            } catch (ClassNotFoundException | LinkageError ex) {
++            } catch (ClassNotFoundException ex) {
++                // JVM reports that the "bytecode behavior" would get an error
++                assert(!m.isResolved());
++                m.resolution = ex;
++                return m;
++            } catch (LinkageError ex) {
+                 // JVM reports that the "bytecode behavior" would get an error
+                 assert(!m.isResolved());
+                 m.resolution = ex;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java openjdk-boot/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java	2016-03-25 04:42:03.663398723 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java	2016-03-25 04:42:45.170708900 +0000
+@@ -222,7 +222,9 @@
+                     public Class<?> run() {
+                         try {
+                             return Class.forName(name, false, refcLoader);
+-                        } catch (ClassNotFoundException | LinkageError e) {
++                        } catch (ClassNotFoundException e) {
++                            return null; // Assume the class is not found
++                        } catch (LinkageError e) {
+                             return null; // Assume the class is not found
+                         }
+                     }
