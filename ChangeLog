@@ -1,3 +1,14 @@
+2016-03-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2781, CA195: typeinfo.cpp: typeinfo_merge_nonarrays:
+	Assertion `dest && result && x.any && y.any' failed
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new patch.
+	* NEWS: Updated.
+	* patches/cacao/pr2781-refactoring_error.patch:
+	Backport of refactoring fix from
+	https://bitbucket.org/Ringdingcoder/cacao-staging
+
 2016-01-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add 2.6.4 release notes.

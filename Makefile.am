@@ -383,7 +383,8 @@ ICEDTEA_PATCHES += \
 	patches/cacao/memory.patch \
 	patches/cacao/pr2032.patch \
 	patches/cacao/pr2520-tempdir.patch \
-	patches/cacao/pr2652-classloader.patch
+	patches/cacao/pr2652-classloader.patch \
+	patches/cacao/pr2781-refactoring_error.patch
 else
 if USING_CACAO
 ICEDTEA_PATCHES += \
