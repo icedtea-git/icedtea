@@ -2178,13 +2178,28 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_FONTCONFIG],
 
 AC_DEFUN_ONCE([IT_CHECK_FOR_CUPS],
 [
-  dnl Check for CUPS headers and libraries.
-  AC_CHECK_LIB([cups], [cupsServer],
-      , [AC_MSG_ERROR([Could not find CUPS library; install CUPS.])])
+  dnl The CUPS headers are always required
   AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],
       , [AC_MSG_ERROR([Could not find CUPS headers; install CUPS (including cups-devel on binary distros).])])
-  CUPS_LIBS="-lcups"
-  AC_SUBST(CUPS_LIBS)
+  AC_MSG_CHECKING([whether to use the system CUPS install])
+  AC_ARG_ENABLE([system-cups],
+	      [AS_HELP_STRING(--enable-system-cups,use the system CUPS [[default=yes]])],
+  [
+    ENABLE_SYSTEM_CUPS="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_CUPS="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_CUPS})
+  if test x"${ENABLE_SYSTEM_CUPS}" = "xyes"; then
+    dnl Check for CUPS libraries
+    AC_CHECK_LIB([cups], [cupsServer],
+        , [AC_MSG_ERROR([Could not find CUPS library; install CUPS.])])
+    CUPS_LIBS="-lcups"
+    AC_SUBST(CUPS_LIBS)
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_CUPS, test x"${ENABLE_SYSTEM_CUPS}" = "xyes")
+  AC_SUBST(ENABLE_SYSTEM_CUPS)
 ])
 
 AC_DEFUN_ONCE([IT_CHECK_FOR_SYSCALLS],
