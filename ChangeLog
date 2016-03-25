@@ -1,5 +1,9 @@
 2016-03-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS: Set release date.
+
+2016-03-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	Bump to icedtea-2.6.5.
 	* INSTALL: Update X11 dependency documentation.
 	* Makefile.am:
