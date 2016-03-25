@@ -16,6 +16,7 @@ New in release 2.6.5 (2016-04-XX):
 
 * Bug fixes
   - PR2803: Make system CUPS optional
+  - PR2893: test/tapset/jstaptest.pl should be executable
 * CACAO
   - PR2781, CA195: typeinfo.cpp: typeinfo_merge_nonarrays: Assertion `dest && result && x.any && y.any' failed
 

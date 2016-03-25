@@ -2845,14 +2845,20 @@ jtregcheck: $(TESTS_TO_RUN)
 
 check-tapset-probes: 
 if ENABLE_SYSTEMTAP
-	$(abs_top_srcdir)/test/tapset/jstaptest.pl \
+	if test "x${PERL}" = "x"; then \
+	  echo "ERROR: Perl not found"; exit -1; \
+	fi
+	${PERL} $(abs_top_srcdir)/test/tapset/jstaptest.pl \
 	  -B $(BUILD_OUTPUT_DIR) -A $(BUILD_ARCH_DIR) \
 	  -S $(abs_top_srcdir)/test/tapset \
 	  -a test/check-stap.log -p
 endif
 check-tapset-jstack: 
 if ENABLE_SYSTEMTAP
-	$(abs_top_srcdir)/test/tapset/jstaptest.pl \
+	if test "x${PERL}" = "x"; then \
+	  echo "ERROR: Perl not found"; exit -1; \
+	fi
+	${PERL} $(abs_top_srcdir)/test/tapset/jstaptest.pl \
 	  -B $(BUILD_OUTPUT_DIR) -A $(BUILD_ARCH_DIR) \
 	  -S $(abs_top_srcdir)/test/tapset \
 	  -a test/check-stap.log -j
