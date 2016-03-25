@@ -1,5 +1,17 @@
 2016-03-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2803: Make system CUPS optional
+	* INSTALL: Document --enable-system-cups.
+	* Makefile.am:
+	(ICEDTEA_ENV): Set SYSTEM_CUPS to the
+	value of ENABLE_SYSTEM_CUPS rather than 'true'.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_CHECK_FOR_CUPS): Only check for the library
+	if --enable-system-cups is on.
+
+2016-03-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2781, CA195: typeinfo.cpp: typeinfo_merge_nonarrays:
 	Assertion `dest && result && x.any && y.any' failed
 	* Makefile.am:
