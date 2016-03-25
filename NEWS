@@ -16,6 +16,7 @@ New in release 2.6.5 (2016-04-XX):
 
 * Bug fixes
   - PR2803: Make system CUPS optional
+  - PR2886: Location of 'stap' executable is hard-coded
   - PR2893: test/tapset/jstaptest.pl should be executable
   - PR2894: Add missing test directory in make check.
 * CACAO
