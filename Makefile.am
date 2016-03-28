@@ -959,7 +959,7 @@ clean-download-langtools:
 	if [ ! -z $(LANGTOOLS_SRC_ZIP) ] ; then \
 	  rm -f $(LANGTOOLS_SRC_ZIP) ; \
 	fi
-	rm -f stamps/download-openjdk.stamp
+	rm -f stamps/download-langtools.stamp
 
 stamps/download-cacao.stamp:
 if BUILD_CACAO
@@ -1140,7 +1140,7 @@ clean-extract-openjdk: clean-overlay clean-versioning \
  clean-patch-fsg clean-remove-intree-libraries \
  clean-sanitise-openjdk clean-extract-hotspot \
  clean-extract-jdk clean-extract-jaxp clean-extract-jaxws \
- clean-extract-corba clean-extract-langtools
+ clean-extract-corba clean-extract-langtools clean-extract-nashorn
 	rm -rf openjdk
 	rm -f stamps/extract-openjdk.stamp
 

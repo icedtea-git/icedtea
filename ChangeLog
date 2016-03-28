@@ -1,3 +1,11 @@
+2015-03-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2873: Fix make distcheck
+	* Makefile.am:
+	(clean-download-langtools): Correct typo, deleting
+	download-openjdk.stamp instead of download-langtools.stamp
+	(clean-extract-openjdk): Also depend on clean-extract-nashorn.
+
 2015-07-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2034: --enable-jamvm builds broken, missing
