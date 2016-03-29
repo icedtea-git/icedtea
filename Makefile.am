@@ -1384,6 +1384,7 @@ endif
 	touch $@
 
 clean-extract-cacao: clean-cacao
+	rm -rf cacao
 	rm -f stamps/extract-cacao.stamp
 
 stamps/extract-jamvm.stamp: stamps/download-jamvm.stamp
@@ -2164,7 +2165,9 @@ if BUILD_CACAO
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao && \
 	./autogen.sh && \
-	$(ARCH_PREFIX) ./configure \
+	mkdir ../cacao.build && \
+	cd ../cacao.build && \
+	$(ARCH_PREFIX) ../cacao/configure \
 	  --host=$(host_alias) \
 	  --build=$(build_alias) \
 	  --target=$(target_alias) \
@@ -2182,7 +2185,7 @@ endif
 stamps/cacao-build.stamp: stamps/cacao-configure.stamp
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
-	cd cacao/cacao && \
+	cd cacao/cacao.build && \
 	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS)
 endif
 endif
@@ -2192,7 +2195,7 @@ endif
 stamps/cacao-install.stamp: stamps/cacao-build.stamp
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
-	cd cacao/cacao && \
+	cd cacao/cacao.build && \
 	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS) install
 	mkdir -p $(abs_top_builddir)/cacao/install/lib
 	touch $(abs_top_builddir)/cacao/install/lib/sa-jdi.jar
@@ -2205,7 +2208,7 @@ endif
 	touch $@
 
 clean-cacao:
-	rm -rf cacao
+	rm -rf cacao/cacao.build cacao/install
 	rm -f stamps/cacao-configure.stamp stamps/cacao-build.stamp stamps/cacao-install.stamp
 	rm -f stamps/cacao.stamp
 
