@@ -659,11 +659,6 @@ all-local: icedtea-stage2
 check-local: jtregcheck $(SYSTEMTAP_TEST_SUITE) stamps/check-ecc.stamp
 
 clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports clean-check-ecc
-	if [ $(abs_top_srcdir) != $(abs_top_builddir) ] ; then \
-	  if [ -e test ] ; then \
-	    rmdir test ; \
-	  fi \
-	fi
 
 clean-local: clean-tests \
  clean-icedtea clean-icedtea-debug clean-icedtea-boot clean-clone clean-clone-boot \

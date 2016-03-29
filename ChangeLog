@@ -1,5 +1,15 @@
 2016-03-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2873: Fix make distcheck
+	* Makefile.am:
+	(clean-tests): Don't try and delete the test
+	subdirectory of the build tree. configure now
+	generates test/tapset/jstaptest.pl and so
+	the directory won't be empty until the autoconf
+	tools remove this.
+
+2016-03-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2897: clean-cacao removes extracted source tree
 	but not extract-cacao.stamp
 	* Makefile.am,
