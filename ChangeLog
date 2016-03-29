@@ -1,4 +1,24 @@
-2015-03-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2016-03-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2352: Split JamVM rule into configure, make and
+	make install stages
+	* Makefile.am:
+	(jamvm): Depend on jamvm-configure, jamvm-build and
+	jamvm-install rather than doing the job itself.
+	(jamvm-configure): Split from jamvm step. Configures
+	the JamVM build.
+	(jamvm-build): Split from jamvm step and update
+	the make invocation to match that used by CACAO.
+	Builds JamVM.
+	(jamvm-install): Likewise. Installs JamVM and
+	creates the JamVM symlinks needed by the OpenJDK
+	build.
+	(clean-jamvm): Delete the intermediate stamps
+	from the jamvm-configure, jamvm-build and jamvm-install
+	steps.
+	* NEWS: Updated.
+
+2016-03-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2351: Split CACAO rule into configure and make stages
 	* Makefile.am:
@@ -14,7 +34,7 @@
 	steps.
 	* NEWS: Updated.
 
-2015-03-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2016-03-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2873: Fix make distcheck
 	* Makefile.am:

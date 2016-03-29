@@ -2073,26 +2073,46 @@ clean-icedtea-stage1: clean-check-crypto-boot clean-add-archive-boot
 
 # JamVM
 
-stamps/jamvm.stamp: $(OPENJDK_TREE)
+stamps/jamvm.stamp: stamps/jamvm-configure.stamp stamps/jamvm-build.stamp stamps/jamvm-install.stamp
+	mkdir -p stamps
+	touch stamps/jamvm.stamp
+
+stamps/jamvm-configure.stamp: $(OPENJDK_TREE)
 if BUILD_JAMVM
 	cd jamvm/jamvm && \
 	./autogen.sh --with-java-runtime-library=openjdk8 \
-	  --prefix=$(abs_top_builddir)/jamvm/install ; \
-	$(MAKE) ; \
-	$(MAKE) install
+	  --prefix=$(abs_top_builddir)/jamvm/install
+endif
+	mkdir -p stamps
+	touch $@
+
+stamps/jamvm-build.stamp: stamps/jamvm-configure.stamp
+if BUILD_JAMVM
+	cd jamvm/jamvm && \
+	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS)
+endif
+	mkdir -p stamps
+	touch $@
+
+stamps/jamvm-install.stamp: stamps/jamvm-build.stamp
+if BUILD_JAMVM
+	cd jamvm/jamvm && \
+	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS) install
 	mkdir -p $(abs_top_builddir)/jamvm/install/hotspot/lib
 	touch $(abs_top_builddir)/jamvm/install/hotspot/lib/sa-jdi.jar
 	mkdir -p $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server
-	cp $(abs_top_builddir)/jamvm/install/lib/libjvm.so $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server
+	cp $(abs_top_builddir)/jamvm/install/lib/libjvm.so \
+	  $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server
 	ln -sf server $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/client
 	touch $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server/Xusage.txt
 	ln -sf libjvm.so $(abs_top_builddir)/jamvm/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/client/libjsig.so
 endif
 	mkdir -p stamps
-	touch stamps/jamvm.stamp
+	touch $@
 
 clean-jamvm:
 	rm -rf jamvm
+	rm -f stamps/jamvm-configure.stamp stamps/jamvm-build.stamp stamps/jamvm-install.stamp
 	rm -f stamps/jamvm.stamp
 
 # Targets for additional VMs
@@ -2949,6 +2969,12 @@ icedtea-stage1: stamps/icedtea-stage1.stamp
 icedtea-stage2: stamps/icedtea-stage2.stamp
 
 jamvm: stamps/jamvm.stamp
+
+jamvm-build: stamps/jamvm-build.stamp
+
+jamvm-configure: stamps/jamvm-configure.stamp
+
+jamvm-install: stamps/jamvm-install.stamp
 
 jtreg: stamps/jtreg.stamp
 
