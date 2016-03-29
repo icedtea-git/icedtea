@@ -1,5 +1,21 @@
 2015-03-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2351: Split CACAO rule into configure and make stages
+	* Makefile.am:
+	(cacao): Depend on cacao-configure, cacao-build and
+	cacao-install rather than doing the job itself.
+	(cacao-configure): Split from cacao step. Configures
+	the CACAO build.
+	(cacao-build): Likewise. Builds CACAO.
+	(cacao-install): Likewise. Installs CACAO and creates
+	the CACAO symlinks needed by the OpenJDK build.
+	(clean-cacao): Delete the intermediate stamps
+	from the cacao-configure, cacao-build and cacao-install
+	steps.
+	* NEWS: Updated.
+
+2015-03-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2873: Fix make distcheck
 	* Makefile.am:
 	(clean-download-langtools): Correct typo, deleting

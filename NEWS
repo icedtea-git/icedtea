@@ -96,6 +96,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2329: jamvm parallel unpack failures
   - PR2339: Fail early if there is no native HotSpot JIT & all other options are disabled
   - PR2348: Avoid following symlinks for CACAO and JamVM patches
+  - PR2351: Split CACAO rule into configure and make stages
   - PR2358: Add aliases for all stamp targets
   - PR2362: Update HACKING & fsg.sh.in
   - PR2363: Remove EC source code prior to build

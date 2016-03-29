@@ -2135,7 +2135,11 @@ clean-add-jamvm-debug:
 
 # CACAO
 
-stamps/cacao.stamp: $(OPENJDK_TREE)
+stamps/cacao.stamp: stamps/cacao-configure.stamp stamps/cacao-build.stamp stamps/cacao-install.stamp
+	mkdir -p stamps
+	touch $@
+
+stamps/cacao-configure.stamp: $(OPENJDK_TREE)
 if BUILD_CACAO
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao && \
@@ -2149,7 +2153,26 @@ if !USE_SYSTEM_CACAO
 	  --with-java-runtime-library-prefix=$(abs_top_builddir)/openjdk \
 	  --with-java-runtime-library-classes=$(RUNTIME) \
 	  --with-libatomic-ops=no \
-	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS); \
+	  --enable-jre-layout $(CACAO_CONFIGURE_ARGS);
+endif
+endif
+	mkdir -p stamps
+	touch $@
+
+stamps/cacao-build.stamp: stamps/cacao-configure.stamp
+if BUILD_CACAO
+if !USE_SYSTEM_CACAO
+	cd cacao/cacao && \
+	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS)
+endif
+endif
+	mkdir -p stamps
+	touch $@
+
+stamps/cacao-install.stamp: stamps/cacao-build.stamp
+if BUILD_CACAO
+if !USE_SYSTEM_CACAO
+	cd cacao/cacao && \
 	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS) install
 	mkdir -p $(abs_top_builddir)/cacao/install/lib
 	touch $(abs_top_builddir)/cacao/install/lib/sa-jdi.jar
@@ -2163,6 +2186,7 @@ endif
 
 clean-cacao:
 	rm -rf cacao
+	rm -f stamps/cacao-configure.stamp stamps/cacao-build.stamp stamps/cacao-install.stamp
 	rm -f stamps/cacao.stamp
 
 # targets for additional VMs
@@ -2841,6 +2865,12 @@ bootstrap-directory-symlink-stage1: stamps/bootstrap-directory-symlink-stage1.st
 bootstrap-directory-symlink-stage2: stamps/bootstrap-directory-symlink-stage2.stamp
 
 cacao: stamps/cacao.stamp
+
+cacao-build: stamps/cacao-build.stamp
+
+cacao-configure: stamps/cacao-configure.stamp
+
+cacao-install: stamps/cacao-install.stamp
 
 check-crypto: stamps/check-crypto.stamp
 
