@@ -12,7 +12,7 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.0.0 (2015-XX-XX):
 
-* Rebase on jdk8u72-b15
+* Rebase on jdk8u77-b03
 * Backports
   - S4890063, PR2304, RH1214835: HPROF: default text truncated when using doe=n option
   - S8000650, PR2462: unpack200.exe should check gzip crc

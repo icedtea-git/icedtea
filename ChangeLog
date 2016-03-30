@@ -1,3 +1,27 @@
+2016-03-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to icedtea-3.0.0pre10.
+	* Makefile.am:
+	(JDK_UPDATE_VERSION): Bump to 77.
+	(BUILD_VERSION): Reset to b03.
+	(CORBA_CHANGESET): Update to icedtea-3.0.0pre10 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	* NEWS: Update base version.
+	* configure.ac: Bump to 3.0.0pre10.
+	* hotspot.map.in: Update to icedtea-3.0.0pre10 tag.
+
 2016-03-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2873: Fix make distcheck
