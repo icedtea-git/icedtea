@@ -187,6 +187,7 @@ New in release 3.0.0 (2015-XX-XX):
   - GC: Minor performance improvement
   - PR2034: --enable-jamvm builds broken, missing JVM_GetTemporaryDirectory impl
   - PR2336: JamVM lacks JVM_FindClassFromCaller
+  - PR2523: Add executable stack markings to callNative.S on JamVM
 * CACAO
   - PR1277: Synchronise CACAO rules between IcedTea6/7/8 where possible
   - PR1279: Synchronise CACAO versions between IcedTea6/7/8 where possible
