@@ -286,8 +286,7 @@ ECC_CHECK_SRCS = $(top_srcdir)/test/standalone/TestEllipticCurveCryptoSupport.ja
 
 ICEDTEA_PATCHES = \
 	patches/memory-limits.patch \
-	patches/override-redirect-metacity.patch \
-	patches/rh1022017.patch
+	patches/override-redirect-metacity.patch
 
 # Conditional patches
 
@@ -316,6 +315,10 @@ endif
 if !ENABLE_SUNEC
 ICEDTEA_PATCHES += \
 	patches/disable-intree-ec.patch
+endif
+
+if !USE_NON_NSS_CURVES
+ICEDTEA_PATCHES += patches/rh1022017.patch
 endif
 
 if ENABLE_NSS

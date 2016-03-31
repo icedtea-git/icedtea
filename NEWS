@@ -104,6 +104,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2369: SunEC provider is partially installed
   - PR2377: PaX mark the installed JDK so it runs on hardened systems
   - PR2383: Location of docs directory in install-data-local is incorrect
+  - PR2392: Make elliptic curve removal optional
   - PR2400, RH1206656: Zero JVM crashes on startup when built with GCC 5
   - PR2407: Fix automatic enabling of the Zero build on non-JIT architectures which don't use CACAO or JamVM
   - PR2408: Enable Zero when Shark is enabled

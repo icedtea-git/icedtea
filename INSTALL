@@ -189,6 +189,7 @@ These are documented fully in the relevant section below.
 * --with-additional-vms=vm-list: Additional VMs to build using the system described
   below.
 * --enable-sunec: Build the SunEC crypto provider against system NSS.
+* --enable-non-nss-curves: Define curves beyond the three specified by NSS (NIST P-{256,384,521})
 
 Testing
 =======

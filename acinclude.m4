@@ -2289,3 +2289,19 @@ AC_DEFUN_ONCE([IT_ENABLE_NASHORN_CHECKSUM],
   AM_CONDITIONAL(DISABLE_NASHORN_CHECKSUM, test x"${ENABLE_NASHORN_CHECKSUM}" = "xno")
   AC_SUBST(ENABLE_NASHORN_CHECKSUM)
 ])
+
+AC_DEFUN_ONCE([IT_ENABLE_NON_NSS_CURVES],
+[
+  AC_MSG_CHECKING([whether to enable elliptic curves beyond those supported by NSS])
+  AC_ARG_ENABLE([non-nss-curves],
+	      [AS_HELP_STRING(--enable-non-nss-curves,register curves beyond the 3 NSS defines [[default=no]])],
+  [
+    ENABLE_NON_NSS_CURVES="${enableval}"
+  ],
+  [
+    ENABLE_NON_NSS_CURVES="no"
+  ])
+  AC_MSG_RESULT(${ENABLE_NON_NSS_CURVES})
+  AM_CONDITIONAL(USE_NON_NSS_CURVES, test x"${ENABLE_NON_NSS_CURVES}" = "xyes")
+  AC_SUBST(ENABLE_NON_NSS_CURVES)
+])

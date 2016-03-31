@@ -1,3 +1,24 @@
+2015-07-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2392: Make elliptic curve removal
+	optional
+	* INSTALL:
+	Document --enable-non-nss-curves.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Only apply
+	the RH1022017 patch when non-NSS
+	curves are not enabled.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_NON_NSS_CURVES): New
+	macro to allow non-NSS curves to
+	be turned on.
+	* configure.ac:
+	Invoke IT_ENABLE_NON_NSS_CURVES.
+	* fsg.sh.in:
+	Don't alter the curve list when
+	non-NSS curves are enabled.
+
 2016-03-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.0.0pre10.
