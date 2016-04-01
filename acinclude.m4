@@ -754,7 +754,7 @@ AC_DEFUN([IT_WITH_CACAO_HOME],
                 AM_CONDITIONAL(USE_SYSTEM_CACAO, true)
               ],
               [
-                CACAO_IMPORT_PATH="\$(abs_top_builddir)/cacao/install"
+                CACAO_IMPORT_PATH="\$(abs_top_builddir)/cacao/install/hotspot"
                 AM_CONDITIONAL(USE_SYSTEM_CACAO, false)
               ])
   AC_MSG_RESULT(${CACAO_IMPORT_PATH})

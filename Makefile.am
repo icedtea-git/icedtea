@@ -2223,11 +2223,14 @@ if BUILD_CACAO
 if !USE_SYSTEM_CACAO
 	cd cacao/cacao.build && \
 	$(ARCH_PREFIX) $(MAKE) -j$(PARALLEL_JOBS) install
-	mkdir -p $(abs_top_builddir)/cacao/install/lib
-	touch $(abs_top_builddir)/cacao/install/lib/sa-jdi.jar
-	ln -sf server $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/client
-	touch $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/server/Xusage.txt
-	ln -sf client/libjvm.so $(abs_top_builddir)/cacao/install/jre/lib/$(INSTALL_ARCH_DIR)/libjsig.so
+	mkdir -p $(abs_top_builddir)/cacao/install/hotspot/lib
+	touch $(abs_top_builddir)/cacao/install/hotspot/lib/sa-jdi.jar
+	mkdir -p $(abs_top_builddir)/cacao/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server
+	cp $(abs_top_builddir)/cacao/install/lib/libjvm.so \
+	  $(abs_top_builddir)/cacao/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server
+	ln -sf server $(abs_top_builddir)/cacao/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/client
+	touch $(abs_top_builddir)/cacao/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/server/Xusage.txt
+	ln -sf libjvm.so $(abs_top_builddir)/cacao/install/hotspot/jre/lib/$(INSTALL_ARCH_DIR)/client/libjsig.so
 endif
 endif
 	mkdir -p stamps

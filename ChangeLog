@@ -1,5 +1,16 @@
 2016-03-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2909: Install CACAO in same way as JamVM
+	* Makefile.am:
+	(cacao-install): Perform same operations as
+	in jamvm-install.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_WITH_CACAO_HOME): Use a clean subdirectory for
+	the OpenJDK-style VM import, as JamVM does.
+
+2016-03-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2907: Replace --with-abs-install-dir
 	with usual --prefix
 	* NEWS: Updated.
