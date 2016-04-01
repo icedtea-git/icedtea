@@ -350,7 +350,8 @@ ICEDTEA_PATCHES += \
 	patches/cacao/pr2035-tempdir.patch \
 	patches/cacao/pr2349.patch \
 	patches/cacao/pr2776-cache_api.patch \
-	patches/cacao/pr2832-refactoring_error.patch
+	patches/cacao/pr2832-refactoring_error.patch \
+	patches/cacao/pr2908-missing_functions.patch
 else
 if USING_CACAO
 ICEDTEA_PATCHES +=
