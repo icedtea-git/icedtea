@@ -637,14 +637,13 @@ JTREG_SRCS = $(top_srcdir)/test/jtreg/com/sun/javatest/cof/i18n.properties \
 	$(top_srcdir)/test/jtreg/JavaTest.cmdMgrs.lst \
 	$(top_srcdir)/test/jtreg/excludelist.langtools.jtx 
 
-DESKTOP_FILES = jconsole.desktop policytool.desktop
+DESKTOP_FILES = jconsole-@JAVA_VER@.desktop policytool-@JAVA_VER@.desktop
 
 EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
 	$(top_srcdir)/patches/jamvm/*.patch \
 	tools-copy contrib overlays \
-	$(JTREG_SRCS) $(DESKTOP_FILES) \
-	HACKING autogen.sh \
+	$(JTREG_SRCS) HACKING autogen.sh \
 	tapset/hotspot.stp.in \
 	tapset/hotspot_jni.stp.in \
 	tapset/jstack.stp.in \
@@ -658,7 +657,7 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 # Top-Level Targets
 # =================
 
-all-local: icedtea-stage2
+all-local: icedtea-stage2 $(DESKTOP_FILES)
 
 check-local: jtregcheck $(SYSTEMTAP_TEST_SUITE) stamps/check-ecc.stamp
 
@@ -670,7 +669,8 @@ clean-local: clean-tests \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
  clean-extract clean-native-ecj clean-icedtea-stage2 \
  clean-icedtea-debug-stage2 clean-icedtea-stage1 clean-add-zero clean-add-zero-debug \
- clean-add-cacao clean-add-cacao-debug clean-cryptocheck clean-ecccheck
+ clean-add-cacao clean-add-cacao-debug clean-cryptocheck clean-ecccheck \
+ clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -706,7 +706,7 @@ distclean-local: clean-local clean-download
 	clean-add-archive clean-add-archive-debug clean-add-archive-boot clean-cryptocheck \
 	clean-tests clean-tapset-report clean-ecccheck clean-check-ecc \
 	check-jdk check-hotspot check-langtools jtregcheck check-tapset check-tapset-probes \
-	check-tapset-jstack
+	check-tapset-jstack clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -2546,6 +2546,20 @@ stamps/check-ecc.stamp: stamps/ecccheck.stamp stamps/icedtea.stamp
 clean-check-ecc:
 	rm -f stamps/check-ecc.stamp
 
+# File substitution
+
+policytool-@JAVA_VER@.desktop: policytool.desktop
+	cat $< | $(SED) "s#_BINDIR_#$(bindir)#" > $@
+
+clean-policytool-@JAVA_VER@.desktop:
+	rm -f policytool-@JAVA_VER@.desktop
+
+jconsole-@JAVA_VER@.desktop: jconsole.desktop
+	cat $< | $(SED) "s#_BINDIR_#$(bindir)#" > $@
+
+clean-jconsole-@JAVA_VER@.desktop:
+	rm -f jconsole-@JAVA_VER@.desktop
+
 # Installation Targets
 # ====================
 
@@ -2697,10 +2711,10 @@ install-data-local:
 	for sizes in 16 24 32 48 ; do \
 	  ${mkinstalldirs} $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps ; \
 	  ${INSTALL_DATA} openjdk/jdk/src/solaris/classes/sun/awt/X11/java-icon$${sizes}.png \
-	    $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-1.8.0.png ; \
+	    $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-@JAVA_VER@.png ; \
 	done
 	for files in $(DESKTOP_FILES) ; do \
-	  ${INSTALL_DATA} $(srcdir)/$${files} $(DESTDIR)$(datadir)/applications ; \
+	  ${INSTALL_DATA} $(builddir)/$${files} $(DESTDIR)$(datadir)/applications ; \
 	done
 	touch $(DESTDIR)/${prefix}/jre/.systemPrefs/.system.lock
 	touch $(DESTDIR)/${prefix}/jre/.systemPrefs/.systemRootModFile
@@ -2822,7 +2836,7 @@ uninstall-local:
 	rm -rf $(DESTDIR)$(docdir)/THIRD_PARTY_README
 	rm -rf $(DESTDIR)$(docdir)/TRADEMARK
 	for sizes in 16 24 32 48 ; do \
-	  rm -vf $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-1.8.0.png; \
+	  rm -vf $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-@JAVA_VER@.png; \
 	done
 	for files in $(DESKTOP_FILES) ; do \
 	  rm -vf $(DESTDIR)$(datadir)/applications/$$(basename $${files}); \
