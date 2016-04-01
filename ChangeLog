@@ -1,3 +1,13 @@
+2015-07-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2035: --enable-cacao builds broken, missing
+	JVM_GetTemporaryDirectory impl.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add CACAO patch for PR2035.
+	* NEWS: Updated.
+	* patches/cacao/pr2035-tempdir.patch:
+	Implement JVM_GetTemporaryDirectory.
+
 2016-03-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2863: IcedTea doesn't pass through build

@@ -196,6 +196,7 @@ New in release 3.0.0 (2015-XX-XX):
 * CACAO
   - PR1277: Synchronise CACAO rules between IcedTea6/7/8 where possible
   - PR1279: Synchronise CACAO versions between IcedTea6/7/8 where possible
+  - PR2035: --enable-cacao builds broken, missing JVM_GetTemporaryDirectory impl.
   - CA172, PR2330, G453612: Add ARM hardfloat support to CACAO on Gentoo
   - PR2331: IcedTea8 fails to build with IcedTea7 CACAO due to low max heap size
   - PR2335: CACAO lacks JVM_FindClassFromCaller

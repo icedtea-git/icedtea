@@ -347,6 +347,7 @@ if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
 	patches/cacao/pr2032.patch \
+	patches/cacao/pr2035-tempdir.patch \
 	patches/cacao/pr2349.patch
 else
 if USING_CACAO

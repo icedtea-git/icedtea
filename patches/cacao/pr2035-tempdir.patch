@@ -1,0 +1,45 @@
+diff -r 73c53a02de5d contrib/mapfile-vers-product
+--- cacao/cacao/contrib/mapfile-vers-product	Mon Jul 13 01:38:19 2015 +0100
++++ cacao/cacao/contrib/mapfile-vers-product	Mon Jul 13 10:44:59 2015 +0100
+@@ -161,6 +161,7 @@
+                 JVM_GetStackTraceElement;
+                 JVM_GetSystemPackage;
+                 JVM_GetSystemPackages;
++		JVM_GetTemporaryDirectory;
+                 JVM_GetThreadStateNames;
+                 JVM_GetThreadStateValues;
+                 JVM_GetVersionInfo;
+diff -r 73c53a02de5d src/native/vm/openjdk/jvm.cpp
+--- cacao.orig/cacao/src/native/vm/openjdk/jvm.cpp	Mon Jul 13 01:38:19 2015 +0100
++++ cacao/cacao/src/native/vm/openjdk/jvm.cpp	Mon Jul 13 10:21:20 2015 +0100
+@@ -3821,6 +3821,30 @@
+ 	return -1;
+ }
+ 
++/*
++ * Return the temporary directory that the VM uses for the attach
++ * and perf data files.
++ *
++ * It is important that this directory is well-known and the
++ * same for all VM instances. It cannot be affected by configuration
++ * variables such as java.io.tmpdir.
++ */
++jstring JVM_GetTemporaryDirectory(JNIEnv *env)
++{
++	TRACEJVMCALLS(("JVM_GetTemporaryDirectory(env=%p)", env));
++
++#if (defined(__LINUX__) || defined (__SOLARIS__) || \
++	 defined(__FREEBSD__) || defined (__DARWIN__))
++	// This must be hard coded because it's the system's temporary
++	// directory not the java application's temp directory, ala java.io.tmpdir.
++	return JavaString::from_utf8("/tmp");
++#else
++# error Not implemented for this OS.
++#endif
++
++	return NULL;
++}
++	
+ } // extern "C"
+ 
+ 
