@@ -841,25 +841,6 @@ AC_DEFUN([IT_WITH_VERSION_SUFFIX],
   AC_SUBST(VERSION_SUFFIX, $version_suffix)
 ])
 
-AC_DEFUN([IT_WITH_GCJ],
-[
-  AC_MSG_CHECKING([whether to compile ecj natively])
-  AC_ARG_WITH([gcj],
-	      [AS_HELP_STRING([--with-gcj[[=PATH]]],location of gcj for natively compiling ecj)],
-  [
-    GCJ="${withval}"
-  ],
-  [ 
-    GCJ="no"
-  ])
-  AC_MSG_RESULT([${GCJ}])
-  if test "x${GCJ}" = xyes; then
-    AC_PATH_TOOL([GCJ],[gcj])
-  fi
-  AM_CONDITIONAL([BUILD_NATIVE_ECJ], test x"${GCJ}" != xno)
-  AC_SUBST([GCJ])
-])
-
 AC_DEFUN([IT_WITH_HOTSPOT_BUILD],
 [
   DEFAULT_BUILD="default"
@@ -1070,7 +1051,6 @@ AC_DEFUN([IT_CHECK_FOR_JDK],
   if test -z "${SYSTEM_JDK_DIR}"; then
     AC_MSG_RESULT([not specified])
     if test "x${enable_bootstrap}" = "xyes"; then
-      GCJ_VMS="/usr/lib/jvm/java-gcj /usr/lib/jvm/gcj-jdk";
       BOOTSTRAP_VMS="/usr/lib/jvm/cacao";
     fi
     ICEDTEA7_VMS="/usr/lib/jvm/icedtea-7 /usr/lib/jvm/icedtea7 /usr/lib/jvm/java-1.7.0-openjdk

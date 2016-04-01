@@ -138,6 +138,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2738: java.lang.UnsatisfiedLinkError: no javalcms in java.library.path
   - PR2743: Remove bad AArch64 merge fragment
   - PR2759: LCMS library should be named javalcms, not lcms, to avoid potential conflicts with the system library
+  - PR2766: Remove all references to GCJ
   - PR2767: Remove remaining rogue binaries from OpenJDK tree
   - PR2768: Move SystemTap GCC 4.5 patch to OpenJDK tree or discard if no longer needed
   - PR2777: Fix MAX/MIN template usage on s390

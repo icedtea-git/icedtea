@@ -18,7 +18,7 @@ else
 }
 
 my @bcoption;
-push @bcoption, '-bootclasspath', glob '@abs_top_builddir@/bootstrap/jdk1.6.0/jre/lib/rt.jar'
+push @bcoption, '-bootclasspath', glob '@abs_top_builddir@/bootstrap/jdk1.7.0/jre/lib/rt.jar'
     unless grep {$_ eq '-bootclasspath'} @ARGV;
 my @ecj_parms = ($ECJ_WARNINGS, @bcoption);
 my @javac_parms = ($JAVAC_WARNINGS, '-Xprefer:source',
@@ -54,12 +54,7 @@ sub gen_ecj_opts
     return @new_args;
 }
 
-if ( -e "@abs_top_builddir@/native-ecj" )
-{
-    my @ecj_args = gen_ecj_opts( \@ARGV );
-    exec '@abs_top_builddir@/native-ecj', @ecj_parms, @ecj_args ;
-}
-elsif ( -e "@JAVAC@" )
+if ( -e "@JAVAC@" )
 {
     if ("@USING_ECJ@" eq "yes")
     {

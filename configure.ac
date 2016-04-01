@@ -48,7 +48,6 @@ IT_CHECK_FOR_MERCURIAL
 IT_OBTAIN_HG_REVISIONS
 AC_PATH_TOOL([LSB_RELEASE],[lsb_release])
 IT_CHECK_FOR_RMDIR
-IT_WITH_GCJ
 IT_WITH_HOTSPOT_BUILD
 AC_PATH_TOOL([LINUX32],[linux32])
 IT_CHECK_GCC_VERSION
@@ -142,9 +141,6 @@ if test "x${enable_hg}" = "xyes"; then
 fi
 AC_SUBST([HG])
 IT_WITH_HG_REVISION
-
-AC_PATH_TOOL([GCJ],[gcj])
-AC_SUBST([GCJ])
 
 dnl pkgconfig cannot be used to find these headers and libraries.
 AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]

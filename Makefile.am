@@ -93,13 +93,6 @@ JDK_CACERTS_FILE = @ALT_CACERTS_FILE@
 CACERTS_FILE = \
   `if [ -h $(JDK_CACERTS_FILE) ] ; then $(READLINK) -e $(JDK_CACERTS_FILE) ; else echo $(JDK_CACERTS_FILE); fi`
 
-# Sources used from OpenJDK.
-#PR43148 - javac fails due to missing java.util.regex.Matcher.quoteReplacement
-#PR48033 - Missing javax.management.remote.JMXServiceURL
-#PR48034 - javax.management.modelmbean.ModelMBeanInfo
-#PR42003 - Missing javax.swing.plaf.basic.BasicDirectoryModel methods cause OpenJDK build failure 
-ICEDTEA_BOOTSTRAP_CLASSES =
-
 # Settings for javac
 
 IT_LANGUAGE_SOURCE_VERSION=6
@@ -560,19 +553,6 @@ ICEDTEA_ENV += \
 	LCMS_CFLAGS="${LCMS2_CFLAGS}"
 endif
 
-# Dropped for new build
-#	ALT_JDK_IMPORT_PATH="$(BOOT_DIR)" 
-#	ANT="$(ANT)" 
-#	ALT_BOOTDIR="$(BOOT_DIR)" 
-#	BUILD_ARCH_DIR="$(BUILD_ARCH_DIR)" 
-#	ICEDTEA_RT="$(RUNTIME)" 
-#	FREETYPE2_HEADERS="$(FREETYPE2_CFLAGS)" 
-#	FT2_LIB="$(FREETYPE2_LIBS)" 
-#	ALT_PARALLEL_COMPILE_JOBS="$(PARALLEL_JOBS)" 
-#	HOTSPOT_BUILD_JOBS="$(PARALLEL_JOBS)" 
-#	ALT_OUTPUTDIR="$(BUILD_OUTPUT_DIR)" 
-#	ALT_JIBX_LIBS_PATH="$(JIBX_DEPS_DIR)"
-
 if ENABLE_JAR_COMPRESSION
 ICEDTEA_ENV += \
 	COMPRESS_JARS="true"
@@ -609,13 +589,6 @@ ICEDTEA_ENV_BOOT = $(ICEDTEA_ENV) \
 	JAR_KNOWS_J_OPTIONS="$(JAR_KNOWS_J_OPTIONS)" \
 	JAR_ACCEPTS_STDIN_LIST="$(JAR_ACCEPTS_STDIN_LIST)" \
 	DISABLE_NIMBUS="true"
-
-# Dropped for new build
-#	BOOTCLASSPATH_CLS_RT="-bootclasspath $(CLS_DIR_BOOT):$(RUNTIME)" 
-#	BOOTCLASSPATH_CLS="-bootclasspath $(CLS_DIR_BOOT)" 
-#	BOOTCLASSPATH_RT_LIBGCJ="-bootclasspath $(RUNTIME)" 
-#	ALT_OUTPUTDIR="$(BOOT_BUILD_OUTPUT_DIR)"
-#	XSLT="$(XSLTPROC)"
 
 # Source files
 
@@ -727,10 +700,10 @@ clean-local: clean-tests \
  clean-icedtea clean-icedtea-debug clean-icedtea-boot clean-clone clean-clone-boot \
  clean-bootstrap-directory-stage1 clean-bootstrap-directory-stage2 \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
- clean-extract clean-native-ecj clean-icedtea-stage2 \
- clean-icedtea-debug-stage2 clean-icedtea-stage1 clean-add-zero clean-add-zero-debug \
- clean-add-cacao clean-add-cacao-debug clean-cryptocheck clean-ecccheck \
- clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop
+ clean-extract clean-icedtea-stage2 clean-icedtea-debug-stage2 clean-icedtea-stage1 \
+ clean-add-zero clean-add-zero-debug clean-add-cacao clean-add-cacao-debug \
+ clean-cryptocheck clean-ecccheck clean-policytool-@JAVA_VER@.desktop \
+ clean-jconsole-@JAVA_VER@.desktop
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -1723,21 +1696,8 @@ clean-patch-boot:
 # Bootstrap Directory Targets
 # ===========================
 
-# Optional native ecj
-stamps/native-ecj.stamp:
-	mkdir -p stamps 
-if BUILD_NATIVE_ECJ
-	${GCJ} $(IT_CFLAGS) -Wl,-Bsymbolic -findirect-dispatch -o native-ecj \
-	    --main=org.eclipse.jdt.internal.compiler.batch.Main ${ECJ_JAR}
-endif
-	touch $@
-
-clean-native-ecj:
-	rm -f native-ecj
-	rm -rf stamps/native-ecj.stamp
-
 # bootstrap/stage1
-stamps/bootstrap-directory-stage1.stamp: stamps/native-ecj.stamp
+stamps/bootstrap-directory-stage1.stamp:
 	mkdir -p $(STAGE1_BOOT_DIR)/bin stamps/
 	ln -sf $(JAVA) $(STAGE1_BOOT_DIR)/bin/java
 	ln -sf ../../../javah $(STAGE1_BOOT_DIR)/bin/javah
@@ -3056,8 +3016,6 @@ jamvm-configure: stamps/jamvm-configure.stamp
 jamvm-install: stamps/jamvm-install.stamp
 
 jtreg: stamps/jtreg.stamp
-
-native-ecj: stamps/native-ecj.stamp
 
 overlay: stamps/overlay.stamp
 
