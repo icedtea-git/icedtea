@@ -34,7 +34,7 @@ Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  Currently only works with full path in process probes below.
  When things don't seem to work look if the correct
  jre/lib/[arch]/[client|server]/libjvm.so is used
- and exists under @ABS_JAVA_HOME_DIR@/.
+ and exists under @prefix@/.
  This version of jstack.stp has been configured to instrument the
  libjvm.so for arch @INSTALL_ARCH_DIR@ installed at:
  @ABS_CLIENT_LIBJVM_SO@

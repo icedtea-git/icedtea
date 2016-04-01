@@ -68,7 +68,7 @@ Finally, the following generic locations are checked as a last resort:
 There is currently no install target.  IcedTea ends up in
 openjdk.build when the build completes.
 
-Most targets in IcedTea creat stamp files in the stamps directory to
+Most targets in IcedTea create stamp files in the stamps directory to
 determine what and when dependencies were compiled.  Each target has a
 corresponding clean-x target which removes the output and the stamp
 file, allowing it to be rebuilt.  For example, stamps/rt.stamp (alias
@@ -81,6 +81,7 @@ Build Modification Options
 The build process may be modified by passing the following options
 to configure:
 
+* --prefix: The final install location of the j2sdk-image.
 * --disable-docs: Don't build the Javadoc documentation.
 * --disable-bootstrap: Perform a quick (no bootstrap) build using an installed
   copy of IcedTea6 or IcedTea7.  If a directory is not specified, a check against
@@ -186,7 +187,6 @@ to configure:
   --with-jamvm-src-zip at all. This option allows a locally modified version of the source
   tarball to be used instead of the standard versions.
 * --with-hg-revision: Specify a hg revision to use (as opposed to tip) with the --enable-hg option.
-* --with-abs-install-dir: The final install location of the j2sdk-image, for use in the SystemTap tapset.
 * --with-llvm-config: Specify the location of the llvm-config binary.
 * --with-version-suffix: Appends the given text to the JDK version output.
 * --with-cacerts-file: Specify the location of a cacerts file, defaulting to

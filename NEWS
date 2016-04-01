@@ -160,6 +160,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2880: Add missing test directory in make check.
   - PR2885: Location of 'stap' executable is hard-coded
   - PR2906: Support prefixed variants of GNU tools used on *BSD systems
+  - PR2907: Replace --with-abs-install-dir with usual --prefix
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck
