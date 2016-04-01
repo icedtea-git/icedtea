@@ -1,5 +1,21 @@
 2016-03-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2775: JamVM lacks JVM_GetResourceLookupCacheURLs
+	introduced by jdk8u40
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add PR2775 patch.
+	* NEWS: Updated.
+
+2015-12-22  Xerxes Rånby  <xerxes@gudinna.com>
+
+	PR2775: JamVM lacks JVM_GetResourceLookupCacheURLs
+	introduced by jdk8u40
+	* patches/jamvm/pr2775-cache_api.patch:
+	Provide a minimal implementation of the lookup
+	cache API which basically says we don't implement it.
+
+2016-03-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2776: CACAO lacks JVM_GetResourceLookupCacheURLs
 	introduced by jdk8u40
 	* Makefile.am:

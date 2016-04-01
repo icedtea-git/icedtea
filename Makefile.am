@@ -365,7 +365,8 @@ if BUILD_JAMVM
 ICEDTEA_PATCHES += \
 	patches/jamvm/find_class_from_caller.patch \
 	patches/jamvm/pr2034-tempdir.patch \
-	patches/jamvm/noexecstack.patch
+	patches/jamvm/noexecstack.patch \
+	patches/jamvm/pr2775-cache_api.patch
 endif
 
 if !ENABLE_SUNEC
