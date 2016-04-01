@@ -169,6 +169,8 @@ to configure:
 * --with-abs-install-dir: The final install location of the j2sdk-image, for use in the SystemTap tapset.
 * --with-llvm-config: Specify the location of the llvm-config binary.
 * --with-version-suffix: Appends the given text to the JDK version output.
+* --with-cacerts-file: Specify the location of a cacerts file, defaulting to
+  ${SYSTEM_JDK_DIR}/jre/lib/security/cacerts
 
 Other options may be supplied which enable or disable new features.
 These are documented fully in the relevant section below.

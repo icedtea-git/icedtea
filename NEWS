@@ -127,6 +127,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2456: Installation path for hotspot_gc.stp is wrong, due to changed j2sdk-image location
   - PR2459: Policy JAR files should be timestamped with the date of the policy file they hold
   - PR2511: Reset success following calls in LayoutManager.cpp
+  - PR2541: Allow the user to specify the cacerts file to use
   - PR2631: jvm.cfg missing for ppc64le
   - PR2633: s390 builds still fail as BUILD_NUM_BITS is never set
   - PR2675: Update ppc64le autotools infrastructure following PR2237

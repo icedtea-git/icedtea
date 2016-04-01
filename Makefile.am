@@ -88,7 +88,7 @@ VERSION_SETTINGS_FILE = openjdk/jdk/make/ProfileNames.gmk
 
 VERSION_SETTINGS_FILE_BACKUP = $$(basename $(VERSION_SETTINGS_FILE)).bak
 
-JDK_CACERTS_FILE = $(SYSTEM_JDK_DIR)/jre/lib/security/cacerts
+JDK_CACERTS_FILE = @ALT_CACERTS_FILE@
 
 CACERTS_FILE = \
   `if [ -h $(JDK_CACERTS_FILE) ] ; then $(READLINK) -e $(JDK_CACERTS_FILE) ; else echo $(JDK_CACERTS_FILE); fi`
@@ -2659,6 +2659,8 @@ install-data-local:
 	for files in $(BUILD_SDK_DIR)/jre/lib/management/*.template; do \
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/management; \
 	done
+	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/security/cacerts \
+	  $(DESTDIR)${prefix}/jre/lib/security
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/security/java.policy \
 	  $(DESTDIR)${prefix}/jre/lib/security
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/security/java.security \
@@ -2789,6 +2791,7 @@ uninstall-local:
 	for files in $(BUILD_SDK_DIR)/jre/lib/management/*.template; do \
 	  rm -vf $(DESTDIR)${prefix}/jre/lib/management/$$(basename $${files}); \
 	done
+	rm -vf $(DESTDIR)${prefix}/jre/lib/security/cacerts
 	rm -vf $(DESTDIR)${prefix}/jre/lib/security/java.policy
 	rm -vf $(DESTDIR)${prefix}/jre/lib/security/java.security
 	rm -vf $(DESTDIR)${prefix}/jre/lib/security/nss.cfg
