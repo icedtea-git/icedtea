@@ -1,3 +1,14 @@
+2016-03-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2776: CACAO lacks JVM_GetResourceLookupCacheURLs
+	introduced by jdk8u40
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add CACAO patch for PR2776.
+	* NEWS: Updated.
+	* patches/cacao/pr2776-cache_api.patch:
+	Provide a minimal implementation of the lookup
+	cache API which basically says we don't implement it.
+
 2015-07-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2035: --enable-cacao builds broken, missing

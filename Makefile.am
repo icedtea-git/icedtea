@@ -348,7 +348,8 @@ ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch \
 	patches/cacao/pr2032.patch \
 	patches/cacao/pr2035-tempdir.patch \
-	patches/cacao/pr2349.patch
+	patches/cacao/pr2349.patch \
+	patches/cacao/pr2776-cache_api.patch
 else
 if USING_CACAO
 ICEDTEA_PATCHES +=
