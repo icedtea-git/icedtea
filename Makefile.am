@@ -407,6 +407,8 @@ ICEDTEA_PKG = $(EMPTY) (${PKGVERSION})
 endif
 
 ICEDTEA_CONFIGURE = \
+	  --build=$(build_triplet) \
+	  --host=$(host_triplet) \
 	  --enable-unlimited-crypto \
 	  --with-cacerts-file=$(CACERTS_FILE) \
 	  --with-stdc++lib=dynamic \

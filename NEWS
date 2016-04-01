@@ -154,6 +154,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2853: Remove some unnecessary divergences from jdk8u.
   - PR2853: Revert AArch64 jvm.cfg divergence
   - PR2853: Revert changes to libpng source code now 8078245 is in place.
+  - PR2863: IcedTea doesn't pass through build and host triplets to OpenJDK's configure
   - PR2865: Handle uninstallation.
   - PR2873: Fix make distcheck.
   - PR2880: Add missing test directory in make check.
