@@ -139,10 +139,22 @@ else
 OPENJDK_SHA256SUM_BIN = $(SHA256SUM)
 endif
 
+if WITH_OPENJDK_CHECKSUM
+OPENJDK_SUM = @OPENJDK_CHECKSUM@
+else
+OPENJDK_SUM = $(OPENJDK_SHA256SUM)
+endif
+
 if DISABLE_CORBA_CHECKSUM
 CORBA_SHA256SUM_BIN = true
 else
 CORBA_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if WITH_CORBA_CHECKSUM
+CORBA_SUM = @CORBA_CHECKSUM@
+else
+CORBA_SUM = $(CORBA_SHA256SUM)
 endif
 
 if DISABLE_JAXP_CHECKSUM
@@ -151,10 +163,22 @@ else
 JAXP_SHA256SUM_BIN = $(SHA256SUM)
 endif
 
+if WITH_JAXP_CHECKSUM
+JAXP_SUM = @JAXP_CHECKSUM@
+else
+JAXP_SUM = $(JAXP_SHA256SUM)
+endif
+
 if DISABLE_JAXWS_CHECKSUM
 JAXWS_SHA256SUM_BIN = true
 else
 JAXWS_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if WITH_JAXWS_CHECKSUM
+JAXWS_SUM = @JAXWS_CHECKSUM@
+else
+JAXWS_SUM = $(JAXWS_SHA256SUM)
 endif
 
 if DISABLE_JDK_CHECKSUM
@@ -163,10 +187,22 @@ else
 JDK_SHA256SUM_BIN = $(SHA256SUM)
 endif
 
+if WITH_JDK_CHECKSUM
+JDK_SUM = @JDK_CHECKSUM@
+else
+JDK_SUM = $(JDK_SHA256SUM)
+endif
+
 if DISABLE_LANGTOOLS_CHECKSUM
 LANGTOOLS_SHA256SUM_BIN = true
 else
 LANGTOOLS_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if WITH_LANGTOOLS_CHECKSUM
+LANGTOOLS_SUM = @LANGTOOLS_CHECKSUM@
+else
+LANGTOOLS_SUM = $(LANGTOOLS_SHA256SUM)
 endif
 
 if DISABLE_CACAO_CHECKSUM
@@ -175,10 +211,22 @@ else
 CACAO_SHA256SUM_BIN = $(SHA256SUM)
 endif
 
+if WITH_CACAO_CHECKSUM
+CACAO_SUM = @CACAO_CHECKSUM@
+else
+CACAO_SUM = $(CACAO_SHA256SUM)
+endif
+
 if DISABLE_JAMVM_CHECKSUM
 JAMVM_SHA256SUM_BIN = true
 else
 JAMVM_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if WITH_JAMVM_CHECKSUM
+JAMVM_SUM = @JAMVM_CHECKSUM@
+else
+JAMVM_SUM = $(JAMVM_SHA256SUM)
 endif
 
 if DISABLE_HOTSPOT_CHECKSUM
@@ -187,10 +235,22 @@ else
 HOTSPOT_SHA256SUM_BIN = $(SHA256SUM)
 endif
 
+if WITH_HOTSPOT_CHECKSUM
+HOTSPOT_SUM = @HOTSPOT_CHECKSUM@
+else
+HOTSPOT_SUM = $(HS_SHA256SUM)
+endif
+
 if DISABLE_NASHORN_CHECKSUM
 NASHORN_SHA256SUM_BIN = true
 else
 NASHORN_SHA256SUM_BIN = $(SHA256SUM)
+endif
+
+if WITH_NASHORN_CHECKSUM
+NASHORN_SUM = @NASHORN_CHECKSUM@
+else
+NASHORN_SUM = $(NASHORN_SHA256SUM)
 endif
 
 if WITH_HGREV
@@ -758,7 +818,7 @@ else
 if USE_ALT_OPENJDK_SRC_ZIP
 	ln -sf $(ALT_OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP)
 endif
-	if ! echo "$(OPENJDK_SHA256SUM)  $(OPENJDK_SRC_ZIP)" \
+	if ! echo "$(OPENJDK_SUM)  $(OPENJDK_SRC_ZIP)" \
 	  | $(OPENJDK_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
@@ -766,7 +826,7 @@ endif
 	      mv $(OPENJDK_SRC_ZIP) $(OPENJDK_SRC_ZIP).old ; \
 	    fi ; \
 	    $(WGET) $(ICEDTEA_URL)/$(OPENJDK_SRC_ZIP); \
-	    if ! echo "$(OPENJDK_SHA256SUM)  $(OPENJDK_SRC_ZIP)" \
+	    if ! echo "$(OPENJDK_SUM)  $(OPENJDK_SRC_ZIP)" \
 	      | $(SHA256SUM) --check ; then \
 	      echo "ERROR: Bad download of OpenJDK root zip"; false; \
 	    fi; \
@@ -787,7 +847,7 @@ else
 if USE_ALT_CORBA_SRC_ZIP
 	ln -sf $(ALT_CORBA_SRC_ZIP) $(CORBA_SRC_ZIP)
 endif
-	if ! echo "$(CORBA_SHA256SUM)  $(CORBA_SRC_ZIP)" \
+	if ! echo "$(CORBA_SUM)  $(CORBA_SRC_ZIP)" \
 	  | $(CORBA_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
@@ -795,7 +855,7 @@ endif
 	      mv $(CORBA_SRC_ZIP) $(CORBA_SRC_ZIP).old ; \
 	    fi ; \
 	    $(WGET) $(ICEDTEA_URL)/$(CORBA_SRC_ZIP); \
-	    if ! echo "$(CORBA_SHA256SUM)  $(CORBA_SRC_ZIP)" \
+	    if ! echo "$(CORBA_SUM)  $(CORBA_SRC_ZIP)" \
 	      | $(SHA256SUM) --check ; then \
 	      echo "ERROR: Bad download of CORBA zip"; false; \
 	    fi; \
@@ -816,7 +876,7 @@ else
 if USE_ALT_JAXP_SRC_ZIP
 	ln -sf $(ALT_JAXP_SRC_ZIP) $(JAXP_SRC_ZIP)
 endif
-	if ! echo "$(JAXP_SHA256SUM)  $(JAXP_SRC_ZIP)" \
+	if ! echo "$(JAXP_SUM)  $(JAXP_SRC_ZIP)" \
 	  | $(JAXP_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
@@ -824,7 +884,7 @@ endif
 	      mv $(JAXP_SRC_ZIP) $(JAXP_SRC_ZIP).old ; \
 	    fi ; \
 	    $(WGET) $(ICEDTEA_URL)/$(JAXP_SRC_ZIP); \
-	    if ! echo "$(JAXP_SHA256SUM)  $(JAXP_SRC_ZIP)" \
+	    if ! echo "$(JAXP_SUM)  $(JAXP_SRC_ZIP)" \
 	      | $(SHA256SUM) --check ; then \
 	      echo "ERROR: Bad download of JAXP zip"; false; \
 	    fi; \
@@ -845,7 +905,7 @@ else
 if USE_ALT_JAXWS_SRC_ZIP
 	ln -sf $(ALT_JAXWS_SRC_ZIP) $(JAXWS_SRC_ZIP)
 endif
-	if ! echo "$(JAXWS_SHA256SUM)  $(JAXWS_SRC_ZIP)" \
+	if ! echo "$(JAXWS_SUM)  $(JAXWS_SRC_ZIP)" \
 	  | $(JAXWS_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
@@ -853,7 +913,7 @@ endif
 	      mv $(JAXWS_SRC_ZIP) $(JAXWS_SRC_ZIP).old ; \
 	    fi ; \
 	    $(WGET) $(ICEDTEA_URL)/$(JAXWS_SRC_ZIP); \
-	    if ! echo "$(JAXWS_SHA256SUM)  $(JAXWS_SRC_ZIP)" \
+	    if ! echo "$(JAXWS_SUM)  $(JAXWS_SRC_ZIP)" \
 	      | $(SHA256SUM) --check ; then \
 	      echo "ERROR: Bad download of JAXWS zip"; false; \
 	    fi; \
@@ -874,7 +934,7 @@ else
 if USE_ALT_JDK_SRC_ZIP
 	ln -sf $(ALT_JDK_SRC_ZIP) $(JDK_SRC_ZIP)
 endif
-	if ! echo "$(JDK_SHA256SUM)  $(JDK_SRC_ZIP)" \
+	if ! echo "$(JDK_SUM)  $(JDK_SRC_ZIP)" \
 	  | $(JDK_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
@@ -882,7 +942,7 @@ endif
 	      mv $(JDK_SRC_ZIP) $(JDK_SRC_ZIP).old ; \
 	    fi ; \
 	    $(WGET) $(ICEDTEA_URL)/$(JDK_SRC_ZIP); \
-	    if ! echo "$(JDK_SHA256SUM)  $(JDK_SRC_ZIP)" \
+	    if ! echo "$(JDK_SUM)  $(JDK_SRC_ZIP)" \
 	      | $(SHA256SUM) --check ; then \
 	      echo "ERROR: Bad download of JDK zip"; false; \
 	    fi; \
@@ -903,7 +963,7 @@ else
 if USE_ALT_LANGTOOLS_SRC_ZIP
 	ln -sf $(ALT_LANGTOOLS_SRC_ZIP) $(LANGTOOLS_SRC_ZIP)
 endif
-	if ! echo "$(LANGTOOLS_SHA256SUM)  $(LANGTOOLS_SRC_ZIP)" \
+	if ! echo "$(LANGTOOLS_SUM)  $(LANGTOOLS_SRC_ZIP)" \
 	  | $(LANGTOOLS_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
@@ -911,7 +971,7 @@ endif
 	      mv $(LANGTOOLS_SRC_ZIP) $(LANGTOOLS_SRC_ZIP).old ; \
 	    fi ; \
 	    $(WGET) $(ICEDTEA_URL)/$(LANGTOOLS_SRC_ZIP); \
-	    if ! echo "$(LANGTOOLS_SHA256SUM)  $(LANGTOOLS_SRC_ZIP)" \
+	    if ! echo "$(LANGTOOLS_SUM)  $(LANGTOOLS_SRC_ZIP)" \
 	      | $(SHA256SUM) --check ; then \
 	      echo "ERROR: Bad download of langtools zip"; false; \
 	    fi; \
@@ -968,7 +1028,7 @@ else
 if USE_ALT_CACAO_SRC_ZIP
 	ln -sf $(ALT_CACAO_SRC_ZIP) $(CACAO_SRC_ZIP)
 endif
-	if ! echo "$(CACAO_SHA256SUM)  $(CACAO_SRC_ZIP)" \
+	if ! echo "$(CACAO_SUM)  $(CACAO_SRC_ZIP)" \
 	 | $(CACAO_SHA256SUM_BIN) --check ; \
 	then \
 	 if test "x$(enable_downloading)" = "xyes"; then \
@@ -976,7 +1036,7 @@ endif
 	     mv $(CACAO_SRC_ZIP) $(CACAO_SRC_ZIP).old ; \
 	   fi ; \
 	   $(WGET) $(CACAO_URL) -O $(CACAO_SRC_ZIP); \
-	   if ! echo "$(CACAO_SHA256SUM)  $(CACAO_SRC_ZIP)" \
+	   if ! echo "$(CACAO_SUM)  $(CACAO_SRC_ZIP)" \
 	     | $(SHA256SUM) --check ; then \
 	     echo "ERROR: Bad download of CACAO zip"; false; \
 	   fi; \
@@ -999,7 +1059,7 @@ if BUILD_JAMVM
 if USE_ALT_JAMVM_SRC_ZIP
 	ln -sf $(ALT_JAMVM_SRC_ZIP) $(JAMVM_SRC_ZIP)
 endif
-	if ! echo "$(JAMVM_SHA256SUM)  $(JAMVM_SRC_ZIP)" \
+	if ! echo "$(JAMVM_SUM)  $(JAMVM_SRC_ZIP)" \
 	 | $(JAMVM_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
@@ -1007,7 +1067,7 @@ endif
 	      mv $(JAMVM_SRC_ZIP) $(JAMVM_SRC_ZIP).old ; \
 	    fi ; \
 	    $(WGET) $(JAMVM_URL) -O $(JAMVM_SRC_ZIP); \
-	    if ! echo "$(JAMVM_SHA256SUM)  $(JAMVM_SRC_ZIP)" \
+	    if ! echo "$(JAMVM_SUM)  $(JAMVM_SRC_ZIP)" \
 	      | $(SHA256SUM) --check ; then \
 	      echo "ERROR: Bad download of JamVM zip"; false; \
 	    fi; \
@@ -1032,7 +1092,7 @@ else
 if USE_ALT_NASHORN_SRC_ZIP
 	ln -sf $(ALT_NASHORN_SRC_ZIP) $(NASHORN_SRC_ZIP)
 endif
-	if ! echo "$(NASHORN_SHA256SUM)  $(NASHORN_SRC_ZIP)" \
+	if ! echo "$(NASHORN_SUM)  $(NASHORN_SRC_ZIP)" \
 	  | $(NASHORN_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
@@ -1040,7 +1100,7 @@ endif
 	      mv $(NASHORN_SRC_ZIP) $(NASHORN_SRC_ZIP).old ; \
 	    fi ; \
 	    $(WGET) $(ICEDTEA_URL)/$(NASHORN_SRC_ZIP); \
-	    if ! echo "$(NASHORN_SHA256SUM)  $(NASHORN_SRC_ZIP)" \
+	    if ! echo "$(NASHORN_SUM)  $(NASHORN_SRC_ZIP)" \
 	      | $(SHA256SUM) --check ; then \
 	      echo "ERROR: Bad download of NASHORN zip"; false; \
 	    fi; \
@@ -1068,7 +1128,7 @@ if USE_ALT_HOTSPOT_SRC_ZIP
 	ln -sf $(ALT_HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP)
 endif
 	echo "Using HotSpot build: ${HSBUILD}"
-	if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
+	if ! echo "$(HOTSPOT_SUM)  $(HOTSPOT_SRC_ZIP)" \
 	  | $(HOTSPOT_SHA256SUM_BIN) --check ; \
 	then \
 	  if test "x$(enable_downloading)" = "xyes"; then \
@@ -1080,7 +1140,7 @@ endif
 	    else \
 	      $(WGET) $(HS_URL)/$(HOTSPOT_SRC_ZIP) ; \
             fi ; \
-	    if ! echo "$(HS_SHA256SUM)  $(HOTSPOT_SRC_ZIP)" \
+	    if ! echo "$(HOTSPOT_SUM)  $(HOTSPOT_SRC_ZIP)" \
 	      | $(SHA256SUM) --check ; then \
 	      echo "ERROR: Bad download of HotSpot zip"; false; \
 	    fi; \

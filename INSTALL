@@ -122,49 +122,69 @@ to configure:
     - /usr/share/java/ecj.jar
     - /usr/share/eclipse-ecj-3.{2,3,4,5}/lib/ecj.jar
 * --with-openjdk-src-zip: Specify the location of the OpenJDK tarball to avoid downloading.
-* --disable-openjdk-checksum: Don't check that the tarball specified by --with-openjdk-src-zip
-  has the same checksum as the expected OpenJDK source zip, so a locally modified version can
-  be used instead.
+* --with-openjdk-checksum: Specify a SHA256 checksum for the supplied source zip. Alternatively,
+  --with-openjdk-checksum without an argument (the default) uses the expected upstream SHA256
+  checksum, while --without-openjdk-checksum doesn't check the tarball specified by
+  --with-openjdk-src-zip at all. This option allows a locally modified version of the source
+  tarball to be used instead of the standard versions.
 * --with-hotspot-src-zip: Specify the location of the HotSpot tarball to avoid downloading.
-* --disable-hotspot-checksum: Don't check that the tarball specified by --with-hotspot-src-zip
-  has the same checksum as the expected HotSpot source zip, so a locally modified version can
-  be used instead.
+* --with-hotspot-checksum: Specify a SHA256 checksum for the supplied source zip. Alternatively,
+  --with-hotspot-checksum without an argument (the default) uses the expected upstream SHA256
+  checksum, while --without-hotspot-checksum doesn't check the tarball specified by
+  --with-hotspot-src-zip at all. This option allows a locally modified version of the source
+  tarball to be used instead of the standard versions.
 * --with-corba-src-zip: Specify the location of the CORBA tarball to avoid downloading.
-* --disable-corba-checksum: Don't check that the tarball specified by --with-corba-src-zip
-  has the same checksum as the expected CORBA source zip, so a locally modified version can
-  be used instead.
+* --with-corba-checksum: Specify a SHA256 checksum for the supplied source zip. Alternatively,
+  --with-corba-checksum without an argument (the default) uses the expected upstream SHA256
+  checksum, while --without-corba-checksum doesn't check the tarball specified by
+  --with-corba-src-zip at all. This option allows a locally modified version of the source
+  tarball to be used instead of the standard versions.
 * --with-jaxp-src-zip: Specify the location of the JAXP tarball to avoid downloading.
-* --disable-jaxp-checksum: Don't check that the tarball specified by --with-jaxp-src-zip
-  has the same checksum as the expected JAXP source zip, so a locally modified version can
-  be used instead.
+* --with-jaxp-checksum: Specify a SHA256 checksum for the supplied source zip. Alternatively,
+  --with-jaxp-checksum without an argument (the default) uses the expected upstream SHA256
+  checksum, while --without-jaxp-checksum doesn't check the tarball specified by
+  --with-jaxp-src-zip at all. This option allows a locally modified version of the source
+  tarball to be used instead of the standard versions.
 * --with-jaxws-src-zip: Specify the location of the JAXWS tarball to avoid downloading.
-* --disable-jaxws-checksum: Don't check that the tarball specified by --with-jaxws-src-zip
-  has the same checksum as the expected JAXWS source zip, so a locally modified version can
-  be used instead.
+* --with-jaxws-checksum: Specify a SHA256 checksum for the supplied source zip. Alternatively,
+  --with-jaxws-checksum without an argument (the default) uses the expected upstream SHA256
+  checksum, while --without-jaxws-checksum doesn't check the tarball specified by
+  --with-jaxws-src-zip at all. This option allows a locally modified version of the source
+  tarball to be used instead of the standard versions.
 * --with-jdk-src-zip: Specify the location of the JDK tarball to avoid downloading.
-* --disable-jdk-checksum: Don't check that the tarball specified by --with-jdk-src-zip
-  has the same checksum as the expected JDK source zip, so a locally modified version can
-  be used instead.
+* --with-jdk-checksum: Specify a SHA256 checksum for the supplied source zip. Alternatively,
+  --with-jdk-checksum without an argument (the default) uses the expected upstream SHA256
+  checksum, while --without-jdk-checksum doesn't check the tarball specified by
+  --with-jdk-src-zip at all. This option allows a locally modified version of the source
+  tarball to be used instead of the standard versions.
 * --with-langtools-src-zip: Specify the location of the langtools tarball to avoid downloading.
-* --disable-langtools-checksum: Don't check that the tarball specified by --with-langtools-src-zip
-  has the same checksum as the expected langtools source zip, so a locally modified version can
-  be used instead.
+* --with-langtools-checksum: Specify a SHA256 checksum for the supplied source zip. Alternatively,
+  --with-langtools-checksum without an argument (the default) uses the expected upstream SHA256
+  checksum, while --without-langtools-checksum doesn't check the tarball specified by
+  --with-langtools-src-zip at all. This option allows a locally modified version of the source
+  tarball to be used instead of the standard versions.
 * --with-nashorn-src-zip: Specify the location of the Nashorn tarball to avoid downloading.
-* --disable-nashorn-checksum: Don't check that the tarball specified by --with-nashorn-src-zip
-  has the same checksum as the expected Nashorn source zip, so a locally modified version can
-  be used instead.
+* --with-nashorn-checksum: Specify a SHA256 checksum for the supplied source zip. Alternatively,
+  --with-nashorn-checksum without an argument (the default) uses the expected upstream SHA256
+  checksum, while --without-nashorn-checksum doesn't check the tarball specified by
+  --with-nashorn-src-zip at all. This option allows a locally modified version of the source
+  tarball to be used instead of the standard versions.
 * --with-alt-jar: Use the specified jar binary in the second stage rather than the one just built.
 * --with-cacao-home: Specify the location of an installed CACAO to use rather than downloading
   and building one.
 * --with-cacao-src-zip: Specify the location of a CACAO tarball to avoid downloading.
-* --disable-cacao-checksum: Don't check that the tarball specified by --with-cacao-src-zip
-  has the same checksum as the expected CACAO source zip, so a locally modified version can
-  be used instead.
+* --with-cacao-checksum: Specify a SHA256 checksum for the supplied source zip. Alternatively,
+  --with-cacao-checksum without an argument (the default) uses the expected upstream SHA256
+  checksum, while --without-cacao-checksum doesn't check the tarball specified by
+  --with-cacao-src-zip at all. This option allows a locally modified version of the source
+  tarball to be used instead of the standard versions.
 * --with-cacao-src-dir: Specify the location of a CACAO source tree to avoid downloading.
 * --with-jamvm-src-zip: Specify the location of a JamVM tarball to avoid downloading.
-* --disable-jamvm-checksum: Don't check that the tarball specified by --with-jamvm-src-zip
-  has the same checksum as the expected JamVM source zip, so a locally modified version can
-  be used instead.
+* --with-jamvm-checksum: Specify a SHA256 checksum for the supplied source zip. Alternatively,
+  --with-jamvm-checksum without an argument (the default) uses the expected upstream SHA256
+  checksum, while --without-jamvm-checksum doesn't check the tarball specified by
+  --with-jamvm-src-zip at all. This option allows a locally modified version of the source
+  tarball to be used instead of the standard versions.
 * --with-hg-revision: Specify a hg revision to use (as opposed to tip) with the --enable-hg option.
 * --with-abs-install-dir: The final install location of the j2sdk-image, for use in the SystemTap tapset.
 * --with-llvm-config: Specify the location of the llvm-config binary.

@@ -2026,243 +2026,189 @@ AC_DEFUN_ONCE([IT_ENABLE_OPENJDK_CHECKSUM],
 [
   AC_REQUIRE([IT_WITH_OPENJDK_SRC_ZIP])
   AC_MSG_CHECKING([whether to enable checksumming of the specified OpenJDK tarball])
-  AC_ARG_ENABLE([openjdk-checksum],
-	      [AS_HELP_STRING(--disable-openjdk-checksum,checksum the specified OpenJDK tarball [[default=yes]])],
+  AC_ARG_WITH([openjdk-checksum],
+	      [AS_HELP_STRING(--with-openjdk-checksum,checksum the specified OpenJDK tarball [[default=yes]])],
   [
-    case "${enableval}" in
-      no)
-	ENABLE_OPENJDK_CHECKSUM=no
-        ;;
-      *)
-        ENABLE_OPENJDK_CHECKSUM=yes
-        ;;
-    esac
+    OPENJDK_CHECKSUM=${withval}
   ],
   [
-    ENABLE_OPENJDK_CHECKSUM="yes"
+    OPENJDK_CHECKSUM="yes"
   ])
-  AC_MSG_RESULT(${ENABLE_OPENJDK_CHECKSUM})
-  if test "x${ENABLE_OPENJDK_CHECKSUM}" = "xno" -a "x${ALT_OPENJDK_SRC_ZIP}" = "xnot specified"; then
+  AC_MSG_RESULT(${OPENJDK_CHECKSUM})
+  if test "x${OPENJDK_CHECKSUM}" = "xno" -a "x${ALT_OPENJDK_SRC_ZIP}" = "xnot specified"; then
     AC_MSG_WARN([No OpenJDK source tarball specified; downloaded tarballs are always checksummed.])
   fi
-  AM_CONDITIONAL(DISABLE_OPENJDK_CHECKSUM, test x"${ENABLE_OPENJDK_CHECKSUM}" = "xno")
-  AC_SUBST(ENABLE_OPENJDK_CHECKSUM)
+  AM_CONDITIONAL(DISABLE_OPENJDK_CHECKSUM, test x"${OPENJDK_CHECKSUM}" = "xno")
+  AM_CONDITIONAL(WITH_OPENJDK_CHECKSUM, test x"${OPENJDK_CHECKSUM}" != "xyes" -a x"${OPENJDK_CHECKSUM}" != "xno")
+  AC_SUBST(OPENJDK_CHECKSUM)
 ])
 
 AC_DEFUN_ONCE([IT_ENABLE_CORBA_CHECKSUM],
 [
   AC_REQUIRE([IT_WITH_CORBA_SRC_ZIP])
   AC_MSG_CHECKING([whether to enable checksumming of the specified CORBA tarball])
-  AC_ARG_ENABLE([corba-checksum],
-	      [AS_HELP_STRING(--disable-corba-checksum,checksum the specified CORBA tarball [[default=yes]])],
+  AC_ARG_WITH([corba-checksum],
+	      [AS_HELP_STRING(--with-corba-checksum,checksum the specified CORBA tarball [[default=yes]])],
   [
-    case "${enableval}" in
-      no)
-	ENABLE_CORBA_CHECKSUM=no
-        ;;
-      *)
-        ENABLE_CORBA_CHECKSUM=yes
-        ;;
-    esac
+    CORBA_CHECKSUM=${withval}
   ],
   [
-    ENABLE_CORBA_CHECKSUM="yes"
+    CORBA_CHECKSUM="yes"
   ])
-  AC_MSG_RESULT(${ENABLE_CORBA_CHECKSUM})
-  if test "x${ENABLE_CORBA_CHECKSUM}" = "xno" -a "x${ALT_CORBA_SRC_ZIP}" = "xnot specified"; then
+  AC_MSG_RESULT(${CORBA_CHECKSUM})
+  if test "x${CORBA_CHECKSUM}" = "xno" -a "x${ALT_CORBA_SRC_ZIP}" = "xnot specified"; then
     AC_MSG_WARN([No CORBA source tarball specified; downloaded tarballs are always checksummed.])
   fi
-  AM_CONDITIONAL(DISABLE_CORBA_CHECKSUM, test x"${ENABLE_CORBA_CHECKSUM}" = "xno")
-  AC_SUBST(ENABLE_CORBA_CHECKSUM)
+  AM_CONDITIONAL(DISABLE_CORBA_CHECKSUM, test x"${CORBA_CHECKSUM}" = "xno")
+  AM_CONDITIONAL(WITH_CORBA_CHECKSUM, test x"${CORBA_CHECKSUM}" != "xyes" -a x"${CORBA_CHECKSUM}" != "xno")
+  AC_SUBST(CORBA_CHECKSUM)
 ])
 
 AC_DEFUN_ONCE([IT_ENABLE_JAXP_CHECKSUM],
 [
   AC_REQUIRE([IT_WITH_JAXP_SRC_ZIP])
   AC_MSG_CHECKING([whether to enable checksumming of the specified JAXP tarball])
-  AC_ARG_ENABLE([jaxp-checksum],
-	      [AS_HELP_STRING(--disable-jaxp-checksum,checksum the specified JAXP tarball [[default=yes]])],
+  AC_ARG_WITH([jaxp-checksum],
+	      [AS_HELP_STRING(--with-jaxp-checksum,checksum the specified JAXP tarball [[default=yes]])],
   [
-    case "${enableval}" in
-      no)
-	ENABLE_JAXP_CHECKSUM=no
-        ;;
-      *)
-        ENABLE_JAXP_CHECKSUM=yes
-        ;;
-    esac
+    JAXP_CHECKSUM=${withval}
   ],
   [
-    ENABLE_JAXP_CHECKSUM="yes"
+    JAXP_CHECKSUM="yes"
   ])
-  AC_MSG_RESULT(${ENABLE_JAXP_CHECKSUM})
-  if test "x${ENABLE_JAXP_CHECKSUM}" = "xno" -a "x${ALT_JAXP_SRC_ZIP}" = "xnot specified"; then
+  AC_MSG_RESULT(${JAXP_CHECKSUM})
+  if test "x${JAXP_CHECKSUM}" = "xno" -a "x${ALT_JAXP_SRC_ZIP}" = "xnot specified"; then
     AC_MSG_WARN([No JAXP source tarball specified; downloaded tarballs are always checksummed.])
   fi
-  AM_CONDITIONAL(DISABLE_JAXP_CHECKSUM, test x"${ENABLE_JAXP_CHECKSUM}" = "xno")
-  AC_SUBST(ENABLE_JAXP_CHECKSUM)
+  AM_CONDITIONAL(DISABLE_JAXP_CHECKSUM, test x"${JAXP_CHECKSUM}" = "xno")
+  AM_CONDITIONAL(WITH_JAXP_CHECKSUM, test x"${JAXP_CHECKSUM}" != "xyes" -a x"${JAXP_CHECKSUM}" != "xno")
+  AC_SUBST(JAXP_CHECKSUM)
 ])
 
 AC_DEFUN_ONCE([IT_ENABLE_JAXWS_CHECKSUM],
 [
   AC_REQUIRE([IT_WITH_JAXWS_SRC_ZIP])
   AC_MSG_CHECKING([whether to enable checksumming of the specified JAXWS tarball])
-  AC_ARG_ENABLE([jaxws-checksum],
-	      [AS_HELP_STRING(--disable-jaxws-checksum,checksum the specified JAXWS tarball [[default=yes]])],
+  AC_ARG_WITH([jaxws-checksum],
+	      [AS_HELP_STRING(--with-jaxws-checksum,checksum the specified JAXWS tarball [[default=yes]])],
   [
-    case "${enableval}" in
-      no)
-	ENABLE_JAXWS_CHECKSUM=no
-        ;;
-      *)
-        ENABLE_JAXWS_CHECKSUM=yes
-        ;;
-    esac
+    JAXWS_CHECKSUM=${withval}
   ],
   [
-    ENABLE_JAXWS_CHECKSUM="yes"
+    JAXWS_CHECKSUM="yes"
   ])
-  AC_MSG_RESULT(${ENABLE_JAXWS_CHECKSUM})
-  if test "x${ENABLE_JAXWS_CHECKSUM}" = "xno" -a "x${ALT_JAXWS_SRC_ZIP}" = "xnot specified"; then
+  AC_MSG_RESULT(${JAXWS_CHECKSUM})
+  if test "x${JAXWS_CHECKSUM}" = "xno" -a "x${ALT_JAXWS_SRC_ZIP}" = "xnot specified"; then
     AC_MSG_WARN([No JAXWS source tarball specified; downloaded tarballs are always checksummed.])
   fi
-  AM_CONDITIONAL(DISABLE_JAXWS_CHECKSUM, test x"${ENABLE_JAXWS_CHECKSUM}" = "xno")
-  AC_SUBST(ENABLE_JAXWS_CHECKSUM)
+  AM_CONDITIONAL(DISABLE_JAXWS_CHECKSUM, test x"${JAXWS_CHECKSUM}" = "xno")
+  AM_CONDITIONAL(WITH_JAXWS_CHECKSUM, test x"${JAXWS_CHECKSUM}" != "xyes" -a x"${JAXWS_CHECKSUM}" != "xno")
+  AC_SUBST(JAXWS_CHECKSUM)
 ])
 
 AC_DEFUN_ONCE([IT_ENABLE_JDK_CHECKSUM],
 [
   AC_REQUIRE([IT_WITH_JDK_SRC_ZIP])
   AC_MSG_CHECKING([whether to enable checksumming of the specified JDK tarball])
-  AC_ARG_ENABLE([jdk-checksum],
-	      [AS_HELP_STRING(--disable-jdk-checksum,checksum the specified JDK tarball [[default=yes]])],
+  AC_ARG_WITH([jdk-checksum],
+	      [AS_HELP_STRING(--with-jdk-checksum,checksum the specified JDK tarball [[default=yes]])],
   [
-    case "${enableval}" in
-      no)
-	ENABLE_JDK_CHECKSUM=no
-        ;;
-      *)
-        ENABLE_JDK_CHECKSUM=yes
-        ;;
-    esac
+    JDK_CHECKSUM=${withval}
   ],
   [
-    ENABLE_JDK_CHECKSUM="yes"
+    JDK_CHECKSUM="yes"
   ])
-  AC_MSG_RESULT(${ENABLE_JDK_CHECKSUM})
-  if test "x${ENABLE_JDK_CHECKSUM}" = "xno" -a "x${ALT_JDK_SRC_ZIP}" = "xnot specified"; then
+  AC_MSG_RESULT(${JDK_CHECKSUM})
+  if test "x${JDK_CHECKSUM}" = "xno" -a "x${ALT_JDK_SRC_ZIP}" = "xnot specified"; then
     AC_MSG_WARN([No JDK source tarball specified; downloaded tarballs are always checksummed.])
   fi
-  AM_CONDITIONAL(DISABLE_JDK_CHECKSUM, test x"${ENABLE_JDK_CHECKSUM}" = "xno")
-  AC_SUBST(ENABLE_JDK_CHECKSUM)
+  AM_CONDITIONAL(DISABLE_JDK_CHECKSUM, test x"${JDK_CHECKSUM}" = "xno")
+  AM_CONDITIONAL(WITH_JDK_CHECKSUM, test x"${JDK_CHECKSUM}" != "xyes" -a x"${JDK_CHECKSUM}" != "xno")
+  AC_SUBST(JDK_CHECKSUM)
 ])
 
 AC_DEFUN_ONCE([IT_ENABLE_LANGTOOLS_CHECKSUM],
 [
   AC_REQUIRE([IT_WITH_LANGTOOLS_SRC_ZIP])
   AC_MSG_CHECKING([whether to enable checksumming of the specified langtools tarball])
-  AC_ARG_ENABLE([langtools-checksum],
-	      [AS_HELP_STRING(--disable-langtools-checksum,checksum the specified langtools tarball [[default=yes]])],
+  AC_ARG_WITH([langtools-checksum],
+	      [AS_HELP_STRING(--with-langtools-checksum,checksum the specified langtools tarball [[default=yes]])],
   [
-    case "${enableval}" in
-      no)
-	ENABLE_LANGTOOLS_CHECKSUM=no
-        ;;
-      *)
-        ENABLE_LANGTOOLS_CHECKSUM=yes
-        ;;
-    esac
+    LANGTOOLS_CHECKSUM=${withval}
   ],
   [
-    ENABLE_LANGTOOLS_CHECKSUM="yes"
+    LANGTOOLS_CHECKSUM="yes"
   ])
-  AC_MSG_RESULT(${ENABLE_LANGTOOLS_CHECKSUM})
-  if test "x${ENABLE_LANGTOOLS_CHECKSUM}" = "xno" -a "x${ALT_LANGTOOLS_SRC_ZIP}" = "xnot specified"; then
+  AC_MSG_RESULT(${LANGTOOLS_CHECKSUM})
+  if test "x${LANGTOOLS_CHECKSUM}" = "xno" -a "x${ALT_LANGTOOLS_SRC_ZIP}" = "xnot specified"; then
     AC_MSG_WARN([No langtools source tarball specified; downloaded tarballs are always checksummed.])
   fi
-  AM_CONDITIONAL(DISABLE_LANGTOOLS_CHECKSUM, test x"${ENABLE_LANGTOOLS_CHECKSUM}" = "xno")
-  AC_SUBST(ENABLE_LANGTOOLS_CHECKSUM)
+  AM_CONDITIONAL(DISABLE_LANGTOOLS_CHECKSUM, test x"${LANGTOOLS_CHECKSUM}" = "xno")
+  AM_CONDITIONAL(WITH_LANGTOOLS_CHECKSUM, test x"${LANGTOOLS_CHECKSUM}" != "xyes" -a x"${LANGTOOLS_CHECKSUM}" != "xno")
+  AC_SUBST(LANGTOOLS_CHECKSUM)
 ])
 
 AC_DEFUN_ONCE([IT_ENABLE_CACAO_CHECKSUM],
 [
   AC_REQUIRE([IT_WITH_CACAO_SRC_ZIP])
   AC_MSG_CHECKING([whether to enable checksumming of the specified CACAO tarball])
-  AC_ARG_ENABLE([cacao-checksum],
-	      [AS_HELP_STRING(--disable-cacao-checksum,checksum the specified CACAO tarball [[default=yes]])],
+  AC_ARG_WITH([cacao-checksum],
+	      [AS_HELP_STRING(--with-cacao-checksum,checksum the specified CACAO tarball [[default=yes]])],
   [
-    case "${enableval}" in
-      no)
-	ENABLE_CACAO_CHECKSUM=no
-        ;;
-      *)
-        ENABLE_CACAO_CHECKSUM=yes
-        ;;
-    esac
+    CACAO_CHECKSUM=${withval}
   ],
   [
-    ENABLE_CACAO_CHECKSUM="yes"
+    CACAO_CHECKSUM="yes"
   ])
-  AC_MSG_RESULT(${ENABLE_CACAO_CHECKSUM})
-  if test "x${ENABLE_CACAO_CHECKSUM}" = "xno" -a "x${ALT_CACAO_SRC_ZIP}" = "xnot specified"; then
+  AC_MSG_RESULT(${CACAO_CHECKSUM})
+  if test "x${CACAO_CHECKSUM}" = "xno" -a "x${ALT_CACAO_SRC_ZIP}" = "xnot specified"; then
     AC_MSG_WARN([No CACAO source tarball specified; downloaded tarballs are always checksummed.])
   fi
-  AM_CONDITIONAL(DISABLE_CACAO_CHECKSUM, test x"${ENABLE_CACAO_CHECKSUM}" = "xno")
-  AC_SUBST(ENABLE_CACAO_CHECKSUM)
+  AM_CONDITIONAL(DISABLE_CACAO_CHECKSUM, test x"${CACAO_CHECKSUM}" = "xno")
+  AM_CONDITIONAL(WITH_CACAO_CHECKSUM, test x"${CACAO_CHECKSUM}" != "xyes" -a x"${CACAO_CHECKSUM}" != "xno")
+  AC_SUBST(CACAO_CHECKSUM)
 ])
 
 AC_DEFUN_ONCE([IT_ENABLE_JAMVM_CHECKSUM],
 [
   AC_REQUIRE([IT_WITH_JAMVM_SRC_ZIP])
   AC_MSG_CHECKING([whether to enable checksumming of the specified JamVM tarball])
-  AC_ARG_ENABLE([jamvm-checksum],
-	      [AS_HELP_STRING(--disable-jamvm-checksum,checksum the specified JamVM tarball [[default=yes]])],
+  AC_ARG_WITH([jamvm-checksum],
+	      [AS_HELP_STRING(--with-jamvm-checksum,checksum the specified JamVM tarball [[default=yes]])],
   [
-    case "${enableval}" in
-      no)
-	ENABLE_JAMVM_CHECKSUM=no
-        ;;
-      *)
-        ENABLE_JAMVM_CHECKSUM=yes
-        ;;
-    esac
+    JAMVM_CHECKSUM=${withval}
   ],
   [
-    ENABLE_JAMVM_CHECKSUM="yes"
+    JAMVM_CHECKSUM="yes"
   ])
-  AC_MSG_RESULT(${ENABLE_JAMVM_CHECKSUM})
-  if test "x${ENABLE_JAMVM_CHECKSUM}" = "xno" -a "x${ALT_JAMVM_SRC_ZIP}" = "xnot specified"; then
+  AC_MSG_RESULT(${JAMVM_CHECKSUM})
+  if test "x${JAMVM_CHECKSUM}" = "xno" -a "x${ALT_JAMVM_SRC_ZIP}" = "xnot specified"; then
     AC_MSG_WARN([No JamVM source tarball specified; downloaded tarballs are always checksummed.])
   fi
-  AM_CONDITIONAL(DISABLE_JAMVM_CHECKSUM, test x"${ENABLE_JAMVM_CHECKSUM}" = "xno")
-  AC_SUBST(ENABLE_JAMVM_CHECKSUM)
+  AM_CONDITIONAL(DISABLE_JAMVM_CHECKSUM, test x"${JAMVM_CHECKSUM}" = "xno")
+  AM_CONDITIONAL(WITH_JAMVM_CHECKSUM, test x"${JAMVM_CHECKSUM}" != "xyes" -a x"${JAMVM_CHECKSUM}" != "xno")
+  AC_SUBST(JAMVM_CHECKSUM)
 ])
 
 AC_DEFUN_ONCE([IT_ENABLE_HOTSPOT_CHECKSUM],
 [
   AC_REQUIRE([IT_WITH_HOTSPOT_SRC_ZIP])
   AC_MSG_CHECKING([whether to enable checksumming of the specified HotSpot tarball])
-  AC_ARG_ENABLE([hotspot-checksum],
-	      [AS_HELP_STRING(--disable-hotspot-checksum,checksum the specified HotSpot tarball [[default=yes]])],
+  AC_ARG_WITH([hotspot-checksum],
+	      [AS_HELP_STRING(--with-hotspot-checksum,checksum the specified HotSpot tarball [[default=yes]])],
   [
-    case "${enableval}" in
-      no)
-	ENABLE_HOTSPOT_CHECKSUM=no
-        ;;
-      *)
-        ENABLE_HOTSPOT_CHECKSUM=yes
-        ;;
-    esac
+    HOTSPOT_CHECKSUM=${withval}
   ],
   [
-    ENABLE_HOTSPOT_CHECKSUM="yes"
+    HOTSPOT_CHECKSUM="yes"
   ])
-  AC_MSG_RESULT(${ENABLE_HOTSPOT_CHECKSUM})
-  if test "x${ENABLE_HOTSPOT_CHECKSUM}" = "xno" -a "x${ALT_HOTSPOT_SRC_ZIP}" = "xnot specified"; then
+  AC_MSG_RESULT(${HOTSPOT_CHECKSUM})
+  if test "x${HOTSPOT_CHECKSUM}" = "xno" -a "x${ALT_HOTSPOT_SRC_ZIP}" = "xnot specified"; then
     AC_MSG_WARN([No HotSpot source tarball specified; downloaded tarballs are always checksummed.])
   fi
-  AM_CONDITIONAL(DISABLE_HOTSPOT_CHECKSUM, test x"${ENABLE_HOTSPOT_CHECKSUM}" = "xno")
-  AC_SUBST(ENABLE_HOTSPOT_CHECKSUM)
+  AM_CONDITIONAL(DISABLE_HOTSPOT_CHECKSUM, test x"${HOTSPOT_CHECKSUM}" = "xno")
+  AM_CONDITIONAL(WITH_HOTSPOT_CHECKSUM, test x"${HOTSPOT_CHECKSUM}" != "xyes" -a x"${HOTSPOT_CHECKSUM}" != "xno")
+  AC_SUBST(HOTSPOT_CHECKSUM)
 ])
 
 AC_DEFUN_ONCE([IT_WITH_CACERTS_FILE],
@@ -2301,27 +2247,21 @@ AC_DEFUN_ONCE([IT_ENABLE_NASHORN_CHECKSUM],
 [
   AC_REQUIRE([IT_WITH_NASHORN_SRC_ZIP])
   AC_MSG_CHECKING([whether to enable checksumming of the specified Nashorn tarball])
-  AC_ARG_ENABLE([nashorn-checksum],
-	      [AS_HELP_STRING(--disable-nashorn-checksum,checksum the specified Nashorn tarball [[default=yes]])],
+  AC_ARG_WITH([nashorn-checksum],
+	      [AS_HELP_STRING(--with-nashorn-checksum,checksum the specified Nashorn tarball [[default=yes]])],
   [
-    case "${enableval}" in
-      no)
-	ENABLE_NASHORN_CHECKSUM=no
-        ;;
-      *)
-        ENABLE_NASHORN_CHECKSUM=yes
-        ;;
-    esac
+    NASHORN_CHECKSUM=${withval}
   ],
   [
-    ENABLE_NASHORN_CHECKSUM="yes"
+    NASHORN_CHECKSUM="yes"
   ])
-  AC_MSG_RESULT(${ENABLE_NASHORN_CHECKSUM})
-  if test "x${ENABLE_NASHORN_CHECKSUM}" = "xno" -a "x${ALT_NASHORN_SRC_ZIP}" = "xnot specified"; then
+  AC_MSG_RESULT(${NASHORN_CHECKSUM})
+  if test "x${NASHORN_CHECKSUM}" = "xno" -a "x${ALT_NASHORN_SRC_ZIP}" = "xnot specified"; then
     AC_MSG_WARN([No Nashorn source tarball specified; downloaded tarballs are always checksummed.])
   fi
-  AM_CONDITIONAL(DISABLE_NASHORN_CHECKSUM, test x"${ENABLE_NASHORN_CHECKSUM}" = "xno")
-  AC_SUBST(ENABLE_NASHORN_CHECKSUM)
+  AM_CONDITIONAL(DISABLE_NASHORN_CHECKSUM, test x"${NASHORN_CHECKSUM}" = "xno")
+  AM_CONDITIONAL(WITH_NASHORN_CHECKSUM, test x"${NASHORN_CHECKSUM}" != "xyes" -a x"${NASHORN_CHECKSUM}" != "xno")
+  AC_SUBST(NASHORN_CHECKSUM)
 ])
 
 AC_DEFUN_ONCE([IT_ENABLE_NON_NSS_CURVES],

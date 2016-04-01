@@ -1,5 +1,126 @@
 2016-03-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2547: Extend tarball checksumming option to
+	allow the checksum to be specified
+	* INSTALL: Update documentation, replacing
+	the --disable-nashorn-checksum option with
+	the --with--nashorn-checksum option.
+	* Makefile.am:
+	(NASHORN_SUM): Set to either NASHORN_SHA256SUM
+	or the checksum supplied by the user.
+	(download-nashorn): Use NASHORN_SUM instead
+	of NASHORN_SHA256SUM directly.
+	* acinclude.m4:
+	(IT_ENABLE_NASHORN_CHECKSUM): Change from
+	an enablement option to a with option, so
+	that the user can specify a checksum.
+	The conditional WITH_NASHORN_CHECKSUM is
+	set if the specified value is other than
+	"yes" or "no".
+
+2015-07-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2547: Extend tarball checksumming option to
+	allow the checksum to be specified
+	* INSTALL: Update documentation, replacing
+	--disable-x-checksum options with
+	--with-x-checksum options.
+	* Makefile.am:
+	(OPENJDK_SUM): Set to either OPENJDK_SHA256SUM
+	or the checksum supplied by the user.
+	(CORBA_SUM): Set to either CORBA_SHA256SUM
+	or the checksum supplied by the user.
+	(JAXP_SUM): Set to either JAXP_SHA256SUM
+	or the checksum supplied by the user.
+	(JAXWS_SUM): Set to either JAXWS_SHA256SUM
+	or the checksum supplied by the user.
+	(JDK_SUM): Set to either JDK_SHA256SUM
+	or the checksum supplied by the user.
+	(LANGTOOLS_SUM): Set to either LANGTOOLS_SHA256SUM
+	or the checksum supplied by the user.
+	(CACAO_SUM): Set to either CACAO_SHA256SUM
+	or the checksum supplied by the user.
+	(JAMVM_SUM): Set to either JAMVM_SHA256SUM
+	or the checksum supplied by the user.
+	(HOTSPOT_SUM): Set to either HS_SHA256SUM
+	or the checksum supplied by the user.
+	(download-openjdk): Use OPENJDK_SUM instead
+	of OPENJDK_SHA256SUM directly.
+	(download-corba): Use CORBA_SUM instead
+	of CORBA_SHA256SUM directly.
+	(download-jaxp): Use JAXP_SUM instead
+	of JAXP_SHA256SUM directly.
+	(download-jaxws): Use JAXWS_SUM instead
+	of JAXWS_SHA256SUM directly.
+	(download-jdk): Use JDK_SUM instead
+	of JDK_SHA256SUM directly.
+	(download-langtools): Use LANGTOOLS_SUM instead
+	of LANGTOOLS_SHA256SUM directly.
+	(download-cacao): Use CACAO_SUM instead
+	of CACAO_SHA256SUM directly.
+	(download-jamvm): Use JAMVM_SUM instead
+	of JAMVM_SHA256SUM directly.
+	(download-hotspot): Use HOTSPOT_SUM instead
+	of HS_SHA256SUM directly.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_OPENJDK_CHECKSUM): Change from
+	an enablement option to a with option, so
+	that the user can specify a checksum.
+	The conditional WITH_OPENJDK_CHECKSUM is
+	set if the specified value is other than
+	"yes" or "no".
+	(IT_ENABLE_CORBA_CHECKSUM): Change from
+	an enablement option to a with option, so
+	that the user can specify a checksum.
+	The conditional WITH_CORBA_CHECKSUM is
+	set if the specified value is other than
+	"yes" or "no".
+	(IT_ENABLE_JAXP_CHECKSUM): Change from
+	an enablement option to a with option, so
+	that the user can specify a checksum.
+	The conditional WITH_JAXP_CHECKSUM is
+	set if the specified value is other than
+	"yes" or "no".
+	(IT_ENABLE_JAXWS_CHECKSUM): Change from
+	an enablement option to a with option, so
+	that the user can specify a checksum.
+	The conditional WITH_JAXWS_CHECKSUM is
+	set if the specified value is other than
+	"yes" or "no".
+	(IT_ENABLE_JDK_CHECKSUM): Change from
+	an enablement option to a with option, so
+	that the user can specify a checksum.
+	The conditional WITH_JDK_CHECKSUM is
+	set if the specified value is other than
+	"yes" or "no".
+	(IT_ENABLE_LANGTOOLS_CHECKSUM): Change from
+	an enablement option to a with option, so
+	that the user can specify a checksum.
+	The conditional WITH_LANGTOOLS_CHECKSUM is
+	set if the specified value is other than
+	"yes" or "no".
+	(IT_ENABLE_CACAO_CHECKSUM): Change from
+	an enablement option to a with option, so
+	that the user can specify a checksum.
+	The conditional WITH_CACAO_CHECKSUM is
+	set if the specified value is other than
+	"yes" or "no".
+	(IT_ENABLE_JAMVM_CHECKSUM): Change from
+	an enablement option to a with option, so
+	that the user can specify a checksum.
+	The conditional WITH_JAMVM_CHECKSUM is
+	set if the specified value is other than
+	"yes" or "no".
+	(IT_ENABLE_HOTSPOT_CHECKSUM): Change from
+	an enablement option to a with option, so
+	that the user can specify a checksum.
+	The conditional WITH_HOTSPOT_CHECKSUM is
+	set if the specified value is other than
+	"yes" or "no".
+
+2016-03-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2544: Desktop files do not allow installation from
 	multiple versions of IcedTea
 	* Makefile.am:
