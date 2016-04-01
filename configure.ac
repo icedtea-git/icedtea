@@ -22,24 +22,21 @@ AC_CANONICAL_HOST
 AC_PROG_CC
 AC_PROG_CXX
 
-IT_FIND_TOOL([MAKE], [make])
+IT_FIND_TOOLS([MAKE], [gmake make])
 IT_FIND_TOOL([GZIP], [gzip])
-IT_FIND_TOOL([FIND], [find])
-IT_FIND_TOOL([PATCH], [patch])
-IT_FIND_TOOL([TAR], [tar])
+IT_FIND_TOOLS([FIND], [gfind find])
+IT_FIND_TOOLS([PATCH], [gpatch patch])
+IT_FIND_TOOLS([TAR], [gtar tar])
 IT_FIND_TOOL([CHMOD], [chmod])
-IT_FIND_TOOL([SHA256SUM], [sha256sum])
+IT_FIND_TOOLS([SHA256SUM], [gsha256sum sha256sum])
 IT_FIND_TOOL([WGET], [wget])
 IT_FIND_TOOL([ZIP], [zip])
 IT_FIND_TOOL([UNZIP], [unzip])
 IT_FIND_TOOL([CPIO], [cpio])
 IT_FIND_TOOL([FILE], [file])
 IT_FIND_TOOL([READLINK], [readlink])
-AC_CHECK_TOOLS([FASTJAR], [fastjar jar])
-if test "x$FASTJAR" = x; then
-	AC_MSG_ERROR([Can't find fastjar or jar])
-fi
-AC_SUBST([FASTJAR])
+IT_FIND_TOOLS([FASTJAR], [fastjar jar])
+IT_FIND_TOOLS([SED],[gsed sed])
 AC_CHECK_TOOL([LDD], [ldd])
 dnl OpenJDK's README-builds.html lists gawk as a build dependency so we
 dnl check for it explicitly rather than using AC_PROG_AWK.

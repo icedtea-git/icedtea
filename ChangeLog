@@ -1,3 +1,40 @@
+2016-03-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2906: Support prefixed variants of GNU
+	tools used on *BSD systems
+	* NEWS: Updated.
+
+2014-04-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2906: Support prefixed variants of GNU
+	tools used on *BSD systems
+	* AUTHORS: Add Radim Kolar.
+	* acinclude.m4:
+	(IT_FIND_TOOL): Cleanup error message.
+	(IT_FIND_TOOLS): Likewise.
+
+2014-03-20  Radim Kolar  <hsn@sanatana.filez.com>
+
+	PR2906: Support prefixed variants of GNU
+	tools used on *BSD systems
+	* Makefile.am:
+	(versioning): Use $(SED) instead of 'sed'.
+	(icedtea): Likewise.
+	(icedtea-debug): Likewise.
+	(clean-add-jamvm): Likewise.
+	(clean-add-jamvm-debug): Likewise.
+	(clean-add-cacao): Likewise.
+	(clean-add-cacao-debug): Likewise.
+	(clean-add-zero): Likewise.
+	(clean-add-zero-debug): Likewise.
+	(jtreg_processes): Likewise.
+	* acinclude.m4:
+	(IT_FIND_TOOLS): New macro to check for
+	multiple tools.
+	* configure.ac: Check for gmake, gfind, gpatch, gtar,
+	gsha256sum and gsed (GNU tools on *BSD). Use
+	IT_FIND_TOOLS for fastjar.
+
 2016-03-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2832, CA195: typeinfo.cpp: typeinfo_merge_nonarrays:

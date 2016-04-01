@@ -610,7 +610,15 @@ AC_DEFUN([IT_DISABLE_OPTIMIZATIONS],
 AC_DEFUN([IT_FIND_TOOL],
 [AC_PATH_TOOL([$1],[$2])
  if test x"$$1" = x ; then
-   AC_MSG_ERROR([$2 program not found in PATH])
+   AC_MSG_ERROR([The following program was not found on the PATH: $2])
+ fi
+ AC_SUBST([$1])
+])
+
+AC_DEFUN([IT_FIND_TOOLS],
+[AC_PATH_PROGS([$1],[$2])
+ if test x"$$1" = x ; then
+   AC_MSG_ERROR([None of the following programs could be found on the PATH: $2])
  fi
  AC_SUBST([$1])
 ])
