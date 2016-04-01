@@ -1,0 +1,107 @@
+# HG changeset patch
+# User Stefan Ring <stefan@complang.tuwien.ac.at>
+# Date 1453933756 -3600
+# Node ID 4982d429274b9498ad2629ea4f28566ed69e4775
+# Parent  1cef439b53ee701662059ae50874d55c7b5302d7
+PR195: Fix some oversights during a large macro cleanup in 1e9787c3484e
+
+diff --git cacao/cacao/src/vm/jit/verify/typecheck-common.cpp cacao/cacao/src/vm/jit/verify/typecheck-common.cpp
+--- cacao/cacao/src/vm/jit/verify/typecheck-common.cpp
++++ cacao/cacao/src/vm/jit/verify/typecheck-common.cpp
+@@ -281,7 +281,7 @@
+ 
+ 		dv->type = sv->type;
+ 		if (dv->type == TYPE_ADR) {
+-			dv->typeinfo = sv->typeinfo;
++			typeinfo_t::clone(sv->typeinfo, dv->typeinfo);
+ 		}
+ 	}
+ 	return true;
+diff --git cacao/cacao/src/vm/jit/verify/typeinfo.cpp cacao/cacao/src/vm/jit/verify/typeinfo.cpp
+--- cacao/cacao/src/vm/jit/verify/typeinfo.cpp
++++ cacao/cacao/src/vm/jit/verify/typeinfo.cpp
+@@ -1674,6 +1674,7 @@
+ 	classref_or_classinfo common;
+ 	classref_or_classinfo elementclass;
+ 	int dimension;
++	ArrayType new_elementtype;
+ 	bool changed;
+ 	typecheck_result r;
+ 
+@@ -1784,23 +1785,23 @@
+          * interpret it as an array (same dim. as x) of Arraystubs. */
+         if (x->dimension < src->dimension) {
+             dimension = x->dimension;
+-            elementtype = ARRAYTYPE_OBJECT;
++            new_elementtype = ARRAYTYPE_OBJECT;
+             elementclass.cls = pseudo_class_Arraystub;
+         }
+         else {
+             dimension    = src->dimension;
+-            elementtype  = src->elementtype;
++            new_elementtype = src->elementtype;
+             elementclass = src->elementclass;
+         }
+         
+         /* {The arrays are of the same dimension.} */
+         
+-        if (x->elementtype != elementtype) {
++        if (x->elementtype != new_elementtype) {
+             /* Different element types are merged, so the resulting array
+              * type has one accessible dimension less. */
+             if (--dimension == 0) {
+                 common.cls       = pseudo_class_Arraystub;
+-                elementtype      = ARRAYTYPE_INT;
++                new_elementtype = ARRAYTYPE_INT;
+                 elementclass.any = NULL;
+             }
+             else {
+@@ -1810,14 +1811,14 @@
+ 					return typecheck_FAIL;
+ 				}
+ 
+-                elementtype      = ARRAYTYPE_OBJECT;
++                new_elementtype = ARRAYTYPE_OBJECT;
+                 elementclass.cls = pseudo_class_Arraystub;
+             }
+         }
+         else {
+             /* {The arrays have the same dimension and elementtype.} */
+ 
+-            if (elementtype == ARRAYTYPE_OBJECT) {
++            if (new_elementtype == ARRAYTYPE_OBJECT) {
+                 /* The elements are references, so their respective
+                  * types must be merged.
+                  */
+@@ -1862,7 +1863,7 @@
+ 		changed |= r;
+ 
+         dimension        = 0;
+-        elementtype      = ARRAYTYPE_INT;
++        new_elementtype = ARRAYTYPE_INT;
+         elementclass.any = NULL;
+     }
+ 
+@@ -1876,8 +1877,8 @@
+         this->dimension = dimension;
+         changed = true;
+     }
+-    if (this->elementtype != elementtype) {
+-        this->elementtype = elementtype;
++    if (elementtype != new_elementtype) {
++        elementtype = new_elementtype;
+         changed = true;
+     }
+     if (this->elementclass.any != elementclass.any) {
+diff --git cacao/cacao/src/vm/resolve.cpp cacao/cacao/src/vm/resolve.cpp
+--- cacao/cacao/src/vm/resolve.cpp
++++ cacao/cacao/src/vm/resolve.cpp
+@@ -703,7 +703,7 @@
+ 
+ 	/* uninitialized objects are illegal here */
+ 
+-	if (subtinfo->is_primitive()) {
++	if (subtinfo->is_newobject()) {
+ 		exceptions_throw_verifyerror(refmethod,
+ 				"Invalid use of uninitialized object");
+ 		return resolveFailed;

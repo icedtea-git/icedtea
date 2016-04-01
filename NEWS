@@ -207,6 +207,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2354: stamps/cacao.stamp tries to touch a file in a directory which doesn't exist
   - PR2355: CACAO build fails to use JRE layout
   - PR2776: CACAO lacks JVM_GetResourceLookupCacheURLs introduced by jdk8u40
+  - PR2832, CA195: typeinfo.cpp: typeinfo_merge_nonarrays: Assertion `dest && result && x.any && y.any' failed
 
 New in release 2.6.3 (2015-11-13):
 

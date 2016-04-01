@@ -1,3 +1,14 @@
+2016-03-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2832, CA195: typeinfo.cpp: typeinfo_merge_nonarrays:
+	Assertion `dest && result && x.any && y.any' failed
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new patch.
+	* NEWS: Updated.
+	* patches/cacao/pr2832-refactoring_error.patch:
+	Backport of refactoring fix from
+	https://bitbucket.org/Ringdingcoder/cacao-staging
+
 2016-03-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2775: JamVM lacks JVM_GetResourceLookupCacheURLs
