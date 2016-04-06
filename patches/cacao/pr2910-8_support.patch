@@ -1,0 +1,185 @@
+diff -r d38fca124cd9 src/vm/class.cpp
+--- cacao.old/cacao/src/vm/class.cpp	Mon Jul 13 13:34:45 2015 +0100
++++ cacao/cacao/src/vm/class.cpp	Wed Apr 06 01:47:19 2016 +0100
+@@ -673,17 +673,26 @@
+ 
+ void* class_getconstant(classinfo *c, u4 pos, ConstantPoolTag ctype)
+ {
++	return class_getconstant(c, pos, ctype, CONSTANT_UNUSED);
++}
++
++void* class_getconstant(classinfo *c, u4 pos, ConstantPoolTag ctype, ConstantPoolTag ctype2)
++{
+ 	// check index and type of constantpool entry
+ 	// (pos == 0 is caught by type comparison)
+-
+-	if ((((int32_t)pos) >= c->cpcount) || (c->cptags[pos] != ctype)) {
++	bool typematch = (c->cptags[pos] == ctype || (ctype2 != CONSTANT_UNUSED && c->cptags[pos] == ctype2));
++	if ((((int32_t)pos) >= c->cpcount) || !typematch) {
+ 		// this is the slow path,
+ 		// we can afford to repeat the separate checks for a better error message
+ 
+ 		if ((pos == 0) || (((int32_t)pos) >= c->cpcount)) {
+ 			exceptions_throw_classformaterror(c, "Illegal constant pool index: %u", pos);
+-		} else if (c->cptags[pos] != ctype) {
+-			exceptions_throw_classformaterror(c, "Illegal constant pool type %u (expected %u)", ctype, c->cptags[pos]);
++		} else if (!typematch) {
++			if (ctype2 == CONSTANT_UNUSED)
++				exceptions_throw_classformaterror(c, "Illegal constant pool type %u (expected %u)", c->cptags[pos], ctype);
++			else
++				exceptions_throw_classformaterror(c, "Illegal constant pool type %u (expected %u or %u)",
++												  c->cptags[pos], ctype, ctype2);
+ 		}
+ 
+ 		assert(exceptions_get_exception());
+diff -r d38fca124cd9 src/vm/class.hpp
+--- cacao.old/cacao/src/vm/class.hpp	Mon Jul 13 13:34:45 2015 +0100
++++ cacao/cacao/src/vm/class.hpp	Wed Apr 06 01:47:19 2016 +0100
+@@ -196,6 +196,7 @@
+ 
+ /* retrieve constantpool element */
+ void* class_getconstant(classinfo *c, u4 pos, ConstantPoolTag ctype);
++void* class_getconstant(classinfo *c, u4 pos, ConstantPoolTag ctype, ConstantPoolTag ctype2);
+ void* innerclass_getconstant(classinfo *c, u4 pos, ConstantPoolTag ctype);
+ 
+ /* frees all resources used by the class */
+diff -r d38fca124cd9 src/vm/global.hpp
+--- cacao.old/cacao/src/vm/global.hpp	Mon Jul 13 13:34:45 2015 +0100
++++ cacao/cacao/src/vm/global.hpp	Wed Apr 06 01:47:19 2016 +0100
+@@ -142,13 +142,13 @@
+ 
+ /* some Java related defines **************************************************/
+ 
+-#define JAVA_VERSION    "1.6.0"         /* this version is supported by CACAO */
+-#define CLASS_VERSION   "51.0"
++#define JAVA_VERSION    "1.8.0"         /* this version is supported by CACAO */
++#define CLASS_VERSION   "52.0"
+ 
+ /* Java class file constants **************************************************/
+ 
+ #define MAGIC             0xCAFEBABE
+-#define MAJOR_VERSION     51
++#define MAJOR_VERSION     52
+ #define MINOR_VERSION     0
+ 
+ 
+diff -r d38fca124cd9 src/vm/loader.cpp
+--- cacao.old/cacao/src/vm/loader.cpp	Mon Jul 13 13:34:45 2015 +0100
++++ cacao/cacao/src/vm/loader.cpp	Wed Apr 06 01:47:19 2016 +0100
+@@ -126,6 +126,7 @@
+ 
+ const ClassFileVersion ClassFileVersion::CACAO_VERSION(MAJOR_VERSION, MINOR_VERSION);
+ const ClassFileVersion ClassFileVersion::JDK_7(51, 0);
++const ClassFileVersion ClassFileVersion::JDK_8(52, 0);
+ 
+ 
+ /* loader_preinit **************************************************************
+@@ -1848,12 +1849,29 @@
+ 			break;
+ 
+ 		case REF_invokeVirtual:
++			fmi  = (constant_FMIref*) class_getconstant(c, it->reference_index, CONSTANT_Methodref);
++
++			if (!fmi)
++				return false;
++
++			if (fmi->name == utf8::init || fmi->name == utf8::clinit) {
++				exceptions_throw_classformaterror(c, "Illegal method handle");
++				return false;
++			}
++			break;
++			
+ 		case REF_invokeStatic:
+ 		case REF_invokeSpecial:
+-			fmi  = (constant_FMIref*) class_getconstant(c, it->reference_index, CONSTANT_Methodref);
+-
+-			if (!fmi)
++			if (c->version >= ClassFileVersion::JDK_8) {
++				fmi  = (constant_FMIref*) class_getconstant(c, it->reference_index,
++															CONSTANT_Methodref, CONSTANT_InterfaceMethodref);
++			} else {
++				fmi  = (constant_FMIref*) class_getconstant(c, it->reference_index, CONSTANT_Methodref);
++			}
++			
++			if (!fmi) {
+ 				return false;
++			}
+ 
+ 			if (fmi->name == utf8::init || fmi->name == utf8::clinit) {
+ 				exceptions_throw_classformaterror(c, "Illegal method handle");
+diff -r d38fca124cd9 src/vm/loader.hpp
+--- cacao.old/cacao/src/vm/loader.hpp	Mon Jul 13 13:34:45 2015 +0100
++++ cacao/cacao/src/vm/loader.hpp	Wed Apr 06 01:47:19 2016 +0100
+@@ -116,6 +116,10 @@
+ 		 */
+ 		static const ClassFileVersion JDK_7;
+ 
++		/**
++		 * The class file format version used by JDK 8
++		 */
++		static const ClassFileVersion JDK_8;
+ 
+ 		ClassFileVersion(uint16_t major, uint16_t minor = 0) : _majr(major), _minr(minor) {}
+ 
+@@ -141,6 +145,14 @@
+ 			return (*this == v) || (*this < v);
+ 		}
+ 
++		bool operator >(ClassFileVersion v) const {
++			return !(*this <= v);
++		}
++
++		bool operator >=(ClassFileVersion v) const {
++			return (*this == v) || (*this > v);
++		}
++	   
+ 		// we can't call these major/minor because GCC defines macros of that name
+ 		uint16_t majr() const { return _majr; }
+ 		uint16_t minr() const { return _minr; }
+diff -r d38fca124cd9 src/vm/method.cpp
+--- cacao.old/cacao/src/vm/method.cpp	Mon Jul 13 13:34:45 2015 +0100
++++ cacao/cacao/src/vm/method.cpp	Wed Apr 06 01:47:19 2016 +0100
+@@ -252,7 +252,7 @@
+ 
+ 			if (i != 0 && i != ACC_PUBLIC && i != ACC_PRIVATE && i != ACC_PROTECTED) {
+ 				exceptions_throw_classformaterror(c,
+-												  "Illegal method modifiers: 0x%X",
++												  "Illegal method access modifiers: 0x%X",
+ 												  m->flags);
+ 				return false;
+ 			}
+@@ -261,18 +261,28 @@
+ 				if ((m->flags & (ACC_FINAL | ACC_NATIVE | ACC_PRIVATE |
+ 								 ACC_STATIC | ACC_STRICT | ACC_SYNCHRONIZED))) {
+ 					exceptions_throw_classformaterror(c,
+-													  "Illegal method modifiers: 0x%X",
++													  "Illegal abstract method modifiers: 0x%X",
+ 													  m->flags);
+ 					return false;
+ 				}
+ 			}
+ 
+ 			if (c->flags & ACC_INTERFACE) {
+-				if ((m->flags & (ACC_ABSTRACT | ACC_PUBLIC)) != (ACC_ABSTRACT | ACC_PUBLIC)) {
+-					exceptions_throw_classformaterror(c,
+-													  "Illegal method modifiers: 0x%X",
+-													  m->flags);
+-					return false;
++				if (c->version < ClassFileVersion::JDK_8) {
++					if ((m->flags & (ACC_ABSTRACT | ACC_PUBLIC)) != (ACC_ABSTRACT | ACC_PUBLIC)) {
++						exceptions_throw_classformaterror(c,
++														  "Illegal interface method modifiers: 0x%X",
++														  m->flags);
++						return false;
++					}
++				} else {
++					i = (m->flags & (ACC_PUBLIC | ACC_PRIVATE));
++					if (i != ACC_PUBLIC && i != ACC_PRIVATE) {
++						exceptions_throw_classformaterror(c,
++														  "Illegal JDK 8 interface method modifiers: 0x%X",
++														  m->flags);
++						return false;
++					}
+ 				}
+ 			}
+ 

@@ -212,6 +212,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2832, CA195: typeinfo.cpp: typeinfo_merge_nonarrays: Assertion `dest && result && x.any && y.any' failed
   - PR2908: Add missing functions for CACAO OpenJDK JVM implementation
   - PR2909: Install CACAO in same way as JamVM
+  - PR2910: Add rudimentary support for OpenJDK 8 class files to CACAO
 
 New in release 2.6.3 (2015-11-13):
 

@@ -1,3 +1,15 @@
+2016-04-05  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2910: Add rudimentary support for OpenJDK 8
+	class files to CACAO
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new patch.
+	* NEWS: Updated.
+	* patches/cacao/pr2910-8_support.patch:
+	Bump versions in CACAO and allow it to handle
+	interface methods and constant pools in OpenJDK 8
+	bytecode files.
+
 2016-03-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2908: Add missing functions for CACAO
