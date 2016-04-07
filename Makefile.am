@@ -411,7 +411,6 @@ ICEDTEA_CONFIGURE = \
 	  --build=$(build_triplet) \
 	  --host=$(host_triplet) \
 	  --enable-unlimited-crypto \
-	  --with-cacerts-file=$(CACERTS_FILE) \
 	  --with-stdc++lib=dynamic \
 	  --with-boot-jdk=$(BOOT_DIR) \
 	  --with-update-version=$(JDK_UPDATE_VERSION) \
@@ -495,6 +494,11 @@ ICEDTEA_CONFIGURE += \
 else
 ICEDTEA_CONFIGURE += \
 	--disable-warnings-as-errors
+endif
+
+if USE_ALT_CACERTS_FILE
+ICEDTEA_CONFIGURE += \
+	--with-cacerts-file=$(CACERTS_FILE)
 endif
 
 ICEDTEA_UNSET = \
