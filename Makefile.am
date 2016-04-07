@@ -27,8 +27,10 @@ HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$5}' version=$(HSBUILD) $(abs_top_
 
 DROP_URL = http://icedtea.classpath.org/download/drops
 
-CACAO_VERSION = c182f119eaad
-CACAO_SHA256SUM = bf48f6b725a4dc0c936f6770a67ab4074c3bb35352d5de727368350d32549808
+# Drop is a snapshot of the changeset specified by CACAO_VERSION taken
+# from the repository at https://bitbucket.org/gnu_andrew/cacao-staging
+CACAO_VERSION = 900db2220376
+CACAO_SHA256SUM = eccda2d8bdf6a60347d5479b42143209f19c3731ef93666a3d12185f759165d8
 CACAO_BASE_URL = $(DROP_URL)/cacao
 CACAO_SRC_ZIP = cacao-$(CACAO_VERSION).tar.xz
 CACAO_URL = $(CACAO_BASE_URL)/$(CACAO_SRC_ZIP)
@@ -345,14 +347,7 @@ ICEDTEA_PATCHES = \
 
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
-	patches/cacao/launcher.patch \
-	patches/cacao/pr2032.patch \
-	patches/cacao/pr2035-tempdir.patch \
-	patches/cacao/pr2349.patch \
-	patches/cacao/pr2776-cache_api.patch \
-	patches/cacao/pr2832-refactoring_error.patch \
-	patches/cacao/pr2908-missing_functions.patch \
-	patches/cacao/pr2910-8_support.patch
+	patches/cacao/launcher.patch
 else
 if USING_CACAO
 ICEDTEA_PATCHES +=
@@ -1414,7 +1409,7 @@ else
 	then \
 	  mkdir cacao ; \
 	  $(TAR) xf $(CACAO_SRC_ZIP) -C cacao ; \
-	  dir=$$(basename cacao/cacao-*) ; \
+	  dir=$$(basename cacao/gnu*) ; \
 	  mv -v cacao/$$dir cacao/cacao ; \
 	  ln -s cacao cacao/$$dir ; \
 	fi

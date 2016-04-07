@@ -1,3 +1,23 @@
+2016-04-06  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2916: Update CACAO drop to use the latest
+	from cacao-staging
+	* patches/cacao/pr2032.patch,
+	* patches/cacao/pr2035-tempdir.patch,
+	* patches/cacao/pr2349.patch,
+	* patches/cacao/pr2776-cache_api.patch,
+	* patches/cacao/pr2832-refactoring_error.patch,
+	* patches/cacao/pr2908-missing_functions.patch,
+	* patches/cacao/pr2910-8_support.patch:
+	Removed as applied in new snapshot.
+	* Makefile.am:
+	(CACAO_VERSION): Bump to icedtea-3.0.0 changeset
+	in gnu_andrew/cacao-staging repository.
+	(CACAO_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Remove patches applied upstream.
+	(extract-cacao): Adapt to prefix of new snapshot.
+	* NEWS: Updated.
+
 2016-04-05  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2910: Add rudimentary support for OpenJDK 8

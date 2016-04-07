@@ -213,6 +213,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2908: Add missing functions for CACAO OpenJDK JVM implementation
   - PR2909: Install CACAO in same way as JamVM
   - PR2910: Add rudimentary support for OpenJDK 8 class files to CACAO
+  - PR2916: Update CACAO drop to use the latest from cacao-staging
 
 New in release 2.6.3 (2015-11-13):
 
