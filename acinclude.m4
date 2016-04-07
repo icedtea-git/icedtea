@@ -2217,6 +2217,10 @@ AC_DEFUN_ONCE([IT_WITH_CACERTS_FILE],
       AC_MSG_NOTICE([No cacerts file specified; using ${CACERTS_DEFAULT}])
       ALT_CACERTS_FILE=${CACERTS_DEFAULT} ;
     fi
+    if test -h "${ALT_CACERTS_FILE}"; then
+       ALT_CACERTS_FILE=$(${READLINK} -e ${ALT_CACERTS_FILE})
+       AC_MSG_NOTICE([Resolved cacerts file symlink to ${ALT_CACERTS_FILE}])
+    fi
     AC_MSG_CHECKING([if $ALT_CACERTS_FILE is a valid keystore file])
     if test -f "${ALT_CACERTS_FILE}" && \
      ${FILE} ${ALT_CACERTS_FILE} | ${GREP} 'Java KeyStore' >&AS_MESSAGE_LOG_FD 2>&1; then

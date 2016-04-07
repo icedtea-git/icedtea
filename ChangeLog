@@ -1,5 +1,18 @@
 2016-04-06  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2918: Makefile handles cacerts as a symlink,
+	but the configure check doesn't
+	* Makefile.am:
+	(JDK_CACERTS_FILE): Removed as no longer needed.
+	(CACERTS_FILE): Just use @ALT_CACERTS_FILE@ directly
+	as it will have been resolved by configure.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_WITH_CACERTS_FILE): Detect if the cacerts is
+	a symlink and resolve it if so.
+
+2016-04-06  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2917: Don't pass --with-cacerts-file to
 	build if USE_ALT_CACERTS_FILE is not set
 	* Makefile.am:

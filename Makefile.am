@@ -90,10 +90,7 @@ VERSION_SETTINGS_FILE = openjdk/jdk/make/ProfileNames.gmk
 
 VERSION_SETTINGS_FILE_BACKUP = $$(basename $(VERSION_SETTINGS_FILE)).bak
 
-JDK_CACERTS_FILE = @ALT_CACERTS_FILE@
-
-CACERTS_FILE = \
-  `if [ -h $(JDK_CACERTS_FILE) ] ; then $(READLINK) -e $(JDK_CACERTS_FILE) ; else echo $(JDK_CACERTS_FILE); fi`
+CACERTS_FILE = @ALT_CACERTS_FILE@
 
 # Settings for javac
 
