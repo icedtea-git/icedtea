@@ -1805,7 +1805,7 @@ stamps/icedtea.stamp: stamps/icedtea-configure.stamp
 	  $(ICEDTEA_ENV) \
 	  -C $(BUILD_OUTPUT_DIR) \
 	  $(ICEDTEA_BUILD_TARGET)
-	$(abs_top_builddir)/pax-mark-vm $(BUILD_SDK_DIR)
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_SDK_DIR) true
 	mkdir -p $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_SDK_DIR)/jre/lib/ext
@@ -1867,7 +1867,7 @@ stamps/icedtea-debug.stamp: stamps/icedtea-debug-configure.stamp
 	  $(ICEDTEA_ENV) \
 	  -C $(DEBUG_BUILD_OUTPUT_DIR) \
 	  $(ICEDTEA_BUILD_TARGET)
-	$(abs_top_builddir)/pax-mark-vm $(BUILD_DEBUG_SDK_DIR)
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_DEBUG_SDK_DIR) true
 	mkdir -p $(BUILD_DEBUG_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_DEBUG_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_DEBUG_SDK_DIR)/jre/lib/ext
@@ -2014,7 +2014,7 @@ stamps/icedtea-boot.stamp: stamps/icedtea-boot-configure.stamp
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C $(BOOT_BUILD_OUTPUT_DIR) \
 	  images
-	$(abs_top_builddir)/pax-mark-vm $(BUILD_BOOT_SDK_DIR)
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_BOOT_SDK_DIR) true
 	@echo "Bootstrapped IcedTea is served:" $(BUILD_BOOT_SDK_DIR)
 	mkdir -p stamps
 	touch $@
@@ -2651,7 +2651,7 @@ if ENABLE_SYSTEMTAP
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/tapset; \
 	done
 endif
-	$(abs_top_builddir)/pax-mark-vm $(DESTDIR)${prefix}
+	$(abs_top_builddir)/pax-mark-vm $(DESTDIR)${prefix} false
 
 install-data-local:
 	${mkinstalldirs} $(DESTDIR)${prefix}

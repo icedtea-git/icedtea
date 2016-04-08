@@ -1,3 +1,22 @@
+2016-04-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2920: PaX marking fails on filesystems which
+	don't support extended attributes
+	* Makefile.am:
+	(icedtea): Pass true to pax-mark-vm to fail
+	if PaX marking fails.
+	(icedtea-debug): Likewise.
+	(icedtea-boot): Likewise.
+	(install-exec-local): Pass false to pax-mark-vm
+	so that only a warning is produced if PaX marking
+	fails on the installed version.
+	* NEWS: Updated.
+	* pax-mark-vm.in:
+	Add a second option, FAIL_ON_ERROR, which will
+	cause the script to exit if it can't PaX mark
+	when set to true, but just issue a warning when
+	set to false.
+
 2016-04-06  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2918: Makefile handles cacerts as a symlink,

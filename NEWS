@@ -163,6 +163,7 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2907: Replace --with-abs-install-dir with usual --prefix
   - PR2917: Don't pass --with-cacerts-file to build if USE_ALT_CACERTS_FILE is not set
   - PR2918: Makefile handles cacerts as a symlink, but the configure check doesn't
+  - PR2920: PaX marking fails on filesystems which don't support extended attributes
   - Don't substitute 'j' for '-j' inside -I directives
   - Extend 8041658 to all files in the HotSpot build.
   - Remove jcheck
