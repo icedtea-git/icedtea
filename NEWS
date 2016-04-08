@@ -15,6 +15,7 @@ New in release 3.0.0 (2015-XX-XX):
 * Rebase on jdk8u77-b03
 * Backports
   - S4890063, PR2304, RH1214835: HPROF: default text truncated when using doe=n option
+  - S6425769, PR2859: Allow specifying an address to bind JMX remote connector
   - S8000650, PR2462: unpack200.exe should check gzip crc
   - S8031668, PR2842: TOOLCHAIN_FIND_COMPILER unexpectedly resolves symbolic links
   - S8035341: Allow using a system installed libpng
@@ -29,7 +30,11 @@ New in release 3.0.0 (2015-XX-XX):
   - S8139932, PR2739: Typo in makefile changes for 8043805 [Allow using a system-installed libjpeg]
   - S8140483, PR2740: Atomic*FieldUpdaters final fields should be trusted
   - S8140620, PR2769: Find and load default.sf2 as the default soundbank on Linux
+  - S8145096, PR2854: Undefined behaviour in HotSpot
+  - S8145982, PR2859: JMXInterfaceBindingTest is failing intermittently
+  - S8146015, PR2859: JMXInterfaceBindingTest is failing intermittently for IPv6 addresses
   - S8148351, PR2842: Only display resolved symlink for compiler, do not change path
+  - S8150954, PR2866, RH1176206: AWT Robot not compatible with GNOME Shell
 * Bug fixes
   - S8041658: Use of -fdevirtualize on macroAssembler_x86.o (via -O2) with gcc 4.9.0 creates broken VM
   - PR94: empty install target in Makefile.am
@@ -156,9 +161,12 @@ New in release 3.0.0 (2015-XX-XX):
   - PR2853: Revert changes to libpng source code now 8078245 is in place.
   - PR2863: IcedTea doesn't pass through build and host triplets to OpenJDK's configure
   - PR2865: Handle uninstallation.
+  - PR2869: Revert CRC fix (S8000650) backported as part of PR2462
   - PR2873: Fix make distcheck.
   - PR2880: Add missing test directory in make check.
   - PR2885: Location of 'stap' executable is hard-coded
+  - PR2888: OpenJDK should check for system cacerts database (e.g. /etc/pki/java/cacerts)
+  - PR2899: Don't use WithSeed versions of NSS functions as they don't fully process the seed
   - PR2906: Support prefixed variants of GNU tools used on *BSD systems
   - PR2907: Replace --with-abs-install-dir with usual --prefix
   - PR2917: Don't pass --with-cacerts-file to build if USE_ALT_CACERTS_FILE is not set
@@ -170,6 +178,8 @@ New in release 3.0.0 (2015-XX-XX):
   - Remove jcheck
 * AArch64 port
   - PR1970: Imported from aarch64 jdk8 repository.
+  - PR2922: Import latest AArch64 changes from aarch64-port/jdk8u (aarch64-jdk8u77-b03)
+  - S8150652, PR2922: Remove unused code in AArch64 back end
 * JamVM
   - JSR 292: Invoke Dynamic
   - JSR 308: Type Annotations
