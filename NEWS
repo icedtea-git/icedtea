@@ -10,7 +10,7 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.0.0 (2016-04-07):
+New in release 3.0.0 (2016-04-08):
 
 * Rebase on jdk8u77-b03
 * Backports
