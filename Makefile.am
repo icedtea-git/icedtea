@@ -2875,11 +2875,10 @@ if ENABLE_DOCS
 	for items in $(BUILD_OUTPUT_DIR)/docs/*; do \
 	  rm -rvf $(DESTDIR)$(htmldir)/$$(basename $${items}); \
 	done
-	$(RMDIR) $(DESTDIR)$(htmldir)
 endif
 	for vms in client server ; do \
 	  rm -vf $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/classes.jsa; \
-	  if [ -e $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ] ; then \
+	  if [ -d $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ] ; then \
 	    $(RMDIR) $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ; \
 	  fi ; \
 	done
@@ -2903,6 +2902,12 @@ endif
 	for sizes in 16 24 32 48 ; do \
 	  $(RMDIR) $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps ; \
 	done
+if ENABLE_DOCS
+# May have already been removed if docdir == htmldir
+	if [ -d $(DESTDIR)$(htmldir) ] ; then \
+	  $(RMDIR) $(DESTDIR)$(htmldir) ; \
+	fi
+endif
 
 # Target Aliases
 # ===============

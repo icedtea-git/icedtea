@@ -1,3 +1,12 @@
+2016-04-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2873: Fix make distcheck
+	* Makefile.am:
+	(uninstall-local): Move removal of htmldir to
+	end and only do so if it still exists, as
+	docdir may equal htmldir. Always test with
+	-d to ensure the target is a directory for rmdir.
+
 2016-04-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Set release date to current date.
