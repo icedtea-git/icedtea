@@ -1,5 +1,15 @@
 2016-04-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR2921: Uninstallation of docs deletes too much
+	* Makefile.am:
+	(uninstall-local): Don't delete docs from the
+	build directory. Instead, do the inverse of the
+	installation step, removing each item copied over
+	by the install.
+	* NEWS: Updated.
+
+2016-04-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR2920: PaX marking fails on filesystems which
 	don't support extended attributes
 	* Makefile.am:

@@ -2872,7 +2872,9 @@ uninstall-local:
 	rm -vf $(DESTDIR)${prefix}/jre/.systemPrefs/.system.lock
 	rm -vf $(DESTDIR)${prefix}/jre/.systemPrefs/.systemRootModFile
 if ENABLE_DOCS
-	rm -rvf $(BUILD_OUTPUT_DIR)/docs/* $(DESTDIR)$(htmldir)
+	for items in $(BUILD_OUTPUT_DIR)/docs/*; do \
+	  rm -rvf $(DESTDIR)$(htmldir)/$$(basename $${items}); \
+	done
 	$(RMDIR) $(DESTDIR)$(htmldir)
 endif
 	for vms in client server ; do \
