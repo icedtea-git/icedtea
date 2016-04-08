@@ -9,7 +9,7 @@ The build requirements are as follows:
 
 A bootstrap JDK, either IcedTea7 or IcedTea8
 CUPS
-libX11 (libXp, libXtst, libXi, libXt)
+libX11 (xproto, libX11, libXext, libXtst, libXi, libXt, libXinerama, libXrender, libXcomposite, libXau, libXdmcp)
 Freetype2
 patch
 sed
