@@ -152,13 +152,6 @@ New in release 3.0.0 (2016-04-08):
   - PR2825: Placement of -lfreebl matters when using bfd linker
   - PR2826: Provide option to disable SystemTap tests
   - PR2841: Parallelism issues resulting from PR2459
-  - PR2853: Fix build for aarch64/zero
-  - PR2853: Remaining miscellaneous synchronisation changes from aarch64/jdk8u
-  - PR2853: Remove AArch64-specific code in generateOptoStub.cpp.
-  - PR2853: Remove some AArch64-specific code in share/.
-  - PR2853: Remove some unnecessary divergences from jdk8u.
-  - PR2853: Revert AArch64 jvm.cfg divergence
-  - PR2853: Revert changes to libpng source code now 8078245 is in place.
   - PR2863: IcedTea doesn't pass through build and host triplets to OpenJDK's configure
   - PR2865: Handle uninstallation.
   - PR2869: Revert CRC fix (S8000650) backported as part of PR2462
@@ -178,6 +171,13 @@ New in release 3.0.0 (2016-04-08):
   - Remove jcheck
 * AArch64 port
   - PR1970: Imported from aarch64 jdk8 repository.
+  - PR2853: Fix build for aarch64/zero
+  - PR2853: Remaining miscellaneous synchronisation changes from aarch64/jdk8u
+  - PR2853: Remove AArch64-specific code in generateOptoStub.cpp.
+  - PR2853: Remove some AArch64-specific code in share/.
+  - PR2853: Remove some unnecessary divergences from jdk8u.
+  - PR2853: Revert AArch64 jvm.cfg divergence
+  - PR2853: Revert changes to libpng source code now 8078245 is in place.
   - PR2922: Import latest AArch64 changes from aarch64-port/jdk8u (aarch64-jdk8u77-b03)
   - S8150652, PR2922: Remove unused code in AArch64 back end
 * JamVM
@@ -214,7 +214,7 @@ New in release 3.0.0 (2016-04-08):
   - PR1277: Synchronise CACAO rules between IcedTea6/7/8 where possible
   - PR1279: Synchronise CACAO versions between IcedTea6/7/8 where possible
   - PR2035: --enable-cacao builds broken, missing JVM_GetTemporaryDirectory impl.
-  - CA172, PR2330, G453612: Add ARM hardfloat support to CACAO on Gentoo
+  - PR2330, CA172, G453612: Add ARM hardfloat support to CACAO on Gentoo
   - PR2331: IcedTea8 fails to build with IcedTea7 CACAO due to low max heap size
   - PR2335: CACAO lacks JVM_FindClassFromCaller
   - PR2347: Fix CACAO patches to apply again
