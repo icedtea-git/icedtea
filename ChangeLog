@@ -1,3 +1,17 @@
+2015-10-22  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2686: Add generated Fedora & Gentoo font
+	configurations for bootstrap stage
+	* generated/fontconfig/fontconfig.Fedora.bfc,
+	* generated/fontconfig/fontconfig.Ubuntu.bfc:
+	Updated.
+	* generated/fontconfig/fontconfig.Fedora.10.bfc
+	* generated/fontconfig/fontconfig.Fedora.11.bfc
+	* generated/fontconfig/fontconfig.Fedora.12.bfc
+	* generated/fontconfig/fontconfig.Fedora.9.bfc
+	* generated/fontconfig/fontconfig.Gentoo.bfc:
+	Added.
+
 2015-10-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2557, G390663: Update Gentoo font configuration
