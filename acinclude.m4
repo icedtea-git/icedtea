@@ -3063,6 +3063,33 @@ AC_DEFUN_ONCE([IT_ENABLE_NON_NSS_CURVES],
   AC_SUBST(ENABLE_NON_NSS_CURVES)
 ])
 
+AC_DEFUN_ONCE([IT_WITH_FONTS_DIR],
+[
+  FONTS_DEFAULT=/usr/share/fonts
+  AC_MSG_CHECKING([where fonts are stored])
+  AC_ARG_WITH([fonts-dir],
+              [AS_HELP_STRING(--with-fonts-dir=PATH,fonts [[DATAROOTDIR/fonts]])],
+  [
+    fontdir=${withval}
+  ],
+  [ 
+    fontdir=${FONTS_DEFAULT}
+  ])
+  AC_MSG_RESULT(${fontdir})
+  if test "x${fontdir}" = "xyes" -o "x${fontdir}" = "xno"; then
+    AC_MSG_NOTICE([No font directory specified; using ${FONTS_DEFAULT}])
+    fontdir=${FONTS_DEFAULT} ;
+  fi
+  AC_MSG_CHECKING([if $fontdir is a valid directory])
+  if test -d "${fontdir}" ; then
+    AC_MSG_RESULT([yes])
+  else
+    AC_MSG_RESULT([no])
+    AC_MSG_WARN([No valid font directory found])
+  fi
+  AC_SUBST(fontdir)
+])
+
 AC_DEFUN([IT_ENABLE_SPLIT_DEBUGINFO],
 [
   AC_REQUIRE([IT_ENABLE_NATIVE_DEBUGINFO])

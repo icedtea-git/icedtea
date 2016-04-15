@@ -229,6 +229,7 @@ to configure:
 * --disable-hotspot-test-in-build: Turn off the Queens test. Always turned off for bootstrapping.
 * --with-cacerts-file: Specify the location of a cacerts file, defaulting to
   ${SYSTEM_JDK_DIR}/jre/lib/security/cacerts
+* --with-fonts-dir: Specify the location of system fonts. This is currently only used on Gentoo systems.
 
 Other options may be supplied which enable or disable new features.
 These are documented fully in the relevant section below.

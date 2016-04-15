@@ -59,6 +59,9 @@ IT_ENABLE_SUNEC
 IT_ENABLE_NATIVE_DEBUGINFO
 IT_ENABLE_JAVA_DEBUGINFO
 
+IT_WITH_FONTS_DIR
+AC_CONFIG_FILES([linux.fontconfig.Gentoo.properties])
+
 # Use xvfb-run if found to run gui tests (check-jdk).
 AC_CHECK_PROG(XVFB_RUN_CMD, xvfb-run, [xvfb-run -a -e xvfb-errors], [])
 AC_SUBST(XVFB_RUN_CMD)
