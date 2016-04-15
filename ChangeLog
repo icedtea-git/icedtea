@@ -1,3 +1,8 @@
+2016-04-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Add 2.6.6 section.
+	* configure.ac: Bump to 2.6.6pre00.
+
 2016-03-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Replace misplaced '.' with ','.
