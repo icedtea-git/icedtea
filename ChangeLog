@@ -1,3 +1,7 @@
+2016-03-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Replace misplaced '.' with ','.
+
 2016-03-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Set release date.

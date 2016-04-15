@@ -24,7 +24,7 @@ New in release 2.6.5 (2016-03-24):
 * Backports
   - S8028727, PR2814: [parfait] warnings from b116 for jdk.src.share.native.sun.security.ec: JNI pending exceptions
   - S8048512, PR2814: Uninitialised memory in jdk/src/share/native/sun/security/ec/ECC_JNI.cpp
-  - S8071705. PR2819, RH1182694: Java application menu misbehaves when running multiple screen stacked vertically
+  - S8071705, PR2819, RH1182694: Java application menu misbehaves when running multiple screen stacked vertically
   - S8150954, PR2866, RH1176206: AWT Robot not compatible with GNOME Shell
 * Bug fixes
   - PR2803: Make system CUPS optional
