@@ -14,6 +14,13 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.7.0 (201X-XX-XX):
 
+* Backports
+  - S8076221, PR2809: Disable RC4 cipher suites
+* Bug fixes
+  - PR2889: OpenJDK should check for system cacerts database (e.g. /etc/pki/java/cacerts)
+* AArch64 port
+  - PR2914: byte_map_base is not page aligned on OpenJDK 7
+
 New in release 2.6.5 (2016-03-24):
 
 * Security fixes

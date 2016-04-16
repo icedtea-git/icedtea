@@ -4,19 +4,19 @@ JDK_UPDATE_VERSION = 85
 BUILD_VERSION = b02
 COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(BUILD_VERSION)
 
-CORBA_CHANGESET = 52740a0992cf
-JAXP_CHANGESET = 3cc8e02e66bc
-JAXWS_CHANGESET = ffef9af0446a
-JDK_CHANGESET = 91216176dcc7
-LANGTOOLS_CHANGESET = e15dd34800b5
-OPENJDK_CHANGESET = 613ca59d428d
+CORBA_CHANGESET = cbe0edb3d345
+JAXP_CHANGESET = 4b0a1c213416
+JAXWS_CHANGESET = 76aade5c18f8
+JDK_CHANGESET = 3fc5cbcd46dd
+LANGTOOLS_CHANGESET = caa50dd46a14
+OPENJDK_CHANGESET = 7f245987a287
 
-CORBA_SHA256SUM = d8cfca4bd056e0cdd3a69c9f2c13f5815ece29eabf791e7c1f798d3c31d24a0f
-JAXP_SHA256SUM = a621b407bd3b96e3d676c2e7d2358607dfe54fc97197b578d301c662f632e4e6
-JAXWS_SHA256SUM = bd2931f7c909160124b59c1f1b723930140741a5d3c9793330b8a391189fe461
-JDK_SHA256SUM = e72e00a3a311f3daeaefc23d2b11ea183fee4f0e1e431c12c9187c80d4ab330a
-LANGTOOLS_SHA256SUM = 03672c1c6e8c3a46c4f981821d45075c7c53facec3029728fbbea3fba094c69c
-OPENJDK_SHA256SUM = 492a567851ac54bcf93dae182d8421178b20b9d613b00254ff409e7a8587486a
+CORBA_SHA256SUM = b1257121829a728d1850382ac3ae1ea65ecf0461605824ad6e6b3583ebf8908f
+JAXP_SHA256SUM = 77e3b7f148a5876299d535b084f1b8bbfb58e173e9697a3560f2e59931aa73a2
+JAXWS_SHA256SUM = bc65e3078623f2d85df47f7a877121e57248068859c18ea03960b533af44a80e
+JDK_SHA256SUM = 44adca39f854ce57defd7692796c193f9bf638a1110e283cc369552ec66bbba2
+LANGTOOLS_SHA256SUM = 1a7195adfc1f05ecdf17559dd8afccbbd9b8c61e96f290a1e2ca9659856b4fa7
+OPENJDK_SHA256SUM = 72ab3fe89fab55d430af49ffaae216317e8a88b963350a7a695870f7fd744c33
 
 DROP_URL = http://icedtea.classpath.org/download/drops
 
@@ -369,7 +369,7 @@ CRYPTO_CHECK_SRCS = $(top_srcdir)/TestCryptoLevel.java
 
 # Patch list
 
-ICEDTEA_PATCHES = patches/f14-fonts.patch patches/fonts-gentoo.patch
+ICEDTEA_PATCHES = 
 
 # Conditional patches
 
@@ -1634,17 +1634,14 @@ clean-generated:
 	rm -f stamps/generated.stamp
 
 stamps/fonts.stamp: stamps/extract.stamp
-	cp $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.properties $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.9.properties
-	cp $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.properties $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.10.properties
-	cp $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.properties $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.11.properties
-	cp $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.properties $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.12.properties
+	cp $(FONTCONFIG_PATH)/linux.fontconfig.Gentoo.properties{,.old}
 	cp linux.fontconfig.Gentoo.properties $(FONTCONFIG_PATH)
 	mkdir -p stamps
 	touch $@
 
 clean-fonts:
-	rm -f $(FONTCONFIG_PATH)/linux.fontconfig.Fedora.{9,10,11,12}.properties
 	rm -f $(FONTCONFIG_PATH)/linux.fontconfig.Gentoo.properties
+	mv $(FONTCONFIG_PATH)/linux.fontconfig.Gentoo.properties{.old,}
 	rm -f stamps/fonts.stamp
 
 stamps/patch-fsg.stamp: stamps/extract.stamp stamps/fonts.stamp

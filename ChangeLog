@@ -1,3 +1,36 @@
+2016-04-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-2.7.0pre05.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 2.7.0pre05.
+	* hotspot.map.in: Update to icedtea-2.7.0pre05.
+
+2015-11-13  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* patches/f14-fonts.patch,
+	* patches/fonts-gentoo.patch:
+	Removed as now applied directly in the forest.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Reset to empty.
+	(fonts): No need to copy Fedora files any more.
+	Make a backup of the forest Gentoo fontconfig
+	file before replacing with locally generated one.
+	(clean-fonts): No need to remove Fedora files
+	which are now provided in the forest. Restore
+	the original Gentoo fontconfig from the backup.
+
 2015-10-22  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2686: Add generated Fedora & Gentoo font
