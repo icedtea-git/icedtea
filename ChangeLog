@@ -1,5 +1,22 @@
 2016-04-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	S8150954, PR2867, RH1176206: AWT Robot not
+	compatible with GNOME Shell
+	* NEWS: Fix wrong bug ID used for PR2867.
+
+2016-03-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	S8150954, PR2867, RH1176206: AWT Robot not
+	compatible with GNOME Shell
+	* INSTALL: Update X11 dependency documentation.
+	* configure.ac: Add check
+	for libXcomposite as required by fix
+	for PR2867. Correct variables used by
+	xproto check.
+
+2016-04-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Bump to icedtea-2.7.0pre05.
 	* Makefile.am:
 	(CORBA_CHANGESET): Update to icedtea-2.7.0pre05.
 	(JAXP_CHANGESET): Likewise.
