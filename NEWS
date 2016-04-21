@@ -18,6 +18,8 @@ New in release 2.6.6 (2016-04-19):
   - PR2889: OpenJDK should check for system cacerts database (e.g. /etc/pki/java/cacerts)
 * AArch64 port
   - PR2914: byte_map_base is not page aligned on OpenJDK 7
+* JamVM
+  - PR2665: icedtea/jamvm 2.6 fails as a build VM for icedtea
 
 New in release 2.6.5 (2016-03-24):
 

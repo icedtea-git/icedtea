@@ -403,7 +403,8 @@ if BUILD_JAMVM
 ICEDTEA_PATCHES += \
 	patches/jamvm/find_class_from_caller.patch \
 	patches/jamvm/pr2172-tempdir.patch \
-	patches/jamvm/noexecstack.patch
+	patches/jamvm/noexecstack.patch \
+	patches/jamvm/pr2665.patch
 endif
 
 if ENABLE_NSS
