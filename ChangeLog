@@ -1,3 +1,14 @@
+2016-04-20  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2665: icedtea/jamvm 2.6 fails as a
+	build VM for icedtea
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new patch.
+	* NEWS: Updated.
+	* patches/jamvm/pr2665.patch:
+	Set the classLoader field in java.lang.Class
+	when a class is defined.
+
 2016-04-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	S8150954, PR2867, RH1176206: AWT Robot not

@@ -1,0 +1,36 @@
+diff --git a/src/symbol.h b/src/symbol.h
+index 8864fcb..c3836a7 100644
+--- jamvm.orig/jamvm/src/symbol.h
++++ jamvm/jamvm/src/symbol.h
+@@ -60,6 +60,7 @@ extern char *symbol_values[];
+     action(uncaughtException, "uncaughtException"), \
+     action(contextClassLoader, "contextClassLoader"), \
+     action(getSystemClassLoader, "getSystemClassLoader"), \
++    action(classLoader, "classLoader"), \
+     \
+     /* Constant pool attribute names */\
+     action(Code, "Code"), \
+diff --git a/src/classlib/openjdk/jvm.c b/src/classlib/openjdk/jvm.c
+index b5f4cae..fc10983 100644
+--- jamvm.orig/jamvm/src/classlib/openjdk/jvm.c
++++ jamvm/jamvm/src/classlib/openjdk/jvm.c
+@@ -578,6 +575,19 @@ jclass JVM_DefineClassWithSource(JNIEnv *env, const char *name, jobject loader,
+     if(class != NULL) {
+         CLASS_CB(class)->protection_domain = pd;
+         linkClass(class);
++
++	/* Set classLoader field in java.lang.Class instance */
++	FieldBlock *class_loader_fb = findField(class->class,
++						SYMBOL(classLoader),
++						SYMBOL(sig_java_lang_ClassLoader));
++	if (class_loader_fb == NULL) {
++	    jam_fprintf(stderr, "defineClass: classLoader field missing"
++			" in java.lang.Class\n");
++	    exitVM(1);
++	}
++
++	int cl_offset = class_loader_fb->u.offset;
++	INST_DATA(class, Object*, cl_offset) = loader;
+     }
+ 
+     return class;
