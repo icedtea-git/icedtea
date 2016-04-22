@@ -1,3 +1,14 @@
+2016-04-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2929: configure: error: "A JDK home directory
+	could not be found."
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_FIND_RHINO_JAR): Refactor to be more
+	verbose and helpful to the user.
+	(IT_CHECK_FOR_JDK): Point user to the
+	configure option if we fail to find the JDK.
+
 2016-04-20  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2665: icedtea/jamvm 2.6 fails as a
