@@ -2838,6 +2838,7 @@ AC_DEFUN_ONCE([IT_ENABLE_JAVA_DEBUGINFO],
 
 AC_DEFUN_ONCE([IT_ENABLE_INFINALITY],
 [
+  AC_REQUIRE([IT_CHECK_FOR_FREETYPE])
   AC_REQUIRE([IT_CHECK_FOR_FONTCONFIG])
   AC_MSG_CHECKING([whether to use fontconfig to provide better font rendering])
   AC_ARG_ENABLE([infinality],
@@ -2861,6 +2862,20 @@ AC_DEFUN_ONCE([IT_ENABLE_INFINALITY],
     if test "x${ENABLE_SYSTEM_FONTCONFIG}" != "xtrue"; then
       AC_MSG_ERROR([Infinality support requires fontconfig. Either --enable-system-fontconfig or --disable-infinality])
     fi
+    AC_MSG_CHECKING([if FreeType is patched with infinality support])
+    AC_LANG_PUSH([C])
+    CFLAGS_SAVED=$CFLAGS
+    CFLAGS="$CFLAGS $FREETYPE2_CFLAGS"
+    AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+    #include <ft2build.h>
+    #include FT_FREETYPE_H
+    #ifndef FT_CONFIG_OPTION_INFINALITY_PATCHSET
+    #error Infinality not supported
+    #endif
+    ]])], [AC_MSG_RESULT([yes])], [AC_MSG_RESULT([no]); \
+      AC_MSG_ERROR([Infinality support requires infinality support in FreeType.])])
+    CFLAGS=$CFLAGS_SAVED
+    AC_LANG_POP([C])
   fi
 ])
 
@@ -3359,4 +3374,14 @@ AC_DEFUN_ONCE([IT_WITH_CACERTS_FILE],
   fi
   AM_CONDITIONAL(USE_ALT_CACERTS_FILE, test "x${ALT_CACERTS_FILE}" != "xno")
   AC_SUBST(ALT_CACERTS_FILE)
+])
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_FREETYPE],
+[
+dnl Check for freetype2 headers and libraries.
+  PKG_CHECK_MODULES(FREETYPE2, freetype2,[]
+	  ,[AC_MSG_ERROR([Could not find freetype2 - \
+  Try installing freetype2-devel.])])
+  AC_SUBST(FREETYPE2_CFLAGS)
+  AC_SUBST(FREETYPE2_LIBS)
 ])
