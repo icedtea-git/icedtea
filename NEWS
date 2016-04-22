@@ -16,6 +16,7 @@ New in release 2.6.6 (2016-04-19):
 
 * Bug fixes
   - PR2889: OpenJDK should check for system cacerts database (e.g. /etc/pki/java/cacerts)
+  - PR2929: configure: error: "A JDK home directory could not be found."
 * AArch64 port
   - PR2914: byte_map_base is not page aligned on OpenJDK 7
 * JamVM

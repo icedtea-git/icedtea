@@ -602,43 +602,62 @@ AC_DEFUN([IT_FIND_RHINO_JAR],
   [
     case "${withval}" in
       yes)
-	RHINO_JAR=yes
+	RHINO_RESULT=yes
         ;;
       no)
-        RHINO_JAR=no
+        RHINO_RESULT=no
         ;;
       *)
-    	if test -f "${withval}"; then
-          RHINO_JAR="${withval}"
-        else
-	  AC_MSG_RESULT([not found])
-          AC_MSG_ERROR("The rhino jar ${withval} was not found.")
-        fi
+	RHINO_RESULT=yes
+        RHINO_JAR="${withval}"
 	;;
      esac
   ],
   [
-    RHINO_JAR=yes
+    RHINO_RESULT=yes
   ])
-  if test x"${RHINO_JAR}" = "xyes"; then
-    if test -e "/usr/share/java/rhino.jar"; then
-      RHINO_JAR=/usr/share/java/rhino.jar
-    elif test -e "/usr/share/java/js.jar"; then
-      RHINO_JAR=/usr/share/java/js.jar
-    elif test -e "/usr/share/rhino-1.6/lib/js.jar"; then
-      RHINO_JAR=/usr/share/rhino-1.6/lib/js.jar
+  AC_MSG_RESULT([$RHINO_RESULT])
+  if test "x${RHINO_RESULT}" = "xyes"; then
+    if test "x${RHINO_JAR}" != x; then
+      AC_MSG_CHECKING([if ${RHINO_JAR} is a valid JAR file])
+      if test -f ${RHINO_JAR}; then
+      	 AC_MSG_RESULT([yes])
+      else
+	 AC_MSG_RESULT([no])
+	 RHINO_JAR=
+      fi
     fi
-    if test x"${RHINO_JAR}" = "xyes"; then
-      AC_MSG_RESULT([not found])
-      AC_MSG_ERROR("A rhino jar was not found in /usr/share/java as either rhino.jar or js.jar.")
+    if test "x${RHINO_JAR}" = x; then
+      RHINO_JAR="/usr/share/java/rhino.jar"
+      AC_MSG_CHECKING([if ${RHINO_JAR} is a valid JAR file])
+      if test -f ${RHINO_JAR}; then
+        AC_MSG_RESULT([yes])
+      else
+        AC_MSG_RESULT([no])
+	RHINO_JAR="/usr/share/java/js.jar"
+      	AC_MSG_CHECKING([if ${RHINO_JAR} is a valid JAR file])
+      	if test -f ${RHINO_JAR}; then
+      	  AC_MSG_RESULT([yes])
+      	else
+	  AC_MSG_RESULT([no])
+	  RHINO_JAR="/usr/share/rhino-1.6/lib/js.jar"
+      	  AC_MSG_CHECKING([if ${RHINO_JAR} is a valid JAR file])
+      	  if test -f ${RHINO_JAR}; then
+      	    AC_MSG_RESULT([yes])
+      	  else
+	    AC_MSG_RESULT([no])
+	    RHINO_JAR=
+	  fi
+        fi
+      fi
+    fi
+    if test x"${RHINO_JAR}" = "x"; then
+      AC_MSG_ERROR([A Rhino JAR could not be found; specify one using --with-rhino=jar=<FILE> or use --without-rhino.])
+    else
+      AC_MSG_NOTICE([Using Rhino JAR: ${RHINO_JAR}])
     fi
   fi
-  AC_MSG_RESULT(${RHINO_JAR})
-  AM_CONDITIONAL(WITH_RHINO, test x"${RHINO_JAR}" != "xno")
-dnl Clear RHINO_JAR if it doesn't contain a valid filename
-  if test x"${RHINO_JAR}" = "xno"; then
-    RHINO_JAR=
-  fi
+  AM_CONDITIONAL(WITH_RHINO, test x"${RHINO_JAR}" != "x")
   AC_SUBST(RHINO_JAR)
 ])
 
@@ -1160,7 +1179,7 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_JDK],
     AC_MSG_RESULT(${SYSTEM_JDK_DIR})
   fi
   if ! test -d "${SYSTEM_JDK_DIR}"; then
-    AC_MSG_ERROR("A JDK home directory could not be found.")
+    AC_MSG_ERROR("A JDK home directory could not be found. Try specifying one using --with-jdk-home=<DIR>")
   fi
   AC_SUBST(SYSTEM_JDK_DIR)
 ])
