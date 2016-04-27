@@ -1,5 +1,11 @@
 2016-04-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS:
+	Move entries from Backports section
+	into port-specific sections.
+
+2016-04-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	Bump to icedtea-2.6.6.
 	* Makefile.am,
 	(JDK_UPDATE_VERSION): Bump to 101.

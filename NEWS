@@ -53,16 +53,16 @@ New in release 2.6.6 (2016-04-21):
   - S8150790: 8u75 L10n resource file translation update
   - S8153673: [BACKOUT] JDWP: Memory Leak: GlobalRefs never deleted when processing invokeMethod command
   - S8154210: Zero: Better byte behaviour
-* Backports
-  - S8148487: PPC64: Better byte behavior
-  - S8154413: AArch64: Better byte behaviour
 * Bug fixes
   - PR2889: OpenJDK should check for system cacerts database (e.g. /etc/pki/java/cacerts)
   - PR2929: configure: error: "A JDK home directory could not be found."
   - PR2935: Check that freetype defines FT_CONFIG_OPTION_INFINALITY_PATCHSET if enabling infinality
   - PR2938: Fix build of 8148487 backport
   - PR2939: Remove rogue ReleaseStringUTFChars line remaining from merge of 7u101 b00
+* PPC & AIX port
+  - S8148487: PPC64: Better byte behavior
 * AArch64 port
+  - S8154413: AArch64: Better byte behaviour
   - PR2914: byte_map_base is not page aligned on OpenJDK 7
 * JamVM
   - PR2665: icedtea/jamvm 2.6 fails as a build VM for icedtea
