@@ -10,6 +10,59 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 3.0.1 (2016-04-23):
+
+* Security fixes
+  - S8129952, CVE-2016-0686: Ensure thread consistency
+  - S8132051, CVE-2016-0687: Better byte behavior
+  - S8138593, CVE-2016-0695: Make DSA more fair
+  - S8139008: Better state table management
+  - S8143167, CVE-2016-3425: Better buffering of XML strings
+  - S8143945, CVE-2016-3426: Better GCM validation
+  - S8144430, CVE-2016-3427: Improve JMX connections
+  - S8146494: Better ligature substitution
+  - S8146498: Better device table adjustments
+* Import of OpenJDK 8 u91 build 14
+  - S8002116: This JdbReadTwiceTest.sh gets an exit 1
+  - S8007890: [TESTBUG] JcmdWithNMTDisabled.java fails when invoked with NMT explicitly turned on
+  - S8036132: Tab characters in test/com/sun/jdi files
+  - S8038963: com/sun/jdi tests fail because cygwin's ps sometimes misses processes
+  - S8044419: TEST_BUG: com/sun/jdi/JdbReadTwiceTest.sh fails when run under root
+  - S8059661: Test SoftReference and OOM behavior
+  - S8067422: Lambda method names are unnecessarily unstable
+  - S8073735: [TEST_BUG] compiler/loopopts/CountedLoopProblem.java got OOME
+  - S8074146: [TEST_BUG] jdb has succeded to read an unreadable file
+  - S8130212: Thread::current() might access freed memory on Solaris
+  - S8132890: Text Overlapping on Dot Matrix Printers
+  - S8134297: NPE in GSSNameElement nameType check
+  - S8134650: Xsl transformation gives different results in 8u66
+  - S8134828: Scrollbar thumb disappears with Nimbus L&F
+  - S8138589: Correct limits on unlimited cryptography
+  - S8138811: Construction of static protection domains
+  - S8140268: Generate link to specification license for JavaDoc API documentation
+  - S8141229: [Parfait] Null pointer dereference in cmsstrcasecmp of cmserr.c
+  - S8143002: [Parfait] JNI exception pending in fontpath.c:1300
+  - S8143959: Certificates requiring blacklisting
+  - S8146477: [TEST_BUG] ClientJSSEServerJSSE.java failing again
+  - S8146518: Zero interpreter broken with better byte behaviour
+  - S8146967: [TEST_BUG] javax/security/auth/SubjectDomainCombiner/Optimize.java should use 4-args ProtectionDomain constructor
+  - S8147567: InterpreterRuntime::post_field_access not updated for boolean in JDK-8132051
+  - S8148446: (tz) Support tzdata2016a
+  - S8148475: Missing SA Bytecode updates.
+  - S8148487: PPC64: Better byte behavior
+  - S8148522: Backout JDK-8138811 from 2016 Apr CPU repo
+  - S8149170: Better byte behavior for native arguments
+  - S8149367: PolicyQualifierInfo/index_Ctor JCk test fails with IOE: Invalid encoding for PolicyQualifierInfo
+  - S8150012: Better byte behavior for reflection
+  - S8150790: 8u75 L10n resource file translation update
+* Backports
+  - S8148752, PR2943: Compiled StringBuilder code throws StringIndexOutOfBoundsException
+  - S8154210: Zero: Better byte behaviour
+  - S8154413: AArch64: Better byte behaviour
+* Bug fixes
+  - PR2933: Support ccache 3.2 and later
+  - PR2934, G579676: SunEC provider throwing KeyException with current NSS
+
 New in release 3.0.0 (2016-04-08):
 
 * Rebase on jdk8u77-b03
