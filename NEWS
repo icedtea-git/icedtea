@@ -16,11 +16,58 @@ New in release 2.7.0 (201X-XX-XX):
 
 * Backports
   - S8076221, PR2809: Disable RC4 cipher suites
+
+New in release 2.6.6 (2016-04-21):
+
+* Security fixes
+  - S8129952, CVE-2016-0686: Ensure thread consistency
+  - S8132051, CVE-2016-0687: Better byte behavior
+  - S8138593, CVE-2016-0695: Make DSA more fair
+  - S8139008: Better state table management
+  - S8143167, CVE-2016-3425: Better buffering of XML strings
+  - S8144430, CVE-2016-3427: Improve JMX connections
+  - S8146494: Better ligature substitution
+  - S8146498: Better device table adjustments
+* Import of OpenJDK 7 u101 build 0
+  - S4858370: JDWP: Memory Leak: GlobalRefs never deleted when processing invokeMethod command
+  - S7127906: (launcher) convert the launcher regression tests to java
+  - S8002116: This JdbReadTwiceTest.sh gets an exit 1
+  - S8004007: test/sun/tools/jinfo/Basic.sh fails on when runSA is set to true
+  - S8007890: [TESTBUG] JcmdWithNMTDisabled.java fails when invoked with NMT explicitly turned on
+  - S8027705: com/sun/jdi/JdbMethodExitTest.sh fails when a background thread is generating events.
+  - S8028537: PPC64: Updated the JDK regression tests to run on AIX
+  - S8036132: Tab characters in test/com/sun/jdi files
+  - S8038963: com/sun/jdi tests fail because cygwin's ps sometimes misses processes
+  - S8044419: TEST_BUG: com/sun/jdi/JdbReadTwiceTest.sh fails when run under root
+  - S8059661: Test SoftReference and OOM behavior
+  - S8072753: Nondeterministic wrong answer on arithmetic
+  - S8073735: [TEST_BUG] compiler/loopopts/CountedLoopProblem.java got OOME
+  - S8074146: [TEST_BUG] jdb has succeded to read an unreadable file
+  - S8134297: NPE in GSSNameElement nameType check
+  - S8134650: Xsl transformation gives different results in 8u66
+  - S8141229: [Parfait] Null pointer dereference in cmsstrcasecmp of cmserr.c
+  - S8143002: [Parfait] JNI exception pending in fontpath.c:1300
+  - S8146477: [TEST_BUG] ClientJSSEServerJSSE.java failing again
+  - S8146967: [TEST_BUG] javax/security/auth/SubjectDomainCombiner/Optimize.java should use 4-args ProtectionDomain constructor
+  - S8147567: InterpreterRuntime::post_field_access not updated for boolean in JDK-8132051
+  - S8148446: (tz) Support tzdata2016a
+  - S8148475: Missing SA Bytecode updates.
+  - S8149170: Better byte behavior for native arguments
+  - S8149367: PolicyQualifierInfo/index_Ctor JCk test fails with IOE: Invalid encoding for PolicyQualifierInfo
+  - S8150012: Better byte behavior for reflection
+  - S8150790: 8u75 L10n resource file translation update
+  - S8153673: [BACKOUT] JDWP: Memory Leak: GlobalRefs never deleted when processing invokeMethod command
+  - S8154210: Zero: Better byte behaviour
 * Bug fixes
   - PR2889: OpenJDK should check for system cacerts database (e.g. /etc/pki/java/cacerts)
   - PR2929: configure: error: "A JDK home directory could not be found."
   - PR2935: Check that freetype defines FT_CONFIG_OPTION_INFINALITY_PATCHSET if enabling infinality
+  - PR2938: Fix build of 8148487 backport
+  - PR2939: Remove rogue ReleaseStringUTFChars line remaining from merge of 7u101 b00
+* PPC & AIX port
+  - S8148487: PPC64: Better byte behavior
 * AArch64 port
+  - S8154413: AArch64: Better byte behaviour
   - PR2914: byte_map_base is not page aligned on OpenJDK 7
 * JamVM
   - PR2665: icedtea/jamvm 2.6 fails as a build VM for icedtea
