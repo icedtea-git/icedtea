@@ -395,6 +395,90 @@ New in release 3.0.0 (2016-04-08):
   - PR2910: Add rudimentary support for OpenJDK 8 class files to CACAO
   - PR2916: Update CACAO drop to use the latest from cacao-staging
 
+New in release 2.6.5 (2016-03-24):
+
+* Security fixes
+  - S8152335, CVE-2016-0636: Improve MethodHandle consistency
+* Import of OpenJDK 7 u99 build 0
+  - S6425769, PR2858: Allow specifying an address to bind JMX remote connector
+  - S6961123: setWMClass fails to null-terminate WM_CLASS string
+  - S8145982, PR2858: JMXInterfaceBindingTest is failing intermittently
+  - S8146015, PR2858: JMXInterfaceBindingTest is failing intermittently for IPv6 addresses
+* Backports
+  - S8028727, PR2814: [parfait] warnings from b116 for jdk.src.share.native.sun.security.ec: JNI pending exceptions
+  - S8048512, PR2814: Uninitialised memory in jdk/src/share/native/sun/security/ec/ECC_JNI.cpp
+  - S8071705, PR2819, RH1182694: Java application menu misbehaves when running multiple screen stacked vertically
+  - S8150954, PR2866, RH1176206: AWT Robot not compatible with GNOME Shell
+* Bug fixes
+  - PR2803: Make system CUPS optional
+  - PR2886: Location of 'stap' executable is hard-coded
+  - PR2893: test/tapset/jstaptest.pl should be executable
+  - PR2894: Add missing test directory in make check.
+* CACAO
+  - PR2781, CA195: typeinfo.cpp: typeinfo_merge_nonarrays: Assertion `dest && result && x.any && y.any' failed
+* AArch64 port
+  - PR2852: Add support for large code cache
+  - PR2852: Apply ReservedCodeCacheSize default limiting to AArch64 only.
+  - S8081289, PR2852: aarch64: add support for RewriteFrequentPairs in interpreter
+  - S8131483, PR2852: aarch64: illegal stlxr instructions
+  - S8133352, PR2852: aarch64: generates constrained unpredictable instructions
+  - S8133842, PR2852: aarch64: C2 generates illegal instructions with int shifts >=32
+  - S8134322, PR2852: AArch64: Fix several errors in C2 biased locking implementation
+  - S8136615, PR2852: aarch64: elide DecodeN when followed by CmpP 0
+  - S8138575, PR2852: Improve generated code for profile counters
+  - S8138641, PR2852: Disable C2 peephole by default for aarch64
+  - S8138966, PR2852: Intermittent SEGV running ParallelGC
+  - S8143067, PR2852: aarch64: guarantee failure in javac
+  - S8143285, PR2852: aarch64: Missing load acquire when checking if ConstantPoolCacheEntry is resolved
+  - S8143584, PR2852: Load constant pool tag and class status with load acquire
+  - S8144201, PR2852: aarch64: jdk/test/com/sun/net/httpserver/Test6a.java fails with --enable-unlimited-crypto
+  - S8144582, PR2852: AArch64 does not generate correct branch profile data
+  - S8146709, PR2852: AArch64: Incorrect use of ADRP for byte_map_base
+  - S8147805, PR2852: aarch64: C1 segmentation fault due to inline Unsafe.getAndSetObject
+  - S8148240, PR2852: aarch64: random infrequent null pointer exceptions in javac
+* PPC & AIX port
+  - S8034797, PR2851: AIX: Fix os::naked_short_sleep() in os_aix.cpp after 8028280
+  - S8139258, PR2851: PPC64LE: argument passing problem when passing 15 floats in native call
+  - S8139421, PR2851: PPC64LE: MacroAssembler::bxx64_patchable kill register R12
+
+New in release 2.6.4 (2016-01-19):
+
+* Security fixes
+  - S8059054, CVE-2016-0402: Better URL processing
+  - S8130710, CVE-2016-0448: Better attributes processing
+  - S8132210: Reinforce JMX collector internals
+  - S8132988: Better printing dialogues
+  - S8133962, CVE-2016-0466: More general limits
+  - S8137060: JMX memory management improvements
+  - S8139012: Better font substitutions
+  - S8139017, CVE-2016-0483: More stable image decoding
+  - S8140543, CVE-2016-0494: Arrange font actions
+  - S8143185: Cleanup for handling proxies
+  - S8143941, CVE-2015-8126, CVE-2015-8472: Update splashscreen displays
+  - S8144773, CVE-2015-7575: Further reduce use of MD5 (SLOTH)
+* Import of OpenJDK 7 u95 build 0
+  - S7167988: PKIX CertPathBuilder in reverse mode doesn't work if more than one trust anchor is specified
+  - S8068761: [TEST_BUG] java/nio/channels/ServerSocketChannel/AdaptServerSocket.java failed with SocketTimeoutException
+  - S8074068: Cleanup in src/share/classes/sun/security/x509/
+  - S8075773: jps running as root fails after the fix of JDK-8050807
+  - S8081297: SSL Problem with Tomcat
+  - S8131181: Increment minor version of HSx for 7u95 and initialize the build number
+  - S8132082: Let OracleUcrypto accept RSAPrivateKey
+  - S8134605: Partial rework of the fix for 8081297
+  - S8134861: XSLT: Extension func call cause exception if namespace URI contains partial package name
+  - S8135307: CompletionFailure thrown when calling FieldDoc.type, if the field's type is missing
+  - S8138716: (tz) Support tzdata2015g
+  - S8140244: Port fix of JDK-8075773 to MacOSX
+  - S8141213: [Parfait]Potentially blocking function GetArrayLength called in JNI critical region at line 239 of jdk/src/share/native/sun/awt/image/jpeg/jpegdecoder.c in function GET_ARRAYS
+  - S8141287: Add MD5 to jdk.certpath.disabledAlgorithms - Take 2
+  - S8142928: [TEST_BUG] sun/security/provider/certpath/ReverseBuilder/ReverseBuild.java 8u71 failure
+  - S8143132: L10n resource file translation update
+  - S8144955: Wrong changes were pushed with 8143942
+  - S8145551: Test failed with Crash for Improved font lookups
+  - S8147466: Add -fno-strict-overflow to IndicRearrangementProcessor{,2}.cpp
+* Backports
+  - S8140244: Port fix of JDK-8075773 to AIX
+
 New in release 2.6.3 (2015-11-13):
 
 * Security fixes
