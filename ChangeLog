@@ -1,3 +1,20 @@
+2016-04-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2934: SunEC provider throwing KeyException
+	with current NSS
+	* Makefile.am:
+	(ECC_RESULT): Removed.
+	(ECC_CHECK_SRCS): Add TestECDSA.java
+	(ecccheck): Only compile tests if SunEC is enabled.
+	(clean-ecccheck): Only remove build directory if
+	SunEC is enabled.
+	(check-ecc): Only run tests if SunEC is enabled.
+	Add running of TestECDSA. Call set -e so rule
+	fails if any test fails.
+	* test/standalone/TestECDSA.java:
+	New test to make sure SunEC can produce ECDSA
+	signatures.
+
 2016-05-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.1.0pre02.
