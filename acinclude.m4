@@ -1916,6 +1916,38 @@ AC_DEFUN_ONCE([IT_DETERMINE_VERSION],
   AC_SUBST([ICEDTEA_BRANCH])
 ])
 
+AC_DEFUN_ONCE([IT_ENABLE_INFINALITY],
+[
+  AC_MSG_CHECKING([whether to use fontconfig to provide better font rendering])
+  AC_ARG_ENABLE([infinality],
+                [AS_HELP_STRING(--enable-infinality,build with fontconfig font rendering [[default=yes]])],
+  [
+    case "${enableval}" in
+      yes)
+        enable_infinality=yes
+        ;;
+      *)
+        enable_infinality=no
+        ;;
+    esac
+  ],
+  [
+    enable_infinality=yes
+  ])
+  AC_MSG_RESULT([$enable_infinality])
+  AM_CONDITIONAL([ENABLE_INFINALITY], test x"${enable_infinality}" = "xyes")
+  if test "x${enable_infinality}" = "xyes"; then
+    dnl Check for Fontconfig+ headers and libraries.
+    PKG_CHECK_MODULES(FONTCONFIG, fontconfig,[FONTCONFIG_FOUND=yes],[FONTCONFIG_FOUND=no])
+    if test "x${FONTCONFIG_FOUND}" = xno
+    then
+      AC_MSG_ERROR([Infinality support requires fontconfig. Either install fontconfig or --disable-infinality])
+    fi
+    AC_SUBST(FONTCONFIG_CFLAGS)
+    AC_SUBST(FONTCONFIG_LIBS)
+  fi
+])
+
 AC_DEFUN_ONCE([IT_HAS_NATIVE_HOTSPOT_PORT],
 [
   AC_MSG_CHECKING([if a native HotSpot port is available for this architecture])

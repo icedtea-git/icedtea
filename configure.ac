@@ -152,6 +152,7 @@ IT_CHECK_FOR_JPEG
 IT_CHECK_FOR_PNG
 IT_CHECK_FOR_GIF
 IT_CHECK_FOR_LCMS
+IT_ENABLE_INFINALITY
 AC_CONFIG_FILES([remove-intree-libraries.sh])
 
 dnl Check for Xproto headers and libraries.

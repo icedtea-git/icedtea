@@ -493,6 +493,14 @@ ICEDTEA_CONFIGURE += \
 	--with-cacerts-file=$(CACERTS_FILE)
 endif
 
+if ENABLE_INFINALITY
+ICEDTEA_CONFIGURE += \
+	--enable-infinality
+else
+ICEDTEA_CONFIGURE += \
+	--disable-infinality
+endif
+
 ICEDTEA_UNSET = \
 	JAVAC= \
 	JAVA_HOME= \
@@ -580,6 +588,12 @@ if ENABLE_SUNEC
 ICEDTEA_ENV += \
 	NSS_LIBS="${SUNEC_LIBS}" \
 	NSS_CFLAGS="${SUNEC_CFLAGS}"
+endif
+
+if ENABLE_INFINALITY
+ICEDTEA_ENV += \
+	FONTCONFIG_LIBS="${FONTCONFIG_LIBS}" \
+	FONTCONFIG_CFLAGS="${FONTCONFIG_CFLAGS}"
 endif
 
 # OpenJDK boot build environment.

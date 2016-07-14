@@ -1,5 +1,37 @@
 2016-07-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE): Pass --enable-infinality or
+	--disable-infinality, depending on whether or
+	not infinality is enabled.
+	* acinclude.m4:
+	(IT_CHECK_FOR_FONTCONFIG): Removed.
+	(IT_ENABLE_INFINALITY): Merge fontconfig detection
+	from IT_CHECK_FOR_FONTCONFIG into this macro, as
+	currently we only need to link against fontconfig
+	for infinality support.
+
+2014-06-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* AUTHORS:
+	Add authors of infinality patch. Websites are used
+	as present as couldn't find any e-mail addresses.
+	* INSTALL: Document --enable-infinality.
+	* acinclude.m4:
+	(IT_ENABLE_INFINALITY): Macro for new option.
+	* configure.ac: Invoke IT_ENABLE_INFINALITY instead
+	of its dependency, IT_CHECK_FOR_FONTCONFIG.
+
+2011-09-21  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	(ICEDTEA_ENV): Set FONTCONFIG_LIBS & FONTCONFIG_CFLAGS.
+	* acinclude.m4:
+	(IT_CHECK_FOR_FONTCONFIG): Detect fontconfig.
+	* configure.ac: Add call to IT_CHECK_FOR_FONTCONFIG.
+
+2016-07-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump to icedtea-3.1.0pre03.
 	* Makefile.am:
 	(CORBA_CHANGESET): Update to icedtea-3.1.0pre03 tag.

@@ -212,6 +212,7 @@ These are documented fully in the relevant section below.
   below.
 * --enable-sunec: Build the SunEC crypto provider against system NSS.
 * --enable-non-nss-curves: Define curves beyond the three specified by NSS (NIST P-{256,384,521})
+* --enable-infinality: Use fontconfig for better font rendering
 
 Testing
 =======
