@@ -1,3 +1,19 @@
+2016-04-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2931: Check that freetype defines
+	FT_CONFIG_OPTION_INFINALITY_PATCHSET if
+	enabling infinality
+	* acinclude.m4:
+	(IT_ENABLE_INFINALITY): Depend on
+	IT_CHECK_FOR_FREETYPE and check that
+	FreeType defines
+	FT_CONFIG_OPTION_INFINALITY_PATCHSET.
+	(IT_CHECK_FOR_FREETYPE): Moved from
+	configure.ac to its own macro so
+	IT_ENABLE_INFINALITY can depend on it.
+	* configure.ac:
+	Move FreeType check to its own macro.
+
 2014-07-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2931: Turn the infinality patch off by default

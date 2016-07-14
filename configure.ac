@@ -284,17 +284,6 @@ fi
 AC_SUBST(XTST_CFLAGS)
 AC_SUBST(XTST_LIBS)
 
-dnl Check for freetype2 headers and libraries.
-PKG_CHECK_MODULES(FREETYPE2, freetype2,[FREETYPE2_FOUND=yes]
-	,[FREETYPE2_FOUND=no])
-if test "x${FREETYPE2_FOUND}" = xno
-then
-  AC_MSG_ERROR([Could not find freetype2 - \
-  Try installing freetype2-devel.])
-fi
-AC_SUBST(FREETYPE2_CFLAGS)
-AC_SUBST(FREETYPE2_LIBS)
-
 dnl Check for alsa headers and libraries (only required for Linux).
 if test "x${BUILD_OS_DIR}" = "xlinux"
 then
