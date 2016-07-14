@@ -1839,6 +1839,7 @@
 	* Makefile.am:
 	(versioning): Drop use of PROJECT_NAME removed
 	in PR1365.
+	* NEWS: Updated.
 
 2014-06-13  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
