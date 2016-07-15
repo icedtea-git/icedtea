@@ -332,7 +332,6 @@ ECC_CHECK_SRCS = $(top_srcdir)/test/standalone/TestEllipticCurveCryptoSupport.ja
 # Patch list
 
 ICEDTEA_PATCHES = \
-	patches/memory-limits.patch \
 	patches/override-redirect-metacity.patch
 
 # Conditional patches

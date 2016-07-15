@@ -1,5 +1,12 @@
 2016-07-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR3089: Remove old memory limits patch
+	* patches/memory-limits.patch: Removed.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove above patch.
+
+2016-07-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2945: No LocalVariableTable generated
 	for the entire JDK
 	* Makefile.am:
