@@ -410,7 +410,8 @@ ICEDTEA_CONFIGURE = \
 	  --with-milestone="fcs" \
 	  --with-extra-cflags="$(CFLAGS)" \
 	  --with-extra-cxxflags="$(CXXFLAGS)" \
-	  --with-extra-ldflags="$(LDFLAGS)"
+	  --with-extra-ldflags="$(LDFLAGS)" \
+	  --with-java-debug-symbols=yes
 
 if ENABLE_CACAO
 ICEDTEA_CONFIGURE += \
@@ -526,9 +527,8 @@ ICEDTEA_ENV = \
 	ANT_RESPECT_JAVA_HOME="TRUE" \
 	DISTRIBUTION_ID="$(DIST_ID)" \
 	DERIVATIVE_ID="$(ICEDTEA_NAME) $(PACKAGE_VERSION)$(ICEDTEA_REV)" \
-	DEBUG_CLASSFILES="true" \
 	DEBUG_BINARIES="true" \
-	LOG="debug" SCTP_WERROR= \
+	LOG="debug" \
 	POST_STRIP_CMD= STRIP_POLICY="no_strip" \
 	JOBS="$(PARALLEL_JOBS)" \
 	INSTALL_LOCATION="${prefix}"
@@ -706,9 +706,11 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 
 all-local: icedtea-stage2 $(DESKTOP_FILES)
 
-check-local: jtregcheck $(SYSTEMTAP_TEST_SUITE) stamps/check-ecc.stamp
+check-local: jtregcheck $(SYSTEMTAP_TEST_SUITE) stamps/check-ecc.stamp \
+ stamps/check-java-debug.stamp stamps/check-java-src.stamp
 
-clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports clean-check-ecc
+clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports clean-check-ecc \
+ clean-check-java-debug clean-check-java-src
 
 clean-local: clean-tests \
  clean-icedtea clean-icedtea-debug clean-icedtea-boot clean-clone clean-clone-boot \
@@ -742,7 +744,7 @@ distclean-local: clean-local clean-download
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot \
 	hotspot hotspot-helper clean-jtreg clean-jtreg-reports \
-	jtregcheck clean-remove-intree-libraries \
+	jtregcheck clean-remove-intree-libraries clean-check-java-src \
 	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
 	clean-extract-hotspot clean-sanitise-openjdk clean-icedtea-debug \
 	clean-download-nashorn clean-extract-nashorn clean-download-hotspot \
@@ -751,7 +753,7 @@ distclean-local: clean-local clean-download
 	clean-extract-corba clean-extract-jaxp clean-extract-jaxws clean-extract-jdk \
 	clean-extract-langtools clean-check-crypto clean-check-crypto-debug clean-check-crypto-boot \
 	clean-add-archive clean-add-archive-debug clean-add-archive-boot clean-cryptocheck \
-	clean-tests clean-tapset-report clean-ecccheck clean-check-ecc \
+	clean-tests clean-tapset-report clean-ecccheck clean-check-ecc clean-check-java-debug \
 	check-jdk check-hotspot check-langtools jtregcheck check-tapset check-tapset-probes \
 	check-tapset-jstack clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop
 
@@ -2591,6 +2593,33 @@ endif
 clean-check-ecc:
 	rm -f stamps/check-ecc.stamp
 
+# Check class files, both from in-tree and generated sources, contain debug info
+stamps/check-java-debug.stamp: stamps/icedtea.stamp
+	@echo "Checking that Java classes include debug info"
+	if [ -e $(BUILD_SDK_DIR)/bin/javap ] ; then \
+	  $(BUILD_SDK_DIR)/bin/javap -l java.lang.Object | grep "Compiled from" ; \
+	  $(BUILD_SDK_DIR)/bin/javap -l java.lang.Object | grep LineNumberTable ; \
+	  $(BUILD_SDK_DIR)/bin/javap -l java.lang.Object | grep LocalVariableTable ; \
+	  $(BUILD_SDK_DIR)/bin/javap -l java.nio.ByteBuffer | grep "Compiled from" ; \
+	  $(BUILD_SDK_DIR)/bin/javap -l java.nio.ByteBuffer | grep LineNumberTable ; \
+	  $(BUILD_SDK_DIR)/bin/javap -l java.nio.ByteBuffer | grep LocalVariableTable ; \
+	fi
+	mkdir -p stamps
+	touch $@
+
+clean-check-java-debug:
+	rm -f stamps/check-java-debug.stamp
+
+# Check source files are included in the source zip
+stamps/check-java-src.stamp: stamps/icedtea.stamp
+	@echo "Checking for Java sources in src.zip"
+	$(UNZIP) -l $(BUILD_SDK_DIR)/src.zip | grep 'sun.misc.Unsafe'
+	mkdir -p stamps
+	touch $@
+
+clean-check-java-src:
+	rm -f stamps/check-java-src.stamp
+
 # File substitution
 
 policytool-@JAVA_VER@.desktop: policytool.desktop
@@ -2970,6 +2999,10 @@ check-crypto-boot: stamps/check-crypto-boot.stamp
 check-crypto-debug: stamps/check-crypto-debug.stamp
 
 check-ecc: stamps/check-ecc.stamp
+
+check-java-src: stamps/check-java-src.stamp
+
+check-java-debug: stamps/check-java-debug.stamp
 
 clone-boot: stamps/clone-boot.stamp
 

@@ -1,3 +1,28 @@
+2016-07-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2945: No LocalVariableTable generated
+	for the entire JDK
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE): Set the new
+	--with-debug-symbols option to yes.
+	(ICEDTEA_ENV): Drop now-unused DEBUG_CLASSFILES.
+	Drop SCTP_WERROR which is now handled by
+	configurable Werror in PR1937.
+	(check-local): Depend on check-java-debug and
+	check-java-src.
+	(clean-tests): Depend on clean-check-java-debug
+	and clean-check-java-src.
+	(.PHONY): Add clean-check-java-src and
+	clean-check-java-debug.
+	(check-java-debug): Adapt Omair Majid's Java debug
+	info test from Fedora RPM to IcedTea.
+	(clean-check-java-debug): Cleanup target for
+	check-java-debug.
+	(check-java-src): Adapt Omair Majid's Java source
+	file test from Fedora RPM to IcedTea.
+	(clean-check-java-src): Cleanup target for
+	check-java-src.
+
 2016-04-21  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2931: Check that freetype defines
