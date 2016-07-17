@@ -160,6 +160,7 @@ New in release 3.1.0 (2016-05-XX):
   - S8073320, PR1061: Windows HiDPI Graphics support
   - S8074807, PR3077: Fix some tests unnecessary using internal API
   - S8076315, PR3077: move 4 manual functional swing tests to regression suite
+  - S8078504, PR3094: Zero lacks declaration of VM_Version::initialize()
   - S8129822, PR3077: Define "headful" jtreg keyword
   - S8132123, PR1061: MultiResolutionCachedImage unnecessarily creates base image to get its size
   - S8133539, PR1061: [TEST_BUG] Split java/awt/image/MultiResolutionImageTest.java in two to allow restricted access
@@ -182,6 +183,7 @@ New in release 3.1.0 (2016-05-XX):
   - PR2931, G478960: Provide Infinality Support via fontconfig
   - PR2974: PKCS#10 certificate requests now use CRLF line endings rather than system line endings
   - PR3083, RH1346460: Regression in SSL debug output without an ECC provider
+  - PR3089: Remove old memory limits patch
 * AArch64 port
   - S8145320, PR3078: Create unsafe_arraycopy and generic_arraycopy for AArch64
   - S8148328, PR3078: aarch64: redundant lsr instructions in stub code.

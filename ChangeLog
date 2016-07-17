@@ -1,5 +1,17 @@
 2016-07-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR3094: Zero lacks declaration of
+	VM_Version::initialize()
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new temporary
+	patch for PR3094.
+	* NEWS: Updated with PR3094 & PR3089.
+	* patches/pr3094.patch:
+	Backport initialize() definition from
+	S8078504.
+
+2016-07-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR3089: Remove old memory limits patch
 	* patches/memory-limits.patch: Removed.
 	* Makefile.am:
