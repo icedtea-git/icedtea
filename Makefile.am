@@ -413,6 +413,10 @@ ICEDTEA_CONFIGURE = \
 	  --with-extra-ldflags="$(LDFLAGS)" \
 	  --with-java-debug-symbols=yes
 
+ICEDTEA_CONFIGURE_ENV = \
+	FREETYPE_CFLAGS="${FREETYPE2_CFLAGS}" \
+	FREETYPE_LIBS="${FREETYPE2_LIBS}"
+
 if ENABLE_CACAO
 ICEDTEA_CONFIGURE += \
 	--with-import-hotspot="$(CACAO_IMPORT_PATH)"
@@ -434,6 +438,9 @@ endif
 if USE_SYSTEM_LCMS
 ICEDTEA_CONFIGURE += \
 	--with-lcms=system
+ICEDTEA_CONFIGURE_ENV += \
+	LCMS_LIBS="${LCMS2_LIBS}" \
+	LCMS_CFLAGS="${LCMS2_CFLAGS}"
 else
 ICEDTEA_CONFIGURE += \
 	--with-lcms=bundled
@@ -450,6 +457,9 @@ endif
 if USE_SYSTEM_PNG
 ICEDTEA_CONFIGURE += \
 	--with-libpng=system
+ICEDTEA_CONFIGURE_ENV += \
+	PNG_LIBS="${PNG_LIBS}" \
+	PNG_CFLAGS="${PNG_CFLAGS}"
 else
 ICEDTEA_CONFIGURE += \
 	--with-libpng=bundled
@@ -464,6 +474,9 @@ ICEDTEA_CONFIGURE += \
 endif
 
 if ENABLE_SUNEC
+ICEDTEA_CONFIGURE_ENV += \
+	NSS_LIBS="${SUNEC_LIBS}" \
+	NSS_CFLAGS="${SUNEC_CFLAGS}"
 ICEDTEA_CONFIGURE += \
 	--enable-system-nss
 else
@@ -497,6 +510,9 @@ endif
 if ENABLE_INFINALITY
 ICEDTEA_CONFIGURE += \
 	--enable-infinality
+ICEDTEA_CONFIGURE_ENV += \
+	FONTCONFIG_LIBS="${FONTCONFIG_LIBS}" \
+	FONTCONFIG_CFLAGS="${FONTCONFIG_CFLAGS}"
 else
 ICEDTEA_CONFIGURE += \
 	--disable-infinality
@@ -551,14 +567,8 @@ endif
 
 if USE_SYSTEM_ZLIB
 ICEDTEA_ENV += \
-	ZLIB_LIBS="${ZLIB_LIBS}" \
-	ZLIB_CFLAGS="${ZLIB_CFLAGS}"
-endif
-
-if USE_SYSTEM_LCMS
-ICEDTEA_ENV += \
-	LCMS_LIBS="${LCMS2_LIBS}" \
-	LCMS_CFLAGS="${LCMS2_CFLAGS}"
+	LIBZ="${ZLIB_LIBS}" \
+	ZLIB_CPPFLAGS="${ZLIB_CFLAGS}"
 endif
 
 if ENABLE_JAR_COMPRESSION
@@ -568,32 +578,14 @@ endif
 
 if USE_SYSTEM_JPEG
 ICEDTEA_ENV += \
-	JPEG_LIBS="${JPEG_LIBS}" \
-	JPEG_CFLAGS="${JPEG_CFLAGS}"
-endif
-
-if USE_SYSTEM_PNG
-ICEDTEA_ENV += \
-	PNG_LIBS="${PNG_LIBS}" \
-	PNG_CFLAGS="${PNG_CFLAGS}"
+	LIBJPEG_LDFLAGS="${JPEG_LIBS}" \
+	LIBJPEG_CFLAGS="${JPEG_CFLAGS}"
 endif
 
 if USE_SYSTEM_GIF
 ICEDTEA_ENV += \
-	GIF_LIBS="${GIF_LIBS}" \
+	GIF_LDFLAGS="${GIF_LIBS}" \
 	GIF_CFLAGS="${GIF_CFLAGS}"
-endif
-
-if ENABLE_SUNEC
-ICEDTEA_ENV += \
-	NSS_LIBS="${SUNEC_LIBS}" \
-	NSS_CFLAGS="${SUNEC_CFLAGS}"
-endif
-
-if ENABLE_INFINALITY
-ICEDTEA_ENV += \
-	FONTCONFIG_LIBS="${FONTCONFIG_LIBS}" \
-	FONTCONFIG_CFLAGS="${FONTCONFIG_CFLAGS}"
 endif
 
 # OpenJDK boot build environment.
@@ -1807,7 +1799,8 @@ stamps/icedtea-configure.stamp: stamps/bootstrap-directory-symlink-stage2.stamp 
  stamps/cacao.stamp stamps/jamvm.stamp
 	mkdir -p $(BUILD_OUTPUT_DIR)
 	cd $(BUILD_OUTPUT_DIR) && \
-	$(SHELL) $(abs_top_builddir)/openjdk/configure $(ICEDTEA_CONFIGURE)
+          $(ICEDTEA_CONFIGURE_ENV) $(SHELL) $(abs_top_builddir)/openjdk/configure \
+          $(ICEDTEA_CONFIGURE)
 	mkdir -p stamps
 	touch $@
 
@@ -1868,8 +1861,8 @@ stamps/icedtea-debug-configure.stamp: stamps/bootstrap-directory-symlink-stage2.
  stamps/cacao.stamp stamps/jamvm.stamp
 	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)
 	cd $(DEBUG_BUILD_OUTPUT_DIR) && \
-	$(SHELL) $(abs_top_builddir)/openjdk/configure $(ICEDTEA_CONFIGURE) \
-	  --with-debug-level=slowdebug
+          $(ICEDTEA_CONFIGURE_ENV) $(SHELL) $(abs_top_builddir)/openjdk/configure \
+          $(ICEDTEA_CONFIGURE) --with-debug-level=slowdebug
 	mkdir -p stamps
 	touch $@
 
@@ -2016,7 +2009,8 @@ stamps/icedtea-boot-configure.stamp: stamps/bootstrap-directory-symlink-stage1.s
  stamps/download.stamp $(OPENJDK_BOOT_TREE) stamps/cacao.stamp stamps/jamvm.stamp
 	mkdir -p $(BOOT_BUILD_OUTPUT_DIR)
 	cd $(BOOT_BUILD_OUTPUT_DIR) && \
-	$(SHELL) $(abs_top_builddir)/openjdk-boot/configure $(ICEDTEA_CONFIGURE_BOOT)
+          $(ICEDTEA_CONFIGURE_ENV) $(SHELL) $(abs_top_builddir)/openjdk-boot/configure \
+          $(ICEDTEA_CONFIGURE_BOOT)
 	mkdir -p stamps
 	touch $@
 

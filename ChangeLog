@@ -1,3 +1,31 @@
+2016-07-17  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2822: Feed LIBS & CFLAGS into configure
+	rather than make to avoid re-discovery by
+	OpenJDK configure
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE_ENV): Introduce
+	environment variables for passing
+	to configure. Always add FreeType
+	CFLAGS and LIBS. Conditionally
+	add CFLAGS and LIBS for LCMS, PNG,
+	NSS and fontconfig. Others don't
+	use pkg-config.
+	(ICEDTEA_ENV): Remove LCMS_LIBS,
+	LCMS_CFLAGS, PNG_LIBS, PNG_CFLAGS,
+	NSS_LIBS, NSS_CFLAGS, FONTCONFIG_LIBS
+	and FONTCONFIG_CFLAGS. Use
+	ZLIB_CPPFLAGS and LIBZ instead of
+	ZLIB_CFLAGS and ZLIB_LIBS. Use
+	LIBJPEG_LDFLAGS and LIBJPEG_CFLAGS
+	instead of JPEG_CFLAGS and JPEG_LIBS.
+	Use GIF_LDFLAGS instead of GIF_LIBS.
+	(icedtea-configure): Set environment
+	variables using ICEDTEA_CONFIGURE_ENV.
+	(icedtea-debug-configure): Likewise.
+	(icedtea-boot-configure): Likewise.
+	* NEWS: Updated.
+
 2016-07-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3094: Zero lacks declaration of

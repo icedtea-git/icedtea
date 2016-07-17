@@ -180,6 +180,7 @@ New in release 3.1.0 (2016-05-XX):
   - S8159690, PR3077: [TESTBUG] Mark headful tests with @key headful.
 * Bug fixes
   - PR1958: GTKLookAndFeel does not honor gtk-alternative-button-order
+  - PR2822: Feed LIBS & CFLAGS into configure rather than make to avoid re-discovery by OpenJDK configure
   - PR2931, G478960: Provide Infinality Support via fontconfig
   - PR2974: PKCS#10 certificate requests now use CRLF line endings rather than system line endings
   - PR3083, RH1346460: Regression in SSL debug output without an ECC provider
