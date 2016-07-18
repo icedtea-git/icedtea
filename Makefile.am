@@ -399,6 +399,12 @@ if HAS_PKGVERSION
 ICEDTEA_PKG = $(EMPTY) (${PKGVERSION})
 endif
 
+ICEDTEA_COMMON_ENV = \
+	LANG="C" \
+	PATH="$(BOOT_DIR)/bin:$(OS_PATH):$(NO_CCACHE_PATH)" \
+	CLASSPATH="" \
+	LD_LIBRARY_PATH=""
+
 ICEDTEA_CONFIGURE = \
 	  --build=$(build_triplet) \
 	  --host=$(host_triplet) \
@@ -414,6 +420,7 @@ ICEDTEA_CONFIGURE = \
 	  --with-java-debug-symbols=yes
 
 ICEDTEA_CONFIGURE_ENV = \
+	${ICEDTEA_COMMON_ENV} \
 	FREETYPE_CFLAGS="${FREETYPE2_CFLAGS}" \
 	FREETYPE_LIBS="${FREETYPE2_LIBS}"
 
@@ -523,6 +530,14 @@ ICEDTEA_CONFIGURE += \
 	--disable-headful
 endif
 
+if USE_CCACHE
+ICEDTEA_CONFIGURE += \
+	--enable-ccache
+else
+ICEDTEA_CONFIGURE += \
+	--disable-ccache
+endif
+
 ICEDTEA_UNSET = \
 	JAVAC= \
 	JAVA_HOME= \
@@ -530,10 +545,7 @@ ICEDTEA_UNSET = \
 	OS=
 
 ICEDTEA_ENV = \
-	LANG="C" \
-	PATH="$(BOOT_DIR)/bin:$(OS_PATH):$$PATH" \
-	CLASSPATH="" \
-	LD_LIBRARY_PATH="" \
+	${ICEDTEA_COMMON_ENV} \
 	ZERO_LIBARCH="$(ZERO_LIBARCH)" \
 	ARCH_DATA_MODEL="$(ZERO_BITSPERWORD)" \
 	ZERO_ENDIANNESS="$(ZERO_ENDIANNESS)" \

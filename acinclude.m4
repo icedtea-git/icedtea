@@ -2358,3 +2358,45 @@ AC_DEFUN_ONCE([IT_ENABLE_HEADLESS],
   AM_CONDITIONAL(BUILD_HEADLESS, test x"${ENABLE_HEADLESS}" = "xyes")
   AC_SUBST(ENABLE_HEADLESS)
 ])
+
+AC_DEFUN_ONCE([IT_ENABLE_CCACHE],
+[
+  AC_MSG_CHECKING([whether to use ccache to speed up recompilations])
+  AC_ARG_ENABLE([ccache],
+	      [AS_HELP_STRING(--enable-ccache,use ccache to speed up recompilations [[default=yes if ccache detected]])],
+  [
+    case "${enableval}" in
+      no)
+        ENABLE_CCACHE=no
+        ;;
+      *)
+        ENABLE_CCACHE=yes
+        ;;
+    esac
+    AC_MSG_RESULT(${ENABLE_CCACHE})
+  ],
+  [
+    AC_MSG_RESULT([if available])
+    AC_PATH_PROG(CCACHE, "ccache")
+    if test -z "${CCACHE}"; then
+      ENABLE_CCACHE="no"
+    else
+      ENABLE_CCACHE="yes"
+    fi
+  ])
+  AC_MSG_CHECKING([if there is a ccache gcc wrapper on the PATH])
+  ABS_CC=$(${WHICH} ${CC})
+  REAL_GCC=$(${READLINK} -e ${ABS_CC})
+  if test "x$(basename ${REAL_GCC})" = "xccache"; then
+     AC_MSG_RESULT([yes; ${CC} resolves to ${REAL_GCC}])
+     NO_CCACHE_PATH=$(sed "s#@<:@^:@:>@*$(dirname ${ABS_CC}):##g" <<< "${PATH}")
+     AC_MSG_NOTICE([Using ${NO_CCACHE_PATH} as PATH])
+  else
+     AC_MSG_RESULT([no; ${CC} resolves to ${REAL_GCC}])
+     NO_CCACHE_PATH=${PATH}
+  fi
+  AM_CONDITIONAL(USE_CCACHE, test x"${ENABLE_CCACHE}" = "xyes")
+  AC_SUBST(ENABLE_CCACHE)
+  AC_SUBST(NO_CCACHE_PATH)
+])
+

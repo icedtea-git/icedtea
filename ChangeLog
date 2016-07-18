@@ -1,5 +1,27 @@
 2016-07-17  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2932: Support ccache in a non-automagic manner
+	* INSTALL: Document --disable-ccache.
+	* Makefile.am:
+	(ICEDTEA_COMMON_ENV): Introduce to share
+	common environment variables for configure and make.
+	(ICEDTEA_CONFIGURE_ENV): Include ICEDTEA_COMMON_ENV.
+	(ICEDTEA_CONFIGURE): Pass --enable--cache or
+	--disable-ccache depending on whether USE_CCACHE
+	is set or not.
+	(ICEDTEA_ENV): Include ICEDTEA_COMMON_ENV.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_CCACHE): Add option to explicitly
+	enable or disable ccache. We also detect if
+	there is a compiler wrapper on the PATH and remove it
+	if so (OpenJDK doesn't like it).
+	* configure.ac:
+	Detect which. Cluster other tool detection
+	calls together. Invoke IT_ENABLE_CCACHE.
+
+2016-07-17  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2821: Support building OpenJDK
 	with --disable-headful
 	* INSTALL: Document --enable-headless.
