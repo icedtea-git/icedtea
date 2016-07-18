@@ -189,6 +189,7 @@ New in release 3.1.0 (2016-05-XX):
   - PR3083, RH1346460: Regression in SSL debug output without an ECC provider
   - PR3089: Remove old memory limits patch
   - PR3090: SystemTap is heavily confused by multiple JDKs
+  - PR3096: Remove dead --disable-optimizations option
 * AArch64 port
   - S8145320, PR3078: Create unsafe_arraycopy and generic_arraycopy for AArch64
   - S8148328, PR3078: aarch64: redundant lsr instructions in stub code.

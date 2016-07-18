@@ -1,5 +1,20 @@
 2016-07-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
+	PR3096: Remove dead
+	--disable-optimizations option
+	* INSTALL: Remove documentation of
+	--disable-optimizations.
+	* Makefile.am:
+	(ICEDTEA_ENV): Drop additions when
+	DISABLE_OPTIMIZATIONS is set.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DISABLE_OPTIMIZATIONS): Removed.
+	* configure.ac:
+	Don't invoke IT_DISABLE_OPTIMIZATIONS.
+
+2016-07-17  Andrew John Hughes  <gnu.andrew@redhat.com>
+
 	PR3090: SystemTap is heavily confused
 	by multiple JDKs
 	* AUTHORS: Added Felix Lu.

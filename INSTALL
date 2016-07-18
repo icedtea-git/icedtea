@@ -89,7 +89,6 @@ to configure:
 * --enable-warnings: Produce warnings from the Java compiler during the build.
 * --with-openjdk-src-dir: Copy the specified OpenJDK tree, rather than
   downloading and extracting a tarball.
-* --disable-optimizations: Build with -O0.
 * --enable-hg: Checkout the OpenJDK tree from Mercurial, rather than
   downloading and extracting a tarball.
 * --enable-system-lcms: Build using the system installation of LCMS2, not

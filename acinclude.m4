@@ -585,28 +585,6 @@ AC_DEFUN([IT_WITH_ALT_JAR_BINARY],
   AC_SUBST(ALT_JAR_CMD)
 ])
 
-AC_DEFUN([IT_DISABLE_OPTIMIZATIONS],
-[
-  AC_MSG_CHECKING([whether to disable optimizations and build with -O0 -g])
-  AC_ARG_ENABLE([optimizations],
-                [AS_HELP_STRING(--disable-optimizations,build with -O0 -g [[default=no]])],
-  [
-    case "${enableval}" in
-      no)
-        disable_optimizations=yes
-        ;;
-      *)
-        disable_optimizations=no
-        ;;
-    esac
-  ],
-  [
-    disable_optimizations=no
-  ])
-  AC_MSG_RESULT([$disable_optimizations])
-  AM_CONDITIONAL([DISABLE_OPTIMIZATIONS], test x"${disable_optimizations}" = "xyes")
-])
-
 AC_DEFUN([IT_FIND_TOOL],
 [AC_PATH_TOOL([$1],[$2])
  if test x"$$1" = x ; then
