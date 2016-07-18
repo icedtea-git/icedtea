@@ -45,22 +45,28 @@ Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  semantic error: failed to retrieve location attribute for local
 */
 
-global CodeCache_heap;
+/* Resolve multiple installed java versions conflict. */
+@define _private %( %( systemtap_v >= "3.0" %? private %) %)
+@define _check_match %(
+  %( systemtap_v >= "3.0" %? if (pp() !~ "@prefix@") next %)
+%)
 
-global sp_register;
-global fp_register;
-global pc_register;
-global ptr_size;
-global ptr_mask;
+@_private global CodeCache_heap;
 
-global constantPool_size;
-global HeapBlock_Header_size;
+@_private global sp_register;
+@_private global fp_register;
+@_private global pc_register;
+@_private global ptr_size;
+@_private global ptr_mask;
 
-global vm_inited;
+@_private global constantPool_size;
+@_private global HeapBlock_Header_size;
+
+@_private global vm_inited;
 
 /* We need to collect some global symbol addresses that cannot be resolved
    in a bare function and vm_init_end seems a good place to use. */
-probe hotspot.vm_init_end
+probe hotspot.vm_init_end8
 {
   /**
    * The CodeCache class contains the static CodeHeap _heap that
@@ -116,6 +122,8 @@ probe hotspot.vm_shutdown
 
 function jstack:string()
 {
+  @_check_match
+
   // java backtraces can be a lot bigger, but we risk going over MAXACTION.
   // 32 frames only gives us ~32 actions per frame (with MAXACTION == 1024).
   max_depth = 32;
@@ -125,6 +133,8 @@ function jstack:string()
 
 function jstack_n:string(max_depth:long)
 {
+  @_check_match
+
   // Whether to log the method signatures.
   log_sig = 0;
 
@@ -139,6 +149,8 @@ function jstack_n:string(max_depth:long)
 
 function print_jstack()
 {
+  @_check_match
+
   // java backtraces can be a lot bigger, but we risk going over MAXACTION.
   // 32 frames only gives us ~32 actions per frame (with MAXACTION == 1024).
   max_depth = 32;
@@ -148,6 +160,8 @@ function print_jstack()
 
 function print_jstack_n:string(max_depth:long)
 {
+  @_check_match
+
   // Whether to log the method signatures.
   log_sig = 0;
 
@@ -162,6 +176,8 @@ function print_jstack_n:string(max_depth:long)
 
 function jstack_full:string()
 {
+  @_check_match
+
   // java backtraces can be a lot bigger, but we risk going over MAXACTION.
   // 32 frames only gives us ~32 actions per frame (with MAXACTION == 1024).
   max_depth = 32;
@@ -171,6 +187,8 @@ function jstack_full:string()
 
 function jstack_full_n:string(max_depth:long)
 {
+  @_check_match
+
   // Whether to log the method signatures.
   log_sig = 1;
 
@@ -185,6 +203,8 @@ function jstack_full_n:string(max_depth:long)
 
 function print_jstack_full()
 {
+  @_check_match
+
   // java backtraces can be a lot bigger, but we risk going over MAXACTION.
   // 32 frames only gives us ~32 actions per frame (with MAXACTION == 1024).
   max_depth = 32;
@@ -194,6 +214,8 @@ function print_jstack_full()
 
 function print_jstack_full_n:string(max_depth:long)
 {
+  @_check_match
+
   // Whether to log the method signatures.
   log_sig = 1;
 
@@ -209,6 +231,8 @@ function print_jstack_full_n:string(max_depth:long)
 function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
                             print_frames:long)
 {
+  @_check_match
+
   if (! vm_inited[pid()])
     {
       frame = "<vm-not-inited>";

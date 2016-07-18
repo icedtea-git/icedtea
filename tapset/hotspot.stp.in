@@ -141,7 +141,8 @@ probe hotspot.vm_init_begin =
    Triggers at the end of the virtual machine initialization.
    Has no arguments.
  */
-probe hotspot.vm_init_end =
+probe hotspot_vm_init_end = hotspot.vm_init_end8 {}
+probe hotspot.vm_init_end8 =
   process("@ABS_CLIENT_LIBJVM_SO@").mark("vm__init__end"),
   process("@ABS_SERVER_LIBJVM_SO@").mark("vm__init__end")
 {

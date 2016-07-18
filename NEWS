@@ -188,6 +188,7 @@ New in release 3.1.0 (2016-05-XX):
   - PR2974: PKCS#10 certificate requests now use CRLF line endings rather than system line endings
   - PR3083, RH1346460: Regression in SSL debug output without an ECC provider
   - PR3089: Remove old memory limits patch
+  - PR3090: SystemTap is heavily confused by multiple JDKs
 * AArch64 port
   - S8145320, PR3078: Create unsafe_arraycopy and generic_arraycopy for AArch64
   - S8148328, PR3078: aarch64: redundant lsr instructions in stub code.

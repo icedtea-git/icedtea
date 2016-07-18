@@ -1,3 +1,21 @@
+2016-07-17  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR3090: SystemTap is heavily confused
+	by multiple JDKs
+	* AUTHORS: Added Felix Lu.
+	* NEWS: Updated.
+
+2016-07-13  Felix Lu  <flu@redhat.com>
+
+	PR3090: SystemTap is heavily confused
+	by multiple JDKs
+	* tapset/hotspot.stp.in,
+	* tapset/jstack.stp.in:
+	Use the new private keyword in SystemTap
+	>= 3.0 to resolve global variable name
+	collision and function overloading
+	to select the correct jstack_call at runtime.
+
 2016-05-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR2964: Set system defaults based on OS
