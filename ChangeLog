@@ -1,5 +1,22 @@
 2016-07-17  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR2821: Support building OpenJDK
+	with --disable-headful
+	* INSTALL: Document --enable-headless.
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE): Pass --disable-headful
+	when BUILD_HEADLESS is set.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_NON_NSS_CURVES): Make sure all
+	possible values of enableval are handled.
+	(IT_ENABLE_HEADLESS): Allow OpenJDK to
+	be built without graphical UI support.
+	* configure.ac:
+	Invoke IT_ENABLE_HEADLESS.
+
+2016-07-17  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR2822: Feed LIBS & CFLAGS into configure
 	rather than make to avoid re-discovery by
 	OpenJDK configure

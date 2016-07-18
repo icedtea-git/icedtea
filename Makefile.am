@@ -518,6 +518,11 @@ ICEDTEA_CONFIGURE += \
 	--disable-infinality
 endif
 
+if BUILD_HEADLESS
+ICEDTEA_CONFIGURE += \
+	--disable-headful
+endif
+
 ICEDTEA_UNSET = \
 	JAVAC= \
 	JAVA_HOME= \

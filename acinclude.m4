@@ -2319,7 +2319,14 @@ AC_DEFUN_ONCE([IT_ENABLE_NON_NSS_CURVES],
   AC_ARG_ENABLE([non-nss-curves],
 	      [AS_HELP_STRING(--enable-non-nss-curves,register curves beyond the 3 NSS defines [[default=no]])],
   [
-    ENABLE_NON_NSS_CURVES="${enableval}"
+    case "${enableval}" in
+      no)
+        ENABLE_NON_NSS_CURVES=no
+        ;;
+      *)
+        ENABLE_NON_NSS_CURVES=yes
+        ;;
+    esac
   ],
   [
     ENABLE_NON_NSS_CURVES="no"
@@ -2327,4 +2334,27 @@ AC_DEFUN_ONCE([IT_ENABLE_NON_NSS_CURVES],
   AC_MSG_RESULT(${ENABLE_NON_NSS_CURVES})
   AM_CONDITIONAL(USE_NON_NSS_CURVES, test x"${ENABLE_NON_NSS_CURVES}" = "xyes")
   AC_SUBST(ENABLE_NON_NSS_CURVES)
+])
+
+AC_DEFUN_ONCE([IT_ENABLE_HEADLESS],
+[
+  AC_MSG_CHECKING([whether to perform a headless build of OpenJDK])
+  AC_ARG_ENABLE([headless],
+	      [AS_HELP_STRING(--enable-headless,perform a build of OpenJDK without graphical UI support [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+        ENABLE_HEADLESS=no
+        ;;
+      *)
+        ENABLE_HEADLESS=yes
+        ;;
+    esac
+  ],
+  [
+    ENABLE_HEADLESS="no"
+  ])
+  AC_MSG_RESULT(${ENABLE_HEADLESS})
+  AM_CONDITIONAL(BUILD_HEADLESS, test x"${ENABLE_HEADLESS}" = "xyes")
+  AC_SUBST(ENABLE_HEADLESS)
 ])
