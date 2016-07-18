@@ -1,4 +1,6 @@
 AC_INIT([icedtea], [3.1.0pre03], [distro-pkg-dev@openjdk.java.net])
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([1.9 tar-pax foreign])
 AM_MAINTAINER_MODE([enable])
 AC_CONFIG_FILES([Makefile])
@@ -16,8 +18,6 @@ IT_DETERMINE_VERSION
 AC_CONFIG_FILES([hotspot.map fsg.sh])
 AC_CONFIG_FILES([jconsole.desktop])
 AC_CONFIG_FILES([policytool.desktop])
-
-AC_CANONICAL_HOST
 
 AC_PROG_CC
 AC_PROG_CXX

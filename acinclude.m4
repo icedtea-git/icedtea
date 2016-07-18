@@ -1,6 +1,6 @@
 AC_DEFUN([IT_SET_ARCH_SETTINGS],
 [
-  case "${host_cpu}" in
+  case "${target_cpu}" in
     x86_64)
       BUILD_ARCH_DIR=amd64
       INSTALL_ARCH_DIR=amd64
@@ -109,7 +109,7 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
 
 AC_DEFUN([IT_SET_OS_DIRS],
 [
-  case "${host_os}" in
+  case "${target_os}" in
     *linux*)
       BUILD_OS_DIR=linux
       OS_PATH=
@@ -123,7 +123,7 @@ AC_DEFUN([IT_SET_OS_DIRS],
       OS_PATH=
       ;;
     *)
-      AC_MSG_ERROR([unsupported operating system ${host_os}])
+      AC_MSG_ERROR([unsupported operating system ${target_os}])
       ;;
   esac
   AC_SUBST(BUILD_OS_DIR)
@@ -1159,7 +1159,14 @@ AC_DEFUN([IT_CHECK_ENABLE_WARNINGS],
   AC_ARG_ENABLE([warnings],
 	      [AS_HELP_STRING(--enable-warnings,produce warnings from javac/ecj [[default=no]])],
   [
-    ENABLE_WARNINGS="${enableval}"
+    case "${enableval}" in
+      no)
+        ENABLE_WARNINGS=no
+        ;;
+      *)
+        ENABLE_WARNINGS=yes
+        ;;
+    esac
   ],
   [
     ENABLE_WARNINGS=no
@@ -1388,7 +1395,16 @@ AC_MSG_CHECKING([whether to enable the PKCS11 crypto provider using NSS])
 AC_ARG_ENABLE([nss],
 	      [AS_HELP_STRING([--enable-nss],
 	      		      [Enable inclusion of PKCS11 crypto provider using NSS])],
-	      [ENABLE_NSS="${enableval}"], [ENABLE_NSS='no'])
+  [
+    case "${enableval}" in
+      no)
+        ENABLE_NSS=no
+        ;;
+      *)
+        ENABLE_NSS=yes
+        ;;
+    esac
+  ], [ENABLE_NSS='no'])
 AM_CONDITIONAL([ENABLE_NSS], [test x$ENABLE_NSS = xyes])
 if test "x${ENABLE_NSS}" = "xyes"
 then
@@ -1605,10 +1621,24 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_LCMS],
   AC_ARG_ENABLE([system-lcms],
 	      [AS_HELP_STRING(--enable-system-lcms,use the system LCMS [[default=yes]])],
   [
-    ENABLE_SYSTEM_LCMS="${enableval}"
+    case "${enableval}" in
+      no)
+        ENABLE_SYSTEM_LCMS=no
+        ;;
+      *)
+        ENABLE_SYSTEM_LCMS=yes
+        ;;
+    esac
   ],
   [
-    ENABLE_SYSTEM_LCMS="yes"
+    case "${target_os}" in
+     *linux*)
+       ENABLE_SYSTEM_LCMS="yes"
+       ;;
+     *)
+       ENABLE_SYSTEM_LCMS="no" ;
+       ;;
+    esac
   ])
   AC_MSG_RESULT(${ENABLE_SYSTEM_LCMS})
   if test x"${ENABLE_SYSTEM_LCMS}" = "xyes"; then
@@ -1631,10 +1661,24 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_ZLIB],
   AC_ARG_ENABLE([system-zlib],
 	      [AS_HELP_STRING(--enable-system-zlib,use the system ZLIB [[default=yes]])],
   [
-    ENABLE_SYSTEM_ZLIB="${enableval}"
+    case "${enableval}" in
+      no)
+        ENABLE_SYSTEM_ZLIB=no
+        ;;
+      *)
+        ENABLE_SYSTEM_ZLIB=yes
+        ;;
+    esac
   ],
   [
-    ENABLE_SYSTEM_ZLIB="yes"
+    case "${target_os}" in
+      *linux*)
+        ENABLE_SYSTEM_ZLIB="yes"
+	;;
+      *)
+        ENABLE_SYSTEM_ZLIB="no" ;
+	;;
+    esac
   ])
   AC_MSG_RESULT(${ENABLE_SYSTEM_ZLIB})
   if test x"${ENABLE_SYSTEM_ZLIB}" = "xyes"; then
@@ -1657,10 +1701,24 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_JPEG],
   AC_ARG_ENABLE([system-jpeg],
 	      [AS_HELP_STRING(--enable-system-jpeg,use the system libjpeg [[default=yes]])],
   [
-    ENABLE_SYSTEM_JPEG="${enableval}"
+    case "${enableval}" in
+      no)
+        ENABLE_SYSTEM_JPEG=no
+        ;;
+      *)
+        ENABLE_SYSTEM_JPEG=yes
+        ;;
+    esac
   ],
   [
-    ENABLE_SYSTEM_JPEG="yes"
+    case "${target_os}" in
+      *linux*)
+        ENABLE_SYSTEM_JPEG="yes"
+	;;
+      *)
+        ENABLE_SYSTEM_JPEG="no" ;
+	;;
+    esac
   ])
   AC_MSG_RESULT(${ENABLE_SYSTEM_JPEG})
   if test x"${ENABLE_SYSTEM_JPEG}" = "xyes"; then
@@ -1682,10 +1740,24 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_PNG],
   AC_ARG_ENABLE([system-png],
 	      [AS_HELP_STRING(--enable-system-png,use the system PNG [[default=yes]])],
   [
-    ENABLE_SYSTEM_PNG="${enableval}"
+    case "${enableval}" in
+      no)
+        ENABLE_SYSTEM_PNG=no
+        ;;
+      *)
+        ENABLE_SYSTEM_PNG=yes
+        ;;
+    esac
   ],
   [
-    ENABLE_SYSTEM_PNG="yes"
+    case "${target_os}" in
+      *linux*)
+        ENABLE_SYSTEM_PNG="yes"
+	;;
+      *)
+        ENABLE_SYSTEM_PNG="no" ;
+	;;
+    esac
   ])
   AC_MSG_RESULT(${ENABLE_SYSTEM_PNG})
   if test x"${ENABLE_SYSTEM_PNG}" = "xyes"; then
@@ -1708,10 +1780,24 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_GIF],
   AC_ARG_ENABLE([system-gif],
 	      [AS_HELP_STRING(--enable-system-gif,use the system giflib [[default=yes]])],
   [
-    ENABLE_SYSTEM_GIF="${enableval}"
+    case "${enableval}" in
+      no)
+        ENABLE_SYSTEM_GIF=no
+        ;;
+      *)
+        ENABLE_SYSTEM_GIF=yes
+        ;;
+    esac
   ],
   [
-    ENABLE_SYSTEM_GIF="yes"
+    case "${target_os}" in
+      *linux*)
+        ENABLE_SYSTEM_GIF="yes"
+	;;
+      *)
+        ENABLE_SYSTEM_GIF="no" ;
+	;;
+    esac
   ])
   AC_MSG_RESULT(${ENABLE_SYSTEM_GIF})
   if test x"${ENABLE_SYSTEM_GIF}" = "xyes"; then

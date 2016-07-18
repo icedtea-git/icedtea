@@ -1,3 +1,30 @@
+2016-05-17  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR2964: Set system defaults based on OS
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_WARNINGS): Make sure all possible
+	values of enableval are handled.
+	(IT_LOCATE_NSS): Likewise.
+	(IT_CHECK_FOR_LCMS): Likewise. Use a similar case
+	statement as in IT_SET_OS_DIRS to determine default
+	based on OS.
+	(IT_CHECK_FOR_ZLIB): Likewise.
+	(IT_CHECK_FOR_JPEG): Likewise.
+	(IT_CHECK_FOR_PNG): Likewise.
+	(IT_CHECK_FOR_GIF): Likewise.
+
+2013-12-26  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR2964: Set system defaults based on OS
+	* acinclude.m4:
+	(IT_SET_ARCH_SETTINGS): Use target, not host.
+	(IT_SET_OS_DIRS): Likewise.
+	* configure.ac:
+	Add AC_CANONICAL_TARGET after AC_CANONICAL_HOST
+	and move earlier in file, before Automake
+	initialisation.
+
 2016-07-17  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR2932: Support ccache in a non-automagic manner

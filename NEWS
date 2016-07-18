@@ -184,6 +184,7 @@ New in release 3.1.0 (2016-05-XX):
   - PR2822: Feed LIBS & CFLAGS into configure rather than make to avoid re-discovery by OpenJDK configure
   - PR2931, G478960: Provide Infinality Support via fontconfig
   - PR2932: Support ccache in a non-automagic manner
+  - PR2964: Set system defaults based on OS
   - PR2974: PKCS#10 certificate requests now use CRLF line endings rather than system line endings
   - PR3083, RH1346460: Regression in SSL debug output without an ECC provider
   - PR3089: Remove old memory limits patch
