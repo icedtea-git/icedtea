@@ -15,7 +15,45 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 2.7.0 (201X-XX-XX):
 
 * Backports
-  - S8076221, PR2809: Disable RC4 cipher suites
+  - S2178143, PR2958: JVM crashes if the number of bound CPUs changed during runtime
+  - S4900206, PR3101: Include worst-case rounding tests for Math library functions
+  - S6260348, PR3067: GTK+ L&F JTextComponent not respecting desktop caret blink rate
+  - S6934604, PR3075: enable parts of EliminateAutoBox by default
+  - S7043064, PR3020: sun/java2d/cmm/ tests failed against RI b141 & b138-nightly
+  - S7051394, PR3020: NullPointerException when running regression tests LoadProfileTest by using openjdk-7-b144
+  - S7086015, PR3013: fix test/tools/javac/parser/netbeans/JavacParserTest.java
+  - S7119487, PR3013: JavacParserTest.java test fails on Windows platforms
+  - S7124245, PR3020: [lcms] ColorConvertOp to color space CS_GRAY apparently converts orange to 244,244,0
+  - S7159445, PR3013: (javac) emits inaccurate diagnostics for enhanced for-loops
+  - S7175845, PR1437, RH1207129: 'jar uf' changes file permissions unexpectedly
+  - S8005402, PR3020: Need to provide benchmarks for color management
+  - S8005530, PR3020: [lcms] Improve performance of ColorConverOp for default destinations
+  - S8005930, PR3020: [lcms] ColorConvertOp: Alpha channel is not transferred from source to destination.
+  - S8013430, PR3020: REGRESSION: closed/java/awt/color/ICC_Profile/LoadProfileTest/LoadProfileTest.java fails with java.io.StreamCorruptedException: invalid type code: EE since 8b87
+  - S8014286, PR3075: failed java/lang/Math/DivModTests.java after 6934604 changes
+  - S8014959, PR3075: assert(Compile::current()->live_nodes() < (uint)MaxNodeLimit) failed: Live Node limit exceeded limit
+  - S8019247, PR3075: SIGSEGV in compiled method c8e.e.t_.getArray(Ljava/lang/Class;)[Ljava/lang/Object
+  - S8024511, PR3020: Crash during color profile destruction
+  - S8025429, PR3020: [parfait] warnings from b107 for sun.java2d.cmm: JNI exception pending
+  - S8026702, PR3020: Fix for 8025429 breaks jdk build on windows
+  - S8026780, PR3020, RH1142587: Crash on PPC and PPC v2 for Java_awt test suit
+  - S8047066, PR3020: Test test/sun/awt/image/bug8038000.java fails with ClassCastException
+  - S8069181, PR3012, RH1015612: java.lang.AssertionError when compiling JDK 1.4 code in JDK 8
+  - S8076221, PR2809, RH1302385: Disable RC4 cipher suites
+  - S8151841, PR3098: Build needs additional flags to compile with GCC 6
+  - S8158260, PR2992, RH1341258: PPC64: unaligned Unsafe.getInt can lead to the generation of illegal instructions
+  - S8159244, PR3075: Partially initialized string object created by C2's string concat optimization may escape
+* Bug fixes
+  - PR2799, RH1195203: Files are missing from resources.jar
+  - PR2900: Don't use WithSeed versions of NSS functions as they don't fully process the seed
+* AArch64 port
+  - S8148328: aarch64: redundant lsr instructions in stub code.
+  - S8148783: aarch64: SEGV running SpecJBB2013
+  - S8148948: aarch64: generate_copy_longs calls align() incorrectly
+  - S8150045: arraycopy causes segfaults in SATB during garbage collection
+  - S8154537: AArch64: some integer rotate instructions are never emitted
+  - S8154739: AArch64: TemplateTable::fast_xaccess loads in wrong mode
+  - S8157906: aarch64: some more integer rotate instructions are never emitted
 
 New in release 2.6.6 (2016-04-21):
 
