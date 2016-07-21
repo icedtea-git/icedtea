@@ -1,0 +1,64 @@
+# HG changeset patch
+# User vlivanov
+# Date 1447818025 0
+#      Wed Nov 18 03:40:25 2015 +0000
+# Node ID cbdd812ea25e27919983c363fd416b492846e426
+# Parent  3b05ef40e997e8234f396a55cf238e9b01472f12
+8087218, PR2740: Constant fold loads from final instance fields in VM anonymous classes
+Reviewed-by: jrose, rbackman
+
+diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciField.cpp openjdk/hotspot/src/share/vm/ci/ciField.cpp
+--- openjdk.orig/hotspot/src/share/vm/ci/ciField.cpp	2016-05-12 21:03:31.000000000 +0100
++++ openjdk/hotspot/src/share/vm/ci/ciField.cpp	2016-07-21 03:29:23.922520659 +0100
+@@ -187,6 +187,10 @@
+   // Even if general trusting is disabled, trust system-built closures in these packages.
+   if (holder->is_in_package("java/lang/invoke") || holder->is_in_package("sun/invoke"))
+     return true;
++  // Trust VM anonymous classes. They are private API (sun.misc.Unsafe) and can't be serialized,
++  // so there is no hacking of finals going on with them.
++  if (holder->is_anonymous())
++    return true;
+   // Trust Atomic*FieldUpdaters: they are very important for performance, and make up one
+   // more reason not to use Unsafe, if their final fields are trusted. See more in JDK-8140483.
+   if (holder->name() == ciSymbol::java_util_concurrent_atomic_AtomicIntegerFieldUpdater_Impl() ||
+diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.cpp openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.cpp
+--- openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.cpp	2016-05-12 21:03:31.000000000 +0100
++++ openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.cpp	2016-07-21 03:29:04.678838046 +0100
+@@ -59,6 +59,7 @@
+   _nonstatic_field_size = ik->nonstatic_field_size();
+   _has_nonstatic_fields = ik->has_nonstatic_fields();
+   _has_default_methods = ik->has_default_methods();
++  _is_anonymous = ik->is_anonymous();
+   _nonstatic_fields = NULL; // initialized lazily by compute_nonstatic_fields:
+ 
+   _implementor = NULL; // we will fill these lazily
+@@ -101,6 +102,7 @@
+   _nonstatic_field_size = -1;
+   _has_nonstatic_fields = false;
+   _nonstatic_fields = NULL;
++  _is_anonymous = false;
+   _loader = loader;
+   _protection_domain = protection_domain;
+   _is_shared = false;
+diff -Nru openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.hpp openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.hpp
+--- openjdk.orig/hotspot/src/share/vm/ci/ciInstanceKlass.hpp	2016-05-12 21:03:31.000000000 +0100
++++ openjdk/hotspot/src/share/vm/ci/ciInstanceKlass.hpp	2016-07-21 03:29:04.678838046 +0100
+@@ -53,6 +53,7 @@
+   bool                   _has_subklass;
+   bool                   _has_nonstatic_fields;
+   bool                   _has_default_methods;
++  bool                   _is_anonymous;
+ 
+   ciFlags                _flags;
+   jint                   _nonstatic_field_size;
+@@ -177,6 +178,10 @@
+     return _has_default_methods;
+   }
+ 
++  bool is_anonymous() {
++    return _is_anonymous;
++  }
++
+   ciInstanceKlass* get_canonical_holder(int offset);
+   ciField* get_field_by_offset(int field_offset, bool is_static);
+   ciField* get_field_by_name(ciSymbol* name, ciSymbol* signature, bool is_static);

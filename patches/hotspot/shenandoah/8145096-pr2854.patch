@@ -1,0 +1,281 @@
+# HG changeset patch
+# User aph
+# Date 1459479993 -3600
+#      Fri Apr 01 04:06:33 2016 +0100
+# Node ID 5f2728295878fc80d8d14b4304abe9629e6893cd
+# Parent  2d14547e0dfb815e39edde22c092286a22d5b993
+8145096, PR2854: Undefined behaviour in HotSpot
+Summary: Fix some integer overflows
+Reviewed-by: jrose, kvn, kbarrett, adinn, iklam
+
+diff -r 2d14547e0dfb -r 5f2728295878 src/os/posix/vm/os_posix.cpp
+--- openjdk/hotspot/src/os/posix/vm/os_posix.cpp	Wed Mar 30 04:49:01 2016 +0100
++++ openjdk/hotspot/src/os/posix/vm/os_posix.cpp	Fri Apr 01 04:06:33 2016 +0100
+@@ -594,7 +594,11 @@
+   strncpy(buffer, "none", size);
+ 
+   const struct {
+-    int i;
++    // NB: i is an unsigned int here because SA_RESETHAND is on some
++    // systems 0x80000000, which is implicitly unsigned.  Assignining
++    // it to an int field would be an overflow in unsigned-to-signed
++    // conversion.
++    unsigned int i;
+     const char* s;
+   } flaginfo [] = {
+     { SA_NOCLDSTOP, "SA_NOCLDSTOP" },
+diff -r 2d14547e0dfb -r 5f2728295878 src/share/vm/opto/addnode.cpp
+--- openjdk/hotspot/src/share/vm/opto/addnode.cpp	Wed Mar 30 04:49:01 2016 +0100
++++ openjdk/hotspot/src/share/vm/opto/addnode.cpp	Fri Apr 01 04:06:33 2016 +0100
+@@ -344,8 +344,8 @@
+ const Type *AddINode::add_ring( const Type *t0, const Type *t1 ) const {
+   const TypeInt *r0 = t0->is_int(); // Handy access
+   const TypeInt *r1 = t1->is_int();
+-  int lo = r0->_lo + r1->_lo;
+-  int hi = r0->_hi + r1->_hi;
++  int lo = java_add(r0->_lo, r1->_lo);
++  int hi = java_add(r0->_hi, r1->_hi);
+   if( !(r0->is_con() && r1->is_con()) ) {
+     // Not both constants, compute approximate result
+     if( (r0->_lo & r1->_lo) < 0 && lo >= 0 ) {
+@@ -462,8 +462,8 @@
+ const Type *AddLNode::add_ring( const Type *t0, const Type *t1 ) const {
+   const TypeLong *r0 = t0->is_long(); // Handy access
+   const TypeLong *r1 = t1->is_long();
+-  jlong lo = r0->_lo + r1->_lo;
+-  jlong hi = r0->_hi + r1->_hi;
++  jlong lo = java_add(r0->_lo, r1->_lo);
++  jlong hi = java_add(r0->_hi, r1->_hi);
+   if( !(r0->is_con() && r1->is_con()) ) {
+     // Not both constants, compute approximate result
+     if( (r0->_lo & r1->_lo) < 0 && lo >= 0 ) {
+diff -r 2d14547e0dfb -r 5f2728295878 src/share/vm/opto/loopTransform.cpp
+--- openjdk/hotspot/src/share/vm/opto/loopTransform.cpp	Wed Mar 30 04:49:01 2016 +0100
++++ openjdk/hotspot/src/share/vm/opto/loopTransform.cpp	Fri Apr 01 04:06:33 2016 +0100
+@@ -1310,8 +1310,8 @@
+           limit = new (C) Opaque2Node( C, limit );
+           register_new_node( limit, opaq_ctrl );
+         }
+-        if (stride_con > 0 && ((limit_type->_lo - stride_con) < limit_type->_lo) ||
+-                   stride_con < 0 && ((limit_type->_hi - stride_con) > limit_type->_hi)) {
++        if (stride_con > 0 && (java_subtract(limit_type->_lo, stride_con) < limit_type->_lo) ||
++            stride_con < 0 && (java_subtract(limit_type->_hi, stride_con) > limit_type->_hi)) {
+           // No underflow.
+           new_limit = new (C) SubINode(limit, stride);
+         } else {
+diff -r 2d14547e0dfb -r 5f2728295878 src/share/vm/opto/mulnode.cpp
+--- openjdk/hotspot/src/share/vm/opto/mulnode.cpp	Wed Mar 30 04:49:01 2016 +0100
++++ openjdk/hotspot/src/share/vm/opto/mulnode.cpp	Fri Apr 01 04:06:33 2016 +0100
+@@ -244,13 +244,13 @@
+   double d = (double)hi1;
+ 
+   // Compute all endpoints & check for overflow
+-  int32 A = lo0*lo1;
++  int32 A = java_multiply(lo0, lo1);
+   if( (double)A != a*c ) return TypeInt::INT; // Overflow?
+-  int32 B = lo0*hi1;
++  int32 B = java_multiply(lo0, hi1);
+   if( (double)B != a*d ) return TypeInt::INT; // Overflow?
+-  int32 C = hi0*lo1;
++  int32 C = java_multiply(hi0, lo1);
+   if( (double)C != b*c ) return TypeInt::INT; // Overflow?
+-  int32 D = hi0*hi1;
++  int32 D = java_multiply(hi0, hi1);
+   if( (double)D != b*d ) return TypeInt::INT; // Overflow?
+ 
+   if( A < B ) { lo0 = A; hi0 = B; } // Sort range endpoints
+@@ -340,13 +340,13 @@
+   double d = (double)hi1;
+ 
+   // Compute all endpoints & check for overflow
+-  jlong A = lo0*lo1;
++  jlong A = java_multiply(lo0, lo1);
+   if( (double)A != a*c ) return TypeLong::LONG; // Overflow?
+-  jlong B = lo0*hi1;
++  jlong B = java_multiply(lo0, hi1);
+   if( (double)B != a*d ) return TypeLong::LONG; // Overflow?
+-  jlong C = hi0*lo1;
++  jlong C = java_multiply(hi0, lo1);
+   if( (double)C != b*c ) return TypeLong::LONG; // Overflow?
+-  jlong D = hi0*hi1;
++  jlong D = java_multiply(hi0, hi1);
+   if( (double)D != b*d ) return TypeLong::LONG; // Overflow?
+ 
+   if( A < B ) { lo0 = A; hi0 = B; } // Sort range endpoints
+@@ -573,7 +573,8 @@
+     // Masking off high bits which are always zero is useless.
+     const TypeLong* t1 = phase->type( in(1) )->isa_long();
+     if (t1 != NULL && t1->_lo >= 0) {
+-      jlong t1_support = ((jlong)1 << (1 + log2_long(t1->_hi))) - 1;
++      int bit_count = log2_long(t1->_hi) + 1;
++      jlong t1_support = jlong(max_julong >> (BitsPerJavaLong - bit_count));
+       if ((t1_support & con) == t1_support)
+         return usr;
+     }
+@@ -801,7 +802,7 @@
+ 
+   // Check for ((x & ((CONST64(1)<<(64-c0))-1)) << c0) which ANDs off high bits
+   // before shifting them away.
+-  const jlong bits_mask = ((jlong)CONST64(1) << (jlong)(BitsPerJavaLong - con)) - CONST64(1);
++  const jlong bits_mask = jlong(max_julong >> con);
+   if( add1_op == Op_AndL &&
+       phase->type(add1->in(2)) == TypeLong::make( bits_mask ) )
+     return new (phase->C) LShiftLNode( add1->in(1), in(2) );
+@@ -1253,7 +1254,7 @@
+   if ( con == 0 ) return NULL;  // let Identity() handle a 0 shift count
+                               // note: mask computation below does not work for 0 shift count
+   // We'll be wanting the right-shift amount as a mask of that many bits
+-  const jlong mask = (((jlong)CONST64(1) << (jlong)(BitsPerJavaLong - con)) -1);
++  const jlong mask = jlong(max_julong >> con);
+ 
+   // Check for ((x << z) + Y) >>> z.  Replace with x + con>>>z
+   // The idiom for rounding to a power of 2 is "(Q+(2^z-1)) >>> z".
+diff -r 2d14547e0dfb -r 5f2728295878 src/share/vm/opto/subnode.cpp
+--- openjdk/hotspot/src/share/vm/opto/subnode.cpp	Wed Mar 30 04:49:01 2016 +0100
++++ openjdk/hotspot/src/share/vm/opto/subnode.cpp	Fri Apr 01 04:06:33 2016 +0100
+@@ -252,8 +252,8 @@
+ const Type *SubINode::sub( const Type *t1, const Type *t2 ) const {
+   const TypeInt *r0 = t1->is_int(); // Handy access
+   const TypeInt *r1 = t2->is_int();
+-  int32 lo = r0->_lo - r1->_hi;
+-  int32 hi = r0->_hi - r1->_lo;
++  int32 lo = java_subtract(r0->_lo, r1->_hi);
++  int32 hi = java_subtract(r0->_hi, r1->_lo);
+ 
+   // We next check for 32-bit overflow.
+   // If that happens, we just assume all integers are possible.
+@@ -361,8 +361,8 @@
+ const Type *SubLNode::sub( const Type *t1, const Type *t2 ) const {
+   const TypeLong *r0 = t1->is_long(); // Handy access
+   const TypeLong *r1 = t2->is_long();
+-  jlong lo = r0->_lo - r1->_hi;
+-  jlong hi = r0->_hi - r1->_lo;
++  jlong lo = java_subtract(r0->_lo, r1->_hi);
++  jlong hi = java_subtract(r0->_hi, r1->_lo);
+ 
+   // We next check for 32-bit overflow.
+   // If that happens, we just assume all integers are possible.
+diff -r 2d14547e0dfb -r 5f2728295878 src/share/vm/opto/type.cpp
+--- openjdk/hotspot/src/share/vm/opto/type.cpp	Wed Mar 30 04:49:01 2016 +0100
++++ openjdk/hotspot/src/share/vm/opto/type.cpp	Fri Apr 01 04:06:33 2016 +0100
+@@ -1317,8 +1317,8 @@
+ 
+   // The new type narrows the old type, so look for a "death march".
+   // See comments on PhaseTransform::saturate.
+-  juint nrange = _hi - _lo;
+-  juint orange = ohi - olo;
++  juint nrange = (juint)_hi - _lo;
++  juint orange = (juint)ohi - olo;
+   if (nrange < max_juint - 1 && nrange > (orange >> 1) + (SMALLINT*2)) {
+     // Use the new type only if the range shrinks a lot.
+     // We do not want the optimizer computing 2^31 point by point.
+@@ -1351,7 +1351,7 @@
+ //------------------------------hash-------------------------------------------
+ // Type-specific hashing function.
+ int TypeInt::hash(void) const {
+-  return _lo+_hi+_widen+(int)Type::Int;
++  return java_add(java_add(_lo, _hi), java_add(_widen, (int)Type::Int));
+ }
+ 
+ //------------------------------is_finite--------------------------------------
+@@ -1532,7 +1532,7 @@
+         // If neither endpoint is extremal yet, push out the endpoint
+         // which is closer to its respective limit.
+         if (_lo >= 0 ||                 // easy common case
+-            (julong)(_lo - min) >= (julong)(max - _hi)) {
++            ((julong)_lo - min) >= ((julong)max - _hi)) {
+           // Try to widen to an unsigned range type of 32/63 bits:
+           if (max >= max_juint && _hi < max_juint)
+             return make(_lo, max_juint, WidenMax);
+@@ -2296,7 +2296,7 @@
+ //------------------------------hash-------------------------------------------
+ // Type-specific hashing function.
+ int TypePtr::hash(void) const {
+-  return _ptr + _offset;
++  return java_add(_ptr, _offset);
+ }
+ 
+ //------------------------------dump2------------------------------------------
+@@ -2877,12 +2877,9 @@
+ // Type-specific hashing function.
+ int TypeOopPtr::hash(void) const {
+   return
+-    (const_oop() ? const_oop()->hash() : 0) +
+-    _klass_is_exact +
+-    _instance_id +
+-    hash_speculative() +
+-    _inline_depth +
+-    TypePtr::hash();
++    java_add(java_add(const_oop() ? const_oop()->hash() : 0, _klass_is_exact),
++             java_add(_instance_id, java_add(hash_speculative(),
++                                             java_add(_inline_depth, TypePtr::hash()))));
+ }
+ 
+ //------------------------------dump2------------------------------------------
+@@ -3608,7 +3605,7 @@
+ //------------------------------hash-------------------------------------------
+ // Type-specific hashing function.
+ int TypeInstPtr::hash(void) const {
+-  int hash = klass()->hash() + TypeOopPtr::hash();
++  int hash = java_add(klass()->hash(), TypeOopPtr::hash());
+   return hash;
+ }
+ 
+@@ -4503,7 +4500,7 @@
+ //------------------------------hash-------------------------------------------
+ // Type-specific hashing function.
+ int TypeKlassPtr::hash(void) const {
+-  return klass()->hash() + TypePtr::hash();
++  return java_add(klass()->hash(), TypePtr::hash());
+ }
+ 
+ //------------------------------singleton--------------------------------------
+diff -r 2d14547e0dfb -r 5f2728295878 src/share/vm/runtime/advancedThresholdPolicy.cpp
+--- openjdk/hotspot/src/share/vm/runtime/advancedThresholdPolicy.cpp	Wed Mar 30 04:49:01 2016 +0100
++++ openjdk/hotspot/src/share/vm/runtime/advancedThresholdPolicy.cpp	Fri Apr 01 04:06:33 2016 +0100
+@@ -131,7 +131,8 @@
+ }
+ 
+ double AdvancedThresholdPolicy::weight(Method* method) {
+-  return (method->rate() + 1) * ((method->invocation_count() + 1) *  (method->backedge_count() + 1));
++  return (double)(method->rate() + 1) *
++    (method->invocation_count() + 1) * (method->backedge_count() + 1);
+ }
+ 
+ // Apply heuristics and return true if x should be compiled before y
+diff -r 2d14547e0dfb -r 5f2728295878 src/share/vm/utilities/globalDefinitions.hpp
+--- openjdk/hotspot/src/share/vm/utilities/globalDefinitions.hpp	Wed Mar 30 04:49:01 2016 +0100
++++ openjdk/hotspot/src/share/vm/utilities/globalDefinitions.hpp	Fri Apr 01 04:06:33 2016 +0100
+@@ -1405,6 +1405,32 @@
+ 
+ #define ARRAY_SIZE(array) (sizeof(array)/sizeof((array)[0]))
+ 
++//----------------------------------------------------------------------------------------------------
++// Sum and product which can never overflow: they wrap, just like the
++// Java operations.  Note that we don't intend these to be used for
++// general-purpose arithmetic: their purpose is to emulate Java
++// operations.
++
++// The goal of this code to avoid undefined or implementation-defined
++// behaviour.  The use of an lvalue to reference cast is explicitly
++// permitted by Lvalues and rvalues [basic.lval].  [Section 3.10 Para
++// 15 in C++03]
++#define JAVA_INTEGER_OP(OP, NAME, TYPE, UNSIGNED_TYPE)  \
++inline TYPE NAME (TYPE in1, TYPE in2) {                 \
++  UNSIGNED_TYPE ures = static_cast<UNSIGNED_TYPE>(in1); \
++  ures OP ## = static_cast<UNSIGNED_TYPE>(in2);         \
++  return reinterpret_cast<TYPE&>(ures);                 \
++}
++
++JAVA_INTEGER_OP(+, java_add, jint, juint)
++JAVA_INTEGER_OP(-, java_subtract, jint, juint)
++JAVA_INTEGER_OP(*, java_multiply, jint, juint)
++JAVA_INTEGER_OP(+, java_add, jlong, julong)
++JAVA_INTEGER_OP(-, java_subtract, jlong, julong)
++JAVA_INTEGER_OP(*, java_multiply, jlong, julong)
++
++#undef JAVA_INTEGER_OP
++
+ // Dereference vptr
+ // All C++ compilers that we know of have the vtbl pointer in the first
+ // word.  If there are exceptions, this function needs to be made compiler

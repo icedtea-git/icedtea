@@ -337,6 +337,28 @@ ICEDTEA_PATCHES = \
 
 # Conditional patches
 
+if WITH_ALT_HSBUILD
+ICEDTEA_PATCHES += \
+	patches/hotspot/shenandoah/6425769-pr2859.patch \
+	patches/hotspot/shenandoah/8038392-rh1064383.patch \
+	patches/hotspot/shenandoah/8041658.patch \
+	patches/hotspot/shenandoah/8087218-pr2740.patch \
+	patches/hotspot/shenandoah/8145096-pr2854.patch \
+	patches/hotspot/shenandoah/8148752-pr2943.patch \
+	patches/hotspot/shenandoah/8154210.patch \
+	patches/hotspot/shenandoah/8158260-pr2991-rh1341258.patch \
+	patches/hotspot/shenandoah/8159244-pr3074.patch \
+	patches/hotspot/shenandoah/crash_dump.patch \
+	patches/hotspot/shenandoah/no_devirt.patch \
+	patches/hotspot/shenandoah/pr1368.patch \
+	patches/hotspot/shenandoah/pr1748.patch \
+	patches/hotspot/shenandoah/pr1869.patch \
+	patches/hotspot/shenandoah/pr1942.patch \
+	patches/hotspot/shenandoah/pr1975.patch \
+	patches/hotspot/shenandoah/pr2777.patch \
+	patches/hotspot/shenandoah/werror.patch
+endif
+
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch

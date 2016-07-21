@@ -12,6 +12,11 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.1.0 (2016-05-XX):
 
+* New features
+  - S8145547, PR1061: [AWT/Swing] Conditional support for GTK 3 on Linux
+  - PR2821: Support building OpenJDK with --disable-headful
+  - PR2931, G478960: Provide Infinality Support via fontconfig
+  - PR3079: Provide option to build Shenandoah on x86_64
 * Import of OpenJDK 8 u92 build 14
   - S6869327: Add new C2 flag to keep safepoints in counted loops.
   - S8022865: [TESTBUG] Compressed Oops testing needs to be revised
@@ -167,7 +172,6 @@ New in release 3.1.0 (2016-05-XX):
   - S8137571, PR1061: Linux HiDPI Graphics support
   - S8142406, PR1061: [TEST] MultiResolution image: need test to cover the case when @2x image is corrupted
   - S8145188, PR2945: No LocalVariableTable generated for the entire JDK
-  - S8145547, PR1061: [AWT/Swing] Conditional support for GTK 3 on Linux
   - S8150258, PR1061: [TEST] HiDPI: create a test for multiresolution menu items icons
   - S8150724, PR1061: [TEST] HiDPI: create a test for multiresolution icons
   - S8150844, PR1061: [hidpi] [macosx] -Dsun.java2d.uiScale should be taken into account for OS X
@@ -180,9 +184,7 @@ New in release 3.1.0 (2016-05-XX):
   - S8159690, PR3077: [TESTBUG] Mark headful tests with @key headful.
 * Bug fixes
   - PR1958: GTKLookAndFeel does not honor gtk-alternative-button-order
-  - PR2821: Support building OpenJDK with --disable-headful
   - PR2822: Feed LIBS & CFLAGS into configure rather than make to avoid re-discovery by OpenJDK configure
-  - PR2931, G478960: Provide Infinality Support via fontconfig
   - PR2932: Support ccache in a non-automagic manner
   - PR2964: Set system defaults based on OS
   - PR2974: PKCS#10 certificate requests now use CRLF line endings rather than system line endings

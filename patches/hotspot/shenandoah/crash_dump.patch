@@ -1,0 +1,65 @@
+# HG changeset patch
+# User andrew
+# Date 1273843189 -3600
+#      Fri May 14 14:19:49 2010 +0100
+# Node ID 468593ef6b33c2adc6a8f1ddd3b642b62faafcb2
+# Parent  e431f9da7dc99624f01c0d57d2b4e89d4a778010
+Include DERIVATIVE_ID and DISTRIBUTION_ID in crash dump.  Use IcedTea bug URL.
+
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make/linux/makefiles/vm.make
+--- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2016-05-12 21:03:31.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/vm.make	2016-07-21 03:41:10.642865322 +0100
+@@ -90,6 +90,14 @@
+ BUILD_USER    = -DHOTSPOT_BUILD_USER="\"$(HOTSPOT_BUILD_USER)\""
+ VM_DISTRO     = -DHOTSPOT_VM_DISTRO="\"$(HOTSPOT_VM_DISTRO)\""
+ 
++ifdef DERIVATIVE_ID
++CPPFLAGS += -DDERIVATIVE_ID="\"$(DERIVATIVE_ID)\""
++endif
++
++ifdef DISTRIBUTION_ID
++CPPFLAGS += -DDISTRIBUTION_ID="\"$(DISTRIBUTION_ID)\""
++endif
++
+ CXXFLAGS =           \
+   ${SYSDEFS}         \
+   ${INCLUDES}        \
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspot/src/share/vm/runtime/arguments.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2016-05-12 21:03:31.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2016-07-21 03:39:33.780462719 +0100
+@@ -67,7 +67,7 @@
+ #endif // INCLUDE_ALL_GCS
+ 
+ // Note: This is a special bug reporting site for the JVM
+-#define DEFAULT_VENDOR_URL_BUG "http://bugreport.java.com/bugreport/crash.jsp"
++#define DEFAULT_VENDOR_URL_BUG "http://icedtea.classpath.org/bugzilla"
+ #define DEFAULT_JAVA_LAUNCHER  "generic"
+ 
+ // Disable options not supported in this release, with a warning if they
+diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/share/vm/utilities/vmError.cpp
+--- openjdk.orig/hotspot/src/share/vm/utilities/vmError.cpp	2016-05-12 21:03:31.000000000 +0100
++++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2016-07-21 03:39:14.800775724 +0100
+@@ -197,7 +197,8 @@
+ 
+ static void print_bug_submit_message(outputStream *out, Thread *thread) {
+   if (out == NULL) return;
+-  out->print_raw_cr("# If you would like to submit a bug report, please visit:");
++  out->print_raw_cr("# If you would like to submit a bug report, please include");
++  out->print_raw_cr("# instructions on how to reproduce the bug and visit:");
+   out->print_raw   ("#   ");
+   out->print_raw_cr(Arguments::java_vendor_url_bug());
+   // If the crash is in native code, encourage user to submit a bug to the
+@@ -470,6 +471,13 @@
+                    UseCompressedOops ? "compressed oops" : ""
+                  );
+ 
++#ifdef DERIVATIVE_ID
++     st->print_cr("# Derivative: %s", DERIVATIVE_ID);
++#endif
++#ifdef DISTRIBUTION_ID
++     st->print_cr("# Distribution: %s", DISTRIBUTION_ID);
++#endif
++
+   STEP(60, "(printing problematic frame)")
+ 
+      // Print current frame if we have a context (i.e. it's a crash)

@@ -607,7 +607,7 @@ AC_DEFUN_ONCE([IT_ENABLE_ZERO_BUILD],
   AC_REQUIRE([IT_ENABLE_CACAO])
   AC_REQUIRE([IT_ENABLE_JAMVM])
   AC_REQUIRE([IT_ENABLE_SHARK])
-  AC_REQUIRE([IT_HAS_NATIVE_HOTSPOT_PORT])
+  AC_REQUIRE([IT_ARCH_HAS_NATIVE_HOTSPOT_PORT])
   AC_MSG_CHECKING([whether to use the zero-assembler port])
   use_zero=no
   AC_ARG_ENABLE([zero],
@@ -827,7 +827,7 @@ AC_DEFUN([IT_WITH_VERSION_SUFFIX],
   AC_SUBST(VERSION_SUFFIX, $version_suffix)
 ])
 
-AC_DEFUN([IT_WITH_HOTSPOT_BUILD],
+AC_DEFUN_ONCE([IT_WITH_HOTSPOT_BUILD],
 [
   DEFAULT_BUILD="default"
   AC_MSG_CHECKING([which HotSpot build to use])
@@ -2027,9 +2027,9 @@ AC_DEFUN_ONCE([IT_ENABLE_INFINALITY],
   fi
 ])
 
-AC_DEFUN_ONCE([IT_HAS_NATIVE_HOTSPOT_PORT],
+AC_DEFUN_ONCE([IT_ARCH_HAS_NATIVE_HOTSPOT_PORT],
 [
-  AC_MSG_CHECKING([if a native HotSpot port is available for this architecture])
+  AC_MSG_CHECKING([if a native HotSpot port is available for ${host_cpu}])
   has_native_hotspot_port=yes;
   case "${host_cpu}" in
     aarch64) ;;
@@ -2464,3 +2464,19 @@ AC_DEFUN_ONCE([IT_ENABLE_CCACHE],
   AC_SUBST(NO_CCACHE_PATH)
 ])
 
+AC_DEFUN_ONCE([IT_HSBUILD_WORKS_ON_THIS_ARCH],
+[
+  AC_REQUIRE([IT_WITH_HOTSPOT_BUILD])
+  AC_MSG_CHECKING([if HotSpot build ${HSBUILD} works on ${host_cpu}])
+  has_working_hotspot=yes;
+  if test "x${HSBUILD}" = "xshenandoah"; then
+    case "${host_cpu}" in
+      x86_64) ;;
+      *) has_working_hotspot=no ;
+    esac
+  fi
+  AC_MSG_RESULT([$has_working_hotspot])
+  if test "x$has_working_hotspot" = "xno"; then
+    AC_MSG_ERROR([${HSBUILD} is not supported on this platform.])
+  fi
+])

@@ -1,0 +1,80 @@
+# HG changeset patch
+# User andrew
+# Date 1408661670 -3600
+#      Thu Aug 21 23:54:30 2014 +0100
+# Node ID 877471da7fbbe69d029b990b77a70e7fcf3d02ed
+# Parent  22d29c372fc4271930e4169a66818f67e27cf6e8
+PR1942: Bug reports lack IcedTea version & distribution packaging information
+
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/buildtree.make openjdk/hotspot/make/linux/makefiles/buildtree.make
+--- openjdk.orig/hotspot/make/linux/makefiles/buildtree.make	2016-05-12 21:03:31.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/buildtree.make	2016-07-21 04:02:40.321948126 +0100
+@@ -221,6 +221,8 @@
+ 	echo "SA_BUILD_VERSION = $(HS_BUILD_VER)"; \
+ 	echo "HOTSPOT_BUILD_USER = $(HOTSPOT_BUILD_USER)"; \
+ 	echo "HOTSPOT_VM_DISTRO = $(HOTSPOT_VM_DISTRO)"; \
++	echo "DERIVATIVE_ID = $(DERIVATIVE_ID)"; \
++	echo "DISTRIBUTION_ID = $(DISTRIBUTION_ID)"; \
+ 	echo "OPENJDK = $(OPENJDK)"; \
+ 	echo "$(LP64_SETTING/$(DATA_MODE))"; \
+ 	echo; \
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make/linux/makefiles/vm.make
+--- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2016-07-21 03:58:43.517786089 +0100
++++ openjdk/hotspot/make/linux/makefiles/vm.make	2016-07-21 04:03:18.853320721 +0100
+@@ -91,11 +91,11 @@
+ VM_DISTRO     = -DHOTSPOT_VM_DISTRO="\"$(HOTSPOT_VM_DISTRO)\""
+ 
+ ifdef DERIVATIVE_ID
+-CPPFLAGS += -DDERIVATIVE_ID="\"$(DERIVATIVE_ID)\""
++CXXFLAGS += -DDERIVATIVE_ID="\"$(DERIVATIVE_ID)\""
+ endif
+ 
+ ifdef DISTRIBUTION_ID
+-CPPFLAGS += -DDISTRIBUTION_ID="\"$(DISTRIBUTION_ID)\""
++CXXFLAGS += -DDISTRIBUTION_ID="\"$(DISTRIBUTION_ID)\""
+ endif
+ 
+ CXXFLAGS =           \
+diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/vm.make openjdk/hotspot/make/solaris/makefiles/vm.make
+--- openjdk.orig/hotspot/make/solaris/makefiles/vm.make	2016-07-21 03:58:43.973778706 +0100
++++ openjdk/hotspot/make/solaris/makefiles/vm.make	2016-07-21 04:04:14.804409599 +0100
+@@ -85,6 +85,10 @@
+   ${HS_LIB_ARCH}     \
+   ${VM_DISTRO}
+ 
++ifdef DERIVATIVE_ID
++CXXFLAGS += -DDERIVATIVE_ID="\"$(DERIVATIVE_ID)\""
++endif
++
+ # This is VERY important! The version define must only be supplied to vm_version.o
+ # If not, ccache will not re-use the cache at all, since the version string might contain
+ # a time and date.
+@@ -100,6 +104,10 @@
+ CXXFLAGS/ostream.o += -D_FILE_OFFSET_BITS=64
+ endif # ifneq ($(LP64), 1)
+ 
++ifdef DISTRIBUTION_ID
++CXXFLAGS += -DDISTRIBUTION_ID="\"$(DISTRIBUTION_ID)\""
++endif
++
+ # CFLAGS_WARN holds compiler options to suppress/enable warnings.
+ CFLAGS += $(CFLAGS_WARN)
+ 
+diff -Nru openjdk.orig/hotspot/make/windows/makefiles/vm.make openjdk/hotspot/make/windows/makefiles/vm.make
+--- openjdk.orig/hotspot/make/windows/makefiles/vm.make	2016-05-12 21:03:31.000000000 +0100
++++ openjdk/hotspot/make/windows/makefiles/vm.make	2016-07-21 04:04:46.347895899 +0100
+@@ -67,6 +67,14 @@
+ # Define that so jni.h is on correct side
+ CXX_FLAGS=$(CXX_FLAGS) /D "_JNI_IMPLEMENTATION_"
+ 
++!ifdef DERIVATIVE_ID
++CXX_FLAGS = $(CPP_FLAGS) /D "DERIVATIVE_ID=\"$(DERIVATIVE_ID)\""
++!endif
++ 
++!ifdef DISTRIBUTION_ID
++CXX_FLAGS = $(CPP_FLAGS) /D "DISTRIBUTION_ID=\"$(DISTRIBUTION_ID)\""
++!endif
++
+ !if "$(BUILDARCH)" == "ia64"
+ STACK_SIZE="/STACK:1048576,262144"
+ !else

@@ -344,8 +344,13 @@ can be specified using --with-hotspot-src-zip.  This skips the
 download stage and just verifies that the zip's MD5 sum matches that
 of the requested build.
 
-Currently, IcedTea7 only supports the 'original' HotSpot provided as
-part of the upstream IcedTea forest.
+Currently, IcedTea 3.x supports the 'default' HotSpot tree, which is
+part of the IcedTea forest for the particular minor release series
+being used, and the 'shenandoah' HotSpot tree, which provides a
+backport of Shenandoah (http://openjdk.java.net/projects/shenandoah/)
+to OpenJDK 8 and is taken from:
+
+http://hg.openjdk.java.net/aarch64-port/jdk8u-shenandoah/hotspot
 
 Building Additional Virtual Machines
 ====================================

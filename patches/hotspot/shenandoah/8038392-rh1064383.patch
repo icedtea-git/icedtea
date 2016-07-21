@@ -1,0 +1,79 @@
+# HG changeset patch
+# User andrew
+# Date 1400254787 -3600
+#      Fri May 16 16:39:47 2014 +0100
+# Node ID c2767d7216058484f87920557a3f9282506e5ce5
+# Parent  2b4f89de39c2c4fd09f927adacb3781454dbee44
+8038392: Generating prelink cache breaks JAVA 'jinfo' utility normal behavior
+Summary: See RH1064383 (https://bugzilla.redhat.com/show_bug.cgi?id=1064383)
+Contributed-by: Carlos Santos <casantos@redhat.com>
+
+diff -r 2b4f89de39c2 -r c2767d721605 agent/src/os/linux/ps_proc.c
+--- openjdk/hotspot/agent/src/os/linux/ps_proc.c	Thu Apr 24 16:21:06 2014 +0100
++++ openjdk/hotspot/agent/src/os/linux/ps_proc.c	Fri May 16 16:39:47 2014 +0100
+@@ -263,7 +263,7 @@
+ 
+ static bool read_lib_info(struct ps_prochandle* ph) {
+   char fname[32];
+-  char buf[256];
++  char buf[PATH_MAX];
+   FILE *fp = NULL;
+ 
+   sprintf(fname, "/proc/%d/maps", ph->pid);
+@@ -273,10 +273,52 @@
+     return false;
+   }
+ 
+-  while(fgets_no_cr(buf, 256, fp)){
+-    char * word[6];
+-    int nwords = split_n_str(buf, 6, word, ' ', '\0');
+-    if (nwords > 5 && find_lib(ph, word[5]) == false) {
++  while(fgets_no_cr(buf, PATH_MAX, fp)){
++    char * word[7];
++    int nwords = split_n_str(buf, 7, word, ' ', '\0');
++
++    if (nwords < 6) {
++      // not a shared library entry. ignore.
++      continue;
++    }
++
++    if (word[5][0] == '[') {
++        // not a shared library entry. ignore.
++      if (strncmp(word[5],"[stack",6) == 0) {
++        continue;
++      }
++      if (strncmp(word[5],"[heap]",6) == 0) {
++        continue;
++      }
++
++      // SA don't handle VDSO
++      if (strncmp(word[5],"[vdso]",6) == 0) {
++        continue;
++      }
++      if (strncmp(word[5],"[vsyscall]",6) == 0) {
++        continue;
++      }
++    }
++
++    if (nwords > 6) {
++      // prelink altered mapfile when the program is running.
++      // Entries like one below have to be skipped
++      //  /lib64/libc-2.15.so (deleted)
++      // SO name in entries like one below have to be stripped.
++      //  /lib64/libpthread-2.15.so.#prelink#.EECVts
++      char *s = strstr(word[5],".#prelink#");
++      if (s == NULL) {
++        // No prelink keyword. skip deleted library
++        print_debug("skip shared object %s deleted by prelink\n", word[5]);
++        continue;
++      }
++
++      // Fall through
++      print_debug("rectifing shared object name %s changed by prelink\n", word[5]);
++      *s = 0;
++    }
++
++    if (find_lib(ph, word[5]) == false) {
+        intptr_t base;
+        lib_info* lib;
+ #ifdef _LP64

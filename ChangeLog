@@ -1,3 +1,57 @@
+2016-07-21  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR3079: Provide option to build Shenandoah on x86_64
+	* INSTALL: Mention Shenandoah under HotSpot builds.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add IcedTea HotSpot patches
+	for use in alt-HotSpot (i.e. Shenandoah) builds.
+	* NEWS: Updated. Move this and other new features
+	to the top under "New features".
+	* acinclude.m4:
+	(IT_ENABLE_ZERO_BUILD): Fix name of native port
+	macro.
+	(IT_WITH_HOTSPOT_BUILD): Make DEFUN_ONCE.
+	(IT_ARCH_HAS_NATIVE_HOTSPOT_PORT): Use clearer
+	name. Use host_cpu in configure output so it's clear
+	what value is being checked.
+	(IT_HSBUILD_WORKS_ON_THIS_ARCH): Check that HSBUILD
+	is applicable to the architecture being used.
+	At present, this stops Shenandoah being built on
+	anything but x86_64.
+	* configure.ac: Invoke IT_HSBUILD_WORKS_ON_THIS_ARCH
+	rather than IT_WITH_HOTSPOT_BUILD (now a dependency
+	of that macro).
+	* hotspot.map.in: Add Shenandoah drop, taken from
+	aarch64-shenandoah-jdk8u92-b14 in
+	aarch64-port/jdk8u-shenandoah.
+	* patches/hotspot/shenandoah/6425769-pr2859.patch,
+	* patches/hotspot/shenandoah/8038392-rh1064383.patch,
+	* patches/hotspot/shenandoah/8041658.patch,
+	* patches/hotspot/shenandoah/8087218-pr2740.patch,
+	* patches/hotspot/shenandoah/8145096-pr2854.patch,
+	* patches/hotspot/shenandoah/8148752-pr2943.patch,
+	* patches/hotspot/shenandoah/8154210.patch,
+	* patches/hotspot/shenandoah/8158260-pr2991-rh1341258.patch,
+	* patches/hotspot/shenandoah/8159244-pr3074.patch,
+	* patches/hotspot/shenandoah/crash_dump.patch,
+	* patches/hotspot/shenandoah/no_devirt.patch,
+	* patches/hotspot/shenandoah/pr1368.patch,
+	* patches/hotspot/shenandoah/pr1748.patch,
+	* patches/hotspot/shenandoah/pr1869.patch,
+	* patches/hotspot/shenandoah/pr1942.patch,
+	* patches/hotspot/shenandoah/pr1975.patch,
+	* patches/hotspot/shenandoah/pr2777.patch,
+	* patches/hotspot/shenandoah/werror.patch:
+	Patches applied to the main IcedTea HotSpot tree
+	which need to also be applied to any alternate HotSpot
+	being built.
+	* scripts/create_tarballs.sh:
+	Add script used to create drop tarballs, most recently
+	the Shenandoah one.
+	* scripts/gen_changeset_and_sha256sums.sh:
+	Update to latest version which handles HotSpot-only
+	drop creation.
+
 2016-07-17  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR3096: Remove dead
