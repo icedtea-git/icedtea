@@ -1,5 +1,16 @@
 2016-07-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
+	PR3103: Handle case in clean-fonts where
+	linux.fontconfig.Gentoo.properties.old has
+	not been created
+	* Makefile.am:
+	(clean-fonts): Guard movement of old
+	Gentoo.properties.old file with a
+	check to see if it exists.
+	* NEWS: Updated.
+
+2016-07-20  Andrew John Hughes  <gnu.andrew@redhat.com>
+
 	PR3091: SystemTap is heavily confused
 	by multiple JDKs
 	* AUTHORS: Added Felix Lu.

@@ -1642,7 +1642,9 @@ stamps/fonts.stamp: stamps/extract.stamp
 
 clean-fonts:
 	rm -f $(FONTCONFIG_PATH)/linux.fontconfig.Gentoo.properties
-	mv $(FONTCONFIG_PATH)/linux.fontconfig.Gentoo.properties{.old,}
+	if [ -e $(FONTCONFIG_PATH)/linux.fontconfig.Gentoo.properties.old ] ; then \
+	  mv $(FONTCONFIG_PATH)/linux.fontconfig.Gentoo.properties{.old,} ; \
+	fi
 	rm -f stamps/fonts.stamp
 
 stamps/patch-fsg.stamp: stamps/extract.stamp stamps/fonts.stamp
