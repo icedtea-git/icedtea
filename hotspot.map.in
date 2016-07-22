@@ -1,3 +1,3 @@
 # version url changeset md5sum
-default drop http://icedtea.classpath.org/download/drops/icedtea8/@ICEDTEA_RELEASE@ ea6933324a7a 2fe149bb8b212f973c013bae36fcc6b589f88b3fb0886c48ef3921f85e216a78
+default drop http://icedtea.classpath.org/download/drops/icedtea8/@ICEDTEA_RELEASE@ 0f47eef348e2 e41072fdf970b226267d3be19189ea980aeeffc5c3e34574bb5980af603cdd9f
 shenandoah drop http://icedtea.classpath.org/download/drops/icedtea8/@ICEDTEA_RELEASE@ ec2e71f375b1 3a4579daab230b7cf8f05074a686e3a4a76184d87d6bc277d735543ad683b38e

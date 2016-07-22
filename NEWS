@@ -119,6 +119,10 @@ New in release 3.1.0 (2016-05-XX):
   - S8014212, PR2866: Robot captures black screen
   - S8029339, PR1061: Custom MultiResolution image support on HiDPI displays
   - S8031145, PR3077: Re-examine closed i18n tests to see it they can be moved to the jdk repository.
+  - S8034856, PR3095: gcc warnings compiling src/solaris/native/sun/security/pkcs11
+  - S8034857, PR3095: gcc warnings compiling src/solaris/native/sun/management
+  - S8035054, PR3095: JarFacade.c should not include ctype.h
+  - S8035287, PR3095: gcc warnings compiling various libraries files
   - S8038631, PR3077: Create wrapper for awt.Robot with additional functionality
   - S8039279, PR3077: Move awt tests to openjdk repository
   - S8041561, PR3077: Inconsistent opacity behaviour between JCheckBox and JRadioButton
@@ -182,15 +186,19 @@ New in release 3.1.0 (2016-05-XX):
   - S8158260, PR2991, RH1341258: PPC64: unaligned Unsafe.getInt can lead to the generation of illegal instructions
   - S8159244, PR3074: Partially initialized string object created by C2's string concat optimization may escape
   - S8159690, PR3077: [TESTBUG] Mark headful tests with @key headful.
+  - S8160294, PR2882, PR3095: Some client libraries cannot be built with GCC 6
 * Bug fixes
   - PR1958: GTKLookAndFeel does not honor gtk-alternative-button-order
   - PR2822: Feed LIBS & CFLAGS into configure rather than make to avoid re-discovery by OpenJDK configure
   - PR2932: Support ccache in a non-automagic manner
+  - PR2933: Support ccache 3.2 and later
   - PR2964: Set system defaults based on OS
   - PR2974: PKCS#10 certificate requests now use CRLF line endings rather than system line endings
+  - PR3078: Remove duplicated line dating back to 6788347 and 6894807
   - PR3083, RH1346460: Regression in SSL debug output without an ECC provider
   - PR3089: Remove old memory limits patch
   - PR3090: SystemTap is heavily confused by multiple JDKs
+  - PR3095: Fix warnings in URLClassPath.c
   - PR3096: Remove dead --disable-optimizations option
 * AArch64 port
   - S8145320, PR3078: Create unsafe_arraycopy and generic_arraycopy for AArch64
@@ -226,6 +234,7 @@ New in release 3.1.0 (2016-05-XX):
   - S8158913, PR3078: aarch64: SEGV running Spark terasort
   - S8159052, PR3078: aarch64: optimise unaligned copies in pd_disjoint_words and pd_conjoint_words
   - S8159063, PR3078: aarch64: optimise unaligned array copy long
+  - PR3078: Cleanup remaining differences from aarch64/jdk8u tree
 
 New in release 3.0.1 (2016-04-23):
 
