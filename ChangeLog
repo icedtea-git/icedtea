@@ -1,3 +1,31 @@
+2016-07-22  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3105: Use version from hotspot.map to
+	create tarball filename
+	* Makefile.am:
+	(NASHORN_SRC_ZIP): Use TAR_SUFFIX.
+	* NEWS: Updated.
+
+2014-10-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3105: Use version from hotspot.map to
+	create tarball filename
+	* Makefile.am:
+	(TAR_SUFFIX): New variable to store filename
+	suffix of OpenJDK drop tarballs.
+	(OPENJDK_SRC_ZIP): Use TAR_SUFFIX.
+	(CORBA_SRC_ZIP): Likewise.
+	(JAXP_SRC_ZIP): Likewise.
+	(JAXWS_SRC_ZIP): Likewise.
+	(JDK_SRC_ZIP): Likewise.
+	(LANGTOOLS_SRC_ZIP): Likewise.
+	(HOTSPOT_SRC_ZIP): Likewise.
+	(download-hotspot): Look for $(HSBUILD).$(TAR_SUFFIX)
+	as the drop tarball filename in the URL if using
+	a non-default HotSpot, rather than always looking
+	for hotspot.$(TAR_SUFFIX).
+	(ADD_ZERO_CONFIGURE_ARGS): Make use of $(TAR_SUFFIX).
+
 2016-07-21  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	Bump to icedtea-3.1.0pre04.
