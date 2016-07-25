@@ -714,6 +714,7 @@ DESKTOP_FILES = jconsole-@JAVA_VER@.desktop policytool-@JAVA_VER@.desktop
 EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/cacao/*.patch \
 	$(top_srcdir)/patches/jamvm/*.patch \
+	$(top_srcdir)/patches/hotspot/*/*.patch \
 	tools-copy contrib overlays \
 	$(JTREG_SRCS) HACKING autogen.sh \
 	tapset/hotspot.stp.in \

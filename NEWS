@@ -201,6 +201,7 @@ New in release 3.1.0 (2016-05-XX):
   - PR3095: Fix warnings in URLClassPath.c
   - PR3096: Remove dead --disable-optimizations option
   - PR3105: Use version from hotspot.map to create tarball filename
+  - PR3108: Shenandoah patches not included in release tarball
 * AArch64 port
   - S8145320, PR3078: Create unsafe_arraycopy and generic_arraycopy for AArch64
   - S8148328, PR3078: aarch64: redundant lsr instructions in stub code.

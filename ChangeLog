@@ -1,3 +1,11 @@
+2016-07-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3108: Shenandoah patches not included
+	in release tarball
+	* Makefile.am
+	(EXTRA_DIST): Include HotSpot patches.
+	* NEWS: Updated.
+
 2016-07-22  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3105: Use version from hotspot.map to
