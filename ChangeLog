@@ -1,5 +1,10 @@
 2016-07-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u101-b14-shenandoah-merge-2016-07-25
+
+2016-07-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* Makefile.am,
 	(JDK_UPDATE_VERSION): Bump to 101.
 	(BUILD_VERSION): Set to b13.
