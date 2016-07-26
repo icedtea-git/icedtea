@@ -238,6 +238,7 @@ New in release 3.1.0 (2016-05-XX):
   - PR3105: Use version from hotspot.map to create tarball filename
   - PR3106: Handle both correctly-spelt property "enableCustomValueHandler" introduced by S8079718 and typo version
   - PR3108: Shenandoah patches not included in release tarball
+  - PR3110: Update hotspot.map documentation in INSTALL
 * AArch64 port
   - S8145320, PR3078: Create unsafe_arraycopy and generic_arraycopy for AArch64
   - S8148328, PR3078: aarch64: redundant lsr instructions in stub code.

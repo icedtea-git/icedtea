@@ -1151,7 +1151,7 @@ endif
 	      mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
 	    fi ; \
 	    if test "x$(HS_TYPE)" = "xhg"; then \
-	      $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).tar.gz -O $(HOTSPOT_SRC_ZIP) ; \
+	      $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).$(TAR_SUFFIX) -O $(HOTSPOT_SRC_ZIP) ; \
 	    else \
 		if test "x$(HSBUILD)" = "xdefault"; then \
 	          $(WGET) $(HS_URL)/$(HOTSPOT_SRC_ZIP) ; \

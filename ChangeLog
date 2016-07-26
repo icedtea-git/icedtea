@@ -1,5 +1,25 @@
 2016-07-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR3110: Update hotspot.map documentation
+	in INSTALL
+	* NEWS: Updated.
+	* hotspot.map.in:
+	Fix header to match current fields.
+
+2014-10-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3110: Update hotspot.map documentation
+	in INSTALL
+	* INSTALL: Update section on hotspot.map
+	to reflect recent changes.
+	* Makefile.am:
+	(download-hotspot): Use $(TAR_SUFFIX) in hg drops
+	as well.
+	* hotspot.map.in:
+	Fix header to match current fields.
+
+2016-07-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* hotspot.map.in: Bump shenandoah to
 	aarch64-shenandoah-jdk8u101-b14-shenandoah-merge-2016-07-25
 
