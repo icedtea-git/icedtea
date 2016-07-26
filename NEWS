@@ -10,7 +10,7 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.1.0 (2016-05-XX):
+New in release 3.1.0 (2016-06-25):
 
 * Security fixes
   - S8079718, CVE-2016-3458: IIOP Input Stream Hooking

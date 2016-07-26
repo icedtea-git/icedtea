@@ -1,5 +1,9 @@
 2016-07-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS: Set release date to today.
+
+2016-07-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR3110: Update hotspot.map documentation
 	in INSTALL
 	* NEWS: Updated.
