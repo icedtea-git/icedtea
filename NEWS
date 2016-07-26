@@ -12,6 +12,22 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.1.0 (2016-05-XX):
 
+* Security fixes
+  - S8079718, CVE-2016-3458: IIOP Input Stream Hooking
+  - S8145446, CVE-2016-3485: Perfect pipe placement (Windows only)
+  - S8146514: Enforce GCM limits
+  - S8147771: Construction of static protection domains under Javax custom policy
+  - S8148872, CVE-2016-3500: Complete name checking
+  - S8149070: Enforce update ordering
+  - S8149962, CVE-2016-3508: Better delineation of XML processing
+  - S8150752: Share Class Data
+  - S8151925: Font reference improvements
+  - S8152479, CVE-2016-3550: Coded byte streams
+  - S8153312: Constrain AppCDS behavior
+  - S8154475, CVE-2016-3587: Clean up lookup visibility
+  - S8155981, CVE-2016-3606: Bolster bytecode verification
+  - S8155985, CVE-2016-3598: Persistent Parameter Processing
+  - S8158571, CVE-2016-3610: Additional method handle validation
 * New features
   - S8145547, PR1061: [AWT/Swing] Conditional support for GTK 3 on Linux
   - PR2821: Support building OpenJDK with --disable-headful
@@ -111,6 +127,25 @@ New in release 3.1.0 (2016-05-XX):
   - S8147857: RMIConnector logs attribute names incorrectly
   - S8148353: [linux-sparc] Crash in libawt.so on Linux SPARC
   - S8150791: 8u76 L10n resource file translation update
+* Import of OpenJDK 8 u101 build 13
+  - S6483657: MSCAPI provider does not create unique alias names
+  - S6675699: need comprehensive fix for unconstrained ConvI2L with narrowed type
+  - S8037557: test SessionCacheSizeTests.java timeout
+  - S8038837: Add support to jarsigner for specifying timestamp hash algorithm
+  - S8081778: Use Intel x64 CPU instructions for RSA acceleration
+  - S8130150: Implement BigInteger.montgomeryMultiply intrinsic
+  - S8130735: javax.swing.TimerQueue: timer fires late when another timer starts
+  - S8143913: MSCAPI keystore should accept Certificate[] in setEntry()
+  - S8144313: Test SessionTimeOutTests can be timeout
+  - S8146240: Three nashorn files contain "GNU General Public License" header
+  - S8146387: Test SSLSession/SessionCacheSizeTests socket accept timed out
+  - S8146669: Test SessionTimeOutTests fails intermittently
+  - S8146993: Several javax/management/remote/mandatory regression tests fail after JDK-8138811
+  - S8147994: [macosx] JScrollPane jitters up/down during trackpad scrolling on MacOS/Aqua
+  - S8151522: Disable 8130150 and 8081778 intrinsics by default
+  - S8151876: (tz) Support tzdata2016d
+  - S8152098: Fix 8151522 caused test compiler/intrinsics/squaretolen/TestSquareToLen.java to fail
+  - S8157077: 8u101 L10n resource file updates
 * Backports
   - S6260348, PR3066: GTK+ L&F JTextComponent not respecting desktop caret blink rate
   - S6778087, PR1061: getLocationOnScreen() always returns (0, 0) for mouse wheel events
@@ -201,6 +236,7 @@ New in release 3.1.0 (2016-05-XX):
   - PR3095: Fix warnings in URLClassPath.c
   - PR3096: Remove dead --disable-optimizations option
   - PR3105: Use version from hotspot.map to create tarball filename
+  - PR3106: Handle both correctly-spelt property "enableCustomValueHandler" introduced by S8079718 and typo version
   - PR3108: Shenandoah patches not included in release tarball
 * AArch64 port
   - S8145320, PR3078: Create unsafe_arraycopy and generic_arraycopy for AArch64
