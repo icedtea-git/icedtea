@@ -711,6 +711,10 @@ ICEDTEA_ENV += \
 	PAX_COMMAND="${PAX_COMMAND}"
 endif
 
+if !DISABLE_SYSTEMTAP_TESTS
+SYSTEMTAP_TEST_SUITE = check-tapset
+endif
+
 if ENABLE_SUNEC
 ICEDTEA_ENV += \
 	SYSTEM_NSS="true" \
@@ -926,7 +930,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 
 all-local: icedtea-stage2 $(DESKTOP_FILES)
 
-check-local: jtregcheck check-tapset check-mimetype
+check-local: jtregcheck $(SYSTEMTAP_TEST_SUITE) check-mimetype
 
 clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports \
   clean-check-mimetype
@@ -984,7 +988,10 @@ distclean-local: clean-local clean-download
 	clean-extract-corba clean-extract-jaxp clean-extract-jaxws clean-extract-jdk \
 	clean-extract-langtools clean-split-debuginfo clean-split-debuginfo-debug \
 	clean-split-debuginfo-boot clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop \
-	clean-fonts clean-add-mime-types-file clean-add-mime-types-file-debug clean-add-mime-types-file-boot
+	clean-fonts clean-add-mime-types-file clean-add-mime-types-file-debug clean-add-mime-types-file-boot \
+	clean-tests clean-tapset-report clean-ecccheck clean-check-ecc \
+	check-jdk check-hotspot check-langtools jtregcheck check-tapset check-tapset-probes \
+	check-tapset-jstack
 
 env:
 	@echo 'unset JAVA_HOME'
