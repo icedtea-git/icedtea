@@ -1,3 +1,51 @@
+2016-07-26  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR2799: Files are missing from resources.jar
+	* Makefile.am:
+	(MIME_TYPE_CHECK_BUILD_DIR): Add build directory
+	for mime type check.
+	(MIME_TYPE_CHECK_SRCS): Specify sources for
+	mime type check.
+	(EXTRA_DIST): Distribute mime type check sources.
+	(check-local): Depend on check-mimetype.
+	(clean-tests): Depend on clean-check-mimetype.
+	(clean-local): Depend on clean-mimetypecheck.
+	(.PHONY): Depend on clean-check-mimetype,
+	clean-mimetypecheck, clean-add-mime-types-file,
+	clean-add-mime-types-file-debug and
+	clean-add-mime-types-file-boot.
+	(add-mime-types-file): Add a symlink to the
+	system mime.types file if found.
+	(clean-add-mime-types-file): Remove symlink
+	to the system mime types file.
+	(add-mime-types-file-debug): Add a symlink to the
+	system mime.types file, if found, in the debug build.
+	(clean-add-mime-types-file-debug): Remove symlink
+	to the system mime types file in the debug build.
+	(icedtea-stage2): Depend on add-mime-types-file.
+	(clean-icedtea-stage2): Depend on clean-add-mime-types-file.
+	(icedtea-debug-stage2): Depend on add-mime-types-file-debug.
+	(clean-icedtea-debug-stage2): Depend on clean-add-mime-types-file-debug.
+	(add-mime-types-file-boot): Add a symlink to the
+	system mime.types file, if found, in the bootstrap build.
+	(clean-add-mime-types-file-boot): Remove symlink
+	to the system mime types file in the bootstrap build.
+	(icedtea-stage1): Depend on add-mime-types-file-boot.
+	(clean-icedtea-stage1): Depend on clean-add-mime-types-file-boot.
+	(check-mimetype): Check that we can recognise a HTML
+	file and (if system mime.types is available) a Java file.
+	(clean-check-mimetype): Cleanup after check-mimetype.
+	(mimetypecheck): Build the MIME type check.
+	(clean-mimetypecheck): Remove MIME type check build.
+	(install-data-local): Install the mime.types symlink.
+	* acinclude.m4:
+	(IT_CHECK_FOR_MIME_TYPES): Check for a system mime.types
+	file and define MIME_TYPES_FILE_FOUND if located.
+	* configure.ac:
+	Invoke IT_CHECK_FOR_MIME_TYPES.
+	* test/RH1195203.java: Testcase to get Java to print
+	the MIME type of a file.
+
 2016-07-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR3103: Handle case in clean-fonts where
