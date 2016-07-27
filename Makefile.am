@@ -70,6 +70,7 @@ STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
 STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
 JAMVM_IMPORT_PATH = $(abs_top_builddir)/jamvm/install/hotspot
 CRYPTO_CHECK_BUILD_DIR = $(abs_top_builddir)/test/cryptocheck.build
+MIME_TYPE_CHECK_BUILD_DIR = $(abs_top_builddir)/test/mimetypecheck.build
 STAGE1_BOOT_RUNTIME = $(STAGE1_BOOT_DIR)/jre/lib/rt.jar
 STAGE2_BOOT_RUNTIME = $(STAGE2_BOOT_DIR)/jre/lib/rt.jar
 FONTCONFIG_PATH = openjdk/jdk/src/solaris/classes/sun/awt/fontconfigs
@@ -367,6 +368,7 @@ OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
 
 REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 CRYPTO_CHECK_SRCS = $(top_srcdir)/TestCryptoLevel.java
+MIME_TYPE_CHECK_SRCS = $(top_srcdir)/test/RH1195203.java
 
 # Patch list
 
@@ -917,16 +919,18 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	rewriter/agpl-3.0.txt \
 	$(REWRITER_SRCS) \
 	test/tapset \
-	$(CRYPTO_CHECK_SRCS)
+	$(CRYPTO_CHECK_SRCS) \
+	$(MIME_TYPE_CHECK_SRCS)
 
 # Top-Level Targets
 # =================
 
 all-local: icedtea-stage2 $(DESKTOP_FILES)
 
-check-local: jtregcheck check-tapset
+check-local: jtregcheck check-tapset check-mimetype
 
-clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports
+clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports \
+  clean-check-mimetype
 	if [ $(abs_top_srcdir) != $(abs_top_builddir) ] ; then \
 	  if [ -e test ] ; then \
 	    rmdir test ; \
@@ -942,7 +946,7 @@ clean-local: clean-tests \
  clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter \
  clean-add-systemtap clean-add-systemtap-debug clean-add-nss clean-add-tzdata-support \
  clean-add-tzdata-support-debug clean-cryptocheck clean-policytool-@JAVA_VER@.desktop \
- clean-jconsole-@JAVA_VER@.desktop
+ clean-jconsole-@JAVA_VER@.desktop clean-mimetypecheck
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -973,7 +977,7 @@ distclean-local: clean-local clean-download
 	clean-tests clean-tapset-report clean-add-systemtap \
 	clean-add-systemtap-debug clean-add-systemtap-boot \
 	clean-add-nss clean-add-tzdata-support clean-add-tzdata-support-debug \
-	clean-add-tzdata-support-boot \
+	clean-add-tzdata-support-boot clean-check-mimetype clean-mimetypecheck \
 	clean-check-crypto clean-check-crypto-debug clean-check-crypto-boot \
 	clean-add-archive clean-add-archive-debug clean-add-archive-boot clean-cryptocheck \
 	clean-download-hotspot clean-download-corba clean-download-jaxp \
@@ -981,7 +985,7 @@ distclean-local: clean-local clean-download
 	clean-extract-corba clean-extract-jaxp clean-extract-jaxws clean-extract-jdk \
 	clean-extract-langtools clean-split-debuginfo clean-split-debuginfo-debug \
 	clean-split-debuginfo-boot clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop \
-	clean-fonts
+	clean-fonts clean-add-mime-types-file clean-add-mime-types-file-debug clean-add-mime-types-file-boot
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -2148,6 +2152,20 @@ clean-split-debuginfo:
 	rm -rvf $(BUILD_DEBUGINFO_DIR)
 	rm -f stamps/split-debuginfo.stamp
 
+stamps/add-mime-types-file.stamp: stamps/icedtea.stamp
+if MIME_TYPES_FILE_FOUND
+	if [ -e $(BUILD_SDK_DIR)/jre/lib ] ; then \
+	  ln -sf $(MIME_TYPES_FILE) $(BUILD_SDK_DIR)/jre/lib/mime.types ; \
+	fi
+endif
+	touch $@
+
+clean-add-mime-types-file:
+	if [ -e $(BUILD_SDK_DIR)/jre/lib/mime.types ] ; then \
+	  rm -vf $(BUILD_SDK_DIR)/jre/lib/mime.types ; \
+	fi
+	rm -f stamps/add-mime-types-file.stamp
+
 stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
  stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
  stamps/cacao.stamp stamps/rewrite-rhino.stamp stamps/jamvm.stamp
@@ -2282,25 +2300,41 @@ clean-split-debuginfo-debug:
 	rm -rvf $(BUILD_DEBUG_DEBUGINFO_DIR)
 	rm -f stamps/split-debuginfo-debug.stamp
 
+stamps/add-mime-types-file-debug.stamp: stamps/icedtea-debug.stamp
+if MIME_TYPES_FILE_FOUND
+	if [ -e $(BUILD_DEBUG_SDK_DIR)/jre/lib ] ; then \
+	  ln -sf $(MIME_TYPES_FILE) $(BUILD_DEBUG_SDK_DIR)/jre/lib/mime.types ; \
+	fi
+endif
+	touch $@
+
+clean-add-mime-types-file-debug:
+	if [ -e $(BUILD_DEBUG_SDK_DIR)/jre/lib/mime.types ] ; then \
+	  rm -vf $(BUILD_DEBUG_SDK_DIR)/jre/lib/mime.types ; \
+	fi
+	rm -f stamps/add-mime-types-file-debug.stamp
+
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
  stamps/add-zero.stamp stamps/add-jamvm.stamp stamps/add-systemtap.stamp \
  stamps/add-tzdata-support.stamp stamps/check-crypto.stamp stamps/add-archive.stamp \
- stamps/split-debuginfo.stamp
+ stamps/split-debuginfo.stamp stamps/add-mime-types-file.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-stage2: clean-add-jamvm clean-check-crypto clean-add-archive clean-split-debuginfo
+clean-icedtea-stage2: clean-add-jamvm clean-check-crypto clean-add-archive clean-split-debuginfo \
+ clean-add-mime-types-file
 	rm -f stamps/icedtea-stage2.stamp
 
 stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
  stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp \
  stamps/add-systemtap-debug.stamp stamps/add/tzdata-support-debug.stamp \
- stamps/check-crypto-debug.stamp stamps/add-archive-debug.stamp stamps/split-debuginfo-debug.stamp
+ stamps/check-crypto-debug.stamp stamps/add-archive-debug.stamp stamps/split-debuginfo-debug.stamp \
+ stamps/add-mime-types-file-debug.stamp
 	mkdir -p stamps
 	touch $@
 
 clean-icedtea-debug-stage2: clean-add-jamvm-debug clean-check-crypto-debug \
- clean-add-archive-debug clean-split-debuginfo-debug
+ clean-add-archive-debug clean-split-debuginfo-debug clean-add-mime-types-file-debug
 	rm -f stamps/icedtea-debug-stage2.stamp
 
 # OpenJDK boot Targets
@@ -2424,15 +2458,30 @@ clean-split-debuginfo-boot:
 	rm -rvf $(BUILD_BOOT_DEBUGINFO_DIR)
 	rm -f stamps/split-debuginfo-boot.stamp
 
+stamps/add-mime-types-file-boot.stamp: stamps/icedtea-boot.stamp
+if MIME_TYPES_FILE_FOUND
+	if [ -e $(BUILD_BOOT_SDK_DIR)/jre/lib ] ; then \
+	  ln -sf $(MIME_TYPES_FILE) $(BUILD_BOOT_SDK_DIR)/jre/lib/mime.types ; \
+	fi
+endif
+	touch $@
+
+clean-add-mime-types-file-boot:
+	if [ -e $(BUILD_BOOT_SDK_DIR)/jre/lib/mime.types ] ; then \
+	  rm -vf $(BUILD_BOOT_SDK_DIR)/jre/lib/mime.types ; \
+	fi
+	rm -f stamps/add-mime-types-file-boot.stamp
+
 stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp \
  stamps/add-systemtap-boot.stamp stamps/add-tzdata-support-boot.stamp \
  stamps/check-crypto-boot.stamp stamps/add-archive-boot.stamp \
- stamps/split-debuginfo-boot.stamp
+ stamps/split-debuginfo-boot.stamp stamps/add-mime-types-file-boot.stamp
 	mkdir -p stamps
 	touch $@
 
 clean-icedtea-stage1: clean-add-systemtap-boot clean-add-tzdata-support-boot \
- clean-check-crypto-boot clean-add-archive-boot clean-split-debuginfo-boot
+ clean-check-crypto-boot clean-add-archive-boot clean-split-debuginfo-boot \
+ clean-add-mime-types-file-boot
 	rm -f stamps/icedtea-stage1.stamp
 
 # Rebuild targets
@@ -2763,7 +2812,7 @@ clean-add-zero-debug:
 
 # end additional VMs
 
-# jtreg
+# Test cases
 
 stamps/jtreg.stamp: stamps/icedtea-stage2.stamp
 	rm -rf test/jtreg/classes
@@ -2904,6 +2953,35 @@ if ENABLE_SYSTEMTAP
 	rm -f test/check-stap.log
 endif
 
+stamps/check-mimetype.stamp: stamps/mimetypecheck.stamp stamps/icedtea.stamp
+	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
+	  echo "<html><head/><body/></html>" > $(MIME_TYPE_CHECK_BUILD_DIR)/test.html ; \
+	  expected="text/html" ; \
+	  html=$$($(BUILD_SDK_DIR)/bin/java -cp $(MIME_TYPE_CHECK_BUILD_DIR) RH1195203 \
+	    $(MIME_TYPE_CHECK_BUILD_DIR)/test.html) ; \
+	  if test "x$${html}" != "x$${expected}" ; then \
+	    echo "MIME type test failed; expected $${expected}, got $${html}" ; \
+	    exit -1; \
+	  fi ; \
+	fi
+if MIME_TYPES_FILE_FOUND
+	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
+	  expected="text/x-java-source" ; \
+	  java=$$($(BUILD_SDK_DIR)/bin/java -cp $(MIME_TYPE_CHECK_BUILD_DIR) RH1195203 \
+	    $(MIME_TYPE_CHECK_SRCS)) ; \
+	  if test "x$${java}" != "x$${expected}"; then \
+	    echo "MIME type test failed; expected $${expected}, got $${java}" ; \
+	    exit -1; \
+	  fi ; \
+	fi
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-check-mimetype:
+	rm -f $(MIME_TYPE_CHECK_BUILD_DIR)/test.html
+	rm -f stamps/check-mimetype.stamp
+
 # Support classes for non-OpenJDK bootstraps
 
 rt-source-files.txt: $(OPENJDK_BOOT_TREE)
@@ -2963,6 +3041,19 @@ stamps/cryptocheck.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
 clean-cryptocheck:
 	rm -rf $(CRYPTO_CHECK_BUILD_DIR)
 	rm -f stamps/cryptocheck.stamp
+
+# Mime Type Check
+
+stamps/mimetypecheck.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
+	mkdir -p $(MIME_TYPE_CHECK_BUILD_DIR)
+	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
+	  -d $(MIME_TYPE_CHECK_BUILD_DIR) $(MIME_TYPE_CHECK_SRCS)
+	mkdir -p stamps
+	touch $@
+
+clean-mimetypecheck:
+	rm -rf $(MIME_TYPE_CHECK_BUILD_DIR)
+	rm -f stamps/mimetypecheck.stamp
 
 # File substitution
 
@@ -3120,6 +3211,9 @@ install-data-local:
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/currency.data $(DESTDIR)${prefix}/jre/lib
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/jvm.hprof.txt $(DESTDIR)${prefix}/jre/lib
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/meta-index $(DESTDIR)${prefix}/jre/lib
+if MIME_TYPES_FILE_FOUND
+	$(call install_file,$(BUILD_SDK_DIR)/jre/lib/mime.types,$(DESTDIR)${prefix}/jre/lib,$(INSTALL_DATA))
+endif
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/psfont.properties.ja $(DESTDIR)${prefix}/jre/lib
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/jvm.cfg \
 	  $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)
@@ -3221,6 +3315,12 @@ add-jamvm: stamps/add-jamvm.stamp
 
 add-jamvm-debug: stamps/add-jamvm-debug.stamp
 
+add-mime-types-file: stamps/add-mime-types-file.stamp
+
+add-mime-types-file-debug: stamps/add-mime-types-file-debug.stamp
+
+add-mime-types-file-boot: stamps/add-mime-types-file-boot.stamp
+
 add-nss: stamps/add-nss.stamp
 
 add-nss-debug: stamps/add-nss-debug.stamp
@@ -3256,6 +3356,8 @@ check-crypto: stamps/check-crypto.stamp
 check-crypto-boot: stamps/check-crypto-boot.stamp
 
 check-crypto-debug: stamps/check-crypto-debug.stamp
+
+check-mimetype: stamps/check-mimetype.stamp
 
 clone-boot: stamps/clone-boot.stamp
 
@@ -3320,6 +3422,8 @@ icedtea-stage2: stamps/icedtea-stage2.stamp
 jamvm: stamps/jamvm.stamp
 
 jtreg: stamps/jtreg.stamp
+
+mimetypecheck: stamps/mimetypecheck.stamp
 
 native-ecj: stamps/native-ecj.stamp
 

@@ -3399,3 +3399,20 @@ dnl Check for freetype2 headers and libraries.
   AC_SUBST(FREETYPE2_CFLAGS)
   AC_SUBST(FREETYPE2_LIBS)
 ])
+
+AC_DEFUN_ONCE([IT_CHECK_FOR_MIME_TYPES],
+[
+  MIME_TYPES_FILE="/etc/mime.types"
+  AC_MSG_CHECKING([for ${MIME_TYPES_FILE}])
+  if test -f ${MIME_TYPES_FILE}; then
+     mime_types_file_found=yes
+  else
+     mime_types_file_found=no
+  fi
+  AC_MSG_RESULT([$mime_types_file_found])
+  if test "x${mime_types_file_found}" = "xno"; then
+    AC_MSG_WARN([No system MIME types file found.])
+  fi
+  AC_SUBST([MIME_TYPES_FILE])
+  AM_CONDITIONAL(MIME_TYPES_FILE_FOUND, test "x${mime_types_file_found}" = "xyes")
+])
