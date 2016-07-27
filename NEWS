@@ -10,7 +10,9 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.1.0 (2016-06-25):
+New in release 3.2.0 (2016-09-XX):
+
+New in release 3.1.0 (2016-07-25):
 
 * Security fixes
   - S8079718, CVE-2016-3458: IIOP Input Stream Hooking
@@ -228,11 +230,11 @@ New in release 3.1.0 (2016-06-25):
   - PR2932: Support ccache in a non-automagic manner
   - PR2933: Support ccache 3.2 and later
   - PR2964: Set system defaults based on OS
-  - PR2974: PKCS#10 certificate requests now use CRLF line endings rather than system line endings
+  - PR2974, RH1337583: PKCS#10 certificate requests now use CRLF line endings rather than system line endings
   - PR3078: Remove duplicated line dating back to 6788347 and 6894807
   - PR3083, RH1346460: Regression in SSL debug output without an ECC provider
   - PR3089: Remove old memory limits patch
-  - PR3090: SystemTap is heavily confused by multiple JDKs
+  - PR3090, RH1204159: SystemTap is heavily confused by multiple JDKs
   - PR3095: Fix warnings in URLClassPath.c
   - PR3096: Remove dead --disable-optimizations option
   - PR3105: Use version from hotspot.map to create tarball filename

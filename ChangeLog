@@ -1,3 +1,10 @@
+2016-07-26  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Add 3.2.0 section. Add missing
+	bug IDs in 3.1.0 release notes and correct
+	release date.
+	* configure.ac: Bump to 3.2.0pre00.
+
 2016-07-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Set release date to today.
@@ -19,8 +26,6 @@
 	* Makefile.am:
 	(download-hotspot): Use $(TAR_SUFFIX) in hg drops
 	as well.
-	* hotspot.map.in:
-	Fix header to match current fields.
 
 2016-07-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
