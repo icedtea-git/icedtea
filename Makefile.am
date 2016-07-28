@@ -935,10 +935,12 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 
 all-local: icedtea-stage2 $(DESKTOP_FILES)
 
-check-local: jtregcheck $(SYSTEMTAP_TEST_SUITE) check-ecc check-mimetype
+check-local: jtregcheck $(SYSTEMTAP_TEST_SUITE) check-ecc check-mimetype \
+ check-java-debug check-java-src
 
 clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports \
-  clean-check-ecc clean-check-mimetype
+ clean-check-ecc clean-check-mimetype clean-check-java-debug \
+ clean-check-java-src
 	if [ $(abs_top_srcdir) != $(abs_top_builddir) ] ; then \
 	  if [ -e test ] ; then \
 	    rmdir test ; \
@@ -979,7 +981,7 @@ distclean-local: clean-local clean-download
 	clean-bootstrap-directory-symlink-stage1 icedtea icedtea-debug \
 	clean-icedtea icedtea-stage2 clean-icedtea-boot \
 	clean-rt hotspot hotspot-helper clean-jtreg clean-jtreg-reports \
-	jtregcheck clean-remove-intree-libraries \
+	jtregcheck clean-remove-intree-libraries clean-check-java-src \
 	clean-jamvm clean-extract-jamvm clean-add-jamvm clean-add-jamvm-debug \
 	clean-extract-hotspot clean-sanitise-openjdk \
 	clean-tests clean-tapset-report clean-add-systemtap \
@@ -996,7 +998,7 @@ distclean-local: clean-local clean-download
 	clean-fonts clean-add-mime-types-file clean-add-mime-types-file-debug clean-add-mime-types-file-boot \
 	clean-tests clean-tapset-report clean-ecccheck clean-check-ecc \
 	check-jdk check-hotspot check-langtools jtregcheck check-tapset check-tapset-probes \
-	check-tapset-jstack
+	check-tapset-jstack clean-check-java-debug
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -3068,6 +3070,35 @@ clean-mimetypecheck:
 	rm -rf $(MIME_TYPE_CHECK_BUILD_DIR)
 	rm -f stamps/mimetypecheck.stamp
 
+# Check class files, both from in-tree and generated sources, contain debug info
+stamps/check-java-debug.stamp: stamps/icedtea.stamp
+if ENABLE_JAVA_DEBUGINFO
+	@echo "Checking that Java classes include debug info"
+	if [ -e $(BUILD_SDK_DIR)/bin/javap ] ; then \
+	  $(BUILD_SDK_DIR)/bin/javap -l java.lang.Object | grep "Compiled from" ; \
+	  $(BUILD_SDK_DIR)/bin/javap -l java.lang.Object | grep LineNumberTable ; \
+	  $(BUILD_SDK_DIR)/bin/javap -l java.lang.Object | grep LocalVariableTable ; \
+	  $(BUILD_SDK_DIR)/bin/javap -l java.nio.ByteBuffer | grep "Compiled from" ; \
+	  $(BUILD_SDK_DIR)/bin/javap -l java.nio.ByteBuffer | grep LineNumberTable ; \
+	  $(BUILD_SDK_DIR)/bin/javap -l java.nio.ByteBuffer | grep LocalVariableTable ; \
+	fi
+endif
+	mkdir -p stamps
+	touch $@
+
+clean-check-java-debug:
+	rm -f stamps/check-java-debug.stamp
+
+# Check source files are included in the source zip
+stamps/check-java-src.stamp: stamps/icedtea.stamp
+	@echo "Checking for Java sources in src.zip"
+	$(UNZIP) -l $(BUILD_SDK_DIR)/src.zip | grep 'sun.misc.Unsafe'
+	mkdir -p stamps
+	touch $@
+
+clean-check-java-src:
+	rm -f stamps/check-java-src.stamp
+
 # File substitution
 
 policytool-@JAVA_VER@.desktop: policytool.desktop
@@ -3404,6 +3435,10 @@ check-crypto-debug: stamps/check-crypto-debug.stamp
 check-mimetype: stamps/check-mimetype.stamp
 
 check-ecc: stamps/check-ecc.stamp
+
+check-java-src: stamps/check-java-src.stamp
+
+check-java-debug: stamps/check-java-debug.stamp
 
 clone-boot: stamps/clone-boot.stamp
 

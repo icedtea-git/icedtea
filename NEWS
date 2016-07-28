@@ -102,6 +102,7 @@ New in release 2.6.7 (2016-07-28):
   - PR3111: Provide option to disable SystemTap tests
   - PR3114: Don't assume system mime.types supports text/x-java-source
   - PR3115: Add check for elliptic curve cryptography implementation
+  - PR3116: Add tests for Java debug info and source files
 * AArch64 port
   - S8148328, PR3100: aarch64: redundant lsr instructions in stub code.
   - S8148783, PR3100: aarch64: SEGV running SpecJBB2013
