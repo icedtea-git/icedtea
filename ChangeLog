@@ -1,5 +1,12 @@
 2016-07-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR3118: Path to agpl-3.0.txt not updated
+	* Makefile.am:
+	(EXTRA_DIST): Fix path to agpl-3.0.txt.
+	* NEWS: Updated.
+
+2016-07-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR3116: Add tests for Java debug info and
 	source files
 	* Makefile.am:
