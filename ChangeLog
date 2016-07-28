@@ -1,5 +1,19 @@
 2016-07-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	S7175845, PR1437, RH1207129: 'jar uf' changes file
+	permissions unexpectedly
+	* Makefile.am:
+	(icedtea): Correct permissions of sa-jdi.jar and
+	resources.jar if PR1437 was present in the bootstrap
+	JDK.
+	(icedtea-debug): Likewise.
+	(icedtea-boot): Likewise.
+	* acinclude.m4:
+	(IT_FIND_JAR): Check for PR1437 in the bootstrap
+	jar program and define PR1437_PRESENT if it exhibits.
+
+2016-07-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	Bump to icedtea-2.6.7.
 	* Makefile.am:
 	(JDK_UPDATE_VERSION): Bump to 111.

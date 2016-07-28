@@ -475,11 +475,25 @@ EOF
     JAR_KNOWS_J_OPTIONS=
     AC_MSG_RESULT(no)
   fi
-  rm -f _config.txt _config.jar
+  AC_MSG_CHECKING([whether jar uf fails to retain permissions (PR1437)])
+  origperms=$(ls -l _config.jar | cut -d ' ' -f 1)
+  echo "Original permissions: ${origperms}" >&AS_MESSAGE_LOG_FD
+  touch _config2.txt
+  $JAR uf _config.jar _config2.txt >&AS_MESSAGE_LOG_FD 2>&1
+  newperms=$(ls -l _config.jar | cut -d ' ' -f 1)
+  echo "New permissions: ${newperms}" >&AS_MESSAGE_LOG_FD
+  if test "x$origperms" != "x$newperms"; then
+    pr1437_present=yes
+  else
+    pr1437_present=no
+  fi
+  AC_MSG_RESULT([$pr1437_present])
+  rm -f _config.txt _config2.txt _config.jar
   AC_SUBST(JAR)
   AC_SUBST(JAR_KNOWS_ATFILE)
   AC_SUBST(JAR_ACCEPTS_STDIN_LIST)
   AC_SUBST(JAR_KNOWS_J_OPTIONS)
+  AM_CONDITIONAL(PR1437_PRESENT, test "x${pr1437_present}" = "xyes")
 ])
 
 AC_DEFUN([IT_FIND_RMIC],
