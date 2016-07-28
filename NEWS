@@ -50,6 +50,7 @@ New in release 2.7.0 (201X-XX-XX):
   - PR3103: Handle case in clean-fonts where linux.fontconfig.Gentoo.properties.old has not been created
   - PR3111: Provide option to disable SystemTap tests
   - PR3114: Don't assume system mime.types supports text/x-java-source
+  - PR3115: Add check for elliptic curve cryptography implementation
 * AArch64 port
   - S8148328: aarch64: redundant lsr instructions in stub code.
   - S8148783: aarch64: SEGV running SpecJBB2013
