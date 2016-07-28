@@ -2050,6 +2050,14 @@ endif
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
+# Fix permissions on JARs updated during build if PR1437 bug is present
+if PR1437_PRESENT
+	if [ -e $(BUILD_SDK_DIR)/lib/sa-jdi.jar ] ; then \
+	  chmod g+r,o+r $(BUILD_SDK_DIR)/lib/sa-jdi.jar ; \
+	fi
+	chmod g+r,o+r $(BUILD_JRE_DIR)/lib/resources.jar
+	chmod g+r,o+r $(BUILD_SDK_DIR)/jre/lib/resources.jar
+endif
 	@echo "IcedTea is served:" $(BUILD_SDK_DIR)
 	mkdir -p stamps
 	touch $@
@@ -2193,6 +2201,14 @@ if ENABLE_CACAO
 endif
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+endif
+# Fix permissions on JARs updated during build if PR1437 bug is present
+if PR1437_PRESENT
+	if [ -e $(BUILD_DEBUG_SDK_DIR)/lib/sa-jdi.jar ] ; then \
+	  chmod g+r,o+r $(BUILD_DEBUG_SDK_DIR)/lib/sa-jdi.jar ; \
+	fi
+	chmod g+r,o+r $(BUILD_DEBUG_JRE_DIR)/lib/resources.jar
+	chmod g+r,o+r $(BUILD_DEBUG_SDK_DIR)/jre/lib/resources.jar
 endif
 	@echo "IcedTea (debug build) is served:" $(BUILD_DEBUG_SDK_DIR)
 	mkdir -p stamps
@@ -2344,6 +2360,14 @@ stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
 	  -C openjdk-boot \
 	  $(ICEDTEA_BUILD_TARGET)
 	$(abs_top_builddir)/pax-mark-vm $(BUILD_BOOT_SDK_DIR)
+# Fix permissions on JARs updated during build if PR1437 bug is present
+if PR1437_PRESENT
+	if [ -e $(BUILD_BOOT_SDK_DIR)/lib/sa-jdi.jar ] ; then \
+	  chmod g+r,o+r $(BUILD_BOOT_SDK_DIR)/lib/sa-jdi.jar ; \
+	fi
+	chmod g+r,o+r $(BUILD_BOOT_JRE_DIR)/lib/resources.jar
+	chmod g+r,o+r $(BUILD_BOOT_SDK_DIR)/jre/lib/resources.jar
+endif
 	@echo "Bootstrapped IcedTea is served:" $(BUILD_BOOT_SDK_DIR)
 	mkdir -p stamps
 	touch $@
