@@ -1,5 +1,34 @@
 2016-07-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR3116: Add tests for Java debug info and
+	source files
+	* Makefile.am:
+	(check-java-debug): Guard with
+	ENABLE_JAVA_DEBUGINFO.
+	* NEWS: Updated.
+
+2016-07-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3116: Add tests for Java debug info and
+	source files
+	* Makefile.am:
+	(check-local): Depend on check-java-debug and
+	check-java-src.
+	(clean-tests): Depend on clean-check-java-debug
+	and clean-check-java-src.
+	(.PHONY): Add clean-check-java-src and
+	clean-check-java-debug.
+	(check-java-debug): Adapt Omair Majid's Java debug
+	info test from Fedora RPM to IcedTea.
+	(clean-check-java-debug): Cleanup target for
+	check-java-debug.
+	(check-java-src): Adapt Omair Majid's Java source
+	file test from Fedora RPM to IcedTea.
+	(clean-check-java-src): Cleanup target for
+	check-java-src.
+
+2016-07-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	S7175845, PR1437, RH1207129: 'jar uf' changes file
 	permissions unexpectedly
 	* Makefile.am:
