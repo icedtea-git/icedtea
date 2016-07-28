@@ -368,7 +368,8 @@ OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
 
 REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
 CRYPTO_CHECK_SRCS = $(top_srcdir)/test/standalone/TestCryptoLevel.java
-ECC_CHECK_SRCS = $(top_srcdir)/test/standalone/TestEllipticCurveCryptoSupport.java
+ECC_CHECK_SRCS = $(top_srcdir)/test/standalone/TestEllipticCurveCryptoSupport.java \
+	$(top_srcdir)/test/standalone/TestECDSA.java
 MIME_TYPE_CHECK_SRCS = $(top_srcdir)/test/standalone/RH1195203.java
 
 # Patch list
@@ -3059,20 +3060,28 @@ clean-jconsole-@JAVA_VER@.desktop:
 # ECC Availability Check
 
 stamps/ecccheck.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
+if ENABLE_SUNEC
 	mkdir -p $(ECC_CHECK_BUILD_DIR)
 	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	  -d $(ECC_CHECK_BUILD_DIR) $(ECC_CHECK_SRCS)
+endif
 	mkdir -p stamps
 	touch $@
 
 clean-ecccheck:
+if ENABLE_SUNEC
 	rm -rf $(ECC_CHECK_BUILD_DIR)
+endif
 	rm -f stamps/ecccheck.stamp
 
 stamps/check-ecc.stamp: stamps/ecccheck.stamp stamps/icedtea.stamp
+if ENABLE_SUNEC
+	set -e ; \
 	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
 	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestEllipticCurveCryptoSupport yes ; \
+	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestECDSA ; \
 	fi
+endif
 	mkdir -p stamps
 	touch $@
 
