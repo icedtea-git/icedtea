@@ -2948,7 +2948,7 @@ stamps/check-mimetype.stamp: stamps/mimetypecheck.stamp stamps/icedtea.stamp
 	    exit -1; \
 	  fi ; \
 	fi
-if MIME_TYPES_FILE_FOUND
+if JAVA_SOURCE_SUPPORTED
 	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
 	  expected="text/x-java-source" ; \
 	  java=$$($(BUILD_SDK_DIR)/bin/java -cp $(MIME_TYPE_CHECK_BUILD_DIR) RH1195203 \

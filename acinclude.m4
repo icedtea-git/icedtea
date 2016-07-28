@@ -3397,11 +3397,20 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_MIME_TYPES],
      mime_types_file_found=no
   fi
   AC_MSG_RESULT([$mime_types_file_found])
-  if test "x${mime_types_file_found}" = "xno"; then
+  if test "x${mime_types_file_found}" = "xyes"; then
+    AC_MSG_CHECKING([if ${MIME_TYPES_FILE} has text/x-java-source])
+    if grep '^text/x-java-source' ${MIME_TYPES_FILE} >&AS_MESSAGE_LOG_FD ; then
+      java_source_supported=yes
+    else
+      java_source_supported=no
+    fi
+    AC_MSG_RESULT([$java_source_supported])
+  else
     AC_MSG_WARN([No system MIME types file found.])
   fi
   AC_SUBST([MIME_TYPES_FILE])
   AM_CONDITIONAL(MIME_TYPES_FILE_FOUND, test "x${mime_types_file_found}" = "xyes")
+  AM_CONDITIONAL(JAVA_SOURCE_SUPPORTED, test "x${java_source_supported}" = "xyes")    
 ])
 
 AC_DEFUN_ONCE([IT_DISABLE_SYSTEMTAP_TESTS],
