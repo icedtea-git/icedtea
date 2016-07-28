@@ -923,7 +923,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	tapset/hotspot_gc.stp.in \
 	scripts/jni_create_stap.c \
 	scripts/jni_desc \
-	rewriter/agpl-3.0.txt \
+	agpl-3.0.txt \
 	$(REWRITER_SRCS) \
 	test/tapset \
 	$(CRYPTO_CHECK_SRCS) \
