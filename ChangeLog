@@ -1,3 +1,16 @@
+2016-07-27  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3114: Don't assume system mime.types
+	supports text/x-java-source
+	* Makefile.am:
+	(check-mimetype): Make second test depend
+	on JAVA_SOURCE_SUPPORTED conditional,
+	not MIME_TYPES_FILE_FOUND.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_CHECK_FOR_MIME_TYPES): Check if the
+	system mime types file supports text/x-java-source.
+
 2016-07-20  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR3103: Handle case in clean-fonts where
