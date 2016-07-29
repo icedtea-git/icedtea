@@ -98,6 +98,7 @@ New in release 2.6.7 (2016-07-28):
   - PR2900: Don't use WithSeed versions of NSS functions as they don't fully process the seed
   - PR3091: SystemTap is heavily confused by multiple JDKs
   - PR3102: Extend 8022594 to AixPollPort
+  - PR3103: Handle case in clean-fonts where linux.fontconfig.Gentoo.properties.old has not been created
   - PR3111: Provide option to disable SystemTap tests
   - PR3115: Add check for elliptic curve cryptography implementation
 * AArch64 port
