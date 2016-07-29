@@ -97,6 +97,7 @@ New in release 2.6.7 (2016-07-28):
   - PR2799, RH1195203: Files are missing from resources.jar
   - PR2900: Don't use WithSeed versions of NSS functions as they don't fully process the seed
   - PR3102: Extend 8022594 to AixPollPort
+  - PR3111: Provide option to disable SystemTap tests
 * AArch64 port
   - S8148328, PR3100: aarch64: redundant lsr instructions in stub code.
   - S8148783, PR3100: aarch64: SEGV running SpecJBB2013
