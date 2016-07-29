@@ -1085,8 +1085,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SeedGene
                      } catch (Exception ex) {
                          md.update((byte)ex.hashCode());
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/KeyTool.java openjdk-boot/jdk/src/share/classes/sun/security/tools/KeyTool.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/KeyTool.java	2015-07-23 09:51:31.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/tools/KeyTool.java	2015-10-21 17:46:40.719750532 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2015-07-23 09:51:31.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2015-10-21 17:46:40.719750532 +0100
 @@ -1149,9 +1149,14 @@
                  } else {
                      ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -1380,3 +1380,233 @@ diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/print/UnixPrintJob.java 
          }
  
          public Object run() {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java	2016-07-28 21:35:15.322965877 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java	2016-07-28 21:34:38.955563090 +0100
+@@ -279,7 +279,9 @@
+                 connection.setIfModifiedSince(lastModified);
+             }
+             long oldLastModified = lastModified;
+-            try (InputStream in = connection.getInputStream()) {
++	    InputStream in = null;
++            try {
++		in = connection.getInputStream();
+                 lastModified = connection.getLastModified();
+                 if (oldLastModified != 0) {
+                     if (oldLastModified == lastModified) {
+@@ -305,7 +307,9 @@
+                 // Safe cast since factory is an X.509 certificate factory
+                 certs = (Collection<X509Certificate>)
+                     factory.generateCertificates(in);
+-            }
++            } finally {
++		if (in != null) try { in.close(); } catch (IOException e) {}
++	    }
+             return getMatchingCerts(certs, selector);
+         } catch (IOException e) {
+             if (debug != null) {
+@@ -393,7 +397,9 @@
+             }
+             long oldLastModified = lastModified;
+             connection.setConnectTimeout(CRL_CONNECT_TIMEOUT);
+-            try (InputStream in = connection.getInputStream()) {
++	    InputStream in = null;
++            try {
++		in = connection.getInputStream();
+                 lastModified = connection.getLastModified();
+                 if (oldLastModified != 0) {
+                     if (oldLastModified == lastModified) {
+@@ -417,7 +423,9 @@
+                     debug.println("Downloading new CRL...");
+                 }
+                 crl = (X509CRL) factory.generateCRL(in);
+-            }
++            } finally {
++		if (in != null) { try { in.close (); } catch (IOException e) {} }
++	    }
+             return getMatchingCRLs(crl, selector);
+         } catch (IOException e) {
+             if (debug != null) {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/KeyStoreUtil.java openjdk-boot/jdk/src/share/classes/sun/security/tools/KeyStoreUtil.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/KeyStoreUtil.java	2016-07-29 00:16:01.144891579 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/tools/KeyStoreUtil.java	2016-07-29 00:21:53.671091268 +0100
+@@ -94,10 +94,15 @@
+             return null;
+         }
+         KeyStore caks = null;
+-        try (FileInputStream fis = new FileInputStream(file)) {
++	FileInputStream fis = null;
++        try {
+             caks = KeyStore.getInstance(JKS);
+             caks.load(fis, null);
+-        }
++        } finally {
++	    if (fis != null) {
++		fis.close();
++	    }
++	}
+         return caks;
+     }
+ 
+@@ -130,9 +135,9 @@
+                     }
+                 }
+ 
+-                try (BufferedReader br =
+-                     new BufferedReader(new InputStreamReader(
+-                         url.openStream()))) {
++		BufferedReader br = null;
++                try {
++		    br = new BufferedReader(new InputStreamReader(url.openStream()));
+                     String value = br.readLine();
+ 
+                     if (value == null) {
+@@ -140,7 +145,11 @@
+                     }
+ 
+                     return value.toCharArray();
+-                }
++                } finally {
++		    if (br != null) {
++			br.close();
++		    }
++		}
+             } catch (IOException ioe) {
+                 System.err.println(ioe);
+                 return null;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/keytool/Main.java openjdk-boot/jdk/src/share/classes/sun/security/tools/keytool/Main.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2016-07-29 00:02:36.006145428 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2016-07-29 00:15:18.761589045 +0100
+@@ -917,10 +917,15 @@
+         // Perform the specified command
+         if (command == CERTREQ) {
+             if (filename != null) {
+-                try (PrintStream ps = new PrintStream(new FileOutputStream
+-                                                      (filename))) {
+-                    doCertReq(alias, sigAlgName, ps);
+-                }
++		PrintStream ps = null;
++                try {
++		    ps = new PrintStream(new FileOutputStream(filename));
++		    doCertReq(alias, sigAlgName, ps);
++                } finally {
++		    if (ps != null) {
++			ps.close();
++		    }
++		}
+             } else {
+                 doCertReq(alias, sigAlgName, out);
+             }
+@@ -936,10 +941,15 @@
+             kssave = true;
+         } else if (command == EXPORTCERT) {
+             if (filename != null) {
+-                try (PrintStream ps = new PrintStream(new FileOutputStream
+-                                                   (filename))) {
++		PrintStream ps = null;
++                try {
++		    ps = new PrintStream(new FileOutputStream(filename));
+                     doExportCert(alias, ps);
+-                }
++                } finally {
++		    if (ps != null) {
++			ps.close();
++		    }
++		}
+             } else {
+                 doExportCert(alias, out);
+             }
+@@ -963,9 +973,15 @@
+             kssave = true;
+         } else if (command == IDENTITYDB) {
+             if (filename != null) {
+-                try (InputStream inStream = new FileInputStream(filename)) {
++		InputStream inStream = null;
++                try {
++		    inStream = new FileInputStream(filename);
+                     doImportIdentityDatabase(inStream);
+-                }
++                } finally {
++		    if (inStream != null) {
++			inStream.close();
++		    }
++		}
+             } else {
+                 doImportIdentityDatabase(System.in);
+             }
+@@ -1087,18 +1103,29 @@
+                 alias = keyAlias;
+             }
+             if (filename != null) {
+-                try (PrintStream ps =
+-                         new PrintStream(new FileOutputStream(filename))) {
++		PrintStream ps = null;
++                try {
++		    ps = new PrintStream(new FileOutputStream(filename));
+                     doGenCRL(ps);
+-                }
++                } finally {
++		    if (ps != null) {
++			ps.close();
++		    }
++		}
+             } else {
+                 doGenCRL(out);
+             }
+         } else if (command == PRINTCERTREQ) {
+             if (filename != null) {
+-                try (InputStream inStream = new FileInputStream(filename)) {
++		InputStream inStream = null;
++                try {
++		    inStream = new FileInputStream(filename);
+                     doPrintCertReq(inStream, out);
+-                }
++                } finally {
++		    if (inStream != null) {
++			inStream.close();
++		    }
++		}
+             } else {
+                 doPrintCertReq(System.in, out);
+             }
+@@ -2246,13 +2273,19 @@
+             int pos = 0;
+             while (entries.hasMoreElements()) {
+                 JarEntry je = entries.nextElement();
+-                try (InputStream is = jf.getInputStream(je)) {
++		InputStream is = null;
++                try {
++		    is = jf.getInputStream(je);
+                     while (is.read(buffer) != -1) {
+                         // we just read. this will throw a SecurityException
+                         // if a signature/digest check fails. This also
+                         // populate the signers
+                     }
+-                }
++                } finally {
++		    if (is != null) {
++			try { is.close(); } catch (IOException e) {}
++		    }
++		}
+                 CodeSigner[] signers = je.getCodeSigners();
+                 if (signers != null) {
+                     for (CodeSigner signer: signers) {
+@@ -2338,9 +2371,15 @@
+             }
+         } else {
+             if (filename != null) {
+-                try (FileInputStream inStream = new FileInputStream(filename)) {
+-                    printCertFromStream(inStream, out);
+-                }
++		FileInputStream inStream = null;
++                try {
++		    inStream = new FileInputStream(filename);
++		    printCertFromStream(inStream, out);
++                } finally {
++		    if (inStream != null) {
++			inStream.close();
++		    }
++		}
+             } else {
+                 printCertFromStream(System.in, out);
+             }

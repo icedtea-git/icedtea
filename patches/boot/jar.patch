@@ -1,27 +1,36 @@
 diff -Nru openjdk-boot.orig/jdk/make/common/Release.gmk openjdk-boot/jdk/make/common/Release.gmk
---- openjdk-boot.orig/jdk/make/common/Release.gmk	2011-06-13 16:08:46.000000000 +0100
-+++ openjdk-boot/jdk/make/common/Release.gmk	2011-06-13 17:06:49.515488800 +0100
-@@ -627,9 +627,19 @@
+--- openjdk-boot.orig/jdk/make/common/Release.gmk	2016-07-20 03:31:53.349151607 +0100
++++ openjdk-boot/jdk/make/common/Release.gmk	2016-07-20 03:41:37.223480082 +0100
+@@ -728,12 +728,28 @@
  RESOURCES_JAR=$(ABS_TEMPDIR)/resources-orig.jar
- $(RESOURCES_JAR): $(RES_JAR_FILELIST) $(OTHER_JAR_MANIFEST_FILE)
+ $(RESOURCES_JAR): $(RES_JAR_FILELIST) $(OTHER_JAR_MANIFEST_FILE) $(IMPORT_JAR_FILELIST)
  	$(prep-target)
 +ifneq (,$(JAR_KNOWS_ATFILE))
  	$(CD) $(CLASSBINDIR) && \
  	    $(BOOT_JAR_CMD) $(CREATE_JAR_OPTS) $(OTHER_JAR_MANIFEST_FILE) $@ \
  	        @$(RES_JAR_FILELIST) $(BOOT_JAR_JFLAGS)
+ 	$(CD) $(IMPORTSRCDIR) && \
+ 	    $(BOOT_JAR_CMD) $(UPDATE_JAR_OPTS) $@ \
+ 	        @$(IMPORT_JAR_FILELIST) $(BOOT_JAR_JFLAGS)
 +else ifneq (,$(JAR_ACCEPTS_STDIN_LIST))
 +	(cd $(CLASSBINDIR) && $(CAT) $(RES_JAR_FILELIST) | \
 +	$(BOOT_JAR_CMD) $(CREATE_JAR_OPTS)@ $(OTHER_JAR_MANIFEST_FILE) $@ \
 +	    $(BOOT_JAR_JFLAGS))
++	(cd $(IMPORTSRCDIR) && $(CAT) $(IMPORT_JAR_FILELIST) | \
++	$(BOOT_JAR_CMD) $(UPDATE_JAR_OPTS)@ $@ \
++	    $(BOOT_JAR_JFLAGS))
 +else
 +	(cd $(CLASSBINDIR) && \
 +	$(BOOT_JAR_CMD) $(CREATE_JAR_OPTS) $(OTHER_JAR_MANIFEST_FILE) $@ \
-+	    $(BOOT_JAR_JFLAGS) `cat $(RES_JAR_FILELIST)`)
++	    $(BOOT_JAR_JFLAGS) `$(CAT) $(RES_JAR_FILELIST)`)
++	(cd $(IMPORTSRCDIR) && \
++	$(BOOT_JAR_CMD) $(UPDATE_JAR_OPTS) $@ \
++	    $(BOOT_JAR_JFLAGS) `$(CAT) $(IMPORT_JAR_FILELIST)`)
 +endif
  	@$(CD) $(CLASSBINDIR) && $(java-vm-cleanup)
+ 	@$(CD) $(IMPORTSRCDIR) && $(java-vm-cleanup)
  
- # Create jsse.jar containing SunJSSE implementation classes
-@@ -683,9 +693,19 @@
+@@ -788,9 +804,19 @@
  RT_JAR=$(ABS_TEMPDIR)/rt-orig.jar
  $(RT_JAR): $(RT_JAR_FILELIST) $(RT_JAR_MANIFEST_FILE)
  	$(prep-target)
