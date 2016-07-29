@@ -1,3 +1,35 @@
+2015-05-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3115: Add check for elliptic curve
+	cryptography implementation.
+	* TestCryptoLevel.java: Moved to
+	test/standalone.
+	* rewriter/agpl-3.0.txt: Moved to
+	root directory.
+	* test/RH1195203.java: Likewise.
+	* Makefile.am:
+	(ECC_CHECK_BUILD_DIR): Added.
+	(CRYPTO_CHECK_SRCS): Update TestCryptoLevel.java
+	path.
+	(ECC_CHECK_SRCS): Added.
+	(MIME_TYPE_CHECK_SRCS): Update path.
+	(EXTRA_DIST): Add ECC_CHECK_SRCS.
+	(check-local): Add check-ecc.
+	(clean-tests): Add clean-check-ecc.
+	(clean-local): Add clean-ecccheck.
+	(ecccheck): Build ECC check test.
+	(clean-ecccheck): Cleanup ECC check test.
+	(check-ecc): Run ECC check test.
+	(clean-check-ecc): Cleanup run of ECC check test.
+	* NEWS: Updated.
+	* agpl-3.0.txt: Moved from rewriter as also
+	applies to tests.
+	* test/standalone/RH1195203.java: Moved from test.
+	* test/standalone/TestCryptoLevel.java: Moved from
+	root directory.
+	* test/standalone/TestEllipticCurveCryptoSupport.java:
+	Add check for elliptic curve cryptography support.
+
 2016-03-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3111: Provide option to disable SystemTap tests

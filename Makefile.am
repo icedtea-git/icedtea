@@ -70,6 +70,7 @@ STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
 STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
 JAMVM_IMPORT_PATH = $(abs_top_builddir)/jamvm/install/hotspot
 CRYPTO_CHECK_BUILD_DIR = $(abs_top_builddir)/test/cryptocheck.build
+ECC_CHECK_BUILD_DIR = $(abs_top_builddir)/ecccheck.build
 MIME_TYPE_CHECK_BUILD_DIR = $(abs_top_builddir)/test/mimetypecheck.build
 STAGE1_BOOT_RUNTIME = $(STAGE1_BOOT_DIR)/jre/lib/rt.jar
 STAGE2_BOOT_RUNTIME = $(STAGE2_BOOT_DIR)/jre/lib/rt.jar
@@ -367,8 +368,9 @@ OPENJDK_BOOT_TREE = stamps/patch-boot.stamp
 # Sources list
 
 REWRITER_SRCS = $(top_srcdir)/rewriter/com/redhat/rewriter/ClassRewriter.java
-CRYPTO_CHECK_SRCS = $(top_srcdir)/TestCryptoLevel.java
-MIME_TYPE_CHECK_SRCS = $(top_srcdir)/test/RH1195203.java
+CRYPTO_CHECK_SRCS = $(top_srcdir)/test/standalone/TestCryptoLevel.java
+ECC_CHECK_SRCS = $(top_srcdir)/test/standalone/TestEllipticCurveCryptoSupport.java
+MIME_TYPE_CHECK_SRCS = $(top_srcdir)/test/standalone/RH1195203.java
 
 # Patch list
 
@@ -924,6 +926,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	$(REWRITER_SRCS) \
 	test/tapset \
 	$(CRYPTO_CHECK_SRCS) \
+	$(ECC_CHECK_SRCS) \
 	$(MIME_TYPE_CHECK_SRCS)
 
 # Top-Level Targets
@@ -931,10 +934,10 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 
 all-local: icedtea-stage2 $(DESKTOP_FILES)
 
-check-local: jtregcheck $(SYSTEMTAP_TEST_SUITE) check-mimetype
+check-local: jtregcheck $(SYSTEMTAP_TEST_SUITE) check-ecc check-mimetype
 
 clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports \
-  clean-check-mimetype
+  clean-check-ecc clean-check-mimetype
 	if [ $(abs_top_srcdir) != $(abs_top_builddir) ] ; then \
 	  if [ -e test ] ; then \
 	    rmdir test ; \
@@ -950,7 +953,7 @@ clean-local: clean-tests \
  clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter \
  clean-add-systemtap clean-add-systemtap-debug clean-add-nss clean-add-tzdata-support \
  clean-add-tzdata-support-debug clean-cryptocheck clean-policytool-@JAVA_VER@.desktop \
- clean-jconsole-@JAVA_VER@.desktop clean-mimetypecheck
+ clean-jconsole-@JAVA_VER@.desktop clean-ecccheck clean-mimetypecheck
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -3076,6 +3079,29 @@ jconsole-@JAVA_VER@.desktop: jconsole.desktop
 clean-jconsole-@JAVA_VER@.desktop:
 	rm -f jconsole-@JAVA_VER@.desktop
 
+# ECC Availability Check
+
+stamps/ecccheck.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
+	mkdir -p $(ECC_CHECK_BUILD_DIR)
+	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
+	  -d $(ECC_CHECK_BUILD_DIR) $(ECC_CHECK_SRCS)
+	mkdir -p stamps
+	touch $@
+
+clean-ecccheck:
+	rm -rf $(ECC_CHECK_BUILD_DIR)
+	rm -f stamps/ecccheck.stamp
+
+stamps/check-ecc.stamp: stamps/ecccheck.stamp stamps/icedtea.stamp
+	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
+	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestEllipticCurveCryptoSupport yes ; \
+	fi
+	mkdir -p stamps
+	touch $@
+
+clean-check-ecc:
+	rm -f stamps/check-ecc.stamp
+
 # Installation Targets
 # ====================
 
@@ -3366,6 +3392,8 @@ check-crypto-debug: stamps/check-crypto-debug.stamp
 
 check-mimetype: stamps/check-mimetype.stamp
 
+check-ecc: stamps/check-ecc.stamp
+
 clone-boot: stamps/clone-boot.stamp
 
 cryptocheck: stamps/cryptocheck.stamp
@@ -3389,6 +3417,8 @@ download-jdk: stamps/download-jdk.stamp
 download-langtools: stamps/download-langtools.stamp
 
 download-openjdk: stamps/download-openjdk.stamp
+
+ecccheck: stamps/ecccheck.stamp
 
 extract: stamps/extract.stamp
 
