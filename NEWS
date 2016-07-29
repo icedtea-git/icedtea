@@ -15,6 +15,63 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 2.7.0 (201X-XX-XX):
 
 * Backports
+  - S8076221, PR2809, RH1302385: Disable RC4 cipher suites
+
+New in release 2.6.7 (2016-07-28):
+
+* Security fixes
+  - S8079718, CVE-2016-3458: IIOP Input Stream Hooking
+  - S8145446, CVE-2016-3485: Perfect pipe placement (Windows only)
+  - S8147771: Construction of static protection domains under Javax custom policy
+  - S8148872, CVE-2016-3500: Complete name checking
+  - S8149962, CVE-2016-3508: Better delineation of XML processing
+  - S8150752: Share Class Data
+  - S8151925: Font reference improvements
+  - S8152479, CVE-2016-3550: Coded byte streams
+  - S8155981, CVE-2016-3606: Bolster bytecode verification
+  - S8155985, CVE-2016-3598: Persistent Parameter Processing
+  - S8158571, CVE-2016-3610: Additional method handle validation
+* Import of OpenJDK 7 u111 build 0
+  - S6953295: Move few sun.security.{util, x509, pkcs} classes used by keytool/jarsigner to another package
+  - S7060849: Eliminate pack200 build warnings
+  - S7064075: Security libraries don't build with javac -Xlint:all,-deprecation -Werror
+  - S7069870: Parts of the JDK erroneously rely on generic array initializers with diamond
+  - S7102686: Restructure timestamp code so that jars and modules can more easily share the same code
+  - S7105780: Add SSLSocket client/SSLEngine server to templates directory
+  - S7142339: PKCS7.java is needlessly creating SHA1PRNG SecureRandom instances when timestamping is not done
+  - S7152582: PKCS11 tests should use the NSS libraries available in the OS
+  - S7192202: Make sure keytool prints both unknown and unparseable extensions
+  - S7194449: String resources for Key Tool and Policy Tool should be in their respective packages
+  - S7196855: autotest.sh fails on ubuntu because libsoftokn.so not found
+  - S7200682: TEST_BUG: keytool/autotest.sh still has problems with libsoftokn.so
+  - S8002306: (se) Selector.open fails if invoked with thread interrupt status set [win]
+  - S8009636: JARSigner including TimeStamp PolicyID (TSAPolicyID) as defined in RFC3161
+  - S8019341: Update CookieHttpsClientTest to use the newer framework.
+  - S8022228: Intermittent test failures in sun/security/ssl/javax/net/ssl/NewAPIs
+  - S8022439: Fix lint warnings in sun.security.ec
+  - S8022594: Potential deadlock in <clinit> of sun.nio.ch.Util/IOUtil
+  - S8023546: sun/security/mscapi/ShortRSAKey1024.sh fails intermittently
+  - S8036612: [parfait] JNI exception pending in jdk/src/windows/native/sun/security/mscapi/security.cpp
+  - S8037557: test SessionCacheSizeTests.java timeout
+  - S8038837: Add support to jarsigner for specifying timestamp hash algorithm
+  - S8079410: Hotspot version to share the same update and build version from JDK
+  - S8130735: javax.swing.TimerQueue: timer fires late when another timer starts
+  - S8139436: sun.security.mscapi.KeyStore might load incomplete data
+  - S8144313: Test SessionTimeOutTests can be timeout
+  - S8146387: Test SSLSession/SessionCacheSizeTests socket accept timed out
+  - S8146669: Test SessionTimeOutTests fails intermittently
+  - S8146993: Several javax/management/remote/mandatory regression tests fail after JDK-8138811
+  - S8147857: [TEST] RMIConnector logs attribute names incorrectly
+  - S8151841, PR3098: Build needs additional flags to compile with GCC 6
+  - S8151876: (tz) Support tzdata2016d
+  - S8157077: 8u101 L10n resource file updates
+  - S8161262: Fix jdk build with gcc 4.1.2: -fno-strict-overflow not known.
+* Import of OpenJDK 7 u111 build 1
+  - S7081817: test/sun/security/provider/certpath/X509CertPath/IllegalCertificates.java failing
+  - S8140344: add support for 3 digit update release numbers
+  - S8145017: Add support for 3 digit hotspot minor version numbers
+  - S8162344: The API changes made by CR 7064075 need to be reverted
+* Backports
   - S2178143, PR2958: JVM crashes if the number of bound CPUs changed during runtime
   - S4900206, PR3101: Include worst-case rounding tests for Math library functions
   - S6260348, PR3067: GTK+ L&F JTextComponent not respecting desktop caret blink rate
@@ -39,14 +96,13 @@ New in release 2.7.0 (201X-XX-XX):
   - S8026780, PR3020, RH1142587: Crash on PPC and PPC v2 for Java_awt test suit
   - S8047066, PR3020: Test test/sun/awt/image/bug8038000.java fails with ClassCastException
   - S8069181, PR3012, RH1015612: java.lang.AssertionError when compiling JDK 1.4 code in JDK 8
-  - S8076221, PR2809, RH1302385: Disable RC4 cipher suites
-  - S8151841, PR3098: Build needs additional flags to compile with GCC 6
   - S8158260, PR2992, RH1341258: PPC64: unaligned Unsafe.getInt can lead to the generation of illegal instructions
   - S8159244, PR3075: Partially initialized string object created by C2's string concat optimization may escape
 * Bug fixes
   - PR2799, RH1195203: Files are missing from resources.jar
   - PR2900: Don't use WithSeed versions of NSS functions as they don't fully process the seed
   - PR3091: SystemTap is heavily confused by multiple JDKs
+  - PR3102: Extend 8022594 to AixPollPort
   - PR3103: Handle case in clean-fonts where linux.fontconfig.Gentoo.properties.old has not been created
   - PR3111: Provide option to disable SystemTap tests
   - PR3114: Don't assume system mime.types supports text/x-java-source
@@ -55,13 +111,13 @@ New in release 2.7.0 (201X-XX-XX):
   - PR3118: Path to agpl-3.0.txt not updated
   - PR3119: Makefile handles cacerts as a symlink, but the configure check doesn't
 * AArch64 port
-  - S8148328: aarch64: redundant lsr instructions in stub code.
-  - S8148783: aarch64: SEGV running SpecJBB2013
-  - S8148948: aarch64: generate_copy_longs calls align() incorrectly
-  - S8150045: arraycopy causes segfaults in SATB during garbage collection
-  - S8154537: AArch64: some integer rotate instructions are never emitted
-  - S8154739: AArch64: TemplateTable::fast_xaccess loads in wrong mode
-  - S8157906: aarch64: some more integer rotate instructions are never emitted
+  - S8148328, PR3100: aarch64: redundant lsr instructions in stub code.
+  - S8148783, PR3100: aarch64: SEGV running SpecJBB2013
+  - S8148948, PR3100: aarch64: generate_copy_longs calls align() incorrectly
+  - S8150045, PR3100: arraycopy causes segfaults in SATB during garbage collection
+  - S8154537, PR3100: AArch64: some integer rotate instructions are never emitted
+  - S8154739, PR3100: AArch64: TemplateTable::fast_xaccess loads in wrong mode
+  - S8157906, PR3100: aarch64: some more integer rotate instructions are never emitted
 
 New in release 2.6.6 (2016-04-21):
 
