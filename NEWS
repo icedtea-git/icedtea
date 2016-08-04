@@ -12,6 +12,12 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.2.0 (2016-09-XX):
 
+* Backports
+  - S8157306, PR3121: Random infrequent null pointer exceptions in javac (enabled on AArch64 only)
+  - S8162384, PR3122: Performance regression: bimorphic inlining may be bypassed by type speculation
+* Bug fixes
+  - PR3123: Some object files built without -fPIC on x86 only
+
 New in release 3.1.0 (2016-07-25):
 
 * Security fixes

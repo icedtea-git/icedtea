@@ -1,3 +1,25 @@
+2016-08-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Bump to icedtea-3.2.0pre01.
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-3.2.0pre01 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 3.2.0pre01.
+	* hotspot.map.in: Update to icedtea-3.2.0pre01 tag.
+
 2016-07-26  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add 3.2.0 section. Add missing
@@ -34,6 +56,7 @@
 
 2016-07-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	Bump to icedtea-3.1.0.
 	* Makefile.am,
 	(JDK_UPDATE_VERSION): Bump to 101.
 	(BUILD_VERSION): Set to b13.
