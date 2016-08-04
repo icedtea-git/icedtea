@@ -17,7 +17,7 @@ if test "x@PAX_COMMAND@" != "x"; then
     else
 	if test "x${FAIL_ON_ERROR}" = "xtrue"; then
 	    echo "ERROR: Could not apply PaX markings to files in ${JDK}";
-	    exit -1;
+	    exit 1;
 	else
 	    echo "WARNING: Could not apply PaX markings to files in ${JDK}";
 	fi

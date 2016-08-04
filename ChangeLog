@@ -1,3 +1,11 @@
+2016-08-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3126: pax-mark-vm script calls "exit -1" which
+	is invalid in dash
+	* NEWS: Updated.
+	* pax-mark-vm.in:
+	Use POSIX-compliant exit value.
+
 2015-07-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3127, G590348: Only apply PaX markings
