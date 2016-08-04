@@ -17,6 +17,7 @@ New in release 3.2.0 (2016-09-XX):
   - S8162384, PR3122: Performance regression: bimorphic inlining may be bypassed by type speculation
 * Bug fixes
   - PR3123: Some object files built without -fPIC on x86 only
+  - PR3127, G590348: Only apply PaX markings by default on running PaX kernels
 
 New in release 3.1.0 (2016-07-25):
 

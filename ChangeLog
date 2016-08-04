@@ -1,3 +1,16 @@
+2015-07-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3127, G590348: Only apply PaX markings
+	by default on running PaX kernels
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_HAS_PAX): Use grep directly rather
+	than piping from cat.
+	(IT_WITH_PAX): Use ${pax_active} as the
+	default value. Handle --with-pax and
+	--without-pax options (i.e. without arguments)
+	better.
+
 2016-08-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	Bump shenandoah to aarch64-shenandoah-jdk8u101-b15.

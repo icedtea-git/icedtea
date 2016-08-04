@@ -1860,7 +1860,7 @@ AC_DEFUN_ONCE([IT_WITH_NASHORN_SRC_ZIP],
 AC_DEFUN_ONCE([IT_HAS_PAX],
 [
   AC_MSG_CHECKING([if a PaX kernel is in use])
-  if cat /proc/self/status | grep '^PaX' >&AS_MESSAGE_LOG_FD 2>&1; then
+  if grep '^PaX' /proc/self/status >&AS_MESSAGE_LOG_FD 2>&1; then
     pax_active=yes;
   else
     pax_active=no;
@@ -1877,41 +1877,44 @@ AC_DEFUN_ONCE([IT_WITH_PAX],
   AC_ARG_WITH([pax],
               [AS_HELP_STRING(--with-pax=COMMAND,the command used for pax marking)],
   [
-    if test "x${withval}" = "xyes"; then
-      PAX_COMMAND=no
-    else
-      PAX_COMMAND="${withval}"
-    fi
+    PAX_COMMAND="${withval}"
   ],
   [ 
-    PAX_COMMAND=no
+    PAX_COMMAND=${pax_active}
   ])
-  AC_MSG_RESULT(${PAX_COMMAND})
-  if test "x${PAX_COMMAND}" == "xno"; then
-    PAX_COMMAND=${PAX_DEFAULT}
-  fi
-  AC_MSG_CHECKING([if $PAX_COMMAND is a valid executable file])
-  if test -x "${PAX_COMMAND}" && test -f "${PAX_COMMAND}"; then
-    AC_MSG_RESULT([yes])
-  else
+  if test "x${PAX_COMMAND}" == "xyes"; then
     AC_MSG_RESULT([no])
-    PAX_COMMAND=""
-    AC_PATH_PROG(PAX_COMMAND, "paxmark.sh")
-    if test -z "${PAX_COMMAND}"; then
-      AC_PATH_PROG(PAX_COMMAND, "paxctl-ng")
-    fi
-    if test -z "${PAX_COMMAND}"; then
-      AC_PATH_PROG(PAX_COMMAND, "chpax")
-    fi
-    if test -z "${PAX_COMMAND}"; then
-      AC_PATH_PROG(PAX_COMMAND, "paxctl")
-    fi
-    if test -z "${PAX_COMMAND}"; then
-      if test "x${pax_active}" = "xyes"; then
-        AC_MSG_ERROR("No PaX utility found and running on a PaX kernel.")
-      else
-        AC_MSG_WARN("No PaX utility found.")
+    PAX_COMMAND=${PAX_DEFAULT}
+    AC_MSG_NOTICE([PaX enabled but no tool specified; using ${PAX_DEFAULT}])
+  else
+    AC_MSG_RESULT(${PAX_COMMAND})
+  fi
+  if test "x${PAX_COMMAND}" != "xno"; then
+    AC_MSG_CHECKING([if $PAX_COMMAND is a valid executable file])
+    if test -x "${PAX_COMMAND}" && test -f "${PAX_COMMAND}"; then
+      AC_MSG_RESULT([yes])
+    else
+      AC_MSG_RESULT([no])
+      PAX_COMMAND=""
+      AC_PATH_PROG(PAX_COMMAND, "paxmark.sh")
+      if test -z "${PAX_COMMAND}"; then
+        AC_PATH_PROG(PAX_COMMAND, "paxctl-ng")
       fi
+      if test -z "${PAX_COMMAND}"; then
+        AC_PATH_PROG(PAX_COMMAND, "chpax")
+      fi
+      if test -z "${PAX_COMMAND}"; then
+        AC_PATH_PROG(PAX_COMMAND, "paxctl")
+      fi
+    fi
+  else
+    PAX_COMMAND=""
+  fi
+  if test -z "${PAX_COMMAND}"; then
+    if test "x${pax_active}" = "xyes"; then
+      AC_MSG_ERROR("No PaX utility found and running on a PaX kernel.")
+    else
+      AC_MSG_WARN("No PaX utility found.")
     fi
   fi
   if test -n "${PAX_COMMAND}"; then
