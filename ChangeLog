@@ -1,5 +1,19 @@
 2016-08-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	Bump shenandoah to aarch64-shenandoah-jdk8u101-b15.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add PR3122 patch and
+	use $(HSBUILD) in all paths.
+	* hotspot.map.in: Update shenandoah to
+	aarch64-shenandoah-jdk8u101-b15 tag.
+	* patches/hotspot/shenandoah/8158260-pr2991-rh1341258.patch:
+	Fixed to apply following addition of
+	8131779 (Montgomery multiply intrinsic)
+	* patches/hotspot/shenandoah/8162384-pr3122.patch:
+	Provide S8162384/PR3122 for Shenandoah.
+
+2016-08-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	Bump to icedtea-3.2.0pre01.
 	* Makefile.am:
 	(CORBA_CHANGESET): Update to icedtea-3.2.0pre01 tag.

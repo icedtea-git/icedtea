@@ -9,9 +9,9 @@ Summary: Adjust instruction generation. Includes portions of 8026049 for test ca
 Reviewed-by: goetz
 Contributed-by: gromero@linux.vnet.ibm.com, horii@jp.ibm.com
 
-diff -r 3fc29347b27f -r 4b40867e627d src/cpu/aarch64/vm/vm_version_aarch64.cpp
---- openjdk/hotspot/src/cpu/aarch64/vm/vm_version_aarch64.cpp	Fri May 20 19:42:15 2016 +0100
-+++ openjdk/hotspot/src/cpu/aarch64/vm/vm_version_aarch64.cpp	Fri Jun 17 11:31:24 2016 +0200
+diff -Nru openjdk.orig/hotspot/src/cpu/aarch64/vm/vm_version_aarch64.cpp openjdk/hotspot/src/cpu/aarch64/vm/vm_version_aarch64.cpp
+--- openjdk.orig/hotspot/src/cpu/aarch64/vm/vm_version_aarch64.cpp	2016-08-03 06:40:06.000000000 +0100
++++ openjdk/hotspot/src/cpu/aarch64/vm/vm_version_aarch64.cpp	2016-08-04 06:47:10.570843896 +0100
 @@ -1,6 +1,6 @@
  /*
 - * Copyright (c) 2013, Red Hat Inc.
@@ -20,7 +20,7 @@ diff -r 3fc29347b27f -r 4b40867e627d src/cpu/aarch64/vm/vm_version_aarch64.cpp
   * All rights reserved.
   * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
   *
-@@ -232,6 +232,11 @@
+@@ -296,6 +296,11 @@
      UsePopCountInstruction = true;
    }
  
@@ -29,12 +29,12 @@ diff -r 3fc29347b27f -r 4b40867e627d src/cpu/aarch64/vm/vm_version_aarch64.cpp
 +    FLAG_SET_DEFAULT(UseUnalignedAccesses, true);
 +  }
 +
- #ifdef COMPILER2
-   if (FLAG_IS_DEFAULT(OptoScheduling)) {
-     OptoScheduling = true;
-diff -r 3fc29347b27f -r 4b40867e627d src/cpu/ppc/vm/ppc.ad
---- openjdk/hotspot/src/cpu/ppc/vm/ppc.ad	Fri May 20 19:42:15 2016 +0100
-+++ openjdk/hotspot/src/cpu/ppc/vm/ppc.ad	Fri Jun 17 11:31:24 2016 +0200
+   if (FLAG_IS_DEFAULT(UseMontgomeryMultiplyIntrinsic)) {
+     UseMontgomeryMultiplyIntrinsic = true;
+   }
+diff -Nru openjdk.orig/hotspot/src/cpu/ppc/vm/ppc.ad openjdk/hotspot/src/cpu/ppc/vm/ppc.ad
+--- openjdk.orig/hotspot/src/cpu/ppc/vm/ppc.ad	2016-08-03 06:40:06.000000000 +0100
++++ openjdk/hotspot/src/cpu/ppc/vm/ppc.ad	2016-08-04 06:46:19.679689919 +0100
 @@ -5461,7 +5461,7 @@
  %}
  
@@ -53,9 +53,9 @@ diff -r 3fc29347b27f -r 4b40867e627d src/cpu/ppc/vm/ppc.ad
    match(Set dst (ConvI2L (LoadI mem)));
    ins_cost(3*MEMORY_REF_COST);
  
-diff -r 3fc29347b27f -r 4b40867e627d src/cpu/ppc/vm/vm_version_ppc.cpp
---- openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp	Fri May 20 19:42:15 2016 +0100
-+++ openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp	Fri Jun 17 11:31:24 2016 +0200
+diff -Nru openjdk.orig/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp
+--- openjdk.orig/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp	2016-08-03 06:40:06.000000000 +0100
++++ openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp	2016-08-04 06:46:19.679689919 +0100
 @@ -1,6 +1,6 @@
  /*
 - * Copyright (c) 1997, 2014, Oracle and/or its affiliates. All rights reserved.
@@ -76,9 +76,9 @@ diff -r 3fc29347b27f -r 4b40867e627d src/cpu/ppc/vm/vm_version_ppc.cpp
  }
  
  void VM_Version::print_features() {
-diff -r 3fc29347b27f -r 4b40867e627d src/cpu/sparc/vm/vm_version_sparc.cpp
---- openjdk/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp	Fri May 20 19:42:15 2016 +0100
-+++ openjdk/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp	Fri Jun 17 11:31:24 2016 +0200
+diff -Nru openjdk.orig/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp openjdk/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp
+--- openjdk.orig/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp	2016-08-03 06:40:06.000000000 +0100
++++ openjdk/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp	2016-08-04 06:46:19.679689919 +0100
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (c) 1997, 2014, Oracle and/or its affiliates. All rights reserved.
@@ -100,10 +100,10 @@ diff -r 3fc29347b27f -r 4b40867e627d src/cpu/sparc/vm/vm_version_sparc.cpp
  #ifndef PRODUCT
    if (PrintMiscellaneous && Verbose) {
      tty->print_cr("L2 data cache line size: %u", L2_data_cache_line_size());
-diff -r 3fc29347b27f -r 4b40867e627d src/cpu/x86/vm/vm_version_x86.cpp
---- openjdk/hotspot/src/cpu/x86/vm/vm_version_x86.cpp	Fri May 20 19:42:15 2016 +0100
-+++ openjdk/hotspot/src/cpu/x86/vm/vm_version_x86.cpp	Fri Jun 17 11:31:24 2016 +0200
-@@ -994,6 +994,11 @@
+diff -Nru openjdk.orig/hotspot/src/cpu/x86/vm/vm_version_x86.cpp openjdk/hotspot/src/cpu/x86/vm/vm_version_x86.cpp
+--- openjdk.orig/hotspot/src/cpu/x86/vm/vm_version_x86.cpp	2016-08-03 06:40:06.000000000 +0100
++++ openjdk/hotspot/src/cpu/x86/vm/vm_version_x86.cpp	2016-08-04 06:46:19.679689919 +0100
+@@ -1030,6 +1030,11 @@
       (cache_line_size > ContendedPaddingWidth))
       ContendedPaddingWidth = cache_line_size;
  
@@ -115,9 +115,9 @@ diff -r 3fc29347b27f -r 4b40867e627d src/cpu/x86/vm/vm_version_x86.cpp
  #ifndef PRODUCT
    if (PrintMiscellaneous && Verbose) {
      tty->print_cr("Logical CPUs per core: %u",
-diff -r 3fc29347b27f -r 4b40867e627d src/cpu/zero/vm/vm_version_zero.cpp
---- openjdk/hotspot/src/cpu/zero/vm/vm_version_zero.cpp	Fri May 20 19:42:15 2016 +0100
-+++ openjdk/hotspot/src/cpu/zero/vm/vm_version_zero.cpp	Fri Jun 17 11:31:24 2016 +0200
+diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/vm_version_zero.cpp openjdk/hotspot/src/cpu/zero/vm/vm_version_zero.cpp
+--- openjdk.orig/hotspot/src/cpu/zero/vm/vm_version_zero.cpp	2016-08-03 06:40:06.000000000 +0100
++++ openjdk/hotspot/src/cpu/zero/vm/vm_version_zero.cpp	2016-08-04 06:46:19.679689919 +0100
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (c) 1997, 2010, Oracle and/or its affiliates. All rights reserved.
@@ -138,10 +138,10 @@ diff -r 3fc29347b27f -r 4b40867e627d src/cpu/zero/vm/vm_version_zero.cpp
 +    FLAG_SET_DEFAULT(UseUnalignedAccesses, false);
 +  }
 +}
-diff -r 3fc29347b27f -r 4b40867e627d src/share/vm/prims/unsafe.cpp
---- openjdk/hotspot/src/share/vm/prims/unsafe.cpp	Fri May 20 19:42:15 2016 +0100
-+++ openjdk/hotspot/src/share/vm/prims/unsafe.cpp	Fri Jun 17 11:31:24 2016 +0200
-@@ -393,6 +393,24 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/prims/unsafe.cpp openjdk/hotspot/src/share/vm/prims/unsafe.cpp
+--- openjdk.orig/hotspot/src/share/vm/prims/unsafe.cpp	2016-08-03 06:40:06.000000000 +0100
++++ openjdk/hotspot/src/share/vm/prims/unsafe.cpp	2016-08-04 06:46:19.679689919 +0100
+@@ -401,6 +401,24 @@
  
  #endif // not SUPPORTS_NATIVE_CX8
  
@@ -166,7 +166,7 @@ diff -r 3fc29347b27f -r 4b40867e627d src/share/vm/prims/unsafe.cpp
  #define DEFINE_GETSETOOP(jboolean, Boolean) \
   \
  UNSAFE_ENTRY(jboolean, Unsafe_Get##Boolean##140(JNIEnv *env, jobject unsafe, jobject obj, jint offset)) \
-@@ -1704,6 +1722,9 @@
+@@ -1729,6 +1747,9 @@
      {CC"loadFence",          CC"()V",                    FN_PTR(Unsafe_LoadFence)},
      {CC"storeFence",         CC"()V",                    FN_PTR(Unsafe_StoreFence)},
      {CC"fullFence",          CC"()V",                    FN_PTR(Unsafe_FullFence)},
@@ -176,9 +176,9 @@ diff -r 3fc29347b27f -r 4b40867e627d src/share/vm/prims/unsafe.cpp
  };
  
  #undef CC
-diff -r 3fc29347b27f -r 4b40867e627d src/share/vm/runtime/globals.hpp
---- openjdk/hotspot/src/share/vm/runtime/globals.hpp	Fri May 20 19:42:15 2016 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	Fri Jun 17 11:31:24 2016 +0200
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp openjdk/hotspot/src/share/vm/runtime/globals.hpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/globals.hpp	2016-08-03 06:40:06.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/globals.hpp	2016-08-04 06:46:19.679689919 +0100
 @@ -3961,6 +3961,9 @@
    product(bool, UseLockedTracing, false,                                    \
            "Use locked-tracing when doing event-based tracing")              \
@@ -189,9 +189,9 @@ diff -r 3fc29347b27f -r 4b40867e627d src/share/vm/runtime/globals.hpp
    product_pd(bool, PreserveFramePointer,                                    \
               "Use the FP register for holding the frame pointer "           \
               "and not as a general purpose register.")
-diff -r 3fc29347b27f -r 4b40867e627d test/compiler/unsafe/JdkInternalMiscUnsafeUnalignedAccess.java
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ openjdk/hotspot/test/compiler/unsafe/JdkInternalMiscUnsafeUnalignedAccess.java	Fri Jun 17 11:31:24 2016 +0200
+diff -Nru openjdk.orig/hotspot/test/compiler/unsafe/JdkInternalMiscUnsafeUnalignedAccess.java openjdk/hotspot/test/compiler/unsafe/JdkInternalMiscUnsafeUnalignedAccess.java
+--- openjdk.orig/hotspot/test/compiler/unsafe/JdkInternalMiscUnsafeUnalignedAccess.java	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/hotspot/test/compiler/unsafe/JdkInternalMiscUnsafeUnalignedAccess.java	2016-08-04 06:46:19.679689919 +0100
 @@ -0,0 +1,315 @@
 +/*
 + * Copyright (c) 2016 SAP SE. All rights reserved.

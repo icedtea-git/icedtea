@@ -1,0 +1,54 @@
+# HG changeset patch
+# User roland
+# Date 1469615613 -7200
+#      Wed Jul 27 12:33:33 2016 +0200
+# Node ID fd29eff8b797daa41a68394ced7fe80c9e8c96e9
+# Parent  ee9bffb3bd390b2ad805c7b59d7d2ab8a68a4367
+8162384, PR3122: Performance regression: bimorphic inlining may be bypassed by type speculation
+Summary: when speculation fails at a call fallback to profile data at the call site
+Reviewed-by: kvn
+
+diff -r ee9bffb3bd39 -r fd29eff8b797 src/share/vm/opto/doCall.cpp
+--- openjdk/hotspot/src/share/vm/opto/doCall.cpp	Mon Aug 01 16:33:54 2016 +0100
++++ openjdk/hotspot/src/share/vm/opto/doCall.cpp	Wed Jul 27 12:33:33 2016 +0200
+@@ -205,16 +205,22 @@
+ 
+       int morphism = profile.morphism();
+       if (speculative_receiver_type != NULL) {
+-        // We have a speculative type, we should be able to resolve
+-        // the call. We do that before looking at the profiling at
+-        // this invoke because it may lead to bimorphic inlining which
+-        // a speculative type should help us avoid.
+-        receiver_method = callee->resolve_invoke(jvms->method()->holder(),
+-                                                 speculative_receiver_type);
+-        if (receiver_method == NULL) {
++        if (!too_many_traps(caller, bci, Deoptimization::Reason_speculate_class_check)) {
++          // We have a speculative type, we should be able to resolve
++          // the call. We do that before looking at the profiling at
++          // this invoke because it may lead to bimorphic inlining which
++          // a speculative type should help us avoid.
++          receiver_method = callee->resolve_invoke(jvms->method()->holder(),
++                                                   speculative_receiver_type);
++          if (receiver_method == NULL) {
++            speculative_receiver_type = NULL;
++          } else {
++            morphism = 1;
++          }
++        } else {
++          // speculation failed before. Use profiling at the call
++          // (could allow bimorphic inlining for instance).
+           speculative_receiver_type = NULL;
+-        } else {
+-          morphism = 1;
+         }
+       }
+       if (receiver_method == NULL &&
+@@ -252,7 +258,7 @@
+                                     Deoptimization::Reason_bimorphic :
+                                     (speculative_receiver_type == NULL ? Deoptimization::Reason_class_check : Deoptimization::Reason_speculate_class_check);
+           if ((morphism == 1 || (morphism == 2 && next_hit_cg != NULL)) &&
+-              !too_many_traps(jvms->method(), jvms->bci(), reason)
++              !too_many_traps(caller, bci, reason)
+              ) {
+             // Generate uncommon trap for class check failure path
+             // in case of monomorphic or bimorphic virtual call site.
