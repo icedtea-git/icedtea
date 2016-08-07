@@ -1,3 +1,27 @@
+2016-08-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Bump to icedtea-3.2.0pre02.
+	* Makefile.am,
+	(JDK_UPDATE_VERSION): Bump to 102.
+	(BUILD_VERSION): Set to b14.
+	(CORBA_CHANGESET): Update to icedtea-3.2.0pre02 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 3.2.0pre02.
+	* hotspot.map.in: Update to icedtea-3.2.0pre02 tag.
+
 2016-08-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3126: pax-mark-vm script calls "exit -1" which
@@ -92,7 +116,7 @@
 2016-07-25  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	Bump to icedtea-3.1.0.
-	* Makefile.am,
+	* Makefile.am:
 	(JDK_UPDATE_VERSION): Bump to 101.
 	(BUILD_VERSION): Set to b13.
 	(CORBA_CHANGESET): Update to icedtea-3.1.0 tag.

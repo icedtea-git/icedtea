@@ -12,6 +12,149 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.2.0 (2016-09-XX):
 
+* Import of OpenJDK 8 u102 build 14
+  - S4515292: ReferenceType.isStatic() returns true for arrays
+  - S4858370: JDWP: Memory Leak: GlobalRefs never deleted when processing invokeMethod command
+  - S6976636: JVM/TI test ex03t001 fails assertion
+  - S7185591: jcmd-big-script.sh ERROR: could not find app's Java pid.
+  - S8017462: G1: guarantee fails with UseDynamicNumberOfGCThreads
+  - S8034168: ThreadMXBean/Locks.java failed, blocked on wrong object
+  - S8036006: [TESTBUG] sun/tools/native2ascii/NativeErrors.java fails: Process exit code was 0, but error was expected.
+  - S8041781: Need new regression tests for PBE keys
+  - S8041787: Need new regressions tests for buffer handling for PBE algorithms
+  - S8043836: Need new tests for AES cipher
+  - S8044199: Tests for RSA keys and key specifications
+  - S8044772: TempDirTest.java still times out with -Xcomp
+  - S8046339: sun.rmi.transport.DGCAckHandler leaks memory
+  - S8047031: Add SocketPermission tests for legacy socket types
+  - S8048052: Permission tests for setFactory
+  - S8048138: Tests for JAAS callbacks
+  - S8048147: Privilege tests with JAAS Subject.doAs
+  - S8048356: SecureRandom default provider tests
+  - S8048357: PKCS basic tests
+  - S8048360: Test signed jar files
+  - S8048362: Tests for doPrivileged with accomplice
+  - S8048596: Tests for AEAD ciphers
+  - S8048599: Tests for key wrap and unwrap operations
+  - S8048603: Additional tests for MAC algorithms
+  - S8048604: Tests for strong crypto ciphers
+  - S8048607: Test key generation of DES and DESEDE
+  - S8048610: Implement regression test for bug fix of 4686632 in JCE
+  - S8048617: Tests for PKCS12 read operations
+  - S8048618: Tests for PKCS12 write operations.
+  - S8048619: Implement tests for converting PKCS12 keystores
+  - S8048624: Tests for SealedObject
+  - S8048819: Implement reliability test for DH algorithm
+  - S8048820: Implement tests for SecretKeyFactory
+  - S8048830: Implement tests for new functionality provided in JEP 166
+  - S8049237: Need new tests for X509V3 certificates
+  - S8049321: Support SHA256WithDSA in JSSE
+  - S8049429: Tests for java client server communications with various TLS/SSL combinations.
+  - S8049432: New tests for TLS property jdk.tls.client.protocols
+  - S8049814: Additional SASL client-server tests
+  - S8050281: New permission tests for JEP 140
+  - S8050370: Need new regressions tests for messageDigest with DigestIOStream
+  - S8050371: More MessageDigest tests
+  - S8050374: More Signature tests
+  - S8050427: LoginContext tests to cover JDK-4703361
+  - S8050460: JAAS login/logout tests with LoginContext
+  - S8050461: Tests for syntax checking of JAAS configuration file
+  - S8054278: Refactor jps utility tests
+  - S8055530: assert(_exits.control()->is_top() || !_gvn.type(ret_phi)->empty()) failed: return value must be well defined
+  - S8055844: [TESTBUG] test/runtime/NMT/VirtualAllocCommitUncommitRecommit.java fails on Solaris Sparc due to incorrect page size being used
+  - S8059677: Thread.getName() instantiates Strings
+  - S8061464: A typo in CipherTestUtils test
+  - S8062536: [TESTBUG] Conflicting GC combinations in jdk tests
+  - S8065076: java/net/SocketPermission/SocketPermissionTest.java fails intermittently
+  - S8065078: NetworkInterface.getNetworkInterfaces() triggers intermittent test failures
+  - S8066871: java.lang.VerifyError: Bad local variable type - local final String
+  - S8068427: Hashtable deserialization reconstitutes table with wrong capacity
+  - S8069038: javax/net/ssl/TLS/TLSClientPropertyTest.java needs to be updated for JDK-8061210
+  - S8069253: javax/net/ssl/TLS/TestJSSE.java failed on Mac
+  - S8071125: Improve exception messages in URLPermission
+  - S8072081: Supplementary characters are rejected in comments
+  - S8072463: Remove requirement that AKID and SKID have to match when building certificate chain
+  - S8072725: Provide more granular levels for GC verification
+  - S8073400: Some Monospaced logical fonts have a different width
+  - S8073872: Schemagen fails with StackOverflowError if element references containing class
+  - S8074931: Additional tests for CertPath API
+  - S8075286: Additional tests for signature algorithm OIDs and transformation string
+  - S8076486: [TESTBUG] javax/security/auth/Subject/doAs/NestedActions.java fails if extra VM options are given
+  - S8076545: Text size is twice bigger under Windows L&F on Win 8.1 with HiDPI display
+  - S8076995: gc/ergonomics/TestDynamicNumberOfGCThreads.java failed with java.lang.RuntimeException: 'new_active_workers' missing from stdout/stderr
+  - S8079138: Additional negative tests for XML signature processing
+  - S8081512: Remove sun.invoke.anon classes, or move / co-locate them with tests
+  - S8081771: ProcessTool.createJavaProcessBuilder() needs new addTestVmAndJavaOptions argument
+  - S8129419: heapDumper.cpp: assert(length_in_bytes > 0) failed: nothing to copy
+  - S8130150: Implement BigInteger.montgomeryMultiply intrinsic
+  - S8130242: DataFlavorComparator transitivity exception
+  - S8130304: Inference: NodeNotFoundException thrown with deep generic method call chain
+  - S8130425: libjvm crash due to stack overflow in executables with 32k tbss/tdata
+  - S8133023: ParallelGCThreads is not calculated correctly
+  - S8134111: Unmarshaller unmarshalls XML element which doesn't have the expected namespace
+  - S8135259: InetAddress.getAllByName only reports "unknown error" instead of actual cause
+  - S8136506: Include sun.arch.data.model as a property that can be queried by jtreg
+  - S8137068: Tests added in JDK-8048604 fail to compile
+  - S8139040: Fix initializations before ShouldNotReachHere() etc. and enable -Wuninitialized on linux.
+  - S8139581: AWT components are not drawn after removal and addition to a container
+  - S8141243: Unexpected timezone returned after parsing a date
+  - S8141420: Compiler runtime entries don't hold Klass* from being GCed
+  - S8141445: Use of Solaris/SPARC M7 libadimalloc.so can generate unknown signal in hs_err file
+  - S8141551: C2 can not handle returns with inccompatible interface arrays
+  - S8143377: Test PKCS8Test.java fails
+  - S8143647: Javac compiles method reference that allows results in an IllegalAccessError
+  - S8144144: ORB destroy() leaks filedescriptors after unsuccessful connection
+  - S8144593: Suppress not recognized property/feature warning messages from SAXParser
+  - S8144957: Remove PICL warning message
+  - S8145039: JAXB marshaller fails with ClassCastException on classes generated by xjc
+  - S8145228: Java Access Bridge, getAccessibleStatesStringFromContext doesn't wrap the call to getAccessibleRole
+  - S8145388: URLConnection.guessContentTypeFromStream returns image/jpg for some JPEG images
+  - S8145974: XMLStreamWriter produces invalid XML for surrogate pairs on OutputStreamWriter
+  - S8146035: Windows - With LCD antialiasing, some glyphs are not rendered correctly
+  - S8146192: Add test for JDK-8049321
+  - S8146274: Thread spinning on WeakHashMap.getEntry() with concurrent use of nashorn
+  - S8147468: Allow users to bound the size of buffers cached in the per-thread buffer caches
+  - S8147645: get_ctrl_no_update() code is wrong
+  - S8147807: crash in libkcms.so on linux-sparc
+  - S8148379: jdk.nashorn.api.scripting spec. adjustments, clarifications
+  - S8148627: RestrictTestMaxCachedBufferSize.java to 64-bit platforms
+  - S8148820: Missing @since Javadoc tag in Logger.log(Level, Supplier)
+  - S8148926: Call site profiling fails on braces-wrapped anonymous function
+  - S8149017: Delayed provider selection broken in RSA client key exchange
+  - S8149029: Secure validation of XML based digital signature always enabled when checking wrapping attacks
+  - S8149330: Capacity of StringBuilder should not get close to Integer.MAX_VALUE unless necessary
+  - S8149334: JSON.parse(JSON.stringify([])).push(10) creates an array containing two elements
+  - S8149368: [hidpi] JLabel font is twice bigger than JTextArea font on Windows 7,HiDPI, Windows L&F
+  - S8149411: PKCS12KeyStore cannot extract AES Secret Keys
+  - S8149417: Use final restricted flag
+  - S8149450: LdapCtx.processReturnCode() throwing Null Pointer Exception
+  - S8149453: [hidpi] JFileChooser does not scale properly on Windows with HiDPI display and Windows L&F
+  - S8149543: range check CastII nodes should not be split through Phi
+  - S8149743: JVM crash after debugger hotswap with lambdas
+  - S8149744: fix testng.jar delivery in Nashorn build.xml
+  - S8149915: enabling validate-annotations feature for xsd schema with annotation causes NPE
+  - S8150002: Check for the validity of oop before printing it in verify_remembered_set
+  - S8150470: JCK: api/xsl/conf/copy/copy19 test failure
+  - S8150518: G1 GC crashes at G1CollectedHeap::do_collection_pause_at_safepoint(double)
+  - S8150533: Test java/util/logging/LogManagerAppContextDeadlock.java times out intermittently.
+  - S8150704: XALAN: ERROR: 'No more DTM IDs are available' when transforming with lots of temporary result trees
+  - S8150780: Repeated offer and remove on ConcurrentLinkedQueue lead to an OutOfMemoryError
+  - S8151064: com/sun/jdi/RedefineAddPrivateMethod.sh fails intermittently
+  - S8151197: [TEST_BUG] Need to backport fix for test/javax/net/ssl/TLS/TestJSSE.java
+  - S8151352: jdk/test/sample fails with "effective library path is outside the test suite"
+  - S8151431: DateFormatSymbols triggers this.clone() in the constructor
+  - S8151535: TESTBUG: java/lang/invoke/AccessControlTest.java should be modified to run with JTREG 4.1 b13
+  - S8151731: Add new jtreg keywords to jdk 8
+  - S8151998: VS2010 ThemeReader.cpp(758) : error C3861: 'round': identifier not found
+  - S8152927: Incorrect GPL header in StubFactoryDynamicBase.java reported
+  - S8153252: SA: Hotspot build on Windows fails if make/closed folder does not exist
+  - S8153531: Improve exception messaging for RSAClientKeyExchange
+  - S8153641: assert(thread_state == _thread_in_native) failed: Assumed thread_in_native while heap dump
+  - S8153673: [BACKOUT] JDWP: Memory Leak: GlobalRefs never deleted when processing invokeMethod command
+  - S8154304: NullpointerException at LdapReferralException.getReferralContext
+  - S8154722: Test gc/ergonomics/TestDynamicNumberOfGCThreads.java fails
+  - S8157078: 8u102 L10n resource file updates
+  - S8157838: Personalized Windows Font Size is not taken into account in Java8u102
 * Backports
   - S8157306, PR3121: Random infrequent null pointer exceptions in javac (enabled on AArch64 only)
   - S8162384, PR3122: Performance regression: bimorphic inlining may be bypassed by type speculation
