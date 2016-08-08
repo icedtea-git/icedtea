@@ -339,12 +339,10 @@ ICEDTEA_PATCHES = \
 
 if WITH_ALT_HSBUILD
 ICEDTEA_PATCHES += \
-	patches/hotspot/$(HSBUILD)/6425769-pr2859.patch \
 	patches/hotspot/$(HSBUILD)/8038392-rh1064383.patch \
 	patches/hotspot/$(HSBUILD)/8041658.patch \
 	patches/hotspot/$(HSBUILD)/8087218-pr2740.patch \
 	patches/hotspot/$(HSBUILD)/8145096-pr2854.patch \
-	patches/hotspot/$(HSBUILD)/8148752-pr2943.patch \
 	patches/hotspot/$(HSBUILD)/8154210.patch \
 	patches/hotspot/$(HSBUILD)/8158260-pr2991-rh1341258.patch \
 	patches/hotspot/$(HSBUILD)/8159244-pr3074.patch \

@@ -1,5 +1,16 @@
 2016-08-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	Bump shenandoah to aarch64-shenandoah-jdk8u102-b14.
+	* patches/hotspot/shenandoah/6425769-pr2859.patch,
+	* patches/hotspot/shenandoah/8148752-pr2943.patch:
+	Removed as applied upstream in 8u102.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Drop above patches.
+	* hotspot.map.in: Update shenandoah to
+	aarch64-shenandoah-jdk8u102-b14 tag.
+
+2016-08-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	Bump to icedtea-3.2.0pre02.
 	* Makefile.am,
 	(JDK_UPDATE_VERSION): Bump to 102.
