@@ -16,6 +16,8 @@ New in release 2.7.0 (201X-XX-XX):
 
 * Backports
   - S8076221, PR2809, RH1302385: Disable RC4 cipher suites
+* Bug fixes
+  - PR3131: PaX marking fails on filesystems which don't support extended attributes
 
 New in release 2.6.7 (2016-07-28):
 

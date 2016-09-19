@@ -2032,7 +2032,7 @@ stamps/icedtea.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  $(ICEDTEA_BUILD_TARGET)
-	$(abs_top_builddir)/pax-mark-vm $(BUILD_SDK_DIR)
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_SDK_DIR) true
 	mkdir -p $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_SDK_DIR)/jre/lib/ext
@@ -2184,7 +2184,7 @@ stamps/icedtea-debug.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
 	  $(ICEDTEA_ENV) \
 	  -C openjdk/ \
 	  $(ICEDTEA_DEBUG_BUILD_TARGET)
-	$(abs_top_builddir)/pax-mark-vm $(BUILD_DEBUG_SDK_DIR)
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_DEBUG_SDK_DIR) true
 	mkdir -p $(BUILD_DEBUG_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_DEBUG_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
 	mkdir -p $(BUILD_DEBUG_SDK_DIR)/jre/lib/ext
@@ -2358,7 +2358,7 @@ stamps/icedtea-boot.stamp: stamps/bootstrap-directory-symlink-stage1.stamp \
 	  $(ICEDTEA_ENV_BOOT) \
 	  -C openjdk-boot \
 	  $(ICEDTEA_BUILD_TARGET)
-	$(abs_top_builddir)/pax-mark-vm $(BUILD_BOOT_SDK_DIR)
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_BOOT_SDK_DIR) true
 # Fix permissions on JARs updated during build if PR1437 bug is present
 if PR1437_PRESENT
 	if [ -e $(BUILD_BOOT_SDK_DIR)/lib/sa-jdi.jar ] ; then \
@@ -3256,7 +3256,7 @@ endif
 	for files in $(BUILD_SDK_DIR)/tapset/*.stp; do \
 	  $(call install_file,$${files},$(DESTDIR)${prefix}/tapset,$(INSTALL_DATA));\
 	done
-	$(abs_top_builddir)/pax-mark-vm $(DESTDIR)${prefix}
+	$(abs_top_builddir)/pax-mark-vm $(DESTDIR)${prefix} false
 
 install-data-local:
 	${mkinstalldirs} $(DESTDIR)${prefix}
