@@ -1,3 +1,11 @@
+2016-08-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3141: Pass $(CC) and $(CXX) to OpenJDK build
+	* Makefile.am:
+	(ICEDTEA_ENV): Set CC and CXX instead
+	of BUILD_GCC and BUILD_CXX.
+	* NEWS: Updated.
+
 2016-08-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3135: Makefile.am rule

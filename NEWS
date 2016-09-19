@@ -20,6 +20,7 @@ New in release 2.7.0 (201X-XX-XX):
   - PR3128: pax-mark-vm script calls "exit -1" which is invalid in dash
   - PR3131: PaX marking fails on filesystems which don't support extended attributes
   - PR3135: Makefile.am rule stamps/add/tzdata-support-debug.stamp has a typo in add-tzdata dependency
+  - PR3141: Pass $(CC) and $(CXX) to OpenJDK build
 
 New in release 2.6.7 (2016-07-28):
 
