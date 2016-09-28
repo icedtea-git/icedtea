@@ -1,3 +1,68 @@
+2016-09-24  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Bump to icedtea-2.7.0pre07.
+	* Makefile.am,
+	(JDK_UPDATE_VERSION): Set to 111.
+	(BUILD_VERSION): Set to b01.
+	(CORBA_CHANGESET): Update to icedtea-2.7.0pre07.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* configure.ac: Bump to 2.7.0pre07.
+	* hotspot.map.in: Update to icedtea-2.7.0pre07.
+	* patches/boot/ecj-diamond.patch:
+	Add numerous cases in JAXP classes, along with
+	com.sun.java.util.jar.pack, java.security.Provider,
+	java.security.Security, javax.crypto.Cipher,
+	javax.crypto.CryptoAllPermission,
+	javax.crypto.CryptoPermissions,
+	javax.crypto.CryptoPolicyParser,
+	javax.crypto.JceSecurity, javax.crypto.JceSecurityManager,
+	javax.management.remote.rmi.RMIJRMPServerImpl,
+	sun.reflect.annotation.AnnotationInvocationHandler,
+	sun.security.krb5.Krb5ServiceLocator,
+	sun.security.provider.certpath.CertStoreHelper,
+	sun.security.provider.certpath.ssl.SSLServerCertStore,
+	sun.security.provider.certpath.URICertStore and
+	sun.security.ssl.DHCrypt
+	* patches/boot/ecj-multicatch.patch:
+	Add sun.security.krb5.PrincipalName,
+	java.lang.invoke.MemberName,
+	sun.invoke.util.VerifyAccess,
+	javax.crypto.EncryptedPrivateKeyInfo,
+	javax.crypto.SealedObject,
+	sun.security.provider.certpath.URICertStore,
+	sun.security.ssl.RSAClientKeyExchange,
+	sun.security.pkcs11.P11KeyStore,
+	sun.security.pkcs11.P11RSAKeyFactory and
+	sun.security.tools.keytool.Main
+	* patches/boot/ecj-stringswitch.patch:
+	Add cases in
+	sun.security.krb5.Config,
+	sun.security.provider.certpath.X509CertPath,
+	sun.security.ssl.HandshakeMessage,
+	sun.security.ssl.X509KeyManagerImpl,
+	sun.security.pkcs11.Config,
+	sun.security.pkcs11.P11Key,
+	sun.security.sasl.digest.DigestMD5Base,
+	sun.security.sasl.digest.DigestMD5Server,
+	sun.security.sasl.ntlm.NTLMClient,
+	sun.security.sasl.ntlm.NTLMServer and
+	sun.security.sasl.util.AbstractSaslImpl.
+	* patches/boot/ecj-trywithresources.patch:
+	Add cases in
+	sun.security.provider.certpath.URICertStore,
+	sun.security.tools.KeyStoreUtil,
+	sun.security.tools.keytool.Main.
+
 2016-08-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3166: invalid zip timestamp handling leads to
@@ -290,6 +355,7 @@
 
 2016-07-20  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	Bump to icedtea-2.7.0pre06.
 	* Makefile.am,
 	(CORBA_CHANGESET): Update to icedtea-2.7.0pre06.
 	(JAXP_CHANGESET): Likewise.

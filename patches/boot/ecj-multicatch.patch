@@ -638,3 +638,280 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.j
              // Missing VK is okay
              return 0;
          }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/PrincipalName.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/PrincipalName.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/PrincipalName.java	2016-09-21 20:40:40.276914774 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/PrincipalName.java	2016-09-21 20:41:14.560360126 +0100
+@@ -421,7 +421,9 @@
+                                 hostName.toLowerCase(Locale.ENGLISH)+".")) {
+                         hostName = canonicalized;
+                     }
+-                } catch (UnknownHostException | SecurityException e) {
++                } catch (UnknownHostException e) {
++                    // not canonicalized or no permission to do so, use old
++                } catch (SecurityException e) {
+                     // not canonicalized or no permission to do so, use old
+                 }
+                 nameParts[1] = hostName.toLowerCase(Locale.ENGLISH);
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MemberName.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MemberName.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MemberName.java	2016-09-23 15:15:03.191967011 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MemberName.java	2016-09-23 15:22:20.332755375 +0100
+@@ -862,7 +862,12 @@
+                 m = MethodHandleNatives.resolve(m, lookupClass);
+                 m.checkForTypeAlias(m.getDeclaringClass());
+                 m.resolution = null;
+-            } catch (ClassNotFoundException | LinkageError ex) {
++            } catch (ClassNotFoundException ex) {
++                // JVM reports that the "bytecode behavior" would get an error
++                assert(!m.isResolved());
++                m.resolution = ex;
++                return m;
++            } catch (LinkageError ex) {
+                 // JVM reports that the "bytecode behavior" would get an error
+                 assert(!m.isResolved());
+                 m.resolution = ex;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java openjdk-boot/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java	2016-09-23 15:15:03.199966880 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java	2016-09-23 15:22:46.000332273 +0100
+@@ -222,7 +222,9 @@
+                     public Class<?> run() {
+                         try {
+                             return Class.forName(name, false, refcLoader);
+-                        } catch (ClassNotFoundException | LinkageError e) {
++                        } catch (ClassNotFoundException e) {
++                            return null; // Assume the class is not found
++                        } catch (LinkageError e) {
+                             return null; // Assume the class is not found
+                         }
+                     }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/crypto/EncryptedPrivateKeyInfo.java openjdk-boot/jdk/src/share/classes/javax/crypto/EncryptedPrivateKeyInfo.java
+--- openjdk-boot.orig/jdk/src/share/classes/javax/crypto/EncryptedPrivateKeyInfo.java	2016-09-23 16:23:05.180335751 +0100
++++ openjdk-boot/jdk/src/share/classes/javax/crypto/EncryptedPrivateKeyInfo.java	2016-09-23 16:27:25.492014703 +0100
+@@ -249,9 +249,13 @@
+         try {
+             encoded = cipher.doFinal(encryptedData);
+             checkPKCS8Encoding(encoded);
+-        } catch (GeneralSecurityException |
+-                 IOException |
+-                 IllegalStateException ex) {
++        } catch (GeneralSecurityException ex) {
++            throw new InvalidKeySpecException(
++                    "Cannot retrieve the PKCS8EncodedKeySpec", ex);
++        } catch (IOException ex) {
++            throw new InvalidKeySpecException(
++                    "Cannot retrieve the PKCS8EncodedKeySpec", ex);
++        } catch (IllegalStateException ex) {
+             throw new InvalidKeySpecException(
+                     "Cannot retrieve the PKCS8EncodedKeySpec", ex);
+         }
+@@ -276,7 +280,10 @@
+         } catch (NoSuchAlgorithmException nsae) {
+             // rethrow
+             throw nsae;
+-        } catch (GeneralSecurityException | IOException ex) {
++        } catch (GeneralSecurityException ex) {
++            throw new InvalidKeyException(
++                    "Cannot retrieve the PKCS8EncodedKeySpec", ex);
++        } catch (IOException ex) {
+             throw new InvalidKeyException(
+                     "Cannot retrieve the PKCS8EncodedKeySpec", ex);
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/crypto/SealedObject.java openjdk-boot/jdk/src/share/classes/javax/crypto/SealedObject.java
+--- openjdk-boot.orig/jdk/src/share/classes/javax/crypto/SealedObject.java	2016-09-23 16:23:05.192335551 +0100
++++ openjdk-boot/jdk/src/share/classes/javax/crypto/SealedObject.java	2016-09-23 16:24:51.118576883 +0100
+@@ -353,7 +353,9 @@
+ 
+         try {
+             return unseal(key, provider);
+-        } catch (IllegalBlockSizeException | BadPaddingException ex) {
++        } catch (IllegalBlockSizeException ex) {
++            throw new InvalidKeyException(ex.getMessage());
++        } catch (BadPaddingException ex) {
+             throw new InvalidKeyException(ex.getMessage());
+         }
+     }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java	2016-09-23 17:07:13.421018536 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java	2016-09-23 17:07:55.180339579 +0100
+@@ -307,7 +307,12 @@
+                     factory.generateCertificates(in);
+             }
+             return getMatchingCerts(certs, selector);
+-        } catch (IOException | CertificateException e) {
++        } catch (IOException e) {
++            if (debug != null) {
++                debug.println("Exception fetching certificates:");
++                e.printStackTrace();
++            }
++        } catch (CertificateException e) {
+             if (debug != null) {
+                 debug.println("Exception fetching certificates:");
+                 e.printStackTrace();
+@@ -414,7 +419,12 @@
+                 crl = (X509CRL) factory.generateCRL(in);
+             }
+             return getMatchingCRLs(crl, selector);
+-        } catch (IOException | CRLException e) {
++        } catch (IOException e) {
++            if (debug != null) {
++                debug.println("Exception fetching CRL:");
++                e.printStackTrace();
++            }
++        } catch (CRLException e) {
+             if (debug != null) {
+                 debug.println("Exception fetching CRL:");
+                 e.printStackTrace();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java openjdk-boot/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java	2016-09-23 17:07:13.457017951 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java	2016-09-23 17:15:54.756537449 +0100
+@@ -173,8 +173,14 @@
+                     clientVersion, serverVersion, encodedSecret),
+                     generator);
+             return kg.generateKey();
+-        } catch (InvalidAlgorithmParameterException |
+-                NoSuchAlgorithmException iae) {
++        } catch (InvalidAlgorithmParameterException iae) {
++            // unlikely to happen, otherwise, must be a provider exception
++            if (debug != null && Debug.isOn("handshake")) {
++                System.out.println("RSA premaster secret generation error:");
++                iae.printStackTrace(System.out);
++            }
++            throw new RuntimeException("Could not generate premaster secret", iae);
++        } catch (NoSuchAlgorithmException iae) {
+             // unlikely to happen, otherwise, must be a provider exception
+             if (debug != null && Debug.isOn("handshake")) {
+                 System.out.println("RSA premaster secret generation error:");
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11KeyStore.java openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11KeyStore.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11KeyStore.java	2016-09-23 18:04:55.125088351 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11KeyStore.java	2016-09-23 18:10:03.312134476 +0100
+@@ -325,7 +325,9 @@
+ 
+             // did not find anything
+             return null;
+-        } catch (PKCS11Exception | KeyStoreException e) {
++        } catch (PKCS11Exception e) {
++            throw new ProviderException(e);
++        } catch (KeyStoreException e) {
+             throw new ProviderException(e);
+         } finally {
+             token.releaseSession(session);
+@@ -450,7 +452,9 @@
+             } else if (key instanceof SecretKey) {
+                 entry = new KeyStore.SecretKeyEntry((SecretKey)key);
+             }
+-        } catch (NullPointerException | IllegalArgumentException e) {
++        } catch (NullPointerException e) {
++            throw new KeyStoreException(e);
++        } catch (IllegalArgumentException e) {
+             throw new KeyStoreException(e);
+         }
+         engineSetEntry(alias, entry, new KeyStore.PasswordProtection(password));
+@@ -556,7 +560,9 @@
+                 } else {
+                     throw new KeyStoreException("unexpected entry type");
+                 }
+-            } catch (PKCS11Exception | CertificateException e) {
++            } catch (PKCS11Exception e) {
++                throw new KeyStoreException(e);
++            } catch (CertificateException e) {
+                 throw new KeyStoreException(e);
+             }
+         }
+@@ -758,7 +764,11 @@
+             if (debug != null) {
+                 dumpTokenMap();
+             }
+-        } catch (LoginException | KeyStoreException | PKCS11Exception e) {
++        } catch (LoginException e) {
++            throw new IOException("load failed", e);
++        } catch (KeyStoreException e) {
++            throw new IOException("load failed", e);
++        } catch (PKCS11Exception e) {
+             throw new IOException("load failed", e);
+         }
+     }
+@@ -838,7 +848,11 @@
+             if (debug != null) {
+                 dumpTokenMap();
+             }
+-        } catch (LoginException | KeyStoreException | PKCS11Exception e) {
++        } catch (LoginException e) {
++            throw new IOException("load failed", e);
++        } catch (KeyStoreException e) {
++            throw new IOException("load failed", e);
++        } catch (PKCS11Exception e) {
+             throw new IOException("load failed", e);
+         }
+     }
+@@ -1028,7 +1042,9 @@
+                 storeCert(alias, xcert);
+                 module.setTrust(token, xcert);
+                 mapLabels();
+-            } catch (PKCS11Exception | CertificateException e) {
++            } catch (PKCS11Exception e) {
++                throw new KeyStoreException(e);
++            } catch (CertificateException e) {
+                 throw new KeyStoreException(e);
+             }
+ 
+@@ -1090,7 +1106,9 @@
+                         storePkey(alias, (KeyStore.PrivateKeyEntry)entry);
+                     }
+ 
+-                } catch (PKCS11Exception | CertificateException pe) {
++                } catch (PKCS11Exception pe) {
++                    throw new KeyStoreException(pe);
++                } catch (CertificateException pe) {
+                     throw new KeyStoreException(pe);
+                 }
+ 
+@@ -1128,7 +1146,9 @@
+                 if (debug != null) {
+                     dumpTokenMap();
+                 }
+-            } catch (PKCS11Exception | CertificateException pe) {
++            } catch (PKCS11Exception pe) {
++                throw new KeyStoreException(pe);
++            } catch (CertificateException pe) {
+                 throw new KeyStoreException(pe);
+             }
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java	2016-09-23 18:04:55.137088159 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java	2016-09-23 18:06:53.927179034 +0100
+@@ -130,7 +130,10 @@
+                 rs.getModulus(),
+                 rs.getPublicExponent()
+             );
+-        } catch (PKCS11Exception | InvalidKeyException e) {
++        } catch (PKCS11Exception e) {
++            throw new InvalidKeySpecException
++                ("Could not create RSA public key", e);
++        } catch (InvalidKeyException e) {
+             throw new InvalidKeySpecException
+                 ("Could not create RSA public key", e);
+         }
+@@ -174,7 +177,10 @@
+                 throw new InvalidKeySpecException("Only RSAPrivate(Crt)KeySpec "
+                     + "and PKCS8EncodedKeySpec supported for RSA private keys");
+             }
+-        } catch (PKCS11Exception | InvalidKeyException e) {
++        } catch (PKCS11Exception e) {
++            throw new InvalidKeySpecException
++                ("Could not create RSA private key", e);
++        } catch (InvalidKeyException e) {
+             throw new InvalidKeySpecException
+                 ("Could not create RSA private key", e);
+         }
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2016-09-23 18:24:05.646575464 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2016-09-23 18:24:20.022343797 +0100
+@@ -2538,7 +2538,9 @@
+         X509Certificate cert = null;
+         try {
+             cert = (X509Certificate)cf.generateCertificate(in);
+-        } catch (ClassCastException | CertificateException ce) {
++        } catch (ClassCastException ce) {
++            throw new Exception(rb.getString("Input.not.an.X.509.certificate"));
++        } catch (CertificateException ce) {
+             throw new Exception(rb.getString("Input.not.an.X.509.certificate"));
+         }
+ 
