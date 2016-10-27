@@ -1,5 +1,19 @@
 2016-10-26  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR3180: Support building without pre-compiled headers
+	* INSTALL: Updated.
+	* Makefile.am:
+	(ICEDTEA_ENV): Set USE_PRECOMPILED_HEADER
+	appropriately, according to whether
+	DISABLE_PRECOMPILED_HEADERS is defined or not.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DISABLE_PRECOMPILED_HEADERS): New macro to
+	provide the --disable-precompiled-headers option.
+	* configure.ac: Invoke IT_DISABLE_PRECOMPILED_HEADERS.
+
+2016-10-26  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	Bump to icedtea-2.7.0pre08.
 	* Makefile.am:
 	(CORBA_CHANGESET): Update to icedtea-2.7.0pre08.

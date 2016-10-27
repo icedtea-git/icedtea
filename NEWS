@@ -16,6 +16,8 @@ New in release 2.7.0 (201X-XX-XX):
 
 * Security fixes
   - PR3207, RH1367357: lcms2: Out-of-bounds read in Type_MLU_Read()
+* New features
+  - PR3180: Support building without pre-compiled headers
 * Backports
   - S6604109, PR3162: javax.print.PrintServiceLookup.lookupPrintServices fails SOMETIMES for Cups
   - S6907252, PR3162: ZipFileInputStream Not Thread-Safe
