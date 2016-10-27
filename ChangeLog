@@ -1,3 +1,13 @@
+2016-10-27  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	S8157306, PR3209: Random infrequent null pointer
+	exceptions in javac
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add backout patch for PR3209.
+	* NEWS: Remove PR3209.
+	* patches/pr3209-backout.patch:
+	Backout PR3209 as it won't work without 8023988.
+
 2016-10-26  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3211: AArch64 build fails with pre-compiled
