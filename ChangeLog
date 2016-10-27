@@ -1,5 +1,15 @@
 2016-10-26  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR3211: AArch64 build fails with pre-compiled
+	headers disabled
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add patch for PR3211.
+	* NEWS: Updated.
+	* patches/pr3211.patch:
+	Add missing includes to AArch64 port.
+
+2016-10-26  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR3180: Support building without pre-compiled headers
 	* INSTALL: Updated.
 	* Makefile.am:

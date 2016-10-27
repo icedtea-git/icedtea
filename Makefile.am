@@ -371,7 +371,7 @@ MIME_TYPE_CHECK_SRCS = $(top_srcdir)/test/standalone/RH1195203.java
 
 # Patch list
 
-ICEDTEA_PATCHES = 
+ICEDTEA_PATCHES = patches/pr3211.patch
 
 # Conditional patches
 
