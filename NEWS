@@ -14,6 +14,46 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.6.8 (2016-10-XX):
 
+* Security fixes
+  - PR3207, RH1367357: lcms2: Out-of-bounds read in Type_MLU_Read()
+* Backports
+  - S6604109, PR3162: javax.print.PrintServiceLookup.lookupPrintServices fails SOMETIMES for Cups
+  - S6907252, PR3162: ZipFileInputStream Not Thread-Safe
+  - S8024046, PR3162: Test sun/security/krb5/runNameEquals.sh failed on 7u45 Embedded linux-ppc*
+  - S8028479, PR3162: runNameEquals still cannot precisely detect if a usable native krb5 is available
+  - S8034057, PR3162: Files.getFileStore and Files.isWritable do not work with SUBST'ed drives (win)
+  - S8038491, PR3162: Improve synchronization in ZipFile.read()
+  - S8038502, PR3162: Deflater.needsInput() should use synchronization
+  - S8059411, PR3162: RowSetWarning does not correctly chain warnings
+  - S8062198, PR3162: Add RowSetMetaDataImpl Tests and add column range validation to isdefinitlyWritable
+  - S8066188, PR3162: BaseRowSet returns the wrong default value for escape processing
+  - S8072466, PR3162: Deadlock when initializing MulticastSocket and DatagramSocket
+  - S8075118, PR3162: JVM stuck in infinite loop during verification
+  - S8076579, PR3162: Popping a stack frame after exception breakpoint sets last method param to exception
+  - S8078495, PR3162: End time checking for native TGT is wrong
+  - S8078668, PR3162: jar usage string mentions unsupported option '-n'
+  - S8080115, PR3162: (fs) Crash in libgio when calling Files.probeContentType(path) from parallel threads
+  - S8081794, PR3162: ParsePosition getErrorIndex returns 0 for TimeZone parsing problem
+  - S8129957, PR3162: Deadlock in JNDI LDAP implementation when closing the LDAP context
+  - S8130136, PR3162: Swing window sometimes fails to repaint partially when it becomes exposed
+  - S8130274, PR3162: java/nio/file/FileStore/Basic.java fails when two successive stores in an iteration are determined to be equal
+  - S8132551, PR3162: Initialize local variables before returning them in p11_convert.c
+  - S8133207, PR3162: [TEST_BUG] ParallelProbes.java test fails after changes for JDK-8080115
+  - S8133666, PR3162: OperatingSystemMXBean reports abnormally high machine CPU consumption on Linux
+  - S8135002, PR3162: Fix or remove broken links in objectMonitor.cpp comments
+  - S8137121, PR3162: (fc) Infinite loop FileChannel.truncate
+  - S8137230, PR3162: TEST_BUG: java/nio/channels/FileChannel/LoopingTruncate.java timed out
+  - S8139373, PR3162: [TEST_BUG] java/net/MulticastSocket/MultiDead.java failed with timeout
+  - S8140249, PR3162: JVM Crashing During startUp If Flight Recording is enabled
+  - S8141491, PR3160, G592292: Unaligned memory access in Bits.c
+  - S8144483, PR3162: One long Safepoint pause directly after each GC log rotation
+  - S8149611, PR3160, G592292: Add tests for Unsafe.copySwapMemory
+* Bug fixes
+  - S8078628, PR3151: Zero build fails with pre-compiled headers disabled
+* AArch64 port
+  - S8167200, PR3204: AArch64: Broken stack pointer adjustment in interpreter
+  - PR3211: AArch64 build fails with pre-compiled headers disabled
+
 New in release 2.6.7 (2016-07-28):
 
 * Security fixes
