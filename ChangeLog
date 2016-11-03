@@ -1,5 +1,35 @@
 2016-11-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR1370: Provide option to build without debugging
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE): Set --with-java-debug-symbols
+	according to whether ENABLE_JAVA_DEBUGINFO is set
+	or not.
+
+2016-07-28  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1370: Provide option to build without debugging
+	* Makefile.am:
+	(check-java-debug): Guard with
+	ENABLE_JAVA_DEBUGINFO.
+
+2014-06-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1370: Provide option to build without debugging
+	* INSTALL: Updated.
+	* Makefile.am:
+	(ICEDTEA_ENV): Only set DEBUG_BINARIES when
+	ENABLE_NATIVE_DEBUGINFO is set.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_NATIVE_DEBUGINFO): New macro to add
+	option --enable-native-debuginfo.
+	(IT_ENABLE_JAVA_DEBUGINFO): New macro to add
+	option --enable-java-debuginfo.
+	* configure.ac: Invoke new macros.
+
+2016-11-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	Bump to icedtea-3.2.0pre03.
 	* Makefile.am,
 	(CORBA_CHANGESET): Update to icedtea-3.2.0pre03 tag.

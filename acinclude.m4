@@ -1983,6 +1983,50 @@ AC_DEFUN_ONCE([IT_DETERMINE_VERSION],
   AC_SUBST([ICEDTEA_BRANCH])
 ])
 
+AC_DEFUN_ONCE([IT_ENABLE_NATIVE_DEBUGINFO],
+[
+  AC_MSG_CHECKING([whether to build native code with debugging information])
+  AC_ARG_ENABLE([native-debuginfo],
+                [AS_HELP_STRING(--enable-native-debuginfo,build with native code debuginfo [[default=yes]])],
+  [
+    case "${enableval}" in
+      yes)
+        enable_native_debuginfo=yes
+        ;;
+      *)
+        enable_native_debuginfo=no
+        ;;
+    esac
+  ],
+  [
+    enable_native_debuginfo=yes
+  ])
+  AC_MSG_RESULT([$enable_native_debuginfo])
+  AM_CONDITIONAL([ENABLE_NATIVE_DEBUGINFO], test x"${enable_native_debuginfo}" = "xyes")
+])
+
+AC_DEFUN_ONCE([IT_ENABLE_JAVA_DEBUGINFO],
+[
+  AC_MSG_CHECKING([whether to build Java bytecode with debugging information])
+  AC_ARG_ENABLE([java-debuginfo],
+                [AS_HELP_STRING(--enable-java-debuginfo,build with Java bytecode debuginfo [[default=yes]])],
+  [
+    case "${enableval}" in
+      yes)
+        enable_java_debuginfo=yes
+        ;;
+      *)
+        enable_java_debuginfo=no
+        ;;
+    esac
+  ],
+  [
+    enable_java_debuginfo=yes
+  ])
+  AC_MSG_RESULT([$enable_java_debuginfo])
+  AM_CONDITIONAL([ENABLE_JAVA_DEBUGINFO], test x"${enable_java_debuginfo}" = "xyes")
+])
+
 AC_DEFUN_ONCE([IT_ENABLE_INFINALITY],
 [
   AC_REQUIRE([IT_CHECK_FOR_FREETYPE])

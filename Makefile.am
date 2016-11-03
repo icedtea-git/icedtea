@@ -439,8 +439,7 @@ ICEDTEA_CONFIGURE = \
 	  --with-milestone="fcs" \
 	  --with-extra-cflags="$(CFLAGS)" \
 	  --with-extra-cxxflags="$(CXXFLAGS)" \
-	  --with-extra-ldflags="$(LDFLAGS)" \
-	  --with-java-debug-symbols=yes
+	  --with-extra-ldflags="$(LDFLAGS)"
 
 ICEDTEA_CONFIGURE_ENV = \
 	${ICEDTEA_COMMON_ENV} \
@@ -561,6 +560,14 @@ ICEDTEA_CONFIGURE += \
 	--disable-ccache
 endif
 
+if ENABLE_JAVA_DEBUGINFO
+ICEDTEA_CONFIGURE += \
+	--with-java-debug-symbols=yes
+else
+ICEDTEA_CONFIGURE += \
+	--with-java-debug-symbols=no
+endif
+
 ICEDTEA_UNSET = \
 	JAVAC= \
 	JAVA_HOME= \
@@ -583,7 +590,6 @@ ICEDTEA_ENV = \
 	ANT_RESPECT_JAVA_HOME="TRUE" \
 	DISTRIBUTION_ID="$(DIST_ID)" \
 	DERIVATIVE_ID="$(ICEDTEA_NAME) $(PACKAGE_VERSION)$(ICEDTEA_REV)" \
-	DEBUG_BINARIES="true" \
 	LOG="debug" \
 	POST_STRIP_CMD= STRIP_POLICY="no_strip" \
 	JOBS="$(PARALLEL_JOBS)" \
@@ -620,6 +626,11 @@ if USE_SYSTEM_GIF
 ICEDTEA_ENV += \
 	GIF_LDFLAGS="${GIF_LIBS}" \
 	GIF_CFLAGS="${GIF_CFLAGS}"
+endif
+
+if ENABLE_NATIVE_DEBUGINFO
+ICEDTEA_ENV += \
+	DEBUG_BINARIES="true"
 endif
 
 # OpenJDK boot build environment.
@@ -2628,6 +2639,7 @@ clean-check-ecc:
 
 # Check class files, both from in-tree and generated sources, contain debug info
 stamps/check-java-debug.stamp: stamps/icedtea.stamp
+if ENABLE_JAVA_DEBUGINFO
 	@echo "Checking that Java classes include debug info"
 	if [ -e $(BUILD_SDK_DIR)/bin/javap ] ; then \
 	  $(BUILD_SDK_DIR)/bin/javap -l java.lang.Object | grep "Compiled from" ; \
@@ -2637,6 +2649,7 @@ stamps/check-java-debug.stamp: stamps/icedtea.stamp
 	  $(BUILD_SDK_DIR)/bin/javap -l java.nio.ByteBuffer | grep LineNumberTable ; \
 	  $(BUILD_SDK_DIR)/bin/javap -l java.nio.ByteBuffer | grep LocalVariableTable ; \
 	fi
+endif
 	mkdir -p stamps
 	touch $@
 
