@@ -156,12 +156,21 @@ New in release 3.2.0 (2016-09-XX):
   - S8157078: 8u102 L10n resource file updates
   - S8157838: Personalized Windows Font Size is not taken into account in Java8u102
 * Backports
+  - S8078628, PR3208: Zero build fails with pre-compiled headers disabled
+  - S8141491, PR3159, G592292: Unaligned memory access in Bits.c
   - S8157306, PR3121: Random infrequent null pointer exceptions in javac (enabled on AArch64 only)
   - S8162384, PR3122: Performance regression: bimorphic inlining may be bypassed by type speculation
 * Bug fixes
+  - PR1537: Handle alternative Kerberos credential cache locations
+  - PR1978: Allow use of system PCSC
+  - PR2445: Support system libsctp
   - PR3123: Some object files built without -fPIC on x86 only
   - PR3126: pax-mark-vm script calls "exit -1" which is invalid in dash
   - PR3127, G590348: Only apply PaX markings by default on running PaX kernels
+  - PR3183: Support Fedora/RHEL system crypto policy
+  - PR3201: Update infinality configure test
+  - PR3206, RH1367357: lcms2: Out-of-bounds read in Type_MLU_Read()
+  - PR3218: PR3159 leads to build failure on clean tree
 
 New in release 3.1.0 (2016-07-25):
 

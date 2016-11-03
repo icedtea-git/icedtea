@@ -1,3 +1,31 @@
+2016-11-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Bump to icedtea-3.2.0pre03.
+	* Makefile.am,
+	(CORBA_CHANGESET): Update to icedtea-3.2.0pre03 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Add HotSpot patches
+	for Shenandoah.
+	* NEWS: Updated.
+	* configure.ac: Bump to 3.2.0pre03.
+	* hotspot.map.in: Update to icedtea-3.2.0pre03 tag.
+	* patches/hotspot/shenandoah/8078628-pr3208.patch,
+	* patches/hotspot/shenandoah/8141491-pr3159-g592292.patch:
+	Local versions of the HotSpot fixes in the main tree
+	for application to the Shenandoah HotSpot tree.
+
 2016-08-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	Bump shenandoah to aarch64-shenandoah-jdk8u102-b14.
