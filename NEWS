@@ -14,6 +14,7 @@ New in release 3.2.0 (2016-09-XX):
 
 * New features
   - PR1370: Provide option to build without debugging
+  - PR1375: Provide option to strip and link debugging info after build
 * Import of OpenJDK 8 u102 build 14
   - S4515292: ReferenceType.isStatic() returns true for arrays
   - S4858370: JDWP: Memory Leak: GlobalRefs never deleted when processing invokeMethod command

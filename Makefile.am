@@ -59,19 +59,26 @@ SERVER_DIR = hotspot/dist/jre/lib/$(INSTALL_ARCH_DIR)/server
 BUILD_IMAGE_DIR = $(BUILD_OUTPUT_DIR)/images
 BUILD_SDK_DIR = $(BUILD_IMAGE_DIR)/j2sdk-image
 BUILD_JRE_DIR = $(BUILD_IMAGE_DIR)/j2re-image
+BUILD_DEBUGINFO_DIR = $(BUILD_IMAGE_DIR)/j2sdk-image.stripped
 BUILD_JRE_ARCH_DIR = $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
 BUILD_DEBUG_IMAGE_DIR = $(DEBUG_BUILD_OUTPUT_DIR)/images
 BUILD_DEBUG_SDK_DIR = $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image
 BUILD_DEBUG_JRE_DIR = $(BUILD_DEBUG_IMAGE_DIR)/j2re-image
+BUILD_DEBUG_DEBUGINFO_DIR = $(BUILD_DEBUG_IMAGE_DIR)/j2sdk-image.stripped
 BUILD_DEBUG_JRE_ARCH_DIR = $(BUILD_DEBUG_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
 BUILD_BOOT_IMAGE_DIR = $(BOOT_BUILD_OUTPUT_DIR)/images
 BUILD_BOOT_SDK_DIR = $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image
 BUILD_BOOT_JRE_DIR = $(BUILD_BOOT_IMAGE_DIR)/j2re-image
+BUILD_BOOT_DEBUGINFO_DIR = $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image.stripped
 STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
 STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
 JAMVM_IMPORT_PATH = $(abs_top_builddir)/jamvm/install/hotspot
 CRYPTO_CHECK_BUILD_DIR = $(abs_top_builddir)/test/cryptocheck.build
 ECC_CHECK_BUILD_DIR = $(abs_top_builddir)/test/ecccheck.build
+
+# Installation directories
+
+DEBUG_PREFIX = $(libdir)/debug
 
 # Source directories
 
@@ -793,7 +800,8 @@ distclean-local: clean-local clean-download
 	clean-add-archive clean-add-archive-debug clean-add-archive-boot clean-cryptocheck \
 	clean-tests clean-tapset-report clean-ecccheck clean-check-ecc clean-check-java-debug \
 	check-jdk check-hotspot check-langtools jtregcheck check-tapset check-tapset-probes \
-	check-tapset-jstack clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop
+	check-tapset-jstack clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop \
+	clean-split-debuginfo clean-split-debuginfo-debug clean-split-debuginfo-boot
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -2005,6 +2013,26 @@ clean-add-archive:
 	rm -vf $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive.stamp
 
+stamps/split-debuginfo.stamp: stamps/icedtea.stamp
+if SPLIT_DEBUGINFO
+	( cd $(BUILD_SDK_DIR) ; \
+	  for files in $$($(FIND) . -type f) ; do \
+	    if $(FILE) $${files} | $(GREP) 'ELF' > /dev/null ; then \
+	      mkdir -p $(BUILD_DEBUGINFO_DIR)/$$(dirname $${files}) ; \
+	      $(OBJCOPY) --only-keep-debug $${files} $(BUILD_DEBUGINFO_DIR)/$${files}.debug ; \
+	      $(OBJCOPY) --strip-debug $${files} $(BUILD_DEBUGINFO_DIR)/$${files}.stripped ; \
+	      $(OBJCOPY) --add-gnu-debuglink=$(BUILD_DEBUGINFO_DIR)/$${files}.debug \
+	        $(BUILD_DEBUGINFO_DIR)/$${files}.stripped ; \
+	    fi ; \
+	  done ; \
+	)
+endif
+	touch $@
+
+clean-split-debuginfo:
+	rm -rvf $(BUILD_DEBUGINFO_DIR)
+	rm -f stamps/split-debuginfo.stamp
+
 stamps/check-crypto-debug.stamp: stamps/cryptocheck.stamp stamps/icedtea-debug.stamp
 	if [ -e $(BUILD_DEBUG_SDK_DIR)/bin/java ] ; then \
 	  $(BUILD_DEBUG_SDK_DIR)/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
@@ -2033,23 +2061,44 @@ clean-add-archive-debug:
 	rm -vf $(BUILD_DEBUG_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive-debug.stamp
 
+stamps/split-debuginfo-debug.stamp: stamps/icedtea-debug.stamp
+if SPLIT_DEBUGINFO
+	( cd $(BUILD_DEBUG_SDK_DIR) ; \
+	  for files in $$($(FIND) . -type f) ; do \
+	    if $(FILE) $${files} | $(GREP) 'ELF' > /dev/null ; then \
+	      mkdir -p $(BUILD_DEBUG_DEBUGINFO_DIR)/$$(dirname $${files}) ; \
+	      $(OBJCOPY) --only-keep-debug $${files} $(BUILD_DEBUG_DEBUGINFO_DIR)/$${files}.debug ; \
+	      $(OBJCOPY) --strip-debug $${files} $(BUILD_DEBUG_DEBUGINFO_DIR)/$${files}.stripped ; \
+	      $(OBJCOPY) --add-gnu-debuglink=$(BUILD_DEBUG_DEBUGINFO_DIR)/$${files}.debug \
+	        $(BUILD_DEBUG_DEBUGINFO_DIR)/$${files}.stripped ; \
+	    fi ; \
+	  done ; \
+	)
+endif
+	touch $@
+
+clean-split-debuginfo-debug:
+	rm -rvf $(BUILD_DEBUG_DEBUGINFO_DIR)
+	rm -f stamps/split-debuginfo-debug.stamp
+
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
  stamps/add-zero.stamp stamps/add-jamvm.stamp stamps/check-crypto.stamp \
- stamps/add-archive.stamp
+ stamps/add-archive.stamp stamps/split-debuginfo.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-stage2: clean-add-jamvm clean-check-crypto clean-add-archive
+clean-icedtea-stage2: clean-add-jamvm clean-check-crypto clean-add-archive \
+ clean-split-debuginfo
 	rm -f stamps/icedtea-stage2.stamp
 
 stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
  stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp \
- stamps/check-crypto-debug.stamp stamps/add-archive-debug.stamp
+ stamps/check-crypto-debug.stamp stamps/add-archive-debug.stamp stamps/split-debuginfo-debug.stamp
 	mkdir -p stamps
 	touch $@
 
 clean-icedtea-debug-stage2: clean-add-jamvm-debug clean-check-crypto-debug \
- clean-add-archive-debug
+ clean-add-archive-debug clean-split-debuginfo-debug
 	rm -f stamps/icedtea-debug-stage2.stamp
 
 # OpenJDK boot Targets
@@ -2143,12 +2192,34 @@ clean-add-archive-boot:
 	rm -vf $(BUILD_BOOT_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive-boot.stamp
 
-stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp stamps/check-crypto-boot.stamp \
- stamps/add-archive-boot.stamp
+stamps/split-debuginfo-boot.stamp: stamps/icedtea-boot.stamp
+if SPLIT_DEBUGINFO
+	( cd $(BUILD_BOOT_SDK_DIR) ; \
+	  for files in $$($(FIND) . -type f) ; do \
+	    if $(FILE) $${files} | $(GREP) 'ELF' > /dev/null ; then \
+	      mkdir -p $(BUILD_BOOT_DEBUGINFO_DIR)/$$(dirname $${files}) ; \
+	      $(OBJCOPY) --only-keep-debug $${files} $(BUILD_BOOT_DEBUGINFO_DIR)/$${files}.debug ; \
+	      $(OBJCOPY) --strip-debug $${files} $(BUILD_BOOT_DEBUGINFO_DIR)/$${files}.stripped ; \
+	      $(OBJCOPY) --add-gnu-debuglink=$(BUILD_BOOT_DEBUGINFO_DIR)/$${files}.debug \
+	        $(BUILD_BOOT_DEBUGINFO_DIR)/$${files}.stripped ; \
+	    fi ; \
+	  done ; \
+	)
+endif
+	touch $@
+
+clean-split-debuginfo-boot:
+	rm -rvf $(BUILD_BOOT_DEBUGINFO_DIR)
+	rm -f stamps/split-debuginfo-boot.stamp
+
+stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp \
+ stamps/check-crypto-boot.stamp stamps/add-archive-boot.stamp \
+ stamps/split-debuginfo-boot.stamp
 	mkdir -p stamps
 	touch $@
 
-clean-icedtea-stage1: clean-check-crypto-boot clean-add-archive-boot
+clean-icedtea-stage1: clean-check-crypto-boot clean-add-archive-boot \
+ clean-split-debuginfo-boot
 	rm -f stamps/icedtea-stage1.stamp
 
 # JamVM
@@ -2692,8 +2763,23 @@ install-exec-local:
 	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli
 	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/ext
 	${mkinstalldirs} $(DESTDIR)${prefix}/tapset
+if SPLIT_DEBUGINFO
+	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/$(bindir) $(DESTDIR)$(DEBUG_PREFIX)/${exec_prefix}/lib
+	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${exec_prefix}/lib/$(INSTALL_ARCH_DIR)
+	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli
+	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/bin $(DESTDIR)${prefix}/jre/lib
+	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)
+	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli
+endif
 	for files in $(BUILD_SDK_DIR)/bin/*; do \
-	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)$(bindir); \
+	  name=$$(basename $${files}) ; \
+	  if test "x$(enable_split_debuginfo)" = "xyes" -a ! -h $${files} -a "x$${name}" != "xjava-rmi.cgi" ; then \
+	    dir=$$(echo $$(dirname $${files}) | $(SED) "s#$(BUILD_SDK_DIR)#$(BUILD_DEBUGINFO_DIR)#") ; \
+	    $(INSTALL_PROGRAM) $${dir}/$${name}.stripped $(DESTDIR)$(bindir)/$${name}; \
+	    $(INSTALL_PROGRAM) $${dir}/$${name}.debug $(DESTDIR)$(DEBUG_PREFIX)/$(bindir); \
+	  else \
+	    $(INSTALL_PROGRAM) $${files} $(DESTDIR)$(bindir); \
+	  fi ; \
 	done
 	for files in $(BUILD_SDK_DIR)/include/*.h; do \
 	  $(INSTALL_DATA) $${files} $(DESTDIR)$(includedir); \
@@ -2707,31 +2793,86 @@ install-exec-local:
 	for files in $(BUILD_SDK_DIR)/lib/*.idl; do \
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${exec_prefix}/lib; \
 	done
-	$(INSTALL_PROGRAM) $(BUILD_SDK_DIR)/lib/jexec $(DESTDIR)${exec_prefix}/lib
+	if test "x$(enable_split_debuginfo)" = "xyes"; then \
+	  $(INSTALL_PROGRAM) $(BUILD_DEBUGINFO_DIR)/lib/jexec.stripped $(DESTDIR)${exec_prefix}/lib/jexec ; \
+	  $(INSTALL_PROGRAM) $(BUILD_DEBUGINFO_DIR)/lib/jexec.debug $(DESTDIR)$(DEBUG_PREFIX)/${exec_prefix}/lib ; \
+	else \
+	  $(INSTALL_PROGRAM) $(BUILD_SDK_DIR)/lib/jexec $(DESTDIR)${exec_prefix}/lib ; \
+	fi
 	for files in $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR)/*.so; do \
-	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR); \
+	  if test "x$(enable_split_debuginfo)" = "xyes" -a ! -h $${files}; then \
+	    name=$$(basename $${files}) ; \
+	    dir=$$(echo $$(dirname $${files}) | $(SED) "s#$(BUILD_SDK_DIR)#$(BUILD_DEBUGINFO_DIR)#") ; \
+	    $(INSTALL_PROGRAM) $${dir}/$${name}.stripped $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/$${name}; \
+	    $(INSTALL_PROGRAM) $${dir}/$${name}.debug $(DESTDIR)$(DEBUG_PREFIX)/${exec_prefix}/lib/$(INSTALL_ARCH_DIR); \
+	  else \
+	    $(INSTALL_PROGRAM) $${files} $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR); \
+	  fi ; \
 	done
 	for files in $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR)/jli/*.so; do \
-	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli; \
+	  if test "x$(enable_split_debuginfo)" = "xyes" -a ! -h $${files}; then \
+	    name=$$(basename $${files}) ; \
+	    dir=$$(echo $$(dirname $${files}) | $(SED) "s#$(BUILD_SDK_DIR)#$(BUILD_DEBUGINFO_DIR)#") ; \
+	    $(INSTALL_PROGRAM) $${dir}/$${name}.stripped $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli/$${name}; \
+	    $(INSTALL_PROGRAM) $${dir}/$${name}.debug $(DESTDIR)$(DEBUG_PREFIX)/${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli; \
+	  else \
+	    $(INSTALL_PROGRAM) $${files} $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli; \
+	  fi ; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/bin/*; do \
-	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/bin; \
+	  if test "x$(enable_split_debuginfo)" = "xyes" -a ! -h $${files}; then \
+	    name=$$(basename $${files}) ; \
+	    dir=$$(echo $$(dirname $${files}) | $(SED) "s#$(BUILD_SDK_DIR)#$(BUILD_DEBUGINFO_DIR)#") ; \
+	    $(INSTALL_PROGRAM) $${dir}/$${name}.stripped $(DESTDIR)${prefix}/jre/bin/$${name}; \
+	    $(INSTALL_PROGRAM) $${dir}/$${name}.debug $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/bin; \
+	  else \
+	    $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/bin; \
+	  fi ; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/lib/*.jar; do \
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib; \
 	done
-	$(INSTALL_PROGRAM) $(BUILD_SDK_DIR)/lib/jexec $(DESTDIR)${prefix}/jre/lib
+	if test "x$(enable_split_debuginfo)" = "xyes"; then \
+	  $(INSTALL_PROGRAM) $(BUILD_DEBUGINFO_DIR)/jre/lib/jexec.stripped $(DESTDIR)${exec_prefix}/jre/lib/jexec ; \
+	  $(INSTALL_PROGRAM) $(BUILD_DEBUGINFO_DIR)/jre/lib/jexec.debug $(DESTDIR)$(DEBUG_PREFIX)/${exec_prefix}/jre/lib ; \
+	else \
+	  $(INSTALL_PROGRAM) $(BUILD_SDK_DIR)/jre/lib/jexec $(DESTDIR)${exec_prefix}/jre/lib ; \
+	fi
 	for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*.so; do \
-	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR); \
+	  if test "x$(enable_split_debuginfo)" = "xyes" -a ! -h $${files}; then \
+	    name=$$(basename $${files}) ; \
+	    dir=$$(echo $$(dirname $${files}) | $(SED) "s#$(BUILD_SDK_DIR)#$(BUILD_DEBUGINFO_DIR)#") ; \
+	    $(INSTALL_PROGRAM) $${dir}/$${name}.stripped $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${name}; \
+	    $(INSTALL_PROGRAM) $${dir}/$${name}.debug $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR); \
+	  else \
+	    $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR); \
+	  fi ; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/jli/*.so; do \
-	  $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli; \
+	  if test "x$(enable_split_debuginfo)" = "xyes" -a ! -h $${files} ; then \
+	    name=$$(basename $${files}) ; \
+	    dir=$$(echo $$(dirname $${files}) | $(SED) "s#$(BUILD_SDK_DIR)#$(BUILD_DEBUGINFO_DIR)#") ; \
+	    $(INSTALL_PROGRAM) $${dir}/$${name}.stripped $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli/$${name}; \
+	    $(INSTALL_PROGRAM) $${dir}/$${name}.debug $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli; \
+	  else \
+	    $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli; \
+	  fi ; \
 	done
 	for vms in client server ; do \
 	  if [ -d $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ] ; then \
 	    ${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ; \
+	    ${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ; \
 	    for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/*.so; do \
-	      $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}; \
+	      if test "x$(enable_split_debuginfo)" = "xyes" -a ! -h $${files} ; then \
+	        name=$$(basename $${files}) ; \
+	        dir=$$(echo $$(dirname $${files}) | $(SED) "s#$(BUILD_SDK_DIR)#$(BUILD_DEBUGINFO_DIR)#") ; \
+	        $(INSTALL_PROGRAM) $${dir}/$${name}.stripped \
+	          $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/$${name}; \
+	        $(INSTALL_PROGRAM) $${dir}/$${name}.debug \
+	          $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}; \
+	      else \
+	        $(INSTALL_PROGRAM) $${files} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}; \
+	      fi ; \
 	    done ; \
 	  fi ; \
 	done
@@ -2852,7 +2993,9 @@ endif
 
 uninstall-local:
 	for files in $(BUILD_SDK_DIR)/bin/*; do \
-	  rm -vf $(DESTDIR)$(bindir)/$$(basename $${files}); \
+	  name=$$(basename $${files}) ; \
+	  rm -vf $(DESTDIR)$(bindir)/$${name}; \
+	  rm -vf $(DESTDIR)$(DEBUG_PREFIX)/$(bindir)/$${name}.debug; \
 	done
 	for files in $(BUILD_SDK_DIR)/include/*.h; do \
 	  rm -vf $(DESTDIR)$(includedir)/$$(basename $${files}); \
@@ -2867,28 +3010,42 @@ uninstall-local:
 	  rm -vf $(DESTDIR)${exec_prefix}/lib/$$(basename $${files}); \
 	done
 	rm -vf $(DESTDIR)${exec_prefix}/lib/jexec
+	rm -vf $(DESTDIR)$(DEBUG_PREFIX)/${exec_prefix}/lib/jexec.debug
 	for files in $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR)/*.so; do \
-	  rm -vf $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/$$(basename $${files}); \
+	  name=$$(basename $${files}) ; \
+	  rm -vf $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/$${name}; \
+	  rm -vf $(DESTDIR)$(DEBUG_PREFIX)/${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/$${name}.debug; \
 	done
 	for files in $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR)/jli/*.so; do \
-	  rm -vf $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli/$$(basename $${files}); \
+	  name=$$(basename $${files}) ; \
+	  rm -vf $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli/$${name}; \
+	  rm -vf $(DESTDIR)$(DEBUG_PREFIX)/${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli/$${name}.debug; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/bin/*; do \
-	  rm -vf $(DESTDIR)${prefix}/jre/bin/$$(basename $${files}); \
+	  name=$$(basename $${files}) ; \
+	  rm -vf $(DESTDIR)${prefix}/jre/bin/$${name}; \
+	  rm -vf $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/bin/$${name}.debug; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/lib/*.jar; do \
 	  rm -vf $(DESTDIR)${prefix}/jre/lib/$$(basename $${files}); \
 	done
 	rm -vf $(DESTDIR)${prefix}/jre/lib/jexec
+	rm -vf $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/jexec.debug
 	for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*.so; do \
-	  rm -vf $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$$(basename $${files}); \
+	  name=$$(basename $${files}) ; \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${name}; \
+	  rm -vf $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${name}.debug; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/jli/*.so; do \
-	  rm -vf $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli/$$(basename $${files}); \
+	  name=$$(basename $${files}) ; \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli/$${name}; \
+	  rm -vf $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli/$${name}.debug; \
 	done
 	for vms in client server ; do \
 	  for files in $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/*.so; do \
-	    rm -vf $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/$$(basename $${files}); \
+	    name=$$(basename $${files}) ; \
+	    rm -vf $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/$${name}; \
+	    rm -vf $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/$${name}.debug; \
 	  done ; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/lib/ext/*.jar; do \

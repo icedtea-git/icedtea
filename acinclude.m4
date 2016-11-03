@@ -2447,6 +2447,38 @@ AC_DEFUN_ONCE([IT_ENABLE_NON_NSS_CURVES],
   AC_SUBST(ENABLE_NON_NSS_CURVES)
 ])
 
+AC_DEFUN([IT_ENABLE_SPLIT_DEBUGINFO],
+[
+  AC_REQUIRE([IT_ENABLE_NATIVE_DEBUGINFO])
+  AC_MSG_CHECKING([whether to split debuginfo into separate files])
+  AC_ARG_ENABLE([split-debuginfo],
+	      [AS_HELP_STRING(--enable-split-debuginfo,split debuginfo into separate files [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+	enable_split_debuginfo=no
+        ;;
+      *)
+        enable_split_debuginfo=yes
+        ;;
+    esac
+  ],
+  [
+        enable_split_debuginfo=no
+  ])
+  AC_MSG_RESULT([${enable_split_debuginfo}])
+  if test x"${enable_split_debuginfo}" = "xyes"; then
+    if test x"${enable_native_debuginfo}" = "xno"; then
+      AC_MSG_WARN([disabling split debuginfo as native debuginfo is not enabled])
+      enable_split_debuginfo=no
+    else
+      IT_FIND_TOOL([OBJCOPY], [objcopy])
+    fi
+  fi
+  AM_CONDITIONAL([SPLIT_DEBUGINFO], test x"${enable_split_debuginfo}" = "xyes")
+  AC_SUBST([enable_split_debuginfo])
+])
+
 AC_DEFUN_ONCE([IT_ENABLE_HEADLESS],
 [
   AC_MSG_CHECKING([whether to perform a headless build of OpenJDK])

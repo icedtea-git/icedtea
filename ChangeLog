@@ -1,3 +1,59 @@
+2016-11-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR1375: Provide option to strip and link debugging
+	info after build
+	* Makefile.am:
+	(uninstall-local): Remove .debug files.
+
+2015-07-15  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR1375: Provide option to strip and link debugging
+	info after build
+	* INSTALL: Document --enable-split-debuginfo
+	and objcopy dependency.
+	* Makefile.am:
+	(BUILD_DEBUGINFO_DIR): Specify location of split
+	binaries and libraries for main build.
+	(BUILD_DEBUG_DEBUGINFO_DIR): Likewise for debug build.
+	(BUILD_BOOT_DEBUGINFO_DIR): Likewise for bootstrap build.
+	(DEBUG_PREFIX): Prefix for debuginfo installation directory.
+	(.PHONY): Add clean-split-debuginfo, clean-split-debuginfo-debug
+	and clean-split-debuginfo-boot.
+	(split-debuginfo): Split ELF binaries into debuginfo and
+	non-debuginfo files if --enable-split-debuginfo is enabled.
+	(clean-split-debuginfo): Remove split debuginfo files.
+	(split-debuginfo-debug): Equivalent of split-debuginfo
+	for debug builds.
+	(clean-split-debuginfo-debug): Remove split debuginfo
+	files for debug build.
+	(icedtea-stage2): Depend on stamps/split-debuginfo.stamp
+	(clean-icedtea-stage2): Depend on clean-split-debuginfo.
+	(icedtea-debug-stage2): Depend on
+	stamps/split-debuginfo-debug.stamp
+	(clean-icedtea-debug-stage2): Depend on
+	clean-split-debuginfo-debug.
+	(split-debuginfo-boot): Equivalent of split-debuginfo
+	for bootstrap builds.
+	(clean-split-debuginfo-boot): Remove split debuginfo
+	files for bootstrap build.
+	(icedtea-stage1): Depend on
+	stamps/split-debuginfo-boot.stamp
+	(clean-icedtea-stage1): Depend on
+	clean-split-debuginfo-boot.
+	(install-exec-local): Create debuginfo directories
+	and install stripped file and debug file instead of
+	original file if --enable-split-debuginfo is enabled
+	and the file is not a symbolic link or the java-rmi.cgi
+	script.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_SPLIT_DEBUGINFO): New macro to introduce
+	the --enable-split-debuginfo option. The option is
+	automatically disabled if native debuginfo is
+	disabled. Turning the option on introduces a
+	requirement for objcopy.
+	* configure.ac: Invoke IT_ENABLE_SPLIT_DEBUGINFO.
+
 2016-11-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR1370: Provide option to build without debugging
@@ -2156,6 +2212,54 @@
 	* configure.ac: Call IT_ENABLE_WERROR.
 	* javac.in: Handle stripping of arguments which
 	take parameters, specifically -Xmaxwarns.
+
+2015-07-15  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR1374: Provide option to strip and link debugging
+	info after build
+	* INSTALL: Document --enable-split-debuginfo.
+	* Makefile.am:
+	(BUILD_DEBUGINFO_DIR): Specify location of split
+	binaries and libraries for main build.
+	(BUILD_DEBUG_DEBUGINFO_DIR): Likewise for debug build.
+	(BUILD_BOOT_DEBUGINFO_DIR): Likewise for bootstrap build.
+	(DEBUG_PREFIX): Prefix for debuginfo installation directory.
+	(.PHONY): Add clean-split-debuginfo, clean-split-debuginfo-debug
+	and clean-split-debuginfo-boot.
+	(split-debuginfo): Split ELF binaries into debuginfo and
+	non-debuginfo files if --enable-split-debuginfo is enabled.
+	(clean-split-debuginfo): Remove split debuginfo files.
+	(split-debuginfo-debug): Equivalent of split-debuginfo
+	for debug builds.
+	(clean-split-debuginfo-debug): Remove split debuginfo
+	files for debug build.
+	(icedtea-stage2): Depend on stamps/split-debuginfo.stamp
+	(clean-icedtea-stage2): Depend on clean-split-debuginfo.
+	(icedtea-debug-stage2): Depend on
+	stamps/split-debuginfo-debug.stamp
+	(clean-icedtea-debug-stage2): Depend on
+	clean-split-debuginfo-debug.
+	(split-debuginfo-boot): Equivalent of split-debuginfo
+	for bootstrap builds.
+	(clean-split-debuginfo-boot): Remove split debuginfo
+	files for bootstrap build.
+	(icedtea-stage1): Depend on
+	stamps/split-debuginfo-boot.stamp
+	(clean-icedtea-stage1): Depend on
+	clean-split-debuginfo-boot.
+	(install-exec-local): Create debuginfo directories
+	and install stripped file and debug file instead of
+	original file if --enable-split-debuginfo is enabled
+	and the file is not a symbolic link or the java-rmi.cgi
+	script.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_SPLIT_DEBUGINFO): New macro to introduce
+	the --enable-split-debuginfo option. The option is
+	automatically disabled if native debuginfo is
+	disabled. Turning the option on introduces a
+	requirement for objcopy.
+	* configure.ac: Invoke IT_ENABLE_SPLIT_DEBUGINFO.
 
 2015-06-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
