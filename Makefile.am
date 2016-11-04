@@ -531,6 +531,17 @@ ICEDTEA_CONFIGURE += \
 	--disable-system-kerberos
 endif
 
+if USE_SYSTEM_PCSC
+ICEDTEA_CONFIGURE_ENV += \
+	PCSC_LIBS="${PCSC_LIBS}" \
+	PCSC_CFLAGS="${PCSC_CFLAGS}"
+ICEDTEA_CONFIGURE += \
+	--enable-system-pcsc
+else
+ICEDTEA_CONFIGURE += \
+	--disable-system-pcsc
+endif
+
 if ZERO_BUILD
 ICEDTEA_CONFIGURE += \
 	--with-jvm-variants=zero

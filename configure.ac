@@ -145,8 +145,6 @@ fi
 AC_SUBST([HG])
 IT_WITH_HG_REVISION
 
-IT_CHECK_FOR_KERBEROS
-
 dnl pkgconfig cannot be used to find these headers and libraries.
 AC_CHECK_HEADERS([cups/cups.h cups/ppd.h],[]
 	,[AC_MSG_ERROR("CUPS headers were not found -
@@ -160,6 +158,8 @@ IT_CHECK_FOR_JPEG
 IT_CHECK_FOR_PNG
 IT_CHECK_FOR_GIF
 IT_CHECK_FOR_LCMS
+IT_CHECK_FOR_KERBEROS
+IT_CHECK_FOR_PCSC
 IT_ENABLE_INFINALITY
 AC_CONFIG_FILES([remove-intree-libraries.sh])
 

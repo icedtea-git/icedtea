@@ -1,5 +1,30 @@
 2016-11-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR1978: Allow use of system PCSC
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE): Set --enable-system-pcsc
+	or --disable-system-pcsc according to
+	whether USE_SYSTEM_PCSC is set or not.
+
+2014-01-31  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR1978: Allow use of system PCSC
+	* INSTALL: Update with --enable-system-pcsc
+	and add configure options for image libraries.
+	Remove --with-gcj.
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE_ENV): Add system libpcsc options.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_CHECK_FOR_PCSC): System libpcsclite support macro.
+	* configure.ac:
+	Call IT_CHECK_FOR_PCSC.
+	* remove-intree-libraries.sh.in:
+	Remove libpcsclite headers when building with system
+	version.
+
+2016-11-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR1537: Allow use of system Kerberos to obtain cache location
 	* Makefile.am:
 	(ICEDTEA_CONFIGURE): Set --enable-system-kerberos

@@ -17,16 +17,14 @@ tar
 sha256sum (from coreutils)
 wget
 alsa
-xalan
-xerces
 glib2-devel 
 gtk2-devel
-libXinerama-devel
-giflib-devel
-libpng-devel
-libjpeg-devel >= 6b
-zlib-devel
-libffi (for --enable-zero or on archs other than x86/x86_64/sparc)
+giflib-devel (for --enable-system-gif)
+libpng-devel (for --enable-system-png)
+libjpeg-devel >= 6b (for --enable-system-jpeg)
+zlib-devel (for --enable-system-zlib)
+libpcsclite (for --enable-system-pcsc)
+libffi (for --enable-zero or on archs other than x86/x86_64/sparc/ppc64/ppc64le/aarch64)
 LLVM 2.5 or later (for --enable-shark)
 systemtap-sdl-devel >= 0.9.5 (Java method tracing requires systemtap >= 0.9.9)
 objcopy (for --enable-split-debuginfo)
@@ -94,7 +92,8 @@ to configure:
   downloading and extracting a tarball.
 * --enable-system-lcms: Build using the system installation of LCMS2, not
   the version in-tree.
-* --with-gcj: Compile ecj to native code with gcj prior to building.
+* --enable-system-pcsc: Build and link against the system installation of
+  libpcsclite instead of trying to dynamically open it at runtime.
 * --with-parallel-jobs: Run the specified number of parallel jobs when
   building HotSpot and the JDK.  If this option is passed without an
   argument, the number of online processors plus one is used.

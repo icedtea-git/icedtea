@@ -1817,6 +1817,32 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_KERBEROS],
   AC_SUBST(ENABLE_SYSTEM_KERBEROS)
 ])
 
+AC_DEFUN_ONCE([IT_CHECK_FOR_PCSC],
+[
+  AC_MSG_CHECKING([whether to use the system libpcsclite install])
+  AC_ARG_ENABLE([system-pcsc],
+	      [AS_HELP_STRING(--enable-system-pcsc,use the system PCSC [[default=yes]])],
+  [
+    ENABLE_SYSTEM_PCSC="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_PCSC="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_PCSC})
+  if test x"${ENABLE_SYSTEM_PCSC}" = "xyes"; then
+    dnl Check for PCSC headers and libraries.
+    PKG_CHECK_MODULES(PCSC, libpcsclite,[LIBPCSC_FOUND=yes],[LIBPCSC_FOUND=no])
+    if test "x${LIBPCSC_FOUND}" = xno
+    then
+      AC_MSG_ERROR([Could not find libpcsc; install libpcsc or build with --disable-system-pcsc to use dynamic loading.])
+    fi
+    AC_SUBST(PCSC_CFLAGS)
+    AC_SUBST(PCSC_LIBS)
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_PCSC, test x"${ENABLE_SYSTEM_PCSC}" = "xyes")
+  AC_SUBST(ENABLE_SYSTEM_PCSC)
+])
+
 AC_DEFUN([IT_ENABLE_JAMVM],
 [
   AC_MSG_CHECKING(whether to use JamVM as VM)

@@ -16,6 +16,7 @@ New in release 3.2.0 (2016-09-XX):
   - PR1370: Provide option to build without debugging
   - PR1375: Provide option to strip and link debugging info after build
   - PR1537: Handle alternative Kerberos credential cache locations
+  - PR1978: Allow use of system PCSC
 * Import of OpenJDK 8 u102 build 14
   - S4515292: ReferenceType.isStatic() returns true for arrays
   - S4858370: JDWP: Memory Leak: GlobalRefs never deleted when processing invokeMethod command
@@ -165,7 +166,6 @@ New in release 3.2.0 (2016-09-XX):
   - S8157306, PR3121: Random infrequent null pointer exceptions in javac (enabled on AArch64 only)
   - S8162384, PR3122: Performance regression: bimorphic inlining may be bypassed by type speculation
 * Bug fixes
-  - PR1978: Allow use of system PCSC
   - PR2445: Support system libsctp
   - PR3123: Some object files built without -fPIC on x86 only
   - PR3126: pax-mark-vm script calls "exit -1" which is invalid in dash
