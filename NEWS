@@ -52,6 +52,7 @@ New in release 2.6.8 (2016-10-XX):
   - S8078628, PR3151: Zero build fails with pre-compiled headers disabled
   - PR3128: pax-mark-vm script calls "exit -1" which is invalid in dash
   - PR3131: PaX marking fails on filesystems which don't support extended attributes
+  - PR3135: Makefile.am rule stamps/add/tzdata-support-debug.stamp has a typo in add-tzdata dependency
 * AArch64 port
   - S8167200, PR3204: AArch64: Broken stack pointer adjustment in interpreter
   - PR3211: AArch64 build fails with pre-compiled headers disabled

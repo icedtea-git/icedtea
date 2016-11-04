@@ -1,3 +1,19 @@
+2016-08-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3135: Makefile.am rule
+	stamps/add/tzdata-support-debug.stamp has a typo in
+	add-tzdata dependency
+	* NEWS: Updated.
+
+2016-08-10  Tiago Sturmer Daitx  <tdaitx@linux.vnet.ibm.com>
+
+	PR3135: Makefile.am rule
+	stamps/add/tzdata-support-debug.stamp has a typo in
+	add-tzdata dependency
+	* Makefile.am:
+	(icedtea-debug-stage2): Fix typo in
+	add-tzdata-support-debug dependency.
+
 2016-08-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3128: pax-mark-vm script calls "exit -1" which

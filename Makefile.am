@@ -2339,7 +2339,7 @@ clean-icedtea-stage2: clean-add-jamvm clean-check-crypto clean-add-archive clean
 
 stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
  stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp \
- stamps/add-systemtap-debug.stamp stamps/add/tzdata-support-debug.stamp \
+ stamps/add-systemtap-debug.stamp stamps/add-tzdata-support-debug.stamp \
  stamps/check-crypto-debug.stamp stamps/add-archive-debug.stamp stamps/split-debuginfo-debug.stamp \
  stamps/add-mime-types-file-debug.stamp
 	mkdir -p stamps
