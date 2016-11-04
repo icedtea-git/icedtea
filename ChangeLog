@@ -1,3 +1,12 @@
+2016-11-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3202: Update infinality configure test
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_INFINALITY): Allow Infinality to be
+	enabled if TT_CONFIG_OPTION_SUBPIXEL_HINTING is
+	set (FreeType >= 2.7)
+
 2016-10-27  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	S8157306, PR3209: Random infrequent null pointer

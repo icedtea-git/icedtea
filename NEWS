@@ -59,6 +59,7 @@ New in release 2.7.0 (201X-XX-XX):
   - PR3141: Pass $(CC) and $(CXX) to OpenJDK build
   - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
   - PR3166: invalid zip timestamp handling leads to error building bootstrap-javac
+  - PR3202: Update infinality configure test
 * AArch64 port
   - S8167200: AArch64: Broken stack pointer adjustment in interpreter
   - PR3211: AArch64 build fails with pre-compiled headers disabled
