@@ -50,6 +50,7 @@ New in release 2.6.8 (2016-10-XX):
   - S8149611, PR3160, G592292: Add tests for Unsafe.copySwapMemory
 * Bug fixes
   - S8078628, PR3151: Zero build fails with pre-compiled headers disabled
+  - PR3131: PaX marking fails on filesystems which don't support extended attributes
 * AArch64 port
   - S8167200, PR3204: AArch64: Broken stack pointer adjustment in interpreter
   - PR3211: AArch64 build fails with pre-compiled headers disabled
