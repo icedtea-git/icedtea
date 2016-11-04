@@ -1,3 +1,18 @@
+2016-08-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3166: invalid zip timestamp handling leads to
+	error building bootstrap-javac
+	* AUTHORS: Add Ricardo Ribalda.
+	* NEWS: Updated.
+
+2016-08-19  Ricardo Ribalda  <ricardo.ribalda@gmail.com>
+
+	PR3166: invalid zip timestamp handling leads to
+	error building bootstrap-javac
+	* Makefile.am:
+	(rt): Don't use -u so files are always overwritten,
+	regardless of timestamps.
+
 2016-08-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3141: Pass $(CC) and $(CXX) to OpenJDK build

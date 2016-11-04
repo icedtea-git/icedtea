@@ -3026,7 +3026,7 @@ stamps/rt.stamp: stamps/rt-class-files.stamp
 	     cp -a ../../$$dirs $$destpath ; \
 	   done ; \
 	   if [ -w $(STAGE1_BOOT_RUNTIME) ] ; then \
-	     $(ZIP) -qur $(STAGE1_BOOT_RUNTIME) com java javax sun ; \
+	     $(ZIP) -qr $(STAGE1_BOOT_RUNTIME) com java javax sun ; \
 	   fi ; ) \
 	fi
 	mkdir -p stamps
