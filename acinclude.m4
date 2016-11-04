@@ -2115,7 +2115,9 @@ AC_DEFUN_ONCE([IT_ENABLE_INFINALITY],
     #include <ft2build.h>
     #include FT_FREETYPE_H
     #ifndef FT_CONFIG_OPTION_INFINALITY_PATCHSET
+    #if TT_CONFIG_OPTION_SUBPIXEL_HINTING < 1
     #error Infinality not supported
+    #endif
     #endif
     ]])], [AC_MSG_RESULT([yes])], [AC_MSG_RESULT([no]); \
       AC_MSG_ERROR([Infinality support requires infinality support in FreeType.])])

@@ -1,3 +1,11 @@
+2016-11-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3201: Update infinality configure test
+	* acinclude.m4:
+	(IT_ENABLE_INFINALITY): Allow Infinality to be
+	enabled if TT_CONFIG_OPTION_SUBPIXEL_HINTING is
+	set (FreeType >= 2.7)
+
 2016-11-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR1978: Allow use of system PCSC
