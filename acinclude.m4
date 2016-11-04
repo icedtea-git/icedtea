@@ -1791,6 +1791,32 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_GIF],
   AC_SUBST(ENABLE_SYSTEM_GIF)
 ])
 
+dnl Check for Kerberos library in order to lookup cache location at runtime.
+AC_DEFUN_ONCE([IT_CHECK_FOR_KERBEROS],
+[
+  AC_MSG_CHECKING([whether to use the system Kerberos install])
+  AC_ARG_ENABLE([system-kerberos],
+	      [AS_HELP_STRING(--enable-system-kerberos,use the system kerberos [[default=yes]])],
+  [
+    ENABLE_SYSTEM_KERBEROS="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_KERBEROS="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_KERBEROS})
+  if test x"${ENABLE_SYSTEM_KERBEROS}" = "xyes"; then
+    dnl Check for krb5 header and library.
+    AC_CHECK_LIB([krb5], [krb5_cc_default],
+        , [AC_MSG_ERROR([Could not find Kerberos library; install Kerberos or build with --disable-system-kerberos to use the default cache location.])])
+    AC_CHECK_HEADER([krb5.h],
+        , [AC_MSG_ERROR([Could not find Kerberos header; install Kerberos or build with --disable-system-kerberos to use the default cache location.])])
+    KRB5_LIBS="-lkrb5"
+    AC_SUBST(KRB5_LIBS)
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_KERBEROS, test x"${ENABLE_SYSTEM_KERBEROS}" = "xyes")
+  AC_SUBST(ENABLE_SYSTEM_KERBEROS)
+])
+
 AC_DEFUN([IT_ENABLE_JAMVM],
 [
   AC_MSG_CHECKING(whether to use JamVM as VM)

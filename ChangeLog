@@ -1,5 +1,27 @@
 2016-11-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR1537: Allow use of system Kerberos to obtain cache location
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE): Set --enable-system-kerberos
+	or --disable-system-kerberos according to
+	whether USE_SYSTEM_KERBEROS is set or not.
+	* NEWS: Updated.
+
+2013-08-30  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR1537: Allow use of system Kerberos to obtain cache location
+	* INSTALL: Update with --enable-system-kerberos
+	option.
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE_ENV): Set KRB5_LIBS and KRB5_CFLAGS.
+	* acinclude.m4:
+	(IT_CHECK_FOR_KERBEROS): Add --enable-system-kerberos
+	option (on by default) which checks for libkrb5 and
+	the krb5.h header.
+	* configure.ac: Invoke IT_CHECK_FOR_KERBEROS.
+
+2016-11-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR1375: Provide option to strip and link debugging
 	info after build
 	* Makefile.am:

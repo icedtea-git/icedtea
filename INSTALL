@@ -220,6 +220,9 @@ These are documented fully in the relevant section below.
 * --enable-split-debuginfo: Strip debuginfo from binaries and libraries
   and install in .debug files under ${libdir}/debug instead.  objcopy
   from binutils must be available to perform the stripping.
+* --enable-system-kerberos: Link against the system Kerberos library and
+  query it at runtime to obtain the cache location, rather than using a
+  hardcoded value.
 
 Testing
 =======

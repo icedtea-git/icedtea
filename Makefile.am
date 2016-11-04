@@ -520,6 +520,17 @@ ICEDTEA_CONFIGURE += \
 	--disable-system-nss
 endif
 
+if USE_SYSTEM_KERBEROS
+ICEDTEA_CONFIGURE_ENV += \
+	KRB5_LIBS="${KRB5_LIBS}" \
+	KRB5_CFLAGS="${KRB5_CFLAGS}"
+ICEDTEA_CONFIGURE += \
+	--enable-system-kerberos
+else
+ICEDTEA_CONFIGURE += \
+	--disable-system-kerberos
+endif
+
 if ZERO_BUILD
 ICEDTEA_CONFIGURE += \
 	--with-jvm-variants=zero
