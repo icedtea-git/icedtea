@@ -1,3 +1,27 @@
+2016-11-06  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2445: Support system libsctp
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE): Set --enable-system-sctp
+	or --disable-system-sctp according to
+	whether USE_SYSTEM_PCSC is set or not.
+
+2015-07-07  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR2445: Support system libsctp
+	* INSTALL:
+	Document --enable-system-sctp option
+	and necessary dependencies.
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE_ENV): Add SCTP_CFLAGS
+	and SCTP_LIBS to support the system SCTP
+	option.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_CHECK_FOR_SCTP): Add --enable-system-sctp
+	option.
+	* configure.ac: Invoke IT_CHECK_FOR_SCTP.
+
 2016-11-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3182: Support building without pre-compiled headers

@@ -24,6 +24,7 @@ libpng-devel (for --enable-system-png)
 libjpeg-devel >= 6b (for --enable-system-jpeg)
 zlib-devel (for --enable-system-zlib)
 libpcsclite (for --enable-system-pcsc)
+lksctp-tools (for --enable-system-sctp)
 libffi (for --enable-zero or on archs other than x86/x86_64/sparc/ppc64/ppc64le/aarch64)
 LLVM 2.5 or later (for --enable-shark)
 systemtap-sdl-devel >= 0.9.5 (Java method tracing requires systemtap >= 0.9.9)
@@ -94,6 +95,8 @@ to configure:
   the version in-tree.
 * --enable-system-pcsc: Build and link against the system installation of
   libpcsclite instead of trying to dynamically open it at runtime.
+* --enable-system-sctp: Build and link against the system installation of
+  libsctp instead of trying to dynamically open it at runtime.
 * --with-parallel-jobs: Run the specified number of parallel jobs when
   building HotSpot and the JDK.  If this option is passed without an
   argument, the number of online processors plus one is used.

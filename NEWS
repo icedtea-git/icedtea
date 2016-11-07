@@ -17,6 +17,7 @@ New in release 3.2.0 (2016-09-XX):
   - PR1375: Provide option to strip and link debugging info after build
   - PR1537: Handle alternative Kerberos credential cache locations
   - PR1978: Allow use of system PCSC
+  - PR2445: Support system libsctp
   - PR3182: Support building without pre-compiled headers
 * Import of OpenJDK 8 u102 build 14
   - S4515292: ReferenceType.isStatic() returns true for arrays

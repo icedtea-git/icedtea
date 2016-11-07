@@ -542,6 +542,17 @@ ICEDTEA_CONFIGURE += \
 	--disable-system-pcsc
 endif
 
+if USE_SYSTEM_SCTP
+ICEDTEA_CONFIGURE_ENV += \
+	SCTP_LIBS="${SCTP_LIBS}" \
+	SCTP_CFLAGS="${SCTP_CFLAGS}"
+ICEDTEA_CONFIGURE += \
+	--enable-system-sctp
+else
+ICEDTEA_CONFIGURE += \
+	--disable-system-sctp
+endif
+
 if ZERO_BUILD
 ICEDTEA_CONFIGURE += \
 	--with-jvm-variants=zero

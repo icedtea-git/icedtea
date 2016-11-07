@@ -2500,6 +2500,32 @@ AC_DEFUN_ONCE([IT_ENABLE_NASHORN_CHECKSUM],
   AC_SUBST(NASHORN_CHECKSUM)
 ])
 
+AC_DEFUN_ONCE([IT_CHECK_FOR_SCTP],
+[
+  AC_MSG_CHECKING([whether to use the system libsctp install])
+  AC_ARG_ENABLE([system-sctp],
+	      [AS_HELP_STRING(--enable-system-sctp,use the system SCTP [[default=yes]])],
+  [
+    ENABLE_SYSTEM_SCTP="${enableval}"
+  ],
+  [
+    ENABLE_SYSTEM_SCTP="yes"
+  ])
+  AC_MSG_RESULT(${ENABLE_SYSTEM_SCTP})
+  if test x"${ENABLE_SYSTEM_SCTP}" = "xyes"; then
+    dnl Check for SCTP headers and libraries.
+    AC_CHECK_LIB([sctp], [sctp_bindx],
+        , [AC_MSG_ERROR([Could not find SCTP library; install SCTP or build with --disable-system-sctp to use the in-tree copy.])])
+    AC_CHECK_HEADER([netinet/sctp.h],
+        , [AC_MSG_ERROR([Could not find SCTP header; install SCTP or build with --disable-system-sctp to use the in-tree copy.])])
+    SCTP_LIBS="-lsctp"
+    AC_SUBST(SCTP_LIBS)
+    ENABLE_SYSTEM_SCTP=true
+  fi
+  AM_CONDITIONAL(USE_SYSTEM_SCTP, test x"${ENABLE_SYSTEM_SCTP}" = "xtrue")
+  AC_SUBST(ENABLE_SYSTEM_SCTP)
+])
+
 AC_DEFUN_ONCE([IT_ENABLE_NON_NSS_CURVES],
 [
   AC_MSG_CHECKING([whether to enable elliptic curves beyond those supported by NSS])
