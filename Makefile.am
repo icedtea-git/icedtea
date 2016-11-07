@@ -130,7 +130,7 @@ else
   JDK_SRC_ZIP = jdk.$(TAR_SUFFIX)
   LANGTOOLS_SRC_ZIP = langtools.$(TAR_SUFFIX)
   HOTSPOT_SRC_ZIP = hotspot.$(TAR_SUFFIX)
-  NASHORN_SRC_ZIP = nashorn.tar.$(TAR_SUFFIX)
+  NASHORN_SRC_ZIP = nashorn.$(TAR_SUFFIX)
 endif
 
 if DISABLE_OPENJDK_CHECKSUM

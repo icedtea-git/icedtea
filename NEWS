@@ -173,6 +173,7 @@ New in release 3.2.0 (2016-09-XX):
   - PR3126: pax-mark-vm script calls "exit -1" which is invalid in dash
   - PR3127, G590348: Only apply PaX markings by default on running PaX kernels
   - PR3183: Support Fedora/RHEL system crypto policy
+  - PR3199: Invalid nashorn URL
   - PR3201: Update infinality configure test
   - PR3206, RH1367357: lcms2: Out-of-bounds read in Type_MLU_Read()
   - PR3218: PR3159 leads to build failure on clean tree
