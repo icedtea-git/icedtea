@@ -19,6 +19,7 @@ New in release 3.2.0 (2016-09-XX):
   - PR1978: Allow use of system PCSC
   - PR2445: Support system libsctp
   - PR3182: Support building without pre-compiled headers
+  - PR3221: Use pkgconfig to detect Kerberos CFLAGS and libraries
 * Import of OpenJDK 8 u102 build 14
   - S4515292: ReferenceType.isStatic() returns true for arrays
   - S4858370: JDWP: Memory Leak: GlobalRefs never deleted when processing invokeMethod command
