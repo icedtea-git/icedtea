@@ -61,6 +61,7 @@ IT_DISABLE_SYSTEMTAP_TESTS
 IT_ENABLE_SUNEC
 IT_ENABLE_NATIVE_DEBUGINFO
 IT_ENABLE_JAVA_DEBUGINFO
+IT_DISABLE_PRECOMPILED_HEADERS
 
 # Use xvfb-run if found to run gui tests (check-jdk).
 AC_CHECK_PROG(XVFB_RUN_CMD, xvfb-run, [xvfb-run -a -e xvfb-errors], [])

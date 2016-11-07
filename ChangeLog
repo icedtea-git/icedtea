@@ -1,3 +1,22 @@
+2016-11-04  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3182: Support building without pre-compiled headers
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE): Pass --disable-precompiled-headers
+	or --enable-precompiled-headers, according to whether
+	DISABLE_PRECOMPILED_HEADERS is defined or not,
+	respectively.
+
+2016-10-26  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3182: Support building without pre-compiled headers
+	* INSTALL: Updated.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DISABLE_PRECOMPILED_HEADERS): New macro to
+	provide the --disable-precompiled-headers option.
+	* configure.ac: Invoke IT_DISABLE_PRECOMPILED_HEADERS.
+
 2016-11-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3201: Update infinality configure test

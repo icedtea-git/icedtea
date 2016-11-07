@@ -597,6 +597,14 @@ ICEDTEA_CONFIGURE += \
 	--with-java-debug-symbols=no
 endif
 
+if DISABLE_PRECOMPILED_HEADERS
+ICEDTEA_CONFIGURE += \
+	--disable-precompiled-headers
+else
+ICEDTEA_CONFIGURE += \
+	--enable-precompiled-headers
+endif
+
 ICEDTEA_UNSET = \
 	JAVAC= \
 	JAVA_HOME= \

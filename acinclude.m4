@@ -2222,6 +2222,28 @@ AC_DEFUN_ONCE([IT_DISABLE_SYSTEMTAP_TESTS],
   AM_CONDITIONAL([DISABLE_SYSTEMTAP_TESTS], test x"${disable_systemtap_tests}" = "xyes")
 ])
 
+AC_DEFUN_ONCE([IT_DISABLE_PRECOMPILED_HEADERS],
+[
+  AC_MSG_CHECKING([whether to disable the use of pre-compiled headers])
+  AC_ARG_ENABLE([precompiled-headers],
+                [AS_HELP_STRING(--disable-precompiled-headers,do not use pre-compiled headers [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+        disable_precompiled_headers=yes
+        ;;
+      *)
+        disable_precompiled_headers=no
+        ;;
+    esac
+  ],
+  [
+    disable_precompiled_headers=no
+  ])
+  AC_MSG_RESULT([$disable_precompiled_headers])
+  AM_CONDITIONAL([DISABLE_PRECOMPILED_HEADERS], test x"${disable_precompiled_headers}" = "xyes")
+])
+
 AC_DEFUN_ONCE([IT_ENABLE_OPENJDK_CHECKSUM],
 [
   AC_REQUIRE([IT_WITH_OPENJDK_SRC_ZIP])
