@@ -12,6 +12,31 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.2.0 (2016-09-XX):
 
+* Security fixes
+  - S8146490: Direct indirect CRL checks
+  - S8151921: Improved page resolution
+  - S8155968: Update command line options
+  - S8155973, CVE-2016-5542: Tighten jar checks
+  - S8156794: Extend data sharing
+  - S8157176: Improved classfile parsing
+  - S8157739, CVE-2016-5554: Classloader Consistency Checking
+  - S8157749: Improve handling of DNS error replies
+  - S8157753: Audio replay enhancement
+  - S8157759: LCMS Transform Sampling Enhancement
+  - S8157764: Better handling of interpolation plugins
+  - S8158302: Handle contextual glyph substitutions
+  - S8158993, CVE-2016-5568: Service Menu services
+  - S8159495: Fix index offsets
+  - S8159503: Amend Annotation Actions
+  - S8159511: Stack map validation
+  - S8159515: Improve indy validation
+  - S8159519, CVE-2016-5573: Reformat JDWP messages
+  - S8160090: Better signature handling in pack200
+  - S8160094: Improve pack200 layout
+  - S8160098: Clean up color profiles
+  - S8160591, CVE-2016-5582: Improve internal array handling
+  - S8160838, CVE-2016-5597: Better HTTP service
+  - PR3206, RH1367357: lcms2: Out-of-bounds read in Type_MLU_Read()
 * New features
   - PR1370: Provide option to build without debugging
   - PR1375: Provide option to strip and link debugging info after build
@@ -163,6 +188,30 @@ New in release 3.2.0 (2016-09-XX):
   - S8154722: Test gc/ergonomics/TestDynamicNumberOfGCThreads.java fails
   - S8157078: 8u102 L10n resource file updates
   - S8157838: Personalized Windows Font Size is not taken into account in Java8u102
+* Import of OpenJDK 8 u111 build 14
+  - S6882559: new JEditorPane("text/plain","") fails for null context class loader
+  - S8049171: Additional tests for jarsigner's warnings
+  - S8063086: Math.pow yields different results upon repeated calls
+  - S8140530: Creating a VolatileImage with size 0,0 results in no longer working g2d.drawString
+  - S8142926: OutputAnalyzer's shouldXXX() calls return this
+  - S8147077: IllegalArgumentException thrown by api/java_awt/Component/FlipBufferStrategy/indexTGF_General
+  - S8148127: IllegalArgumentException thrown by JCK test api/java_awt/Component/FlipBufferStrategy/indexTGF_General in opengl pipeline
+  - S8150611: Security problem on sun.misc.resources.Messages*
+  - S8153399: Constrain AppCDS behavior (back port)
+  - S8157653: [Parfait] Uninitialised variable in awt_Font.cpp
+  - S8158734: JEditorPane.createEditorKitForContentType throws NPE after 6882559
+  - S8158994: Service Menu services
+  - S8159684: (tz) Support tzdata2016f
+  - S8160904: Typo in code from 8079718 fix : enableCustomValueHanlde
+  - S8160934: isnan() is not available on older MSVC compilers
+  - S8161141: correct bugId for JDK-8158994 fix push
+  - S8162411: Service Menu services 2
+  - S8162419: closed/com/oracle/jfr/runtime/TestVMInfoEvent.sh failing after JDK-8155968
+  - S8162511: 8u111 L10n resource file updates
+  - S8162792: Remove constraint DSA keySize < 1024 from jdk.jar.disabledAlgorithms in jdk8
+  - S8164452: 8u111 L10n resource file update - msgdrop 20
+  - S8165816: jarsigner -verify shows jar unsigned if it was signed with a weak algorithm
+  - S8166381: Back out changes to the java.security file to not disable MD5
 * Backports
   - S8078628, PR3208: Zero build fails with pre-compiled headers disabled
   - S8141491, PR3159, G592292: Unaligned memory access in Bits.c
@@ -176,8 +225,14 @@ New in release 3.2.0 (2016-09-XX):
   - PR3183: Support Fedora/RHEL system crypto policy
   - PR3199: Invalid nashorn URL
   - PR3201: Update infinality configure test
-  - PR3206, RH1367357: lcms2: Out-of-bounds read in Type_MLU_Read()
   - PR3218: PR3159 leads to build failure on clean tree
+* AArch64 port
+  - S8131779, PR3220: AARCH64: add Montgomery multiply intrinsic
+  - S8167200, PR3220: AArch64: Broken stack pointer adjustment in interpreter
+  - S8167421, PR3220: AArch64: in one core system, fatal error: Illegal threadstate encountered
+  - S8167595, PR3220: AArch64: SEGV in stub code cipherBlockChaining_decryptAESCrypt
+  - S8168888, PR3220: Port 8160591: Improve internal array handling to AArch64.
+* Shenandoah
   - PR3224: Shenandoah broken when building without pre-compiled headers
 
 New in release 3.1.0 (2016-07-25):
