@@ -1,5 +1,18 @@
 2016-11-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump shenandoah to aarch64-shenandoah-jdk8u111-b17.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Rename patch below.
+	* hotspot.map.in: Update shenandoah to
+	aarch64-shenandoah-jdk8u111-b17 tag.
+	* patches/hotspot/shenandoah/8159244-pr3074.patch:
+	Renamed to...
+	* patches/hotspot/shenandoah/8160122-pr3074.patch:
+	... this and reduced from full version to the
+	backport correction provided by 8160122.
+
+2016-11-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump to icedtea-3.2.0.
 	* Makefile.am:
 	(JDK_UPDATE_VERSION): Bump to 111.

@@ -352,7 +352,7 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8145096-pr2854.patch \
 	patches/hotspot/$(HSBUILD)/8154210.patch \
 	patches/hotspot/$(HSBUILD)/8158260-pr2991-rh1341258.patch \
-	patches/hotspot/$(HSBUILD)/8159244-pr3074.patch \
+	patches/hotspot/$(HSBUILD)/8160122-pr3074.patch \
 	patches/hotspot/$(HSBUILD)/crash_dump.patch \
 	patches/hotspot/$(HSBUILD)/no_devirt.patch \
 	patches/hotspot/$(HSBUILD)/pr1368.patch \
