@@ -44,6 +44,7 @@ New in release 3.2.0 (2016-11-08):
   - PR1978: Allow use of system PCSC
   - PR2445: Support system libsctp
   - PR3182: Support building without pre-compiled headers
+  - PR3183: Support Fedora/RHEL system crypto policy
   - PR3221: Use pkgconfig to detect Kerberos CFLAGS and libraries
 * Import of OpenJDK 8 u102 build 14
   - S4515292: ReferenceType.isStatic() returns true for arrays
@@ -218,11 +219,9 @@ New in release 3.2.0 (2016-11-08):
   - S8157306, PR3121: Random infrequent null pointer exceptions in javac (enabled on AArch64 only)
   - S8162384, PR3122: Performance regression: bimorphic inlining may be bypassed by type speculation
 * Bug fixes
-  - PR2445: Support system libsctp
   - PR3123: Some object files built without -fPIC on x86 only
   - PR3126: pax-mark-vm script calls "exit -1" which is invalid in dash
   - PR3127, G590348: Only apply PaX markings by default on running PaX kernels
-  - PR3183: Support Fedora/RHEL system crypto policy
   - PR3199: Invalid nashorn URL
   - PR3201: Update infinality configure test
   - PR3218: PR3159 leads to build failure on clean tree

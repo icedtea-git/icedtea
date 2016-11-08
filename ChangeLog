@@ -1,5 +1,10 @@
 2016-11-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS: Remove duplicate line and
+	move crypto policy support to features section.
+
+2016-11-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* NEWS: Set release date to today.
 
 2016-11-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
