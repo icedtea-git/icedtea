@@ -1,0 +1,11 @@
+diff --git a/src/share/vm/gc_implementation/shenandoah/shenandoahBarrierSet.cpp b/src/share/vm/gc_implementation/shenandoah/shenandoahBarrierSet.cpp
+--- openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahBarrierSet.cpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahBarrierSet.cpp
+@@ -26,6 +26,7 @@
+ #include "gc_implementation/shenandoah/shenandoahHeap.inline.hpp"
+ #include "gc_implementation/shenandoah/shenandoahBarrierSet.inline.hpp"
+ #include "memory/universe.hpp"
++#include "runtime/interfaceSupport.hpp"
+ #include "utilities/array.hpp"
+ 
+ class UpdateRefsForOopClosure: public ExtendedOopClosure {

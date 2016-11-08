@@ -178,6 +178,7 @@ New in release 3.2.0 (2016-09-XX):
   - PR3201: Update infinality configure test
   - PR3206, RH1367357: lcms2: Out-of-bounds read in Type_MLU_Read()
   - PR3218: PR3159 leads to build failure on clean tree
+  - PR3224: Shenandoah broken when building without pre-compiled headers
 
 New in release 3.1.0 (2016-07-25):
 

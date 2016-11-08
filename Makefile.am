@@ -364,7 +364,8 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/werror.patch \
 	patches/hotspot/$(HSBUILD)/8162384-pr3122.patch \
 	patches/hotspot/$(HSBUILD)/8078628-pr3208.patch \
-	patches/hotspot/$(HSBUILD)/8141491-pr3159-g592292.patch
+	patches/hotspot/$(HSBUILD)/8141491-pr3159-g592292.patch \
+	patches/hotspot/$(HSBUILD)/pr3224.patch
 endif
 
 if BUILD_CACAO
