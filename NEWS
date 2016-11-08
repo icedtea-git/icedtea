@@ -10,7 +10,7 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.2.0 (2016-09-XX):
+New in release 3.2.0 (2016-11-08):
 
 * Security fixes
   - S8146490: Direct indirect CRL checks
