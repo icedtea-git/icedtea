@@ -61,6 +61,8 @@ New in release 2.7.0 (201X-XX-XX):
   - PR3166: invalid zip timestamp handling leads to error building bootstrap-javac
   - PR3202: Update infinality configure test
   - PR3212: Disable ARM32 JIT by default
+* CACAO
+  - PR3136: CACAO is broken due to 2 new native methods in sun.misc.Unsafe (from S8158260)
 * AArch64 port
   - S8167200: AArch64: Broken stack pointer adjustment in interpreter
   - PR3211: AArch64 build fails with pre-compiled headers disabled
