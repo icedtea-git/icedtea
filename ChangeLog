@@ -1,5 +1,10 @@
 2016-11-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS: Add 3.3.0 section.
+	* configure.ac: Bump to 3.3.0pre00.
+
+2016-11-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* NEWS: Remove duplicate line and
 	move crypto policy support to features section.
 
