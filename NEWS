@@ -55,6 +55,7 @@ New in release 2.6.8 (2016-10-XX):
   - PR3135: Makefile.am rule stamps/add/tzdata-support-debug.stamp has a typo in add-tzdata dependency
   - PR3141: Pass $(CC) and $(CXX) to OpenJDK build
   - PR3166: invalid zip timestamp handling leads to error building bootstrap-javac
+  - PR3202: Update infinality configure test
 * CACAO
   - PR3136: CACAO is broken due to 2 new native methods in sun.misc.Unsafe (from S8158260)
 * JamVM
