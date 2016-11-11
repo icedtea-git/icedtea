@@ -1,0 +1,36 @@
+--- jamvm.orig/jamvm/src/classlib/openjdk/natives.c	2014-03-24 21:34:58.000000000 -0300
++++ jamvm/jamvm/src/classlib/openjdk/natives.c	2016-08-09 19:26:36.205775539 -0300
+@@ -34,6 +33,7 @@
+ #include "reflect.h"
+ #include "natives.h"
+ #include "openjdk.h"
++#include "properties.h"
+ #include "trace.h"
+ 
+ int classlibInitialiseNatives() {
+@@ -470,6 +465,16 @@
+     return ostack;
+ }
+ 
++uintptr_t *isBigEndian0(Class *clazz, MethodBlock *mb, uintptr_t *ostack) {
++    *ostack++ = IS_BIG_ENDIAN;
++    return ostack;
++}
++
++uintptr_t *unalignedAccess0(Class *clazz, MethodBlock *mb, uintptr_t *ostack) {
++    *ostack++ = FALSE;
++    return ostack;
++}
++
+ VMMethod sun_misc_unsafe[] = {
+     {"registerNatives",        "()V", unsafeRegisterNatives},
+     {"objectFieldOffset",      "(Ljava/lang/reflect/Field;)J",
+@@ -569,6 +574,8 @@
+     {"fullFence",              "()V", fullFence},
+     {"loadFence",              "()V", loadFence},
+     {"storeFence",             "()V", storeFence},
++    {"isBigEndian0",           "()Z", isBigEndian0},
++    {"unalignedAccess0",       "()Z", unalignedAccess0},
+     {NULL,                     NULL, NULL}
+ };
+ 
