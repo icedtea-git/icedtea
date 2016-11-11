@@ -1,3 +1,13 @@
+2016-08-18  Stefan Ring <stefan@complang.tuwien.ac.at>
+
+	PR3136: CACAO is broken due to 2 new native
+	methods in sun.misc.Unsafe (from S8158260)
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add CACAO patch for PR3136.
+	* NEWS: Updated.
+	* patches/cacao/pr3136-unsafe_methods.patch:
+	Add implementation of isBigEndian0 and unalignedAccess0.
+
 2016-08-10  Tiago Stuermer Daitx  <tdaitx@gmail.com>
 
 	PR3134: JamVM is broken due to 2 new native

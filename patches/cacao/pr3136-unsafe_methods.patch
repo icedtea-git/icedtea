@@ -1,0 +1,43 @@
+diff --git a/src/native/vm/sun_misc_Unsafe.cpp b/src/native/vm/sun_misc_Unsafe.cpp
+--- cacao.orig/cacao/src/native/vm/sun_misc_Unsafe.cpp
++++ cacao/cacao/src/native/vm/sun_misc_Unsafe.cpp
+@@ -1303,6 +1303,30 @@
+ 	return result;
+ }
+ 
++/*
++ * Class:     sun/misc/Unsafe
++ * Method:    isBigEndian0
++ * Signature: ()Z
++ */
++JNIEXPORT jboolean JNICALL Java_sun_misc_Unsafe_isBigEndian0(JNIEnv *env, jobject _this)
++{
++#if WORDS_BIGENDIAN == 1
++	return true;
++#else
++	return false;
++#endif
++}
++
++/*
++ * Class:     sun/misc/Unsafe
++ * Method:    unalignedAccess0
++ * Signature: ()Z
++ */
++JNIEXPORT jboolean JNICALL Java_sun_misc_Unsafe_unalignedAccess0(JNIEnv *env, jobject _this)
++{
++	return false;
++}
++
+ } // extern "C"
+ 
+ 
+@@ -1390,6 +1414,8 @@
+ 	{ (char*) "unpark",                 (char*) "(Ljava/lang/Object;)V",                                      (void*) (uintptr_t) &Java_sun_misc_Unsafe_unpark                           },
+ 	{ (char*) "park",                   (char*) "(ZJ)V",                                                      (void*) (uintptr_t) &Java_sun_misc_Unsafe_park                             },
+ 	{ (char*) "getLoadAverage",         (char*) "([DI)I",                                                     (void*) (uintptr_t) &Java_sun_misc_Unsafe_getLoadAverage                   },
++	{ (char*) "isBigEndian0",           (char*) "()Z",                                                        (void*) (uintptr_t) &Java_sun_misc_Unsafe_isBigEndian0                     },
++	{ (char*) "unalignedAccess0",       (char*) "()Z",                                                        (void*) (uintptr_t) &Java_sun_misc_Unsafe_unalignedAccess0                 },
+ };
+ 
+ 
