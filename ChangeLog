@@ -1,3 +1,10 @@
+2016-11-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3212: Disable ARM32 JIT by default
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_ARM32JIT): Set default to no.
+
 2016-11-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3202: Update infinality configure test
