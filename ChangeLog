@@ -1,3 +1,36 @@
+2016-11-11  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Bump to icedtea-2.6.8.
+	* Makefile.am:
+	(JDK_UPDATE_VERSION): Bump to 121.
+	(BUILD_VERSION): Reset to b00.
+	(CORBA_CHANGESET): Update to icedtea-2.6.8.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 2.6.8.
+	* hotspot.map.in: Update to icedtea-2.6.8.
+	* patches/boot/ecj-diamond.patch:
+	Regenerated. Add new cases in
+	java.net.URLConnection, java.net.URL,
+	sun.net.TransferProtocolClient,
+	sun.net.www.protocol.http.AuthenticationHeader
+	and sun.net.www.protocol.http.HttpURLConnection.
+	* patches/boot/ecj-multicatch.patch:
+	Add new cases in
+	sun.net.www.protocol.http.HttpURLConnection,
+	com.sun.net.httpserver.spi.HttpServerProvider and
+	sun.net.ftp.FtpClientProvider.
+
 2016-11-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3212: Disable ARM32 JIT by default

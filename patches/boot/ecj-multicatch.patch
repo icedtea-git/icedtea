@@ -949,3 +949,70 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyF
              throw new Exception(rb.getString("Input.not.an.X.509.certificate"));
          }
  
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/http/HttpURLConnection.java openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/http/HttpURLConnection.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/http/HttpURLConnection.java	2016-11-11 07:37:30.734509907 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/http/HttpURLConnection.java	2016-11-11 07:39:05.881003919 +0000
+@@ -883,7 +883,8 @@
+                     InetAddress a1 = InetAddress.getByName(h1);
+                     InetAddress a2 = InetAddress.getByName(h2);
+                     result[0] = a1.equals(a2);
+-                } catch(UnknownHostException | SecurityException e) {
++                } catch(UnknownHostException e) {
++                } catch(SecurityException e) {
+                 }
+                 return null;
+             }
+@@ -1650,8 +1651,9 @@
+                                 // HttpsURLConnection instance saved in
+                                 // DelegateHttpsURLConnection
+                                 uconn = (URLConnection)this.getClass().getField("httpsURLConnection").get(this);
+-                                } catch (IllegalAccessException |
+-                                         NoSuchFieldException e) {
++                                } catch (IllegalAccessException e) {
++                                    // ignored; use 'this'
++                                } catch (NoSuchFieldException e) {
+                                     // ignored; use 'this'
+                                 }
+                             }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/net/httpserver/spi/HttpServerProvider.java openjdk-boot/jdk/src/share/classes/com/sun/net/httpserver/spi/HttpServerProvider.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/net/httpserver/spi/HttpServerProvider.java	2016-11-11 17:56:40.902084907 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/net/httpserver/spi/HttpServerProvider.java	2016-11-11 17:57:45.745028909 +0000
+@@ -85,10 +85,13 @@
+                                     ClassLoader.getSystemClassLoader());
+             provider = (HttpServerProvider)c.newInstance();
+             return true;
+-        } catch (ClassNotFoundException |
+-                 IllegalAccessException |
+-                 InstantiationException |
+-                 SecurityException x) {
++        } catch (ClassNotFoundException x) {
++            throw new ServiceConfigurationError(x);
++        } catch (IllegalAccessException x) {
++            throw new ServiceConfigurationError(x);
++        } catch (InstantiationException x) {
++            throw new ServiceConfigurationError(x);
++        } catch (SecurityException x) {
+             throw new ServiceConfigurationError(x);
+         }
+     }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/ftp/FtpClientProvider.java openjdk-boot/jdk/src/share/classes/sun/net/ftp/FtpClientProvider.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/net/ftp/FtpClientProvider.java	2016-11-11 18:31:26.771858815 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/net/ftp/FtpClientProvider.java	2016-11-11 18:33:20.217997543 +0000
+@@ -70,10 +70,13 @@
+             Class<?> c = Class.forName(cm, true, null);
+             provider = (FtpClientProvider) c.newInstance();
+             return true;
+-        } catch (ClassNotFoundException |
+-                 IllegalAccessException |
+-                 InstantiationException |
+-                 SecurityException x) {
++        } catch (ClassNotFoundException x) {
++            throw new ServiceConfigurationError(x.toString());
++        } catch (IllegalAccessException x) {
++            throw new ServiceConfigurationError(x.toString());
++        } catch (InstantiationException x) {
++            throw new ServiceConfigurationError(x.toString());
++        } catch (SecurityException x) {
+             throw new ServiceConfigurationError(x.toString());
+         }
+     }

@@ -15,7 +15,72 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 2.6.8 (2016-10-XX):
 
 * Security fixes
+  - S8151921: Improved page resolution
+  - S8155968: Update command line options
+  - S8155973, CVE-2016-5542: Tighten jar checks
+  - S8157176: Improved classfile parsing
+  - S8157739, CVE-2016-5554: Classloader Consistency Checking
+  - S8157749: Improve handling of DNS error replies
+  - S8157753: Audio replay enhancement
+  - S8157759: LCMS Transform Sampling Enhancement
+  - S8157764: Better handling of interpolation plugins
+  - S8158302: Handle contextual glyph substitutions
+  - S8158993, CVE-2016-5568: Service Menu services
+  - S8159495: Fix index offsets
+  - S8159503: Amend Annotation Actions
+  - S8159511: Stack map validation
+  - S8159515: Improve indy validation
+  - S8159519, CVE-2016-5573: Reformat JDWP messages
+  - S8160090: Better signature handling in pack200
+  - S8160094: Improve pack200 layout
+  - S8160098: Clean up color profiles
+  - S8160591, CVE-2016-5582: Improve internal array handling
+  - S8160838, CVE-2016-5597: Better HTTP service
   - PR3207, RH1367357: lcms2: Out-of-bounds read in Type_MLU_Read()
+* Import of OpenJDK 7 u121 build 0
+  - S6624200: Regression test fails: test/closed/javax/swing/JMenuItem/4654927/bug4654927.java
+  - S6882559: new JEditorPane("text/plain","") fails for null context class loader
+  - S7090158: Networking Libraries don't build with javac -Werror
+  - S7125055: ContentHandler.getContent API changed in error
+  - S7145960: sun/security/mscapi/ShortRSAKey1024.sh failing on windows
+  - S7187051: ShortRSAKeynnn.sh tests should do cleanup before start test
+  - S8000626: Implement dead key detection for KeyEvent on Linux
+  - S8003890: corelibs test scripts should pass TESTVMOPTS
+  - S8005629: javac warnings compiling java.awt.EventDispatchThread and sun.awt.X11.XIconWindow
+  - S8010297: Missing isLoggable() checks in logging code
+  - S8010782: clean up source files containing carriage return characters
+  - S8014431: cleanup warnings indicated by the -Wunused-value compiler option on linux
+  - S8015265: revise the fix for 8007037
+  - S8016747: Replace deprecated PlatformLogger isLoggable(int) with isLoggable(Level)
+  - S8020708: NLS mnemonics missing in SwingSet2/JInternalFrame demo
+  - S8024756: method grouping tabs are not selectable
+  - S8026741: jdk8 l10n resource file translation update 5
+  - S8048147: Privilege tests with JAAS Subject.doAs
+  - S8048357: PKCS basic tests
+  - S8049171: Additional tests for jarsigner's warnings
+  - S8059177: jdk8u40 l10n resource file translation update 1
+  - S8075584: test for 8067364 depends on hardwired text advance
+  - S8076486: [TESTBUG] javax/security/auth/Subject/doAs/NestedActions.java fails if extra VM options are given
+  - S8077953: [TEST_BUG] com/sun/management/OperatingSystemMXBean/TestTotalSwap.java Compilation failed after JDK-8077387
+  - S8080628: No mnemonics on Open and Save buttons in JFileChooser
+  - S8083601: jdk8u60 l10n resource file translation update 2
+  - S8140530: Creating a VolatileImage with size 0,0 results in no longer working g2d.drawString
+  - S8142926: OutputAnalyzer's shouldXXX() calls return this
+  - S8143134: L10n resource file translation update
+  - S8147077: IllegalArgumentException thrown by api/java_awt/Component/FlipBufferStrategy/indexTGF_General
+  - S8148127: IllegalArgumentException thrown by JCK test api/java_awt/Component/FlipBufferStrategy/indexTGF_General in opengl pipeline
+  - S8150611: Security problem on sun.misc.resources.Messages*
+  - S8157653: [Parfait] Uninitialised variable in awt_Font.cpp
+  - S8158734: JEditorPane.createEditorKitForContentType throws NPE after 6882559
+  - S8159684: (tz) Support tzdata2016f
+  - S8160934: isnan() is not available on older MSVC compilers
+  - S8162411: Service Menu services 2
+  - S8162419: closed/com/oracle/jfr/runtime/TestVMInfoEvent.sh failing after JDK-8155968
+  - S8162511: 8u111 L10n resource file updates
+  - S8162792: Remove constraint DSA keySize < 1024 from jdk.jar.disabledAlgorithms in jdk8
+  - S8164452: 8u111 L10n resource file update - msgdrop 20
+  - S8165816: jarsigner -verify shows jar unsigned if it was signed with a weak algorithm
+  - S8166381: Back out changes to the java.security file to not disable MD5
 * Backports
   - S6604109, PR3162: javax.print.PrintServiceLookup.lookupPrintServices fails SOMETIMES for Cups
   - S6907252, PR3162: ZipFileInputStream Not Thread-Safe
@@ -63,6 +128,7 @@ New in release 2.6.8 (2016-10-XX):
   - PR3134: JamVM is broken due to 2 new native methods in sun.misc.Unsafe (from S8158260)
 * AArch64 port
   - S8167200, PR3204: AArch64: Broken stack pointer adjustment in interpreter
+  - S8168888: Port 8160591: Improve internal array handling to AArch64.
   - PR3211: AArch64 build fails with pre-compiled headers disabled
 
 New in release 2.6.7 (2016-07-28):
