@@ -1,3 +1,7 @@
+2016-11-13  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Add 2.6.8 release notes.
+
 2016-08-10  Tiago Stuermer Daitx  <tdaitx@gmail.com>
 
 	PR3134: JamVM is broken due to 2 new native
