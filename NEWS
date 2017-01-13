@@ -12,6 +12,123 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.3.0 (2017-01-XX):
 
+* Import of OpenJDK 8 u112 build 16
+  - S6477756: GraphicsDevice.getConfigurations() is slow taking 3 or more seconds
+  - S7172749: Xrender: Class cast exception in 2D code running an AWT regression test
+  - S8017629: G1: UseSHM in combination with a G1HeapRegionSize > os::large_page_size() falls back to use small pages
+  - S8022203: Intermittent test failures in demo/jvmti/hprof
+  - S8022582: Relax response flags checking in sun.security.krb5.KrbKdcRep.check.
+  - S8027575: b113 causing a lot of memory allocation and regression for wls_webapp_atomics
+  - S8028486: java/awt/Window/WindowsLeak/WindowsLeak.java fails
+  - S8030780: test/com/sun/corba/cachedSocket/7056731.sh leaves HelloServer behind
+  - S8036630: Null ProtectionDomain in JVM can cause NPE because principals field is not initialized to an empty array
+  - S8042660: vm/mlvm/anonloader/stress/byteMutation failed with: assert(index >=0 && index < _length) failed: symbol index overflow
+  - S8044193: Need to add known answer tests for AES cipher
+  - S8044575: testlibrary_tests/whitebox/vm_flags/UintxTest.java failed: assert(!res || TypeEntriesAtCall::arguments_profiling_enabled()) failed: no profiling of arguments
+  - S8048601: Tests for JCE crypto ciphers (part 1)
+  - S8048621: Implement basic keystore tests
+  - S8048622: Enhance tests for PKCS11 keystores with NSS
+  - S8049021: Add smartcardio tests with APDU buffer
+  - S8049312: AES/CICO test failed with on several modes
+  - S8050402: Tests to check for use of policy files
+  - S8050409: Test for JAAS getPrivateCredentials
+  - S8054326: Confusing message in "Current rem set statistics"
+  - S8055772: get_source.sh : version check assumes English localization
+  - S8057791: Selection in JList is drawn with wrong colors in Nimbus L&F
+  - S8058865: JMX Test Refactoring
+  - S8067964: Native2ascii doesn't close one of the streams it opens
+  - S8071487: javax/management/monitor/GaugeMonitorDeadlockTest.java timed out
+  - S8071909: Port testlibrary improvments in jdk/test to hotspot/test as required for DCMD test port
+  - S8073542: File Leak in jdk/src/java/base/unix/native/libnet/PlainDatagramSocketImpl.c
+  - S8074784: Additional tests for XML DSig API
+  - S8075007: Additional tests for krb5-related cipher suites with unbound server
+  - S8075297: Tests for RFEs 4515853 and 4745056
+  - S8075299: Additional tests for krb5 settings
+  - S8075301: Tests for sun.security.krb5.principal system property
+  - S8077276: allocating heap with UseLargePages and HugeTLBFS may trash existing memory mappings (linux)
+  - S8078268: javax.swing.text.html.parser.Parser parseScript incorrectly optimized
+  - S8078382: Wrong glyph is displayed for a derived font
+  - S8080729: [macosx] java 7 and 8 JDialogs on multiscreen jump to parent frame on focus
+  - S8085903: New fix for memory leak in ProtectionDomain cache
+  - S8098581: SecureRandom.nextBytes() hurts performance with small size requests
+  - S8129740: Incorrect class file created when passing lambda in inner class constructor
+  - S8130127: streamline input parameter of Nashorn scripting $EXEC function
+  - S8130309: Need to bailout cleanly if creation of stubs fails when codecache is out of space
+  - S8130317: "ant test" fails to complete on Windows when run under cygwin shell
+  - S8133070: Hot lock on BulkCipher.isAvailable
+  - S8133309: Some unicode characters do not display any more after upgrading to Windows 10
+  - S8134232: KeyStore.load() throws an IOException with a wrong cause in case of wrong password
+  - S8135322: ConstantPool::release_C_heap_structures not run in some circumstances
+  - S8136998: JComboBox prevents wheel mouse scrolling of JScrollPane
+  - S8137240: Negative lookahead in RegEx breaks backreference
+  - S8138906: [TEST_BUG] Test test/script/trusted/JDK-8087292.js intermittently fails.
+  - S8141148: LDAP "follow" throws ClassCastException with Java 8
+  - S8141541: Simplify Nashorn's Context class loader handling
+  - S8143640: Showing incorrect result while passing specific argument in the Java launcher tools
+  - S8143642: Nashorn shebang argument handling is broken
+  - S8144160: Regression: two tests fail on Windows with "ant test" target
+  - S8144221: fix Nashorn shebang argument handling on Mac/Linux
+  - S8144703: ClassCastException: sun.font.CompositeFont cannot be cast to PhysicalFont
+  - S8145305: fix Nashorn shebang handling on Cygwin
+  - S8145984: [macosx] sun.lwawt.macosx.CAccessible leaks
+  - S8146975: NullPointerException in IIOPInputStream.inputClassFields
+  - S8147026: Convert an assert in ClassLoaderData to a guarantee
+  - S8147451: Crash in Method::checked_resolve_jmethod_id(_jmethodID*)
+  - S8147585: Annotations with lambda expressions has parameter result in wrong behavior.
+  - S8147969: Print size of DH keysize when errors are encountered
+  - S8148140: arguments are handled differently in apply for JS functions and AbstractJSObjects
+  - S8148984: [macosx] Chinese Comma cannot be entered using Pinyin Input Method on OS X
+  - S8150219: ReferenceError in 1.8.0_72
+  - S8150234: Windows 10 App Containers disallow access to ICMP calls
+  - S8150814: correct package declaration in Nashorn test
+  - S8151722: TESTBUG: New test compiler/native/TestDirtyInt.sh should be modified
+  - S8153149: Uninitialised memory in WinAccessBridge.cpp:1128
+  - S8153192: (se) Selector.select(long) uses wrong timeout after EINTR (lnx)
+  - S8153781: Issue in XMLScanner: EXPECTED_SQUARE_BRACKET_TO_CLOSE_INTERNAL_SUBSET when skipping large DOCTYPE section with CRLF at wrong place
+  - S8153948: sun/security/mscapi/ShortRSAKey1024.sh fails with "Field length overflow"
+  - S8154009: Some methods of java.security.Security require more permissions, than necessary
+  - S8154069: Jaws reads wrong values from comboboxes when no element is selected
+  - S8154144: Tests in com/sun/jdi fails intermittently with "jdb input stream closed prematurely"
+  - S8154469: Update FSF address
+  - S8154553: Incorrect GPL header in package-info.java reported
+  - S8154558: Incorrect GPL header in ProcessEnvironment_md.c reported
+  - S8154816: Caps Lock doesn't work as expected when using Pinyin Simplified input method
+  - S8154831: CastII/ConvI2L for a range check is prematurely eliminated
+  - S8155001: SystemTray.remove() leaks GDI Objects in Windows
+  - S8155106: MHs.Lookup.findConstructor returns handles for array classes
+  - S8155214: java/lang/invoke/PermuteArgsTest.java fails due to exhausted code cache
+  - S8156478: 3 Buffer overrun defect groups in jexec.c
+  - S8156521: Minor fixes and cleanups in NetworkInterface.c
+  - S8156714: Parsing issue with automatic semicolon insertion
+  - S8156836: SIGSEGV: Test test/compiler/jsr292/VMAnonymousClasses.java fails with JTREG 4.2 b02
+  - S8156896: Script stack trace should display function names
+  - S8157160: JSON.stringify does not work on ScriptObjectMirror objects
+  - S8157242: Some java/lang/invoke tests miss othervm
+  - S8157444: exclude jjs shebang handling test from runs
+  - S8157603: TestCipher.java doesn't check one of the decrypted message as expected
+  - S8157680: Callback parameter of any JS builtin implementation should accept any Callable
+  - S8157819: TypeError when a java.util.Comparator object is invoked as a function
+  - S8158059: The fix for 8050402 was partially committed
+  - S8158072: Need a test for JDK-7172749
+  - S8158111: Make handling of 3rd party providers more stable
+  - S8158178: java.awt.SplashScreen.getSize() returns incorrect size for high dpi splash screens
+  - S8158338: Nashorn's ScriptLoader split delegation has to be adjusted
+  - S8158373: SIGSEGV: Metadata::mark_on_stack
+  - S8158467: AccessControlException is thrown on public Java class access if "script app loader" is set to null
+  - S8158495: CCE: sun.java2d.NullSurfaceData cannot be cast to sun.java2d.opengl.OGLSurfaceData
+  - S8158802: com.sun.jndi.ldap.SimpleClientId produces wrong hash code
+  - S8158871: Long response times with G1 and StringDeduplication
+  - S8159822: Non-synchronized access to shared members of com.sun.jndi.ldap.pool.Pool
+  - S8160122: Backport of JDK-8159244 used wrong version of the JDK 9 fix
+  - S8160518: Semicolon is not recognized as comment starting character (Kerberos)
+  - S8160693: ScriptRunData.java uses bitwise AND instead of logical AND
+  - S8161144: Fix for JDK-8147451 failed: Crash in Method::checked_resolve_jmethod_id(_jmethodID*)
+  - S8162510: 8u112 L10n resource file updates
+  - S8164453: 8u112 L10n resource file update - msgdrop 20
+* AArch64 port
+  - S8130309, PR3280: Need to bailout cleanly if creation of stubs fails when codecache is out of space (AArch64 changes)
+  - S8132875, PR3280: AArch64: Fix error introduced into AArch64 CodeCache by commit for 8130309
+
 New in release 3.2.0 (2016-11-08):
 
 * Security fixes
