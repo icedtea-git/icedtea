@@ -1,5 +1,32 @@
 2017-01-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* Makefile.am:
+	(JDK_UPDATE_VERSION): Bump to 121.
+	(BUILD_VERSION): Set to b13.
+	(CORBA_CHANGESET): Update to icedtea-3.3.0pre02 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 3.3.0pre02.
+	* hotspot.map.in: Update to icedtea-3.3.0pre02 tag.
+	* patches/pr2126.patch:
+	Extend following changes made in 8148516.
+	* patches/rh1022017.patch:
+	Adapt to changes made in 8148516.
+
+2017-01-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump shenandoah to aarch64-shenandoah-jdk8u112-b16.
 	* patches/hotspot/shenandoah/8154210.patch,
 	* patches/hotspot/shenandoah/8160122-pr3074.patch:
