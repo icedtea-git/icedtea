@@ -7,9 +7,9 @@
 PR2777: Fix MAX/MIN template usage on s390
 Summary: The templates can't be used without casting on s390 as size_t != uintx
 
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp
---- openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp	Thu Jan 28 02:50:10 2016 +0000
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp	2017-01-22 19:56:18.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/compactibleFreeListSpace.cpp	2017-01-23 11:25:16.256881284 +0000
 @@ -2659,7 +2659,7 @@
    if (ResizeOldPLAB && CMSOldPLABResizeQuicker) {
      size_t multiple = _num_blocks[word_sz]/(CMSOldPLABToleranceFactor*CMSOldPLABNumRefills*n_blks);
@@ -19,9 +19,9 @@ diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/concurrentMa
    }
    assert(n_blks > 0, "Error");
    _cfls->par_get_chunk_of_blocks(word_sz, n_blks, fl);
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp
---- openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	Thu Jan 28 02:50:10 2016 +0000
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2017-01-22 22:57:03.693835101 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/concurrentMarkSweepGeneration.cpp	2017-01-23 11:25:16.256881284 +0000
 @@ -963,7 +963,7 @@
    if (free_percentage < desired_free_percentage) {
      size_t desired_capacity = (size_t)(used() / ((double) 1 - desired_free_percentage));
@@ -49,10 +49,10 @@ diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/concurrentMa
    // Do not give up existing stack until we have managed to
    // get the double capacity that we desired.
    ReservedSpace rs(ReservedSpace::allocation_align_size_up(
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/g1/concurrentMark.cpp
---- openjdk/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp	Thu Jan 28 02:50:10 2016 +0000
-@@ -3903,7 +3903,7 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp openjdk/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp	2017-01-22 19:56:18.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp	2017-01-23 11:25:16.256881284 +0000
+@@ -3923,7 +3923,7 @@
    // of things to do) or totally (at the very end).
    size_t target_size;
    if (partially) {
@@ -61,9 +61,9 @@ diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/g1/concurren
    } else {
      target_size = 0;
    }
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp
---- openjdk/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp	Thu Jan 28 02:50:10 2016 +0000
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp openjdk/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp	2017-01-22 19:56:18.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1CollectedHeap.cpp	2017-01-23 11:25:16.256881284 +0000
 @@ -1726,7 +1726,7 @@
  
    verify_region_sets_optional();
@@ -73,9 +73,9 @@ diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/g1/g1Collect
    ergo_verbose1(ErgoHeapSizing,
                  "attempt heap expansion",
                  ergo_format_reason("allocation request failed")
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/g1/g1PageBasedVirtualSpace.hpp
---- openjdk/hotspot/src/share/vm/gc_implementation/g1/g1PageBasedVirtualSpace.hpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1PageBasedVirtualSpace.hpp	Thu Jan 28 02:50:10 2016 +0000
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1PageBasedVirtualSpace.hpp openjdk/hotspot/src/share/vm/gc_implementation/g1/g1PageBasedVirtualSpace.hpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1PageBasedVirtualSpace.hpp	2017-01-22 19:56:18.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1PageBasedVirtualSpace.hpp	2017-01-23 11:25:16.256881284 +0000
 @@ -89,7 +89,7 @@
    void pretouch_internal(size_t start_page, size_t end_page);
  
@@ -85,9 +85,9 @@ diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/g1/g1PageBas
    // Returns the address of the given page index.
    char*  page_start(size_t index) const;
  
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp
---- openjdk/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp	Thu Jan 28 02:50:10 2016 +0000
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp openjdk/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp	2017-01-22 19:56:18.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupQueue.cpp	2017-01-23 11:25:16.256881284 +0000
 @@ -38,7 +38,7 @@
    _cancel(false),
    _empty(true),
@@ -97,21 +97,21 @@ diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/g1/g1StringD
    _queues = NEW_C_HEAP_ARRAY(G1StringDedupWorkerQueue, _nqueues, mtGC);
    for (size_t i = 0; i < _nqueues; i++) {
      new (_queues + i) G1StringDedupWorkerQueue(G1StringDedupWorkerQueue::default_segment_size(), _max_cache_size, _max_size);
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp
---- openjdk/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp	Thu Jan 28 02:50:10 2016 +0000
-@@ -110,7 +110,7 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp openjdk/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp	2017-01-22 19:56:18.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp	2017-01-23 11:26:19.311842674 +0000
+@@ -120,7 +120,7 @@
  };
  
- G1StringDedupEntryCache::G1StringDedupEntryCache() {
--  _nlists = MAX2(ParallelGCThreads, (size_t)1);
-+  _nlists = MAX2((size_t) ParallelGCThreads, (size_t)1);
-   _lists = PaddedArray<G1StringDedupEntryFreeList, mtGC>::create_unfreeable((uint)_nlists);
- }
- 
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/g1/heapRegion.cpp
---- openjdk/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp	Thu Jan 28 02:50:10 2016 +0000
+ G1StringDedupEntryCache::G1StringDedupEntryCache(size_t max_size) :
+-  _nlists(MAX2(ParallelGCThreads, (size_t)1)),
++  _nlists(MAX2((size_t) ParallelGCThreads, (size_t)1)),
+   _max_list_length(0),
+   _cached(PaddedArray<G1StringDedupEntryList, mtGC>::create_unfreeable((uint)_nlists)),
+   _overflowed(PaddedArray<G1StringDedupEntryList, mtGC>::create_unfreeable((uint)_nlists)) {
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp openjdk/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp	2017-01-22 19:56:18.000000000 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/heapRegion.cpp	2017-01-23 11:25:16.256881284 +0000
 @@ -108,7 +108,7 @@
    uintx region_size = G1HeapRegionSize;
    if (FLAG_IS_DEFAULT(G1HeapRegionSize)) {
@@ -121,21 +121,9 @@ diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/g1/heapRegio
                         (uintx) HeapRegionBounds::min_size());
    }
  
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/parNew/parNewGeneration.cpp
---- openjdk/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp	Thu Jan 28 02:50:10 2016 +0000
-@@ -200,7 +200,7 @@
-   const size_t num_overflow_elems = of_stack->size();
-   const size_t space_available = queue->max_elems() - queue->size();
-   const size_t num_take_elems = MIN3(space_available / 4,
--                                     ParGCDesiredObjsFromOverflowList,
-+                                     (size_t) ParGCDesiredObjsFromOverflowList,
-                                      num_overflow_elems);
-   // Transfer the most recent num_take_elems from the overflow
-   // stack to our work queue.
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp
---- openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	Thu Jan 28 02:50:10 2016 +0000
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	2017-01-22 22:57:03.693835101 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/parallelScavenge/psParallelCompact.cpp	2017-01-23 11:25:16.260881219 +0000
 @@ -920,8 +920,8 @@
  void PSParallelCompact::initialize_dead_wood_limiter()
  {
@@ -147,9 +135,21 @@ diff -r be477dd4629d -r c313c4782bb3 src/share/vm/gc_implementation/parallelScav
    _dwl_first_term = 1.0 / (sqrt(2.0 * M_PI) * _dwl_std_dev);
    DEBUG_ONLY(_dwl_initialized = true;)
    _dwl_adjustment = normal_distribution(1.0);
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/memory/collectorPolicy.cpp
---- openjdk/hotspot/src/share/vm/memory/collectorPolicy.cpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/memory/collectorPolicy.cpp	Thu Jan 28 02:50:10 2016 +0000
+diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp openjdk/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp	2017-01-22 22:57:03.697835035 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/parNew/parNewGeneration.cpp	2017-01-23 11:25:16.260881219 +0000
+@@ -200,7 +200,7 @@
+   const size_t num_overflow_elems = of_stack->size();
+   const size_t space_available = queue->max_elems() - queue->size();
+   const size_t num_take_elems = MIN3(space_available / 4,
+-                                     ParGCDesiredObjsFromOverflowList,
++                                     (size_t) ParGCDesiredObjsFromOverflowList,
+                                      num_overflow_elems);
+   // Transfer the most recent num_take_elems from the overflow
+   // stack to our work queue.
+diff -Nru openjdk.orig/hotspot/src/share/vm/memory/collectorPolicy.cpp openjdk/hotspot/src/share/vm/memory/collectorPolicy.cpp
+--- openjdk.orig/hotspot/src/share/vm/memory/collectorPolicy.cpp	2017-01-22 19:56:18.000000000 +0000
++++ openjdk/hotspot/src/share/vm/memory/collectorPolicy.cpp	2017-01-23 11:25:16.260881219 +0000
 @@ -385,7 +385,7 @@
        uintx calculated_size = NewSize + OldSize;
        double shrink_factor = (double) MaxHeapSize / calculated_size;
@@ -207,9 +207,9 @@ diff -r be477dd4629d -r c313c4782bb3 src/share/vm/memory/collectorPolicy.cpp
      _initial_gen1_size = OldSize;
  
      // If the user has explicitly set an OldSize that is inconsistent
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/memory/metaspace.cpp
---- openjdk/hotspot/src/share/vm/memory/metaspace.cpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/memory/metaspace.cpp	Thu Jan 28 02:50:10 2016 +0000
+diff -Nru openjdk.orig/hotspot/src/share/vm/memory/metaspace.cpp openjdk/hotspot/src/share/vm/memory/metaspace.cpp
+--- openjdk.orig/hotspot/src/share/vm/memory/metaspace.cpp	2017-01-22 19:56:18.000000000 +0000
++++ openjdk/hotspot/src/share/vm/memory/metaspace.cpp	2017-01-23 11:25:16.260881219 +0000
 @@ -1455,7 +1455,7 @@
  
  void MetaspaceGC::post_initialize() {
@@ -246,9 +246,9 @@ diff -r be477dd4629d -r c313c4782bb3 src/share/vm/memory/metaspace.cpp
      _first_class_chunk_word_size = align_word_size_up(_first_class_chunk_word_size);
      // Arbitrarily set the initial virtual space to a multiple
      // of the boot class loader size.
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/oops/objArrayKlass.inline.hpp
---- openjdk/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp	Thu Jan 28 02:50:10 2016 +0000
+diff -Nru openjdk.orig/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp openjdk/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp
+--- openjdk.orig/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp	2017-01-22 19:56:18.000000000 +0000
++++ openjdk/hotspot/src/share/vm/oops/objArrayKlass.inline.hpp	2017-01-23 11:25:16.260881219 +0000
 @@ -48,7 +48,7 @@
    const size_t beg_index = size_t(index);
    assert(beg_index < len || len == 0, "index too large");
@@ -267,10 +267,10 @@ diff -r be477dd4629d -r c313c4782bb3 src/share/vm/oops/objArrayKlass.inline.hpp
    const size_t end_index = beg_index + stride;
    T* const base = (T*)a->base();
    T* const beg = base + beg_index;
-diff -r be477dd4629d -r c313c4782bb3 src/share/vm/runtime/arguments.cpp
---- openjdk/hotspot/src/share/vm/runtime/arguments.cpp	Mon Jan 11 17:16:42 2016 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	Thu Jan 28 02:50:10 2016 +0000
-@@ -1264,7 +1264,7 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspot/src/share/vm/runtime/arguments.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2017-01-22 22:57:03.429839455 +0000
++++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2017-01-23 11:25:16.260881219 +0000
+@@ -1270,7 +1270,7 @@
      (ParallelGCThreads == 0 ? 1 : ParallelGCThreads);
    const size_t preferred_max_new_size_unaligned =
      MIN2(max_heap/(NewRatio+1), ScaleForWordSize(young_gen_per_worker * parallel_gc_threads));
@@ -279,7 +279,7 @@ diff -r be477dd4629d -r c313c4782bb3 src/share/vm/runtime/arguments.cpp
      align_size_up(preferred_max_new_size_unaligned, os::vm_page_size());
  
    // Unless explicitly requested otherwise, size young gen
-@@ -1295,7 +1295,7 @@
+@@ -1301,7 +1301,7 @@
             " max_heap: " SIZE_FORMAT,
             min_heap_size(), InitialHeapSize, max_heap);
      }
@@ -288,7 +288,7 @@ diff -r be477dd4629d -r c313c4782bb3 src/share/vm/runtime/arguments.cpp
      if (FLAG_IS_CMDLINE(NewSize)) {
        min_new = NewSize;
      }
-@@ -1314,7 +1314,7 @@
+@@ -1320,7 +1320,7 @@
        // so it's NewRatio x of NewSize.
        if (FLAG_IS_DEFAULT(OldSize)) {
          if (max_heap > NewSize) {

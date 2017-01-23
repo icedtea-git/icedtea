@@ -1,3 +1,19 @@
+2017-01-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump shenandoah to aarch64-shenandoah-jdk8u112-b16.
+	* patches/hotspot/shenandoah/8154210.patch,
+	* patches/hotspot/shenandoah/8160122-pr3074.patch:
+	Remove patches applied upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove above patches.
+	* hotspot.map.in: Update shenandoah to
+	aarch64-shenandoah-jdk8u112-b16 tag.
+	* patches/hotspot/shenandoah/8158260-pr2991-rh1341258.patch:
+	Remove ppc.ad changes which were applied upstream. Keep testcase
+	patches.
+	* patches/hotspot/shenandoah/pr2777.patch:
+	Regenerate against new HotSpot tarball.
+
 2016-11-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.3.0pre01.
