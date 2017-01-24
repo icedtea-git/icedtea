@@ -1,5 +1,12 @@
 2017-01-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump shenandoah to aarch64-shenandoah-jdk8u121-b14.
+	* hotspot.map.in: Update shenandoah to
+	aarch64-shenandoah-jdk8u121-b14 tag.
+
+2017-01-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to icedtea-3.3.0pre02.
 	* Makefile.am:
 	(JDK_UPDATE_VERSION): Bump to 121.
 	(BUILD_VERSION): Set to b13.
