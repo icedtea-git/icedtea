@@ -187,9 +187,21 @@ New in release 3.3.0 (2017-01-XX):
   - S8169911: Enhanced tests for jarsigner -verbose -verify after JDK-8163304
   - S8170131: Certificates not being blocked by jdk.tls.disabledAlgorithms property
   - S8170268: 8u121 L10n resource file update - msgdrop 20
+* Bug fixes
+  - PR3271: Always round glyph advance in 26.6 space
+  - PR3271: Fix compatibility with vanilla Fontconfig
+  - PR3271: Fix glyph y advance
+  - PR3271: Replace 'infinality' with 'improved font rendering' (--enable-improved-font-rendering)
+  - PR3271: Simplify glyph advance handling
+  - PR3286: -ffp-contract not available on older GCCs
+* PPC port
+  - S8170873, PR3280: PPC64/aarch64: Poor StrictMath performance due to non-optimized compilation
 * AArch64 port
   - S8130309, PR3280: Need to bailout cleanly if creation of stubs fails when codecache is out of space (AArch64 changes)
   - S8132875, PR3280: AArch64: Fix error introduced into AArch64 CodeCache by commit for 8130309
+  - S8165673, PR3280: AArch64: Fix JNI floating point argument handling
+  - S8170188, PR3280: jtreg test compiler/types/TestMeetIncompatibleInterfaceArrays.java causes JVM crash
+  - S8170873, PR3280: PPC64/aarch64: Poor StrictMath performance due to non-optimized compilation
 
 New in release 3.2.0 (2016-11-08):
 
