@@ -2077,50 +2077,34 @@ AC_DEFUN_ONCE([IT_ENABLE_JAVA_DEBUGINFO],
   AM_CONDITIONAL([ENABLE_JAVA_DEBUGINFO], test x"${enable_java_debuginfo}" = "xyes")
 ])
 
-AC_DEFUN_ONCE([IT_ENABLE_INFINALITY],
+AC_DEFUN_ONCE([IT_ENABLE_IMPROVED_FONT_RENDERING],
 [
   AC_REQUIRE([IT_CHECK_FOR_FREETYPE])
   AC_MSG_CHECKING([whether to use fontconfig to provide better font rendering])
-  AC_ARG_ENABLE([infinality],
-                [AS_HELP_STRING(--enable-infinality,build with fontconfig font rendering [[default=no]])],
+  AC_ARG_ENABLE([improved-font-rendering],
+                [AS_HELP_STRING(--enable-improved-font-rendering,build with fontconfig font rendering [[default=no]])],
   [
     case "${enableval}" in
       yes)
-        enable_infinality=yes
+        enable_improved_font_rendering=yes
         ;;
       *)
-        enable_infinality=no
+        enable_improved_font_rendering=no
         ;;
     esac
   ],
   [
-    enable_infinality=no
+    enable_improved_font_rendering=no
   ])
-  AC_MSG_RESULT([$enable_infinality])
-  AM_CONDITIONAL([ENABLE_INFINALITY], test x"${enable_infinality}" = "xyes")
-  if test "x${enable_infinality}" = "xyes"; then
+  AC_MSG_RESULT([$enable_improved_font_rendering])
+  AM_CONDITIONAL([ENABLE_IMPROVED_FONT_RENDERING], test x"${enable_improved_font_rendering}" = "xyes")
+  if test "x${enable_improved_font_rendering}" = "xyes"; then
     dnl Check for Fontconfig+ headers and libraries.
     PKG_CHECK_MODULES(FONTCONFIG, fontconfig,[FONTCONFIG_FOUND=yes],[FONTCONFIG_FOUND=no])
     if test "x${FONTCONFIG_FOUND}" = xno
     then
-      AC_MSG_ERROR([Infinality support requires fontconfig. Either install fontconfig or --disable-infinality])
+      AC_MSG_ERROR([Improved font rendering support requires fontconfig. Either install fontconfig or --disable-improved-font-rendering])
     fi
-    AC_MSG_CHECKING([if FreeType is patched with infinality support])
-    AC_LANG_PUSH([C])
-    CFLAGS_SAVED=$CFLAGS
-    CFLAGS="$CFLAGS $FREETYPE2_CFLAGS"
-    AC_LINK_IFELSE([AC_LANG_PROGRAM([[
-    #include <ft2build.h>
-    #include FT_FREETYPE_H
-    #ifndef FT_CONFIG_OPTION_INFINALITY_PATCHSET
-    #if TT_CONFIG_OPTION_SUBPIXEL_HINTING < 1
-    #error Infinality not supported
-    #endif
-    #endif
-    ]])], [AC_MSG_RESULT([yes])], [AC_MSG_RESULT([no]); \
-      AC_MSG_ERROR([Infinality support requires infinality support in FreeType.])])
-    CFLAGS=$CFLAGS_SAVED
-    AC_LANG_POP([C])
     AC_SUBST(FONTCONFIG_CFLAGS)
     AC_SUBST(FONTCONFIG_LIBS)
   fi

@@ -1,5 +1,25 @@
 2017-01-24  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR3271: Replace 'infinality' with
+	'improved font rendering'
+	* INSTALL:
+	Rename --enable-infinality to
+	--enable-improved-font-rendering, as
+	the code no longer relies on the infinality
+	patch set.
+	* Makefile.am:
+	Use ENABLE_IMPROVED_FONT_RENDERING, not
+	ENABLE_INFINALITY.
+	* acinclude.m4:
+	(IT_ENABLE_IMPROVED_FONT_RENDERING): Renamed
+	from IT_ENABLE_INFINALITY. Fix variables to match
+	and remove unneeded test for infinality patches.
+	* configure.ac:
+	Invoke IT_ENABLE_IMPROVED_FONT_RENDERING instead
+	of IT_ENABLE_INFINALITY.
+
+2017-01-24  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump to icedtea-3.3.0.
 	* Makefile.am:
 	(CORBA_CHANGESET): Update to icedtea-3.3.0 tag.

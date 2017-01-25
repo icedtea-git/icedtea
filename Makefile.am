@@ -575,7 +575,7 @@ ICEDTEA_CONFIGURE += \
 	--with-cacerts-file=$(CACERTS_FILE)
 endif
 
-if ENABLE_INFINALITY
+if ENABLE_IMPROVED_FONT_RENDERING
 ICEDTEA_CONFIGURE += \
 	--enable-improved-font-rendering
 ICEDTEA_CONFIGURE_ENV += \

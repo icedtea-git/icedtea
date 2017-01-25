@@ -215,7 +215,7 @@ These are documented fully in the relevant section below.
   below.
 * --enable-sunec: Build the SunEC crypto provider against system NSS.
 * --enable-non-nss-curves: Define curves beyond the three specified by NSS (NIST P-{256,384,521})
-* --enable-infinality: Use fontconfig for better font rendering
+* --enable-improved-font-rendering: Use fontconfig for better font rendering
 * --enable-headless: Build OpenJDK without graphical UI support
 * --disable-cache: Don't use ccache to speed up recompilations (default is to use if available)
 * --enable-native-debuginfo: Include debuginfo in native binaries.
