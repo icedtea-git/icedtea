@@ -29,7 +29,6 @@ IT_FIND_TOOLS([PATCH], [gpatch patch])
 IT_FIND_TOOLS([TAR], [gtar tar])
 IT_FIND_TOOL([CHMOD], [chmod])
 IT_FIND_TOOLS([SHA256SUM], [gsha256sum sha256sum])
-IT_FIND_TOOL([ZIP], [zip])
 IT_FIND_TOOL([UNZIP], [unzip])
 IT_FIND_TOOL([CPIO], [cpio])
 IT_FIND_TOOL([FILE], [file])
@@ -48,6 +47,7 @@ fi
 
 AC_PATH_TOOL([LSB_RELEASE],[lsb_release])
 AC_PATH_TOOL([LINUX32],[linux32])
+AC_PATH_TOOL([ZIP], [zip])
 
 IT_CHECK_FOR_MERCURIAL
 IT_OBTAIN_HG_REVISIONS

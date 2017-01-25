@@ -38,6 +38,7 @@ New in release 3.3.0 (2017-01-XX):
 * New features
   - PR3300: wget not required when downloading is disabled
   - PR3301: Support RHEL multilib installations which use the /usr/lib/jvm/java-1.x.0-openjdk.${arch} naming
+  - PR3302: zip should be optional, as it's only used in the manually invoked dist-openjdk and dist-openjdk-fsg rules
 * Import of OpenJDK 8 u112 build 16
   - S6477756: GraphicsDevice.getConfigurations() is slow taking 3 or more seconds
   - S7172749: Xrender: Class cast exception in 2D code running an AWT regression test

@@ -857,11 +857,17 @@ snapshot: dist
 
 # Creates archive of openjdk.
 dist-openjdk: stamps/extract-cacao.stamp
+	if test "x${ZIP}" = "x"; then \
+	  echo "ERROR: zip not found"; exit 1; \
+	fi
 	find openjdk/ -name \\.hg* | xargs rm -rf	
 	$(ZIP) -r openjdk-$(COMBINED_VERSION) openjdk/
 
 # Creates archive of openjdk that is compliant with Free Software guidelines.
 dist-openjdk-fsg: stamps/patch-fsg.stamp
+	if test "x${ZIP}" = "x"; then \
+	  echo "ERROR: zip not found"; exit 1; \
+	fi
 	$(ZIP) -r openjdk-fsg-$(COMBINED_VERSION) openjdk/
 
 dist-openjdk-fsg-xz: stamps/patch-fsg.stamp

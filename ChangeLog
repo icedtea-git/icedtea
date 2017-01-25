@@ -1,5 +1,18 @@
 2017-01-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR3302: zip should be optional, as it's only used
+	in the manually invoked dist-openjdk and
+	dist-openjdk-fsg rules
+	* Makefile.am:
+	(dist-openjdk): Check if ${ZIP} is set and fail
+	if not.
+	(dist-openjdk-fsg): Likewise.
+	* NEWS: Updated.
+	* configure.ac:
+	Use the non-failing AC_PATH_TOOL macro for zip.
+
+2017-01-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR3301: Support RHEL multilib installations which
 	use the /usr/lib/jvm/java-1.x.0-openjdk.${arch} naming
 	* NEWS: Updated.
