@@ -29,7 +29,6 @@ IT_FIND_TOOLS([PATCH], [gpatch patch])
 IT_FIND_TOOLS([TAR], [gtar tar])
 IT_FIND_TOOL([CHMOD], [chmod])
 IT_FIND_TOOLS([SHA256SUM], [gsha256sum sha256sum])
-IT_FIND_TOOL([WGET], [wget])
 IT_FIND_TOOL([ZIP], [zip])
 IT_FIND_TOOL([UNZIP], [unzip])
 IT_FIND_TOOL([CPIO], [cpio])
@@ -42,6 +41,11 @@ dnl OpenJDK's README-builds.html lists gawk as a build dependency so we
 dnl check for it explicitly rather than using AC_PROG_AWK.
 IT_FIND_TOOL([GAWK], [gawk])
 IT_FIND_TOOL([WHICH], [which])
+
+if test "x$enable_downloading" = "xyes"; then
+   IT_FIND_TOOL([WGET], [wget])
+fi
+
 AC_PATH_TOOL([LSB_RELEASE],[lsb_release])
 AC_PATH_TOOL([LINUX32],[linux32])
 

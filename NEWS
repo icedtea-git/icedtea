@@ -35,6 +35,8 @@ New in release 3.3.0 (2017-01-XX):
   - S8168714, CVE-2016-5546: Tighten ECDSA validation
   - S8168728, CVE-2016-5548: DSA signing improvments
   - S8168724, CVE-2016-5549: ECDSA signing improvments
+* New features
+  - PR3300: wget not required when downloading is disabled
 * Import of OpenJDK 8 u112 build 16
   - S6477756: GraphicsDevice.getConfigurations() is slow taking 3 or more seconds
   - S7172749: Xrender: Class cast exception in 2D code running an AWT regression test

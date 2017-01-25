@@ -1,3 +1,10 @@
+2016-02-15  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR3300: wget not required when downloading is disabled
+	* NEWS: Updated.
+	* configure.ac:
+	Only check for wget if downloading is enabled.
+
 2017-01-24  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3271: Replace 'infinality' with
