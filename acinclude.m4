@@ -5,12 +5,14 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       BUILD_ARCH_DIR=amd64
       INSTALL_ARCH_DIR=amd64
       JRE_ARCH_DIR=amd64
+      RPM_ARCH=x86_64
       ARCHFLAG="-m64"
       ;;
     i?86)
       BUILD_ARCH_DIR=i586
       INSTALL_ARCH_DIR=i386
       JRE_ARCH_DIR=i386
+      RPM_ARCH=i686
       ARCH_PREFIX=${LINUX32}
       ARCHFLAG="-m32"
       ;;
@@ -23,12 +25,14 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       BUILD_ARCH_DIR=arm
       INSTALL_ARCH_DIR=arm
       JRE_ARCH_DIR=arm
+      RPM_ARCH=armv7hl
       ARCHFLAG="-D_LITTLE_ENDIAN"
       ;;
     arm64|aarch64)
       BUILD_ARCH_DIR=aarch64
       INSTALL_ARCH_DIR=aarch64
       JRE_ARCH_DIR=aarch64
+      RPM_ARCH=aarch64
       ARCHFLAG="-D_LITTLE_ENDIAN"
       ;;
     mips)
@@ -45,6 +49,7 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       BUILD_ARCH_DIR=ppc
       INSTALL_ARCH_DIR=ppc
       JRE_ARCH_DIR=ppc
+      RPM_ARCH=ppc
       ARCH_PREFIX=${LINUX32}
       ARCHFLAG="-m32"
       ;;
@@ -52,19 +57,20 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       BUILD_ARCH_DIR=ppc64
       INSTALL_ARCH_DIR=ppc64
       JRE_ARCH_DIR=ppc64
+      RPM_ARCH=ppc64
       ARCHFLAG="-m64"
        ;;
     powerpc64le)
       BUILD_ARCH_DIR=ppc64le
       INSTALL_ARCH_DIR=ppc64le
       JRE_ARCH_DIR=ppc64le
+      RPM_ARCH=ppc64le
       ARCHFLAG="-m64"
        ;;
     sparc)
       BUILD_ARCH_DIR=sparc
       INSTALL_ARCH_DIR=sparc
       JRE_ARCH_DIR=sparc
-      CROSS_TARGET_ARCH=sparc
       ARCH_PREFIX=${LINUX32}
       ARCHFLAG="-m32"
        ;;
@@ -78,6 +84,7 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       BUILD_ARCH_DIR=s390
       INSTALL_ARCH_DIR=s390
       JRE_ARCH_DIR=s390
+      RPM_ARCH=s390
       ARCH_PREFIX=${LINUX32}
       ARCHFLAG="-m31"
        ;;
@@ -85,14 +92,13 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       BUILD_ARCH_DIR=s390x
       INSTALL_ARCH_DIR=s390x
       JRE_ARCH_DIR=s390x
-      CROSS_TARGET_ARCH=s390x
+      RPM_ARCH=s390x
       ARCHFLAG="-m64"
       ;;
     sh*)
       BUILD_ARCH_DIR=sh
       INSTALL_ARCH_DIR=sh
       JRE_ARCH_DIR=sh
-      CROSS_TARGET_ARCH=sh
       ;;
     *)
       BUILD_ARCH_DIR=`uname -m`
@@ -1016,6 +1022,7 @@ AC_DEFUN([IT_CHECK_IF_BOOTSTRAPPING],
 
 AC_DEFUN([IT_CHECK_FOR_JDK],
 [
+  AC_REQUIRE([IT_SET_ARCH_SETTINGS])
   AC_MSG_CHECKING([for a JDK home directory])
   AC_ARG_WITH([jdk-home],
 	      [AS_HELP_STRING([--with-jdk-home[[=PATH]]],
@@ -1040,10 +1047,10 @@ AC_DEFUN([IT_CHECK_FOR_JDK],
       BOOTSTRAP_VMS="/usr/lib/jvm/cacao";
     fi
     ICEDTEA7_VMS="/usr/lib/jvm/icedtea-7 /usr/lib/jvm/icedtea7 /usr/lib/jvm/java-1.7.0-openjdk
-    		  /usr/lib/jvm/java-1.7.0-openjdk.x86_64 /usr/lib64/jvm/java-1.7.0-openjdk
+    		  /usr/lib/jvm/java-1.7.0-openjdk.${RPM_ARCH} /usr/lib64/jvm/java-1.7.0-openjdk
 		  /usr/lib/jvm/java-1.7.0 /usr/lib/jvm/java-7-openjdk"
     ICEDTEA8_VMS="/usr/lib/jvm/icedtea-8 /usr/lib/jvm/java-1.8.0-openjdk
-    		  /usr/lib/jvm/java-1.8.0-openjdk.x86_64 /usr/lib64/jvm/java-1.8.0-openjdk
+    		  /usr/lib/jvm/java-1.8.0-openjdk.${RPM_ARCH} /usr/lib64/jvm/java-1.8.0-openjdk
 		  /usr/lib/jvm/java-1.8.0 /usr/lib/jvm/java-8-openjdk"
     for dir in ${ICEDTEA8_VMS} ${ICEDTEA7_VMS} ${BOOTSTRAP_VMS} \
     	       /usr/lib/jvm/java-openjdk /usr/lib/jvm/openjdk /usr/lib/jvm/java-icedtea \
