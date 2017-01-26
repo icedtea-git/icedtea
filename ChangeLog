@@ -1,5 +1,13 @@
 2017-01-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR3304: zip still a requirement of the underlying
+	OpenJDK build
+	* NEWS: Updated.
+	* configure.ac:
+	Use IT_FIND_TOOL macro to require zip.
+
+2017-01-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR3303: Allow Kerberos to be detected by old libs
 	and headers method if pkg-config check fails
 	* Makefile.am:
