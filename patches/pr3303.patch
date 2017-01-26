@@ -1,0 +1,95 @@
+diff --git a/common/autoconf/generated-configure.sh b/common/autoconf/generated-configure.sh
+--- openjdk///common/autoconf/generated-configure.sh
++++ openjdk///common/autoconf/generated-configure.sh
+@@ -3999,7 +3999,7 @@
+ #CUSTOM_AUTOCONF_INCLUDE
+ 
+ # Do not change or remove the following line, it is needed for consistency checks:
+-DATE_WHEN_GENERATED=1485316663
++DATE_WHEN_GENERATED=1485433878
+ 
+ ###############################################################################
+ #
+@@ -35679,7 +35679,64 @@
+       if test "x${KRB5_FOUND}" = "xyes"; then
+ 	  USE_EXTERNAL_KRB5=true
+       else
+-	  as_fn_error $? "--enable-system-kerberos specified, but Kerberos not found." "$LINENO" 5
++	  { $as_echo "$as_me:${as_lineno-$LINENO}: Could not find Kerberos using pkg-config; trying via krb5.h and krb5 library" >&5
++$as_echo "$as_me: Could not find Kerberos using pkg-config; trying via krb5.h and krb5 library" >&6;}
++          { $as_echo "$as_me:${as_lineno-$LINENO}: checking for krb5_cc_default in -lkrb5" >&5
++$as_echo_n "checking for krb5_cc_default in -lkrb5... " >&6; }
++if ${ac_cv_lib_krb5_krb5_cc_default+:} false; then :
++  $as_echo_n "(cached) " >&6
++else
++  ac_check_lib_save_LIBS=$LIBS
++LIBS="-lkrb5  $LIBS"
++cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++
++/* Override any GCC internal prototype to avoid an error.
++   Use char because int might match the return type of a GCC
++   builtin and then its argument prototype would still apply.  */
++#ifdef __cplusplus
++extern "C"
++#endif
++char krb5_cc_default ();
++int
++main ()
++{
++return krb5_cc_default ();
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_cxx_try_link "$LINENO"; then :
++  ac_cv_lib_krb5_krb5_cc_default=yes
++else
++  ac_cv_lib_krb5_krb5_cc_default=no
++fi
++rm -f core conftest.err conftest.$ac_objext \
++    conftest$ac_exeext conftest.$ac_ext
++LIBS=$ac_check_lib_save_LIBS
++fi
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_krb5_krb5_cc_default" >&5
++$as_echo "$ac_cv_lib_krb5_krb5_cc_default" >&6; }
++if test "x$ac_cv_lib_krb5_krb5_cc_default" = xyes; then :
++  cat >>confdefs.h <<_ACEOF
++#define HAVE_LIBKRB5 1
++_ACEOF
++
++  LIBS="-lkrb5 $LIBS"
++
++else
++  as_fn_error $? "Could not find Kerberos library; install Kerberos or build with --disable-system-kerberos to use the default cache location." "$LINENO" 5
++fi
++
++          ac_fn_cxx_check_header_mongrel "$LINENO" "krb5.h" "ac_cv_header_krb5_h" "$ac_includes_default"
++if test "x$ac_cv_header_krb5_h" = xyes; then :
++
++else
++  as_fn_error $? "Could not find Kerberos header; install Kerberos or build with --disable-system-kerberos to use the default cache location." "$LINENO" 5
++fi
++
++
++      	  KRB5_LIBS="-lkrb5"
+       fi
+   else
+       USE_EXTERNAL_KRB5=false
+diff --git a/common/autoconf/libraries.m4 b/common/autoconf/libraries.m4
+--- openjdk///common/autoconf/libraries.m4
++++ openjdk///common/autoconf/libraries.m4
+@@ -942,7 +942,12 @@
+       if test "x${KRB5_FOUND}" = "xyes"; then
+ 	  USE_EXTERNAL_KRB5=true
+       else
+-	  AC_MSG_ERROR([--enable-system-kerberos specified, but Kerberos not found.])
++	  AC_MSG_NOTICE([Could not find Kerberos using pkg-config; trying via krb5.h and krb5 library])
++          AC_CHECK_LIB([krb5], [krb5_cc_default],
++            , [AC_MSG_ERROR([Could not find Kerberos library; install Kerberos or build with --disable-system-kerberos to use the default cache location.])])
++          AC_CHECK_HEADER([krb5.h],
++            , [AC_MSG_ERROR([Could not find Kerberos header; install Kerberos or build with --disable-system-kerberos to use the default cache location.])])
++      	  KRB5_LIBS="-lkrb5"
+       fi
+   else
+       USE_EXTERNAL_KRB5=false

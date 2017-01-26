@@ -1815,7 +1815,12 @@ AC_DEFUN_ONCE([IT_CHECK_FOR_KERBEROS],
     dnl Check for krb5 header and library.
     PKG_CHECK_MODULES(KRB5, krb5, [KRB5_FOUND=yes], [KRB5_FOUND=no])
     if test "x${KRB5_FOUND}" = "xno"; then
-      AC_MSG_ERROR([Could not find Kerberos; install Kerberos or build with --disable-system-kerberos to use the default cache location.])
+      AC_MSG_NOTICE([Could not find Kerberos using pkg-config; trying via krb5.h and krb5 library])
+      AC_CHECK_LIB([krb5], [krb5_cc_default],
+        , [AC_MSG_ERROR([Could not find Kerberos library; install Kerberos or build with --disable-system-kerberos to use the default cache location.])])
+      AC_CHECK_HEADER([krb5.h],
+        , [AC_MSG_ERROR([Could not find Kerberos header; install Kerberos or build with --disable-system-kerberos to use the default cache location.])])
+      KRB5_LIBS="-lkrb5"
     fi
   fi
   AM_CONDITIONAL(USE_SYSTEM_KERBEROS, test x"${ENABLE_SYSTEM_KERBEROS}" = "xyes")
