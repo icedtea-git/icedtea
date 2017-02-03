@@ -10,7 +10,9 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.3.0 (2017-01-XX):
+New in release 3.4.0 (2017-04-XX):
+
+New in release 3.3.0 (2017-01-28):
 
 * Security fixes
   - S8138725: Add options for Javadoc generation

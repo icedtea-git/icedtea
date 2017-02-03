@@ -1,3 +1,9 @@
+2017-02-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* NEWS: Set release date of 3.3.0.
+	Add 3.4.0 section.
+	* configure.ac: Bump to 3.4.0pre00.
+
 2017-01-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3304: zip still a requirement of the underlying
