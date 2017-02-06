@@ -12,7 +12,21 @@ JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.9 (2017-01-XX):
+New in release 2.6.9 (2017-02-XX):
+
+* Backports
+  - S7102489, PR3316, RH1390708: RFE: cleanup jlong typedef on __APPLE__and _LLP64 systems.
+  - S8000351, PR3316, RH1390708: Tenuring threshold should be unsigned
+  - S8153711, PR3315, RH1284948: [REDO] JDWP: Memory Leak: GlobalRefs never deleted when processing invokeMethod command
+  - S8170888, PR3316, RH1390708: [linux] Experimental support for cgroup memory limits in container (ie Docker) environments
+* Bug fixes
+  - PR3318: Replace 'infinality' with 'improved font rendering' (--enable-improved-font-rendering)
+  - PR3318: Fix compatibility with vanilla Fontconfig
+  - PR3318: Fix glyph y advance
+  - PR3318: Always round glyph advance in 26.6 space
+  - PR3318: Simplify glyph advance handling
+* AArch64 port
+  - S8165673, PR3320: AArch64: Fix JNI floating point argument handling
 
 New in release 2.6.8 (2016-11-13):
 

@@ -1,3 +1,26 @@
+2017-02-06  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to icedtea-2.6.9pre01.
+	* Makefile.am,
+	(CORBA_CHANGESET): Update to icedtea-2.6.9pre01.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_ENV): Update INFINALITY_SUPPORT
+	setting to IMPROVED_FONT_RENDERING,
+	following PR3318.
+	* NEWS: Updated.
+	* configure.ac: Bump to 2.6.9pre01.
+	* hotspot.map.in: Update to icedtea-2.6.9pre01.
+
 2016-11-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Add section for 2.6.9.
@@ -144,6 +167,7 @@
 
 2016-10-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump to icedtea-2.6.8pre01.
 	* Makefile.am,
 	(CORBA_CHANGESET): Update to icedtea-2.6.8pre01.
 	(JAXP_CHANGESET): Likewise.
