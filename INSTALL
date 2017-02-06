@@ -252,7 +252,7 @@ These are documented fully in the relevant section below.
 * --enable-sunec: Build the SunEC crypto provider against system NSS.
 * --enable-native-debuginfo: Include debuginfo in native binaries.
 * --enable-java-debuginfo: Include debuginfo in Java class files.
-* --enable-infinality: Use fontconfig for better font rendering
+* --enable-improved-font-rendering: Use fontconfig for better font rendering
 * --enable-non-nss-curves: Define curves beyond the three specified
   by NSS (NIST P-{256,384,521})
 * --enable-split-debuginfo: Strip debuginfo from binaries and libraries
