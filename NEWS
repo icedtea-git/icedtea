@@ -17,9 +17,22 @@ New in release 2.7.0 (201X-XX-XX):
 * New features
   - PR3180: Support building without pre-compiled headers
 * Backports
+  - S7102489, PR3316, RH1390708: RFE: cleanup jlong typedef on __APPLE__and _LLP64 systems.
+  - S8000351, PR3316, RH1390708: Tenuring threshold should be unsigned
   - S8076221, PR2809, RH1302385: Disable RC4 cipher suites
+  - S8153711, PR3313, RH1284948: [REDO] JDWP: Memory Leak: GlobalRefs never deleted when processing invokeMethod command
+  - S8170888, PR3316, RH1390708: [linux] Experimental support for cgroup memory limits in container (ie Docker) environments
 * Bug fixes
   - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
+  - PR3318: Always round glyph advance in 26.6 space
+  - PR3318: Fix compatibility with vanilla Fontconfig
+  - PR3318: Fix glyph y advance
+  - PR3318: Replace 'infinality' with 'improved font rendering' (--enable-improved-font-rendering)
+  - PR3318: Simplify glyph advance handling
+* AArch64 port
+  - S8165673: AArch64: Fix JNI floating point argument handling
+  - PR3209: Backed out changeset 3cc3ab869ccf
+  - PR3211: AArch64 build fails with pre-compiled headers disabled
 
 New in release 2.6.8 (2016-11-13):
 

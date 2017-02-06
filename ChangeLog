@@ -1,3 +1,30 @@
+2017-02-05  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Bump to icedtea-2.7.0pre09.
+	* patches/pr3209-backout.patch,
+	* patches/pr3211.patch:
+	Remove upstreamed patches.
+	(CORBA_CHANGESET): Update to icedtea-2.7.0pre09.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Remove PR3211 patch
+	and PR3209 backout now applied upstream.
+	(ICEDTEA_ENV): Update INFINALITY_SUPPORT
+	setting to IMPROVED_FONT_RENDERING,
+	following PR3318.
+	* NEWS: Updated.
+	* configure.ac: Bump to 2.7.0pre09.
+	* hotspot.map.in: Update to icedtea-2.7.0pre09.
+
 2016-11-13  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Add 2.6.8 release notes.
