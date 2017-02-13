@@ -1,6 +1,6 @@
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2016-07-28 15:55:15.728105678 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2017-02-07 05:07:53.531497571 +0000
 @@ -350,19 +350,16 @@
              if (attrCommands != null) {
                  Attribute.Layout lkey = Attribute.keyForLookup(ctype, name);
@@ -32,8 +32,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Cla
              // Find canonical instance of the requested attribute.
              Attribute a = Attribute.lookup(Package.attrDefs, ctype, name);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2016-07-28 15:54:09.577175804 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2017-02-07 05:07:53.531497571 +0000
 @@ -73,16 +73,14 @@
          {
              // Non-standard, undocumented "--unpack" switch enables unpack mode.
@@ -91,8 +91,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Dri
  
          if (logFile != null && !logFile.equals("")) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2016-07-28 15:54:09.577175804 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2017-02-07 05:07:53.531497571 +0000
 @@ -1107,30 +1107,25 @@
          // what is one of { Debug, Compile, Constant, Exceptions, InnerClasses }
          if (verbose > 0)
@@ -144,8 +144,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Pac
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2016-07-28 15:54:09.577175804 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2017-02-07 05:07:53.531497571 +0000
 @@ -65,17 +65,23 @@
  
      protected NTLM(String version) throws NTLMException {
@@ -181,9 +181,178 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.jav
          try {
              fac = SecretKeyFactory.getInstance ("DES");
              cipher = Cipher.getInstance ("DES/ECB/NoPadding");
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java	2017-02-07 05:07:53.535497506 +0000
+@@ -1579,21 +1579,18 @@
+         KeySpec spec = null;
+         SecretKeyFactory desFactory =
+             SecretKeyFactory.getInstance(desStrength);
+-        switch (desStrength) {
+-            case "des":
+-                spec = new DESKeySpec(subkey1, 0);
+-                if (logger.isLoggable(Level.FINEST)) {
+-                    traceOutput(DP_CLASS_NAME, "makeDesKeys",
+-                        "DIGEST42:DES key input: ", input);
+-                    traceOutput(DP_CLASS_NAME, "makeDesKeys",
+-                        "DIGEST43:DES key parity-adjusted: ", subkey1);
+-                    traceOutput(DP_CLASS_NAME, "makeDesKeys",
+-                        "DIGEST44:DES key material: ", ((DESKeySpec)spec).getKey());
+-                    logger.log(Level.FINEST, "DIGEST45: is parity-adjusted? {0}",
+-                        Boolean.valueOf(DESKeySpec.isParityAdjusted(subkey1, 0)));
+-                }
+-                break;
+-            case "desede":
++	if ("des".equals(desStrength)) {
++	    spec = new DESKeySpec(subkey1, 0);
++	    if (logger.isLoggable(Level.FINEST)) {
++		traceOutput(DP_CLASS_NAME, "makeDesKeys",
++			    "DIGEST42:DES key input: ", input);
++		traceOutput(DP_CLASS_NAME, "makeDesKeys",
++			    "DIGEST43:DES key parity-adjusted: ", subkey1);
++		traceOutput(DP_CLASS_NAME, "makeDesKeys",
++			    "DIGEST44:DES key material: ", ((DESKeySpec)spec).getKey());
++		logger.log(Level.FINEST, "DIGEST45: is parity-adjusted? {0}",
++			   Boolean.valueOf(DESKeySpec.isParityAdjusted(subkey1, 0)));
++	    } else if ("desede".equals(desStrength)) {
+                 // Generate second subkey using second 7 bytes
+                 byte[] subkey2 = addDesParity(input, 7, 7);
+                 // Construct 24-byte encryption-decryption-encryption sequence
+@@ -1614,10 +1611,10 @@
+                     logger.log(Level.FINEST, "DIGEST49: is parity-adjusted? ",
+                         Boolean.valueOf(DESedeKeySpec.isParityAdjusted(ede, 0)));
+                 }
+-                break;
+-            default:
++	    } else {
+                 throw new IllegalArgumentException("Invalid DES strength:" +
+-                    desStrength);
++						   desStrength);
++	    }
+         }
+         return desFactory.generateSecret(spec);
+     }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java	2017-02-07 05:07:53.535497506 +0000
+@@ -461,21 +461,17 @@
+ 
+         // Check that QOP is one sent by server
+         byte cQop;
+-        switch (negotiatedQop) {
+-            case "auth":
++        if ("auth".equals(negotiatedQop)) {
+                 cQop = NO_PROTECTION;
+-                break;
+-            case "auth-int":
++	} else if ("auth-int".equals(negotiatedQop)) {
+                 cQop = INTEGRITY_ONLY_PROTECTION;
+                 integrity = true;
+                 rawSendSize = sendMaxBufSize - 16;
+-                break;
+-            case "auth-conf":
++	} else if ("auth-conf".equals(negotiatedQop)) {
+                 cQop = PRIVACY_PROTECTION;
+                 integrity = privacy = true;
+                 rawSendSize = sendMaxBufSize - 26;
+-                break;
+-            default:
++	} else {
+                 throw new SaslException("DIGEST-MD5: digest response format " +
+                     "violation. Invalid QOP: " + negotiatedQop);
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java	2017-02-07 05:07:53.535497506 +0000
+@@ -205,13 +205,12 @@
+         if (!isComplete()) {
+             throw new IllegalStateException("authentication not complete");
+         }
+-        switch (propName) {
+-            case Sasl.QOP:
+-                return "auth";
+-            case NTLM_DOMAIN:
+-                return client.getDomain();
+-            default:
+-                return null;
++	if (Sasl.QOP.equals(propName)) {
++	    return "auth";
++	} else if (NTLM_DOMAIN.equals(propName)) {
++	    return client.getDomain();
++	} else {
++	    return null;
+         }
+     }
+ 
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java	2017-02-07 05:07:53.535497506 +0000
+@@ -219,13 +219,12 @@
+         if (!isComplete()) {
+             throw new IllegalStateException("authentication not complete");
+         }
+-        switch (propName) {
+-            case Sasl.QOP:
+-                return "auth";
+-            case NTLM_HOSTNAME:
+-                return hostname;
+-            default:
+-                return null;
++	if (propName.equals(Sasl.QOP)) {
++	    return "auth";
++	} else if (propName.equals(NTLM_HOSTNAME)) {
++	    return hostname;
++	} else {
++	    return null;
+         }
+     }
+ 
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java	2017-02-07 05:07:53.535497506 +0000
+@@ -155,23 +155,22 @@
+         if (!completed) {
+             throw new IllegalStateException("SASL authentication not completed");
+         }
+-        switch (propName) {
+-            case Sasl.QOP:
+-                if (privacy) {
+-                    return "auth-conf";
+-                } else if (integrity) {
+-                    return "auth-int";
+-                } else {
+-                    return "auth";
+-                }
+-            case Sasl.MAX_BUFFER:
+-                return Integer.toString(recvMaxBufSize);
+-            case Sasl.RAW_SEND_SIZE:
+-                return Integer.toString(rawSendSize);
+-            case MAX_SEND_BUF:
+-                return Integer.toString(sendMaxBufSize);
+-            default:
+-                return null;
++	if (Sasl.QOP.equals(propName)) {
++	    if (privacy) {
++		return "auth-conf";
++	    } else if (integrity) {
++		return "auth-int";
++	    } else {
++		return "auth";
++	    }
++	} else if (Sasl.MAX_BUFFER.equals(propName)) {
++	    return Integer.toString(recvMaxBufSize);
++	} else if (Sasl.RAW_SEND_SIZE.equals(propName)) {
++	    return Integer.toString(rawSendSize);
++	} else if (MAX_SEND_BUF.equals(propName)) {
++	    return Integer.toString(sendMaxBufSize);
++	} else {
++	    return null;
+         }
+     }
+ 
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2016-07-28 15:54:09.577175804 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2017-02-07 05:07:53.531497571 +0000
 @@ -328,12 +328,11 @@
                                       Object[] appendixResult) {
          try {
@@ -434,8 +603,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleN
          }
          return false;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2016-07-28 15:54:09.577175804 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2017-02-07 05:07:53.531497571 +0000
 @@ -269,14 +269,16 @@
  
      private static
@@ -477,8 +646,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleP
          }
          return null;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2016-07-28 15:54:09.577175804 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2017-02-07 05:07:53.531497571 +0000
 @@ -119,24 +119,20 @@
          String optStr = (opts.length > 1 && opts[1] != null)
                  ? opts[1].trim()
@@ -516,8 +685,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.ja
  
      /*
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java openjdk-boot/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java	2016-07-28 15:54:09.577175804 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java	2017-02-07 05:07:53.531497571 +0000
 @@ -65,14 +65,12 @@
          if (paramTypes.length != 0)
              throw new AssertionError("Too many parameters for an annotation method");
@@ -537,8 +706,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/reflect/annotation/Annotat
          // Handle annotation member accessors
          Object result = memberValues.get(member);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/Config.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/Config.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/Config.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/Config.java	2016-07-28 15:54:09.581175739 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/Config.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/Config.java	2017-02-07 05:07:53.531497571 +0000
 @@ -428,14 +428,13 @@
          if (s == null) {
              return null;
@@ -558,283 +727,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/Config.java 
      }
  
      /**
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2016-07-28 15:54:09.577175804 +0100
-@@ -228,19 +228,23 @@
-             GE;         // ">="
- 
-             static Operator of(String s) {
--                switch (s) {
--                    case "==":
--                        return EQ;
--                    case "!=":
--                        return NE;
--                    case "<":
--                        return LT;
--                    case "<=":
--                        return LE;
--                    case ">":
--                        return GT;
--                    case ">=":
--                        return GE;
-+                if ("==".equals(s)) {
-+                    return EQ;
-+                }
-+                if ("!=".equals(s)) {
-+                    return NE;
-+                }
-+                if ("<".equals(s)) {
-+                    return LT;
-+                }
-+                if ("<=".equals(s)) {
-+                    return LE;
-+                }
-+                if (">".equals(s)) {
-+                    return GT;
-+                }
-+                if (">=".equals(s)) {
-+                    return GE;
-                 }
- 
-                 throw new IllegalArgumentException(
-diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java openjdk-boot/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java
---- openjdk-boot.orig/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java	2016-07-28 15:54:09.581175739 +0100
-@@ -101,19 +101,17 @@
-         k = lib.indexOf("$ARCH");
-         if (k != -1) {
-             String arch = System.getProperty("os.arch");
--            switch (arch) {
--            case "amd64":
-+	    if ("amd64".equals(arch)) {
-                 arch = "x86_64";
--                break;
--            case "ppc":
-+	    }
-+	    if ("ppc".equals(arch)) {
-                 arch = "powerpc";
--                break;
--            case "ppc64":
-+	    }
-+	    if ("ppc64".equals(arch)) {
-                 arch = "powerpc64";
--                break;
--            case "ppc64le":
-+	    }
-+            if ("ppc64le".equals(arch)) {
-                 arch = "powerpc64le";
--                break;
-             }
-             lib = replace(k, lib, "$ARCH", arch);
-         }
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java	2016-07-28 17:36:09.321703377 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java	2016-07-28 17:38:27.515445297 +0100
-@@ -153,15 +153,12 @@
-             throws CertificateException {
-         super("X.509");
- 
--        switch (encoding) {
--            case PKIPATH_ENCODING:
--                certs = parsePKIPATH(is);
--                break;
--            case PKCS7_ENCODING:
--                certs = parsePKCS7(is);
--                break;
--            default:
--                throw new CertificateException("unsupported encoding");
-+	if (PKIPATH_ENCODING.equals(encoding)) {
-+	    certs = parsePKIPATH(is);
-+	} else if (PKCS7_ENCODING.equals(encoding)) {
-+	    certs = parsePKCS7(is);
-+	} else {
-+	    throw new CertificateException("unsupported encoding");
-         }
-     }
- 
-@@ -344,14 +341,12 @@
-      */
-     public byte[] getEncoded(String encoding)
-             throws CertificateEncodingException {
--        switch (encoding) {
--            case PKIPATH_ENCODING:
--                return encodePKIPATH();
--            case PKCS7_ENCODING:
--                return encodePKCS7();
--            default:
--                throw new CertificateEncodingException("unsupported encoding");
--        }
-+	if (PKIPATH_ENCODING.equals(encoding)) {
-+	    return encodePKIPATH();
-+	} else if (PKCS7_ENCODING.equals(encoding)) {
-+	    return encodePKCS7();
-+	}
-+	throw new CertificateEncodingException("unsupported encoding");
-     }
- 
-     /**
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java openjdk-boot/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java	2016-07-28 20:26:30.394383115 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java	2016-07-28 21:13:53.492030120 +0100
-@@ -823,16 +823,13 @@
-             sig = JsseJce.getSignature(
-                         preferableSignatureAlgorithm.getAlgorithmName());
-         } else {
--                switch (algorithm) {
--                    case "DSA":
--                        sig = JsseJce.getSignature(JsseJce.SIGNATURE_DSA);
--                        break;
--                    case "RSA":
--                        sig = RSASignature.getInstance();
--                        break;
--                    default:
--                        throw new SSLKeyException("neither an RSA or a DSA key");
--                }
-+	    if ("DSA".equals(algorithm)) {
-+		sig = JsseJce.getSignature(JsseJce.SIGNATURE_DSA);
-+	    } else if ("RSA".equals(algorithm)) {
-+		sig = RSASignature.getInstance();
-+	    } else {
-+		throw new SSLKeyException("neither an RSA or a DSA key");
-+	    }
-         }
- 
-         sig.initVerify(publicKey);
-@@ -1112,14 +1109,13 @@
- 
-     private static Signature getSignature(String keyAlgorithm)
-             throws NoSuchAlgorithmException {
--            switch (keyAlgorithm) {
--                case "EC":
--                    return JsseJce.getSignature(JsseJce.SIGNATURE_ECDSA);
--                case "RSA":
--                    return RSASignature.getInstance();
--                default:
--                    throw new NoSuchAlgorithmException("neither an RSA or a EC key");
--            }
-+	if ("EC".equals(keyAlgorithm)) {
-+	    return JsseJce.getSignature(JsseJce.SIGNATURE_ECDSA);
-+	} else if ("RSA".equals(keyAlgorithm)) {
-+	    return RSASignature.getInstance();
-+	} else {
-+	    throw new NoSuchAlgorithmException("neither an RSA or a EC key");
-+	}
-     }
- 
-     private void updateSignature(Signature sig, byte clntNonce[],
-@@ -1627,17 +1623,16 @@
-      */
-     private static Signature getSignature(ProtocolVersion protocolVersion,
-             String algorithm) throws GeneralSecurityException {
--            switch (algorithm) {
--                case "RSA":
--                    return RSASignature.getInternalInstance();
--                case "DSA":
--                    return JsseJce.getSignature(JsseJce.SIGNATURE_RAWDSA);
--                case "EC":
--                    return JsseJce.getSignature(JsseJce.SIGNATURE_RAWECDSA);
--                default:
--                    throw new SignatureException("Unrecognized algorithm: "
--                        + algorithm);
--            }
-+	if ("RSA".equals(algorithm)) {
-+	    return RSASignature.getInternalInstance();
-+	} else if ("DSA".equals(algorithm)) {
-+	    return JsseJce.getSignature(JsseJce.SIGNATURE_RAWDSA);
-+	} else if ("EC".equals(algorithm)) {
-+	    return JsseJce.getSignature(JsseJce.SIGNATURE_RAWECDSA);
-+	} else {
-+	    throw new SignatureException("Unrecognized algorithm: "
-+					 + algorithm);
-+	}
-     }
- 
-     /*
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java openjdk-boot/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java	2016-07-28 20:26:30.394383115 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java	2016-07-28 21:15:43.182226311 +0100
-@@ -525,44 +525,39 @@
-                 if (ku != null) {
-                     String algorithm = cert.getPublicKey().getAlgorithm();
-                     boolean kuSignature = getBit(ku, 0);
--                    switch (algorithm) {
--                        case "RSA":
--                            // require either signature bit
--                            // or if server also allow key encipherment bit
--                            if (kuSignature == false) {
--                                if ((this == CLIENT) || (getBit(ku, 2) == false)) {
--                                    return CheckResult.EXTENSION_MISMATCH;
--                                }
--                            }
--                            break;
--                        case "DSA":
--                            // require signature bit
--                            if (kuSignature == false) {
--                                return CheckResult.EXTENSION_MISMATCH;
--                            }
--                            break;
--                        case "DH":
--                            // require keyagreement bit
--                            if (getBit(ku, 4) == false) {
--                                return CheckResult.EXTENSION_MISMATCH;
--                            }
--                            break;
--                        case "EC":
--                            // require signature bit
--                            if (kuSignature == false) {
--                                return CheckResult.EXTENSION_MISMATCH;
--                            }
--                            // For servers, also require key agreement.
--                            // This is not totally accurate as the keyAgreement bit
--                            // is only necessary for static ECDH key exchange and
--                            // not ephemeral ECDH. We leave it in for now until
--                            // there are signs that this check causes problems
--                            // for real world EC certificates.
--                            if ((this == SERVER) && (getBit(ku, 4) == false)) {
--                                return CheckResult.EXTENSION_MISMATCH;
--                            }
--                            break;
--                    }
-+		    if ("RSA".equals(algorithm)) {
-+			// require either signature bit
-+			// or if server also allow key encipherment bit
-+			if (kuSignature == false) {
-+			    if ((this == CLIENT) || (getBit(ku, 2) == false)) {
-+				return CheckResult.EXTENSION_MISMATCH;
-+			    }
-+			}
-+		    } else if ("DSA".equals(algorithm)) {
-+			// require signature bit
-+			if (kuSignature == false) {
-+			    return CheckResult.EXTENSION_MISMATCH;
-+			}
-+		    } else if ("DH".equals(algorithm)) {
-+			// require keyagreement bit
-+			if (getBit(ku, 4) == false) {
-+			    return CheckResult.EXTENSION_MISMATCH;
-+			}
-+		    } else if ("EC".equals(algorithm)) {
-+			// require signature bit
-+			if (kuSignature == false) {
-+			    return CheckResult.EXTENSION_MISMATCH;
-+			}
-+			// For servers, also require key agreement.
-+			// This is not totally accurate as the keyAgreement bit
-+			// is only necessary for static ECDH key exchange and
-+			// not ephemeral ECDH. We leave it in for now until
-+			// there are signs that this check causes problems
-+			// for real world EC certificates.
-+			if ((this == SERVER) && (getBit(ku, 4) == false)) {
-+			    return CheckResult.EXTENSION_MISMATCH;
-+			}
-+		    }
-                 }
-             } catch (CertificateException e) {
-                 // extensions unparseable, return failure
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/Config.java openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/Config.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/Config.java	2016-07-28 23:01:40.162337121 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/Config.java	2016-07-28 23:06:45.089325474 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/Config.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/Config.java	2017-02-07 05:07:53.531497571 +0000
 @@ -574,13 +574,12 @@
  
      private boolean parseBoolean() throws IOException {
@@ -880,8 +775,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/Config.jav
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11Key.java openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11Key.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11Key.java	2016-07-28 23:01:47.882210219 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11Key.java	2016-07-28 23:04:51.603190476 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11Key.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11Key.java	2017-02-07 05:07:53.531497571 +0000
 @@ -304,22 +304,21 @@
      // we assume that all components of public keys are always accessible
      static PublicKey publicKey(Session session, long keyID, String algorithm,
@@ -1000,172 +895,654 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11Key.jav
              }
          }
      }
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java	2016-07-29 01:11:46.993987445 +0100
-@@ -1579,21 +1579,18 @@
-         KeySpec spec = null;
-         SecretKeyFactory desFactory =
-             SecretKeyFactory.getInstance(desStrength);
--        switch (desStrength) {
--            case "des":
--                spec = new DESKeySpec(subkey1, 0);
--                if (logger.isLoggable(Level.FINEST)) {
--                    traceOutput(DP_CLASS_NAME, "makeDesKeys",
--                        "DIGEST42:DES key input: ", input);
--                    traceOutput(DP_CLASS_NAME, "makeDesKeys",
--                        "DIGEST43:DES key parity-adjusted: ", subkey1);
--                    traceOutput(DP_CLASS_NAME, "makeDesKeys",
--                        "DIGEST44:DES key material: ", ((DESKeySpec)spec).getKey());
--                    logger.log(Level.FINEST, "DIGEST45: is parity-adjusted? {0}",
--                        Boolean.valueOf(DESKeySpec.isParityAdjusted(subkey1, 0)));
--                }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java	2017-02-07 05:07:53.531497571 +0000
+@@ -153,15 +153,12 @@
+             throws CertificateException {
+         super("X.509");
+ 
+-        switch (encoding) {
+-            case PKIPATH_ENCODING:
+-                certs = parsePKIPATH(is);
 -                break;
--            case "desede":
-+	if ("des".equals(desStrength)) {
-+	    spec = new DESKeySpec(subkey1, 0);
-+	    if (logger.isLoggable(Level.FINEST)) {
-+		traceOutput(DP_CLASS_NAME, "makeDesKeys",
-+			    "DIGEST42:DES key input: ", input);
-+		traceOutput(DP_CLASS_NAME, "makeDesKeys",
-+			    "DIGEST43:DES key parity-adjusted: ", subkey1);
-+		traceOutput(DP_CLASS_NAME, "makeDesKeys",
-+			    "DIGEST44:DES key material: ", ((DESKeySpec)spec).getKey());
-+		logger.log(Level.FINEST, "DIGEST45: is parity-adjusted? {0}",
-+			   Boolean.valueOf(DESKeySpec.isParityAdjusted(subkey1, 0)));
-+	    } else if ("desede".equals(desStrength)) {
-                 // Generate second subkey using second 7 bytes
-                 byte[] subkey2 = addDesParity(input, 7, 7);
-                 // Construct 24-byte encryption-decryption-encryption sequence
-@@ -1614,10 +1611,10 @@
-                     logger.log(Level.FINEST, "DIGEST49: is parity-adjusted? ",
-                         Boolean.valueOf(DESedeKeySpec.isParityAdjusted(ede, 0)));
+-            case PKCS7_ENCODING:
+-                certs = parsePKCS7(is);
+-                break;
+-            default:
+-                throw new CertificateException("unsupported encoding");
++	if (PKIPATH_ENCODING.equals(encoding)) {
++	    certs = parsePKIPATH(is);
++	} else if (PKCS7_ENCODING.equals(encoding)) {
++	    certs = parsePKCS7(is);
++	} else {
++	    throw new CertificateException("unsupported encoding");
+         }
+     }
+ 
+@@ -344,14 +341,12 @@
+      */
+     public byte[] getEncoded(String encoding)
+             throws CertificateEncodingException {
+-        switch (encoding) {
+-            case PKIPATH_ENCODING:
+-                return encodePKIPATH();
+-            case PKCS7_ENCODING:
+-                return encodePKCS7();
+-            default:
+-                throw new CertificateEncodingException("unsupported encoding");
+-        }
++	if (PKIPATH_ENCODING.equals(encoding)) {
++	    return encodePKIPATH();
++	} else if (PKCS7_ENCODING.equals(encoding)) {
++	    return encodePKCS7();
++	}
++	throw new CertificateEncodingException("unsupported encoding");
+     }
+ 
+     /**
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java openjdk-boot/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java	2017-02-07 05:07:53.531497571 +0000
+@@ -818,16 +818,13 @@
+             sig = JsseJce.getSignature(
+                         preferableSignatureAlgorithm.getAlgorithmName());
+         } else {
+-                switch (algorithm) {
+-                    case "DSA":
+-                        sig = JsseJce.getSignature(JsseJce.SIGNATURE_DSA);
+-                        break;
+-                    case "RSA":
+-                        sig = RSASignature.getInstance();
+-                        break;
+-                    default:
+-                        throw new SSLKeyException("neither an RSA or a DSA key");
+-                }
++	    if ("DSA".equals(algorithm)) {
++		sig = JsseJce.getSignature(JsseJce.SIGNATURE_DSA);
++	    } else if ("RSA".equals(algorithm)) {
++		sig = RSASignature.getInstance();
++	    } else {
++		throw new SSLKeyException("neither an RSA or a DSA key");
++	    }
+         }
+ 
+         sig.initVerify(publicKey);
+@@ -1107,14 +1104,13 @@
+ 
+     private static Signature getSignature(String keyAlgorithm)
+             throws NoSuchAlgorithmException {
+-            switch (keyAlgorithm) {
+-                case "EC":
+-                    return JsseJce.getSignature(JsseJce.SIGNATURE_ECDSA);
+-                case "RSA":
+-                    return RSASignature.getInstance();
+-                default:
+-                    throw new NoSuchAlgorithmException("neither an RSA or a EC key");
+-            }
++	if ("EC".equals(keyAlgorithm)) {
++	    return JsseJce.getSignature(JsseJce.SIGNATURE_ECDSA);
++	} else if ("RSA".equals(keyAlgorithm)) {
++	    return RSASignature.getInstance();
++	} else {
++	    throw new NoSuchAlgorithmException("neither an RSA or a EC key");
++	}
+     }
+ 
+     private void updateSignature(Signature sig, byte clntNonce[],
+@@ -1622,17 +1618,16 @@
+      */
+     private static Signature getSignature(ProtocolVersion protocolVersion,
+             String algorithm) throws GeneralSecurityException {
+-            switch (algorithm) {
+-                case "RSA":
+-                    return RSASignature.getInternalInstance();
+-                case "DSA":
+-                    return JsseJce.getSignature(JsseJce.SIGNATURE_RAWDSA);
+-                case "EC":
+-                    return JsseJce.getSignature(JsseJce.SIGNATURE_RAWECDSA);
+-                default:
+-                    throw new SignatureException("Unrecognized algorithm: "
+-                        + algorithm);
+-            }
++	if ("RSA".equals(algorithm)) {
++	    return RSASignature.getInternalInstance();
++	} else if ("DSA".equals(algorithm)) {
++	    return JsseJce.getSignature(JsseJce.SIGNATURE_RAWDSA);
++	} else if ("EC".equals(algorithm)) {
++	    return JsseJce.getSignature(JsseJce.SIGNATURE_RAWECDSA);
++	} else {
++	    throw new SignatureException("Unrecognized algorithm: "
++					 + algorithm);
++	}
+     }
+ 
+     /*
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java openjdk-boot/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java	2017-02-07 05:07:53.531497571 +0000
+@@ -525,44 +525,39 @@
+                 if (ku != null) {
+                     String algorithm = cert.getPublicKey().getAlgorithm();
+                     boolean kuSignature = getBit(ku, 0);
+-                    switch (algorithm) {
+-                        case "RSA":
+-                            // require either signature bit
+-                            // or if server also allow key encipherment bit
+-                            if (kuSignature == false) {
+-                                if ((this == CLIENT) || (getBit(ku, 2) == false)) {
+-                                    return CheckResult.EXTENSION_MISMATCH;
+-                                }
+-                            }
+-                            break;
+-                        case "DSA":
+-                            // require signature bit
+-                            if (kuSignature == false) {
+-                                return CheckResult.EXTENSION_MISMATCH;
+-                            }
+-                            break;
+-                        case "DH":
+-                            // require keyagreement bit
+-                            if (getBit(ku, 4) == false) {
+-                                return CheckResult.EXTENSION_MISMATCH;
+-                            }
+-                            break;
+-                        case "EC":
+-                            // require signature bit
+-                            if (kuSignature == false) {
+-                                return CheckResult.EXTENSION_MISMATCH;
+-                            }
+-                            // For servers, also require key agreement.
+-                            // This is not totally accurate as the keyAgreement bit
+-                            // is only necessary for static ECDH key exchange and
+-                            // not ephemeral ECDH. We leave it in for now until
+-                            // there are signs that this check causes problems
+-                            // for real world EC certificates.
+-                            if ((this == SERVER) && (getBit(ku, 4) == false)) {
+-                                return CheckResult.EXTENSION_MISMATCH;
+-                            }
+-                            break;
+-                    }
++		    if ("RSA".equals(algorithm)) {
++			// require either signature bit
++			// or if server also allow key encipherment bit
++			if (kuSignature == false) {
++			    if ((this == CLIENT) || (getBit(ku, 2) == false)) {
++				return CheckResult.EXTENSION_MISMATCH;
++			    }
++			}
++		    } else if ("DSA".equals(algorithm)) {
++			// require signature bit
++			if (kuSignature == false) {
++			    return CheckResult.EXTENSION_MISMATCH;
++			}
++		    } else if ("DH".equals(algorithm)) {
++			// require keyagreement bit
++			if (getBit(ku, 4) == false) {
++			    return CheckResult.EXTENSION_MISMATCH;
++			}
++		    } else if ("EC".equals(algorithm)) {
++			// require signature bit
++			if (kuSignature == false) {
++			    return CheckResult.EXTENSION_MISMATCH;
++			}
++			// For servers, also require key agreement.
++			// This is not totally accurate as the keyAgreement bit
++			// is only necessary for static ECDH key exchange and
++			// not ephemeral ECDH. We leave it in for now until
++			// there are signs that this check causes problems
++			// for real world EC certificates.
++			if ((this == SERVER) && (getBit(ku, 4) == false)) {
++			    return CheckResult.EXTENSION_MISMATCH;
++			}
++		    }
                  }
+             } catch (CertificateException e) {
+                 // extensions unparseable, return failure
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2017-02-07 05:08:33.614848980 +0000
+@@ -387,19 +387,23 @@
+             GE;         // ">="
+ 
+             static Operator of(String s) {
+-                switch (s) {
+-                    case "==":
+-                        return EQ;
+-                    case "!=":
+-                        return NE;
+-                    case "<":
+-                        return LT;
+-                    case "<=":
+-                        return LE;
+-                    case ">":
+-                        return GT;
+-                    case ">=":
+-                        return GE;
++                if ("==".equals(s)) {
++                    return EQ;
++                }
++                if ("!=".equals(s)) {
++                    return NE;
++                }
++                if ("<".equals(s)) {
++                    return LT;
++                }
++                if ("<=".equals(s)) {
++                    return LE;
++                }
++                if (">".equals(s)) {
++                    return GT;
++                }
++                if (">=".equals(s)) {
++                    return GE;
+                 }
+ 
+                 throw new IllegalArgumentException("Error in security " +
+diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java openjdk-boot/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java	2017-02-07 04:14:25.000000000 +0000
++++ openjdk-boot/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java	2017-02-07 05:07:53.531497571 +0000
+@@ -101,19 +101,17 @@
+         k = lib.indexOf("$ARCH");
+         if (k != -1) {
+             String arch = System.getProperty("os.arch");
+-            switch (arch) {
+-            case "amd64":
++	    if ("amd64".equals(arch)) {
+                 arch = "x86_64";
 -                break;
--            default:
-+	    } else {
-                 throw new IllegalArgumentException("Invalid DES strength:" +
--                    desStrength);
-+						   desStrength);
+-            case "ppc":
 +	    }
++	    if ("ppc".equals(arch)) {
+                 arch = "powerpc";
+-                break;
+-            case "ppc64":
++	    }
++	    if ("ppc64".equals(arch)) {
+                 arch = "powerpc64";
+-                break;
+-            case "ppc64le":
++	    }
++            if ("ppc64le".equals(arch)) {
+                 arch = "powerpc64le";
+-                break;
+             }
+             lib = replace(k, lib, "$ARCH", arch);
          }
-         return desFactory.generateSecret(spec);
-     }
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java	2016-07-29 01:24:49.757268557 +0100
-@@ -461,21 +461,17 @@
- 
-         // Check that QOP is one sent by server
-         byte cQop;
--        switch (negotiatedQop) {
--            case "auth":
-+        if ("auth".equals(negotiatedQop)) {
-                 cQop = NO_PROTECTION;
--                break;
--            case "auth-int":
-+	} else if ("auth-int".equals(negotiatedQop)) {
-                 cQop = INTEGRITY_ONLY_PROTECTION;
-                 integrity = true;
-                 rawSendSize = sendMaxBufSize - 16;
--                break;
--            case "auth-conf":
-+	} else if ("auth-conf".equals(negotiatedQop)) {
-                 cQop = PRIVACY_PROTECTION;
-                 integrity = privacy = true;
-                 rawSendSize = sendMaxBufSize - 26;
--                break;
--            default:
-+	} else {
-                 throw new SaslException("DIGEST-MD5: digest response format " +
-                     "violation. Invalid QOP: " + negotiatedQop);
-         }
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java	2016-07-29 01:26:53.563255481 +0100
-@@ -205,13 +205,12 @@
-         if (!isComplete()) {
-             throw new IllegalStateException("authentication not complete");
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java	2017-02-13 05:37:09.622730053 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java	2017-02-13 05:50:45.429236373 +0000
+@@ -2163,66 +2163,50 @@
+         if (envprops == null || envprops.get(propName) == null) {
+             return null;
          }
 -        switch (propName) {
--            case Sasl.QOP:
--                return "auth";
--            case NTLM_DOMAIN:
--                return client.getDomain();
--            default:
--                return null;
-+	if (Sasl.QOP.equals(propName)) {
-+	    return "auth";
-+	} else if (NTLM_DOMAIN.equals(propName)) {
-+	    return client.getDomain();
-+	} else {
-+	    return null;
-         }
-     }
+-            case REF_SEPARATOR:
+-                addrEncodingSeparator = DEFAULT_REF_SEPARATOR;
+-                break;
+-            case TYPES_ONLY:
+-                typesOnly = DEFAULT_TYPES_ONLY;
+-                break;
+-            case DELETE_RDN:
+-                deleteRDN = DEFAULT_DELETE_RDN;
+-                break;
+-            case DEREF_ALIASES:
+-                derefAliases = DEFAULT_DEREF_ALIASES;
+-                break;
+-            case Context.BATCHSIZE:
+-                batchSize = DEFAULT_BATCH_SIZE;
+-                break;
+-            case REFERRAL_LIMIT:
+-                referralHopLimit = DEFAULT_REFERRAL_LIMIT;
+-                break;
+-            case Context.REFERRAL:
+-                setReferralMode(null, true);
+-                break;
+-            case BINARY_ATTRIBUTES:
+-                setBinaryAttributes(null);
+-                break;
+-            case CONNECT_TIMEOUT:
+-                connectTimeout = -1;
+-                break;
+-            case READ_TIMEOUT:
+-                readTimeout = -1;
+-                break;
+-            case WAIT_FOR_REPLY:
+-                waitForReply = true;
+-                break;
+-            case REPLY_QUEUE_SIZE:
+-                replyQueueSize = -1;
+-                break;
++        if (REF_SEPARATOR.equals(propName)) {
++	    addrEncodingSeparator = DEFAULT_REF_SEPARATOR;
++	} else if (TYPES_ONLY.equals(propName)) {
++	    typesOnly = DEFAULT_TYPES_ONLY;
++	} else if (DELETE_RDN.equals(propName)) {
++	    deleteRDN = DEFAULT_DELETE_RDN;
++	} else if (DEREF_ALIASES.equals(propName)) {
++	    derefAliases = DEFAULT_DEREF_ALIASES;
++	} else if (Context.BATCHSIZE.equals(propName)) {
++	    batchSize = DEFAULT_BATCH_SIZE;
++	} else if (REFERRAL_LIMIT.equals(propName)) {
++	    referralHopLimit = DEFAULT_REFERRAL_LIMIT;
++	} else if (Context.REFERRAL.equals(propName)) {
++	    setReferralMode(null, true);
++	} else if (BINARY_ATTRIBUTES.equals(propName)) {
++	    setBinaryAttributes(null);
++	} else if (CONNECT_TIMEOUT.equals(propName)) {
++	    connectTimeout = -1;
++	} else if (READ_TIMEOUT.equals(propName)) {
++	    readTimeout = -1;
++	} else if (WAIT_FOR_REPLY.equals(propName)) {
++	    waitForReply = true;
++	} else if (REPLY_QUEUE_SIZE.equals(propName)) {
++	    replyQueueSize = -1;
  
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java	2016-07-29 01:28:53.801300086 +0100
-@@ -219,13 +219,12 @@
-         if (!isComplete()) {
-             throw new IllegalStateException("authentication not complete");
-         }
--        switch (propName) {
--            case Sasl.QOP:
--                return "auth";
--            case NTLM_HOSTNAME:
--                return hostname;
--            default:
--                return null;
-+	if (propName.equals(Sasl.QOP)) {
-+	    return "auth";
-+	} else if (propName.equals(NTLM_HOSTNAME)) {
-+	    return hostname;
-+	} else {
-+	    return null;
-         }
-     }
+             // The following properties affect the connection
  
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java	2016-07-28 14:59:45.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java	2016-07-29 01:30:13.696000605 +0100
-@@ -155,23 +155,22 @@
-         if (!completed) {
-             throw new IllegalStateException("SASL authentication not completed");
-         }
--        switch (propName) {
--            case Sasl.QOP:
--                if (privacy) {
--                    return "auth-conf";
--                } else if (integrity) {
--                    return "auth-int";
--                } else {
--                    return "auth";
+-            case Context.SECURITY_PROTOCOL:
+-                closeConnection(SOFT_CLOSE);
+-                // De-activate SSL and reset the context's url and port number
+-                if (useSsl && !hasLdapsScheme) {
+-                    useSsl = false;
+-                    url = null;
+-                    if (useDefaultPortNumber) {
+-                        port_number = DEFAULT_PORT;
+-                    }
 -                }
--            case Sasl.MAX_BUFFER:
--                return Integer.toString(recvMaxBufSize);
--            case Sasl.RAW_SEND_SIZE:
--                return Integer.toString(rawSendSize);
--            case MAX_SEND_BUF:
--                return Integer.toString(sendMaxBufSize);
--            default:
--                return null;
-+	if (Sasl.QOP.equals(propName)) {
-+	    if (privacy) {
-+		return "auth-conf";
-+	    } else if (integrity) {
-+		return "auth-int";
-+	    } else {
-+		return "auth";
+-                break;
+-            case VERSION:
+-            case SOCKET_FACTORY:
+-                closeConnection(SOFT_CLOSE);
+-                break;
+-            case Context.SECURITY_AUTHENTICATION:
+-            case Context.SECURITY_PRINCIPAL:
+-            case Context.SECURITY_CREDENTIALS:
+-                sharable = false;
+-                break;
++	} else if (Context.SECURITY_PROTOCOL.equals(propName)) {
++	    closeConnection(SOFT_CLOSE);
++	    // De-activate SSL and reset the context's url and port number
++	    if (useSsl && !hasLdapsScheme) {
++		useSsl = false;
++		url = null;
++		if (useDefaultPortNumber) {
++		    port_number = DEFAULT_PORT;
++		}
 +	    }
-+	} else if (Sasl.MAX_BUFFER.equals(propName)) {
-+	    return Integer.toString(recvMaxBufSize);
-+	} else if (Sasl.RAW_SEND_SIZE.equals(propName)) {
-+	    return Integer.toString(rawSendSize);
-+	} else if (MAX_SEND_BUF.equals(propName)) {
-+	    return Integer.toString(sendMaxBufSize);
-+	} else {
-+	    return null;
++	} else if (VERSION.equals(propName) ||
++		   SOCKET_FACTORY.equals(propName)) {
++	    closeConnection(SOFT_CLOSE);
++	} else if (Context.SECURITY_AUTHENTICATION.equals(propName) ||
++		   Context.SECURITY_PRINCIPAL.equals(propName) ||
++		   Context.SECURITY_CREDENTIALS.equals(propName)) {
++	    sharable = false;
+         }
+ 
+         // Update environment; reconnection will use new props
+@@ -2238,66 +2222,50 @@
+             if (propVal == null) {
+                 return removeFromEnvironment(propName);
+             }
+-            switch (propName) {
+-                case REF_SEPARATOR:
+-                    setRefSeparator((String)propVal);
+-                    break;
+-                case TYPES_ONLY:
+-                    setTypesOnly((String)propVal);
+-                    break;
+-                case DELETE_RDN:
+-                    setDeleteRDN((String)propVal);
+-                    break;
+-                case DEREF_ALIASES:
+-                    setDerefAliases((String)propVal);
+-                    break;
+-                case Context.BATCHSIZE:
+-                    setBatchSize((String)propVal);
+-                    break;
+-                case REFERRAL_LIMIT:
+-                    setReferralLimit((String)propVal);
+-                    break;
+-                case Context.REFERRAL:
+-                    setReferralMode((String)propVal, true);
+-                    break;
+-                case BINARY_ATTRIBUTES:
+-                    setBinaryAttributes((String)propVal);
+-                    break;
+-                case CONNECT_TIMEOUT:
+-                    setConnectTimeout((String)propVal);
+-                    break;
+-                case READ_TIMEOUT:
+-                    setReadTimeout((String)propVal);
+-                    break;
+-                case WAIT_FOR_REPLY:
+-                    setWaitForReply((String)propVal);
+-                    break;
+-                case REPLY_QUEUE_SIZE:
+-                    setReplyQueueSize((String)propVal);
+-                    break;
+-
++            if (REF_SEPARATOR.equals(propName)) {
++		setRefSeparator((String)propVal);
++	    } else if (TYPES_ONLY.equals(propName)) {
++		setTypesOnly((String)propVal);
++	    } else if (DELETE_RDN.equals(propName)) {
++		setDeleteRDN((String)propVal);
++	    } else if (DEREF_ALIASES.equals(propName)) {
++		setDerefAliases((String)propVal);
++	    } else if (Context.BATCHSIZE.equals(propName)) {
++		setBatchSize((String)propVal);
++            } else if (REFERRAL_LIMIT.equals(propName)) {
++		setReferralLimit((String)propVal);
++            } else if (Context.REFERRAL.equals(propName)) {
++		setReferralMode((String)propVal, true);
++	    } else if (BINARY_ATTRIBUTES.equals(propName)) {
++		setBinaryAttributes((String)propVal);
++            } else if (CONNECT_TIMEOUT.equals(propName)) {
++		setConnectTimeout((String)propVal);
++	    } else if (READ_TIMEOUT.equals(propName)) {
++		setReadTimeout((String)propVal);
++	    } else if (WAIT_FOR_REPLY.equals(propName)) {
++		setWaitForReply((String)propVal);
++	    } else if (REPLY_QUEUE_SIZE.equals(propName)) {
++		setReplyQueueSize((String)propVal);
++		
+             // The following properties affect the connection
+ 
+-                case Context.SECURITY_PROTOCOL:
+-                    closeConnection(SOFT_CLOSE);
+-                    // Activate SSL and reset the context's url and port number
+-                    if ("ssl".equals(propVal)) {
+-                        useSsl = true;
+-                        url = null;
+-                        if (useDefaultPortNumber) {
+-                            port_number = DEFAULT_SSL_PORT;
+-                        }
+-                    }
+-                    break;
+-                case VERSION:
+-                case SOCKET_FACTORY:
+-                    closeConnection(SOFT_CLOSE);
+-                    break;
+-                case Context.SECURITY_AUTHENTICATION:
+-                case Context.SECURITY_PRINCIPAL:
+-                case Context.SECURITY_CREDENTIALS:
+-                    sharable = false;
+-                    break;
++	    } else if (Context.SECURITY_PROTOCOL.equals(propName)) {
++		closeConnection(SOFT_CLOSE);
++		// Activate SSL and reset the context's url and port number
++		if ("ssl".equals(propVal)) {
++		    useSsl = true;
++		    url = null;
++		    if (useDefaultPortNumber) {
++			port_number = DEFAULT_SSL_PORT;
++		    }
++		}
++	    } else if (VERSION.equals(propName) ||
++		       SOCKET_FACTORY.equals(propName)) {
++		closeConnection(SOFT_CLOSE);
++	    } else if (Context.SECURITY_AUTHENTICATION.equals(propName) ||
++		       Context.SECURITY_PRINCIPAL.equals(propName) ||
++		       Context.SECURITY_CREDENTIALS.equals(propName)) {
++		sharable = false;
+             }
+ 
+             // Update environment; reconnection will use new props
+@@ -2414,19 +2382,15 @@
+     private void setReferralMode(String ref, boolean update) {
+         // First determine the referral mode
+         if (ref != null) {
+-            switch (ref) {
+-                case "follow":
+-                    handleReferrals = LdapClient.LDAP_REF_FOLLOW;
+-                    break;
+-                case "throw":
+-                    handleReferrals = LdapClient.LDAP_REF_THROW;
+-                    break;
+-                case "ignore":
+-                    handleReferrals = LdapClient.LDAP_REF_IGNORE;
+-                    break;
+-                default:
+-                    throw new IllegalArgumentException(
+-                        "Illegal value for " + Context.REFERRAL + " property.");
++	    if ("follow".equals(ref)) {
++		handleReferrals = LdapClient.LDAP_REF_FOLLOW;
++	    } else if ("throw".equals(ref)) {
++		handleReferrals = LdapClient.LDAP_REF_THROW;
++	    } else if ("ignore".equals(ref)) {
++		handleReferrals = LdapClient.LDAP_REF_IGNORE;
++	    } else {
++		throw new IllegalArgumentException(
++		    "Illegal value for " + Context.REFERRAL + " property.");
+             }
+         } else {
+             handleReferrals = DEFAULT_REFERRAL_MODE;
+@@ -2449,20 +2413,15 @@
+      */
+     private void setDerefAliases(String deref) {
+         if (deref != null) {
+-            switch (deref) {
+-                case "never":
+-                    derefAliases = 0; // never de-reference aliases
+-                    break;
+-                case "searching":
++	    if ("never".equals(deref)) {
++		derefAliases = 0; // never de-reference aliases
++	    } else if ("searching".equals(deref)) {
+                     derefAliases = 1; // de-reference aliases during searching
+-                    break;
+-                case "finding":
+-                    derefAliases = 2; // de-reference during name resolution
+-                    break;
+-                case "always":
+-                    derefAliases = 3; // always de-reference aliases
+-                    break;
+-                default:
++	    } else if ("finding".equals(deref)) {
++		derefAliases = 2; // de-reference during name resolution
++	    } else if ("always".equals(deref)) {
++		derefAliases = 3; // always de-reference aliases
++	    } else {
+                     throw new IllegalArgumentException("Illegal value for " +
+                         DEREF_ALIASES + " property.");
+             }
+--- openjdk-boot.orig/jdk/src/share/classes/org/jcp/xml/dsig/internal/dom/Policy.java	2017-02-13 06:42:40.829574277 +0000
++++ openjdk-boot/jdk/src/share/classes/org/jcp/xml/dsig/internal/dom/Policy.java	2017-02-13 06:44:45.115531813 +0000
+@@ -81,56 +81,47 @@
+         for (String entry : entries) {
+             String[] tokens = entry.split("\\s");
+             String type = tokens[0];
+-            switch(type) {
+-                case "disallowAlg":
+-                    if (tokens.length != 2) {
+-                        error(entry);
+-                    }
+-                    disallowedAlgs.add(URI.create(tokens[1]));
+-                    break;
+-                case "maxTransforms":
+-                    if (tokens.length != 2) {
+-                        error(entry);
+-                    }
+-                    maxTrans = Parsing.parseUnsignedInt(tokens[1]);
+-                    break;
+-                case "maxReferences":
+-                    if (tokens.length != 2) {
+-                        error(entry);
+-                    }
+-                    maxRefs = Parsing.parseUnsignedInt(tokens[1]);
+-                    break;
+-                case "disallowReferenceUriSchemes":
+-                    if (tokens.length == 1) {
+-                        error(entry);
+-                    }
+-                    for (int i = 1; i < tokens.length; i++) {
+-                        String scheme = tokens[i];
+-                        disallowedRefUriSchemes.add(
+-                            scheme.toLowerCase(Locale.ROOT));
+-                    }
+-                    break;
+-                case "minKeySize":
+-                    if (tokens.length != 3) {
+-                        error(entry);
+-                    }
+-                    minKeyMap.put(tokens[1],
+-                                  Parsing.parseUnsignedInt(tokens[2]));
+-                    break;
+-                case "noDuplicateIds":
+-                    if (tokens.length != 1) {
+-                        error(entry);
+-                    }
+-                    noDuplicateIds = true;
+-                    break;
+-                case "noRetrievalMethodLoops":
+-                    if (tokens.length != 1) {
+-                        error(entry);
+-                    }
+-                    noRMLoops = true;
+-                    break;
+-                default:
++            if ("disallowAlg".equals(type)) {
++                if (tokens.length != 2) {
+                     error(entry);
++                }
++                disallowedAlgs.add(URI.create(tokens[1]));
++            } else if ("maxTransforms".equals(type)) {
++                if (tokens.length != 2) {
++                    error(entry);
++                }
++                maxTrans = Parsing.parseUnsignedInt(tokens[1]);
++            } else if ("maxReferences".equals(type)) {
++                if (tokens.length != 2) {
++                    error(entry);
++                }
++                maxRefs = Parsing.parseUnsignedInt(tokens[1]);
++            } else if ("disallowReferenceUriSchemes".equals(type)) {
++                if (tokens.length == 1) {
++                    error(entry);
++                }
++                for (int i = 1; i < tokens.length; i++) {
++                    String scheme = tokens[i];
++                    disallowedRefUriSchemes.add(scheme.toLowerCase(Locale.ROOT));
++                }
++            } else if ("minKeySize".equals(type)) {
++                if (tokens.length != 3) {
++                    error(entry);
++                }
++                minKeyMap.put(tokens[1],
++                              Parsing.parseUnsignedInt(tokens[2]));
++            } else if ("noDuplicateIds".equals(type)) {
++                if (tokens.length != 1) {
++                    error(entry);
++                }
++                noDuplicateIds = true;
++            } else if ("noRetrievalMethodLoops".equals(type)) {
++                if (tokens.length != 1) {
++                    error(entry);
++                }
++                noRMLoops = true;
++            } else {
++                error(entry);
+             }
          }
      }
- 

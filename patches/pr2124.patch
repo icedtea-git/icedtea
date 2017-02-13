@@ -484,3 +484,60 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
          SPLIT_PATTERN = null;
      }
  
+diff --git a/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java b/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
+--- openjdk/jdk/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
++++ openjdk/jdk/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
+@@ -62,29 +62,6 @@
+ 
+     // See sun.security.util.CurveDB for the OIDs
+     private static enum NamedEllipticCurve {
+-        T163_K1(1,  "sect163k1",    "1.3.132.0.1",      true),  // NIST K-163
+-        T163_R1(2,  "sect163r1",    "1.3.132.0.2",      false),
+-        T163_R2(3,  "sect163r2",    "1.3.132.0.15",     true),  // NIST B-163
+-        T193_R1(4,  "sect193r1",    "1.3.132.0.24",     false),
+-        T193_R2(5,  "sect193r2",    "1.3.132.0.25",     false),
+-        T233_K1(6,  "sect233k1",    "1.3.132.0.26",     true),  // NIST K-233
+-        T233_R1(7,  "sect233r1",    "1.3.132.0.27",     true),  // NIST B-233
+-        T239_K1(8,  "sect239k1",    "1.3.132.0.3",      false),
+-        T283_K1(9,  "sect283k1",    "1.3.132.0.16",     true),  // NIST K-283
+-        T283_R1(10, "sect283r1",    "1.3.132.0.17",     true),  // NIST B-283
+-        T409_K1(11, "sect409k1",    "1.3.132.0.36",     true),  // NIST K-409
+-        T409_R1(12, "sect409r1",    "1.3.132.0.37",     true),  // NIST B-409
+-        T571_K1(13, "sect571k1",    "1.3.132.0.38",     true),  // NIST K-571
+-        T571_R1(14, "sect571r1",    "1.3.132.0.39",     true),  // NIST B-571
+-
+-        P160_K1(15, "secp160k1",    "1.3.132.0.9",      false),
+-        P160_R1(16, "secp160r1",    "1.3.132.0.8",      false),
+-        P160_R2(17, "secp160r2",    "1.3.132.0.30",     false),
+-        P192_K1(18, "secp192k1",    "1.3.132.0.31",     false),
+-        P192_R1(19, "secp192r1",    "1.2.840.10045.3.1.1", true), // NIST P-192
+-        P224_K1(20, "secp224k1",    "1.3.132.0.32",     false),
+-        P224_R1(21, "secp224r1",    "1.3.132.0.33",     true),  // NIST P-224
+-        P256_K1(22, "secp256k1",    "1.3.132.0.10",     false),
+         P256_R1(23, "secp256r1",    "1.2.840.10045.3.1.7", true), // NIST P-256
+         P384_R1(24, "secp384r1",    "1.3.132.0.34",     true),  // NIST P-384
+         P521_R1(25, "secp521r1",    "1.3.132.0.35",     true);  // NIST P-521
+diff --git a/test/sun/security/ec/TestEC.java b/test/sun/security/ec/TestEC.java
+--- openjdk/jdk/test/sun/security/ec/TestEC.java
++++ openjdk/jdk/test/sun/security/ec/TestEC.java
+@@ -35,7 +35,7 @@
+  * @library ../pkcs11/sslecc
+  * @library ../../../java/security/testlibrary
+  * @compile -XDignore.symbol.file TestEC.java
+- * @run main/othervm -Djdk.tls.namedGroups="secp256r1,sect193r1" TestEC
++ * @run main/othervm -Djdk.tls.namedGroups="secp256r1" TestEC
+  */
+ 
+ import java.security.NoSuchProviderException;
+diff --git a/test/sun/security/ssl/sanity/interop/ClientJSSEServerJSSE.java b/test/sun/security/ssl/sanity/interop/ClientJSSEServerJSSE.java
+--- openjdk/jdk/test/sun/security/ssl/sanity/interop/ClientJSSEServerJSSE.java
++++ openjdk/jdk/test/sun/security/ssl/sanity/interop/ClientJSSEServerJSSE.java
+@@ -26,7 +26,7 @@
+  * @bug 4496785
+  * @summary Verify that all ciphersuites work in all configurations
+  * @author Andreas Sterbenz
+- * @run main/othervm/timeout=300 -Djdk.tls.namedGroups="secp256r1,secp192r1"
++ * @run main/othervm/timeout=300 -Djdk.tls.namedGroups="secp256r1"
+  *      ClientJSSEServerJSSE
+  */
+ 
