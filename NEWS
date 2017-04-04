@@ -16,6 +16,7 @@ New in release 2.7.0 (201X-XX-XX):
 
 * New features
   - PR3180: Support building without pre-compiled headers
+  - PR3347: jstack.stp should support AArch64
 * Backports
   - S8076221, PR2809, RH1302385: Disable RC4 cipher suites
 * Bug fixes
