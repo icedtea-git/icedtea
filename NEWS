@@ -12,6 +12,9 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.4.0 (2017-04-XX):
 
+* New features
+  - PR3340: jstack.stp should support AArch64
+
 New in release 3.3.0 (2017-01-28):
 
 * Security fixes

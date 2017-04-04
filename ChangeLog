@@ -1,3 +1,13 @@
+2017-03-15  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3340: jstack.stp should support AArch64
+	Patch by Andrew Dinn <adinn@redhat.com>
+	and Mark Wielaard <mjw@redhat.com>
+	* AUTHORS: Add Andrew Dinn.
+	* NEWS: Updated.
+	* tapset/jstack.stp.in:
+	Add AArch64 support.
+
 2017-02-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Set release date of 3.3.0.

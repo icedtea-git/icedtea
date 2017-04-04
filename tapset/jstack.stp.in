@@ -101,8 +101,14 @@ probe hotspot.vm_init_end8
      pc_register = "rip";
      ptr_size = 8; // XXX - might be probing 32-on-64 jvm.
      ptr_mask = 0xFFFFFFFFFFFFFFFF;
+  %: %(arch == "arm64" %?
+     sp_register = "sp";
+     fp_register = "fp";
+     pc_register = "pc";
+     ptr_size = 8; // XXX - might be probing 32-on-64 jvm.
+     ptr_mask = 0xFFFFFFFFFFFFFFFF;
   %: **ERROR** unknown architecture
-  %) %)
+  %) %) %)
 
   // Pretend we have an array at address zero and take address of second
   // element and we have the size.
