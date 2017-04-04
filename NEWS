@@ -21,6 +21,7 @@ New in release 2.7.0 (201X-XX-XX):
   - S8076221, PR2809, RH1302385: Disable RC4 cipher suites
 * Bug fixes
   - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
+  - PR3349: Architectures unsupported by SystemTap tapsets throw a parse error
 * AArch64 port
   - PR3209: Backed out changeset 3cc3ab869ccf
 
