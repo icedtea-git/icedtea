@@ -3,7 +3,7 @@
 	PR3348: Architectures unsupported by SystemTap
 	tapsets throw a parse error
 	Patch by David Smith <dsmith@redhat.com>
-	* AUTHORS: Add Andrew Dinn.
+	* AUTHORS: Add David Smith.
 	* NEWS: Updated.
 	* tapset/jstack.stp.in:
 	Call the error function if no architecture is matched.
