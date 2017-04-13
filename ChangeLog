@@ -1,3 +1,13 @@
+2017-04-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3348: Architectures unsupported by SystemTap
+	tapsets throw a parse error
+	Patch by David Smith <dsmith@redhat.com>
+	* AUTHORS: Add Andrew Dinn.
+	* NEWS: Updated.
+	* tapset/jstack.stp.in:
+	Call the error function if no architecture is matched.
+
 2017-03-15  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3340: jstack.stp should support AArch64

@@ -107,7 +107,13 @@ probe hotspot.vm_init_end8
      pc_register = "pc";
      ptr_size = 8; // XXX - might be probing 32-on-64 jvm.
      ptr_mask = 0xFFFFFFFFFFFFFFFF;
-  %: **ERROR** unknown architecture
+  %:
+     sp_register = "";
+     fp_register = "";
+     pc_register = "";
+     ptr_size = 8;
+     ptr_mask = 0xFFFFFFFFFFFFFFFF;
+     error("unknown architecture")
   %) %) %)
 
   // Pretend we have an array at address zero and take address of second

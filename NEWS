@@ -14,6 +14,8 @@ New in release 3.4.0 (2017-04-XX):
 
 * New features
   - PR3340: jstack.stp should support AArch64
+* Bug fixes
+  - PR3348: Architectures unsupported by SystemTap tapsets throw a parse error
 
 New in release 3.3.0 (2017-01-28):
 
