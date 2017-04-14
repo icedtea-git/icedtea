@@ -19,6 +19,8 @@ New in release 2.7.0 (201X-XX-XX):
   - PR3347: jstack.stp should support AArch64
 * Backports
   - S8076221, PR2809, RH1302385: Disable RC4 cipher suites
+  - S8078823, PR2809: javax/net/ssl/ciphersuites/DisabledAlgorithms.java fails intermittently
+  - S8148516, PR2809: Improve the default strength of EC in JDK [test/javax/net/ssl/ciphersuites/DisabledAlgorithms.java update]
 * Bug fixes
   - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
   - PR3349: Architectures unsupported by SystemTap tapsets throw a parse error
@@ -745,7 +747,6 @@ New in release 2.5.6 (2015-07-22):
 * JamVM
   - PR2500: Add executable stack markings to callNative.S on JamVM
 * AArch64 port
-  - Changes to make aix compile after the merge
   - S8025613, PR2437: clang: remove -Wno-unused-value
   - S8035938: Memory leak in JvmtiEnv::GetConstantPool
   - S8058113: Execution of OnOutOfMemoryError command hangs on linux-sparc
@@ -1196,10 +1197,10 @@ New in release 2.6.0 (2015-07-17):
   - S8079203: AARCH64: Need to cater for different partner implementations
   - S8080586: aarch64: hotspot test compiler/codegen/7184394/TestAESMain.java fails
 * PPC & AIX port
-  - Changes to make aix compile after the merge
   - S8069590: AIX port of "8050807: Better performing performance data handling"
   - S8078482, PR2307, RH1201393: ppc: pass thread to throw_AbstractMethodError
   - S8080190: PPC64: Fix wrong rotate instructions in the .ad file
+  - S8167198: Changes to make AIX compile after the merge
 
 New in release 2.5.5 (2015-04-14):
 
@@ -1683,7 +1684,7 @@ New in release 2.5.2 (2014-08-29):
 * PPC & AIX port
   - Adapt AIX port to 5049299: (process) Use posix_spawn, not fork, on S10 to avoid swap exhaustion
   - Adapt aix to 8022507
-  - Fix aix after 8022507: SIGSEGV at ParMarkBitMap::verify_clear()
+  - S8167144: Fix aix after 8022507: SIGSEGV at ParMarkBitMap::verify_clear()
   - S8050942: PPC64: implement template interpreter for ppc64le
   - S8050972: Concurrency problem in PcDesc cache
 
