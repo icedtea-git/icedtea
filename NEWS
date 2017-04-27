@@ -35,6 +35,8 @@ New in release 2.7.0 (201X-XX-XX):
   - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
   - PR3349: Architectures unsupported by SystemTap tapsets throw a parse error
   - PR3370: Disable ARM32 JIT by default in jdk_generic_profile.sh
+* CACAO
+  - PR2732: Raise javadoc memory limits for CACAO again!
 * AArch64 port
   - S8177661, PR3367: Correct ad rule output register types from iRegX to iRegXNoSp
 
