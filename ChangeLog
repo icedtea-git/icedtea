@@ -1,3 +1,17 @@
+2017-04-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR2732: Raise javadoc memory limits for CACAO
+	again!
+	* NEWS: Updated.
+
+2015-11-30  James Le Cuirot  <chewi@gentoo.org>
+
+	PR2732: Raise javadoc memory limits for CACAO
+	again!
+	* patches/cacao/memory.patch: Increase memory
+	limits so a build with CACAO and doc generation
+	succeeds.
+
 2017-04-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am,

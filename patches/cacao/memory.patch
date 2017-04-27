@@ -47,23 +47,23 @@ diff -Nru openjdk.orig/jdk/make/common/shared/Platform.gmk openjdk/jdk/make/comm
    else
      MB_OF_MEMORY       := unknown
 diff -Nru openjdk.orig/jdk/make/docs/Makefile openjdk/jdk/make/docs/Makefile
---- openjdk.orig/jdk/make/docs/Makefile	2012-06-08 17:12:17.000000000 +0100
-+++ openjdk/jdk/make/docs/Makefile	2012-06-12 11:09:31.616702981 +0100
-@@ -69,11 +69,11 @@
+--- openjdk.orig/jdk/make/docs/Makefile	2015-11-30 05:07:07.728000000 -0800
++++ openjdk/jdk/make/docs/Makefile	2015-11-30 05:07:47.064000000 -0800
+@@ -68,13 +68,7 @@
+ # We override whatever the max VM memory setting is here.
  #    NOTE: javadoc will not complete without these larger settings.
  #    WARNING: This could cause thrashing on low memory machines.
- ifeq ($(ARCH_DATA_MODEL),64)
+-ifeq ($(ARCH_DATA_MODEL),64)
 -  MAX_VM_MEMORY = 1536
-+  MAX_VM_MEMORY = 1792
- else ifeq ($(ARCH),universal)
+-else ifeq ($(ARCH),universal)
 -  MAX_VM_MEMORY = 1536
-+  MAX_VM_MEMORY = 1792
- else
+-else
 -  MAX_VM_MEMORY = 768
-+  MAX_VM_MEMORY = 2048
- endif
+-endif
++MAX_VM_MEMORY = 2048
  
  # List of all possible directories for javadoc to look for sources
+ #    NOTE: Quotes are required around sourcepath argument only on Windows.
 diff -Nru openjdk.orig/langtools/make/build.xml openjdk/langtools/make/build.xml
 --- openjdk.orig/langtools/make/build.xml	2012-06-08 17:12:36.000000000 +0100
 +++ openjdk/langtools/make/build.xml	2012-06-12 10:50:20.974290246 +0100

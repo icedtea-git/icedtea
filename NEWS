@@ -27,6 +27,8 @@ New in release 2.6.10 (2017-04-XX):
   - S8174729, PR3361: Race Condition in java.lang.reflect.WeakCache
 * Bug fixes
   - PR3370: Disable ARM32 JIT by default in jdk_generic_profile.sh
+* CACAO
+  - PR2732: Raise javadoc memory limits for CACAO again!
 * AArch64 port
   - S8177661, PR3367: Correct ad rule output register types from iRegX to iRegXNoSp
 
