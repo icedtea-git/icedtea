@@ -1,8 +1,8 @@
 diff --git a/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java b/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
 --- openjdk/jdk/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
 +++ openjdk/jdk/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
-@@ -160,20 +160,10 @@
-                 }
+@@ -168,20 +168,10 @@
+                     "contains no supported elliptic curves");
              }
          } else {        // default curves
 -            int[] ids;

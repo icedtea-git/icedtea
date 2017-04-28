@@ -14,6 +14,22 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.6.10 (2017-04-XX):
 
+* Backports
+  - S8011621, PR3209: live_ranges_in_separate_class.patch
+  - S8022284, PR3209: Hide internal data structure in PhaseCFG
+  - S8023003, PR3209: Cleanup the public interface to PhaseCFG
+  - S8023691, PR3209: Create interface for nodes in class Block
+  - S8023988, PR3209: Move local scheduling of nodes to the CFG creation and code motion phase (PhaseCFG)
+  - S8043780, PR3369: Use open(O_CLOEXEC) instead of fcntl(FD_CLOEXEC)
+  - S8157306, PR3209: Random infrequent null pointer exceptions in javac
+  - S8173783, PR3329: IllegalArgumentException: jdk.tls.namedGroups
+  - S8173941, PR3330: SA does not work if executable is DSO
+  - S8174729, PR3361: Race Condition in java.lang.reflect.WeakCache
+* Bug fixes
+  - PR3370: Disable ARM32 JIT by default in jdk_generic_profile.sh
+* AArch64 port
+  - S8177661, PR3367: Correct ad rule output register types from iRegX to iRegXNoSp
+
 New in release 2.6.9 (2017-02-14):
 
 * Security fixes
