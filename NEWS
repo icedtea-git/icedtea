@@ -14,6 +14,8 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.6.10 (2017-04-XX):
 
+* New features
+  - PR3347: jstack.stp should support AArch64
 * Backports
   - S8011621, PR3209: live_ranges_in_separate_class.patch
   - S8022284, PR3209: Hide internal data structure in PhaseCFG

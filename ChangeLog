@@ -1,3 +1,13 @@
+2017-03-15  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3347: jstack.stp should support AArch64
+	Patch by Andrew Dinn <adinn@redhat.com>
+	and Mark Wielaard <mjw@redhat.com>
+	* AUTHORS: Add Andrew Dinn.
+	* NEWS: Updated.
+	* tapset/jstack.stp.in:
+	Add AArch64 support.
+
 2017-04-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR2732: Raise javadoc memory limits for CACAO
@@ -14,6 +24,7 @@
 
 2017-04-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump to icedtea-2.6.10pre01.
 	* Makefile.am,
 	(CORBA_CHANGESET): Update to icedtea-2.6.10pre01.
 	(JAXP_CHANGESET): Likewise.
