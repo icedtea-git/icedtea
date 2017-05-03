@@ -28,6 +28,7 @@ New in release 2.6.10 (2017-04-XX):
   - S8173941, PR3330: SA does not work if executable is DSO
   - S8174729, PR3361: Race Condition in java.lang.reflect.WeakCache
 * Bug fixes
+  - PR3349: Architectures unsupported by SystemTap tapsets throw a parse error
   - PR3370: Disable ARM32 JIT by default in jdk_generic_profile.sh
 * CACAO
   - PR2732: Raise javadoc memory limits for CACAO again!
