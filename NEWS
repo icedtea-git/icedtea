@@ -14,6 +14,46 @@ New in release 3.4.0 (2017-04-XX):
 
 * New features
   - PR3340: jstack.stp should support AArch64
+* Backports
+  - S6457406, PR3335: javadoc doesn't handle <a href='http://...'> properly in producing index pages
+  - S6515172, PR3346: Runtime.availableProcessors() ignores Linux taskset command
+  - S8030245, PR3335: Update langtools to use try-with-resources and multi-catch
+  - S8030253, PR3335: Update langtools to use strings-in-switch
+  - S8030262, PR3335: Update langtools to use foreach loops
+  - S8031113, PR3337: TEST_BUG: java/nio/channels/AsynchronousChannelGroup/Basic.java fails intermittently
+  - S8031625, PR3335: javadoc problems referencing inner class constructors
+  - S8031649, PR3335: Clean up javadoc tests
+  - S8031670, PR3335: Remove unneeded -source options in javadoc tests
+  - S8032066, PR3335: Serialized form has broken links to non private inner classes of package private
+  - S8034174, PR2290: Remove use of JVM_* functions from java.net code
+  - S8034182, PR2290: Misc. warnings in java.net code
+  - S8035876, PR2290: AIX build issues after '8034174: Remove use of JVM_* functions from java.net code'
+  - S8038730, PR3335: Clean up the way JavadocTester is invoked, and checks for errors.
+  - S8040903, PR3335: Clean up use of BUG_ID in javadoc tests
+  - S8040904, PR3335: Ensure javadoc tests do not overwrite results within tests
+  - S8040908, PR3335: javadoc test TestDocEncoding should use -notimestamp
+  - S8041150, PR3335: Avoid silly use of static methods in JavadocTester
+  - S8041253, PR3335: Avoid redundant synonyms of NO_TEST
+  - S8043780, PR3368: Use open(O_CLOEXEC) instead of fcntl(FD_CLOEXEC)
+  - S8061305, PR3335: Javadoc crashes when method name ends with "Property"
+  - S8072452, PR3337: Support DHE sizes up to 8192-bits and DSA sizes up to 3072-bits
+  - S8075565, PR3337: Define @intermittent jtreg keyword and mark intermittently failing jdk tests
+  - S8075670, PR3337: Remove intermittent keyword from some tests
+  - S8078334, PR3337: Mark regression tests using randomness
+  - S8078880, PR3337: Mark a few more intermittently failuring security-libs
+  - S8133318, PR3337: Exclude intermittent failing PKCS11 tests on Solaris SPARC 11.1 and earlier
+  - S8144539, PR3337: Update PKCS11 tests to run with security manager
+  - S8144566, PR3352: Custom HostnameVerifier disables SNI extension
+  - S8147910, PR3346: Cache initial active_processor_count
+  - S8153711, PR3313, RH1284948: [REDO] JDWP: Memory Leak: GlobalRefs never deleted when processing invokeMethod command
+  - S8155049, PR3352: New tests from 8144566 fail with "No expected Server Name Indication"
+  - S8161993, PR3346: G1 crashes if active_processor_count changes during startup
+  - S8170888, PR3314, RH1284948: [linux] Experimental support for cgroup memory limits in container (ie Docker) environments
+  - S8173783, PR3328: IllegalArgumentException: jdk.tls.namedGroups
+  - S8173941, PR3326: SA does not work if executable is DSO
+  - S8174164, PR3334, RH1417266: SafePointNode::_replaced_nodes breaks with irreducible loops
+  - S8174729, PR3336, RH1420518: Race Condition in java.lang.reflect.WeakCache
+  - S8175097, PR3334, RH1417266: [TESTBUG] 8174164 fix missed the test
 * Bug fixes
   - PR3348: Architectures unsupported by SystemTap tapsets throw a parse error
 
