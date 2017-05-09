@@ -1,0 +1,72 @@
+# HG changeset patch
+# User tschatzl
+# Date 1481850001 18000
+#      Thu Dec 15 20:00:01 2016 -0500
+# Node ID 62212568179b76b5ebe7b0129ddeed7b268b0bc0
+# Parent  49e72c5c468e09745a3ef455d0b34495cab81521
+8161993, PR3346: G1 crashes if active_processor_count changes during startup
+Summary: Use the initial active processor count for memory initialization instead of the current active one.
+Reviewed-by: dholmes, mgerdin
+
+diff --git a/src/share/vm/gc_implementation/g1/concurrentMark.cpp b/src/share/vm/gc_implementation/g1/concurrentMark.cpp
+--- openjdk/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/concurrentMark.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 2001, 2014, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 2001, 2016, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -631,11 +631,10 @@
+       double overall_cm_overhead =
+         (double) MaxGCPauseMillis * marking_overhead /
+         (double) GCPauseIntervalMillis;
+-      double cpu_ratio = 1.0 / (double) os::processor_count();
++      double cpu_ratio = 1.0 / os::initial_active_processor_count();
+       double marking_thread_num = ceil(overall_cm_overhead / cpu_ratio);
+       double marking_task_overhead =
+-        overall_cm_overhead / marking_thread_num *
+-                                                (double) os::processor_count();
++        overall_cm_overhead / marking_thread_num * os::initial_active_processor_count();
+       double sleep_factor =
+                          (1.0 - marking_task_overhead) / marking_task_overhead;
+ 
+diff --git a/src/share/vm/gc_implementation/g1/dirtyCardQueue.cpp b/src/share/vm/gc_implementation/g1/dirtyCardQueue.cpp
+--- openjdk/hotspot/src/share/vm/gc_implementation/g1/dirtyCardQueue.cpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/dirtyCardQueue.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 2001, 2010, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 2001, 2016, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -80,7 +80,7 @@
+ 
+ // Determines how many mutator threads can process the buffers in parallel.
+ uint DirtyCardQueueSet::num_par_ids() {
+-  return (uint)os::processor_count();
++  return (uint)os::initial_active_processor_count();
+ }
+ 
+ void DirtyCardQueueSet::initialize(CardTableEntryClosure* cl, Monitor* cbl_mon, Mutex* fl_lock,
+diff --git a/src/share/vm/runtime/vm_version.cpp b/src/share/vm/runtime/vm_version.cpp
+--- openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
++++ openjdk/hotspot/src/share/vm/runtime/vm_version.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 1998, 2015, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 1998, 2016, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -300,7 +300,7 @@
+     // processor after the first 8.  For example, on a 72 cpu machine
+     // and a chosen fraction of 5/8
+     // use 8 + (72 - 8) * (5/8) == 48 worker threads.
+-    unsigned int ncpus = (unsigned int) os::active_processor_count();
++    unsigned int ncpus = (unsigned int) os::initial_active_processor_count();
+     return (ncpus <= switch_pt) ?
+            ncpus :
+           (switch_pt + ((ncpus - switch_pt) * num) / den);

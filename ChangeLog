@@ -1,3 +1,20 @@
+2017-05-08  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Add icedtea-3.4.0pre01 HotSpot patches to Shenandoah.
+	* Makefile.am,
+	(ICEDTEA_PATCHES): Add HotSpot patches
+	for Shenandoah.
+	* patches/hotspot/shenandoah/6515172-pr3346.patch,
+	* patches/hotspot/shenandoah/8043780-pr3368.patch,
+	* patches/hotspot/shenandoah/8147910-pr3346.patch,
+	* patches/hotspot/shenandoah/8161993-pr3346.patch,
+	* patches/hotspot/shenandoah/8170888-pr3314-rh1284948.patch,
+	* patches/hotspot/shenandoah/8173941-pr3326.patch,
+	* patches/hotspot/shenandoah/8174164-pr3334-rh1417266.patch,
+	* patches/hotspot/shenandoah/8175097-pr3334-rh1417266.patch:
+	Local versions of the HotSpot fixes in the main tree
+	for application to the Shenandoah HotSpot tree.
+
 2017-05-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.4.0pre01.

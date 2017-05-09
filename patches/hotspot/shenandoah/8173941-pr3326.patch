@@ -1,0 +1,77 @@
+# HG changeset patch
+# User ysuenaga
+# Date 1487123491 18000
+#      Tue Feb 14 20:51:31 2017 -0500
+# Node ID 15922b2f31db4857ec84efdf533c41b19e68030b
+# Parent  652fe741b8f2bfdacba66d772cc89fe7ec6dea66
+8173941, PR3326: SA does not work if executable is DSO
+Reviewed-by: aph, dsamersoff
+
+diff --git a/agent/src/os/linux/elfmacros.h b/agent/src/os/linux/elfmacros.h
+--- openjdk/hotspot/agent/src/os/linux/elfmacros.h
++++ openjdk/hotspot/agent/src/os/linux/elfmacros.h
+@@ -33,6 +33,7 @@
+ #define ELF_NHDR        Elf64_Nhdr
+ #define ELF_DYN         Elf64_Dyn
+ #define ELF_ADDR        Elf64_Addr
++#define ELF_AUXV        Elf64_auxv_t
+ 
+ #define ELF_ST_TYPE     ELF64_ST_TYPE
+ 
+@@ -45,6 +46,7 @@
+ #define ELF_NHDR        Elf32_Nhdr
+ #define ELF_DYN         Elf32_Dyn
+ #define ELF_ADDR        Elf32_Addr
++#define ELF_AUXV        Elf32_auxv_t
+ 
+ #define ELF_ST_TYPE     ELF32_ST_TYPE
+ 
+diff --git a/agent/src/os/linux/ps_core.c b/agent/src/os/linux/ps_core.c
+--- openjdk/hotspot/agent/src/os/linux/ps_core.c
++++ openjdk/hotspot/agent/src/os/linux/ps_core.c
+@@ -642,6 +642,18 @@
+         if (core_handle_prstatus(ph, descdata, notep->n_descsz) != true) {
+           return false;
+         }
++      } else if (notep->n_type == NT_AUXV) {
++        // Get first segment from entry point
++        ELF_AUXV *auxv = (ELF_AUXV *)descdata;
++        while (auxv->a_type != AT_NULL) {
++          if (auxv->a_type == AT_ENTRY) {
++            // Set entry point address to address of dynamic section.
++            // We will adjust it in read_exec_segments().
++            ph->core->dynamic_addr = auxv->a_un.a_val;
++            break;
++          }
++          auxv++;
++        }
+       }
+       p = descdata + ROUNDUP(notep->n_descsz, 4);
+    }
+@@ -826,7 +838,13 @@
+ 
+          // from PT_DYNAMIC we want to read address of first link_map addr
+          case PT_DYNAMIC: {
+-            ph->core->dynamic_addr = exec_php->p_vaddr;
++            if (exec_ehdr->e_type == ET_EXEC) {
++                ph->core->dynamic_addr = exec_php->p_vaddr;
++            } else { // ET_DYN
++                // dynamic_addr has entry point of executable.
++                // Thus we should substract it.
++                ph->core->dynamic_addr += exec_php->p_vaddr - exec_ehdr->e_entry;
++            }
+             print_debug("address of _DYNAMIC is 0x%lx\n", ph->core->dynamic_addr);
+             break;
+          }
+@@ -1024,8 +1042,9 @@
+     goto err;
+   }
+ 
+-  if (read_elf_header(ph->core->exec_fd, &exec_ehdr) != true || exec_ehdr.e_type != ET_EXEC) {
+-    print_debug("executable file is not a valid ELF ET_EXEC file\n");
++  if (read_elf_header(ph->core->exec_fd, &exec_ehdr) != true ||
++      ((exec_ehdr.e_type != ET_EXEC) && (exec_ehdr.e_type != ET_DYN))) {
++    print_debug("executable file is not a valid ELF file\n");
+     goto err;
+   }
+ 

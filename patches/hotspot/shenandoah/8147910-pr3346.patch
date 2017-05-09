@@ -1,0 +1,98 @@
+# HG changeset patch
+# User tschatzl
+# Date 1481849312 18000
+#      Thu Dec 15 19:48:32 2016 -0500
+# Node ID 49e72c5c468e09745a3ef455d0b34495cab81521
+# Parent  1b4eb44fbfcd0fceb485d89d91eb893d99f5864b
+8147910, PR3346: Cache initial active_processor_count
+Summary: Introduce and initialize active_processor_count variable in VM.
+Reviewed-by: dholmes, jprovino
+
+diff --git a/src/share/vm/runtime/os.cpp b/src/share/vm/runtime/os.cpp
+--- openjdk/hotspot/src/share/vm/runtime/os.cpp
++++ openjdk/hotspot/src/share/vm/runtime/os.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 1997, 2014, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -78,6 +78,7 @@
+ uintptr_t         os::_serialize_page_mask = 0;
+ long              os::_rand_seed          = 1;
+ int               os::_processor_count    = 0;
++int               os::_initial_active_processor_count = 0;
+ size_t            os::_page_sizes[os::page_sizes_max];
+ 
+ #ifndef PRODUCT
+@@ -322,6 +323,7 @@
+ }
+ 
+ void os::init_before_ergo() {
++  initialize_initial_active_processor_count();
+   // We need to initialize large page support here because ergonomics takes some
+   // decisions depending on large page support and the calculated large page size.
+   large_page_init();
+@@ -835,7 +837,11 @@
+   st->print("CPU:");
+   st->print("total %d", os::processor_count());
+   // It's not safe to query number of active processors after crash
+-  // st->print("(active %d)", os::active_processor_count());
++  // st->print("(active %d)", os::active_processor_count()); but we can
++  // print the initial number of active processors.
++  // We access the raw value here because the assert in the accessor will
++  // fail if the crash occurs before initialization of this value.
++  st->print(" (initial active %d)", _initial_active_processor_count);
+   st->print(" %s", VM_Version::cpu_features());
+   st->cr();
+   pd_print_cpu_info(st);
+@@ -1418,6 +1424,11 @@
+   return result;
+ }
+ 
++void os::initialize_initial_active_processor_count() {
++  assert(_initial_active_processor_count == 0, "Initial active processor count already set.");
++  _initial_active_processor_count = active_processor_count();
++}
++
+ void os::SuspendedThreadTask::run() {
+   assert(Threads_lock->owned_by_self() || (_thread == VMThread::vm_thread()), "must have threads lock to call this");
+   internal_do_task();
+diff --git a/src/share/vm/runtime/os.hpp b/src/share/vm/runtime/os.hpp
+--- openjdk/hotspot/src/share/vm/runtime/os.hpp
++++ openjdk/hotspot/src/share/vm/runtime/os.hpp
+@@ -151,6 +151,7 @@
+ 
+   static size_t page_size_for_region(size_t region_size, size_t min_pages, bool must_be_aligned);
+ 
++  static void initialize_initial_active_processor_count();
+  public:
+   static void init(void);                      // Called before command line parsing
+   static void init_before_ergo(void);          // Called after command line parsing
+@@ -238,6 +239,13 @@
+   // Note that on some OSes this can change dynamically.
+   static int active_processor_count();
+ 
++  // At startup the number of active CPUs this process is allowed to run on.
++  // This value does not change dynamically. May be different from active_processor_count().
++  static int initial_active_processor_count() {
++    assert(_initial_active_processor_count > 0, "Initial active processor count not set yet.");
++    return _initial_active_processor_count;
++  }
++
+   // Bind processes to processors.
+   //     This is a two step procedure:
+   //     first you generate a distribution of processes to processors,
+@@ -978,8 +986,9 @@
+ 
+ 
+  protected:
+-  static long _rand_seed;                   // seed for random number generator
+-  static int _processor_count;              // number of processors
++  static long _rand_seed;                     // seed for random number generator
++  static int _processor_count;                // number of processors
++  static int _initial_active_processor_count; // number of active processors during initialization.
+ 
+   static char* format_boot_path(const char* format_string,
+                                 const char* home,
