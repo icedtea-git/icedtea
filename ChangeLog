@@ -1,3 +1,24 @@
+2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Bump shenandoah to
+	aarch64-shenandoah-jdk8u131-b12-shenandoah-merge-2017-04-20.
+	* patches/hotspot/shenandoah/8147910-pr3346.patch,
+	* patches/hotspot/shenandoah/8161993-pr3346.patch,
+	* patches/hotspot/shenandoah/8170888-pr3314-rh1284948.patch:
+	Removed as applied upstream.
+	* patches/hotspot/shenandoah/pr3224.patch:
+	Missing header has been added upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove above patches.
+	* NEWS: Updated.
+	* hotspot.map.in: Update shenandoah to
+	aarch64-shenandoah-jdk8u131-b12-shenandoah-merge-2017-04-20
+	* patches/hotspot/shenandoah/8041658.patch:
+	Regenerated due to changed context.
+	* patches/hotspot/shenandoah/8087218-pr2740.patch:
+	Remove changes to ciInstanceKlass.* as is_anonymous
+	was introduced by 8168699.
+
 2017-05-09  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	Bump to icedtea-3.4.0.

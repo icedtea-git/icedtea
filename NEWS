@@ -106,6 +106,13 @@ New in release 3.4.0 (2017-04-XX):
   - S8172881, PR3372: AArch64: assertion failure: the int pressure is incorrect
   - S8173472, PR3372: AArch64: C1 comparisons with null only use 32-bit instructions
   - S8177661, PR3372: Correct ad rule output register types from iRegX to iRegXNoSp
+* Shenandoah
+  - Fix Shenandoah argument checking on 32bit builds.
+  - Import from Shenandoah tag aarch64-shenandoah-jdk8u101-b14-shenandoah-merge-2016-07-25
+  - Import from Shenandoah tag aarch64-shenandoah-jdk8u121-b14-shenandoah-merge-2017-02-20
+  - Import from Shenandoah tag aarch64-shenandoah-jdk8u121-b14-shenandoah-merge-2017-03-06
+  - Import from Shenandoah tag aarch64-shenandoah-jdk8u121-b14-shenandoah-merge-2017-03-09
+  - Import from Shenandoah tag aarch64-shenandoah-jdk8u121-b14-shenandoah-merge-2017-03-23
 
 New in release 3.3.0 (2017-01-28):
 
