@@ -1,5 +1,13 @@
 2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR3297: Allow Shenandoah to be used on AArch64
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_HSBUILD_WORKS_ON_THIS_ARCH): Allow Shenandoah
+	on arm64/aarch64.
+
+2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	* NEWS:
 	Document the security fixes in a separate
 	section.

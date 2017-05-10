@@ -2647,6 +2647,7 @@ AC_DEFUN_ONCE([IT_HSBUILD_WORKS_ON_THIS_ARCH],
   if test "x${HSBUILD}" = "xshenandoah"; then
     case "${host_cpu}" in
       x86_64) ;;
+      arm64|aarch64) ;;
       *) has_working_hotspot=no ;
     esac
   fi
