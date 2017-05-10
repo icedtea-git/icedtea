@@ -12,11 +12,59 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.4.0 (2017-04-XX):
 
+* Security fixes
 * New features
   - PR3340: jstack.stp should support AArch64
+* Import of OpenJDK 8 u131 build 11
+  - S6474807: (smartcardio) CardTerminal.connect() throws CardException instead of CardNotPresentException
+  - S6515172, PR3346: Runtime.availableProcessors() ignores Linux taskset command
+  - S7155957: closed/java/awt/MenuBar/MenuBarStress1/MenuBarStress1.java hangs on win 64 bit with jdk8
+  - S7167293: FtpURLConnection connection leak on FileNotFoundException
+  - S8035568: [macosx] Cursor management unification
+  - S8079595: Resizing dialog which is JWindow parent makes JVM crash
+  - S8130769: The new menu can't be shown on the menubar after clicking the "Add" button.
+  - S8146602: jdk/test/sun/misc/URLClassPath/ClassnameCharTest.java test fails with NullPointerException
+  - S8147842: IME Composition Window is displayed at incorrect location
+  - S8147910, PR3346: Cache initial active_processor_count
+  - S8150490: Update OS detection code to recognize Windows Server 2016
+  - S8160951: [TEST_BUG] javax/xml/bind/marshal/8134111/UnmarshalTest.java should be added into :needs_jre group
+  - S8160958: [TEST_BUG] java/net/SetFactoryPermission/SetFactoryPermission.java should be added into :needs_compact2 group
+  - S8161147: jvm crashes when -XX:+UseCountedLoopSafepoints is enabled
+  - S8161195: Regression: closed/javax/swing/text/FlowView/LayoutTest.java 
+  - S8161993, PR3346: G1 crashes if active_processor_count changes during startup
+  - S8162876: [TEST_BUG] sun/net/www/protocol/http/HttpInputStream.java fails intermittently
+  - S8162916: Test sun/security/krb5/auto/UnboundSSL.java fails
+  - S8163520: Reuse cache entries
+  - S8163528: Better library loading
+  - S8164533: sun/security/ssl/SSLSocketImpl/CloseSocket.java failed with "Error while cleaning up threads after test"
+  - S8165626: Improved window framing
+  - S8167110: Windows peering issue
+  - S8167179: Make XSL generated namespace prefixes local to transformation process
+  - S8168699: Validate special case invocations
+  - S8168774: Polymorhic signature method check crashes javac
+  - S8169011: Resizing XML parse trees
+  - S8169465: Deadlock in com.sun.jndi.ldap.pool.Connections
+  - S8169589: [macosx] Activating a JDialog puts to back another dialog
+  - S8170222: Better transfers of files
+  - S8170307: Stack size option -Xss is ignored
+  - S8170316: (tz) Support tzdata2016j
+  - S8170814: Reuse cache entries (part II)
+  - S8170888, PR3314, RH1284948: [linux] Experimental support for cgroup memory limits in container (ie Docker) environments
+  - S8171121: Enhancing jar checking
+  - S8171388: Update JNDI Thread contexts
+  - S8171533: Better email transfer
+  - S8171949: [macosx] AWT_ZoomFrame Automated tests fail with error: The bitwise mask Frame.ICONIFIED is not setwhen the frame is in ICONIFIED state
+  - S8171952: [macosx] AWT_Modality/Automated/ModalExclusion/NoExclusion/ModelessDialog test fails as DummyButton on Dialog did not gain focus when clicked.
+  - S8172299: Improve class processing
+  - S8173030: Temporary backout fix #8035568 from 8u131-b03
+  - S8173031: Temporary backout fix #8171952 from 8u131-b03
+  - S8173783, PR3328: IllegalArgumentException: jdk.tls.namedGroups
+  - S8173931: 8u131 L10n resource file update
+  - S8174844: Incorrect GPL header causes RE script to miss swap to commercial header for licensee source bundle
+  - S8174985: NTLM authentication doesn't work with IIS if NTLM cache is disabled
+  - S8176044: (tz) Support tzdata2017a
 * Backports
   - S6457406, PR3335: javadoc doesn't handle <a href='http://...'> properly in producing index pages
-  - S6515172, PR3346: Runtime.availableProcessors() ignores Linux taskset command
   - S8030245, PR3335: Update langtools to use try-with-resources and multi-catch
   - S8030253, PR3335: Update langtools to use strings-in-switch
   - S8030262, PR3335: Update langtools to use foreach loops
@@ -44,18 +92,20 @@ New in release 3.4.0 (2017-04-XX):
   - S8133318, PR3337: Exclude intermittent failing PKCS11 tests on Solaris SPARC 11.1 and earlier
   - S8144539, PR3337: Update PKCS11 tests to run with security manager
   - S8144566, PR3352: Custom HostnameVerifier disables SNI extension
-  - S8147910, PR3346: Cache initial active_processor_count
   - S8153711, PR3313, RH1284948: [REDO] JDWP: Memory Leak: GlobalRefs never deleted when processing invokeMethod command
   - S8155049, PR3352: New tests from 8144566 fail with "No expected Server Name Indication"
-  - S8161993, PR3346: G1 crashes if active_processor_count changes during startup
-  - S8170888, PR3314, RH1284948: [linux] Experimental support for cgroup memory limits in container (ie Docker) environments
-  - S8173783, PR3328: IllegalArgumentException: jdk.tls.namedGroups
   - S8173941, PR3326: SA does not work if executable is DSO
   - S8174164, PR3334, RH1417266: SafePointNode::_replaced_nodes breaks with irreducible loops
   - S8174729, PR3336, RH1420518: Race Condition in java.lang.reflect.WeakCache
   - S8175097, PR3334, RH1417266: [TESTBUG] 8174164 fix missed the test
 * Bug fixes
   - PR3348: Architectures unsupported by SystemTap tapsets throw a parse error
+* AArch64 port
+  - S8168699, PR3372: Validate special case invocations [AArch64 support]
+  - S8170100, PR3372: AArch64: Crash in C1-compiled code accessing References
+  - S8172881, PR3372: AArch64: assertion failure: the int pressure is incorrect
+  - S8173472, PR3372: AArch64: C1 comparisons with null only use 32-bit instructions
+  - S8177661, PR3372: Correct ad rule output register types from iRegX to iRegXNoSp
 
 New in release 3.3.0 (2017-01-28):
 
