@@ -1,5 +1,11 @@
 2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	* NEWS:
+	Document the security fixes in a separate
+	section.
+
+2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	Bump shenandoah to
 	aarch64-shenandoah-jdk8u131-b12-shenandoah-merge-2017-04-20.
 	* patches/hotspot/shenandoah/8147910-pr3346.patch,

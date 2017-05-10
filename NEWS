@@ -13,6 +13,16 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 3.4.0 (2017-04-XX):
 
 * Security fixes
+  - S8163520, CVE-2017-3509: Reuse cache entries
+  - S8163528, CVE-2017-3511: Better library loading
+  - S8165626, CVE-2017-3512: Improved window framing
+  - S8167110, CVE-2017-3514: Windows peering issue
+  - S8168699: Validate special case invocations
+  - S8169011, CVE-2017-3526: Resizing XML parse trees
+  - S8170222, CVE-2017-3533: Better transfers of files
+  - S8171121, CVE-2017-3539: Enhancing jar checking
+  - S8171533, CVE-2017-3544: Better email transfer
+  - S8172299: Improve class processing
 * New features
   - PR3340: jstack.stp should support AArch64
 * Import of OpenJDK 8 u131 build 11
@@ -34,28 +44,18 @@ New in release 3.4.0 (2017-04-XX):
   - S8161993, PR3346: G1 crashes if active_processor_count changes during startup
   - S8162876: [TEST_BUG] sun/net/www/protocol/http/HttpInputStream.java fails intermittently
   - S8162916: Test sun/security/krb5/auto/UnboundSSL.java fails
-  - S8163520: Reuse cache entries
-  - S8163528: Better library loading
   - S8164533: sun/security/ssl/SSLSocketImpl/CloseSocket.java failed with "Error while cleaning up threads after test"
-  - S8165626: Improved window framing
-  - S8167110: Windows peering issue
   - S8167179: Make XSL generated namespace prefixes local to transformation process
-  - S8168699: Validate special case invocations
   - S8168774: Polymorhic signature method check crashes javac
-  - S8169011: Resizing XML parse trees
   - S8169465: Deadlock in com.sun.jndi.ldap.pool.Connections
   - S8169589: [macosx] Activating a JDialog puts to back another dialog
-  - S8170222: Better transfers of files
   - S8170307: Stack size option -Xss is ignored
   - S8170316: (tz) Support tzdata2016j
   - S8170814: Reuse cache entries (part II)
   - S8170888, PR3314, RH1284948: [linux] Experimental support for cgroup memory limits in container (ie Docker) environments
-  - S8171121: Enhancing jar checking
   - S8171388: Update JNDI Thread contexts
-  - S8171533: Better email transfer
   - S8171949: [macosx] AWT_ZoomFrame Automated tests fail with error: The bitwise mask Frame.ICONIFIED is not setwhen the frame is in ICONIFIED state
   - S8171952: [macosx] AWT_Modality/Automated/ModalExclusion/NoExclusion/ModelessDialog test fails as DummyButton on Dialog did not gain focus when clicked.
-  - S8172299: Improve class processing
   - S8173030: Temporary backout fix #8035568 from 8u131-b03
   - S8173031: Temporary backout fix #8171952 from 8u131-b03
   - S8173783, PR3328: IllegalArgumentException: jdk.tls.namedGroups
