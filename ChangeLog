@@ -1,5 +1,13 @@
 2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR3378: Perl should be mandatory
+	* NEWS: Updated.
+	* configure.ac:
+	Change Perl macro invocation to use IT_FIND_TOOL
+	and make it unconditional.
+
+2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR1969: Add AArch32 JIT port
 	* Makefile.am:
 	(ICEDTEA_PATCHES): Exclude 6515172 from AArch32

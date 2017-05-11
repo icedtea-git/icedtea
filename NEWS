@@ -102,6 +102,7 @@ New in release 3.4.0 (2017-04-XX):
   - S8175097, PR3334, RH1417266: [TESTBUG] 8174164 fix missed the test
 * Bug fixes
   - PR3348: Architectures unsupported by SystemTap tapsets throw a parse error
+  - PR3378: Perl should be mandatory
 * AArch64 port
   - S8168699, PR3372: Validate special case invocations [AArch64 support]
   - S8170100, PR3372: AArch64: Crash in C1-compiled code accessing References

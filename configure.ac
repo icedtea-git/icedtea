@@ -41,6 +41,7 @@ dnl OpenJDK's README-builds.html lists gawk as a build dependency so we
 dnl check for it explicitly rather than using AC_PROG_AWK.
 IT_FIND_TOOL([GAWK], [gawk])
 IT_FIND_TOOL([WHICH], [which])
+IT_FIND_TOOL([PERL], [perl])
 
 if test "x$enable_downloading" = "xyes"; then
    IT_FIND_TOOL([WGET], [wget])
@@ -264,11 +265,6 @@ public:
 ]])], [AC_MSG_RESULT([yes])], [SDT_H_FOUND='no'; AC_MSG_WARN([systemtap sdt.h or g++ too old])])
 AC_LANG_POP([C++])
 if test "x${SDT_H_FOUND}" = "xyes"; then
- AC_PATH_TOOL([PERL],[perl])
- if test x"${PERL}" = x ; then
-   AC_MSG_WARN([Perl not found in PATH; SystemTap tests will not be able to run])
- fi
- AC_SUBST(PERL)
  AC_PATH_TOOL([STAP],[stap])
  if test x"${STAP}" = x ; then
    AC_MSG_WARN([stap not found in PATH; SystemTap tests will not be able to run])
