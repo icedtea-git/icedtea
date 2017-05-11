@@ -2131,16 +2131,17 @@ AC_DEFUN_ONCE([IT_ENABLE_IMPROVED_FONT_RENDERING],
 
 AC_DEFUN_ONCE([IT_ARCH_HAS_NATIVE_HOTSPOT_PORT],
 [
-  AC_MSG_CHECKING([if a native HotSpot port is available for ${host_cpu}])
+  AC_REQUIRE([IT_WITH_HOTSPOT_BUILD])
+  AC_MSG_CHECKING([if a native HotSpot port is available in the ${HSBUILD} HotSpot build for ${host_cpu}])
   has_native_hotspot_port=yes;
   case "${host_cpu}" in
-    aarch64) ;;
-    arm64) ;;
+    aarch64|arm64) if test "x${HSBUILD}" = "xaarch32"; then has_native_hotspot_port=no; fi ;;
     i?86) ;;
     sparc) ;;
     x86_64) ;;
     powerpc64) ;;
     powerpc64le) ;;
+    arm*) if test "x${HSBUILD}" != "xaarch32"; then has_native_hotspot_port=no; fi ;;
     *) has_native_hotspot_port=no;
   esac
   AC_MSG_RESULT([$has_native_hotspot_port])

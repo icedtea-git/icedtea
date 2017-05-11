@@ -103,6 +103,7 @@ New in release 3.4.0 (2017-04-XX):
 * Bug fixes
   - PR3348: Architectures unsupported by SystemTap tapsets throw a parse error
   - PR3378: Perl should be mandatory
+  - PR3380: Zero should not be enabled by default on arm with the AArch32 HotSpot build
 * AArch64 port
   - S8168699, PR3372: Validate special case invocations [AArch64 support]
   - S8170100, PR3372: AArch64: Crash in C1-compiled code accessing References

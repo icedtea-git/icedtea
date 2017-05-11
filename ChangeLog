@@ -1,5 +1,18 @@
 2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR3380: Zero should not be enabled by default
+	on arm with the AArch32 HotSpot build
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ARCH_HAS_NATIVE_HOTSPOT_PORT): Bring
+	in the HSBUILD setting and base AArch32 and
+	AArch64 decisions on that. The AArch32 HotSpot
+	build has a native AArch32 port, but no AArch64.
+	The default HotSpot build has a native AArch64
+	port, but no AArch32.
+
+2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR3378: Perl should be mandatory
 	* NEWS: Updated.
 	* configure.ac:
