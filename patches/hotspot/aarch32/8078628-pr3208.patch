@@ -1,0 +1,55 @@
+# HG changeset patch
+# User andrew
+# Date 1477430205 -3600
+#      Tue Oct 25 22:16:45 2016 +0100
+# Node ID 3e73be729f73e0466652abea2fa205cf196e9941
+# Parent  e200581a7a13d2a96d31c79d3f17eee799f83608
+8078628, PR3208: Zero build fails with pre-compiled headers disabled
+
+diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp openjdk/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp
+--- openjdk.orig/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp	2017-04-20 13:33:45.000000000 +0100
++++ openjdk/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp	2017-05-11 03:14:30.749469306 +0100
+@@ -1,6 +1,6 @@
+ /*
+  * Copyright (c) 2011, 2012, Oracle and/or its affiliates. All rights reserved.
+- * Copyright 2011 Red Hat, Inc.
++ * Copyright 2016 Red Hat, Inc.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -23,6 +23,8 @@
+  *
+  */
+ 
++#ifndef CPU_ZERO_VM_METHODHANDLES_ZERO_HPP
++#define CPU_ZERO_VM_METHODHANDLES_ZERO_HPP
+ 
+ // Adapters
+ enum /* platform_dependent_constants */ {
+@@ -37,3 +39,5 @@
+   static int method_handle_entry_linkToVirtual(Method* method, intptr_t UNUSED, TRAPS);
+   static int method_handle_entry_linkToInterface(Method* method, intptr_t UNUSED, TRAPS);
+   static int method_handle_entry_invalid(Method* method, intptr_t UNUSED, TRAPS);
++
++#endif // CPU_ZERO_VM_METHODHANDLES_ZERO_HPP
+diff -Nru openjdk.orig/hotspot/src/share/vm/prims/methodHandles.hpp openjdk/hotspot/src/share/vm/prims/methodHandles.hpp
+--- openjdk.orig/hotspot/src/share/vm/prims/methodHandles.hpp	2017-04-20 13:33:45.000000000 +0100
++++ openjdk/hotspot/src/share/vm/prims/methodHandles.hpp	2017-05-11 03:14:30.749469306 +0100
+@@ -1,5 +1,6 @@
+ /*
+  * Copyright (c) 2008, 2014, Oracle and/or its affiliates. All rights reserved.
++ * Copyright 2016 Red Hat, Inc.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -31,6 +32,10 @@
+ #include "runtime/globals.hpp"
+ #include "runtime/interfaceSupport.hpp"
+ 
++#ifdef TARGET_ARCH_zero
++#include "entry_zero.hpp"
++#endif
++
+ class MacroAssembler;
+ class Label;
+ 

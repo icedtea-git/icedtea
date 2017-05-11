@@ -1,5 +1,47 @@
 2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR1969: Add AArch32 JIT port
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Exclude 6515172 from AArch32
+	build patches as it appears upstream in 8u131.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_SET_ARCH_SETTINGS): Test arm64 first so
+	it isn't matched by arm*.
+	(IT_WITH_HOTSPOT_BUILD): Default to aarch32 on
+	32-bit arm. Introduce WITH_AARCH32_HSBUILD and
+	WITH_SHENANDOAH_HSBUILD conditionals for use
+	in Makefile.am.
+	* hotspot.map.in:
+	Add aarch32 from tag jdk8u131-b12-aarch32-170420
+	in http://hg.openjdk.java.net/aarch32-port/jdk8u/hotspot/
+	* patches/hotspot/aarch32/8038392-rh1064383.patch,
+	* patches/hotspot/aarch32/8041658.patch,
+	* patches/hotspot/aarch32/8043780-pr3368.patch,
+	* patches/hotspot/aarch32/8078628-pr3208.patch,
+	* patches/hotspot/aarch32/8087218-pr2740.patch,
+	* patches/hotspot/aarch32/8141491-pr3159-g592292.patch,
+	* patches/hotspot/aarch32/8145096-pr2854.patch,
+	* patches/hotspot/aarch32/8158260-pr2991-rh1341258.patch,
+	* patches/hotspot/aarch32/8162384-pr3122.patch,
+	* patches/hotspot/aarch32/8173941-pr3326.patch,
+	* patches/hotspot/aarch32/8174164-pr3334-rh1417266.patch,
+	* patches/hotspot/aarch32/8175097-pr3334-rh1417266.patch,
+	* patches/hotspot/aarch32/crash_dump.patch,
+	* patches/hotspot/aarch32/no_devirt.patch,
+	* patches/hotspot/aarch32/pr1368.patch,
+	* patches/hotspot/aarch32/pr1748.patch,
+	* patches/hotspot/aarch32/pr1869.patch,
+	* patches/hotspot/aarch32/pr1942.patch,
+	* patches/hotspot/aarch32/pr1975.patch,
+	* patches/hotspot/aarch32/pr2777.patch,
+	* patches/hotspot/aarch32/werror.patch:
+	Local versions of the HotSpot fixes in the main tree
+	for application to the AArch32 HotSpot tree. Many
+	are simply symlinks to the Shenandoah versions.
+
+2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR3297: Allow Shenandoah to be used on AArch64
 	* NEWS: Updated.
 	* acinclude.m4:

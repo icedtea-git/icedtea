@@ -363,11 +363,17 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8162384-pr3122.patch \
 	patches/hotspot/$(HSBUILD)/8078628-pr3208.patch \
 	patches/hotspot/$(HSBUILD)/8141491-pr3159-g592292.patch \
-	patches/hotspot/$(HSBUILD)/6515172-pr3346.patch \
 	patches/hotspot/$(HSBUILD)/8043780-pr3368.patch \
 	patches/hotspot/$(HSBUILD)/8173941-pr3326.patch \
 	patches/hotspot/$(HSBUILD)/8174164-pr3334-rh1417266.patch \
 	patches/hotspot/$(HSBUILD)/8175097-pr3334-rh1417266.patch
+
+# AArch32 already has 6515172 from upstream 8u131
+if !WITH_AARCH32_HSBUILD
+ICEDTEA_PATCHES += \
+	patches/hotspot/$(HSBUILD)/6515172-pr3346.patch
+endif
+
 endif
 
 if BUILD_CACAO

@@ -24,6 +24,7 @@ New in release 3.4.0 (2017-04-XX):
   - S8171533, CVE-2017-3544: Better email transfer
   - S8172299: Improve class processing
 * New features
+  - PR1969: Add AArch32 JIT port
   - PR3297: Allow Shenandoah to be used on AArch64
   - PR3340: jstack.stp should support AArch64
 * Import of OpenJDK 8 u131 build 11

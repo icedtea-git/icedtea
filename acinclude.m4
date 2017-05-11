@@ -21,18 +21,18 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       INSTALL_ARCH_DIR=alpha
       JRE_ARCH_DIR=alpha
       ;;
-    arm*)
-      BUILD_ARCH_DIR=arm
-      INSTALL_ARCH_DIR=arm
-      JRE_ARCH_DIR=arm
-      RPM_ARCH=armv7hl
-      ARCHFLAG="-D_LITTLE_ENDIAN"
-      ;;
     arm64|aarch64)
       BUILD_ARCH_DIR=aarch64
       INSTALL_ARCH_DIR=aarch64
       JRE_ARCH_DIR=aarch64
       RPM_ARCH=aarch64
+      ARCHFLAG="-D_LITTLE_ENDIAN"
+      ;;
+    arm*)
+      BUILD_ARCH_DIR=arm
+      INSTALL_ARCH_DIR=arm
+      JRE_ARCH_DIR=arm
+      RPM_ARCH=armv7hl
       ARCHFLAG="-D_LITTLE_ENDIAN"
       ;;
     mips)
@@ -835,7 +835,12 @@ AC_DEFUN([IT_WITH_VERSION_SUFFIX],
 
 AC_DEFUN_ONCE([IT_WITH_HOTSPOT_BUILD],
 [
-  DEFAULT_BUILD="default"
+  case "${host_cpu}" in
+    arm64) DEFAULT_BUILD="default" ;;
+    arm*) DEFAULT_BUILD="aarch32" ;;
+    *) DEFAULT_BUILD="default" ;;
+  esac
+  AC_MSG_NOTICE([Default HotSpot build on this architecture is ${DEFAULT_BUILD}])
   AC_MSG_CHECKING([which HotSpot build to use])
   AC_ARG_WITH([hotspot-build],
 	      [AS_HELP_STRING(--with-hotspot-build=BUILD,the HotSpot build to use [[BUILD=default]])],
@@ -853,6 +858,8 @@ AC_DEFUN_ONCE([IT_WITH_HOTSPOT_BUILD],
   AC_MSG_RESULT([${HSBUILD}])
   AC_SUBST([HSBUILD])
   AM_CONDITIONAL(WITH_ALT_HSBUILD, test "x${HSBUILD}" != "xdefault")
+  AM_CONDITIONAL(WITH_AARCH32_HSBUILD, test "x${HSBUILD}" = "xaarch32")
+  AM_CONDITIONAL(WITH_SHENANDOAH_HSBUILD, test "x${HSBUILD}" = "xshenandoah")
 ])
 
 AC_DEFUN_ONCE([IT_WITH_HOTSPOT_SRC_ZIP],
