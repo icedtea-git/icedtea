@@ -1705,3 +1705,24 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/jarsigner/M
                  }
              }
  
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/awt/SunToolkit.java openjdk-boot/jdk/src/share/classes/sun/awt/SunToolkit.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/awt/SunToolkit.java	2017-05-12 05:11:37.156626217 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/awt/SunToolkit.java	2017-05-12 05:14:27.177890518 +0100
+@@ -899,10 +899,16 @@
+     protected static boolean imageExists(URL url) {
+         checkPermissions(url);
+         if (url != null) {
+-            try (InputStream is = url.openStream()) {
++            InputStream is = null;
++            try {
++                is = url.openStream();
+                 return true;
+             }catch(IOException e){
+                 return false;
++            } finally {
++                if (is != null) {
++                    try { is.close(); } catch (IOException ex) {}
++                }
+             }
+         }
+         return false;
