@@ -376,6 +376,12 @@ endif
 
 endif
 
+if WITH_AARCH32_HSBUILD
+ICEDTEA_PATCHES += \
+	patches/aarch32-conf.patch \
+	patches/aarch32-jdk.patch
+endif
+
 if BUILD_CACAO
 ICEDTEA_PATCHES += \
 	patches/cacao/launcher.patch

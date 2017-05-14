@@ -103,13 +103,15 @@ New in release 3.4.0 (2017-04-XX):
 * Bug fixes
   - PR3348: Architectures unsupported by SystemTap tapsets throw a parse error
   - PR3378: Perl should be mandatory
-  - PR3380: Zero should not be enabled by default on arm with the AArch32 HotSpot build
 * AArch64 port
   - S8168699, PR3372: Validate special case invocations [AArch64 support]
   - S8170100, PR3372: AArch64: Crash in C1-compiled code accessing References
   - S8172881, PR3372: AArch64: assertion failure: the int pressure is incorrect
   - S8173472, PR3372: AArch64: C1 comparisons with null only use 32-bit instructions
   - S8177661, PR3372: Correct ad rule output register types from iRegX to iRegXNoSp
+* AArch32 port
+  - PR3380: Zero should not be enabled by default on arm with the AArch32 HotSpot build
+  - PR3384, S8139303, S8167584: Add support for AArch32 architecture to configure and jdk makefiles
 * Shenandoah
   - Fix Shenandoah argument checking on 32bit builds.
   - Import from Shenandoah tag aarch64-shenandoah-jdk8u101-b14-shenandoah-merge-2016-07-25

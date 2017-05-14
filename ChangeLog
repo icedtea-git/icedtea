@@ -1,3 +1,18 @@
+2017-05-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3384: Add support for AArch32 architecture
+	to configure and jdk makefiles
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add two new patches
+	when building AArch32.
+	* NEWS: Updated.
+	* patches/aarch32-conf.patch:
+	Recognise AArch32 and don't build the serviceability
+	agent (S8167584, S8139303). Default to the client variant
+	for it as there is no server.
+	* patches/aarch32-jdk.patch:
+	Recognise AArch32 and provide a jvm.cfg file (S8139303).
+
 2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3380: Zero should not be enabled by default
