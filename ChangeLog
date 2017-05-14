@@ -1,3 +1,12 @@
+2017-05-13  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3385: aarch32 does not support -Xshare:dump
+	* Makefile.am:
+	(add-archive): Exclude aarch32 (known as "arm").
+	(add-archive-debug): Likewise.
+	(add-archive-boot): Likewise.
+	* NEWS: Updated.
+
 2017-05-12  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3384: Add support for AArch32 architecture

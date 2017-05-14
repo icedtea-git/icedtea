@@ -2062,7 +2062,9 @@ if !ENABLE_JAMVM
 if !ENABLE_CACAO
 if !ZERO_BUILD
 	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
-	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64" -a "x$(INSTALL_ARCH_DIR)" != "xppc64le" ; then \
+	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64" -a \
+	  "x$(INSTALL_ARCH_DIR)" != "xppc64le" -a \
+	  "x$(INSTALL_ARCH_DIR)" != "xarm" ; then \
 	    $(BUILD_SDK_DIR)/bin/java -Xshare:dump ; \
 	  fi ; \
 	fi
@@ -2110,7 +2112,9 @@ if !ENABLE_JAMVM
 if !ENABLE_CACAO
 if !ZERO_BUILD
 	if [ -e $(BUILD_DEBUG_SDK_DIR)/bin/java ] ; then \
-	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64" -a "x$(INSTALL_ARCH_DIR)" != "xppc64le" ; then \
+	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64" -a \
+	  "x$(INSTALL_ARCH_DIR)" != "xppc64le" -a \
+	  "x$(INSTALL_ARCH_DIR)" != "xarm" ; then \
 	    $(BUILD_DEBUG_SDK_DIR)/bin/java -Xshare:dump ; \
 	  fi ; \
 	fi
@@ -2241,7 +2245,9 @@ if !ENABLE_JAMVM
 if !ENABLE_CACAO
 if !ZERO_BUILD
 	if [ -e $(BUILD_BOOT_SDK_DIR)/bin/java ] ; then \
-	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64" -a "x$(INSTALL_ARCH_DIR)" != "xppc64le" ; then \
+	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64" -a \
+	  "x$(INSTALL_ARCH_DIR)" != "xppc64le" -a \
+	  "x$(INSTALL_ARCH_DIR)" != "xarm" ; then \
 	    $(BUILD_BOOT_SDK_DIR)/bin/java -Xshare:dump ; \
 	  fi ; \
 	fi
