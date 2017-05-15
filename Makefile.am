@@ -379,7 +379,8 @@ endif
 if WITH_AARCH32_HSBUILD
 ICEDTEA_PATCHES += \
 	patches/aarch32-conf.patch \
-	patches/aarch32-jdk.patch
+	patches/aarch32-jdk.patch \
+	patches/aarch32-c1.patch
 endif
 
 if BUILD_CACAO

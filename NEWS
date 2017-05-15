@@ -113,6 +113,7 @@ New in release 3.4.0 (2017-04-XX):
   - PR3380: Zero should not be enabled by default on arm with the AArch32 HotSpot build
   - PR3384, S8139303, S8167584: Add support for AArch32 architecture to configure and jdk makefiles
   - PR3385: aarch32 does not support -Xshare:dump
+  - PR3386, S8164652: AArch32 jvm.cfg wrong for C1 build
 * Shenandoah
   - Fix Shenandoah argument checking on 32bit builds.
   - Import from Shenandoah tag aarch64-shenandoah-jdk8u101-b14-shenandoah-merge-2016-07-25
