@@ -2840,6 +2840,16 @@ if SPLIT_DEBUGINFO
 	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)
 	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli
 endif
+if WITH_AARCH32_HSBUILD
+	if test "x$(INSTALL_ARCH_DIR)" = "xarm" ; then \
+	  if [ ! -e $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR) ] ; then \
+	    ln -sf $(BUILD_SDK_DIR)/lib/aarch32 $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR) ; \
+	  fi ; \
+	  if [ ! -e $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR) ] ; then \
+	    ln -sf $(BUILD_SDK_DIR)/jre/lib/aarch32 $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR) ; \
+	  fi ; \
+	fi
+endif
 	for files in $(BUILD_SDK_DIR)/bin/*; do \
 	  name=$$(basename $${files}) ; \
 	  if test "x$(enable_split_debuginfo)" = "xyes" -a ! -h $${files} -a "x$${name}" != "xjava-rmi.cgi" ; then \
@@ -2953,6 +2963,12 @@ if ENABLE_SYSTEMTAP
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/tapset; \
 	done
 endif
+if WITH_AARCH32_HSBUILD
+	if [ -e $(BUILD_SDK_DIR)/lib/aarch32 ] ; then \
+	  ln -s $(INSTALL_ARCH_DIR) $(DESTDIR)${exec_prefix}/lib/aarch32 ; \
+	  ln -s $(INSTALL_ARCH_DIR) $(DESTDIR)${prefix}/jre/lib/aarch32 ; \
+	fi
+endif
 	$(abs_top_builddir)/pax-mark-vm $(DESTDIR)${prefix} false
 
 install-data-local:
@@ -2967,6 +2983,16 @@ install-data-local:
 	${mkinstalldirs} $(DESTDIR)$(docdir)
 	${mkinstalldirs} $(DESTDIR)$(datadir)/applications
 	${mkinstalldirs} $(DESTDIR)$(sysconfdir)/.java/.systemPrefs
+if WITH_AARCH32_HSBUILD
+	if test "x$(INSTALL_ARCH_DIR)" = "xarm" ; then \
+	  if [ ! -e $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR) ] ; then \
+	    ln -sf $(BUILD_SDK_DIR)/lib/aarch32 $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR) ; \
+	  fi ; \
+	  if [ ! -e $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR) ] ; then \
+	    ln -sf $(BUILD_SDK_DIR)/jre/lib/aarch32 $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR) ; \
+	  fi ; \
+	fi
+endif
 	for files in $(BUILD_SDK_DIR)/jre/lib/*.properties; do \
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib; \
 	done
@@ -3200,6 +3226,12 @@ endif
 	    $(RMDIR) $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ; \
 	  fi ; \
 	done
+	if [ -h $(DESTDIR)${exec_prefix}/lib/aarch32 ] ; then \
+	  rm -vf $(DESTDIR)${exec_prefix}/lib/aarch32 ; \
+	fi
+	if [ -h $(DESTDIR)${prefix}/jre/lib/aarch32 ] ; then \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/aarch32 ; \
+	fi
 	$(RMDIR) $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli
 	$(RMDIR) $(DESTDIR)$(includedir)/$(BUILD_OS_DIR) $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)
 	$(RMDIR) $(DESTDIR)$(bindir) $(DESTDIR)$(includedir) $(DESTDIR)${exec_prefix}/lib

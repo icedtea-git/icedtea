@@ -1,5 +1,21 @@
 2017-05-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR3387: Installation fails on arm with AArch32 port
+	as INSTALL_ARCH_DIR is arm, not aarch32
+	* Makefile.am:
+	(install-exec-local): Create a symlink from the
+	aarch32 build directories to arm if building the
+	AArch32 port on that platform, so the arch-specific
+	files can be found. Include a symlink from the arm
+	installation directory to aarch32 after install,
+	so the JDK still works.
+	(install-data-local): Create build symlink as above.
+	(uninstall-local): Remove the installation aarch32
+	symlink.
+	* NEWS: Updated.
+
+2017-05-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR3386, S8164652: AArch32 jvm.cfg wrong for C1 build
 	* Makefile.am:
 	(ICEDTEA_PATCHES): Add new patch.
