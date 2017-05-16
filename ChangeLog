@@ -1,3 +1,7 @@
+2017-05-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Set release date to today.
+
 2017-05-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3389: javac.in and javah.in should use @PERL@

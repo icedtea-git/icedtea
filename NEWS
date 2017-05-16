@@ -10,7 +10,7 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.4.0 (2017-04-XX):
+New in release 3.4.0 (2017-05-16):
 
 * Security fixes
   - S8163520, CVE-2017-3509: Reuse cache entries
