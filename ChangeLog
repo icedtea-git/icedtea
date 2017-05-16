@@ -1,5 +1,12 @@
 2017-05-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	PR3389: javac.in and javah.in should use @PERL@
+	rather than a hardcoded path
+	* javac.in: Use @PERL@.
+	* javah.in: Likewise.
+
+2017-05-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	PR3388: Wrong path for jvm.cfg being used on arm
 	with AArch32 build
 	* Makefile.am:
