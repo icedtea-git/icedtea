@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!@PERL@ -w
 use strict;
 use constant NO_DUP_ARGS => qw(-source -target -d -encoding);
 use constant STRIP_ARGS_1 => qw(-Werror -implicit:none -J-Xbootclasspath/p:);

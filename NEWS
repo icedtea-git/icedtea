@@ -112,6 +112,7 @@ New in release 2.6.10 (2017-04-XX):
   - PR3349: Architectures unsupported by SystemTap tapsets throw a parse error
   - PR3370: Disable ARM32 JIT by default in jdk_generic_profile.sh
   - PR3379: Perl should be mandatory
+  - PR3390: javac.in and javah.in should use @PERL@ rather than a hardcoded path
 * CACAO
   - PR2732: Raise javadoc memory limits for CACAO again!
 * AArch64 port

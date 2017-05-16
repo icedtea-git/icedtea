@@ -1,3 +1,10 @@
+2017-05-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3390: javac.in and javah.in should use @PERL@
+	rather than a hardcoded path
+	* javac.in: Use @PERL@.
+	* javah.in: Likewise.
+
 2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3379: Perl should be mandatory
