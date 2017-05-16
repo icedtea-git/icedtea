@@ -1,3 +1,24 @@
+2017-05-15  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3388: Wrong path for jvm.cfg being used on arm
+	with AArch32 build
+	* Makefile.am:
+	(add-archive): Switch test from "arm" to "aarch32".
+	(add-archive-debug): Likewise.
+	(add-archive-boot): Likewise.
+	(install-exec-local): No more need to create symlink
+	from aarch32 to arm in build directories as "aarch32"
+	is now used throughout. Create arm -> aarch32 symlink
+	in installation directory instead of aarch32 -> arm.
+	(install-data-local): Drop symlink creation for
+	build directories as above.
+	(uninstall-local): Fix symlink name from "aarch32"
+	to "arm".
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_SET_ARCH_SETTINGS): Change arm directories to
+	aarch32 to match default AArch32 build.
+
 2017-05-14  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3387: Installation fails on arm with AArch32 port

@@ -29,9 +29,9 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       ARCHFLAG="-D_LITTLE_ENDIAN"
       ;;
     arm*)
-      BUILD_ARCH_DIR=arm
-      INSTALL_ARCH_DIR=arm
-      JRE_ARCH_DIR=arm
+      BUILD_ARCH_DIR=aarch32
+      INSTALL_ARCH_DIR=aarch32
+      JRE_ARCH_DIR=aarch32
       RPM_ARCH=armv7hl
       ARCHFLAG="-D_LITTLE_ENDIAN"
       ;;

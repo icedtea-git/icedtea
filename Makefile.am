@@ -2065,7 +2065,7 @@ if !ZERO_BUILD
 	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
 	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64" -a \
 	  "x$(INSTALL_ARCH_DIR)" != "xppc64le" -a \
-	  "x$(INSTALL_ARCH_DIR)" != "xarm" ; then \
+	  "x$(INSTALL_ARCH_DIR)" != "xaarch32" ; then \
 	    $(BUILD_SDK_DIR)/bin/java -Xshare:dump ; \
 	  fi ; \
 	fi
@@ -2115,7 +2115,7 @@ if !ZERO_BUILD
 	if [ -e $(BUILD_DEBUG_SDK_DIR)/bin/java ] ; then \
 	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64" -a \
 	  "x$(INSTALL_ARCH_DIR)" != "xppc64le" -a \
-	  "x$(INSTALL_ARCH_DIR)" != "xarm" ; then \
+	  "x$(INSTALL_ARCH_DIR)" != "xaarch32" ; then \
 	    $(BUILD_DEBUG_SDK_DIR)/bin/java -Xshare:dump ; \
 	  fi ; \
 	fi
@@ -2248,7 +2248,7 @@ if !ZERO_BUILD
 	if [ -e $(BUILD_BOOT_SDK_DIR)/bin/java ] ; then \
 	  if test "x$(INSTALL_ARCH_DIR)" != "xppc64" -a \
 	  "x$(INSTALL_ARCH_DIR)" != "xppc64le" -a \
-	  "x$(INSTALL_ARCH_DIR)" != "xarm" ; then \
+	  "x$(INSTALL_ARCH_DIR)" != "xaarch32" ; then \
 	    $(BUILD_BOOT_SDK_DIR)/bin/java -Xshare:dump ; \
 	  fi ; \
 	fi
@@ -2840,16 +2840,6 @@ if SPLIT_DEBUGINFO
 	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)
 	${mkinstalldirs} $(DESTDIR)$(DEBUG_PREFIX)/${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli
 endif
-if WITH_AARCH32_HSBUILD
-	if test "x$(INSTALL_ARCH_DIR)" = "xarm" ; then \
-	  if [ ! -e $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR) ] ; then \
-	    ln -sf $(BUILD_SDK_DIR)/lib/aarch32 $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR) ; \
-	  fi ; \
-	  if [ ! -e $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR) ] ; then \
-	    ln -sf $(BUILD_SDK_DIR)/jre/lib/aarch32 $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR) ; \
-	  fi ; \
-	fi
-endif
 	for files in $(BUILD_SDK_DIR)/bin/*; do \
 	  name=$$(basename $${files}) ; \
 	  if test "x$(enable_split_debuginfo)" = "xyes" -a ! -h $${files} -a "x$${name}" != "xjava-rmi.cgi" ; then \
@@ -2963,12 +2953,12 @@ if ENABLE_SYSTEMTAP
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/tapset; \
 	done
 endif
-if WITH_AARCH32_HSBUILD
-	if [ -e $(BUILD_SDK_DIR)/lib/aarch32 ] ; then \
-	  ln -s $(INSTALL_ARCH_DIR) $(DESTDIR)${exec_prefix}/lib/aarch32 ; \
-	  ln -s $(INSTALL_ARCH_DIR) $(DESTDIR)${prefix}/jre/lib/aarch32 ; \
+	if [ -e $(DESTDIR)${exec_prefix}/lib/aarch32 ] ; then \
+	  ln -s aarch32 $(DESTDIR)${exec_prefix}/lib/arm; \
 	fi
-endif
+	if [ -e $(DESTDIR)${prefix}/jre/lib/aarch32 ] ; then \
+	  ln -s aarch32 $(DESTDIR)${prefix}/jre/lib/arm; \
+	fi
 	$(abs_top_builddir)/pax-mark-vm $(DESTDIR)${prefix} false
 
 install-data-local:
@@ -2983,16 +2973,6 @@ install-data-local:
 	${mkinstalldirs} $(DESTDIR)$(docdir)
 	${mkinstalldirs} $(DESTDIR)$(datadir)/applications
 	${mkinstalldirs} $(DESTDIR)$(sysconfdir)/.java/.systemPrefs
-if WITH_AARCH32_HSBUILD
-	if test "x$(INSTALL_ARCH_DIR)" = "xarm" ; then \
-	  if [ ! -e $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR) ] ; then \
-	    ln -sf $(BUILD_SDK_DIR)/lib/aarch32 $(BUILD_SDK_DIR)/lib/$(INSTALL_ARCH_DIR) ; \
-	  fi ; \
-	  if [ ! -e $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR) ] ; then \
-	    ln -sf $(BUILD_SDK_DIR)/jre/lib/aarch32 $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR) ; \
-	  fi ; \
-	fi
-endif
 	for files in $(BUILD_SDK_DIR)/jre/lib/*.properties; do \
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib; \
 	done
@@ -3226,11 +3206,11 @@ endif
 	    $(RMDIR) $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/$${vms} ; \
 	  fi ; \
 	done
-	if [ -h $(DESTDIR)${exec_prefix}/lib/aarch32 ] ; then \
-	  rm -vf $(DESTDIR)${exec_prefix}/lib/aarch32 ; \
+	if [ -h $(DESTDIR)${exec_prefix}/lib/arm ] ; then \
+	  rm -vf $(DESTDIR)${exec_prefix}/lib/arm ; \
 	fi
-	if [ -h $(DESTDIR)${prefix}/jre/lib/aarch32 ] ; then \
-	  rm -vf $(DESTDIR)${prefix}/jre/lib/aarch32 ; \
+	if [ -h $(DESTDIR)${prefix}/jre/lib/arm ] ; then \
+	  rm -vf $(DESTDIR)${prefix}/jre/lib/arm ; \
 	fi
 	$(RMDIR) $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli
 	$(RMDIR) $(DESTDIR)$(includedir)/$(BUILD_OS_DIR) $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)
