@@ -16,25 +16,114 @@ New in release 2.7.0 (201X-XX-XX):
 
 * New features
   - PR3180: Support building without pre-compiled headers
-  - PR3347: jstack.stp should support AArch64
 * Backports
+  - S8076221, PR2809, RH1302385: Disable RC4 cipher suites
+  - S8078823, PR2809: javax/net/ssl/ciphersuites/DisabledAlgorithms.java fails intermittently
+  - S8148516, PR2809: Improve the default strength of EC in JDK [test/javax/net/ssl/ciphersuites/DisabledAlgorithms.java update]
+* Bug fixes
+  - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
+
+New in release 2.6.10 (2017-05-16):
+
+* Security fixes
+  - S8163520, CVE-2017-3509: Reuse cache entries
+  - S8163528, CVE-2017-3511: Better library loading
+  - S8165626, CVE-2017-3512: Improved window framing
+  - S8167110, CVE-2017-3514: Windows peering issue
+  - S8169011, CVE-2017-3526: Resizing XML parse trees
+  - S8170222, CVE-2017-3533: Better transfers of files
+  - S8171121, CVE-2017-3539: Enhancing jar checking
+  - S8171533, CVE-2017-3544: Better email transfer
+  - S8172299: Improve class processing
+* New features
+  - PR3347: jstack.stp should support AArch64
+* Import of OpenJDK 7 u141 build 0
+  - S4717864: setFont() does not update Fonts of Menus already on screen
+  - S6474807: (smartcardio) CardTerminal.connect() throws CardException instead of CardNotPresentException
+  - S6518907: cleanup IA64 specific code in Hotspot
+  - S6869327: Add new C2 flag to keep safepoints in counted loops.
+  - S7112912: Message "Error occurred during initialization of VM" on boxes with lots of RAM
+  - S7124213: [macosx] pack() does ignore size of a component; doesn't on the other platforms
+  - S7124219: [macosx] Unable to draw images to fullscreen
+  - S7124552: [macosx] NullPointerException in getBufferStrategy()
+  - S7148275: [macosx] setIconImages() not working correctly (distorted icon when minimized)
+  - S7154841: [macosx] Popups appear behind taskbar
+  - S7155957: closed/java/awt/MenuBar/MenuBarStress1/MenuBarStress1.java hangs on win 64 bit with jdk8
+  - S7160627: [macosx] TextArea has wrong initial size
+  - S7167293: FtpURLConnection connection leak on FileNotFoundException
+  - S7168851: [macosx] Netbeans crashes in CImage.nativeCreateNSImageFromArray
+  - S7197203: sun/misc/URLClassPath/ClassnameCharTest.sh failed, compile error
+  - S8005255: [macosx] Cleanup warnings in sun.lwawt
+  - S8006088: Incompatible heap size flags accepted by VM
+  - S8007295: Reduce number of warnings in awt classes
+  - S8010722: assert: failed: heap size is too big for compressed oops
+  - S8011059: [macosx] Support automatic @2x images loading on Mac OS X
+  - S8014058: Regression tests for 8006088
+  - S8014489: tests/gc/arguments/Test(Serial|CMS|Parallel|G1)HeapSizeFlags jtreg tests invoke wrong class
+  - S8016302: Change type of the number of GC workers to unsigned int (2)
+  - S8024662: gc/arguments/TestUseCompressedOopsErgo.java does not compile.
+  - S8024669: Native OOME when allocating after changes to maximum heap supporting Coops sizing on sparcv9
+  - S8024926: [macosx] AquaIcon HiDPI support
+  - S8025974: l10n for policytool
+  - S8027025: [macosx] getLocationOnScreen returns 0 if parent invisible
+  - S8028212: Custom cursor HiDPI support
+  - S8028471: PPC64 (part 215): opto: Extend ImplicitNullCheck optimization.
+  - S8031573: [macosx] Checkmarks of JCheckBoxMenuItems aren't rendered in high resolution on Retina
+  - S8033534: [macosx] Get MultiResolution image from native system
+  - S8033786: White flashing when opening Dialogs and Menus using Nimbus with dark background
+  - S8035568: [macosx] Cursor management unification
+  - S8041734: JFrame in full screen mode leaves empty workspace after close
+  - S8059803: Update use of GetVersionEx to get correct Windows version in hs_err files
+  - S8066504: GetVersionEx in java.base/windows/native/libjava/java_props_md.c might not get correct Windows version 0
+  - S8079595: Resizing dialog which is JWindow parent makes JVM crash
+  - S8080729: [macosx] java 7 and 8 JDialogs on multiscreen jump to parent frame on focus
+  - S8130769: The new menu can't be shown on the menubar after clicking the "Add" button.
+  - S8133357: 8u65 l10n resource file translation update
+  - S8146602: jdk/test/sun/misc/URLClassPath/ClassnameCharTest.java test fails with NullPointerException
+  - S8147842: IME Composition Window is displayed at incorrect location
+  - S8147910: Cache initial active_processor_count
+  - S8150490: Update OS detection code to recognize Windows Server 2016
+  - S8161147: jvm crashes when -XX:+UseCountedLoopSafepoints is enabled
+  - S8161195: Regression: closed/javax/swing/text/FlowView/LayoutTest.java
+  - S8161993: G1 crashes if active_processor_count changes during startup
+  - S8162603: Unrecognized VM option 'UseCountedLoopSafepoints'
+  - S8162876: [TEST_BUG] sun/net/www/protocol/http/HttpInputStream.java fails intermittently
+  - S8164533: sun/security/ssl/SSLSocketImpl/CloseSocket.java failed with "Error while cleaning up threads after test"
+  - S8167179: Make XSL generated namespace prefixes local to transformation process
+  - S8169465: Deadlock in com.sun.jndi.ldap.pool.Connections
+  - S8169589: [macosx] Activating a JDialog puts to back another dialog
+  - S8170307: Stack size option -Xss is ignored
+  - S8170316: (tz) Support tzdata2016j
+  - S8170814: Reuse cache entries (part II)
+  - S8171388: Update JNDI Thread contexts
+  - S8171949: [macosx] AWT_ZoomFrame Automated tests fail with error: The bitwise mask Frame.ICONIFIED is not setwhen the frame is in ICONIFIED state
+  - S8171952: [macosx] AWT_Modality/Automated/ModalExclusion/NoExclusion/ModelessDialog test fails as DummyButton on Dialog did not gain focus when clicked.
+  - S8173931: 8u131 L10n resource file update
+  - S8174844: Incorrect GPL header causes RE script to miss swap to commercial header for licensee source bundle
+  - S8175087: [bsd] Fix build after "8024900: PPC64: Enable new build on AIX (jdk part)"
+  - S8175163: [bsd] Fix build after "8005629: javac warnings compiling java.awt.EventDispatchThread..."
+  - S8176044: (tz) Support tzdata2017a
+* Import of OpenJDK 7 u141 build 1
+  - S8043723: max_heap_for_compressed_oops() declared with size_t, but defined with uintx
+* Import of OpenJDK 7 u141 build 2
+  - S8011123: serialVersionUID of java.awt.dnd.InvalidDnDOperationException changed in JDK8-b82
+* Backports
+  - S6515172, PR3362: Runtime.availableProcessors() ignores Linux taskset command
   - S8011621, PR3209: live_ranges_in_separate_class.patch
   - S8022284, PR3209: Hide internal data structure in PhaseCFG
   - S8023003, PR3209: Cleanup the public interface to PhaseCFG
   - S8023691, PR3209: Create interface for nodes in class Block
   - S8023988, PR3209: Move local scheduling of nodes to the CFG creation and code motion phase (PhaseCFG)
   - S8043780, PR3369: Use open(O_CLOEXEC) instead of fcntl(FD_CLOEXEC)
-  - S8076221, PR2809, RH1302385: Disable RC4 cipher suites
-  - S8078823, PR2809: javax/net/ssl/ciphersuites/DisabledAlgorithms.java fails intermittently
-  - S8148516, PR2809: Improve the default strength of EC in JDK [test/javax/net/ssl/ciphersuites/DisabledAlgorithms.java update]
   - S8157306, PR3209: Random infrequent null pointer exceptions in javac
   - S8173783, PR3329: IllegalArgumentException: jdk.tls.namedGroups
   - S8173941, PR3330: SA does not work if executable is DSO
   - S8174729, PR3361: Race Condition in java.lang.reflect.WeakCache
 * Bug fixes
-  - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
   - PR3349: Architectures unsupported by SystemTap tapsets throw a parse error
   - PR3370: Disable ARM32 JIT by default in jdk_generic_profile.sh
+  - PR3379: Perl should be mandatory
+  - PR3390: javac.in and javah.in should use @PERL@ rather than a hardcoded path
 * CACAO
   - PR2732: Raise javadoc memory limits for CACAO again!
 * AArch64 port
