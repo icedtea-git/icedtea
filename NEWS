@@ -10,6 +10,19 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 3.5.0 (2017-07-XX):
+
+* New features
+  - PR3392, RH1273760: Support using RSAandMGF1 with the SHA hash algorithms in the PKCS11 provider
+* Backports
+  - S8164293, PR3412, RH1459641: HotSpot leaking memory in long-running requests
+  - S8175813, PR3394, RH1448880: PPC64: "mbind: Invalid argument" when -XX:+UseNUMA is used
+  - S8175887, PR3415: C1 value numbering handling of Unsafe.get*Volatile is incorrect
+  - S8179084, PR3409, RH1455694: HotSpot VM fails to start when AggressiveHeap is set
+  - S8180048, PR3411, RH1449870: Interned string and symbol table leak memory during parallel unlinking
+  - S8181055, PR3394, RH1448880: PPC64: "mbind: Invalid argument" still seen after 8175813
+  - S8181419, PR3413, RH1463144: Race in jdwp invoker handling may lead to crashes or invalid results
+
 New in release 3.4.0 (2017-05-16):
 
 * Security fixes

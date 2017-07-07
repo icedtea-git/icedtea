@@ -1,3 +1,49 @@
+2017-07-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Bump to icedtea-3.5.0pre01.
+	* patches/aarch32-c1.patch,
+	* patches/aarch32-conf.patch,
+	* patches/aarch32-jdk.patch:
+	Removed as applied upstream.
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-3.5.0pre01 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Add HotSpot patches for Shenandoah
+	and AArch32 ports. Remove AArch32 fixes now applied
+	upstream.
+	* NEWS: Updated.
+	* configure.ac: Bump to 3.5.0pre01.
+	* hotspot.map.in: Update to icedtea-3.5.0pre01 tag.
+	* patches/hotspot/aarch32/8164293-pr3412-rh1459641.patch,
+	* patches/hotspot/aarch32/8175813-pr3394-rh1448880.patch,
+	* patches/hotspot/aarch32/8175887-pr3415.patch,
+	* patches/hotspot/aarch32/8179084-pr3409-rh1455694.patch,
+	* patches/hotspot/aarch32/8180048-pr3411-rh1449870.patch:
+	Symlink to Shenandoah versions of same patches.
+	* patches/hotspot/aarch32/8181055-pr3394-rh1448880.patch:
+	AArch32 version of 8181055 as there are uclibc changes
+	in os_linux.cpp
+	* patches/hotspot/shenandoah/8164293-pr3412-rh1459641.patch,
+	* patches/hotspot/shenandoah/8175813-pr3394-rh1448880.patch,
+	* patches/hotspot/shenandoah/8175887-pr3415.patch,
+	* patches/hotspot/shenandoah/8179084-pr3409-rh1455694.patch,
+	* patches/hotspot/shenandoah/8180048-pr3411-rh1449870.patch,
+	* patches/hotspot/shenandoah/8181055-pr3394-rh1448880.patch:
+	Copies of upstream HotSpot patches for Shenandoah. Patches
+	are identical to those upstream.
+
 2017-05-16  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	* NEWS: Set release date to today.

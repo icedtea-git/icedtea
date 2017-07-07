@@ -1,0 +1,288 @@
+# HG changeset patch
+# User tschatzl
+# Date 1494843615 -7200
+#      Mon May 15 12:20:15 2017 +0200
+# Node ID 3d07e14d65bc223dbfe94be9224e4aa8c6e63762
+# Parent  2fee74c5547889d9698a2636e0a5170f9e66fb9c
+8180048, PR3411, RH1449870: Interned string and symbol table leak memory during parallel unlinking
+Summary: Make appending found dead BasicHashtableEntrys to the free list atomic.
+Reviewed-by: ehelin, shade
+
+diff -r 2fee74c55478 -r 3d07e14d65bc src/share/vm/classfile/symbolTable.cpp
+--- openjdk/hotspot/src/share/vm/classfile/symbolTable.cpp
++++ openjdk/hotspot/src/share/vm/classfile/symbolTable.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 1997, 2014, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 1997, 2017, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -96,7 +96,7 @@
+ int SymbolTable::_symbols_counted = 0;
+ volatile int SymbolTable::_parallel_claimed_idx = 0;
+ 
+-void SymbolTable::buckets_unlink(int start_idx, int end_idx, int* processed, int* removed, size_t* memory_total) {
++void SymbolTable::buckets_unlink(int start_idx, int end_idx, BucketUnlinkContext* context, size_t* memory_total) {
+   for (int i = start_idx; i < end_idx; ++i) {
+     HashtableEntry<Symbol*, mtSymbol>** p = the_table()->bucket_addr(i);
+     HashtableEntry<Symbol*, mtSymbol>* entry = the_table()->bucket(i);
+@@ -110,15 +110,14 @@
+       }
+       Symbol* s = entry->literal();
+       (*memory_total) += s->size();
+-      (*processed)++;
++      context->_num_processed++;
+       assert(s != NULL, "just checking");
+       // If reference count is zero, remove.
+       if (s->refcount() == 0) {
+         assert(!entry->is_shared(), "shared entries should be kept live");
+         delete s;
+-        (*removed)++;
+         *p = entry->next();
+-        the_table()->free_entry(entry);
++        context->free_entry(entry);
+       } else {
+         p = entry->next_addr();
+       }
+@@ -132,9 +131,14 @@
+ // This is done late during GC.
+ void SymbolTable::unlink(int* processed, int* removed) {
+   size_t memory_total = 0;
+-  buckets_unlink(0, the_table()->table_size(), processed, removed, &memory_total);
+-  _symbols_removed += *removed;
+-  _symbols_counted += *processed;
++  BucketUnlinkContext context;
++  buckets_unlink(0, the_table()->table_size(), &context, &memory_total);
++  _the_table->bulk_free_entries(&context);
++  *processed = context._num_processed;
++  *removed = context._num_removed;
++
++  _symbols_removed = context._num_removed;
++  _symbols_counted = context._num_processed;
+   // Exclude printing for normal PrintGCDetails because people parse
+   // this output.
+   if (PrintGCDetails && Verbose && WizardMode) {
+@@ -148,6 +152,7 @@
+ 
+   size_t memory_total = 0;
+ 
++  BucketUnlinkContext context;
+   for (;;) {
+     // Grab next set of buckets to scan
+     int start_idx = Atomic::add(ClaimChunkSize, &_parallel_claimed_idx) - ClaimChunkSize;
+@@ -157,10 +162,15 @@
+     }
+ 
+     int end_idx = MIN2(limit, start_idx + ClaimChunkSize);
+-    buckets_unlink(start_idx, end_idx, processed, removed, &memory_total);
++    buckets_unlink(start_idx, end_idx, &context, &memory_total);
+   }
+-  Atomic::add(*processed, &_symbols_counted);
+-  Atomic::add(*removed, &_symbols_removed);
++
++  _the_table->bulk_free_entries(&context);
++  *processed = context._num_processed;
++  *removed = context._num_removed;
++
++  Atomic::add(context._num_processed, &_symbols_counted);
++  Atomic::add(context._num_removed, &_symbols_removed);
+   // Exclude printing for normal PrintGCDetails because people parse
+   // this output.
+   if (PrintGCDetails && Verbose && WizardMode) {
+@@ -811,7 +821,11 @@
+ }
+ 
+ void StringTable::unlink_or_oops_do(BoolObjectClosure* is_alive, OopClosure* f, int* processed, int* removed) {
+-  buckets_unlink_or_oops_do(is_alive, f, 0, the_table()->table_size(), processed, removed);
++  BucketUnlinkContext context;
++  buckets_unlink_or_oops_do(is_alive, f, 0, the_table()->table_size(), &context);
++  _the_table->bulk_free_entries(&context);
++  *processed = context._num_processed;
++  *removed = context._num_removed;
+ }
+ 
+ void StringTable::possibly_parallel_unlink_or_oops_do(BoolObjectClosure* is_alive, OopClosure* f, int* processed, int* removed) {
+@@ -820,6 +834,7 @@
+   assert(SafepointSynchronize::is_at_safepoint(), "must be at safepoint");
+   const int limit = the_table()->table_size();
+ 
++  BucketUnlinkContext context;
+   for (;;) {
+     // Grab next set of buckets to scan
+     int start_idx = Atomic::add(ClaimChunkSize, &_parallel_claimed_idx) - ClaimChunkSize;
+@@ -829,8 +844,11 @@
+     }
+ 
+     int end_idx = MIN2(limit, start_idx + ClaimChunkSize);
+-    buckets_unlink_or_oops_do(is_alive, f, start_idx, end_idx, processed, removed);
++    buckets_unlink_or_oops_do(is_alive, f, start_idx, end_idx, &context);
+   }
++  _the_table->bulk_free_entries(&context);
++  *processed = context._num_processed;
++  *removed = context._num_removed;
+ }
+ 
+ void StringTable::buckets_oops_do(OopClosure* f, int start_idx, int end_idx) {
+@@ -856,7 +874,7 @@
+   }
+ }
+ 
+-void StringTable::buckets_unlink_or_oops_do(BoolObjectClosure* is_alive, OopClosure* f, int start_idx, int end_idx, int* processed, int* removed) {
++void StringTable::buckets_unlink_or_oops_do(BoolObjectClosure* is_alive, OopClosure* f, int start_idx, int end_idx, BucketUnlinkContext* context) {
+   const int limit = the_table()->table_size();
+ 
+   assert(0 <= start_idx && start_idx <= limit,
+@@ -880,10 +898,9 @@
+         p = entry->next_addr();
+       } else {
+         *p = entry->next();
+-        the_table()->free_entry(entry);
+-        (*removed)++;
++        context->free_entry(entry);
+       }
+-      (*processed)++;
++      context->_num_processed++;
+       entry = *p;
+     }
+   }
+diff -r 2fee74c55478 -r 3d07e14d65bc src/share/vm/classfile/symbolTable.hpp
+--- openjdk/hotspot/src/share/vm/classfile/symbolTable.hpp
++++ openjdk/hotspot/src/share/vm/classfile/symbolTable.hpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 1997, 2013, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 1997, 2017, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -124,8 +124,11 @@
+ 
+   static volatile int _parallel_claimed_idx;
+ 
+-  // Release any dead symbols
+-  static void buckets_unlink(int start_idx, int end_idx, int* processed, int* removed, size_t* memory_total);
++  typedef SymbolTable::BucketUnlinkContext BucketUnlinkContext;
++  // Release any dead symbols. Unlinked bucket entries are collected in the given
++  // context to be freed later.
++  // This allows multiple threads to work on the table at once.
++  static void buckets_unlink(int start_idx, int end_idx, BucketUnlinkContext* context, size_t* memory_total);
+ public:
+   enum {
+     symbol_alloc_batch_size = 8,
+@@ -274,9 +277,13 @@
+   // Apply the give oop closure to the entries to the buckets
+   // in the range [start_idx, end_idx).
+   static void buckets_oops_do(OopClosure* f, int start_idx, int end_idx);
++
++  typedef StringTable::BucketUnlinkContext BucketUnlinkContext;
+   // Unlink or apply the give oop closure to the entries to the buckets
+-  // in the range [start_idx, end_idx).
+-  static void buckets_unlink_or_oops_do(BoolObjectClosure* is_alive, OopClosure* f, int start_idx, int end_idx, int* processed, int* removed);
++  // in the range [start_idx, end_idx). Unlinked bucket entries are collected in the given
++  // context to be freed later.
++  // This allows multiple threads to work on the table at once.
++  static void buckets_unlink_or_oops_do(BoolObjectClosure* is_alive, OopClosure* f, int start_idx, int end_idx, BucketUnlinkContext* context);
+ 
+   StringTable() : RehashableHashtable<oop, mtSymbol>((int)StringTableSize,
+                               sizeof (HashtableEntry<oop, mtSymbol>)) {}
+diff -r 2fee74c55478 -r 3d07e14d65bc src/share/vm/runtime/vmStructs.cpp
+--- openjdk/hotspot/src/share/vm/runtime/vmStructs.cpp
++++ openjdk/hotspot/src/share/vm/runtime/vmStructs.cpp
+@@ -712,7 +712,7 @@
+                                                                                                                                      \
+   nonstatic_field(BasicHashtable<mtInternal>, _table_size,                                   int)                                   \
+   nonstatic_field(BasicHashtable<mtInternal>, _buckets,                                      HashtableBucket<mtInternal>*)          \
+-  nonstatic_field(BasicHashtable<mtInternal>, _free_list,                                    BasicHashtableEntry<mtInternal>*)      \
++  volatile_nonstatic_field(BasicHashtable<mtInternal>,  _free_list,                          BasicHashtableEntry<mtInternal>*)      \
+   nonstatic_field(BasicHashtable<mtInternal>, _first_free_entry,                             char*)                                 \
+   nonstatic_field(BasicHashtable<mtInternal>, _end_block,                                    char*)                                 \
+   nonstatic_field(BasicHashtable<mtInternal>, _entry_size,                                   int)                                   \
+diff -r 2fee74c55478 -r 3d07e14d65bc src/share/vm/utilities/hashtable.cpp
+--- openjdk/hotspot/src/share/vm/utilities/hashtable.cpp
++++ openjdk/hotspot/src/share/vm/utilities/hashtable.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 2003, 2014, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 2003, 2017, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -172,6 +172,35 @@
+   }
+ }
+ 
++template <MEMFLAGS F> void BasicHashtable<F>::BucketUnlinkContext::free_entry(BasicHashtableEntry<F>* entry) {
++  entry->set_next(_removed_head);
++  _removed_head = entry;
++  if (_removed_tail == NULL) {
++    _removed_tail = entry;
++  }
++  _num_removed++;
++}
++
++template <MEMFLAGS F> void BasicHashtable<F>::bulk_free_entries(BucketUnlinkContext* context) {
++  if (context->_num_removed == 0) {
++    assert(context->_removed_head == NULL && context->_removed_tail == NULL,
++           err_msg("Zero entries in the unlink context, but elements linked from " PTR_FORMAT " to " PTR_FORMAT,
++                   p2i(context->_removed_head), p2i(context->_removed_tail)));
++    return;
++  }
++
++  // MT-safe add of the list of BasicHashTableEntrys from the context to the free list.
++  BasicHashtableEntry<F>* current = _free_list;
++  while (true) {
++    context->_removed_tail->set_next(current);
++    BasicHashtableEntry<F>* old = (BasicHashtableEntry<F>*)Atomic::cmpxchg_ptr(context->_removed_head, &_free_list, current);
++    if (old == current) {
++      break;
++    }
++    current = old;
++  }
++  Atomic::add(-context->_num_removed, &_number_of_entries);
++}
+ 
+ // Copy the table to the shared space.
+ 
+diff -r 2fee74c55478 -r 3d07e14d65bc src/share/vm/utilities/hashtable.hpp
+--- openjdk/hotspot/src/share/vm/utilities/hashtable.hpp
++++ openjdk/hotspot/src/share/vm/utilities/hashtable.hpp
+@@ -164,11 +164,11 @@
+   // Instance variables
+   int               _table_size;
+   HashtableBucket<F>*     _buckets;
+-  BasicHashtableEntry<F>* _free_list;
++  BasicHashtableEntry<F>* volatile _free_list;
+   char*             _first_free_entry;
+   char*             _end_block;
+   int               _entry_size;
+-  int               _number_of_entries;
++  volatile int      _number_of_entries;
+ 
+ protected:
+ 
+@@ -215,6 +215,24 @@
+   // Free the buckets in this hashtable
+   void free_buckets();
+ 
++  // Helper data structure containing context for the bucket entry unlink process,
++  // storing the unlinked buckets in a linked list.
++  // Also avoids the need to pass around these four members as parameters everywhere.
++  struct BucketUnlinkContext {
++    int _num_processed;
++    int _num_removed;
++    // Head and tail pointers for the linked list of removed entries.
++    BasicHashtableEntry<F>* _removed_head;
++    BasicHashtableEntry<F>* _removed_tail;
++
++    BucketUnlinkContext() : _num_processed(0), _num_removed(0), _removed_head(NULL), _removed_tail(NULL) {
++    }
++
++    void free_entry(BasicHashtableEntry<F>* entry);
++  };
++  // Add of bucket entries linked together in the given context to the global free list. This method
++  // is mt-safe wrt. to other calls of this method.
++  void bulk_free_entries(BucketUnlinkContext* context);
+ public:
+   int table_size() { return _table_size; }
+   void set_entry(int index, BasicHashtableEntry<F>* entry);

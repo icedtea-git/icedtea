@@ -1,0 +1,48 @@
+# HG changeset patch
+# User jcm
+# Date 1484137609 28800
+#      Wed Jan 11 04:26:49 2017 -0800
+# Node ID 1faf7c17089922f6f72b580253725f2ecb6ba2f8
+# Parent  3d07e14d65bc223dbfe94be9224e4aa8c6e63762
+8164293, PR3412, RH1459641: HotSpot leaking memory in long-running requests
+Summary: Applied RMs in sweep_code_cache and related codes.
+Reviewed-by: kvn, thartmann
+
+diff -r 3d07e14d65bc -r 1faf7c170899 src/share/vm/code/nmethod.cpp
+--- openjdk/hotspot/src/share/vm/code/nmethod.cpp
++++ openjdk/hotspot/src/share/vm/code/nmethod.cpp
+@@ -1172,6 +1172,7 @@
+ // Clear ICStubs of all compiled ICs
+ void nmethod::clear_ic_stubs() {
+   assert_locked_or_safepoint(CompiledIC_lock);
++  ResourceMark rm;
+   RelocIterator iter(this);
+   while(iter.next()) {
+     if (iter.type() == relocInfo::virtual_call_type) {
+diff -r 3d07e14d65bc -r 1faf7c170899 src/share/vm/runtime/sweeper.cpp
+--- openjdk/hotspot/src/share/vm/runtime/sweeper.cpp
++++ openjdk/hotspot/src/share/vm/runtime/sweeper.cpp
+@@ -319,6 +319,7 @@
+ }
+ 
+ void NMethodSweeper::sweep_code_cache() {
++  ResourceMark rm;
+   Ticks sweep_start_counter = Ticks::now();
+ 
+   _flushed_count                = 0;
+@@ -626,6 +627,7 @@
+ // state of the code cache if it's requested.
+ void NMethodSweeper::log_sweep(const char* msg, const char* format, ...) {
+   if (PrintMethodFlushing) {
++    ResourceMark rm;
+     stringStream s;
+     // Dump code cache state into a buffer before locking the tty,
+     // because log_state() will use locks causing lock conflicts.
+@@ -643,6 +645,7 @@
+   }
+ 
+   if (LogCompilation && (xtty != NULL)) {
++    ResourceMark rm;
+     stringStream s;
+     // Dump code cache state into a buffer before locking the tty,
+     // because log_state() will use locks causing lock conflicts.
