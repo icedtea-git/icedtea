@@ -1649,3 +1649,25 @@ diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/print/UnixPrintJob.java 
          }
  
          public Object run() {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/awt/SunToolkit.java openjdk-boot/jdk/src/share/classes/sun/awt/SunToolkit.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/awt/SunToolkit.java	2017-07-14 18:22:28.993307143 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/awt/SunToolkit.java	2017-07-14 18:24:38.743201166 +0100
+@@ -899,10 +899,16 @@
+     protected static boolean imageExists(URL url) {
+         checkPermissions(url);
+         if (url != null) {
+-            try (InputStream is = url.openStream()) {
++            InputStream is = null;
++            try {
++                is = url.openStream();
+                 return true;
+-            }catch(IOException e){
++            } catch(IOException e){
+                 return false;
++            } finally {
++                if (is != null) {
++                    try { is.close(); } catch (IOException e) {}
++                }
+             }
+         }
+         return false;

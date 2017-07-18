@@ -98,6 +98,7 @@ New in release 2.6.10 (2017-05-16):
   - S8171388: Update JNDI Thread contexts
   - S8171949: [macosx] AWT_ZoomFrame Automated tests fail with error: The bitwise mask Frame.ICONIFIED is not setwhen the frame is in ICONIFIED state
   - S8171952: [macosx] AWT_Modality/Automated/ModalExclusion/NoExclusion/ModelessDialog test fails as DummyButton on Dialog did not gain focus when clicked.
+  - S8173783, PR3329: IllegalArgumentException: jdk.tls.namedGroups
   - S8173931: 8u131 L10n resource file update
   - S8174844: Incorrect GPL header causes RE script to miss swap to commercial header for licensee source bundle
   - S8175087: [bsd] Fix build after "8024900: PPC64: Enable new build on AIX (jdk part)"
@@ -116,7 +117,6 @@ New in release 2.6.10 (2017-05-16):
   - S8023988, PR3209: Move local scheduling of nodes to the CFG creation and code motion phase (PhaseCFG)
   - S8043780, PR3369: Use open(O_CLOEXEC) instead of fcntl(FD_CLOEXEC)
   - S8157306, PR3209: Random infrequent null pointer exceptions in javac
-  - S8173783, PR3329: IllegalArgumentException: jdk.tls.namedGroups
   - S8173941, PR3330: SA does not work if executable is DSO
   - S8174729, PR3361: Race Condition in java.lang.reflect.WeakCache
 * Bug fixes

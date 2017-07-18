@@ -10428,3 +10428,172 @@ diff -Nru openjdk-boot.orig/jdk/test/java/util/Random/DistinctSeeds.java openjdk
          List<Thread> threads = new ArrayList<Thread>();
          for (int i = 0; i < threadCount; i++) {
              RandomCollector r = new RandomCollector();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/awt/Cursor.java openjdk-boot/jdk/src/share/classes/java/awt/Cursor.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/awt/Cursor.java	2017-07-14 17:51:22.731719319 +0100
++++ openjdk-boot/jdk/src/share/classes/java/awt/Cursor.java	2017-07-14 17:53:52.713265358 +0100
+@@ -163,7 +163,7 @@
+      * hashtable, filesystem dir prefix, filename, and properties for custom cursors support
+      */
+ 
+-    private static final Hashtable<String,Cursor> systemCustomCursors = new Hashtable<>(1);
++    private static final Hashtable<String,Cursor> systemCustomCursors = new Hashtable<String,Cursor>(1);
+     private static final String systemCustomCursorDirPrefix = initCursorDir();
+ 
+     private static String initCursorDir() {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/awt/datatransfer/Clipboard.java openjdk-boot/jdk/src/share/classes/java/awt/datatransfer/Clipboard.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/awt/datatransfer/Clipboard.java	2017-07-14 17:51:22.739719188 +0100
++++ openjdk-boot/jdk/src/share/classes/java/awt/datatransfer/Clipboard.java	2017-07-14 17:53:43.673413243 +0100
+@@ -341,7 +341,7 @@
+      * @since 1.5
+      */
+     private Set<DataFlavor> getAvailableDataFlavorSet() {
+-        Set<DataFlavor> set = new HashSet<>();
++        Set<DataFlavor> set = new HashSet<DataFlavor>();
+         Transferable contents = getContents(null);
+         if (contents != null) {
+             DataFlavor[] flavors = contents.getTransferDataFlavors();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/awt/EventQueue.java openjdk-boot/jdk/src/share/classes/java/awt/EventQueue.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/awt/EventQueue.java	2017-07-14 17:51:22.751718992 +0100
++++ openjdk-boot/jdk/src/share/classes/java/awt/EventQueue.java	2017-07-14 17:53:17.321844353 +0100
+@@ -1183,7 +1183,7 @@
+                 return;
+             }
+ 
+-            currentEvent = new WeakReference<>(e);
++            currentEvent = new WeakReference<AWTEvent>(e);
+ 
+             // This series of 'instanceof' checks should be replaced with a
+             // polymorphic type (for example, an interface which declares a
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/awt/MenuBar.java openjdk-boot/jdk/src/share/classes/java/awt/MenuBar.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/awt/MenuBar.java	2017-07-14 17:51:22.759718861 +0100
++++ openjdk-boot/jdk/src/share/classes/java/awt/MenuBar.java	2017-07-14 17:52:41.754426272 +0100
+@@ -94,7 +94,7 @@
+      * @serial
+      * @see #countMenus()
+      */
+-    Vector<Menu> menus = new Vector<>();
++    Vector<Menu> menus = new Vector<Menu>();
+ 
+     /**
+      * This menu is a special menu dedicated to
+@@ -323,7 +323,7 @@
+      * @since       JDK1.1
+      */
+     public synchronized Enumeration<MenuShortcut> shortcuts() {
+-        Vector<MenuShortcut> shortcuts = new Vector<>();
++        Vector<MenuShortcut> shortcuts = new Vector<MenuShortcut>();
+         int nmenus = getMenuCount();
+         for (int i = 0 ; i < nmenus ; i++) {
+             Enumeration<MenuShortcut> e = getMenu(i).shortcuts();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/awt/Menu.java openjdk-boot/jdk/src/share/classes/java/awt/Menu.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/awt/Menu.java	2017-07-14 17:51:22.775718599 +0100
++++ openjdk-boot/jdk/src/share/classes/java/awt/Menu.java	2017-07-14 17:52:30.842604809 +0100
+@@ -78,7 +78,7 @@
+      * @serial
+      * @see #countItems()
+      */
+-    Vector<MenuComponent> items = new Vector<>();
++    Vector<MenuComponent> items = new Vector<MenuComponent>();
+ 
+     /**
+      * This field indicates whether the menu has the
+@@ -313,7 +313,7 @@
+             }
+ 
+             int nitems = getItemCount();
+-            Vector<MenuItem> tempItems = new Vector<>();
++            Vector<MenuItem> tempItems = new Vector<MenuItem>();
+ 
+             /* Remove the item at index, nitems-index times
+                storing them in a temporary vector in the
+@@ -379,7 +379,7 @@
+             }
+ 
+             int nitems = getItemCount();
+-            Vector<MenuItem> tempItems = new Vector<>();
++            Vector<MenuItem> tempItems = new Vector<MenuItem>();
+ 
+             /* Remove the item at index, nitems-index times
+                storing them in a temporary vector in the
+@@ -476,7 +476,7 @@
+     }
+ 
+     synchronized Enumeration<MenuShortcut> shortcuts() {
+-        Vector<MenuShortcut> shortcuts = new Vector<>();
++        Vector<MenuShortcut> shortcuts = new Vector<MenuShortcut>();
+         int nitems = getItemCount();
+         for (int i = 0 ; i < nitems ; i++) {
+             MenuItem mi = getItem(i);
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/awt/RenderingHints.java openjdk-boot/jdk/src/share/classes/java/awt/RenderingHints.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/awt/RenderingHints.java	2017-07-14 17:51:22.783718468 +0100
++++ openjdk-boot/jdk/src/share/classes/java/awt/RenderingHints.java	2017-07-14 17:53:34.281566890 +0100
+@@ -92,7 +92,7 @@
+      * {@code equals()} method.
+      */
+     public abstract static class Key {
+-        private static HashMap<Object,Object> identitymap = new HashMap<>(17);
++        private static HashMap<Object,Object> identitymap = new HashMap<Object,Object>(17);
+ 
+         private String getIdentity() {
+             // Note that the identity string is dependent on 3 variables:
+@@ -195,7 +195,7 @@
+         }
+     }
+ 
+-    HashMap<Object,Object> hintmap = new HashMap<>(7);
++    HashMap<Object,Object> hintmap = new HashMap<Object,Object>(7);
+ 
+     /**
+      * Antialiasing hint key.
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/http/NegotiateAuthentication.java openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/http/NegotiateAuthentication.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/http/NegotiateAuthentication.java	2017-07-14 17:51:22.803718141 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/http/NegotiateAuthentication.java	2017-07-14 17:52:10.078944551 +0100
+@@ -128,7 +128,7 @@
+      */
+     private static synchronized boolean isSupportedImpl(HttpCallerInfo hci) {
+         if (supported == null) {
+-            supported = new HashMap<>();
++            supported = new HashMap<String, Boolean>();
+         }
+         String hostname = hci.host;
+         hostname = hostname.toLowerCase();
+@@ -145,7 +145,7 @@
+                 cache = new ThreadLocal<HashMap<String, Negotiator>>() {
+                     @Override
+                     protected HashMap<String, Negotiator> initialValue() {
+-                        return new HashMap<>();
++                        return new HashMap<String, Negotiator>();
+                     }
+                 };
+             }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/pool/Connections.java openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/pool/Connections.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/pool/Connections.java	2017-07-14 18:43:02.445291208 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/pool/Connections.java	2017-07-14 18:43:42.736642459 +0100
+@@ -292,9 +292,9 @@
+     boolean expire(long threshold) {
+         List<ConnectionDesc> clonedConns;
+         synchronized(this) {
+-            clonedConns = new ArrayList<>(conns);
++            clonedConns = new ArrayList<ConnectionDesc>(conns);
+         }
+-        List<ConnectionDesc> expired = new ArrayList<>();
++        List<ConnectionDesc> expired = new ArrayList<ConnectionDesc>();
+ 
+         for (ConnectionDesc entry : clonedConns) {
+             d("expire(): ", entry);
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/pool/Pool.java openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/pool/Pool.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/pool/Pool.java	2017-07-14 18:43:02.457291013 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/pool/Pool.java	2017-07-14 18:43:25.888913736 +0100
+@@ -165,10 +165,10 @@
+     public void expire(long threshold) {
+         Collection<ConnectionsRef> copy;
+         synchronized (map) {
+-            copy = new ArrayList<>(map.values());
++            copy = new ArrayList<ConnectionsRef>(map.values());
+         }
+ 
+-        ArrayList<ConnectionsRef> removed = new ArrayList<>();
++        ArrayList<ConnectionsRef> removed = new ArrayList<ConnectionsRef>();
+         Connections conns;
+         for (ConnectionsRef ref : copy) {
+             conns = ref.getConnections();
