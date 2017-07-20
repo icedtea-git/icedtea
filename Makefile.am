@@ -365,26 +365,21 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8141491-pr3159-g592292.patch \
 	patches/hotspot/$(HSBUILD)/8043780-pr3368.patch \
 	patches/hotspot/$(HSBUILD)/8173941-pr3326.patch \
-	patches/hotspot/$(HSBUILD)/8174164-pr3334-rh1417266.patch \
-	patches/hotspot/$(HSBUILD)/8175097-pr3334-rh1417266.patch \
 	patches/hotspot/$(HSBUILD)/8164293-pr3412-rh1459641.patch \
 	patches/hotspot/$(HSBUILD)/8175813-pr3394-rh1448880.patch \
 	patches/hotspot/$(HSBUILD)/8175887-pr3415.patch \
 	patches/hotspot/$(HSBUILD)/8179084-pr3409-rh1455694.patch \
 	patches/hotspot/$(HSBUILD)/8180048-pr3411-rh1449870.patch \
 	patches/hotspot/$(HSBUILD)/8181055-pr3394-rh1448880.patch \
-	patches/hotspot/$(HSBUILD)/8173770.patch \
-	patches/hotspot/$(HSBUILD)/8181420.patch \
 	patches/hotspot/$(HSBUILD)/8181946.patch
 
-# AArch32 already has 6515172 from upstream 8u131
-# AArch32 doesn't have the AArch64 port
-if !WITH_AARCH32_HSBUILD
+# AArch32 doesn't yet have the latest update
+if WITH_AARCH32_HSBUILD
 ICEDTEA_PATCHES += \
-	patches/hotspot/$(HSBUILD)/6515172-pr3346.patch \
-	patches/hotspot/$(HSBUILD)/7009641-pr3423.patch \
-	patches/hotspot/$(HSBUILD)/8182581-pr3423.patch \
-	patches/hotspot/$(HSBUILD)/8183551-pr3423.patch
+	patches/hotspot/$(HSBUILD)/8174164-pr3334-rh1417266.patch \
+	patches/hotspot/$(HSBUILD)/8175097-pr3334-rh1417266.patch \
+	patches/hotspot/$(HSBUILD)/8173770.patch \
+	patches/hotspot/$(HSBUILD)/8181420.patch
 endif
 
 endif

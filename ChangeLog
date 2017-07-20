@@ -1,5 +1,30 @@
 2017-07-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
+	Bump shenandoah to aarch64-shenandoah-jdk8u141-b16.
+	* patches/hotspot/shenandoah/6515172-pr3346.patch,
+	* patches/hotspot/shenandoah/7009641-pr3423.patch,
+	* patches/hotspot/shenandoah/8173770.patch,
+	* patches/hotspot/shenandoah/8174164-pr3334-rh1417266.patch,
+	* patches/hotspot/shenandoah/8175097-pr3334-rh1417266.patch,
+	* patches/hotspot/shenandoah/8181420.patch,
+	* patches/hotspot/shenandoah/8182581-pr3423.patch,
+	* patches/hotspot/shenandoah/8183551-pr3423.patch:
+	Removed as applied upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove patches applied upstream
+	that were Shenandoah build only. Move those that still
+	apply to AArch32 to an AArch32-only block.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u141-b16.
+	* patches/hotspot/aarch32/8173770.patch,
+	* patches/hotspot/aarch32/8174164-pr3334-rh1417266.patch,
+	* patches/hotspot/aarch32/8175097-pr3334-rh1417266.patch,
+	* patches/hotspot/aarch32/8181420.patch:
+	Patches are still needed for AArch32 so replace symlinks
+	with the actual patches from patches/hotspot/shenandoah.
+
+2017-07-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
 	Bump to icedtea-3.5.0.
 	* Makefile.am,
 	(JDK_UPDATE_VERSION): Bump to 141.
