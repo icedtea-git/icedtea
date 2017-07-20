@@ -1,3 +1,44 @@
+2017-07-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	Bump to icedtea-3.5.0.
+	* Makefile.am,
+	(JDK_UPDATE_VERSION): Bump to 141.
+	(BUILD_VERSION): Set to b15.
+	(CORBA_CHANGESET): Update to icedtea-3.5.0 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Add HotSpot patches for Shenandoah
+	and AArch32 ports.
+	* NEWS: Updated.
+	* configure.ac: Bump to 3.5.0.
+	* hotspot.map.in: Update to icedtea-3.5.0 tag.
+	* patches/hotspot/aarch32/8173770.patch,
+	* patches/hotspot/aarch32/8181420.patch:
+	Add CVE-2017-10074 fixes for AArch32.
+	* patches/hotspot/aarch32/8181946.patch:
+	Add README cleanup for AArch32.
+	* patches/hotspot/shenandoah/7009641-pr3423.patch,
+	* patches/hotspot/shenandoah/8173770.patch,
+	* patches/hotspot/shenandoah/8181420.patch:
+	Add CVE-2017-10074 fixes for Shenandoah, including
+	AArch64 fix.
+	* patches/hotspot/shenandoah/8181946.patch:
+	Add README cleanup for Shenandoah.
+	* patches/hotspot/shenandoah/8182581-pr3423.patch,
+	* patches/hotspot/shenandoah/8183551-pr3423.patch:
+	Add AArch64 fixes for Shenandoah.
+
 2017-07-06  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	Bump to icedtea-3.5.0pre01.

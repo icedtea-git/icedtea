@@ -12,8 +12,62 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.5.0 (2017-07-XX):
 
+* Security fixes
+  - S8163958, CVE-2017-10102: Improved garbage collection
+  - S8167228: Update to libpng 1.6.28
+  - S8169209, CVE-2017-10053: Improved image post-processing steps
+  - S8169392, CVE-2017-10067: Additional jar validation steps
+  - S8170966, CVE-2017-10081: Right parenthesis issue
+  - S8171539, CVE-2017-10078: Better script accessibility for JavaScript
+  - S8172204, CVE-2017-10087: Better Thread Pool execution
+  - S8172461, CVE-2017-10089: Service Registration Lifecycle
+  - S8172465, CVE-2017-10090: Better handling of channel groups
+  - S8172469, CVE-2017-10096: Transform Transformer Exceptions
+  - S8173286, CVE-2017-10101: Better reading of text catalogs
+  - S8173697, CVE-2017-10107: Less Active Activations
+  - S8173770, CVE-2017-10074: Image conversion improvements
+  - S8174098, CVE-2017-10110: Better image fetching
+  - S8174105, CVE-2017-10108: Better naming attribution
+  - S8174113, CVE-2017-10109: Better sourcing of code
+  - S8174770: Check registry registration location
+  - S8174873: Improved certificate procesing
+  - S8175106, CVE-2017-10115: Higher quality DSA operations
+  - S8175110, CVE-2017-10118: Higher quality ECDSA operations
+  - S8176055: JMX diagnostic improvements
+  - S8176067, CVE-2017-10116: Proper directory lookup processing
+  - S8176760, CVE-2017-10135: Better handling of PKCS8 material
+  - S8178135, CVE-2017-10176: Additional elliptic curve support
+  - S8179101, CVE-2017-10193: Improve algorithm constraints implementation
+  - S8179998, CVE-2017-10198: Clear certificate chain connections
+  - S8181420, CVE-2017-10074: PPC: Image conversion improvements
+  - S8183551, CVE-2017-10074, PR3423: AArch64: Image conversion improvements
+  - S8184185, CVE-2017-10111: Rearrange MethodHandle arrangements
 * New features
   - PR3392, RH1273760: Support using RSAandMGF1 with the SHA hash algorithms in the PKCS11 provider
+* Import of OpenJDK 8 u141 build 15
+  - S8139870: sun.management.LazyCompositeData.isTypeMatched() fails for composite types with items of ArrayType
+  - S8155690: Update libPNG library to the latest up-to-date
+  - S8159058: SAXParseException when sending soap message
+  - S8162461: Hang due to JNI up-call made whilst holding JNI critical lock
+  - S8163889: [macosx] Can't print from browser on Mac OS X
+  - S8165231: java.nio.Bits.unaligned() doesn't return true on ppc
+  - S8165367: Additional tests for JEP 288: Disable SHA-1 Certificates
+  - S8173145: Menu is activated after using mnemonic Alt/Key combination
+  - S8173207: Upgrade compression library
+  - S8175251: Failed to load RSA private key from pkcs12
+  - S8176329: jdeps to detect MR jar file and output a warning
+  - S8176536: Improved algorithm constraints checking
+  - S8176731: JCK tests in api/javax_xml/transform/ spec conformance started failing after 8172469
+  - S8176769: Remove accidental spec change in jdk8u
+  - S8177449: (tz) Support tzdata2017b
+  - S8178996: [macos] JComboBox doesn't display popup in mixed JavaFX Swing Application on 8u131 and Mac OS 10.12
+  - S8179014: JFileChooser with Windows look and feel crashes on win 10
+  - S8180582: The bind to rmiregistry is rejected by registryFilter even though registryFilter is set
+  - S8181591: 8u141 L10n resource file update
+  - S8181698: Remove and retag 8u141-b12 tag from source repository
+  - S8181946: JDK 8 THIRD_PARTY_README - Minor Cleanup
+  - S8182054: Improve wsdl support
+  - S8184235: Backout JDK-8173207 from 8u141, 7u151 and higher updates source base
 * Backports
   - S8164293, PR3412, RH1459641: HotSpot leaking memory in long-running requests
   - S8175813, PR3394, RH1448880: PPC64: "mbind: Invalid argument" when -XX:+UseNUMA is used
@@ -22,6 +76,9 @@ New in release 3.5.0 (2017-07-XX):
   - S8180048, PR3411, RH1449870: Interned string and symbol table leak memory during parallel unlinking
   - S8181055, PR3394, RH1448880: PPC64: "mbind: Invalid argument" still seen after 8175813
   - S8181419, PR3413, RH1463144: Race in jdwp invoker handling may lead to crashes or invalid results
+* AArch64 port
+  - S7009641, PR3423: Don't fail VM when CodeCache is full
+  - S8182581, PR3423: aarch64: fix for crash caused by earlyret of compiled method
 
 New in release 3.4.0 (2017-05-16):
 
