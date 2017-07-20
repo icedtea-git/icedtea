@@ -79,6 +79,8 @@ New in release 3.5.0 (2017-07-XX):
 * AArch64 port
   - S7009641, PR3423: Don't fail VM when CodeCache is full
   - S8182581, PR3423: aarch64: fix for crash caused by earlyret of compiled method
+* AArch32 port
+  - PR3391: Revert PR3385 as -Xshare:dump does appear to work on AArch32
 
 New in release 3.4.0 (2017-05-16):
 
