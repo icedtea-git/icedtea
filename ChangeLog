@@ -1,3 +1,7 @@
+2017-07-20  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	* NEWS: Set release date to today (2017-07-20)
+
 2017-07-19  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3391: Revert PR3385 as -Xshare:dump does appear
