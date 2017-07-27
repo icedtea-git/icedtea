@@ -14,6 +14,143 @@ New in release 3.5.1 (2017-07-27):
 
 * Import of OpenJDK 8 u144 build 01
   - S8184993: Jar file verification failing with SecurityException: digest missing xxx
+* Shenandoah
+  - Amend "ArrayCopy verification code fix" with 8u-specific node hierarchy test
+  - Amend "Refactor asm acmp" with a few missing changes
+  - [backport] aarch64 store check fix
+  - [backport] Account "shared" out-of-LAB allocations separately
+  - [backport] Adaptive should not be scared of user-requested System.gc()
+  - [backport] Added assertion for page alignment of heap's base address
+  - [backport] Add "verify jcstress" acceptance test
+  - [backport] "Allocation failure" cause should not be overwritten
+  - [backport] ArrayCopy verification code fix
+  - [backport] Assorted cleanups
+  - [backport] "Before Full GC" verification is too strong for OOME-during-evac
+  - [backport] C1 stores constants without read barriers
+  - [backport] Cleanup AArch64 code
+  - [backport] Cleanup class unloading and string intern code
+  - [backport] Cleanup duplicated Shenandoah task queue declarations
+  - [backport] Cleanups
+  - [backport] Cleanup ShenandoahBarrierSet::write_barrier
+  - [backport] Cleanup ShenandoahHeap::do_evacuation
+  - [backport] Clean up unused fields and methods
+  - [backport] Cleanup: update-refs check in_collection_set twice
+  - [backport] Code cache roots styles
+  - [backport] Concurrent code cache evacuation + bugfixes
+  - [backport] Concurrent preclean + Fix weakref precleaning
+  - [backport] Correct prefetch offset for marked object iteration
+  - [backport] Deferred region cleanup.
+  - [backport] Dense ShenandoahHeapRegion printout
+  - [backport] Detailed ParallelCleanupTask statistics + Split out Full GC stats for parallel cleaning
+  - [backport] Disable aggressive+verification test configs (jtreg eats up last configuration)
+  - [backport] Do not abandon RP discovery on conc GC cancel, do that only before Full GC
+  - [backport] Eliminating _num_regions variable in ShenandoahHeap
+  - [backport] Ensure collection set and cset map are consistent
+  - [backport] Fallback to shared allocation if GCLAB is not available
+  - [backport] Fast synchronizer root scanning
+  - [backport] "F: Code Cache Roots" is missing from gc+stats
+  - [backport] Fix DerivedPointerTable handling when scanning roots twice in init-evac phase
+  - [backport] Fixed a few of early returns that calling register_gc_end()
+  - [backport] Fix live data accounting for humongous region
+  - [backport] Fix memory Phis with only data uses
+  - [backport] Fix recycled regions zapping
+  - [backport] Fix up pointer volatility
+  - [backport] Generic verification should not trust bitmaps
+  - [backport] Heap/matrix verification for all reachable objects
+  - [backport] Heap memory usage counting not longer needs to be atomic
+  - [backport] Heap region recycling should call explicit clear() and request zapping
+  - [backport] Heap region verification
+  - [backport] Implementation of interpreter matrix barrier on aarch64
+  - [backport] Implement early update references phase.
+  - [backport] implicit null checks broken on aarch64
+  - [backport] Increase timeout for EvilSyncBug test
+  - [backport] Lazy parallel code cache iterator
+  - [backport] Make statistics gathering span more operations
+  - [backport] Make sure atomic operations are done on "volatile" fields
+  - [backport] Make sure new_active_workers is used
+  - [backport] Make {T,GC}LAB statistics unconditional
+  - [backport] Mark-compact and heuristics should consistently process refs and unload classes
+  - [backport] minor fix to optimization of java mirror comparison
+  - [backport] more barrier on constant oop fixes + couple small unrelated fixes
+  - [backport] More collection set and matrix cleanup
+  - [backport] Nit: mark-compact phase 3 (Adjust Pointers) should announce itself as "Phase 3"
+  - [backport] Optimize heap region size checks
+  - [backport] Optimize heap verification
+  - [backport] Out-of-TLAB evacuation should overwrite stale copies
+  - [backport] Parallel code cache scanning
+  - [backport] Parallel verification
+  - [backport] Print correct message about gross times in stats
+  - [backport] Print heap changes in phases that actually change heap occupancy
+  - [backport] Print more detailed final UR stats
+  - [backport] Print more details for weak ref and class unloading stats
+  - [backport] Properly react on -ClassUnloading
+  - [backport] Purge ealier version of redefined classes during class unloading
+  - [backport] Purge ratio, global, connections heuristics.
+  - [backport] Purge shenandoahHumongous.hpp
+  - [backport] Purge ShenandoahVerify(Reads|Writes)ToFromSpace.
+  - [backport] Reduce region retirement during tlab allocation
+  - [backport] Refactor asm acmp (x86, aarch64, renames)
+  - [backport] Refactor BrooksPointer asserts
+  - [backport] Refactor heap verification
+  - [backport] Reference processing deadlocks with -ParallelRefProcEnabled
+  - [backport] Reference processors might use non-forwarded alive checks
+  - [backport] Region sampling may not be enabled because last timetick is uninitialized
+  - [backport] Rehash ShenandoahHeap section in hs_err
+  - [backport] Reinstate "Purge" block in final-mark stats
+  - [backport] Relax assert to not fire at safepoint
+  - [backport] Remove heap printing routines from ShenandoahHeap
+  - [backport] Remove obsolete compile_resolve_oop_runtime() methods
+  - [backport] Rename final mark operations
+  - [backport] Rename ShenandoahBarriersForConst
+  - [backport] Replace ShHeapRegionSet::get with get_fast
+  - [backport] Report correct total garbage data. Print out garbage and cset data with -Xlog:gc+ergo
+  - [backport] Report oops and fwdptrs verification failures fully
+  - [backport] Result of write barrier on constant not used
+  - [backport] Separate Full GC root operations in GC stats
+  - [backport] ShenandoahCollectionSet refactor
+  - [backport] ShenandoahGCSession used wrong timer for full GC
+  - [backport] ShenandoahHeap::evacuate_object() with boolean result flag.
+  - [backport] Shenandoah options should be uintx
+  - [backport] shenandoah_wb should fallback to slow path with -UseTLAB + Fix aarch64 compilation error due to shenandoah_wb change
+  - [backport] ShenandoahWriteBarrierNode::memory_dominates_all_paths() assert failure when compiling methods using unsafe
+  - [backport] Shortcut reference processing when no work is available
+  - [backport] Simplify parallel synchronizer roots iterator
+  - [backport] Skip RESOLVE when references update is not needed
+  - [backport] Stats should attribute "Resize TLABs" properly, and mention "Pause" for init/final mark
+  - [backport] Stats should not record past-shutdown events
+  - [backport] "String/Symbol/CodeCache" -> "Str/Sym, Code Cache"
+  - [backport] Tests should use all heuristics and pass heap verification + Disable aggressive+verification test configs
+  - [backport] Total pauses should include final-mark pauses
+  - [backport] Trim down native GC footprint
+  - [backport] Update region sampling to include TLAB/GCLAB allocation data
+  - [backport] Update roots should always handle derived pointers
+  - [backport] Update ShenandoahHeapSampling to avoid double counting.
+  - [backport] Update statistics to capture thread data accurately
+  - [backport] Use CollectedHeap::base() instead of ShenandoahHeap::first_region_bottom()
+  - [backport] Use lock version heap region memory allocator
+  - [backport] Use scoped object for gc session/phases recording
+  - [backport] Variable steps in adaptive heuristics
+  - [backport] Verification error log is truncated
+  - [backport] Verification levels
+  - [backport] Verification should assert complete bitmaps in most phases + Disable complete bitmap verification in init mark
+  - [backport] Verifier performance improvements: scan objects once, avoid double oop checks
+  - [backport] Verifier should not assert cset in forwarded test block
+  - [backport] Verifier should print extended info on referenced location
+  - [backport] Verifier should use non-optimized root scans
+  - [backport] Verify marked objects
+  - [backport] Verify TAMS and object sizes
+  - [backport] write barrier can get stuck below predicates resulting in unschedulable graph
+  - S8140584: nmethod::oops_do_marking_epilogue always runs verification code
+  - S8180175, S8180599: Cherry-pick/synchronize
+  - Cleanup: Removed redundant ClassLoaderData::clear_claimed_marks() calls
+  - Cleanup shared code.
+  - Fixed memory leak in region garbage cache
+  - Fix return type of ShenandoahHeapRegion::region_size_words_jint()
+  - Improved comment about AArch64bit addressing in assembler.
+  - Leak mutex in ShenandoahTaskTerminator
+  - Make sure C2 arguments are not used when C2 is disabled.
+  - Refactor parallel ClassLoaderData iterator
+  - Revert G1 changes and bring shared BitMap
 
 New in release 3.5.0 (2017-07-20):
 

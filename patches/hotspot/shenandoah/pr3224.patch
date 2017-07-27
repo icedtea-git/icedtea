@@ -1,0 +1,33 @@
+diff --git a/src/share/vm/gc_implementation/shenandoah/shenandoahCollectionSet.hpp b/src/share/vm/gc_implementation/shenandoah/shenandoahCollectionSet.hpp
+--- openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahCollectionSet.hpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahCollectionSet.hpp
+@@ -26,6 +26,7 @@
+ #define SHARE_VM_GC_SHENANDOAH_SHENANDOAHCOLLECTIONSET_HPP
+ 
+ #include "memory/allocation.hpp"
++#include "utilities/ostream.hpp"
+ 
+ class ShenandoahHeap;
+ class ShenandoahHeapRegion;
+diff --git a/src/share/vm/gc_implementation/shenandoah/shenandoahHeapRegion.cpp b/src/share/vm/gc_implementation/shenandoah/shenandoahHeapRegion.cpp
+--- openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahHeapRegion.cpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahHeapRegion.cpp
+@@ -30,6 +30,7 @@
+ #include "memory/space.inline.hpp"
+ #include "memory/universe.hpp"
+ #include "oops/oop.inline.hpp"
++#include "runtime/java.hpp"
+ #include "runtime/mutexLocker.hpp"
+ #include "runtime/os.hpp"
+ #include "runtime/safepoint.hpp"
+diff --git a/src/share/vm/gc_implementation/shenandoah/shenandoahRootProcessor.cpp b/src/share/vm/gc_implementation/shenandoah/shenandoahRootProcessor.cpp
+--- openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahRootProcessor.cpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahRootProcessor.cpp
+@@ -23,6 +23,7 @@
+ 
+ #include "precompiled.hpp"
+ 
++#include "classfile/javaClasses.hpp"
+ #include "classfile/systemDictionary.hpp"
+ #include "code/codeCache.hpp"
+ #include "gc_implementation/shenandoah/shenandoahRootProcessor.hpp"

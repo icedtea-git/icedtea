@@ -1,5 +1,25 @@
 2017-07-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump shenandoah to
+	aarch64-shenandoah-jdk8u141-b16-shenandoah-merge-2017-07-26
+	* patches/hotspot/shenandoah/8175887-pr3415.patch:
+	Removed as applied upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Move patch that still
+	applies to AArch32, but not Shenandoah, to the AArch32-only
+	block. Add PR3224 fix in the Shenandoah-only block.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u141-b16-shenandoah-merge-2017-07-26.
+	* patches/hotspot/aarch32/8175887-pr3415.patch,
+	Patch is still needed for AArch32 so replace symlink
+	with the actual patch from patches/hotspot/shenandoah.
+	* patches/hotspot/shenandoah/pr3224.patch:
+	Shenandoah update broke compilation without precompiled
+	headers again. This patch fixes it.
+
+2017-07-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump to icedtea-3.5.1.
 	* Makefile.am:
 	(JDK_UPDATE_VERSION): Bump to 144.
