@@ -151,6 +151,9 @@ New in release 3.5.1 (2017-07-27):
   - Make sure C2 arguments are not used when C2 is disabled.
   - Refactor parallel ClassLoaderData iterator
   - Revert G1 changes and bring shared BitMap
+  - Add missing cmpoops() declaration to AArch64 macro assembler. Back out matrix related code from AArch64 interpreter.
+  - Fix build without precompiled headers.
+  - Fixed build issues on Windows
 
 New in release 3.5.0 (2017-07-20):
 

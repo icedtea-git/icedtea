@@ -1,6 +1,19 @@
 2017-07-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump shenandoah to
+	aarch64-shenandoah-jdk8u141-b16-shenandoah-merge-2017-07-27-02
+	* patches/hotspot/shenandoah/pr3224.patch:
+	Removed as applied upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Drop fix for build without precompiled
+	headers, as applied upstream.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u141-b16-shenandoah-merge-2017-07-27-02.
+
+2017-07-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump shenandoah to
 	aarch64-shenandoah-jdk8u141-b16-shenandoah-merge-2017-07-26
 	* patches/hotspot/shenandoah/8175887-pr3415.patch:
 	Removed as applied upstream.

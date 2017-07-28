@@ -374,7 +374,6 @@ ICEDTEA_PATCHES += \
 
 # AArch32 doesn't yet have the latest update
 # Shenandoah included 8175887 ahead of upstream
-# Shenandoah broke builds with pre-compiled headers again (PR3224)
 if WITH_AARCH32_HSBUILD
 ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8175887-pr3415.patch \
@@ -382,9 +381,6 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8175097-pr3334-rh1417266.patch \
 	patches/hotspot/$(HSBUILD)/8173770.patch \
 	patches/hotspot/$(HSBUILD)/8181420.patch
-else
-ICEDTEA_PATCHES += \
-	patches/hotspot/$(HSBUILD)/pr3224.patch
 endif
 
 endif
