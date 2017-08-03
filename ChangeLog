@@ -1,3 +1,10 @@
+2017-05-10  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3379: Perl should be mandatory
+	* configure.ac:
+	Change Perl macro invocation to use IT_FIND_TOOL
+	and make it unconditional.
+
 2017-08-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-2.7.0pre13.
