@@ -1132,3 +1132,249 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java
                  addEx = ae;
              }
  
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/imageio/plugins/jpeg/JPEGImageReader.java openjdk-boot/jdk/src/share/classes/com/sun/imageio/plugins/jpeg/JPEGImageReader.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/imageio/plugins/jpeg/JPEGImageReader.java	2017-08-04 00:48:54.687958298 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/imageio/plugins/jpeg/JPEGImageReader.java	2017-08-04 01:25:49.468596257 +0100
+@@ -392,7 +392,8 @@
+         try {
+             gotoImage(imageIndex);
+             skipImage();
+-        } catch (IOException | IndexOutOfBoundsException e) {
++        } catch (IOException e) {
++        } catch (IndexOutOfBoundsException e) {
+         } finally {
+             cbLock.unlock();
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/management/Agent.java openjdk-boot/jdk/src/share/classes/sun/management/Agent.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/management/Agent.java	2017-08-04 00:48:54.699958109 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/management/Agent.java	2017-08-04 01:25:27.484951246 +0100
+@@ -383,7 +383,13 @@
+                     adaptorClass.getMethod("initialize",
+                         String.class, Properties.class);
+             initializeMethod.invoke(null,snmpPort,props);
+-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException x) {
++        } catch (ClassNotFoundException x) {
++            // snmp runtime doesn't exist - initialization fails
++            throw new UnsupportedOperationException("Unsupported management property: " + SNMP_PORT,x);
++        } catch (NoSuchMethodException x) {
++            // snmp runtime doesn't exist - initialization fails
++            throw new UnsupportedOperationException("Unsupported management property: " + SNMP_PORT,x);
++        } catch (IllegalAccessException x) {
+             // snmp runtime doesn't exist - initialization fails
+             throw new UnsupportedOperationException("Unsupported management property: " + SNMP_PORT,x);
+         } catch (InvocationTargetException x) {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/management/GarbageCollectionNotifInfoCompositeData.java openjdk-boot/jdk/src/share/classes/sun/management/GarbageCollectionNotifInfoCompositeData.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/management/GarbageCollectionNotifInfoCompositeData.java	2017-08-04 00:48:54.711957920 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/management/GarbageCollectionNotifInfoCompositeData.java	2017-08-04 01:24:16.534097177 +0100
+@@ -69,7 +69,11 @@
+                         Field f = cl.getDeclaredField("builder");
+                         f.setAccessible(true);
+                         return (GcInfoBuilder)f.get(gcNotifInfo.getGcInfo());
+-                    } catch(ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
++                    } catch(ClassNotFoundException e) {
++                        return null;
++                    } catch(NoSuchFieldException e) {
++                        return null;
++                    } catch(IllegalAccessException e) {
+                         return null;
+                     }
+                 }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/management/GcInfoCompositeData.java openjdk-boot/jdk/src/share/classes/sun/management/GcInfoCompositeData.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/management/GcInfoCompositeData.java	2017-08-04 00:48:54.719957794 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/management/GcInfoCompositeData.java	2017-08-04 01:23:28.846867575 +0100
+@@ -76,7 +76,11 @@
+                                 Field f = cl.getDeclaredField("builder");
+                                 f.setAccessible(true);
+                                 return (GcInfoBuilder)f.get(info);
+-                            } catch(ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
++                            } catch(ClassNotFoundException e) {
++                                return null;
++                            } catch(NoSuchFieldException e) {
++                                return null;
++                            } catch(IllegalAccessException e) {
+                                 return null;
+                             }
+                         }
+@@ -88,7 +92,11 @@
+                                 Field f = cl.getDeclaredField("extAttributes");
+                                 f.setAccessible(true);
+                                 return (Object[])f.get(info);
+-                            } catch(ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
++                            } catch(ClassNotFoundException e) {
++                                return null;
++                            } catch(NoSuchFieldException e) {
++                                return null;
++                            } catch(IllegalAccessException e) {
+                                 return null;
+                             }
+                         }
+@@ -172,7 +180,10 @@
+             Method m = GcInfo.class.getMethod("getMemoryUsageBeforeGc");
+             memoryUsageMapType =
+                 MappedMXBeanType.getMappedType(m.getGenericReturnType());
+-        } catch (NoSuchMethodException | OpenDataException e) {
++        } catch (NoSuchMethodException e) {
++            // Should never reach here
++            throw new AssertionError(e);
++        } catch (OpenDataException e) {
+             // Should never reach here
+             throw new AssertionError(e);
+         }
+@@ -214,7 +225,10 @@
+         try {
+             TabularData td = (TabularData) cd.get(MEMORY_USAGE_BEFORE_GC);
+             return cast(memoryUsageMapType.toJavaTypeData(td));
+-        } catch (InvalidObjectException | OpenDataException e) {
++        } catch (InvalidObjectException e) {
++            // Should never reach here
++            throw new AssertionError(e);
++        } catch (OpenDataException e) {
+             // Should never reach here
+             throw new AssertionError(e);
+         }
+@@ -230,7 +244,10 @@
+             TabularData td = (TabularData) cd.get(MEMORY_USAGE_AFTER_GC);
+             //return (Map<String,MemoryUsage>)
+             return cast(memoryUsageMapType.toJavaTypeData(td));
+-        } catch (InvalidObjectException | OpenDataException e) {
++        } catch (InvalidObjectException e) {
++            // Should never reach here
++            throw new AssertionError(e);
++        } catch (OpenDataException e) {
+             // Should never reach here
+             throw new AssertionError(e);
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastRef.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/UnicastRef.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastRef.java	2017-08-04 00:48:54.747957353 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/UnicastRef.java	2017-08-04 01:21:14.673036188 +0100
+@@ -186,7 +186,13 @@
+ 
+                 return returnValue;
+ 
+-            } catch (IOException | ClassNotFoundException e) {
++            } catch (IOException e) {
++                // disable saving any refs in the inputStream for GC
++                ((StreamRemoteCall)call).discardPendingRefs();
++                clientRefLog.log(Log.BRIEF,
++                                 e.getClass().getName() + " unmarshalling return: ", e);
++                throw new UnmarshalException("error unmarshalling return", e);
++            } catch (ClassNotFoundException e) {
+                 // disable saving any refs in the inputStream for GC
+                 ((StreamRemoteCall)call).discardPendingRefs();
+                 clientRefLog.log(Log.BRIEF,
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java	2017-08-04 00:48:54.755957226 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java	2017-08-04 01:20:56.273333695 +0100
+@@ -342,7 +342,12 @@
+                 // disable saving any refs in the inputStream for GC
+                 ((StreamRemoteCall) call).discardPendingRefs();
+                 throw aex;
+-            } catch (java.io.IOException | ClassNotFoundException e) {
++            } catch (java.io.IOException e) {
++                // disable saving any refs in the inputStream for GC
++                ((StreamRemoteCall) call).discardPendingRefs();
++                throw new UnmarshalException(
++                    "error unmarshalling arguments", e);
++            } catch (ClassNotFoundException e) {
+                 // disable saving any refs in the inputStream for GC
+                 ((StreamRemoteCall) call).discardPendingRefs();
+                 throw new UnmarshalException(
+--- openjdk-boot.orig/jaxp/src/javax/xml/transform/TransformerException.java	2017-08-04 02:37:40.114998937 +0100
++++ openjdk-boot/jaxp/src/javax/xml/transform/TransformerException.java	2017-08-04 02:40:35.124170763 +0100
+@@ -360,10 +360,13 @@
+                 } else {
+                     exception = null;
+                 }
+-                } catch (InvocationTargetException | IllegalAccessException
+-                        | NoSuchMethodException e) {
++	    } catch (InvocationTargetException e) {
+                 exception = null;
+-            }
++	    } catch (IllegalAccessException e) {
++                exception = null;
++	    } catch (NoSuchMethodException e) {
++                exception = null;
++	    }
+         }
+         // insure output is written
+         s.flush();
+--- openjdk-boot.orig/jaxws/src/share/jaxws_classes/com/sun/xml/internal/ws/util/xml/XmlUtil.java	2017-08-04 02:51:02.650041176 +0100
++++ openjdk-boot/jaxws/src/share/jaxws_classes/com/sun/xml/internal/ws/util/xml/XmlUtil.java	2017-08-04 02:51:52.065244665 +0100
+@@ -440,7 +440,11 @@
+                 featureToSet = LOAD_EXTERNAL_DTD;
+                 factory.setFeature(featureToSet, false);
+             }
+-        } catch (ParserConfigurationException | SAXNotRecognizedException | SAXNotSupportedException e) {
++        } catch (ParserConfigurationException e) {
++            LOGGER.log(Level.WARNING, "Factory [{0}] doesn't support "+featureToSet+" feature!", new Object[]{factory.getClass().getName()});
++        } catch (SAXNotRecognizedException e) {
++            LOGGER.log(Level.WARNING, "Factory [{0}] doesn't support "+featureToSet+" feature!", new Object[]{factory.getClass().getName()});
++        } catch (SAXNotSupportedException e) {
+             LOGGER.log(Level.WARNING, "Factory [{0}] doesn't support "+featureToSet+" feature!", new Object[]{factory.getClass().getName()});
+         }
+         return factory;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Skel.java openjdk-boot/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Skel.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Skel.java	2017-08-04 13:34:18.780791108 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Skel.java	2017-08-04 13:36:51.550336758 +0100
+@@ -74,7 +74,9 @@
+                     java.io.ObjectInput in = call.getInputStream();
+                     $param_String_1 = (java.lang.String) in.readObject();
+                     $param_Remote_2 = (java.rmi.Remote) in.readObject();
+-                } catch (java.io.IOException | java.lang.ClassNotFoundException e) {
++                } catch (java.io.IOException e) {
++                    throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
++                } catch (java.lang.ClassNotFoundException e) {
+                     throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
+                 } finally {
+                     call.releaseInputStream();
+@@ -107,7 +109,9 @@
+                 try {
+                     java.io.ObjectInput in = call.getInputStream();
+                     $param_String_1 = (java.lang.String) in.readObject();
+-                } catch (java.io.IOException | java.lang.ClassNotFoundException e) {
++                } catch (java.io.IOException e) {
++                    throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
++                } catch (java.lang.ClassNotFoundException e) {
+                     throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
+                 } finally {
+                     call.releaseInputStream();
+@@ -133,7 +137,9 @@
+                     java.io.ObjectInput in = call.getInputStream();
+                     $param_String_1 = (java.lang.String) in.readObject();
+                     $param_Remote_2 = (java.rmi.Remote) in.readObject();
+-                } catch (java.io.IOException | java.lang.ClassNotFoundException e) {
++                } catch (java.io.IOException e) {
++                    throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
++                } catch (java.lang.ClassNotFoundException e) {
+                     throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
+                 } finally {
+                     call.releaseInputStream();
+@@ -156,7 +162,9 @@
+                 try {
+                     java.io.ObjectInput in = call.getInputStream();
+                     $param_String_1 = (java.lang.String) in.readObject();
+-                } catch (java.io.IOException | java.lang.ClassNotFoundException e) {
++                } catch (java.io.IOException e) {
++                    throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
++                } catch (java.lang.ClassNotFoundException e) {
+                     throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
+                 } finally {
+                     call.releaseInputStream();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Stub.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Stub.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Stub.java	2017-08-04 13:34:18.800790786 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Stub.java	2017-08-04 13:35:09.851970460 +0100
+@@ -132,7 +132,13 @@
+                     });
+                 }
+                 $result = (java.rmi.dgc.Lease) in.readObject();
+-            } catch (java.io.IOException | java.lang.ClassNotFoundException e) {
++            } catch (java.io.IOException e) {
++                if (connection instanceof TCPConnection) {
++                    // Modified to prevent re-use of the connection after an exception
++                    ((TCPConnection) connection).getChannel().free(connection, false);
++                }
++                throw new java.rmi.UnmarshalException("error unmarshalling return", e);
++            } catch (java.lang.ClassNotFoundException e) {
+                 if (connection instanceof TCPConnection) {
+                     // Modified to prevent re-use of the connection after an exception
+                     ((TCPConnection) connection).getChannel().free(connection, false);

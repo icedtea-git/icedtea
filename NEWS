@@ -12,12 +12,83 @@ JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.11 (2017-07-XX):
+New in release 2.6.11 (2017-08-XX):
 
+* Security fixes
+  - S8163958, CVE-2017-10102: Improved garbage collection
+  - S8167228: Update to libpng 1.6.28
+  - S8169209, CVE-2017-10053: Improved image post-processing steps
+  - S8169392, CVE-2017-10067: Additional jar validation steps
+  - S8170966, CVE-2017-10081: Right parenthesis issue
+  - S8172204, CVE-2017-10087: Better Thread Pool execution
+  - S8172461, CVE-2017-10089: Service Registration Lifecycle
+  - S8172465, CVE-2017-10090: Better handling of channel groups
+  - S8172469, CVE-2017-10096: Transform Transformer Exceptions
+  - S8173286, CVE-2017-10101: Better reading of text catalogs
+  - S8173697, CVE-2017-10107: Less Active Activations
+  - S8173770, CVE-2017-10074: Image conversion improvements
+  - S8174098, CVE-2017-10110: Better image fetching
+  - S8174105, CVE-2017-10108: Better naming attribution
+  - S8174113, CVE-2017-10109: Better sourcing of code
+  - S8174770: Check registry registration location
+  - S8174873: Improved certificate processing
+  - S8175106, CVE-2017-10115: Higher quality DSA operations
+  - S8175110, CVE-2017-10118: Higher quality ECDSA operations
+  - S8176055: JMX diagnostic improvements
+  - S8176067, CVE-2017-10116: Proper directory lookup processing
+  - S8176760, CVE-2017-10135: Better handling of PKCS8 material
+  - S8178135, CVE-2017-10176: Additional elliptic curve support
+  - S8181420, CVE-2017-10074: PPC: Image conversion improvements
+  - S8183551, CVE-2017-10074, PR3423: AArch64: Image conversion improvements
+  - S8184119, CVE-2017-10111: Incorrect return processing for the LF editor of MethodHandles.permuteArguments
+* Import of OpenJDK 7 u151 build 0
+  - S7117357: Warnings in sun.instrument, tools and other sun.* classes
+  - S7117570: Warnings in sun.mangement.* and its subpackages
+  - S7143230: fix warnings in java.util.jar, sun.tools.jar, zipfs demo, etc.
+  - S8022440: suppress deprecation warnings in sun.rmi
+  - S8024069: replace_in_map() should operate on parent maps
+  - S8026796: Make replace_in_map() on parent maps generic
+  - S8030787: [Parfait] JNI-related warnings from b119 for jdk/src/share/native/sun/awt/image
+  - S8030875: Macros for checking and returning on exceptions
+  - S8031737: CHECK_NULL and CHECK_EXCEPTION macros cleanup
+  - S8034912: backport of 8031737 to jdk8u breaks linux buld.
+  - S8035629: [parfait] JNI exc pending in jdk/src/windows/native/sun/windows/ShellFolder2.cpp
+  - S8037287: Windows build failed after JDK-8030787
+  - S8048703: ReplacedNodes dumps it's content to tty
+  - S8080492: [Parfait] Uninitialised variable in jdk/src/java/desktop/windows/native/libawt/
+  - S8139870: sun.management.LazyCompositeData.isTypeMatched() fails for composite types with items of ArrayType
+  - S8143377: Test PKCS8Test.java fails
+  - S8149450: LdapCtx.processReturnCode() throwing Null Pointer Exception
+  - S8155690: Update libPNG library to the latest up-to-date
+  - S8156804: Better constraint checking (sync with upstream version)
+  - S8162461: Hang due to JNI up-call made whilst holding JNI critical lock
+  - S8165231: java.nio.Bits.unaligned() doesn't return true on ppc
+  - S8165367: Additional tests for JEP 288: Disable SHA-1 Certificates
+  - S8173145: Menu is activated after using mnemonic Alt/Key combination
+  - S8174164: SafePointNode::_replaced_nodes breaks with irreducible loops
+  - S8175097: [TESTBUG] 8174164 fix missed the test
+  - S8175251: Failed to load RSA private key from pkcs12
+  - S8176731: JCK tests in api/javax_xml/transform/ spec conformance started failing after 8172469
+  - S8176769: Remove accidental spec change in jdk8u
+  - S8177449: (tz) Support tzdata2017b
+  - S8178996: [macos] JComboBox doesn't display popup in mixed JavaFX Swing Application on 8u131 and Mac OS 10.12
+  - S8179014: JFileChooser with Windows look and feel crashes on win 10
+  - S8179887: Build failure with glibc >= 2.24: error: 'int readdir_r(DIR*, dirent*, dirent**)' is deprecated
+  - S8180582: The bind to rmiregistry is rejected by registryFilter even though registryFilter is set
+  - S8181591: 8u141 L10n resource file update
+  - S8182054: Improve wsdl support
+  - S8184993: Jar file verification failing with SecurityException: digest missing xxx
+  - S8185501: Missing import in JAXP code
+  - S8185502: No overflow operator on OpenJDK 7
+* Import of OpenJDK 7 u151 build 1
+  - S8185716: OpenJDK 7 PPC64 port uses a different ins_encode format in ppc.ad
 * Backports
   - S7177216, PR3398, RH1446700: native2ascii changes file permissions of input file
   - S8179084, PR3410, RH1455694: HotSpot VM fails to start when AggressiveHeap is set
   - S8181419, PR3414, RH1463144: Race in jdwp invoker handling may lead to crashes or invalid results
+* AArch64 port
+  - S8144028, PR3431: Use AArch64 bit-test instructions in C2
+  - S8152537, PR3431: aarch64: Make use of CBZ and CBNZ when comparing unsigned values with zero.
 
 New in release 2.6.10 (2017-05-16):
 

@@ -1,5 +1,61 @@
 2017-08-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump to 2.6.11.
+	* Makefile.am,
+	(JDK_UPDATE_VERSION): Bump to 141.
+	(BUILD_VERSION): Set to b01.
+	(CORBA_CHANGESET): Update to icedtea-2.6.11.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 2.6.11.
+	* hotspot.map.in: Update to icedtea-2.6.11.
+	* patches/boot/ecj-diamond.patch:
+	Regenerated. Add cases in
+	java.util.jar.Attributes, java.util.jar.JarVerifier,
+	javax.imageio.spi.ServiceRegistry,
+	sun.management.ConnectorAddressLink,
+	sun.management.counter.perf.PerfInstrumentation,
+	sun.management.Flag,
+	sun.management.GarbageCollectionNotifInfoCompositeData,
+	sun.management.HotspotCompilation,
+	sun.management.HotspotDiagnostic,
+	sun.management.HotspotThread,
+	sun.management.jmxremote.ConnectorBootstrap,
+	sun.management.ManagementFactoryHelper,
+	sun.management.MappedMXBeanType,
+	sun.management.NotificationEmitterSupport,
+	sun.management.RuntimeImpl,
+	sun.net.RegisterDomain,
+	sun.tools.jar.CommandLine,
+	sun.tools.jar.Manifest and sun.tools.jar.SignatureFile
+	* patches/boot/ecj-multicatch.patch:
+	Add cases in
+	com.sun.imageio.plugins.jpeg.JPEGImageReader,
+	sun.management.Agent,
+	sun.management.GarbageCollectionNotifInfoCompositeData,
+	sun.management.GcInfoCompositeData,
+	sun.rmi.server.UnicastRef, sun.rmi.server.UnicastServerRef,
+	javax.xml.transform.TransformerException,
+	com.sun.xml.internal.ws.util.xml.XmlUtil,
+	sun.rmi.registry.RegistryImpl_Skel and
+	sun.rmi.transport.DGCImpl_Stub
+	* patches/boot/ecj-stringswitch.patch: Regenerated.
+	* patches/boot/ecj-trywithresources.patch:
+	Add cases in
+	sun.management.jmxremote.ConnectorBootstrap.
+
+2017-08-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump to 2.6.11pre01.
 	* Makefile.am,
 	(CORBA_CHANGESET): Update to icedtea-2.6.11pre01.
