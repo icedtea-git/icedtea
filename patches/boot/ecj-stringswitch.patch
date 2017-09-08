@@ -1,6 +1,6 @@
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/ClassReader.java	2017-09-06 17:11:36.127837372 +0100
 @@ -350,19 +350,16 @@
              if (attrCommands != null) {
                  Attribute.Layout lkey = Attribute.keyForLookup(ctype, name);
@@ -32,8 +32,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Cla
              // Find canonical instance of the requested attribute.
              Attribute a = Attribute.lookup(Package.attrDefs, ctype, name);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2017-09-06 17:11:36.127837372 +0100
 @@ -73,16 +73,14 @@
          {
              // Non-standard, undocumented "--unpack" switch enables unpack mode.
@@ -91,8 +91,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Dri
  
          if (logFile != null && !logFile.equals("")) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Package.java	2017-09-06 17:11:36.127837372 +0100
 @@ -1107,30 +1107,25 @@
          // what is one of { Debug, Compile, Constant, Exceptions, InnerClasses }
          if (verbose > 0)
@@ -143,9 +143,291 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Pac
          }
      }
  
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java	2017-09-06 17:14:01.145507377 +0100
+@@ -2161,66 +2161,50 @@
+         if (envprops == null || envprops.get(propName) == null) {
+             return null;
+         }
+-        switch (propName) {
+-            case REF_SEPARATOR:
+-                addrEncodingSeparator = DEFAULT_REF_SEPARATOR;
+-                break;
+-            case TYPES_ONLY:
++        if (REF_SEPARATOR.equals(propName)) {
++            addrEncodingSeparator = DEFAULT_REF_SEPARATOR;
++        } else if (TYPES_ONLY.equals(propName)) {
+                 typesOnly = DEFAULT_TYPES_ONLY;
+-                break;
+-            case DELETE_RDN:
++        } else if (DELETE_RDN.equals(propName)) {
+                 deleteRDN = DEFAULT_DELETE_RDN;
+-                break;
+-            case DEREF_ALIASES:
+-                derefAliases = DEFAULT_DEREF_ALIASES;
+-                break;
+-            case Context.BATCHSIZE:
+-                batchSize = DEFAULT_BATCH_SIZE;
+-                break;
+-            case REFERRAL_LIMIT:
+-                referralHopLimit = DEFAULT_REFERRAL_LIMIT;
+-                break;
+-            case Context.REFERRAL:
+-                setReferralMode(null, true);
+-                break;
+-            case BINARY_ATTRIBUTES:
+-                setBinaryAttributes(null);
+-                break;
+-            case CONNECT_TIMEOUT:
+-                connectTimeout = -1;
+-                break;
+-            case READ_TIMEOUT:
+-                readTimeout = -1;
+-                break;
+-            case WAIT_FOR_REPLY:
+-                waitForReply = true;
+-                break;
+-            case REPLY_QUEUE_SIZE:
+-                replyQueueSize = -1;
+-                break;
++        } else if (DEREF_ALIASES.equals(propName)) {
++            derefAliases = DEFAULT_DEREF_ALIASES;
++        } else if (Context.BATCHSIZE.equals(propName)) {
++            batchSize = DEFAULT_BATCH_SIZE;
++        } else if (REFERRAL_LIMIT.equals(propName)) {
++            referralHopLimit = DEFAULT_REFERRAL_LIMIT;
++        } else if (Context.REFERRAL.equals(propName)) {
++            setReferralMode(null, true);
++        } else if (BINARY_ATTRIBUTES.equals(propName)) {
++            setBinaryAttributes(null);
++        } else if (CONNECT_TIMEOUT.equals(propName)) {
++            connectTimeout = -1;
++        } else if (READ_TIMEOUT.equals(propName)) {
++            readTimeout = -1;
++        } else if (WAIT_FOR_REPLY.equals(propName)) {
++            waitForReply = true;
++        } else if (REPLY_QUEUE_SIZE.equals(propName)) {
++            replyQueueSize = -1;
+ 
+             // The following properties affect the connection
+ 
+-            case Context.SECURITY_PROTOCOL:
+-                closeConnection(SOFT_CLOSE);
+-                // De-activate SSL and reset the context's url and port number
+-                if (useSsl && !hasLdapsScheme) {
+-                    useSsl = false;
+-                    url = null;
+-                    if (useDefaultPortNumber) {
+-                        port_number = DEFAULT_PORT;
+-                    }
++        } else if (Context.SECURITY_PROTOCOL.equals(propName)) {
++            closeConnection(SOFT_CLOSE);
++            // De-activate SSL and reset the context's url and port number
++            if (useSsl && !hasLdapsScheme) {
++                useSsl = false;
++                url = null;
++                if (useDefaultPortNumber) {
++                    port_number = DEFAULT_PORT;
+                 }
+-                break;
+-            case VERSION:
+-            case SOCKET_FACTORY:
+-                closeConnection(SOFT_CLOSE);
+-                break;
+-            case Context.SECURITY_AUTHENTICATION:
+-            case Context.SECURITY_PRINCIPAL:
+-            case Context.SECURITY_CREDENTIALS:
+-                sharable = false;
+-                break;
++            }
++        } else if (VERSION.equals(propName) ||
++                   SOCKET_FACTORY.equals(propName)) {
++            closeConnection(SOFT_CLOSE);
++        } else if (Context.SECURITY_AUTHENTICATION.equals(propName) ||
++                   Context.SECURITY_PRINCIPAL.equals(propName) ||
++                   Context.SECURITY_CREDENTIALS.equals(propName)) {
++            sharable = false;
+         }
+ 
+         // Update environment; reconnection will use new props
+@@ -2236,66 +2220,50 @@
+             if (propVal == null) {
+                 return removeFromEnvironment(propName);
+             }
+-            switch (propName) {
+-                case REF_SEPARATOR:
+-                    setRefSeparator((String)propVal);
+-                    break;
+-                case TYPES_ONLY:
+-                    setTypesOnly((String)propVal);
+-                    break;
+-                case DELETE_RDN:
+-                    setDeleteRDN((String)propVal);
+-                    break;
+-                case DEREF_ALIASES:
+-                    setDerefAliases((String)propVal);
+-                    break;
+-                case Context.BATCHSIZE:
+-                    setBatchSize((String)propVal);
+-                    break;
+-                case REFERRAL_LIMIT:
+-                    setReferralLimit((String)propVal);
+-                    break;
+-                case Context.REFERRAL:
++            if (REF_SEPARATOR.equals(propName)) {
++                setRefSeparator((String)propVal);
++            } else if (TYPES_ONLY.equals(propName)) {
++                setTypesOnly((String)propVal);
++            } else if (DELETE_RDN.equals(propName)) {
++                setDeleteRDN((String)propVal);
++            } else if (DEREF_ALIASES.equals(propName)) {
++                setDerefAliases((String)propVal);
++            } else if (Context.BATCHSIZE.equals(propName)) {
++                setBatchSize((String)propVal);
++            } else if (REFERRAL_LIMIT.equals(propName)) {
++                setReferralLimit((String)propVal);
++            } else if (Context.REFERRAL.equals(propName)) {
+                     setReferralMode((String)propVal, true);
+-                    break;
+-                case BINARY_ATTRIBUTES:
+-                    setBinaryAttributes((String)propVal);
+-                    break;
+-                case CONNECT_TIMEOUT:
+-                    setConnectTimeout((String)propVal);
+-                    break;
+-                case READ_TIMEOUT:
+-                    setReadTimeout((String)propVal);
+-                    break;
+-                case WAIT_FOR_REPLY:
+-                    setWaitForReply((String)propVal);
+-                    break;
+-                case REPLY_QUEUE_SIZE:
+-                    setReplyQueueSize((String)propVal);
+-                    break;
++            } else if (BINARY_ATTRIBUTES.equals(propName)) {
++                setBinaryAttributes((String)propVal);
++            } else if (CONNECT_TIMEOUT.equals(propName)) {
++                setConnectTimeout((String)propVal);
++            } else if (READ_TIMEOUT.equals(propName)) {
++                setReadTimeout((String)propVal);
++            } else if (WAIT_FOR_REPLY.equals(propName)) {
++                setWaitForReply((String)propVal);
++            } else if (REPLY_QUEUE_SIZE.equals(propName)) {
++                setReplyQueueSize((String)propVal);
+ 
+             // The following properties affect the connection
+ 
+-                case Context.SECURITY_PROTOCOL:
+-                    closeConnection(SOFT_CLOSE);
+-                    // Activate SSL and reset the context's url and port number
+-                    if ("ssl".equals(propVal)) {
+-                        useSsl = true;
+-                        url = null;
+-                        if (useDefaultPortNumber) {
+-                            port_number = DEFAULT_SSL_PORT;
+-                        }
++            } else if (Context.SECURITY_PROTOCOL.equals(propName)) {
++                closeConnection(SOFT_CLOSE);
++                // Activate SSL and reset the context's url and port number
++                if ("ssl".equals(propVal)) {
++                    useSsl = true;
++                    url = null;
++                    if (useDefaultPortNumber) {
++                        port_number = DEFAULT_SSL_PORT;
+                     }
+-                    break;
+-                case VERSION:
+-                case SOCKET_FACTORY:
+-                    closeConnection(SOFT_CLOSE);
+-                    break;
+-                case Context.SECURITY_AUTHENTICATION:
+-                case Context.SECURITY_PRINCIPAL:
+-                case Context.SECURITY_CREDENTIALS:
+-                    sharable = false;
+-                    break;
++                }
++            } else if (VERSION.equals(propName) ||
++                       SOCKET_FACTORY.equals(propName)) {
++                closeConnection(SOFT_CLOSE);
++            } else if (Context.SECURITY_AUTHENTICATION.equals(propName) ||
++                       Context.SECURITY_PRINCIPAL.equals(propName) ||
++                       Context.SECURITY_CREDENTIALS.equals(propName)) {
++                sharable = false;
+             }
+ 
+             // Update environment; reconnection will use new props
+@@ -2412,22 +2380,17 @@
+     private void setReferralMode(String ref, boolean update) {
+         // First determine the referral mode
+         if (ref != null) {
+-            switch (ref) {
+-                case "follow-scheme":
+-                    handleReferrals = LdapClient.LDAP_REF_FOLLOW_SCHEME;
+-                    break;
+-                case "follow":
+-                    handleReferrals = LdapClient.LDAP_REF_FOLLOW;
+-                    break;
+-                case "throw":
+-                    handleReferrals = LdapClient.LDAP_REF_THROW;
+-                    break;
+-                case "ignore":
+-                    handleReferrals = LdapClient.LDAP_REF_IGNORE;
+-                    break;
+-                default:
+-                    throw new IllegalArgumentException(
+-                        "Illegal value for " + Context.REFERRAL + " property.");
++	    if ("follow-scheme".equals(ref)) {
++		handleReferrals = LdapClient.LDAP_REF_FOLLOW_SCHEME;
++	    } else if ("follow".equals(ref)) {
++		handleReferrals = LdapClient.LDAP_REF_FOLLOW;
++	    } else if ("throw".equals(ref)) {
++		handleReferrals = LdapClient.LDAP_REF_THROW;
++	    } else if ( "ignore".equals(ref)) {
++		handleReferrals = LdapClient.LDAP_REF_IGNORE;
++	    } else {
++		throw new IllegalArgumentException(
++                    "Illegal value for " + Context.REFERRAL + " property.");
+             }
+         } else {
+             handleReferrals = DEFAULT_REFERRAL_MODE;
+@@ -2450,22 +2413,17 @@
+      */
+     private void setDerefAliases(String deref) {
+         if (deref != null) {
+-            switch (deref) {
+-                case "never":
+-                    derefAliases = 0; // never de-reference aliases
+-                    break;
+-                case "searching":
+-                    derefAliases = 1; // de-reference aliases during searching
+-                    break;
+-                case "finding":
+-                    derefAliases = 2; // de-reference during name resolution
+-                    break;
+-                case "always":
+-                    derefAliases = 3; // always de-reference aliases
+-                    break;
+-                default:
+-                    throw new IllegalArgumentException("Illegal value for " +
+-                        DEREF_ALIASES + " property.");
++	    if ("never".equals(deref)) {
++		derefAliases = 0; // never de-reference aliases
++	    } else if ("searching".equals(deref)) {
++		derefAliases = 1; // de-reference aliases during searching
++	    } else if ("finding".equals(deref)) {
++		derefAliases = 2; // de-reference during name resolution
++	    } else if ("always".equals(deref)) {
++		derefAliases = 3; // always de-reference aliases
++	    } else {
++		throw new IllegalArgumentException("Illegal value for " +
++                    DEREF_ALIASES + " property.");
+             }
+         } else {
+             derefAliases = DEFAULT_DEREF_ALIASES;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/ntlm/NTLM.java	2017-09-06 17:11:36.127837372 +0100
 @@ -65,17 +65,23 @@
  
      protected NTLM(String version) throws NTLMException {
@@ -182,8 +464,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/ntlm/NTLM.jav
              fac = SecretKeyFactory.getInstance ("DES");
              cipher = Cipher.getInstance ("DES/ECB/NoPadding");
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Base.java	2017-09-06 17:11:36.131837308 +0100
 @@ -1579,45 +1579,42 @@
          KeySpec spec = null;
          SecretKeyFactory desFactory =
@@ -267,8 +549,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/D
          return desFactory.generateSecret(spec);
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/digest/DigestMD5Server.java	2017-09-06 17:11:36.131837308 +0100
 @@ -461,23 +461,19 @@
  
          // Check that QOP is one sent by server
@@ -307,8 +589,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/digest/D
          if ((cQop&allQop) == 0) {
              throw new SaslException("DIGEST-MD5: server does not support " +
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMClient.java	2017-09-06 17:11:36.131837308 +0100
 @@ -205,13 +205,12 @@
          if (!isComplete()) {
              throw new IllegalStateException("authentication not complete");
@@ -330,8 +612,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTL
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTLMServer.java	2017-09-06 17:11:36.131837308 +0100
 @@ -219,13 +219,12 @@
          if (!isComplete()) {
              throw new IllegalStateException("authentication not complete");
@@ -353,8 +635,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/ntlm/NTL
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java	2017-04-04 13:15:36.561971285 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/security/sasl/util/AbstractSaslImpl.java	2017-09-06 17:11:36.131837308 +0100
 @@ -155,23 +155,22 @@
          if (!completed) {
              throw new IllegalStateException("SASL authentication not completed");
@@ -396,8 +678,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/security/sasl/util/Abs
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2017-09-06 17:11:36.131837308 +0100
 @@ -328,12 +328,11 @@
                                       Object[] appendixResult) {
          try {
@@ -648,8 +930,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleN
          }
          return false;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleProxies.java	2017-09-06 17:11:36.131837308 +0100
 @@ -269,14 +269,16 @@
  
      private static
@@ -690,9 +972,110 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleP
              return (self == args[0]);
          }
          return null;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/org/jcp/xml/dsig/internal/dom/Policy.java openjdk-boot/jdk/src/share/classes/org/jcp/xml/dsig/internal/dom/Policy.java
+--- openjdk-boot.orig/jdk/src/share/classes/org/jcp/xml/dsig/internal/dom/Policy.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/org/jcp/xml/dsig/internal/dom/Policy.java	2017-09-06 17:11:36.135837243 +0100
+@@ -81,56 +81,48 @@
+         for (String entry : entries) {
+             String[] tokens = entry.split("\\s");
+             String type = tokens[0];
+-            switch(type) {
+-                case "disallowAlg":
+-                    if (tokens.length != 2) {
+-                        error(entry);
+-                    }
+-                    disallowedAlgs.add(URI.create(tokens[1]));
+-                    break;
+-                case "maxTransforms":
+-                    if (tokens.length != 2) {
+-                        error(entry);
+-                    }
+-                    maxTrans = Parsing.parseUnsignedInt(tokens[1]);
+-                    break;
+-                case "maxReferences":
+-                    if (tokens.length != 2) {
+-                        error(entry);
+-                    }
+-                    maxRefs = Parsing.parseUnsignedInt(tokens[1]);
+-                    break;
+-                case "disallowReferenceUriSchemes":
+-                    if (tokens.length == 1) {
+-                        error(entry);
+-                    }
+-                    for (int i = 1; i < tokens.length; i++) {
+-                        String scheme = tokens[i];
+-                        disallowedRefUriSchemes.add(
+-                            scheme.toLowerCase(Locale.ROOT));
+-                    }
+-                    break;
+-                case "minKeySize":
+-                    if (tokens.length != 3) {
+-                        error(entry);
+-                    }
+-                    minKeyMap.put(tokens[1],
+-                                  Parsing.parseUnsignedInt(tokens[2]));
+-                    break;
+-                case "noDuplicateIds":
+-                    if (tokens.length != 1) {
+-                        error(entry);
+-                    }
+-                    noDuplicateIds = true;
+-                    break;
+-                case "noRetrievalMethodLoops":
+-                    if (tokens.length != 1) {
+-                        error(entry);
+-                    }
+-                    noRMLoops = true;
+-                    break;
+-                default:
++            if ("disallowAlg".equals(type)) {
++                if (tokens.length != 2) {
+                     error(entry);
++                }
++                disallowedAlgs.add(URI.create(tokens[1]));
++            } else if ("maxTransforms".equals(type)) {
++                if (tokens.length != 2) {
++                    error(entry);
++                }
++                maxTrans = Parsing.parseUnsignedInt(tokens[1]);
++            } else if ("maxReferences".equals(type)) {
++                if (tokens.length != 2) {
++                    error(entry);
++                }
++                maxRefs = Parsing.parseUnsignedInt(tokens[1]);
++            } else if ("disallowReferenceUriSchemes".equals(type)) {
++                if (tokens.length == 1) {
++                    error(entry);
++                }
++                for (int i = 1; i < tokens.length; i++) {
++                    String scheme = tokens[i];
++                    disallowedRefUriSchemes.add(
++                        scheme.toLowerCase(Locale.ROOT));
++                }
++            } else if ("minKeySize".equals(type)) {
++                if (tokens.length != 3) {
++                    error(entry);
++                }
++                minKeyMap.put(tokens[1],
++                              Parsing.parseUnsignedInt(tokens[2]));
++            } else if ("noDuplicateIds".equals(type)) {
++                if (tokens.length != 1) {
++                    error(entry);
++                }
++                noDuplicateIds = true;
++            } else if ("noRetrievalMethodLoops".equals(type)) {
++                if (tokens.length != 1) {
++                    error(entry);
++                }
++                noRMLoops = true;
++            } else {
++                error(entry);
+             }
+         }
+     }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2017-09-06 17:11:36.131837308 +0100
 @@ -119,24 +119,20 @@
          String optStr = (opts.length > 1 && opts[1] != null)
                  ? opts[1].trim()
@@ -730,8 +1113,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.ja
  
      /*
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java openjdk-boot/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/reflect/annotation/AnnotationInvocationHandler.java	2017-09-06 17:11:36.131837308 +0100
 @@ -65,14 +65,12 @@
          if (paramTypes.length != 0)
              throw new AssertionError("Too many parameters for an annotation method");
@@ -751,8 +1134,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/reflect/annotation/Annotat
          // Handle annotation member accessors
          Object result = memberValues.get(member);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/Config.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/Config.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/Config.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/Config.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/Config.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/Config.java	2017-09-06 17:11:36.131837308 +0100
 @@ -428,14 +428,13 @@
          if (s == null) {
              return null;
@@ -773,8 +1156,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/Config.java 
  
      /**
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/Config.java openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/Config.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/Config.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/Config.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/Config.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/Config.java	2017-09-06 17:11:36.131837308 +0100
 @@ -574,13 +574,12 @@
  
      private boolean parseBoolean() throws IOException {
@@ -820,8 +1203,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/Config.jav
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11Key.java openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11Key.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11Key.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11Key.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11Key.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11Key.java	2017-09-06 17:11:36.131837308 +0100
 @@ -304,22 +304,21 @@
      // we assume that all components of public keys are always accessible
      static PublicKey publicKey(Session session, long keyID, String algorithm,
@@ -941,8 +1324,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11Key.jav
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/X509CertPath.java	2017-09-06 17:11:36.131837308 +0100
 @@ -153,15 +153,12 @@
              throws CertificateException {
          super("X.509");
@@ -986,8 +1369,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java openjdk-boot/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/HandshakeMessage.java	2017-09-06 17:11:36.131837308 +0100
 @@ -818,16 +818,13 @@
              sig = JsseJce.getSignature(
                          preferableSignatureAlgorithm.getAlgorithmName());
@@ -1063,8 +1446,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/HandshakeMess
  
      /*
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java openjdk-boot/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/X509KeyManagerImpl.java	2017-09-06 17:11:36.131837308 +0100
 @@ -525,43 +525,38 @@
                  if (ku != null) {
                      String algorithm = cert.getPublicKey().getAlgorithm();
@@ -1140,8 +1523,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/X509KeyManage
                  }
              } catch (CertificateException e) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2017-04-04 13:16:32.753067002 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2017-09-06 17:11:36.135837243 +0100
 @@ -387,19 +387,23 @@
              GE;         // ">="
  
@@ -1180,8 +1563,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgo
  
                  throw new IllegalArgumentException("Error in security " +
 diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java openjdk-boot/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java
---- openjdk-boot.orig/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java	2016-09-19 11:44:50.000000000 +0100
-+++ openjdk-boot/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java	2017-04-04 13:15:36.557971350 +0100
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java	2017-08-22 02:03:52.000000000 +0100
++++ openjdk-boot/jdk/src/solaris/classes/sun/security/smartcardio/PlatformPCSC.java	2017-09-06 17:11:36.135837243 +0100
 @@ -101,19 +101,17 @@
          k = lib.indexOf("$ARCH");
          if (k != -1) {
@@ -1209,380 +1592,3 @@ diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/security/smartcardio/Pla
              }
              lib = replace(k, lib, "$ARCH", arch);
          }
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java	2017-04-07 15:22:02.796779767 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java	2017-04-07 15:36:19.702877596 +0100
-@@ -2163,66 +2163,50 @@
-         if (envprops == null || envprops.get(propName) == null) {
-             return null;
-         }
--        switch (propName) {
--            case REF_SEPARATOR:
--                addrEncodingSeparator = DEFAULT_REF_SEPARATOR;
--                break;
--            case TYPES_ONLY:
-+        if (REF_SEPARATOR.equals(propName)) {
-+            addrEncodingSeparator = DEFAULT_REF_SEPARATOR;
-+        } else if (TYPES_ONLY.equals(propName)) {
-                 typesOnly = DEFAULT_TYPES_ONLY;
--                break;
--            case DELETE_RDN:
-+        } else if (DELETE_RDN.equals(propName)) {
-                 deleteRDN = DEFAULT_DELETE_RDN;
--                break;
--            case DEREF_ALIASES:
--                derefAliases = DEFAULT_DEREF_ALIASES;
--                break;
--            case Context.BATCHSIZE:
--                batchSize = DEFAULT_BATCH_SIZE;
--                break;
--            case REFERRAL_LIMIT:
--                referralHopLimit = DEFAULT_REFERRAL_LIMIT;
--                break;
--            case Context.REFERRAL:
--                setReferralMode(null, true);
--                break;
--            case BINARY_ATTRIBUTES:
--                setBinaryAttributes(null);
--                break;
--            case CONNECT_TIMEOUT:
--                connectTimeout = -1;
--                break;
--            case READ_TIMEOUT:
--                readTimeout = -1;
--                break;
--            case WAIT_FOR_REPLY:
--                waitForReply = true;
--                break;
--            case REPLY_QUEUE_SIZE:
--                replyQueueSize = -1;
--                break;
-+        } else if (DEREF_ALIASES.equals(propName)) {
-+            derefAliases = DEFAULT_DEREF_ALIASES;
-+        } else if (Context.BATCHSIZE.equals(propName)) {
-+            batchSize = DEFAULT_BATCH_SIZE;
-+        } else if (REFERRAL_LIMIT.equals(propName)) {
-+            referralHopLimit = DEFAULT_REFERRAL_LIMIT;
-+        } else if (Context.REFERRAL.equals(propName)) {
-+            setReferralMode(null, true);
-+        } else if (BINARY_ATTRIBUTES.equals(propName)) {
-+            setBinaryAttributes(null);
-+        } else if (CONNECT_TIMEOUT.equals(propName)) {
-+            connectTimeout = -1;
-+        } else if (READ_TIMEOUT.equals(propName)) {
-+            readTimeout = -1;
-+        } else if (WAIT_FOR_REPLY.equals(propName)) {
-+            waitForReply = true;
-+        } else if (REPLY_QUEUE_SIZE.equals(propName)) {
-+            replyQueueSize = -1;
- 
-             // The following properties affect the connection
- 
--            case Context.SECURITY_PROTOCOL:
--                closeConnection(SOFT_CLOSE);
--                // De-activate SSL and reset the context's url and port number
--                if (useSsl && !hasLdapsScheme) {
--                    useSsl = false;
--                    url = null;
--                    if (useDefaultPortNumber) {
--                        port_number = DEFAULT_PORT;
--                    }
-+        } else if (Context.SECURITY_PROTOCOL.equals(propName)) {
-+            closeConnection(SOFT_CLOSE);
-+            // De-activate SSL and reset the context's url and port number
-+            if (useSsl && !hasLdapsScheme) {
-+                useSsl = false;
-+                url = null;
-+                if (useDefaultPortNumber) {
-+                    port_number = DEFAULT_PORT;
-                 }
--                break;
--            case VERSION:
--            case SOCKET_FACTORY:
--                closeConnection(SOFT_CLOSE);
--                break;
--            case Context.SECURITY_AUTHENTICATION:
--            case Context.SECURITY_PRINCIPAL:
--            case Context.SECURITY_CREDENTIALS:
--                sharable = false;
--                break;
-+            }
-+        } else if (VERSION.equals(propName) ||
-+                   SOCKET_FACTORY.equals(propName)) {
-+            closeConnection(SOFT_CLOSE);
-+        } else if (Context.SECURITY_AUTHENTICATION.equals(propName) ||
-+                   Context.SECURITY_PRINCIPAL.equals(propName) ||
-+                   Context.SECURITY_CREDENTIALS.equals(propName)) {
-+            sharable = false;
-         }
- 
-         // Update environment; reconnection will use new props
-@@ -2238,66 +2222,50 @@
-             if (propVal == null) {
-                 return removeFromEnvironment(propName);
-             }
--            switch (propName) {
--                case REF_SEPARATOR:
--                    setRefSeparator((String)propVal);
--                    break;
--                case TYPES_ONLY:
--                    setTypesOnly((String)propVal);
--                    break;
--                case DELETE_RDN:
--                    setDeleteRDN((String)propVal);
--                    break;
--                case DEREF_ALIASES:
--                    setDerefAliases((String)propVal);
--                    break;
--                case Context.BATCHSIZE:
--                    setBatchSize((String)propVal);
--                    break;
--                case REFERRAL_LIMIT:
--                    setReferralLimit((String)propVal);
--                    break;
--                case Context.REFERRAL:
-+            if (REF_SEPARATOR.equals(propName)) {
-+                setRefSeparator((String)propVal);
-+            } else if (TYPES_ONLY.equals(propName)) {
-+                setTypesOnly((String)propVal);
-+            } else if (DELETE_RDN.equals(propName)) {
-+                setDeleteRDN((String)propVal);
-+            } else if (DEREF_ALIASES.equals(propName)) {
-+                setDerefAliases((String)propVal);
-+            } else if (Context.BATCHSIZE.equals(propName)) {
-+                setBatchSize((String)propVal);
-+            } else if (REFERRAL_LIMIT.equals(propName)) {
-+                setReferralLimit((String)propVal);
-+            } else if (Context.REFERRAL.equals(propName)) {
-                     setReferralMode((String)propVal, true);
--                    break;
--                case BINARY_ATTRIBUTES:
--                    setBinaryAttributes((String)propVal);
--                    break;
--                case CONNECT_TIMEOUT:
--                    setConnectTimeout((String)propVal);
--                    break;
--                case READ_TIMEOUT:
--                    setReadTimeout((String)propVal);
--                    break;
--                case WAIT_FOR_REPLY:
--                    setWaitForReply((String)propVal);
--                    break;
--                case REPLY_QUEUE_SIZE:
--                    setReplyQueueSize((String)propVal);
--                    break;
-+            } else if (BINARY_ATTRIBUTES.equals(propName)) {
-+                setBinaryAttributes((String)propVal);
-+            } else if (CONNECT_TIMEOUT.equals(propName)) {
-+                setConnectTimeout((String)propVal);
-+            } else if (READ_TIMEOUT.equals(propName)) {
-+                setReadTimeout((String)propVal);
-+            } else if (WAIT_FOR_REPLY.equals(propName)) {
-+                setWaitForReply((String)propVal);
-+            } else if (REPLY_QUEUE_SIZE.equals(propName)) {
-+                setReplyQueueSize((String)propVal);
- 
-             // The following properties affect the connection
- 
--                case Context.SECURITY_PROTOCOL:
--                    closeConnection(SOFT_CLOSE);
--                    // Activate SSL and reset the context's url and port number
--                    if ("ssl".equals(propVal)) {
--                        useSsl = true;
--                        url = null;
--                        if (useDefaultPortNumber) {
--                            port_number = DEFAULT_SSL_PORT;
--                        }
-+            } else if (Context.SECURITY_PROTOCOL.equals(propName)) {
-+                closeConnection(SOFT_CLOSE);
-+                // Activate SSL and reset the context's url and port number
-+                if ("ssl".equals(propVal)) {
-+                    useSsl = true;
-+                    url = null;
-+                    if (useDefaultPortNumber) {
-+                        port_number = DEFAULT_SSL_PORT;
-                     }
--                    break;
--                case VERSION:
--                case SOCKET_FACTORY:
--                    closeConnection(SOFT_CLOSE);
--                    break;
--                case Context.SECURITY_AUTHENTICATION:
--                case Context.SECURITY_PRINCIPAL:
--                case Context.SECURITY_CREDENTIALS:
--                    sharable = false;
--                    break;
-+                }
-+            } else if (VERSION.equals(propName) ||
-+                       SOCKET_FACTORY.equals(propName)) {
-+                closeConnection(SOFT_CLOSE);
-+            } else if (Context.SECURITY_AUTHENTICATION.equals(propName) ||
-+                       Context.SECURITY_PRINCIPAL.equals(propName) ||
-+                       Context.SECURITY_CREDENTIALS.equals(propName)) {
-+                sharable = false;
-             }
- 
-             // Update environment; reconnection will use new props
-@@ -2414,19 +2382,15 @@
-     private void setReferralMode(String ref, boolean update) {
-         // First determine the referral mode
-         if (ref != null) {
--            switch (ref) {
--                case "follow":
-+	    if ("follow".equals(ref)) {
-                     handleReferrals = LdapClient.LDAP_REF_FOLLOW;
--                    break;
--                case "throw":
--                    handleReferrals = LdapClient.LDAP_REF_THROW;
--                    break;
--                case "ignore":
--                    handleReferrals = LdapClient.LDAP_REF_IGNORE;
--                    break;
--                default:
--                    throw new IllegalArgumentException(
--                        "Illegal value for " + Context.REFERRAL + " property.");
-+	    } else if ("throw".equals(ref)) {
-+		handleReferrals = LdapClient.LDAP_REF_THROW;
-+	    } else if ( "ignore".equals(ref)) {
-+		handleReferrals = LdapClient.LDAP_REF_IGNORE;
-+	    } else {
-+		throw new IllegalArgumentException(
-+                    "Illegal value for " + Context.REFERRAL + " property.");
-             }
-         } else {
-             handleReferrals = DEFAULT_REFERRAL_MODE;
-@@ -2449,22 +2413,17 @@
-      */
-     private void setDerefAliases(String deref) {
-         if (deref != null) {
--            switch (deref) {
--                case "never":
--                    derefAliases = 0; // never de-reference aliases
--                    break;
--                case "searching":
--                    derefAliases = 1; // de-reference aliases during searching
--                    break;
--                case "finding":
--                    derefAliases = 2; // de-reference during name resolution
--                    break;
--                case "always":
--                    derefAliases = 3; // always de-reference aliases
--                    break;
--                default:
--                    throw new IllegalArgumentException("Illegal value for " +
--                        DEREF_ALIASES + " property.");
-+	    if ("never".equals(deref)) {
-+		derefAliases = 0; // never de-reference aliases
-+	    } else if ("searching".equals(deref)) {
-+		derefAliases = 1; // de-reference aliases during searching
-+	    } else if ("finding".equals(deref)) {
-+		derefAliases = 2; // de-reference during name resolution
-+	    } else if ("always".equals(deref)) {
-+		derefAliases = 3; // always de-reference aliases
-+	    } else {
-+		throw new IllegalArgumentException("Illegal value for " +
-+                    DEREF_ALIASES + " property.");
-             }
-         } else {
-             derefAliases = DEFAULT_DEREF_ALIASES;
-diff -Nru openjdk-boot.orig/jdk/src/share/classes/org/jcp/xml/dsig/internal/dom/Policy.java openjdk-boot/jdk/src/share/classes/org/jcp/xml/dsig/internal/dom/Policy.java
---- openjdk-boot.orig/jdk/src/share/classes/org/jcp/xml/dsig/internal/dom/Policy.java	2017-04-07 16:43:10.660296981 +0100
-+++ openjdk-boot/jdk/src/share/classes/org/jcp/xml/dsig/internal/dom/Policy.java	2017-04-07 16:45:55.481614942 +0100
-@@ -81,56 +81,48 @@
-         for (String entry : entries) {
-             String[] tokens = entry.split("\\s");
-             String type = tokens[0];
--            switch(type) {
--                case "disallowAlg":
--                    if (tokens.length != 2) {
--                        error(entry);
--                    }
--                    disallowedAlgs.add(URI.create(tokens[1]));
--                    break;
--                case "maxTransforms":
--                    if (tokens.length != 2) {
--                        error(entry);
--                    }
--                    maxTrans = Parsing.parseUnsignedInt(tokens[1]);
--                    break;
--                case "maxReferences":
--                    if (tokens.length != 2) {
--                        error(entry);
--                    }
--                    maxRefs = Parsing.parseUnsignedInt(tokens[1]);
--                    break;
--                case "disallowReferenceUriSchemes":
--                    if (tokens.length == 1) {
--                        error(entry);
--                    }
--                    for (int i = 1; i < tokens.length; i++) {
--                        String scheme = tokens[i];
--                        disallowedRefUriSchemes.add(
--                            scheme.toLowerCase(Locale.ROOT));
--                    }
--                    break;
--                case "minKeySize":
--                    if (tokens.length != 3) {
--                        error(entry);
--                    }
--                    minKeyMap.put(tokens[1],
--                                  Parsing.parseUnsignedInt(tokens[2]));
--                    break;
--                case "noDuplicateIds":
--                    if (tokens.length != 1) {
--                        error(entry);
--                    }
--                    noDuplicateIds = true;
--                    break;
--                case "noRetrievalMethodLoops":
--                    if (tokens.length != 1) {
--                        error(entry);
--                    }
--                    noRMLoops = true;
--                    break;
--                default:
-+            if ("disallowAlg".equals(type)) {
-+                if (tokens.length != 2) {
-                     error(entry);
-+                }
-+                disallowedAlgs.add(URI.create(tokens[1]));
-+            } else if ("maxTransforms".equals(type)) {
-+                if (tokens.length != 2) {
-+                    error(entry);
-+                }
-+                maxTrans = Parsing.parseUnsignedInt(tokens[1]);
-+            } else if ("maxReferences".equals(type)) {
-+                if (tokens.length != 2) {
-+                    error(entry);
-+                }
-+                maxRefs = Parsing.parseUnsignedInt(tokens[1]);
-+            } else if ("disallowReferenceUriSchemes".equals(type)) {
-+                if (tokens.length == 1) {
-+                    error(entry);
-+                }
-+                for (int i = 1; i < tokens.length; i++) {
-+                    String scheme = tokens[i];
-+                    disallowedRefUriSchemes.add(
-+                        scheme.toLowerCase(Locale.ROOT));
-+                }
-+            } else if ("minKeySize".equals(type)) {
-+                if (tokens.length != 3) {
-+                    error(entry);
-+                }
-+                minKeyMap.put(tokens[1],
-+                              Parsing.parseUnsignedInt(tokens[2]));
-+            } else if ("noDuplicateIds".equals(type)) {
-+                if (tokens.length != 1) {
-+                    error(entry);
-+                }
-+                noDuplicateIds = true;
-+            } else if ("noRetrievalMethodLoops".equals(type)) {
-+                if (tokens.length != 1) {
-+                    error(entry);
-+                }
-+                noRMLoops = true;
-+            } else {
-+                error(entry);
-             }
-         }
-     }

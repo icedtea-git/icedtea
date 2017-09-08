@@ -22,6 +22,8 @@ New in release 2.7.0 (201X-XX-XX):
   - S8148516, PR2809: Improve the default strength of EC in JDK [test/javax/net/ssl/ciphersuites/DisabledAlgorithms.java update]
 * Bug fixes
   - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
+* AArch64 port
+  - S8145438, PR3443, RH1482244: Guarantee failures since 8144028: Use AArch64 bit-test instructions in C2
 
 New in release 2.6.11 (2017-08-08):
 
