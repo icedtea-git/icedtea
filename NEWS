@@ -12,6 +12,9 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.6.0 (2017-10-XX):
 
+* Bug fixes
+  - PR3467: Hotspot object_alloc tapset uses HeapWordSize incorrectly
+
 New in release 3.5.1 (2017-07-27):
 
 * Import of OpenJDK 8 u144 build 01
