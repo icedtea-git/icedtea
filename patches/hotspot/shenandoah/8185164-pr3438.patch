@@ -1,0 +1,31 @@
+# HG changeset patch
+# User dbuck
+# Date 1502509867 14400
+#      Fri Aug 11 23:51:07 2017 -0400
+# Node ID 302eb515bf52ceacf17b6e620db2d2b862dfefa2
+# Parent  5c00d5cd7677aec3549afe02e4f9de8dc7b20bef
+8185164, PR3438: GetOwnedMonitorInfo() returns incorrect owned monitor
+Summary: The GetOwnedMonitorInfo() should not return a pending monitor
+Reviewed-by: dcubed
+
+diff --git a/src/share/vm/runtime/objectMonitor.cpp b/src/share/vm/runtime/objectMonitor.cpp
+--- openjdk/hotspot/src/share/vm/runtime/objectMonitor.cpp
++++ openjdk/hotspot/src/share/vm/runtime/objectMonitor.cpp
+@@ -381,6 +381,8 @@
+   { // Change java thread status to indicate blocked on monitor enter.
+     JavaThreadBlockedOnMonitorEnterState jtbmes(jt, this);
+ 
++    Self->set_current_pending_monitor(this);
++
+     DTRACE_MONITOR_PROBE(contended__enter, this, object(), jt);
+     if (JvmtiExport::should_post_monitor_contended_enter()) {
+       JvmtiExport::post_monitor_contended_enter(jt, this);
+@@ -395,8 +397,6 @@
+     OSThreadContendState osts(Self->osthread());
+     ThreadBlockInVM tbivm(jt);
+ 
+-    Self->set_current_pending_monitor(this);
+-
+     // TODO-FIXME: change the following for(;;) loop to straight-line code.
+     for (;;) {
+       jt->set_suspend_equivalent();

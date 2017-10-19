@@ -1,0 +1,131 @@
+# HG changeset patch
+# User roland
+# Date 1506521867 -7200
+#      Wed Sep 27 16:17:47 2017 +0200
+# Node ID 542f4e30fdffc87e5e098d81d69e7aa52d3c763c
+# Parent  302eb515bf52ceacf17b6e620db2d2b862dfefa2
+8187822, PR8187822, RH1494230: C2 conditonal move optimization might create broken graph
+Reviewed-by: kvn
+
+diff --git a/src/share/vm/opto/loopopts.cpp b/src/share/vm/opto/loopopts.cpp
+--- openjdk/hotspot/src/share/vm/opto/loopopts.cpp
++++ openjdk/hotspot/src/share/vm/opto/loopopts.cpp
+@@ -309,6 +309,7 @@
+       }
+       return NULL;
+     }
++    assert(m->is_Phi() || is_dominator(get_ctrl(m), n_ctrl), "m has strange control");
+   }
+ 
+   return n_ctrl;
+@@ -609,6 +610,7 @@
+   // Now replace all Phis with CMOV's
+   Node *cmov_ctrl = iff->in(0);
+   uint flip = (lp->Opcode() == Op_IfTrue);
++  Node_List wq;
+   while (1) {
+     PhiNode* phi = NULL;
+     for (DUIterator_Fast imax, i = region->fast_outs(imax); i < imax; i++) {
+@@ -623,17 +625,21 @@
+     if (PrintOpto && VerifyLoopOptimizations) tty->print_cr("CMOV");
+ #endif
+     // Move speculative ops
+-    for (uint j = 1; j < region->req(); j++) {
+-      Node *proj = region->in(j);
+-      Node *inp = phi->in(j);
+-      if (get_ctrl(inp) == proj) { // Found local op
++    wq.push(phi);
++    while (wq.size() > 0) {
++      Node *n = wq.pop();
++      for (uint j = 1; j < n->req(); j++) {
++        Node* m = n->in(j);
++        if (m != NULL && !is_dominator(get_ctrl(m), cmov_ctrl)) {
+ #ifndef PRODUCT
+-        if (PrintOpto && VerifyLoopOptimizations) {
+-          tty->print("  speculate: ");
+-          inp->dump();
++          if (PrintOpto && VerifyLoopOptimizations) {
++            tty->print("  speculate: ");
++            m->dump();
++          }
++#endif
++          set_ctrl(m, cmov_ctrl);
++          wq.push(m);
+         }
+-#endif
+-        set_ctrl(inp, cmov_ctrl);
+       }
+     }
+     Node *cmov = CMoveNode::make( C, cmov_ctrl, iff->in(1), phi->in(1+flip), phi->in(2-flip), _igvn.type(phi) );
+diff --git a/test/compiler/loopopts/TestCMovSplitThruPhi.java b/test/compiler/loopopts/TestCMovSplitThruPhi.java
+new file mode 100644
+--- /dev/null
++++ openjdk/hotspot/test/compiler/loopopts/TestCMovSplitThruPhi.java
+@@ -0,0 +1,67 @@
++/*
++ * Copyright (c) 2017, Red Hat, Inc. All rights reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
++ * or visit www.oracle.com if you need additional information or have any
++ * questions.
++ */
++
++/**
++ * @test
++ * @bug 8187822
++ * @summary C2 conditonal move optimization might create broken graph
++ * @run main/othervm -XX:-UseOnStackReplacement -XX:-BackgroundCompilation -XX:CompileCommand=dontinline,TestCMovSplitThruPhi::not_inlined -XX:CompileOnly=TestCMovSplitThruPhi::test -XX:-LoopUnswitching TestCMovSplitThruPhi
++ *
++ */
++
++public class TestCMovSplitThruPhi {
++    static int f;
++
++    static int test(boolean flag1, boolean flag2, boolean flag3, boolean flag4) {
++        int v3 = 0;
++        if (flag4) {
++            for (int i = 0; i < 10; i++) {
++                int v1 = 0;
++                if (flag1) {
++                    v1 = not_inlined();
++                }
++                // AddI below will be candidate for split through Phi
++                int v2 = v1;
++                if (flag2) {
++                    v2 = f + v1;
++                }
++                // test above will be converted to CMovI
++                if (flag3) {
++                    v3 = v2 * 2;
++                    break;
++                }
++            }
++        }
++        return v3;
++    }
++
++    private static int not_inlined() {
++        return 0;
++    }
++
++    public static void main(String[] args) {
++        for (int i = 0; i < 20000; i++) {
++            test((i % 2) == 0, (i % 2) == 0, (i % 100) == 1, (i % 1000) == 1);
++        }
++    }
++}

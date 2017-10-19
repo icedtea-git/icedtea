@@ -1,0 +1,66 @@
+# HG changeset patch
+# User mdoerr
+# Date 1507752266 -3600
+#      Wed Oct 11 21:04:26 2017 +0100
+# Node ID 5c00d5cd7677aec3549afe02e4f9de8dc7b20bef
+# Parent  3c499a0ba92b1affb3f473c6502e374f4785aba9
+8181810, PR3466, RH1498319: PPC64: Leverage extrdi for bitfield extract
+Reviewed-by: mdoerr, simonis
+Contributed-by: Matthew Brandyberry <mbrandy@linux.vnet.ibm.com>
+
+diff --git a/src/cpu/ppc/vm/ppc.ad b/src/cpu/ppc/vm/ppc.ad
+--- openjdk/hotspot/src/cpu/ppc/vm/ppc.ad
++++ openjdk/hotspot/src/cpu/ppc/vm/ppc.ad
+@@ -1,6 +1,6 @@
+ //
+ // Copyright (c) 2011, 2014, Oracle and/or its affiliates. All rights reserved.
+-// Copyright 2012, 2014 SAP AG. All rights reserved.
++// Copyright (c) 2012, 2017 SAP SE. All rights reserved.
+ // DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ //
+ // This code is free software; you can redistribute it and/or modify it
+@@ -8610,6 +8610,44 @@
+   ins_pipe(pipe_class_default);
+ %}
+ 
++// Bitfield Extract: URShiftI + AndI
++instruct andI_urShiftI_regI_immI_immIpow2minus1(iRegIdst dst, iRegIsrc src1, immI src2, immIpow2minus1 src3) %{
++  match(Set dst (AndI (URShiftI src1 src2) src3));
++
++  format %{ "EXTRDI  $dst, $src1, shift=$src2, mask=$src3 \t// int bitfield extract" %}
++  size(4);
++  ins_encode %{
++    // TODO: PPC port $archOpcode(ppc64Opcode_rldicl);
++    int rshift = ($src2$$constant) & 0x1f;
++    int length = log2_long(((jlong) $src3$$constant) + 1);
++    if (rshift + length > 32) {
++      // if necessary, adjust mask to omit rotated bits.
++      length = 32 - rshift;
++    }
++    __ extrdi($dst$$Register, $src1$$Register, length, 64 - (rshift + length));
++  %}
++  ins_pipe(pipe_class_default);
++%}
++
++// Bitfield Extract: URShiftL + AndL
++instruct andL_urShiftL_regL_immI_immLpow2minus1(iRegLdst dst, iRegLsrc src1, immI src2, immLpow2minus1 src3) %{
++  match(Set dst (AndL (URShiftL src1 src2) src3));
++
++  format %{ "EXTRDI  $dst, $src1, shift=$src2, mask=$src3 \t// long bitfield extract" %}
++  size(4);
++  ins_encode %{
++    // TODO: PPC port $archOpcode(ppc64Opcode_rldicl);
++    int rshift  = ($src2$$constant) & 0x3f;
++    int length = log2_long(((jlong) $src3$$constant) + 1);
++    if (rshift + length > 64) {
++      // if necessary, adjust mask to omit rotated bits.
++      length = 64 - rshift;
++    }
++    __ extrdi($dst$$Register, $src1$$Register, length, 64 - (rshift + length));
++  %}
++  ins_pipe(pipe_class_default);
++%}
++
+ instruct sxtI_reg(iRegIdst dst, iRegIsrc src) %{
+   match(Set dst (ConvL2I (ConvI2L src)));
+ 

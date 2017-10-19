@@ -12,7 +12,24 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.6.0 (2017-10-XX):
 
+* New features
+  - PR3469: Alternative path to tzdb.dat
+* Backports
+  - S8075484, PR3473, RH1490713: SocketInputStream.socketRead0 can hang even with soTimeout set
+  - S8146086, PR3439, RH1478402: Publishing two webservices on same port fails with "java.net.BindException: Address already in use"
+  - S8184673, PR3475, RH1487266: Fix compatibility issue in AlgorithmChecker for 3rd party JCE providers
+  - S8185164, PR3438: GetOwnedMonitorInfo() returns incorrect owned monitor
+  - S8187822, PR3478, RH1494230: C2 conditonal move optimization might create broken graph
 * Bug fixes
+  - PR3479, RH1486025: ECC and NSS JVM crash
+  - S8165852, PR3468: (fs) Mount point not found for a file which is present in overlayfs
+  - S8188030, PR3459, RH1484079: AWT java apps fail to start when some minimal fonts are present
+* PPC port
+  - S8145913, PR3466, RH1498309: PPC64: add Montgomery multiply intrinsic
+  - S8168318, PR3466, RH1498320: PPC64: Use cmpldi instead of li/cmpld
+  - S8170328, PR3466, RH1498321: PPC64: Use andis instead of lis/and
+  - S8181810, PR3466, RH1498319: PPC64: Leverage extrdi for bitfield extract
+* SystemTap
   - PR3467, RH1492139: Hotspot object_alloc tapset uses HeapWordSize incorrectly
 
 New in release 3.5.1 (2017-07-27):

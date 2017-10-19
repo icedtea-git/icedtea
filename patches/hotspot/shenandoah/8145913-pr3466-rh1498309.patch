@@ -1,0 +1,472 @@
+# HG changeset patch
+# User mdoerr
+# Date 1507750779 -3600
+#      Wed Oct 11 20:39:39 2017 +0100
+# Node ID 92f0dbe76a13992cc27188e0f68e4b1771c7004a
+# Parent  542c122b1d7d30c29189565248074aa28f21ae58
+8145913, PR3466, RH1498309: PPC64: add Montgomery multiply intrinsic
+Reviewed-by: aph, goetz
+
+diff --git a/src/cpu/ppc/vm/assembler_ppc.hpp b/src/cpu/ppc/vm/assembler_ppc.hpp
+--- openjdk/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
++++ openjdk/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
+@@ -1179,6 +1179,8 @@
+   inline void mullw_( Register d, Register a, Register b);
+   inline void mulhw(  Register d, Register a, Register b);
+   inline void mulhw_( Register d, Register a, Register b);
++  inline void mulhwu( Register d, Register a, Register b);
++  inline void mulhwu_(Register d, Register a, Register b);
+   inline void mulhd(  Register d, Register a, Register b);
+   inline void mulhd_( Register d, Register a, Register b);
+   inline void mulhdu( Register d, Register a, Register b);
+diff --git a/src/cpu/ppc/vm/assembler_ppc.inline.hpp b/src/cpu/ppc/vm/assembler_ppc.inline.hpp
+--- openjdk/hotspot/src/cpu/ppc/vm/assembler_ppc.inline.hpp
++++ openjdk/hotspot/src/cpu/ppc/vm/assembler_ppc.inline.hpp
+@@ -109,6 +109,8 @@
+ inline void Assembler::mullw_( Register d, Register a, Register b) { emit_int32(MULLW_OPCODE  | rt(d) | ra(a) | rb(b) | oe(0) | rc(1)); }
+ inline void Assembler::mulhw(  Register d, Register a, Register b) { emit_int32(MULHW_OPCODE  | rt(d) | ra(a) | rb(b) | rc(0)); }
+ inline void Assembler::mulhw_( Register d, Register a, Register b) { emit_int32(MULHW_OPCODE  | rt(d) | ra(a) | rb(b) | rc(1)); }
++inline void Assembler::mulhwu( Register d, Register a, Register b) { emit_int32(MULHWU_OPCODE | rt(d) | ra(a) | rb(b) | rc(0)); }
++inline void Assembler::mulhwu_(Register d, Register a, Register b) { emit_int32(MULHWU_OPCODE | rt(d) | ra(a) | rb(b) | rc(1)); }
+ inline void Assembler::mulhd(  Register d, Register a, Register b) { emit_int32(MULHD_OPCODE  | rt(d) | ra(a) | rb(b) | rc(0)); }
+ inline void Assembler::mulhd_( Register d, Register a, Register b) { emit_int32(MULHD_OPCODE  | rt(d) | ra(a) | rb(b) | rc(1)); }
+ inline void Assembler::mulhdu( Register d, Register a, Register b) { emit_int32(MULHDU_OPCODE | rt(d) | ra(a) | rb(b) | rc(0)); }
+diff --git a/src/cpu/ppc/vm/c2_init_ppc.cpp b/src/cpu/ppc/vm/c2_init_ppc.cpp
+--- openjdk/hotspot/src/cpu/ppc/vm/c2_init_ppc.cpp
++++ openjdk/hotspot/src/cpu/ppc/vm/c2_init_ppc.cpp
+@@ -45,4 +45,10 @@
+       FLAG_SET_ERGO(bool, InsertEndGroupPPC64, true);
+     }
+   }
++
++  if (OptimizeFill) {
++    warning("OptimizeFill is not supported on this CPU.");
++    FLAG_SET_DEFAULT(OptimizeFill, false);
++  }
++
+ }
+diff --git a/src/cpu/ppc/vm/sharedRuntime_ppc.cpp b/src/cpu/ppc/vm/sharedRuntime_ppc.cpp
+--- openjdk/hotspot/src/cpu/ppc/vm/sharedRuntime_ppc.cpp
++++ openjdk/hotspot/src/cpu/ppc/vm/sharedRuntime_ppc.cpp
+@@ -42,6 +42,8 @@
+ #include "opto/runtime.hpp"
+ #endif
+ 
++#include <alloca.h>
++
+ #define __ masm->
+ 
+ #ifdef PRODUCT
+@@ -3269,3 +3271,245 @@
+   return RuntimeStub::new_runtime_stub(name, &buffer, frame_complete, frame_size_in_bytes/wordSize,
+                                        oop_maps, true);
+ }
++
++
++//------------------------------Montgomery multiplication------------------------
++//
++
++// Subtract 0:b from carry:a. Return carry.
++static unsigned long
++sub(unsigned long a[], unsigned long b[], unsigned long carry, long len) {
++  long i = 0;
++  unsigned long tmp, tmp2;
++  __asm__ __volatile__ (
++    "subfc  %[tmp], %[tmp], %[tmp]   \n" // pre-set CA
++    "mtctr  %[len]                   \n"
++    "0:                              \n"
++    "ldx    %[tmp], %[i], %[a]       \n"
++    "ldx    %[tmp2], %[i], %[b]      \n"
++    "subfe  %[tmp], %[tmp2], %[tmp]  \n" // subtract extended
++    "stdx   %[tmp], %[i], %[a]       \n"
++    "addi   %[i], %[i], 8            \n"
++    "bdnz   0b                       \n"
++    "addme  %[tmp], %[carry]         \n" // carry + CA - 1
++    : [i]"+b"(i), [tmp]"=&r"(tmp), [tmp2]"=&r"(tmp2)
++    : [a]"r"(a), [b]"r"(b), [carry]"r"(carry), [len]"r"(len)
++    : "ctr", "xer", "memory"
++  );
++  return tmp;
++}
++
++// Multiply (unsigned) Long A by Long B, accumulating the double-
++// length result into the accumulator formed of T0, T1, and T2.
++inline void MACC(unsigned long A, unsigned long B, unsigned long &T0, unsigned long &T1, unsigned long &T2) {
++  unsigned long hi, lo;
++  __asm__ __volatile__ (
++    "mulld  %[lo], %[A], %[B]    \n"
++    "mulhdu %[hi], %[A], %[B]    \n"
++    "addc   %[T0], %[T0], %[lo]  \n"
++    "adde   %[T1], %[T1], %[hi]  \n"
++    "addze  %[T2], %[T2]         \n"
++    : [hi]"=&r"(hi), [lo]"=&r"(lo), [T0]"+r"(T0), [T1]"+r"(T1), [T2]"+r"(T2)
++    : [A]"r"(A), [B]"r"(B)
++    : "xer"
++  );
++}
++
++// As above, but add twice the double-length result into the
++// accumulator.
++inline void MACC2(unsigned long A, unsigned long B, unsigned long &T0, unsigned long &T1, unsigned long &T2) {
++  unsigned long hi, lo;
++  __asm__ __volatile__ (
++    "mulld  %[lo], %[A], %[B]    \n"
++    "mulhdu %[hi], %[A], %[B]    \n"
++    "addc   %[T0], %[T0], %[lo]  \n"
++    "adde   %[T1], %[T1], %[hi]  \n"
++    "addze  %[T2], %[T2]         \n"
++    "addc   %[T0], %[T0], %[lo]  \n"
++    "adde   %[T1], %[T1], %[hi]  \n"
++    "addze  %[T2], %[T2]         \n"
++    : [hi]"=&r"(hi), [lo]"=&r"(lo), [T0]"+r"(T0), [T1]"+r"(T1), [T2]"+r"(T2)
++    : [A]"r"(A), [B]"r"(B)
++    : "xer"
++  );
++}
++
++// Fast Montgomery multiplication. The derivation of the algorithm is
++// in "A Cryptographic Library for the Motorola DSP56000,
++// Dusse and Kaliski, Proc. EUROCRYPT 90, pp. 230-237".
++static void
++montgomery_multiply(unsigned long a[], unsigned long b[], unsigned long n[],
++                    unsigned long m[], unsigned long inv, int len) {
++  unsigned long t0 = 0, t1 = 0, t2 = 0; // Triple-precision accumulator
++  int i;
++
++  assert(inv * n[0] == -1UL, "broken inverse in Montgomery multiply");
++
++  for (i = 0; i < len; i++) {
++    int j;
++    for (j = 0; j < i; j++) {
++      MACC(a[j], b[i-j], t0, t1, t2);
++      MACC(m[j], n[i-j], t0, t1, t2);
++    }
++    MACC(a[i], b[0], t0, t1, t2);
++    m[i] = t0 * inv;
++    MACC(m[i], n[0], t0, t1, t2);
++
++    assert(t0 == 0, "broken Montgomery multiply");
++
++    t0 = t1; t1 = t2; t2 = 0;
++  }
++
++  for (i = len; i < 2*len; i++) {
++    int j;
++    for (j = i-len+1; j < len; j++) {
++      MACC(a[j], b[i-j], t0, t1, t2);
++      MACC(m[j], n[i-j], t0, t1, t2);
++    }
++    m[i-len] = t0;
++    t0 = t1; t1 = t2; t2 = 0;
++  }
++
++  while (t0) {
++    t0 = sub(m, n, t0, len);
++  }
++}
++
++// Fast Montgomery squaring. This uses asymptotically 25% fewer
++// multiplies so it should be up to 25% faster than Montgomery
++// multiplication. However, its loop control is more complex and it
++// may actually run slower on some machines.
++static void
++montgomery_square(unsigned long a[], unsigned long n[],
++                  unsigned long m[], unsigned long inv, int len) {
++  unsigned long t0 = 0, t1 = 0, t2 = 0; // Triple-precision accumulator
++  int i;
++
++  assert(inv * n[0] == -1UL, "broken inverse in Montgomery multiply");
++
++  for (i = 0; i < len; i++) {
++    int j;
++    int end = (i+1)/2;
++    for (j = 0; j < end; j++) {
++      MACC2(a[j], a[i-j], t0, t1, t2);
++      MACC(m[j], n[i-j], t0, t1, t2);
++    }
++    if ((i & 1) == 0) {
++      MACC(a[j], a[j], t0, t1, t2);
++    }
++    for (; j < i; j++) {
++      MACC(m[j], n[i-j], t0, t1, t2);
++    }
++    m[i] = t0 * inv;
++    MACC(m[i], n[0], t0, t1, t2);
++
++    assert(t0 == 0, "broken Montgomery square");
++
++    t0 = t1; t1 = t2; t2 = 0;
++  }
++
++  for (i = len; i < 2*len; i++) {
++    int start = i-len+1;
++    int end = start + (len - start)/2;
++    int j;
++    for (j = start; j < end; j++) {
++      MACC2(a[j], a[i-j], t0, t1, t2);
++      MACC(m[j], n[i-j], t0, t1, t2);
++    }
++    if ((i & 1) == 0) {
++      MACC(a[j], a[j], t0, t1, t2);
++    }
++    for (; j < len; j++) {
++      MACC(m[j], n[i-j], t0, t1, t2);
++    }
++    m[i-len] = t0;
++    t0 = t1; t1 = t2; t2 = 0;
++  }
++
++  while (t0) {
++    t0 = sub(m, n, t0, len);
++  }
++}
++
++// The threshold at which squaring is advantageous was determined
++// experimentally on an i7-3930K (Ivy Bridge) CPU @ 3.5GHz.
++// Doesn't seem to be relevant for Power8 so we use the same value.
++#define MONTGOMERY_SQUARING_THRESHOLD 64
++
++// Copy len longwords from s to d, word-swapping as we go. The
++// destination array is reversed.
++static void reverse_words(unsigned long *s, unsigned long *d, int len) {
++  d += len;
++  while(len-- > 0) {
++    d--;
++    unsigned long s_val = *s;
++    // Swap words in a longword on little endian machines.
++#ifdef VM_LITTLE_ENDIAN
++     s_val = (s_val << 32) | (s_val >> 32);
++#endif
++    *d = s_val;
++    s++;
++  }
++}
++
++void SharedRuntime::montgomery_multiply(jint *a_ints, jint *b_ints, jint *n_ints,
++                                        jint len, jlong inv,
++                                        jint *m_ints) {
++  assert(len % 2 == 0, "array length in montgomery_multiply must be even");
++  int longwords = len/2;
++  assert(longwords > 0, "unsupported");
++
++  // Make very sure we don't use so much space that the stack might
++  // overflow. 512 jints corresponds to an 16384-bit integer and
++  // will use here a total of 8k bytes of stack space.
++  int total_allocation = longwords * sizeof (unsigned long) * 4;
++  guarantee(total_allocation <= 8192, "must be");
++  unsigned long *scratch = (unsigned long *)alloca(total_allocation);
++
++  // Local scratch arrays
++  unsigned long
++    *a = scratch + 0 * longwords,
++    *b = scratch + 1 * longwords,
++    *n = scratch + 2 * longwords,
++    *m = scratch + 3 * longwords;
++
++  reverse_words((unsigned long *)a_ints, a, longwords);
++  reverse_words((unsigned long *)b_ints, b, longwords);
++  reverse_words((unsigned long *)n_ints, n, longwords);
++
++  ::montgomery_multiply(a, b, n, m, (unsigned long)inv, longwords);
++
++  reverse_words(m, (unsigned long *)m_ints, longwords);
++}
++
++void SharedRuntime::montgomery_square(jint *a_ints, jint *n_ints,
++                                      jint len, jlong inv,
++                                      jint *m_ints) {
++  assert(len % 2 == 0, "array length in montgomery_square must be even");
++  int longwords = len/2;
++  assert(longwords > 0, "unsupported");
++
++  // Make very sure we don't use so much space that the stack might
++  // overflow. 512 jints corresponds to an 16384-bit integer and
++  // will use here a total of 6k bytes of stack space.
++  int total_allocation = longwords * sizeof (unsigned long) * 3;
++  guarantee(total_allocation <= 8192, "must be");
++  unsigned long *scratch = (unsigned long *)alloca(total_allocation);
++
++  // Local scratch arrays
++  unsigned long
++    *a = scratch + 0 * longwords,
++    *n = scratch + 1 * longwords,
++    *m = scratch + 2 * longwords;
++
++  reverse_words((unsigned long *)a_ints, a, longwords);
++  reverse_words((unsigned long *)n_ints, n, longwords);
++
++  if (len >= MONTGOMERY_SQUARING_THRESHOLD) {
++    ::montgomery_square(a, n, m, (unsigned long)inv, longwords);
++  } else {
++    ::montgomery_multiply(a, a, n, m, (unsigned long)inv, longwords);
++  }
++
++  reverse_words(m, (unsigned long *)m_ints, longwords);
++}
+diff --git a/src/cpu/ppc/vm/stubGenerator_ppc.cpp b/src/cpu/ppc/vm/stubGenerator_ppc.cpp
+--- openjdk/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp
++++ openjdk/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp
+@@ -2094,6 +2094,14 @@
+     generate_safefetch("SafeFetchN", sizeof(intptr_t), &StubRoutines::_safefetchN_entry,
+                                                        &StubRoutines::_safefetchN_fault_pc,
+                                                        &StubRoutines::_safefetchN_continuation_pc);
++    if (UseMontgomeryMultiplyIntrinsic) {
++      StubRoutines::_montgomeryMultiply
++        = CAST_FROM_FN_PTR(address, SharedRuntime::montgomery_multiply);
++    }
++    if (UseMontgomerySquareIntrinsic) {
++      StubRoutines::_montgomerySquare
++        = CAST_FROM_FN_PTR(address, SharedRuntime::montgomery_square);
++    }
+   }
+ 
+  public:
+diff --git a/src/cpu/ppc/vm/templateInterpreter_ppc.cpp b/src/cpu/ppc/vm/templateInterpreter_ppc.cpp
+--- openjdk/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.cpp
++++ openjdk/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.cpp
+@@ -265,7 +265,7 @@
+       __ cmpdi(CCR0, Rmdo, 0);
+       __ beq(CCR0, no_mdo);
+ 
+-      // Increment backedge counter in the MDO.
++      // Increment invocation counter in the MDO.
+       const int mdo_bc_offs = in_bytes(MethodData::backedge_counter_offset()) + in_bytes(InvocationCounter::counter_offset());
+       __ lwz(Rscratch2, mdo_bc_offs, Rmdo);
+       __ addi(Rscratch2, Rscratch2, increment);
+@@ -277,12 +277,12 @@
+     }
+ 
+     // Increment counter in MethodCounters*.
+-    const int mo_bc_offs = in_bytes(MethodCounters::backedge_counter_offset()) + in_bytes(InvocationCounter::counter_offset());
++    const int mo_ic_offs = in_bytes(MethodCounters::invocation_counter_offset()) + in_bytes(InvocationCounter::counter_offset());
+     __ bind(no_mdo);
+     __ get_method_counters(R19_method, R3_counters, done);
+-    __ lwz(Rscratch2, mo_bc_offs, R3_counters);
++    __ lwz(Rscratch2, mo_ic_offs, R3_counters);
+     __ addi(Rscratch2, Rscratch2, increment);
+-    __ stw(Rscratch2, mo_bc_offs, R3_counters);
++    __ stw(Rscratch2, mo_ic_offs, R3_counters);
+     __ load_const_optimized(Rscratch1, mask, R0);
+     __ and_(Rscratch1, Rscratch2, Rscratch1);
+     __ beq(CCR0, *overflow);
+diff --git a/src/cpu/ppc/vm/vm_version_ppc.cpp b/src/cpu/ppc/vm/vm_version_ppc.cpp
+--- openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp
++++ openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp
+@@ -181,6 +181,13 @@
+   if (FLAG_IS_DEFAULT(UseUnalignedAccesses)) {
+     FLAG_SET_DEFAULT(UseUnalignedAccesses, true);
+   }
++
++  if (FLAG_IS_DEFAULT(UseMontgomeryMultiplyIntrinsic)) {
++    UseMontgomeryMultiplyIntrinsic = true;
++  }
++  if (FLAG_IS_DEFAULT(UseMontgomerySquareIntrinsic)) {
++    UseMontgomerySquareIntrinsic = true;
++  }
+ }
+ 
+ void VM_Version::print_features() {
+diff --git a/src/share/vm/opto/library_call.cpp b/src/share/vm/opto/library_call.cpp
+--- openjdk/hotspot/src/share/vm/opto/library_call.cpp
++++ openjdk/hotspot/src/share/vm/opto/library_call.cpp
+@@ -6031,11 +6031,21 @@
+     Node* n_start = array_element_address(n, intcon(0), n_elem);
+     Node* m_start = array_element_address(m, intcon(0), m_elem);
+ 
+-    Node* call = make_runtime_call(RC_LEAF,
+-                                   OptoRuntime::montgomeryMultiply_Type(),
+-                                   stubAddr, stubName, TypePtr::BOTTOM,
+-                                   a_start, b_start, n_start, len, inv, top(),
+-                                   m_start);
++    Node* call = NULL;
++    if (CCallingConventionRequiresIntsAsLongs) {
++      Node* len_I2L = ConvI2L(len);
++      call = make_runtime_call(RC_LEAF,
++                               OptoRuntime::montgomeryMultiply_Type(),
++                               stubAddr, stubName, TypePtr::BOTTOM,
++                               a_start, b_start, n_start, len_I2L XTOP, inv,
++                               top(), m_start);
++    } else {
++      call = make_runtime_call(RC_LEAF,
++                               OptoRuntime::montgomeryMultiply_Type(),
++                               stubAddr, stubName, TypePtr::BOTTOM,
++                               a_start, b_start, n_start, len, inv, top(),
++                               m_start);
++    }
+     set_result(m);
+   }
+ 
+@@ -6085,11 +6095,22 @@
+     Node* n_start = array_element_address(n, intcon(0), n_elem);
+     Node* m_start = array_element_address(m, intcon(0), m_elem);
+ 
+-    Node* call = make_runtime_call(RC_LEAF,
+-                                   OptoRuntime::montgomerySquare_Type(),
+-                                   stubAddr, stubName, TypePtr::BOTTOM,
+-                                   a_start, n_start, len, inv, top(),
+-                                   m_start);
++    Node* call = NULL;
++    if (CCallingConventionRequiresIntsAsLongs) {
++      Node* len_I2L = ConvI2L(len);
++      call = make_runtime_call(RC_LEAF,
++                               OptoRuntime::montgomerySquare_Type(),
++                               stubAddr, stubName, TypePtr::BOTTOM,
++                               a_start, n_start, len_I2L XTOP, inv, top(),
++                               m_start);
++    } else {
++      call = make_runtime_call(RC_LEAF,
++                               OptoRuntime::montgomerySquare_Type(),
++                               stubAddr, stubName, TypePtr::BOTTOM,
++                               a_start, n_start, len, inv, top(),
++                               m_start);
++    }
++
+     set_result(m);
+   }
+ 
+diff --git a/src/share/vm/opto/runtime.cpp b/src/share/vm/opto/runtime.cpp
+--- openjdk/hotspot/src/share/vm/opto/runtime.cpp
++++ openjdk/hotspot/src/share/vm/opto/runtime.cpp
+@@ -1005,12 +1005,20 @@
+   // create input type (domain)
+   int num_args      = 7;
+   int argcnt = num_args;
++  if (CCallingConventionRequiresIntsAsLongs) {
++    argcnt++;                           // additional placeholder
++  }
+   const Type** fields = TypeTuple::fields(argcnt);
+   int argp = TypeFunc::Parms;
+   fields[argp++] = TypePtr::NOTNULL;    // a
+   fields[argp++] = TypePtr::NOTNULL;    // b
+   fields[argp++] = TypePtr::NOTNULL;    // n
+-  fields[argp++] = TypeInt::INT;        // len
++  if (CCallingConventionRequiresIntsAsLongs) {
++    fields[argp++] = TypeLong::LONG;    // len
++    fields[argp++] = TypeLong::HALF;    // placeholder
++  } else {
++    fields[argp++] = TypeInt::INT;      // len
++  }
+   fields[argp++] = TypeLong::LONG;      // inv
+   fields[argp++] = Type::HALF;
+   fields[argp++] = TypePtr::NOTNULL;    // result
+@@ -1029,11 +1037,19 @@
+   // create input type (domain)
+   int num_args      = 6;
+   int argcnt = num_args;
++  if (CCallingConventionRequiresIntsAsLongs) {
++    argcnt++;                           // additional placeholder
++  }
+   const Type** fields = TypeTuple::fields(argcnt);
+   int argp = TypeFunc::Parms;
+   fields[argp++] = TypePtr::NOTNULL;    // a
+   fields[argp++] = TypePtr::NOTNULL;    // n
+-  fields[argp++] = TypeInt::INT;        // len
++  if (CCallingConventionRequiresIntsAsLongs) {
++    fields[argp++] = TypeLong::LONG;    // len
++    fields[argp++] = TypeLong::HALF;    // placeholder
++  } else {
++    fields[argp++] = TypeInt::INT;      // len
++  }
+   fields[argp++] = TypeLong::LONG;      // inv
+   fields[argp++] = Type::HALF;
+   fields[argp++] = TypePtr::NOTNULL;    // result
