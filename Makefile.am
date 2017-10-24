@@ -1978,6 +1978,10 @@ if ENABLE_SYSTEMTAP
 endif
 	cp $(abs_top_builddir)/nss.cfg \
 	  $(BUILD_SDK_DIR)/jre/lib/security;
+if WITH_TZDATA_DIR
+	cp $(abs_top_builddir)/tz.properties \
+	  $(BUILD_SDK_DIR)/jre/lib;
+endif
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
@@ -2040,6 +2044,10 @@ if ENABLE_SYSTEMTAP
 endif
 	cp $(abs_top_builddir)/nss.cfg \
 	  $(BUILD_DEBUG_SDK_DIR)/jre/lib/security;
+if WITH_TZDATA_DIR
+	cp $(abs_top_builddir)/tz.properties \
+	  $(BUILD_DEBUG_SDK_DIR)/jre/lib;
+endif
 if ENABLE_JAMVM
 	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
 endif
@@ -2192,6 +2200,9 @@ stamps/icedtea-boot.stamp: stamps/icedtea-boot-configure.stamp
 	  -C $(BOOT_BUILD_OUTPUT_DIR) \
 	  images
 	$(abs_top_builddir)/pax-mark-vm $(BUILD_BOOT_SDK_DIR) true
+if WITH_TZDATA_DIR
+	cp $(abs_top_builddir)/tz.properties $(BUILD_BOOT_SDK_DIR)/jre/lib;
+endif
 	@echo "Bootstrapped IcedTea is served:" $(BUILD_BOOT_SDK_DIR)
 	mkdir -p stamps
 	touch $@
