@@ -15,6 +15,7 @@ New in release 3.6.0 (2017-10-XX):
 * New features
   - PR3469: Alternative path to tzdb.dat
   - PR3483: Separate addition of nss.cfg and tz.properties into separate targets
+  - PR3484: Move SystemTap support to its own target
 * Backports
   - S8075484, PR3473, RH1490713: SocketInputStream.socketRead0 can hang even with soTimeout set
   - S8146086, PR3439, RH1478402: Publishing two webservices on same port fails with "java.net.BindException: Address already in use"

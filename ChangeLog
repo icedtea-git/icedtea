@@ -1,3 +1,20 @@
+2010-09-22  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR3484: Move SystemTap support to its own target
+	* Makefile.am:
+	(.PHONY): Add clean-add-systemtap and
+	clean-add-systemtap-debug.
+	(clean-local): Likewise.
+	(icedtea): Remove systemtap support.
+	(icedtea-debug): Likewise.
+	(icedtea-stage2): Depend on add-systemtap.
+	(icedtea-debug-stage2): Depend on add-systemtap-debug.
+	(add-systemtap): New target to add SystemTap support to the build.
+	(add-systemtap-debug): Likewise for debug.
+	(clean-add-systemtap): Remove SystemTap support from the build.
+	(clean-add-systemtap-debug): Likewise for debug.
+	* NEWS: Updated.
+
 2010-09-23  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR3483: Separate addition of nss.cfg and tz.properties into separate targets

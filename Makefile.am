@@ -830,7 +830,8 @@ clean-local: clean-tests \
  clean-add-zero clean-add-zero-debug clean-add-cacao clean-add-cacao-debug \
  clean-cryptocheck clean-ecccheck clean-policytool-@JAVA_VER@.desktop \
  clean-jconsole-@JAVA_VER@.desktop clean-add-nss clean-add-nss-debug \
- clean-add-tzdata-support clean-add-tzdata-support-debug
+ clean-add-tzdata-support clean-add-tzdata-support-debug \
+ clean-add-systemtap clean-add-systemtap-debug
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -868,7 +869,8 @@ distclean-local: clean-local clean-download
 	check-jdk check-hotspot check-langtools jtregcheck check-tapset check-tapset-probes \
 	check-tapset-jstack clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop \
 	clean-split-debuginfo clean-split-debuginfo-debug clean-split-debuginfo-boot \
-	clean-add-nss clean-add-nss-debug clean-add-tzdata-support clean-add-tzdata-support-debug
+	clean-add-nss clean-add-nss-debug clean-add-tzdata-support clean-add-tzdata-support-debug \
+	clean-add-systemtap clean-add-systemtap-debug
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -1954,6 +1956,18 @@ endif
 if ENABLE_CACAO
 	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
 endif
+if ENABLE_JAMVM
+	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
+endif
+	@echo "IcedTea is served:" $(BUILD_SDK_DIR)
+	mkdir -p stamps
+	touch $@
+
+clean-icedtea: 
+	rm -rf $(BUILD_OUTPUT_DIR)
+	rm -f stamps/icedtea-configure.stamp stamps/icedtea.stamp
+
+stamps/add-systemtap.stamp: stamps/icedtea.stamp
 if ENABLE_SYSTEMTAP
 	mkdir -p $(BUILD_SDK_DIR)/tapset ; \
 	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
@@ -1978,12 +1992,11 @@ if ENABLE_SYSTEMTAP
 	cp $(abs_top_builddir)/tapset/jstack.stp \
 	  $(BUILD_SDK_DIR)/tapset/jstack.stp
 endif
-if ENABLE_JAMVM
-	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_JRE_ARCH_DIR)/jvm.cfg
-endif
-	@echo "IcedTea is served:" $(BUILD_SDK_DIR)
-	mkdir -p stamps
-	touch $@
+	touch stamps/add-systemtap.stamp
+
+clean-add-systemtap:
+	rm -rf $(BUILD_SDK_DIR)/tapset
+	rm -f stamps/add-systemtap.stamp
 
 stamps/add-nss.stamp: stamps/icedtea.stamp
 	cp $(abs_top_builddir)/nss.cfg $(BUILD_SDK_DIR)/jre/lib/security;
@@ -2002,75 +2015,6 @@ endif
 clean-add-tzdata-support:
 	rm -f $(BUILD_SDK_DIR)/jre/lib/tz.properties
 	rm -f stamps/add-tzdata-support.stamp
-
-stamps/icedtea-debug-configure.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
- stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
- stamps/cacao.stamp stamps/jamvm.stamp
-	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)
-	cd $(DEBUG_BUILD_OUTPUT_DIR) && \
-          $(ICEDTEA_CONFIGURE_ENV) $(SHELL) $(abs_top_builddir)/openjdk/configure \
-          $(ICEDTEA_CONFIGURE) --with-debug-level=slowdebug
-	mkdir -p stamps
-	touch $@
-
-stamps/icedtea-debug.stamp: stamps/icedtea-debug-configure.stamp
-	$(ICEDTEA_UNSET) $(ARCH_PREFIX) $(ICEDTEA_MAKE) \
-	  $(ICEDTEA_ENV) \
-	  -C $(DEBUG_BUILD_OUTPUT_DIR) \
-	  $(ICEDTEA_BUILD_TARGET)
-	$(abs_top_builddir)/pax-mark-vm $(BUILD_DEBUG_SDK_DIR) true
-	mkdir -p $(BUILD_DEBUG_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
-	mkdir -p $(BUILD_DEBUG_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
-	mkdir -p $(BUILD_DEBUG_SDK_DIR)/jre/lib/ext
-	mkdir -p $(BUILD_DEBUG_JRE_DIR)/lib/ext 
-if ZERO_BUILD
-	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
-endif
-if SHARK_BUILD
-	printf -- '-shark ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
-endif
-if ENABLE_CACAO
-	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
-endif
-if ENABLE_SYSTEMTAP
-	mkdir -p $(BUILD_DEBUG_SDK_DIR)/tapset ; \
-	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
-	if test $$? -eq 0; then \
-	  $(SED) -e '/\/client\/libjvm.so/d' \
-	    < $(abs_top_builddir)/tapset/hotspot.stp \
-	    > $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot.stp; \
-	  $(SED) -e '/\/client\/libjvm.so/d' \
-	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    > $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_jni.stp; \
-	  $(SED) -e '/\/client\/libjvm.so/d' \
-	    < $(abs_top_builddir)/tapset/hotspot_gc.stp \
-	    > $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_gc.stp; \
-	else \
-	  cp $(abs_top_builddir)/tapset/hotspot.stp \
-	    $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot.stp; \
-	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
-	    $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_jni.stp; \
-	  cp $(abs_top_builddir)/tapset/hotspot_gc.stp \
-	    $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_gc.stp; \
-	fi; \
-	cp $(abs_top_builddir)/tapset/jstack.stp \
-	  $(BUILD_DEBUG_SDK_DIR)/tapset/jstack.stp
-endif
-if ENABLE_JAMVM
-	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
-endif
-	@echo "IcedTea (debug build) is served:" $(BUILD_DEBUG_SDK_DIR)
-	mkdir -p stamps
-	touch $@
-
-clean-icedtea: 
-	rm -rf $(BUILD_OUTPUT_DIR)
-	rm -f stamps/icedtea-configure.stamp stamps/icedtea.stamp
-
-clean-icedtea-debug:
-	rm -rf $(DEBUG_BUILD_OUTPUT_DIR)
-	rm -f stamps/icedtea-debug-configure.stamp
-	rm -f stamps/icedtea-debug.stamp
 
 stamps/check-crypto.stamp: stamps/cryptocheck.stamp stamps/icedtea.stamp
 	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
@@ -2121,6 +2065,97 @@ clean-split-debuginfo:
 	rm -rvf $(BUILD_DEBUGINFO_DIR)
 	rm -f stamps/split-debuginfo.stamp
 
+stamps/icedtea-debug-configure.stamp: stamps/bootstrap-directory-symlink-stage2.stamp \
+ stamps/download.stamp stamps/extract.stamp $(OPENJDK_TREE) \
+ stamps/cacao.stamp stamps/jamvm.stamp
+	mkdir -p $(DEBUG_BUILD_OUTPUT_DIR)
+	cd $(DEBUG_BUILD_OUTPUT_DIR) && \
+          $(ICEDTEA_CONFIGURE_ENV) $(SHELL) $(abs_top_builddir)/openjdk/configure \
+          $(ICEDTEA_CONFIGURE) --with-debug-level=slowdebug
+	mkdir -p stamps
+	touch $@
+
+stamps/icedtea-debug.stamp: stamps/icedtea-debug-configure.stamp
+	$(ICEDTEA_UNSET) $(ARCH_PREFIX) $(ICEDTEA_MAKE) \
+	  $(ICEDTEA_ENV) \
+	  -C $(DEBUG_BUILD_OUTPUT_DIR) \
+	  $(ICEDTEA_BUILD_TARGET)
+	$(abs_top_builddir)/pax-mark-vm $(BUILD_DEBUG_SDK_DIR) true
+	mkdir -p $(BUILD_DEBUG_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_DEBUG_JRE_DIR)/lib/$(INSTALL_ARCH_DIR)
+	mkdir -p $(BUILD_DEBUG_SDK_DIR)/jre/lib/ext
+	mkdir -p $(BUILD_DEBUG_JRE_DIR)/lib/ext 
+if ZERO_BUILD
+	printf -- '-zero ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+endif
+if SHARK_BUILD
+	printf -- '-shark ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+endif
+if ENABLE_CACAO
+	printf -- '-cacao ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+endif
+if ENABLE_JAMVM
+	printf -- '-jamvm ALIASED_TO -server\n' >> $(BUILD_DEBUG_JRE_ARCH_DIR)/jvm.cfg
+endif
+	@echo "IcedTea (debug build) is served:" $(BUILD_DEBUG_SDK_DIR)
+	mkdir -p stamps
+	touch $@
+
+clean-icedtea-debug:
+	rm -rf $(DEBUG_BUILD_OUTPUT_DIR)
+	rm -f stamps/icedtea-debug-configure.stamp
+	rm -f stamps/icedtea-debug.stamp
+
+stamps/add-systemtap-debug.stamp: stamps/icedtea-debug.stamp
+if ENABLE_SYSTEMTAP
+	mkdir -p $(BUILD_DEBUG_SDK_DIR)/tapset ; \
+	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
+	if test $$? -eq 0; then \
+	  $(SED) -e '/\/client\/libjvm.so/d' \
+	    < $(abs_top_builddir)/tapset/hotspot.stp \
+	    > $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot.stp; \
+	  $(SED) -e '/\/client\/libjvm.so/d' \
+	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
+	    > $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_jni.stp; \
+	  $(SED) -e '/\/client\/libjvm.so/d' \
+	    < $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    > $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_gc.stp; \
+	else \
+	  cp $(abs_top_builddir)/tapset/hotspot.stp \
+	    $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot.stp; \
+	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
+	    $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_jni.stp; \
+	  cp $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    $(BUILD_DEBUG_SDK_DIR)/tapset/hotspot_gc.stp; \
+	fi; \
+	cp $(abs_top_builddir)/tapset/jstack.stp \
+	  $(BUILD_DEBUG_SDK_DIR)/tapset/jstack.stp
+endif
+	touch stamps/add-systemtap-debug.stamp
+
+clean-add-systemtap-debug:
+	rm -rf $(BUILD_DEBUG_SDK_DIR)/tapset
+	rm -f stamps/add-systemtap-debug.stamp
+
+stamps/add-nss-debug.stamp: stamps/icedtea-debug.stamp
+	cp $(abs_top_builddir)/nss.cfg $(BUILD_DEBUG_SDK_DIR)/jre/lib/security;
+	touch stamps/add-nss-debug.stamp
+
+clean-add-nss-debug:
+	rm -f $(BUILD_DEBUG_SDK_DIR)/jre/lib/security/nss.cfg
+	rm -f stamps/add-nss-debug.stamp
+
+stamps/add-tzdata-support-debug.stamp: stamps/icedtea.stamp
+if WITH_TZDATA_DIR
+	cp $(abs_top_builddir)/tz.properties \
+	  $(BUILD_DEBUG_SDK_DIR)/j2sdk-image/jre/lib;
+endif
+	touch stamps/add-tzdata-support-debug.stamp
+
+clean-add-tzdata-support-debug:
+	rm -f $(BUILD_DEBUG_SDK_DIR)/jre/lib/tz.properties
+	rm -f stamps/add-tzdata-support-debug.stamp
+
 stamps/check-crypto-debug.stamp: stamps/cryptocheck.stamp stamps/icedtea-debug.stamp
 	if [ -e $(BUILD_DEBUG_SDK_DIR)/bin/java ] ; then \
 	  $(BUILD_DEBUG_SDK_DIR)/bin/java -cp $(CRYPTO_CHECK_BUILD_DIR) TestCryptoLevel ; \
@@ -2170,28 +2205,10 @@ clean-split-debuginfo-debug:
 	rm -rvf $(BUILD_DEBUG_DEBUGINFO_DIR)
 	rm -f stamps/split-debuginfo-debug.stamp
 
-stamps/add-nss-debug.stamp: stamps/icedtea-debug.stamp
-	cp $(abs_top_builddir)/nss.cfg $(BUILD_DEBUG_SDK_DIR)/jre/lib/security;
-	touch stamps/add-nss-debug.stamp
-
-clean-add-nss-debug:
-	rm -f $(BUILD_DEBUG_SDK_DIR)/jre/lib/security/nss.cfg
-	rm -f stamps/add-nss-debug.stamp
-
-stamps/add-tzdata-support-debug.stamp: stamps/icedtea.stamp
-if WITH_TZDATA_DIR
-	cp $(abs_top_builddir)/tz.properties \
-	  $(BUILD_DEBUG_SDK_DIR)/j2sdk-image/jre/lib;
-endif
-	touch stamps/add-tzdata-support-debug.stamp
-
-clean-add-tzdata-support-debug:
-	rm -f $(BUILD_DEBUG_SDK_DIR)/jre/lib/tz.properties
-	rm -f stamps/add-tzdata-support-debug.stamp
-
 stamps/icedtea-stage2.stamp: stamps/icedtea.stamp stamps/add-cacao.stamp \
- stamps/add-zero.stamp stamps/add-jamvm.stamp stamps/check-crypto.stamp \
- stamps/add-archive.stamp stamps/split-debuginfo.stamp stamps/add-nss.stamp \
+ stamps/add-zero.stamp stamps/add-jamvm.stamp stamps/add-systemtap.stamp \
+ stamps/check-crypto.stamp stamps/add-archive.stamp \
+ stamps/split-debuginfo.stamp stamps/add-nss.stamp \
  stamps/add-tzdata-support.stamp
 	mkdir -p stamps
 	touch $@
@@ -2202,7 +2219,8 @@ clean-icedtea-stage2: clean-add-jamvm clean-check-crypto clean-add-archive \
 
 stamps/icedtea-debug-stage2.stamp: stamps/icedtea-debug.stamp \
  stamps/add-cacao-debug.stamp stamps/add-zero-debug.stamp stamps/add-jamvm-debug.stamp \
- stamps/check-crypto-debug.stamp stamps/add-archive-debug.stamp stamps/split-debuginfo-debug.stamp \
+ stamps/add-systemtap-debug.stamp stamps/check-crypto-debug.stamp \
+ stamps/add-archive-debug.stamp stamps/split-debuginfo-debug.stamp \
  stamps/add-nss-debug.stamp stamps/add/tzdata-support-debug.stamp
 	mkdir -p stamps
 	touch $@
@@ -3289,7 +3307,7 @@ endif
 
 add-archive: stamps/add-archive.stamp
 
-add-archive-boot: stamps/add-archive-ecj.stamp
+add-archive-boot: stamps/add-archive-boot.stamp
 
 add-archive-debug: stamps/add-archive-debug.stamp
 
@@ -3304,6 +3322,10 @@ add-jamvm-debug: stamps/add-jamvm-debug.stamp
 add-nss: stamps/add-nss.stamp
 
 add-nss-debug: stamps/add-nss-debug.stamp
+
+add-systemtap: stamps/add-systemtap.stamp
+
+add-systemtap-debug: stamps/add-systemtap-debug.stamp
 
 add-tzdata-support: stamps/add-tzdata-support.stamp
 
