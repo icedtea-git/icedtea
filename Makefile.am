@@ -70,6 +70,7 @@ BUILD_BOOT_IMAGE_DIR = $(BOOT_BUILD_OUTPUT_DIR)/images
 BUILD_BOOT_SDK_DIR = $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image
 BUILD_BOOT_JRE_DIR = $(BUILD_BOOT_IMAGE_DIR)/j2re-image
 BUILD_BOOT_DEBUGINFO_DIR = $(BUILD_BOOT_IMAGE_DIR)/j2sdk-image.stripped
+BUILD_BOOT_JRE_ARCH_DIR = $(BUILD_BOOT_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)
 STAGE1_BOOT_DIR = $(abs_top_builddir)/bootstrap/boot
 STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
 JAMVM_IMPORT_PATH = $(abs_top_builddir)/jamvm/install/hotspot
@@ -2043,7 +2044,7 @@ endif
 	touch stamps/add-archive.stamp
 
 clean-add-archive:
-	rm -vf $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -vf $(BUILD_JRE_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive.stamp
 
 stamps/split-debuginfo.stamp: stamps/icedtea.stamp
@@ -2183,7 +2184,7 @@ endif
 	touch stamps/add-archive-debug.stamp
 
 clean-add-archive-debug:
-	rm -vf $(BUILD_DEBUG_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -vf $(BUILD_DEBUG_JRE_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive-debug.stamp
 
 stamps/split-debuginfo-debug.stamp: stamps/icedtea-debug.stamp
@@ -2260,7 +2261,7 @@ clean-icedtea-boot:
 stamps/add-systemtap-boot.stamp: stamps/icedtea-boot.stamp
 if ENABLE_SYSTEMTAP
 	mkdir -p $(BUILD_BOOT_SDK_DIR)/tapset ; \
-	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
+	grep "client IGNORE" $(BUILD_BOOT_JRE_ARCH_DIR)/jvm.cfg; \
 	if test $$? -eq 0; then \
 	  sed -e '/\/client\/libjvm.so/d' \
 	    < $(abs_top_builddir)/tapset/hotspot.stp \
@@ -2333,7 +2334,7 @@ endif
 	touch $@
 
 clean-add-archive-boot:
-	rm -vf $(BUILD_BOOT_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/*/*.jsa
+	rm -vf $(BUILD_BOOT_JRE_ARCH_DIR)/*/*.jsa
 	rm -f stamps/add-archive-boot.stamp
 
 stamps/split-debuginfo-boot.stamp: stamps/icedtea-boot.stamp

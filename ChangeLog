@@ -1,3 +1,15 @@
+2015-06-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
+
+	PR3486: Path to jvm.cfg is wrong in add-systemtap-boot
+	* Makefile.am:
+	(BUILD_BOOT_JRE_ARCH_DIR): Added.
+	(clean-add-archive): Use BUILD_JRE_ARCH_DIR.
+	(clean-add-archive-debug): Use BUILD_DEBUG_JRE_ARCH_DIR.
+	(add-systemtap-boot): Use BUILD_BOOT_JRE_ARCH_DIR
+	instead of BUILD_JRE_ARCH_DIR which doesn't yet exist.
+	(clean-add-archive-boot): Use BUILD_BOOT_JRE_ARCH_DIR.
+	* NEWS: Updated.
+
 2010-09-24  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR3485: Support additional targets for the bootstrap build

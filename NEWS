@@ -25,6 +25,7 @@ New in release 3.6.0 (2017-10-XX):
   - S8187822, PR3478, RH1494230: C2 conditonal move optimization might create broken graph
 * Bug fixes
   - PR3479, RH1486025: ECC and NSS JVM crash
+  - PR3486: Path to jvm.cfg is wrong in add-systemtap-boot
   - S8165852, PR3468: (fs) Mount point not found for a file which is present in overlayfs
   - S8188030, PR3459, RH1484079: AWT java apps fail to start when some minimal fonts are present
 * PPC port
