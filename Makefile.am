@@ -870,7 +870,8 @@ distclean-local: clean-local clean-download
 	check-tapset-jstack clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop \
 	clean-split-debuginfo clean-split-debuginfo-debug clean-split-debuginfo-boot \
 	clean-add-nss clean-add-nss-debug clean-add-tzdata-support clean-add-tzdata-support-debug \
-	clean-add-systemtap clean-add-systemtap-debug
+	clean-add-systemtap clean-add-systemtap-debug clean-add-systemtap-boot clean-add-nss-boot \
+	clean-add-tzdata-support-boot
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -2145,7 +2146,7 @@ clean-add-nss-debug:
 	rm -f $(BUILD_DEBUG_SDK_DIR)/jre/lib/security/nss.cfg
 	rm -f stamps/add-nss-debug.stamp
 
-stamps/add-tzdata-support-debug.stamp: stamps/icedtea.stamp
+stamps/add-tzdata-support-debug.stamp: stamps/icedtea-debug.stamp
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
 	  $(BUILD_DEBUG_SDK_DIR)/j2sdk-image/jre/lib;
@@ -2247,53 +2248,64 @@ stamps/icedtea-boot.stamp: stamps/icedtea-boot-configure.stamp
 	  -C $(BOOT_BUILD_OUTPUT_DIR) \
 	  images
 	$(abs_top_builddir)/pax-mark-vm $(BUILD_BOOT_SDK_DIR) true
-if WITH_TZDATA_DIR
-	cp $(abs_top_builddir)/tz.properties $(BUILD_BOOT_SDK_DIR)/jre/lib;
-endif
 	@echo "Bootstrapped IcedTea is served:" $(BUILD_BOOT_SDK_DIR)
 	mkdir -p stamps
 	touch $@
-
-# Rebuild targets
-
-rebuild:
-if BOOTSTRAPPING
-	rm -f stamps/icedtea-boot.stamp
-	rm -f stamps/icedtea-stage1.stamp
-	$(ARCH_PREFIX) $(MAKE) icedtea-stage1
-	@echo "bootstrap-poured IcedTea is served (again):" $(BUILD_BOOT_SDK_DIR)
-else
-	rm -f stamps/icedtea.stamp
-	rm -f stamps/icedtea-stage2.stamp
-	$(ARCH_PREFIX) $(MAKE) icedtea-stage2
-	@echo "IcedTea is served (again):" $(BUILD_SDK_DIR)
-endif
-
-hotspot:
-if BOOTSTRAPPING
-	rm -f stamps/icedtea-boot.stamp
-	rm -f stamps/icedtea-stage1.stamp
-	$(ARCH_PREFIX) $(MAKE) ICEDTEA_BUILD_TARGET=hotspot icedtea-stage1
-	mkdir -p \
-	   $(BUILD_BOOT_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/server
-	cp $(BOOT_BUILD_OUTPUT_DIR)/$(SERVER_DIR)/libjvm.so \
-	   $(BUILD_BOOT_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/server
-	@echo "HotSpot is served:" $(BUILD_BOOT_SDK_DIR)
-else
-	rm -f stamps/icedtea.stamp
-	rm -f stamps/icedtea-stage2.stamp
-	$(ARCH_PREFIX) $(MAKE) ICEDTEA_BUILD_TARGET=hotspot icedtea-stage2
-	mkdir -p \
-	   $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/server
-	cp $(BOOT_BUILD_OUTPUT_DIR)/$(SERVER_DIR)/libjvm.so \
-	   $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/server
-	@echo "HotSpot is served:" $(BUILD_SDK_DIR)
-endif
 
 clean-icedtea-boot:
 	rm -rf $(BOOT_BUILD_OUTPUT_DIR)
 	rm -f stamps/icedtea-boot-configure.stamp
 	rm -f stamps/icedtea-boot.stamp
+
+stamps/add-systemtap-boot.stamp: stamps/icedtea-boot.stamp
+if ENABLE_SYSTEMTAP
+	mkdir -p $(BUILD_BOOT_SDK_DIR)/tapset ; \
+	grep "client IGNORE" $(BUILD_JRE_ARCH_DIR)/jvm.cfg; \
+	if test $$? -eq 0; then \
+	  sed -e '/\/client\/libjvm.so/d' \
+	    < $(abs_top_builddir)/tapset/hotspot.stp \
+	    > $(BUILD_BOOT_SDK_DIR)/tapset/hotspot.stp; \
+	  sed -e '/\/client\/libjvm.so/d' \
+	    < $(abs_top_builddir)/tapset/hotspot_jni.stp \
+	    > $(BUILD_BOOT_SDK_DIR)/tapset/hotspot_jni.stp; \
+	  sed -e '/\/client\/libjvm.so/d' \
+	    < $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    > $(BUILD_BOOT_SDK_DIR)/tapset/hotspot_gc.stp; \
+	else \
+	  cp $(abs_top_builddir)/tapset/hotspot.stp \
+	    $(BUILD_BOOT_SDK_DIR)/tapset/hotspot.stp; \
+	  cp $(abs_top_builddir)/tapset/hotspot_jni.stp \
+	    $(BUILD_BOOT_SDK_DIR)/tapset/hotspot_jni.stp; \
+	  cp $(abs_top_builddir)/tapset/hotspot_gc.stp \
+	    $(BUILD_BOOT_SDK_DIR)/tapset/hotspot_gc.stp; \
+	fi; \
+	cp $(abs_top_builddir)/tapset/jstack.stp \
+	  $(BUILD_BOOT_SDK_DIR)/tapset/jstack.stp
+endif
+	touch stamps/add-systemtap-boot.stamp
+
+clean-add-systemtap-boot:
+	rm -rf $(BUILD_BOOT_SDK_DIR)/tapset
+	rm -f stamps/add-systemtap-boot.stamp
+
+stamps/add-nss-boot.stamp: stamps/icedtea-boot.stamp
+	cp $(abs_top_builddir)/nss.cfg \
+	  $(BUILD_BOOT_SDK_DIR)/jre/lib/security;
+	touch stamps/add-nss-boot.stamp
+
+clean-add-nss-boot:
+	rm -f $(BUILD_BOOT_SDK_DIR)/jre/lib/security/nss.cfg
+	rm -f stamps/add-nss-boot.stamp
+
+stamps/add-tzdata-support-boot.stamp: stamps/icedtea-boot.stamp
+if WITH_TZDATA_DIR
+	cp $(abs_top_builddir)/tz.properties $(BUILD_BOOT_SDK_DIR)/jre/lib;
+endif
+	touch stamps/add-tzdata-support-boot.stamp
+
+clean-add-tzdata-support-boot:
+	rm -f $(BUILD_BOOT_SDK_DIR)/jre/lib/tz.properties
+	rm -f stamps/add-tzdata-support-boot.stamp
 
 stamps/check-crypto-boot.stamp: stamps/cryptocheck.stamp stamps/icedtea-boot.stamp
 	if [ -e $(BUILD_BOOT_SDK_DIR)/bin/java ] ; then \
@@ -2345,14 +2357,52 @@ clean-split-debuginfo-boot:
 	rm -f stamps/split-debuginfo-boot.stamp
 
 stamps/icedtea-stage1.stamp: stamps/icedtea-boot.stamp \
- stamps/check-crypto-boot.stamp stamps/add-archive-boot.stamp \
- stamps/split-debuginfo-boot.stamp
+ stamps/add-systemtap-boot.stamp stamps/add-nss-boot.stamp \
+ stamps/add-tzdata-support-boot.stamp stamps/check-crypto-boot.stamp \
+ stamps/add-archive-boot.stamp stamps/split-debuginfo-boot.stamp
 	mkdir -p stamps
 	touch $@
 
 clean-icedtea-stage1: clean-check-crypto-boot clean-add-archive-boot \
- clean-split-debuginfo-boot
+ clean-split-debuginfo-boot clean-add-systemtap-boot clean-add-nss-boot \
+ clean-add-tzdata-support-boot
 	rm -f stamps/icedtea-stage1.stamp
+
+# Rebuild targets
+
+rebuild:
+if BOOTSTRAPPING
+	rm -f stamps/icedtea-boot.stamp
+	rm -f stamps/icedtea-stage1.stamp
+	$(ARCH_PREFIX) $(MAKE) icedtea-stage1
+	@echo "bootstrap-poured IcedTea is served (again):" $(BUILD_BOOT_SDK_DIR)
+else
+	rm -f stamps/icedtea.stamp
+	rm -f stamps/icedtea-stage2.stamp
+	$(ARCH_PREFIX) $(MAKE) icedtea-stage2
+	@echo "IcedTea is served (again):" $(BUILD_SDK_DIR)
+endif
+
+hotspot:
+if BOOTSTRAPPING
+	rm -f stamps/icedtea-boot.stamp
+	rm -f stamps/icedtea-stage1.stamp
+	$(ARCH_PREFIX) $(MAKE) ICEDTEA_BUILD_TARGET=hotspot icedtea-stage1
+	mkdir -p \
+	   $(BUILD_BOOT_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/server
+	cp $(BOOT_BUILD_OUTPUT_DIR)/$(SERVER_DIR)/libjvm.so \
+	   $(BUILD_BOOT_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/server
+	@echo "HotSpot is served:" $(BUILD_BOOT_SDK_DIR)
+else
+	rm -f stamps/icedtea.stamp
+	rm -f stamps/icedtea-stage2.stamp
+	$(ARCH_PREFIX) $(MAKE) ICEDTEA_BUILD_TARGET=hotspot icedtea-stage2
+	mkdir -p \
+	   $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/server
+	cp $(BOOT_BUILD_OUTPUT_DIR)/$(SERVER_DIR)/libjvm.so \
+	   $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/server
+	@echo "HotSpot is served:" $(BUILD_SDK_DIR)
+endif
 
 # JamVM
 

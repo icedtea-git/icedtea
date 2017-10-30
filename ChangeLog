@@ -1,3 +1,22 @@
+2010-09-24  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR3485: Support additional targets for the bootstrap build
+	* Makefile.am:
+	(.PHONY): Add new clean targets.
+	(add-tzdata-support-debug): Depend on icedtea-debug, not icedtea.
+	(icedtea-boot): Move tz.properties handling to its own target.
+	(add-systemtap-boot): Add SystemTap support to the boot build.
+	(clean-add-systemtap-boot): Remove SystemTap support from the boot build.
+	(add-pulseaudio-boot): New target to add PulseAudio support to the boot build.
+	(clean-add-pulseaudio-boot): Remove PulseAudio support from the boot build.
+	(add-nss-boot): New target to add NSS support to the boot build.
+	(clean-add-nss-boot): Remove NSS support from the boot build.
+	(add-tzdata-support-boot): New target to add alternate timezone data support to the boot build.
+	(clean-add-tzdata-support-boot): Remove alternate timezone data support from the boot build.
+	(icedtea-stage1): Add new add-x-boot targets.
+	(clean-icedtea-stage1): Add new clean-add-x-boot targets.
+	* NEWS: Updated.
+
 2010-09-22  Andrew John Hughes  <gnu.andrew@redhat.com>
 
 	PR3484: Move SystemTap support to its own target
