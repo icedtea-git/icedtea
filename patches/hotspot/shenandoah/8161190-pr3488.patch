@@ -1,0 +1,35 @@
+# HG changeset patch
+# User aph
+# Date 1469203508 -3600
+#      Fri Jul 22 17:05:08 2016 +0100
+# Node ID bed72f56b47da796c83de7e873ce0a9ac44b0af6
+# Parent  88712267e7cb4e499b1070be1851f0ec352f79d2
+8161190, PR3488: AArch64: Fix overflow in immediate cmp instruction
+Summary: Use subs instead of cmp to compare BlockZeroingLowLimit. Subs can check and handle immediate out of range correctly.
+Reviewed-by: aph
+Contributed-by: yang.zhang@linaro.org
+
+diff --git a/src/cpu/aarch64/vm/macroAssembler_aarch64.cpp b/src/cpu/aarch64/vm/macroAssembler_aarch64.cpp
+--- openjdk/hotspot/src/cpu/aarch64/vm/macroAssembler_aarch64.cpp
++++ openjdk/hotspot/src/cpu/aarch64/vm/macroAssembler_aarch64.cpp
+@@ -4651,7 +4651,7 @@
+   // alignment.
+   if (!is_large || !(BlockZeroingLowLimit >= zva_length * 2)) {
+     int low_limit = MAX2(zva_length * 2, (int)BlockZeroingLowLimit);
+-    cmp(cnt, low_limit >> 3);
++    subs(tmp, cnt, low_limit >> 3);
+     br(Assembler::LT, small);
+   }
+ 
+diff --git a/src/cpu/aarch64/vm/stubGenerator_aarch64.cpp b/src/cpu/aarch64/vm/stubGenerator_aarch64.cpp
+--- openjdk/hotspot/src/cpu/aarch64/vm/stubGenerator_aarch64.cpp
++++ openjdk/hotspot/src/cpu/aarch64/vm/stubGenerator_aarch64.cpp
+@@ -2024,7 +2024,7 @@
+     if (UseBlockZeroing) {
+       Label non_block_zeroing, rest;
+       // count >= BlockZeroingLowLimit && value == 0
+-      __ cmp(cnt_words, BlockZeroingLowLimit >> 3);
++      __ subs(rscratch1, cnt_words, BlockZeroingLowLimit >> 3);
+       __ ccmp(value, 0 /* comparing value */, 0 /* NZCV */, Assembler::GE);
+       __ br(Assembler::NE, non_block_zeroing);
+       __ mov(bz_base, to);

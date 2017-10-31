@@ -1,24 +1,24 @@
 # Dependencies
 
-JDK_UPDATE_VERSION = 144
-BUILD_VERSION = b01
+JDK_UPDATE_VERSION = 151
+BUILD_VERSION = b12
 COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(BUILD_VERSION)
 
-CORBA_CHANGESET = 0c8bc00d9e30
-JAXP_CHANGESET = db1236756fea
-JAXWS_CHANGESET = 768279d73ebb
-JDK_CHANGESET = 5dcb55da00c1
-LANGTOOLS_CHANGESET = e0f1c298f0d6
-OPENJDK_CHANGESET = 63060ee6ba74
-NASHORN_CHANGESET = add478757898
+CORBA_CHANGESET = 13a5a8a3c66f
+JAXP_CHANGESET = 947a7b1ce48b
+JAXWS_CHANGESET = eafb356c44d0
+JDK_CHANGESET = a05e38417041
+LANGTOOLS_CHANGESET = 61a1c711f7ab
+OPENJDK_CHANGESET = eb577ed6ec93
+NASHORN_CHANGESET = a2d2fc80c97a
 
-CORBA_SHA256SUM = a314c031e34f443f46a04704da35ffc742cb4e1ad6603d2c9797c2075fb778d0
-JAXP_SHA256SUM = 0c3790e74b8618e770fb37884475427f7aa95636504c097599686035b80004bd
-JAXWS_SHA256SUM = f3d347ed5d33844bdc88c97154c3ced2dd80aed06218a1f5a619424129387336
-JDK_SHA256SUM = bbc35f829a5e6548511e7fb02a8b413e0d89832270a37b401220255a01e30775
-LANGTOOLS_SHA256SUM = b2d70040de1e95907bd899d69c5511813d7cf2129340370d7f72867c3e536ce0
-OPENJDK_SHA256SUM = 76ad0beb77b5a665820cf21f070507b4b8b3ce13573441babcc22d003ca5ec1a
-NASHORN_SHA256SUM = 202b0cb347694deb6b30f8826d696128c6bb9e7d6b0b7c50ae9146f81d91cd77
+CORBA_SHA256SUM = ad9d8ee4124afa374fb362fc2cbbcbd9efae186ade413a539e36004e70603662
+JAXP_SHA256SUM = b1b7b78a1079153410c1a1d20c749f92660faceb25d7e51515731bf4c6cd5f1d
+JAXWS_SHA256SUM = 33fa2d3507498dd94d0313a2d8cd989ee1a56ef19d7203f01df79f82a1680e05
+JDK_SHA256SUM = e86575ce39c19b46f0ca9d0c6a807504f3eee092e8307aa7614cc8822742446f
+LANGTOOLS_SHA256SUM = 2ced1f044e25d5f659413bb8fc93cf0c46dbffd2af7096f7cdb24cb67968c611
+OPENJDK_SHA256SUM = cb76591cd13fbb276ce2ac695e3b416ec58072f660c6d93c27bf003c03821d57
+NASHORN_SHA256SUM = 7245ba3bd15896e6f41300f370dd16a64bfa8fa6bdd69a099c0f14bd7e6546a8
 
 HS_TYPE = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_builddir)/hotspot.map`"
 HS_URL = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_builddir)/hotspot.map`"
@@ -377,7 +377,10 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8170328-pr3466-rh1498321.patch \
 	patches/hotspot/$(HSBUILD)/8181810-pr3466-rh1498319.patch \
 	patches/hotspot/$(HSBUILD)/8185164-pr3438.patch \
-	patches/hotspot/$(HSBUILD)/8187822-pr3478-rh1494230.patch
+	patches/hotspot/$(HSBUILD)/8187822-pr3478-rh1494230.patch \
+	patches/hotspot/$(HSBUILD)/8035496-pr3487.patch \
+	patches/hotspot/$(HSBUILD)/8180711.patch \
+	patches/hotspot/$(HSBUILD)/8184682.patch
 
 # AArch32 doesn't yet have the latest update
 # Shenandoah included 8175887 ahead of upstream
@@ -388,6 +391,10 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8175097-pr3334-rh1417266.patch \
 	patches/hotspot/$(HSBUILD)/8173770.patch \
 	patches/hotspot/$(HSBUILD)/8181420.patch
+else
+ICEDTEA_PATCHES += \
+	patches/hotspot/$(HSBUILD)/8187224-pr3488.patch \
+	patches/hotspot/$(HSBUILD)/8161190-pr3488.patch
 endif
 
 endif
@@ -3133,8 +3140,11 @@ install-data-local:
 	  $(DESTDIR)${prefix}/jre/lib/security
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/security/blacklisted.certs \
 	  $(DESTDIR)${prefix}/jre/lib/security
-	for files in $(BUILD_SDK_DIR)/jre/lib/security/*.jar; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/security; \
+	for policies in limited unlimited; do \
+	  ${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/security/policy/$${policies} ; \
+	  for files in $(BUILD_SDK_DIR)/jre/lib/security/policy/$${policies}/*.jar; do \
+	    $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/security/policy/$${policies}; \
+	  done ; \
 	done
 	for files in $(BUILD_SDK_DIR)/man/man1/*.1; do \
 	  $(INSTALL_DATA) $${files} $(DESTDIR)$(mandir)/man1; \
@@ -3276,8 +3286,11 @@ uninstall-local:
 	rm -vf $(DESTDIR)${prefix}/jre/lib/security/java.security
 	rm -vf $(DESTDIR)${prefix}/jre/lib/security/nss.cfg
 	rm -vf $(DESTDIR)${prefix}/jre/lib/security/blacklisted.certs
-	for files in $(BUILD_SDK_DIR)/jre/lib/security/*.jar; do \
-	  rm -vf $(DESTDIR)${prefix}/jre/lib/security/$$(basename $${files}); \
+	for policies in unlimited limited ; do \
+	  for files in $(BUILD_SDK_DIR)/jre/lib/security/policy/$${policies}/*.jar; do \
+	    rm -vf $(DESTDIR)${prefix}/jre/lib/security/policy/$${policies}/$$(basename $${files}); \
+	  done ; \
+	  $(RMDIR) $(DESTDIR)${prefix}/jre/lib/security/policy/$${policies} ; \
 	done
 	for files in $(BUILD_SDK_DIR)/man/man1/*.1; do \
 	  rm -vf $(DESTDIR)$(mandir)/man1/$$(basename $${files}); \
@@ -3331,6 +3344,7 @@ endif
 	$(RMDIR) $(DESTDIR)$(bindir) $(DESTDIR)$(includedir) $(DESTDIR)${exec_prefix}/lib
 	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli
 	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)
+	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/security/policy
 	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/{cmm,ext,images/cursors,management,security}
 	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/images
 	$(RMDIR) $(DESTDIR)${prefix}/jre/bin $(DESTDIR)${prefix}/jre/lib

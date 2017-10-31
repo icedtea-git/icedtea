@@ -12,13 +12,62 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.6.0 (2017-10-XX):
 
+* Security fixes
+  - S8165543: Better window framing
+  - S8169026, CVE-2017-10274: Handle smartcard clean up better
+  - S8169966: Larger AWT menus
+  - S8170218: Improved Font Metrics
+  - S8171252: Improve exception checking
+  - S8171261: Stability fixes for lcms
+  - S8174109, CVE-2017-10281: Better queuing priorities
+  - S8174966, CVE-2017-10285: Unreferenced references
+  - S8175940: More certificate subject checking
+  - S8176751, CVE-2017-10295: Better URL connections
+  - S8178794, CVE-2017-10388: Correct Kerberos ticket grants
+  - S8180024: Improve construction of objects during deserialization
+  - S8180711, CVE-2017-10346: Better invokespecial checks
+  - S8181100, CVE-2017-10350: Better Base Exceptions
+  - S8181323, CVE-2017-10347: Better timezone processing
+  - S8181327, CVE-2017-10349: Better X processing
+  - S8181370, CVE-2017-10345: Better keystore handling
+  - S8181432, CVE-2017-10348: Better processing of unresolved permissions
+  - S8181597, CVE-2017-10357: Process Proxy presentation
+  - S8181612, CVE-2017-10355: More stable connection processing
+  - S8181692, CVE-2017-10356: Update storage implementations
+  - S8183028, CVE-2016-10165: Improve CMS header processing
+  - S8184682, CVE-2016-9840, CVE-2016-9841, CVE-2016-9842, CVE-2016-9843: Upgrade compression library
 * New features
   - PR3469: Alternative path to tzdb.dat
   - PR3483: Separate addition of nss.cfg and tz.properties into separate targets
   - PR3484: Move SystemTap support to its own target
   - PR3485: Support additional targets for the bootstrap build
-* Backports
+* Import of OpenJDK 8 u151 build 12
+  - S8029659: Keytool, print key algorithm of certificate or key entry
+  - S8057810: New defaults for DSA keys in jarsigner and keytool
   - S8075484, PR3473, RH1490713: SocketInputStream.socketRead0 can hang even with soTimeout set
+  - S8077670: sun/security/krb5/auto/MaxRetries.java may fail with BindException
+  - S8087144: sun/security/krb5/auto/MaxRetries.java fails with Retry count is -1 less
+  - S8153146: sun/security/krb5/auto/MaxRetries.java failed with timeout
+  - S8157561: Ship the unlimited policy files in JDK Updates
+  - S8158517: Minor optimizations to ISO10126PADDING
+  - S8171319: keytool should print out warnings when reading or generating cert/cert req using weak algorithms
+  - S8177569: keytool should not warn if signature algorithm used in cacerts is weak
+  - S8177837: need to upgrade install tools
+  - S8178714: PKIX validator nameConstraints check failing after change 8175940
+  - S8179423: 2 security tests started failing for JDK 1.6.0 u161 b05
+  - S8179564: Missing @bug for tests added with JDK-8165367
+  - S8181048: Refactor existing providers to refer to the same constants for default values for key length
+  - S8182879: Add warnings to keytool when using JKS and JCEKS
+  - S8184937: LCMS error 13: Couldn't link the profiles
+  - S8185039: Incorrect GPL header causes RE script to miss swap to commercial header for licensee source bundle
+  - S8185040: Incorrect GPL header causes RE script to miss swap to commercial header for licensee source bundle
+  - S8185778: 8u151 L10n resource file update
+  - S8185845: Add SecurityTools.java test library
+  - S8186503: sun/security/tools/jarsigner/DefaultSigalg.java failed after backport to JDK 6/7/8
+  - S8186533: 8u151 L10n resource file update md20
+  - S8186674: Remove JDK-8174109 from CPU Aug 21 week builds
+* Backports
+  - S8035496, PR3487: G1 ARM: missing remset entry noticed by VerifyAfterGC for vm/gc/concurrent/lp50yp10rp70mr30st0
   - S8146086, PR3439, RH1478402: Publishing two webservices on same port fails with "java.net.BindException: Address already in use"
   - S8184673, PR3475, RH1487266: Fix compatibility issue in AlgorithmChecker for 3rd party JCE providers
   - S8185164, PR3438: GetOwnedMonitorInfo() returns incorrect owned monitor
@@ -33,6 +82,9 @@ New in release 3.6.0 (2017-10-XX):
   - S8168318, PR3466, RH1498320: PPC64: Use cmpldi instead of li/cmpld
   - S8170328, PR3466, RH1498321: PPC64: Use andis instead of lis/and
   - S8181810, PR3466, RH1498319: PPC64: Leverage extrdi for bitfield extract
+* AArch64 port
+  - S8161190, PR3488: AArch64: Fix overflow in immediate cmp instruction
+  - S8187224, PR3488: aarch64: some inconsistency between aarch64_ad.m4 and aarch64.ad
 * SystemTap
   - PR3467, RH1492139: Hotspot object_alloc tapset uses HeapWordSize incorrectly
 

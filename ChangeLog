@@ -1,3 +1,45 @@
+2017-10-30  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to icedtea-3.6.0.
+	* Makefile.am:
+	(JDK_UPDATE_VERSION): Bump to 151.
+	(BUILD_VERSION): Set to b12.
+	(CORBA_CHANGESET): Update to icedtea-3.6.0pre02 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Add HotSpot patches for Shenandoah
+	and AArch32 ports.
+	(install-data-local): Install policy JAR files into new
+	policy directories.
+	(uninstall-local): Remove policy JAR files from their
+	subdirectories and prune the now empty directories.
+	* NEWS: Updated.
+	* configure.ac: Bump to 3.6.0.
+	* hotspot.map.in: Update to icedtea-3.6.0 tag.
+	* patches/hotspot/aarch32/8035496-pr3487.patch,
+	* patches/hotspot/aarch32/8180711.patch,
+	* patches/hotspot/aarch32/8184682.patch:
+	Add AArch32 patches for latest HotSpot updates (symlinked
+	to Shenandoah ones). The AArch32 port doesn't include the
+	AArch64 port so PR3488 fixes are excluded.
+	* patches/hotspot/shenandoah/8035496-pr3487.patch,
+	* patches/hotspot/shenandoah/8161190-pr3488.patch,
+	* patches/hotspot/shenandoah/8180711.patch,
+	* patches/hotspot/shenandoah/8184682.patch,
+	* patches/hotspot/shenandoah/8187224-pr3488.patch:
+	Add Shenandoah patches for latest HotSpot updates.
+
 2015-06-03  Andrew John Hughes  <gnu.andrew@member.fsf.org>
 
 	PR3486: Path to jvm.cfg is wrong in add-systemtap-boot

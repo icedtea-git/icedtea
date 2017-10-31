@@ -1,0 +1,30 @@
+# HG changeset patch
+# User bdelsart
+# Date 1393242561 -3600
+#      Mon Feb 24 12:49:21 2014 +0100
+# Node ID f7ae197522b1f3b59c8f1c73ccb07641e82ec08a
+# Parent  e2d13b496321f87a9232573d5671af86311af99f
+8035496, PR3487: G1 ARM: missing remset entry noticed by VerifyAfterGC for vm/gc/concurrent/lp50yp10rp70mr30st0
+Summary: release_store used when registering a PerRegionTable. Also reviewed-by: vitalyd@gmail.com
+Reviewed-by: jmasa, tschatzl, brutisso
+
+diff --git a/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp b/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp
+--- openjdk/hotspot/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/heapRegionRemSet.cpp
+@@ -514,7 +514,15 @@
+ 
+       PerRegionTable* first_prt = _fine_grain_regions[ind];
+       prt->set_collision_list_next(first_prt);
+-      _fine_grain_regions[ind] = prt;
++      // The assignment into _fine_grain_regions allows the prt to
++      // start being used concurrently. In addition to
++      // collision_list_next which must be visible (else concurrent
++      // parsing of the list, if any, may fail to see other entries),
++      // the content of the prt must be visible (else for instance
++      // some mark bits may not yet seem cleared or a 'later' update
++      // performed by a concurrent thread could be undone when the
++      // zeroing becomes visible). This requires store ordering.
++      OrderAccess::release_store_ptr((volatile PerRegionTable*)&_fine_grain_regions[ind], prt);
+       _n_fine_entries++;
+ 
+       if (G1HRRSUseSparseTable) {
