@@ -368,19 +368,15 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8173941-pr3326.patch \
 	patches/hotspot/$(HSBUILD)/8164293-pr3412-rh1459641.patch \
 	patches/hotspot/$(HSBUILD)/8175813-pr3394-rh1448880.patch \
-	patches/hotspot/$(HSBUILD)/8179084-pr3409-rh1455694.patch \
 	patches/hotspot/$(HSBUILD)/8180048-pr3411-rh1449870.patch \
 	patches/hotspot/$(HSBUILD)/8181055-pr3394-rh1448880.patch \
-	patches/hotspot/$(HSBUILD)/8181946.patch \
 	patches/hotspot/$(HSBUILD)/8145913-pr3466-rh1498309.patch \
 	patches/hotspot/$(HSBUILD)/8168318-pr3466-rh1498320.patch \
 	patches/hotspot/$(HSBUILD)/8170328-pr3466-rh1498321.patch \
 	patches/hotspot/$(HSBUILD)/8181810-pr3466-rh1498319.patch \
 	patches/hotspot/$(HSBUILD)/8185164-pr3438.patch \
 	patches/hotspot/$(HSBUILD)/8187822-pr3478-rh1494230.patch \
-	patches/hotspot/$(HSBUILD)/8035496-pr3487.patch \
-	patches/hotspot/$(HSBUILD)/8180711.patch \
-	patches/hotspot/$(HSBUILD)/8184682.patch
+	patches/hotspot/$(HSBUILD)/8035496-pr3487.patch
 
 # AArch32 doesn't yet have the latest update
 # Shenandoah included 8175887 ahead of upstream
@@ -390,11 +386,11 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8174164-pr3334-rh1417266.patch \
 	patches/hotspot/$(HSBUILD)/8175097-pr3334-rh1417266.patch \
 	patches/hotspot/$(HSBUILD)/8173770.patch \
-	patches/hotspot/$(HSBUILD)/8181420.patch
-else
-ICEDTEA_PATCHES += \
-	patches/hotspot/$(HSBUILD)/8187224-pr3488.patch \
-	patches/hotspot/$(HSBUILD)/8161190-pr3488.patch
+	patches/hotspot/$(HSBUILD)/8181420.patch \
+	patches/hotspot/$(HSBUILD)/8179084-pr3409-rh1455694.patch \
+	patches/hotspot/$(HSBUILD)/8181946.patch \
+	patches/hotspot/$(HSBUILD)/8180711.patch \
+	patches/hotspot/$(HSBUILD)/8184682.patch
 endif
 
 endif

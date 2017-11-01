@@ -87,6 +87,77 @@ New in release 3.6.0 (2017-10-XX):
   - S8187224, PR3488: aarch64: some inconsistency between aarch64_ad.m4 and aarch64.ad
 * SystemTap
   - PR3467, RH1492139: Hotspot object_alloc tapset uses HeapWordSize incorrectly
+* Shenandoah
+  - Add missing UseShenandoahGC checks to C2
+  - [backport] Add JVMTI notifications to Shenandoah GC pauses.
+  - [backport] After Evac verification should run consistently
+  - [backport] All definitions should start with Shenandoah*
+  - [backport] Allocation latency tracing
+  - [backport] Allow allocations in pinned regions
+  - [backport] Assorted monitoring support fixes
+  - [backport] Avoid Full STW GC on System.gc() + related fixes
+  - [backport] BrooksPointer tracing overwhelms -Xlog:gc=trace
+  - [backport] Cannot do more than 1000 Full GCs
+  - [backport] Cap heap size for TestRegionSizeArgs test
+  - [backport] Cleanup "dirty" mentions
+  - [backport] Cleanup unused methods and statements + Trivial cleanup: removed unused field, etc.
+  - [backport] Common pause marker to capture everything before/after pause
+  - [backport] Consistent print_on and tty handling
+  - [backport] "continuous" heuristics
+  - [backport] Disable biased locking by default
+  - [backport] Fix build error: avoid loops with empty bodies
+  - [backport] Fix build error: switches over enums should take all enums
+  - [backport] Fix build error: verifier liveness should not be implicitly casted to size_t
+  - [backport] Fixed assertion failures when printing heap region to trace output
+  - [backport] Fixed C calling convention of shenandoah_wb() on Windows
+  - [backport] LotsOfCycles test always degrades to Full GC
+  - [backport] Made ShenandoahPrinter debug only
+  - [backport] Make sure different Verifier levels work
+  - [backport] Make sure we have at least one memory pool per memory manager (JMX) + JMX double-counts heap used size
+  - [backport] Mark heuristics diagnostic/experimental
+  - [backport] Move Verifier "start" message under (gc,start)
+  - [backport] On-demand commit as heap resizing strategy
+  - [backport] Periodic GC
+  - [backport] PhiNode::has_only_data_users() needs to apply to shenandoah barrier only
+  - [backport] Pinning humongous regions should be allowed
+  - [backport] Reclaimed humongous regions should count towards immediate garbage
+  - [backport] Refactor region flags into finite state machine
+  - [backport] Refactor ShConcThread dispatch
+  - [backport] Refactor ShenandoahFreeSet + Fast-forward over humongous regions to keep "current" non-humongous
+  - [backport] Refactor ShenandoahHeapLock
+  - [backport] Refactor ShenandoahHeapRegionSet
+  - [backport] Region (byte|word) shifts as the replacement for divisions
+  - [backport] Rehash -XX:-UseTLAB in tests + Rehash allocation tests
+  - [backport] Rename inline guards
+  - [backport] Selectable humongous threshold + Humongous top() should be correct for iteration
+  - [backport] Shortcut concurrent cycle when enough immediate garbage is reclaimed
+  - [backport] Templatize and improve inlining of arraycopy and clone barriers.
+  - [backport] TestRegionSampling test
+  - [backport] TestSmallHeap test for Shenandoah
+  - [backport] Uncommit heap regions after given delay
+  - [backport] Underflow in adaptive free_threshold calculation
+  - [backport] Unlock more GC-specific tests for Shenandoah
+  - [backport] Update counters on slow-path more rarely
+  - [backport] Verifier should avoid pushing on stack when walking objects past TAMS
+  - [backport] Verifier should walk cset and humongous regions
+  - [backport] Verify humongous regions liveness
+  - [backport] Verify liveness data
+  - Correct way to fix Windows call convention issue
+  - Fix build error in release config.
+  - Fixed Fixed message logging
+  - Handle Java heap initialization and expansion failures
+  - Make sure -verbose:gc, PrintGC, PrintGCDetails work consistently
+  - Missing barriers on constant oops + acmp rework + cas fix + write barrier on constant oop fix
+  - Missing UseShenandoahGC check in LibraryCallKit::inline_multiplyToLen()
+  - Missing UseShenandoahGC check to C2
+  - OOME in SurrogateLockerThread deadlocks the GC cycle
+  - Properly unlock ShenandoahVerify
+  - Remove unused memory_for, fixing the build
+  - Remove useless code following acmp rework
+  - Revert accidental G1 closure rename
+  - Test bug: test library and flags in TestHeapAlloc
+  - UnlockDiagnosticVMOptions flag is needed for ShenandoahVerify
+  - Write barrier pin and expand cleanup
 
 New in release 3.5.1 (2017-07-27):
 

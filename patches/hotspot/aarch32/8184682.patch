@@ -1,1 +1,31 @@
-../shenandoah/8184682.patch
+# HG changeset patch
+# User coffeys
+# Date 1502190121 -3600
+#      Tue Aug 08 12:02:01 2017 +0100
+# Node ID 8b0169692abbf8fb7972920cd79cee7dcab959c3
+# Parent  689fd6652737c33f03ea95a867070f8053739623
+8184682: Upgrade compression library
+Reviewed-by: alanb, sherman, ahgross, jeff
+
+diff -Nru openjdk.orig/hotspot/THIRD_PARTY_README openjdk/hotspot/THIRD_PARTY_README
+--- openjdk.orig/hotspot/THIRD_PARTY_README	2017-10-30 18:56:18.751491232 +0000
++++ openjdk/hotspot/THIRD_PARTY_README	2017-10-30 19:00:20.159616795 +0000
+@@ -2808,14 +2808,14 @@
+ 
+ -------------------------------------------------------------------------------
+ 
+-%% This notice is provided with respect to zlib v1.2.8, which may be included 
++%% This notice is provided with respect to zlib v1.2.11, which may be included 
+ with JRE 8, JDK 8, and OpenJDK 8.
+ 
+ --- begin of LICENSE ---
++ 
++  version 1.2.11, January 15th, 2017
+ 
+-  version 1.2.8, April 28th, 2013
+-
+-  Copyright (C) 1995-2013 Jean-loup Gailly and Mark Adler
++  Copyright (C) 1995-2017 Jean-loup Gailly and Mark Adler
+ 
+   This software is provided 'as-is', without any express or implied
+   warranty.  In no event will the authors be held liable for any damages
