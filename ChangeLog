@@ -1,5 +1,21 @@
 2017-10-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump aarch32 to jdk8u144-b01-aarch32-170809.
+	* patches/hotspot/aarch32/8173770.patch,
+	* patches/hotspot/aarch32/8174164-pr3334-rh1417266.patch,
+	* patches/hotspot/aarch32/8175097-pr3334-rh1417266.patch,
+	* patches/hotspot/aarch32/8181420.patch,
+	* patches/hotspot/aarch32/8181946.patch:
+	Remove patches applied in upstream AArch32.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove above.
+	* hotspot.map.in: Bump aarch32 to
+	jdk8u144-b01-aarch32-170809.
+	* patches/hotspot/aarch32/8184682.patch:
+	Re-generated against new AArch32 tarball.
+
+2017-10-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump shenandoah to aarch64-shenandoah-jdk8u151-b13.
 	* patches/hotspot/shenandoah/8161190-pr3488.patch,
 	* patches/hotspot/shenandoah/8187224-pr3488.patch:
