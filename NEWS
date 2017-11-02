@@ -10,6 +10,8 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 3.7.0 (2018-01-XX):
+
 New in release 3.6.0 (2017-10-31):
 
 * Security fixes
