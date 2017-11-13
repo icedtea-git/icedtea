@@ -26,6 +26,7 @@ New in release 2.7.0 (201X-XX-XX):
   - S8188030, PR3460, RH1484079: AWT java apps fail to start when some minimal fonts are present
 * Bug fixes
   - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
+  - PR3470, RH1492139: Hotspot object_alloc tapset uses HeapWordSize incorrectly
   - PR3480, RH1486025: ECC and NSS JVM crash
 * AArch64 port
   - S8145438, PR3443, RH1482244: Guarantee failures since 8144028: Use AArch64 bit-test instructions in C2
