@@ -3163,10 +3163,12 @@ clean-aescheck:
 stamps/check-aes.stamp: stamps/aescheck-build.stamp stamps/icedtea.stamp
 	set -e ; \
 	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
-	  cat $(AES_CHECK_SRC)|grep '@run'|cut -d ' ' -f 5-|while read command; do \
-	    $(BUILD_SDK_DIR)/bin/java -cp $(AES_CHECK_BUILD_DIR) \
-	      -XX:+UseAESIntrinsics $${command} ; \
-	  done ; \
+	  if test "x$(INSTALL_ARCH_DIR)" != "xaarch64" ; then \
+	    cat $(AES_CHECK_SRC)|grep '@run'|cut -d ' ' -f 5-|while read command; do \
+	      $(BUILD_SDK_DIR)/bin/java -cp $(AES_CHECK_BUILD_DIR) \
+	        -XX:+UseAESIntrinsics $${command} ; \
+	    done ; \
+	  fi ; \
 	fi
 	mkdir -p stamps
 	touch $@

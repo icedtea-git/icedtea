@@ -1,3 +1,9 @@
+2017-11-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3494: Skip AES test on AArch64 due to VM crash
+	* Makefile.am:
+	(check-aes): Don't run test if running on aarch64.
+
 2017-11-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3493: Run AES test to test intrinsics

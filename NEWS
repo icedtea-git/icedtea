@@ -29,6 +29,7 @@ New in release 2.7.0 (201X-XX-XX):
   - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
   - PR3470, RH1492139: Hotspot object_alloc tapset uses HeapWordSize incorrectly
   - PR3480, RH1486025: ECC and NSS JVM crash
+  - PR3494: Skip AES test on AArch64 due to VM crash
 * AArch64 port
   - S8145438, PR3443, RH1482244: Guarantee failures since 8144028: Use AArch64 bit-test instructions in C2
 
