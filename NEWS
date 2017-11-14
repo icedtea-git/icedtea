@@ -16,6 +16,7 @@ New in release 2.7.0 (201X-XX-XX):
 
 * New features
   - PR3180: Support building without pre-compiled headers
+  - PR3493: Run AES test to test intrinsics
 * Backports
   - S8076221, PR2809, RH1302385: Disable RC4 cipher suites
   - S8075484, PR3474, RH1490713: SocketInputStream.socketRead0 can hang even with soTimeout set

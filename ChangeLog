@@ -1,3 +1,24 @@
+2017-11-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3493: Run AES test to test intrinsics
+	* Makefile.am:
+	(AES_CHECK_BUILD_DIR): Define directory for
+	built test class files.
+	(AES_CHECK_SRC): Define source file for test.
+	(check-local): Depend on check-aes.
+	(clean-tests): Depend on clean-check-aes and
+	also include all test build targets (clean-ecccheck,
+	clean-mimetypecheck, clean-aescheck, clean-cryptocheck).
+	Drop removal of test directory which fails as it's non-empty,
+	due to configure's generation of jstapset.pl
+	(clean-local): Remove targets moved to clean-tests.
+	(.PHONY): Add clean-aescheck and clean-check-aes.
+	(aescheck-build): Build the AES test.
+	(clean-aescheck): Cleanup the AES test build.
+	(check-aes): Run the AES test.
+	(clean-check-aes): Cleanup the AES test run.
+	* NEWS: Updated.
+
 2017-10-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3470: Hotspot object_alloc tapset uses HeapWordSize incorrectly
