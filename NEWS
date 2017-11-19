@@ -14,6 +14,16 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.6.12 (2017-10-XX):
 
+* Backports
+  - S8075484, PR3474, RH1490713: SocketInputStream.socketRead0 can hang even with soTimeout set
+  - S8138745, PR3465, RH1484399: Implement ExitOnOutOfMemory and CrashOnOutOfMemory in HotSpot
+  - S8185164, PR3433: GetOwnedMonitorInfo() returns incorrect owned monitor
+  - S8188030, PR3460, RH1484079: AWT java apps fail to start when some minimal fonts are present
+* Bug fixes
+  - PR3480, RH1486025: ECC and NSS JVM crash
+* AArch64 port
+  - S8145438, PR3443, RH1482244: Guarantee failures since 8144028: Use AArch64 bit-test instructions in C2
+
 New in release 2.6.11 (2017-08-08):
 
 * Security fixes
