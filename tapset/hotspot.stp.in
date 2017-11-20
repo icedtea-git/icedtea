@@ -120,7 +120,7 @@ probe hotspot.object_alloc =
   name = "object_alloc";
   thread_id = $arg1;
   class = user_string_n($arg2, $arg3);
-  size = $arg4 * $HeapWordSize; // Note - systemtap-alloc-size-workaround.patch
+  size = $arg4;
   probestr = sprintf("%s(thread_id=%d,class='%s',size=0x%x)",
                      name, thread_id, class, size);
 }
