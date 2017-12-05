@@ -1794,3 +1794,55 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/management/jmxremote/Conne
                      }
                  }
                  TrustManagerFactory tmf = TrustManagerFactory.getInstance(
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/KdcComm.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/KdcComm.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/KdcComm.java	2017-12-03 19:15:21.592499000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/KdcComm.java	2017-12-03 19:16:58.014947577 +0000
+@@ -369,8 +369,9 @@
+ 
+             for (int i=1; i <= retries; i++) {
+                 String proto = useTCP?"TCP":"UDP";
+-                try (NetClient kdcClient = NetClient.getInstance(
+-                        proto, kdc, port, timeout)) {
++                NetClient kdcClient = null;
++                try {
++                    kdcClient = NetClient.getInstance(proto, kdc, port, timeout);
+                     if (DEBUG) {
+                         System.out.println(">>> KDCCommunication: kdc=" + kdc
+                             + " " + proto + ":"
+@@ -399,6 +400,8 @@
+                             throw se;
+                         }
+                     }
++                } finally {
++                    if (kdcClient != null) { kdcClient.close(); }
+                 }
+             }
+             return ibuf;
+@@ -516,4 +519,3 @@
+         }
+     }
+ }
+-
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2017-12-05 04:35:09.056391833 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2017-12-05 04:39:54.235812547 +0000
+@@ -1267,8 +1267,9 @@
+     private String keyStoreType(File f) throws IOException {
+         int MAGIC = 0xfeedfeed;
+         int JCEKS_MAGIC = 0xcececece;
+-        try (DataInputStream dis = new DataInputStream(
+-            new FileInputStream(f))) {
++        DataInputStream dis = null;
++        try {
++            dis = new DataInputStream(new FileInputStream(f));
+             int xMagic = dis.readInt();
+             if (xMagic == MAGIC) {
+                 return "JKS";
+@@ -1277,6 +1278,8 @@
+             } else {
+                 return "Non JKS/JCEKS";
+             }
++        } finally {
++            if (dis != null) { dis.close(); }
+         }
+     }
+ 

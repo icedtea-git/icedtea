@@ -1,3 +1,80 @@
+2017-12-05  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to 2.6.12.
+	* Makefile.am,
+	(JDK_UPDATE_VERSION): Bump to 161.
+	(CORBA_CHANGESET): Update to icedtea-2.6.12.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(install-data-local): Install policy JAR files into new
+	policy directories.
+	* NEWS: Updated.
+	* configure.ac: Bump to 2.6.12.
+	* hotspot.map.in: Update to icedtea-2.6.12.
+	* patches/boot/ecj-diamond.patch:
+	Regenerated. Add new instances in
+	com.sun.corba.se.impl.io.ObjectStreamClass,
+	com.sun.xml.internal.ws.util.exception.JAXWSExceptionBase,
+	java.io.ObjectStreamClass,
+	java.security.cert.CertificateRevokedException,
+	java.security.KeyStore, java.security.UnresolvedPermission,
+	sun.security.pkcs.SignerInfo, sun.security.pkcs12.PKCS12KeyStore,
+	sun.security.provider.certpath.AdjacencyList,
+	sun.security.provider.certpath.Builder,
+	sun.security.provider.certpath.CollectionCertStore,
+	sun.security.provider.certpath.DistributionPointFetcher,
+	sun.security.provider.certpath.ForwardBuilder,
+	sun.security.provider.certpath.IndexedCollectionCertStore,
+	sun.security.provider.certpath.OCSPResponse,
+	sun.security.provider.certpath.PKIXCertPathValidator,
+	sun.security.provider.certpath.PKIX,
+	sun.security.provider.certpath.PKIXRevocationChecker,
+	sun.security.provider.certpath.PolicyChecker,
+	sun.security.provider.certpath.PolicyNodeImpl,
+	sun.security.provider.certpath.ReverseBuilder,
+	sun.security.provider.certpath.ReverseState,
+	sun.security.provider.certpath.RevocationChecker,
+	sun.security.provider.certpath.SunCertPathBuilder,
+	sun.security.provider.certpath.X509CertPath,
+	sun.security.tools.keytool.Main,
+	sun.security.util.DisabledAlgorithmConstraints and
+	sun.security.util.SignatureFileVerifier
+	* patches/boot/ecj-multicatch.patch:
+	Regenerated. Add new cases in
+	com.sun.corba.se.impl.io.ObjectStreamClass,
+	java.io.ObjectStreamClass,
+	sun.security.provider.certpath.CertStoreHelper,
+	sun.security.provider.certpath.DistributionPointFetcher,
+	sun.security.provider.certpath.OCSP,
+	sun.security.provider.certpath.OCSPResponse,
+	sun.security.provider.certpath.PKIXCertPathValidator,
+	sun.security.provider.certpath.RevocationChecker,
+	sun.security.provider.certpath.SunCertPathBuilder,
+	sun.security.provider.certpath.URICertStore and
+	sun.security.provider.KeyStoreDelegator.
+	* patches/boot/ecj-stringswitch.patch:
+	Add new cases in
+	sun.security.util.DisabledAlgorithmConstraints,
+	sun.security.provider.certpath.CertStoreHelper and
+	sun.security.provider.certpath.RevocationChecker.
+	* patches/boot/ecj-trywithresources.patch:
+	Add new cases in sun.security.krb5.KdcComm and
+	sun.security.tools.keytool.Main.
+	* patches/boot/ecj-underscored_literals.patch:
+	Add new case in sun.net.ftp.impl.FtpClient.
+	* remove-intree-libraries.sh.in:
+	Remove ZLIB_VERSION and its use in the ZIP_SRC path,
+	as the source tree path is now unversioned.
+
 2017-10-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3470: Hotspot object_alloc tapset uses HeapWordSize incorrectly

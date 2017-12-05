@@ -1,7 +1,6 @@
 #!/bin/sh
 
-ZLIB_VERSION=1.2.8
-ZIP_SRC=openjdk/jdk/src/share/native/java/util/zip/zlib-${ZLIB_VERSION}
+ZIP_SRC=openjdk/jdk/src/share/native/java/util/zip/zlib
 JPEG_SRC=openjdk/jdk/src/share/native/sun/awt/image/jpeg/jpeg-6b
 GIF_SRC=openjdk/jdk/src/share/native/sun/awt/giflib
 PNG_SRC=openjdk/jdk/src/share/native/sun/awt/libpng

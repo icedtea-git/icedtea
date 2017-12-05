@@ -24,3 +24,16 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/Parsing.java
                          return (int) ell;
                      } else {
                          throw new
+--- openjdk-boot.orig/jdk/src/share/classes/sun/net/ftp/impl/FtpClient.java	2017-12-05 04:44:13.171649999 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/net/ftp/impl/FtpClient.java	2017-12-05 04:44:27.047426865 +0000
+@@ -117,8 +117,8 @@
+                 new PrivilegedAction<Object>() {
+ 
+                     public Object run() {
+-                        vals[0] = Integer.getInteger("sun.net.client.defaultReadTimeout", 300_000).intValue();
+-                        vals[1] = Integer.getInteger("sun.net.client.defaultConnectTimeout", 300_000).intValue();
++                        vals[0] = Integer.getInteger("sun.net.client.defaultReadTimeout", 300000).intValue();
++                        vals[1] = Integer.getInteger("sun.net.client.defaultConnectTimeout", 300000).intValue();
+                         encs[0] = System.getProperty("file.encoding", "ISO8859_1");
+                         return null;
+                     }
