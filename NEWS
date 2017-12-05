@@ -12,7 +12,7 @@ JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.12 (2017-10-XX):
+New in release 2.6.12 (2017-12-05):
 
 * Security fixes
   - S8165543: Better window framing
