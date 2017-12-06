@@ -101,7 +101,7 @@ New in release 2.6.12 (2017-12-05):
   - S8179564: Missing @bug for tests added with JDK-8165367
   - S8181048: Refactor existing providers to refer to the same constants for default values for key length
   - S8182879: Add warnings to keytool when using JKS and JCEKS
-  - S8184673: Fix compatibility issue in AlgorithmChecker for 3rd party JCE providers
+  - S8184673, PR3476: Fix compatibility issue in AlgorithmChecker for 3rd party JCE providers
   - S8184937: LCMS error 13: Couldn't link the profiles
   - S8185039: Incorrect GPL header causes RE script to miss swap to commercial header for licensee source bundle
   - S8185040: Incorrect GPL header causes RE script to miss swap to commercial header for licensee source bundle
