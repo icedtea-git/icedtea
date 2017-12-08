@@ -19,19 +19,124 @@ New in release 2.7.0 (201X-XX-XX):
   - PR3493: Run AES test to test intrinsics
 * Backports
   - S8076221, PR2809, RH1302385: Disable RC4 cipher suites
-  - S8075484, PR3474, RH1490713: SocketInputStream.socketRead0 can hang even with soTimeout set
   - S8078823, PR2809: javax/net/ssl/ciphersuites/DisabledAlgorithms.java fails intermittently
-  - S8138745, PR3465, RH1484399: Implement ExitOnOutOfMemory and CrashOnOutOfMemory in HotSpot
   - S8148516, PR2809: Improve the default strength of EC in JDK [test/javax/net/ssl/ciphersuites/DisabledAlgorithms.java update]
+* Bug fixes
+  - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
+  - PR3494: Skip AES test on AArch64 due to VM crash
+
+New in release 2.6.12 (2017-12-05):
+
+* Security fixes
+  - S8165543: Better window framing
+  - S8169026, CVE-2017-10274: Handle smartcard clean up better
+  - S8169966: Larger AWT menus
+  - S8170218: Improved Font Metrics
+  - S8171252: Improve exception checking
+  - S8171261: Stability fixes for lcms
+  - S8174109, CVE-2017-10281: Better queuing priorities
+  - S8174966, CVE-2017-10285: Unreferenced references
+  - S8175940: More certificate subject checking
+  - S8176751, CVE-2017-10295: Better URL connections
+  - S8178794, CVE-2017-10388: Correct Kerberos ticket grants
+  - S8179101, CVE-2017-10193: Improve algorithm constraints implementation
+  - S8179998, CVE-2017-10198: Clear certificate chain connections
+  - S8180024: Improve construction of objects during deserialization
+  - S8180711, CVE-2017-10346: Better invokespecial checks
+  - S8181100, CVE-2017-10350: Better Base Exceptions
+  - S8181323, CVE-2017-10347: Better timezone processing
+  - S8181327, CVE-2017-10349: Better X processing
+  - S8181370, CVE-2017-10345: Better keystore handling
+  - S8181432, CVE-2017-10348: Better processing of unresolved permissions
+  - S8181597, CVE-2017-10357: Process Proxy presentation
+  - S8181612, CVE-2017-10355: More stable connection processing
+  - S8181692, CVE-2017-10356: Update storage implementations
+  - S8183028, CVE-2016-10165: Improve CMS header processing
+  - S8184682, CVE-2016-9840, CVE-2016-9841, CVE-2016-9842, CVE-2016-9843: Upgrade compression library
+* Import of OpenJDK 7 u161 build 0
+  - S6475361: Attempting to remove help menu from java.awt.MenuBar throws NullPointerException
+  - S6637288: Add OCSP support to PKIX CertPathBuilder implementation
+  - S6854712: Revocation checking enhancements (JEP-124)
+  - S6904367: (coll) IdentityHashMap is resized before exceeding the expected maximum size
+  - S7015157: String "Tabular Navigation" should be rephrased for avoiding mistranslation
+  - S7115744: Do not call File::deleteOnExit in security tests
+  - S7126011: ReverseBuilder.getMatchingCACerts may throws NPE
+  - S7147336: clarification on warning of keytool -printcrl
+  - S7162687: enhance KDC server availability detection
+  - S7176627: CertPath/jep124/PreferCRL_SoftFail test fails (Could not determine revocation status)
+  - S7195409: CertPath/CertPathValidatorTest/KeyParamsInheritanceTest fails with NullPointerException
+  - S7196382: PKCS11 provider should support 2048-bit DH
+  - S7197672: There are issues with shared data on windows
+  - S7199939: DSA 576 and 640 bit keys fail when initializing for No precomputed parameters
+  - S8002074: Support for AES on SPARC
+  - S8005408: KeyStore API enhancements
+  - S8006863: javadoc cleanup for 8005408
+  - S8006946: PKCS12 test failure due to incorrect alias name
+  - S8006951: Avoid storing duplicate PKCS12 attributes
+  - S8006994: Cleanup PKCS12 tests to ensure streams get closed
+  - S8007483: attributes are ignored when loading keys from a PKCS12 keystore
+  - S8007967: Infinite loop can happen in sun.security.provider.certpath.SunCertPathBuilder.depthFirstSearchForward()
+  - S8010112: NullPointerException in sun.security.provider.certpath.CertId()
+  - S8012900: CICO ignores AAD in GCM mode (with refactoring from 6996769)
+  - S8015571: OCSP validation fails if ocsp.responderCertSubjectName is set
+  - S8016252: More defensive HashSet.readObject
+  - S8025215: jdk8 l10n resource file translation update 4
+  - S8026943: SQE test jce/Global/Cipher/SameBuffer failed
+  - S8027575: b113 causing a lot of memory allocation and regression for wls_webapp_atomics
+  - S8029659: Keytool, print key algorithm of certificate or key entry
+  - S8029788: Certificate validation - java.lang.ClassCastException
+  - S8031825: OCSP client can't find responder cert if it uses a different subject key id algorithm than responderID
+  - S8033117: PPC64: Adapt to 8002074: Support for AES on SPARC
+  - S8035623: [parfait] JNI exception pending in jdk/src/windows/native/sun/windows/awt_Font.cpp
+  - S8049312: AES/CICO test failed with on several modes
+  - S8050374: More Signature tests
+  - S8057810: New defaults for DSA keys in jarsigner and keytool
+  - S8062552: Support keystore type detection for JKS and PKCS12 keystores
+  - S8068427: Hashtable deserialization reconstitutes table with wrong capacity
+  - S8068881: SIGBUS in C2 compiled method weblogic.wsee.jaxws.framework.jaxrpc.EnvironmentFactory$SimulatedWsdlDefinitions.<init>
+  - S8075484, PR3474, RH1490713: SocketInputStream.socketRead0 can hang even with soTimeout set
+  - S8077670: sun/security/krb5/auto/MaxRetries.java may fail with BindException
+  - S8079129: NullPointerException in PKCS#12 Keystore in PKCS12KeyStore.java
+  - S8087144: sun/security/krb5/auto/MaxRetries.java fails with Retry count is -1 less
+  - S8136534: Loading JKS keystore using non-null InputStream results in closed stream
+  - S8149411: PKCS12KeyStore cannot extract AES Secret Keys
+  - S8153146: sun/security/krb5/auto/MaxRetries.java failed with timeout
+  - S8157561: Ship the unlimited policy files in JDK Updates
+  - S8158517: Minor optimizations to ISO10126PADDING
+  - S8164846: CertificateException missing cause of underlying exception
+  - S8165751: NPE hit with java.security.debug=provider
+  - S8171319: keytool should print out warnings when reading or generating cert/cert req using weak algorithms
+  - S8173853: IllegalArgumentException in java.awt.image.ReplicateScaleFilter
+  - S8176536: Improved algorithm constraints checking
+  - S8177569: keytool should not warn if signature algorithm used in cacerts is weak
+  - S8178714: PKIX validator nameConstraints check failing after change 8175940
+  - S8179423: 2 security tests started failing for JDK 1.6.0 u161 b05
+  - S8179564: Missing @bug for tests added with JDK-8165367
+  - S8181048: Refactor existing providers to refer to the same constants for default values for key length
+  - S8182879: Add warnings to keytool when using JKS and JCEKS
+  - S8184673, PR3476: Fix compatibility issue in AlgorithmChecker for 3rd party JCE providers
+  - S8184937: LCMS error 13: Couldn't link the profiles
+  - S8185039: Incorrect GPL header causes RE script to miss swap to commercial header for licensee source bundle
+  - S8185040: Incorrect GPL header causes RE script to miss swap to commercial header for licensee source bundle
+  - S8185778: 8u151 L10n resource file update
+  - S8185845: Add SecurityTools.java test library
+  - S8186503: sun/security/tools/jarsigner/DefaultSigalg.java failed after backport to JDK 6/7/8
+  - S8186533: 8u151 L10n resource file update md20
+  - S8191137: keytool fails to format resource strings for keys for some languages after JDK-8171319
+  - S8191840: Update localizations with positional arguments following JDK-8191137
+  - S8191845: [TEST_BUG] Too many new-lines in backport of WeakAlg test
+* Import of OpenJDK 7 u151 build 1
+  - S8035640: JNU_CHECK_EXCEPTION should support c++ JNI syntax
+* Backports
+  - S8138745, PR3465, RH1484399: Implement ExitOnOutOfMemory and CrashOnOutOfMemory in HotSpot
   - S8185164, PR3433: GetOwnedMonitorInfo() returns incorrect owned monitor
   - S8188030, PR3460, RH1484079: AWT java apps fail to start when some minimal fonts are present
 * Bug fixes
-  - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
   - PR3470, RH1492139: Hotspot object_alloc tapset uses HeapWordSize incorrectly
   - PR3480, RH1486025: ECC and NSS JVM crash
-  - PR3494: Skip AES test on AArch64 due to VM crash
 * AArch64 port
   - S8145438, PR3443, RH1482244: Guarantee failures since 8144028: Use AArch64 bit-test instructions in C2
+  - PR3497: AArch64: Adapt to 8002074: Support for AES on SPARC
 
 New in release 2.6.11 (2017-08-08):
 
