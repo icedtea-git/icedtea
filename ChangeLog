@@ -1,3 +1,8 @@
+2017-12-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* NEWS: Add section for 2.6.13.
+	* configure.ac: Bump to 2.6.13pre00.
+
 2017-12-05  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Add missing reference to PR3476
