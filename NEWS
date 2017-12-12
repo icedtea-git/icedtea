@@ -12,6 +12,244 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.7.0 (2018-01-XX):
 
+* Import of OpenJDK 8 u152 build 16
+  - S4953367: MAWT: Java should be more careful manipulating NLSPATH, XFILESEARCHPATH env variables
+  - S6772009: java/util/concurrent/locks/ReentrantLock/CancelledLockLoops.java test failed with 'Completed != 2'
+  - S6947916: JarURLConnection does not handle useCaches correctly
+  - S6980209: Make tracking SecondaryLoop.enter/exit methods easier
+  - S7052625: com/sun/net/httpserver/bugs/6725892/Test.java fails intermittently
+  - S7102702: java/net/PortUnreachableException/OneExceptionOnly.java failing
+  - S7131356: (props) "No Java runtime present, requesting install" when creating VM from JNI [macosx]
+  - S7172652: With JDK 1.7 text field does not obtain focus when using mnemonic Alt/Key combin
+  - S8022291: Mac OS: Unexpected JavaLaunchHelper message displaying
+  - S8022580: sun.net.ftp.impl.FtpClient.nameList(String path) handles "null" incorrectly
+  - S8025306: Inet[4|6]Address class and fieldID initialization in networking native code
+  - S8028363: XmlGregorianCalendarImpl.getTimeZone() bug when offset is less than 10 minutes
+  - S8028725: [Parfait] warnings from b116 for jdk.src.solaris.native.java.net: JNI pending exceptions
+  - S8028769: Check src/share/native/java/lang/*.c for cases when JNI calls are used with pending warnings
+  - S8029018: (bf) Check src/share/native/java/nio/Bits.c for JNI pending exceptions
+  - S8030116: (process) Check Parfait warnings in src/solaris/native/java/lang/*
+  - S8031586: Check jdk/src/*/native/com/sun/security/auth/module for pending JNI exceptions
+  - S8033371: jdk/src/solaris/native/java/lang/ProcessEnvironment.c environ doesn't check for JNI pending exceptions
+  - S8033372: Check jdk/src/share/native/java/lang for JNI pending exception issues
+  - S8034102: Check solaris/native/sun/nio/fs/MacOSXNativeDispatcher.c for JNI pending exceptions
+  - S8034249: need more workarounds for suspend equivalent condition issue
+  - S8035158: Remove dependency on sun.misc.RegexpPool and friends
+  - S8035568: [macosx] Cursor management unification
+  - S8035653: InetAddress.getLocalHost crash
+  - S8037346: Need to terminate server process if client runs into problems
+  - S8037909: JNI warnings in jdk/src/windows/native/java/nio/MappedByteBuffer.c
+  - S8038075: JNI warnings in jdk/src/share/native/sun/misc/VMSupport.c
+  - S8038348: Instance field load is replaced by wrong data Phi
+  - S8039412: Stack overflow on Linux using DialogTypeSelection.NATIVE
+  - S8040322: TextArea.replaceRange() and insert() are broken with setText(null)
+  - S8040635: [macosx] Printing a shape filled with a texture doesn't work under Mac OS X
+  - S8043913: remove legacy code in SPARC's VM_Version::platform_features
+  - S8046768: com/sun/jndi/ldap/LdapTimeoutTest.java fails intermittently
+  - S8046893: JNI exception pending in jdk/src/solaris/native/java/net: ExtendedOptionsImpl.c, PlainDatagramSocketImpl.c
+  - S8046901: Check jdk/src/solaris/native/sun/nio for Parfait flagged uninitialized memory
+  - S8049717: expose L1_data_cache_line_size for diagnostic/sanity checks
+  - S8050478: [macosx] Cursor not updating correctly after closing a modal dialog
+  - S8054214: JapaneseEra.getDisplayName doesn't return names if it's an additional era
+  - S8055204: Memory leak in jdk/src/windows/native/java/lang/java_props_md.c
+  - S8058316: lookupDefaultPrintService returns null on Solaris 11
+  - S8061258: [macosx] PrinterJob's native Print Dialog does not reflect specified Copies or Page Ranges
+  - S8064470: JNI exception pending in jdk/src/java/base/unix/native/libjava/FileDescriptor_md.c
+  - S8066250: compiler/dependencies/MonomorphicObjectCall/TestMonomorphicObjectCall.java fails product
+  - S8067059: PrinterJob.pageDialog() with DialogSelectionType.NATIVE returns a PageFormat when cancelled.
+  - S8071424: JCK test api/java_net/Socket/descriptions.html#Bind crashes on Windows
+  - S8075516: Deleting a file from either the open or save java.awt.FileDialog hangs.
+  - S8076249: NPE in AccessBridge while editing JList model
+  - S8076554: [macosx] Custom Swing text components need to allow standard accessibility
+  - S8080486: JNI exception pending in jdk/src/java.base/windows/native/libnet/DualStackPlainSocketImpl.c
+  - S8081219: hs_err improvement: Add event logging for class redefinition to the hs_err file
+  - S8087144: sun/security/krb5/auto/MaxRetries.java fails with Retry count is -1 less
+  - S8087342: Crash in klassItable::initialize_itable_for_interface
+  - S8089573: [macosx] Incorrect char to glyph mapping printing on OSX 10.10
+  - S8129361: ISO 4217 amendment 160
+  - S8130041: TsacertOptionTest.java intermittently fails on Mac
+  - S8132209: DiagnosticCommandImpl.getNotificationInfo() may expose internal representation
+  - S8132455: com/sun/jndi/ldap/LdapTimeoutTest.java fails at handleNamingException
+  - S8134119: Use new API to get cache line sizes
+  - S8134389: Crash in HotSpot with jvm.dll+0x42b48 ciObjectFactory::create_new_metadata
+  - S8134918: C2: Type speculation produces mismatched unsafe accesses
+  - S8135124: com/sun/jndi/ldap/LdapTimeoutTest.java failed intermittently
+  - S8136570: Stop changing user environment variables related to /usr/dt
+  - S8139189: VK_OEM_102 dead key detected as VK_UNDEFINED
+  - S8140309: [REDO] failed: no mismatched stores, except on raw memory: StoreB StoreI
+  - S8140525: AwtFrame::WmShowWindow() may steal focus
+  - S8141370: com/sun/jndi/ldap/LdapTimeoutTest.java failed intermittently
+  - S8143897: Weblogic12medrec assert(handler_address == SharedRuntime::compute_compiled_exc_handler(nm, pc, exception, force_unwind, true)) failed: Must be the same
+  - S8145207: [macosx] JList, VO can't access non-visible list items
+  - S8145732: Duplicate entry in http.nonProxyHosts will ignore subsequent entries
+  - S8145952: ISO 4217 amendment 161
+  - S8145981: (fs) LinuxWatchService can reports events against wrong directory
+  - S8146961: Fix PermGen memory leaks caused by static final Exceptions
+  - S8147772: Update KerberosTicket to describe behavior if it has been destroyed and fix NullPointerExceptions
+  - S8149521: automatic discovery of LDAP servers with Kerberos authentication
+  - S8149714: [parfait] char array lengths don't match in awt_Font.cpp:1701
+  - S8152000: Java FlightRecorder does not run on Java 8 compact 3 profile since u65
+  - S8152172: PPC64: Support AES intrinsics
+  - S8152730: File Leak in CompileBroker::init_compiler_thread_log of compileBroker.cpp:1665.
+  - S8152981: Double icons with JMenuItem setHorizontalTextPosition on Win 10
+  - S8153134: Infinite loop in handle_wrong_method in jmod
+  - S8153176: ParOldGC: Use correct TaskQueueSet for ParallelTaskTerminator in marking.
+  - S8153267: nmethod's exception cache not multi-thread safe
+  - S8153925: (fs) WatchService hangs on GetOverlappedResult and locks directory (win)
+  - S8154945: Enable 8130150 and 8081778 intrinsics by default
+  - S8155691: Update GIFlib library to the latest up-to-date
+  - S8155781: C2: opaque unsafe access triggers an assert
+  - S8156116: [macosx] two JNI locals to delete in AWTWindow.m, CGraphicsEnv.m
+  - S8156723: JVM crash at sun.java2d.windows.GDIBlitLoops.nativeBlit
+  - S8157035: Use stronger algorithms and keys for JSSE testing
+  - S8157181: Compilers accept modification of final fields outside initializer methods
+  - S8157184: java/lang/invoke/LFCaching/LFMultiThreadCachingTest.java failed with a fatal error
+  - S8157548: JVM crashes sometimes while starting
+  - S8157665: ProblemList.txt needs to be updated as 7041639 closed
+  - S8158325: [macosx] Memory leak in com.apple.laf.ScreenMenu
+  - S8158356: SIGSEGV when attempting to rotate BufferedImage using AffineTransform by NaN degrees
+  - S8158639: C2 compilation fails with SIGSEGV
+  - S8159035: CTSMode.java test crashed due to unhandled case of cipher length value as 0
+  - S8159696: java.beans.MethodRef#get throws NullPointerException
+  - S8160024: jdb returns invalid argument count if first parameter to Arrays.asList is null
+  - S8160119: Utils.tryFindJvmPid sometimes find incorrect pid
+  - S8160174: java.net.NetworkInterface - fixes and improvements for network interface listing
+  - S8160370: System.getProperty("os.version") returns "Unknown" on Mac
+  - S8160551: assert(c == Bytecodes::_putfield) failed: must be putfield
+  - S8160570: [macosx] modal dialog can skip the activation/focus events
+  - S8160623: [PIT] Exception running java/awt/event/KeyEvent/KeyChar/KeyCharTest.java
+  - S8160664: JVM crashed with font manager on Solaris 12
+  - S8160696: IllegalArgumentException: adding a component to a container on a different GraphicsDevice
+  - S8160893: [macosx] JMenuItems in JPopupMenu are not accessible
+  - S8160913: [TEST_BUG] javax/management/security/SecurityTest.java fails due to missing keyStore file
+  - S8160941: "text/uri-list" dataflavor concats the first two strings
+  - S8161039: System.getProperty("os.version") returns incorrect version number on Mac
+  - S8161664: Memory leak in com.apple.laf.AquaProgressBarUI removed progress bar still referenced
+  - S8161733: [parfait] Memory leak in imageioJPEG.c:2803
+  - S8161742: [parfait] Uninitialised memory in isXTestAvailable of awt_Robot.c:65
+  - S8161761: [parfait] 2 JNI exception pending defect groups in GraphicsPrimitiveMgr.c
+  - S8162101: C2: Handle "wide" aliases for unsafe accesses
+  - S8162488: JDK should be updated to use LittleCMS 2.8
+  - S8162496: missing precedence edge for anti_dependence
+  - S8162598: XSLTC transformer swallows empty namespace declaration which is needed to undeclare default namespace
+  - S8162603: Unrecognized VM option 'UseCountedLoopSafepoints'
+  - S8162766: Unsafe_DefineClass0 accesses raw oops while in _thread_in_native
+  - S8162795: [REDO] MemberNameTable doesn't purge stale entries
+  - S8162796: [macosx] LinearGradientPaint and RadialGradientPaint are not printed on OS X.
+  - S8163104: Unexpected NPE still possible on some Kerberos ticket calls
+  - S8163181: Further improvements for Unix NetworkInterface native implementation
+  - S8163518: Integer overflow in StringBufferInputStream.read() and CharArrayReader.read/skip()
+  - S8163877: Tests added in JDK-8163518 fail on some platforms
+  - S8163896: Finalizing one key of a KeyPair invalidates the other key
+  - S8163945: Honor Number type hint in toPrimitive on Numbers
+  - S8163969: Cyclic interface initialization causes JVM crash
+  - S8163979: [macosx] Chinese text shows as Latin w/ openVanilla input method
+  - S8164002: Add a new CPU family (S_family) for SPARC S7 and above processors
+  - S8164119: MoveToOtherScreenTest fails due wrong key attribute
+  - S8164366: ZoneOffset.ofHoursMinutesSeconds() does not reject invalid input
+  - S8164501: Uninitialised memory in byteArrayToPacket of SharedMemoryConnection.c
+  - S8164508: unexpected profiling mismatch in c1 generated code
+  - S8164784: ISO 4217 amendment 162
+  - S8164846: CertificateException missing cause of underlying exception
+  - S8165153: Crash in rebuild_cpu_to_node_map
+  - S8165243: Base64.Encoder.wrap(os).write(byte[],int,int) with incorrect arguments should not produce output
+  - S8165320: Small flaw when integrating 8160174 to JDK8
+  - S8165428: Security Warning dialog should be always on the top when multiple applets with APPLICATION_MODAL dialog launched in a browser
+  - S8165482: java in ldoms, with cpu-arch=generic has problems
+  - S8165717: [macosx] Various memory leaks in jdk9
+  - S8165751: NPE hit with java.security.debug=provider
+  - S8165829: Android Studio 2.x crashes with NPE at sun.lwawt.macosx.CAccessibility.getAccessibleIndexInParent
+  - S8165988: Test JarURLConnectionUseCaches.java fails at windows: failed to clean up files after test
+  - S8166248: tools/pack200/Pack200Test.java fails on Win32: Could not reserve enough space
+  - S8166507: ConcurrentSkipListSet.clear() can leave the Set in an invalid state
+  - S8166747: Add invalid network / computer name cases to isReachable known failure switch
+  - S8166799: ASSEMBLY_EXCEPTION contains historical company name
+  - S8166840: Synthetic bridge constructor in ArrayList$Itr blocks inlining
+  - S8166872: GPL header in /hotspot/src/share/vm/gc_implementation/g1/g1RemSetSummary.cpp
+  - S8166902: Nested object literal property maps not reset in optimistic recompilation
+  - S8167102: [macosx] PrintRequestAttributeSet breaks page size set using PageFormat
+  - S8168115: Remove and retag jdk8u122-b03 in 8u repo
+  - S8168364: [macosx] Delete unused class NSPrintinfo
+  - S8168373: don't emit conversions for symbols outside their lexical scope
+  - S8168405: Pending exceptions in java.base/windows/native
+  - S8168751: Two "Direct Clip" threads are created to play the same "AudioClip" object, what makes clip sound corrupted
+  - S8168914: Crash in ClassLoaderData/JNIHandleBlock::oops_do during concurrent marking
+  - S8169056: StringIndexOutOfBoundsException in Pattern.compile with CANON_EQ flag
+  - S8169112: java.lang.VerifyError: (class: GregorSamsa, method: template-bash signature: (LGregorSamsa8;)V) Register 10 contains wrong type
+  - S8169229: RSAClientKeyExchange debug info is incorrect
+  - S8169355: Diacritics input works incorrectly on Windows if Spanish (Latin American) keyboard layout is used
+  - S8169481: StackOverflowError on start when parsing PAC file to autodetect Proxy settings
+  - S8169556: Wrapping of FileInputStream's native skip and available methods
+  - S8169865: Downport minor fixes in java.net native code from JDK 9 to JDK 8
+  - S8170153: PPC64/s390x/aarch64: Poor StrictMath performance due to non-optimized compilation
+  - S8170278: ticket renewal won't happen with debugging turned on
+  - S8170409: CMS: Crash in CardTableModRefBSForCTRS::process_chunk_boundaries
+  - S8170465: JNI exception pending in jni_util.c:190
+  - S8170466: JNI exception pending in jni_util.c:190
+  - S8170536: Uninitialised memory in set_uintx_flag of attachListener.cpp
+  - S8170552: [macosx] Wrong rendering of diacritics on macOS
+  - S8170565: JSObject call() is passed undefined for the argument 'thiz'
+  - S8170578: CUPS Printing is broken with Ubuntu 16.10 (CUPS 2.2)
+  - S8170594: >>>=0 generates invalid bytecode for BaseNode LHS
+  - S8170913: Java "1.8.0_112" on Windows 10 displays different characters for EUDCs from ones created in eudcedit.exe.
+  - S8170950: Text is displayed in bold when fonts are installed into symlinked folder
+  - S8170977: SparseArrayData should not grow its underlying dense array data
+  - S8171151: JDK8u ProblemList.txt Updates
+  - S8171155: Scanning method file for initialized final field updates can fail for non-existent fields
+  - S8171194: Exception "Duplicate field name&signature in class file" should report the name and signature of the field
+  - S8171219: Missing checks in sparse array shift() implementation
+  - S8171808: Performance problems in dialogs with large tables when JAB activated
+  - S8171849: Collection and Queue conversions not prioritized for Arrays
+  - S8171909: [PIT] on Windows, failure of java/awt/Dialog/DialogAboveFrame/DialogAboveFrameTest.java
+  - S8171952: [macosx] AWT_Modality/Automated/ModalExclusion/NoExclusion/ModelessDialog test fails as DummyButton on Dialog did not gain focus when clicked.
+  - S8172053: (ppc64) Downport of 8170153 breaks build on linux/ppc64 (big endian)
+  - S8172145: C2: anti dependence missed because store hidden by membar
+  - S8173373: C1: NPE is thrown instead of LinkageError when accessing inaccessible field on NULL receiver
+  - S8173423: Wrong display name for supplemental Japanese era
+  - S8173581: performance regression in com/sun/crypto/provider/OutputFeedback.java
+  - S8173654: Regression since 8u60: System.getenv doesn't return env var set in JNI code
+  - S8173664: Typo in https://java.net/downloads/heap-snapshot/hprof-binary-format.html
+  - S8173853: IllegalArgumentException in java.awt.image.ReplicateScaleFilter
+  - S8173876: Fast precise scrolling and DeltaAccumulator fix for macOS Sierra 10.12.2
+  - S8174736: [JCP] [Mac]Cannot launch JCP on Mac os with language set to "Chinese, Simplified" while region is not China
+  - S8174779: Locale issues with Mac 10.12
+  - S8175025: The copyright section in the test/java/awt/font/TextLayout/DiacriticsDrawingTest.java should be updated
+  - S8175131: sun.rmi.transport.tcp.TCPChannel.createConnection close connection on timeout
+  - S8175345: Reported null pointer dereference defect groups
+  - S8175915: NullPointerException from JComboBox and JList when Accessibility enabled
+  - S8176287: [macosx] The print test crashed with Nimbus L&F
+  - S8176490: [macosx] Sometimes NSWindow.isZoomed hangs
+  - S8176511: JSObject property access is broken for numeric keys outside the int range
+  - S8176530: JDK support for JavaFX modal print dialogs
+  - S8177095: Range check dependent CastII/ConvI2L is prematurely eliminated
+  - S8177450: javax.swing.text.html.parser.Parser parseScript ignores a character after commend end
+  - S8177678: Overstatement of universality of Era.getDisplayName() implementation
+  - S8177776: Create an equivalent test case for JDK9's SupplementalJapaneseEraTest
+  - S8177817: Remove assertions in 8u that were removed by 8056124 in 9.
+  - S8179515: Class java.util.concurrent.ThreadLocalRandom fails to Initialize when using SecurityManager
+  - S8180511: Null pointer dereference in Matcher::ReduceInst()
+  - S8180565: Null pointer dereferences of ConstMethod::method()
+  - S8180575: Null pointer dereference in LoadNode::Identity()
+  - S8180576: Null pointer dereference in Matcher::xform()
+  - S8180617: Null pointer dereference in InitializeNode::complete_stores
+  - S8180660: missing LNT entry for finally block
+  - S8180813: Null pointer dereference of CodeCache::find_blob() result
+  - S8180934: PutfieldError failed with UnsupportedClassVersionError
+  - S8180949: Correctly handle exception in TCPChannel.createConnection
+  - S8181191: getUint32 returning Long
+  - S8181192: [macos] javafx.print.PrinterJob.showPrintDialog() hangs on macOS
+  - S8181205: JRE fails to load/register security providers when started from UNC pathname
+  - S8181500: [TESTBUG] com/sun/jdi/LineNumberInfo.java fails with jArrayIndexOutOfBoundsException
+  - S8182672: Java 8u121 on Linux intermittently returns null for MAC address
+  - S8185779: 8u152 L10n resource file update
+  - S8186532: 8u152 L10n resource file update md20
+* Backports
+  - S8190258, PR3499: (tz) Support tzdata2017c
+  - S8190259, PR3499: test tck.java.time.zone.TCKZoneRules is broken by tzdata2017c
+* Bug fixes
+  - PR3489: Incomplete reading of directory containing tzdb.dat
+  - PR3501: Revert 8165320 so as not to revert the work of 8034174 (PR2290)
+  
 New in release 3.6.0 (2017-10-31):
 
 * Security fixes
