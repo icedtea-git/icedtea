@@ -1,3 +1,35 @@
+2018-01-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump shenandoah to aarch64-shenandoah-jdk8u152-b16.
+	* patches/hotspot/shenandoah/8162384-pr3122.patch,
+	* patches/hotspot/shenandoah/8164293-pr3412-rh1459641.patch,
+	* patches/hotspot/shenandoah/8173941-pr3326.patch,
+	* patches/hotspot/shenandoah/8175813-pr3394-rh1448880.patch,
+	* patches/hotspot/shenandoah/8180048-pr3411-rh1449870.patch:
+	Moved to aarch32 patches tree as applied in upstream
+	Shenandoah.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Move Shenandoah patches applied upstream
+	to AArch32-only section. Apply AArch32-only patches first
+	so common patches work from the same base on both alternative
+	HotSpot trees.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u152-b16
+	* patches/hotspot/aarch32/8145913-pr3466-rh1498309.patch,
+	* patches/hotspot/aarch32/8162384-pr3122.patch,
+	* patches/hotspot/aarch32/8164293-pr3412-rh1459641.patch,
+	* patches/hotspot/aarch32/8173941-pr3326.patch,
+	* patches/hotspot/aarch32/8175813-pr3394-rh1448880.patch,
+	* patches/hotspot/aarch32/8180048-pr3411-rh1449870.patch,
+	* patches/hotspot/aarch32/8181055-pr3394-rh1448880.patch:
+	Replace symlinks with full versions from Shenandoah
+	patches tree. Adjust 8180048 to apply against AArch32.
+	* patches/hotspot/shenandoah/8078628-pr3208.patch,
+	* patches/hotspot/shenandoah/8145913-pr3466-rh1498309.patch,
+	* patches/hotspot/shenandoah/8158260-pr2991-rh1341258.patch:
+	Adjust to apply to updated Shenandoah.
+
 2017-12-11  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.7.0pre01.

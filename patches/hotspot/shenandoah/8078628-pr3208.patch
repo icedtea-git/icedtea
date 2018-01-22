@@ -6,9 +6,9 @@
 # Parent  e200581a7a13d2a96d31c79d3f17eee799f83608
 8078628, PR3208: Zero build fails with pre-compiled headers disabled
 
-diff --git a/src/cpu/zero/vm/entry_zero.hpp b/src/cpu/zero/vm/entry_zero.hpp
---- openjdk/hotspot/src/cpu/zero/vm/entry_zero.hpp
-+++ openjdk/hotspot/src/cpu/zero/vm/entry_zero.hpp
+diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/entry_zero.hpp openjdk/hotspot/src/cpu/zero/vm/entry_zero.hpp
+--- openjdk.orig/hotspot/src/cpu/zero/vm/entry_zero.hpp	2017-12-20 04:22:04.000000000 +0000
++++ openjdk/hotspot/src/cpu/zero/vm/entry_zero.hpp	2018-01-10 17:26:06.988054364 +0000
 @@ -1,6 +1,6 @@
  /*
   * Copyright (c) 2003, 2012, Oracle and/or its affiliates. All rights reserved.
@@ -26,9 +26,9 @@ diff --git a/src/cpu/zero/vm/entry_zero.hpp b/src/cpu/zero/vm/entry_zero.hpp
  class ZeroEntry {
   public:
    ZeroEntry() {
-diff --git a/src/cpu/zero/vm/methodHandles_zero.hpp b/src/cpu/zero/vm/methodHandles_zero.hpp
---- openjdk/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp
-+++ openjdk/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp
+diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp openjdk/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp
+--- openjdk.orig/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp	2017-12-20 04:22:04.000000000 +0000
++++ openjdk/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp	2018-01-10 17:26:06.988054364 +0000
 @@ -1,6 +1,6 @@
  /*
   * Copyright (c) 2011, 2012, Oracle and/or its affiliates. All rights reserved.
@@ -52,9 +52,9 @@ diff --git a/src/cpu/zero/vm/methodHandles_zero.hpp b/src/cpu/zero/vm/methodHand
    static int method_handle_entry_invalid(Method* method, intptr_t UNUSED, TRAPS);
 +
 +#endif // CPU_ZERO_VM_METHODHANDLES_ZERO_HPP
-diff --git a/src/cpu/zero/vm/nativeInst_zero.cpp b/src/cpu/zero/vm/nativeInst_zero.cpp
---- openjdk/hotspot/src/cpu/zero/vm/nativeInst_zero.cpp
-+++ openjdk/hotspot/src/cpu/zero/vm/nativeInst_zero.cpp
+diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/nativeInst_zero.cpp openjdk/hotspot/src/cpu/zero/vm/nativeInst_zero.cpp
+--- openjdk.orig/hotspot/src/cpu/zero/vm/nativeInst_zero.cpp	2017-12-20 04:22:04.000000000 +0000
++++ openjdk/hotspot/src/cpu/zero/vm/nativeInst_zero.cpp	2018-01-10 17:26:06.988054364 +0000
 @@ -1,6 +1,6 @@
  /*
   * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.
@@ -71,9 +71,9 @@ diff --git a/src/cpu/zero/vm/nativeInst_zero.cpp b/src/cpu/zero/vm/nativeInst_ze
  #include "memory/resourceArea.hpp"
  #include "nativeInst_zero.hpp"
  #include "oops/oop.inline.hpp"
-diff --git a/src/share/vm/interpreter/cppInterpreterGenerator.hpp b/src/share/vm/interpreter/cppInterpreterGenerator.hpp
---- openjdk/hotspot/src/share/vm/interpreter/cppInterpreterGenerator.hpp
-+++ openjdk/hotspot/src/share/vm/interpreter/cppInterpreterGenerator.hpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/interpreter/cppInterpreterGenerator.hpp openjdk/hotspot/src/share/vm/interpreter/cppInterpreterGenerator.hpp
+--- openjdk.orig/hotspot/src/share/vm/interpreter/cppInterpreterGenerator.hpp	2017-12-20 04:22:04.000000000 +0000
++++ openjdk/hotspot/src/share/vm/interpreter/cppInterpreterGenerator.hpp	2018-01-10 17:26:06.988054364 +0000
 @@ -1,5 +1,6 @@
  /*
   * Copyright (c) 1997, 2011, Oracle and/or its affiliates. All rights reserved.
@@ -92,12 +92,12 @@ diff --git a/src/share/vm/interpreter/cppInterpreterGenerator.hpp b/src/share/vm
  #ifdef CC_INTERP
  
  class CppInterpreterGenerator: public AbstractInterpreterGenerator {
-diff --git a/src/share/vm/prims/methodHandles.hpp b/src/share/vm/prims/methodHandles.hpp
---- openjdk/hotspot/src/share/vm/prims/methodHandles.hpp
-+++ openjdk/hotspot/src/share/vm/prims/methodHandles.hpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/prims/methodHandles.hpp openjdk/hotspot/src/share/vm/prims/methodHandles.hpp
+--- openjdk.orig/hotspot/src/share/vm/prims/methodHandles.hpp	2017-12-20 04:22:04.000000000 +0000
++++ openjdk/hotspot/src/share/vm/prims/methodHandles.hpp	2018-01-10 17:26:25.167763087 +0000
 @@ -1,5 +1,6 @@
  /*
-  * Copyright (c) 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+  * Copyright (c) 2008, 2017, Oracle and/or its affiliates. All rights reserved.
 + * Copyright 2016 Red Hat, Inc.
   * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
   *

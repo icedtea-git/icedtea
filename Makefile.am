@@ -346,6 +346,22 @@ ICEDTEA_PATCHES = \
 # Conditional patches
 
 if WITH_ALT_HSBUILD
+
+# AArch32 doesn't yet have the latest update
+# Shenandoah included 8175887 ahead of upstream
+if WITH_AARCH32_HSBUILD
+ICEDTEA_PATCHES += \
+	patches/hotspot/$(HSBUILD)/8162384-pr3122.patch \
+	patches/hotspot/$(HSBUILD)/8164293-pr3412-rh1459641.patch \
+	patches/hotspot/$(HSBUILD)/8173941-pr3326.patch \
+	patches/hotspot/$(HSBUILD)/8175813-pr3394-rh1448880.patch \
+	patches/hotspot/$(HSBUILD)/8175887-pr3415.patch \
+	patches/hotspot/$(HSBUILD)/8179084-pr3409-rh1455694.patch \
+	patches/hotspot/$(HSBUILD)/8180711.patch \
+	patches/hotspot/$(HSBUILD)/8180048-pr3411-rh1449870.patch \
+	patches/hotspot/$(HSBUILD)/8184682.patch
+endif
+
 ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8038392-rh1064383.patch \
 	patches/hotspot/$(HSBUILD)/8041658.patch \
@@ -361,14 +377,9 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/pr1975.patch \
 	patches/hotspot/$(HSBUILD)/pr2777.patch \
 	patches/hotspot/$(HSBUILD)/werror.patch \
-	patches/hotspot/$(HSBUILD)/8162384-pr3122.patch \
 	patches/hotspot/$(HSBUILD)/8078628-pr3208.patch \
 	patches/hotspot/$(HSBUILD)/8141491-pr3159-g592292.patch \
 	patches/hotspot/$(HSBUILD)/8043780-pr3368.patch \
-	patches/hotspot/$(HSBUILD)/8173941-pr3326.patch \
-	patches/hotspot/$(HSBUILD)/8164293-pr3412-rh1459641.patch \
-	patches/hotspot/$(HSBUILD)/8175813-pr3394-rh1448880.patch \
-	patches/hotspot/$(HSBUILD)/8180048-pr3411-rh1449870.patch \
 	patches/hotspot/$(HSBUILD)/8181055-pr3394-rh1448880.patch \
 	patches/hotspot/$(HSBUILD)/8145913-pr3466-rh1498309.patch \
 	patches/hotspot/$(HSBUILD)/8168318-pr3466-rh1498320.patch \
@@ -377,17 +388,6 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8185164-pr3438.patch \
 	patches/hotspot/$(HSBUILD)/8187822-pr3478-rh1494230.patch \
 	patches/hotspot/$(HSBUILD)/8035496-pr3487.patch
-
-# AArch32 doesn't yet have the latest update
-# Shenandoah included 8175887 ahead of upstream
-if WITH_AARCH32_HSBUILD
-ICEDTEA_PATCHES += \
-	patches/hotspot/$(HSBUILD)/8175887-pr3415.patch \
-	patches/hotspot/$(HSBUILD)/8179084-pr3409-rh1455694.patch \
-	patches/hotspot/$(HSBUILD)/8180711.patch \
-	patches/hotspot/$(HSBUILD)/8184682.patch
-endif
-
 endif
 
 if BUILD_CACAO

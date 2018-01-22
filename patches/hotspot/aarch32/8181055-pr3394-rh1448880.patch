@@ -1,6 +1,16 @@
+# HG changeset patch
+# User zgu
+# Date 1499204074 -3600
+#      Tue Jul 04 22:34:34 2017 +0100
+# Node ID 13a04e8df5a3af73794146b930b32556c7cbc5b0
+# Parent  4dc64f3c3e2342970f091a1a73165a3e2a0c2f88
+8181055, PR3394, RH1448880: PPC64: "mbind: Invalid argument" still seen after 8175813
+Summary: Use numa_interleave_memory v2 api when available
+Reviewed-by: dholmes, shade, gromero
+
 diff -Nru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
---- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2017-07-07 02:39:53.074767403 +0100
-+++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2017-07-07 02:41:44.196961739 +0100
+--- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2018-01-22 17:40:29.680271971 +0000
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2018-01-22 17:41:32.607262105 +0000
 @@ -2827,11 +2827,8 @@
  extern "C" JNIEXPORT void numa_error(char *where) { }
  extern "C" JNIEXPORT int fork1() { return fork(); }
@@ -46,8 +56,8 @@ diff -Nru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/
  os::Linux::numa_bitmask_isbitset_func_t os::Linux::_numa_bitmask_isbitset;
  os::Linux::numa_distance_func_t os::Linux::_numa_distance;
 diff -Nru openjdk.orig/hotspot/src/os/linux/vm/os_linux.hpp openjdk/hotspot/src/os/linux/vm/os_linux.hpp
---- openjdk.orig/hotspot/src/os/linux/vm/os_linux.hpp	2017-07-07 02:39:53.074767403 +0100
-+++ openjdk/hotspot/src/os/linux/vm/os_linux.hpp	2017-07-07 02:41:03.353625308 +0100
+--- openjdk.orig/hotspot/src/os/linux/vm/os_linux.hpp	2018-01-22 17:40:29.448275695 +0000
++++ openjdk/hotspot/src/os/linux/vm/os_linux.hpp	2018-01-22 17:40:55.547856843 +0000
 @@ -192,6 +192,8 @@
    static void libpthread_init();
    static bool libnuma_init();

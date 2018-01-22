@@ -249,6 +249,8 @@ New in release 3.7.0 (2018-01-XX):
 * Bug fixes
   - PR3489: Incomplete reading of directory containing tzdb.dat
   - PR3501: Revert 8165320 so as not to revert the work of 8034174 (PR2290)
+* Shenandoah
+  - S8193133: Assertion failure because 0xDEADDEAD can be in-heap
   
 New in release 3.6.0 (2017-10-31):
 

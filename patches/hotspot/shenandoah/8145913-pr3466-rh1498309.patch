@@ -7,10 +7,10 @@
 8145913, PR3466, RH1498309: PPC64: add Montgomery multiply intrinsic
 Reviewed-by: aph, goetz
 
-diff --git a/src/cpu/ppc/vm/assembler_ppc.hpp b/src/cpu/ppc/vm/assembler_ppc.hpp
---- openjdk/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
-+++ openjdk/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
-@@ -1179,6 +1179,8 @@
+diff -Nru openjdk.orig/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp openjdk/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp
+--- openjdk.orig/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp	2017-12-20 04:22:04.000000000 +0000
++++ openjdk/hotspot/src/cpu/ppc/vm/assembler_ppc.hpp	2018-01-11 01:11:26.065318132 +0000
+@@ -1180,6 +1180,8 @@
    inline void mullw_( Register d, Register a, Register b);
    inline void mulhw(  Register d, Register a, Register b);
    inline void mulhw_( Register d, Register a, Register b);
@@ -19,9 +19,9 @@ diff --git a/src/cpu/ppc/vm/assembler_ppc.hpp b/src/cpu/ppc/vm/assembler_ppc.hpp
    inline void mulhd(  Register d, Register a, Register b);
    inline void mulhd_( Register d, Register a, Register b);
    inline void mulhdu( Register d, Register a, Register b);
-diff --git a/src/cpu/ppc/vm/assembler_ppc.inline.hpp b/src/cpu/ppc/vm/assembler_ppc.inline.hpp
---- openjdk/hotspot/src/cpu/ppc/vm/assembler_ppc.inline.hpp
-+++ openjdk/hotspot/src/cpu/ppc/vm/assembler_ppc.inline.hpp
+diff -Nru openjdk.orig/hotspot/src/cpu/ppc/vm/assembler_ppc.inline.hpp openjdk/hotspot/src/cpu/ppc/vm/assembler_ppc.inline.hpp
+--- openjdk.orig/hotspot/src/cpu/ppc/vm/assembler_ppc.inline.hpp	2017-12-20 04:22:04.000000000 +0000
++++ openjdk/hotspot/src/cpu/ppc/vm/assembler_ppc.inline.hpp	2018-01-11 01:11:26.065318132 +0000
 @@ -109,6 +109,8 @@
  inline void Assembler::mullw_( Register d, Register a, Register b) { emit_int32(MULLW_OPCODE  | rt(d) | ra(a) | rb(b) | oe(0) | rc(1)); }
  inline void Assembler::mulhw(  Register d, Register a, Register b) { emit_int32(MULHW_OPCODE  | rt(d) | ra(a) | rb(b) | rc(0)); }
@@ -31,9 +31,9 @@ diff --git a/src/cpu/ppc/vm/assembler_ppc.inline.hpp b/src/cpu/ppc/vm/assembler_
  inline void Assembler::mulhd(  Register d, Register a, Register b) { emit_int32(MULHD_OPCODE  | rt(d) | ra(a) | rb(b) | rc(0)); }
  inline void Assembler::mulhd_( Register d, Register a, Register b) { emit_int32(MULHD_OPCODE  | rt(d) | ra(a) | rb(b) | rc(1)); }
  inline void Assembler::mulhdu( Register d, Register a, Register b) { emit_int32(MULHDU_OPCODE | rt(d) | ra(a) | rb(b) | rc(0)); }
-diff --git a/src/cpu/ppc/vm/c2_init_ppc.cpp b/src/cpu/ppc/vm/c2_init_ppc.cpp
---- openjdk/hotspot/src/cpu/ppc/vm/c2_init_ppc.cpp
-+++ openjdk/hotspot/src/cpu/ppc/vm/c2_init_ppc.cpp
+diff -Nru openjdk.orig/hotspot/src/cpu/ppc/vm/c2_init_ppc.cpp openjdk/hotspot/src/cpu/ppc/vm/c2_init_ppc.cpp
+--- openjdk.orig/hotspot/src/cpu/ppc/vm/c2_init_ppc.cpp	2017-12-20 04:22:04.000000000 +0000
++++ openjdk/hotspot/src/cpu/ppc/vm/c2_init_ppc.cpp	2018-01-11 01:11:26.065318132 +0000
 @@ -45,4 +45,10 @@
        FLAG_SET_ERGO(bool, InsertEndGroupPPC64, true);
      }
@@ -45,9 +45,9 @@ diff --git a/src/cpu/ppc/vm/c2_init_ppc.cpp b/src/cpu/ppc/vm/c2_init_ppc.cpp
 +  }
 +
  }
-diff --git a/src/cpu/ppc/vm/sharedRuntime_ppc.cpp b/src/cpu/ppc/vm/sharedRuntime_ppc.cpp
---- openjdk/hotspot/src/cpu/ppc/vm/sharedRuntime_ppc.cpp
-+++ openjdk/hotspot/src/cpu/ppc/vm/sharedRuntime_ppc.cpp
+diff -Nru openjdk.orig/hotspot/src/cpu/ppc/vm/sharedRuntime_ppc.cpp openjdk/hotspot/src/cpu/ppc/vm/sharedRuntime_ppc.cpp
+--- openjdk.orig/hotspot/src/cpu/ppc/vm/sharedRuntime_ppc.cpp	2017-12-20 04:22:04.000000000 +0000
++++ openjdk/hotspot/src/cpu/ppc/vm/sharedRuntime_ppc.cpp	2018-01-11 01:11:26.065318132 +0000
 @@ -42,6 +42,8 @@
  #include "opto/runtime.hpp"
  #endif
@@ -303,13 +303,13 @@ diff --git a/src/cpu/ppc/vm/sharedRuntime_ppc.cpp b/src/cpu/ppc/vm/sharedRuntime
 +
 +  reverse_words(m, (unsigned long *)m_ints, longwords);
 +}
-diff --git a/src/cpu/ppc/vm/stubGenerator_ppc.cpp b/src/cpu/ppc/vm/stubGenerator_ppc.cpp
---- openjdk/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp
-+++ openjdk/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp
-@@ -2094,6 +2094,14 @@
-     generate_safefetch("SafeFetchN", sizeof(intptr_t), &StubRoutines::_safefetchN_entry,
-                                                        &StubRoutines::_safefetchN_fault_pc,
-                                                        &StubRoutines::_safefetchN_continuation_pc);
+diff -Nru openjdk.orig/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp openjdk/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp
+--- openjdk.orig/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp	2017-12-20 04:22:04.000000000 +0000
++++ openjdk/hotspot/src/cpu/ppc/vm/stubGenerator_ppc.cpp	2018-01-11 01:12:09.532621192 +0000
+@@ -2524,6 +2524,14 @@
+       StubRoutines::_aescrypt_decryptBlock = generate_aescrypt_decryptBlock();
+     }
+ 
 +    if (UseMontgomeryMultiplyIntrinsic) {
 +      StubRoutines::_montgomeryMultiply
 +        = CAST_FROM_FN_PTR(address, SharedRuntime::montgomery_multiply);
@@ -321,9 +321,9 @@ diff --git a/src/cpu/ppc/vm/stubGenerator_ppc.cpp b/src/cpu/ppc/vm/stubGenerator
    }
  
   public:
-diff --git a/src/cpu/ppc/vm/templateInterpreter_ppc.cpp b/src/cpu/ppc/vm/templateInterpreter_ppc.cpp
---- openjdk/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.cpp
-+++ openjdk/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.cpp
+diff -Nru openjdk.orig/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.cpp openjdk/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.cpp
+--- openjdk.orig/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.cpp	2017-12-20 04:22:04.000000000 +0000
++++ openjdk/hotspot/src/cpu/ppc/vm/templateInterpreter_ppc.cpp	2018-01-11 01:11:26.069318068 +0000
 @@ -265,7 +265,7 @@
        __ cmpdi(CCR0, Rmdo, 0);
        __ beq(CCR0, no_mdo);
@@ -349,10 +349,10 @@ diff --git a/src/cpu/ppc/vm/templateInterpreter_ppc.cpp b/src/cpu/ppc/vm/templat
      __ load_const_optimized(Rscratch1, mask, R0);
      __ and_(Rscratch1, Rscratch2, Rscratch1);
      __ beq(CCR0, *overflow);
-diff --git a/src/cpu/ppc/vm/vm_version_ppc.cpp b/src/cpu/ppc/vm/vm_version_ppc.cpp
---- openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp
-+++ openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp
-@@ -181,6 +181,13 @@
+diff -Nru openjdk.orig/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp
+--- openjdk.orig/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp	2018-01-11 00:58:36.529656600 +0000
++++ openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp	2018-01-11 01:11:26.069318068 +0000
+@@ -205,6 +205,13 @@
    if (FLAG_IS_DEFAULT(UseUnalignedAccesses)) {
      FLAG_SET_DEFAULT(UseUnalignedAccesses, true);
    }
@@ -366,10 +366,10 @@ diff --git a/src/cpu/ppc/vm/vm_version_ppc.cpp b/src/cpu/ppc/vm/vm_version_ppc.c
  }
  
  void VM_Version::print_features() {
-diff --git a/src/share/vm/opto/library_call.cpp b/src/share/vm/opto/library_call.cpp
---- openjdk/hotspot/src/share/vm/opto/library_call.cpp
-+++ openjdk/hotspot/src/share/vm/opto/library_call.cpp
-@@ -6031,11 +6031,21 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/opto/library_call.cpp openjdk/hotspot/src/share/vm/opto/library_call.cpp
+--- openjdk.orig/hotspot/src/share/vm/opto/library_call.cpp	2017-12-20 04:22:04.000000000 +0000
++++ openjdk/hotspot/src/share/vm/opto/library_call.cpp	2018-01-11 01:11:26.069318068 +0000
+@@ -6205,11 +6205,21 @@
      Node* n_start = array_element_address(n, intcon(0), n_elem);
      Node* m_start = array_element_address(m, intcon(0), m_elem);
  
@@ -396,7 +396,7 @@ diff --git a/src/share/vm/opto/library_call.cpp b/src/share/vm/opto/library_call
      set_result(m);
    }
  
-@@ -6085,11 +6095,22 @@
+@@ -6263,11 +6273,22 @@
      Node* n_start = array_element_address(n, intcon(0), n_elem);
      Node* m_start = array_element_address(m, intcon(0), m_elem);
  
@@ -424,10 +424,10 @@ diff --git a/src/share/vm/opto/library_call.cpp b/src/share/vm/opto/library_call
      set_result(m);
    }
  
-diff --git a/src/share/vm/opto/runtime.cpp b/src/share/vm/opto/runtime.cpp
---- openjdk/hotspot/src/share/vm/opto/runtime.cpp
-+++ openjdk/hotspot/src/share/vm/opto/runtime.cpp
-@@ -1005,12 +1005,20 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/opto/runtime.cpp openjdk/hotspot/src/share/vm/opto/runtime.cpp
+--- openjdk.orig/hotspot/src/share/vm/opto/runtime.cpp	2017-12-20 04:22:04.000000000 +0000
++++ openjdk/hotspot/src/share/vm/opto/runtime.cpp	2018-01-11 01:11:26.069318068 +0000
+@@ -1031,12 +1031,20 @@
    // create input type (domain)
    int num_args      = 7;
    int argcnt = num_args;
@@ -449,7 +449,7 @@ diff --git a/src/share/vm/opto/runtime.cpp b/src/share/vm/opto/runtime.cpp
    fields[argp++] = TypeLong::LONG;      // inv
    fields[argp++] = Type::HALF;
    fields[argp++] = TypePtr::NOTNULL;    // result
-@@ -1029,11 +1037,19 @@
+@@ -1055,11 +1063,19 @@
    // create input type (domain)
    int num_args      = 6;
    int argcnt = num_args;
