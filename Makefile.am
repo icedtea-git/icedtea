@@ -347,20 +347,10 @@ ICEDTEA_PATCHES = \
 
 if WITH_ALT_HSBUILD
 
-# AArch32 doesn't yet have the latest update
-# Shenandoah included 8175887 ahead of upstream
-if WITH_AARCH32_HSBUILD
-ICEDTEA_PATCHES += \
-	patches/hotspot/$(HSBUILD)/8162384-pr3122.patch \
-	patches/hotspot/$(HSBUILD)/8164293-pr3412-rh1459641.patch \
-	patches/hotspot/$(HSBUILD)/8173941-pr3326.patch \
-	patches/hotspot/$(HSBUILD)/8175813-pr3394-rh1448880.patch \
-	patches/hotspot/$(HSBUILD)/8175887-pr3415.patch \
-	patches/hotspot/$(HSBUILD)/8179084-pr3409-rh1455694.patch \
-	patches/hotspot/$(HSBUILD)/8180711.patch \
-	patches/hotspot/$(HSBUILD)/8180048-pr3411-rh1449870.patch \
-	patches/hotspot/$(HSBUILD)/8184682.patch
-endif
+# Patches only for AArch32
+#if WITH_AARCH32_HSBUILD
+#ICEDTEA_PATCHES += \
+#endif
 
 ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8038392-rh1064383.patch \

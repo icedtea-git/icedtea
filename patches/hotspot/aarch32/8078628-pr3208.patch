@@ -7,8 +7,8 @@
 8078628, PR3208: Zero build fails with pre-compiled headers disabled
 
 diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp openjdk/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp
---- openjdk.orig/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp	2017-04-20 13:33:45.000000000 +0100
-+++ openjdk/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp	2017-05-11 03:14:30.749469306 +0100
+--- openjdk.orig/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp	2017-10-18 17:37:09.000000000 +0100
++++ openjdk/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp	2018-01-24 03:48:09.644055362 +0000
 @@ -1,6 +1,6 @@
  /*
   * Copyright (c) 2011, 2012, Oracle and/or its affiliates. All rights reserved.
@@ -33,11 +33,11 @@ diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/methodHandles_zero.hpp openjdk/ho
 +
 +#endif // CPU_ZERO_VM_METHODHANDLES_ZERO_HPP
 diff -Nru openjdk.orig/hotspot/src/share/vm/prims/methodHandles.hpp openjdk/hotspot/src/share/vm/prims/methodHandles.hpp
---- openjdk.orig/hotspot/src/share/vm/prims/methodHandles.hpp	2017-04-20 13:33:45.000000000 +0100
-+++ openjdk/hotspot/src/share/vm/prims/methodHandles.hpp	2017-05-11 03:14:30.749469306 +0100
+--- openjdk.orig/hotspot/src/share/vm/prims/methodHandles.hpp	2017-10-18 17:37:09.000000000 +0100
++++ openjdk/hotspot/src/share/vm/prims/methodHandles.hpp	2018-01-24 03:48:24.907809625 +0000
 @@ -1,5 +1,6 @@
  /*
-  * Copyright (c) 2008, 2014, Oracle and/or its affiliates. All rights reserved.
+  * Copyright (c) 2008, 2017, Oracle and/or its affiliates. All rights reserved.
 + * Copyright 2016 Red Hat, Inc.
   * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
   *

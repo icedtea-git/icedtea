@@ -251,6 +251,8 @@ New in release 3.7.0 (2018-01-XX):
   - PR3501: Revert 8165320 so as not to revert the work of 8034174 (PR2290)
 * Shenandoah
   - S8193133: Assertion failure because 0xDEADDEAD can be in-heap
+* AArch32 port
+  - S8140584: [aarch32] nmethod::oops_do_marking_epilogue always runs verification code
   
 New in release 3.6.0 (2017-10-31):
 
