@@ -12,6 +12,40 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.7.0 (2018-01-XX):
 
+* Security fixes
+  - S8160104: CORBA communication improvements
+  - S8172525, CVE-2018-2579: Improve key keying case
+  - S8174756: Extra validation for public keys
+  - S8174962, CVE-2018-2582: Better interface invocations
+  - S8175932: Improve host instance supports
+  - S8176458: Revise default document styling
+  - S8178449, CVE-2018-2588: Improve LDAP logins
+  - S8178458: Better use of certificates in LDAP
+  - S8178466: Better RSA parameters
+  - S8179536: Cleaner print job handling
+  - S8179990: Cleaner palette entry handling
+  - S8180011: Cleaner native graphics device handling
+  - S8180015: Cleaner AWT robot handling
+  - S8180020: Improve SymbolHashMap entry handling
+  - S8180433: Cleaner CLR invocation handling
+  - S8180877: More deeply colored ICC spaces
+  - S8181664: Improve JVM UTF String handling
+  - S8181670: Improve implementation of keystores
+  - S8182125, CVE-2018-2599: Improve reliability of DNS lookups
+  - S8182387, CVE-2018-2603: Improve PKCS usage
+  - S8182601, CVE-2018-2602: Improve usage messages
+  - S8185292, CVE-2018-2618: Stricter key generation
+  - S8185325, CVE-2018-2641: Improve GTK initialization
+  - S8186080: Transform XML interfaces
+  - S8186212, CVE-2018-2629: Improve GSS handling
+  - S8186600, CVE-2018-2634: Improve property negotiations
+  - S8186606, CVE-2018-2633: Improve LDAP lookup robustness
+  - S8186699: Clean up extra Derby files
+  - S8186867: Improve native glyph layouts
+  - S8186998, CVE-2018-2637: Improve JMX supportive features
+  - S8189284, CVE-2018-2663: More refactoring for deserialization cases
+  - S8190289, CVE-2018-2677: More refactoring for client deserialization cases
+  - S8191142, CVE-2018-2678: More refactoring for naming deserialization cases
 * Import of OpenJDK 8 u152 build 16
   - S4953367: MAWT: Java should be more careful manipulating NLSPATH, XFILESEARCHPATH env variables
   - S6772009: java/util/concurrent/locks/ReentrantLock/CancelledLockLoops.java test failed with 'Completed != 2'
@@ -243,14 +277,81 @@ New in release 3.7.0 (2018-01-XX):
   - S8182672: Java 8u121 on Linux intermittently returns null for MAC address
   - S8185779: 8u152 L10n resource file update
   - S8186532: 8u152 L10n resource file update md20
-* Backports
+* Import of OpenJDK 8 u161 build 12
+  - S8035105: DNS provider cleanups
+  - S8137255: sun/security/provider/NSASuiteB/TestDSAGenParameterSpec.java timeouts intermittently
+  - S8140436: Negotiated Finite Field Diffie-Hellman Ephemeral Parameters for TLS
+  - S8148108: Disable Diffie-Hellman keys less than 1024 bits
+  - S8148421, PR3504: Transport Layer Security (TLS) Session Hash and Extended Master Secret Extension
+  - S8154344: sun/security/pkcs11/KeyAgreement/SupportedDHKeys.java fails on solaris
+  - S8156502: Use short name of SupportedEllipticCurvesExtension.java
+  - S8158116: com/sun/crypto/provider/KeyAgreement/SupportedDHParamGens.java failed with timeout
+  - S8159240: XSOM parser incorrectly processes type names with whitespaces
+  - S8159377: JMX Connections need white-list filters
+  - S8161598: Kitchensink fails: assert(nm->insts_contains(original_pc)) failed: original PC must be in nmethod/CompiledMethod
+  - S8163237: Restrict the use of EXPORT cipher suites
+  - S8166362: [TEST_BUG] test sun/net/www/http/HttpClient/B8025710.java failing with cert error in 8u121 b01
+  - S8169944: sun/security/tools tests fail with CompilationError
+  - S8170157: Enable unlimited cryptographic policy by default in OracleJDK
+  - S8170245: [TEST_BUG] Cipher tests fail when running with unlimited policy
+  - S8170911: 8170823 changes in 8u131 causing signature-test failure in jck runtime8b suite
+  - S8171262: Stability fixes for lcms
+  - S8172297: In java 8, the marshalling with JAX-WS does not escape carriage return
+  - S8173631: Backout three hotspot fixes from 8u121-bpr repo
+  - S8176536: Improved algorithm constraints checking
+  - S8177144: [TEST BUG] sun/net/www/http/HttpClient/B8025710.java should run in ovm mode
+  - S8177750: Forgot TestSocketFactory testcase in 8163958 changeset
+  - S8178536: OOM ERRORS + SERVICE-THREAD TAKES A PROCESSOR TO 100%
+  - S8178728: Check the AlgorithmParameters in algorithm constraints
+  - S8179223: Integrate 8176490 into 8u131-bpr repo
+  - S8181439: Test the jdk.tls.namedGroups System Property
+  - S8181975: Run sun/security/pkcs11 tests on Mac
+  - S8182614: Backout JDK-8140436 from 8u161
+  - S8183939: Import JDK-8182672 into 8u141-bpr repo
+  - S8184016: Text in native popup is not always updated with Sogou IME
+  - S8185572: Enable AssumeMP by default on SPARC machines
+  - S8185628: Backport jdk/test/lib/testlibrary/CompilerUtils.java to jdk8u which is helpful in test development
+  - S8185719: rmi TestSocketFactory does not flush
+  - S8185909: Disable JARs signed with DSA keys less than 1024 bits
+  - S8186539: [testlibrary] TestSocketFactory should allow triggers before match/replace
+  - S8187482: Backout JDK-8159377
+  - S8187556: Backout of a fix reintroduced a dependency that had since been removed
+  - S8188880: A JAXB JCK test failure found after 8186080
   - S8190258, PR3499: (tz) Support tzdata2017c
   - S8190259, PR3499: test tck.java.time.zone.TCKZoneRules is broken by tzdata2017c
+  - S8190266: closed/java/awt/ComponentOrientation/WindowTest.java throws java.util.MissingResourceException.
+  - S8190449: sun/security/pkcs11/KeyPairGenerator/TestDH2048.java fails on Solaris x64 5.10
+  - S8190497: DHParameterSpec.getL() returns zero after JDK-8072452
+  - S8190541: 8u161 L10n resource file update
+  - S8190789: sun/security/provider/certpath/LDAPCertStore/TestURICertStoreParameters.java fails after JDK-8186606
+  - S8191137, PR3503: keytool fails to format resource strings for keys for some languages after JDK-8171319
+  - S8191340: 8ux linux builds failing - com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl (unknown type)
+  - S8191352: Remove 8u161-b07 and 8u162-b07 tag to include 8191340 for b07
+  - S8191907: PPC64 part of JDK-8174962: Better interface invocations
+  - S8192793: 8u161 L10n resource file update md20
+  - S8193683: Increase the number of clones in the CloneableDigest
+* Backports
+  - S8165996, PR3506: PKCS11 using NSS throws an error regarding secmod.db when NSS uses sqlite
+  - S8170523, PR3506: Some PKCS11 test cases are ignored with security manager
+  - S8187667, PR3517: Disable deprecation warning for readdir_r
+  - S8189789, PR3530: tomcat gzip-compressed response bodies appear to be broken in update 151
+  - S8194739, PR3520: Zero port of 8174962: Better interface invocations
+  - S8194828, PR3520: Fix for 8194739: Zero port of 8174962: Better interface invocations
+  - S8195837, PR3522: (tz) Upgrade time-zone data to tzdata2018c
+  - S8196516, PR3523: [REDO] [linux] libfontmanager should be linked against headless awt library
+  - S8196978, PR3517: JDK-8187667 fails on GCC 4.4.7 as found on RHEL 6
 * Bug fixes
   - PR3489: Incomplete reading of directory containing tzdb.dat
   - PR3501: Revert 8165320 so as not to revert the work of 8034174 (PR2290)
-* Shenandoah
-  - S8193133: Assertion failure because 0xDEADDEAD can be in-heap
+  - PR3526: configure fails to parse GCC version
+* AArch64 port
+  - S8193133, PR3519: Assertion failure because 0xDEADDEAD can be in-heap
+  - S8194686, PR3519: AArch64 port of 8174962: Better interface invocations
+  - S8195859, PR3519: AArch64: vtableStubs gtest fails after 8174962
+  - S8196136, PR3519: AArch64: Correct register use in patch for JDK-8194686
+  - S8196221, PR3519: AArch64: Mistake in committed patch for JDK-8195859
+  - PR3519: Fix functions with missing return value.
+  - PR3519: Fix further functions with a missing return value.
 * AArch32 port
   - S8140584: [aarch32] nmethod::oops_do_marking_epilogue always runs verification code
   

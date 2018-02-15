@@ -552,9 +552,9 @@ diff --git a/src/share/classes/sun/security/ec/CurveDB.java b/src/share/classes/
          specCollection = Collections.unmodifiableCollection(oidMap.values());
      }
  }
-diff --git a/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java b/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
---- openjdk/jdk/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
-+++ openjdk/jdk/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
+diff --git a/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java b/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java
+--- openjdk/jdk/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java
++++ openjdk/jdk/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java
 @@ -65,29 +65,6 @@
  
      // See sun.security.util.CurveDB for the OIDs

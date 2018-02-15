@@ -1,0 +1,33 @@
+# HG changeset patch
+# User ehelin
+# Date 1517861444 0
+#      Mon Feb 05 20:10:44 2018 +0000
+# Node ID 3df435e5c2807c1596d5ff98698b493c82384317
+# Parent  fb479b2ec08dc13d45b22180bc48807d6796b857
+8187667, PR3517: Disable deprecation warning for readdir_r
+Reviewed-by: dholmes, sjohanss
+
+diff --git a/src/os/linux/vm/os_linux.inline.hpp b/src/os/linux/vm/os_linux.inline.hpp
+--- openjdk/hotspot/src/os/linux/vm/os_linux.inline.hpp
++++ openjdk/hotspot/src/os/linux/vm/os_linux.inline.hpp
+@@ -116,6 +116,11 @@
+ 
+ inline struct dirent* os::readdir(DIR* dirp, dirent *dbuf)
+ {
++// readdir_r has been deprecated since glibc 2.24.
++// See https://sourceware.org/bugzilla/show_bug.cgi?id=19056 for more details.
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++
+   dirent* p;
+   int status;
+   assert(dirp != NULL, "just checking");
+@@ -129,6 +134,8 @@
+     return NULL;
+   } else
+     return p;
++
++#pragma GCC diagnostic pop
+ }
+ 
+ inline int os::closedir(DIR *dirp) {
