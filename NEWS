@@ -345,6 +345,7 @@ New in release 3.7.0 (2018-01-XX):
   - PR3501: Revert 8165320 so as not to revert the work of 8034174 (PR2290)
   - PR3526: configure fails to parse GCC version
 * AArch64 port
+  - S8164113, PR3519: AArch64: follow-up the fix for 8161598
   - S8193133, PR3519: Assertion failure because 0xDEADDEAD can be in-heap
   - S8194686, PR3519: AArch64 port of 8174962: Better interface invocations
   - S8195859, PR3519: AArch64: vtableStubs gtest fails after 8174962
