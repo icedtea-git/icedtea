@@ -385,7 +385,6 @@ endif
 # Shenandoah has the AArch64 port so should get the return value fixes
 if WITH_SHENANDOAH_HSBUILD
 ICEDTEA_PATCHES += \
-	patches/hotspot/$(HSBUILD)/pr3519-return_value-01.patch \
 	patches/hotspot/$(HSBUILD)/pr3519-return_value-02.patch
 endif
 
