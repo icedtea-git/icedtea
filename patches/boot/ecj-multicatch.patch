@@ -1668,3 +1668,71 @@ diff -Nru openjdk-boot.orig/jdk/src/share/demo/jfc/Notepad/Notepad.java openjdk-
              System.err.println("resources/Notepad.properties "
                      + "or resources/NotepadSystem.properties not found");
              System.exit(1);
+--- openjdk-boot.orig/jdk/src/share/classes/java/nio/file/FileTreeWalker.java	2018-02-26 18:59:40.135894666 +0000
++++ openjdk-boot/jdk/src/share/classes/java/nio/file/FileTreeWalker.java	2018-02-26 19:00:08.003445637 +0000
+@@ -237,7 +237,9 @@
+                         // cycle detected
+                         return true;
+                     }
+-                } catch (IOException | SecurityException x) {
++                } catch (IOException x) {
++                    // ignore
++                } catch (SecurityException x) {
+                     // ignore
+                 }
+             }
+diff -Nru openjdk-boot.orig/jaxp/src/jdk/xml/internal/JdkXmlUtils.java openjdk-boot/jaxp/src/jdk/xml/internal/JdkXmlUtils.java
+--- openjdk-boot.orig/jaxp/src/jdk/xml/internal/JdkXmlUtils.java	2018-02-26 19:24:02.152360675 +0000
++++ openjdk-boot/jaxp/src/jdk/xml/internal/JdkXmlUtils.java	2018-02-26 19:26:41.473797848 +0000
+@@ -113,7 +113,12 @@
+             Object value, boolean warn) {
+         try {
+             reader.setProperty(property, value);
+-        } catch (SAXNotRecognizedException | SAXNotSupportedException e) {
++        } catch (SAXNotRecognizedException e) {
++            if (warn) {
++                XMLSecurityManager.printWarning(reader.getClass().getName(),
++                        property, e);
++            }
++        } catch (SAXNotSupportedException e) {
+             if (warn) {
+                 XMLSecurityManager.printWarning(reader.getClass().getName(),
+                         property, e);
+@@ -166,7 +171,9 @@
+ 
+         try {
+             reader = saxFactory.newSAXParser().getXMLReader();
+-        } catch (ParserConfigurationException | SAXException ex) {
++        } catch (ParserConfigurationException ex) {
++            // shall not happen with the system-default reader
++        } catch (SAXException ex) {
+             // shall not happen with the system-default reader
+         }
+         return reader;
+@@ -253,7 +260,9 @@
+         SAXParserFactory saxFactory = getSAXFactory(overrideDefaultParser);
+         try {
+             return saxFactory.newSAXParser().getXMLReader();
+-        } catch (ParserConfigurationException | SAXException ex) {
++        } catch (ParserConfigurationException ex) {
++            return getXMLReaderWXMLReaderFactory();
++        } catch (SAXException ex) {
+             return getXMLReaderWXMLReaderFactory();
+         }
+     }
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/ResourceRecord.java	2018-02-27 04:27:43.751829275 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/ResourceRecord.java	2018-02-27 04:28:05.231483764 +0000
+@@ -371,7 +371,12 @@
+                 } else
+                     throw new IOException("Invalid label type: " + typeAndLen);
+             }
+-        } catch (IOException | InvalidNameException e) {
++        } catch (IOException e) {
++            CommunicationException ce =new CommunicationException(
++                "DNS error: malformed packet");
++            ce.initCause(e);
++            throw ce;
++        } catch (InvalidNameException e) {
+             CommunicationException ce =new CommunicationException(
+                 "DNS error: malformed packet");
+             ce.initCause(e);

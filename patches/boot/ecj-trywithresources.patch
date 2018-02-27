@@ -1846,3 +1846,69 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/KdcComm.java
          }
      }
  
+--- openjdk-boot.orig/jdk/src/share/classes/java/nio/file/Files.java	2018-02-26 18:51:46.819521207 +0000
++++ openjdk-boot/jdk/src/share/classes/java/nio/file/Files.java	2018-02-26 18:51:22.963905592 +0000
+@@ -2604,7 +2604,9 @@
+          * Create a FileTreeWalker to walk the file tree, invoking the visitor
+          * for each event.
+          */
+-        try (FileTreeWalker walker = new FileTreeWalker(options, maxDepth)) {
++        FileTreeWalker walker = null;
++        try {
++            walker = new FileTreeWalker(options, maxDepth);
+             FileTreeWalker.Event ev = walker.walk(start);
+             do {
+                 FileVisitResult result;
+@@ -2651,6 +2653,8 @@
+                 }
+                 ev = walker.next();
+             } while (ev != null);
++        } finally {
++            if (walker != null) { walker.close(); }
+         }
+ 
+         return start;
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DnsClient.java	2018-02-27 03:46:19.655773714 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/DnsClient.java	2018-02-27 03:48:49.265368422 +0000
+@@ -399,7 +399,9 @@
+         int minTimeout = 50; // msec after which there are no retries.
+ 
+         synchronized (udpSocketLock) {
+-            try (DatagramSocket udpSocket = getDatagramSocket()) {
++            DatagramSocket udpSocket = null;
++            try {
++                udpSocket = getDatagramSocket();
+                 DatagramPacket opkt = new DatagramPacket(
+                         pkt.getData(), pkt.length(), server, port);
+                 DatagramPacket ipkt = new DatagramPacket(new byte[8000], 8000);
+@@ -436,6 +438,8 @@
+                     udpSocket.disconnect();
+                 }
+                 return null; // no matching packet received within the timeout
++            } finally {
++                if (udpSocket != null) { udpSocket.close(); }
+             }
+         }
+     }
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DNSDatagramSocketFactory.java	2018-02-27 03:46:19.667773521 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/DNSDatagramSocketFactory.java	2018-02-27 04:20:37.734681969 +0000
+@@ -199,6 +199,10 @@
+                 SocketException e = new SocketException(x.getMessage());
+                 e.initCause(x);
+                 throw e;
++            } catch (Throwable x) {
++                SocketException e = new SocketException(x.getMessage());
++                e.initCause(x);
++                throw e;
+             }
+         }
+         return new DatagramSocket();
+@@ -238,6 +242,8 @@
+                 return new DatagramSocket(port);
+             } catch (IOException x) {
+                 // try again until maxtries == 0;
++            } catch (Throwable x) {
++                // try again until maxtries == 0;
+             }
+         }
+         return null;

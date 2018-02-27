@@ -484,9 +484,9 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
          SPLIT_PATTERN = null;
      }
  
-diff --git a/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java b/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
---- openjdk/jdk/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
-+++ openjdk/jdk/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
+diff --git a/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java b/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java
+--- openjdk/jdk/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java
++++ openjdk/jdk/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java
 @@ -62,29 +62,6 @@
  
      // See sun.security.util.CurveDB for the OIDs

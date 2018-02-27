@@ -1635,3 +1635,62 @@ diff -Nrub openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpat
                  // we don't know about any other remote CertStore types
                  return false;
          }
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/KeyUtil.java	2018-02-26 19:04:19.711389871 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/KeyUtil.java	2018-02-26 19:04:16.735437821 +0000
+@@ -112,36 +112,29 @@
+     public static final int getKeySize(AlgorithmParameters parameters) {
+ 
+         String algorithm = parameters.getAlgorithm();
+-        switch (algorithm) {
+-            case "EC":
+-                try {
+-                    ECParameterSpec ps = parameters.getParameterSpec(
+-                            ECParameterSpec.class);
+-                    if (ps != null) {
+-                        return ps.getOrder().bitLength();
+-                    }
+-                } catch (InvalidParameterSpecException ipse) {
+-                    // ignore
++        if ("EC".equals(algorithm)) {
++            try {
++                ECParameterSpec ps = parameters.getParameterSpec(ECParameterSpec.class);
++                if (ps != null) {
++                    return ps.getOrder().bitLength();
+                 }
++            } catch (InvalidParameterSpecException ipse) {
++                // ignore
++            }
+ 
+-                // Note: the ECGenParameterSpec case should be covered by the
+-                // ECParameterSpec case above.
+-                // See NamedCurve.getECParameterSpec(String).
+-
+-                break;
+-            case "DiffieHellman":
+-                try {
+-                    DHParameterSpec ps = parameters.getParameterSpec(
+-                            DHParameterSpec.class);
+-                    if (ps != null) {
+-                        return ps.getP().bitLength();
+-                    }
+-                } catch (InvalidParameterSpecException ipse) {
+-                    // ignore
++            // Note: the ECGenParameterSpec case should be covered by the
++            // ECParameterSpec case above.
++            // See NamedCurve.getECParameterSpec(String).
++        } else if ("DiffieHellman".equals(algorithm)) {
++            try {
++                DHParameterSpec ps = parameters.getParameterSpec(DHParameterSpec.class);
++                if (ps != null) {
++                    return ps.getP().bitLength();
+                 }
+-                break;
+-
+-            // May support more AlgorithmParameters algorithms in the future.
++            } catch (InvalidParameterSpecException ipse) {
++                // ignore
++            }
++        // May support more AlgorithmParameters algorithms in the future.
+         }
+ 
+         return -1;

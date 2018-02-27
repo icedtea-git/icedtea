@@ -1,3 +1,49 @@
+2018-02-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to 2.6.13.
+	* Makefile.am:
+	(JDK_UPDATE_VERSION): Bump to 171.
+	(BUILD_VERSION): Set to b02.
+	(CORBA_CHANGESET): Update to icedtea-2.6.13.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 2.6.13.
+	* hotspot.map.in: Update to icedtea-2.6.13.
+	* patches/boot/ecj-diamond.patch:
+	Regenerated. Add new cases in
+	com.sun.corba.se.impl.ior.IORTypeCheckRegistryImpl,
+	com.sun.org.apache.xalan.internal.utils.XMLSecurityManager,
+	com.sun.org.apache.xerces.internal.utils.XMLSecurityManager and
+	java.nio.file.FileTreeWalker.
+	Drop com.sun.org.apache.xml.internal.utils.DOMHelper
+	change (class removed).
+	Update file paths due to 8156502 dropping 'Supported' from the
+	front of 'SupportedEllipticCurvesExtension.java'
+	* patches/boot/ecj-multicatch.patch:
+	Add cases in java.nio.file.FileTreeWalker,
+	jdk.xml.internal.JdkXmlUtils and
+	com.sun.jndi.dns.ResourceRecord.
+	* patches/boot/ecj-stringswitch.patch:
+	Add case in sun.security.util.KeyUtil.
+	* patches/boot/ecj-trywithresources.patch:
+	Add cases in java.nio.file.Files,
+	com.sun.jndi.dns.DnsClient and
+	com.sun.jndi.dns.DNSDatagramSocketFactory.
+	* patches/pr2124.patch:
+	Fix file paths due to 8156502 dropping 'Supported' from the
+	front of 'SupportedEllipticCurvesExtension.java'
+	* patches/rh1022017.patch: Likewise.
+
 2017-12-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Add section for 2.6.13.

@@ -1,6 +1,6 @@
-diff --git a/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java b/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
---- openjdk/jdk/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
-+++ openjdk/jdk/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
+diff --git a/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java b/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
+--- openjdk/jdk/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java
++++ openjdk/jdk/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java
 @@ -168,20 +168,10 @@
                      "contains no supported elliptic curves");
              }
