@@ -1,3 +1,10 @@
+2018-02-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump aarch32 to jdk8u161-b13-aarch32-180220.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump aarch32 to
+	jdk8u161-b13-aarch32-180220.
+
 2018-02-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Update Hotspot tarballs to use revised version of
