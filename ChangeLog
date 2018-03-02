@@ -1,4 +1,9 @@
-2017-08-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2018-03-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* NEWS: Add section for 2.6.14.
+	* configure.ac: Bump to 2.6.14pre00.
+
+2018-02-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Set release date to today.
 
