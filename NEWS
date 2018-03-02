@@ -25,6 +25,134 @@ New in release 2.7.0 (201X-XX-XX):
   - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
   - PR3494: Skip AES test on AArch64 due to VM crash
 
+New in release 2.6.13 (2018-02-27):
+
+* Security fixes
+  - S8160104: CORBA communication improvements
+  - S8172525, CVE-2018-2579: Improve key keying case
+  - S8174756: Extra validation for public keys
+  - S8175932: Improve host instance supports
+  - S8176458: Revise default document styling
+  - S8178449, CVE-2018-2588: Improve LDAP logins
+  - S8178458: Better use of certificates in LDAP
+  - S8178466: Better RSA parameters
+  - S8179536: Cleaner print job handling
+  - S8179990: Cleaner palette entry handling
+  - S8180011: Cleaner native graphics device handling
+  - S8180015: Cleaner AWT robot handling
+  - S8180020: Improve SymbolHashMap entry handling
+  - S8180433: Cleaner CLR invocation handling
+  - S8180877: More deeply colored ICC spaces
+  - S8181664: Improve JVM UTF String handling
+  - S8181670: Improve implementation of keystores
+  - S8182125, CVE-2018-2599: Improve reliability of DNS lookups
+  - S8182387, CVE-2018-2603: Improve PKCS usage
+  - S8182601, CVE-2018-2602: Improve usage messages
+  - S8185292, CVE-2018-2618: Stricter key generation
+  - S8185325, CVE-2018-2641: Improve GTK initialization
+  - S8186080: Transform XML interfaces
+  - S8186212, CVE-2018-2629: Improve GSS handling
+  - S8186600, CVE-2018-2634: Improve property negotiations
+  - S8186606, CVE-2018-2633: Improve LDAP lookup robustness
+  - S8186867: Improve native glyph layouts
+  - S8186998, CVE-2018-2637: Improve JMX supportive features
+  - S8189284, CVE-2018-2663: More refactoring for deserialization cases
+  - S8190289, CVE-2018-2677: More refactoring for client deserialization cases
+  - S8191142, CVE-2018-2678: More refactoring for naming deserialization cases
+* Import of OpenJDK 7 u171 build 0
+  - S7171982: Cipher getParameters() throws RuntimeException: Cannot find SunJCE provider
+  - S7172652: With JDK 1.7 text field does not obtain focus when using mnemonic Alt/Key combin
+  - S8022532: [parfait] Potential memory leak in gtk2_interface.c
+  - S8031003: [Parfait] warnings from jdk/src/share/native/sun/security/jgss/wrapper: JNI exception pending
+  - S8035105: DNS provider cleanups
+  - S8041781: Need new regression tests for PBE keys
+  - S8041787: Need new regressions tests for buffer handling for PBE algorithms
+  - S8044193: Need to add known answer tests for AES cipher
+  - S8048601: Tests for JCE crypto ciphers (part 1)
+  - S8048819: Implement reliability test for DH algorithm
+  - S8072452: Support DHE sizes up to 8192-bits and DSA sizes up to 3072-bits
+  - S8075286: Additional tests for signature algorithm OIDs and transformation string
+  - S8137255: sun/security/provider/NSASuiteB/TestDSAGenParameterSpec.java timeouts intermittently
+  - S8141243: Unexpected timezone returned after parsing a date
+  - S8144593: Suppress not recognized property/feature warning messages from SAXParser
+  - S8147969: Print size of DH keysize when errors are encountered
+  - S8148108: Disable Diffie-Hellman keys less than 1024 bits
+  - S8148421, PR3505: Transport Layer Security (TLS) Session Hash and Extended Master Secret Extension
+  - S8154344: sun/security/pkcs11/KeyAgreement/SupportedDHKeys.java fails on solaris
+  - S8156502: Use short name of SupportedEllipticCurvesExtension.java
+  - S8157548: JVM crashes sometimes while starting
+  - S8157603: TestCipher.java doesn't check one of the decrypted message as expected
+  - S8158116: com/sun/crypto/provider/KeyAgreement/SupportedDHParamGens.java failed with timeout
+  - S8159240: XSOM parser incorrectly processes type names with whitespaces
+  - S8163237: Restrict the use of EXPORT cipher suites
+  - S8163958: Improved garbage collection [test case]
+  - S8166248: tools/pack200/Pack200Test.java fails on Win32: Could not reserve enough space
+  - S8166362: [TEST_BUG] test sun/net/www/http/HttpClient/B8025710.java failing with cert error in 8u121 b01
+  - S8170157: Enable unlimited cryptographic policy by default in OracleJDK
+  - S8170245: [TEST_BUG] Cipher tests fail when running with unlimited policy
+  - S8170536: Uninitialised memory in set_uintx_flag of attachListener.cpp
+  - S8177144: [TEST BUG] sun/net/www/http/HttpClient/B8025710.java should run in ovm mode
+  - S8178728: Check the AlgorithmParameters in algorithm constraints
+  - S8180048: Interned string and symbol table leak memory during parallel unlinking
+  - S8184016: Text in native popup is not always updated with Sogou IME
+  - S8185628: Backport jdk/test/lib/testlibrary/CompilerUtils.java to jdk8u which is helpful in test development
+  - S8185719: rmi TestSocketFactory does not flush
+  - S8185909: Disable JARs signed with DSA keys less than 1024 bits
+  - S8186539: [testlibrary] TestSocketFactory should allow triggers before match/replace
+  - S8187667, PR3518: Disable deprecation warning for readdir_r
+  - S8188880: A JAXB JCK test failure found after 8186080
+  - S8190258, PR3500: (tz) Support tzdata2017c
+  - S8190259, PR3500: test tck.java.time.zone.TCKZoneRules is broken by tzdata2017c
+  - S8190266: closed/java/awt/ComponentOrientation/WindowTest.java throws java.util.MissingResourceException.
+  - S8190449: sun/security/pkcs11/KeyPairGenerator/TestDH2048.java fails on Solaris x64 5.10
+  - S8190497: DHParameterSpec.getL() returns zero after JDK-8072452
+  - S8190541: 8u161 L10n resource file update
+  - S8190789: sun/security/provider/certpath/LDAPCertStore/TestURICertStoreParameters.java fails after JDK-8186606
+  - S8192793: 8u161 L10n resource file update md20
+  - S8193683: Increase the number of clones in the CloneableDigest
+  - S8194859: Bad backport of 8024468 breaks Zero build due to lack of 8010862 in OpenJDK 7
+  - S8195837: (tz) Upgrade time-zone data to tzdata2018c
+* Import of OpenJDK 7 u171 build 1
+  - S8007772: G1: assert(!hr->isHumongous() || mr.start() == hr->bottom()) failed: the start of HeapRegion and MemRegion should be consistent for humongous regions
+  - S8022956: Clang: enable return type warnings on BSD
+  - S8043029: Change 8037816 breaks HS build with older GCC versions which don't support diagnostic pragmas
+  - S8048169: Change 8037816 breaks HS build on PPC64 and CPP-Interpreter platforms
+  - S8062808: Turn on the -Wreturn-type warning
+  - S8064786: Fix debug build after 8062808: Turn on the -Wreturn-type warning
+  - S8143245: Zero build requires disabled warnings
+  - S8196952, PR3525: Bad primeCertainty value setting in DSAParameterGenerator
+  - S8196978: JDK-8187667 fails on GCC 4.4.7 as found on RHEL 6
+  - S8197510: fastdebug builds fail due to lack of p2i
+  - S8197801: Zero debug build fails on "assert(labs(istate->_stack_base - istate->_stack_limit) == (istate->_method->max_stack() + extra_stack_entries + 1)) failed: bad stack limit"
+* Import of OpenJDK 7 u171 build 2
+  - S8197981: Missing return statement in __sync_val_compare_and_swap_8
+* Backports
+  - S7189886, PR3507: (aio) Add test coverage for AsynchronousChannelGroup.withThreadPool
+  - S7200306, PR3507: SunPKCS11 provider delays the check of DSA key size for SHA1withDSA to sign() instead of init()
+  - S8012930, PR3507: (fs) Eliminate recursion from FileTreeWalker
+  - S8013647, PR3507: JPRT unable to clean-up after tests that leave file trees with loops
+  - S8020321, PR3507: Problem in PKCS11 regression test TestRSAKeyLength
+  - S8022313, PR3507: sun/security/pkcs11/rsa/TestKeyPairGenerator.java failed in aurora
+  - S8027218, PR3507: TEST_BUG: sun/security/pkcs11/ec tests fail because of ever-changing key size restrictions
+  - S8029158, PR3507: sun/security/pkcs11/Signature/TestDSAKeyLength.java does not compile (or run)
+  - S8031113, PR3507: TEST_BUG: java/nio/channels/AsynchronousChannelGroup/Basic.java fails intermittently
+  - S8048603, PR3507: Additional tests for MAC algorithms
+  - S8048622, PR3507: Enhance tests for PKCS11 keystores with NSS
+  - S8075565, PR3337: Define @intermittent jtreg keyword and mark intermittently failing jdk tests
+  - S8075670, PR3507: Remove intermittent keyword from some tests
+  - S8078334, PR3507: Mark regression tests using randomness
+  - S8078880, PR3507: Mark a few more intermittently failuring security-libs
+  - S8133318, PR3507: Exclude intermittent failing PKCS11 tests on Solaris SPARC 11.1 and earlier
+  - S8144539, PR3507: Update PKCS11 tests to run with security manager
+  - S8151731, PR3337: Add new jtreg keywords to jdk 8
+  - S8165996, PR3507: PKCS11 using NSS throws an error regarding secmod.db when NSS uses sqlite
+  - S8170523, PR3507: Some PKCS11 test cases are ignored with security manager
+  - S8196516, PR3524: [REDO] [linux] libfontmanager should be linked against headless awt library
+* AArch64 port
+  - S8193133, PR3521: Assertion failure because 0xDEADDEAD can be in-heap
+  - PR3521: Fix functions with missing return value.
+  - PR3521: Fix further functions with a missing return value.
+
 New in release 2.6.12 (2017-12-05):
 
 * Security fixes
