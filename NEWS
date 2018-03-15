@@ -12,6 +12,62 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.8.0 (2018-03-XX):
 
+* Import of OpenJDK 8 u162 build 12
+  - S4354680: Runtime.runFinalization() silently clears interrupted flag in the calling thread
+  - S6618335: ThreadReference.stop(null) throws NPE instead of InvalidTypeException
+  - S6651256: jstack: DeleteGlobalRef method call doesn't lead to descreasing of global refs count shown by jstack
+  - S6656031: SA: jmap -permstat number of classes is off by 1
+  - S6977426: sun/tools tests can intermittently fail to find app's Java pid
+  - S6988950: JDWP exit error JVMTI_ERROR_WRONG_PHASE(112)
+  - S7124271: [macosx] RealSync test failure
+  - S7162125: [macosx] A font has different behaviour for ligatures depending on its creation mod
+  - S8023667: SA: ExceptionBlob and other C2 classes not available in client VM
+  - S8031661: java/net/Authenticator/B4769350.java failed intermittently
+  - S8046778: Better error messages when starting JMX agent via attach or jcmd
+  - S8066185: VM crashed with SIGSEGV VirtualMemoryTracker::add_reserved_region
+  - S8072428: Enable UseLoopCounter ergonomically if on-stack-replacement is enabled
+  - S8073670: TypeF::eq and TypeD::eq do not handle NaNs correctly
+  - S8074812: More specific error message when the .java_pid well-known file is not secure
+  - S8078269: JTabbedPane UI Property TabbedPane.tabAreaBackground no longer works
+  - S8080504: [macosx] SunToolkit.realSync() may hang
+  - S8087291: InitialBootClassLoaderMetaspaceSize and CompressedClassSpaceSize should be checked consistent from MaxMetaspaceSize
+  - S8132374: AIX: fix value of os.version property
+  - S8134103: JVMTI_ERROR_WRONG_PHASE(112): on checking for an interface
+  - S8139218: Dialog that opens and closes quickly changes focus in original focusowner
+  - S8147002: [macosx] Arabic character cannot be rendered on MacOS X
+  - S8148786: xml.tranform fails on x86-64
+  - S8155197: Focus transition issue
+  - S8157896: TestDSAGenParameterSpec.java test fails with timeout
+  - S8158633: BASE64 encoded cert not correctly parsed with UTF-16
+  - S8159432: [PIT][macosx] StackOverflow in closed/java/awt/Dialog/DialogDeadlock/DialogDeadlockTest
+  - S8162530: src/jdk.management/share/native/libmanagement_ext/GcInfoBuilder.c doesn't handle JNI exceptions properly
+  - S8164954: split_if creates empty phi and region nodes
+  - S8166742: SIGFPE in C2 Loop IV elimination
+  - S8169961: Memory leak after debugging session
+  - S8172751: OSR compilation at unreachable bci causes C1 crash
+  - S8175340: Possible invalid memory accesses due to ciMethodData::bci_to_data() returning NULL
+  - S8177026: jvm.dll file version not updated since 8u72
+  - S8177414: Missing key events on Mac Os
+  - S8177958: Possible uninitialized char* in vm_version_solaris_sparc.cpp
+  - S8178047: Aliasing problem with raw memory accesses
+  - S8179086: java.time.temporal.ValueRange has poor hashCode()
+  - S8180370: Characters are skipped on input of Korean text on OS X
+  - S8180855: Null pointer dereference in OopMapSet::all_do of oopMap.cpp:394
+  - S8181659: Create an alternative fix for JDK-8167102, whose fix was backed out
+  - S8181786: Extra runLater causes impossible states to be possible using javafx.embed.singleThread=true
+  - S8182402: Tooltip for Desktop button is in English when non-English locale is set
+  - S8182996: Incorrect mapping Long type to JavaScript equivalent
+  - S8184009: Missing null pointer check in InterpreterRuntime::update_mdp_for_ret()
+  - S8184271: Time related C1 intrinsics produce inconsistent results when floating around
+  - S8184328: JDK 8u131 socketRead0 hang at SSL read
+  - S8184893: jdk8u152 b06 : issues with nashorn when running kraken benchmarks
+  - S8185346: Relax RMI Registry Serial Filter to allow arrays of any type
+  - S8187023: Cannot read pkcs11 config file in UTF-16 environment
+  - S8189918: Remove Trailing whitespace from file while syncing 8u into 8u162-b03
+  - S8190280: [macos] Font2DTest demo started failing for Arabic range from JDK 8 u162 b01 on Mac
+  - S8190542: 8u162 L10n resource file update
+  - S8192794: 8u162 L10n resource file update md20
+
 New in release 3.7.0 (2018-02-28):
 
 * Security fixes
