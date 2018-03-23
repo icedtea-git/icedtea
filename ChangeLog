@@ -1,3 +1,19 @@
+2018-03-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump aarch32 to jdk8u162-b12-aarch32-180220.
+	* patches/hotspot/aarch32/8145913-pr3466-rh1498309.patch,
+	* patches/hotspot/aarch32/8168318-pr3466-rh1498320.patch,
+	* patches/hotspot/aarch32/8170328-pr3466-rh1498321.patch,
+	* patches/hotspot/aarch32/8181055-pr3394-rh1448880.patch,
+	* patches/hotspot/aarch32/8181810-pr3466-rh1498319.patch,
+	* patches/hotspot/aarch32/8185164-pr3438.patch:
+	Remove as applied upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove unneeded AArch32-only patches
+	now that port is on 8u162 like the others.
+	* hotspot.map.in: Bump aarch32 to
+	jdk8u162-b12-aarch32-180220.
+
 2018-03-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump shenandoah to aarch64-shenandoah-jdk8u162-b12.

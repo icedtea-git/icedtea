@@ -348,15 +348,9 @@ ICEDTEA_PATCHES = \
 if WITH_ALT_HSBUILD
 
 # Patches only for AArch32
-if WITH_AARCH32_HSBUILD
-ICEDTEA_PATCHES += \
-	patches/hotspot/$(HSBUILD)/8145913-pr3466-rh1498309.patch \
-	patches/hotspot/$(HSBUILD)/8168318-pr3466-rh1498320.patch \
-	patches/hotspot/$(HSBUILD)/8170328-pr3466-rh1498321.patch \
-	patches/hotspot/$(HSBUILD)/8181055-pr3394-rh1448880.patch \
-	patches/hotspot/$(HSBUILD)/8181810-pr3466-rh1498319.patch \
-	patches/hotspot/$(HSBUILD)/8185164-pr3438.patch
-endif
+#if WITH_AARCH32_HSBUILD
+#ICEDTEA_PATCHES += \
+#endif
 
 ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8038392-rh1064383.patch \
