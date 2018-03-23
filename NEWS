@@ -67,6 +67,8 @@ New in release 3.8.0 (2018-03-XX):
   - S8190280: [macos] Font2DTest demo started failing for Arabic range from JDK 8 u162 b01 on Mac
   - S8190542: 8u162 L10n resource file update
   - S8192794: 8u162 L10n resource file update md20
+* Shenandoah
+  - Remove oop cast in oopMap.cpp again, as oopDesc::operator== has additional checking in Shenandoah.
 
 New in release 3.7.0 (2018-02-28):
 

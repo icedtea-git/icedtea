@@ -1,3 +1,35 @@
+2018-03-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump shenandoah to aarch64-shenandoah-jdk8u162-b12.
+	* patches/hotspot/shenandoah/8145913-pr3466-rh1498309.patch,
+	* patches/hotspot/shenandoah/8168318-pr3466-rh1498320.patch,
+	* patches/hotspot/shenandoah/8170328-pr3466-rh1498321.patch,
+	* patches/hotspot/shenandoah/8181055-pr3394-rh1448880.patch,
+	* patches/hotspot/shenandoah/8181810-pr3466-rh1498319.patch,
+	* patches/hotspot/shenandoah/8185164-pr3438.patch:
+	Remove as applied upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Move upstreamed patches to AArch32 only.
+	Split out aarch64 part of 8158260 so the rest can be
+	shared between Shenandoah and AArch32.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u162-b12.
+	* patches/hotspot/aarch32/8145913-pr3466-rh1498309.patch:
+	Moved to aarch32 patches tree as applied in upstream
+	Shenandoah.
+	* patches/hotspot/aarch32/8158260-pr2991-rh1341258.patch:
+	Replace with symlink to Shenandoah version.
+	* patches/hotspot/aarch32/8168318-pr3466-rh1498320.patch,
+	* patches/hotspot/aarch32/8170328-pr3466-rh1498321.patch,
+	* patches/hotspot/aarch32/8181810-pr3466-rh1498319.patch,
+	* patches/hotspot/aarch32/8185164-pr3438.patch:
+	Moved to aarch32 patches tree as applied in upstream
+	Shenandoah.
+	* patches/hotspot/shenandoah/8158260-pr2991-rh1341258-aarch64.patch,
+	* patches/hotspot/shenandoah/8158260-pr2991-rh1341258.patch:
+	Split out AArch64 segment so rest can be shared with AArch32.
+
 2018-03-15  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.8.0pre01.
