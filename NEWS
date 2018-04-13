@@ -68,6 +68,7 @@ New in release 3.8.0 (2018-03-XX):
   - S8190542: 8u162 L10n resource file update
   - S8192794: 8u162 L10n resource file update md20
 * Bug fixes
+  - PR3549: Desktop file doesn't reference versioned icon
   - PR3550: Additional category used in jconsole.desktop.in is incorrect
 * Shenandoah
   - Remove oop cast in oopMap.cpp again, as oopDesc::operator== has additional checking in Shenandoah.

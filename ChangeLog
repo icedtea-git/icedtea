@@ -1,3 +1,11 @@
+2015-07-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3549: Desktop file doesn't reference versioned icon
+	* NEWS: Updated
+	* jconsole.desktop.in:
+	Set Icon to java-@JAVA_VER@, so the icon can be found.
+	* policytool.desktop.in: Likewise.
+
 2018-04-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3550: Additional category used in jconsole.desktop.in is incorrect

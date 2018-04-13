@@ -2,7 +2,7 @@
 Name=OpenJDK @JAVA_VER@ Monitoring & Management Console
 Comment=Monitor and manage OpenJDK applications
 Exec=_BINDIR_/jconsole
-Icon=java
+Icon=java-@JAVA_VER@
 Terminal=false
 Type=Application
 StartupWMClass=sun-tools-jconsole-JConsole

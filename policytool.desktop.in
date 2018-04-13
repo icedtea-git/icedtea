@@ -2,7 +2,7 @@
 Name=OpenJDK @JAVA_VER@ Policy Tool
 Comment=Manage OpenJDK policy files
 Exec=_BINDIR_/policytool
-Icon=java
+Icon=java-@JAVA_VER@
 Terminal=false
 Type=Application
 StartupWMClass=sun-security-tools-PolicyTool
