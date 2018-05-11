@@ -12,6 +12,8 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.8.0 (2018-03-XX):
 
+ * New features
+  - PR3493: Run AES test to test intrinsics
 * Import of OpenJDK 8 u162 build 12
   - S4354680: Runtime.runFinalization() silently clears interrupted flag in the calling thread
   - S6618335: ThreadReference.stop(null) throws NPE instead of InvalidTypeException

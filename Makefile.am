@@ -76,6 +76,7 @@ STAGE2_BOOT_DIR = $(abs_top_builddir)/bootstrap/icedtea
 JAMVM_IMPORT_PATH = $(abs_top_builddir)/jamvm/install/hotspot
 CRYPTO_CHECK_BUILD_DIR = $(abs_top_builddir)/test/cryptocheck.build
 ECC_CHECK_BUILD_DIR = $(abs_top_builddir)/test/ecccheck.build
+AES_CHECK_BUILD_DIR = $(abs_top_builddir)/aescheck.build
 
 # Installation directories
 
@@ -337,6 +338,7 @@ CRYPTO_CHECK_SRCS = $(top_srcdir)/test/standalone/TestCryptoLevel.java
 
 ECC_CHECK_SRCS = $(top_srcdir)/test/standalone/TestEllipticCurveCryptoSupport.java \
 	$(top_srcdir)/test/standalone/TestECDSA.java
+AES_CHECK_SRC = openjdk/hotspot/test/compiler/7184394/TestAESMain.java
 
 # Patch list
 
@@ -809,10 +811,12 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 all-local: icedtea-stage2 $(DESKTOP_FILES)
 
 check-local: jtregcheck $(SYSTEMTAP_TEST_SUITE) stamps/check-ecc.stamp \
- stamps/check-java-debug.stamp stamps/check-java-src.stamp
+ stamps/check-java-debug.stamp stamps/check-java-src.stamp \
+ stamps/check-aes.stamp
 
 clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports clean-check-ecc \
- clean-check-java-debug clean-check-java-src
+ clean-check-java-debug clean-check-java-src clean-check-aes clean-ecccheck \
+ clean-aescheck clean-cryptocheck
 
 clean-local: clean-tests \
  clean-icedtea clean-icedtea-debug clean-icedtea-boot clean-clone clean-clone-boot \
@@ -820,9 +824,8 @@ clean-local: clean-tests \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
  clean-extract clean-icedtea-stage2 clean-icedtea-debug-stage2 clean-icedtea-stage1 \
  clean-add-zero clean-add-zero-debug clean-add-cacao clean-add-cacao-debug \
- clean-cryptocheck clean-ecccheck clean-policytool-@JAVA_VER@.desktop \
- clean-jconsole-@JAVA_VER@.desktop clean-add-nss clean-add-nss-debug \
- clean-add-tzdata-support clean-add-tzdata-support-debug \
+ clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop \
+ clean-add-nss clean-add-nss-debug clean-add-tzdata-support clean-add-tzdata-support-debug \
  clean-add-systemtap clean-add-systemtap-debug
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
@@ -863,7 +866,7 @@ distclean-local: clean-local clean-download
 	clean-split-debuginfo clean-split-debuginfo-debug clean-split-debuginfo-boot \
 	clean-add-nss clean-add-nss-debug clean-add-tzdata-support clean-add-tzdata-support-debug \
 	clean-add-systemtap clean-add-systemtap-debug clean-add-systemtap-boot clean-add-nss-boot \
-	clean-add-tzdata-support-boot
+	clean-add-tzdata-support-boot clean-aescheck clean-check-aes
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -2925,6 +2928,33 @@ jconsole-@JAVA_VER@.desktop: jconsole.desktop
 clean-jconsole-@JAVA_VER@.desktop:
 	rm -f jconsole-@JAVA_VER@.desktop
 
+# AES Intrinstic Check
+
+stamps/aescheck-build.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP) stamps/extract-hotspot.stamp
+	mkdir -p $(AES_CHECK_BUILD_DIR)
+	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) -cp `dirname $(AES_CHECK_SRC)` \
+	  -d $(AES_CHECK_BUILD_DIR) $(AES_CHECK_SRC)
+	mkdir -p stamps
+	touch $@
+
+clean-aescheck:
+	rm -rf $(AES_CHECK_BUILD_DIR)
+	rm -f stamps/aescheck-build.stamp
+
+stamps/check-aes.stamp: stamps/aescheck-build.stamp stamps/icedtea.stamp
+	set -e ; \
+	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
+	  cat $(AES_CHECK_SRC)|grep '@run'|cut -d ' ' -f 5-|while read command; do \
+	    $(BUILD_SDK_DIR)/bin/java -cp $(AES_CHECK_BUILD_DIR) \
+	      -XX:+UseAESIntrinsics $${command} ; \
+	  done ; \
+	fi
+	mkdir -p stamps
+	touch $@
+
+clean-check-aes:
+	rm -f stamps/check-aes.stamp
+
 # Installation Targets
 # ====================
 
@@ -3384,6 +3414,8 @@ add-zero: stamps/add-zero.stamp
 
 add-zero-debug: stamps/add-zero-debug.stamp
 
+aescheck-build: stamps/aescheck-build.stamp
+
 bootstrap-directory-stage1: stamps/bootstrap-directory-stage1.stamp
 
 bootstrap-directory-stage2: stamps/bootstrap-directory-stage2.stamp
@@ -3399,6 +3431,8 @@ cacao-build: stamps/cacao-build.stamp
 cacao-configure: stamps/cacao-configure.stamp
 
 cacao-install: stamps/cacao-install.stamp
+
+check-aes: stamps/check-aes.stamp
 
 check-crypto: stamps/check-crypto.stamp
 
