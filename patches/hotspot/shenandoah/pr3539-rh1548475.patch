@@ -1,0 +1,116 @@
+# HG changeset patch
+# User andrew
+# Date 1526065930 -3600
+#      Fri May 11 20:12:10 2018 +0100
+# Node ID b8fc1e640c4c7f38ca94131279cb67c4d3de6961
+# Parent  afb31413c73cbc06420fdb447aa90a7a38258904
+PR3539, RH1548475: Pass EXTRA_LDFLAGS to HotSpot build
+
+diff --git openjdk.orig/hotspot/make/aix/makefiles/jsig.make openjdk/hotspot/make/aix/makefiles/jsig.make
+--- openjdk.orig/hotspot/make/aix/makefiles/jsig.make
++++ openjdk/hotspot/make/aix/makefiles/jsig.make
+@@ -45,7 +45,7 @@
+ # cause problems with interposing. See CR: 6466665
+ # LFLAGS_JSIG += $(MAPFLAG:FILENAME=$(LIBJSIG_MAPFILE))
+ 
+-LFLAGS_JSIG += -D_GNU_SOURCE -D_REENTRANT $(LDFLAGS_HASH_STYLE)
++LFLAGS_JSIG += -D_GNU_SOURCE -D_REENTRANT $(LDFLAGS_HASH_STYLE) $(EXTRA_LDFLAGS)
+ 
+ LFLAGS_JSIG += $(BIN_UTILS)
+ 
+diff --git openjdk.orig/hotspot/make/aix/makefiles/saproc.make openjdk/hotspot/make/aix/makefiles/saproc.make
+--- openjdk.orig/hotspot/make/aix/makefiles/saproc.make
++++ openjdk/hotspot/make/aix/makefiles/saproc.make
+@@ -66,7 +66,7 @@
+ endif
+ 
+ 
+-SA_LFLAGS = $(MAPFLAG:FILENAME=$(SAMAPFILE)) $(LDFLAGS_HASH_STYLE)
++SA_LFLAGS = $(MAPFLAG:FILENAME=$(SAMAPFILE)) $(LDFLAGS_HASH_STYLE) $(EXTRA_LDFLAGS)
+ 
+ $(LIBSAPROC): $(SASRCFILES) $(SAMAPFILE)
+ 	$(QUIETLY) if [ "$(BOOT_JAVA_HOME)" = "" ]; then \
+diff --git openjdk.orig/hotspot/make/aix/makefiles/vm.make openjdk/hotspot/make/aix/makefiles/vm.make
+--- openjdk.orig/hotspot/make/aix/makefiles/vm.make
++++ openjdk/hotspot/make/aix/makefiles/vm.make
+@@ -117,7 +117,7 @@
+ 
+ # Extra flags from gnumake's invocation or environment
+ CFLAGS += $(EXTRA_CFLAGS)
+-LFLAGS += $(EXTRA_CFLAGS)
++LFLAGS += $(EXTRA_CFLAGS) $(EXTRA_LDFLAGS)
+ 
+ # Don't set excutable bit on stack segment
+ # the same could be done by separate execstack command
+diff --git openjdk.orig/hotspot/make/bsd/makefiles/jsig.make openjdk/hotspot/make/bsd/makefiles/jsig.make
+--- openjdk.orig/hotspot/make/bsd/makefiles/jsig.make
++++ openjdk/hotspot/make/bsd/makefiles/jsig.make
+@@ -52,7 +52,7 @@
+ # cause problems with interposing. See CR: 6466665
+ # LFLAGS_JSIG += $(MAPFLAG:FILENAME=$(LIBJSIG_MAPFILE))
+ 
+-LFLAGS_JSIG += -D_GNU_SOURCE -pthread $(LDFLAGS_HASH_STYLE)
++LFLAGS_JSIG += -D_GNU_SOURCE -pthread $(LDFLAGS_HASH_STYLE) $(EXTRA_LDFLAGS)
+ 
+ # DEBUG_BINARIES overrides everything, use full -g debug information
+ ifeq ($(DEBUG_BINARIES), true)
+diff --git openjdk.orig/hotspot/make/bsd/makefiles/saproc.make openjdk/hotspot/make/bsd/makefiles/saproc.make
+--- openjdk.orig/hotspot/make/bsd/makefiles/saproc.make
++++ openjdk/hotspot/make/bsd/makefiles/saproc.make
+@@ -114,7 +114,7 @@
+ # bring in minimum version argument or we'll fail on OSX 10.10
+ SA_LFLAGS = $(LFLAGS)
+ endif
+-SA_LFLAGS += $(LDFLAGS_HASH_STYLE)
++SA_LFLAGS += $(LDFLAGS_HASH_STYLE) $(EXTRA_LDFLAGS)
+ 
+ BOOT_JAVA_INCLUDES = -I$(BOOT_JAVA_HOME)/include \
+   -I$(BOOT_JAVA_HOME)/include/$(shell uname -s | tr "[:upper:]" "[:lower:]")
+diff --git openjdk.orig/hotspot/make/bsd/makefiles/vm.make openjdk/hotspot/make/bsd/makefiles/vm.make
+--- openjdk.orig/hotspot/make/bsd/makefiles/vm.make
++++ openjdk/hotspot/make/bsd/makefiles/vm.make
+@@ -119,7 +119,7 @@
+ 
+ # Extra flags from gnumake's invocation or environment
+ CFLAGS += $(EXTRA_CFLAGS)
+-LFLAGS += $(EXTRA_CFLAGS)
++LFLAGS += $(EXTRA_CFLAGS) $(EXTRA_LDFLAGS)
+ 
+ # Don't set excutable bit on stack segment
+ # the same could be done by separate execstack command
+diff --git openjdk.orig/hotspot/make/linux/makefiles/jsig.make openjdk/hotspot/make/linux/makefiles/jsig.make
+--- openjdk.orig/hotspot/make/linux/makefiles/jsig.make
++++ openjdk/hotspot/make/linux/makefiles/jsig.make
+@@ -44,7 +44,7 @@
+ # cause problems with interposing. See CR: 6466665
+ # LFLAGS_JSIG += $(MAPFLAG:FILENAME=$(LIBJSIG_MAPFILE))
+ 
+-LFLAGS_JSIG += -D_GNU_SOURCE -D_REENTRANT $(LDFLAGS_HASH_STYLE)
++LFLAGS_JSIG += -D_GNU_SOURCE -D_REENTRANT $(LDFLAGS_HASH_STYLE) $(EXTRA_LDFLAGS)
+ 
+ # DEBUG_BINARIES overrides everything, use full -g debug information
+ ifeq ($(DEBUG_BINARIES), true)
+diff --git openjdk.orig/hotspot/make/linux/makefiles/saproc.make openjdk/hotspot/make/linux/makefiles/saproc.make
+--- openjdk.orig/hotspot/make/linux/makefiles/saproc.make
++++ openjdk/hotspot/make/linux/makefiles/saproc.make
+@@ -73,7 +73,7 @@
+ else
+ ALT_SAINCDIR=
+ endif
+-SA_LFLAGS = $(MAPFLAG:FILENAME=$(SAMAPFILE)) $(LDFLAGS_HASH_STYLE)
++SA_LFLAGS = $(MAPFLAG:FILENAME=$(SAMAPFILE)) $(LDFLAGS_HASH_STYLE) $(EXTRA_LDFLAGS)
+ 
+ SAARCH ?= $(BUILDARCH)
+ 
+diff --git openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make/linux/makefiles/vm.make
+--- openjdk.orig/hotspot/make/linux/makefiles/vm.make
++++ openjdk/hotspot/make/linux/makefiles/vm.make
+@@ -130,7 +130,7 @@
+ 
+ # Extra flags from gnumake's invocation or environment
+ CFLAGS += $(EXTRA_CFLAGS)
+-LFLAGS += $(EXTRA_CFLAGS)
++LFLAGS += $(EXTRA_CFLAGS) $(EXTRA_LDFLAGS)
+ 
+ # Don't set excutable bit on stack segment
+ # the same could be done by separate execstack command

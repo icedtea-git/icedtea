@@ -1,0 +1,21 @@
+# HG changeset patch
+# User aph
+# Date 1524508361 -3600
+#      Mon Apr 23 19:32:41 2018 +0100
+# Node ID 5460c427c0dcb335f510cbc2ea1d76c6921b1aaa
+# Parent  6275d7b419091092752d5a1854194c98897892ba
+8200556, PR3566: AArch64: assertion failure in slowdebug builds
+Reviewed-by: adinn
+
+diff --git openjdk.orig/hotspot/src/cpu/aarch64/vm/nativeInst_aarch64.cpp openjdk/hotspot/src/cpu/aarch64/vm/nativeInst_aarch64.cpp
+--- openjdk.orig/hotspot/src/cpu/aarch64/vm/nativeInst_aarch64.cpp
++++ openjdk/hotspot/src/cpu/aarch64/vm/nativeInst_aarch64.cpp
+@@ -302,7 +302,7 @@
+   CodeBuffer cb(code_pos, instruction_size);
+   MacroAssembler a(&cb);
+ 
+-  a.mov(rscratch1, entry);
++  a.movptr(rscratch1, (uintptr_t)entry);
+   a.br(rscratch1);
+ 
+   ICache::invalidate_range(code_pos, instruction_size);

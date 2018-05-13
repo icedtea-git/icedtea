@@ -1,0 +1,36 @@
+# HG changeset patch
+# User mbalao
+# Date 1525317412 -3600
+#      Thu May 03 04:16:52 2018 +0100
+# Node ID de79964656fc652f2085dac4fe99bcc128b5a3b1
+# Parent  ffd5260fe5adcb26f87a14f1aaaf3e1a075d712a
+8201509, PR3579: Zero: S390 31bit atomic_copy64 inline assembler is wrong
+Summary: The inline assembler for the S390 (S390 and not _LP64) has src and dst reversed thereby corrupting data
+Reviewed-by: shade
+
+diff --git openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
+--- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
++++ openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
+@@ -1,6 +1,6 @@
+ /*
+  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.
+- * Copyright 2007, 2008, 2010 Red Hat, Inc.
++ * Copyright 2007, 2008, 2010, 2018, Red Hat, Inc.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -50,10 +50,10 @@
+                   : "Q"(*(volatile long*)src));
+ #elif defined(S390) && !defined(_LP64)
+     double tmp;
+-    asm volatile ("ld  %0, 0(%1)\n"
+-                  "std %0, 0(%2)\n"
+-                  : "=r"(tmp)
+-                  : "a"(src), "a"(dst));
++    asm volatile ("ld  %0, %2\n"
++                  "std %0, %1\n"
++                  : "=&f"(tmp), "=Q"(*(volatile double*)dst)
++                  : "Q"(*(volatile double*)src));
+ #elif defined(__ARM_ARCH_7A__)
+     jlong tmp;
+     asm volatile ("ldrexd  %0, [%1]\n"

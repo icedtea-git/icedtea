@@ -69,9 +69,26 @@ New in release 3.8.0 (2018-03-XX):
   - S8190280: [macos] Font2DTest demo started failing for Arabic range from JDK 8 u162 b01 on Mac
   - S8190542: 8u162 L10n resource file update
   - S8192794: 8u162 L10n resource file update md20
+* Backports
+  - S8062808, PR3548: Turn on the -Wreturn-type warning
+  - S8141570, PR3548: Fix Zero interpreter build for --disable-precompiled-headers
+  - S8143245, PR3548: Zero build requires disabled warnings
+  - S8165489, PR3589: Missing G1 barrier in Unsafe_GetObjectVolatile
+  - S8171000, PR3542, RH1402819: Robot.createScreenCapture() crashes in wayland mode
+  - S8185723, PR3553: Zero: segfaults on Power PC 32-bit
+  - S8186461, PR3557: Zero's atomic_copy64() should use SPE instructions on linux-powerpcspe
+  - S8187577, PR3578: JVM crash during gc doing concurrent marking
+  - S8197429, PR3546, RH1536622: Increased stack guard causes segfaults on x86-32
+  - S8197546, PR3542: Fix for 8171000 breaks Solaris + Linux builds
+  - S8200556, PR3566: AArch64: assertion failure in slowdebug builds
+  - S8201509, PR3579: Zero: S390 31bit atomic_copy64 inline assembler is wrong
 * Bug fixes
+  - PR3533: HotSpot generates code with unaligned stack, crashes on SSE operations
+  - PR3539, RH1548475: Pass EXTRA_LDFLAGS to HotSpot build
   - PR3549: Desktop file doesn't reference versioned icon
   - PR3550: Additional category used in jconsole.desktop.in is incorrect
+  - PR3559: Use ldrexd for atomic reads on ARMv7.
+  - PR3575, RH1567204: System cacerts database handling should not affect jssecacerts
 * Shenandoah
   - Remove oop cast in oopMap.cpp again, as oopDesc::operator== has additional checking in Shenandoah.
 

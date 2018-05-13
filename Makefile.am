@@ -4,21 +4,21 @@ JDK_UPDATE_VERSION = 162
 BUILD_VERSION = b12
 COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(BUILD_VERSION)
 
-CORBA_CHANGESET = 7617ee6aaaea
-JAXP_CHANGESET = f802ca5202ba
-JAXWS_CHANGESET = 2ad08048a6a5
-JDK_CHANGESET = 0a89388f0b97
-LANGTOOLS_CHANGESET = 831896b367a4
-OPENJDK_CHANGESET = fbfdb1550327
-NASHORN_CHANGESET = 5afa6751113d
+CORBA_CHANGESET = 049dc4a6e4e0
+JAXP_CHANGESET = 9e4260f4a0ef
+JAXWS_CHANGESET = 92b8de88a9ab
+JDK_CHANGESET = 388fc8da2304
+LANGTOOLS_CHANGESET = 4a11d88aab1d
+OPENJDK_CHANGESET = 00ccc7349862
+NASHORN_CHANGESET = 2fd73cb3eef5
 
-CORBA_SHA256SUM = e36b3a731bc1be6b2a7f3011a04751b422d6c3d9a71f9d8092d40b2335ce7d59
-JAXP_SHA256SUM = 71eafc717ee0bf1462fab4e73695f2d8b7deb1190b86ef1c3e881f5e2b1b9c69
-JAXWS_SHA256SUM = e69ecaa1a91c8de4faf449c862298575711ed3cd3ba6ddaa90dec4c61190f60c
-JDK_SHA256SUM = 627ada20a2270aa983b9edad228728c7d7424c6b71923f31acc71d7ced97d71d
-LANGTOOLS_SHA256SUM = 8619b4e448c40afbb26c0f9e4a0913ee435fcaa75a9ab4fa3959c476ac273b74
-OPENJDK_SHA256SUM = ee4bbed5aeabe273b72690f584ad3de30ba6af372c77bb4976e39271bca98431
-NASHORN_SHA256SUM = 561a02e5133e37ebf35a037b0e3e1d316b2e2248f1057726ad0c24a4c28a2a58
+CORBA_SHA256SUM = e1e00594b58374e08fd53bd9891c0bb5080acb19aa3dc5d9faa3dd07b0ce7e80
+JAXP_SHA256SUM = b625d3ac4734f73e1fcbc9b2557fb31a9f25625055617746ec0cdd1bcd3c178f
+JAXWS_SHA256SUM = 7d183dc27f3761565e526d85520c094197547e206a969787d76335a2f333a831
+JDK_SHA256SUM = 8ff371438a816a8a9970f4ab76fb4e3b9728508d024045876af4cce0311c85e2
+LANGTOOLS_SHA256SUM = 8a72ae4cedbea13668f435a555dbbb6ce0ddd0d604b4fae96ac9151bde860e5f
+OPENJDK_SHA256SUM = bfc6ab0ecbc6e8072f6fc51bc96ad5aefbb54f22028c980bda6ff63f094125ed
+NASHORN_SHA256SUM = c533193aff27b6833a05e2b80ea948d54eefd175167d8003fa337655003ff458
 
 HS_TYPE = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_builddir)/hotspot.map`"
 HS_URL = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_builddir)/hotspot.map`"
@@ -375,13 +375,25 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8187822-pr3478-rh1494230.patch \
 	patches/hotspot/$(HSBUILD)/8035496-pr3487.patch \
 	patches/hotspot/$(HSBUILD)/8187667-pr3517-readdir_r.patch \
-	patches/hotspot/$(HSBUILD)/8196978-pr3517-gcc_4_pragmas.patch
+	patches/hotspot/$(HSBUILD)/8196978-pr3517-gcc_4_pragmas.patch \
+	patches/hotspot/$(HSBUILD)/8062808-pr3548.patch \
+	patches/hotspot/$(HSBUILD)/8141570-pr3548.patch \
+	patches/hotspot/$(HSBUILD)/8143245-pr3548.patch \
+	patches/hotspot/$(HSBUILD)/8165489-pr3589.patch \
+	patches/hotspot/$(HSBUILD)/8185723-pr3553.patch \
+	patches/hotspot/$(HSBUILD)/8186461-pr3557.patch \
+	patches/hotspot/$(HSBUILD)/8187577-pr3578.patch \
+	patches/hotspot/$(HSBUILD)/8197429-pr3546-rh1536622.patch \
+	patches/hotspot/$(HSBUILD)/pr3559.patch \
+	patches/hotspot/$(HSBUILD)/8201509-pr3579.patch \
+	patches/hotspot/$(HSBUILD)/pr3539-rh1548475.patch
 endif
 
-# Shenandoah has the AArch64 port so should get the return value fixes
+# Shenandoah has the AArch64 port so should get the return value & debug build fixes
 if WITH_SHENANDOAH_HSBUILD
 ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8158260-pr2991-rh1341258-aarch64.patch \
+	patches/hotspot/$(HSBUILD)/8200556-pr3566.patch \
 	patches/hotspot/$(HSBUILD)/pr3519-return_value-02.patch
 endif
 
