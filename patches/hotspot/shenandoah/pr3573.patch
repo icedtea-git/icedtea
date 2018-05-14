@@ -1,0 +1,25 @@
+# HG changeset patch
+# User roland
+# Date 1506520357 -7200
+#      Wed Sep 27 15:52:37 2017 +0200
+# Node ID c307975d0800f8da5cc8e82cd8f1fdadbd745357
+# Parent  ab0c101fa16e4cd97ac8ceff4f5ff72e2f4d5776
+[backport] fix TCK crash with shenandoah
+
+diff --git openjdk.orig/hotspot/src/share/vm/opto/shenandoahSupport.cpp openjdk/hotspot/src/share/vm/opto/shenandoahSupport.cpp
+--- openjdk.orig/hotspot/src/share/vm/opto/shenandoahSupport.cpp
++++ openjdk/hotspot/src/share/vm/opto/shenandoahSupport.cpp
+@@ -472,9 +472,11 @@
+   Node* input = in(Memory);
+   if (input->Opcode() == Op_ShenandoahWBMemProj) {
+     Node* wb = input->in(0);
+-    if (wb->is_top()) return NULL; // Dead path.
++    const Type* in_type = phase->type(wb);
++    // is_top() test not sufficient here: we can come here after CCP
++    // in a dead branch of the graph that has not yet been removed.
++    if (in_type == Type::TOP) return NULL; // Dead path.
+     assert(wb->Opcode() == Op_ShenandoahWriteBarrier, "expect write barrier");
+-    const Type* in_type = phase->type(wb);
+     if (is_independent(in_type, _type)) {
+       if (phase->is_IterGVN()) {
+         phase->is_IterGVN()->rehash_node_delayed(wb);

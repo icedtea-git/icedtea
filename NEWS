@@ -90,6 +90,7 @@ New in release 3.8.0 (2018-03-XX):
   - PR3559: Use ldrexd for atomic reads on ARMv7.
   - PR3575, RH1567204: System cacerts database handling should not affect jssecacerts
 * Shenandoah
+  - PR3573: Fix TCK crash with Shenandoah
   - Remove oop cast in oopMap.cpp again, as oopDesc::operator== has additional checking in Shenandoah.
 
 New in release 3.7.0 (2018-02-28):

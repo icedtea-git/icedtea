@@ -394,7 +394,8 @@ if WITH_SHENANDOAH_HSBUILD
 ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8158260-pr2991-rh1341258-aarch64.patch \
 	patches/hotspot/$(HSBUILD)/8200556-pr3566.patch \
-	patches/hotspot/$(HSBUILD)/pr3519-return_value-02.patch
+	patches/hotspot/$(HSBUILD)/pr3519-return_value-02.patch \
+	patches/hotspot/$(HSBUILD)/pr3573.patch
 endif
 
 if BUILD_CACAO
