@@ -83,7 +83,8 @@ New in release 3.8.0 (2018-03-XX):
   - S8200556, PR3566: AArch64: assertion failure in slowdebug builds
   - S8201509, PR3579: Zero: S390 31bit atomic_copy64 inline assembler is wrong
 * Bug fixes
-  - PR3533: HotSpot generates code with unaligned stack, crashes on SSE operations
+  - S8199936, PR3533: HotSpot generates code with unaligned stack, crashes on SSE operations
+  - S8199936, PR3591: Fix for bug 3533 doesn't add -mstackrealign to JDK code
   - PR3539, RH1548475: Pass EXTRA_LDFLAGS to HotSpot build
   - PR3549: Desktop file doesn't reference versioned icon
   - PR3550: Additional category used in jconsole.desktop.in is incorrect

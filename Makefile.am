@@ -343,7 +343,8 @@ AES_CHECK_SRC = openjdk/hotspot/test/compiler/7184394/TestAESMain.java
 # Patch list
 
 ICEDTEA_PATCHES = \
-	patches/override-redirect-metacity.patch
+	patches/override-redirect-metacity.patch \
+	patches/pr3591.patch
 
 # Conditional patches
 
