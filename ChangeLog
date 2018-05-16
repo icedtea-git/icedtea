@@ -1,3 +1,9 @@
+2017-11-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3592: Skip AES test on AArch64 due to VM crash
+	* Makefile.am:
+	(check-aes): Don't run test if running on aarch64.
+
 2018-05-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	S8199936, PR3591: Fix for bug 3533 doesn't
