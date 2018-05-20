@@ -80,6 +80,7 @@ New in release 3.8.0 (2018-03-XX):
   - S8187577, PR3578: JVM crash during gc doing concurrent marking
   - S8197429, PR3546, RH1536622: Increased stack guard causes segfaults on x86-32
   - S8197546, PR3542: Fix for 8171000 breaks Solaris + Linux builds
+  - S8197981, PR3548: Missing return statement in __sync_val_compare_and_swap_8
   - S8200556, PR3566: AArch64: assertion failure in slowdebug builds
   - S8201509, PR3579: Zero: S390 31bit atomic_copy64 inline assembler is wrong
 * Bug fixes

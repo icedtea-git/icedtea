@@ -1,5 +1,15 @@
 2018-05-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	S8197981, PR3548: Missing return statement
+	in __sync_val_compare_and_swap_8
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add patch.
+	* NEWS: Updated.
+	* patches/pr3548.patch: Fix missing return
+	value case only visible on 32-bit Zero builds.
+
+2018-05-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR3593: s390 needs to use '%z' format specifier
 	for size_t arguments as size_t != int
 	* Makefile.am:
