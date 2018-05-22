@@ -14,6 +14,58 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.6.14 (2018-04-XX):
 
+* Security fixes
+  - S8162488: JDK should be updated to use LittleCMS 2.8
+  - S8180881: Better packaging of deserialization
+  - S8182362: Update CipherOutputStream Usage
+  - S8183032: Upgrade to LittleCMS 2.9
+  - S8189123: More consistent classloading
+  - S8189969, CVE-2018-2790: Manifest better manifest entries
+  - S8189977, CVE-2018-2795: Improve permission portability
+  - S8189981, CVE-2018-2796: Improve queuing portability
+  - S8189985, CVE-2018-2797: Improve tabular data portability
+  - S8189989, CVE-2018-2798: Improve container portability
+  - S8189993, CVE-2018-2799: Improve document portability
+  - S8189997, CVE-2018-2794: Enhance keystore mechanisms
+  - S8190478: Improved interface method selection
+  - S8190877: Better handling of abstract classes
+  - S8191696: Better mouse positioning
+  - S8192025, CVE-2018-2814: Less referential references
+  - S8192030: Better MTSchema support
+  - S8192757, CVE-2018-2815: Improve stub classes implementation
+  - S8193409: Improve AES supporting classes
+  - S8193414: Improvements in MethodType lookups
+  - S8193833, CVE-2018-2800: Better RMI connection support
+* Import of OpenJDK 7 u181 build 0
+  - S7132338: Use @code friendly idiom for '\' in javadoc
+  - S8001419: Build the JCE portion of JDK-8000970
+  - S8019360: Cleanup of the javadoc <code> tag in java.security.*
+  - S8020842: IDN do not throw IAE when hostname ends with a trailing dot
+  - S8024068: sun/security/ssl/javax/net/ssl/ServerName/IllegalSNIName.java fails
+  - S8026982: javadoc errors in core libs
+  - S8029020: Check src/share/native/java/util/zip code for JNI pending exceptions
+  - S8029475: Fix more doclint issues in javax.security
+  - S8034031: [parfait] JNI exception pending in jdk/src/macosx/native/apple/security/KeystoreImpl.m
+  - S8054213: Class name repeated in output of Type.toString()
+  - S8064524: Compiler code generation improvements
+  - S8150530: Improve javax.crypto.BadPaddingException messages
+  - S8153955: increase java.util.logging.FileHandler MAX_LOCKS limit
+  - S8169080: Improve documentation examples for crypto applications
+  - S8175075: Add 3DES to the default disabled algorithm security property
+  - S8179665: [Windows] java.awt.IllegalComponentStateException: component must be showing on the screen to determine its location
+  - S8186032: Disable XML Signatures signed with EC keys less than 224 bits
+  - S8187496: Possible memory leak in java.apple.security.KeychainStore.addItemToKeychain
+  - S8189789: tomcat gzip-compressed response bodies appear to be broken in update 151
+  - S8191358: Restore TSA certificate expiration check
+  - S8191909: Nightly failures in nashorn suite
+  - S8192789: Avoid using AtomicReference in sun.security.provider.PolicyFile
+  - S8194259: keytool error: java.io.IOException: Invalid secret key format
+  - S8198494: 8u171 and 8u172 - Build failure on non-SE Linux Platforms
+  - S8198963: Fix new rmi property name
+  - S8200760: java.security-linux was missed in backport of JDK-8160104
+* Import of OpenJDK 7 u181 build 1
+  - S8200314: JDK 8u171 l10n resource file update - msg drop 40
+  - S8202850: Fix for 8189123 doesn't include precompiled header
 * Backports
   - S8185723, PR3555: Zero: segfaults on Power PC 32-bit
   - S8186461, PR3558: Zero's atomic_copy64() should use SPE instructions on linux-powerpcspe

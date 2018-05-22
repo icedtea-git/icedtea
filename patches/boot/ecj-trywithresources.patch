@@ -1912,3 +1912,51 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/KdcComm.java
              }
          }
          return null;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/crypto/provider/SealedObjectForKeyProtector.java openjdk-boot/jdk/src/share/classes/com/sun/crypto/provider/SealedObjectForKeyProtector.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/crypto/provider/SealedObjectForKeyProtector.java	2018-05-21 15:41:54.203001045 +0100
++++ openjdk-boot/jdk/src/share/classes/com/sun/crypto/provider/SealedObjectForKeyProtector.java	2018-05-22 04:06:06.698796565 +0100
+@@ -77,16 +77,10 @@
+             throws IOException, ClassNotFoundException, IllegalBlockSizeException,
+             BadPaddingException {
+ 
+-        try (ObjectInputStream ois = SharedSecrets.getJavaxCryptoSealedObjectAccess()
+-                .getExtObjectInputStream(this, c)) {
+-            AccessController.doPrivileged(new PrivilegedAction<Void>() {
+-                @Override
+-                public Void run() {
+-                    ObjectInputFilter.Config.setObjectInputFilter(ois,
+-                        DeserializationChecker.ONE_FILTER);
+-                    return null;
+-                }
+-            });
++        ObjectInputStream ois = null;
++        try {
++            ois = SharedSecrets.getJavaxCryptoSealedObjectAccess().getExtObjectInputStream(this, c);
++            AccessController.doPrivileged(new FilterSetter(ois));
+             try {
+                 @SuppressWarnings("unchecked")
+                 Key t = (Key) ois.readObject();
+@@ -101,6 +95,23 @@
+                     throw ice;
+                 }
+             }
++        } finally {
++            if (ois != null) {
++                ois.close();
++            }
++        }
++    }
++
++    private static class FilterSetter implements PrivilegedAction<Void> {
++        private ObjectInputStream ois;
++        public FilterSetter(ObjectInputStream ois) {
++            this.ois = ois;
++        }
++        @Override
++        public Void run() {
++            ObjectInputFilter.Config.setObjectInputFilter(ois,
++                                                          DeserializationChecker.ONE_FILTER);
++            return null;
+         }
+     }
+ 
