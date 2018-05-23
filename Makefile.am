@@ -446,7 +446,6 @@ ICEDTEA_BOOT_PATCHES = \
 	patches/boot/ecj-stringswitch.patch \
 	patches/boot/langtools-force-old-jdk.patch \
 	patches/boot/dependencies.patch \
-	patches/boot/corba-dependencies.patch \
 	patches/boot/hotspot-jdk-dependency.patch \
 	patches/boot/ecj-multicatch.patch \
 	patches/boot/ecj-trywithresources.patch \
@@ -468,6 +467,11 @@ endif
 if LACKS_COM_SUN_NET_HTTPSERVER_HEADERS
 ICEDTEA_BOOT_PATCHES += \
 	patches/boot/jaxws-jdk-dependency.patch
+endif
+
+if LACKS_SUN_TOOLS_JAVA_CLASSDEFINITION
+ICEDTEA_BOOT_PATCHES += \
+	patches/boot/corba-dependencies.patch
 endif
 
 if !VM_SUPPORTS_XBOOTCLASSPATH

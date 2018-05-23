@@ -74,6 +74,7 @@ New in release 2.6.14 (2018-04-XX):
   - S8201509, PR3580: Zero's atomic_copy64() broken on s390
 * Bug fixes
   - PR3576, RH1567204: System cacerts database handling should not affect jssecacerts
+  - PR3595: Bootstrapping with IcedTea 2.x as the bootstrap JDK broken by import of 7u181-b01
 
 New in release 2.6.13 (2018-02-27):
 

@@ -1,3 +1,22 @@
+2018-05-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3595: Bootstrapping with IcedTea 2.x as the
+	bootstrap JDK broken by import of 7u181-b01
+	* Makefile.am:
+	(ICEDTEA_BOOT_PATCHES): Apply updated
+	corba-dependencies.patch conditionally;
+	only if sun.tools.java classes are missing.
+	* NEWS: Updated.
+	* configure.ac: Check for sun.tools.java.ClassDefinition
+	so we know whether we have a pre-built version
+	of the Sun tooling available in the bootstrap JDK or not.
+	* patches/boot/bootstrap-tools.patch:
+	Remove chunk that switches from tools.jar to
+	langtools classes.jar so this patch can be applied
+	on both GNU Classpath & OpenJDK bootstraps.
+	* patches/boot/corba-dependencies.patch:
+	Add tools.jar switch to here.
+
 2018-05-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to 2.6.14.

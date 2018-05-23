@@ -1,12 +1,7 @@
 diff -Nru openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk openjdk-boot/corba/make/common/shared/Defs-java.gmk
---- openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk	2012-06-29 15:19:55.000000000 +0100
-+++ openjdk-boot/corba/make/common/shared/Defs-java.gmk	2012-06-29 18:52:40.584723407 +0100
-@@ -131,26 +131,14 @@
- CLASS_VERSION = -target $(TARGET_CLASS_VERSION)
- JAVACFLAGS  += $(CLASS_VERSION)
- JAVACFLAGS  += -encoding ascii
--JAVACFLAGS  += -classpath $(BOOTDIR)/lib/tools.jar
-+JAVACFLAGS  += -classpath $(LANGTOOLS_DIST)/lib/classes.jar
+--- openjdk-boot.orig/corba/make/common/shared/Defs-java.gmk	2018-05-23 00:38:22.950463481 +0100
++++ openjdk-boot/corba/make/common/shared/Defs-java.gmk	2018-05-23 02:03:19.165950214 +0100
+@@ -141,22 +141,10 @@
  JAVACFLAGS  += $(OTHER_JAVACFLAGS)
  
  # Langtools
