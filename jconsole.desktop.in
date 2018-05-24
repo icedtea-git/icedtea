@@ -6,5 +6,5 @@ Icon=java-@JAVA_VER@
 Terminal=false
 Type=Application
 StartupWMClass=sun-tools-jconsole-JConsole
-Categories=Development;Monitor;Java;
+Categories=Development;Profiling;Java;
 Version=1.0
