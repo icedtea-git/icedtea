@@ -1,3 +1,11 @@
+2018-05-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3594: Patch for bug 3593 breaks Shenandoah build
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add all build HotSpot patches
+	after the conditional patches.
+	* NEWS: Updated.
+
 2018-05-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	S8197981, PR3548: Missing return statement

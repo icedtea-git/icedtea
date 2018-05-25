@@ -344,9 +344,7 @@ AES_CHECK_SRC = openjdk/hotspot/test/compiler/7184394/TestAESMain.java
 
 ICEDTEA_PATCHES = \
 	patches/override-redirect-metacity.patch \
-	patches/pr3591.patch \
-	patches/pr3593.patch \
-	patches/pr3548.patch
+	patches/pr3591.patch
 
 # Conditional patches
 
@@ -445,6 +443,11 @@ else
 ICEDTEA_PATCHES += patches/nss-not-enabled-config.patch
 endif
 endif
+
+# Apply additional HotSpot patches against same patch base
+ICEDTEA_PATCHES += \
+	patches/pr3593.patch \
+	patches/pr3548.patch
 
 ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
 
