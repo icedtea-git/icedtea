@@ -12,7 +12,28 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.8.0 (2018-03-XX):
 
- * New features
+* Security fixes
+  - S8180881: Better packaging of deserialization
+  - S8182362: Update CipherOutputStream Usage
+  - S8183032: Upgrade to LittleCMS 2.9
+  - S8189123: More consistent classloading
+  - S8189969, CVE-2018-2790: Manifest better manifest entries
+  - S8189977, CVE-2018-2795: Improve permission portability
+  - S8189981, CVE-2018-2796: Improve queuing portability
+  - S8189985, CVE-2018-2797: Improve tabular data portability
+  - S8189989, CVE-2018-2798: Improve container portability
+  - S8189993, CVE-2018-2799: Improve document portability
+  - S8189997, CVE-2018-2794: Enhance keystore mechanisms
+  - S8190478: Improved interface method selection
+  - S8190877: Better handling of abstract classes
+  - S8191696: Better mouse positioning
+  - S8192025, CVE-2018-2814: Less referential references
+  - S8192030: Better MTSchema support
+  - S8192757, CVE-2018-2815: Improve stub classes implementation
+  - S8193409: Improve AES supporting classes
+  - S8193414: Improvements in MethodType lookups
+  - S8193833, CVE-2018-2800: Better RMI connection support
+* New features
   - PR3493: Run AES test to test intrinsics
 * Import of OpenJDK 8 u162 build 12
   - S4354680: Runtime.runFinalization() silently clears interrupted flag in the calling thread
@@ -69,6 +90,30 @@ New in release 3.8.0 (2018-03-XX):
   - S8190280: [macos] Font2DTest demo started failing for Arabic range from JDK 8 u162 b01 on Mac
   - S8190542: 8u162 L10n resource file update
   - S8192794: 8u162 L10n resource file update md20
+* Import of OpenJDK 8 u171 build 11
+  - S8054213: Class name repeated in output of Type.toString()
+  - S8068778: [TESTBUG] CompressedClassSpaceSizeInJmapHeap.java fails if SA not available
+  - S8150530: Improve javax.crypto.BadPaddingException messages
+  - S8153955: increase java.util.logging.FileHandler MAX_LOCKS limit
+  - S8169080: Improve documentation examples for crypto applications
+  - S8175075: Add 3DES to the default disabled algorithm security property
+  - S8179665: [Windows] java.awt.IllegalComponentStateException: component must be showing on the screen to determine its location
+  - S8186032: Disable XML Signatures signed with EC keys less than 224 bits
+  - S8186441: Change of behavior in the getMessage () method of the SOAPMessageContextImpl class
+  - S8187496: Possible memory leak in java.apple.security.KeychainStore.addItemToKeychain
+  - S8189851: [TESTBUG] runtime/RedefineTests/RedefineInterfaceCall.java fails
+  - S8191358: Restore TSA certificate expiration check
+  - S8191909: Nightly failures in nashorn suite
+  - S8192789: Avoid using AtomicReference in sun.security.provider.PolicyFile
+  - S8194259: keytool error: java.io.IOException: Invalid secret key format
+  - S8196952: Bad primeCertainty value setting in DSAParameterGenerator
+  - S8197030: Perf regression on all platforms with 8u171-b03 - early lambda use
+  - S8198494: 8u171 and 8u172 - Build failure on non-SE Linux Platforms
+  - S8198662: Incompatible internal API change in JDK8u161: signature of method exportObject()
+  - S8198963: Fix new rmi property name
+  - S8199001: [TESTBUG] RMIConnectionFilterTest.java test fails in compilation
+  - S8199141: Windows: new warning messaging for JRE installer UI in non-MOS cases
+  - S8200314: JDK 8u171 l10n resource file update - msg drop 40
 * Backports
   - S8062808, PR3548: Turn on the -Wreturn-type warning
   - S8141570, PR3548: Fix Zero interpreter build for --disable-precompiled-headers
