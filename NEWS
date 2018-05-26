@@ -142,6 +142,9 @@ New in release 3.8.0 (2018-03-XX):
 * Shenandoah
   - PR3573: Fix TCK crash with Shenandoah
   - Remove oop cast in oopMap.cpp again, as oopDesc::operator== has additional checking in Shenandoah.
+  - Fix new code for Shenandoah after the 8u171 merge
+  - Revert accidental OpSpinWait matching
+  - UseBiasedLocking should be disabled only for Shenandoah
 
 New in release 3.7.0 (2018-02-28):
 
