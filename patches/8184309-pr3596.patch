@@ -1,0 +1,21 @@
+# HG changeset patch
+# User ysuenaga
+# Date 1527498573 -3600
+#      Mon May 28 10:09:33 2018 +0100
+# Node ID ef176cb429c49d1c330d9575938f66b04e3fb730
+# Parent  6915dc9ae18cce5625d3a3fc74b37da70a5b4215
+8184309, PR3596: Build warnings from GCC 7.1 on Fedora 26
+Reviewed-by: kbarrett, vlivanov
+
+diff --git openjdk.orig/hotspot/src/share/vm/code/dependencies.cpp openjdk/hotspot/src/share/vm/code/dependencies.cpp
+--- openjdk.orig/hotspot/src/share/vm/code/dependencies.cpp
++++ openjdk/hotspot/src/share/vm/code/dependencies.cpp
+@@ -525,7 +525,7 @@
+         xtty->object("x", arg.metadata_value());
+       }
+     } else {
+-      char xn[10]; sprintf(xn, "x%d", j);
++      char xn[12]; sprintf(xn, "x%d", j);
+       if (arg.is_oop()) {
+         xtty->object(xn, arg.oop_value());
+       } else {
