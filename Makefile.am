@@ -350,9 +350,10 @@ ICEDTEA_PATCHES = \
 if WITH_ALT_HSBUILD
 
 # Patches only for AArch32
-#if WITH_AARCH32_HSBUILD
-#ICEDTEA_PATCHES += \
-#endif
+if WITH_AARCH32_HSBUILD
+ICEDTEA_PATCHES += \
+	patches/hotspot/$(HSBUILD)/pr3548-aarch32.patch
+endif
 
 ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8038392-rh1064383.patch \
@@ -388,7 +389,7 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8201509-pr3579.patch \
 	patches/hotspot/$(HSBUILD)/pr3539-rh1548475.patch
 	patches/hotspot/$(HSBUILD)/pr3593.patch \
-	patches/hotspot/$(HSBUILD)/pr3548.patch
+	patches/hotspot/$(HSBUILD)/8197981-pr3548.patch
 endif
 
 # Shenandoah has the AArch64 port so should get the return value & debug build fixes

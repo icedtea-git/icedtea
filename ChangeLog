@@ -1,3 +1,16 @@
+2018-05-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3548: Add missing return values for AArch32 port
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add pr3548 patch for AArch32.
+	Add OpenJDK bug ID to earlier pr3548 patch.
+	* NEWS: Updated.
+	* patches/hotspot/aarch32/8197981-pr3548.patch,
+	* patches/hotspot/shenandoah/8197981-pr3548.patch:
+	Renamed from pr3548.patch to include OpenJDK bug ID.
+	* patches/hotspot/aarch32/pr3548-aarch32.patch:
+	Add missing return values in AArch32 port code.
+
 2018-05-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump aarch32 to jdk8u171-b11-aarch32-180511.

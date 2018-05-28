@@ -145,6 +145,8 @@ New in release 3.8.0 (2018-03-XX):
   - Fix new code for Shenandoah after the 8u171 merge
   - Revert accidental OpSpinWait matching
   - UseBiasedLocking should be disabled only for Shenandoah
+* AArch32 port
+  - PR3548: Add missing return values for AArch32 port
 
 New in release 3.7.0 (2018-02-28):
 
