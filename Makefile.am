@@ -447,7 +447,8 @@ endif
 
 # Apply additional HotSpot patches against same patch base
 ICEDTEA_PATCHES += \
-	patches/8184309-pr3596.patch
+	patches/8184309-pr3596.patch \
+	patches/pr3597.patch
 
 ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
 

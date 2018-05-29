@@ -1,0 +1,43 @@
+diff --git openjdk.orig/hotspot/src/share/vm/adlc/adlc.hpp openjdk/hotspot/src/share/vm/adlc/adlc.hpp
+--- openjdk.orig/hotspot/src/share/vm/adlc/adlc.hpp
++++ openjdk/hotspot/src/share/vm/adlc/adlc.hpp
+@@ -85,6 +85,19 @@
+ #undef max
+ #define max(a, b)   (((a)>(b)) ? (a) : (b))
+ 
++#if !defined(__clang_major__) && (__GNUC__ >= 7)
++#define PRAGMA_DIAG_PUSH             _Pragma("GCC diagnostic push")
++#define PRAGMA_DIAG_POP              _Pragma("GCC diagnostic pop")
++#define PRAGMA_FORMAT_OVERFLOW_IGNORED _Pragma("GCC diagnostic ignored \"-Wformat-overflow\"")
++#define PRAGMA_FORMAT_OVERFLOW_IGNORED_EXTERNAL PRAGMA_FORMAT_OVERFLOW_IGNORED
++#define PRAGMA_FORMAT_OVERFLOW_IGNORED_INTERNAL PRAGMA_FORMAT_OVERFLOW_IGNORED
++#else
++#define PRAGMA_DIAG_PUSH
++#define PRAGMA_DIAG_POP
++#define PRAGMA_FORMAT_OVERFLOW_IGNORED_EXTERNAL
++#define PRAGMA_FORMAT_OVERFLOW_IGNORED_INTERNAL
++#endif
++
+ // ADLC components
+ #include "arena.hpp"
+ #include "opto/adlcVMDeps.hpp"
+diff --git openjdk.orig/hotspot/src/share/vm/adlc/output_c.cpp openjdk/hotspot/src/share/vm/adlc/output_c.cpp
+--- openjdk.orig/hotspot/src/share/vm/adlc/output_c.cpp
++++ openjdk/hotspot/src/share/vm/adlc/output_c.cpp
+@@ -560,6 +560,8 @@
+   return (ndx);
+ }
+ 
++PRAGMA_DIAG_PUSH
++PRAGMA_FORMAT_OVERFLOW_IGNORED_EXTERNAL
+ void ArchDesc::build_pipe_classes(FILE *fp_cpp) {
+   const char *classname;
+   const char *resourcename;
+@@ -1016,6 +1018,7 @@
+   fprintf(fp_cpp, "}\n");
+   fprintf(fp_cpp, "#endif\n");
+ }
++PRAGMA_DIAG_POP
+ 
+ // ---------------------------------------------------------------------------
+ //------------------------------Utilities to build Instruction Classes--------
