@@ -1,0 +1,65 @@
+# HG changeset patch
+# User aph
+# Date 1531146945 -3600
+#      Mon Jul 09 15:35:45 2018 +0100
+# Node ID 95b72537801cc9946c27ad27f07e3f0790a21b08
+# Parent  f6341f4635dacb56678264d29a88cd052b74036b
+8206406, PR3610, RH1597825: StubCodeDesc constructor publishes partially-constructed objects on StubCodeDesc::_list
+Reviewed-by: dholmes
+
+diff --git openjdk.orig/hotspot/src/share/vm/runtime/stubCodeGenerator.cpp openjdk/hotspot/src/share/vm/runtime/stubCodeGenerator.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/stubCodeGenerator.cpp
++++ openjdk/hotspot/src/share/vm/runtime/stubCodeGenerator.cpp
+@@ -34,12 +34,12 @@
+ 
+ // Implementation of StubCodeDesc
+ 
+-StubCodeDesc* StubCodeDesc::_list = NULL;
+-int           StubCodeDesc::_count = 0;
++StubCodeDesc* volatile StubCodeDesc::_list = NULL;
++int                    StubCodeDesc::_count = 0;
+ 
+ 
+ StubCodeDesc* StubCodeDesc::desc_for(address pc) {
+-  StubCodeDesc* p = _list;
++  StubCodeDesc* p = (StubCodeDesc*)OrderAccess::load_ptr_acquire(&_list);
+   while (p != NULL && !p->contains(pc)) p = p->_next;
+   // p == NULL || p->contains(pc)
+   return p;
+@@ -47,7 +47,7 @@
+ 
+ 
+ StubCodeDesc* StubCodeDesc::desc_for_index(int index) {
+-  StubCodeDesc* p = _list;
++  StubCodeDesc* p = (StubCodeDesc*)OrderAccess::load_ptr_acquire(&_list);
+   while (p != NULL && p->index() != index) p = p->_next;
+   return p;
+ }
+diff --git openjdk.orig/hotspot/src/share/vm/runtime/stubCodeGenerator.hpp openjdk/hotspot/src/share/vm/runtime/stubCodeGenerator.hpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/stubCodeGenerator.hpp
++++ openjdk/hotspot/src/share/vm/runtime/stubCodeGenerator.hpp
+@@ -38,7 +38,7 @@
+ 
+ class StubCodeDesc: public CHeapObj<mtCode> {
+  protected:
+-  static StubCodeDesc* _list;                  // the list of all descriptors
++  static StubCodeDesc* volatile _list;         // the list of all descriptors
+   static int           _count;                 // length of list
+ 
+   StubCodeDesc*        _next;                  // the next element in the linked list
+@@ -69,13 +69,13 @@
+ 
+   StubCodeDesc(const char* group, const char* name, address begin) {
+     assert(name != NULL, "no name specified");
+-    _next           = _list;
++    _next           = (StubCodeDesc*)OrderAccess::load_ptr_acquire(&_list);
+     _group          = group;
+     _name           = name;
+     _index          = ++_count; // (never zero)
+     _begin          = begin;
+     _end            = NULL;
+-    _list           = this;
++    OrderAccess::release_store_ptr(&_list, this);
+   };
+ 
+   const char* group() const                      { return _group; }

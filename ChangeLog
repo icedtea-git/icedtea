@@ -1,3 +1,52 @@
+2018-08-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to icedtea-3.9.0pre01.
+	* Makefile.am,
+	(CORBA_CHANGESET): Update to icedtea-3.9.0pre01 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Add HotSpot patches for Shenandoah
+	and AArch32 ports, including a couple that are now
+	in the IcedTea forest.
+	* NEWS: Updated.
+	* configure.ac: Bump to 3.9.0pre01.
+	* hotspot.map.in: Update to icedtea-3.9.0pre01 tag.
+	* patches/pr3597.patch,
+	* patches/8184309-pr3596.patch:
+	Moved into patches/hotspot/shenandoah, as now
+	included in the IcedTea forest.
+	* patches/hotspot/aarch32/8008321-pr3599.patch,
+	* patches/hotspot/aarch32/8064786-pr3601.patch,
+	* patches/hotspot/aarch32/8146115-pr3508-rh1463098.patch,
+	* patches/hotspot/aarch32/8184309-pr3596.patch,
+	* patches/hotspot/aarch32/8206406-pr3610-rh1597825.patch,
+	* patches/hotspot/aarch32/8207057-pr3613.patch,
+	* patches/hotspot/aarch32/pr3597.patch,
+	* patches/hotspot/aarch32/pr3601.patch,
+	* patches/hotspot/aarch32/pr3607.patch,
+	Add AArch32 patches for latest HotSpot updates (symlinked
+	to Shenandoah ones).
+	* patches/hotspot/shenandoah/8008321-pr3599.patch,
+	* patches/hotspot/shenandoah/8064786-pr3601.patch,
+	* patches/hotspot/shenandoah/8146115-pr3508-rh1463098.patch,
+	* patches/hotspot/shenandoah/8206406-pr3610-rh1597825.patch,
+	* patches/hotspot/shenandoah/8207057-pr3613.patch,
+	* patches/hotspot/shenandoah/pr3597.patch,
+	* patches/hotspot/shenandoah/pr3601.patch,
+	* patches/hotspot/shenandoah/pr3607.patch,
+	Add Shenandoah patches for latest HotSpot updates.
+
 2018-06-05  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Add 3.9.0 section.

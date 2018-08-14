@@ -1,3 +1,11 @@
+# HG changeset patch
+# User andrew
+# Date 1527661161 -3600
+#      Wed May 30 07:19:21 2018 +0100
+# Node ID 8cde8f606e3f4f7c8809d9c1ebc71e45615f7402
+# Parent  ef176cb429c49d1c330d9575938f66b04e3fb730
+PR3597: Potential bogus -Wformat-overflow warning with -Wformat enabled
+
 diff --git openjdk.orig/hotspot/src/share/vm/adlc/adlc.hpp openjdk/hotspot/src/share/vm/adlc/adlc.hpp
 --- openjdk.orig/hotspot/src/share/vm/adlc/adlc.hpp
 +++ openjdk/hotspot/src/share/vm/adlc/adlc.hpp

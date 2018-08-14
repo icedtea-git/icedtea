@@ -1,0 +1,28 @@
+# HG changeset patch
+# User goetz
+# Date 1415873641 -3600
+#      Thu Nov 13 11:14:01 2014 +0100
+# Node ID 30520d5018b509b0ae68f5fcc9a5c540e3e5b2de
+# Parent  533473c67de6ff767710594639033c8e83523fe5
+8064786, PR3601: Fix debug build after 8062808: Turn on the -Wreturn-type warning
+Reviewed-by: stefank, tschatzl
+
+diff --git openjdk.orig/hotspot/src/share/vm/prims/jni.cpp openjdk/hotspot/src/share/vm/prims/jni.cpp
+--- openjdk.orig/hotspot/src/share/vm/prims/jni.cpp
++++ openjdk/hotspot/src/share/vm/prims/jni.cpp
+@@ -708,6 +708,7 @@
+ 
+   THROW_OOP_(JNIHandles::resolve(obj), JNI_OK);
+   ShouldNotReachHere();
++  return 0;  // Mute compiler.
+ JNI_END
+ 
+ #ifndef USDT2
+@@ -734,6 +735,7 @@
+   Handle protection_domain (THREAD, k->protection_domain());
+   THROW_MSG_LOADER_(name, (char *)message, class_loader, protection_domain, JNI_OK);
+   ShouldNotReachHere();
++  return 0;  // Mute compiler.
+ JNI_END
+ 
+ 
