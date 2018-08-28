@@ -14,6 +14,41 @@ New in release 3.9.0 (2018-07-XX):
 
 * Security fixes
   - PR3607, CVE-2018-3639: hw: cpu: speculative store bypass mitigation
+* Import of OpenJDK 8 u172 build 11
+  - S8031304: Add dcmd to print all loaded dynamic libraries.
+  - S8044107: Add Diagnostic Command to list all ClassLoaders
+  - S8055755: Information about loaded dynamic libraries is wrong on MacOSX
+  - S8059036: Implement Diagnostic Commands for heap and finalizerinfo
+  - S8130400: Test java/awt/image/DrawImage/IncorrectClipXorModeSurface2Surface.java fails with ClassCastException
+  - S8136356: Add time zone mappings on Windows
+  - S8139673: NMT stack traces in output should show mtcomponent
+  - S8147542: ClassCastException when repainting after display resolution change
+  - S8154017: Shutdown hooks are racing against shutdown sequence, if System.exit()-calling thread is interrupted
+  - S8165466: DecimalFormat percentage format can contain unexpected %
+  - S8166772: Touch keyboard is not shown for text components on a screen touch
+  - S8169424: src/share/sample/scripting/scriptpad/src/scripts/memory.sh missing #!
+  - S8170358: [REDO] 8k class metaspace chunks misallocated from 4k chunk Freelist
+  - S8170395: Metaspace initialization queries the wrong chunk freelist
+  - S8176072: READING attributes are not available on TSF
+  - S8177721: Improve diagnostics in sun.management.Agent#startAgent()
+  - S8177758: Regression in java.awt.FileDialog
+  - S8183504: 8u131 Win 10, issue with wrong position of Sogou IME popup
+  - S8184991: NMT detail diff should take memory type into account
+  - S8187331: VirtualSpaceList tracks free space on wrong node
+  - S8187629: NMT: Memory miscounting in compiler (C2)
+  - S8187658: Bigger buffer for GetAdaptersAddresses
+  - S8187685: NMT: Tracking compiler memory usage of thread's resource area
+  - S8187803: JDK part of JavaFX-Swing dialogs appearing behind main stage
+  - S8187985: Broken certificate number in debug output
+  - S8188855: Fix VS10 build after "8187658: Bigger buffer for GetAdaptersAddresses"
+  - S8189599: InitialBootClassLoaderMetaspaceSize and CompressedClassSpaceSize should be checked consistent from MaxMetaspaceSize
+  - S8189646: sun/security/ssl/SSLSocketImpl/SSLSocketCloseHang.java failed with "java.net.SocketTimeoutException: Read timed out"
+  - S8190442: Backout changes for JDK-8087291 from 8u-dev as it didn't use main CR id
+  - S8190690: Impact on krb5 test cases in the 8u-CPU nightly
+  - S8191969: javac produces incorrect RuntimeInvisibleTypeAnnotations length attribute
+  - S8192987: keytool should remember real storetype if it is not provided
+  - S8193156: Need to backout fixes for JDK-8058547, JDK-8055753, JDK-8085903
+  - S8193807: Avoid UnsatisfiedLinkError on AIX by providing empty basic implementations of getSystemCpuLoad and getProcessCpuLoad
 * Backports
   - S8008321, PR3599: compile.cpp verify_graph_edges uses bool as int
   - S8064786, PR3601: Fix debug build after 8062808: Turn on the -Wreturn-type warning
