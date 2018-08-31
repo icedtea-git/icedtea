@@ -17,14 +17,3 @@ diff --git a/src/cpu/aarch64/vm/c1_LIRAssembler_aarch64.cpp b/src/cpu/aarch64/vm
  }
  
  Address LIR_Assembler::as_Address_hi(LIR_Address* addr) {
-diff --git a/src/os_cpu/linux_aarch64/vm/os_linux_aarch64.cpp b/src/os_cpu/linux_aarch64/vm/os_linux_aarch64.cpp
---- openjdk/hotspot/src/os_cpu/linux_aarch64/vm/os_linux_aarch64.cpp
-+++ openjdk/hotspot/src/os_cpu/linux_aarch64/vm/os_linux_aarch64.cpp
-@@ -699,6 +699,7 @@
- 
- extern "C" {
-   int SpinPause() {
-+    return 0;
-   }
- 
-   void _Copy_conjoint_jshorts_atomic(jshort* from, jshort* to, size_t count) {

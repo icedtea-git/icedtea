@@ -62,6 +62,219 @@ New in release 3.9.0 (2018-07-XX):
   - PR3597: Potential bogus -Wformat-overflow warning with -Wformat enabled
   - PR3600: jni_util.c does not import header file which declares getLastErrorString
   - PR3601: Fix additional -Wreturn-type issues introduced by 8061651
+* Shenandoah
+  - Allocation failure injection machinery
+  - [backport] AArch64 shenandoah_store_check should read evacuation_in_progress as byte
+  - [backport] Account trashed regions from coalesced CM-with-UR
+  - [backport] Adaptive collection set selection in adaptive policy
+  - [backport] Adaptive heuristics accounts trashed cset twice
+  - [backport] Adapt upstream object pinning API
+  - [backport] Add comments in shenandoah_store_check on direct heap field use
+  - [backport] Added diagnostic flag ShenandoahOOMDuringEvacALot
+  - [backport] Added missing header file for non-PCH build
+  - [backport] Add missing barrier in C1 NIOCheckIndex intrinsic
+  - [backport] Add new pinned/cset region state for evac-failure-path
+  - [backport] Add ShenandoahRootProcessor API to report threads while scanning roots
+  - [backport] Add test to verify Shenandoah is not enabled by default, and enabled with the flag
+  - [backport] Add -XX:+ShenandoahVerify to more interesting tests
+  - [backport] AESCrypt.implEncryptBlock/AESCrypt.implDecryptBlock intrinsics assume non null inputs
+  - [backport] Allow use of fp spills around write barrier
+  - [backport] Arraycopy fixes (tests and infrastructure)
+  - [backport] Assert Shenandoah-specific safepoints instead of generic ones
+  - [backport] Asynchronous region recycling
+  - [backport] Avoid notifying about zero waste
+  - [backport] barrier moved due to null checks needs to always fix memory edges
+  - [backport] Basic support for x86_32: build and run in STW configuration
+  - [backport] Bitmap based ShHeapRegionSet
+  - [backport] Break heuristics out from ShCollectorPolicy into their own source files
+  - [backport] C2 should use heapword-sized object math
+  - [backport] Check BS type in immByteMapBase predicate
+  - [backport] Cleanup allocation tracking in heuristics
+  - [backport] Cleanup and refactor Full GC code
+  - [backport] Cleanup and strengthen BrooksPointer verification
+  - [backport] Clean up dead code
+  - [backport] Cleanup: removed unused code
+  - [backport] Cleanup reset_{next|complete}_mark_bitmap
+  - [backport] Cleanup SHH::should_start_normal_gc
+  - [backport] "Compact" heuristics for dense footprint scenarios
+  - [backport] Compact heuristics should not shortcut on immediate garbage, but aggressively compact
+  - [backport] Conditionalize PerfDataMemorySize on enabled heap sampling
+  - [backport] Consistent liveness for humongous regions
+  - [backport] Control loop should wait before starting another GC cycle
+  - [backport] Critical native tests should only be ran on x86_64 platforms
+  - [backport] Degenerated GC
+  - [backport] Degenerated GC: rename enum, report degen reasons in stats
+  - [backport] Demote ShenandoahAllocImplicitLive to diagnostic
+  - [backport] Demote warning message about OOM-during-evac to informational
+  - [backport] Denser ShHeapRegion status line
+  - [backport] Disable verification from non-Shenandoah VMOps.
+  - [backport] Disallow pinned_cset region moves and allocations during Full GC
+  - [backport] Disambiguate "upgrade to Full GC" GCause
+  - [backport] Do not add non-allocatable regions to the freeset
+  - [backport] Don't treat allocation regions implicitely live during some GCs
+  - [backport] Double check for UseShenandoahGC in WB expand
+  - [backport] Drop distinction between immediate garbage and free in heuristics
+  - [backport] Dynamic worker refactoring
+  - [backport] Eagerly drop CSet state from regions during Full GC
+  - [backport] Eliminate write-barrier assembly stub (part 1)
+  - [backport] Enable biased locking for Shenandoah by default
+  - [backport] Ensure tasks use correct number of workers
+  - [backport] Excessive assert in ShHeap::mark_next
+  - [backport] Excessive asserts in marked_object_iterate
+  - [backport] FinalEvac pause to turn off evacuation
+  - [backport] Fix || and && chaining warnings in memnode.cpp
+  - [backport] Fix broken asserts in ShenandoahSharedEnumFlag
+  - [backport] Fixed code roots scanning that might be bypassed during degenerated cycle
+  - [backport] Fixed compilation error of libTestHeapDump.c on Windows with VS2010
+  - [backport] Fixed missing ResourceMark in ShenandoahAsserts::print_obj
+  - [backport] Fixed pinned region handling in mark-compact
+  - [backport] Fix (external) heap iteration + TestHeapDump should unlock aggressive heuristics
+  - [backport] fix for alias analysis with ShenandoahBarriersForConst
+  - [backport] Fix/improve CLD processing
+  - [backport] Fixing Windows and ARM32 build
+  - [backport] Fix Mac OS build warnings
+  - [backport] Fix Minimal VM build
+  - [backport] Fix ShFreeSet boundary case
+  - [backport] fix TCK crash with shenandoah
+  - [backport] Forcefully update counters when GC cycle is running
+  - [backport] FreeSet and HeapRegion should have the reference to ShenandoahHeap
+  - [backport] FreeSet refactor: bitmaps, cursors, biasing
+  - [backport] FreeSet should accept responsibility over trashed regions
+  - [backport] FreeSet should report its internal state before/after GC cycle
+  - [backport] Full GC should compact humongous regions
+  - [backport] Full GC should not trash empty regions
+  - [backport] GC state testers (infra)
+  - [backport] Generic verification is possible only at Shenandoah safepoints
+  - [backport] Get easy on template instantiations in ShConcMark
+  - [backport] Heap region sampling should publish region states
+  - [backport] Humongous regions should support explicit pinning
+  - [backport] Immediate garbage ratio should not go over 100%
+  - [backport] Implement flag to generate write-barriers without membars
+  - [backport] Implement protocol for safe OOM during evacuation handling + Use jint in oom-evac-handler to match older JDKs Atomic support better + Missing OOMScope in ShenandoahFixRootsTask
+  - [backport] Improve assertion/verification messages a bit
+  - [backport] Improve/more detailed timing stats for root queue work
+  - [backport] Incorrect constant folding with final field and -ShenandoahOptimizeFinals
+  - [backport] Increase test timeouts
+  - [backport] Introduce assert_in_correct_region to verify object is in correct region
+  - [backport] Isolate shenandoahVerifier from stray headers
+  - [backport] keep read barriers for final instance/stable field accesses
+  - [backport] Keep track of per-cycle mutator/collector allocs. Fix mutator/collector alloc region overlap in traversal.
+  - [backport] Little cleanup
+  - [backport] Log message on ref processing, class unload, update refs for mark events
+  - [backport] LotsOfCycles test timeouts
+  - [backport] Make concurrent precleaning log message optional again
+  - [backport] Make control loop more responsive under allocation pressure
+  - [backport] Make degenerated update-refs use region-set cursor to hand over work
+  - [backport] Make heap counters update completely asynchronous
+  - [backport] Make major GC phases exclusive from each other
+  - [backport] Make sure selective barriers enabling/disabling works
+  - [backport] Make sure -XX:+ShenandoahVerify comes first in the tests
+  - [backport] Mark bitmap slices commit/uncommit + Aggregated bitmap slicing
+  - [backport] Match barrier fastpath checks better
+  - [backport] Minor cleanups
+  - [backport] Minor cleanup, uses latest Atomic API
+  - [backport] Move barriers into typeArrayOop.hpp direct memory accessors
+  - [backport] Move ShHeap::used increment out of locked allocation path
+  - [backport] No need for fence in control loop: flags are now ShSharedVariables
+  - [backport] Only report GC pause time to GC MXBean + Re-fix memory managers and memory pools usage and pause reporting
+  - [backport] Optimize fwdptr region handling in ShenandoahVerifyOopClosure::verify_oop
+  - [backport] Optimize oop/fwdptr/hr_index verification a bit
+  - [backport] overflow integer during size calculation
+  - [backport] Pacer should account allocation waste and unsuccessful pacing in the budget
+  - [backport] Pacer should poll FreeSet to figure out actually available space
+  - [backport] Passive should opt-in the barriers, not opt-out
+  - [backport] Pauses that do not affect heap occupancy should not report heap
+  - [backport] Print message when heuristics changes the setting ergonomically
+  - [backport] Protect C2 matchers with UseShenandoahGC
+  - [backport] Provide non-taxable allocation slack at the beginning of the cycle
+  - [backport] Record cycle start/end to avoid continuous periodic GC
+  - [backport] Record Shenandoah events in hs_err events section
+  - [backport] Refactor allocation failure and explicit GC handling
+  - [backport] Refactor allocation metadata handling
+  - [backport] Refactor FreeSet rebuilding into the single source
+  - [backport] Refactoring GC phase and heap allocation tracking out of policy
+  - [backport] Refactor uncommit handling: react on explicit GCs, feature kill flag, etc
+  - [backport] Refactor worker timings into ShenandoahPhaseTimings
+  - [backport] ReferenceProcessor is_alive setup is racy
+  - [backport] Region sampling should lock while gathering region data
+  - [backport] Rehash VMOperations and cycle driver mechanics for consistency
+  - [backport] Relax assert in SBS::is_safe()
+  - [backport] Remove BS:is_safe in favor of logged BS::verify_safe_oop
+  - [backport] Remove CSetThreshold handling from heuristics
+  - [backport] Remove FreeSet::add_region, inline into FreeSet::rebuild
+  - [backport] Remove obsolete check in FreeSet::allocate
+  - [backport] Remove ShenandoahGCWorkerPerJavaThread flag
+  - [backport] Remove ShenandoahMarkCompactBarrierSet
+  - [backport] Rename and cleanup _regions and _free_set uses
+  - [backport] Rename dynamic heuristics to static
+  - [backport] Rename *_oop_static/oop_ref to *_forwarded
+  - [backport] Rename ShenandoahConcurrentThread to ShenandoahControlThread
+  - [backport] Report all GC status flags in hs_err
+  - [backport] Report fwdptr size in JNI GetObjectSize
+  - [backport] Report how much we have failed to allocate during Allocation Failure
+  - [backport] Report illegal transitions verbosely, and remove some no-op transitions
+  - [backport] Rewire control loop to avoid double cleanup work
+  - [backport] Rework shared bool/enum flags with proper types and synchronization
+  - [backport] Rewrite and fix ShenandoahHeap::marked_object_iterate
+  - [backport] Rich assertion failure logging
+  - [backport] Roots verification should take the special roots first
+  - [backport] RP closures should accept NULL referents
+  - [backport] Set ShenandoahMinFreeThreshold default to 10%
+  - [backport] Setup process references and class unloading once before the cycle
+  - [backport] ShConcurrentThread races with set_gc_state_bit
+  - [backport] Shenandoah critical native support
+  - [backport] Shenandoah region/set iterators should not allow copying
+  - [backport] Shenandoah SA implementation
+  - [backport] Shenandoah/SPARC barrier stubs
+  - [backport] ShenandoahVerifyOptoBarriers should not fail with disabled barriers
+  - [backport] ShenandoahWriteBarrierNode::find_bottom_mem() fix
+  - [backport] ShenandoahWriteBarrierRB flag to conditionally disable RB on WB fastpath
+  - [backport] Shenandoah/Zero barrier stubs
+  - [backport] SieveObjects test is too hostile to verification
+  - [backport] Single GCTimer shared by all operations
+  - [backport] Single thread-local GC state flag for all barriers
+  - [backport] Some smallish ShHeapRegionSet changes
+  - [backport] Speed up asserts and verification, improve fastdebug builds performance
+  - [backport] Split live data management for allocations and GCs
+  - [backport] Static heuristics should be really static and report decisions
+  - [backport] Static heuristics should use non-zero allocation threshold
+  - [backport] Store checks should run most of the time
+  - [backport] Tax-and-Spend allocation pacing
+  - [backport] Testbug: VerifyJCStressTest leaks memory
+  - [backport] TestSelectiveBarrierFlags should accept multi-element flag selections
+  - [backport] TestSelectiveBarrierFlags times out due to too aggressive compilation mode
+  - [backport] Trim/expand test heap sizes to fit small heaps
+  - [backport] Trim the TLAB sizes to avoid wasteful retirement under TLAB races
+  - [backport] Use leftmost region in GC allocations
+  - [backport] Use os::naked_short_sleep instead of naked Thread events for sleeping
+  - [backport] Use/sort (cached) RegionData not ShenandoahHeapRegionSet (infrastructure)
+  - [backport] UX: Cleanup (adaptive) CSet selection message
+  - [backport] UX: Pacer reports incorrect free size
+  - [backport] UX: Shorter gc+ergo messages from CSet selection
+  - [backport] Verifier crashes when reporting multiple forwardings
+  - [backport] Verifier should check klass pointers before attempting to reach for object size
+  - [backport] Verifier should print verification label at liveness verification
+  - [backport] Verify fwdptr accesses during Full GC moves
+  - [backport] Verify regions status
+  - [backport] When Shenandoah WB is moved out of loop, connect it to correct loop memory Phi (back out and revisit previous fix)
+  - [backport] Wipe out ShenandoahStoreCheck implementation
+  - [backport] Workaround C1 ConstantOopWriteValue bug
+  - Bitmap size might not be page aligned when large page is used
+  - Changed claim count to jint
+  - Cherry-pick JDK-8173013: JVMTI tagged object access needs G1 pre-barrier
+  - Defer cleaning of system dictionary and friends to parallel cleaning phase
+  - Do not put down update-refs-in-progress flag concurrently
+  - Fix AArch64 build failure: misplaced #endif
+  - Fixed Shenandoah 8u build
+  - Fixed Windows build
+  - Fix non-PCH build
+  - Fix non-PCH x86_32 build
+  - Fix up SPARC and Zero headers for proper locations
+  - missing barriers in String intrinsics with -ShenandoahOptimizeInstanceFinals -ShenandoahOptimizeStableFinals
+  - Missing event log for canceled GC
+  - StringInternCleanup times out
+  - VerifyJCStressTest should test all heuristics
+  - Workaround VM crash with JNI Weak Refs handling
 
 New in release 3.8.0 (2018-05-29):
 
