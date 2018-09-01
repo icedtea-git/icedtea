@@ -1,3 +1,14 @@
+2018-09-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump aarch32 to jdk8u172-b11-aarch32-180511.
+	* patches/hotspot/aarch32/8035496-pr3487.patch,
+	* patches/hotspot/aarch32/8187822-pr3478-rh1494230.patch:
+	Removed as applied upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove upstreamed patches.
+	* hotspot.map.in: Bump aarch32 to
+	jdk8u172-b11-aarch32-180511.
+
 2018-08-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump shenandoah to
