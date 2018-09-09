@@ -13,6 +13,12 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 3.9.0 (2018-07-XX):
 
 * Security fixes
+  - S8191239: Improve desktop file usage
+  - S8193419: Better Internet address support
+  - S8197871, CVE-2018-2938: Support Derby connections
+  - S8197925, CVE-2018-2940: Better stack walking
+  - S8199547, CVE-2018-2952: Exception to Pattern Syntax
+  - S8200666, CVE-2018-2973: Improve LDAP support
   - PR3607, CVE-2018-3639: hw: cpu: speculative store bypass mitigation
 * Import of OpenJDK 8 u172 build 11
   - S8031304: Add dcmd to print all loaded dynamic libraries.
@@ -49,6 +55,38 @@ New in release 3.9.0 (2018-07-XX):
   - S8192987: keytool should remember real storetype if it is not provided
   - S8193156: Need to backout fixes for JDK-8058547, JDK-8055753, JDK-8085903
   - S8193807: Avoid UnsatisfiedLinkError on AIX by providing empty basic implementations of getSystemCpuLoad and getProcessCpuLoad
+* Import of OpenJDK 8 u181 build 13
+  - S8038636: speculative traps break when classes are redefined
+  - S8051972: sun/security/pkcs11/ec/ReadCertificates.java fails intermittently
+  - S8055008: Clean up code that saves the previous versions of redefined classes
+  - S8057570: RedefineClasses() tests fail assert(((Metadata*)obj)->is_valid()) failed: obj is valid
+  - S8074373: NMT is not enabled if NMT option is specified after class path specifiers
+  - S8076117: EndEntityChecker should not process custom extensions after PKIX validation
+  - S8156137: SIGSEGV in ReceiverTypeData::clean_weak_klass_links
+  - S8157898: SupportedDSAParamGen.java failed with timeout
+  - S8169201: Montgomery multiply intrinsic should use correct name
+  - S8170035: When determining the ciphersuite lists, there is no debug output for disabled suites.
+  - S8176183: sun/security/mscapi/SignedObjectChain.java fails on Windows
+  - S8187045: [linux] Not all libraries in the VM are linked with -z,noexecstack
+  - S8187635: On Windows Swing changes keyboard layout on a window activation
+  - S8188223: IfNode::range_check_trap_proj() should handler dying subgraph with single if proj
+  - S8196224: Even better Internet address support
+  - S8196491: Newlines in JAXB string values of SOAP-requests are escaped to "&#xa;"
+  - S8196854: TestFlushableGZIPOutputStream failing with IndexOutOfBoundsException
+  - S8197943: Unable to use JDWP API in JDK 8 to debug JDK 9 VM
+  - S8198605: Touch keyboard is shown for a non-focusable text component
+  - S8198606: Touch keyboard does not hide, when a text component looses focus
+  - S8198794: Hotspot crash on Cassandra 3.11.1 startup with libnuma 2.0.3
+  - S8199406: Performance drop with Java JDK 1.8.0_162-b32
+  - S8199748: Touch keyboard is not shown, if text component gets focus from other text component
+  - S8200359: (tz) Upgrade time-zone data to tzdata2018d
+  - S8201433: Fix potential crash in BufImg_SetupICM
+  - S8202585: JDK 8u181 l10n resource file update
+  - S8202996: Remove debug print statements from RMI fix
+  - S8203233: (tz) Upgrade time-zone data to tzdata2018e
+  - S8203368: ObjectInputStream filterCheck method throws NullPointerException
+  - S8204874: Update THIRDPARTYREADME file
+  - S8205491: adjust reflective access checks
 * Backports
   - S8008321, PR3599: compile.cpp verify_graph_edges uses bool as int
   - S8064786, PR3601: Fix debug build after 8062808: Turn on the -Wreturn-type warning
