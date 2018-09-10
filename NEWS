@@ -313,6 +313,7 @@ New in release 3.9.0 (2018-07-XX):
   - StringInternCleanup times out
   - VerifyJCStressTest should test all heuristics
   - Workaround VM crash with JNI Weak Refs handling
+  - S8207348: AArch64: backport 8207345: Trampoline generation code reads from uninitialized memory
 
 New in release 3.8.0 (2018-05-29):
 
