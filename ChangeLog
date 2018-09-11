@@ -1,5 +1,18 @@
 2018-09-10  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump aarch32 to jdk8u181-b13-aarch32-180802.
+	* patches/hotspot/aarch32/8187577-pr3578.patch:
+	Removed as applied upstream in 8u181.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove upstreamed patch.
+	* hotspot.map.in: Bump aarch32 to
+	jdk8u181-b13-aarch32-180802.
+	* patches/hotspot/aarch32/pr3539-rh1548475.patch:
+	Revert to symlink now we share the same 8u base
+	as Shenandoah again.
+
+2018-09-10  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump shenandoah to
 	aarch64-shenandoah-jdk8u181-b15.
 	* patches/hotspot/shenandoah/8078628-pr3208.patch:
