@@ -1,0 +1,71 @@
+# PR3620: Shenandoah broken on ppc64
+diff --git openjdk.orig/hotspot/make/excludeSrc.make openjdk/hotspot/make/excludeSrc.make
+--- openjdk.orig/hotspot/make/excludeSrc.make
++++ openjdk/hotspot/make/excludeSrc.make
+@@ -121,6 +121,7 @@
+       Src_Files_EXCLUDE +=                                              \
+         shenandoahBarrierSet_x86.cpp                                    \
+         shenandoahBarrierSet_aarch64.cpp                                \
++        shenandoahBarrierSet_ppc.cpp                                    \
+         shenandoahBarrierSet_sparc.cpp                                  \
+         shenandoahBarrierSet_zero.cpp
+ endif
+diff --git openjdk.orig/hotspot/src/cpu/ppc/vm/shenandoahBarrierSet_ppc.cpp openjdk/hotspot/src/cpu/ppc/vm/shenandoahBarrierSet_ppc.cpp
+new file mode 100644
+--- /dev/null
++++ openjdk/hotspot/src/cpu/ppc/vm/shenandoahBarrierSet_ppc.cpp
+@@ -0,0 +1,54 @@
++/*
++ * Copyright (c) 2018, Red Hat, Inc. and/or its affiliates.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
++ * or visit www.oracle.com if you need additional information or have any
++ * questions.
++ *
++ */
++
++#include "precompiled.hpp"
++#include "gc_implementation/shenandoah/brooksPointer.hpp"
++#include "gc_implementation/shenandoah/shenandoahBarrierSet.inline.hpp"
++
++#include "asm/macroAssembler.hpp"
++#include "interpreter/interpreter.hpp"
++
++#define __ masm->
++
++#ifndef CC_INTERP
++
++void ShenandoahBarrierSet::interpreter_read_barrier(MacroAssembler* masm, Register dst) {
++  Unimplemented();
++}
++
++void ShenandoahBarrierSet::interpreter_read_barrier_not_null(MacroAssembler* masm, Register dst) {
++  Unimplemented();
++}
++
++void ShenandoahBarrierSet::interpreter_write_barrier(MacroAssembler* masm, Register dst) {
++  Unimplemented();
++}
++
++void ShenandoahBarrierSet::asm_acmp_barrier(MacroAssembler* masm, Register op1, Register op2) {
++  Unimplemented();
++}
++
++void ShenandoahHeap::compile_prepare_oop(MacroAssembler* masm, Register obj) {
++  Unimplemented();
++}
++#endif

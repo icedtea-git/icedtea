@@ -1,0 +1,47 @@
+# PR3619: Shenandoah broken on s390
+
+diff --git openjdk.orig/hotspot/src/share/vm/gc_implementation/shenandoah/heuristics/shenandoahAdaptiveHeuristics.cpp openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/heuristics/shenandoahAdaptiveHeuristics.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/shenandoah/heuristics/shenandoahAdaptiveHeuristics.cpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/heuristics/shenandoahAdaptiveHeuristics.cpp
+@@ -108,7 +108,7 @@
+   step = MIN2(step, (intx) MaxNormalStep);
+ 
+   log_info(gc, ergo)("Capacity: " SIZE_FORMAT "M, Peak Occupancy: " SIZE_FORMAT
+-                             "M, Lowest Free: " SIZE_FORMAT "M, Free Threshold: " UINTX_FORMAT "M",
++                             "M, Lowest Free: " SIZE_FORMAT "M, Free Threshold: " SIZE_FORMAT "M",
+                      capacity / M, _peak_occupancy / M,
+                      (capacity - _peak_occupancy) / M, ShenandoahMinFreeThreshold * capacity / 100 / M);
+ 
+diff --git openjdk.orig/hotspot/src/share/vm/gc_implementation/shenandoah/heuristics/shenandoahStaticHeuristics.cpp openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/heuristics/shenandoahStaticHeuristics.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/shenandoah/heuristics/shenandoahStaticHeuristics.cpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/heuristics/shenandoahStaticHeuristics.cpp
+@@ -36,7 +36,7 @@
+ }
+ 
+ void ShenandoahStaticHeuristics::print_thresholds() {
+-  log_info(gc, init)("Shenandoah heuristics thresholds: allocation "SIZE_FORMAT", free "SIZE_FORMAT", garbage "SIZE_FORMAT,
++  log_info(gc, init)("Shenandoah heuristics thresholds: allocation "UINTX_FORMAT", free "UINTX_FORMAT", garbage "UINTX_FORMAT,
+                      ShenandoahAllocationThreshold,
+                      ShenandoahFreeThreshold,
+                      ShenandoahGarbageThreshold);
+diff --git openjdk.orig/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahHeapRegion.cpp openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahHeapRegion.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahHeapRegion.cpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahHeapRegion.cpp
+@@ -539,7 +539,7 @@
+     }
+     size_t average_heap_size = (initial_heap_size + max_heap_size) / 2;
+     region_size = MAX2(average_heap_size / ShenandoahTargetNumRegions,
+-                       ShenandoahMinRegionSize);
++                       (size_t) ShenandoahMinRegionSize);
+ 
+     // Now make sure that we don't go over or under our limits.
+     region_size = MAX2(ShenandoahMinRegionSize, region_size);
+@@ -573,7 +573,7 @@
+   // Otherwise, mem-protecting one region may falsely protect the adjacent
+   // regions too.
+   if (UseLargePages) {
+-    region_size = MAX2(region_size, os::large_page_size());
++    region_size = MAX2((size_t) region_size, os::large_page_size());
+   }
+ 
+   int region_size_log = log2_long((jlong) region_size);

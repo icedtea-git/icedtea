@@ -1,3 +1,18 @@
+2018-09-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3619: Shenandoah broken on s390
+	PR3620: Shenandoah broken on ppc64
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new patches on Shenandoah
+	builds.
+	* NEWS: Updated.
+	* patches/hotspot/shenandoah/pr3619.patch:
+	Fix Shenandoah build on s390 where
+	size_t is not equal to uintx.
+	* patches/hotspot/shenandoah/pr3620.patch:
+	Add shenandoahBarrierSet implementation for
+	ppc so it builds on ppc64.
+
 2018-09-10  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump aarch32 to jdk8u181-b13-aarch32-180802.

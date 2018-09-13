@@ -101,6 +101,8 @@ New in release 3.9.0 (2018-07-XX):
   - PR3600: jni_util.c does not import header file which declares getLastErrorString
   - PR3601: Fix additional -Wreturn-type issues introduced by 8061651
 * Shenandoah
+  - PR3619: Shenandoah broken on s390
+  - PR3620: Shenandoah broken on ppc64
   - Allocation failure injection machinery
   - [backport] AArch64 shenandoah_store_check should read evacuation_in_progress as byte
   - [backport] Account trashed regions from coalesced CM-with-UR
