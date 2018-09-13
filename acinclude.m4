@@ -2683,13 +2683,6 @@ AC_DEFUN_ONCE([IT_HSBUILD_WORKS_ON_THIS_ARCH],
   AC_REQUIRE([IT_WITH_HOTSPOT_BUILD])
   AC_MSG_CHECKING([if HotSpot build ${HSBUILD} works on ${host_cpu}])
   has_working_hotspot=yes;
-  if test "x${HSBUILD}" = "xshenandoah"; then
-    case "${host_cpu}" in
-      x86_64) ;;
-      arm64|aarch64) ;;
-      *) has_working_hotspot=no ;
-    esac
-  fi
   AC_MSG_RESULT([$has_working_hotspot])
   if test "x$has_working_hotspot" = "xno"; then
     AC_MSG_ERROR([${HSBUILD} is not supported on this platform.])
