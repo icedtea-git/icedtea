@@ -1,5 +1,12 @@
 2018-09-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump default HotSpot build to include PR3626
+	AArch64 fix.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump default to include PR3626.
+
+2018-09-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR3623: Allow Shenandoah to be used on
 	all architectures
 	* NEWS: Updated.

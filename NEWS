@@ -101,6 +101,8 @@ New in release 3.9.0 (2018-07-XX):
   - PR3600: jni_util.c does not import header file which declares getLastErrorString
   - PR3601: Fix additional -Wreturn-type issues introduced by 8061651
   - PR3623: Allow Shenandoah to be used on all architectures
+* AArch64 port
+  - S8207345, PR3626: Trampoline generation code reads from uninitialized memory
 * Shenandoah
   - PR3619: Shenandoah broken on s390
   - PR3620: Shenandoah broken on ppc64
@@ -316,7 +318,6 @@ New in release 3.9.0 (2018-07-XX):
   - StringInternCleanup times out
   - VerifyJCStressTest should test all heuristics
   - Workaround VM crash with JNI Weak Refs handling
-  - S8207348: AArch64: backport 8207345: Trampoline generation code reads from uninitialized memory
 
 New in release 3.8.0 (2018-05-29):
 
