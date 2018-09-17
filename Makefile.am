@@ -1,9 +1,5 @@
 # Dependencies
 
-JDK_UPDATE_VERSION = 181
-BUILD_VERSION = b13
-COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(BUILD_VERSION)
-
 CORBA_CHANGESET = c120c4fb7b31
 JAXP_CHANGESET = 55420c5cc9f3
 JAXWS_CHANGESET = f824de94c42e
@@ -485,8 +481,8 @@ ICEDTEA_CONFIGURE = \
 	  --enable-unlimited-crypto \
 	  --with-stdc++lib=dynamic \
 	  --with-boot-jdk=$(BOOT_DIR) \
-	  --with-update-version=$(JDK_UPDATE_VERSION) \
-	  --with-build-number=$(BUILD_VERSION) \
+	  --with-update-version=@JDK_UPDATE_VERSION@ \
+	  --with-build-number=@BUILD_VERSION@ \
 	  --with-milestone="fcs" \
 	  --with-extra-cflags="$(CFLAGS)" \
 	  --with-extra-cxxflags="$(CXXFLAGS)" \
@@ -912,18 +908,18 @@ dist-openjdk: stamps/extract-cacao.stamp
 	  echo "ERROR: zip not found"; exit 1; \
 	fi
 	find openjdk/ -name \\.hg* | xargs rm -rf	
-	$(ZIP) -r openjdk-$(COMBINED_VERSION) openjdk/
+	$(ZIP) -r openjdk-@COMBINED_VERSION@ openjdk/
 
 # Creates archive of openjdk that is compliant with Free Software guidelines.
 dist-openjdk-fsg: stamps/patch-fsg.stamp
 	if test "x${ZIP}" = "x"; then \
 	  echo "ERROR: zip not found"; exit 1; \
 	fi
-	$(ZIP) -r openjdk-fsg-$(COMBINED_VERSION) openjdk/
+	$(ZIP) -r openjdk-fsg-@COMBINED_VERSION@ openjdk/
 
 dist-openjdk-fsg-xz: stamps/patch-fsg.stamp
 	tardir=openjdk/ && $(am__tar) | XZ_OPT=$${XZ_OPT--e} xz -c \
-	  >openjdk-fsg-$(COMBINED_VERSION).tar.xz
+	  >openjdk-fsg-@COMBINED_VERSION@.tar.xz
 
 # OpenJDK Source Preparation Targets
 # ==================================
@@ -3213,7 +3209,7 @@ install-data-local:
 	for sizes in 16 24 32 48 ; do \
 	  ${mkinstalldirs} $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps ; \
 	  ${INSTALL_DATA} openjdk/jdk/src/solaris/classes/sun/awt/X11/java-icon$${sizes}.png \
-	    $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-@JAVA_VER@.png ; \
+	    $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-@JAVA_VER@-@JAVA_VENDOR@.png ; \
 	done
 	for files in $(DESKTOP_FILES) ; do \
 	  ${INSTALL_DATA} $(builddir)/$${files} $(DESTDIR)$(datadir)/applications ; \
@@ -3357,7 +3353,7 @@ uninstall-local:
 	rm -rf $(DESTDIR)$(docdir)/THIRD_PARTY_README
 	rm -rf $(DESTDIR)$(docdir)/TRADEMARK
 	for sizes in 16 24 32 48 ; do \
-	  rm -vf $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-@JAVA_VER@.png; \
+	  rm -vf $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-@JAVA_VER@-@JAVA_VENDOR@.png; \
 	done
 	for files in $(DESKTOP_FILES) ; do \
 	  rm -vf $(DESTDIR)$(datadir)/applications/$$(basename $${files}); \
