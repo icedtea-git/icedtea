@@ -6,6 +6,7 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       INSTALL_ARCH_DIR=amd64
       JRE_ARCH_DIR=amd64
       RPM_ARCH=x86_64
+      SYSTEMTAP_ARCH_DIR=x86_64
       ARCHFLAG="-m64"
       ;;
     i?86)
@@ -13,6 +14,7 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       INSTALL_ARCH_DIR=i386
       JRE_ARCH_DIR=i386
       RPM_ARCH=i686
+      SYSTEMTAP_ARCH_DIR=i386
       ARCH_PREFIX=${LINUX32}
       ARCHFLAG="-m32"
       ;;
@@ -20,12 +22,14 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       BUILD_ARCH_DIR=alpha
       INSTALL_ARCH_DIR=alpha
       JRE_ARCH_DIR=alpha
+      SYSTEMTAP_ARCH_DIR=alpha
       ;;
     arm64|aarch64)
       BUILD_ARCH_DIR=aarch64
       INSTALL_ARCH_DIR=aarch64
       JRE_ARCH_DIR=aarch64
       RPM_ARCH=aarch64
+      SYSTEMTAP_ARCH_DIR=arm64
       ARCHFLAG="-D_LITTLE_ENDIAN"
       ;;
     arm*)
@@ -33,23 +37,27 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       INSTALL_ARCH_DIR=aarch32
       JRE_ARCH_DIR=aarch32
       RPM_ARCH=armv7hl
+      SYSTEMTAP_ARCH_DIR=arm
       ARCHFLAG="-D_LITTLE_ENDIAN"
       ;;
     mips)
       BUILD_ARCH_DIR=mips
       INSTALL_ARCH_DIR=mips
       JRE_ARCH_DIR=mips
+      SYSTEMTAP_ARCH_DIR=mips
        ;;
     mipsel)
       BUILD_ARCH_DIR=mipsel
       INSTALL_ARCH_DIR=mipsel
       JRE_ARCH_DIR=mipsel
+      SYSTEMTAP_ARCH_DIR=mips
        ;;
     powerpc)
       BUILD_ARCH_DIR=ppc
       INSTALL_ARCH_DIR=ppc
       JRE_ARCH_DIR=ppc
       RPM_ARCH=ppc
+      SYSTEMTAP_ARCH_DIR=powerpc
       ARCH_PREFIX=${LINUX32}
       ARCHFLAG="-m32"
       ;;
@@ -58,6 +66,7 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       INSTALL_ARCH_DIR=ppc64
       JRE_ARCH_DIR=ppc64
       RPM_ARCH=ppc64
+      SYSTEMTAP_ARCH_DIR=powerpc
       ARCHFLAG="-m64"
        ;;
     powerpc64le)
@@ -65,12 +74,14 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       INSTALL_ARCH_DIR=ppc64le
       JRE_ARCH_DIR=ppc64le
       RPM_ARCH=ppc64le
+      SYSTEMTAP_ARCH_DIR=powerpc
       ARCHFLAG="-m64"
        ;;
     sparc)
       BUILD_ARCH_DIR=sparc
       INSTALL_ARCH_DIR=sparc
       JRE_ARCH_DIR=sparc
+      SYSTEMTAP_ARCH_DIR=sparc
       ARCH_PREFIX=${LINUX32}
       ARCHFLAG="-m32"
        ;;
@@ -78,6 +89,7 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       BUILD_ARCH_DIR=sparcv9
       INSTALL_ARCH_DIR=sparcv9
       JRE_ARCH_DIR=sparc64
+      SYSTEMTAP_ARCH_DIR=sparc
       ARCHFLAG="-m64"
        ;;
     s390)
@@ -85,6 +97,7 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       INSTALL_ARCH_DIR=s390
       JRE_ARCH_DIR=s390
       RPM_ARCH=s390
+      SYSTEMTAP_ARCH_DIR=s390
       ARCH_PREFIX=${LINUX32}
       ARCHFLAG="-m31"
        ;;
@@ -93,22 +106,26 @@ AC_DEFUN([IT_SET_ARCH_SETTINGS],
       INSTALL_ARCH_DIR=s390x
       JRE_ARCH_DIR=s390x
       RPM_ARCH=s390x
+      SYSTEMTAP_ARCH_DIR=s390
       ARCHFLAG="-m64"
       ;;
     sh*)
       BUILD_ARCH_DIR=sh
       INSTALL_ARCH_DIR=sh
       JRE_ARCH_DIR=sh
+      SYSTEMTAP_ARCH_DIR=sh
       ;;
     *)
       BUILD_ARCH_DIR=`uname -m`
       INSTALL_ARCH_DIR=$BUILD_ARCH_DIR
       JRE_ARCH_DIR=$INSTALL_ARCH_DIR
+      SYSTEMTAP_ARCH_DIR=$INSTALL_ARCH_DIR
       ;;
   esac
   AC_SUBST(BUILD_ARCH_DIR)
   AC_SUBST(INSTALL_ARCH_DIR)
   AC_SUBST(JRE_ARCH_DIR)
+  AC_SUBST(SYSTEMTAP_ARCH_DIR)
   AC_SUBST(ARCH_PREFIX)
   AC_SUBST(ARCHFLAG)
 ])
@@ -2697,4 +2714,31 @@ AC_DEFUN_ONCE([IT_HSBUILD_WORKS_ON_THIS_ARCH],
   if test "x$has_working_hotspot" = "xno"; then
     AC_MSG_ERROR([${HSBUILD} is not supported on this platform.])
   fi
+])
+
+AC_DEFUN([IT_WITH_TAPSET_DIR],
+[
+  TAPSET_DEFAULT="${datadir}/systemtap/tapset"
+  AC_MSG_CHECKING([which SystemTap tapset directory to use])
+  AC_ARG_WITH([tapset-dir],
+	      [AS_HELP_STRING(--with-tapset-dir,set the SystemTap tapset directory [[default=DATAROOTDIR/systemtap/tapset]])],
+  [
+    if test "x${withval}" = x || test "x${withval}" = xyes; then
+      TAPSET_DIR="${TAPSET_DEFAULT}"
+    else
+      TAPSET_DIR="${withval}"
+    fi
+  ],
+  [
+    TAPSET_DIR="${TAPSET_DEFAULT}"
+  ])
+  if test "x${TAPSET_DIR}" = "xno"; then
+    TAPSET_DIR=none
+    TAPSET_DIR_SET=no
+  else
+    TAPSET_DIR_SET=yes
+  fi
+  AC_MSG_RESULT([${TAPSET_DIR}])
+  AC_SUBST([TAPSET_DIR])
+  AM_CONDITIONAL(WITH_TAPSET_DIR, test "x${TAPSET_DIR_SET}" = "xyes")
 ])

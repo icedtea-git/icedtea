@@ -3108,9 +3108,16 @@ endif
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/ext; \
 	done
 if ENABLE_SYSTEMTAP
+if WITH_TAPSET_DIR
+	stapdest="$(DESTDIR)$(TAPSET_DIR)/$(SYSTEMTAP_ARCH_DIR)" ; \
 	for files in $(BUILD_SDK_DIR)/tapset/*.stp; do \
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/tapset; \
+	  ${mkinstalldirs} $${stapdest} ; \
+	  tapname=$$(basename $${files}); \
+	  destname=$${tapname/./-@JAVA_VER@.} ; \
+	  ln -s ${prefix}/tapset/${tapname} $${stapdest}/$${destname} ; \
 	done
+endif
 endif
 	if [ -e $(DESTDIR)${exec_prefix}/lib/aarch32 ] ; then \
 	  ln -s aarch32 $(DESTDIR)${exec_prefix}/lib/arm; \
@@ -3289,7 +3296,10 @@ uninstall-local:
 	  rm -vf $(DESTDIR)${prefix}/jre/lib/ext/$$(basename $${files}); \
 	done
 	for files in $(BUILD_SDK_DIR)/tapset/*.stp; do \
-	  rm -vf $(DESTDIR)${prefix}/tapset/$$(basename $${files}); \
+	  tapname=$$(basename $${files}); \
+	  destname=$${tapname/./-@JAVA_VER@.} ; \
+	  rm -vf $(DESTDIR)${prefix}/tapset/$${tapname}; \
+	  rm -vf $(DESTDIR)$(TAPSET_DIR)/$(SYSTEMTAP_ARCH_DIR)/$${destname} ; \
 	done
 	for files in $(BUILD_SDK_DIR)/jre/lib/*.properties; do \
 	  rm -vf $(DESTDIR)${prefix}/jre/lib/$$(basename $${files}); \
@@ -3393,6 +3403,8 @@ endif
 	$(RMDIR) $(DESTDIR)${prefix}/sample
 	$(RMDIR) $(DESTDIR)$(docdir)
 	$(RMDIR) $(DESTDIR)$(datadir)/applications
+	$(RMDIR) $(DESTDIR)$(TAPSET_DIR)/$(SYSTEMTAP_ARCH_DIR)
+	$(RMDIR) $(DESTDIR)$(TAPSET_DIR)
 	$(RMDIR) $(DESTDIR)$(sysconfdir)/.java/.systemPrefs
 	$(RMDIR) $(DESTDIR)$(mandir)/{man1,ja_JP.UTF-8/man1}
 	for sizes in 16 24 32 48 ; do \

@@ -23,6 +23,7 @@ New in release 3.9.0 (2018-07-XX):
 * New features
   - PR3623: Allow Shenandoah to be used on all architectures
   - PR3624: Sync desktop files with Fedora/RHEL versions again
+  - PR3628: Install symlinks to tapsets in SystemTap directory
 * Import of OpenJDK 8 u172 build 11
   - S8031304: Add dcmd to print all loaded dynamic libraries.
   - S8044107: Add Diagnostic Command to list all ClassLoaders

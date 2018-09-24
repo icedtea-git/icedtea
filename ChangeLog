@@ -1,3 +1,22 @@
+2018-09-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3628: Install symlinks to tapsets in SystemTap directory
+	* INSTALL: Updated and synched with IcedTea 2.x.
+	* Makefile.am:
+	(install-exec-local):
+	Add symlinks to tapsets in system tapset directory.
+	(uninstall-local): Remove symlinks now added by
+	install stage.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_SET_ARCH_SETTINGS): Set SYSTEMTAP_ARCH_DIR
+	appropriately for each architecture.
+	(IT_WITH_TAPSET_DIR): Add option --with-tapset-dir
+	to allow SystemTap tapset directory to be
+	specified (defaults to ${datadir}/systemtap/tapset)
+	* configure.ac:
+	Invoke IT_WITH_TAPSET_DIR.
+
 2018-09-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3624: Sync desktop files with Fedora/RHEL
