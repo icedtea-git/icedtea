@@ -817,10 +817,7 @@ EXTRA_DIST = $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/hotspot/*/*.patch \
 	tools-copy contrib overlays \
 	$(JTREG_SRCS) HACKING autogen.sh \
-	tapset/hotspot.stp.in \
-	tapset/hotspot_jni.stp.in \
-	tapset/jstack.stp.in \
-	tapset/hotspot_gc.stp.in \
+	tz.properties.in \
 	scripts/jni_create_stap.c \
 	scripts/jni_desc \
 	THANKYOU test/tapset \
@@ -846,7 +843,7 @@ clean-local: clean-tests \
  clean-bootstrap-directory-symlink-stage1 clean-bootstrap-directory-symlink-stage2 \
  clean-extract clean-icedtea-stage2 clean-icedtea-debug-stage2 clean-icedtea-stage1 \
  clean-add-zero clean-add-zero-debug clean-add-cacao clean-add-cacao-debug \
- clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop \
+ clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop clean-tz.properties \
  clean-add-nss clean-add-nss-debug clean-add-tzdata-support clean-add-tzdata-support-debug \
  clean-add-systemtap clean-add-systemtap-debug
 	if [ -e bootstrap ]; then \
@@ -888,7 +885,7 @@ distclean-local: clean-local clean-download
 	clean-split-debuginfo clean-split-debuginfo-debug clean-split-debuginfo-boot \
 	clean-add-nss clean-add-nss-debug clean-add-tzdata-support clean-add-tzdata-support-debug \
 	clean-add-systemtap clean-add-systemtap-debug clean-add-systemtap-boot clean-add-nss-boot \
-	clean-add-tzdata-support-boot clean-aescheck clean-check-aes
+	clean-add-tzdata-support-boot clean-aescheck clean-check-aes clean-tz.properties
 
 env:
 	@echo 'unset JAVA_HOME'
@@ -2024,7 +2021,7 @@ clean-add-nss:
 	rm -f $(BUILD_SDK_DIR)/jre/lib/security/nss.cfg
 	rm -f stamps/add-nss.stamp
 
-stamps/add-tzdata-support.stamp: stamps/icedtea.stamp
+stamps/add-tzdata-support.stamp: stamps/icedtea.stamp tz.properties
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties $(BUILD_SDK_DIR)/jre/lib;
 endif
@@ -2163,7 +2160,7 @@ clean-add-nss-debug:
 	rm -f $(BUILD_DEBUG_SDK_DIR)/jre/lib/security/nss.cfg
 	rm -f stamps/add-nss-debug.stamp
 
-stamps/add-tzdata-support-debug.stamp: stamps/icedtea-debug.stamp
+stamps/add-tzdata-support-debug.stamp: stamps/icedtea-debug.stamp tz.properties
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties \
 	  $(BUILD_DEBUG_SDK_DIR)/j2sdk-image/jre/lib;
@@ -2314,7 +2311,7 @@ clean-add-nss-boot:
 	rm -f $(BUILD_BOOT_SDK_DIR)/jre/lib/security/nss.cfg
 	rm -f stamps/add-nss-boot.stamp
 
-stamps/add-tzdata-support-boot.stamp: stamps/icedtea-boot.stamp
+stamps/add-tzdata-support-boot.stamp: stamps/icedtea-boot.stamp tz.properties
 if WITH_TZDATA_DIR
 	cp $(abs_top_builddir)/tz.properties $(BUILD_BOOT_SDK_DIR)/jre/lib;
 endif
@@ -2949,6 +2946,12 @@ jconsole-@JAVA_VER@.desktop: jconsole.desktop
 
 clean-jconsole-@JAVA_VER@.desktop:
 	rm -f jconsole-@JAVA_VER@.desktop
+
+tz.properties: $(top_srcdir)/tz.properties.in
+	cat $< | $(SED) "s#_TZDATA_DIR_#$(TZDATA_DIR)#" > $@
+
+clean-tz.properties:
+	rm -f tz.properties
 
 # AES Intrinstic Check
 

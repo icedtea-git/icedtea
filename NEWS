@@ -104,6 +104,7 @@ New in release 3.9.0 (2018-07-XX):
   - PR3597: Potential bogus -Wformat-overflow warning with -Wformat enabled
   - PR3600: jni_util.c does not import header file which declares getLastErrorString
   - PR3601: Fix additional -Wreturn-type issues introduced by 8061651
+  - PR3630: Use ${datadir} when specifying default tz.properties location
 * AArch64 port
   - S8207345, PR3626: Trampoline generation code reads from uninitialized memory
 * Shenandoah
