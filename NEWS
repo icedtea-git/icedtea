@@ -12,6 +12,155 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.10.0 (2018-10-XX):
 
+* Shenandoah
+  - PR3634: Shenandoah still broken on s390 with aarch64-shenandoah-jdk8u181-b16
+  - [backport] Adaptive CSet selection overshoots max-CSet
+  - [backport] Adaptive CSet selection selects excessively when memory is tight
+  - [backport] Adaptive/Traversal heuristics rewrite for allocation rate
+  - [backport] Added logging for the number of workers used for GC cycles
+  - [backport] Add task termination and enhanced task queue state tracking + weakrefs
+  - [backport] Allocation path should not touch GC barriers for metadata
+  - [backport] Allocation tracker should really report bytes
+  - [backport] AlwaysPreTouch fails with non-default ConcGCThreads
+  - [backport] Application pacing precision fixes
+  - [backport] Apply ShenandoahEvacOOMScope only for evac-taking paths in ShenandoahBarrierSet
+  - [backport] Assembler write barriers should consistently check for forwarded objects
+  - [backport] Avoid indirection to next-mark-context
+  - [backport] Avoid using uintx in ShenandoahHeapRegion
+  - [backport] C1 shenandoah_wb expects obj in a register
+  - [backport] Check and ensure that Shenandoah-enabled compilations succeed
+  - [backport] Check heap stability in C1 WBs
+  - [backport] ClassUnloadingWithConcurrentMark should be opt-in with Shenandoah
+  - [backport] Clean up obsolete c2 code
+  - [backport] Cleanup: remove unused root processor's sub tasks
+  - [backport] Cleanup UseShenandoahOWST blocks
+  - [backport] CollectedHeap::max_tlab_size is measured in words
+  - [backport] Complete liveness for recently allocated regions outside the allocation path
+  - [backport] Comprehensible GC trigger logging
+  - [backport] Concurrent uncommit should be recorded as GC event
+  - [backport] Constify ShHeapRegionSet and ShCollectionSet
+  - [backport] Convert magic value to ShenandoahPacingSurcharge
+  - [backport] Default to ShenandoahCodeRootsStyle = 2
+  - [backport] Degenerated evacuation
+  - [backport] Disable UseFastJNIAccessors for Shenandoah
+  - [backport] Elastic TLABs support for Shenandoah
+  - [backport] Enable ShenandoahEvacReserveOverflow by default
+  - [backport] Evac assist should touch marked objects only
+  - [backport] Evac reserve: make sure GC has untouchable space to move the objects into
+  - [backport] EvilSyncBug test is too slow
+  - [backport] Explicit GC should actually uncommit the heap
+  - [backport] Exponential backoff with pacing
+  - [backport] Fix aarch64 CAS predicates
+  - [backport] Fix CAS-obj predicates and add expected-null-versions for cmpxchg-narrow-oop
+  - [backport] Fixed SA due to code refactoring and merging
+  - [backport] Fix Minimal and Zero builds
+  - [backport] Fix ShHeap::notify_alloc usages: it accepts words, not bytes
+  - [backport] Fix TestCommonGCLoads test
+  - [backport] Fix TestFullGCALot test failure
+  - [backport] Fix TestGCThreadGroups test
+  - [backport] Forceful SATB buffer flushes should be time-periodic, not traffic-dependent
+  - [backport] Full GC always comes with liveness data
+  - [backport] Full GC should not always update references
+  - [backport] GCLAB slowpath allocations should fit the object into GCLAB
+  - [backport] GC trace messages have to be immortal
+  - [backport] Handle missing ShenandoahWriteBarrierRB case
+  - [backport] Heap region count selection should only consider max heap size
+  - [backport] Hook up GCLABs to Elastic LAB support
+  - [backport] Improve scheduling and interleaving of SATB processing in mark loop
+  - [backport] Including metaspace info when reporting heap info
+  - [backport] Incorrect label for static heuristics
+  - [backport] Make in-cset checks use signed bytes to match C2 better
+  - [backport] Micro-optimize AArch64 assembly write-barriers
+  - [backport] Missing Shenandoah entry in GCNameHelper::to_string
+  - [backport] More detailed pacing histogram
+  - [backport] More verbose profiling for phase 4 in mark-compact
+  - [backport] Move heuristics from ShCollectorPolicy to ShHeap
+  - [backport] Move (Java)Thread::_gc_state to lower offset to optimize barrier fast-path encoding
+  - [backport] Move ParallelCodeIterator to ShenandoahCodeRoots
+  - [backport] Move periodic GC decision making to GC heuristics base class
+  - [backport] Move Shenandoah stress tests to tier3
+  - [backport] Non-cancellable mark loops should have sensible stride
+  - [backport] Off-by-one error in degen progress calculation
+  - [backport] Only Java and GC worker threads should get GCLABs
+  - [backport] Out-of-cycle Degenerated GC should process references and unload classes
+  - [backport] Pacer for evacuation should print "Avail" to capture discounting
+  - [backport] Pacer should account actual size for elastic TLABs
+  - [backport] Parallel +AlwaysPreTouch should run with max workers
+  - [backport] Passive heuristics should enter degen GC, not full GC
+  - [backport] Perform gc-state checks with LoadB to fit C2 matchers
+  - [backport] Pre-filter oops before enqueing them in SBS slowpaths
+  - [backport] Print task queue statistics at the end of GC cycle
+  - [backport] Process remaining SATB buffers in final mark/traverse loop instead of separate phase
+  - [backport] Proper units for allocation failure messages
+  - [backport] Prune undefined and unused methods
+  - [backport] Purge partial heuristics and connection matrix infrastructure
+  - [backport] Purge support for ShenandoahConcurrentEvacCodeRoots and ShenandoahBarriersForConst
+  - [backport] Rearrange Shenandoah tests into 3 tiers
+  - [backport] Reclaim immediate garbage after mark-compact marking
+  - [backport] Recycle the regions only once
+  - [backport] Refactor alive-closures to deal better with new marking contexts
+  - [backport] Refactor allocation path to accept ShenandoahAllocRequest tuple
+  - [backport] Refactor and improve ShenandoahCodeRoots strategies
+  - [backport] Refactor FreeSet logging: support evac-reserve, denser printouts
+  - [backport] Refactor gc+init logging
+  - [backport] Refactoring ShenandoahStrDedupStress test to reduce test time
+  - [backport] Refactor to group marking bitmap and TAMS structure in one class ShenandoahMarkingContext
+  - [backport] Remove C2 write-barrier from .ad files
+  - [backport] Removed racy assertion
+  - [backport] Remove NMethodSizeLimit adjustment for Shenandoah
+  - [backport] Remove obsolete/unused logging usages
+  - [backport] Remove safe_equals()
+  - [backport] Remove ShHeuristics::print_threshold
+  - [backport] Rename and move ShenandoahPrepareForMarkClosure
+  - [backport] Rename "cancel_concgc" to "cancel_gc"
+  - [backport] Replace custom asserts with shenandoah_assert_*
+  - [backport] Replace risky SBS::need_update_refs_barrier with straightforward check
+  - [backport] Replace ShBarrierSet* casts with accessor
+  - [backport] Report actual free size in non-verbose FreeSet status
+  - [backport] Report heap region stats in proper units
+  - [backport] Resettable iterators to avoid dealing with copying/assignment compilation differences
+  - [backport] Reshuffle tests: verify STW GC is working first, then verify under aggressive, then the rest
+  - [backport] Rework ClassUnloading* flags handling
+  - [backport] Rework GC degradation on allocation failure
+  - [backport] SATB buffer filtering/compaction hides unmarked objects until final-mark
+  - [backport] shenandoah_assert_correct should check object/forwardee klasses
+  - [backport] shenandoah_assert_correct should verify classes before claiming _safe_oop
+  - [backport] Shenandoah changes to allow enabling -Wreorder
+  - [backport] Shenandoah/PPC barrier stubs
+  - [backport] Shenandoah string deduplication
+  - [backport] SH::make_(tlabs)_parsable() should work correctly with/without TLABs
+  - [backport] Shortcut regions that are known not to be alive
+  - [backport] Should cleanup previous/bad versions of redefined classes during full gc
+  - [backport] Skip RESOLVE in SATBBufferClosure if no forwarded objects are in heap
+  - [backport] Soft-refs policy needs reliable heap usage data after the GC cycle
+  - [backport] Soft refs should be purged reliably on allocation failure, or with compact heuristics
+  - [backport] Some trivial-ish cleanups
+  - [backport] Split write barrier paths for mutator and GC workers
+  - [backport] StringInternCleanup times out
+  - [backport] TestHeapDump runs much faster with small heap
+  - [backport] Tests should use -XX:+ShenandoahVerify in some OOM-evac configurations
+  - [backport] TLAB sizing policy should converge faster with Shenandoah
+  - [backport] Trace and report total allocation latency and sizes
+  - [backport] Traversal should resize TLABs
+  - [backport] Trivial enhancement to avoid costly deletion array element
+  - [backport] Uncommit should relinquish the heap lock regularly
+  - [backport] Unreachable assert in ShenandoahCodeRoots::acquire_lock
+  - [backport] Verifier should dump raw memory around the problematic oops
+  - [backport] Verify global and local gc-state status
+  - [backport] VSC++ requires space(s) in between two string literals
+  - [backport] WB slowpath should assist with evacuation of adjacent objects
+  - [backport] Wiring GC events to JFR + Restore heap occupancy in GC logs after JFR changes
+  - [backport] Wiring heap and metaspace info to JFR
+  - [backport] Wrap worker id in thread local worker session
+  - [backport] -XX:-UseTLAB should disable GCLABs too
+  - Cleanup undeclared methods in barrier stubs
+  - Disable evac assist by default until bugfixes arrive
+  - Fix build failure: signedness mismatch in assert
+  - Fix MacOS/Clang build failure
+  - Fix x86_32 build
+  - JDK8u: Silence compilation warnings on implicit type conversion
+  - Move JNI Weak References workaround to Shenandoah-specific root processor
+
 New in release 3.9.0 (2018-09-27):
 
 * Security fixes

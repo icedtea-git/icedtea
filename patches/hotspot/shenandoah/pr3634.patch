@@ -1,0 +1,18 @@
+# PR3634: Shenandoah still broken on s390 with aarch64-shenandoah-jdk8u181-b16
+
+diff --git openjdk.orig/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoah_globals.hpp openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoah_globals.hpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoah_globals.hpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoah_globals.hpp
+@@ -55,10 +55,10 @@
+           "Size of the Shenandoah regions. "                                \
+           "Determined automatically by default.")                           \
+                                                                             \
+-  experimental(uintx, ShenandoahMinRegionSize, 256 * K,                     \
++  experimental(size_t, ShenandoahMinRegionSize, 256 * K,                    \
+           "Minimum heap region size. ")                                     \
+                                                                             \
+-  experimental(uintx, ShenandoahMaxRegionSize, 32 * M,                      \
++  experimental(size_t, ShenandoahMaxRegionSize, 32 * M,                     \
+           "Maximum heap region size. ")                                     \
+                                                                             \
+   experimental(intx, ShenandoahHumongousThreshold, 100,                     \
