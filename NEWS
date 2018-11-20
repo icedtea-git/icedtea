@@ -12,6 +12,15 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.10.0 (2018-10-XX):
 
+* Security fixes
+  - PR3639, CVE-2018-16435: lcms2: heap-based buffer overflow in SetData function in cmsIT8LoadFromFile
+* Backports
+  - PR3646: Backed out changeset 6e3f4784affc (S4890063/PR2304/RH1214835)
+  - S8029661, PR3642, RH1477159: Support TLS v1.2 algorithm in SunPKCS11 provider
+  - S8131048, PR3574, RH1498936: ppc implement CRC32 intrinsic
+  - S8164920, PR3574, RH1498936: ppc: enhancement of CRC32 intrinsic
+  - S8172850, PR3643, RH1640127: Anti-dependency on membar causes crash in register allocator due to invalid instruction scheduling
+  - S8209639, PR3643, RH1640127: assert failure in coalesce.cpp: attempted to spill a non-spillable item
 * Shenandoah
   - PR3634: Shenandoah still broken on s390 with aarch64-shenandoah-jdk8u181-b16
   - [backport] Adaptive CSet selection overshoots max-CSet
