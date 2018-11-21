@@ -21,6 +21,8 @@ New in release 3.10.0 (2018-10-XX):
   - S8164920, PR3574, RH1498936: ppc: enhancement of CRC32 intrinsic
   - S8172850, PR3643, RH1640127: Anti-dependency on membar causes crash in register allocator due to invalid instruction scheduling
   - S8209639, PR3643, RH1640127: assert failure in coalesce.cpp: attempted to spill a non-spillable item
+* SystemTap
+  - PR3625: arc_priority representation creates an implicit limit on character sequence within regexp
 * Shenandoah
   - PR3634: Shenandoah still broken on s390 with aarch64-shenandoah-jdk8u181-b16
   - [backport] Adaptive CSet selection overshoots max-CSet
