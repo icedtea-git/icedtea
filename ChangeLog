@@ -1,5 +1,14 @@
 2018-11-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR3634: Update Shenandoah fix following upstream
+	discussion
+	* patches/hotspot/shenandoah/pr3634.patch:
+	Cast ShenandoahMinRegionSize/ShenandoahMaxRegionSize
+	as necessary rather than changing their type as
+	OpenJDK 8 doesn't have support for size_t arguments.
+
+2018-11-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump to icedtea-3.10.0pre01.
 	* Makefile.am,
 	(CORBA_CHANGESET): Update to icedtea-3.10.0pre01 tag.
