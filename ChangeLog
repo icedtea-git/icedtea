@@ -1,5 +1,27 @@
 2018-11-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR3652: Detect whether -Xprefer:source
+	and -J-Xmx<limit> can be used, rather than assuming
+	* Makefile.am:
+	(PREFER_SOURCE): Define if
+	COMPILER_SUPPORTS_XPREFERSOURCE is set
+	by configure.
+	(MEMORY_LIMIT): Define if
+	COMPILER_SUPPORTS_MAX_HEAP_SIZE is set
+	by configure.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DIAMOND_CHECK): Use 'the Java compiler'
+	rather than 'javac' to avoid confusion with
+	the OpenJDK command.
+	(IT_UNDERSCORE_CHECK): Likewise.
+	(IT_JAVAC_OPTIONS_CHECK): Check whether the
+	selected Java compiler supports -Xprefer:source
+	and -J-Xmx.
+	* configure.ac: Invoke IT_JAVAC_OPTIONS_CHECK.
+
+2018-11-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* NEWS: Add section for 2.6.15.
 	* configure.ac: Bump to 2.6.15pre00.
 
