@@ -3261,9 +3261,18 @@ endif
 	for files in $(BUILD_SDK_DIR)/jre/lib/ext/*.jar; do \
 	  $(call install_file,$${files},$(DESTDIR)${prefix}/jre/lib/ext,$(INSTALL_DATA));\
 	done
+if ENABLE_SYSTEMTAP
+if WITH_TAPSET_DIR
+	stapdest="$(DESTDIR)$(TAPSET_DIR)/$(SYSTEMTAP_ARCH_DIR)" ; \
 	for files in $(BUILD_SDK_DIR)/tapset/*.stp; do \
 	  $(call install_file,$${files},$(DESTDIR)${prefix}/tapset,$(INSTALL_DATA));\
+	  ${mkinstalldirs} $${stapdest} ; \
+	  tapname=$$(basename $${files}); \
+	  destname=$${tapname/./-@JAVA_VER@.} ; \
+	  ln -s ${prefix}/tapset/${tapname} $${stapdest}/$${destname} ; \
 	done
+endif
+endif
 	$(abs_top_builddir)/pax-mark-vm $(DESTDIR)${prefix} false
 
 install-data-local:

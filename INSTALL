@@ -29,7 +29,7 @@ libpng-devel (for --enable-system-png)
 libjpeg-devel >= 6b (for --enable-system-jpeg)
 zlib-devel (for --enable-system-zlib)
 lcms2-devel (for --enable-system-lcms)
-fontconfig (for --enable-system-fontconfig)
+fontconfig (for --enable-system-fontconfig & --enable-improved-font-rendering)
 libc6-dev & libattr-devel/libattr1-dev (for --enable-compile-against-syscalls)
 libpcsclite (for --enable-system-pcsc)
 lksctp-tools (for --enable-system-sctp)
@@ -218,9 +218,10 @@ to configure:
   tarball to be used instead of the standard versions.
 * --with-hg-revision: Specify a hg revision to use (as opposed to tip) with the --enable-hg option.
 * --with-tzdata-dir: Specify the location of Java timezone data, defaulting to /usr/share/javazi.
+* --with-tapset-dir: Specify the location of system SystemTap tapsets, defaulting to ${datarootdir}/systemtap/tapset.
 * --with-llvm-config: Specify the location of the llvm-config binary.
 * --with-version-suffix: Appends the given text to the JDK version output.
-* --with-hotspot-build: The HotSpot to use, defaulting to 'original' i.e. hs14 as bundled with OpenJDK.
+* --with-hotspot-build: The HotSpot to use, as listed in hotspot.map.in.
 * --with-pax: The command used to PaX-mark built binaries.
 * --enable-Werror: Turn gcc & javac warnings into errors.
 * --disable-jar-compression: Don't compress the OpenJDK JAR files.
@@ -285,7 +286,7 @@ the -Dsun.java2d.xrender=True option to java.
 SystemTap
 =========
 
-IcedTea7 includes work to allow the existing DTrace probes included in
+IcedTea includes work to allow the existing DTrace probes included in
 OpenJDK to be used with SystemTap.  This requires version 0.9.5 or later (0.9.9
 or later if you want Java method tracing).  The tapset needs to know
 the final install location of the JDK, so the --prefix option
@@ -293,8 +294,8 @@ should also be used to specify this.  If not set, it defaults to the
 in-tree location of openjdk.build/j2sdk-image and requires
 manual changes to tapset/hotspot.stp to work from elsewhere. For
 example, if you plan to install the resulting build in
-/usr/lib/jvm/java-1.6.0-openjdk, then you should specify
---prefix=/usr/lib/jvm/java-1.6.0-openjdk.
+/usr/lib/jvm/java-1.7.0-openjdk, then you should specify
+--prefix=/usr/lib/jvm/java-1.7.0-openjdk.
 
 The NSS PKCS11 Security Provider and Elliptic Curve Cryptography
 ================================================================
@@ -319,7 +320,7 @@ appropriate softokn ABI is available to the provider.
 CACAO
 =====
 
-IcedTea7 can use CACAO as the virtual machine, as opposed to HotSpot.
+IcedTea can use CACAO as the virtual machine, as opposed to HotSpot.
 One advantage of this is that CACAO has a JIT implementation for
 more platforms than HotSpot, including ppc, arm and mips.
 When --enable-cacao is specified, CACAO will be downloaded and built,
@@ -332,7 +333,7 @@ of a pre-downloaded zip or source tree respectively.
 JamVM
 =====
 
-IcedTea6 can use JamVM as the virtual machine, as opposed to HotSpot.
+IcedTea can use JamVM as the virtual machine, as opposed to HotSpot.
 When --enable-jamvm is specified, JamVM will be downloaded and built,
 followed by the JDK portion of OpenJDK resulting in a JamVM+OpenJDK
 image in openjdk.build/j2sdk-image.  The --with-jamvm-src-zip option
@@ -341,19 +342,19 @@ exists to allow the use of a pre-downloaded zip.
 Zero & Shark
 ============
 
-IcedTea7 includes a zero assembler port of HotSpot, which avoids
+IcedTea includes a zero assembler port of HotSpot, which avoids
 architecture-specific code as much as possible, allowing an
 interpreter to be built and run on most platforms (albeit very
-slowly).  As HotSpot only includes JITs for x86, x86_64, AArch64,
-ppc64, ppc64le and SPARC, the zero assembler port is automatically
-enabled on all other architectures.  On HotSpot architectures, it may
+slowly).  As HotSpot only includes JITs for aarch64, ppc64, ppc64le,
+x86, x86_64 and SPARC, the zero assembler port is automatically enabled
+on all other architectures.  On HotSpot-supported architectures, it may
 be built using --enable-zero.
 
 To overcome the performance issues inherent in zero, a LLVM-based JIT
 called Shark has been developed.  This performs Just-In-Time compilation
 on any architecture supported by LLVM.  To enable it, pass the option
---enable-shark to configure.  Please note that Shark is still in
-development and builds are still likely to fail at present.
+--enable-shark to configure.  Please note that work on Shark is now
+abandoned and builds may fail.
 
 On ARM32, there is also a native JIT port built on top of Zero, which
 is built on this platform by default.
