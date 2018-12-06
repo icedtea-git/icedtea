@@ -21,6 +21,7 @@ New in release 2.6.15 (2018-11-XX):
 * Bug fixes
   - PR3606: jni_util.c does not import header file which declares getLastErrorString
   - PR3652: Detect whether -Xprefer:source and -J-Xmx<limit> can be used, rather than assuming
+  - PR3663: IcedTea installing symlinks to SystemTap directory rather than individual tapsets
 
 New in release 2.6.14 (2018-05-23):
 

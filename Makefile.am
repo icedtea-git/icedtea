@@ -3269,7 +3269,7 @@ if WITH_TAPSET_DIR
 	  ${mkinstalldirs} $${stapdest} ; \
 	  tapname=$$(basename $${files}); \
 	  destname=$${tapname/./-@JAVA_VER@.} ; \
-	  ln -s ${prefix}/tapset/${tapname} $${stapdest}/$${destname} ; \
+	  ln -s ${prefix}/tapset/$${tapname} $${stapdest}/$${destname} ; \
 	done
 endif
 endif
