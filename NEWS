@@ -225,6 +225,7 @@ New in release 3.10.0 (2018-10-XX):
   - Fix x86_32 build
   - JDK8u: Silence compilation warnings on implicit type conversion
   - Move JNI Weak References workaround to Shenandoah-specific root processor
+  - Fix code differences against shenandoah/jdk8u
 * AArch64 port
   - S8155627, PR3651: Enable SA on AArch64
   - S8207838, PR3666: AArch64: Float registers incorrectly restored in JNI call

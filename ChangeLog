@@ -1,5 +1,22 @@
 2018-12-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump shenandoah to aarch64-shenandoah-jdk8u191-b13.
+	* patches/hotspot/shenandoah/8146115-pr3508-rh1463098.patch:
+	Removed as applied upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Move 8146115 patch to AArch32-only.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to aarch64-shenandoah-jdk8u191-b13.
+	* patches/hotspot/aarch32/8146115-pr3508-rh1463098.patch:
+	Symlink replaced with the actual patch as Shenandoah version
+	no longer required.
+	* patches/hotspot/aarch32/8207057-pr3613.patch: Likewise,
+	as Shenandoah version has been altered.
+	* patches/hotspot/shenandoah/8207057-pr3613.patch:
+	Update to apply in context of 8033251 in updated Shenandoah bundle.
+
+2018-12-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump to icedtea-3.10.0.
 	* Makefile.am:
 	(CORBA_CHANGESET): Update to icedtea-3.10.0 tag.

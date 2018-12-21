@@ -6,14 +6,14 @@
 # Parent  2f2d2af6fa5c44e67e0a9987f56392315a1e4b64
 8207057, PR3613: No debug info for assembler files
 
-diff --git openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
---- openjdk.orig/hotspot/make/linux/makefiles/gcc.make
-+++ openjdk/hotspot/make/linux/makefiles/gcc.make
-@@ -334,6 +334,7 @@
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2018-12-21 00:55:33.407545727 +0000
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2018-12-21 01:14:40.357592769 +0000
+@@ -339,6 +339,7 @@
  # DEBUG_BINARIES uses full -g debug information for all configs
  ifeq ($(DEBUG_BINARIES), true)
    CFLAGS += -g
 +  ASFLAGS += -g
  else
-   # Use the stabs format for debugging information (this is the default
-   # on gcc-2.91). It's good enough, has all the information about line
+   DEBUG_CFLAGS += $(DEBUG_CFLAGS/$(BUILDARCH))
+   ifeq ($(DEBUG_CFLAGS/$(BUILDARCH)),)
