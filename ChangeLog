@@ -1,3 +1,16 @@
+2018-12-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump aarch32 to jdk8u191-b12-aarch32-181022.
+	* patches/hotspot/aarch32/8146115-pr3508-rh1463098.patch:
+	Removed, as now no longer needed on AArch32 either.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove 8146115 patch.
+	* hotspot.map.in: Bump aarch32 to
+	jdk8u191-b12-aarch32-181022.
+	* patches/hotspot/aarch32/8207057-pr3613.patch:
+	Reinstate symlink now aarch32 and shenandoah are
+	both based on u191.
+
 2018-12-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump shenandoah to aarch64-shenandoah-jdk8u191-b13.
