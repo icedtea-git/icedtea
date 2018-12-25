@@ -394,7 +394,8 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8131048-pr3574-rh1498936.patch \
 	patches/hotspot/$(HSBUILD)/8164920-pr3574-rh1498936.patch \
 	patches/hotspot/$(HSBUILD)/8172850-pr3643-rh1640127.patch \
-	patches/hotspot/$(HSBUILD)/8209639-pr3643-rh1640127.patch
+	patches/hotspot/$(HSBUILD)/8209639-pr3643-rh1640127.patch \
+	patches/hotspot/$(HSBUILD)/8078504-pr3094.patch
 endif
 
 # Shenandoah has the AArch64 port so should get the return value & debug build fixes

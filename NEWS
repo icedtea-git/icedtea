@@ -75,6 +75,8 @@ New in release 3.10.0 (2018-10-XX):
   - S8172850, PR3643, RH1640127: Anti-dependency on membar causes crash in register allocator due to invalid instruction scheduling
   - S8202261, PR3638: (fc) FileChannel.map and RandomAccessFile.setLength should not preallocate space
   - S8209639, PR3643, RH1640127: assert failure in coalesce.cpp: attempted to spill a non-spillable item
+* Bug fixes
+  - PR3673: Alternate HotSpot builds need fix for PR3094
 * SystemTap
   - PR3625: arc_priority representation creates an implicit limit on character sequence within regexp
 * Shenandoah
