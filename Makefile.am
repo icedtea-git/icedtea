@@ -255,15 +255,16 @@ if WITH_HGREV
 REV_ARG = -r $(HGREV)
 endif
 
-# This should not depend on bootstrapping
-# but on whether MEMORY_LIMIT is accepted
-# as an argument to javac
-if BOOTSTRAPPING
-  MEMORY_LIMIT =
-  PREFER_SOURCE = 
-else
-  MEMORY_LIMIT = -J-Xmx1024m
+if COMPILER_SUPPORTS_XPREFERSOURCE
   PREFER_SOURCE = -Xprefer:source
+else
+  PREFER_SOURCE =
+endif
+
+if COMPILER_SUPPORTS_MAX_HEAP_SIZE
+  MEMORY_LIMIT = -J-Xmx1024m
+else
+  MEMORY_LIMIT =
 endif
 
 ICEDTEA_BUILD_TARGET=images

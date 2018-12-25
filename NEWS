@@ -76,6 +76,7 @@ New in release 3.10.0 (2018-10-XX):
   - S8202261, PR3638: (fc) FileChannel.map and RandomAccessFile.setLength should not preallocate space
   - S8209639, PR3643, RH1640127: assert failure in coalesce.cpp: attempted to spill a non-spillable item
 * Bug fixes
+  - PR3653: Detect whether -Xprefer:source and -J-Xmx<limit> can be used, rather than assuming
   - PR3673: Alternate HotSpot builds need fix for PR3094
 * SystemTap
   - PR3625: arc_priority representation creates an implicit limit on character sequence within regexp

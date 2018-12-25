@@ -1466,7 +1466,7 @@ AC_CONFIG_FILES([nss.cfg])
 ])
 
 AC_DEFUN([IT_DIAMOND_CHECK],[
-  AC_CACHE_CHECK([if javac lacks support for the diamond operator], it_cv_diamond, [
+  AC_CACHE_CHECK([if the Java compiler lacks support for the diamond operator], it_cv_diamond, [
   CLASS=Test.java
   BYTECODE=$(echo $CLASS|sed 's#\.java##')
   mkdir tmp.$$
@@ -2276,6 +2276,68 @@ AC_DEFUN_ONCE([IT_DISABLE_SYSTEMTAP_TESTS],
   ])
   AC_MSG_RESULT([$disable_systemtap_tests])
   AM_CONDITIONAL([DISABLE_SYSTEMTAP_TESTS], test x"${disable_systemtap_tests}" = "xyes")
+])
+
+AC_DEFUN_ONCE([IT_JAVAC_OPTIONS_CHECK],
+[
+  AC_REQUIRE([IT_CHECK_JAVA_AND_JAVAC_WORK])
+  AC_CACHE_CHECK([if the Java compiler supports -Xprefer:source], it_cv_xprefersource_works, [
+  CLASS=Test.java
+  BYTECODE=$(echo $CLASS|sed 's#\.java##')
+  mkdir tmp.$$
+  cd tmp.$$
+  cat << \EOF > $CLASS
+[/* [#]line __oline__ "configure" */
+
+public class Test
+{
+    public static void main(String[] args)
+    {
+      System.out.println("Hello World!");
+    }
+}]
+EOF
+  mkdir build
+  if $JAVAC -d build -cp . $JAVACFLAGS -Xprefer:source $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+    it_cv_xprefersource_works=yes;
+  else
+    it_cv_xprefersource_works=no;
+  fi
+  rm -f $CLASS build/*.class
+  rmdir build
+  cd ..
+  rmdir tmp.$$
+  ])
+  AC_CACHE_CHECK([if the Java compiler supports setting the maximum heap size], it_cv_max_heap_size_works, [
+  CLASS=Test.java
+  BYTECODE=$(echo $CLASS|sed 's#\.java##')
+  mkdir tmp.$$
+  cd tmp.$$
+  cat << \EOF > $CLASS
+[/* [#]line __oline__ "configure" */
+
+public class Test
+{
+    public static void main(String[] args)
+    {
+      System.out.println("Hello World!");
+    }
+}]
+EOF
+  mkdir build
+  if $JAVAC -d build -cp . $JAVACFLAGS -J-Xmx1024m $CLASS >&AS_MESSAGE_LOG_FD 2>&1; then
+    it_cv_max_heap_size_works=yes;
+  else
+    it_cv_max_heap_size_works=no;
+  fi
+  rm -f $CLASS build/*.class
+  rmdir build
+  cd ..
+  rmdir tmp.$$
+  ])
+  AC_PROVIDE([$0])dnl
+  AM_CONDITIONAL([COMPILER_SUPPORTS_XPREFERSOURCE], test x"${it_cv_xprefersource_works}" = "xyes")
+  AM_CONDITIONAL([COMPILER_SUPPORTS_MAX_HEAP_SIZE], test x"${it_cv_max_heap_size_works}" = "xyes")
 ])
 
 AC_DEFUN_ONCE([IT_DISABLE_PRECOMPILED_HEADERS],
