@@ -10,7 +10,7 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.10.0 (2018-10-XX):
+New in release 3.10.0 (2018-12-25):
 
 * Security fixes
   - S8194534, CVE-2018-3136: Manifest better support
