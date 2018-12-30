@@ -917,10 +917,7 @@ EXTRA_DIST = $(GENERATED_FILES) $(top_srcdir)/patches/*.patch \
 	$(top_srcdir)/patches/jamvm/*.patch \
 	tools-copy contrib overlays \
 	$(JTREG_SRCS) HACKING autogen.sh \
-	tapset/hotspot.stp.in \
-	tapset/hotspot_jni.stp.in \
-	tapset/jstack.stp.in \
-	tapset/hotspot_gc.stp.in \
+	tz.properties.in \
 	scripts/jni_create_stap.c \
 	scripts/jni_desc \
 	agpl-3.0.txt \
@@ -956,7 +953,7 @@ clean-local: clean-tests \
  clean-add-cacao clean-add-cacao-debug clean-rt clean-rewrite-rhino clean-rewriter \
  clean-add-systemtap clean-add-systemtap-debug clean-add-nss clean-add-tzdata-support \
  clean-add-tzdata-support-debug clean-cryptocheck clean-policytool-@JAVA_VER@.desktop \
- clean-jconsole-@JAVA_VER@.desktop clean-ecccheck clean-mimetypecheck
+ clean-jconsole-@JAVA_VER@.desktop clean-ecccheck clean-mimetypecheck clean-tz.properties
 	if [ -e bootstrap ]; then \
 	  rmdir bootstrap ; \
 	fi
@@ -996,7 +993,7 @@ distclean-local: clean-local clean-download
 	clean-extract-langtools clean-split-debuginfo clean-split-debuginfo-debug \
 	clean-split-debuginfo-boot clean-policytool-@JAVA_VER@.desktop clean-jconsole-@JAVA_VER@.desktop \
 	clean-fonts clean-add-mime-types-file clean-add-mime-types-file-debug clean-add-mime-types-file-boot \
-	clean-tests clean-tapset-report clean-ecccheck clean-check-ecc \
+	clean-tests clean-tapset-report clean-ecccheck clean-check-ecc clean-tz.properties \
 	check-jdk check-hotspot check-langtools jtregcheck check-tapset check-tapset-probes \
 	check-tapset-jstack clean-check-java-debug
 
@@ -2104,7 +2101,7 @@ clean-add-nss:
 	rm -f openjdk/jdk/src/share/lib/security/nss.cfg
 	rm -f stamps/add-nss.stamp
 
-stamps/add-tzdata-support.stamp: stamps/icedtea.stamp
+stamps/add-tzdata-support.stamp: stamps/icedtea.stamp tz.properties
 if WITH_TZDATA_DIR
 	if [ -e $(BUILD_SDK_DIR)/jre/lib ] ; then \
 	  cp -v $(abs_top_builddir)/tz.properties \
@@ -2252,7 +2249,7 @@ clean-add-systemtap-debug:
 	rm -rf $(BUILD_DEBUG_SDK_DIR)/tapset
 	rm -f stamps/add-systemtap-debug.stamp
 
-stamps/add-tzdata-support-debug.stamp: stamps/icedtea-debug.stamp
+stamps/add-tzdata-support-debug.stamp: stamps/icedtea-debug.stamp tz.properties
 if WITH_TZDATA_DIR
 	if [ -e $(BUILD_DEBUG_SDK_DIR)/jre/lib ] ; then \
 	  cp -v $(abs_top_builddir)/tz.properties \
@@ -2410,7 +2407,7 @@ clean-add-systemtap-boot:
 	rm -rf $(BUILD_BOOT_SDK_DIR)/tapset
 	rm -f stamps/add-systemtap-boot.stamp
 
-stamps/add-tzdata-support-boot.stamp: stamps/icedtea-boot.stamp
+stamps/add-tzdata-support-boot.stamp: stamps/icedtea-boot.stamp tz.properties
 if WITH_TZDATA_DIR
 	if [ -e $(BUILD_BOOT_SDK_DIR)/jre/lib ] ; then \
 	  cp -v $(abs_top_builddir)/tz.properties \
@@ -3112,6 +3109,12 @@ jconsole-@JAVA_VER@.desktop: jconsole.desktop
 
 clean-jconsole-@JAVA_VER@.desktop:
 	rm -f jconsole-@JAVA_VER@.desktop
+
+tz.properties: $(top_srcdir)/tz.properties.in
+	cat $< | $(SED) "s#_TZDATA_DIR_#$(TZDATA_DIR)#" > $@
+
+clean-tz.properties:
+	rm -f tz.properties
 
 # ECC Availability Check
 

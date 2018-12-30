@@ -1489,33 +1489,29 @@ AC_DEFUN([IT_CHECK_ENABLE_WARNINGS],
 
 AC_DEFUN([IT_WITH_TZDATA_DIR],
 [
-  DEFAULT="/usr/share/javazi"
+  TZDATA_DEFAULT="${datadir}/javazi"
   AC_MSG_CHECKING([which Java timezone data directory to use])
   AC_ARG_WITH([tzdata-dir],
-	      [AS_HELP_STRING([--with-tzdata-dir[[=DIR]]],set the Java timezone data directory [[DIR=/usr/share/javazi]])],
+	      [AS_HELP_STRING([--with-tzdata-dir[[=DIR]]],set the Java timezone data directory [[default=DATAROOTDIR/javazi]])],
   [
     if test "x${withval}" = x || test "x${withval}" = xyes; then
-      TZDATA_DIR_SET=yes
-      TZDATA_DIR="${DEFAULT}"
+      TZDATA_DIR="${TZDATA_DEFAULT}"
     else
-      if test "x${withval}" = xno; then
-        TZDATA_DIR_SET=no
-        AC_MSG_RESULT([no])
-      else
-        TZDATA_DIR_SET=yes
-        TZDATA_DIR="${withval}"
-      fi
+      TZDATA_DIR="${withval}"
     fi
   ],
   [ 
-    TZDATA_DIR="${DEFAULT}"
+    TZDATA_DIR="${TZDATA_DEFAULT}"
   ])
-  if test "x${TZDATA_DIR}" != "x"; then
-    AC_MSG_RESULT([${TZDATA_DIR}])
+  if test "x${TZDATA_DIR}" = "xno"; then
+    TZDATA_DIR=none
+    TZDATA_DIR_SET=no
+  else
+    TZDATA_DIR_SET=yes
   fi
+  AC_MSG_RESULT([${TZDATA_DIR}])
   AC_SUBST([TZDATA_DIR])
-  AM_CONDITIONAL(WITH_TZDATA_DIR, test "x${TZDATA_DIR}" != "x")
-  AC_CONFIG_FILES([tz.properties])
+  AM_CONDITIONAL(WITH_TZDATA_DIR, test "x${TZDATA_DIR_SET}" = "xyes")
 ])
 
 dnl check that javac and java work

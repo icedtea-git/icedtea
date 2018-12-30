@@ -57,6 +57,7 @@ New in release 2.6.15 (2018-11-XX):
   - S8075942, PR3605: ArrayIndexOutOfBoundsException in sun.java2d.pisces.Dasher.goTo
 * Bug fixes
   - PR3616: Don't include timestamps in generated documentation
+  - PR3631: Use ${datadir} when specifying default tz.properties location
   - PR3652: Detect whether -Xprefer:source and -J-Xmx<limit> can be used, rather than assuming
   - PR3663: IcedTea installing symlinks to SystemTap directory rather than individual tapsets
 * SystemTap

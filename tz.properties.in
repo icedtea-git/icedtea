@@ -1,1 +1,1 @@
-sun.zoneinfo.dir=@TZDATA_DIR@
+sun.zoneinfo.dir=_TZDATA_DIR_
