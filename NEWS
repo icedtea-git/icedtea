@@ -59,6 +59,8 @@ New in release 2.6.15 (2018-11-XX):
   - PR3616: Don't include timestamps in generated documentation
   - PR3652: Detect whether -Xprefer:source and -J-Xmx<limit> can be used, rather than assuming
   - PR3663: IcedTea installing symlinks to SystemTap directory rather than individual tapsets
+* SystemTap
+  - PR3633: arc_priority representation creates an implicit limit on character sequence within regexp
 * AArch64 port
   - S8207345, PR3614: Trampoline generation code reads from uninitialized memory
   - PR3615: Fix whitespace in hotspot/src/cpu/aarch64
