@@ -23,6 +23,8 @@ New in release 2.6.15 (2018-11-XX):
   - S8200666, CVE-2018-2973: Improve LDAP support
   - PR3608, CVE-2018-3639 hw: cpu: speculative store bypass mitigation
 * New features
+  - PR3629: Install symlinks to tapsets in SystemTap directory
+  - PR3657: Sync desktop files with Fedora/RHEL versions again
   - PR3659: Support RHEL multilib installations which use the /usr/lib/jvm/java-1.x.0-openjdk.${arch} naming
 * Import of OpenJDK 7 u191 build 2
   - S8005661: [parfait] Possible buffer overrun in jdk/src/solaris/native/sun/awt/awt_GraphicsEnv.c
@@ -2072,8 +2074,6 @@ New in release 2.5.3 (2014-10-14):
 
 New in release 2.5.2 (2014-08-29):
 
-* New features
-  - PR3629: Install symlinks to tapsets in SystemTap directory
 * Backports
   - S8049480: Current versions of Java can't verify jars signed and timestamped with Java 9
   - S8051012, LP1360392: Regression in verifier for <init> method call from inside of a branch

@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=OpenJDK @JAVA_VER@ Policy Tool
+Name=OpenJDK @OPENJDK_VER@ for @target_cpu@ Policy Tool
 Comment=Manage OpenJDK policy files
 Exec=_BINDIR_/policytool
-Icon=java-@JAVA_VER@
+Icon=java-@JAVA_VER@-@JAVA_VENDOR@
 Terminal=false
 Type=Application
 StartupWMClass=sun-security-tools-PolicyTool

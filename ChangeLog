@@ -1,3 +1,41 @@
+2018-09-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3657: Sync desktop files with Fedora/RHEL
+	versions again
+	* Makefile.am:
+	(JDK_UPDATE_VERSION): Moved to acinclude.m4.
+	(BUILD_VERSION): Likewise.
+	(COMBINED_VERSION): Likewise.
+	(ICEDTEA_ENV): Use substitution for
+	JRE_RELEASE_VERSION, JDK_UPDATE_VERSION
+	and BUILD_VERSION.
+	(dist-openjdk): Use substitution for
+	COMBINED_VERSION.
+	(dist-openjdk-fsg): Likewise.
+	(dist-openjdk-fsg-xz): Likewise.
+	(install-data-local): Include JAVA_VENDOR
+	in icon name.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DETERMINE_VERSION): Define JAVA_VENDOR,
+	JDK_UPDATE_VERSION, BUILD_VERSION, COMBINED_VERSION
+	and OPENJDK_VER here. Include OPENJDK_VER in output.
+	* jconsole.desktop.in:
+	Add full version and target architecture to name
+	to distinguish between multiple installations for the
+	same major Java version.  Add JAVA_VENDOR ('openjdk')
+	to the icon name.
+	* policytool.desktop.in: Likewise.
+
+2013-12-26  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR3657: Sync desktop files with Fedora/RHEL
+	versions again
+	* configure.ac:
+	Add AC_CANONICAL_TARGET after AC_CANONICAL_HOST
+	and move earlier in file, before Automake
+	initialisation.
+
 2018-12-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to 2.6.15.

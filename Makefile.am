@@ -1,9 +1,5 @@
 # Dependencies
 
-JDK_UPDATE_VERSION = 191
-BUILD_VERSION = b02
-COMBINED_VERSION = $(JDK_UPDATE_VERSION)-$(BUILD_VERSION)
-
 CORBA_CHANGESET = 9b8ff44cf2c6
 JAXP_CHANGESET = 5dc90bd920db
 JAXWS_CHANGESET = a88988c07020
@@ -591,9 +587,9 @@ ICEDTEA_UNSET = \
 ICEDTEA_ENV = \
 	ALT_JDK_IMPORT_PATH="$(BOOT_DIR)" \
 	ANT="$(ANT)" \
-        BUILD_NUMBER="$(BUILD_VERSION)" \
-	JDK_UPDATE_VERSION="$(JDK_UPDATE_VERSION)" \
-        JRE_RELEASE_VERSION="@JAVA_VER@_$(COMBINED_VERSION)" \
+        BUILD_NUMBER="@BUILD_VERSION@" \
+	JDK_UPDATE_VERSION="@JDK_UPDATE_VERSION@" \
+        JRE_RELEASE_VERSION="@JAVA_VER@_@COMBINED_VERSION@" \
 	MILESTONE="fcs" \
 	LANG="C" \
 	PATH="$(BOOT_DIR)/bin:$(OS_PATH):$$PATH" \
@@ -1019,15 +1015,15 @@ snapshot: dist
 # Creates archive of openjdk.
 dist-openjdk: stamps/extract-cacao.stamp
 	find openjdk/ -name \\.hg* | xargs rm -rf	
-	$(ZIP) -r openjdk-$(COMBINED_VERSION) openjdk/
+	$(ZIP) -r openjdk-@COMBINED_VERSION@ openjdk/
 
 # Creates archive of openjdk that is compliant with Free Software guidelines.
 dist-openjdk-fsg: stamps/patch-fsg.stamp
-	$(ZIP) -r openjdk-fsg-$(COMBINED_VERSION) openjdk/
+	$(ZIP) -r openjdk-fsg-@COMBINED_VERSION@ openjdk/
 
 dist-openjdk-fsg-xz: stamps/patch-fsg.stamp
 	tardir=openjdk/ && $(am__tar) | XZ_OPT=$${XZ_OPT--e} xz -c \
-	  >openjdk-fsg-$(COMBINED_VERSION).tar.xz
+	  >openjdk-fsg-@COMBINED_VERSION@.tar.xz
 
 # OpenJDK Source Preparation Targets
 # ==================================
@@ -3373,7 +3369,7 @@ endif
 	for sizes in 16 24 32 48 ; do \
 	  ${mkinstalldirs} $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps ; \
 	  ${INSTALL_DATA} openjdk/jdk/src/solaris/classes/sun/awt/X11/java-icon$${sizes}.png \
-	    $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-@JAVA_VER@.png ; \
+	    $(DESTDIR)$(datadir)/icons/hicolor/$${sizes}x$${sizes}/apps/java-@JAVA_VER@-@JAVA_VENDOR@.png ; \
 	done
 	for files in $(DESKTOP_FILES) ; do \
 	  ${INSTALL_DATA} $(builddir)/$${files} $(DESTDIR)$(datadir)/applications ; \
