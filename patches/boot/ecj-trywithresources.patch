@@ -1960,3 +1960,26 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/crypto/provider/Sealed
          }
      }
  
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/jarsigner/Main.java openjdk-boot/jdk/src/share/classes/sun/security/tools/jarsigner/Main.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/jarsigner/Main.java	2019-01-01 03:36:02.501179351 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/tools/jarsigner/Main.java	2019-01-01 03:40:23.769092827 +0000
+@@ -1653,7 +1653,9 @@
+         // We need to extract the certs from the signed jar to
+         // validate it.
+         if (!noTimestamp) {
+-            try (JarFile check = new JarFile(signedJarFile)) {
++            JarFile check = null;
++            try {
++                check = new JarFile(signedJarFile);
+                 PKCS7 p7 = new PKCS7(check.getInputStream(check.getEntry(
+                         "META-INF/" + sigfile + "." + privateKey.getAlgorithm())));
+                 SignerInfo si = p7.getSignerInfos()[0];
+@@ -1670,6 +1672,8 @@
+                 if (debug) {
+                     e.printStackTrace();
+                 }
++            } finally {
++                if (check != null) { try { check.close(); } catch (IOException e) {} }
+             }
+         }
+ 

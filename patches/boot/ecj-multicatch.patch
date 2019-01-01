@@ -1736,3 +1736,16 @@ diff -Nru openjdk-boot.orig/jaxp/src/jdk/xml/internal/JdkXmlUtils.java openjdk-b
              CommunicationException ce =new CommunicationException(
                  "DNS error: malformed packet");
              ce.initCause(e);
+--- openjdk-boot.orig/jdk/src/share/classes/sun/misc/URLClassPath.java	2018-12-31 23:05:10.262998844 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/misc/URLClassPath.java	2018-12-31 23:06:40.561585343 +0000
+@@ -1104,7 +1104,9 @@
+                         }
+                     }
+                 }
+-            } catch (MalformedURLException | IllegalArgumentException e) {}
++            } catch (MalformedURLException e) {
++            } catch (IllegalArgumentException e) {
++            }
+             if (DEBUG_CP_URL_CHECK) {
+                 System.err.println("Class-Path entry: \"" + path + "\" ignored in JAR file " + base);
+             }
