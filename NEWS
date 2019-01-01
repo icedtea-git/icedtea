@@ -12,7 +12,7 @@ JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.16 (2018-12-31):
+New in release 2.6.16 (2019-01-01):
 
 * Security fixes
   - S8194534, CVE-2018-3136: Manifest better support
