@@ -12,6 +12,8 @@ JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 2.6.17 (2019-01-XX):
+
 New in release 2.6.16 (2019-01-01):
 
 * Security fixes
@@ -68,7 +70,7 @@ New in release 2.6.15 (2018-12-31):
   - S8197925, CVE-2018-2940: Better stack walking
   - S8199547, CVE-2018-2952: Exception to Pattern Syntax
   - S8200666, CVE-2018-2973: Improve LDAP support
-  - PR3608, CVE-2018-3639 hw: cpu: speculative store bypass mitigation
+  - PR3608, CVE-2018-3639: hw: cpu: speculative store bypass mitigation
 * New features
   - PR3629: Install symlinks to tapsets in SystemTap directory
   - PR3657: Sync desktop files with Fedora/RHEL versions again
