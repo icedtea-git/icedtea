@@ -1,3 +1,8 @@
+2019-01-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3676: Update CVE URL
+	* NEWS: Update CVE URL.
+
 2019-01-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Add 2.6.14, 2.6.15 & 2.6.16 release notes.

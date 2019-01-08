@@ -10,7 +10,7 @@ LPX - https://bugs.launchpad.net/bugs/X
 JSRX - http://jcp.org/en/jsr/detail?id=X
 JEPX - http://openjdk.java.net/jeps/X
 
-CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
+CVE-XXXX-YYYY: http://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.7.0 (201X-XX-XX):
 
@@ -24,6 +24,7 @@ New in release 2.7.0 (201X-XX-XX):
 * Bug fixes
   - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
   - PR3494: Skip AES test on AArch64 due to VM crash
+  - PR3676: Update CVE URL
 
 New in release 2.6.16 (2019-01-01):
 
