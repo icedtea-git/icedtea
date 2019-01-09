@@ -430,27 +430,14 @@ ICEDTEA_PATCHES += \
 	patches/jamvm/pr2775-cache_api.patch
 endif
 
-if !ENABLE_SUNEC
-ICEDTEA_PATCHES += \
-	patches/disable-intree-ec.patch
-endif
-
 if !USE_NON_NSS_CURVES
 ICEDTEA_PATCHES += patches/rh1022017.patch
 endif
 
 if ENABLE_NSS
-if ENABLE_SUNEC
-ICEDTEA_PATCHES += patches/nss-config-with-sunec.patch
+ICEDTEA_PATCHES += patches/pkcs11-nss-config.patch
 else
-ICEDTEA_PATCHES += patches/nss-config.patch
-endif
-else
-if ENABLE_SUNEC
-ICEDTEA_PATCHES += patches/nss-not-enabled-config-with-sunec.patch
-else
-ICEDTEA_PATCHES += patches/nss-not-enabled-config.patch
-endif
+ICEDTEA_PATCHES += patches/pkcs11-nss-not-enabled-config.patch
 endif
 
 # Apply additional HotSpot patches against same patch base
@@ -551,12 +538,6 @@ ICEDTEA_CONFIGURE += \
 else
 ICEDTEA_CONFIGURE += \
 	--with-giflib=bundled
-endif
-
-if ENABLE_SUNEC
-ICEDTEA_CONFIGURE_ENV += \
-	NSS_LIBS="${SUNEC_LIBS}" \
-	NSS_CFLAGS="${SUNEC_CFLAGS}"
 endif
 
 if USE_SYSTEM_KERBEROS
@@ -2875,28 +2856,22 @@ clean-cryptocheck:
 # ECC Availability Check
 
 stamps/ecccheck.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
-if ENABLE_SUNEC
 	mkdir -p $(ECC_CHECK_BUILD_DIR)
 	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	  -d $(ECC_CHECK_BUILD_DIR) $(ECC_CHECK_SRCS)
-endif
 	mkdir -p stamps
 	touch $@
 
 clean-ecccheck:
-if ENABLE_SUNEC
 	rm -rf $(ECC_CHECK_BUILD_DIR)
-endif
 	rm -f stamps/ecccheck.stamp
 
 stamps/check-ecc.stamp: stamps/ecccheck.stamp stamps/icedtea.stamp
-if ENABLE_SUNEC
 	set -e ; \
 	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
 	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestEllipticCurveCryptoSupport yes ; \
 	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestECDSA ; \
 	fi
-endif
 	mkdir -p stamps
 	touch $@
 

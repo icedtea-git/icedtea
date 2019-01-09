@@ -119,11 +119,3 @@ if test "x@ENABLE_SYSTEM_PCSC@" = "xyes"; then
   echo "Removing libpcsc headers"
   rm -rvf ${PCSC_SRC}
 fi
-if test "x@ENABLE_SUNEC@" = "xno"; then
-  rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECDHKeyAgreement.java
-  rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECDSASignature.java
-  rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECKeyPairGenerator.java
-  rm -vf openjdk/jdk/src/share/classes/sun/security/ec/SunEC.java
-  rm -vf openjdk/jdk/src/share/classes/sun/security/ec/SunECEntries.java
-  rm -rvf openjdk/jdk/src/share/native/sun/security/ec
-fi

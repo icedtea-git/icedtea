@@ -12,6 +12,8 @@ CVE-XXXX-YYYY: http://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.11.0 (2019-01-XX):
 
+* New features
+  - PR3667: Use the internal copy of the SunEC library rather than statically linking against NSS
 * Bug fixes
   - PR3667, PR1983: Backed out changeset 48c15869ecd5
   - PR3667, PR1983: Backed out changeset f0635543beb3
