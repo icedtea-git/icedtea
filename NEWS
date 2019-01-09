@@ -13,6 +13,13 @@ CVE-XXXX-YYYY: http://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 3.11.0 (2019-01-XX):
 
 * Bug fixes
+  - PR3667, PR1983: Backed out changeset 48c15869ecd5
+  - PR3667, PR1983: Backed out changeset f0635543beb3
+  - PR3667, PR2127: Backed out changeset 0ff7720931e8
+  - PR3667, PR2815: Backed out changeset 26e2e029ee25
+  - PR3667, PR2899: Backed out changeset 9dc0eca5fa89
+  - PR3667, PR2934: Backed out changeset 7513dae3426b
+  - PR3667, PR3479, RH1486025: Backed out changeset 5dcb55da00c1
   - PR3675: Update CVE URL
 
 New in release 3.10.0 (2018-12-25):
