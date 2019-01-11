@@ -313,12 +313,6 @@ if !DISABLE_SYSTEMTAP_TESTS
 SYSTEMTAP_TEST_SUITE = check-tapset
 endif
 
-if ENABLE_SUNEC
-ECC_RESULT = yes
-else
-ECC_RESULT = no
-endif
-
 # Target to ensure a patched OpenJDK tree containing Zero & Shark
 # and any overlays is available in $(abs_top_builddir)/openjdk
 OPENJDK_TREE = stamps/overlay.stamp
@@ -364,27 +358,14 @@ ICEDTEA_PATCHES += \
 	patches/jamvm/pr2775-cache_api.patch
 endif
 
-if !ENABLE_SUNEC
-ICEDTEA_PATCHES += \
-	patches/disable-intree-ec.patch
-endif
-
 if !USE_NON_NSS_CURVES
 ICEDTEA_PATCHES += patches/rh1022017.patch
 endif
 
 if ENABLE_NSS
-if ENABLE_SUNEC
-ICEDTEA_PATCHES += patches/nss-config-with-sunec.patch
+ICEDTEA_PATCHES += patches/pkcs11-nss-config.patch
 else
-ICEDTEA_PATCHES += patches/nss-config.patch
-endif
-else
-if ENABLE_SUNEC
-ICEDTEA_PATCHES += patches/nss-not-enabled-config-with-sunec.patch
-else
-ICEDTEA_PATCHES += patches/nss-not-enabled-config.patch
-endif
+ICEDTEA_PATCHES += patches/pkcs11-nss-not-enabled-config.patch
 endif
 
 ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
@@ -465,14 +446,6 @@ ICEDTEA_CONFIGURE += \
 else
 ICEDTEA_CONFIGURE += \
 	--with-giflib=bundled
-endif
-
-if ENABLE_SUNEC
-ICEDTEA_CONFIGURE += \
-	--enable-system-nss
-else
-ICEDTEA_CONFIGURE += \
-	--disable-system-nss
 endif
 
 if ZERO_BUILD
@@ -579,12 +552,6 @@ if USE_SYSTEM_GIF
 ICEDTEA_ENV += \
 	GIF_LIBS="${GIF_LIBS}" \
 	GIF_CFLAGS="${GIF_CFLAGS}"
-endif
-
-if ENABLE_SUNEC
-ICEDTEA_ENV += \
-	NSS_LIBS="${SUNEC_LIBS}" \
-	NSS_CFLAGS="${SUNEC_CFLAGS}"
 endif
 
 # OpenJDK boot build environment.
@@ -2566,7 +2533,7 @@ clean-ecccheck:
 
 stamps/check-ecc.stamp: stamps/ecccheck.stamp stamps/icedtea.stamp
 	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
-	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestEllipticCurveCryptoSupport $(ECC_RESULT) ; \
+	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestEllipticCurveCryptoSupport yes ; \
 	fi
 	mkdir -p stamps
 	touch $@

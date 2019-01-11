@@ -12,6 +12,9 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 4.0.0 (2017-XX-XX):
 
+* New features
+  - PR3679: Use the internal copy of the SunEC library rather than statically linking against NSS
+
 New in release 3.0.0 (2016-04-08):
 
 * Rebase on jdk8u77-b03

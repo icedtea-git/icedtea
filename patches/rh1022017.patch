@@ -1,6 +1,6 @@
-diff -r a5c3d9643077 src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java
---- openjdk/jdk/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java	Tue Feb 10 16:24:28 2015 +0000
-+++ openjdk/jdk/src/share/classes/sun/security/ssl/SupportedEllipticCurvesExtension.java	Thu May 14 04:01:02 2015 +0100
+diff --git openjdk.orig/jdk/src/java.base/share/classes/sun/security/ssl/EllipticCurvesExtension.java openjdk/jdk/src/java.base/share/classes/sun/security/ssl/EllipticCurvesExtension.java
+--- openjdk.orig/jdk/src/java.base/share/classes/sun/security/ssl/EllipticCurvesExtension.java
++++ openjdk/jdk/src/java.base/share/classes/sun/security/ssl/EllipticCurvesExtension.java
 @@ -37,25 +37,11 @@
      // the extension value to send in the ClientHello message
      static final SupportedEllipticCurvesExtension DEFAULT;
