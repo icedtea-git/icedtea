@@ -14,6 +14,14 @@ echo "Removing EC source code we don't build"
 rm -rvf openjdk/jdk/src/share/native/sun/security/ec/impl
 
 if test "x@ENABLE_NON_NSS_CURVES@" = "xno"; then
-  echo "Syncing EC list with NSS"
-  patch -Np0 < @abs_top_srcdir@/patches/pr2126.patch
+  echo "Removing non-NSS ECC curves"
+  rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ec2.h
+  rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ec2_163.c
+  rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ec2_193.c
+  rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ec2_233.c
+  rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ec2_aff.c
+  rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ec2_mont.c
+  rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ecp_192.c
+  rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ecp_224.c
+  patch -Np0 < @abs_top_srcdir@/patches/pr3681.patch
 fi
