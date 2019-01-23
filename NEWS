@@ -14,6 +14,100 @@ New in release 3.11.0 (2019-01-XX):
 
 * New features
   - PR3667: Use the internal copy of the SunEC library rather than statically linking against NSS
+* Import of OpenJDK 8 u192 build 12
+  - S6730115: Fastdebug VM crashes with "ExceptionMark destructor expects no pending exceptions" error
+  - S8022177: Windows/MSYS builds broken
+  - S8026331: hs_err improvement: Print if we have seen any OutOfMemoryErrors or StackOverflowErrors
+  - S8026335: hs_err improvement: Print exact compressed oops mode and the heap base value.
+  - S8027584: Disable ccache by default
+  - S8031759: Improved tool overriding in configure
+  - S8033292: only warn, not fail, on unknown variables in configure
+  - S8034199: Add 'reconfigure' target for re-creating a configuration
+  - S8034788: Rewrite toolchain.m4 to support multiple toolchains per platform.
+  - S8035074: hs_err improvement: Add time zone information in the hs_err file
+  - S8035495: Improvements in autoconf integration
+  - S8035725: Must keep microsoft VS_PATH on PATH after toolchain detection
+  - S8035730: Configure fails in cygwin if current dir is in /home/user
+  - S8035751: Clean up Visual Studio detection logic
+  - S8035825: Warn instead of fail when calling the configure wrapper directly
+  - S8036003: Add --with-native-debug-symbols=[none|internal|external|zipped]
+  - S8038340: Cleanup and fix sysroot and devkit handling on Linux and Solaris
+  - S8039030: 9-dev windows-i586 build failed with mktemp: command not found
+  - S8041623: Solaris Studio 12.4 C++ 5.13, CHECK_UNHANDLED_OOPS use of class oop's copy constructor definitions causing error level diagnostic.
+  - S8042707: Source changes needed to build JDK 9 with Visual Studio 2013 (VS2013)
+  - S8048128: Fix for Solaris Studio C++ 5.13, CHECK_UNHANDLED_OOPS breaks PPC build.
+  - S8057538: Build the freetype library during configure on Windows
+  - S8067239: [TESTBUG] javax/xml/bind/marshal/8036981/Test.java failed
+  - S8069124: runtime/NMT/MallocSiteHashOverflow.java failing in nightlies
+  - S8077420: Build failure with SS12u4
+  - S8078437: Enable use of devkits for Windows
+  - S8079788: Fix broken CL version detection in configure for some Visual Studio configurations
+  - S8081202: Hotspot compile warning: "Invalid suffix on literal; C++11 requires a space between literal and identifier"
+  - S8081323: ConstantPool::_resolved_references is missing in heap dump
+  - S8114823: G1 doesn't honor request to disable class unloading
+  - S8134157: adlc fails to compile with SS12u4
+  - S8138692: libjsig compilation is missing EXTRA_CFLAGS on macosx
+  - S8140470: javax/xml/crypto/dsig/SecurityManager/XMLDSigWithSecMgr.java failed with AccessControlException
+  - S8148175: C1: G1 barriers don't preserve FP registers
+  - S8150426: Wrong cast in metadata_at_put
+  - S8150688: Fix os_windows siglabel
+  - S8153194: PreserveFPRegistersTest.java runs out of memory in the nightlies
+  - S8156824: com.sun.jndi.ldap.pool.PoolCleaner should clear its context class loader
+  - S8158012: Use SW prefetch instructions instead of BIS for allocation prefetches on SPARC Core C4
+  - S8160748: Inconsistent types for ideal_reg
+  - S8162362: Introduce system property to control enabled ciphersuites
+  - S8162540: Crash in C2 escape analysis with assert: "node should be registered"
+  - S8165463: Native implementation of sunmscapi should use operator new (nothrow) for allocations
+  - S8176033: New cygwin grep does not match \r as newline
+  - S8176192: Incorrect usage of Iterator in Java 8 In com.sun.jndi.ldap.EventSupport.removeNamingListener
+  - S8178370: [TEST_BUG] java/security/Signature/SignatureLength.java fails
+  - S8179079: Incremental HotSpot builds broken on Windows
+  - S8179675: Build with error on windows with new Cygwin grep
+  - S8185855: Debug exception stacks should be clearer
+  - S8186171: HashMap: Entry.setValue may not work after Iterator.remove() called for previous entries
+  - S8186646: Nashorn: "duplicate code" assertion when binding a vararg function that just passes arguments along
+  - S8188083: NullPointerExcpn-java.awt.image.FilteredImageSource.startProduction JDK-8079607
+  - S8189170: Add option to disable stack overflow checking in primordial thread for use with JNI_CreateJavaJVM
+  - S8189760: sun/security/ssl/CertPathRestrictions/TLSRestrictions.java failed with unexpected Exception intermittently
+  - S8193171: keytool -list displays "JKS" for a PKCS12 keystore
+  - S8193758: Update copyright headers of files in src tree that are missing Classpath exception
+  - S8194412: Adding 256 units of IsoFields.QUARTER_YEARS broken
+  - S8194642: Improve OOM error reporting for JDK8
+  - S8195095: Images are not scaled correctly in JEditorPane
+  - S8195738: scroll poistion in ScrollPane is reset after calling validate()
+  - S8196108: Add build support for VS 2015/2017
+  - S8196880: VS2017 Addition of Global Delete Operator with Size Parameter Conflicts with Arena's Chunk Provided One
+  - S8196884: VS2017 Multiple Type Cast Conversion Compilation Errors
+  - S8197864: VS2017 (C4334) Result of 32-bit Shift Implicitly Converted to 64 bits
+  - S8197868: VS2017 (C2065) 'timezone': Undeclared Identifier in share/runtime/os.cpp
+  - S8198304: VS2017 (C4838, C4312) Various conversion issues with gtest tests
+  - S8198898: Compilation errors in jdk.crypto.mscapi with VS 2017
+  - S8200353: Shift or Capslock not working in Textfield after accented keystrokes
+  - S8201240: Improve releasing native resources of BufImgSurfaceData.ICMColorData
+  - S8201369: Inet4AddressImpl_getLocalHostName reverse lookup on Solaris only
+  - S8202600: [Zero] Undefined behaviour in src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+  - S8202696: Remove exclusion range for phonetic chars in windows fontconfig.properties
+  - S8203368: ObjectInputStream filterCheck method throws NullPointerException
+  - S8203499: Uninitialised memory in WinAccessBridge.cpp
+  - S8203790: MSVCP dependency introduced in awt.dll
+  - S8203845: backport of JDK-8034788 inadvertently rolled back JDK-8187045 changes to toolchain.m4
+  - S8204053: libsaproc.so not linked with -z,noexecstack
+  - S8204872: [8u] VS2017: more instances of "error C3680: cannot concatenate user-defined string literals with mismatched literal suffix identifiers"
+  - S8205104: EXTRA_LDFLAGS not consistently being used
+  - S8205440: [8u] DWORD64 required for later Windows compilers
+  - S8205677: [8u] casts and type change for 8u to enable later Windows compilers
+  - S8206425: .gnu_debuglink sections added unconditionally when no debuginfo is stripped
+  - S8206454: [8u] os::current_stack_pointer() fails to compile on later Windows compilers (warning C4172: returning address of local variable)
+  - S8206914: add jdk8u-dev test failures to ProblemList.txt
+  - S8207402: Stray *.debuginfo files when not stripping debug info
+  - S8207853: Need to regenerate configure in jdk8u-dev
+  - S8209002: 8u192 installed exe and dll files have wrong file version
+  - S8210423: Backport of 8034788 breaks GCC version detection
+  - S8210658: Remove and retag jdk8u192-b10 tag in source repository
+  - S8210951: Test sun/security/ssl/SSLContextImpl/CustomizedCipherSuites.java fails
+* Backports
+  - S8074859, PR1937: Re-apply warnings as error switch removed by 8034788 in 8u192
+  - S8145188, PR2945: Re-apply --with-java-debug-symbols option removed by 8034788 in 8u192
 * Bug fixes
   - PR3667, PR1983: Backed out changeset 48c15869ecd5
   - PR3667, PR1983: Backed out changeset f0635543beb3
@@ -23,6 +117,11 @@ New in release 3.11.0 (2019-01-XX):
   - PR3667, PR2934: Backed out changeset 7513dae3426b
   - PR3667, PR3479, RH1486025: Backed out changeset 5dcb55da00c1
   - PR3675: Update CVE URL
+  - PR3683: Addition of 8189170 in 8u192 breaks 8197429 backport
+* AArch64 port
+  - S8160748, PR3682: [AArch64] Inconsistent types for ideal_reg
+  - S8189170, PR3682: [AArch64] Add option to disable stack overflow checking in primordial thread for use with JNI_CreateJavaJVM
+  - S8209414, PR3682: [AArch64] method handle invocation does not respect JVMTI interp_only mode
 
 New in release 3.10.0 (2018-12-25):
 

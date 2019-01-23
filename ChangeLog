@@ -1,3 +1,32 @@
+2019-01-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to icedtea-3.11.0pre02.
+	* Makefile.am,
+	(CORBA_CHANGESET): Update to icedtea-3.11.0pre02 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	(ICEDTEA_CONFIGURE): Add --with-native-debug-symbols,
+	set to internal when building with native
+	debuginfo and none otherwise.
+	(ICEDTEA_ENV): Remove obsolete setting of POST_STRIP_CMD,
+	DEBUG_BINARIES and STRIP_POLICY.
+	* NEWS: Updated.
+	* acinclude.m4,
+	(IT_DETERMINE_VERSION): Update JDK_UPDATE_VERSION to 192.
+	* configure.ac: Bump to 3.11.0pre02.
+	* hotspot.map.in: Update to icedtea-3.11.0pre02 tag.
+
 2019-01-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3667: Use the internal copy of the SunEC library
