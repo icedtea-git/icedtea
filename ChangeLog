@@ -1,3 +1,12 @@
+2019-02-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3691: wget not detected by configure
+	* NEWS: Updated.
+	* configure.ac:
+	Move IT_CHECK_IF_BOOTSTRAPPING and
+	IT_CHECK_IF_DOWNLOADING closer to the
+	beginning, prior to tool detection.
+
 2019-01-30  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump shenandoah to aarch64-shenandoah-jdk8u192-b13.

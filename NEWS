@@ -118,6 +118,7 @@ New in release 3.11.0 (2019-01-XX):
   - PR3667, PR3479, RH1486025: Backed out changeset 5dcb55da00c1
   - PR3675: Update CVE URL
   - PR3683: Addition of 8189170 in 8u192 breaks 8197429 backport
+  - PR3691: wget not detected by configure
 * AArch64 port
   - S8160748, PR3682: [AArch64] Inconsistent types for ideal_reg
   - S8189170, PR3682: [AArch64] Add option to disable stack overflow checking in primordial thread for use with JNI_CreateJavaJVM
