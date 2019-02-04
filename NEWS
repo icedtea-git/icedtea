@@ -58,6 +58,7 @@ New in release 3.11.0 (2019-01-XX):
   - S8162362: Introduce system property to control enabled ciphersuites
   - S8162540: Crash in C2 escape analysis with assert: "node should be registered"
   - S8165463: Native implementation of sunmscapi should use operator new (nothrow) for allocations
+  - S8173013: JVMTI tagged object access needs G1 pre-barrier
   - S8176033: New cygwin grep does not match \r as newline
   - S8176192: Incorrect usage of Iterator in Java 8 In com.sun.jndi.ldap.EventSupport.removeNamingListener
   - S8178370: [TEST_BUG] java/security/Signature/SignatureLength.java fails

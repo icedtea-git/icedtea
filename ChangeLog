@@ -1,5 +1,33 @@
 2019-02-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump aarch32 to jdk8u192-b12-aarch32-181022.
+	* patches/hotspot/aarch32/8008321-pr3599.patch,
+	* patches/hotspot/aarch32/8165489-pr3589.patch,
+	* patches/hotspot/aarch32/8185723-pr3553.patch,
+	* patches/hotspot/aarch32/8186461-pr3557.patch,
+	* patches/hotspot/aarch32/8201509-pr3579.patch,
+	* patches/hotspot/aarch32/8206406-pr3610-rh1597825.patch,
+	* patches/hotspot/aarch32/pr3539-rh1548475.patch:
+	Remove patches now upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove AArch32-only patches which
+	are now included in the updated tarball.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump aarch32 to
+	jdk8u192-b12-aarch32-181022.
+	* patches/hotspot/aarch32/8141491-pr3159-g592292.patch,
+	* patches/hotspot/aarch32/8143245-pr3548.patch,
+	* patches/hotspot/aarch32/8158260-pr2991-rh1341258.patch,
+	* patches/hotspot/aarch32/8197429-pr3546-rh1536622.patch,
+	* patches/hotspot/aarch32/pr1368.patch,
+	* patches/hotspot/aarch32/pr3593.patch,
+	* patches/hotspot/aarch32/pr3607.patch,
+	* patches/hotspot/aarch32/werror.patch:
+	Replace pre-8u192 versions with symlinks to Shenandoah
+	versions.
+
+2019-02-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR3691: wget not detected by configure
 	* NEWS: Updated.
 	* configure.ac:
