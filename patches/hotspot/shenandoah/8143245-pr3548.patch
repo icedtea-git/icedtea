@@ -7,9 +7,9 @@
 8143245, PR3548: Zero build requires disabled warnings
 Reviewed-by: dholmes, coleenp
 
-diff --git openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make openjdk/hotspot/make/linux/makefiles/zeroshark.make
---- openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make
-+++ openjdk/hotspot/make/linux/makefiles/zeroshark.make
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make openjdk/hotspot/make/linux/makefiles/zeroshark.make
+--- openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make	2019-01-29 19:24:20.912427991 +0000
++++ openjdk/hotspot/make/linux/makefiles/zeroshark.make	2019-01-29 19:28:51.204181986 +0000
 @@ -1,5 +1,5 @@
  #
 -# Copyright (c) 2003, 2015, Oracle and/or its affiliates. All rights reserved.
@@ -29,9 +29,9 @@ diff --git openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make openjdk/hots
  
  # The copied fdlibm routines in sharedRuntimeTrig.o must not be optimized
  OPT_CFLAGS/sharedRuntimeTrig.o = $(OPT_CFLAGS/NOOPT)
-diff --git openjdk.orig/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp openjdk/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
---- openjdk.orig/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
-+++ openjdk/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
+diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp openjdk/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
+--- openjdk.orig/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp	2019-01-29 19:28:51.208181923 +0000
 @@ -100,7 +100,7 @@
      case T_DOUBLE:
      case T_VOID:
@@ -41,9 +41,9 @@ diff --git openjdk.orig/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp openjdk/
    }
  }
  
-diff --git openjdk.orig/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp openjdk/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp
---- openjdk.orig/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp
-+++ openjdk/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp
+diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp openjdk/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp
+--- openjdk.orig/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp	2019-01-29 19:28:51.208181923 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (c) 2003, 2012, Oracle and/or its affiliates. All rights reserved.
@@ -60,12 +60,12 @@ diff --git openjdk.orig/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp openjdk/h
    switch (type) {
    case T_VOID:
      ftype = &ffi_type_void;
-diff --git openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
---- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
-+++ openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
+--- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp	2019-01-29 19:29:06.931934919 +0000
 @@ -1,6 +1,6 @@
  /*
-  * Copyright (c) 2003, 2013, Oracle and/or its affiliates. All rights reserved.
+  * Copyright (c) 2003, 2018, Oracle and/or its affiliates. All rights reserved.
 - * Copyright 2007, 2008, 2009, 2010 Red Hat, Inc.
 + * Copyright 2016 Red Hat, Inc.
   * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -126,17 +126,9 @@ diff --git openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp openj
  }
  
  void os::Linux::set_fpu_control_word(int fpu) {
-@@ -408,6 +418,7 @@
- 
- extern "C" {
-   int SpinPause() {
-+      return -1; // silence compile warnings
-   }
- 
- 
-diff --git openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp openjdk/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp
---- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp
-+++ openjdk/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp
+diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp openjdk/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp
+--- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp	2019-01-29 19:28:51.208181923 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.

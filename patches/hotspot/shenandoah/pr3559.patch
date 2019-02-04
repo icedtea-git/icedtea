@@ -11,13 +11,13 @@ PR3559: Use ldrexd for atomic reads on ARMv7.
 	* os_linux_zero.hpp (atomic_copy64): Use ldrexd for atomic reads
 	on ARMv7.
 
-diff --git openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
---- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
-+++ openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
+diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
+--- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp	2019-01-31 03:47:46.786028653 +0000
 @@ -54,6 +54,12 @@
-                   "std %0, 0(%2)\n"
-                   : "=r"(tmp)
-                   : "a"(src), "a"(dst));
+                   "std %0, %1\n"
+                   : "=&f"(tmp), "=Q"(*(volatile double*)dst)
+                   : "Q"(*(volatile double*)src));
 +#elif defined(__ARM_ARCH_7A__)
 +    jlong tmp;
 +    asm volatile ("ldrexd  %0, [%1]\n"

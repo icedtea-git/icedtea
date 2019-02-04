@@ -6,10 +6,10 @@
 # Parent  c75d6ce2e98b901b31ac84dbbb59667e03beb9d5
 Merge jdk8u20-b23
 
-diff -r c75d6ce2e98b -r 22d29c372fc4 make/linux/makefiles/gcc.make
---- openjdk/hotspot/make/linux/makefiles/gcc.make	Tue Aug 19 22:31:00 2014 +0100
-+++ openjdk/hotspot/make/linux/makefiles/gcc.make	Tue Aug 19 23:57:06 2014 +0100
-@@ -206,7 +206,9 @@
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2019-01-25 15:02:27.660107711 +0000
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2019-01-25 15:05:30.485236897 +0000
+@@ -198,7 +198,9 @@
  endif
  
  # Compiler warnings are treated as errors
@@ -19,9 +19,9 @@ diff -r c75d6ce2e98b -r 22d29c372fc4 make/linux/makefiles/gcc.make
  
  ifeq ($(USE_CLANG), true)
    # However we need to clean the code up before we can unrestrictedly enable this option with Clang
-diff -r c75d6ce2e98b -r 22d29c372fc4 make/solaris/makefiles/adlc.make
---- openjdk/hotspot/make/solaris/makefiles/adlc.make	Tue Aug 19 22:31:00 2014 +0100
-+++ openjdk/hotspot/make/solaris/makefiles/adlc.make	Tue Aug 19 23:57:06 2014 +0100
+diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/adlc.make openjdk/hotspot/make/solaris/makefiles/adlc.make
+--- openjdk.orig/hotspot/make/solaris/makefiles/adlc.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/solaris/makefiles/adlc.make	2019-01-25 15:06:44.376075821 +0000
 @@ -73,8 +73,10 @@
  
  # CFLAGS_WARN holds compiler options to suppress/enable warnings.
@@ -33,11 +33,11 @@ diff -r c75d6ce2e98b -r 22d29c372fc4 make/solaris/makefiles/adlc.make
 +    CFLAGS_WARN = +w -errwarn
 +  endif
  endif
- CFLAGS += $(CFLAGS_WARN)
- 
-diff -r c75d6ce2e98b -r 22d29c372fc4 make/solaris/makefiles/gcc.make
---- openjdk/hotspot/make/solaris/makefiles/gcc.make	Tue Aug 19 22:31:00 2014 +0100
-+++ openjdk/hotspot/make/solaris/makefiles/gcc.make	Tue Aug 19 23:57:06 2014 +0100
+ # When using compiler version 5.13 (Solaris Studio 12.4), calls to explicitly 
+ # instantiated template functions trigger this warning when +w is active.
+diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/gcc.make openjdk/hotspot/make/solaris/makefiles/gcc.make
+--- openjdk.orig/hotspot/make/solaris/makefiles/gcc.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/solaris/makefiles/gcc.make	2019-01-25 15:05:30.485236897 +0000
 @@ -116,7 +116,9 @@
  
  

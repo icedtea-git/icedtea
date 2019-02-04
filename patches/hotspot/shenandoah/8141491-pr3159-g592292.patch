@@ -8,10 +8,10 @@
 Summary: Introduce alignment-safe Copy::conjoint_swap and j.i.m.Unsafe.copySwapMemory
 Reviewed-by: jrose, dholmes, psandoz
 
-diff --git a/src/share/vm/prims/unsafe.cpp b/src/share/vm/prims/unsafe.cpp
---- openjdk/hotspot/src/share/vm/prims/unsafe.cpp
-+++ openjdk/hotspot/src/share/vm/prims/unsafe.cpp
-@@ -740,6 +740,36 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/prims/unsafe.cpp openjdk/hotspot/src/share/vm/prims/unsafe.cpp
+--- openjdk.orig/hotspot/src/share/vm/prims/unsafe.cpp	2019-01-25 15:09:02.521904826 +0000
++++ openjdk/hotspot/src/share/vm/prims/unsafe.cpp	2019-01-29 17:57:15.651251367 +0000
+@@ -737,6 +737,36 @@
    Copy::conjoint_memory_atomic(src, dst, sz);
  UNSAFE_END
  
@@ -48,17 +48,17 @@ diff --git a/src/share/vm/prims/unsafe.cpp b/src/share/vm/prims/unsafe.cpp
  
  ////// Random queries
  
-@@ -1702,6 +1732,7 @@
+@@ -1712,6 +1742,7 @@
  
  JNINativeMethod memcopy_methods_17[] = {
-     {CC"copyMemory",         CC"("OBJ"J"OBJ"JJ)V",       FN_PTR(Unsafe_CopyMemory2)},
-+    {CC"copySwapMemory0",    CC "(" OBJ "J" OBJ "JJJ)V", FN_PTR(Unsafe_CopySwapMemory0)},
-     {CC"setMemory",          CC"("OBJ"JJB)V",            FN_PTR(Unsafe_SetMemory2)}
+     {CC "copyMemory",         CC "(" OBJ "J" OBJ "JJ)V",       FN_PTR(Unsafe_CopyMemory2)},
++    {CC "copySwapMemory0",    CC "(" OBJ "J" OBJ "JJJ)V",    FN_PTR(Unsafe_CopySwapMemory0)},
+     {CC "setMemory",          CC "(" OBJ "JJB)V",            FN_PTR(Unsafe_SetMemory2)}
  };
  
-diff --git a/src/share/vm/runtime/interfaceSupport.hpp b/src/share/vm/runtime/interfaceSupport.hpp
---- openjdk/hotspot/src/share/vm/runtime/interfaceSupport.hpp
-+++ openjdk/hotspot/src/share/vm/runtime/interfaceSupport.hpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/interfaceSupport.hpp openjdk/hotspot/src/share/vm/runtime/interfaceSupport.hpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/interfaceSupport.hpp	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/interfaceSupport.hpp	2019-01-29 02:57:27.690537317 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (c) 1997, 2013, Oracle and/or its affiliates. All rights reserved.
@@ -96,9 +96,9 @@ diff --git a/src/share/vm/runtime/interfaceSupport.hpp b/src/share/vm/runtime/in
  #define JVM_END } }
  
  #endif // SHARE_VM_RUNTIME_INTERFACESUPPORT_HPP
-diff --git a/src/share/vm/utilities/copy.cpp b/src/share/vm/utilities/copy.cpp
---- openjdk/hotspot/src/share/vm/utilities/copy.cpp
-+++ openjdk/hotspot/src/share/vm/utilities/copy.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/copy.cpp openjdk/hotspot/src/share/vm/utilities/copy.cpp
+--- openjdk.orig/hotspot/src/share/vm/utilities/copy.cpp	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/src/share/vm/utilities/copy.cpp	2019-01-29 02:57:27.690537317 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (c) 2006, 2010, Oracle and/or its affiliates. All rights reserved.
@@ -282,9 +282,9 @@ diff --git a/src/share/vm/utilities/copy.cpp b/src/share/vm/utilities/copy.cpp
  
  // Fill bytes; larger units are filled atomically if everything is aligned.
  void Copy::fill_to_memory_atomic(void* to, size_t size, jubyte value) {
-diff --git a/src/share/vm/utilities/copy.hpp b/src/share/vm/utilities/copy.hpp
---- openjdk/hotspot/src/share/vm/utilities/copy.hpp
-+++ openjdk/hotspot/src/share/vm/utilities/copy.hpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/copy.hpp openjdk/hotspot/src/share/vm/utilities/copy.hpp
+--- openjdk.orig/hotspot/src/share/vm/utilities/copy.hpp	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/src/share/vm/utilities/copy.hpp	2019-01-29 02:57:27.690537317 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (c) 2003, 2011, Oracle and/or its affiliates. All rights reserved.

@@ -122,6 +122,11 @@ New in release 3.11.0 (2019-01-XX):
   - S8160748, PR3682: [AArch64] Inconsistent types for ideal_reg
   - S8189170, PR3682: [AArch64] Add option to disable stack overflow checking in primordial thread for use with JNI_CreateJavaJVM
   - S8209414, PR3682: [AArch64] method handle invocation does not respect JVMTI interp_only mode
+* Shenandoah
+  - S8199552: Update to build scripts
+  - S8203349: 8u hotspot should recognise later Windows compilers
+  - S8205714: Initial class initialization
+  - S8210094: Better loading of classloader classes
 
 New in release 3.10.0 (2018-12-25):
 

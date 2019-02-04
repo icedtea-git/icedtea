@@ -7,10 +7,10 @@
 8197429, PR3546: Increased stack guard causes segfaults on x86-32
 Reviewed-by: dholmes
 
-diff --git openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
---- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp
-+++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp
-@@ -674,6 +674,10 @@
+diff -Nru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+--- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2019-01-29 20:02:23.464569622 +0000
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2019-01-29 20:31:12.037413762 +0000
+@@ -724,6 +724,10 @@
    }
  }
  
@@ -21,17 +21,10 @@ diff --git openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src
  bool os::Linux::manually_expand_stack(JavaThread * t, address addr) {
    assert(t!=NULL, "just checking");
    assert(t->osthread()->expanding_stack(), "expand should be set");
-diff --git openjdk.orig/hotspot/src/os/linux/vm/os_linux.hpp openjdk/hotspot/src/os/linux/vm/os_linux.hpp
---- openjdk.orig/hotspot/src/os/linux/vm/os_linux.hpp
-+++ openjdk/hotspot/src/os/linux/vm/os_linux.hpp
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 1999, 2013, Oracle and/or its affiliates. All rights reserved.
-+ * Copyright (c) 1999, 2018, Oracle and/or its affiliates. All rights reserved.
-  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-  *
-  * This code is free software; you can redistribute it and/or modify it
-@@ -245,6 +245,8 @@
+diff -Nru openjdk.orig/hotspot/src/os/linux/vm/os_linux.hpp openjdk/hotspot/src/os/linux/vm/os_linux.hpp
+--- openjdk.orig/hotspot/src/os/linux/vm/os_linux.hpp	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/src/os/linux/vm/os_linux.hpp	2019-01-29 20:32:29.688193870 +0000
+@@ -249,6 +249,8 @@
    static int safe_cond_timedwait(pthread_cond_t *_cond, pthread_mutex_t *_mutex, const struct timespec *_abstime);
  
  private:
@@ -40,17 +33,10 @@ diff --git openjdk.orig/hotspot/src/os/linux/vm/os_linux.hpp openjdk/hotspot/src
    typedef int (*sched_getcpu_func_t)(void);
    typedef int (*numa_node_to_cpus_func_t)(int node, unsigned long *buffer, int bufferlen);
    typedef int (*numa_max_node_func_t)(void);
-diff --git openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp
---- openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp
-+++ openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 1999, 2014, Oracle and/or its affiliates. All rights reserved.
-+ * Copyright (c) 1999, 2018, Oracle and/or its affiliates. All rights reserved.
-  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-  *
-  * This code is free software; you can redistribute it and/or modify it
-@@ -892,6 +892,25 @@
+diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp
+--- openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp	2019-01-29 20:02:23.496569120 +0000
++++ openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp	2019-01-29 20:32:11.444480479 +0000
+@@ -893,6 +893,25 @@
  void os::workaround_expand_exec_shield_cs_limit() {
  #if defined(IA32) && !defined(ZERO)
    size_t page_size = os::vm_page_size();
@@ -76,7 +62,7 @@ diff --git openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp openjdk
    /*
     * Take the highest VA the OS will give us and exec
     *
-@@ -910,6 +929,16 @@
+@@ -911,6 +930,16 @@
    char* hint = (char*) (Linux::initial_thread_stack_bottom() -
                          ((StackYellowPages + StackRedPages + 1) * page_size));
    char* codebuf = os::attempt_reserve_memory_at(page_size, hint);
@@ -93,48 +79,9 @@ diff --git openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp openjdk
    if ( (codebuf == NULL) || (!os::commit_memory(codebuf, page_size, true)) ) {
      return; // No matter, we tried, best effort.
    }
-diff --git openjdk.orig/hotspot/test/runtime/StackGap/T.java openjdk/hotspot/test/runtime/StackGap/T.java
-new file mode 100644
---- /dev/null
-+++ openjdk/hotspot/test/runtime/StackGap/T.java
-@@ -0,0 +1,33 @@
-+/*
-+ * Copyright (c) 2018, Red Hat, Inc. All rights reserved.
-+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-+ *
-+ * This code is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 only, as
-+ * published by the Free Software Foundation.
-+ *
-+ * This code is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-+ * version 2 for more details (a copy is included in the LICENSE file that
-+ * accompanied this code).
-+ *
-+ * You should have received a copy of the GNU General Public License version
-+ * 2 along with this work; if not, write to the Free Software Foundation,
-+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
-+ *
-+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
-+ * or visit www.oracle.com if you need additional information or have any
-+ * questions.
-+ */
-+
-+public class T {
-+
-+  public static void test(int n) {
-+    if (n == 0) return;
-+    System.out.println (n);
-+    test (n - 1);
-+
-+  }
-+
-+}
-diff --git openjdk.orig/hotspot/test/runtime/StackGap/exestack-gap.c openjdk/hotspot/test/runtime/StackGap/exestack-gap.c
-new file mode 100644
---- /dev/null
-+++ openjdk/hotspot/test/runtime/StackGap/exestack-gap.c
+diff -Nru openjdk.orig/hotspot/test/runtime/StackGap/exestack-gap.c openjdk/hotspot/test/runtime/StackGap/exestack-gap.c
+--- openjdk.orig/hotspot/test/runtime/StackGap/exestack-gap.c	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/hotspot/test/runtime/StackGap/exestack-gap.c	2019-01-29 20:31:12.037413762 +0000
 @@ -0,0 +1,82 @@
 +/*
 + * Copyright (c) 2018, Red Hat, Inc. All rights reserved.
@@ -218,10 +165,9 @@ new file mode 100644
 +
 +  return 0;
 +}
-diff --git openjdk.orig/hotspot/test/runtime/StackGap/testme.sh openjdk/hotspot/test/runtime/StackGap/testme.sh
-new file mode 100644
---- /dev/null
-+++ openjdk/hotspot/test/runtime/StackGap/testme.sh
+diff -Nru openjdk.orig/hotspot/test/runtime/StackGap/testme.sh openjdk/hotspot/test/runtime/StackGap/testme.sh
+--- openjdk.orig/hotspot/test/runtime/StackGap/testme.sh	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/hotspot/test/runtime/StackGap/testme.sh	2019-01-29 20:31:12.037413762 +0000
 @@ -0,0 +1,48 @@
 +# Copyright (c) 2014, 2018, Oracle and/or its affiliates. All rights reserved.
 +# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
@@ -271,3 +217,40 @@ new file mode 100644
 +export LD_LIBRARY_PATH
 +
 +${TESTNATIVEPATH}/stack-gap || exit $?
+diff -Nru openjdk.orig/hotspot/test/runtime/StackGap/T.java openjdk/hotspot/test/runtime/StackGap/T.java
+--- openjdk.orig/hotspot/test/runtime/StackGap/T.java	1970-01-01 01:00:00.000000000 +0100
++++ openjdk/hotspot/test/runtime/StackGap/T.java	2019-01-29 20:31:12.037413762 +0000
+@@ -0,0 +1,33 @@
++/*
++ * Copyright (c) 2018, Red Hat, Inc. All rights reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
++ * or visit www.oracle.com if you need additional information or have any
++ * questions.
++ */
++
++public class T {
++
++  public static void test(int n) {
++    if (n == 0) return;
++    System.out.println (n);
++    test (n - 1);
++
++  }
++
++}

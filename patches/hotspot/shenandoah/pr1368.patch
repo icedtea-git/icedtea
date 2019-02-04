@@ -6,9 +6,9 @@
 # Parent  e04f994581e23e89757774cd2033413bc650a831
 PR1368: Ensure debug data is available for all libraries and binaries without redundant files
 
-diff -r e04f994581e2 -r be477dd4629d make/aix/makefiles/defs.make
---- openjdk/hotspot/make/aix/makefiles/defs.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/aix/makefiles/defs.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/aix/makefiles/defs.make openjdk/hotspot/make/aix/makefiles/defs.make
+--- openjdk.orig/hotspot/make/aix/makefiles/defs.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/aix/makefiles/defs.make	2019-01-25 14:24:31.999871188 +0000
 @@ -186,12 +186,14 @@
  # client and server subdirectories have symbolic links to ../libjsig.so
  EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.$(LIBRARY_SUFFIX)
@@ -53,9 +53,9 @@ diff -r e04f994581e2 -r be477dd4629d make/aix/makefiles/defs.make
  endif
  
  # Serviceability Binaries
-diff -r e04f994581e2 -r be477dd4629d make/aix/makefiles/jsig.make
---- openjdk/hotspot/make/aix/makefiles/jsig.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/aix/makefiles/jsig.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/aix/makefiles/jsig.make openjdk/hotspot/make/aix/makefiles/jsig.make
+--- openjdk.orig/hotspot/make/aix/makefiles/jsig.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/aix/makefiles/jsig.make	2019-01-25 14:24:31.999871188 +0000
 @@ -60,6 +60,7 @@
                           $(LFLAGS_JSIG) $(JSIG_DEBUG_CFLAGS) -o $@ $< -ldl
  
@@ -72,9 +72,9 @@ diff -r e04f994581e2 -r be477dd4629d make/aix/makefiles/jsig.make
  
  install_jsig: $(LIBJSIG)
  	@echo "Copying $(LIBJSIG) to $(DEST_JSIG)"
-diff -r e04f994581e2 -r be477dd4629d make/aix/makefiles/saproc.make
---- openjdk/hotspot/make/aix/makefiles/saproc.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/aix/makefiles/saproc.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/aix/makefiles/saproc.make openjdk/hotspot/make/aix/makefiles/saproc.make
+--- openjdk.orig/hotspot/make/aix/makefiles/saproc.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/aix/makefiles/saproc.make	2019-01-25 14:24:31.999871188 +0000
 @@ -88,8 +88,10 @@
  	           -o $@                                                \
  	           -lthread_db
@@ -97,9 +97,9 @@ diff -r e04f994581e2 -r be477dd4629d make/aix/makefiles/saproc.make
    endif
  endif
  
-diff -r e04f994581e2 -r be477dd4629d make/aix/makefiles/vm.make
---- openjdk/hotspot/make/aix/makefiles/vm.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/aix/makefiles/vm.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/aix/makefiles/vm.make openjdk/hotspot/make/aix/makefiles/vm.make
+--- openjdk.orig/hotspot/make/aix/makefiles/vm.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/aix/makefiles/vm.make	2019-01-25 14:24:31.999871188 +0000
 @@ -330,6 +330,7 @@
  #	}
  
@@ -116,9 +116,9 @@ diff -r e04f994581e2 -r be477dd4629d make/aix/makefiles/vm.make
  
  DEST_SUBDIR        = $(JDK_LIBDIR)/$(VM_SUBDIR)
  DEST_JVM           = $(DEST_SUBDIR)/$(LIBJVM)
-diff -r e04f994581e2 -r be477dd4629d make/bsd/makefiles/defs.make
---- openjdk/hotspot/make/bsd/makefiles/defs.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/bsd/makefiles/defs.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/defs.make openjdk/hotspot/make/bsd/makefiles/defs.make
+--- openjdk.orig/hotspot/make/bsd/makefiles/defs.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/bsd/makefiles/defs.make	2019-01-25 14:24:31.999871188 +0000
 @@ -269,6 +269,7 @@
  EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.$(LIBRARY_SUFFIX)
  
@@ -207,12 +207,12 @@ diff -r e04f994581e2 -r be477dd4629d make/bsd/makefiles/defs.make
  
    endif
  endif
-diff -r e04f994581e2 -r be477dd4629d make/bsd/makefiles/jsig.make
---- openjdk/hotspot/make/bsd/makefiles/jsig.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/bsd/makefiles/jsig.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/jsig.make openjdk/hotspot/make/bsd/makefiles/jsig.make
+--- openjdk.orig/hotspot/make/bsd/makefiles/jsig.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/bsd/makefiles/jsig.make	2019-01-25 14:29:06.939548251 +0000
 @@ -64,6 +64,7 @@
  	$(QUIETLY) $(CC) $(SYMFLAG) $(ARCHFLAG) $(SHARED_FLAG) $(PICFLAG) \
-                          $(LFLAGS_JSIG) $(JSIG_DEBUG_CFLAGS) -o $@ $<
+                          $(LFLAGS_JSIG) $(JSIG_DEBUG_CFLAGS) $(EXTRA_CFLAGS) -o $@ $<
  ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
 +ifneq ($(STRIP_POLICY),no_strip)
    ifeq ($(OS_VENDOR), Darwin)
@@ -226,9 +226,9 @@ diff -r e04f994581e2 -r be477dd4629d make/bsd/makefiles/jsig.make
  
  install_jsig: $(LIBJSIG)
  	@echo "Copying $(LIBJSIG) to $(DEST_JSIG)"
-diff -r e04f994581e2 -r be477dd4629d make/bsd/makefiles/saproc.make
---- openjdk/hotspot/make/bsd/makefiles/saproc.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/bsd/makefiles/saproc.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/saproc.make openjdk/hotspot/make/bsd/makefiles/saproc.make
+--- openjdk.orig/hotspot/make/bsd/makefiles/saproc.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/bsd/makefiles/saproc.make	2019-01-25 14:24:31.999871188 +0000
 @@ -137,6 +137,7 @@
  	           -o $@                                                \
  	           $(SALIBS)
@@ -245,9 +245,9 @@ diff -r e04f994581e2 -r be477dd4629d make/bsd/makefiles/saproc.make
  
  install_saproc: $(BUILDLIBSAPROC)
  	@echo "Copying $(LIBSAPROC) to $(DEST_SAPROC)"
-diff -r e04f994581e2 -r be477dd4629d make/bsd/makefiles/vm.make
---- openjdk/hotspot/make/bsd/makefiles/vm.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/bsd/makefiles/vm.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/vm.make openjdk/hotspot/make/bsd/makefiles/vm.make
+--- openjdk.orig/hotspot/make/bsd/makefiles/vm.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/bsd/makefiles/vm.make	2019-01-25 14:24:31.999871188 +0000
 @@ -342,6 +342,7 @@
  	}
  
@@ -264,166 +264,9 @@ diff -r e04f994581e2 -r be477dd4629d make/bsd/makefiles/vm.make
  
  DEST_SUBDIR        = $(JDK_LIBDIR)/$(VM_SUBDIR)
  DEST_JVM           = $(DEST_SUBDIR)/$(LIBJVM)
-diff -r e04f994581e2 -r be477dd4629d make/linux/makefiles/defs.make
---- openjdk/hotspot/make/linux/makefiles/defs.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/linux/makefiles/defs.make	Mon Jan 11 17:16:42 2016 +0000
-@@ -252,12 +252,14 @@
- # client and server subdirectories have symbolic links to ../libjsig.so
- EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.$(LIBRARY_SUFFIX)
- ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+ifneq ($(STRIP_POLICY),no_strip)
-   ifeq ($(ZIP_DEBUGINFO_FILES),1)
-     EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.diz
-   else
-     EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.debuginfo
-   endif
- endif
-+endif
- EXPORT_SERVER_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/server
- EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
- EXPORT_MINIMAL_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/minimal
-@@ -266,24 +268,28 @@
-   EXPORT_LIST += $(EXPORT_SERVER_DIR)/Xusage.txt
-   EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.$(LIBRARY_SUFFIX)
-   ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+  ifneq ($(STRIP_POLICY),no_strip)
-     ifeq ($(ZIP_DEBUGINFO_FILES),1)
-       EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.diz
-     else
-       EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.debuginfo
-     endif
-   endif
-+  endif
- endif
- 
- ifeq ($(JVM_VARIANT_CLIENT),true)
-   EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt
-   EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.$(LIBRARY_SUFFIX)
-   ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+  ifneq ($(STRIP_POLICY),no_strip)
-     ifeq ($(ZIP_DEBUGINFO_FILES),1)
-       EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.diz
-     else
-       EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.debuginfo
-     endif
-   endif
-+  endif
- endif
- 
- ifeq ($(JVM_VARIANT_MINIMAL1),true)
-@@ -291,12 +297,14 @@
-   EXPORT_LIST += $(EXPORT_MINIMAL_DIR)/libjvm.$(LIBRARY_SUFFIX)
- 
-   ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+  ifneq ($(STRIP_POLICY),no_strip)
-     ifeq ($(ZIP_DEBUGINFO_FILES),1)
- 	EXPORT_LIST += $(EXPORT_MINIMAL_DIR)/libjvm.diz
-     else
- 	EXPORT_LIST += $(EXPORT_MINIMAL_DIR)/libjvm.debuginfo
-     endif
-   endif
-+  endif
- endif
- 
- # Serviceability Binaries
-@@ -308,6 +316,7 @@
- ADD_SA_BINARIES/aarch64 = $(EXPORT_JRE_LIB_ARCH_DIR)/libsaproc.$(LIBRARY_SUFFIX) \
-                         $(EXPORT_LIB_DIR)/sa-jdi.jar
- ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+ifneq ($(STRIP_POLICY),no_strip)
-   ifeq ($(ZIP_DEBUGINFO_FILES),1)
-     ADD_SA_BINARIES/x86   += $(EXPORT_JRE_LIB_ARCH_DIR)/libsaproc.diz
-     ADD_SA_BINARIES/sparc += $(EXPORT_JRE_LIB_ARCH_DIR)/libsaproc.diz
-@@ -316,6 +325,7 @@
-     ADD_SA_BINARIES/sparc += $(EXPORT_JRE_LIB_ARCH_DIR)/libsaproc.debuginfo
-   endif
- endif
-+endif
- ADD_SA_BINARIES/ppc   =
- ADD_SA_BINARIES/ia64  =
- ADD_SA_BINARIES/arm   =
-diff -r e04f994581e2 -r be477dd4629d make/linux/makefiles/jsig.make
---- openjdk/hotspot/make/linux/makefiles/jsig.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/linux/makefiles/jsig.make	Mon Jan 11 17:16:42 2016 +0000
-@@ -56,8 +56,10 @@
- 	$(QUIETLY) $(CC) $(SYMFLAG) $(ARCHFLAG) $(SHARED_FLAG) $(PICFLAG) \
-                          $(LFLAGS_JSIG) $(JSIG_DEBUG_CFLAGS) $(EXTRA_CFLAGS) -o $@ $< -ldl
- ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+  ifneq ($(STRIP_POLICY),no_strip)
- 	$(QUIETLY) $(OBJCOPY) --only-keep-debug $@ $(LIBJSIG_DEBUGINFO)
- 	$(QUIETLY) $(OBJCOPY) --add-gnu-debuglink=$(LIBJSIG_DEBUGINFO) $@
-+  endif
-   ifeq ($(STRIP_POLICY),all_strip)
- 	$(QUIETLY) $(STRIP) $@
-   else
-@@ -66,10 +68,12 @@
-     # implied else here is no stripping at all
-     endif
-   endif
-+  ifneq ($(STRIP_POLICY),no_strip)
-   ifeq ($(ZIP_DEBUGINFO_FILES),1)
- 	$(ZIPEXE) -q -y $(LIBJSIG_DIZ) $(LIBJSIG_DEBUGINFO)
- 	$(RM) $(LIBJSIG_DEBUGINFO)
-   endif
-+  endif
- endif
- 
- install_jsig: $(LIBJSIG)
-diff -r e04f994581e2 -r be477dd4629d make/linux/makefiles/saproc.make
---- openjdk/hotspot/make/linux/makefiles/saproc.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/linux/makefiles/saproc.make	Mon Jan 11 17:16:42 2016 +0000
-@@ -98,8 +98,10 @@
- 	           -o $@                                                \
- 	           -lthread_db
- ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+  ifneq ($(STRIP_POLICY),no_strip)
- 	$(QUIETLY) $(OBJCOPY) --only-keep-debug $@ $(LIBSAPROC_DEBUGINFO)
- 	$(QUIETLY) $(OBJCOPY) --add-gnu-debuglink=$(LIBSAPROC_DEBUGINFO) $@
-+  endif
-   ifeq ($(STRIP_POLICY),all_strip)
- 	$(QUIETLY) $(STRIP) $@
-   else
-@@ -109,8 +111,10 @@
-     endif
-   endif
-   ifeq ($(ZIP_DEBUGINFO_FILES),1)
-+    ifneq ($(STRIP_POLICY),no_strip)
- 	$(ZIPEXE) -q -y $(LIBSAPROC_DIZ) $(LIBSAPROC_DEBUGINFO)
- 	$(RM) $(LIBSAPROC_DEBUGINFO)
-+    endif
-   endif
- endif
- 
-diff -r e04f994581e2 -r be477dd4629d make/linux/makefiles/vm.make
---- openjdk/hotspot/make/linux/makefiles/vm.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/linux/makefiles/vm.make	Mon Jan 11 17:16:42 2016 +0000
-@@ -417,8 +417,10 @@
- 	}
- 
- ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+  ifneq ($(STRIP_POLICY),no_strip)
- 	$(QUIETLY) $(OBJCOPY) --only-keep-debug $@ $(LIBJVM_DEBUGINFO)
- 	$(QUIETLY) $(OBJCOPY) --add-gnu-debuglink=$(LIBJVM_DEBUGINFO) $@
-+  endif
-   ifeq ($(STRIP_POLICY),all_strip)
- 	$(QUIETLY) $(STRIP) $@
-   else
-@@ -427,10 +429,12 @@
-     # implied else here is no stripping at all
-     endif
-   endif
-+  ifneq ($(STRIP_POLICY),no_strip)
-   ifeq ($(ZIP_DEBUGINFO_FILES),1)
- 	$(ZIPEXE) -q -y $(LIBJVM_DIZ) $(LIBJVM_DEBUGINFO)
- 	$(RM) $(LIBJVM_DEBUGINFO)
-   endif
-+  endif
- endif
- 
- DEST_SUBDIR        = $(JDK_LIBDIR)/$(VM_SUBDIR)
-diff -r e04f994581e2 -r be477dd4629d make/solaris/makefiles/defs.make
---- openjdk/hotspot/make/solaris/makefiles/defs.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/solaris/makefiles/defs.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/defs.make openjdk/hotspot/make/solaris/makefiles/defs.make
+--- openjdk.orig/hotspot/make/solaris/makefiles/defs.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/solaris/makefiles/defs.make	2019-01-25 14:24:31.999871188 +0000
 @@ -226,12 +226,14 @@
  # client and server subdirectories have symbolic links to ../libjsig.$(LIBRARY_SUFFIX)
  EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.$(LIBRARY_SUFFIX)
@@ -476,9 +319,9 @@ diff -r e04f994581e2 -r be477dd4629d make/solaris/makefiles/defs.make
    ifeq ($(ZIP_DEBUGINFO_FILES),1)
      EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libsaproc.diz
    else
-diff -r e04f994581e2 -r be477dd4629d make/solaris/makefiles/jsig.make
---- openjdk/hotspot/make/solaris/makefiles/jsig.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/solaris/makefiles/jsig.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/jsig.make openjdk/hotspot/make/solaris/makefiles/jsig.make
+--- openjdk.orig/hotspot/make/solaris/makefiles/jsig.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/solaris/makefiles/jsig.make	2019-01-25 14:24:31.999871188 +0000
 @@ -52,8 +52,10 @@
  	$(QUIETLY) $(CC) $(SYMFLAG) $(ARCHFLAG) $(SHARED_FLAG) $(PICFLAG) \
                           $(LFLAGS_JSIG) -o $@ $(JSIGSRCDIR)/jsig.c -ldl
@@ -503,9 +346,9 @@ diff -r e04f994581e2 -r be477dd4629d make/solaris/makefiles/jsig.make
  endif
  
  install_jsig: $(LIBJSIG)
-diff -r e04f994581e2 -r be477dd4629d make/solaris/makefiles/saproc.make
---- openjdk/hotspot/make/solaris/makefiles/saproc.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/solaris/makefiles/saproc.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/saproc.make openjdk/hotspot/make/solaris/makefiles/saproc.make
+--- openjdk.orig/hotspot/make/solaris/makefiles/saproc.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/solaris/makefiles/saproc.make	2019-01-25 14:24:31.999871188 +0000
 @@ -121,8 +121,10 @@
  	           -c -o $(SADISOBJ)
  	
@@ -528,10 +371,10 @@ diff -r e04f994581e2 -r be477dd4629d make/solaris/makefiles/saproc.make
    endif
  endif
  
-diff -r e04f994581e2 -r be477dd4629d make/solaris/makefiles/vm.make
---- openjdk/hotspot/make/solaris/makefiles/vm.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/solaris/makefiles/vm.make	Mon Jan 11 17:16:42 2016 +0000
-@@ -307,8 +307,10 @@
+diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/vm.make openjdk/hotspot/make/solaris/makefiles/vm.make
+--- openjdk.orig/hotspot/make/solaris/makefiles/vm.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/solaris/makefiles/vm.make	2019-01-25 14:24:32.003871126 +0000
+@@ -299,8 +299,10 @@
  	$(QUIETLY) $(LINK_LIB.CXX/POST_HOOK)
  	$(QUIETLY) rm -f $@.1 && ln -s $@ $@.1
  ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
@@ -542,7 +385,7 @@ diff -r e04f994581e2 -r be477dd4629d make/solaris/makefiles/vm.make
    ifeq ($(STRIP_POLICY),all_strip)
  	$(QUIETLY) $(STRIP) $@
    else
-@@ -317,10 +319,12 @@
+@@ -309,10 +311,12 @@
      # implied else here is no stripping at all
      endif
    endif
@@ -555,9 +398,9 @@ diff -r e04f994581e2 -r be477dd4629d make/solaris/makefiles/vm.make
  endif
  endif # filter -sbfast -xsbfast
  
-diff -r e04f994581e2 -r be477dd4629d make/windows/makefiles/debug.make
---- openjdk/hotspot/make/windows/makefiles/debug.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/windows/makefiles/debug.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/windows/makefiles/debug.make openjdk/hotspot/make/windows/makefiles/debug.make
+--- openjdk.orig/hotspot/make/windows/makefiles/debug.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/windows/makefiles/debug.make	2019-01-25 14:24:32.003871126 +0000
 @@ -60,11 +60,13 @@
  	$(MT) /manifest $@.manifest /outputresource:$@;#2
  !endif
@@ -572,9 +415,9 @@ diff -r e04f994581e2 -r be477dd4629d make/windows/makefiles/debug.make
  
  !include $(WorkSpace)/make/windows/makefiles/shared.make
  !include $(WorkSpace)/make/windows/makefiles/sa.make
-diff -r e04f994581e2 -r be477dd4629d make/windows/makefiles/defs.make
---- openjdk/hotspot/make/windows/makefiles/defs.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/windows/makefiles/defs.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/windows/makefiles/defs.make openjdk/hotspot/make/windows/makefiles/defs.make
+--- openjdk.orig/hotspot/make/windows/makefiles/defs.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/windows/makefiles/defs.make	2019-01-25 14:24:32.003871126 +0000
 @@ -253,6 +253,7 @@
    EXPORT_LIST += $(EXPORT_SERVER_DIR)/Xusage.txt
    EXPORT_LIST += $(EXPORT_SERVER_DIR)/jvm.$(LIBRARY_SUFFIX)
@@ -621,9 +464,9 @@ diff -r e04f994581e2 -r be477dd4629d make/windows/makefiles/defs.make
    EXPORT_LIST += $(EXPORT_LIB_DIR)/sa-jdi.jar
    # Must pass this down to nmake.
    MAKE_ARGS += BUILD_WIN_SA=1
-diff -r e04f994581e2 -r be477dd4629d make/windows/makefiles/fastdebug.make
---- openjdk/hotspot/make/windows/makefiles/fastdebug.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/windows/makefiles/fastdebug.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/windows/makefiles/fastdebug.make openjdk/hotspot/make/windows/makefiles/fastdebug.make
+--- openjdk.orig/hotspot/make/windows/makefiles/fastdebug.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/windows/makefiles/fastdebug.make	2019-01-25 14:24:32.003871126 +0000
 @@ -59,11 +59,13 @@
  	$(MT) /manifest $@.manifest /outputresource:$@;#2
  !endif
@@ -638,9 +481,9 @@ diff -r e04f994581e2 -r be477dd4629d make/windows/makefiles/fastdebug.make
  
  !include $(WorkSpace)/make/windows/makefiles/shared.make
  !include $(WorkSpace)/make/windows/makefiles/sa.make
-diff -r e04f994581e2 -r be477dd4629d make/windows/makefiles/product.make
---- openjdk/hotspot/make/windows/makefiles/product.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/windows/makefiles/product.make	Mon Jan 11 17:16:42 2016 +0000
+diff -Nru openjdk.orig/hotspot/make/windows/makefiles/product.make openjdk/hotspot/make/windows/makefiles/product.make
+--- openjdk.orig/hotspot/make/windows/makefiles/product.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/windows/makefiles/product.make	2019-01-25 14:24:32.003871126 +0000
 @@ -62,11 +62,13 @@
  	$(MT) /manifest $@.manifest /outputresource:$@;#2
  !endif
@@ -655,10 +498,10 @@ diff -r e04f994581e2 -r be477dd4629d make/windows/makefiles/product.make
  
  !include $(WorkSpace)/make/windows/makefiles/shared.make
  !include $(WorkSpace)/make/windows/makefiles/sa.make
-diff -r e04f994581e2 -r be477dd4629d make/windows/makefiles/sa.make
---- openjdk/hotspot/make/windows/makefiles/sa.make	Tue Dec 08 03:10:43 2015 +0000
-+++ openjdk/hotspot/make/windows/makefiles/sa.make	Mon Jan 11 17:16:42 2016 +0000
-@@ -152,11 +152,13 @@
+diff -Nru openjdk.orig/hotspot/make/windows/makefiles/sa.make openjdk/hotspot/make/windows/makefiles/sa.make
+--- openjdk.orig/hotspot/make/windows/makefiles/sa.make	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/make/windows/makefiles/sa.make	2019-01-25 14:24:32.003871126 +0000
+@@ -154,11 +154,13 @@
  	$(MT) -manifest $(@F).manifest -outputresource:$(@F);#2
  !endif
  !if "$(ENABLE_FULL_DEBUG_SYMBOLS)" == "1"

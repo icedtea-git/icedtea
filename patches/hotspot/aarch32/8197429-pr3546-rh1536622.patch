@@ -1,1 +1,273 @@
-../shenandoah/8197429-pr3546-rh1536622.patch
+# HG changeset patch
+# User aph
+# Date 1524109541 -3600
+#      Thu Apr 19 04:45:41 2018 +0100
+# Node ID 4e2adbc3d2b512f6b2bf318d2db60f4d1903f8c7
+# Parent  20a18751757aaac9782d8272dcfe22998001066f
+8197429, PR3546: Increased stack guard causes segfaults on x86-32
+Reviewed-by: dholmes
+
+diff --git openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+--- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+@@ -674,6 +674,10 @@
+   }
+ }
+ 
++void os::Linux::expand_stack_to(address bottom) {
++  _expand_stack_to(bottom);
++}
++
+ bool os::Linux::manually_expand_stack(JavaThread * t, address addr) {
+   assert(t!=NULL, "just checking");
+   assert(t->osthread()->expanding_stack(), "expand should be set");
+diff --git openjdk.orig/hotspot/src/os/linux/vm/os_linux.hpp openjdk/hotspot/src/os/linux/vm/os_linux.hpp
+--- openjdk.orig/hotspot/src/os/linux/vm/os_linux.hpp
++++ openjdk/hotspot/src/os/linux/vm/os_linux.hpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 1999, 2013, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 1999, 2018, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -245,6 +245,8 @@
+   static int safe_cond_timedwait(pthread_cond_t *_cond, pthread_mutex_t *_mutex, const struct timespec *_abstime);
+ 
+ private:
++  static void expand_stack_to(address bottom);
++
+   typedef int (*sched_getcpu_func_t)(void);
+   typedef int (*numa_node_to_cpus_func_t)(int node, unsigned long *buffer, int bufferlen);
+   typedef int (*numa_max_node_func_t)(void);
+diff --git openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp
+--- openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp
++++ openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 1999, 2014, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 1999, 2018, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -892,6 +892,25 @@
+ void os::workaround_expand_exec_shield_cs_limit() {
+ #if defined(IA32) && !defined(ZERO)
+   size_t page_size = os::vm_page_size();
++
++  /*
++   * JDK-8197429
++   *
++   * Expand the stack mapping to the end of the initial stack before
++   * attempting to install the codebuf.  This is needed because newer
++   * Linux kernels impose a distance of a megabyte between stack
++   * memory and other memory regions.  If we try to install the
++   * codebuf before expanding the stack the installation will appear
++   * to succeed but we'll get a segfault later if we expand the stack
++   * in Java code.
++   *
++   */
++  if (os::Linux::is_initial_thread()) {
++    address limit = Linux::initial_thread_stack_bottom();
++    limit += (StackYellowPages + StackRedPages) * page_size;
++    os::Linux::expand_stack_to(limit);
++  }
++
+   /*
+    * Take the highest VA the OS will give us and exec
+    *
+@@ -910,6 +929,16 @@
+   char* hint = (char*) (Linux::initial_thread_stack_bottom() -
+                         ((StackYellowPages + StackRedPages + 1) * page_size));
+   char* codebuf = os::attempt_reserve_memory_at(page_size, hint);
++
++  if (codebuf == NULL) {
++    // JDK-8197429: There may be a stack gap of one megabyte between
++    // the limit of the stack and the nearest memory region: this is a
++    // Linux kernel workaround for CVE-2017-1000364.  If we failed to
++    // map our codebuf, try again at an address one megabyte lower.
++    hint -= 1 * M;
++    codebuf = os::attempt_reserve_memory_at(page_size, hint);
++  }
++
+   if ( (codebuf == NULL) || (!os::commit_memory(codebuf, page_size, true)) ) {
+     return; // No matter, we tried, best effort.
+   }
+diff --git openjdk.orig/hotspot/test/runtime/StackGap/T.java openjdk/hotspot/test/runtime/StackGap/T.java
+new file mode 100644
+--- /dev/null
++++ openjdk/hotspot/test/runtime/StackGap/T.java
+@@ -0,0 +1,33 @@
++/*
++ * Copyright (c) 2018, Red Hat, Inc. All rights reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
++ * or visit www.oracle.com if you need additional information or have any
++ * questions.
++ */
++
++public class T {
++
++  public static void test(int n) {
++    if (n == 0) return;
++    System.out.println (n);
++    test (n - 1);
++
++  }
++
++}
+diff --git openjdk.orig/hotspot/test/runtime/StackGap/exestack-gap.c openjdk/hotspot/test/runtime/StackGap/exestack-gap.c
+new file mode 100644
+--- /dev/null
++++ openjdk/hotspot/test/runtime/StackGap/exestack-gap.c
+@@ -0,0 +1,82 @@
++/*
++ * Copyright (c) 2018, Red Hat, Inc. All rights reserved.
++ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++ *
++ * This code is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 only, as
++ * published by the Free Software Foundation.
++ *
++ * This code is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++ * version 2 for more details (a copy is included in the LICENSE file that
++ * accompanied this code).
++ *
++ * You should have received a copy of the GNU General Public License version
++ * 2 along with this work; if not, write to the Free Software Foundation,
++ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++ *
++ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
++ * or visit www.oracle.com if you need additional information or have any
++ * questions.
++ */
++
++#include <jni.h>
++#include <stdio.h>
++#include <stdlib.h>
++
++JNIEnv* create_vm(JavaVM **jvm, char *extra_option)
++{
++    JNIEnv* env;
++    JavaVMInitArgs args;
++    JavaVMOption options[4];
++    args.version = JNI_VERSION_1_8;
++    args.nOptions = 3 + (extra_option != NULL);
++    options[0].optionString = "-Xss2048k";
++    char classpath[4096];
++    snprintf(classpath, sizeof classpath,
++             "-Djava.class.path=%s", getenv("CLASSPATH"));
++    options[1].optionString = classpath;
++    options[2].optionString = "-XX:+UnlockExperimentalVMOptions";
++    if (extra_option) {
++      options[3].optionString = extra_option;
++    }
++    args.options = &options[0];
++    args.ignoreUnrecognized = 0;
++    int rv;
++    rv = JNI_CreateJavaVM(jvm, (void**)&env, &args);
++    if (rv < 0) return NULL;
++    return env;
++}
++
++void run(char *extra_arg) {
++  JavaVM *jvm;
++  jclass T_class;
++  jmethodID test_method;
++  JNIEnv *env = create_vm(&jvm, extra_arg);
++  if (env == NULL)
++    exit(1);
++  T_class = (*env)->FindClass(env, "T");
++  if ((*env)->ExceptionCheck(env) == JNI_TRUE) {
++    (*env)->ExceptionDescribe(env);
++    exit(1);
++  }
++  test_method = (*env)->GetStaticMethodID(env, T_class, "test", "(I)V");
++  if ((*env)->ExceptionCheck(env) == JNI_TRUE) {
++    (*env)->ExceptionDescribe(env);
++    exit(1);
++  }
++  (*env)->CallStaticVoidMethod(env, T_class, test_method, 1000);
++}
++
++
++int main(int argc, char **argv)
++{
++  if (argc > 1) {
++    run(argv[1]);
++  } else {
++    run(NULL);
++  }
++
++  return 0;
++}
+diff --git openjdk.orig/hotspot/test/runtime/StackGap/testme.sh openjdk/hotspot/test/runtime/StackGap/testme.sh
+new file mode 100644
+--- /dev/null
++++ openjdk/hotspot/test/runtime/StackGap/testme.sh
+@@ -0,0 +1,48 @@
++# Copyright (c) 2014, 2018, Oracle and/or its affiliates. All rights reserved.
++# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
++#
++# This code is free software; you can redistribute it and/or modify it
++# under the terms of the GNU General Public License version 2 only, as
++# published by the Free Software Foundation.
++#
++# This code is distributed in the hope that it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
++# version 2 for more details (a copy is included in the LICENSE file that
++# accompanied this code).
++#
++# You should have received a copy of the GNU General Public License version
++# 2 along with this work; if not, write to the Free Software Foundation,
++# Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
++#
++# Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
++# or visit www.oracle.com if you need additional information or have any
++# questions.
++#!/bin/sh
++
++#
++# @test testme.sh
++# @summary Linux kernel stack guard should not cause segfaults on x86-32
++# @compile T.java
++# @run shell testme.sh
++#
++
++if [ "${TESTSRC}" = "" ]
++then
++  TESTSRC=${PWD}
++  echo "TESTSRC not set.  Using "${TESTSRC}" as default"
++fi
++echo "TESTSRC=${TESTSRC}"
++## Adding common setup Variables for running shell tests.
++. ${TESTSRC}/../../test_env.sh
++
++if [ "${VM_OS}" != "linux" ]
++then
++  echo "Test only valid for Linux"
++  exit 0
++fi
++
++LD_LIBRARY_PATH=.:${TESTJAVA}/jre/lib/${VM_CPU}/${VM_TYPE}:/usr/lib:$LD_LIBRARY_PATH
++export LD_LIBRARY_PATH
++
++${TESTNATIVEPATH}/stack-gap || exit $?
