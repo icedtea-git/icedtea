@@ -16,6 +16,8 @@ New in release 2.6.17 (2019-01-XX):
 
 * Bug fixes
   - PR3676: Update CVE URL
+* SystemTap
+  - PR3698: jstack.stp should support ppc64[le,be]
 
 New in release 2.6.16 (2019-01-01):
 
