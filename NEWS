@@ -12,6 +12,28 @@ CVE-XXXX-YYYY: http://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.11.0 (2019-01-XX):
 
+* Security fixes
+  - S8199156: Better route routing
+  - S8199161: Better interface enumeration
+  - S8199166: Better interface lists
+  - S8199552: Update to build scripts
+  - S8200659: Improve BigDecimal support
+  - S8203955: Improve robot support
+  - S8204895: Better icon support
+  - S8205356: Choose printer defaults
+  - S8205709: Proper allocation handling
+  - S8205714: Initial class initialization
+  - S8206290, CVE-2019-2422: Better FileChannel transfer performance
+  - S8206295: More reliable p11 transactions
+  - S8206301: Improve NIO stability
+  - S8208585: Make crypto code more robust
+  - S8209094, CVE-2019-2426: Improve web server connections
+  - S8210094: Better loading of classloader classes
+  - S8210598: Strengthen Windows Access Bridge Support
+  - S8210606: Improved data set handling
+  - S8210610: Improved LSA authentication
+  - S8210866, CVE-2018-11212: Improve JPEG processing
+  - S8210870: Libsunmscapi improved interactions
 * New features
   - PR3667: Use the internal copy of the SunEC library rather than statically linking against NSS
 * Import of OpenJDK 8 u192 build 12
@@ -106,9 +128,34 @@ New in release 3.11.0 (2019-01-XX):
   - S8210423: Backport of 8034788 breaks GCC version detection
   - S8210658: Remove and retag jdk8u192-b10 tag in source repository
   - S8210951: Test sun/security/ssl/SSLContextImpl/CustomizedCipherSuites.java fails
+* Import of OpenJDK 8 u201 build 8
+  - S8027781: New jarsigner timestamp warning is grammatically incorrect
+  - S8159805: sun/security/tools/jarsigner/warnings/NoTimestampTest.java fails after JDK-8027781
+  - S8171049: Era.getDisplayName doesn't work with non-IsoChronology
+  - S8191438: jarsigner should print when a timestamp will expire
+  - S8201818: [macosx] Printing attributes break page size set via "java.awt.print.Book" object
+  - S8205330: InitialDirContext ctor sometimes throws NPE if the server has sent a disconnection
+  - S8207775: Better management of CipherCore buffers
+  - S8208583: Better management of internal KeyStore buffers
+  - S8209129: Further improvements to cipher buffer management
+  - S8209862: CipherCore performance improvement
+  - S8210695: Create test to cover JDK-8205330 InitialDirContext ctor sometimes throws NPE if the server has sent a disconnection
+  - S8211883: Disable anon and NULL cipher suites
+  - S8213085: (tz) Upgrade time-zone data to tzdata2018g
+  - S8213368: JDK 8u201 l10n resource file update
+  - S8213792: Update THIRD_PARTY_README for LCMS to 2.9
+  - S8213949: OpenJDK 8 CCharToGlyphMapper.m missing the Classpath exception license text
+  - S8214357: JDK 8u201 l10n resource file update md20
+  - S8215257: OpenJDK 8 mozilla_compat.js, parser.js missing the Classpath exception license text
+  - S8215377: JDK-8171049 Breaks JCK signature tests - Era.getDisplayName doesn't work with non-IsoChronology
 * Backports
+  - S6424123, PR3696: JVM crashes on failed 'strdup' call
+  - S8059847, PR3696: complement JDK-8055286 and JDK-8056964 changes
   - S8074859, PR1937: Re-apply warnings as error switch removed by 8034788 in 8u192
+  - S8076475, PR3696: Misuses of strncpy/strncat
   - S8145188, PR2945: Re-apply --with-java-debug-symbols option removed by 8034788 in 8u192
+  - S8214059, PR3693: Undefined behaviour in ADLC
+  - S8217753, PR3685: Enable HotSpot builds on 5.x Linux kernels
 * Bug fixes
   - PR3667, PR1983: Backed out changeset 48c15869ecd5
   - PR3667, PR1983: Backed out changeset f0635543beb3
@@ -127,10 +174,7 @@ New in release 3.11.0 (2019-01-XX):
   - S8189170, PR3682: [AArch64] Add option to disable stack overflow checking in primordial thread for use with JNI_CreateJavaJVM
   - S8209414, PR3682: [AArch64] method handle invocation does not respect JVMTI interp_only mode
 * Shenandoah
-  - S8199552: Update to build scripts
   - S8203349: 8u hotspot should recognise later Windows compilers
-  - S8205714: Initial class initialization
-  - S8210094: Better loading of classloader classes
 
 New in release 3.10.0 (2018-12-25):
 
