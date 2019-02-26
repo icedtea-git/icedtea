@@ -110,6 +110,7 @@ New in release 3.11.0 (2019-01-XX):
   - S8201369: Inet4AddressImpl_getLocalHostName reverse lookup on Solaris only
   - S8202600: [Zero] Undefined behaviour in src/os_cpu/linux_zero/vm/os_linux_zero.cpp
   - S8202696: Remove exclusion range for phonetic chars in windows fontconfig.properties
+  - S8203349: 8u hotspot should recognise later Windows compilers
   - S8203368: ObjectInputStream filterCheck method throws NullPointerException
   - S8203499: Uninitialised memory in WinAccessBridge.cpp
   - S8203790: MSVCP dependency introduced in awt.dll
@@ -174,7 +175,8 @@ New in release 3.11.0 (2019-01-XX):
   - S8189170, PR3682: [AArch64] Add option to disable stack overflow checking in primordial thread for use with JNI_CreateJavaJVM
   - S8209414, PR3682: [AArch64] method handle invocation does not respect JVMTI interp_only mode
 * Shenandoah
-  - S8203349: 8u hotspot should recognise later Windows compilers
+  - S8215951: AArch64: jtreg test vmTestbase/nsk/jvmti/PopFrame/popframe005 segfaults
+  - S8218185: aarch64: missing LoadStore barrier in TemplateTable::putfield_or_static
 
 New in release 3.10.0 (2018-12-25):
 
