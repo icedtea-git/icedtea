@@ -174,9 +174,9 @@ New in release 3.11.0 (2019-01-XX):
   - S8160748, PR3682: [AArch64] Inconsistent types for ideal_reg
   - S8189170, PR3682: [AArch64] Add option to disable stack overflow checking in primordial thread for use with JNI_CreateJavaJVM
   - S8209414, PR3682: [AArch64] method handle invocation does not respect JVMTI interp_only mode
-* Shenandoah
-  - S8215951: AArch64: jtreg test vmTestbase/nsk/jvmti/PopFrame/popframe005 segfaults
-  - S8218185: aarch64: missing LoadStore barrier in TemplateTable::putfield_or_static
+  - S8215951, PR3682: AArch64: jtreg test vmTestbase/nsk/jvmti/PopFrame/popframe005 segfaults
+  - S8218185, PR3682: aarch64: missing LoadStore barrier in TemplateTable::putfield_or_static
+  - S8219635, PR3682: aarch64: missing LoadStore barrier in TemplateTable::fast_storefield
 
 New in release 3.10.0 (2018-12-25):
 
