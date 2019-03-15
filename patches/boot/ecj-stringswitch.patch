@@ -1694,3 +1694,109 @@ diff -Nrub openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpat
          }
  
          return -1;
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/crypto/provider/PBES2Core.java openjdk-boot/jdk/src/share/classes/com/sun/crypto/provider/PBES2Core.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/crypto/provider/PBES2Core.java	2019-03-12 23:18:09.408619039 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/crypto/provider/PBES2Core.java	2019-03-14 02:09:56.486038418 +0000
+@@ -77,23 +77,17 @@
+             blkSize = AESConstants.AES_BLOCK_SIZE;
+             cipher = new CipherCore(new AESCrypt(), blkSize);
+ 
+-            switch(kdfAlgo) {
+-            case "HmacSHA1":
++            if ("HmacSHA1".equals(kdfAlgo)) {
+                 kdf = new PBKDF2Core.HmacSHA1();
+-                break;
+-            case "HmacSHA224":
++            } else if ("HmacSHA224".equals(kdfAlgo)) {
+                 kdf = new PBKDF2Core.HmacSHA224();
+-                break;
+-            case "HmacSHA256":
++            } else if ("HmacSHA256".equals(kdfAlgo)) {
+                 kdf = new PBKDF2Core.HmacSHA256();
+-                break;
+-            case "HmacSHA384":
++            } else if ("HmacSHA384".equals(kdfAlgo)) {
+                 kdf = new PBKDF2Core.HmacSHA384();
+-                break;
+-            case "HmacSHA512":
++            } else if ("HmacSHA512".equals(kdfAlgo)) {
+                 kdf = new PBKDF2Core.HmacSHA512();
+-                break;
+-            default:
++            } else {
+                 throw new NoSuchAlgorithmException(
+                     "No Cipher implementation for " + kdfAlgo);
+             }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/crypto/provider/PBES2Parameters.java openjdk-boot/jdk/src/share/classes/com/sun/crypto/provider/PBES2Parameters.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/crypto/provider/PBES2Parameters.java	2019-03-12 23:18:09.420618852 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/crypto/provider/PBES2Parameters.java	2019-03-14 02:09:56.482038481 +0000
+@@ -202,23 +202,17 @@
+                 pbes2AlgorithmName);
+         }
+ 
+-        switch (kdfAlgo) {
+-        case "HmacSHA1":
++        if ("HmacSHA1".equals(kdfAlgo)) {
+             kdfAlgo_OID = hmacWithSHA1_OID;
+-            break;
+-        case "HmacSHA224":
++        } else if ("HmacSHA224".equals(kdfAlgo)) {
+             kdfAlgo_OID = hmacWithSHA224_OID;
+-            break;
+-        case "HmacSHA256":
++        } else if ("HmacSHA256".equals(kdfAlgo)) {
+             kdfAlgo_OID = hmacWithSHA256_OID;
+-            break;
+-        case "HmacSHA384":
++        } else if ("HmacSHA384".equals(kdfAlgo)) {
+             kdfAlgo_OID = hmacWithSHA384_OID;
+-            break;
+-        case "HmacSHA512":
++        } else if ("HmacSHA512".equals(kdfAlgo)) {
+             kdfAlgo_OID = hmacWithSHA512_OID;
+-            break;
+-        default:
++        } else {
+             throw new NoSuchAlgorithmException(
+                 "No crypto implementation for " + kdfAlgo);
+         }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/crypto/provider/PBMAC1Core.java openjdk-boot/jdk/src/share/classes/com/sun/crypto/provider/PBMAC1Core.java
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/crypto/provider/PBMAC1Core.java	2019-03-12 23:18:09.432618664 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/crypto/provider/PBMAC1Core.java	2019-03-14 02:09:56.474038605 +0000
+@@ -62,24 +62,18 @@
+ 
+     private static PBKDF2Core getKDFImpl(String algo) {
+         PBKDF2Core kdf = null;
+-        switch(algo) {
+-        case "HmacSHA1":
+-                kdf = new PBKDF2Core.HmacSHA1();
+-                break;
+-        case "HmacSHA224":
+-                kdf = new PBKDF2Core.HmacSHA224();
+-                break;
+-        case "HmacSHA256":
+-                kdf = new PBKDF2Core.HmacSHA256();
+-                break;
+-        case "HmacSHA384":
+-                kdf = new PBKDF2Core.HmacSHA384();
+-                break;
+-        case "HmacSHA512":
+-                kdf = new PBKDF2Core.HmacSHA512();
+-                break;
+-        default:
+-                throw new ProviderException(
++        if ("HmacSHA1".equals(algo)) {
++            kdf = new PBKDF2Core.HmacSHA1();
++        } else if ("HmacSHA224".equals(algo)) {
++            kdf = new PBKDF2Core.HmacSHA224();
++        } else if ("HmacSHA256".equals(algo)) {
++            kdf = new PBKDF2Core.HmacSHA256();
++        } else if ("HmacSHA384".equals(algo)) {
++            kdf = new PBKDF2Core.HmacSHA384();
++        } else if ("HmacSHA512".equals(algo)) {
++            kdf = new PBKDF2Core.HmacSHA512();
++        } else {
++            throw new ProviderException(
+                     "No MAC implementation for " + algo);
+         }
+         return kdf;

@@ -1,3 +1,33 @@
+2019-03-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to 2.6.17.
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-2.6.17.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* configure.ac: Bump to 2.6.17.
+	* hotspot.map.in: Update to icedtea-2.6.17.
+	* patches/boot/ecj-diamond.patch:
+	Regenerated. Add new cases in
+	sun.security.tools.jarsigner.Main and
+	sun.security.ssl.SSLContextImpl.
+	* patches/boot/ecj-stringswitch.patch:
+	Add new cases in com.sun.crypto.provider.PBES2Core,
+	com.sun.crypto.provider.PBES2parameters and
+	com.sun.crypto.provider.PBMAC1Core.
+	* patches/boot/ecj-trywithresources.patch:
+	Regenerated.
+
 2019-02-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to 2.6.17pre01.
