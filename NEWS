@@ -12,7 +12,7 @@ JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.17 (2019-01-XX):
+New in release 2.6.17 (2019-03-16):
 
 * Security fixes
   - S8199156: Better route routing
