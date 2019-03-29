@@ -24,7 +24,89 @@ New in release 2.7.0 (201X-XX-XX):
 * Bug fixes
   - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
   - PR3494: Skip AES test on AArch64 due to VM crash
+
+New in release 2.6.17 (2019-03-16):
+
+* Security fixes
+  - S8199156: Better route routing
+  - S8199161: Better interface enumeration
+  - S8199166: Better interface lists
+  - S8199552: Update to build scripts
+  - S8200659: Improve BigDecimal support
+  - S8203955: Improve robot support
+  - S8204895: Better icon support
+  - S8205356: Choose printer defaults
+  - S8205709: Proper allocation handling
+  - S8205714: Initial class initialization
+  - S8206290, CVE-2019-2422: Better FileChannel transfer performance
+  - S8206295: More reliable p11 transactions
+  - S8206301: Improve NIO stability
+  - S8208585: Make crypto code more robust
+  - S8209094, CVE_2019-2426: Improve web server connections
+  - S8210094: Better loading of classloader classes
+  - S8210606: Improved data set handling
+  - S8210610: Improved LSA authentication
+  - S8210866, CVE-2018-11212: Improve JPEG processing
+  - S8210870: Libsunmscapi improved interactions
+* Import of OpenJDK 7 u211 build 0
+  - S6383200: PBE: need new algorithm support in password based encryption
+  - S6483657: MSCAPI provider does not create unique alias names
+  - S8000203: File descriptor leak in src/solaris/native/java/net/net_util_md.c
+  - S8008321: compile.cpp verify_graph_edges uses bool as int
+  - S8013069: javax.crypto tests fail with new PBE algorithm names
+  - S8027781: New jarsigner timestamp warning is grammatically incorrect
+  - S8029018: (bf) Check src/share/native/java/nio/Bits.c for JNI pending exceptions
+  - S8029661: Support TLS v1.2 algorithm in SunPKCS11 provider
+  - S8098854: Do cleanup in a proper order in sunmscapi code
+  - S8133070: Hot lock on BulkCipher.isAvailable
+  - S8138589: Correct limits on unlimited cryptography
+  - S8143913: MSCAPI keystore should accept Certificate[] in setEntry()
+  - S8159805: sun/security/tools/jarsigner/warnings/NoTimestampTest.java fails after JDK-8027781
+  - S8162362: Introduce system property to control enabled ciphersuites
+  - S8165463: Native implementation of sunmscapi should use operator new (nothrow) for allocations
+  - S8191438: jarsigner should print when a timestamp will expire
+  - S8205330: InitialDirContext ctor sometimes throws NPE if the server has sent a disconnection
+  - S8207775: Better management of CipherCore buffers
+  - S8208583: Better management of internal KeyStore buffers
+  - S8209129: Further improvements to cipher buffer management
+  - S8209862: CipherCore performance improvement
+  - S8210695: Create test to cover JDK-8205330 InitialDirContext ctor sometimes throws NPE if the server has sent a disconnection
+  - S8210951: Test sun/security/ssl/SSLContextImpl/CustomizedCipherSuites.java fails
+  - S8211883: Disable anon and NULL cipher suites
+  - S8213085: (tz) Upgrade time-zone data to tzdata2018g
+  - S8213368: JDK 8u201 l10n resource file update
+  - S8213949: OpenJDK 8 CCharToGlyphMapper.m missing the Classpath exception license text
+  - S8214357: JDK 8u201 l10n resource file update md20
+  - S8218798: slowdebug build broken by JDK-8205714
+* Import of OpenJDK 7 u211 build 1
+  - S8213154: Update copyright headers of files in src tree that are missing Classpath exception
+* Import of OpenJDK 7 u211 build 2
+  - S8219570: JDK-6383200 wrongly extends PBEParameterSpec API
+* Backports
+  - S6424123, PR3702: JVM crashes on failed 'strdup' call
+  - S8005921, PR3702: Memory leaks in vmStructs.cpp
+  - S8011661, PR3702: Insufficient memory message says "malloc" when sometimes it should say "mmap"
+  - S8014138, PR3702: Add VM option to facilitate the writing of CDS tests
+  - S8055286, PR3702: Extend CompileCommand=option to handle numeric parameters
+  - S8056964, PR3702: JDK-8055286 changes are incomplete.
+  - S8057129, PR3702: Fix AIX build after the Extend CompileCommand=option change 8055286
+  - S8059847, PR3702: complement JDK-8055286 and JDK-8056964 changes
+  - S8076475, PR3702: Misuses of strncpy/strncat
+  - S8145096, PR3700: Undefined behaviour in HotSpot
+  - S8214059, PR3701: Undefined behaviour in ADLC
+  - S8217753, PR3686: Enable HotSpot builds on 5.x Linux kernels
+* Bug fixes
+  - PR3647: Backed out changeset 4e3ea67d3b69 (JDK-4890063/PR2305/RH1214835)
   - PR3676: Update CVE URL
+* SystemTap
+  - PR3698: jstack.stp should support ppc64[le,be]
+* AArch64 port
+  - S8207838, PR3669: AArch64: Float registers incorrectly restored in JNI call
+  - S8209414, PR3669: AArch64: method handle invocation does not respect JVMTI interp_only mode
+  - S8209415, PR3669: Fix JVMTI test failure HS202
+  - S8211064, PR3669: [AArch64] Interpreter and c1 don't correctly handle jboolean results in native calls
+  - S8215951, PR3669: AArch64: jtreg test vmTestbase/nsk/jvmti/PopFrame/popframe005 segfaults
+  - S8218185, PR3669: aarch64: missing LoadStore barrier in TemplateTable::putfield_or_static
 
 New in release 2.6.16 (2019-01-01):
 
