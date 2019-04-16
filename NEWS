@@ -37,7 +37,6 @@ New in release 3.12.0 (2019-04-XX):
   - S8183979: Remove Kodak CMS (KCMS) code from Oracle JDK
   - S8186098: sun/security/pkcs11/KeyStore/SecretKeysBasic.sh failed due to libnss3 version cannot be parsed
   - S8187218: GSSCredential.getRemainingLifetime() returns negative value for TTL > 24 days.
-  - S8189762: [TESTBUG] Create tests for JDK-8146115 container awareness and resource configuration
   - S8191006: hsdis disassembler plugin does not compile with binutils 2.29+
   - S8191178: [macos] Problem with input of yen symbol
   - S8191948: db error: InvalidTypeException: Can't assign double[][][] to double[][][]
@@ -78,6 +77,8 @@ New in release 3.12.0 (2019-04-XX):
   - S8212821: CHECK_ must be used in the rhs of an assignment statement within a block (round 2)
 * AArch64 port
   - S8221220, PR3724: AArch64: Add StoreStore membar explicitly for Volatile Writes in TemplateTable
+* Shenandoah
+  - S8153172: aarch64: hotspot crashes after the 8.1 LSE patch is merged
 
 New in release 3.11.0 (2019-03-01):
 

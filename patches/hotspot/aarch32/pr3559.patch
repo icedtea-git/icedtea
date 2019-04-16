@@ -1,1 +1,29 @@
-../shenandoah/pr3559.patch
+# HG changeset patch
+# User aph
+# Date 1338206478 14400
+#      Mon May 28 08:01:18 2012 -0400
+# Node ID 6275d7b419091092752d5a1854194c98897892ba
+# Parent  be1379a186ba527b32c93a83e04c9600735fe44b
+PR3559: Use ldrexd for atomic reads on ARMv7.
+
+2012-05-28  Andrew Haley  <aph@redhat.com>
+
+	* os_linux_zero.hpp (atomic_copy64): Use ldrexd for atomic reads
+	on ARMv7.
+
+diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp
+--- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp	2019-01-16 07:13:59.000000000 +0000
++++ openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.hpp	2019-01-31 03:47:46.786028653 +0000
+@@ -54,6 +54,12 @@
+                   "std %0, %1\n"
+                   : "=&f"(tmp), "=Q"(*(volatile double*)dst)
+                   : "Q"(*(volatile double*)src));
++#elif defined(__ARM_ARCH_7A__)
++    jlong tmp;
++    asm volatile ("ldrexd  %0, [%1]\n"
++                  : "=r"(tmp)
++                  : "r"(src), "m"(src));
++    *(jlong *) dst = tmp;
+ #else
+     *(jlong *) dst = *(jlong *) src;
+ #endif

@@ -8,9 +8,9 @@
 Summary: Various small fixes around strncpy and strncat
 Reviewed-by: dsamersoff, coleenp
 
-diff --git openjdk.orig/hotspot/agent/src/os/bsd/libproc_impl.c openjdk/hotspot/agent/src/os/bsd/libproc_impl.c
---- openjdk.orig/hotspot/agent/src/os/bsd/libproc_impl.c
-+++ openjdk/hotspot/agent/src/os/bsd/libproc_impl.c
+diff -Nru openjdk.orig/hotspot/agent/src/os/bsd/libproc_impl.c openjdk/hotspot/agent/src/os/bsd/libproc_impl.c
+--- openjdk.orig/hotspot/agent/src/os/bsd/libproc_impl.c	2019-04-05 19:21:24.000000000 +0100
++++ openjdk/hotspot/agent/src/os/bsd/libproc_impl.c	2019-04-16 16:05:31.441511929 +0100
 @@ -215,7 +215,12 @@
      return NULL;
    }
@@ -25,9 +25,9 @@ diff --git openjdk.orig/hotspot/agent/src/os/bsd/libproc_impl.c openjdk/hotspot/
    newlib->base = base;
  
    if (fd == -1) {
-diff --git openjdk.orig/hotspot/agent/src/os/linux/libproc_impl.c openjdk/hotspot/agent/src/os/linux/libproc_impl.c
---- openjdk.orig/hotspot/agent/src/os/linux/libproc_impl.c
-+++ openjdk/hotspot/agent/src/os/linux/libproc_impl.c
+diff -Nru openjdk.orig/hotspot/agent/src/os/linux/libproc_impl.c openjdk/hotspot/agent/src/os/linux/libproc_impl.c
+--- openjdk.orig/hotspot/agent/src/os/linux/libproc_impl.c	2019-04-05 19:21:24.000000000 +0100
++++ openjdk/hotspot/agent/src/os/linux/libproc_impl.c	2019-04-16 16:05:31.441511929 +0100
 @@ -162,7 +162,12 @@
        return NULL;
     }
@@ -42,9 +42,9 @@ diff --git openjdk.orig/hotspot/agent/src/os/linux/libproc_impl.c openjdk/hotspo
     newlib->base = base;
  
     if (fd == -1) {
-diff --git openjdk.orig/hotspot/src/os/bsd/dtrace/libjvm_db.c openjdk/hotspot/src/os/bsd/dtrace/libjvm_db.c
---- openjdk.orig/hotspot/src/os/bsd/dtrace/libjvm_db.c
-+++ openjdk/hotspot/src/os/bsd/dtrace/libjvm_db.c
+diff -Nru openjdk.orig/hotspot/src/os/bsd/dtrace/libjvm_db.c openjdk/hotspot/src/os/bsd/dtrace/libjvm_db.c
+--- openjdk.orig/hotspot/src/os/bsd/dtrace/libjvm_db.c	2019-04-05 19:21:24.000000000 +0100
++++ openjdk/hotspot/src/os/bsd/dtrace/libjvm_db.c	2019-04-16 16:05:31.441511929 +0100
 @@ -543,13 +543,14 @@
    CHECK_FAIL(err);
  
@@ -79,9 +79,9 @@ diff --git openjdk.orig/hotspot/src/os/bsd/dtrace/libjvm_db.c openjdk/hotspot/sr
    }
    if (debug)
        fprintf(stderr, "name_for_nmethod: END: method name: %s, vf_cnt: %d\n\n",
-diff --git openjdk.orig/hotspot/src/os/bsd/vm/decoder_machO.cpp openjdk/hotspot/src/os/bsd/vm/decoder_machO.cpp
---- openjdk.orig/hotspot/src/os/bsd/vm/decoder_machO.cpp
-+++ openjdk/hotspot/src/os/bsd/vm/decoder_machO.cpp
+diff -Nru openjdk.orig/hotspot/src/os/bsd/vm/decoder_machO.cpp openjdk/hotspot/src/os/bsd/vm/decoder_machO.cpp
+--- openjdk.orig/hotspot/src/os/bsd/vm/decoder_machO.cpp	2019-04-05 19:21:24.000000000 +0100
++++ openjdk/hotspot/src/os/bsd/vm/decoder_machO.cpp	2019-04-16 16:05:31.441511929 +0100
 @@ -97,6 +97,7 @@
    char * symname = mach_find_in_stringtable((char*) ((uintptr_t)mach_base + stroff), strsize, found_strx);
    if (symname) {
@@ -90,9 +90,9 @@ diff --git openjdk.orig/hotspot/src/os/bsd/vm/decoder_machO.cpp openjdk/hotspot/
        return true;
    }
    DEBUG_ONLY(tty->print_cr("no string or null string found."));
-diff --git openjdk.orig/hotspot/src/os/solaris/dtrace/libjvm_db.c openjdk/hotspot/src/os/solaris/dtrace/libjvm_db.c
---- openjdk.orig/hotspot/src/os/solaris/dtrace/libjvm_db.c
-+++ openjdk/hotspot/src/os/solaris/dtrace/libjvm_db.c
+diff -Nru openjdk.orig/hotspot/src/os/solaris/dtrace/libjvm_db.c openjdk/hotspot/src/os/solaris/dtrace/libjvm_db.c
+--- openjdk.orig/hotspot/src/os/solaris/dtrace/libjvm_db.c	2019-04-05 19:21:24.000000000 +0100
++++ openjdk/hotspot/src/os/solaris/dtrace/libjvm_db.c	2019-04-16 16:05:31.441511929 +0100
 @@ -543,13 +543,14 @@
    CHECK_FAIL(err);
  
@@ -127,10 +127,10 @@ diff --git openjdk.orig/hotspot/src/os/solaris/dtrace/libjvm_db.c openjdk/hotspo
    }
    if (debug)
        fprintf(stderr, "name_for_nmethod: END: method name: %s, vf_cnt: %d\n\n",
-diff --git openjdk.orig/hotspot/src/share/tools/hsdis/hsdis.c openjdk/hotspot/src/share/tools/hsdis/hsdis.c
---- openjdk.orig/hotspot/src/share/tools/hsdis/hsdis.c
-+++ openjdk/hotspot/src/share/tools/hsdis/hsdis.c
-@@ -410,6 +410,7 @@
+diff -Nru openjdk.orig/hotspot/src/share/tools/hsdis/hsdis.c openjdk/hotspot/src/share/tools/hsdis/hsdis.c
+--- openjdk.orig/hotspot/src/share/tools/hsdis/hsdis.c	2019-04-05 19:21:24.000000000 +0100
++++ openjdk/hotspot/src/share/tools/hsdis/hsdis.c	2019-04-16 16:05:31.445511866 +0100
+@@ -438,6 +438,7 @@
      }
      p = q;
    }
@@ -138,9 +138,9 @@ diff --git openjdk.orig/hotspot/src/share/tools/hsdis/hsdis.c openjdk/hotspot/sr
  }
  
  static void print_help(struct hsdis_app_data* app_data,
-diff --git openjdk.orig/hotspot/src/share/vm/compiler/compileBroker.hpp openjdk/hotspot/src/share/vm/compiler/compileBroker.hpp
---- openjdk.orig/hotspot/src/share/vm/compiler/compileBroker.hpp
-+++ openjdk/hotspot/src/share/vm/compiler/compileBroker.hpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/compileBroker.hpp openjdk/hotspot/src/share/vm/compiler/compileBroker.hpp
+--- openjdk.orig/hotspot/src/share/vm/compiler/compileBroker.hpp	2019-04-05 19:21:24.000000000 +0100
++++ openjdk/hotspot/src/share/vm/compiler/compileBroker.hpp	2019-04-16 16:05:31.445511866 +0100
 @@ -173,7 +173,8 @@
      // these methods should be called in a thread safe context
  
@@ -151,9 +151,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/compiler/compileBroker.hpp openjdk/
        if (UsePerfData) _perf_current_method->set_value(method);
      }
  
-diff --git openjdk.orig/hotspot/src/share/vm/compiler/compilerOracle.cpp openjdk/hotspot/src/share/vm/compiler/compilerOracle.cpp
---- openjdk.orig/hotspot/src/share/vm/compiler/compilerOracle.cpp
-+++ openjdk/hotspot/src/share/vm/compiler/compilerOracle.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/compilerOracle.cpp openjdk/hotspot/src/share/vm/compiler/compilerOracle.cpp
+--- openjdk.orig/hotspot/src/share/vm/compiler/compilerOracle.cpp	2019-04-16 16:03:42.787215846 +0100
++++ openjdk/hotspot/src/share/vm/compiler/compilerOracle.cpp	2019-04-16 16:05:31.445511866 +0100
 @@ -647,9 +647,7 @@
        // so read integer and fraction part of double value separately.
        if (sscanf(line, "%*[ \t]%255[0-9]%*[ /\t]%255[0-9]%n", buffer[0], buffer[1], &bytes_read) == 2) {
@@ -165,9 +165,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/compiler/compilerOracle.cpp openjdk
          total_bytes_read += bytes_read;
          return add_option_string(c_name, c_match, m_name, m_match, signature, flag, atof(value));
        } else {
-diff --git openjdk.orig/hotspot/src/share/vm/compiler/disassembler.cpp openjdk/hotspot/src/share/vm/compiler/disassembler.cpp
---- openjdk.orig/hotspot/src/share/vm/compiler/disassembler.cpp
-+++ openjdk/hotspot/src/share/vm/compiler/disassembler.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/disassembler.cpp openjdk/hotspot/src/share/vm/compiler/disassembler.cpp
+--- openjdk.orig/hotspot/src/share/vm/compiler/disassembler.cpp	2019-04-05 19:21:24.000000000 +0100
++++ openjdk/hotspot/src/share/vm/compiler/disassembler.cpp	2019-04-16 16:05:31.445511866 +0100
 @@ -298,6 +298,7 @@
          strlen((const char*)arg) > sizeof(buffer) - 1) {
        // Only print this when the mach changes
@@ -176,10 +176,10 @@ diff --git openjdk.orig/hotspot/src/share/vm/compiler/disassembler.cpp openjdk/h
        output()->print_cr("[Disassembling for mach='%s']", arg);
      }
    } else if (match(event, "format bytes-per-line")) {
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspot/src/share/vm/runtime/arguments.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp
-+++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp
-@@ -3452,8 +3452,7 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspot/src/share/vm/runtime/arguments.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2019-04-16 16:03:42.763216221 +0100
++++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2019-04-16 16:05:31.445511866 +0100
+@@ -3629,8 +3629,7 @@
        src ++;
      }
  
@@ -189,7 +189,7 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotsp
  
      // trim all trailing empty paths
      for (char* tail = copy + strlen(copy) - 1; tail >= copy && *tail == separator; tail--) {
-@@ -3836,18 +3835,14 @@
+@@ -4013,18 +4012,14 @@
      if (end != NULL) *end = '\0';
      size_t jvm_path_len = strlen(jvm_path);
      size_t file_sep_len = strlen(os::file_separator());
@@ -213,19 +213,10 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotsp
    }
    return shared_archive_path;
  }
-diff --git openjdk.orig/hotspot/src/share/vm/utilities/ostream.cpp openjdk/hotspot/src/share/vm/utilities/ostream.cpp
---- openjdk.orig/hotspot/src/share/vm/utilities/ostream.cpp
-+++ openjdk/hotspot/src/share/vm/utilities/ostream.cpp
-@@ -112,7 +112,7 @@
-   }
-   if (add_cr) {
-     if (result != buffer) {
--      strncpy(buffer, result, buflen);
-+      memcpy(buffer, result, result_len);
-       result = buffer;
-     }
-     buffer[result_len++] = '\n';
-@@ -337,15 +337,19 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/ostream.cpp openjdk/hotspot/src/share/vm/utilities/ostream.cpp
+--- openjdk.orig/hotspot/src/share/vm/utilities/ostream.cpp	2019-04-05 19:21:24.000000000 +0100
++++ openjdk/hotspot/src/share/vm/utilities/ostream.cpp	2019-04-16 16:06:46.896328647 +0100
+@@ -342,15 +342,19 @@
        assert(rm == NULL || Thread::current()->current_resource_mark() == rm,
               "stringStream is re-allocated with a different ResourceMark");
        buffer = NEW_RESOURCE_ARRAY(char, end);
@@ -249,9 +240,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/utilities/ostream.cpp openjdk/hotsp
  
    // Note that the following does not depend on write_len.
    // This means that position and count get updated
-diff --git openjdk.orig/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/share/vm/utilities/vmError.cpp
---- openjdk.orig/hotspot/src/share/vm/utilities/vmError.cpp
-+++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/vmError.cpp openjdk/hotspot/src/share/vm/utilities/vmError.cpp
+--- openjdk.orig/hotspot/src/share/vm/utilities/vmError.cpp	2019-04-16 16:03:40.295254924 +0100
++++ openjdk/hotspot/src/share/vm/utilities/vmError.cpp	2019-04-16 16:05:31.445511866 +0100
 @@ -451,14 +451,7 @@
  #else
           const char *file = _filename;

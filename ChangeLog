@@ -1,3 +1,29 @@
+2019-04-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump shenandoah to aarch64-shenandoah-jdk8u202-b08.
+	* patches/hotspot/shenandoah/8131048-pr3574-rh1498936.patch,
+	* patches/hotspot/shenandoah/8164920-pr3574-rh1498936.patch,
+	* patches/hotspot/shenandoah/8172850-pr3643-rh1640127.patch,
+	* patches/hotspot/shenandoah/8209639-pr3643-rh1640127.patch,
+	* patches/hotspot/shenandoah/pr3559.patch:
+	Removed as applied upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Move upstreamed Shenandoah patches to
+	AArch32-only section.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u202-b08.
+	* patches/hotspot/aarch32/8076475-pr3696.patch,
+	* patches/hotspot/aarch32/8131048-pr3574-rh1498936.patch,
+	* patches/hotspot/aarch32/8164920-pr3574-rh1498936.patch,
+	* patches/hotspot/aarch32/8172850-pr3643-rh1640127.patch,
+	* patches/hotspot/aarch32/8209639-pr3643-rh1640127.patch,
+	* patches/hotspot/aarch32/pr3559.patch:
+	Replace symlinks with copies as Shenandoah versions removed
+	or altered for 8u202.
+	* patches/hotspot/shenandoah/8076475-pr3696.patch:
+	Adjust to apply against aarch64-shenandoah-jdk8u202-b08.
+
 2019-04-15  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.12.0pre01.
