@@ -12,6 +12,73 @@ CVE-XXXX-YYYY: http://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.12.0 (2019-04-XX):
 
+* Import of OpenJDK 8 u202 build 08
+  - S8064811: Use THREAD instead of CHECK_NULL in return statements
+  - S8068440: Test6857159.java times out
+  - S8073139: PPC64: User-visible arch directory and os.arch value on ppc64le cause issues with Java tooling
+  - S8073159: improve Test6857159.java
+  - S8129560: TestKeyPairGenerator.java fails on Solaris because private exponent needs to comply with FIPS 186-4
+  - S8130655: OS X: keyboard input in textfield is not possible if the window contained textfield is owned by EmbeddedFrame
+  - S8131051: KDC might issue a renewable ticket even if not requested
+  - S8134124: sun/security/tools/jarsigner/warnings.sh fails when using Hindi locale
+  - S8139507: WARNING: Could not open/create prefs root node Software\JavaSoft\Prefs
+  - S8141421: Various test fail with OOME on win x86
+  - S8145788: JVM crashes with -XX:+EnableTracing
+  - S8155635: C2: Mixed unsafe accesses break alias analysis
+  - S8156709: Cannot call setSeed on NativePRNG on Mac if EGD is /dev/urandom
+  - S8160928: javac incorrectly copies over interior type annotations to bridge method
+  - S8161732: [TEST_BUG] Test closed/java/awt/MenuBar/MenuBarPeer/MenuBarPeerDisposeTest.java fails in unix enviroments with NullPointerException
+  - S8163083: SocketListeningConnector does not allow invocations with port 0
+  - S8164383: jhsdb dumps core on Solaris 12 when loading dumped core
+  - S8164920: ppc: enhancement of CRC32 intrinsic
+  - S8170937: Swing apps are slow if displaying from a remote source to many local displays
+  - S8174050: Compilation errors with clang-4.0
+  - S8182461: IndexOutOfBoundsException when reading indexed color BMP
+  - S8183979: Remove Kodak CMS (KCMS) code from Oracle JDK
+  - S8186098: sun/security/pkcs11/KeyStore/SecretKeysBasic.sh failed due to libnss3 version cannot be parsed
+  - S8187218: GSSCredential.getRemainingLifetime() returns negative value for TTL > 24 days.
+  - S8189762: [TESTBUG] Create tests for JDK-8146115 container awareness and resource configuration
+  - S8191006: hsdis disassembler plugin does not compile with binutils 2.29+
+  - S8191178: [macos] Problem with input of yen symbol
+  - S8191948: db error: InvalidTypeException: Can't assign double[][][] to double[][][]
+  - S8193879: Java debugger hangs on method invocation
+  - S8194864: Outputs more details for PKCS11 tests if the NSS lib version cannot be determined
+  - S8196882: VS2017 Hotspot Defined vsnprintf Function Causes C2084 Already Defined Compilation Error
+  - S8200719: Cannot connect to IPv6 host when exists any active network interface without IPv6 address
+  - S8201801: RTL language (Hebrew) is presented from left to right
+  - S8202264: Race condition in AudioClip.loop()
+  - S8202557: OpenJDK fails to start in Windows 7 and 8.1 after upgrading compiler to VC 2017
+  - S8204966: [TESTBUG] hotspot/test/compiler/whitebox/IsMethodCompilableTest.java test fails with -XX:CompileThreshold=1
+  - S8205479: OS X: requestFocus() does not work properly for embedded frame
+  - S8205965: SIGSEGV on write to NativeCallStack::EMPTY_STACK
+  - S8206392: [macosx] Cycling through windows (JFrames) does not work with keyboard shortcut
+  - S8206911: javax/xml/crypto/dsig/GenerationTests.java fails in 8u-dev
+  - S8207060: Memory leak when malloc fails within WITH_UNICODE_STRING block
+  - S8207145: (fs) Native memory leak in WindowsNativeDispatcher.LookupPrivilegeValue0
+  - S8207150: Clip.isRunning() may return true after Clip.stop() was called
+  - S8207322: Backport GTK3 support on Linux to 8u
+  - S8207750: Native handle leak in java.io.WinNTFileSystem.list()
+  - S8208091: SA: jhsdb jstack --mixed throws UnmappedAddressException on i686
+  - S8208183: update HSDIS plugin license to UPL
+  - S8208541: non-ASCII characters in hsdis UPL text
+  - S8208638: Instead of circle rendered in appl window, but ellipse is produced JEditor Pane
+  - S8209184: JCK Test Failure due to ResourceBundle
+  - S8209359: [8u] hotspot needs to recognise cl.exe 19.13 to build with VS2017.
+  - S8209863: Add a test to verify that -XX:+EnableTracing works
+  - S8210350: -Wl,-z,defs JDK 8 build failure
+  - S8210384: SunLayoutEngine.isAAT() font is expensive on MacOS
+  - S8210736: jdk/javax/xml/crypto/dsig/GenerationTests.java slow on linux
+  - S8210891: Remove unused extutil.h from JDK8u sources
+  - S8211124: HotSpot update for vm_version.cpp to recognise updated VS2017
+  - S8211150: G1 Full GC not purging code root memory and hence causing memory leak
+  - S8211394: CHECK_ must be used in the rhs of an assignment statement within a block
+  - S8211909: JDWP Transport Listener: dt_socket thread crash
+  - S8211933: [8u] hotspot adlc needs to link statically with libstdc++ for gcc7.3
+  - S8212709: Backout backport of JDK-8211394 from jdk 8u-dev
+  - S8212821: CHECK_ must be used in the rhs of an assignment statement within a block (round 2)
+* AArch64 port
+  - S8221220, PR3724: AArch64: Add StoreStore membar explicitly for Volatile Writes in TemplateTable
+
 New in release 3.11.0 (2019-03-01):
 
 * Security fixes
@@ -844,7 +911,7 @@ New in release 3.8.0 (2018-05-29):
   - PR3539, RH1548475: Pass EXTRA_LDFLAGS to HotSpot build
   - PR3549: Desktop file doesn't reference versioned icon
   - PR3550: Additional category used in jconsole.desktop.in is incorrect
-  - PR3559: Use ldrexd for atomic reads on ARMv7.
+  - S8211387, PR3559: Use ldrexd for atomic reads on ARMv7.
   - PR3575, RH1567204: System cacerts database handling should not affect jssecacerts
   - PR3592: Skip AES test on AArch64 due to VM crash
   - PR3593: s390 needs to use '%z' format specifier for size_t arguments as size_t != int
