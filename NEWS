@@ -30,7 +30,6 @@ New in release 3.12.0 (2019-04-XX):
   - S8161732: [TEST_BUG] Test closed/java/awt/MenuBar/MenuBarPeer/MenuBarPeerDisposeTest.java fails in unix enviroments with NullPointerException
   - S8163083: SocketListeningConnector does not allow invocations with port 0
   - S8164383: jhsdb dumps core on Solaris 12 when loading dumped core
-  - S8164920: ppc: enhancement of CRC32 intrinsic
   - S8170937: Swing apps are slow if displaying from a remote source to many local displays
   - S8174050: Compilation errors with clang-4.0
   - S8182461: IndexOutOfBoundsException when reading indexed color BMP
