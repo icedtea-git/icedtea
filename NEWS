@@ -74,6 +74,8 @@ New in release 3.12.0 (2019-04-XX):
   - S8211933: [8u] hotspot adlc needs to link statically with libstdc++ for gcc7.3
   - S8212709: Backout backport of JDK-8211394 from jdk 8u-dev
   - S8212821: CHECK_ must be used in the rhs of an assignment statement within a block (round 2)
+* Bug fixes
+  - PR3718: Change policytool.desktop.in category Development to Settings
 * AArch64 port
   - S8221220, PR3724: AArch64: Add StoreStore membar explicitly for Volatile Writes in TemplateTable
 * Shenandoah
