@@ -1,5 +1,15 @@
 2019-04-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR3723: Use shortened Java version first in
+	Name field of desktop files
+	* NEWS: Updated.
+	* jconsole.desktop.in:
+	Use @JAVA_VER@ in first part of Name field,
+	with the longer @OPENJDK_VER@ appearing at the end.
+	* policytool.desktop.in: Likewise.
+
+2019-04-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR3722: Use SDK bin directory in jconsole.desktop.in
 	* Makefile.am:
 	(jconsole-@JAVA_VER@.desktop): Replace _SDKBINDIR_

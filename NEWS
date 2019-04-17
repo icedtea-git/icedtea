@@ -78,6 +78,7 @@ New in release 3.12.0 (2019-04-XX):
   - PR3718: Change policytool.desktop.in category Development to Settings
   - PR3719: Use JRE bin directory in policytool.desktop.in
   - PR3722: Use SDK bin directory in jconsole.desktop.in
+  - PR3723: Use shortened Java version first in Name field of desktop files
 * AArch64 port
   - S8221220, PR3724: AArch64: Add StoreStore membar explicitly for Volatile Writes in TemplateTable
 * Shenandoah
