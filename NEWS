@@ -12,6 +12,10 @@ CVE-XXXX-YYYY: http://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.12.0 (2019-04-XX):
 
+* Security fixes
+  - S8211936, CVE-2019-2602: Better String parsing
+  - S8218453, CVE-2019-2684: More dynamic RMI interactions
+  - S8219066, CVE-2019-2698: Fuzzing TrueType fonts: setCurrGlyphID()
 * Import of OpenJDK 8 u202 build 08
   - S8064811: Use THREAD instead of CHECK_NULL in return statements
   - S8068440: Test6857159.java times out
@@ -74,15 +78,104 @@ New in release 3.12.0 (2019-04-XX):
   - S8211933: [8u] hotspot adlc needs to link statically with libstdc++ for gcc7.3
   - S8212709: Backout backport of JDK-8211394 from jdk 8u-dev
   - S8212821: CHECK_ must be used in the rhs of an assignment statement within a block (round 2)
+* Import of OpenJDK 8 u212 build 04
+  - S7127191: SA JSDB does not display native symbols correctly for transported Linux cores
+  - S8027434: "-XX:OnOutOfMemoryError" uses fork instead of vfork
+  - S8028254: gc/arguments/TestMinInitialErgonomics.java failed with unexpected initial heap size
+  - S8042131: DateTimeFormatterBuilder Mapped-values do not work for JapaneseDate
+  - S8043387: java/time/test/java/util/TestFormatter.java failed.
+  - S8044047: Missing null pointer checks for streams
+  - S8059038: Create new launcher for SA tools
+  - S8065749: [TESTBUG]: gc/arguments/TestG1HeapRegionSize.java fails at nightly
+  - S8068269: RTM tests that assert on non-zero lock statistics are too strict in RTMTotalCountIncrRate > 1 cases
+  - S8076164: [JTextField] When input too long Thai character, cursor's behavior is odd
+  - S8076274: [TESTBUG] Remove @ignore from runtime\NMT\JcmdDetailDiff.java
+  - S8076458: java/util/stream/test/org/openjdk/tests/java/util/stream/FlatMapOpTest.java timeout
+  - S8077608: [TESTBUG] Enable Hotspot jtreg tests to run in agentvm mode
+  - S8080932: [TEST_BUG] Test java/awt/BasicStroke/DashStrokeTest.java fails with Bad script error due to improper @run notation
+  - S8132136: [PIT] RTL orientation in JEditorPane is broken
+  - S8132985: Crash in freetypescaler.c due to double free
+  - S8133108: [PIT] Container size is wrong in JEditorPane
+  - S8133731: [TEST_BUG] Unmappable in ASCII character such as Thai should be escaped in the regtests targeted for a regular non-I18n runs
+  - S8133802: replace some <tt> tags (obsolete in html5) in security-libs docs
+  - S8133984: print_compressed_class_space() is only defined in 64-bit VM
+  - S8139803: Fix for 8132985 breaks OpenJDK build on windows.
+  - S8148928: java/util/stream/test/**/SequentialOpTest.java timed out intermittently
+  - S8164656: krb5 does not retry if TCP connection timeouts
+  - S8170681: Remove fontconfig header files from JDK source tree
+  - S8175120: Remove old tests on kdc timeout policy
+  - S8180469: Wrong short form text for supplemental Japanese era
+  - S8180904: Hotspot tests running with -agentvm failing due to classpath
+  - S8185975: PPC64: Fix vsldoi interface according to the ISA
+  - S8187364: Unable to enter zero width non-joiner (ZWNJ) symbol in Swing text component
+  - S8189761: COMPANY_NAME, IMPLEMENTOR, BUNDLE_VENDOR, VENDOR, but no configure flag
+  - S8193764: Cannot set COMPANY_NAME when configuring a build
+  - S8195153: [test] runtime/6981737/Test6981737.java shouldn't check 'java.vendor' and 'java.vm.vendor' properties
+  - S8200109: NMT: diff_malloc_site assert(early->flags() == current->flags(), "Must be the same memory type")
+  - S8200115: System property java.vm.vendor value includes quotation marks
+  - S8202088: Japanese new era implementation
+  - S8204142: AWT hang occurs when sequenced events arrive out of sequence in multiple AppContexts
+  - S8205432: Replace the placeholder Japanese era name
+  - S8206075: On x86, assert on unbound assembler Labels used as branch targets
+  - S8206120: Add test cases for lenient Japanese era parsing
+  - S8207070: Webstart app popup on wrong screen in a one-screen setup changing to multi-monitor
+  - S8207152: Placeholder for Japanese new era should be two characters
+  - S8207258: Distrust TLS server certificates anchored by Symantec Root CAs
+  - S8208480: Test failure: assert(is_bound() || is_unused()) after JDK-8206075 in C1
+  - S8208656: Move java/util/Calendar/CalendarTestScripts tests into OpenJDK
+  - S8210633: Cannot parse JapaneseDate string with DateTimeFormatterBuilder Mapped-values
+  - S8210647: libsaproc is being compiled without optimization
+  - S8211106: [windows] Update OS detection code to recognize Windows Server 2019
+  - S8211231: BarrierSetC1::generate_referent_check() confuses register allocator
+  - S8211382: ISO2022JP and GB18030 NIO converter issues
+  - S8211398: Square character support for the Japanese new era
+  - S8211435: Exception in thread "AWT-EventQueue-1" java.lang.IllegalArgumentException: null source
+  - S8211926: Catastrophic size_t underflow in BitMap::*_large methods
+  - S8212110: Build of saproc.dll broken on Windows 32 bit after JDK-8210647
+  - S8212178: Soft reference reclamation race in com.sun.xml.internal.stream.util.ThreadLocalBufferAllocator
+  - S8212914: Test javax/imageio/plugins/bmp/BMP8BPPLoadTest.java fails
+  - S8212941: Support new Japanese era in java.time.chrono.JapaneseEra
+  - S8213151: [AIX] Some class library files are missing the Classpath exception
+  - S8213154: Update copyright headers of files in src tree that are missing Classpath exception
+  - S8213419: C2 may hang in MulLNode::Ideal()/MulINode::Ideal() with gcc 8.2.1
+  - S8213583: Error while opening the JFileChooser when desktop contains shortcuts pointing to deleted files.
+  - S8213952: Relax DNSName restriction as per RFC 1123
+  - S8213983: [macosx] Keyboard shortcut “cmd +`” stops working properly if popup window is displayed
+  - S8213992: Rename and make DieOnSafepointTimeout the diagnostic option
+  - S8214061: Buffer written into itself
+  - S8214189: test/hotspot/jtreg/compiler/intrinsics/mathexact/MulExactLConstantTest.java fails on Windows x64 when run with -XX:-TieredCompilation
+  - S8214206: Fix for JDK-8213419 is broken on 32-bit
+  - S8215364: JavaFX crashes on Ubuntu 18.04 with Wayland while using Swing-FX interop
+  - S8215934: G1 Old Gen MemoryPool CollectionUsage.used values don't reflect mixed GC results
+  - S8215976: Fix gmtime_r declaration conflicts in zip.cpp with linux header files
+  - S8216037: Avoid calling vm_update with a NULL name
+  - S8216058: [TESTBUG] tools/launcher/VersionCheck.java fails after JDK-8215992
+  - S8216396: Support new Japanese era and new currency code points in java.lang.Character for Java SE 8
+  - S8217305: Missing 0 in java.dll file version cause issues with patch management software
+  - S8217432: MetaspaceGC::_capacity_until_GC exceeds MaxMetaspaceSize
+  - S8217520: Remove vm.opt.MaxGCPauseMillis == "null" from TestOldGenCollectionUsage.java
+  - S8217579: TLS_EMPTY_RENEGOTIATION_INFO_SCSV is disabled after 8211883
+  - S8217609: New era placeholder not recognized by java.text.SimpleDateFormat
+  - S8217710: Add 5 currency code points to Java SE 8uX
+  - S8218613: [TESTBUG] runtime/ErrorHandling tests are building incorrect testlibrary classes
+  - S8218915: Change isJavaIdentifierStart and isJavaIdentifierPart to handle new code points
+  - S8219636: Windows build failure after JDK-8207070 8u backport
+  - S8219890: Calendar.getDisplayName() returns empty string for new Japanese Era on some locales
+  - S8219961: [ppc64] Increase code size for interpreter generation.
+  - S8220397: REGRESSION: JDK-8036003 backport regresses no_strip builds
+  - S8220641: [TESTBUG] New test KdcPolicy.java introduced by JDK-8164656 needs same change as JDK-8190690
+  - S8221355: Performance regression after JDK-8155635 backport into 8u
+* Backports
+  - S8222286, PR3727: Fix for JDK-8213419 is broken on s390
 * Bug fixes
   - PR3718: Change policytool.desktop.in category Development to Settings
   - PR3719: Use JRE bin directory in policytool.desktop.in
   - PR3722: Use SDK bin directory in jconsole.desktop.in
   - PR3723: Use shortened Java version first in Name field of desktop files
+  - PR3728: CVE-2018-3639 fix revision to prefer PR_SPEC_DISABLE_NOEXEC to PR_SPEC_DISABLE
 * AArch64 port
+  - S8153172, PR3724: aarch64: hotspot crashes after the 8.1 LSE patch is merged
   - S8221220, PR3724: AArch64: Add StoreStore membar explicitly for Volatile Writes in TemplateTable
-* Shenandoah
-  - S8153172: aarch64: hotspot crashes after the 8.1 LSE patch is merged
 
 New in release 3.11.0 (2019-03-01):
 
@@ -563,7 +656,6 @@ New in release 3.9.0 (2018-09-27):
   - S8064786, PR3601: Fix debug build after 8062808: Turn on the -Wreturn-type warning
   - S8075942, PR3602, RH1582032: ArrayIndexOutOfBoundsException in sun.java2d.pisces.Dasher.goTo
   - S8146115, PR3508, RH1463098: Improve docker container detection and resource configuration usage
-  - S8184309, PR3596: Build warnings from GCC 7.1 on Fedora 26
   - S8203182, PR3603: Release session if initialization of SunPKCS11 Signature fails
   - S8206406, PR3610, RH1597825: StubCodeDesc constructor publishes partially-constructed objects on StubCodeDesc::_list
   - S8207057, PR3613: No debug info for assembler files
@@ -901,7 +993,7 @@ New in release 3.8.0 (2018-05-29):
   - S8143245, PR3548: Zero build requires disabled warnings
   - S8165489, PR3589: Missing G1 barrier in Unsafe_GetObjectVolatile
   - S8171000, PR3542, RH1402819: Robot.createScreenCapture() crashes in wayland mode
-  _ S8184309, PR3596: Build warnings from GCC 7.1 on Fedora 26
+  - S8184309, PR3596: Build warnings from GCC 7.1 on Fedora 26
   - S8185723, PR3553: Zero: segfaults on Power PC 32-bit
   - S8186461, PR3557: Zero's atomic_copy64() should use SPE instructions on linux-powerpcspe
   - S8187577, PR3578: JVM crash during gc doing concurrent marking
