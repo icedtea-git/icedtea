@@ -7,10 +7,10 @@
 PR1869: Avoid x86 workaround when running Zero rather than a JIT
 Contributed-by: Matthias Klose <doko@ubuntu.com>
 
-diff -r 84854c983fd8 -r 967ae4d849eb src/os/linux/vm/os_linux.cpp
---- openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Wed May 27 15:22:21 2015 +0100
-+++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	Tue Jul 15 22:55:15 2014 +0100
-@@ -4861,7 +4861,7 @@
+diff -Nru openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+--- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp	2019-04-11 03:36:49.000000000 +0100
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp	2019-04-19 17:15:35.194017652 +0100
+@@ -5139,7 +5139,7 @@
  
    Linux::capture_initial_stack(JavaThread::stack_size_at_create());
  
@@ -19,9 +19,9 @@ diff -r 84854c983fd8 -r 967ae4d849eb src/os/linux/vm/os_linux.cpp
    workaround_expand_exec_shield_cs_limit();
  #endif
  
-diff -r 84854c983fd8 -r 967ae4d849eb src/os_cpu/linux_x86/vm/os_linux_x86.cpp
---- openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp	Wed May 27 15:22:21 2015 +0100
-+++ openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp	Tue Jul 15 22:55:15 2014 +0100
+diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp
+--- openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp	2019-04-11 03:36:49.000000000 +0100
++++ openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp	2019-04-19 17:15:58.329656663 +0100
 @@ -890,7 +890,7 @@
   * updates (JDK-8023956).
   */
@@ -29,5 +29,5 @@ diff -r 84854c983fd8 -r 967ae4d849eb src/os_cpu/linux_x86/vm/os_linux_x86.cpp
 -#if defined(IA32)
 +#if defined(IA32) && !defined(ZERO)
    size_t page_size = os::vm_page_size();
+ 
    /*
-    * Take the highest VA the OS will give us and exec

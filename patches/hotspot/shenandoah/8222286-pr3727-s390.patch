@@ -1,0 +1,34 @@
+# HG changeset patch
+# User andrew
+# Date 1555556414 -3600
+#      Thu Apr 18 04:00:14 2019 +0100
+# Node ID 2366ee02c78968ed4d62f77fc88632873cffd183
+# Parent  8977710898a50eac14f4fbe6047fe74d29880cd2
+8222286, PR3727: Fix for JDK-8213419 is broken on s390
+Summary: Calls to log2_intptr with a size_t are ambiguous on s390, so an explicit cast to uintptr_t is necessary
+
+diff --git openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1BiasedArray.hpp openjdk/hotspot/src/share/vm/gc_implementation/g1/g1BiasedArray.hpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1BiasedArray.hpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1BiasedArray.hpp
+@@ -78,7 +78,8 @@
+     size_t num_target_elems = pointer_delta(end, bottom, mapping_granularity_in_bytes);
+     idx_t bias = (uintptr_t)bottom / mapping_granularity_in_bytes;
+     address base = create_new_base_array(num_target_elems, target_elem_size_in_bytes);
+-    initialize_base(base, num_target_elems, bias, target_elem_size_in_bytes, log2_intptr(mapping_granularity_in_bytes));
++    initialize_base(base, num_target_elems, bias, target_elem_size_in_bytes,
++                    log2_intptr((uintptr_t) mapping_granularity_in_bytes));
+   }
+ 
+   size_t bias() const { return _bias; }
+diff --git openjdk.orig/hotspot/src/share/vm/runtime/os.cpp openjdk/hotspot/src/share/vm/runtime/os.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/os.cpp
++++ openjdk/hotspot/src/share/vm/runtime/os.cpp
+@@ -1292,7 +1292,7 @@
+ }
+ 
+ void os::set_memory_serialize_page(address page) {
+-  int count = log2_intptr(sizeof(class JavaThread)) - log2_int(64);
++  int count = log2_intptr((uintptr_t) sizeof(class JavaThread)) - log2_int(64);
+   _mem_serialize_page = (volatile int32_t *)page;
+   // We initialize the serialization page shift count here
+   // We assume a cache line size of 64 bytes

@@ -7,20 +7,20 @@
 PR1942: Bug reports lack IcedTea version & distribution packaging information
 
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/buildtree.make openjdk/hotspot/make/linux/makefiles/buildtree.make
---- openjdk.orig/hotspot/make/linux/makefiles/buildtree.make	2016-05-12 21:03:31.000000000 +0100
-+++ openjdk/hotspot/make/linux/makefiles/buildtree.make	2016-07-21 04:02:40.321948126 +0100
-@@ -221,6 +221,8 @@
- 	echo "SA_BUILD_VERSION = $(HS_BUILD_VER)"; \
- 	echo "HOTSPOT_BUILD_USER = $(HOTSPOT_BUILD_USER)"; \
- 	echo "HOTSPOT_VM_DISTRO = $(HOTSPOT_VM_DISTRO)"; \
+--- openjdk.orig/hotspot/make/linux/makefiles/buildtree.make	2019-04-11 03:36:49.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/buildtree.make	2019-04-19 17:21:19.576644199 +0100
+@@ -226,6 +226,8 @@
+ 	echo "VENDOR_URL = $(VENDOR_URL)"; \
+ 	echo "VENDOR_URL_BUG = $(VENDOR_URL_BUG)"; \
+ 	echo "VENDOR_URL_VM_BUG = $(VENDOR_URL_VM_BUG)"; \
 +	echo "DERIVATIVE_ID = $(DERIVATIVE_ID)"; \
 +	echo "DISTRIBUTION_ID = $(DISTRIBUTION_ID)"; \
  	echo "OPENJDK = $(OPENJDK)"; \
  	echo "$(LP64_SETTING/$(DATA_MODE))"; \
  	echo; \
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make/linux/makefiles/vm.make
---- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2016-07-21 03:58:43.517786089 +0100
-+++ openjdk/hotspot/make/linux/makefiles/vm.make	2016-07-21 04:03:18.853320721 +0100
+--- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2019-04-19 17:17:29.512233927 +0100
++++ openjdk/hotspot/make/linux/makefiles/vm.make	2019-04-19 17:20:43.425208275 +0100
 @@ -91,11 +91,11 @@
  VM_DISTRO     = -DHOTSPOT_VM_DISTRO="\"$(HOTSPOT_VM_DISTRO)\""
  
@@ -36,8 +36,8 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make
  
  CXXFLAGS =           \
 diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/vm.make openjdk/hotspot/make/solaris/makefiles/vm.make
---- openjdk.orig/hotspot/make/solaris/makefiles/vm.make	2016-07-21 03:58:43.973778706 +0100
-+++ openjdk/hotspot/make/solaris/makefiles/vm.make	2016-07-21 04:04:14.804409599 +0100
+--- openjdk.orig/hotspot/make/solaris/makefiles/vm.make	2019-04-19 17:17:29.848228686 +0100
++++ openjdk/hotspot/make/solaris/makefiles/vm.make	2019-04-19 17:20:43.425208275 +0100
 @@ -85,6 +85,10 @@
    ${HS_LIB_ARCH}     \
    ${VM_DISTRO}
@@ -49,7 +49,7 @@ diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/vm.make openjdk/hotspot/ma
  # This is VERY important! The version define must only be supplied to vm_version.o
  # If not, ccache will not re-use the cache at all, since the version string might contain
  # a time and date.
-@@ -100,6 +104,10 @@
+@@ -101,6 +105,10 @@
  CXXFLAGS/ostream.o += -D_FILE_OFFSET_BITS=64
  endif # ifneq ($(LP64), 1)
  
@@ -61,9 +61,9 @@ diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/vm.make openjdk/hotspot/ma
  CFLAGS += $(CFLAGS_WARN)
  
 diff -Nru openjdk.orig/hotspot/make/windows/makefiles/vm.make openjdk/hotspot/make/windows/makefiles/vm.make
---- openjdk.orig/hotspot/make/windows/makefiles/vm.make	2016-05-12 21:03:31.000000000 +0100
-+++ openjdk/hotspot/make/windows/makefiles/vm.make	2016-07-21 04:04:46.347895899 +0100
-@@ -67,6 +67,14 @@
+--- openjdk.orig/hotspot/make/windows/makefiles/vm.make	2019-04-11 03:36:49.000000000 +0100
++++ openjdk/hotspot/make/windows/makefiles/vm.make	2019-04-19 17:20:43.425208275 +0100
+@@ -72,6 +72,14 @@
  # Define that so jni.h is on correct side
  CXX_FLAGS=$(CXX_FLAGS) /D "_JNI_IMPLEMENTATION_"
  

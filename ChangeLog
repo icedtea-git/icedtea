@@ -1,3 +1,50 @@
+2019-04-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump shenandoah to aarch64-shenandoah-jdk8u212-b04.
+	* patches/hotspot/shenandoah/8145096-pr2854.patch,
+	* patches/hotspot/shenandoah/8184309-pr3596.patch,
+	* patches/hotspot/shenandoah/8197429-pr3546-rh1536622.patch,
+	* patches/hotspot/shenandoah/8214059-pr3693.patch,
+	* patches/hotspot/shenandoah/8217753-pr3685.patch:
+	Remove patches now upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Move upstreamed Shenandoah patches to
+	AArch32-only section. Add PR3728 fix for both HotSpot builds
+	and 8222286 for Shenandoah (which now has 8213419).
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u212-b04.
+	* patches/hotspot/aarch32/8145096-pr2854.patch,
+	* patches/hotspot/aarch32/8184309-pr3596.patch,
+	* patches/hotspot/aarch32/8197429-pr3546-rh1536622.patch,
+	* patches/hotspot/aarch32/8214059-pr3693.patch,
+	* patches/hotspot/aarch32/8217753-pr3685.patch:
+	Replace symlinks with copies as Shenandoah versions removed
+	for 8u212.
+	* patches/hotspot/aarch32/crash_dump_bug_url.patch:
+	Separate the bug URL update into a separate patch, as
+	Shenandoah now has 8189761 and should set this via configure.
+	* patches/hotspot/aarch32/pr1942.patch,
+	* patches/hotspot/aarch32/pr2777.patch,
+	Replace symlinks with copies as Shenandoah versions altered for
+	8u212.
+	* patches/hotspot/aarch32/pr3728.patch:
+	Symlink to Shenandoah version.
+	* patches/hotspot/shenandoah/8222286-pr3727-s390-shenandoah.patch,
+	* patches/hotspot/shenandoah/8222286-pr3727-s390.patch:
+	New patches to fix an issue with 8222286 on S390.
+	* patches/hotspot/shenandoah/crash_dump.patch:
+	Bug URL section separated to avoid conflict with changes from
+	8189761.
+	* patches/hotspot/shenandoah/pr1869.patch:
+	Altered to apply after 8197429.
+	* patches/hotspot/shenandoah/pr1942.patch,
+	* patches/hotspot/shenandoah/pr2777.patch:
+	Altered to apply after changes in 8u212.
+	* patches/hotspot/shenandoah/pr3728.patch:
+	Extension of Spectre v4 fix to recognise
+	PR_SPEC_DISABLE_NOEXEC.
+
 2019-04-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.12.0.

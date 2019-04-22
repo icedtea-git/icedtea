@@ -350,14 +350,19 @@ if WITH_ALT_HSBUILD
 if WITH_AARCH32_HSBUILD
 ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/pr3548-aarch32.patch \
-	patches/hotspot/$(HSBUILD)/8078628-pr3208.patch
+	patches/hotspot/$(HSBUILD)/8078628-pr3208.patch \
+	patches/hotspot/$(HSBUILD)/8145096-pr2854.patch \
+	patches/hotspot/$(HSBUILD)/8197429-pr3546-rh1536622.patch \
+	patches/hotspot/$(HSBUILD)/8184309-pr3596.patch \
+	patches/hotspot/$(HSBUILD)/8214059-pr3693.patch \
+	patches/hotspot/$(HSBUILD)/8217753-pr3685.patch \
+	patches/hotspot/$(HSBUILD)/crash_dump_bug_url.patch
 endif
 
 ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8038392-rh1064383.patch \
 	patches/hotspot/$(HSBUILD)/8041658.patch \
 	patches/hotspot/$(HSBUILD)/8087218-pr2740.patch \
-	patches/hotspot/$(HSBUILD)/8145096-pr2854.patch \
 	patches/hotspot/$(HSBUILD)/8158260-pr2991-rh1341258.patch \
 	patches/hotspot/$(HSBUILD)/crash_dump.patch \
 	patches/hotspot/$(HSBUILD)/no_devirt.patch \
@@ -374,10 +379,8 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8062808-pr3548.patch \
 	patches/hotspot/$(HSBUILD)/8141570-pr3548.patch \
 	patches/hotspot/$(HSBUILD)/8143245-pr3548.patch \
-	patches/hotspot/$(HSBUILD)/8197429-pr3546-rh1536622.patch \
 	patches/hotspot/$(HSBUILD)/pr3593.patch \
 	patches/hotspot/$(HSBUILD)/8197981-pr3548.patch \
-	patches/hotspot/$(HSBUILD)/8184309-pr3596.patch \
 	patches/hotspot/$(HSBUILD)/pr3597.patch \
 	patches/hotspot/$(HSBUILD)/8064786-pr3601.patch \
 	patches/hotspot/$(HSBUILD)/pr3601.patch \
@@ -387,8 +390,7 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/6424123-pr3696.patch \
 	patches/hotspot/$(HSBUILD)/8059847-pr3696.patch \
 	patches/hotspot/$(HSBUILD)/8076475-pr3696.patch \
-	patches/hotspot/$(HSBUILD)/8214059-pr3693.patch \
-	patches/hotspot/$(HSBUILD)/8217753-pr3685.patch
+	patches/hotspot/$(HSBUILD)/pr3728.patch
 endif
 
 # Shenandoah has the AArch64 port so should get the return value & debug build fixes
@@ -396,6 +398,8 @@ endif
 if WITH_SHENANDOAH_HSBUILD
 ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8158260-pr2991-rh1341258-aarch64.patch \
+	patches/hotspot/$(HSBUILD)/8222286-pr3727-s390.patch \
+	patches/hotspot/$(HSBUILD)/8222286-pr3727-s390-shenandoah.patch \
 	patches/hotspot/$(HSBUILD)/pr3519-return_value-02.patch \
 	patches/hotspot/$(HSBUILD)/pr3634.patch
 endif
