@@ -1,5 +1,18 @@
 2019-04-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	S8213419, PR3724: [AArch64] C2 may hang in
+	MulLNode::Ideal()/MulINode::Ideal() with gcc 8.2.1
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Apply additional PR3724 patch
+	when building the default HotSpot. Move Shenandoah-only
+	patches into the ALT_HSBUILD block.
+	* NEWS: Updated.
+	* patches/pr3724.patch:
+	AArch64 segment of 8213419, also fixed upstream
+	after the 3.12.0 tag.
+
+2019-04-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump shenandoah to aarch64-shenandoah-jdk8u212-b04.
 	* patches/hotspot/shenandoah/8145096-pr2854.patch,
 	* patches/hotspot/shenandoah/8184309-pr3596.patch,

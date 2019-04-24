@@ -1,0 +1,42 @@
+# HG changeset patch
+# User roland
+# Date 1554911223 -3600
+#      Wed Apr 10 16:47:03 2019 +0100
+# Node ID 5f929b75d93ca63ca29cc1324fb50dac67a231a6
+# Parent  5174c702c7e30e0b047b89d2163736a5fd79861b
+8213419, PR3724: [AArch64] C2 may hang in MulLNode::Ideal()/MulINode::Ideal() with gcc 8.2.1
+Reviewed-by: kvn, dlong, aph
+
+diff --git openjdk.orig/hotspot/src/cpu/aarch64/vm/assembler_aarch64.hpp openjdk/hotspot/src/cpu/aarch64/vm/assembler_aarch64.hpp
+--- openjdk.orig/hotspot/src/cpu/aarch64/vm/assembler_aarch64.hpp
++++ openjdk/hotspot/src/cpu/aarch64/vm/assembler_aarch64.hpp
+@@ -320,29 +320,6 @@
+   enum operation { uxtb, uxth, uxtw, uxtx, sxtb, sxth, sxtw, sxtx };
+ };
+ 
+-// abs methods which cannot overflow and so are well-defined across
+-// the entire domain of integer types.
+-static inline unsigned int uabs(unsigned int n) {
+-  union {
+-    unsigned int result;
+-    int value;
+-  };
+-  result = n;
+-  if (value < 0) result = -result;
+-  return result;
+-}
+-static inline unsigned long uabs(unsigned long n) {
+-  union {
+-    unsigned long result;
+-    long value;
+-  };
+-  result = n;
+-  if (value < 0) result = -result;
+-  return result;
+-}
+-static inline unsigned long uabs(long n) { return uabs((unsigned long)n); }
+-static inline unsigned long uabs(int n) { return uabs((unsigned int)n); }
+-
+ // Addressing modes
+ class Address VALUE_OBJ_CLASS_SPEC {
+  public:

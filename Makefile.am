@@ -391,7 +391,6 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8059847-pr3696.patch \
 	patches/hotspot/$(HSBUILD)/8076475-pr3696.patch \
 	patches/hotspot/$(HSBUILD)/pr3728.patch
-endif
 
 # Shenandoah has the AArch64 port so should get the return value & debug build fixes
 # Shenandoah also needs some fixes to build on all architectures
@@ -402,6 +401,10 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8222286-pr3727-s390-shenandoah.patch \
 	patches/hotspot/$(HSBUILD)/pr3519-return_value-02.patch \
 	patches/hotspot/$(HSBUILD)/pr3634.patch
+endif
+else
+ICEDTEA_PATCHES += \
+	patches/pr3724.patch
 endif
 
 if BUILD_CACAO
