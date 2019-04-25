@@ -211,6 +211,10 @@ to configure:
 * --with-cacerts-file: Specify the location of a cacerts file, defaulting to
   ${SYSTEM_JDK_DIR}/jre/lib/security/cacerts
 * --disable-precompiled-headers: Don't use pre-compiled headers.
+* --with-vendor-name: Set the value used by the java.vendor & java.vm.vendor properties.
+* --with-vendor-url: Set the value used by the java.vendor.url property.
+* --with-vendor-bug-url: Set the value used by the java.vendor.url.bug property.
+* --with-vendor-vm-bug-url: Set the URL included in virtual machine crash dumps.
 
 Other options may be supplied which enable or disable new features.
 These are documented fully in the relevant section below.

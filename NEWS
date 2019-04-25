@@ -16,6 +16,8 @@ New in release 3.12.0 (2019-04-XX):
   - S8211936, CVE-2019-2602: Better String parsing
   - S8218453, CVE-2019-2684: More dynamic RMI interactions
   - S8219066, CVE-2019-2698: Fuzzing TrueType fonts: setCurrGlyphID()
+* New features
+  - PR3734: Make use of branding options
 * Import of OpenJDK 8 u202 build 08
   - S8064811: Use THREAD instead of CHECK_NULL in return statements
   - S8068440: Test6857159.java times out

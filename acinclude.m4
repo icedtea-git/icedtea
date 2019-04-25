@@ -2762,3 +2762,74 @@ AC_DEFUN([IT_WITH_TAPSET_DIR],
   AC_SUBST([TAPSET_DIR])
   AM_CONDITIONAL(WITH_TAPSET_DIR, test "x${TAPSET_DIR_SET}" = "xyes")
 ])
+
+AC_DEFUN([IT_ARG_WITH],
+  [AC_ARG_WITH(m4_translit([[$1]], [_], [-]),
+   [AS_HELP_STRING([--with-m4_translit([$1], [_], [-])], [$2 [default=$3]])],
+   [$4="${withval}"], [$4=$5])
+  ]
+)
+
+AC_DEFUN_ONCE([IT_VENDOR_OPTS],
+[
+  VENDOR_NAME_DEFAULT="IcedTea"
+  AC_MSG_CHECKING([what vendor name to use])
+  IT_ARG_WITH([vendor_name],
+    [Set vendor name. Among others, used to set the 'java.vendor'
+     and 'java.vm.vendor' system properties.], IcedTea, VENDOR_NAME,
+     ${VENDOR_NAME_DEFAULT})
+  AC_MSG_RESULT([${VENDOR_NAME}])
+  if test "x${VENDOR_NAME}" = x ||
+     test "x${VENDOR_NAME}" = xyes ||
+     test "x${VENDOR_NAME}" = xno; then
+       AC_MSG_ERROR([--with-vendor-name must have a value])
+  elif [ ! [[ ${VENDOR_NAME} =~ ^[[:print:]]*$ ]] ]; then
+    AC_MSG_ERROR([--with-vendor-name value contains non-printing characters: ${VENDOR_NAME}])
+  fi
+  AC_SUBST(VENDOR_NAME)
+
+  VENDOR_URL_DEFAULT="http://icedtea.classpath.org"
+  AC_MSG_CHECKING([what vendor URL to use])
+  IT_ARG_WITH([vendor_url],
+    [Set the 'java.vendor.url' system property],
+    http://icedtea.classpath.org, VENDOR_URL, ${VENDOR_URL_DEFAULT})
+  AC_MSG_RESULT([${VENDOR_URL}])
+  if test "x${VENDOR_URL}" = x ||
+     test "x${VENDOR_URL}" = xyes ||
+     test "x${VENDOR_URL}" = xno; then
+       AC_MSG_ERROR([--with-vendor-url must have a value])
+  elif [ ! [[ ${VENDOR_URL} =~ ^[[:print:]]*$ ]] ]; then
+    AC_MSG_ERROR([--with-vendor-url value contains non-printing characters: ${VENDOR_URL}])
+  fi
+  AC_SUBST(VENDOR_URL)
+
+  VENDOR_BUG_URL_DEFAULT="http://icedtea.classpath.org/bugzilla"
+  AC_MSG_CHECKING([what vendor bug URL to use])
+  IT_ARG_WITH([vendor_bug_url],
+    [Set the 'java.vendor.url.bug' system property],
+    http://icedtea.classpath.org/bugzilla, VENDOR_BUG_URL, ${VENDOR_BUG_URL_DEFAULT})
+  AC_MSG_RESULT([${VENDOR_BUG_URL}])
+  if test "x${VENDOR_BUG_URL}" = x ||
+     test "x${VENDOR_BUG_URL}" = xyes ||
+     test "x${VENDOR_BUG_URL}" = xno; then
+       AC_MSG_ERROR([--with-vendor-bug-url must have a value])
+  elif [ ! [[ ${VENDOR_BUG_URL} =~ ^[[:print:]]*$ ]] ]; then
+    AC_MSG_ERROR([--with-vendor-bug-url value contains non-printing characters: ${VENDOR_BUG_URL}])
+  fi
+  AC_SUBST(VENDOR_BUG_URL)
+
+  VENDOR_VM_BUG_URL_DEFAULT=${VENDOR_BUG_URL}
+  AC_MSG_CHECKING([what vendor VM bug URL to use])
+  IT_ARG_WITH([vendor_vm_bug_url],
+    [Sets the bug URL which will be displayed when the VM crashes],
+    VENDOR_BUG_URL, VENDOR_VM_BUG_URL, ${VENDOR_VM_BUG_URL_DEFAULT})
+  AC_MSG_RESULT([${VENDOR_VM_BUG_URL}])
+  if test "x${VENDOR_VM_BUG_URL}" = x ||
+     test "x${VENDOR_VM_BUG_URL}" = xyes ||
+     test "x${VENDOR_VM_BUG_URL}" = xno; then
+       AC_MSG_ERROR([--with-vendor-vm-bug-url must have a value])
+  elif [ ! [[ ${VENDOR_VM_BUG_URL} =~ ^[[:print:]]*$ ]] ]; then
+    AC_MSG_ERROR([--with-vendor-vm-bug-url value contains non-printing characters: ${VENDOR_VM_BUG_URL}])
+  fi
+  AC_SUBST(VENDOR_VM_BUG_URL)
+])
