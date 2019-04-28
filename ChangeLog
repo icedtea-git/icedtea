@@ -1,3 +1,27 @@
+2019-04-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump aarch32 to jdk8u212-b04-aarch32-190429.
+	* patches/hotspot/aarch32/8145096-pr2854.patch,
+	* patches/hotspot/aarch32/8184309-pr3596.patch,
+	* patches/hotspot/aarch32/8197429-pr3546-rh1536622.patch,
+	* patches/hotspot/aarch32/8214059-pr3693.patch,
+	* patches/hotspot/aarch32/8217753-pr3685.patch,
+	* patches/hotspot/aarch32/crash_dump_bug_url.patch:
+	Remove patches now upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove AArch32-only patches which
+	are now included in the updated tarball. Move 8222286
+	so it applies to both builds, now they both have
+	8213419.
+	* hotspot.map.in: Bump aarch32 to
+	jdk8u212-b04-aarch32-190429.
+	* patches/hotspot/aarch32/8222286-pr3727-s390.patch:
+	Symlink to Shenandoah verison.
+	* patches/hotspot/aarch32/pr1942.patch,
+	* patches/hotspot/aarch32/pr2777.patch:
+	Switch back to symlinks now they can share a version with
+	Shenandoah again.
+
 2019-04-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3734: Make use of branding options

@@ -179,6 +179,9 @@ New in release 3.12.0 (2019-04-XX):
   - S8153172, PR3724: aarch64: hotspot crashes after the 8.1 LSE patch is merged
   - S8213419, PR3724: [AArch64] C2 may hang in MulLNode::Ideal()/MulINode::Ideal() with gcc 8.2.1
   - S8221220, PR3724: AArch64: Add StoreStore membar explicitly for Volatile Writes in TemplateTable
+* AArch32 port
+  - S8213419: [AArch32] C2 may hang in MulLNode::Ideal()/MulINode::Ideal() with gcc 8.2.1
+  - S8214189: [AArch32] test/hotspot/jtreg/compiler/intrinsics/mathexact/MulExactLConstantTest.java fails on Windows x64 when run with -XX:-TieredCompilation
 
 New in release 3.11.0 (2019-03-01):
 
