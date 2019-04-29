@@ -14,6 +14,9 @@ CVE-XXXX-YYYY: http://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.6.18 (2019-04-XX):
 
+* Bug fixes
+  - PR3730: Change policytool.desktop.in category Development to Settings
+
 New in release 2.6.17 (2019-03-16):
 
 * Security fixes
