@@ -1,5 +1,15 @@
 2019-04-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR3731: Use JRE bin directory in policytool.desktop.in
+	* Makefile.am:
+	(policytool-@JAVA_VER@.desktop): Replace _JREBINDIR_
+	with the JRE bin directory ($(prefix)/jre/bin).
+	* NEWS: Updated.
+	* policytool.desktop.in: Use _JREBINDIR_ instead of
+	_BINDIR_.
+
+2019-04-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR3730: Change policytool.desktop.in category
 	Development to Settings
 	* NEWS: Updated.

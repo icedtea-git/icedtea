@@ -3099,7 +3099,7 @@ clean-check-java-src:
 # File substitution
 
 policytool-@JAVA_VER@.desktop: policytool.desktop
-	cat $< | $(SED) "s#_BINDIR_#$(bindir)#" > $@
+	cat $< | $(SED) "s#_JREBINDIR_#$(prefix)/jre/bin#" > $@
 
 clean-policytool-@JAVA_VER@.desktop:
 	rm -f policytool-@JAVA_VER@.desktop
