@@ -3105,7 +3105,7 @@ clean-policytool-@JAVA_VER@.desktop:
 	rm -f policytool-@JAVA_VER@.desktop
 
 jconsole-@JAVA_VER@.desktop: jconsole.desktop
-	cat $< | $(SED) "s#_BINDIR_#$(bindir)#" > $@
+	cat $< | $(SED) "s#_SDKBINDIR_#$(bindir)#" > $@
 
 clean-jconsole-@JAVA_VER@.desktop:
 	rm -f jconsole-@JAVA_VER@.desktop
