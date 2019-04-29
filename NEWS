@@ -18,6 +18,7 @@ New in release 2.6.18 (2019-04-XX):
   - PR3730: Change policytool.desktop.in category Development to Settings
   - PR3731: Use JRE bin directory in policytool.desktop.in
   - PR3732: Use SDK bin directory in jconsole.desktop.in
+  - PR3733: Use shortened Java version first in Name field of desktop files
 
 New in release 2.6.17 (2019-03-16):
 
