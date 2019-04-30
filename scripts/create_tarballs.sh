@@ -14,14 +14,14 @@
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 CHECKOUT_DIR=$1
 DOWNLOAD_DIR=$2
 TAG=$3
 HOTSPOT=$4
 RUNNING_DIR=$(dirname $0)
-DOWNLOAD_URL=http://icedtea.classpath.org/download/drops
+DOWNLOAD_URL=https://icedtea.classpath.org/download/drops
 
 echo "PWD: $PWD"
 echo "DOWNLOAD URL: ${DOWNLOAD_URL}"

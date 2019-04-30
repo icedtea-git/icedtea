@@ -1,5 +1,25 @@
 2019-04-30  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR3736: Use https URLs where possible.
+	* AUTHORS,
+	* ChangeLog,
+	* INSTALL,
+	* Makefile.am,
+	* NEWS,
+	* README,
+	* acinclude.m4,
+	* contrib/templater/README,
+	* contrib/templater/hotspot/src/os_cpu/linux_CPU/vm/os_linux_CPU.cpp,
+	* fsg.sh.in,
+	* hotspot.map.in,
+	* scripts/create_tarballs.sh,
+	* scripts/gen_changeset_and_sha256sums.sh,
+	* scripts/update_tarballs.sh:
+	Replace http:// URLs with https:// equivalents where
+	possible.
+
+2019-04-30  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Prepare for release.
 	* INSTALL:
 	Set AArch32 HotSpot URL to temporary location
@@ -1987,7 +2007,7 @@
 	in Makefile.am.
 	* hotspot.map.in:
 	Add aarch32 from tag jdk8u131-b12-aarch32-170420
-	in http://hg.openjdk.java.net/aarch32-port/jdk8u/hotspot/
+	in https://hg.openjdk.java.net/aarch32-port/jdk8u/hotspot/
 	* patches/hotspot/aarch32/8038392-rh1064383.patch,
 	* patches/hotspot/aarch32/8041658.patch,
 	* patches/hotspot/aarch32/8043780-pr3368.patch,
@@ -10603,7 +10623,7 @@
 2010-06-22 Andrew John Hughes  <ahughes@redhat.com>
 
 	Remove VisualVM support, now maintained at
-	http://icedtea.classpath.org/hg/visualvm
+	https://icedtea.classpath.org/hg/visualvm
 	* Makefile.am:
 	Remove VisualVM targets, references and aliases.
 	(NETBEANS_PROFILER_URL): Removed.
@@ -11713,7 +11733,7 @@
 	* Makefile.am:
 	(NETX_EXTRA_DIR): Path to extra NetX resource files.
 	(ICEDTEA_BOOTSTRAP_CLASSES): Explicitly compile BasicDirectoryModel
-	due to http://gcc.gnu.org/bugzilla/show_bug.cgi?id=42003
+	due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=42003
 	(stamps/icedtea.stamp): Use NETX_RESOURCE_DIR for about.jnlp.
 	(stamps/icedtea-debug.stamp): Likewise.
 	(stamps/netx.stamp): Copy the resources to the build directory.
@@ -11902,7 +11922,7 @@
 	* Makefile.am: Update langtools
 	changeset ID and sha256 sum to bring in
 	fix to no-fork genstubs classpath:
-	http://hg.openjdk.java.net/icedtea/jdk7/langtools/rev/681f1f51926f
+	https://hg.openjdk.java.net/icedtea/jdk7/langtools/rev/681f1f51926f
 
 2010-02-26  Xerxes Rånby  <xerxes@zafena.se>
 
@@ -12164,7 +12184,7 @@
 	  * Fix off-by-one loop bug so final entry is inspected.
 	  * Handle double entries which occur with 8-byte entries
 	    (doubles and longs):
-	http://java.sun.com/docs/books/jvms/second_edition/html/ClassFile.doc.html#16628
+	https://java.sun.com/docs/books/jvms/second_edition/html/ClassFile.doc.html#16628
 
 2010-02-17  Xerxes Rånby  <xerxes@zafena.se>
 
@@ -12435,7 +12455,7 @@
 	Decide which libjpeg library to load
 	at compile-time not runtime using
 	JPEG_LIB_VERSION.
-	(See http://bugs.debian.org/563999)
+	(See https://bugs.debian.org/563999)
 
 2010-05-11 Andrew John Hughes  <ahughes@redhat.com>
 
@@ -13495,8 +13515,8 @@
 	specified.
 	* netx/net/sourceforge/jnlp/runtime/Boot.java
 	(getFile): Launches the original jnlp file (i.e. if the file was
-	downloaded from http://icedtea.classpath.org, then it will launch the
-	one from http://icedtea.classpath.org).
+	downloaded from https://icedtea.classpath.org, then it will launch the
+	one from https://icedtea.classpath.org).
 	* netx/net/sourceforge/jnlp/util/XDesktopEntry.java
 	(getContentsAsReader): Shortcut uses jnlp file in cache and launches
 	with system preferred javaws.
@@ -24904,7 +24924,7 @@
 2008-09-10  Lillian Angel  <langel@redhat.com>
 
 	* patches/icedtea-lc_ctype.patch: New patch to fix this issue:
-	http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=497666
+	https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=497666
 	* Makefile.am: Added patch to list.
 
 2008-09-05  Andrew John Hughes  <gnu_andrew@member.fsf.org>

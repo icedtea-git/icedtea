@@ -21,7 +21,7 @@ HS_URL = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_buildd
 HS_CHANGESET = "`$(AWK) 'version==$$1 {print $$4}' version=$(HSBUILD) $(abs_top_builddir)/hotspot.map`"
 HS_SHA256SUM = "`$(AWK) 'version==$$1 {print $$5}' version=$(HSBUILD) $(abs_top_builddir)/hotspot.map`"
 
-DROP_URL = http://icedtea.classpath.org/download/drops
+DROP_URL = https://icedtea.classpath.org/download/drops
 
 # Drop is a snapshot of the changeset specified by CACAO_VERSION taken
 # from the repository at https://bitbucket.org/gnu_andrew/cacao-staging
@@ -39,7 +39,7 @@ JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
 
 ICEDTEA_MAJOR = icedtea8
 ICEDTEA_PREFIX = $(ICEDTEA_MAJOR)-forest
-ICEDTEA_HG_URL = http://icedtea.classpath.org/hg/$(ICEDTEA_PREFIX)
+ICEDTEA_HG_URL = https://icedtea.classpath.org/hg/$(ICEDTEA_PREFIX)
 ICEDTEA_URL = $(DROP_URL)/$(ICEDTEA_MAJOR)/$(ICEDTEA_RELEASE)
 
 # Build directories

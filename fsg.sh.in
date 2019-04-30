@@ -2,7 +2,7 @@
 
 echo "Further liberating OpenJDK..."
 
-# PRx denotes bug x in the IcedTea bug database (http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=x)
+# PRx denotes bug x in the IcedTea bug database (https://icedtea.classpath.org/bugzilla/show_bug.cgi?id=x)
 # Sx denotes bug x in the Sun/Oracle bug database (https://bugs.openjdk.java.net/browse/JDK-X)
 
 echo "Removing support for proprietary SNMP plug"

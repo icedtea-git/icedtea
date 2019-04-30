@@ -2788,11 +2788,11 @@ AC_DEFUN_ONCE([IT_VENDOR_OPTS],
   fi
   AC_SUBST(VENDOR_NAME)
 
-  VENDOR_URL_DEFAULT="http://icedtea.classpath.org"
+  VENDOR_URL_DEFAULT="https://icedtea.classpath.org"
   AC_MSG_CHECKING([what vendor URL to use])
   IT_ARG_WITH([vendor_url],
     [Set the 'java.vendor.url' system property],
-    http://icedtea.classpath.org, VENDOR_URL, ${VENDOR_URL_DEFAULT})
+    https://icedtea.classpath.org, VENDOR_URL, ${VENDOR_URL_DEFAULT})
   AC_MSG_RESULT([${VENDOR_URL}])
   if test "x${VENDOR_URL}" = x ||
      test "x${VENDOR_URL}" = xyes ||
@@ -2803,11 +2803,11 @@ AC_DEFUN_ONCE([IT_VENDOR_OPTS],
   fi
   AC_SUBST(VENDOR_URL)
 
-  VENDOR_BUG_URL_DEFAULT="http://icedtea.classpath.org/bugzilla"
+  VENDOR_BUG_URL_DEFAULT="https://icedtea.classpath.org/bugzilla"
   AC_MSG_CHECKING([what vendor bug URL to use])
   IT_ARG_WITH([vendor_bug_url],
     [Set the 'java.vendor.url.bug' system property],
-    http://icedtea.classpath.org/bugzilla, VENDOR_BUG_URL, ${VENDOR_BUG_URL_DEFAULT})
+    https://icedtea.classpath.org/bugzilla, VENDOR_BUG_URL, ${VENDOR_BUG_URL_DEFAULT})
   AC_MSG_RESULT([${VENDOR_BUG_URL}])
   if test "x${VENDOR_BUG_URL}" = x ||
      test "x${VENDOR_BUG_URL}" = xyes ||
