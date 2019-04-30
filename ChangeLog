@@ -1,4 +1,12 @@
-2019-04-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2019-04-30  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Prepare for release.
+	* INSTALL:
+	Set AArch32 HotSpot URL to temporary location
+	on IcedTea where the latest update is located.
+	* NEWS: Set release date to today (2019-04-30).
+
+2019-04-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump aarch32 to jdk8u212-b04-aarch32-190429.
 	* patches/hotspot/aarch32/8145096-pr2854.patch,

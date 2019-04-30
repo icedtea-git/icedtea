@@ -410,7 +410,7 @@ http://hg.openjdk.java.net/aarch64-port/jdk8u-shenandoah/hotspot
 The 'aarch32' HotSpot tree is also provided and enabled by default
 on 32-bit ARM platforms. This is taken from:
 
-http://hg.openjdk.java.net/aarch32-port/jdk8u/hotspot
+https://icedtea.classpath.org/people/andrew/aarch32/hotspot
 
 Building Additional Virtual Machines
 ====================================
