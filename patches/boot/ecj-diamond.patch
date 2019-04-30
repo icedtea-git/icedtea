@@ -11929,3 +11929,36 @@ diff -Nru openjdk-boot.orig/jdk/test/java/util/Random/DistinctSeeds.java openjdk
          List<Thread> threads = new ArrayList<Thread>();
          for (int i = 0; i < threadCount; i++) {
              RandomCollector r = new RandomCollector();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/awt/SequencedEvent.java openjdk-boot/jdk/src/share/classes/java/awt/SequencedEvent.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/awt/SequencedEvent.java	2019-04-30 00:44:04.986086797 +0100
++++ openjdk-boot/jdk/src/share/classes/java/awt/SequencedEvent.java	2019-04-30 00:44:29.373711232 +0100
+@@ -55,7 +55,7 @@
+     private final AWTEvent nested;
+     private AppContext appContext;
+     private boolean disposed;
+-    private final LinkedList<AWTEvent> pendingEvents = new LinkedList<>();
++    private final LinkedList<AWTEvent> pendingEvents = new LinkedList<AWTEvent>();
+ 
+     static {
+         AWTAccessor.setSequencedEventAccessor(new AWTAccessor.SequencedEventAccessor() {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/validator/SymantecTLSPolicy.java openjdk-boot/jdk/src/share/classes/sun/security/validator/SymantecTLSPolicy.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/validator/SymantecTLSPolicy.java	2019-04-30 00:44:04.994086673 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/validator/SymantecTLSPolicy.java	2019-04-30 00:45:02.705197935 +0100
+@@ -47,7 +47,7 @@
+     private static final Date APRIL_16_2019;
+ 
+     // SHA-256 certificate fingerprints of subCAs with later distrust dates
+-    private static final Map<String, Date> EXEMPT_SUBCAS = new HashMap<>();
++    private static final Map<String, Date> EXEMPT_SUBCAS = new HashMap<String, Date>();
+     static {
+         /*
+            We need to ensure that a date occurs after these dates.
+@@ -78,7 +78,7 @@
+     }
+ 
+     // SHA-256 certificate fingerprints of distrusted roots
+-    private static final Set<String> FINGERPRINTS = new HashSet<>(Arrays.asList(
++    private static final Set<String> FINGERPRINTS = new HashSet<String>(Arrays.asList(
+         // cacerts alias: geotrustglobalca
+         // DN: CN=GeoTrust Global CA, O=GeoTrust Inc., C=US
+         "FF856A2D251DCD88D36656F450126798CFABAADE40799C722DE4D2B5DB36A73A",
