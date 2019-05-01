@@ -12,7 +12,7 @@ JEPX - http://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: http://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.18 (2019-04-XX):
+New in release 2.6.18 (2019-05-01):
 
 * Security fixes
   - S8211936, CVE-2019-2602: Better String parsing
