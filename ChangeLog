@@ -1,5 +1,10 @@
 2019-05-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Prepare for release.
+	* NEWS: Set release date to today (2019-05-01).
+
+2019-05-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump aarch32 to jdk8u212-b04-aarch32-190430.
 	* INSTALL: Switch AArch32 URL back to the upstream
 	OpenJDK project.
