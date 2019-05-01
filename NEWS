@@ -20,11 +20,9 @@ New in release 2.6.18 (2019-05-01):
   - S8219066, CVE-2019-2698: Fuzzing TrueType fonts: setCurrGlyphID()
 * Import of OpenJDK 7 u211 build 1
   - S8003846: Override mechanism for currency data should not require creating currency.properties in java.home
-  - S8074350: Support ISO 4217 "Current funds codes" table (A.2)
   - S8129361: ISO 4217 amendment 160
   - S8129822: Define "headful" jtreg keyword
   - S8145952: ISO 4217 amendment 161
-  - S8151731: Add new jtreg keywords to jdk 8
   - S8164784: ISO 4217 amendment 162
   - S8202088: Japanese new era implementation
   - S8204142: AWT hang occurs when sequenced events arrive out of sequence in multiple AppContexts
@@ -35,7 +33,6 @@ New in release 2.6.18 (2019-05-01):
   - S8208656: Move java/util/Calendar/CalendarTestScripts tests into OpenJDK
   - S8216280: Allow later Symantec Policy distrust date for two Apple SubCAs
   - S8217579: TLS_EMPTY_RENEGOTIATION_INFO_SCSV is disabled after 8211883
-  - S8217753: Enable HotSpot builds on 5.x Linux kernels
   - S8219890: [TEST_BUG] Calendar.getDisplayName() returns empty string for new Japanese Era on some locales
   - S8222449: freetypecheck compares versions using lexicographic comparison
 * Bug fixes
