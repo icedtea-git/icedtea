@@ -1,16 +1,16 @@
 Key:
 
 SX  - https://bugs.openjdk.java.net/browse/JDK-X
-PRX - http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=X
+PRX - https://icedtea.classpath.org/bugzilla/show_bug.cgi?id=X
 RHX - https://bugzilla.redhat.com/show_bug.cgi?id=X
-DX  - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=X
-GX  - http://bugs.gentoo.org/show_bug.cgi?id=X
+DX  - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=X
+GX  - https://bugs.gentoo.org/show_bug.cgi?id=X
 CAX - http://server.complang.tuwien.ac.at/cgi-bin/bugzilla/show_bug.cgi?id=X
 LPX - https://bugs.launchpad.net/bugs/X
-JSRX - http://jcp.org/en/jsr/detail?id=X
-JEPX - http://openjdk.java.net/jeps/X
+JSRX - https://jcp.org/en/jsr/detail?id=X
+JEPX - https://openjdk.java.net/jeps/X
 
-CVE-XXXX-YYYY: http://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
+CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.6.18 (2019-05-01):
 
@@ -40,6 +40,7 @@ New in release 2.6.18 (2019-05-01):
   - PR3731: Use JRE bin directory in policytool.desktop.in
   - PR3732: Use SDK bin directory in jconsole.desktop.in
   - PR3733: Use shortened Java version first in Name field of desktop files
+  - PR3737: Use https URLs where possible.
 * AArch64 port
   - S8219635, PR3726: aarch64: missing LoadStore barrier in TemplateTable::fast_storefield
   - S8221220, PR3726: AArch64: Add StoreStore membar explicitly for Volatile Writes in TemplateTable
@@ -1415,7 +1416,7 @@ New in release 2.6.1 (2015-07-21):
   - S8087120, RH1206656, PR2553: [GCC5] java.lang.StackOverflowError on Zero JVM initialization on non x86 platforms.
 * Bug fixes
   - PR2501: libjavasctp.so doesn't need to link against libdl when linking against libsctp
-  - PR2502: Remove -fno-tree-vectorize workaround now http://gcc.gnu.org/PR63341 is fixed
+  - PR2502: Remove -fno-tree-vectorize workaround now https://gcc.gnu.org/PR63341 is fixed
   - PR2503: Add existence check for all optional dependencies in jdk_generic_profile.sh
   - PR2521: Systems with a GLib without libgio segfault when obtaining proxy information
 
@@ -7458,7 +7459,7 @@ New in release 1.14 (2011-05-25):
 New in release 1.13 (2010-07-29)
 
 * Updated to OpenJDK7 milestone 7/b89.
-* Removed VisualVM support; now hosted at http://icedtea.classpath.org/hg/visualvm.
+* Removed VisualVM support; now hosted at https://icedtea.classpath.org/hg/visualvm.
 * Removed old plugin.
 * Bumped to CACAO 1.1.0 pre-release snapshot.
 * libjpeg7 & libpng 1.4 supported.
@@ -7666,7 +7667,7 @@ New in release 1.10 (2009-05-29)
   - Added proxy support
   - Other improvements that were breaking specific sites (tag parser fix,
     nested jar support, etc.)
-  - Added JVM Console (used by http://chrispederick.com/work/web-developer/)
+  - Added JVM Console (used by https://chrispederick.com/work/web-developer/)
   - Experimental new plugin enabled by --enable-npplugin.
   - Original plugin is now enabled by --enable-plugin, not --enable-liveconnect.
 - LCMS security fixes.
@@ -7744,7 +7745,7 @@ New in release 1.8 (2008-11-20)
   supported now without any (regional) restrictions. No more need for
   separate crypto policy jars.
 - Integration of Mozilla Rhino javascript support for javax.script.
-  (See http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=179 when
+  (See https://icedtea.classpath.org/bugzilla/show_bug.cgi?id=179 when
    you want to enable non-system-installed versions of Rhino).
 - Add support for Zero builds on alpha, arm, mips, mipsel, m68k, s390.
 - Various build fixes.

@@ -1,8 +1,8 @@
 Patches
 =======
 
-PRx denotes bug x in the IcedTea bug database (http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=x)
-Sx denotes bug x in the Sun bug database (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=x)
+PRx denotes bug x in the IcedTea bug database (https://icedtea.classpath.org/bugzilla/show_bug.cgi?id=x)
+Sx denotes bug x in the Sun/Oracle bug database (https://bugs.openjdk.java.net/browse/JDK-X)
 
 The fsg.sh script is also run to delete certain files with dubious licensing and/or only occuring
 in binary format.
@@ -174,7 +174,7 @@ The following patches are only applied when building with the JamVM virtual mach
 The following patches are to support Xrender pipeline (-Dsun.java2d.xrender):
 
 * icedtea-xrender-xxx.patch: Numbered patches from xrender branch
-  http://hg.openjdk.java.net/xrender/xrender/jdk
+  https://hg.openjdk.java.net/xrender/xrender/jdk
 
 Obsolete Patches
 ================

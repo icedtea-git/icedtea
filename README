@@ -1,5 +1,5 @@
-IcedTea7
-========
+IcedTea
+=======
 
 The IcedTea project provides a harness to build the source code from
 openjdk.java.net using Free Software tools and dependencies.
@@ -14,26 +14,26 @@ which are as yet unresolved upstream.
 See INSTALL for build instructions.
 
 Homepage (wiki):
-  http://icedtea.classpath.org/
+  https://icedtea.classpath.org/
 
 Bugs (bugzilla):
-  http://icedtea.classpath.org/bugzilla
+  https://icedtea.classpath.org/bugzilla
 
 Mailing List: 
   distro-pkg-dev@openjdk.java.net
-  http://mail.openjdk.java.net/mailman/listinfo/distro-pkg-dev
+  https://mail.openjdk.java.net/mailman/listinfo/distro-pkg-dev
 
 FAQ:
-  http://icedtea.classpath.org/wiki/FrequentlyAskedQuestions
+  https://icedtea.classpath.org/wiki/FrequentlyAskedQuestions
 
 Anonymous Mercurial checkout:
-  hg clone http://icedtea.classpath.org/hg/icedtea
+  hg clone https://icedtea.classpath.org/hg/icedtea
 
 Java compatibility
 ------------------
 
 IcedTea is derived from OpenJDK, an open-source implementation of
-the Java SE platform. See http://openjdk.java.net/groups/conformance/
+the Java SE platform. See https://openjdk.java.net/groups/conformance/
 for information on compatibility testing.
 
 A Note About License Headers
@@ -69,7 +69,7 @@ is built on this platform by default.
 CACAO as VM
 ===========
 
-The CACAO virtual machine (http://cacaojvm.org) can be used as an
+The CACAO virtual machine (http://www.cacaojvm.org) can be used as an
 alternative to the HotSpot virtual machine. One advantage of this is
 that it already provides a JIT for many platforms to which HotSpot has
 not yet been ported, including ppc, arm and mips.  To use CACAO as the

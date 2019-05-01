@@ -2,8 +2,8 @@
 
 echo "Further liberating OpenJDK..."
 
-# PRx denotes bug x in the IcedTea bug database (http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=x)
-# Sx denotes bug x in the Sun bug database (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=x)
+# PRx denotes bug x in the IcedTea bug database (https://icedtea.classpath.org/bugzilla/show_bug.cgi?id=x)
+# Sx denotes bug x in the Sun/Oracle bug database (https://bugs.openjdk.java.net/browse/JDK-X)
 
 # PR146/S6713083
 # Remove binaries

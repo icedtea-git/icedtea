@@ -335,7 +335,7 @@ extern "C" {
   }
 
   // Implementations of atomic operations not supported by processors.
-  //  -- http://gcc.gnu.org/onlinedocs/gcc-4.2.1/gcc/Atomic-Builtins.html
+  //  -- https://gcc.gnu.org/onlinedocs/gcc-4.2.1/gcc/Atomic-Builtins.html
 #ifndef _LP64
   long long unsigned int __sync_val_compare_and_swap_8(
     volatile void *ptr,

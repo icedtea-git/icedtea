@@ -14,7 +14,7 @@ JDK_SHA256SUM = 57b5741ab0807fbc71f15efce11546d943baffeb5f5cf55ec16fed69634abc36
 LANGTOOLS_SHA256SUM = 915f492188b7b214e280532df061adc6c999f0d190ea5f1325bc70b77a2af4f0
 OPENJDK_SHA256SUM = da5fc1846ec80409ad5af870dbeb03d077b4add3ba54c0dde00414bea0376392
 
-DROP_URL = http://icedtea.classpath.org/download/drops
+DROP_URL = https://icedtea.classpath.org/download/drops
 
 CACAO_VERSION = c182f119eaad
 CACAO_SHA256SUM = eade43f6c5da8b3b5a64e6b206b624eaca88539f80101d7164d6aa426eb590b1
@@ -31,7 +31,7 @@ JAMVM_SRC_ZIP = jamvm-$(JAMVM_VERSION).tar.gz
 ICEDTEA_MAJOR = icedtea7
 ICEDTEA_BRANCH = 2.6
 ICEDTEA_PREFIX = $(ICEDTEA_MAJOR)-forest-$(ICEDTEA_BRANCH)
-ICEDTEA_HG_URL = http://icedtea.classpath.org/hg/release/$(ICEDTEA_PREFIX)
+ICEDTEA_HG_URL = https://icedtea.classpath.org/hg/release/$(ICEDTEA_PREFIX)
 ICEDTEA_URL = $(DROP_URL)/$(ICEDTEA_MAJOR)/$(ICEDTEA_RELEASE)
 
 HS_TYPE = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_builddir)/hotspot.map`"

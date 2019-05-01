@@ -3,7 +3,7 @@ Building IcedTea7
 
 For convenience we've provided make targets that automatically
 download, extract and patch the source code from the IcedTea forest
-(http://hg.openjdk.java.net/icedtea/jdk7/).
+(https://hg.openjdk.java.net/icedtea/jdk7/).
 
 The build requirements are as follows:
 
@@ -277,8 +277,8 @@ takes several hours.
 XRender Support
 ===============
 
-IcedTea7 includes support for an Xrender-based rendering pipeline
-developed by Clemens Eisserer (http://linuxhippy.blogspot.com/).  This
+IcedTea includes support for an Xrender-based rendering pipeline
+developed by Clemens Eisserer (https://linuxhippy.blogspot.com/).  This
 is compiled by default.  To actually use the pipeline, the
 sun.java2d.xrender property needs to be set to true, e.g.  by passing
 the -Dsun.java2d.xrender=True option to java.
