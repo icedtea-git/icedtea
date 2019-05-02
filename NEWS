@@ -41,6 +41,7 @@ New in release 2.6.18 (2019-05-01):
   - PR3732: Use SDK bin directory in jconsole.desktop.in
   - PR3733: Use shortened Java version first in Name field of desktop files
   - PR3737: Use https URLs where possible.
+  - PR3739: PR2886 breaks make clean
 * AArch64 port
   - S8219635, PR3726: aarch64: missing LoadStore barrier in TemplateTable::fast_storefield
   - S8221220, PR3726: AArch64: Add StoreStore membar explicitly for Volatile Writes in TemplateTable

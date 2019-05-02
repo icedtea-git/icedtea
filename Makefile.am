@@ -938,11 +938,6 @@ check-local: jtregcheck $(SYSTEMTAP_TEST_SUITE) check-ecc check-mimetype \
 clean-tests: clean-jtreg clean-tapset-report clean-jtreg-reports \
  clean-check-ecc clean-check-mimetype clean-check-java-debug \
  clean-check-java-src
-	if [ $(abs_top_srcdir) != $(abs_top_builddir) ] ; then \
-	  if [ -e test ] ; then \
-	    rmdir test ; \
-	  fi \
-	fi
 
 clean-local: clean-tests \
  clean-icedtea clean-icedtea-boot clean-clone clean-clone-boot \
