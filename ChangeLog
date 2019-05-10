@@ -1,3 +1,9 @@
+2019-05-10  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Start 2.6.19 release cycle.
+	* NEWS: Add section for 2.6.19.
+	* configure.ac: Bump to 2.6.19pre00.
+
 2019-05-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3739: PR2886 breaks make clean
