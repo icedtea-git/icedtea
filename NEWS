@@ -12,6 +12,181 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.13.0 (2019-07-XX):
 
+* Shenandoah
+  - [backport] 8210879: ClassLoaderStatsClosure does raw oop comparison
+  - [backport] 8216973: Kick up cleanup phases in the right places
+  - [backport] 8217043: Shenandoah: SIGSEGV in Type::meet_helper() at barrier expansion time
+  - [backport] 8217213: shenandoahTaskQueue.hpp includes .inline.hpp file
+  - [backport] 8217319: Cleanup Shenandoah includes
+  - [backport] 8217343: Shenandoah control thread should be able to run at critical priority
+  - [backport] 8217400: Optimized build is broken by Shenandoah changes
+  - [backport] 8219524: Shenandoah misreports "committed" size in MemoryMXBean
+  - [backport] 8219857: Shenandoah GC may initialize thread's gclab twice
+  - [backport] 8219976: GarbageCollectionNotificationInfo always says "No GC" when running Shenandoah
+  - [backport] 8220153: Shenandoah does not work with TransparentHugePages properly
+  - [backport] 8220162: Shenandoah should not commit HugeTLBFS memory
+  - [backport] 8220228: Improve Shenandoah pacing histogram message
+  - [backport] 8220350: Refactor ShenandoahHeap::initialize
+  - [backport] 8220712: [TESTBUG] gc/shenandoah/compiler/TestMaybeNullUnsafeAccess should run with Shenandoah enabled
+  - [backport] 8222130: Shenandoah should verify roots after pre-evacuation
+  - [backport] 8222185: Shenandoah should report "committed" as capacity
+  - [backport] 8222186: Shenandoah should not uncommit below minimum heap size
+  - [backport] 8222838: Shenandoah: SEGV on accessing cset bitmap for NULL ptr
+  - [backport] 8222843: Print Shenandoah cset map addresses in hs_err
+  - [backport] Added a few missed worker sessions for worker tasks
+  - [backport] Add JFR parallel and concurrent events (infrastructure)
+  - [backport] Adjust metaspace size during each GC
+  - [backport] A few more missing object equals barriers
+  - [backport] Always copy forward for disjoint arrays (test)
+  - [backport] Assert that Shenandoah does not trip JDK-8211926
+  - [backport] Avoid false sharing by padding the ShenandoahEvacOOMHandler field in ShenandoahHeap
+  - [backport] Avoid write barrier during full GC
+  - [backport] Beef up and parallelize EvilSyncBug test
+  - [backport] c2 verification pass fixes for CAS
+  - [backport] Cherry-pick bulk MarkBitMap clearing methods
+  - [backport] Cherry-pick JDK-8212673, fix for Node::eqv_uncast
+  - [backport] Cleanup .ad files includes
+  - [backport] Clean up and regroup Shenandoah flags
+  - [backport] Cleanup buffered queue handling
+  - [backport] Cleanup C2 debugging leftovers
+  - [backport] Clean up dead code
+  - [backport] Clean up declarations and uses of marked_object_iterate
+  - [backport] Cleanup header files and forward declarations
+  - [backport] Clean up Shenandoah configurations in shared tests
+  - [backport] Clean up ShHeap::heap_region_iterate uses
+  - [backport] Cleanup unused bitmap methods
+  - [backport] Cleanup up superfluous newlines
+  - [backport] Coarsen Full GC use of heap lock
+  - [backport] Code root iterators should not be instantiated in worker threads
+  - [backport] Common liveness cache in ShHeap
+  - [backport] Compact heuristics adjustments
+  - [backport] Concurrent cycle by default on any external GC request
+  - [backport] Disable heap iteration for Shenandoah in SA
+  - [backport] Disable ShHeapUncommit on too-large large-pages
+  - [backport] Drop Shenandoah from test names
+  - [backport] Eliminating Shenandoah exposure to CLD
+  - [backport] Enable NUMA by default
+  - [backport] Enable string deduplication in all marking phases
+  - [backport] Factor out implicit/explicit GC requests
+  - [backport] Fail early when critical barriers are disabled
+  - [backport] Filter out TestPromotionToSurvivor.java test for Shenandoah
+  - [backport] Filter upstream tests for Shenandoah (part 1: tier1_gc)
+  - [backport] Fix build failures when Shenandoah is disabled, after #include reshuffles
+  - [backport] Fix call to is_g1_marking_load() with is_shenandoah_state_load() in ShenandoahSupport
+  - [backport] Fix compilation errors due to missing spaces between string literal and macro
+  - [backport] Fixed ShenandoahStrDedupStress test that causes negative index OOB exception
+  - [backport] Fix inconsistent "process weakrefs" logging
+  - [backport] Fix indentation of CriticalNative* tests
+  - [backport] Fix indenting in ShMarkCompact::do_it
+  - [backport] Fix up superfluous changes against upstream
+  - [backport] Fix various formattings and namings in shared GC code
+  - [backport] Fix Windows build failure
+  - [backport] Force termination logic is inverted
+  - [backport] Handle metadata induced GC
+  - [backport] Handle ShHeap::time_since_last_millis for RMI users
+  - [backport] Handle update_refs, class_unload, ref_proc in ShConcMark better
+  - [backport] Homogenize unimplemented stubs handling
+  - [backport] Improve liveness count during marking
+  - [backport] Initial committed regions count can be more than max
+  - [backport] Inline/rename confusingly named methods in ShConcurrentMark
+  - [backport] Inline ShHeap::do_marked_object_complete
+  - [backport] Inline ShHeap::monitoring_support into header
+  - [backport] Inline ShHeap::prepare_concurrent_evacuation
+  - [backport] Inline trivial ShHeap methods right in header
+  - [backport] In update-refs, update all code-roots when in degen-gc
+  - [backport] JVMTI lacks a few GC barriers/hooks
+  - [backport] Make heuristics tell if we can process references or unload classes
+  - [backport] Make ResourceMark use consistent in ShenandoahCodeRoots
+  - [backport] Make Shenandoah to use ShenandoahOWST only
+  - [backport] Make sure bitmap is marked incomplete before bitmap resets
+  - [backport] Make sure debug builds fail predictably on safepoint timeout
+  - [backport] Micro-optimize ShHeap::get_region by moving the most likely branch first
+  - [backport] Minor cleanup of Shenandoah SA
+  - [backport] Missed VerifyObjectEquals in VerifyJCStressTest
+  - [backport] More AArch64 assembler cleanups
+  - [backport] Move HdrSeq and BinaryMagnitudeSeq into Shenandoah utilities
+  - [backport] Move ShenandoahAllocType and ShenandoahAllocRequest to separate file
+  - [backport] Move ShenandoahGCTracer to gc/shenandoah
+  - [backport] Move Shenandoah tests to proper locations
+  - [backport] Need to step over GC barriers in Node::eqv_uncast()
+  - [backport] Parallel heap region iteration
+  - [backport] Parallelise "Clear Liveness"
+  - [backport] Parallelise "Complete Liveness"
+  - [backport] Partial infrastructure for suspendible workers
+  - [backport] Precleaning should use GC workers to do actual work
+  - [backport] Pre-evac JVMTI roots + fixes
+  - [backport] Prefix Shenandoah tests with "Test"
+  - [backport] Prepare tests for making UseShenandoahGC experimental
+  - [backport] Print number of threads in Shenandoah SA heap summary
+  - [backport] Print "process weakrefs" to disambiguate vs CM-with-UR
+  - [backport] Protect more internal code from false sharing
+  - [backport] Protect risky conversion in ShenandoahHeap::millis_since_last_gc
+  - [backport] Purge some G1-related cruft in C2
+  - [backport] Purge unnecessary time conversion in ShenandoahPhaseTimings::record_phase_time
+  - [backport] Readjust ShenandoahStrDedupStress test to avoid timeout
+  - [backport] Record location when asserting the code root correctness
+  - [backport] Refactor bitmap cleaning
+  - [backport] Reformat Shenandoah tests
+  - [backport] Rehash and cleanup usages of ShenandoahHeap::heap()
+  - [backport] Re-label Shenandoah GC causes (SA&GC)
+  - [backport] Remove dead-weight ShenandoahPrinter
+  - [backport] Remove fix-roots pass in ShHeap
+  - [backport] Remove obsolete and ignored TestHeapAlloc
+  - [backport] Remove obsolete code snippet related to barriers on constants
+  - [backport] Remove obsolete unused flags
+  - [backport] Remove old code from escape analysis
+  - [backport] Remove Parallel Cleanup counters
+  - [backport] Remove ShenandoahCompileCheck
+  - [backport] Remove ShenandoahWriteBarrierCsetTestInIR flag
+  - [backport] Remove ShenandoahWriteBarrierRB flag
+  - [backport] Remove ShHeap::_heap_expansion_count
+  - [backport] Remove ShHeap::region_in_collection_set in favor of SHR::in_cset
+  - [backport] Remove ShWB from formssel.cpp
+  - [backport] Remove unused SA ShenandoahHeapRegionSet.java
+  - [backport] Remove unused ShenandoahEvacuateRootsClosure
+  - [backport] Remove useless change in loopnode.cpp
+  - [backport] Remove useless ShHeap::heap_region_iterate
+  - [backport] Rename BrooksPointer to ShenandoahBrooksPointer
+  - [backport] Rename concurrentMark -> concurrent_mark
+  - [backport] Rename fields in (SA) ShenandoahHeap.java to omit 'Regions' and 'Field' suffix
+  - [backport] Rename ShHeap::shenandoahPolicy -> ShHeap::shenandoah_policy
+  - [backport] Rename UINT64_FORMAT_HEX_W to UINT64_FORMAT_X_W
+  - [backport] Rename VerifyObjectEquals to ShenandoahVerifyObjectEquals
+  - [backport] Rename vm_operations_shenandoah.* to shenandoahVMOperations.*
+  - [backport] Renaming ShenandoahParallelEvacuationTask to ShenandoahConcurrentEvacuationTask
+  - [backport] Separate "passive" heuristics from "adaptive"
+  - [backport] Several AArch64 cleanups
+  - [backport] ShenandoahMemoryPool should support usage threshold
+  - [backport] Shenandoah should @require Shenandoah, @key gc, and have good @test
+  - [backport] Shenandoah test groups should not include each other
+  - [backport] Silence VSC++ about multiple assignment operators
+  - [backport] Simplify Shenandoah task termination in aborted paths
+  - [backport] Single marking bitmap
+  - [backport] Skip pre-evac verification and pacing on shortcut cycle path
+  - [backport] Some Shenandoah related additions to SA
+  - [backport] Sort ShenandoahConcurrentMark methods/fields into logical groups
+  - [backport] Sort ShenandoahHeap methods/fields into logical groups
+  - [backport] StringDedupMode enum for closures/method templates
+  - [backport] Support VerifyBeforeGC and VerifyAfterGC VM options
+  - [backport] Suppressing VSC++ warning locally
+  - [backport] Trim down oop-equals verification
+  - [backport] Trim unused code from Shenandoah SA
+  - [backport] Turn TestReferenceCAS into a standalone/no-testng test
+  - [backport] Update copyrights
+  - [backport] Use ShenandoahAllocationThreshold in ShenandoahStaticHeuristics constructor
+  - [backport] Use s-macro to keep GC phase enum and names in sync
+  - Enable heap inspection for Shenandoah
+  - Excess barriers before JNI accesses, already covered by "Move barriers into typeArrayOop.hpp direct memory accessors"
+  - Fix build failure due to unknown INCLUDE_SHENANDOAHGC
+  - Fix dangling write-barrier in acmp
+  - Fix force termination detection by spin master
+  - Fix minimal VM build
+  - Fix non-PCH builds
+  - Fix shutdown deadlock due to blocking SATB flush periodic task
+  - JDK8u-only: Use WB-based acmp barrier
+  - Prettify Shenandoah JDK 8 logging
+  - ShenandoahSATBBufferSize cannot be size_t in 8u
+
 New in release 3.12.0 (2019-05-01):
 
 * Security fixes
@@ -425,7 +600,7 @@ New in release 3.10.0 (2018-12-25):
 * SystemTap
   - PR3625: arc_priority representation creates an implicit limit on character sequence within regexp
 * Shenandoah
-  - PR3634: Shenandoah still broken on s390 with aarch64-shenandoah-jdk8u181-b16
+  - PR3634: Shenandoah still broken on s390 with aarch64-shenandoah-jdk8u181-b16 (Cast Shenandoah{Min,Max}RegionSize to size_t)
   - [backport] Adaptive CSet selection overshoots max-CSet
   - [backport] Adaptive CSet selection selects excessively when memory is tight
   - [backport] Adaptive/Traversal heuristics rewrite for allocation rate

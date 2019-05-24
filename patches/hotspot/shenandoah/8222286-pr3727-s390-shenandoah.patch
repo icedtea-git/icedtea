@@ -2,15 +2,15 @@
 # the BinaryMagnitudeSeq::add method in
 # [backport] Allocation latency tracing
 
-diff --git openjdk.orig/hotspot/src/share/vm/utilities/numberSeq.cpp openjdk/hotspot/src/share/vm/utilities/numberSeq.cpp
---- openjdk.orig/hotspot/src/share/vm/utilities/numberSeq.cpp
-+++ openjdk/hotspot/src/share/vm/utilities/numberSeq.cpp
-@@ -369,7 +369,7 @@
+diff --git openjdk.orig/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahNumberSeq.cpp openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahNumberSeq.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahNumberSeq.cpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahNumberSeq.cpp
+@@ -135,7 +135,7 @@
  void BinaryMagnitudeSeq::add(size_t val) {
    Atomic::add(val, &_sum);
  
 -  int mag = log2_intptr(val) + 1;
-+  int mag = log2_intptr((uintptr_t) val) + 1;
++  int mag = log2_long(val) + 1;
  
    // Defensively saturate for product bits:
    if (mag < 0) {
