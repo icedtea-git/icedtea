@@ -1,3 +1,14 @@
+2019-05-24  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump shenandoah to aarch64-shenandoah-jdk8u222-b01.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u222-b01.
+	* patches/hotspot/shenandoah/6424123-pr3696.patch:
+	Regenerated due to changes in vm_version_ppc.cpp in 8154156.
+	* patches/hotspot/shenandoah/8158260-pr2991-rh1341258.patch:
+	Remove unneeded copyright header change following 8154156.
+
 2019-05-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump shenandoah to aarch64-shenandoah-jdk8u212-b04-shenandoah-merge-2019-04-30.

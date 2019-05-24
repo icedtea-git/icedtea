@@ -8,9 +8,9 @@
 Summary: Calling os::malloc()/os::strdup() and new os::strdup_check_oom() instead of ::malloc()/::strdup() for native memory tracking purpose
 Reviewed-by: coleenp, ctornqvi, kvn
 
-diff --git openjdk.orig/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp
---- openjdk.orig/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp
-+++ openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp
+diff -Nru openjdk.orig/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp
+--- openjdk.orig/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp	2019-05-24 18:37:52.434845994 +0100
++++ openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp	2019-05-24 18:40:20.600564335 +0100
 @@ -29,6 +29,7 @@
  #include "compiler/disassembler.hpp"
  #include "memory/resourceArea.hpp"
@@ -19,18 +19,18 @@ diff --git openjdk.orig/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp openjdk/hotspo
  #include "runtime/stubCodeGenerator.hpp"
  #include "utilities/defaultStream.hpp"
  #include "vm_version_ppc.hpp"
-@@ -116,7 +117,7 @@
-                (has_vpmsumb() ? " vpmsumb" : "")
+@@ -127,7 +128,7 @@
+                (has_vsx()     ? " vsx"     : "")
                 // Make sure number of %s matches num_features!
                );
 -  _features_str = strdup(buf);
 +  _features_str = os::strdup(buf);
-   NOT_PRODUCT(if (Verbose) print_features(););
- 
-   // PPC64 supports 8-byte compare-exchange operations (see
-diff --git openjdk.orig/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp openjdk/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp
---- openjdk.orig/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp
-+++ openjdk/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp
+   if (Verbose) {
+     print_features();
+   }
+diff -Nru openjdk.orig/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp openjdk/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp
+--- openjdk.orig/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp	2019-05-24 18:37:52.434845994 +0100
++++ openjdk/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp	2019-05-24 18:40:00.480874165 +0100
 @@ -26,6 +26,7 @@
  #include "asm/macroAssembler.inline.hpp"
  #include "memory/resourceArea.hpp"
@@ -57,9 +57,9 @@ diff --git openjdk.orig/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp openjdk/ho
  
    for (int i = 0; impl[i] != 0; i++)
      impl[i] = (char)toupper((uint)impl[i]);
-diff --git openjdk.orig/hotspot/src/cpu/x86/vm/vm_version_x86.cpp openjdk/hotspot/src/cpu/x86/vm/vm_version_x86.cpp
---- openjdk.orig/hotspot/src/cpu/x86/vm/vm_version_x86.cpp
-+++ openjdk/hotspot/src/cpu/x86/vm/vm_version_x86.cpp
+diff -Nru openjdk.orig/hotspot/src/cpu/x86/vm/vm_version_x86.cpp openjdk/hotspot/src/cpu/x86/vm/vm_version_x86.cpp
+--- openjdk.orig/hotspot/src/cpu/x86/vm/vm_version_x86.cpp	2019-05-24 18:37:52.438845932 +0100
++++ openjdk/hotspot/src/cpu/x86/vm/vm_version_x86.cpp	2019-05-24 18:40:00.484874104 +0100
 @@ -27,6 +27,7 @@
  #include "asm/macroAssembler.inline.hpp"
  #include "memory/resourceArea.hpp"
@@ -77,9 +77,9 @@ diff --git openjdk.orig/hotspot/src/cpu/x86/vm/vm_version_x86.cpp openjdk/hotspo
  
    // UseSSE is set to the smaller of what hardware supports and what
    // the command line requires.  I.e., you cannot set UseSSE to 2 on
-diff --git openjdk.orig/hotspot/src/os/aix/vm/os_aix.cpp openjdk/hotspot/src/os/aix/vm/os_aix.cpp
---- openjdk.orig/hotspot/src/os/aix/vm/os_aix.cpp
-+++ openjdk/hotspot/src/os/aix/vm/os_aix.cpp
+diff -Nru openjdk.orig/hotspot/src/os/aix/vm/os_aix.cpp openjdk/hotspot/src/os/aix/vm/os_aix.cpp
+--- openjdk.orig/hotspot/src/os/aix/vm/os_aix.cpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/os/aix/vm/os_aix.cpp	2019-05-24 18:40:00.484874104 +0100
 @@ -56,6 +56,7 @@
  #include "runtime/mutexLocker.hpp"
  #include "runtime/objectMonitor.hpp"
@@ -101,9 +101,9 @@ diff --git openjdk.orig/hotspot/src/os/aix/vm/os_aix.cpp openjdk/hotspot/src/os/
    }
  
    // query default shm page size (LDR_CNTRL SHMPSIZE)
-diff --git openjdk.orig/hotspot/src/os/aix/vm/porting_aix.cpp openjdk/hotspot/src/os/aix/vm/porting_aix.cpp
---- openjdk.orig/hotspot/src/os/aix/vm/porting_aix.cpp
-+++ openjdk/hotspot/src/os/aix/vm/porting_aix.cpp
+diff -Nru openjdk.orig/hotspot/src/os/aix/vm/porting_aix.cpp openjdk/hotspot/src/os/aix/vm/porting_aix.cpp
+--- openjdk.orig/hotspot/src/os/aix/vm/porting_aix.cpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/os/aix/vm/porting_aix.cpp	2019-05-24 18:40:00.484874104 +0100
 @@ -23,6 +23,8 @@
   */
  
@@ -131,9 +131,9 @@ diff --git openjdk.orig/hotspot/src/os/aix/vm/porting_aix.cpp openjdk/hotspot/sr
      p->next = first;
      first = p;
      return p->v;
-diff --git openjdk.orig/hotspot/src/os/windows/vm/perfMemory_windows.cpp openjdk/hotspot/src/os/windows/vm/perfMemory_windows.cpp
---- openjdk.orig/hotspot/src/os/windows/vm/perfMemory_windows.cpp
-+++ openjdk/hotspot/src/os/windows/vm/perfMemory_windows.cpp
+diff -Nru openjdk.orig/hotspot/src/os/windows/vm/perfMemory_windows.cpp openjdk/hotspot/src/os/windows/vm/perfMemory_windows.cpp
+--- openjdk.orig/hotspot/src/os/windows/vm/perfMemory_windows.cpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/os/windows/vm/perfMemory_windows.cpp	2019-05-24 18:40:00.484874104 +0100
 @@ -29,6 +29,7 @@
  #include "oops/oop.inline.hpp"
  #include "os_windows.inline.hpp"
@@ -151,9 +151,9 @@ diff --git openjdk.orig/hotspot/src/os/windows/vm/perfMemory_windows.cpp openjdk
  
    return fmh;
  }
-diff --git openjdk.orig/hotspot/src/share/vm/c1/c1_LIRAssembler.cpp openjdk/hotspot/src/share/vm/c1/c1_LIRAssembler.cpp
---- openjdk.orig/hotspot/src/share/vm/c1/c1_LIRAssembler.cpp
-+++ openjdk/hotspot/src/share/vm/c1/c1_LIRAssembler.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/c1/c1_LIRAssembler.cpp openjdk/hotspot/src/share/vm/c1/c1_LIRAssembler.cpp
+--- openjdk.orig/hotspot/src/share/vm/c1/c1_LIRAssembler.cpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/share/vm/c1/c1_LIRAssembler.cpp	2019-05-24 18:40:00.484874104 +0100
 @@ -30,6 +30,7 @@
  #include "c1/c1_MacroAssembler.hpp"
  #include "c1/c1_ValueStack.hpp"
@@ -162,7 +162,7 @@ diff --git openjdk.orig/hotspot/src/share/vm/c1/c1_LIRAssembler.cpp openjdk/hots
  #ifdef TARGET_ARCH_x86
  # include "nativeInst_x86.hpp"
  # include "vmreg_x86.inline.hpp"
-@@ -880,7 +881,7 @@
+@@ -883,7 +884,7 @@
            stringStream st;
            st.print("bad oop %s at %d", r->as_Register()->name(), _masm->offset());
  #ifdef SPARC
@@ -171,9 +171,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/c1/c1_LIRAssembler.cpp openjdk/hots
  #else
            _masm->verify_oop(r->as_Register());
  #endif
-diff --git openjdk.orig/hotspot/src/share/vm/classfile/classLoader.cpp openjdk/hotspot/src/share/vm/classfile/classLoader.cpp
---- openjdk.orig/hotspot/src/share/vm/classfile/classLoader.cpp
-+++ openjdk/hotspot/src/share/vm/classfile/classLoader.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/classfile/classLoader.cpp openjdk/hotspot/src/share/vm/classfile/classLoader.cpp
+--- openjdk.orig/hotspot/src/share/vm/classfile/classLoader.cpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/share/vm/classfile/classLoader.cpp	2019-05-24 18:40:00.484874104 +0100
 @@ -324,7 +324,7 @@
  }
  
@@ -203,9 +203,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/classfile/classLoader.cpp openjdk/h
              boot_class_path_packages.append(new_name);
            }
          }
-diff --git openjdk.orig/hotspot/src/share/vm/classfile/classLoader.hpp openjdk/hotspot/src/share/vm/classfile/classLoader.hpp
---- openjdk.orig/hotspot/src/share/vm/classfile/classLoader.hpp
-+++ openjdk/hotspot/src/share/vm/classfile/classLoader.hpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/classfile/classLoader.hpp openjdk/hotspot/src/share/vm/classfile/classLoader.hpp
+--- openjdk.orig/hotspot/src/share/vm/classfile/classLoader.hpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/share/vm/classfile/classLoader.hpp	2019-05-24 18:40:00.484874104 +0100
 @@ -134,6 +134,8 @@
    bool is_jar_file();
    const char* name()  { return _path; }
@@ -215,9 +215,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/classfile/classLoader.hpp openjdk/h
    u1* open_entry(const char* name, jint* filesize, bool nul_terminate, TRAPS);
    ClassFileStream* open_stream(const char* name, TRAPS);
    void set_meta_index(MetaIndex* meta_index) { _meta_index = meta_index; }
-diff --git openjdk.orig/hotspot/src/share/vm/compiler/compilerOracle.cpp openjdk/hotspot/src/share/vm/compiler/compilerOracle.cpp
---- openjdk.orig/hotspot/src/share/vm/compiler/compilerOracle.cpp
-+++ openjdk/hotspot/src/share/vm/compiler/compilerOracle.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/compiler/compilerOracle.cpp openjdk/hotspot/src/share/vm/compiler/compilerOracle.cpp
+--- openjdk.orig/hotspot/src/share/vm/compiler/compilerOracle.cpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/share/vm/compiler/compilerOracle.cpp	2019-05-24 18:40:00.484874104 +0100
 @@ -33,6 +33,7 @@
  #include "oops/symbol.hpp"
  #include "runtime/handles.inline.hpp"
@@ -226,7 +226,7 @@ diff --git openjdk.orig/hotspot/src/share/vm/compiler/compilerOracle.cpp openjdk
  
  class MethodMatcher : public CHeapObj<mtCompiler> {
   public:
-@@ -224,7 +225,7 @@
+@@ -219,7 +220,7 @@
                             const T value,  MethodMatcher* next) :
      MethodMatcher(class_name, class_mode, method_name, method_mode, signature, next),
                    _type(get_type_for<T>()), _value(copy_value<T>(value)) {
@@ -235,10 +235,10 @@ diff --git openjdk.orig/hotspot/src/share/vm/compiler/compilerOracle.cpp openjdk
    }
  
    ~TypedMethodOptionMatcher() {
-diff --git openjdk.orig/hotspot/src/share/vm/opto/runtime.cpp openjdk/hotspot/src/share/vm/opto/runtime.cpp
---- openjdk.orig/hotspot/src/share/vm/opto/runtime.cpp
-+++ openjdk/hotspot/src/share/vm/opto/runtime.cpp
-@@ -1541,11 +1541,11 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/opto/runtime.cpp openjdk/hotspot/src/share/vm/opto/runtime.cpp
+--- openjdk.orig/hotspot/src/share/vm/opto/runtime.cpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/share/vm/opto/runtime.cpp	2019-05-24 18:40:00.484874104 +0100
+@@ -1567,11 +1567,11 @@
    }
    NamedCounter* c;
    if (tag == NamedCounter::BiasedLockingCounter) {
@@ -253,9 +253,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/opto/runtime.cpp openjdk/hotspot/sr
    }
  
    // atomically add the new counter to the head of the list.  We only
-diff --git openjdk.orig/hotspot/src/share/vm/opto/runtime.hpp openjdk/hotspot/src/share/vm/opto/runtime.hpp
---- openjdk.orig/hotspot/src/share/vm/opto/runtime.hpp
-+++ openjdk/hotspot/src/share/vm/opto/runtime.hpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/opto/runtime.hpp openjdk/hotspot/src/share/vm/opto/runtime.hpp
+--- openjdk.orig/hotspot/src/share/vm/opto/runtime.hpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/share/vm/opto/runtime.hpp	2019-05-24 18:40:00.484874104 +0100
 @@ -74,11 +74,17 @@
  
   public:
@@ -275,10 +275,10 @@ diff --git openjdk.orig/hotspot/src/share/vm/opto/runtime.hpp openjdk/hotspot/sr
    const char * name() const     { return _name; }
    int count() const             { return _count; }
    address addr()                { return (address)&_count; }
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspot/src/share/vm/runtime/arguments.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp
-+++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp
-@@ -796,7 +796,7 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspot/src/share/vm/runtime/arguments.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2019-05-24 18:37:55.414800103 +0100
++++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2019-05-24 18:40:00.484874104 +0100
+@@ -805,7 +805,7 @@
    } else {
      *bldarray = REALLOC_C_HEAP_ARRAY(char*, *bldarray, new_count, mtInternal);
    }
@@ -287,7 +287,7 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotsp
    *count = new_count;
  }
  
-@@ -2055,7 +2055,7 @@
+@@ -2256,7 +2256,7 @@
  }
  
  void Arguments::process_java_launcher_argument(const char* launcher, void* extra_info) {
@@ -296,7 +296,7 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotsp
    if (strcmp("gamma", _sun_java_launcher) == 0) {
      _created_by_gamma_launcher = true;
    }
-@@ -3200,7 +3200,7 @@
+@@ -3416,7 +3416,7 @@
        // Redirect GC output to the file. -Xloggc:<filename>
        // ostream_init_log(), when called will use this filename
        // to initialize a fileStream.
@@ -305,9 +305,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotsp
       if (!is_filename_valid(_gc_log_filename)) {
         jio_fprintf(defaultStream::output_stream(),
                    "Invalid file name for use with -Xloggc: Filename can only contain the "
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/fprofiler.cpp openjdk/hotspot/src/share/vm/runtime/fprofiler.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/fprofiler.cpp
-+++ openjdk/hotspot/src/share/vm/runtime/fprofiler.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/fprofiler.cpp openjdk/hotspot/src/share/vm/runtime/fprofiler.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/fprofiler.cpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/fprofiler.cpp	2019-05-24 18:40:00.484874104 +0100
 @@ -628,10 +628,16 @@
    }
  
@@ -344,10 +344,10 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/fprofiler.cpp openjdk/hotsp
    }
  }
  
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/os.cpp openjdk/hotspot/src/share/vm/runtime/os.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/os.cpp
-+++ openjdk/hotspot/src/share/vm/runtime/os.cpp
-@@ -542,6 +542,14 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/os.cpp openjdk/hotspot/src/share/vm/runtime/os.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/os.cpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/os.cpp	2019-05-24 18:40:00.484874104 +0100
+@@ -550,6 +550,14 @@
  }
  
  
@@ -362,10 +362,10 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/os.cpp openjdk/hotspot/src/
  
  #define paranoid                 0  /* only set to 1 if you suspect checking code has bug */
  
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/os.hpp openjdk/hotspot/src/share/vm/runtime/os.hpp
---- openjdk.orig/hotspot/src/share/vm/runtime/os.hpp
-+++ openjdk/hotspot/src/share/vm/runtime/os.hpp
-@@ -717,6 +717,8 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/os.hpp openjdk/hotspot/src/share/vm/runtime/os.hpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/os.hpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/os.hpp	2019-05-24 18:40:00.484874104 +0100
+@@ -720,6 +720,8 @@
    static void  free    (void *memblock, MEMFLAGS flags = mtNone);
    static bool  check_heap(bool force = false);      // verify C heap integrity
    static char* strdup(const char *, MEMFLAGS flags = mtInternal);  // Like strdup
@@ -374,9 +374,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/os.hpp openjdk/hotspot/src/
  
  #ifndef PRODUCT
    static julong num_mallocs;         // # of calls to malloc/realloc
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/vmStructs.cpp openjdk/hotspot/src/share/vm/runtime/vmStructs.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/vmStructs.cpp
-+++ openjdk/hotspot/src/share/vm/runtime/vmStructs.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/vmStructs.cpp openjdk/hotspot/src/share/vm/runtime/vmStructs.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/vmStructs.cpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/vmStructs.cpp	2019-05-24 18:40:00.488874042 +0100
 @@ -51,6 +51,7 @@
  #include "interpreter/bytecodes.hpp"
  #include "interpreter/interpreter.hpp"
@@ -393,7 +393,7 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/vmStructs.cpp openjdk/hotsp
  #include "runtime/perfMemory.hpp"
  #include "runtime/serviceThread.hpp"
  #include "runtime/sharedRuntime.hpp"
-@@ -3301,14 +3303,14 @@
+@@ -3328,14 +3330,14 @@
      }
    }
    if (strstr(typeName, " const") == typeName + len - 6) {
@@ -411,9 +411,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/vmStructs.cpp openjdk/hotsp
    }
    if (!isRecurse) {
      tty->print_cr("type \"%s\" not found", typeName);
-diff --git openjdk.orig/hotspot/src/share/vm/services/management.cpp openjdk/hotspot/src/share/vm/services/management.cpp
---- openjdk.orig/hotspot/src/share/vm/services/management.cpp
-+++ openjdk/hotspot/src/share/vm/services/management.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/services/management.cpp openjdk/hotspot/src/share/vm/services/management.cpp
+--- openjdk.orig/hotspot/src/share/vm/services/management.cpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/share/vm/services/management.cpp	2019-05-24 18:40:00.488874042 +0100
 @@ -1793,7 +1793,7 @@
    ResourceMark rm(THREAD); // thread->name() uses ResourceArea
  
@@ -432,9 +432,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/services/management.cpp openjdk/hot
    }
    FREE_C_HEAP_ARRAY(char *, _names_chars, mtInternal);
  }
-diff --git openjdk.orig/hotspot/src/share/vm/shark/sharkBuilder.cpp openjdk/hotspot/src/share/vm/shark/sharkBuilder.cpp
---- openjdk.orig/hotspot/src/share/vm/shark/sharkBuilder.cpp
-+++ openjdk/hotspot/src/share/vm/shark/sharkBuilder.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/shark/sharkBuilder.cpp openjdk/hotspot/src/share/vm/shark/sharkBuilder.cpp
+--- openjdk.orig/hotspot/src/share/vm/shark/sharkBuilder.cpp	2019-05-02 01:23:49.000000000 +0100
++++ openjdk/hotspot/src/share/vm/shark/sharkBuilder.cpp	2019-05-24 18:40:00.488874042 +0100
 @@ -413,7 +413,7 @@
    const char *name;
    if (value->hasName())

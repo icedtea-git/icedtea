@@ -13,6 +13,13 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 3.13.0 (2019-07-XX):
 
 * Shenandoah
+  - S8055814: [TESTBUG] runtime/NMT/NMTWithCDS.java fails with product builds due to missing UnlockDiagnosticVMOptions
+  - S8150013: ParNew: Prune nmethods scavengable list.
+  - S8154156: PPC64: improve array copy stubs by using vector instructions
+  - S8209951: Problematic sparc intrinsic: com.sun.crypto.provider.CipherBlockChaining
+  - S8213825: assert(false) failed: Non-balanced monitor enter/exit! Likely JNI locking
+  - S8217597: [TESTBUG] old version docker does not support --cpus
+  - S8220718: Missing ResourceMark in nmethod::metadata_do
   - [backport] 8210879: ClassLoaderStatsClosure does raw oop comparison
   - [backport] 8216973: Kick up cleanup phases in the right places
   - [backport] 8217043: Shenandoah: SIGSEGV in Type::meet_helper() at barrier expansion time
