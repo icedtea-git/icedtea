@@ -12,14 +12,48 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.13.0 (2019-07-XX):
 
-* Shenandoah
+* Import of OpenJDK 8 u222 build 01
+  - S8022879: TEST_BUG: sun/nio/cs/MalformedSurrogates.java fails intermittently
+  - S8025209: Intermittent test failure java/net/Socket/asyncClose/AsyncClose.java
+  - S8030690: TEST_BUG java/nio/Buffer/Chars.java fails intermittently
+  - S8031563: TEST_BUG: java/nio/channels/Selector/ChangingInterests.java failed once
+  - S8031666: TEST_BUG: java/net/ipv6tests/UdpTest.java failed because of SocketTimeoutException
+  - S8048782: OpenJDK: PiscesCache : xmax/ymax rounding up can cause RasterFormatException
   - S8055814: [TESTBUG] runtime/NMT/NMTWithCDS.java fails with product builds due to missing UnlockDiagnosticVMOptions
+  - S8073078: java/nio/file/FileStore/Basic.java sensitive to NFS configuration
+  - S8129988: JSSE should create a single instance of the cacerts KeyStore
+  - S8137231: sun/security/rsa/SpecTest.java timeout with Agent error: java.lang.Exception
   - S8150013: ParNew: Prune nmethods scavengable list.
+  - S8151225: Mark SpecTest.java as intermittently failing
   - S8154156: PPC64: improve array copy stubs by using vector instructions
+  - S8156035: Remove intermittent key from sun/security/rsa/SpecTest.java
+  - S8157287: java/nio/file/FileStore/Basic.java failed with "java.nio.file.AccessDeniedException : /zones/zoneone/root "
+  - S8192854: FONTCONFIG_CFLAGS missing from spec.gmk.in
+  - S8202768: [macos] Appkit thread slows when any Window Manager active
+  - S8203627: Swing applications with JRadioButton and JCheckbox fail to render correctly when using GTK3 and the GTK L&F
+  - S8205916: [test] Fix jdk/tools/launcher/RunpathTest to handle both, RPATH and RUNPATH
+  - S8206955: MethodHandleProxies.asInterfaceInstance does not support default methods
+  - S8207760: SAXException: Invalid UTF-16 surrogate detected: d83c ?
   - S8209951: Problematic sparc intrinsic: com.sun.crypto.provider.CipherBlockChaining
   - S8213825: assert(false) failed: Non-balanced monitor enter/exit! Likely JNI locking
+  - S8214109: XToolkit is not correctly displayed color on 16-bit high color setting
+  - S8214111: There is no icon in all JOptionPane target image
+  - S8214112: The whole text in target JPasswordField image are not selected
+  - S8214252: Expanded & Collapsed nodes of a JTree look the same on GTK3
+  - S8214253: Tooltip is transparent rather than having a black background
+  - S8217263: Automate DashOffset test
   - S8217597: [TESTBUG] old version docker does not support --cpus
+  - S8218469: JSlider display issue with slider for GTKLookAndFeel
+  - S8218470: JScrollBar display issue with GTKLookAndFeel
+  - S8218472: JProgressBar display issue with GTKLookAndFeel
+  - S8218473: JOptionPane display issue with GTKLookAndFeel
+  - S8218479: JTextPane display issue with GTKLookAndFeel
+  - S8220349: The fix done for JDK-8214253 have caused issues in JTree behaviour
   - S8220718: Missing ResourceMark in nmethod::metadata_do
+  - S8221789: make reconfigure broken (jdk8u only)
+  - S8222965: Backport of JDK-8129988 broke the build
+  - S8222975: Fix 'release' file to reflect actual repo checkin used to compile JDK
+* Shenandoah
   - [backport] 8210879: ClassLoaderStatsClosure does raw oop comparison
   - [backport] 8216973: Kick up cleanup phases in the right places
   - [backport] 8217043: Shenandoah: SIGSEGV in Type::meet_helper() at barrier expansion time
