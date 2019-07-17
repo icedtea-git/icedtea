@@ -64,6 +64,7 @@ New in release 2.6.19 (2019-07-XX):
   - S8225580: tzdata2018i integration causes test failures on jdk-13
 * Bug fixes
   - PR3729: CVE-2018-3639 fix revision to prefer PR_SPEC_DISABLE_NOEXEC to PR_SPEC_DISABLE
+  - PR3744: Latest ISO 4217 amendments make PR64174 workaround redundant
 * AArch64 port
   - S8149365, PR3741: aarch64: memory copy does not prefetch on backwards copy
   - S8151340, PR3741: aarch64: prefetch the destination word for write prior to ldxr/stxr loops.

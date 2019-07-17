@@ -159,9 +159,6 @@ IT_CHECK_FOR_CLASS([COM_SUN_NET_HTTPSERVER_HEADERS], [com.sun.net.httpserver.Hea
 dnl Check whether the OpenJDK tooling is present in the bootstrap JDK, required by CORBA
 IT_CHECK_FOR_CLASS([SUN_TOOLS_JAVA_CLASSDEFINITION], [sun.tools.java.ClassDefinition])
 
-dnl Check whether the JDK can parse the dates used in the currency file
-IT_PR64174_CHECK
-
 IT_CHECK_ENABLE_WARNINGS
 IT_DIAMOND_CHECK
 IT_UNDERSCORE_CHECK

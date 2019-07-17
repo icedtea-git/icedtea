@@ -535,13 +535,6 @@ if NO_BYTECODE7
 ICEDTEA_BOOT_PATCHES +=	patches/boot/use_target_6_for_bootstrap_classes.patch 
 endif
 
-# If date parsing bug is present, move Lithuania EUR transition date
-# two hours forward into 1st of January, 2015 and drop Latvia transition
-# date as it's already in the past.
-if CP64174
-ICEDTEA_BOOT_PATCHES += patches/boot/pr64174.patch
-endif
-
 ICEDTEA_BOOT_PATCHES += $(DISTRIBUTION_BOOT_PATCHES)
 
 # OpenJDK build environment.
