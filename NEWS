@@ -12,6 +12,8 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.13.0 (2019-07-XX):
 
+* New features
+  - PR3743: Support EA builds
 * Import of OpenJDK 8 u222 build 01
   - S8022879: TEST_BUG: sun/nio/cs/MalformedSurrogates.java fails intermittently
   - S8025209: Intermittent test failure java/net/Socket/asyncClose/AsyncClose.java

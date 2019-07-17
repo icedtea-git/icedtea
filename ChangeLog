@@ -1,3 +1,13 @@
+2019-07-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3743: Support EA builds
+	* Makefile.am:
+	(ICEDTEA_CONFIGURE): Use @MAKEFILE@ rather
+	than hardcoded value.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DETERMINE_VERSION): Define MILESTONE.
+
 2019-05-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.13.0pre01.
