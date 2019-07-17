@@ -1,10 +1,11 @@
-diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
---- openjdk/jdk/src/share/classes/sun/security/ec/NamedCurve.java	Fri Dec 05 02:53:29 2014 +0000
-+++ openjdk/jdk/src/share/classes/sun/security/ec/NamedCurve.java	Fri Dec 05 02:58:18 2014 +0000
-@@ -162,114 +162,6 @@
- 
+diff --git openjdk.orig/jdk/src/share/classes/sun/security/ec/CurveDB.java openjdk/jdk/src/share/classes/sun/security/ec/CurveDB.java
+--- openjdk.orig/jdk/src/share/classes/sun/security/ec/CurveDB.java
++++ openjdk/jdk/src/share/classes/sun/security/ec/CurveDB.java
+@@ -167,115 +167,6 @@
      static {
-         /* SEC2 prime curves */
+         Pattern nameSplitPattern = Pattern.compile(SPLIT_PATTERN);
+ 
+-        /* SEC2 prime curves */
 -        add("secp112r1", "1.3.132.0.6", P,
 -            "DB7C2ABF62E35E668076BEAD208B",
 -            "DB7C2ABF62E35E668076BEAD2088",
@@ -12,7 +13,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "09487239995A5EE76B55F9C2F098",
 -            "A89CE5AF8724C0A23E0E0FF77500",
 -            "DB7C2ABF62E35E7628DFAC6561C5",
--            1);
+-            1, nameSplitPattern);
 -
 -        add("secp112r2", "1.3.132.0.7", P,
 -            "DB7C2ABF62E35E668076BEAD208B",
@@ -21,7 +22,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "4BA30AB5E892B4E1649DD0928643",
 -            "adcd46f5882e3747def36e956e97",
 -            "36DF0AAFD8B8D7597CA10520D04B",
--            4);
+-            4, nameSplitPattern);
 -
 -        add("secp128r1", "1.3.132.0.28", P,
 -            "FFFFFFFDFFFFFFFFFFFFFFFFFFFFFFFF",
@@ -30,7 +31,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "161FF7528B899B2D0C28607CA52C5B86",
 -            "CF5AC8395BAFEB13C02DA292DDED7A83",
 -            "FFFFFFFE0000000075A30D1B9038A115",
--            1);
+-            1, nameSplitPattern);
 -
 -        add("secp128r2", "1.3.132.0.29", P,
 -            "FFFFFFFDFFFFFFFFFFFFFFFFFFFFFFFF",
@@ -39,7 +40,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "7B6AA5D85E572983E6FB32A7CDEBC140",
 -            "27B6916A894D3AEE7106FE805FC34B44",
 -            "3FFFFFFF7FFFFFFFBE0024720613B5A3",
--            4);
+-            4, nameSplitPattern);
 -
 -        add("secp160k1", "1.3.132.0.9", P,
 -            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFAC73",
@@ -48,7 +49,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "3B4C382CE37AA192A4019E763036F4F5DD4D7EBB",
 -            "938CF935318FDCED6BC28286531733C3F03C4FEE",
 -            "0100000000000000000001B8FA16DFAB9ACA16B6B3",
--            1);
+-            1, nameSplitPattern);
 -
 -        add("secp160r1", "1.3.132.0.8", P,
 -            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFF",
@@ -57,7 +58,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "4A96B5688EF573284664698968C38BB913CBFC82",
 -            "23A628553168947D59DCC912042351377AC5FB32",
 -            "0100000000000000000001F4C8F927AED3CA752257",
--            1);
+-            1, nameSplitPattern);
 -
 -        add("secp160r2", "1.3.132.0.30", P,
 -            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFAC73",
@@ -66,7 +67,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "52DCB034293A117E1F4FF11B30F7199D3144CE6D",
 -            "FEAFFEF2E331F296E071FA0DF9982CFEA7D43F2E",
 -            "0100000000000000000000351EE786A818F3A1A16B",
--            1);
+-            1, nameSplitPattern);
 -
 -        add("secp192k1", "1.3.132.0.31", P,
 -            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFEE37",
@@ -75,7 +76,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "DB4FF10EC057E9AE26B07D0280B7F4341DA5D1B1EAE06C7D",
 -            "9B2F2F6D9C5628A7844163D015BE86344082AA88D95E2F9D",
 -            "FFFFFFFFFFFFFFFFFFFFFFFE26F2FC170F69466A74DEFD8D",
--            1);
+-            1, nameSplitPattern);
 -
 -        add("secp192r1 [NIST P-192, X9.62 prime192v1]", "1.2.840.10045.3.1.1", PD,
 -            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFF",
@@ -84,7 +85,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "188DA80EB03090F67CBF20EB43A18800F4FF0AFD82FF1012",
 -            "07192B95FFC8DA78631011ED6B24CDD573F977A11E794811",
 -            "FFFFFFFFFFFFFFFFFFFFFFFF99DEF836146BC9B1B4D22831",
--            1);
+-            1, nameSplitPattern);
 -
 -        add("secp224k1", "1.3.132.0.32", P,
 -            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFE56D",
@@ -93,7 +94,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "A1455B334DF099DF30FC28A169A467E9E47075A90F7E650EB6B7A45C",
 -            "7E089FED7FBA344282CAFBD6F7E319F7C0B0BD59E2CA4BDB556D61A5",
 -            "010000000000000000000000000001DCE8D2EC6184CAF0A971769FB1F7",
--            1);
+-            1, nameSplitPattern);
 -
 -        add("secp224r1 [NIST P-224]", "1.3.132.0.33", PD,
 -            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000000000000001",
@@ -102,7 +103,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "B70E0CBD6BB4BF7F321390B94A03C1D356C21122343280D6115C1D21",
 -            "BD376388B5F723FB4C22DFE6CD4375A05A07476444D5819985007E34",
 -            "FFFFFFFFFFFFFFFFFFFFFFFFFFFF16A2E0B8F03E13DD29455C5C2A3D",
--            1);
+-            1, nameSplitPattern);
 -
 -        add("secp256k1", "1.3.132.0.10", P,
 -            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F",
@@ -111,14 +112,14 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798",
 -            "483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8",
 -            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141",
--            1);
+-            1, nameSplitPattern);
 -
          add("secp256r1 [NIST P-256, X9.62 prime256v1]", "1.2.840.10045.3.1.7", PD,
              "FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF",
              "FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFC",
-@@ -297,367 +189,6 @@
+@@ -303,367 +194,6 @@
              "01FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA51868783BF2F966B7FCC0148F709A5D03BB5C9B8899C47AEBB6FB71E91386409",
-             1);
+             1, nameSplitPattern);
  
 -        /* ANSI X9.62 prime curves */
 -        add("X9.62 prime192v2", "1.2.840.10045.3.1.2", P,
@@ -128,7 +129,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "EEA2BAE7E1497842F2DE7769CFE9C989C072AD696F48034A",
 -            "6574D11D69B6EC7A672BB82A083DF2F2B0847DE970B2DE15",
 -            "FFFFFFFFFFFFFFFFFFFFFFFE5FB1A724DC80418648D8DD31",
--            1);
+-            1, nameSplitPattern);
 -
 -        add("X9.62 prime192v3", "1.2.840.10045.3.1.3", P,
 -            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFF",
@@ -137,7 +138,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "7D29778100C65A1DA1783716588DCE2B8B4AEE8E228F1896",
 -            "38A90F22637337334B49DCB66A6DC8F9978ACA7648A943B0",
 -            "FFFFFFFFFFFFFFFFFFFFFFFF7A62D031C83F4294F640EC13",
--            1);
+-            1, nameSplitPattern);
 -
 -        add("X9.62 prime239v1", "1.2.840.10045.3.1.4", P,
 -            "7FFFFFFFFFFFFFFFFFFFFFFF7FFFFFFFFFFF8000000000007FFFFFFFFFFF",
@@ -146,7 +147,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "0FFA963CDCA8816CCC33B8642BEDF905C3D358573D3F27FBBD3B3CB9AAAF",
 -            "7DEBE8E4E90A5DAE6E4054CA530BA04654B36818CE226B39FCCB7B02F1AE",
 -            "7FFFFFFFFFFFFFFFFFFFFFFF7FFFFF9E5E9A9F5D9071FBD1522688909D0B",
--            1);
+-            1, nameSplitPattern);
 -
 -        add("X9.62 prime239v2", "1.2.840.10045.3.1.5", P,
 -            "7FFFFFFFFFFFFFFFFFFFFFFF7FFFFFFFFFFF8000000000007FFFFFFFFFFF",
@@ -155,7 +156,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "38AF09D98727705120C921BB5E9E26296A3CDCF2F35757A0EAFD87B830E7",
 -            "5B0125E4DBEA0EC7206DA0FC01D9B081329FB555DE6EF460237DFF8BE4BA",
 -            "7FFFFFFFFFFFFFFFFFFFFFFF800000CFA7E8594377D414C03821BC582063",
--            1);
+-            1, nameSplitPattern);
 -
 -        add("X9.62 prime239v3", "1.2.840.10045.3.1.6", P,
 -            "7FFFFFFFFFFFFFFFFFFFFFFF7FFFFFFFFFFF8000000000007FFFFFFFFFFF",
@@ -164,7 +165,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "6768AE8E18BB92CFCF005C949AA2C6D94853D0E660BBF854B1C9505FE95A",
 -            "1607E6898F390C06BC1D552BAD226F3B6FCFE48B6E818499AF18E3ED6CF3",
 -            "7FFFFFFFFFFFFFFFFFFFFFFF7FFFFF975DEB41B3A6057C3C432146526551",
--            1);
+-            1, nameSplitPattern);
 -
 -        /* SEC2 binary curves */
 -        add("sect113r1", "1.3.132.0.4", B,
@@ -174,7 +175,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "009D73616F35F4AB1407D73562C10F",
 -            "00A52830277958EE84D1315ED31886",
 -            "0100000000000000D9CCEC8A39E56F",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("sect113r2", "1.3.132.0.5", B,
 -            "020000000000000000000000000201",
@@ -183,7 +184,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "01A57A6A7B26CA5EF52FCDB8164797",
 -            "00B3ADC94ED1FE674C06E695BABA1D",
 -            "010000000000000108789B2496AF93",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("sect131r1", "1.3.132.0.22", B,
 -            "080000000000000000000000000000010D",
@@ -192,7 +193,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "0081BAF91FDF9833C40F9C181343638399",
 -            "078C6E7EA38C001F73C8134B1B4EF9E150",
 -            "0400000000000000023123953A9464B54D",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("sect131r2", "1.3.132.0.23", B,
 -            "080000000000000000000000000000010D",
@@ -201,7 +202,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "0356DCD8F2F95031AD652D23951BB366A8",
 -            "0648F06D867940A5366D9E265DE9EB240F",
 -            "0400000000000000016954A233049BA98F",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("sect163k1 [NIST K-163]", "1.3.132.0.1", BD,
 -            "0800000000000000000000000000000000000000C9",
@@ -210,7 +211,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "02FE13C0537BBC11ACAA07D793DE4E6D5E5C94EEE8",
 -            "0289070FB05D38FF58321F2E800536D538CCDAA3D9",
 -            "04000000000000000000020108A2E0CC0D99F8A5EF",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("sect163r1", "1.3.132.0.2", B,
 -            "0800000000000000000000000000000000000000C9",
@@ -219,7 +220,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "0369979697AB43897789566789567F787A7876A654",
 -            "00435EDB42EFAFB2989D51FEFCE3C80988F41FF883",
 -            "03FFFFFFFFFFFFFFFFFFFF48AAB689C29CA710279B",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("sect163r2 [NIST B-163]", "1.3.132.0.15", BD,
 -            "0800000000000000000000000000000000000000C9",
@@ -228,7 +229,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "03F0EBA16286A2D57EA0991168D4994637E8343E36",
 -            "00D51FBC6C71A0094FA2CDD545B11C5C0C797324F1",
 -            "040000000000000000000292FE77E70C12A4234C33",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("sect193r1", "1.3.132.0.24", B,
 -            "02000000000000000000000000000000000000000000008001",
@@ -237,7 +238,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "01F481BC5F0FF84A74AD6CDF6FDEF4BF6179625372D8C0C5E1",
 -            "0025E399F2903712CCF3EA9E3A1AD17FB0B3201B6AF7CE1B05",
 -            "01000000000000000000000000C7F34A778F443ACC920EBA49",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("sect193r2", "1.3.132.0.25", B,
 -            "02000000000000000000000000000000000000000000008001",
@@ -246,7 +247,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "00D9B67D192E0367C803F39E1A7E82CA14A651350AAE617E8F",
 -            "01CE94335607C304AC29E7DEFBD9CA01F596F927224CDECF6C",
 -            "010000000000000000000000015AAB561B005413CCD4EE99D5",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("sect233k1 [NIST K-233]", "1.3.132.0.26", BD,
 -            "020000000000000000000000000000000000000004000000000000000001",
@@ -255,7 +256,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "017232BA853A7E731AF129F22FF4149563A419C26BF50A4C9D6EEFAD6126",
 -            "01DB537DECE819B7F70F555A67C427A8CD9BF18AEB9B56E0C11056FAE6A3",
 -            "008000000000000000000000000000069D5BB915BCD46EFB1AD5F173ABDF",
--            4);
+-            4, nameSplitPattern);
 -
 -        add("sect233r1 [NIST B-233]", "1.3.132.0.27", B,
 -            "020000000000000000000000000000000000000004000000000000000001",
@@ -264,7 +265,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "00FAC9DFCBAC8313BB2139F1BB755FEF65BC391F8B36F8F8EB7371FD558B",
 -            "01006A08A41903350678E58528BEBF8A0BEFF867A7CA36716F7E01F81052",
 -            "01000000000000000000000000000013E974E72F8A6922031D2603CFE0D7",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("sect239k1", "1.3.132.0.3", B,
 -            "800000000000000000004000000000000000000000000000000000000001",
@@ -273,7 +274,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "29A0B6A887A983E9730988A68727A8B2D126C44CC2CC7B2A6555193035DC",
 -            "76310804F12E549BDB011C103089E73510ACB275FC312A5DC6B76553F0CA",
 -            "2000000000000000000000000000005A79FEC67CB6E91F1C1DA800E478A5",
--            4);
+-            4, nameSplitPattern);
 -
 -        add("sect283k1 [NIST K-283]", "1.3.132.0.16", BD,
 -            "0800000000000000000000000000000000000000000000000000000000000000000010A1",
@@ -282,7 +283,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "0503213F78CA44883F1A3B8162F188E553CD265F23C1567A16876913B0C2AC2458492836",
 -            "01CCDA380F1C9E318D90F95D07E5426FE87E45C0E8184698E45962364E34116177DD2259",
 -            "01FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE9AE2ED07577265DFF7F94451E061E163C61",
--            4);
+-            4, nameSplitPattern);
 -
 -        add("sect283r1 [NIST B-283]", "1.3.132.0.17", B,
 -            "0800000000000000000000000000000000000000000000000000000000000000000010A1",
@@ -291,7 +292,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "05F939258DB7DD90E1934F8C70B0DFEC2EED25B8557EAC9C80E2E198F8CDBECD86B12053",
 -            "03676854FE24141CB98FE6D4B20D02B4516FF702350EDDB0826779C813F0DF45BE8112F4",
 -            "03FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEF90399660FC938A90165B042A7CEFADB307",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("sect409k1 [NIST K-409]", "1.3.132.0.36", BD,
 -            "02000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000001",
@@ -300,7 +301,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "0060F05F658F49C1AD3AB1890F7184210EFD0987E307C84C27ACCFB8F9F67CC2C460189EB5AAAA62EE222EB1B35540CFE9023746",
 -            "01E369050B7C4E42ACBA1DACBF04299C3460782F918EA427E6325165E9EA10E3DA5F6C42E9C55215AA9CA27A5863EC48D8E0286B",
 -            "007FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE5F83B2D4EA20400EC4557D5ED3E3E7CA5B4B5C83B8E01E5FCF",
--            4);
+-            4, nameSplitPattern);
 -
 -        add("sect409r1 [NIST B-409]", "1.3.132.0.37", B,
 -            "02000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000001",
@@ -309,7 +310,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "015D4860D088DDB3496B0C6064756260441CDE4AF1771D4DB01FFE5B34E59703DC255A868A1180515603AEAB60794E54BB7996A7",
 -            "0061B1CFAB6BE5F32BBFA78324ED106A7636B9C5A7BD198D0158AA4F5488D08F38514F1FDF4B4F40D2181B3681C364BA0273C706",
 -            "010000000000000000000000000000000000000000000000000001E2AAD6A612F33307BE5FA47C3C9E052F838164CD37D9A21173",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("sect571k1 [NIST K-571]", "1.3.132.0.38", BD,
 -            "080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000425",
@@ -318,7 +319,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "026EB7A859923FBC82189631F8103FE4AC9CA2970012D5D46024804801841CA44370958493B205E647DA304DB4CEB08CBBD1BA39494776FB988B47174DCA88C7E2945283A01C8972",
 -            "0349DC807F4FBF374F4AEADE3BCA95314DD58CEC9F307A54FFC61EFC006D8A2C9D4979C0AC44AEA74FBEBBB9F772AEDCB620B01A7BA7AF1B320430C8591984F601CD4C143EF1C7A3",
 -            "020000000000000000000000000000000000000000000000000000000000000000000000131850E1F19A63E4B391A8DB917F4138B630D84BE5D639381E91DEB45CFE778F637C1001",
--            4);
+-            4, nameSplitPattern);
 -
 -        add("sect571r1 [NIST B-571]", "1.3.132.0.39", B,
 -            "080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000425",
@@ -327,7 +328,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "0303001D34B856296C16C0D40D3CD7750A93D1D2955FA80AA5F40FC8DB7B2ABDBDE53950F4C0D293CDD711A35B67FB1499AE60038614F1394ABFA3B4C850D927E1E7769C8EEC2D19",
 -            "037BF27342DA639B6DCCFFFEB73D69D78C6C27A6009CBBCA1980F8533921E8A684423E43BAB08A576291AF8F461BB2A8B3531D2F0485C19B16E2F1516E23DD3C1A4827AF1B8AC15B",
 -            "03FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE661CE18FF55987308059B186823851EC7DD9CA1161DE93D5174D66E8382E9BB2FE84E47",
--            2);
+-            2, nameSplitPattern);
 -
 -        /* ANSI X9.62 binary curves */
 -        add("X9.62 c2tnb191v1", "1.2.840.10045.3.0.5", B,
@@ -337,7 +338,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "36B3DAF8A23206F9C4F299D7B21A9C369137F2C84AE1AA0D",
 -            "765BE73433B3F95E332932E70EA245CA2418EA0EF98018FB",
 -            "40000000000000000000000004A20E90C39067C893BBB9A5",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("X9.62 c2tnb191v2", "1.2.840.10045.3.0.6", B,
 -            "800000000000000000000000000000000000000000000201",
@@ -346,7 +347,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "3809B2B7CC1B28CC5A87926AAD83FD28789E81E2C9E3BF10",
 -            "17434386626D14F3DBF01760D9213A3E1CF37AEC437D668A",
 -            "20000000000000000000000050508CB89F652824E06B8173",
--            4);
+-            4, nameSplitPattern);
 -
 -        add("X9.62 c2tnb191v3", "1.2.840.10045.3.0.7", B,
 -            "800000000000000000000000000000000000000000000201",
@@ -355,7 +356,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "375D4CE24FDE434489DE8746E71786015009E66E38A926DD",
 -            "545A39176196575D985999366E6AD34CE0A77CD7127B06BE",
 -            "155555555555555555555555610C0B196812BFB6288A3EA3",
--            6);
+-            6, nameSplitPattern);
 -
 -        add("X9.62 c2tnb239v1", "1.2.840.10045.3.0.11", B,
 -            "800000000000000000000000000000000000000000000000001000000001",
@@ -364,7 +365,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "57927098FA932E7C0A96D3FD5B706EF7E5F5C156E16B7E7C86038552E91D",
 -            "61D8EE5077C33FECF6F1A16B268DE469C3C7744EA9A971649FC7A9616305",
 -            "2000000000000000000000000000000F4D42FFE1492A4993F1CAD666E447",
--            4);
+-            4, nameSplitPattern);
 -
 -        add("X9.62 c2tnb239v2", "1.2.840.10045.3.0.12", B,
 -            "800000000000000000000000000000000000000000000000001000000001",
@@ -373,7 +374,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "28F9D04E900069C8DC47A08534FE76D2B900B7D7EF31F5709F200C4CA205",
 -            "5667334C45AFF3B5A03BAD9DD75E2C71A99362567D5453F7FA6E227EC833",
 -            "1555555555555555555555555555553C6F2885259C31E3FCDF154624522D",
--            6);
+-            6, nameSplitPattern);
 -
 -        add("X9.62 c2tnb239v3", "1.2.840.10045.3.0.13", B,
 -            "800000000000000000000000000000000000000000000000001000000001",
@@ -382,7 +383,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "70F6E9D04D289C4E89913CE3530BFDE903977D42B146D539BF1BDE4E9C92",
 -            "2E5A0EAF6E5E1305B9004DCE5C0ED7FE59A35608F33837C816D80B79F461",
 -            "0CCCCCCCCCCCCCCCCCCCCCCCCCCCCCAC4912D2D9DF903EF9888B8A0E4CFF",
--            0xA);
+-            0xA, nameSplitPattern);
 -
 -        add("X9.62 c2tnb359v1", "1.2.840.10045.3.0.18", B,
 -            "800000000000000000000000000000000000000000000000000000000000000000000000100000000000000001",
@@ -391,7 +392,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "3C258EF3047767E7EDE0F1FDAA79DAEE3841366A132E163ACED4ED2401DF9C6BDCDE98E8E707C07A2239B1B097",
 -            "53D7E08529547048121E9C95F3791DD804963948F34FAE7BF44EA82365DC7868FE57E4AE2DE211305A407104BD",
 -            "01AF286BCA1AF286BCA1AF286BCA1AF286BCA1AF286BC9FB8F6B85C556892C20A7EB964FE7719E74F490758D3B",
--            0x4C);
+-            0x4C, nameSplitPattern);
 -
 -        add("X9.62 c2tnb431r1", "1.2.840.10045.3.0.20", B,
 -            "800000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000001",
@@ -400,7 +401,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "120FC05D3C67A99DE161D2F4092622FECA701BE4F50F4758714E8A87BBF2A658EF8C21E7C5EFE965361F6C2999C0C247B0DBD70CE6B7",
 -            "20D0AF8903A96F8D5FA2C255745D3C451B302C9346D9B7E485E7BCE41F6B591F3E8F6ADDCBB0BC4C2F947A7DE1A89B625D6A598B3760",
 -            "0340340340340340340340340340340340340340340340340340340323C313FAB50589703B5EC68D3587FEC60D161CC149C1AD4A91",
--            0x2760);
+-            0x2760, nameSplitPattern);
 -
 -        /* ANSI X9.62 binary curves from the 1998 standard but forbidden
 -         * in the 2005 version of the standard.
@@ -415,7 +416,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "07AF69989546103D79329FCC3D74880F33BBE803CB",
 -            "01EC23211B5966ADEA1D3F87F7EA5848AEF0B7CA9F",
 -            "0400000000000000000001E60FC8821CC74DAEAFC1",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("X9.62 c2pnb163v2", "1.2.840.10045.3.0.2", B,
 -            "080000000000000000000000000000000000000107",
@@ -424,7 +425,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "0024266E4EB5106D0A964D92C4860E2671DB9B6CC5",
 -            "079F684DDF6684C5CD258B3890021B2386DFD19FC5",
 -            "03FFFFFFFFFFFFFFFFFFFDF64DE1151ADBB78F10A7",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("X9.62 c2pnb163v3", "1.2.840.10045.3.0.3", B,
 -            "080000000000000000000000000000000000000107",
@@ -433,7 +434,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "02F9F87B7C574D0BDECF8A22E6524775F98CDEBDCB",
 -            "05B935590C155E17EA48EB3FF3718B893DF59A05D0",
 -            "03FFFFFFFFFFFFFFFFFFFE1AEE140F110AFF961309",
--            2);
+-            2, nameSplitPattern);
 -
 -        add("X9.62 c2pnb176w1", "1.2.840.10045.3.0.4", B,
 -            "0100000000000000000000000000000000080000000007",
@@ -442,7 +443,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "8D16C2866798B600F9F08BB4A8E860F3298CE04A5798",
 -            "6FA4539C2DADDDD6BAB5167D61B436E1D92BB16A562C",
 -            "00010092537397ECA4F6145799D62B0A19CE06FE26AD",
--            0xFF6E);
+-            0xFF6E, nameSplitPattern);
 -
 -        add("X9.62 c2pnb208w1", "1.2.840.10045.3.0.10", B,
 -            "010000000000000000000000000000000800000000000000000007",
@@ -451,7 +452,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "89FDFBE4ABE193DF9559ECF07AC0CE78554E2784EB8C1ED1A57A",
 -            "0F55B51A06E78E9AC38A035FF520D8B01781BEB1A6BB08617DE3",
 -            "000101BAF95C9723C57B6C21DA2EFF2D5ED588BDD5717E212F9D",
--            0xFE48);
+-            0xFE48, nameSplitPattern);
 -
 -        add("X9.62 c2pnb272w1", "1.2.840.10045.3.0.16", B,
 -            "010000000000000000000000000000000000000000000000000000010000000000000B",
@@ -460,7 +461,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "6108BABB2CEEBCF787058A056CBE0CFE622D7723A289E08A07AE13EF0D10D171DD8D",
 -            "10C7695716851EEF6BA7F6872E6142FBD241B830FF5EFCACECCAB05E02005DDE9D23",
 -            "000100FAF51354E0E39E4892DF6E319C72C8161603FA45AA7B998A167B8F1E629521",
--            0xFF06);
+-            0xFF06, nameSplitPattern);
 -
 -        add("X9.62 c2pnb304w1", "1.2.840.10045.3.0.17", B,
 -            "010000000000000000000000000000000000000000000000000000000000000000000000000807",
@@ -469,7 +470,7 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "197B07845E9BE2D96ADB0F5F3C7F2CFFBD7A3EB8B6FEC35C7FD67F26DDF6285A644F740A2614",
 -            "E19FBEB76E0DA171517ECF401B50289BF014103288527A9B416A105E80260B549FDC1B92C03B",
 -            "000101D556572AABAC800101D556572AABAC8001022D5C91DD173F8FB561DA6899164443051D",
--            0xFE2E);
+-            0xFE2E, nameSplitPattern);
 -
 -        add("X9.62 c2pnb368w1", "1.2.840.10045.3.0.19", B,
 -            "0100000000000000000000000000000000000000000000000000000000000000000000002000000000000000000007",
@@ -478,16 +479,16 @@ diff -r 9665966de2e7 src/share/classes/sun/security/ec/NamedCurve.java
 -            "1085E2755381DCCCE3C1557AFA10C2F0C0C2825646C5B34A394CBCFA8BC16B22E7E789E927BE216F02E1FB136A5F",
 -            "7B3EB1BDDCBA62D5D8B2059B525797FC73822C59059C623A45FF3843CEE8F87CD1855ADAA81E2A0750B80FDA2310",
 -            "00010090512DA9AF72B08349D98A5DD4C7B0532ECA51CE03E2D10F3B7AC579BD87E909AE40A6F131E9CFCE5BD967",
--            0xFF70);
+-            0xFF70, nameSplitPattern);
 -*/
 -
-         SPLIT_PATTERN = null;
+         specCollection = Collections.unmodifiableCollection(oidMap.values());
      }
- 
-diff --git a/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java b/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java
---- openjdk/jdk/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java
+ }
+diff --git openjdk.orig/jdk/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java openjdk/jdk/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java
+--- openjdk.orig/jdk/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java
 +++ openjdk/jdk/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java
-@@ -62,29 +62,6 @@
+@@ -65,29 +65,6 @@
  
      // See sun.security.util.CurveDB for the OIDs
      private static enum NamedEllipticCurve {
@@ -517,10 +518,10 @@ diff --git a/src/share/classes/sun/security/ssl/EllipticCurvesExtension.java b/s
          P256_R1(23, "secp256r1",    "1.2.840.10045.3.1.7", true), // NIST P-256
          P384_R1(24, "secp384r1",    "1.3.132.0.34",     true),  // NIST P-384
          P521_R1(25, "secp521r1",    "1.3.132.0.35",     true);  // NIST P-521
-diff --git a/test/sun/security/ec/TestEC.java b/test/sun/security/ec/TestEC.java
---- openjdk/jdk/test/sun/security/ec/TestEC.java
+diff --git openjdk.orig/jdk/test/sun/security/ec/TestEC.java openjdk/jdk/test/sun/security/ec/TestEC.java
+--- openjdk.orig/jdk/test/sun/security/ec/TestEC.java
 +++ openjdk/jdk/test/sun/security/ec/TestEC.java
-@@ -35,7 +35,7 @@
+@@ -30,7 +30,7 @@
   * @library ../pkcs11/sslecc
   * @library ../../../java/security/testlibrary
   * @compile -XDignore.symbol.file TestEC.java
@@ -529,8 +530,8 @@ diff --git a/test/sun/security/ec/TestEC.java b/test/sun/security/ec/TestEC.java
   */
  
  import java.security.NoSuchProviderException;
-diff --git a/test/sun/security/ssl/sanity/interop/ClientJSSEServerJSSE.java b/test/sun/security/ssl/sanity/interop/ClientJSSEServerJSSE.java
---- openjdk/jdk/test/sun/security/ssl/sanity/interop/ClientJSSEServerJSSE.java
+diff --git openjdk.orig/jdk/test/sun/security/ssl/sanity/interop/ClientJSSEServerJSSE.java openjdk/jdk/test/sun/security/ssl/sanity/interop/ClientJSSEServerJSSE.java
+--- openjdk.orig/jdk/test/sun/security/ssl/sanity/interop/ClientJSSEServerJSSE.java
 +++ openjdk/jdk/test/sun/security/ssl/sanity/interop/ClientJSSEServerJSSE.java
 @@ -26,7 +26,7 @@
   * @bug 4496785

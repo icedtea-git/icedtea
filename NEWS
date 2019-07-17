@@ -14,13 +14,75 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.6.19 (2019-07-XX):
 
+* Security fixes
+  - S8191073: JpegImageReader throws IndexOutOfBoundsException when trying to read image data from tables-only image
+  - S8208698, CVE-2019-2745: Improved ECC Implementation
+  - S8212328, CVE-2019-2745: Exceptional throw cases
+  - S8213431, CVE-2019-2766: Improve file protocol handling
+  - S8213432, CVE-2019-2769: Better copies of CopiesList
+  - S8216381, CVE-2019-2786: More limited privilege usage
+  - S8217563: Improve realm maintenance
+  - S8218873: Improve JSSE endpoint checking
+  - S8218876, CVE-2019-2745: Improve PNG support options
+  - S8219018: Adjust positions of glyphs
+  - S8219020: Table alternate substitutions
+  - S8219775: Certificate validation improvements
+  - S8220192: Better outlook for SecureRandom
+  - S8220517: Enhanced GIF support
+  - S8221518, CVE-2019-2816: Normalize normalization
+  - S8223511, CVE-2019-2842: Extended AES support
+* Import of OpenJDK 7 u231 build 1
+  - S7152169: TEST_BUG: sun/security/tools/jarsigner/ec.sh occasionally fail due to keytool error on sparc
+  - S7194075: Various classes of sunec.jar are duplicated in rt.jar
+  - S7198901: correct the field size check when decoding a point on ECC curve
+  - S8006799: Optimize sun.nio.cs.ISO_8859_1$Encode.encodeArrayLoop() (jdk part of 6896617)
+  - S8031145: Re-examine closed i18n tests to see it they can be moved to the jdk repository.
+  - S8035974: Refactor DigestBase.engineUpdate() method for better code generation by JIT compiler
+  - S8135248: Add utility methods to check indexes and ranges
+  - S8142493: Utility methods to check indexes and ranges doesn't specify behavior when function produces null
+  - S8146458: Improve exception reporting for Objects.checkIndex/checkFromToIndex/checkFromIndexSize
+  - S8155794: Move Objects.checkIndex BiFunction accepting methods to an internal package
+  - S8159035: CTSMode.java test crashed due to unhandled case of cipher length value as 0
+  - S8179098: Crypto AES/ECB encryption/decryption performance regression (introduced in jdk9b73)
+  - S8181594: Efficient and constant-time modular arithmetic
+  - S8182999: SunEC throws ProviderException on invalid curves
+  - S8187946: Support ISO 4217 Amendments 163 and 164
+  - S8193552: ISO 4217 amendment 165
+  - S8195478: sun/text/resources/LocaleDataTest.java fails with java.lang.Exception
+  - S8201317: X25519/X448 code improvements
+  - S8202026: ISO 4217 amendment 166
+  - S8203228: Branch-free output conversion for X25519 and X448
+  - S8204269: ISO 4217 amendment 167
+  - S8208648: ECC Field Arithmetic Enhancements
+  - S8208746: ISO 4217 Amendment #168 update
+  - S8209775: ISO 4217 Amendment #169 update
+  - S8210153: localized currency symbol of VES
+  - S8211435: Exception in thread "AWT-EventQueue-1" java.lang.IllegalArgumentException: null source
+  - S8215982: (tz) Upgrade time-zone data to tzdata2018i
+  - S8218781: Localized names for Japanese era Reiwa in COMPAT provider
+  - S8224560: (tz) Upgrade time-zone data to tzdata2019a
+  - S8225580: tzdata2018i integration causes test failures on jdk-13
+* Bug fixes
+  - PR3729: CVE-2018-3639 fix revision to prefer PR_SPEC_DISABLE_NOEXEC to PR_SPEC_DISABLE
+* AArch64 port
+  - S8149365, PR3741: aarch64: memory copy does not prefetch on backwards copy
+  - S8151340, PR3741: aarch64: prefetch the destination word for write prior to ldxr/stxr loops.
+  - S8153713, PR3741: aarch64: improve short array clearing using store pair
+  - S8153797, PR3741: aarch64: Add Arrays.fill stub code
+  - S8155617, PR3741: aarch64: ClearArray does not use DC ZVA
+  - S8157841, PR3741: aarch64: prefetch ignores cache line size
+  - S8186325, PR3741: AArch64: jtreg test hotspot/test/gc/g1/TestJNIWeakG1/TestJNIWeakG1.java SEGV
+  - S8224671, PR3741: AArch64: mauve System.arraycopy test failure
+  - S8224828, PR3741: aarch64: rflags is not correct after safepoint poll
+  - S8224880, PR3741: AArch64: java/javac error with AllocatePrefetchDistance
+
 New in release 2.6.18 (2019-05-01):
 
 * Security fixes
   - S8211936, CVE-2019-2602: Better String parsing
   - S8218453, CVE-2019-2684: More dynamic RMI interactions
   - S8219066, CVE-2019-2698: Fuzzing TrueType fonts: setCurrGlyphID()
-* Import of OpenJDK 7 u211 build 1
+* Import of OpenJDK 7 u221 build 1
   - S8003846: Override mechanism for currency data should not require creating currency.properties in java.home
   - S8129361: ISO 4217 amendment 160
   - S8129822: Define "headful" jtreg keyword
