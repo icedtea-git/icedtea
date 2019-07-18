@@ -8,9 +8,9 @@
 Summary: change to include atomic.inline.hpp and allocation.inline.hpp only in .cpp files and some build fixes from Kim to build on ubuntu without devkits
 Reviewed-by: kbarrett, sgehwolf, erikj
 
-diff --git openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make openjdk/hotspot/make/linux/makefiles/zeroshark.make
---- openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make
-+++ openjdk/hotspot/make/linux/makefiles/zeroshark.make
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make openjdk/hotspot/make/linux/makefiles/zeroshark.make
+--- openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make	2019-07-11 03:20:53.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/zeroshark.make	2019-07-18 02:59:04.550133133 +0100
 @@ -1,5 +1,5 @@
  #
 -# Copyright (c) 2003, 2005, Oracle and/or its affiliates. All rights reserved.
@@ -34,17 +34,17 @@ diff --git openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make openjdk/hots
 +  -Wno-format-nonliteral -Wno-format-security \
 +  -Wno-maybe-uninitialized
  
- # The copied fdlibm routines in sharedRuntimeTrig.o must not be optimized
- OPT_CFLAGS/sharedRuntimeTrig.o = $(OPT_CFLAGS/NOOPT)
-@@ -42,5 +49,3 @@
+ # If FDLIBM_CFLAGS is non-empty it holds CFLAGS needed to be passed to
+ # the compiler so as to be able to produce optimized objects
+@@ -48,5 +55,3 @@
  ifeq ($(ARCH_DATA_MODEL), 64)
    CFLAGS += -D_LP64=1
  endif
 -
 -OPT_CFLAGS/compactingPermGenGen.o = -O1
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/java.cpp openjdk/hotspot/src/share/vm/runtime/java.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/java.cpp
-+++ openjdk/hotspot/src/share/vm/runtime/java.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/java.cpp openjdk/hotspot/src/share/vm/runtime/java.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/java.cpp	2019-07-11 03:20:53.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/java.cpp	2019-07-18 02:58:37.142553196 +0100
 @@ -45,6 +45,7 @@
  #include "runtime/arguments.hpp"
  #include "runtime/biasedLocking.hpp"

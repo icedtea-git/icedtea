@@ -1,5 +1,30 @@
 2019-07-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump shenandoah to aarch64-shenandoah-jdk8u222-b10.
+	* patches/hotspot/shenandoah/8064786-pr3601.patch:
+	Drop patch applied silently in 8176100.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Move 8064786/PR3601 to
+	AArch32 only.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u222-b10.
+	* patches/hotspot/aarch32/6424123-pr3696.patch:
+	Restore unaltered version from before integration
+	of b01, so AArch32 builds again.
+	* patches/hotspot/aarch32/8064786-pr3601.patch:
+	Replace symlink with copy as Shenandoah version
+	has been removed.
+	* patches/hotspot/aarch32/8141570-pr3548.patch,
+	* patches/hotspot/aarch32/8143245-pr3548.patch:
+	Replace symlinks with copies as Shenandoah versions
+	have been modified.
+	* patches/hotspot/shenandoah/8141570-pr3548.patch,
+	* patches/hotspot/shenandoah/8143245-pr3548.patch:
+	Regenerate, due to context being changed by 8210425.
+
+2019-07-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump to icedtea-3.13.0.
 	* Makefile.am:
 	(CORBA_CHANGESET): Update to icedtea-3.13.0 tag.

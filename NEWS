@@ -183,11 +183,13 @@ New in release 3.13.0 (2019-07-XX):
 * Shenandoah
   - [backport] 8210879: ClassLoaderStatsClosure does raw oop comparison
   - [backport] 8216973: Kick up cleanup phases in the right places
+  - [backport] 8217016: Shenandoah: Streamline generation of CAS barriers
   - [backport] 8217043: Shenandoah: SIGSEGV in Type::meet_helper() at barrier expansion time
   - [backport] 8217213: shenandoahTaskQueue.hpp includes .inline.hpp file
   - [backport] 8217319: Cleanup Shenandoah includes
   - [backport] 8217343: Shenandoah control thread should be able to run at critical priority
   - [backport] 8217400: Optimized build is broken by Shenandoah changes
+  - [backport] 8217874: Shenandoah: Clobbered register in ShenandoahBarrierSetAssembler::cmpxchg_oop()
   - [backport] 8219524: Shenandoah misreports "committed" size in MemoryMXBean
   - [backport] 8219857: Shenandoah GC may initialize thread's gclab twice
   - [backport] 8219976: GarbageCollectionNotificationInfo always says "No GC" when running Shenandoah
@@ -196,9 +198,20 @@ New in release 3.13.0 (2019-07-XX):
   - [backport] 8220228: Improve Shenandoah pacing histogram message
   - [backport] 8220350: Refactor ShenandoahHeap::initialize
   - [backport] 8220712: [TESTBUG] gc/shenandoah/compiler/TestMaybeNullUnsafeAccess should run with Shenandoah enabled
+  - [backport] 8220714: C2 Compilation failure when accessing off-heap memory using Unsafe
+  - [backport] 8221278: Shenandoah should not enqueue string dedup candidates during root scan
   - [backport] 8222130: Shenandoah should verify roots after pre-evacuation
   - [backport] 8222185: Shenandoah should report "committed" as capacity
   - [backport] 8222186: Shenandoah should not uncommit below minimum heap size
+  - [backport] 8222403: Shenandoah: Remove ShenandoahAlwaysTrueClosure, use AlwaysTrueClosure instead
+  - [backport] 8222425: Shenandoah: Move commonly used closures to separate files
+  - [backport] 8223446: Shenandoah breaks alignment with some HumongousThreshold values
+  - [backport] 8223447: Stabilize gc/shenandoah/TestStringDedupStress test
+  - [backport] 8223651: Build fails with --with-jvm-features=-jfr and --disable-precompiled-headers
+  - [backport] 8223759: Shenandoah should allow arbitrarily low initial heap size
+  - [backport] 8223762: Shenandoah: overflows in calculations involving heap capacity
+  - [backport] 8223767: Shenandoah fails to build on Solaris x86_64
+  - [backport] 8223980: Shenandoah: Refactor and fix ObjArrayChunkedTask verification
   - [backport] 8222838: Shenandoah: SEGV on accessing cset bitmap for NULL ptr
   - [backport] 8222843: Print Shenandoah cset map addresses in hs_err
   - [backport] Added a few missed worker sessions for worker tasks
@@ -354,6 +367,9 @@ New in release 3.13.0 (2019-07-XX):
   - JDK8u-only: Use WB-based acmp barrier
   - Prettify Shenandoah JDK 8 logging
   - ShenandoahSATBBufferSize cannot be size_t in 8u
+  - Adjust code stub sizes for Shenandoah and future backports
+  - Enable weak JNI handling with Shenandoah after JDK-8176100
+  - S8210425: [AArch64] sharedRuntimeTrig/sharedRuntimeTrans compiled without optimization
 * AArch64 port
   - S8176100, PR3745: [AArch64] [REDO][REDO] G1 Needs pre barrier on dereference of weak JNI handles
   - S8186325, PR3745: AArch64: jtreg test hotspot/test/gc/g1/TestJNIWeakG1/TestJNIWeakG1.java SEGV
