@@ -369,10 +369,10 @@ New in release 3.13.0 (2019-07-XX):
   - ShenandoahSATBBufferSize cannot be size_t in 8u
   - Adjust code stub sizes for Shenandoah and future backports
   - Enable weak JNI handling with Shenandoah after JDK-8176100
-  - S8210425: [AArch64] sharedRuntimeTrig/sharedRuntimeTrans compiled without optimization
 * AArch64 port
   - S8176100, PR3745: [AArch64] [REDO][REDO] G1 Needs pre barrier on dereference of weak JNI handles
   - S8186325, PR3745: AArch64: jtreg test hotspot/test/gc/g1/TestJNIWeakG1/TestJNIWeakG1.java SEGV
+  - S8210425, PR3745: [AArch64] sharedRuntimeTrig/sharedRuntimeTrans compiled without optimization
   - S8224671, PR3745: AArch64: mauve System.arraycopy test failure
   - S8224828, PR3745: aarch64: rflags is not correct after safepoint poll
   - S8224880, PR3745: AArch64: java/javac error with AllocatePrefetchDistance

@@ -1,3 +1,12 @@
+2019-07-18  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	S8210425, PR3745: [AArch64]
+	sharedRuntimeTrig/sharedRuntimeTrans compiled
+	without optimization
+	* NEWS: Updated.
+	* hotspot.map.in: Bump HotSpot revision to
+	include AArch64 version of 8210425.
+
 2019-07-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump shenandoah to aarch64-shenandoah-jdk8u222-b10.
