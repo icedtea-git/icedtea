@@ -31,6 +31,8 @@ New in release 2.6.19 (2019-07-XX):
   - S8220517: Enhanced GIF support
   - S8221518, CVE-2019-2816: Normalize normalization
   - S8223511, CVE-2019-2842: Extended AES support
+* New features
+  - PR3746: Support EA builds
 * Import of OpenJDK 7 u231 build 1
   - S7152169: TEST_BUG: sun/security/tools/jarsigner/ec.sh occasionally fail due to keytool error on sparc
   - S7194075: Various classes of sunec.jar are duplicated in rt.jar
