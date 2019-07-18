@@ -12,6 +12,24 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.13.0 (2019-07-XX):
 
+* Security fixes
+  - S8191073: JpegImageReader throws IndexOutOfBoundsException when trying to read image data from tables-only image
+  - S8208698, CVE-2019-2745: Improved ECC Implementation
+  - S8212328, CVE-2019-2745: Exceptional throw cases
+  - S8213431, CVE-2019-2766: Improve file protocol handling
+  - S8213432, CVE-2019-2769: Better copies of CopiesList
+  - S8216381, CVE-2019-2786: More limited privilege usage
+  - S8217563: Improve realm maintenance
+  - S8218863: Better endpoint checks
+  - S8218873: Improve JSSE endpoint checking
+  - S8218876, CVE-2019-2745: Improve PNG support options
+  - S8219018: Adjust positions of glyphs
+  - S8219020: Table alternate substitutions
+  - S8219775: Certificate validation improvements
+  - S8220192: Better outlook for SecureRandom
+  - S8220517: Enhanced GIF support
+  - S8221518, CVE-2019-2816: Normalize normalization
+  - S8223511, CVE-2019-2842: Extended AES support
 * New features
   - PR3743: Support EA builds
 * Import of OpenJDK 8 u222 build 01
@@ -55,6 +73,113 @@ New in release 3.13.0 (2019-07-XX):
   - S8221789: make reconfigure broken (jdk8u only)
   - S8222965: Backport of JDK-8129988 broke the build
   - S8222975: Fix 'release' file to reflect actual repo checkin used to compile JDK
+* Import of OpenJDK 8 u222 build 02
+  - S8134030: test/serviceability/dcmd/gc/HeapDumpTest fails to verify the dump
+  - S8151539: Remove duplicate AlwaysTrueClosures
+  - S8176100: [REDO][REDO] G1 Needs pre barrier on dereference of weak JNI handles
+  - S8210416: [linux] Poor StrictMath performance due to non-optimized compilation
+  - S8217315: Proper units should print more significant digits
+  - S8218674: HTML Tooltip with "img=src" on component doesn't show
+* Import of OpenJDK 8 u222 build 03
+  - S7100957: SOCKS proxying does not work with IPv6 connections
+  - S7102541: RFE: os::set_native_thread_name() cleanups
+  - S8144332: HSDB could not terminate when close button is pushed.
+  - S8151322: Implement os::set_native_thread_name() on Solaris
+  - S8154387: Parallel unordered Stream.limit() tries to collect 128 elements even if limit is less
+  - S8189131: Open-source the Oracle JDK Root Certificates
+  - S8189949: Remove Baltimore Cybertrust Code Signing CA
+  - S8191031: Remove several Symantec Root CAs
+  - S8191844: Remove SECOM root (secomevrootca1)
+  - S8195774: Add Entrust root certificates
+  - S8195793: Remove GTE CyberTrust Global Root
+  - S8196141: Add GoDaddy root certificates
+  - S8199779: Add T-Systems, GlobalSign and Starfield services root certificates
+  - S8204923: Restore Symantec root verisignclass2g2ca
+  - S8209506: Add Google Trust Services GlobalSign root certificates
+  - S8210425: [x86] sharedRuntimeTrig/sharedRuntimeTrans compiled without optimization
+  - S8210432: Add additional TeliaSonera root certificate
+  - S8213213: Remove src/java.desktop/unix/classes/sun/awt/X11/keysym2ucs.h
+  - S8214770: java/time/test/java/time/format/TestNonIsoFormatter.java failed in non-english locales.
+  - S8216577: Add GlobalSign's R6 Root certificate
+  - S8218152: [javac] fails and exits with no error if a bad annotation processor provided
+  - S8222136: Remove two Comodo root CA certificates that are expiring
+  - S8222137: Remove T-Systems root CA certificate
+  - S8223555: Cleanups in cacerts tests
+  - S8223664: Add jtreg tests for 8223528, backport to jdk8u of 8176100
+* Import of OpenJDK 8 u222 build 04
+  - S8158232: PPC64: improve byte, int and long array copy stubs by using VSX instructions
+  - S8190974: Parallel stream execution within a custom ForkJoinPool should obey the parallelism
+  - S8203190: SessionId.hashCode generates too many collisions
+  - S8223499: Remove two DocuSign root certificates that are expiring
+  - S8223883: Fix jni.cpp copyright date after 8223528
+* Import of OpenJDK 8 u222 build 05
+  - S8019816: [TEST_BUG][macosx] closed/java/awt/BasicStroke/DashZeroWidth.java not on EDT
+  - S8044289: In ImageIO.write() and ImageIO.read() null stream is not handled properly.
+  - S8055705: Rename UnixPrintServiceLookup and Win32PrintServiceLookup as a platform neutral class name
+  - S8059575: JEP-JDK-8043304: Test task: Tiered Compilation level transition tests
+  - S8075939: Stream.flatMap() causes breaking of short-circuiting of terminal operations
+  - S8143097: java/net/ipv6tests/UdpTest.java fails intermittently with "checkTime failed: got 1998 expected 4000"
+  - S8151226: Mark UdpTest.java as intermittently failing
+  - S8166684: PPC64: implement intrinsic code with vector instructions for Unsafe.copyMemory()
+  - S8185969: PPC64: Improve VSR support to use up to 64 registers
+  - S8193830: Xalan Update: Xalan Java 2.7.2
+  - S8196775: java/net/Socket/asyncClose/Race.java failed intermittently on Windows with ConnectException: Connection refused
+  - S8202414: Unsafe write after primitive array creation may result in array length change
+  - S8202651: Test ComodoCA.java fails
+  - S8204929: Fonts with embedded bitmaps are not always rotated
+  - S8210886: Remove references in xwindows.md to non-existent files.
+  - S8210985: Update the default SSL session cache size to 20480
+  - S8213183: InputMethod cannot be used after its restarting
+  - S8214765: All TrayIcon MessageType icons does not show up with gtk3 option set
+  - S8218020: Back out accidental changes that belong elsewhere
+  - S8218020: Fix version number in mesa.md 3rd party legal file
+  - S8220495: Update GIFlib library to the 5.1.8
+  - S8222670: pathological case of JIT recompilation and code cache bloat
+  - S8223537: testlibrary_tests/ctw/ClassesListTest.java fails with Agent timeout frequently
+  - S8224727: Problem list test security/infra/java/security/cert/CertPathValidator/certification/ActalisCA.java
+  - S8225065: Revert 8221166 (8u backport of 8048782)
+* Import of OpenJDK 8 u222 build 06
+  - S8173910: (fs) java/nio/file/FileSystem/Basic.java should conditionally check FileStores
+  - S8176237: (fs) java/nio/file/FileStore/Basic.java should conditionally check FileStores
+  - S8202884: SA: Attach/detach might fail on Linux if debugee application create/destroy threads during attaching
+* Import of OpenJDK 8 u222 build 07
+  - S8153732: Windows remote printer changes do not reflect in lookupPrintServices()
+  - S8212202: [Windows] Exception if no printers are installed.
+  - S8221263: [TEST_BUG] RemotePrinterStatusRefresh test is hard to use
+  - S8221412: lookupPrintServices() does not always update the list of Windows remote printers
+  - S8225716: G1 GC: Undefined behaviour in G1BlockOffsetTablePart::block_at_or_preceding
+* Import of OpenJDK 8 u222 build 08
+  - S8040211: Update LSR datafile for BCP 47
+  - S8177472: Remove hard-coded IANA Subtag Registry map in LocaleEquivalentMap.java
+  - S8181594: Efficient and constant-time modular arithmetic
+  - S8182999: SunEC throws ProviderException on invalid curves
+  - S8187946: Support ISO 4217 Amendments 163 and 164
+  - S8191404: Upgrading JDK with latest available LSR data from IANA.
+  - S8193552: ISO 4217 amendment 165
+  - S8195478: sun/text/resources/LocaleDataTest.java fails with java.lang.Exception
+  - S8201317: X25519/X448 code improvements
+  - S8202026: ISO 4217 amendment 166
+  - S8203228: Branch-free output conversion for X25519 and X448
+  - S8203872: Upgrading JDK with latest available LSR data from IANA.
+  - S8204269: ISO 4217 amendment 167
+  - S8208648: ECC Field Arithmetic Enhancements
+  - S8208746: ISO 4217 Amendment #168 update
+  - S8209775: ISO 4217 Amendment #169 update
+  - S8210153: localized currency symbol of VES
+  - S8213294: Upgrade IANA LSR data
+  - S8214935: Upgrade IANA LSR data
+  - S8219781: Localized names for Japanese era Reiwa in COMPAT provider
+* Import of OpenJDK 8 u222 build 09
+  - S8135248: Add utility methods to check indexes and ranges
+  - S8142493: Utility methods to check indexes and ranges doesn't specify behavior when function produces null
+  - S8146458: Improve exception reporting for Objects.checkIndex/checkFromToIndex/checkFromIndexSize
+  - S8155794: Move Objects.checkIndex BiFunction accepting methods to an internal package
+  - S8179098: Crypto AES/ECB encryption/decryption performance regression (introduced in jdk9b73)
+* Import of OpenJDK 8 u222 build 10
+  - S8157792: After Integrating tzdata2016d the test/sun/util/calendar/zi/TestZoneInfo310.java fails for "Asia/Oral" and "Asia/Qyzylorda" Timezones
+  - S8215982: (tz) Upgrade time-zone data to tzdata2018i
+  - S8224560: (tz) Upgrade time-zone data to tzdata2019a
+  - S8225580: tzdata2018i integration causes test failures on jdk-13
 * Shenandoah
   - [backport] 8210879: ClassLoaderStatsClosure does raw oop comparison
   - [backport] 8216973: Kick up cleanup phases in the right places
@@ -229,6 +354,12 @@ New in release 3.13.0 (2019-07-XX):
   - JDK8u-only: Use WB-based acmp barrier
   - Prettify Shenandoah JDK 8 logging
   - ShenandoahSATBBufferSize cannot be size_t in 8u
+* AArch64 port
+  - S8176100, PR3745: [AArch64] [REDO][REDO] G1 Needs pre barrier on dereference of weak JNI handles
+  - S8186325, PR3745: AArch64: jtreg test hotspot/test/gc/g1/TestJNIWeakG1/TestJNIWeakG1.java SEGV
+  - S8224671, PR3745: AArch64: mauve System.arraycopy test failure
+  - S8224828, PR3745: aarch64: rflags is not correct after safepoint poll
+  - S8224880, PR3745: AArch64: java/javac error with AllocatePrefetchDistance
 
 New in release 3.12.0 (2019-05-01):
 
