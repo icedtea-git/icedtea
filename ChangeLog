@@ -1,3 +1,7 @@
+2019-07-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* NEWS: Set release date to today (2019-07-17).
+
 2019-07-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3746: Support EA builds

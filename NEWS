@@ -12,7 +12,7 @@ JEPX - https://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.19 (2019-07-XX):
+New in release 2.6.19 (2019-07-17):
 
 * Security fixes
   - S8191073: JpegImageReader throws IndexOutOfBoundsException when trying to read image data from tables-only image
