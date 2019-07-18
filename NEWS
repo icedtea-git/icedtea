@@ -376,6 +376,10 @@ New in release 3.13.0 (2019-07-XX):
   - S8224671, PR3745: AArch64: mauve System.arraycopy test failure
   - S8224828, PR3745: aarch64: rflags is not correct after safepoint poll
   - S8224880, PR3745: AArch64: java/javac error with AllocatePrefetchDistance
+* AArch32 port
+  - [aarch32] fix crash 'guarantee(sect->end() <= tend) failed: sanity'
+  - Remove debug output
+  - S8176100: [aarch32] [REDO][REDO] G1 Needs pre barrier on dereference of weak JNI handles
 
 New in release 3.12.0 (2019-05-01):
 
