@@ -10,19 +10,19 @@ LPX - https://bugs.launchpad.net/bugs/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.13.0 (2019-07-XX):
+New in release 3.13.0 (2019-07-18):
 
 * Security fixes
   - S8191073: JpegImageReader throws IndexOutOfBoundsException when trying to read image data from tables-only image
   - S8208698, CVE-2019-2745: Improved ECC Implementation
-  - S8212328, CVE-2019-2745: Exceptional throw cases
+  - S8212328, CVE-2019-2762: Exceptional throw cases
   - S8213431, CVE-2019-2766: Improve file protocol handling
   - S8213432, CVE-2019-2769: Better copies of CopiesList
   - S8216381, CVE-2019-2786: More limited privilege usage
   - S8217563: Improve realm maintenance
   - S8218863: Better endpoint checks
   - S8218873: Improve JSSE endpoint checking
-  - S8218876, CVE-2019-2745: Improve PNG support options
+  - S8218876, CVE-2019-7317: Improve PNG support options
   - S8219018: Adjust positions of glyphs
   - S8219020: Table alternate substitutions
   - S8219775: Certificate validation improvements

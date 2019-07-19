@@ -1,5 +1,10 @@
 2019-07-18  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Prepare for release.
+	* NEWS: Set release date to today (2019-07-18).
+
+2019-07-18  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump aarch32 to jdk8u222-b08-aarch32-190710.
 	* patches/hotspot/aarch32/8064786-pr3601.patch:
 	Removed, now that AArch32 is also using 8u222.
