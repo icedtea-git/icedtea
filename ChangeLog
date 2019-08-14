@@ -1,3 +1,9 @@
+2019-05-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Start 3.14.0 release cycle.
+	* NEWS: Add 3.14.0 section.
+	* configure.ac: Bump to 3.14.0pre00.
+
 2019-07-18  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Prepare for release.
