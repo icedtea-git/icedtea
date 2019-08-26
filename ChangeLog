@@ -1,3 +1,36 @@
+2019-08-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump shenandoah to aarch64-shenandoah-jdk8u232-b01
+	* patches/hotspot/shenandoah/8187667-pr3517-readdir_r.patch,
+	* patches/hotspot/shenandoah/8196978-pr3517-gcc_4_pragmas.patch:
+	Removed as readdir_r issue was fixed upstream in 8u232-b01.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Move above readdir_r patches to AArch32-only
+	section.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u232-b01.
+	* patches/hotspot/aarch32/6424123-pr3696.patch:
+	Replace symlink with a copy of the Shenandoah version, so the
+	Shenandoah one can be updated for 8u232-b01.
+	* patches/hotspot/aarch32/8187667-pr3517-readdir_r.patch,
+	* patches/hotspot/aarch32/8196978-pr3517-gcc_4_pragmas.patch:
+	Replace symlinks with copies as these patches have been removed
+	for Shenandoah.
+	* patches/hotspot/aarch32/pr1368.patch:
+	Replace symlink with a copy of the Shenandoah version, so the
+	Shenandoah one can be updated for 8u232-b01.
+	* patches/hotspot/shenandoah/6424123-pr3696.patch:
+	Fix context in vm_version_ppc.cpp altered by
+	"8185979: PPC64: Implement SHA2 intrinsic"
+	* patches/hotspot/shenandoah/8158260-pr2991-rh1341258.patch:
+	Alter placement of new flag in vm_version_ppc.cpp so it
+	is no longer affected by 8185979.
+	* patches/hotspot/shenandoah/pr1368.patch:
+	Fix context in jsig.make files for each platform as
+	"8210761: libjsig is being compiled without optimization"
+	changed them.
+
 2019-05-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Start 3.14.0 release cycle.

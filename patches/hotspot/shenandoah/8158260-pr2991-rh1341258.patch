@@ -12,18 +12,18 @@ Contributed-by: gromero@linux.vnet.ibm.com, horii@jp.ibm.com
 diff -Nru openjdk.orig/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp
 --- openjdk.orig/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp	2019-01-16 07:13:59.000000000 +0000
 +++ openjdk/hotspot/src/cpu/ppc/vm/vm_version_ppc.cpp	2019-01-25 13:46:51.799453897 +0000
-@@ -201,6 +201,11 @@
-     FLAG_SET_DEFAULT(UseSHA512Intrinsics, false);
+@@ -237,6 +251,11 @@
+   if (FLAG_IS_DEFAULT(UseMontgomerySquareIntrinsic)) {
+     UseMontgomerySquareIntrinsic = true;
    }
- 
++
 +  // This machine allows unaligned memory accesses
 +  if (FLAG_IS_DEFAULT(UseUnalignedAccesses)) {
 +    FLAG_SET_DEFAULT(UseUnalignedAccesses, true);
 +  }
-+
-   if (FLAG_IS_DEFAULT(UseMontgomeryMultiplyIntrinsic)) {
-     UseMontgomeryMultiplyIntrinsic = true;
-   }
+ }
+ 
+ void VM_Version::print_features() {
 diff -Nru openjdk.orig/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp openjdk/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp
 --- openjdk.orig/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp	2019-01-16 07:13:59.000000000 +0000
 +++ openjdk/hotspot/src/cpu/sparc/vm/vm_version_sparc.cpp	2019-01-25 13:46:51.799453897 +0000

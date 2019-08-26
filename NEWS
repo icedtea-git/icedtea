@@ -12,6 +12,19 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.14.0 (2019-10-XX):
 
+* Shenandoah
+  - S8075136: Unnecessary sign extension for byte array access
+  - S8152856: Xcode 7.3 -Wshift-negative-value compile failure on Mac OS X
+  - S8185900: hotspot build failed with gcc version Red Hat 4.4.7-3
+  - S8185979: PPC64: Implement SHA2 intrinsic
+  - S8202353: os::readdir should use readdir instead of readdir_r
+  - S8210761: libjsig is being compiled without optimization
+  - S8218721: C1's CEE optimization produces safepoint poll with invalid debug information
+  - S8219807: C2 crash in IfNode::up_one_dom(Node*, bool)
+  - S8225636: SA can't handle prelinked libraries
+  - S8228405: Incorrect format strings in PhaseIdealLoop::rc_predicate
+  - S8228406: Superfluous change in chaitin.hpp
+
 New in release 3.13.0 (2019-07-18):
 
 * Security fixes
