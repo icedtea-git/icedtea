@@ -12,18 +12,41 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.14.0 (2019-10-XX):
 
-* Shenandoah
+* Import of OpenJDK 8 u232 build 01
+  - S6913047: Long term memory leak when using PKCS11 and JCE exceeds 32 bit process address space
+  - S6946830: javax.crypto.Cipher.doFinal behavior differs depending on platform
+  - S6996807: FieldReflectorKey hash code computation can be improved
+  - S8030993: Check jdk/src/share/native/common/jni_util.c for JNI pending exceptions
   - S8075136: Unnecessary sign extension for byte array access
+  - S8075544: Add tiered testing definitions to the jdk repo
+  - S8075573: Add jdk_other and jdk_svc to jdk tier 2 test definition
+  - S8151486: Class.forName causes memory leak
   - S8152856: Xcode 7.3 -Wshift-negative-value compile failure on Mac OS X
+  - S8168417: Pending exceptions in java.base/windows/native/libnio
+  - S8170494: JNI exception pending in PlainDatagramSocketImpl.c
   - S8185900: hotspot build failed with gcc version Red Hat 4.4.7-3
   - S8185979: PPC64: Implement SHA2 intrinsic
+  - S8197930: JNI exception pending in initializeEncoding of jni_util.c
   - S8202353: os::readdir should use readdir instead of readdir_r
+  - S8205587: Implicit function declaration in jni_util.c
   - S8210761: libjsig is being compiled without optimization
+  - S8214002: Cannot use italic font style if the font has embedded bitmap
   - S8218721: C1's CEE optimization produces safepoint poll with invalid debug information
+  - S8218781: Localized names for Japanese era Reiwa in COMPAT provider
+  - S8218854: FontMetrics.getMaxAdvance may be less than the maximum FontMetrics.charWidth
   - S8219807: C2 crash in IfNode::up_one_dom(Node*, bool)
+  - S8221304: Problem list java/awt/FontMetrics/MaxAdvanceIsMax.java
+  - S8223219: Backport of JDK-8199552 to OpenJDK 8 leads to duplicate -fstack-protector flags, overriding --with-extra-cflags
   - S8225636: SA can't handle prelinked libraries
+  - S8226392: Launcher should not enable legacy stdio streams on GNU/Linux (glibc)
+  - S8226870: OpenJDK 8u JRE contains clhsdb and hsdb launchers
+  - S8226928: [TESTBUG] test/java/net/NetworkInterface/IPv4Only.java fails intermittently on AIX
+  - S8227018: CompletableFuture should not call Runtime.availableProcessors on fast path
   - S8228405: Incorrect format strings in PhaseIdealLoop::rc_predicate
+* Shenandoah
   - S8228406: Superfluous change in chaitin.hpp
+* AArch64 port
+  - S8151775, PR3750: aarch64: add support for 8.1 LSE atomic operations
 
 New in release 3.13.0 (2019-07-18):
 
