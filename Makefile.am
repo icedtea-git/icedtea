@@ -358,10 +358,6 @@ ICEDTEA_PATCHES += \
 	patches/jamvm/pr2775-cache_api.patch
 endif
 
-if !USE_NON_NSS_CURVES
-ICEDTEA_PATCHES += patches/rh1022017.patch
-endif
-
 if ENABLE_NSS
 ICEDTEA_PATCHES += patches/pkcs11-nss-config.patch
 else
