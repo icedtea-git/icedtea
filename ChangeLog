@@ -1,3 +1,17 @@
+2019-10-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3748: dev-java/icedtea-3.12.0 fails to build with
+	mksh as the default shell
+	* AUTHORS: Add Kerin Millar.
+
+2019-05-15  Kerin Millar  <kfm@plushkava.net>
+
+	PR3748: dev-java/icedtea-3.12.0 fails to build with
+	mksh as the default shell
+	* acinclude.m4:
+	(IT_VENDOR_OPTS): Use a switch statement rather than
+	the =~ bashism.
+
 2019-09-05  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.14.0pre01.

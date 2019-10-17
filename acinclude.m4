@@ -2789,8 +2789,12 @@ AC_DEFUN_ONCE([IT_VENDOR_OPTS],
      test "x${VENDOR_NAME}" = xyes ||
      test "x${VENDOR_NAME}" = xno; then
        AC_MSG_ERROR([--with-vendor-name must have a value])
-  elif [ ! [[ ${VENDOR_NAME} =~ ^[[:print:]]*$ ]] ]; then
-    AC_MSG_ERROR([--with-vendor-name value contains non-printing characters: ${VENDOR_NAME}])
+  else
+    case ${VENDOR_NAME} in
+      *[![:print:]]*)
+    	AC_MSG_ERROR([--with-vendor-name value contains non-printing characters: ${VENDOR_NAME}])
+	;;
+    esac
   fi
   AC_SUBST(VENDOR_NAME)
 
@@ -2804,8 +2808,12 @@ AC_DEFUN_ONCE([IT_VENDOR_OPTS],
      test "x${VENDOR_URL}" = xyes ||
      test "x${VENDOR_URL}" = xno; then
        AC_MSG_ERROR([--with-vendor-url must have a value])
-  elif [ ! [[ ${VENDOR_URL} =~ ^[[:print:]]*$ ]] ]; then
-    AC_MSG_ERROR([--with-vendor-url value contains non-printing characters: ${VENDOR_URL}])
+  else
+    case ${VENDOR_URL} in
+      *[![:print:]]*)
+        AC_MSG_ERROR([--with-vendor-url value contains non-printing characters: ${VENDOR_URL}])
+	;;
+    esac
   fi
   AC_SUBST(VENDOR_URL)
 
@@ -2819,8 +2827,12 @@ AC_DEFUN_ONCE([IT_VENDOR_OPTS],
      test "x${VENDOR_BUG_URL}" = xyes ||
      test "x${VENDOR_BUG_URL}" = xno; then
        AC_MSG_ERROR([--with-vendor-bug-url must have a value])
-  elif [ ! [[ ${VENDOR_BUG_URL} =~ ^[[:print:]]*$ ]] ]; then
-    AC_MSG_ERROR([--with-vendor-bug-url value contains non-printing characters: ${VENDOR_BUG_URL}])
+  else
+    case ${VENDOR_BUG_URL} in
+      *[![:print:]]*)
+        AC_MSG_ERROR([--with-vendor-bug-url value contains non-printing characters: ${VENDOR_BUG_URL}])
+	;;
+    esac
   fi
   AC_SUBST(VENDOR_BUG_URL)
 
@@ -2834,8 +2846,12 @@ AC_DEFUN_ONCE([IT_VENDOR_OPTS],
      test "x${VENDOR_VM_BUG_URL}" = xyes ||
      test "x${VENDOR_VM_BUG_URL}" = xno; then
        AC_MSG_ERROR([--with-vendor-vm-bug-url must have a value])
-  elif [ ! [[ ${VENDOR_VM_BUG_URL} =~ ^[[:print:]]*$ ]] ]; then
-    AC_MSG_ERROR([--with-vendor-vm-bug-url value contains non-printing characters: ${VENDOR_VM_BUG_URL}])
+  else
+    case ${VENDOR_VM_BUG_URL} in
+      *[![:print:]]*)
+        AC_MSG_ERROR([--with-vendor-vm-bug-url value contains non-printing characters: ${VENDOR_VM_BUG_URL}])
+	;;
+    esac
   fi
   AC_SUBST(VENDOR_VM_BUG_URL)
 ])
