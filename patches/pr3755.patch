@@ -126,24 +126,6 @@ diff --git a/src/java.base/share/classes/sun/security/ssl/NamedGroup.java b/src/
  
      final int id;               // hash + signature
      final NamedGroupType type;  // group type
-diff --git a/src/java.base/share/classes/sun/security/ssl/SupportedGroupsExtension.java b/src/java.base/share/classes/sun/security/ssl/SupportedGroupsExtension.java
---- a/src/java.base/share/classes/sun/security/ssl/SupportedGroupsExtension.java
-+++ b/src/java.base/share/classes/sun/security/ssl/SupportedGroupsExtension.java
-@@ -214,14 +214,6 @@
-                         // Secondary XDH curves
-                         NamedGroup.X448,
- 
--                        // Secondary NIST curves
--                        NamedGroup.SECT283_K1,
--                        NamedGroup.SECT283_R1,
--                        NamedGroup.SECT409_K1,
--                        NamedGroup.SECT409_R1,
--                        NamedGroup.SECT571_K1,
--                        NamedGroup.SECT571_R1,
--
-                         // non-NIST curves
-                         NamedGroup.SECP256_K1,
- 
 diff --git a/src/java.base/share/classes/sun/security/util/CurveDB.java b/src/java.base/share/classes/sun/security/util/CurveDB.java
 --- a/src/java.base/share/classes/sun/security/util/CurveDB.java
 +++ b/src/java.base/share/classes/sun/security/util/CurveDB.java
