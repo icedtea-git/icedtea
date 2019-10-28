@@ -8,8 +8,8 @@
 Reviewed-by: dholmes, coleenp
 
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make openjdk/hotspot/make/linux/makefiles/zeroshark.make
---- openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make	2019-07-18 03:01:29.631909551 +0100
-+++ openjdk/hotspot/make/linux/makefiles/zeroshark.make	2019-07-18 03:06:00.171763146 +0100
+--- openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make	2019-10-10 18:16:42.000000000 +0100
++++ openjdk/hotspot/make/linux/makefiles/zeroshark.make	2019-10-24 04:00:14.945588968 +0100
 @@ -1,5 +1,5 @@
  #
 -# Copyright (c) 2003, 2015, Oracle and/or its affiliates. All rights reserved.
@@ -18,7 +18,7 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make openjdk/hotsp
  # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  #
 @@ -29,11 +29,6 @@
- ifeq ($(USE_CLANG), true)
+ ifeq ($(JVM_VARIANT_ZEROSHARK), true)
    WARNING_FLAGS += -Wno-undef
  endif
 -# Suppress some warning flags that are normally turned on for hotspot,
@@ -26,12 +26,12 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make openjdk/hotsp
 -WARNING_FLAGS += -Wno-return-type \
 -  -Wno-format-nonliteral -Wno-format-security \
 -  -Wno-maybe-uninitialized
+  
  
  # If FDLIBM_CFLAGS is non-empty it holds CFLAGS needed to be passed to
- # the compiler so as to be able to produce optimized objects
 diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp openjdk/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
---- openjdk.orig/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp	2019-07-11 03:20:53.000000000 +0100
-+++ openjdk/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp	2019-07-18 03:05:46.751968822 +0100
+--- openjdk.orig/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp	2019-10-10 18:16:42.000000000 +0100
++++ openjdk/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp	2019-10-24 03:59:57.009862016 +0100
 @@ -100,7 +100,7 @@
      case T_DOUBLE:
      case T_VOID:
@@ -42,8 +42,8 @@ diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp openjdk/h
  }
  
 diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp openjdk/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp
---- openjdk.orig/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp	2019-07-11 03:20:53.000000000 +0100
-+++ openjdk/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp	2019-07-18 03:05:46.751968822 +0100
+--- openjdk.orig/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp	2019-10-10 18:16:42.000000000 +0100
++++ openjdk/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp	2019-10-24 03:59:57.009862016 +0100
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (c) 2003, 2012, Oracle and/or its affiliates. All rights reserved.
@@ -61,8 +61,8 @@ diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp openjdk/ho
    case T_VOID:
      ftype = &ffi_type_void;
 diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
---- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp	2019-07-11 03:20:53.000000000 +0100
-+++ openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp	2019-07-18 03:05:46.751968822 +0100
+--- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp	2019-10-10 18:16:42.000000000 +0100
++++ openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp	2019-10-24 03:59:57.009862016 +0100
 @@ -1,6 +1,6 @@
  /*
   * Copyright (c) 2003, 2018, Oracle and/or its affiliates. All rights reserved.
@@ -127,8 +127,8 @@ diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp openjd
  
  void os::Linux::set_fpu_control_word(int fpu) {
 diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp openjdk/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp
---- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp	2019-07-11 03:20:53.000000000 +0100
-+++ openjdk/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp	2019-07-18 03:05:46.751968822 +0100
+--- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp	2019-10-10 18:16:42.000000000 +0100
++++ openjdk/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp	2019-10-24 03:59:57.009862016 +0100
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.

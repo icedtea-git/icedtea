@@ -353,11 +353,12 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8078628-pr3208.patch \
 	patches/hotspot/$(HSBUILD)/8187667-pr3517-readdir_r.patch \
 	patches/hotspot/$(HSBUILD)/8196978-pr3517-gcc_4_pragmas.patch \
-	patches/hotspot/$(HSBUILD)/8223511.patch
+	patches/hotspot/$(HSBUILD)/8223511.patch \
+	patches/hotspot/$(HSBUILD)/8038392-rh1064383.patch \
+	patches/hotspot/$(HSBUILD)/8141570-pr3548.patch
 endif
 
 ICEDTEA_PATCHES += \
-	patches/hotspot/$(HSBUILD)/8038392-rh1064383.patch \
 	patches/hotspot/$(HSBUILD)/8041658.patch \
 	patches/hotspot/$(HSBUILD)/8087218-pr2740.patch \
 	patches/hotspot/$(HSBUILD)/8158260-pr2991-rh1341258.patch \
@@ -372,7 +373,6 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/werror.patch \
 	patches/hotspot/$(HSBUILD)/8043780-pr3368.patch \
 	patches/hotspot/$(HSBUILD)/8062808-pr3548.patch \
-	patches/hotspot/$(HSBUILD)/8141570-pr3548.patch \
 	patches/hotspot/$(HSBUILD)/8143245-pr3548.patch \
 	patches/hotspot/$(HSBUILD)/pr3593.patch \
 	patches/hotspot/$(HSBUILD)/8197981-pr3548.patch \

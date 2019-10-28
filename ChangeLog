@@ -1,3 +1,25 @@
+2019-10-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump shenandoah to aarch64-shenandoah-jdk8u232-b09.
+	* patches/hotspot/shenandoah/8038392-rh1064383.patch,
+	* patches/hotspot/shenandoah/8141570-pr3548.patch:
+	Removed as applied upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Move above patches to AArch32-only
+	section.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u232-b09.
+	* patches/hotspot/aarch32/8038392-rh1064383.patch,
+	* patches/hotspot/aarch32/8141570-pr3548.patch:
+	Replace symlinks with copies of the Shenandoah versions, so the
+	Shenandoah ones can be removed.
+	* patches/hotspot/aarch32/8143245-pr3548.patch:
+	Replace symlink with a copy of the Shenandoah version, so the
+	Shenandoah one can be updated for 8u232-b09.
+	* patches/hotspot/shenandoah/8143245-pr3548.patch:
+	Adjust patch to apply against upstream version of 8141570.
+
 2019-10-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3748: dev-java/icedtea-3.12.0 fails to build with
