@@ -12,6 +12,32 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.14.0 (2019-10-XX):
 
+* Security fixes
+  - S8167646: Better invalid FilePermission
+  - S8213429, CVE-2019-2933: Windows file handling redux
+  - S8218573, CVE-2019-2945: Better socket support
+  - S8218877: Help transform transformers
+  - S8220186: Improve use of font temporary files
+  - S8220302, CVE-2019-2949: Better Kerberos ccache handling
+  - S8221497: Optional Panes in Swing
+  - S8221858, CVE-2019-2958: Build Better Processes
+  - S8222684, CVE-2019-2964: Better support for patterns
+  - S8222690, CVE-2019-2962: Better Glyph Images
+  - S8223163: Better pattern recognition
+  - S8223505, CVE-2019-2973: Better pattern compilation
+  - S8223518, CVE-2019-2975: Unexpected exception in jjs
+  - S8223892, CVE-2019-2978: Improved handling of jar files
+  - S8224025: Fix for JDK-8220302 is not complete
+  - S8224532, CVE-2019-2981: Better Path supports
+  - S8224915, CVE-2019-2983: Better serial attributes
+  - S8225286, CVE-2019-2987: Better rendering of native glyphs
+  - S8225292, CVE-2019-2988: Better Graphics2D drawing
+  - S8225298, CVE-2019-2989: Improve TLS connection support
+  - S8225597, CVE-2019-2992: Enhance font glyph mapping
+  - S8226765, CVE-2019-2999: Commentary on Javadoc comments
+  - S8227129: Better ligature for subtables
+  - S8227601: Better collection of references
+  - S8228825, CVE-2019-2894: Enhance ECDSA operations
 * Import of OpenJDK 8 u232 build 01
   - S6913047: Long term memory leak when using PKCS11 and JCE exceeds 32 bit process address space
   - S6946830: javax.crypto.Cipher.doFinal behavior differs depending on platform
@@ -43,6 +69,62 @@ New in release 3.14.0 (2019-10-XX):
   - S8226928: [TESTBUG] test/java/net/NetworkInterface/IPv4Only.java fails intermittently on AIX
   - S8227018: CompletableFuture should not call Runtime.availableProcessors on fast path
   - S8228405: Incorrect format strings in PhaseIdealLoop::rc_predicate
+* Import of OpenJDK 8 u232 build 02
+  - S8075546: Add tiered testing definitions to the langtools repo
+  - S8202252: (aio) Closed AsynchronousSocketChannel keeps completion handler alive
+  - S8216597: SIGBUS in Java_sun_security_pkcs11_wrapper_PKCS11_getNativeKeyInfo after JDK-6913047
+  - S8220513: Wrapper Key may get deleted when closing sessions in SunPKCS11 crypto provider
+  - S8222737: [TESTBUG] Allow for tier 1 like testing in OpenJDK 8u
+  - S8224580: Matcher can cause oop field/array element to be reloaded
+  - S8226543: Reduce GC pressure during message digest calculations in password-based encryption
+* Import of OpenJDK 8 u232 build 03
+  - S8213561: ZipFile/MultiThreadedReadTest.java timed out in tier1
+  - S8217785: Padding ParallelTaskTerminator::_offered_termination variable
+* Import of OpenJDK 8 u232 build 04
+  - S8188868: PPC64: Support AES intrinsics on Big Endian
+* Import of OpenJDK 8 u232 build 05
+  - S8080157: assert(allocates2(pc)) failed: not in CodeBuffer memory
+  - S8087128: C2: Disallow definition split on MachCopySpill nodes
+  - S8139965: Hang seen when using com.sun.jndi.ldap.search.replyQueueSize
+  - S8147502: Digest is incorrectly truncated for ECDSA signatures when the bit length of n is less than the field size
+  - S8147611: G1 - Missing memory barrier in start_cset_region_for_worker
+  - S8151066: assert(0 <= i && i < length()) failed: index out of bounds
+  - S8155951: VM crash in nsk/jvmti/RedefineClasses/StressRedefine: assert failed: Corrupted constant pool
+  - S8202948: C2: assert(init_offset >= 0) failed: positive offset from object start
+  - S8203324: Use out of scope in getMacOSXLocale of java_props_macosx.c:120
+  - S8206879: Currency decimal marker incorrect for Peru
+  - S8211232: GraphKit::make_runtime_call() sometimes attaches wrong memory state to call
+  - S8214687: Optimize Collections.nCopies().hashCode() and equals()
+  - S8214702: Wrong text position for whitespaced string in printing Swing text
+  - S8215130: Fix errors in LittleCMS 2.9 reported by GCC 8
+  - S8215265: C2: range check elimination may allow illegal out of bound access
+  - S8217359: C2 compiler triggers SIGSEGV after transformation in ConvI2LNode::Ideal
+  - S8217731: Font rendering and glyph spacing changed from jdk-8 to jdk-11
+  - S8217896: Make better use of LCPUs when building on AIX
+  - S8218201: Failures when vmIntrinsics::_getClass is not inlined
+  - S8218280: LineNumberReader throws "Mark invalid" exception if CRLF straddles buffer.
+  - S8218780: Update MUSCLE PCSC-Lite header files
+  - S8219517: assert(false) failed: infinite loop in PhaseIterGVN::optimize
+  - S8220072: GCC 8.3 reports errors in java.base
+  - S8222980: Upgrade IANA Language Subtag Registry to Version 2019-04-03
+  - S8223177: Data race on JvmtiEnvBase::_tag_map in double-checked locking
+  - S8223227: Rename acquire_tag_map() to tag_map_acquire() in jvmtiEnvBase
+  - S8225423: GTK L&F: JSplitPane: There is no divider shown
+  - S8226798: JVM crash in klassItable::initialize_itable_for_interface(int, InstanceKlass*, bool, Thread*)
+  - S8226964: [Yaru] GTK L&F: There is no difference between menu selected and de-selected
+  - S8228440: TestAESCiphers tests fail with "access denied" trying to access ArrayUtil
+* Import of OpenJDK 8 u232 build 06
+  - S8178870: instrumentation.retransformClasses cause coredump
+  - S8216965: crash in freetypeScaler.c CopyBW2Grey8
+  - S8217676: Upgrade libpng to 1.6.37
+  - S8222108: Reduce minRefreshTime for updating remote printer list on Windows
+* Import of OpenJDK 8 u232 build 08
+  - S8225425: java.lang.UnsatisfiedLinkError: net.dll: Can't find dependent libraries
+  - S8226607: Inconsistent info between pcsclite.md and MUSCLE headers
+  - S8228469: (tz) Upgrade time-zone data to tzdata2019b
+  - S8230085: (fs) FileStore::isReadOnly is always true on macOS Catalina
+  - S8231098: (tz) Upgrade time-zone data to tzdata2019c
+  - S8231463: Fix runtime/RedefineTests/RedefineDoubleDelete.java test in 8u
 * Shenandoah
   - [backport] 8230425: Shenandoah forces +UseNUMAInterleaving even after explicitly disabled
   - Missing include precompiled.hpp in shenandoahSynchronizerIterator.cpp
@@ -51,56 +133,32 @@ New in release 3.14.0 (2019-10-XX):
   - Revert parts of x86_64.ad to 8u upstream state
   - Revert Shenandoah/JDK8-only changes relating to MonitorInUseLists
   - Revert Shenandoah-specific assert after JDK-8211926 landed
-  - S8038392: Generating prelink cache breaks JAVA 'jinfo' utility normal behaviour
-  - S8080157: assert(allocates2(pc)) failed: not in CodeBuffer memory
-  - S8087128: C2: Disallow definition split on MachCopySpill nodes
-  - S8141570: Fix Zero interpreter build for --disable-precompiled-headers
-  - S8143072: [JVMCI] Port JVMCI to AArch64
-  - S8147611: G1 - Missing memory barrier in start_cset_region_for_worker
-  - S8151066: assert(0 <= i && i < length()) failed: index out of bounds
-  - S8155951: VM crash in nsk/jvmti/RedefineClasses/StressRedefine: assert failed: Corrupted constant pool
-  - S8178870: instrumentation.retransformClasses cause coredump
-  - S8179954: AArch64: C1 and C2 volatile accesses are not sequentially consistent
-  - S8188868: PPC64: Support AES intrinsics on Big Endian
-  - S8202948: C2: assert(init_offset >= 0) failed: positive offset from object start
-  - S8205421: AARCH64: StubCodeMark should be placed after alignment
-  - S8206163: AArch64: incorrect code generation for StoreCM
-  - S8209420: Track membars for volatile accesses so they can be properly optimized
-  - S8211232: GraphKit::make_runtime_call() sometimes attaches wrong memory state to call
-  - S8211233: MemBarNode::trailing_membar() and MemBarNode::leading_membar() need to handle dying subgraphs better
-  - S8213134: AArch64: vector shift failed with MaxVectorSize=8
-  - S8214857: "bad trailing membar" assert failure at memnode.cpp:3220
-  - S8215265: C2: range check elimination may allow illegal out of bound access
-  - S8216350: AArch64: monitor unlock fast path not called
-  - S8217359: C2 compiler triggers SIGSEGV after transformation in ConvI2LNode::Ideal
-  - S8217676: Upgrade libpng to 1.6.37
-  - S8217785: Padding ParallelTaskTerminator::_offered_termination variable
-  - S8218201: Failures when vmIntrinsics::_getClass is not inlined
-  - S8219011: Implement MacroAssembler::warn method on AArch64
-  - S8219517: assert(false) failed: infinite loop in PhaseIterGVN::optimize
-  - S8222737: [TESTBUG] Allow for tier 1 like testing in OpenJDK 8u
-  - S8223177: Data race on JvmtiEnvBase::_tag_map in double-checked locking
-  - S8223227: Rename acquire_tag_map() to tag_map_acquire() in jvmtiEnvBase
-  - S8224580: Matcher can cause oop field/array element to be reloaded
-  - S8226607: Inconsistent info between pcsclite.md and MUSCLE headers
-  - S8226798: JVM crash in klassItable::initialize_itable_for_interface(int, InstanceKlass*, bool, Thread*)
-  - S8228400: Remove built-in AArch64 simulator
-  - S8228406: Superfluous change in chaitin.hpp
-  - S8228593: Revert explicit JDK 7 support additions
-  - S8228716: Revert InstanceKlass::print_on debug additions
-  - S8228718: Revert incorrect backport of JDK-8129757 to 8-aarch64
-  - S8228725: AArch64: Purge method call format support
   - S8228746: Revert incorrect StubRoutines::contains change
-  - S8228747: Revert "unused" attribute from test_arraycopy_func
-  - S8228767: Revert ResourceMark additions
-  - S8228770: Revert development hsdis changes
-  - S8229123: Revert build fixes for aarch64/zero
-  - S8229124: Revert disassembler.cpp changes
-  - S8229145: Revert TemplateTable::bytecode() visibility change
   - S8231366: Shenandoah: Shenandoah String Dedup thread is not properly initialized
-  - S8231463: Fix runtime/RedefineTests/RedefineDoubleDelete.java test in 8u
 * AArch64 port
   - S8151775, PR3750: aarch64: add support for 8.1 LSE atomic operations
+  - S8179954, PR3762: AArch64: C1 and C2 volatile accesses are not sequentially consistent
+  - S8205421, PR3762: AARCH64: StubCodeMark should be placed after alignment
+  - S8206163, PR3762: AArch64: incorrect code generation for StoreCM
+  - S8209420, PR3762: Track membars for volatile accesses so they can be properly optimized
+  - S8211233, PR3762: MemBarNode::trailing_membar() and MemBarNode::leading_membar() need to handle dying subgraphs better
+  - S8213134, PR3762: AArch64: vector shift failed with MaxVectorSize=8
+  - S8214857, PR3762: "bad trailing membar" assert failure at memnode.cpp:3220
+  - S8216350, PR3762: AArch64: monitor unlock fast path not called
+  - S8219011, PR3762: Implement MacroAssembler::warn method on AArch64
+  - S8228400, PR3762: Remove built-in AArch64 simulator
+  - S8228406, PR3762: Superfluous change in chaitin.hpp
+  - S8228593, PR3762: Revert explicit JDK 7 support additions
+  - S8228716, PR3762: Revert InstanceKlass::print_on debug additions
+  - S8228718, PR3762: Revert incorrect backport of JDK-8129757 to 8-aarch64
+  - S8228725, PR3762: AArch64: Purge method call format support
+  - S8228747, PR3762: Revert "unused" attribute from test_arraycopy_func
+  - S8228767, PR3762: Revert ResourceMark additions
+  - S8228770, PR3762: Revert development hsdis changes
+  - S8229123, PR3762: Revert build fixes for aarch64/zero
+  - S8229124, PR3762: Revert disassembler.cpp changes
+  - S8229145, PR3762: Revert TemplateTable::bytecode() visibility change
+  - PR3762: profile_has_unique_klass gives wrong result
 
 New in release 3.13.0 (2019-07-18):
 
@@ -3073,7 +3131,7 @@ New in release 3.0.0 (2016-04-08):
   - S8000650, PR2462: unpack200.exe should check gzip crc
   - S8031668, PR2842: TOOLCHAIN_FIND_COMPILER unexpectedly resolves symbolic links
   - S8035341: Allow using a system installed libpng
-  - S8038392: Generating prelink cache breaks JAVA 'jinfo' utility normal behavior
+  - S8038392, RH1064383: Generating prelink cache breaks JAVA 'jinfo' utility normal behavior
   - S8042159: Allow using a system-installed lcms2
   - S8042806: Splashscreen uses libjpeg-internal macros
   - S8043805: Allow using a system-installed libjpeg
@@ -4612,7 +4670,7 @@ New in release 2.4.8 (2014-07-23):
   - S8036837: Increment hsx 24.55 build to b03 for 7u55-b12
   - S8037012: (tz) Support tzdata2014a
   - S8038306: (tz) Support tzdata2014b
-  - S8038392: Generating prelink cache breaks JAVA 'jinfo' utility normal behavior
+  - S8038392, RH1064383: Generating prelink cache breaks JAVA 'jinfo' utility normal behavior
   - S8042264: 7u65 l10n resource file translation update 1
   - S8042582: Test java/awt/KeyboardFocusmanager/ChangeKFMTest/ChangeKFMTest.html fails on Windows x64
   - S8042590: Running form URL throws NPE
