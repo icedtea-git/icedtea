@@ -159,6 +159,26 @@ New in release 3.14.0 (2019-10-XX):
   - S8229124, PR3762: Revert disassembler.cpp changes
   - S8229145, PR3762: Revert TemplateTable::bytecode() visibility change
   - PR3762: profile_has_unique_klass gives wrong result
+* AArch32 port
+  - [aarch32] Fix debug build failure introduced at feec5f4cea8b
+  - c1: misc bugfixes
+  - [c1] [Spec98] _228_jack crash
+  - CCC: align doubles on stack
+  - CritcalJNI support
+  - Fix ARMv6 target causes some asserts to fail
+  - Fix ccc: float args should go to stack after first double allocated there
+  - Fix for jtreg TestArrayCopy6769124 -Xcomp
+  - Fix for single-core config crash
+  - Fix JVMTI PopFrame: should skip runtime call if next bytecode is not invokestatic
+  - Fix native_wrapper faste unlock register used for temp, avoid clobbering lock_obj register
+  - Fix operand value corruption in arraycopy
+  - Fix SIGSEGV in System.arraycopy
+  - Fix wrong fault_pc in safefetch stubs
+  - Follow-up the fix for 8161598
+  - JTReg test compiler/uncommontrap/TestDeoptOOM.java causes JVM assert
+  - Raw long address should be converted to sizeof(ptr) one when it is required
+  - S8207838: AArch32: Float registers incorrectly restored in JNI call
+  - save_args/restore_args misses second part of VMRegPair
 
 New in release 3.13.0 (2019-07-18):
 

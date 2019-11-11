@@ -1,3 +1,22 @@
+2019-11-10  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump aarch32 to jdk8u232-ga-aarch32-191016.
+	* patches/hotspot/aarch32/8038392-rh1064383.patch,
+	* patches/hotspot/aarch32/8141570-pr3548.patch,
+	* patches/hotspot/aarch32/8187667-pr3517-readdir_r.patch,
+	* patches/hotspot/aarch32/8196978-pr3517-gcc_4_pragmas.patch,
+	* patches/hotspot/aarch32/8223511.patch:
+	Remove patches now included upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove above patches.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump aarch32 to jdk8u232-ga-aarch32-191016.
+	* patches/hotspot/aarch32/6424123-pr3696.patch,
+	* patches/hotspot/aarch32/8143245-pr3548.patch,
+	* patches/hotspot/aarch32/pr1368.patch:
+	Replace with symlinks to Shenandoah versions now
+	both are again based on the same upstream 8u version.
+
 2019-11-08  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.14.0.
