@@ -58,7 +58,6 @@ New in release 3.14.0 (2019-10-XX):
   - S8210761: libjsig is being compiled without optimization
   - S8214002: Cannot use italic font style if the font has embedded bitmap
   - S8218721: C1's CEE optimization produces safepoint poll with invalid debug information
-  - S8218781: Localized names for Japanese era Reiwa in COMPAT provider
   - S8218854: FontMetrics.getMaxAdvance may be less than the maximum FontMetrics.charWidth
   - S8219807: C2 crash in IfNode::up_one_dom(Node*, bool)
   - S8221304: Problem list java/awt/FontMetrics/MaxAdvanceIsMax.java
@@ -338,7 +337,7 @@ New in release 3.13.0 (2019-07-18):
   - S8210153: localized currency symbol of VES
   - S8213294: Upgrade IANA LSR data
   - S8214935: Upgrade IANA LSR data
-  - S8219781: Localized names for Japanese era Reiwa in COMPAT provider
+  - S8218781: Localized names for Japanese era Reiwa in COMPAT provider
 * Import of OpenJDK 8 u222 build 09
   - S8135248: Add utility methods to check indexes and ranges
   - S8142493: Utility methods to check indexes and ranges doesn't specify behavior when function produces null
