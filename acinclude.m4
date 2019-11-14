@@ -2948,7 +2948,7 @@ AC_DEFUN_ONCE([IT_DETERMINE_VERSION],
   AC_MSG_CHECKING([which branch and release of IcedTea is being built])
   JAVA_VER=1.7.0
   JAVA_VENDOR=openjdk
-  JDK_UPDATE_VERSION=231
+  JDK_UPDATE_VERSION=241
   BUILD_VERSION=b01
   MILESTONE=fcs
   if test "x${MILESTONE}" = "xfcs"; then

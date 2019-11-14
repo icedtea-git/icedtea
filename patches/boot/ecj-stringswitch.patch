@@ -1858,3 +1858,41 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/Precondition
      }
  
      /**
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/ResourceBundle.java openjdk-boot/jdk/src/share/classes/java/util/ResourceBundle.java
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/ResourceBundle.java	2019-11-13 21:46:22.926858210 +0000
++++ openjdk-boot/jdk/src/share/classes/java/util/ResourceBundle.java	2019-11-13 21:48:58.096470164 +0000
+@@ -2361,27 +2361,21 @@
+                     if (script.length() == 0 && region.length() > 0) {
+                         // Supply script for users who want to use zh_Hans/zh_Hant
+                         // as bundle names (recommended for Java7+)
+-                        switch (region) {
+-                        case "TW":
+-                        case "HK":
+-                        case "MO":
++                        if ("TW".equals(region) ||
++                            "HK".equals(region) ||
++                            "MO".equals(region)) {
+                             script = "Hant";
+-                            break;
+-                        case "CN":
+-                        case "SG":
++                        } else if ("CN".equals(region) ||
++                                   "SG".equals(region)) {
+                             script = "Hans";
+-                            break;
+                         }
+                     } else if (script.length() > 0 && region.length() == 0) {
+                         // Supply region(country) for users who still package Chinese
+                         // bundles using old convension.
+-                        switch (script) {
+-                        case "Hans":
++                        if ("Hans".equals(script)) {
+                             region = "CN";
+-                            break;
+-                        case "Hant":
++                        } else if ("Hant".equals(script)) {
+                             region = "TW";
+-                            break;
+                         }
+                     }
+                 }

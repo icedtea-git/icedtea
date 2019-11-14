@@ -1,3 +1,60 @@
+2019-11-13  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to 2.6.20.
+	* patches/rh1022017.patch:
+	Removed as included upstream as 8228825 / CVE-2019-2894.
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-2.6.19.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Drop RH1022017 patch.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(JDK_UPDATE_VERSION): Bump to 241.
+	* configure.ac: Bump to 2.6.20.
+	* hotspot.map.in: Update to icedtea-2.6.20.
+	* patches/boot/ecj-diamond.patch:
+	Regenerated. Add new cases in
+	java.util.Calendar, java.util.Collections,
+	java.util.Currency,
+	java.util.JapaneseImperialCalendar,
+	java.util.Observable, java.util.Properties,
+	java.util.PropertyPermission,
+	java.util.ResourceBundle, java.util.TimeZone,
+	java.util.TreeMap, java.util.TreeSet,
+	sun.java2d.opengl.OGLBlitLoops,
+	sun.nio.cs.ThreadLocalCoders,
+	sun.reflect.Label, sun.reflect.Reflection,
+	sun.util.calendar.CalendarSystem,
+	sun.util.calendar.LocalGregorianCalendar,
+	sun.util.calendar.ZoneInfoFile,
+	sun.util.calendar.ZoneInfo,
+	sun.util.resources.OpenListResourceBundle and
+	sun.util.resources.TimeZoneNamesBundle.
+	* patches/boot/ecj-multicatch.patch:
+	Regenerated. Add new cases in
+	java.util.ResourceBundle,
+	sun.nio.ch.Reflect, sun.nio.ch.Util,
+	sun.nio.cs.FastCharsetProvider,
+	sun.reflect.MethodAccessGenerator,
+	sun.rmi.registry.RegistryImpl_Skel,
+	sun.rmi.registry.RegistryImpl_Stub,
+	sun.rmi.transport.DGCImpl_Skel and
+	sun.rmi.transport.DGCImpl_Stub.
+	* patches/boot/ecj-stringswitch.patch:
+	Add new case in java.util.ResourceBundle.
+	* patches/boot/ecj-trywithresources.patch:
+	Regenerated.
+
 2019-08-14  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Start 2.6.20 release cycle.
