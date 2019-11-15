@@ -53,6 +53,8 @@ New in release 2.6.20 (2019-10-XX):
   - S8041129: [OGL] surface->sw blit is extremely slow
   - S8216965: crash in freetypeScaler.c CopyBW2Grey8
   - S8226318: Class Loader Dependencies improvements
+* Bug fixes
+  - PR3761: OpenJDK 7.241 doesn't compile
 
 New in release 2.6.19 (2019-07-17):
 

@@ -1,0 +1,24 @@
+# HG changeset patch
+# User mbalao
+# Date 1571433044 10800
+#      Fri Oct 18 18:10:44 2019 -0300
+# Node ID 55de33c12fdcff9cc3fa391e9343a04d398c48e5
+# Parent  ce5e37056409870413d49cce681049b711220849
+8232643: Building error in jdk7u241 after 7068616
+Reviewed-by: andrew
+
+diff --git openjdk.orig/jdk/src/share/classes/sun/nio/cs/ext/DoubleByteDecoder.java openjdk/jdk/src/share/classes/sun/nio/cs/ext/DoubleByteDecoder.java
+--- openjdk.orig/jdk/src/share/classes/sun/nio/cs/ext/DoubleByteDecoder.java
++++ openjdk/jdk/src/share/classes/sun/nio/cs/ext/DoubleByteDecoder.java
+@@ -209,9 +209,9 @@
+         if (bugLevel == null) {
+             if (!sun.misc.VM.isBooted())
+                 return false;
+-            java.security.PrivilegedAction pa =
++            java.security.PrivilegedAction<String> pa =
+                 new GetPropertyAction("sun.nio.cs.bugLevel");
+-            String value = (String)AccessController.doPrivileged(pa);
++            String value = AccessController.doPrivileged(pa);
+             bugLevel = (value != null) ? value : "";
+         }
+         return bugLevel.equals(bl);
