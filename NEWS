@@ -12,7 +12,7 @@ JEPX - https://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.20 (2019-10-XX):
+New in release 2.6.20 (2019-11-17):
 
 * Security fixes
   - S8167646: Better invalid FilePermission
@@ -39,7 +39,7 @@ New in release 2.6.20 (2019-10-XX):
   - S8227601: Better collection of references
   - S8228825, CVE-2019-2894: Enhance ECDSA operations
 * Import of OpenJDK 7 u241 build 1
-  - S7050570: (fs) FileSysteProvider fails to initializes if run with file.encoding set to Cp037
+  - S7050570: (fs) FileSystemProvider fails to initializes if run with file.encoding set to Cp037
   - S7068616: NIO libraries do not build with javac -Xlint:all,-deprecation -Werror
   - S7068617: Core libraries don't build with javac -Xlint:all -Werror
   - S7077389: Reflection classes do not build with javac -Xlint:all -Werror
@@ -53,8 +53,8 @@ New in release 2.6.20 (2019-10-XX):
   - S8041129: [OGL] surface->sw blit is extremely slow
   - S8216965: crash in freetypeScaler.c CopyBW2Grey8
   - S8226318: Class Loader Dependencies improvements
-* Bug fixes
-  - PR3761: OpenJDK 7.241 doesn't compile
+* Backports
+  - S8232643, PR3761: OpenJDK 7.241 doesn't compile
 
 New in release 2.6.19 (2019-07-17):
 
