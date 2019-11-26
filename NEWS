@@ -25,6 +25,50 @@ New in release 2.7.0 (201X-XX-XX):
   - PR3162: Remove reference to AbstractPlainDatagramSocketImpl.c, removed in 8072466
   - PR3494: Skip AES test on AArch64 due to VM crash
 
+New in release 2.6.20 (2019-11-17):
+
+* Security fixes
+  - S8167646: Better invalid FilePermission
+  - S8213429, CVE-2019-2933: Windows file handling redux
+  - S8218573, CVE-2019-2945: Better socket support
+  - S8218877: Help transform transformers
+  - S8220186: Improve use of font temporary files
+  - S8220302, CVE-2019-2949: Better Kerberos ccache handling
+  - S8221497: Optional Panes in Swing
+  - S8221858, CVE-2019-2958: Build Better Processes
+  - S8222684, CVE-2019-2964: Better support for patterns
+  - S8222690, CVE-2019-2962: Better Glyph Images
+  - S8223163: Better pattern recognition
+  - S8223505, CVE-2019-2973: Better pattern compilation
+  - S8223892, CVE-2019-2978: Improved handling of jar files
+  - S8224532, CVE-2019-2981: Better Path supports
+  - S8224915, CVE-2019-2983: Better serial attributes
+  - S8225286, CVE-2019-2987: Better rendering of native glyphs
+  - S8225292, CVE-2019-2988: Better Graphics2D drawing
+  - S8225298, CVE-2019-2989: Improve TLS connection support
+  - S8225597, CVE-2019-2992: Enhance font glyph mapping
+  - S8226765, CVE-2019-2999: Commentary on Javadoc comments
+  - S8227129: Better ligature for subtables
+  - S8227601: Better collection of references
+  - S8228825, CVE-2019-2894: Enhance ECDSA operations
+* Import of OpenJDK 7 u241 build 1
+  - S7050570: (fs) FileSystemProvider fails to initializes if run with file.encoding set to Cp037
+  - S7068616: NIO libraries do not build with javac -Xlint:all,-deprecation -Werror
+  - S7068617: Core libraries don't build with javac -Xlint:all -Werror
+  - S7077389: Reflection classes do not build with javac -Xlint:all -Werror
+  - S7116997: fix warnings in java.util.PropertyPermission
+  - S7117487: Warnings Cleanup: some i18n classes in java.util and sun.util
+  - S7157893: Warnings Cleanup in java.util.*
+  - S7193406: Clean-up JDK Build Warnings in java.util, java.io
+  - S8017626: [OGL] Translucent VolatileImages don't paint correctly
+  - S8026876: (fs) Build issue with src/solaris/classes/sun/nio/fs/SolarisUserDefinedFileAttributeView.java
+  - S8029253: [macosx] Performance problems with Retina display on Mac OS X
+  - S8041129: [OGL] surface->sw blit is extremely slow
+  - S8216965: crash in freetypeScaler.c CopyBW2Grey8
+  - S8226318: Class Loader Dependencies improvements
+* Backports
+  - S8232643, PR3761: OpenJDK 7.241 doesn't compile
+
 New in release 2.6.19 (2019-07-17):
 
 * Security fixes
