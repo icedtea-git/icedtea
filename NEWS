@@ -12,16 +12,21 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.15.0 (2020-01-XX):
 
-* Shenandoah
+* Import of OpenJDK 8 u242 build 01
   - S8010500: [parfait] Possible null pointer dereference at hotspot/src/share/vm/opto/loopnode.hpp
+  - S8067429: java.lang.VerifyError: Inconsistent stackmap frames at branch target
   - S8073154: NULL-pointer dereferencing in LIR_OpProfileType::print_instr
+  - S8077707: jdk9 b58 cannot run any graphical application on Win 8 with JAWS running
+  - S8132249: Clean up JAB debugging code
   - S8133951: Zero interpreter asserts in stubRoutines.cpp
   - S8134739: compiler/loopopts/superword/TestVectorizationWithInvariant crashes in loop opts
-  - S8209835: Aarch64: elide barriers on all volatile operations
+  - S8212071: Need to set the FreeType LCD Filter to reduce fringing.
   - S8230238: Add another regression test for JDK-8134739
   - S8230813: Add JDK-8010500 to compiler/loopopts/superword/TestFuzzPreLoop.java bug list
   - S8231398: Add time tracing for gc log rotation at safepoint cleanup
   - S8231988: Unexpected test result caused by C2 IdealLoopTree::do_remove_empty_loop
+* Shenandoah
+  - S8209835: Aarch64: elide barriers on all volatile operations
 
 New in release 3.14.0 (2019-11-14):
 
