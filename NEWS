@@ -26,7 +26,14 @@ New in release 3.15.0 (2020-01-XX):
   - S8231398: Add time tracing for gc log rotation at safepoint cleanup
   - S8231988: Unexpected test result caused by C2 IdealLoopTree::do_remove_empty_loop
 * Shenandoah
+  - S8206173: MallocSiteTable::initialize() doesn't take function descriptors into account
   - S8209835: Aarch64: elide barriers on all volatile operations
+  - S8218558: NMT stack traces in output should show mt component for virtual memory allocations
+  - S8228888: C2 compilation fails with assert "m has strange control"
+  - S8229020: Failure on CPUs allowing loads reordering: assert(_tasks[t] == 1) failed: What else?
+  - S8229169: False failure of GenericTaskQueue::pop_local on architectures with weak memory model
+  - S8230363: C2: Let ConnectionGraph::not_global_escape(Node* n) return false if n is not in the CG
+  - S8233839: aarch64: missing memory barrier in NewObjectArrayStub and NewTypeArrayStub
 
 New in release 3.14.0 (2019-11-14):
 
