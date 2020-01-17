@@ -10,17 +10,17 @@ Reviewed-by: goetz
 Contributed-by: gromero@linux.vnet.ibm.com, horii@jp.ibm.com
 
 diff -Nru openjdk.orig/hotspot/src/cpu/aarch64/vm/vm_version_aarch64.cpp openjdk/hotspot/src/cpu/aarch64/vm/vm_version_aarch64.cpp
---- openjdk.orig/hotspot/src/cpu/aarch64/vm/vm_version_aarch64.cpp	2018-03-21 09:00:58.000000000 +0000
-+++ openjdk/hotspot/src/cpu/aarch64/vm/vm_version_aarch64.cpp	2018-03-21 09:54:01.579562708 +0000
+--- openjdk.orig/hotspot/src/cpu/aarch64/vm/vm_version_aarch64.cpp	2020-01-15 20:50:41.000000000 +0000
++++ openjdk/hotspot/src/cpu/aarch64/vm/vm_version_aarch64.cpp	2020-01-17 01:58:41.317259789 +0000
 @@ -1,6 +1,6 @@
  /*
 - * Copyright (c) 2013, Red Hat Inc.
-  * Copyright (c) 1997, 2012, Oracle and/or its affiliates.
+  * Copyright (c) 1997, 2015, Oracle and/or its affiliates. All rights reserved.
 + * Copyright (c) 2015, Red Hat Inc. All rights reserved.
-  * All rights reserved.
   * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
   *
-@@ -296,6 +296,11 @@
+  * This code is free software; you can redistribute it and/or modify it
+@@ -295,6 +295,11 @@
      UsePopCountInstruction = true;
    }
  

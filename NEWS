@@ -26,14 +26,101 @@ New in release 3.15.0 (2020-01-XX):
   - S8231398: Add time tracing for gc log rotation at safepoint cleanup
   - S8231988: Unexpected test result caused by C2 IdealLoopTree::do_remove_empty_loop
 * Shenandoah
+  - Add missing include in shenandoahOopClosures.cpp
+  - Avoid initializing unused SharedHeap::_workers for Shenandoah
+  - [backport] 8221435: Shenandoah should not mark through weak roots
+  - [backport] 8221766: Load-reference barriers for Shenandoah
+  - [backport] 8222129: Shenandoah: Missing CompareAndSwapP/N case in get_barrier_strength()
+  - [backport] 8222738: Shenandoah: assert(is_Proj()) failed when running cometd benchmarks
+  - [backport] 8223448: Shenandoah disabled barriers blocks omit LRB
+  - [backport] 8223450: Disable Shenandoah C2 barriers verification for x86_32
+  - [backport] 8223567: Rename ShenandoahBrooksPointer to ShenandoahForwarding
+  - [backport] 8224496: Shenandoah compilation fails with assert(is_CountedLoopEnd()) failed: invalid node class
+  - [backport] 8224522: Shenandoah should apply barriers on deoptimization
+  - [backport] 8224584: Shenandoah: Eliminate forwarding pointer word
+  - [backport] 8224667: Shenandoah: Post-LRB cleanup
+  - [backport] 8224881: Shenandoah: trashing "Collection Set, Pinned" region during Degenerated GC
+  - [backport] 8224932: Shenandoah: Rename ShenandoahHeapLock, make it general purpose lock
+  - [backport] 8225017: [TESTBUG] gc/shenandoah/oom/TestThreadFailure.java takes too long
+  - [backport] 8225046: Shenandoah metrics logs refactoring
+  - [backport] 8225048: Shenandoah x86_32 support
+  - [backport] 8225111: Make Shenandoah tests work with 32-bit VMs
+  - [backport] 8225229: Shenandoah: trim down default number of GC threads
+  - [backport] 8225357: Rewire ShenandoahHeap::maybe_update_with_forwarded for contending fixups
+  - [backport] 8225441: Cleanup ShenandoahHeap::atomic_compare_exchange_oop
+  - [backport] 8225514: Shenandoah: ShenandoahCodeRoots should inherit from AllStatic
+  - [backport] 8226757: Shenandoah: Make traversal and passive modes explicit
+  - [backport] 8226957: Shenandoah: Remove obsoleted ShenandoahStoreCheck option
+  - [backport] 8228775: Shenandoah: Remove useless null-input-verification in Shenandoah/C2 verifier
+  - [backport] 8229002: Shenandoah: Missing node types in ShenandoahLoadReferenceBarrier::needs_barrier_impl()
+  - [backport] 8229231: Shenandoah: Non-PCH builds failed after JDK-8224932
+  - [backport] 8229350: Shenandoah does not need barriers before CreateEx
+  - [backport] 8229416: Shenandoah: Demote or remove ShenandoahOptimize*Final optimizations
+  - [backport] 8229419: Shenandoah: Cleanup LRB strength selector code
+  - [backport] 8229707: [TESTBUG] Some Shenandoah tests assume Server VM by default
+  - [backport] 8231197: Shenandoah: JVMTI heap walking cleanup crashes with NULL forwardee
+  - [backport] 8231405: [Shenandoah] guarantee(d != NULL) failed: Null dominator info
+  - [backport] 8231583: Shenandoah: Fix register clash in SBSA::resolve_forwarding_pointer() borrowing
+  - [backport] 8231667: Shenandoah: Full GC should take empty regions into slices for compaction
+  - [backport] 8231932: Shenandoah: conc/par GC threads ergonomics overrides user settings
+  - [backport] 8231946: Remove obsolete and unused ShenandoahVerifyObjectEquals flag
+  - [backport] 8231947: Shenandoah: cleanup ShenandoahHumongousMoves flag treatment
+  - [backport] 8232102: Shenandoah: print everything in proper units
+  - [backport] 8232176: Shenandoah: new assert in ShenandoahEvacuationTask is too strong
+  - [backport] 8232534: Shenandoah: guard against reentrant ShenandoahHeapLock locking
+  - [backport] 8232573: Shenandoah: cleanup and add more logging for in-pause phases
+  - [backport] 8232575: Shenandoah: asynchronous object/region pinning
+  - [backport] 8232702: Shenandoah: gc/shenandoah/TestVerifyJCStress.java uses non-existent -XX:+VerifyObjectEquals
+  - [backport] 8232729: Shenandoah: assert ShenandoahHeap::cas_oop addresses are aligned
+  - [backport] 8232802: Shenandoah: transition between "cset" and "pinned_cset" does not require cancelled gc
+  - [backport] LRB right after call, use is Bool
+  - Backport per-region seqnum tracking
+  - [backport] Relax Shenandoah/C2 verifier against JDK11 shortcomings
+  - [backport] Remove to wrong handlings of Shenandoah LRB in escape analysis
+  - Backport Traversal GC
+  - Cherry-pick JDK-8231201: hs_err should print coalesced safepoint operations in Events section
+  - Cleanup weak JNI refs when not doing reference processing
+  - Correct order between load, LRB and membar nodes
+  - Disable JNI tests for 32-bit platforms, due to lack of jtreg support
+  - Do not enable UseCountedLoopSafepoints in Shenandoah by default
+  - Fix ifdef -> if INCLUDE_ALL_GCS in Shenandoah x86_32 code
+  - Fix leftover commented out code in ShenandoahRuntime::load_reference_barrier_JRT
+  - Fix lock ordering issue when calling JVMTI GetLoadedClasses during marking
+  - Fix naked heap loads in HeapDumper
+  - Fix ShenandoahLoadReferenceBarrierNode::{Value, Identity} signatures after LRB backport
+  - Fix Windows build after LRB backports
+  - Fix Zero build after LRB backport moves, remove other stubs
+  - Remove some obsolete Shenandoah code from C2
+  - Remove StubRoutines::_shenandoah_wb_C and related code
+  - Revert obsolete shared-code changes in runtime synchronizer code
+  - Revert ShenandoahVerifyObjectEquals additions, not required after LRB
+  - S8048556: Unnecessary GCLocker-initiated young GCs
+  - S8073108: [AArch64] Use x86 and SPARC CPU instructions for GHASH acceleration
+  - S8073108: Use x86 and SPARC CPU instructions for GHASH acceleration
+  - S8130341: GHASH 32bit intrinsics has AEADBadTagException
+  - S8131778: java disables UseAES flag when using VIS=2 on sparc
+  - S8135018: AARCH64: Missing memory barriers for CMS collector
+  - S8138978: Examine usages of sun.misc.IOUtils
+  - S8156028: G1YoungGenSizer _adaptive_size not correct when setting NewSize and MaxNewSize to the same value
   - S8206173: MallocSiteTable::initialize() doesn't take function descriptors into account
   - S8209835: Aarch64: elide barriers on all volatile operations
   - S8218558: NMT stack traces in output should show mt component for virtual memory allocations
+  - S8225141: Better handling of classes in error state in fast class initialization checks
+  - S8225261: Better method resolutions
   - S8228888: C2 compilation fails with assert "m has strange control"
   - S8229020: Failure on CPUs allowing loads reordering: assert(_tasks[t] == 1) failed: What else?
+  - S8229420: [Redo] jstat reports incorrect values for OU for CMS GC
   - S8229169: False failure of GenericTaskQueue::pop_local on architectures with weak memory model
   - S8230363: C2: Let ConnectionGraph::not_global_escape(Node* n) return false if n is not in the CG
   - S8233839: aarch64: missing memory barrier in NewObjectArrayStub and NewTypeArrayStub
+  - S8232984: Upgrading Joni License version to 2.1.16
+  - S8235850: [TESTBUG] Remove test/runtime/RedefineTests/test8178870.sh
+  - S8236178: Debug build failed after 8236058
+  - S8236829: JDK-8232102 backport breaks s390
+  - Save vector registers before LRB slowpath call
+  - Shenandoah: JvmtiExport::weak_oops_do should not be entered by multiple threads
+  - Shenandoah SA: support live region iteration
+  - Use correct flag to guard implicit concurrent GC
 
 New in release 3.14.0 (2019-11-14):
 
