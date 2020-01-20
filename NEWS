@@ -12,6 +12,24 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.15.0 (2020-01-XX):
 
+* Security fixes
+  - S8225261: Better method resolutions
+  - S8224909, CVE-2020-2583: Unlink Set of LinkedHashSets
+  - S8225279: Better XRender interpolation
+  - S8226352, CVE-2020-2590: Improve Kerberos interop capabilities
+  - S8227758: More valid PKIX processing
+  - S8227816: More Colorful ICC profiles
+  - S8228548, CVE-2020-2593: Normalize normalization for all
+  - S8229951, CVE-2020-2601: Better Ticket Granting Services
+  - S8230279: Improve Pack200 file reading
+  - S8230318: Better trust store usage
+  - S8230967: Improve Registry support of clients
+  - S8231129: More glyph images
+  - S8231139: Improved keystore support
+  - S8231422, CVE-2020-2604: Better serial filter handling
+  - S8231795, CVE-2020-2659: Enhance datagram socket support
+  - S8232419: Improve Registry registration
+  - S8234037, CVE-2020-2654: Improve Object Identifier Processing
 * Import of OpenJDK 8 u242 build 01
   - S8010500: [parfait] Possible null pointer dereference at hotspot/src/share/vm/opto/loopnode.hpp
   - S8067429: java.lang.VerifyError: Inconsistent stackmap frames at branch target
@@ -25,6 +43,94 @@ New in release 3.15.0 (2020-01-XX):
   - S8230813: Add JDK-8010500 to compiler/loopopts/superword/TestFuzzPreLoop.java bug list
   - S8231398: Add time tracing for gc log rotation at safepoint cleanup
   - S8231988: Unexpected test result caused by C2 IdealLoopTree::do_remove_empty_loop
+* Import of OpenJDK 8 u242 build 02
+  - S8057986: freetype code to get glyph outline does not handle initial control point properly
+  - S8068736: Avoid synchronization on Executable/Field.declaredAnnotations
+  - S8073347: javadoc of Formattable messed up by JDK-8019857
+  - S8206173: MallocSiteTable::initialize() doesn't take function descriptors into account
+  - S8213568: Typo in java/awt/GraphicsEnvironment/LoadLock/GE_init5.java
+  - S8218558: NMT stack traces in output should show mt component for virtual memory allocations
+  - S8225101: Crash at sun.awt.X11.XlibWrapper.XkbGetUpdatedMap when change keybord map
+  - S8228888: C2 compilation fails with assert "m has strange control"
+  - S8229020: Failure on CPUs allowing loads reordering: assert(_tasks[t] == 1) failed: What else?
+  - S8229169: False failure of GenericTaskQueue::pop_local on architectures with weak memory model
+  - S8230363: C2: Let ConnectionGraph::not_global_escape(Node* n) return false if n is not in the CG
+  - S8231887: ComodoCA.java fails because certificate was revoked
+* Import of OpenJDK 8 u242 build 04
+  - S8048556: Unnecessary GCLocker-initiated young GCs
+  - S8073108: Use x86 and SPARC CPU instructions for GHASH acceleration
+  - S8130341: GHASH 32bit intrinsics has AEADBadTagException
+  - S8139178: Wrong fontMetrics when printing in Landscape (OpenJDK)
+  - S8146238: [macosx] Java2D Queue Flusher crash on OSX after switching between user accounts
+  - S8196681: Java Access Bridge logging and debug flags dynamically controlled
+  - S8204288: Matching the end of a string followed by an empty greedy regex and a word boundary fails
+  - S8204290: Add check to limit number of capture groups
+  - S8219914: Change the environment variable for Java Access Bridge logging to have a directory.
+  - S8225505: ctrl-F1 does not show the tooltip of a menu item (JMenuItems)
+* Import of OpenJDK 8 u242 build 05
+  - S8029629: java/lang/ProcessBuilder/Basic.java fails intermittently
+  - S8055351: sun/security/provider/DSA/TestAlgParameterGenerator.java failed with interrupted! (timed out?)
+  - S8131778: java disables UseAES flag when using VIS=2 on sparc
+  - S8133489: Better messaging for PKIX path validation matching
+  - S8134424: BlockDataInputStream.readUTFBody: size local StringBuffer with the given length
+  - S8156028: G1YoungGenSizer _adaptive_size not correct when setting NewSize and MaxNewSize to the same value
+  - S8170641: sun/net/www/protocol/https/HttpsURLConnection/PostThruProxy.sh fails with timeout
+  - S8173956: KeyStore regression due to default keystore being changed to PKCS12
+  - S8185898: setRequestProperty(key, null) results in HTTP header without colon in request
+  - S8189762: [TESTBUG] Create tests for JDK-8146115 container awareness and resource configuration
+  - S8194653: Deadlock involving FileSystems.getDefault and System.loadLibrary call
+  - S8195088: [TEST_BUG] StartManagementAgent got unexpected exception
+  - S8195667: ProblemList PKCS11 tests Secmod/AddTrustedCert.java and tls/TestKeyMaterial.java due to JDK-8180837
+  - S8198649: Switch AWT/Swing's default GTK version to 3
+  - S8208715: Conversion of milliseconds to nanoseconds in UNIXProcess contains bug
+  - S8213119: [macos] java/awt/GraphicsDevice/CheckDisplayModes.java fails
+  - S8215210: [macos] Hangul text does not shape to the precomposed form on JDK8u
+  - S8216401: Allow "file:" URLs in Class-Path of local JARs
+  - S8221172: SunEC specific test is not limited to SunEC
+  - S8221246: NullPointerException within Win32ShellFolder2
+  - S8222496: [8u] Switch on GTK3 as a default GTK L&F in client-libs
+  - S8223490: Optimize search algorithm for determining default time zone
+  - S8225141: Better handling of classes in error state in fast class initialization checks
+  - S8229420: [Redo] jstat reports incorrect values for OU for CMS GC
+  - S8231124: Missing closedir call with JDK-8223490
+  - S8231584: Deadlock with ClassLoader.findLibrary and System.loadLibrary call
+  - S8232984: Upgrading Joni License version to 2.1.16
+  - S8233886: TEST_BUG jdk/java/net/CookieHandler/B6791927.java hit hardcoded expiration date
+  - S8234591: [11u] Build with old C compiler broken by 8223490
+  - S8236178: Debug build failed after 8236058
+* Import of OpenJDK 8 u242 build 06
+  - S8227715: GPLv2 files missing Classpath Exception
+  - S8232019: Add LuxTrust certificate updates to the existing root program
+  - S8233223: Add Amazon Root CA certificates
+  - S8235850: [TESTBUG] Remove test/runtime/RedefineTests/test8178870.sh
+* Import of OpenJDK 8 u242 build 07
+  - S8037550: Update RFC references in javadoc to RFC 5280
+  - S8039438: Some tests depend on internal API sun.misc.IOUtils
+  - S8044500: Add kinit options and krb5.conf flags that allow users to obtain renewable tickets and specify ticket lifetimes
+  - S8058290: JAAS Krb5LoginModule has suspect ticket-renewal logic, relies on clockskew grace
+  - S8080835: Add blocking bulk read to sun.misc.IOUtils
+  - S8138978: Examine usages of sun.misc.IOUtils
+  - S8139206: Add InputStream readNBytes(int len)
+  - S8183591: Incorrect behavior when reading DER value with Integer.MAX_VALUE length
+  - S8186576: KerberosTicket does not properly handle renewable tickets at the end of their lifetime
+  - S8186831: Kerberos ignores PA-DATA with a non-null s2kparams
+  - S8186884: Test native KDC, Java krb5 lib, and native krb5 lib in one test
+  - S8193832: Performance of InputStream.readAllBytes() could be improved
+  - S8196956: (ch) More channels cleanup
+  - S8201627: Kerberos sequence number issues
+  - S8215032: Support Kerberos cross-realm referrals (RFC 6806)
+  - S8226719: Kerberos login to Windows 2000 failed with "Inappropriate type of checksum in message"
+  - S8227061: KDC.java test behaves incorrectly when AS-REQ contains a PAData not PA-ENC-TS-ENC
+  - S8227381: GSS login fails with PREAUTH_FAILED
+  - S8227437: S4U2proxy cannot continue because server's TGT cannot be found
+  - S8232381: add result NULL-checking to freetypeScaler.c
+  - S8233944: Make KerberosPrincipal.KRB_NT_ENTERPRISE field package private
+  - S8235909: File.exists throws AccessControlException for invalid paths when a SecurityManager is installed
+  - S8236983: [TESTBUG] Remove pointless catch block in test/jdk/sun/security/util/DerValue/BadValue.java
+  - S8236984: Add compatibility wrapper for IOUtils.readFully
+* Import of OpenJDK 8 u242 build 08
+  - S8031111: fix krb5 caddr
+  - S8132111: Do not request for addresses for forwarded TGT
 * Shenandoah
   - Add missing include in shenandoahOopClosures.cpp
   - Avoid initializing unused SharedHeap::_workers for Shenandoah
@@ -94,33 +200,16 @@ New in release 3.15.0 (2020-01-XX):
   - Remove StubRoutines::_shenandoah_wb_C and related code
   - Revert obsolete shared-code changes in runtime synchronizer code
   - Revert ShenandoahVerifyObjectEquals additions, not required after LRB
-  - S8048556: Unnecessary GCLocker-initiated young GCs
-  - S8073108: [AArch64] Use x86 and SPARC CPU instructions for GHASH acceleration
-  - S8073108: Use x86 and SPARC CPU instructions for GHASH acceleration
-  - S8130341: GHASH 32bit intrinsics has AEADBadTagException
-  - S8131778: java disables UseAES flag when using VIS=2 on sparc
-  - S8135018: AARCH64: Missing memory barriers for CMS collector
-  - S8138978: Examine usages of sun.misc.IOUtils
-  - S8156028: G1YoungGenSizer _adaptive_size not correct when setting NewSize and MaxNewSize to the same value
-  - S8206173: MallocSiteTable::initialize() doesn't take function descriptors into account
-  - S8209835: Aarch64: elide barriers on all volatile operations
-  - S8218558: NMT stack traces in output should show mt component for virtual memory allocations
-  - S8225141: Better handling of classes in error state in fast class initialization checks
-  - S8225261: Better method resolutions
-  - S8228888: C2 compilation fails with assert "m has strange control"
-  - S8229020: Failure on CPUs allowing loads reordering: assert(_tasks[t] == 1) failed: What else?
-  - S8229420: [Redo] jstat reports incorrect values for OU for CMS GC
-  - S8229169: False failure of GenericTaskQueue::pop_local on architectures with weak memory model
-  - S8230363: C2: Let ConnectionGraph::not_global_escape(Node* n) return false if n is not in the CG
-  - S8233839: aarch64: missing memory barrier in NewObjectArrayStub and NewTypeArrayStub
-  - S8232984: Upgrading Joni License version to 2.1.16
-  - S8235850: [TESTBUG] Remove test/runtime/RedefineTests/test8178870.sh
-  - S8236178: Debug build failed after 8236058
   - S8236829: JDK-8232102 backport breaks s390
   - Save vector registers before LRB slowpath call
   - Shenandoah: JvmtiExport::weak_oops_do should not be entered by multiple threads
   - Shenandoah SA: support live region iteration
   - Use correct flag to guard implicit concurrent GC
+* AArch64 port
+  - S8073108, PR3772: [AArch64] Use x86 and SPARC CPU instructions for GHASH acceleration
+  - S8135018, PR3772: AARCH64: Missing memory barriers for CMS collector
+  - S8209835, PR3772: Aarch64: elide barriers on all volatile operations
+  - S8233839, PR3772: aarch64: missing memory barrier in NewObjectArrayStub and NewTypeArrayStub
 
 New in release 3.14.0 (2019-11-14):
 
