@@ -1,6 +1,6 @@
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/crypto/provider/SealedObjectForKeyProtector.java openjdk-boot/jdk/src/share/classes/com/sun/crypto/provider/SealedObjectForKeyProtector.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/crypto/provider/SealedObjectForKeyProtector.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/crypto/provider/SealedObjectForKeyProtector.java	2019-11-13 20:30:26.213053974 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/crypto/provider/SealedObjectForKeyProtector.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/crypto/provider/SealedObjectForKeyProtector.java	2020-02-23 05:03:20.181484070 +0000
 @@ -77,16 +77,10 @@
              throws IOException, ClassNotFoundException, IllegalBlockSizeException,
              BadPaddingException {
@@ -47,8 +47,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/crypto/provider/Sealed
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java	2019-11-13 20:30:26.213053974 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/BandStructure.java	2020-02-23 05:03:20.181484070 +0000
 @@ -743,7 +743,9 @@
  
          private void dumpBand() throws IOException {
@@ -102,8 +102,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Ban
  
          public void readDataFrom(InputStream in) throws IOException {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2019-11-13 20:24:19.338717267 +0000
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2019-11-13 20:30:26.213053974 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2020-02-23 04:45:31.673776931 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Driver.java	2020-02-23 05:03:20.185484009 +0000
 @@ -151,8 +151,13 @@
                  if ("--config-file=".equals(state)) {
                      String propFile = av.remove(0);
@@ -157,8 +157,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Dri
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java	2019-11-13 20:30:26.213053974 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/NativeUnpack.java	2020-02-23 05:03:20.185484009 +0000
 @@ -245,9 +245,15 @@
      void run(File inFile, JarOutputStream jstream) throws IOException {
          // %%% maybe memory-map the file, and pass it straight into unpacker
@@ -177,8 +177,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Nat
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java	2019-11-13 20:30:26.213053974 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageReader.java	2020-02-23 05:03:20.185484009 +0000
 @@ -540,9 +540,15 @@
              Index index = initCPIndex(tag, cpMap);
  
@@ -222,8 +222,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Pac
          attr_definition_name.doneDisbursing();
          attr_definition_layout.doneDisbursing();
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java	2019-11-13 20:30:26.213053974 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PackageWriter.java	2020-02-23 05:03:20.185484009 +0000
 @@ -458,9 +458,15 @@
                  Utils.log.info("Writing "+cpMap.length+" "+ConstantPool.tagName(tag)+" entries...");
  
@@ -267,8 +267,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Pac
  
      void writeAttrCounts() throws IOException {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java	2019-11-13 20:30:26.213053974 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/PropMap.java	2020-02-23 05:03:20.185484009 +0000
 @@ -122,8 +122,9 @@
          // Do this after the previous props are put in place,
          // to allow override if necessary.
@@ -297,8 +297,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Pro
          for (Map.Entry<Object, Object> e : props.entrySet()) {
              String key = (String) e.getKey();
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	2019-11-13 20:30:26.213053974 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/UnpackerImpl.java	2020-02-23 05:03:20.185484009 +0000
 @@ -160,9 +160,15 @@
          }
          // Use the stream-based implementation.
@@ -317,8 +317,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Unp
              in.delete();
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	2019-11-13 20:30:26.213053974 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/java/util/jar/pack/Utils.java	2020-02-23 05:03:20.185484009 +0000
 @@ -268,18 +268,30 @@
          // 4947205 : Peformance is slow when using pack-effort=0
          out = new BufferedOutputStream(out);
@@ -353,8 +353,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/java/util/jar/pack/Uti
          // Wrapper to prevent closing of client-supplied stream.
      static private
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DnsClient.java openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/DnsClient.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DnsClient.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/DnsClient.java	2019-11-13 20:30:26.213053974 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DnsClient.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/DnsClient.java	2020-02-23 05:03:20.185484009 +0000
 @@ -399,7 +399,9 @@
          int minTimeout = 50; // msec after which there are no retries.
  
@@ -376,8 +376,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DnsClient.jav
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DNSDatagramSocketFactory.java openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/DNSDatagramSocketFactory.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DNSDatagramSocketFactory.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/DNSDatagramSocketFactory.java	2019-11-13 20:30:26.213053974 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DNSDatagramSocketFactory.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/DNSDatagramSocketFactory.java	2020-02-23 05:03:20.185484009 +0000
 @@ -199,6 +199,10 @@
                  SocketException e = new SocketException(x.getMessage());
                  e.initCause(x);
@@ -399,8 +399,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/DNSDatagramSo
          }
          return null;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/Obj.java openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/Obj.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/Obj.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/Obj.java	2019-11-13 20:30:26.213053974 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/Obj.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/Obj.java	2020-02-23 05:03:20.185484009 +0000
 @@ -503,9 +503,13 @@
  
          try {
@@ -441,8 +441,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/Obj.java ope
              NamingException ne = new NamingException();
              ne.setRootCause(e);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl.java	2020-02-23 05:03:20.185484009 +0000
 @@ -912,10 +912,15 @@
                              java.net.URLConnection uconn = tClass.getResource(tResource).openConnection();
                              int len = uconn.getContentLength();
@@ -462,8 +462,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleI
                          } catch (java.io.IOException ex) {
                              throw newInternalError(ex);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/Package.java openjdk-boot/jdk/src/share/classes/java/lang/Package.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/Package.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/Package.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/Package.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/Package.java	2020-02-23 05:03:20.185484009 +0000
 @@ -578,12 +578,23 @@
       * Returns the Manifest for the specified JAR file name.
       */
@@ -492,8 +492,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/Package.java openjdk
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/channels/SocketChannel.java openjdk-boot/jdk/src/share/classes/java/nio/channels/SocketChannel.java
---- openjdk-boot.orig/jdk/src/share/classes/java/nio/channels/SocketChannel.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/nio/channels/SocketChannel.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/java/nio/channels/SocketChannel.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/nio/channels/SocketChannel.java	2020-02-23 05:03:20.185484009 +0000
 @@ -188,7 +188,7 @@
              } catch (Throwable suppressed) {
                  x.addSuppressed(suppressed);
@@ -504,8 +504,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/channels/SocketChanne
          assert sc.isConnected();
          return sc;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java openjdk-boot/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java
---- openjdk-boot.orig/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/nio/file/CopyMoveHelper.java	2020-02-23 05:03:20.185484009 +0000
 @@ -122,9 +122,15 @@
          if (attrs.isDirectory()) {
              Files.createDirectory(target);
@@ -533,8 +533,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/file/CopyMoveHelper.j
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/file/Files.java openjdk-boot/jdk/src/share/classes/java/nio/file/Files.java
---- openjdk-boot.orig/jdk/src/share/classes/java/nio/file/Files.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/nio/file/Files.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/java/nio/file/Files.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/nio/file/Files.java	2020-02-23 05:07:40.729510274 +0000
 @@ -2604,7 +2604,9 @@
           * Create a FileTreeWalker to walk the file tree, invoking the visitor
           * for each event.
@@ -661,29 +661,32 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/file/Files.java openj
          return path;
      }
  
-@@ -3202,12 +3240,18 @@
+@@ -3201,12 +3239,20 @@
+         // ensure lines is not null before opening file
          Objects.requireNonNull(lines);
          CharsetEncoder encoder = cs.newEncoder();
-         OutputStream out = newOutputStream(path, options);
--        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, encoder))) {
+-        try (OutputStream out = newOutputStream(path, options);
+-             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, encoder))) {
++	OutputStream out = null;
 +        BufferedWriter writer = null;
 +        try {
++	    out = newOutputStream(path, options);
 +            writer = new BufferedWriter(new OutputStreamWriter(out, encoder));
              for (CharSequence line: lines) {
                  writer.append(line);
                  writer.newLine();
              }
-         }
-+        finally {
++	} finally {
 +            if (writer != null)
 +                writer.close();
-+        }
++	    if (out != null)
++		out.close();
+         }
          return path;
      }
- }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Currency.java openjdk-boot/jdk/src/share/classes/java/util/Currency.java
---- openjdk-boot.orig/jdk/src/share/classes/java/util/Currency.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/util/Currency.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/Currency.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/util/Currency.java	2020-02-23 05:03:20.185484009 +0000
 @@ -241,8 +241,12 @@
                      File propFile = new File(propsFile);
                      if (propFile.exists()) {
@@ -699,9 +702,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Currency.java openjd
                          Set<String> keys = props.stringPropertyNames();
                          Pattern propertiesPattern =
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/jar/JarFile.java openjdk-boot/jdk/src/share/classes/java/util/jar/JarFile.java
---- openjdk-boot.orig/jdk/src/share/classes/java/util/jar/JarFile.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/util/jar/JarFile.java	2019-11-13 20:30:26.217053912 +0000
-@@ -386,9 +386,14 @@
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/jar/JarFile.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/util/jar/JarFile.java	2020-02-23 05:04:32.404382551 +0000
+@@ -386,13 +386,18 @@
       * META-INF files.
       */
      private byte[] getBytes(ZipEntry ze) throws IOException {
@@ -709,18 +712,21 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/jar/JarFile.java ope
 +	InputStream is = null;
 +	try {
 +	    is = super.getInputStream(ze);
-             return IOUtils.readFully(is, (int)ze.getSize(), true);
--        }
+             int len = (int)ze.getSize();
+             byte[] b = IOUtils.readAllBytes(is);
+             if (len != -1 && b.length != len)
+                 throw new EOFException("Expected:" + len + ", read:" + b.length);
+ 
+             return b;
 +        } finally {
 +	    if (is != null)
 +		is.close();
-+	}
+         }
      }
  
-     /**
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java openjdk-boot/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java
---- openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/javax/sql/rowset/serial/SerialClob.java	2020-02-23 05:03:20.189483948 +0000
 @@ -144,8 +144,9 @@
          buf = new char[(int)len];
          int read = 0;
@@ -780,8 +786,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/serial/Serial
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java openjdk-boot/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java
---- openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/javax/sql/rowset/spi/SyncFactory.java	2020-02-23 05:03:20.189483948 +0000
 @@ -382,9 +382,15 @@
                      // Load user's implementation of SyncProvider
                      // here. -Drowset.properties=/abc/def/pqr.txt
@@ -832,8 +838,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/sql/rowset/spi/SyncFacto
                  } catch (PrivilegedActionException ex) {
                      Throwable e = ex.getException();
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/awt/SunToolkit.java openjdk-boot/jdk/src/share/classes/sun/awt/SunToolkit.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/awt/SunToolkit.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/awt/SunToolkit.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/awt/SunToolkit.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/awt/SunToolkit.java	2020-02-23 05:03:20.189483948 +0000
 @@ -899,10 +899,16 @@
      protected static boolean imageExists(URL url) {
          checkPermissions(url);
@@ -853,8 +859,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/awt/SunToolkit.java openjd
          }
          return false;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2019-11-13 20:24:19.574713611 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2020-02-23 04:45:31.677776870 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/launcher/LauncherHelper.java	2020-02-23 05:03:20.189483948 +0000
 @@ -555,8 +555,9 @@
                  if (parent == null) {
                      parent = new File(".");
@@ -878,8 +884,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/launcher/LauncherHelper.ja
              } else {
                  out.add(a.arg);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/management/jmxremote/ConnectorBootstrap.java openjdk-boot/jdk/src/share/classes/sun/management/jmxremote/ConnectorBootstrap.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/management/jmxremote/ConnectorBootstrap.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/management/jmxremote/ConnectorBootstrap.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/management/jmxremote/ConnectorBootstrap.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/management/jmxremote/ConnectorBootstrap.java	2020-02-23 05:03:20.189483948 +0000
 @@ -260,8 +260,14 @@
              if (fname == null) {
                  return p;
@@ -946,8 +952,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/management/jmxremote/Conne
                  }
                  TrustManagerFactory tmf = TrustManagerFactory.getInstance(
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/jar/URLJarFile.java	2020-02-23 05:03:20.189483948 +0000
 @@ -194,7 +194,8 @@
       * Given a URL, retrieves a JAR file, caches it to disk, and creates a
       * cached JAR file object.
@@ -981,8 +987,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/jar/URLJa
                          }
                      });
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java openjdk-boot/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/nio/fs/PollingWatchService.java	2020-02-23 05:03:20.189483948 +0000
 @@ -255,7 +255,9 @@
              this.entries = new HashMap<Path,CacheEntry>();
  
@@ -1006,8 +1012,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/nio/fs/PollingWatchService
          }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/print/PSPrinterJob.java openjdk-boot/jdk/src/share/classes/sun/print/PSPrinterJob.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/print/PSPrinterJob.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/print/PSPrinterJob.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/print/PSPrinterJob.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/print/PSPrinterJob.java	2020-02-23 05:03:20.189483948 +0000
 @@ -680,25 +680,38 @@
  
          private void handleProcessFailure(final Process failedProcess,
@@ -1053,9 +1059,29 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/print/PSPrinterJob.java op
          }
  
          public Object run() {
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/reflect/misc/MethodUtil.java openjdk-boot/jdk/src/share/classes/sun/reflect/misc/MethodUtil.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/reflect/misc/MethodUtil.java	2020-02-24 04:57:59.189649645 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/reflect/misc/MethodUtil.java	2020-02-24 05:06:43.205671519 +0000
+@@ -383,11 +383,15 @@
+             }
+         }
+         int len = uc.getContentLength();
+-        try (InputStream in = new BufferedInputStream(uc.getInputStream())) {
++        InputStream in = null;
++        try {
++            in = new BufferedInputStream(uc.getInputStream());
+             byte[] b = IOUtils.readAllBytes(in);
+             if (len != -1 && b.length != len)
+                 throw new EOFException("Expected:" + len + ", read:" + b.length);
+             return b;
++        } finally {
++            if (in != null) { in.close(); }
+         }
+     }
+ 
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/log/ReliableLog.java openjdk-boot/jdk/src/share/classes/sun/rmi/log/ReliableLog.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/log/ReliableLog.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/log/ReliableLog.java	2019-11-13 20:30:26.217053912 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/log/ReliableLog.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/log/ReliableLog.java	2020-02-23 05:03:20.189483948 +0000
 @@ -594,10 +594,16 @@
          } else {
              name = versionFile;
@@ -1094,8 +1120,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/log/ReliableLog.java o
  
      /**
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Activation.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/Activation.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Activation.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/Activation.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Activation.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/Activation.java	2020-02-23 05:03:20.189483948 +0000
 @@ -1272,13 +1272,16 @@
                      PipeWriter.plugTogetherPair
                          (child.getInputStream(), System.out,
@@ -1117,8 +1143,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/Activation.java
  
                  } catch (IOException e) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2019-11-13 20:24:19.710711505 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2020-02-23 04:45:31.757775651 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2020-02-23 05:03:20.189483948 +0000
 @@ -234,13 +234,14 @@
                          proxyLog.log(Log.BRIEF,
                              "trying with factory: " + factory);
@@ -1147,9 +1173,45 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMas
                      proxyLog.log(Log.BRIEF, "factory succeeded");
  
                      // factory succeeded, open new socket for caller's use
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/Config.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/Config.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/Config.java	2020-02-24 05:08:36.903944019 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/Config.java	2020-02-24 06:13:22.404834763 +0000
+@@ -582,15 +582,16 @@
+             throws IOException, KrbException {
+         try {
+             List<String> v = new ArrayList<>();
+-            try (BufferedReader br = new BufferedReader(new InputStreamReader(
+-                AccessController.doPrivileged(
+-                    new PrivilegedExceptionAction<FileInputStream> () {
+-                        public FileInputStream run() throws IOException {
+-                            return new FileInputStream(fileName);
+-                        }
+-                    })))) {
++            BufferedReader br = null;
++            try {
+                 String line;
+                 String previous = null;
++                br = new BufferedReader(new InputStreamReader(AccessController.doPrivileged(
++                         new PrivilegedExceptionAction<FileInputStream> () {
++                             public FileInputStream run() throws IOException {
++                                 return new FileInputStream(fileName);
++                             }
++                         })));
+                 while ((line = br.readLine()) != null) {
+                     line = line.trim();
+                     if (line.startsWith("#") || line.isEmpty()) {
+@@ -653,6 +654,8 @@
+                     v.add(previous);
+                     v.add("}");
+                 }
++            } finally {
++                if (br != null) { br.close(); }
+             }
+             return v;
+         } catch (java.security.PrivilegedActionException pe) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/ccache/FileCredentialsCache.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ccache/FileCredentialsCache.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/ccache/FileCredentialsCache.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ccache/FileCredentialsCache.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/ccache/FileCredentialsCache.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ccache/FileCredentialsCache.java	2020-02-23 05:03:20.189483948 +0000
 @@ -156,18 +156,33 @@
      synchronized void init(PrincipalName principal, String name)
          throws IOException, KrbException {
@@ -1233,8 +1295,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/cca
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/ktab/KeyTab.java	2020-02-23 05:03:20.189483948 +0000
 @@ -92,9 +92,13 @@
          tabName = filename;
          try {
@@ -1251,7 +1313,7 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/kta
              }
          } catch (FileNotFoundException e) {
              entries.clear();
-@@ -441,9 +445,13 @@
+@@ -417,9 +421,13 @@
      public synchronized static KeyTab create(String name)
          throws IOException, RealmException {
  
@@ -1267,7 +1329,7 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/kta
          }
          return new KeyTab(name);
      }
-@@ -452,12 +460,16 @@
+@@ -428,12 +436,16 @@
       * Saves the file at the directory.
       */
      public synchronized void save() throws IOException {
@@ -1286,7 +1348,7 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/kta
          }
      }
  
-@@ -521,9 +533,13 @@
+@@ -497,9 +509,13 @@
       * @exception IOException.
       */
      public synchronized void createVersion(File file) throws IOException {
@@ -1302,10 +1364,71 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/kta
          }
      }
  }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/rcache/DflCache.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/rcache/DflCache.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/rcache/DflCache.java	2020-02-24 04:57:59.213649278 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/rcache/DflCache.java	2020-02-24 05:07:07.509302259 +0000
+@@ -188,7 +188,9 @@
+             throws IOException, KrbApErrException {
+         Path p = getFileName(source, time.server);
+         int missed = 0;
+-        try (Storage s = new Storage()) {
++        Storage s = null;
++        try {
++            s = new Storage();
+             try {
+                 missed = s.loadAndCheck(p, time, currTime);
+             } catch (IOException ioe) {
+@@ -197,6 +199,8 @@
+                 missed = s.loadAndCheck(p, time, currTime);
+             }
+             s.append(time);
++        } finally {
++            if (s != null) { s.close(); }
+         }
+         if (missed > EXCESSREPS) {
+             Storage.expunge(p, currTime);
+@@ -208,8 +212,12 @@
+         // Static methods
+         @SuppressWarnings("try")
+         private static void create(Path p) throws IOException {
+-            try (SeekableByteChannel newChan = createNoClose(p)) {
++            SeekableByteChannel newChan = null;
++            try {
++                newChan = createNoClose(p);
+                 // Do nothing, wait for close
++            } finally {
++                if (newChan != null) { newChan.close(); }
+             }
+             makeMine(p);
+         }
+@@ -244,8 +252,11 @@
+         private static void expunge(Path p, KerberosTime currTime)
+                 throws IOException {
+             Path p2 = Files.createTempFile(p.getParent(), "rcache", null);
+-            try (SeekableByteChannel oldChan = Files.newByteChannel(p);
+-                    SeekableByteChannel newChan = createNoClose(p2)) {
++            SeekableByteChannel oldChan = null;
++            SeekableByteChannel newChan = null;
++            try {
++                oldChan = Files.newByteChannel(p);
++                newChan = createNoClose(p2);
+                 long timeLimit = currTime.getSeconds() - readHeader(oldChan);
+                 while (true) {
+                     try {
+@@ -258,6 +269,9 @@
+                         break;
+                     }
+                 }
++            } finally {
++                if (newChan != null) { newChan.close(); }
++                if (oldChan != null) { oldChan.close(); }
+             }
+             makeMine(p2);
+             Files.move(p2, p,
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/KdcComm.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/KdcComm.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/KdcComm.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/KdcComm.java	2019-11-13 20:30:26.221053850 +0000
-@@ -369,8 +369,9 @@
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/KdcComm.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/KdcComm.java	2020-02-23 05:03:20.189483948 +0000
+@@ -370,8 +370,9 @@
  
              for (int i=1; i <= retries; i++) {
                  String proto = useTCP?"TCP":"UDP";
@@ -1317,7 +1440,7 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/KdcComm.java
                      if (DEBUG) {
                          System.out.println(">>> KDCCommunication: kdc=" + kdc
                              + " " + proto + ":"
-@@ -399,6 +400,8 @@
+@@ -400,6 +401,8 @@
                              throw se;
                          }
                      }
@@ -1326,14 +1449,14 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/KdcComm.java
                  }
              }
              return ibuf;
-@@ -516,4 +519,3 @@
+@@ -540,4 +543,3 @@
          }
      }
  }
 -
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java	2019-11-13 20:24:19.730711195 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java	2020-02-23 04:45:31.765775529 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java	2020-02-23 05:03:20.189483948 +0000
 @@ -280,7 +280,9 @@
                  connection.setIfModifiedSince(lastModified);
              }
@@ -1379,8 +1502,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath
          } catch (IOException e) {
              if (debug != null) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SeedGenerator.java openjdk-boot/jdk/src/share/classes/sun/security/provider/SeedGenerator.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SeedGenerator.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/SeedGenerator.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SeedGenerator.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/SeedGenerator.java	2020-02-23 05:03:20.189483948 +0000
 @@ -179,7 +179,9 @@
                          // The temporary dir
                          File f = new File(p.getProperty("java.io.tmpdir"));
@@ -1404,8 +1527,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SeedGene
                      } catch (Exception ex) {
                          md.update((byte)ex.hashCode());
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/jarsigner/Main.java openjdk-boot/jdk/src/share/classes/sun/security/tools/jarsigner/Main.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/jarsigner/Main.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/tools/jarsigner/Main.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/jarsigner/Main.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/tools/jarsigner/Main.java	2020-02-23 05:03:20.193483887 +0000
 @@ -635,13 +635,15 @@
              while (entries.hasMoreElements()) {
                  JarEntry je = entries.nextElement();
@@ -1457,8 +1580,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/jarsigner/M
  
          if (signedjar == null) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/KeyStoreUtil.java openjdk-boot/jdk/src/share/classes/sun/security/tools/KeyStoreUtil.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/KeyStoreUtil.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/tools/KeyStoreUtil.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/KeyStoreUtil.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/tools/KeyStoreUtil.java	2020-02-23 05:03:20.193483887 +0000
 @@ -114,10 +114,15 @@
              return null;
          }
@@ -1504,8 +1627,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/KeyStoreUti
                  System.err.println(ioe);
                  return null;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/keytool/Main.java openjdk-boot/jdk/src/share/classes/sun/security/tools/keytool/Main.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2019-11-13 20:24:19.738711072 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2020-02-23 04:45:31.765775529 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2020-02-23 05:03:20.193483887 +0000
 @@ -965,10 +965,15 @@
          // Perform the specified command
          if (command == CERTREQ) {
@@ -1678,8 +1801,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/keytool/Mai
                  printCertFromStream(System.in, out);
              }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/AnchorCertificates.java openjdk-boot/jdk/src/share/classes/sun/security/util/AnchorCertificates.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/AnchorCertificates.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/util/AnchorCertificates.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/AnchorCertificates.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/AnchorCertificates.java	2020-02-23 05:03:20.193483887 +0000
 @@ -57,7 +57,9 @@
                  KeyStore cacerts;
                  try {
@@ -1705,8 +1828,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/AnchorCertif
                      if (debug != null) {
                          debug.println("Error parsing cacerts");
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/UntrustedCertificates.java	2020-02-23 05:03:20.193483887 +0000
 @@ -56,7 +56,9 @@
              public Void run() {
                  File f = new File(System.getProperty("java.home"),
@@ -1736,8 +1859,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/UntrustedCer
                  return null;
              }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/Arguments.java openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/Arguments.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/Arguments.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/Arguments.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/Arguments.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/Arguments.java	2020-02-23 05:03:20.193483887 +0000
 @@ -99,14 +99,19 @@
      }
  
@@ -1767,8 +1890,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/Arguments.java 
  
      public static void usage() {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2019-11-13 20:24:19.766710638 +0000
-+++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2020-02-23 04:45:31.769775468 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2020-02-23 05:03:20.193483887 +0000
 @@ -116,7 +116,7 @@
                              e.printStackTrace();
                          }
@@ -1811,8 +1934,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java openj
  
      private static String getMainClass(VirtualMachineDescriptor vmd)
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java openjdk-boot/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java	2019-11-13 20:31:17.112269171 +0000
+--- openjdk-boot.orig/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/util/calendar/LocalGregorianCalendar.java	2020-02-23 05:03:20.193483887 +0000
 @@ -126,9 +126,15 @@
              calendarProps = AccessController.doPrivileged(new PrivilegedExceptionAction<Properties>() {
                  public Properties run() throws IOException {
@@ -1831,8 +1954,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/util/calendar/LocalGregori
                  }
              });
 diff -Nru openjdk-boot.orig/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java openjdk-boot/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java
---- openjdk-boot.orig/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java	2020-02-23 05:03:20.193483887 +0000
 @@ -200,7 +200,7 @@
      }
  
@@ -1843,8 +1966,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/demo/jfc/Font2DTest/RangeMenu.java ope
          Character.UnicodeBlock currentBlock = Character.UnicodeBlock.of(0);
          for (int cp = 0x000001; cp < 0x110000; cp++ ) {
 diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java openjdk-boot/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java
---- openjdk-boot.orig/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/solaris/classes/java/util/prefs/FileSystemPreferences.java	2020-02-23 05:03:20.193483887 +0000
 @@ -569,11 +569,11 @@
                  public Void run() throws BackingStoreException {
                      Map<String, String> m = new TreeMap<>();
@@ -1908,8 +2031,8 @@ diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/java/util/prefs/FileSystemPr
                  }
              });
 diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java
---- openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.java	2020-02-23 05:03:20.193483887 +0000
 @@ -256,9 +256,16 @@
          String fstypes = System.getProperty("java.home") + "/lib/fstypes.properties";
          Path file = Paths.get(fstypes);
@@ -1929,8 +2052,8 @@ diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixFileStore.jav
          }
          return result;
 diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/print/UnixPrintJob.java openjdk-boot/jdk/src/solaris/classes/sun/print/UnixPrintJob.java
---- openjdk-boot.orig/jdk/src/solaris/classes/sun/print/UnixPrintJob.java	2019-10-14 19:21:40.000000000 +0100
-+++ openjdk-boot/jdk/src/solaris/classes/sun/print/UnixPrintJob.java	2019-11-13 20:30:26.221053850 +0000
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/print/UnixPrintJob.java	2020-02-19 04:24:34.000000000 +0000
++++ openjdk-boot/jdk/src/solaris/classes/sun/print/UnixPrintJob.java	2020-02-23 05:03:20.193483887 +0000
 @@ -960,25 +960,38 @@
  
          private void handleProcessFailure(final Process failedProcess,

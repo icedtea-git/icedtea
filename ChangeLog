@@ -1,3 +1,47 @@
+2020-02-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to 2.6.21.
+	* patches/8232643-pr3761.patch:
+	Temporary copy of fix removed with upgrade
+	to 7u251, where it's available upstream.
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-2.6.20.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(ICEDTEA_PATCHES): Drop JDK-8232643/PR3761 patch.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(JDK_UPDATE_VERSION): Bump to 251.
+	(BUILD_VERSION): Set to b02.
+	* configure.ac: Bump to 2.6.21.
+	* hotspot.map.in: Update to icedtea-2.6.21.
+	* patches/boot/ecj-diamond.patch:
+	Regenerated. Add new cases in
+	sun.security.krb5.Config,
+	sun.security.krb5.SCDynamicStoreConfig,
+	sun.security.krb5.internal.rcache.MemoryCache,
+	sun.security.krb5.internal.rcache.DflCache,
+	sun.security.krb5.internal.rcache.AuthList,
+	sun.security.x509.AVA,
+	sun.security.x509.X500Name,
+	sun.misc.IOUtils,
+	javax.security.Sasl & com.sun.crypto.provider.JceKeyStore
+	* patches/boot/ecj-multicatch.patch:
+	Regenerated.
+	* patches/boot/ecj-trywithresources.patch:
+	Regenerated. Add new cases in java.nio.file.Files,
+	sun.reflect.misc.MethodUtil, sun.security.krb5.Config &
+	sun.security.krb5.internal.rcache.DflCache
+
 2019-11-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Start 2.6.21 release cycle.
@@ -24,7 +68,7 @@
 	* patches/rh1022017.patch:
 	Removed as included upstream as 8228825 / CVE-2019-2894.
 	* Makefile.am:
-	(CORBA_CHANGESET): Update to icedtea-2.6.19.
+	(CORBA_CHANGESET): Update to icedtea-2.6.20.
 	(JAXP_CHANGESET): Likewise.
 	(JAXWS_CHANGESET): Likewise.
 	(JDK_CHANGESET): Likewise.

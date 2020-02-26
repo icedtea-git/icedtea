@@ -14,6 +14,99 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.6.21 (2020-01-XX):
 
+* Security fixes
+  - S8224909, CVE-2020-2583: Unlink Set of LinkedHashSets
+  - S8225261: Better method resolutions
+  - S8225279: Better XRender interpolation
+  - S8226352, CVE-2020-2590: Improve Kerberos interop capabilities
+  - S8227758: More valid PKIX processing
+  - S8227816: More Colorful ICC profiles
+  - S8228548, CVE-2020-2593: Normalize normalization for all
+  - S8229951, CVE-2020-2601: Better Ticket Granting Services
+  - S8230279: Improve Pack200 file reading
+  - S8230318: Better trust store usage
+  - S8230967: Improve Registry support of clients
+  - S8231129: More glyph images
+  - S8231139: Improved keystore support
+  - S8231422, CVE-2020-2604: Better serial filter handling
+  - S8231795, CVE-2020-2659: Enhance datagram socket support
+  - S8232419: Improve Registry registration
+  - S8234037, CVE-2020-2654: Improve Object Identifier Processing
+* Import of OpenJDK 7 u251 build 1
+  - S8017773: OpenJDK7 returns incorrect TrueType font metrics
+  - S8214002: Cannot use italic font style if the font has embedded bitmap
+* Import of OpenJDK 7 u251 build 2
+  - S6675699: need comprehensive fix for unconstrained ConvI2L with narrowed type
+  - S6880619: reg tests for 6879540
+  - S7024771: "\\<>" in attribute value part of X500Principal constructor parameter makes strange effect
+  - S7111579: klist starttime, renewtill, ticket etype
+  - S7152176: More krb5 tests
+  - S7172701: KDC tests cleanup
+  - S7175041: HttpTimestamper should accept https URI
+  - S7184246: Simplify Config.get() of krb5
+  - S7184932: Remove the temporary Selector usage in the NIO socket adapters
+  - S8001326: Improve Kerberos caching
+  - S8011124: Make KerberosTime immutable
+  - S8012679: Let allow_weak_crypto default to false
+  - S8014310: JAAS/Krb5LoginModule using des encytypes failure with NPE after JDK-8012679
+  - S8017453: ReplayCache tests fail on multiple platforms
+  - S8019410: sun/security/krb5/auto/ReplayCacheTestProc.java
+  - S8020971: Fix doclint issues in java.nio.*
+  - S8028049: Tidy warnings cleanup for packages java.nio/java.io
+  - S8031111: fix krb5 caddr
+  - S8031997: PPC64: Make the various POLL constants system dependant
+  - S8033271: Manual security tests have @ignore rather than @run main/manual
+  - S8036779: sun.security.krb5.KdcComm interprets kdc_timeout as msec instead of sec
+  - S8036971: krb5.conf does not accept directive lines before the first section
+  - S8037550: Update RFC references in javadoc to RFC 5280
+  - S8039132: cleanup @ignore JAAS/krb5 tests
+  - S8039438: Some tests depend on internal API sun.misc.IOUtils
+  - S8044500: Add kinit options and krb5.conf flags that allow users to obtain renewable tickets and specify ticket lifetimes
+  - S8058290: JAAS Krb5LoginModule has suspect ticket-renewal logic, relies on clockskew grace
+  - S8075297: Tests for RFEs 4515853 and 4745056
+  - S8075299: Additional tests for krb5 settings
+  - S8075301: Tests for sun.security.krb5.principal system property
+  - S8080835: Add blocking bulk read to sun.misc.IOUtils
+  - S8131051: KDC might issue a renewable ticket even if not requested
+  - S8132111: Do not request for addresses for forwarded TGT
+  - S8134232: KeyStore.load() throws an IOException with a wrong cause in case of wrong password
+  - S8138978: Examine usages of sun.misc.IOUtils
+  - S8139206: Add InputStream readNBytes(int len)
+  - S8147772: Update KerberosTicket to describe behavior if it has been destroyed and fix NullPointerExceptions
+  - S8149543: range check CastII nodes should not be split through Phi
+  - S8154831: CastII/ConvI2L for a range check is prematurely eliminated
+  - S8163104: Unexpected NPE still possible on some Kerberos ticket calls
+  - S8177095: Range check dependent CastII/ConvI2L is prematurely eliminated
+  - S8183591: Incorrect behavior when reading DER value with Integer.MAX_VALUE length
+  - S8186576: KerberosTicket does not properly handle renewable tickets at the end of their lifetime
+  - S8186831: Kerberos ignores PA-DATA with a non-null s2kparams
+  - S8186884: Test native KDC, Java krb5 lib, and native krb5 lib in one test
+  - S8187218: GSSCredential.getRemainingLifetime() returns negative value for TTL > 24 days.
+  - S8190690: Impact on krb5 test cases in the 8u-CPU nightly
+  - S8193832: Performance of InputStream.readAllBytes() could be improved
+  - S8196956: (ch) More channels cleanup
+  - S8197518: Kerberos krb5 authentication: AuthList's put method leads to performance issue
+  - S8200400: Restrict Sasl mechanisms
+  - S8201627: Kerberos sequence number issues
+  - S8218854: FontMetrics.getMaxAdvance may be less than the maximum FontMetrics.charWidth
+  - S8221304: Problem list java/awt/FontMetrics/MaxAdvanceIsMax.java
+  - S8225425: java.lang.UnsatisfiedLinkError: net.dll: Can't find dependent libraries
+  - S8227662: freetype seeks to index at the end of the font data
+  - S8228469: (tz) Upgrade time-zone data to tzdata2019b
+  - S8229767: Typo in java.security: Sasl.createClient and Sasl.createServer
+  - S8230085: (fs) FileStore::isReadOnly is always true on macOS Catalina
+  - S8231098: (tz) Upgrade time-zone data to tzdata2019c
+  - S8232003: (fs) Files.write can leak file descriptor in the exception case
+  - S8232381: add result NULL-checking to freetypeScaler.c
+  - S8235909: File.exists throws AccessControlException for invalid paths when a SecurityManager is installed
+  - S8236983: [TESTBUG] Remove pointless catch block in test/jdk/sun/security/util/DerValue/BadValue.java
+  - S8236984: Add compatibility wrapper for IOUtils.readFully
+  - S8237368: Problem with NullPointerException in RMI TCPEndpoint.read
+  - S8237604: [TEST_BUG] sun/security/tools/jarsigner/EntriesOrder.java not adapted for changes in JDK-7194449
+* Bug fixes
+  - S8135018, PR3774: AARCH64: Missing memory barriers for CMS collector
+  - S8233839, PR3774: aarch64: missing memory barrier in NewObjectArrayStub and NewTypeArrayStub
+
 New in release 2.6.20 (2019-11-17):
 
 * Security fixes
