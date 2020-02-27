@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XNoExposeEvent extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 28; }
+	public static int getSize() { return 48; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XNoExposeEvent extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XNoExposeEvent(long addr) {
+	public XNoExposeEvent(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XNoExposeEvent() {
+	public XNoExposeEvent() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,18 +39,18 @@ public class XNoExposeEvent extends XWrapperBase {
 		}
 	public int get_type() { log.finest("");return (Native.getInt(pData+0)); }
 	public void set_type(int v) { log.finest(""); Native.putInt(pData+0, v); }
-	public long get_serial() { log.finest("");return (Native.getLong(pData+4)); }
-	public void set_serial(long v) { log.finest(""); Native.putLong(pData+4, v); }
-	public boolean get_send_event() { log.finest("");return (Native.getBool(pData+8)); }
-	public void set_send_event(boolean v) { log.finest(""); Native.putBool(pData+8, v); }
-	public long get_display() { log.finest("");return (Native.getLong(pData+12)); }
-	public void set_display(long v) { log.finest(""); Native.putLong(pData+12, v); }
-	public long get_drawable() { log.finest("");return (Native.getLong(pData+16)); }
-	public void set_drawable(long v) { log.finest(""); Native.putLong(pData+16, v); }
-	public int get_major_code() { log.finest("");return (Native.getInt(pData+20)); }
-	public void set_major_code(int v) { log.finest(""); Native.putInt(pData+20, v); }
-	public int get_minor_code() { log.finest("");return (Native.getInt(pData+24)); }
-	public void set_minor_code(int v) { log.finest(""); Native.putInt(pData+24, v); }
+	public long get_serial() { log.finest("");return (Native.getLong(pData+8)); }
+	public void set_serial(long v) { log.finest(""); Native.putLong(pData+8, v); }
+	public boolean get_send_event() { log.finest("");return (Native.getBool(pData+16)); }
+	public void set_send_event(boolean v) { log.finest(""); Native.putBool(pData+16, v); }
+	public long get_display() { log.finest("");return (Native.getLong(pData+24)); }
+	public void set_display(long v) { log.finest(""); Native.putLong(pData+24, v); }
+	public long get_drawable() { log.finest("");return (Native.getLong(pData+32)); }
+	public void set_drawable(long v) { log.finest(""); Native.putLong(pData+32, v); }
+	public int get_major_code() { log.finest("");return (Native.getInt(pData+40)); }
+	public void set_major_code(int v) { log.finest(""); Native.putInt(pData+40, v); }
+	public int get_minor_code() { log.finest("");return (Native.getInt(pData+44)); }
+	public void set_minor_code(int v) { log.finest(""); Native.putInt(pData+44, v); }
 
 
 	String getName() {
@@ -59,16 +59,16 @@ public class XNoExposeEvent extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(280);
 
-		ret += ""+"type = " + XlibWrapper.eventToString[get_type()] +", ";
-		ret += ""+"serial = " + get_serial() +", ";
-		ret += ""+"send_event = " + get_send_event() +", ";
-		ret += ""+"display = " + get_display() +", ";
-		ret += ""+"drawable = " + get_drawable() +", ";
-		ret += ""+"major_code = " + get_major_code() +", ";
-		ret += ""+"minor_code = " + get_minor_code() +", ";
-		return ret;
+		ret.append("type = ").append( XlibWrapper.eventToString[get_type()] ).append(", ");
+		ret.append("serial = ").append( get_serial() ).append(", ");
+		ret.append("send_event = ").append( get_send_event() ).append(", ");
+		ret.append("display = ").append( get_display() ).append(", ");
+		ret.append("drawable = ").append( get_drawable() ).append(", ");
+		ret.append("major_code = ").append( get_major_code() ).append(", ");
+		ret.append("minor_code = ").append( get_minor_code() ).append(", ");
+		return ret.toString();
 	}
 
 

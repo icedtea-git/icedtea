@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XIMValuesList extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 8; }
+	public static int getSize() { return 16; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XIMValuesList extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XIMValuesList(long addr) {
+	public XIMValuesList(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XIMValuesList() {
+	public XIMValuesList() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,9 +39,9 @@ public class XIMValuesList extends XWrapperBase {
 		}
 	public short get_count_values() { log.finest("");return (Native.getShort(pData+0)); }
 	public void set_count_values(short v) { log.finest(""); Native.putShort(pData+0, v); }
-	public long get_supported_values(int index) { log.finest(""); return Native.getLong(pData+4)+index*Native.getLongSize(); }
-	public long get_supported_values() { log.finest("");return Native.getLong(pData+4); }
-	public void set_supported_values(long v) { log.finest(""); Native.putLong(pData + 4, v); }
+	public long get_supported_values(int index) { log.finest(""); return Native.getLong(pData+8)+index*Native.getLongSize(); }
+	public long get_supported_values() { log.finest("");return Native.getLong(pData+8); }
+	public void set_supported_values(long v) { log.finest(""); Native.putLong(pData + 8, v); }
 
 
 	String getName() {
@@ -50,11 +50,11 @@ public class XIMValuesList extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(80);
 
-		ret += ""+"count_values = " + get_count_values() +", ";
-		ret += ""+"supported_values = " + get_supported_values() +", ";
-		return ret;
+		ret.append("count_values = ").append( get_count_values() ).append(", ");
+		ret.append("supported_values = ").append( get_supported_values() ).append(", ");
+		return ret.toString();
 	}
 
 

@@ -1,11 +1,10 @@
 package com.sun.tools.javac.resources;
 
-import java.util.ListResourceBundle;
-
-public final class legacy extends ListResourceBundle {
+public final class legacy extends java.util.ListResourceBundle {
     protected final Object[][] getContents() {
         return new Object[][] {
             { "com.sun.accessibility.internal.resources", "tiger legacy" },
+            { "com.sun.awt", "tiger legacy" },
             { "com.sun.beans", "tiger legacy" },
             { "com.sun.corba.se.impl.activation", "tiger legacy" },
             { "com.sun.corba.se.impl.copyobject", "tiger legacy" },
@@ -75,7 +74,6 @@ public final class legacy extends ListResourceBundle {
             { "com.sun.corba.se.spi.resolver", "tiger legacy" },
             { "com.sun.corba.se.spi.servicecontext", "tiger legacy" },
             { "com.sun.corba.se.spi.transport", "tiger legacy" },
-            { "com.sun.image.codec.jpeg", "tiger legacy" },
             { "com.sun.imageio.metadata", "tiger legacy" },
             { "com.sun.imageio.plugins.bmp", "tiger legacy" },
             { "com.sun.imageio.plugins.common", "tiger legacy" },
@@ -94,6 +92,7 @@ public final class legacy extends ListResourceBundle {
             { "com.sun.java.swing.plaf.motif", "tiger legacy" },
             { "com.sun.java.swing.plaf.motif.icons", "tiger legacy" },
             { "com.sun.java.swing.plaf.motif.resources", "tiger legacy" },
+            { "com.sun.java.swing.plaf.nimbus", "tiger legacy" },
             { "com.sun.java.swing.plaf.windows", "tiger legacy" },
             { "com.sun.java.swing.plaf.windows.icons", "tiger legacy" },
             { "com.sun.java.swing.plaf.windows.resources", "tiger legacy" },
@@ -247,6 +246,8 @@ public final class legacy extends ListResourceBundle {
             { "com.sun.swing.internal.plaf.basic.resources", "tiger legacy" },
             { "com.sun.swing.internal.plaf.metal.resources", "tiger legacy" },
             { "com.sun.swing.internal.plaf.synth.resources", "tiger legacy" },
+            { "com.sun.tracing", "tiger legacy" },
+            { "com.sun.tracing.dtrace", "tiger legacy" },
             { "java.applet", "tiger legacy" },
             { "java.awt", "tiger legacy" },
             { "java.awt.color", "tiger legacy" },
@@ -360,6 +361,7 @@ public final class legacy extends ListResourceBundle {
             { "javax.swing.plaf.metal.icons.ocean", "tiger legacy" },
             { "javax.swing.plaf.metal.sounds", "tiger legacy" },
             { "javax.swing.plaf.multi", "tiger legacy" },
+            { "javax.swing.plaf.nimbus", "tiger legacy" },
             { "javax.swing.plaf.synth", "tiger legacy" },
             { "javax.swing.table", "tiger legacy" },
             { "javax.swing.text", "tiger legacy" },
@@ -545,6 +547,7 @@ public final class legacy extends ListResourceBundle {
             { "sun.tools.jar.resources", "tiger legacy" },
             { "sun.util", "tiger legacy" },
             { "sun.util.calendar", "tiger legacy" },
+            { "sun.util.locale", "tiger legacy" },
             { "sun.util.logging.resources", "tiger legacy" },
             { "sunw.io", "tiger legacy" },
             { "sunw.util", "tiger legacy" },

@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XVisibilityEvent extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 24; }
+	public static int getSize() { return 48; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XVisibilityEvent extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XVisibilityEvent(long addr) {
+	public XVisibilityEvent(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XVisibilityEvent() {
+	public XVisibilityEvent() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,16 +39,16 @@ public class XVisibilityEvent extends XWrapperBase {
 		}
 	public int get_type() { log.finest("");return (Native.getInt(pData+0)); }
 	public void set_type(int v) { log.finest(""); Native.putInt(pData+0, v); }
-	public long get_serial() { log.finest("");return (Native.getLong(pData+4)); }
-	public void set_serial(long v) { log.finest(""); Native.putLong(pData+4, v); }
-	public boolean get_send_event() { log.finest("");return (Native.getBool(pData+8)); }
-	public void set_send_event(boolean v) { log.finest(""); Native.putBool(pData+8, v); }
-	public long get_display() { log.finest("");return (Native.getLong(pData+12)); }
-	public void set_display(long v) { log.finest(""); Native.putLong(pData+12, v); }
-	public long get_window() { log.finest("");return (Native.getLong(pData+16)); }
-	public void set_window(long v) { log.finest(""); Native.putLong(pData+16, v); }
-	public int get_state() { log.finest("");return (Native.getInt(pData+20)); }
-	public void set_state(int v) { log.finest(""); Native.putInt(pData+20, v); }
+	public long get_serial() { log.finest("");return (Native.getLong(pData+8)); }
+	public void set_serial(long v) { log.finest(""); Native.putLong(pData+8, v); }
+	public boolean get_send_event() { log.finest("");return (Native.getBool(pData+16)); }
+	public void set_send_event(boolean v) { log.finest(""); Native.putBool(pData+16, v); }
+	public long get_display() { log.finest("");return (Native.getLong(pData+24)); }
+	public void set_display(long v) { log.finest(""); Native.putLong(pData+24, v); }
+	public long get_window() { log.finest("");return (Native.getLong(pData+32)); }
+	public void set_window(long v) { log.finest(""); Native.putLong(pData+32, v); }
+	public int get_state() { log.finest("");return (Native.getInt(pData+40)); }
+	public void set_state(int v) { log.finest(""); Native.putInt(pData+40, v); }
 
 
 	String getName() {
@@ -57,15 +57,15 @@ public class XVisibilityEvent extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(240);
 
-		ret += ""+"type = " + XlibWrapper.eventToString[get_type()] +", ";
-		ret += ""+"serial = " + get_serial() +", ";
-		ret += ""+"send_event = " + get_send_event() +", ";
-		ret += ""+"display = " + get_display() +", ";
-		ret += ""+"window = " + getWindow(get_window()) + ", ";
-		ret += ""+"state = " + get_state() +", ";
-		return ret;
+		ret.append("type = ").append( XlibWrapper.eventToString[get_type()] ).append(", ");
+		ret.append("serial = ").append( get_serial() ).append(", ");
+		ret.append("send_event = ").append( get_send_event() ).append(", ");
+		ret.append("display = ").append( get_display() ).append(", ");
+		ret.append("window = " ).append( getWindow(get_window()) ).append(", ");
+		ret.append("state = ").append( get_state() ).append(", ");
+		return ret.toString();
 	}
 
 

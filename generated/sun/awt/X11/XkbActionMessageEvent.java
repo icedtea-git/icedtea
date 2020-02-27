@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XkbActionMessageEvent extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -72,22 +72,29 @@ public class XkbActionMessageEvent extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(520);
 
-		ret += ""+"type = " + XlibWrapper.eventToString[get_type()] +", ";
-		ret += ""+"serial = " + get_serial() +", ";
-		ret += ""+"send_event = " + get_send_event() +", ";
-		ret += ""+"display = " + get_display() +", ";
-		ret += ""+"time = " + get_time() +", ";
-		ret += ""+"xkb_type = " + get_xkb_type() +", ";
-		ret += ""+"device = " + get_device() +", ";
-		ret += ""+"keycode = " + get_keycode() +", ";
-		ret += ""+"press = " + get_press() +", ";
-		ret += ""+"key_event_follows = " + get_key_event_follows() +", ";
-		ret += ""+"group = " + get_group() +", ";
-		ret += ""+"mods = " + get_mods() +", ";
-		ret += "{" + get_message(0) + " " + get_message(1) + " " + get_message(2) + " " + get_message(3) + " " + get_message(4) + " " + get_message(5) + " " + get_message(6) + " " + "}";
-		return ret;
+		ret.append("type = ").append( XlibWrapper.eventToString[get_type()] ).append(", ");
+		ret.append("serial = ").append( get_serial() ).append(", ");
+		ret.append("send_event = ").append( get_send_event() ).append(", ");
+		ret.append("display = ").append( get_display() ).append(", ");
+		ret.append("time = ").append( get_time() ).append(", ");
+		ret.append("xkb_type = ").append( get_xkb_type() ).append(", ");
+		ret.append("device = ").append( get_device() ).append(", ");
+		ret.append("keycode = ").append( get_keycode() ).append(", ");
+		ret.append("press = ").append( get_press() ).append(", ");
+		ret.append("key_event_follows = ").append( get_key_event_follows() ).append(", ");
+		ret.append("group = ").append( get_group() ).append(", ");
+		ret.append("mods = ").append( get_mods() ).append(", ");
+		ret.append("{")
+		.append( get_message(0) ).append(" ")
+		.append( get_message(1) ).append(" ")
+		.append( get_message(2) ).append(" ")
+		.append( get_message(3) ).append(" ")
+		.append( get_message(4) ).append(" ")
+		.append( get_message(5) ).append(" ")
+		.append( get_message(6) ).append(" ").append( "}");
+		return ret.toString();
 	}
 
 

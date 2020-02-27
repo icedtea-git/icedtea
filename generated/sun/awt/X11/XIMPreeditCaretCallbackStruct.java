@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XIMPreeditCaretCallbackStruct extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -16,14 +16,14 @@ public class XIMPreeditCaretCallbackStruct extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XIMPreeditCaretCallbackStruct(long addr) {
+	public XIMPreeditCaretCallbackStruct(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XIMPreeditCaretCallbackStruct() {
+	public XIMPreeditCaretCallbackStruct() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -51,12 +51,12 @@ public class XIMPreeditCaretCallbackStruct extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(120);
 
-		ret += ""+"position = " + get_position() +", ";
-		ret += ""+"direction = " + get_direction() +", ";
-		ret += ""+"style = " + get_style() +", ";
-		return ret;
+		ret.append("position = ").append( get_position() ).append(", ");
+		ret.append("direction = ").append( get_direction() ).append(", ");
+		ret.append("style = ").append( get_style() ).append(", ");
+		return ret.toString();
 	}
 
 

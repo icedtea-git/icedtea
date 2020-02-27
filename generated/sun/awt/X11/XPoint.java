@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XPoint extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -16,14 +16,14 @@ public class XPoint extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XPoint(long addr) {
+	public XPoint(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XPoint() {
+	public XPoint() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -49,11 +49,11 @@ public class XPoint extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(80);
 
-		ret += ""+"x = " + get_x() +", ";
-		ret += ""+"y = " + get_y() +", ";
-		return ret;
+		ret.append("x = ").append( get_x() ).append(", ");
+		ret.append("y = ").append( get_y() ).append(", ");
+		return ret.toString();
 	}
 
 

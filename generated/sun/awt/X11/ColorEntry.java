@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class ColorEntry extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -16,14 +16,14 @@ public class ColorEntry extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	ColorEntry(long addr) {
+	public ColorEntry(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	ColorEntry() {
+	public ColorEntry() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -53,13 +53,13 @@ public class ColorEntry extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(160);
 
-		ret += ""+"r = " + get_r() +", ";
-		ret += ""+"g = " + get_g() +", ";
-		ret += ""+"b = " + get_b() +", ";
-		ret += ""+"flags = " + get_flags() +", ";
-		return ret;
+		ret.append("r = ").append( get_r() ).append(", ");
+		ret.append("g = ").append( get_g() ).append(", ");
+		ret.append("b = ").append( get_b() ).append(", ");
+		ret.append("flags = ").append( get_flags() ).append(", ");
+		return ret.toString();
 	}
 
 

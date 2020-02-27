@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XIMStringConversionCallbackStruct extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 16; }
+	public static int getSize() { return 24; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XIMStringConversionCallbackStruct extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XIMStringConversionCallbackStruct(long addr) {
+	public XIMStringConversionCallbackStruct(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XIMStringConversionCallbackStruct() {
+	public XIMStringConversionCallbackStruct() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -45,9 +45,9 @@ public class XIMStringConversionCallbackStruct extends XWrapperBase {
 	public void set_operation(short v) { log.finest(""); Native.putShort(pData+8, v); }
 	public short get_factor() { log.finest("");return (Native.getShort(pData+10)); }
 	public void set_factor(short v) { log.finest(""); Native.putShort(pData+10, v); }
-	public XIMStringConversionText get_text(int index) { log.finest(""); return (Native.getLong(pData+12) != 0)?(new XIMStringConversionText(Native.getLong(pData+12)+index*16)):(null); }
-	public long get_text() { log.finest("");return Native.getLong(pData+12); }
-	public void set_text(long v) { log.finest(""); Native.putLong(pData + 12, v); }
+	public XIMStringConversionText get_text(int index) { log.finest(""); return (Native.getLong(pData+16) != 0)?(new XIMStringConversionText(Native.getLong(pData+16)+index*32)):(null); }
+	public long get_text() { log.finest("");return Native.getLong(pData+16); }
+	public void set_text(long v) { log.finest(""); Native.putLong(pData + 16, v); }
 
 
 	String getName() {
@@ -56,14 +56,14 @@ public class XIMStringConversionCallbackStruct extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(200);
 
-		ret += ""+"position = " + get_position() +", ";
-		ret += ""+"direction = " + get_direction() +", ";
-		ret += ""+"operation = " + get_operation() +", ";
-		ret += ""+"factor = " + get_factor() +", ";
-		ret += ""+"text = " + get_text() +", ";
-		return ret;
+		ret.append("position = ").append( get_position() ).append(", ");
+		ret.append("direction = ").append( get_direction() ).append(", ");
+		ret.append("operation = ").append( get_operation() ).append(", ");
+		ret.append("factor = ").append( get_factor() ).append(", ");
+		ret.append("text = ").append( get_text() ).append(", ");
+		return ret.toString();
 	}
 
 

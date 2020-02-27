@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XkbNewKeyboardNotifyEvent extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -75,24 +75,24 @@ public class XkbNewKeyboardNotifyEvent extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(600);
 
-		ret += ""+"type = " + XlibWrapper.eventToString[get_type()] +", ";
-		ret += ""+"serial = " + get_serial() +", ";
-		ret += ""+"send_event = " + get_send_event() +", ";
-		ret += ""+"display = " + get_display() +", ";
-		ret += ""+"time = " + get_time() +", ";
-		ret += ""+"xkb_type = " + get_xkb_type() +", ";
-		ret += ""+"device = " + get_device() +", ";
-		ret += ""+"old_device = " + get_old_device() +", ";
-		ret += ""+"min_key_code = " + get_min_key_code() +", ";
-		ret += ""+"max_key_code = " + get_max_key_code() +", ";
-		ret += ""+"old_min_key_code = " + get_old_min_key_code() +", ";
-		ret += ""+"old_max_key_code = " + get_old_max_key_code() +", ";
-		ret += ""+"changed = " + get_changed() +", ";
-		ret += ""+"req_major = " + get_req_major() +", ";
-		ret += ""+"req_minor = " + get_req_minor() +", ";
-		return ret;
+		ret.append("type = ").append( XlibWrapper.eventToString[get_type()] ).append(", ");
+		ret.append("serial = ").append( get_serial() ).append(", ");
+		ret.append("send_event = ").append( get_send_event() ).append(", ");
+		ret.append("display = ").append( get_display() ).append(", ");
+		ret.append("time = ").append( get_time() ).append(", ");
+		ret.append("xkb_type = ").append( get_xkb_type() ).append(", ");
+		ret.append("device = ").append( get_device() ).append(", ");
+		ret.append("old_device = ").append( get_old_device() ).append(", ");
+		ret.append("min_key_code = ").append( get_min_key_code() ).append(", ");
+		ret.append("max_key_code = ").append( get_max_key_code() ).append(", ");
+		ret.append("old_min_key_code = ").append( get_old_min_key_code() ).append(", ");
+		ret.append("old_max_key_code = ").append( get_old_max_key_code() ).append(", ");
+		ret.append("changed = ").append( get_changed() ).append(", ");
+		ret.append("req_major = ").append( get_req_major() ).append(", ");
+		ret.append("req_minor = ").append( get_req_minor() ).append(", ");
+		return ret.toString();
 	}
 
 

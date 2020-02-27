@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XArc extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -16,14 +16,14 @@ public class XArc extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XArc(long addr) {
+	public XArc(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XArc() {
+	public XArc() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -57,15 +57,15 @@ public class XArc extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(240);
 
-		ret += ""+"x = " + get_x() +", ";
-		ret += ""+"y = " + get_y() +", ";
-		ret += ""+"width = " + get_width() +", ";
-		ret += ""+"height = " + get_height() +", ";
-		ret += ""+"angle1 = " + get_angle1() +", ";
-		ret += ""+"angle2 = " + get_angle2() +", ";
-		return ret;
+		ret.append("x = ").append( get_x() ).append(", ");
+		ret.append("y = ").append( get_y() ).append(", ");
+		ret.append("width = ").append( get_width() ).append(", ");
+		ret.append("height = ").append( get_height() ).append(", ");
+		ret.append("angle1 = ").append( get_angle1() ).append(", ");
+		ret.append("angle2 = ").append( get_angle2() ).append(", ");
+		return ret.toString();
 	}
 
 

@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XdbeSwapInfo extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 8; }
+	public static int getSize() { return 16; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XdbeSwapInfo extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XdbeSwapInfo(long addr) {
+	public XdbeSwapInfo(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XdbeSwapInfo() {
+	public XdbeSwapInfo() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,8 +39,8 @@ public class XdbeSwapInfo extends XWrapperBase {
 		}
 	public long get_swap_window() { log.finest("");return (Native.getLong(pData+0)); }
 	public void set_swap_window(long v) { log.finest(""); Native.putLong(pData+0, v); }
-	public int get_swap_action() { log.finest("");return (Native.getInt(pData+4)); }
-	public void set_swap_action(int v) { log.finest(""); Native.putInt(pData+4, v); }
+	public int get_swap_action() { log.finest("");return (Native.getInt(pData+8)); }
+	public void set_swap_action(int v) { log.finest(""); Native.putInt(pData+8, v); }
 
 
 	String getName() {
@@ -49,11 +49,11 @@ public class XdbeSwapInfo extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(80);
 
-		ret += ""+"swap_window = " + get_swap_window() +", ";
-		ret += ""+"swap_action = " + get_swap_action() +", ";
-		return ret;
+		ret.append("swap_window = ").append( get_swap_window() ).append(", ");
+		ret.append("swap_action = ").append( get_swap_action() ).append(", ");
+		return ret.toString();
 	}
 
 

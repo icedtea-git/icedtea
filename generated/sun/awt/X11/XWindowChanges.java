@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XWindowChanges extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 28; }
+	public static int getSize() { return 40; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XWindowChanges extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XWindowChanges(long addr) {
+	public XWindowChanges(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XWindowChanges() {
+	public XWindowChanges() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -47,10 +47,10 @@ public class XWindowChanges extends XWrapperBase {
 	public void set_height(int v) { log.finest(""); Native.putInt(pData+12, v); }
 	public int get_border_width() { log.finest("");return (Native.getInt(pData+16)); }
 	public void set_border_width(int v) { log.finest(""); Native.putInt(pData+16, v); }
-	public long get_sibling() { log.finest("");return (Native.getLong(pData+20)); }
-	public void set_sibling(long v) { log.finest(""); Native.putLong(pData+20, v); }
-	public int get_stack_mode() { log.finest("");return (Native.getInt(pData+24)); }
-	public void set_stack_mode(int v) { log.finest(""); Native.putInt(pData+24, v); }
+	public long get_sibling() { log.finest("");return (Native.getLong(pData+24)); }
+	public void set_sibling(long v) { log.finest(""); Native.putLong(pData+24, v); }
+	public int get_stack_mode() { log.finest("");return (Native.getInt(pData+32)); }
+	public void set_stack_mode(int v) { log.finest(""); Native.putInt(pData+32, v); }
 
 
 	String getName() {
@@ -59,16 +59,16 @@ public class XWindowChanges extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(280);
 
-		ret += ""+"x = " + get_x() +", ";
-		ret += ""+"y = " + get_y() +", ";
-		ret += ""+"width = " + get_width() +", ";
-		ret += ""+"height = " + get_height() +", ";
-		ret += ""+"border_width = " + get_border_width() +", ";
-		ret += ""+"sibling = " + get_sibling() +", ";
-		ret += ""+"stack_mode = " + get_stack_mode() +", ";
-		return ret;
+		ret.append("x = ").append( get_x() ).append(", ");
+		ret.append("y = ").append( get_y() ).append(", ");
+		ret.append("width = ").append( get_width() ).append(", ");
+		ret.append("height = ").append( get_height() ).append(", ");
+		ret.append("border_width = ").append( get_border_width() ).append(", ");
+		ret.append("sibling = ").append( get_sibling() ).append(", ");
+		ret.append("stack_mode = ").append( get_stack_mode() ).append(", ");
+		return ret.toString();
 	}
 
 

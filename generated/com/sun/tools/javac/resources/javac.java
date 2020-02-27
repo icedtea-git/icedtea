@@ -1,8 +1,6 @@
 package com.sun.tools.javac.resources;
 
-import java.util.ListResourceBundle;
-
-public final class javac extends ListResourceBundle {
+public final class javac extends java.util.ListResourceBundle {
     protected final Object[][] getContents() {
         return new Object[][] {
             { "javac.err.dir.not.found", "directory not found: {0}" },
@@ -17,6 +15,7 @@ public final class javac extends ListResourceBundle {
             { "javac.err.invalid.source", "invalid source release: {0}" },
             { "javac.err.invalid.target", "invalid target release: {0}" },
             { "javac.err.no.source.files", "no source files" },
+            { "javac.err.no.source.files.classes", "no source files or class names" },
             { "javac.err.req.arg", "{0} requires an argument" },
             { "javac.fullVersion", "{0} full version \"{1}\"" },
             { "javac.msg.bug", "An exception has occurred in the compiler ({0}). Please file a bug at the Java Developer Connection (http://java.sun.com/webapps/bugreport)  after checking the Bug Parade for duplicates. Include your program and the following diagnostic in your report.  Thank you." },
@@ -27,7 +26,9 @@ public final class javac extends ListResourceBundle {
             { "javac.msg.usage.header", "Usage: {0} <options> <source files>\nwhere possible options include:" },
             { "javac.msg.usage.nonstandard.footer", "These options are non-standard and subject to change without notice." },
             { "javac.opt.A", "Options to pass to annotation processors" },
+            { "javac.opt.AT", "Read options and filenames from file" },
             { "javac.opt.J", "Pass <flag> directly to the runtime system" },
+            { "javac.opt.Werror", "Terminate compilation if warnings occur" },
             { "javac.opt.X", "Print a synopsis of nonstandard options" },
             { "javac.opt.Xbootclasspath.a", "Append to the bootstrap class path" },
             { "javac.opt.Xbootclasspath.p", "Prepend to the bootstrap class path" },
@@ -57,12 +58,13 @@ public final class javac extends ListResourceBundle {
             { "javac.opt.g.lines.vars.source", "Generate only some debugging info" },
             { "javac.opt.g.none", "Generate no debugging info" },
             { "javac.opt.help", "Print a synopsis of standard options" },
-            { "javac.opt.implicit", "Specify whether or not to generate class files for implicitly referenced files " },
+            { "javac.opt.implicit", "Specify whether or not to generate class files for implicitly referenced files" },
             { "javac.opt.maxerrs", "Set the maximum number of errors to print" },
             { "javac.opt.maxwarns", "Set the maximum number of warnings to print" },
             { "javac.opt.moreinfo", "Print extended information for type variables" },
             { "javac.opt.nogj", "Don't accept generics in the language" },
             { "javac.opt.nowarn", "Generate no warnings" },
+            { "javac.opt.pkginfo", "Specify handling of package-info files" },
             { "javac.opt.prefer", "Specify which file to read when both a source file and class file are found for an implicitly compiled class" },
             { "javac.opt.print", "Print out a textual representation of specified types" },
             { "javac.opt.printProcessorInfo", "Print information about which annotations a processor is asked to process" },

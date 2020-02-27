@@ -1,8 +1,6 @@
 package com.sun.tools.apt.resources;
 
-import java.util.ListResourceBundle;
-
-public final class apt extends ListResourceBundle {
+public final class apt extends java.util.ListResourceBundle {
     protected final Object[][] getContents() {
         return new Object[][] {
             { "apt.err.BadDeclaration", "Bad declaration created for annotation type {0}" },
@@ -12,6 +10,7 @@ public final class apt extends ListResourceBundle {
             { "apt.err.error", "error: " },
             { "apt.err.unsupported.source.version", "Source release {0} is not supported; use release 5 or earlier" },
             { "apt.err.unsupported.target.version", "Target release {0} is not supported; use release 5 or earlier" },
+            { "apt.misc.Deprecation", "\nwarning: The apt tool and its associated API are planned to be\nremoved in the next major JDK release.  These features have been\nsuperseded by javac and the standardized annotation processing API,\njavax.annotation.processing and javax.lang.model.  Users are\nrecommended to migrate to the annotation processing features of\njavac; see the javac man page for more information.\n" },
             { "apt.misc.Problem", "Problem encountered during annotation processing; \nsee stacktrace below for more information." },
             { "apt.misc.SunMiscService", "Error finding annotation processor factories; \ncheck META-INF/services information." },
             { "apt.msg.bug", "An exception has occurred in apt ({0}). Please file a bug at the Java Developer Connection (http://java.sun.com/webapps/bugreport)  after checking the Bug Parade for duplicates. Include your program and the following diagnostic in your report.  Thank you." },

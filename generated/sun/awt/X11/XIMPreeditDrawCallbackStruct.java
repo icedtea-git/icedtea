@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XIMPreeditDrawCallbackStruct extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 16; }
+	public static int getSize() { return 24; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XIMPreeditDrawCallbackStruct extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XIMPreeditDrawCallbackStruct(long addr) {
+	public XIMPreeditDrawCallbackStruct(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XIMPreeditDrawCallbackStruct() {
+	public XIMPreeditDrawCallbackStruct() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -43,9 +43,9 @@ public class XIMPreeditDrawCallbackStruct extends XWrapperBase {
 	public void set_chg_first(int v) { log.finest(""); Native.putInt(pData+4, v); }
 	public int get_chg_length() { log.finest("");return (Native.getInt(pData+8)); }
 	public void set_chg_length(int v) { log.finest(""); Native.putInt(pData+8, v); }
-	public XIMText get_text(int index) { log.finest(""); return (Native.getLong(pData+12) != 0)?(new XIMText(Native.getLong(pData+12)+index*16)):(null); }
-	public long get_text() { log.finest("");return Native.getLong(pData+12); }
-	public void set_text(long v) { log.finest(""); Native.putLong(pData + 12, v); }
+	public XIMText get_text(int index) { log.finest(""); return (Native.getLong(pData+16) != 0)?(new XIMText(Native.getLong(pData+16)+index*32)):(null); }
+	public long get_text() { log.finest("");return Native.getLong(pData+16); }
+	public void set_text(long v) { log.finest(""); Native.putLong(pData + 16, v); }
 
 
 	String getName() {
@@ -54,13 +54,13 @@ public class XIMPreeditDrawCallbackStruct extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(160);
 
-		ret += ""+"caret = " + get_caret() +", ";
-		ret += ""+"chg_first = " + get_chg_first() +", ";
-		ret += ""+"chg_length = " + get_chg_length() +", ";
-		ret += ""+"text = " + get_text() +", ";
-		return ret;
+		ret.append("caret = ").append( get_caret() ).append(", ");
+		ret.append("chg_first = ").append( get_chg_first() ).append(", ");
+		ret.append("chg_length = ").append( get_chg_length() ).append(", ");
+		ret.append("text = ").append( get_text() ).append(", ");
+		return ret.toString();
 	}
 
 

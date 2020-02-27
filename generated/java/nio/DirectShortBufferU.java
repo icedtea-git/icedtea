@@ -242,7 +242,7 @@ class DirectShortBufferU
     }
 
     private long ix(int i) {
-        return address + (i << 1);
+        return address + ((long)i << 1);
     }
 
     public short get() {
@@ -255,7 +255,7 @@ class DirectShortBufferU
 
     public ShortBuffer get(short[] dst, int offset, int length) {
 
-        if ((length << 1) > Bits.JNI_COPY_TO_ARRAY_THRESHOLD) {
+        if (((long)length << 1) > Bits.JNI_COPY_TO_ARRAY_THRESHOLD) {
             checkBounds(offset, length, dst.length);
             int pos = position();
             int lim = limit();
@@ -267,13 +267,13 @@ class DirectShortBufferU
 
             if (order() != ByteOrder.nativeOrder())
                 Bits.copyToShortArray(ix(pos), dst,
-                                          offset << 1,
-                                          length << 1);
+                                          (long)offset << 1,
+                                          (long)length << 1);
             else
 
                 Bits.copyToArray(ix(pos), dst, arrayBaseOffset,
-                                 offset << 1,
-                                 length << 1);
+                                 (long)offset << 1,
+                                 (long)length << 1);
             position(pos + length);
         } else {
             super.get(dst, offset, length);
@@ -323,7 +323,7 @@ class DirectShortBufferU
 
             if (srem > rem)
                 throw new BufferOverflowException();
-            unsafe.copyMemory(sb.ix(spos), ix(pos), srem << 1);
+            unsafe.copyMemory(sb.ix(spos), ix(pos), (long)srem << 1);
             sb.position(spos + srem);
             position(pos + srem);
         } else if (src.hb != null) {
@@ -347,7 +347,7 @@ class DirectShortBufferU
 
     public ShortBuffer put(short[] src, int offset, int length) {
 
-        if ((length << 1) > Bits.JNI_COPY_FROM_ARRAY_THRESHOLD) {
+        if (((long)length << 1) > Bits.JNI_COPY_FROM_ARRAY_THRESHOLD) {
             checkBounds(offset, length, src.length);
             int pos = position();
             int lim = limit();
@@ -358,12 +358,16 @@ class DirectShortBufferU
 
 
             if (order() != ByteOrder.nativeOrder())
-                Bits.copyFromShortArray(src, offset << 1,
-                                            ix(pos), length << 1);
+                Bits.copyFromShortArray(src,
+                                            (long)offset << 1,
+                                            ix(pos),
+                                            (long)length << 1);
             else
 
-                Bits.copyFromArray(src, arrayBaseOffset, offset << 1,
-                                   ix(pos), length << 1);
+                Bits.copyFromArray(src, arrayBaseOffset,
+                                   (long)offset << 1,
+                                   ix(pos),
+                                   (long)length << 1);
             position(pos + length);
         } else {
             super.put(src, offset, length);
@@ -381,7 +385,7 @@ class DirectShortBufferU
         assert (pos <= lim);
         int rem = (pos <= lim ? lim - pos : 0);
 
-        unsafe.copyMemory(ix(pos), ix(0), rem << 1);
+        unsafe.copyMemory(ix(pos), ix(0), (long)rem << 1);
         position(rem);
         limit(capacity());
         discardMark();

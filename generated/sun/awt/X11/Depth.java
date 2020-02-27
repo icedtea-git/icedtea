@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class Depth extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 12; }
+	public static int getSize() { return 16; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class Depth extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	Depth(long addr) {
+	public Depth(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	Depth() {
+	public Depth() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -41,7 +41,7 @@ public class Depth extends XWrapperBase {
 	public void set_depth(int v) { log.finest(""); Native.putInt(pData+0, v); }
 	public int get_nvisuals() { log.finest("");return (Native.getInt(pData+4)); }
 	public void set_nvisuals(int v) { log.finest(""); Native.putInt(pData+4, v); }
-	public Visual get_visuals(int index) { log.finest(""); return (Native.getLong(pData+8) != 0)?(new Visual(Native.getLong(pData+8)+index*32)):(null); }
+	public Visual get_visuals(int index) { log.finest(""); return (Native.getLong(pData+8) != 0)?(new Visual(Native.getLong(pData+8)+index*56)):(null); }
 	public long get_visuals() { log.finest("");return Native.getLong(pData+8); }
 	public void set_visuals(long v) { log.finest(""); Native.putLong(pData + 8, v); }
 
@@ -52,12 +52,12 @@ public class Depth extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(120);
 
-		ret += ""+"depth = " + get_depth() +", ";
-		ret += ""+"nvisuals = " + get_nvisuals() +", ";
-		ret += ""+"visuals = " + get_visuals() +", ";
-		return ret;
+		ret.append("depth = ").append( get_depth() ).append(", ");
+		ret.append("nvisuals = ").append( get_nvisuals() ).append(", ");
+		ret.append("visuals = ").append( get_visuals() ).append(", ");
+		return ret.toString();
 	}
 
 

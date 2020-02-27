@@ -242,7 +242,7 @@ class DirectFloatBufferS
     }
 
     private long ix(int i) {
-        return address + (i << 2);
+        return address + ((long)i << 2);
     }
 
     public float get() {
@@ -255,7 +255,7 @@ class DirectFloatBufferS
 
     public FloatBuffer get(float[] dst, int offset, int length) {
 
-        if ((length << 2) > Bits.JNI_COPY_TO_ARRAY_THRESHOLD) {
+        if (((long)length << 2) > Bits.JNI_COPY_TO_ARRAY_THRESHOLD) {
             checkBounds(offset, length, dst.length);
             int pos = position();
             int lim = limit();
@@ -267,13 +267,13 @@ class DirectFloatBufferS
 
             if (order() != ByteOrder.nativeOrder())
                 Bits.copyToIntArray(ix(pos), dst,
-                                          offset << 2,
-                                          length << 2);
+                                          (long)offset << 2,
+                                          (long)length << 2);
             else
 
                 Bits.copyToArray(ix(pos), dst, arrayBaseOffset,
-                                 offset << 2,
-                                 length << 2);
+                                 (long)offset << 2,
+                                 (long)length << 2);
             position(pos + length);
         } else {
             super.get(dst, offset, length);
@@ -323,7 +323,7 @@ class DirectFloatBufferS
 
             if (srem > rem)
                 throw new BufferOverflowException();
-            unsafe.copyMemory(sb.ix(spos), ix(pos), srem << 2);
+            unsafe.copyMemory(sb.ix(spos), ix(pos), (long)srem << 2);
             sb.position(spos + srem);
             position(pos + srem);
         } else if (src.hb != null) {
@@ -347,7 +347,7 @@ class DirectFloatBufferS
 
     public FloatBuffer put(float[] src, int offset, int length) {
 
-        if ((length << 2) > Bits.JNI_COPY_FROM_ARRAY_THRESHOLD) {
+        if (((long)length << 2) > Bits.JNI_COPY_FROM_ARRAY_THRESHOLD) {
             checkBounds(offset, length, src.length);
             int pos = position();
             int lim = limit();
@@ -358,12 +358,16 @@ class DirectFloatBufferS
 
 
             if (order() != ByteOrder.nativeOrder())
-                Bits.copyFromIntArray(src, offset << 2,
-                                            ix(pos), length << 2);
+                Bits.copyFromIntArray(src,
+                                            (long)offset << 2,
+                                            ix(pos),
+                                            (long)length << 2);
             else
 
-                Bits.copyFromArray(src, arrayBaseOffset, offset << 2,
-                                   ix(pos), length << 2);
+                Bits.copyFromArray(src, arrayBaseOffset,
+                                   (long)offset << 2,
+                                   ix(pos),
+                                   (long)length << 2);
             position(pos + length);
         } else {
             super.put(src, offset, length);
@@ -381,7 +385,7 @@ class DirectFloatBufferS
         assert (pos <= lim);
         int rem = (pos <= lim ? lim - pos : 0);
 
-        unsafe.copyMemory(ix(pos), ix(0), rem << 2);
+        unsafe.copyMemory(ix(pos), ix(0), (long)rem << 2);
         position(rem);
         limit(capacity());
         discardMark();

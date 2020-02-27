@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XkbAnyEvent extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -59,16 +59,16 @@ public class XkbAnyEvent extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(280);
 
-		ret += ""+"type = " + XlibWrapper.eventToString[get_type()] +", ";
-		ret += ""+"serial = " + get_serial() +", ";
-		ret += ""+"send_event = " + get_send_event() +", ";
-		ret += ""+"display = " + get_display() +", ";
-		ret += ""+"time = " + get_time() +", ";
-		ret += ""+"xkb_type = " + get_xkb_type() +", ";
-		ret += ""+"device = " + get_device() +", ";
-		return ret;
+		ret.append("type = ").append( XlibWrapper.eventToString[get_type()] ).append(", ");
+		ret.append("serial = ").append( get_serial() ).append(", ");
+		ret.append("send_event = ").append( get_send_event() ).append(", ");
+		ret.append("display = ").append( get_display() ).append(", ");
+		ret.append("time = ").append( get_time() ).append(", ");
+		ret.append("xkb_type = ").append( get_xkb_type() ).append(", ");
+		ret.append("device = ").append( get_device() ).append(", ");
+		return ret.toString();
 	}
 
 

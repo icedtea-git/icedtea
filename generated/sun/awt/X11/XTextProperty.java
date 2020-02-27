@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XTextProperty extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 16; }
+	public static int getSize() { return 32; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XTextProperty extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XTextProperty(long addr) {
+	public XTextProperty(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XTextProperty() {
+	public XTextProperty() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -40,12 +40,12 @@ public class XTextProperty extends XWrapperBase {
 	public byte get_value(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+0)+index*1); }
 	public long get_value() { log.finest("");return Native.getLong(pData+0); }
 	public void set_value(long v) { log.finest(""); Native.putLong(pData + 0, v); }
-	public long get_encoding() { log.finest("");return (Native.getLong(pData+4)); }
-	public void set_encoding(long v) { log.finest(""); Native.putLong(pData+4, v); }
-	public int get_format() { log.finest("");return (Native.getInt(pData+8)); }
-	public void set_format(int v) { log.finest(""); Native.putInt(pData+8, v); }
-	public long get_nitems() { log.finest("");return (Native.getLong(pData+12)); }
-	public void set_nitems(long v) { log.finest(""); Native.putLong(pData+12, v); }
+	public long get_encoding() { log.finest("");return (Native.getLong(pData+8)); }
+	public void set_encoding(long v) { log.finest(""); Native.putLong(pData+8, v); }
+	public int get_format() { log.finest("");return (Native.getInt(pData+16)); }
+	public void set_format(int v) { log.finest(""); Native.putInt(pData+16, v); }
+	public long get_nitems() { log.finest("");return (Native.getLong(pData+24)); }
+	public void set_nitems(long v) { log.finest(""); Native.putLong(pData+24, v); }
 
 
 	String getName() {
@@ -54,13 +54,13 @@ public class XTextProperty extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(160);
 
-		ret += ""+"value = " + get_value() +", ";
-		ret += ""+"encoding = " + get_encoding() +", ";
-		ret += ""+"format = " + get_format() +", ";
-		ret += ""+"nitems = " + get_nitems() +", ";
-		return ret;
+		ret.append("value = ").append( get_value() ).append(", ");
+		ret.append("encoding = ").append( get_encoding() ).append(", ");
+		ret.append("format = ").append( get_format() ).append(", ");
+		ret.append("nitems = ").append( get_nitems() ).append(", ");
+		return ret.toString();
 	}
 
 

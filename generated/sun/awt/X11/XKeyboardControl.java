@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XKeyboardControl extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -16,14 +16,14 @@ public class XKeyboardControl extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XKeyboardControl(long addr) {
+	public XKeyboardControl(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XKeyboardControl() {
+	public XKeyboardControl() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -61,17 +61,17 @@ public class XKeyboardControl extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(320);
 
-		ret += ""+"key_click_percent = " + get_key_click_percent() +", ";
-		ret += ""+"bell_percent = " + get_bell_percent() +", ";
-		ret += ""+"bell_pitch = " + get_bell_pitch() +", ";
-		ret += ""+"bell_duration = " + get_bell_duration() +", ";
-		ret += ""+"led = " + get_led() +", ";
-		ret += ""+"led_mode = " + get_led_mode() +", ";
-		ret += ""+"key = " + get_key() +", ";
-		ret += ""+"auto_repeat_mode = " + get_auto_repeat_mode() +", ";
-		return ret;
+		ret.append("key_click_percent = ").append( get_key_click_percent() ).append(", ");
+		ret.append("bell_percent = ").append( get_bell_percent() ).append(", ");
+		ret.append("bell_pitch = ").append( get_bell_pitch() ).append(", ");
+		ret.append("bell_duration = ").append( get_bell_duration() ).append(", ");
+		ret.append("led = ").append( get_led() ).append(", ");
+		ret.append("led_mode = ").append( get_led_mode() ).append(", ");
+		ret.append("key = ").append( get_key() ).append(", ");
+		ret.append("auto_repeat_mode = ").append( get_auto_repeat_mode() ).append(", ");
+		return ret.toString();
 	}
 
 

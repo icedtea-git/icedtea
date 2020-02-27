@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XTimeCoord extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 8; }
+	public static int getSize() { return 16; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XTimeCoord extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XTimeCoord(long addr) {
+	public XTimeCoord(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XTimeCoord() {
+	public XTimeCoord() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,10 +39,10 @@ public class XTimeCoord extends XWrapperBase {
 		}
 	public long get_time() { log.finest("");return (Native.getULong(pData+0)); }
 	public void set_time(long v) { log.finest(""); Native.putULong(pData+0, v); }
-	public short get_x() { log.finest("");return (Native.getShort(pData+4)); }
-	public void set_x(short v) { log.finest(""); Native.putShort(pData+4, v); }
-	public short get_y() { log.finest("");return (Native.getShort(pData+6)); }
-	public void set_y(short v) { log.finest(""); Native.putShort(pData+6, v); }
+	public short get_x() { log.finest("");return (Native.getShort(pData+8)); }
+	public void set_x(short v) { log.finest(""); Native.putShort(pData+8, v); }
+	public short get_y() { log.finest("");return (Native.getShort(pData+10)); }
+	public void set_y(short v) { log.finest(""); Native.putShort(pData+10, v); }
 
 
 	String getName() {
@@ -51,12 +51,12 @@ public class XTimeCoord extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(120);
 
-		ret += ""+"time = " + get_time() +", ";
-		ret += ""+"x = " + get_x() +", ";
-		ret += ""+"y = " + get_y() +", ";
-		return ret;
+		ret.append("time = ").append( get_time() ).append(", ");
+		ret.append("x = ").append( get_x() ).append(", ");
+		ret.append("y = ").append( get_y() ).append(", ");
+		return ret.toString();
 	}
 
 

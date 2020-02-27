@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XExtData extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 16; }
+	public static int getSize() { return 32; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XExtData extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XExtData(long addr) {
+	public XExtData(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XExtData() {
+	public XExtData() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,15 +39,15 @@ public class XExtData extends XWrapperBase {
 		}
 	public int get_number() { log.finest("");return (Native.getInt(pData+0)); }
 	public void set_number(int v) { log.finest(""); Native.putInt(pData+0, v); }
-	public XExtData get_next(int index) { log.finest(""); return (Native.getLong(pData+4) != 0)?(new XExtData(Native.getLong(pData+4)+index*16)):(null); }
-	public long get_next() { log.finest("");return Native.getLong(pData+4); }
-	public void set_next(long v) { log.finest(""); Native.putLong(pData + 4, v); }
-	public long get_free_private(int index) { log.finest(""); return Native.getLong(pData+8)+index*Native.getLongSize(); }
-	public long get_free_private() { log.finest("");return Native.getLong(pData+8); }
-	public void set_free_private(long v) { log.finest(""); Native.putLong(pData + 8, v); }
-	public long get_private_data(int index) { log.finest(""); return Native.getLong(pData+12)+index*Native.getLongSize(); }
-	public long get_private_data() { log.finest("");return Native.getLong(pData+12); }
-	public void set_private_data(long v) { log.finest(""); Native.putLong(pData + 12, v); }
+	public XExtData get_next(int index) { log.finest(""); return (Native.getLong(pData+8) != 0)?(new XExtData(Native.getLong(pData+8)+index*32)):(null); }
+	public long get_next() { log.finest("");return Native.getLong(pData+8); }
+	public void set_next(long v) { log.finest(""); Native.putLong(pData + 8, v); }
+	public long get_free_private(int index) { log.finest(""); return Native.getLong(pData+16)+index*Native.getLongSize(); }
+	public long get_free_private() { log.finest("");return Native.getLong(pData+16); }
+	public void set_free_private(long v) { log.finest(""); Native.putLong(pData + 16, v); }
+	public long get_private_data(int index) { log.finest(""); return Native.getLong(pData+24)+index*Native.getLongSize(); }
+	public long get_private_data() { log.finest("");return Native.getLong(pData+24); }
+	public void set_private_data(long v) { log.finest(""); Native.putLong(pData + 24, v); }
 
 
 	String getName() {
@@ -56,13 +56,13 @@ public class XExtData extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(160);
 
-		ret += ""+"number = " + get_number() +", ";
-		ret += ""+"next = " + get_next() +", ";
-		ret += ""+"free_private = " + get_free_private() +", ";
-		ret += ""+"private_data = " + get_private_data() +", ";
-		return ret;
+		ret.append("number = ").append( get_number() ).append(", ");
+		ret.append("next = ").append( get_next() ).append(", ");
+		ret.append("free_private = ").append( get_free_private() ).append(", ");
+		ret.append("private_data = ").append( get_private_data() ).append(", ");
+		return ret.toString();
 	}
 
 

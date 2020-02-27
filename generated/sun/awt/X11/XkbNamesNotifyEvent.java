@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XkbNamesNotifyEvent extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -83,28 +83,28 @@ public class XkbNamesNotifyEvent extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(760);
 
-		ret += ""+"type = " + XlibWrapper.eventToString[get_type()] +", ";
-		ret += ""+"serial = " + get_serial() +", ";
-		ret += ""+"send_event = " + get_send_event() +", ";
-		ret += ""+"display = " + get_display() +", ";
-		ret += ""+"time = " + get_time() +", ";
-		ret += ""+"xkb_type = " + get_xkb_type() +", ";
-		ret += ""+"device = " + get_device() +", ";
-		ret += ""+"changed = " + get_changed() +", ";
-		ret += ""+"first_type = " + get_first_type() +", ";
-		ret += ""+"num_types = " + get_num_types() +", ";
-		ret += ""+"first_lvl = " + get_first_lvl() +", ";
-		ret += ""+"num_lvls = " + get_num_lvls() +", ";
-		ret += ""+"num_aliases = " + get_num_aliases() +", ";
-		ret += ""+"num_radio_groups = " + get_num_radio_groups() +", ";
-		ret += ""+"changed_vmods = " + get_changed_vmods() +", ";
-		ret += ""+"changed_groups = " + get_changed_groups() +", ";
-		ret += ""+"changed_indicators = " + get_changed_indicators() +", ";
-		ret += ""+"first_key = " + get_first_key() +", ";
-		ret += ""+"num_keys = " + get_num_keys() +", ";
-		return ret;
+		ret.append("type = ").append( XlibWrapper.eventToString[get_type()] ).append(", ");
+		ret.append("serial = ").append( get_serial() ).append(", ");
+		ret.append("send_event = ").append( get_send_event() ).append(", ");
+		ret.append("display = ").append( get_display() ).append(", ");
+		ret.append("time = ").append( get_time() ).append(", ");
+		ret.append("xkb_type = ").append( get_xkb_type() ).append(", ");
+		ret.append("device = ").append( get_device() ).append(", ");
+		ret.append("changed = ").append( get_changed() ).append(", ");
+		ret.append("first_type = ").append( get_first_type() ).append(", ");
+		ret.append("num_types = ").append( get_num_types() ).append(", ");
+		ret.append("first_lvl = ").append( get_first_lvl() ).append(", ");
+		ret.append("num_lvls = ").append( get_num_lvls() ).append(", ");
+		ret.append("num_aliases = ").append( get_num_aliases() ).append(", ");
+		ret.append("num_radio_groups = ").append( get_num_radio_groups() ).append(", ");
+		ret.append("changed_vmods = ").append( get_changed_vmods() ).append(", ");
+		ret.append("changed_groups = ").append( get_changed_groups() ).append(", ");
+		ret.append("changed_indicators = ").append( get_changed_indicators() ).append(", ");
+		ret.append("first_key = ").append( get_first_key() ).append(", ");
+		ret.append("num_keys = ").append( get_num_keys() ).append(", ");
+		return ret.toString();
 	}
 
 

@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XkbExtensionDeviceNotifyEvent extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -77,25 +77,25 @@ public class XkbExtensionDeviceNotifyEvent extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(640);
 
-		ret += ""+"type = " + XlibWrapper.eventToString[get_type()] +", ";
-		ret += ""+"serial = " + get_serial() +", ";
-		ret += ""+"send_event = " + get_send_event() +", ";
-		ret += ""+"display = " + get_display() +", ";
-		ret += ""+"time = " + get_time() +", ";
-		ret += ""+"xkb_type = " + get_xkb_type() +", ";
-		ret += ""+"device = " + get_device() +", ";
-		ret += ""+"reason = " + get_reason() +", ";
-		ret += ""+"supported = " + get_supported() +", ";
-		ret += ""+"unsupported = " + get_unsupported() +", ";
-		ret += ""+"first_btn = " + get_first_btn() +", ";
-		ret += ""+"num_btns = " + get_num_btns() +", ";
-		ret += ""+"leds_defined = " + get_leds_defined() +", ";
-		ret += ""+"led_state = " + get_led_state() +", ";
-		ret += ""+"led_class = " + get_led_class() +", ";
-		ret += ""+"led_id = " + get_led_id() +", ";
-		return ret;
+		ret.append("type = ").append( XlibWrapper.eventToString[get_type()] ).append(", ");
+		ret.append("serial = ").append( get_serial() ).append(", ");
+		ret.append("send_event = ").append( get_send_event() ).append(", ");
+		ret.append("display = ").append( get_display() ).append(", ");
+		ret.append("time = ").append( get_time() ).append(", ");
+		ret.append("xkb_type = ").append( get_xkb_type() ).append(", ");
+		ret.append("device = ").append( get_device() ).append(", ");
+		ret.append("reason = ").append( get_reason() ).append(", ");
+		ret.append("supported = ").append( get_supported() ).append(", ");
+		ret.append("unsupported = ").append( get_unsupported() ).append(", ");
+		ret.append("first_btn = ").append( get_first_btn() ).append(", ");
+		ret.append("num_btns = ").append( get_num_btns() ).append(", ");
+		ret.append("leds_defined = ").append( get_leds_defined() ).append(", ");
+		ret.append("led_state = ").append( get_led_state() ).append(", ");
+		ret.append("led_class = ").append( get_led_class() ).append(", ");
+		ret.append("led_id = ").append( get_led_id() ).append(", ");
+		return ret.toString();
 	}
 
 

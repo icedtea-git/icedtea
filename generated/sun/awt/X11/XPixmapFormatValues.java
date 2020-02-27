@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XPixmapFormatValues extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -16,14 +16,14 @@ public class XPixmapFormatValues extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XPixmapFormatValues(long addr) {
+	public XPixmapFormatValues(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XPixmapFormatValues() {
+	public XPixmapFormatValues() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -51,12 +51,12 @@ public class XPixmapFormatValues extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(120);
 
-		ret += ""+"depth = " + get_depth() +", ";
-		ret += ""+"bits_per_pixel = " + get_bits_per_pixel() +", ";
-		ret += ""+"scanline_pad = " + get_scanline_pad() +", ";
-		return ret;
+		ret.append("depth = ").append( get_depth() ).append(", ");
+		ret.append("bits_per_pixel = ").append( get_bits_per_pixel() ).append(", ");
+		ret.append("scanline_pad = ").append( get_scanline_pad() ).append(", ");
+		return ret.toString();
 	}
 
 

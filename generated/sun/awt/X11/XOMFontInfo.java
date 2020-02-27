@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XOMFontInfo extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 12; }
+	public static int getSize() { return 24; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XOMFontInfo extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XOMFontInfo(long addr) {
+	public XOMFontInfo(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XOMFontInfo() {
+	public XOMFontInfo() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,12 +39,12 @@ public class XOMFontInfo extends XWrapperBase {
 		}
 	public int get_num_font() { log.finest("");return (Native.getInt(pData+0)); }
 	public void set_num_font(int v) { log.finest(""); Native.putInt(pData+0, v); }
-	public long get_font_struct_list(int index) { log.finest(""); return Native.getLong(pData+4)+index*Native.getLongSize(); }
-	public long get_font_struct_list() { log.finest("");return Native.getLong(pData+4); }
-	public void set_font_struct_list(long v) { log.finest(""); Native.putLong(pData + 4, v); }
-	public long get_font_name_list(int index) { log.finest(""); return Native.getLong(pData+8)+index*Native.getLongSize(); }
-	public long get_font_name_list() { log.finest("");return Native.getLong(pData+8); }
-	public void set_font_name_list(long v) { log.finest(""); Native.putLong(pData + 8, v); }
+	public long get_font_struct_list(int index) { log.finest(""); return Native.getLong(pData+8)+index*Native.getLongSize(); }
+	public long get_font_struct_list() { log.finest("");return Native.getLong(pData+8); }
+	public void set_font_struct_list(long v) { log.finest(""); Native.putLong(pData + 8, v); }
+	public long get_font_name_list(int index) { log.finest(""); return Native.getLong(pData+16)+index*Native.getLongSize(); }
+	public long get_font_name_list() { log.finest("");return Native.getLong(pData+16); }
+	public void set_font_name_list(long v) { log.finest(""); Native.putLong(pData + 16, v); }
 
 
 	String getName() {
@@ -53,12 +53,12 @@ public class XOMFontInfo extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(120);
 
-		ret += ""+"num_font = " + get_num_font() +", ";
-		ret += ""+"font_struct_list = " + get_font_struct_list() +", ";
-		ret += ""+"font_name_list = " + get_font_name_list() +", ";
-		return ret;
+		ret.append("num_font = ").append( get_num_font() ).append(", ");
+		ret.append("font_struct_list = ").append( get_font_struct_list() ).append(", ");
+		ret.append("font_name_list = ").append( get_font_name_list() ).append(", ");
+		return ret.toString();
 	}
 
 

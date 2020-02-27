@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class AwtScreenData extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 24; }
+	public static int getSize() { return 48; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class AwtScreenData extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	AwtScreenData(long addr) {
+	public AwtScreenData(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	AwtScreenData() {
+	public AwtScreenData() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,18 +39,18 @@ public class AwtScreenData extends XWrapperBase {
 		}
 	public int get_numConfigs() { log.finest("");return (Native.getInt(pData+0)); }
 	public void set_numConfigs(int v) { log.finest(""); Native.putInt(pData+0, v); }
-	public long get_root() { log.finest("");return (Native.getLong(pData+4)); }
-	public void set_root(long v) { log.finest(""); Native.putLong(pData+4, v); }
-	public long get_whitepixel() { log.finest("");return (Native.getLong(pData+8)); }
-	public void set_whitepixel(long v) { log.finest(""); Native.putLong(pData+8, v); }
-	public long get_blackpixel() { log.finest("");return (Native.getLong(pData+12)); }
-	public void set_blackpixel(long v) { log.finest(""); Native.putLong(pData+12, v); }
-	public AwtGraphicsConfigData get_defaultConfig(int index) { log.finest(""); return (Native.getLong(pData+16) != 0)?(new AwtGraphicsConfigData(Native.getLong(pData+16)+index*92)):(null); }
-	public long get_defaultConfig() { log.finest("");return Native.getLong(pData+16); }
-	public void set_defaultConfig(long v) { log.finest(""); Native.putLong(pData + 16, v); }
-	public long get_configs(int index) { log.finest(""); return Native.getLong(pData+20)+index*Native.getLongSize(); }
-	public long get_configs() { log.finest("");return Native.getLong(pData+20); }
-	public void set_configs(long v) { log.finest(""); Native.putLong(pData + 20, v); }
+	public long get_root() { log.finest("");return (Native.getLong(pData+8)); }
+	public void set_root(long v) { log.finest(""); Native.putLong(pData+8, v); }
+	public long get_whitepixel() { log.finest("");return (Native.getLong(pData+16)); }
+	public void set_whitepixel(long v) { log.finest(""); Native.putLong(pData+16, v); }
+	public long get_blackpixel() { log.finest("");return (Native.getLong(pData+24)); }
+	public void set_blackpixel(long v) { log.finest(""); Native.putLong(pData+24, v); }
+	public AwtGraphicsConfigData get_defaultConfig(int index) { log.finest(""); return (Native.getLong(pData+32) != 0)?(new AwtGraphicsConfigData(Native.getLong(pData+32)+index*208)):(null); }
+	public long get_defaultConfig() { log.finest("");return Native.getLong(pData+32); }
+	public void set_defaultConfig(long v) { log.finest(""); Native.putLong(pData + 32, v); }
+	public long get_configs(int index) { log.finest(""); return Native.getLong(pData+40)+index*Native.getLongSize(); }
+	public long get_configs() { log.finest("");return Native.getLong(pData+40); }
+	public void set_configs(long v) { log.finest(""); Native.putLong(pData + 40, v); }
 
 
 	String getName() {
@@ -59,15 +59,15 @@ public class AwtScreenData extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(240);
 
-		ret += ""+"numConfigs = " + get_numConfigs() +", ";
-		ret += ""+"root = " + get_root() +", ";
-		ret += ""+"whitepixel = " + get_whitepixel() +", ";
-		ret += ""+"blackpixel = " + get_blackpixel() +", ";
-		ret += ""+"defaultConfig = " + get_defaultConfig() +", ";
-		ret += ""+"configs = " + get_configs() +", ";
-		return ret;
+		ret.append("numConfigs = ").append( get_numConfigs() ).append(", ");
+		ret.append("root = ").append( get_root() ).append(", ");
+		ret.append("whitepixel = ").append( get_whitepixel() ).append(", ");
+		ret.append("blackpixel = ").append( get_blackpixel() ).append(", ");
+		ret.append("defaultConfig = ").append( get_defaultConfig() ).append(", ");
+		ret.append("configs = ").append( get_configs() ).append(", ");
+		return ret.toString();
 	}
 
 

@@ -32,9 +32,11 @@ public final class agent extends ListResourceBundle {
             { "agent.err.file.read.failed", "Failed in reading the file" },
             { "agent.err.invalid.agentclass", "Invalid com.sun.management.agent.class property value" },
             { "agent.err.invalid.jmxremote.port", "Invalid com.sun.management.jmxremote.port number" },
+            { "agent.err.invalid.jmxremote.rmi.port", "Invalid com.sun.management.jmxremote.rmi.port number" },
             { "agent.err.invalid.option", "Invalid option specified" },
             { "agent.err.invalid.snmp.port", "Invalid com.sun.management.snmp.port number" },
             { "agent.err.invalid.snmp.trap.port", "Invalid com.sun.management.snmp.trap number" },
+            { "agent.err.invalid.state", "Invalid agent state" },
             { "agent.err.password.file.access.notrestricted", "Password file read access must be restricted" },
             { "agent.err.password.file.not.readable", "Password file not readable" },
             { "agent.err.password.file.notfound", "Password file not found" },
@@ -51,11 +53,11 @@ public final class agent extends ListResourceBundle {
             { "jmxremote.AdaptorBootstrap.getTargetList.processing", "Processing ACL" },
             { "jmxremote.AdaptorBootstrap.getTargetList.starting", "Starting Adaptor Server:" },
             { "jmxremote.AdaptorBootstrap.getTargetList.terminate", "terminate {0}" },
-            { "jmxremote.ConnectorBootstrap.initialize", "Starting JMX Connector Server:" },
-            { "jmxremote.ConnectorBootstrap.initialize.file.readonly", "File read access must be restricted: {0}" },
-            { "jmxremote.ConnectorBootstrap.initialize.noAuthentication", "No Authentication" },
-            { "jmxremote.ConnectorBootstrap.initialize.password.readonly", "Password file read access must be restricted: {0}" },
-            { "jmxremote.ConnectorBootstrap.initialize.ready", "JMX Connector ready at: {0}" },
+            { "jmxremote.ConnectorBootstrap.file.readonly", "File read access must be restricted: {0}" },
+            { "jmxremote.ConnectorBootstrap.noAuthentication", "No Authentication" },
+            { "jmxremote.ConnectorBootstrap.password.readonly", "Password file read access must be restricted: {0}" },
+            { "jmxremote.ConnectorBootstrap.ready", "JMX Connector ready at: {0}" },
+            { "jmxremote.ConnectorBootstrap.starting", "Starting JMX Connector Server:" },
         };
     }
 }

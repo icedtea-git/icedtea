@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XIMPreeditStateNotifyCallbackStruct extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 4; }
+	public static int getSize() { return 8; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XIMPreeditStateNotifyCallbackStruct extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XIMPreeditStateNotifyCallbackStruct(long addr) {
+	public XIMPreeditStateNotifyCallbackStruct(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XIMPreeditStateNotifyCallbackStruct() {
+	public XIMPreeditStateNotifyCallbackStruct() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -47,10 +47,10 @@ public class XIMPreeditStateNotifyCallbackStruct extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(40);
 
-		ret += ""+"state = " + get_state() +", ";
-		return ret;
+		ret.append("state = ").append( get_state() ).append(", ");
+		return ret.toString();
 	}
 
 

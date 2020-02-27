@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XStandardColormap extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 40; }
+	public static int getSize() { return 80; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XStandardColormap extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XStandardColormap(long addr) {
+	public XStandardColormap(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XStandardColormap() {
+	public XStandardColormap() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,24 +39,24 @@ public class XStandardColormap extends XWrapperBase {
 		}
 	public long get_colormap() { log.finest("");return (Native.getLong(pData+0)); }
 	public void set_colormap(long v) { log.finest(""); Native.putLong(pData+0, v); }
-	public long get_red_max() { log.finest("");return (Native.getLong(pData+4)); }
-	public void set_red_max(long v) { log.finest(""); Native.putLong(pData+4, v); }
-	public long get_red_mult() { log.finest("");return (Native.getLong(pData+8)); }
-	public void set_red_mult(long v) { log.finest(""); Native.putLong(pData+8, v); }
-	public long get_green_max() { log.finest("");return (Native.getLong(pData+12)); }
-	public void set_green_max(long v) { log.finest(""); Native.putLong(pData+12, v); }
-	public long get_green_mult() { log.finest("");return (Native.getLong(pData+16)); }
-	public void set_green_mult(long v) { log.finest(""); Native.putLong(pData+16, v); }
-	public long get_blue_max() { log.finest("");return (Native.getLong(pData+20)); }
-	public void set_blue_max(long v) { log.finest(""); Native.putLong(pData+20, v); }
-	public long get_blue_mult() { log.finest("");return (Native.getLong(pData+24)); }
-	public void set_blue_mult(long v) { log.finest(""); Native.putLong(pData+24, v); }
-	public long get_base_pixel() { log.finest("");return (Native.getLong(pData+28)); }
-	public void set_base_pixel(long v) { log.finest(""); Native.putLong(pData+28, v); }
-	public long get_visualid() { log.finest("");return (Native.getLong(pData+32)); }
-	public void set_visualid(long v) { log.finest(""); Native.putLong(pData+32, v); }
-	public long get_killid() { log.finest("");return (Native.getLong(pData+36)); }
-	public void set_killid(long v) { log.finest(""); Native.putLong(pData+36, v); }
+	public long get_red_max() { log.finest("");return (Native.getLong(pData+8)); }
+	public void set_red_max(long v) { log.finest(""); Native.putLong(pData+8, v); }
+	public long get_red_mult() { log.finest("");return (Native.getLong(pData+16)); }
+	public void set_red_mult(long v) { log.finest(""); Native.putLong(pData+16, v); }
+	public long get_green_max() { log.finest("");return (Native.getLong(pData+24)); }
+	public void set_green_max(long v) { log.finest(""); Native.putLong(pData+24, v); }
+	public long get_green_mult() { log.finest("");return (Native.getLong(pData+32)); }
+	public void set_green_mult(long v) { log.finest(""); Native.putLong(pData+32, v); }
+	public long get_blue_max() { log.finest("");return (Native.getLong(pData+40)); }
+	public void set_blue_max(long v) { log.finest(""); Native.putLong(pData+40, v); }
+	public long get_blue_mult() { log.finest("");return (Native.getLong(pData+48)); }
+	public void set_blue_mult(long v) { log.finest(""); Native.putLong(pData+48, v); }
+	public long get_base_pixel() { log.finest("");return (Native.getLong(pData+56)); }
+	public void set_base_pixel(long v) { log.finest(""); Native.putLong(pData+56, v); }
+	public long get_visualid() { log.finest("");return (Native.getLong(pData+64)); }
+	public void set_visualid(long v) { log.finest(""); Native.putLong(pData+64, v); }
+	public long get_killid() { log.finest("");return (Native.getLong(pData+72)); }
+	public void set_killid(long v) { log.finest(""); Native.putLong(pData+72, v); }
 
 
 	String getName() {
@@ -65,19 +65,19 @@ public class XStandardColormap extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(400);
 
-		ret += ""+"colormap = " + get_colormap() +", ";
-		ret += ""+"red_max = " + get_red_max() +", ";
-		ret += ""+"red_mult = " + get_red_mult() +", ";
-		ret += ""+"green_max = " + get_green_max() +", ";
-		ret += ""+"green_mult = " + get_green_mult() +", ";
-		ret += ""+"blue_max = " + get_blue_max() +", ";
-		ret += ""+"blue_mult = " + get_blue_mult() +", ";
-		ret += ""+"base_pixel = " + get_base_pixel() +", ";
-		ret += ""+"visualid = " + get_visualid() +", ";
-		ret += ""+"killid = " + get_killid() +", ";
-		return ret;
+		ret.append("colormap = ").append( get_colormap() ).append(", ");
+		ret.append("red_max = ").append( get_red_max() ).append(", ");
+		ret.append("red_mult = ").append( get_red_mult() ).append(", ");
+		ret.append("green_max = ").append( get_green_max() ).append(", ");
+		ret.append("green_mult = ").append( get_green_mult() ).append(", ");
+		ret.append("blue_max = ").append( get_blue_max() ).append(", ");
+		ret.append("blue_mult = ").append( get_blue_mult() ).append(", ");
+		ret.append("base_pixel = ").append( get_base_pixel() ).append(", ");
+		ret.append("visualid = ").append( get_visualid() ).append(", ");
+		ret.append("killid = ").append( get_killid() ).append(", ");
+		return ret.toString();
 	}
 
 

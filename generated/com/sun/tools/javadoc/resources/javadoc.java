@@ -1,13 +1,12 @@
 package com.sun.tools.javadoc.resources;
 
-import java.util.ListResourceBundle;
-
-public final class javadoc extends ListResourceBundle {
+public final class javadoc extends java.util.ListResourceBundle {
     protected final Object[][] getContents() {
         return new Object[][] {
-            { "javadoc.Body_missing_from_html_file", "Body tag missing from HTML" },
+            { "javadoc.Body_missing_from_html_file", "Body tag missing from HTML file" },
             { "javadoc.End_body_missing_from_html_file", "Close body tag missing from HTML file" },
             { "javadoc.File_Read_Error", "Error while reading file {0}" },
+            { "javadoc.JavaScript_in_comment", "JavaScript found in documentation comment.\nUse --allow-script-in-comments to allow use of JavaScript." },
             { "javadoc.Multiple_package_comments", "Multiple sources of package comments found for package \"{0}\"" },
             { "javadoc.class_not_found", "Class {0} not found." },
             { "javadoc.error", "error" },
@@ -17,6 +16,7 @@ public final class javadoc extends ListResourceBundle {
             { "main.Loading_source_file_for_class", "Loading source file for class {0}..." },
             { "main.Loading_source_files_for_package", "Loading source files for package {0}..." },
             { "main.No_packages_or_classes_specified", "No packages or classes specified." },
+            { "main.Xusage", "-Xmaxerrs <number>        Set the maximum number of errors to print\n-Xmaxwarns <number>       Set the maximum number of warnings to print\n\nThese options are non-standard and subject to change without notice." },
             { "main.cant.read", "cannot read {0}" },
             { "main.doclet_class_not_found", "Cannot find doclet class {0}" },
             { "main.doclet_method_must_be_static", "In doclet class {0}, method {1} must be static." },
@@ -24,6 +24,7 @@ public final class javadoc extends ListResourceBundle {
             { "main.doclet_method_not_found", "Doclet class {0} does not contain a {1} method" },
             { "main.done_in", "[done in {0} ms]" },
             { "main.error", "{0} error" },
+            { "main.errors", "{0} errors" },
             { "main.exception_thrown", "In doclet class {0},  method {1} has thrown an exception {2}" },
             { "main.fatal.error", "fatal error" },
             { "main.fatal.exception", "fatal exception" },
@@ -41,9 +42,9 @@ public final class javadoc extends ListResourceBundle {
             { "main.must_return_languageversion", "In doclet class {0}, method {1} must return LanguageVersion." },
             { "main.no_source_files_for_package", "No source files for package {0}" },
             { "main.option.already.seen", "The {0} option may be specified no more than once." },
-            { "main.out.of.memory", "java.lang.OutOfMemoryError: Please increase memory.\nFor example, on the Sun Classic or HotSpot VMs, add the option -J-Xmx\nsuch as -J-Xmx32m." },
+            { "main.out.of.memory", "java.lang.OutOfMemoryError: Please increase memory.\nFor example, on the JDK Classic or HotSpot VMs, add the option -J-Xmx\nsuch as -J-Xmx32m." },
             { "main.requires_argument", "option {0} requires an argument." },
-            { "main.usage", "usage: javadoc [options] [packagenames] [sourcefiles] [@files]\n-overview <file>          Read overview documentation from HTML file\n-public                   Show only public classes and members\n-protected                Show protected/public classes and members (default)\n-package                  Show package/protected/public classes and members\n-private                  Show all classes and members\n-help                     Display command line options and exit\n-doclet <class>           Generate output via alternate doclet\n-docletpath <path>        Specify where to find doclet class files\n-sourcepath <pathlist>    Specify where to find source files\n-classpath <pathlist>     Specify where to find user class files\n-exclude <pkglist>        Specify a list of packages to exclude\n-subpackages <subpkglist> Specify subpackages to recursively load\n-breakiterator            Compute 1st sentence with BreakIterator\n-bootclasspath <pathlist> Override location of class files loaded\n\t\t\t  by the bootstrap class loader\n-source <release>         Provide source compatibility with specified release\n-extdirs <dirlist>        Override location of installed extensions\n-verbose                  Output messages about what Javadoc is doing\n-locale <name>            Locale to be used, e.g. en_US or en_US_WIN\n-encoding <name>          Source file encoding name\n-quiet                    Do not display status messages\n-J<flag>                  Pass <flag> directly to the runtime system\n" },
+            { "main.usage", "usage: javadoc [options] [packagenames] [sourcefiles] [@files]\n-overview <file>          Read overview documentation from HTML file\n-public                   Show only public classes and members\n-protected                Show protected/public classes and members (default)\n-package                  Show package/protected/public classes and members\n-private                  Show all classes and members\n-help                     Display command line options and exit\n-doclet <class>           Generate output via alternate doclet\n-docletpath <path>        Specify where to find doclet class files\n-sourcepath <pathlist>    Specify where to find source files\n-classpath <pathlist>     Specify where to find user class files\n-exclude <pkglist>        Specify a list of packages to exclude\n-subpackages <subpkglist> Specify subpackages to recursively load\n-breakiterator            Compute 1st sentence with BreakIterator\n-bootclasspath <pathlist> Override location of class files loaded\n\t\t\t  by the bootstrap class loader\n-source <release>         Provide source compatibility with specified release\n-extdirs <dirlist>        Override location of installed extensions\n-verbose                  Output messages about what Javadoc is doing\n-locale <name>            Locale to be used, e.g. en_US or en_US_WIN\n-encoding <name>          Source file encoding name\n-quiet                    Do not display status messages\n-J<flag>                  Pass <flag> directly to the runtime system\n-X                        Print a synopsis of nonstandard options\n" },
             { "main.warning", "{0} warning" },
             { "main.warnings", "{0} warnings" },
             { "tag.End_delimiter_missing_for_possible_SeeTag", "End Delimiter } missing for possible See Tag in comment string: \"{0}\"" },

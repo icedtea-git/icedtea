@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XWindowAttributes extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 92; }
+	public static int getSize() { return 136; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XWindowAttributes extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XWindowAttributes(long addr) {
+	public XWindowAttributes(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XWindowAttributes() {
+	public XWindowAttributes() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -49,42 +49,42 @@ public class XWindowAttributes extends XWrapperBase {
 	public void set_border_width(int v) { log.finest(""); Native.putInt(pData+16, v); }
 	public int get_depth() { log.finest("");return (Native.getInt(pData+20)); }
 	public void set_depth(int v) { log.finest(""); Native.putInt(pData+20, v); }
-	public Visual get_visual(int index) { log.finest(""); return (Native.getLong(pData+24) != 0)?(new Visual(Native.getLong(pData+24)+index*32)):(null); }
+	public Visual get_visual(int index) { log.finest(""); return (Native.getLong(pData+24) != 0)?(new Visual(Native.getLong(pData+24)+index*56)):(null); }
 	public long get_visual() { log.finest("");return Native.getLong(pData+24); }
 	public void set_visual(long v) { log.finest(""); Native.putLong(pData + 24, v); }
-	public long get_root() { log.finest("");return (Native.getLong(pData+28)); }
-	public void set_root(long v) { log.finest(""); Native.putLong(pData+28, v); }
-	public int get_class() { log.finest("");return (Native.getInt(pData+32)); }
-	public void set_class(int v) { log.finest(""); Native.putInt(pData+32, v); }
-	public int get_bit_gravity() { log.finest("");return (Native.getInt(pData+36)); }
-	public void set_bit_gravity(int v) { log.finest(""); Native.putInt(pData+36, v); }
-	public int get_win_gravity() { log.finest("");return (Native.getInt(pData+40)); }
-	public void set_win_gravity(int v) { log.finest(""); Native.putInt(pData+40, v); }
-	public int get_backing_store() { log.finest("");return (Native.getInt(pData+44)); }
-	public void set_backing_store(int v) { log.finest(""); Native.putInt(pData+44, v); }
-	public long get_backing_planes() { log.finest("");return (Native.getLong(pData+48)); }
-	public void set_backing_planes(long v) { log.finest(""); Native.putLong(pData+48, v); }
-	public long get_backing_pixel() { log.finest("");return (Native.getLong(pData+52)); }
-	public void set_backing_pixel(long v) { log.finest(""); Native.putLong(pData+52, v); }
-	public boolean get_save_under() { log.finest("");return (Native.getBool(pData+56)); }
-	public void set_save_under(boolean v) { log.finest(""); Native.putBool(pData+56, v); }
-	public long get_colormap() { log.finest("");return (Native.getLong(pData+60)); }
-	public void set_colormap(long v) { log.finest(""); Native.putLong(pData+60, v); }
-	public boolean get_map_installed() { log.finest("");return (Native.getBool(pData+64)); }
-	public void set_map_installed(boolean v) { log.finest(""); Native.putBool(pData+64, v); }
-	public int get_map_state() { log.finest("");return (Native.getInt(pData+68)); }
-	public void set_map_state(int v) { log.finest(""); Native.putInt(pData+68, v); }
-	public long get_all_event_masks() { log.finest("");return (Native.getLong(pData+72)); }
-	public void set_all_event_masks(long v) { log.finest(""); Native.putLong(pData+72, v); }
-	public long get_your_event_mask() { log.finest("");return (Native.getLong(pData+76)); }
-	public void set_your_event_mask(long v) { log.finest(""); Native.putLong(pData+76, v); }
-	public long get_do_not_propagate_mask() { log.finest("");return (Native.getLong(pData+80)); }
-	public void set_do_not_propagate_mask(long v) { log.finest(""); Native.putLong(pData+80, v); }
-	public boolean get_override_redirect() { log.finest("");return (Native.getBool(pData+84)); }
-	public void set_override_redirect(boolean v) { log.finest(""); Native.putBool(pData+84, v); }
-	public Screen get_screen(int index) { log.finest(""); return (Native.getLong(pData+88) != 0)?(new Screen(Native.getLong(pData+88)+index*80)):(null); }
-	public long get_screen() { log.finest("");return Native.getLong(pData+88); }
-	public void set_screen(long v) { log.finest(""); Native.putLong(pData + 88, v); }
+	public long get_root() { log.finest("");return (Native.getLong(pData+32)); }
+	public void set_root(long v) { log.finest(""); Native.putLong(pData+32, v); }
+	public int get_class() { log.finest("");return (Native.getInt(pData+40)); }
+	public void set_class(int v) { log.finest(""); Native.putInt(pData+40, v); }
+	public int get_bit_gravity() { log.finest("");return (Native.getInt(pData+44)); }
+	public void set_bit_gravity(int v) { log.finest(""); Native.putInt(pData+44, v); }
+	public int get_win_gravity() { log.finest("");return (Native.getInt(pData+48)); }
+	public void set_win_gravity(int v) { log.finest(""); Native.putInt(pData+48, v); }
+	public int get_backing_store() { log.finest("");return (Native.getInt(pData+52)); }
+	public void set_backing_store(int v) { log.finest(""); Native.putInt(pData+52, v); }
+	public long get_backing_planes() { log.finest("");return (Native.getLong(pData+56)); }
+	public void set_backing_planes(long v) { log.finest(""); Native.putLong(pData+56, v); }
+	public long get_backing_pixel() { log.finest("");return (Native.getLong(pData+64)); }
+	public void set_backing_pixel(long v) { log.finest(""); Native.putLong(pData+64, v); }
+	public boolean get_save_under() { log.finest("");return (Native.getBool(pData+72)); }
+	public void set_save_under(boolean v) { log.finest(""); Native.putBool(pData+72, v); }
+	public long get_colormap() { log.finest("");return (Native.getLong(pData+80)); }
+	public void set_colormap(long v) { log.finest(""); Native.putLong(pData+80, v); }
+	public boolean get_map_installed() { log.finest("");return (Native.getBool(pData+88)); }
+	public void set_map_installed(boolean v) { log.finest(""); Native.putBool(pData+88, v); }
+	public int get_map_state() { log.finest("");return (Native.getInt(pData+92)); }
+	public void set_map_state(int v) { log.finest(""); Native.putInt(pData+92, v); }
+	public long get_all_event_masks() { log.finest("");return (Native.getLong(pData+96)); }
+	public void set_all_event_masks(long v) { log.finest(""); Native.putLong(pData+96, v); }
+	public long get_your_event_mask() { log.finest("");return (Native.getLong(pData+104)); }
+	public void set_your_event_mask(long v) { log.finest(""); Native.putLong(pData+104, v); }
+	public long get_do_not_propagate_mask() { log.finest("");return (Native.getLong(pData+112)); }
+	public void set_do_not_propagate_mask(long v) { log.finest(""); Native.putLong(pData+112, v); }
+	public boolean get_override_redirect() { log.finest("");return (Native.getBool(pData+120)); }
+	public void set_override_redirect(boolean v) { log.finest(""); Native.putBool(pData+120, v); }
+	public Screen get_screen(int index) { log.finest(""); return (Native.getLong(pData+128) != 0)?(new Screen(Native.getLong(pData+128)+index*128)):(null); }
+	public long get_screen() { log.finest("");return Native.getLong(pData+128); }
+	public void set_screen(long v) { log.finest(""); Native.putLong(pData + 128, v); }
 
 
 	String getName() {
@@ -93,32 +93,32 @@ public class XWindowAttributes extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(920);
 
-		ret += ""+"x = " + get_x() +", ";
-		ret += ""+"y = " + get_y() +", ";
-		ret += ""+"width = " + get_width() +", ";
-		ret += ""+"height = " + get_height() +", ";
-		ret += ""+"border_width = " + get_border_width() +", ";
-		ret += ""+"depth = " + get_depth() +", ";
-		ret += ""+"visual = " + get_visual() +", ";
-		ret += ""+"root = " + get_root() +", ";
-		ret += ""+"class = " + get_class() +", ";
-		ret += ""+"bit_gravity = " + get_bit_gravity() +", ";
-		ret += ""+"win_gravity = " + get_win_gravity() +", ";
-		ret += ""+"backing_store = " + get_backing_store() +", ";
-		ret += ""+"backing_planes = " + get_backing_planes() +", ";
-		ret += ""+"backing_pixel = " + get_backing_pixel() +", ";
-		ret += ""+"save_under = " + get_save_under() +", ";
-		ret += ""+"colormap = " + get_colormap() +", ";
-		ret += ""+"map_installed = " + get_map_installed() +", ";
-		ret += ""+"map_state = " + get_map_state() +", ";
-		ret += ""+"all_event_masks = " + get_all_event_masks() +", ";
-		ret += ""+"your_event_mask = " + get_your_event_mask() +", ";
-		ret += ""+"do_not_propagate_mask = " + get_do_not_propagate_mask() +", ";
-		ret += ""+"override_redirect = " + get_override_redirect() +", ";
-		ret += ""+"screen = " + get_screen() +", ";
-		return ret;
+		ret.append("x = ").append( get_x() ).append(", ");
+		ret.append("y = ").append( get_y() ).append(", ");
+		ret.append("width = ").append( get_width() ).append(", ");
+		ret.append("height = ").append( get_height() ).append(", ");
+		ret.append("border_width = ").append( get_border_width() ).append(", ");
+		ret.append("depth = ").append( get_depth() ).append(", ");
+		ret.append("visual = ").append( get_visual() ).append(", ");
+		ret.append("root = ").append( get_root() ).append(", ");
+		ret.append("class = ").append( get_class() ).append(", ");
+		ret.append("bit_gravity = ").append( get_bit_gravity() ).append(", ");
+		ret.append("win_gravity = ").append( get_win_gravity() ).append(", ");
+		ret.append("backing_store = ").append( get_backing_store() ).append(", ");
+		ret.append("backing_planes = ").append( get_backing_planes() ).append(", ");
+		ret.append("backing_pixel = ").append( get_backing_pixel() ).append(", ");
+		ret.append("save_under = ").append( get_save_under() ).append(", ");
+		ret.append("colormap = ").append( get_colormap() ).append(", ");
+		ret.append("map_installed = ").append( get_map_installed() ).append(", ");
+		ret.append("map_state = ").append( get_map_state() ).append(", ");
+		ret.append("all_event_masks = ").append( get_all_event_masks() ).append(", ");
+		ret.append("your_event_mask = ").append( get_your_event_mask() ).append(", ");
+		ret.append("do_not_propagate_mask = ").append( get_do_not_propagate_mask() ).append(", ");
+		ret.append("override_redirect = ").append( get_override_redirect() ).append(", ");
+		ret.append("screen = ").append( get_screen() ).append(", ");
+		return ret.toString();
 	}
 
 

@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XChar2b extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -16,14 +16,14 @@ public class XChar2b extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XChar2b(long addr) {
+	public XChar2b(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XChar2b() {
+	public XChar2b() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -49,11 +49,11 @@ public class XChar2b extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(80);
 
-		ret += ""+"byte1 = " + get_byte1() +", ";
-		ret += ""+"byte2 = " + get_byte2() +", ";
-		return ret;
+		ret.append("byte1 = ").append( get_byte1() ).append(", ");
+		ret.append("byte2 = ").append( get_byte2() ).append(", ");
+		return ret.toString();
 	}
 
 

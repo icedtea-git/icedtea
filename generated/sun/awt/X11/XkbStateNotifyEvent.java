@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XkbStateNotifyEvent extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -97,35 +97,35 @@ public class XkbStateNotifyEvent extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(1040);
 
-		ret += ""+"type = " + XlibWrapper.eventToString[get_type()] +", ";
-		ret += ""+"serial = " + get_serial() +", ";
-		ret += ""+"send_event = " + get_send_event() +", ";
-		ret += ""+"display = " + get_display() +", ";
-		ret += ""+"time = " + get_time() +", ";
-		ret += ""+"xkb_type = " + get_xkb_type() +", ";
-		ret += ""+"device = " + get_device() +", ";
-		ret += ""+"changed = " + get_changed() +", ";
-		ret += ""+"group = " + get_group() +", ";
-		ret += ""+"base_group = " + get_base_group() +", ";
-		ret += ""+"latched_group = " + get_latched_group() +", ";
-		ret += ""+"locked_group = " + get_locked_group() +", ";
-		ret += ""+"mods = " + get_mods() +", ";
-		ret += ""+"base_mods = " + get_base_mods() +", ";
-		ret += ""+"latched_mods = " + get_latched_mods() +", ";
-		ret += ""+"locked_mods = " + get_locked_mods() +", ";
-		ret += ""+"compat_state = " + get_compat_state() +", ";
-		ret += ""+"grab_mods = " + get_grab_mods() +", ";
-		ret += ""+"compat_grab_mods = " + get_compat_grab_mods() +", ";
-		ret += ""+"lookup_mods = " + get_lookup_mods() +", ";
-		ret += ""+"compat_lookup_mods = " + get_compat_lookup_mods() +", ";
-		ret += ""+"ptr_buttons = " + get_ptr_buttons() +", ";
-		ret += ""+"keycode = " + get_keycode() +", ";
-		ret += ""+"event_type = " + get_event_type() +", ";
-		ret += ""+"req_major = " + get_req_major() +", ";
-		ret += ""+"req_minor = " + get_req_minor() +", ";
-		return ret;
+		ret.append("type = ").append( XlibWrapper.eventToString[get_type()] ).append(", ");
+		ret.append("serial = ").append( get_serial() ).append(", ");
+		ret.append("send_event = ").append( get_send_event() ).append(", ");
+		ret.append("display = ").append( get_display() ).append(", ");
+		ret.append("time = ").append( get_time() ).append(", ");
+		ret.append("xkb_type = ").append( get_xkb_type() ).append(", ");
+		ret.append("device = ").append( get_device() ).append(", ");
+		ret.append("changed = ").append( get_changed() ).append(", ");
+		ret.append("group = ").append( get_group() ).append(", ");
+		ret.append("base_group = ").append( get_base_group() ).append(", ");
+		ret.append("latched_group = ").append( get_latched_group() ).append(", ");
+		ret.append("locked_group = ").append( get_locked_group() ).append(", ");
+		ret.append("mods = ").append( get_mods() ).append(", ");
+		ret.append("base_mods = ").append( get_base_mods() ).append(", ");
+		ret.append("latched_mods = ").append( get_latched_mods() ).append(", ");
+		ret.append("locked_mods = ").append( get_locked_mods() ).append(", ");
+		ret.append("compat_state = ").append( get_compat_state() ).append(", ");
+		ret.append("grab_mods = ").append( get_grab_mods() ).append(", ");
+		ret.append("compat_grab_mods = ").append( get_compat_grab_mods() ).append(", ");
+		ret.append("lookup_mods = ").append( get_lookup_mods() ).append(", ");
+		ret.append("compat_lookup_mods = ").append( get_compat_lookup_mods() ).append(", ");
+		ret.append("ptr_buttons = ").append( get_ptr_buttons() ).append(", ");
+		ret.append("keycode = ").append( get_keycode() ).append(", ");
+		ret.append("event_type = ").append( get_event_type() ).append(", ");
+		ret.append("req_major = ").append( get_req_major() ).append(", ");
+		ret.append("req_minor = ").append( get_req_minor() ).append(", ");
+		return ret.toString();
 	}
 
 

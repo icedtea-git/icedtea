@@ -6,7 +6,7 @@ public final class CalendarData_hu extends LocaleNamesBundle {
     protected final Object[][] getContents() {
         return new Object[][] {
             { "firstDayOfWeek", "2" },
-            { "minimalDaysInFirstWeek", "1" },
+            { "minimalDaysInFirstWeek", "4" },
         };
     }
 }

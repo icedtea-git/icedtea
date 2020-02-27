@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XImage extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 88; }
+	public static int getSize() { return 136; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XImage extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XImage(long addr) {
+	public XImage(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XImage() {
+	public XImage() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -48,47 +48,47 @@ public class XImage extends XWrapperBase {
 	public byte get_data(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+16)+index*1); }
 	public long get_data() { log.finest("");return Native.getLong(pData+16); }
 	public void set_data(long v) { log.finest(""); Native.putLong(pData + 16, v); }
-	public int get_byte_order() { log.finest("");return (Native.getInt(pData+20)); }
-	public void set_byte_order(int v) { log.finest(""); Native.putInt(pData+20, v); }
-	public int get_bitmap_unit() { log.finest("");return (Native.getInt(pData+24)); }
-	public void set_bitmap_unit(int v) { log.finest(""); Native.putInt(pData+24, v); }
-	public int get_bitmap_bit_order() { log.finest("");return (Native.getInt(pData+28)); }
-	public void set_bitmap_bit_order(int v) { log.finest(""); Native.putInt(pData+28, v); }
-	public int get_bitmap_pad() { log.finest("");return (Native.getInt(pData+32)); }
-	public void set_bitmap_pad(int v) { log.finest(""); Native.putInt(pData+32, v); }
-	public int get_depth() { log.finest("");return (Native.getInt(pData+36)); }
-	public void set_depth(int v) { log.finest(""); Native.putInt(pData+36, v); }
-	public int get_bytes_per_line() { log.finest("");return (Native.getInt(pData+40)); }
-	public void set_bytes_per_line(int v) { log.finest(""); Native.putInt(pData+40, v); }
-	public int get_bits_per_pixel() { log.finest("");return (Native.getInt(pData+44)); }
-	public void set_bits_per_pixel(int v) { log.finest(""); Native.putInt(pData+44, v); }
-	public long get_red_mask() { log.finest("");return (Native.getLong(pData+48)); }
-	public void set_red_mask(long v) { log.finest(""); Native.putLong(pData+48, v); }
-	public long get_green_mask() { log.finest("");return (Native.getLong(pData+52)); }
-	public void set_green_mask(long v) { log.finest(""); Native.putLong(pData+52, v); }
-	public long get_blue_mask() { log.finest("");return (Native.getLong(pData+56)); }
-	public void set_blue_mask(long v) { log.finest(""); Native.putLong(pData+56, v); }
-	public long get_obdata(int index) { log.finest(""); return Native.getLong(pData+60)+index*Native.getLongSize(); }
-	public long get_obdata() { log.finest("");return Native.getLong(pData+60); }
-	public void set_obdata(long v) { log.finest(""); Native.putLong(pData + 60, v); }
-	public long get_f_create_image(int index) { log.finest(""); return Native.getLong(pData+64)+index*Native.getLongSize(); }
-	public long get_f_create_image() { log.finest("");return Native.getLong(pData+64); }
-	public void set_f_create_image(long v) { log.finest(""); Native.putLong(pData + 64, v); }
-	public long get_f_destroy_image(int index) { log.finest(""); return Native.getLong(pData+68)+index*Native.getLongSize(); }
-	public long get_f_destroy_image() { log.finest("");return Native.getLong(pData+68); }
-	public void set_f_destroy_image(long v) { log.finest(""); Native.putLong(pData + 68, v); }
-	public long get_f_get_pixel(int index) { log.finest(""); return Native.getLong(pData+72)+index*Native.getLongSize(); }
-	public long get_f_get_pixel() { log.finest("");return Native.getLong(pData+72); }
-	public void set_f_get_pixel(long v) { log.finest(""); Native.putLong(pData + 72, v); }
-	public long get_f_put_pixel(int index) { log.finest(""); return Native.getLong(pData+76)+index*Native.getLongSize(); }
-	public long get_f_put_pixel() { log.finest("");return Native.getLong(pData+76); }
-	public void set_f_put_pixel(long v) { log.finest(""); Native.putLong(pData + 76, v); }
-	public long get_f_sub_image(int index) { log.finest(""); return Native.getLong(pData+80)+index*Native.getLongSize(); }
-	public long get_f_sub_image() { log.finest("");return Native.getLong(pData+80); }
-	public void set_f_sub_image(long v) { log.finest(""); Native.putLong(pData + 80, v); }
-	public long get_f_add_pixel(int index) { log.finest(""); return Native.getLong(pData+84)+index*Native.getLongSize(); }
-	public long get_f_add_pixel() { log.finest("");return Native.getLong(pData+84); }
-	public void set_f_add_pixel(long v) { log.finest(""); Native.putLong(pData + 84, v); }
+	public int get_byte_order() { log.finest("");return (Native.getInt(pData+24)); }
+	public void set_byte_order(int v) { log.finest(""); Native.putInt(pData+24, v); }
+	public int get_bitmap_unit() { log.finest("");return (Native.getInt(pData+28)); }
+	public void set_bitmap_unit(int v) { log.finest(""); Native.putInt(pData+28, v); }
+	public int get_bitmap_bit_order() { log.finest("");return (Native.getInt(pData+32)); }
+	public void set_bitmap_bit_order(int v) { log.finest(""); Native.putInt(pData+32, v); }
+	public int get_bitmap_pad() { log.finest("");return (Native.getInt(pData+36)); }
+	public void set_bitmap_pad(int v) { log.finest(""); Native.putInt(pData+36, v); }
+	public int get_depth() { log.finest("");return (Native.getInt(pData+40)); }
+	public void set_depth(int v) { log.finest(""); Native.putInt(pData+40, v); }
+	public int get_bytes_per_line() { log.finest("");return (Native.getInt(pData+44)); }
+	public void set_bytes_per_line(int v) { log.finest(""); Native.putInt(pData+44, v); }
+	public int get_bits_per_pixel() { log.finest("");return (Native.getInt(pData+48)); }
+	public void set_bits_per_pixel(int v) { log.finest(""); Native.putInt(pData+48, v); }
+	public long get_red_mask() { log.finest("");return (Native.getLong(pData+56)); }
+	public void set_red_mask(long v) { log.finest(""); Native.putLong(pData+56, v); }
+	public long get_green_mask() { log.finest("");return (Native.getLong(pData+64)); }
+	public void set_green_mask(long v) { log.finest(""); Native.putLong(pData+64, v); }
+	public long get_blue_mask() { log.finest("");return (Native.getLong(pData+72)); }
+	public void set_blue_mask(long v) { log.finest(""); Native.putLong(pData+72, v); }
+	public long get_obdata(int index) { log.finest(""); return Native.getLong(pData+80)+index*Native.getLongSize(); }
+	public long get_obdata() { log.finest("");return Native.getLong(pData+80); }
+	public void set_obdata(long v) { log.finest(""); Native.putLong(pData + 80, v); }
+	public long get_f_create_image(int index) { log.finest(""); return Native.getLong(pData+88)+index*Native.getLongSize(); }
+	public long get_f_create_image() { log.finest("");return Native.getLong(pData+88); }
+	public void set_f_create_image(long v) { log.finest(""); Native.putLong(pData + 88, v); }
+	public long get_f_destroy_image(int index) { log.finest(""); return Native.getLong(pData+96)+index*Native.getLongSize(); }
+	public long get_f_destroy_image() { log.finest("");return Native.getLong(pData+96); }
+	public void set_f_destroy_image(long v) { log.finest(""); Native.putLong(pData + 96, v); }
+	public long get_f_get_pixel(int index) { log.finest(""); return Native.getLong(pData+104)+index*Native.getLongSize(); }
+	public long get_f_get_pixel() { log.finest("");return Native.getLong(pData+104); }
+	public void set_f_get_pixel(long v) { log.finest(""); Native.putLong(pData + 104, v); }
+	public long get_f_put_pixel(int index) { log.finest(""); return Native.getLong(pData+112)+index*Native.getLongSize(); }
+	public long get_f_put_pixel() { log.finest("");return Native.getLong(pData+112); }
+	public void set_f_put_pixel(long v) { log.finest(""); Native.putLong(pData + 112, v); }
+	public long get_f_sub_image(int index) { log.finest(""); return Native.getLong(pData+120)+index*Native.getLongSize(); }
+	public long get_f_sub_image() { log.finest("");return Native.getLong(pData+120); }
+	public void set_f_sub_image(long v) { log.finest(""); Native.putLong(pData + 120, v); }
+	public long get_f_add_pixel(int index) { log.finest(""); return Native.getLong(pData+128)+index*Native.getLongSize(); }
+	public long get_f_add_pixel() { log.finest("");return Native.getLong(pData+128); }
+	public void set_f_add_pixel(long v) { log.finest(""); Native.putLong(pData + 128, v); }
 
 
 	String getName() {
@@ -97,31 +97,31 @@ public class XImage extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(880);
 
-		ret += ""+"width = " + get_width() +", ";
-		ret += ""+"height = " + get_height() +", ";
-		ret += ""+"xoffset = " + get_xoffset() +", ";
-		ret += ""+"format = " + get_format() +", ";
-		ret += ""+"data = " + get_data() +", ";
-		ret += ""+"byte_order = " + get_byte_order() +", ";
-		ret += ""+"bitmap_unit = " + get_bitmap_unit() +", ";
-		ret += ""+"bitmap_bit_order = " + get_bitmap_bit_order() +", ";
-		ret += ""+"bitmap_pad = " + get_bitmap_pad() +", ";
-		ret += ""+"depth = " + get_depth() +", ";
-		ret += ""+"bytes_per_line = " + get_bytes_per_line() +", ";
-		ret += ""+"bits_per_pixel = " + get_bits_per_pixel() +", ";
-		ret += ""+"red_mask = " + get_red_mask() +", ";
-		ret += ""+"green_mask = " + get_green_mask() +", ";
-		ret += ""+"blue_mask = " + get_blue_mask() +", ";
-		ret += ""+"obdata = " + get_obdata() +", ";
-		ret += ""+"f_create_image = " + get_f_create_image() +", ";
-		ret += ""+"f_destroy_image = " + get_f_destroy_image() +", ";
-		ret += ""+"f_get_pixel = " + get_f_get_pixel() +", ";
-		ret += ""+"f_put_pixel = " + get_f_put_pixel() +", ";
-		ret += ""+"f_sub_image = " + get_f_sub_image() +", ";
-		ret += ""+"f_add_pixel = " + get_f_add_pixel() +", ";
-		return ret;
+		ret.append("width = ").append( get_width() ).append(", ");
+		ret.append("height = ").append( get_height() ).append(", ");
+		ret.append("xoffset = ").append( get_xoffset() ).append(", ");
+		ret.append("format = ").append( get_format() ).append(", ");
+		ret.append("data = ").append( get_data() ).append(", ");
+		ret.append("byte_order = ").append( get_byte_order() ).append(", ");
+		ret.append("bitmap_unit = ").append( get_bitmap_unit() ).append(", ");
+		ret.append("bitmap_bit_order = ").append( get_bitmap_bit_order() ).append(", ");
+		ret.append("bitmap_pad = ").append( get_bitmap_pad() ).append(", ");
+		ret.append("depth = ").append( get_depth() ).append(", ");
+		ret.append("bytes_per_line = ").append( get_bytes_per_line() ).append(", ");
+		ret.append("bits_per_pixel = ").append( get_bits_per_pixel() ).append(", ");
+		ret.append("red_mask = ").append( get_red_mask() ).append(", ");
+		ret.append("green_mask = ").append( get_green_mask() ).append(", ");
+		ret.append("blue_mask = ").append( get_blue_mask() ).append(", ");
+		ret.append("obdata = ").append( get_obdata() ).append(", ");
+		ret.append("f_create_image = ").append( get_f_create_image() ).append(", ");
+		ret.append("f_destroy_image = ").append( get_f_destroy_image() ).append(", ");
+		ret.append("f_get_pixel = ").append( get_f_get_pixel() ).append(", ");
+		ret.append("f_put_pixel = ").append( get_f_put_pixel() ).append(", ");
+		ret.append("f_sub_image = ").append( get_f_sub_image() ).append(", ");
+		ret.append("f_add_pixel = ").append( get_f_add_pixel() ).append(", ");
+		return ret.toString();
 	}
 
 

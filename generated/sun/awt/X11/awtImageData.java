@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class awtImageData extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 304; }
+	public static int getSize() { return 560; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class awtImageData extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	awtImageData(long addr) {
+	public awtImageData(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	awtImageData() {
+	public awtImageData() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -54,13 +54,45 @@ public class awtImageData extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(160);
 
-		ret += ""+"Depth = " + get_Depth() +", ";
-		ret += ""+"wsImageFormat = " + get_wsImageFormat() +", ";
-		ret += ""+"clrdata = " + get_clrdata() +", ";
-		ret += "{" + get_convert(0) + " " + get_convert(1) + " " + get_convert(2) + " " + get_convert(3) + " " + get_convert(4) + " " + get_convert(5) + " " + get_convert(6) + " " + get_convert(7) + " " + get_convert(8) + " " + get_convert(9) + " " + get_convert(10) + " " + get_convert(11) + " " + get_convert(12) + " " + get_convert(13) + " " + get_convert(14) + " " + get_convert(15) + " " + get_convert(16) + " " + get_convert(17) + " " + get_convert(18) + " " + get_convert(19) + " " + get_convert(20) + " " + get_convert(21) + " " + get_convert(22) + " " + get_convert(23) + " " + get_convert(24) + " " + get_convert(25) + " " + get_convert(26) + " " + get_convert(27) + " " + get_convert(28) + " " + get_convert(29) + " " + get_convert(30) + " " + get_convert(31) + " " + "}";
-		return ret;
+		ret.append("Depth = ").append( get_Depth() ).append(", ");
+		ret.append("wsImageFormat = ").append( get_wsImageFormat() ).append(", ");
+		ret.append("clrdata = ").append( get_clrdata() ).append(", ");
+		ret.append("{")
+		.append( get_convert(0) ).append(" ")
+		.append( get_convert(1) ).append(" ")
+		.append( get_convert(2) ).append(" ")
+		.append( get_convert(3) ).append(" ")
+		.append( get_convert(4) ).append(" ")
+		.append( get_convert(5) ).append(" ")
+		.append( get_convert(6) ).append(" ")
+		.append( get_convert(7) ).append(" ")
+		.append( get_convert(8) ).append(" ")
+		.append( get_convert(9) ).append(" ")
+		.append( get_convert(10) ).append(" ")
+		.append( get_convert(11) ).append(" ")
+		.append( get_convert(12) ).append(" ")
+		.append( get_convert(13) ).append(" ")
+		.append( get_convert(14) ).append(" ")
+		.append( get_convert(15) ).append(" ")
+		.append( get_convert(16) ).append(" ")
+		.append( get_convert(17) ).append(" ")
+		.append( get_convert(18) ).append(" ")
+		.append( get_convert(19) ).append(" ")
+		.append( get_convert(20) ).append(" ")
+		.append( get_convert(21) ).append(" ")
+		.append( get_convert(22) ).append(" ")
+		.append( get_convert(23) ).append(" ")
+		.append( get_convert(24) ).append(" ")
+		.append( get_convert(25) ).append(" ")
+		.append( get_convert(26) ).append(" ")
+		.append( get_convert(27) ).append(" ")
+		.append( get_convert(28) ).append(" ")
+		.append( get_convert(29) ).append(" ")
+		.append( get_convert(30) ).append(" ")
+		.append( get_convert(31) ).append(" ").append( "}");
+		return ret.toString();
 	}
 
 

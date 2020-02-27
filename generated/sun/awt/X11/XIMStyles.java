@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XIMStyles extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 8; }
+	public static int getSize() { return 16; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XIMStyles extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XIMStyles(long addr) {
+	public XIMStyles(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XIMStyles() {
+	public XIMStyles() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,9 +39,9 @@ public class XIMStyles extends XWrapperBase {
 		}
 	public short get_count_styles() { log.finest("");return (Native.getShort(pData+0)); }
 	public void set_count_styles(short v) { log.finest(""); Native.putShort(pData+0, v); }
-	public long get_supported_styles(int index) { log.finest(""); return Native.getLong(Native.getLong(pData+4)+index*Native.getLongSize()); }
-	public long get_supported_styles() { log.finest("");return Native.getLong(pData+4); }
-	public void set_supported_styles(long v) { log.finest(""); Native.putLong(pData + 4, v); }
+	public long get_supported_styles(int index) { log.finest(""); return Native.getLong(Native.getLong(pData+8)+index*Native.getLongSize()); }
+	public long get_supported_styles() { log.finest("");return Native.getLong(pData+8); }
+	public void set_supported_styles(long v) { log.finest(""); Native.putLong(pData + 8, v); }
 
 
 	String getName() {
@@ -50,11 +50,11 @@ public class XIMStyles extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(80);
 
-		ret += ""+"count_styles = " + get_count_styles() +", ";
-		ret += ""+"supported_styles = " + get_supported_styles() +", ";
-		return ret;
+		ret.append("count_styles = ").append( get_count_styles() ).append(", ");
+		ret.append("supported_styles = ").append( get_supported_styles() ).append(", ");
+		return ret.toString();
 	}
 
 

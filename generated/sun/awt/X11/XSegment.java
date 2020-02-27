@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XSegment extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -16,14 +16,14 @@ public class XSegment extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XSegment(long addr) {
+	public XSegment(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XSegment() {
+	public XSegment() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -53,13 +53,13 @@ public class XSegment extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(160);
 
-		ret += ""+"x1 = " + get_x1() +", ";
-		ret += ""+"y1 = " + get_y1() +", ";
-		ret += ""+"x2 = " + get_x2() +", ";
-		ret += ""+"y2 = " + get_y2() +", ";
-		return ret;
+		ret.append("x1 = ").append( get_x1() ).append(", ");
+		ret.append("y1 = ").append( get_y1() ).append(", ");
+		ret.append("x2 = ").append( get_x2() ).append(", ");
+		ret.append("y2 = ").append( get_y2() ).append(", ");
+		return ret.toString();
 	}
 
 

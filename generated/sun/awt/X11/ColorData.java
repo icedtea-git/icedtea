@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class ColorData extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 44; }
+	public static int getSize() { return 88; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class ColorData extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	ColorData(long addr) {
+	public ColorData(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	ColorData() {
+	public ColorData() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -40,34 +40,34 @@ public class ColorData extends XWrapperBase {
 	public ColorEntry get_awt_Colors(int index) { log.finest(""); return (Native.getLong(pData+0) != 0)?(new ColorEntry(Native.getLong(pData+0)+index*4)):(null); }
 	public long get_awt_Colors() { log.finest("");return Native.getLong(pData+0); }
 	public void set_awt_Colors(long v) { log.finest(""); Native.putLong(pData + 0, v); }
-	public int get_awt_numICMcolors() { log.finest("");return (Native.getInt(pData+4)); }
-	public void set_awt_numICMcolors(int v) { log.finest(""); Native.putInt(pData+4, v); }
-	public int get_awt_icmLUT(int index) { log.finest(""); return Native.getInt(Native.getLong(pData+8)+index*4); }
-	public long get_awt_icmLUT() { log.finest("");return Native.getLong(pData+8); }
-	public void set_awt_icmLUT(long v) { log.finest(""); Native.putLong(pData + 8, v); }
-	public byte get_awt_icmLUT2Colors(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+12)+index*1); }
-	public long get_awt_icmLUT2Colors() { log.finest("");return Native.getLong(pData+12); }
-	public void set_awt_icmLUT2Colors(long v) { log.finest(""); Native.putLong(pData + 12, v); }
-	public byte get_img_grays(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+16)+index*1); }
-	public long get_img_grays() { log.finest("");return Native.getLong(pData+16); }
-	public void set_img_grays(long v) { log.finest(""); Native.putLong(pData + 16, v); }
-	public byte get_img_clr_tbl(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+20)+index*1); }
-	public long get_img_clr_tbl() { log.finest("");return Native.getLong(pData+20); }
-	public void set_img_clr_tbl(long v) { log.finest(""); Native.putLong(pData + 20, v); }
-	public byte get_img_oda_red(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+24)+index*1); }
-	public long get_img_oda_red() { log.finest("");return Native.getLong(pData+24); }
-	public void set_img_oda_red(long v) { log.finest(""); Native.putLong(pData + 24, v); }
-	public byte get_img_oda_green(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+28)+index*1); }
-	public long get_img_oda_green() { log.finest("");return Native.getLong(pData+28); }
-	public void set_img_oda_green(long v) { log.finest(""); Native.putLong(pData + 28, v); }
-	public byte get_img_oda_blue(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+32)+index*1); }
-	public long get_img_oda_blue() { log.finest("");return Native.getLong(pData+32); }
-	public void set_img_oda_blue(long v) { log.finest(""); Native.putLong(pData + 32, v); }
-	public int get_pGrayInverseLutData(int index) { log.finest(""); return Native.getInt(Native.getLong(pData+36)+index*4); }
-	public long get_pGrayInverseLutData() { log.finest("");return Native.getLong(pData+36); }
-	public void set_pGrayInverseLutData(long v) { log.finest(""); Native.putLong(pData + 36, v); }
-	public int get_screendata() { log.finest("");return (Native.getInt(pData+40)); }
-	public void set_screendata(int v) { log.finest(""); Native.putInt(pData+40, v); }
+	public int get_awt_numICMcolors() { log.finest("");return (Native.getInt(pData+8)); }
+	public void set_awt_numICMcolors(int v) { log.finest(""); Native.putInt(pData+8, v); }
+	public int get_awt_icmLUT(int index) { log.finest(""); return Native.getInt(Native.getLong(pData+16)+index*4); }
+	public long get_awt_icmLUT() { log.finest("");return Native.getLong(pData+16); }
+	public void set_awt_icmLUT(long v) { log.finest(""); Native.putLong(pData + 16, v); }
+	public byte get_awt_icmLUT2Colors(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+24)+index*1); }
+	public long get_awt_icmLUT2Colors() { log.finest("");return Native.getLong(pData+24); }
+	public void set_awt_icmLUT2Colors(long v) { log.finest(""); Native.putLong(pData + 24, v); }
+	public byte get_img_grays(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+32)+index*1); }
+	public long get_img_grays() { log.finest("");return Native.getLong(pData+32); }
+	public void set_img_grays(long v) { log.finest(""); Native.putLong(pData + 32, v); }
+	public byte get_img_clr_tbl(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+40)+index*1); }
+	public long get_img_clr_tbl() { log.finest("");return Native.getLong(pData+40); }
+	public void set_img_clr_tbl(long v) { log.finest(""); Native.putLong(pData + 40, v); }
+	public byte get_img_oda_red(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+48)+index*1); }
+	public long get_img_oda_red() { log.finest("");return Native.getLong(pData+48); }
+	public void set_img_oda_red(long v) { log.finest(""); Native.putLong(pData + 48, v); }
+	public byte get_img_oda_green(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+56)+index*1); }
+	public long get_img_oda_green() { log.finest("");return Native.getLong(pData+56); }
+	public void set_img_oda_green(long v) { log.finest(""); Native.putLong(pData + 56, v); }
+	public byte get_img_oda_blue(int index) { log.finest(""); return Native.getByte(Native.getLong(pData+64)+index*1); }
+	public long get_img_oda_blue() { log.finest("");return Native.getLong(pData+64); }
+	public void set_img_oda_blue(long v) { log.finest(""); Native.putLong(pData + 64, v); }
+	public int get_pGrayInverseLutData(int index) { log.finest(""); return Native.getInt(Native.getLong(pData+72)+index*4); }
+	public long get_pGrayInverseLutData() { log.finest("");return Native.getLong(pData+72); }
+	public void set_pGrayInverseLutData(long v) { log.finest(""); Native.putLong(pData + 72, v); }
+	public int get_screendata() { log.finest("");return (Native.getInt(pData+80)); }
+	public void set_screendata(int v) { log.finest(""); Native.putInt(pData+80, v); }
 
 
 	String getName() {
@@ -76,20 +76,20 @@ public class ColorData extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(440);
 
-		ret += ""+"awt_Colors = " + get_awt_Colors() +", ";
-		ret += ""+"awt_numICMcolors = " + get_awt_numICMcolors() +", ";
-		ret += ""+"awt_icmLUT = " + get_awt_icmLUT() +", ";
-		ret += ""+"awt_icmLUT2Colors = " + get_awt_icmLUT2Colors() +", ";
-		ret += ""+"img_grays = " + get_img_grays() +", ";
-		ret += ""+"img_clr_tbl = " + get_img_clr_tbl() +", ";
-		ret += ""+"img_oda_red = " + get_img_oda_red() +", ";
-		ret += ""+"img_oda_green = " + get_img_oda_green() +", ";
-		ret += ""+"img_oda_blue = " + get_img_oda_blue() +", ";
-		ret += ""+"pGrayInverseLutData = " + get_pGrayInverseLutData() +", ";
-		ret += ""+"screendata = " + get_screendata() +", ";
-		return ret;
+		ret.append("awt_Colors = ").append( get_awt_Colors() ).append(", ");
+		ret.append("awt_numICMcolors = ").append( get_awt_numICMcolors() ).append(", ");
+		ret.append("awt_icmLUT = ").append( get_awt_icmLUT() ).append(", ");
+		ret.append("awt_icmLUT2Colors = ").append( get_awt_icmLUT2Colors() ).append(", ");
+		ret.append("img_grays = ").append( get_img_grays() ).append(", ");
+		ret.append("img_clr_tbl = ").append( get_img_clr_tbl() ).append(", ");
+		ret.append("img_oda_red = ").append( get_img_oda_red() ).append(", ");
+		ret.append("img_oda_green = ").append( get_img_oda_green() ).append(", ");
+		ret.append("img_oda_blue = ").append( get_img_oda_blue() ).append(", ");
+		ret.append("pGrayInverseLutData = ").append( get_pGrayInverseLutData() ).append(", ");
+		ret.append("screendata = ").append( get_screendata() ).append(", ");
+		return ret.toString();
 	}
 
 

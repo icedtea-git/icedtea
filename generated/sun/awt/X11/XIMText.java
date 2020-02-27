@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XIMText extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 16; }
+	public static int getSize() { return 32; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XIMText extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XIMText(long addr) {
+	public XIMText(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XIMText() {
+	public XIMText() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,14 +39,14 @@ public class XIMText extends XWrapperBase {
 		}
 	public short get_length() { log.finest("");return (Native.getShort(pData+0)); }
 	public void set_length(short v) { log.finest(""); Native.putShort(pData+0, v); }
-	public long get_feedback(int index) { log.finest(""); return Native.getLong(pData+4)+index*Native.getLongSize(); }
-	public long get_feedback() { log.finest("");return Native.getLong(pData+4); }
-	public void set_feedback(long v) { log.finest(""); Native.putLong(pData + 4, v); }
-	public boolean get_encoding_is_wchar() { log.finest("");return (Native.getBool(pData+8)); }
-	public void set_encoding_is_wchar(boolean v) { log.finest(""); Native.putBool(pData+8, v); }
-	public long get_string(int index) { log.finest(""); return Native.getLong(pData+12)+index*Native.getLongSize(); }
-	public long get_string() { log.finest("");return Native.getLong(pData+12); }
-	public void set_string(long v) { log.finest(""); Native.putLong(pData + 12, v); }
+	public long get_feedback(int index) { log.finest(""); return Native.getLong(pData+8)+index*Native.getLongSize(); }
+	public long get_feedback() { log.finest("");return Native.getLong(pData+8); }
+	public void set_feedback(long v) { log.finest(""); Native.putLong(pData + 8, v); }
+	public boolean get_encoding_is_wchar() { log.finest("");return (Native.getBool(pData+16)); }
+	public void set_encoding_is_wchar(boolean v) { log.finest(""); Native.putBool(pData+16, v); }
+	public long get_string(int index) { log.finest(""); return Native.getLong(pData+24)+index*Native.getLongSize(); }
+	public long get_string() { log.finest("");return Native.getLong(pData+24); }
+	public void set_string(long v) { log.finest(""); Native.putLong(pData + 24, v); }
 
 
 	String getName() {
@@ -55,13 +55,13 @@ public class XIMText extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(160);
 
-		ret += ""+"length = " + get_length() +", ";
-		ret += ""+"feedback = " + get_feedback() +", ";
-		ret += ""+"encoding_is_wchar = " + get_encoding_is_wchar() +", ";
-		ret += ""+"string = " + get_string() +", ";
-		return ret;
+		ret.append("length = ").append( get_length() ).append(", ");
+		ret.append("feedback = ").append( get_feedback() ).append(", ");
+		ret.append("encoding_is_wchar = ").append( get_encoding_is_wchar() ).append(", ");
+		ret.append("string = ").append( get_string() ).append(", ");
+		return ret.toString();
 	}
 
 

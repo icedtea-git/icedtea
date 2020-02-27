@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2007 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Sun designates this
+ * published by the Free Software Foundation.  Oracle designates this
  * particular file as subject to the "Classpath" exception as provided
- * by Sun in the LICENSE file that accompanied this code.
+ * by Oracle in the LICENSE file that accompanied this code.
  *
  * This code is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -18,9 +18,9 @@
  * 2 along with this work; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
- * CA 95054 USA or visit www.sun.com if you need additional information or
- * have any questions.
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
  */
 
 // -- This file was mechanically generated: Do not edit! -- //
@@ -634,9 +634,10 @@ public abstract class FloatBuffer
      * <tt>src.get(dst,&nbsp;off,&nbsp;len)</tt> has exactly the same effect as
      * the loop
      *
-     * <pre>
+     * <pre>{@code
      *     for (int i = off; i < off + len; i++)
-     *         dst[i] = src.get(); </pre>
+     *         dst[i] = src.get():
+     * }</pre>
      *
      * except that it first checks that there are sufficient floats in
      * this buffer and it is potentially much more efficient. </p>
@@ -768,9 +769,10 @@ public abstract class FloatBuffer
      * <tt>dst.put(src,&nbsp;off,&nbsp;len)</tt> has exactly the same effect as
      * the loop
      *
-     * <pre>
+     * <pre>{@code
      *     for (int i = off; i < off + len; i++)
-     *         dst.put(a[i]); </pre>
+     *         dst.put(a[i]);
+     * }</pre>
      *
      * except that it first checks that there is sufficient space in this
      * buffer and it is potentially much more efficient. </p>
@@ -831,6 +833,7 @@ public abstract class FloatBuffer
     public final FloatBuffer put(float[] src) {
         return put(src, 0, src.length);
     }
+
 
 
 
@@ -1023,6 +1026,7 @@ public abstract class FloatBuffer
 
 
 
+
      *
      * @return  This buffer
      *
@@ -1080,7 +1084,11 @@ public abstract class FloatBuffer
         int h = 1;
         int p = position();
         for (int i = limit() - 1; i >= p; i--)
+
+
+
             h = 31 * h + (int)get(i);
+
         return h;
     }
 
@@ -1089,7 +1097,7 @@ public abstract class FloatBuffer
      *
      * <p> Two float buffers are equal if, and only if,
      *
-     * <p><ol>
+     * <ol>
      *
      *   <li><p> They have the same element type,  </p></li>
      *
@@ -1098,6 +1106,13 @@ public abstract class FloatBuffer
      *
      *   <li><p> The two sequences of remaining elements, considered
      *   independently of their starting positions, are pointwise equal.
+
+     *   This method considers two float elements {@code a} and {@code b}
+     *   to be equal if
+     *   {@code (a == b) || (Float.isNaN(a) && Float.isNaN(b))}.
+     *   The values {@code -0.0} and {@code +0.0} are considered to be
+     *   equal, unlike {@link Float#equals(Object)}.
+
      *   </p></li>
      *
      * </ol>
@@ -1118,16 +1133,18 @@ public abstract class FloatBuffer
         if (this.remaining() != that.remaining())
             return false;
         int p = this.position();
-        for (int i = this.limit() - 1, j = that.limit() - 1; i >= p; i--, j--) {
-            float v1 = this.get(i);
-            float v2 = that.get(j);
-            if (v1 != v2) {
-                if ((v1 != v1) && (v2 != v2))   // For float and double
-                    continue;
+        for (int i = this.limit() - 1, j = that.limit() - 1; i >= p; i--, j--)
+            if (!equals(this.get(i), that.get(j)))
                 return false;
-            }
-        }
         return true;
+    }
+
+    private static boolean equals(float x, float y) {
+
+        return (x == y) || (Float.isNaN(x) && Float.isNaN(y));
+
+
+
     }
 
     /**
@@ -1136,6 +1153,17 @@ public abstract class FloatBuffer
      * <p> Two float buffers are compared by comparing their sequences of
      * remaining elements lexicographically, without regard to the starting
      * position of each sequence within its corresponding buffer.
+
+     * Pairs of {@code float} elements are compared as if by invoking
+     * {@link Float#compare(float,float)}, except that
+     * {@code -0.0} and {@code 0.0} are considered to be equal.
+     * {@code Float.NaN} is considered by this method to be equal
+     * to itself and greater than all other {@code float} values
+     * (including {@code Float.POSITIVE_INFINITY}).
+
+
+
+
      *
      * <p> A float buffer is not comparable to any other type of object.
      *
@@ -1145,20 +1173,23 @@ public abstract class FloatBuffer
     public int compareTo(FloatBuffer that) {
         int n = this.position() + Math.min(this.remaining(), that.remaining());
         for (int i = this.position(), j = that.position(); i < n; i++, j++) {
-            float v1 = this.get(i);
-            float v2 = that.get(j);
-            if (v1 == v2)
-                continue;
-            if ((v1 != v1) && (v2 != v2))       // For float and double
-                continue;
-            if (v1 < v2)
-                return -1;
-            return +1;
+            int cmp = compare(this.get(i), that.get(j));
+            if (cmp != 0)
+                return cmp;
         }
         return this.remaining() - that.remaining();
     }
 
+    private static int compare(float x, float y) {
 
+        return ((x < y)  ? -1 :
+                (x > y)  ? +1 :
+                (x == y) ?  0 :
+                Float.isNaN(x) ? (Float.isNaN(y) ? 0 : +1) : -1);
+
+
+
+    }
 
     // -- Other char stuff --
 

@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XkbEvent extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -60,23 +60,23 @@ public class XkbEvent extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(560);
 
-		ret += ""+"type = " + XlibWrapper.eventToString[get_type()] +", ";
-		ret += ""+"any = " + get_any() +", ";
-		ret += ""+"new_kbd = " + get_new_kbd() +", ";
-		ret += ""+"map = " + get_map() +", ";
-		ret += ""+"state = " + get_state() +", ";
-		ret += ""+"ctrls = " + get_ctrls() +", ";
-		ret += ""+"indicators = " + get_indicators() +", ";
-		ret += ""+"names = " + get_names() +", ";
-		ret += ""+"compat = " + get_compat() +", ";
-		ret += ""+"bell = " + get_bell() +", ";
-		ret += ""+"message = " + get_message() +", ";
-		ret += ""+"accessx = " + get_accessx() +", ";
-		ret += ""+"device = " + get_device() +", ";
-		ret += ""+"core = " + get_core() +", ";
-		return ret;
+		ret.append("type = ").append( XlibWrapper.eventToString[get_type()] ).append(", ");
+		ret.append("any = ").append( get_any() ).append(", ");
+		ret.append("new_kbd = ").append( get_new_kbd() ).append(", ");
+		ret.append("map = ").append( get_map() ).append(", ");
+		ret.append("state = ").append( get_state() ).append(", ");
+		ret.append("ctrls = ").append( get_ctrls() ).append(", ");
+		ret.append("indicators = ").append( get_indicators() ).append(", ");
+		ret.append("names = ").append( get_names() ).append(", ");
+		ret.append("compat = ").append( get_compat() ).append(", ");
+		ret.append("bell = ").append( get_bell() ).append(", ");
+		ret.append("message = ").append( get_message() ).append(", ");
+		ret.append("accessx = ").append( get_accessx() ).append(", ");
+		ret.append("device = ").append( get_device() ).append(", ");
+		ret.append("core = ").append( get_core() ).append(", ");
+		return ret.toString();
 	}
 
 

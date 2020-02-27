@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XHostAddress extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 12; }
+	public static int getSize() { return 16; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XHostAddress extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XHostAddress(long addr) {
+	public XHostAddress(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XHostAddress() {
+	public XHostAddress() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -52,12 +52,12 @@ public class XHostAddress extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(120);
 
-		ret += ""+"family = " + get_family() +", ";
-		ret += ""+"length = " + get_length() +", ";
-		ret += ""+"address = " + get_address() +", ";
-		return ret;
+		ret.append("family = ").append( get_family() ).append(", ");
+		ret.append("length = ").append( get_length() ).append(", ");
+		ret.append("address = ").append( get_address() ).append(", ");
+		return ret.toString();
 	}
 
 

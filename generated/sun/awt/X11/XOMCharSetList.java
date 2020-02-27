@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XOMCharSetList extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 8; }
+	public static int getSize() { return 16; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XOMCharSetList extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XOMCharSetList(long addr) {
+	public XOMCharSetList(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XOMCharSetList() {
+	public XOMCharSetList() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,9 +39,9 @@ public class XOMCharSetList extends XWrapperBase {
 		}
 	public int get_charset_count() { log.finest("");return (Native.getInt(pData+0)); }
 	public void set_charset_count(int v) { log.finest(""); Native.putInt(pData+0, v); }
-	public long get_charset_list(int index) { log.finest(""); return Native.getLong(pData+4)+index*Native.getLongSize(); }
-	public long get_charset_list() { log.finest("");return Native.getLong(pData+4); }
-	public void set_charset_list(long v) { log.finest(""); Native.putLong(pData + 4, v); }
+	public long get_charset_list(int index) { log.finest(""); return Native.getLong(pData+8)+index*Native.getLongSize(); }
+	public long get_charset_list() { log.finest("");return Native.getLong(pData+8); }
+	public void set_charset_list(long v) { log.finest(""); Native.putLong(pData + 8, v); }
 
 
 	String getName() {
@@ -50,11 +50,11 @@ public class XOMCharSetList extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(80);
 
-		ret += ""+"charset_count = " + get_charset_count() +", ";
-		ret += ""+"charset_list = " + get_charset_list() +", ";
-		return ret;
+		ret.append("charset_count = ").append( get_charset_count() ).append(", ");
+		ret.append("charset_list = ").append( get_charset_list() ).append(", ");
+		return ret.toString();
 	}
 
 

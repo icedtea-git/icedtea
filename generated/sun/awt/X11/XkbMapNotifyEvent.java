@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XkbMapNotifyEvent extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -97,35 +97,35 @@ public class XkbMapNotifyEvent extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(1040);
 
-		ret += ""+"type = " + XlibWrapper.eventToString[get_type()] +", ";
-		ret += ""+"serial = " + get_serial() +", ";
-		ret += ""+"send_event = " + get_send_event() +", ";
-		ret += ""+"display = " + get_display() +", ";
-		ret += ""+"time = " + get_time() +", ";
-		ret += ""+"xkb_type = " + get_xkb_type() +", ";
-		ret += ""+"device = " + get_device() +", ";
-		ret += ""+"changed = " + get_changed() +", ";
-		ret += ""+"flags = " + get_flags() +", ";
-		ret += ""+"first_type = " + get_first_type() +", ";
-		ret += ""+"num_types = " + get_num_types() +", ";
-		ret += ""+"min_key_code = " + get_min_key_code() +", ";
-		ret += ""+"max_key_code = " + get_max_key_code() +", ";
-		ret += ""+"first_key_sym = " + get_first_key_sym() +", ";
-		ret += ""+"first_key_act = " + get_first_key_act() +", ";
-		ret += ""+"first_key_behavior = " + get_first_key_behavior() +", ";
-		ret += ""+"first_key_explicit = " + get_first_key_explicit() +", ";
-		ret += ""+"first_modmap_key = " + get_first_modmap_key() +", ";
-		ret += ""+"first_vmodmap_key = " + get_first_vmodmap_key() +", ";
-		ret += ""+"num_key_syms = " + get_num_key_syms() +", ";
-		ret += ""+"num_key_acts = " + get_num_key_acts() +", ";
-		ret += ""+"num_key_behaviors = " + get_num_key_behaviors() +", ";
-		ret += ""+"num_key_explicit = " + get_num_key_explicit() +", ";
-		ret += ""+"num_modmap_keys = " + get_num_modmap_keys() +", ";
-		ret += ""+"num_vmodmap_keys = " + get_num_vmodmap_keys() +", ";
-		ret += ""+"vmods = " + get_vmods() +", ";
-		return ret;
+		ret.append("type = ").append( XlibWrapper.eventToString[get_type()] ).append(", ");
+		ret.append("serial = ").append( get_serial() ).append(", ");
+		ret.append("send_event = ").append( get_send_event() ).append(", ");
+		ret.append("display = ").append( get_display() ).append(", ");
+		ret.append("time = ").append( get_time() ).append(", ");
+		ret.append("xkb_type = ").append( get_xkb_type() ).append(", ");
+		ret.append("device = ").append( get_device() ).append(", ");
+		ret.append("changed = ").append( get_changed() ).append(", ");
+		ret.append("flags = ").append( get_flags() ).append(", ");
+		ret.append("first_type = ").append( get_first_type() ).append(", ");
+		ret.append("num_types = ").append( get_num_types() ).append(", ");
+		ret.append("min_key_code = ").append( get_min_key_code() ).append(", ");
+		ret.append("max_key_code = ").append( get_max_key_code() ).append(", ");
+		ret.append("first_key_sym = ").append( get_first_key_sym() ).append(", ");
+		ret.append("first_key_act = ").append( get_first_key_act() ).append(", ");
+		ret.append("first_key_behavior = ").append( get_first_key_behavior() ).append(", ");
+		ret.append("first_key_explicit = ").append( get_first_key_explicit() ).append(", ");
+		ret.append("first_modmap_key = ").append( get_first_modmap_key() ).append(", ");
+		ret.append("first_vmodmap_key = ").append( get_first_vmodmap_key() ).append(", ");
+		ret.append("num_key_syms = ").append( get_num_key_syms() ).append(", ");
+		ret.append("num_key_acts = ").append( get_num_key_acts() ).append(", ");
+		ret.append("num_key_behaviors = ").append( get_num_key_behaviors() ).append(", ");
+		ret.append("num_key_explicit = ").append( get_num_key_explicit() ).append(", ");
+		ret.append("num_modmap_keys = ").append( get_num_modmap_keys() ).append(", ");
+		ret.append("num_vmodmap_keys = ").append( get_num_vmodmap_keys() ).append(", ");
+		ret.append("vmods = ").append( get_vmods() ).append(", ");
+		return ret.toString();
 	}
 
 

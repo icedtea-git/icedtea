@@ -6,7 +6,7 @@ public final class CurrencyNames_tr_TR extends LocaleNamesBundle {
     protected final Object[][] getContents() {
         return new Object[][] {
             { "TRL", "TL" },
-            { "TRY", "YTL" },
+            { "TRY", "TL" },
         };
     }
 }

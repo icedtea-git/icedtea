@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2007 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright (c) 1999, 2011, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Sun designates this
+ * published by the Free Software Foundation.  Oracle designates this
  * particular file as subject to the "Classpath" exception as provided
- * by Sun in the LICENSE file that accompanied this code.
+ * by Oracle in the LICENSE file that accompanied this code.
  *
  * This code is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -18,9 +18,9 @@
  * 2 along with this work; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
- * CA 95054 USA or visit www.sun.com if you need additional information or
- * have any questions.
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
  */
 
 package sun.misc;
@@ -33,13 +33,25 @@ public class Version {
         "java";
 
     private static final String java_version =
-        "1.7.0_0";
+        "1.7.0_241";
 
     private static final String java_runtime_name =
         "OpenJDK Runtime Environment";
 
     private static final String java_runtime_version =
-        "1.7.0-b36";
+        "1.7.0_241-b01";
+
+    private static final String jdk_derivative_name =
+        "IcedTea 2.6.21pre00+r888139ad9b3b+";
+
+    private static final String distro_name =
+        "Gentoo";
+
+    private static final String distro_package_version =
+        "";
+
+    private static final String jdk_revid =
+        "";
 
     static {
         init();
@@ -87,15 +99,47 @@ public class Version {
      * Give a stream, it will print version info on it.
      */
     public static void print(PrintStream ps) {
+        boolean isHeadless = false;
+
+        /* Report that we're running headless if the property is true */
+        String headless = System.getProperty("java.awt.headless");
+        if ( (headless != null) && (headless.equalsIgnoreCase("true")) ) {
+            isHeadless = true;
+        }
+
         /* First line: platform version. */
         ps.println(launcher_name + " version \"" + java_version + "\"");
 
+        String java_vm_name    = System.getProperty("java.vm.name");
+
         /* Second line: runtime version (ie, libraries). */
-        ps.println(java_runtime_name + " (build " +
-                           java_runtime_version + ")");
+        StringBuilder sb = new StringBuilder();
+        if (java_vm_name.toLowerCase().startsWith("cacao")) {
+            sb.append("IcedTea Runtime Environment");
+        } else {
+            sb.append(java_runtime_name);
+        }
+        if (jdk_derivative_name.length() > 0) {
+            sb.append(" (").append(jdk_derivative_name).append(")");
+        }
+        if (distro_package_version.length() > 0) {
+            sb.append(" (").append(distro_package_version).append(")");
+        } else {
+            sb.append(" (");
+            if (distro_name.length() > 0)
+                sb.append(distro_name).append(" ");
+            sb.append("build ").append(java_runtime_version);
+            if (jdk_revid.length() > 0)
+                sb.append("+").append(jdk_revid);
+            if (java_runtime_name.indexOf("Embedded") != -1 && isHeadless) {
+              // embedded builds report headless state
+              sb.append(", headless");
+            }
+            sb.append(")");
+        }
+        ps.println(sb.toString());
 
         /* Third line: JVM information. */
-        String java_vm_name    = System.getProperty("java.vm.name");
         String java_vm_version = System.getProperty("java.vm.version");
         String java_vm_info    = System.getProperty("java.vm.info");
         ps.println(java_vm_name + " (build " + java_vm_version + ", " +
@@ -269,15 +313,24 @@ public class Version {
                 jvm_minor_version = Character.digit(cs.charAt(2), 10);
                 jvm_micro_version = Character.digit(cs.charAt(4), 10);
                 cs = cs.subSequence(5, cs.length());
-                if (cs.charAt(0) == '_' && cs.length() >= 3 &&
-                    Character.isDigit(cs.charAt(1)) &&
-                    Character.isDigit(cs.charAt(2))) {
-                    int nextChar = 3;
+                if (cs.charAt(0) == '_' && cs.length() >= 3) {
+                    int nextChar = 0;
+                    if (Character.isDigit(cs.charAt(1)) &&
+                        Character.isDigit(cs.charAt(2)) &&
+                        Character.isDigit(cs.charAt(3)))
+                    {
+                        nextChar = 4;
+                    } else if (Character.isDigit(cs.charAt(1)) &&
+                        Character.isDigit(cs.charAt(2)))
+                    {
+                        nextChar = 3;
+                    }
+
                     try {
-                        String uu = cs.subSequence(1, 3).toString();
+                        String uu = cs.subSequence(1, nextChar).toString();
                         jvm_update_version = Integer.valueOf(uu).intValue();
-                        if (cs.length() >= 4) {
-                            char c = cs.charAt(3);
+                        if (cs.length() >= nextChar + 1) {
+                            char c = cs.charAt(nextChar);
                             if (c >= 'a' && c <= 'z') {
                                 jvm_special_version = Character.toString(c);
                                 nextChar++;

@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XCharStruct extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -16,14 +16,14 @@ public class XCharStruct extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XCharStruct(long addr) {
+	public XCharStruct(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XCharStruct() {
+	public XCharStruct() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -57,15 +57,15 @@ public class XCharStruct extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(240);
 
-		ret += ""+"lbearing = " + get_lbearing() +", ";
-		ret += ""+"rbearing = " + get_rbearing() +", ";
-		ret += ""+"width = " + get_width() +", ";
-		ret += ""+"ascent = " + get_ascent() +", ";
-		ret += ""+"descent = " + get_descent() +", ";
-		ret += ""+"attributes = " + get_attributes() +", ";
-		return ret;
+		ret.append("lbearing = ").append( get_lbearing() ).append(", ");
+		ret.append("rbearing = ").append( get_rbearing() ).append(", ");
+		ret.append("width = ").append( get_width() ).append(", ");
+		ret.append("ascent = ").append( get_ascent() ).append(", ");
+		ret.append("descent = ").append( get_descent() ).append(", ");
+		ret.append("attributes = ").append( get_attributes() ).append(", ");
+		return ret.toString();
 	}
 
 

@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XFontProp extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 8; }
+	public static int getSize() { return 16; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XFontProp extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XFontProp(long addr) {
+	public XFontProp(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XFontProp() {
+	public XFontProp() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,8 +39,8 @@ public class XFontProp extends XWrapperBase {
 		}
 	public long get_name() { log.finest("");return (Native.getLong(pData+0)); }
 	public void set_name(long v) { log.finest(""); Native.putLong(pData+0, v); }
-	public long get_card32() { log.finest("");return (Native.getLong(pData+4)); }
-	public void set_card32(long v) { log.finest(""); Native.putLong(pData+4, v); }
+	public long get_card32() { log.finest("");return (Native.getLong(pData+8)); }
+	public void set_card32(long v) { log.finest(""); Native.putLong(pData+8, v); }
 
 
 	String getName() {
@@ -49,11 +49,11 @@ public class XFontProp extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(80);
 
-		ret += ""+"name = " + get_name() +", ";
-		ret += ""+"card32 = " + get_card32() +", ";
-		return ret;
+		ret.append("name = ").append( get_name() ).append(", ");
+		ret.append("card32 = ").append( get_card32() ).append(", ");
+		return ret.toString();
 	}
 
 

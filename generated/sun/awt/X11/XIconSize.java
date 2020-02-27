@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XIconSize extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -16,14 +16,14 @@ public class XIconSize extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XIconSize(long addr) {
+	public XIconSize(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XIconSize() {
+	public XIconSize() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -57,15 +57,15 @@ public class XIconSize extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(240);
 
-		ret += ""+"min_width = " + get_min_width() +", ";
-		ret += ""+"min_height = " + get_min_height() +", ";
-		ret += ""+"max_width = " + get_max_width() +", ";
-		ret += ""+"max_height = " + get_max_height() +", ";
-		ret += ""+"width_inc = " + get_width_inc() +", ";
-		ret += ""+"height_inc = " + get_height_inc() +", ";
-		return ret;
+		ret.append("min_width = ").append( get_min_width() ).append(", ");
+		ret.append("min_height = ").append( get_min_height() ).append(", ");
+		ret.append("max_width = ").append( get_max_width() ).append(", ");
+		ret.append("max_height = ").append( get_max_height() ).append(", ");
+		ret.append("width_inc = ").append( get_width_inc() ).append(", ");
+		ret.append("height_inc = ").append( get_height_inc() ).append(", ");
+		return ret.toString();
 	}
 
 

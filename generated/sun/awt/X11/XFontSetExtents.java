@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XFontSetExtents extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -16,14 +16,14 @@ public class XFontSetExtents extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XFontSetExtents(long addr) {
+	public XFontSetExtents(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XFontSetExtents() {
+	public XFontSetExtents() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -47,11 +47,11 @@ public class XFontSetExtents extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(80);
 
-		ret += ""+"max_ink_extent = " + get_max_ink_extent() +", ";
-		ret += ""+"max_logical_extent = " + get_max_logical_extent() +", ";
-		return ret;
+		ret.append("max_ink_extent = ").append( get_max_ink_extent() ).append(", ");
+		ret.append("max_logical_extent = ").append( get_max_logical_extent() ).append(", ");
+		return ret.toString();
 	}
 
 

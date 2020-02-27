@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class Visual extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 32; }
+	public static int getSize() { return 56; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class Visual extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	Visual(long addr) {
+	public Visual(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	Visual() {
+	public Visual() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -37,23 +37,23 @@ public class Visual extends XWrapperBase {
 			unsafe.freeMemory(pData); 
 	}
 		}
-	public XExtData get_ext_data(int index) { log.finest(""); return (Native.getLong(pData+0) != 0)?(new XExtData(Native.getLong(pData+0)+index*16)):(null); }
+	public XExtData get_ext_data(int index) { log.finest(""); return (Native.getLong(pData+0) != 0)?(new XExtData(Native.getLong(pData+0)+index*32)):(null); }
 	public long get_ext_data() { log.finest("");return Native.getLong(pData+0); }
 	public void set_ext_data(long v) { log.finest(""); Native.putLong(pData + 0, v); }
-	public long get_visualid() { log.finest("");return (Native.getLong(pData+4)); }
-	public void set_visualid(long v) { log.finest(""); Native.putLong(pData+4, v); }
-	public int get_class() { log.finest("");return (Native.getInt(pData+8)); }
-	public void set_class(int v) { log.finest(""); Native.putInt(pData+8, v); }
-	public long get_red_mask() { log.finest("");return (Native.getLong(pData+12)); }
-	public void set_red_mask(long v) { log.finest(""); Native.putLong(pData+12, v); }
-	public long get_green_mask() { log.finest("");return (Native.getLong(pData+16)); }
-	public void set_green_mask(long v) { log.finest(""); Native.putLong(pData+16, v); }
-	public long get_blue_mask() { log.finest("");return (Native.getLong(pData+20)); }
-	public void set_blue_mask(long v) { log.finest(""); Native.putLong(pData+20, v); }
-	public int get_bits_per_rgb() { log.finest("");return (Native.getInt(pData+24)); }
-	public void set_bits_per_rgb(int v) { log.finest(""); Native.putInt(pData+24, v); }
-	public int get_map_entries() { log.finest("");return (Native.getInt(pData+28)); }
-	public void set_map_entries(int v) { log.finest(""); Native.putInt(pData+28, v); }
+	public long get_visualid() { log.finest("");return (Native.getLong(pData+8)); }
+	public void set_visualid(long v) { log.finest(""); Native.putLong(pData+8, v); }
+	public int get_class() { log.finest("");return (Native.getInt(pData+16)); }
+	public void set_class(int v) { log.finest(""); Native.putInt(pData+16, v); }
+	public long get_red_mask() { log.finest("");return (Native.getLong(pData+24)); }
+	public void set_red_mask(long v) { log.finest(""); Native.putLong(pData+24, v); }
+	public long get_green_mask() { log.finest("");return (Native.getLong(pData+32)); }
+	public void set_green_mask(long v) { log.finest(""); Native.putLong(pData+32, v); }
+	public long get_blue_mask() { log.finest("");return (Native.getLong(pData+40)); }
+	public void set_blue_mask(long v) { log.finest(""); Native.putLong(pData+40, v); }
+	public int get_bits_per_rgb() { log.finest("");return (Native.getInt(pData+48)); }
+	public void set_bits_per_rgb(int v) { log.finest(""); Native.putInt(pData+48, v); }
+	public int get_map_entries() { log.finest("");return (Native.getInt(pData+52)); }
+	public void set_map_entries(int v) { log.finest(""); Native.putInt(pData+52, v); }
 
 
 	String getName() {
@@ -62,17 +62,17 @@ public class Visual extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(320);
 
-		ret += ""+"ext_data = " + get_ext_data() +", ";
-		ret += ""+"visualid = " + get_visualid() +", ";
-		ret += ""+"class = " + get_class() +", ";
-		ret += ""+"red_mask = " + get_red_mask() +", ";
-		ret += ""+"green_mask = " + get_green_mask() +", ";
-		ret += ""+"blue_mask = " + get_blue_mask() +", ";
-		ret += ""+"bits_per_rgb = " + get_bits_per_rgb() +", ";
-		ret += ""+"map_entries = " + get_map_entries() +", ";
-		return ret;
+		ret.append("ext_data = ").append( get_ext_data() ).append(", ");
+		ret.append("visualid = ").append( get_visualid() ).append(", ");
+		ret.append("class = ").append( get_class() ).append(", ");
+		ret.append("red_mask = ").append( get_red_mask() ).append(", ");
+		ret.append("green_mask = ").append( get_green_mask() ).append(", ");
+		ret.append("blue_mask = ").append( get_blue_mask() ).append(", ");
+		ret.append("bits_per_rgb = ").append( get_bits_per_rgb() ).append(", ");
+		ret.append("map_entries = ").append( get_map_entries() ).append(", ");
+		return ret.toString();
 	}
 
 

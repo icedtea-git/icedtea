@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XEvent extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 96; }
+	public static int getSize() { return 192; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XEvent extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XEvent(long addr) {
+	public XEvent(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XEvent() {
+	public XEvent() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -81,42 +81,66 @@ public class XEvent extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(1320);
 
-		ret += ""+"type = " + XlibWrapper.eventToString[get_type()] +", ";
-		ret += ""+"xany = " + get_xany() +", ";
-		ret += ""+"xkey = " + get_xkey() +", ";
-		ret += ""+"xbutton = " + get_xbutton() +", ";
-		ret += ""+"xmotion = " + get_xmotion() +", ";
-		ret += ""+"xcrossing = " + get_xcrossing() +", ";
-		ret += ""+"xfocus = " + get_xfocus() +", ";
-		ret += ""+"xexpose = " + get_xexpose() +", ";
-		ret += ""+"xgraphicsexpose = " + get_xgraphicsexpose() +", ";
-		ret += ""+"xnoexpose = " + get_xnoexpose() +", ";
-		ret += ""+"xvisibility = " + get_xvisibility() +", ";
-		ret += ""+"xcreatewindow = " + get_xcreatewindow() +", ";
-		ret += ""+"xdestroywindow = " + get_xdestroywindow() +", ";
-		ret += ""+"xunmap = " + get_xunmap() +", ";
-		ret += ""+"xmap = " + get_xmap() +", ";
-		ret += ""+"xmaprequest = " + get_xmaprequest() +", ";
-		ret += ""+"xreparent = " + get_xreparent() +", ";
-		ret += ""+"xconfigure = " + get_xconfigure() +", ";
-		ret += ""+"xgravity = " + get_xgravity() +", ";
-		ret += ""+"xresizerequest = " + get_xresizerequest() +", ";
-		ret += ""+"xconfigurerequest = " + get_xconfigurerequest() +", ";
-		ret += ""+"xcirculate = " + get_xcirculate() +", ";
-		ret += ""+"xcirculaterequest = " + get_xcirculaterequest() +", ";
-		ret += ""+"xproperty = " + get_xproperty() +", ";
-		ret += ""+"xselectionclear = " + get_xselectionclear() +", ";
-		ret += ""+"xselectionrequest = " + get_xselectionrequest() +", ";
-		ret += ""+"xselection = " + get_xselection() +", ";
-		ret += ""+"xcolormap = " + get_xcolormap() +", ";
-		ret += ""+"xclient = " + get_xclient() +", ";
-		ret += ""+"xmapping = " + get_xmapping() +", ";
-		ret += ""+"xerror = " + get_xerror() +", ";
-		ret += ""+"xkeymap = " + get_xkeymap() +", ";
-		ret += "{" + get_pad(0) + " " + get_pad(1) + " " + get_pad(2) + " " + get_pad(3) + " " + get_pad(4) + " " + get_pad(5) + " " + get_pad(6) + " " + get_pad(7) + " " + get_pad(8) + " " + get_pad(9) + " " + get_pad(10) + " " + get_pad(11) + " " + get_pad(12) + " " + get_pad(13) + " " + get_pad(14) + " " + get_pad(15) + " " + get_pad(16) + " " + get_pad(17) + " " + get_pad(18) + " " + get_pad(19) + " " + get_pad(20) + " " + get_pad(21) + " " + get_pad(22) + " " + get_pad(23) + " " + "}";
-		return ret;
+		ret.append("type = ").append( XlibWrapper.eventToString[get_type()] ).append(", ");
+		ret.append("xany = ").append( get_xany() ).append(", ");
+		ret.append("xkey = ").append( get_xkey() ).append(", ");
+		ret.append("xbutton = ").append( get_xbutton() ).append(", ");
+		ret.append("xmotion = ").append( get_xmotion() ).append(", ");
+		ret.append("xcrossing = ").append( get_xcrossing() ).append(", ");
+		ret.append("xfocus = ").append( get_xfocus() ).append(", ");
+		ret.append("xexpose = ").append( get_xexpose() ).append(", ");
+		ret.append("xgraphicsexpose = ").append( get_xgraphicsexpose() ).append(", ");
+		ret.append("xnoexpose = ").append( get_xnoexpose() ).append(", ");
+		ret.append("xvisibility = ").append( get_xvisibility() ).append(", ");
+		ret.append("xcreatewindow = ").append( get_xcreatewindow() ).append(", ");
+		ret.append("xdestroywindow = ").append( get_xdestroywindow() ).append(", ");
+		ret.append("xunmap = ").append( get_xunmap() ).append(", ");
+		ret.append("xmap = ").append( get_xmap() ).append(", ");
+		ret.append("xmaprequest = ").append( get_xmaprequest() ).append(", ");
+		ret.append("xreparent = ").append( get_xreparent() ).append(", ");
+		ret.append("xconfigure = ").append( get_xconfigure() ).append(", ");
+		ret.append("xgravity = ").append( get_xgravity() ).append(", ");
+		ret.append("xresizerequest = ").append( get_xresizerequest() ).append(", ");
+		ret.append("xconfigurerequest = ").append( get_xconfigurerequest() ).append(", ");
+		ret.append("xcirculate = ").append( get_xcirculate() ).append(", ");
+		ret.append("xcirculaterequest = ").append( get_xcirculaterequest() ).append(", ");
+		ret.append("xproperty = ").append( get_xproperty() ).append(", ");
+		ret.append("xselectionclear = ").append( get_xselectionclear() ).append(", ");
+		ret.append("xselectionrequest = ").append( get_xselectionrequest() ).append(", ");
+		ret.append("xselection = ").append( get_xselection() ).append(", ");
+		ret.append("xcolormap = ").append( get_xcolormap() ).append(", ");
+		ret.append("xclient = ").append( get_xclient() ).append(", ");
+		ret.append("xmapping = ").append( get_xmapping() ).append(", ");
+		ret.append("xerror = ").append( get_xerror() ).append(", ");
+		ret.append("xkeymap = ").append( get_xkeymap() ).append(", ");
+		ret.append("{")
+		.append( get_pad(0) ).append(" ")
+		.append( get_pad(1) ).append(" ")
+		.append( get_pad(2) ).append(" ")
+		.append( get_pad(3) ).append(" ")
+		.append( get_pad(4) ).append(" ")
+		.append( get_pad(5) ).append(" ")
+		.append( get_pad(6) ).append(" ")
+		.append( get_pad(7) ).append(" ")
+		.append( get_pad(8) ).append(" ")
+		.append( get_pad(9) ).append(" ")
+		.append( get_pad(10) ).append(" ")
+		.append( get_pad(11) ).append(" ")
+		.append( get_pad(12) ).append(" ")
+		.append( get_pad(13) ).append(" ")
+		.append( get_pad(14) ).append(" ")
+		.append( get_pad(15) ).append(" ")
+		.append( get_pad(16) ).append(" ")
+		.append( get_pad(17) ).append(" ")
+		.append( get_pad(18) ).append(" ")
+		.append( get_pad(19) ).append(" ")
+		.append( get_pad(20) ).append(" ")
+		.append( get_pad(21) ).append(" ")
+		.append( get_pad(22) ).append(" ")
+		.append( get_pad(23) ).append(" ").append( "}");
+		return ret.toString();
 	}
 
 

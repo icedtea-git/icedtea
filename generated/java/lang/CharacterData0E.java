@@ -1,12 +1,13 @@
+// This file was generated AUTOMATICALLY from a template file Wed Feb 26 05:21:18 GMT 2020
 /*
- * Copyright 2003-2006 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright (c) 2003, 2006, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Sun designates this
+ * published by the Free Software Foundation.  Oracle designates this
  * particular file as subject to the "Classpath" exception as provided
- * by Sun in the LICENSE file that accompanied this code.
+ * by Oracle in the LICENSE file that accompanied this code.
  *
  * This code is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -18,9 +19,9 @@
  * 2 along with this work; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
- * CA 95054 USA or visit www.sun.com if you need additional information or
- * have any questions.
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
  */
 
 package java.lang;
@@ -66,9 +67,35 @@ class CharacterData0E extends CharacterData {
      */
 
     int getProperties(int ch) {
-		char offset = (char)ch;
+        char offset = (char)ch;
         int props = A[Y[X[offset>>5]|((offset>>1)&0xF)]|(offset&0x1)];
         return props;
+    }
+
+    int getPropertiesEx(int ch) {
+        char offset = (char)ch;
+        int props = B[Y[X[offset>>5]|((offset>>1)&0xF)]|(offset&0x1)];
+        return props;
+    }
+
+    boolean isOtherLowercase(int ch) {
+        int props = getPropertiesEx(ch);
+        return (props & 0x0001) != 0;
+    }
+
+    boolean isOtherUppercase(int ch) {
+        int props = getPropertiesEx(ch);
+        return (props & 0x0002) != 0;
+    }
+
+    boolean isOtherAlphabetic(int ch) {
+        int props = getPropertiesEx(ch);
+        return (props & 0x0004) != 0;
+    }
+
+    boolean isIdeographic(int ch) {
+        int props = getPropertiesEx(ch);
+        return (props & 0x0010) != 0;
     }
 
     int getType(int ch) {
@@ -214,6 +241,7 @@ class CharacterData0E extends CharacterData {
     private CharacterData0E() {};
 
     // The following tables and code generated using:
+  // java GenerateCharacter -plane 14 -template ../../tools/GenerateCharacter/CharacterData0E.java.template -spec ../../tools/UnicodeData/UnicodeData.txt -specialcasing ../../tools/UnicodeData/SpecialCasing.txt -proplist ../../tools/UnicodeData/PropList.txt -o /home/andrew/builder/icedtea7-2.6/openjdk.build/gensrc/java/lang/CharacterData0E.java -string -usecharforbyte 11 4 1
   // The X table has 2048 entries for a total of 4096 bytes.
 
   static final char X[] = (
@@ -341,6 +369,11 @@ class CharacterData0E extends CharacterData {
   static final String A_DATA =
     "\u7800\000\u4800\u1010\u7800\000\u7800\000\u4800\u1010\u4800\u1010\u4000\u3006"+
     "\u4000\u3006";
+
+  // The B table has 8 entries for a total of 16 bytes.
+
+  static final char B[] = (
+    "\000\000\000\000\000\000\000\000").toCharArray();
 
   // In all, the character property tables require 4288 bytes.
 

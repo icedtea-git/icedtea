@@ -1574,9 +1574,8 @@ class JDWP {
          * Both the JNI signature and the generic signature are 
          * returned for each class.  
          * Generic signatures are described in the signature attribute 
-         * section in the 
-         * <a href="http://java.sun.com/docs/books/vmspec">
-         * Java Virtual Machine Specification, 3rd Edition.</a>  
+         * section in 
+         * <cite>The Java&trade; Virtual Machine Specification</cite>. 
          * Since JDWP version 1.5.
          */
         static class AllClassesWithGeneric {
@@ -1902,8 +1901,8 @@ class JDWP {
 
 
             /**
-             * Modifier bits as defined in the 
-             * <a href="http://java.sun.com/docs/books/vmspec/html/ClassFile.doc.html">VM Specification</a>
+             * Modifier bits as defined in Chapter 4 of 
+             * <cite>The Java&trade; Virtual Machine Specification</cite>
              */
             final int modBits;
 
@@ -1976,8 +1975,8 @@ class JDWP {
                  * The modifier bit flags (also known as access flags) 
                  * which provide additional information on the  
                  * field declaration. Individual flag values are 
-                 * defined in the 
-                 * <a href="http://java.sun.com/docs/books/vmspec/html/ClassFile.doc.html">VM Specification</a>.
+                 * defined in Chapter 4 of 
+                 * <cite>The Java&trade; Virtual Machine Specification</cite>. 
                  * In addition, The <code>0xf0000000</code> bit identifies 
                  * the field as synthetic, if the synthetic attribute 
                  * <a href="#JDWP_VirtualMachine_Capabilities">capability</a> is available.
@@ -2087,8 +2086,8 @@ class JDWP {
                  * The modifier bit flags (also known as access flags) 
                  * which provide additional information on the  
                  * method declaration. Individual flag values are 
-                 * defined in the 
-                 * <a href="http://java.sun.com/docs/books/vmspec/html/ClassFile.doc.html">VM Specification</a>.
+                 * defined in Chapter 4 of 
+                 * <cite>The Java&trade; Virtual Machine Specification</cite>. 
                  * In addition, The <code>0xf0000000</code> bit identifies 
                  * the method as synthetic, if the synthetic attribute 
                  * <a href="#JDWP_VirtualMachine_Capabilities">capability</a> is available.
@@ -2370,8 +2369,8 @@ class JDWP {
         /**
          * Returns the current status of the reference type. The status 
          * indicates the extent to which the reference type has been 
-         * initialized, as described in the 
-         * <a href="http://java.sun.com/docs/books/vmspec/html/Concepts.doc.html#16491">VM specification</a>. 
+         * initialized, as described in section 2.1.6 of 
+         * <cite>The Java&trade; Virtual Machine Specification</cite>. 
          * If the class is linked the PREPARED and VERIFIED bits in the returned status bits 
          * will be set. If the class is initialized the INITIALIZED bit in the returned 
          * status bits will be set. If an error occured during initialization then the 
@@ -2592,9 +2591,8 @@ class JDWP {
          * Returns the JNI signature of a reference type along with the 
          * generic signature if there is one.  
          * Generic signatures are described in the signature attribute 
-         * section in the 
-         * <a href="http://java.sun.com/docs/books/vmspec">
-         * Java Virtual Machine Specification, 3rd Edition.</a>  
+         * section in 
+         * <cite>The Java&trade; Virtual Machine Specification</cite>. 
          * Since JDWP version 1.5.
          * <p>
          */
@@ -2663,9 +2661,8 @@ class JDWP {
          * by the compiler. 
          * Fields are returned in the order they occur in the class file.  
          * Generic signatures are described in the signature attribute 
-         * section in the 
-         * <a href="http://java.sun.com/docs/books/vmspec">
-         * Java Virtual Machine Specification, 3rd Edition.</a>  
+         * section in 
+         * <cite>The Java&trade; Virtual Machine Specification</cite>. 
          * Since JDWP version 1.5.
          */
         static class FieldsWithGeneric {
@@ -2725,8 +2722,8 @@ class JDWP {
                  * The modifier bit flags (also known as access flags) 
                  * which provide additional information on the  
                  * field declaration. Individual flag values are 
-                 * defined in the 
-                 * <a href="http://java.sun.com/docs/books/vmspec/html/ClassFile.doc.html">VM Specification</a>.
+                 * defined in Chapter 4 of 
+                 * <cite>The Java&trade; Virtual Machine Specification</cite>. 
                  * In addition, The <code>0xf0000000</code> bit identifies 
                  * the field as synthetic, if the synthetic attribute 
                  * <a href="#JDWP_VirtualMachine_Capabilities">capability</a> is available.
@@ -2790,9 +2787,8 @@ class JDWP {
          * if present, and any synthetic methods created by the compiler. 
          * Methods are returned in the order they occur in the class file.  
          * Generic signatures are described in the signature attribute 
-         * section in the 
-         * <a href="http://java.sun.com/docs/books/vmspec">
-         * Java Virtual Machine Specification, 3rd Edition.</a>  
+         * section in 
+         * <cite>The Java&trade; Virtual Machine Specification</cite>. 
          * Since JDWP version 1.5.
          */
         static class MethodsWithGeneric {
@@ -2852,8 +2848,8 @@ class JDWP {
                  * The modifier bit flags (also known as access flags) 
                  * which provide additional information on the  
                  * method declaration. Individual flag values are 
-                 * defined in the 
-                 * <a href="http://java.sun.com/docs/books/vmspec/html/ClassFile.doc.html">VM Specification</a>.
+                 * defined in Chapter 4 of 
+                 * <cite>The Java&trade; Virtual Machine Specification</cite>. 
                  * In addition, The <code>0xf0000000</code> bit identifies 
                  * the method as synthetic, if the synthetic attribute 
                  * <a href="#JDWP_VirtualMachine_Capabilities">capability</a> is available.
@@ -3038,8 +3034,8 @@ class JDWP {
 
         /**
          * Return the raw bytes of the constant pool in the format of the 
-         * constant_pool item of the Class File Format in the 
-         * Java Virtual Machine Specification. 
+         * constant_pool item of the Class File Format in 
+         * <cite>The Java&trade; Virtual Machine Specification</cite>. 
          * <p>Since JDWP version 1.6. Requires canGetConstantPool capability - see 
          * <a href="#JDWP_VirtualMachine_CapabilitiesNew">CapabilitiesNew</a>.
          * 
@@ -3078,7 +3074,8 @@ class JDWP {
             /**
              * Total number of constant pool entries plus one. This 
              * corresponds to the constant_pool_count item of the 
-             * Class File Format in the Java Virtual Machine Specification. 
+             * Class File Format in 
+             * <cite>The Java&trade; Virtual Machine Specification</cite>. 
              */
             final int count;
 
@@ -3855,7 +3852,8 @@ class JDWP {
         }
 
         /**
-         * Retrieve the method's bytecodes as defined in the JVM Specification.
+         * Retrieve the method's bytecodes as defined in 
+         * <cite>The Java&trade; Virtual Machine Specification</cite>. 
          * Requires canGetBytecodes capability - see 
          * <a href="#JDWP_VirtualMachine_CapabilitiesNew">CapabilitiesNew</a>.
          */
@@ -3986,9 +3984,8 @@ class JDWP {
          * instance methods, the "this" reference is included in the 
          * table. Also, synthetic variables may be present. 
          * Generic signatures are described in the signature attribute 
-         * section in the 
-         * <a href="http://java.sun.com/docs/books/vmspec">
-         * Java Virtual Machine Specification, 3rd Edition.</a>  
+         * section in 
+         * <cite>The Java&trade; Virtual Machine Specification</cite>. 
          * Since JDWP version 1.5.
          */
         static class VariableTableWithGeneric {
@@ -5679,8 +5676,9 @@ class JDWP {
          * <p>
          * The method which will return early is referred to as the 
          * called method. The called method is the current method (as 
-         * defined by the Frames section in the Java Virtual Machine 
-         * Specification) for the specified thread at the time this command 
+         * defined by the Frames section in 
+         * <cite>The Java&trade; Virtual Machine Specification</cite>) 
+         * for the specified thread at the time this command 
          * is received. 
          * <p>
          * The specified thread must be suspended. 
@@ -7709,6 +7707,8 @@ class JDWP {
                 /**
                  * Notification that a thread in the target VM is attempting 
                  * to enter a monitor that is already acquired by another thread. 
+                 * Requires canRequestMonitorEvents capability - see 
+                 * <a href="#JDWP_VirtualMachine_CapabilitiesNew">CapabilitiesNew</a>. 
                  * <p>Since JDWP version 1.6. 
                  */
                 static class MonitorContendedEnter extends EventsCommon {
@@ -7760,6 +7760,8 @@ class JDWP {
                 /**
                  * Notification of a thread in the target VM is entering a monitor 
                  * after waiting for it to be released by another thread. 
+                 * Requires canRequestMonitorEvents capability - see 
+                 * <a href="#JDWP_VirtualMachine_CapabilitiesNew">CapabilitiesNew</a>. 
                  * <p>Since JDWP version 1.6. 
                  */
                 static class MonitorContendedEntered extends EventsCommon {
@@ -7810,6 +7812,8 @@ class JDWP {
 
                 /**
                  * Notification of a thread about to wait on a monitor object. 
+                 * Requires canRequestMonitorEvents capability - see 
+                 * <a href="#JDWP_VirtualMachine_CapabilitiesNew">CapabilitiesNew</a>. 
                  * <p>Since JDWP version 1.6. 
                  */
                 static class MonitorWait extends EventsCommon {
@@ -7869,6 +7873,8 @@ class JDWP {
 
                 /**
                  * Notification that a thread in the target VM has finished waiting on 
+                 * Requires canRequestMonitorEvents capability - see 
+                 * <a href="#JDWP_VirtualMachine_CapabilitiesNew">CapabilitiesNew</a>. 
                  * a monitor object. 
                  * <p>Since JDWP version 1.6. 
                  */

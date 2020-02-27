@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XRectangle extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -16,14 +16,14 @@ public class XRectangle extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XRectangle(long addr) {
+	public XRectangle(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XRectangle() {
+	public XRectangle() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -53,13 +53,13 @@ public class XRectangle extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(160);
 
-		ret += ""+"x = " + get_x() +", ";
-		ret += ""+"y = " + get_y() +", ";
-		ret += ""+"width = " + get_width() +", ";
-		ret += ""+"height = " + get_height() +", ";
-		return ret;
+		ret.append("x = ").append( get_x() ).append(", ");
+		ret.append("y = ").append( get_y() ).append(", ");
+		ret.append("width = ").append( get_width() ).append(", ");
+		ret.append("height = ").append( get_height() ).append(", ");
+		return ret.toString();
 	}
 
 

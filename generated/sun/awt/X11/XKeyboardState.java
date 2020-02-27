@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XKeyboardState extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 56; }
+	public static int getSize() { return 64; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XKeyboardState extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XKeyboardState(long addr) {
+	public XKeyboardState(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XKeyboardState() {
+	public XKeyboardState() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -47,11 +47,11 @@ public class XKeyboardState extends XWrapperBase {
 	public void set_bell_duration(int v) { log.finest(""); Native.putInt(pData+12, v); }
 	public long get_led_mask() { log.finest("");return (Native.getLong(pData+16)); }
 	public void set_led_mask(long v) { log.finest(""); Native.putLong(pData+16, v); }
-	public int get_global_auto_repeat() { log.finest("");return (Native.getInt(pData+20)); }
-	public void set_global_auto_repeat(int v) { log.finest(""); Native.putInt(pData+20, v); }
-	public byte get_auto_repeats(int index) { log.finest("");return Native.getByte(pData + 24+index*1); }
-	public void set_auto_repeats(int index, byte v) { log.finest(""); Native.putByte(pData+24 + index*1, v); }
-	public long get_auto_repeats() { log.finest("");return pData+24; }
+	public int get_global_auto_repeat() { log.finest("");return (Native.getInt(pData+24)); }
+	public void set_global_auto_repeat(int v) { log.finest(""); Native.putInt(pData+24, v); }
+	public byte get_auto_repeats(int index) { log.finest("");return Native.getByte(pData + 28+index*1); }
+	public void set_auto_repeats(int index, byte v) { log.finest(""); Native.putByte(pData+28 + index*1, v); }
+	public long get_auto_repeats() { log.finest("");return pData+28; }
 
 
 	String getName() {
@@ -60,16 +60,48 @@ public class XKeyboardState extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(280);
 
-		ret += ""+"key_click_percent = " + get_key_click_percent() +", ";
-		ret += ""+"bell_percent = " + get_bell_percent() +", ";
-		ret += ""+"bell_pitch = " + get_bell_pitch() +", ";
-		ret += ""+"bell_duration = " + get_bell_duration() +", ";
-		ret += ""+"led_mask = " + get_led_mask() +", ";
-		ret += ""+"global_auto_repeat = " + get_global_auto_repeat() +", ";
-		ret += "{" + get_auto_repeats(0) + " " + get_auto_repeats(1) + " " + get_auto_repeats(2) + " " + get_auto_repeats(3) + " " + get_auto_repeats(4) + " " + get_auto_repeats(5) + " " + get_auto_repeats(6) + " " + get_auto_repeats(7) + " " + get_auto_repeats(8) + " " + get_auto_repeats(9) + " " + get_auto_repeats(10) + " " + get_auto_repeats(11) + " " + get_auto_repeats(12) + " " + get_auto_repeats(13) + " " + get_auto_repeats(14) + " " + get_auto_repeats(15) + " " + get_auto_repeats(16) + " " + get_auto_repeats(17) + " " + get_auto_repeats(18) + " " + get_auto_repeats(19) + " " + get_auto_repeats(20) + " " + get_auto_repeats(21) + " " + get_auto_repeats(22) + " " + get_auto_repeats(23) + " " + get_auto_repeats(24) + " " + get_auto_repeats(25) + " " + get_auto_repeats(26) + " " + get_auto_repeats(27) + " " + get_auto_repeats(28) + " " + get_auto_repeats(29) + " " + get_auto_repeats(30) + " " + get_auto_repeats(31) + " " + "}";
-		return ret;
+		ret.append("key_click_percent = ").append( get_key_click_percent() ).append(", ");
+		ret.append("bell_percent = ").append( get_bell_percent() ).append(", ");
+		ret.append("bell_pitch = ").append( get_bell_pitch() ).append(", ");
+		ret.append("bell_duration = ").append( get_bell_duration() ).append(", ");
+		ret.append("led_mask = ").append( get_led_mask() ).append(", ");
+		ret.append("global_auto_repeat = ").append( get_global_auto_repeat() ).append(", ");
+		ret.append("{")
+		.append( get_auto_repeats(0) ).append(" ")
+		.append( get_auto_repeats(1) ).append(" ")
+		.append( get_auto_repeats(2) ).append(" ")
+		.append( get_auto_repeats(3) ).append(" ")
+		.append( get_auto_repeats(4) ).append(" ")
+		.append( get_auto_repeats(5) ).append(" ")
+		.append( get_auto_repeats(6) ).append(" ")
+		.append( get_auto_repeats(7) ).append(" ")
+		.append( get_auto_repeats(8) ).append(" ")
+		.append( get_auto_repeats(9) ).append(" ")
+		.append( get_auto_repeats(10) ).append(" ")
+		.append( get_auto_repeats(11) ).append(" ")
+		.append( get_auto_repeats(12) ).append(" ")
+		.append( get_auto_repeats(13) ).append(" ")
+		.append( get_auto_repeats(14) ).append(" ")
+		.append( get_auto_repeats(15) ).append(" ")
+		.append( get_auto_repeats(16) ).append(" ")
+		.append( get_auto_repeats(17) ).append(" ")
+		.append( get_auto_repeats(18) ).append(" ")
+		.append( get_auto_repeats(19) ).append(" ")
+		.append( get_auto_repeats(20) ).append(" ")
+		.append( get_auto_repeats(21) ).append(" ")
+		.append( get_auto_repeats(22) ).append(" ")
+		.append( get_auto_repeats(23) ).append(" ")
+		.append( get_auto_repeats(24) ).append(" ")
+		.append( get_auto_repeats(25) ).append(" ")
+		.append( get_auto_repeats(26) ).append(" ")
+		.append( get_auto_repeats(27) ).append(" ")
+		.append( get_auto_repeats(28) ).append(" ")
+		.append( get_auto_repeats(29) ).append(" ")
+		.append( get_auto_repeats(30) ).append(" ")
+		.append( get_auto_repeats(31) ).append(" ").append( "}");
+		return ret.toString();
 	}
 
 

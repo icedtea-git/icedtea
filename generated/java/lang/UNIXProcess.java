@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1995, 2010, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,10 +35,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadFactory;
 import java.security.AccessController;
+import static java.security.AccessController.doPrivileged;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
@@ -62,37 +64,61 @@ final class UNIXProcess extends Process {
     private /* final */ InputStream  stdout;
     private /* final */ InputStream  stderr;
 
-    /**
-     * Required package-private classes taken from
-     * Oracle's java.lang.ProcessBuilder for bootstrapping.
-     */
+    private static enum LaunchMechanism {
+        FORK(1),
+        VFORK(3);
 
-    /**
-     * Implements a <a href="#redirect-output">null input stream</a>.
-     */
-    static class NullInputStream extends InputStream {
-        static final NullInputStream INSTANCE = new NullInputStream();
-        private NullInputStream() {}
-        public int read()      { return -1; }
-        public int available() { return 0; }
+        private int value;
+        LaunchMechanism(int x) {value = x;}
+    };
+
+    /* default is VFORK on Linux */
+    private static final LaunchMechanism launchMechanism;
+    private static byte[] helperpath;
+
+    private static byte[] toCString(String s) {
+        if (s == null)
+            return null;
+        byte[] bytes = s.getBytes();
+        byte[] result = new byte[bytes.length + 1];
+        System.arraycopy(bytes, 0,
+                         result, 0,
+                         bytes.length);
+        result[result.length-1] = (byte)0;
+        return result;
     }
 
-    /**
-     * Implements a <a href="#redirect-input">null output stream</a>.
-     */
-    static class NullOutputStream extends OutputStream {
-        static final NullOutputStream INSTANCE = new NullOutputStream();
-        private NullOutputStream() {}
-        public void write(int b) throws IOException {
-            throw new IOException("Stream closed");
-        }
+    static {
+        launchMechanism = AccessController.doPrivileged(
+                new PrivilegedAction<LaunchMechanism>()
+        {
+            public LaunchMechanism run() {
+                String javahome = System.getProperty("java.home");
+                String osArch = System.getProperty("os.arch");
+
+                helperpath = toCString(javahome + "/lib/" + osArch + "/jspawnhelper");
+                String s = System.getProperty(
+                    "jdk.lang.Process.launchMechanism", "vfork");
+
+                try {
+                    return LaunchMechanism.valueOf(s.toUpperCase(Locale.ENGLISH));
+                } catch (IllegalArgumentException e) {
+                    throw new Error(s + " is not a supported " +
+                        "process launch mechanism on this platform.");
+                }
+            }
+        });
     }
 
     /* this is for the reaping thread */
     private native int waitForProcessExit(int pid);
 
     /**
-     * Create a process using fork(2) and exec(2).
+     * Create a process. Depending on the mode flag, this is done by
+     * one of the following mechanisms.
+     * - fork(2) and exec(2)
+     * - clone(2) and exec(2)
+     * - vfork(2) and exec(2)
      *
      * @param fds an array of three file descriptors.
      *        Indexes 0, 1, and 2 correspond to standard input,
@@ -105,7 +131,8 @@ final class UNIXProcess extends Process {
      *        output.
      * @return the pid of the subprocess
      */
-    private native int forkAndExec(byte[] prog,
+    private native int forkAndExec(int mode, byte[] helperpath,
+                                   byte[] prog,
                                    byte[] argBlock, int argc,
                                    byte[] envBlock, int envc,
                                    byte[] dir,
@@ -120,14 +147,13 @@ final class UNIXProcess extends Process {
         private final static ThreadGroup group = getRootThreadGroup();
 
         private static ThreadGroup getRootThreadGroup() {
-            return AccessController.doPrivileged
-            (new PrivilegedAction<ThreadGroup> () {
-            public ThreadGroup run() {
-                ThreadGroup root = Thread.currentThread().getThreadGroup();
-                while (root.getParent() != null)
-                    root = root.getParent();
-                return root;
-            }});
+            return doPrivileged(new PrivilegedAction<ThreadGroup> () {
+                public ThreadGroup run() {
+                    ThreadGroup root = Thread.currentThread().getThreadGroup();
+                    while (root.getParent() != null)
+                        root = root.getParent();
+                    return root;
+                }});
         }
 
         public Thread newThread(Runnable grimReaper) {
@@ -143,8 +169,12 @@ final class UNIXProcess extends Process {
     /**
      * The thread pool of "process reaper" daemon threads.
      */
-    private static final Executor processReaperExecutor
-        = Executors.newCachedThreadPool(new ProcessReaperThreadFactory());
+    private static final Executor processReaperExecutor =
+        doPrivileged(new PrivilegedAction<Executor>() {
+            public Executor run() {
+                return Executors.newCachedThreadPool
+                    (new ProcessReaperThreadFactory());
+            }});
 
     UNIXProcess(final byte[] prog,
                 final byte[] argBlock, final int argc,
@@ -154,7 +184,9 @@ final class UNIXProcess extends Process {
                 final boolean redirectErrorStream)
             throws IOException {
 
-        pid = forkAndExec(prog,
+        pid = forkAndExec(launchMechanism.value,
+                          helperpath,
+                          prog,
                           argBlock, argc,
                           envBlock, envc,
                           dir,
@@ -162,8 +194,7 @@ final class UNIXProcess extends Process {
                           redirectErrorStream);
 
         try {
-            AccessController.doPrivileged
-            (new PrivilegedExceptionAction<Void>() {
+            doPrivileged(new PrivilegedExceptionAction<Void>() {
                 public Void run() throws IOException {
                     initStreams(fds);
                     return null;
@@ -181,15 +212,15 @@ final class UNIXProcess extends Process {
 
     void initStreams(int[] fds) throws IOException {
         stdin = (fds[0] == -1) ?
-            NullOutputStream.INSTANCE :
+            ProcessBuilder.NullOutputStream.INSTANCE :
             new ProcessPipeOutputStream(fds[0]);
 
         stdout = (fds[1] == -1) ?
-            NullInputStream.INSTANCE :
+            ProcessBuilder.NullInputStream.INSTANCE :
             new ProcessPipeInputStream(fds[1]);
 
         stderr = (fds[2] == -1) ?
-            NullInputStream.INSTANCE :
+            ProcessBuilder.NullInputStream.INSTANCE :
             new ProcessPipeInputStream(fds[2]);
 
         processReaperExecutor.execute(new Runnable() {
@@ -199,7 +230,13 @@ final class UNIXProcess extends Process {
             }});
     }
 
-    synchronized void processExited(int exitcode) {
+    void processExited(int exitcode) {
+        synchronized (this) {
+            this.exitcode = exitcode;
+            hasExited = true;
+            notifyAll();
+        }
+
         if (stdout instanceof ProcessPipeInputStream)
             ((ProcessPipeInputStream) stdout).processExited();
 
@@ -208,10 +245,6 @@ final class UNIXProcess extends Process {
 
         if (stdin instanceof ProcessPipeOutputStream)
             ((ProcessPipeOutputStream) stdin).processExited();
-
-        this.exitcode = exitcode;
-        hasExited = true;
-        notifyAll();
     }
 
     public OutputStream getOutputStream() {
@@ -257,11 +290,10 @@ final class UNIXProcess extends Process {
         try { stderr.close(); } catch (IOException ignored) {}
     }
 
-    /* This routine initializes JNI field offsets for the class */
-    private static native void initIDs();
+    private static native void init();
 
     static {
-        initIDs();
+        init();
     }
 
     /**
@@ -274,13 +306,13 @@ final class UNIXProcess extends Process {
      * able to read any buffered data lingering in the OS pipe buffer.
      */
     static class ProcessPipeInputStream extends BufferedInputStream {
+        private final Object closeLock = new Object();
+
         ProcessPipeInputStream(int fd) {
             super(new FileInputStream(newFileDescriptor(fd)));
         }
-
         private static byte[] drainInputStream(InputStream in)
                 throws IOException {
-            if (in == null) return null;
             int n = 0;
             int j;
             byte[] a = null;
@@ -293,21 +325,27 @@ final class UNIXProcess extends Process {
 
         /** Called by the process reaper thread when the process exits. */
         synchronized void processExited() {
-            // Most BufferedInputStream methods are synchronized, but close()
-            // is not, and so we have to handle concurrent racing close().
-            try {
-                InputStream in = this.in;
-                if (in != null) {
-                    byte[] stragglers = drainInputStream(in);
-                    in.close();
-                    this.in = (stragglers == null) ?
-                        NullInputStream.INSTANCE :
-                        new ByteArrayInputStream(stragglers);
-                    if (buf == null) // asynchronous close()?
-                        this.in = null;
-                }
-            } catch (IOException ignored) {
-                // probably an asynchronous close().
+            synchronized (closeLock) {
+                try {
+                    InputStream in = this.in;
+                    // this stream is closed if and only if: in == null
+                    if (in != null) {
+                        byte[] stragglers = drainInputStream(in);
+                        in.close();
+                        this.in = (stragglers == null) ?
+                            ProcessBuilder.NullInputStream.INSTANCE :
+                            new ByteArrayInputStream(stragglers);
+                    }
+                } catch (IOException ignored) {}
+            }
+        }
+
+        @Override
+        public void close() throws IOException {
+            // BufferedInputStream#close() is not synchronized unlike most other methods.
+            // Synchronizing helps avoid race with processExited().
+            synchronized (closeLock) {
+                super.close();
             }
         }
     }
@@ -332,7 +370,7 @@ final class UNIXProcess extends Process {
                     // We know of no reason to get an IOException, but if
                     // we do, there's nothing else to do but carry on.
                 }
-                this.out = NullOutputStream.INSTANCE;
+                this.out = ProcessBuilder.NullOutputStream.INSTANCE;
             }
         }
     }

@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XColor extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 12; }
+	public static int getSize() { return 16; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XColor extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XColor(long addr) {
+	public XColor(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XColor() {
+	public XColor() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,16 +39,16 @@ public class XColor extends XWrapperBase {
 		}
 	public long get_pixel() { log.finest("");return (Native.getLong(pData+0)); }
 	public void set_pixel(long v) { log.finest(""); Native.putLong(pData+0, v); }
-	public short get_red() { log.finest("");return (Native.getShort(pData+4)); }
-	public void set_red(short v) { log.finest(""); Native.putShort(pData+4, v); }
-	public short get_green() { log.finest("");return (Native.getShort(pData+6)); }
-	public void set_green(short v) { log.finest(""); Native.putShort(pData+6, v); }
-	public short get_blue() { log.finest("");return (Native.getShort(pData+8)); }
-	public void set_blue(short v) { log.finest(""); Native.putShort(pData+8, v); }
-	public byte get_flags() { log.finest("");return (Native.getByte(pData+10)); }
-	public void set_flags(byte v) { log.finest(""); Native.putByte(pData+10, v); }
-	public byte get_pad() { log.finest("");return (Native.getByte(pData+11)); }
-	public void set_pad(byte v) { log.finest(""); Native.putByte(pData+11, v); }
+	public short get_red() { log.finest("");return (Native.getShort(pData+8)); }
+	public void set_red(short v) { log.finest(""); Native.putShort(pData+8, v); }
+	public short get_green() { log.finest("");return (Native.getShort(pData+10)); }
+	public void set_green(short v) { log.finest(""); Native.putShort(pData+10, v); }
+	public short get_blue() { log.finest("");return (Native.getShort(pData+12)); }
+	public void set_blue(short v) { log.finest(""); Native.putShort(pData+12, v); }
+	public byte get_flags() { log.finest("");return (Native.getByte(pData+14)); }
+	public void set_flags(byte v) { log.finest(""); Native.putByte(pData+14, v); }
+	public byte get_pad() { log.finest("");return (Native.getByte(pData+15)); }
+	public void set_pad(byte v) { log.finest(""); Native.putByte(pData+15, v); }
 
 
 	String getName() {
@@ -57,15 +57,15 @@ public class XColor extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(240);
 
-		ret += ""+"pixel = " + get_pixel() +", ";
-		ret += ""+"red = " + get_red() +", ";
-		ret += ""+"green = " + get_green() +", ";
-		ret += ""+"blue = " + get_blue() +", ";
-		ret += ""+"flags = " + get_flags() +", ";
-		ret += ""+"pad = " + get_pad() +", ";
-		return ret;
+		ret.append("pixel = ").append( get_pixel() ).append(", ");
+		ret.append("red = ").append( get_red() ).append(", ");
+		ret.append("green = ").append( get_green() ).append(", ");
+		ret.append("blue = ").append( get_blue() ).append(", ");
+		ret.append("flags = ").append( get_flags() ).append(", ");
+		ret.append("pad = ").append( get_pad() ).append(", ");
+		return ret.toString();
 	}
 
 

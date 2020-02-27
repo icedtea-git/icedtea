@@ -370,6 +370,10 @@ class DirectShortBufferRU
 
 
 
+
+
+
+
         throw new ReadOnlyBufferException();
 
     }

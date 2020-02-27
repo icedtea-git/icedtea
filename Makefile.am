@@ -778,6 +778,11 @@ GENERATED_FILES = $(top_srcdir)/generated/com/sun/java/swing/plaf/gtk/resources/
 	$(top_srcdir)/generated/com/sun/tools/jdi/*.java \
 	$(top_srcdir)/generated/com/sun/tools/jdi/resources/jdi*.java \
 	$(top_srcdir)/generated/com/sun/tools/javac/resources/*.java \
+	$(top_srcdir)/generated/com/sun/tools/javac/resources/*.properties \
+	$(top_srcdir)/generated/com/sun/tools/javah/resources/*.java \
+	$(top_srcdir)/generated/com/sun/tools/javah/resources/*.properties \
+	$(top_srcdir)/generated/com/sun/tools/javap/resources/*.java \
+	$(top_srcdir)/generated/com/sun/tools/javap/resources/*.properties \
 	$(top_srcdir)/generated/com/sun/tools/doclets/formats/html/resources/standard*.java \
 	$(top_srcdir)/generated/com/sun/tools/doclets/internal/toolkit/resources/doclets*.java \
 	$(top_srcdir)/generated/com/sun/tools/javadoc/resources/javadoc*.java \
@@ -800,8 +805,10 @@ GENERATED_FILES = $(top_srcdir)/generated/com/sun/java/swing/plaf/gtk/resources/
 	$(top_srcdir)/generated/org/omg/PortableServer/CurrentPackage/*.java \
 	$(top_srcdir)/generated/org/omg/PortableServer/POAManagerPackage/*.java \
 	$(top_srcdir)/generated/org/omg/PortableServer/POAPackage/*.java \
+	$(top_srcdir)/generated/sun/awt/*.java \
 	$(top_srcdir)/generated/sun/awt/X11/*.java \
 	$(top_srcdir)/generated/sun/awt/resources/awt*.java \
+	$(top_srcdir)/generated/sun/launcher/resources/*.java \
 	$(top_srcdir)/generated/sun/nio/ch/*.java \
 	$(top_srcdir)/generated/sun/nio/cs/*.java \
 	$(top_srcdir)/generated/sun/nio/cs/ext/*.java \
@@ -812,12 +819,14 @@ GENERATED_FILES = $(top_srcdir)/generated/com/sun/java/swing/plaf/gtk/resources/
 	$(top_srcdir)/generated/sun/util/resources/*.java \
 	$(top_srcdir)/generated/sun/print/resources/serviceui*.java \
 	$(top_srcdir)/generated/sun/tools/jar/resources/jar*.java \
+	$(top_srcdir)/generated/sun/tools/jconsole/*.java \
 	$(top_srcdir)/generated/sun/management/resources/agent*.java \
 	$(top_srcdir)/generated/java/nio/*.java \
 	$(top_srcdir)/generated/java/nio/channels/*.java \
 	$(top_srcdir)/generated/java/lang/*.java \
 	$(top_srcdir)/generated/java/util/*.java \
 	$(top_srcdir)/generated/javax/management/remote/rmi/*.java \
+	$(top_srcdir)/generated/javax/swing/plaf/nimbus/*.java \
 	$(top_srcdir)/generated/fontconfig/fontconfig*.bfc
 
 JTREG_SRCS = $(top_srcdir)/test/jtreg/com/sun/javatest/cof/i18n.properties \

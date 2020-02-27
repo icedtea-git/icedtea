@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XSetWindowAttributes extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 60; }
+	public static int getSize() { return 112; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XSetWindowAttributes extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XSetWindowAttributes(long addr) {
+	public XSetWindowAttributes(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XSetWindowAttributes() {
+	public XSetWindowAttributes() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,34 +39,34 @@ public class XSetWindowAttributes extends XWrapperBase {
 		}
 	public long get_background_pixmap() { log.finest("");return (Native.getLong(pData+0)); }
 	public void set_background_pixmap(long v) { log.finest(""); Native.putLong(pData+0, v); }
-	public long get_background_pixel() { log.finest("");return (Native.getLong(pData+4)); }
-	public void set_background_pixel(long v) { log.finest(""); Native.putLong(pData+4, v); }
-	public long get_border_pixmap() { log.finest("");return (Native.getLong(pData+8)); }
-	public void set_border_pixmap(long v) { log.finest(""); Native.putLong(pData+8, v); }
-	public long get_border_pixel() { log.finest("");return (Native.getLong(pData+12)); }
-	public void set_border_pixel(long v) { log.finest(""); Native.putLong(pData+12, v); }
-	public int get_bit_gravity() { log.finest("");return (Native.getInt(pData+16)); }
-	public void set_bit_gravity(int v) { log.finest(""); Native.putInt(pData+16, v); }
-	public int get_win_gravity() { log.finest("");return (Native.getInt(pData+20)); }
-	public void set_win_gravity(int v) { log.finest(""); Native.putInt(pData+20, v); }
-	public int get_backing_store() { log.finest("");return (Native.getInt(pData+24)); }
-	public void set_backing_store(int v) { log.finest(""); Native.putInt(pData+24, v); }
-	public long get_backing_planes() { log.finest("");return (Native.getLong(pData+28)); }
-	public void set_backing_planes(long v) { log.finest(""); Native.putLong(pData+28, v); }
-	public long get_backing_pixel() { log.finest("");return (Native.getLong(pData+32)); }
-	public void set_backing_pixel(long v) { log.finest(""); Native.putLong(pData+32, v); }
-	public boolean get_save_under() { log.finest("");return (Native.getBool(pData+36)); }
-	public void set_save_under(boolean v) { log.finest(""); Native.putBool(pData+36, v); }
-	public long get_event_mask() { log.finest("");return (Native.getLong(pData+40)); }
-	public void set_event_mask(long v) { log.finest(""); Native.putLong(pData+40, v); }
-	public long get_do_not_propagate_mask() { log.finest("");return (Native.getLong(pData+44)); }
-	public void set_do_not_propagate_mask(long v) { log.finest(""); Native.putLong(pData+44, v); }
-	public boolean get_override_redirect() { log.finest("");return (Native.getBool(pData+48)); }
-	public void set_override_redirect(boolean v) { log.finest(""); Native.putBool(pData+48, v); }
-	public long get_colormap() { log.finest("");return (Native.getLong(pData+52)); }
-	public void set_colormap(long v) { log.finest(""); Native.putLong(pData+52, v); }
-	public long get_cursor() { log.finest("");return (Native.getLong(pData+56)); }
-	public void set_cursor(long v) { log.finest(""); Native.putLong(pData+56, v); }
+	public long get_background_pixel() { log.finest("");return (Native.getLong(pData+8)); }
+	public void set_background_pixel(long v) { log.finest(""); Native.putLong(pData+8, v); }
+	public long get_border_pixmap() { log.finest("");return (Native.getLong(pData+16)); }
+	public void set_border_pixmap(long v) { log.finest(""); Native.putLong(pData+16, v); }
+	public long get_border_pixel() { log.finest("");return (Native.getLong(pData+24)); }
+	public void set_border_pixel(long v) { log.finest(""); Native.putLong(pData+24, v); }
+	public int get_bit_gravity() { log.finest("");return (Native.getInt(pData+32)); }
+	public void set_bit_gravity(int v) { log.finest(""); Native.putInt(pData+32, v); }
+	public int get_win_gravity() { log.finest("");return (Native.getInt(pData+36)); }
+	public void set_win_gravity(int v) { log.finest(""); Native.putInt(pData+36, v); }
+	public int get_backing_store() { log.finest("");return (Native.getInt(pData+40)); }
+	public void set_backing_store(int v) { log.finest(""); Native.putInt(pData+40, v); }
+	public long get_backing_planes() { log.finest("");return (Native.getLong(pData+48)); }
+	public void set_backing_planes(long v) { log.finest(""); Native.putLong(pData+48, v); }
+	public long get_backing_pixel() { log.finest("");return (Native.getLong(pData+56)); }
+	public void set_backing_pixel(long v) { log.finest(""); Native.putLong(pData+56, v); }
+	public boolean get_save_under() { log.finest("");return (Native.getBool(pData+64)); }
+	public void set_save_under(boolean v) { log.finest(""); Native.putBool(pData+64, v); }
+	public long get_event_mask() { log.finest("");return (Native.getLong(pData+72)); }
+	public void set_event_mask(long v) { log.finest(""); Native.putLong(pData+72, v); }
+	public long get_do_not_propagate_mask() { log.finest("");return (Native.getLong(pData+80)); }
+	public void set_do_not_propagate_mask(long v) { log.finest(""); Native.putLong(pData+80, v); }
+	public boolean get_override_redirect() { log.finest("");return (Native.getBool(pData+88)); }
+	public void set_override_redirect(boolean v) { log.finest(""); Native.putBool(pData+88, v); }
+	public long get_colormap() { log.finest("");return (Native.getLong(pData+96)); }
+	public void set_colormap(long v) { log.finest(""); Native.putLong(pData+96, v); }
+	public long get_cursor() { log.finest("");return (Native.getLong(pData+104)); }
+	public void set_cursor(long v) { log.finest(""); Native.putLong(pData+104, v); }
 
 
 	String getName() {
@@ -75,24 +75,24 @@ public class XSetWindowAttributes extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(600);
 
-		ret += ""+"background_pixmap = " + get_background_pixmap() +", ";
-		ret += ""+"background_pixel = " + get_background_pixel() +", ";
-		ret += ""+"border_pixmap = " + get_border_pixmap() +", ";
-		ret += ""+"border_pixel = " + get_border_pixel() +", ";
-		ret += ""+"bit_gravity = " + get_bit_gravity() +", ";
-		ret += ""+"win_gravity = " + get_win_gravity() +", ";
-		ret += ""+"backing_store = " + get_backing_store() +", ";
-		ret += ""+"backing_planes = " + get_backing_planes() +", ";
-		ret += ""+"backing_pixel = " + get_backing_pixel() +", ";
-		ret += ""+"save_under = " + get_save_under() +", ";
-		ret += ""+"event_mask = " + get_event_mask() +", ";
-		ret += ""+"do_not_propagate_mask = " + get_do_not_propagate_mask() +", ";
-		ret += ""+"override_redirect = " + get_override_redirect() +", ";
-		ret += ""+"colormap = " + get_colormap() +", ";
-		ret += ""+"cursor = " + get_cursor() +", ";
-		return ret;
+		ret.append("background_pixmap = ").append( get_background_pixmap() ).append(", ");
+		ret.append("background_pixel = ").append( get_background_pixel() ).append(", ");
+		ret.append("border_pixmap = ").append( get_border_pixmap() ).append(", ");
+		ret.append("border_pixel = ").append( get_border_pixel() ).append(", ");
+		ret.append("bit_gravity = ").append( get_bit_gravity() ).append(", ");
+		ret.append("win_gravity = ").append( get_win_gravity() ).append(", ");
+		ret.append("backing_store = ").append( get_backing_store() ).append(", ");
+		ret.append("backing_planes = ").append( get_backing_planes() ).append(", ");
+		ret.append("backing_pixel = ").append( get_backing_pixel() ).append(", ");
+		ret.append("save_under = ").append( get_save_under() ).append(", ");
+		ret.append("event_mask = ").append( get_event_mask() ).append(", ");
+		ret.append("do_not_propagate_mask = ").append( get_do_not_propagate_mask() ).append(", ");
+		ret.append("override_redirect = ").append( get_override_redirect() ).append(", ");
+		ret.append("colormap = ").append( get_colormap() ).append(", ");
+		ret.append("cursor = ").append( get_cursor() ).append(", ");
+		return ret.toString();
 	}
 
 

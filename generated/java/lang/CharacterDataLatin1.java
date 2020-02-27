@@ -1,12 +1,13 @@
+// This file was generated AUTOMATICALLY from a template file Wed Feb 26 05:21:16 GMT 2020
 /*
- * Copyright 2002-2006 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright (c) 2002, 2006, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Sun designates this
+ * published by the Free Software Foundation.  Oracle designates this
  * particular file as subject to the "Classpath" exception as provided
- * by Sun in the LICENSE file that accompanied this code.
+ * by Oracle in the LICENSE file that accompanied this code.
  *
  * This code is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -18,9 +19,9 @@
  * 2 along with this work; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
- * CA 95054 USA or visit www.sun.com if you need additional information or
- * have any questions.
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
  */
 
 package java.lang;
@@ -67,9 +68,35 @@ class CharacterDataLatin1 extends CharacterData {
      */
 
     int getProperties(int ch) {
-		char offset = (char)ch;
+        char offset = (char)ch;
         int props = A[offset];
         return props;
+    }
+
+    int getPropertiesEx(int ch) {
+        char offset = (char)ch;
+        int props = B[offset];
+        return props;
+    }
+
+    boolean isOtherLowercase(int ch) {
+        int props = getPropertiesEx(ch);
+        return (props & 0x0001) != 0;
+    }
+
+    boolean isOtherUppercase(int ch) {
+        int props = getPropertiesEx(ch);
+        return (props & 0x0002) != 0;
+    }
+
+    boolean isOtherAlphabetic(int ch) {
+        int props = getPropertiesEx(ch);
+        return (props & 0x0004) != 0;
+    }
+
+    boolean isIdeographic(int ch) {
+        int props = getPropertiesEx(ch);
+        return (props & 0x0010) != 0;
     }
 
     int getType(int ch) {
@@ -225,6 +252,7 @@ class CharacterDataLatin1 extends CharacterData {
     private CharacterDataLatin1() {};
 
     // The following tables and code generated using:
+  // java GenerateCharacter -template ../../tools/GenerateCharacter/CharacterDataLatin1.java.template -spec ../../tools/UnicodeData/UnicodeData.txt -specialcasing ../../tools/UnicodeData/SpecialCasing.txt -proplist ../../tools/UnicodeData/PropList.txt -o /home/andrew/builder/icedtea7-2.6/openjdk.build/gensrc/java/lang/CharacterDataLatin1.java -string -usecharforbyte -latin1 8
   // The A table has 256 entries for a total of 1024 bytes.
 
   static final int A[] = new int[256];
@@ -235,8 +263,8 @@ class CharacterDataLatin1 extends CharacterData {
     "\u100F\u4800\u100F\u4800\u100F\u4800\u100F\u4800\u100F\u4800\u100F\u4800\u100F"+
     "\u4800\u100F\u4800\u100F\u5000\u400F\u5000\u400F\u5000\u400F\u5800\u400F\u6000"+
     "\u400C\u6800\030\u6800\030\u2800\030\u2800\u601A\u2800\030\u6800\030\u6800"+
-    "\030\uE800\025\uE800\026\u6800\030\u2800\031\u3800\030\u2800\024\u3800\030"+
-    "\u2000\030\u1800\u3609\u1800\u3609\u1800\u3609\u1800\u3609\u1800\u3609\u1800"+
+    "\030\uE800\025\uE800\026\u6800\030\u2000\031\u3800\030\u2000\024\u3800\030"+
+    "\u3800\030\u1800\u3609\u1800\u3609\u1800\u3609\u1800\u3609\u1800\u3609\u1800"+
     "\u3609\u1800\u3609\u1800\u3609\u1800\u3609\u1800\u3609\u3800\030\u6800\030"+
     "\uE800\031\u6800\031\uE800\031\u6800\030\u6800\030\202\u7FE1\202\u7FE1\202"+
     "\u7FE1\202\u7FE1\202\u7FE1\202\u7FE1\202\u7FE1\202\u7FE1\202\u7FE1\202\u7FE1"+
@@ -253,7 +281,7 @@ class CharacterDataLatin1 extends CharacterData {
     "\u4800\u100F\u4800\u100F\u4800\u100F\u4800\u100F\u4800\u100F\u4800\u100F\u4800"+
     "\u100F\u4800\u100F\u4800\u100F\u4800\u100F\u4800\u100F\u4800\u100F\u4800\u100F"+
     "\u3800\014\u6800\030\u2800\u601A\u2800\u601A\u2800\u601A\u2800\u601A\u6800"+
-    "\034\u6800\034\u6800\033\u6800\034\000\u7002\uE800\035\u6800\031\u6800\u1010"+
+    "\034\u6800\034\u6800\033\u6800\034\000\u7002\uE800\035\u6800\031\u4800\u1010"+
     "\u6800\034\u6800\033\u2800\034\u2800\031\u1800\u060B\u1800\u060B\u6800\033"+
     "\u07FD\u7002\u6800\034\u6800\030\u6800\033\u1800\u050B\000\u7002\uE800\036"+
     "\u6800\u080B\u6800\u080B\u6800\u080B\u6800\030\202\u7001\202\u7001\202\u7001"+
@@ -266,6 +294,24 @@ class CharacterDataLatin1 extends CharacterData {
     "\201\u7002\201\u7002\201\u7002\201\u7002\201\u7002\201\u7002\201\u7002\u6800"+
     "\031\201\u7002\201\u7002\201\u7002\201\u7002\201\u7002\201\u7002\201\u7002"+
     "\u061D\u7002";
+
+  // The B table has 256 entries for a total of 512 bytes.
+
+  static final char B[] = (
+    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"+
+    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"+
+    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"+
+    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"+
+    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"+
+    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"+
+    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"+
+    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"+
+    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"+
+    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"+
+    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"+
+    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"+
+    "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000"+
+    "\000\000\000\000\000\000\000\000\000").toCharArray();
 
   // In all, the character property tables require 1024 bytes.
 

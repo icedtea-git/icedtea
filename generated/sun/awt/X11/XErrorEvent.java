@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XErrorEvent extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 20; }
+	public static int getSize() { return 40; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XErrorEvent extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XErrorEvent(long addr) {
+	public XErrorEvent(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XErrorEvent() {
+	public XErrorEvent() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,18 +39,18 @@ public class XErrorEvent extends XWrapperBase {
 		}
 	public int get_type() { log.finest("");return (Native.getInt(pData+0)); }
 	public void set_type(int v) { log.finest(""); Native.putInt(pData+0, v); }
-	public long get_display() { log.finest("");return (Native.getLong(pData+4)); }
-	public void set_display(long v) { log.finest(""); Native.putLong(pData+4, v); }
-	public long get_resourceid() { log.finest("");return (Native.getLong(pData+8)); }
-	public void set_resourceid(long v) { log.finest(""); Native.putLong(pData+8, v); }
-	public long get_serial() { log.finest("");return (Native.getLong(pData+12)); }
-	public void set_serial(long v) { log.finest(""); Native.putLong(pData+12, v); }
-	public byte get_error_code() { log.finest("");return (Native.getByte(pData+16)); }
-	public void set_error_code(byte v) { log.finest(""); Native.putByte(pData+16, v); }
-	public byte get_request_code() { log.finest("");return (Native.getByte(pData+17)); }
-	public void set_request_code(byte v) { log.finest(""); Native.putByte(pData+17, v); }
-	public byte get_minor_code() { log.finest("");return (Native.getByte(pData+18)); }
-	public void set_minor_code(byte v) { log.finest(""); Native.putByte(pData+18, v); }
+	public long get_display() { log.finest("");return (Native.getLong(pData+8)); }
+	public void set_display(long v) { log.finest(""); Native.putLong(pData+8, v); }
+	public long get_resourceid() { log.finest("");return (Native.getLong(pData+16)); }
+	public void set_resourceid(long v) { log.finest(""); Native.putLong(pData+16, v); }
+	public long get_serial() { log.finest("");return (Native.getLong(pData+24)); }
+	public void set_serial(long v) { log.finest(""); Native.putLong(pData+24, v); }
+	public byte get_error_code() { log.finest("");return (Native.getByte(pData+32)); }
+	public void set_error_code(byte v) { log.finest(""); Native.putByte(pData+32, v); }
+	public byte get_request_code() { log.finest("");return (Native.getByte(pData+33)); }
+	public void set_request_code(byte v) { log.finest(""); Native.putByte(pData+33, v); }
+	public byte get_minor_code() { log.finest("");return (Native.getByte(pData+34)); }
+	public void set_minor_code(byte v) { log.finest(""); Native.putByte(pData+34, v); }
 
 
 	String getName() {
@@ -59,16 +59,16 @@ public class XErrorEvent extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(280);
 
-		ret += ""+"type = " + XlibWrapper.eventToString[get_type()] +", ";
-		ret += ""+"display = " + get_display() +", ";
-		ret += ""+"resourceid = " + get_resourceid() +", ";
-		ret += ""+"serial = " + get_serial() +", ";
-		ret += ""+"error_code = " + get_error_code() +", ";
-		ret += ""+"request_code = " + get_request_code() +", ";
-		ret += ""+"minor_code = " + get_minor_code() +", ";
-		return ret;
+		ret.append("type = ").append( XlibWrapper.eventToString[get_type()] ).append(", ");
+		ret.append("display = ").append( get_display() ).append(", ");
+		ret.append("resourceid = ").append( get_resourceid() ).append(", ");
+		ret.append("serial = ").append( get_serial() ).append(", ");
+		ret.append("error_code = ").append( get_error_code() ).append(", ");
+		ret.append("request_code = ").append( get_request_code() ).append(", ");
+		ret.append("minor_code = ").append( get_minor_code() ).append(", ");
+		return ret.toString();
 	}
 
 

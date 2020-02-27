@@ -4,11 +4,11 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XIMStatusDrawCallbackStruct extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
-	public static int getSize() { return 8; }
+	public static int getSize() { return 16; }
 	public int getDataSize() { return getSize(); }
 
 	long pData;
@@ -16,14 +16,14 @@ public class XIMStatusDrawCallbackStruct extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XIMStatusDrawCallbackStruct(long addr) {
+	public XIMStatusDrawCallbackStruct(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XIMStatusDrawCallbackStruct() {
+	public XIMStatusDrawCallbackStruct() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -39,8 +39,8 @@ public class XIMStatusDrawCallbackStruct extends XWrapperBase {
 		}
 	public int get_type() { log.finest("");return (Native.getInt(pData+0)); }
 	public void set_type(int v) { log.finest(""); Native.putInt(pData+0, v); }
-	public long get_data() { log.finest("");return (Native.getLong(pData+4)); }
-	public void set_data(long v) { log.finest(""); Native.putLong(pData+4, v); }
+	public long get_data() { log.finest("");return (Native.getLong(pData+8)); }
+	public void set_data(long v) { log.finest(""); Native.putLong(pData+8, v); }
 
 
 	String getName() {
@@ -49,11 +49,11 @@ public class XIMStatusDrawCallbackStruct extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(80);
 
-		ret += ""+"type = " + XlibWrapper.eventToString[get_type()] +", ";
-		ret += ""+"data = " + get_data() +", ";
-		return ret;
+		ret.append("type = ").append( XlibWrapper.eventToString[get_type()] ).append(", ");
+		ret.append("data = ").append( get_data() ).append(", ");
+		return ret.toString();
 	}
 
 

@@ -4,7 +4,7 @@ package sun.awt.X11;
 
 import sun.misc.*;
 
-import java.util.logging.*;
+import sun.util.logging.PlatformLogger;
 public class XExtCodes extends XWrapperBase { 
 	private Unsafe unsafe = XlibWrapper.unsafe; 
 	private final boolean should_free_memory;
@@ -16,14 +16,14 @@ public class XExtCodes extends XWrapperBase {
 	public long getPData() { return pData; }
 
 
-	XExtCodes(long addr) {
+	public XExtCodes(long addr) {
 		log.finest("Creating");
 		pData=addr;
 		should_free_memory = false;
 	}
 
 
-	XExtCodes() {
+	public XExtCodes() {
 		log.finest("Creating");
 		pData = unsafe.allocateMemory(getSize());
 		should_free_memory = true;
@@ -53,13 +53,13 @@ public class XExtCodes extends XWrapperBase {
 
 
 	String getFieldsAsString() {
-		String ret="";
+		StringBuilder ret = new StringBuilder(160);
 
-		ret += ""+"extension = " + get_extension() +", ";
-		ret += ""+"major_opcode = " + get_major_opcode() +", ";
-		ret += ""+"first_event = " + get_first_event() +", ";
-		ret += ""+"first_error = " + get_first_error() +", ";
-		return ret;
+		ret.append("extension = ").append( get_extension() ).append(", ");
+		ret.append("major_opcode = ").append( get_major_opcode() ).append(", ");
+		ret.append("first_event = ").append( get_first_event() ).append(", ");
+		ret.append("first_error = ").append( get_first_error() ).append(", ");
+		return ret.toString();
 	}
 
 

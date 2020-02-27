@@ -370,6 +370,10 @@ class DirectCharBufferRS
 
 
 
+
+
+
+
         throw new ReadOnlyBufferException();
 
     }

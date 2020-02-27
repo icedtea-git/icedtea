@@ -1,13 +1,13 @@
 /*
- * Copyright 2000 Sun Microsystems, Inc.  All Rights Reserved.
+ * Copyright (c) 2000, 2007, Oracle and/or its affiliates. All rights reserved.
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Sun designates this
+ * published by the Free Software Foundation.  Oracle designates this
  * particular file as subject to the "Classpath" exception as provided
- * by Sun in the LICENSE file that accompanied this code.
+ * by Oracle in the LICENSE file that accompanied this code.
  *
  * This code is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -19,9 +19,9 @@
  * 2 along with this work; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
- * CA 95054 USA or visit www.sun.com if you need additional information or
- * have any questions.
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
  *
  */
 
@@ -332,6 +332,7 @@ public class StandardCharsets
         "ccsid00858",
         "cp00858",
         "858",
+        "PC-Multilingual-850+euro",
     };
 
     static final String[] aliases_IBM862 = new String[] {
@@ -363,7 +364,7 @@ public class StandardCharsets
     {
 
         private static final int ROWS = 1024;
-        private static final int SIZE = 208;
+        private static final int SIZE = 209;
         private static final int SHIFT = 0;
         private static final int MASK = 0x3ff;
 
@@ -513,6 +514,7 @@ public class StandardCharsets
             ht[573] = new Object[] { "iso_8859-4:1988", "iso-8859-4" };
             ht[577] = new Object[] { "default", "us-ascii" };
             ht[582] = new Object[] { "utf32", "utf-32" };
+            ht[583] = new Object[] { "pc-multilingual-850+euro", "ibm00858" };
             ht[588] = new Object[] { "elot_928", "iso-8859-7" };
             ht[593] = new Object[] { "csisolatingreek", "iso-8859-7" };
             ht[598] = new Object[] { "csibm857", "ibm857" };
