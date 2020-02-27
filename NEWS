@@ -107,6 +107,7 @@ New in release 2.6.21 (2020-02-26):
   - S8135018, PR3774: AARCH64: Missing memory barriers for CMS collector
   - S8233839, PR3774: aarch64: missing memory barrier in NewObjectArrayStub and NewTypeArrayStub
   - PR3779: Update generated files
+  - PR3780: make dist broken by PR3779
 
 New in release 2.6.20 (2019-11-17):
 

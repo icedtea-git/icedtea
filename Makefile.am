@@ -824,7 +824,6 @@ GENERATED_FILES = $(top_srcdir)/generated/com/sun/java/swing/plaf/gtk/resources/
 	$(top_srcdir)/generated/java/nio/*.java \
 	$(top_srcdir)/generated/java/nio/channels/*.java \
 	$(top_srcdir)/generated/java/lang/*.java \
-	$(top_srcdir)/generated/java/util/*.java \
 	$(top_srcdir)/generated/javax/management/remote/rmi/*.java \
 	$(top_srcdir)/generated/javax/swing/plaf/nimbus/*.java \
 	$(top_srcdir)/generated/fontconfig/fontconfig*.bfc
