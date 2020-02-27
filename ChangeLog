@@ -1,5 +1,9 @@
 2020-02-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* NEWS: Set release date to today (2020-02-26).
+
+2020-02-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR3779: Update generated files
 	* generated/java/util/CurrencyData.java,
 	* generated/sun/awt/X11/XAWTIcon32_java_icon16_png.java,
