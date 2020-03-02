@@ -1,4 +1,4 @@
-AC_INIT([icedtea], [3.16.0pre00], [distro-pkg-dev@openjdk.java.net])
+AC_INIT([icedtea], [3.16.0pre01], [distro-pkg-dev@openjdk.java.net])
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([1.9 tar-pax foreign])
@@ -21,6 +21,7 @@ AC_CONFIG_FILES([policytool.desktop])
 
 AC_PROG_CC
 AC_PROG_CXX
+AM_PROG_AS
 
 IT_CHECK_IF_BOOTSTRAPPING
 IT_CHECK_IF_DOWNLOADING

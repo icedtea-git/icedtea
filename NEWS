@@ -12,6 +12,44 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.16.0 (2020-04-XX):
 
+* Import of OpenJDK 8 u242 build 01
+  - S8028480: (zipfs) NoSuchFileException on creating a file in ZipFileSystem with CREATE and WRITE
+  - S8031191: Warning exception when XMLSignature logging is enabled
+  - S8034773: (zipfs) newOutputstream uses CREATE_NEW when no options specified
+  - S8038431: Close InputStream when finished retrieving XML Signature HTTP References
+  - S8041620: Solaris Studio 12.4 C++ 5.13 change in behavior for placing friend declarations within surrounding scope.
+  - S8046044: Fix raw and unchecked lint warnings in XML Signature Impl
+  - S8055351: sun/security/provider/DSA/TestAlgParameterGenerator.java failed with interrupted! (timed out?)
+  - S8056313: TEST_BUG: java/util/Timer/NameConstructors.java fails intermittently
+  - S8133489: Better messaging for PKIX path validation matching
+  - S8144732: VM_HeapDumper hits assert with bad dump_len
+  - S8150432: LocaleProviders.sh fails
+  - S8150460: (linux|bsd|aix)_close.c: file descriptor table may become large or may not work at all
+  - S8170641: sun/net/www/protocol/https/HttpsURLConnection/PostThruProxy.sh fails with timeout
+  - S8173956: KeyStore regression due to default keystore being changed to PKCS12
+  - S8216354: Syntax error in toolchain_windows.m4
+  - S8218553: Enhance keystore load debug output
+  - S8218580: endpoint identification algorithm should be case-insensitive
+  - S8227397: Add --with-extra-asflags configure option
+  - S8227662: freetype seeks to index at the end of the font data
+  - S8227715: GPLv2 files missing Classpath Exception
+  - S8231201: hs_err should print coalesced safepoint operations in Events section
+  - S8231991: Mouse wheel change focus on awt/swing windows
+  - S8232003: (fs) Files.write can leak file descriptor in the exception case
+  - S8232154: Update Mesa 3-D Headers to version 19.2.1
+  - S8232355: Two obsolete flags have the wrong obsolete version in 8u
+  - S8233023: assert(Opcode() == mem->Opcode() || phase->C->get_alias_index(adr_type()) == Compile::AliasIdxRaw) failed: no mismatched stores, except on raw memory
+  - S8233404: System property to set the number of PBE iterations in JCEKS keystores
+  - S8233886: TEST_BUG jdk/java/net/CookieHandler/B6791927.java hit hardcoded expiration date
+  - S8234107: Several AWT modal dialog tests failing on Linux after JDK-8231991
+  - S8234264: Incorrect 8047434 JDK 8 backport in 8219677
+  - S8234288: Turkey Time Zone returns incorrect time zone name
+  - S8235637: jhsdb jmap from OpenJDK 11.0.5 doesn't work if prelink is enabled
+  - S8236873: Worker has a deadlock bug
+  - S8237523: 8u backport of JDK-8216354 didn't include generated-configure.sh changes
+* Backports
+  - S8195607, PR3776: sun/security/pkcs11/Secmod/TestNssDbSqlite.java failed with "NSS initialization failed" on NSS 3.34.1
+
 New in release 3.15.0 (2020-01-20):
 
 * Security fixes
