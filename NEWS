@@ -12,6 +12,8 @@ JEPX - https://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 2.6.22 (2020-04-XX):
+
 New in release 2.6.21 (2020-02-26):
 
 * Security fixes
