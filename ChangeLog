@@ -1,3 +1,17 @@
+2020-03-17  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3782: Update patch against 14.0.0 & JDK-8226374
+	* NEWS: Updated.
+	* fsg.sh.in: Update patch name.
+
+2020-03-16  Petra Mikova  <pmikova@redhat.com>
+
+	PR3782: Update patch against 14.0.0 & JDK-8226374
+	* patches/pr3782.patch:
+	Renamed from pr3755.patch. Adapt to changes in
+	JDK-8226374: Restrict TLS signature schemes and
+	named groups
+
 2019-10-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3755: Update patch against 13.0.1 & JDK-8228825

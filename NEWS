@@ -12,6 +12,9 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 9.0.0 (2019-XX-XX):
 
+* New features
+  - PR3782: Support secp256k1 in the default set of curves
+
 New in release 8.0.0 (2019-XX-XX):
 
 New in release 7.0.0 (2019-XX-XX):

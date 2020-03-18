@@ -10,122 +10,145 @@ diff --git a/make/lib/Lib-jdk.crypto.ec.gmk b/make/lib/Lib-jdk.crypto.ec.gmk
        CXXFLAGS := $(CXXFLAGS_JDKLIB), \
        DISABLED_WARNINGS_gcc := sign-compare implicit-fallthrough unused-value, \
        DISABLED_WARNINGS_clang := sign-compare, \
-diff --git a/src/java.base/share/classes/sun/security/ssl/NamedGroup.java b/src/java.base/share/classes/sun/security/ssl/NamedGroup.java
---- a/src/java.base/share/classes/sun/security/ssl/NamedGroup.java
-+++ b/src/java.base/share/classes/sun/security/ssl/NamedGroup.java
-@@ -50,93 +50,7 @@
+diff -r e568ce785bdf src/java.base/share/classes/sun/security/ssl/NamedGroup.java
+--- a/src/java.base/share/classes/sun/security/ssl/NamedGroup.java	Fri Feb 07 00:17:01 2020 +0100
++++ b/src/java.base/share/classes/sun/security/ssl/NamedGroup.java	Mon Mar 16 11:22:28 2020 +0100
+@@ -49,114 +49,8 @@
      // Elliptic Curves (RFC 4492)
      //
      // See sun.security.util.CurveDB for the OIDs
 -    // NIST K-163
 -
--    SECT163_K1(0x0001, "sect163k1", "1.3.132.0.1",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
--    SECT163_R1(0x0002, "sect163r1", "1.3.132.0.2",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT163_K1(0x0001, "sect163k1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect163k1")),
+-    SECT163_R1(0x0002, "sect163r1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect163r1")),
 -
 -    // NIST B-163
--    SECT163_R2(0x0003, "sect163r2", "1.3.132.0.15",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
--    SECT193_R1(0x0004, "sect193r1", "1.3.132.0.24",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
--    SECT193_R2(0x0005, "sect193r2", "1.3.132.0.25",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT163_R2(0x0003, "sect163r2",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect163r2")),
+-    SECT193_R1(0x0004, "sect193r1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect193r1")),
+-    SECT193_R2(0x0005, "sect193r2",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect193r2")),
 -
 -    // NIST K-233
--    SECT233_K1(0x0006, "sect233k1", "1.3.132.0.26",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT233_K1(0x0006, "sect233k1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect233k1")),
 -
 -    // NIST B-233
--    SECT233_R1(0x0007, "sect233r1", "1.3.132.0.27",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
--    SECT239_K1(0x0008, "sect239k1", "1.3.132.0.3",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT233_R1(0x0007, "sect233r1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect233r1")),
+-    SECT239_K1(0x0008, "sect239k1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect239k1")),
 -
 -    // NIST K-283
--    SECT283_K1(0x0009, "sect283k1", "1.3.132.0.16",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT283_K1(0x0009, "sect283k1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect283k1")),
 -
 -    // NIST B-283
--    SECT283_R1(0x000A, "sect283r1", "1.3.132.0.17",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT283_R1(0x000A, "sect283r1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect283r1")),
 -
 -    // NIST K-409
--    SECT409_K1(0x000B, "sect409k1", "1.3.132.0.36",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT409_K1(0x000B, "sect409k1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect409k1")),
 -
 -    // NIST B-409
--    SECT409_R1(0x000C, "sect409r1", "1.3.132.0.37",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT409_R1(0x000C, "sect409r1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect409r1")),
 -
 -    // NIST K-571
--    SECT571_K1(0x000D, "sect571k1", "1.3.132.0.38",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT571_K1(0x000D, "sect571k1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect571k1")),
 -
 -    // NIST B-571
--    SECT571_R1(0x000E, "sect571r1", "1.3.132.0.39",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
--    SECP160_K1(0x000F, "secp160k1", "1.3.132.0.9",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
--    SECP160_R1(0x0010, "secp160r1", "1.3.132.0.8",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
--    SECP160_R2(0x0011, "secp160r2", "1.3.132.0.30",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
--    SECP192_K1(0x0012, "secp192k1", "1.3.132.0.31",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT571_R1(0x000E, "sect571r1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("sect571r1")),
+-    SECP160_K1(0x000F, "secp160k1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("secp160k1")),
+-    SECP160_R1(0x0010, "secp160r1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("secp160r1")),
+-    SECP160_R2(0x0011, "secp160r2",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("secp160r2")),
+-    SECP192_K1(0x0012, "secp192k1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("secp192k1")),
 -
 -    // NIST P-192
--    SECP192_R1(0x0013, "secp192r1", "1.2.840.10045.3.1.1",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
--    SECP224_K1(0x0014, "secp224k1", "1.3.132.0.32",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
--
+-    SECP192_R1(0x0013, "secp192r1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("secp192r1")),
+-    SECP224_K1(0x0014, "secp224k1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("secp224k1")),
+ 
      // NIST P-224
--    SECP224_R1(0x0015, "secp224r1", "1.3.132.0.33",
--            NamedGroupType.NAMED_GROUP_ECDHE,
--            ProtocolVersion.PROTOCOLS_TO_12),
-     SECP256_K1(0x0016, "secp256k1", "1.3.132.0.10",
-             NamedGroupType.NAMED_GROUP_ECDHE,
-             ProtocolVersion.PROTOCOLS_TO_12),
-@@ -179,17 +93,7 @@
-             ProtocolVersion.PROTOCOLS_TO_13),
-     FFDHE_8192(0x0104, "ffdhe8192", null,
-             NamedGroupType.NAMED_GROUP_FFDHE,
--            ProtocolVersion.PROTOCOLS_TO_13),
+-    SECP224_R1(0x0015, "secp224r1",
+-            NamedGroupSpec.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            CurveDB.lookup("secp224r1")),
+     SECP256_K1(0x0016, "secp256k1",
+             NamedGroupSpec.NAMED_GROUP_ECDHE,
+             ProtocolVersion.PROTOCOLS_TO_12,
+@@ -211,19 +105,7 @@
+     FFDHE_8192(0x0104, "ffdhe8192",
+             NamedGroupSpec.NAMED_GROUP_FFDHE,
+             ProtocolVersion.PROTOCOLS_TO_13,
+-            PredefinedDHParameterSpecs.ffdheParams.get(8192)),
 -
 -    // Elliptic Curves (RFC 4492)
 -    //
 -    // arbitrary prime and characteristic-2 curves
--    ARBITRARY_PRIME(0xFF01, "arbitrary_explicit_prime_curves", null,
--            NamedGroupType.NAMED_GROUP_ARBITRARY,
--            ProtocolVersion.PROTOCOLS_TO_12),
--    ARBITRARY_CHAR2(0xFF02, "arbitrary_explicit_char2_curves", null,
--            NamedGroupType.NAMED_GROUP_ARBITRARY,
--            ProtocolVersion.PROTOCOLS_TO_12);
-+            ProtocolVersion.PROTOCOLS_TO_13);
+-    ARBITRARY_PRIME(0xFF01, "arbitrary_explicit_prime_curves",
+-            NamedGroupSpec.NAMED_GROUP_ARBITRARY,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            null),
+-    ARBITRARY_CHAR2(0xFF02, "arbitrary_explicit_char2_curves",
+-            NamedGroupSpec.NAMED_GROUP_ARBITRARY,
+-            ProtocolVersion.PROTOCOLS_TO_12,
+-            null);
++            PredefinedDHParameterSpecs.ffdheParams.get(8192));
  
      final int id;               // hash + signature
-     final NamedGroupType type;  // group type
+     final String name;          // literal name
 diff --git a/src/java.base/share/classes/sun/security/util/CurveDB.java b/src/java.base/share/classes/sun/security/util/CurveDB.java
 --- a/src/java.base/share/classes/sun/security/util/CurveDB.java
 +++ b/src/java.base/share/classes/sun/security/util/CurveDB.java
