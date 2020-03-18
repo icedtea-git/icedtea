@@ -22,6 +22,9 @@ New in release 5.0.0 (2019-XX-XX):
 
 New in release 4.0.0 (2017-XX-XX):
 
+* New features
+  - PR3758: Use the internal copy of the SunEC library rather than statically linking against NSS
+
 New in release 3.0.0 (2016-04-08):
 
 * Rebase on jdk8u77-b03

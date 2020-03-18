@@ -1,3 +1,61 @@
+2019-10-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3755: Update patch against 13.0.1 & JDK-8228825
+	* AUTHORS: Add Petra Mikova.
+
+2019-10-21  Petra Mikova  <pmikova@redhat.com>
+
+	PR3755: Update patch against 13.0.1 & JDK-8228825
+	* patches/pr3755.patch:
+	Curves supported over SSL are now limited upstream,
+	as a result of CVE-2019-2894.
+
+2019-10-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3755: Support secp256k1 in the default set of curves
+	* fsg.sh.in: Update patch name.
+	* patches/pr3755.patch:
+	Renamed from pr3758.patch. Retain secp256k1 curve
+	when reducing supported curve set.
+
+2019-10-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3758: Use the internal copy of the SunEC library
+	rather than statically linking against NSS
+	* patches/disable-intree-ec.patch: Removed.
+	* patches/nss-config.patch: Removed.
+	* patches/nss-not-enabled-config.patch: Removed.
+	* patches/nss-not-enabled-config-with-sunec.patch:
+	Renamed to patches/pkcs11-nss-not-enabled-config.patch.
+	* patches/nss-config-with-sunec.patch:
+	Renamed to patches/pkcs11-nss-config.patch.
+	* INSTALL:
+	Remove --enable-sunec option. Update documentation
+	to match current situation with SunEC.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove disable-intree-ec.patch.
+	Remove PKCS11 config patches without the SunEC provider.
+	Rename remaining two to make it clear they are for
+	the PKCS11 provider. Drop rh1022017.patch.
+	(ICEDTEA_CONFIGURE): Remove use of system-nss
+	option which no longer exists, following PR3758.
+	(ICEDTEA_ENV): Remove NSS_LIBS and NSS_CFLAGS.
+	(check-ecc): Argument passed to the test should
+	now be "yes".
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_SUNEC): Removed.
+	* configure.ac: Replace IT_ENABLE_SUNEC call with
+	IT_LOCATE_NSS.
+	* fsg.sh.in: Remove unused source code and use
+	new PR3758 patch instead of old PR2126 patch which
+	only alters Java code.
+	* patches/pr3758.patch: Renamed from patches/pr2126.patch,
+	updated to OpenJDK 11 paths and extended to patch native code.
+	* patches/rh1022017.patch: Included in PR3758 patch.
+	* remove-intree-libraries.sh.in: Drop conditional removal
+	of SunEC code.
+
 2019-10-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Start next major release cycle (9.0.0/OpenJDK 14)
@@ -5,6 +63,35 @@
 	(ICEDTEA_MAJOR): Bump to icedtea14.
 	* NEWS:	Add section for 9.0.0.
 	* configure.ac: Bump to 9.0.0pre00.
+
+2018-02-15  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/pr2126.patch,
+	* patches/rh1022017.patch:
+	Fix file paths due to 8156502 dropping 'Supported' from the
+	front of 'SupportedEllipticCurvesExtension.java'
+
+2017-12-11  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/pr2126.patch:
+	Update to apply against 8u152, following 8157035.
+
+2017-01-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/pr2126.patch:
+	Extend following changes made in 8148516.
+
+2016-11-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* patches/pr2126.patch:
+	Remove Brainpool curves added by 8146490.
+
+2016-04-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3758: Use the internal copy of the SunEC library
+	rather than statically linking against NSS
+	* Makefile.am:
+	(ECC_RESULT): Removed.
 
 2019-01-10  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
