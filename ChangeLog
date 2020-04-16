@@ -1,3 +1,28 @@
+2020-04-15  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to 2.6.22.
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-2.6.22.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(JDK_UPDATE_VERSION): Bump to 261.
+	* configure.ac: Bump to 2.6.22.
+	* hotspot.map.in: Update to icedtea-2.6.22.
+	* patches/boot/ecj-trywithresources.patch:
+	Regenerated. Update case for
+	com.sun.crypto.provider.SealedObjectForKeyProtector.
+
 2020-03-05  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Start 2.6.22 release cycle.
@@ -1299,7 +1324,7 @@
 	Temporary copy of fix removed with upgrade
 	to 7u251, where it's available upstream.
 	* Makefile.am:
-	(CORBA_CHANGESET): Update to icedtea-2.6.20.
+	(CORBA_CHANGESET): Update to icedtea-2.6.21.
 	(JAXP_CHANGESET): Likewise.
 	(JAXWS_CHANGESET): Likewise.
 	(JDK_CHANGESET): Likewise.

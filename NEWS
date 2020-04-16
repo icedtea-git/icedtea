@@ -12,7 +12,31 @@ JEPX - https://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.22 (2020-04-XX):
+New in release 2.6.22 (2020-04-15):
+
+* Security fixes
+  - S8224541, CVE-2020-2756: Better mapping of serial ENUMs
+  - S8224549, CVE-2020-2757: Less Blocking Array Queues
+  - S8225603: Enhancement for big integers
+  - S8227542: Manifest improved jar headers
+  - S8231415, CVE-2020-2773: Better signatures in XML
+  - S8233250: Better X11 rendering
+  - S8233410: Better Build Scripting
+  - S8234027: Better JCEKS key support
+  - S8234408, CVE-2020-2781: Improve TLS session handling
+  - S8234825, CVE-2020-2800: Better Headings for HTTP Servers
+  - S8234841, CVE-2020-2803: Enhance buffering of byte buffers
+  - S8235274, CVE-2020-2805: Enhance typing of methods
+  - S8236201, CVE-2020-2830: Better Scanner conversions
+  - S8238960: linux-i586 builds are inconsistent as the newly build jdk is not able to reserve enough space for object heap
+* Import of OpenJDK 7 u261 build 1
+  - S8240621: Build failure on Windows after JDK-8044500
+* Import of OpenJDK 7 u261 build 2
+  - S7065233: To interpret case-insensitive string locale independently
+  - S8219597: (bf) Heap buffer state changes could provoke unexpected exceptions
+* Bug fixes
+  - S8036543, PR3777: [parfait] JNI pending exceptions for j2secmod.c, j2secmod_md.c, and p11_md.c
+  - S8195607, PR3777: sun/security/pkcs11/Secmod/TestNssDbSqlite.java failed with "NSS initialization failed" on NSS 3.34.1
 
 New in release 2.6.21 (2020-02-26):
 
