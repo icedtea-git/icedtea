@@ -1,3 +1,9 @@
+2020-04-18  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Start 2.6.23 release cycle.
+	* NEWS: Add section for 2.6.23.
+	* configure.ac: Bump to 2.6.23pre00.
+
 2020-04-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* NEWS: Set release date to today (2020-04-16).
