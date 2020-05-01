@@ -1,5 +1,13 @@
 2020-05-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	JDK-8224851, PR3785: AArch64: fix warnings
+	and errors with Clang and GCC 8.3
+	* NEWS: Updated.
+	* hotspot.map.in: Bump HotSpot revision to
+	include JDK-8224851/PR3785 for AArch64.
+
+2020-05-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump shenandoah to aarch64-shenandoah-jdk8u252-b09.
 	* NEWS: Updated.
 	* hotspot.map.in: Bump shenandoah to

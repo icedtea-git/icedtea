@@ -202,8 +202,9 @@ New in release 3.16.0 (2020-04-XX):
   - Fix tier2_gc_shenandoah group definition
   - Rectify JDK-8191227 workaround for Shenandoah
   - Revert leftover changes in type.{cpp|hpp}
-  - S8224851: AArch64: fix warnings and errors with Clang and GCC 8.3
   - S8233500: Shenandoah: Shenandoah load barrier should save registers before calling keep alive barrier on x86
+* AArch64 port
+  - S8224851, PR3785: AArch64: fix warnings and errors with Clang and GCC 8.3
 
 New in release 3.15.0 (2020-01-20):
 
