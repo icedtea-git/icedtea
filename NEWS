@@ -149,6 +149,61 @@ New in release 3.16.0 (2020-04-XX):
   - S8035949, PR3784: Remove unused macro USE_SELECT and clean up Unix version of net_util_md.{c,h}
   - S8167481, PR3784: cleanup of headers and includes for native libnet
   - S8195607, PR3776: sun/security/pkcs11/Secmod/TestNssDbSqlite.java failed with "NSS initialization failed" on NSS 3.34.1
+* Shenandoah
+  - AArch64: Fix LRB use in LIRGenerator::do_UnsafeGetAndSetObject
+  - [backport] 8221751: Shenandoah: Improve SATB enqueueing
+  - [backport] 8221848: Shenandoah: ArrayCopy post-barrier improvements
+  - [backport] 8222766: Shenandoah: streamline post-LRB CAS barrier (x86)
+  - [backport] 8223951: Shenandoah: Only need to update thread roots during final update refs
+  - [backport] 8224179: Shenandoah: CTW test failures with traversal GC
+  - [backport] 8224495: Shenandoah: Do not rescan code roots in final mark pause if it is not degenerated GC
+  - [backport] 8224508: Shenandoah: Need to update thread roots in final mark for piggyback ref update cycle
+  - [backport] 8224525: Shenandoah: Eliminate shenandoah verifier's side-effects
+  - [backport] 8225171: Remove leftovers in shenandoahBarrierSetC1.cpp
+  - [backport] 8225341: Shenandoah: CM::update_thread_roots() needs to handle derived pointers
+  - [backport] 8226586: Shenandoah: No need to pre-evacuate roots for degenerated GC
+  - [backport] 8227327: Shenandoah: Faster and more parallel tests
+  - [backport] 8227676: Shenandoah: More consistent naming of LRB entry points
+  - [backport] 8228364: Shenandoah: Remove unused code from ShenandoahBarrierSetC1
+  - [backport] 8229865: Use explicit #include debug.hpp for STATIC_ASSERT in gc/shenandoah/shenandoahUtils.cpp
+  - [backport] 8229919: Support JNI Critical functions in object pinning API on x86_32 platforms
+  - [backport] 8231086: Shenandoah: Stronger invariant for object-arraycopy
+  - [backport] 8231293: Shenandoah: Traversal should not revive dead weak roots
+  - [backport] 8231410: Shenandoah: clone barrier should use base pointer
+  - [backport] 8231447: Shenandoah: Compilation-time regression after JDK-8231086
+  - [backport] 8231499: Shenandoah: compiler/arraycopy/TestDefaultMethodArrayCloneDeoptC2 fails
+  - [backport] 8232205: Shenandoah: missing "Update References" -> "Update Roots" tracing
+  - [backport] 8232778: Shenandoah: SBSA::arraycopy_prologue checks wrong register
+  - [backport] 8232908: Shenandoah: compact heuristics has incorrect trigger "Free is lower than allocated recently"
+  - [backport] 8233387: Shenandoah: passive mode should disable pacing ergonomically
+  - [backport] 8233520: Shenandoah: do not sleep when thread is attaching
+  - [backport] 8233850: Shenandoah: Shenandoah thread count ergonomics should be container aware
+  - [backport] 8234232: [TESTBUG] gc/shenandoah/jvmti/TestHeapDump.java fails with -Xcomp
+  - [backport] 8235636: gc/shenandoah/compiler/TestUnsafeOffheapSwap.java fails after JDK-8226411
+  - [backport] 8235729: Shenandoah: Remove useless casting to non-constant
+  - [backport] 8236106: [TESTBUG] Shenandoah: Make TestThreadFailure more resilient
+  - [backport] 8236181: C2: Remove useless step_over_gc_barrier() in int->bool conversion
+  - [backport] 8236732: Shenandoah: Stricter placement for oom-evac scopes
+  - [backport] 8236851: Shenandoah: More details in Traversal GC event messages
+  - [backport] 8237007: Shenandoah: assert(_base == Tuple) failure during C2 compilation
+  - [backport] 8237038: Shenandoah: Reduce thread pool size in TestEvilSyncBug.java test
+  - [backport] 8237570: Shenandoah: cleanup uses of allocation/free threshold in static heuristics
+  - [backport] 8237586: Shenandoah: provide option to disable periodic GC
+  - [backport] 8239868: Shenandoah: ditch C2 node limit adjustments
+  - [backport] 8239904: Shenandoah: accumulated penalties should not be over 100% of capacity
+  - [backport] 8240069: Shenandoah: turn more flags diagnostic
+  - [backport] 8240070: Shenandoah: remove obsolete ShenandoahCommonGCStateLoads
+  - [backport] 8240076: Shenandoah: pacer should cover reset and preclean phases
+  - [backport] 8240215: Shenandoah: remove ShenandoahAllocationTrace
+  - [backport] 8240216: Shenandoah: remove ShenandoahTerminationTrace
+  - [backport] 8240217: Shenandoah: remove ShenandoahEvacAssist
+  - [backport] 8240534: Shenandoah: ditch debug safepoint timeout adjustment
+  - Fix LRB use in LIRGenerator::do_UnsafeGetAndSetObject
+  - Fix tier2_gc_shenandoah group definition
+  - Rectify JDK-8191227 workaround for Shenandoah
+  - Revert leftover changes in type.{cpp|hpp}
+  - S8224851: AArch64: fix warnings and errors with Clang and GCC 8.3
+  - S8233500: Shenandoah: Shenandoah load barrier should save registers before calling keep alive barrier on x86
 
 New in release 3.15.0 (2020-01-20):
 
