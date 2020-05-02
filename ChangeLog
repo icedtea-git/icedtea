@@ -1,3 +1,8 @@
+2020-05-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Prepare for release.
+	* NEWS: Set release date to today (2020-05-02).
+
 2020-05-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3786: Use 'JDK-' as prefix for bugs from
