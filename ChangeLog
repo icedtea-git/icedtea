@@ -1,5 +1,11 @@
 2020-05-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR3786: Use 'JDK-' as prefix for bugs from
+	the OpenJDK bug tracker
+	* NEWS: Updated.
+
+2020-05-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump aarch32 to jdk8u252-ga-aarch32-20200415.
 	* NEWS: Updated.
 	* hotspot.map.in: Bump aarch32 to
