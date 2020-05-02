@@ -205,6 +205,8 @@ New in release 3.16.0 (2020-04-XX):
   - S8233500: Shenandoah: Shenandoah load barrier should save registers before calling keep alive barrier on x86
 * AArch64 port
   - S8224851, PR3785: AArch64: fix warnings and errors with Clang and GCC 8.3
+* AArch32 port
+  - S8240219: CPU specific port of 8229345: Memory leak due to vtable stubs not being shared on SPARC
 
 New in release 3.15.0 (2020-01-20):
 
