@@ -11,6 +11,8 @@ JDK-X  - https://bugs.openjdk.java.net/browse/JDK-X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 3.17.0 (2020-07-XX):
+
 New in release 3.16.0 (2020-05-02):
 
 * Security fixes
