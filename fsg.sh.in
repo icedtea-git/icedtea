@@ -23,5 +23,5 @@ if test "x@ENABLE_NON_NSS_CURVES@" = "xno"; then
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ec2_mont.c
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ecp_192.c
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ecp_224.c
-  patch -Np0 < @abs_top_srcdir@/patches/pr3782.patch
+  patch -Np0 < @abs_top_srcdir@/patches/pr3788.patch
 fi

@@ -14,6 +14,8 @@ New in release 9.0.0 (2019-XX-XX):
 
 * New features
   - PR3782: Support secp256k1 in the default set of curves
+* Bug fixes
+  - PR3788: Update elliptic curve patch to include jdk.disabled.namedCurves
 
 New in release 8.0.0 (2019-XX-XX):
 
