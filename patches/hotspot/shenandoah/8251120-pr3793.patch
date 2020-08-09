@@ -1,0 +1,96 @@
+diff --git openjdk.orig/hotspot/make/aix/makefiles/buildtree.make openjdk/hotspot/make/aix/makefiles/buildtree.make
+--- openjdk.orig/hotspot/make/aix/makefiles/buildtree.make
++++ openjdk/hotspot/make/aix/makefiles/buildtree.make
+@@ -111,7 +111,7 @@
+ endif
+ endif
+ 
+-ifeq ($(ENABLE_JFR),false)
++ifneq ($(ENABLE_JFR),true)
+ ALWAYS_EXCLUDE_DIRS += -o -name jfr
+ endif
+ 
+diff --git openjdk.orig/hotspot/make/aix/makefiles/vm.make openjdk/hotspot/make/aix/makefiles/vm.make
+--- openjdk.orig/hotspot/make/aix/makefiles/vm.make
++++ openjdk/hotspot/make/aix/makefiles/vm.make
+@@ -147,7 +147,7 @@
+ LIBJVM_DEBUGINFO   = lib$(JVM).debuginfo
+ LIBJVM_DIZ         = lib$(JVM).diz
+ 
+-ifeq ($(ENABLE_JFR),false)
++ifneq ($(ENABLE_JFR),true)
+ EXCLUDE_JFR_PATHS:= -o -name jfr -prune
+ endif
+ 
+diff --git openjdk.orig/hotspot/make/bsd/makefiles/buildtree.make openjdk/hotspot/make/bsd/makefiles/buildtree.make
+--- openjdk.orig/hotspot/make/bsd/makefiles/buildtree.make
++++ openjdk/hotspot/make/bsd/makefiles/buildtree.make
+@@ -113,7 +113,7 @@
+ endif
+ endif
+ 
+-ifeq ($(ENABLE_JFR),false)
++ifneq ($(ENABLE_JFR),true)
+ ALWAYS_EXCLUDE_DIRS += -o -name jfr
+ endif
+ 
+diff --git openjdk.orig/hotspot/make/bsd/makefiles/vm.make openjdk/hotspot/make/bsd/makefiles/vm.make
+--- openjdk.orig/hotspot/make/bsd/makefiles/vm.make
++++ openjdk/hotspot/make/bsd/makefiles/vm.make
+@@ -165,7 +165,7 @@
+   LIBJVM_DIZ         = lib$(JVM).diz
+ endif
+ 
+-ifeq ($(ENABLE_JFR),false)
++ifneq ($(ENABLE_JFR),true)
+ EXCLUDE_JFR_PATHS:= -o -name jfr -prune
+ endif
+ SPECIAL_PATHS:=adlc c1 gc_implementation opto shark libadt
+diff --git openjdk.orig/hotspot/make/linux/makefiles/buildtree.make openjdk/hotspot/make/linux/makefiles/buildtree.make
+--- openjdk.orig/hotspot/make/linux/makefiles/buildtree.make
++++ openjdk/hotspot/make/linux/makefiles/buildtree.make
+@@ -112,7 +112,7 @@
+ endif
+ endif
+ 
+-ifeq ($(ENABLE_JFR),false)
++ifneq ($(ENABLE_JFR),true)
+ ALWAYS_EXCLUDE_DIRS += -o -name jfr
+ endif
+ 
+diff --git openjdk.orig/hotspot/make/linux/makefiles/vm.make openjdk/hotspot/make/linux/makefiles/vm.make
+--- openjdk.orig/hotspot/make/linux/makefiles/vm.make
++++ openjdk/hotspot/make/linux/makefiles/vm.make
+@@ -150,7 +150,7 @@
+ LIBJVM_DEBUGINFO   = lib$(JVM).debuginfo
+ LIBJVM_DIZ         = lib$(JVM).diz
+ 
+-ifeq ($(ENABLE_JFR),false)
++ifneq ($(ENABLE_JFR),true)
+ EXCLUDE_JFR_PATHS:= -o -name jfr -prune
+ endif
+ SPECIAL_PATHS:=adlc c1 gc_implementation opto shark libadt
+diff --git openjdk.orig/hotspot/make/solaris/makefiles/buildtree.make openjdk/hotspot/make/solaris/makefiles/buildtree.make
+--- openjdk.orig/hotspot/make/solaris/makefiles/buildtree.make
++++ openjdk/hotspot/make/solaris/makefiles/buildtree.make
+@@ -103,7 +103,7 @@
+ endif
+ endif
+ 
+-ifeq ($(ENABLE_JFR),false)
++ifneq ($(ENABLE_JFR),true)
+ ALWAYS_EXCLUDE_DIRS += -o -name jfr
+ endif
+ 
+diff --git openjdk.orig/hotspot/make/solaris/makefiles/vm.make openjdk/hotspot/make/solaris/makefiles/vm.make
+--- openjdk.orig/hotspot/make/solaris/makefiles/vm.make
++++ openjdk/hotspot/make/solaris/makefiles/vm.make
+@@ -164,7 +164,7 @@
+ 
+ LIBJVM_DEBUGINFO   = lib$(JVM).debuginfo
+ LIBJVM_DIZ         = lib$(JVM).diz
+-ifeq ($(ENABLE_JFR),false)
++ifneq ($(ENABLE_JFR),true)
+ EXCLUDE_JFR_PATHS:= -o -name jfr -prune
+ endif
+ SPECIAL_PATHS:=adlc c1 dist gc_implementation opto shark libadt

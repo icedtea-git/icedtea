@@ -388,7 +388,8 @@ if WITH_SHENANDOAH_HSBUILD
 ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8158260-pr2991-rh1341258-aarch64.patch \
 	patches/hotspot/$(HSBUILD)/8222286-pr3727-s390-shenandoah.patch \
-	patches/hotspot/$(HSBUILD)/pr3519-return_value-02.patch
+	patches/hotspot/$(HSBUILD)/pr3519-return_value-02.patch \
+	patches/hotspot/$(HSBUILD)/8251120-pr3793.patch
 endif
 endif
 
