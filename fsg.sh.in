@@ -10,7 +10,7 @@ rm -rvf openjdk/jdk/src/share/classes/sun/management/snmp
 rm -rvf openjdk/jdk/src/share/classes/com/sun/jmx/snmp
 rm -rvf openjdk/jdk/test/com/sun/jmx/snmp
 
-if test "x@ENABLE_NON_NSS_CURVES@" = "xno"; then
+if test "x@CURVES@" != "xall"; then
   echo "Removing non-NSS ECC curves"
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ec2.h
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ec2_163.c
@@ -20,5 +20,11 @@ if test "x@ENABLE_NON_NSS_CURVES@" = "xno"; then
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ec2_mont.c
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ecp_192.c
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ecp_224.c
-  patch -Np0 < @abs_top_srcdir@/patches/pr3756.patch
+  if test "x@CURVES@" = "x3"; then
+      PATCH_FILE="@abs_top_srcdir@/patches/pr3667.patch"
+  else
+      PATCH_FILE="@abs_top_srcdir@/patches/pr3756.patch"
+  fi
+  echo "Applying ${PATCH_FILE}..."
+  patch -Np0 < ${PATCH_FILE}
 fi

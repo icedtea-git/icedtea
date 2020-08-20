@@ -1,3 +1,24 @@
+2020-08-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3796: Allow the number of curves supported to be specified
+	* INSTALL:
+	Rename --enable-non-nss-curves to --with-curves and
+	provide additional section documenting its use.
+	Use "Mercurial" in the description of --with-hg-revision,
+	rather than the command name, "hg".
+	* acinclude.m4:
+	(IT_WITH_CURVES): Renamed from IT_ENABLE_NON_NSS_CURVES.
+	Allow the curve set to be chosen from 3/nist, 4/nist+ or
+	all.
+	* configure.ac: Invoke IT_WITH_CURVES instead of
+	IT_ENABLE_NON_NSS_CURVES.
+	* fsg.sh.in:
+	Use CURVES instead of the obsolete ENABLE_NON_NSS_CURVES.
+	Apply either the 3 curve or 4 curve patch, depending on the
+	value of CURVES.
+	* patches/pr3667.patch: Resurrect the 3 curve version
+	of the patch from PR3756.
+
 2020-08-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump aarch32 to jdk8u262-b01-aarch32-20200429.

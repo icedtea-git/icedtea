@@ -199,7 +199,7 @@ to configure:
   checksum, while --without-jamvm-checksum doesn't check the tarball specified by
   --with-jamvm-src-zip at all. This option allows a locally modified version of the source
   tarball to be used instead of the standard versions.
-* --with-hg-revision: Specify a hg revision to use (as opposed to tip) with the --enable-hg option.
+* --with-hg-revision: Specify a Mercurial revision to use (as opposed to tip) with the --enable-hg option.
 * --with-tzdata-dir: Specify the location of Java timezone data, defaulting to /usr/share/javazi.
 * --with-tapset-dir: Specify the location of system SystemTap tapsets, defaulting to ${datarootdir}/systemtap/tapset.
 * --with-llvm-config: Specify the location of the llvm-config binary.
@@ -234,7 +234,7 @@ These are documented fully in the relevant section below.
 * --with-additional-vms=vm-list: Additional VMs to build using the system described
   below.
 * --with-hotspot-build: The HotSpot to use, as listed in hotspot.map.in.
-* --enable-non-nss-curves: Define curves beyond the three specified by NSS (NIST P-{256,384,521})
+* --with-curves: Define the number of curves to support for elliptic curve cryptography
 * --enable-improved-font-rendering: Use fontconfig for better font rendering
 * --enable-headless: Build OpenJDK without graphical UI support
 * --disable-cache: Don't use ccache to speed up recompilations (default is to use if available)
@@ -437,3 +437,38 @@ Please note that using this feature does not do as extensive testing
 of the VM as would enabling it in the default full bootstrap mode,
 which compiles IcedTea and then recompiles it using the just-built
 image.
+
+Elliptic Curve Cryptography Support
+===================================
+
+As some distributors may not wish to include the full set of elliptic
+curves supported by OpenJDK, we currently provide two reduced sets of
+curves, available via the --with-curves option:
+
+1. NIST
+
+This includes the three NIST curves, NIST P-{256,384,521}
+For this, specify --with-curves=nist or --with-curves=3.
+
+2. NIST+
+
+This includes the three curves from option one, along with secp256k1.
+For this, specify --with-curves=nist+ or --with-curves=4
+
+3. All curves
+Leave the OpenJDK sources as is and provide all curves.
+For this, specify --with-curves=all or simply --with-curves.
+
+The current default is option 2 (NIST+), as used in the Fedora and Red
+Hat Enterprise Linux OpenJDK packages.
+
+For compatibility with the old --enable-non-nss-curves option,
+--with-curves or --with-curves=yes will be interpreted like
+--enable-non-nss-curves as desiring all curves (option three).
+Similarly, --without-curves will be interpreted as
+--disable-non-nss-curves would, providing the default set.
+
+We currently don't support the more obvious interpretation of
+--without-curves in supporting no elliptic curve cryptography, as this
+would severely hampered real world usage of the resulting JDK.
+
