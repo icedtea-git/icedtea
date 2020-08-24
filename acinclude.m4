@@ -2089,9 +2089,9 @@ AC_DEFUN_ONCE([IT_DETERMINE_VERSION],
   AC_MSG_CHECKING([which branch and release of IcedTea is being built])
   JAVA_VER=1.8.0
   JAVA_VENDOR=openjdk
-  JDK_UPDATE_VERSION=252
-  BUILD_VERSION=b09
-  MILESTONE=fcs
+  JDK_UPDATE_VERSION=262
+  BUILD_VERSION=b01
+  MILESTONE=ea
   if test "x${MILESTONE}" = "xfcs"; then
     COMBINED_VERSION=${JDK_UPDATE_VERSION}-${BUILD_VERSION}
   else
@@ -2865,4 +2865,49 @@ AC_DEFUN_ONCE([IT_VENDOR_OPTS],
     esac
   fi
   AC_SUBST(VENDOR_VM_BUG_URL)
+])
+
+AC_DEFUN_ONCE([IT_ARCH_HAS_JFR],
+[
+  AC_REQUIRE([IT_WITH_HOTSPOT_BUILD])
+  AC_MSG_CHECKING([if the Java Flight Recorder is available in the ${HSBUILD} HotSpot build for ${host_cpu}])
+  supports_jfr=yes;
+  case "${host_cpu}" in
+    aarch64|arm64) if test "x${HSBUILD}" = "xaarch32"; then supports_jfr=no; fi ;;
+    i?86) supports_jfr=no ;;
+    sparc) ;;
+    x86_64) ;;
+    powerpc64) ;;
+    powerpc64le) ;;
+    arm*) if test "x${HSBUILD}" != "xaarch32"; then supports_jfr=no; fi ;;
+    *) supports_jfr=no;
+  esac
+  AC_MSG_RESULT([$supports_jfr])
+])
+
+AC_DEFUN_ONCE([IT_ENABLE_JFR],
+[
+  AC_REQUIRE([IT_ARCH_HAS_JFR])
+  AC_MSG_CHECKING([whether to build OpenJDK with the Java Flight Recorder])
+  AC_ARG_ENABLE([jfr],
+	      [AS_HELP_STRING(--enable-jfr,compile OpenJDK with the Java Flight Recorder [[default=no]])],
+  [
+    case "${enableval}" in
+      no)
+        ENABLE_JFR=no
+        ;;
+      *)
+        ENABLE_JFR=yes
+        ;;
+    esac
+  ],
+  [
+	ENABLE_JFR=no
+  ])
+  AC_MSG_RESULT(${ENABLE_JFR})
+  if test "x${ENABLE_JFR}" = "xyes" -a "x$supports_jfr" = "xno"; then
+    AC_MSG_ERROR([The Java Flight Recorder is not supported on this platform.])
+  fi
+  AM_CONDITIONAL(USE_JFR, test x"${ENABLE_JFR}" = "xyes")
+  AC_SUBST(ENABLE_JFR)
 ])

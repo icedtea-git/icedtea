@@ -1,4 +1,4 @@
-AC_INIT([icedtea], [3.17.0pre00], [distro-pkg-dev@openjdk.java.net])
+AC_INIT([icedtea], [3.17.0pre01], [distro-pkg-dev@openjdk.java.net])
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([1.9 tar-pax foreign])
@@ -138,6 +138,7 @@ IT_WITH_TZDATA_DIR
 IT_WITH_TAPSET_DIR
 IT_WITH_CURVES
 IT_ENABLE_HEADLESS
+IT_ENABLE_JFR
 IT_ENABLE_CCACHE
 IT_ENABLE_SPLIT_DEBUGINFO
 
