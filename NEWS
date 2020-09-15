@@ -12,9 +12,6 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 10.0.0 (2021-XX-XX):
 
-* Bug fixes
-  - PR3803: Update elliptic curve patch to handle JDK-8242151, JDK-8237219 & JDK-8177334
-
 New in release 9.0.0 (2019-XX-XX):
 
 * New features
