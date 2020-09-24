@@ -1,3 +1,27 @@
+2020-09-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to 2.6.23.
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-2.6.23.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(JDK_UPDATE_VERSION): Bump to 271.
+	(BUILD_VERSION): Set to b01.
+	* configure.ac: Bump to 2.6.23.
+	* hotspot.map.in: Update to icedtea-2.6.23.
+	* patches/boot/ecj-diamond.patch: Regenerated.
+
 2020-04-18  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Start 2.6.23 release cycle.
