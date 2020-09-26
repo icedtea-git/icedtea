@@ -12,7 +12,7 @@ JEPX - https://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.23 (2020-07-16):
+New in release 2.6.23 (2020-09-26):
 
 * Security fixes
   - JDK-8028431, CVE-2020-14579: NullPointerException in DerValue.equals(DerValue)
