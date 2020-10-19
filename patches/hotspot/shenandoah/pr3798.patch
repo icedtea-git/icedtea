@@ -1,0 +1,44 @@
+# HG changeset patch
+# User Andrew John Hughes <gnu_andrew@member.fsf.org>
+# Date 1598841656 -3600
+#      Mon Aug 31 03:40:56 2020 +0100
+# Node ID 9f2ceb42dc64f72ae83997982383c30a454acdb2
+# Parent  3511db5b989804f5df37eda1dcefc28e44e964a6
+PR3798: Fix format-overflow error on GCC 10, caused by passing NULL to a '%s' directive
+
+diff --git openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+--- openjdk.orig/hotspot/src/os/linux/vm/os_linux.cpp
++++ openjdk/hotspot/src/os/linux/vm/os_linux.cpp
+@@ -4947,8 +4947,9 @@
+ static os_sigaction_t os_sigaction = NULL;
+ 
+ void os::Linux::check_signal_handler(int sig) {
+-  char buf[O_BUFLEN];
++  char buf[O_BUFLEN], enbuf[O_BUFLEN];
+   address jvmHandler = NULL;
++  const char* exname = os::exception_name(sig, enbuf, O_BUFLEN);
+ 
+ 
+   struct sigaction act;
+@@ -4999,7 +5000,7 @@
+   }
+ 
+   if (thisHandler != jvmHandler) {
+-    tty->print("Warning: %s handler ", exception_name(sig, buf, O_BUFLEN));
++    tty->print("Warning: %s handler ", exname == NULL ? "(null)" : exname);
+     tty->print("expected:%s", get_signal_handler_name(jvmHandler, buf, O_BUFLEN));
+     tty->print_cr("  found:%s", get_signal_handler_name(thisHandler, buf, O_BUFLEN));
+     // No need to check this sig any longer
+@@ -5007,10 +5008,10 @@
+     // Running under non-interactive shell, SHUTDOWN2_SIGNAL will be reassigned SIG_IGN
+     if (sig == SHUTDOWN2_SIGNAL && !isatty(fileno(stdin))) {
+       tty->print_cr("Running in non-interactive shell, %s handler is replaced by shell",
+-                    exception_name(sig, buf, O_BUFLEN));
++                    exname == NULL ? "(null)" : exname);
+     }
+   } else if(os::Linux::get_our_sigflags(sig) != 0 && (int)act.sa_flags != os::Linux::get_our_sigflags(sig)) {
+-    tty->print("Warning: %s handler flags ", exception_name(sig, buf, O_BUFLEN));
++    tty->print("Warning: %s handler flags ", exname == NULL ? "(null)" : exname);
+     tty->print("expected:" PTR32_FORMAT, os::Linux::get_our_sigflags(sig));
+     tty->print_cr("  found:" PTR32_FORMAT, act.sa_flags);
+     // No need to check this sig any longer

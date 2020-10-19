@@ -1,3 +1,20 @@
+2020-10-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Add HotSpot backports for 3.17.0 to the alternate
+	Hotspot builds for Shenandoah & AArch32.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Add new patches.
+	* NEWS: Updated.
+	* patches/hotspot/aarch32/8152358-pr3800.patch,
+	* patches/hotspot/aarch32/pr3798.patch:
+	Link to Shenandoah versions.
+	* patches/hotspot/shenandoah/8152358-pr3800.patch:
+	Improve debugging output.
+	* patches/hotspot/shenandoah/8251120-pr3793.patch:
+	Add changeset header.
+	* patches/hotspot/shenandoah/pr3798.patch:
+	Fix format overflow warning from GCC 10.
+
 2020-08-23  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.17.0pre01.

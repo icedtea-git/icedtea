@@ -121,10 +121,16 @@ New in release 3.17.0 (2020-07-XX):
   - JDK-8238380, PR3798: java.base/unix/native/libjava/childproc.c "multiple definition" link errors with GCC10
   - JDK-8238386, PR3798: (sctp) jdk.sctp/unix/native/libsctp/SctpNet.c "multiple definition" link errors with GCC10
   - JDK-8238388, PR3798: libj2gss/NativeFunc.o "multiple definition" link errors with GCC10
+* Shenandoah
+  - JDK-8152358, PR3800: code and comment cleanups found during the hunt for 8077392
+  - PR3798: Fix format-overflow error on GCC 10, caused by passing NULL to a '%s' directive
 * AArch64 port
   - JDK-8183925, PR3797: [AArch64] Decouple crash protection from watcher thread
   - JDK-8199712, PR3797: [AArch64] Flight Recorder
   - JDK-8215961, PR3797: jdk/jfr/event/os/TestCPUInformation.java fails on AArch64
+* AArch32 port
+  - JDK-8152358, PR3800: code and comment cleanups found during the hunt for 8077392
+  - PR3798: Fix format-overflow error on GCC 10, caused by passing NULL to a '%s' directive
 
 New in release 3.16.0 (2020-05-02):
 
