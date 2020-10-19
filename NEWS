@@ -18,6 +18,10 @@ New in release 4.0.0 (2017-XX-XX):
 
 * New features
   - PR3681: Use the internal copy of the SunEC library rather than statically linking against NSS
+  - PR3751: Support secp256k1 in the default set of curves
+  - PR3807: Allow the number of curves supported to be specified
+* Bug fixes
+  - PR3802: Update elliptic curve patch to handle jdk.disabled.namedCurves (JDK-8233228) & curves in Apache Santuario 2.1.1 (JDK-8177334)
 
 New in release 3.0.0 (2016-04-08):
 

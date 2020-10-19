@@ -23,11 +23,7 @@ if test "x@CURVES@" != "xall"; then
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ec2_mont.c
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ecp_192.c
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ecp_224.c
-  if test "x@CURVES@" = "x3"; then
-      PATCH_FILE="@abs_top_srcdir@/patches/pr3681.patch"
-  else
-      PATCH_FILE="@abs_top_srcdir@/patches/pr3751.patch"
-  fi
+  PATCH_FILE="@abs_top_srcdir@/patches/pr3802-@CURVES@curve.patch"
   echo "Applying ${PATCH_FILE}..."
   patch -Np0 < ${PATCH_FILE}
 fi
