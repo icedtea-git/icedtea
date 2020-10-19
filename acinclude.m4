@@ -2218,18 +2218,36 @@ AC_DEFUN_ONCE([IT_ENABLE_NASHORN_CHECKSUM],
   AC_SUBST(NASHORN_CHECKSUM)
 ])
 
-AC_DEFUN_ONCE([IT_ENABLE_NON_NSS_CURVES],
+AC_DEFUN_ONCE([IT_WITH_CURVES],
 [
-  AC_MSG_CHECKING([whether to enable elliptic curves beyond those supported by NSS])
-  AC_ARG_ENABLE([non-nss-curves],
-	      [AS_HELP_STRING(--enable-non-nss-curves,register curves beyond the 3 NSS defines [[default=no]])],
+  CURVE_DEFAULT=nist+
+  AC_MSG_CHECKING([which set of elliptic curves to enable])
+  AC_ARG_WITH([curves],
+	      [AS_HELP_STRING(--with-curves,register the specified number of ECC curves [[default=nist+]])],
   [
-    ENABLE_NON_NSS_CURVES="${enableval}"
+    if test "x${withval}" = x || test "x${withval}" = xyes; then
+        CURVE_SET=all;
+    elif test "x${withval}" = xno; then
+    	CURVE_SET="${CURVE_DEFAULT}";
+    else
+	CURVE_SET="${withval}";
+    fi
   ],
   [
-    ENABLE_NON_NSS_CURVES="no"
+    CURVE_SET="${CURVE_DEFAULT}";
   ])
-  AC_MSG_RESULT(${ENABLE_NON_NSS_CURVES})
-  AM_CONDITIONAL(USE_NON_NSS_CURVES, test x"${ENABLE_NON_NSS_CURVES}" = "xyes")
-  AC_SUBST(ENABLE_NON_NSS_CURVES)
+  AC_MSG_RESULT(${CURVE_SET})
+  if test "x${CURVE_SET}" = "xnist" || test "x${CURVE_SET}" = "x3"; then
+     CURVES=3;
+  elif test "x${CURVE_SET}" = "xnist+" || test "x${CURVE_SET}" = "x4"; then
+     CURVES=4;
+  elif test "x${CURVE_SET}" = "xall"; then
+     CURVES=all
+  else
+     AC_MSG_ERROR([Invalid value specified for curve set: "${CURVE_SET}"])
+  fi
+  AM_CONDITIONAL(USE_NIST_CURVES, test x"${CURVES}" = "x3")
+  AM_CONDITIONAL(USE_NISTPLUS_CURVES, test x"${CURVES}" = "x4")
+  AM_CONDITIONAL(USE_ALL_CURVES, test x"${CURVES}" = "xall")
+  AC_SUBST(CURVES)
 ])
