@@ -1,3 +1,19 @@
+2020-10-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump shenandoah to aarch64-shenandoah-jdk8u272-b04.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u272-b04.
+	* patches/hotspot/aarch32/8076475-pr3696.patch:
+	Take a copy of the Shenandoah patch, so it can
+	be changed without breaking AArch32 builds.
+	* patches/hotspot/shenandoah/8076475-pr3696.patch:
+	Update to apply after the version of JDK-8076475
+	which was included upstream, but didn't include
+	changes to the code introduced by JDK-8059847,
+	which is not upstream, or the strdup_check_oom
+	calls, as JDK-6424123 is not in 8u yet.
+
 2020-10-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Add HotSpot backports for 3.17.0 to the alternate

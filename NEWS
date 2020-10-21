@@ -122,7 +122,190 @@ New in release 3.17.0 (2020-07-XX):
   - JDK-8238386, PR3798: (sctp) jdk.sctp/unix/native/libsctp/SctpNet.c "multiple definition" link errors with GCC10
   - JDK-8238388, PR3798: libj2gss/NativeFunc.o "multiple definition" link errors with GCC10
 * Shenandoah
+  - [backport] 8221435: Shenandoah should not mark through weak roots
+  - [backport] 8221629: Shenandoah: Cleanup class unloading logic
+  - [backport] 8222992: Shenandoah: Pre-evacuate all roots
+  - [backport] 8223215: Shenandoah: Support verifying subset of roots
+  - [backport] 8223774: Shenandoah: Refactor ShenandoahRootProcessor and family
+  - [backport] 8224210: Shenandoah: Refactor ShenandoahRootScanner to support scanning CSet codecache roots
+  - [backport] 8224508: Shenandoah: Need to update thread roots in final mark for piggyback ref update cycle
+  - [backport] 8224579: ResourceMark not declared in shenandoahRootProcessor.inline.hpp with --disable-precompiled-headers
+  - [backport] 8224679: Shenandoah: Make ShenandoahParallelCodeCacheIterator noncopyable
+  - [backport] 8224751: Shenandoah: Shenandoah Verifier should select proper roots according to current GC cycle
+  - [backport] 8225014: Separate ShenandoahRootScanner method for object_iterate
+  - [backport] 8225216: gc/logging/TestMetaSpaceLog.java doesn't work for Shenandoah
+  - [backport] 8225573: Shenandoah: Enhance ShenandoahVerifier to ensure roots to-space invariant
+  - [backport] 8225590: Shenandoah: Refactor ShenandoahClassLoaderDataRoots API
+  - [backport] 8226413: Shenandoah: Separate root scanner for SH::object_iterate()
+  - [backport] 8230853: Shenandoah: replace leftover assert(is_in(...)) with rich asserts
+  - [backport] 8231198: Shenandoah: heap walking should visit all roots most of the time
+  - [backport] 8231244: Shenandoah: all-roots heap walking misses some weak roots
+  - [backport] 8237632: Shenandoah: accept NULL fwdptr to cooperate with JVMTI and JFR
+  - [backport] 8239786: Shenandoah: print per-cycle statistics
+  - [backport] 8239926: Shenandoah: Shenandoah needs to mark nmethod's metadata
+  - [backport] 8240671: Shenandoah: refactor ShenandoahPhaseTimings
+  - [backport] 8240749: Shenandoah: refactor ShenandoahUtils
+  - [backport] 8240750: Shenandoah: remove leftover files and mentions of ShenandoahAllocTracker
+  - [backport] 8240868: Shenandoah: remove CM-with-UR piggybacking cycles
+  - [backport] 8240872: Shenandoah: Avoid updating new regions from start of evacuation
+  - [backport] 8240873: Shenandoah: Short-cut arraycopy barriers
+  - [backport] 8240915: Shenandoah: Remove unused fields in init mark tasks
+  - [backport] 8240948: Shenandoah: cleanup not-forwarded-objects paths after JDK-8240868
+  - [backport] 8241062: Shenandoah: rich asserts trigger "empty statement" inspection
+  - [backport] 8241081: Shenandoah: Do not modify update-watermark concurrently
+  - [backport] 8241093: Shenandoah: editorial changes in flag descriptions
+  - [backport] 8241139: Shenandoah: distribute mark-compact work exactly to minimize fragmentation
+  - [backport] 8241142: Shenandoah: should not use parallel reference processing with single GC thread
+  - [backport] 8241351: Shenandoah: fragmentation metrics overhaul
+  - [backport] 8241435: Shenandoah: avoid disabling pacing with "aggressive"
+  - [backport] 8241520: Shenandoah: simplify region sequence numbers handling
+  - [backport] 8241534: Shenandoah: region status should include update watermark
+  - [backport] 8241583: Shenandoah: turn heap lock asserts into macros
+  - [backport] 8241668: Shenandoah: make ShenandoahHeapRegion not derive from ContiguousSpace
+  - [backport] 8241673: Shenandoah: refactor anti-false-sharing padding
+  - [backport] 8241675: Shenandoah: assert(n->outcnt() > 0) at shenandoahSupport.cpp:2858 with java/util/Collections/FindSubList.java
+  - [backport] 8241692: Shenandoah: remove ShenandoahHeapRegion::_reserved
+  - [backport] 8241700: Shenandoah: Fold ShenandoahKeepAliveBarrier flag into ShenandoahSATBBarrier
+  - [backport] 8241740: Shenandoah: remove ShenandoahHeapRegion::_heap
+  - [backport] 8241743: Shenandoah: refactor and inline ShenandoahHeap::heap()
+  - [backport] 8241748: Shenandoah: inline MarkingContext TAMS methods
+  - [backport] 8241838: Shenandoah: no need to trash cset during final mark
+  - [backport] 8241841: Shenandoah: ditch one of allocation type counters in ShenandoahHeapRegion
+  - [backport] 8241842: Shenandoah: inline ShenandoahHeapRegion::region_number
+  - [backport] 8241844: Shenandoah: rename ShenandoahHeapRegion::region_number
+  - [backport] 8241845: Shenandoah: align ShenandoahHeapRegions to cache lines
+  - [backport] 8241926: Shenandoah: only print heap changes for operations that directly affect it
+  - [backport] 8241983: Shenandoah: simplify FreeSet logging
+  - [backport] 8241985: Shenandoah: simplify collectable garbage logging
+  - [backport] 8242040: Shenandoah: print allocation failure type
+  - [backport] 8242041: Shenandoah: adaptive heuristics should account evac reserve in free target
+  - [backport] 8242042: Shenandoah: tune down ShenandoahGarbageThreshold
+  - [backport] 8242054: Shenandoah: New incremental-update mode
+  - [backport] 8242075: Shenandoah: rename ShenandoahHeapRegionSize flag
+  - [backport] 8242082: Shenandoah: Purge Traversal mode
+  - [backport] 8242083: Shenandoah: split "Prepare Evacuation" tracking into cset/freeset counters
+  - [backport] 8242089: Shenandoah: per-worker stats should be summed up, not averaged
+  - [backport] 8242101: Shenandoah: coalesce and parallelise heap region walks during the pauses
+  - [backport] 8242114: Shenandoah: remove ShenandoahHeapRegion::reset_alloc_metadata_to_shared
+  - [backport] 8242130: Shenandoah: Simplify arraycopy-barrier dispatching
+  - [backport] 8242211: Shenandoah: remove ShenandoahHeuristics::RegionData::_seqnum_last_alloc
+  - [backport] 8242212: Shenandoah: initialize ShenandoahHeuristics::_region_data eagerly
+  - [backport] 8242213: Shenandoah: remove ShenandoahHeuristics::_bytes_in_cset
+  - [backport] 8242217: Shenandoah: Enable GC mode to be diagnostic/experimental and have a name
+  - [backport] 8242227: Shenandoah: transit regions to cset state when adding to collection set
+  - [backport] 8242228: Shenandoah: remove unused ShenandoahCollectionSet methods
+  - [backport] 8242229: Shenandoah: inline ShenandoahHeapRegion liveness-related methods
+  - [backport] 8242267: Shenandoah: regions space needs to be aligned by os::vm_allocation_granularity()
+  - [backport] 8242271: Shenandoah: add test to verify GC mode unlock
+  - [backport] 8242273: Shenandoah: accept either SATB or IU barriers, but not both
+  - [backport] 8242301: Shenandoah: Inline LRB runtime call
+  - [backport] 8242316: Shenandoah: Turn NULL-check into assert in SATB slow-path entry
+  - [backport] 8242353: Shenandoah: micro-optimize region liveness handling
+  - [backport] 8242365: Shenandoah: use uint16_t instead of jushort for liveness cache
+  - [backport] 8242641: Shenandoah: clear live data and update TAMS optimistically
+  - [backport] 8243238: Shenandoah: explicit GC request should wait for a complete GC cycle
+  - [backport] 8243301: Shenandoah: ditch ShenandoahAllowMixedAllocs
+  - [backport] 8243307: Shenandoah: remove ShCollectionSet::live_data
+  - [backport] 8243395: Shenandoah: demote guarantee in ShenandoahPhaseTimings::record_workers_end
+  - [backport] 8243463: Shenandoah: ditch total_pause counters
+  - [backport] 8243464: Shenandoah: print statistic counters in time order
+  - [backport] 8243465: Shenandoah: ditch unused pause_other, conc_other counters
+  - [backport] 8243487: Shenandoah: make _num_phases illegal phase type
+  - [backport] 8243494: Shenandoah: set counters once per cycle
+  - [backport] 8243573: Shenandoah: rename GCParPhases and related code
+  - [backport] 8243848: Shenandoah: Windows build fails after JDK-8239786
+  - [backport] 8244180: Shenandoah: carry Phase to ShWorkerTimingsTracker explicitly
+  - [backport] 8244200: Shenandoah: build breakages after JDK-8241743
+  - [backport] 8244226: Shenandoah: per-cycle statistics contain worker data from previous cycles
+  - [backport] 8244326: Shenandoah: global statistics should not accept bogus samples
+  - [backport] 8244551: Shenandoah: Fix racy update of update_watermark
+  - [backport] 8244730: Shenandoah: gc/shenandoah/options/TestHeuristicsUnlock.java should only verify the heuristics
+  - [backport] 8244732: Shenandoah: move heuristics code to gc/shenandoah/heuristics
+  - [backport] 8244737: Shenandoah: move mode code to gc/shenandoah/mode
+  - [backport] 8244739: Shenandoah: break superclass dependency on ShenandoahNormalMode
+  - [backport] 8244740: Shenandoah: rename ShenandoahNormalMode to ShenandoahSATBMode
+  - [backport] 8245461: Shenandoah: refine mode name()-s
+  - [backport] 8245463: Shenandoah: refine ShenandoahPhaseTimings constructor arguments
+  - [backport] 8245726: Shenandoah: lift/cleanup ShenandoahHeuristics names and properties
+  - [backport] 8245754: Shenandoah: ditch ShenandoahAlwaysPreTouch
+  - [backport] 8245757: Shenandoah: AlwaysPreTouch should not disable heap resizing or uncommits
+  - [backport] 8245812: Shenandoah: compute root phase parallelism
+  - [backport] 8245814: Shenandoah: reconsider format specifiers for stats
+  - [backport] 8245825: Shenandoah: Remove diagnostic flag ShenandoahConcurrentScanCodeRoots
+  - [backport] 8246162: Shenandoah: full GC does not mark code roots when class unloading is off
+  - [backport] 8247310: Shenandoah: pacer should not affect interrupt status
+  - [backport] 8247358: Shenandoah: reconsider free budget slice for marking
+  - [backport] 8247474: Shenandoah: Windows build warning after JDK-8247310
+  - [backport] 8247560: Shenandoah: heap iteration holds root locks all the time
+  - Fix slowdebug build after JDK-8230853 backport
+  - JDK-8006205: [TESTBUG] NEED_TEST: please JTREGIFY test/compiler/7177917/Test7177917.java
+  - JDK-8023697: failed class resolution reports different class name in detail message for the first and subsequent times
+  - JDK-8035493: JVMTI PopFrame capability must instruct compilers not to prune locals
+  - JDK-8046274: Removing dependency on jakarta-regexp
+  - JDK-8048933: -XX:+TraceExceptions output should include the message
+  - JDK-8061616: HotspotDiagnosticMXBean.getVMOption() throws IllegalArgumentException for flags of type double
+  - JDK-8076475: Misuses of strncpy/strncat
+  - JDK-8146612: C2: Precedence edges specification violated
+  - JDK-8148754: C2 loop unrolling fails due to unexpected graph shape
+  - JDK-8148854: Class names "SomeClass" and "LSomeClass;" treated by JVM as an equivalent
+  - JDK-8150986: serviceability/sa/jmap-hprof/JMapHProfLargeHeapTest.java failing because expects HPROF JAVA PROFILE 1.0.1 file format
   - JDK-8152358, PR3800: code and comment cleanups found during the hunt for 8077392
+  - JDK-8153583: Make OutputAnalyzer.reportDiagnosticSummary public
+  - JDK-8161072: AArch64: jtreg compiler/uncommontrap/TestDeoptOOM failure
+  - JDK-8167300: Scheduling failures during gcm should be fatal
+  - JDK-8171537: aarch64: compiler/c1/Test6849574.java generates guarantee failure in C1
+  - JDK-8173300: [TESTBUG]compiler/tiered/NonTieredLevelsTest.java fails with compiler.whitebox.SimpleTestCaseHelper(int) must be compiled
+  - JDK-8177334: Update xmldsig implementation to Apache Santuario 2.1.1
+  - JDK-8196969: JTreg Failure: serviceability/sa/ClhsdbJstack.java causes NPE
+  - JDK-8203481: Incorrect constraint for unextended_sp in frame:safe_for_sender
+  - JDK-8203699: java/lang/invoke/SpecialInterfaceCall fails with SIGILL on aarch64
+  - JDK-8209413: AArch64: NPE in clhsdb jstack command
+  - JDK-8211714: Need to update vm_version.cpp to recognise VS2017 minor versions
+  - JDK-8214862: assert(proj != __null) at compile.cpp:3251
+  - JDK-8216283: Allow shorter method sampling interval than 10 ms
+  - JDK-8216989: CardTableBarrierSetAssembler::gen_write_ref_array_post_barrier() does not check for zero length on AARCH64
+  - JDK-8217368: AArch64: C2 recursive stack locking optimisation not triggered
+  - JDK-8217647: JFR: recordings on 32-bit systems unreadable
+  - JDK-8219566: JFR did not collect call stacks when MaxJavaStackTraceDepth is set to zero
+  - JDK-8220293: Deadlock in JFR string pool
+  - JDK-8221658: aarch64: add necessary predicate for ubfx patterns
+  - JDK-8230303: JDB hangs when running monitor command
+  - JDK-8230597: Update GIFlib library to the 5.2.1
+  - JDK-8230711: ConnectionGraph::unique_java_object(Node* N) return NULL if n is not in the CG
+  - JDK-8231779: crash HeapWord*ParallelScavengeHeap::failed_mem_allocate
+  - JDK-8233197: Invert JvmtiExport::post_vm_initialized() and Jfr:on_vm_start() start-up order for correct option parsing
+  - JDK-8234617: C1: Incorrect result of field load due to missing narrowing conversion
+  - JDK-8235243: handle VS2017 15.9 and VS2019 in abstract_vm_version
+  - JDK-8235325: build failure on Linux after 8235243
+  - JDK-8237512: AArch64: aarch64TestHook leaks a BufferBlob
+  - JDK-8237951: CTW: C2 compilation fails with "malformed control flow"
+  - JDK-8239852: java/util/concurrent tests fail with -XX:+VerifyGraphEdges: assert(!VerifyGraphEdges) failed: verification should have failed
+  - JDK-8240295: hs_err elapsed time in seconds is not accurate enough
+  - JDK-8240576: JVM crashes after transformation in C2 IdealLoopTree::merge_many_backedges
+  - JDK-8243489: Thread CPU Load event may contain wrong data for CPU time under certain conditions
+  - JDK-8244407: JVM crashes after transformation in C2 IdealLoopTree::split_fall_in
+  - JDK-8244548: JDK 8u: sun.misc.Version.jdkUpdateVersion() returns wrong result
+  - JDK-8244777: ClassLoaderStats VM Op uses constant hash value
+  - JDK-8245167: Top package in method profiling shows null in JMC
+  - JDK-8246310: Clean commented-out code about ModuleEntry andPackageEntry in JFR
+  - JDK-8246482: Build failures with +JFR -PCH
+  - JDK-8246703: [TESTBUG] Add test for JDK-8233197
+  - JDK-8248219: aarch64: missing memory barrier in fast_storefield and fast_accessfield
+  - JDK-8248643: Remove extra leading space in JDK-8240295 8u backport
+  - JDK-8248851: CMS: Missing memory fences between free chunk check and klass read
+  - JDK-8250875: Incorrect parameter type for update_number in JDK_Version::jdk_update
+  - Shenandoah: add JFR roots to root processor after JFR integration
+  - Shenandoah: add root statistics for string dedup table/queues
+  - Shenandoah: fix build failures after JDK-8244737 backport
+  - Shenandoah: Fix build failure with +JFR -PCH
+  - Shenandoah: fix formats in ShenandoahStringSymbolTableUnlinkTask
+  - Shenandoah: fix runtime linking failure due to non-compiled shenandoahBarrierSetC1
+  - Shenandoah: JNI weak roots are always cleared before Full GC mark
+  - Shenandoah: missing SystemDictionary roots in ShenandoahHeapIterationRootScanner
+  - Shenandoah: move barrier sets to their proper locations
+  - Shenandoah: move parallelCleaning.* to shenandoah/
+  - Shenandoah: properly deallocates class loader metadata
+  - Shenandoah: specialize String Table scans for better pause performance
   - PR3798: Fix format-overflow error on GCC 10, caused by passing NULL to a '%s' directive
 * AArch64 port
   - JDK-8183925, PR3797: [AArch64] Decouple crash protection from watcher thread
