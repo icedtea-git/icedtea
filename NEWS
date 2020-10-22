@@ -312,7 +312,51 @@ New in release 3.17.0 (2020-07-XX):
   - JDK-8199712, PR3797: [AArch64] Flight Recorder
   - JDK-8215961, PR3797: jdk/jfr/event/os/TestCPUInformation.java fails on AArch64
 * AArch32 port
+  - JDK-8006205: [TESTBUG] NEED_TEST: please JTREGIFY test/compiler/7177917/Test7177917.java
+  - JDK-8023697: failed class resolution reports different class name in detail message for the first and subsequent times
+  - JDK-8035493: JVMTI PopFrame capability must instruct compilers not to prune locals
+  - JDK-8046274: Removing dependency on jakarta-regexp
+  - JDK-8048933: -XX:+TraceExceptions output should include the message
+  - JDK-8061616: HotspotDiagnosticMXBean.getVMOption() throws IllegalArgumentException for flags of type double
+  - JDK-8076475: Misuses of strncpy/strncat
+  - JDK-8146612: C2: Precedence edges specification violated
+  - JDK-8148754: C2 loop unrolling fails due to unexpected graph shape
+  - JDK-8148854: Class names "SomeClass" and "LSomeClass;" treated by JVM as an equivalent
+  - JDK-8150986: serviceability/sa/jmap-hprof/JMapHProfLargeHeapTest.java failing because expects HPROF JAVA PROFILE 1.0.1 file format
   - JDK-8152358, PR3800: code and comment cleanups found during the hunt for 8077392
+  - JDK-8153583: Make OutputAnalyzer.reportDiagnosticSummary public
+  - JDK-8167300: Scheduling failures during gcm should be fatal
+  - JDK-8173300: [TESTBUG]compiler/tiered/NonTieredLevelsTest.java fails with compiler.whitebox.SimpleTestCaseHelper(int) must be compiled
+  - JDK-8177334: Update xmldsig implementation to Apache Santuario 2.1.1
+  - JDK-8196969: JTreg Failure: serviceability/sa/ClhsdbJstack.java causes NPE
+  - JDK-8211714: Need to update vm_version.cpp to recognise VS2017 minor versions
+  - JDK-8214862: assert(proj != __null) at compile.cpp:3251
+  - JDK-8216283: Allow shorter method sampling interval than 10 ms
+  - JDK-8217647: JFR: recordings on 32-bit systems unreadable
+  - JDK-8219566: JFR did not collect call stacks when MaxJavaStackTraceDepth is set to zero
+  - JDK-8220293: Deadlock in JFR string pool
+  - JDK-8230303: JDB hangs when running monitor command
+  - JDK-8230597: Update GIFlib library to the 5.2.1
+  - JDK-8230711: ConnectionGraph::unique_java_object(Node* N) return NULL if n is not in the CG
+  - JDK-8231779: crash HeapWord*ParallelScavengeHeap::failed_mem_allocate
+  - JDK-8233197: Invert JvmtiExport::post_vm_initialized() and Jfr:on_vm_start() start-up order for correct option parsing
+  - JDK-8234617: C1: Incorrect result of field load due to missing narrowing conversion
+  - JDK-8235243: handle VS2017 15.9 and VS2019 in abstract_vm_version
+  - JDK-8235325: build failure on Linux after 8235243
+  - JDK-8237951: CTW: C2 compilation fails with "malformed control flow"
+  - JDK-8239852: java/util/concurrent tests fail with -XX:+VerifyGraphEdges: assert(!VerifyGraphEdges) failed: verification should have failed
+  - JDK-8240295: hs_err elapsed time in seconds is not accurate enough
+  - JDK-8240576: JVM crashes after transformation in C2 IdealLoopTree::merge_many_backedges
+  - JDK-8243489: Thread CPU Load event may contain wrong data for CPU time under certain conditions
+  - JDK-8244407: JVM crashes after transformation in C2 IdealLoopTree::split_fall_in
+  - JDK-8244548: JDK 8u: sun.misc.Version.jdkUpdateVersion() returns wrong result
+  - JDK-8244777: ClassLoaderStats VM Op uses constant hash value
+  - JDK-8245167: Top package in method profiling shows null in JMC
+  - JDK-8246310: Clean commented-out code about ModuleEntry andPackageEntry in JFR
+  - JDK-8246703: [TESTBUG] Add test for JDK-8233197
+  - JDK-8248643: Remove extra leading space in JDK-8240295 8u backport
+  - JDK-8248851: CMS: Missing memory fences between free chunk check and klass read
+  - JDK-8250875: Incorrect parameter type for update_number in JDK_Version::jdk_update
   - PR3798: Fix format-overflow error on GCC 10, caused by passing NULL to a '%s' directive
 
 New in release 3.16.0 (2020-05-02):
