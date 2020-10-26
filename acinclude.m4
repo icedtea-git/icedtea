@@ -2089,8 +2089,8 @@ AC_DEFUN_ONCE([IT_DETERMINE_VERSION],
   AC_MSG_CHECKING([which branch and release of IcedTea is being built])
   JAVA_VER=1.8.0
   JAVA_VENDOR=openjdk
-  JDK_UPDATE_VERSION=262
-  BUILD_VERSION=b01
+  JDK_UPDATE_VERSION=272
+  BUILD_VERSION=b04
   MILESTONE=ea
   if test "x${MILESTONE}" = "xfcs"; then
     COMBINED_VERSION=${JDK_UPDATE_VERSION}-${BUILD_VERSION}
@@ -2890,7 +2890,7 @@ AC_DEFUN_ONCE([IT_ENABLE_JFR],
   AC_REQUIRE([IT_ARCH_HAS_JFR])
   AC_MSG_CHECKING([whether to build OpenJDK with the Java Flight Recorder])
   AC_ARG_ENABLE([jfr],
-	      [AS_HELP_STRING(--enable-jfr,compile OpenJDK with the Java Flight Recorder [[default=no]])],
+	      [AS_HELP_STRING(--enable-jfr,compile OpenJDK with the Java Flight Recorder [[default=yes]])],
   [
     case "${enableval}" in
       no)
@@ -2902,7 +2902,7 @@ AC_DEFUN_ONCE([IT_ENABLE_JFR],
     esac
   ],
   [
-	ENABLE_JFR=no
+	ENABLE_JFR=yes
   ])
   AC_MSG_RESULT(${ENABLE_JFR})
   if test "x${ENABLE_JFR}" = "xyes" -a "x$supports_jfr" = "xno"; then
