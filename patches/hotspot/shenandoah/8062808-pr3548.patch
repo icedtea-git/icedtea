@@ -7,10 +7,10 @@
 8062808, PR3548: Turn on the -Wreturn-type warning
 Reviewed-by: mgerdin, tschatzl, coleenp, jrose, kbarrett
 
-diff --git openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
---- openjdk.orig/hotspot/make/linux/makefiles/gcc.make
-+++ openjdk/hotspot/make/linux/makefiles/gcc.make
-@@ -210,7 +210,7 @@
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2020-10-26 03:45:26.495908686 +0000
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2020-10-26 03:51:46.461937909 +0000
+@@ -214,7 +214,7 @@
    WARNINGS_ARE_ERRORS += -Wno-return-type -Wno-empty-body -Qunused-arguments -Wno-uninitialized
  endif
  
@@ -19,10 +19,10 @@ diff --git openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/ma
  
  ifeq ($(USE_CLANG),)
    # Since GCC 4.3, -Wconversion has changed its meanings to warn these implicit
-diff --git openjdk.orig/hotspot/src/cpu/x86/vm/x86_32.ad openjdk/hotspot/src/cpu/x86/vm/x86_32.ad
---- openjdk.orig/hotspot/src/cpu/x86/vm/x86_32.ad
-+++ openjdk/hotspot/src/cpu/x86/vm/x86_32.ad
-@@ -1250,6 +1250,7 @@
+diff -Nru openjdk.orig/hotspot/src/cpu/x86/vm/x86_32.ad openjdk/hotspot/src/cpu/x86/vm/x86_32.ad
+--- openjdk.orig/hotspot/src/cpu/x86/vm/x86_32.ad	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/cpu/x86/vm/x86_32.ad	2020-10-26 03:51:46.463937930 +0000
+@@ -1255,6 +1255,7 @@
  
  
    Unimplemented();
@@ -30,9 +30,9 @@ diff --git openjdk.orig/hotspot/src/cpu/x86/vm/x86_32.ad openjdk/hotspot/src/cpu
  }
  
  #ifndef PRODUCT
-diff --git openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp
---- openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp
-+++ openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp
+diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp
+--- openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp	2020-10-26 03:45:26.348907127 +0000
++++ openjdk/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp	2020-10-26 03:51:46.464937941 +0000
 @@ -541,6 +541,7 @@
    err.report_and_die();
  
@@ -41,9 +41,9 @@ diff --git openjdk.orig/hotspot/src/os_cpu/linux_x86/vm/os_linux_x86.cpp openjdk
  }
  
  void os::Linux::init_thread_fpu_state(void) {
-diff --git openjdk.orig/hotspot/src/share/vm/classfile/defaultMethods.cpp openjdk/hotspot/src/share/vm/classfile/defaultMethods.cpp
---- openjdk.orig/hotspot/src/share/vm/classfile/defaultMethods.cpp
-+++ openjdk/hotspot/src/share/vm/classfile/defaultMethods.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/classfile/defaultMethods.cpp openjdk/hotspot/src/share/vm/classfile/defaultMethods.cpp
+--- openjdk.orig/hotspot/src/share/vm/classfile/defaultMethods.cpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/classfile/defaultMethods.cpp	2020-10-26 03:51:46.465937952 +0000
 @@ -506,7 +506,7 @@
    ss.write((const char*)name->bytes(), name->utf8_length());
    ss.write((const char*)signature->bytes(), signature->utf8_length());
@@ -62,9 +62,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/classfile/defaultMethods.cpp openjd
  }
  
  
-diff --git openjdk.orig/hotspot/src/share/vm/classfile/symbolTable.cpp openjdk/hotspot/src/share/vm/classfile/symbolTable.cpp
---- openjdk.orig/hotspot/src/share/vm/classfile/symbolTable.cpp
-+++ openjdk/hotspot/src/share/vm/classfile/symbolTable.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/classfile/symbolTable.cpp openjdk/hotspot/src/share/vm/classfile/symbolTable.cpp
+--- openjdk.orig/hotspot/src/share/vm/classfile/symbolTable.cpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/classfile/symbolTable.cpp	2020-10-26 03:51:46.465937952 +0000
 @@ -249,7 +249,7 @@
    MutexLocker ml(SymbolTable_lock, THREAD);
  
@@ -83,10 +83,10 @@ diff --git openjdk.orig/hotspot/src/share/vm/classfile/symbolTable.cpp openjdk/h
  }
  
  Symbol* SymbolTable::lookup_only(const char* name, int len,
-diff --git openjdk.orig/hotspot/src/share/vm/classfile/systemDictionary.cpp openjdk/hotspot/src/share/vm/classfile/systemDictionary.cpp
---- openjdk.orig/hotspot/src/share/vm/classfile/systemDictionary.cpp
-+++ openjdk/hotspot/src/share/vm/classfile/systemDictionary.cpp
-@@ -229,15 +229,15 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/classfile/systemDictionary.cpp openjdk/hotspot/src/share/vm/classfile/systemDictionary.cpp
+--- openjdk.orig/hotspot/src/share/vm/classfile/systemDictionary.cpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/classfile/systemDictionary.cpp	2020-10-26 03:51:46.467937973 +0000
+@@ -236,15 +236,15 @@
                   class_name->as_C_string(),
                   class_loader.is_null() ? "null" : class_loader->klass()->name()->as_C_string()));
    if (FieldType::is_array(class_name)) {
@@ -105,9 +105,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/classfile/systemDictionary.cpp open
    }
  }
  
-diff --git openjdk.orig/hotspot/src/share/vm/memory/heapInspection.hpp openjdk/hotspot/src/share/vm/memory/heapInspection.hpp
---- openjdk.orig/hotspot/src/share/vm/memory/heapInspection.hpp
-+++ openjdk/hotspot/src/share/vm/memory/heapInspection.hpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/memory/heapInspection.hpp openjdk/hotspot/src/share/vm/memory/heapInspection.hpp
+--- openjdk.orig/hotspot/src/share/vm/memory/heapInspection.hpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/memory/heapInspection.hpp	2020-10-26 03:51:46.467937973 +0000
 @@ -367,7 +367,7 @@
        _csv_format(csv_format), _print_help(print_help),
        _print_class_stats(print_class_stats), _columns(columns) {}
@@ -117,9 +117,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/memory/heapInspection.hpp openjdk/h
    static void find_instances_at_safepoint(Klass* k, GrowableArray<oop>* result) NOT_SERVICES_RETURN;
   private:
    void iterate_over_heap(KlassInfoTable* cit, BoolObjectClosure* filter = NULL);
-diff --git openjdk.orig/hotspot/src/share/vm/memory/metaspaceShared.hpp openjdk/hotspot/src/share/vm/memory/metaspaceShared.hpp
---- openjdk.orig/hotspot/src/share/vm/memory/metaspaceShared.hpp
-+++ openjdk/hotspot/src/share/vm/memory/metaspaceShared.hpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/memory/metaspaceShared.hpp openjdk/hotspot/src/share/vm/memory/metaspaceShared.hpp
+--- openjdk.orig/hotspot/src/share/vm/memory/metaspaceShared.hpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/memory/metaspaceShared.hpp	2020-10-26 03:51:46.468937983 +0000
 @@ -93,7 +93,7 @@
    static void preload_and_dump(TRAPS) NOT_CDS_RETURN;
    static int preload_and_dump(const char * class_list_path,
@@ -129,10 +129,10 @@ diff --git openjdk.orig/hotspot/src/share/vm/memory/metaspaceShared.hpp openjdk/
  
    static ReservedSpace* shared_rs() {
      CDS_ONLY(return _shared_rs);
-diff --git openjdk.orig/hotspot/src/share/vm/oops/constantPool.hpp openjdk/hotspot/src/share/vm/oops/constantPool.hpp
---- openjdk.orig/hotspot/src/share/vm/oops/constantPool.hpp
-+++ openjdk/hotspot/src/share/vm/oops/constantPool.hpp
-@@ -352,7 +352,7 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/oops/constantPool.hpp openjdk/hotspot/src/share/vm/oops/constantPool.hpp
+--- openjdk.orig/hotspot/src/share/vm/oops/constantPool.hpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/oops/constantPool.hpp	2020-10-26 03:52:24.750343919 +0000
+@@ -353,7 +353,7 @@
  
    Klass* klass_at(int which, TRAPS) {
      constantPoolHandle h_this(THREAD, this);
@@ -140,11 +140,11 @@ diff --git openjdk.orig/hotspot/src/share/vm/oops/constantPool.hpp openjdk/hotsp
 +    return klass_at_impl(h_this, which, THREAD);
    }
  
-   Symbol* klass_name_at(int which);  // Returns the name, w/o resolving.
-diff --git openjdk.orig/hotspot/src/share/vm/prims/jvm.cpp openjdk/hotspot/src/share/vm/prims/jvm.cpp
---- openjdk.orig/hotspot/src/share/vm/prims/jvm.cpp
-+++ openjdk/hotspot/src/share/vm/prims/jvm.cpp
-@@ -4244,7 +4244,7 @@
+   Symbol* klass_name_at(int which) const;  // Returns the name, w/o resolving.
+diff -Nru openjdk.orig/hotspot/src/share/vm/prims/jvm.cpp openjdk/hotspot/src/share/vm/prims/jvm.cpp
+--- openjdk.orig/hotspot/src/share/vm/prims/jvm.cpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/prims/jvm.cpp	2020-10-26 03:51:46.470938005 +0000
+@@ -4375,7 +4375,7 @@
      JVM_DTraceProvider* providers))
    JVMWrapper("JVM_DTraceActivate");
    return DTraceJSDT::activate(
@@ -153,9 +153,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/prims/jvm.cpp openjdk/hotspot/src/s
  JVM_END
  
  JVM_ENTRY(jboolean,JVM_DTraceIsProbeEnabled(JNIEnv* env, jmethodID method))
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/reflection.cpp openjdk/hotspot/src/share/vm/runtime/reflection.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/reflection.cpp
-+++ openjdk/hotspot/src/share/vm/runtime/reflection.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/reflection.cpp openjdk/hotspot/src/share/vm/runtime/reflection.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/reflection.cpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/reflection.cpp	2020-10-26 03:51:46.471938015 +0000
 @@ -1093,7 +1093,7 @@
    } else {
      if (rtype == T_BOOLEAN || rtype == T_BYTE || rtype == T_CHAR || rtype == T_SHORT)
@@ -165,10 +165,10 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/reflection.cpp openjdk/hots
    }
  }
  
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/sharedRuntime.cpp openjdk/hotspot/src/share/vm/runtime/sharedRuntime.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/sharedRuntime.cpp
-+++ openjdk/hotspot/src/share/vm/runtime/sharedRuntime.cpp
-@@ -1046,7 +1046,7 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/sharedRuntime.cpp openjdk/hotspot/src/share/vm/runtime/sharedRuntime.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/sharedRuntime.cpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/sharedRuntime.cpp	2020-10-26 03:51:46.472938026 +0000
+@@ -1045,7 +1045,7 @@
    // last java frame on stack (which includes native call frames)
    vframeStream vfst(thread, true);  // Do not skip and javaCalls
  
@@ -177,9 +177,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/sharedRuntime.cpp openjdk/h
  }
  
  
-diff --git openjdk.orig/hotspot/src/share/vm/services/memTracker.hpp openjdk/hotspot/src/share/vm/services/memTracker.hpp
---- openjdk.orig/hotspot/src/share/vm/services/memTracker.hpp
-+++ openjdk/hotspot/src/share/vm/services/memTracker.hpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/services/memTracker.hpp openjdk/hotspot/src/share/vm/services/memTracker.hpp
+--- openjdk.orig/hotspot/src/share/vm/services/memTracker.hpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/services/memTracker.hpp	2020-10-26 03:51:46.473938037 +0000
 @@ -64,7 +64,7 @@
      const NativeCallStack& stack, MEMFLAGS flag = mtNone) { }
    static inline void record_virtual_memory_commit(void* addr, size_t size, const NativeCallStack& stack) { }

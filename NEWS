@@ -347,6 +347,7 @@ New in release 3.17.0 (2020-07-XX):
   - [backport] 8240873: Shenandoah: Short-cut arraycopy barriers
   - [backport] 8240915: Shenandoah: Remove unused fields in init mark tasks
   - [backport] 8240948: Shenandoah: cleanup not-forwarded-objects paths after JDK-8240868
+  - [backport] 8241007: Shenandoah: remove ShenandoahCriticalControlThreadPriority support
   - [backport] 8241062: Shenandoah: rich asserts trigger "empty statement" inspection
   - [backport] 8241081: Shenandoah: Do not modify update-watermark concurrently
   - [backport] 8241093: Shenandoah: editorial changes in flag descriptions
@@ -356,6 +357,7 @@ New in release 3.17.0 (2020-07-XX):
   - [backport] 8241435: Shenandoah: avoid disabling pacing with "aggressive"
   - [backport] 8241520: Shenandoah: simplify region sequence numbers handling
   - [backport] 8241534: Shenandoah: region status should include update watermark
+  - [backport] 8241574: Shenandoah: remove ShenandoahAssertToSpaceClosure
   - [backport] 8241583: Shenandoah: turn heap lock asserts into macros
   - [backport] 8241668: Shenandoah: make ShenandoahHeapRegion not derive from ContiguousSpace
   - [backport] 8241673: Shenandoah: refactor anti-false-sharing padding
@@ -398,6 +400,7 @@ New in release 3.17.0 (2020-07-XX):
   - [backport] 8242316: Shenandoah: Turn NULL-check into assert in SATB slow-path entry
   - [backport] 8242353: Shenandoah: micro-optimize region liveness handling
   - [backport] 8242365: Shenandoah: use uint16_t instead of jushort for liveness cache
+  - [backport] 8242375: Shenandoah: Remove ShenandoahHeuristic::record_gc_start/end methods
   - [backport] 8242641: Shenandoah: clear live data and update TAMS optimistically
   - [backport] 8243238: Shenandoah: explicit GC request should wait for a complete GC cycle
   - [backport] 8243301: Shenandoah: ditch ShenandoahAllowMixedAllocs
@@ -414,7 +417,9 @@ New in release 3.17.0 (2020-07-XX):
   - [backport] 8244200: Shenandoah: build breakages after JDK-8241743
   - [backport] 8244226: Shenandoah: per-cycle statistics contain worker data from previous cycles
   - [backport] 8244326: Shenandoah: global statistics should not accept bogus samples
+  - [backport] 8244509: Shenandoah: refactor ShenandoahBarrierC2Support::test_* methods
   - [backport] 8244551: Shenandoah: Fix racy update of update_watermark
+  - [backport] 8244667: Shenandoah: SBC2Support::test_gc_state takes loop for wrong control
   - [backport] 8244730: Shenandoah: gc/shenandoah/options/TestHeuristicsUnlock.java should only verify the heuristics
   - [backport] 8244732: Shenandoah: move heuristics code to gc/shenandoah/heuristics
   - [backport] 8244737: Shenandoah: move mode code to gc/shenandoah/mode
@@ -422,41 +427,88 @@ New in release 3.17.0 (2020-07-XX):
   - [backport] 8244740: Shenandoah: rename ShenandoahNormalMode to ShenandoahSATBMode
   - [backport] 8245461: Shenandoah: refine mode name()-s
   - [backport] 8245463: Shenandoah: refine ShenandoahPhaseTimings constructor arguments
+  - [backport] 8245464: Shenandoah: allocate collection set bitmap at lower addresses
+  - [backport] 8245465: Shenandoah: test_in_cset can use more efficient encoding
   - [backport] 8245726: Shenandoah: lift/cleanup ShenandoahHeuristics names and properties
   - [backport] 8245754: Shenandoah: ditch ShenandoahAlwaysPreTouch
   - [backport] 8245757: Shenandoah: AlwaysPreTouch should not disable heap resizing or uncommits
+  - [backport] 8245773: Shenandoah: Windows assertion failure after JDK-8245464
   - [backport] 8245812: Shenandoah: compute root phase parallelism
   - [backport] 8245814: Shenandoah: reconsider format specifiers for stats
   - [backport] 8245825: Shenandoah: Remove diagnostic flag ShenandoahConcurrentScanCodeRoots
   - [backport] 8246162: Shenandoah: full GC does not mark code roots when class unloading is off
   - [backport] 8247310: Shenandoah: pacer should not affect interrupt status
   - [backport] 8247358: Shenandoah: reconsider free budget slice for marking
+  - [backport] 8247367: Shenandoah: pacer should wait on lock instead of exponential backoff
   - [backport] 8247474: Shenandoah: Windows build warning after JDK-8247310
   - [backport] 8247560: Shenandoah: heap iteration holds root locks all the time
+  - [backport] 8247593: Shenandoah: should not block pacing reporters
+  - [backport] 8247751: Shenandoah: options tests should run with smaller heaps
+  - [backport] 8247754: Shenandoah: mxbeans tests can be shorter
+  - [backport] 8247757: Shenandoah: split heavy tests by heuristics to improve parallelism
+  - [backport] 8247860: Shenandoah: add update watermark line in rich assert failure message
+  - [backport] 8248041: Shenandoah: pre-Full GC root updates may miss some roots
+  - [backport] 8248652: Shenandoah: SATB buffer handling may assume no forwarded objects
+  - [backport] 8249560: Shenandoah: Fix racy GC request handling
+  - [backport] 8249649: Shenandoah: provide per-cycle pacing stats
+  - [backport] 8249801: Shenandoah: Clear soft-refs on requested GC cycle
+  - [backport] 8249953: Shenandoah: gc/shenandoah/mxbeans tests should account for corner cases
   - Fix slowdebug build after JDK-8230853 backport
+  - JDK-8057003: Large reference arrays cause extremely long synchronization times
+  - JDK-8060721: Test runtime/SharedArchiveFile/LimitSharedSizes.java fails in jdk 9 fcs new platforms/compiler
+  - JDK-8064319: Need to enable -XX:+TraceExceptions in release builds
   - JDK-8161072: AArch64: jtreg compiler/uncommontrap/TestDeoptOOM failure
   - JDK-8171537: aarch64: compiler/c1/Test6849574.java generates guarantee failure in C1
+  - JDK-8184762: ZapStackSegments should use optimized memset
+  - JDK-8193234: When using -Xcheck:jni an internally allocated buffer can leak
   - JDK-8203481: Incorrect constraint for unextended_sp in frame:safe_for_sender
   - JDK-8203699: java/lang/invoke/SpecialInterfaceCall fails with SIGILL on aarch64
   - JDK-8209413: AArch64: NPE in clhsdb jstack command
   - JDK-8216989: CardTableBarrierSetAssembler::gen_write_ref_array_post_barrier() does not check for zero length on AARCH64
   - JDK-8217368: AArch64: C2 recursive stack locking optimisation not triggered
+  - JDK-8219919: RuntimeStub name lost with PrintFrameConverterAssembly
+  - JDK-8220313: [TESTBUG] Update base image for Docker testing to OL 7.6
   - JDK-8221658: aarch64: add necessary predicate for ubfx patterns
+  - JDK-8222079: Don't use memset to initialize fields decode_env constructor in disassembler.cpp
+  - JDK-8226575: OperatingSystemMXBean should be made container aware
+  - JDK-8233624: Enhance JNI linkage
+  - JDK-8236196: Improve string pooling
   - JDK-8237512: AArch64: aarch64TestHook leaks a BufferBlob
+  - JDK-8240124: Better VM Interning
+  - JDK-8240676: Meet not symmetric failure when running lucene on jdk8
+  - JDK-8241114: Better range handling
+  - JDK-8243302: Advanced class supports
+  - JDK-8244151: Update MUSCLE PC/SC-Lite headers to the latest release 1.8.26
+  - JDK-8244955: Additional Fix for JDK-8240124
+  - JDK-8245412: Better class definitions
   - JDK-8246482: Build failures with +JFR -PCH
+  - JDK-8247979: aarch64: missing side effect of killing flags for clearArray_reg_reg
   - JDK-8248219: aarch64: missing memory barrier in fast_storefield and fast_accessfield
+  - JDK-8249158: THREAD_START and THREAD_END event posted in primordial phase
+  - JDK-8250627: Use -XX:+/-UseContainerSupport for enabling/disabling Java container metrics
+  - JDK-8252084: Minimal VM fails to bootcycle: undefined symbol: AgeTableTracer::is_tenuring_distribution_event_enabled
+  - JDK-8252096: Shenandoah: adjust SerialPageShiftCount for x86_32 and JFR
+  - JDK-8252366: Shenandoah: revert/cleanup changes in graphKit.cpp
+  - JDK-8252573: 8u: Windows build failed after 8222079 backport
+  - JDK-8254673: Call to JvmtiExport::post_vm_start() was removed by the fix for JDK-8249158
+  - JDK-8254937: Revert JDK-8148854 for 8u272
   - Shenandoah: add JFR roots to root processor after JFR integration
   - Shenandoah: add root statistics for string dedup table/queues
+  - Shenandoah: enable low-frequency STW class unloading
   - Shenandoah: fix build failures after JDK-8244737 backport
   - Shenandoah: Fix build failure with +JFR -PCH
+  - Shenandoah: fix forceful pacer claim
   - Shenandoah: fix formats in ShenandoahStringSymbolTableUnlinkTask
   - Shenandoah: fix runtime linking failure due to non-compiled shenandoahBarrierSetC1
+  - Shenandoah: hook statistics printing to PrintGCDetails, not PrintGC
   - Shenandoah: JNI weak roots are always cleared before Full GC mark
   - Shenandoah: missing SystemDictionary roots in ShenandoahHeapIterationRootScanner
   - Shenandoah: move barrier sets to their proper locations
   - Shenandoah: move parallelCleaning.* to shenandoah/
+  - Shenandoah: pacer should use proper Atomics for intptr_t
   - Shenandoah: properly deallocates class loader metadata
   - Shenandoah: specialize String Table scans for better pause performance
+  - Shenandoah: Zero build fails after recent Atomic cleanup in Pacer
 * AArch64 port
   - JDK-8183925, PR3797: [AArch64] Decouple crash protection from watcher thread
   - JDK-8199712, PR3797: [AArch64] Flight Recorder

@@ -1,3 +1,27 @@
+2020-10-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump shenandoah to aarch64-shenandoah-jdk8u272-b10.
+	* patches/hotspot/shenandoah/8251120-pr3793.patch:
+	Removed as applied upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Only apply JDK-8251120/PR3793
+	on AArch32 builds as it is included upstream in
+	Shenandoah now.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u272-b10.
+	* patches/hotspot/aarch32/8062808-pr3548.patch,
+	* patches/hotspot/aarch32/8251120-pr3793.patch,
+	* patches/hotspot/aarch32/pr3593.patch:
+	Take copies of the Shenandoah patches, so they can
+	be changed without breaking AArch32 builds.
+	* patches/hotspot/shenandoah/8062808-pr3548.patch:
+	Adjusted following constantPool.hpp context change
+	in JDK-8243302.
+	* patches/hotspot/shenandoah/pr3593.patch,
+	Adjust PR3593 following g1StringDedupTable.cpp
+	context change in JDK-8240124 & JDK-8244955.
+
 2020-10-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3795: ECDSAUtils for XML digital signatures

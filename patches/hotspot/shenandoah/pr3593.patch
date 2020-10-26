@@ -7,8 +7,8 @@
 PR3593: s390 needs to use '%z' format specifier for size_t arguments as size_t != int
 
 diff -Nru openjdk.orig/hotspot/src/share/vm/asm/codeBuffer.cpp openjdk/hotspot/src/share/vm/asm/codeBuffer.cpp
---- openjdk.orig/hotspot/src/share/vm/asm/codeBuffer.cpp	2019-01-16 07:13:59.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/asm/codeBuffer.cpp	2019-01-31 04:10:34.516469599 +0000
+--- openjdk.orig/hotspot/src/share/vm/asm/codeBuffer.cpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/asm/codeBuffer.cpp	2020-10-26 04:00:54.102745171 +0000
 @@ -977,7 +977,7 @@
      for (int n = (int) CodeBuffer::SECT_FIRST; n < (int) CodeBuffer::SECT_LIMIT; n++) {
        CodeSection* sect = code_section(n);
@@ -19,9 +19,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/asm/codeBuffer.cpp openjdk/hotspot/s
      }
      xtty->print_cr("</blob>");
 diff -Nru openjdk.orig/hotspot/src/share/vm/code/codeCache.cpp openjdk/hotspot/src/share/vm/code/codeCache.cpp
---- openjdk.orig/hotspot/src/share/vm/code/codeCache.cpp	2019-01-16 07:13:59.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/code/codeCache.cpp	2019-01-31 04:10:34.516469599 +0000
-@@ -192,7 +192,7 @@
+--- openjdk.orig/hotspot/src/share/vm/code/codeCache.cpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/code/codeCache.cpp	2020-10-26 04:00:54.103745182 +0000
+@@ -199,7 +199,7 @@
      }
      if (PrintCodeCacheExtension) {
        ResourceMark rm;
@@ -31,20 +31,20 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/code/codeCache.cpp openjdk/hotspot/s
                      (address)_heap->high() - (address)_heap->low_boundary());
      }
 diff -Nru openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp openjdk/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp
---- openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp	2019-01-31 04:09:27.637523788 +0000
-+++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp	2019-01-31 04:11:36.563491574 +0000
-@@ -598,7 +598,7 @@
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp	2020-10-26 03:56:19.253830644 +0000
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1StringDedupTable.cpp	2020-10-26 04:01:43.844272631 +0000
+@@ -597,7 +597,7 @@
      "   [Table]\n"
      "      [Memory Usage: " G1_STRDEDUP_BYTES_FORMAT_NS "]\n"
      "      [Size: " SIZE_FORMAT ", Min: " SIZE_FORMAT ", Max: " SIZE_FORMAT "]\n"
 -    "      [Entries: " UINTX_FORMAT ", Load: " G1_STRDEDUP_PERCENT_FORMAT_NS ", Cached: " UINTX_FORMAT ", Added: " UINTX_FORMAT ", Removed: " UINTX_FORMAT "]\n"
 +    "      [Entries: " UINTX_FORMAT ", Load: " G1_STRDEDUP_PERCENT_FORMAT_NS ", Cached: " SIZE_FORMAT ", Added: " UINTX_FORMAT ", Removed: " UINTX_FORMAT "]\n"
      "      [Resize Count: " UINTX_FORMAT ", Shrink Threshold: " UINTX_FORMAT "(" G1_STRDEDUP_PERCENT_FORMAT_NS "), Grow Threshold: " UINTX_FORMAT "(" G1_STRDEDUP_PERCENT_FORMAT_NS ")]\n"
-     "      [Rehash Count: " UINTX_FORMAT ", Rehash Threshold: " UINTX_FORMAT ", Hash Seed: 0x%x]\n"
+     "      [Rehash Count: " UINTX_FORMAT ", Rehash Threshold: " UINTX_FORMAT ", Hash Seed: " UINT64_FORMAT "]\n"
      "      [Age Threshold: " UINTX_FORMAT "]",
 diff -Nru openjdk.orig/hotspot/src/share/vm/memory/blockOffsetTable.cpp openjdk/hotspot/src/share/vm/memory/blockOffsetTable.cpp
---- openjdk.orig/hotspot/src/share/vm/memory/blockOffsetTable.cpp	2019-01-16 07:13:59.000000000 +0000
-+++ openjdk/hotspot/src/share/vm/memory/blockOffsetTable.cpp	2019-01-31 04:10:34.516469599 +0000
+--- openjdk.orig/hotspot/src/share/vm/memory/blockOffsetTable.cpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/memory/blockOffsetTable.cpp	2020-10-26 04:00:54.105745203 +0000
 @@ -57,7 +57,7 @@
      gclog_or_tty->print_cr("BlockOffsetSharedArray::BlockOffsetSharedArray: ");
      gclog_or_tty->print_cr("  "
@@ -55,8 +55,8 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/memory/blockOffsetTable.cpp openjdk/
                    p2i(rs.base()), rs.size(), p2i(rs.base() + rs.size()));
      gclog_or_tty->print_cr("  "
 diff -Nru openjdk.orig/hotspot/src/share/vm/memory/collectorPolicy.cpp openjdk/hotspot/src/share/vm/memory/collectorPolicy.cpp
---- openjdk.orig/hotspot/src/share/vm/memory/collectorPolicy.cpp	2019-01-31 04:09:27.641523725 +0000
-+++ openjdk/hotspot/src/share/vm/memory/collectorPolicy.cpp	2019-01-31 04:10:34.516469599 +0000
+--- openjdk.orig/hotspot/src/share/vm/memory/collectorPolicy.cpp	2020-10-26 03:56:19.255830665 +0000
++++ openjdk/hotspot/src/share/vm/memory/collectorPolicy.cpp	2020-10-26 04:00:54.106745214 +0000
 @@ -1056,7 +1056,8 @@
      size_t expected = msp.scale_by_NewRatio_aligned(initial_heap_size);
      assert(msp.initial_gen0_size() == expected, err_msg("%zu != %zu", msp.initial_gen0_size(), expected));
@@ -68,9 +68,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/memory/collectorPolicy.cpp openjdk/h
  
  private:
 diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspot/src/share/vm/runtime/arguments.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2019-01-31 04:09:27.641523725 +0000
-+++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2019-01-31 04:10:34.520469536 +0000
-@@ -1291,14 +1291,14 @@
+--- openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp	2020-10-26 03:56:19.261830729 +0000
++++ openjdk/hotspot/src/share/vm/runtime/arguments.cpp	2020-10-26 04:00:54.108745235 +0000
+@@ -1312,14 +1312,14 @@
      }
      if (PrintGCDetails && Verbose) {
        // Too early to use gclog_or_tty
@@ -88,7 +88,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspo
             " max_heap: " SIZE_FORMAT,
             min_heap_size(), InitialHeapSize, max_heap);
      }
-@@ -1314,7 +1314,7 @@
+@@ -1335,7 +1335,7 @@
          FLAG_SET_ERGO(uintx, NewSize, MIN2(preferred_max_new_size, NewSize));
          if (PrintGCDetails && Verbose) {
            // Too early to use gclog_or_tty
@@ -97,7 +97,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspo
          }
        }
        // Unless explicitly requested otherwise, size old gen
-@@ -1324,7 +1324,7 @@
+@@ -1345,7 +1345,7 @@
            FLAG_SET_ERGO(uintx, OldSize, MIN2(NewRatio*NewSize, (uintx) (max_heap - NewSize)));
            if (PrintGCDetails && Verbose) {
              // Too early to use gclog_or_tty
@@ -106,7 +106,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspo
            }
          }
        }
-@@ -2043,7 +2043,7 @@
+@@ -2074,7 +2074,7 @@
  
        if (PrintGCDetails && Verbose) {
          // Cannot use gclog_or_tty yet.
@@ -115,7 +115,7 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspo
        }
        FLAG_SET_ERGO(uintx, InitialHeapSize, (uintx)reasonable_initial);
      }
-@@ -2053,7 +2053,7 @@
+@@ -2084,7 +2084,7 @@
        set_min_heap_size(MIN2((uintx)reasonable_minimum, InitialHeapSize));
        if (PrintGCDetails && Verbose) {
          // Cannot use gclog_or_tty yet.
@@ -125,9 +125,9 @@ diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/arguments.cpp openjdk/hotspo
      }
    }
 diff -Nru openjdk.orig/hotspot/src/share/vm/utilities/globalDefinitions.hpp openjdk/hotspot/src/share/vm/utilities/globalDefinitions.hpp
---- openjdk.orig/hotspot/src/share/vm/utilities/globalDefinitions.hpp	2019-01-31 04:09:26.369543774 +0000
-+++ openjdk/hotspot/src/share/vm/utilities/globalDefinitions.hpp	2019-01-31 04:10:34.520469536 +0000
-@@ -1389,12 +1389,21 @@
+--- openjdk.orig/hotspot/src/share/vm/utilities/globalDefinitions.hpp	2020-10-17 05:31:10.000000000 +0100
++++ openjdk/hotspot/src/share/vm/utilities/globalDefinitions.hpp	2020-10-26 04:00:54.109745246 +0000
+@@ -1456,12 +1456,21 @@
  
  #define INTPTR_FORMAT_W(width)   "%" #width PRIxPTR
  
