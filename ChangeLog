@@ -1,3 +1,18 @@
+2020-10-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3795: ECDSAUtils for XML digital signatures
+	should support the same curve set as the rest
+	of the JDK
+	* NEWS: Updated.
+	* fsg.sh.in: Use a single value for PATCH_FILE,
+	which includes the value of @CURVES@.
+	* patches/pr3795-3curve.patch: Renamed
+	from pr3667.patch and added removal of curves
+	from ECDSAUtils.java
+	* patches/pr3795-4curve.patch: Renamed
+	from pr3756.patch and added removal of curves
+	from ECDSAUtils.java
+
 2020-10-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.17.0pre02.
