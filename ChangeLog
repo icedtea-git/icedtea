@@ -1,3 +1,20 @@
+2020-10-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump aarch32 to jdk8u272-ga-aarch32-20201026.
+	* patches/hotspot/aarch32/8251120-pr3793.patch:
+	Removed as applied upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove JDK-8251120/PR3793
+	altogether now it is in both aarch32 and
+	shenandoah upstream bundles.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump aarch32 to
+	jdk8u272-ga-aarch32-20201026.
+	* patches/hotspot/aarch32/8062808-pr3548.patch,
+	* patches/hotspot/aarch32/pr3593.patch:
+	Switch back to symlinks now they can share a version with
+	Shenandoah again.
+
 2020-10-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump shenandoah to aarch64-shenandoah-jdk8u272-b10.
@@ -788,7 +805,7 @@
 	* hotspot.map.in: Bump aarch32 to
 	jdk8u212-b04-aarch32-190429.
 	* patches/hotspot/aarch32/8222286-pr3727-s390.patch:
-	Symlink to Shenandoah verison.
+	Symlink to Shenandoah version.
 	* patches/hotspot/aarch32/pr1942.patch,
 	* patches/hotspot/aarch32/pr2777.patch:
 	Switch back to symlinks now they can share a version with

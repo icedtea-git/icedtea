@@ -513,6 +513,33 @@ New in release 3.17.0 (2020-07-XX):
   - JDK-8183925, PR3797: [AArch64] Decouple crash protection from watcher thread
   - JDK-8199712, PR3797: [AArch64] Flight Recorder
   - JDK-8215961, PR3797: jdk/jfr/event/os/TestCPUInformation.java fails on AArch64
+* AArch32 port
+  - JDK-8057003: Large reference arrays cause extremely long synchronization times
+  - JDK-8060721: Test runtime/SharedArchiveFile/LimitSharedSizes.java fails in jdk 9 fcs new platforms/compiler
+  - JDK-8064319: Need to enable -XX:+TraceExceptions in release builds
+  - JDK-8080462: Update SunPKCS11 provider with PKCS11 v2.40 support
+  - JDK-8184762: ZapStackSegments should use optimized memset
+  - JDK-8193234: When using -Xcheck:jni an internally allocated buffer can leak
+  - JDK-8219919: RuntimeStub name lost with PrintFrameConverterAssembly
+  - JDK-8220313: [TESTBUG] Update base image for Docker testing to OL 7.6
+  - JDK-8222079: Don't use memset to initialize fields decode_env constructor in disassembler.cpp
+  - JDK-8226575: OperatingSystemMXBean should be made container aware
+  - JDK-8233624: Enhance JNI linkage
+  - JDK-8236196: Improve string pooling
+  - JDK-8240124: Better VM Interning
+  - JDK-8240676: Meet not symmetric failure when running lucene on jdk8
+  - JDK-8241114: Better range handling
+  - JDK-8243302: Advanced class supports
+  - JDK-8244151: Update MUSCLE PC/SC-Lite headers to the latest release 1.8.26
+  - JDK-8244955: Additional Fix for JDK-8240124
+  - JDK-8245412: Better class definitions
+  - JDK-8249158: THREAD_START and THREAD_END event posted in primordial phase
+  - JDK-8250627: Use -XX:+/-UseContainerSupport for enabling/disabling Java container metrics
+  - JDK-8251120: [8u] HotSpot build assumes ENABLE_JFR is set to either true or false
+  - JDK-8252084: Minimal VM fails to bootcycle: undefined symbol: AgeTableTracer::is_tenuring_distribution_event_enabled
+  - JDK-8252573: 8u: Windows build failed after 8222079 backport
+  - JDK-8254673: Call to JvmtiExport::post_vm_start() was removed by the fix for JDK-8249158
+  - JDK-8254937: Revert JDK-8148854 for 8u272
 
 New in release 3.16.0 (2020-05-02):
 
