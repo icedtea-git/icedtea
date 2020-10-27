@@ -14,6 +14,7 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 New in release 3.17.0 (2020-07-XX):
 
 * New features
+  - JDK-8245468: Add TLSv1.3 implementation classes from 11.0.7
   - PR3796: Allow the number of curves supported to be specified
 * Security fixes
   - JDK-8028431, CVE-2020-14579: NullPointerException in DerValue.equals(DerValue)
@@ -22,13 +23,18 @@ New in release 3.17.0 (2020-07-XX):
   - JDK-8231800: Better listing of arrays
   - JDK-8232014: Expand DTD support
   - JDK-8233255: Better Swing Buttons
+  - JDK-8233624: Enhance JNI linkage
   - JDK-8234032: Improve basic calendar services
   - JDK-8234042: Better factory production of certificates
   - JDK-8234418: Better parsing with CertificateFactory
   - JDK-8234836: Improve serialization handling
   - JDK-8236191: Enhance OID processing
+  - JDK-8236196: Improve string pooling
+  - JDK-8236862, CVE-2020-14779: Enhance support of Proxy class
   - JDK-8237117, CVE-2020-14556: Better ForkJoinPool behavior
   - JDK-8237592, CVE-2020-14577: Enhance certificate verification
+  - JDK-8237990, CVE-2020-14781: Enhanced LDAP contexts
+  - JDK-8237995, CVE-2020-14782: Enhance certificate processing
   - JDK-8238002, CVE-2020-14581: Better matrix operations
   - JDK-8238804: Enhance key handling process
   - JDK-8238842: AIOOBE in GIFImageReader.initializeStringTable
@@ -36,10 +42,25 @@ New in release 3.17.0 (2020-07-XX):
   - JDK-8238920, CVE-2020-14583: Better Buffer support
   - JDK-8238925: Enhance WAV file playback
   - JDK-8240119, CVE-2020-14593: Less Affine Transformations
+  - JDK-8240124: Better VM Interning
   - JDK-8240482: Improved WAV file playback
+  - JDK-8241114, CVE-2020-14792: Better range handling
   - JDK-8241379: Update JCEKS support
   - JDK-8241522: Manifest improved jar headers redux
   - JDK-8242136, CVE-2020-14621: Better XML namespace handling
+  - JDK-8242680, CVE-2020-14796: Improved URI Support
+  - JDK-8242685, CVE-2020-14797: Better Path Validation
+  - JDK-8242695, CVE-2020-14798: Enhanced buffer support
+  - JDK-8243302: Advanced class supports
+  - JDK-8244136, CVE-2020-14803: Improved Buffer supports
+  - JDK-8244479: Further constrain certificates
+  - JDK-8244955: Additional Fix for JDK-8240124
+  - JDK-8245407: Enhance zoning of times
+  - JDK-8245412: Better class definitions
+  - JDK-8245417: Improve certificate chain handling
+  - JDK-8248574: Improve jpeg processing
+  - JDK-8249927: Specify limits of jdk.serialProxyInterfaceLimit
+  - JDK-8253019: Enhanced JPEG decoding
 * Import of OpenJDK 8 u262 build 01
   - JDK-4949105: Access Bridge lacks html tags parsing
   - JDK-8003209: JFR events for network utilization
@@ -290,11 +311,71 @@ New in release 3.17.0 (2020-07-XX):
   - JDK-8217878: ENVELOPING XML signature no longer works in JDK 11
   - JDK-8218629: XML Digital Signature throws NAMESPACE_ERR exception on OpenJDK 11, works 8/9/10
   - JDK-8243138: Enhance BaseLdapServer to support starttls extended request
+* Import of OpenJDK 8 u272 build 05
+  - JDK-8026236: Add PrimeTest for BigInteger
+  - JDK-8057003: Large reference arrays cause extremely long synchronization times
+  - JDK-8060721: Test runtime/SharedArchiveFile/LimitSharedSizes.java fails in jdk 9 fcs new platforms/compiler
+  - JDK-8152077: (cal) Calendar.roll does not always roll the hours during daylight savings
+  - JDK-8168517: java/lang/ProcessBuilder/Basic.java failed
+  - JDK-8211163: UNIX version of Java_java_io_Console_echo does not return a clean boolean
+  - JDK-8220674: [TESTBUG] MetricsMemoryTester failcount test in docker container only works with debug JVMs
+  - JDK-8231213: Migrate SimpleDateFormatConstTest to JDK Repo
+  - JDK-8236645: JDK 8u231 introduces a regression with incompatible handling of XML messages
+  - JDK-8240676: Meet not symmetric failure when running lucene on jdk8
+  - JDK-8243321: Add Entrust root CA - G4 to Oracle Root CA program
+  - JDK-8249158: THREAD_START and THREAD_END event posted in primordial phase
+  - JDK-8250627: Use -XX:+/-UseContainerSupport for enabling/disabling Java container metrics
+  - JDK-8251546: 8u backport of JDK-8194298 breaks AIX and Solaris builds
+  - JDK-8252084: Minimal VM fails to bootcycle: undefined symbol: AgeTableTracer::is_tenuring_distribution_event_enabled
+* Import of OpenJDK 8 u272 build 06
+  - JDK-8064319: Need to enable -XX:+TraceExceptions in release builds
+  - JDK-8080462, PR3801: Update SunPKCS11 provider with PKCS11 v2.40 support
+  - JDK-8160768: Add capability to custom resolve host/domain names within the default JNDI LDAP provider
+  - JDK-8161973: PKIXRevocationChecker.getSoftFailExceptions() not working
+  - JDK-8169925, PR3801: PKCS #11 Cryptographic Token Interface license
+  - JDK-8184762: ZapStackSegments should use optimized memset
+  - JDK-8193234: When using -Xcheck:jni an internally allocated buffer can leak
+  - JDK-8219919: RuntimeStub name lost with PrintFrameConverterAssembly
+  - JDK-8220313: [TESTBUG] Update base image for Docker testing to OL 7.6
+  - JDK-8222079: Don't use memset to initialize fields decode_env constructor in disassembler.cpp
+  - JDK-8225695: 32-bit build failures after JDK-8080462 (Update SunPKCS11 provider with PKCS11 v2.40 support)
+  - JDK-8226575: OperatingSystemMXBean should be made container aware
+  - JDK-8226809: Circular reference in printed stack trace is not correctly indented & ambiguous
+  - JDK-8228835: Memory leak in PKCS11 provider when using AES GCM
+  - JDK-8233621: Mismatch in jsse.enableMFLNExtension property name
+  - JDK-8238898, PR3801: Missing hash characters for header on license file
+  - JDK-8243320: Add SSL root certificates to Oracle Root CA program
+  - JDK-8244151: Update MUSCLE PC/SC-Lite headers to the latest release 1.8.26
+  - JDK-8245467: Remove 8u TLSv1.2 implementation files
+  - JDK-8245469: Remove DTLS protocol implementation
+  - JDK-8245470: Fix JDK8 compatibility issues
+  - JDK-8245471: Revert JDK-8148188
+  - JDK-8245472: Backport JDK-8038893 to JDK8
+  - JDK-8245473: OCSP stapling support
+  - JDK-8245474: Add TLS_KRB5 cipher suites support according to RFC-2712
+  - JDK-8245476: Disable TLSv1.3 protocol in the ClientHello message by default
+  - JDK-8245477: Adjust TLS tests location
+  - JDK-8245653: Remove 8u TLS tests
+  - JDK-8245681: Add TLSv1.3 regression test from 11.0.7
+  - JDK-8251117: Cannot check P11Key size in P11Cipher and P11AEADCipher
+  - JDK-8251120, PR3793: [8u] HotSpot build assumes ENABLE_JFR is set to either true or false
+  - JDK-8251341: Minimal Java specification change
+  - JDK-8251478: Backport TLSv1.3 regression tests to JDK8u
+* Import of OpenJDK 8 u272 build 07
+  - JDK-8246193: Possible NPE in ENC-PA-REP search in AS-REQ
+* Import of OpenJDK 8 u272 build 08
+  - JDK-8062947: Fix exception message to correctly represent LDAP connection failure
+  - JDK-8151678: com/sun/jndi/ldap/LdapTimeoutTest.java failed due to timeout on DeadServerNoTimeoutTest is incorrect
+  - JDK-8252573: 8u: Windows build failed after 8222079 backport
+* Import of OpenJDK 8 u272 build 09
+  - JDK-8252886: [TESTBUG] sun/security/ec/TestEC.java : Compilation failed
+* Import of OpenJDK 8 u272 build 10
+  - JDK-8254673: Call to JvmtiExport::post_vm_start() was removed by the fix for JDK-8249158
+  - JDK-8254937: Revert JDK-8148854 for 8u272
 * Backports
   - JDK-8038723, PR3806: Openup some PrinterJob tests
   - JDK-8041480, PR3806: ArrayIndexOutOfBoundsException when JTable contains certain string
   - JDK-8058779, PR3805: Faster implementation of String.replace(CharSequence, CharSequence)
-  - JDK-8080462, PR3801: Update SunPKCS11 provider with PKCS11 v2.40 support
   - JDK-8130125, PR3806: [TEST_BUG] add @modules to the several client tests unaffected by the automated bulk update
   - JDK-8144015, PR3806: [PIT] failures of text layout font tests
   - JDK-8144023, PR3806: [PIT] failure of text measurements in javax/swing/text/html/parser/Parser/6836089/bug6836089.java
@@ -308,15 +389,14 @@ New in release 3.17.0 (2020-07-XX):
   - JDK-8166003, PR3806: [PIT][TEST_BUG] missing helper for javax/swing/text/GlyphPainter2/6427244/bug6427244.java
   - JDK-8166068, PR3806: test/java/awt/font/GlyphVector/GetGlyphCharIndexTest.java does not compile
   - JDK-8169879, PR3806: [TEST_BUG] javax/swing/text/GlyphPainter2/6427244/bug6427244.java - compilation failed
-  - JDK-8169925, PR3801: PKCS #11 Cryptographic Token Interface license
   - JDK-8191512, PR3806: T2K font rasterizer code removal
   - JDK-8191522, PR3806: Remove Bigelow&Holmes Lucida fonts from JDK sources
   - JDK-8236512, PR3801: PKCS11 Connection closed after Cipher.doFinal and NoPadding
-  - JDK-8238898, PR3801: Missing hash characters for header on license file
-  - JDK-8251120, PR3793: [8u] HotSpot build assumes ENABLE_JFR is set to either true or false
+  - JDK-8254177, PR3809: (tz) Upgrade time-zone data to tzdata2020b
 * Bug fixes
   - PR3798: Fix format-overflow error on GCC 10, caused by passing NULL to a '%s' directive
   - PR3795: ECDSAUtils for XML digital signatures should support the same curve set as the rest of the JDK 
+  - PR3799: Adapt elliptic curve patches to JDK-8245468: Add TLSv1.3 implementation classes from 11.0.7
   - PR3808: IcedTea does not install the JFR *.jfc files
 * Shenandoah
   - [backport] 8221435: Shenandoah should not mark through weak roots
@@ -455,44 +535,8 @@ New in release 3.17.0 (2020-07-XX):
   - [backport] 8249801: Shenandoah: Clear soft-refs on requested GC cycle
   - [backport] 8249953: Shenandoah: gc/shenandoah/mxbeans tests should account for corner cases
   - Fix slowdebug build after JDK-8230853 backport
-  - JDK-8057003: Large reference arrays cause extremely long synchronization times
-  - JDK-8060721: Test runtime/SharedArchiveFile/LimitSharedSizes.java fails in jdk 9 fcs new platforms/compiler
-  - JDK-8064319: Need to enable -XX:+TraceExceptions in release builds
-  - JDK-8161072: AArch64: jtreg compiler/uncommontrap/TestDeoptOOM failure
-  - JDK-8171537: aarch64: compiler/c1/Test6849574.java generates guarantee failure in C1
-  - JDK-8184762: ZapStackSegments should use optimized memset
-  - JDK-8193234: When using -Xcheck:jni an internally allocated buffer can leak
-  - JDK-8203481: Incorrect constraint for unextended_sp in frame:safe_for_sender
-  - JDK-8203699: java/lang/invoke/SpecialInterfaceCall fails with SIGILL on aarch64
-  - JDK-8209413: AArch64: NPE in clhsdb jstack command
-  - JDK-8216989: CardTableBarrierSetAssembler::gen_write_ref_array_post_barrier() does not check for zero length on AARCH64
-  - JDK-8217368: AArch64: C2 recursive stack locking optimisation not triggered
-  - JDK-8219919: RuntimeStub name lost with PrintFrameConverterAssembly
-  - JDK-8220313: [TESTBUG] Update base image for Docker testing to OL 7.6
-  - JDK-8221658: aarch64: add necessary predicate for ubfx patterns
-  - JDK-8222079: Don't use memset to initialize fields decode_env constructor in disassembler.cpp
-  - JDK-8226575: OperatingSystemMXBean should be made container aware
-  - JDK-8233624: Enhance JNI linkage
-  - JDK-8236196: Improve string pooling
-  - JDK-8237512: AArch64: aarch64TestHook leaks a BufferBlob
-  - JDK-8240124: Better VM Interning
-  - JDK-8240676: Meet not symmetric failure when running lucene on jdk8
-  - JDK-8241114: Better range handling
-  - JDK-8243302: Advanced class supports
-  - JDK-8244151: Update MUSCLE PC/SC-Lite headers to the latest release 1.8.26
-  - JDK-8244955: Additional Fix for JDK-8240124
-  - JDK-8245412: Better class definitions
-  - JDK-8246482: Build failures with +JFR -PCH
-  - JDK-8247979: aarch64: missing side effect of killing flags for clearArray_reg_reg
-  - JDK-8248219: aarch64: missing memory barrier in fast_storefield and fast_accessfield
-  - JDK-8249158: THREAD_START and THREAD_END event posted in primordial phase
-  - JDK-8250627: Use -XX:+/-UseContainerSupport for enabling/disabling Java container metrics
-  - JDK-8252084: Minimal VM fails to bootcycle: undefined symbol: AgeTableTracer::is_tenuring_distribution_event_enabled
   - JDK-8252096: Shenandoah: adjust SerialPageShiftCount for x86_32 and JFR
   - JDK-8252366: Shenandoah: revert/cleanup changes in graphKit.cpp
-  - JDK-8252573: 8u: Windows build failed after 8222079 backport
-  - JDK-8254673: Call to JvmtiExport::post_vm_start() was removed by the fix for JDK-8249158
-  - JDK-8254937: Revert JDK-8148854 for 8u272
   - Shenandoah: add JFR roots to root processor after JFR integration
   - Shenandoah: add root statistics for string dedup table/queues
   - Shenandoah: enable low-frequency STW class unloading
@@ -511,36 +555,21 @@ New in release 3.17.0 (2020-07-XX):
   - Shenandoah: specialize String Table scans for better pause performance
   - Shenandoah: Zero build fails after recent Atomic cleanup in Pacer
 * AArch64 port
+  - JDK-8161072, PR3797: AArch64: jtreg compiler/uncommontrap/TestDeoptOOM failure
+  - JDK-8171537, PR3797: aarch64: compiler/c1/Test6849574.java generates guarantee failure in C1
   - JDK-8183925, PR3797: [AArch64] Decouple crash protection from watcher thread
   - JDK-8199712, PR3797: [AArch64] Flight Recorder
+  - JDK-8203481, PR3797: Incorrect constraint for unextended_sp in frame:safe_for_sender
+  - JDK-8203699, PR3797: java/lang/invoke/SpecialInterfaceCall fails with SIGILL on aarch64
+  - JDK-8209413, PR3797: AArch64: NPE in clhsdb jstack command
   - JDK-8215961, PR3797: jdk/jfr/event/os/TestCPUInformation.java fails on AArch64
-* AArch32 port
-  - JDK-8057003: Large reference arrays cause extremely long synchronization times
-  - JDK-8060721: Test runtime/SharedArchiveFile/LimitSharedSizes.java fails in jdk 9 fcs new platforms/compiler
-  - JDK-8064319: Need to enable -XX:+TraceExceptions in release builds
-  - JDK-8080462: Update SunPKCS11 provider with PKCS11 v2.40 support
-  - JDK-8184762: ZapStackSegments should use optimized memset
-  - JDK-8193234: When using -Xcheck:jni an internally allocated buffer can leak
-  - JDK-8219919: RuntimeStub name lost with PrintFrameConverterAssembly
-  - JDK-8220313: [TESTBUG] Update base image for Docker testing to OL 7.6
-  - JDK-8222079: Don't use memset to initialize fields decode_env constructor in disassembler.cpp
-  - JDK-8226575: OperatingSystemMXBean should be made container aware
-  - JDK-8233624: Enhance JNI linkage
-  - JDK-8236196: Improve string pooling
-  - JDK-8240124: Better VM Interning
-  - JDK-8240676: Meet not symmetric failure when running lucene on jdk8
-  - JDK-8241114: Better range handling
-  - JDK-8243302: Advanced class supports
-  - JDK-8244151: Update MUSCLE PC/SC-Lite headers to the latest release 1.8.26
-  - JDK-8244955: Additional Fix for JDK-8240124
-  - JDK-8245412: Better class definitions
-  - JDK-8249158: THREAD_START and THREAD_END event posted in primordial phase
-  - JDK-8250627: Use -XX:+/-UseContainerSupport for enabling/disabling Java container metrics
-  - JDK-8251120: [8u] HotSpot build assumes ENABLE_JFR is set to either true or false
-  - JDK-8252084: Minimal VM fails to bootcycle: undefined symbol: AgeTableTracer::is_tenuring_distribution_event_enabled
-  - JDK-8252573: 8u: Windows build failed after 8222079 backport
-  - JDK-8254673: Call to JvmtiExport::post_vm_start() was removed by the fix for JDK-8249158
-  - JDK-8254937: Revert JDK-8148854 for 8u272
+  - JDK-8216989, PR3797: CardTableBarrierSetAssembler::gen_write_ref_array_post_barrier() does not check for zero length on AARCH64
+  - JDK-8217368, PR3797: AArch64: C2 recursive stack locking optimisation not triggered
+  - JDK-8221658, PR3797: aarch64: add necessary predicate for ubfx patterns
+  - JDK-8237512, PR3797: AArch64: aarch64TestHook leaks a BufferBlob
+  - JDK-8246482, PR3797: Build failures with +JFR -PCH
+  - JDK-8247979, PR3797: aarch64: missing side effect of killing flags for clearArray_reg_reg
+  - JDK-8248219, PR3797: aarch64: missing memory barrier in fast_storefield and fast_accessfield
 
 New in release 3.16.0 (2020-05-02):
 
