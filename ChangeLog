@@ -1,5 +1,13 @@
 2020-10-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR3810: Enable JFR on x86 (32-bit) now that
+	JDK-8252096 has fixed its use with Shenandoah
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_ARCH_HAS_JFR): Allow JFR on i?86.
+
+2020-10-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump to icedtea-3.17.0.
 	PR3799: Adapt elliptic curve patches to JDK-8245468:
 	Add TLSv1.3 implementation classes from 11.0.7

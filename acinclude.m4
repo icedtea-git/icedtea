@@ -2874,7 +2874,7 @@ AC_DEFUN_ONCE([IT_ARCH_HAS_JFR],
   supports_jfr=yes;
   case "${host_cpu}" in
     aarch64|arm64) if test "x${HSBUILD}" = "xaarch32"; then supports_jfr=no; fi ;;
-    i?86) supports_jfr=no ;;
+    i?86) ;;
     sparc) ;;
     x86_64) ;;
     powerpc64) ;;

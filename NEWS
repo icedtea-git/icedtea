@@ -398,6 +398,7 @@ New in release 3.17.0 (2020-07-XX):
   - PR3795: ECDSAUtils for XML digital signatures should support the same curve set as the rest of the JDK 
   - PR3799: Adapt elliptic curve patches to JDK-8245468: Add TLSv1.3 implementation classes from 11.0.7
   - PR3808: IcedTea does not install the JFR *.jfc files
+  - PR3810: Enable JFR on x86 (32-bit) now that JDK-8252096 has fixed its use with Shenandoah
 * Shenandoah
   - [backport] 8221435: Shenandoah should not mark through weak roots
   - [backport] 8221629: Shenandoah: Cleanup class unloading logic
