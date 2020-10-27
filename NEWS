@@ -317,6 +317,7 @@ New in release 3.17.0 (2020-07-XX):
 * Bug fixes
   - PR3798: Fix format-overflow error on GCC 10, caused by passing NULL to a '%s' directive
   - PR3795: ECDSAUtils for XML digital signatures should support the same curve set as the rest of the JDK 
+  - PR3808: IcedTea does not install the JFR *.jfc files
 * Shenandoah
   - [backport] 8221435: Shenandoah should not mark through weak roots
   - [backport] 8221629: Shenandoah: Cleanup class unloading logic
