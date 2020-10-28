@@ -1,5 +1,16 @@
 2020-10-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR3811: Don't attempt to install JFR files when
+	JFR is disabled
+	* Makefile.am,
+	(install-data-local): Create jre/lib/jfr directory
+	and copy over *.jfc files only if USE_JFR is set.
+	(uninstall-local): Only attempt to remove the
+	jre/lib/jfr directory if it exists.
+	* NEWS: Updated.
+
+2020-10-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR3810: Enable JFR on x86 (32-bit) now that
 	JDK-8252096 has fixed its use with Shenandoah
 	* NEWS: Updated.

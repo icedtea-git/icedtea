@@ -3106,7 +3106,7 @@ install-data-local:
 	${mkinstalldirs} $(DESTDIR)${prefix}/jre/.systemPrefs
 	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib
 	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)
-	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/{cmm,ext,jfr,images/cursors,management,security}
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/{cmm,ext,images/cursors,management,security}
 	${mkinstalldirs} $(DESTDIR)$(mandir)/{man1,ja_JP.UTF-8/man1}
 	${mkinstalldirs} $(DESTDIR)${prefix}/demo
 	${mkinstalldirs} $(DESTDIR)${prefix}/sample
@@ -3137,9 +3137,6 @@ install-data-local:
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/cmm; \
 	done
 	$(INSTALL_DATA) $(BUILD_SDK_DIR)/jre/lib/ext/meta-index $(DESTDIR)${prefix}/jre/lib/ext
-	for files in $(BUILD_SDK_DIR)/jre/lib/jfr/*.jfc; do \
-	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/jfr; \
-	done
 	for files in $(BUILD_SDK_DIR)/jre/lib/images/cursors/*.gif; do \
 	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/images/cursors; \
 	done
@@ -3203,6 +3200,12 @@ install-data-local:
 if ENABLE_DOCS
 	${mkinstalldirs} $(DESTDIR)$(htmldir)
 	cp -RP $(BUILD_OUTPUT_DIR)/docs/* $(DESTDIR)$(htmldir)
+endif
+if USE_JFR
+	${mkinstalldirs} $(DESTDIR)${prefix}/jre/lib/jfr
+	for files in $(BUILD_SDK_DIR)/jre/lib/jfr/*.jfc; do \
+	  $(INSTALL_DATA) $${files} $(DESTDIR)${prefix}/jre/lib/jfr; \
+	done
 endif
 	for vms in client server ; do \
 	  if [ -f $(BUILD_SDK_DIR)/jre/lib/$(INSTALL_ARCH_DIR)/$${vms}/classes.jsa ] ; then \
@@ -3367,13 +3370,16 @@ endif
 	if [ -h $(DESTDIR)${prefix}/jre/lib/arm ] ; then \
 	  rm -vf $(DESTDIR)${prefix}/jre/lib/arm ; \
 	fi
+	if [ -d $(DESTDIR)${prefix}/jre/lib/jfr ] ; then \
+	  $(RMDIR) $(DESTDIR)${prefix}/jre/lib/jfr ; \
+	fi
 	$(RMDIR) $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)/jli
 	$(RMDIR) $(DESTDIR)$(includedir)/$(BUILD_OS_DIR) $(DESTDIR)${exec_prefix}/lib/$(INSTALL_ARCH_DIR)
 	$(RMDIR) $(DESTDIR)$(bindir) $(DESTDIR)$(includedir) $(DESTDIR)${exec_prefix}/lib
 	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)/jli
 	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/$(INSTALL_ARCH_DIR)
 	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/security/policy
-	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/{cmm,ext,jfr,images/cursors,management,security}
+	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/{cmm,ext,images/cursors,management,security}
 	$(RMDIR) $(DESTDIR)${prefix}/jre/lib/images
 	$(RMDIR) $(DESTDIR)${prefix}/jre/bin $(DESTDIR)${prefix}/jre/lib
 	$(RMDIR) $(DESTDIR)${prefix}/jre/.systemPrefs
