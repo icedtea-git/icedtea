@@ -2026,3 +2026,17 @@ diff -Nru openjdk-boot.orig/jdk/src/share/demo/jfc/Notepad/Notepad.java openjdk-
              System.err.println("resources/Notepad.properties "
                      + "or resources/NotepadSystem.properties not found");
              System.exit(1);
+diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixUriUtils.java openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixUriUtils.java
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixUriUtils.java	2020-11-05 03:04:00.676485761 +0000
++++ openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixUriUtils.java	2020-11-05 03:04:29.414464085 +0000
+@@ -119,7 +119,9 @@
+                  up.checkRead();
+                  if (UnixFileAttributes.get(up, true).isDirectory())
+                      sb.append('/');
+-            } catch (SecurityException | UnixException x) {
++            } catch (SecurityException x) {
++                // ignore
++            } catch (UnixException x) {
+                 // ignore
+             }
+         }

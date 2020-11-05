@@ -12,6 +12,34 @@ JEPX - https://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 2.6.24 (2020-11-05):
+
+* Security fixes
+  - JDK-8233624: Enhance JNI linkage
+  - JDK-8236862, CVE-2020-14779: Enhance support of Proxy class
+  - JDK-8237990, CVE-2020-14781: Enhanced LDAP contexts
+  - JDK-8237995, CVE-2020-14782: Enhance certificate processing
+  - JDK-8240124: Better VM Interning
+  - JDK-8241114, CVE-2020-14792: Better range handling
+  - JDK-8242680, CVE-2020-14796: Improved URI Support
+  - JDK-8242685, CVE-2020-14797: Better Path Validation
+  - JDK-8242695, CVE-2020-14798: Enhanced buffer support
+  - JDK-8243302: Advanced class supports
+  - JDK-8244136, CVE-2020-14803: Improved Buffer supports
+  - JDK-8244479: Further constrain certificates
+  - JDK-8244955: Additional Fix for JDK-8240124
+  - JDK-8245407: Enhance zoning of times
+  - JDK-8245412: Better class definitions
+  - JDK-8245417: Improve certificate chain handling
+  - JDK-8248574: Improve jpeg processing
+  - JDK-8249927: Specify limits of jdk.serialProxyInterfaceLimit
+  - JDK-8253019: Enhanced JPEG decoding
+* Import of OpenJDK 7 u281 build 1
+  - JDK-8145096: Undefined behaviour in HotSpot
+  - JDK-8215265: C2: range check elimination may allow illegal out of bound access
+* Backports
+  - JDK-8250861, PR3812: Crash in MinINode::Ideal(PhaseGVN*, bool)
+
 New in release 2.6.23 (2020-09-26):
 
 * Security fixes
