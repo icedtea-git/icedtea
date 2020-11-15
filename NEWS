@@ -11,6 +11,16 @@ JDK-X  - https://bugs.openjdk.java.net/browse/JDK-X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 3.17.1 (2020-11-XX):
+
+* Import of OpenJDK 8 u275 build 01
+  - JDK-8214440: ldap over a TLS connection negotiate failed with "javax.net.ssl.SSLPeerUnverifiedException: hostname of the server '' does not match the hostname in the server's certificate"
+  - JDK-8223940: Private key not supported by chosen signature algorithm
+  - JDK-8236512: PKCS11 Connection closed after Cipher.doFinal and NoPadding
+  - JDK-8250861: Crash in MinINode::Ideal(PhaseGVN*, bool)
+* Bug fixes
+  - PR3815: Fix new s390 size_t issue in g1ConcurrentMarkObjArrayProcessor.cpp
+
 New in release 3.17.0 (2020-10-27):
 
 * New features
