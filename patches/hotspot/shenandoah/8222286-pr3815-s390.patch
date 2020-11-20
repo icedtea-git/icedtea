@@ -1,0 +1,20 @@
+# HG changeset patch
+# User Andrew John Hughes <gnu_andrew@member.fsf.org>
+# Date 1605152060 0
+#      Thu Nov 12 03:34:20 2020 +0000
+# Node ID e7fd2b284bd059020c3edfa7ba8c02febe0d5a59
+# Parent  e3dc4a3d588c1d4556cc54704683a50b034b5584
+PR3815: Fix new s390 size_t issue in g1ConcurrentMarkObjArrayProcessor.cpp
+
+diff --git openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1ConcurrentMarkObjArrayProcessor.cpp openjdk/hotspot/src/share/vm/gc_implementation/g1/g1ConcurrentMarkObjArrayProcessor.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/g1/g1ConcurrentMarkObjArrayProcessor.cpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/g1/g1ConcurrentMarkObjArrayProcessor.cpp
+@@ -41,7 +41,7 @@
+ }
+ 
+ size_t G1CMObjArrayProcessor::process_array_slice(objArrayOop obj, HeapWord* start_from, size_t remaining) {
+-  size_t words_to_scan = MIN2(remaining, ObjArrayMarkingStride);
++  size_t words_to_scan = MIN2(remaining, (size_t) ObjArrayMarkingStride);
+ 
+   if (remaining > ObjArrayMarkingStride) {
+     push_array_slice(start_from + ObjArrayMarkingStride);

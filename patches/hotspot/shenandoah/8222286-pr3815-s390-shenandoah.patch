@@ -1,0 +1,10 @@
+diff --git openjdk.orig/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahUtils.cpp openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahUtils.cpp
+--- openjdk.orig/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahUtils.cpp
++++ openjdk/hotspot/src/share/vm/gc_implementation/shenandoah/shenandoahUtils.cpp
+@@ -150,5 +150,5 @@
+     return value;
+   }
+ 
+-  return (size_t)1 << (log2_intptr(value) + 1);
++  return (size_t)1 << (log2_intptr((uintptr_t) value) + 1);
+ }
