@@ -11,7 +11,7 @@ JDK-X  - https://bugs.openjdk.java.net/browse/JDK-X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.17.1 (2020-11-XX):
+New in release 3.17.1 (2020-11-26):
 
 * Import of OpenJDK 8 u275 build 01
   - JDK-8214440: ldap over a TLS connection negotiate failed with "javax.net.ssl.SSLPeerUnverifiedException: hostname of the server '' does not match the hostname in the server's certificate"
