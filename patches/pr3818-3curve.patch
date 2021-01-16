@@ -10,83 +10,126 @@ diff --git a/make/lib/Lib-jdk.crypto.ec.gmk b/make/lib/Lib-jdk.crypto.ec.gmk
        CXXFLAGS := $(BUILD_LIBSUNEC_CXXFLAGS_JDKLIB), \
        DISABLED_WARNINGS_gcc := sign-compare implicit-fallthrough, \
        DISABLED_WARNINGS_microsoft := 4101 4244 4146 4018, \
-diff --git a/src/java.base/share/classes/sun/security/ssl/SupportedGroupsExtension.java b/src/java.base/share/classes/sun/security/ssl/SupportedGroupsExtension.java
---- a/src/java.base/share/classes/sun/security/ssl/SupportedGroupsExtension.java
-+++ b/src/java.base/share/classes/sun/security/ssl/SupportedGroupsExtension.java
-@@ -181,73 +181,6 @@
-         // Elliptic Curves (RFC 4492)
-         //
-         // See sun.security.util.CurveDB for the OIDs
--        // NIST K-163
--        SECT163_K1  (0x0001, "sect163k1", "1.3.132.0.1", true,
--                            ProtocolVersion.PROTOCOLS_TO_12),
--        SECT163_R1  (0x0002, "sect163r1", "1.3.132.0.2", false,
--                            ProtocolVersion.PROTOCOLS_TO_12),
+diff --git a/src/java.base/share/classes/sun/security/ssl/NamedGroup.java b/src/java.base/share/classes/sun/security/ssl/NamedGroup.java
+--- a/src/java.base/share/classes/sun/security/ssl/NamedGroup.java
++++ b/src/java.base/share/classes/sun/security/ssl/NamedGroup.java
+@@ -50,97 +50,6 @@
+     // Elliptic Curves (RFC 4492)
+     //
+     // See sun.security.util.CurveDB for the OIDs
+-    // NIST K-163
 -
--        // NIST B-163
--        SECT163_R2  (0x0003, "sect163r2", "1.3.132.0.15", true,
--                            ProtocolVersion.PROTOCOLS_TO_12),
--        SECT193_R1  (0x0004, "sect193r1", "1.3.132.0.24", false,
--                            ProtocolVersion.PROTOCOLS_TO_12),
--        SECT193_R2  (0x0005, "sect193r2", "1.3.132.0.25", false,
--                            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT163_K1(0x0001, "sect163k1", "1.3.132.0.1", true,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT163_R1(0x0002, "sect163r1", "1.3.132.0.2", false,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
 -
--        // NIST K-233
--        SECT233_K1  (0x0006, "sect233k1", "1.3.132.0.26", true,
--                            ProtocolVersion.PROTOCOLS_TO_12),
+-    // NIST B-163
+-    SECT163_R2(0x0003, "sect163r2", "1.3.132.0.15", true,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT193_R1(0x0004, "sect193r1", "1.3.132.0.24", false,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT193_R2(0x0005, "sect193r2", "1.3.132.0.25", false,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
 -
--        // NIST B-233
--        SECT233_R1  (0x0007, "sect233r1", "1.3.132.0.27", true,
--                            ProtocolVersion.PROTOCOLS_TO_12),
--        SECT239_K1  (0x0008, "sect239k1", "1.3.132.0.3", false,
--                            ProtocolVersion.PROTOCOLS_TO_12),
+-    // NIST K-233
+-    SECT233_K1(0x0006, "sect233k1", "1.3.132.0.26", true,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
 -
--        // NIST K-283
--        SECT283_K1  (0x0009, "sect283k1", "1.3.132.0.16", true,
--                            ProtocolVersion.PROTOCOLS_TO_12),
+-    // NIST B-233
+-    SECT233_R1(0x0007, "sect233r1", "1.3.132.0.27", true,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECT239_K1(0x0008, "sect239k1", "1.3.132.0.3", false,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
 -
--        // NIST B-283
--        SECT283_R1  (0x000A, "sect283r1", "1.3.132.0.17", true,
--                            ProtocolVersion.PROTOCOLS_TO_12),
+-    // NIST K-283
+-    SECT283_K1(0x0009, "sect283k1", "1.3.132.0.16", true,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
 -
--        // NIST K-409
--        SECT409_K1  (0x000B, "sect409k1", "1.3.132.0.36", true,
--                            ProtocolVersion.PROTOCOLS_TO_12),
+-    // NIST B-283
+-    SECT283_R1(0x000A, "sect283r1", "1.3.132.0.17", true,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
 -
--        // NIST B-409
--        SECT409_R1  (0x000C, "sect409r1", "1.3.132.0.37", true,
--                            ProtocolVersion.PROTOCOLS_TO_12),
+-    // NIST K-409
+-    SECT409_K1(0x000B, "sect409k1", "1.3.132.0.36", true,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
 -
--        // NIST K-571
--        SECT571_K1  (0x000D, "sect571k1", "1.3.132.0.38", true,
--                            ProtocolVersion.PROTOCOLS_TO_12),
+-    // NIST B-409
+-    SECT409_R1(0x000C, "sect409r1", "1.3.132.0.37", true,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
 -
--        // NIST B-571
--        SECT571_R1  (0x000E, "sect571r1", "1.3.132.0.39", true,
--                            ProtocolVersion.PROTOCOLS_TO_12),
--        SECP160_K1  (0x000F, "secp160k1", "1.3.132.0.9", false,
--                            ProtocolVersion.PROTOCOLS_TO_12),
--        SECP160_R1  (0x0010, "secp160r1", "1.3.132.0.8", false,
--                            ProtocolVersion.PROTOCOLS_TO_12),
--        SECP160_R2  (0x0011, "secp160r2", "1.3.132.0.30", false,
--                            ProtocolVersion.PROTOCOLS_TO_12),
--        SECP192_K1  (0x0012, "secp192k1", "1.3.132.0.31", false,
--                            ProtocolVersion.PROTOCOLS_TO_12),
+-    // NIST K-571
+-    SECT571_K1(0x000D, "sect571k1", "1.3.132.0.38", true,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
 -
--        // NIST P-192
--        SECP192_R1  (0x0013, "secp192r1", "1.2.840.10045.3.1.1", true,
--                            ProtocolVersion.PROTOCOLS_TO_12),
--        SECP224_K1  (0x0014, "secp224k1", "1.3.132.0.32", false,
--                            ProtocolVersion.PROTOCOLS_TO_12),
--        // NIST P-224
--        SECP224_R1  (0x0015, "secp224r1", "1.3.132.0.33", true,
--                            ProtocolVersion.PROTOCOLS_TO_12),
--        SECP256_K1  (0x0016, "secp256k1", "1.3.132.0.10", false,
--                            ProtocolVersion.PROTOCOLS_TO_12),
+-    // NIST B-571
+-    SECT571_R1(0x000E, "sect571r1", "1.3.132.0.39", true,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECP160_K1(0x000F, "secp160k1", "1.3.132.0.9", false,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECP160_R1(0x0010, "secp160r1", "1.3.132.0.8", false,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECP160_R2(0x0011, "secp160r2", "1.3.132.0.30", false,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECP192_K1(0x0012, "secp192k1", "1.3.132.0.31", false,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
 -
-         // NIST P-256
-         SECP256_R1  (0x0017, "secp256r1", "1.2.840.10045.3.1.7", true,
-                             ProtocolVersion.PROTOCOLS_TO_13),
+-    // NIST P-192
+-    SECP192_R1(0x0013, "secp192r1", "1.2.840.10045.3.1.1", true,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECP224_K1(0x0014, "secp224k1", "1.3.132.0.32", false,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
+-
+-    // NIST P-224
+-    SECP224_R1(0x0015, "secp224r1", "1.3.132.0.33", true,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
+-    SECP256_K1(0x0016, "secp256k1", "1.3.132.0.10", false,
+-            NamedGroupType.NAMED_GROUP_ECDHE,
+-            ProtocolVersion.PROTOCOLS_TO_12),
+-
+     // NIST P-256
+     SECP256_R1(0x0017, "secp256r1", "1.2.840.10045.3.1.7", true,
+             NamedGroupType.NAMED_GROUP_ECDHE,
+@@ -179,17 +88,7 @@
+             ProtocolVersion.PROTOCOLS_TO_13),
+     FFDHE_8192(0x0104, "ffdhe8192", null, true,
+             NamedGroupType.NAMED_GROUP_FFDHE,
+-            ProtocolVersion.PROTOCOLS_TO_13),
+-
+-    // Elliptic Curves (RFC 4492)
+-    //
+-    // arbitrary prime and characteristic-2 curves
+-    ARBITRARY_PRIME(0xFF01, "arbitrary_explicit_prime_curves", null, false,
+-            NamedGroupType.NAMED_GROUP_ARBITRARY,
+-            ProtocolVersion.PROTOCOLS_TO_12),
+-    ARBITRARY_CHAR2(0xFF02, "arbitrary_explicit_char2_curves", null, false,
+-            NamedGroupType.NAMED_GROUP_ARBITRARY,
+-            ProtocolVersion.PROTOCOLS_TO_12);
++            ProtocolVersion.PROTOCOLS_TO_13);
+ 
+     final int id;               // hash + signature
+     final NamedGroupType type;  // group type
 diff --git a/src/java.base/share/classes/sun/security/util/CurveDB.java b/src/java.base/share/classes/sun/security/util/CurveDB.java
 --- a/src/java.base/share/classes/sun/security/util/CurveDB.java
 +++ b/src/java.base/share/classes/sun/security/util/CurveDB.java

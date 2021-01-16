@@ -22,6 +22,7 @@ New in release 4.0.0 (2017-XX-XX):
   - PR3807: Allow the number of curves supported to be specified
 * Bug fixes
   - PR3802: Update elliptic curve patch to handle jdk.disabled.namedCurves (JDK-8233228) & curves in Apache Santuario 2.1.1 (JDK-8177334)
+  - PR3818: Update elliptic curve patch to handle move of SSL curve handling to sun.security.ssl.NamedGroup in JDK-8171279
 
 New in release 3.0.0 (2016-04-08):
 
