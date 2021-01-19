@@ -11,6 +11,8 @@ JDK-X  - https://bugs.openjdk.java.net/browse/JDK-X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 3.18.0 (2021-01-19):
+
 New in release 3.17.1 (2020-11-26):
 
 * Import of OpenJDK 8 u275 build 01
