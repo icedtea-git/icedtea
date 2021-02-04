@@ -1,3 +1,23 @@
+2021-02-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump aarch32 to jdk8u282-ga-aarch32-20210125.
+	* patches/hotspot/aarch32/8062808-pr3548.patch,
+	* patches/hotspot/aarch32/8197981-pr3548.patch,
+	* patches/hotspot/aarch32/pr1869.patch,
+	* patches/hotspot/aarch32/pr3548-aarch32.patch,
+	* patches/hotspot/aarch32/pr3601.patch:
+	Remove patches included upstream.
+	* Makefile.am:
+	(ICEDTEA_PATCHES): Remove upstreamed patches.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump aarch32 to
+	jdk8u282-ga-aarch32-20210125.
+	* patches/hotspot/aarch32/8143245-pr3548.patch,
+	* patches/hotspot/aarch32/pr1748.patch,
+	* patches/hotspot/aarch32/werror.patch:
+	Switch back to symlinks to Shenandoah versions
+	now that both HotSpot builds are based on 8u282-b08/-ga.
+
 2021-02-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump shenandoah to aarch64-shenandoah-jdk8u282-b08.
