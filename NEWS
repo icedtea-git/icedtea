@@ -13,6 +13,50 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 3.18.0 (2021-01-19):
 
+* Shenandoah
+  - JDK-8030350: Enable additional compiler warnings for GCC
+  - JDK-8036122: Fix warning 'format not a string literal'
+  - JDK-8043899: compiler/5091921/Test7005594.java fails if specified -Xmx is less than 1600m
+  - JDK-8148854: Class names "SomeClass" and "LSomeClass;" treated by JVM as an equivalent
+  - JDK-8156803: Turn StressLCM/StressGCM flags to diagnostic
+  - JDK-8160761: [TESTBUG] Several compiler tests fail with product bits
+  - JDK-8165808: Add release barriers when allocating objects with concurrent collection
+  - JDK-8166583: Add oopDesc::klass_or_null_acquire()
+  - JDK-8166663: Simplify oops_on_card_seq_iterate_careful
+  - JDK-8166862: CMS needs klass_or_null_acquire
+  - JDK-8179083: Uninitialized notifier in Java Monitor Wait tracing event
+  - JDK-8185003: JMX: Add a version of ThreadMXBean.dumpAllThreads with a maxDepth argument
+  - JDK-8212070: Introduce diagnostic flag to abort VM on failed JIT compilation
+  - JDK-8215727: Restore JFR thread sampler loop to old / previous behavior
+  - JDK-8217362: Emergency dump does not work when disk=false is set
+  - JDK-8217766: Container Support doesn't work for some Join Controllers combinations
+  - JDK-8219562: Line of code in osContainer_linux.cpp L102 appears unreachable
+  - JDK-8221342: [TESTBUG] Generate Dockerfile for docker testing
+  - JDK-8221710: [TESTBUG] more configurable parameters for docker testing
+  - JDK-8227006: [linux] Runtime.availableProcessors execution time increased by factor of 100
+  - JDK-8229868: Update Apache Santuario TPRM version
+  - JDK-8231209: [REDO] ThreadMXBean::getThreadAllocatedBytes() can be quicker for self thread
+  - JDK-8233548: Update CUP to v0.11b
+  - JDK-8234270: [REDO] JDK-8204128 NMT might report incorrect numbers for Compiler area
+  - JDK-8244225: stringop-overflow warning on strncpy call from compile_the_world_in
+  - JDK-8245400: Upgrade to LittleCMS 2.11
+  - JDK-8248214: Add paddings for TaskQueueSuper to reduce false-sharing cache contention
+  - JDK-8250636: iso8601_time returns incorrect offset part on MacOS
+  - JDK-8250928: JFR: Improve hash algorithm for stack traces
+  - JDK-8251365: Build failure on AIX after 8250636
+  - JDK-8252754: Hash code calculation of JfrStackTrace is inconsistent
+  - JDK-8252904: VM crashes when JFR is used and JFR event class is transformed
+  - JDK-8253036: Support building the Zero assembler port on AArch64
+  - JDK-8253284: Zero OrderAccess barrier mappings are incorrect
+  - JDK-8253837: JFR 8u fix symbol and cstring hashtable equals implementaion
+  - JDK-8254144: Non-x86 Zero builds fail with return-type warning in os_linux_zero.cpp
+  - JDK-8254166: Zero: return-type warning in zeroInterpreter_zero.cpp
+  - JDK-8255269: Unsigned overflow in g1Policy.cpp
+  - JDK-8255717: Fix JFR crash in WriteObjectSampleStacktrace due to object not initialized
+  - JDK-8256618: Zero: Linux x86_32 build still fails
+  - JDK-8256671: Incorrect assignment operator used in guarantee() in genCollectedHeap
+  - Shenandoah: Fix racy update of code roots
+
 New in release 3.17.1 (2020-11-26):
 
 * Import of OpenJDK 8 u275 build 01

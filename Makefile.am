@@ -350,7 +350,11 @@ if WITH_ALT_HSBUILD
 if WITH_AARCH32_HSBUILD
 ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/pr3548-aarch32.patch \
-	patches/hotspot/$(HSBUILD)/8078628-pr3208.patch
+	patches/hotspot/$(HSBUILD)/8078628-pr3208.patch \
+	patches/hotspot/$(HSBUILD)/pr1869.patch \
+	patches/hotspot/$(HSBUILD)/8062808-pr3548.patch \
+	patches/hotspot/$(HSBUILD)/8197981-pr3548.patch \
+	patches/hotspot/$(HSBUILD)/pr3601.patch
 endif
 
 ICEDTEA_PATCHES += \
@@ -361,18 +365,14 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/no_devirt.patch \
 	patches/hotspot/$(HSBUILD)/pr1368.patch \
 	patches/hotspot/$(HSBUILD)/pr1748.patch \
-	patches/hotspot/$(HSBUILD)/pr1869.patch \
 	patches/hotspot/$(HSBUILD)/pr1942.patch \
 	patches/hotspot/$(HSBUILD)/pr1975.patch \
 	patches/hotspot/$(HSBUILD)/pr2777.patch \
 	patches/hotspot/$(HSBUILD)/werror.patch \
 	patches/hotspot/$(HSBUILD)/8043780-pr3368.patch \
-	patches/hotspot/$(HSBUILD)/8062808-pr3548.patch \
 	patches/hotspot/$(HSBUILD)/8143245-pr3548.patch \
 	patches/hotspot/$(HSBUILD)/pr3593.patch \
-	patches/hotspot/$(HSBUILD)/8197981-pr3548.patch \
 	patches/hotspot/$(HSBUILD)/pr3597.patch \
-	patches/hotspot/$(HSBUILD)/pr3601.patch \
 	patches/hotspot/$(HSBUILD)/8207057-pr3613.patch \
 	patches/hotspot/$(HSBUILD)/pr3607.patch \
 	patches/hotspot/$(HSBUILD)/8078504-pr3094.patch \
@@ -391,7 +391,6 @@ if WITH_SHENANDOAH_HSBUILD
 ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8158260-pr2991-rh1341258-aarch64.patch \
 	patches/hotspot/$(HSBUILD)/8222286-pr3727-s390-shenandoah.patch \
-	patches/hotspot/$(HSBUILD)/pr3519-return_value-02.patch \
 	patches/hotspot/$(HSBUILD)/8222286-pr3815-s390-shenandoah.patch
 endif
 endif

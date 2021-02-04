@@ -1,1 +1,65 @@
-../shenandoah/pr1748.patch
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2021-02-04 03:29:37.041389872 +0000
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2021-02-04 03:32:04.985078068 +0000
+@@ -209,7 +209,7 @@
+   WARNINGS_ARE_ERRORS += -Wno-logical-op-parentheses -Wno-parentheses-equality -Wno-parentheses
+   WARNINGS_ARE_ERRORS += -Wno-switch -Wno-tautological-constant-out-of-range-compare -Wno-tautological-compare
+   WARNINGS_ARE_ERRORS += -Wno-delete-non-virtual-dtor -Wno-deprecated -Wno-format -Wno-dynamic-class-memaccess
+-  WARNINGS_ARE_ERRORS += -Wno-return-type -Wno-empty-body
++  WARNINGS_ARE_ERRORS += -Wno-return-type -Wno-empty-body -Qunused-arguments -Wno-uninitialized
+ endif
+ 
+ WARNING_FLAGS = -Wpointer-arith -Wsign-compare -Wundef -Wunused-function -Wunused-value -Wreturn-type
+diff -Nru openjdk.orig/hotspot/src/cpu/x86/vm/templateTable_x86_64.cpp openjdk/hotspot/src/cpu/x86/vm/templateTable_x86_64.cpp
+--- openjdk.orig/hotspot/src/cpu/x86/vm/templateTable_x86_64.cpp	2020-11-08 08:27:57.000000000 +0000
++++ openjdk/hotspot/src/cpu/x86/vm/templateTable_x86_64.cpp	2021-02-04 03:31:18.911552322 +0000
+@@ -107,10 +107,6 @@
+   return Address(rsp,  Interpreter::expr_offset_in_bytes(2));
+ }
+ 
+-static inline Address at_tos_p3() {
+-  return Address(rsp,  Interpreter::expr_offset_in_bytes(3));
+-}
+-
+ // Condition conversion
+ static Assembler::Condition j_not(TemplateTable::Condition cc) {
+   switch (cc) {
+diff -Nru openjdk.orig/hotspot/src/share/vm/prims/jvmtiTagMap.cpp openjdk/hotspot/src/share/vm/prims/jvmtiTagMap.cpp
+--- openjdk.orig/hotspot/src/share/vm/prims/jvmtiTagMap.cpp	2020-11-08 08:27:57.000000000 +0000
++++ openjdk/hotspot/src/share/vm/prims/jvmtiTagMap.cpp	2021-02-04 03:31:18.911552322 +0000
+@@ -2806,6 +2806,7 @@
+ }
+ 
+ // verify that a static oop field is in range
++#ifdef ASSERT
+ static inline bool verify_static_oop(InstanceKlass* ik,
+                                      oop mirror, int offset) {
+   address obj_p = (address)mirror + offset;
+@@ -2819,6 +2820,7 @@
+     return false;
+   }
+ }
++#endif
+ 
+ // a class references its super class, interfaces, class loader, ...
+ // and finally its static fields
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/mutex.cpp openjdk/hotspot/src/share/vm/runtime/mutex.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/mutex.cpp	2020-11-08 08:27:57.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/mutex.cpp	2021-02-04 03:31:18.912552333 +0000
+@@ -283,16 +283,6 @@
+   return x & 0x7FFFFFFF ;
+ }
+ 
+-static inline jint MarsagliaXOR (jint * const a) {
+-  jint x = *a ;
+-  if (x == 0) x = UNS(a)|1 ;
+-  x ^= x << 6;
+-  x ^= ((unsigned)x) >> 21;
+-  x ^= x << 7 ;
+-  *a = x ;
+-  return x & 0x7FFFFFFF ;
+-}
+-
+ static int Stall (int its) {
+   static volatile jint rv = 1 ;
+   volatile int OnFrame = 0 ;

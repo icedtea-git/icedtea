@@ -8,8 +8,8 @@
 Reviewed-by: dholmes, coleenp
 
 diff -Nru openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make openjdk/hotspot/make/linux/makefiles/zeroshark.make
---- openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make	2019-01-03 15:14:40.000000000 +0000
-+++ openjdk/hotspot/make/linux/makefiles/zeroshark.make	2020-07-21 03:22:17.875932021 +0100
+--- openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make	2021-01-15 17:21:13.000000000 +0000
++++ openjdk/hotspot/make/linux/makefiles/zeroshark.make	2021-02-03 18:32:04.493467003 +0000
 @@ -1,5 +1,5 @@
  #
 -# Copyright (c) 2003, 2015, Oracle and/or its affiliates. All rights reserved.
@@ -30,20 +30,20 @@ diff -Nru openjdk.orig/hotspot/make/linux/makefiles/zeroshark.make openjdk/hotsp
  
  # If FDLIBM_CFLAGS is non-empty it holds CFLAGS needed to be passed to
 diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp openjdk/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp
---- openjdk.orig/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp	2019-01-03 15:14:40.000000000 +0000
-+++ openjdk/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp	2020-07-21 03:22:17.875932021 +0100
-@@ -100,7 +100,7 @@
-     case T_DOUBLE:
-     case T_VOID:
+--- openjdk.orig/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp	2021-01-15 17:21:13.000000000 +0000
++++ openjdk/hotspot/src/cpu/zero/vm/cppInterpreter_zero.cpp	2021-02-03 18:32:45.508953742 +0000
+@@ -102,7 +102,7 @@
        return result;
--    default  : ShouldNotReachHere();
-+    default  : ShouldNotReachHere(); return NULL_WORD;
+     default:
+       ShouldNotReachHere();
+-      return result; // silence compiler warnings
++      return NULL_WORD; // silence compiler warnings
    }
  }
  
 diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp openjdk/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp
---- openjdk.orig/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp	2019-01-03 15:14:40.000000000 +0000
-+++ openjdk/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp	2020-07-21 03:22:17.876932032 +0100
+--- openjdk.orig/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp	2021-01-15 17:21:13.000000000 +0000
++++ openjdk/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp	2021-02-03 18:32:04.493467003 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (c) 2003, 2012, Oracle and/or its affiliates. All rights reserved.
@@ -61,8 +61,8 @@ diff -Nru openjdk.orig/hotspot/src/cpu/zero/vm/interpreterRT_zero.cpp openjdk/ho
    case T_VOID:
      ftype = &ffi_type_void;
 diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp
---- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp	2019-01-03 15:14:40.000000000 +0000
-+++ openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp	2020-07-21 03:22:17.876932032 +0100
+--- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp	2021-01-15 17:21:13.000000000 +0000
++++ openjdk/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp	2021-02-03 18:32:04.493467003 +0000
 @@ -1,6 +1,6 @@
  /*
   * Copyright (c) 2003, 2018, Oracle and/or its affiliates. All rights reserved.
@@ -127,8 +127,8 @@ diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/os_linux_zero.cpp openjd
  
  void os::Linux::set_fpu_control_word(int fpu) {
 diff -Nru openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp openjdk/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp
---- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp	2019-01-03 15:14:40.000000000 +0000
-+++ openjdk/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp	2020-07-21 03:22:43.949200090 +0100
+--- openjdk.orig/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp	2021-01-15 17:21:13.000000000 +0000
++++ openjdk/hotspot/src/os_cpu/linux_zero/vm/thread_linux_zero.hpp	2021-02-03 18:32:04.494467015 +0000
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.

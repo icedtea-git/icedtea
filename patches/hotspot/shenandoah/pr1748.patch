@@ -6,10 +6,10 @@
 # Parent  5e956adabf368a0f3292ce5b9ee79db79bfe92f2
 PR1748: Allow clang to be used to build
 
-diff -r 5e956adabf36 -r a8b6c290873c make/linux/makefiles/gcc.make
---- openjdk/hotspot/make/linux/makefiles/gcc.make	Tue Apr 22 19:50:45 2014 +0100
-+++ openjdk/hotspot/make/linux/makefiles/gcc.make	Wed Apr 23 21:15:09 2014 +0100
-@@ -212,7 +212,7 @@
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2021-02-03 05:30:00.050338690 +0000
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2021-02-03 05:34:54.382857820 +0000
+@@ -209,7 +209,7 @@
    WARNINGS_ARE_ERRORS += -Wno-logical-op-parentheses -Wno-parentheses-equality -Wno-parentheses
    WARNINGS_ARE_ERRORS += -Wno-switch -Wno-tautological-constant-out-of-range-compare -Wno-tautological-compare
    WARNINGS_ARE_ERRORS += -Wno-delete-non-virtual-dtor -Wno-deprecated -Wno-format -Wno-dynamic-class-memaccess
@@ -17,11 +17,11 @@ diff -r 5e956adabf36 -r a8b6c290873c make/linux/makefiles/gcc.make
 +  WARNINGS_ARE_ERRORS += -Wno-return-type -Wno-empty-body -Qunused-arguments -Wno-uninitialized
  endif
  
- WARNING_FLAGS = -Wpointer-arith -Wsign-compare -Wundef -Wunused-function -Wunused-value
-diff -r 5e956adabf36 -r a8b6c290873c src/cpu/x86/vm/templateTable_x86_64.cpp
---- openjdk/hotspot/src/cpu/x86/vm/templateTable_x86_64.cpp	Tue Apr 22 19:50:45 2014 +0100
-+++ openjdk/hotspot/src/cpu/x86/vm/templateTable_x86_64.cpp	Wed Apr 23 21:15:09 2014 +0100
-@@ -107,10 +107,6 @@
+ WARNING_FLAGS = -Wpointer-arith -Wsign-compare -Wundef -Wunused-function -Wunused-value -Wformat=2 -Wreturn-type
+diff -Nru openjdk.orig/hotspot/src/cpu/x86/vm/templateTable_x86_64.cpp openjdk/hotspot/src/cpu/x86/vm/templateTable_x86_64.cpp
+--- openjdk.orig/hotspot/src/cpu/x86/vm/templateTable_x86_64.cpp	2021-01-15 17:21:13.000000000 +0000
++++ openjdk/hotspot/src/cpu/x86/vm/templateTable_x86_64.cpp	2021-02-03 05:34:29.284541349 +0000
+@@ -110,10 +110,6 @@
    return Address(rsp,  Interpreter::expr_offset_in_bytes(2));
  }
  
@@ -32,10 +32,10 @@ diff -r 5e956adabf36 -r a8b6c290873c src/cpu/x86/vm/templateTable_x86_64.cpp
  // Condition conversion
  static Assembler::Condition j_not(TemplateTable::Condition cc) {
    switch (cc) {
-diff -r 5e956adabf36 -r a8b6c290873c src/share/vm/prims/jvmtiTagMap.cpp
---- openjdk/hotspot/src/share/vm/prims/jvmtiTagMap.cpp	Tue Apr 22 19:50:45 2014 +0100
-+++ openjdk/hotspot/src/share/vm/prims/jvmtiTagMap.cpp	Wed Apr 23 21:15:09 2014 +0100
-@@ -2791,6 +2791,7 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/prims/jvmtiTagMap.cpp openjdk/hotspot/src/share/vm/prims/jvmtiTagMap.cpp
+--- openjdk.orig/hotspot/src/share/vm/prims/jvmtiTagMap.cpp	2021-01-15 17:21:13.000000000 +0000
++++ openjdk/hotspot/src/share/vm/prims/jvmtiTagMap.cpp	2021-02-03 05:34:29.284541349 +0000
+@@ -2806,6 +2806,7 @@
  }
  
  // verify that a static oop field is in range
@@ -43,7 +43,7 @@ diff -r 5e956adabf36 -r a8b6c290873c src/share/vm/prims/jvmtiTagMap.cpp
  static inline bool verify_static_oop(InstanceKlass* ik,
                                       oop mirror, int offset) {
    address obj_p = (address)mirror + offset;
-@@ -2804,6 +2805,7 @@
+@@ -2819,6 +2820,7 @@
      return false;
    }
  }
@@ -51,10 +51,10 @@ diff -r 5e956adabf36 -r a8b6c290873c src/share/vm/prims/jvmtiTagMap.cpp
  
  // a class references its super class, interfaces, class loader, ...
  // and finally its static fields
-diff -r 5e956adabf36 -r a8b6c290873c src/share/vm/runtime/mutex.cpp
---- openjdk/hotspot/src/share/vm/runtime/mutex.cpp	Tue Apr 22 19:50:45 2014 +0100
-+++ openjdk/hotspot/src/share/vm/runtime/mutex.cpp	Wed Apr 23 21:15:09 2014 +0100
-@@ -280,16 +280,6 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/mutex.cpp openjdk/hotspot/src/share/vm/runtime/mutex.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/mutex.cpp	2021-01-15 17:21:13.000000000 +0000
++++ openjdk/hotspot/src/share/vm/runtime/mutex.cpp	2021-02-03 05:34:29.284541349 +0000
+@@ -283,16 +283,6 @@
    return x & 0x7FFFFFFF ;
  }
  
