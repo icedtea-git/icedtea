@@ -11,7 +11,7 @@ JDK-X  - https://bugs.openjdk.java.net/browse/JDK-X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.18.0 (2021-01-19):
+New in release 3.18.0 (2021-02-05):
 
 * Security fixes
   - JDK-8247619: Improve Direct Buffering of Characters
