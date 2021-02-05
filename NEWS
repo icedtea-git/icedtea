@@ -120,6 +120,8 @@ New in release 3.18.0 (2021-01-19):
   - JDK-8225072: Add LuxTrust certificate that is expiring in March 2021 to list of allowed but expired certs
   - JDK-8239105: Add exception for expiring Digicert root certificates to VerifyCACerts test
   - JDK-8258630: Add expiry exception for QuoVadis root certificate
+* Bug fixes
+  - PR3819: Installation can't handle existing tapset symlinks
 * Shenandoah
   - Shenandoah: Fix racy update of code roots
 * AArch32 port
