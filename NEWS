@@ -12,6 +12,15 @@ JEPX - https://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 2.6.25 (2021-02-12):
+
+* Security fixes
+  - JDK-8247619: Improve Direct Buffering of Characters
+* Import of OpenJDK 7 u291 build 1
+  - JDK-8254177: (tz) Upgrade time-zone data to tzdata2020b
+  - JDK-8254982: (tz) Upgrade time-zone data to tzdata2020c
+  - JDK-8255226: (tz) Upgrade time-zone data to tzdata2020d
+
 New in release 2.6.24 (2020-11-05):
 
 * Security fixes
