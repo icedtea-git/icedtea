@@ -1,5 +1,15 @@
 2021-02-11  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR3823: Update elliptic curve patch to handle
+	JDK-8235710 (remove legacy elliptic curves)
+	* NEWS: Updated.
+	* fsg.sh.in: Update patch name.
+	* patches/pr3823.patch: No longer any need to
+	patch native SunEC code (removed) or java.security,
+	as jdk.disabled.namedCurves is empty by default.
+
+2021-02-11  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Start next major release cycle (11.0.0/OpenJDK 16)
 	* Makefile.am:
 	(ICEDTEA_MAJOR): Bump to icedtea16.

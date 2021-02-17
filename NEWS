@@ -12,6 +12,9 @@ CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 11.0.0 (2021-XX-XX):
 
+* Bug fixes
+  - PR3823: Update elliptic curve patch to handle JDK-8235710 (remove legacy elliptic curves)
+
 New in release 10.0.0 (2021-XX-XX):
 
 * Bug fixes
