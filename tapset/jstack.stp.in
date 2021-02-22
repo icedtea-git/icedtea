@@ -52,7 +52,7 @@ Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   %( systemtap_v < "3.2" && systemtap_v >= "3.0" %? if (pp() !~ "@prefix@") next %)
 %)
 
-@_private global CodeCache_heap;
+@_private global CodeCache_heaps;
 
 @_private global sp_register;
 /* On PowerPC there is a link register, but no frame pointer register.  */
@@ -90,8 +90,8 @@ probe hotspot.vm_init_end@JAVA_SPEC_VER@
    * the segment at index - N (which can be recursive if a block
    * contains more than 0xFE segments).
    */
-  CodeCache_heap[pid()] = %( systemtap_v >= "1.8"
-                            %? @var("_heap@codeCache.cpp")
+  CodeCache_heaps[pid()] = %( systemtap_v >= "1.8"
+                            %? @var("_heaps@codeCache.cpp")
                             %: $_heap %);
 
   // Should really check arch of user space (for 32bit jvm on 64bit kernel).
@@ -140,7 +140,7 @@ probe hotspot.vm_init_end@JAVA_SPEC_VER@
 
 probe hotspot.vm_shutdown
 {
-  delete(CodeCache_heap[pid()]);
+  delete(CodeCache_heaps[pid()]);
   delete(vm_inited[pid()]);
 }
 
@@ -269,19 +269,6 @@ function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
         return frame;
     }
 
-  // Extract code bounds.
-  CodeCache_low = @cast(CodeCache_heap[pid()], "CodeHeap",
-                        "@ABS_SERVER_LIBJVM_SO@")->_memory->_low;
-  CodeCache_high =  @cast(CodeCache_heap[pid()], "CodeHeap",
-                          "@ABS_SERVER_LIBJVM_SO@")->_memory->_high;
-
-  CodeHeap_log2_segment_size = @cast(CodeCache_heap[pid()],
-                                     "CodeHeap",
-                                     "@ABS_SERVER_LIBJVM_SO@")->_log2_segment_size;
-  CodeCache_segmap_low = @cast(CodeCache_heap[pid()],
-                               "CodeHeap",
-                               "@ABS_SERVER_LIBJVM_SO@")->_segmap->_low;
-
   // Might want to sanity check above values.
 
   // Loop through all the frames. The program counter is the starting
@@ -309,8 +296,39 @@ function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
       // Assume things are fine unless indicated otherwise.
       trust_fp = 1;
 
+      // Extract code bounds.
+      CodeHeaps_len = @cast(CodeCache_heaps[pid()], "GrowableArray<CodeHeap*>",
+                            "@ABS_SERVER_LIBJVM_SO@")->_len;
+      heapsPos = 0;
+      foundCodeHeap = 0;
+      while (heapsPos < CodeHeaps_len)
+        {
+          CodeHeap = &@cast(CodeCache_heaps[pid()], "GrowableArray<CodeHeap*>",
+                            "@ABS_SERVER_LIBJVM_SO@")->_data[heapsPos];
+          heapsPos++;
+
+          // Extract code bounds.
+          CodeCache_low = @cast(CodeHeap, "CodeHeap",
+                                "@ABS_SERVER_LIBJVM_SO@")->_memory->_low_boundary;
+          CodeCache_high =  @cast(CodeHeap, "CodeHeap",
+                                  "@ABS_SERVER_LIBJVM_SO@")->_memory->_high;
+
+          CodeHeap_log2_segment_size = @cast(CodeHeap,
+                                             "CodeHeap",
+                                             "@ABS_SERVER_LIBJVM_SO@")->_log2_segment_size;
+          CodeCache_segmap_low = @cast(CodeHeap,
+                                       "CodeHeap",
+                                       "@ABS_SERVER_LIBJVM_SO@")->_segmap->_low;
+          // break out of the loop if we've found the code heap
+          if (CodeCache_low <= pc && pc < CodeCache_high)
+            {
+              foundCodeHeap = 1;
+              break;
+            }
+        }
+
       // Generated code? (Interpreter and stub methods are also generated)
-      if (CodeCache_low <= pc && pc < CodeCache_high)
+      if (foundCodeHeap == 1)
         {
           // Find the start of the code segment and code block that
           // this pc is in.
@@ -357,7 +375,7 @@ function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
               // For the interpreter (and other code blobs) it is on the
               // stack relative to the frame pointer.
               if (blob_name == "nmethod")
-                methodPtr = @cast(blob, "nmethod",
+                methodPtr = @cast(blob, "CompiledMethod",
                                      "@ABS_SERVER_LIBJVM_SO@")->_method
               else 
                 methodPtr = user_long(fp + (-3 * ptr_size)) & ptr_mask

@@ -21,6 +21,7 @@ New in release 6.0.0 (2019-XX-XX):
   - PR3828: Architectures unsupported by SystemTap tapsets throw a parse error
   - PR3829: arc_priority representation creates an implicit limit on character sequence within regexp
   - PR3831: Hotspot object_alloc tapset uses HeapWordSize incorrectly
+  - PR3833, RH1814915: Update tapsets following JDK-8015774, which removes '_heap'
 
 New in release 5.0.0 (2019-XX-XX):
 
