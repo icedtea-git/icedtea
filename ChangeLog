@@ -1,3 +1,20 @@
+2021-02-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3832: Populate unique SystemTap suffix
+	from configure
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DETERMINE_VERSION): Update JAVA_VER
+	to match this version of IcedTea (11).
+	Introduce JAVA_SPEC_VER, which is no
+	different here, but will be for
+	IcedTea <= 3 (OpenJDK <= 8)
+	* tapset/hotspot.stp.in,
+	* tapset/jstack.stp.in:
+	Replace "end11" with "end@JAVA_SPEC_VER@"
+	so that the unique suffix is completed
+	by configure.
+
 2017-10-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3831: Hotspot object_alloc tapset uses HeapWordSize incorrectly
