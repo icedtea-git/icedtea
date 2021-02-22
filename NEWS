@@ -37,9 +37,10 @@ New in release 6.0.0 (2019-XX-XX):
 
 * New features
   - PR3827: jstack.stp should support AArch64
-* Bug fixes
+* SystemTap
   - PR3825: SystemTap is heavily confused by multiple JDKs
   - PR3828: Architectures unsupported by SystemTap tapsets throw a parse error
+  - PR3829: arc_priority representation creates an implicit limit on character sequence within regexp
 
 New in release 5.0.0 (2019-XX-XX):
 
