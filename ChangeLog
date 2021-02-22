@@ -1,3 +1,30 @@
+2021-02-21  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR3825: SystemTap is heavily confused
+	by multiple JDKs
+	* tapset/hotspot.stp.in,
+	* tapset/jstack.stp.in:
+	Update unique suffix to match JDK
+	version ('end11' instead of 'end8')
+
+2016-07-17  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR3825: SystemTap is heavily confused
+	by multiple JDKs
+	* AUTHORS: Added Felix Lu.
+	* NEWS: Updated.
+
+2016-07-13  Felix Lu  <flu@redhat.com>
+
+	PR3825: SystemTap is heavily confused
+	by multiple JDKs
+	* tapset/hotspot.stp.in,
+	* tapset/jstack.stp.in:
+	Use the new private keyword in SystemTap
+	>= 3.0 to resolve global variable name
+	collision and function overloading
+	to select the correct jstack_call at runtime.
+
 2021-01-16  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3818: Update elliptic curve patch to
