@@ -1,5 +1,22 @@
 2021-02-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	PR3833: Update tapsets following JDK-8015774,
+	which removes '_heap'
+	* NEWS: Updated.
+	* tapset/jstack.stp.in:
+	Replace hardcoded libjvm.so paths
+	from Severin's patch with @ABS_SERVER_LIBJVM_SO@.
+
+2020-08-03  Severin Gehwolf  <sgehwolf@redhat.com>
+
+	PR3833: Update tapsets following JDK-8015774,
+	which removes '_heap'
+	* tapset/jstack.stp.in:
+	Adapt to work with _heaps, following
+	JDK-8015774.
+
+2021-02-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	PR3832: Populate unique SystemTap suffix
 	from configure
 	* NEWS: Updated.
