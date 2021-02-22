@@ -1,3 +1,13 @@
+2019-02-10  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3830: jstack.stp should support ppc64[le,be]
+	* NEWS: Updated.
+
+2019-01-28  Mark Wielaard  <mjw@redhat.com>
+
+	PR3830: jstack.stp should support ppc64[le,be]
+	* tapset/jstack.stp.in: Add ppc64 support.
+
 2018-11-20  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3829: arc_priority representation creates an
