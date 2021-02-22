@@ -35,6 +35,8 @@ New in release 7.0.0 (2019-XX-XX):
 
 New in release 6.0.0 (2019-XX-XX):
 
+* New features
+  - PR3827: jstack.stp should support AArch64
 * Bug fixes
   - PR3825: SystemTap is heavily confused by multiple JDKs
 
