@@ -35,6 +35,9 @@ New in release 7.0.0 (2019-XX-XX):
 
 New in release 6.0.0 (2019-XX-XX):
 
+* Bug fixes
+  - PR3825: SystemTap is heavily confused by multiple JDKs
+
 New in release 5.0.0 (2019-XX-XX):
 
 New in release 4.0.0 (2017-XX-XX):
