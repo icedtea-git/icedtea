@@ -55,7 +55,12 @@ Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 @_private global CodeCache_heap;
 
 @_private global sp_register;
+/* On PowerPC there is a link register, but no frame pointer register.  */
+%(arch == "powerpc" %?
+@_private global link_register;
+%:
 @_private global fp_register;
+%)
 @_private global pc_register;
 @_private global ptr_size;
 @_private global ptr_mask;
@@ -108,6 +113,12 @@ probe hotspot.vm_init_end17
      pc_register = "pc";
      ptr_size = 8; // XXX - might be probing 32-on-64 jvm.
      ptr_mask = 0xFFFFFFFFFFFFFFFF;
+  %: %(arch == "powerpc" %?
+     sp_register = "r1";
+     link_register = "link";
+     pc_register = "nip";
+     ptr_size = 8; // XXX - might be probing 32-on-64 jvm.
+     ptr_mask = 0xFFFFFFFFFFFFFFFF;
   %:
      sp_register = "";
      fp_register = "";
@@ -115,7 +126,7 @@ probe hotspot.vm_init_end17
      ptr_size = 8;
      ptr_mask = 0xFFFFFFFFFFFFFFFF;
      error("unknown architecture")
-  %) %) %)
+  %) %) %) %)
 
   // Pretend we have an array at address zero and take address of second
   // element and we have the size.
@@ -280,9 +291,16 @@ function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
   // to "recover" the previous fp in case we hit a code blob that didn't
   // preserve it.
   frames = "";
+%(arch == "powerpc" %?
+  sp = register(sp_register);
+  fp = sp + 72; /* fp + (-3 * ptr_size) = 48, parameter save area offset */
+  link = register(link_register);
+  pc = register(pc_register);
+%:
   sp = register(sp_register);
   fp = register(fp_register);
   pc = register(pc_register);
+%)
   depth = 0;
   while (pc != 0 && depth < max_depth)
     {
@@ -441,9 +459,17 @@ function jstack_call:string(max_depth:long, log_sig:long, log_native:long,
         old_fp = fp;
         old_sp = sp
 
+%(arch == "powerpc" %?
+        sp = user_long(sp);
+        fp = sp + 72; /* fp + (-3 * ptr_size) = 48, parameter save area offset */
+        pc = link;
+        link = user_long(sp + 16);
+        trust_fp = 1; /* We don't need to recover the frame pointer.  */
+%:
         sp = fp;
         fp = user_long(sp);
         pc = user_long(fp + ptr_size);
+%)
 
         // Do we need to double check? We do not want to do this
         // unless necessary. We have to assume most code is "sane"
