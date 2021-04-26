@@ -20,7 +20,7 @@ if test "x@CURVES@" != "xall"; then
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ec2_mont.c
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ecp_192.c
   rm -vf openjdk/jdk/src/share/native/sun/security/ec/impl/ecp_224.c
-  PATCH_FILE="@abs_top_srcdir@/patches/pr3799-@CURVES@curve.patch"
+  PATCH_FILE="@abs_top_srcdir@/patches/pr3822-@CURVES@curve.patch"
   echo "Applying ${PATCH_FILE}..."
   patch -Np0 < ${PATCH_FILE}
 fi

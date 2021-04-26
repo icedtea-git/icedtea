@@ -1,3 +1,39 @@
+2021-04-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to icedtea-3.19.0.
+	PR3822: Update elliptic curve patch to handle
+	jdk.disabled.namedCurves (JDK-8233228) & file
+	movement (JDK-8035166)
+	* Makefile.am:
+	(CORBA_CHANGESET): Update to icedtea-3.19.0 tag.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DETERMINE_VERSION): Set JDK_UPDATE_VERSION
+	to 292 and BUILD_VERSION to b10.
+	* configure.ac: Bump to 3.19.0.
+	* fsg.sh.in: Change PATCH_FILE to
+	pr3822-@CURVES@curve.patch
+	* hotspot.map.in: Update to icedtea-3.19.0 tag.
+	* patches/pr3822-3curve.patch:
+	Renamed from pr3799-3curve.patch to apply against
+	8u292 and add fix to jdk.disabled.namedCurves in
+	java.security* files
+	* patches/pr3822-4curve.patch: Likewise, but
+	with pr3799-4curve.patch.
+
 2021-04-18  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Start 3.19.0 release cycle.
