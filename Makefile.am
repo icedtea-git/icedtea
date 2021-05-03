@@ -378,13 +378,12 @@ ICEDTEA_PATCHES += \
 	patches/hotspot/$(HSBUILD)/8222286-pr3727-s390.patch \
 	patches/hotspot/$(HSBUILD)/8152358-pr3800.patch \
 	patches/hotspot/$(HSBUILD)/pr3798.patch \
-	patches/hotspot/$(HSBUILD)/8222286-pr3815-s390.patch
+	patches/hotspot/$(HSBUILD)/8222286-pr3815-s390.patch \
+	patches/hotspot/$(HSBUILD)/8158260-pr2991-rh1341258-aarch64.patch
 
-# Shenandoah has the AArch64 port so should get the return value & debug build fixes
-# Shenandoah also needs some fixes to build on all architectures
+# Shenandoah needs some fixes to build on all architectures
 if WITH_SHENANDOAH_HSBUILD
 ICEDTEA_PATCHES += \
-	patches/hotspot/$(HSBUILD)/8158260-pr2991-rh1341258-aarch64.patch \
 	patches/hotspot/$(HSBUILD)/8222286-pr3727-s390-shenandoah.patch \
 	patches/hotspot/$(HSBUILD)/8222286-pr3815-s390-shenandoah.patch
 endif
