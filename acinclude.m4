@@ -2088,6 +2088,9 @@ AC_DEFUN_ONCE([IT_DETERMINE_VERSION],
 [
   AC_MSG_CHECKING([which branch and release of IcedTea is being built])
   JAVA_VER=1.8.0
+  dnl JAVA_SPEC_VER is the same for OpenJDK >= 9, but not for earlier versions
+  dnl (e.g. 1.8.0 = 8, 1.7.0 = 7, etc.)
+  JAVA_SPEC_VER=8
   JAVA_VENDOR=openjdk
   JDK_UPDATE_VERSION=292
   BUILD_VERSION=b10
@@ -2100,8 +2103,9 @@ AC_DEFUN_ONCE([IT_DETERMINE_VERSION],
   OPENJDK_VER=${JAVA_VER}_${COMBINED_VERSION}
   ICEDTEA_RELEASE=$(echo ${PACKAGE_VERSION} | sed 's#pre.*##')
   ICEDTEA_BRANCH=$(echo ${ICEDTEA_RELEASE}|sed 's|\.[[0-9]]$||')
-  AC_MSG_RESULT([branch ${ICEDTEA_BRANCH}, release ${ICEDTEA_RELEASE} for OpenJDK ${OPENJDK_VER}])
+  AC_MSG_RESULT([branch ${ICEDTEA_BRANCH}, release ${ICEDTEA_RELEASE} for OpenJDK ${OPENJDK_VER} (specification ${JAVA_SPEC_VER})])
   AC_SUBST([JAVA_VER])
+  AC_SUBST([JAVA_SPEC_VER])
   AC_SUBST([JAVA_VENDOR])
   AC_SUBST([JDK_UPDATE_VERSION])
   AC_SUBST([BUILD_VERSION])

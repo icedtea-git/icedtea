@@ -20,6 +20,8 @@ New in release 3.19.0 (2021-04-XX):
   - JDK-8249906, CVE-2021-2163: Enhance opening JARs
   - JDK-8250568, CVE-2021-2161: Less ambiguous processing
   - JDK-8253799: Make lists of normal filenames
+* New features
+  - PR3835: Populate unique SystemTap suffix from configure
 * Import of OpenJDK 8 u292 build 01
   - JDK-6949753: [TEST BUG]: java/awt/print/PageFormat/PDialogTest.java needs update by removing a infinite loop
   - JDK-8031126: java/lang/management/ThreadMXBean/ThreadUserTime.java fails intermittently

@@ -72,7 +72,7 @@ Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 
 /* We need to collect some global symbol addresses that cannot be resolved
    in a bare function and vm_init_end seems a good place to use. */
-probe hotspot.vm_init_end8
+probe hotspot.vm_init_end@JAVA_SPEC_VER@
 {
   /**
    * The CodeCache class contains the static CodeHeap _heap that
