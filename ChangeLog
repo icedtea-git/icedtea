@@ -1,3 +1,9 @@
+2021-05-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Fix merge error.
+	* hotspot.map.in: Bump to include merge
+	fix.
+
 2021-02-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3835: Populate unique SystemTap suffix
