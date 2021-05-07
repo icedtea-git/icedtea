@@ -137,6 +137,7 @@ New in release 3.19.0 (2021-04-XX):
   - JDK-8261183: Follow on to Make lists of normal filenames
 * Bug fixes
   - PR3822: Update elliptic curve patch to handle jdk.disabled.namedCurves (JDK-8233228) & file movement (JDK-8035166)
+  - PR3836: Extra compiler flags not passed to adlc build
 * Shenandoah
   - [backport] 8202976: Add C1 lea patching support for x86
   - [backport] 8221507: Implement JFR Events for Shenandoah
