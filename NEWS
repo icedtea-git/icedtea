@@ -135,6 +135,9 @@ New in release 3.19.0 (2021-04-XX):
   - JDK-8258247: Couple of issues in fix for JDK-8249906
   - JDK-8259428: AlgorithmId.getEncodedParams() should return copy
   - JDK-8261183: Follow on to Make lists of normal filenames
+* Backports
+  - JDK-8250825, PR3837: C2 crashes with assert(field != __null) failed: missing field
+  - JDK-8255466, PR3837: C2 crashes at ciObject::get_oop() const+0x0
 * Bug fixes
   - PR3822: Update elliptic curve patch to handle jdk.disabled.namedCurves (JDK-8233228) & file movement (JDK-8035166)
   - PR3836: Extra compiler flags not passed to adlc build
