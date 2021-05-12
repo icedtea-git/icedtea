@@ -1,3 +1,12 @@
+2021-05-11  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3838: Bogus -Wnonnull warning on Zero builds
+	PR3839: Make -Wnonnull warnings on ppc64
+	non-fatal for now
+	* NEWS: Updated.
+	* hotspot.map.in: Bumped to include PR3838
+	and PR3839.
+
 2021-05-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3837: Include C2 backports to fix null pointer
