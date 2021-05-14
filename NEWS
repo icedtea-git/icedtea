@@ -11,7 +11,7 @@ JDK-X  - https://bugs.openjdk.java.net/browse/JDK-X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.19.0 (2021-04-XX):
+New in release 3.19.0 (2021-05-13):
 
 * Security fixes
   - JDK-8227467: Better class method invocations
