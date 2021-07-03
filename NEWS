@@ -12,6 +12,35 @@ JEPX - https://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 2.6.25 (2021-07-03):
+
+* Security fixes
+  - JDK-8244473: Contextualize registration for JNDI
+  - JDK-8244543: Enhanced handling of abstract classes
+  - JDK-8249906, CVE-2021-2163: Enhance opening JARs
+  - JDK-8250568, CVE-2021-2161: Less ambiguous processing
+  - JDK-8253799: Make lists of normal filenames
+* Import of OpenJDK 7 u301 build 1
+  - JDK-8035166: Remove dependency on EC classes from pkcs11 provider
+  - JDK-8202343: Disable TLS 1.0 and 1.1
+  - JDK-8233228: Disable weak named curves by default in TLS, CertPath, and Signed JAR
+  - JDK-8258247: Couple of issues in fix for JDK-8249906
+  - JDK-8259048: (tz) Upgrade time-zone data to tzdata2020f
+  - JDK-8259428: AlgorithmId.getEncodedParams() should return copy
+  - JDK-8260356: (tz) Upgrade time-zone data to tzdata2021a
+  - JDK-8261183: Follow on to Make lists of normal filenames
+* Backports
+  - JDK-8167409, PR3840: Invalid value passed to critical JNI function
+* AArch64 port
+  - PR3840: Backport cleanup changes from upstreaming AArch64 port to 8u
+  - JDK-8078521, PR3840: AARCH64: Add AArch64 SA support
+  - JDK-8136596, PR3840: Remove aarch64: MemBarRelease when final field's allocation is NoEscape or ArgEscape
+  - JDK-8163363, PR3840: AArch64: Stack size in tools/launcher/Settings.java needs to be adjusted
+  - JDK-8240353, PR3840: AArch64: missing support for -XX:+ExtendedDTraceProbes in C1
+  - JDK-8248336, PR3840: AArch64: C2: offset overflow in BoxLockNode::emit
+  - JDK-8260930, PR3840: AArch64: Invalid value passed to critical JNI function
+  - JDK-8263008, PR3840: AARCH64: Add debug info for libsaproc.so
+
 New in release 2.6.25 (2021-02-12):
 
 * Security fixes

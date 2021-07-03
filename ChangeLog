@@ -1,3 +1,41 @@
+2021-07-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to 2.6.26.
+	(CORBA_CHANGESET): Update to icedtea-2.6.26.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(OPENJDK_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(JDK_UPDATE_VERSION): Bump to 301.
+	* configure.ac: Bump to 2.6.26.
+	* hotspot.map.in: Update to icedtea-2.6.26.
+	* patches/boot/ecj-diamond.patch:
+	Regenerated.  Add new cases in
+	sun.security.pkcs.SignerInfo,
+	sun.security.util.AbstractAlgorithmConstraints,
+	sun.security.util.AnchorCertificates and
+	sun.security.util.JarConstraintsParameters.
+	* patches/boot/ecj-multicatch.patch:
+	Regenerated.  Add new case in
+	sun.security.pkcs.SignerInfo.
+	* patches/boot/ecj-stringswitch.patch:
+	Add new case in
+	sun.security.util.DisabledAlgorithmConstraints.
+	* patches/boot/ecj-trywithresources.patch:
+	Regenerated.
+	* patches/pr2124.patch: Regenerate following
+	path change from sun.security.ec.CurveDB to
+	sun.security.util.CurveDB in JDK-8035166.
+
 2021-02-09  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to 2.6.25.

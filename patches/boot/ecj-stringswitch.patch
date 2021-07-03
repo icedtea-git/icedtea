@@ -1896,3 +1896,55 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/ResourceBundle.java 
                          }
                      }
                  }
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2021-07-02 16:18:31.040108158 +0100
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/DisabledAlgorithmConstraints.java	2021-07-02 16:25:21.562436119 +0100
+@@ -206,12 +206,10 @@
+     private void permits(AlgorithmParameters ap, ConstraintsParameters cp)
+         throws CertPathValidatorException {
+ 
+-        switch (ap.getAlgorithm().toUpperCase(Locale.ENGLISH)) {
+-            case "RSASSA-PSS":
+-                permitsPSSParams(ap, cp);
+-                break;
+-            default:
+-                // unknown algorithm, just ignore
++        if ("RSASSA-PSS".equals(ap.getAlgorithm().toUpperCase(Locale.ENGLISH))) {
++            permitsPSSParams(ap, cp);
++        } else {
++            // unknown algorithm, just ignore
+         }
+     }
+ 
+@@ -797,21 +795,17 @@
+                 throws CertPathValidatorException {
+             String variant = cp.getVariant();
+             for (String usage : usages) {
+-
+                 boolean match = false;
+-                switch (usage.toLowerCase()) {
+-                    case "tlsserver":
+-                        match = variant.equals(Validator.VAR_TLS_SERVER);
+-                        break;
+-                    case "tlsclient":
+-                        match = variant.equals(Validator.VAR_TLS_CLIENT);
+-                        break;
+-                    case "signedjar":
+-                        match =
+-                            variant.equals(Validator.VAR_PLUGIN_CODE_SIGNING) ||
+-                            variant.equals(Validator.VAR_CODE_SIGNING) ||
+-                            variant.equals(Validator.VAR_TSA_SERVER);
+-                        break;
++                String lcUsage = usage.toLowerCase();
++                if ("tlsserver".equals(lcUsage)) {
++                    match = variant.equals(Validator.VAR_TLS_SERVER);
++                } else if ("tlsclient".equals(lcUsage)) {
++                    match = variant.equals(Validator.VAR_TLS_CLIENT);
++                } else if ("signedjar".equals(lcUsage)) {
++                    match =
++                      variant.equals(Validator.VAR_PLUGIN_CODE_SIGNING) ||
++                      variant.equals(Validator.VAR_CODE_SIGNING) ||
++                      variant.equals(Validator.VAR_TSA_SERVER);
+                 }
+ 
+                 if (debug != null) {
