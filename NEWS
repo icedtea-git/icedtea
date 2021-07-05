@@ -12,7 +12,7 @@ JEPX - https://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.25 (2021-07-03):
+New in release 2.6.26 (2021-07-05):
 
 * Security fixes
   - JDK-8244473: Contextualize registration for JNDI
