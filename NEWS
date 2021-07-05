@@ -36,7 +36,6 @@ New in release 2.6.25 (2021-07-03):
   - JDK-8078521, PR3840: AARCH64: Add AArch64 SA support
   - JDK-8136596, PR3840: Remove aarch64: MemBarRelease when final field's allocation is NoEscape or ArgEscape
   - JDK-8163363, PR3840: AArch64: Stack size in tools/launcher/Settings.java needs to be adjusted
-  - JDK-8240353, PR3840: AArch64: missing support for -XX:+ExtendedDTraceProbes in C1
   - JDK-8248336, PR3840: AArch64: C2: offset overflow in BoxLockNode::emit
   - JDK-8260930, PR3840: AArch64: Invalid value passed to critical JNI function
   - JDK-8263008, PR3840: AARCH64: Add debug info for libsaproc.so

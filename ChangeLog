@@ -1,3 +1,19 @@
+2021-07-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	PR3840: Backout JDK-8240353 due to
+	missing mov_metadata
+	* Makefile.am:
+	(CORBA_SHA256SUM): Update checksums to match
+	newly generated tarballs.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Remove JDK-8240353.
+	* hotspot.map.in: Bump to include removal
+	changeset.
+
 2021-07-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to 2.6.26.
