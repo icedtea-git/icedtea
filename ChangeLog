@@ -1,3 +1,25 @@
+2021-07-27  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump shenandoah to aarch64-shenandoah-jdk8u302-b08.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u302-b08.
+	* patches/hotspot/aarch32/6424123-pr3696.patch,
+	* patches/hotspot/aarch32/8152358-pr3800.patch,
+	* patches/hotspot/aarch32/pr1368.patch,
+	* patches/hotspot/aarch32/pr1748.patch:
+	Replace symlinks to Shenandoah versions with
+	copies, so build is not broken by Shenandoah
+	versions changing.
+	* patches/hotspot/shenandoah/6424123-pr3696.patch:
+	Regenerated following JDK-8239400.
+	* patches/hotspot/shenandoah/8152358-pr3800.patch:
+	Regenerated following JDK-8258669.
+	* patches/hotspot/shenandoah/pr1368.patch:
+	Regenerated following JDK-8265666.
+	* patches/hotspot/shenandoah/pr1748.patch:
+	Drop segments upstreamed in JDK-8033289.
+
 2021-07-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.20.0.

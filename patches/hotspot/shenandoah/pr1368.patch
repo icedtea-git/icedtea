@@ -7,90 +7,95 @@
 PR1368: Ensure debug data is available for all libraries and binaries without redundant files
 
 diff -Nru openjdk.orig/hotspot/make/aix/makefiles/defs.make openjdk/hotspot/make/aix/makefiles/defs.make
---- openjdk.orig/hotspot/make/aix/makefiles/defs.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/aix/makefiles/defs.make	2019-08-19 19:12:11.819510751 +0100
-@@ -186,12 +186,14 @@
+--- openjdk.orig/hotspot/make/aix/makefiles/defs.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/aix/makefiles/defs.make	2021-07-27 17:09:32.885923277 +0100
+@@ -178,10 +178,12 @@
  # client and server subdirectories have symbolic links to ../libjsig.so
  EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.$(LIBRARY_SUFFIX)
- #ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+#ifneq ($(STRIP_POLICY),no_strip)
- #  ifeq ($(ZIP_DEBUGINFO_FILES),1)
- #    EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.diz
- #  else
- #    EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.debuginfo
- #  endif
- #endif
-+#endif
+ ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
+-  ifeq ($(ZIP_DEBUGINFO_FILES),1)
+-    EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.diz
+-  else
+-    EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.debuginfo
++  ifneq ($(STRIP_POLICY),no_strip)
++    ifeq ($(ZIP_DEBUGINFO_FILES),1)
++      EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.diz
++    else
++      EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.debuginfo
++    endif
+   endif
+ endif
  EXPORT_SERVER_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/server
- EXPORT_CLIENT_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/client
- EXPORT_MINIMAL_DIR = $(EXPORT_JRE_LIB_ARCH_DIR)/minimal
-@@ -200,24 +202,28 @@
+@@ -192,10 +194,12 @@
    EXPORT_LIST += $(EXPORT_SERVER_DIR)/Xusage.txt
    EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.$(LIBRARY_SUFFIX)
- #  ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+#  ifneq ($(STRIP_POLICY),no_strip)
- #    ifeq ($(ZIP_DEBUGINFO_FILES),1)
- #      EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.diz
- #    else
- #      EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.debuginfo
- #    endif
- #  endif
-+#  endif
- endif
- 
- ifeq ($(JVM_VARIANT_CLIENT),true)
-   EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt
-   EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.$(LIBRARY_SUFFIX)
- #  ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+#  ifneq ($(STRIP_POLICY),no_strip)
- #    ifeq ($(ZIP_DEBUGINFO_FILES),1)
- #      EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.diz
- #    else
- #      EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.debuginfo
- #    endif
- #  endif
-+#  endif
- endif
- 
- # Serviceability Binaries
-diff -Nru openjdk.orig/hotspot/make/aix/makefiles/jsig.make openjdk/hotspot/make/aix/makefiles/jsig.make
---- openjdk.orig/hotspot/make/aix/makefiles/jsig.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/aix/makefiles/jsig.make	2019-08-19 19:15:34.696397884 +0100
-@@ -65,6 +65,7 @@
-                          $(LFLAGS_JSIG) $(JSIG_DEBUG_CFLAGS) $(JSIG_OPT_FLAGS) -o $@ $< -ldl
- 
- #ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+#ifneq ($(STRIP_POLICY),no_strip)
- #	$(QUIETLY) $(OBJCOPY) --only-keep-debug $@ $(LIBJSIG_DEBUGINFO)
- #	$(QUIETLY) $(OBJCOPY) --add-gnu-debuglink=$(LIBJSIG_DEBUGINFO) $@
- #  ifeq ($(STRIP_POLICY),all_strip)
-@@ -80,6 +81,7 @@
- #	$(RM) $(LIBJSIG_DEBUGINFO)
- #  endif
- #endif
-+#endif
- 
- install_jsig: $(LIBJSIG)
- 	@echo "Copying $(LIBJSIG) to $(DEST_JSIG)"
-diff -Nru openjdk.orig/hotspot/make/aix/makefiles/saproc.make openjdk/hotspot/make/aix/makefiles/saproc.make
---- openjdk.orig/hotspot/make/aix/makefiles/saproc.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/aix/makefiles/saproc.make	2019-08-19 19:12:11.819510751 +0100
-@@ -88,8 +88,10 @@
- 	           -o $@                                                \
- 	           -lthread_db
- ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+  ifneq ($(STRIP_POLICY),no_strip)
- 	$(QUIETLY) $(OBJCOPY) --only-keep-debug $@ $(LIBSAPROC_DEBUGINFO)
- 	$(QUIETLY) $(OBJCOPY) --add-gnu-debuglink=$(LIBSAPROC_DEBUGINFO) $@
-+  endif
-   ifeq ($(STRIP_POLICY),all_strip)
- 	$(QUIETLY) $(STRIP) $@
-   else
-@@ -99,8 +101,10 @@
+   ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
+-    ifeq ($(ZIP_DEBUGINFO_FILES),1)
+-      EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.diz
+-    else
+-      EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.debuginfo
++    ifneq ($(STRIP_POLICY),no_strip)
++      ifeq ($(ZIP_DEBUGINFO_FILES),1)
++        EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.diz
++      else
++        EXPORT_LIST += $(EXPORT_SERVER_DIR)/libjvm.debuginfo
++      endif
      endif
    endif
-   ifeq ($(ZIP_DEBUGINFO_FILES),1)
+ endif
+@@ -204,10 +208,12 @@
+   EXPORT_LIST += $(EXPORT_CLIENT_DIR)/Xusage.txt
+   EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.$(LIBRARY_SUFFIX)
+   ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
+-    ifeq ($(ZIP_DEBUGINFO_FILES),1)
+-      EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.diz
+-    else
+-      EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.debuginfo
 +    ifneq ($(STRIP_POLICY),no_strip)
++      ifeq ($(ZIP_DEBUGINFO_FILES),1)
++        EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.diz
++      else
++        EXPORT_LIST += $(EXPORT_CLIENT_DIR)/libjvm.debuginfo
++      endif
+     endif
+   endif
+ endif
+diff -Nru openjdk.orig/hotspot/make/aix/makefiles/jsig.make openjdk/hotspot/make/aix/makefiles/jsig.make
+--- openjdk.orig/hotspot/make/aix/makefiles/jsig.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/aix/makefiles/jsig.make	2021-07-27 17:10:45.750714134 +0100
+@@ -66,6 +66,7 @@
+ 
+ ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
+   # AIX produces .debuginfo from copy of -g compiled object prior to strip
++  ifneq ($(STRIP_POLICY),no_strip)
+ 	$(QUIETLY) $(CP) $@ $(LIBJSIG_DEBUGINFO)
+ #  ifeq ($(STRIP_POLICY),all_strip)
+ #	$(QUIETLY) $(STRIP) $@
+@@ -75,7 +76,6 @@
+ #    # implied else here is no stripping at all
+ #    endif
+ #  endif
+-  ifneq ($(STRIP_POLICY),no_strip)
+     ifeq ($(ZIP_DEBUGINFO_FILES),1)
+ 	$(ZIPEXE) -q -y $(LIBJSIG_DIZ) $(LIBJSIG_DEBUGINFO)
+ 	$(RM) $(LIBJSIG_DEBUGINFO)
+diff -Nru openjdk.orig/hotspot/make/aix/makefiles/saproc.make openjdk/hotspot/make/aix/makefiles/saproc.make
+--- openjdk.orig/hotspot/make/aix/makefiles/saproc.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/aix/makefiles/saproc.make	2021-07-27 17:11:30.513199985 +0100
+@@ -89,6 +89,7 @@
+ 	           -lthread_db
+ ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
+   # AIX produces .debuginfo from copy of -g compiled object prior to strip
++  ifneq ($(STRIP_POLICY),no_strip)
+ 	$(QUIETLY) $(CP) $@ $(LIBJSIG_DEBUGINFO)
+ #  ifeq ($(STRIP_POLICY),all_strip)
+ #	$(QUIETLY) $(STRIP) $@
+@@ -98,9 +99,10 @@
+ #    # implied else here is no stripping at all
+ #    endif
+ #  endif
+-  ifeq ($(ZIP_DEBUGINFO_FILES),1)
++    ifeq ($(ZIP_DEBUGINFO_FILES),1)
  	$(ZIPEXE) -q -y $(LIBSAPROC_DIZ) $(LIBSAPROC_DEBUGINFO)
  	$(RM) $(LIBSAPROC_DEBUGINFO)
 +    endif
@@ -98,27 +103,27 @@ diff -Nru openjdk.orig/hotspot/make/aix/makefiles/saproc.make openjdk/hotspot/ma
  endif
  
 diff -Nru openjdk.orig/hotspot/make/aix/makefiles/vm.make openjdk/hotspot/make/aix/makefiles/vm.make
---- openjdk.orig/hotspot/make/aix/makefiles/vm.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/aix/makefiles/vm.make	2019-08-19 19:12:11.819510751 +0100
+--- openjdk.orig/hotspot/make/aix/makefiles/vm.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/aix/makefiles/vm.make	2021-07-27 17:12:41.222967440 +0100
 @@ -331,6 +331,7 @@
- #	}
  
- #ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
-+#ifneq ($(STRIP_POLICY),no_strip)
- #	$(QUIETLY) $(OBJCOPY) --only-keep-debug $@ $(LIBJVM_DEBUGINFO)
- #	$(QUIETLY) $(OBJCOPY) --add-gnu-debuglink=$(LIBJVM_DEBUGINFO) $@
+ ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
+   # AIX produces .debuginfo from copy of -g compiled object prior to strip
++    ifneq ($(STRIP_POLICY),no_strip)
+ 	$(QUIETLY) $(CP) $@ $(LIBJVM_DEBUGINFO)
  #    ifeq ($(STRIP_POLICY),all_strip)
-@@ -346,6 +347,7 @@
- #	$(RM) $(LIBJVM_DEBUGINFO)
- #  endif
- #endif
-+#endif
- 
- DEST_SUBDIR        = $(JDK_LIBDIR)/$(VM_SUBDIR)
- DEST_JVM           = $(DEST_SUBDIR)/$(LIBJVM)
+ #	$(QUIETLY) $(STRIP) $@
+@@ -340,7 +341,6 @@
+ #      # implied else here is no stripping at all
+ #      endif
+ #    endif
+-    ifneq ($(STRIP_POLICY),no_strip)
+       ifeq ($(ZIP_DEBUGINFO_FILES),1)
+ 	$(ZIPEXE) -q -y $(LIBJVM_DIZ) $(LIBJVM_DEBUGINFO)
+ 	$(RM) $(LIBJVM_DEBUGINFO)
 diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/defs.make openjdk/hotspot/make/bsd/makefiles/defs.make
---- openjdk.orig/hotspot/make/bsd/makefiles/defs.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/bsd/makefiles/defs.make	2019-08-19 19:12:11.819510751 +0100
+--- openjdk.orig/hotspot/make/bsd/makefiles/defs.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/bsd/makefiles/defs.make	2021-07-27 17:07:31.922610365 +0100
 @@ -269,6 +269,7 @@
  EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.$(LIBRARY_SUFFIX)
  
@@ -208,9 +213,9 @@ diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/defs.make openjdk/hotspot/make
    endif
  endif
 diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/jsig.make openjdk/hotspot/make/bsd/makefiles/jsig.make
---- openjdk.orig/hotspot/make/bsd/makefiles/jsig.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/bsd/makefiles/jsig.make	2019-08-19 19:16:26.555602172 +0100
-@@ -69,6 +69,7 @@
+--- openjdk.orig/hotspot/make/bsd/makefiles/jsig.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/bsd/makefiles/jsig.make	2021-07-27 17:07:31.923610376 +0100
+@@ -74,6 +74,7 @@
  	$(QUIETLY) $(CC) $(SYMFLAG) $(ARCHFLAG) $(SHARED_FLAG) $(PICFLAG) \
                           $(LFLAGS_JSIG) $(JSIG_DEBUG_CFLAGS) $(JSIG_OPT_FLAGS) $(EXTRA_CFLAGS) -o $@ $<
  ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
@@ -218,7 +223,7 @@ diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/jsig.make openjdk/hotspot/make
    ifeq ($(OS_VENDOR), Darwin)
  	$(DSYMUTIL) $@
      ifeq ($(ZIP_DEBUGINFO_FILES),1)
-@@ -92,6 +93,7 @@
+@@ -97,6 +98,7 @@
      endif
    endif
  endif
@@ -227,9 +232,9 @@ diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/jsig.make openjdk/hotspot/make
  install_jsig: $(LIBJSIG)
  	@echo "Copying $(LIBJSIG) to $(DEST_JSIG)"
 diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/saproc.make openjdk/hotspot/make/bsd/makefiles/saproc.make
---- openjdk.orig/hotspot/make/bsd/makefiles/saproc.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/bsd/makefiles/saproc.make	2019-08-19 19:12:11.819510751 +0100
-@@ -137,6 +137,7 @@
+--- openjdk.orig/hotspot/make/bsd/makefiles/saproc.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/bsd/makefiles/saproc.make	2021-07-27 17:07:31.923610376 +0100
+@@ -139,6 +139,7 @@
  	           -o $@                                                \
  	           $(SALIBS)
  ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
@@ -237,7 +242,7 @@ diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/saproc.make openjdk/hotspot/ma
    ifeq ($(OS_VENDOR), Darwin)
  	$(DSYMUTIL) $@
      ifeq ($(ZIP_DEBUGINFO_FILES),1)
-@@ -160,6 +161,7 @@
+@@ -162,6 +163,7 @@
      endif
    endif
  endif
@@ -246,9 +251,9 @@ diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/saproc.make openjdk/hotspot/ma
  install_saproc: $(BUILDLIBSAPROC)
  	@echo "Copying $(LIBSAPROC) to $(DEST_SAPROC)"
 diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/vm.make openjdk/hotspot/make/bsd/makefiles/vm.make
---- openjdk.orig/hotspot/make/bsd/makefiles/vm.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/bsd/makefiles/vm.make	2019-08-19 19:12:11.819510751 +0100
-@@ -343,6 +343,7 @@
+--- openjdk.orig/hotspot/make/bsd/makefiles/vm.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/bsd/makefiles/vm.make	2021-07-27 17:07:31.923610376 +0100
+@@ -341,6 +341,7 @@
  	}
  
  ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
@@ -256,7 +261,7 @@ diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/vm.make openjdk/hotspot/make/b
    ifeq ($(OS_VENDOR), Darwin)
  	$(DSYMUTIL) $@
      ifeq ($(ZIP_DEBUGINFO_FILES),1)
-@@ -366,6 +367,7 @@
+@@ -364,6 +365,7 @@
      endif
    endif
  endif
@@ -265,8 +270,8 @@ diff -Nru openjdk.orig/hotspot/make/bsd/makefiles/vm.make openjdk/hotspot/make/b
  DEST_SUBDIR        = $(JDK_LIBDIR)/$(VM_SUBDIR)
  DEST_JVM           = $(DEST_SUBDIR)/$(LIBJVM)
 diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/defs.make openjdk/hotspot/make/solaris/makefiles/defs.make
---- openjdk.orig/hotspot/make/solaris/makefiles/defs.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/solaris/makefiles/defs.make	2019-08-19 19:12:11.819510751 +0100
+--- openjdk.orig/hotspot/make/solaris/makefiles/defs.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/solaris/makefiles/defs.make	2021-07-27 17:07:31.923610376 +0100
 @@ -226,12 +226,14 @@
  # client and server subdirectories have symbolic links to ../libjsig.$(LIBRARY_SUFFIX)
  EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libjsig.$(LIBRARY_SUFFIX)
@@ -320,8 +325,8 @@ diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/defs.make openjdk/hotspot/
      EXPORT_LIST += $(EXPORT_JRE_LIB_ARCH_DIR)/libsaproc.diz
    else
 diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/jsig.make openjdk/hotspot/make/solaris/makefiles/jsig.make
---- openjdk.orig/hotspot/make/solaris/makefiles/jsig.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/solaris/makefiles/jsig.make	2019-08-19 19:16:51.731215886 +0100
+--- openjdk.orig/hotspot/make/solaris/makefiles/jsig.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/solaris/makefiles/jsig.make	2021-07-27 17:07:31.923610376 +0100
 @@ -57,8 +57,10 @@
  	$(QUIETLY) $(CC) $(SYMFLAG) $(ARCHFLAG) $(SHARED_FLAG) $(PICFLAG) \
                           $(LFLAGS_JSIG) $(JSIG_OPT_FLAGS) -o $@ $(JSIGSRCDIR)/jsig.c -ldl
@@ -347,8 +352,8 @@ diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/jsig.make openjdk/hotspot/
  
  install_jsig: $(LIBJSIG)
 diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/saproc.make openjdk/hotspot/make/solaris/makefiles/saproc.make
---- openjdk.orig/hotspot/make/solaris/makefiles/saproc.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/solaris/makefiles/saproc.make	2019-08-19 19:12:11.819510751 +0100
+--- openjdk.orig/hotspot/make/solaris/makefiles/saproc.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/solaris/makefiles/saproc.make	2021-07-27 17:07:31.923610376 +0100
 @@ -121,8 +121,10 @@
  	           -c -o $(SADISOBJ)
  	
@@ -372,9 +377,9 @@ diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/saproc.make openjdk/hotspo
  endif
  
 diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/vm.make openjdk/hotspot/make/solaris/makefiles/vm.make
---- openjdk.orig/hotspot/make/solaris/makefiles/vm.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/solaris/makefiles/vm.make	2019-08-19 19:12:11.819510751 +0100
-@@ -300,8 +300,10 @@
+--- openjdk.orig/hotspot/make/solaris/makefiles/vm.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/solaris/makefiles/vm.make	2021-07-27 17:07:31.924610387 +0100
+@@ -299,8 +299,10 @@
  	$(QUIETLY) $(LINK_LIB.CXX/POST_HOOK)
  	$(QUIETLY) rm -f $@.1 && ln -s $@ $@.1
  ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
@@ -385,7 +390,7 @@ diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/vm.make openjdk/hotspot/ma
    ifeq ($(STRIP_POLICY),all_strip)
  	$(QUIETLY) $(STRIP) $@
    else
-@@ -310,10 +312,12 @@
+@@ -309,10 +311,12 @@
      # implied else here is no stripping at all
      endif
    endif
@@ -399,8 +404,8 @@ diff -Nru openjdk.orig/hotspot/make/solaris/makefiles/vm.make openjdk/hotspot/ma
  endif # filter -sbfast -xsbfast
  
 diff -Nru openjdk.orig/hotspot/make/windows/makefiles/debug.make openjdk/hotspot/make/windows/makefiles/debug.make
---- openjdk.orig/hotspot/make/windows/makefiles/debug.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/windows/makefiles/debug.make	2019-08-19 19:12:11.819510751 +0100
+--- openjdk.orig/hotspot/make/windows/makefiles/debug.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/windows/makefiles/debug.make	2021-07-27 17:07:31.924610387 +0100
 @@ -60,11 +60,13 @@
  	$(MT) /manifest $@.manifest /outputresource:$@;#2
  !endif
@@ -416,9 +421,9 @@ diff -Nru openjdk.orig/hotspot/make/windows/makefiles/debug.make openjdk/hotspot
  !include $(WorkSpace)/make/windows/makefiles/shared.make
  !include $(WorkSpace)/make/windows/makefiles/sa.make
 diff -Nru openjdk.orig/hotspot/make/windows/makefiles/defs.make openjdk/hotspot/make/windows/makefiles/defs.make
---- openjdk.orig/hotspot/make/windows/makefiles/defs.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/windows/makefiles/defs.make	2019-08-19 19:12:11.819510751 +0100
-@@ -253,6 +253,7 @@
+--- openjdk.orig/hotspot/make/windows/makefiles/defs.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/windows/makefiles/defs.make	2021-07-27 17:07:31.924610387 +0100
+@@ -262,6 +262,7 @@
    EXPORT_LIST += $(EXPORT_SERVER_DIR)/Xusage.txt
    EXPORT_LIST += $(EXPORT_SERVER_DIR)/jvm.$(LIBRARY_SUFFIX)
    ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
@@ -426,7 +431,7 @@ diff -Nru openjdk.orig/hotspot/make/windows/makefiles/defs.make openjdk/hotspot/
      ifeq ($(ZIP_DEBUGINFO_FILES),1)
        EXPORT_LIST += $(EXPORT_SERVER_DIR)/jvm.diz
      else
-@@ -260,11 +261,13 @@
+@@ -269,11 +270,13 @@
        EXPORT_LIST += $(EXPORT_SERVER_DIR)/jvm.map
      endif
    endif
@@ -440,7 +445,7 @@ diff -Nru openjdk.orig/hotspot/make/windows/makefiles/defs.make openjdk/hotspot/
      ifeq ($(ZIP_DEBUGINFO_FILES),1)
        EXPORT_LIST += $(EXPORT_CLIENT_DIR)/jvm.diz
      else
-@@ -272,6 +275,7 @@
+@@ -281,6 +284,7 @@
        EXPORT_LIST += $(EXPORT_CLIENT_DIR)/jvm.map
      endif
    endif
@@ -448,7 +453,7 @@ diff -Nru openjdk.orig/hotspot/make/windows/makefiles/defs.make openjdk/hotspot/
  endif
  
  EXPORT_LIST += $(EXPORT_LIB_DIR)/jvm.lib
-@@ -279,6 +283,7 @@
+@@ -288,6 +292,7 @@
  ifeq ($(BUILD_WIN_SA), 1)
    EXPORT_LIST += $(EXPORT_JRE_BIN_DIR)/sawindbg.$(LIBRARY_SUFFIX)
    ifeq ($(ENABLE_FULL_DEBUG_SYMBOLS),1)
@@ -456,7 +461,7 @@ diff -Nru openjdk.orig/hotspot/make/windows/makefiles/defs.make openjdk/hotspot/
      ifeq ($(ZIP_DEBUGINFO_FILES),1)
        EXPORT_LIST += $(EXPORT_JRE_BIN_DIR)/sawindbg.diz
      else
-@@ -286,6 +291,7 @@
+@@ -295,6 +300,7 @@
        EXPORT_LIST += $(EXPORT_JRE_BIN_DIR)/sawindbg.map
      endif
    endif
@@ -465,8 +470,8 @@ diff -Nru openjdk.orig/hotspot/make/windows/makefiles/defs.make openjdk/hotspot/
    # Must pass this down to nmake.
    MAKE_ARGS += BUILD_WIN_SA=1
 diff -Nru openjdk.orig/hotspot/make/windows/makefiles/fastdebug.make openjdk/hotspot/make/windows/makefiles/fastdebug.make
---- openjdk.orig/hotspot/make/windows/makefiles/fastdebug.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/windows/makefiles/fastdebug.make	2019-08-19 19:12:11.819510751 +0100
+--- openjdk.orig/hotspot/make/windows/makefiles/fastdebug.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/windows/makefiles/fastdebug.make	2021-07-27 17:07:31.924610387 +0100
 @@ -59,11 +59,13 @@
  	$(MT) /manifest $@.manifest /outputresource:$@;#2
  !endif
@@ -482,8 +487,8 @@ diff -Nru openjdk.orig/hotspot/make/windows/makefiles/fastdebug.make openjdk/hot
  !include $(WorkSpace)/make/windows/makefiles/shared.make
  !include $(WorkSpace)/make/windows/makefiles/sa.make
 diff -Nru openjdk.orig/hotspot/make/windows/makefiles/product.make openjdk/hotspot/make/windows/makefiles/product.make
---- openjdk.orig/hotspot/make/windows/makefiles/product.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/windows/makefiles/product.make	2019-08-19 19:12:11.819510751 +0100
+--- openjdk.orig/hotspot/make/windows/makefiles/product.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/windows/makefiles/product.make	2021-07-27 17:07:31.924610387 +0100
 @@ -62,11 +62,13 @@
  	$(MT) /manifest $@.manifest /outputresource:$@;#2
  !endif
@@ -499,8 +504,8 @@ diff -Nru openjdk.orig/hotspot/make/windows/makefiles/product.make openjdk/hotsp
  !include $(WorkSpace)/make/windows/makefiles/shared.make
  !include $(WorkSpace)/make/windows/makefiles/sa.make
 diff -Nru openjdk.orig/hotspot/make/windows/makefiles/sa.make openjdk/hotspot/make/windows/makefiles/sa.make
---- openjdk.orig/hotspot/make/windows/makefiles/sa.make	2019-07-25 17:40:16.000000000 +0100
-+++ openjdk/hotspot/make/windows/makefiles/sa.make	2019-08-19 19:12:11.819510751 +0100
+--- openjdk.orig/hotspot/make/windows/makefiles/sa.make	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/make/windows/makefiles/sa.make	2021-07-27 17:07:31.924610387 +0100
 @@ -165,11 +165,13 @@
  	$(MT) -manifest $(@F).manifest -outputresource:$(@F);#2
  !endif

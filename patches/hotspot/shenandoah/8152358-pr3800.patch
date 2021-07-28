@@ -6,9 +6,9 @@
 # Parent  412a170785df4e95fef3622d66910b90ad2245c8
 8152358, PR3800: code and comment cleanups found during the hunt for 8077392
 
-diff --git openjdk.orig/hotspot/src/cpu/x86/vm/c1_LIRAssembler_x86.cpp openjdk/hotspot/src/cpu/x86/vm/c1_LIRAssembler_x86.cpp
---- openjdk.orig/hotspot/src/cpu/x86/vm/c1_LIRAssembler_x86.cpp
-+++ openjdk/hotspot/src/cpu/x86/vm/c1_LIRAssembler_x86.cpp
+diff -Nru openjdk.orig/hotspot/src/cpu/x86/vm/c1_LIRAssembler_x86.cpp openjdk/hotspot/src/cpu/x86/vm/c1_LIRAssembler_x86.cpp
+--- openjdk.orig/hotspot/src/cpu/x86/vm/c1_LIRAssembler_x86.cpp	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/src/cpu/x86/vm/c1_LIRAssembler_x86.cpp	2021-07-27 18:21:08.551555444 +0100
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (c) 2000, 2013, Oracle and/or its affiliates. All rights reserved.
@@ -16,7 +16,7 @@ diff --git openjdk.orig/hotspot/src/cpu/x86/vm/c1_LIRAssembler_x86.cpp openjdk/h
   * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
   *
   * This code is free software; you can redistribute it and/or modify it
-@@ -312,7 +312,7 @@
+@@ -315,7 +315,7 @@
    Register OSR_buf = osrBufferPointer()->as_pointer_register();
    { assert(frame::interpreter_frame_monitor_size() == BasicObjectLock::size(), "adjust code below");
      int monitor_offset = BytesPerWord * method()->max_locals() +
@@ -25,9 +25,9 @@ diff --git openjdk.orig/hotspot/src/cpu/x86/vm/c1_LIRAssembler_x86.cpp openjdk/h
      // SharedRuntime::OSR_migration_begin() packs BasicObjectLocks in
      // the OSR buffer using 2 word entries: first the lock and then
      // the oop.
-diff --git openjdk.orig/hotspot/src/cpu/x86/vm/interp_masm_x86_32.cpp openjdk/hotspot/src/cpu/x86/vm/interp_masm_x86_32.cpp
---- openjdk.orig/hotspot/src/cpu/x86/vm/interp_masm_x86_32.cpp
-+++ openjdk/hotspot/src/cpu/x86/vm/interp_masm_x86_32.cpp
+diff -Nru openjdk.orig/hotspot/src/cpu/x86/vm/interp_masm_x86_32.cpp openjdk/hotspot/src/cpu/x86/vm/interp_masm_x86_32.cpp
+--- openjdk.orig/hotspot/src/cpu/x86/vm/interp_masm_x86_32.cpp	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/src/cpu/x86/vm/interp_masm_x86_32.cpp	2021-07-27 18:21:08.551555444 +0100
 @@ -722,7 +722,7 @@
      // Save (object->mark() | 1) into BasicLock's displaced header
      movptr(Address(lock_reg, mark_offset), swap_reg);
@@ -46,9 +46,9 @@ diff --git openjdk.orig/hotspot/src/cpu/x86/vm/interp_masm_x86_32.cpp openjdk/ho
      jcc(Assembler::zero, done);
  
      // Call the runtime routine for slow case.
-diff --git openjdk.orig/hotspot/src/cpu/x86/vm/interp_masm_x86_64.cpp openjdk/hotspot/src/cpu/x86/vm/interp_masm_x86_64.cpp
---- openjdk.orig/hotspot/src/cpu/x86/vm/interp_masm_x86_64.cpp
-+++ openjdk/hotspot/src/cpu/x86/vm/interp_masm_x86_64.cpp
+diff -Nru openjdk.orig/hotspot/src/cpu/x86/vm/interp_masm_x86_64.cpp openjdk/hotspot/src/cpu/x86/vm/interp_masm_x86_64.cpp
+--- openjdk.orig/hotspot/src/cpu/x86/vm/interp_masm_x86_64.cpp	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/src/cpu/x86/vm/interp_masm_x86_64.cpp	2021-07-27 18:21:08.551555444 +0100
 @@ -725,7 +725,7 @@
      movptr(Address(lock_reg, mark_offset), swap_reg);
  
@@ -76,10 +76,10 @@ diff --git openjdk.orig/hotspot/src/cpu/x86/vm/interp_masm_x86_64.cpp openjdk/ho
      jcc(Assembler::zero, done);
  
      // Call the runtime routine for slow case.
-diff --git openjdk.orig/hotspot/src/cpu/x86/vm/macroAssembler_x86.cpp openjdk/hotspot/src/cpu/x86/vm/macroAssembler_x86.cpp
---- openjdk.orig/hotspot/src/cpu/x86/vm/macroAssembler_x86.cpp
-+++ openjdk/hotspot/src/cpu/x86/vm/macroAssembler_x86.cpp
-@@ -1078,7 +1078,7 @@
+diff -Nru openjdk.orig/hotspot/src/cpu/x86/vm/macroAssembler_x86.cpp openjdk/hotspot/src/cpu/x86/vm/macroAssembler_x86.cpp
+--- openjdk.orig/hotspot/src/cpu/x86/vm/macroAssembler_x86.cpp	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/src/cpu/x86/vm/macroAssembler_x86.cpp	2021-07-27 18:21:08.552555455 +0100
+@@ -1080,7 +1080,7 @@
    }
    assert(markOopDesc::age_shift == markOopDesc::lock_bits + markOopDesc::biased_lock_bits, "biased locking makes assumptions about bit layout");
    Address mark_addr      (obj_reg, oopDesc::mark_offset_in_bytes());
@@ -88,7 +88,7 @@ diff --git openjdk.orig/hotspot/src/cpu/x86/vm/macroAssembler_x86.cpp openjdk/ho
  
    if (PrintBiasedLockingStatistics && counters == NULL) {
      counters = BiasedLocking::counters();
-@@ -1699,7 +1699,7 @@
+@@ -1701,7 +1701,7 @@
                                 RTMLockingCounters* stack_rtm_counters,
                                 Metadata* method_data,
                                 bool use_rtm, bool profile_rtm) {
@@ -97,9 +97,9 @@ diff --git openjdk.orig/hotspot/src/cpu/x86/vm/macroAssembler_x86.cpp openjdk/ho
    assert(tmpReg == rax, "");
  
    if (use_rtm) {
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/biasedLocking.cpp openjdk/hotspot/src/share/vm/runtime/biasedLocking.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/biasedLocking.cpp
-+++ openjdk/hotspot/src/share/vm/runtime/biasedLocking.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/biasedLocking.cpp openjdk/hotspot/src/share/vm/runtime/biasedLocking.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/biasedLocking.cpp	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/biasedLocking.cpp	2021-07-27 18:21:08.552555455 +0100
 @@ -151,8 +151,13 @@
    if (!mark->has_bias_pattern()) {
      if (TraceBiasedLocking) {
@@ -153,9 +153,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/biasedLocking.cpp openjdk/h
    // Thread owning bias is alive.
    // Check to see whether it currently owns the lock and, if so,
    // write down the needed displaced headers to the thread's stack.
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/objectMonitor.cpp openjdk/hotspot/src/share/vm/runtime/objectMonitor.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/objectMonitor.cpp
-+++ openjdk/hotspot/src/share/vm/runtime/objectMonitor.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/objectMonitor.cpp openjdk/hotspot/src/share/vm/runtime/objectMonitor.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/objectMonitor.cpp	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/objectMonitor.cpp	2021-07-27 18:21:08.553555466 +0100
 @@ -929,7 +929,7 @@
  // ~~~~~~~~
  // ::exit() uses a canonical 1-1 idiom with a MEMBAR although some of
@@ -174,10 +174,10 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/objectMonitor.cpp openjdk/h
  // We detect and recover from stranding with timers.
  //
  // If a thread transiently strands it'll park until (a) another
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/os.cpp openjdk/hotspot/src/share/vm/runtime/os.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/os.cpp
-+++ openjdk/hotspot/src/share/vm/runtime/os.cpp
-@@ -1286,7 +1286,8 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/os.cpp openjdk/hotspot/src/share/vm/runtime/os.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/os.cpp	2021-07-27 18:15:29.116737492 +0100
++++ openjdk/hotspot/src/share/vm/runtime/os.cpp	2021-07-27 18:21:08.553555466 +0100
+@@ -1287,7 +1287,8 @@
    // We initialize the serialization page shift count here
    // We assume a cache line size of 64 bytes
    assert(SerializePageShiftCount == count,
@@ -187,10 +187,10 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/os.cpp openjdk/hotspot/src/
    set_serialize_page_mask((uintptr_t)(vm_page_size() - sizeof(int32_t)));
  }
  
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/sharedRuntime.cpp openjdk/hotspot/src/share/vm/runtime/sharedRuntime.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/sharedRuntime.cpp
-+++ openjdk/hotspot/src/share/vm/runtime/sharedRuntime.cpp
-@@ -2957,7 +2957,7 @@
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/sharedRuntime.cpp openjdk/hotspot/src/share/vm/runtime/sharedRuntime.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/sharedRuntime.cpp	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/sharedRuntime.cpp	2021-07-27 18:21:08.553555466 +0100
+@@ -2974,7 +2974,7 @@
    Method* moop = fr.interpreter_frame_method();
    int max_locals = moop->max_locals();
    // Allocate temp buffer, 1 word per local & 2 per active monitor
@@ -199,9 +199,9 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/sharedRuntime.cpp openjdk/h
    intptr_t *buf = NEW_C_HEAP_ARRAY(intptr_t,buf_size_words, mtCode);
  
    // Copy the locals.  Order is preserved so that loading of longs works.
-diff --git openjdk.orig/hotspot/src/share/vm/runtime/synchronizer.cpp openjdk/hotspot/src/share/vm/runtime/synchronizer.cpp
---- openjdk.orig/hotspot/src/share/vm/runtime/synchronizer.cpp
-+++ openjdk/hotspot/src/share/vm/runtime/synchronizer.cpp
+diff -Nru openjdk.orig/hotspot/src/share/vm/runtime/synchronizer.cpp openjdk/hotspot/src/share/vm/runtime/synchronizer.cpp
+--- openjdk.orig/hotspot/src/share/vm/runtime/synchronizer.cpp	2021-07-16 05:52:52.000000000 +0100
++++ openjdk/hotspot/src/share/vm/runtime/synchronizer.cpp	2021-07-27 18:24:49.538937794 +0100
 @@ -184,38 +184,52 @@
  }
  
@@ -222,6 +222,11 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/synchronizer.cpp openjdk/ho
 -     assert (!mark->is_neutral(), "invariant") ;
 -     if (mark->has_locker() && mark != markOopDesc::INFLATING()) {
 -        assert(THREAD->is_lock_owned((address)mark->locker()), "invariant") ;
+-     }
+-     if (mark->has_monitor()) {
+-        ObjectMonitor * m = mark->monitor() ;
+-        assert(((oop)(m->object()))->mark() == mark, "invariant") ;
+-        assert(m->is_entered(THREAD), "invariant") ;
 +    // If the displaced header is NULL, then this exit matches up with
 +    // a recursive enter. No real work to do here except for diagnostics.
 +#ifndef PRODUCT
@@ -246,11 +251,6 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/synchronizer.cpp openjdk/ho
 +        assert(m->is_entered(THREAD), "invariant");
 +      }
       }
--     if (mark->has_monitor()) {
--        ObjectMonitor * m = mark->monitor() ;
--        assert(((oop)(m->object()))->mark() == mark, "invariant") ;
--        assert(m->is_entered(THREAD), "invariant") ;
--     }
 -     return ;
 +#endif
 +     return;
@@ -276,6 +276,6 @@ diff --git openjdk.orig/hotspot/src/share/vm/runtime/synchronizer.cpp openjdk/ho
    }
  
 +  // We have to take the slow-path of possible inflation and then exit.
-   ObjectSynchronizer::inflate(THREAD, object)->exit (true, THREAD) ;
- }
- 
+   ObjectSynchronizer::inflate(THREAD,
+                               object,
+                               inflate_cause_vm_internal)->exit(true, THREAD);

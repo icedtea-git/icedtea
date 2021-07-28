@@ -166,6 +166,17 @@ New in release 3.20.0 (2021-07-XX):
   - JDK-8269468: JDK-8269388 breaks the build on older GCCs
 * Import of OpenJDK 8 u302 build 08
   - JDK-8270533: AArch64: size_fits_all_mem_uses should return false if its output is a CAS
+* Shenandoah
+  - [backport] 8259580: Shenandoah: uninitialized label in VerifyThreadGCState
+  - [backport] 8259954: gc/shenandoah/mxbeans tests fail with -Xcomp
+  - [backport] 8261251: Shenandoah: Use object size for full GC humongous
+  - [backport] 8261413: Shenandoah: Disable class-unloading in I-U mode
+  - [backport] 8265239: Shenandoah: Shenandoah heap region count could be off by 1
+  - [backport] 8266802: Shenandoah: Round up region size to page size unconditionally
+  - [backport] 8267561: Shenandoah: Reference processing not properly setup for outside of cycle degenerated GC
+  - [backport] 8268127: Shenandoah: Heap size may be too small for region to align to large page size
+  - [backport] 8268699: Shenandoah: Add test for JDK-8268127
+  - Shenandoah: Process weak roots during class unloading cycle
 
 New in release 3.19.0 (2021-05-13):
 
