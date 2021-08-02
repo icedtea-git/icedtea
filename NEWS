@@ -12,6 +12,26 @@ JEPX - https://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 2.6.27 (2021-08-01):
+
+* Security fixes
+  - JDK-8256157: Improve bytecode assembly
+  - JDK-8256491: Better HTTP transport
+  - JDK-8258432, CVE-2021-2341: Improve file transfers
+  - JDK-8260453: Improve Font Bounding
+  - JDK-8260960: Signs of jarsigner signing
+  - JDK-8260967, CVE-2021-2369: Better jar file validation
+  - JDK-8262380: Enhance XML processing passes
+  - JDK-8262403: Enhanced data transfer
+  - JDK-8262477: Enhance String Conclusions
+  - JDK-8262967: Improve Zip file support
+  - JDK-8264079: Improve abstractions
+  - JDK-8264460: Improve NTLM support
+  - JDK-8267412, CVE-2021-2432: Provide better LDAP provider support
+* Import of OpenJDK 7 u311 build 1
+  - JDK-8151678: com/sun/jndi/ldap/LdapTimeoutTest.java failed due to timeout on DeadServerNoTimeoutTest is incorrect
+  - JDK-8160768: Add capability to custom resolve host/domain names within the default JNDI LDAP provider
+
 New in release 2.6.26 (2021-07-05):
 
 * Security fixes
