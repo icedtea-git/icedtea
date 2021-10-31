@@ -1,4 +1,11 @@
-2021-07-26  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+2021-10-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump shenandoah to aarch64-shenandoah-jdk8u312-b07.
+	* NEWS: Updated.
+	* hotspot.map.in: Bump shenandoah to
+	aarch64-shenandoah-jdk8u312-b07.
+
+2021-10-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to icedtea-3.21.0.
 	* Makefile.am:

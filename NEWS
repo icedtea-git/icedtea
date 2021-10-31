@@ -112,6 +112,9 @@ New in release 3.21.0 (2021-10-24):
   - JDK-8157404: Unable to read certain PKCS12 keystores from SequenceInputStream
   - JDK-8222751: closed/test/jdk/sun/security/util/DerIndefLenConverter/IndefBerPkcs12.java fail
   - JDK-8269763: The JEditorPane is blank after JDK-8265167
+* Shenandoah
+  - [backport] 8269661: JNI_GetStringCritical does not lock char array
+  - Re-cast JNI critical strings patch to be Shenandoah-specific
 
 New in release 3.20.0 (2021-07-27):
 
