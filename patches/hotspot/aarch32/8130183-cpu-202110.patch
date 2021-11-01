@@ -1,0 +1,22 @@
+# HG changeset patch
+# User mbalao
+# Date 1436445397 0
+#      Thu Jul 09 12:36:37 2015 +0000
+# Node ID 78565a54a256905583e0994f385e64c3b1321330
+# Parent  35002b4e84f9e1cfd3b3ab697ccb529939dc4f49
+8130183: InnerClasses: VM permits wrong Throw ClassFormatError if InnerClasses attribute's inner_class_info_index is 0
+Reviewed-by: acorn, lfoltan, andrew
+
+diff --git openjdk.orig/hotspot/src/share/vm/classfile/classFileParser.cpp openjdk/hotspot/src/share/vm/classfile/classFileParser.cpp
+--- openjdk.orig/hotspot/src/share/vm/classfile/classFileParser.cpp
++++ openjdk/hotspot/src/share/vm/classfile/classFileParser.cpp
+@@ -2801,8 +2801,7 @@
+     // Inner class index
+     u2 inner_class_info_index = cfs->get_u2_fast();
+     check_property(
+-      inner_class_info_index == 0 ||
+-        valid_klass_reference_at(inner_class_info_index),
++      valid_klass_reference_at(inner_class_info_index),
+       "inner_class_info_index %u has bad constant type in class file %s",
+       inner_class_info_index, CHECK_0);
+     // Outer class index

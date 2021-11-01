@@ -1,0 +1,48 @@
+# HG changeset patch
+# User avoitylov
+# Date 1628521972 -10800
+#      Mon Aug 09 18:12:52 2021 +0300
+# Node ID 8aac6d08b58e31e4938a32c2662bf822d87a5440
+# Parent  fe198a8a1cab7747ce8fea1a8ad9af894f1b80af
+8270404: Better canonicalization
+Reviewed-by: coleenp, rhalade, mschoene, andrew
+
+diff --git openjdk.orig/hotspot/src/share/vm/classfile/classFileParser.cpp openjdk/hotspot/src/share/vm/classfile/classFileParser.cpp
+--- openjdk.orig/hotspot/src/share/vm/classfile/classFileParser.cpp
++++ openjdk/hotspot/src/share/vm/classfile/classFileParser.cpp
+@@ -2811,6 +2811,13 @@
+         valid_klass_reference_at(outer_class_info_index),
+       "outer_class_info_index %u has bad constant type in class file %s",
+       outer_class_info_index, CHECK_0);
++
++    if (outer_class_info_index != 0) {
++      const Symbol* const outer_class_name = cp->klass_name_at(outer_class_info_index);
++      char* bytes = (char*)outer_class_name->bytes();
++      guarantee_property(bytes[0] != JVM_SIGNATURE_ARRAY,
++                         "Outer class is an array class in class file %s", CHECK_0);
++    }
+     // Inner class name
+     u2 inner_name_index = cfs->get_u2_fast();
+     check_property(
+diff --git openjdk.orig/hotspot/src/share/vm/prims/jvm.cpp openjdk/hotspot/src/share/vm/prims/jvm.cpp
+--- openjdk.orig/hotspot/src/share/vm/prims/jvm.cpp
++++ openjdk/hotspot/src/share/vm/prims/jvm.cpp
+@@ -1772,6 +1772,18 @@
+         found = (k() == inner_klass);
+         if (found && ooff != 0) {
+           ok = i_cp->klass_at(ooff, CHECK_NULL);
++          if (!ok->oop_is_instance()) {
++            // If the outer class is not an instance klass then it cannot have
++            // declared any inner classes.
++            ResourceMark rm(THREAD);
++            Exceptions::fthrow(
++              THREAD_AND_LOCATION,
++              vmSymbols::java_lang_IncompatibleClassChangeError(),
++              "%s and %s disagree on InnerClasses attribute",
++              ok->external_name(),
++              k->external_name());
++            return NULL;
++          }
+           outer_klass = instanceKlassHandle(thread, ok);
+           *inner_is_member = true;
+         }
