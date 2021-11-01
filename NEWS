@@ -11,7 +11,7 @@ JDK-X  - https://bugs.openjdk.java.net/browse/JDK-X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.21.0 (2021-10-24):
+New in release 3.21.0 (2021-10-31):
 
 * Security fixes
   - JDK-8130183, CVE-2021-35588: InnerClasses: VM permits wrong Throw ClassFormatError if InnerClasses attribute's inner_class_info_index is 0

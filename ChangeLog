@@ -1,5 +1,10 @@
 2021-10-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Prepare for release.
+	* NEWS: Set release date to today (2021-10-31).
+
+2021-10-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump aarch32 to jdk8u312-b06-aarch32-20210923.
 	* Makefile.am:
 	(ICEDTEA_PATCHES): Add security patches for
