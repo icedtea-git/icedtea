@@ -40,7 +40,7 @@ echo "COMPRESSION TYPE: ${CTYPE}"
 
 if test "x$CHECKOUT_DIR" = "x"; then
     echo "ERROR: Checkout directory must be specified";
-    echo "$0 <CHECKOUT_DIR> <DOWNLOAD_DIR> <TAG>"
+    echo "$0 <CHECKOUT_DIR> <DOWNLOAD_DIR> <TAG> <HOTSPOT>"
     exit -1;
 fi
 
@@ -63,7 +63,7 @@ fi
 
 if test "x$HOTSPOT" = "x" -o "x$HOTSPOT" = "xdefault"; then
     HOTSPOT=default;
-    ARCHIVED_REPOS=". corba jaxp jaxws langtools hotspot jdk $NASHORN"
+    ARCHIVED_REPOS=". $(${RUNNING_DIR}/discover_trees.sh ${CHECKOUT_DIR})"
 else
     ARCHIVED_REPOS=${HOTSPOT}
     echo "Only archiving HotSpot tree as ${HOTSPOT}"
@@ -75,6 +75,10 @@ echo "Using checkout directory $CHECKOUT_DIR"
 echo "Using HotSpot archive: $HOTSPOT"
 URL=$(hg -R ${CHECKOUT_DIR} paths default)
 echo "Upstream URL is ${URL}"
+if [ ! -e ${DOWNLOAD_DIR} ] ; then
+    echo "Creating ${DOWNLOAD_DIR}...";
+    mkdir -pv ${DOWNLOAD_DIR}
+fi
 pushd $DOWNLOAD_DIR
 echo "Compiling tarballs for ${ARCHIVED_REPOS}"
 for repos in ${ARCHIVED_REPOS};
@@ -82,7 +86,7 @@ do
     DIRNAME=${repos}
     if test "x$repos" = "x."; then
 	FILENAME=openjdk;
-	PREFIX=$(echo ${URL}|sed -r 's#.*/([^/]*)$#\1#'|sed 's#\.#-#')
+	PREFIX=$(echo ${URL}|sed -e 's#/$##'|sed -r 's#.*/([^/]*)$#\1#'|sed 's#\.#-#')
 	echo "Prefix for root tree is ${PREFIX}"
 	REPONAME=${PREFIX};
     elif test "x$repos" = "x${HOTSPOT}"; then
@@ -109,8 +113,6 @@ do
     hg archive -R ${CHECKOUT_DIR}/${DIRNAME} -t ${MCTYPE} -r ${TAG} -p ${REPONAME}-${CHANGESET} ${FILENAME}.tar${SUFFIX}
     if test "x${CTYPE}" = "xxz"; then xz -v ${FILENAME}.tar; fi
 done
-echo Removing outdated symlinks
-find $DOWNLOAD_DIR -maxdepth 1 -type l -exec rm -vf '{}' ';'
 popd
 echo Generating new changeset IDs and SHA256 sums
 echo URL = ${URL}

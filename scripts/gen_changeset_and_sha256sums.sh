@@ -84,7 +84,8 @@ if test "x$HOTSPOT" = "xdefault"; then
 	    sha256sum=$(sha256sum $file|awk '{print $1}')
 	    changeset=$(tar tf $file|head -n1|sed -r "s#[a-z0-9-]*-([0-9a-z]*)/.*#\1#")
 	    name=$(echo ${DOWNLOAD_DIR}|sed -r 's#.*(icedtea.*)#\1#'|sed 's#[78]/#-#')
-	    ln -sf ${repos}.tar.${COMPRESSION_TYPE} ${DOWNLOAD_DIR}/${name}-${repos}-${changeset}.tar.${COMPRESSION_TYPE}
+	    rm -vf ${DOWNLOAD_DIR}/${name}-${repos}-*.tar.${COMPRESSION_TYPE}
+	    ln -svf ${repos}.tar.${COMPRESSION_TYPE} ${DOWNLOAD_DIR}/${name}-${repos}-${changeset}.tar.${COMPRESSION_TYPE}
 	    echo "${id}_CHANGESET = $changeset" >> /tmp/changesets
 	    echo "${id}_SHA256SUM = $sha256sum" >> /tmp/sums
 	fi
@@ -100,7 +101,8 @@ if [ -e ${file} ] ; then
     sha256sum=$(sha256sum $file|awk '{print $1}')
     name=$(echo ${DOWNLOAD_DIR}|sed -r 's#.*(icedtea.*)#\1#'|sed 's#[78]/#-#')
     changeset=$(tar tf $file|head -n1|sed -r "s#[a-z0-9-]*-([0-9a-z]*)/.*#\1#")
-    ln -sf ${hotspots}.tar.${COMPRESSION_TYPE} ${DOWNLOAD_DIR}/${name}-${hotspots}-${changeset}.tar.${COMPRESSION_TYPE}
+    rm -vf ${DOWNLOAD_DIR}/${name}-${hotspots}-*.tar.${COMPRESSION_TYPE}
+    ln -svf ${hotspots}.tar.${COMPRESSION_TYPE} ${DOWNLOAD_DIR}/${name}-${hotspots}-${changeset}.tar.${COMPRESSION_TYPE}
     if test "x${hotspots}" = "xhotspot";
       then hsversion=default; else hsversion=${hotspots};
     fi
