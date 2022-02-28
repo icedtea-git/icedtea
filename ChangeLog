@@ -1,3 +1,128 @@
+2022-02-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Switch to using a single OpenJDK tarball
+	from git, with an optional HotSpot replacement
+	tarball.
+	* INSTALL: Remove documentation of
+	--with-corba-src-zip, --with-corba-checksum,
+	--with-jaxp-src-zip, --with-jaxp-checksum,
+	--with-jaxws-src-zip, --with-jaxws-checksum,
+	--with-jdk-src-zip, --with-jdk-checksum,
+	--with-langtools-src-zip, --with-langtools-checksum,
+	--with-nashorn-src-zip and --with-nashorn-checksum,
+	* Makefile.am:
+	(CORBA_CHANGESET): Removed.
+	(JAXP_CHANGESET): Likewise.
+	(JAXWS_CHANGESET): Likewise.
+	(JDK_CHANGESET): Likewise.
+	(LANGTOOLS_CHANGESET): Likewise.
+	(NASHORN_CHANGESET): Likewise.
+	(CORBA_SHA256SUM): Likewise.
+	(JAXP_SHA256SUM): Likewise.
+	(JAXWS_SHA256SUM): Likewise.
+	(JDK_SHA256SUM): Likewise.
+	(LANGTOOLS_SHA256SUM): Likewise.
+	(NASHORN_SHA256SUM): Likewise.
+	(OPENJDK_CHANGESET): Updated to match icedtea-3.21.0
+	tag in git repository.
+	(OPENJDK_SHA256SUM): Updated to reflect openjdk-git
+	tarball.
+	(CORBA_SRC_ZIP): Removed.
+	(JAXP_SRC_ZIP): Likewise.
+	(JAXWS_SRC_ZIP): Likewise.
+	(JDK_SRC_ZIP): Likewise.
+	(LANGTOOLS_SRC_ZIP): Likewise.
+	(NASHORN_SRC_ZIP): Likewise.
+	(OPENJDK_SRC_ZIP): Changed default to
+	openjdk-git.$(TAR_SUFFIX)
+	(HOTSPOT_SRC_ZIP): Changed default to
+	hotspot-git.$(TAR_SUFFIX)
+	(CORBA_SHA256SUM_BIN): Removed.
+	(CORBA_SUM): Likewise.
+	(JAXP_SHA256SUM_BIN): Removed.
+	(JAXP_SUM): Likewise.
+	(JAXWS_SHA256SUM_BIN): Removed.
+	(JAXWS_SUM): Likewise.
+	(JDK_SHA256SUM_BIN): Removed.
+	(JDK_SUM): Likewise.
+	(LANGTOOLS_SHA256SUM_BIN): Removed.
+	(LANGTOOLS_SUM): Likewise.
+	(NASHORN_SHA256SUM_BIN): Removed.
+	(NASHORN_SUM): Likewise.
+	(.PHONY): Dropped removed targets.
+	(download): Drop dependencies on download-corba,
+	download-jaxp, download-jaxws, download-jdk,
+	download-langtools and download-nashorn.
+	(clean-download): Drop dependencies on
+	clean-download-corba, clean-download-jaxp,
+	clean-download-jaxws, clean-download-jdk,
+	clean-download-langtools and clean-download-nashorn.
+	(download-corba): Removed
+	(download-jaxp): Likewise.
+	(download-jaxws): Likewise.
+	(download-jdk): Likewise.
+	(download-langtools): Likewise.
+	(clean-download-corba): Likewise.
+	(clean-download-jaxp): Likewise.
+	(clean-download-jaxws): Likewise.
+	(clean-download-jdk): Likewise.
+	(clean-download-langtools): Likewise.
+	(download-nashorn): Likewise.
+	(clean-download-nashorn): Likewise.
+	(extract): Drop dependencies on extract-corba,
+	extract-jaxp, extract-jaxws, extract-jdk,
+	extract-langtools and extract-nashorn.
+	(clean-extract-openjdk): Drop dependencies on
+	clean-extract-jdk, clean-extract-jaxp,
+	clean-extract-jaxws, clean-extract-corba,
+	clean-extract-langtools and clean-extract-nashorn
+	(extract-corba): Removed.
+	(clean-extract-corba): Likewise.
+	(extract-jaxp): Removed.
+	(clean-extract-jaxws): Likewise.
+	(extract-jaxws): Removed.
+	(clean-extract-jaxws): Likewise.
+	(extract-jdk): Removed.
+	(clean-extract-jdk): Likewise.
+	(extract-langtools): Removed.
+	(clean-extract-langtools): Likewise.
+	(extract-hotspot): Only handle case where
+	the HotSpot tarball is a replacement build
+	and not "default".
+	(extract-nashorn): Removed.
+	(clean-extract-nashorn): Likewise.
+	(sanitise-openjdk): Drop dependencies on
+	extract-jdk, extract-langtools, extract-corba,
+	extract-jaxp, extract-jaxws and extract-nashorn.
+	(ADD_ZERO_CONFIGURE_ARGS): Remove corba, jaxp,
+	jaxws, jdk and langtools options.
+	* acinclude.m4:
+	(IT_WITH_CORBA_SRC_ZIP): Removed.
+	(IT_WITH_JAXP_SRC_ZIP): Likewise.
+	(IT_WITH_JAXWS_SRC_ZIP): Likewise.
+	(IT_WITH_JDK_SRC_ZIP): Likewise.
+	(IT_WITH_LANGTOOLS_SRC_ZIP): Likewise.
+	(IT_WITH_NASHORN_SRC_ZIP): Likewise.
+	(IT_ENABLE_CORBA_CHECKSUM): Likewise.
+	(IT_ENABLE_JAXP_CHECKSUM): Likewise.
+	(IT_ENABLE_JAXWS_CHECKSUM): Likewise.
+	(IT_ENABLE_JDK_CHECKSUM): Likewise.
+	(IT_ENABLE_LANGTOOLS_CHECKSUM): Likewise.
+	(IT_ENABLE_NASHORN_CHECKSUM): Likewise.
+	* configure.ac: Don't invoke removed macros.
+	* scripts/create_tarballs.sh: Updated to
+	create a single openjdk-git or ${HSBUILD}-git
+	tarball from Git.
+	* scripts/create_tarballs8: Symlink to
+	run create_tarballs.sh in IcedTea 8 (3.x) mode.
+	* scripts/gen_changeset_and_sha256sums.sh:
+	Handle TMPDIR. Refactor to produce a single
+	changeset ID and checksum for either the
+	OpenJDK tarball or a replacement HotSpot tarball.
+	* scripts/gen_changeset_and_sha256sums_8.sh:
+	Symlink to run gen_changeset_and_sha256sum.sh
+	in IcedTea 8 (3.x) mode.
+
 2022-02-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Sync scripts with local copies before transition

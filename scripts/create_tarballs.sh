@@ -53,8 +53,8 @@ if test "x$DOWNLOAD_DIR" = "x"; then
 fi
 
 if test "x$TAG" = "x"; then
-    TAG=tip ;
-elif echo ${TAG}|grep '^icedtea' ; then
+    TAG=HEAD ;
+elif echo ${TAG}|grep -q '^icedtea' ; then
     if test "x$CHECKOUT_DIR" = "x"; then
 	echo "No checkout directory found.";
 	exit -1;
@@ -63,9 +63,9 @@ fi
 
 if test "x$HOTSPOT" = "x" -o "x$HOTSPOT" = "xdefault"; then
     HOTSPOT=default;
-    ARCHIVED_REPOS=". $(${RUNNING_DIR}/discover_trees.sh ${CHECKOUT_DIR})"
+    REPONAME="."
 else
-    ARCHIVED_REPOS=${HOTSPOT}
+    REPONAME=${HOTSPOT}
     echo "Only archiving HotSpot tree as ${HOTSPOT}"
 fi
 
@@ -73,46 +73,42 @@ echo "TAG = $TAG";
 echo "Creating new tarballs in $DOWNLOAD_DIR"
 echo "Using checkout directory $CHECKOUT_DIR"
 echo "Using HotSpot archive: $HOTSPOT"
-URL=$(hg -R ${CHECKOUT_DIR} paths default)
+pushd ${CHECKOUT_DIR}
+URL=$(git remote show origin | grep 'Fetch' | cut -d ':' -f 2-)
 echo "Upstream URL is ${URL}"
 if [ ! -e ${DOWNLOAD_DIR} ] ; then
     echo "Creating ${DOWNLOAD_DIR}...";
     mkdir -pv ${DOWNLOAD_DIR}
 fi
-pushd $DOWNLOAD_DIR
-echo "Compiling tarballs for ${ARCHIVED_REPOS}"
-for repos in ${ARCHIVED_REPOS};
-do
-    DIRNAME=${repos}
-    if test "x$repos" = "x."; then
-	FILENAME=openjdk;
-	PREFIX=$(echo ${URL}|sed -e 's#/$##'|sed -r 's#.*/([^/]*)$#\1#'|sed 's#\.#-#')
-	echo "Prefix for root tree is ${PREFIX}"
-	REPONAME=${PREFIX};
-    elif test "x$repos" = "x${HOTSPOT}"; then
-	FILENAME=${repos}
-	REPONAME=hotspot;
-	DIRNAME=hotspot;
-    else
-	FILENAME=${repos};
-	REPONAME=${repos};
-    fi
-    if echo ${TAG} | egrep '^(icedtea|jdk|aarch64|tip)' > /dev/null ; then
-	CHANGESET=$(hg log -r ${TAG} -R ${CHECKOUT_DIR}/${DIRNAME} | head -n1| awk -F ':' '{print $3}')
-    else
-	CHANGESET=${TAG}
-    fi
-    if test "x${CTYPE}" = "xxz"; then
-	MCTYPE=tar;
-    else
-	MCTYPE=t${CTYPE};
-	SUFFIX=.${CTYPE}
-    fi
-    echo "Creating ${FILENAME}.tar.${CTYPE} containing ${REPONAME}-${CHANGESET} from tag ${TAG} in ${CHECKOUT_DIR}/${repos}"
-    rm -f ${FILENAME}.tar.${CTYPE}
-    hg archive -R ${CHECKOUT_DIR}/${DIRNAME} -t ${MCTYPE} -r ${TAG} -p ${REPONAME}-${CHANGESET} ${FILENAME}.tar${SUFFIX}
-    if test "x${CTYPE}" = "xxz"; then xz -v ${FILENAME}.tar; fi
-done
+echo "Compiling tarballs for ${REPONAME}"
+if test "x${REPONAME}" = "x."; then
+    FILENAME=openjdk-git; 
+    DIRNAME=${REPONAME}
+    PREFIX=$(echo ${URL}|sed -e 's#/$##'|sed -e 's#\.git$##'|sed -r 's#.*/([^/]*)$#\1#'|sed 's#\.#-#')
+    echo "Prefix for root tree is ${PREFIX}"
+elif test "x${REPONAME}" = "x${HOTSPOT}"; then
+    FILENAME=${REPONAME}-git
+    DIRNAME=hotspot;
+    PREFIX=hotspot;
+fi
+if echo ${TAG} | egrep '^(icedtea|jdk|aarch64|tip)' > /dev/null ; then
+    CHANGESET=$(git show -s --format=%h ${TAG}^{commit})
+else
+    CHANGESET=${TAG}
+fi
+if test "x${CTYPE}" = "xxz"; then
+    git config tar.tar.xz.command "xz -c"
+elif test "x${CTYPE}" = "xbz2"; then
+    git config tar.tar.bz2.command "bzip2 -c"
+fi
+echo "Creating ${FILENAME}.tar.${CTYPE} containing ${PREFIX}-${CHANGESET} from tag ${TAG} in ${CHECKOUT_DIR}"
+rm -f ${DOWNLOAD_DIR}/${FILENAME}.tar.${CTYPE}
+if test "x${DIRNAME}" = "x."; then
+    git archive --prefix=${PREFIX}-${CHANGESET}/ -o ${DOWNLOAD_DIR}/${FILENAME}.tar.${CTYPE} ${TAG}
+else
+    echo "WARNING: Creating archive from a subtree; archive won't be reproducible due to use of current timestamp"
+    git archive --prefix=${PREFIX}-${CHANGESET}/ -o ${DOWNLOAD_DIR}/${FILENAME}.tar.${CTYPE} ${TAG}:${DIRNAME}/
+fi
 popd
 echo Generating new changeset IDs and SHA256 sums
 echo URL = ${URL}

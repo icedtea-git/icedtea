@@ -900,111 +900,6 @@ AC_DEFUN_ONCE([IT_WITH_HOTSPOT_SRC_ZIP],
   AC_SUBST(ALT_HOTSPOT_SRC_ZIP)
 ])
 
-AC_DEFUN_ONCE([IT_WITH_CORBA_SRC_ZIP],
-[
-  AC_MSG_CHECKING([for a CORBA source zip])
-  AC_ARG_WITH([corba-src-zip],
-              [AS_HELP_STRING(--with-corba-src-zip=PATH,specify the location of the CORBA source zip)],
-  [
-    ALT_CORBA_SRC_ZIP=${withval}
-    if test "x${ALT_CORBA_SRC_ZIP}" = "xno"; then
-      ALT_CORBA_SRC_ZIP="not specified"
-    elif ! test -f ${ALT_CORBA_SRC_ZIP} ; then
-      AC_MSG_ERROR([Invalid CORBA source zip specified: ${ALT_CORBA_SRC_ZIP}])
-    fi
-  ],
-  [ 
-    ALT_CORBA_SRC_ZIP="not specified"
-  ])
-  AM_CONDITIONAL(USE_ALT_CORBA_SRC_ZIP, test "x${ALT_CORBA_SRC_ZIP}" != "xnot specified")
-  AC_MSG_RESULT(${ALT_CORBA_SRC_ZIP})
-  AC_SUBST(ALT_CORBA_SRC_ZIP)
-])
-
-AC_DEFUN_ONCE([IT_WITH_JAXP_SRC_ZIP],
-[
-  AC_MSG_CHECKING([for a JAXP source zip])
-  AC_ARG_WITH([jaxp-src-zip],
-              [AS_HELP_STRING(--with-jaxp-src-zip=PATH,specify the location of the JAXP source zip)],
-  [
-    ALT_JAXP_SRC_ZIP=${withval}
-    if test "x${ALT_JAXP_SRC_ZIP}" = "xno"; then
-      ALT_JAXP_SRC_ZIP="not specified"
-    elif ! test -f ${ALT_JAXP_SRC_ZIP} ; then
-      AC_MSG_ERROR([Invalid JAXP source zip specified: ${ALT_JAXP_SRC_ZIP}])
-    fi
-  ],
-  [ 
-    ALT_JAXP_SRC_ZIP="not specified"
-  ])
-  AM_CONDITIONAL(USE_ALT_JAXP_SRC_ZIP, test "x${ALT_JAXP_SRC_ZIP}" != "xnot specified")
-  AC_MSG_RESULT(${ALT_JAXP_SRC_ZIP})
-  AC_SUBST(ALT_JAXP_SRC_ZIP)
-])
-
-AC_DEFUN_ONCE([IT_WITH_JAXWS_SRC_ZIP],
-[
-  AC_MSG_CHECKING([for a JAXWS source zip])
-  AC_ARG_WITH([jaxws-src-zip],
-              [AS_HELP_STRING(--with-jaxws-src-zip=PATH,specify the location of the JAXWS source zip)],
-  [
-    ALT_JAXWS_SRC_ZIP=${withval}
-    if test "x${ALT_JAXWS_SRC_ZIP}" = "xno"; then
-      ALT_JAXWS_SRC_ZIP="not specified"
-    elif ! test -f ${ALT_JAXWS_SRC_ZIP} ; then
-      AC_MSG_ERROR([Invalid JAXWS source zip specified: ${ALT_JAXWS_SRC_ZIP}])
-    fi
-  ],
-  [ 
-    ALT_JAXWS_SRC_ZIP="not specified"
-  ])
-  AM_CONDITIONAL(USE_ALT_JAXWS_SRC_ZIP, test "x${ALT_JAXWS_SRC_ZIP}" != "xnot specified")
-  AC_MSG_RESULT(${ALT_JAXWS_SRC_ZIP})
-  AC_SUBST(ALT_JAXWS_SRC_ZIP)
-])
-
-AC_DEFUN_ONCE([IT_WITH_JDK_SRC_ZIP],
-[
-  AC_MSG_CHECKING([for a JDK source zip])
-  AC_ARG_WITH([jdk-src-zip],
-              [AS_HELP_STRING(--with-jdk-src-zip=PATH,specify the location of the JDK source zip)],
-  [
-    ALT_JDK_SRC_ZIP=${withval}
-    if test "x${ALT_JDK_SRC_ZIP}" = "xno"; then
-      ALT_JDK_SRC_ZIP="not specified"
-    elif ! test -f ${ALT_JDK_SRC_ZIP} ; then
-      AC_MSG_ERROR([Invalid JDK source zip specified: ${ALT_JDK_SRC_ZIP}])
-    fi
-  ],
-  [ 
-    ALT_JDK_SRC_ZIP="not specified"
-  ])
-  AM_CONDITIONAL(USE_ALT_JDK_SRC_ZIP, test "x${ALT_JDK_SRC_ZIP}" != "xnot specified")
-  AC_MSG_RESULT(${ALT_JDK_SRC_ZIP})
-  AC_SUBST(ALT_JDK_SRC_ZIP)
-])
-
-AC_DEFUN_ONCE([IT_WITH_LANGTOOLS_SRC_ZIP],
-[
-  AC_MSG_CHECKING([for a langtools source zip])
-  AC_ARG_WITH([langtools-src-zip],
-              [AS_HELP_STRING(--with-langtools-src-zip=PATH,specify the location of the langtools source zip)],
-  [
-    ALT_LANGTOOLS_SRC_ZIP=${withval}
-    if test "x${ALT_LANGTOOLS_SRC_ZIP}" = "xno"; then
-      ALT_LANGTOOLS_SRC_ZIP="not specified"
-    elif ! test -f ${ALT_LANGTOOLS_SRC_ZIP} ; then
-      AC_MSG_ERROR([Invalid langtools source zip specified: ${ALT_LANGTOOLS_SRC_ZIP}])
-    fi
-  ],
-  [ 
-    ALT_LANGTOOLS_SRC_ZIP="not specified"
-  ])
-  AM_CONDITIONAL(USE_ALT_LANGTOOLS_SRC_ZIP, test "x${ALT_LANGTOOLS_SRC_ZIP}" != "xnot specified")
-  AC_MSG_RESULT(${ALT_LANGTOOLS_SRC_ZIP})
-  AC_SUBST(ALT_LANGTOOLS_SRC_ZIP)
-])
-
 AC_DEFUN([IT_WITH_HG_REVISION],
 [
   AC_MSG_CHECKING([which Mercurial revision to use])
@@ -1949,27 +1844,6 @@ AC_DEFUN_ONCE([IT_WITH_JAMVM_SRC_ZIP],
   AC_SUBST(ALT_JAMVM_SRC_ZIP)
 ])
 
-AC_DEFUN_ONCE([IT_WITH_NASHORN_SRC_ZIP],
-[
-  AC_MSG_CHECKING([for a NASHORN source zip])
-  AC_ARG_WITH([nashorn-src-zip],
-              [AS_HELP_STRING(--with-nashorn-src-zip=PATH,specify the location of the Nashorn source zip)],
-  [
-    ALT_NASHORN_SRC_ZIP=${withval}
-    if test "x${ALT_NASHORN_SRC_ZIP}" = "xno"; then
-      ALT_NASHORN_SRC_ZIP="not specified"
-    elif ! test -f ${ALT_NASHORN_SRC_ZIP} ; then
-      AC_MSG_ERROR([Invalid NASHORN source zip specified: ${ALT_NASHORN_SRC_ZIP}])
-    fi
-  ],
-  [ 
-    ALT_NASHORN_SRC_ZIP="not specified"
-  ])
-  AM_CONDITIONAL(USE_ALT_NASHORN_SRC_ZIP, test "x${ALT_NASHORN_SRC_ZIP}" != "xnot specified")
-  AC_MSG_RESULT(${ALT_NASHORN_SRC_ZIP})
-  AC_SUBST(ALT_NASHORN_SRC_ZIP)
-])
-
 AC_DEFUN_ONCE([IT_HAS_PAX],
 [
   AC_MSG_CHECKING([if a PaX kernel is in use])
@@ -2355,111 +2229,6 @@ AC_DEFUN_ONCE([IT_ENABLE_OPENJDK_CHECKSUM],
   AC_SUBST(OPENJDK_CHECKSUM)
 ])
 
-AC_DEFUN_ONCE([IT_ENABLE_CORBA_CHECKSUM],
-[
-  AC_REQUIRE([IT_WITH_CORBA_SRC_ZIP])
-  AC_MSG_CHECKING([whether to enable checksumming of the specified CORBA tarball])
-  AC_ARG_WITH([corba-checksum],
-	      [AS_HELP_STRING(--with-corba-checksum,checksum the specified CORBA tarball [[default=yes]])],
-  [
-    CORBA_CHECKSUM=${withval}
-  ],
-  [
-    CORBA_CHECKSUM="yes"
-  ])
-  AC_MSG_RESULT(${CORBA_CHECKSUM})
-  if test "x${CORBA_CHECKSUM}" = "xno" -a "x${ALT_CORBA_SRC_ZIP}" = "xnot specified"; then
-    AC_MSG_WARN([No CORBA source tarball specified; downloaded tarballs are always checksummed.])
-  fi
-  AM_CONDITIONAL(DISABLE_CORBA_CHECKSUM, test x"${CORBA_CHECKSUM}" = "xno")
-  AM_CONDITIONAL(WITH_CORBA_CHECKSUM, test x"${CORBA_CHECKSUM}" != "xyes" -a x"${CORBA_CHECKSUM}" != "xno")
-  AC_SUBST(CORBA_CHECKSUM)
-])
-
-AC_DEFUN_ONCE([IT_ENABLE_JAXP_CHECKSUM],
-[
-  AC_REQUIRE([IT_WITH_JAXP_SRC_ZIP])
-  AC_MSG_CHECKING([whether to enable checksumming of the specified JAXP tarball])
-  AC_ARG_WITH([jaxp-checksum],
-	      [AS_HELP_STRING(--with-jaxp-checksum,checksum the specified JAXP tarball [[default=yes]])],
-  [
-    JAXP_CHECKSUM=${withval}
-  ],
-  [
-    JAXP_CHECKSUM="yes"
-  ])
-  AC_MSG_RESULT(${JAXP_CHECKSUM})
-  if test "x${JAXP_CHECKSUM}" = "xno" -a "x${ALT_JAXP_SRC_ZIP}" = "xnot specified"; then
-    AC_MSG_WARN([No JAXP source tarball specified; downloaded tarballs are always checksummed.])
-  fi
-  AM_CONDITIONAL(DISABLE_JAXP_CHECKSUM, test x"${JAXP_CHECKSUM}" = "xno")
-  AM_CONDITIONAL(WITH_JAXP_CHECKSUM, test x"${JAXP_CHECKSUM}" != "xyes" -a x"${JAXP_CHECKSUM}" != "xno")
-  AC_SUBST(JAXP_CHECKSUM)
-])
-
-AC_DEFUN_ONCE([IT_ENABLE_JAXWS_CHECKSUM],
-[
-  AC_REQUIRE([IT_WITH_JAXWS_SRC_ZIP])
-  AC_MSG_CHECKING([whether to enable checksumming of the specified JAXWS tarball])
-  AC_ARG_WITH([jaxws-checksum],
-	      [AS_HELP_STRING(--with-jaxws-checksum,checksum the specified JAXWS tarball [[default=yes]])],
-  [
-    JAXWS_CHECKSUM=${withval}
-  ],
-  [
-    JAXWS_CHECKSUM="yes"
-  ])
-  AC_MSG_RESULT(${JAXWS_CHECKSUM})
-  if test "x${JAXWS_CHECKSUM}" = "xno" -a "x${ALT_JAXWS_SRC_ZIP}" = "xnot specified"; then
-    AC_MSG_WARN([No JAXWS source tarball specified; downloaded tarballs are always checksummed.])
-  fi
-  AM_CONDITIONAL(DISABLE_JAXWS_CHECKSUM, test x"${JAXWS_CHECKSUM}" = "xno")
-  AM_CONDITIONAL(WITH_JAXWS_CHECKSUM, test x"${JAXWS_CHECKSUM}" != "xyes" -a x"${JAXWS_CHECKSUM}" != "xno")
-  AC_SUBST(JAXWS_CHECKSUM)
-])
-
-AC_DEFUN_ONCE([IT_ENABLE_JDK_CHECKSUM],
-[
-  AC_REQUIRE([IT_WITH_JDK_SRC_ZIP])
-  AC_MSG_CHECKING([whether to enable checksumming of the specified JDK tarball])
-  AC_ARG_WITH([jdk-checksum],
-	      [AS_HELP_STRING(--with-jdk-checksum,checksum the specified JDK tarball [[default=yes]])],
-  [
-    JDK_CHECKSUM=${withval}
-  ],
-  [
-    JDK_CHECKSUM="yes"
-  ])
-  AC_MSG_RESULT(${JDK_CHECKSUM})
-  if test "x${JDK_CHECKSUM}" = "xno" -a "x${ALT_JDK_SRC_ZIP}" = "xnot specified"; then
-    AC_MSG_WARN([No JDK source tarball specified; downloaded tarballs are always checksummed.])
-  fi
-  AM_CONDITIONAL(DISABLE_JDK_CHECKSUM, test x"${JDK_CHECKSUM}" = "xno")
-  AM_CONDITIONAL(WITH_JDK_CHECKSUM, test x"${JDK_CHECKSUM}" != "xyes" -a x"${JDK_CHECKSUM}" != "xno")
-  AC_SUBST(JDK_CHECKSUM)
-])
-
-AC_DEFUN_ONCE([IT_ENABLE_LANGTOOLS_CHECKSUM],
-[
-  AC_REQUIRE([IT_WITH_LANGTOOLS_SRC_ZIP])
-  AC_MSG_CHECKING([whether to enable checksumming of the specified langtools tarball])
-  AC_ARG_WITH([langtools-checksum],
-	      [AS_HELP_STRING(--with-langtools-checksum,checksum the specified langtools tarball [[default=yes]])],
-  [
-    LANGTOOLS_CHECKSUM=${withval}
-  ],
-  [
-    LANGTOOLS_CHECKSUM="yes"
-  ])
-  AC_MSG_RESULT(${LANGTOOLS_CHECKSUM})
-  if test "x${LANGTOOLS_CHECKSUM}" = "xno" -a "x${ALT_LANGTOOLS_SRC_ZIP}" = "xnot specified"; then
-    AC_MSG_WARN([No langtools source tarball specified; downloaded tarballs are always checksummed.])
-  fi
-  AM_CONDITIONAL(DISABLE_LANGTOOLS_CHECKSUM, test x"${LANGTOOLS_CHECKSUM}" = "xno")
-  AM_CONDITIONAL(WITH_LANGTOOLS_CHECKSUM, test x"${LANGTOOLS_CHECKSUM}" != "xyes" -a x"${LANGTOOLS_CHECKSUM}" != "xno")
-  AC_SUBST(LANGTOOLS_CHECKSUM)
-])
-
 AC_DEFUN_ONCE([IT_ENABLE_CACAO_CHECKSUM],
 [
   AC_REQUIRE([IT_WITH_CACAO_SRC_ZIP])
@@ -2567,27 +2336,6 @@ dnl Check for freetype2 headers and libraries.
   Try installing freetype2-devel.])])
   AC_SUBST(FREETYPE2_CFLAGS)
   AC_SUBST(FREETYPE2_LIBS)
-])
-
-AC_DEFUN_ONCE([IT_ENABLE_NASHORN_CHECKSUM],
-[
-  AC_REQUIRE([IT_WITH_NASHORN_SRC_ZIP])
-  AC_MSG_CHECKING([whether to enable checksumming of the specified Nashorn tarball])
-  AC_ARG_WITH([nashorn-checksum],
-	      [AS_HELP_STRING(--with-nashorn-checksum,checksum the specified Nashorn tarball [[default=yes]])],
-  [
-    NASHORN_CHECKSUM=${withval}
-  ],
-  [
-    NASHORN_CHECKSUM="yes"
-  ])
-  AC_MSG_RESULT(${NASHORN_CHECKSUM})
-  if test "x${NASHORN_CHECKSUM}" = "xno" -a "x${ALT_NASHORN_SRC_ZIP}" = "xnot specified"; then
-    AC_MSG_WARN([No Nashorn source tarball specified; downloaded tarballs are always checksummed.])
-  fi
-  AM_CONDITIONAL(DISABLE_NASHORN_CHECKSUM, test x"${NASHORN_CHECKSUM}" = "xno")
-  AM_CONDITIONAL(WITH_NASHORN_CHECKSUM, test x"${NASHORN_CHECKSUM}" != "xyes" -a x"${NASHORN_CHECKSUM}" != "xno")
-  AC_SUBST(NASHORN_CHECKSUM)
 ])
 
 AC_DEFUN_ONCE([IT_CHECK_FOR_SCTP],

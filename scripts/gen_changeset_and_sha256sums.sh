@@ -22,6 +22,10 @@ DOWNLOAD_URL=$3
 ROOT_URL=$4
 HOTSPOT=$5
 
+if test "x${TMPDIR}" = "x"; then
+    TMPDIR=/tmp;
+fi
+
 if [ $(echo $0|grep '_8') ]; then
     echo "Assuming OpenJDK 8 and later";
     OPENJDK8=true;
@@ -72,41 +76,33 @@ fi
 
 echo "Using HotSpot archive: $HOTSPOT"
 
-rm -f /tmp/changesets /tmp/sums /tmp/hotspot.map
+rm -f ${TMPDIR}/changesets ${TMPDIR}/sums ${TMPDIR}/hotspot.map
 
 if test "x$HOTSPOT" = "xdefault"; then
-    for repos in corba jaxp jaxws jdk langtools openjdk $NASHORN
-    do
-	file=$DOWNLOAD_DIR/$repos.tar.${COMPRESSION_TYPE}
-	echo Generating changeset and checksum for $repos using ${file}
-	if [ -e $file ] ; then
-	    id=$(echo $repos|tr '[a-z]' '[A-Z]')
-	    sha256sum=$(sha256sum $file|awk '{print $1}')
-	    changeset=$(tar tf $file|head -n1|sed -r "s#[a-z0-9-]*-([0-9a-z]*)/.*#\1#")
-	    name=$(echo ${DOWNLOAD_DIR}|sed -r 's#.*(icedtea.*)#\1#'|sed 's#[78]/#-#')
-	    rm -vf ${DOWNLOAD_DIR}/${name}-${repos}-*.tar.${COMPRESSION_TYPE}
-	    ln -svf ${repos}.tar.${COMPRESSION_TYPE} ${DOWNLOAD_DIR}/${name}-${repos}-${changeset}.tar.${COMPRESSION_TYPE}
-	    echo "${id}_CHANGESET = $changeset" >> /tmp/changesets
-	    echo "${id}_SHA256SUM = $sha256sum" >> /tmp/sums
-	fi
-    done
-    hotspots=hotspot
-else
-    hotspots=${HOTSPOT}
-fi
-
-file=${DOWNLOAD_DIR}/${hotspots}.tar.${COMPRESSION_TYPE}
-if [ -e ${file} ] ; then
-    echo Generating changeset and checksum for ${hotspots} using ${file}
-    sha256sum=$(sha256sum $file|awk '{print $1}')
-    name=$(echo ${DOWNLOAD_DIR}|sed -r 's#.*(icedtea.*)#\1#'|sed 's#[78]/#-#')
-    changeset=$(tar tf $file|head -n1|sed -r "s#[a-z0-9-]*-([0-9a-z]*)/.*#\1#")
-    rm -vf ${DOWNLOAD_DIR}/${name}-${hotspots}-*.tar.${COMPRESSION_TYPE}
-    ln -svf ${hotspots}.tar.${COMPRESSION_TYPE} ${DOWNLOAD_DIR}/${name}-${hotspots}-${changeset}.tar.${COMPRESSION_TYPE}
-    if test "x${hotspots}" = "xhotspot";
-      then hsversion=default; else hsversion=${hotspots};
+    repo=openjdk
+    file=$DOWNLOAD_DIR/${repo}-git.tar.${COMPRESSION_TYPE}
+    echo Generating changeset and checksum for OpenJDK using ${file}
+    if [ -e $file ] ; then
+	id=$(echo $repo|tr '[a-z]' '[A-Z]')
+	sha256sum=$(sha256sum $file|awk '{print $1}')
+	changeset=$(tar tf $file|head -n1|sed -r "s#[a-z0-9-]*-([0-9a-z]*)/.*#\1#")
+	name=$(echo ${DOWNLOAD_DIR}|sed -r 's#.*(icedtea.*)#\1#'|sed 's#[78]/#-#')
+	rm -vf ${DOWNLOAD_DIR}/${name}-${repo}-*-git.tar.${COMPRESSION_TYPE}
+	ln -svf ${repo}-git.tar.${COMPRESSION_TYPE} ${DOWNLOAD_DIR}/${name}-${repo}-${changeset}-git.tar.${COMPRESSION_TYPE}
+	echo "${id}_CHANGESET = $changeset" >> ${TMPDIR}/changesets
+	echo "${id}_SHA256SUM = $sha256sum" >> ${TMPDIR}/sums
     fi
-    drop_url="${DOWNLOAD_URL}/icedtea${jdk_version}/@ICEDTEA_RELEASE@";
-    echo "${hsversion} drop ${drop_url} ${changeset} ${sha256sum}" >> /tmp/hotspot.map
-fi ;
+else
+    file=${DOWNLOAD_DIR}/${HOTSPOT}-git.tar.${COMPRESSION_TYPE}
+    if [ -e ${file} ] ; then
+	echo Generating changeset and checksum for ${HOTSPOT} using ${file}
+	sha256sum=$(sha256sum $file|awk '{print $1}')
+	name=$(echo ${DOWNLOAD_DIR}|sed -r 's#.*(icedtea.*)#\1#'|sed 's#[78]/#-#')
+	changeset=$(tar tf $file|head -n1|sed -r "s#[a-z0-9-]*-([0-9a-z]*)/.*#\1#")
+	rm -vf ${DOWNLOAD_DIR}/${name}-${HOTSPOT}-*-git.tar.${COMPRESSION_TYPE}
+	ln -svf ${HOTSPOT}-git.tar.${COMPRESSION_TYPE} ${DOWNLOAD_DIR}/${name}-${HOTSPOT}-${changeset}-git.tar.${COMPRESSION_TYPE}
+	drop_url="${DOWNLOAD_URL}/icedtea${jdk_version}/@ICEDTEA_RELEASE@";
+	echo "${HOTSPOT} drop ${drop_url} ${changeset} ${sha256sum}" >> ${TMPDIR}/hotspot.map
+    fi ;
+fi
 
