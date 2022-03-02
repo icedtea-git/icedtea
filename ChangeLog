@@ -1,3 +1,21 @@
+2022-03-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to icedtea-3.22.0.
+	* Makefile.am:
+	(OPENJDK_CHANGESET): Update to icedtea-3.22.0 tag.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DETERMINE_VERSION): Set JDK_UPDATE_VERSION
+	to 322 and BUILD_VERSION to b06.
+	* configure.ac: Bump to 3.22.0.
+	* hotspot.map.in: Drop unused 'default' build.
+	* scripts/create_tarballs.sh: Replace use of 'tip'
+	with 'HEAD' to refer to top changeset in repository.
+	* scripts/list_openjdk_changes.sh:
+	Import script to create entries for the NEWS file,
+	updated to work with git.
+
 2022-02-22  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Switch to using a single OpenJDK tarball

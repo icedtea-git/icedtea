@@ -91,7 +91,7 @@ elif test "x${REPONAME}" = "x${HOTSPOT}"; then
     DIRNAME=hotspot;
     PREFIX=hotspot;
 fi
-if echo ${TAG} | egrep '^(icedtea|jdk|aarch64|tip)' > /dev/null ; then
+if echo ${TAG} | egrep '^(icedtea|jdk|aarch64|HEAD)' > /dev/null ; then
     CHANGESET=$(git show -s --format=%h ${TAG}^{commit})
 else
     CHANGESET=${TAG}
