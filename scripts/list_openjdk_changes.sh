@@ -43,10 +43,26 @@ echo "Working directory: ${WORKING_DIR}"
 rm -f ${TMPDIR}/fixes2 ${TMPDIR}/fixes
 pushd ${WORKING_DIR}
 
+if ! git diff --quiet --no-ext-diff Makefile.am ; then
+    DIFF_COMMAND="diff";
+elif ! git diff --cached --quiet --no-ext-diff Makefile.am ; then
+    DIFF_COMMAND="diff --cached";
+fi
+
 echo "Repository OPENJDK";
-id1=$(git diff Makefile.am|grep "\-OPENJDK_CHANGESET ="|head -n1|sed 's#.*=\W##');
-id2=$(git diff Makefile.am|grep "\+OPENJDK_CHANGESET ="|tail -n1|sed 's#.*=\W##');
-if test "x$id1" != x -a "x$id2" != x; then
+if test "x${DIFF_COMMAND}" = "x"; then
+    echo "Assuming changes are committed";
+    id1=$(git show HEAD:Makefile.am|grep "^OPENJDK_CHANGESET ="|head -n1|sed 's#.*=\W##');
+    id2=$(git show HEAD^:Makefile.am|grep "^OPENJDK_CHANGESET ="|tail -n1|sed 's#.*=\W##');
+else
+    echo "Using diff command ${DIFF_COMMAND}";
+    id1=$(git ${DIFF_COMMAND} Makefile.am|grep "\-OPENJDK_CHANGESET ="|head -n1|sed 's#.*=\W##');
+    id2=$(git ${DIFF_COMMAND} Makefile.am|grep "\+OPENJDK_CHANGESET ="|tail -n1|sed 's#.*=\W##');
+fi
+
+echo "Found old Makefile.am OPENJDK_CHANGESET id ${id1}";
+echo "Found new Makefile.am OPENJDK_CHANGESET id ${id2}";
+if test "x$id1" != x -a "x$id2" != x -a "x$id1" != "x$id2"; then
     echo "Changeset changed from ${id1} to ${id2}";
     git --git-dir=${TREE}/.git log --no-merges --pretty=format:%B "${id1}...${id2}" | \
 	egrep '^[0-9]{7}' | \
@@ -55,22 +71,38 @@ else
     echo "No change.";
 fi
 
-HS_MAP=${WORKING_DIR}/hotspot.map.in;
+HS_MAP=hotspot.map.in;
 if [ ! -e ${HS_MAP} ] ; then
-    HS_MAP=${WORKING_DIR}/hotspot.map;
+    HS_MAP=hotspot.map;
 fi
 
 if [ -e  ${HS_MAP} ] ; then
+    if ! git diff --quiet --no-ext-diff ${HS_MAP} ; then
+	DIFF_COMMAND="diff";
+    elif ! git diff --cached --quiet --no-ext-diff ${HS_MAP} ; then
+	DIFF_COMMAND="diff --cached";
+    else
+	DIFF_COMMAND="";
+    fi
     HOTSPOT_BUILDS=$(grep -v '^#' ${HS_MAP} | awk '{print $1}');
     echo "HotSpot builds: ${HOTSPOT_BUILDS}"
     for builds in ${HOTSPOT_BUILDS}; do
 	if test "x$builds" = "xdefault"; then name="HOTSPOT"; else name=${builds}; fi
 	echo "Repository $name";
-	hs1=$(git diff ${HS_MAP}|grep "^-${builds}"|awk '{print $4}');
-	hs2=$(git diff ${HS_MAP}|grep "^+${builds}"|awk '{print $4}');
-	if test "x$hs1" != x -a "x$hs2" != x; then
+	if test "x${DIFF_COMMAND}" = "x"; then
+	    echo "Assuming changes are committed";
+	    hs1=$(git show HEAD:${HS_MAP}|grep "^${builds}"|awk '{print $4}');
+	    hs2=$(git show HEAD^:${HS_MAP}|grep "^${builds}"|awk '{print $4}');
+	else
+	    echo "Using diff command ${DIFF_COMMAND}";
+	    hs1=$(git ${DIFF_COMMAND} ${HS_MAP}|grep "^-${builds}"|awk '{print $4}');
+	    hs2=$(git ${DIFF_COMMAND} ${HS_MAP}|grep "^+${builds}"|awk '{print $4}');
+	fi
+	echo "Found old ${HS_MAP} ${builds} id ${hs1}";
+	echo "Found new ${HS_MAP} ${builds} id ${hs2}";
+	if test "x$hs1" != x -a "x$hs2" != x -a "x$hs1" != "x$hs2"; then
 	    echo "Changeset changed from ${hs1} to ${hs2}";
-	    git --git-dir=${TREE}/.git log --no-merges --pretty=format:%B "${id1}...${id2}" | \
+	    git --git-dir=${TREE}/.git log --no-merges --pretty=format:%B "${hs1}...${hs2}" | \
 		egrep '^[0-9]{7}' | \
 		sed -r 's#^([0-9])#  - JDK-\1#' >> ${TMPDIR}/fixes2;
 	else
