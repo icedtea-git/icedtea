@@ -18,9 +18,8 @@
 
 COMPRESSION_TYPE=$1
 DOWNLOAD_DIR=$2
-DOWNLOAD_URL=$3
-ROOT_URL=$4
-HOTSPOT=$5
+HOTSPOT=$3
+DOWNLOAD_URL=$4
 
 if test "x${TMPDIR}" = "x"; then
     TMPDIR=/tmp;
@@ -35,40 +34,32 @@ else
     OPENJDK8=false;
 fi
 
-if test "x$COMPRESSION_TYPE" = "x"; then
+if test "x${COMPRESSION_TYPE}" = "x"; then
     echo "ERROR: Compression type must be specified.";
-    echo "$0 <COMPRESSION_TYPE> <DOWNLOAD_DIR> <DOWNLOAD_URL> <ROOT_URL> <HOTSPOT>"
-    exit -1;
+    echo "$0 <COMPRESSION_TYPE> <DOWNLOAD_DIR> <HOTSPOT> <DOWNLOAD_URL>"
+    exit 1;
 fi
 
-if test "x$DOWNLOAD_DIR" = "x"; then
-    if test "x$OPENJDK8" = "xfalse"; then
-      DOWNLOAD_DIR=/home/downloads/java/drops/icedtea7 ;
-    else
-      DOWNLOAD_DIR=/home/downloads/java/drops/icedtea8 ;
-    fi
+echo "Using compression type ${COMPRESSION_TYPE}";
+
+if test "x${DOWNLOAD_DIR}" = "x"; then
+    echo "ERROR: Download directory must be specified.";
+    echo "$0 <COMPRESSION_TYPE> <DOWNLOAD_DIR> <HOTSPOT> <DOWNLOAD_URL>";
+    exit 2;
 fi
 
-if test "x$URL" = "x"; then
-    if test "x$OPENJDK8" = "xfalse"; then
-      URL=https://icedtea.classpath.org/hg/icedtea7-forest ;
-    else
-      URL=https://icedtea.classpath.org/hg/icedtea8-forest ;
-    fi
+if ! echo ${DOWNLOAD_DIR} | egrep -q 'icedtea[78]/[0-9.]*$' ; then
+    echo "ERROR: Download directory must end in the form 'icedtea<major_ver>/<version number>'";
+    exit 3;
 fi
 
-echo "Using URL: $ROOT_URL";
-if echo ${ROOT_URL}|grep 'release' > /dev/null; then
-    jdk_version=$(echo ${ROOT_URL}|sed -r 's#.*release/icedtea([0-9]).*#\1#')
-    version=$(echo ${ROOT_URL}|sed -r 's#.*release/icedtea[0-9]-forest-([0-9.]*)#\1#')
-    echo "OpenJDK version ${jdk_version}, release branch: ${version}";
-elif echo ${ROOT_URL}|grep 'openjdk\.java\.net' > /dev/null; then
-    jdk_version=$(echo ${ROOT_URL}|sed -r 's#.*jdk([0-9])u.*#\1#')
-    echo "OpenJDK version ${jdk_version}";
-else
-    jdk_version=$(echo ${ROOT_URL}|sed -r 's#.*icedtea([0-9]).*#\1#')
-    echo "OpenJDK version ${jdk_version}";
+echo "Using download directory ${DOWNLOAD_DIR}";
+
+if test "x${DOWNLOAD_URL}" = "x"; then
+    DOWNLOAD_URL=https://icedtea.classpath.org/download/drops;
 fi
+
+echo "Using download URL ${DOWNLOAD_URL}";
 
 if test "x$HOTSPOT" = "x"; then
     HOTSPOT=default;
@@ -79,25 +70,15 @@ echo "Using HotSpot archive: $HOTSPOT"
 rm -f ${TMPDIR}/changesets ${TMPDIR}/sums ${TMPDIR}/hotspot.map
 
 if test "x$HOTSPOT" = "xdefault"; then
-    repo=openjdk
-    file=$DOWNLOAD_DIR/${repo}-git.tar.${COMPRESSION_TYPE}
-    echo Generating changeset and checksum for OpenJDK using ${file}
-    if [ -e $file ] ; then
-	id=$(echo $repo|tr '[a-z]' '[A-Z]')
-	sha256sum=$(sha256sum $file|awk '{print $1}')
-	changeset=$(tar tf $file|head -n1|sed -r "s#[a-z0-9-]*-([0-9a-z]*)/.*#\1#")
-	name=$(echo ${DOWNLOAD_DIR}|sed -r 's#.*(icedtea.*)#\1#'|sed 's#[78]/#-#')
-	rm -vf ${DOWNLOAD_DIR}/${name}-${repo}-*-git.tar.${COMPRESSION_TYPE}
-	ln -svf ${repo}-git.tar.${COMPRESSION_TYPE} ${DOWNLOAD_DIR}/${name}-${repo}-${changeset}-git.tar.${COMPRESSION_TYPE}
-	echo "${id}_CHANGESET = $changeset" >> ${TMPDIR}/changesets
-	echo "${id}_SHA256SUM = $sha256sum" >> ${TMPDIR}/sums
-    fi
+    echo "Default HotSpot archive no longer supported.";
+    exit 4;
 else
     file=${DOWNLOAD_DIR}/${HOTSPOT}-git.tar.${COMPRESSION_TYPE}
     if [ -e ${file} ] ; then
 	echo Generating changeset and checksum for ${HOTSPOT} using ${file}
 	sha256sum=$(sha256sum $file|awk '{print $1}')
 	name=$(echo ${DOWNLOAD_DIR}|sed -r 's#.*(icedtea.*)#\1#'|sed 's#[78]/#-#')
+	jdk_version=$(echo ${DOWNLOAD_DIR}|sed -r 's#.*icedtea([0-9])/[0-9.]*$#\1#')
 	changeset=$(tar tf $file|head -n1|sed -r "s#[a-z0-9-]*-([0-9a-z]*)/.*#\1#")
 	rm -vf ${DOWNLOAD_DIR}/${name}-${HOTSPOT}-*-git.tar.${COMPRESSION_TYPE}
 	ln -svf ${HOTSPOT}-git.tar.${COMPRESSION_TYPE} ${DOWNLOAD_DIR}/${name}-${HOTSPOT}-${changeset}-git.tar.${COMPRESSION_TYPE}

@@ -110,10 +110,12 @@ else
     git archive --prefix=${PREFIX}-${CHANGESET}/ -o ${DOWNLOAD_DIR}/${FILENAME}.tar.${CTYPE} ${TAG}:${DIRNAME}/
 fi
 popd
-echo Generating new changeset IDs and SHA256 sums
-echo URL = ${URL}
+echo "Generating new changeset IDs and SHA256 sums with arguments:"
+echo "\tDownload directory: ${DOWNLOAD_DIR}"
+echo "\tHotSpot: ${HOTSPOT}"
+echo "\tDownload URL: ${DOWNLOAD_URL}"
 if test "x$OPENJDK8" = "xfalse"; then
-  $RUNNING_DIR/gen_changeset_and_sha256sums.sh bz2 $DOWNLOAD_DIR ${DOWNLOAD_URL} ${URL} ${HOTSPOT}
+  $RUNNING_DIR/gen_changeset_and_sha256sums.sh bz2 ${DOWNLOAD_DIR} ${HOTSPOT} ${DOWNLOAD_URL}
 else
-  $RUNNING_DIR/gen_changeset_and_sha256sums_8.sh xz $DOWNLOAD_DIR ${DOWNLOAD_URL} ${URL} ${HOTSPOT}
+  $RUNNING_DIR/gen_changeset_and_sha256sums_8.sh xz ${DOWNLOAD_DIR} ${HOTSPOT} ${DOWNLOAD_URL}
 fi
