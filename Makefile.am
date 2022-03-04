@@ -911,29 +911,27 @@ else
 if USE_ALT_HOTSPOT_SRC_ZIP
 	ln -sf $(ALT_HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP)
 endif
-	echo "Using HotSpot build: ${HSBUILD}"
-	if ! echo "$(HOTSPOT_SUM)  $(HOTSPOT_SRC_ZIP)" \
-	  | $(HOTSPOT_SHA256SUM_BIN) --check ; \
-	then \
-	  if test "x$(enable_downloading)" = "xyes"; then \
-	    if [ -e $(HOTSPOT_SRC_ZIP) ] ; then \
-	      mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
-	    fi ; \
-	    if test "x$(HS_TYPE)" = "xhg"; then \
-	      $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).$(TAR_SUFFIX) -O $(HOTSPOT_SRC_ZIP) ; \
+	if test "x${HSBUILD}" != "xdefault"; then \
+	  echo "Using HotSpot build: ${HSBUILD}" ; \
+	  if ! echo "$(HOTSPOT_SUM)  $(HOTSPOT_SRC_ZIP)" \
+	    | $(HOTSPOT_SHA256SUM_BIN) --check ; \
+	  then \
+	    if test "x$(enable_downloading)" = "xyes"; then \
+	      if [ -e $(HOTSPOT_SRC_ZIP) ] ; then \
+	        mv $(HOTSPOT_SRC_ZIP) $(HOTSPOT_SRC_ZIP).old ; \
+	      fi ; \
+	      if test "x$(HS_TYPE)" = "xhg"; then \
+	        $(WGET) $(HS_URL)/archive/$(HS_CHANGESET).$(TAR_SUFFIX) -O $(HOTSPOT_SRC_ZIP) ; \
+	      else \
+		$(WGET) $(HS_URL)/$(HSBUILD)-git.$(TAR_SUFFIX) -O $(HOTSPOT_SRC_ZIP) ; \
+	      fi ; \
+	      if ! echo "$(HOTSPOT_SUM)  $(HOTSPOT_SRC_ZIP)" \
+	        | $(SHA256SUM) --check ; then \
+	        echo "ERROR: Bad download of HotSpot zip"; false; \
+	      fi; \
 	    else \
-		if test "x$(HSBUILD)" = "xdefault"; then \
-	          $(WGET) $(HS_URL)/$(HOTSPOT_SRC_ZIP) ; \
-		else \
-		  $(WGET) $(HS_URL)/$(HSBUILD).$(TAR_SUFFIX) -O $(HOTSPOT_SRC_ZIP) ; \
-		fi ; \
-            fi ; \
-	    if ! echo "$(HOTSPOT_SUM)  $(HOTSPOT_SRC_ZIP)" \
-	      | $(SHA256SUM) --check ; then \
-	      echo "ERROR: Bad download of HotSpot zip"; false; \
-	    fi; \
-	  else \
-	    echo "ERROR: No up-to-date OpenJDK HotSpot zip available"; exit -1; \
+	      echo "ERROR: No up-to-date OpenJDK HotSpot zip available"; exit -1; \
+	    fi ; \
 	  fi ; \
 	fi
 endif

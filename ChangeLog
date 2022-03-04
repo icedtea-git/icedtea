@@ -1,5 +1,12 @@
 2022-03-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* Makefile.am:
+	(download-hotspot): Only download for alternative
+	HotSpot builds (i.e. not "default") and use the "-git"
+	suffix on the URL.
+
+2022-03-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* scripts/list_openjdk_changes.sh:
 	Only list changes from the HotSpot subdirectory
 	for the HotSpot builds.
