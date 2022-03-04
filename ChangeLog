@@ -1,5 +1,11 @@
 2022-03-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* scripts/list_openjdk_changes.sh:
+	Only list changes from the HotSpot subdirectory
+	for the HotSpot builds.
+
+2022-03-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump aarch32 to jdk8u322-ga-aarch32-20220131.
 	* patches/hotspot/aarch32/8130183-cpu-202110.patch,
 	* patches/hotspot/aarch32/8269624-cpu-202110.patch,
