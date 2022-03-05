@@ -1,3 +1,8 @@
+2022-03-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Prepare for release.
+	* NEWS: Set release date to today (2022-03-04).
+
 2022-03-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	* Makefile.am:
