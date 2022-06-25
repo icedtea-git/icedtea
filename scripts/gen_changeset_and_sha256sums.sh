@@ -70,8 +70,19 @@ echo "Using HotSpot archive: $HOTSPOT"
 rm -f ${TMPDIR}/changesets ${TMPDIR}/sums ${TMPDIR}/hotspot.map
 
 if test "x$HOTSPOT" = "xdefault"; then
-    echo "Default HotSpot archive no longer supported.";
-    exit 4;
+    repo=openjdk
+    file=$DOWNLOAD_DIR/${repo}-git.tar.${COMPRESSION_TYPE}
+    echo Generating changeset and checksum for OpenJDK using ${file}
+    if [ -e $file ] ; then
+	id=$(echo $repo|tr '[a-z]' '[A-Z]')
+	sha256sum=$(sha256sum $file|awk '{print $1}')
+	changeset=$(tar tf $file|head -n1|sed -r "s#[a-z0-9-]*-([0-9a-z]*)/.*#\1#")
+	name=$(echo ${DOWNLOAD_DIR}|sed -r 's#.*(icedtea.*)#\1#'|sed 's#[78]/#-#')
+	rm -vf ${DOWNLOAD_DIR}/${name}-${repo}-*-git.tar.${COMPRESSION_TYPE}
+	ln -svf ${repo}-git.tar.${COMPRESSION_TYPE} ${DOWNLOAD_DIR}/${name}-${repo}-${changeset}-git.tar.${COMPRESSION_TYPE}
+	echo "${id}_CHANGESET = $changeset" >> ${TMPDIR}/changesets
+	echo "${id}_SHA256SUM = $sha256sum" >> ${TMPDIR}/sums
+    fi
 else
     file=${DOWNLOAD_DIR}/${HOTSPOT}-git.tar.${COMPRESSION_TYPE}
     if [ -e ${file} ] ; then

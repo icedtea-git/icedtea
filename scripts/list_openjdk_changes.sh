@@ -65,8 +65,10 @@ echo "Found new Makefile.am OPENJDK_CHANGESET id ${id2}";
 if test "x$id1" != x -a "x$id2" != x -a "x$id1" != "x$id2"; then
     echo "Changeset changed from ${id1} to ${id2}";
     git -C ${TREE} log --no-merges --pretty=format:%B "${id1}...${id2}" | \
-	egrep '^[0-9]{7}' | \
-	sed -r 's#^([0-9])#  - JDK-\1#' >> ${TMPDIR}/fixes2;
+	egrep '^([0-9]{7}|GH)' | \
+	sed -r 's#^([0-9])#  - JDK-\1#' | \
+	sed -r 's#^GH([0-9]):#  - GH00\1:#' | \
+	sed -r 's#^GH([0-9]{2}):#  - GH0\1:#' >> ${TMPDIR}/fixes2;
 else
     echo "No change.";
 fi
@@ -103,8 +105,10 @@ if [ -e  ${HS_MAP} ] ; then
 	if test "x$hs1" != x -a "x$hs2" != x -a "x$hs1" != "x$hs2"; then
 	    echo "Changeset changed from ${hs1} to ${hs2}";
 	    git -C ${TREE} log --no-merges --pretty=format:%B "${hs1}...${hs2}" -- hotspot | \
-		egrep '^[0-9]{7}' | \
-		sed -r 's#^([0-9])#  - JDK-\1#' >> ${TMPDIR}/fixes2;
+		egrep '^([0-9]{7}|GH)' | \
+		sed -r 's#^([0-9])#  - JDK-\1#' | \
+		sed -r 's#^GH([0-9]):#  - GH00\1:#' | \
+		sed -r 's#^GH([0-9]{2}):#  - GH0\1:#' >> ${TMPDIR}/fixes2;
 	else
 	    echo "No change.";
 	fi;

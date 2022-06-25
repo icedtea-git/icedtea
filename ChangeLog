@@ -1,3 +1,25 @@
+2022-06-25  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to icedtea-3.23.0.
+	* Makefile.am:
+	(OPENJDK_CHANGESET): Update to icedtea-3.23.0 tag.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated. Support GitHub issues.
+	* acinclude.m4:
+	(IT_DETERMINE_VERSION): Set JDK_UPDATE_VERSION
+	to 332 and BUILD_VERSION to b09.
+	* configure.ac: Bump to 3.23.0.
+	* scripts/find_existing_items_one_file.sh:
+	Import my script used to find duplicate bug items
+	in NEWS file.
+	* scripts/gen_changeset_and_sha256sums.sh:
+	Restore handling of main repository accidentally
+	removed in prior commit when adding support
+	for alternate HotSpot builds based in git.
+	* scripts/list_openjdk_changes.sh: Include
+	GitHub issues from the log and ensure the IDs
+	are always three digits long.
+
 2022-03-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Prepare for release.
