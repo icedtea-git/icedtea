@@ -100,6 +100,8 @@ New in release 3.23.0 (2022-03-04):
   - GH007: Fix NetworkInterface_winXP.c variable declarations to compile on VS2010
   - GH008: Reinstate POST_STRIP_CMD empty check in Images.gmk
   - GH012: Building from tarball broken by bad backport of JDK-8210283 (#13)
+* Shenandoah
+  - JDK-8260632: Build failures after JDK-8253353
 
 New in release 3.22.0 (2022-03-04):
 
