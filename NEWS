@@ -12,7 +12,7 @@ GHX - https://github.com/icedtea-git/icedtea8/issues/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.23.0 (2022-03-04):
+New in release 3.23.0 (2022-06-28):
 
 * Security fixes
   - JDK-8269938: Enhance XML processing passes redux
