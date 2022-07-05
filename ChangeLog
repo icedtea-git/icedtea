@@ -1,3 +1,15 @@
+2022-07-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* NEWS: Updated.
+	* patches/gh001-3curve.patch: Renamed
+	from pr3818-3curve.patch. Updated to
+	apply after JDK-8226374, including
+	removal of unsupported curve from
+	jdk.tls.disabledAlgorithms.
+	* patches/gh001-4curve.patch: Likewise
+	for the 4 curve version, renamed from
+	pr3818-4curve.patch
+
 2021-02-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	PR3833: Update tapsets following JDK-8015774,

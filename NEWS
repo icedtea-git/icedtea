@@ -7,6 +7,7 @@ DX  - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=X
 GX  - http://bugs.gentoo.org/show_bug.cgi?id=X
 CAX - http://server.complang.tuwien.ac.at/cgi-bin/bugzilla/show_bug.cgi?id=X
 LPX - https://bugs.launchpad.net/bugs/X
+GHX - https://github.com/icedtea-git/icedtea/issues/X
 
 CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
@@ -22,6 +23,8 @@ New in release 6.0.0 (2019-XX-XX):
   - PR3829: arc_priority representation creates an implicit limit on character sequence within regexp
   - PR3831: Hotspot object_alloc tapset uses HeapWordSize incorrectly
   - PR3833, RH1814915: Update tapsets following JDK-8015774, which removes '_heap'
+* Bug fixes
+  - GH001: Update ECC patch, following JDK-8226374
 
 New in release 5.0.0 (2019-XX-XX):
 
