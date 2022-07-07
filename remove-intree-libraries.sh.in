@@ -87,12 +87,7 @@ if test "x@ENABLE_SYSTEM_PCSC@" = "xtrue"; then
   rm -rvf ${PCSC_SRC}
 fi
 
-if test "x@ENABLE_SUNEC@" = "xno"; then
-rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECDHKeyAgreement.java
-rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECDSASignature.java
-rm -vf openjdk/jdk/src/share/classes/sun/security/ec/ECKeyPairGenerator.java
-rm -vf openjdk/jdk/src/share/classes/sun/security/ec/SunEC.java
-rm -vf openjdk/jdk/src/share/classes/sun/security/ec/SunECEntries.java
-rm -rvf openjdk/jdk/src/share/native/sun/security/ec
-rm -rvf openjdk/jdk/make/sun/security/ec
+if test "x@ENABLE_NSS_SUNEC@" = "xyes"; then
+    echo "Removing EC source code we don't build"
+    rm -rvf openjdk/jdk/src/share/native/sun/security/ec/impl
 fi

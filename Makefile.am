@@ -708,16 +708,19 @@ if !DISABLE_SYSTEMTAP_TESTS
 SYSTEMTAP_TEST_SUITE = check-tapset
 endif
 
-if ENABLE_SUNEC
+if ENABLE_NSS_SUNEC
 ICEDTEA_ENV += \
 	SYSTEM_NSS="true" \
 	NSS_LIBS="${SUNEC_LIBS}" \
-	NSS_CFLAGS="${SUNEC_CFLAGS}" \
-	ECC_JUST_SUITE_B="true"
+	NSS_CFLAGS="${SUNEC_CFLAGS}"
 else
 ICEDTEA_ENV += \
-	SYSTEM_NSS="false" \
-	DISABLE_INTREE_EC="true"
+	SYSTEM_NSS="false"
+endif
+
+if !USE_NON_NSS_CURVES
+ICEDTEA_ENV += \
+	ECC_JUST_SUITE_B="true"
 endif
 
 if ENABLE_NATIVE_DEBUGINFO
@@ -3111,28 +3114,22 @@ clean-tz.properties:
 # ECC Availability Check
 
 stamps/ecccheck.stamp: $(INITIAL_BOOTSTRAP_LINK_STAMP)
-if ENABLE_SUNEC
 	mkdir -p $(ECC_CHECK_BUILD_DIR)
 	$(BOOT_DIR)/bin/javac $(IT_JAVACFLAGS) \
 	  -d $(ECC_CHECK_BUILD_DIR) $(ECC_CHECK_SRCS)
-endif
 	mkdir -p stamps
 	touch $@
 
 clean-ecccheck:
-if ENABLE_SUNEC
 	rm -rf $(ECC_CHECK_BUILD_DIR)
-endif
 	rm -f stamps/ecccheck.stamp
 
 stamps/check-ecc.stamp: stamps/ecccheck.stamp stamps/icedtea.stamp
-if ENABLE_SUNEC
 	set -e ; \
 	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
 	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestEllipticCurveCryptoSupport yes ; \
 	  $(BUILD_SDK_DIR)/bin/java -cp $(ECC_CHECK_BUILD_DIR) TestECDSA ; \
 	fi
-endif
 	mkdir -p stamps
 	touch $@
 

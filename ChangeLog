@@ -1,3 +1,42 @@
+2021-11-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Improve SunEC provider support, following
+	recent upstream changes.
+	* INSTALL: Rename --enable-sunec to
+	--enable-nss-sunec and update documentation
+	to donate new usage.
+	* Makefile.am:
+	(ICEDTEA_ENV): Rename ENABLE_SUNEC to
+	ENABLE_NSS_SUNEC. Separate ECC_JUST_SUITE_B
+	flag out to when USE_NON_NSS_CURVES is not
+	set.
+	(ecccheck): Always run as OpenJDK 7u's PKCS11
+	provider can no longer work without SunEC,
+	as of JDK-7194075.
+	(clean-ecccheck): Likewise.
+	(check-ecc): Likewise.
+	* NEW: Updated.
+	* acinclude.m4:
+	(IT_ENABLE_NSS_SUNEC): Renamed from
+	IT_ENABLE_SUNEC.
+	* configure.ac: Fix reference to IT_ENABLE_SUNEC.
+	* fsg.sh.in: Don't remove all the SunEC native
+	code.  Just remove and patch out the curves we
+	don't use when ENABLE_NON_NSS_CURVES is not set.
+	* patches/no_native_non-nss_curves.patch:
+	Update native SunEC source code to exclude
+	non-NSS curves.
+	* patches/remove_unknown_curves.patch:
+	Remove references to unsupported curves in
+	java.security when we build without non-NSS
+	curves.
+	* remove-intree-libraries.sh.in: Delete just
+	the native SunEC code when we are linking
+	against NSS instead (ENABLE_NSS_SUNEC).
+	* test/standalone/TestEllipticCurveCryptoSupport.java:
+	Update test to ensure java.security
+	curve constraints can be parsed.
+
 2021-11-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump to 2.6.28.

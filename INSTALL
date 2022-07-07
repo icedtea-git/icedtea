@@ -250,7 +250,7 @@ These are documented fully in the relevant section below.
 * --with-additional-vms=vm-list: Additional VMs to build using the system described
   below.
 * --enable-arm32-jit: Build the ARM32 JIT.
-* --enable-sunec: Build the SunEC crypto provider against system NSS.
+* --enable-nss-sunec: Build the SunEC crypto provider against system NSS.
 * --enable-native-debuginfo: Include debuginfo in native binaries.
 * --enable-java-debuginfo: Include debuginfo in Java class files.
 * --enable-improved-font-rendering: Use fontconfig for better font rendering
@@ -311,11 +311,13 @@ This can also be done manually at a later date.
 
 The PKCS11 option was originally added as it was the only way that
 elliptic curve cryptography support could be provided. From OpenJDK 7
-onwards, there is another provider, SunEC. This also utilises NSS, but
-directly via its ECC functions rather than the PKCS11 interface.
-Specifying --enable-sunec will build this provider, linked against
-NSS. Version 3.16.1 or later of NSS is required so that the
-appropriate softokn ABI is available to the provider.
+onwards, there is another provider, SunEC, which uses the in-tree
+SunEC native library. This is enabled by default, so there is no
+longer a need to enable the SunPKCS11 provider simply to obtain
+elliptic curve cryptography support.  If --enable-nss-sunec is
+specified, this may link against the system NSS library. Version
+3.16.1 or later of NSS is required so that the appropriate softokn ABI
+is available to the provider.
 
 CACAO
 =====

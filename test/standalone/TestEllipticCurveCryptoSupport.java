@@ -27,6 +27,8 @@ import java.security.Signature;
 
 import javax.crypto.KeyAgreement;
 
+import sun.security.util.DisabledAlgorithmConstraints;
+
 /**
  * Check whether Elliptic Curve Crypto is available.
  *
@@ -139,7 +141,7 @@ public class TestEllipticCurveCryptoSupport {
 	  possibleProblems = true;
 	}
     } catch (NoSuchAlgorithmException e) {
-      System.out.println("No EC KeyFactory");
+      System.out.println("No EC KeyPairGenerator");
     }
     
     // Signature
@@ -178,6 +180,17 @@ public class TestEllipticCurveCryptoSupport {
     }
     catch (IllegalAccessException e) {
       System.out.println("Could not access useFullImplementation field");
+    }
+
+    // If EC is available, check curve constraints are parseable
+    if (!possibleProblems) {
+      try {
+	new DisabledAlgorithmConstraints(DisabledAlgorithmConstraints.PROPERTY_TLS_DISABLED_ALGS);
+	System.out.println("Security properties parsed");
+      } catch (IllegalArgumentException e) {
+	System.out.println("Could not initialise security properties: " + e);
+	possibleProblems = true;
+      }
     }
 
     System.err.println("SunEC provider available: " + possibleProblems);

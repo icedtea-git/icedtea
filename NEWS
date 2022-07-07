@@ -14,6 +14,9 @@ CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
 New in release 2.6.28 (2021-11-05):
 
+* New features
+  - Elliptic curve cryptography (ECC) is now always supported using the in-tree SunEC library
+  - The option --enable-sunec is renamed to --enable-nss-sunec and may still be used to link against system NSS
 * Security fixes
   - JDK-8130183, CVE-2021-35588: InnerClasses: VM permits wrong Throw ClassFormatError if InnerClasses attribute's inner_class_info_index is 0
   - JDK-8161016: Strange behavior of URLConnection with proxy
