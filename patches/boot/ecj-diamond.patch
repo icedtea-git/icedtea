@@ -12689,3 +12689,28 @@ diff -Nru openjdk-boot.orig/jdk/test/java/util/Random/DistinctSeeds.java openjdk
          List<Thread> threads = new ArrayList<Thread>();
          for (int i = 0; i < threadCount; i++) {
              RandomCollector r = new RandomCollector();
+diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/swing/text/rtf/RTFReader.java openjdk-boot/jdk/src/share/classes/javax/swing/text/rtf/RTFReader.java
+--- openjdk-boot.orig/jdk/src/share/classes/javax/swing/text/rtf/RTFReader.java	2021-11-04 02:07:46.733593785 +0000
++++ openjdk-boot/jdk/src/share/classes/javax/swing/text/rtf/RTFReader.java	2021-11-04 02:08:41.536640011 +0000
+@@ -834,9 +834,9 @@
+ 
+     public void close()
+     {
+-        Map<Integer, Style> chrStyles = new HashMap<>();
+-        Map<Integer, Style> pgfStyles = new HashMap<>();
+-        Map<Integer, Style> secStyles = new HashMap<>();
++        Map<Integer, Style> chrStyles = new HashMap<Integer, Style>();
++        Map<Integer, Style> pgfStyles = new HashMap<Integer, Style>();
++        Map<Integer, Style> secStyles = new HashMap<Integer, Style>();
+         Enumeration<StyleDefiningDestination> styles = definedStyles.elements();
+         while(styles.hasMoreElements()) {
+             StyleDefiningDestination style;
+@@ -985,7 +985,7 @@
+             Style next = null;
+ 
+             if (alreadyMetBasisIndexSet == null) {
+-                alreadyMetBasisIndexSet = new HashSet<>();
++                alreadyMetBasisIndexSet = new HashSet<Integer>();
+             }
+ 
+             if (realizedStyle != null)

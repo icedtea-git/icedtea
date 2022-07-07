@@ -1,6 +1,6 @@
 diff -Nru openjdk-boot.orig/corba/src/share/classes/com/sun/corba/se/impl/io/ObjectStreamClass.java openjdk-boot/corba/src/share/classes/com/sun/corba/se/impl/io/ObjectStreamClass.java
---- openjdk-boot.orig/corba/src/share/classes/com/sun/corba/se/impl/io/ObjectStreamClass.java	2021-05-24 01:07:26.000000000 +0100
-+++ openjdk-boot/corba/src/share/classes/com/sun/corba/se/impl/io/ObjectStreamClass.java	2021-07-02 15:37:28.991644996 +0100
+--- openjdk-boot.orig/corba/src/share/classes/com/sun/corba/se/impl/io/ObjectStreamClass.java	2021-11-03 16:36:15.000000000 +0000
++++ openjdk-boot/corba/src/share/classes/com/sun/corba/se/impl/io/ObjectStreamClass.java	2021-11-03 19:37:26.162349054 +0000
 @@ -1001,9 +1001,11 @@
                          public Object run() {
                              try {
@@ -17,8 +17,8 @@ diff -Nru openjdk-boot.orig/corba/src/share/classes/com/sun/corba/se/impl/io/Obj
                              }
                          }
 diff -Nru openjdk-boot.orig/jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.java openjdk-boot/jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.java
---- openjdk-boot.orig/jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.java	2021-05-24 01:07:26.000000000 +0100
-+++ openjdk-boot/jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.java	2021-07-02 15:37:28.992644997 +0100
+--- openjdk-boot.orig/jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.java	2021-11-03 16:36:16.000000000 +0000
++++ openjdk-boot/jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.java	2021-11-03 19:37:26.164349099 +0000
 @@ -145,7 +145,9 @@
                  final String name = c.name();
                  ei = new EncodingInfo(name, name);
@@ -31,8 +31,8 @@ diff -Nru openjdk-boot.orig/jaxp/src/com/sun/org/apache/xml/internal/serializer/
              }
          }
 diff -Nru openjdk-boot.orig/jaxp/src/javax/xml/transform/TransformerException.java openjdk-boot/jaxp/src/javax/xml/transform/TransformerException.java
---- openjdk-boot.orig/jaxp/src/javax/xml/transform/TransformerException.java	2021-05-24 01:07:26.000000000 +0100
-+++ openjdk-boot/jaxp/src/javax/xml/transform/TransformerException.java	2021-07-02 15:37:28.993644998 +0100
+--- openjdk-boot.orig/jaxp/src/javax/xml/transform/TransformerException.java	2021-11-03 16:36:16.000000000 +0000
++++ openjdk-boot/jaxp/src/javax/xml/transform/TransformerException.java	2021-11-03 19:37:26.164349099 +0000
 @@ -360,10 +360,13 @@
                  } else {
                      exception = null;
@@ -51,8 +51,8 @@ diff -Nru openjdk-boot.orig/jaxp/src/javax/xml/transform/TransformerException.ja
          // insure output is written
          s.flush();
 diff -Nru openjdk-boot.orig/jaxp/src/jdk/xml/internal/JdkXmlUtils.java openjdk-boot/jaxp/src/jdk/xml/internal/JdkXmlUtils.java
---- openjdk-boot.orig/jaxp/src/jdk/xml/internal/JdkXmlUtils.java	2021-05-24 01:07:26.000000000 +0100
-+++ openjdk-boot/jaxp/src/jdk/xml/internal/JdkXmlUtils.java	2021-07-02 15:37:28.995645000 +0100
+--- openjdk-boot.orig/jaxp/src/jdk/xml/internal/JdkXmlUtils.java	2021-11-03 16:36:16.000000000 +0000
++++ openjdk-boot/jaxp/src/jdk/xml/internal/JdkXmlUtils.java	2021-11-03 19:37:26.166349138 +0000
 @@ -113,7 +113,12 @@
              Object value, boolean warn) {
          try {
@@ -78,7 +78,7 @@ diff -Nru openjdk-boot.orig/jaxp/src/jdk/xml/internal/JdkXmlUtils.java openjdk-b
              // shall not happen with the system-default reader
          }
          return reader;
-@@ -253,7 +260,9 @@
+@@ -269,7 +276,9 @@
          SAXParserFactory saxFactory = getSAXFactory(overrideDefaultParser);
          try {
              return saxFactory.newSAXParser().getXMLReader();
@@ -90,8 +90,8 @@ diff -Nru openjdk-boot.orig/jaxp/src/jdk/xml/internal/JdkXmlUtils.java openjdk-b
          }
      }
 diff -Nru openjdk-boot.orig/jaxws/src/share/jaxws_classes/com/sun/xml/internal/ws/util/xml/XmlUtil.java openjdk-boot/jaxws/src/share/jaxws_classes/com/sun/xml/internal/ws/util/xml/XmlUtil.java
---- openjdk-boot.orig/jaxws/src/share/jaxws_classes/com/sun/xml/internal/ws/util/xml/XmlUtil.java	2021-05-24 01:07:27.000000000 +0100
-+++ openjdk-boot/jaxws/src/share/jaxws_classes/com/sun/xml/internal/ws/util/xml/XmlUtil.java	2021-07-02 15:37:28.996645000 +0100
+--- openjdk-boot.orig/jaxws/src/share/jaxws_classes/com/sun/xml/internal/ws/util/xml/XmlUtil.java	2021-11-03 16:36:17.000000000 +0000
++++ openjdk-boot/jaxws/src/share/jaxws_classes/com/sun/xml/internal/ws/util/xml/XmlUtil.java	2021-11-03 19:37:26.167349147 +0000
 @@ -440,7 +440,11 @@
                  featureToSet = LOAD_EXTERNAL_DTD;
                  factory.setFeature(featureToSet, false);
@@ -106,8 +106,8 @@ diff -Nru openjdk-boot.orig/jaxws/src/share/jaxws_classes/com/sun/xml/internal/w
          }
          return factory;
 diff -Nru openjdk-boot.orig/jdk/src/macosx/classes/com/apple/laf/AquaUtils.java openjdk-boot/jdk/src/macosx/classes/com/apple/laf/AquaUtils.java
---- openjdk-boot.orig/jdk/src/macosx/classes/com/apple/laf/AquaUtils.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/macosx/classes/com/apple/laf/AquaUtils.java	2021-07-02 15:37:28.996645000 +0100
+--- openjdk-boot.orig/jdk/src/macosx/classes/com/apple/laf/AquaUtils.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/macosx/classes/com/apple/laf/AquaUtils.java	2021-11-03 19:37:26.168349173 +0000
 @@ -212,7 +212,8 @@
              try {
                  ReflectUtil.checkPackageAccess(clazz);
@@ -119,8 +119,8 @@ diff -Nru openjdk-boot.orig/jdk/src/macosx/classes/com/apple/laf/AquaUtils.java 
              return null;
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/imageio/plugins/jpeg/JPEGImageReader.java openjdk-boot/jdk/src/share/classes/com/sun/imageio/plugins/jpeg/JPEGImageReader.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/imageio/plugins/jpeg/JPEGImageReader.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/imageio/plugins/jpeg/JPEGImageReader.java	2021-07-02 15:37:28.996645000 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/imageio/plugins/jpeg/JPEGImageReader.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/imageio/plugins/jpeg/JPEGImageReader.java	2021-11-03 19:37:26.170349231 +0000
 @@ -395,7 +395,8 @@
          try {
              gotoImage(imageIndex);
@@ -132,8 +132,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/imageio/plugins/jpeg/J
              cbLock.unlock();
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jmx/remote/internal/ArrayNotificationBuffer.java openjdk-boot/jdk/src/share/classes/com/sun/jmx/remote/internal/ArrayNotificationBuffer.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/jmx/remote/internal/ArrayNotificationBuffer.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/jmx/remote/internal/ArrayNotificationBuffer.java	2021-07-02 15:37:28.997645000 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jmx/remote/internal/ArrayNotificationBuffer.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/jmx/remote/internal/ArrayNotificationBuffer.java	2021-11-03 19:37:26.170349231 +0000
 @@ -402,7 +402,13 @@
                          try {
                              ServerNotifForwarder.checkMBeanPermission(this.mBeanServer,
@@ -150,8 +150,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jmx/remote/internal/Ar
                                  logger.debug("fetchNotifications", "candidate: " + candidate + " skipped. exception " + e);
                              }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/ResourceRecord.java openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/ResourceRecord.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/ResourceRecord.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/ResourceRecord.java	2021-07-02 15:37:28.997645000 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/ResourceRecord.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/dns/ResourceRecord.java	2021-11-03 19:37:26.170349231 +0000
 @@ -371,7 +371,12 @@
                  } else
                      throw new IOException("Invalid label type: " + typeAndLen);
@@ -167,8 +167,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/dns/ResourceRecor
                  "DNS error: malformed packet");
              ce.initCause(e);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/AbstractLdapNamingEnumeration.java openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/AbstractLdapNamingEnumeration.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/AbstractLdapNamingEnumeration.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/AbstractLdapNamingEnumeration.java	2021-07-02 15:37:28.997645000 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/AbstractLdapNamingEnumeration.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/AbstractLdapNamingEnumeration.java	2021-11-03 19:37:26.171349256 +0000
 @@ -147,7 +147,9 @@
                  // convert referrals into a chain of LdapReferralException
                  homeCtx.processReturnCode(res, listArg);
@@ -198,8 +198,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/AbstractLdap
                  throw e;
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/Connection.java openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/Connection.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/Connection.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/Connection.java	2021-07-02 15:37:28.998645000 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/Connection.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/Connection.java	2021-11-03 19:37:26.171349256 +0000
 @@ -272,10 +272,13 @@
              return inetSocketAddressCons.newInstance(new Object[]{
                  host, new Integer(port)});
@@ -219,8 +219,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/Connection.j
  
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java	2021-07-02 15:37:28.998645000 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java	2021-11-03 18:40:58.489873445 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java	2021-11-03 19:37:26.171349256 +0000
 @@ -588,7 +588,9 @@
                  if (answer.resControls != null) {
                      respCtls = appendVector(respCtls, answer.resControls);
@@ -233,8 +233,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/jndi/ldap/LdapCtx.java
              }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/naming/internal/ResourceManager.java openjdk-boot/jdk/src/share/classes/com/sun/naming/internal/ResourceManager.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/naming/internal/ResourceManager.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/naming/internal/ResourceManager.java	2021-07-02 15:37:28.999645000 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/naming/internal/ResourceManager.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/naming/internal/ResourceManager.java	2021-11-03 19:37:26.172349280 +0000
 @@ -165,8 +165,9 @@
                  throw new ClassCastException(applet.getClass().getName());
              try {
@@ -248,8 +248,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/naming/internal/Resour
              }
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/net/httpserver/spi/HttpServerProvider.java openjdk-boot/jdk/src/share/classes/com/sun/net/httpserver/spi/HttpServerProvider.java
---- openjdk-boot.orig/jdk/src/share/classes/com/sun/net/httpserver/spi/HttpServerProvider.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/com/sun/net/httpserver/spi/HttpServerProvider.java	2021-07-02 15:37:28.999645000 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/com/sun/net/httpserver/spi/HttpServerProvider.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/com/sun/net/httpserver/spi/HttpServerProvider.java	2021-11-03 19:37:26.172349280 +0000
 @@ -85,10 +85,13 @@
                                      ClassLoader.getSystemClassLoader());
              provider = (HttpServerProvider)c.newInstance();
@@ -269,8 +269,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/com/sun/net/httpserver/spi/Htt
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/io/ObjectStreamClass.java openjdk-boot/jdk/src/share/classes/java/io/ObjectStreamClass.java
---- openjdk-boot.orig/jdk/src/share/classes/java/io/ObjectStreamClass.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/io/ObjectStreamClass.java	2021-07-02 15:37:28.999645000 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/io/ObjectStreamClass.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/io/ObjectStreamClass.java	2021-11-03 19:37:26.172349280 +0000
 @@ -1107,9 +1107,11 @@
                          public Object run() {
                              try {
@@ -287,8 +287,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/io/ObjectStreamClass.java
                              }
                          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/io/PrintStream.java openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java
---- openjdk-boot.orig/jdk/src/share/classes/java/io/PrintStream.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java	2021-07-02 15:37:29.000645001 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/io/PrintStream.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/io/PrintStream.java	2021-11-03 19:37:26.173349296 +0000
 @@ -91,7 +91,10 @@
          requireNonNull(csn, "charsetName");
          try {
@@ -302,8 +302,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/io/PrintStream.java openj
              throw new UnsupportedEncodingException(csn);
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/io/PrintWriter.java openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java
---- openjdk-boot.orig/jdk/src/share/classes/java/io/PrintWriter.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java	2021-07-02 15:37:29.000645001 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/io/PrintWriter.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/io/PrintWriter.java	2021-11-03 19:37:26.173349296 +0000
 @@ -85,7 +85,10 @@
          Objects.requireNonNull(csn, "charsetName");
          try {
@@ -317,8 +317,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/io/PrintWriter.java openj
              throw new UnsupportedEncodingException(csn);
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2021-07-02 15:37:29.001645002 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/BoundMethodHandle.java	2021-11-03 19:37:26.173349296 +0000
 @@ -748,7 +748,9 @@
              Class<?> fieldType = Wrapper.forBasicType(types.charAt(index)).primitiveType();
              try {
@@ -346,8 +346,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/BoundMethodHa
              }
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/LambdaForm.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2021-07-02 15:37:29.001645002 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/LambdaForm.java	2021-11-03 19:37:26.174349312 +0000
 @@ -456,9 +456,11 @@
                  traceInterpreter("compileToBytecode", this);
              isCompiled = true;
@@ -377,8 +377,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/LambdaForm.ja
              Name n = new Name(zcon).newIndex(0);
              assert(n.type == ALL_TYPES.charAt(tn));
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MemberName.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MemberName.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MemberName.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MemberName.java	2021-07-02 15:37:29.002645003 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MemberName.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MemberName.java	2021-11-03 19:37:26.174349312 +0000
 @@ -862,7 +862,12 @@
                  m = MethodHandleNatives.resolve(m, lookupClass);
                  m.checkForTypeAlias(m.getDeclaringClass());
@@ -394,8 +394,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MemberName.ja
                  assert(!m.isResolved());
                  m.resolution = ex;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2021-07-02 15:37:29.002645003 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2021-11-03 18:40:58.500873440 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/invoke/MethodHandleNatives.java	2021-11-03 19:37:26.174349312 +0000
 @@ -264,7 +264,12 @@
                      continue;
                  }
@@ -411,8 +411,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/invoke/MethodHandleN
                  // ignore exotic ops the JVM cares about; we just wont issue them
                  //System.err.println("warning: "+err);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/management/ManagementFactory.java openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/management/ManagementFactory.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java	2021-07-02 15:37:29.002645003 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/management/ManagementFactory.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/management/ManagementFactory.java	2021-11-03 19:37:26.175349324 +0000
 @@ -606,7 +606,9 @@
              // create an MXBean proxy
              return JMX.newMXBeanProxy(connection, objName, mxbeanInterface,
@@ -425,8 +425,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/management/Managemen
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/ProcessBuilder.java openjdk-boot/jdk/src/share/classes/java/lang/ProcessBuilder.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/ProcessBuilder.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/ProcessBuilder.java	2021-07-02 15:37:29.003645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/ProcessBuilder.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/ProcessBuilder.java	2021-11-03 19:37:26.175349324 +0000
 @@ -1030,10 +1030,10 @@
                                       dir,
                                       redirects,
@@ -458,8 +458,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/ProcessBuilder.java 
      }
  }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/reflect/Proxy.java openjdk-boot/jdk/src/share/classes/java/lang/reflect/Proxy.java
---- openjdk-boot.orig/jdk/src/share/classes/java/lang/reflect/Proxy.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/lang/reflect/Proxy.java	2021-07-02 15:37:29.003645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/lang/reflect/Proxy.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/lang/reflect/Proxy.java	2021-11-03 19:37:26.175349324 +0000
 @@ -762,7 +762,9 @@
      private static Object newInstance(Constructor<?> cons, InvocationHandler h) {
          try {
@@ -472,8 +472,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/lang/reflect/Proxy.java o
          } catch (InvocationTargetException e) {
              Throwable t = e.getCause();
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/charset/Charset.java openjdk-boot/jdk/src/share/classes/java/nio/charset/Charset.java
---- openjdk-boot.orig/jdk/src/share/classes/java/nio/charset/Charset.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/nio/charset/Charset.java	2021-07-02 15:37:29.003645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/nio/charset/Charset.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/nio/charset/Charset.java	2021-11-03 19:37:26.176349330 +0000
 @@ -437,8 +437,9 @@
                                  } catch (ClassNotFoundException x) {
                                      // Extended charsets not available
@@ -487,8 +487,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/charset/Charset.java 
                                  }
                                  return null;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/file/FileTreeWalker.java openjdk-boot/jdk/src/share/classes/java/nio/file/FileTreeWalker.java
---- openjdk-boot.orig/jdk/src/share/classes/java/nio/file/FileTreeWalker.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/nio/file/FileTreeWalker.java	2021-07-02 15:37:29.003645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/nio/file/FileTreeWalker.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/nio/file/FileTreeWalker.java	2021-11-03 19:37:26.176349330 +0000
 @@ -237,7 +237,9 @@
                          // cycle detected
                          return true;
@@ -501,8 +501,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/nio/file/FileTreeWalker.j
                  }
              }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Formatter.java openjdk-boot/jdk/src/share/classes/java/util/Formatter.java
---- openjdk-boot.orig/jdk/src/share/classes/java/util/Formatter.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/util/Formatter.java	2021-07-02 15:37:29.004645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/Formatter.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/util/Formatter.java	2021-11-03 19:37:26.177349347 +0000
 @@ -1857,7 +1857,10 @@
          Objects.requireNonNull(csn, "charsetName");
          try {
@@ -516,8 +516,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Formatter.java openj
              throw new UnsupportedEncodingException(csn);
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/ResourceBundle.java openjdk-boot/jdk/src/share/classes/java/util/ResourceBundle.java
---- openjdk-boot.orig/jdk/src/share/classes/java/util/ResourceBundle.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/util/ResourceBundle.java	2021-07-02 15:37:29.005645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/ResourceBundle.java	2021-11-03 18:40:58.522873427 +0000
++++ openjdk-boot/jdk/src/share/classes/java/util/ResourceBundle.java	2021-11-03 19:37:26.177349347 +0000
 @@ -590,7 +590,8 @@
                          // treat it as unequal
                          && (loader != null)
@@ -529,8 +529,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/ResourceBundle.java 
              return false;
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Scanner.java openjdk-boot/jdk/src/share/classes/java/util/Scanner.java
---- openjdk-boot.orig/jdk/src/share/classes/java/util/Scanner.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/java/util/Scanner.java	2021-07-02 15:37:29.005645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/java/util/Scanner.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/java/util/Scanner.java	2021-11-03 19:37:26.178349361 +0000
 @@ -637,7 +637,10 @@
          Objects.requireNonNull(csn, "charsetName");
          try {
@@ -555,8 +555,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/java/util/Scanner.java openjdk
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/crypto/CipherInputStream.java openjdk-boot/jdk/src/share/classes/javax/crypto/CipherInputStream.java
---- openjdk-boot.orig/jdk/src/share/classes/javax/crypto/CipherInputStream.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/javax/crypto/CipherInputStream.java	2021-07-02 15:37:29.006645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/javax/crypto/CipherInputStream.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/javax/crypto/CipherInputStream.java	2021-11-03 19:37:26.178349361 +0000
 @@ -123,7 +123,10 @@
              done = true;
              try {
@@ -582,8 +582,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/crypto/CipherInputStream
              }
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/crypto/CipherOutputStream.java openjdk-boot/jdk/src/share/classes/javax/crypto/CipherOutputStream.java
---- openjdk-boot.orig/jdk/src/share/classes/javax/crypto/CipherOutputStream.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/javax/crypto/CipherOutputStream.java	2021-07-02 15:37:29.006645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/javax/crypto/CipherOutputStream.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/javax/crypto/CipherOutputStream.java	2021-11-03 19:37:26.178349361 +0000
 @@ -216,7 +216,9 @@
          closed = true;
          try {
@@ -596,8 +596,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/crypto/CipherOutputStrea
          }
          try {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/crypto/EncryptedPrivateKeyInfo.java openjdk-boot/jdk/src/share/classes/javax/crypto/EncryptedPrivateKeyInfo.java
---- openjdk-boot.orig/jdk/src/share/classes/javax/crypto/EncryptedPrivateKeyInfo.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/javax/crypto/EncryptedPrivateKeyInfo.java	2021-07-02 15:37:29.006645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/javax/crypto/EncryptedPrivateKeyInfo.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/javax/crypto/EncryptedPrivateKeyInfo.java	2021-11-03 19:37:26.179349370 +0000
 @@ -249,9 +249,13 @@
          try {
              encoded = cipher.doFinal(encryptedData);
@@ -628,8 +628,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/crypto/EncryptedPrivateK
                      "Cannot retrieve the PKCS8EncodedKeySpec", ex);
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/crypto/SealedObject.java openjdk-boot/jdk/src/share/classes/javax/crypto/SealedObject.java
---- openjdk-boot.orig/jdk/src/share/classes/javax/crypto/SealedObject.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/javax/crypto/SealedObject.java	2021-07-02 15:37:29.006645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/javax/crypto/SealedObject.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/javax/crypto/SealedObject.java	2021-11-03 19:37:26.179349370 +0000
 @@ -344,7 +344,9 @@
  
          try {
@@ -642,8 +642,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/crypto/SealedObject.java
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/swing/SortingFocusTraversalPolicy.java openjdk-boot/jdk/src/share/classes/javax/swing/SortingFocusTraversalPolicy.java
---- openjdk-boot.orig/jdk/src/share/classes/javax/swing/SortingFocusTraversalPolicy.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/javax/swing/SortingFocusTraversalPolicy.java	2021-07-02 15:37:29.007645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/javax/swing/SortingFocusTraversalPolicy.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/javax/swing/SortingFocusTraversalPolicy.java	2021-11-03 19:37:26.179349370 +0000
 @@ -113,7 +113,10 @@
                          Method m = c.getDeclaredMethod("legacyMergeSort", new Class[]{Object[].class, Comparator.class});
                          m.setAccessible(true);
@@ -668,8 +668,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/javax/swing/SortingFocusTraver
          }
          ListIterator<Component> i = l.listIterator();
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversions.java openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2021-07-02 15:37:29.007645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/ValueConversions.java	2021-11-03 19:37:26.179349370 +0000
 @@ -482,7 +482,9 @@
              FILL_NEW_TYPED_ARRAY = IMPL_LOOKUP
                      .findStatic(THIS_CLASS, "fillNewTypedArray",
@@ -682,8 +682,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/ValueConversio
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java openjdk-boot/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java	2021-07-02 15:37:29.007645004 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/invoke/util/VerifyAccess.java	2021-11-03 19:37:26.180349380 +0000
 @@ -222,7 +222,9 @@
                      public Class<?> run() {
                          try {
@@ -696,8 +696,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/invoke/util/VerifyAccess.j
                          }
                      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/management/Agent.java openjdk-boot/jdk/src/share/classes/sun/management/Agent.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/management/Agent.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/management/Agent.java	2021-07-02 15:37:29.008645005 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/management/Agent.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/management/Agent.java	2021-11-03 19:37:26.180349380 +0000
 @@ -383,7 +383,13 @@
                      adaptorClass.getMethod("initialize",
                          String.class, Properties.class);
@@ -714,8 +714,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/management/Agent.java open
              throw new UnsupportedOperationException("Unsupported management property: " + SNMP_PORT,x);
          } catch (InvocationTargetException x) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/management/GarbageCollectionNotifInfoCompositeData.java openjdk-boot/jdk/src/share/classes/sun/management/GarbageCollectionNotifInfoCompositeData.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/management/GarbageCollectionNotifInfoCompositeData.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/management/GarbageCollectionNotifInfoCompositeData.java	2021-07-02 15:37:29.008645005 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/management/GarbageCollectionNotifInfoCompositeData.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/management/GarbageCollectionNotifInfoCompositeData.java	2021-11-03 19:37:26.180349380 +0000
 @@ -69,7 +69,11 @@
                          Field f = cl.getDeclaredField("builder");
                          f.setAccessible(true);
@@ -730,8 +730,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/management/GarbageCollecti
                      }
                  }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/management/GcInfoCompositeData.java openjdk-boot/jdk/src/share/classes/sun/management/GcInfoCompositeData.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/management/GcInfoCompositeData.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/management/GcInfoCompositeData.java	2021-07-02 15:37:29.008645005 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/management/GcInfoCompositeData.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/management/GcInfoCompositeData.java	2021-11-03 19:37:26.180349380 +0000
 @@ -76,7 +76,11 @@
                                  Field f = cl.getDeclaredField("builder");
                                  f.setAccessible(true);
@@ -795,9 +795,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/management/GcInfoComposite
              throw new AssertionError(e);
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/misc/URLClassPath.java openjdk-boot/jdk/src/share/classes/sun/misc/URLClassPath.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/misc/URLClassPath.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/misc/URLClassPath.java	2021-07-02 15:37:29.009645006 +0100
-@@ -1104,7 +1104,9 @@
+--- openjdk-boot.orig/jdk/src/share/classes/sun/misc/URLClassPath.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/misc/URLClassPath.java	2021-11-03 19:37:26.181349398 +0000
+@@ -1118,7 +1118,9 @@
                          }
                      }
                  }
@@ -809,8 +809,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/misc/URLClassPath.java ope
                  System.err.println("Class-Path entry: \"" + path + "\" ignored in JAR file " + base);
              }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/ftp/FtpClientProvider.java openjdk-boot/jdk/src/share/classes/sun/net/ftp/FtpClientProvider.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/net/ftp/FtpClientProvider.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/net/ftp/FtpClientProvider.java	2021-07-02 15:37:29.009645006 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/net/ftp/FtpClientProvider.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/net/ftp/FtpClientProvider.java	2021-11-03 19:37:26.181349398 +0000
 @@ -70,10 +70,13 @@
              Class<?> c = Class.forName(cm, true, null);
              provider = (FtpClientProvider) c.newInstance();
@@ -830,8 +830,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/ftp/FtpClientProvider.
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/http/HttpURLConnection.java openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/http/HttpURLConnection.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/http/HttpURLConnection.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/http/HttpURLConnection.java	2021-07-02 15:37:29.009645006 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/http/HttpURLConnection.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/net/www/protocol/http/HttpURLConnection.java	2021-11-03 19:37:26.181349398 +0000
 @@ -907,7 +907,8 @@
                      InetAddress a1 = InetAddress.getByName(h1);
                      InetAddress a2 = InetAddress.getByName(h2);
@@ -842,7 +842,7 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/http/Http
                  }
                  return null;
              }
-@@ -1674,8 +1675,9 @@
+@@ -1671,8 +1672,9 @@
                                  // HttpsURLConnection instance saved in
                                  // DelegateHttpsURLConnection
                                  uconn = (URLConnection)this.getClass().getField("httpsURLConnection").get(this);
@@ -855,8 +855,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/net/www/protocol/http/Http
                                  }
                              }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/nio/ch/Reflect.java openjdk-boot/jdk/src/share/classes/sun/nio/ch/Reflect.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/nio/ch/Reflect.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/nio/ch/Reflect.java	2021-07-02 15:37:29.010645007 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/nio/ch/Reflect.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/nio/ch/Reflect.java	2021-11-03 19:37:26.182349402 +0000
 @@ -58,7 +58,9 @@
              Constructor<?> c = cl.getDeclaredConstructor(paramTypes);
              setAccessible(c);
@@ -917,8 +917,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/nio/ch/Reflect.java openjd
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/nio/ch/Util.java openjdk-boot/jdk/src/share/classes/sun/nio/ch/Util.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/nio/ch/Util.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/nio/ch/Util.java	2021-07-02 15:37:29.010645007 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/nio/ch/Util.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/nio/ch/Util.java	2021-11-03 19:37:26.182349402 +0000
 @@ -309,10 +309,13 @@
                                               Runnable.class });
                          ctor.setAccessible(true);
@@ -986,8 +986,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/nio/ch/Util.java openjdk-b
          }
          return dbb;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/nio/cs/FastCharsetProvider.java openjdk-boot/jdk/src/share/classes/sun/nio/cs/FastCharsetProvider.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/nio/cs/FastCharsetProvider.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/nio/cs/FastCharsetProvider.java	2021-07-02 15:37:29.010645007 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/nio/cs/FastCharsetProvider.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/nio/cs/FastCharsetProvider.java	2021-11-03 19:37:26.182349402 +0000
 @@ -121,9 +121,11 @@
              cs = (Charset)c.newInstance();
              cache.put(csn, cs);
@@ -1004,8 +1004,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/nio/cs/FastCharsetProvider
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/reflect/MethodAccessorGenerator.java openjdk-boot/jdk/src/share/classes/sun/reflect/MethodAccessorGenerator.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/reflect/MethodAccessorGenerator.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/reflect/MethodAccessorGenerator.java	2021-07-02 15:37:29.011645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/reflect/MethodAccessorGenerator.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/reflect/MethodAccessorGenerator.java	2021-11-03 19:37:26.183349397 +0000
 @@ -401,8 +401,10 @@
                                   0,
                                   bytes.length,
@@ -1020,8 +1020,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/reflect/MethodAccessorGene
                                  new InternalError().initCause(e);
                          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/reflect/ReflectionFactory.java openjdk-boot/jdk/src/share/classes/sun/reflect/ReflectionFactory.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/reflect/ReflectionFactory.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/reflect/ReflectionFactory.java	2021-07-02 15:37:29.011645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/reflect/ReflectionFactory.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/reflect/ReflectionFactory.java	2021-11-03 19:37:26.183349397 +0000
 @@ -598,7 +598,10 @@
          }
          try {
@@ -1054,8 +1054,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/reflect/ReflectionFactory.
                  new InternalError("unable to create OptionalDataException").initCause(ex);
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Skel.java openjdk-boot/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Skel.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Skel.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Skel.java	2021-07-02 15:37:29.011645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Skel.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Skel.java	2021-11-03 19:37:26.183349397 +0000
 @@ -89,7 +89,13 @@
                      $param_String_1 =
                              SharedSecrets.getJavaObjectInputStreamReadString().readString(in);
@@ -1111,8 +1111,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_
                      throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
                  } finally {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Stub.java openjdk-boot/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Stub.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Stub.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Stub.java	2021-07-02 15:37:29.011645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Stub.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_Stub.java	2021-11-03 19:37:26.183349397 +0000
 @@ -93,7 +93,13 @@
              try {
                  java.io.ObjectInput in = call.getInputStream();
@@ -1144,8 +1144,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/registry/RegistryImpl_
                  throw new java.rmi.UnmarshalException("error unmarshalling return", e);
              } finally {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java	2021-07-02 15:37:29.012645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/ActivationGroupImpl.java	2021-11-03 19:37:26.183349397 +0000
 @@ -296,7 +296,16 @@
              active.put(id, entry);
              return entry.mobj;
@@ -1165,8 +1165,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/ActivationGroup
               * or code recompiled and user forgot to provide
               *  activatable constructor?
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java	2021-07-02 15:37:29.012645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/LoaderHandler.java	2021-11-03 19:37:26.184349390 +0000
 @@ -263,11 +263,14 @@
  
                      annotation = urlsToPath(urls);
@@ -1184,8 +1184,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/LoaderHandler.j
                   * to be thrown by openConnection() and getPermission().  If it
                   * does happen, forget about this class loader's URLs and
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastRef.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/UnicastRef.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastRef.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/UnicastRef.java	2021-07-02 15:37:29.012645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastRef.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/UnicastRef.java	2021-11-03 19:37:26.184349390 +0000
 @@ -189,7 +189,13 @@
  
                  return returnValue;
@@ -1202,8 +1202,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastRef.java
                  ((StreamRemoteCall)call).discardPendingRefs();
                  clientRefLog.log(Log.BRIEF,
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java openjdk-boot/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java	2021-07-02 15:37:29.013645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/server/UnicastServerRef.java	2021-11-03 19:37:26.184349390 +0000
 @@ -342,7 +342,12 @@
                  // disable saving any refs in the inputStream for GC
                  ((StreamRemoteCall) call).discardPendingRefs();
@@ -1219,8 +1219,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/server/UnicastServerRe
                  ((StreamRemoteCall) call).discardPendingRefs();
                  throw new UnmarshalException(
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Skel.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Skel.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Skel.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Skel.java	2021-07-02 15:37:29.013645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Skel.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Skel.java	2021-11-03 19:37:26.185349385 +0000
 @@ -65,7 +65,13 @@
                      $param_long_2 = in.readLong();
                      $param_VMID_3 = (java.rmi.dgc.VMID) in.readObject();
@@ -1252,8 +1252,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Skel
                      throw new java.rmi.UnmarshalException("error unmarshalling arguments", e);
                  } finally {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Stub.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Stub.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Stub.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Stub.java	2021-07-02 15:37:29.013645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Stub.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Stub.java	2021-11-03 19:37:26.185349385 +0000
 @@ -125,7 +125,21 @@
                  java.io.ObjectInput in = call.getInputStream();
  
@@ -1278,8 +1278,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/DGCImpl_Stub
                      // Modified to prevent re-use of the connection after an exception
                      ((TCPConnection) connection).getChannel().free(connection, false);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2021-07-02 15:37:29.013645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMasterSocketFactory.java	2021-11-03 19:37:26.185349385 +0000
 @@ -209,7 +209,9 @@
  
              return initialSocket;
@@ -1303,8 +1303,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/proxy/RMIMas
              } catch (SocketException e) {
                  if (eagerHttpFallback) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java	2021-07-02 15:37:29.014645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpoint.java	2021-11-03 19:37:26.185349385 +0000
 @@ -627,7 +627,10 @@
              try {
                  TCPEndpoint.shedConnectionCaches();
@@ -1318,8 +1318,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/rmi/transport/tcp/TCPEndpo
                  // or shed fails non-catastrophically
              }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/PAData.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/PAData.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/PAData.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/PAData.java	2021-07-02 15:37:29.014645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/PAData.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/internal/PAData.java	2021-11-03 19:37:26.186349378 +0000
 @@ -282,7 +282,9 @@
                                      .append(info.getSalt())
                                      .append('\n');
@@ -1343,8 +1343,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/internal/PAD
                      }
                  }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/PrincipalName.java openjdk-boot/jdk/src/share/classes/sun/security/krb5/PrincipalName.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/PrincipalName.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/PrincipalName.java	2021-07-02 15:37:29.014645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/PrincipalName.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/krb5/PrincipalName.java	2021-11-03 19:37:26.186349378 +0000
 @@ -421,7 +421,9 @@
                                  hostName.toLowerCase(Locale.ENGLISH)+".")) {
                          hostName = canonicalized;
@@ -1357,8 +1357,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/krb5/PrincipalNam
                  }
                  nameParts[1] = hostName.toLowerCase(Locale.ENGLISH);
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs/SignerInfo.java openjdk-boot/jdk/src/share/classes/sun/security/pkcs/SignerInfo.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs/SignerInfo.java	2021-07-02 16:48:42.001322382 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs/SignerInfo.java	2021-07-02 16:49:25.677384557 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs/SignerInfo.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs/SignerInfo.java	2021-11-03 19:37:26.186349378 +0000
 @@ -443,9 +443,10 @@
                  return this;
              }
@@ -1373,8 +1373,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs/SignerInfo.j
              throw new SignatureException("InvalidKey: " + e.getMessage());
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11KeyStore.java openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11KeyStore.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11KeyStore.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11KeyStore.java	2021-07-02 15:37:29.015645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11KeyStore.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11KeyStore.java	2021-11-03 19:37:26.187349375 +0000
 @@ -324,7 +324,9 @@
  
              // did not find anything
@@ -1466,8 +1466,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11KeyStor
              }
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java	2021-07-02 15:37:29.015645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyFactory.java	2021-11-03 19:37:26.187349375 +0000
 @@ -130,7 +130,10 @@
                  rs.getModulus(),
                  rs.getPublicExponent()
@@ -1493,8 +1493,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/pkcs11/P11RSAKeyF
                  ("Could not create RSA private key", e);
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/CertStoreHelper.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/CertStoreHelper.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/CertStoreHelper.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/CertStoreHelper.java	2021-07-02 15:37:29.015645008 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/CertStoreHelper.java	2021-11-03 18:40:58.514873432 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/CertStoreHelper.java	2021-11-03 19:37:26.187349375 +0000
 @@ -83,8 +83,9 @@
                                  = (CertStoreHelper)c.newInstance();
                              cache.put(type, csh);
@@ -1508,8 +1508,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath
                          }
                      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/DistributionPointFetcher.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/DistributionPointFetcher.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/DistributionPointFetcher.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/DistributionPointFetcher.java	2021-07-02 15:38:39.391680410 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/DistributionPointFetcher.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/DistributionPointFetcher.java	2021-11-03 19:37:26.187349375 +0000
 @@ -166,7 +166,9 @@
                  debug.println("Returning " + results.size() + " CRLs");
              }
@@ -1552,8 +1552,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath
                  debug.println("Can't create URICertStore: " + e.getMessage());
              }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/OCSP.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/OCSP.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/OCSP.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/OCSP.java	2021-07-02 15:37:29.016645009 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/OCSP.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/OCSP.java	2021-11-03 19:37:26.188349374 +0000
 @@ -149,7 +149,10 @@
          try {
              X509CertImpl certImpl = X509CertImpl.toImpl(cert);
@@ -1567,8 +1567,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath
                  ("Exception while encoding OCSPRequest", e);
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/OCSPResponse.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/OCSPResponse.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/OCSPResponse.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/OCSPResponse.java	2021-07-02 15:37:29.016645009 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/OCSPResponse.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/OCSPResponse.java	2021-11-03 19:37:26.188349374 +0000
 @@ -646,9 +646,11 @@
                  }
                  return false;
@@ -1585,8 +1585,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/PKIXCertPathValidator.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/PKIXCertPathValidator.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/PKIXCertPathValidator.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/PKIXCertPathValidator.java	2021-07-02 15:37:29.017645010 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/PKIXCertPathValidator.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/PKIXCertPathValidator.java	2021-11-03 19:37:26.188349374 +0000
 @@ -101,7 +101,9 @@
                  X509CertImpl firstCertImpl = X509CertImpl.toImpl(firstCert);
                  selector.parseAuthorityKeyIdentifierExtension(
@@ -1599,8 +1599,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath
              }
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/RevocationChecker.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/RevocationChecker.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/RevocationChecker.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/RevocationChecker.java	2021-07-02 15:37:29.017645010 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/RevocationChecker.java	2021-11-03 18:40:58.515873431 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/RevocationChecker.java	2021-11-03 19:37:26.189349375 +0000
 @@ -148,8 +148,14 @@
          try {
              this.certStores.add(CertStore.getInstance("Collection",
@@ -1618,7 +1618,7 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath
              // should never occur but not necessarily fatal, so log it,
              // ignore and continue
              if (debug != null) {
-@@ -835,7 +841,19 @@
+@@ -831,7 +837,19 @@
                      break;
              }
              return results;
@@ -1640,8 +1640,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath
                  debug.println("Exception while verifying CRL: "+e.getMessage());
                  e.printStackTrace();
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/SunCertPathBuilder.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/SunCertPathBuilder.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/SunCertPathBuilder.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/SunCertPathBuilder.java	2021-07-02 15:37:29.017645010 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/SunCertPathBuilder.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/SunCertPathBuilder.java	2021-11-03 19:37:26.189349375 +0000
 @@ -165,7 +165,16 @@
              } else {
                  buildReverse(adjList, certPathList);
@@ -1676,8 +1676,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath
                  if (iter.hasNext())
                      continue;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java	2021-07-02 15:37:29.018645011 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/certpath/URICertStore.java	2021-11-03 19:37:26.189349375 +0000
 @@ -308,7 +308,12 @@
                      factory.generateCertificates(in);
              }
@@ -1712,8 +1712,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/certpath
                  debug.println("Exception fetching CRL:");
                  e.printStackTrace();
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/KeyStoreDelegator.java openjdk-boot/jdk/src/share/classes/sun/security/provider/KeyStoreDelegator.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/KeyStoreDelegator.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/KeyStoreDelegator.java	2021-07-02 15:37:29.018645011 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/KeyStoreDelegator.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/KeyStoreDelegator.java	2021-11-03 19:37:26.189349375 +0000
 @@ -204,7 +204,9 @@
              try {
                  keystore = primaryKeyStore.newInstance();
@@ -1748,36 +1748,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/KeyStore
                              UnrecoverableKeyException) {
                          throw (IOException)e3;
                      }
-@@ -266,7 +266,25 @@
-                     } else if (e instanceof NoSuchAlgorithmException) {
-                         throw (NoSuchAlgorithmException)e;
-                     }
--                }
-+                } catch (NoSuchAlgorithmException e3) {
-+                    // rethrow the outer exception
-+                    if (e instanceof IOException) {
-+                        throw (IOException)e;
-+                    } else if (e instanceof CertificateException) {
-+                        throw (CertificateException)e;
-+                    } else if (e instanceof NoSuchAlgorithmException) {
-+                        throw (NoSuchAlgorithmException)e;
-+                    }
-+                } catch (CertificateException e3) {
-+                    // rethrow the outer exception
-+                    if (e instanceof IOException) {
-+                        throw (IOException)e;
-+                    } else if (e instanceof CertificateException) {
-+                        throw (CertificateException)e;
-+                    } else if (e instanceof NoSuchAlgorithmException) {
-+                        throw (NoSuchAlgorithmException)e;
-+                    }
-+		}
-             }
- 
-             if (debug != null) {
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SecureRandom.java openjdk-boot/jdk/src/share/classes/sun/security/provider/SecureRandom.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SecureRandom.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/provider/SecureRandom.java	2021-07-02 15:37:29.018645011 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SecureRandom.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/provider/SecureRandom.java	2021-11-03 19:37:26.190349374 +0000
 @@ -100,7 +100,15 @@
               * performance overhead.
               */
@@ -1813,8 +1786,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/provider/SecureRa
              try {
                  digest = MessageDigest.getInstance("SHA");
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/ECDHCrypt.java openjdk-boot/jdk/src/share/classes/sun/security/ssl/ECDHCrypt.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/ECDHCrypt.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/ECDHCrypt.java	2021-07-02 15:37:29.019645012 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/ECDHCrypt.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/ECDHCrypt.java	2021-11-03 19:37:26.190349374 +0000
 @@ -119,7 +119,10 @@
              ECPublicKeySpec spec = new ECPublicKeySpec(point, params);
              PublicKey peerPublicKey = kf.generatePublic(spec);
@@ -1840,8 +1813,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/ECDHCrypt.jav
                      "Could not generate ECPublicKey").initCause(e);
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/Handshaker.java openjdk-boot/jdk/src/share/classes/sun/security/ssl/Handshaker.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/Handshaker.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/Handshaker.java	2021-07-02 15:37:29.019645012 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/Handshaker.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/Handshaker.java	2021-11-03 19:37:26.190349374 +0000
 @@ -1214,8 +1214,7 @@
              KeyGenerator kg = JsseJce.getKeyGenerator(masterAlg);
              kg.init(spec);
@@ -1866,8 +1839,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/Handshaker.ja
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java openjdk-boot/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java	2021-07-02 15:37:29.019645012 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/ssl/RSAClientKeyExchange.java	2021-11-03 19:37:26.190349374 +0000
 @@ -173,14 +173,20 @@
                      clientVersion, serverVersion, encodedSecret),
                      generator);
@@ -1892,9 +1865,9 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/ssl/RSAClientKeyE
      }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/keytool/Main.java openjdk-boot/jdk/src/share/classes/sun/security/tools/keytool/Main.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2021-07-02 15:37:29.020645012 +0100
-@@ -2739,7 +2739,9 @@
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/tools/keytool/Main.java	2021-11-03 19:37:26.191349372 +0000
+@@ -2735,7 +2735,9 @@
          X509Certificate cert = null;
          try {
              cert = (X509Certificate)cf.generateCertificate(in);
@@ -1906,8 +1879,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/tools/keytool/Mai
          }
  
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/ECUtil.java openjdk-boot/jdk/src/share/classes/sun/security/util/ECUtil.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/ECUtil.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/util/ECUtil.java	2021-07-02 15:37:29.020645012 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/util/ECUtil.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/util/ECUtil.java	2021-11-03 19:37:26.191349372 +0000
 @@ -92,7 +92,9 @@
      private static KeyFactory getKeyFactory() {
          try {
@@ -1920,8 +1893,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/util/ECUtil.java 
          }
      }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/x509/X509CertImpl.java openjdk-boot/jdk/src/share/classes/sun/security/x509/X509CertImpl.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/security/x509/X509CertImpl.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/security/x509/X509CertImpl.java	2021-07-02 15:37:29.021645012 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/security/x509/X509CertImpl.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/security/x509/X509CertImpl.java	2021-11-03 19:37:26.192349370 +0000
 @@ -1962,7 +1962,9 @@
                  byte2hex(digest[i], buf);
              }
@@ -1934,8 +1907,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/security/x509/X509CertImpl
          }
          return fingerPrint;
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/text/bidi/BidiBase.java openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/text/bidi/BidiBase.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java	2021-07-02 15:37:29.021645012 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/text/bidi/BidiBase.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/text/bidi/BidiBase.java	2021-11-03 19:37:26.192349370 +0000
 @@ -3478,7 +3478,9 @@
              try {
                  Field f = clazz.getField(name);
@@ -1948,8 +1921,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/text/bidi/BidiBase.java op
              }
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2021-07-02 15:37:29.022645012 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/tools/jcmd/JCmd.java	2021-11-03 19:37:26.193349368 +0000
 @@ -94,7 +94,7 @@
                          && mainClass.indexOf(arg.getProcessSubstring()) != -1) {
                              pids.add(vmd.id());
@@ -1994,8 +1967,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jcmd/JCmd.java openj
  
      private static String getMainClass(VirtualMachineDescriptor vmd)
 diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.java openjdk-boot/jdk/src/share/classes/sun/tools/jconsole/Resources.java
---- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2021-07-02 15:37:29.022645012 +0100
+--- openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/classes/sun/tools/jconsole/Resources.java	2021-11-03 19:37:26.193349368 +0000
 @@ -129,7 +129,9 @@
      private static void setFieldValue(Field field, String value) {
          try {
@@ -2027,8 +2000,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/classes/sun/tools/jconsole/Resources.j
              return 0;
          }
 diff -Nru openjdk-boot.orig/jdk/src/share/demo/jfc/Notepad/Notepad.java openjdk-boot/jdk/src/share/demo/jfc/Notepad/Notepad.java
---- openjdk-boot.orig/jdk/src/share/demo/jfc/Notepad/Notepad.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/share/demo/jfc/Notepad/Notepad.java	2021-07-02 15:37:29.022645012 +0100
+--- openjdk-boot.orig/jdk/src/share/demo/jfc/Notepad/Notepad.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/share/demo/jfc/Notepad/Notepad.java	2021-11-03 19:37:26.193349368 +0000
 @@ -80,7 +80,11 @@
                      "resources/NotepadSystem.properties"));
              resources = ResourceBundle.getBundle("resources.Notepad",
@@ -2043,8 +2016,8 @@ diff -Nru openjdk-boot.orig/jdk/src/share/demo/jfc/Notepad/Notepad.java openjdk-
                      + "or resources/NotepadSystem.properties not found");
              System.exit(1);
 diff -Nru openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixUriUtils.java openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixUriUtils.java
---- openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixUriUtils.java	2021-07-02 05:44:27.000000000 +0100
-+++ openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixUriUtils.java	2021-07-02 15:37:29.022645012 +0100
+--- openjdk-boot.orig/jdk/src/solaris/classes/sun/nio/fs/UnixUriUtils.java	2021-11-03 16:38:55.000000000 +0000
++++ openjdk-boot/jdk/src/solaris/classes/sun/nio/fs/UnixUriUtils.java	2021-11-03 19:37:26.194349366 +0000
 @@ -119,7 +119,9 @@
                   up.checkRead();
                   if (UnixFileAttributes.get(up, true).isDirectory())

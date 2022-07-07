@@ -12,6 +12,36 @@ JEPX - https://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 2.6.28 (2021-11-05):
+
+* Security fixes
+  - JDK-8130183, CVE-2021-35588: InnerClasses: VM permits wrong Throw ClassFormatError if InnerClasses attribute's inner_class_info_index is 0
+  - JDK-8161016: Strange behavior of URLConnection with proxy
+  - JDK-8163326, CVE-2021-35550: Update the default enabled cipher suites preference
+  - JDK-8254967, CVE-2021-35565: com.sun.net.HttpsServer spins on TLS session close
+  - JDK-8263314: Enhance XML Dsig modes
+  - JDK-8265167, CVE-2021-35556: Richer Text Editors
+  - JDK-8265574: Improve handling of sheets
+  - JDK-8265580, CVE-2021-35559: Enhanced style for RTF kit
+  - JDK-8265776: Improve Stream handling for SSL
+  - JDK-8266097, CVE-2021-35561: Better hashing support
+  - JDK-8266103: Better specified spec values
+  - JDK-8266109: More Resilient Classloading
+  - JDK-8266115: More Manifest Jar Loading
+  - JDK-8266137, CVE-2021-35564: Improve Keystore integrity
+  - JDK-8267086: ArrayIndexOutOfBoundsException in java.security.KeyFactory.generatePublic
+  - JDK-8267712: Better LDAP reference processing
+  - JDK-8267735, CVE-2021-35586: Better BMP support
+  - JDK-8268506: More Manifest Digests
+  - JDK-8269618, CVE-2021-35603: Better session identification
+  - JDK-8269624: Enhance method selection support
+  - JDK-8270398: Enhance canonicalization
+  - JDK-8270404: Better canonicalization
+* Import of OpenJDK 7 u321 build 1
+  - JDK-8157404: Unable to read certain PKCS12 keystores from SequenceInputStream
+  - JDK-8222751: closed/test/jdk/sun/security/util/DerIndefLenConverter/IndefBerPkcs12.java fail
+  - JDK-8269763: The JEditorPane is blank after JDK-8265167
+
 New in release 2.6.27 (2021-08-01):
 
 * Security fixes
