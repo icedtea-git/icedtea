@@ -12,7 +12,7 @@ JEPX - https://openjdk.java.net/jeps/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 2.6.28 (2021-11-05):
+New in release 2.6.28 (2021-11-07):
 
 * New features
   - Elliptic curve cryptography (ECC) is now always supported using the in-tree SunEC library
