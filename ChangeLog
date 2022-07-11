@@ -1,5 +1,16 @@
 2022-07-10  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Start next major release cycle (14.0.0/OpenJDK 19)
+	* Makefile.am:
+	(ICEDTEA_MAJOR): Bump to icedtea19.
+	* NEWS:	Add section for 14.0.0.
+	* acinclude.m4:
+	(IT_DETERMINE_VERSION): Update JAVA_VER and
+	JAVA_SPEC_VER to match this version of IcedTea (19).
+	* configure.ac: Bump to 14.0.0pre00.
+
+2022-07-10  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Start next major release cycle (13.0.0/OpenJDK 18)
 	* Makefile.am:
 	(ICEDTEA_MAJOR): Bump to icedtea18.

@@ -1,4 +1,4 @@
-AC_INIT([icedtea], [13.0.0pre00], [distro-pkg-dev@openjdk.java.net])
+AC_INIT([icedtea], [14.0.0pre00], [distro-pkg-dev@openjdk.java.net])
 AM_INIT_AUTOMAKE([1.9 tar-pax foreign])
 AM_MAINTAINER_MODE([enable])
 AC_CONFIG_FILES([Makefile])
