@@ -25,6 +25,7 @@ New in release 6.0.0 (2019-XX-XX):
   - PR3833, RH1814915: Update tapsets following JDK-8015774, which removes '_heap'
 * Bug fixes
   - GH001: Update ECC patch, following JDK-8226374
+  - GH002: Import ECC test patch from Zdeněk Žamberský
 
 New in release 5.0.0 (2019-XX-XX):
 

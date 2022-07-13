@@ -2635,32 +2635,3 @@ diff --git a/src/jdk.crypto.ec/share/native/libsunec/impl/oid.c b/src/jdk.crypto
  };
  
  int
-diff --git a/test/jdk/sun/security/ec/TestEC.java b/test/jdk/sun/security/ec/TestEC.java
---- a/test/jdk/sun/security/ec/TestEC.java
-+++ b/test/jdk/sun/security/ec/TestEC.java
-@@ -37,8 +37,8 @@
-  * @library ../../../java/security/testlibrary
-  * @library ../../../javax/net/ssl/TLSCommon
-  * @modules jdk.crypto.cryptoki/sun.security.pkcs11.wrapper
-- * @run main/othervm -Djdk.tls.namedGroups="secp256r1,sect193r1" TestEC
-- * @run main/othervm/java.security.policy=TestEC.policy -Djdk.tls.namedGroups="secp256r1,sect193r1" TestEC
-+ * @run main/othervm -Djdk.tls.namedGroups="secp256r1" TestEC
-+ * @run main/othervm/java.security.policy=TestEC.policy -Djdk.tls.namedGroups="secp256r1" TestEC
-  */
- 
- import java.security.NoSuchProviderException;
-diff --git a/test/jdk/sun/security/pkcs11/sslecc/ClientJSSEServerJSSE.java b/test/jdk/sun/security/pkcs11/sslecc/ClientJSSEServerJSSE.java
---- a/test/jdk/sun/security/pkcs11/sslecc/ClientJSSEServerJSSE.java
-+++ b/test/jdk/sun/security/pkcs11/sslecc/ClientJSSEServerJSSE.java
-@@ -34,9 +34,9 @@
-  * @library /test/lib .. ../../../../javax/net/ssl/TLSCommon
-  * @library ../../../../java/security/testlibrary
-  * @modules jdk.crypto.cryptoki
-- * @run main/othervm -Djdk.tls.namedGroups="secp256r1,sect193r1"
-+ * @run main/othervm -Djdk.tls.namedGroups="secp256r1"
-  *      ClientJSSEServerJSSE
-- * @run main/othervm -Djdk.tls.namedGroups="secp256r1,sect193r1"
-+ * @run main/othervm -Djdk.tls.namedGroups="secp256r1"
-  *      ClientJSSEServerJSSE sm policy
-  */
- 
