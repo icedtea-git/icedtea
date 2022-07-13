@@ -1,5 +1,20 @@
 2022-07-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	GH003: Import ECC test patch from Zdeněk Žamberský
+	* NEWS: Fix issue reference.
+	* fsg.sh.in: Update references to
+	ECC patches.
+	* patches/gh002-3curve-test.patch,
+	* patches/gh002-4curve-test.patch:
+	Renamed to...
+	* patches/gh003-3curve-test.patch,
+	* patches/gh003-4curve-test.patch:
+	...as GitHub numbers both pull requests
+	and issues from the same sequence.
+
+2022-07-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	GH003: Import ECC test patch from Zdeněk Žamberský
 	* AUTHORS: Add Zdeněk Žamberský.
 	* NEWS: Updated.
 	* fsg.sh.in: Update references to
