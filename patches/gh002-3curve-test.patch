@@ -1,0 +1,747 @@
+From abd9ea6c1abea83930bbb39682fe4ed5a7181b59 Mon Sep 17 00:00:00 2001
+From: Zdenek Zambersky <zzambers@redhat.com>
+Date: Thu, 4 Nov 2021 18:22:56 +0100
+Subject: [PATCH] ec-fixes
+
+---
+ .../KeyAgreement/KeyAgreementTest.java        |  26 +++-------------
+ .../security/KeyAgreement/KeySizeTest.java    |   6 ++--
+ .../net/ssl/templates/SSLSocketTemplate.java  |  28 ------------------
+ test/jdk/jdk/security/jarsigner/Spec.java     |   6 ++--
+ .../security/ec/SignatureDigestTruncate.java  |  12 ++++----
+ test/jdk/sun/security/ec/TestEC.java          |  15 +++++++---
+ test/jdk/sun/security/ec/keystore             | Bin 4288 -> 3486 bytes
+ .../ec/pkcs12/sect193r1server-rsa1024ca.p12   | Bin 1252 -> 0 bytes
+ .../sun/security/pkcs11/ec/ReadPKCS12.java    |   2 +-
+ test/jdk/sun/security/pkcs11/ec/TestECDH.java |  11 ++++---
+ .../jdk/sun/security/pkcs11/ec/TestECDSA.java |   8 +++--
+ .../security/pkcs11/ec/TestKeyFactory.java    |  15 ++++------
+ .../ec/pkcs12/sect193r1server-rsa1024ca.p12   | Bin 1252 -> 0 bytes
+ .../pkcs11/sslecc/ClientJSSEServerJSSE.java   |   4 +--
+ test/jdk/sun/security/pkcs11/sslecc/keystore  | Bin 4288 -> 3486 bytes
+ .../security/provider/KeyStore/DKSTest.java   |   8 ++---
+ .../security/provider/KeyStore/domains.cfg    |   4 ---
+ .../ssl/CipherSuite/DisabledCurve.java        |  25 ++++++++--------
+ .../tools/jarsigner/RestrictedAlgo.java       |  14 ++-------
+ .../sun/security/tools/keytool/GroupName.java |   5 ++--
+ .../fakegen/DefaultSignatureAlgorithm.java    |   4 +--
+ .../sun/security/ec/ECKeyPairGenerator.java   |  28 +++---------------
+ 22 files changed, 72 insertions(+), 149 deletions(-)
+ delete mode 100644 test/jdk/sun/security/ec/pkcs12/sect193r1server-rsa1024ca.p12
+ delete mode 100644 test/jdk/sun/security/pkcs11/ec/pkcs12/sect193r1server-rsa1024ca.p12
+
+diff --git a/test/jdk/java/security/KeyAgreement/KeyAgreementTest.java b/test/jdk/java/security/KeyAgreement/KeyAgreementTest.java
+index 8f705abd77..8b03d08211 100644
+--- a/test/jdk/java/security/KeyAgreement/KeyAgreementTest.java
++++ b/test/jdk/java/security/KeyAgreement/KeyAgreementTest.java
+@@ -67,27 +67,9 @@ public class KeyAgreementTest {
+         // EC curve supported for KeyGeneration can found between intersection
+         // of curves define in
+         // "java.base/share/classes/sun/security/util/CurveDB.java"
+-        // and
+-        // "jdk.crypto.ec/share/native/libsunec/impl/ecdecode.c"
+-        ECDH(
+-                // SEC2 prime curves
+-                "secp112r1", "secp112r2", "secp128r1", "secp128r2", "secp160k1",
+-                "secp160r1", "secp192k1", "secp192r1", "secp224k1", "secp224r1",
+-                "secp256k1", "secp256r1", "secp384r1", "secp521r1",
+-                // ANSI X9.62 prime curves
+-                "X9.62 prime192v2", "X9.62 prime192v3", "X9.62 prime239v1",
+-                "X9.62 prime239v2", "X9.62 prime239v3",
+-                // SEC2 binary curves
+-                "sect113r1", "sect113r2", "sect131r1", "sect131r2", "sect163k1",
+-                "sect163r1", "sect163r2", "sect193r1", "sect193r2", "sect233k1",
+-                "sect233r1", "sect239k1", "sect283k1", "sect283r1", "sect409k1",
+-                "sect409r1", "sect571k1", "sect571r1",
+-                // ANSI X9.62 binary curves
+-                "X9.62 c2tnb191v1", "X9.62 c2tnb191v2", "X9.62 c2tnb191v3",
+-                "X9.62 c2tnb239v1", "X9.62 c2tnb239v2", "X9.62 c2tnb239v3",
+-                "X9.62 c2tnb359v1", "X9.62 c2tnb431r1"
+-        ),
+-        XDH("X25519", "X448"),
++
++        ECDH("secp256r1", "secp384r1", "secp521r1"),
++        XDH("X25519", "X448", "x25519"),
+         // There is no curve for DiffieHellman
+         DiffieHellman(new String[]{});
+ 
+@@ -119,7 +101,7 @@ public class KeyAgreementTest {
+     }
+ 
+     /**
+-     * Perform KeyAgreement operation using native as well as JCE provider.
++     * Perform KeyAgreement operation
+      */
+     private static void testKeyAgreement(String provider, String kaAlgo,
+             String kpgAlgo, AlgorithmParameterSpec spec) throws Exception {
+diff --git a/test/jdk/java/security/KeyAgreement/KeySizeTest.java b/test/jdk/java/security/KeyAgreement/KeySizeTest.java
+index fede572675..942aa9d53a 100644
+--- a/test/jdk/java/security/KeyAgreement/KeySizeTest.java
++++ b/test/jdk/java/security/KeyAgreement/KeySizeTest.java
+@@ -37,9 +37,9 @@
+  * @run main KeySizeTest DiffieHellman SunJCE DiffieHellman 4096
+  * @run main KeySizeTest DiffieHellman SunJCE DiffieHellman 6144
+  * @run main KeySizeTest DiffieHellman SunJCE DiffieHellman 8192
+- * @run main KeySizeTest ECDH SunEC EC 128
+- * @run main KeySizeTest ECDH SunEC EC 192
+- * @run main KeySizeTest ECDH SunEC EC 256
++ * @run main/othervm KeySizeTest ECDH SunEC EC 256
++ * @run main/othervm KeySizeTest ECDH SunEC EC 384
++ * @run main/othervm KeySizeTest ECDH SunEC EC 521
+  * @run main KeySizeTest XDH SunEC XDH 255
+  * @run main KeySizeTest XDH SunEC XDH 448
+  */
+diff --git a/test/jdk/javax/net/ssl/templates/SSLSocketTemplate.java b/test/jdk/javax/net/ssl/templates/SSLSocketTemplate.java
+index 32022a731a..bac798c212 100644
+--- a/test/jdk/javax/net/ssl/templates/SSLSocketTemplate.java
++++ b/test/jdk/javax/net/ssl/templates/SSLSocketTemplate.java
+@@ -358,14 +358,12 @@ public class SSLSocketTemplate {
+     // Trusted certificates.
+     protected final static Cert[] TRUSTED_CERTS = {
+             Cert.CA_ECDSA_SECP256R1,
+-            Cert.CA_ECDSA_SECT283R1,
+             Cert.CA_RSA_2048,
+             Cert.CA_DSA_2048 };
+ 
+     // End entity certificate.
+     protected final static Cert[] END_ENTITY_CERTS = {
+             Cert.EE_ECDSA_SECP256R1,
+-            Cert.EE_ECDSA_SECT283R1,
+             Cert.EE_RSA_2048,
+             Cert.EE_EC_RSA_SECP256R1,
+             Cert.EE_DSA_2048 };
+@@ -699,32 +697,6 @@ public class SSLSocketTemplate {
+                 "p1YdWENftmDoNTJ3O6TNlXb90jKWgAirCXNBUompPtHKkO592eDyGcT1h8qjrKlm\n" +
+                 "Kw=="),
+ 
+-         CA_ECDSA_SECT283R1(
+-                "EC",
+-                // SHA1withECDSA, curve sect283r1
+-                // Validity
+-                //     Not Before: May 26 06:06:52 2020 GMT
+-                //     Not After : May 21 06:06:52 2040 GMT
+-                // Subject Key Identifier:
+-                //     CF:A3:99:ED:4C:6E:04:41:09:21:31:33:B6:80:D5:A7:BF:2B:98:04
+-                "-----BEGIN CERTIFICATE-----\n" +
+-                "MIIB8TCCAY+gAwIBAgIJANQFsBngZ3iMMAsGByqGSM49BAEFADBdMQswCQYDVQQG\n" +
+-                "EwJVUzELMAkGA1UECBMCQ0ExCzAJBgNVBAcTAlNBMQ8wDQYDVQQKEwZPcmFjbGUx\n" +
+-                "DzANBgNVBAsTBkpQR1NRRTESMBAGA1UEAxMJc2VjdDI4M3IxMB4XDTIwMDUyNjE4\n" +
+-                "MDY1MloXDTQwMDUyMTE4MDY1MlowXTELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNB\n" +
+-                "MQswCQYDVQQHEwJTQTEPMA0GA1UEChMGT3JhY2xlMQ8wDQYDVQQLEwZKUEdTUUUx\n" +
+-                "EjAQBgNVBAMTCXNlY3QyODNyMTBeMBAGByqGSM49AgEGBSuBBAARA0oABALatmDt\n" +
+-                "QIhjpK4vJjv4GgC8CUH/VAWLUSQRU7yGGQ3NF8rVBARv0aehiII0nzjDVX5KrP/A\n" +
+-                "w/DmW7q8PfEAIktuaA/tcKv/OKMyMDAwHQYDVR0OBBYEFM+jme1MbgRBCSExM7aA\n" +
+-                "1ae/K5gEMA8GA1UdEwEB/wQFMAMBAf8wCwYHKoZIzj0EAQUAA08AMEwCJAGHsAP8\n" +
+-                "HlcVqszra+fxq35juTxHJIfxTKIr7f54Ywtz7AJowgIkAxydv8g+dkuniOUAj0Xt\n" +
+-                "FnGVp6HzKX5KM1zLpfqmix8ZPP/A\n" +
+-                "-----END CERTIFICATE-----",
+-                "MIGQAgEAMBAGByqGSM49AgEGBSuBBAARBHkwdwIBAQQkAdcyn/FxiNvuTsSgDehq\n" +
+-                "SGFiTxAKNMMJfmsO6GHekzszFqjPoUwDSgAEAtq2YO1AiGOkri8mO/gaALwJQf9U\n" +
+-                "BYtRJBFTvIYZDc0XytUEBG/Rp6GIgjSfOMNVfkqs/8DD8OZburw98QAiS25oD+1w\n" +
+-                "q/84"),
+-
+         CA_RSA_2048(
+                 "RSA",
+                 // SHA256withRSA, 2048 bits
+diff --git a/test/jdk/jdk/security/jarsigner/Spec.java b/test/jdk/jdk/security/jarsigner/Spec.java
+index 1b3a12c741..c023fe9837 100644
+--- a/test/jdk/jdk/security/jarsigner/Spec.java
++++ b/test/jdk/jdk/security/jarsigner/Spec.java
+@@ -31,7 +31,7 @@
+  *          jdk.jartool
+  *          jdk.crypto.ec
+  * @build jdk.test.lib.util.JarUtils
+- * @run main Spec
++ * @run main/othervm Spec
+  */
+ 
+ import com.sun.jarsigner.ContentSigner;
+@@ -190,7 +190,7 @@ public class Spec {
+                 .equals("SHA256withDSA"));
+ 
+         kpg = KeyPairGenerator.getInstance("EC");
+-        kpg.initialize(192);
++        kpg.initialize(256);
+         assertTrue(JarSigner.Builder
+                 .getDefaultSignatureAlgorithm(kpg.generateKeyPair().getPrivate())
+                 .equals("SHA256withECDSA"));
+@@ -198,7 +198,7 @@ public class Spec {
+         assertTrue(JarSigner.Builder
+                 .getDefaultSignatureAlgorithm(kpg.generateKeyPair().getPrivate())
+                 .equals("SHA384withECDSA"));
+-        kpg.initialize(571);
++        kpg.initialize(521);
+         assertTrue(JarSigner.Builder
+                 .getDefaultSignatureAlgorithm(kpg.generateKeyPair().getPrivate())
+                 .equals("SHA512withECDSA"));
+diff --git a/test/jdk/sun/security/ec/SignatureDigestTruncate.java b/test/jdk/sun/security/ec/SignatureDigestTruncate.java
+index 8bdf82fec1..c33e54f320 100644
+--- a/test/jdk/sun/security/ec/SignatureDigestTruncate.java
++++ b/test/jdk/sun/security/ec/SignatureDigestTruncate.java
+@@ -36,7 +36,7 @@ import java.util.*;
+  *     group order.
+  * @library /test/lib
+  * @build jdk.test.lib.Convert
+- * @run main SignatureDigestTruncate
++ * @run main/othervm SignatureDigestTruncate
+  */
+ public class SignatureDigestTruncate {
+ 
+@@ -117,12 +117,12 @@ public class SignatureDigestTruncate {
+     }
+ 
+     public static void main(String[] args) throws Exception {
+-        runTest("SHA384withECDSAinP1363Format", "sect283r1",
++        runTest("SHA384withECDSAinP1363Format", "secp256r1",
+             "abcdef10234567", "010203040506070809",
+             "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d" +
+-            "1e1f20212223",
+-            "01d7544b5d3935216bd45e2f8042537e1e0296a11e0eb96666199281b409" +
+-            "42abccd5358a035de8a314d3e6c2a97614daebf5fb1313540eec3f9a3272" +
+-            "068aa10922ccae87d255c84c");
++                "1e1f20212223",
++            "d83534beccde787f9a4c6b0408337d9b9ca2e0a0259228526c15cc17a1d6" +
++                "4da6b34bf21b3bc4488c591d8ac9c33d93c7c6137e2ab4c503a42da7" +
++                "2fe0b6dda4c4");
+     }
+ }
+diff --git a/test/jdk/sun/security/ec/TestEC.java b/test/jdk/sun/security/ec/TestEC.java
+index eb15af75cb..57346606b2 100644
+--- a/test/jdk/sun/security/ec/TestEC.java
++++ b/test/jdk/sun/security/ec/TestEC.java
+@@ -37,8 +37,8 @@
+  * @library ../../../java/security/testlibrary
+  * @library ../../../javax/net/ssl/TLSCommon
+  * @modules jdk.crypto.cryptoki/sun.security.pkcs11.wrapper
+- * @run main/othervm -Djdk.tls.namedGroups="secp256r1,sect193r1" TestEC
+- * @run main/othervm/java.security.policy=TestEC.policy -Djdk.tls.namedGroups="secp256r1,sect193r1" TestEC
++ * @run main/othervm -Djdk.tls.namedGroups="secp256r1" TestEC
++ * @run main/othervm/java.security.policy=TestEC.policy -Djdk.tls.namedGroups="secp256r1" TestEC
+  */
+ 
+ import java.security.NoSuchProviderException;
+@@ -48,13 +48,12 @@ import java.security.Security;
+ /*
+  * Leverage the collection of EC tests used by PKCS11
+  *
+- * NOTE: the following 6 files were copied here from the PKCS11 EC Test area
++ * NOTE: the following 5 files were copied here from the PKCS11 EC Test area
+  *       and must be kept in sync with the originals:
+  *
+  *           ../pkcs11/ec/p12passwords.txt
+  *           ../pkcs11/ec/certs/sunlabscerts.pem
+  *           ../pkcs11/ec/pkcs12/secp256r1server-secp384r1ca.p12
+- *           ../pkcs11/ec/pkcs12/sect193r1server-rsa1024ca.p12
+  *           ../pkcs11/sslecc/keystore
+  *           ../pkcs11/sslecc/truststore
+  */
+@@ -99,18 +98,26 @@ public class TestEC {
+          * The entry point used for each test is its instance method
+          * called main (not its static method called main).
+          */
++        System.out.println("TestECDH");
+         new TestECDH().main(p);
++        System.out.println("TestECDSA");
+         new TestECDSA().main(p);
++        System.out.println("TestCurves");
+         new TestCurves().main(p);
++        System.out.println("TestKeyFactory");
+         new TestKeyFactory().main(p);
++        System.out.println("TestECGenSpec");
+         new TestECGenSpec().main(p);
++        System.out.println("ReadPKCS12");
+         new ReadPKCS12().main(p);
++        System.out.println("ReadCertificate");
+         new ReadCertificates().main(p);
+ 
+         // ClientJSSEServerJSSE fails on Solaris 11 when both SunEC and
+         // SunPKCS11-Solaris providers are enabled.
+         // Workaround:
+         // Security.removeProvider("SunPKCS11-Solaris");
++        System.out.println("ClientJSSEServerJSSE");
+         new ClientJSSEServerJSSE().main(p);
+ 
+         long stop = System.currentTimeMillis();
+diff --git a/test/jdk/sun/security/ec/keystore b/test/jdk/sun/security/ec/keystore
+index b59a2ab43c61b99c5d72a943aec13b090f111b62..c8a09d1a6de3961953d3da5f1a5071581e4a889b 100644
+GIT binary patch
+delta 47
+zcmX@0I8U1A-`jt085kItfS7qBPb<gf&D=j(MD_%pQ!e`v;&8myYrdNl&(<q%cFhF<
+Dv%eFw
+
+delta 606
+zcmbOyeL#`t-`jt085kItfS6??Pb){gWN~V8iJ_%&kzsLaQCVt{Zc%Zfp@ES}av}o*
+zBj-$aTUVgc5`!WGJ~l3GHbxdkEha%mMpg!v1nz>2tdCjxJ`M4A%5x2w6IIW~_AS{S
+zAuH~9c;`pM;6t37cJr-2Dzd@2isNt8&O42>Y<3=bx#*9J+WOBkTK6kGJ9qi8ld1pr
+z@;3@HYQ^hL9^ELtd3S_PL&%P8tY;LC{cf%WTFl768lh)uU<q__i9r)nfk6}FO(sr;
+z1$X^<inkt$H{fOC)N1o+`_2n=5-Wp2<NV12%wm%j*j?r24P@DvLs__a#6nVwOB8~^
+zo>R~W3U*Wgd2jM`cD2bb*my-vOrykk4Gjzo4NZ&;jSYZYgT@UoQ}hfB^dP3FqnLst
+z%qCA|*Qoa}5MW~mI_jJ)6C)d|b|VXe1hWYP3&Y+Cwpa5~&3rHJu5!>3-#B4b<d?N#
+zy|Yd;D)W73bKARn$-+Yowk`L0+he@h3szK5aYyqUb7Lbzz2q6$%U45BJndY4or8IH
+zLiRVuWDfEDPrg^MiU{ql-jbrgANzgN#x#8&`Ki0_T-lQ|E$XWLxkexRkTS#98|N4+
+z#cL!wzq_Ipd;SfJk-guRMZM1UTf(#t{8?<zA^P~&wrh*r*w+eIq|5q9A1mH|aeI>a
+vT9?v<;0soD7k2k2@%5H(?&0{yB69lkrYR>{miDx&96ravqh7j2(>xIXU0B;-
+
+diff --git a/test/jdk/sun/security/ec/pkcs12/sect193r1server-rsa1024ca.p12 b/test/jdk/sun/security/ec/pkcs12/sect193r1server-rsa1024ca.p12
+deleted file mode 100644
+index ed4d861e4ca49cf3a574a67f52b8848306f69fe2..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 1252
+zcmXqLVtK&C$ZXKWvW$&WtIebBJ1-+U<ANrZ=`2kwlYzqh22IT22r0G&P0SuZAr~e_
+z1|VgNkYO~CVdH|Dz{AL9z{kRof1lNKwRiU$CMFJsh9+i#ibp%!)7UP4pE&7A@5)I>
+zf*B7y*8H!PHP@--pWdg159{8oE>R6m)wk>WC-#}!CAi~)#Qe3%t3G7RHLhB6G3VBr
+zsam~pr$b~JoqaD@f3ww-*_7&(^@0CU%AUK9TNozJy<N#@w8KAG;Oy5O{wC+&Pd>;J
+zA7PNCc`xB|X#PBgLcL|dihD|5Imy2b+;5xJy86Q6Ko{;bcGD>-0XH9O>^{9?%Cy<b
+z7QScuXnv88<C52s&th_3>rFNPi9h6tIuZC|cW?f$#JkV`Pc@HGT<*c7BJ*hBjd$%U
+zuH^Zo$i-^BSK(NAO@8O=yXTmHy%#FlW4PiRXYwm9MN98S+wG|)qOvB8J=a3}51jQ&
+zdUff@_AO$SR*pM;H~#v!$nV&rFUJk9HyUkYn3NqEI<xqji<M2$DyGj*&*V$&nx!Br
+z@%LI?Wxi{q*zaA9FTbrwm+7btU+yLQ^5rU~-IC(3qRfwVH6-7;zE0VfXJY8N8P$Is
+zG~#=o)ocp7>Yl{LncUU=DVDG7Y{OL+$*Mz)HLGI&igYeIp}a+FUfw3f%!@%El>e<u
+z&+T8}$0_72Uv~WGyu%N!WqRs`tX~wWCLa{UId^XHg^5~T4iC9(SnvGUrM!ZxV-JhU
+z+{KHw{BSU3Tt9Esj9<MsR$3*foheJVm_6T5ZK_@Kv&2(Xv){HPFk2jp-nx!Qe8bkg
+z3KtJ=>5}w$GFM?9bMJwF<rVoKvIV}c%@bXl{DA9w(K~}1ZCf_%5vXfCV7hW=ZbR#2
+zg-Efs$D1_U**b&R-|Ng@<{A7|=BG<-=A<CCU;%TkZSpTI0$M~)evU44yZgF<`T5Fc
+zg<jKT|G4d~S{qjTK;wSem69X#Csk+FyQf}kn0<WaBAX5OI|AoVn)PGF?Jqt073){W
+zm&}m-v)3nZWtZ#5!^w4xcl+fWoi&9V7WU43ywQ4Nuj`eyU)DUi;Kgxr`MdQ$w9Z)M
+zr##wsLvHQ;j+yU|XzfhR)SIuDS$lQiy`~UJ+mCB*+FL~OS$w`#7ngSF|N91My$LC&
+zDpInU9rI@}%FNzzz-RNek1e{4o7-=+-8dn0euctBgC<4;qzts6iBXZIiBT3PED6M-
+zY}~Ny#Kp+8pmDZA;|!EM#th11qAXTsT&KiVf$|tj#kw8K_vdsS))b6CS?$-bZt;m5
+zmbEM1@A{>cw4$72LN&vV>2*wAd==+ruV(-DRqiv#?1DNU!NVr)y=ohx{-$o~4PX}e
+z!=!n5PJPnx@ch@^k#p2SrY_I=mVbxMhx<|28nKOTF-A#q?_9f(v7lt;iR%Ji|4rQ3
+z_w>;R!wdsuxKB7m4aHbQ%(i78Tos*n{`+?GnHwY2G7II;tuSyzC=xL=kuzc_W=Lg7
+zW+-7WWUyo~W+(#EAdw=5GBBwNWEC?c0!0lNj2KLSDiaM14HOMH*;uvtn3<$l8CXPw
+m=X>2;aJj?&kK>Uw>3dZEw|#JxVBv_JE&b=r+-3_<umAuoCLz`U
+
+diff --git a/test/jdk/sun/security/pkcs11/ec/ReadPKCS12.java b/test/jdk/sun/security/pkcs11/ec/ReadPKCS12.java
+index 155816a34a..76273869bc 100644
+--- a/test/jdk/sun/security/pkcs11/ec/ReadPKCS12.java
++++ b/test/jdk/sun/security/pkcs11/ec/ReadPKCS12.java
+@@ -29,7 +29,7 @@
+  * @library /test/lib ..
+  * @library ../../../../java/security/testlibrary
+  * @key randomness
+- * @modules jdk.crypto.cryptoki
++ * @modules jdk.crypto.cryptoki jdk.crypto.ec/sun.security.ec
+  * @run main/othervm ReadPKCS12
+  * @run main/othervm ReadPKCS12 sm policy
+  */
+diff --git a/test/jdk/sun/security/pkcs11/ec/TestECDH.java b/test/jdk/sun/security/pkcs11/ec/TestECDH.java
+index 58d6b4b418..83d19bc915 100644
+--- a/test/jdk/sun/security/pkcs11/ec/TestECDH.java
++++ b/test/jdk/sun/security/pkcs11/ec/TestECDH.java
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 2006, 2018, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 2006, 2020, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -124,9 +124,12 @@ public class TestECDH extends PKCS11Test {
+             return;
+         }
+ 
+-        test(p, pub192a, priv192a, pub192b, priv192b, secret192);
+-        test(p, pub163a, priv163a, pub163b, priv163b, secret163);
+-
++        if (getSupportedECParameterSpec("secp192r1", p).isPresent()) {
++            test(p, pub192a, priv192a, pub192b, priv192b, secret192);
++        }
++        if (getSupportedECParameterSpec("sect163r1", p).isPresent()) {
++            test(p, pub163a, priv163a, pub163b, priv163b, secret163);
++        }
+         if (getSupportedECParameterSpec("brainpoolP256r1", p).isPresent()) {
+             test(p, pubBrainpoolP256r1a, privBrainpoolP256r1a, pubBrainpoolP256r1b, privBrainpoolP256r1b, secretBrainpoolP256r1);
+         }
+diff --git a/test/jdk/sun/security/pkcs11/ec/TestECDSA.java b/test/jdk/sun/security/pkcs11/ec/TestECDSA.java
+index df408ce1f8..8971f3a7ca 100644
+--- a/test/jdk/sun/security/pkcs11/ec/TestECDSA.java
++++ b/test/jdk/sun/security/pkcs11/ec/TestECDSA.java
+@@ -156,12 +156,14 @@ public class TestECDSA extends PKCS11Test {
+             return;
+         }
+ 
+-        if (getNSSECC() != ECCState.Basic) {
++        if (getSupportedECParameterSpec("secp192r1", provider).isPresent()) {
+             test(provider, pub192, priv192, sig192);
++        }
++        if (getSupportedECParameterSpec("sect163r1", provider).isPresent()) {
+             test(provider, pub163, priv163, sig163);
++        }
++        if (getSupportedECParameterSpec("sect571r1", provider).isPresent()) {
+             test(provider, pub571, priv571, sig571);
+-        } else {
+-            System.out.println("ECC Basic only, skipping 192, 163 and 571.");
+         }
+         test(provider, pub521, priv521, sig521);
+ 
+diff --git a/test/jdk/sun/security/pkcs11/ec/TestKeyFactory.java b/test/jdk/sun/security/pkcs11/ec/TestKeyFactory.java
+index 29f93ea493..ae0c84edba 100644
+--- a/test/jdk/sun/security/pkcs11/ec/TestKeyFactory.java
++++ b/test/jdk/sun/security/pkcs11/ec/TestKeyFactory.java
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 2006, 2018, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 2006, 2020, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -130,17 +130,12 @@ public class TestKeyFactory extends PKCS11Test {
+             System.out.println("Provider does not support EC, skipping");
+             return;
+         }
+-        int[] keyLengths = {192, 163, 409, 521};
+-        int len = 0;
+-        if (getNSSECC() == ECCState.Basic) {
+-            System.out.println("NSS Basic ECC only. Skipping 192, 163, & 409");
+-            len = 3;
+-        }
++        int[] keyLengths = {256, 521};
+         KeyFactory kf = KeyFactory.getInstance("EC", p);
+-        for (; keyLengths.length > len ; len++) {
+-            System.out.println("Length "+keyLengths[len]);
++        for (int len : keyLengths) {
++            System.out.println("Length " + len);
+             KeyPairGenerator kpg = KeyPairGenerator.getInstance("EC", p);
+-            kpg.initialize(keyLengths[len]);
++            kpg.initialize(len);
+             KeyPair kp = kpg.generateKeyPair();
+             test(kf, kp.getPrivate());
+             test(kf, kp.getPublic());
+diff --git a/test/jdk/sun/security/pkcs11/ec/pkcs12/sect193r1server-rsa1024ca.p12 b/test/jdk/sun/security/pkcs11/ec/pkcs12/sect193r1server-rsa1024ca.p12
+deleted file mode 100644
+index ed4d861e4ca49cf3a574a67f52b8848306f69fe2..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 1252
+zcmXqLVtK&C$ZXKWvW$&WtIebBJ1-+U<ANrZ=`2kwlYzqh22IT22r0G&P0SuZAr~e_
+z1|VgNkYO~CVdH|Dz{AL9z{kRof1lNKwRiU$CMFJsh9+i#ibp%!)7UP4pE&7A@5)I>
+zf*B7y*8H!PHP@--pWdg159{8oE>R6m)wk>WC-#}!CAi~)#Qe3%t3G7RHLhB6G3VBr
+zsam~pr$b~JoqaD@f3ww-*_7&(^@0CU%AUK9TNozJy<N#@w8KAG;Oy5O{wC+&Pd>;J
+zA7PNCc`xB|X#PBgLcL|dihD|5Imy2b+;5xJy86Q6Ko{;bcGD>-0XH9O>^{9?%Cy<b
+z7QScuXnv88<C52s&th_3>rFNPi9h6tIuZC|cW?f$#JkV`Pc@HGT<*c7BJ*hBjd$%U
+zuH^Zo$i-^BSK(NAO@8O=yXTmHy%#FlW4PiRXYwm9MN98S+wG|)qOvB8J=a3}51jQ&
+zdUff@_AO$SR*pM;H~#v!$nV&rFUJk9HyUkYn3NqEI<xqji<M2$DyGj*&*V$&nx!Br
+z@%LI?Wxi{q*zaA9FTbrwm+7btU+yLQ^5rU~-IC(3qRfwVH6-7;zE0VfXJY8N8P$Is
+zG~#=o)ocp7>Yl{LncUU=DVDG7Y{OL+$*Mz)HLGI&igYeIp}a+FUfw3f%!@%El>e<u
+z&+T8}$0_72Uv~WGyu%N!WqRs`tX~wWCLa{UId^XHg^5~T4iC9(SnvGUrM!ZxV-JhU
+z+{KHw{BSU3Tt9Esj9<MsR$3*foheJVm_6T5ZK_@Kv&2(Xv){HPFk2jp-nx!Qe8bkg
+z3KtJ=>5}w$GFM?9bMJwF<rVoKvIV}c%@bXl{DA9w(K~}1ZCf_%5vXfCV7hW=ZbR#2
+zg-Efs$D1_U**b&R-|Ng@<{A7|=BG<-=A<CCU;%TkZSpTI0$M~)evU44yZgF<`T5Fc
+zg<jKT|G4d~S{qjTK;wSem69X#Csk+FyQf}kn0<WaBAX5OI|AoVn)PGF?Jqt073){W
+zm&}m-v)3nZWtZ#5!^w4xcl+fWoi&9V7WU43ywQ4Nuj`eyU)DUi;Kgxr`MdQ$w9Z)M
+zr##wsLvHQ;j+yU|XzfhR)SIuDS$lQiy`~UJ+mCB*+FL~OS$w`#7ngSF|N91My$LC&
+zDpInU9rI@}%FNzzz-RNek1e{4o7-=+-8dn0euctBgC<4;qzts6iBXZIiBT3PED6M-
+zY}~Ny#Kp+8pmDZA;|!EM#th11qAXTsT&KiVf$|tj#kw8K_vdsS))b6CS?$-bZt;m5
+zmbEM1@A{>cw4$72LN&vV>2*wAd==+ruV(-DRqiv#?1DNU!NVr)y=ohx{-$o~4PX}e
+z!=!n5PJPnx@ch@^k#p2SrY_I=mVbxMhx<|28nKOTF-A#q?_9f(v7lt;iR%Ji|4rQ3
+z_w>;R!wdsuxKB7m4aHbQ%(i78Tos*n{`+?GnHwY2G7II;tuSyzC=xL=kuzc_W=Lg7
+zW+-7WWUyo~W+(#EAdw=5GBBwNWEC?c0!0lNj2KLSDiaM14HOMH*;uvtn3<$l8CXPw
+m=X>2;aJj?&kK>Uw>3dZEw|#JxVBv_JE&b=r+-3_<umAuoCLz`U
+
+diff --git a/test/jdk/sun/security/pkcs11/sslecc/ClientJSSEServerJSSE.java b/test/jdk/sun/security/pkcs11/sslecc/ClientJSSEServerJSSE.java
+index 43efcd5afb..8389a688a1 100644
+--- a/test/jdk/sun/security/pkcs11/sslecc/ClientJSSEServerJSSE.java
++++ b/test/jdk/sun/security/pkcs11/sslecc/ClientJSSEServerJSSE.java
+@@ -34,9 +34,9 @@
+  * @library /test/lib .. ../../../../javax/net/ssl/TLSCommon
+  * @library ../../../../java/security/testlibrary
+  * @modules jdk.crypto.cryptoki
+- * @run main/othervm -Djdk.tls.namedGroups="secp256r1,sect193r1"
++ * @run main/othervm -Djdk.tls.namedGroups="secp256r1"
+  *      ClientJSSEServerJSSE
+- * @run main/othervm -Djdk.tls.namedGroups="secp256r1,sect193r1"
++ * @run main/othervm -Djdk.tls.namedGroups="secp256r1"
+  *      ClientJSSEServerJSSE sm policy
+  */
+ 
+diff --git a/test/jdk/sun/security/pkcs11/sslecc/keystore b/test/jdk/sun/security/pkcs11/sslecc/keystore
+index b59a2ab43c61b99c5d72a943aec13b090f111b62..c8a09d1a6de3961953d3da5f1a5071581e4a889b 100644
+GIT binary patch
+delta 47
+zcmX@0I8U1A-`jt085kItfS7qBPb<gf&D=j(MD_%pQ!e`v;&8myYrdNl&(<q%cFhF<
+Dv%eFw
+
+delta 606
+zcmbOyeL#`t-`jt085kItfS6??Pb){gWN~V8iJ_%&kzsLaQCVt{Zc%Zfp@ES}av}o*
+zBj-$aTUVgc5`!WGJ~l3GHbxdkEha%mMpg!v1nz>2tdCjxJ`M4A%5x2w6IIW~_AS{S
+zAuH~9c;`pM;6t37cJr-2Dzd@2isNt8&O42>Y<3=bx#*9J+WOBkTK6kGJ9qi8ld1pr
+z@;3@HYQ^hL9^ELtd3S_PL&%P8tY;LC{cf%WTFl768lh)uU<q__i9r)nfk6}FO(sr;
+z1$X^<inkt$H{fOC)N1o+`_2n=5-Wp2<NV12%wm%j*j?r24P@DvLs__a#6nVwOB8~^
+zo>R~W3U*Wgd2jM`cD2bb*my-vOrykk4Gjzo4NZ&;jSYZYgT@UoQ}hfB^dP3FqnLst
+z%qCA|*Qoa}5MW~mI_jJ)6C)d|b|VXe1hWYP3&Y+Cwpa5~&3rHJu5!>3-#B4b<d?N#
+zy|Yd;D)W73bKARn$-+Yowk`L0+he@h3szK5aYyqUb7Lbzz2q6$%U45BJndY4or8IH
+zLiRVuWDfEDPrg^MiU{ql-jbrgANzgN#x#8&`Ki0_T-lQ|E$XWLxkexRkTS#98|N4+
+z#cL!wzq_Ipd;SfJk-guRMZM1UTf(#t{8?<zA^P~&wrh*r*w+eIq|5q9A1mH|aeI>a
+vT9?v<;0soD7k2k2@%5H(?&0{yB69lkrYR>{miDx&96ravqh7j2(>xIXU0B;-
+
+diff --git a/test/jdk/sun/security/provider/KeyStore/DKSTest.java b/test/jdk/sun/security/provider/KeyStore/DKSTest.java
+index dc63e82ecb..56e8c37cd0 100644
+--- a/test/jdk/sun/security/provider/KeyStore/DKSTest.java
++++ b/test/jdk/sun/security/provider/KeyStore/DKSTest.java
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 2013, 2015, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 2013, 2020, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -52,8 +52,6 @@ public class DKSTest {
+                 new KeyStore.PasswordProtection("test12".toCharArray()));
+             put("eckeystore1",
+                 new KeyStore.PasswordProtection("password".toCharArray()));
+-            put("eckeystore2",
+-                new KeyStore.PasswordProtection("password".toCharArray()));
+             put("truststore",
+                 new KeyStore.PasswordProtection("changeit".toCharArray()));
+             put("empty",
+@@ -69,8 +67,6 @@ public class DKSTest {
+                 new KeyStore.PasswordProtection("wrong".toCharArray()));
+             put("eckeystore1",
+                 new KeyStore.PasswordProtection("wrong".toCharArray()));
+-            put("eckeystore2",
+-                new KeyStore.PasswordProtection("wrong".toCharArray()));
+         }};
+ 
+     public static void main(String[] args) throws Exception {
+@@ -154,7 +150,7 @@ public class DKSTest {
+          * domain keystore: keystores
+          */
+         config = new URI(CONFIG + "#keystores");
+-        expected = 2 + 1 + 1 + 1;
++        expected = 2 + 1 + 1;
+         keystore = KeyStore.getInstance("DKS");
+         // load entries
+         keystore.load(new DomainLoadStoreParameter(config, PASSWORDS));
+diff --git a/test/jdk/sun/security/provider/KeyStore/domains.cfg b/test/jdk/sun/security/provider/KeyStore/domains.cfg
+index f26d6f08fe..da739377a7 100644
+--- a/test/jdk/sun/security/provider/KeyStore/domains.cfg
++++ b/test/jdk/sun/security/provider/KeyStore/domains.cfg
+@@ -25,8 +25,6 @@ domain keystores
+             keystoreType="CaseExactJKS"
+             keystoreURI="${test.src}/pw.jks";
+         keystore eckeystore1
+-            keystoreURI="${test.src}/../../pkcs11/ec/pkcs12/sect193r1server-rsa1024ca.p12";
+-        keystore eckeystore2 
+             keystoreURI="${test.src}/../../pkcs11/ec/pkcs12/secp256r1server-secp384r1ca.p12";
+ };
+ 
+@@ -40,8 +38,6 @@ domain keystores_tmp
+             keystoreType="CaseExactJKS"
+             keystoreURI="${user.dir}/pw.jks_tmp";
+         keystore eckeystore1
+-            keystoreURI="${user.dir}/sect193r1server-rsa1024ca.p12_tmp";
+-        keystore eckeystore2 
+             keystoreURI="${user.dir}/secp256r1server-secp384r1ca.p12_tmp";
+ };
+ 
+diff --git a/test/jdk/sun/security/ssl/CipherSuite/DisabledCurve.java b/test/jdk/sun/security/ssl/CipherSuite/DisabledCurve.java
+index c1be3a50e0..e63c168951 100644
+--- a/test/jdk/sun/security/ssl/CipherSuite/DisabledCurve.java
++++ b/test/jdk/sun/security/ssl/CipherSuite/DisabledCurve.java
+@@ -25,10 +25,10 @@
+  * @test
+  * @bug 8246330
+  * @library /javax/net/ssl/templates /test/lib
+- * @run main/othervm -Djdk.tls.namedGroups="sect283r1"
++ * @run main/othervm -Djdk.tls.namedGroups="secp384r1"
+         DisabledCurve DISABLE_NONE PASS
+- * @run main/othervm -Djdk.tls.namedGroups="sect283r1"
+-        DisabledCurve sect283r1 FAIL
++ * @run main/othervm -Djdk.tls.namedGroups="secp384r1"
++        DisabledCurve secp384r1 FAIL
+ */
+ import java.security.Security;
+ import java.util.Arrays;
+@@ -51,18 +51,18 @@ public class DisabledCurve extends SSLSocketTemplate {
+     protected SSLContext createClientSSLContext() throws Exception {
+         return createSSLContext(
+                 new SSLSocketTemplate.Cert[] {
+-                        SSLSocketTemplate.Cert.CA_ECDSA_SECT283R1 },
++                        SSLSocketTemplate.Cert.CA_ECDSA_SECP384R1 },
+                 new SSLSocketTemplate.Cert[] {
+-                        SSLSocketTemplate.Cert.EE_ECDSA_SECT283R1 },
++                        SSLSocketTemplate.Cert.EE_ECDSA_SECP384R1 },
+                 getClientContextParameters());
+     }
+ 
+     protected SSLContext createServerSSLContext() throws Exception {
+         return createSSLContext(
+                 new SSLSocketTemplate.Cert[] {
+-                        SSLSocketTemplate.Cert.CA_ECDSA_SECT283R1 },
++                        SSLSocketTemplate.Cert.CA_ECDSA_SECP384R1 },
+                 new SSLSocketTemplate.Cert[] {
+-                        SSLSocketTemplate.Cert.EE_ECDSA_SECT283R1 },
++                        SSLSocketTemplate.Cert.EE_ECDSA_SECP384R1 },
+                 getServerContextParameters());
+     }
+ 
+@@ -91,10 +91,13 @@ public class DisabledCurve extends SSLSocketTemplate {
+     public static void main(String[] args) throws Exception {
+         String expected = args[1];
+         String disabledName = ("DISABLE_NONE".equals(args[0]) ? "" : args[0]);
++        boolean disabled = false;
+         if (disabledName.equals("")) {
+             Security.setProperty("jdk.disabled.namedCurves", "");
++        } else {
++            disabled = true;
++            Security.setProperty("jdk.certpath.disabledAlgorithms", "secp384r1");
+         }
+-        System.setProperty("jdk.sunec.disableNative", "false");
+ 
+         // Re-enable TLSv1 and TLSv1.1 since test depends on it.
+         SecurityUtils.removeFromDisabledTlsAlgs("TLSv1", "TLSv1.1");
+@@ -104,12 +107,10 @@ public class DisabledCurve extends SSLSocketTemplate {
+                 (new DisabledCurve()).run();
+                 if (expected.equals("FAIL")) {
+                     throw new RuntimeException(
+-                            "The test case should not reach here");
++                            "Expected test to fail, but it passed");
+                 }
+             } catch (SSLException | IllegalStateException ssle) {
+-                if ((expected.equals("FAIL"))
+-                        && Security.getProperty("jdk.disabled.namedCurves")
+-                                .contains(disabledName)) {
++                if (expected.equals("FAIL") && disabled) {
+                     System.out.println(
+                             "Expected exception was thrown: TEST PASSED");
+                 } else {
+diff --git a/test/jdk/sun/security/tools/jarsigner/RestrictedAlgo.java b/test/jdk/sun/security/tools/jarsigner/RestrictedAlgo.java
+index 763d12cf42..b5a2ebc09a 100644
+--- a/test/jdk/sun/security/tools/jarsigner/RestrictedAlgo.java
++++ b/test/jdk/sun/security/tools/jarsigner/RestrictedAlgo.java
+@@ -93,11 +93,6 @@ public class RestrictedAlgo {
+         System.out.println("\nTesting DSA Keysize: DSA keySize < 1024\n");
+         test("DSA", "SHA256withDSA", "KeySizeDSA", "SHA-256", true,
+                 "-keysize", "512");
+-
+-        System.out.println("\nTesting Native Curve:"
+-                + " include jdk.disabled.namedCurves\n");
+-        test("EC", "SHA256withECDSA", "curve", "SHA-256", true,
+-                "-groupname", "secp112r1");
+     }
+ 
+     private static void test(String keyAlg, String sigAlg, String aliasPrefix,
+@@ -123,8 +118,7 @@ public class RestrictedAlgo {
+                 "-ext", "bc:c",
+                 "-keyalg", keyAlg,
+                 "-sigalg", sigAlg,
+-                "-alias", alias,
+-                "-J-Djdk.sunec.disableNative=false");
++                "-alias", alias);
+         for (String additionalCMDArg : additionalCmdArgs) {
+             cmd.add(additionalCMDArg);
+         }
+@@ -147,8 +141,7 @@ public class RestrictedAlgo {
+                 "-digestalg", digestAlg,
+                 "-signedjar", SIGNED_JARFILE,
+                 UNSIGNED_JARFILE,
+-                alias,
+-                "-J-Djdk.sunec.disableNative=false");
++                alias);
+ 
+         OutputAnalyzer analyzer = SecurityTools.jarsigner(cmd)
+                 .shouldHaveExitValue(0);
+@@ -162,8 +155,7 @@ public class RestrictedAlgo {
+         System.out.println("\nTesting JarSigner Verification\n");
+         List<String> cmd = prepareCommand(
+                 "-verify",
+-                SIGNED_JARFILE,
+-                "-J-Djdk.sunec.disableNative=false");
++                SIGNED_JARFILE);
+ 
+         OutputAnalyzer analyzer = SecurityTools.jarsigner(cmd)
+                 .shouldHaveExitValue(0);
+diff --git a/test/jdk/sun/security/tools/keytool/GroupName.java b/test/jdk/sun/security/tools/keytool/GroupName.java
+index 6d119e9c15..290db8f9b8 100644
+--- a/test/jdk/sun/security/tools/keytool/GroupName.java
++++ b/test/jdk/sun/security/tools/keytool/GroupName.java
+@@ -65,10 +65,9 @@ public class GroupName {
+                 .shouldNotContain("Specifying -keysize for generating EC keys is deprecated");
+         checkCurveName("e", "secp256r1");
+ 
+-        gen("f", "-keyalg EC -groupname brainpoolP256r1")
++        kt("-list -v")
+                 .shouldHaveExitValue(0)
+-                .shouldNotContain("Specifying -keysize for generating EC keys is deprecated");
+-        checkCurveName("f", "brainpoolP256r1");
++                .shouldContain("Subject Public Key Algorithm: 256-bit EC (secp256r1) key");
+     }
+ 
+     private static void checkCurveName(String a, String name)
+diff --git a/test/jdk/sun/security/tools/keytool/fakegen/DefaultSignatureAlgorithm.java b/test/jdk/sun/security/tools/keytool/fakegen/DefaultSignatureAlgorithm.java
+index 6f2d918093..c7445499ec 100644
+--- a/test/jdk/sun/security/tools/keytool/fakegen/DefaultSignatureAlgorithm.java
++++ b/test/jdk/sun/security/tools/keytool/fakegen/DefaultSignatureAlgorithm.java
+@@ -60,11 +60,9 @@ public class DefaultSignatureAlgorithm {
+         check("DSA", 1024, null, "SHA256withDSA");
+         check("DSA", 3072, null, "SHA256withDSA");
+ 
+-        check("EC", 192, null, "SHA256withECDSA");
+         check("EC", 384, null, "SHA384withECDSA");
+-        check("EC", 571, null, "SHA512withECDSA");
+ 
+-        check("EC", 571, "SHA256withECDSA", "SHA256withECDSA");
++        check("EC", 384, "SHA256withECDSA", "SHA256withECDSA");
+     }
+ 
+     private static void check(String keyAlg, int keySize,
+diff --git a/test/jdk/sun/security/tools/keytool/fakegen/jdk.crypto.ec/sun/security/ec/ECKeyPairGenerator.java b/test/jdk/sun/security/tools/keytool/fakegen/jdk.crypto.ec/sun/security/ec/ECKeyPairGenerator.java
+index 68da125087..f688da1c63 100644
+--- a/test/jdk/sun/security/tools/keytool/fakegen/jdk.crypto.ec/sun/security/ec/ECKeyPairGenerator.java
++++ b/test/jdk/sun/security/tools/keytool/fakegen/jdk.crypto.ec/sun/security/ec/ECKeyPairGenerator.java
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 2019, Oracle and/or its affiliates. All rights reserved.
++ * Copyright (c) 2019, 2020, Oracle and/or its affiliates. All rights reserved.
+  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  *
+  * This code is free software; you can redistribute it and/or modify it
+@@ -58,14 +58,6 @@ public final class ECKeyPairGenerator extends KeyPairGeneratorSpi {
+     public KeyPair generateKeyPair() {
+         BigInteger s, x, y;
+         switch (keySize) {
+-            case 192:
+-                s = new BigInteger("144089953963995451666433763881605261867377"
+-                        + "0287449914970417");
+-                x = new BigInteger("527580219290493448707803038403444129676461"
+-                        + "560927008883862");
+-                y = new BigInteger("171489247081620145247240656640887886126295"
+-                        + "376102134763235");
+-                break;
+             case 384:
+                 s = new BigInteger("230878276322370828604837367594276033697165"
+                         + "328633328282930557390817326627704675451851870430805"
+@@ -77,22 +69,10 @@ public final class ECKeyPairGenerator extends KeyPairGeneratorSpi {
+                         + "792287657810480793861620950159864617021540168828129"
+                         + "97920015041145259782242");
+                 break;
+-            case 571:
+-                s = new BigInteger("102950007413729156017516513076331886543538"
+-                        + "947044937190140406420556321983301533699021909556189"
+-                        + "150601557539520495361099574425100081169640300555562"
+-                        + "4280643194744140660275077121");
+-                x = new BigInteger("640598847385582251482893323029655037929442"
+-                        + "593800810090252942944624854811134311418807076811195"
+-                        + "132373308708007447666896675761104237802118413642543"
+-                        + "8277858107132017492037336593");
+-                y = new BigInteger("254271270803422773271985083014247202480077"
+-                        + "131823713050110789460550383275777195766342550786766"
+-                        + "080401402424961690914429074822281551140068729472439"
+-                        + "477216613432839953714415981");
+-                break;
+             default:
+-                throw new AssertionError("Unsupported keysize " + keySize);
++                throw new AssertionError("SunEC ECKeyPairGenerator" +
++                    "has been patched. Key size " + keySize +
++                    " is not supported");
+         }
+         ECParameterSpec ecParams = ECUtil.getECParameterSpec(null, keySize);
+         try {
+-- 
+2.35.1
+
