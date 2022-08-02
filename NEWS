@@ -57,6 +57,9 @@ New in release 3.24.0 (2022-07-XX):
   - JDK-8285727: [11u, 17u] Unify fix for JDK-8284920 with version from head
   - JDK-8286989: Build failure on macOS after 8281814
   - JDK-8287537: 8u JDK-8284620 backport broke AArch64 build
+* Import of OpenJDK 8 u345
+  - JDK-8290832: It is no longer possible to change "user.dir" in the JDK8
+  - JDK-8291568: Bump update version of OpenJDK: 8u345
 
 New in release 3.23.0 (2022-06-28):
 
