@@ -111,9 +111,9 @@ else
 fi
 popd
 echo "Generating new changeset IDs and SHA256 sums with arguments:"
-echo "\tDownload directory: ${DOWNLOAD_DIR}"
-echo "\tHotSpot: ${HOTSPOT}"
-echo "\tDownload URL: ${DOWNLOAD_URL}"
+echo -e "\tDownload directory: ${DOWNLOAD_DIR}"
+echo -e "\tHotSpot: ${HOTSPOT}"
+echo -e "\tDownload URL: ${DOWNLOAD_URL}"
 if test "x$OPENJDK8" = "xfalse"; then
   $RUNNING_DIR/gen_changeset_and_sha256sums.sh bz2 ${DOWNLOAD_DIR} ${HOTSPOT} ${DOWNLOAD_URL}
 else

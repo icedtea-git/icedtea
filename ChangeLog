@@ -1,5 +1,14 @@
 2022-11-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump shenandoah to shenandoah-jdk8u352-b08.
+	* hotspot.map.in: Bump shenandoah to
+	shenandoah-jdk8u352-b08.
+	* scripts/create_tarballs.sh: Enable
+	interpretation of backslash escapes so
+	indentation appears.
+
+2022-11-21  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump to icedtea-3.25.0.
 	* Makefile.am:
 	(OPENJDK_CHANGESET): Update to icedtea-3.25.0 tag.
