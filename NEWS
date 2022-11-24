@@ -75,6 +75,8 @@ New in release 3.24.0 (2022-11-XX):
   - JDK-8290000: Bump macOS GitHub actions to macOS 11
   - JDK-8292579: (tz) Update Timezone Data to 2022c
   - JDK-8292688: Support Security properties in security.testlibrary.Proc
+* AArch32 port
+  - JDK-8292599: [aarch32] Crash due to missed CPU specific part of 8233019
 
 New in release 3.24.0 (2022-08-02):
 
