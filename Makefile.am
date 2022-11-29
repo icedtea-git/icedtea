@@ -2438,6 +2438,9 @@ clean-aescheck:
 	rm -f stamps/aescheck-build.stamp
 
 stamps/check-aes.stamp: stamps/aescheck-build.stamp stamps/icedtea.stamp
+if ZERO_BUILD
+	@echo "Skipping AES check on Zero assembler build with no intrinsics";
+else
 	set -e ; \
 	if [ -e $(BUILD_SDK_DIR)/bin/java ] ; then \
 	  if test "x$(INSTALL_ARCH_DIR)" != "xaarch64" ; then \
@@ -2447,6 +2450,7 @@ stamps/check-aes.stamp: stamps/aescheck-build.stamp stamps/icedtea.stamp
 	    done ; \
 	  fi ; \
 	fi
+endif
 	mkdir -p stamps
 	touch $@
 
