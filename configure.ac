@@ -1,4 +1,4 @@
-AC_INIT([icedtea], [3.26.0pre00], [distro-pkg-dev@openjdk.java.net])
+AC_INIT([icedtea], [3.26.0], [distro-pkg-dev@openjdk.java.net])
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([1.9 tar-pax foreign])
@@ -21,6 +21,9 @@ AC_CONFIG_FILES([policytool.desktop])
 
 AC_PROG_CC
 AC_PROG_CXX
+AC_PROG_GREP
+AC_PROG_INSTALL
+AC_PROG_MKDIR_P
 AM_PROG_AS
 
 IT_CHECK_IF_BOOTSTRAPPING
@@ -38,7 +41,6 @@ IT_FIND_TOOL([UNZIP], [unzip])
 IT_FIND_TOOL([CPIO], [cpio])
 IT_FIND_TOOL([FILE], [file])
 IT_FIND_TOOL([READLINK], [readlink])
-IT_FIND_TOOLS([FASTJAR], [fastjar jar])
 IT_FIND_TOOLS([SED],[gsed sed])
 AC_CHECK_TOOL([LDD], [ldd])
 dnl OpenJDK's README-builds.html lists gawk as a build dependency so we

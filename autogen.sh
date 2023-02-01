@@ -11,7 +11,7 @@ for AUTOCONF in autoconf autoconf259; do
         AUTOCONF_VERSION=`${AUTOCONF} --version | head -1 | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
 #        echo ${AUTOCONF_VERSION}
         case ${AUTOCONF_VERSION} in
-            2.59* | 2.6[0-9]* )
+            2.59* | 2.6[0-9]* | 2.7[0-9]* )
                 HAVE_AUTOCONF=true
                 break;
                 ;;
@@ -28,7 +28,7 @@ for AUTOHEADER in autoheader autoheader259; do
         AUTOHEADER_VERSION=`${AUTOHEADER} --version | head -1 | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
 #        echo ${AUTOHEADER_VERSION}
         case ${AUTOHEADER_VERSION} in
-            2.59* | 2.6[0-9]* )
+            2.59* | 2.6[0-9]* | 2.7[0-9]* )
                 HAVE_AUTOHEADER=true
                 break;
                 ;;
@@ -45,7 +45,7 @@ for AUTORECONF in autoreconf; do
         AUTORECONF_VERSION=`${AUTORECONF} --version | head -1 | sed 's/^[^0-9]*\([0-9.][0-9.]*\).*/\1/'`
 #        echo ${AUTORECONF_VERSION}
         case ${AUTORECONF_VERSION} in
-            2.59* | 2.6[0-9]* )
+            2.59* | 2.6[0-9]* | 2.7[0-9]* )
                 HAVE_AUTORECONF=true
                 break;
                 ;;
