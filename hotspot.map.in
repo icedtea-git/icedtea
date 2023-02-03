@@ -1,3 +1,3 @@
 # version type(drop/hg) url changeset sha256sum
 shenandoah drop https://icedtea.classpath.org/download/drops/icedtea8/@ICEDTEA_RELEASE@ 14dafe269d2 a2523276091531715dd699b341bd2ad840c9710893ef57ff182226c2ee2afd8f
-aarch32 drop https://icedtea.classpath.org/download/drops/icedtea8/@ICEDTEA_RELEASE@ ff0c7e5f63 d9f3e787f7fa28ef81a534c9636d33bd2b75b6952a8ef7abcc1244fc17c1af6f
+aarch32 drop https://icedtea.classpath.org/download/drops/icedtea8/@ICEDTEA_RELEASE@ ae728d7d03 036b56e9127af94c5649232044426363ffde04f586cb663a2e3c15c23347608a
