@@ -12,7 +12,7 @@ GHX - https://github.com/icedtea-git/icedtea8/issues/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.26.0 (2023-01-XX):
+New in release 3.26.0 (2023-02-06):
 
 * CVEs
   - CVE-2023-21830
@@ -92,6 +92,8 @@ New in release 3.26.0 (2023-01-XX):
   - JDK-8299483: ProblemList java/text/Format/NumberFormat/CurrencyFormat.java
   - JDK-8300178: JDK-8286496 causes build failure on older GCC
   - JDK-8300225: JDK-8288516 causes build failure on Windows + VS2010
+* Bug fixes
+  - Don't run check-aes on Zero builds (pointless and slow)
 
 New in release 3.25.0 (2022-11-24):
 
