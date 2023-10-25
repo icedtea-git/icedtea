@@ -1,5 +1,17 @@
 2023-10-24  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump to icedtea-3.29.0.
+	* Makefile.am:
+	(OPENJDK_CHANGESET): Update to icedtea-3.29.0 tag.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DETERMINE_VERSION): Set JDK_UPDATE_VERSION
+	to 392 and BUILD_VERSION to b08.
+	* configure.ac: Bump to 3.29.0.
+
+2023-10-24  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Start 3.29.0 release cycle.
 	* NEWS: Add 3.29.0 section.
 	* configure.ac: Bump to 3.29.0pre00.
