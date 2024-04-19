@@ -542,7 +542,8 @@ ICEDTEA_UNSET = \
 	JAVAC= \
 	JAVA_HOME= \
 	JDK_HOME= \
-	OS=
+	OS= \
+	MAKEFLAGS=$(patsubst -j%,,$(patsubst --job%,,$(MAKEFLAGS)))
 
 ICEDTEA_ENV = \
 	${ICEDTEA_COMMON_ENV} \
