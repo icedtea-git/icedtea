@@ -1,5 +1,11 @@
 2024-04-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump aarch32 to jdk8u412-ga-aarch32-20240419
+	* hotspot.map.in: Bump aarch32 to
+	jdk8u412-ga-aarch32-20240419
+
+2024-04-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* scripts/create_tarballs.sh:
 	Add safety check on checkout directory,
 	to make sure it is actually an OpenJDK tree.
