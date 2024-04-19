@@ -44,6 +44,11 @@ if test "x$CHECKOUT_DIR" = "x"; then
     exit -1;
 fi
 
+if [ ! -d ${CHECKOUT_DIR}/hotspot ] ; then
+    echo "ERROR: Checkout directory does not look like an OpenJDK tree";
+    exit 2;
+fi
+
 if test "x$DOWNLOAD_DIR" = "x"; then
     if test "x$OPENJDK8" = "xfalse"; then
       DOWNLOAD_DIR=/home/downloads/java/drops/icedtea7 ;
