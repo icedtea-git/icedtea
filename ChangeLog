@@ -1,5 +1,18 @@
 2024-04-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Fix issues raised by shellcheck.
+	* scripts/create_tarballs.sh:
+	Fix shellcheck issues.
+	* scripts/discover_trees.sh:
+	Sync with fixed version from RHEL.
+	* scripts/find_existing_items_one_file.sh,
+	* scripts/gen_changeset_and_sha256sums.sh,
+	* scripts/list_openjdk_changes.sh,
+	* scripts/update_tarballs.sh:
+	Fix shellcheck issues.
+
+2024-04-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump aarch32 to jdk8u412-ga-aarch32-20240419
 	* hotspot.map.in: Bump aarch32 to
 	jdk8u412-ga-aarch32-20240419

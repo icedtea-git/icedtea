@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Copyright (C) 2022 Red Hat, Inc.
+# Copyright (C) 2024 Andrew John Hughes
 # Written by Andrew John Hughes <gnu.andrew@redhat.com>.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,29 +19,35 @@
 
 NEWS_FILE=$1
 
-if test "x${NEWS_FILE}" = x; then
+if test "${NEWS_FILE}" = ""; then
     echo "Need edited NEWS file.";
-    exit -1;
+    exit 1;
 fi
 
-BASE=$(dirname ${NEWS_FILE})
-if [ -e ${BASE}/.hg ] ; then
+BASE=$(dirname "${NEWS_FILE}")
+if [ -e "${BASE}/.hg" ] ; then
     echo "Found Mercurial repository.";
     VCS=hg
-elif [ -e ${BASE}/.git ] ; then
+elif [ -e "${BASE}/.git" ] ; then
     echo "Found git repository.";
     VCS=git
 else
     echo "No version repository found.";
-    exit 1;
+    exit 2;
 fi
 
-for id in `${VCS} diff ${NEWS_FILE} |egrep '^\+  - (S|JDK-)([0-9]{7})'|sed -r 's#^\+  - (S|JDK-)([0-9]{7}).*#\2#'`;
+for id in $(${VCS} diff "${NEWS_FILE}" |grep -E '^\+  - (S|JDK-)([0-9]{7})'|sed -r 's#^\+  - (S|JDK-)([0-9]{7}).*#\2#');
 do
-    count=$(cat NEWS | grep $id |wc -l)
-    if test ${count} -gt 1 ; then
+    count=$(grep -c "${id}" NEWS)
+    if test "${count}" -gt 1 ; then
 	echo "${id} is duplicated (appears ${count} times)";
-	cat NEWS | grep $id
+	grep "${id}" NEWS
     fi;
 done
 
+# Local Variables:
+# compile-command: "shellcheck find_existing_items_one_file.sh"
+# fill-column: 80
+# indent-tabs-mode: nil
+# sh-basic-offset: 4
+# End:
