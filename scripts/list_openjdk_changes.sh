@@ -43,10 +43,19 @@ echo "Working directory: ${WORKING_DIR}"
 rm -f "${TMPDIR}/fixes2" "${TMPDIR}/fixes"
 pushd "${WORKING_DIR}" || exit 2
 
-if ! git diff --quiet --no-ext-diff Makefile.am ; then
+HS_MAP=hotspot.map.in;
+if [ ! -e ${HS_MAP} ] ; then
+    HS_MAP=hotspot.map;
+fi
+
+if ! git diff --quiet --no-ext-diff Makefile.am ${HS_MAP} ; then
+    echo "Unstaged changes found in Makefile.am or ${HS_MAP}";
     DIFF_COMMAND=(diff);
-elif ! git diff --cached --quiet --no-ext-diff Makefile.am ; then
+elif ! git diff --cached --quiet --no-ext-diff Makefile.am ${HS_MAP} ; then
+    echo "Staged changes found in Makefile.am or ${HS_MAP}";
     DIFF_COMMAND=(diff --cached);
+else
+    echo "No uncommitted changes found.";
 fi
 
 echo "Repository OPENJDK";
@@ -73,19 +82,8 @@ else
     echo "No change.";
 fi
 
-HS_MAP=hotspot.map.in;
-if [ ! -e ${HS_MAP} ] ; then
-    HS_MAP=hotspot.map;
-fi
 
 if [ -e  ${HS_MAP} ] ; then
-    if ! git diff --quiet --no-ext-diff ${HS_MAP} ; then
-	DIFF_COMMAND=(diff);
-    elif ! git diff --cached --quiet --no-ext-diff ${HS_MAP} ; then
-	DIFF_COMMAND=(diff --cached);
-    else
-	unset DIFF_COMMAND;
-    fi
     HOTSPOT_BUILDS=$(grep -v '^#' ${HS_MAP} | awk '{print $1}');
     echo "HotSpot builds: ${HOTSPOT_BUILDS}"
     for build in ${HOTSPOT_BUILDS}; do
