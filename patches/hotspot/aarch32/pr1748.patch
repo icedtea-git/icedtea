@@ -1,1 +1,20 @@
-../shenandoah/pr1748.patch
+# HG changeset patch
+# User andrew
+# Date 1398284109 -3600
+#      Wed Apr 23 21:15:09 2014 +0100
+# Node ID a8b6c290873cc30d96137bd29724638600317f92
+# Parent  5e956adabf368a0f3292ce5b9ee79db79bfe92f2
+PR1748: Allow clang to be used to build
+
+diff -Nru openjdk.orig/hotspot/make/linux/makefiles/gcc.make openjdk/hotspot/make/linux/makefiles/gcc.make
+--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2021-07-27 17:18:48.122949721 +0100
++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2021-07-27 17:48:10.595248443 +0100
+@@ -209,7 +209,7 @@
+   WARNINGS_ARE_ERRORS += -Wno-logical-op-parentheses -Wno-parentheses-equality -Wno-parentheses
+   WARNINGS_ARE_ERRORS += -Wno-switch -Wno-tautological-constant-out-of-range-compare -Wno-tautological-compare
+   WARNINGS_ARE_ERRORS += -Wno-delete-non-virtual-dtor -Wno-deprecated -Wno-format -Wno-dynamic-class-memaccess
+-  WARNINGS_ARE_ERRORS += -Wno-return-type -Wno-empty-body
++  WARNINGS_ARE_ERRORS += -Wno-return-type -Wno-empty-body -Qunused-arguments -Wno-uninitialized
+ endif
+ 
+ WARNING_FLAGS = -Wpointer-arith -Wsign-compare -Wundef -Wunused-function -Wunused-value -Wformat=2 -Wreturn-type
