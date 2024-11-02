@@ -1,3 +1,11 @@
+2024-11-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump aarch32 to jdk8u432-ga-aarch32-20241016
+	* hotspot.map.in: Bump aarch32 to
+	jdk8u432-ga-aarch32-20241016
+	* patches/hotspot/aarch32/pr1748.patch:
+	Symlink to Shenandoah version again.
+
 2024-11-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump shenandoah to shenandoah8u432-b06.
