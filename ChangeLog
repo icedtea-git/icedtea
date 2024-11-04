@@ -1,5 +1,11 @@
 2024-11-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Start 3.34.0 release cycle.
+	* NEWS: Add 3.34.0 section.
+	* configure.ac: Bump to 3.34.0pre00.
+
+2024-11-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* NEWS: Mention removal of PR2691 distcc fix
 
 2024-11-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
