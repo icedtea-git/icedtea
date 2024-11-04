@@ -1,3 +1,8 @@
+2024-11-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Prepare for release.
+	* NEWS: Set release date to today (2024-11-04).
+
 2024-11-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump aarch32 to jdk8u432-ga-aarch32-20241016
