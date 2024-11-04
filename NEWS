@@ -85,6 +85,8 @@ New in release 3.33.0 (2024-11-04):
   - JDK-8338144: [8u] Remove duplicate license files
   - JDK-8341057: Add 2 SSL.com TLS roots
   - JDK-8341059: Change Entrust TLS distrust date to November 12, 2024
+* Bug fixes
+  - Revert flawed PR2691 distcc fix
 
 New in release 3.32.0 (2024-07-27):
 
