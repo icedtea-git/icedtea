@@ -12,7 +12,7 @@ GHX - https://github.com/icedtea-git/icedtea8/issues/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.34.0 (2025-01-25):
+New in release 3.34.0 (2025-01-27):
 
 * Import of OpenJDK 8 u442 build 06
   - JDK-8048003: test/compiler/8009761/Test8009761.java failed with: java.lang.RuntimeException: static java.lang.Object Test8009761.m3(boolean,boolean) not compiled
