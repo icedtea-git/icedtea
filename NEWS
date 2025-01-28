@@ -12,6 +12,8 @@ GHX - https://github.com/icedtea-git/icedtea8/issues/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 3.35.0 (2025-04-XX):
+
 New in release 3.34.0 (2025-01-27):
 
 * Import of OpenJDK 8 u442 build 06
