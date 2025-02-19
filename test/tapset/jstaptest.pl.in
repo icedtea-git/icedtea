@@ -916,9 +916,9 @@ sub clean_up {
 #     files/directories within $JAVA_HOME.
 sub set_java_vars {
     my ($_java_home, $_arch_dir) = @_;
-    $java_exec = "$_java_home/jre/bin/java";
+    $java_exec = "$_java_home/bin/java";
     $javac_exec = "$_java_home/bin/javac";
-    $jvm_dir = "$_java_home/jre/lib/$_arch_dir/server";
+    $jvm_dir = "$_java_home/lib/server";
     $jvm_so = "$jvm_dir/libjvm.so";
     push(@include_dirs, "-I$_java_home/include");
     push(@include_dirs, "-I$_java_home/include/linux");

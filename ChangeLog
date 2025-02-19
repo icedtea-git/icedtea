@@ -1,3 +1,11 @@
+2025-02-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	GH006: Update jstaptest.pl.in to use
+	modern JDK file structure
+	* test/tapset/jstaptest.pl.in:
+	Fix paths in java_exec and jvm_dir
+	to match modern JDK structure.
+
 2022-07-12  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	GH003: Import ECC test patch from Zdeněk Žamberský
