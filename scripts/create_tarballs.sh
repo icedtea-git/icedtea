@@ -98,7 +98,7 @@ elif test "${REPONAME}" = "${HOTSPOT}"; then
 fi
 
 if echo "${TAG}" | grep -E '^(icedtea|jdk|aarch64|shenandoah|HEAD)' > /dev/null ; then
-    CHANGESET=$(git show -s --format=%h "${TAG}"^\{commit\})
+    CHANGESET=$(git rev-parse --short=11 --end-of-options "${TAG}"^\{commit\})
 else
     CHANGESET=${TAG}
 fi
