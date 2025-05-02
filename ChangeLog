@@ -1,3 +1,9 @@
+2025-04-30  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump aarch32 to jdk8u452-b09-aarch32-20250424
+	* hotspot.map.in: Bump aarch32 to
+	jdk8u452-b09-aarch32-20250424
+
 2025-04-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump shenandoah to shenandoah8u452-b09.
