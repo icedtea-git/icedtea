@@ -12,7 +12,7 @@ GHX - https://github.com/icedtea-git/icedtea8/issues/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.36.0 (2025-07-20):
+New in release 3.36.0 (2025-09-07):
 
 * CVEs
   - CVE-2025-30749
