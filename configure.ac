@@ -1,4 +1,4 @@
-AC_INIT([icedtea], [3.36.0], [distro-pkg-dev@openjdk.java.net])
+AC_INIT([icedtea], [3.37.0], [distro-pkg-dev@openjdk.java.net])
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([1.9 tar-pax foreign])

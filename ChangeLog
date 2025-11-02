@@ -1,3 +1,15 @@
+2025-11-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to icedtea-3.37.0.
+	* Makefile.am:
+	(OPENJDK_CHANGESET): Update to icedtea-3.37.0 tag.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DETERMINE_VERSION): Set JDK_UPDATE_VERSION
+	to 472.
+	* configure.ac: Bump to 3.37.0.
+
 2025-09-07  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Prepare for release.
@@ -26,7 +38,7 @@
 	release.
 	* acinclude.m4:
 	(IT_DETERMINE_VERSION): Set JDK_UPDATE_VERSION
-	to 452 and BUILD_VERSION to b08.
+	to 462 and BUILD_VERSION to b08.
 	* configure.ac: Bump to 3.36.0.
 
 2025-05-04  Andrew John Hughes  <gnu_andrew@member.fsf.org>
@@ -62,7 +74,7 @@
 	* NEWS: Updated.
 	* acinclude.m4:
 	(IT_DETERMINE_VERSION): Set JDK_UPDATE_VERSION
-	to 442 and BUILD_VERSION to b09.
+	to 452 and BUILD_VERSION to b09.
 	* configure.ac: Bump to 3.35.0.
 
 2025-01-28  Andrew John Hughes  <gnu_andrew@member.fsf.org>

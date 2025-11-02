@@ -1,8 +1,8 @@
 # Dependencies
 
-OPENJDK_CHANGESET = 16a711a0f88
+OPENJDK_CHANGESET = 9d4138b9d01
 
-OPENJDK_SHA256SUM = c2b0935ab98caa8c8e16628693f9a14cf89d499dc22866d5d9166500f43db161
+OPENJDK_SHA256SUM = 1fce7d19b7f46f92dde19a8d5a5e0359ccfeeb6c6e4bc43091f13dfce6536806
 
 HS_TYPE = "`$(AWK) 'version==$$1 {print $$2}' version=$(HSBUILD) $(abs_top_builddir)/hotspot.map`"
 HS_URL = "`$(AWK) 'version==$$1 {print $$3}' version=$(HSBUILD) $(abs_top_builddir)/hotspot.map`"

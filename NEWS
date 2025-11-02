@@ -12,6 +12,51 @@ GHX - https://github.com/icedtea-git/icedtea8/issues/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
+New in release 3.37.0 (2025-11-02):
+
+* CVEs
+  - CVE-2025-53057
+  - CVE-2025-53066
+* Import of OpenJDK 8 u472 build 08
+  - JDK-7102969: currency.properties supercede not working correctly
+  - JDK-8041924: [TESTBUG] sun/net/www/http/ChunkedOutputStream/checkError.java fails on some systems
+  - JDK-8044051: Test jdk/lambda/vm/InterfaceAccessFlagsTest.java gets IOException during compilation
+  - JDK-8056283: @ignore tools/javac/defaultMethods/Assertions.java until JDK-8047675 is fixed
+  - JDK-8081734: ConcurrentHashMap/ConcurrentAssociateTest.java, times out 90% of time on sparc with 256 cpu.
+  - JDK-8157138: Error while fetching currency instance by Currency.getInstance(currencycode)
+  - JDK-8160767: [TEST_BUG] java/awt/Frame/MaximizedToIconified/MaximizedToIconified.java
+  - JDK-8185348: Major performance regression in GetMethodDeclaringClass and other JVMTI Method functions
+  - JDK-8185500: [TESTBUG] Add keywords headful/printer in java/awt and javax tests.
+  - JDK-8186259: IOExceptionIfEncodedURLTest.sh versus IOExceptionIfEncodedURLTest.java
+  - JDK-8205653: test/jdk/sun/management/jmxremote/bootstrap/RmiRegistrySslTest.java and RmiSslBootstrapTest.sh fail with handshake_failure
+  - JDK-8228658: test GetTotalSafepointTime.java fails on fast Linux machines with Total safepoint time 0 ms
+  - JDK-8275303: sun/java2d/pipe/InterpolationQualityTest.java fails with D3D basic render driver
+  - JDK-8312065: Socket.connect does not timeout when profiling
+  - JDK-8335978: [8u] incorrect include file name in semaphore.inline.hpp
+  - JDK-8339414: Fix JDK-8202369 incorrect backport for 8u
+  - JDK-8340387: Update OS detection code to recognize Windows Server 2025
+  - JDK-8345414: Google CAInterop test failures
+  - JDK-8348760: RadioButton is not shown if JRadioButtonMenuItem is rendered with ImageIcon in WindowsLookAndFeel
+  - JDK-8351624: [8u] Xerces-J version wrong in THIRD_PARTY_README after JDK-7150324
+  - JDK-8352302: Test sun/security/tools/jarsigner/TimestampCheck.java is failing
+  - JDK-8352637: Enhance bytecode verification
+  - JDK-8356294: Enhance Path Factories
+  - JDK-8358328: Bump update version of OpenJDK: 8u472
+  - JDK-8358538: Update GHA Windows runner to 2025
+  - JDK-8360937: Enhance certificate handling
+  - JDK-8361212: Remove AffirmTrust root CAs
+  - JDK-8363965: GHA: Switch cross-compiling sysroots to Debian bookworm
+  - JDK-8365375: Method SU3.setAcceleratorSelectionForeground assigns to acceleratorForeground
+  - JDK-8365389: Remove static color fields from SwingUtilities3 and WindowsMenuItemUI
+  - JDK-8365560: [8u] ppc64le MaxRAM default is too low at 4GiB
+  - JDK-8365811: test/jdk/java/net/CookieHandler/B6644726.java failure - "Should have 5 cookies. Got only 4, expires probably didn't parse correctly"
+  - JDK-8366112: [8u] GHA: Fix broken installation of Windows SDK
+  - JDK-8368308: ISO 4217 Amendment 180 Update
+* Backports
+  - JDK-8354941, GH028: Build failure with glibc 2.42 due to uabs() name collision
+* Bug fixes
+  - GH030: Remove java/util/TimeZone/CheckDisplayNames.java
+
 New in release 3.36.0 (2025-09-07):
 
 * CVEs
