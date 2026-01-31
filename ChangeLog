@@ -1,5 +1,12 @@
 2026-01-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	* scripts/find_existing_items_one_file.sh:
+	Allow the command to the VCS to be specified,
+	so commits can be used as well as uncommitted
+	changes.
+
+2026-01-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Bump aarch32 to jdk8u482-ga-aarch32-20260122
 	* NEWS: Updated.
 	* hotspot.map.in: Bump aarch32 to

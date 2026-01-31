@@ -18,10 +18,16 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 NEWS_FILE=$1
+CMD=$2
 
 if test "${NEWS_FILE}" = ""; then
     echo "Need edited NEWS file.";
     exit 1;
+fi
+
+if test "${CMD}" = ""; then
+    echo "Defaulting to diff as VCS command";
+    CMD="diff";
 fi
 
 BASE=$(dirname "${NEWS_FILE}")
@@ -36,7 +42,7 @@ else
     exit 2;
 fi
 
-for id in $(${VCS} diff "${NEWS_FILE}" |grep -E '^\+  - (S|JDK-)([0-9]{7})'|sed -r 's#^\+  - (S|JDK-)([0-9]{7}).*#\2#');
+for id in $(${VCS} ${CMD} "${NEWS_FILE}" |grep -E '^\+  - (S|JDK-)([0-9]{7})'|sed -r 's#^\+  - (S|JDK-)([0-9]{7}).*#\2#');
 do
     count=$(grep -c "${id}" NEWS)
     if test "${count}" -gt 1 ; then
