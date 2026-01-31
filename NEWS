@@ -72,6 +72,8 @@ New in release 3.38.0 (2026-02-01):
 * Backports
   - JDK-8376272: [8u] Windows x86-32 fails to build after JDK-8359501
   - JDK-8376352: [8u] Build failure on Windows 32-bit after JDK-8362308
+* AArch32 port
+  - JDK-8374556: [aarch32] JDK hangs on startup after 8354941
 
 New in release 3.37.0 (2025-11-02):
 
