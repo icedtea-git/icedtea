@@ -1,3 +1,15 @@
+2026-01-31  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	Bump to icedtea-3.38.0.
+	* Makefile.am:
+	(OPENJDK_CHANGESET): Update to icedtea-3.38.0 tag.
+	(OPENJDK_SHA256SUM): Likewise.
+	* NEWS: Updated.
+	* acinclude.m4:
+	(IT_DETERMINE_VERSION): Set JDK_UPDATE_VERSION
+	to 482.
+	* configure.ac: Bump to 3.38.0.
+
 2025-11-02  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
 	Bump aarch32 to jdk8u472-ga-aarch32-20251022
