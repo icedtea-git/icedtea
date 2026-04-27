@@ -65,8 +65,8 @@ if test "${DIFF_COMMAND[0]}" = ""; then
     id2=$(git show HEAD^:Makefile.am|grep "^OPENJDK_CHANGESET ="|tail -n1|sed 's#.*=\W##');
 else
     echo "Using diff command ${DIFF_COMMAND[*]}";
-    id1=$(git "${DIFF_COMMAND[@]}" Makefile.am|grep "\-OPENJDK_CHANGESET ="|head -n1|sed 's#.*=\W##');
-    id2=$(git "${DIFF_COMMAND[@]}" Makefile.am|grep "\+OPENJDK_CHANGESET ="|tail -n1|sed 's#.*=\W##');
+    id1=$(git "${DIFF_COMMAND[@]}" Makefile.am|grep -- "-OPENJDK_CHANGESET ="|head -n1|sed 's#.*=\W##');
+    id2=$(git "${DIFF_COMMAND[@]}" Makefile.am|grep -- "+OPENJDK_CHANGESET ="|tail -n1|sed 's#.*=\W##');
 fi
 
 echo "Found old Makefile.am OPENJDK_CHANGESET id ${id1}";
