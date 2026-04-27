@@ -1,0 +1,25 @@
+commit da9eab31a692d83216cd224aa9de909261c17e2e
+Author:     Aleksei Voitylov <avoitylov@openjdk.org>
+AuthorDate: Wed Mar 11 09:28:30 2026 +0100
+Commit:     Andrew John Hughes <gnu_andrew@member.fsf.org>
+CommitDate: Mon Apr 27 23:26:24 2026 +0100
+
+    8370986: Enhance Zip file reading
+    
+    Reviewed-by: abakhtin, andrew
+    Backport-of: 0e46b6b0c682a6a4dd09d74bad4e7283fae4f479
+
+diff --git openjdk.orig/hotspot/src/share/vm/classfile/classLoader.cpp openjdk/hotspot/src/share/vm/classfile/classLoader.cpp
+index adffbb6d29..77cceff502 100644
+--- openjdk.orig/hotspot/src/share/vm/classfile/classLoader.cpp
++++ openjdk/hotspot/src/share/vm/classfile/classLoader.cpp
+@@ -746,6 +746,9 @@ ClassPathEntry* ClassLoader::create_class_path_entry(const char *path, const str
+       if (throw_exception) {
+         THROW_MSG_(vmSymbols::java_lang_ClassNotFoundException(), msg, NULL);
+       } else {
++        if (TraceClassLoading || TraceClassPaths) {
++          tty->print_cr("[Path failed: %s, err: %s]", path, error_msg);
++        }
+         return NULL;
+       }
+     }
