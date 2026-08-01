@@ -365,7 +365,11 @@ ICEDTEA_CONFIGURE = \
 	  --with-extra-cflags="$(CFLAGS)" \
 	  --with-extra-cxxflags="$(CXXFLAGS)" \
 	  --with-extra-ldflags="$(LDFLAGS)" \
-	  --with-extra-asflags="$(CCASFLAGS)"
+	  --with-extra-asflags="$(CCASFLAGS)" \
+	  CC="$(CC)" CXX="$(CXX)" LD="$(LD)" \
+	  AR="$(AR)" AS="$(AS)" NM="$(NM)" \
+	  OBJCOPY="$(OBJCOPY)" OBJDUMP="$(OBJDUMP)" \
+	  READELF="$(READELF)" STRIP="$(STRIP)"
 
 ICEDTEA_CONFIGURE_ENV = \
 	${ICEDTEA_COMMON_ENV} \
