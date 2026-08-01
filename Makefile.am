@@ -253,9 +253,7 @@ if WITH_ALT_HSBUILD
 # Patches only for AArch32
 if WITH_AARCH32_HSBUILD
 ICEDTEA_PATCHES += \
-	patches/hotspot/$(HSBUILD)/8078628-pr3208.patch \
-	patches/hotspot/$(HSBUILD)/8364465-cpu-2026-04.patch \
-	patches/hotspot/$(HSBUILD)/8370986-cpu-2026-04.patch
+	patches/hotspot/$(HSBUILD)/8078628-pr3208.patch
 endif
 
 ICEDTEA_PATCHES += \

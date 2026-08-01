@@ -69,6 +69,8 @@ New in release 3.40.0 (2026-08-01):
   - JDK-8383354: Update LCMS to 2.19.1
   - JDK-8383473: Follow on from tzdata2026b time change to include temporary hack BC time change
   - JDK-8384158: GHA: Downgrade Windows GHA runners to windows-2022 temporarily
+* AArch32 port
+  - JDK-8385332: aarch32 started to crash after 8261235
 
 New in release 3.39.0 (2026-04-28):
 
