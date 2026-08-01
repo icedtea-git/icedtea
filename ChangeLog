@@ -1,5 +1,11 @@
 2026-08-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Bump shenandoah to shenandoah8u502-b07
+	* hotspot.map.in: Bump shenandoah to
+	shenandoah8u502-b07
+
+2026-08-01  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Support passing toolchain binaries
 	to the OpenJDK configure.
 	* Makefile.am:
