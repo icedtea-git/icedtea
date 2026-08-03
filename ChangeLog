@@ -1,5 +1,14 @@
 2026-08-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Fix shellcheck issues with scripts.
+	* scripts/find_existing_items_one_file.sh:
+	Change CMD to an array so git commands of multiple
+	words can be specified (e.g. 'diff --cached')
+	* scripts/tag_tree.sh: Resolve various shellcheck
+	issues
+
+2026-08-03  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	* scripts/tag_tree.sh:
 	Import script for tagging the related
 	IcedTea OpenJDK tree, using the changeset

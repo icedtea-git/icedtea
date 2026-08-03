@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2022 Red Hat, Inc.
+# Copyright (C) 2026 Red Hat, Inc.
 # Written by Andrew John Hughes <gnu.andrew@redhat.com>.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -20,19 +20,19 @@ TAG=$1
 TREE=$2
 MAKEFILE=$3
 
-if test "x$TAG" = "x"; then
+if test "$TAG" = ""; then
   echo "No tag specified.";
   echo "$0 <TAG> <TREE> <MAKEFILE>"
   exit 1;
 fi
 
-if test "x$TREE" = "x"; then
+if test "$TREE" = ""; then
   echo "No tree specified.";
   echo "$0 <TAG> <TREE> <MAKEFILE>"
   exit 2;
 fi
 
-if test "x$MAKEFILE" = "x"; then
+if test "$MAKEFILE" = ""; then
     echo "No makefile specified. Using ${PWD}/Makefile.am";
     MAKEFILE=${PWD}/Makefile.am
 fi
@@ -40,40 +40,44 @@ fi
 echo "Using changesets from $MAKEFILE..." >&2
 echo "Tagging with $TAG..." >&2
 
-if [ -d ${TREE}/.git ] ; then
+if [ -d "${TREE}/.git" ] ; then
     REPO_TYPE=git;
-elif [ -d ${TREE}/.hg ] ; then
+elif [ -d "${TREE}/.hg" ] ; then
     REPO_TYPE=hg;
 else
     echo "${TREE} does not appear to be a git or Mercurial repository.":
     exit 3;
 fi
 
-IFSBAK=${IFS}
-IFS=$'\n';
-for lines in `cat ${MAKEFILE}|grep '^[A-Z]*_CHANGESET = [a-z0-9]*$'`;
+grep '^[A-Z]*_CHANGESET = [a-z0-9]*$' "${MAKEFILE}" | while IFS= read -r line
 do
-    repo=$(echo $lines|tr A-Z a-z|sed 's#_changeset.*##')
-    id=$(echo $lines|sed 's#.*_CHANGESET\W=\W##')
-    if test "x$repo" = "xopenjdk" ; then repo=; fi
-    if test "x${REPO_TYPE}" = "xhg"; then
+    repo=$(echo "$line"|tr '[:upper:]' '[:lower:]'|sed 's#_changeset.*##')
+    id=${line##*CHANGESET[[:space:]]=[[:space:]]}
+    if test "$repo" = "openjdk" ; then repo=; fi
+    if test "${REPO_TYPE}" = "hg"; then
 	echo "hg tag -R $TREE/$repo -r ${id} ${TAG}"
-	hg tag -R $TREE/$repo -r ${id} ${TAG}
+	hg tag -R "$TREE/$repo" -r "${id}" "${TAG}"
     else
 	echo "git -C ${TREE}/${repo} tag -s -m ${TAG} ${TAG} ${id}"
-	git -C ${TREE}/${repo} tag -s -m ${TAG} ${TAG} ${id}
+	git -C "${TREE}/${repo}" tag -s -m "${TAG}" "${TAG}" "${id}"
     fi
 done
 
-IFS=${IFSBAK}
-MAPFILE=$(dirname $MAKEFILE)/hotspot.map.in
-if [ -e ${MAPFILE} ] && grep -q '^default' ${MAPFILE} ; then
-    HSCHANGESET=$(awk 'version==$1 {print $4}' version=default ${MAPFILE})
-    if test "x${REPO_TYPE}" = "xhg"; then
+HSMAP=$(dirname "${MAKEFILE}")/hotspot.map.in
+if [ -e "${HSMAP}" ] && grep -q '^default' "${HSMAP}" ; then
+    HSCHANGESET=$(awk 'version==$1 {print $4}' version=default "${HSMAP}")
+    if test "${REPO_TYPE}" = "hg"; then
 	echo "hg tag -R $TREE/hotspot -r ${HSCHANGESET} ${TAG}"
-	hg tag -R $TREE/hotspot -r ${HSCHANGESET} ${TAG}
+	hg tag -R "${TREE}/hotspot" -r "${HSCHANGESET}" "${TAG}"
     else
 	echo "default HotSpot found but the repository is a git repository";
 	exit 4;
     fi
 fi
+
+# Local Variables:
+# compile-command: "shellcheck tag_tree.sh"
+# fill-column: 80
+# indent-tabs-mode: nil
+# sh-basic-offset: 4
+# End:

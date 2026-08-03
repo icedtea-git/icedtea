@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright (C) 2022 Red Hat, Inc.
-# Copyright (C) 2024 Andrew John Hughes
+# Copyright (C) 2026 Andrew John Hughes
 # Written by Andrew John Hughes <gnu.andrew@redhat.com>.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,16 +18,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 NEWS_FILE=$1
-CMD=$2
+shift
+CMD=( "$@" )
 
 if test "${NEWS_FILE}" = ""; then
     echo "Need edited NEWS file.";
     exit 1;
 fi
 
-if test "${CMD}" = ""; then
+if test "${#CMD[@]}" -eq 0; then
     echo "Defaulting to diff as VCS command";
-    CMD="diff";
+    CMD=( diff );
 fi
 
 BASE=$(dirname "${NEWS_FILE}")
@@ -42,7 +43,7 @@ else
     exit 2;
 fi
 
-for id in $(${VCS} ${CMD} "${NEWS_FILE}" |grep -E '^\+  - (S|JDK-)([0-9]{7})'|sed -r 's#^\+  - (S|JDK-)([0-9]{7}).*#\2#');
+for id in $(${VCS} "${CMD[@]}" "${NEWS_FILE}" |grep -E '^\+  - (S|JDK-)([0-9]{7})'|sed -r 's#^\+  - (S|JDK-)([0-9]{7}).*#\2#');
 do
     count=$(grep -c "${id}" NEWS)
     if test "${count}" -gt 1 ; then
