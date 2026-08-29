@@ -12,7 +12,19 @@ GHX - https://github.com/icedtea-git/icedtea8/issues/X
 
 CVE-XXXX-YYYY: https://cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
 
-New in release 3.40.1 (2026-08-XX):
+New in release 3.40.1 (2026-08-29):
+
+* CVEs
+  - CVE-2026-60589
+  - CVE-2026-61308
+  - CVE-2026-70907
+* Import of OpenJDK 8 u504 build 01
+  - JDK-8382471: Improve Resource Resolving
+  - JDK-8384708: Enhance HTTP Connections
+  - JDK-8385390: Update FreeType to 2.14.3
+  - JDK-8386205: Enhance TLS server
+  - JDK-8388811: [8u] VS2010 build broken by JDK-8374058
+  - JDK-8389477: Bump update version for OpenJDK: 8u504
 
 New in release 3.40.0 (2026-08-01):
 
