@@ -21,6 +21,10 @@ AC_CONFIG_FILES([policytool.desktop])
 
 AC_PROG_CC
 AC_PROG_CXX
+dnl Remove any flags added to the compiler path by autoconf
+CC=$(echo $CC | cut -d ' ' -f 1)
+CXX=$(echo $CXX | cut -d ' ' -f 1)
+
 AC_PROG_GREP
 AC_PROG_INSTALL
 AC_PROG_MKDIR_P

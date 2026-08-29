@@ -1,5 +1,12 @@
 2026-08-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
 
+	Cleanup autoconf 2.72 additions to CC and CXX
+	* configure.ac: Remove any values from CC or CXX
+	after the first whitespace to avoid autoconf
+	adding flags like '-std=gnu11'
+
+2026-08-29  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
 	Support Gentoo's OpenJDK package
 	https://packages.gentoo.org/packages/dev-java/openjdk
 	* acinclude.m4:
